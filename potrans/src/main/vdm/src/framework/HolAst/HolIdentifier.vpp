@@ -1,0 +1,56 @@
+class HolIdentifier is subclass of HolExpression
+
+instance variables
+protected name:		seq of char;
+protected type:		[HolType]
+
+operations
+
+public HolIdentifier : seq of char ==> HolIdentifier
+HolIdentifier(newName) ==
+(
+	name := newName;
+	type := nil
+);
+
+public HolIdentifier : char ==> HolIdentifier
+HolIdentifier(newName) == 
+(
+	name := [newName];
+	type := nil
+);
+
+public HolIdentifier : seq of char * [HolType] ==> HolIdentifier
+HolIdentifier(newName, newType) == 
+(
+	name := newName;
+	type := newType
+);
+
+public requires : () ==> set of seq of char
+requires() == 
+	if type <> nil then
+		return {name} union type.requires()
+	else
+		return {name};
+
+public setTypeInformation : HolTypeDescription ==> ()
+setTypeInformation (typeInfo) ==
+	if type <> nil then
+		type.setTypeInformation(typeInfo);
+	
+public equals : HolIdentifier ==> bool
+equals (id) == 
+	return (print() = id.print());
+
+public print : () ==> seq of char
+print () ==
+	if type = nil then
+		return name
+	else
+		return name ^ ":" ^ type.print(<type>);
+
+functions
+
+end HolIdentifier
+

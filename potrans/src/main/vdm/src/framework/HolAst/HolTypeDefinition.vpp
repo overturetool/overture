@@ -1,0 +1,114 @@
+class HolTypeDefinition is subclass of HolDefinition
+
+instance variables
+protected name:		HolTypeIdentifier;
+protected type:		HolType;
+protected invar:	[HolFunction]		-- TODO invariant about result being a boolean (possible?)
+
+operations
+
+-- public HolTypeDefinition : HolTypeIdentifier * HolType ==> HolTypeDefinition
+-- HolTypeDefinition(newName, newType) ==
+-- (
+-- 	name := newName;
+-- 	type := newType;
+-- 	invar  := nil
+-- );
+
+-- public HolTypeDefinition : HolTypeIdentifier * HolType * [HolFunction] ==> HolTypeDefinition
+-- HolTypeDefinition(newName, newType, newInv) ==
+-- (
+-- 	name := newName;
+-- 	type := newType;
+-- 	invar  := newInv
+-- );
+
+public processTypeInformation : HolTypeDescription ==> HolTypeDescription
+processTypeInformation (typeDesc) == 
+	return typeDesc;
+
+public setTypeInformation : HolTypeDescription ==> ()
+setTypeInformation (typeInfo) == 
+(
+	type.setTypeInformation(typeInfo);
+	if invar <> nil then
+		invar.setTypeInformation(typeInfo)
+);
+	
+public provides : () ==> set of seq of char
+provides() == is subclass responsibility;
+
+public requires : () ==> set of seq of char
+requires() == 
+	if invar <> nil then 
+		return type.requires() union invar.requires()
+	else
+		return type.requires();
+
+public print : () ==> seq of char
+print () == is subclass responsibility;
+
+-- public princt : () ==> seq of char
+-- print () ==
+--	let
+--		namep : seq of char = name.print(<plain>),
+--		arbValue : seq of char = 
+--			conc ["(mk_arb(``:", type.print(<type>), "``)) "],
+--		typeDefinition : seq of char = 
+--			if isofclass(HolUnionType, type) or isofclass(HolQuoteType, type) then		-- TODO make Union and Quote type regular types
+--				conc ["Hol_datatype `", name.print(<plain>), " = ", type.print(<type>), "`;\n"]
+--			elseif isofclass(HolRecordType, type) then
+--				conc 
+--				[
+--					"Hol_datatype `", name.print(<plain>), " = ", type.print(<type>), "`;\n",
+--					getOrderedRecordConstructor(type).print(),
+--					printNumberedFieldSelectors(type)
+--				]
+--			else
+--				let
+--					prover : seq of char =		conc ["TAC_PROOF"],
+--					tactic : seq of char =		conc [	"(EXISTS_TAC", arbValue, ") THEN (PROVE_TAC [])"],									-- TODO Make external tactic
+--					existence : seq of char = 
+--						let
+--							arbEquality =	conc ["(x = ^", arbValue, ")"]
+--						in
+--							-- The invariant will not be used here: Assuming all proof obligations are satisfied, the invariant will always be satisfied anyway
+--							conc ["``?x:", type.print(<term>), ". (\\x . ", arbEquality, ") x``"]	-- TODO Make Hol AST
+--				in
+--					conc ["new_type_definition(\"", namep, "\",", prover, "( ([]:(term list),", existence, "),(", tactic,") ));\n"]
+--	in
+--		let
+--			invariantDef : seq of char = 
+--				if invar = nil then
+--					""
+--				else
+--					(new HolFunctionDefinition(conc ["invariant_", namep], invar)).print()
+--		in
+--			return conc [	-- Define invariant
+--							invariantDef,
+--							-- Define type
+--							typeDefinition
+--						]
+--;
+
+-- printNumberedFieldSelectors : HolRecordType ==> seq of char		-- No direct type casts possible, so indirect typecast
+-- printNumberedFieldSelectors (recType) ==
+-- 	let
+-- 		defs : seq of HolFunctionDefinition = recType.getNumberedFieldSelectors()
+-- 	in
+-- 	(
+-- 		dcl result : seq of char := "";
+-- 		for i = 1 to len defs do
+-- 		(
+-- 			result := result ^ defs(i).print();
+-- 		);
+-- 		return result
+-- 	)
+
+functions
+
+-- getOrderedRecordConstructor : HolRecordType -> HolFunctionDefinition		-- No direct type casts possible, so indirect typecast
+-- getOrderedRecordConstructor (recType) ==
+-- 	recType.getOrderedRecordConstructor()
+	
+end HolTypeDefinition

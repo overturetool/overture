@@ -1,0 +1,26 @@
+class HolSetType is subclass of HolType
+
+instance variables
+elType : HolType
+
+operations
+
+public HolSetType : HolType ==> HolSetType
+HolSetType(newElType) ==
+	elType := newElType
+;
+
+public setTypeInformation : HolTypeDescription ==> ()
+setTypeInformation (typeInfo) ==
+	elType.setTypeInformation(typeInfo);
+
+public requires : () ==> set of seq of char
+requires() == 
+	return elType.requires();
+
+public print : HolType`HolTypeSpecificationType ==> seq of char
+print (specType) ==
+	return conc ["(", elType.print(specType), " set)"];
+
+
+end HolSetType

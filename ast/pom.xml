@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><project>
+  <parent>
+    <artifactId>core</artifactId>
+    <groupId>org.overturetool</groupId>
+    <version>1.0.0</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.overturetool</groupId>
+  <artifactId>ast</artifactId>
+  <name>The Overture Abstract Syntax</name>
+  <build>
+  <finalName>org.overturetool.ast-${version}</finalName>
+  </build>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.overturetool</groupId>
+  		<artifactId>stdlib</artifactId>
+  		<version>1.0.0</version>
+  		<scope>provided</scope>
+  	</dependency>
+  </dependencies>
+</project>

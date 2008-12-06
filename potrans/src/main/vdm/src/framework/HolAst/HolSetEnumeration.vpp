@@ -1,0 +1,45 @@
+class HolSetEnumeration is subclass of HolExpression
+
+instance variables
+elements:		seq of HolExpression;
+
+operations
+
+public HolSetEnumeration : seq of HolExpression ==> HolSetEnumeration
+HolSetEnumeration(newElements) ==
+	elements := newElements
+;
+
+public setTypeInformation : HolTypeDescription ==> ()
+setTypeInformation (typeInfo) ==
+(
+	for i = 1 to len elements do
+		elements(i).setTypeInformation(typeInfo)
+);
+
+public requires : () ==> set of seq of char
+requires() == 
+(
+	dcl result : set of seq of char := {};
+	for i = 1 to len elements do
+		result := result union elements(i).requires();
+	return result
+);
+
+public print : () ==> seq of char
+print () ==
+(
+	dcl result : seq of char;
+	result := "{";
+	for i = 1 to len elements do
+	(
+		result := conc [result, elements(i).print()];
+		if i < len elements then
+			result := conc [result, ";"]
+	);
+	return conc [result, "}"]
+);
+
+functions
+
+end HolSetEnumeration

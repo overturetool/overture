@@ -1,0 +1,28 @@
+class HolReferedFunction is subclass of HolFunction
+
+instance variables
+
+reference : HolIdentifier
+
+operations
+
+public HolReferedFunction : seq of char ==> HolReferedFunction
+HolReferedFunction (newRef) ==
+	reference := new HolIdentifier(newRef)
+;
+
+public HolReferedFunction : HolIdentifier ==> HolReferedFunction
+HolReferedFunction (newRef) ==
+	reference := newRef
+;
+
+public requires : () ==> set of seq of char
+requires() == 
+	return reference.requires();
+
+public print : () ==> seq of char
+print () ==
+	return reference.print()
+;
+
+end HolReferedFunction

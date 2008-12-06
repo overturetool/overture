@@ -1,0 +1,16 @@
+class HolFunction is subclass of HolExpression
+
+instance variables
+
+operations
+
+public print : () ==> seq of char
+print () == is subclass responsibility
+;
+
+public setTypeInformation : HolTypeDescription ==> ()
+setTypeInformation (-) ==
+	skip;
+
+end HolFunction
+

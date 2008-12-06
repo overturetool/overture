@@ -1,0 +1,70 @@
+% WHAT
+%    The dosort algorithm. 
+% ID
+%    $Id: dosort.vpp,v 1.9 2005/05/13 00:41:45 vdmtools Exp $
+% PROJECT
+%    Toolbox
+% COPYRIGHT
+%    (C) 2005 CSK
+
+\section{Sorter class}
+
+\begin{vdm_al}
+class Sorter
+ 
+operations
+
+  public
+  Sort: seq of int ==> seq of int 
+  Sort(arg) ==
+    is subclass responsibility
+
+end Sorter
+\end{vdm_al}
+
+
+\section{DoSort}
+\begin{vdm_al}
+class DoSort is subclass of Sorter
+
+operations
+
+  public Sort: seq of int ==> seq of int
+  Sort(l) ==
+    return DoSorting(l)
+
+functions
+
+  DoSorting: seq of int -> seq of int
+  DoSorting(l) ==
+    if l = [] then
+      []
+    else
+      let sorted = DoSorting (tl l) in
+        InsertSorted (hd l, sorted);
+
+  InsertSorted: int * seq of int -> seq of int
+  InsertSorted(i,l) ==
+    cases true :
+      (l = [])    -> [i],
+      (i <= hd l) -> [i] ^ l,
+      others      -> [hd l] ^ InsertSorted(i,tl l)
+    end
+
+
+
+end DoSort 
+\end{vdm_al}
+
+An overview of the test coverage information for the {\em DoSort}
+class is listed in the table below. The test coverage information is
+generated using the argument file {\em sort.arg}.
+
+
+\begin{rtinfo}
+[InsertSorted]{vdm.tc}[DoSort]
+DoSorting
+InsertSorted
+Sort
+\end{rtinfo}
+

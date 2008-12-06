@@ -1,0 +1,34 @@
+class HolAxiom is subclass of MLExpression
+
+instance variables
+name : 			seq of char;
+objectToAxiomatize :	HolExpression
+
+operations
+
+public HolAxiom : seq of char * HolExpression ==> HolAxiom
+HolAxiom(newName, newObjectToAxiomatize) ==
+(
+	name := newName;
+	objectToAxiomatize := newObjectToAxiomatize
+)
+;
+
+public setTypeInformation : HolTypeDescription ==> ()
+setTypeInformation (typeInfo) == 
+	objectToAxiomatize.setTypeInformation(typeInfo);
+	
+public provides : () ==> set of seq of char
+provides() == 
+	return {};
+
+public requires : () ==> set of seq of char
+requires() == 
+	return objectToAxiomatize.requires();
+
+public print : () ==> seq of char
+print () ==
+	return conc ["new_axiom (\"", name, "\", ``", objectToAxiomatize.print(), "``);\n"]
+;
+
+end HolAxiom

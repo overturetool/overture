@@ -1,0 +1,1513 @@
+class VdmHolTranslator
+
+instance variables
+uniqueNumber : nat := 0;
+
+types
+HolTypeTranslation ::
+	type :					HolType
+	additionalTypeDefs :	seq of HolTypeDefinition
+;
+
+operations
+
+-- main function
+public static
+main : seq of (seq of char) ==> ()
+main(argv) ==
+ -- argv(1) app file
+ -- argv(2) vset file
+ -- argv(3) map file
+ if   len argv < 3
+ then usage()
+ else (dcl ex      : Extractor,
+           doc     : OmlDocument,
+		   holdoc  : HolDocument,
+		   docprov : DocumentProver,
+		   io      : IO,
+		   result  : bool;
+	   io := new IO();
+	   ex := new Extractor(argv(2), argv(3));
+	   doc := io.freadval[OmlDocument](argv(1)).#2;
+	   holdoc := new VdmHolTranslator().translateDocument(doc);
+	   docprov := new DocumentProver(holdoc,ex.GetProofObligations());
+	   result := io.fecho("hol.out",docprov.getProofCounter().print(),<start>);
+	  );
+
+protected static
+usage : () ==> ()
+usage() == 
+  (dcl io : IO, result : bool;
+   result := io.echo("Usage information ..."));
+
+
+
+
+getUniqueID : () ==> seq of char
+getUniqueID() == 
+(
+	uniqueNumber := uniqueNumber + 1;
+	return new Util().itoa(uniqueNumber - 1)
+)
+
+functions
+
+public translateDocument: IOmlDocument -> HolDocument
+translateDocument (doc) ==
+	let
+		expression : [HolExpression] = 
+			if doc.hasExpression() then translateExpression(doc.getExpression())
+			else nil,
+		specifications : seq of HolClass = 
+			if doc.hasSpecifications() then translateClassList(doc.getSpecifications().getClassList())
+			else []
+	in
+		let
+			document = new HolDocument(expression, specifications),
+			typeDescriptor = new HolTypeDescription()
+		in
+			document.setTypeInformation(document.processTypeInformation(typeDescriptor))
+;
+
+translateClassList: seq of IOmlClass -> seq of HolClass
+translateClassList (classes) == 
+	if len classes = 0 then []
+	else conc [[translateClass(hd(classes))], translateClassList(tl(classes))]
+;
+
+translateClass: IOmlClass -> HolClass
+translateClass (cl) == 
+	new HolClass(	new HolIdentifier(cl.getIdentifier()),
+					translateTypeDefinitionsFromBlock(cl.getClassBody()),
+					translateFunctionDefinitionsFromBlock(cl.getClassBody())	)
+;
+
+translateNode: IOmlNode -> HolNode
+translateNode (node) == 
+	if isofclass(IOmlExpression, node) then translateExpression(node)
+	elseif isofclass(IOmlBinaryOperator, node) then translateBinaryOperator(node)
+	else new HolIdentifierError(conc ["Unknown node type: ", node.identity()])
+;
+
+-- Types ------------------------------------------------------------------------------------------------
+
+-- This function will get the type definitions from the given sequence of definition blocks and translate these
+translateTypeDefinitionsFromBlock: seq of IOmlDefinitionBlock -> seq of HolTypeDefinition
+translateTypeDefinitionsFromBlock (blocks) == 
+	if len blocks = 0 then []
+	else
+		if isofclass(IOmlTypeDefinitions, hd(blocks)) then
+			conc [translateTypeDefinitions(hd(blocks)), translateTypeDefinitionsFromBlock(tl(blocks))]
+		else translateTypeDefinitionsFromBlock(tl(blocks))
+;
+
+translateTypeDefinitions: IOmlTypeDefinitions -> seq of HolTypeDefinition
+translateTypeDefinitions (defs) == 
+	translateTypeList(defs.getTypeList())
+;
+
+translateTypeList: seq of IOmlTypeDefinition -> seq of HolTypeDefinition
+translateTypeList (defs) == 
+	if len defs = 0 then []
+	else conc [translateTypeDefinition(hd(defs)), translateTypeList(tl(defs))]
+;
+
+translateTypeDefinition: IOmlTypeDefinition -> seq of HolTypeDefinition
+translateTypeDefinition (typeDef) ==
+	let
+		shape : IOmlTypeShape = typeDef.getShape()
+	in
+		if isofclass(IOmlSimpleType, shape) then translateSimpleTypeDefinition(shape)
+		elseif isofclass(IOmlComplexType, shape) then translateComplexTypeDefinition(shape)
+		else [new HolTypeDefinitionError(conc ["Unknown type definition type: ", typeDef.identity()])]
+;
+
+translateSimpleTypeDefinition: IOmlSimpleType -> seq of HolTypeDefinition
+translateSimpleTypeDefinition (typeDef) == 
+	let
+		typeTranslation : HolTypeTranslation = translateType(typeDef.getType()),
+		typeId : HolTypeIdentifier = new HolTypeIdentifier(typeDef.getIdentifier())
+	in
+		let
+			inva :  [HolLambdaFunction] = 
+					if typeDef.hasInvariant() then
+						translateInvariant(typeDef.getInvariant(), typeTranslation.type, typeDef.getIdentifier())
+					else 
+						nil,
+			holTypeDef = 
+				if isofclass(HolUnionType, typeTranslation.type) then
+					new HolComplexTypeDefinition(typeId, typeTranslation.type, inva)		-- UnionTypes are translated to complex types for now, since I cannot translate to the regular union in Hol yet
+				else
+					new HolSimpleTypeDefinition(typeId, typeTranslation.type, inva)
+		in
+			conc 
+			[
+				typeTranslation.additionalTypeDefs,	-- These first, to make sure the supporting types have been defined in advance
+				[holTypeDef]
+			]
+;
+
+translateComplexTypeDefinition: IOmlComplexType -> seq of HolTypeDefinition
+translateComplexTypeDefinition (typeDef) == 
+	let
+		typeName : HolTypeIdentifier = 
+			new HolTypeIdentifier(typeDef.getIdentifier()),
+		names : seq of HolIdentifier =
+			translateFieldListToName(typeDef.getFieldList()),
+		additionalTypeDefs : seq of HolTypeDefinition = 
+			getAdditionalTypeDefs(translateFieldListToType(typeDef.getFieldList())),
+		ftypes : seq of HolType = 
+			getTypes(translateFieldListToType(typeDef.getFieldList()))
+	in
+		let
+			inva :  [HolLambdaFunction] = 
+					if typeDef.hasInvariant() then
+						translateInvariant(typeDef.getInvariant(), typeName, typeDef.getIdentifier())
+					else 
+						nil
+		in
+			conc 
+			[
+				additionalTypeDefs,
+				[new HolComplexTypeDefinition(
+					typeName,
+					new HolRecordType(typeName, names, ftypes),
+					inva					)]
+			]
+;
+
+-- Convert invariant pattern to function with OmlLetExpression and translate this
+translateInvariant: OmlInvariant * HolType * seq of char-> HolLambdaFunction
+translateInvariant (invp, typeID, typeName) == 
+	let
+		invariantParameter = new HolIdentifier("inv_" ^ typeName ^ "_subj")
+	in
+		new HolLambdaFunction 
+		(
+			[invariantParameter],
+			new HolFunctionType([typeID], new HolNativeTypeIdentifier("bool")),
+			translateLetExpression
+			(
+				new OmlLetExpression
+				(
+					[new OmlValueShape(invp.getPattern(), nil, new OmlName("", invariantParameter.print()))],
+					invp.getExpression()
+				)
+			)
+		)
+;
+translateFieldListToType: seq of IOmlField -> seq of HolTypeTranslation
+translateFieldListToType (fields) == 
+	if len fields = 0 then []
+	else conc [[translateType((hd(fields)).getType())], translateFieldListToType(tl(fields))]
+;
+translateFieldListToName: seq of IOmlField -> seq of HolIdentifier
+translateFieldListToName (fields) == 
+	if len fields = 0 then []
+	else conc [[new HolIdentifier((hd(fields)).getIdentifier())], translateFieldListToName(tl(fields))]
+;
+
+translateType: IOmlType -> HolTypeTranslation
+translateType (type) == 
+	if isofclass(IOmlUnionType, type) then translateUnionType(type)
+	elseif isofclass(IOmlQuoteType, type) then translateQuoteType(type)
+	elseif isofclass(IOmlTokenType, type) then mk_HolTypeTranslation(translateTokenType(type), [])
+	elseif isofclass(IOmlProductType, type) then translateProductType(type)
+	elseif isofclass(IOmlTypeName, type) then mk_HolTypeTranslation(translateTypeName(type), [])
+	elseif isofclass(IOmlPartialFunctionType, type) then translatePartialFunctionType(type) 
+	elseif isofclass(IOmlTotalFunctionType, type) then translateTotalFunctionType(type) 
+	elseif isofclass(IOmlSetType, type) then translateSetType(type)
+	elseif isofclass(IOmlSeq0Type, type) then translateSeq0Type(type)
+	elseif isofclass(IOmlGeneralMapType, type) then translateGeneralMapType(type)
+	elseif isofclass(IOmlCharType, type) then mk_HolTypeTranslation(new HolNativeTypeIdentifier("char"), [])
+	elseif isofclass(IOmlBoolType, type) then mk_HolTypeTranslation(new HolNativeTypeIdentifier("bool"), [])
+	elseif isofclass(IOmlNatType, type) then mk_HolTypeTranslation(new HolNativeTypeIdentifier("num"), [])
+	elseif isofclass(IOmlIntType, type) then mk_HolTypeTranslation(new HolNativeTypeIdentifier("num"), [])
+	elseif isofclass(IOmlRealType, type) then mk_HolTypeTranslation(new HolNativeTypeIdentifier("real"), [])
+	else mk_HolTypeTranslation(new HolTypeError(conc ["Unknown type: ", type.identity()]), [])
+;
+
+translateUnionType: IOmlUnionType -> HolTypeTranslation
+translateUnionType (type) == 
+	let 
+		lhs = translateType(type.getLhsType()),
+		rhs = translateType(type.getRhsType())
+	in
+		mk_HolTypeTranslation(
+			new HolUnionType(lhs.type, rhs.type),
+			conc [lhs.additionalTypeDefs, rhs.additionalTypeDefs]
+		)
+;
+
+translateQuoteType: IOmlQuoteType -> HolTypeTranslation
+translateQuoteType (type) == 
+	let
+		literal = type.getQuoteLiteral()
+	in
+		mk_HolTypeTranslation(
+			new HolQuoteType(translateQuoteLiteral(literal)),	-- TODO Change this when generic union to:    new HolTypeIdentifier(literal.getVal()), 
+			[
+				new HolComplexTypeDefinition(
+					new HolTypeIdentifier(literal.getVal()), 
+					new HolQuoteType(translateQuoteLiteral(literal)),
+					nil
+				)
+			]
+		)
+;
+
+translateTokenType: IOmlUnionType -> HolNativeTypeIdentifier
+translateTokenType (-) == 
+	new HolNativeTypeIdentifier("ind")
+;
+
+translateProductType: IOmlProductType -> HolTypeTranslation
+translateProductType (type) == 
+	let
+		translations : seq of HolTypeTranslation = translateProductTypeToFlatSequence(type)
+	in
+		let
+			addTypeDefs = getAdditionalTypeDefs(translations),
+			prodTypes = getTypes(translations)
+		in
+			mk_HolTypeTranslation(new HolProductType(prodTypes), addTypeDefs)
+;
+
+translateProductTypeToFlatSequence : IOmlProductType -> seq of HolTypeTranslation
+translateProductTypeToFlatSequence (type) == 
+	let
+		rhs : HolTypeTranslation = translateType(type.getRhsType()),
+		lhsType = type.getLhsType()
+	in
+		if not(isofclass(IOmlProductType, lhsType)) then
+			[translateType(lhsType), rhs]
+		else
+			conc [translateProductTypeToFlatSequence(lhsType), [rhs]]
+;
+
+translateTypeName: IOmlTypeName -> HolTypeIdentifier
+translateTypeName (type) == 
+	new HolTypeIdentifier(translateName(type.getName()))
+;
+
+translatePartialFunctionType: IOmlPartialFunctionType -> HolTypeTranslation
+translatePartialFunctionType (type) == 
+	let 
+		domain : HolTypeTranslation = 
+			if isofclass(IOmlEmptyType, type.getDomType()) then 
+				mk_HolTypeTranslation(new HolProductType([]), [])
+			else
+				let typeTrans = translateType(type.getDomType())
+				in
+					if isofclass(HolProductType, typeTrans.type) then typeTrans
+					else
+						mk_HolTypeTranslation(
+							new HolProductType([typeTrans.type]), 
+							typeTrans.additionalTypeDefs
+						),
+		range = 
+			if isofclass(IOmlEmptyType, type.getRngType()) then 
+				mk_HolTypeTranslation(new HolTypeError(conc ["Functions may not have an empty range type"]), [])
+			else
+				translateType(type.getRngType())
+	in
+		mk_HolTypeTranslation(
+			new HolFunctionType(domain.type, range.type),
+			conc [domain.additionalTypeDefs, range.additionalTypeDefs]
+		)
+;
+
+translateTotalFunctionType: IOmlTotalFunctionType -> HolTypeTranslation
+translateTotalFunctionType (type) ==																-- TODO Should total functions be handled differently??
+	translatePartialFunctionType(new OmlPartialFunctionType(type.getDomType(), type.getRngType()))
+;
+
+translateSetType: IOmlSetType -> HolTypeTranslation
+translateSetType (type) == 
+	let
+		elementType : HolTypeTranslation = translateType(type.getType())
+	in
+		mk_HolTypeTranslation(
+			new HolSetType(elementType.type),
+			elementType.additionalTypeDefs
+		)
+;
+
+translateSeq0Type: IOmlSeq0Type -> HolTypeTranslation
+translateSeq0Type (type) == 
+	let
+		elementType : HolTypeTranslation = translateType(type.getType())
+	in
+		mk_HolTypeTranslation(
+			new HolListType(elementType.type),
+			elementType.additionalTypeDefs
+		)
+;
+
+translateGeneralMapType: IOmlGeneralMapType -> HolTypeTranslation
+translateGeneralMapType (type) == 
+	let
+		domType : HolTypeTranslation = translateType(type.getDomType()),
+		rngType : HolTypeTranslation = translateType(type.getRngType())
+	in
+		mk_HolTypeTranslation(
+			new HolMapType(domType.type, rngType.type),
+			conc [domType.additionalTypeDefs, rngType.additionalTypeDefs]
+		)
+;
+
+-- Auxiliary functions --
+getAdditionalTypeDefs : seq of HolTypeTranslation -> seq of HolTypeDefinition
+getAdditionalTypeDefs (transs) == 
+	if transs = [] then []
+	else
+		conc [(hd(transs)).additionalTypeDefs, getAdditionalTypeDefs(tl(transs))]
+;
+getTypes : seq of HolTypeTranslation -> seq of HolType
+getTypes (transs) == 
+	if transs = [] then []
+	else
+		conc [[(hd(transs)).type], getTypes(tl(transs))]
+;
+-- FUNCTIONS ------------------------------------------------------------------------------------------------
+
+-- This function will get the function definitions from the given sequence of definition blocks and translate these
+translateFunctionDefinitionsFromBlock: seq of IOmlDefinitionBlock -> seq of HolFunctionDefinition
+translateFunctionDefinitionsFromBlock (blocks) == 
+	if len blocks = 0 then []
+	else
+		if isofclass(IOmlFunctionDefinitions, hd(blocks)) then
+			conc [translateFunctionDefinitions(hd(blocks)), translateFunctionDefinitionsFromBlock(tl(blocks))]
+		else translateFunctionDefinitionsFromBlock(tl(blocks))
+;
+
+translateFunctionDefinitions: IOmlFunctionDefinitions -> seq of HolFunctionDefinition
+translateFunctionDefinitions (defs) == 
+	translateFunctionList(defs.getFunctionList())
+;
+
+translateFunctionList: seq of IOmlFunctionDefinition -> seq of HolFunctionDefinition
+translateFunctionList (defs) == 
+	if len defs = 0 then []
+	else conc [translateFunctionDefinition(hd(defs)), translateFunctionList(tl(defs))]
+;
+
+translateFunctionDefinition: IOmlFunctionDefinition -> seq of HolFunctionDefinition
+translateFunctionDefinition (funDef) ==																		-- TODO Do something with acces restrictions?
+	let
+		shape : IOmlFunctionShape = funDef.getShape()
+	in
+		if		isofclass(IOmlExplicitFunction, shape) then translateExplicitFunction(shape)
+		elseif	isofclass(IOmlImplicitFunction, shape) then translateImplicitFunction(shape)
+		else [new HolFunctionDefinitionError(conc ["Unknown function shape: ", funDef.identity()])]
+;
+
+translateExplicitFunction: IOmlExplicitFunction -> seq of HolFunctionDefinition
+translateExplicitFunction (fun) == 
+	let
+		mk_(paramIdHs, paramIdOs, paramPats) =
+			translateParameterList(serializeParameterList(fun.getParameterList()), 1, fun.getIdentifier()),
+		type : HolFunctionType = 
+			translateType(fun.getType()).type,
+		prec : [HolExpression] = 
+			if fun.getTrailer().hasPreExpression() then
+				translateExpression(fun.getTrailer().getPreExpression())
+			else nil,
+		postc : [HolExpression] = 
+			if fun.getTrailer().hasPostExpression() then
+				translateExpression(fun.getTrailer().getPostExpression())
+			else nil
+	in
+		let
+			functionDef  : seq of HolFunctionDefinition = 
+			[
+				new HolFunctionDefinition
+				(
+					fun.getIdentifier(),
+					new HolLambdaFunction
+					(
+						paramIdHs,
+						type,
+						generateLetExpression
+						(
+							paramPats,
+							paramIdOs,
+							translateFunctionBody(fun.getBody())
+						)
+					)
+				)
+			],
+			precFunction : seq of HolFunctionDefinition = 
+				if prec = nil then []
+				else
+				[
+					new HolFunctionDefinition 
+					(
+						"pre_" ^ fun.getIdentifier(),
+						new HolLambdaFunction(
+							paramIdHs,
+							new HolFunctionType
+							(
+								type.getDomain(),
+								new HolNativeTypeIdentifier("bool")
+							),
+							generateLetExpression
+							(
+								paramPats,
+								paramIdOs,
+								prec
+							)
+						)
+					)
+				],
+			postFunction : seq of HolFunctionDefinition = 
+				if postc = nil then []
+				else
+					[
+						new HolFunctionDefinition 
+						(
+							conc ["post_", fun.getIdentifier()],
+							new HolLambdaFunction(
+								conc [paramIdHs, [new HolIdentifier("RESULT")]],
+								new HolFunctionType
+								(
+									new HolProductType(type.getDomain().getTypes() ^ [type.getRange()]),
+									new HolNativeTypeIdentifier("bool")
+								),
+								generateLetExpression
+								(
+									paramPats,
+									paramIdOs,
+									postc
+								)
+							)
+						)
+					]
+		in
+			functionDef ^ precFunction ^ postFunction
+pre len (translateType(fun.getType()).additionalTypeDefs) = 0	-- No extra type definitions should be required in Vdm to define a function
+;
+
+translateParameterList: seq of IOmlPattern * nat * seq of char-> (seq of HolIdentifier * seq of IOmlName * seq of IOmlPattern)
+translateParameterList (parameters, nr, name) == 
+	if len(parameters) = 0 then mk_([], [], [])
+	else 
+		let
+			idO = new OmlName("", name ^ "_parameter_" ^ new Util().itoa(nr)),
+			idH = new HolIdentifier(name ^ "_parameter_" ^ new Util().itoa(nr)),
+			pattern = hd(parameters),
+			mk_(recIdHs, recIdOs, recPats) = translateParameterList(tl(parameters), nr+1, name)
+		in
+			mk_(
+				[idH] ^ recIdHs,
+				[idO] ^ recIdOs,
+				[pattern] ^ recPats
+			)
+;
+
+-- Hol only has curried functions anyway and will always allow functions as parameter
+serializeParameterList : seq of IOmlParameter -> seq of IOmlPattern
+serializeParameterList (params) == 
+if params = [] then []
+else (hd(params)).getPatternList() ^ serializeParameterList(tl(params))
+;
+
+translateFunctionBody: IOmlFunctionBody -> HolExpression
+translateFunctionBody (body) == 
+	if body.getNotYetSpecified() then new HolIdentifierError("Function body is not yet specified")
+	elseif body.getSubclassResponsibility() then new HolIdentifierError("Subclasses are not yet supported")
+	else translateExpression(body.getFunctionBody())
+;
+
+
+
+-- identifier				f								seq of char
+-- type_variable_list		-
+-- type						Ta * Ta * Ta * Tb -> Tr			IOmlPartialFunctionType
+-- parameter_list			pa1, pa2, pa3, pb1				seq of IOmlParameter
+-- body						let x:Tr st Epost in x			IOmlLetBeExpression
+-- trailer					pre... post...					IOmlFunctionTrailer
+
+translateImplicitFunction: IOmlImplicitFunction -> seq of HolFunctionDefinition
+translateImplicitFunction (fun) == 
+	let
+		name : seq of char =
+			fun.getIdentifier(),
+		mk_(functionDomainType, parameterList) = 
+			translatePatternTypePairList(fun.getPatternTypePairList(), nil),
+		resultIdentifier : seq of char = 
+			((fun.getIdentifierTypePairList())(1)).getIdentifier(),		-- Currently not supporting more than one!
+		resultType : IOmlType =
+			((fun.getIdentifierTypePairList())(1)).getType(),			-- Currently not supporting more than one!
+		postc = 
+			fun.getTrailer().getPostExpression(),
+		prec = 
+			fun.getTrailer().getPreExpression()
+		
+	in
+		translateExplicitFunction
+		(
+			new OmlExplicitFunction
+			(
+				name,
+				[],
+				new OmlPartialFunctionType(functionDomainType, resultType),
+				parameterList,
+				new OmlFunctionBody
+				(
+					new OmlLetBeExpression	-- let x:Tr st Epost in x
+					(
+						new OmlTypeBind([new OmlPatternIdentifier(resultIdentifier)], resultType), 
+						postc,
+						new OmlName("", resultIdentifier)
+					),
+					false,
+					false
+				),
+				new OmlFunctionTrailer
+				(
+					prec,
+					new OmlLetExpression	-- let x=RESULT in Epost
+					(
+						[new OmlValueShape(new OmlPatternIdentifier(resultIdentifier), nil, new OmlName("", "RESULT"))],
+						postc
+					)
+				)
+			)
+		)
+pre len (translateType(((fun.getIdentifierTypePairList())(1)).getType())).additionalTypeDefs = 0	-- No extra type definitions should be required in Vdm to define a function
+;
+
+
+-- Translates "Pa1, Pa2, Pa3, ... : Ta , Pb1, Pb2, ... : Tb, ..." to "Pa1:Ta, Pa2:Ta, ..., Pb1:Tb, Pb2:Tb,..."
+-- In which all P's are patterns and all T's are types
+translatePatternTypePairList: seq of IOmlPatternTypePair * [IOmlType]-> (IOmlType * seq of IOmlParameter)
+translatePatternTypePairList (ptpl, advancingType) == 
+	let parametersOfThisType = translatePatternListToParameters((hd(ptpl)).getPatternList())
+	in
+		let
+			newType : IOmlType = 
+				generateTimesType((hd(ptpl)).getType(), len(parametersOfThisType), advancingType)
+		in
+			if len(ptpl) = 1 then
+				mk_
+				(
+					newType,	
+					parametersOfThisType
+				)
+			else
+				let
+					mk_(tailType, tailParameters) = translatePatternTypePairList(tl(ptpl), newType)
+				in
+					mk_
+					(
+						tailType,
+						parametersOfThisType ^ tailParameters												-- Add parameters to list
+					)
+pre ptpl <> [];
+
+translatePatternListToParameters: seq of IOmlPattern -> seq of IOmlParameter
+translatePatternListToParameters (pats) == 
+	if len pats = 0 then []
+	else [new OmlParameter([hd(pats)])] ^ translatePatternListToParameters(tl(pats));
+
+generateTimesType: IOmlType * nat * [IOmlType] -> IOmlType
+generateTimesType (typeToAdd, times, advancingType) == 
+	let
+		bTypeToAdd = 
+			if isofclass(IOmlProductType, typeToAdd) then new OmlBracketedType(typeToAdd)
+			else typeToAdd
+	in
+		if times = 1 then 
+			if advancingType <> nil then
+				new OmlProductType(advancingType, bTypeToAdd)
+			else
+				bTypeToAdd
+		else
+			new OmlProductType(generateTimesType(bTypeToAdd, times-1, advancingType), bTypeToAdd)
+pre times > 0;
+
+-- Patterns ------------------------------------------------------------------------------------------------
+types
+
+HolPatternTranslation ::
+	vars :					seq of HolIdentifier
+	exprs :					seq of HolExpression
+
+functions
+
+-- translate pattern1 ... patternN == expression
+-- Will therefore result in disjunction of individual pattern equalities to the expression
+translatePatternListToPredicate: seq of IOmlPattern * HolExpression -> HolExpression
+translatePatternListToPredicate (patterns, expr) == 
+	if patterns = [] then new HolNativeIdentifier("F")
+	else
+		let 
+			firstExpression = translatePatternToPredicate(hd(patterns), expr),
+			recTranslation = translatePatternListToPredicate(tl(patterns), expr)
+		in
+			if len(patterns) = 1 then firstExpression
+			else
+				new HolApplication(new HolNativeIdentifier("$\\/"), [firstExpression, recTranslation])
+;
+
+-- translate pattern == expression
+translatePatternToPredicate: IOmlPattern * HolExpression -> HolExpression
+translatePatternToPredicate (pattern, expr) == 
+	patternTranslationToConjunction(translatePattern(pattern, expr))
+;
+
+patternTranslationToConjunction : HolPatternTranslation -> HolExpression
+patternTranslationToConjunction(trans) ==
+	if trans.vars = [] then new HolNativeIdentifier("T")
+	else
+		let 
+			firstExpression = new HolApplication(new HolNativeIdentifier("$="), [hd(trans.vars), hd(trans.exprs)]),
+			recTranslation = 
+				patternTranslationToConjunction (mk_HolPatternTranslation(tl(trans.vars), tl(trans.exprs)))
+		in
+			if len(trans.vars) = 1 then firstExpression
+			else
+				new HolApplication(new HolNativeIdentifier("$/\\"), [firstExpression, recTranslation])
+;
+
+-- translate pattern := expression
+translatePattern: IOmlPattern * HolExpression -> HolPatternTranslation
+translatePattern (pattern, expr) == 
+	if		isofclass(IOmlPatternIdentifier, pattern) then translatePatternIdentifier(pattern, expr)
+	elseif	isofclass(OmlRecordPattern, pattern) then translateRecordPattern(pattern, expr)
+	elseif	isofclass(OmlDontCarePattern, pattern) then mk_HolPatternTranslation([], [])
+	else 	
+		let
+			ierror = new HolIdentifierError(conc ["Pattern type not supported: ", pattern.identity()])
+		in
+			mk_HolPatternTranslation([ierror], [ierror])
+;
+
+translatePatternIdentifier: IOmlPatternIdentifier * HolExpression -> HolPatternTranslation
+translatePatternIdentifier (pattern, expr) == 
+	mk_HolPatternTranslation
+	(
+		[new HolIdentifier(pattern.getIdentifier())],
+		[expr]
+	)
+;
+
+translateRecordPattern: IOmlRecordPattern * HolExpression -> HolPatternTranslation
+translateRecordPattern (pattern, patternMatchExpression) == 
+	translateRecordPatternList(pattern.getPatternList(), patternMatchExpression, 1, pattern.getName().getIdentifier())
+;
+
+translateRecordPatternList: seq of IOmlPattern * HolExpression * nat * seq of char-> HolPatternTranslation
+translateRecordPatternList (patterns, recordExpression, fieldNr, tag) == 
+	if patterns = [] then mk_HolPatternTranslation([], [])
+	else
+		let
+			recTrans : HolPatternTranslation =
+				translatePattern
+				(
+					hd(patterns),
+					new HolApplication
+					(
+						new HolReferedFunction(tag ^ "_field_" ^ new Util().itoa(fieldNr)),
+						[recordExpression]
+					)
+				),
+			tlTrans : HolPatternTranslation = 
+				translateRecordPatternList(tl(patterns), recordExpression, fieldNr + 1, tag)
+		in
+			mk_HolPatternTranslation
+			(
+				recTrans.vars ^ tlTrans.vars,
+				recTrans.exprs ^ tlTrans.exprs
+			)
+;
+-- TODO Check how they did this in PROSPER (looks more extended)
+getIdentifiers: IOmlPattern -> seq of HolIdentifier
+getIdentifiers (pattern) == 
+	if		isofclass(IOmlPatternIdentifier, pattern) then getIdentifiersI(pattern)
+	elseif	isofclass(OmlRecordPattern, pattern) then getIdentifiersR(pattern)
+	elseif	isofclass(OmlDontCarePattern, pattern) then []
+	else [ new HolIdentifierError(conc ["Pattern type not supported: ", pattern.identity()])]
+;
+
+getIdentifiers: seq of IOmlPattern -> seq of HolIdentifier
+getIdentifiers (patterns) == 
+	if patterns = [] then []
+	else
+		getIdentifiers(hd(patterns)) ^ getIdentifiers(tl(patterns))
+;
+
+getIdentifiersR: OmlRecordPattern -> seq of HolIdentifier
+getIdentifiersR (pattern) == getIdentifiers(pattern.getPatternList());
+getIdentifiersI: IOmlPatternIdentifier -> seq of HolIdentifier
+getIdentifiersI (pattern) == [new HolIdentifier(pattern.getIdentifier())];
+
+-- Expressions ------------------------------------------------------------------------------------------------
+
+translateExpressionList: seq of IOmlExpression -> seq of HolExpression
+translateExpressionList (expList) == 
+	if len expList = 0 then []
+	else conc [[translateExpression(hd(expList))], translateExpressionList(tl(expList))]
+;
+public translateExpression: IOmlExpression -> HolExpression
+translateExpression (node) == 
+	if isofclass(IOmlUnaryExpression, node) then translateUnaryExpression(node)
+	elseif isofclass(IOmlBinaryExpression, node) then translateBinaryExpression(node)
+	elseif isofclass(IOmlBracketedExpression, node) then translateBracketedExpression(node)
+	elseif isofclass(IOmlIfExpression, node) then translateIfExpression(node)
+	elseif isofclass(IOmlCasesExpression, node) then translateCasesExpression(node)
+	elseif isofclass(IOmlSymbolicLiteralExpression, node) then translateSymbolicLiteralExpression(node)
+	elseif isofclass(IOmlName, node) then translateName(node)
+	elseif isofclass(IOmlSetComprehension, node) then translateSetComprehension(node)
+	elseif isofclass(IOmlMapComprehension, node) then translateMapComprehension(node)
+	elseif isofclass(IOmlApplyExpression, node) then translateApplyExpression(node)
+	elseif isofclass(IOmlSetEnumeration, node) then translateSetEnumeration(node)
+	elseif isofclass(IOmlSequenceEnumeration, node) then translateSequenceEnumeration(node)
+	elseif isofclass(IOmlExistsExpression, node) then translateExists(node)
+	elseif isofclass(IOmlForAllExpression, node) then translateForAll(node)
+	elseif isofclass(IOmlFieldSelect, node) then translateFieldSelect(node)
+	elseif isofclass(IOmlLetExpression, node) then translateLetExpression(node)
+	elseif isofclass(IOmlLetBeExpression, node) then translateLetBeExpression(node)
+	elseif isofclass(IOmlMapEnumeration, node) then translateMapEnumeration(node)
+	elseif isofclass(IOmlTupleConstructor, node) then translateTupleConstructor(node)
+	elseif isofclass(IOmlMuExpression, node) then translateMuExpression(node)
+	elseif isofclass(IOmlRecordConstructor, node) then translateRecordConstructor(node)
+	elseif isofclass(IOmlTokenExpression, node) then translateTokenExpression(node)
+	else new HolIdentifierError(conc ["Unknown expression: ", node.identity()])
+;
+
+translateUnaryExpression: IOmlUnaryExpression -> HolApplication
+translateUnaryExpression(unExpr) ==
+	new HolApplication(	translateUnaryOperator(unExpr.getOperator()), 
+						[translateExpression(unExpr.getExpression())]		)
+;
+
+translateBinaryExpression: IOmlBinaryExpression -> HolApplication
+translateBinaryExpression(binExpr) ==
+	new HolApplication(	translateBinaryOperator(binExpr.getOperator()), 
+						[translateExpression(binExpr.getLhsExpression()), translateExpression(binExpr.getRhsExpression())]	)
+;
+
+translateBracketedExpression: IOmlBracketedExpression -> HolBrackets
+translateBracketedExpression(brExpr) ==
+	new HolBrackets(translateExpression(brExpr.getExpression()))
+;
+
+translateIfExpression: IOmlIfExpression -> HolExpression
+translateIfExpression(ifExp) == 			-- TODO Implement elseif
+	if (len (ifExp.getElseifExpressionList())) > 0 then
+		new HolIdentifierError("elseif clauses not supported")
+	else
+		new HolConditional
+		(
+			translateExpression(ifExp.getIfExpression()), 
+			translateExpression(ifExp.getThenExpression()),
+			translateExpression(ifExp.getElseExpression())
+		)
+;
+
+translateCasesExpression: IOmlCasesExpression -> HolConditional
+translateCasesExpression(cExp) == 
+	let
+		match : HolExpression = translateExpression(cExp.getMatchExpression()),
+		closure : [HolExpression] = 
+			if(cExp.hasOthersExpression()) then
+				translateExpression(cExp.getOthersExpression())
+			else
+				nil
+	in
+		translateCasesAlternatives
+		(
+			cExp.getAlternativeList(),
+			match,
+			closure
+		)
+;
+
+translateCasesAlternatives: seq of IOmlCasesExpressionAlternative * HolExpression * [HolExpression] -> HolConditional
+translateCasesAlternatives(alts, matchVal, closure) == 
+	let
+		elseExpression : HolExpression = 
+			if len alts = 1 then 
+				closure
+			elseif (closure = nil) and (len alts = 2) then
+				translateExpression((alts(2)).getExpression())
+			else
+				translateCasesAlternatives(tl(alts), matchVal, closure)
+	in
+		makeCaseConditional
+		(
+			matchVal, 
+			(hd(alts)).getPatternList(),
+			translateExpression((hd(alts)).getExpression()),
+			elseExpression
+		)
+pre (len alts > 0) and ((closure = nil) => (len alts > 1))
+;
+
+makeCaseConditional: HolExpression * seq of IOmlPattern * HolExpression * HolExpression -> HolConditional
+makeCaseConditional(matchExpression, matchPatterns, thenClause, elseClause) == 
+	new HolConditional
+	(
+		translatePatternListToPredicate(matchPatterns, matchExpression),
+		thenClause,
+		elseClause
+	)
+;
+
+translateName: IOmlName -> HolIdentifier
+translateName(name) == 
+	new HolIdentifier(name.getIdentifier())
+;
+
+translateUnaryOperator: IOmlUnaryOperator -> HolIdentifier
+translateUnaryOperator(operator) == 
+	if     operator.getValue() = 0	then new HolNativeIdentifier("CARD")									-- Cardinality
+	elseif operator.getValue() = 3	then new HolNativeIdentifier("TL")									-- Sequence Tail	
+	elseif operator.getValue() = 4	then new HolNativeIdentifier("(\\s. {i:num | i > 0 /\\ i < LENGTH s})")	-- Indices
+	elseif operator.getValue() = 10	then new HolNativeIdentifier("LIST_TO_SET")								-- Elements
+	elseif operator.getValue() = 11	then new HolNativeIdentifier("FDOM")									-- Domain
+	elseif operator.getValue() = 12	then new HolNativeIdentifier("HD")									-- Sequence Head	
+	elseif operator.getValue() = 14	then new HolNativeIdentifier("FRANGE")									-- Range
+	elseif operator.getValue() = 15	then new HolNativeIdentifier("LENGTH")									-- Sequence Lenght	
+	elseif operator.getValue() = 16	then new HolNativeIdentifier("~")									-- Negation			
+																						--.............
+	else new HolIdentifierError("Unknown unary operator: " ^ new Util().itoa(operator.getValue()))
+;
+
+translateBinaryOperator: IOmlBinaryOperator -> HolIdentifier
+translateBinaryOperator(operator) == 
+	if     operator.getValue() = 0	then new HolNativeIdentifier("$UNION")						-- Union
+	elseif operator.getValue() = 1	then new HolNativeIdentifier("$-")						-- Minus
+																						--.............
+	elseif operator.getValue() = 3	then new HolNativeIdentifier("$PSUBSET")					-- Proper subset
+	elseif operator.getValue() = 4	then new HolNativeIdentifier("$=")						-- Equals
+	elseif operator.getValue() = 5	then new HolNativeIdentifier("(\\x y . ~ (x IN y))")		-- notinset
+																						--.............
+	elseif operator.getValue() = 7	then new HolNativeIdentifier("$<")						-- Less than
+	elseif operator.getValue() = 8	then new HolNativeIdentifier("$>")						-- Greater than
+	elseif operator.getValue() = 9	then new HolNativeIdentifier("(\\x y . ~ (x = y))")		-- Not equal
+																						--.............
+	elseif operator.getValue() = 12	then new HolNativeIdentifier("$DIFF")						-- Difference
+	elseif operator.getValue() = 13	then new HolNativeIdentifier("$IN")						-- in set
+	elseif operator.getValue() = 14	then new HolNativeIdentifier("$\\/")						-- Or
+	elseif operator.getValue() = 15	then new HolNativeIdentifier("$>=")						-- Greater or equal
+	elseif operator.getValue() = 16	then new HolNativeIdentifier("(\\x y . DRESTRICT y (COMPL x))")	-- Map domain restrict by (restrict map: second parameter, by set: first parameter regarding the domain)
+	elseif operator.getValue() = 17	then new HolNativeIdentifier("$/\\")						-- And
+																						--.............
+	elseif operator.getValue() = 20	then new HolNativeIdentifier("$INTER")					-- Intersection
+	elseif operator.getValue() = 21	then new HolNativeIdentifier("(\\x y . RRESTRICT (y COMPL x))")	-- Map range restrict by (restrict map: second parameter, to set: first parameter regarding the range)
+	elseif operator.getValue() = 22	then new HolNativeIdentifier("$<=")						-- Less or equal
+																						--.............
+	elseif operator.getValue() = 24	then new HolNativeIdentifier("(\\x y . FUNION y x)")	-- Map modify	(x ++ y is union of y and x, with precedence to y : y FUNION x) -- TODO does this also work for element in sequence????
+																						--.............
+	elseif operator.getValue() = 26	then new HolNativeIdentifier("$SUBSET")					-- Subset
+	elseif operator.getValue() = 27	then new HolNativeIdentifier("FUNION")					-- Map union
+	elseif operator.getValue() = 28	then new HolNativeIdentifier("$+")						-- Plus
+	elseif operator.getValue() = 29	then new HolNativeIdentifier("$==>")						-- Implies
+	elseif operator.getValue() = 30	then new HolNativeIdentifier("$++")						-- Concatenation
+																						--.............
+	else new HolIdentifierError("Unknown binary operator: " ^ new Util().itoa(operator.getValue()))
+;
+
+translateSymbolicLiteralExpression: IOmlSymbolicLiteralExpression -> HolIdentifier
+translateSymbolicLiteralExpression(literalExpression) == 
+	let literal = literalExpression.getLiteral() 
+	in
+		if		isofclass(IOmlCharacterLiteral, literal) then translateCharacterLiteral(literal)
+		elseif	isofclass(IOmlQuoteLiteral, literal) then translateQuoteLiteral(literal)
+		elseif	isofclass(IOmlNumericLiteral, literal) then translateNumericLiteral(literal)
+		elseif	isofclass(IOmlBooleanLiteral, literal) then translateBooleanLiteral(literal)
+		else new HolIdentifierError(conc ["Unknown literal expression: ", literal.identity()])
+;
+
+translateCharacterLiteral : IOmlCharacterLiteral -> HolNativeIdentifier
+translateCharacterLiteral(charLit) == 
+	let
+		charStart	: seq of char = "#\"",
+		charVal		: seq of char = [charLit.getVal()],
+		charEnd		: seq of char = ['\"']
+	in
+		new HolNativeIdentifier(conc [charStart, charVal, charEnd])
+;
+
+translateQuoteLiteral : IOmlQuoteLiteral -> HolIdentifier
+translateQuoteLiteral(quoteLit) == 
+	new HolIdentifier(conc [quoteLit.getVal(), "QuoteLiteral"])
+;
+
+translateNumericLiteral : IOmlNumericLiteral -> HolNativeIdentifier
+translateNumericLiteral(number) == 
+	new HolNativeIdentifier(new Util().itoa(number.getVal()))
+;
+
+translateBooleanLiteral : IOmlBooleanLiteral -> HolIdentifier
+translateBooleanLiteral(boolLit) == 
+	if boolLit.getVal() then new HolNativeIdentifier("T")
+	else new HolNativeIdentifier("F")
+;
+
+translateSetComprehension : IOmlSetComprehension -> HolSetComprehension
+translateSetComprehension (compr) == 
+	let
+		element = translateExpression(compr.getExpression()),
+		guard = translateExpression(compr.getGuard()),
+		freeVarName = "setComprehensionVariable" ^ getUniqueID()
+	in
+		let
+			mk_(mk_HolBindTranslation(binding, newElement), -) = 
+				translateBindList(compr.getBindList(), freeVarName, 1, element),
+			mk_(mk_HolBindTranslation(-, newGuard), -) = 			-- TODO Improve this
+				translateBindList(compr.getBindList(), freeVarName, 1, guard)
+		in
+			new HolSetComprehension(newElement, conc [[binding], [newGuard]])
+;
+
+
+translateMapComprehension : IOmlMapComprehension -> HolSelect
+translateMapComprehension (compr) == 
+let
+	mapVar = new HolIdentifier("mapComp"^getUniqueID()),
+	mapTVar = new HolIdentifier("mapCompT"^getUniqueID()),
+	domExp = compr.getExpression().getDomExpression(),
+	rngExp = compr.getExpression().getRngExpression(),
+	guard:[IOmlExpression] = 
+		if compr.hasGuard() then
+			compr.getGuard()
+		else
+			nil,
+	bindList = compr.getBindList()
+in
+	let
+		mapToSetComp = 
+			translateSetComprehension
+			(
+				new OmlSetComprehension
+				(
+					new OmlTupleConstructor([domExp, rngExp]),
+					bindList,
+					guard
+				)
+			),
+		mToFstT = -- FAPPLY m (FST T)
+			new HolApplication
+			(
+				new HolNativeIdentifier("FAPPLY"),
+				[
+					mapVar,
+					new HolApplication(new HolNativeIdentifier("FST"), [mapTVar])
+				]
+			),
+		SndT = -- SND T
+			new HolApplication(new HolNativeIdentifier("SND"), [mapTVar])
+	in
+		let					
+			domainRestriction = 
+				-- FDOM m = {fst(Exp) | P(x)}
+				new HolApplication
+				(
+					new HolNativeIdentifier("$="),
+					[
+						new HolApplication
+						(
+							new HolNativeIdentifier("FDOM"),
+							[mapVar]
+						),
+						mapToSetComp.setElement
+						(
+							new HolApplication
+							(
+								new HolNativeIdentifier("FST"),
+								[mapToSetComp.getElement()]
+							)
+						)
+					]
+				),
+			mapCorrectness = 
+				-- A t . t IN {EXP | P(x)} ==> FAPPLY m (FST T) = SND t
+				new HolQuantifier
+				(
+					<universal>,
+					[mapTVar],
+					nil,
+					new HolApplication
+					(
+						new HolNativeIdentifier("$==>"),
+						[
+							new HolApplication
+							(
+								new HolNativeIdentifier("$IN"),
+								[mapTVar, mapToSetComp ]
+							),
+							new HolApplication
+							(
+								new HolNativeIdentifier("$="),
+								[mToFstT,  SndT]
+							)
+						]
+					)
+				)
+		in
+			new HolSelect(mapVar, [domainRestriction, mapCorrectness]);
+
+translateApplyExpression: IOmlApplyExpression -> HolApplication
+translateApplyExpression(appExp) == 
+	new HolApplication(
+		translateExpression(appExp.getExpression()),
+		translateExpressionList(appExp.getExpressionList())
+	)
+;
+
+translateSetEnumeration: IOmlSetEnumeration -> HolSetEnumeration 
+translateSetEnumeration(setEnum) == 
+	new HolSetEnumeration(translateExpressionList(setEnum.getExpressionList()))
+;
+
+translateSequenceEnumeration: IOmlSequenceEnumeration -> HolSequenceEnumeration 
+translateSequenceEnumeration(seqEnum) == 
+	new HolSequenceEnumeration(translateExpressionList(seqEnum.getExpressionList()))
+;
+
+translateExists : IOmlExistsExpression -> HolQuantifier
+translateExists (ex) == 
+	let
+		mk_(binds, ids) = translateBindList(ex.getBindList(), "exi_" ^ getUniqueID() ^ "_var_", 1, translateExpression(ex.getExpression()))
+	in
+		new HolQuantifier
+		(
+			<existential>,
+			ids, 
+			nil,
+			new HolApplication
+			(
+				new HolNativeIdentifier("$/\\"),
+				[binds.binding, binds.newExpression]
+			)
+		)
+;
+
+translateForAll : IOmlForAllExpression -> HolQuantifier
+translateForAll (fall) == 
+	let
+		mk_(binds, ids) = translateBindList(fall.getBindList(), "uni_" ^ getUniqueID() ^ "_var_", 1, translateExpression(fall.getExpression()))
+	in
+		new HolQuantifier
+		(
+			<universal>,
+			ids, 
+			nil,
+			new HolApplication
+			(
+				new HolNativeIdentifier("$==>"),
+				[binds.binding, binds.newExpression]
+			)
+		)
+;
+
+translateFieldSelect: IOmlFieldSelect -> HolRecordFieldSelection
+translateFieldSelect(fieldSel) ==
+	-- No function application (of type_field) possible, since the type cannot easily be deduced here
+	new HolRecordFieldSelection(	translateExpression(fieldSel.getExpression()),
+									translateName(fieldSel.getName())				)
+;
+
+generateLetExpression: seq of IOmlPattern * seq of IOmlExpression * HolExpression -> HolLetExpression
+generateLetExpression (patterns, matchExprs, inExpr) == 
+	let
+		patternTranslation = 
+			translatePatternExprPairs(patterns, matchExprs)
+	in
+		new HolLetExpression(
+			patternTranslation.vars,
+			patternTranslation.exprs,
+			inExpr
+		)
+;
+
+translatePatternExprPairs: seq of IOmlPattern * seq of IOmlExpression -> HolPatternTranslation
+translatePatternExprPairs (patterns, exprs) == 
+	if patterns = [] then mk_HolPatternTranslation([], [])
+	else 
+		let
+			translatedPattern = translatePattern(hd(patterns), translateExpression(hd(exprs))),
+			recTrans = translatePatternExprPairs(tl(patterns), tl(exprs))
+		in
+			mk_HolPatternTranslation
+			(
+				translatedPattern.vars ^ recTrans.vars,
+				translatedPattern.exprs ^ recTrans.exprs
+			)
+pre len(patterns) = len(exprs);
+
+translateLetExpression: IOmlLetExpression -> HolLetExpression
+translateLetExpression (letExp) == 
+	let
+		patternTranslation = 
+			translateLetDefs(letExp.getDefinitionList())
+	in
+		new HolLetExpression(
+			patternTranslation.vars,
+			patternTranslation.exprs,
+			translateExpression(letExp.getExpression())
+		)
+;
+
+translateLetDefs: seq of IOmlValueShape -> HolPatternTranslation
+translateLetDefs (shapes) == 
+	if shapes = [] then mk_HolPatternTranslation([], [])
+	else 
+		let
+			translatedPattern = translatePattern((hd(shapes)).getPattern(), translateExpression((hd(shapes)).getExpression())),	-- TODO Use type?
+			recTrans = translateLetDefs(tl(shapes))
+		in
+			mk_HolPatternTranslation
+			(
+				translatedPattern.vars ^ recTrans.vars,
+				translatedPattern.exprs ^ recTrans.exprs
+			)
+;
+
+translateLetBeExpression: IOmlLetBeExpression -> HolLetExpression
+translateLetBeExpression (letbeExp) == 
+	let uniqueID = getUniqueID() in
+	let
+		freeIntVar = new HolIdentifier("letBe_" ^ uniqueID ^ "_intVariable"),
+		freeExtVar = new HolIdentifier("letBe_" ^ uniqueID ^ "_extVariable")
+	in
+				-- Step 1:  translate the selector (e.g. let p:T bst Pp in Ep ==> @FVi . FVi:T /\ <let p=FVi in Pp>)
+		let
+			mk_HolBindTranslation(binding, newBest) = 
+				translateBind
+				(
+					letbeExp.getBind(),
+					freeIntVar,
+					if letbeExp.hasBest() then translateExpression(letbeExp.getBest())
+					else new HolNativeIdentifier("T")
+				)
+		in
+			let
+				selector = 
+					new HolSelect
+						(
+							freeIntVar,
+							conc 
+							[
+								[binding],
+								[newBest]
+							]
+						)
+				-- Step 2:  translate the in-part (e.g. let p:T bst Pp in Ep ==> let FVe=selector in <let p=FVe in Ep>)
+			in
+				let
+					mk_HolBindTranslation(-, newExp) = 	-- TODO Make more efficient?
+						translateBind
+						(
+							letbeExp.getBind(),
+							freeExtVar,
+							translateExpression(letbeExp.getExpression())
+						)
+				in
+					new HolLetExpression
+					(
+						[freeExtVar],
+						[selector],
+						newExp
+					)
+;
+
+translateMapEnumeration: IOmlMapEnumeration -> HolExpression
+translateMapEnumeration (mapEnum) == 
+	translateMapletList(mapEnum.getMapletList())
+;
+
+translateMapletList: seq of IOmlMaplet -> HolExpression
+translateMapletList (maplets) == 
+	if maplets = [] then new HolNativeIdentifier("FEMPTY")
+	else 
+		new HolApplication 
+		(
+			new HolNativeIdentifier("$|+"),
+			[
+				translateMapletList(tl(maplets)),
+				let
+					dma = translateExpression((hd(maplets)).getDomExpression()),
+					rne = translateExpression((hd(maplets)).getRngExpression())
+				in
+					new HolTuple([dma, rne])
+			]
+		)
+;
+
+translateTupleConstructor: IOmlTupleConstructor -> HolTuple
+translateTupleConstructor (tuplec) == 
+	new HolTuple(translateExpressionList(tuplec.getExpressionList()))
+;
+
+translateMuExpression: IOmlMuExpression -> HolRecordUpdate
+translateMuExpression (muexp) == 
+	let
+		record = translateExpression(muexp.getExpression()),
+		mods = muexp.getModifierList()
+	in
+		new HolRecordUpdate
+		(
+			record,
+			translateRecordModifierListToNames(mods),
+			translateRecordModifierListToValues(mods)
+		)
+;
+
+translateRecordModifierListToNames: seq of IOmlRecordModifier -> seq of HolIdentifier
+translateRecordModifierListToNames(mods) ==
+	if mods = [] then []
+	else conc [[new HolIdentifier((hd(mods)).getIdentifier())], translateRecordModifierListToNames(tl(mods))]
+;
+
+translateRecordModifierListToValues: seq of IOmlRecordModifier -> seq of HolExpression
+translateRecordModifierListToValues(mods) ==
+	if mods = [] then []
+	else conc [[translateExpression((hd(mods)).getExpression())], translateRecordModifierListToValues(tl(mods))]
+;
+
+translateRecordConstructor: IOmlRecordConstructor -> HolApplication
+translateRecordConstructor(constructor) == 
+	new HolApplication
+	(
+		new HolReferedFunction(conc ["make_", constructor.getName().getIdentifier()]),
+		translateExpressionList(constructor.getExpressionList())
+	)
+;
+
+translateTokenExpression: IOmlTokenExpression -> HolExpression
+translateTokenExpression(tokenExp) == 
+	translateExpression(tokenExp.getExpression())
+;
+
+-- Bindings ------------------------------------------------------------------------------------------------
+
+types
+
+HolBindTranslation ::
+	binding :				HolExpression
+	newExpression :			HolExpression
+
+functions
+
+translateBindList: seq of IOmlBind * seq of char * nat * HolExpression -> (HolBindTranslation * seq of HolIdentifier)
+translateBindList (binds, freeVariablePrefix, freeVariableIndex, expression) == 
+	let flattenedBindList = flattenBindList(binds) in
+	translateBindListF(flattenedBindList, freeVariablePrefix, freeVariableIndex, expression);
+
+flattenBindList: seq of IOmlBind -> seq of IOmlBind
+flattenBindList (binds) == 
+	if binds = [] then []
+	else
+		let currentFlattened = 
+			if isofclass(IOmlSetBind, hd(binds)) then flattenSetBind(hd(binds))
+			elseif isofclass(IOmlTypeBind, hd(binds)) then flattenTypeBind(hd(binds))
+			else [hd(binds)]
+		in
+			currentFlattened ^ flattenBindList(tl(binds));
+
+flattenSetBind: IOmlSetBind -> seq of IOmlBind
+flattenSetBind (bind) == 
+	if len bind.getPattern() = 1 then [bind]
+	else
+		[new OmlSetBind([hd(bind.getPattern())], bind.getExpression())] ^ flattenSetBind(new OmlSetBind(tl(bind.getPattern()), bind.getExpression()))
+pre len bind.getPattern() > 0;
+
+flattenTypeBind: IOmlTypeBind -> seq of IOmlBind
+flattenTypeBind (bind) == 
+	if len bind.getPattern() = 1 then [bind]
+	else
+		[new OmlTypeBind([hd(bind.getPattern())], bind.getType())] ^ flattenTypeBind(new OmlTypeBind(tl(bind.getPattern()), bind.getType()))
+pre len bind.getPattern() > 0;
+
+translateBindListF: seq of IOmlBind * seq of char * nat * HolExpression -> (HolBindTranslation * seq of HolIdentifier)
+translateBindListF (binds, freeVariablePrefix, freeVariableIndex, expression) == 
+	if binds = [] then mk_(mk_HolBindTranslation (new HolNativeIdentifier("T"), expression), [])
+	else 
+-- 		let
+-- 			mk_(binding, boundId) = translateBindSimple(hd(binds))
+-- 		in
+-- 			-- Simple bind translation
+-- 			if boundId <> nil then		-- (the binding may be nil, in case no additional binding predicates are required)
+-- 				let
+-- 					mk_(recTrans, recIds) = 
+-- 						translateBindListF(tl(binds), freeVariablePrefix, freeVariableIndex, expression)
+-- 				in
+-- 					mk_(
+-- 						mk_HolBindTranslation 
+-- 						(
+-- 							if binding <> nil then 
+-- 								new HolApplication(new HolNativeIdentifier("$/\\"), [binding, recTrans.binding])
+-- 							else
+-- 								recTrans.binding,
+-- 							recTrans.newExpression
+-- 						),
+-- 						recIds ^ [boundId]
+-- 					)
+-- 					
+-- 			-- Complex bind translation
+-- 			else
+				let
+					trans : HolBindTranslation = 
+						translateBind(hd(binds), new HolIdentifier(freeVariablePrefix ^ new Util().itoa(freeVariableIndex)), expression)
+				in
+					let
+						mk_(recTrans, recIds) = 
+							translateBindListF(tl(binds), freeVariablePrefix, freeVariableIndex+1, trans.newExpression)
+					in
+						mk_(
+							mk_HolBindTranslation 
+							(
+								new HolApplication(new HolNativeIdentifier("$/\\"), [trans.binding, recTrans.binding]),
+								recTrans.newExpression
+							),
+							recIds ^ [new HolIdentifier(freeVariablePrefix ^ new Util().itoa(freeVariableIndex))]
+						)
+;
+
+-- Simple translation is to filter out the easy cases, to prevent a large unreadable formula in a situation where a simple small formula can be derived easily
+-- translateBindSimple: IOmlBind -> ([HolExpression] * [HolIdentifier])
+-- translateBindSimple (node) == 
+-- 	if isofclass(IOmlSetBind, node) then translateSetBindSimple(node)
+-- 	elseif isofclass(IOmlTypeBind, node) then translateTypeBindSimple(node)
+-- 	else mk_(nil, nil)
+-- ;
+
+-- translateTypeBindSimple : IOmlTypeBind -> ([HolExpression] * [HolIdentifier])
+-- translateTypeBindSimple(bind) == 
+-- 	let
+-- 		pattern = bind.getPattern()(1),	-- TODO Only supporting one pattern (no more in syntax manual)
+-- 		type : HolType = (translateType(bind.getType())).type		-- TODO maybe add precondition no additional typedefs?
+-- 	in
+-- 		if isofclass(IOmlPatternIdentifier, pattern) then
+-- 			mk_
+-- 			(
+-- 				nil,
+-- 				new HolIdentifier(bindSimpleGetId(pattern), type)
+-- 			)
+-- 		else
+-- 			mk_(nil, nil);
+-- translateSetBindSimple : IOmlSetBind -> ([HolExpression] * [HolIdentifier])
+-- translateSetBindSimple(bind) == 
+-- 	let
+-- 		pattern = bind.getPattern()(1)	-- TODO Only supporting one pattern (no more in syntax manual)
+-- 	in
+-- 		if isofclass(IOmlPatternIdentifier, pattern) then
+-- 			mk_
+-- 			(
+-- 				new HolApplication
+-- 				(
+-- 					new HolNativeIdentifier("$IN"),
+-- 					[new HolIdentifier(bindSimpleGetId(pattern)), translateExpression(bind.getExpression())]
+-- 				),
+-- 				new HolIdentifier(bindSimpleGetId(pattern))
+-- 			)
+-- 		else
+-- 			mk_(nil, nil);
+
+-- bindSimpleGetId : IOmlPatternIdentifier -> seq of char
+-- bindSimpleGetId(pat) == 
+-- 	pat.getIdentifier();
+
+translateBind: IOmlBind * HolIdentifier * HolExpression -> HolBindTranslation
+translateBind (node, freeVariable, expression) == 
+	if isofclass(IOmlSetBind, node) then translateSetBind(node, freeVariable, expression)
+	elseif isofclass(IOmlTypeBind, node) then translateTypeBind(node, freeVariable, expression)
+	else 
+		let
+			terror = new HolIdentifierError(conc ["Unknown bind: ", node.identity()])
+		in
+			mk_HolBindTranslation (terror, terror)
+;
+
+translateTypeBind : IOmlTypeBind * HolIdentifier * HolExpression -> HolBindTranslation
+translateTypeBind(bind, freeVariable, originalExpression) == 
+	let
+		pattern = bind.getPattern()(1),	-- TODO Only supporting one pattern (no more in syntax manual)
+		type : HolType = (translateType(bind.getType())).type		-- TODO maybe add precondition no additional typedefs?
+		
+	in
+		let
+			typeMembership = 
+				new HolApplication			-- The fact that the invariant holds automatically implies membership of the super type (as the invariant is explicitly typed)
+				(
+					new HolIdentifier("inv_" ^ type.print(<type>)),
+					[freeVariable]
+				),
+	
+		--		new HolApplication
+		--		(
+		--			new HolNativeIdentifier("$IN"),
+		--			[freeVariable, new HolNativeIdentifier(conc ["{x:", type.print(<type>), " | T}"])]	-- The only way I can think of, as I cannot find a type memebership operator (it is only the type itself for compound structures)
+		--		),
+			patternMatches = 
+				-- Quantifier required, since the pattern contains free variables, since there is no let around it
+				new HolQuantifier
+				(
+					<existential>,
+					getIdentifiers(pattern),
+					nil,
+					translatePatternToPredicate(pattern, freeVariable)
+				),
+			patternVariableRewriting = 
+				generateLetExpression
+				(
+					[pattern],
+					[new OmlName("", freeVariable.print())],
+					originalExpression
+				)
+		in
+			if len(bind.getPattern()) > 1 then
+				let berror = new HolIdentifierError("Not supporting multiple patterns in a single bind (outside a bind list)")
+				in mk_HolBindTranslation(berror, berror)
+			else
+				mk_HolBindTranslation 
+				(
+					new HolApplication(new HolNativeIdentifier("$/\\"), [typeMembership, patternMatches]),
+					patternVariableRewriting
+				)
+;
+
+translateSetBind : IOmlSetBind * HolIdentifier * HolExpression -> HolBindTranslation
+translateSetBind(bind, freeVariable, originalExpression) == 
+	let
+		pattern = bind.getPattern()(1)	-- TODO Only supporting one pattern (no more in syntax manual)
+	in
+		let
+			setMembership = 
+				new HolApplication
+				(
+					new HolNativeIdentifier("$IN"),
+					[freeVariable, translateExpression(bind.getExpression())]
+				),
+			patternMatches = 
+				-- Quantifier required, since the pattern contains free variables, since there is no let around it
+				new HolQuantifier
+				(
+					<existential>,
+					getIdentifiers(pattern),
+					nil,
+					translatePatternToPredicate(pattern, freeVariable)
+				),
+			patternVariableRewriting = 
+				generateLetExpression
+				(
+					[pattern],
+					[new OmlName("", freeVariable.print())],
+					originalExpression
+				)
+		in
+			if len(bind.getPattern()) > 1 then
+				let berror = new HolIdentifierError("Not supporting multiple patterns in one bind")
+				in mk_HolBindTranslation(berror, berror)
+			else
+				mk_HolBindTranslation 
+				(
+					new HolApplication(new HolNativeIdentifier("$/\\"), [setMembership, patternMatches]),
+					patternVariableRewriting
+				)
+end VdmHolTranslator
