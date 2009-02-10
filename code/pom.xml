@@ -14,10 +14,8 @@
 <module>parser</module>
 <module>eclipse</module>
 <module>potrans</module>
-<module>showtrace</module>
 <module>umltrans</module>
 <module>jmltrans</module>
-<module>editor</module>
 <module>testgen</module>
 </modules>
 <dependencies>

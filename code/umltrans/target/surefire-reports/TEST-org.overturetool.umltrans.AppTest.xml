@@ -1,36 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="0.015" errors="0" skipped="0" tests="1" name="org.overturetool.umltrans.AppTest">
+<testsuite failures="0" time="0.031" errors="0" skipped="0" tests="1" name="org.overturetool.umltrans.AppTest">
   <properties>
     <property name="java.vendor" value="Sun Microsystems Inc."/>
     <property name="localRepository" value="C:\Documents and Settings\mave\.m2\repository"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
-    <property name="env.CVSROOT" value=":pserver:mave@pc514:/cvs"/>
     <property name="sun.management.compiler" value="HotSpot Client Compiler"/>
     <property name="env.PROMPT" value="$P$G"/>
     <property name="os.name" value="Windows XP"/>
     <property name="env.FP_NO_HOST_CHECK" value="NO"/>
-    <property name="sun.boot.class.path" value="D:\Java\jdk1.6.0_10\jre\lib\resources.jar;D:\Java\jdk1.6.0_10\jre\lib\rt.jar;D:\Java\jdk1.6.0_10\jre\lib\sunrsasign.jar;D:\Java\jdk1.6.0_10\jre\lib\jsse.jar;D:\Java\jdk1.6.0_10\jre\lib\jce.jar;D:\Java\jdk1.6.0_10\jre\lib\charsets.jar;D:\Java\jdk1.6.0_10\jre\classes"/>
-    <property name="env.COMPUTERNAME" value="PC514"/>
+    <property name="sun.boot.class.path" value="C:\Program Files\Java\jdk1.6.0_12\jre\lib\resources.jar;C:\Program Files\Java\jdk1.6.0_12\jre\lib\rt.jar;C:\Program Files\Java\jdk1.6.0_12\jre\lib\sunrsasign.jar;C:\Program Files\Java\jdk1.6.0_12\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.6.0_12\jre\lib\jce.jar;C:\Program Files\Java\jdk1.6.0_12\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.6.0_12\jre\classes"/>
+    <property name="env.COMPUTERNAME" value="VOYAGER"/>
     <property name="env.ALLUSERSPROFILE" value="C:\Documents and Settings\All Users"/>
     <property name="sun.desktop" value="windows"/>
-    <property name="env.LANG" value="NL"/>
     <property name="java.vm.specification.vendor" value="Sun Microsystems Inc."/>
-    <property name="java.runtime.version" value="1.6.0_10-b33"/>
-    <property name="env.lib" value="C:\Program Files\Microsoft Visual Studio\VC98\mfc\lib;C:\Program Files\Microsoft Visual Studio\VC98\lib"/>
+    <property name="java.runtime.version" value="1.6.0_12-b04"/>
     <property name="env.HOMEPATH" value="\Documents and Settings\mave"/>
-    <property name="env.__COMPAT_LAYER" value="EnableNXShowUI "/>
     <property name="user.name" value="mave"/>
-    <property name="env.QTJAVA" value="C:\Program Files\Java\jre1.6.0_07\lib\ext\QTJava.zip"/>
-    <property name="env.LM_LICENSE_FILE" value="d:\dev\vdmtools\license.dat"/>
+    <property name="env.QTJAVA" value="C:\Program Files\QuickTime\QTSystem\QTJava.zip"/>
     <property name="user.language" value="nl"/>
-    <property name="sun.boot.library.path" value="D:\Java\jdk1.6.0_10\jre\bin"/>
-    <property name="java.version" value="1.6.0_10"/>
-    <property name="env.PROCESSOR_IDENTIFIER" value="x86 Family 6 Model 13 Stepping 8, GenuineIntel"/>
+    <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk1.6.0_12\jre\bin"/>
+    <property name="java.version" value="1.6.0_12"/>
+    <property name="env.PROCESSOR_IDENTIFIER" value="x86 Family 15 Model 2 Stepping 9, GenuineIntel"/>
     <property name="user.timezone" value=""/>
     <property name="env.TEMP" value="C:\DOCUME~1\mave\LOCALS~1\Temp"/>
     <property name="sun.arch.data.model" value="32"/>
-    <property name="java.endorsed.dirs" value="D:\Java\jdk1.6.0_10\jre\lib\endorsed"/>
-    <property name="sun.cpu.isalist" value="pentium_pro+mmx pentium_pro pentium+mmx pentium i486 i386 i86"/>
+    <property name="java.endorsed.dirs" value="C:\Program Files\Java\jdk1.6.0_12\jre\lib\endorsed"/>
+    <property name="env.JDK_HOME" value="C:\Program Files\Java\jdk1.6.0_12"/>
+    <property name="sun.cpu.isalist" value=""/>
     <property name="env.HOMEDRIVE" value="C:"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
     <property name="file.encoding.pkg" value="sun.io"/>
@@ -38,7 +34,7 @@
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.class.version" value="50.0"/>
     <property name="user.country" value="NL"/>
-    <property name="java.home" value="D:\Java\jdk1.6.0_10\jre"/>
+    <property name="java.home" value="C:\Program Files\Java\jdk1.6.0_12\jre"/>
     <property name="env.APPDATA" value="C:\Documents and Settings\mave\Application Data"/>
     <property name="java.vm.info" value="mixed mode, sharing"/>
     <property name="env.ComSpec" value="C:\WINDOWS\system32\cmd.exe"/>
@@ -46,60 +42,55 @@
     <property name="env.CommonProgramFiles" value="C:\Program Files\Common Files"/>
     <property name="os.version" value="5.1"/>
     <property name="path.separator" value=";"/>
-    <property name="java.vm.version" value="11.0-b15"/>
-    <property name="env.PHPRC" value="D:\dev\php\"/>
-    <property name="env.USERPROFILE" value="C:\Documents and Settings\mave"/>
+    <property name="java.vm.version" value="11.2-b01"/>
     <property name="user.variant" value=""/>
-    <property name="env.JAVA_HOME" value="D:\Java\jdk1.6.0_10"/>
+    <property name="env.USERPROFILE" value="C:\Documents and Settings\mave"/>
+    <property name="env.JAVA_HOME" value="C:\Program Files\Java\jdk1.6.0_12"/>
     <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
     <property name="env.TMP" value="C:\DOCUME~1\mave\LOCALS~1\Temp"/>
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
-    <property name="env.MSDevDir" value="C:\Program Files\Microsoft Visual Studio\Common\MSDev98"/>
     <property name="user.home" value="C:\Documents and Settings\mave"/>
     <property name="env.SESSIONNAME" value="Console"/>
     <property name="java.specification.vendor" value="Sun Microsystems Inc."/>
-    <property name="env.CLASSPATH" value=".;C:\Program Files\Java\jre1.6.0_07\lib\ext\QTJava.zip"/>
-    <property name="env.M2_HOME" value="D:\dev\apache-maven-2.0.9"/>
-    <property name="env.NUMBER_OF_PROCESSORS" value="1"/>
-    <property name="java.library.path" value="D:\Java\jdk1.6.0_10\bin;.;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;d:/Java/jdk1.6.0_10/bin/../jre/bin/client;d:/Java/jdk1.6.0_10/bin/../jre/bin;D:\dev\php\;C:\WINDOWS\system32;C:\WINDOWS;D:\Java\jdk1.6.0_02\bin;D:\tmp\p4y\grails-1.0.3\grails\bin;C:\Program Files\QuickTime\QTSystem\;C:\Program Files\Microsoft Visual Studio\Common\Tools\WinNT;C:\Program Files\Microsoft Visual Studio\Common\MSDev98\Bin;C:\Program Files\Microsoft Visual Studio\Common\Tools;C:\Program Files\Microsoft Visual Studio\VC98\bin;C:\Program Files\CVSNT\;C:\Program Files\The VDM-SL Toolbox v3.8.6-Academic\bin;D:\dev\jflex-1.4.1\bin;D:\dev\byaccj;D:\dev\apache-maven-2.0.9\bin"/>
+    <property name="env.CLASSPATH" value=".;C:\Program Files\QuickTime\QTSystem\QTJava.zip"/>
+    <property name="env.M2_HOME" value="C:\dev\apache-maven-2.0.9"/>
+    <property name="env.NUMBER_OF_PROCESSORS" value="2"/>
+    <property name="java.library.path" value="C:\Program Files\Java\jdk1.6.0_12\bin;.;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:/Program Files/Java/jdk1.6.0_12/bin/../jre/bin/client;C:/Program Files/Java/jdk1.6.0_12/bin/../jre/bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\Program Files\QuickTime\QTSystem\;C:\Program Files\Java\jdk1.6.0_12\bin;C:\dev\apache-maven-2.0.9\bin;C:\Program Files\TortoiseSVN\bin"/>
     <property name="java.vendor.url" value="http://java.sun.com/"/>
     <property name="java.vm.vendor" value="Sun Microsystems Inc."/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
-    <property name="java.class.path" value="/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/aspectjrt-1.5.3.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/commons-cli-1.0.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/doxia-sink-api-1.0-alpha-9.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/jsch-0.1.27.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/jtidy-4aug2000r7-dev.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-artifact-3.0-SNAPSHOT.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-core-2.1-SNAPSHOT.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-embedder-2.1-SNAPSHOT.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-lifecycle-2.1-SNAPSHOT.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-model-2.1-SNAPSHOT.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-plugin-api-2.1-SNAPSHOT.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-profile-2.1-SNAPSHOT.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-project-2.1-SNAPSHOT.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-reporting-api-2.1-SNAPSHOT.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-toolchain-2.1-SNAPSHOT.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-workspace-2.1-SNAPSHOT.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/plexus-classworlds-1.2-alpha-12.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/plexus-container-default-1.0-alpha-44.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/plexus-interactivity-api-1.0-alpha-6.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/plexus-interpolation-1.0-SNAPSHOT.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/plexus-utils-1.5.1.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/wagon-file-1.0-beta-2.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/wagon-http-lightweight-1.0-beta-2.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/wagon-http-shared-1.0-beta-2.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/wagon-provider-api-1.0-beta-2.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/wagon-ssh-1.0-beta-2.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/wagon-ssh-common-1.0-beta-2.jar;/D:/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/wagon-ssh-external-1.0-beta-2.jar"/>
-    <property name="env.CVS_RSH" value="&quot;C:\Program Files\PuTTY\plink.exe&quot;"/>
+    <property name="java.class.path" value="/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/aspectjrt-1.5.3.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/commons-cli-1.0.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/doxia-sink-api-1.0-alpha-9.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/jsch-0.1.27.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/jtidy-4aug2000r7-dev.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-artifact-3.0-SNAPSHOT.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-core-2.1-SNAPSHOT.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-embedder-2.1-SNAPSHOT.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-lifecycle-2.1-SNAPSHOT.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-model-2.1-SNAPSHOT.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-plugin-api-2.1-SNAPSHOT.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-profile-2.1-SNAPSHOT.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-project-2.1-SNAPSHOT.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-reporting-api-2.1-SNAPSHOT.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-toolchain-2.1-SNAPSHOT.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/maven-workspace-2.1-SNAPSHOT.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/plexus-classworlds-1.2-alpha-12.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/plexus-container-default-1.0-alpha-44.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/plexus-interactivity-api-1.0-alpha-6.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/plexus-interpolation-1.0-SNAPSHOT.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/plexus-utils-1.5.1.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/wagon-file-1.0-beta-2.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/wagon-http-lightweight-1.0-beta-2.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/wagon-http-shared-1.0-beta-2.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/wagon-provider-api-1.0-beta-2.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/wagon-ssh-1.0-beta-2.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/wagon-ssh-common-1.0-beta-2.jar;/C:/dev/eclipse_3.4.1/plugins/org.maven.ide.components.maven_embedder_2.1.0.20080530-2300/jars/wagon-ssh-external-1.0-beta-2.jar"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="env.LOGONSERVER" value="\\PC514"/>
+    <property name="env.LOGONSERVER" value="\\VOYAGER"/>
     <property name="env.windir" value="C:\WINDOWS"/>
     <property name="java.vm.specification.version" value="1.0"/>
     <property name="env.PROCESSOR_ARCHITECTURE" value="x86"/>
-    <property name="sun.os.patch.level" value="Service Pack 3"/>
     <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.os.patch.level" value="Service Pack 3"/>
+    <property name="surefire.test.class.path" value="C:\overture\core\umltrans\target\test-classes;C:\overture\core\umltrans\target\classes;C:\Documents and Settings\mave\.m2\repository\junit\junit\3.8.1\junit-3.8.1.jar;C:\Documents and Settings\mave\.m2\repository\org\overturetool\stdlib\1.0.0\stdlib-1.0.0.jar;C:\Documents and Settings\mave\.m2\repository\org\overturetool\ast\1.0.0\ast-1.0.0.jar;C:\Documents and Settings\mave\.m2\repository\org\overturetool\parser\1.0.0\parser-1.0.0.jar;"/>
     <property name="env.ProgramFiles" value="C:\Program Files"/>
-    <property name="surefire.test.class.path" value="D:\otproj\core\umltrans\target\test-classes;D:\otproj\core\umltrans\target\classes;C:\Documents and Settings\mave\.m2\repository\junit\junit\3.8.1\junit-3.8.1.jar;"/>
+    <property name="env.PROCESSOR_REVISION" value="0209"/>
     <property name="java.io.tmpdir" value="C:\DOCUME~1\mave\LOCALS~1\Temp\"/>
-    <property name="env.PROCESSOR_REVISION" value="0d08"/>
     <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi"/>
     <property name="env.SystemRoot" value="C:\WINDOWS"/>
     <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
     <property name="os.arch" value="x86"/>
-    <property name="java.ext.dirs" value="D:\Java\jdk1.6.0_10\jre\lib\ext;C:\WINDOWS\Sun\Java\lib\ext"/>
-    <property name="user.dir" value="D:\otproj\core\umltrans"/>
+    <property name="java.ext.dirs" value="C:\Program Files\Java\jdk1.6.0_12\jre\lib\ext;C:\WINDOWS\Sun\Java\lib\ext"/>
+    <property name="user.dir" value="C:\overture\core\umltrans"/>
     <property name="line.separator" value="
 "/>
     <property name="java.vm.name" value="Java HotSpot(TM) Client VM"/>
     <property name="env.PATHEXT" value=".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH"/>
-    <property name="env.Path" value="d:/Java/jdk1.6.0_10/bin/../jre/bin/client;d:/Java/jdk1.6.0_10/bin/../jre/bin;D:\dev\php\;C:\WINDOWS\system32;C:\WINDOWS;D:\Java\jdk1.6.0_02\bin;D:\tmp\p4y\grails-1.0.3\grails\bin;C:\Program Files\QuickTime\QTSystem\;C:\Program Files\Microsoft Visual Studio\Common\Tools\WinNT;C:\Program Files\Microsoft Visual Studio\Common\MSDev98\Bin;C:\Program Files\Microsoft Visual Studio\Common\Tools;C:\Program Files\Microsoft Visual Studio\VC98\bin;C:\Program Files\CVSNT\;C:\Program Files\The VDM-SL Toolbox v3.8.6-Academic\bin;D:\dev\jflex-1.4.1\bin;D:\dev\byaccj;D:\dev\apache-maven-2.0.9\bin"/>
-    <property name="basedir" value="D:\otproj\core\umltrans"/>
+    <property name="env.Path" value="C:/Program Files/Java/jdk1.6.0_12/bin/../jre/bin/client;C:/Program Files/Java/jdk1.6.0_12/bin/../jre/bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\Program Files\QuickTime\QTSystem\;C:\Program Files\Java\jdk1.6.0_12\bin;C:\dev\apache-maven-2.0.9\bin;C:\Program Files\TortoiseSVN\bin"/>
+    <property name="basedir" value="C:\overture\core\umltrans"/>
     <property name="maven.mode.standalone" value="true"/>
     <property name="env.USERNAME" value="mave"/>
     <property name="env.SystemDrive" value="C:"/>
     <property name="file.encoding" value="Cp1252"/>
-    <property name="env.GRAILS_HOME" value="D:\tmp\p4y\grails-1.0.3\grails"/>
-    <property name="env.USERDOMAIN" value="PC514"/>
-    <property name="env.include" value="C:\Program Files\Microsoft Visual Studio\VC98\atl\include;C:\Program Files\Microsoft Visual Studio\VC98\mfc\include;C:\Program Files\Microsoft Visual Studio\VC98\include"/>
+    <property name="env.USERDOMAIN" value="VOYAGER"/>
     <property name="java.specification.version" value="1.6"/>
-    <property name="env.PROCESSOR_LEVEL" value="6"/>
+    <property name="env.PROCESSOR_LEVEL" value="15"/>
   </properties>
   <testcase time="0" classname="org.overturetool.umltrans.AppTest" name="testApp"/>
 </testsuite>
