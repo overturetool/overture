@@ -1,0 +1,47 @@
+\begin{vdm_al}
+
+class Vdm2UmlActiveClassTest is subclass of TestCase
+types
+  public String = seq of char;
+
+instance variables
+  testSpec : [IOmlSpecifications] := nil;
+
+operations
+public Vdm2UmlActiveClassTest: () ==> Vdm2UmlActiveClassTest
+  Vdm2UmlActiveClassTest() == TestCase("Vdm2UmlActiveClassTest");
+
+  protected SetUp: () ==> ()
+  SetUp () == 
+  (
+    --testSpec := new TestData().ClassAbstractOperation.getSpecifications();
+  skip;
+  );
+
+  public test01: () ==> ()
+  test01 () == 
+    ( 
+      dcl vu : Vdm2Uml := new Vdm2Uml();
+      dcl umlClass : [IUmlClass] := nil;
+       
+      --ClassActive
+      vu := new Vdm2Uml();
+      testSpec := new TestData().ClassActive.getSpecifications();
+      
+       let i in set inds testSpec.getClassList() in
+       let cl = testSpec.getClassList()(i) in 
+      (   umlClass := vu.build_Class(cl);
+      
+      assertTrue(umlClass.getName() = cl.getIdentifier());
+      )
+     
+     
+    );
+     
+  
+  protected TearDown: () ==> ()
+  TearDown () == skip
+
+end Vdm2UmlActiveClassTest 
+\end{vdm_al}
+

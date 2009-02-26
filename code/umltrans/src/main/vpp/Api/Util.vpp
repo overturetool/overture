@@ -1,0 +1,73 @@
+class Util is subclass of StdLib
+
+instance variables
+
+  private static writeType : <append> | <start> := <start>;
+  public static outputFileName : seq1 of char := "tmp.xmi"; -- default file name
+  static buf : String := "";
+
+operations
+
+public static Put : String ==> ()
+  Put(pVal) == buf := buf ^pVal;
+
+public static ViewBuf : () ==> ()
+  ViewBuf() == (Print(buf); );
+
+public static SaveBuf : seq1 of char ==> ()
+  SaveBuf(fileName) == (SetFileName(fileName); PrintL(buf););
+
+public static Clear : () ==> ()
+  Clear() == buf := "";
+
+public static Print : seq of char ==> ()
+  Print(debugString) ==
+  (
+    def file = new IOProxy()
+    in
+      file.print(debugString) ;
+  );
+  
+  
+--public static PrintInt: nat ==> ()
+-- PrintInt(i) ==
+-- (
+--   let file = new IO()
+--   in
+--   def - = file.fwriteval[nat]( outputFileName,i,writeType) in skip;
+--   writeType := <append>;
+
+--skip;
+-- );
+ 
+ 
+public static PrintL: seq of char  ==> ()
+ PrintL (line) ==
+ (
+   let file = new IOProxy()
+   in
+   file.overwrite(outputFileName,line);
+  -- def - = file.fwriteval[seq of char]( outputFileName,line,writeType) in skip;
+  -- writeType := <append>;
+ );
+ 
+--public static CreateFile : seq of char ==> ()
+--  CreateFile(fName) ==
+--  (
+--  outputFileName := fName;
+--  let file = new IOProxy(), line = " "
+--   in
+--   file.overwrite(outputFileName,line);
+   --def - = file.fwriteval[seq of char]( outputFileName,line,<start>) in skip;
+
+--);
+
+public static SetFileName : seq1 of char ==> ()
+SetFileName(name) ==
+(
+  outputFileName := name;
+  writeType := <start>;
+);
+
+
+end Util

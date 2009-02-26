@@ -1,0 +1,24 @@
+\begin{vdm_al}
+class Oml2Vpp 
+types
+  public String = seq of char;
+
+
+operations
+
+public Save : String * IOmlDocument ==> ()
+Save(fileName,doc) ==
+(
+  dcl visitor : Oml2VppVisitor := new Oml2VppVisitor();
+  visitor.visitDocument(doc);
+  Util`SetFileName(fileName);
+  Util`PrintL(visitor.result);
+);
+
+end Oml2Vpp
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[Oml2Vpp]
+
+\end{rtinfo}

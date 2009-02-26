@@ -1,0 +1,37 @@
+\begin{vdm_al}
+class Uml2Xmi 
+types
+ public String = seq of char;
+instance variables 
+public  doc : XmlDoc := new XmlDoc();
+
+operations
+
+public Save : seq1 of char * IUmlModel ==> ()
+Save(-, -) == is subclass responsibility;
+
+end Uml2Xmi
+\end{vdm_al}
+
+\begin{vdm_al}
+class XmlDoc is subclass of XmlDocument
+operations
+  public addE: XmlEntity ==> ()
+  addE (pent) == addEntity(pent); 
+  
+  public StartE: seq of char ==> ()
+  StartE (pname) == let - = StartEntity (pname) in skip;
+  
+  public StopE: seq of char ==> ()
+  StopE (pname) == let - = StopEntity (pname) in skip;
+
+  public StartA: seq of char * seq of char ==> ()
+  StartA (pattr,pval) == let - = StartAttribute (pattr,pval) in skip;
+  
+   public StartD: seq of char ==> ()
+  StartD(pdata) == let - = StartData(pdata) in skip;
+
+end XmlDoc
+\end{vdm_al}
+
+

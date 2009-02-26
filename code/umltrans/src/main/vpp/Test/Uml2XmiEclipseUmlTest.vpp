@@ -1,0 +1,117 @@
+\begin{vdm_al}
+
+class Uml2XmiEclipseUmlTest is subclass of TestCase
+types
+  public String = seq of char;
+
+instance variables
+  testSpec : [IOmlSpecifications] := nil;
+
+operations
+public Uml2XmiEclipseUmlTest: () ==> Uml2XmiEclipseUmlTest
+  Uml2XmiEclipseUmlTest() == TestCase("Uml2XmiEclipseUmlTest");
+
+  protected SetUp: () ==> ()
+  SetUp () == 
+  (
+    --testSpec := new TestData().ClassAbstractOperation.getSpecifications();
+  skip;
+  );
+
+  public test01: () ==> ()
+  test01 () == 
+    ( 
+      dcl vu : Vdm2Uml := new Vdm2Uml();
+      dcl xmi : Uml2XmiEclipseUml := new Uml2XmiEclipseUml();
+      dcl fileName : seq1 of char := "ClassAbstractOperation.uml";
+      --abstract class
+      testSpec := new TestData().ClassAbstractOperation.getSpecifications();
+      xmi.Save(fileName,vu.init(testSpec));
+      
+      --ClassAssociation
+      vu := new Vdm2Uml();
+      xmi := new Uml2XmiEclipseUml();
+      fileName := "ClassAssociation.uml";
+      testSpec := new TestData().ClassAssociation.getSpecifications();
+      xmi.Save(fileName,(vu.init(testSpec)));
+      --ClassAssociationN
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEclipseUml();
+      fileName := "ClassAssociationN.uml";
+      testSpec := new TestData().ClassAssociationN.getSpecifications();
+      xmi.Save(fileName,(vu.init(testSpec)));
+    
+      --ClassInheritance
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEclipseUml();
+      fileName := "ClassInheritance.uml";
+      testSpec := new TestData().ClassInheritance.getSpecifications();
+      xmi.Save(fileName,(vu.init(testSpec)));
+      --ClassInstanceUnionType
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEclipseUml();
+      fileName := "ClassInstanceUnionType.uml";
+      testSpec := new TestData().ClassInstanceUnionType.getSpecifications();
+     xmi.Save(fileName,(vu.init(testSpec)));
+      --ClassSimpleOperation
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEclipseUml();
+      fileName := "ClassSimpleOperation.uml";
+      testSpec := new TestData().ClassSimpleOperation.getSpecifications();
+     xmi.Save(fileName,(vu.init(testSpec)));
+      --ClassTemplates
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEclipseUml();
+      fileName := "ClassTemplates.uml";
+      testSpec := new TestData().ClassTemplates.getSpecifications();
+      xmi.Save(fileName,(vu.init(testSpec)));
+      --ClassWithMap
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEclipseUml();
+      fileName := "ClassWithMap.uml";
+      testSpec := new TestData().ClassWithMap.getSpecifications();
+      xmi.Save(fileName,(vu.init(testSpec)));
+      --ClassWithTypes
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEclipseUml();
+      fileName := "ClassWithTypes.uml";
+      testSpec := new TestData().ClassWithTypes.getSpecifications();
+      xmi.Save(fileName,(vu.init(testSpec)));
+      --ClassWithValues
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEclipseUml();
+      fileName := "ClassWithValues.uml";
+      testSpec := new TestData().ClassWithValues.getSpecifications();
+      xmi.Save(fileName,(vu.init(testSpec)));
+      --ClassSimpleFunction
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEclipseUml();
+      fileName := "ClassSimpleFunction.uml";
+      testSpec := new TestData().ClassSimpleFunction.getSpecifications();
+      xmi.Save(fileName,(vu.init(testSpec)));
+      
+      --ClassActive
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEclipseUml();
+      fileName := "ClassActive.uml";
+      testSpec := new TestData().ClassActive.getSpecifications();
+      xmi.Save(fileName,(vu.init(testSpec)));     
+      
+       --ClassActive
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEclipseUml();
+      fileName := "ClassInstanceVar.uml";
+      testSpec := new TestData().ClassInstanceVar.getSpecifications();
+      xmi.Save(fileName,(vu.init(testSpec))); 
+      
+      
+      assertTrue(true);
+    );
+     
+  
+  protected TearDown: () ==> ()
+  TearDown () == skip
+
+end Uml2XmiEclipseUmlTest 
+\end{vdm_al}
+

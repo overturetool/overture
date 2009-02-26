@@ -1,0 +1,125 @@
+\begin{vdm_al}
+
+class Uml2XmiEATest is subclass of TestCase
+types
+  public String = seq of char;
+
+instance variables
+  testSpec : [IOmlSpecifications] := nil;
+
+operations
+public Uml2XmiEATest: () ==> Uml2XmiEATest
+  Uml2XmiEATest() == TestCase("Uml2XmiEATest");
+
+  protected SetUp: () ==> ()
+  SetUp () == 
+  (
+    --testSpec := new TestData().ClassAbstractOperation.getSpecifications();
+  skip;
+  );
+
+  public test01: () ==> ()
+  test01 () == 
+    ( 
+      dcl vu : Vdm2Uml := new Vdm2Uml();
+      dcl xmi : Uml2XmiEAxml := new Uml2XmiEAxml();
+      dcl fileName : seq1 of char := "ClassAbstractOperation.xml";
+      --abstract class
+      testSpec := new TestData().ClassAbstractOperation.getSpecifications();
+      xmi.Save(fileName,vu.init(testSpec));
+      
+      --ClassAssociation
+      vu := new Vdm2Uml();
+      xmi := new Uml2XmiEAxml();
+      fileName := "ClassAssociation.xml";
+      testSpec := new TestData().ClassAssociation.getSpecifications();
+      xmi.Save(fileName,(vu.init(testSpec)));
+      --ClassAssociationN
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEAxml();
+      fileName := "ClassAssociationN.xml";
+      testSpec := new TestData().ClassAssociationN.getSpecifications();
+      xmi.Save(fileName,(vu.init(testSpec)));
+    
+      --ClassInheritance
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEAxml();
+      fileName := "ClassInheritance.xml";
+      testSpec := new TestData().ClassInheritance.getSpecifications();
+      xmi.Save(fileName,(vu.init(testSpec)));
+      --ClassInstanceUnionType
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEAxml();
+      fileName := "ClassInstanceUnionType.xml";
+      testSpec := new TestData().ClassInstanceUnionType.getSpecifications();
+     xmi.Save(fileName,(vu.init(testSpec)));
+      --ClassSimpleOperation
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEAxml();
+      fileName := "ClassSimpleOperation.xml";
+      testSpec := new TestData().ClassSimpleOperation.getSpecifications();
+     xmi.Save(fileName,(vu.init(testSpec)));
+      --ClassTemplates
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEAxml();
+      fileName := "ClassTemplates.xml";
+      testSpec := new TestData().ClassTemplates.getSpecifications();
+      xmi.Save(fileName,(vu.init(testSpec)));
+      --ClassWithMap
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEAxml();
+      fileName := "ClassWithMap.xml";
+      testSpec := new TestData().ClassWithMap.getSpecifications();
+      xmi.Save(fileName,(vu.init(testSpec)));
+      --ClassWithTypes
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEAxml();
+      fileName := "ClassWithTypes.xml";
+      testSpec := new TestData().ClassWithTypes.getSpecifications();
+      xmi.Save(fileName,(vu.init(testSpec)));
+      --ClassWithValues
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEAxml();
+      fileName := "ClassWithValues.xml";
+      testSpec := new TestData().ClassWithValues.getSpecifications();
+      xmi.Save(fileName,(vu.init(testSpec)));
+      --ClassSimpleFunction
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEAxml();
+      fileName := "ClassSimpleFunction.xml";
+      testSpec := new TestData().ClassSimpleFunction.getSpecifications();
+      xmi.Save(fileName,(vu.init(testSpec)));
+      
+      --ClassActive
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEAxml();
+      fileName := "ClassActive.xml";
+      testSpec := new TestData().ClassActive.getSpecifications();
+      xmi.Save(fileName,(vu.init(testSpec)));     
+      
+       --ClassActive
+      vu := new Vdm2Uml();
+       xmi := new Uml2XmiEAxml();
+      fileName := "ClassInstanceVar.xml";
+      testSpec := new TestData().ClassInstanceVar.getSpecifications();
+      xmi.Save(fileName,(vu.init(testSpec))); 
+      
+      
+      
+ --      --ClassActive
+ --     vu := new Vdm2Uml();
+ --      xmi := new Uml2XmiEAxml();
+ --     fileName := "ClassWithMap2.xml";
+ --     testSpec := new TestData().ClassWithMap2.getSpecifications();
+ --     xmi.Save(fileName,(vu.init(testSpec))); 
+      
+      assertTrue(true);
+    );
+     
+  
+  protected TearDown: () ==> ()
+  TearDown () == skip
+
+end Uml2XmiEATest 
+\end{vdm_al}
+

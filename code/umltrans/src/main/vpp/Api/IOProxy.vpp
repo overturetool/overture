@@ -1,0 +1,43 @@
+class IOProxy
+types
+public string = seq of char;
+operations
+public print: string ==> ()
+print(s) ==
+--			let - = IO`fecho("", s, nil) in skip;
+(
+  def file = new IO()
+  in
+    def - = file.echo(s) in skip;
+);
+		
+--	public print: int ==> ()
+--		print(n) ==
+--			let - = IO`fecho("", str(n), nil) in skip;
+
+public append: string * string ==> ()
+append(f, s) ==
+(
+  let file = new IO()
+  in
+    def - = file.fwriteval[seq of char]( f,s,<append>) in skip;
+ 
+);
+		
+--	public append: string * int ==> ()
+--		append(f, n) ==
+--			let - = IO`fecho(f, str(n), <append>) in skip;
+
+public overwrite: string * string ==> ()
+overwrite(f, s) ==
+(
+  let file = new IO()
+  in
+    def - = file.fwriteval[seq of char]( f,s,<start>) in skip;
+);
+		
+--	public overwrite: string * int ==> ()
+--		overwrite(f, n) ==
+--			let - = IO`fecho(f, str(n), <start>) in skip;
+
+end IOProxy

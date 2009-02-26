@@ -1,0 +1,638 @@
+\begin{vdm_al}
+class Uml2XmiEclipseUml is subclass of Uml2Xmi
+types
+ --public String = seq of char;
+ public QualifierInfo ::
+                        AssociationId : String
+                        ClassId : String
+                        QualifierName : String;
+                        
+values
+  ID_TAG : String = "xmi:id";
+--  headerBegin : String = "<?xml version=$1.0$ encoding=$UTF-8$?>
+  ownedMemberElementName : String = "packagedElement";
+
+instance variables
+  protected id : int := 1;
+  protected packageId : int :=0;
+  protected classes : map String to String := {|-> };
+ 
+  protected primitiveTypes : inmap String to String := {|-> };
+  protected associationIdMap : map String to String := {|->};
+  protected oe : String := "";
+  protected extensionTemplateClasses : set of String := {};
+  protected extensionConstrainElem : set of String := {};
+  protected extensionConectorNonNavigable : set of String := {};
+  protected extensionConectorQualifier : set of QualifierInfo := {};
+
+--public  doc : XmlDoc := new XmlDoc();
+--modelEntity : XmlEntity;
+operations
+
+public Save : seq1 of char * IUmlModel ==> ()
+Save(fileName, model) ==
+(
+  dcl xmlVisitor : XmlFileOutputVisitor := new XmlFileOutputVisitor();
+  --CreateFile(fileName);
+  CreateXmlFile(model);
+  Util`Clear();
+  
+  xmlVisitor.VisitXmlDocument(doc);
+  Util`SaveBuf(fileName);
+); 
+
+ 
+protected CreateXmlFile : IUmlModel ==> ()
+CreateXmlFile(m) ==
+(
+  oe := ownedMemberElementName;
+
+  doc.StartE("uml:Model");
+  doc.StartA("xmi:version","2.1");
+  doc.StartA("xmlns:uml","http://www.eclipse.org/uml2/2.1.0/UML");
+  doc.StartA("xmlns:xmi","http://schema.omg.org/spec/XMI/2.1");
+  
+ -- doc.StartE("xmi:Documentation");
+ -- doc.StartA("xmi:Exporter","Enterprise Architect");
+ -- doc.StartA("xmi:ExporterVersion","6.5");
+ -- doc.StopE("xmi:Documentation");
+  
+ doc.StartA(ID_TAG,GetId(packageId));
+  
+  --PrintL(headerBegin);
+ -- doc.StartE("uml:Model");
+  --doc.StartA("name",m.getName());
+  --PrintL("<uml:Model name="^ esc ^ m.getName() ^ esc ^" ");
+  --let - = PrintId() in skip;
+  --doc.StartA(ID_TAG,GetNextId());
+  
+  doc.StartE(oe);
+  doc.StartA("xmi:type","uml:Package");
+  doc.StartA(ID_TAG,GetId(packageId));
+  doc.StartA("name","VDM Generated model");
+  --PrintIdT("<" ^ oe ^ " xmi:type=$uml:Package$ xmi:id=$",packageId,"$ name=$VDM Generated model$ visibility=$public$>");
+  PrintStdTypes();
+  GenerateClassIds(m.getDefinitions());
+  PrintClassDef(m.getDefinitions());--need to build map of classIds first
+  PrintAssociationDef(m.getDefinitions());
+  --PrintConstraintDef(m.getDefinitions());
+  
+  doc.StopE(oe);
+  --PrintL("</" ^ oe ^ ">");
+  --PrintL("</uml:Model>");
+  --doc.StopE("uml:Model");
+  
+  --PrintExstention();
+  --PrintL(headerEnd);
+   
+  doc.StopE("uml:Model");
+  ); 
+ 
+private PrintConstraintDef : set of IUmlModelElement ==>()
+PrintConstraintDef (defs) ==
+(
+  for all c in set {d | d in set defs  }
+  do 
+  (
+    cases true:
+      (isofclass(IUmlConstraint,c)) -> PrintConstraint(c)
+    end;
+  );
+  
+);
+
+
+
+
+
+
+
+private PrintConstraint : IUmlConstraint ==> ()
+PrintConstraint(c) ==
+(
+  doc.StartE(oe);
+  doc.StartA("xmi:type","uml:Constraint");
+  let constrainId = GetNextId() 
+  in 
+    (extensionConstrainElem := extensionConstrainElem union {constrainId};
+     doc.StartA(ID_TAG,constrainId);
+    );
+  
+  for all a in set c.getConstraintElements()
+  do 
+  (
+    doc.StartE("constrainedElement");
+    doc.StartA("xmi:idref", associationIdMap(a));
+    doc.StopE("constrainedElement");
+  ); 				
+  doc.StartE("specification");
+  doc.StartA("xmi:type","uml:OpaqueExpression");
+  doc.StartA(ID_TAG,GetNextId());
+  doc.StopE("specification");
+  
+  doc.StartE("body");
+  doc.StartD(if isofclass(IUmlLiteralString,c.getSpecification()) 
+             then let spec : IUmlLiteralString = c.getSpecification() 
+             in
+               spec.getValue()
+             else "");
+  doc.StopE("body");
+  
+  doc.StopE("specification");
+  doc.StopE(oe);
+  
+);
+
+private PrintExstention : () ==> ()
+PrintExstention() ==
+(
+  doc.StartE("xmi:Extension");
+  doc.StartA("extender","Enterprise Architect");
+  doc.StartA("extenderID","6.5");
+  
+  doc.StartE("elements");
+  for all c in set extensionTemplateClasses
+  do
+  (
+    doc.StartE("element");
+    doc.StartA("xmi:idref",classes(c));
+    doc.StartA("xmi:type","uml:Class");
+    doc.StartA("name",c);
+    doc.StartA("scope","public");
+    
+    doc.StartE("properties");
+    doc.StartA("sType","Class");
+    doc.StartA("nType","1");
+    
+    doc.StopE("element");
+  );
+  for all constrainId in set extensionConstrainElem
+  do
+  (
+    doc.StartE("element");
+    doc.StartA("xmi:idref",constrainId);
+    doc.StartA("xmi:type","uml:Constraint");
+    doc.StartA("scope","public");
+    
+    doc.StartE("properties");
+    doc.StartA("documentation","xor");
+    doc.StartA("isSpecification","false");
+    doc.StartA("sType","Constraint");
+    doc.StartA("nType","2");
+    doc.StartA("scope","public");
+    doc.StopE("properties");
+    
+    doc.StopE("element");
+  
+  );
+  
+  doc.StopE("elements");
+  --diagrams
+  doc.StartE("diagrams");
+  for all constrainId in set extensionConstrainElem
+  do
+  (
+    doc.StartE("diagram");
+    doc.StartA(ID_TAG, GetNextId());
+    
+    doc.StartE("model");
+    doc.StartA("package",GetId(packageId));
+    doc.StartA("localID","24");
+    doc.StartA("owner",GetId(packageId));
+    doc.StopE("model");
+    
+    doc.StartE("properties");
+    doc.StartA("name","Constrain diagram " ^ constrainId);
+    doc.StartA("type","Logical");
+    doc.StopE("properties");
+    
+    doc.StartE("elements");
+    doc.StartE("element");
+    doc.StartA("geometry","Left=100;Top=100;Right=100;Bottom=100;");
+    doc.StartA("subject", constrainId);
+    doc.StartA("seqno","1");
+    doc.StartA("style","DUID=AE8AC20D;");
+    doc.StopE("element");
+    doc.StopE("elements");
+    
+    doc.StopE("diagram");
+  
+  );
+  doc.StopE("diagrams");
+  
+  doc.StartE("connectors");
+  for all associationEndId in set extensionConectorNonNavigable
+  do
+  (
+      doc.StartE("connector");
+      doc.StartA("xmi:idref",associationEndId);
+      doc.StartE("properties");
+      doc.StartA("ea_type","Association");
+      doc.StartA("direction","Unspecified");
+      doc.StopE("properties");
+      doc.StopE("connector");
+  );
+  for all qualifier in set extensionConectorQualifier
+  do
+  (
+    doc.StartE("connector");
+    doc.StartA("xmi:idref",qualifier.AssociationId);
+    doc.StartE("target");
+    doc.StartA("xmi:idref",qualifier.ClassId);
+    doc.StartE("constraints");
+    doc.StartA("qualifier",qualifier.QualifierName);
+    doc.StopE("constraints");
+    doc.StopE("target");
+    doc.StopE("connector");
+  );
+  doc.StopE("connectors");
+  
+  doc.StopE("xmi:Extension");
+  
+-- to show the {ordered} on an association this needs to be entered
+--      <connector xmi:idref="EAID_A6AFEFE4_A68B_4d81_8CCB_88C8E89CC700">
+--        <target xmi:idref="EAID_8777132A_5532_4394_9764_BF52851D465F">
+--          <modifiers isOrdered="true" changeable="none" isNavigable="true"/>
+--        </target>
+--      </connector>
+);
+
+
+ 
+protected PrintAssociationDef : set of IUmlModelElement ==>()
+PrintAssociationDef (defs) ==
+(
+  for all c in set {d | d in set defs  }
+  do 
+  (
+    cases true:
+      (isofclass(IUmlAssociation,c)) -> PrintAssociation(c)
+    end;
+  );
+  
+);
+
+protected PrintClassDef : set of IUmlModelElement ==>()
+PrintClassDef (defs) ==
+(
+  for all c in set {d | d in set defs  }
+  do 
+  (
+    cases true:
+      (isofclass(IUmlClass,c)) -> PrintClass(c)
+    end;
+  );
+);
+
+protected GenerateClassIds : set of IUmlModelElement ==>()
+GenerateClassIds (defs) ==
+(
+  for all c in set {d | d in set defs  }
+  do 
+  (
+    cases true:
+      (isofclass(IUmlClass,c)) -> 
+      (
+        --id := id+1;
+        let cl : IUmlClass = c in
+        classes := classes ++{cl.getName() |-> GetNextId()};
+      )
+    end;
+  );
+);
+ 
+protected PrintClass : IUmlClass ==> ()
+PrintClass (cl) ==
+(
+  doc.StartE(oe);
+  doc.StartA("isAbstract", Util`ToStringBool(cl.getIsAbstract()));
+  doc.StartA("isActive",Util`ToStringBool(cl.getIsActive()));
+  doc.StartA("isLeaf","false");--never the case it cannot happen in VDM
+  doc.StartA("name",cl.getName());
+  doc.StartA("visibility","public");
+  
+  doc.StartA(ID_TAG,classes(cl.getName()));
+  doc.StartA("xmi:type","uml:Class");
+  
+  PrintPropeties(dunion {let d : IUmlOwnedProperties = df in d.getPropetityList() | 
+                 df in set cl.getClassBody() & isofclass(IUmlOwnedProperties,df)});
+  PrintOperstions(dunion {let d : IUmlOwnedOperations = df in d.getOperationList() | 
+                  df in set cl.getClassBody() & isofclass(IUmlOwnedOperations,df)});
+  if len cl.getSuperClass()>0 then AddGeneralization(cl.getSuperClass());
+  --if cl.hasTemplatesignature() then 
+  --                              (  PrintTemplates(cl.getTemplatesignature());  extensionTemplateClasses := extensionTemplateClasses union {cl.getName()});
+  
+  doc.StopE(oe);
+
+);
+
+protected PrintPropeties : set of IUmlProperty ==> ()
+PrintPropeties(propeties) ==
+(
+	for all prop in set propeties
+	do
+	(
+	  doc.StartE("ownedAttribute");
+	 -- PrintL("aggregation=$" ^"none" ^"$" ); --if we write this attribute the tools think it is an association end
+	  doc.StartA("name",prop.getName());
+	  doc.StartA("ownerScope","instance");
+	  
+	  if prop.hasIsStatic() then doc.StartA("isStatic",Util`ToStringBool(prop.getIsStatic()));
+	--  PrintIdT("type=$",GetUmlPrimitiveTypeId(prop.getType()),"$ ");
+	  doc.StartA("visibility",GetVisibilityKind(prop.getVisibility()));
+	  doc.StartA(ID_TAG,GetNextId());
+	  
+	  doc.StartA("xmi:type","uml:Property");
+	  if prop.hasMultiplicity() then
+	  (
+	    doc.StartA("isOrdered",Util`ToStringBool(prop.getMultiplicity().getIsOrdered()));
+	    
+		PrintAssociationMp(prop.getMultiplicity());
+	  );
+	  doc.StartE("defaultValue");
+	    cases true:
+	      (isofclass(IUmlLiteralString,prop.getDefault())) ->
+	        let ls : IUmlLiteralString = prop.getDefault()
+	        in
+	        ( 
+	          doc.StartA("xmi:type","uml:LiteralString"); 
+	          doc.StartA("value",ls.getValue());
+	        ),
+	      (isofclass(IUmlLiteralInteger,prop.getDefault())) ->
+	        let li : IUmlLiteralInteger = prop.getDefault()
+	        in
+	        (
+	          doc.StartA("xmi:type","uml:LiteralInteger"); 
+	          doc.StartA("value",StdLib`ToStringInt(li.getValue()));
+	        )
+	    end;
+	    doc.StartA(ID_TAG,GetNextId());
+	    doc.StopE("defaultValue");
+	  doc.StartE("type");
+	  doc.StartA("xmi:idref",GetUmlPrimitiveTypeId(prop.getType()));
+	  doc.StopE("type");
+	  
+	  doc.StopE("ownedAttribute");
+	);
+);
+
+protected PrintOperstions : set of IUmlOperation ==> ()
+PrintOperstions(ops) ==
+(
+	for all op in set ops
+	do
+	(
+	  doc.StartE("ownedOperation");
+	  doc.StartA("isAbstract","false");
+	  doc.StartA("isLeaf","false");--never the case it cannot happen in VDM
+	  doc.StartA("isQuery","false");
+	  doc.StartA("name",op.getName());
+	  doc.StartA("ownerScope","instance");
+	  doc.StartA("visibility",GetVisibilityKind(op.getVisibility()));
+	  doc.StartA(ID_TAG,GetNextId());
+	  doc.StartA("xmi:type","uml:Operation");
+	  --parameters
+	  doc.StopE("ownedOperation");
+	  
+	);
+);
+
+
+protected PrintAssociation : IUmlAssociation ==> ()
+PrintAssociation(association) ==
+(
+  doc.StartE(oe);
+  doc.StartA("isAbstract","false");
+  doc.StartA("isDerived","false");
+  doc.StartA("isLeaf","false"); --never the case it cannot happen in VDM
+  doc.StartA("name","");--association.getName()
+  let associationId = GetNextId()
+  in
+  (
+    doc.StartA(ID_TAG,associationId);
+    associationIdMap := associationIdMap ++ {association.getId() |-> associationId}; 
+    doc.StartA("xmi:type","uml:Association");
+    for all prop in set {mk_(p,false)|p in set association.getOwnedEnds()} 
+      union {mk_(p,true)|p in set association.getOwnedNavigableEnds()} 
+    do
+    (
+       if prop.#1.hasQualifier() then 
+       (
+      --   let nonQualifieredEnds : set of IUmlProperty = {p | p in set association.getOwnedEnds() 
+      --     & p.hasQualifier()} union 
+      --     {p | p in set association.getOwnedNavigableEnds()& p.hasQualifier()} 
+      --   in
+      --   (
+      --     dcl tmp : seq of IUmlProperty :=[];
+      --     for all p in set {pp | pp in set nonQualifieredEnds & pp <> prop.#1}
+      --     do
+      --       tmp := tmp ^ [p];
+           extensionConectorQualifier := extensionConectorQualifier union 
+             {mk_QualifierInfo(associationId,
+               GetTypeId(prop.#1.getType()),--prop.#1.getOwnerClass()--let cn: IUmlClassNameType = (hd tmp).getType() in classes(cn.getName()),
+               (inverse primitiveTypes)(GetUmlPrimitiveTypeId(prop.#1.getQualifier())))};
+      --    );
+        );
+		  
+      doc.StartE("ownedEnd");
+      doc.StartA("aggregation","none");
+      doc.StartA("association",associationId);
+      doc.StartA("isNavigable",Util`ToStringBool(prop.#2));
+      if len(prop.#1.getName()) > 0 then
+        doc.StartA("name",prop.#1.getName())
+      else
+        doc.StartA("name","");
+      doc.StartA("visibility",GetVisibilityKind(prop.#1.getVisibility()));
+      let associationEndId = GetNextId() 
+      in
+      (
+        doc.StartA(ID_TAG,associationEndId);
+        doc.StartA("xmi:type","uml:Property");
+        if prop.#1.hasMultiplicity() then
+        (
+          doc.StartA("isOrdered",Util`ToStringBool(prop.#1.getMultiplicity().getIsOrdered()));
+          PrintAssociationMp(prop.#1.getMultiplicity());--multiplicity here
+        );
+        if not prop.#2 then --isn't navigable
+          extensionConectorNonNavigable := extensionConectorNonNavigable union {associationEndId};
+		if prop.#1.hasIsStatic() then doc.StartA("isStatic",Util`ToStringBool(prop.#1.getIsStatic()));
+        doc.StartE("type");
+        doc.StartA("xmi:idref",GetTypeId(prop.#1.getType()));--,prop.#1.getOwnerClass()
+        doc.StopE("type");    
+        doc.StopE("ownedEnd");
+        doc.StartE("memberEnd");
+        doc.StartA("xmi:idref",associationEndId);
+        doc.StopE("memberEnd");
+       );
+     );	
+    doc.StopE(oe);
+   );
+);
+
+protected PrintAssociationMp : IUmlMultiplicityElement ==> ()
+PrintAssociationMp(me) ==
+(
+  --if lower and upper are the same then print it as a int
+  
+  --lower
+  doc.StartE("lowerValue");
+  doc.StartA("value",Util`ToString[nat](me.getLower()));
+  doc.StartA(ID_TAG,GetNextId());
+  doc.StartA("xmi:type","uml:LiteralInteger");
+  doc.StopE("lowerValue");
+  --upper
+  if me.hasUpper()  
+  then
+  ( 
+    doc.StartE("upperValue");
+    doc.StartA("value",Util`ToString[nat](me.getUpper()));
+    doc.StartA(ID_TAG,GetNextId());
+    doc.StartA("xmi:type","uml:LiteralInteger");
+    doc.StopE("upperValue"); 
+  )
+  else 
+  (
+    doc.StartE("upperValue");
+    doc.StartA("value","*");
+    doc.StartA(ID_TAG,GetNextId());
+    doc.StartA("xmi:type","uml:LiteralString");
+    doc.StopE("upperValue"); 
+  )
+);
+
+-- Add generalization to XML model
+protected AddGeneralization : seq of IUmlClassNameType ==> ()
+AddGeneralization(supers) ==
+(
+  for all a in set elems supers
+  do 
+  (
+    doc.StartE("generalization");
+    doc.StartA("xmi:type","uml:Generalization");
+    doc.StartA(ID_TAG,GetNextId());
+    doc.StartA("general",classes(a.getName()));
+    doc.StopE("generalization");
+  ); 
+
+);
+
+protected PrintTemplates : IUmlTemplateSignature ==> ()
+PrintTemplates(tps) ==
+(
+  doc.StartE("ownedTemplateSignature");
+  doc.StartA("xmi:type","uml:TemplateSignature");
+  doc.StartA(ID_TAG,GetNextId());
+  for all a in set tps.getTemplateParameters()
+  do 
+  ( 
+    dcl parameterId : String := GetNextId();
+    doc.StartE("ownedParameter");
+    doc.StartA("xmi:type","uml:ClassifierTemplateParameter");
+    doc.StartA(ID_TAG,parameterId);
+    doc.StartE("ownedElement");
+    doc.StartA("xmi:type","uml:Class");
+    doc.StartA(ID_TAG,GetNextId());
+	doc.StartA("name", a.getName());
+--	doc.StartA("visibility", GetVisibilityKind(a.getVisibility()));
+	doc.StartA("templateParameter",parameterId);
+	doc.StopE("ownedElement");
+	
+   doc.StopE("ownedParameter");
+   
+   doc.StartE("parameter");
+   doc.StartA("xmi:idref",parameterId);
+   doc.StopE("parameter");
+   );
+  doc.StopE("ownedTemplateSignature");
+  
+);
+
+
+protected GetUmlPrimitiveTypeId : IUmlType ==> String
+GetUmlPrimitiveTypeId(t) ==
+  cases true:
+	(isofclass(IUmlBoolType,t))		-> return primitiveTypes("bool"),
+	(isofclass(IUmlIntegerType,t))	-> return primitiveTypes("int"),
+	(isofclass(IUmlCharType,t))		-> return primitiveTypes("char"),
+	others 							-> return primitiveTypes("String")
+  end;
+ 
+protected PrintStdTypes : () ==> ()
+PrintStdTypes() ==
+(
+  primitiveTypes := primitiveTypes ++ {"bool"|->PrintPrimitiveType("bool")};
+  --primitiveTypes := primitiveTypes ++ {"nat1"|->PrintPrimitiveType("nat1")};
+  --primitiveTypes := primitiveTypes ++ {"nat"|->PrintPrimitiveType("nat")};
+  primitiveTypes := primitiveTypes ++ {"int"|->PrintPrimitiveType("int")};
+  --primitiveTypes := primitiveTypes ++ {"rat"|->PrintPrimitiveType("rat")};
+  --primitiveTypes := primitiveTypes ++ {"real"|->PrintPrimitiveType("real")};
+  primitiveTypes := primitiveTypes ++ {"char"|->PrintPrimitiveType("char")};
+  --primitiveTypes := primitiveTypes ++ {"quote"|->PrintPrimitiveType("quote")};
+  --primitiveTypes := primitiveTypes ++ {"token"|->PrintPrimitiveType("token")};
+  primitiveTypes := primitiveTypes ++ {"String"|->PrintPrimitiveType("String")};
+   primitiveTypes := primitiveTypes ++ {"unlimitedNatural"|->PrintPrimitiveType("unlimitedNatural")};
+  --primitiveTypes := primitiveTypes ++ {"ProductType"|->PrintPrimitiveType("ProductType")};
+  primitiveTypes := primitiveTypes ++ {"NotSupportedType"|->PrintPrimitiveType("NotSupportedType")};
+);
+protected PrintPrimitiveType : String ==> String
+PrintPrimitiveType(typeName) ==
+(
+  doc.StartE(oe);
+  doc.StartA("name",typeName);
+  doc.StartA("visibility","public");
+	let tid = GetNextId() in 
+	(
+	  doc.StartA(ID_TAG,tid);
+	  doc.StartA("xmi:type","uml:Class");--uml:DataType
+	  doc.StopE(oe);
+	  return tid;
+	);  
+);
+
+protected GetTypeId : IUmlType  ==> String
+GetTypeId(t) == --owner --* String
+ cases true:
+   (isofclass(IUmlClassNameType,t)) -> 
+     let qc : IUmlClassNameType = t in (
+       if exists x in set dom classes & x = qc.getName() 
+       then ( return classes(qc.getName())) 
+       else (return primitiveTypes("NotSupportedType"))),
+   (isofclass(IUmlBoolType,t))	,
+	(isofclass(IUmlIntegerType,t)),
+	(isofclass(IUmlCharType,t)),
+	(isofclass(IUmlUnlimitedNatural,t))	-> return GetUmlPrimitiveTypeId(t),
+--     return classes(owner),--primitiveTypes("ProductType"),
+   others                     -> 
+     return primitiveTypes("NotSupportedType")
+ end;
+
+ protected GetNextId : () ==> String
+ GetNextId() ==
+ (
+   id := id+1;
+   return GetId( id);
+ 
+ );
+ 
+functions
+protected GetId : int -> String
+GetId(idNum) ==
+  "VDM." ^ Util`ToString[int](idNum);
+ 
+protected GetVisibilityKind : IUmlVisibilityKind -> String
+GetVisibilityKind(visibility) ==
+  cases visibility.getValue():
+     (UmlVisibilityKindQuotes`IQPUBLIC) -> ("public"),
+     (UmlVisibilityKindQuotes`IQPRIVATE) -> ("private"),
+     (UmlVisibilityKindQuotes`IQPROTECTED) -> ("protected")
+--     (UmlVisibilityKindQuotes`IQPACKAGE) -> return ("package"),
+ --    others -> error --return ("none")
+  end
+end Uml2XmiEclipseUml
+\end{vdm_al}
+
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[Uml2XmiEclipseUml]
+
+\end{rtinfo}
