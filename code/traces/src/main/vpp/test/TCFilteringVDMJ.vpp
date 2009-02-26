@@ -1,0 +1,63 @@
+class TCFilteringVDMJ is subclass of TestCase
+
+operations
+public TCFilteringVDMJ: () ==> TCFilteringVDMJ
+TCFilteringVDMJ() == TestCase("TCFilteringVDMJ");
+
+protected SetUp: () ==> ()
+ SetUp () == skip;
+
+public test_traceseq_traceseq_01: () ==> ()
+test_traceseq_traceseq_01 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_traceseq_traceseq_01().getSpecifications(), 
+                           "traceseq-01.vdm") = { "UseStackPushBeforePop1" |-> [ "s.Reset()","s.Push(6)" ] });
+);
+
+public test_traceseq_traceseq_02: () ==> ()
+test_traceseq_traceseq_02 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_traceseq_traceseq_02().getSpecifications(), 
+                           "traceseq-02.vdm") = {"UseStackPushBeforePop2" |-> ["s.Reset()", "let x  =2  in s.Push(x)", "s.Pop()"], "UseStackPushBeforePop1" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()"]});
+);
+
+public runTest: ( TestResult ) ==> ()
+runTest (ptr) ==( 
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_traceseq_traceseq_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_traceseq_traceseq_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_traceseq_traceseq_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_traceseq_traceseq_02();
+       );
+
+
+
+);
+
+protected TearDown: () ==> ()
+
+TearDown () == skip;
+
+end TCFilteringVDMJ
+

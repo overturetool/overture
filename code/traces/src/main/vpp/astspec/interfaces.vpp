@@ -1,0 +1,3794 @@
+\begin{vdm_al}
+class IOmlAccessDefinition
+ is subclass of IOmlNode
+
+operations
+  public getAsyncAccess: () ==> bool
+  getAsyncAccess() == is subclass responsibility;
+
+operations
+  public getStaticAccess: () ==> bool
+  getStaticAccess() == is subclass responsibility;
+
+operations
+  public getScope: () ==> IOmlScope
+  getScope() == is subclass responsibility;
+
+end IOmlAccessDefinition
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlActExpression
+ is subclass of IOmlExpression
+
+operations
+  public getNameList: () ==> seq of IOmlName
+  getNameList() == is subclass responsibility;
+
+end IOmlActExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlActiveExpression
+ is subclass of IOmlExpression
+
+operations
+  public getNameList: () ==> seq of IOmlName
+  getNameList() == is subclass responsibility;
+
+end IOmlActiveExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlAlwaysStatement
+ is subclass of IOmlStatement
+
+operations
+  public getAlwaysPart: () ==> IOmlStatement
+  getAlwaysPart() == is subclass responsibility;
+
+operations
+  public getInPart: () ==> IOmlStatement
+  getInPart() == is subclass responsibility;
+
+end IOmlAlwaysStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlApplyExpression
+ is subclass of IOmlExpression
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+operations
+  public getExpressionList: () ==> seq of IOmlExpression
+  getExpressionList() == is subclass responsibility;
+
+end IOmlApplyExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlAssignStatement
+ is subclass of IOmlStatement
+
+operations
+  public getStateDesignator: () ==> IOmlStateDesignator
+  getStateDesignator() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlAssignStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlAssignmentDefinition
+ is subclass of IOmlNode
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+operations
+  public getType: () ==> IOmlType
+  getType() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+  public hasExpression: () ==> bool
+  hasExpression () == is subclass responsibility;
+
+end IOmlAssignmentDefinition
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlAtomicStatement
+ is subclass of IOmlStatement
+
+operations
+  public getAssignmentList: () ==> seq of IOmlAssignStatement
+  getAssignmentList() == is subclass responsibility;
+
+end IOmlAtomicStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlBinaryExpression
+ is subclass of IOmlExpression
+
+operations
+  public getLhsExpression: () ==> IOmlExpression
+  getLhsExpression() == is subclass responsibility;
+
+operations
+  public getOperator: () ==> IOmlBinaryOperator
+  getOperator() == is subclass responsibility;
+
+operations
+  public getRhsExpression: () ==> IOmlExpression
+  getRhsExpression() == is subclass responsibility;
+
+end IOmlBinaryExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlBinaryOperator
+ is subclass of IOmlNode
+
+operations
+  public getValue: () ==> nat
+  getValue () == is subclass responsibility;
+
+  public getStringValue: () ==> seq of char
+  getStringValue() == is subclass responsibility
+
+end IOmlBinaryOperator
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlBind
+ is subclass of IOmlPatternBind
+
+end IOmlBind
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlBlockStatement
+ is subclass of IOmlStatement
+
+operations
+  public getDclStatementList: () ==> seq of IOmlDclStatement
+  getDclStatementList() == is subclass responsibility;
+
+operations
+  public getStatementList: () ==> seq of IOmlStatement
+  getStatementList() == is subclass responsibility;
+
+end IOmlBlockStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlBoolType
+ is subclass of IOmlType
+
+end IOmlBoolType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlBooleanLiteral
+ is subclass of IOmlLiteral
+
+operations
+  public getVal: () ==> bool
+  getVal() == is subclass responsibility;
+
+end IOmlBooleanLiteral
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlBracketedExpression
+ is subclass of IOmlExpression
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlBracketedExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlBracketedType
+ is subclass of IOmlType
+
+operations
+  public getType: () ==> IOmlType
+  getType() == is subclass responsibility;
+
+end IOmlBracketedType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlCallStatement
+ is subclass of IOmlStatement
+
+operations
+  public getObjectDesignator: () ==> IOmlObjectDesignator
+  getObjectDesignator() == is subclass responsibility;
+
+  public hasObjectDesignator: () ==> bool
+  hasObjectDesignator () == is subclass responsibility;
+
+operations
+  public getName: () ==> IOmlName
+  getName() == is subclass responsibility;
+
+operations
+  public getExpressionList: () ==> seq of IOmlExpression
+  getExpressionList() == is subclass responsibility;
+
+end IOmlCallStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlCasesExpression
+ is subclass of IOmlExpression
+
+operations
+  public getMatchExpression: () ==> IOmlExpression
+  getMatchExpression() == is subclass responsibility;
+
+operations
+  public getAlternativeList: () ==> seq of IOmlCasesExpressionAlternative
+  getAlternativeList() == is subclass responsibility;
+
+operations
+  public getOthersExpression: () ==> IOmlExpression
+  getOthersExpression() == is subclass responsibility;
+
+  public hasOthersExpression: () ==> bool
+  hasOthersExpression () == is subclass responsibility;
+
+end IOmlCasesExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlCasesExpressionAlternative
+ is subclass of IOmlNode
+
+operations
+  public getPatternList: () ==> seq of IOmlPattern
+  getPatternList() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlCasesExpressionAlternative
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlCasesStatement
+ is subclass of IOmlStatement
+
+operations
+  public getMatchExpression: () ==> IOmlExpression
+  getMatchExpression() == is subclass responsibility;
+
+operations
+  public getAlternativeList: () ==> seq of IOmlCasesStatementAlternative
+  getAlternativeList() == is subclass responsibility;
+
+operations
+  public getOthersStatement: () ==> IOmlStatement
+  getOthersStatement() == is subclass responsibility;
+
+  public hasOthersStatement: () ==> bool
+  hasOthersStatement () == is subclass responsibility;
+
+end IOmlCasesStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlCasesStatementAlternative
+ is subclass of IOmlNode
+
+operations
+  public getPatternList: () ==> seq of IOmlPattern
+  getPatternList() == is subclass responsibility;
+
+operations
+  public getStatement: () ==> IOmlStatement
+  getStatement() == is subclass responsibility;
+
+end IOmlCasesStatementAlternative
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlCharType
+ is subclass of IOmlType
+
+end IOmlCharType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlCharacterLiteral
+ is subclass of IOmlLiteral
+
+operations
+  public getVal: () ==> char
+  getVal() == is subclass responsibility;
+
+end IOmlCharacterLiteral
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlClass
+ is subclass of IOmlNode
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+operations
+  public getGenericTypes: () ==> seq of IOmlType
+  getGenericTypes() == is subclass responsibility;
+
+operations
+  public getInheritanceClause: () ==> IOmlInheritanceClause
+  getInheritanceClause() == is subclass responsibility;
+
+  public hasInheritanceClause: () ==> bool
+  hasInheritanceClause () == is subclass responsibility;
+
+operations
+  public getClassBody: () ==> seq of IOmlDefinitionBlock
+  getClassBody() == is subclass responsibility;
+
+operations
+  public getSystemSpec: () ==> bool
+  getSystemSpec() == is subclass responsibility;
+
+end IOmlClass
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlClassTypeInstantiation
+ is subclass of IOmlType
+
+operations
+  public getName: () ==> IOmlName
+  getName() == is subclass responsibility;
+
+operations
+  public getGenericTypes: () ==> seq of IOmlType
+  getGenericTypes() == is subclass responsibility;
+
+end IOmlClassTypeInstantiation
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlComplexType
+ is subclass of IOmlTypeShape
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+operations
+  public getFieldList: () ==> seq of IOmlField
+  getFieldList() == is subclass responsibility;
+
+operations
+  public getInvariant: () ==> IOmlInvariant
+  getInvariant() == is subclass responsibility;
+
+  public hasInvariant: () ==> bool
+  hasInvariant () == is subclass responsibility;
+
+end IOmlComplexType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlCompositeType
+ is subclass of IOmlType
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+operations
+  public getFieldList: () ==> seq of IOmlField
+  getFieldList() == is subclass responsibility;
+
+end IOmlCompositeType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlCyclesStatement
+ is subclass of IOmlStatement
+
+operations
+  public getCyclesExpression: () ==> seq of IOmlExpression
+  getCyclesExpression() == is subclass responsibility;
+
+operations
+  public getStatement: () ==> IOmlStatement
+  getStatement() == is subclass responsibility;
+
+end IOmlCyclesStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlDclStatement
+ is subclass of IOmlStatement
+
+operations
+  public getDefinitionList: () ==> seq of IOmlAssignmentDefinition
+  getDefinitionList() == is subclass responsibility;
+
+end IOmlDclStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlDefExpression
+ is subclass of IOmlExpression
+
+operations
+  public getPatternBindList: () ==> seq of IOmlPatternBindExpression
+  getPatternBindList() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlDefExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlDefStatement
+ is subclass of IOmlStatement
+
+operations
+  public getDefinitionList: () ==> seq of IOmlEqualsDefinition
+  getDefinitionList() == is subclass responsibility;
+
+operations
+  public getStatement: () ==> IOmlStatement
+  getStatement() == is subclass responsibility;
+
+end IOmlDefStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlDefinitionBlock
+ is subclass of IOmlNode
+
+end IOmlDefinitionBlock
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlDocument
+
+operations
+  public getFilename: () ==> seq of char
+  getFilename () == is subclass responsibility;
+
+  public hasSpecifications: () ==> bool
+  hasSpecifications () == is subclass responsibility;
+
+  public getSpecifications: () ==> IOmlSpecifications
+  getSpecifications () == is subclass responsibility;
+
+  public hasExpression: () ==> bool
+  hasExpression () == is subclass responsibility;
+
+  public getExpression: () ==> IOmlExpression
+  getExpression () == is subclass responsibility;
+
+  public getLexems: () ==> seq of IOmlLexem
+  getLexems () == is subclass responsibility;
+
+  public toVdmSlValue: () ==> seq of char
+  toVdmSlValue () == is subclass responsibility;
+
+  public toVdmPpValue: () ==> seq of char
+  toVdmPpValue () == is subclass responsibility;
+
+  public accept: IOmlVisitor ==> ()
+  accept (-) == is subclass responsibility
+
+end IOmlDocument
+\end{vdm_al}
+\begin{vdm_al}
+class IOmlDontCarePattern
+ is subclass of IOmlPattern
+
+end IOmlDontCarePattern
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlDurationStatement
+ is subclass of IOmlStatement
+
+operations
+  public getDurationExpression: () ==> seq of IOmlExpression
+  getDurationExpression() == is subclass responsibility;
+
+operations
+  public getStatement: () ==> IOmlStatement
+  getStatement() == is subclass responsibility;
+
+end IOmlDurationStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlElseIfExpression
+ is subclass of IOmlNode
+
+operations
+  public getElseifExpression: () ==> IOmlExpression
+  getElseifExpression() == is subclass responsibility;
+
+operations
+  public getThenExpression: () ==> IOmlExpression
+  getThenExpression() == is subclass responsibility;
+
+end IOmlElseIfExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlElseIfStatement
+ is subclass of IOmlNode
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+operations
+  public getStatement: () ==> IOmlStatement
+  getStatement() == is subclass responsibility;
+
+end IOmlElseIfStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlEmptyType
+ is subclass of IOmlType
+
+end IOmlEmptyType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlEqualsDefinition
+ is subclass of IOmlNode
+
+operations
+  public getPatternBind: () ==> IOmlPatternBind
+  getPatternBind() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlEqualsDefinition
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlError
+ is subclass of IOmlNode
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+operations
+  public getLhs: () ==> IOmlExpression
+  getLhs() == is subclass responsibility;
+
+operations
+  public getRhs: () ==> IOmlExpression
+  getRhs() == is subclass responsibility;
+
+end IOmlError
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlErrorStatement
+ is subclass of IOmlStatement
+
+end IOmlErrorStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlExceptions
+ is subclass of IOmlNode
+
+operations
+  public getErrorList: () ==> seq of IOmlError
+  getErrorList() == is subclass responsibility;
+
+end IOmlExceptions
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlExistsExpression
+ is subclass of IOmlExpression
+
+operations
+  public getBindList: () ==> seq of IOmlBind
+  getBindList() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlExistsExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlExistsUniqueExpression
+ is subclass of IOmlExpression
+
+operations
+  public getBind: () ==> IOmlBind
+  getBind() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlExistsUniqueExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlExitStatement
+ is subclass of IOmlStatement
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+  public hasExpression: () ==> bool
+  hasExpression () == is subclass responsibility;
+
+end IOmlExitStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlExplicitFunction
+ is subclass of IOmlFunctionShape
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+operations
+  public getTypeVariableList: () ==> seq of IOmlTypeVariable
+  getTypeVariableList() == is subclass responsibility;
+
+operations
+  public getType: () ==> IOmlType
+  getType() == is subclass responsibility;
+
+operations
+  public getParameterList: () ==> seq of IOmlParameter
+  getParameterList() == is subclass responsibility;
+
+operations
+  public getBody: () ==> IOmlFunctionBody
+  getBody() == is subclass responsibility;
+
+operations
+  public getTrailer: () ==> IOmlFunctionTrailer
+  getTrailer() == is subclass responsibility;
+
+end IOmlExplicitFunction
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlExplicitOperation
+ is subclass of IOmlOperationShape
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+operations
+  public getType: () ==> IOmlType
+  getType() == is subclass responsibility;
+
+operations
+  public getParameterList: () ==> seq of IOmlPattern
+  getParameterList() == is subclass responsibility;
+
+operations
+  public getBody: () ==> IOmlOperationBody
+  getBody() == is subclass responsibility;
+
+operations
+  public getTrailer: () ==> IOmlOperationTrailer
+  getTrailer() == is subclass responsibility;
+
+end IOmlExplicitOperation
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlExpression
+ is subclass of IOmlNode
+
+end IOmlExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlExtendedExplicitFunction
+ is subclass of IOmlFunctionShape
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+operations
+  public getTypeVariableList: () ==> seq of IOmlTypeVariable
+  getTypeVariableList() == is subclass responsibility;
+
+operations
+  public getPatternTypePairList: () ==> seq of IOmlPatternTypePair
+  getPatternTypePairList() == is subclass responsibility;
+
+operations
+  public getIdentifierTypePairList: () ==> seq of IOmlIdentifierTypePair
+  getIdentifierTypePairList() == is subclass responsibility;
+
+operations
+  public getBody: () ==> IOmlFunctionBody
+  getBody() == is subclass responsibility;
+
+operations
+  public getTrailer: () ==> IOmlFunctionTrailer
+  getTrailer() == is subclass responsibility;
+
+end IOmlExtendedExplicitFunction
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlExtendedExplicitOperation
+ is subclass of IOmlOperationShape
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+operations
+  public getPatternTypePairList: () ==> seq of IOmlPatternTypePair
+  getPatternTypePairList() == is subclass responsibility;
+
+operations
+  public getIdentifierTypePairList: () ==> seq of IOmlIdentifierTypePair
+  getIdentifierTypePairList() == is subclass responsibility;
+
+operations
+  public getBody: () ==> IOmlOperationBody
+  getBody() == is subclass responsibility;
+
+operations
+  public getTrailer: () ==> IOmlOperationTrailer
+  getTrailer() == is subclass responsibility;
+
+end IOmlExtendedExplicitOperation
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlExternals
+ is subclass of IOmlNode
+
+operations
+  public getExtList: () ==> seq of IOmlVarInformation
+  getExtList() == is subclass responsibility;
+
+end IOmlExternals
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlField
+ is subclass of IOmlNode
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+  public hasIdentifier: () ==> bool
+  hasIdentifier () == is subclass responsibility;
+
+operations
+  public getType: () ==> IOmlType
+  getType() == is subclass responsibility;
+
+operations
+  public getIgnore: () ==> bool
+  getIgnore() == is subclass responsibility;
+
+end IOmlField
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlFieldReference
+ is subclass of IOmlStateDesignator
+
+operations
+  public getStateDesignator: () ==> IOmlStateDesignator
+  getStateDesignator() == is subclass responsibility;
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+end IOmlFieldReference
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlFieldSelect
+ is subclass of IOmlExpression
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+operations
+  public getName: () ==> IOmlName
+  getName() == is subclass responsibility;
+
+end IOmlFieldSelect
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlFinExpression
+ is subclass of IOmlExpression
+
+operations
+  public getNameList: () ==> seq of IOmlName
+  getNameList() == is subclass responsibility;
+
+end IOmlFinExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlForAllExpression
+ is subclass of IOmlExpression
+
+operations
+  public getBindList: () ==> seq of IOmlBind
+  getBindList() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlForAllExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlFunctionBody
+ is subclass of IOmlNode
+
+operations
+  public getFunctionBody: () ==> IOmlExpression
+  getFunctionBody() == is subclass responsibility;
+
+  public hasFunctionBody: () ==> bool
+  hasFunctionBody () == is subclass responsibility;
+
+operations
+  public getNotYetSpecified: () ==> bool
+  getNotYetSpecified() == is subclass responsibility;
+
+operations
+  public getSubclassResponsibility: () ==> bool
+  getSubclassResponsibility() == is subclass responsibility;
+
+end IOmlFunctionBody
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlFunctionDefinition
+ is subclass of IOmlNode
+
+operations
+  public getAccess: () ==> IOmlAccessDefinition
+  getAccess() == is subclass responsibility;
+
+operations
+  public getShape: () ==> IOmlFunctionShape
+  getShape() == is subclass responsibility;
+
+end IOmlFunctionDefinition
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlFunctionDefinitions
+ is subclass of IOmlDefinitionBlock
+
+operations
+  public getFunctionList: () ==> seq of IOmlFunctionDefinition
+  getFunctionList() == is subclass responsibility;
+
+end IOmlFunctionDefinitions
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlFunctionShape
+ is subclass of IOmlNode
+
+end IOmlFunctionShape
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlFunctionTrailer
+ is subclass of IOmlNode
+
+operations
+  public getPreExpression: () ==> IOmlExpression
+  getPreExpression() == is subclass responsibility;
+
+  public hasPreExpression: () ==> bool
+  hasPreExpression () == is subclass responsibility;
+
+operations
+  public getPostExpression: () ==> IOmlExpression
+  getPostExpression() == is subclass responsibility;
+
+  public hasPostExpression: () ==> bool
+  hasPostExpression () == is subclass responsibility;
+
+end IOmlFunctionTrailer
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlFunctionTypeInstantiation
+ is subclass of IOmlExpression
+
+operations
+  public getName: () ==> IOmlName
+  getName() == is subclass responsibility;
+
+operations
+  public getTypeList: () ==> seq of IOmlType
+  getTypeList() == is subclass responsibility;
+
+end IOmlFunctionTypeInstantiation
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlFunctionTypeSelect
+ is subclass of IOmlExpression
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+operations
+  public getFunctionTypeInstantiation: () ==> IOmlFunctionTypeInstantiation
+  getFunctionTypeInstantiation() == is subclass responsibility;
+
+end IOmlFunctionTypeSelect
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlGeneralMapType
+ is subclass of IOmlType
+
+operations
+  public getDomType: () ==> IOmlType
+  getDomType() == is subclass responsibility;
+
+operations
+  public getRngType: () ==> IOmlType
+  getRngType() == is subclass responsibility;
+
+end IOmlGeneralMapType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlIdentifierTypePair
+ is subclass of IOmlNode
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+operations
+  public getType: () ==> IOmlType
+  getType() == is subclass responsibility;
+
+end IOmlIdentifierTypePair
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlIfExpression
+ is subclass of IOmlExpression
+
+operations
+  public getIfExpression: () ==> IOmlExpression
+  getIfExpression() == is subclass responsibility;
+
+operations
+  public getThenExpression: () ==> IOmlExpression
+  getThenExpression() == is subclass responsibility;
+
+operations
+  public getElseifExpressionList: () ==> seq of IOmlElseIfExpression
+  getElseifExpressionList() == is subclass responsibility;
+
+operations
+  public getElseExpression: () ==> IOmlExpression
+  getElseExpression() == is subclass responsibility;
+
+end IOmlIfExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlIfStatement
+ is subclass of IOmlStatement
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+operations
+  public getThenStatement: () ==> IOmlStatement
+  getThenStatement() == is subclass responsibility;
+
+operations
+  public getElseifStatement: () ==> seq of IOmlElseIfStatement
+  getElseifStatement() == is subclass responsibility;
+
+operations
+  public getElseStatement: () ==> IOmlStatement
+  getElseStatement() == is subclass responsibility;
+
+  public hasElseStatement: () ==> bool
+  hasElseStatement () == is subclass responsibility;
+
+end IOmlIfStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlImplicitFunction
+ is subclass of IOmlFunctionShape
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+operations
+  public getTypeVariableList: () ==> seq of IOmlTypeVariable
+  getTypeVariableList() == is subclass responsibility;
+
+operations
+  public getPatternTypePairList: () ==> seq of IOmlPatternTypePair
+  getPatternTypePairList() == is subclass responsibility;
+
+operations
+  public getIdentifierTypePairList: () ==> seq of IOmlIdentifierTypePair
+  getIdentifierTypePairList() == is subclass responsibility;
+
+operations
+  public getTrailer: () ==> IOmlFunctionTrailer
+  getTrailer() == is subclass responsibility;
+
+end IOmlImplicitFunction
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlImplicitOperation
+ is subclass of IOmlOperationShape
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+operations
+  public getPatternTypePairList: () ==> seq of IOmlPatternTypePair
+  getPatternTypePairList() == is subclass responsibility;
+
+operations
+  public getIdentifierTypePairList: () ==> seq of IOmlIdentifierTypePair
+  getIdentifierTypePairList() == is subclass responsibility;
+
+operations
+  public getTrailer: () ==> IOmlOperationTrailer
+  getTrailer() == is subclass responsibility;
+
+end IOmlImplicitOperation
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlIndexForLoop
+ is subclass of IOmlStatement
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+operations
+  public getInitExpression: () ==> IOmlExpression
+  getInitExpression() == is subclass responsibility;
+
+operations
+  public getLimitExpression: () ==> IOmlExpression
+  getLimitExpression() == is subclass responsibility;
+
+operations
+  public getByExpression: () ==> IOmlExpression
+  getByExpression() == is subclass responsibility;
+
+  public hasByExpression: () ==> bool
+  hasByExpression () == is subclass responsibility;
+
+operations
+  public getStatement: () ==> IOmlStatement
+  getStatement() == is subclass responsibility;
+
+end IOmlIndexForLoop
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlInheritanceClause
+ is subclass of IOmlNode
+
+operations
+  public getIdentifierList: () ==> seq of seq of char
+  getIdentifierList() == is subclass responsibility;
+
+end IOmlInheritanceClause
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlInjectiveMapType
+ is subclass of IOmlType
+
+operations
+  public getDomType: () ==> IOmlType
+  getDomType() == is subclass responsibility;
+
+operations
+  public getRngType: () ==> IOmlType
+  getRngType() == is subclass responsibility;
+
+end IOmlInjectiveMapType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlInstanceVariable
+ is subclass of IOmlInstanceVariableShape
+
+operations
+  public getAccess: () ==> IOmlAccessDefinition
+  getAccess() == is subclass responsibility;
+
+operations
+  public getAssignmentDefinition: () ==> IOmlAssignmentDefinition
+  getAssignmentDefinition() == is subclass responsibility;
+
+end IOmlInstanceVariable
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlInstanceVariableDefinitions
+ is subclass of IOmlDefinitionBlock
+
+operations
+  public getVariablesList: () ==> seq of IOmlInstanceVariableShape
+  getVariablesList() == is subclass responsibility;
+
+end IOmlInstanceVariableDefinitions
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlInstanceVariableInvariant
+ is subclass of IOmlInstanceVariableShape
+
+operations
+  public getInvariant: () ==> IOmlExpression
+  getInvariant() == is subclass responsibility;
+
+end IOmlInstanceVariableInvariant
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlInstanceVariableShape
+ is subclass of IOmlNode
+
+end IOmlInstanceVariableShape
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlIntType
+ is subclass of IOmlType
+
+end IOmlIntType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlInvariant
+ is subclass of IOmlNode
+
+operations
+  public getPattern: () ==> IOmlPattern
+  getPattern() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlInvariant
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlIotaExpression
+ is subclass of IOmlExpression
+
+operations
+  public getBind: () ==> IOmlBind
+  getBind() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlIotaExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlIsExpression
+ is subclass of IOmlExpression
+
+operations
+  public getType: () ==> IOmlType
+  getType() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlIsExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlIsofbaseclassExpression
+ is subclass of IOmlExpression
+
+operations
+  public getName: () ==> IOmlName
+  getName() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlIsofbaseclassExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlIsofclassExpression
+ is subclass of IOmlExpression
+
+operations
+  public getName: () ==> IOmlName
+  getName() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlIsofclassExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlLambdaExpression
+ is subclass of IOmlExpression
+
+operations
+  public getTypeBindList: () ==> seq of IOmlTypeBind
+  getTypeBindList() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlLambdaExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlLetBeExpression
+ is subclass of IOmlExpression
+
+operations
+  public getBind: () ==> IOmlBind
+  getBind() == is subclass responsibility;
+
+operations
+  public getBest: () ==> IOmlExpression
+  getBest() == is subclass responsibility;
+
+  public hasBest: () ==> bool
+  hasBest () == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlLetBeExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlLetBeStatement
+ is subclass of IOmlStatement
+
+operations
+  public getBind: () ==> IOmlBind
+  getBind() == is subclass responsibility;
+
+operations
+  public getBest: () ==> IOmlExpression
+  getBest() == is subclass responsibility;
+
+  public hasBest: () ==> bool
+  hasBest () == is subclass responsibility;
+
+operations
+  public getStatement: () ==> IOmlStatement
+  getStatement() == is subclass responsibility;
+
+end IOmlLetBeStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlLetExpression
+ is subclass of IOmlExpression
+
+operations
+  public getDefinitionList: () ==> seq of IOmlValueShape
+  getDefinitionList() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlLetExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlLetStatement
+ is subclass of IOmlStatement
+
+operations
+  public getDefinitionList: () ==> seq of IOmlValueShape
+  getDefinitionList() == is subclass responsibility;
+
+operations
+  public getStatement: () ==> IOmlStatement
+  getStatement() == is subclass responsibility;
+
+end IOmlLetStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlLexem
+
+values
+  static public ILEXEMUNKNOWN      : nat = 0;
+  static public ILEXEMKEYWORD      : nat = 1;
+  static public ILEXEMIDENTIFIER   : nat = 2;
+  static public ILEXEMLINECOMMENT  : nat = 3;
+  static public ILEXEMBLOCKCOMMENT : nat = 4
+
+operations
+  public accept: IOmlVisitor ==> ()
+  accept (-) == is subclass responsibility;
+
+  public getLine: () ==> nat
+  getLine () == is subclass responsibility;
+
+  public getColumn: () ==> nat
+  getColumn () == is subclass responsibility;
+
+  public getLexval: () ==> nat
+  getLexval () == is subclass responsibility;
+
+  public getText: () ==> seq of char
+  getText () == is subclass responsibility;
+
+  public getType: () ==> nat
+  getType () == is subclass responsibility;
+
+  public isKeyword: () ==> bool
+  isKeyword () == is subclass responsibility;
+
+  public isIdentifier: () ==> bool
+  isIdentifier () == is subclass responsibility;
+
+  public isComment: () ==> bool
+  isComment () == is subclass responsibility;
+
+  public isLineComment: () ==> bool
+  isLineComment () == is subclass responsibility;
+
+  public isBlockComment: () ==> bool
+  isBlockComment () == is subclass responsibility;
+
+end IOmlLexem
+\end{vdm_al}
+\begin{vdm_al}
+class IOmlLiteral
+ is subclass of IOmlNode
+
+end IOmlLiteral
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlMapComprehension
+ is subclass of IOmlExpression
+
+operations
+  public getExpression: () ==> IOmlMaplet
+  getExpression() == is subclass responsibility;
+
+operations
+  public getBindList: () ==> seq of IOmlBind
+  getBindList() == is subclass responsibility;
+
+operations
+  public getGuard: () ==> IOmlExpression
+  getGuard() == is subclass responsibility;
+
+  public hasGuard: () ==> bool
+  hasGuard () == is subclass responsibility;
+
+end IOmlMapComprehension
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlMapEnumeration
+ is subclass of IOmlExpression
+
+operations
+  public getMapletList: () ==> seq of IOmlMaplet
+  getMapletList() == is subclass responsibility;
+
+end IOmlMapEnumeration
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlMapOrSequenceReference
+ is subclass of IOmlStateDesignator
+
+operations
+  public getStateDesignator: () ==> IOmlStateDesignator
+  getStateDesignator() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlMapOrSequenceReference
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlMaplet
+ is subclass of IOmlNode
+
+operations
+  public getDomExpression: () ==> IOmlExpression
+  getDomExpression() == is subclass responsibility;
+
+operations
+  public getRngExpression: () ==> IOmlExpression
+  getRngExpression() == is subclass responsibility;
+
+end IOmlMaplet
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlMatchValue
+ is subclass of IOmlPattern
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlMatchValue
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlMode
+ is subclass of IOmlNode
+
+operations
+  public getValue: () ==> nat
+  getValue () == is subclass responsibility;
+
+  public getStringValue: () ==> seq of char
+  getStringValue() == is subclass responsibility
+
+end IOmlMode
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlMuExpression
+ is subclass of IOmlExpression
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+operations
+  public getModifierList: () ==> seq of IOmlRecordModifier
+  getModifierList() == is subclass responsibility;
+
+end IOmlMuExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlMutexAllPredicate
+ is subclass of IOmlSyncPredicate
+
+end IOmlMutexAllPredicate
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlMutexPredicate
+ is subclass of IOmlSyncPredicate
+
+operations
+  public getNameList: () ==> seq of IOmlName
+  getNameList() == is subclass responsibility;
+
+end IOmlMutexPredicate
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlName
+ is subclass of IOmlExpression
+
+operations
+  public getClassIdentifier: () ==> seq of char
+  getClassIdentifier() == is subclass responsibility;
+
+  public hasClassIdentifier: () ==> bool
+  hasClassIdentifier () == is subclass responsibility;
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+end IOmlName
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlNamedTrace
+ is subclass of IOmlNode
+
+operations
+  public getName: () ==> seq of char
+  getName() == is subclass responsibility;
+
+operations
+  public getDefs: () ==> IOmlTraceDefinition
+  getDefs() == is subclass responsibility;
+
+end IOmlNamedTrace
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlNat1Type
+ is subclass of IOmlType
+
+end IOmlNat1Type
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlNatType
+ is subclass of IOmlType
+
+end IOmlNatType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlNewExpression
+ is subclass of IOmlExpression
+
+operations
+  public getName: () ==> IOmlName
+  getName() == is subclass responsibility;
+
+operations
+  public getGenericTypes: () ==> seq of IOmlType
+  getGenericTypes() == is subclass responsibility;
+
+operations
+  public getExpressionList: () ==> seq of IOmlExpression
+  getExpressionList() == is subclass responsibility;
+
+end IOmlNewExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlNilLiteral
+ is subclass of IOmlLiteral
+
+end IOmlNilLiteral
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlNondeterministicStatement
+ is subclass of IOmlStatement
+
+operations
+  public getStatementList: () ==> seq of IOmlStatement
+  getStatementList() == is subclass responsibility;
+
+end IOmlNondeterministicStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlNumericLiteral
+ is subclass of IOmlLiteral
+
+operations
+  public getVal: () ==> nat
+  getVal() == is subclass responsibility;
+
+end IOmlNumericLiteral
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlObjectApply
+ is subclass of IOmlObjectDesignator
+
+operations
+  public getObjectDesignator: () ==> IOmlObjectDesignator
+  getObjectDesignator() == is subclass responsibility;
+
+operations
+  public getExpressionList: () ==> seq of IOmlExpression
+  getExpressionList() == is subclass responsibility;
+
+end IOmlObjectApply
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlObjectDesignator
+ is subclass of IOmlNode
+
+end IOmlObjectDesignator
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlObjectDesignatorExpression
+ is subclass of IOmlObjectDesignator
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlObjectDesignatorExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlObjectFieldReference
+ is subclass of IOmlObjectDesignator
+
+operations
+  public getObjectDesignator: () ==> IOmlObjectDesignator
+  getObjectDesignator() == is subclass responsibility;
+
+operations
+  public getName: () ==> IOmlName
+  getName() == is subclass responsibility;
+
+end IOmlObjectFieldReference
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlOldName
+ is subclass of IOmlExpression
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+end IOmlOldName
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlOperationBody
+ is subclass of IOmlNode
+
+operations
+  public getStatement: () ==> IOmlStatement
+  getStatement() == is subclass responsibility;
+
+  public hasStatement: () ==> bool
+  hasStatement () == is subclass responsibility;
+
+operations
+  public getNotYetSpecified: () ==> bool
+  getNotYetSpecified() == is subclass responsibility;
+
+operations
+  public getSubclassResponsibility: () ==> bool
+  getSubclassResponsibility() == is subclass responsibility;
+
+end IOmlOperationBody
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlOperationDefinition
+ is subclass of IOmlNode
+
+operations
+  public getAccess: () ==> IOmlAccessDefinition
+  getAccess() == is subclass responsibility;
+
+operations
+  public getShape: () ==> IOmlOperationShape
+  getShape() == is subclass responsibility;
+
+end IOmlOperationDefinition
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlOperationDefinitions
+ is subclass of IOmlDefinitionBlock
+
+operations
+  public getOperationList: () ==> seq of IOmlOperationDefinition
+  getOperationList() == is subclass responsibility;
+
+end IOmlOperationDefinitions
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlOperationShape
+ is subclass of IOmlNode
+
+end IOmlOperationShape
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlOperationTrailer
+ is subclass of IOmlNode
+
+operations
+  public getExternals: () ==> IOmlExternals
+  getExternals() == is subclass responsibility;
+
+  public hasExternals: () ==> bool
+  hasExternals () == is subclass responsibility;
+
+operations
+  public getPreExpression: () ==> IOmlExpression
+  getPreExpression() == is subclass responsibility;
+
+  public hasPreExpression: () ==> bool
+  hasPreExpression () == is subclass responsibility;
+
+operations
+  public getPostExpression: () ==> IOmlExpression
+  getPostExpression() == is subclass responsibility;
+
+  public hasPostExpression: () ==> bool
+  hasPostExpression () == is subclass responsibility;
+
+operations
+  public getExceptions: () ==> IOmlExceptions
+  getExceptions() == is subclass responsibility;
+
+  public hasExceptions: () ==> bool
+  hasExceptions () == is subclass responsibility;
+
+end IOmlOperationTrailer
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlOperationType
+ is subclass of IOmlType
+
+operations
+  public getDomType: () ==> IOmlType
+  getDomType() == is subclass responsibility;
+
+operations
+  public getRngType: () ==> IOmlType
+  getRngType() == is subclass responsibility;
+
+end IOmlOperationType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlOptionalType
+ is subclass of IOmlType
+
+operations
+  public getType: () ==> IOmlType
+  getType() == is subclass responsibility;
+
+end IOmlOptionalType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlParameter
+ is subclass of IOmlNode
+
+operations
+  public getPatternList: () ==> seq of IOmlPattern
+  getPatternList() == is subclass responsibility;
+
+end IOmlParameter
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlPartialFunctionType
+ is subclass of IOmlType
+
+operations
+  public getDomType: () ==> IOmlType
+  getDomType() == is subclass responsibility;
+
+operations
+  public getRngType: () ==> IOmlType
+  getRngType() == is subclass responsibility;
+
+end IOmlPartialFunctionType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlPattern
+ is subclass of IOmlPatternBind
+
+end IOmlPattern
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlPatternBind
+ is subclass of IOmlNode
+
+end IOmlPatternBind
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlPatternBindExpression
+ is subclass of IOmlNode
+
+operations
+  public getPatternBind: () ==> IOmlPatternBind
+  getPatternBind() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlPatternBindExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlPatternIdentifier
+ is subclass of IOmlPattern
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+end IOmlPatternIdentifier
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlPatternTypePair
+ is subclass of IOmlNode
+
+operations
+  public getPatternList: () ==> seq of IOmlPattern
+  getPatternList() == is subclass responsibility;
+
+operations
+  public getType: () ==> IOmlType
+  getType() == is subclass responsibility;
+
+end IOmlPatternTypePair
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlPeriodicThread
+ is subclass of IOmlThreadSpecification
+
+operations
+  public getArgs: () ==> seq of IOmlExpression
+  getArgs() == is subclass responsibility;
+
+operations
+  public getName: () ==> IOmlName
+  getName() == is subclass responsibility;
+
+end IOmlPeriodicThread
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlPermissionPredicate
+ is subclass of IOmlSyncPredicate
+
+operations
+  public getName: () ==> IOmlName
+  getName() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlPermissionPredicate
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlPreconditionExpression
+ is subclass of IOmlExpression
+
+operations
+  public getExpressionList: () ==> seq of IOmlExpression
+  getExpressionList() == is subclass responsibility;
+
+end IOmlPreconditionExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlProcedureThread
+ is subclass of IOmlThreadSpecification
+
+operations
+  public getStatement: () ==> IOmlStatement
+  getStatement() == is subclass responsibility;
+
+end IOmlProcedureThread
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlProductType
+ is subclass of IOmlType
+
+operations
+  public getLhsType: () ==> IOmlType
+  getLhsType() == is subclass responsibility;
+
+operations
+  public getRhsType: () ==> IOmlType
+  getRhsType() == is subclass responsibility;
+
+end IOmlProductType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlQuoteLiteral
+ is subclass of IOmlLiteral
+
+operations
+  public getVal: () ==> seq of char
+  getVal() == is subclass responsibility;
+
+end IOmlQuoteLiteral
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlQuoteType
+ is subclass of IOmlType
+
+operations
+  public getQuoteLiteral: () ==> IOmlQuoteLiteral
+  getQuoteLiteral() == is subclass responsibility;
+
+end IOmlQuoteType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlRatType
+ is subclass of IOmlType
+
+end IOmlRatType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlRealLiteral
+ is subclass of IOmlLiteral
+
+operations
+  public getVal: () ==> real
+  getVal() == is subclass responsibility;
+
+end IOmlRealLiteral
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlRealType
+ is subclass of IOmlType
+
+end IOmlRealType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlRecordConstructor
+ is subclass of IOmlExpression
+
+operations
+  public getName: () ==> IOmlName
+  getName() == is subclass responsibility;
+
+operations
+  public getExpressionList: () ==> seq of IOmlExpression
+  getExpressionList() == is subclass responsibility;
+
+end IOmlRecordConstructor
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlRecordModifier
+ is subclass of IOmlNode
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlRecordModifier
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlRecordPattern
+ is subclass of IOmlPattern
+
+operations
+  public getName: () ==> IOmlName
+  getName() == is subclass responsibility;
+
+operations
+  public getPatternList: () ==> seq of IOmlPattern
+  getPatternList() == is subclass responsibility;
+
+end IOmlRecordPattern
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlRecursiveTrapStatement
+ is subclass of IOmlStatement
+
+operations
+  public getTrapList: () ==> seq of IOmlTrapDefinition
+  getTrapList() == is subclass responsibility;
+
+operations
+  public getInPart: () ==> IOmlStatement
+  getInPart() == is subclass responsibility;
+
+end IOmlRecursiveTrapStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlReqExpression
+ is subclass of IOmlExpression
+
+operations
+  public getNameList: () ==> seq of IOmlName
+  getNameList() == is subclass responsibility;
+
+end IOmlReqExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlReturnStatement
+ is subclass of IOmlStatement
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+  public hasExpression: () ==> bool
+  hasExpression () == is subclass responsibility;
+
+end IOmlReturnStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSamebaseclassExpression
+ is subclass of IOmlExpression
+
+operations
+  public getLhsExpression: () ==> IOmlExpression
+  getLhsExpression() == is subclass responsibility;
+
+operations
+  public getRhsExpression: () ==> IOmlExpression
+  getRhsExpression() == is subclass responsibility;
+
+end IOmlSamebaseclassExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSameclassExpression
+ is subclass of IOmlExpression
+
+operations
+  public getLhsExpression: () ==> IOmlExpression
+  getLhsExpression() == is subclass responsibility;
+
+operations
+  public getRhsExpression: () ==> IOmlExpression
+  getRhsExpression() == is subclass responsibility;
+
+end IOmlSameclassExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlScope
+ is subclass of IOmlNode
+
+operations
+  public getValue: () ==> nat
+  getValue () == is subclass responsibility;
+
+  public getStringValue: () ==> seq of char
+  getStringValue() == is subclass responsibility
+
+end IOmlScope
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSelfExpression
+ is subclass of IOmlExpression
+
+end IOmlSelfExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSeq0Type
+ is subclass of IOmlType
+
+operations
+  public getType: () ==> IOmlType
+  getType() == is subclass responsibility;
+
+end IOmlSeq0Type
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSeq1Type
+ is subclass of IOmlType
+
+operations
+  public getType: () ==> IOmlType
+  getType() == is subclass responsibility;
+
+end IOmlSeq1Type
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSeqConcPattern
+ is subclass of IOmlPattern
+
+operations
+  public getLhsPattern: () ==> IOmlPattern
+  getLhsPattern() == is subclass responsibility;
+
+operations
+  public getRhsPattern: () ==> IOmlPattern
+  getRhsPattern() == is subclass responsibility;
+
+end IOmlSeqConcPattern
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSeqEnumPattern
+ is subclass of IOmlPattern
+
+operations
+  public getPatternList: () ==> seq of IOmlPattern
+  getPatternList() == is subclass responsibility;
+
+end IOmlSeqEnumPattern
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSequenceComprehension
+ is subclass of IOmlExpression
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+operations
+  public getSetBind: () ==> IOmlSetBind
+  getSetBind() == is subclass responsibility;
+
+operations
+  public getGuard: () ==> IOmlExpression
+  getGuard() == is subclass responsibility;
+
+  public hasGuard: () ==> bool
+  hasGuard () == is subclass responsibility;
+
+end IOmlSequenceComprehension
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSequenceEnumeration
+ is subclass of IOmlExpression
+
+operations
+  public getExpressionList: () ==> seq of IOmlExpression
+  getExpressionList() == is subclass responsibility;
+
+end IOmlSequenceEnumeration
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSequenceForLoop
+ is subclass of IOmlStatement
+
+operations
+  public getPatternBind: () ==> IOmlPatternBind
+  getPatternBind() == is subclass responsibility;
+
+operations
+  public getInReverse: () ==> bool
+  getInReverse() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+operations
+  public getStatement: () ==> IOmlStatement
+  getStatement() == is subclass responsibility;
+
+end IOmlSequenceForLoop
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSetBind
+ is subclass of IOmlBind
+
+operations
+  public getPattern: () ==> seq of IOmlPattern
+  getPattern() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlSetBind
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSetComprehension
+ is subclass of IOmlExpression
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+operations
+  public getBindList: () ==> seq of IOmlBind
+  getBindList() == is subclass responsibility;
+
+operations
+  public getGuard: () ==> IOmlExpression
+  getGuard() == is subclass responsibility;
+
+  public hasGuard: () ==> bool
+  hasGuard () == is subclass responsibility;
+
+end IOmlSetComprehension
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSetEnumPattern
+ is subclass of IOmlPattern
+
+operations
+  public getPatternList: () ==> seq of IOmlPattern
+  getPatternList() == is subclass responsibility;
+
+end IOmlSetEnumPattern
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSetEnumeration
+ is subclass of IOmlExpression
+
+operations
+  public getExpressionList: () ==> seq of IOmlExpression
+  getExpressionList() == is subclass responsibility;
+
+end IOmlSetEnumeration
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSetForLoop
+ is subclass of IOmlStatement
+
+operations
+  public getPattern: () ==> IOmlPattern
+  getPattern() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+operations
+  public getStatement: () ==> IOmlStatement
+  getStatement() == is subclass responsibility;
+
+end IOmlSetForLoop
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSetRangeExpression
+ is subclass of IOmlExpression
+
+operations
+  public getLower: () ==> IOmlExpression
+  getLower() == is subclass responsibility;
+
+operations
+  public getUpper: () ==> IOmlExpression
+  getUpper() == is subclass responsibility;
+
+end IOmlSetRangeExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSetType
+ is subclass of IOmlType
+
+operations
+  public getType: () ==> IOmlType
+  getType() == is subclass responsibility;
+
+end IOmlSetType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSetUnionPattern
+ is subclass of IOmlPattern
+
+operations
+  public getLhsPattern: () ==> IOmlPattern
+  getLhsPattern() == is subclass responsibility;
+
+operations
+  public getRhsPattern: () ==> IOmlPattern
+  getRhsPattern() == is subclass responsibility;
+
+end IOmlSetUnionPattern
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSimpleType
+ is subclass of IOmlTypeShape
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+operations
+  public getType: () ==> IOmlType
+  getType() == is subclass responsibility;
+
+operations
+  public getInvariant: () ==> IOmlInvariant
+  getInvariant() == is subclass responsibility;
+
+  public hasInvariant: () ==> bool
+  hasInvariant () == is subclass responsibility;
+
+end IOmlSimpleType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSkipStatement
+ is subclass of IOmlStatement
+
+end IOmlSkipStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSpecificationStatement
+ is subclass of IOmlStatement
+
+operations
+  public getExternals: () ==> IOmlExternals
+  getExternals() == is subclass responsibility;
+
+  public hasExternals: () ==> bool
+  hasExternals () == is subclass responsibility;
+
+operations
+  public getPreExpression: () ==> IOmlExpression
+  getPreExpression() == is subclass responsibility;
+
+  public hasPreExpression: () ==> bool
+  hasPreExpression () == is subclass responsibility;
+
+operations
+  public getPostExpression: () ==> IOmlExpression
+  getPostExpression() == is subclass responsibility;
+
+operations
+  public getExceptions: () ==> IOmlExceptions
+  getExceptions() == is subclass responsibility;
+
+  public hasExceptions: () ==> bool
+  hasExceptions () == is subclass responsibility;
+
+end IOmlSpecificationStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSpecifications
+ is subclass of IOmlNode
+
+operations
+  public getClassList: () ==> seq of IOmlClass
+  getClassList() == is subclass responsibility;
+
+end IOmlSpecifications
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSporadicThread
+ is subclass of IOmlThreadSpecification
+
+operations
+  public getArgs: () ==> seq of IOmlExpression
+  getArgs() == is subclass responsibility;
+
+operations
+  public getName: () ==> IOmlName
+  getName() == is subclass responsibility;
+
+end IOmlSporadicThread
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlStartStatement
+ is subclass of IOmlStatement
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlStartStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlStateDesignator
+ is subclass of IOmlNode
+
+end IOmlStateDesignator
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlStateDesignatorName
+ is subclass of IOmlStateDesignator
+
+operations
+  public getName: () ==> IOmlName
+  getName() == is subclass responsibility;
+
+end IOmlStateDesignatorName
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlStatement
+ is subclass of IOmlNode
+
+end IOmlStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSubsequenceExpression
+ is subclass of IOmlExpression
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+operations
+  public getLower: () ==> IOmlExpression
+  getLower() == is subclass responsibility;
+
+operations
+  public getUpper: () ==> IOmlExpression
+  getUpper() == is subclass responsibility;
+
+end IOmlSubsequenceExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSymbolicLiteralExpression
+ is subclass of IOmlExpression
+
+operations
+  public getLiteral: () ==> IOmlLiteral
+  getLiteral() == is subclass responsibility;
+
+end IOmlSymbolicLiteralExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSymbolicLiteralPattern
+ is subclass of IOmlPattern
+
+operations
+  public getLiteral: () ==> IOmlLiteral
+  getLiteral() == is subclass responsibility;
+
+end IOmlSymbolicLiteralPattern
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSyncPredicate
+ is subclass of IOmlNode
+
+end IOmlSyncPredicate
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlSynchronizationDefinitions
+ is subclass of IOmlDefinitionBlock
+
+operations
+  public getSyncList: () ==> seq of IOmlSyncPredicate
+  getSyncList() == is subclass responsibility;
+
+end IOmlSynchronizationDefinitions
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTextLiteral
+ is subclass of IOmlLiteral
+
+operations
+  public getVal: () ==> seq of char
+  getVal() == is subclass responsibility;
+
+end IOmlTextLiteral
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlThreadDefinition
+ is subclass of IOmlDefinitionBlock
+
+operations
+  public getThreadSpecification: () ==> IOmlThreadSpecification
+  getThreadSpecification() == is subclass responsibility;
+
+  public hasThreadSpecification: () ==> bool
+  hasThreadSpecification () == is subclass responsibility;
+
+end IOmlThreadDefinition
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlThreadIdExpression
+ is subclass of IOmlExpression
+
+end IOmlThreadIdExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlThreadSpecification
+ is subclass of IOmlNode
+
+end IOmlThreadSpecification
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTimeExpression
+ is subclass of IOmlExpression
+
+end IOmlTimeExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTokenExpression
+ is subclass of IOmlExpression
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlTokenExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTokenType
+ is subclass of IOmlType
+
+end IOmlTokenType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTotalFunctionType
+ is subclass of IOmlType
+
+operations
+  public getDomType: () ==> IOmlType
+  getDomType() == is subclass responsibility;
+
+operations
+  public getRngType: () ==> IOmlType
+  getRngType() == is subclass responsibility;
+
+end IOmlTotalFunctionType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTraceBinding
+ is subclass of IOmlNode
+
+end IOmlTraceBinding
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTraceBracketedDefinition
+ is subclass of IOmlTraceCoreDefinition
+
+operations
+  public getDefinition: () ==> IOmlTraceDefinition
+  getDefinition() == is subclass responsibility;
+
+end IOmlTraceBracketedDefinition
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTraceChoiceDefinition
+ is subclass of IOmlTraceDefinition
+
+operations
+  public getDefs: () ==> seq of IOmlTraceDefinition
+  getDefs() == is subclass responsibility;
+
+end IOmlTraceChoiceDefinition
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTraceCoreDefinition
+ is subclass of IOmlNode
+
+end IOmlTraceCoreDefinition
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTraceDefinition
+ is subclass of IOmlNode
+
+end IOmlTraceDefinition
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTraceDefinitionItem
+ is subclass of IOmlTraceDefinition
+
+operations
+  public getBind: () ==> seq of IOmlTraceBinding
+  getBind() == is subclass responsibility;
+
+operations
+  public getTest: () ==> IOmlTraceCoreDefinition
+  getTest() == is subclass responsibility;
+
+operations
+  public getRegexpr: () ==> IOmlTraceRepeatPattern
+  getRegexpr() == is subclass responsibility;
+
+  public hasRegexpr: () ==> bool
+  hasRegexpr () == is subclass responsibility;
+
+end IOmlTraceDefinitionItem
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTraceDefinitions
+ is subclass of IOmlDefinitionBlock
+
+operations
+  public getTraces: () ==> seq of IOmlNamedTrace
+  getTraces() == is subclass responsibility;
+
+end IOmlTraceDefinitions
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTraceLetBeBinding
+ is subclass of IOmlTraceBinding
+
+operations
+  public getBind: () ==> IOmlBind
+  getBind() == is subclass responsibility;
+
+operations
+  public getBest: () ==> IOmlExpression
+  getBest() == is subclass responsibility;
+
+  public hasBest: () ==> bool
+  hasBest () == is subclass responsibility;
+
+end IOmlTraceLetBeBinding
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTraceLetBinding
+ is subclass of IOmlTraceBinding
+
+operations
+  public getDefinitionList: () ==> seq of IOmlValueShape
+  getDefinitionList() == is subclass responsibility;
+
+end IOmlTraceLetBinding
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTraceMethodApply
+ is subclass of IOmlTraceCoreDefinition
+
+operations
+  public getVariableName: () ==> seq of char
+  getVariableName() == is subclass responsibility;
+
+operations
+  public getMethodName: () ==> seq of char
+  getMethodName() == is subclass responsibility;
+
+operations
+  public getArgs: () ==> seq of IOmlExpression
+  getArgs() == is subclass responsibility;
+
+end IOmlTraceMethodApply
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTraceOneOrMore
+ is subclass of IOmlTraceRepeatPattern
+
+end IOmlTraceOneOrMore
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTraceRange
+ is subclass of IOmlTraceRepeatPattern
+
+operations
+  public getLower: () ==> IOmlNumericLiteral
+  getLower() == is subclass responsibility;
+
+operations
+  public getUpper: () ==> IOmlNumericLiteral
+  getUpper() == is subclass responsibility;
+
+  public hasUpper: () ==> bool
+  hasUpper () == is subclass responsibility;
+
+end IOmlTraceRange
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTraceRepeatPattern
+ is subclass of IOmlNode
+
+end IOmlTraceRepeatPattern
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTraceSequenceDefinition
+ is subclass of IOmlTraceDefinition
+
+operations
+  public getDefs: () ==> seq of IOmlTraceDefinition
+  getDefs() == is subclass responsibility;
+
+end IOmlTraceSequenceDefinition
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTraceZeroOrMore
+ is subclass of IOmlTraceRepeatPattern
+
+end IOmlTraceZeroOrMore
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTraceZeroOrOne
+ is subclass of IOmlTraceRepeatPattern
+
+end IOmlTraceZeroOrOne
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTrapDefinition
+ is subclass of IOmlNode
+
+operations
+  public getPatternBind: () ==> IOmlPatternBind
+  getPatternBind() == is subclass responsibility;
+
+operations
+  public getStatement: () ==> IOmlStatement
+  getStatement() == is subclass responsibility;
+
+end IOmlTrapDefinition
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTrapStatement
+ is subclass of IOmlStatement
+
+operations
+  public getPatternBind: () ==> IOmlPatternBind
+  getPatternBind() == is subclass responsibility;
+
+operations
+  public getWithPart: () ==> IOmlStatement
+  getWithPart() == is subclass responsibility;
+
+operations
+  public getInPart: () ==> IOmlStatement
+  getInPart() == is subclass responsibility;
+
+end IOmlTrapStatement
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTupleConstructor
+ is subclass of IOmlExpression
+
+operations
+  public getExpressionList: () ==> seq of IOmlExpression
+  getExpressionList() == is subclass responsibility;
+
+end IOmlTupleConstructor
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTuplePattern
+ is subclass of IOmlPattern
+
+operations
+  public getPatternList: () ==> seq of IOmlPattern
+  getPatternList() == is subclass responsibility;
+
+end IOmlTuplePattern
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlType
+ is subclass of IOmlNode
+
+end IOmlType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTypeBind
+ is subclass of IOmlBind
+
+operations
+  public getPattern: () ==> seq of IOmlPattern
+  getPattern() == is subclass responsibility;
+
+operations
+  public getType: () ==> IOmlType
+  getType() == is subclass responsibility;
+
+end IOmlTypeBind
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTypeDefinition
+ is subclass of IOmlNode
+
+operations
+  public getAccess: () ==> IOmlAccessDefinition
+  getAccess() == is subclass responsibility;
+
+operations
+  public getShape: () ==> IOmlTypeShape
+  getShape() == is subclass responsibility;
+
+end IOmlTypeDefinition
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTypeDefinitions
+ is subclass of IOmlDefinitionBlock
+
+operations
+  public getTypeList: () ==> seq of IOmlTypeDefinition
+  getTypeList() == is subclass responsibility;
+
+end IOmlTypeDefinitions
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTypeName
+ is subclass of IOmlType
+
+operations
+  public getName: () ==> IOmlName
+  getName() == is subclass responsibility;
+
+end IOmlTypeName
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTypeShape
+ is subclass of IOmlNode
+
+end IOmlTypeShape
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTypeVariable
+ is subclass of IOmlType
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+end IOmlTypeVariable
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlTypelessExplicitFunction
+ is subclass of IOmlFunctionShape
+
+operations
+  public getIdentifier: () ==> seq of char
+  getIdentifier() == is subclass responsibility;
+
+operations
+  public getParameterList: () ==> seq of IOmlParameter
+  getParameterList() == is subclass responsibility;
+
+operations
+  public getBody: () ==> IOmlFunctionBody
+  getBody() == is subclass responsibility;
+
+operations
+  public getTrailer: () ==> IOmlFunctionTrailer
+  getTrailer() == is subclass responsibility;
+
+end IOmlTypelessExplicitFunction
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlUnaryExpression
+ is subclass of IOmlExpression
+
+operations
+  public getOperator: () ==> IOmlUnaryOperator
+  getOperator() == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlUnaryExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlUnaryOperator
+ is subclass of IOmlNode
+
+operations
+  public getValue: () ==> nat
+  getValue () == is subclass responsibility;
+
+  public getStringValue: () ==> seq of char
+  getStringValue() == is subclass responsibility
+
+end IOmlUnaryOperator
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlUndefinedExpression
+ is subclass of IOmlExpression
+
+end IOmlUndefinedExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlUnionType
+ is subclass of IOmlType
+
+operations
+  public getLhsType: () ==> IOmlType
+  getLhsType() == is subclass responsibility;
+
+operations
+  public getRhsType: () ==> IOmlType
+  getRhsType() == is subclass responsibility;
+
+end IOmlUnionType
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlValueDefinition
+ is subclass of IOmlNode
+
+operations
+  public getAccess: () ==> IOmlAccessDefinition
+  getAccess() == is subclass responsibility;
+
+operations
+  public getShape: () ==> IOmlValueShape
+  getShape() == is subclass responsibility;
+
+end IOmlValueDefinition
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlValueDefinitions
+ is subclass of IOmlDefinitionBlock
+
+operations
+  public getValueList: () ==> seq of IOmlValueDefinition
+  getValueList() == is subclass responsibility;
+
+end IOmlValueDefinitions
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlValueShape
+ is subclass of IOmlNode
+
+operations
+  public getPattern: () ==> IOmlPattern
+  getPattern() == is subclass responsibility;
+
+operations
+  public getType: () ==> IOmlType
+  getType() == is subclass responsibility;
+
+  public hasType: () ==> bool
+  hasType () == is subclass responsibility;
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+end IOmlValueShape
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlVarInformation
+ is subclass of IOmlNode
+
+operations
+  public getMode: () ==> IOmlMode
+  getMode() == is subclass responsibility;
+
+operations
+  public getNameList: () ==> seq of IOmlName
+  getNameList() == is subclass responsibility;
+
+operations
+  public getType: () ==> IOmlType
+  getType() == is subclass responsibility;
+
+  public hasType: () ==> bool
+  hasType () == is subclass responsibility;
+
+end IOmlVarInformation
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlVisitor
+operations
+  public visitDocument: IOmlDocument ==> ()
+  visitDocument (-) == is subclass responsibility;
+
+  public visitLexem: IOmlLexem ==> ()
+  visitLexem (-) == is subclass responsibility;
+
+  public visitOldName: IOmlOldName ==> ()
+  visitOldName (-) == is subclass responsibility;
+
+  public visitIntType: IOmlIntType ==> ()
+  visitIntType (-) == is subclass responsibility;
+
+  public visitSeqConcPattern: IOmlSeqConcPattern ==> ()
+  visitSeqConcPattern (-) == is subclass responsibility;
+
+  public visitSkipStatement: IOmlSkipStatement ==> ()
+  visitSkipStatement (-) == is subclass responsibility;
+
+  public visitPeriodicThread: IOmlPeriodicThread ==> ()
+  visitPeriodicThread (-) == is subclass responsibility;
+
+  public visitCallStatement: IOmlCallStatement ==> ()
+  visitCallStatement (-) == is subclass responsibility;
+
+  public visitIsofclassExpression: IOmlIsofclassExpression ==> ()
+  visitIsofclassExpression (-) == is subclass responsibility;
+
+  public visitIndexForLoop: IOmlIndexForLoop ==> ()
+  visitIndexForLoop (-) == is subclass responsibility;
+
+  public visitTextLiteral: IOmlTextLiteral ==> ()
+  visitTextLiteral (-) == is subclass responsibility;
+
+  public visitSymbolicLiteralExpression: IOmlSymbolicLiteralExpression ==> ()
+  visitSymbolicLiteralExpression (-) == is subclass responsibility;
+
+  public visitReqExpression: IOmlReqExpression ==> ()
+  visitReqExpression (-) == is subclass responsibility;
+
+  public visitPermissionPredicate: IOmlPermissionPredicate ==> ()
+  visitPermissionPredicate (-) == is subclass responsibility;
+
+  public visitProcedureThread: IOmlProcedureThread ==> ()
+  visitProcedureThread (-) == is subclass responsibility;
+
+  public visitSetType: IOmlSetType ==> ()
+  visitSetType (-) == is subclass responsibility;
+
+  public visitMapEnumeration: IOmlMapEnumeration ==> ()
+  visitMapEnumeration (-) == is subclass responsibility;
+
+  public visitNewExpression: IOmlNewExpression ==> ()
+  visitNewExpression (-) == is subclass responsibility;
+
+  public visitAtomicStatement: IOmlAtomicStatement ==> ()
+  visitAtomicStatement (-) == is subclass responsibility;
+
+  public visitFieldReference: IOmlFieldReference ==> ()
+  visitFieldReference (-) == is subclass responsibility;
+
+  public visitClass: IOmlClass ==> ()
+  visitClass (-) == is subclass responsibility;
+
+  public visitBlockStatement: IOmlBlockStatement ==> ()
+  visitBlockStatement (-) == is subclass responsibility;
+
+  public visitUnaryExpression: IOmlUnaryExpression ==> ()
+  visitUnaryExpression (-) == is subclass responsibility;
+
+  public visitInjectiveMapType: IOmlInjectiveMapType ==> ()
+  visitInjectiveMapType (-) == is subclass responsibility;
+
+  public visitNumericLiteral: IOmlNumericLiteral ==> ()
+  visitNumericLiteral (-) == is subclass responsibility;
+
+  public visitMatchValue: IOmlMatchValue ==> ()
+  visitMatchValue (-) == is subclass responsibility;
+
+  public visitOperationTrailer: IOmlOperationTrailer ==> ()
+  visitOperationTrailer (-) == is subclass responsibility;
+
+  public visitTypeDefinitions: IOmlTypeDefinitions ==> ()
+  visitTypeDefinitions (-) == is subclass responsibility;
+
+  public visitTypeBind: IOmlTypeBind ==> ()
+  visitTypeBind (-) == is subclass responsibility;
+
+  public visitRecordModifier: IOmlRecordModifier ==> ()
+  visitRecordModifier (-) == is subclass responsibility;
+
+  public visitObjectDesignatorExpression: IOmlObjectDesignatorExpression ==> ()
+  visitObjectDesignatorExpression (-) == is subclass responsibility;
+
+  public visitTraceLetBinding: IOmlTraceLetBinding ==> ()
+  visitTraceLetBinding (-) == is subclass responsibility;
+
+  public visitIdentifierTypePair: IOmlIdentifierTypePair ==> ()
+  visitIdentifierTypePair (-) == is subclass responsibility;
+
+  public visitRealLiteral: IOmlRealLiteral ==> ()
+  visitRealLiteral (-) == is subclass responsibility;
+
+  public visitPatternBindExpression: IOmlPatternBindExpression ==> ()
+  visitPatternBindExpression (-) == is subclass responsibility;
+
+  public visitTrapDefinition: IOmlTrapDefinition ==> ()
+  visitTrapDefinition (-) == is subclass responsibility;
+
+  public visitSelfExpression: IOmlSelfExpression ==> ()
+  visitSelfExpression (-) == is subclass responsibility;
+
+  public visitRecursiveTrapStatement: IOmlRecursiveTrapStatement ==> ()
+  visitRecursiveTrapStatement (-) == is subclass responsibility;
+
+  public visitOperationDefinition: IOmlOperationDefinition ==> ()
+  visitOperationDefinition (-) == is subclass responsibility;
+
+  public visitWhileLoop: IOmlWhileLoop ==> ()
+  visitWhileLoop (-) == is subclass responsibility;
+
+  public visitDefStatement: IOmlDefStatement ==> ()
+  visitDefStatement (-) == is subclass responsibility;
+
+  public visitSeq0Type: IOmlSeq0Type ==> ()
+  visitSeq0Type (-) == is subclass responsibility;
+
+  public visitSetForLoop: IOmlSetForLoop ==> ()
+  visitSetForLoop (-) == is subclass responsibility;
+
+  public visitDefExpression: IOmlDefExpression ==> ()
+  visitDefExpression (-) == is subclass responsibility;
+
+  public visitDurationStatement: IOmlDurationStatement ==> ()
+  visitDurationStatement (-) == is subclass responsibility;
+
+  public visitImplicitOperation: IOmlImplicitOperation ==> ()
+  visitImplicitOperation (-) == is subclass responsibility;
+
+  public visitTypeVariable: IOmlTypeVariable ==> ()
+  visitTypeVariable (-) == is subclass responsibility;
+
+  public visitCompositeType: IOmlCompositeType ==> ()
+  visitCompositeType (-) == is subclass responsibility;
+
+  public visitTraceChoiceDefinition: IOmlTraceChoiceDefinition ==> ()
+  visitTraceChoiceDefinition (-) == is subclass responsibility;
+
+  public visitOperationType: IOmlOperationType ==> ()
+  visitOperationType (-) == is subclass responsibility;
+
+  public visitBooleanLiteral: IOmlBooleanLiteral ==> ()
+  visitBooleanLiteral (-) == is subclass responsibility;
+
+  public visitCasesStatementAlternative: IOmlCasesStatementAlternative ==> ()
+  visitCasesStatementAlternative (-) == is subclass responsibility;
+
+  public visitActiveExpression: IOmlActiveExpression ==> ()
+  visitActiveExpression (-) == is subclass responsibility;
+
+  public visitForAllExpression: IOmlForAllExpression ==> ()
+  visitForAllExpression (-) == is subclass responsibility;
+
+  public visitSpecifications: IOmlSpecifications ==> ()
+  visitSpecifications (-) == is subclass responsibility;
+
+  public visitCasesExpression: IOmlCasesExpression ==> ()
+  visitCasesExpression (-) == is subclass responsibility;
+
+  public visitIfExpression: IOmlIfExpression ==> ()
+  visitIfExpression (-) == is subclass responsibility;
+
+  public visitValueDefinitions: IOmlValueDefinitions ==> ()
+  visitValueDefinitions (-) == is subclass responsibility;
+
+  public visitCasesStatement: IOmlCasesStatement ==> ()
+  visitCasesStatement (-) == is subclass responsibility;
+
+  public visitErrorStatement: IOmlErrorStatement ==> ()
+  visitErrorStatement (-) == is subclass responsibility;
+
+  public visitImplicitFunction: IOmlImplicitFunction ==> ()
+  visitImplicitFunction (-) == is subclass responsibility;
+
+  public visitNatType: IOmlNatType ==> ()
+  visitNatType (-) == is subclass responsibility;
+
+  public visitSamebaseclassExpression: IOmlSamebaseclassExpression ==> ()
+  visitSamebaseclassExpression (-) == is subclass responsibility;
+
+  public visitComplexType: IOmlComplexType ==> ()
+  visitComplexType (-) == is subclass responsibility;
+
+  public visitExternals: IOmlExternals ==> ()
+  visitExternals (-) == is subclass responsibility;
+
+  public visitSubsequenceExpression: IOmlSubsequenceExpression ==> ()
+  visitSubsequenceExpression (-) == is subclass responsibility;
+
+  public visitElseIfStatement: IOmlElseIfStatement ==> ()
+  visitElseIfStatement (-) == is subclass responsibility;
+
+  public visitGeneralMapType: IOmlGeneralMapType ==> ()
+  visitGeneralMapType (-) == is subclass responsibility;
+
+  public visitSpecificationStatement: IOmlSpecificationStatement ==> ()
+  visitSpecificationStatement (-) == is subclass responsibility;
+
+  public visitTuplePattern: IOmlTuplePattern ==> ()
+  visitTuplePattern (-) == is subclass responsibility;
+
+  public visitTraceBracketedDefinition: IOmlTraceBracketedDefinition ==> ()
+  visitTraceBracketedDefinition (-) == is subclass responsibility;
+
+  public visitField: IOmlField ==> ()
+  visitField (-) == is subclass responsibility;
+
+  public visitNamedTrace: IOmlNamedTrace ==> ()
+  visitNamedTrace (-) == is subclass responsibility;
+
+  public visitTraceSequenceDefinition: IOmlTraceSequenceDefinition ==> ()
+  visitTraceSequenceDefinition (-) == is subclass responsibility;
+
+  public visitTokenType: IOmlTokenType ==> ()
+  visitTokenType (-) == is subclass responsibility;
+
+  public visitTraceRange: IOmlTraceRange ==> ()
+  visitTraceRange (-) == is subclass responsibility;
+
+  public visitTypeName: IOmlTypeName ==> ()
+  visitTypeName (-) == is subclass responsibility;
+
+  public visitTypeDefinition: IOmlTypeDefinition ==> ()
+  visitTypeDefinition (-) == is subclass responsibility;
+
+  public visitExplicitOperation: IOmlExplicitOperation ==> ()
+  visitExplicitOperation (-) == is subclass responsibility;
+
+  public visitAssignmentDefinition: IOmlAssignmentDefinition ==> ()
+  visitAssignmentDefinition (-) == is subclass responsibility;
+
+  public visitSameclassExpression: IOmlSameclassExpression ==> ()
+  visitSameclassExpression (-) == is subclass responsibility;
+
+  public visitExitStatement: IOmlExitStatement ==> ()
+  visitExitStatement (-) == is subclass responsibility;
+
+  public visitExistsExpression: IOmlExistsExpression ==> ()
+  visitExistsExpression (-) == is subclass responsibility;
+
+  public visitParameter: IOmlParameter ==> ()
+  visitParameter (-) == is subclass responsibility;
+
+  public visitFunctionTypeInstantiation: IOmlFunctionTypeInstantiation ==> ()
+  visitFunctionTypeInstantiation (-) == is subclass responsibility;
+
+  public visitSequenceEnumeration: IOmlSequenceEnumeration ==> ()
+  visitSequenceEnumeration (-) == is subclass responsibility;
+
+  public visitObjectApply: IOmlObjectApply ==> ()
+  visitObjectApply (-) == is subclass responsibility;
+
+  public visitSetUnionPattern: IOmlSetUnionPattern ==> ()
+  visitSetUnionPattern (-) == is subclass responsibility;
+
+  public visitTraceOneOrMore: IOmlTraceOneOrMore ==> ()
+  visitTraceOneOrMore (-) == is subclass responsibility;
+
+  public visitStartStatement: IOmlStartStatement ==> ()
+  visitStartStatement (-) == is subclass responsibility;
+
+  public visitError: IOmlError ==> ()
+  visitError (-) == is subclass responsibility;
+
+  public visitIfStatement: IOmlIfStatement ==> ()
+  visitIfStatement (-) == is subclass responsibility;
+
+  public visitLetBeExpression: IOmlLetBeExpression ==> ()
+  visitLetBeExpression (-) == is subclass responsibility;
+
+  public visitTotalFunctionType: IOmlTotalFunctionType ==> ()
+  visitTotalFunctionType (-) == is subclass responsibility;
+
+  public visitNilLiteral: IOmlNilLiteral ==> ()
+  visitNilLiteral (-) == is subclass responsibility;
+
+  public visitSporadicThread: IOmlSporadicThread ==> ()
+  visitSporadicThread (-) == is subclass responsibility;
+
+  public visitMapComprehension: IOmlMapComprehension ==> ()
+  visitMapComprehension (-) == is subclass responsibility;
+
+  public visitFunctionDefinition: IOmlFunctionDefinition ==> ()
+  visitFunctionDefinition (-) == is subclass responsibility;
+
+  public visitRecordConstructor: IOmlRecordConstructor ==> ()
+  visitRecordConstructor (-) == is subclass responsibility;
+
+  public visitBoolType: IOmlBoolType ==> ()
+  visitBoolType (-) == is subclass responsibility;
+
+  public visitSetBind: IOmlSetBind ==> ()
+  visitSetBind (-) == is subclass responsibility;
+
+  public visitNondeterministicStatement: IOmlNondeterministicStatement ==> ()
+  visitNondeterministicStatement (-) == is subclass responsibility;
+
+  public visitInstanceVariable: IOmlInstanceVariable ==> ()
+  visitInstanceVariable (-) == is subclass responsibility;
+
+  public visitLetExpression: IOmlLetExpression ==> ()
+  visitLetExpression (-) == is subclass responsibility;
+
+  public visitPatternIdentifier: IOmlPatternIdentifier ==> ()
+  visitPatternIdentifier (-) == is subclass responsibility;
+
+  public visitSymbolicLiteralPattern: IOmlSymbolicLiteralPattern ==> ()
+  visitSymbolicLiteralPattern (-) == is subclass responsibility;
+
+  public visitTupleConstructor: IOmlTupleConstructor ==> ()
+  visitTupleConstructor (-) == is subclass responsibility;
+
+  public visitTraceZeroOrMore: IOmlTraceZeroOrMore ==> ()
+  visitTraceZeroOrMore (-) == is subclass responsibility;
+
+  public visitOptionalType: IOmlOptionalType ==> ()
+  visitOptionalType (-) == is subclass responsibility;
+
+  public visitMutexAllPredicate: IOmlMutexAllPredicate ==> ()
+  visitMutexAllPredicate (-) == is subclass responsibility;
+
+  public visitAccessDefinition: IOmlAccessDefinition ==> ()
+  visitAccessDefinition (-) == is subclass responsibility;
+
+  public visitSequenceComprehension: IOmlSequenceComprehension ==> ()
+  visitSequenceComprehension (-) == is subclass responsibility;
+
+  public visitEqualsDefinition: IOmlEqualsDefinition ==> ()
+  visitEqualsDefinition (-) == is subclass responsibility;
+
+  public visitMaplet: IOmlMaplet ==> ()
+  visitMaplet (-) == is subclass responsibility;
+
+  public visitExistsUniqueExpression: IOmlExistsUniqueExpression ==> ()
+  visitExistsUniqueExpression (-) == is subclass responsibility;
+
+  public visitThreadIdExpression: IOmlThreadIdExpression ==> ()
+  visitThreadIdExpression (-) == is subclass responsibility;
+
+  public visitExtendedExplicitOperation: IOmlExtendedExplicitOperation ==> ()
+  visitExtendedExplicitOperation (-) == is subclass responsibility;
+
+  public visitSetComprehension: IOmlSetComprehension ==> ()
+  visitSetComprehension (-) == is subclass responsibility;
+
+  public visitIotaExpression: IOmlIotaExpression ==> ()
+  visitIotaExpression (-) == is subclass responsibility;
+
+  public visitReturnStatement: IOmlReturnStatement ==> ()
+  visitReturnStatement (-) == is subclass responsibility;
+
+  public visitTraceZeroOrOne: IOmlTraceZeroOrOne ==> ()
+  visitTraceZeroOrOne (-) == is subclass responsibility;
+
+  public visitSetEnumPattern: IOmlSetEnumPattern ==> ()
+  visitSetEnumPattern (-) == is subclass responsibility;
+
+  public visitFunctionDefinitions: IOmlFunctionDefinitions ==> ()
+  visitFunctionDefinitions (-) == is subclass responsibility;
+
+  public visitTrapStatement: IOmlTrapStatement ==> ()
+  visitTrapStatement (-) == is subclass responsibility;
+
+  public visitFieldSelect: IOmlFieldSelect ==> ()
+  visitFieldSelect (-) == is subclass responsibility;
+
+  public visitFunctionTypeSelect: IOmlFunctionTypeSelect ==> ()
+  visitFunctionTypeSelect (-) == is subclass responsibility;
+
+  public visitSeq1Type: IOmlSeq1Type ==> ()
+  visitSeq1Type (-) == is subclass responsibility;
+
+  public visitOperationBody: IOmlOperationBody ==> ()
+  visitOperationBody (-) == is subclass responsibility;
+
+  public visitClassTypeInstantiation: IOmlClassTypeInstantiation ==> ()
+  visitClassTypeInstantiation (-) == is subclass responsibility;
+
+  public visitApplyExpression: IOmlApplyExpression ==> ()
+  visitApplyExpression (-) == is subclass responsibility;
+
+  public visitValueShape: IOmlValueShape ==> ()
+  visitValueShape (-) == is subclass responsibility;
+
+  public visitCyclesStatement: IOmlCyclesStatement ==> ()
+  visitCyclesStatement (-) == is subclass responsibility;
+
+  public visitOperationDefinitions: IOmlOperationDefinitions ==> ()
+  visitOperationDefinitions (-) == is subclass responsibility;
+
+  public visitExplicitFunction: IOmlExplicitFunction ==> ()
+  visitExplicitFunction (-) == is subclass responsibility;
+
+  public visitPreconditionExpression: IOmlPreconditionExpression ==> ()
+  visitPreconditionExpression (-) == is subclass responsibility;
+
+  public visitTraceLetBeBinding: IOmlTraceLetBeBinding ==> ()
+  visitTraceLetBeBinding (-) == is subclass responsibility;
+
+  public visitQuoteLiteral: IOmlQuoteLiteral ==> ()
+  visitQuoteLiteral (-) == is subclass responsibility;
+
+  public visitVarInformation: IOmlVarInformation ==> ()
+  visitVarInformation (-) == is subclass responsibility;
+
+  public visitIsofbaseclassExpression: IOmlIsofbaseclassExpression ==> ()
+  visitIsofbaseclassExpression (-) == is subclass responsibility;
+
+  public visitLetStatement: IOmlLetStatement ==> ()
+  visitLetStatement (-) == is subclass responsibility;
+
+  public visitActExpression: IOmlActExpression ==> ()
+  visitActExpression (-) == is subclass responsibility;
+
+  public visitExceptions: IOmlExceptions ==> ()
+  visitExceptions (-) == is subclass responsibility;
+
+  public visitIsExpression: IOmlIsExpression ==> ()
+  visitIsExpression (-) == is subclass responsibility;
+
+  public visitTraceDefinitions: IOmlTraceDefinitions ==> ()
+  visitTraceDefinitions (-) == is subclass responsibility;
+
+  public visitValueDefinition: IOmlValueDefinition ==> ()
+  visitValueDefinition (-) == is subclass responsibility;
+
+  public visitCasesExpressionAlternative: IOmlCasesExpressionAlternative ==> ()
+  visitCasesExpressionAlternative (-) == is subclass responsibility;
+
+  public visitLetBeStatement: IOmlLetBeStatement ==> ()
+  visitLetBeStatement (-) == is subclass responsibility;
+
+  public visitMutexPredicate: IOmlMutexPredicate ==> ()
+  visitMutexPredicate (-) == is subclass responsibility;
+
+  public visitUndefinedExpression: IOmlUndefinedExpression ==> ()
+  visitUndefinedExpression (-) == is subclass responsibility;
+
+  public visitSetEnumeration: IOmlSetEnumeration ==> ()
+  visitSetEnumeration (-) == is subclass responsibility;
+
+  public visitCharacterLiteral: IOmlCharacterLiteral ==> ()
+  visitCharacterLiteral (-) == is subclass responsibility;
+
+  public visitAssignStatement: IOmlAssignStatement ==> ()
+  visitAssignStatement (-) == is subclass responsibility;
+
+  public visitProductType: IOmlProductType ==> ()
+  visitProductType (-) == is subclass responsibility;
+
+  public visitSequenceForLoop: IOmlSequenceForLoop ==> ()
+  visitSequenceForLoop (-) == is subclass responsibility;
+
+  public visitInstanceVariableDefinitions: IOmlInstanceVariableDefinitions ==> ()
+  visitInstanceVariableDefinitions (-) == is subclass responsibility;
+
+  public visitRealType: IOmlRealType ==> ()
+  visitRealType (-) == is subclass responsibility;
+
+  public visitCharType: IOmlCharType ==> ()
+  visitCharType (-) == is subclass responsibility;
+
+  public visitTraceMethodApply: IOmlTraceMethodApply ==> ()
+  visitTraceMethodApply (-) == is subclass responsibility;
+
+  public visitWaitingExpression: IOmlWaitingExpression ==> ()
+  visitWaitingExpression (-) == is subclass responsibility;
+
+  public visitInvariant: IOmlInvariant ==> ()
+  visitInvariant (-) == is subclass responsibility;
+
+  public visitObjectFieldReference: IOmlObjectFieldReference ==> ()
+  visitObjectFieldReference (-) == is subclass responsibility;
+
+  public visitEmptyType: IOmlEmptyType ==> ()
+  visitEmptyType (-) == is subclass responsibility;
+
+  public visitBracketedType: IOmlBracketedType ==> ()
+  visitBracketedType (-) == is subclass responsibility;
+
+  public visitFinExpression: IOmlFinExpression ==> ()
+  visitFinExpression (-) == is subclass responsibility;
+
+  public visitSetRangeExpression: IOmlSetRangeExpression ==> ()
+  visitSetRangeExpression (-) == is subclass responsibility;
+
+  public visitSimpleType: IOmlSimpleType ==> ()
+  visitSimpleType (-) == is subclass responsibility;
+
+  public visitTokenExpression: IOmlTokenExpression ==> ()
+  visitTokenExpression (-) == is subclass responsibility;
+
+  public visitBracketedExpression: IOmlBracketedExpression ==> ()
+  visitBracketedExpression (-) == is subclass responsibility;
+
+  public visitFunctionBody: IOmlFunctionBody ==> ()
+  visitFunctionBody (-) == is subclass responsibility;
+
+  public visitLambdaExpression: IOmlLambdaExpression ==> ()
+  visitLambdaExpression (-) == is subclass responsibility;
+
+  public visitInstanceVariableInvariant: IOmlInstanceVariableInvariant ==> ()
+  visitInstanceVariableInvariant (-) == is subclass responsibility;
+
+  public visitPartialFunctionType: IOmlPartialFunctionType ==> ()
+  visitPartialFunctionType (-) == is subclass responsibility;
+
+  public visitInheritanceClause: IOmlInheritanceClause ==> ()
+  visitInheritanceClause (-) == is subclass responsibility;
+
+  public visitDontCarePattern: IOmlDontCarePattern ==> ()
+  visitDontCarePattern (-) == is subclass responsibility;
+
+  public visitSeqEnumPattern: IOmlSeqEnumPattern ==> ()
+  visitSeqEnumPattern (-) == is subclass responsibility;
+
+  public visitUnionType: IOmlUnionType ==> ()
+  visitUnionType (-) == is subclass responsibility;
+
+  public visitTraceDefinitionItem: IOmlTraceDefinitionItem ==> ()
+  visitTraceDefinitionItem (-) == is subclass responsibility;
+
+  public visitTypelessExplicitFunction: IOmlTypelessExplicitFunction ==> ()
+  visitTypelessExplicitFunction (-) == is subclass responsibility;
+
+  public visitThreadDefinition: IOmlThreadDefinition ==> ()
+  visitThreadDefinition (-) == is subclass responsibility;
+
+  public visitAlwaysStatement: IOmlAlwaysStatement ==> ()
+  visitAlwaysStatement (-) == is subclass responsibility;
+
+  public visitRecordPattern: IOmlRecordPattern ==> ()
+  visitRecordPattern (-) == is subclass responsibility;
+
+  public visitQuoteType: IOmlQuoteType ==> ()
+  visitQuoteType (-) == is subclass responsibility;
+
+  public visitDclStatement: IOmlDclStatement ==> ()
+  visitDclStatement (-) == is subclass responsibility;
+
+  public visitBinaryExpression: IOmlBinaryExpression ==> ()
+  visitBinaryExpression (-) == is subclass responsibility;
+
+  public visitPatternTypePair: IOmlPatternTypePair ==> ()
+  visitPatternTypePair (-) == is subclass responsibility;
+
+  public visitMapOrSequenceReference: IOmlMapOrSequenceReference ==> ()
+  visitMapOrSequenceReference (-) == is subclass responsibility;
+
+  public visitElseIfExpression: IOmlElseIfExpression ==> ()
+  visitElseIfExpression (-) == is subclass responsibility;
+
+  public visitName: IOmlName ==> ()
+  visitName (-) == is subclass responsibility;
+
+  public visitNat1Type: IOmlNat1Type ==> ()
+  visitNat1Type (-) == is subclass responsibility;
+
+  public visitSynchronizationDefinitions: IOmlSynchronizationDefinitions ==> ()
+  visitSynchronizationDefinitions (-) == is subclass responsibility;
+
+  public visitMuExpression: IOmlMuExpression ==> ()
+  visitMuExpression (-) == is subclass responsibility;
+
+  public visitFunctionTrailer: IOmlFunctionTrailer ==> ()
+  visitFunctionTrailer (-) == is subclass responsibility;
+
+  public visitTimeExpression: IOmlTimeExpression ==> ()
+  visitTimeExpression (-) == is subclass responsibility;
+
+  public visitRatType: IOmlRatType ==> ()
+  visitRatType (-) == is subclass responsibility;
+
+  public visitStateDesignatorName: IOmlStateDesignatorName ==> ()
+  visitStateDesignatorName (-) == is subclass responsibility;
+
+  public visitExtendedExplicitFunction: IOmlExtendedExplicitFunction ==> ()
+  visitExtendedExplicitFunction (-) == is subclass responsibility;
+
+  public visitContextInfo: IOmlContextInfo ==> ()
+  visitContextInfo (-) == is subclass responsibility;
+
+  public visitNode: IOmlNode ==> ()
+  visitNode (-) == is subclass responsibility;
+
+  public visitType: IOmlType ==> ()
+  visitType (-) == is subclass responsibility;
+
+  public visitStatement: IOmlStatement ==> ()
+  visitStatement (-) == is subclass responsibility;
+
+  public visitThreadSpecification: IOmlThreadSpecification ==> ()
+  visitThreadSpecification (-) == is subclass responsibility;
+
+  public visitBind: IOmlBind ==> ()
+  visitBind (-) == is subclass responsibility;
+
+  public visitOperationShape: IOmlOperationShape ==> ()
+  visitOperationShape (-) == is subclass responsibility;
+
+  public visitTraceCoreDefinition: IOmlTraceCoreDefinition ==> ()
+  visitTraceCoreDefinition (-) == is subclass responsibility;
+
+  public visitTraceRepeatPattern: IOmlTraceRepeatPattern ==> ()
+  visitTraceRepeatPattern (-) == is subclass responsibility;
+
+  public visitInstanceVariableShape: IOmlInstanceVariableShape ==> ()
+  visitInstanceVariableShape (-) == is subclass responsibility;
+
+  public visitExpression: IOmlExpression ==> ()
+  visitExpression (-) == is subclass responsibility;
+
+  public visitObjectDesignator: IOmlObjectDesignator ==> ()
+  visitObjectDesignator (-) == is subclass responsibility;
+
+  public visitScope: IOmlScope ==> ()
+  visitScope (-) == is subclass responsibility;
+
+  public visitLiteral: IOmlLiteral ==> ()
+  visitLiteral (-) == is subclass responsibility;
+
+  public visitTraceDefinition: IOmlTraceDefinition ==> ()
+  visitTraceDefinition (-) == is subclass responsibility;
+
+  public visitDefinitionBlock: IOmlDefinitionBlock ==> ()
+  visitDefinitionBlock (-) == is subclass responsibility;
+
+  public visitPatternBind: IOmlPatternBind ==> ()
+  visitPatternBind (-) == is subclass responsibility;
+
+  public visitMode: IOmlMode ==> ()
+  visitMode (-) == is subclass responsibility;
+
+  public visitFunctionShape: IOmlFunctionShape ==> ()
+  visitFunctionShape (-) == is subclass responsibility;
+
+  public visitBinaryOperator: IOmlBinaryOperator ==> ()
+  visitBinaryOperator (-) == is subclass responsibility;
+
+  public visitStateDesignator: IOmlStateDesignator ==> ()
+  visitStateDesignator (-) == is subclass responsibility;
+
+  public visitUnaryOperator: IOmlUnaryOperator ==> ()
+  visitUnaryOperator (-) == is subclass responsibility;
+
+  public visitPattern: IOmlPattern ==> ()
+  visitPattern (-) == is subclass responsibility;
+
+  public visitTraceBinding: IOmlTraceBinding ==> ()
+  visitTraceBinding (-) == is subclass responsibility;
+
+  public visitSyncPredicate: IOmlSyncPredicate ==> ()
+  visitSyncPredicate (-) == is subclass responsibility;
+
+  public visitTypeShape: IOmlTypeShape ==> ()
+  visitTypeShape (-) == is subclass responsibility;
+
+end IOmlVisitor
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlWaitingExpression
+ is subclass of IOmlExpression
+
+operations
+  public getNameList: () ==> seq of IOmlName
+  getNameList() == is subclass responsibility;
+
+end IOmlWaitingExpression
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlWhileLoop
+ is subclass of IOmlStatement
+
+operations
+  public getExpression: () ==> IOmlExpression
+  getExpression() == is subclass responsibility;
+
+operations
+  public getStatement: () ==> IOmlStatement
+  getStatement() == is subclass responsibility;
+
+end IOmlWhileLoop
+\end{vdm_al}
+

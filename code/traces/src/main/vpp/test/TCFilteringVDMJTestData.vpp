@@ -1,0 +1,1224 @@
+class TCFilteringVDMJTestData
+operations
+ public static test_traceseq_traceseq_01: () ==> IOmlDocument
+ test_traceseq_traceseq_01() == return new OmlDocument("",
+  new OmlSpecifications([
+    new OmlClass(
+      "Stack",
+      [
+        
+      ],
+      nil,
+      [
+        new OmlInstanceVariableDefinitions([
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(3,5,5),
+              0,
+              0
+            ),
+            new OmlAssignmentDefinition(
+              "stack",
+              new OmlSeq0Type(new OmlIntType(5,20),5,13),
+              new OmlSequenceEnumeration([
+                
+              ],5,27),
+              5,
+              5
+            ),
+            0,
+            0
+          )
+        ],4,3),
+        new OmlOperationDefinitions([
+          new OmlOperationDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,9,5),
+              9,
+              5
+            ),
+            new OmlExplicitOperation(
+              "Reset",
+              new OmlOperationType(
+                new OmlEmptyType(10,13),
+                new OmlEmptyType(10,20),
+                10,
+                13
+              ),
+              [
+                
+              ],
+              new OmlOperationBody(
+                new OmlAssignStatement(
+                  new OmlStateDesignatorName(new OmlName(
+                    nil,
+                    "stack",
+                    12,
+                    7
+                  ),12,7),
+                  new OmlSequenceEnumeration([
+                    
+                  ],12,16),
+                  12,
+                  13
+                ),
+                false,
+                false,
+                12,
+                13
+              ),
+              new OmlOperationTrailer(
+                nil,
+                nil,
+                nil,
+                nil,
+                0,
+                0
+              ),
+              10,
+              5
+            ),
+            10,
+            5
+          ),
+          new OmlOperationDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,14,5),
+              14,
+              5
+            ),
+            new OmlExplicitOperation(
+              "Pop",
+              new OmlOperationType(
+                new OmlEmptyType(15,11),
+                new OmlIntType(15,18),
+                15,
+                11
+              ),
+              [
+                
+              ],
+              new OmlOperationBody(
+                new OmlDefStatement(
+                  [
+                    new OmlEqualsDefinition(
+                      new OmlPatternIdentifier("res",17,11),
+                      new OmlUnaryExpression(
+                        new OmlUnaryOperator(2,17,17),
+                        new OmlName(
+                          nil,
+                          "stack",
+                          17,
+                          20
+                        ),
+                        17,
+                        17
+                      ),
+                      17,
+                      15
+                    )
+                  ],
+                  new OmlBlockStatement(
+                    [
+                      
+                    ],
+                    [
+                      new OmlAssignStatement(
+                        new OmlStateDesignatorName(new OmlName(
+                          nil,
+                          "stack",
+                          18,
+                          10
+                        ),18,10),
+                        new OmlUnaryExpression(
+                          new OmlUnaryOperator(5,18,19),
+                          new OmlName(
+                            nil,
+                            "stack",
+                            18,
+                            22
+                          ),
+                          18,
+                          19
+                        ),
+                        18,
+                        16
+                      ),
+                      new OmlReturnStatement(new OmlName(
+                        nil,
+                        "res",
+                        19,
+                        17
+                      ),19,10)
+                    ],
+                    18,
+                    9
+                  ),
+                  17,
+                  7
+                ),
+                false,
+                false,
+                17,
+                7
+              ),
+              new OmlOperationTrailer(
+                nil,
+                new OmlBinaryExpression(
+                  new OmlName(
+                    nil,
+                    "stack",
+                    20,
+                    9
+                  ),
+                  new OmlBinaryOperator(33,20,15),
+                  new OmlSequenceEnumeration([
+                    
+                  ],20,18),
+                  20,
+                  15
+                ),
+                new OmlBinaryExpression(
+                  new OmlOldName("stack",21,10),
+                  new OmlBinaryOperator(27,21,17),
+                  new OmlBinaryExpression(
+                    new OmlSequenceEnumeration([
+                      new OmlName(
+                        nil,
+                        "RESULT",
+                        21,
+                        20
+                      )
+                    ],21,19),
+                    new OmlBinaryOperator(30,21,27),
+                    new OmlName(
+                      nil,
+                      "stack",
+                      21,
+                      28
+                    ),
+                    21,
+                    27
+                  ),
+                  21,
+                  17
+                ),
+                nil,
+                20,
+                15
+              ),
+              15,
+              5
+            ),
+            15,
+            5
+          ),
+          new OmlOperationDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,23,5),
+              23,
+              5
+            ),
+            new OmlExplicitOperation(
+              "Push",
+              new OmlOperationType(
+                new OmlIntType(23,18),
+                new OmlEmptyType(23,26),
+                23,
+                18
+              ),
+              [
+                new OmlPatternIdentifier("elem",24,10)
+              ],
+              new OmlOperationBody(
+                new OmlAssignStatement(
+                  new OmlStateDesignatorName(new OmlName(
+                    nil,
+                    "stack",
+                    25,
+                    7
+                  ),25,7),
+                  new OmlBinaryExpression(
+                    new OmlName(
+                      nil,
+                      "stack",
+                      25,
+                      16
+                    ),
+                    new OmlBinaryOperator(30,25,22),
+                    new OmlSequenceEnumeration([
+                      new OmlName(
+                        nil,
+                        "elem",
+                        25,
+                        24
+                      )
+                    ],25,23),
+                    25,
+                    22
+                  ),
+                  25,
+                  13
+                ),
+                false,
+                false,
+                25,
+                13
+              ),
+              new OmlOperationTrailer(
+                nil,
+                nil,
+                nil,
+                nil,
+                0,
+                0
+              ),
+              23,
+              12
+            ),
+            23,
+            12
+          ),
+          new OmlOperationDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,27,5),
+              27,
+              5
+            ),
+            new OmlExplicitOperation(
+              "Top",
+              new OmlOperationType(
+                new OmlEmptyType(28,11),
+                new OmlIntType(28,18),
+                28,
+                11
+              ),
+              [
+                
+              ],
+              new OmlOperationBody(
+                new OmlReturnStatement(new OmlBracketedExpression(new OmlUnaryExpression(
+                  new OmlUnaryOperator(2,30,15),
+                  new OmlName(
+                    nil,
+                    "stack",
+                    30,
+                    18
+                  ),
+                  30,
+                  15
+                ),30,14),30,7),
+                false,
+                false,
+                30,
+                7
+              ),
+              new OmlOperationTrailer(
+                nil,
+                nil,
+                nil,
+                nil,
+                0,
+                0
+              ),
+              28,
+              5
+            ),
+            28,
+            5
+          )
+        ],7,3)
+      ],
+      false,
+      2,
+      1
+    ),
+    new OmlClass(
+      "UseStack",
+      [
+        
+      ],
+      nil,
+      [
+        new OmlInstanceVariableDefinitions([
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(3,38,3),
+              0,
+              0
+            ),
+            new OmlAssignmentDefinition(
+              "s",
+              new OmlTypeName(new OmlName(
+                nil,
+                "Stack",
+                38,
+                7
+              ),38,7),
+              new OmlNewExpression(
+                new OmlName(
+                  nil,
+                  "Stack",
+                  38,
+                  20
+                ),
+                [
+                  
+                ],
+                [
+                  
+                ],
+                38,
+                16
+              ),
+              38,
+              3
+            ),
+            0,
+            0
+          )
+        ],36,1),
+        new OmlTraceDefinitions([
+          new OmlNamedTrace(
+            "PushBeforePop",
+            new OmlTraceSequenceDefinition([
+              new OmlTraceDefinitionItem(
+                [
+                  
+                ],
+                new OmlTraceMethodApply(
+                  "s",
+                  "Reset",
+                  [
+                    
+                  ],
+                  42,
+                  19
+                ),
+                nil,
+                42,
+                19
+              ),
+              new OmlTraceDefinitionItem(
+                [
+                  
+                ],
+                new OmlTraceMethodApply(
+                  "s",
+                  "Push",
+                  [
+                    new OmlSymbolicLiteralExpression(new OmlNumericLiteral(6,42,37),42,37)
+                  ],
+                  42,
+                  30
+                ),
+                nil,
+                42,
+                30
+              )
+            ],42,28),
+            42,
+            17
+          )
+        ],40,1)
+      ],
+      false,
+      34,
+      1
+    )
+  ],0,0),
+  [
+    new OmlLexem(2,1,275,"class",1),
+    new OmlLexem(2,7,433,"Stack",2),
+    new OmlLexem(4,3,323,"instance",1),
+    new OmlLexem(4,12,423,"variables",1),
+    new OmlLexem(5,5,433,"stack",2),
+    new OmlLexem(5,11,58,":",0),
+    new OmlLexem(5,13,390,"seq",1),
+    new OmlLexem(5,17,360,"of",1),
+    new OmlLexem(5,20,324,"int",1),
+    new OmlLexem(5,24,265,":=",0),
+    new OmlLexem(5,27,91,"[",0),
+    new OmlLexem(5,28,93,"]",0),
+    new OmlLexem(5,29,59,";",0),
+    new OmlLexem(7,3,361,"operations",1),
+    new OmlLexem(9,5,375,"public",1),
+    new OmlLexem(10,5,433,"Reset",2),
+    new OmlLexem(10,11,58,":",0),
+    new OmlLexem(10,13,40,"(",0),
+    new OmlLexem(10,14,41,")",0),
+    new OmlLexem(10,16,362,"==>",0),
+    new OmlLexem(10,20,40,"(",0),
+    new OmlLexem(10,21,41,")",0),
+    new OmlLexem(11,5,433,"Reset",2),
+    new OmlLexem(11,11,40,"(",0),
+    new OmlLexem(11,12,41,")",0),
+    new OmlLexem(11,14,333,"==",0),
+    new OmlLexem(12,7,433,"stack",2),
+    new OmlLexem(12,13,265,":=",0),
+    new OmlLexem(12,16,91,"[",0),
+    new OmlLexem(12,17,93,"]",0),
+    new OmlLexem(12,18,59,";",0),
+    new OmlLexem(14,5,375,"public",1),
+    new OmlLexem(15,5,433,"Pop",2),
+    new OmlLexem(15,9,58,":",0),
+    new OmlLexem(15,11,40,"(",0),
+    new OmlLexem(15,12,41,")",0),
+    new OmlLexem(15,14,362,"==>",0),
+    new OmlLexem(15,18,324,"int",1),
+    new OmlLexem(16,5,433,"Pop",2),
+    new OmlLexem(16,8,40,"(",0),
+    new OmlLexem(16,9,41,")",0),
+    new OmlLexem(16,11,333,"==",0),
+    new OmlLexem(17,7,282,"def",1),
+    new OmlLexem(17,11,433,"res",2),
+    new OmlLexem(17,15,299,"=",0),
+    new OmlLexem(17,17,315,"hd",1),
+    new OmlLexem(17,20,433,"stack",2),
+    new OmlLexem(17,26,319,"in",1),
+    new OmlLexem(18,9,40,"(",0),
+    new OmlLexem(18,10,433,"stack",2),
+    new OmlLexem(18,16,265,":=",0),
+    new OmlLexem(18,19,415,"tl",1),
+    new OmlLexem(18,22,433,"stack",2),
+    new OmlLexem(18,27,59,";",0),
+    new OmlLexem(19,10,384,"return",1),
+    new OmlLexem(19,17,433,"res",2),
+    new OmlLexem(19,20,41,")",0),
+    new OmlLexem(20,5,369,"pre",1),
+    new OmlLexem(20,9,433,"stack",2),
+    new OmlLexem(20,15,358,"<>",0),
+    new OmlLexem(20,18,91,"[",0),
+    new OmlLexem(20,19,93,"]",0),
+    new OmlLexem(21,5,367,"post",1),
+    new OmlLexem(21,10,433,"stack",2),
+    new OmlLexem(21,15,316,"~",0),
+    new OmlLexem(21,17,299,"=",0),
+    new OmlLexem(21,19,91,"[",0),
+    new OmlLexem(21,20,433,"RESULT",2),
+    new OmlLexem(21,26,93,"]",0),
+    new OmlLexem(21,27,392,"^",0),
+    new OmlLexem(21,28,433,"stack",2),
+    new OmlLexem(21,33,59,";",0),
+    new OmlLexem(23,5,375,"public",1),
+    new OmlLexem(23,12,433,"Push",2),
+    new OmlLexem(23,16,58,":",0),
+    new OmlLexem(23,18,324,"int",1),
+    new OmlLexem(23,22,362,"==>",0),
+    new OmlLexem(23,26,40,"(",0),
+    new OmlLexem(23,27,41,")",0),
+    new OmlLexem(24,5,433,"Push",2),
+    new OmlLexem(24,9,40,"(",0),
+    new OmlLexem(24,10,433,"elem",2),
+    new OmlLexem(24,14,41,")",0),
+    new OmlLexem(24,16,333,"==",0),
+    new OmlLexem(25,7,433,"stack",2),
+    new OmlLexem(25,13,265,":=",0),
+    new OmlLexem(25,16,433,"stack",2),
+    new OmlLexem(25,22,392,"^",0),
+    new OmlLexem(25,23,91,"[",0),
+    new OmlLexem(25,24,433,"elem",2),
+    new OmlLexem(25,28,93,"]",0),
+    new OmlLexem(25,29,59,";",0),
+    new OmlLexem(27,5,375,"public",1),
+    new OmlLexem(28,5,433,"Top",2),
+    new OmlLexem(28,9,58,":",0),
+    new OmlLexem(28,11,40,"(",0),
+    new OmlLexem(28,12,41,")",0),
+    new OmlLexem(28,14,362,"==>",0),
+    new OmlLexem(28,18,324,"int",1),
+    new OmlLexem(29,5,433,"Top",2),
+    new OmlLexem(29,8,40,"(",0),
+    new OmlLexem(29,9,41,")",0),
+    new OmlLexem(29,11,333,"==",0),
+    new OmlLexem(30,7,384,"return",1),
+    new OmlLexem(30,14,40,"(",0),
+    new OmlLexem(30,15,315,"hd",1),
+    new OmlLexem(30,18,433,"stack",2),
+    new OmlLexem(30,23,41,")",0),
+    new OmlLexem(30,24,59,";",0),
+    new OmlLexem(33,1,298,"end",1),
+    new OmlLexem(33,5,433,"Stack",2),
+    new OmlLexem(34,1,275,"class",1),
+    new OmlLexem(34,7,433,"UseStack",2),
+    new OmlLexem(36,1,323,"instance",1),
+    new OmlLexem(36,10,423,"variables",1),
+    new OmlLexem(38,3,433,"s",2),
+    new OmlLexem(38,5,58,":",0),
+    new OmlLexem(38,7,433,"Stack",2),
+    new OmlLexem(38,13,265,":=",0),
+    new OmlLexem(38,16,354,"new",1),
+    new OmlLexem(38,20,433,"Stack",2),
+    new OmlLexem(38,25,40,"(",0),
+    new OmlLexem(38,26,41,")",0),
+    new OmlLexem(38,27,59,";",0),
+    new OmlLexem(40,1,418,"traces",1),
+    new OmlLexem(42,3,433,"PushBeforePop",2),
+    new OmlLexem(42,17,58,":",0),
+    new OmlLexem(42,19,433,"s",2),
+    new OmlLexem(42,20,46,".",0),
+    new OmlLexem(42,21,433,"Reset",2),
+    new OmlLexem(42,26,40,"(",0),
+    new OmlLexem(42,27,41,")",0),
+    new OmlLexem(42,28,59,";",0),
+    new OmlLexem(42,30,433,"s",2),
+    new OmlLexem(42,31,46,".",0),
+    new OmlLexem(42,32,433,"Push",2),
+    new OmlLexem(42,36,40,"(",0),
+    new OmlLexem(42,37,435,"6",0),
+    new OmlLexem(42,38,41,")",0),
+    new OmlLexem(44,1,298,"end",1),
+    new OmlLexem(44,5,433,"UseStack",2)
+  ]
+);
+operations
+ public static test_traceseq_traceseq_02: () ==> IOmlDocument
+ test_traceseq_traceseq_02() == return new OmlDocument("",
+  new OmlSpecifications([
+    new OmlClass(
+      "Stack",
+      [
+        
+      ],
+      nil,
+      [
+        new OmlInstanceVariableDefinitions([
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(3,5,5),
+              0,
+              0
+            ),
+            new OmlAssignmentDefinition(
+              "stack",
+              new OmlSeq0Type(new OmlIntType(5,20),5,13),
+              new OmlSequenceEnumeration([
+                
+              ],5,27),
+              5,
+              5
+            ),
+            0,
+            0
+          )
+        ],4,3),
+        new OmlOperationDefinitions([
+          new OmlOperationDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,9,5),
+              9,
+              5
+            ),
+            new OmlExplicitOperation(
+              "Reset",
+              new OmlOperationType(
+                new OmlEmptyType(10,13),
+                new OmlEmptyType(10,20),
+                10,
+                13
+              ),
+              [
+                
+              ],
+              new OmlOperationBody(
+                new OmlAssignStatement(
+                  new OmlStateDesignatorName(new OmlName(
+                    nil,
+                    "stack",
+                    12,
+                    7
+                  ),12,7),
+                  new OmlSequenceEnumeration([
+                    
+                  ],12,16),
+                  12,
+                  13
+                ),
+                false,
+                false,
+                12,
+                13
+              ),
+              new OmlOperationTrailer(
+                nil,
+                nil,
+                nil,
+                nil,
+                0,
+                0
+              ),
+              10,
+              5
+            ),
+            10,
+            5
+          ),
+          new OmlOperationDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,14,5),
+              14,
+              5
+            ),
+            new OmlExplicitOperation(
+              "Pop",
+              new OmlOperationType(
+                new OmlEmptyType(15,11),
+                new OmlIntType(15,18),
+                15,
+                11
+              ),
+              [
+                
+              ],
+              new OmlOperationBody(
+                new OmlDefStatement(
+                  [
+                    new OmlEqualsDefinition(
+                      new OmlPatternIdentifier("res",17,11),
+                      new OmlUnaryExpression(
+                        new OmlUnaryOperator(2,17,17),
+                        new OmlName(
+                          nil,
+                          "stack",
+                          17,
+                          20
+                        ),
+                        17,
+                        17
+                      ),
+                      17,
+                      15
+                    )
+                  ],
+                  new OmlBlockStatement(
+                    [
+                      
+                    ],
+                    [
+                      new OmlAssignStatement(
+                        new OmlStateDesignatorName(new OmlName(
+                          nil,
+                          "stack",
+                          18,
+                          10
+                        ),18,10),
+                        new OmlUnaryExpression(
+                          new OmlUnaryOperator(5,18,19),
+                          new OmlName(
+                            nil,
+                            "stack",
+                            18,
+                            22
+                          ),
+                          18,
+                          19
+                        ),
+                        18,
+                        16
+                      ),
+                      new OmlReturnStatement(new OmlName(
+                        nil,
+                        "res",
+                        19,
+                        17
+                      ),19,10)
+                    ],
+                    18,
+                    9
+                  ),
+                  17,
+                  7
+                ),
+                false,
+                false,
+                17,
+                7
+              ),
+              new OmlOperationTrailer(
+                nil,
+                new OmlBinaryExpression(
+                  new OmlName(
+                    nil,
+                    "stack",
+                    20,
+                    9
+                  ),
+                  new OmlBinaryOperator(33,20,15),
+                  new OmlSequenceEnumeration([
+                    
+                  ],20,18),
+                  20,
+                  15
+                ),
+                new OmlBinaryExpression(
+                  new OmlOldName("stack",21,10),
+                  new OmlBinaryOperator(27,21,17),
+                  new OmlBinaryExpression(
+                    new OmlSequenceEnumeration([
+                      new OmlName(
+                        nil,
+                        "RESULT",
+                        21,
+                        20
+                      )
+                    ],21,19),
+                    new OmlBinaryOperator(30,21,27),
+                    new OmlName(
+                      nil,
+                      "stack",
+                      21,
+                      28
+                    ),
+                    21,
+                    27
+                  ),
+                  21,
+                  17
+                ),
+                nil,
+                20,
+                15
+              ),
+              15,
+              5
+            ),
+            15,
+            5
+          ),
+          new OmlOperationDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,23,5),
+              23,
+              5
+            ),
+            new OmlExplicitOperation(
+              "Push",
+              new OmlOperationType(
+                new OmlIntType(23,18),
+                new OmlEmptyType(23,26),
+                23,
+                18
+              ),
+              [
+                new OmlPatternIdentifier("elem",24,10)
+              ],
+              new OmlOperationBody(
+                new OmlAssignStatement(
+                  new OmlStateDesignatorName(new OmlName(
+                    nil,
+                    "stack",
+                    25,
+                    7
+                  ),25,7),
+                  new OmlBinaryExpression(
+                    new OmlName(
+                      nil,
+                      "stack",
+                      25,
+                      16
+                    ),
+                    new OmlBinaryOperator(30,25,22),
+                    new OmlSequenceEnumeration([
+                      new OmlName(
+                        nil,
+                        "elem",
+                        25,
+                        24
+                      )
+                    ],25,23),
+                    25,
+                    22
+                  ),
+                  25,
+                  13
+                ),
+                false,
+                false,
+                25,
+                13
+              ),
+              new OmlOperationTrailer(
+                nil,
+                nil,
+                nil,
+                nil,
+                0,
+                0
+              ),
+              23,
+              12
+            ),
+            23,
+            12
+          ),
+          new OmlOperationDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,27,5),
+              27,
+              5
+            ),
+            new OmlExplicitOperation(
+              "Top",
+              new OmlOperationType(
+                new OmlEmptyType(28,11),
+                new OmlIntType(28,18),
+                28,
+                11
+              ),
+              [
+                
+              ],
+              new OmlOperationBody(
+                new OmlReturnStatement(new OmlBracketedExpression(new OmlUnaryExpression(
+                  new OmlUnaryOperator(2,30,15),
+                  new OmlName(
+                    nil,
+                    "stack",
+                    30,
+                    18
+                  ),
+                  30,
+                  15
+                ),30,14),30,7),
+                false,
+                false,
+                30,
+                7
+              ),
+              new OmlOperationTrailer(
+                nil,
+                nil,
+                nil,
+                nil,
+                0,
+                0
+              ),
+              28,
+              5
+            ),
+            28,
+            5
+          )
+        ],7,3)
+      ],
+      false,
+      2,
+      1
+    ),
+    new OmlClass(
+      "UseStack",
+      [
+        
+      ],
+      nil,
+      [
+        new OmlInstanceVariableDefinitions([
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(3,38,3),
+              0,
+              0
+            ),
+            new OmlAssignmentDefinition(
+              "s",
+              new OmlTypeName(new OmlName(
+                nil,
+                "Stack",
+                38,
+                7
+              ),38,7),
+              new OmlNewExpression(
+                new OmlName(
+                  nil,
+                  "Stack",
+                  38,
+                  20
+                ),
+                [
+                  
+                ],
+                [
+                  
+                ],
+                38,
+                16
+              ),
+              38,
+              3
+            ),
+            0,
+            0
+          )
+        ],36,1),
+        new OmlTraceDefinitions([
+          new OmlNamedTrace(
+            "PushBeforePop",
+            new OmlTraceSequenceDefinition([
+              new OmlTraceDefinitionItem(
+                [
+                  
+                ],
+                new OmlTraceMethodApply(
+                  "s",
+                  "Reset",
+                  [
+                    
+                  ],
+                  42,
+                  19
+                ),
+                nil,
+                42,
+                19
+              ),
+              new OmlTraceDefinitionItem(
+                [
+                  new OmlTraceLetBeBinding(
+                    new OmlSetBind(
+                      [
+                        new OmlPatternIdentifier("x",42,34)
+                      ],
+                      new OmlSetEnumeration([
+                        new OmlSymbolicLiteralExpression(new OmlNumericLiteral(1,42,44),42,44),
+                        new OmlSymbolicLiteralExpression(new OmlNumericLiteral(2,42,46),42,46)
+                      ],42,43),
+                      42,
+                      36
+                    ),
+                    nil,
+                    42,
+                    30
+                  )
+                ],
+                new OmlTraceMethodApply(
+                  "s",
+                  "Push",
+                  [
+                    new OmlName(
+                      nil,
+                      "x",
+                      42,
+                      59
+                    )
+                  ],
+                  42,
+                  52
+                ),
+                nil,
+                42,
+                52
+              ),
+              new OmlTraceDefinitionItem(
+                [
+                  
+                ],
+                new OmlTraceMethodApply(
+                  "s",
+                  "Pop",
+                  [
+                    
+                  ],
+                  43,
+                  19
+                ),
+                nil,
+                43,
+                19
+              )
+            ],42,61),
+            42,
+            17
+          )
+        ],40,1)
+      ],
+      false,
+      34,
+      1
+    )
+  ],0,0),
+  [
+    new OmlLexem(2,1,275,"class",1),
+    new OmlLexem(2,7,433,"Stack",2),
+    new OmlLexem(4,3,323,"instance",1),
+    new OmlLexem(4,12,423,"variables",1),
+    new OmlLexem(5,5,433,"stack",2),
+    new OmlLexem(5,11,58,":",0),
+    new OmlLexem(5,13,390,"seq",1),
+    new OmlLexem(5,17,360,"of",1),
+    new OmlLexem(5,20,324,"int",1),
+    new OmlLexem(5,24,265,":=",0),
+    new OmlLexem(5,27,91,"[",0),
+    new OmlLexem(5,28,93,"]",0),
+    new OmlLexem(5,29,59,";",0),
+    new OmlLexem(7,3,361,"operations",1),
+    new OmlLexem(9,5,375,"public",1),
+    new OmlLexem(10,5,433,"Reset",2),
+    new OmlLexem(10,11,58,":",0),
+    new OmlLexem(10,13,40,"(",0),
+    new OmlLexem(10,14,41,")",0),
+    new OmlLexem(10,16,362,"==>",0),
+    new OmlLexem(10,20,40,"(",0),
+    new OmlLexem(10,21,41,")",0),
+    new OmlLexem(11,5,433,"Reset",2),
+    new OmlLexem(11,11,40,"(",0),
+    new OmlLexem(11,12,41,")",0),
+    new OmlLexem(11,14,333,"==",0),
+    new OmlLexem(12,7,433,"stack",2),
+    new OmlLexem(12,13,265,":=",0),
+    new OmlLexem(12,16,91,"[",0),
+    new OmlLexem(12,17,93,"]",0),
+    new OmlLexem(12,18,59,";",0),
+    new OmlLexem(14,5,375,"public",1),
+    new OmlLexem(15,5,433,"Pop",2),
+    new OmlLexem(15,9,58,":",0),
+    new OmlLexem(15,11,40,"(",0),
+    new OmlLexem(15,12,41,")",0),
+    new OmlLexem(15,14,362,"==>",0),
+    new OmlLexem(15,18,324,"int",1),
+    new OmlLexem(16,5,433,"Pop",2),
+    new OmlLexem(16,8,40,"(",0),
+    new OmlLexem(16,9,41,")",0),
+    new OmlLexem(16,11,333,"==",0),
+    new OmlLexem(17,7,282,"def",1),
+    new OmlLexem(17,11,433,"res",2),
+    new OmlLexem(17,15,299,"=",0),
+    new OmlLexem(17,17,315,"hd",1),
+    new OmlLexem(17,20,433,"stack",2),
+    new OmlLexem(17,26,319,"in",1),
+    new OmlLexem(18,9,40,"(",0),
+    new OmlLexem(18,10,433,"stack",2),
+    new OmlLexem(18,16,265,":=",0),
+    new OmlLexem(18,19,415,"tl",1),
+    new OmlLexem(18,22,433,"stack",2),
+    new OmlLexem(18,27,59,";",0),
+    new OmlLexem(19,10,384,"return",1),
+    new OmlLexem(19,17,433,"res",2),
+    new OmlLexem(19,20,41,")",0),
+    new OmlLexem(20,5,369,"pre",1),
+    new OmlLexem(20,9,433,"stack",2),
+    new OmlLexem(20,15,358,"<>",0),
+    new OmlLexem(20,18,91,"[",0),
+    new OmlLexem(20,19,93,"]",0),
+    new OmlLexem(21,5,367,"post",1),
+    new OmlLexem(21,10,433,"stack",2),
+    new OmlLexem(21,15,316,"~",0),
+    new OmlLexem(21,17,299,"=",0),
+    new OmlLexem(21,19,91,"[",0),
+    new OmlLexem(21,20,433,"RESULT",2),
+    new OmlLexem(21,26,93,"]",0),
+    new OmlLexem(21,27,392,"^",0),
+    new OmlLexem(21,28,433,"stack",2),
+    new OmlLexem(21,33,59,";",0),
+    new OmlLexem(23,5,375,"public",1),
+    new OmlLexem(23,12,433,"Push",2),
+    new OmlLexem(23,16,58,":",0),
+    new OmlLexem(23,18,324,"int",1),
+    new OmlLexem(23,22,362,"==>",0),
+    new OmlLexem(23,26,40,"(",0),
+    new OmlLexem(23,27,41,")",0),
+    new OmlLexem(24,5,433,"Push",2),
+    new OmlLexem(24,9,40,"(",0),
+    new OmlLexem(24,10,433,"elem",2),
+    new OmlLexem(24,14,41,")",0),
+    new OmlLexem(24,16,333,"==",0),
+    new OmlLexem(25,7,433,"stack",2),
+    new OmlLexem(25,13,265,":=",0),
+    new OmlLexem(25,16,433,"stack",2),
+    new OmlLexem(25,22,392,"^",0),
+    new OmlLexem(25,23,91,"[",0),
+    new OmlLexem(25,24,433,"elem",2),
+    new OmlLexem(25,28,93,"]",0),
+    new OmlLexem(25,29,59,";",0),
+    new OmlLexem(27,5,375,"public",1),
+    new OmlLexem(28,5,433,"Top",2),
+    new OmlLexem(28,9,58,":",0),
+    new OmlLexem(28,11,40,"(",0),
+    new OmlLexem(28,12,41,")",0),
+    new OmlLexem(28,14,362,"==>",0),
+    new OmlLexem(28,18,324,"int",1),
+    new OmlLexem(29,5,433,"Top",2),
+    new OmlLexem(29,8,40,"(",0),
+    new OmlLexem(29,9,41,")",0),
+    new OmlLexem(29,11,333,"==",0),
+    new OmlLexem(30,7,384,"return",1),
+    new OmlLexem(30,14,40,"(",0),
+    new OmlLexem(30,15,315,"hd",1),
+    new OmlLexem(30,18,433,"stack",2),
+    new OmlLexem(30,23,41,")",0),
+    new OmlLexem(30,24,59,";",0),
+    new OmlLexem(33,1,298,"end",1),
+    new OmlLexem(33,5,433,"Stack",2),
+    new OmlLexem(34,1,275,"class",1),
+    new OmlLexem(34,7,433,"UseStack",2),
+    new OmlLexem(36,1,323,"instance",1),
+    new OmlLexem(36,10,423,"variables",1),
+    new OmlLexem(38,3,433,"s",2),
+    new OmlLexem(38,5,58,":",0),
+    new OmlLexem(38,7,433,"Stack",2),
+    new OmlLexem(38,13,265,":=",0),
+    new OmlLexem(38,16,354,"new",1),
+    new OmlLexem(38,20,433,"Stack",2),
+    new OmlLexem(38,25,40,"(",0),
+    new OmlLexem(38,26,41,")",0),
+    new OmlLexem(38,27,59,";",0),
+    new OmlLexem(40,1,418,"traces",1),
+    new OmlLexem(42,3,433,"PushBeforePop",2),
+    new OmlLexem(42,17,58,":",0),
+    new OmlLexem(42,19,433,"s",2),
+    new OmlLexem(42,20,46,".",0),
+    new OmlLexem(42,21,433,"Reset",2),
+    new OmlLexem(42,26,40,"(",0),
+    new OmlLexem(42,27,41,")",0),
+    new OmlLexem(42,28,59,";",0),
+    new OmlLexem(42,30,339,"let",1),
+    new OmlLexem(42,34,433,"x",2),
+    new OmlLexem(42,36,327,"in set",0),
+    new OmlLexem(42,43,123,"{",0),
+    new OmlLexem(42,44,435,"1",0),
+    new OmlLexem(42,45,44,",",0),
+    new OmlLexem(42,46,435,"2",0),
+    new OmlLexem(42,47,125,"}",0),
+    new OmlLexem(42,49,319,"in",1),
+    new OmlLexem(42,52,433,"s",2),
+    new OmlLexem(42,53,46,".",0),
+    new OmlLexem(42,54,433,"Push",2),
+    new OmlLexem(42,58,40,"(",0),
+    new OmlLexem(42,59,433,"x",2),
+    new OmlLexem(42,60,41,")",0),
+    new OmlLexem(42,61,59,";",0),
+    new OmlLexem(43,19,433,"s",2),
+    new OmlLexem(43,20,46,".",0),
+    new OmlLexem(43,21,433,"Pop",2),
+    new OmlLexem(43,24,40,"(",0),
+    new OmlLexem(43,25,41,")",0),
+    new OmlLexem(45,1,298,"end",1),
+    new OmlLexem(45,5,433,"UseStack",2)
+  ]
+);
+
+end TCFilteringVDMJTestData
+

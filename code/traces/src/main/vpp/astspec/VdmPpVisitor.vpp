@@ -1,0 +1,3301 @@
+\begin{vdm_al}
+class VdmPpVisitor is subclass of OmlVisitor
+
+values
+  private nl : seq of char = "\r\n";
+  private prefix : seq of char = "new Oml"
+
+instance variables
+  public result : seq of char := [];
+  private lvl : nat := 0
+
+operations
+  private pushNL: () ==> ()
+  pushNL () == lvl := lvl + 2;
+
+  private popNL: () ==> ()
+  popNL () == lvl := lvl - 2;
+
+  private getNL: () ==> seq of char
+  getNL () ==
+    ( dcl res : seq of char := nl, cnt : nat := lvl;
+      while cnt > 0 do ( res := res ^" "; cnt := cnt - 1 );
+      return res );
+
+  private printBoolField: bool ==> ()
+  printBoolField (pval) ==
+    result := if pval then "true" else "false";
+
+  private printCharField: char ==> ()
+  printCharField (pval) ==
+    result := [''',pval,'''];
+
+  private printNatField: nat ==> ()
+  -- implement this operation by hand!
+  printNatField (-) == error;
+
+  private printRealField: real ==> ()
+  -- implement this operation by hand!
+  printRealField (-) == error;
+
+  private printNodeField: IOmlNode ==> ()
+  printNodeField (pNode) == pNode.accept(self);
+
+  private patchString: seq of char ==> seq of char
+  patchString (str) ==
+   ( dcl res : seq of char := [];
+     for ch in str do
+       if ch = '\\' then res := res ^ "\\\\"
+       else if ch = '\"' then res := res ^ "\\\""
+       else res := res ^ [ch];
+     return res );
+
+  private printStringField: seq of char ==> ()
+  printStringField (str) == result := "\"" ^ patchString(str) ^ "\"";
+
+  private printSeqofField: seq of IOmlNode`FieldValue ==> ()
+  printSeqofField (pval) ==
+    ( dcl str : seq of char := "[", cnt : nat := len pval;
+      pushNL();
+      str := str ^ getNL();
+      while cnt > 0 do
+        ( printField(pval(len pval - cnt + 1));
+          str := str ^ result;
+          if cnt > 1
+          then str := str ^ "," ^ getNL();
+          cnt := cnt - 1 ); 
+      popNL();
+      str := str ^ getNL() ^ "]";
+      result := str );
+
+  private printSetofField: set of IOmlNode`FieldValue ==> ()
+  printSetofField (pval) ==
+    ( dcl str : seq of char := "{", cnt : nat := card pval,
+          pvs : set of IOmlNode`FieldValue := pval;
+      pushNL();
+      str := str ^ getNL();
+      while cnt > 0 do
+        let pv in set pvs in
+          ( printField(pv);
+            str := str ^ result;
+            pvs := pvs \ {pv};
+            if cnt > 1
+            then str := str ^ "," ^ getNL();
+            cnt := cnt - 1 ); 
+      popNL();
+      str := str ^ getNL() ^ "}";
+      result := str );
+
+  private printMapField: map IOmlNode`FieldValue to IOmlNode`FieldValue ==> ()
+  printMapField (pval) == 
+    ( dcl str : seq of char := "{", cnt : nat := card dom pval,
+          pvs : set of IOmlNode`FieldValue := dom pval;
+      pushNL();
+      str := str ^ getNL();
+      while cnt > 0 do
+        let pv in set pvs in
+          ( printField(pv);
+            str := str ^ result ^ " |-> ";
+            printField(pval(pv));
+            str := str ^ result;
+            pvs := pvs \ {pv};
+            if cnt > 1
+            then str := str ^ "," ^ getNL();
+            cnt := cnt - 1 ); 
+      popNL();
+      str := str ^ getNL() ^ "}";
+      result := str );
+
+  private printField: IOmlNode`FieldValue ==> ()
+  printField (fld) ==
+    if is_bool(fld) then printBoolField(fld)
+    elseif is_char(fld) then printCharField(fld)
+    elseif is_nat(fld) then printNatField(fld)
+    elseif is_real(fld) then printRealField(fld)
+    elseif isofclass(IOmlNode,fld) then printNodeField(fld)
+    else printStringField(fld);
+
+  public visitNode: IOmlNode ==> ()
+  visitNode (pNode) == pNode.accept(self);
+
+  public visitDocument: IOmlDocument ==> ()
+  visitDocument(pcmp) ==
+    ( dcl str : seq of char := "new OmlDocument(",
+          lxms : seq of IOmlLexem := pcmp.getLexems();
+      pushNL();
+      printStringField(pcmp.getFilename());
+      str := str ^ result ^ "," ^ getNL();
+      if pcmp.hasSpecifications() then visitSpecifications(pcmp.getSpecifications());
+      if pcmp.hasExpression() then visitExpression(pcmp.getExpression());
+      str := str ^ result ^ "," ^ getNL();
+      str := str ^ "[";
+      if len lxms > 0
+      then ( pushNL();
+             while len lxms > 0 do
+               ( visitLexem(hd lxms);
+                 str := str ^ getNL() ^ result;
+                 lxms := tl lxms;
+                 if len lxms > 0
+                 then str := str ^ "," );
+             popNL() );
+      str := str ^ getNL() ^ "]";
+      popNL();
+      str := str ^ getNL() ^ ")";
+      result := str );
+
+  public visitLexem: IOmlLexem ==> ()
+  visitLexem(pcmp) ==
+    ( dcl str : seq of char := "new OmlLexem(";
+      printNatField(pcmp.getLine());
+      str := str ^ result ^ ",";
+      printNatField(pcmp.getColumn());
+      str := str ^ result ^ ",";
+      printNatField(pcmp.getLexval());
+      str := str ^ result ^ ",";
+      printStringField(pcmp.getText());
+      str := str ^ result ^ ",";
+      printNatField(pcmp.getType());
+      str := str ^ result ^ ")";
+      result := str );
+
+  public visitOldName: IOmlOldName ==> ()
+  visitOldName(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitIntType: IOmlIntType ==> ()
+  visitIntType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitSeqConcPattern: IOmlSeqConcPattern ==> ()
+  visitSeqConcPattern(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getLhsPattern());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getRhsPattern());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitSkipStatement: IOmlSkipStatement ==> ()
+  visitSkipStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitPeriodicThread: IOmlPeriodicThread ==> ()
+  visitPeriodicThread(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printSeqofField(pcmp.getArgs());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getName());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitCallStatement: IOmlCallStatement ==> ()
+  visitCallStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      if pcmp.hasObjectDesignator()
+      then printNodeField(pcmp.getObjectDesignator())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getName());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getExpressionList());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitIsofclassExpression: IOmlIsofclassExpression ==> ()
+  visitIsofclassExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getName());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitIndexForLoop: IOmlIndexForLoop ==> ()
+  visitIndexForLoop(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getInitExpression());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getLimitExpression());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasByExpression()
+      then printNodeField(pcmp.getByExpression())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getStatement());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitTextLiteral: IOmlTextLiteral ==> ()
+  visitTextLiteral(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printStringField(pcmp.getVal());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitSymbolicLiteralExpression: IOmlSymbolicLiteralExpression ==> ()
+  visitSymbolicLiteralExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNodeField(pcmp.getLiteral());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitReqExpression: IOmlReqExpression ==> ()
+  visitReqExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getNameList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitPermissionPredicate: IOmlPermissionPredicate ==> ()
+  visitPermissionPredicate(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getName());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitProcedureThread: IOmlProcedureThread ==> ()
+  visitProcedureThread(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNodeField(pcmp.getStatement());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitSetType: IOmlSetType ==> ()
+  visitSetType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNodeField(pcmp.getType());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitMapEnumeration: IOmlMapEnumeration ==> ()
+  visitMapEnumeration(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getMapletList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitNewExpression: IOmlNewExpression ==> ()
+  visitNewExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getName());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getGenericTypes());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getExpressionList());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitAtomicStatement: IOmlAtomicStatement ==> ()
+  visitAtomicStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getAssignmentList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitFieldReference: IOmlFieldReference ==> ()
+  visitFieldReference(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getStateDesignator());
+      str := str ^result ^"," ^getNL();
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitClass: IOmlClass ==> ()
+  visitClass(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getGenericTypes());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasInheritanceClause()
+      then printNodeField(pcmp.getInheritanceClause())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getClassBody());
+      str := str ^result ^"," ^getNL();
+      printBoolField(pcmp.getSystemSpec());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitBlockStatement: IOmlBlockStatement ==> ()
+  visitBlockStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printSeqofField(pcmp.getDclStatementList());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getStatementList());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitUnaryExpression: IOmlUnaryExpression ==> ()
+  visitUnaryExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getOperator());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitInjectiveMapType: IOmlInjectiveMapType ==> ()
+  visitInjectiveMapType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getDomType());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getRngType());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitNumericLiteral: IOmlNumericLiteral ==> ()
+  visitNumericLiteral(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getVal());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitMatchValue: IOmlMatchValue ==> ()
+  visitMatchValue(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitOperationTrailer: IOmlOperationTrailer ==> ()
+  visitOperationTrailer(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      if pcmp.hasExternals()
+      then printNodeField(pcmp.getExternals())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasPreExpression()
+      then printNodeField(pcmp.getPreExpression())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasPostExpression()
+      then printNodeField(pcmp.getPostExpression())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasExceptions()
+      then printNodeField(pcmp.getExceptions())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitTypeDefinitions: IOmlTypeDefinitions ==> ()
+  visitTypeDefinitions(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getTypeList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitTypeBind: IOmlTypeBind ==> ()
+  visitTypeBind(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printSeqofField(pcmp.getPattern());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getType());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitRecordModifier: IOmlRecordModifier ==> ()
+  visitRecordModifier(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitObjectDesignatorExpression: IOmlObjectDesignatorExpression ==> ()
+  visitObjectDesignatorExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitTraceLetBinding: IOmlTraceLetBinding ==> ()
+  visitTraceLetBinding(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getDefinitionList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitIdentifierTypePair: IOmlIdentifierTypePair ==> ()
+  visitIdentifierTypePair(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getType());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitRealLiteral: IOmlRealLiteral ==> ()
+  visitRealLiteral(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printRealField(pcmp.getVal());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitPatternBindExpression: IOmlPatternBindExpression ==> ()
+  visitPatternBindExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getPatternBind());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitTrapDefinition: IOmlTrapDefinition ==> ()
+  visitTrapDefinition(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getPatternBind());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getStatement());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitSelfExpression: IOmlSelfExpression ==> ()
+  visitSelfExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitRecursiveTrapStatement: IOmlRecursiveTrapStatement ==> ()
+  visitRecursiveTrapStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printSeqofField(pcmp.getTrapList());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getInPart());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitOperationDefinition: IOmlOperationDefinition ==> ()
+  visitOperationDefinition(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getAccess());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getShape());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitWhileLoop: IOmlWhileLoop ==> ()
+  visitWhileLoop(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getStatement());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitDefStatement: IOmlDefStatement ==> ()
+  visitDefStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printSeqofField(pcmp.getDefinitionList());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getStatement());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitSeq0Type: IOmlSeq0Type ==> ()
+  visitSeq0Type(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNodeField(pcmp.getType());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitSetForLoop: IOmlSetForLoop ==> ()
+  visitSetForLoop(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getPattern());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getStatement());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitDefExpression: IOmlDefExpression ==> ()
+  visitDefExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printSeqofField(pcmp.getPatternBindList());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitDurationStatement: IOmlDurationStatement ==> ()
+  visitDurationStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printSeqofField(pcmp.getDurationExpression());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getStatement());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitImplicitOperation: IOmlImplicitOperation ==> ()
+  visitImplicitOperation(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getPatternTypePairList());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getIdentifierTypePairList());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getTrailer());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitTypeVariable: IOmlTypeVariable ==> ()
+  visitTypeVariable(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitCompositeType: IOmlCompositeType ==> ()
+  visitCompositeType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getFieldList());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitTraceChoiceDefinition: IOmlTraceChoiceDefinition ==> ()
+  visitTraceChoiceDefinition(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getDefs());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitOperationType: IOmlOperationType ==> ()
+  visitOperationType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getDomType());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getRngType());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitBooleanLiteral: IOmlBooleanLiteral ==> ()
+  visitBooleanLiteral(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printBoolField(pcmp.getVal());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitCasesStatementAlternative: IOmlCasesStatementAlternative ==> ()
+  visitCasesStatementAlternative(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printSeqofField(pcmp.getPatternList());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getStatement());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitActiveExpression: IOmlActiveExpression ==> ()
+  visitActiveExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getNameList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitForAllExpression: IOmlForAllExpression ==> ()
+  visitForAllExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printSeqofField(pcmp.getBindList());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitSpecifications: IOmlSpecifications ==> ()
+  visitSpecifications(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getClassList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitCasesExpression: IOmlCasesExpression ==> ()
+  visitCasesExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getMatchExpression());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getAlternativeList());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasOthersExpression()
+      then printNodeField(pcmp.getOthersExpression())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitIfExpression: IOmlIfExpression ==> ()
+  visitIfExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getIfExpression());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getThenExpression());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getElseifExpressionList());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getElseExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitValueDefinitions: IOmlValueDefinitions ==> ()
+  visitValueDefinitions(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getValueList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitCasesStatement: IOmlCasesStatement ==> ()
+  visitCasesStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getMatchExpression());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getAlternativeList());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasOthersStatement()
+      then printNodeField(pcmp.getOthersStatement())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitErrorStatement: IOmlErrorStatement ==> ()
+  visitErrorStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitImplicitFunction: IOmlImplicitFunction ==> ()
+  visitImplicitFunction(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getTypeVariableList());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getPatternTypePairList());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getIdentifierTypePairList());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getTrailer());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitNatType: IOmlNatType ==> ()
+  visitNatType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitSamebaseclassExpression: IOmlSamebaseclassExpression ==> ()
+  visitSamebaseclassExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getLhsExpression());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getRhsExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitComplexType: IOmlComplexType ==> ()
+  visitComplexType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getFieldList());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasInvariant()
+      then printNodeField(pcmp.getInvariant())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitExternals: IOmlExternals ==> ()
+  visitExternals(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getExtList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitSubsequenceExpression: IOmlSubsequenceExpression ==> ()
+  visitSubsequenceExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getLower());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getUpper());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitElseIfStatement: IOmlElseIfStatement ==> ()
+  visitElseIfStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getStatement());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitGeneralMapType: IOmlGeneralMapType ==> ()
+  visitGeneralMapType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getDomType());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getRngType());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitSpecificationStatement: IOmlSpecificationStatement ==> ()
+  visitSpecificationStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      if pcmp.hasExternals()
+      then printNodeField(pcmp.getExternals())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasPreExpression()
+      then printNodeField(pcmp.getPreExpression())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getPostExpression());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasExceptions()
+      then printNodeField(pcmp.getExceptions())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitTuplePattern: IOmlTuplePattern ==> ()
+  visitTuplePattern(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getPatternList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitTraceBracketedDefinition: IOmlTraceBracketedDefinition ==> ()
+  visitTraceBracketedDefinition(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNodeField(pcmp.getDefinition());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitField: IOmlField ==> ()
+  visitField(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      if pcmp.hasIdentifier()
+      then printStringField(pcmp.getIdentifier())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getType());
+      str := str ^result ^"," ^getNL();
+      printBoolField(pcmp.getIgnore());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitNamedTrace: IOmlNamedTrace ==> ()
+  visitNamedTrace(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printStringField(pcmp.getName());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getDefs());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitTraceSequenceDefinition: IOmlTraceSequenceDefinition ==> ()
+  visitTraceSequenceDefinition(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getDefs());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitTokenType: IOmlTokenType ==> ()
+  visitTokenType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitTraceRange: IOmlTraceRange ==> ()
+  visitTraceRange(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getLower());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasUpper()
+      then printNodeField(pcmp.getUpper())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitTypeName: IOmlTypeName ==> ()
+  visitTypeName(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNodeField(pcmp.getName());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitTypeDefinition: IOmlTypeDefinition ==> ()
+  visitTypeDefinition(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getAccess());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getShape());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitExplicitOperation: IOmlExplicitOperation ==> ()
+  visitExplicitOperation(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getType());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getParameterList());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getBody());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getTrailer());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitAssignmentDefinition: IOmlAssignmentDefinition ==> ()
+  visitAssignmentDefinition(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getType());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasExpression()
+      then printNodeField(pcmp.getExpression())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitSameclassExpression: IOmlSameclassExpression ==> ()
+  visitSameclassExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getLhsExpression());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getRhsExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitExitStatement: IOmlExitStatement ==> ()
+  visitExitStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      if pcmp.hasExpression()
+      then printNodeField(pcmp.getExpression())
+      else result := "nil";
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitExistsExpression: IOmlExistsExpression ==> ()
+  visitExistsExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printSeqofField(pcmp.getBindList());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitParameter: IOmlParameter ==> ()
+  visitParameter(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getPatternList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitFunctionTypeInstantiation: IOmlFunctionTypeInstantiation ==> ()
+  visitFunctionTypeInstantiation(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getName());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getTypeList());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitSequenceEnumeration: IOmlSequenceEnumeration ==> ()
+  visitSequenceEnumeration(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getExpressionList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitObjectApply: IOmlObjectApply ==> ()
+  visitObjectApply(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getObjectDesignator());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getExpressionList());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitSetUnionPattern: IOmlSetUnionPattern ==> ()
+  visitSetUnionPattern(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getLhsPattern());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getRhsPattern());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitTraceOneOrMore: IOmlTraceOneOrMore ==> ()
+  visitTraceOneOrMore(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitStartStatement: IOmlStartStatement ==> ()
+  visitStartStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitError: IOmlError ==> ()
+  visitError(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getLhs());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getRhs());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitIfStatement: IOmlIfStatement ==> ()
+  visitIfStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getThenStatement());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getElseifStatement());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasElseStatement()
+      then printNodeField(pcmp.getElseStatement())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitLetBeExpression: IOmlLetBeExpression ==> ()
+  visitLetBeExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getBind());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasBest()
+      then printNodeField(pcmp.getBest())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitTotalFunctionType: IOmlTotalFunctionType ==> ()
+  visitTotalFunctionType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getDomType());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getRngType());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitNilLiteral: IOmlNilLiteral ==> ()
+  visitNilLiteral(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitSporadicThread: IOmlSporadicThread ==> ()
+  visitSporadicThread(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printSeqofField(pcmp.getArgs());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getName());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitMapComprehension: IOmlMapComprehension ==> ()
+  visitMapComprehension(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getBindList());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasGuard()
+      then printNodeField(pcmp.getGuard())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitFunctionDefinition: IOmlFunctionDefinition ==> ()
+  visitFunctionDefinition(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getAccess());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getShape());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitRecordConstructor: IOmlRecordConstructor ==> ()
+  visitRecordConstructor(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getName());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getExpressionList());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitBoolType: IOmlBoolType ==> ()
+  visitBoolType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitSetBind: IOmlSetBind ==> ()
+  visitSetBind(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printSeqofField(pcmp.getPattern());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitNondeterministicStatement: IOmlNondeterministicStatement ==> ()
+  visitNondeterministicStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getStatementList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitInstanceVariable: IOmlInstanceVariable ==> ()
+  visitInstanceVariable(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getAccess());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getAssignmentDefinition());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitLetExpression: IOmlLetExpression ==> ()
+  visitLetExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printSeqofField(pcmp.getDefinitionList());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitPatternIdentifier: IOmlPatternIdentifier ==> ()
+  visitPatternIdentifier(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitSymbolicLiteralPattern: IOmlSymbolicLiteralPattern ==> ()
+  visitSymbolicLiteralPattern(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNodeField(pcmp.getLiteral());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitTupleConstructor: IOmlTupleConstructor ==> ()
+  visitTupleConstructor(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getExpressionList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitTraceZeroOrMore: IOmlTraceZeroOrMore ==> ()
+  visitTraceZeroOrMore(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitOptionalType: IOmlOptionalType ==> ()
+  visitOptionalType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNodeField(pcmp.getType());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitMutexAllPredicate: IOmlMutexAllPredicate ==> ()
+  visitMutexAllPredicate(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitAccessDefinition: IOmlAccessDefinition ==> ()
+  visitAccessDefinition(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printBoolField(pcmp.getAsyncAccess());
+      str := str ^result ^"," ^getNL();
+      printBoolField(pcmp.getStaticAccess());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getScope());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitSequenceComprehension: IOmlSequenceComprehension ==> ()
+  visitSequenceComprehension(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getSetBind());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasGuard()
+      then printNodeField(pcmp.getGuard())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitEqualsDefinition: IOmlEqualsDefinition ==> ()
+  visitEqualsDefinition(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getPatternBind());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitMaplet: IOmlMaplet ==> ()
+  visitMaplet(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getDomExpression());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getRngExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitExistsUniqueExpression: IOmlExistsUniqueExpression ==> ()
+  visitExistsUniqueExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getBind());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitThreadIdExpression: IOmlThreadIdExpression ==> ()
+  visitThreadIdExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitExtendedExplicitOperation: IOmlExtendedExplicitOperation ==> ()
+  visitExtendedExplicitOperation(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getPatternTypePairList());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getIdentifierTypePairList());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getBody());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getTrailer());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitSetComprehension: IOmlSetComprehension ==> ()
+  visitSetComprehension(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getBindList());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasGuard()
+      then printNodeField(pcmp.getGuard())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitIotaExpression: IOmlIotaExpression ==> ()
+  visitIotaExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getBind());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitReturnStatement: IOmlReturnStatement ==> ()
+  visitReturnStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      if pcmp.hasExpression()
+      then printNodeField(pcmp.getExpression())
+      else result := "nil";
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitTraceZeroOrOne: IOmlTraceZeroOrOne ==> ()
+  visitTraceZeroOrOne(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitSetEnumPattern: IOmlSetEnumPattern ==> ()
+  visitSetEnumPattern(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getPatternList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitFunctionDefinitions: IOmlFunctionDefinitions ==> ()
+  visitFunctionDefinitions(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getFunctionList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitTrapStatement: IOmlTrapStatement ==> ()
+  visitTrapStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getPatternBind());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getWithPart());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getInPart());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitFieldSelect: IOmlFieldSelect ==> ()
+  visitFieldSelect(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getName());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitFunctionTypeSelect: IOmlFunctionTypeSelect ==> ()
+  visitFunctionTypeSelect(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getFunctionTypeInstantiation());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitSeq1Type: IOmlSeq1Type ==> ()
+  visitSeq1Type(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNodeField(pcmp.getType());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitOperationBody: IOmlOperationBody ==> ()
+  visitOperationBody(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      if pcmp.hasStatement()
+      then printNodeField(pcmp.getStatement())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printBoolField(pcmp.getNotYetSpecified());
+      str := str ^result ^"," ^getNL();
+      printBoolField(pcmp.getSubclassResponsibility());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitClassTypeInstantiation: IOmlClassTypeInstantiation ==> ()
+  visitClassTypeInstantiation(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getName());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getGenericTypes());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitApplyExpression: IOmlApplyExpression ==> ()
+  visitApplyExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getExpressionList());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitValueShape: IOmlValueShape ==> ()
+  visitValueShape(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getPattern());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasType()
+      then printNodeField(pcmp.getType())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitCyclesStatement: IOmlCyclesStatement ==> ()
+  visitCyclesStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printSeqofField(pcmp.getCyclesExpression());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getStatement());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitOperationDefinitions: IOmlOperationDefinitions ==> ()
+  visitOperationDefinitions(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getOperationList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitExplicitFunction: IOmlExplicitFunction ==> ()
+  visitExplicitFunction(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getTypeVariableList());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getType());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getParameterList());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getBody());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getTrailer());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitPreconditionExpression: IOmlPreconditionExpression ==> ()
+  visitPreconditionExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getExpressionList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitTraceLetBeBinding: IOmlTraceLetBeBinding ==> ()
+  visitTraceLetBeBinding(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getBind());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasBest()
+      then printNodeField(pcmp.getBest())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitQuoteLiteral: IOmlQuoteLiteral ==> ()
+  visitQuoteLiteral(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printStringField(pcmp.getVal());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitVarInformation: IOmlVarInformation ==> ()
+  visitVarInformation(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getMode());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getNameList());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasType()
+      then printNodeField(pcmp.getType())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitIsofbaseclassExpression: IOmlIsofbaseclassExpression ==> ()
+  visitIsofbaseclassExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getName());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitLetStatement: IOmlLetStatement ==> ()
+  visitLetStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printSeqofField(pcmp.getDefinitionList());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getStatement());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitActExpression: IOmlActExpression ==> ()
+  visitActExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getNameList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitExceptions: IOmlExceptions ==> ()
+  visitExceptions(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getErrorList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitIsExpression: IOmlIsExpression ==> ()
+  visitIsExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getType());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitTraceDefinitions: IOmlTraceDefinitions ==> ()
+  visitTraceDefinitions(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getTraces());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitValueDefinition: IOmlValueDefinition ==> ()
+  visitValueDefinition(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getAccess());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getShape());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitCasesExpressionAlternative: IOmlCasesExpressionAlternative ==> ()
+  visitCasesExpressionAlternative(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printSeqofField(pcmp.getPatternList());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitLetBeStatement: IOmlLetBeStatement ==> ()
+  visitLetBeStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getBind());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasBest()
+      then printNodeField(pcmp.getBest())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getStatement());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitMutexPredicate: IOmlMutexPredicate ==> ()
+  visitMutexPredicate(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getNameList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitUndefinedExpression: IOmlUndefinedExpression ==> ()
+  visitUndefinedExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitSetEnumeration: IOmlSetEnumeration ==> ()
+  visitSetEnumeration(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getExpressionList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitCharacterLiteral: IOmlCharacterLiteral ==> ()
+  visitCharacterLiteral(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printCharField(pcmp.getVal());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitAssignStatement: IOmlAssignStatement ==> ()
+  visitAssignStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getStateDesignator());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitProductType: IOmlProductType ==> ()
+  visitProductType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getLhsType());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getRhsType());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitSequenceForLoop: IOmlSequenceForLoop ==> ()
+  visitSequenceForLoop(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getPatternBind());
+      str := str ^result ^"," ^getNL();
+      printBoolField(pcmp.getInReverse());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getStatement());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitInstanceVariableDefinitions: IOmlInstanceVariableDefinitions ==> ()
+  visitInstanceVariableDefinitions(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getVariablesList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitRealType: IOmlRealType ==> ()
+  visitRealType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitCharType: IOmlCharType ==> ()
+  visitCharType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitTraceMethodApply: IOmlTraceMethodApply ==> ()
+  visitTraceMethodApply(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printStringField(pcmp.getVariableName());
+      str := str ^result ^"," ^getNL();
+      printStringField(pcmp.getMethodName());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getArgs());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitWaitingExpression: IOmlWaitingExpression ==> ()
+  visitWaitingExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getNameList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitInvariant: IOmlInvariant ==> ()
+  visitInvariant(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getPattern());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitObjectFieldReference: IOmlObjectFieldReference ==> ()
+  visitObjectFieldReference(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getObjectDesignator());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getName());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitEmptyType: IOmlEmptyType ==> ()
+  visitEmptyType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitBracketedType: IOmlBracketedType ==> ()
+  visitBracketedType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNodeField(pcmp.getType());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitFinExpression: IOmlFinExpression ==> ()
+  visitFinExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getNameList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitSetRangeExpression: IOmlSetRangeExpression ==> ()
+  visitSetRangeExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getLower());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getUpper());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitSimpleType: IOmlSimpleType ==> ()
+  visitSimpleType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getType());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasInvariant()
+      then printNodeField(pcmp.getInvariant())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitTokenExpression: IOmlTokenExpression ==> ()
+  visitTokenExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitBracketedExpression: IOmlBracketedExpression ==> ()
+  visitBracketedExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitFunctionBody: IOmlFunctionBody ==> ()
+  visitFunctionBody(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      if pcmp.hasFunctionBody()
+      then printNodeField(pcmp.getFunctionBody())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printBoolField(pcmp.getNotYetSpecified());
+      str := str ^result ^"," ^getNL();
+      printBoolField(pcmp.getSubclassResponsibility());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitLambdaExpression: IOmlLambdaExpression ==> ()
+  visitLambdaExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printSeqofField(pcmp.getTypeBindList());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitInstanceVariableInvariant: IOmlInstanceVariableInvariant ==> ()
+  visitInstanceVariableInvariant(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNodeField(pcmp.getInvariant());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitPartialFunctionType: IOmlPartialFunctionType ==> ()
+  visitPartialFunctionType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getDomType());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getRngType());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitInheritanceClause: IOmlInheritanceClause ==> ()
+  visitInheritanceClause(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getIdentifierList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitDontCarePattern: IOmlDontCarePattern ==> ()
+  visitDontCarePattern(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitSeqEnumPattern: IOmlSeqEnumPattern ==> ()
+  visitSeqEnumPattern(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getPatternList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitUnionType: IOmlUnionType ==> ()
+  visitUnionType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getLhsType());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getRhsType());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitTraceDefinitionItem: IOmlTraceDefinitionItem ==> ()
+  visitTraceDefinitionItem(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printSeqofField(pcmp.getBind());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getTest());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasRegexpr()
+      then printNodeField(pcmp.getRegexpr())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitTypelessExplicitFunction: IOmlTypelessExplicitFunction ==> ()
+  visitTypelessExplicitFunction(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getParameterList());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getBody());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getTrailer());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitThreadDefinition: IOmlThreadDefinition ==> ()
+  visitThreadDefinition(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      if pcmp.hasThreadSpecification()
+      then printNodeField(pcmp.getThreadSpecification())
+      else result := "nil";
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitAlwaysStatement: IOmlAlwaysStatement ==> ()
+  visitAlwaysStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getAlwaysPart());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getInPart());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitRecordPattern: IOmlRecordPattern ==> ()
+  visitRecordPattern(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getName());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getPatternList());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitQuoteType: IOmlQuoteType ==> ()
+  visitQuoteType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNodeField(pcmp.getQuoteLiteral());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitDclStatement: IOmlDclStatement ==> ()
+  visitDclStatement(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getDefinitionList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitBinaryExpression: IOmlBinaryExpression ==> ()
+  visitBinaryExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getLhsExpression());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getOperator());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getRhsExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitPatternTypePair: IOmlPatternTypePair ==> ()
+  visitPatternTypePair(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printSeqofField(pcmp.getPatternList());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getType());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitMapOrSequenceReference: IOmlMapOrSequenceReference ==> ()
+  visitMapOrSequenceReference(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getStateDesignator());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitElseIfExpression: IOmlElseIfExpression ==> ()
+  visitElseIfExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getElseifExpression());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getThenExpression());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitName: IOmlName ==> ()
+  visitName(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      if pcmp.hasClassIdentifier()
+      then printStringField(pcmp.getClassIdentifier())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitNat1Type: IOmlNat1Type ==> ()
+  visitNat1Type(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitSynchronizationDefinitions: IOmlSynchronizationDefinitions ==> ()
+  visitSynchronizationDefinitions(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getSyncList());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitMuExpression: IOmlMuExpression ==> ()
+  visitMuExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNodeField(pcmp.getExpression());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getModifierList());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitFunctionTrailer: IOmlFunctionTrailer ==> ()
+  visitFunctionTrailer(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      if pcmp.hasPreExpression()
+      then printNodeField(pcmp.getPreExpression())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasPostExpression()
+      then printNodeField(pcmp.getPostExpression())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitTimeExpression: IOmlTimeExpression ==> ()
+  visitTimeExpression(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitRatType: IOmlRatType ==> ()
+  visitRatType(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitStateDesignatorName: IOmlStateDesignatorName ==> ()
+  visitStateDesignatorName(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printNodeField(pcmp.getName());
+      str := str ^result ^",";
+      printNatField(pcmp.getLine());
+      str := str ^result ^",";
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      str := str ^")";
+      result := str );
+
+  public visitExtendedExplicitFunction: IOmlExtendedExplicitFunction ==> ()
+  visitExtendedExplicitFunction(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printStringField(pcmp.getIdentifier());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getTypeVariableList());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getPatternTypePairList());
+      str := str ^result ^"," ^getNL();
+      printSeqofField(pcmp.getIdentifierTypePairList());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getBody());
+      str := str ^result ^"," ^getNL();
+      printNodeField(pcmp.getTrailer());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getLine());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getColumn());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      result := str );
+
+  public visitLiteral: IOmlLiteral ==> ()
+  visitLiteral(pNode) == pNode.accept(self);
+
+  public visitTraceDefinition: IOmlTraceDefinition ==> ()
+  visitTraceDefinition(pNode) == pNode.accept(self);
+
+  public visitType: IOmlType ==> ()
+  visitType(pNode) == pNode.accept(self);
+
+  public visitStatement: IOmlStatement ==> ()
+  visitStatement(pNode) == pNode.accept(self);
+
+  public visitThreadSpecification: IOmlThreadSpecification ==> ()
+  visitThreadSpecification(pNode) == pNode.accept(self);
+
+  public visitDefinitionBlock: IOmlDefinitionBlock ==> ()
+  visitDefinitionBlock(pNode) == pNode.accept(self);
+
+  public visitPatternBind: IOmlPatternBind ==> ()
+  visitPatternBind(pNode) == pNode.accept(self);
+
+  public visitMode: IOmlMode ==> ()
+  visitMode(pNode) == 
+    ( dcl str : seq of char := prefix ^pNode.identity() ^"(";
+      printNatField(pNode.getValue());
+      str := str ^ result ^ ",";
+      printNatField(pNode.getLine());
+      str := str ^ result ^ ",";
+      printNatField(pNode.getColumn());
+      str := str ^ result ^ ")";
+      result := str );
+
+  public visitBind: IOmlBind ==> ()
+  visitBind(pNode) == pNode.accept(self);
+
+  public visitOperationShape: IOmlOperationShape ==> ()
+  visitOperationShape(pNode) == pNode.accept(self);
+
+  public visitTraceCoreDefinition: IOmlTraceCoreDefinition ==> ()
+  visitTraceCoreDefinition(pNode) == pNode.accept(self);
+
+  public visitTraceRepeatPattern: IOmlTraceRepeatPattern ==> ()
+  visitTraceRepeatPattern(pNode) == pNode.accept(self);
+
+  public visitFunctionShape: IOmlFunctionShape ==> ()
+  visitFunctionShape(pNode) == pNode.accept(self);
+
+  public visitBinaryOperator: IOmlBinaryOperator ==> ()
+  visitBinaryOperator(pNode) == 
+    ( dcl str : seq of char := prefix ^pNode.identity() ^"(";
+      printNatField(pNode.getValue());
+      str := str ^ result ^ ",";
+      printNatField(pNode.getLine());
+      str := str ^ result ^ ",";
+      printNatField(pNode.getColumn());
+      str := str ^ result ^ ")";
+      result := str );
+
+  public visitStateDesignator: IOmlStateDesignator ==> ()
+  visitStateDesignator(pNode) == pNode.accept(self);
+
+  public visitUnaryOperator: IOmlUnaryOperator ==> ()
+  visitUnaryOperator(pNode) == 
+    ( dcl str : seq of char := prefix ^pNode.identity() ^"(";
+      printNatField(pNode.getValue());
+      str := str ^ result ^ ",";
+      printNatField(pNode.getLine());
+      str := str ^ result ^ ",";
+      printNatField(pNode.getColumn());
+      str := str ^ result ^ ")";
+      result := str );
+
+  public visitInstanceVariableShape: IOmlInstanceVariableShape ==> ()
+  visitInstanceVariableShape(pNode) == pNode.accept(self);
+
+  public visitPattern: IOmlPattern ==> ()
+  visitPattern(pNode) == pNode.accept(self);
+
+  public visitExpression: IOmlExpression ==> ()
+  visitExpression(pNode) == pNode.accept(self);
+
+  public visitObjectDesignator: IOmlObjectDesignator ==> ()
+  visitObjectDesignator(pNode) == pNode.accept(self);
+
+  public visitTraceBinding: IOmlTraceBinding ==> ()
+  visitTraceBinding(pNode) == pNode.accept(self);
+
+  public visitTypeShape: IOmlTypeShape ==> ()
+  visitTypeShape(pNode) == pNode.accept(self);
+
+  public visitSyncPredicate: IOmlSyncPredicate ==> ()
+  visitSyncPredicate(pNode) == pNode.accept(self);
+
+  public visitScope: IOmlScope ==> ()
+  visitScope(pNode) == 
+    ( dcl str : seq of char := prefix ^pNode.identity() ^"(";
+      printNatField(pNode.getValue());
+      str := str ^ result ^ ",";
+      printNatField(pNode.getLine());
+      str := str ^ result ^ ",";
+      printNatField(pNode.getColumn());
+      str := str ^ result ^ ")";
+      result := str );
+
+end VdmPpVisitor
+\end{vdm_al}

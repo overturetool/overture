@@ -1,0 +1,133 @@
+\section{Semantic values during evaluation}
+
+This class provides a representation for semantic values resulting
+from evaluation of expressions. In addition it provides functionality
+to transform such semantic values to semantically equivalent syntactic
+expression in AST format. These can then subsequently be translated
+into VDM++ concrete syntax in the form of a sequence of chars.
+
+\begin{vdm_al}
+class SEM
+
+types
+
+public VAL = BasicVal | SEQ | SET | MAP | TUPLE | REC | TOKEN | OBJ | OBJ_Ref;
+
+public BasicVal = BOOL | NUM | CHAR | QUOTE | NIL;
+
+public BOOL:: v : bool;
+
+public NUM :: v : real;
+
+public CHAR :: v : char;
+
+public QUOTE :: v : seq of char;
+
+public NIL:: ;
+
+public SEQ :: v : seq of VAL;
+
+public SET :: v : set of VAL;
+
+public MAP :: v : map VAL to VAL;
+
+public TUPLE :: v : seq of VAL;
+
+public REC :: 
+  tag : DEF`Name
+  v   : seq of VAL;
+
+public TOKEN :: v : VAL;
+
+public OBJ ::
+  nm  : seq of char
+  e_l : seq of VAL;
+ 
+public OBJ_Ref:: nat;
+
+instance variables
+
+static cacheval: map VAL to IOmlExpression := {|->};
+
+operations
+
+static public VAL2IOmlExpr: VAL ==> IOmlExpression
+VAL2IOmlExpr(val) ==
+  if val in set dom cacheval
+  then return cacheval(val)
+  else let e = cases val:
+                 mk_BOOL(v) -> let l = new OmlBooleanLiteral(v)
+                               in
+                                 new OmlSymbolicLiteralExpression(l),
+                 mk_NUM(v)  -> let l = new OmlRealLiteral(v)
+                               in
+                                 new OmlSymbolicLiteralExpression(l),
+                 mk_CHAR(v) -> let l = new OmlCharacterLiteral(v)
+                               in
+                                 new OmlSymbolicLiteralExpression(l),
+                 mk_QUOTE(v)-> let l = new OmlQuoteLiteral(v)
+                               in
+                                 new OmlSymbolicLiteralExpression(l),
+                 mk_NIL()   -> let l = new OmlNilLiteral()
+                               in
+                                 new OmlSymbolicLiteralExpression(l),
+                 mk_SET(v)  -> let e_l = VALSet2IOmlExpr(v)
+                               in
+                                 new OmlSetEnumeration(e_l),
+                 mk_SEQ(v)  -> let e_l = VALSeq2IOmlExpr(v)
+                               in
+                                 new OmlSequenceEnumeration(e_l),
+                 mk_MAP(v)  -> let e_l = VALMap2IOmlExpr(v)
+                               in
+                                 new OmlMapEnumeration(e_l),
+                 mk_TUPLE(v)-> let e_l = VALSeq2IOmlExpr(v)
+                               in
+                                 new OmlTupleConstructor(e_l),
+                 mk_REC(t,v)-> let e_l = VALSeq2IOmlExpr(v),
+                                   nm = new OmlName(t.clnm,t.tnm)
+                               in
+                                 new OmlRecordConstructor(nm,e_l),
+                 mk_TOKEN(v) ->let v1 = VAL2IOmlExpr(v)
+                               in
+                                 new OmlTokenExpression(v1),
+                 mk_OBJ(id,vl) -> let v1 = VALSeq2IOmlExpr(vl),
+                                      nm = new OmlName(nil,id)
+                                  in
+                                    new OmlNewExpression(nm,[],v1),
+                 others     -> undefined
+               end
+       in
+         (cacheval(val) := e;
+          return e);
+
+static public VALSet2IOmlExpr: set of VAL ==> seq of IOmlExpression
+VALSet2IOmlExpr(val_s) ==
+  (dcl e_l : seq of IOmlExpression := [];
+   for all val in set val_s do
+     e_l := [VAL2IOmlExpr(val)] ^ e_l;
+
+   return e_l);
+   
+static public VALMap2IOmlExpr: map VAL to VAL ==> seq of IOmlMaplet
+VALMap2IOmlExpr(val_m) ==
+  (dcl e_l : seq of IOmlMaplet := [];
+   for all val in set dom val_m do
+     let d = VAL2IOmlExpr(val),
+         r = VAL2IOmlExpr(val_m(val))
+     in
+       e_l := [new OmlMaplet(d,r)] ^ e_l;
+
+   return e_l);
+  
+functions
+ 
+static public VALSeq2IOmlExpr: seq of VAL -> seq of IOmlExpression
+VALSeq2IOmlExpr(val_l) ==
+  [VAL2IOmlExpr(val_l(i)) | i in set inds val_l];
+   
+end SEM
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[SEM]
+\end{rtinfo}
