@@ -17,11 +17,11 @@ package org.overturetool.umltrans;
 
 // ***** VDMTOOLS START Name=imports KEEP=NO
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.Writer;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 import jp.co.csk.vdm.toolbox.VDM.Tuple;
@@ -35,9 +35,9 @@ public class external_IO {
 
 // ***** VDMTOOLS START Name=parent KEEP=YES
 	IO parent = null;
-	static File f = null;
-	static Writer output = null;
-	static Boolean firstLine = true;
+//	static File f = null;
+//	static Writer output = null;
+//	static Boolean firstLine = true;
 
 // ***** VDMTOOLS END Name=parent
 
@@ -66,44 +66,19 @@ public class external_IO {
 // ***** VDMTOOLS START Name=impl_fwriteval#3|String|Object|Object KEEP=YES
 	public Boolean impl_fwriteval(final String filename, final Object val, final Object fdir) throws CGException
 	{
-
-		// if (fdir.toString().equals("<start>"))
-		// {
 		try
 		{
-			f = new File(filename);
-			f.createNewFile();
-			output = new BufferedWriter(new FileWriter(f));
+//			f = new File(filename);
+//			f.createNewFile();
+//			output = new BufferedWriter(new FileWriter(f));
+//			String line = val.toString();
+//			output.append(line);
+//			output.flush();
+//			output.close();
+			FileOutputStream fos = new FileOutputStream(filename, fdir.equals("<append>"));
+		    fos.write(val.toString().getBytes(java.nio.charset.Charset.forName("UTF8")));
+		    fos.close();
 
-			// } catch (Exception e)
-			// {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
-			// } else if (fdir.toString().equals("<append>"))
-			// {
-			// try
-			// {
-			String line = val.toString();
-			// if(line.startsWith("\"") )
-			// line= line.substring(1,-1);
-			// if(line.endsWith("\""))
-			// line= line.substring(0,line.length()-1);
-			output.append(line);
-			if (!firstLine)
-			{
-				// output.append((CharSequence) " "
-				// + val.toString().replace('\"', ' ').replace('$',
-				// '\"'));
-
-			} else
-			{
-				// output.append((CharSequence) val.toString().replace('\"',
-				// ' ').replace('$', '\"').trim());
-				firstLine = false;
-			}
-			output.flush();
-			output.close();
 		} catch (IOException e)
 		{
 			// TODO Auto-generated catch block
@@ -130,7 +105,16 @@ public class external_IO {
 // ***** VDMTOOLS START Name=impl_fecho#3|String|String|Object KEEP=YES
 	public Boolean impl_fecho(final String filename, final String text, final Object fdir) throws CGException
 	{
-		System.out.println(text);
+		try
+		{
+			PrintWriter out = new PrintWriter(new OutputStreamWriter(System.out, "UTF8"), true);
+			out.println(text);
+		} catch (UnsupportedEncodingException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//System.out.println(text);
 		// UTIL.RunTime("Run-Time Error:Preliminary fecho has been called");
 		return true;
 	}

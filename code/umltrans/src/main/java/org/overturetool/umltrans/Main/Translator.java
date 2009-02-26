@@ -1,5 +1,6 @@
 package org.overturetool.umltrans.Main;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,44 +22,57 @@ import org.overturetool.umltrans.xml.XmlParser;
 
 public class Translator
 {
-	public static String TranslateVdmToUml(String[] files, String outputFile) throws FileNotFoundException, IOException, Exception
+	public static String TranslateVdmToUml(String specData, String outputFile) throws CGException
 	{
 		String xmiDocumentFileName = outputFile;// files[0].substring(0,
 		// files[0].length() - 4) +
 		// ".xml";
+		
+		
+		OvertureParser op = new OvertureParser(specData);
+		op.parseDocument();
 
-		IOmlSpecifications[] specs = new IOmlSpecifications[files.length];
-
-		for (int i = 0; i < files.length; i++)
-		{
-
-			FileInputStream fis = new FileInputStream(files[i]);
-
-			OvertureParser op = new OvertureParser(fis);
-			op.parseDocument();
-			specs[i] = op.astDocument.getSpecifications();
-			fis.close();
-		}
-
-		Vector tmp = new Vector();
-		for (int i = 0; i < specs.length; i++)
-		{
-			tmp.addAll(specs[i].getClassList());
-
-		}
+//		IOmlSpecifications[] specs = new IOmlSpecifications[files.length];
+//
+//		for (int i = 0; i < files.length; i++)
+//		{
+//
+//			FileInputStream fis = new FileInputStream(files[i]);
+//
+//			OvertureParser op = new OvertureParser(fis);
+//			op.parseDocument();
+//			specs[i] = op.astDocument.getSpecifications();
+//			fis.close();
+//		}
+//
+//		Vector tmp = new Vector();
+//		for (int i = 0; i < specs.length; i++)
+//		{
+//			tmp.addAll(specs[i].getClassList());
+//
+//		}
 
 		Vdm2Uml w = new Vdm2Uml();
 		Uml2XmiEAxml xmi = new Uml2XmiEAxml();
-		xmi.Save(xmiDocumentFileName, w.init(new OmlSpecifications(tmp)));
+		xmi.Save(xmiDocumentFileName, w.init(op.astDocument.getSpecifications()));
 		// System.out.println(xmi);
 
 		return xmiDocumentFileName;
 	}
 
-	public static String TransLateTexVdmToUml(String[] files, String outputFile) throws FileNotFoundException, Exception, IOException
+	public static String TransLateTexVdmToUml(String[] files, String outputFile) throws FileNotFoundException, CGException, IOException
 	{
-		String[] files1 = ClassExstractorFromTexFiles.exstract(files);
-		return Translator.TranslateVdmToUml(files1, outputFile);
+	//	File output =new File(files[0]+ File.separatorChar + "tmp");
+	//	output.createNewFile();
+		
+		StringBuilder sb=new StringBuilder();
+		for (String file : files) {
+			sb.append("\n" + ClassExstractorFromTexFiles.exstractAsString(file));
+		}
+		
+		
+	//	String[] files1 = ClassExstractorFromTexFiles.exstract(files,output.getAbsolutePath());
+		return Translator.TranslateVdmToUml(sb.toString(), outputFile);
 
 	}
 
@@ -69,13 +83,15 @@ public class Translator
 
 	public static String[] TexConvert(String[] files) throws IOException
 	{
-		return new ClassExstractorFromTexFiles().exstract(files);
+		File output =new File(files[0]+ File.separatorChar + "tmp");
+		output.createNewFile();
+		return new ClassExstractorFromTexFiles().exstract(files,output.getAbsolutePath());
 	}
 
 	public static void TransLateUmlToVdm(String file, String outputFile) throws Exception
 	{
 
-		XmlDocument doc = XmlParser.Parse(file);
+		XmlDocument doc = XmlParser.Parse(file,false);
 		Vdm2Uml v = new Vdm2Uml();
 		// cr tmp := v.init(new TestData().ClassAssociation.getSpecifications())
 		// --p tmp

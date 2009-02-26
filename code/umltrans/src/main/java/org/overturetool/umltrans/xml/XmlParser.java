@@ -16,7 +16,8 @@ import org.w3c.dom.NodeList;
 
 public class XmlParser
 {
-	public static XmlDoc Parse(String fileName) throws Exception
+	
+	public static XmlDoc Parse(String fileName, Boolean show) throws Exception
 	{
 
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -29,18 +30,37 @@ public class XmlParser
 		// docc.getDocumentElement().getNodeName());
 
 		XmlDoc doc = new XmlDoc();
-		PrintNode(doc, docc.getDocumentElement());
+		
+		if(show)
+		{
+		File f = new File(fileName);
+		String fName = f.getName();
+		fName= fName.substring(0,fName.lastIndexOf('.'));
+		
+		System.out.println("operations");
+		System.out.println("public static Get"+fName+" : () ==> XmlDoc");
+		System.out.println("Get"+fName+"() ==");
+		System.out.println("(");
+		System.out.println("dcl doc : XmlDoc := new XmlDoc();");
+		}
+		PrintNode(doc, docc.getDocumentElement(),show);
+		if(show)
+		{
+		System.out.println("  return doc");
+		System.out.println(");");
+		}
 		return doc;
 
 	}
 
-	public static void PrintNode(XmlDoc doc, Element e) throws CGException
+	public static void PrintNode(XmlDoc doc, Element e,Boolean show) throws CGException
 	{
 		String name = e.getNodeName();
-		// System.out.println("ELEMENT: " + name);
-
+		if(show)
+		System.out.println("doc.StartE(\""+name+"\");");
 		doc.StartE(name);
-		PrintAttributes(doc, e);
+
+		PrintAttributes(doc, e,show);
 		NodeList childern = e.getChildNodes();
 		for (int i = 0; i < childern.getLength(); i++)
 		{
@@ -49,15 +69,18 @@ public class XmlParser
 				// System.out.print("DATA: " +
 				// childern.item(i).getNodeValue().trim());
 				doc.StartD(childern.item(i).getNodeValue().trim());
+				if(show)
+				System.out.println("doc.StartD(\""+childern.item(i).getNodeValue().trim()+"\");");
 			}
 			if (childern.item(i).getNodeType() == Node.ELEMENT_NODE)
-				PrintNode(doc, (Element) childern.item(i));
+				PrintNode(doc, (Element) childern.item(i),show);
 		}
 		doc.StopE(name);
-
+		if(show)
+		System.out.println("doc.StopE(\""+name+"\");");
 	}
 
-	public static void PrintAttributes(XmlDoc doc, Node e) throws CGException
+	public static void PrintAttributes(XmlDoc doc, Node e, Boolean show) throws CGException
 	{
 
 		NamedNodeMap atts = e.getAttributes();
@@ -69,6 +92,8 @@ public class XmlParser
 			String value = atts.item(i).getNodeValue();
 			// System.out.println(" - " + name + ": " + value);
 			doc.StartA(name, value);
+			if(show)
+			System.out.println("doc.StartA(\""+name+"\",\""+value+"\");");
 		}
 	}
 }

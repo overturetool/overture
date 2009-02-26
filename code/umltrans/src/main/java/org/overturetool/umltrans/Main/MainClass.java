@@ -1,8 +1,10 @@
 package org.overturetool.umltrans.Main;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.overturetool.tex.ClassExstractorFromTexFiles;
+import org.overturetool.umltrans.xml.XmlParser;
 
 public class MainClass
 {
@@ -20,35 +22,70 @@ public class MainClass
 				PrintHelp();
 				return;
 			}
-			if (args[0].endsWith("-removeTex"))
-				RemoveTex(args[1].split(";"));
-			else if (args[0].endsWith("-toVpp"))
-				ToVpp(args[1].split(";"));
-			else if (args[0].endsWith("-toUml"))
-				ToUml(args[1].split(";"));
+			
+			String tmp = "";
+			for (int i = 1; i < args.length; i++) {
+				tmp +=  args[i].trim();
+			}
+			
+			if (args[0].endsWith("-r"))
+				RemoveTex(SplitInputFiles(tmp,";"));
+			else if (args[0].endsWith("-v"))
+				ToVpp(SplitInputFiles(args[1],";"));
+			else if (args[0].endsWith("-u"))
+				ToUml(SplitInputFiles(args[1],";"));
+			else if (args[0].endsWith("-x"))
+				PrintXmlDoc(args[1]);
 			else
 				PrintHelp();
 		} catch (Exception ex)
 		{
-			System.out.println(ex.getMessage() + "\n" + ex.getStackTrace() + "\n\n");
+			System.out.println(ex.getMessage() +"\n\n");
+			ex.printStackTrace();
 			PrintHelp();
 		}
 
 	}
 
+	private static String[] SplitInputFiles(String files,String splitter)
+	{
+		if(files.contains(splitter))
+			return files.split(splitter);
+		else
+			return new String[]{files};
+			
+	}
+	private static void PrintXmlDoc(String string)
+	{
+		try
+		{
+			XmlParser.Parse(string,true);
+		} catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
 	private static void PrintHelp()
 	{
-		System.out.print("VDM <-> UML Transformation\n");
-		System.out.print("-removeTex      : For generating vpp files from tex files\n");
-		System.out.print("-toVpp          : For generating creating VDM vpp file from a UML model\n");
-		System.out.print("-toUml          : For generating a UML model from VDM vpp files\n");
-		System.out.print("\n Example: org.overture.umltrans.jar -toUml file1.vpp;file2.vpp\n");
+		
+		System.out.print("UMLTRANS: You must specify direction\n");
+		System.out.print("\nUsage: org.overture.umltrans.jar (-r | -v | -u) file1 ; file2 ; ...\n\n");
+		System.out.print("-r create vpp files from VDM tex files\n");
+		System.out.print("-v create VDM vpp file from UML model\n");
+		System.out.print("-u create UML model from VDM vpp files\n\n");
+		System.out.print("-x Print XML fils as VDM XML Doc operation\n\n");
+		System.out.print("\n Example: org.overture.umltrans.jar -u file1.vpp;file2.vpp\n");
 
 	}
 
 	public static void RemoveTex(String[] args) throws IOException
 	{
-		ClassExstractorFromTexFiles.exstract(args);
+		File output =new File(new File(args[0]).getParent()+ File.separatorChar + "tmp");
+		output.mkdir();
+		ClassExstractorFromTexFiles.exstract(args,output.getAbsolutePath());
 	}
 
 	public static void ToUml(String[] args)
@@ -66,9 +103,14 @@ public class MainClass
 
 		try
 		{
-			String[] files = ClassExstractorFromTexFiles.exstract(inputfiles);
-			String outputFile = files[0] + ".xml";
-			Translator.TranslateVdmToUml(files, outputFile);
+			for (String string : inputfiles) {
+				System.out.println("Input file: "+ string);
+			}
+			//File output =new File(new File(inputfiles[0]).getParent()+ File.separatorChar + "tmp");
+			//output.mkdir();
+			//String[] files = ClassExstractorFromTexFiles.exstract(inputfiles,output.getAbsolutePath());
+			String outputFile = inputfiles[0] + ".xml";
+			Translator.TransLateTexVdmToUml(inputfiles, outputFile);
 			System.out.println("Done: " + outputFile);
 		} catch (Exception e)
 		{
