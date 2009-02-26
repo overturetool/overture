@@ -1,4 +1,4 @@
-package org.overturetool.eclipse.plugins.umltransplugin.actions;
+package overtureuml.actions;
 
 import java.io.File;
 
@@ -13,6 +13,9 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.overturetool.tex.ClassExstractorFromTexFiles;
+import org.overturetool.umltrans.Main.*;
+
+
 
 import javax.swing.filechooser.FileFilter;
 
@@ -81,11 +84,11 @@ public class Vdm2UmlAction implements IWorkbenchWindowActionDelegate
 				{
 					// convert to vpp files the only format supported by the
 					// overture parser
-					String[] vppFiles = ClassExstractorFromTexFiles.exstract(files);
+					//String[] vppFiles = ClassExstractorFromTexFiles.exstract(files);
 
 					if (!(outFile.endsWith(".xml") || outFile.endsWith(".xml")))
 						outFile += ".xml";
-					String tmp = new org.overturetool.umltrans.Main.Translator().TranslateVdmToUml(vppFiles, outFile);
+					String tmp = new Translator().TransLateTexVdmToUml(files, outFile);
 
 					MessageDialog.openInformation(window.getShell(), "Vdm 2 Uml", "Processing completed: " + outFile);
 

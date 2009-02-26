@@ -1,4 +1,5 @@
-package org.overturetool.eclipse.plugins.umltransplugin.actions;
+package overtureuml.actions;
+
 import java.awt.FileDialog;
 import java.io.File;
 
@@ -12,6 +13,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.overturetool.tex.ClassExstractorFromTexFiles;
+import org.overturetool.umltrans.Main.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.*;
 
@@ -66,7 +68,7 @@ public class Uml2VdmAction implements IWorkbenchWindowActionDelegate
 				{
 					if (!(outFile.endsWith(".vpp") || outFile.endsWith(".tex")))
 						outFile += ".vpp";
-					org.overturetool.umltrans.Main.Translator.TransLateUmlToVdm(inputFile, outFile);
+					Translator.TransLateUmlToVdm(inputFile, outFile);
 
 					MessageDialog.openInformation(window.getShell(), "Uml 2 Vdm", "Processing completed: " + outFile);
 				}

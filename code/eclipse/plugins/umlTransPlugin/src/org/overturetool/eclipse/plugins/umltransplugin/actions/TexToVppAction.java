@@ -1,4 +1,4 @@
-package org.overturetool.eclipse.plugins.umltransplugin.actions;
+package overtureuml.actions;
 
 import java.io.File;
 
@@ -13,6 +13,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.overturetool.tex.ClassExstractorFromTexFiles;
+import org.overturetool.umltrans.Main.*;
 
 import javax.swing.filechooser.FileFilter;
 
@@ -66,7 +67,9 @@ public class TexToVppAction implements IWorkbenchWindowActionDelegate
 					files[i] = fd.getFilterPath() + separator+ fLst[i];
 				}
 
-				String[] vppFiles = ClassExstractorFromTexFiles.exstract(files);
+				String outputDir = new File(files[0]).getParent();
+				
+				String[] vppFiles = ClassExstractorFromTexFiles.exstract(files,outputDir);
 				String outFile = "";
 				for (int i = 0; i < vppFiles.length; i++)
 				{
