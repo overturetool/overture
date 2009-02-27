@@ -40,16 +40,18 @@
 			<groupId>org.overturetool</groupId>
 			<artifactId>stdlib</artifactId>
 			<version>1.0.0</version>
-		</dependency>
+			<scope>compile</scope></dependency>
 		<dependency>
 			<groupId>org.overturetool</groupId>
 			<artifactId>ast</artifactId>
 			<version>1.0.0</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overturetool</groupId>
 			<artifactId>parser</artifactId>
 			<version>1.0.0</version>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 
