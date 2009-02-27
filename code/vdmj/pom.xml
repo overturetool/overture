@@ -8,6 +8,7 @@
   <groupId>org.overturetool</groupId>
   <artifactId>vdmj</artifactId>
   <version>1.0.0</version>
+  <name>The VDMJ Interpreter</name>
   <build>
   	<finalName>org.overturetool.vdmj-${version}</finalName></build>
   <dependencies>
