@@ -16,7 +16,6 @@
 <module>potrans</module>
 <module>umltrans</module>
 <module>jmltrans</module>
-<module>testgen</module>
 <module>traces</module>
 </modules>
 <dependencies>
