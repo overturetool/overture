@@ -17,6 +17,7 @@
 <module>umltrans</module>
 <module>jmltrans</module>
 <module>traces</module>
+<module>vdmj</module>
 </modules>
 <dependencies>
 <dependency>
