@@ -10,8 +10,5 @@
 <artifactId>stdlib</artifactId>
 <version>1.0.0</version>
 <packaging>jar</packaging>
-<build>
-<finalName>org.overturetool.stdlib-${version}</finalName>
-</build>
 <name>The VDM++ Standard Library</name>
 </project>
