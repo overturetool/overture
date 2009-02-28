@@ -1,0 +1,16 @@
+class 銀行口座
+
+  types
+
+  public
+  数字 = nat
+  inv d == d < 10
+
+  instance variables
+    所有者 : seq1 of char;
+    番号 : seq1 of 数字 := [0,0,0,0,0,0,0,0];
+    支店コード : seq1 of 数字 := [0,0,0,0,0,0];
+  inv len 番号 = 8 and len 支店コード = 6
+
+end 銀行口座
+

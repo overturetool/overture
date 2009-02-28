@@ -1,0 +1,120 @@
+dlmodule external
+  imports
+    from A 
+      types
+        A; B; Q
+
+  exports 
+    functions
+      -- bacis types
+      test1 : bool -> bool;
+      test2 : nat  -> nat;
+      test3 : nat1 -> nat1;
+      test4 : int  -> int;
+      test5 : rat -> rat;
+      test6 : real -> real;
+      test7 : char -> char;
+      test7b: token -> token;
+
+      -- sets
+      test8 : set of nat -> set of nat;
+      test9 : set of (set of nat) -> set of (set of nat);
+      test10 : set of (nat | char) -> set of (nat | char);
+
+      -- sequence
+      test11 : seq of nat -> seq of nat;
+      test12 : seq of (seq of nat) -> seq of (seq of nat);
+      test13 : seq of (nat | char) -> seq of (nat | char);
+
+      -- map
+      test14 : map nat to nat -> map nat to nat;
+      test15 : map (set of nat) to nat -> map (set of nat) to nat;
+      test16 : map (nat | char) to (nat | char) -> 
+                                 map (nat | char) to (nat | char);
+     
+      -- records
+      test17 : A`A -> A`A;
+      test18 : A`A | A`B -> A`A | A`B;
+      test19 : seq of A`A -> seq of A`A;
+      
+      -- Nil
+      test20 : [nat] -> [nat];
+      test21 : [A`A] -> [A`A];
+
+      -- tuple
+      test22 : (nat * char) -> (nat * char);
+      test24 : (A`A * A`B) -> (A`A * A`B);
+
+      -- quote
+      test25 : A`Q -> A`Q;
+
+      -- Text (from C++)
+      test26 : seq of char -> seq of char;
+      
+      -- many parameters
+      test27 : nat * A`A * (char * real) -> (nat * A`A * (char * real))
+
+  uselib "libimod-01.so"
+
+end external
+
+module A
+  imports
+    from external all
+
+  exports all
+
+  definitions
+
+  types
+    A:: x: nat
+        y: bool;
+
+    B:: z: real;
+
+    Q = <A> | <B>
+
+  operations
+    Test : () ==> seq of (
+        bool | nat | nat1 | int | rat | real | char | (set of nat) | 
+        (set of (set of nat)) | (set of (nat | char)) | (seq of nat) |
+        (seq of (seq of nat)) | (seq of (nat | char)) |
+        (map nat to nat) | (map (set of nat) to nat) | 
+        (map (nat | char) to (nat | char)) | A | (A | B) | (seq of A) |
+        [nat] | [A] | (nat * char) | (nat) | (A`A * A`B) | Q |
+        (seq of char) | (nat * A`A * (char * real))
+)
+    Test () == return [
+      external`test1(true),
+      external`test2(10),
+      external`test3(10),
+      external`test4(-10),
+      external`test5(3.14),
+      external`test6(3.14),
+      external`test7('a'),
+      external`test7b(mk_token(3)),
+      external`test8({1,2,3}),
+      external`test9({{1,2,3},{2,3,4}}),
+      external`test10({1,'a',2,'b'}),
+      external`test11([1,2,3]),
+      external`test12([[1,2,3], [4,5,6]]),
+      external`test13([1,'a',2,'b']),
+      external`test14({1 |-> 2, 2|->3}),
+      external`test15({ {1,2} |-> 2, {1,2,3} |->3}),
+      external`test16({1|->1, 'a'|->'a', 2|->2, 'b'|->'b'}),
+      external`test17(mk_A(1,true)),
+      external`test18(mk_A(1,true)),
+      external`test18(mk_B(3.14)),
+      external`test19([mk_A(1,false),mk_A(2,true)]),
+      external`test20(1),
+      external`test20(nil),
+      external`test21(mk_A(1,true)),
+      external`test21(nil),
+      external`test22(mk_(1,'a')),
+      external`test24(mk_(mk_A(1,true),mk_B(3.14))),
+      external`test25(<A>),
+      external`test26("Hello World"),
+      external`test27(10,mk_A(1,true),mk_('a',3.14))
+    ]
+end A
+

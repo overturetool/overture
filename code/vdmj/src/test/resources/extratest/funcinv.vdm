@@ -1,0 +1,36 @@
+module A
+exports
+	functions
+		fn: int +> int;
+		pre_fn: int  +> bool;
+		post_fn: int * int +> bool
+		
+definitions
+functions
+
+fn(p:int) r:int
+	pre p < 10
+	post r + p < 10;
+
+end A
+
+------------------------------------------
+
+module B
+imports
+	from A
+		functions
+			fn;
+			pre_fn;
+			post_fn
+		
+definitions
+functions
+
+f: () -> int
+f() ==
+	if A`pre_fn(1)
+	then A`fn(1)
+	else A`fn(2);
+	
+end B

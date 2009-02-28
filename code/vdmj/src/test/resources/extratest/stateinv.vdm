@@ -1,0 +1,40 @@
+module A
+exports
+	types
+		struct State
+		
+	functions
+		inv_State: State +> bool;
+		init_State: State +> bool;
+
+definitions
+
+state State of
+	AS: int
+inv s == s.AS < 10
+init s == s = mk_State(123)
+end
+
+end A
+
+------------------------------------------
+
+module B
+imports
+	from A
+		types
+			State
+			
+		functions
+			inv_State;
+			init_State
+
+exports all
+
+definitions
+operations
+
+op: A`State ==> bool
+	op(s) == return A`inv_State(s) and A`AS < 10;
+	
+end B

@@ -1,0 +1,1467 @@
+
+types 
+     ADDRESS = nat;
+values
+     NIL: ADDRESS = 0;   
+
+types
+     Nodes_Data = Data;
+
+types
+Nodes_SingleLink ::
+     data: Nodes_Data
+     next: Nodes_NodePtr;
+     
+Nodes_DoubleLink ::
+     data: Nodes_Data
+     next: Nodes_NodePtr 
+     prev: Nodes_NodePtr;
+Nodes_BinaryTree ::
+     data: Nodes_Data
+     right: Nodes_NodePtr
+     left: Nodes_NodePtr
+     parent: Nodes_NodePtr;
+Nodes_Node = Nodes_SingleLink | Nodes_DoubleLink | Nodes_BinaryTree;
+Nodes_NodePtr = ADDRESS;
+functions
+Nodes_MkSingleLink: Nodes_Data * Nodes_NodePtr -> Nodes_Node
+Nodes_MkSingleLink(data, ptr) == mk_Nodes_SingleLink(data, ptr);
+Nodes_MkDoubleLink: Nodes_Data * Nodes_NodePtr * Nodes_NodePtr -> Nodes_Node
+Nodes_MkDoubleLink(data, next, prev) == mk_Nodes_DoubleLink(data, next, prev);
+Nodes_MkBinaryTree: Nodes_Data * Nodes_NodePtr * Nodes_NodePtr * Nodes_NodePtr 
+               -> Nodes_Node
+Nodes_MkBinaryTree(data, right, left, parent) == 
+     mk_Nodes_BinaryTree(data, right, left, parent);
+
+Nodes_GetData: Nodes_Node -> Nodes_Data
+Nodes_GetData(node) == 
+     if is_Nodes_SingleLink(node) then
+          let mk_Nodes_SingleLink(data, -) = node in data
+     elseif  is_Nodes_DoubleLink(node) then
+          let mk_Nodes_DoubleLink(data, -, -) = node in data
+     else 
+          let mk_Nodes_BinaryTree(data, -, -, -) = node in data
+pre is_Nodes_SingleLink(node) 
+     or is_Nodes_DoubleLink(node) 
+     or is_Nodes_BinaryTree(node); 
+Nodes_SetData: Nodes_Node * Nodes_Data -> Nodes_Node
+Nodes_SetData(node, data) ==
+     if is_Nodes_SingleLink(node) then
+          let mk_Nodes_SingleLink(-, next) = node in 
+               mk_Nodes_SingleLink(data, next)
+     elseif  is_Nodes_DoubleLink(node) then
+          let mk_Nodes_DoubleLink(-, next, prev) = node in 
+               mk_Nodes_DoubleLink(data, next, prev)
+     else 
+          let mk_Nodes_BinaryTree(-, right, left, parent) = node in
+               mk_Nodes_BinaryTree(data, right, left, parent)
+pre is_Nodes_SingleLink(node) 
+     or is_Nodes_DoubleLink(node) 
+     or is_Nodes_BinaryTree(node); 
+Nodes_GetNext: Nodes_Node -> Nodes_NodePtr
+Nodes_GetNext(node) ==
+     if is_Nodes_SingleLink(node) then
+          let mk_Nodes_SingleLink(-, next) = node in next
+     else 
+          let mk_Nodes_DoubleLink(-, next, -) = node in next
+pre is_Nodes_SingleLink(node) 
+     or is_Nodes_DoubleLink(node);       
+               
+Nodes_SetNext: Nodes_Node * Nodes_NodePtr -> Nodes_Node
+Nodes_SetNext(node, next) ==
+     if is_Nodes_SingleLink(node) then
+          let mk_Nodes_SingleLink(data, -) = node in
+               mk_Nodes_SingleLink(data, next) 
+     else  
+          let mk_Nodes_DoubleLink(data, -, prev) = node in
+               mk_Nodes_DoubleLink(data, next, prev)
+pre is_Nodes_SingleLink(node) 
+     or is_Nodes_DoubleLink(node);
+ 
+Nodes_GetPrev: Nodes_Node -> Nodes_NodePtr
+Nodes_GetPrev(node) == 
+     let mk_Nodes_DoubleLink(-, -, prev) = node in prev
+pre is_Nodes_DoubleLink(node);
+Nodes_SetPrev: Nodes_Node * Nodes_NodePtr -> Nodes_Node
+Nodes_SetPrev(node, prev) == 
+     let mk_Nodes_DoubleLink(data, next, -) = node in
+          mk_Nodes_DoubleLink(data, next, prev)
+pre  is_Nodes_DoubleLink(node);    
+Nodes_GetRight: Nodes_Node -> Nodes_NodePtr
+Nodes_GetRight(node) == 
+     let mk_Nodes_BinaryTree(-, right, -, -) = node in right
+pre is_Nodes_BinaryTree(node);     
+Nodes_SetRight: Nodes_Node * Nodes_NodePtr -> Nodes_Node
+Nodes_SetRight(node, right) == 
+     let mk_Nodes_BinaryTree(data, -, left, parent) = node in
+          mk_Nodes_BinaryTree(data, right, left, parent)
+pre is_Nodes_BinaryTree(node);     
+Nodes_GetLeft: Nodes_Node -> Nodes_NodePtr
+Nodes_GetLeft(node) == 
+     let mk_Nodes_BinaryTree(-, -, left, -) = node in left
+pre is_Nodes_BinaryTree(node);
+Nodes_SetLeft: Nodes_Node * Nodes_NodePtr -> Nodes_Node
+Nodes_SetLeft(node, left) == 
+     let mk_Nodes_BinaryTree(data, right, -, parent) = node in
+          mk_Nodes_BinaryTree(data, right, left, parent)
+pre is_Nodes_BinaryTree(node);     
+Nodes_GetParent: Nodes_Node -> Nodes_NodePtr
+Nodes_GetParent(node) == 
+     let mk_Nodes_BinaryTree(-, -, -, parent) = node in parent
+pre is_Nodes_BinaryTree(node);
+Nodes_SetParent: Nodes_Node * Nodes_NodePtr -> Nodes_Node
+Nodes_SetParent(node, parent) == 
+     let mk_Nodes_BinaryTree(data, right, left, -) = node in
+          mk_Nodes_BinaryTree(data, right, left, parent)
+pre is_Nodes_BinaryTree(node);     
+
+types Heaps_Data = [Nodes_Node];
+values Heaps_Size = 20;
+
+types
+     
+Heaps_Location :: 
+     data: [Heaps_Data]
+     allocated: bool
+inv mk_Heaps_Location(d, a) == (a = true) <=> (d <> nil);
+
+Heaps_Heap ::
+     storage: seq of Heaps_Location
+inv mk_Heaps_Heap(s) == len s = Heaps_Size
+
+functions
+     
+Heaps_InitSequence: nat1 -> seq of Heaps_Location
+Heaps_InitSequence(length) == 
+     if length > 1 then
+          [mk_Heaps_Location(nil, false)]
+               ^Heaps_InitSequence(length - 1)
+     else
+          [mk_Heaps_Location(nil, false)];
+
+Heaps_Init: () -> Heaps_Heap
+Heaps_Init() == mk_Heaps_Heap(Heaps_InitSequence(Heaps_Size));
+Heaps_AmountUsed: Heaps_Heap -> nat
+Heaps_AmountUsed(heap) ==
+     let store = heap.storage in
+          len [store(i) | i in set inds store 
+               & store(i).allocated = true];
+
+Heaps_Available: Heaps_Heap -> bool
+Heaps_Available(heap) == 
+     Heaps_AmountUsed(heap) < len heap.storage;
+
+Heaps_ModifyLoc: Heaps_Heap * ADDRESS * Heaps_Location -> Heaps_Heap
+Heaps_ModifyLoc(heap, address, location) ==
+     mk_Heaps_Heap(heap.storage++{address|->location})
+pre address in set inds heap.storage;
+
+     
+Heaps_Modify: Heaps_Heap * ADDRESS * Heaps_Data -> Heaps_Heap
+Heaps_Modify(heap, address, data) ==
+     Heaps_ModifyLoc(heap, address, mk_Heaps_Location(data, true))
+pre let store = heap.storage in
+     address in set inds store
+     and store(address).allocated = true;
+
+Heaps_Retrieve: Heaps_Heap * ADDRESS -> [Heaps_Data]
+Heaps_Retrieve(heap, address) ==
+     heap.storage(address).data
+pre 
+     let store = heap.storage in
+          address in set inds store     
+          and store(address).allocated = true;
+
+     
+Heaps_UnallocatedAddresses: Heaps_Heap -> set of ADDRESS
+Heaps_UnallocatedAddresses(heap) ==
+     let store = heap.storage in
+          {i|i in set inds store & store(i).allocated = false};
+
+Heaps_UnallocatedAddress: Heaps_Heap -> ADDRESS
+Heaps_UnallocatedAddress(heap) ==
+     iota new in set Heaps_UnallocatedAddresses(heap) & 
+          (forall i in set Heaps_UnallocatedAddresses(heap) & new <= i) 
+pre Heaps_Available(heap); 
+
+operations
+     
+NEW: Heaps_Data ==> ADDRESS
+NEW(data) == 
+(    def newAddress = Heaps_UnallocatedAddress(heap) in 
+	 def newLoc = mk_Heaps_Location(data, true) in
+     (    heap := Heaps_ModifyLoc(heap, newAddress, newLoc);
+          return newAddress;
+     )
+)
+pre Heaps_Available(heap);    
+
+DISPOSE: ADDRESS ==> ()
+DISPOSE(address) == 
+     heap := Heaps_ModifyLoc(heap, address, mk_Heaps_Location(nil, false))
+pre pre_Heaps_ModifyLoc(heap, address, mk_Heaps_Location(nil, false));
+
+SET_DATA: ADDRESS * Data ==> ()
+SET_DATA(ptr, data) == 
+     heap := Heaps_Modify(heap, ptr, 
+               Nodes_SetData(Heaps_Retrieve(heap, ptr), data));
+SET_NEXT: ADDRESS * ADDRESS ==> ()
+SET_NEXT(ptr, next) == 
+     heap := Heaps_Modify(heap, ptr, 
+               Nodes_SetNext(Heaps_Retrieve(heap, ptr), next));
+SET_LEFT: ADDRESS * ADDRESS ==> ()
+SET_LEFT(ptr, left) ==
+     heap := Heaps_Modify(heap, ptr, 
+               Nodes_SetLeft(Heaps_Retrieve(heap, ptr), left));
+SET_RIGHT: ADDRESS * ADDRESS ==> ()
+SET_RIGHT(ptr, right) ==
+     heap := Heaps_Modify(heap, ptr, 
+               Nodes_SetRight(Heaps_Retrieve(heap, ptr), right));
+SET_PREV: ADDRESS * ADDRESS ==> ()
+SET_PREV(ptr, prev) == 
+     heap := Heaps_Modify(heap, ptr, 
+               Nodes_SetPrev(Heaps_Retrieve(heap, ptr), prev));  
+SET_PARENT: ADDRESS * ADDRESS ==> ()
+SET_PARENT(ptr, parent) ==
+     heap := Heaps_Modify(heap, ptr, 
+               Nodes_SetParent(Heaps_Retrieve(heap, ptr), parent));
+DATA: ADDRESS ==> Data
+DATA(ptr) ==
+     return Nodes_GetData(Heaps_Retrieve(heap, ptr));
+ 
+NEXT: ADDRESS ==> ADDRESS
+NEXT(ptr) ==
+     return Nodes_GetNext(Heaps_Retrieve(heap, ptr));
+LEFT: ADDRESS ==> ADDRESS
+LEFT(ptr) == 
+     return Nodes_GetLeft(Heaps_Retrieve(heap, ptr));
+RIGHT: ADDRESS ==> ADDRESS
+RIGHT(ptr) ==
+     return Nodes_GetRight(Heaps_Retrieve(heap, ptr));
+PARENT: ADDRESS ==> ADDRESS
+PARENT(ptr) ==
+     return Nodes_GetParent(Heaps_Retrieve(heap, ptr));
+
+types SList_Data = Data;
+
+types SList_List = Nodes_NodePtr;
+functions
+SList_IsEmpty: SList_List -> bool
+SList_IsEmpty(list) == list = NIL;
+SList_Seq: Heaps_Heap * SList_List -> seq of SList_Data
+SList_Seq(heap, list) == 
+     if not SList_IsEmpty(list) then    
+          let node = Heaps_Retrieve(heap, list) in
+          let data = Nodes_GetData(node) in
+          let tail = Nodes_GetNext(node) in 
+               [data]^SList_Seq(heap, tail)
+     else
+          [];  
+
+SList_Lengthf: Heaps_Heap * SList_List -> nat
+SList_Lengthf(heap, list) == 
+     if not SList_IsEmpty(list) then
+          let tail = Nodes_GetNext(Heaps_Retrieve(heap, list)) in 
+               1 + SList_Lengthf(heap, tail)
+     else
+          0
+post RESULT = len SList_Seq(heap, list);
+
+SList_PtrToNode: Heaps_Heap * SList_List * nat1 -> Nodes_NodePtr
+SList_PtrToNode(heap, list, position) ==
+     let tail = Nodes_GetNext(Heaps_Retrieve(heap, list)) in
+          if position > 1 then 
+               SList_PtrToNode(heap, tail, position - 1) 
+          else list
+pre position <= SList_Lengthf(heap, list)
+post 
+     let data = Nodes_GetData(Heaps_Retrieve(heap, RESULT)), 
+          listSeq = SList_Seq(heap, list) in
+               data = listSeq(position);
+
+SList_Init: () -> SList_List
+SList_Init() == NIL;
+
+operations
+SList_InsertAtBeginning: SList_List * SList_Data ==> SList_List
+SList_InsertAtBeginning(list, data) ==
+     return NEW(Nodes_MkSingleLink(data, list))
+post [data]^SList_Seq(heap~, list) = SList_Seq(heap, RESULT);
+
+SList_InsertAfter: SList_List * Nodes_NodePtr * SList_Data ==> SList_List
+SList_InsertAfter(list, ptr, data) ==
+(    dcl new: Nodes_NodePtr := NEW(Nodes_MkSingleLink(data, NEXT(ptr)));
+     SET_NEXT(ptr, new);
+     return list;
+)
+post 
+     let old = SList_Seq(heap~, ptr) in
+          [old(1)]^[data]^tl old = SList_Seq(heap, ptr);
+
+SList_Insert: SList_List * SList_Data * nat1 ==> SList_List
+SList_Insert(list, data, position) ==
+     if position = 1 then 
+          return SList_InsertAtBeginning(list, data)
+     else
+          return SList_InsertAfter(list, 
+               SList_PtrToNode(heap, list, position - 1), data)
+pre position <= SList_Lengthf(heap, list) + 1 and Heaps_Available(heap)
+post let new = SList_Seq(heap, RESULT) in
+     SList_Seq(heap~, list) 
+          = [new(i) | i in set inds new & i <> position]
+     and new(position) = data
+     and Heaps_AmountUsed(heap~) + 1 = Heaps_AmountUsed(heap);
+
+     
+SList_Append: SList_List * SList_Data ==> SList_List
+SList_Append(list, data) ==
+(    dcl ptr: Nodes_NodePtr := list;
+     if ptr = NIL then
+          return SList_InsertAtBeginning(list, data)
+     else
+     (    while (NEXT(ptr) <> NIL) do ptr := NEXT(ptr);
+          return SList_InsertAfter(list, ptr, data);
+     )
+ )     
+pre Heaps_Available(heap)
+post SList_Seq(heap~, list)^[data] = SList_Seq(heap, RESULT)
+     and Heaps_AmountUsed(heap~) + 1 = Heaps_AmountUsed(heap);
+
+SList_Update: SList_List * SList_Data * nat1 ==> SList_List
+SList_Update(list, data, position) ==
+(    dcl ptr: Nodes_NodePtr := SList_PtrToNode(heap, list, position);
+     SET_DATA(ptr, data);
+     return list; 
+)
+pre position <= SList_Lengthf(heap, list)
+post SList_Seq(heap~, list)++{position |-> data} = SList_Seq(heap, RESULT)
+     and Heaps_AmountUsed(heap~) = Heaps_AmountUsed(heap);
+
+SList_DeleteAtBeginning: SList_List ==> SList_List
+SList_DeleteAtBeginning(list) ==
+(    dcl  temp: Nodes_NodePtr := list,
+          newlist: SList_List := NEXT(list);
+     DISPOSE(temp);
+     return newlist;
+)
+post tl SList_Seq(heap~, list) = SList_Seq(heap, RESULT);
+
+SList_DeleteAfter: SList_List * Nodes_NodePtr ==> SList_List
+SList_DeleteAfter(list, ptr) ==
+(    dcl temp: Nodes_NodePtr;
+     temp := NEXT(ptr);
+     SET_NEXT(ptr, NEXT(temp));
+     DISPOSE(temp);
+     return list;
+)
+post let old = SList_Seq(heap~, ptr) in
+     [old(1)]^tl (tl old) = SList_Seq(heap, ptr);
+
+SList_Delete: SList_List * nat1 ==> SList_List
+SList_Delete(list, position) ==
+(    if position = 1 then return SList_DeleteAtBeginning(list)
+     else 
+          return SList_DeleteAfter(list, 
+                    SList_PtrToNode(heap, list, position - 1))
+)
+pre position <= SList_Lengthf(heap, list)
+post let old = SList_Seq(heap~, list) in
+     [old(i) | i in set inds old & i <> position] 
+          = SList_Seq(heap, RESULT)
+     and Heaps_AmountUsed(heap~) = Heaps_AmountUsed(heap) + 1;
+
+SList_Traverse:  SList_List * (SList_Data -> SList_Data) ==> SList_List
+SList_Traverse(list, traversal) ==
+(    dcl ptr: Nodes_NodePtr := list;
+     while (ptr <> NIL) do
+     (    SET_DATA(ptr, traversal(DATA(ptr)));
+          ptr := NEXT(ptr);
+     );
+     return list;
+)
+post 
+     let old = SList_Seq(heap~, list) in
+          old <> [] => [traversal(old(i)) | i in set inds old] 
+               = SList_Seq(heap, RESULT);
+
+SList_Length: SList_List ==> nat
+SList_Length(list) == return SList_Lengthf(heap, list); 
+SList_Empty: SList_List ==> bool
+SList_Empty(list) == return SList_IsEmpty(list);
+SList_Element: SList_List * nat1 ==> SList_Data
+SList_Element(list, position) == DATA(SList_PtrToNode(heap, list, position));
+
+types
+DList_Data = Data;
+
+types
+DList_List = Nodes_NodePtr;
+functions
+     
+DList_LastNode: Heaps_Heap * DList_List -> Nodes_NodePtr
+DList_LastNode(heap, list) ==
+     let next = Nodes_GetNext(Heaps_Retrieve(heap, list)) in
+          if next <> NIL then
+               DList_LastNode(heap, next)
+          else list;
+
+DList_Forward: Heaps_Heap * DList_List -> seq of DList_Data
+DList_Forward(heap, list) == SList_Seq(heap, list);
+
+DList_Backward: Heaps_Heap * DList_List -> seq of DList_Data
+DList_Backward(heap, list) ==
+     if list <> NIL then
+          let prev = Nodes_GetPrev(Heaps_Retrieve(heap, list)) in
+          let data = Nodes_GetData(Heaps_Retrieve(heap, list)) in
+               DList_Backward(heap, prev)^[data]
+     else [];
+
+               
+DList_IsList: Heaps_Heap * DList_List -> bool
+DList_IsList(heap, list) == 
+     if list <> NIL then
+          DList_Forward(heap, list) 
+               = DList_Backward(heap, DList_LastNode(heap, list))
+     else true;
+
+DList_Init: () -> DList_List
+DList_Init() == NIL;                         
+operations
+DList_InsertAtBeginning: DList_List * DList_Data ==> DList_List
+DList_InsertAtBeginning(list, data) ==
+(    dcl new: Nodes_NodePtr := NEW(Nodes_MkDoubleLink(data, list, NIL));
+     if list <> NIL then SET_PREV(list, new);
+     return new;
+)
+     post [data]^SList_Seq(heap~, list) = SList_Seq(heap, RESULT);
+DList_InsertAfter: DList_List * Nodes_NodePtr * DList_Data ==> DList_List
+DList_InsertAfter(list, ptr, data) ==
+(    dcl new: Nodes_NodePtr := NEW(Nodes_MkDoubleLink(data, NEXT(ptr), ptr));
+     if NEXT(ptr) <> NIL then SET_PREV(NEXT(ptr), new);
+     SET_NEXT(ptr, new);
+     return list;
+)
+post 
+     let old = SList_Seq(heap~, ptr) in
+          [old(1)]^[data]^tl old = SList_Seq(heap, ptr);
+DList_Insert: DList_List * DList_Data * nat1 ==> DList_List
+DList_Insert(list, data, position) ==
+     if position = 1 then 
+          return DList_InsertAtBeginning(list, data)
+     else
+          return DList_InsertAfter(list, 
+                    SList_PtrToNode(heap, list, position - 1), data)
+pre position <= SList_Lengthf(heap, list) + 1 and 
+     Heaps_Available(heap) and DList_IsList(heap, list)
+post DList_IsList(heap, RESULT) and
+     let new = SList_Seq(heap, RESULT) in
+          SList_Seq(heap~, list) 
+               = [new(i) | i in set inds new & i <> position]
+          and new(position) = data;          
+DList_DeleteAtBeginning: DList_List ==> DList_List
+DList_DeleteAtBeginning(list) ==
+(    dcl  temp: Nodes_NodePtr := list, 
+          newlist: DList_List := NEXT(list);
+        if newlist <> NIL then SET_PREV(newlist, NIL);
+     DISPOSE(temp);
+     return newlist;
+)
+post tl SList_Seq(heap~, list) = SList_Seq(heap, RESULT);
+DList_DeleteAfter: DList_List * Nodes_NodePtr ==> DList_List
+DList_DeleteAfter(list, ptr) ==
+(    dcl temp: Nodes_NodePtr, nextPtr: Nodes_NodePtr;
+     temp := NEXT(ptr);
+        nextPtr := NEXT(temp);
+     SET_NEXT(ptr, nextPtr);
+     if nextPtr <> NIL then SET_PREV(nextPtr, ptr);
+     DISPOSE(temp);
+     return list;
+)
+post let old = SList_Seq(heap~, ptr) in
+     [old(1)]^tl (tl old) = SList_Seq(heap, ptr);
+DList_Delete: DList_List * nat1 ==> DList_List
+DList_Delete(list, position) ==
+(    if position = 1 then return DList_DeleteAtBeginning(list)
+     else return DList_DeleteAfter(list, 
+               SList_PtrToNode(heap, list, position - 1))
+)
+pre position <= SList_Lengthf(heap, list) and DList_IsList(heap, list)
+post DList_IsList(heap, RESULT) and
+     let old = SList_Seq(heap~, list) in
+          [old(i) | i in set inds old & i <> position] 
+               = SList_Seq(heap, RESULT)
+          and Heaps_AmountUsed(heap~) = Heaps_AmountUsed(heap) + 1;
+DList_Append: DList_List * DList_Data ==> DList_List
+DList_Append(list, data) ==
+(    dcl ptr: Nodes_NodePtr := list;
+     if ptr = NIL then
+          return DList_InsertAtBeginning(list, data)
+     else
+     (    while (NEXT(ptr) <> NIL) do ptr := NEXT(ptr);
+          return DList_InsertAfter(list, ptr, data);
+     )
+)     
+pre Heaps_Available(heap) and DList_IsList(heap, list)
+post SList_Seq(heap~, list)^[data] = SList_Seq(heap, RESULT)
+     and Heaps_AmountUsed(heap~) + 1 = Heaps_AmountUsed(heap)
+     and DList_IsList(heap, RESULT);
+DList_Empty: DList_List ==> bool
+DList_Empty(list) == SList_Empty(list);
+DList_Element: DList_List * nat1 ==> DList_Data
+DList_Element(list, position) == SList_Element(list, position);
+DList_Length: DList_List ==> nat
+DList_Length(list) == SList_Length(list);
+DList_Traverse: DList_List * (DList_Data -> DList_Data) ==> DList_List
+DList_Traverse(list, traversal) == SList_Traverse(list, traversal);
+     
+DList_Update: DList_List * DList_Data * nat1 ==> DList_List
+DList_Update(list, data, position) == SList_Update(list, data, position);
+
+types Queues_Data = Data;
+
+types Queues_Queue = SList_List;
+functions
+Queues_Init: () -> Queues_Queue
+Queues_Init() == SList_Init();
+operations
+     
+Queues_Enqueue: Queues_Queue * Queues_Data ==> Queues_Queue
+Queues_Enqueue(queue, data) == return SList_Append(queue, data);
+Queues_Dequeue: Queues_Queue ==> Queues_Queue * Queues_Data
+Queues_Dequeue(queue) ==
+(    if not SList_Empty(queue) then
+     (    dcl data: Queues_Data := Queues_Head(queue);
+          return mk_(SList_Delete(queue, 1), data);    
+     )
+     else error;
+);
+Queues_Head: Queues_Queue ==> Queues_Data
+Queues_Head(queue) == 
+     if not SList_Empty(queue) then SList_Element(queue, 1)
+     else error;
+
+types Stacks_Data = Data;
+
+types Stacks_Stack = SList_List;
+functions
+Stacks_Init: () -> Stacks_Stack
+Stacks_Init() == SList_Init();
+operations
+     
+Stacks_Push: Stacks_Stack * Stacks_Data ==> Stacks_Stack
+Stacks_Push(stack, data) == return SList_Insert(stack, data, 1);
+Stacks_Top: Stacks_Stack ==> Stacks_Data
+Stacks_Top(stack) == 
+     if not SList_Empty(stack) then SList_Element(stack, 1)
+     else error;
+Stacks_Pop: Stacks_Stack ==> Stacks_Stack * Stacks_Data
+Stacks_Pop(stack) == 
+(    if not SList_Empty(stack) then
+     (    dcl data: Stacks_Data := Stacks_Top(stack);
+          return mk_(SList_Delete(stack, 1), data);
+     )
+     else error
+);
+
+types
+STrees_Data = Data;
+
+types 
+STrees_Direction = <ToRoot> | <ToLeft> | <ToRight>
+
+types
+STrees_Node ::
+     data: STrees_Data
+     position: nat1;
+
+STrees_Tree = set of STrees_Node
+inv tree == 
+     (forall node in set tree & 
+          not STrees_IsRoot(tree, node) <=> STrees_IsChild(tree, node)
+          and STrees_IsUnique(tree, node)) 
+     and (tree <> {} <=> exists1 node in set tree & STrees_IsRoot(tree, node));
+
+STrees_Info ::
+     tree: STrees_Tree
+     current: [STrees_Node]
+inv mk_STrees_Info(t, c) == 
+     (c = nil <=> t = {}) and
+     (c <> nil <=> (c in set t and let r = STrees_Root(t) in r.position = 1));
+
+functions
+STrees_GetTree: STrees_Info -> STrees_Tree
+STrees_GetTree(mk_STrees_Info(tree, -)) == tree;
+
+ 
+STrees_MkNode: STrees_Data * nat1 -> STrees_Node
+STrees_MkNode(data, position) ==
+     mk_STrees_Node(data, position);
+STrees_MkTree: set of STrees_Node -> STrees_Tree
+STrees_MkTree(tree) == tree
+pre inv_STrees_Tree(tree);
+STrees_MkInfo: STrees_Tree * STrees_Node -> STrees_Info
+STrees_MkInfo(tree, current) ==
+     mk_STrees_Info(tree, current)
+pre inv_STrees_Info(mk_STrees_Info(tree, current));
+
+STrees_Init: () -> STrees_Info
+STrees_Init() == mk_STrees_Info({}, nil);
+
+STrees_IsRoot: STrees_Tree * STrees_Node -> bool
+STrees_IsRoot(tree, mk_STrees_Node(dr, pr)) == 
+     not STrees_IsChild(tree, mk_STrees_Node(dr, pr))
+pre mk_STrees_Node(dr, pr) in set tree;
+
+STrees_IsParent: STrees_Tree * STrees_Node -> bool
+STrees_IsParent(tree, node) ==
+     exists child in set tree & STrees_IsParentOf(tree, node, child)
+pre node in set tree;
+STrees_IsChild: STrees_Tree * STrees_Node -> bool
+STrees_IsChild(tree, node) == 
+     (exists parent in set tree & STrees_IsParentOf(tree, parent, node))
+     and (exists1 parent in set tree & STrees_IsParentOf(tree, parent, node))
+pre node in set tree;
+STrees_IsUnique: STrees_Tree * STrees_Node -> bool
+STrees_IsUnique(tree, mk_STrees_Node(data, position)) ==
+     (mk_STrees_Node(data, position) in set tree) and
+     (exists1 node in set tree & node.position = position);
+
+STrees_IsParentOf: STrees_Tree * STrees_Node * STrees_Node -> bool
+STrees_IsParentOf(tree, node1, node2) == 
+     STrees_IsRightChildOf(tree, node2, node1) 
+          or STrees_IsLeftChildOf(tree, node2, node1)
+pre node1 in set tree and node2 in set tree; 
+STrees_IsRightChildOf: STrees_Tree * STrees_Node * STrees_Node -> bool
+STrees_IsRightChildOf(tree, node1, node2) ==
+     let mk_STrees_Node(-, position1) = node1 in
+     let mk_STrees_Node(-, position2) = node2 in
+          (position1 = 2*position2 + 1)
+pre node1 in set tree and node2 in set tree;
+STrees_IsLeftChildOf: STrees_Tree * STrees_Node * STrees_Node -> bool
+STrees_IsLeftChildOf(tree, node1, node2) ==
+     let mk_STrees_Node(-, position1) = node1 in
+     let mk_STrees_Node(-, position2) = node2 in
+          (position1 = 2*position2)
+pre node1 in set tree and node2 in set tree;
+
+STrees_Insert: STrees_Info * STrees_Data * STrees_Direction -> STrees_Info
+STrees_Insert(mk_STrees_Info(tree, current), data, direction) == 
+     cases mk_(current, direction):
+          mk_(nil, <ToRoot>)  -> STrees_InsertRoot(data),
+          mk_(-, <ToLeft>)    -> STrees_InsertLeft(tree, current, data),
+          mk_(-, <ToRight>)   -> STrees_InsertRight(tree, current, data)
+     end
+pre 
+     (direction = <ToRoot> => tree = {}) and
+     (direction = <ToLeft> => not STrees_HasLeftChild(tree, current)) and 
+     (direction = <ToRight> => not STrees_HasRightChild(tree, current))
+post inv_STrees_Info(RESULT);
+
+STrees_InsertRoot: STrees_Data -> STrees_Info
+STrees_InsertRoot(data) == 
+     let root = mk_STrees_Node(data, 1) in
+          mk_STrees_Info({root}, root);
+STrees_InsertLeft: STrees_Tree * STrees_Node * STrees_Data -> STrees_Info
+STrees_InsertLeft(tree, current, data) ==
+     let mk_STrees_Node(-, position) = current in 
+     let new = mk_STrees_Node(data, 2*position) in
+          mk_STrees_Info(tree union {new}, new)
+pre not STrees_HasLeftChild(tree, current);
+STrees_InsertRight: STrees_Tree * STrees_Node * STrees_Data -> STrees_Info
+STrees_InsertRight(tree, current, data) ==
+     let mk_STrees_Node(-, position) = current in 
+     let new = mk_STrees_Node(data, 2*position + 1) in
+          mk_STrees_Info(tree union {new}, new)
+pre not STrees_HasRightChild(tree, current);
+STrees_Traverse: STrees_Info * (STrees_Data -> STrees_Data) -> STrees_Info
+STrees_Traverse(treeinfo, traversal) ==
+     let mk_STrees_Info(tree, current) = treeinfo in
+          if current <> nil then
+               let mk_STrees_Node(data, position) = current in
+               let newtree = {mk_STrees_Node(traversal(data), position) | 
+                              mk_STrees_Node(data, position) in set tree} in
+                    mk_STrees_Info(newtree, 
+                         mk_STrees_Node(traversal(data), position))
+          else
+               treeinfo;
+
+STrees_MoveInDir: STrees_Info * STrees_Direction -> STrees_Info
+STrees_MoveInDir(mk_STrees_Info(tree, current), direction) ==
+     cases direction:
+          <ToRoot>  -> mk_STrees_Info(tree, STrees_Root(tree)),
+          <ToLeft>  -> mk_STrees_Info(tree, STrees_LeftChild(tree, current)),
+          <ToRight> ->  mk_STrees_Info(tree, STrees_RightChild(tree, current))
+ end
+pre STrees_ExistsDirection(mk_STrees_Info(tree, current), direction);
+
+STrees_MoveToNode: STrees_Info * nat1 -> STrees_Info
+STrees_MoveToNode(mk_STrees_Info(tree, current), position) ==
+     mk_STrees_Info(tree, STrees_GetNode(tree, position))
+pre STrees_ExistsNode(mk_STrees_Info(tree, current), position);
+
+STrees_MoveToParent: STrees_Info -> STrees_Info
+STrees_MoveToParent(mk_STrees_Info(tree, current)) ==
+     mk_STrees_Info(tree, STrees_Parent(tree, current))
+pre not STrees_IsRoot(tree, current);
+
+STrees_MoveToAnscestor: STrees_Info * nat1 -> STrees_Info 
+STrees_MoveToAnscestor(treeinfo, pathlength) ==
+     if pathlength > 1 then
+          STrees_MoveToAnscestor(STrees_MoveToParent(treeinfo), pathlength - 1)
+     else 
+          STrees_MoveToParent(treeinfo)
+pre pre_STrees_MoveToParent(treeinfo);
+
+STrees_Root: STrees_Tree -> STrees_Node
+STrees_Root(tree) ==
+     iota root in set tree & STrees_IsRoot(tree, root)
+pre tree <> {};
+STrees_Parent: STrees_Tree * STrees_Node -> STrees_Node
+STrees_Parent(tree, node) == 
+     iota parent in set tree 
+          & STrees_IsParentOf(tree, parent, node)
+pre node in set tree and not STrees_IsRoot(tree, node);
+STrees_LeftChild: STrees_Tree * STrees_Node -> STrees_Node
+STrees_LeftChild(tree, parent) ==
+     iota leftchild in set tree & STrees_IsLeftChildOf(tree, leftchild, parent)
+pre parent in set tree and STrees_HasLeftChild(tree, parent);
+STrees_RightChild: STrees_Tree * STrees_Node -> STrees_Node
+STrees_RightChild(tree, parent) ==
+     iota rightchild in set tree & STrees_IsRightChildOf(tree, rightchild, parent)
+pre parent in set tree and STrees_HasRightChild(tree, parent); 
+STrees_GetNode: STrees_Tree * nat1 -> STrees_Node
+STrees_GetNode(tree, position) ==
+     iota node in set tree & node.position = position
+pre exists node in set tree & node.position = position; 
+
+STrees_GetData: STrees_Info * nat1 -> STrees_Data
+STrees_GetData(mk_STrees_Info(tree, current), position) ==
+     let mk_STrees_Node(data, -) = STrees_GetNode(tree, position) in 
+          data
+pre STrees_ExistsNode(mk_STrees_Info(tree, current), position);
+
+STrees_StoreCurrentData: STrees_Info * STrees_Data -> STrees_Info
+STrees_StoreCurrentData(mk_STrees_Info(tree, current), data) ==
+     let mk_STrees_Node(-, position) = current in
+     let newcurrent = mk_STrees_Node(data, position) in 
+          mk_STrees_Info((tree\{current}) union {newcurrent}, newcurrent)
+pre current <> nil;
+
+STrees_GetCurrentData: STrees_Info -> STrees_Data
+STrees_GetCurrentData(mk_STrees_Info(tree, mk_STrees_Node(data, -))) == data
+pre tree <> {};
+
+STrees_Size: STrees_Info -> nat
+STrees_Size(mk_STrees_Info(tree, -)) == card tree;
+
+STrees_GetCurrentNode: STrees_Info -> STrees_Node
+STrees_GetCurrentNode(mk_STrees_Info(-, current)) == current;
+STrees_SetCurrentNode: STrees_Info * STrees_Node -> STrees_Info
+STrees_SetCurrentNode(mk_STrees_Info(tree, -), newcurrent) == 
+     mk_STrees_Info(tree, newcurrent)
+pre newcurrent in set tree;
+
+STrees_HasLeftChild: STrees_Tree * STrees_Node -> bool
+STrees_HasLeftChild(tree, parent) ==
+     exists1 child in set tree 
+          & STrees_IsLeftChildOf(tree, child, parent)
+pre parent in set tree;
+STrees_HasRightChild: STrees_Tree * STrees_Node -> bool
+STrees_HasRightChild(tree, parent) ==
+     exists1 child in set tree
+          & STrees_IsRightChildOf(tree, child, parent)
+pre parent in set tree;
+
+STrees_InOrderPredecessor: STrees_Tree * STrees_Node -> STrees_Node
+STrees_InOrderPredecessor(tree, node) ==
+     let leftchild = STrees_LeftChild(tree, node) in
+     let left = STrees_Subtree(tree, leftchild) in 
+     let rightpath = {n | n in set left 
+             & (exists p in set {0, ..., card left} 
+               & n.position 
+			= (leftchild.position + 1)*2**p - 1)} in
+          iota pred in set rightpath 
+                    & (forall n in set rightpath & n.position <= pred.position)
+pre node in set tree and STrees_HasLeftChild(tree, node);
+
+STrees_Delete: STrees_Info -> STrees_Info
+STrees_Delete(mk_STrees_Info(tree, current)) ==
+     let old = STrees_Subtree(tree, current) in
+     if STrees_HasRightChild(tree, current) and STrees_HasLeftChild(tree, current) then 
+          let leftchild = STrees_LeftChild(tree, current),
+               rightchild = STrees_RightChild(tree, current) in
+          let left = STrees_Subtree(old, leftchild) in 
+               let mk_STrees_Node(-, position) = STrees_InOrderPredecessor(old, current) in 
+               let newright = STrees_MoveSubtree(old, rightchild, 2*position + 1) in 
+               let newleft = left union newright in
+          let new = STrees_MoveSubtree(newleft, STrees_Root(newleft), current.position) in  
+               mk_STrees_Info((tree \ old) union new, STrees_Root(new))
+     elseif STrees_HasLeftChild(tree, current) then 
+          let leftchild = STrees_LeftChild(tree, current) in
+          let new = STrees_MoveSubtree(old, leftchild, current.position) in
+                    mk_STrees_Info((tree \ old) union new, STrees_Root(new)) 
+     elseif STrees_HasRightChild(tree, current) then
+          let rightchild = STrees_RightChild(tree, current) in
+          let new = STrees_MoveSubtree(old, rightchild, current.position) in
+               mk_STrees_Info((tree \ old) union new, STrees_Root(new))
+     else 
+          mk_STrees_Info(tree \ {current}, STrees_Parent(tree, current))
+pre current <> nil
+post inv_STrees_Info(RESULT);
+
+STrees_Subtree: STrees_Tree * STrees_Node -> STrees_Tree
+STrees_Subtree(tree, mk_STrees_Node(rootdata, rootpos)) ==
+     {mk_STrees_Node(d, p) | mk_STrees_Node(d, p) in set tree 
+          & (exists1 n in set {0, ..., card tree} 
+               & p >= rootpos*2**n and p < (rootpos + 1)*2**n)}
+pre mk_STrees_Node(rootdata, rootpos) in set tree;
+
+STrees_MoveSubtree:  STrees_Tree * STrees_Node * nat1 -> STrees_Tree
+STrees_MoveSubtree(tree, subtreeRoot, newRootPos) ==
+     let subtree = STrees_Subtree(tree, subtreeRoot), 
+               mk_STrees_Node(-, oldRootPos) = subtreeRoot in
+          {STrees_MoveNode(tree, node, oldRootPos, newRootPos) | node in set subtree} 
+pre subtreeRoot in set tree;
+
+STrees_MoveNode: STrees_Tree * STrees_Node * nat1 * nat1 -> STrees_Node
+STrees_MoveNode(tree, mk_STrees_Node(d, p), oldRootPos, newRootPos) ==
+     let n = (iota n in set {0, ..., card tree} 
+               & p >= oldRootPos*2**n and p < (oldRootPos + 1)*2**n) in
+          mk_STrees_Node(d, newRootPos*2**n + p - oldRootPos*2**n);
+
+STrees_ExistsData: STrees_Info * STrees_Data -> bool
+STrees_ExistsData(mk_STrees_Info(tree, -), data) ==
+     exists node in set tree & node.data = data;
+
+STrees_ExistsNode: STrees_Info * nat1 -> bool
+STrees_ExistsNode(mk_STrees_Info(tree, -), position) ==
+     exists node in set tree & node.position = position;
+
+STrees_ExistsDirection: STrees_Info * STrees_Direction -> bool
+STrees_ExistsDirection(mk_STrees_Info(tree, current), direction) ==
+     cases direction: 
+          <ToRoot>  -> (tree <> {}),
+          <ToLeft>  -> 
+               if current <> nil then 
+                    STrees_HasLeftChild(tree, current) 
+               else false,
+          <ToRight> -> 
+               if current <> nil then 
+                    STrees_HasRightChild(tree, current) 
+               else false
+     end;
+
+types Trees_Data = Data
+
+types
+Trees_Direction = STrees_Direction;
+Trees_Tree ::
+     treePtr: Nodes_NodePtr
+     current: Nodes_NodePtr
+
+functions
+Trees_Position: Heaps_Heap * Nodes_NodePtr -> nat1
+Trees_Position(heap, child) == 
+     let parent = Nodes_GetParent(Heaps_Retrieve(heap, child)) in
+          if parent = NIL then
+               1
+          elseif Trees_IsRightChildOf(heap, child, parent) then
+               2*Trees_Position(heap, parent) + 1
+          else 
+               2*Trees_Position(heap, parent)
+pre child <> NIL; 
+
+Trees_Set: Heaps_Heap * Trees_Tree -> STrees_Info
+Trees_Set(heap, mk_Trees_Tree(treePtr, current)) == 
+     if treePtr <> NIL then
+          let treeset = STrees_MkTree(Trees_SubtreeToSet(heap, treePtr, 1)) in
+          let data = Nodes_GetData(Heaps_Retrieve(heap, current)) in
+          let position = Trees_Position(heap, current) in
+          let currentnode = STrees_MkNode(data, position) in
+          STrees_MkInfo(treeset, currentnode)
+     else STrees_Init();
+
+Trees_SubtreeToSet: Heaps_Heap * Nodes_NodePtr * nat1 -> set of STrees_Node
+Trees_SubtreeToSet(heap, subtree, position) ==
+     if subtree <> NIL then
+          {STrees_MkNode(Nodes_GetData(Heaps_Retrieve(heap, subtree)), position)}
+          union Trees_SubtreeToSet(heap, 
+          	Nodes_GetLeft(
+			Heaps_Retrieve(heap, subtree)), 2*position)
+          union Trees_SubtreeToSet(heap, 
+               Nodes_GetRight(
+			Heaps_Retrieve(heap, subtree)), 2*position + 1)
+     else {};
+
+Trees_HasLeftChild: Heaps_Heap * Nodes_NodePtr -> bool
+Trees_HasLeftChild(heap, ptr) ==
+     if ptr <> NIL then 
+          Nodes_GetLeft(Heaps_Retrieve(heap, ptr)) <> NIL
+     else false
+pre ptr <> NIL => pre_Heaps_Retrieve(heap, ptr);
+Trees_HasRightChild: Heaps_Heap * Nodes_NodePtr -> bool
+Trees_HasRightChild(heap, ptr) ==
+     if ptr <> NIL then
+          Nodes_GetRight(Heaps_Retrieve(heap, ptr)) <> NIL
+     else false
+pre ptr <> NIL => pre_Heaps_Retrieve(heap, ptr);
+Trees_IsRightChildOf: Heaps_Heap * Nodes_NodePtr * Nodes_NodePtr -> bool
+Trees_IsRightChildOf(heap, child, parent) ==
+     child = Nodes_GetRight(Heaps_Retrieve(heap, parent))
+     and parent = Nodes_GetParent(Heaps_Retrieve(heap, child))
+pre pre_Heaps_Retrieve(heap, parent) 
+	and pre_Heaps_Retrieve(heap, child);
+Trees_IsLeftChildOf: Heaps_Heap * Nodes_NodePtr * Nodes_NodePtr -> bool
+Trees_IsLeftChildOf(heap, child, parent) ==
+     child = Nodes_GetLeft(Heaps_Retrieve(heap, parent))
+     and parent = Nodes_GetParent(Heaps_Retrieve(heap, child))
+pre pre_Heaps_Retrieve(heap, parent) 
+	and pre_Heaps_Retrieve(heap, child);
+Trees_IsRoot: Heaps_Heap * Nodes_NodePtr -> bool
+Trees_IsRoot(heap, ptr) == Nodes_GetParent(Heaps_Retrieve(heap, ptr)) = NIL
+pre ptr <> NIL;
+Trees_Init: () -> Trees_Tree
+Trees_Init() == mk_Trees_Tree(NIL, NIL);
+operations
+Trees_Insert: Trees_Tree * Trees_Data * Trees_Direction ==> Trees_Tree
+Trees_Insert(tree, data, direction) ==
+(
+     cases direction: 
+          <ToRoot>  -> return  Trees_InsertRoot(data), 
+          <ToLeft>  -> return  Trees_InsertLeft(tree, data),
+          <ToRight> -> return  Trees_InsertRight(tree, data)
+     end
+)
+pre Heaps_Available(heap) and
+     let mk_Trees_Tree(treePtr, current) = tree in 
+          (direction = <ToRoot> => treePtr = NIL) and
+          (direction = <ToRight> => not Trees_HasRightChild(heap, current)) and
+          (direction = <ToLeft> => not Trees_HasLeftChild(heap, current))
+post Heaps_AmountUsed(heap~) + 1 = Heaps_AmountUsed(heap) and 
+     let old = Trees_Set(heap~, tree) in
+     	STrees_Insert(old, data, direction) = Trees_Set(heap, RESULT);
+Trees_InsertRoot: Trees_Data ==> Trees_Tree
+Trees_InsertRoot(data) ==
+(
+     dcl newTreePtr: Nodes_NodePtr := NEW(Nodes_MkBinaryTree(data, NIL, NIL, NIL)); 
+     return mk_Trees_Tree(newTreePtr, newTreePtr);
+);
+Trees_InsertLeft: Trees_Tree * Trees_Data ==> Trees_Tree
+Trees_InsertLeft(mk_Trees_Tree(treePtr, current), data) ==
+(
+     dcl new: Nodes_NodePtr := NEW(Nodes_MkBinaryTree(data, NIL, NIL, current)); 
+     SET_LEFT(current, new);
+     return mk_Trees_Tree(treePtr, new);
+);
+Trees_InsertRight: Trees_Tree * Trees_Data ==> Trees_Tree
+Trees_InsertRight(mk_Trees_Tree(treePtr, current), data) ==
+(
+     dcl new: Nodes_NodePtr := NEW(Nodes_MkBinaryTree(data, NIL, NIL, current));
+     SET_RIGHT(current, new);
+     return mk_Trees_Tree(treePtr, new);
+);
+Trees_InOrderPredecessor: Nodes_NodePtr ==> Nodes_NodePtr
+Trees_InOrderPredecessor(ptr) ==
+(    dcl pred: Nodes_NodePtr := LEFT(ptr);
+     while Trees_HasRightChild(heap, pred) do
+          pred := RIGHT(pred);
+     return pred;   
+)
+pre Trees_HasLeftChild(heap, ptr);
+Trees_Delete: Trees_Tree  ==> Trees_Tree
+Trees_Delete(mk_Trees_Tree(treePtr, current)) ==
+(    dcl  hasLeftChild: bool := Trees_HasLeftChild(heap, current),
+          hasRightChild: bool := Trees_HasRightChild(heap, current),
+          newcurrent: Nodes_NodePtr,
+          newtree: Nodes_NodePtr := treePtr,
+          parent: Nodes_NodePtr := PARENT(current),
+          newchild: Nodes_NodePtr;
+     if hasLeftChild or hasRightChild then 
+     (    if hasLeftChild then
+          (    newcurrent := LEFT(current);
+               if hasRightChild then
+               (    dcl right: Nodes_NodePtr := RIGHT(current),
+                     pred :Nodes_NodePtr := Trees_InOrderPredecessor(current);
+                    SET_PARENT(right, pred);
+                    SET_RIGHT(pred, right);
+               );
+          )
+          else 
+               newcurrent := RIGHT(current);
+          newchild := newcurrent;
+          SET_PARENT(newcurrent, parent);
+     )
+     else
+     (    newcurrent := parent;
+          newchild := NIL;
+     );
+     if Trees_IsRoot(heap, current) then 
+          newtree := newchild
+     elseif Trees_IsRightChildOf(heap, current, parent) then
+          SET_RIGHT(parent, newchild)
+     else
+          SET_LEFT(parent, newchild);
+     DISPOSE(current);
+     return mk_Trees_Tree(newtree, newcurrent);
+)
+pre treePtr <> NIL
+post Heaps_AmountUsed(heap~) = Heaps_AmountUsed(heap) + 1 and
+     let old = Trees_Set(heap~, mk_Trees_Tree(treePtr, current)) in
+          STrees_Delete(old) = Trees_Set(heap, RESULT);
+
+Trees_SearchSubtree: Nodes_NodePtr * Trees_Data ==> bool
+Trees_SearchSubtree(subtree, dataToFind) ==
+(    
+     if subtree <> NIL then
+     (    def data = DATA(subtree) in
+          if data = dataToFind then
+               return true
+          else 
+               return Trees_SearchSubtree(RIGHT(subtree), dataToFind)         
+                    or Trees_SearchSubtree(LEFT(subtree), dataToFind)
+     )
+     else return false
+);
+
+           
+Trees_ExistsData: Trees_Tree * Trees_Data ==> bool
+Trees_ExistsData(tree, data) == Trees_SearchSubtree(tree.treePtr, data)
+post STrees_ExistsData(Trees_Set(heap, tree), data) = RESULT;
+Trees_ExistsDirection: Trees_Tree * Trees_Direction ==> bool
+Trees_ExistsDirection(tree, direction) == 
+     cases direction:
+          <ToRoot>  -> return tree.treePtr <> NIL,
+          <ToLeft>  -> 
+               return tree.current <> NIL 
+                    and Trees_HasLeftChild(heap, tree.current),
+          <ToRight> -> 
+               return tree.current <> NIL 
+                    and Trees_HasRightChild(heap, tree.current)
+     end
+post STrees_ExistsDirection(Trees_Set(heap, tree), direction) 
+		= RESULT;
+Trees_GetCurrentData: Trees_Tree ==> Trees_Data
+Trees_GetCurrentData(tree) == DATA(tree.current)
+pre tree.treePtr <> NIL
+post STrees_GetCurrentData(Trees_Set(heap, tree)) = RESULT;
+Trees_StoreCurrentData: Trees_Tree * Trees_Data ==> Trees_Tree
+Trees_StoreCurrentData(tree, data) == 
+(    SET_DATA(tree.current, data);
+     return tree;
+)
+pre tree.treePtr <> NIL
+post STrees_StoreCurrentData(Trees_Set(heap~, tree), data)
+     = Trees_Set(heap, RESULT);
+Trees_MoveInDir: Trees_Tree * Trees_Direction ==> Trees_Tree
+Trees_MoveInDir(tree, direction) == 
+     cases direction:
+          <ToRoot> -> return mk_Trees_Tree(tree.treePtr, tree.treePtr),
+          <ToLeft> -> return mk_Trees_Tree(tree.treePtr, LEFT(tree.current)),
+          <ToRight> -> return mk_Trees_Tree(tree.treePtr, RIGHT(tree.current))
+     end
+pre tree.treePtr <> NIL 
+     and (direction = <ToLeft> => Trees_HasLeftChild(heap, tree.current)) 
+     and (direction = <ToRight> => Trees_HasRightChild(heap, tree.current))
+post STrees_MoveInDir(Trees_Set(heap~, tree), direction)
+     = Trees_Set(heap, RESULT); 
+     
+Trees_MoveToParent: Trees_Tree ==> Trees_Tree
+Trees_MoveToParent(tree) ==
+     return mk_Trees_Tree(tree.treePtr, PARENT(tree.current))
+pre not Trees_IsRoot(heap, tree.current)
+post STrees_MoveToParent(Trees_Set(heap~, tree)) 
+     = Trees_Set(heap, RESULT); 
+Trees_Size: Trees_Tree ==> nat
+Trees_Size(tree) == Trees_SubtreeSize(tree.treePtr)
+post STrees_Size(Trees_Set(heap~, tree)) = RESULT;
+Trees_SubtreeSize: Nodes_NodePtr ==> nat
+Trees_SubtreeSize(subtree) ==
+     if subtree <> NIL then
+          return 
+               1 
+               + Trees_SubtreeSize(RIGHT(subtree)) 
+               + Trees_SubtreeSize(LEFT(subtree))
+     else return 0;
+
+Trees_Traverse: Trees_Tree * (Trees_Data -> Trees_Data) ==> Trees_Tree
+Trees_Traverse(tree, traversal) == 
+(    Trees_TraverseSubtree(tree.treePtr, traversal);
+     return tree;
+)
+post STrees_Traverse(Trees_Set(heap~, tree), traversal)
+     = Trees_Set(heap, RESULT);
+Trees_TraverseSubtree: Nodes_NodePtr * (Trees_Data -> Trees_Data) ==> ()
+Trees_TraverseSubtree(subtree, traversal) ==
+     if subtree <> NIL then
+     (    SET_DATA(subtree, traversal(DATA(subtree)));
+          Trees_TraverseSubtree(LEFT(subtree), traversal);
+          Trees_TraverseSubtree(RIGHT(subtree), traversal);
+     );
+
+     state SystemState of
+          heap: Heaps_Heap
+          slist: SList_List
+          charQueue: Queues_Queue
+          charStack: Stacks_Stack
+          dlist: DList_List
+          charTree: Trees_Tree
+          stree: STrees_Info
+     init s == s = mk_SystemState(
+               Heaps_Init(), 
+               SList_Init(), 
+               Queues_Init(), 
+               Stacks_Init(), 
+               DList_Init(), 
+               Trees_Init(), 
+               STrees_Init()) 
+     end
+ 
+types Data = char;
+
+operations
+TestSList: () ==> bool
+TestSList() ==
+(
+     slist := SList_Insert(slist, 'b', 1);
+     slist := SList_Update(slist, 'a', 1);
+     slist := SList_Delete(slist, 1);   
+          
+     slist := SList_Insert(slist, 'a', 1);
+     slist := SList_Insert(slist, 'b', 2);
+     slist := SList_Update(slist, 'c', 2);
+     slist := SList_Delete(slist, 2);
+     slist := SList_Insert(slist, 'b', 2);
+     slist := SList_Insert(slist, 'c', 3);
+     slist := SList_Update(slist, 'd', 2);
+     slist := SList_Update(slist, 'b', 3);
+     slist := SList_Delete(slist, 2);
+     slist := SList_Append(slist, 'c');
+     slist := SList_Delete(slist, 1);
+     slist := SList_Insert(slist, 'a', 1);
+     slist := SList_Insert(slist, 'f', 4);
+     slist := SList_Insert(slist, 'd', 4);
+     slist := SList_Append(slist, 'g');
+     slist := SList_Insert(slist, 'e', 5);
+     slist := SList_Append(slist, 'h');
+     slist := SList_Append(slist, 'i');
+     slist := SList_Append(slist, 'j');
+     slist := SList_Delete(slist, 10);
+     return [SList_Element(slist, i)| i in set {1, ..., 9}] = "abcdefghi";
+);
+
+TestDList: () ==> bool
+TestDList() ==
+(
+     dlist := DList_Insert(dlist, 'b', 1);
+     dlist := DList_Update(dlist, 'a', 1);
+     dlist := DList_Delete(dlist, 1);   
+     dlist := DList_Insert(dlist, 'a', 1);
+     dlist := DList_Insert(dlist, 'b', 2);
+     dlist := DList_Update(dlist, 'c', 2);
+     dlist := DList_Delete(dlist, 2);
+     dlist := DList_Insert(dlist, 'b', 2);
+     dlist := DList_Insert(dlist, 'c', 3);
+     dlist := DList_Update(dlist, 'd', 2);
+     dlist := DList_Update(dlist, 'b', 3);
+     dlist := DList_Delete(dlist, 2);
+     dlist := DList_Append(dlist, 'c');
+     dlist := DList_Delete(dlist, 1);
+     dlist := DList_Insert(dlist, 'a', 1);
+     dlist := DList_Insert(dlist, 'f', 4);
+     dlist := DList_Insert(dlist, 'd', 4);
+     dlist := DList_Append(dlist, 'g');
+     dlist := DList_Insert(dlist, 'e', 5);
+     dlist := DList_Append(dlist, 'h');
+     dlist := DList_Append(dlist, 'i');
+     dlist := DList_Append(dlist, 'j');
+     dlist := DList_Delete(dlist, 10);
+     return [DList_Element(dlist, i)| i in set {1, ..., 9}] = "abcdefghi";
+);
+
+values
+ 
+InsertResult = STrees_MkTree(
+          { 
+                    STrees_MkNode('a', 1), 
+                    STrees_MkNode('b', 2),
+                    STrees_MkNode('c', 3),
+                    STrees_MkNode('d', 4),
+                    STrees_MkNode('e', 5),
+                    STrees_MkNode('f', 6),
+                    STrees_MkNode('g', 7),
+                    STrees_MkNode('h', 8),
+                    STrees_MkNode('i', 9),
+                    STrees_MkNode('j', 10),
+                    STrees_MkNode('k', 11),
+                    STrees_MkNode('l', 12),
+                    STrees_MkNode('m', 13),
+                    STrees_MkNode('n', 14),
+                    STrees_MkNode('o', 15),
+                    STrees_MkNode('p', 16),
+                    STrees_MkNode('q', 17),
+                    STrees_MkNode('r', 18),
+                    STrees_MkNode('s', 19),
+                    STrees_MkNode('t', 20),
+                    STrees_MkNode('u', 21),
+                    STrees_MkNode('v', 22),
+                    STrees_MkNode('w', 23),
+                    STrees_MkNode('x', 24),
+                    STrees_MkNode('y', 25),
+                    STrees_MkNode('z', 26)
+          });
+DeleteResult = STrees_MkTree(
+          { 
+               STrees_MkNode('a', 1), 
+                    STrees_MkNode('d', 2),
+                    STrees_MkNode('c', 3),
+                    STrees_MkNode('h', 4),
+                    STrees_MkNode('i', 5),
+                    STrees_MkNode('f', 6),
+                    STrees_MkNode('o', 7),
+                    STrees_MkNode('p', 8),
+                    STrees_MkNode('r', 10),
+                    STrees_MkNode('s', 11),
+                    STrees_MkNode('l', 12),
+                    STrees_MkNode('z', 13),
+                    STrees_MkNode('j', 23),
+                    STrees_MkNode('x', 24),
+                    STrees_MkNode('y', 25),
+                    STrees_MkNode('t', 46),
+                    STrees_MkNode('u', 47),
+                    STrees_MkNode('k', 95),
+                    STrees_MkNode('v', 190),
+                    STrees_MkNode('w', 191)
+          });
+TraverseResult = STrees_MkTree(
+          { 
+               STrees_MkNode('a', 1), 
+                    STrees_MkNode('a', 2),
+                    STrees_MkNode('a', 3),
+                    STrees_MkNode('a', 4),
+                    STrees_MkNode('a', 5),
+                    STrees_MkNode('a', 6),
+                    STrees_MkNode('b', 7),
+                    STrees_MkNode('b', 8),
+                    STrees_MkNode('b', 10),
+                    STrees_MkNode('b', 11),
+                    STrees_MkNode('b', 12),
+                    STrees_MkNode('b', 13),
+                    STrees_MkNode('a', 23),
+                    STrees_MkNode('b', 24),
+                    STrees_MkNode('b', 25),
+                    STrees_MkNode('b', 46),
+                    STrees_MkNode('b', 47),
+                    STrees_MkNode('b', 95),
+                    STrees_MkNode('b', 190),
+                    STrees_MkNode('b', 191)
+          });
+AlphabetSubset = {'a','b','c','d','e','f','g','h','i','j'};
+
+functions
+Traversal: char -> char
+Traversal(ch) ==
+     if ch in set AlphabetSubset then 'a' else 'b';
+
+operations
+TestSTreesInsert: () ==> bool
+TestSTreesInsert() ==
+(
+     stree := STrees_Insert(stree, 'a', <ToRoot>);
+  
+     stree := STrees_Insert(stree, 'b', <ToLeft>); 
+   
+     stree := STrees_MoveToParent(stree);
+     stree := STrees_Insert(stree, 'c', <ToRight>); 
+     stree := STrees_MoveToParent(stree); 
+     stree := STrees_MoveInDir(stree, <ToLeft>);
+     stree := STrees_Insert(stree, 'd', <ToLeft>); 
+     stree := STrees_MoveToParent(stree);
+     stree := STrees_Insert(stree, 'e', <ToRight>); 
+     stree := STrees_MoveInDir(stree, <ToRoot>); 
+     stree := STrees_MoveInDir(stree, <ToRight>);
+     stree := STrees_Insert(stree, 'f', <ToLeft>); 
+     stree := STrees_MoveToParent(stree);
+     stree := STrees_Insert(stree, 'g', <ToRight>); 
+     stree := STrees_MoveInDir(stree, <ToRoot>); 
+     stree := STrees_MoveInDir(stree, <ToLeft>); 
+     stree := STrees_MoveInDir(stree, <ToLeft>);
+     stree := STrees_Insert(stree, 'h', <ToLeft>); 
+     stree := STrees_MoveToParent(stree);
+     stree := STrees_Insert(stree, 'i', <ToRight>);
+     stree := STrees_MoveToAnscestor(stree, 2); 
+     stree := STrees_MoveInDir(stree, <ToRight>);
+     stree := STrees_Insert(stree, 'j', <ToLeft>);
+     stree := STrees_MoveToParent(stree);
+     stree := STrees_Insert(stree, 'k', <ToRight>);
+     stree := STrees_MoveInDir(stree, <ToRoot>); 
+     stree := STrees_MoveInDir(stree, <ToRight>); 
+     stree := STrees_MoveInDir(stree, <ToLeft>);
+     stree := STrees_Insert(stree, 'l', <ToLeft>);
+     stree := STrees_MoveToParent(stree);
+     stree := STrees_Insert(stree, 'm', <ToRight>);
+     stree := STrees_MoveToAnscestor(stree, 2); 
+     stree := STrees_MoveInDir(stree, <ToRight>);
+     stree := STrees_Insert(stree, 'n', <ToLeft>);
+     stree := STrees_MoveToParent(stree);
+     stree := STrees_Insert(stree, 'o', <ToRight>);
+     stree := STrees_MoveInDir(stree, <ToRoot>); 
+     stree := STrees_MoveInDir(stree, <ToLeft>); 
+     stree := STrees_MoveInDir(stree, <ToLeft>); 
+     stree := STrees_MoveInDir(stree, <ToLeft>);
+     stree := STrees_Insert(stree, 'p', <ToLeft>);
+     stree := STrees_MoveToParent(stree);
+     stree := STrees_Insert(stree, 'q', <ToRight>);
+     stree := STrees_MoveToAnscestor(stree, 2); 
+     stree := STrees_MoveInDir(stree, <ToRight>);
+     stree := STrees_Insert(stree, 'r', <ToLeft>);
+     stree := STrees_MoveToParent(stree);
+     stree := STrees_Insert(stree, 's', <ToRight>);
+     stree := STrees_MoveToAnscestor(stree, 3); 
+     stree := STrees_MoveInDir(stree, <ToRight>); 
+     stree := STrees_MoveInDir(stree, <ToLeft>);
+     stree := STrees_Insert(stree, 't', <ToLeft>);
+     stree := STrees_MoveToParent(stree);
+     stree := STrees_Insert(stree, 'u', <ToRight>);
+     stree := STrees_MoveToAnscestor(stree, 2); 
+     stree := STrees_MoveInDir(stree, <ToRight>);
+     stree := STrees_Insert(stree, 'v', <ToLeft>);
+     stree := STrees_MoveToParent(stree);
+     stree := STrees_Insert(stree, 'w', <ToRight>);
+     stree := STrees_MoveInDir(stree, <ToRoot>); 
+     stree := STrees_MoveInDir(stree, <ToRight>); 
+     stree := STrees_MoveInDir(stree, <ToLeft>); 
+     stree := STrees_MoveInDir(stree, <ToLeft>);
+     stree := STrees_Insert(stree, 'x', <ToLeft>);
+     stree := STrees_MoveToParent(stree);
+     stree := STrees_Insert(stree, 'y', <ToRight>);
+     stree := STrees_MoveToAnscestor(stree, 2); 
+     stree := STrees_MoveInDir(stree, <ToRight>);
+     stree := STrees_Insert(stree, 'z', <ToLeft>);
+     return STrees_GetTree(stree) = InsertResult;
+);
+TestSTreesDelete: () ==> bool
+TestSTreesDelete() ==
+(
+     stree := STrees_MoveToNode(stree, 14);
+     stree := STrees_Delete(stree);
+     stree := STrees_MoveToNode(stree, 17);
+     stree := STrees_Delete(stree);
+     stree := STrees_MoveToNode(stree, 13);
+     stree := STrees_Delete(stree);
+     stree := STrees_MoveToNode(stree, 7);
+     stree := STrees_Delete(stree);
+     stree := STrees_MoveToNode(stree, 5);
+     stree := STrees_Delete(stree);
+     stree := STrees_MoveToNode(stree, 2);
+     stree := STrees_Delete(stree);
+     return STrees_GetTree(stree) = DeleteResult;
+);
+
+TestSTrees: () ==> bool
+TestSTrees() ==
+(
+     if STrees_ExistsDirection(stree, <ToLeft>) then return false;
+     if STrees_ExistsDirection(stree, <ToRight>) then return false;
+     if not TestSTreesInsert() then return false;
+     if not TestSTreesDelete() then return false;
+     if not STrees_ExistsData(stree, 'c') then return false;
+     if not STrees_ExistsNode(stree, 3) then return false;
+     stree := STrees_MoveToNode(stree, 3);
+     if not STrees_ExistsDirection(stree, <ToLeft>) then return false;
+     if not STrees_ExistsDirection(stree, <ToRight>) then return false;
+     if not STrees_ExistsDirection(stree, <ToRoot>) then return false;
+     if 'z' <> STrees_GetData(stree, 13) then return false;
+     stree := STrees_SetCurrentNode(stree, STrees_MkNode('z', 13));
+     if STrees_MkNode('z', 13) <> STrees_GetCurrentNode(stree) then return false;
+     stree := STrees_StoreCurrentData(stree, 'Z');
+     if 'Z' <> STrees_GetCurrentData(stree) then return false;
+     if STrees_Size(stree) <> 20 then return false;
+     stree := STrees_Traverse(stree, Traversal);
+     return STrees_GetTree(stree) = TraverseResult;
+);
+
+operations
+TestTreesInsert: () ==> ()
+TestTreesInsert() ==
+(
+     charTree := Trees_Insert(charTree, 'a', <ToRoot>);
+     charTree := Trees_Insert(charTree, 'b', <ToLeft>); 
+ 
+     charTree := Trees_MoveToParent(charTree);
+     charTree := Trees_Insert(charTree, 'c', <ToRight>); 
+     charTree := Trees_MoveToParent(charTree); 
+     charTree := Trees_MoveInDir(charTree, <ToLeft>);
+     charTree := Trees_Insert(charTree, 'd', <ToLeft>); 
+     charTree := Trees_MoveToParent(charTree);
+     charTree := Trees_Insert(charTree, 'e', <ToRight>); 
+     charTree := Trees_MoveInDir(charTree, <ToRoot>); 
+     charTree := Trees_MoveInDir(charTree, <ToRight>);
+     charTree := Trees_Insert(charTree, 'f', <ToLeft>); 
+     charTree := Trees_MoveToParent(charTree);
+     charTree := Trees_Insert(charTree, 'g', <ToRight>); 
+     charTree := Trees_MoveInDir(charTree, <ToRoot>);
+     charTree := Trees_MoveInDir(charTree, <ToLeft>);
+     charTree := Trees_MoveInDir(charTree, <ToLeft>);
+     charTree := Trees_Insert(charTree, 'h', <ToLeft>);
+     charTree := Trees_MoveToParent(charTree);
+     charTree := Trees_Insert(charTree, 'i', <ToRight>);
+     charTree := Trees_MoveToParent(charTree);
+     charTree := Trees_MoveToParent(charTree);
+     charTree := Trees_MoveInDir(charTree, <ToRight>);
+     charTree := Trees_Insert(charTree, 'j', <ToLeft>);
+     charTree := Trees_MoveToParent(charTree);
+     charTree := Trees_Insert(charTree, 'k', <ToRight>);
+     charTree := Trees_MoveInDir(charTree, <ToRoot>); 
+     charTree := Trees_MoveInDir(charTree, <ToRight>); 
+     charTree := Trees_MoveInDir(charTree, <ToLeft>);
+     charTree := Trees_Insert(charTree, 'l', <ToLeft>);
+     charTree := Trees_MoveToParent(charTree);
+     charTree := Trees_Insert(charTree, 'm', <ToRight>);
+     charTree := Trees_MoveToParent(charTree);
+     charTree := Trees_MoveToParent(charTree);
+     charTree := Trees_MoveInDir(charTree, <ToRight>);
+     charTree := Trees_Insert(charTree, 'n', <ToLeft>);
+     charTree := Trees_MoveToParent(charTree);
+     charTree := Trees_Insert(charTree, 'o', <ToRight>);
+);
+TestTreesDelete: () ==> ()
+TestTreesDelete() ==
+(
+     charTree := Trees_MoveInDir(charTree, <ToRoot>);
+     charTree := Trees_MoveInDir(charTree, <ToRight>);
+     charTree := Trees_MoveInDir(charTree, <ToRight>);
+     charTree := Trees_MoveInDir(charTree, <ToRight>);
+     charTree := Trees_Delete(charTree);
+     charTree := Trees_Delete(charTree);
+     charTree := Trees_MoveInDir(charTree, <ToRoot>);
+     charTree := Trees_MoveInDir(charTree, <ToLeft>);
+     charTree := Trees_MoveInDir(charTree, <ToLeft>);
+     charTree := Trees_MoveInDir(charTree, <ToLeft>);
+     charTree := Trees_Delete(charTree);
+     charTree := Trees_Delete(charTree);
+     charTree := Trees_MoveInDir(charTree, <ToRoot>);
+     charTree := Trees_MoveInDir(charTree, <ToLeft>);
+     charTree := Trees_Delete(charTree);
+     charTree := Trees_MoveInDir(charTree, <ToRoot>);
+     charTree := Trees_MoveInDir(charTree, <ToRight>);
+     charTree := Trees_Delete(charTree);
+     charTree := Trees_MoveInDir(charTree, <ToRoot>);
+     charTree := Trees_Delete(charTree);
+);
+TestTrees: () ==> bool
+TestTrees() ==
+(
+     if Trees_ExistsDirection(charTree, <ToLeft>) then return false;
+     if Trees_ExistsDirection(charTree, <ToRight>) then return false;      
+     TestTreesInsert();
+     TestTreesDelete();
+     if not Trees_ExistsData(charTree, 'i') then return false;
+     if Trees_ExistsDirection(charTree, <ToLeft>) then return false;
+     if not Trees_ExistsDirection(charTree, <ToRight>) then return false;
+     if not Trees_ExistsDirection(charTree, <ToRoot>) then return false;
+     charTree := Trees_StoreCurrentData(charTree, 'Z');
+     if 'Z' <> Trees_GetCurrentData(charTree) then return false;
+     if Trees_Size(charTree) <> 8 then return false;
+     charTree := Trees_Traverse(charTree, Traversal);
+     return true;
+);

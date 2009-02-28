@@ -10,23 +10,31 @@
   <version>1.0.0</version>
   <name>The VDMJ Interpreter</name>
   <build>
-  	<finalName>org.overturetool.vdmj-${version}</finalName></build>
+  <plugins>
+  <plugin>
+  <artifactId>maven-surefire-plugin</artifactId> 
+  <configuration>
+  <testFailureIgnore>true</testFailureIgnore> 
+  <includes>
+  <include>**/*Test.java</include> 
+  <include>**/*Test?.java</include> 
+  </includes>
+  </configuration>
+  </plugin>
+  <plugin>
+  <artifactId>maven-jar-plugin</artifactId> 
+  <configuration>
+  <archive>
+  <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile> 
+  </archive>
+  </configuration>
+  </plugin>
+  </plugins>
+  </build> 
   <dependencies>
-    <dependency>
-      <groupId>org.overturetool</groupId>
-      <artifactId>stdlib</artifactId>
-      <version>1.0.0</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-    	<groupId>org.overturetool</groupId>
-    	<artifactId>ast</artifactId>
-    	<version>1.0.0</version>
-    	<scope>compile</scope></dependency>
     <dependency>
     	<groupId>org.overturetool</groupId>
     	<artifactId>parser</artifactId>
-    	<version>1.0.0</version>
-    	<scope>compile</scope></dependency>
+    	<version>1.0.0</version></dependency>
   </dependencies>
 </project>

@@ -1,0 +1,118 @@
+/*******************************************************************************
+ *
+ *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *
+ *	Author: Nick Battle
+ *
+ *	This file is part of VDMJ.
+ *
+ *	VDMJ is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU General Public License as published by
+ *	the Free Software Foundation, either version 3 of the License, or
+ *	(at your option) any later version.
+ *
+ *	VDMJ is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with VDMJ.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ ******************************************************************************/
+
+package org.overturetool.vdmj.traces;
+
+import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.definitions.MultiBindListDefinition;
+import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.patterns.Bind;
+import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ContextException;
+import org.overturetool.vdmj.runtime.PatternMatchException;
+import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.typechecker.Environment;
+import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
+import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.typechecker.TypeChecker;
+import org.overturetool.vdmj.types.BooleanType;
+import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
+
+/**
+ * A class representing a let-be-st trace binding.
+ */
+
+public class TraceLetBeStBinding extends TraceDefinition
+{
+	public final Bind bind;
+	public final Expression stexp;
+	public final TraceDefinition body;
+
+	public TraceLetBeStBinding(
+		LexLocation location, Bind bind, Expression stexp, TraceDefinition body)
+	{
+		super(location);
+		this.bind = bind;
+		this.stexp = stexp;
+		this.body = body;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "let " + bind +
+			(stexp == null ? "" : " be st " + stexp.toString()) + " in " + body;
+	}
+
+	@Override
+	public void typeCheck(Environment base, NameScope scope)
+	{
+		Definition def =
+			new MultiBindListDefinition(bind.location, bind.getMultipleBindList());
+		def.typeCheck(base, scope);
+		Environment local = new FlatCheckedEnvironment(def, base);
+
+		if (stexp != null &&
+			!stexp.typeCheck(local, null, scope).isType(BooleanType.class))
+		{
+			TypeChecker.report(3225,
+				"Such that clause is not boolean", stexp.location);
+		}
+
+		body.typeCheck(local, scope);
+		local.unusedCheck();
+	}
+
+	@Override
+	public TraceNode expand(TraceNode onto, Context ctxt)
+	{
+		AlternativeTraceNode node = new AlternativeTraceNode();
+		ValueList allValues = bind.getBindValues(ctxt);
+
+		for (Value current: allValues)
+		{
+    		try
+    		{
+    			Context evalContext = new Context(location, "let be st binding", ctxt);
+    			evalContext.put(bind.pattern.getNamedValues(current, ctxt));
+
+    			if (stexp == null || stexp.eval(evalContext).boolValue(ctxt))
+    			{
+    				node.alternatives.add(body.expand(onto, evalContext));
+    			}
+    		}
+            catch (ValueException e)
+            {
+            	throw new ContextException(e, location);
+            }
+    		catch (PatternMatchException e)
+    		{
+    			// Silently try the others...
+    		}
+		}
+
+		return node;
+	}
+}

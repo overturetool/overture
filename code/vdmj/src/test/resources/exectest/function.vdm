@@ -1,0 +1,63 @@
+module A
+definitions
+types
+
+T :: f: int
+inv mk_T(x) == x < 10;
+
+U = int
+inv u == u > 0 and u < 10;
+
+values
+
+XYZ = 123;
+
+functions
+
+fact: nat1 -> nat1
+	fact(a) == if a < 2 then 1 else a * fret()(a-1);
+	
+inc: int -> int
+	inc(a) == a + 1
+	pre a < 10
+	post RESULT = a+1;
+	
+fret: () -> int -> int
+	fret() == fact;
+	
+curry: (int -> int) * (int -> int) -> (int * int) -> int
+	curry(x,y)(mk_(a,b)) == x(a) + y(b);
+	
+cret: () -> (int * int) -> int
+	cret() == curry(fact, fact);
+
+args: (int * (int * int)) -> int
+	args(mk_(a, mk_(b,c))) == a + b + c;
+	
+lamb: () -> (int * int) -> int
+	lamb() == lambda mk_(a,b):int*int & a + b;
+	
+iter: (int -> int) * nat -> (int -> int)
+	iter(f, n) == f ** n;
+
+cmp: (int -> int) * (int -> int) -> (int -> int)
+	cmp(f1, f2) == f1 comp f2;
+	
+fmap[@elem]: (@elem -> @elem) -> seq of @elem -> seq of @elem
+	fmap(f)(l) ==
+		if l = []
+		then []
+		else [f(hd l)]^(fmap[@elem](f)(tl l));
+		
+fmaptest: () -> seq of int
+	fmaptest() == fmap[int](lambda x:int & x * x)([1,2,3,4,5]);
+	
+extimp(a:int) r:int
+	== a + 1
+	pre a > 0
+	post r > a;
+
+loose: set of set of int -> int * int
+    loose(s) == let {a,b} in set s in mk_(a,b);
+
+end A

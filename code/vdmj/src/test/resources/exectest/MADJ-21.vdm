@@ -1,0 +1,122 @@
+module MADJ21
+definitions
+types
+
+TT = <Normal> | <DR> | <COU>;
+
+Term :: code:	nat
+		type:	TT
+inv t == (t.code > 0 and t.code < 300);
+		
+Terms = set of Term
+
+functions
+
+MADJ21: Terms * Terms * Terms -> Terms
+	MADJ21(A, B, C) ==
+		if A = B
+		then C
+		else
+			if contains(A, 63)
+			then
+				let	FB = fix(get(A, 63), B),
+					FC = fix(get(A, 63), C),
+					ALL = A union FB union FC in
+						{ d | d in set ALL & applies(d, A, FB, FC) }
+			else if contains(A, 64)
+			then
+				let	FB = fix(get(A, 64), B),
+					FC = fix(get(A, 64), C),
+					ALL = A union FB union FC in
+						{ d | d in set ALL & applies(d, A, FB, FC) }
+			else
+				let ALL = A union B union C in
+					{ d | d in set ALL & applies(d, A, B, C) };
+				
+
+fix: Term * Terms -> Terms
+	fix(aTerm, S) == 
+		if contains(S, 61) and contains(S, 250)
+		then
+			(S \ {get(S, 61), get(S, 250)}) union {aTerm}
+		else
+			S;
+
+contains: Terms * nat -> bool
+	contains(S, t) ==
+		exists mk_Term(code, -) in set S & code = t;
+		
+get: Terms * nat -> Term
+	get(S, code) ==
+		iota x in set S & x.code = code;			
+
+
+applies: Term * Terms * Terms * Terms -> bool
+	applies(t, A, B, C) ==
+		let AC = A inter C,
+			inA = t in set A,
+			inB = t in set B,
+			inC = t in set C in
+				if not inA and not inB and not inC	-- Never happens
+				then
+					false
+				elseif not inA and not inB and inC
+				then
+					true
+				elseif not inA and inB and not inC
+				then
+					false					
+				elseif not inA and inB and inC					
+				then
+					t.type = <DR>  and (not exists x in set A & x.type = <DR>) or
+					t.type = <COU> and (not exists x in set A & x.type = <COU>)
+				elseif inA and not inB and not inC
+				then
+					not (
+						t.type = <DR>  and
+							((exists x in set AC & x.type = <DR>) or
+							 (exists x in set C & x.type = <DR>))
+						or
+						t.type = <COU> and
+							((exists x in set AC & x.type = <COU>) or
+							 (exists x in set C & x.type = <COU>))) 
+				elseif inA and not inB and inC
+				then
+					true
+				elseif inA and inB and not inC
+				then
+					t.type = <DR> and not
+						((exists x in set AC & x.type = <DR>) or
+						 (exists x in set C & x.type = <DR>))
+					or t.type = <COU> and not
+						((exists x in set AC & x.type = <COU>) or
+						 (exists x in set C & x.type = <COU>))
+				else -- inA and inB and inC
+					true;
+
+values
+
+-- test values
+-- eg. call MADJ21({C4, D5, N6, C7}, {D1, N1, N6, C7}, {C1, N1, D5, C7})
+-- should give {D5, C7, C1}
+
+N1	= mk_Term(1, <Normal>);
+N3	= mk_Term(3, <Normal>);
+N6	= mk_Term(6, <Normal>);
+N63a	= mk_Term(63, <Normal>);
+N63b	= mk_Term(63, <COU>);
+N63c	= mk_Term(63, <DR>);
+N64	= mk_Term(64, <Normal>);
+N61	= mk_Term(61, <Normal>);
+N250= mk_Term(250, <Normal>);
+C1	= mk_Term(1, <COU>);
+C2	= mk_Term(2, <COU>);
+C3	= mk_Term(3, <COU>);
+C4	= mk_Term(4, <COU>);
+C7	= mk_Term(7, <COU>);
+D1	= mk_Term(1, <DR>);
+D2	= mk_Term(2, <DR>);
+D3	= mk_Term(3, <DR>);
+D5	= mk_Term(5, <DR>);
+		
+end MADJ21

@@ -1,0 +1,450 @@
+types
+
+T = <France> | <Denmark> | <SouthAfrica> | <SaudiArabia>;
+
+Team = <Brazil> | <Norway> | <Morocco> | <Scotland> |
+       <Italy> | <Chile> | <Austria> | <Cameroon> |
+       <France> | <Denmark> | <SouthAfrica> | <SaudiArabia> | 
+       <Nigeria> | <Paraguay> | <Spain> | <Bulgaria> |
+       <Holland> | <Mexico> | <Belgium> | <SouthKorea> |
+       <Germany> | <Yugoslavia> | <Iran> | <UnitedStates> |
+       <Rumania> | <England> | <Colombia> | <Tunisia> |
+       <Argentina> | <Croatia> | <Jamaica> | <Japan>;
+
+GroupName = <A> | <B> | <C> | <D> | <E> | <F> | <G> | <H>;
+       
+
+Score :: team : Team
+         won : nat
+         drawn : nat
+         lost : nat
+         points : nat 
+inv score == score.points = 3 * score.won + score.drawn;
+
+
+SeqGroup :: seq of Score;
+SetGroup :: set of Score;
+MapGroup :: map Team to (nat * nat * nat * nat);
+Group = SeqGroup | SetGroup | MapGroup
+
+values
+
+--v1 = <France> = <Denmark>;
+--v2 = <SaudiArabia> <> <SouthAfrica>;
+
+GroupA = [ mk_Score(<Brazil>,2,0,1,6), 
+           mk_Score(<Norway>,1,2,0,5),
+           mk_Score(<Morocco>,1,1,1,4),
+           mk_Score(<Scotland>,0,1,2,1) ];
+
+mk_(Awinner,-) = promoted(GroupA);
+a = <France>;
+p1 = cases GroupA(1).team:
+       <Brazil> -> "Brazil are winners",
+       (a)      -> "France are winners",
+       others   -> "Neither France nor Brazil are winners"
+     end;
+p2 = let {sc1, sc2, sc3, sc4} = elems GroupA
+     in sc1.points + sc2.points + sc3.points + sc4.points;
+v3 = a <> <France>;
+s1 = { <France>, <Denmark>, <SouthAfrica>, <SaudiArabia> };
+l3 = [<England>, <Rumania>, <Colombia>, <Tunisia>];
+m1 = { <France> |-> 6, <Denmark> |-> 4, <SouthAfrica> |-> 3,
+       <SaudiArabia> |-> 1};
+Europe = { <France>, <England>, <Denmark>, <Spain> };
+
+
+sc1 = mk_Score (<France>, 3, 0, 0, 9);
+sc2 = mk_Score (<Denmark>, 1, 1, 1, 4);
+sc3 = mk_Score (<SouthAfrica>, 0, 2, 1, 2);
+sc4 = mk_Score (<SaudiArabia>, 0, 1, 2, 1);
+
+
+v4 = iota x in set {sc1,sc2,sc3,sc4} & x.team = <France>;
+
+GroupC = {sc1,sc2,sc3,sc4};
+
+v5 = {sc.team | sc in set GroupC & sc.points > 2};
+
+v6 = {sc.team | sc in set GroupC & sc.lost > sc.won};
+
+
+v7 = [GroupA(i).team | i in set inds GroupA & GroupA(i).won <> 0];
+
+
+v8 = [GroupA(i) | i in set inds GroupA & GroupA(i).won = 0];
+
+v9 = GroupA(1,...,2);
+
+v10 = [GroupA(i) | i in set inds GroupA & GroupA(i).points = 9];
+
+GroupG = { <Romania> |-> mk_(2,1,0), <England> |-> mk_(2,0,1),
+           <Colombia> |-> mk_(1,0,2), <Tunisia> |-> mk_(0,1,2) };
+
+v11 = { t |-> let mk_(w,d,-) = GroupG(t)
+              in w * 3 + d | t in set dom GroupG};
+
+--v12 = { t |-> w * 3 + d | t in set dom GroupG, w,d,l:nat & 
+--                             mk_(w,d,l) = GroupG(t) and w > l};
+
+v13 = GroupA(1);
+v14 = GroupG(<Romania>);
+
+-- not sure whether this is needed, hence commented out for now
+--gpIndex: bimap GroupName to nat = 
+--  { <A> |-> 1, <B> |-> 2, <C> |-> 3, <D> |-> 4, 
+--    <E> |-> 5, <F> |-> 6, <G> |-> 7, <H> |-> 8 };
+
+secondRoundWinners = [<A>,<B>,<C>,<D>,<E>,<F>,<G>,<H>];
+secondRoundRunnersUp = [<B>,<A>,<D>,<C>,<F>,<E>,<H>,<G>];
+myGps = { <A> |-> sc_init ({<Brazil>, <Norway>, <Morocco>, <Scotland>}),
+          <B> |-> sc_init ({<Italy>, <Chile>, <Austria>, <Cameroon>}),
+          <C> |-> sc_init ({<France>, <Denmark>, <SouthAfrica>,<SaudiArabia>}),
+          <D> |-> sc_init ({ <Nigeria>, <Paraguay>, <Spain>, <Bulgaria>}),
+          <E> |-> sc_init ({ <Holland>, <Mexico>, <Belgium>, <SouthKorea>}),
+          <F> |-> sc_init ({<Germany>, <Yugoslavia>, <Iran>, <UnitedStates>}),
+          <G> |-> sc_init ({<Rumania>, <England>, <Colombia>, <Tunisia>}),
+          <H> |-> sc_init ({<Argentina>, <Croatia>, <Jamaica>, <Japan>})};
+
+
+
+
+state GroupPhase of
+  gps : map GroupName to set of Score
+inv mk_GroupPhase(gps) ==
+  forall gp in set rng gps & 
+    (card gp = 4 and
+     forall sc in set gp & sc.won + sc.lost + sc.drawn <= 3)
+init gp ==
+  gp = mk_GroupPhase ({ <A> |-> sc_init ({<Brazil>, <Norway>, <Morocco>, <Scotland>}),
+          <B> |-> sc_init ({<Italy>, <Chile>, <Austria>, <Cameroon>}),
+          <C> |-> sc_init ({<France>, <Denmark>, <SouthAfrica>,<SaudiArabia>}),
+          <D> |-> sc_init ({ <Nigeria>, <Paraguay>, <Spain>, <Bulgaria>}),
+          <E> |-> sc_init ({ <Holland>, <Mexico>, <Belgium>, <SouthKorea>}),
+          <F> |-> sc_init ({<Germany>, <Yugoslavia>, <Iran>, <UnitedStates>}),
+          <G> |-> sc_init ({<Rumania>, <England>, <Colombia>, <Tunisia>}),
+          <H> |-> sc_init ({<Argentina>, <Croatia>, <Jamaica>, <Japan>})})
+
+end
+
+functions
+
+sc_init : set of Team -> set of Score
+sc_init (ts) ==
+  { mk_Score (t,0,0,0,0) | t in set ts };
+
+
+--inv_Score : Score +> bool
+--inv_Score (sc) == sc.points = 3 * sc.won + sc.drawn;
+
+
+-- let expressions
+let_example2 : Score * Score -> bool
+let_example2 (sc1,sc2) ==
+  let mk_Score (-,w1,-,-,p1) = sc1,
+      mk_Score (-,w2,-,-,p2) = sc2
+  in (p1 > p2) or
+     (p1 = p2) and (w1 > w2);
+
+win : Team * Team * set of Score -> set of Score
+win (wt,lt,gp) ==
+  let wsc = iota sc in set gp & sc.team = wt,
+      lsc = iota sc in set gp & sc.team = lt
+  in let new_wsc = mu(wsc, won |-> wsc.won + 1,
+                           points |-> wsc.points + 3),
+         new_lsc = mu(lsc, lost |-> lsc.lost + 1)
+     in (gp \ {wsc,lsc}) union {new_wsc, new_lsc}
+pre forall sc1, sc2 in set gp & sc1<> sc2 <=> sc1.team <> sc2.team
+    and {wt,lt} subset {sc.team | sc in set gp};
+
+
+
+build_score : Team * nat * nat * nat * nat -> Score
+build_score (t,w,d,l,p) ==
+  if 3 * w + d = p
+  then mk_Score(t,w,d,l,p)
+  else undefined;
+
+promoted : seq of Score -> Team * Team
+promoted([sc1,sc2]^-) == mk_(sc1.team,sc2.team);
+
+
+group_winner : Group -> Team
+group_winner(g) ==
+  cases g:
+    mk_SeqGroup(l) -> (hd l).team,
+    mk_SetGroup(s) -> let sc in set s be st
+                        forall sc' in set s \ {sc} 
+                          & sc.points >= sc'.points
+                      in sc.team,
+    mk_MapGroup(m) -> let t in set dom m be st
+                        let mk_(-,-,-,p) = m(t)
+                        in forall mk_(-,-,-,p') in set rng m &
+                             p >= p'
+                      in t
+  end;
+
+
+clear_winner : set of Score -> bool
+clear_winner (scs) ==
+  exists sc in set scs & 
+    forall sc' in set scs \ {sc} & sc.points > sc'.points;
+
+winner_by_more_wins : set of Score -> bool
+winner_by_more_wins (scs) ==
+  exists sc in set scs &
+    forall sc' in set scs \ {sc} &
+      (sc.points > sc'.points) or
+      (sc.points = sc'.points and sc.won > sc'.won)
+
+
+
+operations
+
+setup: () ==> ()
+setup () ==
+  gps := myGps;
+
+resultsGroupA: () ==> ()
+resultsGroupA () ==
+  (Win(<Brazil>,<Scotland>);  Draw(<Norway>,<Morocco>);
+   Win(<Brazil>,<Morocco>);   Draw(<Norway>,<Scotland>);
+   Win(<Norway>,<Brazil>);    Win(<Morocco>,<Scotland>)
+  );
+
+resultsGroupB: () ==> ()
+resultsGroupB () ==
+  (Draw(<Italy>,<Chile>); Draw (<Cameroon>,<Austria>);
+   Draw(<Chile>,<Austria>); Win(<Italy>,<Cameroon>);
+   Win(<Italy>,<Austria>); Draw(<Chile>,<Cameroon>)
+  );
+
+resultsGroupC: () ==> ()
+resultsGroupC () ==
+  (Win(<Denmark>,<SaudiArabia>); Win(<France>,<SouthAfrica>);
+   Draw(<SouthAfrica>,<Denmark>); Win(<France>,<SaudiArabia>);
+   Win(<France>,<Denmark>); Draw(<SouthAfrica>,<SaudiArabia>);
+  );
+
+resultsGroupD: () ==> ()
+resultsGroupD () ==
+  (Draw(<Paraguay>,<Bulgaria>); Win(<Nigeria>,<Spain>);
+   Win(<Nigeria>,<Bulgaria>); Draw(<Spain>,<Paraguay>);
+   Win(<Spain>,<Bulgaria>); Win(<Paraguay>,<Nigeria>);
+  );
+
+resultsGroupE: () ==> ()
+resultsGroupE () ==
+  (Win(<Mexico>,<SouthKorea>); Draw(<Holland>,<Belgium>);
+   Draw(<Belgium>,<Mexico>); Win(<Holland>,<SouthKorea>);
+   Draw(<Holland>,<Mexico>); Draw(<Belgium>,<SouthKorea>)
+  );
+
+resultsGroupF: () ==> ()
+resultsGroupF () ==
+  (Win(<Yugoslavia>,<Iran>); Win(<Germany>,<UnitedStates>);
+   Draw(<Germany>,<Yugoslavia>); Win(<Iran>,<UnitedStates>);
+   Win(<Germany>,<Iran>); Win(<Yugoslavia>,<UnitedStates>);
+  );
+
+resultsGroupG: () ==> ()
+resultsGroupG () ==
+  (Win(<England>,<Tunisia>); Win(<Rumania>,<Colombia>);
+   Win(<Colombia>,<Tunisia>); Win(<Rumania>,<England>);
+   Draw(<Rumania>,<Tunisia>); Win(<England>,<Colombia>)
+  );
+
+resultsGroupH: () ==> ()
+resultsGroupH () ==
+  (Win(<Argentina>,<Japan>); Win(<Croatia>,<Jamaica>);
+   Win(<Croatia>,<Japan>); Win(<Argentina>,<Jamaica>);
+   Win(<Argentina>,<Croatia>); Win(<Jamaica>,<Japan>);
+  );
+
+Win : Team * Team ==> ()
+Win (wt,lt) ==
+  let gp in set dom gps be st {wt,lt} subset {sc.team | sc in set gps(gp)}
+  in gps := gps ++ { gp |-> 
+                         { if sc.team = wt
+                           then mu(sc, won |-> sc.won + 1,
+                                       points |-> sc.points + 3)
+                           else if sc.team = lt
+                           then mu(sc, lost |-> sc.lost + 1)
+                           else sc 
+                                   | sc in set gps(gp)}}
+pre exists gp in set dom gps & {wt,lt} subset {sc.team | sc in set gps(gp)};
+
+Win2 (wt,lt: Team)
+ext wr gps : map GroupName to set of Score
+pre exists gp in set dom gps & 
+        {wt,lt} subset {sc.team | sc in set gps(gp)}
+post exists gp in set dom gps &
+       {wt,lt} subset {sc.team | sc in set gps(gp)}
+       and gps = gps~ ++ 
+                     { gp |-> 
+                       {if sc.team = wt
+                        then mu(sc, won |-> sc.won + 1,
+                                    points |-> sc.points + 3)
+                        else if sc.team = lt
+                        then mu(sc, lost |-> sc.lost + 1)
+                        else sc 
+                   | sc in set gps(gp)}};
+
+Draw : Team * Team ==> ()
+Draw (t1,t2) ==
+  let gp in set dom gps be st {t1,t2} subset {sc.team | sc in set gps(gp)}
+  in gps := gps ++ { gp |-> 
+                         { if sc.team = t1
+                           then mu(sc, drawn |-> sc.drawn + 1,
+                                       points |-> sc.points + 1)
+                           else if sc.team = t2
+                           then mu(sc, drawn |-> sc.drawn + 1,
+                                       points |-> sc.points + 1)
+                           else sc 
+                                   | sc in set gps(gp)}}
+pre exists gp in set dom gps & {t1,t2} subset {sc.team | sc in set gps(gp)};
+
+
+
+
+
+
+
+
+GroupWinner (gp:GroupName) t:Team
+ext rd gps : map GroupName to set of Score
+pre gp in set dom gps
+post t in set {sc.team | sc in set gps(gp)} and
+     let sct = iota sc in set gps(gp) & sc.team = t 
+     in 
+       forall sc in set gps(gp) &
+         sc.team <> t => sct.points > sc.points or
+                         sct.points = sc.points and sct.won > sc.won;
+
+GroupRunnerUp (gp:GroupName) t:Team
+ext rd gps : map GroupName to set of Score
+post let sc' in set gps(gp) be st
+       post_GroupWinner(gp,sc'.team,mk_GroupPhase(gps),mk_GroupPhase(gps))
+     in t in set {sc.team | sc in set gps(gp) \ {sc'}} and
+        let sct = iota sc in set gps(gp) \ {sc'} & sc.team = t
+        in forall sc in set gps(gp) \ {sc'} &
+         sc.team <> t => sct.points > sc.points or
+                         sct.points = sc.points and sct.won > sc.won;
+
+SecondRound () games : seq of (Team * Team)
+ext rd gps : map GroupName to set of Score
+post let winners = { gp |-> t | t : Team, gp in set dom gps & 
+                                  post_GroupWinner(gp,t,mk_GroupPhase(gps),
+                                                   mk_GroupPhase(gps))},
+         runners_up = { gp |-> t | t : Team,  gp in set dom gps & 
+                                  post_GroupRunnerUp(gp,t,mk_GroupPhase(gps),
+                                                     mk_GroupPhase(gps))}
+      in games = [mk_(winners(secondRoundWinners(i)),
+                      runners_up(secondRoundWinners(i))) | i in set {1,...,8}];
+
+-- statements
+
+
+-- let stmt - lots of examples presumably
+GroupWinner_expl : GroupName ==> Team
+GroupWinner_expl (gp) ==
+  let sc in set gps(gp) be st
+     forall sc' in set gps(gp) \ {sc} & 
+        (sc.points > sc'.points) or
+        (sc.points = sc'.points and sc.won > sc'.won)
+  in return sc.team;
+
+GroupRunnerUp_expl : GroupName ==> Team
+GroupRunnerUp_expl (gp) ==
+  def t = GroupWinner(gp)
+  in let sct = iota sc in set gps(gp) & sc.team = t
+     in 
+       let sc in set gps(gp) \ {sct} be st
+         forall sc' in set gps(gp) \ {sc,sct} & 
+           (sc.points > sc'.points) or
+           (sc.points = sc'.points and sc.won > sc'.won)
+       in return sc.team;
+
+-- def stmt
+SecondRound_expl : () ==> seq of (Team * Team)
+SecondRound_expl () ==
+  def winners = { gp |-> GroupWinner_expl(gp) | gp in set dom gps };
+      runners_up = { gp |-> GroupRunnerUp_expl(gp) | gp in set dom gps}
+  in return ([mk_(winners(secondRoundWinners(i)),
+                  runners_up(secondRoundRunnersUp(i))) | i in set {1,...,8}]);
+
+
+-- assignment to state designator
+--  c.f. earlier version of Win
+Win_sd : Team * Team ==> ()
+Win_sd (wt,lt) ==
+  let gp in set dom gps be st {wt,lt} subset {sc.team | sc in set gps(gp)}
+  in gps(gp) := { if sc.team = wt
+                  then mu(sc, won |-> sc.won + 1,
+                              points |-> sc.points + 3)
+                  else if sc.team = lt
+                  then mu(sc, lost |-> sc.lost + 1)
+                  else sc 
+                      | sc in set gps(gp)}
+pre exists gp in set dom gps & {wt,lt} subset {sc.team | sc in set gps(gp)};
+
+
+-- conditional statements
+
+GroupWinner_if : GroupName ==> Team
+GroupWinner_if (gp) ==
+  if clear_winner(gps(gp))
+  then return ((iota sc in set gps(gp) &
+                 forall sc' in set gps(gp) \ {sc} &
+                   sc.points > sc'.points).team)
+  else if winner_by_more_wins(gps(gp))
+       then return ((iota sc in set gps(gp) &
+                 forall sc' in set gps(gp) \ {sc} &
+                   (sc.points > sc'.points) or
+                   (sc.points = sc'.points and sc.won > sc'.won)).team)
+  else RandomElement ( {sc.team | sc in set gps(gp) &
+                         forall sc' in set gps(gp) &
+                          sc'.points <= sc.points} )
+pre gp in set dom gps;
+
+RandomElement : set of Team ==> Team
+RandomElement (ts) ==
+  (dcl t:Team := let t' in set ts in t';
+   return (t));
+
+GroupWinner_cases : GroupName ==> Team
+GroupWinner_cases (gp) ==
+  cases true:
+    (clear_winner(gps(gp))) -> 
+         return ((iota sc in set gps(gp) &
+                   forall sc' in set gps(gp) \ {sc} &
+                    sc.points > sc'.points).team),
+
+    (winner_by_more_wins(gps(gp))) ->
+         return ((iota sc in set gps(gp) &
+                   forall sc' in set gps(gp) \ {sc} &
+                     (sc.points > sc'.points) or
+                     (sc.points = sc'.points and sc.won > sc'.won)).team),
+
+    others -> RandomElement ( {sc.team | sc in set gps(gp) &
+                                forall sc' in set gps(gp) &
+                                 sc'.points <= sc.points} )
+  end
+pre gp in set dom gps;
+
+-- for loops
+GroupWinners: () ==> set of Team
+GroupWinners () ==
+  (dcl winners : set of Team := {};
+   for all gp in set dom gps do
+     (dcl winner: Team := GroupWinner(gp);
+      winners := winners union {winner}
+     );
+   return winners
+   );
+
+   
+
+
+
+

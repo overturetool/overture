@@ -1,0 +1,35 @@
+module A
+exports
+	types
+		struct S			-- to export the fields too
+		
+	functions
+		inv_S: S +> bool;	-- compose S of x:int end +> bool; ???
+		
+definitions
+
+types
+
+S :: x:int
+inv s == s.x < 10;
+
+end A
+
+------------------------------------------
+
+module B
+imports
+	from A
+		types
+			S:: x:int
+			
+		functions
+			inv_S: A`S +> bool
+		
+definitions
+functions
+
+f: A`S -> bool
+	f(s) == A`inv_S(s) or s.x = 100;
+	
+end B

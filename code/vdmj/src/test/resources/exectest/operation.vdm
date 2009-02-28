@@ -1,0 +1,100 @@
+module A
+definitions
+operations
+
+zero: () ==> int
+	zero() == return 0;
+	
+fact: int ==> int
+	fact(i) == if i < 2 then return 1 else return i * fact(i-1);
+	
+caseop: int ==> seq of char
+	caseop(i) ==
+		cases i:
+			1 -> def result = "a" in return result,
+			2 -> return "b",
+			others -> return "z"
+		end;
+		
+ifelse(a:int, b:int) r:int
+	== if a = b then return 0
+		elseif a < b then return -1
+		elseif a > b then return 1
+		else return 999;
+		
+for1: int ==> int
+	for1(a) ==
+		(
+			dcl sum:int := 0;
+			for all x in set {1,...,a} do sum := sum + x;
+			return sum;
+		);
+
+for2: int * int * int ==> int
+	for2(first, last, interval) ==
+		(
+			dcl sum:int := 0;
+			for x = first to last by interval do sum := sum + x;
+			return sum; 
+		);
+
+for3: () ==> int
+	for3() ==
+		(
+			dcl sum:int := 0;
+			for x in set {1,...,5} in [1,2,3,4,5] do sum := sum + x;
+			return sum;
+		);
+		
+letbest: () ==> int
+	letbest() ==
+		let x in set {1,2,3} be st x > 1 in return x;
+
+letdef: int ==> int
+	letdef(a) ==
+		let x = a in return x;
+		
+skippy: () ==> int
+	skippy() == (skip; skip; skip; skip; return 0);
+	
+whilst: int ==> int
+	whilst(a) ==
+		(
+			dcl sum:int := 0, i:int := 0;
+			while i < a do (i := i + 1; sum := sum + i);
+			return sum;
+		);
+		
+always1: int ==> int
+	always1(a) ==
+		(
+			dcl result:int := 0;
+			always result := 1 in (result := a);			
+			return result;
+		);
+		
+trap1: () ==> int
+	trap1() == trap n with return n in exit 123;
+
+tixe1: int ==> int
+	tixe1(a) == tixe
+				{
+					n:int |-> return n,
+					c:char |-> return 999
+				}
+				in if a < 0
+				 	then (exit a; return 1;)
+				 	else (exit 'x'; return 2;);
+
+pp: int ==> int
+	pp(a) == return a + 1
+	pre a > 0
+	post RESULT > a;
+	
+impl(a:int) r:int
+	== return a + 1
+	pre a > 0
+	post r > a;
+	
+
+end A

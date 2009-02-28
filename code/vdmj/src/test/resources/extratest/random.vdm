@@ -1,0 +1,27 @@
+module Random
+exports all
+definitions
+
+state R of
+	rseed: int
+init r == r = mk_R(87654321)
+end
+
+operations
+
+seed: nat1 ==> ()
+	seed(n) == rseed := n;
+	
+inc: () ==> ()
+	inc() ==
+		for i = 1 to rseed mod 7 + 3 do
+			rseed := (rseed * 69069 + 5) mod 4294967296;
+
+rand: nat1 ==> nat1
+rand(n) ==
+(
+	inc();
+	return rseed mod n + 1;
+);
+
+end Random

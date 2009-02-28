@@ -1,0 +1,11 @@
+op1(2) = 1
+pre_op1(2, mk_Sigma(1,1)) = true
+pre_op1(1, mk_Sigma(1,1)) = false
+post_op1(2, 1, mk_Sigma(1,1), mk_Sigma(2,1)) = true
+post_op1(1, 2, mk_Sigma(1,1), mk_Sigma(2,1)) = false
+
+op2(1) = 2
+pre_op2(2, mk_Sigma(1,1)) = true
+pre_op2(1, mk_Sigma(1,1)) = false
+post_op2(2, 1, mk_Sigma(1,1), mk_Sigma(2,1)) = true
+post_op2(1, 2, mk_Sigma(1,1), mk_Sigma(2,1)) = false

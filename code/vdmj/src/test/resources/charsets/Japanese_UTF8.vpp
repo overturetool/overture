@@ -1,0 +1,28 @@
+class A
+
+instance variables 
+  protected ｉ:real | seq of char;
+  ｊ:real := Ｉｎｉｔ();
+
+operations
+
+public A: () ==> A
+	A() == ( ｉ := 111; );
+	
+public A: int ==> A
+	A(x東京) == (ｉ := x東京; ｊ := x東京 * 2 );
+
+protected Ｉｎｉｔ: () ==> real
+	Ｉｎｉｔ() == return 123.456;
+
+end A
+
+class B is subclass of A
+operations
+public B: () ==> B
+	B() == (let - = A(9) in skip; ｉ := "日本・東京");
+
+protected Ｉｎｉｔ: () ==> real
+	Ｉｎｉｔ() == return 654.321;
+
+end B

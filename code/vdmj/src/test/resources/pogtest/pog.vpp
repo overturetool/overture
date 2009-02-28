@@ -1,0 +1,226 @@
+class A
+types
+	public R :: int | bool;
+	public U = (nat * nat)|(nat * nat * nat);
+	public T1 = seq of bool;
+	public T2 = seq of nat1 inv a == a <> [];
+	
+values
+	m: map int to int = {1 |-> 2, 2 |-> 3};
+	sq: seq of int = [1,2,3];
+	
+instance variables
+	iv:int := 123;
+	inv iv < 10;
+	
+functions
+	public fpat: (int * int) -> seq of int -> int
+		fpat(mk_(i, j))([k]) ==	m(i) + j + k;
+				
+	public fpati(mk_(i, j):(int * int)) r:int
+		==	m(i) + j;
+
+	public ifelse: () -> int
+		ifelse() ==
+			let x = 123 in
+				if m(-1) > 0 then m(1)
+				elseif m(-2) > 0 then m(2)
+				elseif x < 0 or x > 10 or x = 100 then m(3)
+				else m(999);
+		
+	public pref: int * int -> int
+		pref(a, b) == m(a) + b
+	pre a < b;
+	
+	public prepostf: int * int -> int
+		prepostf(a, b) == a + b
+	pre a < b
+	post RESULT > b;
+	
+	public prepostfi(mk_(a,b),c:int * int) r:int
+	pre a < b
+	post r > b;
+	
+	public cazes: seq of int -> int
+		cazes(x) ==
+			cases x ^ [-999]:
+				[a] -> m(a),
+				[a,b] -> m(a+b),
+				[a]^[b] -> m(a+b),
+				others -> m(m(999))
+			end;
+			
+	public letbe: (int * int) -> int
+		letbe(mk_(i, -)) == let x in set {m(1),2,3} be st m(x) < i in m(x);
+			
+	public letdef: () -> int
+		letdef() == let x = m(1) in m(x);
+		
+	public letdef2: () -> int
+		letdef2() ==
+			let local: int->int local(x) == m(x) in
+				local(1);
+		
+	public defx: () -> int
+		defx() == def x = m(1); y = m(2) in m(x) + m(y);
+		
+	public unique: () -> int
+		unique() == iota x in set {1,2,3} & x < 10;
+		
+	public unique2: () -> bool
+		unique2() == exists1 x in set {1,2,3} & x < 10;
+		
+	private f1: int -> int f1(i) == i+1
+		pre i < 10;
+	
+	private f2: int -> int f2(i) == i-1
+		pre i > 10;
+	
+	public fit: nat -> int->int
+		fit(n) == f1 ** n;
+		
+	public fit2: (int -> int) * nat -> int->int
+		fit2(x, n) == x ** n;
+	
+	public mit: nat -> map int to int
+		mit(n) == m ** n;
+		
+	public mit2: (map int to int) * nat -> map int to int
+		mit2(x, n) == x ** n;
+	
+	public fcomp: () -> int->int
+		fcomp() == f1 comp f2;
+		
+	public fcomp2: (int -> int) * (int -> int) -> int -> int
+		fcomp2(x, y) == x comp y;
+	
+	public fcomp3: (int -> int) -> int -> int
+		fcomp3(x) == x comp f2;
+	
+	public fcomp4: (int -> int) -> int -> int
+		fcomp4(x) == f1 comp x;
+	
+	public mcomp: () -> map int to int
+		mcomp() == m comp m;
+		
+	public mcomp2: (map int to int) * (map int to int) -> map int to int
+		mcomp2(x, y) == x comp y;
+		
+	public mcomp3: (map int to int) -> map int to int
+		mcomp3(x) == x comp m;
+		
+	public fapply: int -> int
+		fapply(i) == f1(i);
+		
+	public fapply2: (int -> int) -> int
+		fapply2(x) == x(123);
+
+	public sapply: int -> int
+		sapply(i) == sq(i);
+		
+	public sapply2: (seq of int) -> int
+		sapply2(x) == x(123);
+		
+	public nonemptyset: set of set of int -> set of int
+		nonemptyset(s) == dinter s;
+		
+	public nonemptyseq: seq of int -> seq of int
+		nonemptyseq(s) == 
+			if s = [] then [] else tl s;
+
+	public nonzero: int -> int
+		nonzero(i) == 123/i;
+		
+	public nonzero2: int -> int
+		nonzero2(i) == 456 div i;
+
+	public finitemap: () -> map int to int
+		finitemap() == {a |-> b | a:int, b in set {1,2,3} & a < 10};
+
+	public finiteset: () -> set of int
+		finiteset() == {a + b | a:int, b in set {1,2,3} & a < 10};
+
+	public mcompat: (map int to int) * (map int to int) -> map int to int
+		mcompat(a, b) == a munion b;
+		
+	public mseqcompat: int -> map int to int
+		mseqcompat(x) == {1 |-> 2, 2 |-> 3, x |-> 4};
+
+	public msetcompat: () -> map set of int to int
+		msetcompat() == {{a} |-> a | a in set {1,2,3} & a < 10};
+		
+	public msetcompat2: () -> map int to int
+		msetcompat2() == merge {{1 |-> 2}, {2 |-> 3}};
+		
+	public recursive: nat -> nat
+		recursive(n) ==
+			if n = 1 then 1 else n * recursive(n-1);
+			
+	public seqmod : () -> seq of (nat | bool)
+		seqmod() == [2, true, 7.8] ++ {1 |-> false};
+		
+	public tuple: (nat * nat) | (nat * nat * nat) -> nat
+		tuple(t) == t.#3;
+		
+	public valbind: U -> int
+		valbind(u) ==
+			let mk_(a,b):U = u in a + b;
+			
+	public subtype: () -> T1 | T2 subtype() == [0,1,2,true];
+	
+	public subtype2: T1 | T2 -> int
+		subtype2(t) == let x:T1 | T2 = [0,1,2,true] in len x + len t;
+		
+	public subtype3: T1 | T2 | int -> int
+		subtype3(a) == subtype2(a); 
+	
+	public minverse: () -> map (seq of char) to int
+		minverse() == inverse {1 |-> "2"};
+		
+	public minverse2: () -> map (seq of char) to int
+		minverse2() == inverse {|->};
+		
+	public rec: nat1 * nat1 -> nat1
+		rec(n, x) == if n < 2 then 1 else n * rec(n-1, x-1)
+	measure id;
+	
+	private id: nat1 * nat1 -> nat
+		id(x, y) == x - y;
+
+	public rec2: (nat1 * nat1) -> nat1
+		rec2(mk_(n, x)) == if n < 2 then 1 else n * rec2(mk_(n-1, x-1))
+	measure id2;
+	
+	private id2: (nat1 * nat1) -> nat
+		id2(mk_(x, y)) == x - y;
+
+--	public rec3(mk_(n, x):nat1 * nat1) r:nat1
+	public rec3: (nat1 * nat1) -> nat1 rec3(mk_(n, x)) 
+		== if n < 2 then 1 else n * rec3(mk_(n-1, x-1))
+	measure id3;
+	
+	private id3: (nat1 * nat1) -> nat * nat
+		id3(mk_(x, y)) == mk_(x*2, y*2);
+
+
+operations
+
+public op: int ==> int
+	op(i) ==
+		cases i:
+			1 -> if m(1) < 10 then return m(1) else return m(2),
+			2 -> return m(3)
+		end;
+
+public op2: () ==> ()
+	op2() ==
+	(
+		dcl x:int := 10;
+		
+		while x > 0 do
+		(
+			iv := iv + 1;
+		)
+	);
+
+end A

@@ -1,0 +1,140 @@
+
+module Metro1
+exports all
+definitions 
+state Metro of
+  doors: <Open> | <Closed>
+  train: <Moving> | <Stopped>
+inv mk_Metro(doors,train) == not (doors = <Open> and train = <Moving>)
+init metro == metro = mk_Metro(<Closed>,<Stopped>)
+end
+operations
+  Accelerate: () ==> ()
+  Accelerate() == 
+    (train:= <Moving>)
+  pre doors = <Closed>;
+  Break: () ==> ()
+  Break() == 
+    (train:= <Stopped>);
+  
+  Open: () ==> ()
+  Open() == 
+    (doors:= <Open>)
+  pre train = <Stopped>;
+  
+  Close: () ==> ()
+  Close() == 
+    (doors:= <Closed>)
+end Metro1
+
+module Metro1a
+exports all
+definitions 
+state Metro of
+  doorsopen: bool
+  trainmoving: bool
+inv mk_Metro(doorsopen,trainmoving) == not (doorsopen and trainmoving)
+init metro == metro = mk_Metro(false,false)
+end
+operations
+  Accelerate() 
+  ext wr trainmoving rd doorsopen	-- ADDED doorsopen!
+  pre not doorsopen
+  post trainmoving;
+  Break()
+  ext wr trainmoving
+  post not trainmoving;
+  Open()
+  ext wr doorsopen rd trainmoving	-- ADDED trainmoving!
+  pre not trainmoving
+  post doorsopen;
+  Close()
+  ext wr doorsopen
+  post not doorsopen
+end Metro1a
+
+module Metro2
+exports all
+definitions 
+state Metro of
+  doors: <Open> | <Closed>
+  train: <Moving> | <Stopped>
+  bellon: [Time]  -- The bell is not ringing if bellon is nil
+inv mk_Metro(doors,train,bellon) == 
+  not (doors = <Open> and train = <Moving>) 
+init metro == metro = mk_Metro(<Closed>,<Stopped>,nil)
+end
+types
+  Time = nat;
+operations
+  Accelerate: () ==> ()
+  Accelerate() == 
+    (train:= <Moving>)
+  pre doors = <Open>;
+  Break: () ==> ()
+  Break() == 
+    (train:= <Stopped>);
+  
+  Open: () ==> ()
+  Open() == 
+    (doors:= <Open>)
+  pre train = <Stopped>;
+  
+  CloseDepressed: Time ==> ()
+  CloseDepressed(t) == 
+    (bellon:= t)
+  pre bellon = nil;
+  CloseReleased: Time ==> ()
+  CloseReleased(t) == 
+    (if t+3 >= bellon 
+     then doors:= <Closed> 
+     else skip;
+     bellon:= nil)
+  pre bellon <> nil
+end Metro2
+
+module Metro3
+exports all
+definitions
+types
+  Time = real
+  inv t == t>0;
+  Interval:: start: Time
+             stop: Time
+  inv mk_Interval(s,e) == s < e;
+  LifeTime = seq of Interval
+  inv s == 
+    forall i in set {1,...,len s - 1} & s(i).stop < s(i+1).start;
+  System::
+    train   : LifeTime  -- intervals for moving
+    doors   : LifeTime  -- intervals for open
+    bell    : LifeTime  -- intervals for ringing
+    closebut: LifeTime  -- intervals for depressed
+    closeassist: LifeTime -- intervals for activated
+  inv mk_System(train,doors,bell,closebut,closeassist) ==
+    NotMovingAndOpen(train,doors) and
+    BellOnWhenCloseBut(bell,closebut) and
+    CloseAssistAfter3Secs(closeassist,bell);
+    
+functions
+  NotMovingAndOpen: LifeTime * LifeTime -> bool
+  NotMovingAndOpen(train,doors) == 
+    forall i in set inds train, j in set inds doors &
+      not OverlappingIntervals(train(i),doors(j));
+  CloseAssistAfter3Secs: LifeTime * LifeTime -> bool
+  CloseAssistAfter3Secs(closeassist,bell) == 
+    forall i in set inds closeassist &
+      exists j in set inds bell &
+        bell(j).stop >= bell(j).start+3 and
+        closeassist(i).start = bell(j).start+3;
+  BellOnWhenCloseBut: LifeTime * LifeTime -> bool
+  BellOnWhenCloseBut(bell,closebut) == 
+    forall i in set inds bell &
+      exists j in set inds closebut &
+        SubInterval(bell(i),closebut(j)) -- Too loose, correct?
+functions -- Auxiliary functions
+  OverlappingIntervals: Interval * Interval -> bool
+  OverlappingIntervals(int1,int2) == undefined; -- not specified yet.
+  SubInterval: Interval * Interval -> bool
+  SubInterval(int1,int2) == undefined; -- not specified yet.
+end Metro3
