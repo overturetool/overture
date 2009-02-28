@@ -9,15 +9,11 @@
 <groupId>org.overturetool</groupId>
 <artifactId>potrans</artifactId>
 <name>The Proof Obligation Translator</name>
-<build>
-<finalName>org.overturetool.potrans-${version}</finalName>
-</build>
 <dependencies>
 <dependency>
 <groupId>org.overturetool</groupId>
 <artifactId>stdlib</artifactId>
 <version>1.0.0</version>
-<scope>compile</scope>
 </dependency>
 </dependencies>
 </project>
