@@ -2093,7 +2093,7 @@ public class Uml2Vdm {
           OmlTraceDefinitions tmpVar2_28 = null;
           Vector arg_29 = null;
           arg_29 = new Vector();
-          arg_29.add(new OmlNamedTrace(name, defs));
+          arg_29.add(new OmlNamedTrace((Vector) UTIL.ConvertToList(name), defs));
           tmpVar2_28 = new OmlTraceDefinitions(arg_29);
           varRes_2 = new HashMap();
           varRes_2.put(tmpVar1_25, tmpVar2_28);

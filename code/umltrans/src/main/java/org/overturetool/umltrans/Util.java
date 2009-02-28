@@ -30,7 +30,7 @@ public class Util extends StdLib {
 // ***** VDMTOOLS END Name=vdmComp
 
 // ***** VDMTOOLS START Name=writeType KEEP=NO
-  private static Object writeType = new quotes.start();
+  private static Object writeType = new jp.co.csk.vdm.toolbox.VDM.quotes.start();
 // ***** VDMTOOLS END Name=writeType
 
 // ***** VDMTOOLS START Name=buf KEEP=NO
@@ -109,7 +109,7 @@ public class Util extends StdLib {
   static public void SetFileName (final String name) throws CGException {
 
     outputFileName = UTIL.ConvertToString(UTIL.clone(name));
-    writeType = UTIL.clone(new quotes.start());
+    writeType = UTIL.clone(new jp.co.csk.vdm.toolbox.VDM.quotes.start());
   }
 // ***** VDMTOOLS END Name=SetFileName#1|String
 

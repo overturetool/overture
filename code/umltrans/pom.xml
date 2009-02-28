@@ -9,26 +9,11 @@
 <groupId>org.overturetool</groupId>
 <artifactId>umltrans</artifactId>
 <name>Bi-directional OML to UML translator</name>
-<build>
-<finalName>org.overturetool.umltrans-${version}</finalName>
-</build>
 <dependencies>
-	<dependency>
-		<groupId>org.overturetool</groupId>
-		<artifactId>stdlib</artifactId>
-		<version>1.0.0</version>
-		<scope>provided</scope></dependency>
-	<dependency>
-		<groupId>org.overturetool</groupId>
-		<artifactId>ast</artifactId>
-		<version>1.0.0</version>
-		<scope>provided</scope>
-	</dependency>
 	<dependency>
 		<groupId>org.overturetool</groupId>
 		<artifactId>parser</artifactId>
 		<version>1.0.0</version>
-		<scope>provided</scope>
 	</dependency>
 </dependencies>
 
