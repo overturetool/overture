@@ -1,0 +1,20 @@
+
+Change the #req, #act and #fin counters to be summed by all overloads of an
+operation in an object, not per-operation as they are now.
+
+Check all the TC test error messages against the VDMTools error messages.
+
+Improve the exitCheck coverage to look at called operations.
+
+Fix object construction, once the rules are clear.
+
+Worry about scope bugs with qualified naming of function variables.
+
+What we should generate for VDM++ satisfiability POs that call post conditions
+with self, self~?
+
+Add a refresh to ClassList and Modules to re-parse changed files?
+
+Some internal errors and exceptions get printed, but not added to the error list.
+
+VICE specifications are type checked at the moment, but executed as VDM++.
