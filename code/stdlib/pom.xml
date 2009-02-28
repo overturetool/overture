@@ -8,6 +8,7 @@
 </parent>
 <groupId>org.overturetool</groupId>
 <artifactId>stdlib</artifactId>
+<version>1.0.0</version>
 <packaging>jar</packaging>
 <build>
 <finalName>org.overturetool.stdlib-${version}</finalName>
