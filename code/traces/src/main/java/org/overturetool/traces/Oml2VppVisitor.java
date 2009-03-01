@@ -2272,7 +2272,7 @@ public class Oml2VppVisitor extends OmlVisitor {
     String rhs_2 = null;
     String var1_3 = null;
     String var2_5 = null;
-    var2_5 = pcmp.getName();
+    var2_5 = pcmp.getName().toString();
     var1_3 = str.concat(var2_5);
     rhs_2 = var1_3.concat(new String(" : "));
     str = UTIL.ConvertToString(UTIL.clone(rhs_2));

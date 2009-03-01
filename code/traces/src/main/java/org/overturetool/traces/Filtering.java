@@ -409,7 +409,7 @@ public class Filtering {
                       IOmlNamedTrace t = null;
                       t = (IOmlNamedTrace) tmpVal_17;
                       String var1_18 = null;
-                      var1_18 = t.getName();
+                      var1_18 = t.getName().toString();
                       pred_15 = new Boolean(UTIL.equals(var1_18, trace));
                     }
                     if (pred_15.booleanValue()) {
@@ -549,7 +549,7 @@ public class Filtering {
                       IOmlNamedTrace t = null;
                       t = (IOmlNamedTrace) tmpVal_16;
                       String var1_17 = null;
-                      var1_17 = t.getName();
+                      var1_17 = t.getName().toString();
                       pred_14 = new Boolean(UTIL.equals(var1_17, trace));
                     }
                     if (pred_14.booleanValue()) {

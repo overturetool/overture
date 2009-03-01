@@ -1,0 +1,17 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>core</artifactId>
+    <groupId>org.overturetool</groupId>
+    <version>1.0.0</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.overturetool</groupId>
+  <artifactId>vdmtools</artifactId>
+  <packaging>pom</packaging>
+  <name>Interface for VDM Tools</name>
+  <version>1.0.0</version>
+<modules>
+<module>vdmtoolboxapi</module>
+<module>vdmtoolsapi</module>
+</modules>
+</project>

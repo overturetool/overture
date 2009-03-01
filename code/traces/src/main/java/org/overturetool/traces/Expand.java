@@ -196,7 +196,7 @@ public class Expand extends DEF {
         {
 
           String name = null;
-          name = ntrace.getName();
+          name = ntrace.getName().toString();
           IOmlTraceDefinition defs = null;
           defs = (IOmlTraceDefinition) ntrace.getDefs();
           {

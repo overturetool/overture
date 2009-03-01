@@ -16,6 +16,7 @@
 <module>potrans</module>
 <module>umltrans</module>
 <module>jmltrans</module>
+<module>vdmtools</module>
 <module>traces</module>
 <module>vdmj</module>
 </modules>
