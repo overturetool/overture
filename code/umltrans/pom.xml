@@ -8,13 +8,13 @@
 </parent>
 <groupId>org.overturetool</groupId>
 <artifactId>umltrans</artifactId>
+<version>1.0.0</version>
 <name>Bi-directional OML to UML translator</name>
 <dependencies>
-	<dependency>
-		<groupId>org.overturetool</groupId>
-		<artifactId>parser</artifactId>
-		<version>1.0.0</version>
-	</dependency>
+<dependency>
+<groupId>org.overturetool</groupId>
+<artifactId>parser</artifactId>
+<version>1.0.0</version>
+</dependency>
 </dependencies>
-
 </project>
