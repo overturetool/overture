@@ -37,5 +37,6 @@
 <target>1.5</target>
 </configuration>
 </plugin>
-</plugins></build>
+</plugins>
+</build>
 </project>
