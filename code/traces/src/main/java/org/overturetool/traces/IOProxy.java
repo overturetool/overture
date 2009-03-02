@@ -62,7 +62,7 @@ public class IOProxy {
     {
 
       Boolean tmpVal_6 = null;
-      tmpVal_6 = (Boolean) file.fwriteval(f, s, new quotes.append());
+      tmpVal_6 = (Boolean) file.fwriteval(f, s, new jp.co.csk.vdm.toolbox.VDM.quotes.append());
     }
   }
 // ***** VDMTOOLS END Name=append#2|String|String
@@ -75,7 +75,7 @@ public class IOProxy {
     {
 
       Boolean tmpVal_6 = null;
-      tmpVal_6 = (Boolean) file.fwriteval(f, s, new quotes.start());
+      tmpVal_6 = (Boolean) file.fwriteval(f, s, new jp.co.csk.vdm.toolbox.VDM.quotes.start());
     }
   }
 // ***** VDMTOOLS END Name=overwrite#2|String|String
