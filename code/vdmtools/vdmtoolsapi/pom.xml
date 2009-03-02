@@ -8,16 +8,12 @@
 </parent>
 <groupId>org.overturetool</groupId>
 <artifactId>vdmtoolsapi</artifactId>
-<name>API for VDM Tools - wrapper for corba</name>
+	<version>1.0.0</version>
+	<name>API for VDM Tools - wrapper for corba</name>
 <dependencies>
 	<dependency>
 		<groupId>org.overturetool</groupId>
-		<artifactId>StdLib</artifactId>
-		<version>1.0.0</version>
-	</dependency>
-	<dependency>
-		<groupId>org.overturetool</groupId>
-		<artifactId>vdmtoolboxapi</artifactId>
+		<artifactId>stdlib</artifactId>
 		<version>1.0.0</version>
 	</dependency>
 </dependencies>

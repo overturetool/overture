@@ -11,7 +11,6 @@
   <name>Interface for VDM Tools</name>
   <version>1.0.0</version>
 <modules>
-<module>vdmtoolboxapi</module>
 <module>vdmtoolsapi</module>
 </modules>
 </project>
