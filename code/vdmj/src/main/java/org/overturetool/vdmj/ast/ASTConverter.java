@@ -172,7 +172,6 @@ import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.types.UnionType;
 import org.overturetool.vdmj.types.UnresolvedType;
 import org.overturetool.vdmj.types.VoidType;
-import org.overturetool.vdmj.util.Utils;
 
 @SuppressWarnings("unchecked")
 public class ASTConverter
