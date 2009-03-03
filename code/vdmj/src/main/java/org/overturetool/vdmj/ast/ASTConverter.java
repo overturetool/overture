@@ -975,7 +975,7 @@ public class ASTConverter
 			ExpressionList args = convertExpressionList(apply.getArgs());
 
 			return new TraceApplyExpression(
-				new CallObjectStatement(obj, classname, apply.getMethodName(), args));
+				new CallObjectStatement(obj, null, apply.getMethodName(), args));
 		}
 		else
 		{
