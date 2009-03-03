@@ -35,10 +35,17 @@ import org.overturetool.vdmj.values.ValueList;
 @SuppressWarnings("serial")
 public class CallSequence extends Vector<CallObjectStatement>
 {
+	private int filtered = 0;
+
 	@Override
 	public String toString()
 	{
 		return Utils.listToString(this, "; ");
+	}
+
+	public String toString(int upto)
+	{
+		return Utils.listToString(this.subList(0, upto), "; ");
 	}
 
 	public Value eval(Context ctxt)
@@ -51,5 +58,15 @@ public class CallSequence extends Vector<CallObjectStatement>
 		}
 
 		return new SeqValue(values);
+	}
+
+	public void setFilter(int n)
+	{
+		filtered = n;
+	}
+
+	public int getFilter()
+	{
+		return filtered;
 	}
 }

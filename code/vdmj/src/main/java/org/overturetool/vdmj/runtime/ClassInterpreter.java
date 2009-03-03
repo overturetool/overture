@@ -45,6 +45,7 @@ import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.syntax.StatementReader;
 import org.overturetool.vdmj.traces.CallSequence;
+import org.overturetool.vdmj.traces.Verdict;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
 import org.overturetool.vdmj.typechecker.FlatEnvironment;
@@ -447,21 +448,10 @@ public class ClassInterpreter extends Interpreter
 		return list;
 	}
 
-	public List<Object> runtrace(String classname, CallSequence statements)
+	public List<Object> runtrace(
+		ClassDefinition classdef, Environment env, CallSequence statements)
 	{
 		List<Object> list = new Vector<Object>();
-		ClassDefinition classdef = findClass(classname);
-
-		if (classdef == null)
-		{
-			list.add("Class " + classname + " not found");
-			return list;
-		}
-
-		Environment env = new FlatEnvironment(
-			classdef.getSelfDefinition(),
-			new PrivateClassEnvironment(classdef, getGlobalEnvironment()));
-
 		ObjectValue object = null;
 
 		try
@@ -471,6 +461,7 @@ public class ClassInterpreter extends Interpreter
 		catch (ValueException e)
 		{
 			list.add(e.getMessage());
+			list.add(Verdict.FAILED);
 			return list;
 		}
 
@@ -480,9 +471,9 @@ public class ClassInterpreter extends Interpreter
 
 		ctxt.put(classdef.name.getSelfName(), object);
 
-		for (CallObjectStatement statement: statements)
+		try
 		{
-			try
+			for (CallObjectStatement statement: statements)
 			{
 				typeCheck(statement, env, false);
 
@@ -490,6 +481,7 @@ public class ClassInterpreter extends Interpreter
 				{
 					List<VDMError> errors = TypeChecker.getErrors();
 					list.add(Utils.listToString(errors, " and "));
+					list.add(Verdict.FAILED);
 					break;
 				}
 				else
@@ -497,11 +489,30 @@ public class ClassInterpreter extends Interpreter
 					list.add(statement.eval(ctxt));
 				}
 			}
-			catch (Exception e)
+
+			list.add(Verdict.PASSED);
+		}
+		catch (ContextException e)
+		{
+			list.add(e.getMessage());
+
+			switch (e.number)
 			{
-				list.add(e.getMessage());
-				break;
+				case 4055:	// precondition fails for functions
+				case 4071:	// precondition fails for operations
+				case 4087:	// invalid type conversion
+				case 4060:	// type invariant failure
+					list.add(Verdict.INCONCLUSIVE);
+					break;
+
+				default:
+					list.add(Verdict.FAILED);
 			}
+		}
+		catch (Exception e)
+		{
+			list.add(e.getMessage());
+			list.add(Verdict.FAILED);
 		}
 
 		return list;

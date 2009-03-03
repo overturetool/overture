@@ -40,22 +40,26 @@ import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
 import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.Type;
+import org.overturetool.vdmj.util.Utils;
 import org.overturetool.vdmj.values.NameValuePair;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.OperationValue;
 
 public class NamedTraceDefinition extends Definition
 {
-	public final String pathname;
+	public final List<String> pathname;
 	public final List<TraceDefinitionTerm> terms;
 
 	private StateDefinition state;
 
 	public NamedTraceDefinition(
-		LexLocation location, String pathname, List<TraceDefinitionTerm> terms)
+		LexLocation location, List<String> pathname, List<TraceDefinitionTerm> terms)
 	{
 		super(Pass.DEFS, location,
-			new LexNameToken(location.module, pathname, location), NameScope.GLOBAL);
+			new LexNameToken(
+				location.module, Utils.listToString(pathname, "_"), location),
+				NameScope.GLOBAL);
+
 		this.pathname = pathname;
 		this.terms = terms;
 

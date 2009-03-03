@@ -1223,27 +1223,26 @@ public class DefinitionReader extends Reader
 		throws ParserException, LexException
 	{
 		LexLocation start = lastToken().location;
-		String names = readTraceIdentifierList();
+		List<String> names = readTraceIdentifierList();
 		checkFor(Token.COLON, 2264, "Expecting ':' after trace name(s)");
 		List<TraceDefinitionTerm> traces = readTraceDefinitionList();
 
 		return new NamedTraceDefinition(start, names, traces);
 	}
 
-	private String readTraceIdentifierList()
+	private List<String> readTraceIdentifierList()
 		throws ParserException, LexException
 	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(readIdToken("Expecting trace identifier").name);
+		List<String> names = new Vector<String>();
+		names.add(readIdToken("Expecting trace identifier").name);
 
 		while (lastToken().is(Token.DIVIDE))
 		{
 			nextToken();
-			sb.append("/");
-			sb.append(readIdToken("Expecting trace identifier").name);
+			names.add(readIdToken("Expecting trace identifier").name);
 		}
 
-		return sb.toString();
+		return names;
 	}
 
 	private List<TraceDefinitionTerm> readTraceDefinitionList()

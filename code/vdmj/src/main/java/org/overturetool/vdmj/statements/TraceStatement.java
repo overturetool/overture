@@ -23,15 +23,23 @@
 
 package org.overturetool.vdmj.statements;
 
+import java.util.List;
+import java.util.ListIterator;
+
+import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.messages.MessageException;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.traces.CallSequence;
 import org.overturetool.vdmj.traces.TestSequence;
+import org.overturetool.vdmj.traces.Verdict;
 import org.overturetool.vdmj.typechecker.Environment;
+import org.overturetool.vdmj.typechecker.FlatEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.typechecker.PrivateClassEnvironment;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.VoidValue;
@@ -51,14 +59,53 @@ public class TraceStatement extends Statement
 	{
 		TestSequence tests = tracedef.getTests(ctxt);
 		ClassInterpreter ci = (ClassInterpreter)Interpreter.getInstance();
+		ClassDefinition classdef = ci.findClass(location.module);
+
+		if (classdef == null)
+		{
+			throw new MessageException(
+				"Internal 0028: Class not found: " + location.module);
+		}
+
+		Environment env = new FlatEnvironment(
+			classdef.getSelfDefinition(),
+			new PrivateClassEnvironment(classdef, ci.getGlobalEnvironment()));
+
 		int n = 1;
 
 		for (CallSequence test: tests)
 		{
-			ci.init();	// Initialize completely between every run...
+			if (test.getFilter() > 0)
+			{
+    			Console.out.println("Test " + n + " = " + test);
+				Console.out.println(
+					"Test " + n + " FILTERED by test " + test.getFilter());
+			}
+			else
+			{
+    			ci.init();	// Initialize completely between every run...
+    			List<Object> result = ci.runtrace(classdef, env, test);
 
-			Console.out.println("Test " + n + " = " + test);
-			Console.out.println("Result = " + ci.runtrace(location.module, test));
+    			if (result.get(result.size()-1) == Verdict.FAILED)
+    			{
+    				String stem = test.toString(result.size() - 1);
+    				ListIterator<CallSequence> it = tests.listIterator(n);
+
+    				while (it.hasNext())
+    				{
+    					CallSequence other = it.next();
+
+    					if (other.toString().startsWith(stem))
+    					{
+    						other.setFilter(n);
+    					}
+    				}
+    			}
+
+    			Console.out.println("Test " + n + " = " + test);
+    			Console.out.println("Result = " + result);
+			}
+
 			n++;
 		}
 

@@ -23,69 +23,7 @@
 
 package org.overturetool.vdmj.traces;
 
-public class Permutor
+public enum Verdict
 {
-	private final int[] limit;
-	private final int count;
-	private final int[] current;
-
-	private boolean done = false;
-
-	public Permutor(int[] limits)
-	{
-		this.limit = limits;
-		this.count = limits.length;
-		this.current = new int[count];
-	}
-
-	private int[] permute()
-	{
-		int[] old = new int[count];
-		System.arraycopy(current, 0, old, 0, count);
-
-		for (int i=0; i<count; i++)
-		{
-			if (++current[i] < limit[i])
-			{
-				done = false;
-				break;
-			}
-
-			current[i] = 0;
-
-			if (i == count-1)
-			{
-				done = true;
-			}
-		}
-
-		return old;
-	}
-
-	public int[] next()
-	{
-		return permute();
-	}
-
-	public boolean hasNext()
-	{
-		return !done;
-	}
-
-	public static void main(String[] args)
-	{
-		int[] a = {1,2,3};
-		Permutor p = new Permutor(a);
-
-		while (p.hasNext())
-		{
-			for (int i: p.next())
-			{
-				System.out.print(i);
-				System.out.print(" ");
-			}
-
-			System.out.println();
-		}
-	}
+	PASSED, INCONCLUSIVE, FAILED
 }

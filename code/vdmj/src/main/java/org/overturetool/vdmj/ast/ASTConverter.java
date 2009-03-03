@@ -869,7 +869,7 @@ public class ASTConverter
 	{
 		return new NamedTraceDefinition(
 			getLocation(name),
-			Utils.listToString(name.getName(), "_"),
+			name.getName(),
 			convertTraceDefinition(name.getDefs()));
 	}
 
