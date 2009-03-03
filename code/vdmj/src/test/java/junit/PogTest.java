@@ -164,7 +164,7 @@ public class PogTest extends TestCase
 
 		for (ProofObligation po: polist)
 		{
-			Console.out.println(po.toString());
+//			Console.out.println(po.toString());
 			assertEquals("PO #" + i+1, expected[i], po.value);
 			i++;
 
