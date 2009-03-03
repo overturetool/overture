@@ -16,11 +16,7 @@
 			<artifactId>vdmj</artifactId>
 			<version>1.0.0</version>
 		</dependency>
-		<dependency>
-			<groupId>org.overturetool</groupId>
-			<artifactId>umltrans</artifactId>
-			<version>1.0.0</version>
-		</dependency>
+
 		<dependency>
 			<groupId>org.overturetool</groupId>
 			<artifactId>vdmtoolsapi</artifactId>

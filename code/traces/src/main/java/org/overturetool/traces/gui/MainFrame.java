@@ -218,7 +218,7 @@ public class MainFrame extends JFrame {
 
 							root.add(childClass);
 						}
-						TracesHelper.PrintErrors();
+						//TracesHelper.PrintErrors();
 						
 						jScrollPaneTraces.remove(jTreeTraces);
 

@@ -17,10 +17,15 @@ import org.overturetool.ast.imp.OmlSpecifications;
 import org.overturetool.ast.itf.IOmlClass;
 import org.overturetool.ast.itf.IOmlNamedTrace;
 import org.overturetool.ast.itf.IOmlSpecifications;
-import org.overturetool.ast.itf.IOmlTraceDefinition;
 import org.overturetool.parser.imp.OvertureParser;
-import org.overturetool.tex.ClassExstractorFromTexFiles;
-import org.overturetool.traces.*;
+import org.overturetool.traces.Expand;
+import org.overturetool.traces.Filtering;
+import org.overturetool.traces.RTERR;
+import org.overturetool.traces.ToolBox;
+import org.overturetool.traces.Util;
+import org.overturetool.traces.VDMJToolBox;
+import org.overturetool.traces.VDMToolsToolBox;
+import org.overturetool.traces.external_VDMToolsToolBox;
 
 public class TracesHelper {
 	Filtering filter = null;
@@ -28,6 +33,7 @@ public class TracesHelper {
 	IOmlSpecifications spec = null;
 	File[] specFiles;
 	HashMap<String, File> classToFileMap = new HashMap<String, File>();
+	RTERR errorLog = new RTERR();
 
 	public TracesHelper(String vdmPath, File[] files, Boolean useVDMJ, int max)
 			throws IOException, CGException {
@@ -42,7 +48,7 @@ public class TracesHelper {
 			classes.add(((IOmlClass) spec.getClassList().get(i)).getIdentifier());
 		}
 
-		exp = new Expand(new Long(max));
+		exp = new Expand(new Long(max), errorLog);
 
 		HashMap expandedTraces = exp.ExpandSpecTraces(spec, classes);
 
@@ -58,7 +64,7 @@ public class TracesHelper {
 			tb = new VDMToolsToolBox(files1);
 			external_VDMToolsToolBox.SetVDMToolPath(vdmPath);
 		}
-		filter = new Filtering(expandedTraces, tb);
+		filter = new Filtering(expandedTraces, tb, errorLog);
 	}
 
 	public String[] GetTraceClasNames() throws Exception {
@@ -284,23 +290,28 @@ public class TracesHelper {
 
 	public TestResultType GetStatus(String className, String trace, String num) throws CGException {
 		Long n = Long.parseLong(num);
-		Tuple res = filter.GetResult(className, trace, n);
+		TestResultType status = TestResultType.Unknown;
+		try {
 
-		
-		ArrayList<String> stat = new ArrayList<String>();
+			Tuple res = filter.GetResult(className, trace, n);
 
-		for (int i1 = 0; i1 < ((Vector) res.GetField(2)).size(); i1++) {
-			Filtering.TraceResult tr = ((Filtering.TraceResult) ((Vector) res.GetField(2)).get(i1));
-			String tmp = tr.status.toString();
-			stat.add(tmp);
+			ArrayList<String> stat = new ArrayList<String>();
+
+			for (int i1 = 0; i1 < ((Vector) res.GetField(2)).size(); i1++) {
+				Filtering.TraceResult tr = ((Filtering.TraceResult) ((Vector) res.GetField(2)).get(i1));
+				String tmp = tr.status.toString();
+				stat.add(tmp);
+			}
+			status = GetStatus(stat.toArray());
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
-		TestResultType status = GetStatus(stat.toArray());
 		return status;
 	}
 
-	public static ArrayList<String> GetErrors() throws CGException {
+	public ArrayList<String> GetErrors() throws CGException {
 		ArrayList<String> errStrings = new ArrayList<String>();
-		HashMap errs = RTERR.GetErrors();
+		HashMap errs = errorLog.GetErrors();
 
 		Iterator re = errs.entrySet().iterator();
 		while (re.hasNext()) {
@@ -328,12 +339,12 @@ public class TracesHelper {
 	}
 
 	public boolean HasError(String className, String trace) throws CGException {
-		return RTERR.HasError(className, trace);
+		return errorLog.HasError(className, trace);
 	}
 
 	public ArrayList<TraceError> GetError(String className, String trace) throws CGException {
 		ArrayList<TraceError> errors = new ArrayList<TraceError>();
-		HashSet errs = RTERR.GetErrMsg(className, trace);
+		HashSet errs = errorLog.GetErrMsg(className, trace);
 		Iterator re = errs.iterator();
 		while (re.hasNext()) {
 			RTERR.ErrMsg res = (RTERR.ErrMsg) re.next();
@@ -365,7 +376,7 @@ public class TracesHelper {
 		}
 	}
 
-	public static void PrintErrors() {
+	public void PrintErrors() {
 		try {
 			System.out.println("Errors detected:");
 			for (String err : GetErrors()) {
@@ -425,6 +436,11 @@ public class TracesHelper {
 
 	public File GetFile(String className) {
 		return classToFileMap.get(className);
+	}
+	
+	public int GetSkippedCount(String className, String traceName) throws CGException
+	{
+		return filter.GetSkippedCount(className, traceName).intValue();
 	}
 
 }
