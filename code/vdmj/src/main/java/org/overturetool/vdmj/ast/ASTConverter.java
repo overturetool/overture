@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Vector;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
-import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
 import org.overturetool.ast.itf.*;
 import org.overturetool.vdmj.definitions.AccessSpecifier;
