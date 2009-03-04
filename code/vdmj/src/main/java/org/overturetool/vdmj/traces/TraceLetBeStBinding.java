@@ -86,7 +86,7 @@ public class TraceLetBeStBinding extends TraceDefinition
 	}
 
 	@Override
-	public TraceNode expand(TraceNode onto, Context ctxt)
+	public TraceNode expand(Context ctxt)
 	{
 		AlternativeTraceNode node = new AlternativeTraceNode();
 		ValueList allValues = bind.getBindValues(ctxt);
@@ -100,7 +100,7 @@ public class TraceLetBeStBinding extends TraceDefinition
 
     			if (stexp == null || stexp.eval(evalContext).boolValue(ctxt))
     			{
-    				node.alternatives.add(body.expand(onto, evalContext));
+    				node.alternatives.add(body.expand(evalContext));
     			}
     		}
             catch (ValueException e)

@@ -44,5 +44,5 @@ public abstract class TraceCoreDefinition
 
 	abstract public void typeCheck(Environment local, NameScope scope);
 
-	abstract public TraceNode expand(TraceNode onto, Context ctxt);
+	abstract public TraceNode expand(Context ctxt);
 }

@@ -61,13 +61,13 @@ public class TraceBracketedExpression extends TraceCoreDefinition
 	}
 
 	@Override
-	public TraceNode expand(TraceNode onto, Context ctxt)
+	public TraceNode expand(Context ctxt)
 	{
 		SequenceTraceNode node = new SequenceTraceNode();
 
 		for (TraceDefinitionTerm term: terms)
 		{
-			node.nodes.add(term.expand(onto, ctxt));
+			node.nodes.add(term.expand(ctxt));
 		}
 
 		return node;

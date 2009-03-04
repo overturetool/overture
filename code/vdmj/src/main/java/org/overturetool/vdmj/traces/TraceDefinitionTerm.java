@@ -44,13 +44,13 @@ public class TraceDefinitionTerm extends Vector<TraceDefinition>
 		}
 	}
 
-	public TraceNode expand(TraceNode onto, Context ctxt)
+	public TraceNode expand(Context ctxt)
 	{
 		AlternativeTraceNode node = new AlternativeTraceNode();
 
 		for (TraceDefinition term: this)
 		{
-			node.alternatives.add(term.expand(onto, ctxt));
+			node.alternatives.add(term.expand(ctxt));
 		}
 
 		return node;

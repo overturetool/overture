@@ -70,9 +70,9 @@ public class TraceRepeatDefinition extends TraceDefinition
 	}
 
 	@Override
-	public TraceNode expand(TraceNode onto, Context ctxt)
+	public TraceNode expand(Context ctxt)
 	{
-		TraceNode body = core.expand(onto, ctxt);
+		TraceNode body = core.expand(ctxt);
 
 		if (from == 1 && to == 1)
 		{

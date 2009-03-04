@@ -141,7 +141,7 @@ public class NamedTraceDefinition extends Definition
 
 		for (TraceDefinitionTerm term: terms)
 		{
-			traces.nodes.add(term.expand(null, ctxt));
+			traces.nodes.add(term.expand(ctxt));
 		}
 
 		return traces.getTests();

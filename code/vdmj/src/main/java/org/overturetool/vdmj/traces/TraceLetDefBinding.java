@@ -80,7 +80,7 @@ public class TraceLetDefBinding extends TraceDefinition
 	}
 
 	@Override
-	public TraceNode expand(TraceNode onto, Context ctxt)
+	public TraceNode expand(Context ctxt)
 	{
 		Context evalContext = new Context(location, "let binding", ctxt);
 
@@ -89,6 +89,6 @@ public class TraceLetDefBinding extends TraceDefinition
 			evalContext.put(d.getNamedValues(evalContext));
 		}
 
-		return body.expand(onto, evalContext);
+		return body.expand(evalContext);
 	}
 }

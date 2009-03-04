@@ -64,7 +64,7 @@ public class TraceApplyExpression extends TraceCoreDefinition
 	}
 
 	@Override
-	public TraceNode expand(TraceNode onto, Context ctxt)
+	public TraceNode expand(Context ctxt)
 	{
 		ExpressionList newargs = new ExpressionList();
 
