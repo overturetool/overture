@@ -59,7 +59,7 @@ public class TraceStatement extends Statement
 	{
 		TestSequence tests = tracedef.getTests(ctxt);
 		ClassInterpreter ci = (ClassInterpreter)Interpreter.getInstance();
-		ClassDefinition classdef = ci.findClass(location.module);
+		ClassDefinition classdef = tracedef.classDefinition;
 
 		if (classdef == null)
 		{
