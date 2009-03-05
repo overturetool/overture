@@ -1,25 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.overturetool</groupId>
-		<artifactId>core</artifactId>
-		<version>1.0.0</version>
-	</parent>
-	<groupId>org.overturetool</groupId>
-	<artifactId>traces</artifactId>
-	<name>Combinatorial Testing of VDM++ models</name>
-	<dependencies>
-		<dependency>
-			<groupId>org.overturetool</groupId>
-			<artifactId>vdmj</artifactId>
-			<version>1.0.0</version>
-		</dependency>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.overturetool</groupId>
+    <artifactId>core</artifactId>
+    <version>1.0.0</version>
+  </parent>
+  <groupId>org.overturetool</groupId>
+  <artifactId>traces</artifactId>
+  <name>Combinatorial Testing of VDM++ models</name>
+  <dependencies>
+    <dependency>
+      <groupId>org.overturetool</groupId>
+      <artifactId>vdmj</artifactId>
+      <version>1.0.0</version>
+    </dependency>
 
-		<dependency>
-			<groupId>org.overturetool</groupId>
-			<artifactId>vdmtoolsapi</artifactId>
-			<version>1.0.0</version></dependency>
-	</dependencies>
+    <dependency>
+      <groupId>org.overturetool</groupId>
+      <artifactId>vdmtoolsapi</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+  </dependencies>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>
+              <!-- a lifecycle phase -->
+              <!-- package -->
+              
+            </phase>
+            <configuration>
+              <tasks>
+
+                <!--
+                  Place any Ant task here. You can add anything
+                  you can add between <target> and </target> in a
+                  build.xml.
+                -->
+                <tstamp>
+                  <format property="date" pattern="yyMMdd" />
+                </tstamp>
+                <property name="version" value="0.1" />
+
+                <mkdir dir="target/release" />
+                <mkdir dir="target/tmp" />
+
+              
+                
+                <copy todir="target/tmp">
+                  <fileset dir="../ast/target/classes">
+                    <exclude name="**/*.java"/>
+                  </fileset>
+                </copy>
+
+                <copy todir="target/tmp">
+                  <fileset dir="../parser/target/classes">
+                    <exclude name="**/*.java"/>
+                  </fileset>
+                </copy>
+
+                <copy todir="target/tmp">
+                  <fileset dir="../stdlib/src/main/resources">
+                    <exclude name="**/*.java"/>
+                  </fileset>
+                </copy>
+
+                <copy todir="target/tmp">
+                  <fileset dir="../vdmj/target/classes">
+                    <exclude name="**/*.java"/>
+                  </fileset>
+                </copy>
+
+                <copy todir="target/tmp">
+                  <fileset dir="../vdmtools/vdmtoolsapi/target/classes">
+                    <exclude name="**/*.java"/>
+                  </fileset>
+                </copy>
+
+
+
+                <copy todir="target/tmp">
+                  <fileset dir="target/classes">
+                    <exclude name="**/*.java"/>
+                  </fileset>
+                </copy>
+                
+                <jar destfile="target/release/org.overturetool.traces_${version}_${date}.jar" basedir="target/tmp" includes="**/*.class">
+                  <manifest>
+                    <attribute name="Main-Class" value="org.overturetool.traces.MainClass" />
+                  </manifest>
+                </jar>
+
+                <delete dir="target/tmp"/>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>
+
+
+

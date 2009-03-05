@@ -1,0 +1,20 @@
+
+
+ExpandSpecTraces : IOmlSpecifications * set of Identifier ==>
+  map Identifier to set of seq of IOmlExpression
+
+ExpandClassTraces : IOmlClass ==>
+  map Identifier to set of seq of IOmlExpression
+
+ExpandTraceDef: IOmlTraceDefinition * set of Context ==> 
+                set of seq of IOmlExpression
+
+ExpandTraceBinds: seq of IOmlTraceBinding * set of Context ==> 
+                  set of Context
+
+evaluateExpression : IOmlExpression * Context ==>  SEM`VAL
+
+VAL2IOmlExpr: SEM`VAL -> IOmlExpression
+
+-- class name and definition name
+LookUp: Identifier * Identifier -> SEM`VAL
