@@ -74,7 +74,7 @@ public class external_IO {
 //			output.flush();
 //			output.close();
 			FileOutputStream fos = new FileOutputStream(filename, fdir.equals("<append>"));
-		    fos.write(val.toString().getBytes(java.nio.charset.Charset.forName("UTF8")));
+		    fos.write(val.toString().getBytes(java.nio.charset.Charset.forName("UTF8").name()));
 		    fos.close();
 
 		} catch (IOException e)
