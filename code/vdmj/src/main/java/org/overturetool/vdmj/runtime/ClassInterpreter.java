@@ -502,6 +502,7 @@ public class ClassInterpreter extends Interpreter
 				case 4071:	// precondition fails for operations
 				case 4087:	// invalid type conversion
 				case 4060:	// type invariant failure
+				case 4130:	// class invariant failure
 					list.add(Verdict.INCONCLUSIVE);
 					break;
 

@@ -102,7 +102,10 @@ public class TraceStatement extends Statement
     				}
     			}
 
-    			Console.out.println("Test " + n + " = " + test);
+    			// Bodge until we figure out how to not have explicit op names.
+    			String clean = test.toString().replaceAll("\\.\\w+`", ".");
+
+    			Console.out.println("Test " + n + " = " + clean);
     			Console.out.println("Result = " + result);
 			}
 

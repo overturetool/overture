@@ -881,15 +881,16 @@ public class ASTConverter
 		{
 			IOmlTraceDefinitionItem item = (IOmlTraceDefinitionItem)tdef;
 			term.add(convertTraceDefinitionItem(item));
+			terms.add(term);
 		}
 		else if (tdef instanceof IOmlTraceSequenceDefinition)
 		{
 			IOmlTraceSequenceDefinition seq = (IOmlTraceSequenceDefinition)tdef;
-			List<IOmlTraceDefinitionItem> items = seq.getDefs();
+			List<IOmlTraceDefinition> items = seq.getDefs();
 
-			for (IOmlTraceDefinitionItem item: items)
+			for (IOmlTraceDefinition item: items)
 			{
-				term.add(convertTraceDefinitionItem(item));
+				terms.addAll(convertTraceDefinition(item));
 			}
 		}
 		else if (tdef instanceof IOmlTraceChoiceDefinition)
@@ -901,9 +902,13 @@ public class ASTConverter
 			{
 				term.add(convertTraceDefinitionItem(item));
 			}
-		}
 
-		terms.add(term);
+			terms.add(term);
+		}
+		else
+		{
+			throw new MessageException("Internal 0028: Unknown trace specification type");
+		}
 
 		return terms;
 	}
