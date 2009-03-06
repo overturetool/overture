@@ -34,7 +34,7 @@ public class external_VDMToolsToolBox {
 // ***** VDMTOOLS START Name=parent KEEP=YES
 	VDMToolsToolBox parent = null;
 	VDMToolsProject p = null;
-	Interpreter i = null;
+	Interpreter interpreter = null;
 	static String vdmPath="";
 // ***** VDMTOOLS END Name=parent
 
@@ -74,7 +74,7 @@ public class external_VDMToolsToolBox {
 			
 			p.addFilesToProject(files);
 			
-			i = p.GetInterpreter();
+			interpreter = p.GetInterpreter();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -102,10 +102,12 @@ public class external_VDMToolsToolBox {
 		
 		String results[]= null;
 		try {
-			results = i.EvalTraceCase(className,exps);
+			results = interpreter.EvalTraceCase(className,exps);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			results = new String[exps.length];
+			results[0]= e.getMessage();
 		}
 		
 		Vector iResult = new Vector();

@@ -416,14 +416,16 @@ public class TracesHelper {
 				fileClassMap.put(cl.getIdentifier(), file);
 			}
 		}
-
+if(specs.size()>0)
+{
 		OmlSpecifications spec = (OmlSpecifications) specs.get(0);
 		for (int i = 1; i < specs.size(); i++) {
 			spec.getClassList().addAll(specs.get(i).getClassList());
 		}
 
 		return (IOmlSpecifications) spec;
-	}
+	}else return null;
+}
 
 	public void Save(String path) throws CGException {
 		TraceStorageManager tsm = new TraceStorageManager(path);

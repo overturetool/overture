@@ -22,7 +22,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 import java.io.File;
 import java.util.*;
 // ***** VDMTOOLS END Name=imports
-
+import java.io.PrintWriter;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexTokenReader;
@@ -76,7 +76,10 @@ public class external_VDMJToolBox {
 					interpreter = new ClassInterpreter(classes);
 				
 
-				}
+				}else
+{
+TypeChecker.printErrors(new PrintWriter(System.out));
+}
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

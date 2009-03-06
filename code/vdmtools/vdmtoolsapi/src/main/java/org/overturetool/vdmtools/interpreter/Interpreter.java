@@ -82,6 +82,8 @@ public class Interpreter {
 					results[i] += ("Error, Filename: " + err.fname + " | "
 							+ err.line + "." + err.col + " | " + err.msg);
 				}
+				if(results[i]==null || (results[i]!=null && results[i].length()==0))
+					results[i]="Error API, "+e.getMessage() + " " +e.msg;
 				break;
 			}
 
@@ -118,6 +120,10 @@ public class Interpreter {
 		VDMToolsProject project = VDMToolsProject.getInstance();
 		interpreter.Verbose(true);
 		interpreter.Debug(true);
+		interpreter.DynInvCheck(true);
+		interpreter.DynPostCheck(true);
+		interpreter.DynPreCheck(true);
+		interpreter.DynTypeCheck(true);
 		interpreter.Initialize();
 
 		ArrayList<VDMToolsError> initErrs = project.GetErrors();

@@ -76,11 +76,16 @@ private static boolean VDMToolsProcessStarted=false;
 	public void init(String pathToVdmTools, ToolType toolType)
 			throws IOException, CouldNotResolveObjectException {
 		startVDMTools(pathToVdmTools);
-		int retries=3;
-		for (int i = 0; i < 10; i++) {
+		int retries=10;
+		for (int i = 0; i < retries; i++) {
 			createOrb(toolType);
-			if(i== retries || app!=null)
+			if( app!=null)
 				break;
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				
+			}
 		}
 		
 		parser = new Parser();
