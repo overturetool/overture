@@ -169,6 +169,12 @@ private static boolean VDMToolsProcessStarted=false;
 		return errorList;
 	}
 
+public static Boolean IsMac() {
+		String osName = System.getProperty("os.name");
+
+		return osName.toUpperCase().indexOf("MAC".toUpperCase()) > -1;
+	}
+
 	private void startVDMTools(String pathToVDMTools) throws IOException { // TODO
 		if(VDMToolsProcessStarted)
 			return;
@@ -177,9 +183,13 @@ private static boolean VDMToolsProcessStarted=false;
 		String s = null;
 
 		System.out.println("Launching VDM Tools");
-		// run the Unix "ps -ef" command
-		processToolbox = Runtime.getRuntime().exec(pathToVDMTools);
-		BufferedReader stdInput = new BufferedReader(new InputStreamReader(
+
+if(IsMac())
+		processToolbox = Runtime.getRuntime().exec("open "+pathToVDMTools);
+else		
+	processToolbox = Runtime.getRuntime().exec(pathToVDMTools);
+
+BufferedReader stdInput = new BufferedReader(new InputStreamReader(
 				processToolbox.getInputStream()));
 
 		BufferedReader stdError = new BufferedReader(new InputStreamReader(
