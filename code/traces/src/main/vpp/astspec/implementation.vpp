@@ -5979,8 +5979,8 @@ instance variables
   private ivName : seq of char := []
 
 operations
-  public getName: () ==> seq of char
-  getName() == return ivName;
+  public getName: () ==> seq of seq of char
+  getName() == return [ivName];
 
   public setName: seq of char ==> ()
   setName(parg) == ivName := parg;

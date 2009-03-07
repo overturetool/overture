@@ -1,11 +1,11 @@
 class SpecTest
 
 instance variables
-
+  errorLog  : RTERR := new RTERR();
   Print     : bool := true;
-  exp       : Expand := new Expand();
-  eval      : Eval := new Eval();
-  filter    : Filtering := new Filtering();
+  exp       : Expand := new Expand(errorLog);
+--  eval      : Eval := new Eval(errorLog);
+  filter    : Filtering := new Filtering({|->},new VDMJToolBox(),errorLog);
 --  io        : IO := new IO();
   ppvisitor : Oml2VppVisitor := new Oml2VppVisitor();
 

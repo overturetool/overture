@@ -42,11 +42,12 @@ public class external_VDMUtil {
 // ***** VDMTOOLS END Name=external_VDMUtil
 
 
-// ***** VDMTOOLS START Name=impl_set2seq#1|HashSet KEEP=NO
+// ***** VDMTOOLS START Name=impl_set2seq#1|HashSet KEEP=YES
   public Vector impl_set2seq (final HashSet x) throws CGException {
 
-    UTIL.RunTime("Run-Time Error:Implicit Function set2seq has been called");
-    return new Vector();
+	  Vector ret =  new Vector();
+	  ret.addAll(x);
+	  return ret;
   }
 // ***** VDMTOOLS END Name=impl_set2seq#1|HashSet
 

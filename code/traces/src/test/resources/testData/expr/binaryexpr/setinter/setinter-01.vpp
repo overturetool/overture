@@ -1,0 +1,166 @@
+class Queue
+
+  instance variables
+    stack : seq of Tree`tree := [];
+
+  operations
+
+    public
+    Reset : () ==> ()
+    Reset () ==
+      stack := [];
+
+    public
+    isEmpty : () ==> bool
+    isEmpty() ==
+      return stack = [];
+
+    public
+    Dequeue : () ==> Tree`tree
+    Dequeue() ==
+      def res = hd stack in
+        (stack := tl stack;
+         return res)
+    pre stack <> []
+    post stack~ = [RESULT]^stack;
+
+    public Enqueue: Tree`tree ==> ()
+    Enqueue(elem) ==
+      stack := stack ^[elem];
+
+    public
+    Top : () ==> Tree`tree
+    Top() ==
+      return (hd stack);
+
+
+end Queue
+class Tree
+
+  types
+
+    public
+    tree = <Empty> | node;
+    
+    public
+    node :: lt: Tree
+            nval : int
+            rt : Tree
+
+  instance variables
+    protected root: tree := <Empty>;
+
+  operations
+
+    protected
+    nodes : () ==> set of node
+    nodes () ==
+      cases root:
+        <Empty> -> return ({}),
+        mk_node(lt,v,rt) -> return(lt.nodes() union {v} union rt.nodes())
+      end ;
+
+    protected
+    addRoot : int ==> ()
+    addRoot (x) ==
+      root := mk_node(new Tree(),x,new Tree());
+
+    public insertNode: int ==> ()
+    insertNode(n) ==
+      if root = <Empty>
+      then addRoot(n)
+      elseif n < rootval()
+      then root.lt.insertNode(n)
+      else root.rt.insertNode(n);
+
+    protected
+    rootval : () ==> int
+    rootval () == return root.nval
+    pre root <> <Empty>;
+
+    protected
+    gettree : () ==> tree
+    gettree () == return root;
+
+    protected
+    leftBranch : () ==> Tree
+    leftBranch () == return root.lt
+    pre not isEmpty();
+
+    protected
+    rightBranch : () ==> Tree
+    rightBranch () == return root.rt
+    pre not isEmpty();
+
+    protected
+    isEmpty : () ==> bool
+    isEmpty () == return (root = <Empty>);
+
+    public
+    breadth_first_search : () ==> seq of int 
+    breadth_first_search () ==
+       if isEmpty()
+       then return []
+       else 
+         (dcl to_visit: Queue := new Queue();
+          dcl visited : seq of int := [];
+
+          to_visit.Enqueue(gettree());
+  
+          while (not to_visit.isEmpty()) do
+            def curr_node = to_visit.Dequeue()
+            in ( visited := visited^[curr_node.nval];
+                 if not curr_node.lt.isEmpty()
+                 then to_visit.Enqueue(curr_node.lt.gettree());
+                 if not curr_node.lt.isEmpty()
+                 then to_visit.Enqueue(curr_node.rt.gettree());
+               );
+          return (visited));
+
+    public
+    depth_first_search : () ==> seq of int
+    depth_first_search () ==
+      cases root:
+         <Empty> -> return [],
+         mk_node(lt,v,rt) -> let ln = lt.depth_first_search(),
+                                 rn = rt.depth_first_search()
+                             in return [v]^ln^rn
+      end;
+
+    inorder : () ==> seq of int
+    inorder () ==
+      cases root:
+        <Empty> -> return [],
+        mk_node(lt,v,rt) -> let ln = lt.inorder(),
+                                rn = rt.inorder()
+                            in return ln^[v]^rn
+      end;
+
+largest: tree ==> [int]
+largest(t) ==
+  return
+  if t = <Empty>
+  then nil
+  elseif root.rt.isEmpty()
+  then rootval()
+  else largest(root.rt.gettree());
+
+end Tree
+class UseTree
+
+instance variables
+
+  t1 : Tree := new Tree();
+  t2 : Tree := new Tree();
+
+traces
+
+  T1: t1.addRoot(8); (let x in set {1,5,6,3,9} \ {e | e in set {4,5}}
+                      in
+                        t1.insertNode(x))
+
+  T2: t2.addRoot(8); (let x in set {1,5,6,3,9} inter {e | e in set {4,5}}
+                      in
+                        (t1.insertNode(x - (x div 2))| t2.insertNode(x * x)))+
+
+end UseTree

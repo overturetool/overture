@@ -978,7 +978,7 @@ operations
     ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
       pushNL();
       str := str ^getNL();
-      printStringField(pcmp.getName());
+      --printStringField(pcmp.getName());
       str := str ^result ^"," ^getNL();
       printNodeField(pcmp.getDefs());
       str := str ^result;

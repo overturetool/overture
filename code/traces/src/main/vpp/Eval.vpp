@@ -19,13 +19,16 @@ instance variables
 
 specdefs : DEF;
 curcl : DEF`Identifier;
-
+ errorLog : RTERR;
 operations
 
-public Eval: DEF`Identifier * DEF ==> Eval
-Eval(clid,defs) ==
-  (curcl := clid;
-   specdefs := defs);
+public Eval: DEF`Identifier * DEF * RTERR ==> Eval
+Eval(clid,defs,errLog) ==
+(
+  errorLog := errLog;
+  curcl := clid;
+  specdefs := defs
+);
 
 public evaluateExpression :
   IOmlExpression * Context ==>
@@ -121,7 +124,7 @@ evaluateSeqComprehension(expr,cxt) ==
                                  evaluateExpression(elem,cxt2)
                              | i in set n_s  
                              ])
-    else (RTERR`ReportError(expr, RTERR`NUM_EXPECTED); 
+    else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
           return mk_SEM`SEQ([]));
 \end{vdm_al}
 
@@ -142,9 +145,9 @@ evaluateSubsequenceExpression(expr,cxt) ==
     if is_SEM`NUM(l_v) and is_SEM`NUM(u_v)
     then if is_SEM`SEQ(val)
          then return mk_SEM`SEQ(val.v(l_v.v,...,u_v.v))
-         else (RTERR`ReportError(sub, RTERR`SEQ_EXPECTED); 
+         else (errorLog.ReportError(sub, RTERR`SEQ_EXPECTED); 
                return mk_SEM`SEQ([]))
-    else (RTERR`ReportError(expr, RTERR`NUM_EXPECTED); 
+    else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
           return mk_SEM`SEQ([]));
 \end{vdm_al}
 
@@ -210,9 +213,9 @@ evaluateSetRange(expr,cxt) ==
                        else {}
   in 
    (if not is_SEM`NUM(l) 
-    then RTERR`ReportError(expr, RTERR`LOWER_BOUND_NOT_A_NUMBER); 
+    then errorLog.ReportError(expr, RTERR`LOWER_BOUND_NOT_A_NUMBER); 
     if not is_SEM`NUM(u)
-    then RTERR`ReportError(expr, RTERR`UPPER_BOUND_NOT_A_NUMBER);
+    then errorLog.ReportError(expr, RTERR`UPPER_BOUND_NOT_A_NUMBER);
     return mk_SEM`SET({mk_SEM`NUM(i) | i in set s})); 
 \end{vdm_al}
 
@@ -268,7 +271,7 @@ evaluateMapComprehension(expr,cxt) ==
        if forall x,y in set m_s & x <> y => 
                                   forall z in set (dom x inter dom y) & x(z) = y(z)
        then return mk_SEM`MAP(merge m_s)
-       else (RTERR`ReportError(expr, RTERR`DUPLICATES_NOT_EQUAL);
+       else (errorLog.ReportError(expr, RTERR`DUPLICATES_NOT_EQUAL);
              return mk_SEM`MAP({|->}));
 \end{vdm_al}
 
@@ -340,19 +343,19 @@ EvalGE: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalGE(l_v,r_v,expr) ==
   if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
   then return mk_SEM`BOOL(l_v.v >= r_v.v)
-  else (RTERR`ReportError(expr, RTERR`NUM_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
         return mk_SEM`BOOL(true)); 
 
 EvalModify: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalModify(l_v,r_v,expr) ==
   if not is_SEM`MAP(r_v)
-  then (RTERR`ReportError(expr,RTERR`MAP_EXPECTED);
+  then (errorLog.ReportError(expr,RTERR`MAP_EXPECTED);
         return mk_SEM`NUM(1))
   elseif is_SEM`MAP(l_v)
   then EvalMapOverrideExpr(l_v, r_v)
   elseif is_SEM`SEQ(l_v)
   then EvalSeqModifyExpr(l_v, r_v, expr)
-  else (RTERR`ReportError(expr,RTERR`MAP_OR_SEQ_EXPECTED);
+  else (errorLog.ReportError(expr,RTERR`MAP_OR_SEQ_EXPECTED);
         return mk_SEM`NUM(1));
 
 EvalMapOverrideExpr: SEM`MAP * SEM`MAP ==> SEM`VAL
@@ -372,9 +375,9 @@ EvalSeqModifyExpr(l_v,r_v,expr) ==
                then let maplet : map nat1 to SEM`VAL = { d |-> r_v }
                     in
                       res_lv := res_lv ++ maplet
-               else (RTERR`ReportError(expr,RTERR`ILLEGAL_INDICES);
+               else (errorLog.ReportError(expr,RTERR`ILLEGAL_INDICES);
                      return mk_SEM`NUM(1))
-        else (RTERR`ReportError(expr,RTERR`INT_EXPECTED);
+        else (errorLog.ReportError(expr,RTERR`INT_EXPECTED);
               return mk_SEM`NUM(1));
     return mk_SEM`SEQ(res_lv)
   )
@@ -384,21 +387,21 @@ EvalLT: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalLT(l_v,r_v,expr) ==
   if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
   then return mk_SEM`BOOL(l_v.v < r_v.v)
-  else (RTERR`ReportError(expr, RTERR`NUM_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
         return mk_SEM`BOOL(true));
 
 EvalPSubset: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalPSubset(l_v,r_v,expr) ==
   if is_SEM`SET(l_v) and is_SEM`SET(r_v)
   then return mk_SEM`BOOL(l_v.v psubset r_v.v)
-  else (RTERR`ReportError(expr, RTERR`SET_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
         return mk_SEM`BOOL(true));
 
 EvalMod: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalMod(l_v,r_v,expr) ==
   if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
   then return mk_SEM`NUM(l_v.v mod r_v.v)
-  else (RTERR`ReportError(expr, RTERR`NUM_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
         return mk_SEM`NUM(0));
 
 EvalDomResBy: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
@@ -406,16 +409,16 @@ EvalDomResBy(l_v,r_v,expr) ==
   if is_SEM`SET(l_v) and is_SEM`MAP(r_v)
   then return mk_SEM`MAP(l_v.v <-: r_v.v)
   elseif not is_SEM`SET(l_v)
-  then (RTERR`ReportError(expr, RTERR`SET_EXPECTED); 
+  then (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
         return mk_SEM`MAP({|->}))
-  else (RTERR`ReportError(expr, RTERR`MAP_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`MAP_EXPECTED); 
         return mk_SEM`MAP({|->}));
 
 EvalInter: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalInter(l_v,r_v,expr) ==
   if is_SEM`SET(l_v) and is_SEM`SET(r_v)
   then return mk_SEM`SET(l_v.v inter r_v.v)
-  else (RTERR`ReportError(expr, RTERR`SET_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
         return mk_SEM`SET({}));
 
 EvalComp: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
@@ -426,42 +429,42 @@ EvalMinus: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalMinus(l_v,r_v,expr) ==
   if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
   then return mk_SEM`NUM(l_v.v - r_v.v)
-  else (RTERR`ReportError(expr, RTERR`NUM_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
         return mk_SEM`NUM(0));
 
 EvalRem: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalRem(l_v,r_v,expr) ==
   if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
   then return mk_SEM`NUM(l_v.v rem r_v.v)
-  else (RTERR`ReportError(expr, RTERR`NUM_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
         return mk_SEM`NUM(0));
 
 EvalAnd: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalAnd(l_v,r_v,expr) ==
   if is_SEM`BOOL(l_v) and is_SEM`BOOL(r_v)
   then return mk_SEM`BOOL(l_v.v and r_v.v)
-  else (RTERR`ReportError(expr, RTERR`BOOL_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`BOOL_EXPECTED); 
         return mk_SEM`BOOL(true));
 
 EvalUnion: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalUnion(l_v,r_v,expr) ==
   if is_SEM`SET(l_v) and is_SEM`SET(r_v)
   then return mk_SEM`SET(l_v.v union r_v.v)
-  else (RTERR`ReportError(expr, RTERR`SET_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
         return mk_SEM`SET({}));
 
 EvalInSet: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalInSet(l_v,r_v,expr) ==
   if is_SEM`SET(r_v)
   then return mk_SEM`BOOL(l_v in set r_v.v)
-  else (RTERR`ReportError(expr, RTERR`SET_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
         return mk_SEM`BOOL(true));
 
 EvalEquiv: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalEquiv(l_v,r_v,expr) ==
   if is_SEM`BOOL(l_v) and is_SEM`BOOL(r_v)
   then return mk_SEM`BOOL(l_v = r_v)
-  else (RTERR`ReportError(expr, RTERR`BOOL_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`BOOL_EXPECTED); 
         return mk_SEM`BOOL(true));
 
 EvalMapRngResTo: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
@@ -469,9 +472,9 @@ EvalMapRngResTo(l_v,r_v,expr) ==
   if is_SEM`MAP(l_v) and is_SEM`SET(r_v)
   then return mk_SEM`MAP(l_v.v :> r_v.v)
   elseif is_SEM`MAP(l_v)
-  then (RTERR`ReportError(expr, RTERR`MAP_EXPECTED); 
+  then (errorLog.ReportError(expr, RTERR`MAP_EXPECTED); 
         return mk_SEM`MAP({|->}))
-  else (RTERR`ReportError(expr, RTERR`SET_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
         return mk_SEM`MAP({|->}));
 
 EvalIterate: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
@@ -481,14 +484,14 @@ EvalIterate(l_v,r_v,expr) ==
            mk_SEM`NUM(n2) = r_v
        in
          return mk_SEM`NUM(n1 ** n2)
-  else (RTERR`ReportError(expr, RTERR`NUM_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
         return mk_SEM`NUM(1));
 
 EvalSubset: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalSubset(l_v,r_v,expr) ==
   if is_SEM`SET(l_v) and is_SEM`SET(r_v)
   then return mk_SEM`BOOL(l_v.v subset r_v.v)
-  else (RTERR`ReportError(expr, RTERR`SET_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
         return mk_SEM`BOOL(true));
 
 EvalMapRngResBy: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
@@ -496,9 +499,9 @@ EvalMapRngResBy(l_v,r_v,expr) ==
   if is_SEM`MAP(l_v) and is_SEM`SET(r_v)
   then return mk_SEM`MAP(l_v.v :-> r_v.v)
   elseif not is_SEM`MAP(l_v)
-  then (RTERR`ReportError(expr, RTERR`MAP_EXPECTED); 
+  then (errorLog.ReportError(expr, RTERR`MAP_EXPECTED); 
         return mk_SEM`MAP({|->}))
-  else (RTERR`ReportError(expr, RTERR`SET_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
         return mk_SEM`MAP({|->}));
 
 EvalTupSel: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
@@ -507,51 +510,51 @@ EvalTupSel(l_v,r_v,expr) ==
      r_v.v in set inds l_v.v
   then return l_v.v(r_v.v)
   elseif not is_SEM`TUPLE(l_v)
-  then (RTERR`ReportError(expr, RTERR`TUPLE_EXPECTED); 
+  then (errorLog.ReportError(expr, RTERR`TUPLE_EXPECTED); 
         return mk_SEM`NUM(0))
-  else (RTERR`ReportError(expr, RTERR`NUM_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
         return mk_SEM`NUM(0));
 
 EvalNotInSet: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalNotInSet(l_v,r_v,expr) ==
   if is_SEM`SET(r_v)
   then return mk_SEM`BOOL(l_v not in set r_v.v)
-  else (RTERR`ReportError(expr, RTERR`SET_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
         return mk_SEM`BOOL(false));
 
 EvalMult: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalMult(l_v,r_v,expr) ==
   if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
   then return mk_SEM`NUM(l_v.v * r_v.v)
-  else (RTERR`ReportError(expr, RTERR`NUM_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
         return mk_SEM`NUM(1));
 
 EvalImply: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalImply(l_v,r_v,expr) ==
   if is_SEM`BOOL(l_v) and is_SEM`BOOL(r_v)
   then return mk_SEM`BOOL(l_v.v => r_v.v)
-  else (RTERR`ReportError(expr, RTERR`BOOL_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`BOOL_EXPECTED); 
         return mk_SEM`BOOL(true));
 
 EvalOr: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalOr(l_v,r_v,expr) ==
   if is_SEM`BOOL(l_v) and is_SEM`BOOL(r_v)
   then return mk_SEM`BOOL(l_v.v or r_v.v)
-  else (RTERR`ReportError(expr, RTERR`BOOL_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`BOOL_EXPECTED); 
         return mk_SEM`BOOL(true));
 
 EvalGt: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalGt(l_v,r_v,expr) ==
   if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
   then return mk_SEM`BOOL(l_v.v > r_v.v)
-  else (RTERR`ReportError(expr, RTERR`NUM_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
         return mk_SEM`BOOL(true));
 
 EvalPlus: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalPlus(l_v,r_v,expr) ==
   if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
   then return mk_SEM`NUM(l_v.v + r_v.v)
-  else (RTERR`ReportError(expr, RTERR`NUM_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
         return mk_SEM`NUM(0));
 
 EvalMUnion: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
@@ -575,14 +578,14 @@ EvalMUnion(l_v,r_v,expr) ==
          rv : map SEM`VAL to SEM`VAL = tmpRv.v
     in
       return mk_SEM`MAP(lv munion rv)
-  else (RTERR`ReportError(expr, RTERR`MAP_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`MAP_EXPECTED); 
         return mk_SEM`MAP({|->}));
 
 EvalMapDomResTo: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalMapDomResTo(l_v,r_v,expr) ==
   if is_SEM`SET(l_v) and is_SEM`MAP(r_v)
   then return mk_SEM`MAP(l_v.v <: r_v.v)
-  else (RTERR`ReportError(expr, RTERR`MAP_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`MAP_EXPECTED); 
         return mk_SEM`MAP({|->}));
 
 EvalEq: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
@@ -593,35 +596,35 @@ EvalDiv: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalDiv(l_v,r_v,expr) ==
   if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
   then return mk_SEM`NUM(l_v.v div r_v.v)
-  else (RTERR`ReportError(expr, RTERR`NUM_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
         return mk_SEM`BOOL(true));
 
 EvalDifference: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalDifference(l_v,r_v,expr) ==
   if is_SEM`SET(l_v) and is_SEM`SET(r_v)
   then return mk_SEM`SET(l_v.v \ r_v.v)
-  else (RTERR`ReportError(expr, RTERR`SET_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
         return mk_SEM`SET({}));
 
 EvalConc: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalConc(l_v,r_v,expr) ==
   if is_SEM`SEQ(l_v) and is_SEM`SEQ(r_v)
   then return mk_SEM`SEQ(l_v.v ^ r_v.v)
-  else (RTERR`ReportError(expr, RTERR`SEQ_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`SEQ_EXPECTED); 
         return mk_SEM`SEQ([]));
 
 EvalLE: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalLE(l_v,r_v,expr) ==
   if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
   then return mk_SEM`BOOL(l_v.v <= r_v.v)
-  else (RTERR`ReportError(expr, RTERR`NUM_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
         return mk_SEM`BOOL(true));
 
 EvalDivide: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
 EvalDivide(l_v,r_v,expr) ==
   if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
   then return mk_SEM`NUM(l_v.v / r_v.v)
-  else (RTERR`ReportError(expr, RTERR`NUM_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
         return mk_SEM`BOOL(true));
 
 EvalNE: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
@@ -672,7 +675,7 @@ EvalAbs: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
 EvalAbs(val,expr) ==
   if is_SEM`NUM(val)
   then return mk_SEM`NUM(abs val.v)
-  else (RTERR`ReportError(expr, RTERR`NUM_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
         return mk_SEM`NUM(1));
 
 EvalInverse: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
@@ -682,7 +685,7 @@ EvalInverse(val,expr) ==
     let tmp : SEM`MAP = val
     in 
       return mk_SEM`MAP(inverse tmp.v)
-  else (RTERR`ReportError(expr, RTERR`MAP_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`MAP_EXPECTED); 
         return mk_SEM`MAP({|->}));
 
 EvalHd: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
@@ -690,23 +693,23 @@ EvalHd(val,expr) ==
   if is_SEM`SEQ(val) and val.v <> []
   then return hd val.v
   elseif is_SEM`SEQ(val)
-  then (RTERR`ReportError(expr, RTERR`NONEMPTY_SEQ_EXPECTED); 
+  then (errorLog.ReportError(expr, RTERR`NONEMPTY_SEQ_EXPECTED); 
         return mk_SEM`NUM(1))
-  else (RTERR`ReportError(expr, RTERR`SEQ_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`SEQ_EXPECTED); 
         return mk_SEM`NUM(1));
 
 EvalElems: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
 EvalElems(val,expr) ==
   if is_SEM`SEQ(val)
   then return mk_SEM`SET(elems val.v)
-  else (RTERR`ReportError(expr, RTERR`SEQ_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`SEQ_EXPECTED); 
         return mk_SEM`SET({}));
 
 EvalInds: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
 EvalInds(val,expr) ==
   if is_SEM`SEQ(val)
   then return mk_SEM`SET({mk_SEM`NUM(i) | i in set inds val.v})
-  else (RTERR`ReportError(expr, RTERR`SEQ_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`SEQ_EXPECTED); 
         return mk_SEM`SET({}));
 
 EvalTl: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
@@ -714,16 +717,16 @@ EvalTl(val,expr) ==
   if is_SEM`SEQ(val) and val.v <> []
   then return mk_SEM`SEQ(tl val.v)
   elseif is_SEM`SEQ(val)
-  then (RTERR`ReportError(expr, RTERR`NONEMPTY_SEQ_EXPECTED); 
+  then (errorLog.ReportError(expr, RTERR`NONEMPTY_SEQ_EXPECTED); 
         return mk_SEM`NUM(1))
-  else (RTERR`ReportError(expr, RTERR`NUM_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
         return mk_SEM`BOOL(true));
 
 EvalCard: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
 EvalCard(val,expr) ==
   if is_SEM`SET(val) 
   then return mk_SEM`NUM(card val.v)
-  else (RTERR`ReportError(expr, RTERR`SET_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
         return mk_SEM`NUM(0));
 
 EvalDUnion: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
@@ -731,37 +734,37 @@ EvalDUnion(val,expr) ==
   if is_SEM`SET(val) and forall s in set val.v & is_SEM`SET(s) 
   then return mk_SEM`SET(dunion {s.v | s in set val.v})
   elseif is_SEM`SET(val)
-  then (RTERR`ReportError(expr, RTERR`SET_EXPECTED); 
+  then (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
         return mk_SEM`NUM(1))
-  else (RTERR`ReportError(expr, RTERR`ALL_SETS_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`ALL_SETS_EXPECTED); 
         return mk_SEM`NUM(1));
 
 EvalPower: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
 EvalPower(val,expr) ==
   if is_SEM`SET(val) 
   then return mk_SEM`SET({mk_SEM`SET(s) | s in set power (val.v)})
-  else (RTERR`ReportError(expr, RTERR`SET_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
         return mk_SEM`SET({}));
 
 EvalLen: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
 EvalLen(val,expr) ==
   if is_SEM`SEQ(val) 
   then return mk_SEM`NUM(len val.v)
-  else (RTERR`ReportError(expr, RTERR`SEQ_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`SEQ_EXPECTED); 
         return mk_SEM`NUM(1));
 
 EvalUPlus: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
 EvalUPlus(val,expr) ==
   if is_SEM`NUM(val) 
   then return val
-  else (RTERR`ReportError(expr, RTERR`NUM_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
         return mk_SEM`NUM(1));
 
 EvalDom: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
 EvalDom(val,expr) ==
   if is_SEM`MAP(val) 
   then return mk_SEM`SET(dom val.v)
-  else (RTERR`ReportError(expr, RTERR`MAP_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`MAP_EXPECTED); 
         return mk_SEM`MAP({|->}));
 
 EvalMerge: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
@@ -769,9 +772,9 @@ EvalMerge(val,expr) ==
   if is_SEM`SET(val) and forall m in set val.v & is_SEM`MAP(m) 
   then return mk_SEM`MAP(merge {m.v | m in set val.v})
   elseif is_SEM`SET(val)
-  then (RTERR`ReportError(expr, RTERR`MAP_EXPECTED); 
+  then (errorLog.ReportError(expr, RTERR`MAP_EXPECTED); 
         return mk_SEM`MAP({|->}))
-  else (RTERR`ReportError(expr, RTERR`ALL_MAPS_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`ALL_MAPS_EXPECTED); 
         return mk_SEM`MAP({|->}));
 
 EvalDInter: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
@@ -779,37 +782,37 @@ EvalDInter(val,expr) ==
   if is_SEM`SET(val) and forall s in set val.v & is_SEM`SET(s) 
   then return mk_SEM`SET(dinter {s.v | s in set val.v})
   elseif is_SEM`SET(val)
-  then (RTERR`ReportError(expr, RTERR`SET_EXPECTED); 
+  then (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
         return mk_SEM`SET({}))
-  else (RTERR`ReportError(expr, RTERR`ALL_SETS_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`ALL_SETS_EXPECTED); 
         return mk_SEM`SET({}));
 
 EvalNot: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
 EvalNot(val,expr) ==
   if is_SEM`BOOL(val)
   then return mk_SEM`BOOL(not val.v)
-  else (RTERR`ReportError(expr, RTERR`BOOL_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`BOOL_EXPECTED); 
         return mk_SEM`BOOL(true));
 
 EvalUMinus: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
 EvalUMinus(val,expr) ==
   if is_SEM`NUM(val) 
   then return mk_SEM`NUM(- val.v)
-  else (RTERR`ReportError(expr, RTERR`NUM_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
         return mk_SEM`NUM(1));
 
 EvalRng: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
 EvalRng(val,expr) ==
   if is_SEM`MAP(val) 
   then return mk_SEM`SET(rng val.v)
-  else (RTERR`ReportError(expr, RTERR`MAP_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`MAP_EXPECTED); 
         return mk_SEM`SET({}));
 
 EvalFloor: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
 EvalFloor(val,expr) ==
   if is_SEM`NUM(val)
   then return mk_SEM`NUM(floor val.v)
-  else (RTERR`ReportError(expr, RTERR`NUM_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
         return mk_SEM`NUM(1));
 
 EvalDConc: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
@@ -820,7 +823,7 @@ EvalDConc(val,expr) ==
        in
          return mk_SEM`SEQ(conc [let tmp2 : SEM`SEQ = l(i)
                           in tmp2.v | i in set inds l])
-  else (RTERR`ReportError(expr, RTERR`ALL_SEQS_EXPECTED); 
+  else (errorLog.ReportError(expr, RTERR`ALL_SEQS_EXPECTED); 
         return mk_SEM`SEQ([]));
 
 
@@ -952,6 +955,35 @@ evaluateTupleConstructor(expr,cxt) ==
 public evaluateApplyExpression : 
   IOmlApplyExpression * Context ==> 
   SEM`VAL
+--evaluateApplyExpression(expr,cxt) == 
+--  let morl  = expr.getExpression(),
+--      arg_l = expr.getExpressionList(),
+--      val   = evaluateExpression(morl,cxt),
+--      a_l   = [evaluateExpression(arg_l(i),cxt) | i in set inds arg_l]
+--  in 
+--    if len a_l = 1
+--    then let arg = hd a_l,
+--             v   = val.v
+--         in
+--           if is_SEM`MAP(val) 
+--           then  if arg in set dom v
+--                 then let v2 : map SEM`VAL to SEM`VAL = v
+--                      in
+--                        return v2(arg)
+--                 else (errorLog.ReportError(expr, RTERR`ARG_NOT_IN_DOM); 
+--                      return mk_SEM`NUM(1))
+--           elseif is_SEM`SEQ(val)
+--           then if arg.v in set inds v
+--                then let v2 : seq of SEM`VAL = v
+--                     in
+--                       return v2(arg.v)
+--                else (errorLog.ReportError(expr, RTERR`ILLEGAL_INDICES); 
+--                      return mk_SEM`NUM(1))
+--           else (errorLog.ReportError(expr, RTERR`MAP_OR_SEQ_EXPECTED); 
+--                 return mk_SEM`NUM(1))
+--    else (errorLog.ReportError(expr, RTERR`MAP_OR_SEQ_EXPECTED); 
+--          return mk_SEM`NUM(1));
+
 evaluateApplyExpression(expr,cxt) == 
   let morl  = expr.getExpression(),
       arg_l = expr.getExpressionList(),
@@ -959,26 +991,35 @@ evaluateApplyExpression(expr,cxt) ==
       a_l   = [evaluateExpression(arg_l(i),cxt) | i in set inds arg_l]
   in 
     if len a_l = 1
-    then let arg = hd a_l,
-             v   = val.v
+    then let arg = hd a_l
          in
            if is_SEM`MAP(val) 
-           then  if arg in set dom v
-                 then let v2 : map SEM`VAL to SEM`VAL = v
-                      in
-                        return v2(arg)
-                 else (RTERR`ReportError(expr, RTERR`ARG_NOT_IN_DOM); 
-                      return mk_SEM`NUM(1))
+           then let val2 : SEM`MAP = val,
+                    v = val2.v
+                in
+                  if arg in set dom v
+                  then let v2 : map SEM`VAL to SEM`VAL = v
+                       in
+                         return v2(arg)
+                  else (errorLog.ReportError(expr, RTERR`ARG_NOT_IN_DOM); 
+                        return mk_SEM`NUM(1))
            elseif is_SEM`SEQ(val)
-           then if arg.v in set inds v
-                then let v2 : seq of SEM`VAL = v
-                     in
-                       return v2(arg.v)
-                else (RTERR`ReportError(expr, RTERR`ILLEGAL_INDICES); 
-                      return mk_SEM`NUM(1))
-           else (RTERR`ReportError(expr, RTERR`MAP_OR_SEQ_EXPECTED); 
+           then let val2 : SEM`SEQ = val,
+                    v = val2.v
+                in
+                  if is_nat(arg.v)
+                  then let v2 : seq of SEM`VAL = v,
+                           v3 : nat = arg.v
+                       in
+                         if v3 in set inds v2
+                         then return v2(v3)
+                         else (errorLog.ReportError(expr, RTERR`ILLEGAL_INDICES); 
+                               return mk_SEM`NUM(1))
+                  else (errorLog.ReportError(expr, RTERR`ILLEGAL_INDICES); 
+                        return mk_SEM`NUM(1))
+           else (errorLog.ReportError(expr, RTERR`MAP_OR_SEQ_EXPECTED); 
                  return mk_SEM`NUM(1))
-    else (RTERR`ReportError(expr, RTERR`MAP_OR_SEQ_EXPECTED); 
+    else (errorLog.ReportError(expr, RTERR`MAP_OR_SEQ_EXPECTED); 
           return mk_SEM`NUM(1));
 
 public evaluateTokenExpression : 
@@ -1000,7 +1041,7 @@ evaluateMuExpression(expr,cxt) ==
   in 
     if is_SEM`REC(recval)
     then return evaluateRecordModifier(recval,modlist,expr,cxt)
-    else (RTERR`ReportError(expr, RTERR`REC_EXPECTED); 
+    else (errorLog.ReportError(expr, RTERR`REC_EXPECTED); 
           return mk_SEM`SEQ([]));
 
 public evaluateRecordModifier : 
@@ -1125,7 +1166,7 @@ evalBind: IOmlBind * Context ==> set of Context
 evalBind(bind,cxt) ==
   if isofclass(IOmlSetBind,bind)
   then evalSetBind(bind,cxt)
-  else (RTERR`ReportError(bind, RTERR`TYPE_BIND_EVAL); 
+  else (errorLog.ReportError(bind, RTERR`TYPE_BIND_EVAL); 
         return {{|->}}); 
 
 evalSetBind: IOmlSetBind * Context ==> set of Context
@@ -1139,7 +1180,7 @@ evalSetBind(bind,cxt) ==
               else {}
   in
     (if not is_SEM`SET(s_v)
-     then (RTERR`ReportError(bind, RTERR`TYPE_BIND_EVAL); 
+     then (errorLog.ReportError(bind, RTERR`TYPE_BIND_EVAL); 
            return {{|->}})
      else return {MergeContextList(c_l) | c_l in set c_l_s});
 

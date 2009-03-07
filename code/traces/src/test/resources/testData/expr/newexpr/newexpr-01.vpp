@@ -1,0 +1,81 @@
+class Kerneld
+
+  thread
+    while true do skip
+
+end Kerneld
+
+class Ftpd
+
+  thread
+    while true do skip
+
+end Ftpd
+
+class Syslogd
+
+  thread
+    while true do skip
+
+end Syslogd
+
+class Lpd
+
+  thread
+    while true do skip
+
+end Lpd
+
+class Httpd
+
+  thread
+    while true do skip
+
+end Httpd
+
+class OS
+
+  types
+
+    runLevel = nat;
+
+    Process = Kerneld | Ftpd | Syslogd | Lpd | Httpd
+
+  instance variables
+    pInit : map runLevel to set of Process
+
+  operations
+
+    addProcess: runLevel * Process ==> ()
+    addProcess(rl,p) ==
+      if rl in set dom pInit
+      then pInit(rl) := pInit(rl) union {p}
+      else pInit := pInit ++ {rl |-> {p}};
+ 
+    bootSequence : runLevel ==> ()
+    bootSequence(rl) ==
+      for all p in set pInit(rl) do
+        start(p)
+    pre rl in set dom pInit;
+
+    bootSequenceList : runLevel ==> ()
+    bootSequenceList(rl) ==
+      startlist(pInit(rl))
+    pre rl in set dom pInit
+
+end OS
+class UseOS
+
+instance variables
+
+  os : OS := new OS();
+
+traces
+  startok : let rl in set {1,...,2}
+            in
+              let p in set {new Kerneld(), new Httpd()}
+              in
+                (os.addProcess(rl,p); (os.bootSequenceList(rl) | 
+                                       os.bootSequence(rl)))
+  
+end UseOS

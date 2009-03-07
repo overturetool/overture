@@ -1,0 +1,64 @@
+class SuperStack
+
+values
+
+  public const : nat = 4;
+
+  instance variables
+protected    stack : seq of int := [];
+
+end SuperStack
+class Stack is subclass of SuperStack
+
+  operations
+
+    public
+    Reset : () ==> ()
+    Reset () ==
+      stack := [];
+
+    public
+    Pop : () ==> int
+    Pop() ==
+      def res = hd stack in
+        (stack := tl stack;
+         return res)
+    pre stack <> []
+    post stack~ = [RESULT]^stack;
+
+    public Push: int ==> ()
+    Push(elem) ==
+      stack := stack ^[elem];
+
+    public
+    Top : () ==> int
+    Top() ==
+      return (hd stack);
+
+ 
+end Stack
+class UseStack
+
+values
+
+  s1 : Stack = new Stack();
+
+instance variables
+
+  s : Stack := new Stack();
+
+  s2 : Stack := new Stack();
+
+traces
+
+  PushBeforePop : s.Reset(); (let x in set (if true then {5,2,1}
+                                            else 7) be st x < s1.const 
+                              in s.Push(x)){1}; 
+                  s.Pop(){1,2}
+
+  Test2Dir : s2.Reset(); (let a = 1, b = 2 in (s.Push(a); s2.Push(b)){0,1})?
+
+  Test2Dir2 : (let z in set {e | e in set {4,3,1,2,4,5} & e >= 4}
+                in s.Push(z))*
+ 
+end UseStack

@@ -28,39 +28,42 @@ types
     mes  : seq of char;  
     
 instance variables
-  static errmsgs : map DEF`Identifier to map DEF`Identifier to set of ErrMsg := {|->};
-  
+  errmsgs : map DEF`Identifier to map DEF`Identifier to set of ErrMsg := {|->};
+  curcl : DEF`Identifier := "";
+  curtr : DEF`Identifier := "";
+
+
 operations
 
-static public ReportError : [IOmlExpression | IOmlBind] * ERR ==> ()
+ public ReportError : [IOmlExpression | IOmlBind] * ERR ==> ()
 ReportError(expr,errmsg) ==
   if expr = nil
-  then let clnm = Expand`GetCurClass(),
-           trnm = Expand`GetCurTrace()
-       in
-         AddErrMsg(clnm,trnm,1,1,errmsg)
+  then 
+         AddErrMsg(curcl,curtr,1,1,errmsg)
   else let node : IOmlNode = expr,
            line = node.getLine(),
-           col  = node.getColumn(),
-           clnm = Expand`GetCurClass(),
-           trnm = Expand`GetCurTrace()
+           col  = node.getColumn()
        in
-         AddErrMsg(clnm,trnm,line,col,errmsg);
+         AddErrMsg(curcl,curtr,line,col,errmsg);
   
 
-public static AddErrMsg: DEF`Identifier * DEF`Identifier * nat * nat * ERR ==> ()
+public  AddErrMsg: DEF`Identifier * DEF`Identifier * nat * nat * ERR ==> ()
 AddErrMsg(clnm, trnm,line, col,errmsg) ==
   if clnm in set dom errmsgs
-  then errmsgs(clnm)(trnm) := errmsgs(clnm)(trnm)union{mk_ErrMsg(line,col,errmsg)}
-  else errmsgs(clnm)(trnm) := {mk_ErrMsg(line,col,errmsg)};
+   then errmsgs(clnm)(trnm) := (if trnm in set dom errmsgs(clnm)
+                               then errmsgs(clnm)(trnm) 
+                               else {}) union {mk_ErrMsg(line,col,errmsg)}
+  else errmsgs := errmsgs ++ {clnm |-> {trnm |-> {mk_ErrMsg(line,col,errmsg)}
+                                       }
+                             };
 	
-public static GetErrMsg: DEF`Identifier * DEF`Identifier ==> set of ErrMsg
+public  GetErrMsg: DEF`Identifier * DEF`Identifier ==> set of ErrMsg
 GetErrMsg(clnm,trnm) ==
-  if clnm in set dom errmsgs
+  if clnm in set dom errmsgs and trnm in set dom errmsgs(clnm)
   then return errmsgs(clnm)(trnm)
   else return {};
   
-public static HasError : DEF`Identifier * DEF`Identifier ==> bool
+public HasError : DEF`Identifier * DEF`Identifier ==> bool
 HasError(clnm,trnm) ==  
    if clnm in set dom errmsgs
    then
@@ -79,8 +82,14 @@ HasError(clnm,trnm) ==
    else
      return false;
 
-public static GetErrors : () ==> map DEF`Identifier to map DEF`Identifier to set of ErrMsg
+public  GetErrors : () ==> map DEF`Identifier to map DEF`Identifier to set of ErrMsg
 GetErrors() == return errmsgs;
+
+public SetCurrentClass : DEF`Identifier ==> ()
+SetCurrentClass(clnm) ==  curcl := clnm;
+
+public SetCurrentTrace : DEF`Identifier ==> ()
+SetCurrentTrace(trnm) ==  curtr := trnm;
 
 values
 public BOOL_EXPECTED = "1: A boolean was expected.";
@@ -129,7 +138,7 @@ FCT_V_TYPE_EXPECTED = "72: An explicit function/operation was expected";
 UNDEF_ENCOUNTERED = "73: Identifier is undefined/not initialized";
 ID_UNKNOWN = "74: Unknown identifier";
 OPERATOR_UNKNOWN = "75: Unknown operator";
-DIVISION_WITH_ZERO = "76: Division with zero";
+public DIVISION_WITH_ZERO = "76: Division with zero";
 ZERO_LENGTH_DETECTED = "77: The sequence was empty";
 PATTERN_UNKNOWN = "78: Unknown pattern";
 SET_TOO_BIG = "79: Set too big for 'power' - limit is 16";

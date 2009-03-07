@@ -1,0 +1,50 @@
+class Stack
+
+  instance variables
+    stack : seq of int := [];
+
+  operations
+
+    public
+    Reset : () ==> ()
+    Reset () ==
+      stack := [];
+
+    public
+    Pop : () ==> int
+    Pop() ==
+      def res = hd stack in
+        (stack := tl stack;
+         return res)
+    pre stack <> []
+    post stack~ = [RESULT]^stack;
+
+    public Push: int ==> ()
+    Push(elem) ==
+      stack := stack ^[elem];
+
+    public
+    Top : () ==> int
+    Top() ==
+      return (hd stack);
+
+ 
+end Stack
+class UseStack
+
+instance variables
+
+  s : Stack := new Stack();
+
+traces
+
+  PushBeforePop : s.Reset(); (let x:nat = if true and 5 in set 
+                                             {7,'c',<Q>,mk_token(8),"hi",8.7} 
+                                          then 78 - 65 div 2
+                                          elseif hd conc [[3,5],[4]] = hd tl [9,3] 
+                                                 => not (len [] = 0) 
+                                          then 42
+                                          else 66 + 11 in s.Push(x)){1,2}; 
+                  s.Pop(){1,3}
+ 
+end UseStack

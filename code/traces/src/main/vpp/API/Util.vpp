@@ -34,6 +34,14 @@ SaveCharSeqMapSeqSeq(filename,val) ==
     in skip;
  
 
+public static GetNameOfTrace : seq of seq of char ==> seq of char
+GetNameOfTrace(names) ==
+(
+  dcl name : seq of char := "";
+  for n in names do
+    name := name ^ "/" ^ n;
+  return name(2,...,len name);
+);
 
   
 --public static PrintInt: nat ==> ()
@@ -82,8 +90,7 @@ public static ExpandSpecTracesToString :
   map seq of char to map seq of char to map nat1 to seq of seq of char
 ExpandSpecTracesToString(tc_m) ==
 return 
-  { clnm |-> { tdnm |-> let tc_l = SetToSeq[seq of IOmlExpression]
-                                                  (tc_m(clnm)(tdnm))
+  { clnm |-> { tdnm |-> let tc_l = tc_m(clnm)(tdnm)
                         in
                           {i |-> ExprToString(tc_l(i)) | i in set inds tc_l}
              | tdnm in set dom tc_m(clnm)}

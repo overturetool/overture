@@ -22,9 +22,8 @@ private oneOrMoreMax : nat := 0;
 private seqOfNames : seq of (seq of char) := [];
 private eval : Eval;
 private dfs : DEF;
+private errorLog : RTERR;
 
-static curcl : DEF`Identifier := "";
-static curtr : DEF`Identifier := "";
 cxt_s_stack : seq of set of Eval`Context := [];
 \end{vdm_al}
 
@@ -43,21 +42,23 @@ chars such that these can be executed by an interpreter.
 \begin{vdm_al}
 types
 
-public TraceDefExpMap = map Identifier to set of seq of IOmlExpression
+public TraceDefExpMap = map Identifier to seq of seq of IOmlExpression
 
 operations
 
-public Expand : () ==> Expand
-Expand() == 
+public Expand : RTERR ==> Expand
+Expand(errLog) == 
 (
+  errorLog := errLog;
   zeroOrMoreMax := 3;
   oneOrMoreMax  := 3;
 
 );
 
-public Expand : nat ==> Expand
-Expand(unlimitedValue) == 
+public Expand : nat * RTERR==> Expand
+Expand(unlimitedValue,errLog ) == 
 (
+  errorLog := errLog;
   zeroOrMoreMax := unlimitedValue;
   oneOrMoreMax  := unlimitedValue;
 
@@ -67,7 +68,7 @@ public ExpandSpecTraces : IOmlSpecifications * set of DEF`Identifier ==>
                           map Identifier to TraceDefExpMap
 ExpandSpecTraces(spec,cl_s) ==
  (dcl res_m : map Identifier to TraceDefExpMap := {|->};
-  dfs := new DEF(spec);
+  dfs := new DEF(spec,errorLog);
   for cl in spec.getClassList() do
     let id    = cl.getIdentifier()
     in
@@ -82,8 +83,8 @@ ExpandClassTraces(cl) ==
   let clid = cl.getIdentifier(),
       body = cl.getClassBody()
   in
-   (curcl := clid;
-    eval := new Eval(curcl,dfs);
+  (errorLog.SetCurrentClass( clid);
+    eval := new Eval(clid,dfs,errorLog);
     for def_l in body do
       if isofclass(IOmlTraceDefinitions,def_l)
       then res_m := res_m ++ ExpandTraceDefs(clid,def_l)
@@ -91,22 +92,23 @@ ExpandClassTraces(cl) ==
   return res_m
  );
 
-protected ExpandTraceDefs: DEF`Identifier * IOmlTraceDefinitions ==> TraceDefExpMap
+protected ExpandTraceDefs: DEF`Identifier * IOmlTraceDefinitions ==> 
+                           TraceDefExpMap
 ExpandTraceDefs(clid, def_l) ==
  (dcl res_m :TraceDefExpMap := {|->};
   for ntrace : OmlNamedTrace in def_l.getTraces() do
-    let name = ntrace.getName(),
+    let name = Util`GetNameOfTrace(ntrace.getName()),
         defs = ntrace.getDefs()
     in
     (
-      curtr := name;
+       errorLog.SetCurrentTrace( name);
       res_m(name) := ExpandTraceDef(defs,{{|->}});
     );
   return res_m
  );
 
 ExpandTraceDef: IOmlTraceDefinition * set of Eval`Context ==> 
-                set of seq of IOmlExpression
+                seq of seq of IOmlExpression
 ExpandTraceDef(tdef,ctx_s) ==
   if isofclass(IOmlTraceDefinitionItem,tdef)
   then ExpandTraceDefItem(tdef,ctx_s)
@@ -173,39 +175,39 @@ At the concrete syntax level that corresponds to:
 
 \begin{vdm_al}
 ExpandTraceDefItem: IOmlTraceDefinitionItem * set of Eval`Context ==> 
-                    set of seq of IOmlExpression
+                    seq of seq of IOmlExpression
 ExpandTraceDefItem(tdef,ctx_s) ==
   let bind      = tdef.getBind(),
       trace     = tdef.getTest(),
       regexpr   = if tdef.hasRegexpr() then tdef.getRegexpr() else nil,
       new_ctx_s = ExpandTraceBinds(bind,ctx_s),
-      expr_l_s  = ExpandTraceCoreDef(trace,new_ctx_s)
+      expr_l_l  = ExpandTraceCoreDef(trace,new_ctx_s)
   in
     return if regexpr = nil
-           then expr_l_s
-           else ExpandTraceRepeatPat(regexpr,expr_l_s);
+           then expr_l_l
+           else ExpandTraceRepeatPat(regexpr,expr_l_l);
 
 ExpandTraceSeqDef: IOmlTraceSequenceDefinition * set of Eval`Context ==> 
-                   set of seq of IOmlExpression
+                   seq of seq of IOmlExpression
 ExpandTraceSeqDef(tdef,ctx_s) ==
-  (dcl expr_l_s : set of seq of IOmlExpression := {[]};
+  (dcl expr_l_l : seq of seq of IOmlExpression := [[]];
    for td in tdef.getDefs() do
-     let e_l_s = ExpandTraceDef(td,ctx_s)
+     let e_l_l = ExpandTraceDef(td,ctx_s)
      in
-       expr_l_s := CombineTraces(expr_l_s,e_l_s);
+       expr_l_l := CombineTraces(expr_l_l,e_l_l);
 
-   return expr_l_s);
+   return expr_l_l);
 
 ExpandTraceChoiceDef: IOmlTraceChoiceDefinition * set of Eval`Context ==> 
-                      set of seq of IOmlExpression
+                      seq of seq of IOmlExpression
 ExpandTraceChoiceDef(tdef,ctx_s) ==
-  (dcl expr_l_s : set of seq of IOmlExpression := {};
+  (dcl expr_l_l : seq of seq of IOmlExpression := [];
    for td in tdef.getDefs() do
-     let e_l_s = ExpandTraceDef(td,ctx_s)
+     let e_l_l = ExpandTraceDef(td,ctx_s)
      in
-       expr_l_s := expr_l_s union e_l_s;
+       expr_l_l := expr_l_l ^ e_l_l;
 
-   return expr_l_s);
+   return expr_l_l);
 
 ExpandTraceBinds: seq of IOmlTraceBinding * set of Eval`Context ==> 
                   set of Eval`Context
@@ -224,7 +226,7 @@ ExpandTraceBinds(bind_l,cxt_s) ==
 functions
   
 ExpandTraceCoreDef: IOmlTraceCoreDefinition * set of Eval`Context -> 
-                    set of seq of IOmlExpression
+                    seq of seq of IOmlExpression
 ExpandTraceCoreDef(tdef,cxt_s) ==
   if isofclass(IOmlTraceMethodApply,tdef)
   then ExpandTraceMethodApply(tdef,cxt_s)
@@ -265,21 +267,21 @@ in the resulting collection of test cases.
 operations
 
 ExpandBracketedTraceDef: IOmlTraceBracketedDefinition * set of Eval`Context ==>
-                         set of seq of IOmlExpression
+                         seq of seq of IOmlExpression
 ExpandBracketedTraceDef(tdef,cxt_s) ==
   (PushCxt(cxt_s);
-   let e_l_s = ExpandTraceDef(tdef.getDefinition(),{{|->}}),
-       e_l_s2 = { AddContextToExprList(e_l,hd cxt_s_stack) 
-                | e_l in set e_l_s}
+   let e_l_l = ExpandTraceDef(tdef.getDefinition(),{{|->}}),
+       e_l_l2 = [ AddContextToExprList(e_l_l(i),hd cxt_s_stack) 
+                | i in set inds e_l_l]
    in
      (PopCxt();
-      return dunion e_l_s2)
+      return conc e_l_l2)
   );
 
 functions
 
 ExpandTraceMethodApply: IOmlTraceMethodApply * set of Eval`Context -> 
-                        set of seq of IOmlExpression
+                        seq of seq of IOmlExpression
 ExpandTraceMethodApply(tdef,cxt_s) ==
   let var      = tdef.getVariableName(),
       met_nm   = tdef.getMethodName(),
@@ -292,37 +294,37 @@ ExpandTraceMethodApply(tdef,cxt_s) ==
 
 operations
 
-ExpandTraceRepeatPat: IOmlTraceRepeatPattern * set of seq of IOmlExpression ==>
-                      set of seq of IOmlExpression
-ExpandTraceRepeatPat(regexpr,expr_l_s) ==
+ExpandTraceRepeatPat: IOmlTraceRepeatPattern * seq of seq of IOmlExpression ==>
+                      seq of seq of IOmlExpression
+ExpandTraceRepeatPat(regexpr,expr_l_l) ==
   cases true:
     (isofclass(IOmlTraceZeroOrMore,regexpr)) -> 
-        let rep = RepeatCombine(expr_l_s,1,oneOrMoreMax)
+        let rep = RepeatCombine(expr_l_l,1,oneOrMoreMax)
         in 
-          return {[]} union rep,
+          return [[]] ^ rep,
     (isofclass(IOmlTraceOneOrMore,regexpr))  -> 
-        return RepeatCombine(expr_l_s,1,oneOrMoreMax),
+        return RepeatCombine(expr_l_l,1,oneOrMoreMax),
     (isofclass(IOmlTraceZeroOrOne,regexpr))   -> 
-        return expr_l_s union {[]},
+        return expr_l_l ^ [[]],
     (isofclass(IOmlTraceRange,regexpr))      -> 
-        return ExpandTraceRange(regexpr,expr_l_s),
+        return ExpandTraceRange(regexpr,expr_l_l),
         others -> error
   end;
 
-ExpandTraceRange: IOmlTraceRange * set of seq of IOmlExpression ==>
-                  set of seq of IOmlExpression
-ExpandTraceRange(regexpr, expr_l_s) ==
+ExpandTraceRange: IOmlTraceRange * seq of seq of IOmlExpression ==>
+                  seq of seq of IOmlExpression
+ExpandTraceRange(regexpr, expr_l_l) ==
   let low  = regexpr.getLower().getVal(), 
       high = if regexpr.hasUpper() 
              then regexpr.getUpper().getVal() 
              else low,
       l    = if low = 0 then 1 else low,
       no   = if low = 0
-             then {[]}
-             else {},
-      rep  = RepeatCombine(expr_l_s,l,high)
+             then [[]]
+             else [],
+      rep  = RepeatCombine(expr_l_l,l,high)
   in
-   return no union rep;
+   return no ^ rep;
 \end{vdm_al}
 
 There are a number of functions/operations for combining different kinds of 
@@ -331,50 +333,55 @@ collections in different ways.
 \begin{vdm_al}
 operations
 
-RepeatCombine: (set of seq of IOmlExpression) * nat1 * nat1 ==>
-               set of seq of IOmlExpression
-RepeatCombine(expr_l_s,low,high) ==
- (dcl acc_e_l_s :  set of seq of IOmlExpression := {},
-      ith_e_l_s :  set of seq of IOmlExpression := {[]},
+RepeatCombine: (seq of seq of IOmlExpression) * nat1 * nat1 ==>
+               seq of seq of IOmlExpression
+RepeatCombine(expr_l_l,low,high) ==
+ (dcl acc_e_l_l :  seq of seq of IOmlExpression := [],
+      ith_e_l_l :  seq of seq of IOmlExpression := [[]],
       i : nat1 := 1;
   while i <= high do
-    let oldith = ith_e_l_s
+    let oldith = ith_e_l_l
     in
-      (ith_e_l_s := { e_l1 ^ e_l2
-                    | e_l1 in set oldith, e_l2 in set expr_l_s};
+      (ith_e_l_l := conc [[ oldith(i1) ^ expr_l_l(i2)
+                          | i1 in set inds oldith]
+                         | i2 in set inds expr_l_l];
        if i >= low
-       then acc_e_l_s := acc_e_l_s union ith_e_l_s;
+       then acc_e_l_l := acc_e_l_l ^ ith_e_l_l;
        i := i + 1;
       );
-  return acc_e_l_s
+  return acc_e_l_l
  );
 
 functions
 
 AddContextToExpr: IOmlExpression * set of Eval`Context -> 
-                  set of seq of IOmlExpression
+                  seq of seq of IOmlExpression
 AddContextToExpr(expr,cxt_s) ==
   if cxt_s = {}
-  then {[expr]}
-  else { let def_l = Context2ValShapeL(cxt)
-         in
-           if def_l = []
-           then [expr]
-           else [new OmlLetExpression(def_l, expr)]
-       | cxt in set cxt_s};  
+  then [[expr]]
+  else let e_s = {let def_l = Context2ValShapeL(cxt)
+                  in
+                    if def_l = []
+                    then [expr]
+                    else [new OmlLetExpression(def_l, expr)]
+                 | cxt in set cxt_s}
+       in
+         VDMUtil`set2seq[seq of IOmlExpression](e_s);  
 
 AddContextToExprList: seq of IOmlExpression * set of Eval`Context -> 
-                      set of seq of IOmlExpression
+                      seq of seq of IOmlExpression
 AddContextToExprList(e_l,cxt_s) ==
   if cxt_s = {}
-  then {e_l}
-  else { let def_l = Context2ValShapeL(cxt)
-         in
-           if def_l = []
-           then e_l
-           else [new OmlLetExpression(def_l, e_l(i))
-                | i in set inds e_l]
-       | cxt in set cxt_s};  
+  then [e_l]
+  else let e_s = {let def_l = Context2ValShapeL(cxt)
+                  in
+                    if def_l = []
+                    then e_l
+                    else [new OmlLetExpression(def_l, e_l(i))
+                         | i in set inds e_l]
+                 | cxt in set cxt_s}
+       in
+         VDMUtil`set2seq[seq of IOmlExpression](e_s);  
 
 Context2ValShapeL: Eval`Context -> seq of IOmlValueShape
 Context2ValShapeL(cxt) ==
@@ -394,12 +401,13 @@ SmallerContext: Eval`Context -> nat
 SmallerContext(cxt) == 
   card dom cxt;
 
-CombineTraces: (set of seq of IOmlExpression) * 
-               (set of seq of IOmlExpression) ->
-               (set of seq of IOmlExpression)
-CombineTraces(e_l_s1, e_l_s2) ==
-  { e_l1 ^ e_l2
-  | e_l1 in set e_l_s1, e_l2 in set e_l_s2};
+CombineTraces: (seq of seq of IOmlExpression) * 
+               (seq of seq of IOmlExpression) ->
+               (seq of seq of IOmlExpression)
+CombineTraces(e_l_l1, e_l_l2) ==
+  conc [[ e_l_l1(i1) ^ e_l_l2(i2)
+        | i1 in set inds e_l_l1]
+       | i2 in set inds e_l_l2];
 
 operations
 
@@ -678,13 +686,19 @@ CxtStackIsEmpty: () ==> bool
 CxtStackIsEmpty() ==
   return cxt_s_stack = [];
 
-public static GetCurClass: () ==> DEF`Identifier
-GetCurClass() ==
-  return curcl;
+ 
+-----------------------------------------
+-- Error handling
+-----------------------------------------
+operations
 
-public static GetCurTrace: () ==> DEF`Identifier
-GetCurTrace() ==
-  return curtr;
+public HasError : DEF`Identifier * DEF`Identifier ==> bool
+HasError(clnm,trnm) ==
+  return errorLog.HasError(clnm,trnm);
+  
+public GetErrMsg: DEF`Identifier * DEF`Identifier ==> set of RTERR`ErrMsg
+GetErrMsg(clnm,trnm) ==
+  return errorLog.GetErrMsg(clnm,trnm);
 
 end Expand
 \end{vdm_al}

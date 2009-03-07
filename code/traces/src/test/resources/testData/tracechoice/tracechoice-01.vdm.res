@@ -1,0 +1,1 @@
+{"UseStack|PushBeforePop|1" |-> ["s.Push(6)"], "UseStack|PushBeforePop|2" |-> ["s.Reset()"]}

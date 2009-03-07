@@ -49,7 +49,7 @@ ToStringInt(val) ==
 pre val >= 0
 measure LenToStringInt;
 
-static LenToStringInt : int -> int
+static LenToStringInt : int -> nat
 LenToStringInt(val) == val;
     
 -------------------------------------
@@ -96,7 +96,7 @@ SetToSeq(s) ==
     else let x in set s in SetToSeq[@Elem](s\{x})^[x]
 measure LenSetToSeq;
 
-static LenSetToSeq[@Elem]: set of @Elem -> int
+static LenSetToSeq[@Elem]: set of @Elem -> nat
 LenSetToSeq(s) == card s;   
     
 -------------------------------------

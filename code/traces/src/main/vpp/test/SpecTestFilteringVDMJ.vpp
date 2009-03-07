@@ -9,11 +9,12 @@ operations
 public Run: IOmlSpecifications * seq of char ==> 
             map seq of char to seq of seq of char
 Run(spec,name) ==
-let exp : Expand = new Expand(3),
+let errorLog  : RTERR = new RTERR(),
+    exp : Expand = new Expand(3,errorLog),
     classes = {},
     expandedTraces = exp.ExpandSpecTraces(spec, classes),
     tb : ToolBox = new VDMJToolBox({}),
-    filter = new Filtering(expandedTraces, tb)
+    filter = new Filtering(expandedTraces, tb,errorLog)
 in
   return {|->};
 

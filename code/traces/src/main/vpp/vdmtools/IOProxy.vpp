@@ -5,7 +5,6 @@ public filedirective = <start>|<append>
 operations
 public print: string ==> ()
 print(s) ==
---			let - = IO`fecho("", s, nil) in skip;
 (
   def file = new IO()
   in

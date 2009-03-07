@@ -1574,7 +1574,7 @@ class IOmlNamedTrace
  is subclass of IOmlNode
 
 operations
-  public getName: () ==> seq of char
+  public getName: () ==> seq of seq of char
   getName() == is subclass responsibility;
 
 operations
