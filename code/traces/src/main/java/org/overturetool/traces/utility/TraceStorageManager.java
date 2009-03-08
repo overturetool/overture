@@ -21,6 +21,7 @@ public class TraceStorageManager {
 	public void SaveResults(HashMap resSet) {
 		ArrayList ret = new ArrayList();
 		String extention = "res";
+		String extentionStatus = "verdict";
 		
 		Iterator re = resSet.entrySet().iterator();
 		while (re.hasNext()) {
@@ -37,9 +38,16 @@ public class TraceStorageManager {
 				Map.Entry tr = (Map.Entry) trI.next();
 
 				String trace = tr.getKey().toString();
+				String traceFolderName=trace;
+				if(traceFolderName.contains("/"))
+				{
+				String []tmp = traceFolderName.split("/");
+				trace =tmp[1];
+				traceFolderName = tmp[0] + File.separatorChar + tmp[1];
+				}
 
 				File traceFolder = new File(classFolder.getAbsolutePath()
-						+ File.separatorChar + trace);
+						+ File.separatorChar + traceFolderName);
 
 				if (!traceFolder.exists())
 					traceFolder.mkdirs();
@@ -50,6 +58,7 @@ public class TraceStorageManager {
 					String traceNum = num.getKey().toString();
 
 					FileWriter outputFileReader;
+					FileWriter outputFileReaderStatus;
 					try {
 
 						outputFileReader = new FileWriter(traceFolder.getAbsolutePath()
@@ -58,22 +67,32 @@ public class TraceStorageManager {
 								+ "-"
 								+ traceNum
 								+ "." + extention);
+						
+						outputFileReaderStatus = new FileWriter(traceFolder.getAbsolutePath()
+								+ File.separatorChar
+								+ trace
+								+ "-"
+								+ traceNum
+								+ "." + extentionStatus);
 
 						PrintWriter outputStream = new PrintWriter(outputFileReader);
+						PrintWriter outputStreamStatus = new PrintWriter(outputFileReaderStatus);
 
 						Vector results = (Vector) num.getValue();
 						ArrayList<String> stat = new ArrayList<String>();
 						for (int i1 = 0; i1 < results.size(); i1++) {
 							Filtering.TraceResult tRes = ((Filtering.TraceResult) results.get(i1));
-							outputStream.println(tRes.status.toString() + " : "
-									+ tRes.output);
+							outputStream.println( tRes.output);
+							
+							outputStreamStatus.println(tRes.status.toString());
 						}
 
 						outputStream.close();
+						outputStreamStatus.close();
 
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
-						// e.printStackTrace();
+						 e.printStackTrace();
 					}
 				}
 			}
@@ -98,9 +117,17 @@ public class TraceStorageManager {
 					Map.Entry tr = (Map.Entry) trI.next();
 
 					String trace = tr.getKey().toString();
+					String traceFolderName=trace;
+					if(traceFolderName.contains("/"))
+					{
+					String []tmp = traceFolderName.split("/");
+					trace =tmp[1];
+					traceFolderName = tmp[0] + File.separatorChar + tmp[1];
+					}
 
 					File traceFolder = new File(classFolder.getAbsolutePath()
-							+ File.separatorChar + trace);
+							+ File.separatorChar + traceFolderName);
+					
 
 					if (!traceFolder.exists())
 						traceFolder.mkdirs();
