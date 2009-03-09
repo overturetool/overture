@@ -81,11 +81,13 @@ public class Translator
 		return par;
 	}
 
+	
 	public static String[] TexConvert(String[] files) throws IOException
 	{
 		File output =new File(files[0]+ File.separatorChar + "tmp");
 		output.createNewFile();
-		return new ClassExstractorFromTexFiles().exstract(files,output.getAbsolutePath());
+		new ClassExstractorFromTexFiles();
+		return ClassExstractorFromTexFiles.exstract(files,output.getAbsolutePath());
 	}
 
 	public static void TransLateUmlToVdm(String file, String outputFile) throws Exception

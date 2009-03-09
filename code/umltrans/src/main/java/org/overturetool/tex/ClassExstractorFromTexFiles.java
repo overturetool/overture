@@ -6,9 +6,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringBufferInputStream;
+
 import java.io.Writer;
 
+@SuppressWarnings("unused")
 public class ClassExstractorFromTexFiles
 {
 	private static final String CLASS_START = "class ";//"\\begin{vdm_al}";

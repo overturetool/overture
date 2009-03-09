@@ -15,12 +15,12 @@ package org.overturetool.umltrans;
 
 // ***** VDMTOOLS END Name=package
 
-// ***** VDMTOOLS START Name=imports KEEP=NO
+// ***** VDMTOOLS START Name=imports KEEP=YES
 
 import jp.co.csk.vdm.toolbox.VDM.*;
-import java.util.*;
-// ***** VDMTOOLS END Name=imports
+@SuppressWarnings({"unused"})
 
+//***** VDMTOOLS END Name=imports
 
 
 public class XmlParser {
@@ -30,7 +30,7 @@ public class XmlParser {
 // ***** VDMTOOLS END Name=vdmComp
 
 // ***** VDMTOOLS START Name=fName KEEP=NO
-  private String fName = null;
+private String fName = null;
 // ***** VDMTOOLS END Name=fName
 
 // ***** VDMTOOLS START Name=xmlEvent KEEP=NO

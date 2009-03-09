@@ -15,10 +15,11 @@ package org.overturetool.umltrans;
 
 // ***** VDMTOOLS END Name=package
 
-// ***** VDMTOOLS START Name=imports KEEP=NO
+// ***** VDMTOOLS START Name=imports KEEP=YES
 
 import jp.co.csk.vdm.toolbox.VDM.*;
 import java.util.*;
+@SuppressWarnings({"unchecked","serial" })
 // ***** VDMTOOLS END Name=imports
 
 
@@ -27,7 +28,8 @@ public class Uml2XmiEAxml extends Uml2Xmi {
 
 
 // ***** VDMTOOLS START Name=QualifierInfo KEEP=NO
-  public static class QualifierInfo implements Record {
+
+public static class QualifierInfo implements Record {
 
     public String AssociationId;
 

@@ -24,11 +24,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.*;
-// ***** VDMTOOLS END Name=imports
-
-
-
 public class external_IO {
 
 // ***** VDMTOOLS START Name=parent KEEP=YES
@@ -74,7 +69,9 @@ public class external_IO {
 //			output.flush();
 //			output.close();
 			FileOutputStream fos = new FileOutputStream(filename, fdir.equals("<append>"));
-		    fos.write(val.toString().getBytes(java.nio.charset.Charset.forName("UTF8").name()));
+		   //Java1.6 fos.write(val.toString().getBytes(java.nio.charset.Charset.forName("UTF8").name()));
+
+ fos.write(val.toString().getBytes("UTF-8"));
 		    fos.close();
 
 		} catch (IOException e)

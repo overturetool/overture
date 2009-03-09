@@ -18,9 +18,9 @@ package org.overturetool.umltrans;
 // ***** VDMTOOLS START Name=imports KEEP=YES
 
 import jp.co.csk.vdm.toolbox.VDM.*;
-import java.util.*;
-import jp.co.csk.vdm.toolbox.VDM.quotes.*;
-import org.overturetool.ast.imp.*;
+
+
+
 import org.overturetool.ast.itf.*;
 // ***** VDMTOOLS END Name=imports
 

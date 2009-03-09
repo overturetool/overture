@@ -27,6 +27,7 @@ import jp.co.csk.vdm.toolbox.VDM.UTIL;
 import org.overturetool.ast.imp.*;
 import org.overturetool.ast.itf.*;
 
+@SuppressWarnings({"unchecked" ,"unused"})
 
 // ***** VDMTOOLS END Name=imports
 
