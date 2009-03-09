@@ -20,6 +20,7 @@ package org.overturetool.traces;
 import jp.co.csk.vdm.toolbox.VDM.*;
 import java.util.*;
 import org.overturetool.ast.itf.*;
+@SuppressWarnings({"unchecked","unused"})
 // ***** VDMTOOLS END Name=imports
 
 

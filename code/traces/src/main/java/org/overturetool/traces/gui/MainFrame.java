@@ -35,8 +35,7 @@ import org.overturetool.traces.utility.TracesHelper;
 import org.overturetool.traces.utility.TracesHelper.TestResult;
 import org.overturetool.traces.utility.TracesHelper.TestResultType;
 import org.overturetool.traces.utility.TracesHelper.TestStatus;
-
-import java.awt.Dimension;
+@SuppressWarnings("unchecked")
 
 public class MainFrame extends JFrame {
 

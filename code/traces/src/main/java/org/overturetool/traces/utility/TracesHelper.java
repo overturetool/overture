@@ -26,6 +26,7 @@ import org.overturetool.traces.Util;
 import org.overturetool.traces.VDMJToolBox;
 import org.overturetool.traces.VDMToolsToolBox;
 import org.overturetool.traces.external_VDMToolsToolBox;
+@SuppressWarnings("unchecked")
 
 public class TracesHelper {
 	Filtering filter = null;

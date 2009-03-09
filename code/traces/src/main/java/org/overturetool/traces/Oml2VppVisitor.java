@@ -22,6 +22,7 @@ import java.util.*;
 import org.overturetool.ast.itf.*;
 
 import org.overturetool.ast.imp.*;
+@SuppressWarnings({"unchecked","unused"})
 // ***** VDMTOOLS END Name=imports
 
 

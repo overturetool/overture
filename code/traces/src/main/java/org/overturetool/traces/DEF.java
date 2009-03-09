@@ -15,12 +15,13 @@ package org.overturetool.traces;
 
 // ***** VDMTOOLS END Name=package
 
-// ***** VDMTOOLS START Name=imports KEEP=NO
+// ***** VDMTOOLS START Name=imports KEEP=YES
 
 import jp.co.csk.vdm.toolbox.VDM.*;
 import java.util.*;
 import org.overturetool.ast.imp.*;
 import org.overturetool.ast.itf.*;
+@SuppressWarnings("unchecked")
 // ***** VDMTOOLS END Name=imports
 
 

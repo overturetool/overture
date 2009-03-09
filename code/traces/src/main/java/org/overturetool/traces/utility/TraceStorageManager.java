@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.overturetool.traces.Filtering;
-
+@SuppressWarnings("unchecked")
 public class TraceStorageManager {
 	private String rootPath;
 
@@ -19,7 +19,6 @@ public class TraceStorageManager {
 	}
 
 	public void SaveResults(HashMap resSet) {
-		ArrayList ret = new ArrayList();
 		String extention = "res";
 		String extentionStatus = "verdict";
 		
@@ -79,7 +78,6 @@ public class TraceStorageManager {
 						PrintWriter outputStreamStatus = new PrintWriter(outputFileReaderStatus);
 
 						Vector results = (Vector) num.getValue();
-						ArrayList<String> stat = new ArrayList<String>();
 						for (int i1 = 0; i1 < results.size(); i1++) {
 							Filtering.TraceResult tRes = ((Filtering.TraceResult) results.get(i1));
 							outputStream.println( tRes.output);
@@ -99,7 +97,6 @@ public class TraceStorageManager {
 		}
 	}
 		public void SaveStatements(HashMap resSet) {
-			ArrayList ret = new ArrayList();
 			String extention = "arg";
 			
 			Iterator re = resSet.entrySet().iterator();
@@ -150,7 +147,6 @@ public class TraceStorageManager {
 							PrintWriter outputStream = new PrintWriter(outputFileReader);
 
 							Vector results = (Vector) num.getValue();
-							ArrayList<String> stat = new ArrayList<String>();
 							for (int i1 = 0; i1 < results.size(); i1++) {
 								//Filtering.TraceResult tRes = ((Filtering.TraceResult) results.get(i1));
 								outputStream.println(results.get(i1).toString());

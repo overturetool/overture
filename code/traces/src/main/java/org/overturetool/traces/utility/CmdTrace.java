@@ -18,7 +18,7 @@ import org.overturetool.traces.ToolBox;
 import org.overturetool.traces.VDMJToolBox;
 import org.overturetool.traces.VDMToolsToolBox;
 import org.overturetool.traces.external_VDMToolsToolBox;
-
+@SuppressWarnings("unchecked")
 public class CmdTrace {
 	public enum ToolBoxType {
 		VDMTools, VDMJ
