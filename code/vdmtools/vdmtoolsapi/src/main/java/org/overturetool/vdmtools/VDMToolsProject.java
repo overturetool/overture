@@ -78,10 +78,23 @@ private static boolean VDMToolsProcessStarted=false;
 		startVDMTools(pathToVdmTools);
 		int retries=10;
 		for (int i = 0; i < retries; i++) {
+              try {
+                    String path="";
+                    if(System.getenv("VDM OBJECT LOCATION")!=null)
+                        path=System.getenv("VDM OBJECT LOCATION");
+                    else if( System.getenv("USERPROFILE")!=null)
+                        path = System.getenv("USERPROFILE");
+                    else if( System.getenv("HOME")!=null)
+                        path =System.getenv("HOME");
+
+                    if((!new File(path + File.separatorChar + "vppref.ior").exists() && toolType == ToolType .PP_TOOLBOX ) ||
+                      (!new File(path + File.separatorChar + "vdmref.ior").exists() && toolType ==  ToolType .SL_TOOLBOX))
+                       Thread.sleep(1000);
+
 			createOrb(toolType);
 			if( app!=null)
 				break;
-			try {
+			
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
 				
