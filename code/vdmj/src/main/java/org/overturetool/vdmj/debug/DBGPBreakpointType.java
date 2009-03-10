@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *	Copyright (c) 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,38 +21,40 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overturetool.vdmj.debug;
 
-import org.overturetool.vdmj.lex.LexLocation;
-
-/**
- * A Context class, specialized to represent points in a context chain where
- * name resolution does not proceed further down the chain, but rather jumps to
- * the outermost level.
- */
-
-@SuppressWarnings("serial")
-public abstract class RootContext extends Context
+public enum DBGPBreakpointType
 {
-	public RootContext(LexLocation location, String title, Context outer)
+	LINE("line"),
+	CALL("call"),
+	RETURN("return"),
+	EXCEPTION("exception"),
+	CONDITIONAL("conditional"),
+	WATCH("watch");
+
+	public String value;
+
+	DBGPBreakpointType(String value)
 	{
-		super(location, title, outer);
+		this.value = value;
+	}
+
+	public static DBGPBreakpointType lookup(String string) throws DBGPException
+	{
+		for (DBGPBreakpointType cmd: values())
+		{
+			if (cmd.value.equals(string))
+			{
+				return cmd;
+			}
+		}
+
+		throw new DBGPException(DBGPErrorCode.PARSE, string);
 	}
 
 	@Override
-	abstract public Context getFreeVariables();
-
-
-	@Override
-	public int getDepth()
+	public String toString()
 	{
-		return outer == null ? 1 : outer.getDepth() + 1;
-	}
-
-	@Override
-	public Context getFrame(int depth)
-	{
-		return depth == 0 ? this :
-			outer == null ? null : outer.getFrame(depth - 1);
+		return value;
 	}
 }

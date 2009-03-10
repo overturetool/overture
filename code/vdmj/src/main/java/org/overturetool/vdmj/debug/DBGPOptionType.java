@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *	Copyright (c) 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,38 +21,49 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overturetool.vdmj.debug;
 
-import org.overturetool.vdmj.lex.LexLocation;
-
-/**
- * A Context class, specialized to represent points in a context chain where
- * name resolution does not proceed further down the chain, but rather jumps to
- * the outermost level.
- */
-
-@SuppressWarnings("serial")
-public abstract class RootContext extends Context
+public enum DBGPOptionType
 {
-	public RootContext(LexLocation location, String title, Context outer)
+	TRANSACTION_ID("-i"),
+	N("-n"),
+	V("-v"),
+	T("-t"),
+	S("-s"),
+	F("-f"),
+	M("-m"),
+	O("-o"),
+	H("-h"),
+	X("-x"),
+	R("-r"),
+	D("-d"),
+	P("-p"),
+	K("-k"),
+	A("-a");
+
+	public String tag;
+
+	DBGPOptionType(String tag)
 	{
-		super(location, title, outer);
+		this.tag = tag;
+	}
+
+	public static DBGPOptionType lookup(String string) throws DBGPException
+	{
+		for (DBGPOptionType opt: values())
+		{
+			if (opt.tag.equals(string))
+			{
+				return opt;
+			}
+		}
+
+		throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, string);
 	}
 
 	@Override
-	abstract public Context getFreeVariables();
-
-
-	@Override
-	public int getDepth()
+	public String toString()
 	{
-		return outer == null ? 1 : outer.getDepth() + 1;
-	}
-
-	@Override
-	public Context getFrame(int depth)
-	{
-		return depth == 0 ? this :
-			outer == null ? null : outer.getFrame(depth - 1);
+		return tag;
 	}
 }

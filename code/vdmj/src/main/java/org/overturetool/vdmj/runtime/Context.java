@@ -284,4 +284,14 @@ public class Context extends HashMap<LexNameToken, Value>
 			outer.printStackTrace(variables);
 		}
 	}
+
+	public int getDepth()
+	{
+		return outer == null ? 0 : outer.getDepth();	// NB only roots count
+	}
+
+	public Context getFrame(int depth)
+	{
+		return outer == null ? null : outer.getFrame(depth);
+	}
 }

@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *	Copyright (c) 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,38 +21,44 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overturetool.vdmj.debug;
 
-import org.overturetool.vdmj.lex.LexLocation;
+import java.util.List;
 
-/**
- * A Context class, specialized to represent points in a context chain where
- * name resolution does not proceed further down the chain, but rather jumps to
- * the outermost level.
- */
+import org.overturetool.vdmj.util.Utils;
 
-@SuppressWarnings("serial")
-public abstract class RootContext extends Context
+public class DBGPCommand
 {
-	public RootContext(LexLocation location, String title, Context outer)
+	public final DBGPCommandType type;
+	public final List<DBGPOption> options;
+	public final List<String> args;
+
+	public DBGPCommand(
+		DBGPCommandType type, List<DBGPOption> options, List<String> args)
 	{
-		super(location, title, outer);
+		this.type = type;
+		this.options = options;
+		this.args = args;
 	}
 
 	@Override
-	abstract public Context getFreeVariables();
-
-
-	@Override
-	public int getDepth()
+	public String toString()
 	{
-		return outer == null ? 1 : outer.getDepth() + 1;
+		return type +
+			(options.isEmpty() ? "" : " " + Utils.listToString(options, " ")) +
+			(args.isEmpty() ? "" : " -- " + Utils.listToString(args, " "));
 	}
 
-	@Override
-	public Context getFrame(int depth)
+	public DBGPOption getOption(DBGPOptionType sought)
 	{
-		return depth == 0 ? this :
-			outer == null ? null : outer.getFrame(depth - 1);
+		for (DBGPOption opt: options)
+		{
+			if (opt.type == sought)
+			{
+				return opt;
+			}
+		}
+
+		return null;
 	}
 }

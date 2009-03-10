@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *	Copyright (c) 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,38 +21,41 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overturetool.vdmj.debug;
 
-import org.overturetool.vdmj.lex.LexLocation;
-
-/**
- * A Context class, specialized to represent points in a context chain where
- * name resolution does not proceed further down the chain, but rather jumps to
- * the outermost level.
- */
-
-@SuppressWarnings("serial")
-public abstract class RootContext extends Context
+public enum DBGPErrorCode
 {
-	public RootContext(LexLocation location, String title, Context outer)
+	NONE(0),
+	PARSE(1),
+	DUPLICATE_ARGS(2),
+	INVALID_OPTIONS(3),
+	UNIMPLEMENTED(4),
+	NOT_AVAILABLE(5),
+
+	CANT_OPEN(100),
+	STREAM_REDIRECT_FAILED(101),
+
+	CANT_SET_BREAKPOINT(200),
+	BREAKPOINT_TYPE_UNSUPPORTED(201),
+	INVALID_BREAKPOINT(202),
+	NO_CODE_AT_BREAKPOINT(203),
+	INVALID_BREAKPOINT_STATE(204),
+	NO_SUCH_BREAKPOINT(205),
+	EVALUATION_ERROR(206),
+	INVALID_EXPRESION(207),
+
+	CANT_GET_PROPERTY(300),
+	INVALID_STACK_DEPTH(301),
+	INVALID_CONTEXT(302),
+
+	INVALID_ENCODING(900),
+	INTERNAL_ERROR(998),
+	UNKNOWN_ERROR(999);
+
+	public int value;
+
+	DBGPErrorCode(int v)
 	{
-		super(location, title, outer);
-	}
-
-	@Override
-	abstract public Context getFreeVariables();
-
-
-	@Override
-	public int getDepth()
-	{
-		return outer == null ? 1 : outer.getDepth() + 1;
-	}
-
-	@Override
-	public Context getFrame(int depth)
-	{
-		return depth == 0 ? this :
-			outer == null ? null : outer.getFrame(depth - 1);
+		value = v;
 	}
 }

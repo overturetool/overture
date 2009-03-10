@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *	Copyright (c) 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,38 +21,17 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
-
-import org.overturetool.vdmj.lex.LexLocation;
-
-/**
- * A Context class, specialized to represent points in a context chain where
- * name resolution does not proceed further down the chain, but rather jumps to
- * the outermost level.
- */
+package org.overturetool.vdmj.debug;
 
 @SuppressWarnings("serial")
-public abstract class RootContext extends Context
+public class DBGPException extends Exception
 {
-	public RootContext(LexLocation location, String title, Context outer)
+	public final DBGPErrorCode code;
+	public final String reason;
+
+	public DBGPException(DBGPErrorCode code, String reason)
 	{
-		super(location, title, outer);
-	}
-
-	@Override
-	abstract public Context getFreeVariables();
-
-
-	@Override
-	public int getDepth()
-	{
-		return outer == null ? 1 : outer.getDepth() + 1;
-	}
-
-	@Override
-	public Context getFrame(int depth)
-	{
-		return depth == 0 ? this :
-			outer == null ? null : outer.getFrame(depth - 1);
+		this.code = code;
+		this.reason = reason;
 	}
 }

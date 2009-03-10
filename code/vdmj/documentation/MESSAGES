@@ -42,7 +42,7 @@ as the expected and actual values.
 0026, "Let binding expects value definition"
 0027, "Bare Dcl statement encountered"
 0028, "Unknown trace specification type"
-0029, -
+0029, "DBGP: <reason>"
 0030, "Statement type unsupported: <type>"
 0031, "Expected object state designator type"
 0032, "Expected object state designator type"
