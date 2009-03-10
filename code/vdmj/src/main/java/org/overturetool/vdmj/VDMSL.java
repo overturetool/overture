@@ -24,7 +24,14 @@
 package org.overturetool.vdmj;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import org.overturetool.vdmj.commands.CommandReader;
 import org.overturetool.vdmj.commands.ModuleCommandReader;
@@ -33,6 +40,7 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.MessageException;
+import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.ContextException;
@@ -73,10 +81,40 @@ public class VDMSL extends VDMJ
 
    			try
    			{
-				LexTokenReader ltr = new LexTokenReader(
-					new File(file), Settings.dialect, filecharset);
-    			reader = new ModuleReader(ltr);
-    			modules.addAll(reader.readModules());
+   				if (file.endsWith(".obj"))
+   				{
+   					FileInputStream fis = new FileInputStream(file);
+   	    	        GZIPInputStream gis = new GZIPInputStream(fis);
+   	    	        ObjectInputStream ois = new ObjectInputStream(gis);
+   	    	        ModuleList loaded = null;
+
+   	    	        try
+   	    	        {
+   	    	        	loaded = (ModuleList)ois.readObject();
+   	    	        }
+       	 			catch (Exception e)
+       				{
+       	   				println("Object file is not compatible?");
+       	   				perrs++;
+       	   				continue;
+       				}
+       	 			finally
+       	 			{
+       	 				ois.close();
+       	 			}
+
+   	    	        loaded.setLoaded();
+   	    	        modules.addAll(loaded);
+
+   	    	   		infoln("Loaded " + plural(loaded.size(), "module", "s") + " from " + file);
+   				}
+   				else
+   				{
+    				LexTokenReader ltr = new LexTokenReader(
+    					new File(file), Settings.dialect, filecharset);
+        			reader = new ModuleReader(ltr);
+        			modules.addAll(reader.readModules());
+   				}
     		}
 			catch (MessageException e)
 			{
@@ -117,7 +155,17 @@ public class VDMSL extends VDMJ
 
    		try
    		{
-   			TypeChecker typeChecker = new ModuleTypeChecker(modules);
+   			ModuleList unchecked = new ModuleList();
+
+   			for (Module m: modules)
+   			{
+   				if (!m.loaded)
+   				{
+   					unchecked.add(m);
+   				}
+   			}
+
+   			TypeChecker typeChecker = new ModuleTypeChecker(unchecked);
    			typeChecker.typeCheck();
    		}
 		catch (MessageException e)
@@ -151,6 +199,30 @@ public class VDMSL extends VDMJ
   			"Found " + plural(terrs, "type error", "s"));
   		infoln(twarn == 0 ? "" : " and " +
   			(warnings ? "" : "suppressed ") + plural(twarn, "warning", "s"));
+
+		if (outfile != null && terrs == 0)
+		{
+			try
+			{
+				before = System.currentTimeMillis();
+    	        FileOutputStream fos = new FileOutputStream(outfile);
+    	        GZIPOutputStream gos = new GZIPOutputStream(fos);
+    	        ObjectOutputStream oos = new ObjectOutputStream(gos);
+
+    	        oos.writeObject(modules);
+    	        oos.close();
+    	   		after = System.currentTimeMillis();
+
+    	   		infoln("Saved " + plural(modules.size(), "module", "s") +
+    	   			" to " + outfile + " in " +
+    	   			(double)(after-before)/1000 + " secs. ");
+			}
+			catch (IOException e)
+			{
+				infoln("Cannot write " + outfile + ": " + e.getMessage());
+				terrs++;
+			}
+		}
 
 		if (pog && terrs == 0)
 		{

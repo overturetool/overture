@@ -38,6 +38,8 @@ import org.overturetool.vdmj.values.Value;
 
 public class UnaryMinusExpression extends UnaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public UnaryMinusExpression(LexLocation location, Expression exp)
 	{
 		super(location, exp);

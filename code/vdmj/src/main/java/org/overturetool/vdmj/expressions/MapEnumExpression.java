@@ -45,6 +45,7 @@ import org.overturetool.vdmj.values.ValueMap;
 
 public class MapEnumExpression extends MapExpression
 {
+	private static final long serialVersionUID = 1L;
 	public final List<MapletExpression> members;
 	public TypeList domtypes = null;
 	public TypeList rngtypes = null;

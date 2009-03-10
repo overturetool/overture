@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.expressions;
 
+import java.io.Serializable;
+
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.patterns.ExpressionPattern;
@@ -40,8 +42,10 @@ import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.values.Value;
 
-public class CaseAlternative
+public class CaseAlternative implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	public final LexLocation location;
 	public final Expression cexp;
 	public final PatternList plist;

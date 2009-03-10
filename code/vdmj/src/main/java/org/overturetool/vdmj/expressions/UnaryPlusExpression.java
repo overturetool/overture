@@ -33,6 +33,8 @@ import org.overturetool.vdmj.values.Value;
 
 public class UnaryPlusExpression extends UnaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public UnaryPlusExpression(LexLocation location, Expression exp)
 	{
 		super(location, exp);

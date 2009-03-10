@@ -39,6 +39,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class TixeStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final List<TixeStmtAlternative> traps;
 	public final Statement body;
 

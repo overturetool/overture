@@ -45,6 +45,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class LetDefStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final DefinitionList localDefs;
 	public final Statement statement;
 

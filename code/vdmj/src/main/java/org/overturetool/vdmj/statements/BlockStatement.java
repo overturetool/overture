@@ -38,6 +38,8 @@ import org.overturetool.vdmj.values.VoidValue;
 
 public class BlockStatement extends SimpleBlockStatement
 {
+	private static final long serialVersionUID = 1L;
+
 	public final DefinitionList assignmentDefs;
 
 	public BlockStatement(LexLocation location, DefinitionList assignmentDefs)

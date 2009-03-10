@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.expressions;
 
+import java.io.Serializable;
+
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -41,8 +43,10 @@ import org.overturetool.vdmj.values.Value;
  *	The parent class of all VDM expressions.
  */
 
-public abstract class Expression
+public abstract class Expression implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The textual location of the expression. */
 	public final LexLocation location;
 
@@ -59,7 +63,7 @@ public abstract class Expression
 	{
 		this.location = location;
 		this.breakpoint = new Breakpoint(location);
-		
+
 		location.executable(true);
 	}
 

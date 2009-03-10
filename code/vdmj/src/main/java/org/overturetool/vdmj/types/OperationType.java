@@ -34,6 +34,7 @@ import org.overturetool.vdmj.util.Utils;
 
 public class OperationType extends Type
 {
+	private static final long serialVersionUID = 1L;
 	public TypeList parameters;
 	public Type result;
 

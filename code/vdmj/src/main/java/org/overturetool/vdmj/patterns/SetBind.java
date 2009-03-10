@@ -39,6 +39,7 @@ import org.overturetool.vdmj.values.ValueSet;
 
 public class SetBind extends Bind
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression set;
 
 	public SetBind(Pattern pattern, Expression set)

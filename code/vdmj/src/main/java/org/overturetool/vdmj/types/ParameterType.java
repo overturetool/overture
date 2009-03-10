@@ -33,6 +33,7 @@ import org.overturetool.vdmj.lex.LexNameToken;
 
 public class ParameterType extends Type
 {
+	private static final long serialVersionUID = 1L;
 	public final LexNameToken name;
 
 	public ParameterType(LexNameToken name)

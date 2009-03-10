@@ -36,6 +36,7 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class TypeBind extends Bind
 {
+	private static final long serialVersionUID = 1L;
 	public Type type;
 
 	public TypeBind(Pattern pattern, Type type)

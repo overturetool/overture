@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.lex;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,7 +31,7 @@ import java.util.List;
  * An enumeration for the basic token types recognised by the lexical analyser.
  */
 
-public enum Token
+public enum Token implements Serializable
 {
 	// Variables
 	IDENTIFIER(null, "id", Dialect.VDM_SL, Dialect.VDM_PP, Dialect.VDM_RT),

@@ -74,6 +74,7 @@ import org.overturetool.vdmj.values.OperationValue;
 
 public class ImplicitOperationDefinition extends Definition
 {
+	private static final long serialVersionUID = 1L;
 	public final List<PatternListTypePair> parameterPatterns;
 	public final PatternTypePair result;
 	public final List<ExternalClause> externals;

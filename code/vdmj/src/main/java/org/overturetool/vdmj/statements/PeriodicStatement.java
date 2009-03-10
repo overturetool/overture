@@ -49,6 +49,7 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class PeriodicStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final LexNameToken opname;
 	public final ExpressionList args;
 

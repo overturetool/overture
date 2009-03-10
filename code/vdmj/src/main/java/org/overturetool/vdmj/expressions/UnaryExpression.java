@@ -29,6 +29,7 @@ import org.overturetool.vdmj.pog.ProofObligationList;
 
 abstract public class UnaryExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression exp;
 
 	public UnaryExpression(LexLocation location, Expression exp)

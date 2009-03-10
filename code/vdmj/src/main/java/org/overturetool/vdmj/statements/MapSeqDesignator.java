@@ -43,6 +43,7 @@ import org.overturetool.vdmj.values.ValueMap;
 
 public class MapSeqDesignator extends StateDesignator
 {
+	private static final long serialVersionUID = 1L;
 	public final StateDesignator mapseq;
 	public final Expression exp;
 

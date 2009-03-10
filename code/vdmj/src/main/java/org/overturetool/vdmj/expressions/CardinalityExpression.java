@@ -36,6 +36,8 @@ import org.overturetool.vdmj.values.Value;
 
 public class CardinalityExpression extends UnaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public CardinalityExpression(LexLocation location, Expression exp)
 	{
 		super(location, exp);

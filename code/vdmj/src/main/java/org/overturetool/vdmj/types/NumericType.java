@@ -27,6 +27,8 @@ import org.overturetool.vdmj.lex.LexLocation;
 
 public abstract class NumericType extends BasicType
 {
+	private static final long serialVersionUID = 1L;
+
 	public NumericType(LexLocation location)
 	{
 		super(location);

@@ -33,6 +33,7 @@ import org.overturetool.vdmj.typechecker.TypeCheckException;
 
 public class MapType extends Type
 {
+	private static final long serialVersionUID = 1L;
 	public Type from;
 	public Type to;
 	public final boolean empty;

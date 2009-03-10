@@ -38,6 +38,7 @@ import org.overturetool.vdmj.values.NameValuePairList;
 
 public class InheritedDefinition extends Definition
 {
+	private static final long serialVersionUID = 1L;
 	public Definition superdef;
 	private final LexNameToken oldname;
 

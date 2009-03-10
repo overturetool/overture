@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.modules;
 
+import java.io.Serializable;
+
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.RenamedDefinition;
@@ -42,8 +44,10 @@ import org.overturetool.vdmj.typechecker.ModuleEnvironment;
  * A class holding all the details for one module.
  */
 
-public class Module
+public class Module implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The module name. */
 	public final LexIdentifierToken name;
 	/** A list of import declarations. */
@@ -57,6 +61,8 @@ public class Module
 	public DefinitionList exportdefs;
 	/** Definitions of imported objects from other modules. */
 	public DefinitionList importdefs;
+	/** True if the module was loaded from an object file. */
+	public boolean loaded = false;
 	/** The default module number for flat definitions. */
 	public static int defNumber = 1;
 

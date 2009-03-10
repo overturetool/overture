@@ -40,6 +40,8 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class TailExpression extends UnaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public TailExpression(LexLocation location, Expression exp)
 	{
 		super(location, exp);

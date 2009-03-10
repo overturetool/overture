@@ -27,6 +27,7 @@ import org.overturetool.vdmj.lex.LexQuoteToken;
 
 public class QuoteType extends Type
 {
+	private static final long serialVersionUID = 1L;
 	public final String value;
 
 	public QuoteType(LexQuoteToken token)

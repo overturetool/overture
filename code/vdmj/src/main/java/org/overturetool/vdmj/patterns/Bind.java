@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.patterns;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.overturetool.vdmj.lex.LexLocation;
@@ -39,8 +40,10 @@ import org.overturetool.vdmj.values.ValueList;
  * The parent class of {@link SetBind} and {@link TypeBind}.
  */
 
-public abstract class Bind
+public abstract class Bind implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The textual location of the bind. */
 	public final LexLocation location;
 	/** The pattern of the bind. */

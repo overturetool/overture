@@ -33,6 +33,8 @@ import org.overturetool.vdmj.values.Value;
 
 public class ErrorStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
+
 	public ErrorStatement(LexLocation location)
 	{
 		super(location);

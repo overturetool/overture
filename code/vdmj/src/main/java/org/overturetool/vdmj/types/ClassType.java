@@ -36,6 +36,7 @@ import org.overturetool.vdmj.typechecker.TypeCheckException;
 
 public class ClassType extends Type
 {
+	private static final long serialVersionUID = 1L;
 	public final ClassDefinition classdef;
 	public final LexNameToken name;		// "CLASS`<name>"
 

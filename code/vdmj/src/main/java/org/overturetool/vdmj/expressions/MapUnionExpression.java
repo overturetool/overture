@@ -44,6 +44,8 @@ import org.overturetool.vdmj.values.ValueMap;
 
 public class MapUnionExpression extends BinaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public MapUnionExpression(Expression left, LexToken op, Expression right)
 	{
 		super(left, op, right);

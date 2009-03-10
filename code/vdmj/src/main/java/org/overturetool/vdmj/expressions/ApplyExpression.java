@@ -56,6 +56,8 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class ApplyExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
+
 	public final Expression root;
 	public final ExpressionList args;
 

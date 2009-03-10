@@ -47,6 +47,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class LetDefExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final DefinitionList localDefs;
 	public final Expression expression;
 

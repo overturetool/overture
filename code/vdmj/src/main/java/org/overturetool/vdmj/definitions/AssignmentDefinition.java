@@ -45,6 +45,8 @@ import org.overturetool.vdmj.values.Value;
 
 public class AssignmentDefinition extends Definition
 {
+	private static final long serialVersionUID = 1L;
+
 	public Type type;
 	public final Expression expression;
 	public Type expType;

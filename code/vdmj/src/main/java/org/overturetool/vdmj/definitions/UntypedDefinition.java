@@ -41,6 +41,8 @@ import org.overturetool.vdmj.values.NameValuePairList;
 
 public class UntypedDefinition extends Definition
 {
+	private static final long serialVersionUID = 1L;
+
 	public UntypedDefinition(
 		LexLocation location, LexNameToken name, NameScope scope)
 	{

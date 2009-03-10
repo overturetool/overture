@@ -34,6 +34,8 @@ import org.overturetool.vdmj.syntax.ParserException;
 
 public class Stoppoint extends Breakpoint
 {
+	private static final long serialVersionUID = 1L;
+
 	public Stoppoint(LexLocation location, int number, String trace)
 		throws ParserException, LexException
 	{

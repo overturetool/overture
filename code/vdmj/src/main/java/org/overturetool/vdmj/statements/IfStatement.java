@@ -43,6 +43,7 @@ import org.overturetool.vdmj.values.VoidValue;
 
 public class IfStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression ifExp;
 	public final Statement thenStmt;
 	public final List<ElseIfStatement> elseList;

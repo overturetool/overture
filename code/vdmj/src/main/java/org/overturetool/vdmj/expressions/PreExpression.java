@@ -44,6 +44,7 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class PreExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression function;
 	public final ExpressionList args;
 

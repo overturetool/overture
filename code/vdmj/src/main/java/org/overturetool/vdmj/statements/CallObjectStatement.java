@@ -56,6 +56,7 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class CallObjectStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final ObjectDesignator designator;
 	public String classname;
 	public final String fieldname;

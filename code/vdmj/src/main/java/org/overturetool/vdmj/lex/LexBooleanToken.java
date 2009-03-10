@@ -25,6 +25,7 @@ package org.overturetool.vdmj.lex;
 
 public class LexBooleanToken extends LexToken
 {
+	private static final long serialVersionUID = 1L;
 	public final boolean value;
 
 	public LexBooleanToken(Token value, LexLocation location)

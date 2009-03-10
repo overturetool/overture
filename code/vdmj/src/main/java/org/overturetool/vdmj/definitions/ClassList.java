@@ -44,10 +44,12 @@ import org.overturetool.vdmj.typechecker.NameScope;
  * A class for holding a list of ClassDefinitions.
  */
 
-@SuppressWarnings("serial")
 public class ClassList extends Vector<ClassDefinition>
 {
-	private static Map<String, ClassDefinition> map = new HashMap<String, ClassDefinition>();
+	private static final long serialVersionUID = 1L;
+
+	private static Map<String, ClassDefinition> map =
+					new HashMap<String, ClassDefinition>();
 
 	public ClassList()
 	{
@@ -77,6 +79,16 @@ public class ClassList extends Vector<ClassDefinition>
 		return true;
 	}
 
+	public void remap()
+	{
+		map.clear();
+
+		for (ClassDefinition d: this)
+		{
+			map.put(d.name.name, d);
+		}
+	}
+
 	public void implicitDefinitions(Environment env)
 	{
 		for (ClassDefinition d: this)
@@ -90,6 +102,14 @@ public class ClassList extends Vector<ClassDefinition>
 		for (ClassDefinition d: this)
 		{
 			d.typeCheck(env, scope);
+		}
+	}
+
+	public void setLoaded()
+	{
+		for (ClassDefinition d: this)
+		{
+			d.loaded = true;
 		}
 	}
 

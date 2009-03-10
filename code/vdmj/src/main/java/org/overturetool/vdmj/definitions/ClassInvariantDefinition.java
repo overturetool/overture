@@ -38,6 +38,7 @@ import org.overturetool.vdmj.types.Type;
 
 public class ClassInvariantDefinition extends Definition
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression expression;
 
 	public ClassInvariantDefinition(LexNameToken name, Expression expression)

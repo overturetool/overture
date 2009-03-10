@@ -23,12 +23,16 @@
 
 package org.overturetool.vdmj.lex;
 
+import java.io.Serializable;
+
 import org.overturetool.vdmj.messages.MessageException;
 import org.overturetool.vdmj.typechecker.TypeComparator;
 import org.overturetool.vdmj.types.TypeList;
 
-public class LexNameToken extends LexToken
+public class LexNameToken extends LexToken implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	public final String module;
 	public final String name;
 	public final boolean old;

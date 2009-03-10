@@ -39,6 +39,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class DefStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final DefinitionList equalsDefs;
 	public final Statement statement;
 

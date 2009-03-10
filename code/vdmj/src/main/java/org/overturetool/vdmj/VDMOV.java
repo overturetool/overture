@@ -23,10 +23,14 @@
 
 package org.overturetool.vdmj;
 
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import org.overturetool.vdmj.definitions.BUSClassDefinition;
 import org.overturetool.vdmj.definitions.CPUClassDefinition;
+import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.messages.MessageException;
@@ -60,11 +64,27 @@ public class VDMOV extends VDMPP
    		{
    			try
    			{
-   				OvertureReader reader = new OvertureReader(file, filecharset);
-				long beforeConvert = System.currentTimeMillis();
-    			classes.addAll(reader.readClasses());
-    			convert += System.currentTimeMillis() - beforeConvert;
-    			perrs += reader.getErrorCount();
+   				if (file.endsWith(".obj"))
+   				{
+   					FileInputStream fis = new FileInputStream(file);
+   	    	        GZIPInputStream gis = new GZIPInputStream(fis);
+   	    	        ObjectInputStream ois = new ObjectInputStream(gis);
+
+   	    	        ClassList loaded = (ClassList)ois.readObject();
+   	    	        ois.close();
+   	    	        loaded.remap();
+   	    	        classes.addAll(loaded);
+
+   	    	   		infoln("Loaded " + plural(loaded.size(), "class", "es") + " from " + file);
+   				}
+   				else
+   				{
+       				OvertureReader reader = new OvertureReader(file, filecharset);
+    				long beforeConvert = System.currentTimeMillis();
+        			classes.addAll(reader.readClasses());
+        			convert += System.currentTimeMillis() - beforeConvert;
+        			perrs += reader.getErrorCount();
+   				}
     		}
 			catch (MessageException e)
 			{

@@ -37,6 +37,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class MkBasicExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final Type type;
 	public final Expression arg;
 

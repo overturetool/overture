@@ -42,6 +42,8 @@ import org.overturetool.vdmj.values.ValueSet;
 
 public class DistMergeExpression extends UnaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public DistMergeExpression(LexLocation location, Expression exp)
 	{
 		super(location, exp);

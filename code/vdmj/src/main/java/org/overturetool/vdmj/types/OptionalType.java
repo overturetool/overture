@@ -31,6 +31,7 @@ import org.overturetool.vdmj.typechecker.Environment;
 
 public class OptionalType extends Type
 {
+	private static final long serialVersionUID = 1L;
 	public Type type;
 
 	public OptionalType(LexLocation location, Type type)

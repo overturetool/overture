@@ -50,6 +50,7 @@ import org.overturetool.vdmj.values.ValueMap;
 
 public class ObjectApplyDesignator extends ObjectDesignator
 {
+	private static final long serialVersionUID = 1L;
 	public final ObjectDesignator object;
 	public final ExpressionList args;
 

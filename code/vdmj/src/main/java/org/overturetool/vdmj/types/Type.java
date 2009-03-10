@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.types;
 
+import java.io.Serializable;
+
 import org.overturetool.vdmj.definitions.AccessSpecifier;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
@@ -42,8 +44,10 @@ import org.overturetool.vdmj.values.ValueList;
  * The parent class of all static type checking types.
  */
 
-public abstract class Type implements Comparable<Type>
+public abstract class Type implements Comparable<Type>, Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The location of the type definition. */
 	public final LexLocation location;
 	/** True if the type's and its subtype's names have been resolved. */
@@ -238,7 +242,7 @@ public abstract class Type implements Comparable<Type>
 	{
 		return false;
 	}
-	
+
 	public UnionType getUnion()
 	{
 		assert false : "Can't getUnion of a non-union";

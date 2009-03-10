@@ -43,6 +43,7 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class NewExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final LexIdentifierToken classname;
 	public final ExpressionList args;
 

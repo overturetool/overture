@@ -43,6 +43,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class IfExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression ifExp;
 	public final Expression thenExp;
 	public final List<ElseIfExpression> elseList;

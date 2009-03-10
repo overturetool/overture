@@ -24,7 +24,14 @@
 package org.overturetool.vdmj;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import org.overturetool.vdmj.commands.ClassCommandReader;
 import org.overturetool.vdmj.commands.CommandReader;
@@ -73,10 +80,41 @@ public class VDMPP extends VDMJ
 
    			try
    			{
-				LexTokenReader ltr = new LexTokenReader(
-					new File(file), Settings.dialect, filecharset);
-    			reader = new ClassReader(ltr);
-    			classes.addAll(reader.readClasses());
+   				if (file.endsWith(".obj"))
+   				{
+   					FileInputStream fis = new FileInputStream(file);
+   	    	        GZIPInputStream gis = new GZIPInputStream(fis);
+   	    	        ObjectInputStream ois = new ObjectInputStream(gis);
+   	    	        ClassList loaded = null;
+
+   	    	        try
+   	    	        {
+   	    	        	loaded = (ClassList)ois.readObject();
+   	    	        }
+       	 			catch (Exception e)
+       				{
+       	   				println("Object file is not compatible?");
+       	   				perrs++;
+       	   				continue;
+       				}
+       	 			finally
+       	 			{
+       	 				ois.close();
+       	 			}
+
+       	 			loaded.remap();
+   	    	        loaded.setLoaded();
+   	    	        classes.addAll(loaded);
+
+   	    	   		infoln("Loaded " + plural(loaded.size(), "class", "es") + " from " + file);
+   				}
+   				else
+   				{
+    				LexTokenReader ltr = new LexTokenReader(
+    					new File(file), Settings.dialect, filecharset);
+        			reader = new ClassReader(ltr);
+        			classes.addAll(reader.readClasses());
+   				}
     		}
 			catch (MessageException e)
 			{
@@ -85,12 +123,6 @@ public class VDMPP extends VDMJ
 			catch (Throwable e)
 			{
    				println(e.toString());
-
-   				if (e instanceof StackOverflowError)
-   				{
-   					e.printStackTrace();
-   				}
-
    				perrs++;
 			}
 
@@ -163,6 +195,30 @@ public class VDMPP extends VDMJ
   			"Found " + plural(terrs, "type error", "s"));
 		infoln(twarn == 0 ? "" : " and " +
 			(warnings ? "" : "suppressed ") + plural(twarn, "warning", "s"));
+
+		if (outfile != null && terrs == 0)
+		{
+			try
+			{
+				before = System.currentTimeMillis();
+    	        FileOutputStream fos = new FileOutputStream(outfile);
+    	        GZIPOutputStream gos = new GZIPOutputStream(fos);
+    	        ObjectOutputStream oos = new ObjectOutputStream(gos);
+
+    	        oos.writeObject(classes);
+    	        oos.close();
+    	   		after = System.currentTimeMillis();
+
+    	   		infoln("Saved " + plural(classes.size(), "class", "es") +
+    	   			" to " + outfile + " in " +
+    	   			(double)(after-before)/1000 + " secs. ");
+			}
+			catch (IOException e)
+			{
+				infoln("Cannot write " + outfile + ": " + e.getMessage());
+				terrs++;
+			}
+		}
 
 		if (pog && terrs == 0)
 		{

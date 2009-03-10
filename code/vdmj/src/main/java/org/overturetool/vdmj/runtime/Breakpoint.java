@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.runtime;
 
+import java.io.Serializable;
+
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
@@ -36,8 +38,10 @@ import org.overturetool.vdmj.syntax.ParserException;
  * The root of the breakpoint class hierarchy.
  */
 
-public class Breakpoint
+public class Breakpoint implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The location of the breakpoint. */
 	public final LexLocation location;
 	/** The number of the breakpoint. */

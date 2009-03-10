@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.patterns;
 
+import java.io.Serializable;
+
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
@@ -40,8 +42,10 @@ import org.overturetool.vdmj.values.Value;
  * The parent type of all patterns.
  */
 
-public abstract class Pattern
+public abstract class Pattern implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The textual location of the pattern. */
 	public final LexLocation location;
 

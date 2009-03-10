@@ -44,6 +44,8 @@ import org.overturetool.vdmj.values.ValueMap;
 
 public class StarStarExpression extends BinaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public StarStarExpression(Expression left, LexToken op, Expression right)
 	{
 		super(left, op, right);

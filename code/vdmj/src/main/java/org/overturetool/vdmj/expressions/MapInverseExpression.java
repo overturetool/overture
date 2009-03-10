@@ -41,6 +41,7 @@ import org.overturetool.vdmj.values.ValueMap;
 
 public class MapInverseExpression extends UnaryExpression
 {
+	private static final long serialVersionUID = 1L;
 	public MapType type;
 
 	public MapInverseExpression(LexLocation location, Expression exp)

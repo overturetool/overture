@@ -49,6 +49,7 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class MkTypeExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final LexNameToken typename;
 	public final ExpressionList args;
 

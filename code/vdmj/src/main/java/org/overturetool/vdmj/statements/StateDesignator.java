@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.statements;
 
+import java.io.Serializable;
+
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
@@ -36,8 +38,10 @@ import org.overturetool.vdmj.values.Value;
  * The root of the state designator hierarchy.
  */
 
-public abstract class StateDesignator
+public abstract class StateDesignator implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	public final LexLocation location;
 
 	public StateDesignator(LexLocation location)

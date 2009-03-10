@@ -23,11 +23,13 @@
 
 package org.overturetool.vdmj.lex;
 
+import java.io.Serializable;
+
 /**
  * An enumeration to indicate the VDM dialect being parsed.
  */
 
-public enum Dialect
+public enum Dialect implements Serializable
 {
 	VDM_SL, VDM_PP, VDM_RT
 }

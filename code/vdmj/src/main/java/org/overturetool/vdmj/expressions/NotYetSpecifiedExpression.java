@@ -39,6 +39,8 @@ import org.overturetool.vdmj.values.Value;
 
 public class NotYetSpecifiedExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
+
 	public NotYetSpecifiedExpression(LexLocation location)
 	{
 		super(location);

@@ -33,6 +33,7 @@ import org.overturetool.vdmj.typechecker.TypeCheckException;
 
 public class SetType extends Type
 {
+	private static final long serialVersionUID = 1L;
 	public Type setof;
 	public final boolean empty;
 

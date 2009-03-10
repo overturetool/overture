@@ -37,6 +37,8 @@ import org.overturetool.vdmj.values.Value;
 
 public class SubtractExpression extends NumericBinaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public SubtractExpression(Expression left, LexToken op, Expression right)
 	{
 		super(left, op, right);

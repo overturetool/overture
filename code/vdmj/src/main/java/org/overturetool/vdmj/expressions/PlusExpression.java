@@ -31,6 +31,8 @@ import org.overturetool.vdmj.values.Value;
 
 public class PlusExpression extends NumericBinaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public PlusExpression(Expression left, LexToken op, Expression right)
 	{
 		super(left, op, right);

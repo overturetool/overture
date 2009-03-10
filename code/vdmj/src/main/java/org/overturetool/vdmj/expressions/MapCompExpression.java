@@ -57,6 +57,7 @@ import org.overturetool.vdmj.values.ValueMap;
 
 public class MapCompExpression extends MapExpression
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression first;
 	public final List<MultipleBind> bindings;
 	public final Expression predicate;

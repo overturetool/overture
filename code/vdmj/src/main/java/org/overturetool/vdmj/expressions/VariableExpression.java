@@ -40,6 +40,8 @@ import org.overturetool.vdmj.values.Value;
 
 public class VariableExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
+
 	public LexNameToken name;
 
 	private Definition vardef = null;

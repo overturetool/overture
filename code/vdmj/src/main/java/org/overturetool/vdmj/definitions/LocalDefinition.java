@@ -42,6 +42,7 @@ import org.overturetool.vdmj.values.NameValuePairList;
 
 public class LocalDefinition extends Definition
 {
+	private static final long serialVersionUID = 1L;
 	public Type type;
 
 	public LocalDefinition(LexLocation location,

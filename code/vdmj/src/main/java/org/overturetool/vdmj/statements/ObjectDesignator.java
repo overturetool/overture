@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.statements;
 
+import java.io.Serializable;
+
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
@@ -37,8 +39,10 @@ import org.overturetool.vdmj.values.Value;
  * A class to hold an object assignment designator.
  */
 
-public abstract class ObjectDesignator
+public abstract class ObjectDesignator implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	public final LexLocation location;
 
 	protected boolean updatablesOnly = true;

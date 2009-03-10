@@ -47,6 +47,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class FieldExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression object;
 	public final LexIdentifierToken field;
 

@@ -42,8 +42,8 @@ import org.overturetool.vdmj.values.NameValuePairList;
 
 public class ThreadDefinition extends Definition
 {
+	private static final long serialVersionUID = 1L;
 	public final Statement statement;
-
 	private LexNameToken operationName = null;
 	private ExplicitOperationDefinition operationDef = null;
 

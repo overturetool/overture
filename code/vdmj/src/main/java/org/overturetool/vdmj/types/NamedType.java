@@ -30,6 +30,7 @@ import org.overturetool.vdmj.typechecker.TypeCheckException;
 
 public class NamedType extends InvariantType
 {
+	private static final long serialVersionUID = 1L;
 	public final LexNameToken typename;
 	public Type type;
 

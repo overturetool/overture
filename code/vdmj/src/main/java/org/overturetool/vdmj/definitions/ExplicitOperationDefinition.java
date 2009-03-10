@@ -68,6 +68,7 @@ import org.overturetool.vdmj.values.OperationValue;
 
 public class ExplicitOperationDefinition extends Definition
 {
+	private static final long serialVersionUID = 1L;
 	public OperationType type;
 	public final PatternList parameterPatterns;
 	public final Expression precondition;

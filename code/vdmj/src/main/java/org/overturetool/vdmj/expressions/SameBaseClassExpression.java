@@ -39,6 +39,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class SameBaseClassExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression left;
 	public final Expression right;
 

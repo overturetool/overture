@@ -46,6 +46,7 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class IotaExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final Bind bind;
 	public final Expression predicate;
 

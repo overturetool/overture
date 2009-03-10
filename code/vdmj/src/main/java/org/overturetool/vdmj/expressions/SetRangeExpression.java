@@ -40,6 +40,7 @@ import org.overturetool.vdmj.values.ValueSet;
 
 public class SetRangeExpression extends SetExpression
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression first;
 	public final Expression last;
 

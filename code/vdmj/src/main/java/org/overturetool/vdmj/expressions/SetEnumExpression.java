@@ -40,6 +40,7 @@ import org.overturetool.vdmj.values.ValueSet;
 
 public class SetEnumExpression extends SetExpression
 {
+	private static final long serialVersionUID = 1L;
 	public final ExpressionList members;
 	public TypeList types = null;
 

@@ -50,6 +50,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class RecordPattern extends Pattern
 {
+	private static final long serialVersionUID = 1L;
 	public final LexNameToken typename;
 	public final PatternList plist;
 	public Type type;

@@ -42,6 +42,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class FieldDesignator extends StateDesignator
 {
+	private static final long serialVersionUID = 1L;
 	public final StateDesignator object;
 	public final LexIdentifierToken field;
 	private LexNameToken objectfield = null;

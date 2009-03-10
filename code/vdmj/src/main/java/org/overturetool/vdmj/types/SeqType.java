@@ -33,6 +33,7 @@ import org.overturetool.vdmj.typechecker.TypeCheckException;
 
 public class SeqType extends Type
 {
+	private static final long serialVersionUID = 1L;
 	public Type seqof;
 	public final boolean empty;
 

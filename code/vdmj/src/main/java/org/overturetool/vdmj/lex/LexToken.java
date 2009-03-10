@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.lex;
 
+import java.io.Serializable;
+
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.typechecker.TypeChecker;
@@ -31,8 +33,10 @@ import org.overturetool.vdmj.typechecker.TypeChecker;
  * The parent class for all lexical token types.
  */
 
-abstract public class LexToken
+abstract public class LexToken implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The textual location of the token. */
 	public final LexLocation location;
 	/** The basic type of the token. */

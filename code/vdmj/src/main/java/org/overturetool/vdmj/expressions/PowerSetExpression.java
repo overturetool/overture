@@ -41,6 +41,8 @@ import org.overturetool.vdmj.values.ValueSet;
 
 public class PowerSetExpression extends UnaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public PowerSetExpression(LexLocation location, Expression exp)
 	{
 		super(location, exp);

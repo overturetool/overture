@@ -48,6 +48,7 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class SeqCompExpression extends SeqExpression
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression first;
 	public final SetBind setbind;
 	public final Expression predicate;

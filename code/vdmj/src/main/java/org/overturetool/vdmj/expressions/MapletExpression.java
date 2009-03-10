@@ -34,6 +34,8 @@ import org.overturetool.vdmj.values.Value;
 
 public class MapletExpression extends BinaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public MapletExpression(Expression left, LexToken op, Expression right)
 	{
 		super(left, op, right);

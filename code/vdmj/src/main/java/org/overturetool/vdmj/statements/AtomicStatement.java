@@ -44,6 +44,8 @@ import org.overturetool.vdmj.values.VoidValue;
 
 public class AtomicStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
+
 	public final List<AssignmentStatement> assignments;
 	private StateDefinition statedef = null;
 	private ClassDefinition classdef = null;

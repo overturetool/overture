@@ -36,6 +36,8 @@ import org.overturetool.vdmj.values.Value;
 
 public class AlwaysStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
+
 	public final Statement always;
 	public final Statement body;
 

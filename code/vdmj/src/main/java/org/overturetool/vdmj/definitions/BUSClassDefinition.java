@@ -33,6 +33,8 @@ import org.overturetool.vdmj.syntax.ParserException;
 
 public class BUSClassDefinition extends ClassDefinition
 {
+	private static final long serialVersionUID = 1L;
+
 	public BUSClassDefinition() throws ParserException, LexException
 	{
 		super(

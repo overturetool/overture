@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.statements;
 
+import java.io.Serializable;
+
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -41,8 +43,10 @@ import org.overturetool.vdmj.values.Value;
  * The parent class of all statements.
  */
 
-public abstract class Statement
+public abstract class Statement implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The location of the statement. */
 	public final LexLocation location;
 
@@ -58,7 +62,7 @@ public abstract class Statement
 	{
 		this.location = location;
 		this.breakpoint = new Breakpoint(location);
-		
+
 		location.executable(true);
 	}
 

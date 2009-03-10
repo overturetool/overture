@@ -23,14 +23,18 @@
 
 package org.overturetool.vdmj.definitions;
 
+import java.io.Serializable;
+
 import org.overturetool.vdmj.lex.Token;
 
 /**
  * A class to represent a [static] public/private/protected specifier.
  */
 
-public class AccessSpecifier
+public class AccessSpecifier implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	public final static AccessSpecifier DEFAULT =
 		new AccessSpecifier(false, false, Token.PRIVATE);
 

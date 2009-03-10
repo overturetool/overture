@@ -48,6 +48,7 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class CallStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final LexNameToken name;
 	public final ExpressionList args;
 

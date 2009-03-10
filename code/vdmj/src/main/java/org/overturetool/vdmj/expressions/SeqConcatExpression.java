@@ -37,6 +37,8 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class SeqConcatExpression extends BinaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public SeqConcatExpression(Expression left, LexToken op, Expression right)
 	{
 		super(left, op, right);

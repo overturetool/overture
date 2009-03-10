@@ -41,6 +41,8 @@ import org.overturetool.vdmj.values.ValueSet;
 
 public class DistIntersectExpression extends UnaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public DistIntersectExpression(LexLocation location, Expression exp)
 	{
 		super(location, exp);

@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.lex;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Vector;
 
@@ -30,8 +31,10 @@ import java.util.Vector;
  * A class to hold the location of a token.
  */
 
-public class LexLocation
+public class LexLocation implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** A collection of all LexLocation objects. */
 	private static List<LexLocation> allLocations = new Vector<LexLocation>();
 	/** True if the location is executable. */

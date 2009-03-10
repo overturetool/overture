@@ -37,6 +37,7 @@ import org.overturetool.vdmj.typechecker.TypeCheckException;
 
 public class UnresolvedType extends Type
 {
+	private static final long serialVersionUID = 1L;
 	public final LexNameToken typename;
 
 	public UnresolvedType(LexNameToken typename)

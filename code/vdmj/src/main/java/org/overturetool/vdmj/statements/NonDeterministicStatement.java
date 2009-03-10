@@ -27,6 +27,8 @@ import org.overturetool.vdmj.lex.LexLocation;
 
 public class NonDeterministicStatement extends SimpleBlockStatement
 {
+	private static final long serialVersionUID = 1L;
+
 	public NonDeterministicStatement(LexLocation location)
 	{
 		super(location);

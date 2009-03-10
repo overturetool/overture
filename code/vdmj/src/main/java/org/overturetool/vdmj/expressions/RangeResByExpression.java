@@ -40,6 +40,8 @@ import org.overturetool.vdmj.values.ValueSet;
 
 public class RangeResByExpression extends BinaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public RangeResByExpression(Expression left, LexToken op, Expression right)
 	{
 		super(left, op, right);

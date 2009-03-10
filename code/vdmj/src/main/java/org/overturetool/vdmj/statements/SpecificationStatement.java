@@ -44,6 +44,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class SpecificationStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final List<ExternalClause> externals;
 	public final Expression precondition;
 	public final Expression postcondition;

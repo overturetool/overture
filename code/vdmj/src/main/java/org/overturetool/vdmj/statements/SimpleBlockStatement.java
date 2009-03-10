@@ -44,6 +44,7 @@ import org.overturetool.vdmj.values.VoidValue;
 
 public class SimpleBlockStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final List<Statement> statements = new Vector<Statement>();
 
 	public SimpleBlockStatement(LexLocation location)

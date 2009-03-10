@@ -39,6 +39,7 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class TupleExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final ExpressionList args;
 	public TypeList types = null;
 

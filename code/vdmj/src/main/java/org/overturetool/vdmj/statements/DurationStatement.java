@@ -34,6 +34,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class DurationStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression duration;
 	public final Statement statement;
 

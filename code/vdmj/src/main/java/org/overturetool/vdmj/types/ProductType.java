@@ -33,6 +33,7 @@ import org.overturetool.vdmj.util.Utils;
 
 public class ProductType extends Type
 {
+	private static final long serialVersionUID = 1L;
 	public TypeList types = null;
 
 	public ProductType(LexLocation location, Type a, Type b)

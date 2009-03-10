@@ -40,6 +40,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class IsExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public Type basictype;
 	public final LexNameToken typename;
 	public final Expression test;

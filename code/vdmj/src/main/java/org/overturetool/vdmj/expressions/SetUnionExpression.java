@@ -37,6 +37,8 @@ import org.overturetool.vdmj.values.ValueSet;
 
 public class SetUnionExpression extends BinaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public SetUnionExpression(Expression left, LexToken op, Expression right)
 	{
 		super(left, op, right);

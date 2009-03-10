@@ -57,6 +57,7 @@ import org.overturetool.vdmj.values.ValueSet;
 
 public class EqualsDefinition extends Definition
 {
+	private static final long serialVersionUID = 1L;
 	public final Pattern pattern;
 	public final TypeBind typebind;
 	public final SetBind setbind;

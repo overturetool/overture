@@ -33,6 +33,8 @@ import org.overturetool.vdmj.syntax.ParserException;
 
 public class Tracepoint extends Breakpoint
 {
+	private static final long serialVersionUID = 1L;
+
 	public Tracepoint(LexLocation location, int number, String trace)
 		throws ParserException, LexException
 	{

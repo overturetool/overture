@@ -46,6 +46,7 @@ import org.overturetool.vdmj.values.VoidValue;
 
 public class TraceStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final NamedTraceDefinition tracedef;
 
 	public TraceStatement(NamedTraceDefinition def)

@@ -44,6 +44,8 @@ import org.overturetool.vdmj.values.VoidValue;
 
 public class AssignmentStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
+
 	public final Expression exp;
 	public final StateDesignator target;
 	public Type targetType;

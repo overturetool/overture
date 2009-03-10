@@ -46,6 +46,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class MuExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression record;
 	public final List<RecordModifier> modifiers;
 

@@ -45,6 +45,8 @@ import org.overturetool.vdmj.util.Utils;
 
 public class UnionType extends Type
 {
+	private static final long serialVersionUID = 1L;
+
 	public TypeSet types;
 
 	private SetType setType = null;

@@ -41,6 +41,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class CasesExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression exp;
 	public final List<CaseAlternative> cases;
 	public final Expression others;

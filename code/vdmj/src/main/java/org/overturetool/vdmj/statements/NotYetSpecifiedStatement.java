@@ -54,6 +54,8 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class NotYetSpecifiedStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
+
 	public NotYetSpecifiedStatement(LexLocation location)
 	{
 		super(location);

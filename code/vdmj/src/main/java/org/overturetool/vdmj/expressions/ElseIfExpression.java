@@ -38,6 +38,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class ElseIfExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression elseIfExp;
 	public final Expression thenExp;
 
@@ -71,7 +72,7 @@ public class ElseIfExpression extends Expression
 	{
 		Expression found = super.findExpression(lineno);
 		if (found != null) return found;
-		
+
 		return thenExp.findExpression(lineno);
 	}
 

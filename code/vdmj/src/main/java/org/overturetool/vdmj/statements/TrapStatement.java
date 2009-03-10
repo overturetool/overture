@@ -45,6 +45,7 @@ import org.overturetool.vdmj.values.ValueSet;
 
 public class TrapStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final PatternBind patternBind;
 	public final Statement with;
 	public final Statement body;

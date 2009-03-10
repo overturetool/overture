@@ -37,6 +37,8 @@ import org.overturetool.vdmj.values.Value;
 
 public class LenExpression extends UnaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public LenExpression(LexLocation location, Expression exp)
 	{
 		super(location, exp);

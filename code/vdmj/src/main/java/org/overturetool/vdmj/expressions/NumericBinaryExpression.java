@@ -36,6 +36,8 @@ import org.overturetool.vdmj.types.TypeList;
 
 abstract public class NumericBinaryExpression extends BinaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public NumericBinaryExpression(Expression left, LexToken op, Expression right)
 	{
 		super(left, op, right);

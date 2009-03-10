@@ -34,6 +34,7 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class MultipleTypeBind extends MultipleBind
 {
+	private static final long serialVersionUID = 1L;
 	public Type type;
 
 	public MultipleTypeBind(PatternList plist, Type type)

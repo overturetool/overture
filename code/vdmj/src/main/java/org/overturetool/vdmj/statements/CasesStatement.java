@@ -40,6 +40,7 @@ import org.overturetool.vdmj.values.VoidValue;
 
 public class CasesStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression exp;
 	public final List<CaseStmtAlternative> cases;
 	public final Statement others;

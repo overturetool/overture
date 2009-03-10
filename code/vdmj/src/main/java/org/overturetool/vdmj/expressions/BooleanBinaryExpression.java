@@ -35,6 +35,8 @@ import org.overturetool.vdmj.types.TypeList;
 
 abstract public class BooleanBinaryExpression extends BinaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public BooleanBinaryExpression(Expression left, LexToken op, Expression right)
 	{
 		super(left, op, right);

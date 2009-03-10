@@ -43,6 +43,7 @@ import org.overturetool.vdmj.values.VoidValue;
 
 public class ForIndexStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final LexNameToken var;
 	public final Expression from;
 	public final Expression to;

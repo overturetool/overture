@@ -70,6 +70,7 @@ import org.overturetool.vdmj.values.NameValuePairList;
 
 public class ExplicitFunctionDefinition extends Definition
 {
+	private static final long serialVersionUID = 1L;
 	public final LexNameList typeParams;
 	public FunctionType type;
 	public final List<PatternList> paramPatternList;

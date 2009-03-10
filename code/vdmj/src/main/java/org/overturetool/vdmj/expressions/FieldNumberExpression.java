@@ -41,6 +41,7 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class FieldNumberExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression tuple;
 	public final LexIntegerToken field;
 	private Type type = null;

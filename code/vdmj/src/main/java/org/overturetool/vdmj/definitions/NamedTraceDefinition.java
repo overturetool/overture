@@ -47,6 +47,7 @@ import org.overturetool.vdmj.values.OperationValue;
 
 public class NamedTraceDefinition extends Definition
 {
+	private static final long serialVersionUID = 1L;
 	public final List<String> pathname;
 	public final List<TraceDefinitionTerm> terms;
 

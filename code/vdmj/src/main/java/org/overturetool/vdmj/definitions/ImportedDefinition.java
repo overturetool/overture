@@ -40,6 +40,7 @@ import org.overturetool.vdmj.values.NameValuePairList;
 
 public class ImportedDefinition extends Definition
 {
+	private static final long serialVersionUID = 1L;
 	public final Definition def;
 
 	public ImportedDefinition(LexLocation location, Definition def, NameScope scope)

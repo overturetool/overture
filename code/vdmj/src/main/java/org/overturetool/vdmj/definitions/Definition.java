@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.definitions;
 
+import java.io.Serializable;
+
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
@@ -50,8 +52,10 @@ import org.overturetool.vdmj.values.Value;
  * definition.
  */
 
-public abstract class Definition
+public abstract class Definition implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The textual location of the definition */
 	public final LexLocation location;
 	/** The name of the object being defined. */

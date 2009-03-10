@@ -39,6 +39,7 @@ import org.overturetool.vdmj.values.VoidReturnValue;
 
 public class ReturnStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression expression;
 
 	public ReturnStatement(LexLocation location)

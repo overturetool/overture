@@ -36,6 +36,8 @@ import org.overturetool.vdmj.values.Value;
 
 public class OrExpression extends BooleanBinaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public OrExpression(Expression left, LexToken op, Expression right)
 	{
 		super(left, op, right);

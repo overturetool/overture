@@ -66,6 +66,8 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class ClassDefinition extends Definition
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The names of the superclasses of this class. */
 	public final LexNameList supernames;
 	/** The definitions in this class (excludes superclasses). */
@@ -89,7 +91,10 @@ public class ClassDefinition extends Definition
 
 	/** Used during the linkage of the class hierarchy. */
 	private enum Setting { UNSET, INPROGRESS, DONE }
-	private Setting settingHierarchy = Setting.UNSET;
+	volatile private Setting settingHierarchy = Setting.UNSET;
+
+	/** True if loaded from an object file (so type checked) */
+	public boolean loaded = false;
 
 	/** The private or protected static values in the class. */
 	private NameValuePairList privateStaticValues = null;
@@ -854,6 +859,8 @@ public class ClassDefinition extends Definition
 
 	public void typeCheckPass(Pass p, Environment base)
 	{
+		if (loaded) return;
+
 		for (Definition d: definitions)
 		{
 			if (d.pass == p)

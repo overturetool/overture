@@ -34,6 +34,8 @@ import org.overturetool.vdmj.values.VoidValue;
 
 public class SkipStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
+
 	public SkipStatement(LexLocation location)
 	{
 		super(location);

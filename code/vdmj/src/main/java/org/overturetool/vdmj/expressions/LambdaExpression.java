@@ -49,6 +49,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class LambdaExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final List<TypeBind> bindList;
 	public final Expression expression;
 

@@ -34,6 +34,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class CyclesStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression cycles;
 	public final Statement statement;
 

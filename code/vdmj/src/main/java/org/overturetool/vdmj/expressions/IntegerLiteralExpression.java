@@ -38,6 +38,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class IntegerLiteralExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final LexIntegerToken value;
 
 	public IntegerLiteralExpression(LexIntegerToken value)

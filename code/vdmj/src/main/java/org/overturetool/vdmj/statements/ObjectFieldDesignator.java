@@ -42,6 +42,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class ObjectFieldDesignator extends ObjectDesignator
 {
+	private static final long serialVersionUID = 1L;
 	public final ObjectDesignator object;
 	public String classname;
 	public final String fieldname;

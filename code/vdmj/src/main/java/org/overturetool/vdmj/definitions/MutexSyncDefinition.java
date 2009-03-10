@@ -42,6 +42,7 @@ import org.overturetool.vdmj.util.Utils;
 
 public class MutexSyncDefinition extends Definition
 {
+	private static final long serialVersionUID = 1L;
 	public final LexNameList operations;
 
 	public MutexSyncDefinition(LexLocation location, LexNameList operations)

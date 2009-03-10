@@ -48,6 +48,7 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class TuplePattern extends Pattern
 {
+	private static final long serialVersionUID = 1L;
 	public final PatternList plist;
 
 	public TuplePattern(LexLocation location, PatternList list)

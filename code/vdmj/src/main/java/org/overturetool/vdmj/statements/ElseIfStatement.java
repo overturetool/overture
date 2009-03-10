@@ -38,6 +38,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class ElseIfStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression elseIfExp;
 	public final Statement thenStmt;
 

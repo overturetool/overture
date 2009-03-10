@@ -39,6 +39,8 @@ import org.overturetool.vdmj.values.Value;
 
 public class DivideExpression extends NumericBinaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public DivideExpression(Expression left, LexToken op, Expression right)
 	{
 		super(left, op, right);

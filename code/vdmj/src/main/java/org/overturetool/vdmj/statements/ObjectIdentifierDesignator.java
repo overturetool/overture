@@ -34,6 +34,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class ObjectIdentifierDesignator extends ObjectDesignator
 {
+	private static final long serialVersionUID = 1L;
 	public final LexNameToken name;
 	public final VariableExpression expression;
 

@@ -40,6 +40,7 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class SeqEnumExpression extends SeqExpression
 {
+	private static final long serialVersionUID = 1L;
 	public final ExpressionList members;
 	public TypeList types = null;
 

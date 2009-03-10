@@ -34,6 +34,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class IgnorePattern extends Pattern
 {
+	private static final long serialVersionUID = 1L;
 	private static int var = 1;		// Used in getMatchingValue()
 
 	public IgnorePattern(LexLocation location)

@@ -40,6 +40,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class ExitStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression expression;
 	private Type exptype = null;
 

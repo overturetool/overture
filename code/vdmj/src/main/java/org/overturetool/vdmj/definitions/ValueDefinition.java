@@ -55,6 +55,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class ValueDefinition extends Definition
 {
+	private static final long serialVersionUID = 1L;
 	public final Pattern pattern;
 	public Type type;
 	public final Expression exp;

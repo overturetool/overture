@@ -39,6 +39,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class StateInitExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final StateDefinition state;
 
 	public StateInitExpression(StateDefinition state)

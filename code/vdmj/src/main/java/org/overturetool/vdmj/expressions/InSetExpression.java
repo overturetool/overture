@@ -36,6 +36,8 @@ import org.overturetool.vdmj.values.Value;
 
 public class InSetExpression extends BinaryExpression
 {
+	private static final long serialVersionUID = 1L;
+
 	public InSetExpression(Expression left, LexToken op, Expression right)
 	{
 		super(left, op, right);

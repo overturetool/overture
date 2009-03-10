@@ -119,4 +119,12 @@ public class ModuleList extends Vector<Module>
 
 		return obligations;
 	}
+
+	public void setLoaded()
+	{
+		for (Module m: this)
+		{
+			m.loaded = true;
+		}
+	}
 }

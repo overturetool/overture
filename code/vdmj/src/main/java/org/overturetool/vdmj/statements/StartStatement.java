@@ -43,6 +43,7 @@ import org.overturetool.vdmj.values.VoidValue;
 
 public class StartStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression objects;
 
 	public StartStatement(LexLocation location, Expression obj)

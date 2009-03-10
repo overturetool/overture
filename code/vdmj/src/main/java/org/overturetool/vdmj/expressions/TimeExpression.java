@@ -35,6 +35,8 @@ import org.overturetool.vdmj.values.Value;
 
 public class TimeExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
+
 	public TimeExpression(LexLocation location)
 	{
 		super(location);

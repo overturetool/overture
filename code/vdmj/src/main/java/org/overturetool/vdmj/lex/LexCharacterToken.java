@@ -25,6 +25,7 @@ package org.overturetool.vdmj.lex;
 
 public class LexCharacterToken extends LexToken
 {
+	private static final long serialVersionUID = 1L;
 	public final char unicode;
 
 	public LexCharacterToken(char value, LexLocation location)

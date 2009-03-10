@@ -32,6 +32,8 @@ import org.overturetool.vdmj.lex.LexLocation;
 
 public class UnknownType extends Type
 {
+	private static final long serialVersionUID = 1L;
+
 	public UnknownType(LexLocation location)
 	{
 		super(location);

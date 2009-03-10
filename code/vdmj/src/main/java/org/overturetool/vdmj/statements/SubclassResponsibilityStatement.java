@@ -33,6 +33,8 @@ import org.overturetool.vdmj.values.Value;
 
 public class SubclassResponsibilityStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
+
 	public SubclassResponsibilityStatement(LexLocation location)
 	{
 		super(location);

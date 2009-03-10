@@ -47,6 +47,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class FuncInstantiationExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression function;
 	public TypeList actualTypes;
 	public FunctionType type;

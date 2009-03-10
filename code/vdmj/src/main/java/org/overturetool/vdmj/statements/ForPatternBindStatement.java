@@ -50,6 +50,7 @@ import org.overturetool.vdmj.values.VoidValue;
 
 public class ForPatternBindStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final PatternBind patternBind;
 	public final boolean reverse;
 	public final Expression exp;

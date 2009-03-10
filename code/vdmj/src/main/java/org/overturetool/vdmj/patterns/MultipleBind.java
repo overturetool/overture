@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.patterns;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Vector;
 
@@ -43,8 +44,10 @@ import org.overturetool.vdmj.values.ValueList;
  * The parent class of {@link MultipleSetBind} and {@link MultipleTypeBind}.
  */
 
-public abstract class MultipleBind
+public abstract class MultipleBind implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The textual location of the bind. */
 	public final LexLocation location;
 	/** The list of patterns for this bind. */

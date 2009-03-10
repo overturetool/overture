@@ -59,6 +59,7 @@ import org.overturetool.vdmj.values.NameValuePairList;
 
 public class TypeDefinition extends Definition
 {
+	private static final long serialVersionUID = 1L;
 	public Type type;
 	public final Pattern invPattern;
 	public final Expression invExpression;

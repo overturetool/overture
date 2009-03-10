@@ -34,6 +34,8 @@ import org.overturetool.vdmj.syntax.ParserException;
 
 public class CPUClassDefinition extends ClassDefinition
 {
+	private static final long serialVersionUID = 1L;
+
 	public CPUClassDefinition() throws ParserException, LexException
 	{
 		super(

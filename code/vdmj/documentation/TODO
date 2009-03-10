@@ -18,3 +18,6 @@ Add a refresh to ClassList and Modules to re-parse changed files?
 Some internal errors and exceptions get printed, but not added to the error list.
 
 VICE specifications are type checked at the moment, but executed as VDM++.
+
+Add DBGp protocol handler and clean up CommandReader system.
+

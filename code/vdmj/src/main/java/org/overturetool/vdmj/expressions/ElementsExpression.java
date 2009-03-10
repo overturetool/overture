@@ -41,6 +41,7 @@ import org.overturetool.vdmj.values.ValueSet;
 
 public class ElementsExpression extends SetExpression
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression exp;
 
 	public ElementsExpression(LexLocation location, Expression exp)

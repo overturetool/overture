@@ -56,6 +56,7 @@ import org.overturetool.vdmj.values.ValueSet;
 
 public class SetCompExpression extends SetExpression
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression first;
 	public final List<MultipleBind> bindings;
 	public final Expression predicate;

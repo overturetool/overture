@@ -45,6 +45,7 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class LetBeStStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final Bind bind;
 	public final Expression suchThat;
 	public final Statement statement;

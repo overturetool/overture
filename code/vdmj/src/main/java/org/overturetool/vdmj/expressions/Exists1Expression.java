@@ -45,6 +45,7 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class Exists1Expression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final Bind bind;
 	public final Expression predicate;
 
@@ -84,7 +85,7 @@ public class Exists1Expression extends Expression
 	{
 		Expression found = super.findExpression(lineno);
 		if (found != null) return found;
-		
+
 		return predicate.findExpression(lineno);
 	}
 

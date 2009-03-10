@@ -45,6 +45,7 @@ abstract public class VDMJ
 	protected static boolean pog = false;
 	protected static boolean quiet = false;
 	protected static String script = null;
+	protected static String outfile = null;
 
 	public static String filecharset = Charset.defaultCharset().name();
 
@@ -110,6 +111,17 @@ abstract public class VDMJ
     			else
     			{
     				usage("-e option requires an expression");
+    			}
+    		}
+    		else if (arg.equals("-out"))
+    		{
+    			if (i.hasNext())
+    			{
+    				outfile = i.next();
+    			}
+    			else
+    			{
+    				usage("-out option requires a filename");
     			}
     		}
     		else if (arg.equals("-c"))

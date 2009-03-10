@@ -40,6 +40,7 @@ import org.overturetool.vdmj.values.Value;
 
 public class IsOfClassExpression extends Expression
 {
+	private static final long serialVersionUID = 1L;
 	public final LexNameToken classname;
 	public final Expression exp;
 

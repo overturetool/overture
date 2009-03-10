@@ -59,6 +59,7 @@ import org.overturetool.vdmj.values.State;
 
 public class StateDefinition extends Definition
 {
+	private static final long serialVersionUID = 1L;
 	public final List<Field> fields;
 	public final Pattern invPattern;
 	public final Expression invExpression;

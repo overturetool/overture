@@ -45,6 +45,7 @@ import org.overturetool.vdmj.values.VoidValue;
 
 public class ForAllStatement extends Statement
 {
+	private static final long serialVersionUID = 1L;
 	public final Pattern pattern;
 	public final Expression set;
 	public final Statement statement;

@@ -41,6 +41,7 @@ import org.overturetool.vdmj.values.ValueSet;
 
 public class MultipleSetBind extends MultipleBind
 {
+	private static final long serialVersionUID = 1L;
 	public final Expression set;
 
 	public MultipleSetBind(PatternList plist, Expression set)
