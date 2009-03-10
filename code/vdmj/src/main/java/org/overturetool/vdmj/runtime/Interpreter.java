@@ -29,6 +29,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.overturetool.vdmj.definitions.ClassDefinition;
@@ -315,6 +316,13 @@ abstract public class Interpreter
 
 		return source;
 	}
+
+	/**
+	 * Get a list of all source files.
+	 */
+
+	abstract public Set<File> getSourceFiles();
+
 
 	/**
 	 * Get a list of proof obligations for the loaded specification.

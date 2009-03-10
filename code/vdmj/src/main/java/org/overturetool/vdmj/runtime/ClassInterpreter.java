@@ -23,8 +23,11 @@
 
 package org.overturetool.vdmj.runtime;
 
+import java.io.File;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.overturetool.vdmj.definitions.ClassDefinition;
@@ -125,6 +128,19 @@ public class ClassInterpreter extends Interpreter
 	public String getDefaultFilename()
 	{
 		return defaultClass.name.location.file;
+	}
+
+	@Override
+	public Set<File> getSourceFiles()
+	{
+		Set<File> files = new HashSet<File>();
+
+		for (ClassDefinition def: classes)
+		{
+			files.add(new File(def.location.file));
+		}
+
+		return files;
 	}
 
 	public ClassList getClasses()

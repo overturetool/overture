@@ -23,6 +23,10 @@
 
 package org.overturetool.vdmj.runtime;
 
+import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
@@ -121,6 +125,19 @@ public class ModuleInterpreter extends Interpreter
 	public String getDefaultFilename()
 	{
 		return defaultModule.name.location.file;
+	}
+
+	@Override
+	public Set<File> getSourceFiles()
+	{
+		Set<File> files = new HashSet<File>();
+
+		for (Module def: modules)
+		{
+			files.add(new File(def.name.location.file));
+		}
+
+		return files;
 	}
 
 	/**

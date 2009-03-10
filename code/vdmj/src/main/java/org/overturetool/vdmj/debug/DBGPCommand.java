@@ -31,14 +31,14 @@ public class DBGPCommand
 {
 	public final DBGPCommandType type;
 	public final List<DBGPOption> options;
-	public final List<String> args;
+	public final String data;
 
 	public DBGPCommand(
-		DBGPCommandType type, List<DBGPOption> options, List<String> args)
+		DBGPCommandType type, List<DBGPOption> options, String base64)
 	{
 		this.type = type;
 		this.options = options;
-		this.args = args;
+		this.data = base64; // new String(Base64.decode(base64));
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class DBGPCommand
 	{
 		return type +
 			(options.isEmpty() ? "" : " " + Utils.listToString(options, " ")) +
-			(args.isEmpty() ? "" : " -- " + Utils.listToString(args, " "));
+			(data == null ? "" : " -- " + data);
 	}
 
 	public DBGPOption getOption(DBGPOptionType sought)
