@@ -31,8 +31,8 @@ public class Util extends StdLib {
   static UTIL.VDMCompare vdmComp = new UTIL.VDMCompare();
 // ***** VDMTOOLS END Name=vdmComp
 
-// ***** VDMTOOLS START Name=writeType KEEP=NO
-  private static Object writeType = new quotes.start();
+// ***** VDMTOOLS START Name=writeType KEEP=YES
+  private static Object writeType = new jp.co.csk.vdm.toolbox.VDM.quotes.start();
 // ***** VDMTOOLS END Name=writeType
 
 // ***** VDMTOOLS START Name=buf KEEP=NO
@@ -98,13 +98,13 @@ public class Util extends StdLib {
 // ***** VDMTOOLS END Name=Print#1|String
 
 
-// ***** VDMTOOLS START Name=SaveCharSeqMapSeqSeq#2|String|HashMap KEEP=NO
+// ***** VDMTOOLS START Name=SaveCharSeqMapSeqSeq#2|String|HashMap KEEP=YES
   static public void SaveCharSeqMapSeqSeq (final String filename, final HashMap val) throws CGException {
 
     Boolean tmpVal_4 = null;
     IOProxy obj_5 = null;
     obj_5 = (IOProxy) new IOProxy();
-    tmpVal_4 = (Boolean) obj_5.fwriteval(filename, val, new quotes.start());
+    tmpVal_4 = (Boolean) obj_5.fwriteval(filename, val, new jp.co.csk.vdm.toolbox.VDM.quotes.start());
   }
 // ***** VDMTOOLS END Name=SaveCharSeqMapSeqSeq#2|String|HashMap
 
@@ -151,11 +151,11 @@ public class Util extends StdLib {
 // ***** VDMTOOLS END Name=PrintL#1|String
 
 
-// ***** VDMTOOLS START Name=SetFileName#1|String KEEP=NO
+// ***** VDMTOOLS START Name=SetFileName#1|String KEEP=YES
   static public void SetFileName (final String name) throws CGException {
 
     outputFileName = UTIL.ConvertToString(UTIL.clone(name));
-    writeType = UTIL.clone(new quotes.start());
+    writeType = UTIL.clone(new  jp.co.csk.vdm.toolbox.VDM.quotes.start());
   }
 // ***** VDMTOOLS END Name=SetFileName#1|String
 
