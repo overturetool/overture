@@ -782,7 +782,7 @@ public class ExpressionReader extends Reader
 		if (token.is(Token.STARSTAR))
 		{
 			nextToken();
-			return new StarStarExpression(exp, token, readApplicatorExpression());
+			return new StarStarExpression(exp, token, readEvaluatorP6Expression());
 		}
 
 		return exp;
