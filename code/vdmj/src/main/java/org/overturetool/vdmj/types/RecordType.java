@@ -94,12 +94,12 @@ public class RecordType extends InvariantType
 	@Override
 	public void unResolve()
 	{
+		if (!resolved) return; else resolved = false;
+		
 		for (Field f: fields)
 		{
 			f.unResolve();
 		}
-
-		resolved = false;
 	}
 
 	private boolean infinite = false;
