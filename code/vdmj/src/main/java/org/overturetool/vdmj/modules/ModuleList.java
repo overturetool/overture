@@ -23,14 +23,20 @@
 
 package org.overturetool.vdmj.modules;
 
+import java.io.File;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
+import org.overturetool.vdmj.debug.DBGPReader;
+import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.StateContext;
+import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.util.Utils;
 
 
@@ -53,6 +59,18 @@ public class ModuleList extends Vector<Module>
 		return Utils.listToString(this);
 	}
 
+	public Set<File> getSourceFiles()
+	{
+		Set<File> files = new HashSet<File>();
+
+		for (Module def: this)
+		{
+			files.add(new File(def.name.location.file));
+		}
+
+		return files;
+	}
+
 	public Module findModule(LexIdentifierToken sought)
 	{
 		for (Module m: this)
@@ -66,7 +84,33 @@ public class ModuleList extends Vector<Module>
    		return null;
 	}
 
-	public StateContext initialize()
+	public Statement findStatement(String file, int lineno)
+	{
+		for (Module m: this)
+		{
+			if (m.name.location.file.equals(file))
+			{
+				return m.findStatement(lineno);
+			}
+		}
+
+		return null;
+	}
+
+	public Expression findExpression(String file, int lineno)
+	{
+		for (Module m: this)
+		{
+			if (m.name.location.file.equals(file))
+			{
+				return m.findExpression(lineno);
+			}
+		}
+
+		return null;
+	}
+
+	public StateContext initialize(DBGPReader dbgp)
 	{
 		StateContext initialContext = null;
 
@@ -81,6 +125,7 @@ public class ModuleList extends Vector<Module>
 				new StateContext(this.get(0).name.location, "global environment");
 		}
 
+		initialContext.setThreadState(dbgp);
 		ContextException problems = null;
 		int retries = 2;
 

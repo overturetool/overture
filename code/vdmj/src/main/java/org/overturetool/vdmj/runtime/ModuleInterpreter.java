@@ -24,14 +24,14 @@
 package org.overturetool.vdmj.runtime;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.Set;
 
+import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -60,13 +60,14 @@ public class ModuleInterpreter extends Interpreter
 	 * Create an Interpreter from the list of modules passed.
 	 *
 	 * @param modules
+	 * @param dbgp TODO
 	 * @throws Exception
 	 */
 
-	public ModuleInterpreter(ModuleList modules) throws Exception
+	public ModuleInterpreter(ModuleList modules, DBGPReader dbgp) throws Exception
 	{
 		this.modules = modules;
-		init();
+		init(dbgp);
 
 		if (modules.isEmpty())
 		{
@@ -130,14 +131,7 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public Set<File> getSourceFiles()
 	{
-		Set<File> files = new HashSet<File>();
-
-		for (Module def: modules)
-		{
-			files.add(new File(def.name.location.file));
-		}
-
-		return files;
+		return modules.getSourceFiles();
 	}
 
 	/**
@@ -172,9 +166,9 @@ public class ModuleInterpreter extends Interpreter
 	 */
 
 	@Override
-	public void init()
+	public void init(DBGPReader dbgp)
 	{
-		initialContext = modules.initialize();
+		initialContext = modules.initialize(dbgp);
 	}
 
 	@Override
@@ -196,32 +190,32 @@ public class ModuleInterpreter extends Interpreter
 	}
 
 	@Override
-	public Type typeCheck(Expression expr, Environment env, boolean raise)
+	public Type typeCheck(Expression expr, Environment env)
 		throws Exception
 	{
 		TypeChecker.clearErrors();
 		Type type = expr.typeCheck(env, null, NameScope.NAMESANDSTATE);
 
-		if (raise && TypeChecker.getErrorCount() > 0)
+		if (TypeChecker.getErrorCount() > 0)
 		{
-			TypeChecker.printErrors(Console.out);
-			throw new Exception("Type checking errors");
+			// TypeChecker.printErrors(Console.out);
+			throw new VDMErrorsException(TypeChecker.getErrors());
 		}
 
 		return type;
 	}
 
 	@Override
-	public Type typeCheck(Statement stmt, Environment env, boolean raise)
+	public Type typeCheck(Statement stmt, Environment env)
 		throws Exception
 	{
 		TypeChecker.clearErrors();
 		Type type = stmt.typeCheck(env, NameScope.NAMESANDSTATE);
 
-		if (raise && TypeChecker.getErrorCount() > 0)
+		if (TypeChecker.getErrorCount() > 0)
 		{
-			TypeChecker.printErrors(Console.out);
-			throw new Exception("Type checking errors");
+			// TypeChecker.printErrors(Console.out);
+			throw new VDMErrorsException(TypeChecker.getErrors());
 		}
 
 		return type;
@@ -237,16 +231,24 @@ public class ModuleInterpreter extends Interpreter
 	 */
 
 	@Override
-	public Value execute(String line) throws Exception
+	public Value execute(String line, DBGPReader dbgp) throws Exception
 	{
 		Expression expr = parseExpression(line, getDefaultName());
 		Environment env = getGlobalEnvironment();
-		typeCheck(expr, env, true);
+
+		try
+		{
+			typeCheck(expr, env);
+		}
+		catch (VDMErrorsException e)
+		{
+			// We don't care... we just needed to type check it.
+		}
 
 		Context sctxt = defaultModule.getStateContext();
 		mainContext = new StateContext(
 			defaultModule.name.location, "interpreter", initialContext, sctxt);
-		mainContext.threadState.init();
+		mainContext.setThreadState(dbgp);
 
 		return expr.eval(mainContext);
 	}
@@ -269,9 +271,9 @@ public class ModuleInterpreter extends Interpreter
 			new LexIdentifierToken(ctxt.location.module, false, ctxt.location);
 		Module me = modules.findModule(name);
 		Environment env = new ModuleEnvironment(me);
-		typeCheck(expr, env, false);
-
+		typeCheck(expr, env);
 		ctxt.threadState.init();
+
 		return expr.eval(ctxt);
 	}
 
@@ -294,15 +296,7 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public Statement findStatement(String file, int lineno)
 	{
-		for (Module m: modules)
-		{
-			if (m.name.location.file.equals(file))
-			{
-				return m.findStatement(lineno);
-			}
-		}
-
-		return null;
+		return modules.findStatement(file, lineno);
 	}
 
 	/**
@@ -317,15 +311,7 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public Expression findExpression(String file, int lineno)
 	{
-		for (Module m: modules)
-		{
-			if (m.name.location.file.equals(file))
-			{
-				return m.findExpression(lineno);
-			}
-		}
-
-		return null;
+		return modules.findExpression(file, lineno);
 	}
 
 	@Override

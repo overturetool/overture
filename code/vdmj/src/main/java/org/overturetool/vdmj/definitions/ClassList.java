@@ -23,11 +23,16 @@
 
 package org.overturetool.vdmj.definitions;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
+import org.overturetool.vdmj.debug.DBGPReader;
+import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.pog.POContextStack;
@@ -89,6 +94,18 @@ public class ClassList extends Vector<ClassDefinition>
 		}
 	}
 
+	public Set<File> getSourceFiles()
+	{
+		Set<File> files = new HashSet<File>();
+
+		for (ClassDefinition def: this)
+		{
+			files.add(new File(def.location.file));
+		}
+
+		return files;
+	}
+
 	public void implicitDefinitions(Environment env)
 	{
 		for (ClassDefinition d: this)
@@ -121,20 +138,22 @@ public class ClassList extends Vector<ClassDefinition>
 		}
 	}
 
-	public RootContext initialize()
+	public RootContext initialize(DBGPReader dbgp)
 	{
 		StateContext globalContext = null;
 
 		if (isEmpty())
 		{
 			globalContext = new StateContext(
-				new LexLocation("file", null, 0, 0, 0, 0), "global environment");
+				new LexLocation(), "global environment");
 		}
 		else
 		{
 			globalContext =	new StateContext(
 				this.get(0).location, "public static environment");
 		}
+
+		globalContext.setThreadState(dbgp);
 
 		// Initialize all the functions/operations first because the values
 		// "statics" can call them.
@@ -231,19 +250,40 @@ public class ClassList extends Vector<ClassDefinition>
 		return set;
 	}
 
-	public Statement findStatement(int lineno)
+	public Statement findStatement(String file, int lineno)
 	{
-   		for (ClassDefinition c: this)
+		for (ClassDefinition c: this)
 		{
-			Statement found = c.findStatement(lineno);
-
-			if (found != null)
+			if (c.name.location.file.equals(file))
 			{
-				return found;
+    			Statement stmt = c.findStatement(lineno);
+
+    			if (stmt != null)
+    			{
+    				return stmt;
+    			}
 			}
 		}
 
-   		return null;
+		return null;
+	}
+
+	public Expression findExpression(String file, int lineno)
+	{
+		for (ClassDefinition c: this)
+		{
+			if (c.name.location.file.equals(file))
+			{
+    			Expression exp = c.findExpression(lineno);
+
+    			if (exp != null)
+    			{
+    				return exp;
+    			}
+			}
+		}
+
+		return null;
 	}
 
 	@Override

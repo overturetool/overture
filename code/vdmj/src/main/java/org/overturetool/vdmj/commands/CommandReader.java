@@ -46,6 +46,7 @@ import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.pog.ProofObligation;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Breakpoint;
@@ -301,7 +302,7 @@ abstract public class CommandReader
 		try
 		{
    			long before = System.currentTimeMillis();
-   			println("= " + interpreter.execute(line));
+   			println("= " + interpreter.execute(line, null));
    			long after = System.currentTimeMillis();
 			println("Executed in " + (double)(after-before)/1000 + " secs. ");
 
@@ -332,6 +333,10 @@ abstract public class CommandReader
 		catch (RuntimeException e)
 		{
 			println("Runtime: " + e);
+		}
+		catch (VDMErrorsException e)
+		{
+			println(e.toString());
 		}
 		catch (Exception e)
 		{
@@ -433,7 +438,7 @@ abstract public class CommandReader
 	{
 		LexLocation.clearLocations();
 		println("Cleared all coverage information");
-		interpreter.init();
+		interpreter.init(null);
 
 		if (!VDMThreadSet.abortAll(3))
 		{
@@ -760,7 +765,7 @@ abstract public class CommandReader
 					continue;
 				}
 
-	   			Value result = interpreter.execute(assertion);
+	   			Value result = interpreter.execute(assertion, null);
 
 	   			if (!(result instanceof BooleanValue) || !result.boolValue(null))
    				{

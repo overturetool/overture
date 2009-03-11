@@ -25,6 +25,7 @@ package org.overturetool.vdmj.runtime;
 
 import java.util.HashMap;
 
+import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.Console;
@@ -49,7 +50,7 @@ public class Context extends HashMap<LexNameToken, Value>
 	/** A link to a lower level context, if present. */
 	public final Context outer;
 	/** The thread state associated with this context. */
-	public ThreadState threadState = new ThreadState();
+	public ThreadState threadState = null;
 
 	/**
 	 * Create a context at the given location.
@@ -77,9 +78,9 @@ public class Context extends HashMap<LexNameToken, Value>
 	 * And it must be called before any context chaining is performed.
 	 */
 
-	public void setThreadState()
+	public void setThreadState(DBGPReader dbgp)
 	{
-		threadState = new ThreadState();
+		threadState = new ThreadState(dbgp);
 	}
 
 	/**

@@ -255,7 +255,7 @@ public class VDMSL extends VDMJ
 		try
 		{
    			long before = System.currentTimeMillis();
-			interpreter = new ModuleInterpreter(modules);
+			interpreter = new ModuleInterpreter(modules, null);
    			long after = System.currentTimeMillis();
 
    	   		infoln("Initialized " + plural(modules.size(), "module", "s") + " in " +
@@ -277,7 +277,7 @@ public class VDMSL extends VDMJ
 		{
 			if (script != null)
 			{
-				println(interpreter.execute(script).toString());
+				println(interpreter.execute(script, null).toString());
 				return ExitStatus.EXIT_OK;
 			}
 			else

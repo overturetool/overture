@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.runtime;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.DebuggerReader;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -52,7 +53,14 @@ public class Stoppoint extends Breakpoint
 		{
 			if (parsed == null || parsed.eval(ctxt).boolValue(ctxt))
 			{
-				new DebuggerReader(Interpreter.getInstance(), this, ctxt).run();
+				if (Settings.usingDBGP)
+				{
+					ctxt.threadState.dbgp.stopped(ctxt, this);
+				}
+				else
+				{
+					new DebuggerReader(Interpreter.getInstance(), this, ctxt).run();
+				}
 			}
 		}
 		catch (DebuggerException e)

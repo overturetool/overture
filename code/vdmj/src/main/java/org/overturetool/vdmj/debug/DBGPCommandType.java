@@ -42,7 +42,9 @@ public enum DBGPCommandType
 	STACK_DEPTH("stack_depth"),
 	STACK_GET("stack_get"),
 	CONTEXT_NAMES("context_names"),
-	CONTEXT_GET("context_get")
+	CONTEXT_GET("context_get"),
+	PROPERTY_GET("property_get"),
+	PROPERTY_SET("property_set")
 	;
 
 	public String value;

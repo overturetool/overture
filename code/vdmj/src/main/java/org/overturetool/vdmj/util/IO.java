@@ -26,7 +26,6 @@ package org.overturetool.vdmj.util;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.expressions.Expression;
@@ -34,14 +33,12 @@ import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.FlatEnvironment;
 import org.overturetool.vdmj.typechecker.PrivateClassEnvironment;
-import org.overturetool.vdmj.typechecker.TypeChecker;
 import org.overturetool.vdmj.values.BooleanValue;
 import org.overturetool.vdmj.values.NilValue;
 import org.overturetool.vdmj.values.SeqValue;
@@ -123,13 +120,7 @@ public class IO
 				classdef.getSelfDefinition(),
 				new PrivateClassEnvironment(classdef, ip.getGlobalEnvironment()));
 
-			ip.typeCheck(exp, env, false);
-
-			if (TypeChecker.getErrorCount() != 0)
-			{
-				List<VDMError> errors = TypeChecker.getErrors();
-				throw new Exception(Utils.listToString(errors, " and "));
-			}
+			ip.typeCheck(exp, env);
 
 			result.add(new BooleanValue(true));
 			result.add(exp.eval(new Context(ctxt.location, "freadval", null)));

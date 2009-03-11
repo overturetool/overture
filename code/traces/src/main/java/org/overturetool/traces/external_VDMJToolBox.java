@@ -74,7 +74,7 @@ public class external_VDMJToolBox {
 				tc.typeCheck();
 				if (TypeChecker.getErrorCount() == 0) {
 					interpreter = new ClassInterpreter(classes);
-				
+
 
 				}else
 {
@@ -103,8 +103,8 @@ TypeChecker.printErrors(new PrintWriter(System.out));
 			org.overturetool.vdmj.Settings.prechecks=true;
 			org.overturetool.vdmj.Settings.postchecks=true;
 			org.overturetool.vdmj.Settings.dynamictypechecks=true;
-			interpreter.init();
-			
+			interpreter.init(null);
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

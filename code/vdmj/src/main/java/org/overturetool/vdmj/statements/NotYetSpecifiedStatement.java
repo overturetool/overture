@@ -165,7 +165,7 @@ public class NotYetSpecifiedStatement extends Statement
 				String statement = sval.toString();
 				statement = statement.substring(1, statement.length() - 1);
 				Statement s = ip.parseStatement(statement, classname);
-				ip.typeCheck(s, env, false);
+				ip.typeCheck(s, env);
 
 				if (TypeChecker.getErrorCount() != 0)
 				{

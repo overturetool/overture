@@ -38,7 +38,18 @@ public class LexIdentifierToken extends LexToken
 
 	public LexNameToken getClassName()
 	{
-		return new LexNameToken("CLASS", name, location);
+		// We don't know the class name of the name of a class until we've
+		// read the name. So create a new location with the right module.
+
+		LexLocation loc = new LexLocation(
+			location.file,
+			name,
+			location.startLine,
+			location.startPos,
+			location.endLine,
+			location.endPos);
+
+		return new LexNameToken("CLASS", name, loc);
 	}
 
 	@Override

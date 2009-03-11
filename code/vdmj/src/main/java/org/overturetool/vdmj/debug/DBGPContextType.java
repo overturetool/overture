@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *	Copyright (c) 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,42 +21,52 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overturetool.vdmj.debug;
 
-import org.overturetool.vdmj.debug.DBGPReader;
-
-/**
- * A class to hold some runtime information for each VDM thread.
- */
-
-public class ThreadState
+public enum DBGPContextType
 {
-	public final long threadId;
+	LOCAL("local", 0),
+	CLASS("class", 1),
+	GLOBAL("global", 2);
 
-	public InterruptAction action;
-	public int stepline;
-	public RootContext nextctxt;
-	public Context outctxt;
-	public DBGPReader dbgp;
+	public String value;
+	public int code;
 
-	public ThreadState(DBGPReader dbgp)
+	DBGPContextType(String value, int code)
 	{
-		this.dbgp = dbgp;
-		this.threadId = Thread.currentThread().getId();
-		init();
+		this.value = value;
+		this.code = code;
 	}
 
-	public void init()
+	public static DBGPContextType lookup(String string) throws DBGPException
 	{
-		this.action = InterruptAction.RUNNING;
-		set(0, null, null);
+		for (DBGPContextType type: values())
+		{
+			if (type.value.equals(string))
+			{
+				return type;
+			}
+		}
+
+		throw new DBGPException(DBGPErrorCode.PARSE, string);
 	}
 
-	public synchronized void set(
-		int stepline, RootContext nextctxt, Context outctxt)
+	public static DBGPContextType lookup(int code) throws DBGPException
 	{
-		this.stepline = stepline;
-		this.nextctxt = nextctxt;
-		this.outctxt = outctxt;
+		for (DBGPContextType type: values())
+		{
+			if (type.code == code)
+			{
+				return type;
+			}
+		}
+
+		throw new DBGPException(DBGPErrorCode.PARSE, "" + code);
+	}
+
+	@Override
+	public String toString()
+	{
+		return value;
 	}
 }

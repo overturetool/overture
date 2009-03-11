@@ -52,7 +52,7 @@ public class Minimal
 
     		if (TypeChecker.getErrorCount() == 0)
     		{
-    			ModuleInterpreter interpreter = new ModuleInterpreter(modules);
+    			ModuleInterpreter interpreter = new ModuleInterpreter(modules, null);
     			CommandReader reader = new ModuleCommandReader(interpreter, "$ ");
     			reader.run(Arrays.asList(args));
     		}

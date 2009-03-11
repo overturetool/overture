@@ -25,11 +25,11 @@ package org.overturetool.vdmj.runtime;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.definitions.Definition;
@@ -40,8 +40,8 @@ import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.VDMError;
+import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.statements.CallObjectStatement;
 import org.overturetool.vdmj.statements.Statement;
@@ -75,15 +75,11 @@ public class ClassInterpreter extends Interpreter
 	private NameValuePairMap createdValues;
 	private DefinitionSet createdDefinitions;
 
-	/**
-	 * Create an Interpreter.
-	 * @throws Exception
-	 */
-
 	public ClassInterpreter(ClassList classes) throws Exception
 	{
 		this.classes = classes;
-		init();
+		this.createdValues = new NameValuePairMap();
+		this.createdDefinitions = new DefinitionSet();
 
 		if (classes.isEmpty())
 		{
@@ -133,14 +129,7 @@ public class ClassInterpreter extends Interpreter
 	@Override
 	public Set<File> getSourceFiles()
 	{
-		Set<File> files = new HashSet<File>();
-
-		for (ClassDefinition def: classes)
-		{
-			files.add(new File(def.location.file));
-		}
-
-		return files;
+		return classes.getSourceFiles();
 	}
 
 	public ClassList getClasses()
@@ -162,16 +151,10 @@ public class ClassInterpreter extends Interpreter
 		return new PublicClassEnvironment(classes);
 	}
 
-	/**
-	 * Initialize the initial environment.
-	 *
-	 * @throws Exception
-	 */
-
 	@Override
-	public void init()
+	public void init(DBGPReader dbgp)
 	{
-		initialContext = classes.initialize();
+		initialContext = classes.initialize(dbgp);
 		createdValues = new NameValuePairMap();
 		createdDefinitions = new DefinitionSet();
 	}
@@ -197,45 +180,45 @@ public class ClassInterpreter extends Interpreter
 	}
 
 	@Override
-	public Type typeCheck(Expression expr, Environment env, boolean raise)
+	public Type typeCheck(Expression expr, Environment env)
 		throws Exception
 	{
 		TypeChecker.clearErrors();
 		Type type = expr.typeCheck(env, null, NameScope.NAMESANDSTATE);
 
-		if (raise && TypeChecker.getErrorCount() > 0)
+		if (TypeChecker.getErrorCount() > 0)
 		{
-			TypeChecker.printErrors(Console.out);
-			throw new Exception("Type checking errors");
+			// TypeChecker.printErrors(Console.out);
+			throw new VDMErrorsException(TypeChecker.getErrors());
 		}
 
 		return type;
 	}
 
 	@Override
-	public Type typeCheck(Statement stmt, Environment env, boolean raise)
+	public Type typeCheck(Statement stmt, Environment env)
 		throws Exception
 	{
 		TypeChecker.clearErrors();
 		Type type = stmt.typeCheck(env, NameScope.NAMESANDSTATE);
 
-		if (raise && TypeChecker.getErrorCount() > 0)
+		if (TypeChecker.getErrorCount() > 0)
 		{
-			TypeChecker.printErrors(Console.out);
-			throw new Exception("Type checking errors");
+			// TypeChecker.printErrors(Console.out);
+			throw new VDMErrorsException(TypeChecker.getErrors());
 		}
 
 		return type;
 	}
 
-	public Value execute(Expression expr)
+	private Value execute(Expression expr, DBGPReader dbgp)
 	{
 		mainContext = new StateContext(
 			defaultClass.name.location, "global static scope");
 
 		mainContext.putAll(initialContext);
 		mainContext.putAll(createdValues);
-		mainContext.threadState.init();
+		mainContext.setThreadState(dbgp);
 
 		return expr.eval(mainContext);
 	}
@@ -250,15 +233,15 @@ public class ClassInterpreter extends Interpreter
 	 */
 
 	@Override
-	public Value execute(String line) throws Exception
+	public Value execute(String line, DBGPReader dbgp) throws Exception
 	{
 		Expression expr = parseExpression(line, getDefaultName());
 		Environment env = getGlobalEnvironment();
 		Environment created =
 			new FlatCheckedEnvironment(createdDefinitions.asList(), env);
 
-		typeCheck(expr, created, true);
-		return execute(expr);
+		typeCheck(expr, created);
+		return execute(expr, dbgp);
 	}
 
 	/**
@@ -280,7 +263,15 @@ public class ClassInterpreter extends Interpreter
 		ClassDefinition me = (ClassDefinition)classes.findType(classname);
 		PublicClassEnvironment globals = new PublicClassEnvironment(classes);
 		Environment env = new PrivateClassEnvironment(me, globals);
-		typeCheck(expr, env, false);
+
+		try
+		{
+			typeCheck(expr, env);
+		}
+		catch (VDMErrorsException e)
+		{
+			// We don't care... we just needed to type check it.
+		}
 
 		ctxt.threadState.init();
 		return expr.eval(ctxt);
@@ -340,39 +331,13 @@ public class ClassInterpreter extends Interpreter
 	@Override
 	public Statement findStatement(String file, int lineno)
 	{
-		for (ClassDefinition c: classes)
-		{
-			if (c.name.location.file.equals(file))
-			{
-    			Statement stmt = c.findStatement(lineno);
-
-    			if (stmt != null)
-    			{
-    				return stmt;
-    			}
-			}
-		}
-
-		return null;
+		return classes.findStatement(file, lineno);
 	}
 
 	@Override
 	public Expression findExpression(String file, int lineno)
 	{
-		for (ClassDefinition c: classes)
-		{
-			if (c.name.location.file.equals(file))
-			{
-    			Expression exp = c.findExpression(lineno);
-
-    			if (exp != null)
-    			{
-    				return exp;
-    			}
-			}
-		}
-
-		return null;
+		return classes.findExpression(file, lineno);
 	}
 
 	public void create(String var, String exp) throws Exception
@@ -382,8 +347,8 @@ public class ClassInterpreter extends Interpreter
 		Environment created =
 			new FlatCheckedEnvironment(createdDefinitions.asList(), env);
 
-		Type type = typeCheck(expr, created, true);
-		Value v = execute(exp);
+		Type type = typeCheck(expr, created);
+		Value v = execute(exp, null);
 
 		LexLocation location = defaultClass.location;
 		LexNameToken n = new LexNameToken(defaultClass.name.name, var, location);
@@ -441,7 +406,7 @@ public class ClassInterpreter extends Interpreter
 			try
 			{
 				Statement s = parseStatement(statement, classname);
-				typeCheck(s, env, false);
+				typeCheck(s, env);
 
 				if (TypeChecker.getErrorCount() != 0)
 				{
@@ -491,7 +456,7 @@ public class ClassInterpreter extends Interpreter
 		{
 			for (CallObjectStatement statement: statements)
 			{
-				typeCheck(statement, env, false);
+				typeCheck(statement, env);
 
 				if (TypeChecker.getErrorCount() != 0)
 				{

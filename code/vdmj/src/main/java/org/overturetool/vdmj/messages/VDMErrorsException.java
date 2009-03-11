@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008, 2009 Fujitsu Services Ltd.
+ *	Copyright (c) 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,20 +21,26 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj;
+package org.overturetool.vdmj.messages;
 
-import org.overturetool.vdmj.lex.Dialect;
+import java.util.List;
 
-/**
- * A class to hold global settings accessible throughout.
- */
+import org.overturetool.vdmj.util.Utils;
 
-public class Settings
+@SuppressWarnings("serial")
+public class VDMErrorsException extends Exception
 {
-	public static Dialect dialect = null;
-	public static boolean prechecks = true;
-	public static boolean postchecks = true;
-	public static boolean invchecks = true;
-	public static boolean dynamictypechecks = true;
-	public static boolean usingDBGP = false;
+	public final List<VDMError> errors;
+
+	public VDMErrorsException(List<VDMError> errors)
+	{
+		super(Utils.listToString(errors, "\n"));
+		this.errors = errors;
+	}
+
+	@Override
+	public String toString()
+	{
+		return getMessage();
+	}
 }

@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexException;
@@ -196,18 +197,19 @@ abstract public class Interpreter
 	 * @throws Exception
 	 */
 
-	abstract public void init();
+	abstract public void init(DBGPReader dbgp);
 
 	/**
 	 * Parse the line passed, type check it and evaluate it as an expression
 	 * in the initial context.
 	 *
 	 * @param line A VDM expression.
+	 * @param dbgp TODO
 	 * @return The value of the expression.
 	 * @throws Exception Parser, type checking or runtime errors.
 	 */
 
-	abstract public Value execute(String line) throws Exception;
+	abstract public Value execute(String line, DBGPReader dbgp) throws Exception;
 
 	/**
 	 * Parse the content of the file passed, type check it and evaluate it as an
@@ -233,7 +235,7 @@ abstract public class Interpreter
 
 		br.close();
 
-		return execute(sb.toString());
+		return execute(sb.toString(), null);
 	}
 
 	/**
@@ -478,10 +480,10 @@ abstract public class Interpreter
 	abstract public Statement parseStatement(String line, String module)
 		throws Exception;
 
-	abstract public Type typeCheck(Expression expr, Environment env, boolean raise)
+	abstract public Type typeCheck(Expression expr, Environment env)
 		throws Exception;
 
-	abstract public Type typeCheck(Statement stmt, Environment env, boolean raise)
+	abstract public Type typeCheck(Statement stmt, Environment env)
 		throws Exception;
 
 	public ClassDefinition findClass(@SuppressWarnings("unused") String classname)

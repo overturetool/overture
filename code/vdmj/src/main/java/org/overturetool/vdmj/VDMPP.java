@@ -252,6 +252,7 @@ public class VDMPP extends VDMJ
 		{
    			long before = System.currentTimeMillis();
 			interpreter = new ClassInterpreter(classes);
+			interpreter.init(null);
    			long after = System.currentTimeMillis();
 
    	   		infoln("Initialized " + plural(classes.size(), "class", "es") + " in " +
@@ -273,7 +274,7 @@ public class VDMPP extends VDMJ
 		{
 			if (script != null)
 			{
-				println(interpreter.execute(script).toString());
+				println(interpreter.execute(script, null).toString());
 				return ExitStatus.EXIT_OK;
 			}
 			else
