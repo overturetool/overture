@@ -2,16 +2,13 @@ Using The Overture Parser
 =========================
 
 The Overture parser can be enabled from VDMJ, assuming you have the jar files
-for the parser and its support classes (org.overturetool.parser.jar and VDM.jar)
-on your classpath.
-
-See http://www.overturetool.org/twiki/bin/view/Main/OvertureParser
+for the parser and its support classes on your classpath.
 
 For example:
 
-	JAR=$(ls -t vdmj*.jar | head -1)
-	CP="VDM.jar;org.overturetool.parser.jar;$JAR"
-	java -Xmx1024m -cp $CP org.overturetool.vdmj.VDMJ -overture $@
+CP="parser-1.0.0.jar:ast-1.0.0.jar:stdlib-1.0.0.jar:vdmj-1.0.0.jar"
+exec java -Xmx1024m -cp $CP org.overturetool.vdmj.VDMJ -overture $@
+
 
 Overture is enabled with the -overture argument in place of -vdmpp or -vdmsl (note
 that Overture parses VDM++ with VICE extensions, though VDMJ can only check and
@@ -37,5 +34,5 @@ stdout:
 	syntax error at (8, 22) after reading token "g"
 
 There are also some known problems with special characters in strings ("\n" etc),
-the processing of some international character sets, and its syntax error recovery
+the processing of some international characters, and its syntax error recovery
 is fairly simple.
