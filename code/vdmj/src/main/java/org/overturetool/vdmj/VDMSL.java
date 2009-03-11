@@ -255,7 +255,8 @@ public class VDMSL extends VDMJ
 		try
 		{
    			long before = System.currentTimeMillis();
-			interpreter = new ModuleInterpreter(modules, null);
+			interpreter = new ModuleInterpreter(modules);
+			interpreter.init(null);
    			long after = System.currentTimeMillis();
 
    	   		infoln("Initialized " + plural(modules.size(), "module", "s") + " in " +

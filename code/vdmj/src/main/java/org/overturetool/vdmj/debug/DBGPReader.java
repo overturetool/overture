@@ -32,6 +32,7 @@ import java.net.Socket;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassList;
@@ -307,9 +308,9 @@ public class DBGPReader
 	{
 		StringBuilder sb = new StringBuilder();
 
-		for (LexNameToken name: vars.keySet())
+		for (Entry<LexNameToken, Value> e: vars.entrySet())
 		{
-			sb.append(propertyResponse(name, vars.get(name)));
+			sb.append(propertyResponse(e.getKey(), e.getValue()));
 		}
 
 		return sb;

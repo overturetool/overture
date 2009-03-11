@@ -60,14 +60,12 @@ public class ModuleInterpreter extends Interpreter
 	 * Create an Interpreter from the list of modules passed.
 	 *
 	 * @param modules
-	 * @param dbgp TODO
 	 * @throws Exception
 	 */
 
-	public ModuleInterpreter(ModuleList modules, DBGPReader dbgp) throws Exception
+	public ModuleInterpreter(ModuleList modules) throws Exception
 	{
 		this.modules = modules;
-		init(dbgp);
 
 		if (modules.isEmpty())
 		{
