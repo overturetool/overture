@@ -164,6 +164,11 @@ public class Base64
 		return output;
 	}
 
+	public static StringBuffer encode(byte[] bytes)
+	{
+		return encode(bytes, Integer.MAX_VALUE);
+	}
+
 	/**
 	 * Base64 encode a byte array, wrapping the output at a given column
 	 * width.
@@ -239,5 +244,22 @@ public class Base64
 		}
 
 		return result;
+	}
+
+	public static void main(String[] args) throws Exception
+	{
+		if (args.length != 2 ||
+			!(args[0].equals("encode") || args[0].equals("decode")))
+		{
+			System.err.println("Base64 [encode|decode] <string>");
+		}
+		else if (args[0].equals("decode"))
+		{
+			System.out.println(new String(decode(args[1])));
+		}
+		else
+		{
+			System.out.println(encode(args[1].getBytes()));
+		}
 	}
 }
