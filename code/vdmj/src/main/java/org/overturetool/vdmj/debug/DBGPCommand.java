@@ -25,6 +25,7 @@ package org.overturetool.vdmj.debug;
 
 import java.util.List;
 
+import org.overturetool.vdmj.util.Base64;
 import org.overturetool.vdmj.util.Utils;
 
 public class DBGPCommand
@@ -35,10 +36,11 @@ public class DBGPCommand
 
 	public DBGPCommand(
 		DBGPCommandType type, List<DBGPOption> options, String base64)
+		throws Exception
 	{
 		this.type = type;
 		this.options = options;
-		this.data = base64; // new String(Base64.decode(base64));
+		this.data = new String(Base64.decode(base64), "UTF-8");	// = base64;
 	}
 
 	@Override

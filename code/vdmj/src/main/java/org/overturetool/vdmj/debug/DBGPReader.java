@@ -30,7 +30,6 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.List;
-import java.util.Random;
 import java.util.Vector;
 import java.util.Map.Entry;
 
@@ -67,7 +66,7 @@ public class DBGPReader
 	private OutputStream output;
 	private Interpreter interpreter = null;
 
-	private int sessionId;
+	private String sessionId;
 	private DBGPStatus status = null;
 	private String statusReason = "";
 	private String command = "";
@@ -77,36 +76,59 @@ public class DBGPReader
 	private Context breakContext = null;
 	private Breakpoint breakpoint = null;
 
+	// Usage: <host> <port> <sessionId> {-file <name>}
+
 	public static void main(String[] args) throws Exception
 	{
 		Settings.usingDBGP = true;
 		Settings.dialect = Dialect.VDM_PP;
 
-		LexTokenReader ltr = new LexTokenReader(new File(args[0]), Dialect.VDM_PP);
-		ClassReader mr = new ClassReader(ltr);
-		ClassList classes = mr.readClasses();
+		String host = args[0];
+		int port = Integer.parseInt(args[1]);
+		String session = args[2];
+		ClassList classes = new ClassList();
 
-		if (mr.getErrorCount() == 0)
+		int errs = 0;
+
+		for (int i=3; i<args.length; i++)
+		{
+			if (args[i].equals("-file"))
+			{
+				i++;
+				LexTokenReader ltr = new LexTokenReader(new File(args[i]), Dialect.VDM_PP);
+				ClassReader mr = new ClassReader(ltr);
+				classes.addAll(mr.readClasses());
+				errs += mr.getErrorCount();
+			}
+			else
+			{
+				throw new Exception("Usage: <host> <port> <sessionId> {-file <name>}");
+			}
+		}
+
+		if (errs == 0)
 		{
     		TypeChecker tc = new ClassTypeChecker(classes);
     		tc.typeCheck();
 
     		if (TypeChecker.getErrorCount() == 0)
     		{
-    			DBGPReader r = new DBGPReader(classes, 0);
+    			DBGPReader r = new DBGPReader(host, port, session, classes);
     			r.run();
     		}
 		}
 	}
 
-	public DBGPReader(ClassList classes, int port) throws Exception
+	public DBGPReader(String host, int port, String session, ClassList classes)
+		throws Exception
 	{
+		this.sessionId = session;
 		this.classes = classes;
 		this.interpreter = new ClassInterpreter(classes);
 
 		if (port > 0)
 		{
-			InetAddress server = InetAddress.getLocalHost();
+			InetAddress server = InetAddress.getByName(host);
 			Socket socket = new Socket(server, port);
 			input = socket.getInputStream();
 			output = socket.getOutputStream();
@@ -122,7 +144,6 @@ public class DBGPReader
 
 	private void init() throws IOException
 	{
-		sessionId = Math.abs(new Random().nextInt());
 		status = DBGPStatus.STARTING;
 		features = new DBGPFeatures();
 
@@ -175,7 +196,7 @@ public class DBGPReader
 
 	private void write(StringBuilder data) throws IOException
 	{
-		byte separator = ' ';
+		byte separator = '\0';
 		byte[] header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".getBytes("UTF-8");
 		byte[] body = data.toString().getBytes("UTF-8");
 		byte[] size = Integer.toString(header.length + body.length).getBytes("UTF-8");
@@ -269,15 +290,6 @@ public class DBGPReader
 		sb.append(" state=\"enabled\"");
 		sb.append(" filename=\"" + bp.location.file + "\"");
 		sb.append(" lineno=\"" + bp.location.startLine + "\"");
-
-		/*
-		sb.append(" function=\"?\"");
-		sb.append(" exception=\"?\"");
-		sb.append(" hit_value=\"?\"");
-		sb.append(" hit_condition=\"?\"");
-		sb.append(" hit_count=\"?\"");
-		*/
-
 		sb.append(">");
 
 		if (bp.trace != null)
@@ -457,7 +469,7 @@ public class DBGPReader
 		return carryOn;
 	}
 
-	private DBGPCommand parse(String[] parts) throws DBGPException
+	private DBGPCommand parse(String[] parts) throws Exception
 	{
 		// "<type> [<options>] [-- <args>]"
 
@@ -478,8 +490,7 @@ public class DBGPReader
 				{
 					if (args != null)
 					{
-						// throw new Exception("Expecting one arg after '--'");
-						args = args + " " + parts[i];
+						throw new Exception("Expecting one base64 arg after '--'");
 					}
 					else
 					{
@@ -621,7 +632,7 @@ public class DBGPReader
 
 	private boolean processRun(DBGPCommand c) throws DBGPException, IOException
 	{
-		checkArgs(c, 1, true);
+		checkArgs(c, 1, false);
 
 		if (status == DBGPStatus.BREAK)
 		{
@@ -631,6 +642,11 @@ public class DBGPReader
 		if (status != DBGPStatus.STARTING)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+		}
+
+		if (c.data == null)
+		{
+			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
 		}
 
 		try

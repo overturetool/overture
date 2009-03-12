@@ -113,10 +113,16 @@ public class Base64
 	 * @param text
 	 *            The encoded base64 text.
 	 * @return a byte array of the decoded data.
+	 * @throws Exception
 	 */
 
-	public static byte[] decode(String text)
+	public static byte[] decode(String text) throws Exception
 	{
+		if (text.length()%4 != 0)
+		{
+			throw new Exception("Base64 not a multiple of 4 bytes");
+		}
+
 		byte[] result = new byte[text.length()/4 * 3];
 		int p = 0;
 
