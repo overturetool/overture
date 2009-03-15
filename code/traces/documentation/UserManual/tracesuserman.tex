@@ -127,9 +127,9 @@
 \usepackage{cite}
 \usepackage{alltt}
 %\usepackage{fancyhdr}
-\renewcommand{\topfraction}{0.85}
-\renewcommand{\textfraction}{0.1}
-\renewcommand{\floatpagefraction}{0.7}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.9}
 
 \title{User Manual for the Overture Combinatorial Testing Plug-in}
 
@@ -209,7 +209,22 @@ separated list inside the curly brackets are considered as alternative
 choices. We will see how to do something similar in the trace
 definitions in a VDM++ model.
 
-\section{A Guided Tour with a Small Example}
+This user manual starts in section~\ref{sec:tour} off with a guiding
+tour using a small example to illustrate the constructs in VDM++
+expolited in the combinatorial testing feature. In
+section~\ref{sec:syntax} the details of the syntactic constructs for
+trace definitions in VDM++ is explained. Afterwards in
+section~\ref{sec:tooluse} it is explained how the general tool support for
+combinatorial testing is used. This is followed by two sections
+(\ref{sec:GUI} and \ref{sec:command}) explaining the Graphical User
+Interface specifics and the command-line specific details
+respectively. In appendix~\ref{app:buffers} the full version of the
+introductionary example is provided and finally in
+appendix~\ref{app:install} the full installation procedure is provided
+from scratch. If you are not familiar with using Overture on the
+Eclipse platform it may be an advantage starting here.
+
+\section{A Guided Tour with a Small Example}\label{sec:tour}
 
 In order to illustrate the combinatorial testing approach it makes
 sense to take a small example to illustrate its usage. The example
@@ -217,7 +232,7 @@ used in this section is virtually copied from \cite{Ledru&04} where it
 was formulated in VDM-SL and JML. This is
 a small example with numbers of elements in buffers. In VDM++ it can
 be formulated as:
-\newpage
+%\newpage
 
 \lstset{style=mystyle,language=VDM++}
 \begin{lstlisting}
@@ -395,7 +410,7 @@ end Buffers
 object which may be valuable if the user also wished to inspect the
 results of executing selected test cases. 
 Using this one could extend \texttt{S1} like:
-\newpage
+%\newpage
 
 \begin{lstlisting}
 class UseBuffers
@@ -462,7 +477,7 @@ S1''-TC2: b.Add(1); b.Add(1); b.Add(1)
 
 It is also possible to make a combination of alternatives and repetitions
 in trace definitions and thereby obtain more expressiveness:
-\newpage
+%\newpage
 
 \begin{lstlisting}
 class UseBuffers
@@ -668,7 +683,7 @@ results as expected results. This can be used to form a regression
 test environment that can be used subsequently test the VDM++ model
 when further changes are made.
 
-\section{The graphical user interface}
+\section{The graphical user interface}\label{sec:GUI}
 
 \subsection{Installation}
 
@@ -687,7 +702,7 @@ testing plug-in can be installed from the update site\footnote{The release versi
 \end{quote}
 If a version of The Overture Editor already is installed it can only be updated with the Overture combinatorial plug-in, if it is provided from the same update site as state above.
 
-\subsection{The Combinatorial Testing Perspective}
+\subsection{The Combinatorial Testing Perspective}\label{sec:CTperspective}
 
 When Eclipse is started up and an overture project is loaded the
 combinatorial testing perspective can be invoked using \texttt{Windows
@@ -881,9 +896,9 @@ To select a toolbox the dropdown menu in the CT Overview is used. It
 is marked as a down pointing triangle. The menu is shown in
 Figure~\ref{fig:toolboxSelectVDMTools}. When selecting a new toolbox
 the CT Overview will be reset. If VDM Tools is chosen a dialog asking
-for the VDM Tools (vppgde.exe)\footnote{Only the Graphical version of
-  VDM Tools is supported.} will pop-up asking for the path to the
-file. 
+for the VDM Tools \texttt{(vppgde.exe})\footnote{Only the Graphical
+version of VDM Tools is supported so at the moment please do not
+select \texttt{vppde}.} will pop-up asking for the path to the file.
 
 \begin{figure}[htb]
 \begin{center}
@@ -893,7 +908,7 @@ file.
 \end{figure}
 
 
-\section{The command-line interface}
+\section{The command-line interface}\label{sec:command}
 
 In addition to the graphical user interface it is possible to make use
 of a command-line version of this tool. This is done from a command
@@ -959,7 +974,7 @@ have one argument file and one result file per test case.
  
 \newpage
 \appendix
-\section{The Buffers Example in Full}
+\section{The Buffers Example in Full}\label{app:buffers}
 
 \begin{lstlisting}
 class Buffers
@@ -1031,4 +1046,120 @@ S4: let x in set {1,...,5} in b.Add(x);
 
 end UseBuffers
 \end{lstlisting}
+
+\newpage
+\section{A Clean Installation}\label{app:install}
+
+This appendix describes how to install the combinatorial testing
+feature on top of Eclipse and Eclipse itself and the other tools it
+may be dependent upon.
+
+Since this feature has a graphical user interface that is built on top
+of the Eclipse development environment let us start by installing a
+clean version of that. At
+\url{http://www.eclipse.org/downloads/packages/eclipse-classic-341/ganymedesr1}
+the classic Eclipse version 3.4.1 can be installed. So if we wish for
+example to install on Windows you shall download
+\texttt{eclipse-SDK-3.4.1-win32.zip}. If this zip file is unpacked you
+will get a new eclipse directory with the files shown in
+figure~\ref{fig:eclipsefiles}. 
+
+\begin{figure}[htb]
+\begin{center}
+\resizebox{0.6\textwidth}{!}{\includegraphics{screenDumpsPGL/eclipsefiles.png}}
+\caption{The files availble once eclipse have been unpacked.\label{fig:eclipsefiles}}
+\end{center}
+\end{figure}
+
+Having installed Eclipse you can now start up
+\texttt{eclipse.exe}. The first time this is started up the user will
+have to decide where the standard workspace is to be placed and need
+to close a welcome window. Then the screen should look like in
+figure~\ref{fig:eclipsefirst}. 
+
+\begin{figure}[htb]
+\begin{center}
+\resizebox{0.9\textwidth}{!}{\includegraphics{screenDumpsPGL/eclipsefirst.png}}
+\caption{Startup of Eclipse.\label{fig:eclipsefirst}}
+\end{center}
+\end{figure}
+
+In order to add the Combinatorial Testing feature you need to select
+\texttt{Help -> Software update} as shown in
+figure~\ref{fig:eclipseupdate}.
+
+\begin{figure}[htb]
+\begin{center}
+\resizebox{0.9\textwidth}{!}{\includegraphics{screenDumpsPGL/eclipseupdate.png}}
+\caption{Updating Eclipse with additional plug-ins.\label{fig:eclipseupdate}}
+\end{center}
+\end{figure}
+
+A new window will open up when this is done and here one needs to go
+to the ``Available Software'' pane and then click the ``Add Site...''
+button. Then you type in the URL for the updatesite as shown in
+figure~\ref{fig:CTupdate}. 
+
+\begin{figure}[htb]
+\begin{center}
+\resizebox{0.9\textwidth}{!}{\includegraphics{screenDumpsPGL/CTupdate.png}}
+\caption{Adding the Combinatorial Testing Updatesite.\label{fig:CTupdate}}
+\end{center}
+\end{figure}
+
+In this installation process you need to accept the license agreements
+for a number of other plug-ins that the combinatorial testing plug-in
+depends on. Once this have been installed you need to restart Eclipse as it is
+suggesting. This completes the actual installation process. Now the
+porcess is to start by producing an Overture project. This is done by
+selecting \texttt{File -> New -> Other}. The screen should now look at
+in figure~\ref{fig:projectopen}.
+
+\begin{figure}[htb]
+\begin{center}
+\resizebox{0.7\textwidth}{!}{\includegraphics{screenDumps/projectopen.png}}
+\caption{Producing an Overture project.\label{fig:projectopen}}
+\end{center}
+\end{figure}
+
+A new window for wizards will come up. Here you shall selecte the
+Overture Project Wizard as illustrated in figure~\ref{fig:overtureprojectwizard}.
+
+\begin{figure}[htb]
+\begin{center}
+\resizebox{0.4\textwidth}{!}{\includegraphics{screenDumpsPGL/overtureprojectwizard.png}}
+\caption{Selecting the Overture Project wizard.\label{fig:overtureprojectwizard}}
+\end{center}
+\end{figure}
+
+Let us now create a project for the buffers example used in this user
+manual. So we will get a screen similar to the one presented in
+figure~\ref{fig:buffersproject}. 
+
+\begin{figure}[htb]
+\begin{center}
+\resizebox{0.6\textwidth}{!}{\includegraphics{screenDumpsPGL/buffersproject.png}}
+\caption{Creating the Buffers Project wizard.\label{fig:buffersproject}}
+\end{center}
+\end{figure}
+
+When ``Finished'' is pressed a new small window will pop up and ask if
+you wish to use the Overture perpsective. Here the answer is yes. Now
+we can either create a new VDM file in this workspace or we can copy
+an existing VDM++ file into the new buffers project we have
+created. That can be done by taking the \texttt{buffers2.vpp} file and
+copying it. If the mouse is right-clicked in the ``Script Explorer''
+area it is then possible to select ``paste''. Now the window should
+look like figure~\ref{fig:buffersopened} when the buffers2.vpp file have been selected.
+
+\begin{figure}[htb]
+\begin{center}
+\resizebox{\textwidth}{!}{\includegraphics{screenDumpsPGL/buffersopened.png}}
+\caption{Opening the Buffers Project.\label{fig:buffersopened}}
+\end{center}
+\end{figure}
+ 
+Now the Overture Combinatorial Testing perspective can be opened as
+explained in section~\ref{sec:CTperspective}.
+
 \end{document}
