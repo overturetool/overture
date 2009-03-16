@@ -92,10 +92,10 @@ public class DBGPReader
 
 		for (int i=3; i<args.length; i++)
 		{
-			if (args[i].equals("-file"))
+			if (args[i].startsWith("-file"))
 			{
-				i++;
-				LexTokenReader ltr = new LexTokenReader(new File(args[i]), Dialect.VDM_PP);
+				String name = args[i].replace("-file ", "");
+				LexTokenReader ltr = new LexTokenReader(new File(name), Dialect.VDM_PP);
 				ClassReader mr = new ClassReader(ltr);
 				classes.addAll(mr.readClasses());
 				errs += mr.getErrorCount();
@@ -153,7 +153,7 @@ public class DBGPReader
 		sb.append("appid=\"");
 		sb.append(features.getProperty("language_name"));
 		sb.append("\" ");
-		sb.append("idekey=\"\" ");
+		sb.append("idekey=\"" + sessionId + "\" ");
 		sb.append("session=\"" + sessionId + "\" ");
 		sb.append("thread=\"");
 		sb.append(Thread.currentThread().getId());

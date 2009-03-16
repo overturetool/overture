@@ -40,7 +40,15 @@ public class DBGPCommand
 	{
 		this.type = type;
 		this.options = options;
-		this.data = new String(Base64.decode(base64), "UTF-8");	// = base64;
+
+		if (base64 != null)
+		{
+			this.data = new String(Base64.decode(base64), "UTF-8");
+		}
+		else
+		{
+			this.data = null;
+		}
 	}
 
 	@Override
