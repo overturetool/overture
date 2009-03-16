@@ -311,7 +311,7 @@ public class DBGPReader
 		sb.append(" filename=\"" + ctxt.location.file + "\"");
 		sb.append(" lineno=\"" + ctxt.location.startLine);
 		sb.append(" cmdbegin=\"" + ctxt.location.file + ":" + ctxt.location.startPos + "\"");
-		sb.append("</stack>");
+		sb.append(">");
 
 		return sb;
 	}
@@ -461,9 +461,9 @@ public class DBGPReader
 		{
 			errorResponse(e.code, e.reason);
 		}
-		catch (Exception e)
+		catch (Throwable e)
 		{
-			errorResponse(DBGPErrorCode.PARSE, e.getMessage());
+			errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.toString());
 		}
 
 		return carryOn;
