@@ -452,6 +452,11 @@ public class DBGPReader
     			case PROPERTY_SET:
     				break;
 
+    			case STDOUT:
+       			case STDERR:
+       				processRedirect(c);
+    				break;
+
     			case DETACH:
     			default:
     				errorResponse(DBGPErrorCode.NOT_AVAILABLE, c.type.value);
@@ -1170,6 +1175,22 @@ public class DBGPReader
 		}
 
 		response(null, propertyResponse(longname, value));
+	}
+
+	private void processRedirect(DBGPCommand c) throws DBGPException, IOException
+	{
+		checkArgs(c, 2, false);
+		DBGPOption option = c.getOption(DBGPOptionType.C);
+
+		if (option == null)
+		{
+			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
+		}
+
+		StringBuilder hdr = new StringBuilder();
+		hdr.append("success=\"1\"");
+
+		response(hdr, null);
 	}
 
 	public void stopped(Context ctxt, Breakpoint bp)

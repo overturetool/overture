@@ -44,7 +44,9 @@ public enum DBGPCommandType
 	CONTEXT_NAMES("context_names"),
 	CONTEXT_GET("context_get"),
 	PROPERTY_GET("property_get"),
-	PROPERTY_SET("property_set")
+	PROPERTY_SET("property_set"),
+	STDOUT("stdout"),
+	STDERR("stderr"),
 	;
 
 	public String value;
