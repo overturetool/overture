@@ -5949,15 +5949,32 @@ operations
   public accept: IOmlVisitor ==> ()
   accept (pVisitor) == pVisitor.visitNamedTrace(self);
 
+--  public OmlNamedTrace:
+--    (seq of char) *
+--    (IOmlTraceDefinition) ==> OmlNamedTrace
+--  OmlNamedTrace (p1,p2) == 
+--    ( setName([p1]);
+--      setDefs(p2) );
+
   public OmlNamedTrace:
-    (seq of char) *
+    (seq of seq of char) *
     (IOmlTraceDefinition) ==> OmlNamedTrace
   OmlNamedTrace (p1,p2) == 
     ( setName(p1);
       setDefs(p2) );
 
+--  public OmlNamedTrace:
+--    (seq of char) *
+--    (IOmlTraceDefinition) *
+--    nat *
+--    nat ==> OmlNamedTrace
+--  OmlNamedTrace (p1,p2,line,column) == 
+--    ( setName([p1]);
+--      setDefs(p2);
+--      setPosition(line, column) );
+
   public OmlNamedTrace:
-    (seq of char) *
+    (seq of seq of char) *
     (IOmlTraceDefinition) *
     nat *
     nat ==> OmlNamedTrace
@@ -5970,19 +5987,22 @@ operations
   init (data) ==
     ( let fname = "name" in
         if fname in set dom data
-        then setName(data(fname));
+        then setName([data(fname)]);
       let fname = "defs" in
         if fname in set dom data
         then setDefs(data(fname)) );
 
 instance variables
-  private ivName : seq of char := []
+  private ivName : seq of seq of char := []
 
 operations
   public getName: () ==> seq of seq of char
-  getName() == return [ivName];
+  getName() == return ivName;
 
-  public setName: seq of char ==> ()
+--  public setName: seq of char ==> ()
+--  setName(parg) == ivName := parg;
+
+  public setName: seq of seq of char ==> ()
   setName(parg) == ivName := parg;
 
 instance variables

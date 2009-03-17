@@ -7,12 +7,372 @@ TCFilteringVDMJ() == TestCase("TCFilteringVDMJ");
 protected SetUp: () ==> ()
  SetUp () == skip;
 
+public test_expanderror_expanderror_01: () ==> ()
+test_expanderror_expanderror_01 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expanderror_expanderror_01().getSpecifications(), 
+                           "expanderror-01.vpp") = {|->});
+);
+
+public test_expanderror_expanderror_02: () ==> ()
+test_expanderror_expanderror_02 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expanderror_expanderror_02().getSpecifications(), 
+                           "expanderror-02.vpp") = {|->});
+);
+
+public test_logical_logical_01: () ==> ()
+test_logical_logical_01 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_logical_logical_01().getSpecifications(), 
+                           "logical-01.vpp") = {|->});
+);
+
+public test_logical_logical_02: () ==> ()
+test_logical_logical_02 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_logical_logical_02().getSpecifications(), 
+                           "logical-02.vpp") = {|->});
+);
+
+public test_numminus_numminus_01: () ==> ()
+test_numminus_numminus_01 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_numminus_numminus_01().getSpecifications(), 
+                           "numminus-01.vpp") = {|->});
+);
+
+public test_setinter_setinter_01: () ==> ()
+test_setinter_setinter_01 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_setinter_setinter_01().getSpecifications(), 
+                           "setinter-01.vpp") = {|->});
+);
+
+public test_setunion_setunion_01: () ==> ()
+test_setunion_setunion_01 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_setunion_setunion_01().getSpecifications(), 
+                           "setunion-01.vpp") = {|->});
+);
+
+public test_ifthen_ifthen_01: () ==> ()
+test_ifthen_ifthen_01 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_ifthen_ifthen_01().getSpecifications(), 
+                           "ifthen-01.vpp") = {|->});
+);
+
+public test_ifthen_ifthen_02: () ==> ()
+test_ifthen_ifthen_02 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_ifthen_ifthen_02().getSpecifications(), 
+                           "ifthen-02.vpp") = {|->});
+);
+
+public test_ifthen_ifthen_03: () ==> ()
+test_ifthen_ifthen_03 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_ifthen_ifthen_03().getSpecifications(), 
+                           "ifthen-03.vpp") = {|->});
+);
+
+public test_ifthen_ifthen_04: () ==> ()
+test_ifthen_ifthen_04 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_ifthen_ifthen_04().getSpecifications(), 
+                           "ifthen-04.vpp") = {|->});
+);
+
+public test_ifthen_ifthen_05: () ==> ()
+test_ifthen_ifthen_05 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_ifthen_ifthen_05().getSpecifications(), 
+                           "ifthen-05.vpp") = {|->});
+);
+
+public test_letexpr_letexpr_01: () ==> ()
+test_letexpr_letexpr_01 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_letexpr_letexpr_01().getSpecifications(), 
+                           "letexpr-01.vpp") = {|->});
+);
+
+public test_lookup_lookup_01: () ==> ()
+test_lookup_lookup_01 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_lookup_lookup_01().getSpecifications(), 
+                           "lookup-01.vpp") = {|->});
+);
+
+public test_lookup_lookup_02: () ==> ()
+test_lookup_lookup_02 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_lookup_lookup_02().getSpecifications(), 
+                           "lookup-02.vpp") = {|->});
+);
+
+public test_mapexpr_mapexpr_01: () ==> ()
+test_mapexpr_mapexpr_01 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_mapexpr_mapexpr_01().getSpecifications(), 
+                           "mapexpr-01.vpp") = {|->});
+);
+
+public test_mapexpr_mapexpr_02: () ==> ()
+test_mapexpr_mapexpr_02 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_mapexpr_mapexpr_02().getSpecifications(), 
+                           "mapexpr-02.vpp") = {|->});
+);
+
+public test_mapexpr_mapexpr_03: () ==> ()
+test_mapexpr_mapexpr_03 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_mapexpr_mapexpr_03().getSpecifications(), 
+                           "mapexpr-03.vpp") = {|->});
+);
+
+public test_newexpr_newexpr_01: () ==> ()
+test_newexpr_newexpr_01 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_newexpr_newexpr_01().getSpecifications(), 
+                           "newexpr-01.vpp") = {|->});
+);
+
+public test_recordconstructor_recordconstructor_01: () ==> ()
+test_recordconstructor_recordconstructor_01 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_recordconstructor_recordconstructor_01().getSpecifications(), 
+                           "recordconstructor-01.vpp") = {|->});
+);
+
+public test_recordconstructor_recordconstructor_02: () ==> ()
+test_recordconstructor_recordconstructor_02 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_recordconstructor_recordconstructor_02().getSpecifications(), 
+                           "recordconstructor-02.vpp") = {|->});
+);
+
+public test_recordconstructor_recordconstructor_03: () ==> ()
+test_recordconstructor_recordconstructor_03 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_recordconstructor_recordconstructor_03().getSpecifications(), 
+                           "recordconstructor-03.vpp") = {|->});
+);
+
+public test_missingpre_missingpre_01: () ==> ()
+test_missingpre_missingpre_01 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_missingpre_missingpre_01().getSpecifications(), 
+                           "missingpre-01.vpp") = {|->});
+);
+
+public test_missingpre_missingpre_02: () ==> ()
+test_missingpre_missingpre_02 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_missingpre_missingpre_02().getSpecifications(), 
+                           "missingpre-02.vpp") = {|->});
+);
+
+public test_missingpre_missingpre_03: () ==> ()
+test_missingpre_missingpre_03 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_missingpre_missingpre_03().getSpecifications(), 
+                           "missingpre-03.vpp") = {|->});
+);
+
+public test_missingpre_missingpre_04: () ==> ()
+test_missingpre_missingpre_04 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_missingpre_missingpre_04().getSpecifications(), 
+                           "missingpre-04.vpp") = {|->});
+);
+
+public test_simpletraces_simpletraces_01: () ==> ()
+test_simpletraces_simpletraces_01 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_simpletraces_simpletraces_01().getSpecifications(), 
+                           "simpletraces-01.vpp") = {|->});
+);
+
+public test_tracebind_tracebind_01: () ==> ()
+test_tracebind_tracebind_01 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracebind_tracebind_01().getSpecifications(), 
+                           "tracebind-01.vpp") = {|->});
+);
+
+public test_tracebind_tracebind_02: () ==> ()
+test_tracebind_tracebind_02 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracebind_tracebind_02().getSpecifications(), 
+                           "tracebind-02.vpp") = {|->});
+);
+
+public test_tracebind_tracebind_03: () ==> ()
+test_tracebind_tracebind_03 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracebind_tracebind_03().getSpecifications(), 
+                           "tracebind-03.vpp") = {|->});
+);
+
+public test_tracebind_tracebind_04: () ==> ()
+test_tracebind_tracebind_04 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracebind_tracebind_04().getSpecifications(), 
+                           "tracebind-04.vpp") = {|->});
+);
+
+public test_tracebracket_tracebracket_01: () ==> ()
+test_tracebracket_tracebracket_01 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracebracket_tracebracket_01().getSpecifications(), 
+                           "tracebracket-01.vpp") = {|->});
+);
+
+public test_tracebracket_tracebracket_02: () ==> ()
+test_tracebracket_tracebracket_02 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracebracket_tracebracket_02().getSpecifications(), 
+                           "tracebracket-02.vpp") = {|->});
+);
+
+public test_tracechoice_tracechoice_01: () ==> ()
+test_tracechoice_tracechoice_01 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracechoice_tracechoice_01().getSpecifications(), 
+                           "tracechoice-01.vpp") = {|->});
+);
+
+public test_tracechoice_tracechoice_02: () ==> ()
+test_tracechoice_tracechoice_02 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracechoice_tracechoice_02().getSpecifications(), 
+                           "tracechoice-02.vpp") = {|->});
+);
+
+public test_tracechoice_tracechoice_03: () ==> ()
+test_tracechoice_tracechoice_03 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracechoice_tracechoice_03().getSpecifications(), 
+                           "tracechoice-03.vpp") = {|->});
+);
+
+public test_tracechoice_tracechoice_04: () ==> ()
+test_tracechoice_tracechoice_04 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracechoice_tracechoice_04().getSpecifications(), 
+                           "tracechoice-04.vpp") = {|->});
+);
+
+public test_tracerepeat_tracerepeat_01: () ==> ()
+test_tracerepeat_tracerepeat_01 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracerepeat_tracerepeat_01().getSpecifications(), 
+                           "tracerepeat-01.vpp") = {|->});
+);
+
+public test_tracerepeat_tracerepeat_02: () ==> ()
+test_tracerepeat_tracerepeat_02 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracerepeat_tracerepeat_02().getSpecifications(), 
+                           "tracerepeat-02.vpp") = {|->});
+);
+
+public test_tracerepeat_tracerepeat_03: () ==> ()
+test_tracerepeat_tracerepeat_03 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracerepeat_tracerepeat_03().getSpecifications(), 
+                           "tracerepeat-03.vpp") = {|->});
+);
+
+public test_tracerepeat_tracerepeat_04: () ==> ()
+test_tracerepeat_tracerepeat_04 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracerepeat_tracerepeat_04().getSpecifications(), 
+                           "tracerepeat-04.vpp") = {|->});
+);
+
+public test_tracerepeat_tracerepeat_05: () ==> ()
+test_tracerepeat_tracerepeat_05 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracerepeat_tracerepeat_05().getSpecifications(), 
+                           "tracerepeat-05.vpp") = {|->});
+);
+
+public test_tracerepeat_tracerepeat_06: () ==> ()
+test_tracerepeat_tracerepeat_06 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracerepeat_tracerepeat_06().getSpecifications(), 
+                           "tracerepeat-06.vpp") = {|->});
+);
+
+public test_tracerepeat_tracerepeat_07: () ==> ()
+test_tracerepeat_tracerepeat_07 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracerepeat_tracerepeat_07().getSpecifications(), 
+                           "tracerepeat-07.vpp") = {|->});
+);
+
+public test_tracerepeat_tracerepeat_08: () ==> ()
+test_tracerepeat_tracerepeat_08 () ==
+(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracerepeat_tracerepeat_08().getSpecifications(), 
+                           "tracerepeat-08.vpp") = {|->});
+);
+
 public test_traceseq_traceseq_01: () ==> ()
 test_traceseq_traceseq_01 () ==
 (  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_traceseq_traceseq_01().getSpecifications(), 
-                           "traceseq-01.vdm") = { "UseStackPushBeforePop1" |-> [ "s.Reset()","s.Push(6)" ] });
+                           "traceseq-01.vpp") = {|->});
 );
 
 public test_traceseq_traceseq_02: () ==> ()
@@ -20,11 +380,641 @@ test_traceseq_traceseq_02 () ==
 (  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_traceseq_traceseq_02().getSpecifications(), 
-                           "traceseq-02.vdm") = {"UseStackPushBeforePop2" |-> ["s.Reset()", "let x  =2  in s.Push(x)", "s.Pop()"], "UseStackPushBeforePop1" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()"]});
+                           "traceseq-02.vpp") = {|->});
 );
 
 public runTest: ( TestResult ) ==> ()
 runTest (ptr) ==( 
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_expanderror_expanderror_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_expanderror_expanderror_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_expanderror_expanderror_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_expanderror_expanderror_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_logical_logical_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_logical_logical_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_logical_logical_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_logical_logical_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_numminus_numminus_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_numminus_numminus_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_setinter_setinter_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_setinter_setinter_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_setunion_setunion_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_setunion_setunion_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_ifthen_ifthen_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_ifthen_ifthen_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_ifthen_ifthen_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_ifthen_ifthen_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_ifthen_ifthen_03();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_ifthen_ifthen_03();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_ifthen_ifthen_04();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_ifthen_ifthen_04();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_ifthen_ifthen_05();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_ifthen_ifthen_05();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_letexpr_letexpr_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_letexpr_letexpr_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_lookup_lookup_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_lookup_lookup_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_lookup_lookup_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_lookup_lookup_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_mapexpr_mapexpr_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_mapexpr_mapexpr_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_mapexpr_mapexpr_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_mapexpr_mapexpr_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_mapexpr_mapexpr_03();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_mapexpr_mapexpr_03();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_newexpr_newexpr_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_newexpr_newexpr_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_recordconstructor_recordconstructor_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_recordconstructor_recordconstructor_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_recordconstructor_recordconstructor_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_recordconstructor_recordconstructor_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_recordconstructor_recordconstructor_03();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_recordconstructor_recordconstructor_03();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_missingpre_missingpre_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_missingpre_missingpre_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_missingpre_missingpre_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_missingpre_missingpre_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_missingpre_missingpre_03();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_missingpre_missingpre_03();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_missingpre_missingpre_04();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_missingpre_missingpre_04();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_simpletraces_simpletraces_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_simpletraces_simpletraces_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracebind_tracebind_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracebind_tracebind_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracebind_tracebind_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracebind_tracebind_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracebind_tracebind_03();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracebind_tracebind_03();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracebind_tracebind_04();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracebind_tracebind_04();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracebracket_tracebracket_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracebracket_tracebracket_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracebracket_tracebracket_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracebracket_tracebracket_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracechoice_tracechoice_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracechoice_tracechoice_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracechoice_tracechoice_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracechoice_tracechoice_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracechoice_tracechoice_03();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracechoice_tracechoice_03();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracechoice_tracechoice_04();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracechoice_tracechoice_04();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracerepeat_tracerepeat_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracerepeat_tracerepeat_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_03();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracerepeat_tracerepeat_03();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_04();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracerepeat_tracerepeat_04();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_05();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracerepeat_tracerepeat_05();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_06();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracerepeat_tracerepeat_06();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_07();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracerepeat_tracerepeat_07();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_08();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracerepeat_tracerepeat_08();
+       );
+
+
+
   -- execute the sub-tests
   trap exc : Throwable
   with
