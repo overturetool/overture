@@ -582,20 +582,24 @@ public class DBGPReader
 		}
 
 		String feature = features.getProperty(option.value);
+		StringBuilder hdr = new StringBuilder();
+   		StringBuilder body = new StringBuilder();
 
 		if (feature == null)
 		{
-			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
+			// Unknown feature - unsupported in header; nothing in body
+    		hdr.append("feature_name=\"");
+    		hdr.append(option.value);
+    		hdr.append("\" supported=\"0\"");
 		}
-
-		StringBuilder hdr = new StringBuilder();
-
-		hdr.append("feature_name=\"");
-		hdr.append(option.value);
-		hdr.append("\" supported=\"1\"");
-
-		StringBuilder body = new StringBuilder();
-		body.append(feature);
+		else
+		{
+			// Known feature - supported in header; body reflects actual support
+    		hdr.append("feature_name=\"");
+    		hdr.append(option.value);
+    		hdr.append("\" supported=\"1\"");
+    		body.append(feature);
+		}
 
 		response(hdr, body);
 	}
