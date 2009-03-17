@@ -245,7 +245,7 @@ public class DBGPReader
 			StringBuilder sb = new StringBuilder();
 
 			sb.append("<error code=\"");
-			sb.append(errorCode);
+			sb.append(errorCode.value);
 			sb.append("\" apperr=\"\"><message>");
 			sb.append(reason);
 			sb.append("</message></error>");
@@ -801,40 +801,40 @@ public class DBGPReader
 			lineno = Integer.parseInt(option.value);
 		}
 
-		option = c.getOption(DBGPOptionType.M);
-
-		if (option != null)
-		{
-   			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, option.value);
-		}
-
-		option = c.getOption(DBGPOptionType.X);
-
-		if (option != null)
-		{
-   			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, option.value);
-		}
-
-		option = c.getOption(DBGPOptionType.H);
-
-		if (option != null)
-		{
-   			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, option.value);
-		}
-
-		option = c.getOption(DBGPOptionType.O);
-
-		if (option != null)
-		{
-   			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, option.value);
-		}
-
-		option = c.getOption(DBGPOptionType.R);
-
-		if (option != null)
-		{
-   			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, option.value);
-		}
+//		option = c.getOption(DBGPOptionType.M);
+//
+//		if (option != null)
+//		{
+//   			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, option.value);
+//		}
+//
+//		option = c.getOption(DBGPOptionType.X);
+//
+//		if (option != null)
+//		{
+//   			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, option.value);
+//		}
+//
+//		option = c.getOption(DBGPOptionType.H);
+//
+//		if (option != null)
+//		{
+//   			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, option.value);
+//		}
+//
+//		option = c.getOption(DBGPOptionType.O);
+//
+//		if (option != null)
+//		{
+//   			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, option.value);
+//		}
+//
+//		option = c.getOption(DBGPOptionType.R);
+//
+//		if (option != null)
+//		{
+//   			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, option.value);
+//		}
 
 		String condition = null;
 
