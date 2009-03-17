@@ -109,15 +109,16 @@ evaluateSeqComprehension(expr,cxt) ==
   let elem  = expr.getExpression(),
       bind  = expr.getSetBind(),
       pred  = if expr.hasGuard() then expr.getGuard() else nil,
-      cxt_s = evalBind(bind,cxt)
+      cxt_l = evalBind(bind,cxt)
   in 
-    if forall cxt in set cxt_s & 
-          (forall m in set cxt_s & card dom m = 1) and
+    if forall cxt in set elems cxt_l & 
+          (forall m in set elems cxt_l & card dom m = 1) and
           (forall elem in set rng cxt &
               is_SEM`NUM(elem) and is_nat(elem.v))
     then let n_s  : set of nat = 
-                    {val.v | val in set dunion { rng m | m in set cxt_s}},
-             {id} = let m in set cxt_s in dom m
+                    {val.v | val in set dunion 
+                    { rng m | m in set elems cxt_l}},
+             {id} = let m in set elems cxt_l in dom m
          in
            return mk_SEM`SEQ([ let cxt2 = cxt ++ {id |-> mk_SEM`NUM(i)}
                                in
@@ -234,7 +235,7 @@ evaluateSetComprehension(expr,cxt) ==
   let elem   = expr.getExpression(),
       bind_l = expr.getBindList(),
       guard  = if expr.hasGuard() then expr.getGuard() else nil,
-      cxt_s  = evalBindList(bind_l,cxt)
+      cxt_l  = evalBindList(bind_l,cxt)
   in return
      mk_SEM`SET(
        {let cxt3 = cxt ++ cxt2
@@ -243,7 +244,7 @@ evaluateSetComprehension(expr,cxt) ==
              evaluateExpression(guard,cxt3) = mk_SEM`BOOL(true)
           then evaluateExpression(elem,cxt3)
           else <NoVAL>
-       | cxt2 in set cxt_s} \ {<NoVAL>});
+       | cxt2 in set elems cxt_l} \ {<NoVAL>});
 
 public evaluateMapComprehension : 
   IOmlMapComprehension * Context ==> 
@@ -252,7 +253,7 @@ evaluateMapComprehension(expr,cxt) ==
   let maplet = expr.getExpression(),
       bind_l = expr.getBindList(),
       guard  = if expr.hasGuard() then expr.getGuard() else nil,
-      cxt_s  = evalBindList(bind_l,cxt)
+      cxt_l  = evalBindList(bind_l,cxt)
   in 
     let m_s =
        {let cxt3 = cxt ++ cxt2
@@ -266,7 +267,7 @@ evaluateMapComprehension(expr,cxt) ==
                in
                  {dom_v |-> rng_v}
           else {|->}
-       | cxt2 in set cxt_s}
+       | cxt2 in set elems cxt_l}
      in
        if forall x,y in set m_s & x <> y => 
                                   forall z in set (dom x inter dom y) & x(z) = y(z)
@@ -905,9 +906,9 @@ evaluateLetBeExpression(expr,cxt) ==
       bestval = if bestex = nil 
                 then mk_SEM`BOOL(true) 
                 else evaluateExpression(bestex,cxt),
-      cxt_s   = evalBind(bind,cxt)
+      cxt_l   = evalBind(bind,cxt)
   in 
-    let cxt2 in set cxt_s
+    let cxt2 = hd cxt_l
     in
       evaluateExpression(inexpr,cxt ++ cxt2);
 
@@ -1151,25 +1152,25 @@ getValueNil(-) ==--lit
 
 functions
 
-evalBindList: seq of IOmlBind * Context -> set of Context
+evalBindList: seq of IOmlBind * Context -> seq of Context
 evalBindList(b_l,cxt) ==
   if b_l = []
-  then {{|->}}
-  else let c_s1 = evalBind(hd b_l,cxt),
-           c_s2 = evalBindList(tl b_l,cxt)
+  then [{|->}]
+  else let c_l1 = evalBind(hd b_l,cxt),
+           c_l2 = evalBindList(tl b_l,cxt)
        in
-         CombineContexts(c_s1,c_s2);
+         CombineContexts(c_l1,c_l2);
 
 operations
 
-evalBind: IOmlBind * Context ==> set of Context
+evalBind: IOmlBind * Context ==> seq of Context
 evalBind(bind,cxt) ==
   if isofclass(IOmlSetBind,bind)
   then evalSetBind(bind,cxt)
   else (errorLog.ReportError(bind, RTERR`TYPE_BIND_EVAL); 
-        return {{|->}}); 
+        return [{|->}]); 
 
-evalSetBind: IOmlSetBind * Context ==> set of Context
+evalSetBind: IOmlSetBind * Context ==> seq of Context
 evalSetBind(bind,cxt) ==
   let p_l   = bind.getPattern(),
       s     = bind.getExpression(),
@@ -1181,16 +1182,18 @@ evalSetBind(bind,cxt) ==
   in
     (if not is_SEM`SET(s_v)
      then (errorLog.ReportError(bind, RTERR`TYPE_BIND_EVAL); 
-           return {{|->}})
-     else return {MergeContextList(c_l) | c_l in set c_l_s});
+           return [{|->}])
+     else return VDMUtil`set2seq[Context]
+                         ({MergeContextList(c_l) | c_l in set c_l_s}));
 
 functions
 
-public CombineContexts: set of Context * set of Context -> 
-                 set of Context
-CombineContexts(c_s1,c_s2) ==
-  { c1 ++ c2
-  | c1 in set c_s1, c2 in set c_s2};
+public CombineContexts: seq of Context * seq of Context -> 
+                 seq of Context
+CombineContexts(c_l1,c_l2) ==
+  conc [ [c_l1(j) ++ c_l2(i)
+         | j in set inds c_l1]
+       | i in set inds c_l2];
 
 public MergeContextList: seq1 of Context -> Context
 MergeContextList(cxt_l) ==

@@ -1475,8 +1475,8 @@ operations
   ]
 );
 operations
- public static test_logical_logical_01: () ==> IOmlDocument
- test_logical_logical_01() == return new OmlDocument("",
+ public static test_expr_binaryexpr_logical_logical_01: () ==> IOmlDocument
+ test_expr_binaryexpr_logical_logical_01() == return new OmlDocument("",
   new OmlSpecifications([
     new OmlClass(
       "Stack",
@@ -2267,8 +2267,8 @@ operations
   ]
 );
 operations
- public static test_logical_logical_02: () ==> IOmlDocument
- test_logical_logical_02() == return new OmlDocument("",
+ public static test_expr_binaryexpr_logical_logical_02: () ==> IOmlDocument
+ test_expr_binaryexpr_logical_logical_02() == return new OmlDocument("",
   new OmlSpecifications([
     new OmlClass(
       "Stack",
@@ -3095,8 +3095,8 @@ operations
   ]
 );
 operations
- public static test_numminus_numminus_01: () ==> IOmlDocument
- test_numminus_numminus_01() == return new OmlDocument("",
+ public static test_expr_binaryexpr_numminus_numminus_01: () ==> IOmlDocument
+ test_expr_binaryexpr_numminus_numminus_01() == return new OmlDocument("",
   new OmlSpecifications([
     new OmlClass(
       "Stack",
@@ -3770,8 +3770,8 @@ operations
   ]
 );
 operations
- public static test_setinter_setinter_01: () ==> IOmlDocument
- test_setinter_setinter_01() == return new OmlDocument("",
+ public static test_expr_binaryexpr_setinter_setinter_01: () ==> IOmlDocument
+ test_expr_binaryexpr_setinter_setinter_01() == return new OmlDocument("",
   new OmlSpecifications([
     new OmlClass(
       "Queue",
@@ -7200,8 +7200,8 @@ operations
   ]
 );
 operations
- public static test_setunion_setunion_01: () ==> IOmlDocument
- test_setunion_setunion_01() == return new OmlDocument("",
+ public static test_expr_binaryexpr_setunion_setunion_01: () ==> IOmlDocument
+ test_expr_binaryexpr_setunion_setunion_01() == return new OmlDocument("",
   new OmlSpecifications([
     new OmlClass(
       "Queue",
@@ -10515,8 +10515,8 @@ operations
   ]
 );
 operations
- public static test_ifthen_ifthen_01: () ==> IOmlDocument
- test_ifthen_ifthen_01() == return new OmlDocument("",
+ public static test_expr_ifthen_ifthen_01: () ==> IOmlDocument
+ test_expr_ifthen_ifthen_01() == return new OmlDocument("",
   new OmlSpecifications([
     new OmlClass(
       "Stack",
@@ -11254,8 +11254,8 @@ operations
   ]
 );
 operations
- public static test_ifthen_ifthen_02: () ==> IOmlDocument
- test_ifthen_ifthen_02() == return new OmlDocument("",
+ public static test_expr_ifthen_ifthen_02: () ==> IOmlDocument
+ test_expr_ifthen_ifthen_02() == return new OmlDocument("",
   new OmlSpecifications([
     new OmlClass(
       "Stack",
@@ -11954,8 +11954,8 @@ operations
   ]
 );
 operations
- public static test_ifthen_ifthen_03: () ==> IOmlDocument
- test_ifthen_ifthen_03() == return new OmlDocument("",
+ public static test_expr_ifthen_ifthen_03: () ==> IOmlDocument
+ test_expr_ifthen_ifthen_03() == return new OmlDocument("",
   new OmlSpecifications([
     new OmlClass(
       "Stack",
@@ -12692,8 +12692,8 @@ operations
   ]
 );
 operations
- public static test_ifthen_ifthen_04: () ==> IOmlDocument
- test_ifthen_ifthen_04() == return new OmlDocument("",
+ public static test_expr_ifthen_ifthen_04: () ==> IOmlDocument
+ test_expr_ifthen_ifthen_04() == return new OmlDocument("",
   new OmlSpecifications([
     new OmlClass(
       "Stack",
@@ -13527,8 +13527,8 @@ operations
   ]
 );
 operations
- public static test_ifthen_ifthen_05: () ==> IOmlDocument
- test_ifthen_ifthen_05() == return new OmlDocument("",
+ public static test_expr_ifthen_ifthen_05: () ==> IOmlDocument
+ test_expr_ifthen_ifthen_05() == return new OmlDocument("",
   new OmlSpecifications([
     new OmlClass(
       "Stack",
@@ -14385,8 +14385,8 @@ operations
   ]
 );
 operations
- public static test_letexpr_letexpr_01: () ==> IOmlDocument
- test_letexpr_letexpr_01() == return new OmlDocument("",
+ public static test_expr_letexpr_letexpr_01: () ==> IOmlDocument
+ test_expr_letexpr_letexpr_01() == return new OmlDocument("",
   new OmlSpecifications([
     new OmlClass(
       "Stack",
@@ -15097,8 +15097,8 @@ operations
   ]
 );
 operations
- public static test_lookup_lookup_01: () ==> IOmlDocument
- test_lookup_lookup_01() == return new OmlDocument("",
+ public static test_expr_lookup_lookup_01: () ==> IOmlDocument
+ test_expr_lookup_lookup_01() == return new OmlDocument("",
   new OmlSpecifications([
     new OmlClass(
       "Stack",
@@ -16153,8 +16153,8 @@ operations
   ]
 );
 operations
- public static test_lookup_lookup_02: () ==> IOmlDocument
- test_lookup_lookup_02() == return new OmlDocument("",
+ public static test_expr_lookup_lookup_02: () ==> IOmlDocument
+ test_expr_lookup_lookup_02() == return new OmlDocument("",
   new OmlSpecifications([
     new OmlClass(
       "SuperStack",
@@ -17292,8 +17292,8 @@ operations
   ]
 );
 operations
- public static test_mapexpr_mapexpr_01: () ==> IOmlDocument
- test_mapexpr_mapexpr_01() == return new OmlDocument("",
+ public static test_expr_mapexpr_mapexpr_01: () ==> IOmlDocument
+ test_expr_mapexpr_mapexpr_01() == return new OmlDocument("",
   new OmlSpecifications([
     new OmlClass(
       "Stack",
@@ -18024,8 +18024,8 @@ operations
   ]
 );
 operations
- public static test_mapexpr_mapexpr_02: () ==> IOmlDocument
- test_mapexpr_mapexpr_02() == return new OmlDocument("",
+ public static test_expr_mapexpr_mapexpr_02: () ==> IOmlDocument
+ test_expr_mapexpr_mapexpr_02() == return new OmlDocument("",
   new OmlSpecifications([
     new OmlClass(
       "Stack",
@@ -18874,8 +18874,8 @@ operations
   ]
 );
 operations
- public static test_mapexpr_mapexpr_03: () ==> IOmlDocument
- test_mapexpr_mapexpr_03() == return new OmlDocument("",
+ public static test_expr_mapexpr_mapexpr_03: () ==> IOmlDocument
+ test_expr_mapexpr_mapexpr_03() == return new OmlDocument("",
   new OmlSpecifications([
     new OmlClass(
       "Stack",
@@ -19729,8 +19729,8 @@ operations
   ]
 );
 operations
- public static test_newexpr_newexpr_01: () ==> IOmlDocument
- test_newexpr_newexpr_01() == return new OmlDocument("",
+ public static test_expr_newexpr_newexpr_01: () ==> IOmlDocument
+ test_expr_newexpr_newexpr_01() == return new OmlDocument("",
   new OmlSpecifications([
     new OmlClass(
       "Kerneld",
@@ -20772,8 +20772,8 @@ operations
   ]
 );
 operations
- public static test_recordconstructor_recordconstructor_01: () ==> IOmlDocument
- test_recordconstructor_recordconstructor_01() == return new OmlDocument("",
+ public static test_expr_recordconstructor_recordconstructor_01: () ==> IOmlDocument
+ test_expr_recordconstructor_recordconstructor_01() == return new OmlDocument("",
   new OmlSpecifications([
     new OmlClass(
       "Stack",
@@ -21475,8 +21475,8 @@ operations
   ]
 );
 operations
- public static test_recordconstructor_recordconstructor_02: () ==> IOmlDocument
- test_recordconstructor_recordconstructor_02() == return new OmlDocument("",
+ public static test_expr_recordconstructor_recordconstructor_02: () ==> IOmlDocument
+ test_expr_recordconstructor_recordconstructor_02() == return new OmlDocument("",
   new OmlSpecifications([
     new OmlClass(
       "Stack",
@@ -22150,8 +22150,8 @@ operations
   ]
 );
 operations
- public static test_recordconstructor_recordconstructor_03: () ==> IOmlDocument
- test_recordconstructor_recordconstructor_03() == return new OmlDocument("",
+ public static test_expr_recordconstructor_recordconstructor_03: () ==> IOmlDocument
+ test_expr_recordconstructor_recordconstructor_03() == return new OmlDocument("",
   new OmlSpecifications([
     new OmlClass(
       "Stack",

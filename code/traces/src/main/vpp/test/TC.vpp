@@ -23,163 +23,163 @@ test_expanderror_expanderror_02 () ==
                            "expanderror-02.vpp") = {|->});
 );
 
-public test_logical_logical_01: () ==> ()
-test_logical_logical_01 () ==
+public test_expr_binaryexpr_logical_logical_01: () ==> ()
+test_expr_binaryexpr_logical_logical_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCTestData`test_logical_logical_01().getSpecifications(), 
+   assertTrue(specTest.Run(TCTestData`test_expr_binaryexpr_logical_logical_01().getSpecifications(), 
                            "logical-01.vpp") = {|->});
 );
 
-public test_logical_logical_02: () ==> ()
-test_logical_logical_02 () ==
+public test_expr_binaryexpr_logical_logical_02: () ==> ()
+test_expr_binaryexpr_logical_logical_02 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCTestData`test_logical_logical_02().getSpecifications(), 
+   assertTrue(specTest.Run(TCTestData`test_expr_binaryexpr_logical_logical_02().getSpecifications(), 
                            "logical-02.vpp") = {|->});
 );
 
-public test_numminus_numminus_01: () ==> ()
-test_numminus_numminus_01 () ==
+public test_expr_binaryexpr_numminus_numminus_01: () ==> ()
+test_expr_binaryexpr_numminus_numminus_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCTestData`test_numminus_numminus_01().getSpecifications(), 
+   assertTrue(specTest.Run(TCTestData`test_expr_binaryexpr_numminus_numminus_01().getSpecifications(), 
                            "numminus-01.vpp") = {|->});
 );
 
-public test_setinter_setinter_01: () ==> ()
-test_setinter_setinter_01 () ==
+public test_expr_binaryexpr_setinter_setinter_01: () ==> ()
+test_expr_binaryexpr_setinter_setinter_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCTestData`test_setinter_setinter_01().getSpecifications(), 
+   assertTrue(specTest.Run(TCTestData`test_expr_binaryexpr_setinter_setinter_01().getSpecifications(), 
                            "setinter-01.vpp") = {|->});
 );
 
-public test_setunion_setunion_01: () ==> ()
-test_setunion_setunion_01 () ==
+public test_expr_binaryexpr_setunion_setunion_01: () ==> ()
+test_expr_binaryexpr_setunion_setunion_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCTestData`test_setunion_setunion_01().getSpecifications(), 
+   assertTrue(specTest.Run(TCTestData`test_expr_binaryexpr_setunion_setunion_01().getSpecifications(), 
                            "setunion-01.vpp") = {|->});
 );
 
-public test_ifthen_ifthen_01: () ==> ()
-test_ifthen_ifthen_01 () ==
+public test_expr_ifthen_ifthen_01: () ==> ()
+test_expr_ifthen_ifthen_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCTestData`test_ifthen_ifthen_01().getSpecifications(), 
+   assertTrue(specTest.Run(TCTestData`test_expr_ifthen_ifthen_01().getSpecifications(), 
                            "ifthen-01.vpp") = {|->});
 );
 
-public test_ifthen_ifthen_02: () ==> ()
-test_ifthen_ifthen_02 () ==
+public test_expr_ifthen_ifthen_02: () ==> ()
+test_expr_ifthen_ifthen_02 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCTestData`test_ifthen_ifthen_02().getSpecifications(), 
+   assertTrue(specTest.Run(TCTestData`test_expr_ifthen_ifthen_02().getSpecifications(), 
                            "ifthen-02.vpp") = {|->});
 );
 
-public test_ifthen_ifthen_03: () ==> ()
-test_ifthen_ifthen_03 () ==
+public test_expr_ifthen_ifthen_03: () ==> ()
+test_expr_ifthen_ifthen_03 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCTestData`test_ifthen_ifthen_03().getSpecifications(), 
+   assertTrue(specTest.Run(TCTestData`test_expr_ifthen_ifthen_03().getSpecifications(), 
                            "ifthen-03.vpp") = {|->});
 );
 
-public test_ifthen_ifthen_04: () ==> ()
-test_ifthen_ifthen_04 () ==
+public test_expr_ifthen_ifthen_04: () ==> ()
+test_expr_ifthen_ifthen_04 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCTestData`test_ifthen_ifthen_04().getSpecifications(), 
+   assertTrue(specTest.Run(TCTestData`test_expr_ifthen_ifthen_04().getSpecifications(), 
                            "ifthen-04.vpp") = {|->});
 );
 
-public test_ifthen_ifthen_05: () ==> ()
-test_ifthen_ifthen_05 () ==
+public test_expr_ifthen_ifthen_05: () ==> ()
+test_expr_ifthen_ifthen_05 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCTestData`test_ifthen_ifthen_05().getSpecifications(), 
+   assertTrue(specTest.Run(TCTestData`test_expr_ifthen_ifthen_05().getSpecifications(), 
                            "ifthen-05.vpp") = {|->});
 );
 
-public test_letexpr_letexpr_01: () ==> ()
-test_letexpr_letexpr_01 () ==
+public test_expr_letexpr_letexpr_01: () ==> ()
+test_expr_letexpr_letexpr_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCTestData`test_letexpr_letexpr_01().getSpecifications(), 
+   assertTrue(specTest.Run(TCTestData`test_expr_letexpr_letexpr_01().getSpecifications(), 
                            "letexpr-01.vpp") = {|->});
 );
 
-public test_lookup_lookup_01: () ==> ()
-test_lookup_lookup_01 () ==
+public test_expr_lookup_lookup_01: () ==> ()
+test_expr_lookup_lookup_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCTestData`test_lookup_lookup_01().getSpecifications(), 
+   assertTrue(specTest.Run(TCTestData`test_expr_lookup_lookup_01().getSpecifications(), 
                            "lookup-01.vpp") = {|->});
 );
 
-public test_lookup_lookup_02: () ==> ()
-test_lookup_lookup_02 () ==
+public test_expr_lookup_lookup_02: () ==> ()
+test_expr_lookup_lookup_02 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCTestData`test_lookup_lookup_02().getSpecifications(), 
+   assertTrue(specTest.Run(TCTestData`test_expr_lookup_lookup_02().getSpecifications(), 
                            "lookup-02.vpp") = {|->});
 );
 
-public test_mapexpr_mapexpr_01: () ==> ()
-test_mapexpr_mapexpr_01 () ==
+public test_expr_mapexpr_mapexpr_01: () ==> ()
+test_expr_mapexpr_mapexpr_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCTestData`test_mapexpr_mapexpr_01().getSpecifications(), 
+   assertTrue(specTest.Run(TCTestData`test_expr_mapexpr_mapexpr_01().getSpecifications(), 
                            "mapexpr-01.vpp") = {|->});
 );
 
-public test_mapexpr_mapexpr_02: () ==> ()
-test_mapexpr_mapexpr_02 () ==
+public test_expr_mapexpr_mapexpr_02: () ==> ()
+test_expr_mapexpr_mapexpr_02 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCTestData`test_mapexpr_mapexpr_02().getSpecifications(), 
+   assertTrue(specTest.Run(TCTestData`test_expr_mapexpr_mapexpr_02().getSpecifications(), 
                            "mapexpr-02.vpp") = {|->});
 );
 
-public test_mapexpr_mapexpr_03: () ==> ()
-test_mapexpr_mapexpr_03 () ==
+public test_expr_mapexpr_mapexpr_03: () ==> ()
+test_expr_mapexpr_mapexpr_03 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCTestData`test_mapexpr_mapexpr_03().getSpecifications(), 
+   assertTrue(specTest.Run(TCTestData`test_expr_mapexpr_mapexpr_03().getSpecifications(), 
                            "mapexpr-03.vpp") = {|->});
 );
 
-public test_newexpr_newexpr_01: () ==> ()
-test_newexpr_newexpr_01 () ==
+public test_expr_newexpr_newexpr_01: () ==> ()
+test_expr_newexpr_newexpr_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCTestData`test_newexpr_newexpr_01().getSpecifications(), 
+   assertTrue(specTest.Run(TCTestData`test_expr_newexpr_newexpr_01().getSpecifications(), 
                            "newexpr-01.vpp") = {|->});
 );
 
-public test_recordconstructor_recordconstructor_01: () ==> ()
-test_recordconstructor_recordconstructor_01 () ==
+public test_expr_recordconstructor_recordconstructor_01: () ==> ()
+test_expr_recordconstructor_recordconstructor_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCTestData`test_recordconstructor_recordconstructor_01().getSpecifications(), 
+   assertTrue(specTest.Run(TCTestData`test_expr_recordconstructor_recordconstructor_01().getSpecifications(), 
                            "recordconstructor-01.vpp") = {|->});
 );
 
-public test_recordconstructor_recordconstructor_02: () ==> ()
-test_recordconstructor_recordconstructor_02 () ==
+public test_expr_recordconstructor_recordconstructor_02: () ==> ()
+test_expr_recordconstructor_recordconstructor_02 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCTestData`test_recordconstructor_recordconstructor_02().getSpecifications(), 
+   assertTrue(specTest.Run(TCTestData`test_expr_recordconstructor_recordconstructor_02().getSpecifications(), 
                            "recordconstructor-02.vpp") = {|->});
 );
 
-public test_recordconstructor_recordconstructor_03: () ==> ()
-test_recordconstructor_recordconstructor_03 () ==
+public test_expr_recordconstructor_recordconstructor_03: () ==> ()
+test_expr_recordconstructor_recordconstructor_03 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCTestData`test_recordconstructor_recordconstructor_03().getSpecifications(), 
+   assertTrue(specTest.Run(TCTestData`test_expr_recordconstructor_recordconstructor_03().getSpecifications(), 
                            "recordconstructor-03.vpp") = {|->});
 );
 
@@ -389,7 +389,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_expanderror_expanderror_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -403,7 +403,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_expanderror_expanderror_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -417,12 +417,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_logical_logical_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_logical_logical_01();
+        test_expr_binaryexpr_logical_logical_01();
        );
 
 
@@ -431,12 +431,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_logical_logical_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_logical_logical_02();
+        test_expr_binaryexpr_logical_logical_02();
        );
 
 
@@ -445,12 +445,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_numminus_numminus_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_numminus_numminus_01();
+        test_expr_binaryexpr_numminus_numminus_01();
        );
 
 
@@ -459,12 +459,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_setinter_setinter_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_setinter_setinter_01();
+        test_expr_binaryexpr_setinter_setinter_01();
        );
 
 
@@ -473,12 +473,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_setunion_setunion_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_setunion_setunion_01();
+        test_expr_binaryexpr_setunion_setunion_01();
        );
 
 
@@ -487,12 +487,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_ifthen_ifthen_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_ifthen_ifthen_01();
+        test_expr_ifthen_ifthen_01();
        );
 
 
@@ -501,12 +501,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_ifthen_ifthen_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_ifthen_ifthen_02();
+        test_expr_ifthen_ifthen_02();
        );
 
 
@@ -515,12 +515,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_ifthen_ifthen_03();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_ifthen_ifthen_03();
+        test_expr_ifthen_ifthen_03();
        );
 
 
@@ -529,12 +529,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_ifthen_ifthen_04();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_ifthen_ifthen_04();
+        test_expr_ifthen_ifthen_04();
        );
 
 
@@ -543,12 +543,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_ifthen_ifthen_05();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_ifthen_ifthen_05();
+        test_expr_ifthen_ifthen_05();
        );
 
 
@@ -557,12 +557,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_letexpr_letexpr_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_letexpr_letexpr_01();
+        test_expr_letexpr_letexpr_01();
        );
 
 
@@ -571,12 +571,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_lookup_lookup_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_lookup_lookup_01();
+        test_expr_lookup_lookup_01();
        );
 
 
@@ -585,12 +585,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_lookup_lookup_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_lookup_lookup_02();
+        test_expr_lookup_lookup_02();
        );
 
 
@@ -599,12 +599,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_mapexpr_mapexpr_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_mapexpr_mapexpr_01();
+        test_expr_mapexpr_mapexpr_01();
        );
 
 
@@ -613,12 +613,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_mapexpr_mapexpr_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_mapexpr_mapexpr_02();
+        test_expr_mapexpr_mapexpr_02();
        );
 
 
@@ -627,12 +627,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_mapexpr_mapexpr_03();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_mapexpr_mapexpr_03();
+        test_expr_mapexpr_mapexpr_03();
        );
 
 
@@ -641,12 +641,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_newexpr_newexpr_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_newexpr_newexpr_01();
+        test_expr_newexpr_newexpr_01();
        );
 
 
@@ -655,12 +655,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_recordconstructor_recordconstructor_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_recordconstructor_recordconstructor_01();
+        test_expr_recordconstructor_recordconstructor_01();
        );
 
 
@@ -669,12 +669,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_recordconstructor_recordconstructor_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_recordconstructor_recordconstructor_02();
+        test_expr_recordconstructor_recordconstructor_02();
        );
 
 
@@ -683,12 +683,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_recordconstructor_recordconstructor_03();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_recordconstructor_recordconstructor_03();
+        test_expr_recordconstructor_recordconstructor_03();
        );
 
 
@@ -697,7 +697,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_missingpre_missingpre_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -711,7 +711,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_missingpre_missingpre_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -725,7 +725,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_missingpre_missingpre_03();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -739,7 +739,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_missingpre_missingpre_04();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -753,7 +753,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_simpletraces_simpletraces_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -767,7 +767,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracebind_tracebind_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -781,7 +781,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracebind_tracebind_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -795,7 +795,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracebind_tracebind_03();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -809,7 +809,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracebind_tracebind_04();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -823,7 +823,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracebracket_tracebracket_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -837,7 +837,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracebracket_tracebracket_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -851,7 +851,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracechoice_tracechoice_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -865,7 +865,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracechoice_tracechoice_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -879,7 +879,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracechoice_tracechoice_03();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -893,7 +893,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracechoice_tracechoice_04();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -907,7 +907,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -921,7 +921,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -935,7 +935,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_03();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -949,7 +949,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_04();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -963,7 +963,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_05();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -977,7 +977,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_06();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -991,7 +991,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_07();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -1005,7 +1005,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_08();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -1019,7 +1019,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_traceseq_traceseq_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -1033,7 +1033,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_traceseq_traceseq_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error

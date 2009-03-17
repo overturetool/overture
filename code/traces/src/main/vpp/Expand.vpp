@@ -24,7 +24,7 @@ private eval : Eval;
 private dfs : DEF;
 private errorLog : RTERR;
 
-cxt_s_stack : seq of set of Eval`Context := [];
+cxt_l_stack : seq of seq of Eval`Context := [];
 \end{vdm_al}
 
 \subsection{Expansion of Trace ASTs}
@@ -102,19 +102,19 @@ ExpandTraceDefs(clid, def_l) ==
     in
     (
        errorLog.SetCurrentTrace( name);
-      res_m(name) := ExpandTraceDef(defs,{{|->}});
+      res_m(name) := ExpandTraceDef(defs,[{|->}]);
     );
   return res_m
  );
 
-ExpandTraceDef: IOmlTraceDefinition * set of Eval`Context ==> 
+ExpandTraceDef: IOmlTraceDefinition * seq of Eval`Context ==> 
                 seq of seq of IOmlExpression
-ExpandTraceDef(tdef,ctx_s) ==
+ExpandTraceDef(tdef,ctx_l) ==
   if isofclass(IOmlTraceDefinitionItem,tdef)
-  then ExpandTraceDefItem(tdef,ctx_s)
+  then ExpandTraceDefItem(tdef,ctx_l)
   elseif isofclass(IOmlTraceSequenceDefinition,tdef)
-  then ExpandTraceSeqDef(tdef,ctx_s)
-  else ExpandTraceChoiceDef(tdef,ctx_s);
+  then ExpandTraceSeqDef(tdef,ctx_l)
+  else ExpandTraceChoiceDef(tdef,ctx_l);
 \end{vdm_al}
 
 A \texttt{TraceDefinitionItem} is composed of a collection of
@@ -174,63 +174,63 @@ At the concrete syntax level that corresponds to:
 
 
 \begin{vdm_al}
-ExpandTraceDefItem: IOmlTraceDefinitionItem * set of Eval`Context ==> 
+ExpandTraceDefItem: IOmlTraceDefinitionItem * seq of Eval`Context ==> 
                     seq of seq of IOmlExpression
-ExpandTraceDefItem(tdef,ctx_s) ==
+ExpandTraceDefItem(tdef,ctx_l) ==
   let bind      = tdef.getBind(),
       trace     = tdef.getTest(),
       regexpr   = if tdef.hasRegexpr() then tdef.getRegexpr() else nil,
-      new_ctx_s = ExpandTraceBinds(bind,ctx_s),
-      expr_l_l  = ExpandTraceCoreDef(trace,new_ctx_s)
+      new_ctx_l = ExpandTraceBinds(bind,ctx_l),
+      expr_l_l  = ExpandTraceCoreDef(trace,new_ctx_l)
   in
     return if regexpr = nil
            then expr_l_l
            else ExpandTraceRepeatPat(regexpr,expr_l_l);
 
-ExpandTraceSeqDef: IOmlTraceSequenceDefinition * set of Eval`Context ==> 
+ExpandTraceSeqDef: IOmlTraceSequenceDefinition * seq of Eval`Context ==> 
                    seq of seq of IOmlExpression
-ExpandTraceSeqDef(tdef,ctx_s) ==
+ExpandTraceSeqDef(tdef,ctx_l) ==
   (dcl expr_l_l : seq of seq of IOmlExpression := [[]];
    for td in tdef.getDefs() do
-     let e_l_l = ExpandTraceDef(td,ctx_s)
+     let e_l_l = ExpandTraceDef(td,ctx_l)
      in
        expr_l_l := CombineTraces(expr_l_l,e_l_l);
 
    return expr_l_l);
 
-ExpandTraceChoiceDef: IOmlTraceChoiceDefinition * set of Eval`Context ==> 
+ExpandTraceChoiceDef: IOmlTraceChoiceDefinition * seq of Eval`Context ==> 
                       seq of seq of IOmlExpression
-ExpandTraceChoiceDef(tdef,ctx_s) ==
+ExpandTraceChoiceDef(tdef,ctx_l) ==
   (dcl expr_l_l : seq of seq of IOmlExpression := [];
    for td in tdef.getDefs() do
-     let e_l_l = ExpandTraceDef(td,ctx_s)
+     let e_l_l = ExpandTraceDef(td,ctx_l)
      in
        expr_l_l := expr_l_l ^ e_l_l;
 
    return expr_l_l);
 
-ExpandTraceBinds: seq of IOmlTraceBinding * set of Eval`Context ==> 
-                  set of Eval`Context
-ExpandTraceBinds(bind_l,cxt_s) ==
-  (dcl c_s : set of Eval`Context := cxt_s;
+ExpandTraceBinds: seq of IOmlTraceBinding * seq of Eval`Context ==> 
+                  seq of Eval`Context
+ExpandTraceBinds(bind_l,cxt_l) ==
+  (dcl c_l : seq of Eval`Context := cxt_l;
 
    for bind in bind_l do
-     let c_s2 =  if isofclass(IOmlTraceLetBinding,bind)
-                 then ExtractLetBinding(bind,c_s)
-                 else ExtractLetBeBinding(bind,c_s)
+     let c_l2 =  if isofclass(IOmlTraceLetBinding,bind)
+                 then ExtractLetBinding(bind,c_l)
+                 else ExtractLetBeBinding(bind,c_l)
      in
-       c_s := eval.CombineContexts(c_s,c_s2); 
+       c_l := eval.CombineContexts(c_l,c_l2); 
 
-   return c_s);
+   return c_l);
 
 functions
   
-ExpandTraceCoreDef: IOmlTraceCoreDefinition * set of Eval`Context -> 
+ExpandTraceCoreDef: IOmlTraceCoreDefinition * seq of Eval`Context -> 
                     seq of seq of IOmlExpression
-ExpandTraceCoreDef(tdef,cxt_s) ==
+ExpandTraceCoreDef(tdef,cxt_l) ==
   if isofclass(IOmlTraceMethodApply,tdef)
-  then ExpandTraceMethodApply(tdef,cxt_s)
-  else ExpandBracketedTraceDef(tdef,cxt_s);
+  then ExpandTraceMethodApply(tdef,cxt_l)
+  else ExpandBracketedTraceDef(tdef,cxt_l);
 \end{vdm_al}
 
 Bracketed trace definitions actually give raise to an extra level of 
@@ -266,12 +266,12 @@ in the resulting collection of test cases.
 \begin{vdm_al}
 operations
 
-ExpandBracketedTraceDef: IOmlTraceBracketedDefinition * set of Eval`Context ==>
+ExpandBracketedTraceDef: IOmlTraceBracketedDefinition * seq of Eval`Context ==>
                          seq of seq of IOmlExpression
-ExpandBracketedTraceDef(tdef,cxt_s) ==
-  (PushCxt(cxt_s);
-   let e_l_l = ExpandTraceDef(tdef.getDefinition(),{{|->}}),
-       e_l_l2 = [ AddContextToExprList(e_l_l(i),hd cxt_s_stack) 
+ExpandBracketedTraceDef(tdef,cxt_l) ==
+  (PushCxt(cxt_l);
+   let e_l_l = ExpandTraceDef(tdef.getDefinition(),[{|->}]),
+       e_l_l2 = [ AddContextToExprList(e_l_l(i),hd cxt_l_stack) 
                 | i in set inds e_l_l]
    in
      (PopCxt();
@@ -280,9 +280,9 @@ ExpandBracketedTraceDef(tdef,cxt_s) ==
 
 functions
 
-ExpandTraceMethodApply: IOmlTraceMethodApply * set of Eval`Context -> 
+ExpandTraceMethodApply: IOmlTraceMethodApply * seq of Eval`Context -> 
                         seq of seq of IOmlExpression
-ExpandTraceMethodApply(tdef,cxt_s) ==
+ExpandTraceMethodApply(tdef,cxt_l) ==
   let var      = tdef.getVariableName(),
       met_nm   = tdef.getMethodName(),
       args     = tdef.getArgs(),
@@ -290,7 +290,7 @@ ExpandTraceMethodApply(tdef,cxt_s) ==
                                     new OmlName(nil,met_nm)),
       expr     = new OmlApplyExpression(fieldsel,args)
   in
-    AddContextToExpr(expr,cxt_s);
+    AddContextToExpr(expr,cxt_l);
 
 operations
 
@@ -354,34 +354,26 @@ RepeatCombine(expr_l_l,low,high) ==
 
 functions
 
-AddContextToExpr: IOmlExpression * set of Eval`Context -> 
+AddContextToExpr: IOmlExpression * seq of Eval`Context -> 
                   seq of seq of IOmlExpression
-AddContextToExpr(expr,cxt_s) ==
-  if cxt_s = {}
-  then [[expr]]
-  else let e_s = {let def_l = Context2ValShapeL(cxt)
-                  in
-                    if def_l = []
-                    then [expr]
-                    else [new OmlLetExpression(def_l, expr)]
-                 | cxt in set cxt_s}
-       in
-         VDMUtil`set2seq[seq of IOmlExpression](e_s);  
+AddContextToExpr(expr,cxt_l) ==
+  [let def_l = Context2ValShapeL(cxt_l(i))
+   in
+     if def_l = []
+     then [expr]
+     else [new OmlLetExpression(def_l, expr)]
+  | i in set inds cxt_l];
 
-AddContextToExprList: seq of IOmlExpression * set of Eval`Context -> 
+AddContextToExprList: seq of IOmlExpression * seq of Eval`Context -> 
                       seq of seq of IOmlExpression
-AddContextToExprList(e_l,cxt_s) ==
-  if cxt_s = {}
-  then [e_l]
-  else let e_s = {let def_l = Context2ValShapeL(cxt)
-                  in
-                    if def_l = []
-                    then e_l
-                    else [new OmlLetExpression(def_l, e_l(i))
-                         | i in set inds e_l]
-                 | cxt in set cxt_s}
-       in
-         VDMUtil`set2seq[seq of IOmlExpression](e_s);  
+AddContextToExprList(e_l,cxt_l) ==
+  [let def_l = Context2ValShapeL(cxt_l(i))
+   in
+     if def_l = []
+     then e_l
+     else [new OmlLetExpression(def_l, e_l(i))
+          | i in set inds e_l]
+  | i in set inds cxt_l];
 
 Context2ValShapeL: Eval`Context -> seq of IOmlValueShape
 Context2ValShapeL(cxt) ==
@@ -411,28 +403,30 @@ CombineTraces(e_l_l1, e_l_l2) ==
 
 operations
 
-ExtractLetBinding: IOmlTraceLetBinding * set of Eval`Context ==> 
-                   set of Eval`Context
-ExtractLetBinding(bind,cxt_s) ==
+ExtractLetBinding: IOmlTraceLetBinding * seq of Eval`Context ==> 
+                   seq of Eval`Context
+ExtractLetBinding(bind,cxt_l) ==
   let def_l = bind.getDefinitionList()
   in
-    (dcl c_s : set of Eval`Context := cxt_s;
+    (dcl c_l : seq of Eval`Context := cxt_l;
 
      for valshape in def_l do
        let pat    = valshape.getPattern(),
            expr   = valshape.getExpression(),
-           val_s  = {eval.evaluateExpression(expr,cxt) | cxt in set c_s},
-           newc_s = {eval.PatternMatch(pat,val)|val in set val_s}
+           val_l  = [eval.evaluateExpression(expr,c_l(i)) 
+                    | i in set inds c_l],
+           newc_l = [eval.PatternMatch(pat,val_l(i))
+                    | i in set inds val_l]
        in
-         c_s := eval.CombineContexts(c_s,newc_s);
+         c_l := eval.CombineContexts(c_l,newc_l);
 
-     return c_s);
+     return c_l);
 
 functions
          
-ExtractLetBeBinding: IOmlTraceLetBeBinding * set of Eval`Context -> 
-                     set of Eval`Context
-ExtractLetBeBinding(lbbind,cxt_s) ==
+ExtractLetBeBinding: IOmlTraceLetBeBinding * seq of Eval`Context -> 
+                     seq of Eval`Context
+ExtractLetBeBinding(lbbind,cxt_l) ==
   let bind = lbbind.getBind(),
       best = if lbbind.hasBest() then lbbind.getBest() else nil
   in
@@ -441,28 +435,31 @@ ExtractLetBeBinding(lbbind,cxt_s) ==
                       then new OmlSymbolicLiteralExpression(new OmlBooleanLiteral(true)) 
                       else best
          in
-           ExtractLetBeSetBinding(bind,bestex,cxt_s)
-    else {}; -- no support with type bindings --FIXME code gen bug
+           ExtractLetBeSetBinding(bind,bestex,cxt_l)
+    else []; -- no support with type bindings --FIXME code gen bug
+
 operations 
-ExtractLetBeSetBinding: IOmlSetBind * IOmlExpression * set of Eval`Context ==> 
-                        set of Eval`Context
-ExtractLetBeSetBinding(bind,best,cxt_s) ==
+ExtractLetBeSetBinding: IOmlSetBind * IOmlExpression * seq of Eval`Context ==> 
+                        seq of Eval`Context
+ExtractLetBeSetBinding(bind,best,cxt_l) ==
   let p_l  = bind.getPattern(),
       expr = bind.getExpression()
   in
-    return dunion { let val = eval.evaluateExpression(expr,cxt),
-                 c_l_s = if is_SEM`SET(val)
-                         then {[eval.PatternMatch(p_l(i),v) 
-                               | i in set inds p_l]
-                              | v in set val.v}
-                         else {}--FIXME code gen bug
-             in
-               {eval.MergeContextList(c_l) 
-               | c_l in set c_l_s
-               & let c = eval.MergeContextList([cxt] ^c_l)
-                 in
-                   eval.evaluateExpression(best,c) = mk_SEM`BOOL(true)}
-           | cxt in set cxt_s};
+    return conc [ let val = eval.evaluateExpression(expr,cxt_l(i)),
+                      c_l_l = if is_SEM`SET(val)
+                              then let l = {[eval.PatternMatch(p_l(i),v) 
+                                            | i in set inds p_l]
+                                           | v in set val.v}
+                                   in
+                                     VDMUtil`set2seq[seq1 of Eval`Context](l)
+                              else []--FIXME code gen bug
+                  in
+                    [eval.MergeContextList(c_l_l(i2)) 
+                    | i2 in set inds c_l_l
+                    & let c = eval.MergeContextList([cxt_l(i)] ^ conc c_l_l)
+                      in
+                        eval.evaluateExpression(best,c) = mk_SEM`BOOL(true)]
+           | i in set inds cxt_l];
 
 \end{vdm_al}
 
@@ -673,18 +670,18 @@ This is needed to be able to handle bracketed traces appropriately.
 
 \begin{vdm_al}
 
-PushCxt: set of Eval`Context ==> () 
-PushCxt(cxt_s) ==
-  cxt_s_stack := [cxt_s] ^ cxt_s_stack;  
+PushCxt: seq of Eval`Context ==> () 
+PushCxt(cxt_l) ==
+  cxt_l_stack := [cxt_l] ^ cxt_l_stack;  
 
 PopCxt: () ==> ()
 PopCxt() ==
-  cxt_s_stack := tl cxt_s_stack
+  cxt_l_stack := tl cxt_l_stack
 pre not CxtStackIsEmpty();
 
 CxtStackIsEmpty: () ==> bool
 CxtStackIsEmpty() ==
-  return cxt_s_stack = [];
+  return cxt_l_stack = [];
 
  
 -----------------------------------------
