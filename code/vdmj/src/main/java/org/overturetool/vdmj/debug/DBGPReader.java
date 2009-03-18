@@ -72,6 +72,7 @@ public class DBGPReader
 	private String command = "";
 	private String transaction = "";
 	private DBGPFeatures features;
+	private byte separator = '\0';
 
 	private Context breakContext = null;
 	private Breakpoint breakpoint = null;
@@ -158,6 +159,7 @@ public class DBGPReader
 		{
 			input = System.in;
 			output = System.out;
+			separator = ' ';
 		}
 
 		init();
@@ -217,7 +219,6 @@ public class DBGPReader
 
 	private void write(StringBuilder data) throws IOException
 	{
-		byte separator = '\0';
 		byte[] header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".getBytes("UTF-8");
 		byte[] body = data.toString().getBytes("UTF-8");
 		byte[] size = Integer.toString(header.length + body.length).getBytes("UTF-8");
