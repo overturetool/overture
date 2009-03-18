@@ -25,6 +25,7 @@ package org.overturetool.vdmj.definitions;
 
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
@@ -38,7 +39,7 @@ public class BUSClassDefinition extends ClassDefinition
 	public BUSClassDefinition() throws ParserException, LexException
 	{
 		super(
-			new LexNameToken("CLASS", "BUS", null),
+			new LexNameToken("CLASS", "BUS", new LexLocation()),
 			new LexNameList(),
 			operationDefs(),
 			false);

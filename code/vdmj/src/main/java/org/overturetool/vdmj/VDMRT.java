@@ -36,7 +36,7 @@ public class VDMRT extends VDMPP
 	}
 
 	@Override
-	protected ExitStatus typeCheck()
+	public ExitStatus typeCheck()
 	{
 		try
 		{

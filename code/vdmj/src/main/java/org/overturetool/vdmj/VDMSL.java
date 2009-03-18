@@ -68,7 +68,7 @@ public class VDMSL extends VDMJ
 	 */
 
 	@Override
-	protected ExitStatus parse(List<String> files)
+	public ExitStatus parse(List<String> files)
 	{
 		modules.clear();
 		LexLocation.resetLocations();
@@ -148,7 +148,7 @@ public class VDMSL extends VDMJ
 	 */
 
 	@Override
-	protected ExitStatus typeCheck()
+	public ExitStatus typeCheck()
 	{
 		int terrs = 0;
 		long before = System.currentTimeMillis();
@@ -255,8 +255,7 @@ public class VDMSL extends VDMJ
 		try
 		{
    			long before = System.currentTimeMillis();
-			interpreter = new ModuleInterpreter(modules);
-			interpreter.init(null);
+   			interpreter = getInterpreter();
    			long after = System.currentTimeMillis();
 
    	   		infoln("Initialized " + plural(modules.size(), "module", "s") + " in " +
@@ -299,5 +298,13 @@ public class VDMSL extends VDMJ
 		}
 
 		return ExitStatus.EXIT_ERRORS;
+	}
+
+	@Override
+	public ModuleInterpreter getInterpreter() throws Exception
+	{
+		ModuleInterpreter interpreter = new ModuleInterpreter(modules);
+		interpreter.init(null);
+		return interpreter;
 	}
 }

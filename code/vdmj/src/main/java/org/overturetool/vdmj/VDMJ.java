@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.runtime.Interpreter;
 
 
 /**
@@ -252,7 +253,7 @@ abstract public class VDMJ
 	 * @return The number of syntax errors.
 	 */
 
-	abstract protected ExitStatus parse(List<String> files);
+	public abstract ExitStatus parse(List<String> files);
 
 	/**
 	 * Type check the files previously parsed by {@link #parse(List)}. The
@@ -261,7 +262,15 @@ abstract public class VDMJ
 	 * @return The number of type check errors.
 	 */
 
-	abstract protected ExitStatus typeCheck();
+	public abstract ExitStatus typeCheck();
+
+	/**
+	 * Generate an interpreter from the classes parsed.
+	 * @return An initialized interpreter.
+	 * @throws Exception
+	 */
+
+	public abstract Interpreter getInterpreter() throws Exception;
 
 	/**
 	 * Interpret the type checked specification. The number returned is the

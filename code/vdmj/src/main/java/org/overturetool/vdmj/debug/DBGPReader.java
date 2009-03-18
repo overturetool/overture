@@ -33,8 +33,12 @@ import java.util.List;
 import java.util.Vector;
 import java.util.Map.Entry;
 
+import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.definitions.ClassList;
+import org.overturetool.vdmj.VDMJ;
+import org.overturetool.vdmj.VDMPP;
+import org.overturetool.vdmj.VDMRT;
+import org.overturetool.vdmj.VDMSL;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
@@ -44,7 +48,6 @@ import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.messages.MessageException;
 import org.overturetool.vdmj.runtime.Breakpoint;
-import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.DebuggerException;
 import org.overturetool.vdmj.runtime.Interpreter;
@@ -52,17 +55,13 @@ import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.RootContext;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.statements.Statement;
-import org.overturetool.vdmj.syntax.ClassReader;
 import org.overturetool.vdmj.syntax.ParserException;
-import org.overturetool.vdmj.typechecker.ClassTypeChecker;
-import org.overturetool.vdmj.typechecker.TypeChecker;
 import org.overturetool.vdmj.values.NameValuePairMap;
 import org.overturetool.vdmj.values.Value;
 
 public class DBGPReader
 {
 	private final String sessionId;
-	private final ClassList classes;
 	private final String expression;
 	private final InputStream input;
 	private final OutputStream output;
@@ -89,42 +88,38 @@ public class DBGPReader
 		Settings.dialect = Dialect.valueOf(args[3]);
 		String expression = args[4];
 
-		ClassList classes = new ClassList();
-		int errs = 0;
+		List<String> files = new Vector<String>();
 
 		for (int i=5; i<args.length; i++)
 		{
-			try
-			{
-    			LexTokenReader ltr = new LexTokenReader(new File(args[i]), Settings.dialect);
-    			ClassReader mr = new ClassReader(ltr);
-    			classes.addAll(mr.readClasses());
-    			errs += mr.getErrorCount();
-			}
-			catch (ParserException e)
-			{
-				errs++;
-			}
-			catch (LexException e)
-			{
-				errs++;
-			}
-			catch (IOException e)
-			{
-				errs++;
-			}
+			files.add(args[i]);
 		}
 
-		if (errs == 0)
-		{
-    		TypeChecker tc = new ClassTypeChecker(classes);
-    		tc.typeCheck();
+		VDMJ controller = null;
 
-    		if (TypeChecker.getErrorCount() == 0)
+		switch (Settings.dialect)
+		{
+			case VDM_SL:
+				controller = new VDMSL();
+				break;
+
+			case VDM_PP:
+				controller = new VDMPP();
+				break;
+
+			case VDM_RT:
+				controller = new VDMRT();
+				break;
+		}
+
+		if (controller.parse(files) == ExitStatus.EXIT_OK)
+		{
+    		if (controller.typeCheck() == ExitStatus.EXIT_OK)
     		{
 				try
 				{
-					new DBGPReader(host, port, session, classes, expression).run();
+					Interpreter i = controller.getInterpreter();
+					new DBGPReader(host, port, session, i, expression).run();
 	    			System.exit(0);
 				}
 				catch (Exception e)
@@ -144,13 +139,13 @@ public class DBGPReader
 	}
 
 	public DBGPReader(
-		String host, int port, String session, ClassList classes, String expression)
+		String host, int port, String session,
+		Interpreter interpreter, String expression)
 		throws Exception
 	{
 		this.sessionId = session;
-		this.classes = classes;
 		this.expression = expression;
-		this.interpreter = new ClassInterpreter(classes);
+		this.interpreter = interpreter;
 
 		if (port > 0)
 		{
@@ -194,7 +189,7 @@ public class DBGPReader
 		sb.append(features.getProperty("protocol_version"));
 		sb.append("\"");
 
-		for (File f: classes.getSourceFiles())
+		for (File f: interpreter.getSourceFiles())
 		{
 			sb.append(" fileuri=\"");
 			sb.append(f.toURI());
@@ -384,6 +379,27 @@ public class DBGPReader
 			line = readLine();
 		}
 		while (line != null && process(line));
+	}
+
+	public void stopped(Context ctxt, Breakpoint bp)
+	{
+		try
+		{
+			breakContext = ctxt;
+			breakpoint = bp;
+			statusResponse(DBGPStatus.BREAK, "BREAKPOINT", null);
+
+			run();
+
+			breakContext = null;
+			breakpoint = null;
+			status = DBGPStatus.RUNNING;
+			statusReason = "OK";
+		}
+		catch (Exception e)
+		{
+			errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
+		}
 	}
 
 	private boolean process(String line)
@@ -1224,26 +1240,5 @@ public class DBGPReader
 		hdr.append("success=\"1\"");
 
 		response(hdr, null);
-	}
-
-	public void stopped(Context ctxt, Breakpoint bp)
-	{
-		try
-		{
-			breakContext = ctxt;
-			breakpoint = bp;
-			statusResponse(DBGPStatus.BREAK, "BREAKPOINT", null);
-
-			run();
-
-			breakContext = null;
-			breakpoint = null;
-			status = DBGPStatus.RUNNING;
-			statusReason = "OK";
-		}
-		catch (Exception e)
-		{
-			errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
-		}
 	}
 }

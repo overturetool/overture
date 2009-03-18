@@ -52,7 +52,7 @@ public class VDMOV extends VDMPP
 	 */
 
 	@Override
-	protected ExitStatus parse(List<String> files)
+	public ExitStatus parse(List<String> files)
 	{
 		classes.clear();
 		LexLocation.resetLocations();
@@ -109,7 +109,7 @@ public class VDMOV extends VDMPP
 	}
 
 	@Override
-	protected ExitStatus typeCheck()
+	public ExitStatus typeCheck()
 	{
 		try
 		{
