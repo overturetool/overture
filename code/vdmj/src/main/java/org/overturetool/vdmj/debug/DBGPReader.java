@@ -61,12 +61,13 @@ import org.overturetool.vdmj.values.Value;
 
 public class DBGPReader
 {
-	private ClassList classes;
-	private InputStream input;
-	private OutputStream output;
-	private Interpreter interpreter = null;
+	private final String sessionId;
+	private final ClassList classes;
+	private final String expression;
+	private final InputStream input;
+	private final OutputStream output;
+	private final Interpreter interpreter;
 
-	private String sessionId;
 	private DBGPStatus status = null;
 	private String statusReason = "";
 	private String command = "";
@@ -76,33 +77,41 @@ public class DBGPReader
 	private Context breakContext = null;
 	private Breakpoint breakpoint = null;
 
-	// Usage: <host> <port> <sessionId> {-file <name>}
+	// Usage: <host> <port> <sessionId> <dialect> <expression> {<filename>}
 
-	public static void main(String[] args) throws Exception
+	public static void main(String[] args)
 	{
 		Settings.usingDBGP = true;
-		Settings.dialect = Dialect.VDM_PP;
 
 		String host = args[0];
 		int port = Integer.parseInt(args[1]);
 		String session = args[2];
-		ClassList classes = new ClassList();
+		Settings.dialect = Dialect.valueOf(args[3]);
+		String expression = args[4];
 
+		ClassList classes = new ClassList();
 		int errs = 0;
 
-		for (int i=3; i<args.length; i++)
+		for (int i=5; i<args.length; i++)
 		{
-			if (args[i].startsWith("-file"))
+			try
 			{
-				String name = args[i].replace("-file ", "");
-				LexTokenReader ltr = new LexTokenReader(new File(name), Dialect.VDM_PP);
-				ClassReader mr = new ClassReader(ltr);
-				classes.addAll(mr.readClasses());
-				errs += mr.getErrorCount();
+    			LexTokenReader ltr = new LexTokenReader(new File(args[i]), Settings.dialect);
+    			ClassReader mr = new ClassReader(ltr);
+    			classes.addAll(mr.readClasses());
+    			errs += mr.getErrorCount();
 			}
-			else
+			catch (ParserException e)
 			{
-				throw new Exception("Usage: <host> <port> <sessionId> {-file <name>}");
+				errs++;
+			}
+			catch (LexException e)
+			{
+				errs++;
+			}
+			catch (IOException e)
+			{
+				errs++;
 			}
 		}
 
@@ -113,17 +122,34 @@ public class DBGPReader
 
     		if (TypeChecker.getErrorCount() == 0)
     		{
-    			DBGPReader r = new DBGPReader(host, port, session, classes);
-    			r.run();
+				try
+				{
+					new DBGPReader(host, port, session, classes, expression).run();
+	    			System.exit(0);
+				}
+				catch (Exception e)
+				{
+					System.exit(3);
+				}
     		}
+    		else
+    		{
+    			System.exit(2);
+    		}
+		}
+		else
+		{
+			System.exit(1);
 		}
 	}
 
-	public DBGPReader(String host, int port, String session, ClassList classes)
+	public DBGPReader(
+		String host, int port, String session, ClassList classes, String expression)
 		throws Exception
 	{
 		this.sessionId = session;
 		this.classes = classes;
+		this.expression = expression;
 		this.interpreter = new ClassInterpreter(classes);
 
 		if (port > 0)
@@ -392,17 +418,17 @@ public class DBGPReader
 
     			case STEP_INTO:
     				processStepInto(c);
-    				carryOn = true;
+    				carryOn = false;
     				break;
 
     			case STEP_OVER:
     				processStepOver(c);
-    				carryOn = true;
+    				carryOn = false;
     				break;
 
     			case STEP_OUT:
     				processStepOut(c);
-    				carryOn = true;
+    				carryOn = false;
     				break;
 
     			case STOP:
@@ -458,6 +484,9 @@ public class DBGPReader
     				break;
 
     			case DETACH:
+    				carryOn = false;
+    				break;
+
     			default:
     				errorResponse(DBGPErrorCode.NOT_AVAILABLE, c.type.value);
     		}
@@ -476,7 +505,7 @@ public class DBGPReader
 
 	private DBGPCommand parse(String[] parts) throws Exception
 	{
-		// "<type> [<options>] [-- <args>]"
+		// "<type> [<options>] [-- <base64 args>]"
 
 		DBGPCommandType type = null;
 		List<DBGPOption> options = new Vector<DBGPOption>();
@@ -653,7 +682,7 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
 
-		if (c.data == null)
+		if (c.data != null)
 		{
 			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
 		}
@@ -661,7 +690,7 @@ public class DBGPReader
 		try
 		{
 			interpreter.init(this);
-			Value v = interpreter.execute(c.data, this);
+			Value v = interpreter.execute(expression, this);
 			StringBuilder sb = new StringBuilder();
 
 			sb.append("<message>");
