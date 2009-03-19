@@ -687,7 +687,7 @@ public class DBGPReader
 		response(hdr, null);
 	}
 
-	private boolean processRun(DBGPCommand c) throws DBGPException, IOException
+	private boolean processRun(DBGPCommand c) throws DBGPException
 	{
 		checkArgs(c, 1, false);
 
@@ -714,15 +714,9 @@ public class DBGPReader
 		}
 		catch (Exception e)
 		{
-			StringBuilder sb = new StringBuilder();
-
-			sb.append("<error><message>");
-			sb.append(e.getMessage());
-			sb.append("</message></error>");
-
 			status = DBGPStatus.STOPPING;
 			statusReason = DBGPReason.ERROR;
-			errorResponse(DBGPErrorCode.EVALUATION_ERROR, sb.toString());
+			errorResponse(DBGPErrorCode.EVALUATION_ERROR, e.getMessage());
 		}
 
 		return true;
