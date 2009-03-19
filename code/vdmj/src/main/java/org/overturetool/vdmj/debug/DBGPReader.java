@@ -69,7 +69,7 @@ public class DBGPReader
 
 	private DBGPStatus status = null;
 	private DBGPReason statusReason = null;
-	private String command = "";
+	private DBGPCommandType command = null;
 	private String transaction = "";
 	private DBGPFeatures features;
 	private byte separator = '\0';
@@ -210,13 +210,13 @@ public class DBGPReader
 		StringBuilder line = new StringBuilder();
 		char c = (char)input.read();
 
-		while (c != '\n' && c >= 0)
+		while (c != '\n' && c != 0xFFFF)
 		{
 			if (c != '\r') line.append(c);		// Ignore CRs
 			c = (char)input.read();
 		}
 
-		return (line.length() == 0 && c == -1) ? null : line.toString();
+		return (line.length() == 0 && c == 0xFFFF) ? null : line.toString();
 	}
 
 	private void write(StringBuilder data) throws IOException
@@ -326,16 +326,17 @@ public class DBGPReader
 		return sb;
 	}
 
-	private StringBuilder stackResponse(Context ctxt, int level)
+	private StringBuilder stackResponse(RootContext ctxt, int level)
 	{
 		StringBuilder sb = new StringBuilder();
+		String fileuri = new File(ctxt.location.file).toURI().toString();
 
 		sb.append("<stack level=\"" + level + "\"");
 		sb.append(" type=\"file\"");
-		sb.append(" filename=\"" + ctxt.location.file + "\"");
-		sb.append(" lineno=\"" + ctxt.location.startLine);
-		sb.append(" cmdbegin=\"" + ctxt.location.file + ":" + ctxt.location.startPos + "\"");
-		sb.append(">");
+		sb.append(" filename=\"" + fileuri + "\"");
+		sb.append(" lineno=\"" + ctxt.location.startLine + "\"");
+		sb.append(" cmdbegin=\"" + fileuri + ":" + ctxt.location.startPos + "\"");
+		sb.append("/>");
 
 		return sb;
 	}
@@ -411,7 +412,7 @@ public class DBGPReader
 
 		try
 		{
-			command = "?";
+			command = DBGPCommandType.UNKNOWN;
 			transaction = "?";
 
     		String[] parts = line.split("\\s+");
@@ -526,7 +527,6 @@ public class DBGPReader
 	{
 		// "<type> [<options>] [-- <base64 args>]"
 
-		DBGPCommandType type = null;
 		List<DBGPOption> options = new Vector<DBGPOption>();
 		String args = null;
 		boolean doneOpts = false;
@@ -534,8 +534,7 @@ public class DBGPReader
 
 		try
 		{
-			type = DBGPCommandType.lookup(parts[0]);
-			command = type.value;
+			command = DBGPCommandType.lookup(parts[0]);
 
 			for (int i=1; i<parts.length; i++)
 			{
@@ -597,7 +596,7 @@ public class DBGPReader
 			}
 		}
 
-		return new DBGPCommand(type, options, args);
+		return new DBGPCommand(command, options, args);
 	}
 
 	private void checkArgs(DBGPCommand c, int n, boolean data) throws DBGPException
@@ -996,7 +995,7 @@ public class DBGPReader
 
 		if (depth >= 0)
 		{
-			Context ctxt = breakContext.getFrame(depth);
+			RootContext ctxt = breakContext.getFrame(depth);
 			response(null, stackResponse(ctxt, depth));
 		}
 		else
@@ -1009,7 +1008,7 @@ public class DBGPReader
 			{
 				if (ctxt instanceof RootContext)
 				{
-					sb.append(stackResponse(ctxt, d++));
+					sb.append(stackResponse((RootContext)ctxt, d++));
 				}
 
 				ctxt = ctxt.outer;

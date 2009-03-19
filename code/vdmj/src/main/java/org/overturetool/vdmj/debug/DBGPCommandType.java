@@ -47,7 +47,7 @@ public enum DBGPCommandType
 	PROPERTY_SET("property_set"),
 	STDOUT("stdout"),
 	STDERR("stderr"),
-	;
+	UNKNOWN("?");
 
 	public String value;
 

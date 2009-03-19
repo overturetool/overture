@@ -291,7 +291,7 @@ public class Context extends HashMap<LexNameToken, Value>
 		return outer == null ? 0 : outer.getDepth();	// NB only roots count
 	}
 
-	public Context getFrame(int depth)
+	public RootContext getFrame(int depth)
 	{
 		return outer == null ? null : outer.getFrame(depth);
 	}

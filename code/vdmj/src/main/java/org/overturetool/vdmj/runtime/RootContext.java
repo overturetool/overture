@@ -44,13 +44,13 @@ public abstract class RootContext extends Context
 
 
 	@Override
-	public int getDepth()
+	public final int getDepth()
 	{
 		return outer == null ? 1 : outer.getDepth() + 1;
 	}
 
 	@Override
-	public Context getFrame(int depth)
+	public final RootContext getFrame(int depth)
 	{
 		return depth == 0 ? this :
 			outer == null ? null : outer.getFrame(depth - 1);
