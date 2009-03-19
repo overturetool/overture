@@ -23,9 +23,9 @@
 
 package org.overturetool.vdmj.debug;
 
-public enum DBGPStatus
+public enum DBGPReason
 {
-	STARTING, RUNNING, BREAK, STOPPING, STOPPED;
+	OK, ERROR, ABORTED, EXCEPTION;
 
 	@Override
 	public String toString()

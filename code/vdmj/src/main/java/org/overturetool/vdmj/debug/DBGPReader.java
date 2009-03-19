@@ -68,7 +68,7 @@ public class DBGPReader
 	private final Interpreter interpreter;
 
 	private DBGPStatus status = null;
-	private String statusReason = "";
+	private DBGPReason statusReason = null;
 	private String command = "";
 	private String transaction = "";
 	private DBGPFeatures features;
@@ -76,6 +76,7 @@ public class DBGPReader
 
 	private Context breakContext = null;
 	private Breakpoint breakpoint = null;
+	private Value theAnswer = null;
 
 	// Usage: <host> <port> <sessionId> <dialect> <expression> {<filename>}
 
@@ -93,7 +94,7 @@ public class DBGPReader
 
 		for (int i=5; i<args.length; i++)
 		{
-			files.add(args[i]);
+			files.add(new File(args[i]).getPath());
 		}
 
 		VDMJ controller = null;
@@ -168,6 +169,7 @@ public class DBGPReader
 	private void init() throws IOException
 	{
 		status = DBGPStatus.STARTING;
+		statusReason = DBGPReason.OK;
 		features = new DBGPFeatures();
 
 		StringBuilder sb = new StringBuilder();
@@ -285,7 +287,7 @@ public class DBGPReader
 		statusResponse(status, statusReason, null);
 	}
 
-	private void statusResponse(DBGPStatus s, String reason, StringBuilder body)
+	private void statusResponse(DBGPStatus s, DBGPReason reason, StringBuilder body)
 		throws IOException
 	{
 		StringBuilder sb = new StringBuilder();
@@ -388,14 +390,14 @@ public class DBGPReader
 		{
 			breakContext = ctxt;
 			breakpoint = bp;
-			statusResponse(DBGPStatus.BREAK, "BREAKPOINT", null);
+			statusResponse(DBGPStatus.BREAK, DBGPReason.OK, null);
 
 			run();
 
 			breakContext = null;
 			breakpoint = null;
 			status = DBGPStatus.RUNNING;
-			statusReason = "OK";
+			statusReason = DBGPReason.OK;
 		}
 		catch (Exception e)
 		{
@@ -707,25 +709,20 @@ public class DBGPReader
 		try
 		{
 			interpreter.init(this);
-			Value v = interpreter.execute(expression, this);
-			StringBuilder sb = new StringBuilder();
-
-			sb.append("<message>");
-			sb.append("=");
-			sb.append(v.toString());
-			sb.append("</message>");
-
-			statusResponse(DBGPStatus.STOPPING, "OK", sb);
+			theAnswer = interpreter.execute(expression, this);
+			statusResponse(DBGPStatus.STOPPING, DBGPReason.OK, null);
 		}
 		catch (Exception e)
 		{
 			StringBuilder sb = new StringBuilder();
 
-			sb.append("<message>");
+			sb.append("<error><message>");
 			sb.append(e.getMessage());
-			sb.append("</message>");
+			sb.append("</message></error>");
 
-			statusResponse(DBGPStatus.STOPPING, "ERROR", sb);
+			status = DBGPStatus.STOPPING;
+			statusReason = DBGPReason.ERROR;
+			errorResponse(DBGPErrorCode.EVALUATION_ERROR, sb.toString());
 		}
 
 		return true;
@@ -740,7 +737,7 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
 
-		statusResponse(DBGPStatus.BREAK, "OK", null);
+		statusResponse(DBGPStatus.BREAK, DBGPReason.OK, null);
    		breakContext.threadState.set(breakpoint.location.startLine, null, null);
 	}
 
@@ -753,7 +750,7 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
 
-		statusResponse(DBGPStatus.BREAK, "OK", null);
+		statusResponse(DBGPStatus.BREAK, DBGPReason.OK, null);
 		breakContext.threadState.set(breakpoint.location.startLine,	breakContext.getRoot(), null);
 	}
 
@@ -766,7 +763,7 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
 
-		statusResponse(DBGPStatus.BREAK, "OK", null);
+		statusResponse(DBGPStatus.BREAK, DBGPReason.OK, null);
 		breakContext.threadState.set(breakpoint.location.startLine, null, breakContext.getRoot().outer);
 	}
 
@@ -779,7 +776,7 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
 
-		statusResponse(DBGPStatus.STOPPING, "OK", null);
+		statusResponse(DBGPStatus.STOPPING, DBGPReason.OK, null);
 		DebuggerException e = new DebuggerException("terminated");
 		Interpreter.stop(e, breakContext);
 	}
@@ -821,6 +818,18 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.BREAKPOINT_TYPE_UNSUPPORTED, option.value);
 		}
 
+		option = c.getOption(DBGPOptionType.F);
+		String filename = null;
+
+		if (option != null)
+		{
+			filename = new File(option.value).getPath();
+		}
+		else
+		{
+			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
+		}
+
 		option = c.getOption(DBGPOptionType.S);
 
 		if (option != null)
@@ -831,14 +840,6 @@ public class DBGPReader
     		}
 		}
 
-		option = c.getOption(DBGPOptionType.F);
-		String filename = null;
-
-		if (option != null)
-		{
-			filename = new File(option.value).getPath();
-		}
-
 		option = c.getOption(DBGPOptionType.N);
 		int lineno = 0;
 
@@ -846,41 +847,6 @@ public class DBGPReader
 		{
 			lineno = Integer.parseInt(option.value);
 		}
-
-//		option = c.getOption(DBGPOptionType.M);
-//
-//		if (option != null)
-//		{
-//   			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, option.value);
-//		}
-//
-//		option = c.getOption(DBGPOptionType.X);
-//
-//		if (option != null)
-//		{
-//   			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, option.value);
-//		}
-//
-//		option = c.getOption(DBGPOptionType.H);
-//
-//		if (option != null)
-//		{
-//   			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, option.value);
-//		}
-//
-//		option = c.getOption(DBGPOptionType.O);
-//
-//		if (option != null)
-//		{
-//   			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, option.value);
-//		}
-//
-//		option = c.getOption(DBGPOptionType.R);
-//
-//		if (option != null)
-//		{
-//   			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, option.value);
-//		}
 
 		String condition = null;
 
