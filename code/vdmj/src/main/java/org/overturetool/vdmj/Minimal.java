@@ -24,7 +24,8 @@
 package org.overturetool.vdmj;
 
 import java.io.File;
-import java.util.Arrays;
+import java.util.List;
+import java.util.Vector;
 
 import org.overturetool.vdmj.commands.CommandReader;
 import org.overturetool.vdmj.commands.ModuleCommandReader;
@@ -41,7 +42,8 @@ public class Minimal
 {
 	public static void main(String[] args) throws Exception
 	{
-		LexTokenReader ltr = new LexTokenReader(new File(args[0]), Dialect.VDM_SL);
+		File file = new File(args[0]);
+		LexTokenReader ltr = new LexTokenReader(file, Dialect.VDM_SL);
 		ModuleReader mr = new ModuleReader(ltr);
 		ModuleList modules = mr.readModules();
 
@@ -55,7 +57,9 @@ public class Minimal
     			ModuleInterpreter interpreter = new ModuleInterpreter(modules);
     			interpreter.init(null);
     			CommandReader reader = new ModuleCommandReader(interpreter, "$ ");
-    			reader.run(Arrays.asList(args));
+    			List<File> files = new Vector<File>();
+    			files.add(file);
+    			reader.run(files);
     		}
 		}
 	}

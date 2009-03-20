@@ -104,7 +104,7 @@ abstract public class CommandReader
 	 * reader should loop and read/dispatch more commands, or exit.
 	 */
 
-	public ExitStatus run(List<String> filenames)
+	public ExitStatus run(List<File> filenames)
 	{
 		String line = "";
 		String lastline = "";
@@ -113,9 +113,9 @@ abstract public class CommandReader
 
 		while (carryOn)
 		{
-			for (String file: filenames)
+			for (File file: filenames)
 			{
-				if (new File(file).lastModified() > timestamp)
+				if (file.lastModified() > timestamp)
 				{
 					println("File " + file + " has changed");
 				}
@@ -366,11 +366,11 @@ abstract public class CommandReader
 		return notAvailable(line);
 	}
 
-	protected boolean doFiles(List<String> filenames)
+	protected boolean doFiles(List<File> filenames)
 	{
-		for (String file: filenames)
+		for (File file: filenames)
 		{
-			println(file);
+			println(file.getPath());
 		}
 
 		return true;
@@ -476,7 +476,7 @@ abstract public class CommandReader
 		if (old != null)
 		{
 			println("Cleared " + old);
-			println(interpreter.getSource(old.location));
+			println(interpreter.getSourceLine(old.location));
 		}
 		else
 		{
@@ -494,7 +494,7 @@ abstract public class CommandReader
 		{
 			Breakpoint bp = map.get(key);
 			println(bp.toString());
-			println(interpreter.getSource(bp.location));
+			println(interpreter.getSourceLine(bp.location));
 		}
 
 		return true;
@@ -505,13 +505,13 @@ abstract public class CommandReader
 		return notAvailable(line);
 	}
 
-	protected boolean doCoverage(String line, List<String> filenames)
+	protected boolean doCoverage(String line, List<File> loaded)
 	{
 		try
 		{
 			if (line.equals("coverage"))
 			{
-				for (String file: filenames)
+				for (File file: loaded)
 				{
 					doCoverage(file);
 				}
@@ -521,31 +521,36 @@ abstract public class CommandReader
 
 			String[] parts = line.split("\\s+");
 
-			if (parts[1].equals("clear"))
+			if (parts.length == 2 && parts[1].equals("clear"))
 			{
 				LexLocation.clearLocations();
 				println("Cleared all coverage information");
 				return true;
 			}
 
-			if (filenames.contains(parts[1]))
+			for (int p = 1; p < parts.length; p++)
 			{
-				return doCoverage(parts[1]);
-			}
-			else
-			{
-				println(parts[1] + " is not loaded - try 'files'");
+				File f = new File(parts[p]);
+
+    			if (loaded.contains(f))
+    			{
+    				doCoverage(f);
+    			}
+    			else
+    			{
+    				println(f + " is not loaded - try 'files'");
+    			}
 			}
 		}
 		catch (Exception e)
 		{
-			println("Usage: coverage <filename>");
+			println("Usage: coverage clear|<filenames>");
 		}
 
 		return true;
 	}
 
-	protected boolean doCoverage(String file)
+	private boolean doCoverage(File file)
 	{
 		try
 		{
@@ -564,10 +569,6 @@ abstract public class CommandReader
 		{
 			println("coverage: " + e.getMessage());
 		}
-		catch (Exception e)
-		{
-			println("Usage: coverage <filename>");
-		}
 
 		return true;
 	}
@@ -579,7 +580,8 @@ abstract public class CommandReader
 
 		if (m.matches())
 		{
-			setBreakpoint(m.group(1), Integer.parseInt(m.group(2)), m.group(3));
+			File file = new File(m.group(1));
+			setBreakpoint(file, Integer.parseInt(m.group(2)), m.group(3));
 		}
 		else
 		{
@@ -607,7 +609,8 @@ abstract public class CommandReader
 
 		if (m.matches())
 		{
-			setTracepoint(m.group(1), Integer.parseInt(m.group(2)), m.group(3));
+			File file = new File(m.group(1));
+			setTracepoint(file, Integer.parseInt(m.group(2)), m.group(3));
 		}
 		else
 		{
@@ -704,7 +707,7 @@ abstract public class CommandReader
 		return false;
 	}
 
-	protected boolean doLoad(String line, List<String> filenames)
+	protected boolean doLoad(String line, List<File> filenames)
 	{
 		if (line.indexOf(' ') < 0)
 		{
@@ -716,7 +719,7 @@ abstract public class CommandReader
 
 		for (String s: line.split("\\s+"))
 		{
-			filenames.add(s);
+			filenames.add(new File(s));
 		}
 
 		filenames.remove(0);	// which is "load" :-)
@@ -836,7 +839,7 @@ abstract public class CommandReader
 		println("trace <function/operation> [<exp>] - create a tracepoint");
 		println("remove <breakpoint#> - remove a trace/breakpoint");
 		println("list - list breakpoints");
-		println("coverage [<file>|clear] - display/clear file line coverage");
+		println("coverage [clear | <files>] - display/clear line coverage");
 		println("files - list files in the current specification");
 		println("reload - reload the current specification files");
 		println("load <files> - replace current loaded specification files");
@@ -864,16 +867,12 @@ abstract public class CommandReader
 	 * @throws Exception Problems parsing condition.
 	 */
 
-	private void setBreakpoint(String file, int line, String condition)
+	private void setBreakpoint(File file, int line, String condition)
 		throws Exception
 	{
 		if (file == null)
 		{
-			file = interpreter.getDefaultFilename();
-		}
-		else
-		{
-			file = new File(file).getPath();
+			file = interpreter.getDefaultFile();
 		}
 
 		Statement stmt = interpreter.findStatement(file, line);
@@ -891,7 +890,7 @@ abstract public class CommandReader
 				interpreter.clearBreakpoint(exp.breakpoint.number);
 				Breakpoint bp = interpreter.setBreakpoint(exp, condition);
 				println("Created " + bp);
-				println(interpreter.getSource(bp.location));
+				println(interpreter.getSourceLine(bp.location));
 			}
 		}
 		else
@@ -899,7 +898,7 @@ abstract public class CommandReader
 			interpreter.clearBreakpoint(stmt.breakpoint.number);
 			Breakpoint bp = interpreter.setBreakpoint(stmt, condition);
 			println("Created " + bp);
-			println(interpreter.getSource(bp.location));
+			println(interpreter.getSourceLine(bp.location));
 		}
 	}
 
@@ -939,7 +938,7 @@ abstract public class CommandReader
 			interpreter.clearBreakpoint(exp.breakpoint.number);
 			Breakpoint bp = interpreter.setBreakpoint(exp, condition);
 			println("Created " + bp);
-			println(interpreter.getSource(bp.location));
+			println(interpreter.getSourceLine(bp.location));
 		}
 		else if (v instanceof OperationValue)
 		{
@@ -948,7 +947,7 @@ abstract public class CommandReader
 			interpreter.clearBreakpoint(stmt.breakpoint.number);
 			Breakpoint bp = interpreter.setBreakpoint(stmt, condition);
 			println("Created " + bp);
-			println(interpreter.getSource(bp.location));
+			println(interpreter.getSourceLine(bp.location));
 		}
 		else if (v == null)
 		{
@@ -971,16 +970,12 @@ abstract public class CommandReader
 	 * @throws Exception Problems parsing condition.
 	 */
 
-	private void setTracepoint(String file, int line, String trace)
+	private void setTracepoint(File file, int line, String trace)
 		throws Exception
 	{
 		if (file == null)
 		{
-			file = interpreter.getDefaultFilename();
-		}
-		else
-		{
-			file = new File(file).getPath();
+			file = interpreter.getDefaultFile();
 		}
 
 		Statement stmt = interpreter.findStatement(file, line);
@@ -998,7 +993,7 @@ abstract public class CommandReader
 				interpreter.clearBreakpoint(exp.breakpoint.number);
 				Breakpoint bp = interpreter.setTracepoint(exp, trace);
 				println("Created " + bp);
-				println(interpreter.getSource(bp.location));
+				println(interpreter.getSourceLine(bp.location));
 			}
 		}
 		else
@@ -1006,7 +1001,7 @@ abstract public class CommandReader
 			interpreter.clearBreakpoint(stmt.breakpoint.number);
 			Breakpoint bp = interpreter.setTracepoint(stmt, trace);
 			println("Created " + bp);
-			println(interpreter.getSource(bp.location));
+			println(interpreter.getSourceLine(bp.location));
 		}
 	}
 
@@ -1047,7 +1042,7 @@ abstract public class CommandReader
 			interpreter.clearBreakpoint(exp.breakpoint.number);
 			Breakpoint bp = interpreter.setTracepoint(exp, trace);
 			println("Created " + bp);
-			println(interpreter.getSource(bp.location));
+			println(interpreter.getSourceLine(bp.location));
 		}
 		else if (v instanceof OperationValue)
 		{
@@ -1056,7 +1051,7 @@ abstract public class CommandReader
 			interpreter.clearBreakpoint(stmt.breakpoint.number);
 			Breakpoint bp = interpreter.setTracepoint(stmt, trace);
 			println("Created " + bp);
-			println(interpreter.getSource(bp.location));
+			println(interpreter.getSourceLine(bp.location));
 		}
 		else
 		{

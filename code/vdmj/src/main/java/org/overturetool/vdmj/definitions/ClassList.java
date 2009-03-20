@@ -100,7 +100,7 @@ public class ClassList extends Vector<ClassDefinition>
 
 		for (ClassDefinition def: this)
 		{
-			files.add(new File(def.location.file));
+			files.add(def.location.file);
 		}
 
 		return files;
@@ -250,7 +250,7 @@ public class ClassList extends Vector<ClassDefinition>
 		return set;
 	}
 
-	public Statement findStatement(String file, int lineno)
+	public Statement findStatement(File file, int lineno)
 	{
 		for (ClassDefinition c: this)
 		{
@@ -268,7 +268,7 @@ public class ClassList extends Vector<ClassDefinition>
 		return null;
 	}
 
-	public Expression findExpression(String file, int lineno)
+	public Expression findExpression(File file, int lineno)
 	{
 		for (ClassDefinition c: this)
 		{

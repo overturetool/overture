@@ -64,7 +64,7 @@ public class VDMTestCase extends TestCase
 		}
 		else if (parser.equalsIgnoreCase("overture"))
 		{
-			OvertureReader or = new OvertureReader(vpppath, charset);
+			OvertureReader or = new OvertureReader(new File(vpppath), charset);
 			classes = or.readClasses();
 			or.close();
 			errs = or.getErrorCount();

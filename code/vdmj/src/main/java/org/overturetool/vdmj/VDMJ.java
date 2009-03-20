@@ -60,7 +60,7 @@ abstract public class VDMJ
 
 	public static void main(String[] args)
 	{
-		List<String> filenames = new Vector<String>();
+		List<File> filenames = new Vector<File>();
 		List<String> largs = Arrays.asList(args);
 		VDMJ controller = null;
 
@@ -171,8 +171,7 @@ abstract public class VDMJ
     		}
     		else
     		{
-    			// This converts the separators to a platform specific form.
-    			filenames.add(new File(arg).getPath());
+    			filenames.add(new File(arg));
     		}
 		}
 
@@ -253,7 +252,7 @@ abstract public class VDMJ
 	 * @return The number of syntax errors.
 	 */
 
-	public abstract ExitStatus parse(List<String> files);
+	public abstract ExitStatus parse(List<File> files);
 
 	/**
 	 * Type check the files previously parsed by {@link #parse(List)}. The
@@ -281,7 +280,7 @@ abstract public class VDMJ
 	 * @return The exit status of the interpreter.
 	 */
 
-	abstract protected ExitStatus interpret(List<String> filenames);
+	abstract protected ExitStatus interpret(List<File> filenames);
 
 	protected static void info(String m)
 	{

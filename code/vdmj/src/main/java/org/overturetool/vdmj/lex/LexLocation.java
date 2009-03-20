@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.lex;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Vector;
@@ -41,7 +42,7 @@ public class LexLocation implements Serializable
 	private boolean executable = false;
 
 	/** The filename of the token. */
-	public final String file;
+	public final File file;
 	/** The module/class name of the token. */
 	public final String module;
 	/** The line number of the start of the token. */
@@ -60,7 +61,7 @@ public class LexLocation implements Serializable
 	 * Create a location with the given fields.
 	 */
 
-	public LexLocation(String file, String module,
+	public LexLocation(File file, String module,
 		int startLine, int startPos, int endLine, int endPos)
 	{
 		this.file = file;
@@ -79,7 +80,7 @@ public class LexLocation implements Serializable
 
 	public LexLocation()
 	{
-		this("console", "DEFAULT", 0, 0, 0, 0);
+		this(new File("console"), "DEFAULT", 0, 0, 0, 0);
 	}
 
 	@Override
@@ -139,7 +140,7 @@ public class LexLocation implements Serializable
 		allLocations = new Vector<LexLocation>();
 	}
 
-	public static List<Integer> getHitList(String file)
+	public static List<Integer> getHitList(File file)
 	{
 		List<Integer> hits = new Vector<Integer>();
 
@@ -169,7 +170,7 @@ public class LexLocation implements Serializable
 		return misses;
 	}
 
-	public static List<Integer> getSourceList(String file)
+	public static List<Integer> getSourceList(File file)
 	{
 		List<Integer> lines = new Vector<Integer>();
 
@@ -184,7 +185,7 @@ public class LexLocation implements Serializable
 		return lines;
 	}
 
-	public static List<LexLocation> getHitLocations(String file)
+	public static List<LexLocation> getHitLocations(File file)
 	{
 		List<LexLocation> hits = new Vector<LexLocation>();
 

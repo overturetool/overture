@@ -29,6 +29,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Vector;
 import java.util.Map.Entry;
@@ -91,11 +93,18 @@ public class DBGPReader
 		Settings.dialect = Dialect.valueOf(args[3]);
 		String expression = args[4];
 
-		List<String> files = new Vector<String>();
+		List<File> files = new Vector<File>();
 
 		for (int i=5; i<args.length; i++)
 		{
-			files.add(new File(args[i]).getPath());
+			try
+			{
+				files.add(new File(new URI(args[i])));
+			}
+			catch (URISyntaxException e)
+			{
+				System.exit(4);
+			}
 		}
 
 		VDMJ controller = null;
@@ -313,7 +322,7 @@ public class DBGPReader
 		sb.append("<breakpoint id=\"" + bp.number + "\"");
 		sb.append(" type=\"line\"");
 		sb.append(" state=\"enabled\"");
-		sb.append(" filename=\"file://" + bp.location.file + "\"");
+		sb.append(" filename=\"" + bp.location.file.toURI() + "\"");
 		sb.append(" lineno=\"" + bp.location.startLine + "\"");
 		sb.append(">");
 
@@ -330,11 +339,10 @@ public class DBGPReader
 	private StringBuilder stackResponse(RootContext ctxt, int level)
 	{
 		StringBuilder sb = new StringBuilder();
-		String fileuri = "file://" + ctxt.location.file;
 
 		sb.append("<stack level=\"" + level + "\"");
 		sb.append(" type=\"file\"");
-		sb.append(" filename=\"" + fileuri + "\"");
+		sb.append(" filename=\"" + ctxt.location.file.toURI() + "\"");
 		sb.append(" lineno=\"" + ctxt.location.startLine + "\"");
 		sb.append(" cmdbegin=\"" + ctxt.location.startLine + ":" + ctxt.location.startPos + "\"");
 		sb.append(" cmdend=\"" + ctxt.location.endLine + ":" + ctxt.location.endPos + "\"");
@@ -416,8 +424,6 @@ public class DBGPReader
 		{
 			command = DBGPCommandType.UNKNOWN;
 			transaction = "?";
-
-			line = line.replace("file://", "");		// HACK
 
     		String[] parts = line.split("\\s+");
     		DBGPCommand c = parse(parts);
@@ -829,7 +835,8 @@ public class DBGPReader
 		breakpointResponse(bp);
 	}
 
-	private void breakpointSet(DBGPCommand c) throws DBGPException, IOException
+	private void breakpointSet(DBGPCommand c)
+		throws DBGPException, IOException, URISyntaxException
 	{
 		DBGPOption option = c.getOption(DBGPOptionType.T);
 
@@ -846,11 +853,11 @@ public class DBGPReader
 		}
 
 		option = c.getOption(DBGPOptionType.F);
-		String filename = null;
+		File filename = null;
 
 		if (option != null)
 		{
-			filename = new File(option.value).getPath();
+			filename = new File(new URI(option.value));
 		}
 		else
 		{

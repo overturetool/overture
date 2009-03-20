@@ -67,7 +67,7 @@ public class VDMUtil
 			Context outer = ctxt.getRoot().outer;
 			RootContext root = outer.getRoot();
 
-			tuple.add(new SeqValue(ctxt.location.file));
+			tuple.add(new SeqValue(ctxt.location.file.getPath()));
 			tuple.add(new NaturalOneValue(ctxt.location.startLine));
 			tuple.add(new NaturalOneValue(ctxt.location.startPos));
 			tuple.add(new SeqValue(ctxt.location.module));

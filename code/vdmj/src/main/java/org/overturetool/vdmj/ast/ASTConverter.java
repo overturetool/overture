@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.ast;
 
+import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
@@ -178,11 +179,11 @@ public class ASTConverter
 {
 	private static final long MAX_TIMES = 5;
 
-	public final String filename;
+	public final File filename;
 	public final IOmlDocument document;
 	private String classname = null;
 
-	public ASTConverter(String filename, IOmlDocument document)
+	public ASTConverter(File filename, IOmlDocument document)
 	{
 		this.filename = filename;
 		this.document = document;

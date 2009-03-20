@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.syntax;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -44,15 +45,15 @@ import org.overturetool.vdmj.messages.VDMError;
 
 public class OvertureReader extends Reader
 {
-	public final String filename;
+	public final File filename;
 	public final OvertureParser theParser;
 
-	public OvertureReader(String filename) throws Exception
+	public OvertureReader(File filename) throws Exception
 	{
 		this(filename, Charset.defaultCharset().name());
 	}
 
-	public OvertureReader(String filename, String charset) throws Exception
+	public OvertureReader(File filename, String charset) throws Exception
 	{
 		super();
 		this.filename = filename;
@@ -63,7 +64,7 @@ public class OvertureReader extends Reader
 		{
     		theParser = new OvertureParser(theStream);
     		theParser.parseDocument();
-    		theParser.astDocument.setFilename(filename);
+    		theParser.astDocument.setFilename(filename.getPath());
 		}
 		catch (CGException e)
 		{

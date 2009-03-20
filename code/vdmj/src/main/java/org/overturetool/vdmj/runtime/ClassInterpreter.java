@@ -121,7 +121,7 @@ public class ClassInterpreter extends Interpreter
 	}
 
 	@Override
-	public String getDefaultFilename()
+	public File getDefaultFile()
 	{
 		return defaultClass.name.location.file;
 	}
@@ -329,13 +329,13 @@ public class ClassInterpreter extends Interpreter
 	}
 
 	@Override
-	public Statement findStatement(String file, int lineno)
+	public Statement findStatement(File file, int lineno)
 	{
 		return classes.findStatement(file, lineno);
 	}
 
 	@Override
-	public Expression findExpression(String file, int lineno)
+	public Expression findExpression(File file, int lineno)
 	{
 		return classes.findExpression(file, lineno);
 	}

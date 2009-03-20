@@ -65,7 +65,7 @@ public class ModuleList extends Vector<Module>
 
 		for (Module def: this)
 		{
-			files.add(new File(def.name.location.file));
+			files.add(def.name.location.file);
 		}
 
 		return files;
@@ -84,7 +84,7 @@ public class ModuleList extends Vector<Module>
    		return null;
 	}
 
-	public Statement findStatement(String file, int lineno)
+	public Statement findStatement(File file, int lineno)
 	{
 		for (Module m: this)
 		{
@@ -97,7 +97,7 @@ public class ModuleList extends Vector<Module>
 		return null;
 	}
 
-	public Expression findExpression(String file, int lineno)
+	public Expression findExpression(File file, int lineno)
 	{
 		for (Module m: this)
 		{
@@ -117,7 +117,7 @@ public class ModuleList extends Vector<Module>
 		if (isEmpty())
 		{
 			initialContext = new StateContext(
-				new LexLocation("file", null, 0, 0, 0, 0), "global environment");
+				new LexLocation(), "global environment");
 		}
 		else
 		{

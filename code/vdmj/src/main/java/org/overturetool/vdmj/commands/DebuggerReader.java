@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.commands;
 
+import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
@@ -74,7 +75,7 @@ public class DebuggerReader extends CommandReader
 		{
     		Interpreter.suspend();
     		println("Stopped " + breakpoint);
-       		println(interpreter.getSource(breakpoint.location));
+       		println(interpreter.getSourceLine(breakpoint.location));
 
        		try
 			{
@@ -86,7 +87,7 @@ public class DebuggerReader extends CommandReader
 					"Internal 0052: Cannot set default name at breakpoint");
 			}
 
-       		ExitStatus status = super.run(new Vector<String>());
+       		ExitStatus status = super.run(new Vector<File>());
 
     		ctxt.threadState.action = InterruptAction.RUNNING;
     		return status;
@@ -234,7 +235,7 @@ public class DebuggerReader extends CommandReader
 	@Override
 	protected boolean doSource(String line)
 	{
-		String file = breakpoint.location.file;
+		File file = breakpoint.location.file;
 		int current = breakpoint.location.startLine;
 
 		int start = current - SOURCE_LINES;
@@ -243,7 +244,7 @@ public class DebuggerReader extends CommandReader
 
 		for (int src = start; src < end; src++)
 		{
-			println(interpreter.getSource(
+			println(interpreter.getSourceLine(
 				file, src, (src == current) ? ":>>" : ":  "));
 		}
 
@@ -301,19 +302,19 @@ public class DebuggerReader extends CommandReader
 	}
 
 	@Override
-	protected boolean doLoad(String line, List<String> filenames)
+	protected boolean doLoad(String line, List<File> filenames)
 	{
 		return notAvailable(line);
 	}
 
 	@Override
-	protected boolean doFiles(List<String> filenames)
+	protected boolean doFiles(List<File> filenames)
 	{
 		return notAvailable("");
 	}
 
 	@Override
-	protected boolean doCoverage(String line, List<String> filenames)
+	protected boolean doCoverage(String line, List<File> filenames)
 	{
 		return notAvailable(line);
 	}

@@ -60,7 +60,7 @@ abstract public class Interpreter
 	public Map<Integer, Breakpoint> breakpoints;
 
 	/** A list of source files loaded. */
-	public Map<String, SourceFile> sourceFiles;
+	public Map<File, SourceFile> sourceFiles;
 
 	/** The number of the next breakpoint to be created. */
 	public int nextbreakpoint = 0;
@@ -87,7 +87,7 @@ abstract public class Interpreter
 	public Interpreter()
 	{
 		breakpoints = new TreeMap<Integer, Breakpoint>();
-		sourceFiles = new HashMap<String, SourceFile>();
+		sourceFiles = new HashMap<File, SourceFile>();
 		instance = this;
 		mainThread = Thread.currentThread();
 	}
@@ -177,7 +177,7 @@ abstract public class Interpreter
 	 * @return The default file name.
 	 */
 
-	abstract public String getDefaultFilename();
+	abstract public File getDefaultFile();
 
 	/**
 	 * Set the default module or class name.
@@ -263,25 +263,25 @@ abstract public class Interpreter
 	 * Get a line of a source file.
 	 */
 
-	public String getSource(LexLocation src)
+	public String getSourceLine(LexLocation src)
 	{
-		return getSource(src.file, src.startLine);
+		return getSourceLine(src.file, src.startLine);
 	}
 
 	/**
 	 * Get a line of a source file by its location.
 	 */
 
-	public String getSource(String file, int line)
+	public String getSourceLine(File file, int line)
 	{
-		return getSource(file, line, ":  ");
+		return getSourceLine(file, line, ":  ");
 	}
 
 	/**
 	 * Get a line of a source file by its location.
 	 */
 
-	public String getSource(String file, int line, String sep)
+	public String getSourceLine(File file, int line, String sep)
 	{
 		SourceFile source = sourceFiles.get(file);
 
@@ -306,7 +306,7 @@ abstract public class Interpreter
 	 * @throws IOException
 	 */
 
-	public SourceFile getSourceFile(String file) throws IOException
+	public SourceFile getSourceFile(File file) throws IOException
 	{
 		SourceFile source = sourceFiles.get(file);
 
@@ -342,7 +342,7 @@ abstract public class Interpreter
 	 * @return A Statement object if found, else null.
 	 */
 
-	abstract public Statement findStatement(String file, int lineno);
+	abstract public Statement findStatement(File file, int lineno);
 
 	/**
 	 * Find an expression by file name and line number.
@@ -352,7 +352,7 @@ abstract public class Interpreter
 	 * @return An Expression object if found, else null.
 	 */
 
-	abstract public Expression findExpression(String file, int lineno);
+	abstract public Expression findExpression(File file, int lineno);
 
 	/**
 	 * Find a global environment value by name.

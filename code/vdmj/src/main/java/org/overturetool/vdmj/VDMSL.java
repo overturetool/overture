@@ -68,20 +68,20 @@ public class VDMSL extends VDMJ
 	 */
 
 	@Override
-	public ExitStatus parse(List<String> files)
+	public ExitStatus parse(List<File> files)
 	{
 		modules.clear();
 		LexLocation.resetLocations();
 		long before = System.currentTimeMillis();
    		int perrs = 0;
 
-   		for (String file: files)
+   		for (File file: files)
    		{
    			ModuleReader reader = null;
 
    			try
    			{
-   				if (file.endsWith(".obj"))
+   				if (file.getName().endsWith(".obj"))
    				{
    					FileInputStream fis = new FileInputStream(file);
    	    	        GZIPInputStream gis = new GZIPInputStream(fis);
@@ -110,8 +110,8 @@ public class VDMSL extends VDMJ
    				}
    				else
    				{
-    				LexTokenReader ltr = new LexTokenReader(
-    					new File(file), Settings.dialect, filecharset);
+    				LexTokenReader ltr =
+    					new LexTokenReader(file, Settings.dialect, filecharset);
         			reader = new ModuleReader(ltr);
         			modules.addAll(reader.readModules());
    				}
@@ -248,7 +248,7 @@ public class VDMSL extends VDMJ
 	 */
 
 	@Override
-	protected ExitStatus interpret(List<String> filenames)
+	protected ExitStatus interpret(List<File> filenames)
 	{
 		ModuleInterpreter interpreter = null;
 

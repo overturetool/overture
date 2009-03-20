@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.util.List;
@@ -52,7 +53,7 @@ public class VDMOV extends VDMPP
 	 */
 
 	@Override
-	public ExitStatus parse(List<String> files)
+	public ExitStatus parse(List<File> files)
 	{
 		classes.clear();
 		LexLocation.resetLocations();
@@ -60,11 +61,11 @@ public class VDMOV extends VDMPP
 		long convert = 0;
    		int perrs = 0;
 
-   		for (String file: files)
+   		for (File file: files)
    		{
    			try
    			{
-   				if (file.endsWith(".obj"))
+   				if (file.getName().endsWith(".obj"))
    				{
    					FileInputStream fis = new FileInputStream(file);
    	    	        GZIPInputStream gis = new GZIPInputStream(fis);

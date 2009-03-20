@@ -39,7 +39,7 @@ public class LexTokenReader extends BacktrackInputReader
 	/** The current module name, if parsing a module. */
 	public String currentModule = "";
 	/** The current file name. */
-	public final String file;
+	public final File file;
 	/** The VDM language dialect we're parsing. */
 	public final Dialect dialect;
 
@@ -126,7 +126,7 @@ public class LexTokenReader extends BacktrackInputReader
 	public LexTokenReader(File file, Dialect dialect) throws IOException
 	{
 		super(file);
-		this.file = file.getPath();
+		this.file = file;
 		this.dialect = dialect;
 		init();
 	}
@@ -144,7 +144,7 @@ public class LexTokenReader extends BacktrackInputReader
 		throws IOException
 	{
 		super(file, charset);
-		this.file = file.getPath();
+		this.file = file;
 		this.dialect = dialect;
 		init();
 	}
@@ -160,7 +160,7 @@ public class LexTokenReader extends BacktrackInputReader
 	public LexTokenReader(String expression, Dialect dialect)
 	{
 		super(expression);
-		this.file = "console";
+		this.file = new File("console");
 		this.dialect = dialect;
 		init();
 	}
@@ -208,7 +208,7 @@ public class LexTokenReader extends BacktrackInputReader
 		throws LexException
 	{
 		throw new LexException(number, msg,
-			new LexLocation(file, file, line, pos, line, pos));
+			new LexLocation(file, currentModule, line, pos, line, pos));
 	}
 
 	/**

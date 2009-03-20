@@ -24,6 +24,7 @@
 package org.overturetool.vdmj.runtime;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -40,10 +41,10 @@ import org.overturetool.vdmj.lex.LexLocation;
 
 public class SourceFile
 {
-	public final String filename;
+	public final File filename;
 	public List<String> lines = new Vector<String>();
 
-	public SourceFile(String filename) throws IOException
+	public SourceFile(File filename) throws IOException
 	{
 		this.filename = filename;
 		BufferedReader br = new BufferedReader(
