@@ -1,7 +1,7 @@
 This directory contains the main components of the Overture tool set.
 
 o the Overture Standard Library (used for all Java source code that is
-  generated with VDMTools) can be found in:
+  generated with VDMTools version 8.2b 090316 or later) can be found in:
 	./stdlib
 
 o the Overture Abstract Syntax library and visitors can be found in:

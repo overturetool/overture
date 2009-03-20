@@ -4,7 +4,7 @@ package jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI;
 * jp/co/csk/vdm/toolbox/api/corba/ToolboxAPI/APIErrorHolder.java .
 * IDL-to-Java コンパイラ (ポータブル), バージョン "3.1" で生成
 * 生成元: metaiv_idl.idl
-* 2008年4月21日 15時58分00秒 JST
+* 2009年3月16日 10時22分52秒 JST
 */
 
 public final class APIErrorHolder implements org.omg.CORBA.portable.Streamable
