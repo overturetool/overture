@@ -42,6 +42,7 @@ import org.overturetool.vdmj.VDMSL;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
@@ -208,15 +209,15 @@ public class DBGPReader
 	private String readLine() throws IOException
 	{
 		StringBuilder line = new StringBuilder();
-		char c = (char)input.read();
+		int c = input.read();
 
-		while (c != '\n' && c != 0xFFFF)
+		while (c != '\n' && c > 0)
 		{
-			if (c != '\r') line.append(c);		// Ignore CRs
-			c = (char)input.read();
+			if (c != '\r') line.append((char)c);		// Ignore CRs
+			c = input.read();
 		}
 
-		return (line.length() == 0 && c == 0xFFFF) ? null : line.toString();
+		return (line.length() == 0 && c == -1) ? null : line.toString();
 	}
 
 	private void write(StringBuilder data) throws IOException
@@ -312,7 +313,7 @@ public class DBGPReader
 		sb.append("<breakpoint id=\"" + bp.number + "\"");
 		sb.append(" type=\"line\"");
 		sb.append(" state=\"enabled\"");
-		sb.append(" filename=\"" + bp.location.file + "\"");
+		sb.append(" filename=\"file://" + bp.location.file + "\"");
 		sb.append(" lineno=\"" + bp.location.startLine + "\"");
 		sb.append(">");
 
@@ -329,13 +330,14 @@ public class DBGPReader
 	private StringBuilder stackResponse(RootContext ctxt, int level)
 	{
 		StringBuilder sb = new StringBuilder();
-		String fileuri = new File(ctxt.location.file).toURI().toString();
+		String fileuri = "file://" + ctxt.location.file;
 
 		sb.append("<stack level=\"" + level + "\"");
 		sb.append(" type=\"file\"");
 		sb.append(" filename=\"" + fileuri + "\"");
 		sb.append(" lineno=\"" + ctxt.location.startLine + "\"");
-		sb.append(" cmdbegin=\"" + fileuri + ":" + ctxt.location.startPos + "\"");
+		sb.append(" cmdbegin=\"" + ctxt.location.startLine + ":" + ctxt.location.startPos + "\"");
+		sb.append(" cmdend=\"" + ctxt.location.endLine + ":" + ctxt.location.endPos + "\"");
 		sb.append("/>");
 
 		return sb;
@@ -415,6 +417,8 @@ public class DBGPReader
 			command = DBGPCommandType.UNKNOWN;
 			transaction = "?";
 
+			line = line.replace("file://", "");		// HACK
+
     		String[] parts = line.split("\\s+");
     		DBGPCommand c = parse(parts);
 
@@ -434,6 +438,10 @@ public class DBGPReader
 
     			case RUN:
     				carryOn = processRun(c);
+    				break;
+
+    			case EVAL:
+    				carryOn = processEval(c);
     				break;
 
     			case STEP_INTO:
@@ -715,6 +723,32 @@ public class DBGPReader
 		{
 			status = DBGPStatus.STOPPING;
 			statusReason = DBGPReason.ERROR;
+			errorResponse(DBGPErrorCode.EVALUATION_ERROR, e.getMessage());
+		}
+
+		return true;
+	}
+
+	private boolean processEval(DBGPCommand c) throws DBGPException
+	{
+		checkArgs(c, 1, true);
+
+		if (status != DBGPStatus.BREAK)
+		{
+			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+		}
+
+		try
+		{
+			String exp = c.data;	// Already base64 decoded by the parser
+			theAnswer = interpreter.evaluate(exp, breakContext);
+			LexNameToken RESULT = new LexNameToken(
+				interpreter.getDefaultName(), "RESULT", new LexLocation());
+			StringBuilder property = propertyResponse(RESULT, theAnswer);
+			statusResponse(status, statusReason, property);
+		}
+		catch (Exception e)
+		{
 			errorResponse(DBGPErrorCode.EVALUATION_ERROR, e.getMessage());
 		}
 
