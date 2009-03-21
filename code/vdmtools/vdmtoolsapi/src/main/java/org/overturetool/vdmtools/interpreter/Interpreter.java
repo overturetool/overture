@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import org.overturetool.vdmtools.VDMToolsError;
 import org.overturetool.vdmtools.VDMToolsProject;
@@ -23,6 +24,7 @@ import jp.co.csk.vdm.toolbox.api.corba.VDM.VDMNumeric;
 import jp.co.csk.vdm.toolbox.api.corba.VDM.VDMNumericHelper;
 import jp.co.csk.vdm.toolbox.api.corba.VDM.VDMSequence;
 import jp.co.csk.vdm.toolbox.api.corba.VDM.VDMSequenceHelper;
+import jp.co.csk.vdm.toolbox.api.ToolboxClient;
 
 public class Interpreter {
 	private VDMInterpreter interpreter;
@@ -34,8 +36,8 @@ public class Interpreter {
 	public void PrintErrors() {
 		for (Error err : GetErrors()) {
 
-			System.out.println("Filename: " + err.fname + " | " + err.line
-					+ "." + err.col + " | " + err.msg);
+			System.out.println("Filename: " + ToolboxClient.fromISO(err.fname) + " | " + err.line
+					+ "." + err.col + " | " + ToolboxClient.fromISO(err.msg));
 
 		}
 	}
@@ -59,18 +61,19 @@ public class Interpreter {
 		// return num.GetValue();
 		// }else if (result.IsSequence()) {
 
-		return (result.ToAscii());
+		return (ToolboxClient.fromISO(result.ToAscii()));
 		// }
 	}
 
 	public String[] EvalTraceCase(String className, String[] expressions)
 			throws Exception {
+		try{
 		String[] results = new String[expressions.length];
 
 		init();
 
 		
-		EvalCommand("push " + className);
+		EvalCommand("push " + ToolboxClient.toISO(className));
 		for (int i = 0; i < expressions.length; i++) {
 			try {
 
@@ -79,17 +82,22 @@ public class Interpreter {
 			} catch (APIError e) {
 				results[i] = "";
 				for (Error err : GetErrors()) {
-					results[i] += ("Error, Filename: " + err.fname + " | "
-							+ err.line + "." + err.col + " | " + err.msg);
+					results[i] += ("Error, Filename: " + ToolboxClient.fromISO(err.fname) + " | "
+							+ err.line + "." + err.col + " | " + ToolboxClient.fromISO(err.msg));
 				}
 				if(results[i]==null || (results[i]!=null && results[i].length()==0))
-					results[i]="Error API, "+e.getMessage() + " " +e.msg;
+					results[i]="Error API, "+ToolboxClient.fromISO(e.getMessage()) + " " +ToolboxClient.fromISO(e.msg);
 				break;
 			}
 
 		}
-		EvalCommand("pop " + className);
+		EvalCommand("pop " + ToolboxClient.toISO(className));
 		return results;
+		}catch(Exception e)
+		{
+			VDMToolsProject.logger.logp(Level.SEVERE, "Interpreter", "EvalTraceCase", "Problem when executing test case", e);
+			throw e;
+		}
 	}
 
 	public Interpreter(VDMApplication vdmApplication, short client) {
@@ -118,6 +126,7 @@ public class Interpreter {
 
 	private ArrayList<VDMToolsError> initHelper() throws Exception {
 		VDMToolsProject project = VDMToolsProject.getInstance();
+		try{
 		interpreter.Verbose(true);
 		interpreter.Debug(true);
 		interpreter.DynInvCheck(true);
@@ -133,6 +142,11 @@ public class Interpreter {
 		System.out.println("Initerpeter inizialized.");
 
 		return initErrs;
+		}catch(Exception e)
+		{
+			VDMToolsProject.logger.logp(Level.SEVERE, "Interpreter", "initHelper", "Init faild", e);
+			throw e;
+		}
 	}
 
 	public VDMGeneric GetMkObject(Class t, Object value) {
@@ -156,7 +170,7 @@ public class Interpreter {
 	public void EvalCommand(String command) throws Exception {
 		if (!isInilized)
 			throw new Exception("Initerpeter NOT inizialized");
-		interpreter.EvalCmd(command);
+		interpreter.EvalCmd(ToolboxClient.toISO(command));
 	}
 
 	// used as "o.GoSorting", arg_l
@@ -165,7 +179,7 @@ public class Interpreter {
 		if (!isInilized)
 			throw new Exception("Initerpeter NOT inizialized");
 
-		return interpreter.Apply(client, command, arg_l);
+		return interpreter.Apply(client,ToolboxClient.toISO( command), arg_l);
 	}
 
 	public int GetNumeric(VDMNumeric num) {

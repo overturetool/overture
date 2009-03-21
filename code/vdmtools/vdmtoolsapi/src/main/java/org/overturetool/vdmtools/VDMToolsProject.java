@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.overturetool.vdmtools.interpreter.Interpreter;
 import org.overturetool.vdmtools.parser.Parser;
@@ -21,12 +24,15 @@ import jp.co.csk.vdm.toolbox.api.corba.VDM.VDMError;
 import jp.co.csk.vdm.toolbox.api.corba.VDM.VDMFactory;
 
 public class VDMToolsProject {
-private static boolean VDMToolsProcessStarted=false;
+	private static boolean VDMToolsProcessStarted = false;
+	public static Logger logger = Logger.getLogger("org.overturetools.vdmtoolsapi");
+	private static FileHandler fh = null;
+
 	private Process processToolbox;
 	private Parser parser;
 	private TypeChecker typeChecker;
 	private short client;
-	private VDMApplication app;
+	private static VDMApplication app;
 	private VDMProject prj;
 	private boolean isSuccessfulPased;
 	private boolean isSuccessfulTypeChecked;
@@ -55,9 +61,14 @@ private static boolean VDMToolsProcessStarted=false;
 			synchronized (VDMToolsProject.class) {
 				if (INSTANCE == null) {
 					try {
+						fh=new FileHandler("vdmtoolsapiLog.xml");
+						logger.addHandler(fh);
+				        // Request that every detail gets logged.
+				        logger.setLevel(Level.ALL);
 						INSTANCE = new VDMToolsProject();
 					} catch (Exception e) {
 						e.printStackTrace();
+						logger.log(Level.SEVERE, "Get instance of VDMToolsProject", e);
 					}
 				}
 			}
@@ -76,31 +87,39 @@ private static boolean VDMToolsProcessStarted=false;
 	public void init(String pathToVdmTools, ToolType toolType)
 			throws IOException, CouldNotResolveObjectException {
 		startVDMTools(pathToVdmTools);
-		int retries=10;
+		int retries = 10;
+		logger.logp(Level.INFO, "VDMToolsProject", "init", "Trying to find VDM Tools corba config file");
 		for (int i = 0; i < retries; i++) {
-              try {
-                    String path="";
-                    if(System.getenv("VDM OBJECT LOCATION")!=null)
-                        path=System.getenv("VDM OBJECT LOCATION");
-                    else if( System.getenv("USERPROFILE")!=null)
-                        path = System.getenv("USERPROFILE");
-                    else if( System.getenv("HOME")!=null)
-                        path =System.getenv("HOME");
+			try {
+				if (app != null)
+					break;
+				String path = "";
+				if (System.getenv("VDM OBJECT LOCATION") != null)
+					path = System.getenv("VDM OBJECT LOCATION");
+				else if (System.getenv("USERPROFILE") != null)
+					path = System.getenv("USERPROFILE");
+				else if (System.getenv("HOME") != null)
+					path = System.getenv("HOME");
 
-                    if((!new File(path + File.separatorChar + "vppref.ior").exists() && toolType == ToolType .PP_TOOLBOX ) ||
-                      (!new File(path + File.separatorChar + "vdmref.ior").exists() && toolType ==  ToolType .SL_TOOLBOX))
-                       Thread.sleep(1000);
+				if ((!new File(path + File.separatorChar + "vppref.ior")
+						.exists() && toolType == ToolType.PP_TOOLBOX)
+						|| (!new File(path + File.separatorChar + "vdmref.ior")
+								.exists() && toolType == ToolType.SL_TOOLBOX))
+				{
+					logger.logp(Level.INFO, "VDMToolsProject", "init", "Could not fint .ior file sleeping and retry");
+					Thread.sleep(1000);
+				}
 
-			createOrb(toolType);
-			if( app!=null)
-				break;
-			
+				logger.logp(Level.INFO, "VDMToolsProject", "init", "Trying to connect as "+ toolType);
+				createOrb(toolType);
+				
+
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
-				
+logger.log(Level.SEVERE, "Thread interupted in init", e);
 			}
 		}
-		
+		RegistreClient();
 		parser = new Parser();
 		typeChecker = new TypeChecker();
 		vdmErrorListHandle = app.GetErrorHandler();
@@ -129,11 +148,13 @@ private static boolean VDMToolsProcessStarted=false;
 			// to the files should be used
 
 			for (String string : files) {
-				prj.AddFile(string);
+				prj.AddFile(ToolboxClient.toISO(string));
 			}
 		} catch (APIError e) {
 			System.out
 					.println("Error setting up project.... " + e.getMessage());
+			
+			logger.logp(Level.SEVERE, "VDMToolsProject", "addFilesToProject", "Error creating and adding file to vdm project", e);
 		}
 	}
 
@@ -157,9 +178,9 @@ private static boolean VDMToolsProcessStarted=false;
 			// Print the errors:
 			System.out.println("errors: ");
 			for (int i = 0; i < errlist.length; i++) {
-				System.out.println(errlist[i].fname);
+				System.out.println(ToolboxClient.fromISO(errlist[i].fname));
 				System.out.println(errlist[i].line);
-				System.out.println(errlist[i].msg);
+				System.out.println(ToolboxClient.fromISO(errlist[i].msg));
 			}
 		}
 		return errorList;
@@ -182,37 +203,41 @@ private static boolean VDMToolsProcessStarted=false;
 		return errorList;
 	}
 
-public static Boolean IsMac() {
+	public static Boolean IsMac() {
 		String osName = System.getProperty("os.name");
 
 		return osName.toUpperCase().indexOf("MAC".toUpperCase()) > -1;
 	}
 
-	private void startVDMTools(String pathToVDMTools) throws IOException { // TODO
-		if(VDMToolsProcessStarted)
+	private synchronized void startVDMTools(String pathToVDMTools)
+			throws IOException { // TODO
+		if (VDMToolsProcessStarted) {
+			System.out.println("Launching VDM Tools - Skipped already running");
+			logger.logp(Level.INFO, "VDMToolsProject", "startVDMTools", "Launching VDM Tools - Skipped already running");
 			return;
-		
-		
+		}
+
 		String s = null;
 
 		System.out.println("Launching VDM Tools");
+		logger.logp(Level.INFO, "VDMToolsProject", "startVDMTools", "Launching VDM Tools");
 
-if(IsMac())
-		processToolbox = Runtime.getRuntime().exec("open "+pathToVDMTools);
-else		
-	processToolbox = Runtime.getRuntime().exec(pathToVDMTools);
+		if (IsMac())
+			processToolbox = Runtime.getRuntime()
+					.exec("open " + pathToVDMTools);
+		else
+			processToolbox = Runtime.getRuntime().exec(pathToVDMTools);
 
-BufferedReader stdInput = new BufferedReader(new InputStreamReader(
+		BufferedReader stdInput = new BufferedReader(new InputStreamReader(
 				processToolbox.getInputStream()));
 
 		BufferedReader stdError = new BufferedReader(new InputStreamReader(
 				processToolbox.getErrorStream()));
 
-		
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			
+
 		}
 		// read the output from the command
 
@@ -231,6 +256,7 @@ BufferedReader stdInput = new BufferedReader(new InputStreamReader(
 		}
 		System.out.println("Launching VDM Tools - SUCCESSFUL Completed");
 		VDMToolsProcessStarted = true;
+		logger.logp(Level.INFO, "VDMToolsProject", "startVDMTools", "Launching VDM Tools - SUCCESSFUL Completed");
 	}
 
 	/***
@@ -240,18 +266,32 @@ BufferedReader stdInput = new BufferedReader(new InputStreamReader(
 	 *            the Type of the toolbox VDM++ VDM-SL
 	 * @throws CouldNotResolveObjectException
 	 */
-	private void createOrb(ToolType type) throws CouldNotResolveObjectException {
+	private synchronized void createOrb(ToolType type)
+			throws CouldNotResolveObjectException {
 		String[] args = {};
 		System.out.println("Connect to CORBA server in VDMTools");
+		logger.logp(Level.INFO, "VDMToolsProject", "createOrb", "Connect to CORBA server in VDMTools");
+		
+		try{
 		app = (new ToolboxClient()).getVDMApplication(args, type);
 		System.out
 				.println("Connected to CORBA server in VDMTools server - SUCCESSFUL");
+		}catch(CouldNotResolveObjectException e)
+		{
+			logger.logp(Level.SEVERE, "VDMToolsProject", "createOrb",  "Problem connecting to VDM Tools ((new ToolboxClient()).getVDMApplication(args, type);)", e);
+		throw e;
+		}
 
+	}
+
+	private synchronized void RegistreClient() {
 		System.out.println("Registre this CORBA client in VDMTools server");
 		// Register the client in the Toolbox:
 		client = app.Register();
 		System.out.println("CORBA Client SUCCESSFUL registered as client: "
 				+ client);
+		
+		logger.logp(Level.INFO, "VDMToolsProject", "RegistreClient", "Client created with id: "+client);
 	}
 
 }
