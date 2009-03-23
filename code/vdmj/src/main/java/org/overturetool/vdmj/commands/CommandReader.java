@@ -580,7 +580,8 @@ abstract public class CommandReader
 
 		if (m.matches())
 		{
-			File file = new File(m.group(1));
+			String g1 = m.group(1);
+			File file = g1 == null ? null : new File(g1);
 			setBreakpoint(file, Integer.parseInt(m.group(2)), m.group(3));
 		}
 		else
@@ -609,7 +610,8 @@ abstract public class CommandReader
 
 		if (m.matches())
 		{
-			File file = new File(m.group(1));
+			String g1 = m.group(1);
+			File file = g1 == null ? null : new File(g1);
 			setTracepoint(file, Integer.parseInt(m.group(2)), m.group(3));
 		}
 		else

@@ -164,21 +164,14 @@ public class Base64
 		return output;
 	}
 
-	public static StringBuffer encode(byte[] bytes)
-	{
-		return encode(bytes, Integer.MAX_VALUE);
-	}
-
 	/**
-	 * Base64 encode a byte array, wrapping the output at a given column
-	 * width.
+	 * Base64 encode a byte array.
 	 *
 	 * @param data	the data to encode.
-	 * @param cols	the column to line wrap (multiple of four).
 	 * @return a StringBuffer containing the encoded lines.
 	 */
 
-	public static StringBuffer encode(byte[] data, int cols)
+	public static StringBuffer encode(byte[] data)
 	{
 		int rem = data.length % 3;
 		int num = data.length / 3;
@@ -200,11 +193,6 @@ public class Base64
 
 			p += 3;
 			c += 4;
-
-			if (c % cols == 0)
-			{
-				result.append('\n');
-			}
 		}
 
 		switch (rem)
@@ -236,11 +224,6 @@ public class Base64
 				result.append('=');
 				break;
 			}
-		}
-
-		if (c % cols != 0)
-		{
-			result.append('\n');
 		}
 
 		return result;

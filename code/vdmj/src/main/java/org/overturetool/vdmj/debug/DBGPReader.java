@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URI;
@@ -59,6 +60,7 @@ import org.overturetool.vdmj.runtime.RootContext;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ParserException;
+import org.overturetool.vdmj.util.Base64;
 import org.overturetool.vdmj.values.NameValuePairMap;
 import org.overturetool.vdmj.values.Value;
 
@@ -260,14 +262,18 @@ public class DBGPReader
 
 		sb.append(" transaction_id=\"");
 		sb.append(transaction);
-		sb.append("\">");
+		sb.append("\"");
 
 		if (body != null)
 		{
+			sb.append(">");
 			sb.append(body);
+			sb.append("</response>\n");
 		}
-
-		sb.append("</response>\n");
+		else
+		{
+			sb.append("/>\n");
+		}
 
 		write(sb);
 	}
@@ -336,22 +342,23 @@ public class DBGPReader
 		return sb;
 	}
 
-	private StringBuilder stackResponse(RootContext ctxt, int level)
+	private StringBuilder stackResponse(LexLocation location, int level)
 	{
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("<stack level=\"" + level + "\"");
 		sb.append(" type=\"file\"");
-		sb.append(" filename=\"" + ctxt.location.file.toURI() + "\"");
-		sb.append(" lineno=\"" + ctxt.location.startLine + "\"");
-		sb.append(" cmdbegin=\"" + ctxt.location.startLine + ":" + ctxt.location.startPos + "\"");
-		sb.append(" cmdend=\"" + ctxt.location.endLine + ":" + ctxt.location.endPos + "\"");
+		sb.append(" filename=\"" + location.file.toURI() + "\"");
+		sb.append(" lineno=\"" + location.startLine + "\"");
+		sb.append(" cmdbegin=\"" + location.startLine + ":" + location.startPos + "\"");
+		sb.append(" cmdend=\"" + location.endLine + ":" + location.endPos + "\"");
 		sb.append("/>");
 
 		return sb;
 	}
 
 	private StringBuilder propertyResponse(NameValuePairMap vars)
+		throws UnsupportedEncodingException
 	{
 		StringBuilder sb = new StringBuilder();
 
@@ -364,25 +371,34 @@ public class DBGPReader
 	}
 
 	private StringBuilder propertyResponse(LexNameToken name, Value value)
+		throws UnsupportedEncodingException
 	{
-		StringBuilder sb = new StringBuilder();
-		String sval = value.toString();
-
-		sb.append("<property");
-		sb.append(" name=\"" + name.name + "\"");
-		sb.append(" fullname=\"" + name.getExplicit(true) + "\"");
-		sb.append(" type=\"resource\"");
-		sb.append(" classname=\"" + name.module + "\"");
-		sb.append(" constant=\"0\"");
-		sb.append(" children=\"0\"");
-		sb.append(" size=\"" + sval.length() + "\"");
-		sb.append(" encoding=\"none\"");
-		sb.append(">");
-		sb.append(sval);
-		sb.append("</property>");
-
-		return sb;
+		return propertyResponse(
+			name.name, name.getExplicit(true).toString(),
+			name.module, value.toString());
 	}
+
+	private StringBuilder propertyResponse(
+		String name, String fullname, String clazz, String value)
+		throws UnsupportedEncodingException
+    {
+    	StringBuilder sb = new StringBuilder();
+
+    	sb.append("<property");
+    	sb.append(" name=\"" + name + "\"");
+    	sb.append(" fullname=\"" + fullname + "\"");
+    	sb.append(" type=\"resource\"");
+    	sb.append(" classname=\"" + clazz + "\"");
+    	sb.append(" constant=\"0\"");
+    	sb.append(" children=\"0\"");
+    	sb.append(" size=\"" + value.length() + "\"");
+    	sb.append(" encoding=\"base64\"");
+    	sb.append("><![CDATA[");
+    	sb.append(Base64.encode(value.getBytes("UTF-8")));
+    	sb.append("]]></property>");
+
+    	return sb;
+    }
 
 	private void run() throws IOException
 	{
@@ -748,10 +764,10 @@ public class DBGPReader
 		{
 			String exp = c.data;	// Already base64 decoded by the parser
 			theAnswer = interpreter.evaluate(exp, breakContext);
-			LexNameToken RESULT = new LexNameToken(
-				interpreter.getDefaultName(), "RESULT", new LexLocation());
-			StringBuilder property = propertyResponse(RESULT, theAnswer);
-			statusResponse(status, statusReason, property);
+			StringBuilder property = propertyResponse(
+				exp, exp, interpreter.getDefaultName(), theAnswer.toString());
+			StringBuilder hdr = new StringBuilder("success=\"1\"");
+			response(hdr, property);
 		}
 		catch (Exception e)
 		{
@@ -938,7 +954,9 @@ public class DBGPReader
 			}
 		}
 
-		response(null, breakpointResponse(bp));
+		StringBuilder hdr = new StringBuilder(
+			"state=\"enabled\" id=\"" + bp.number + "\"");
+		response(hdr, null);
 	}
 
 	private void breakpointUpdate(DBGPCommand c) throws DBGPException
@@ -1029,27 +1047,38 @@ public class DBGPReader
 			depth = Integer.parseInt(option.value);	// 0 to n-1
 		}
 
-		if (depth >= breakContext.getDepth())
+		// We omit the last two frames, as these are unhelpful (globals),
+		// but include the "current" non-root frame as this helps.
+
+		int actualDepth = breakContext.getDepth() - 1;
+
+		if (depth >= actualDepth)
 		{
 			throw new DBGPException(DBGPErrorCode.INVALID_STACK_DEPTH, c.toString());
 		}
 
-		if (depth >= 0)
+		if (depth == 0)
+		{
+			response(null, stackResponse(breakpoint.location, 0));
+		}
+		else if (depth > 0)
 		{
 			RootContext ctxt = breakContext.getFrame(depth);
-			response(null, stackResponse(ctxt, depth));
+			response(null, stackResponse(ctxt.location, depth));
 		}
 		else
 		{
 			StringBuilder sb = new StringBuilder();
 			Context ctxt = breakContext;
-			int d = 0;
 
-			while (ctxt != null)
+			int d = 0;
+			sb.append(stackResponse(breakpoint.location, d++));		// Top frame
+
+			while (ctxt != null && d < actualDepth)
 			{
 				if (ctxt instanceof RootContext)
 				{
-					sb.append(stackResponse((RootContext)ctxt, d++));
+					sb.append(stackResponse(ctxt.location, d++));
 				}
 
 				ctxt = ctxt.outer;
