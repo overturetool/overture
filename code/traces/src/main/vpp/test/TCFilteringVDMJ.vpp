@@ -9,7 +9,7 @@ protected SetUp: () ==> ()
 
 public test_expanderror_expanderror_01: () ==> ()
 test_expanderror_expanderror_01 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expanderror_expanderror_01().getSpecifications(), 
                            "expanderror-01.vpp") = {|->});
@@ -17,175 +17,175 @@ test_expanderror_expanderror_01 () ==
 
 public test_expanderror_expanderror_02: () ==> ()
 test_expanderror_expanderror_02 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expanderror_expanderror_02().getSpecifications(), 
                            "expanderror-02.vpp") = {|->});
 );
 
-public test_logical_logical_01: () ==> ()
-test_logical_logical_01 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+public test_expr_binaryexpr_logical_logical_01: () ==> ()
+test_expr_binaryexpr_logical_logical_01 () ==
+(  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_logical_logical_01().getSpecifications(), 
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expr_binaryexpr_logical_logical_01().getSpecifications(), 
                            "logical-01.vpp") = {|->});
 );
 
-public test_logical_logical_02: () ==> ()
-test_logical_logical_02 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+public test_expr_binaryexpr_logical_logical_02: () ==> ()
+test_expr_binaryexpr_logical_logical_02 () ==
+(  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_logical_logical_02().getSpecifications(), 
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expr_binaryexpr_logical_logical_02().getSpecifications(), 
                            "logical-02.vpp") = {|->});
 );
 
-public test_numminus_numminus_01: () ==> ()
-test_numminus_numminus_01 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+public test_expr_binaryexpr_numminus_numminus_01: () ==> ()
+test_expr_binaryexpr_numminus_numminus_01 () ==
+(  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_numminus_numminus_01().getSpecifications(), 
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expr_binaryexpr_numminus_numminus_01().getSpecifications(), 
                            "numminus-01.vpp") = {|->});
 );
 
-public test_setinter_setinter_01: () ==> ()
-test_setinter_setinter_01 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+public test_expr_binaryexpr_setinter_setinter_01: () ==> ()
+test_expr_binaryexpr_setinter_setinter_01 () ==
+(  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_setinter_setinter_01().getSpecifications(), 
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expr_binaryexpr_setinter_setinter_01().getSpecifications(), 
                            "setinter-01.vpp") = {|->});
 );
 
-public test_setunion_setunion_01: () ==> ()
-test_setunion_setunion_01 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+public test_expr_binaryexpr_setunion_setunion_01: () ==> ()
+test_expr_binaryexpr_setunion_setunion_01 () ==
+(  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_setunion_setunion_01().getSpecifications(), 
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expr_binaryexpr_setunion_setunion_01().getSpecifications(), 
                            "setunion-01.vpp") = {|->});
 );
 
-public test_ifthen_ifthen_01: () ==> ()
-test_ifthen_ifthen_01 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+public test_expr_ifthen_ifthen_01: () ==> ()
+test_expr_ifthen_ifthen_01 () ==
+(  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_ifthen_ifthen_01().getSpecifications(), 
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expr_ifthen_ifthen_01().getSpecifications(), 
                            "ifthen-01.vpp") = {|->});
 );
 
-public test_ifthen_ifthen_02: () ==> ()
-test_ifthen_ifthen_02 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+public test_expr_ifthen_ifthen_02: () ==> ()
+test_expr_ifthen_ifthen_02 () ==
+(  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_ifthen_ifthen_02().getSpecifications(), 
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expr_ifthen_ifthen_02().getSpecifications(), 
                            "ifthen-02.vpp") = {|->});
 );
 
-public test_ifthen_ifthen_03: () ==> ()
-test_ifthen_ifthen_03 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+public test_expr_ifthen_ifthen_03: () ==> ()
+test_expr_ifthen_ifthen_03 () ==
+(  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_ifthen_ifthen_03().getSpecifications(), 
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expr_ifthen_ifthen_03().getSpecifications(), 
                            "ifthen-03.vpp") = {|->});
 );
 
-public test_ifthen_ifthen_04: () ==> ()
-test_ifthen_ifthen_04 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+public test_expr_ifthen_ifthen_04: () ==> ()
+test_expr_ifthen_ifthen_04 () ==
+(  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_ifthen_ifthen_04().getSpecifications(), 
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expr_ifthen_ifthen_04().getSpecifications(), 
                            "ifthen-04.vpp") = {|->});
 );
 
-public test_ifthen_ifthen_05: () ==> ()
-test_ifthen_ifthen_05 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+public test_expr_ifthen_ifthen_05: () ==> ()
+test_expr_ifthen_ifthen_05 () ==
+(  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_ifthen_ifthen_05().getSpecifications(), 
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expr_ifthen_ifthen_05().getSpecifications(), 
                            "ifthen-05.vpp") = {|->});
 );
 
-public test_letexpr_letexpr_01: () ==> ()
-test_letexpr_letexpr_01 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+public test_expr_letexpr_letexpr_01: () ==> ()
+test_expr_letexpr_letexpr_01 () ==
+(  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_letexpr_letexpr_01().getSpecifications(), 
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expr_letexpr_letexpr_01().getSpecifications(), 
                            "letexpr-01.vpp") = {|->});
 );
 
-public test_lookup_lookup_01: () ==> ()
-test_lookup_lookup_01 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+public test_expr_lookup_lookup_01: () ==> ()
+test_expr_lookup_lookup_01 () ==
+(  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_lookup_lookup_01().getSpecifications(), 
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expr_lookup_lookup_01().getSpecifications(), 
                            "lookup-01.vpp") = {|->});
 );
 
-public test_lookup_lookup_02: () ==> ()
-test_lookup_lookup_02 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+public test_expr_lookup_lookup_02: () ==> ()
+test_expr_lookup_lookup_02 () ==
+(  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_lookup_lookup_02().getSpecifications(), 
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expr_lookup_lookup_02().getSpecifications(), 
                            "lookup-02.vpp") = {|->});
 );
 
-public test_mapexpr_mapexpr_01: () ==> ()
-test_mapexpr_mapexpr_01 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+public test_expr_mapexpr_mapexpr_01: () ==> ()
+test_expr_mapexpr_mapexpr_01 () ==
+(  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_mapexpr_mapexpr_01().getSpecifications(), 
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expr_mapexpr_mapexpr_01().getSpecifications(), 
                            "mapexpr-01.vpp") = {|->});
 );
 
-public test_mapexpr_mapexpr_02: () ==> ()
-test_mapexpr_mapexpr_02 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+public test_expr_mapexpr_mapexpr_02: () ==> ()
+test_expr_mapexpr_mapexpr_02 () ==
+(  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_mapexpr_mapexpr_02().getSpecifications(), 
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expr_mapexpr_mapexpr_02().getSpecifications(), 
                            "mapexpr-02.vpp") = {|->});
 );
 
-public test_mapexpr_mapexpr_03: () ==> ()
-test_mapexpr_mapexpr_03 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+public test_expr_mapexpr_mapexpr_03: () ==> ()
+test_expr_mapexpr_mapexpr_03 () ==
+(  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_mapexpr_mapexpr_03().getSpecifications(), 
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expr_mapexpr_mapexpr_03().getSpecifications(), 
                            "mapexpr-03.vpp") = {|->});
 );
 
-public test_newexpr_newexpr_01: () ==> ()
-test_newexpr_newexpr_01 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+public test_expr_newexpr_newexpr_01: () ==> ()
+test_expr_newexpr_newexpr_01 () ==
+(  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_newexpr_newexpr_01().getSpecifications(), 
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expr_newexpr_newexpr_01().getSpecifications(), 
                            "newexpr-01.vpp") = {|->});
 );
 
-public test_recordconstructor_recordconstructor_01: () ==> ()
-test_recordconstructor_recordconstructor_01 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+public test_expr_recordconstructor_recordconstructor_01: () ==> ()
+test_expr_recordconstructor_recordconstructor_01 () ==
+(  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_recordconstructor_recordconstructor_01().getSpecifications(), 
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expr_recordconstructor_recordconstructor_01().getSpecifications(), 
                            "recordconstructor-01.vpp") = {|->});
 );
 
-public test_recordconstructor_recordconstructor_02: () ==> ()
-test_recordconstructor_recordconstructor_02 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+public test_expr_recordconstructor_recordconstructor_02: () ==> ()
+test_expr_recordconstructor_recordconstructor_02 () ==
+(  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_recordconstructor_recordconstructor_02().getSpecifications(), 
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expr_recordconstructor_recordconstructor_02().getSpecifications(), 
                            "recordconstructor-02.vpp") = {|->});
 );
 
-public test_recordconstructor_recordconstructor_03: () ==> ()
-test_recordconstructor_recordconstructor_03 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+public test_expr_recordconstructor_recordconstructor_03: () ==> ()
+test_expr_recordconstructor_recordconstructor_03 () ==
+(  let specTest : SpecTest = new SpecTest()
   in
-   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_recordconstructor_recordconstructor_03().getSpecifications(), 
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_expr_recordconstructor_recordconstructor_03().getSpecifications(), 
                            "recordconstructor-03.vpp") = {|->});
 );
 
 public test_missingpre_missingpre_01: () ==> ()
 test_missingpre_missingpre_01 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_missingpre_missingpre_01().getSpecifications(), 
                            "missingpre-01.vpp") = {|->});
@@ -193,7 +193,7 @@ test_missingpre_missingpre_01 () ==
 
 public test_missingpre_missingpre_02: () ==> ()
 test_missingpre_missingpre_02 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_missingpre_missingpre_02().getSpecifications(), 
                            "missingpre-02.vpp") = {|->});
@@ -201,7 +201,7 @@ test_missingpre_missingpre_02 () ==
 
 public test_missingpre_missingpre_03: () ==> ()
 test_missingpre_missingpre_03 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_missingpre_missingpre_03().getSpecifications(), 
                            "missingpre-03.vpp") = {|->});
@@ -209,7 +209,7 @@ test_missingpre_missingpre_03 () ==
 
 public test_missingpre_missingpre_04: () ==> ()
 test_missingpre_missingpre_04 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_missingpre_missingpre_04().getSpecifications(), 
                            "missingpre-04.vpp") = {|->});
@@ -217,15 +217,31 @@ test_missingpre_missingpre_04 () ==
 
 public test_simpletraces_simpletraces_01: () ==> ()
 test_simpletraces_simpletraces_01 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_simpletraces_simpletraces_01().getSpecifications(), 
                            "simpletraces-01.vpp") = {|->});
 );
 
+public test_tmp_simpletraces_01: () ==> ()
+test_tmp_simpletraces_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tmp_simpletraces_01().getSpecifications(), 
+                           "simpletraces-01.vpp") = {|->});
+);
+
+public test_tmp_tracebind_05: () ==> ()
+test_tmp_tracebind_05 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tmp_tracebind_05().getSpecifications(), 
+                           "tracebind-05.vpp") = {|->});
+);
+
 public test_tracebind_tracebind_01: () ==> ()
 test_tracebind_tracebind_01 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracebind_tracebind_01().getSpecifications(), 
                            "tracebind-01.vpp") = {|->});
@@ -233,7 +249,7 @@ test_tracebind_tracebind_01 () ==
 
 public test_tracebind_tracebind_02: () ==> ()
 test_tracebind_tracebind_02 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracebind_tracebind_02().getSpecifications(), 
                            "tracebind-02.vpp") = {|->});
@@ -241,7 +257,7 @@ test_tracebind_tracebind_02 () ==
 
 public test_tracebind_tracebind_03: () ==> ()
 test_tracebind_tracebind_03 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracebind_tracebind_03().getSpecifications(), 
                            "tracebind-03.vpp") = {|->});
@@ -249,15 +265,23 @@ test_tracebind_tracebind_03 () ==
 
 public test_tracebind_tracebind_04: () ==> ()
 test_tracebind_tracebind_04 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracebind_tracebind_04().getSpecifications(), 
                            "tracebind-04.vpp") = {|->});
 );
 
+public test_tracebind_tracebind_05: () ==> ()
+test_tracebind_tracebind_05 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracebind_tracebind_05().getSpecifications(), 
+                           "tracebind-05.vpp") = {|->});
+);
+
 public test_tracebracket_tracebracket_01: () ==> ()
 test_tracebracket_tracebracket_01 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracebracket_tracebracket_01().getSpecifications(), 
                            "tracebracket-01.vpp") = {|->});
@@ -265,7 +289,7 @@ test_tracebracket_tracebracket_01 () ==
 
 public test_tracebracket_tracebracket_02: () ==> ()
 test_tracebracket_tracebracket_02 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracebracket_tracebracket_02().getSpecifications(), 
                            "tracebracket-02.vpp") = {|->});
@@ -273,7 +297,7 @@ test_tracebracket_tracebracket_02 () ==
 
 public test_tracechoice_tracechoice_01: () ==> ()
 test_tracechoice_tracechoice_01 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracechoice_tracechoice_01().getSpecifications(), 
                            "tracechoice-01.vpp") = {|->});
@@ -281,7 +305,7 @@ test_tracechoice_tracechoice_01 () ==
 
 public test_tracechoice_tracechoice_02: () ==> ()
 test_tracechoice_tracechoice_02 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracechoice_tracechoice_02().getSpecifications(), 
                            "tracechoice-02.vpp") = {|->});
@@ -289,7 +313,7 @@ test_tracechoice_tracechoice_02 () ==
 
 public test_tracechoice_tracechoice_03: () ==> ()
 test_tracechoice_tracechoice_03 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracechoice_tracechoice_03().getSpecifications(), 
                            "tracechoice-03.vpp") = {|->});
@@ -297,7 +321,7 @@ test_tracechoice_tracechoice_03 () ==
 
 public test_tracechoice_tracechoice_04: () ==> ()
 test_tracechoice_tracechoice_04 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracechoice_tracechoice_04().getSpecifications(), 
                            "tracechoice-04.vpp") = {|->});
@@ -305,7 +329,7 @@ test_tracechoice_tracechoice_04 () ==
 
 public test_tracerepeat_tracerepeat_01: () ==> ()
 test_tracerepeat_tracerepeat_01 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracerepeat_tracerepeat_01().getSpecifications(), 
                            "tracerepeat-01.vpp") = {|->});
@@ -313,7 +337,7 @@ test_tracerepeat_tracerepeat_01 () ==
 
 public test_tracerepeat_tracerepeat_02: () ==> ()
 test_tracerepeat_tracerepeat_02 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracerepeat_tracerepeat_02().getSpecifications(), 
                            "tracerepeat-02.vpp") = {|->});
@@ -321,7 +345,7 @@ test_tracerepeat_tracerepeat_02 () ==
 
 public test_tracerepeat_tracerepeat_03: () ==> ()
 test_tracerepeat_tracerepeat_03 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracerepeat_tracerepeat_03().getSpecifications(), 
                            "tracerepeat-03.vpp") = {|->});
@@ -329,7 +353,7 @@ test_tracerepeat_tracerepeat_03 () ==
 
 public test_tracerepeat_tracerepeat_04: () ==> ()
 test_tracerepeat_tracerepeat_04 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracerepeat_tracerepeat_04().getSpecifications(), 
                            "tracerepeat-04.vpp") = {|->});
@@ -337,7 +361,7 @@ test_tracerepeat_tracerepeat_04 () ==
 
 public test_tracerepeat_tracerepeat_05: () ==> ()
 test_tracerepeat_tracerepeat_05 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracerepeat_tracerepeat_05().getSpecifications(), 
                            "tracerepeat-05.vpp") = {|->});
@@ -345,7 +369,7 @@ test_tracerepeat_tracerepeat_05 () ==
 
 public test_tracerepeat_tracerepeat_06: () ==> ()
 test_tracerepeat_tracerepeat_06 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracerepeat_tracerepeat_06().getSpecifications(), 
                            "tracerepeat-06.vpp") = {|->});
@@ -353,7 +377,7 @@ test_tracerepeat_tracerepeat_06 () ==
 
 public test_tracerepeat_tracerepeat_07: () ==> ()
 test_tracerepeat_tracerepeat_07 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracerepeat_tracerepeat_07().getSpecifications(), 
                            "tracerepeat-07.vpp") = {|->});
@@ -361,7 +385,7 @@ test_tracerepeat_tracerepeat_07 () ==
 
 public test_tracerepeat_tracerepeat_08: () ==> ()
 test_tracerepeat_tracerepeat_08 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_tracerepeat_tracerepeat_08().getSpecifications(), 
                            "tracerepeat-08.vpp") = {|->});
@@ -369,7 +393,7 @@ test_tracerepeat_tracerepeat_08 () ==
 
 public test_traceseq_traceseq_01: () ==> ()
 test_traceseq_traceseq_01 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_traceseq_traceseq_01().getSpecifications(), 
                            "traceseq-01.vpp") = {|->});
@@ -377,7 +401,7 @@ test_traceseq_traceseq_01 () ==
 
 public test_traceseq_traceseq_02: () ==> ()
 test_traceseq_traceseq_02 () ==
-(  let specTest : SpecTestFilteringVDMJ = new SpecTestFilteringVDMJ()
+(  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCFilteringVDMJTestData`test_traceseq_traceseq_02().getSpecifications(), 
                            "traceseq-02.vpp") = {|->});
@@ -389,7 +413,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_expanderror_expanderror_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -403,7 +427,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_expanderror_expanderror_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -417,12 +441,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_logical_logical_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_logical_logical_01();
+        test_expr_binaryexpr_logical_logical_01();
        );
 
 
@@ -431,12 +455,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_logical_logical_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_logical_logical_02();
+        test_expr_binaryexpr_logical_logical_02();
        );
 
 
@@ -445,12 +469,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_numminus_numminus_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_numminus_numminus_01();
+        test_expr_binaryexpr_numminus_numminus_01();
        );
 
 
@@ -459,12 +483,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_setinter_setinter_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_setinter_setinter_01();
+        test_expr_binaryexpr_setinter_setinter_01();
        );
 
 
@@ -473,12 +497,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_setunion_setunion_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_setunion_setunion_01();
+        test_expr_binaryexpr_setunion_setunion_01();
        );
 
 
@@ -487,12 +511,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_ifthen_ifthen_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_ifthen_ifthen_01();
+        test_expr_ifthen_ifthen_01();
        );
 
 
@@ -501,12 +525,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_ifthen_ifthen_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_ifthen_ifthen_02();
+        test_expr_ifthen_ifthen_02();
        );
 
 
@@ -515,12 +539,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_ifthen_ifthen_03();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_ifthen_ifthen_03();
+        test_expr_ifthen_ifthen_03();
        );
 
 
@@ -529,12 +553,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_ifthen_ifthen_04();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_ifthen_ifthen_04();
+        test_expr_ifthen_ifthen_04();
        );
 
 
@@ -543,12 +567,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_ifthen_ifthen_05();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_ifthen_ifthen_05();
+        test_expr_ifthen_ifthen_05();
        );
 
 
@@ -557,12 +581,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_letexpr_letexpr_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_letexpr_letexpr_01();
+        test_expr_letexpr_letexpr_01();
        );
 
 
@@ -571,12 +595,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_lookup_lookup_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_lookup_lookup_01();
+        test_expr_lookup_lookup_01();
        );
 
 
@@ -585,12 +609,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_lookup_lookup_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_lookup_lookup_02();
+        test_expr_lookup_lookup_02();
        );
 
 
@@ -599,12 +623,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_mapexpr_mapexpr_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_mapexpr_mapexpr_01();
+        test_expr_mapexpr_mapexpr_01();
        );
 
 
@@ -613,12 +637,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_mapexpr_mapexpr_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_mapexpr_mapexpr_02();
+        test_expr_mapexpr_mapexpr_02();
        );
 
 
@@ -627,12 +651,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_mapexpr_mapexpr_03();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_mapexpr_mapexpr_03();
+        test_expr_mapexpr_mapexpr_03();
        );
 
 
@@ -641,12 +665,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_newexpr_newexpr_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_newexpr_newexpr_01();
+        test_expr_newexpr_newexpr_01();
        );
 
 
@@ -655,12 +679,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_recordconstructor_recordconstructor_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_recordconstructor_recordconstructor_01();
+        test_expr_recordconstructor_recordconstructor_01();
        );
 
 
@@ -669,12 +693,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_recordconstructor_recordconstructor_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_recordconstructor_recordconstructor_02();
+        test_expr_recordconstructor_recordconstructor_02();
        );
 
 
@@ -683,12 +707,12 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_recordconstructor_recordconstructor_03();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
    in (
-        test_recordconstructor_recordconstructor_03();
+        test_expr_recordconstructor_recordconstructor_03();
        );
 
 
@@ -697,7 +721,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_missingpre_missingpre_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -711,7 +735,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_missingpre_missingpre_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -725,7 +749,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_missingpre_missingpre_03();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -739,7 +763,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_missingpre_missingpre_04();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -753,7 +777,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_simpletraces_simpletraces_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -767,7 +791,35 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracebind_tracebind_01();")
+    then ptr.addFailure(self, exc)
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tmp_simpletraces_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc)
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tmp_tracebind_05();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -781,7 +833,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracebind_tracebind_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -795,7 +847,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracebind_tracebind_03();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -809,7 +861,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracebind_tracebind_04();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -823,7 +875,21 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracebracket_tracebracket_01();")
+    then ptr.addFailure(self, exc)
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracebind_tracebind_05();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -837,7 +903,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracebracket_tracebracket_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -851,7 +917,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracechoice_tracechoice_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -865,7 +931,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracechoice_tracechoice_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -879,7 +945,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracechoice_tracechoice_03();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -893,7 +959,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracechoice_tracechoice_04();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -907,7 +973,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -921,7 +987,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -935,7 +1001,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_03();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -949,7 +1015,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_04();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -963,7 +1029,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_05();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -977,7 +1043,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_06();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -991,7 +1057,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_07();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -1005,7 +1071,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_08();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -1019,7 +1085,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_traceseq_traceseq_01();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error
@@ -1033,7 +1099,7 @@ runTest (ptr) ==(
   trap exc : Throwable
   with
     if isofclass(AssertionFailedError,exc)
-    then ptr.addFailure(self, exc,"test_traceseq_traceseq_02();")
+    then ptr.addFailure(self, exc)
     else if isofbaseclass(Throwable, exc)
          then ptr.addError(self, exc)
          else error

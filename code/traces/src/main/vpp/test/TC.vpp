@@ -223,6 +223,22 @@ test_simpletraces_simpletraces_01 () ==
                            "simpletraces-01.vpp") = {|->});
 );
 
+public test_tmp_simpletraces_01: () ==> ()
+test_tmp_simpletraces_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tmp_simpletraces_01().getSpecifications(), 
+                           "simpletraces-01.vpp") = {|->});
+);
+
+public test_tmp_tracebind_05: () ==> ()
+test_tmp_tracebind_05 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tmp_tracebind_05().getSpecifications(), 
+                           "tracebind-05.vpp") = {|->});
+);
+
 public test_tracebind_tracebind_01: () ==> ()
 test_tracebind_tracebind_01 () ==
 (  let specTest : SpecTest = new SpecTest()
@@ -253,6 +269,14 @@ test_tracebind_tracebind_04 () ==
   in
    assertTrue(specTest.Run(TCTestData`test_tracebind_tracebind_04().getSpecifications(), 
                            "tracebind-04.vpp") = {|->});
+);
+
+public test_tracebind_tracebind_05: () ==> ()
+test_tracebind_tracebind_05 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracebind_tracebind_05().getSpecifications(), 
+                           "tracebind-05.vpp") = {|->});
 );
 
 public test_tracebracket_tracebracket_01: () ==> ()
@@ -772,6 +796,34 @@ runTest (ptr) ==(
          then ptr.addError(self, exc)
          else error
    in (
+        test_tmp_simpletraces_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc)
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tmp_tracebind_05();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc)
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
         test_tracebind_tracebind_01();
        );
 
@@ -815,6 +867,20 @@ runTest (ptr) ==(
          else error
    in (
         test_tracebind_tracebind_04();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc)
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracebind_tracebind_05();
        );
 
 

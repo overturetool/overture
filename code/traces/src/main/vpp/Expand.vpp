@@ -349,7 +349,7 @@ RepeatCombine(expr_l_l,low,high) ==
        then acc_e_l_l := acc_e_l_l ^ ith_e_l_l;
        i := i + 1;
       );
-  return acc_e_l_l
+  return Util`RemoveDublicates[seq of IOmlExpression](acc_e_l_l,{})
  );
 
 functions
@@ -397,9 +397,11 @@ CombineTraces: (seq of seq of IOmlExpression) *
                (seq of seq of IOmlExpression) ->
                (seq of seq of IOmlExpression)
 CombineTraces(e_l_l1, e_l_l2) ==
+  Util`RemoveDublicates[seq of IOmlExpression](
   conc [[ e_l_l1(i1) ^ e_l_l2(i2)
         | i1 in set inds e_l_l1]
-       | i2 in set inds e_l_l2];
+       | i2 in set inds e_l_l2],
+   {});
 
 operations
 
@@ -456,7 +458,7 @@ ExtractLetBeSetBinding(bind,best,cxt_l) ==
                   in
                     [eval.MergeContextList(c_l_l(i2)) 
                     | i2 in set inds c_l_l
-                    & let c = eval.MergeContextList([cxt_l(i)] ^ conc c_l_l)
+                    & let c = eval.MergeContextList([cxt_l(i)] ^ c_l_l(i2))
                       in
                         eval.evaluateExpression(best,c) = mk_SEM`BOOL(true)]
            | i in set inds cxt_l];

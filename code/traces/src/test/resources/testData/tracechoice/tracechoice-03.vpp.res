@@ -1,0 +1,1 @@
+{"CUP|InitBeforePlay|2" |-> ["gp.Win(<Norway>, <Morocco>)"], "CUP|InitBeforePlay|1" |-> ["gp.Win(<Brazil>, <Denmark>)"]}

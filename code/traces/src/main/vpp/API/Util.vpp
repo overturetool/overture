@@ -118,5 +118,16 @@ let classes : set of String =
               & isofclass(IOmlTraceDefinitions,dfs)} > 0
        }
 in return classes;
+
+functions
+
+public static RemoveDublicates[@T]: seq of @T * set of @T
+                  -> seq of @T
+RemoveDublicates(ll,s) ==
+  if ll =[]
+  then ll
+  elseif hd ll in set s
+  then RemoveDublicates[@T](tl ll,s)
+  else [hd ll] ^ RemoveDublicates[@T](tl ll,s union {hd ll});
        
 end Util

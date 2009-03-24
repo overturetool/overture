@@ -209,7 +209,7 @@ public evaluateSetRange :
 evaluateSetRange(expr,cxt) == 
   let l = evaluateExpression(expr.getLower(),cxt),
       u = evaluateExpression(expr.getUpper(),cxt),
-      s : set of nat = if is_SEM`NUM(l) and is_SEM`NUM(u)
+      s : set of int = if is_SEM`NUM(l) and is_SEM`NUM(u)
                        then {l.v,...,u.v}
                        else {}
   in 
@@ -1191,9 +1191,10 @@ functions
 public CombineContexts: seq of Context * seq of Context -> 
                  seq of Context
 CombineContexts(c_l1,c_l2) ==
+  Util`RemoveDublicates[Context](
   conc [ [c_l1(j) ++ c_l2(i)
          | j in set inds c_l1]
-       | i in set inds c_l2];
+       | i in set inds c_l2],{});
 
 public MergeContextList: seq1 of Context -> Context
 MergeContextList(cxt_l) ==
