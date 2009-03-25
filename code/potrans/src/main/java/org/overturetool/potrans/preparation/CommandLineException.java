@@ -1,14 +1,19 @@
 /**
  * 
  */
-package org.overturetool.potrans.prep;
+package org.overturetool.potrans.preparation;
 
 /**
- * Signals that an exception s occurred during the invocation of a command. 
+ * Signals that an exception has occurred during the invocation of a command. 
  * @author Miguel Ferreira
  *
  */
 public class CommandLineException extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4704674991014634560L;
 
 	/**
 	 * Creates a new CommandLineException.
