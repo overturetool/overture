@@ -30378,6 +30378,818 @@ operations
   ]
 );
 operations
+ public static test_tracebind_tracebind_06: () ==> IOmlDocument
+ test_tracebind_tracebind_06() == return new OmlDocument("",
+  new OmlSpecifications([
+    new OmlClass(
+      "Queue",
+      [
+        
+      ],
+      nil,
+      [
+        new OmlFunctionDefinitions([
+          new OmlFunctionDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,6,1),
+              6,
+              1
+            ),
+            new OmlExplicitFunction(
+              "empty",
+              [
+                
+              ],
+              new OmlPartialFunctionType(
+                new OmlEmptyType(6,16),
+                new OmlSeq0Type(new OmlIntType(6,29),6,22),
+                6,
+                16
+              ),
+              [
+                new OmlParameter([
+                  
+                ],7,6)
+              ],
+              new OmlFunctionBody(
+                new OmlSequenceEnumeration([
+                  
+                ],7,12),
+                false,
+                false,
+                7,
+                12
+              ),
+              new OmlFunctionTrailer(
+                nil,
+                nil,
+                0,
+                0
+              ),
+              6,
+              8
+            ),
+            6,
+            8
+          ),
+          new OmlFunctionDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,10,1),
+              10,
+              1
+            ),
+            new OmlExplicitFunction(
+              "isEmpty",
+              [
+                
+              ],
+              new OmlPartialFunctionType(
+                new OmlSeq0Type(new OmlIntType(10,25),10,18),
+                new OmlBoolType(10,32),
+                10,
+                18
+              ),
+              [
+                new OmlParameter([
+                  new OmlPatternIdentifier("s",11,9)
+                ],11,8)
+              ],
+              new OmlFunctionBody(
+                new OmlBinaryExpression(
+                  new OmlName(
+                    nil,
+                    "s",
+                    11,
+                    15
+                  ),
+                  new OmlBinaryOperator(27,11,17),
+                  new OmlSequenceEnumeration([
+                    
+                  ],11,19),
+                  11,
+                  17
+                ),
+                false,
+                false,
+                11,
+                17
+              ),
+              new OmlFunctionTrailer(
+                nil,
+                nil,
+                0,
+                0
+              ),
+              10,
+              8
+            ),
+            10,
+            8
+          ),
+          new OmlFunctionDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,12,1),
+              12,
+              1
+            ),
+            new OmlExplicitFunction(
+              "enQueue",
+              [
+                
+              ],
+              new OmlPartialFunctionType(
+                new OmlProductType(
+                  new OmlIntType(12,18),
+                  new OmlSeq0Type(new OmlIntType(12,31),12,24),
+                  12,
+                  22
+                ),
+                new OmlSeq0Type(new OmlIntType(12,45),12,38),
+                12,
+                22
+              ),
+              [
+                new OmlParameter([
+                  new OmlPatternIdentifier("e",13,9),
+                  new OmlPatternIdentifier("aQueue",13,12)
+                ],13,8)
+              ],
+              new OmlFunctionBody(
+                new OmlBinaryExpression(
+                  new OmlName(
+                    nil,
+                    "aQueue",
+                    13,
+                    23
+                  ),
+                  new OmlBinaryOperator(30,13,30),
+                  new OmlSequenceEnumeration([
+                    new OmlName(
+                      nil,
+                      "e",
+                      13,
+                      33
+                    )
+                  ],13,32),
+                  13,
+                  30
+                ),
+                false,
+                false,
+                13,
+                30
+              ),
+              new OmlFunctionTrailer(
+                nil,
+                nil,
+                0,
+                0
+              ),
+              12,
+              8
+            ),
+            12,
+            8
+          ),
+          new OmlFunctionDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,16,1),
+              16,
+              1
+            ),
+            new OmlExplicitFunction(
+              "deQueue",
+              [
+                
+              ],
+              new OmlPartialFunctionType(
+                new OmlSeq0Type(new OmlIntType(16,25),16,18),
+                new OmlSeq0Type(new OmlIntType(16,39),16,32),
+                16,
+                18
+              ),
+              [
+                new OmlParameter([
+                  new OmlPatternIdentifier("aQueue",17,9)
+                ],17,8)
+              ],
+              new OmlFunctionBody(
+                new OmlUnaryExpression(
+                  new OmlUnaryOperator(5,18,1),
+                  new OmlName(
+                    nil,
+                    "aQueue",
+                    18,
+                    4
+                  ),
+                  18,
+                  1
+                ),
+                false,
+                false,
+                18,
+                1
+              ),
+              new OmlFunctionTrailer(
+                new OmlBinaryExpression(
+                  new OmlName(
+                    nil,
+                    "aQueue",
+                    20,
+                    1
+                  ),
+                  new OmlBinaryOperator(33,20,8),
+                  new OmlSequenceEnumeration([
+                    
+                  ],20,11),
+                  20,
+                  8
+                ),
+                new OmlBinaryExpression(
+                  new OmlName(
+                    nil,
+                    "RESULT",
+                    22,
+                    1
+                  ),
+                  new OmlBinaryOperator(27,22,8),
+                  new OmlUnaryExpression(
+                    new OmlUnaryOperator(5,22,10),
+                    new OmlName(
+                      nil,
+                      "aQueue",
+                      22,
+                      13
+                    ),
+                    22,
+                    10
+                  ),
+                  22,
+                  8
+                ),
+                20,
+                8
+              ),
+              16,
+              8
+            ),
+            16,
+            8
+          ),
+          new OmlFunctionDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,25,1),
+              25,
+              1
+            ),
+            new OmlExplicitFunction(
+              "top",
+              [
+                
+              ],
+              new OmlPartialFunctionType(
+                new OmlSeq0Type(new OmlIntType(25,21),25,14),
+                new OmlOptionalType(new OmlIntType(25,29),25,28),
+                25,
+                14
+              ),
+              [
+                new OmlParameter([
+                  new OmlPatternIdentifier("aQueue",26,5)
+                ],26,4)
+              ],
+              new OmlFunctionBody(
+                new OmlUnaryExpression(
+                  new OmlUnaryOperator(2,27,1),
+                  new OmlName(
+                    nil,
+                    "aQueue",
+                    27,
+                    4
+                  ),
+                  27,
+                  1
+                ),
+                false,
+                false,
+                27,
+                1
+              ),
+              new OmlFunctionTrailer(
+                new OmlBinaryExpression(
+                  new OmlName(
+                    nil,
+                    "aQueue",
+                    29,
+                    1
+                  ),
+                  new OmlBinaryOperator(33,29,8),
+                  new OmlSequenceEnumeration([
+                    
+                  ],29,11),
+                  29,
+                  8
+                ),
+                new OmlBinaryExpression(
+                  new OmlName(
+                    nil,
+                    "RESULT",
+                    31,
+                    1
+                  ),
+                  new OmlBinaryOperator(27,31,8),
+                  new OmlUnaryExpression(
+                    new OmlUnaryOperator(2,31,10),
+                    new OmlName(
+                      nil,
+                      "aQueue",
+                      31,
+                      13
+                    ),
+                    31,
+                    10
+                  ),
+                  31,
+                  8
+                ),
+                29,
+                8
+              ),
+              25,
+              8
+            ),
+            25,
+            8
+          )
+        ],5,1)
+      ],
+      false,
+      2,
+      1
+    ),
+    new OmlClass(
+      "UseQueue",
+      [
+        
+      ],
+      nil,
+      [
+        new OmlInstanceVariableDefinitions([
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(3,43,3),
+              0,
+              0
+            ),
+            new OmlAssignmentDefinition(
+              "q",
+              new OmlTypeName(new OmlName(
+                nil,
+                "Queue",
+                43,
+                7
+              ),43,7),
+              new OmlNewExpression(
+                new OmlName(
+                  nil,
+                  "Queue",
+                  43,
+                  20
+                ),
+                [
+                  
+                ],
+                [
+                  
+                ],
+                43,
+                16
+              ),
+              43,
+              3
+            ),
+            0,
+            0
+          )
+        ],40,1),
+        new OmlTraceDefinitions([
+          new OmlNamedTrace(
+            [
+              "S1"
+            ],
+            new OmlTraceDefinitionItem(
+              [
+                new OmlTraceLetBeBinding(
+                  new OmlSetBind(
+                    [
+                      new OmlPatternIdentifier("i",49,9)
+                    ],
+                    new OmlSetEnumeration([
+                      new OmlSymbolicLiteralExpression(new OmlNumericLiteral(1,49,19),49,19),
+                      new OmlSymbolicLiteralExpression(new OmlNumericLiteral(2,49,22),49,22),
+                      new OmlSymbolicLiteralExpression(new OmlNumericLiteral(3,49,25),49,25)
+                    ],49,18),
+                    49,
+                    11
+                  ),
+                  nil,
+                  49,
+                  5
+                ),
+                new OmlTraceLetBeBinding(
+                  new OmlSetBind(
+                    [
+                      new OmlPatternIdentifier("s",50,5)
+                    ],
+                    new OmlSetEnumeration([
+                      new OmlSequenceEnumeration([
+                        
+                      ],50,15),
+                      new OmlSequenceEnumeration([
+                        new OmlSymbolicLiteralExpression(new OmlNumericLiteral(1,50,20),50,20)
+                      ],50,19),
+                      new OmlSequenceEnumeration([
+                        new OmlSymbolicLiteralExpression(new OmlNumericLiteral(1,50,25),50,25),
+                        new OmlSymbolicLiteralExpression(new OmlNumericLiteral(2,50,27),50,27)
+                      ],50,24),
+                      new OmlSequenceEnumeration([
+                        new OmlSymbolicLiteralExpression(new OmlNumericLiteral(1,50,32),50,32),
+                        new OmlSymbolicLiteralExpression(new OmlNumericLiteral(2,50,34),50,34),
+                        new OmlSymbolicLiteralExpression(new OmlNumericLiteral(3,50,36),50,36)
+                      ],50,31)
+                    ],50,14),
+                    50,
+                    7
+                  ),
+                  nil,
+                  50,
+                  1
+                )
+              ],
+              new OmlTraceBracketedDefinition(new OmlTraceSequenceDefinition([
+                new OmlTraceDefinitionItem(
+                  [
+                    
+                  ],
+                  new OmlTraceMethodApply(
+                    "q",
+                    "empty",
+                    [
+                      
+                    ],
+                    51,
+                    1
+                  ),
+                  nil,
+                  51,
+                  1
+                ),
+                new OmlTraceDefinitionItem(
+                  [
+                    
+                  ],
+                  new OmlTraceMethodApply(
+                    "q",
+                    "enQueue",
+                    [
+                      new OmlName(
+                        nil,
+                        "i",
+                        51,
+                        22
+                      ),
+                      new OmlName(
+                        nil,
+                        "s",
+                        51,
+                        25
+                      )
+                    ],
+                    51,
+                    12
+                  ),
+                  new OmlTraceRange(
+                    new OmlNumericLiteral(1,51,28),
+                    new OmlNumericLiteral(3,51,31),
+                    51,
+                    27
+                  ),
+                  51,
+                  12
+                ),
+                new OmlTraceDefinitionItem(
+                  [
+                    
+                  ],
+                  new OmlTraceMethodApply(
+                    "q",
+                    "enQueue",
+                    [
+                      new OmlName(
+                        nil,
+                        "i",
+                        51,
+                        45
+                      ),
+                      new OmlName(
+                        nil,
+                        "s",
+                        51,
+                        48
+                      )
+                    ],
+                    51,
+                    35
+                  ),
+                  new OmlTraceRange(
+                    new OmlNumericLiteral(1,51,51),
+                    new OmlNumericLiteral(3,51,54),
+                    51,
+                    50
+                  ),
+                  51,
+                  35
+                ),
+                new OmlTraceDefinitionItem(
+                  [
+                    
+                  ],
+                  new OmlTraceMethodApply(
+                    "q",
+                    "deQueue",
+                    [
+                      new OmlName(
+                        nil,
+                        "s",
+                        51,
+                        68
+                      )
+                    ],
+                    51,
+                    58
+                  ),
+                  new OmlTraceRange(
+                    new OmlNumericLiteral(1,51,71),
+                    new OmlNumericLiteral(3,51,73),
+                    51,
+                    70
+                  ),
+                  51,
+                  58
+                )
+              ],51,56),50,43),
+              nil,
+              50,
+              43
+            ),
+            49,
+            3
+          )
+        ],46,1)
+      ],
+      false,
+      37,
+      1
+    )
+  ],0,0),
+  [
+    new OmlLexem(2,1,275,"class",1),
+    new OmlLexem(2,7,434,"Queue",2),
+    new OmlLexem(5,1,312,"functions",1),
+    new OmlLexem(6,1,376,"public",1),
+    new OmlLexem(6,8,434,"empty",2),
+    new OmlLexem(6,14,58,":",0),
+    new OmlLexem(6,16,40,"(",0),
+    new OmlLexem(6,17,41,")",0),
+    new OmlLexem(6,19,264,"->",0),
+    new OmlLexem(6,22,391,"seq",1),
+    new OmlLexem(6,26,361,"of",1),
+    new OmlLexem(6,29,324,"int",1),
+    new OmlLexem(7,1,434,"empty",2),
+    new OmlLexem(7,6,40,"(",0),
+    new OmlLexem(7,7,41,")",0),
+    new OmlLexem(7,9,333,"==",0),
+    new OmlLexem(7,12,91,"[",0),
+    new OmlLexem(7,13,93,"]",0),
+    new OmlLexem(7,14,59,";",0),
+    new OmlLexem(10,1,376,"public",1),
+    new OmlLexem(10,8,434,"isEmpty",2),
+    new OmlLexem(10,16,58,":",0),
+    new OmlLexem(10,18,391,"seq",1),
+    new OmlLexem(10,22,361,"of",1),
+    new OmlLexem(10,25,324,"int",1),
+    new OmlLexem(10,29,264,"->",0),
+    new OmlLexem(10,32,270,"bool",1),
+    new OmlLexem(11,1,434,"isEmpty",2),
+    new OmlLexem(11,8,40,"(",0),
+    new OmlLexem(11,9,434,"s",2),
+    new OmlLexem(11,10,41,")",0),
+    new OmlLexem(11,12,333,"==",0),
+    new OmlLexem(11,15,434,"s",2),
+    new OmlLexem(11,17,299,"=",0),
+    new OmlLexem(11,19,91,"[",0),
+    new OmlLexem(11,20,93,"]",0),
+    new OmlLexem(11,21,59,";",0),
+    new OmlLexem(12,1,376,"public",1),
+    new OmlLexem(12,8,434,"enQueue",2),
+    new OmlLexem(12,16,58,":",0),
+    new OmlLexem(12,18,324,"int",1),
+    new OmlLexem(12,22,42,"*",0),
+    new OmlLexem(12,24,391,"seq",1),
+    new OmlLexem(12,28,361,"of",1),
+    new OmlLexem(12,31,324,"int",1),
+    new OmlLexem(12,35,264,"->",0),
+    new OmlLexem(12,38,391,"seq",1),
+    new OmlLexem(12,42,361,"of",1),
+    new OmlLexem(12,45,324,"int",1),
+    new OmlLexem(13,1,434,"enQueue",2),
+    new OmlLexem(13,8,40,"(",0),
+    new OmlLexem(13,9,434,"e",2),
+    new OmlLexem(13,10,44,",",0),
+    new OmlLexem(13,12,434,"aQueue",2),
+    new OmlLexem(13,18,41,")",0),
+    new OmlLexem(13,20,333,"==",0),
+    new OmlLexem(13,23,434,"aQueue",2),
+    new OmlLexem(13,30,393,"^",0),
+    new OmlLexem(13,32,91,"[",0),
+    new OmlLexem(13,33,434,"e",2),
+    new OmlLexem(13,34,93,"]",0),
+    new OmlLexem(13,35,59,";",0),
+    new OmlLexem(16,1,376,"public",1),
+    new OmlLexem(16,8,434,"deQueue",2),
+    new OmlLexem(16,16,58,":",0),
+    new OmlLexem(16,18,391,"seq",1),
+    new OmlLexem(16,22,361,"of",1),
+    new OmlLexem(16,25,324,"int",1),
+    new OmlLexem(16,29,264,"->",0),
+    new OmlLexem(16,32,391,"seq",1),
+    new OmlLexem(16,36,361,"of",1),
+    new OmlLexem(16,39,324,"int",1),
+    new OmlLexem(17,1,434,"deQueue",2),
+    new OmlLexem(17,8,40,"(",0),
+    new OmlLexem(17,9,434,"aQueue",2),
+    new OmlLexem(17,15,41,")",0),
+    new OmlLexem(17,17,333,"==",0),
+    new OmlLexem(18,1,416,"tl",1),
+    new OmlLexem(18,4,434,"aQueue",2),
+    new OmlLexem(19,1,370,"pre",1),
+    new OmlLexem(20,1,434,"aQueue",2),
+    new OmlLexem(20,8,359,"<>",0),
+    new OmlLexem(20,11,91,"[",0),
+    new OmlLexem(20,12,93,"]",0),
+    new OmlLexem(21,1,368,"post",1),
+    new OmlLexem(22,1,434,"RESULT",2),
+    new OmlLexem(22,8,299,"=",0),
+    new OmlLexem(22,10,416,"tl",1),
+    new OmlLexem(22,13,434,"aQueue",2),
+    new OmlLexem(22,19,59,";",0),
+    new OmlLexem(25,1,376,"public",1),
+    new OmlLexem(25,8,434,"top",2),
+    new OmlLexem(25,12,58,":",0),
+    new OmlLexem(25,14,391,"seq",1),
+    new OmlLexem(25,18,361,"of",1),
+    new OmlLexem(25,21,324,"int",1),
+    new OmlLexem(25,25,264,"->",0),
+    new OmlLexem(25,28,91,"[",0),
+    new OmlLexem(25,29,324,"int",1),
+    new OmlLexem(25,32,93,"]",0),
+    new OmlLexem(26,1,434,"top",2),
+    new OmlLexem(26,4,40,"(",0),
+    new OmlLexem(26,5,434,"aQueue",2),
+    new OmlLexem(26,11,41,")",0),
+    new OmlLexem(26,13,333,"==",0),
+    new OmlLexem(27,1,315,"hd",1),
+    new OmlLexem(27,4,434,"aQueue",2),
+    new OmlLexem(28,1,370,"pre",1),
+    new OmlLexem(29,1,434,"aQueue",2),
+    new OmlLexem(29,8,359,"<>",0),
+    new OmlLexem(29,11,91,"[",0),
+    new OmlLexem(29,12,93,"]",0),
+    new OmlLexem(30,1,368,"post",1),
+    new OmlLexem(31,1,434,"RESULT",2),
+    new OmlLexem(31,8,299,"=",0),
+    new OmlLexem(31,10,315,"hd",1),
+    new OmlLexem(31,13,434,"aQueue",2),
+    new OmlLexem(31,19,59,";",0),
+    new OmlLexem(34,1,298,"end",1),
+    new OmlLexem(34,5,434,"Queue",2),
+    new OmlLexem(37,1,275,"class",1),
+    new OmlLexem(37,7,434,"UseQueue",2),
+    new OmlLexem(40,1,323,"instance",1),
+    new OmlLexem(40,10,424,"variables",1),
+    new OmlLexem(43,3,434,"q",2),
+    new OmlLexem(43,5,58,":",0),
+    new OmlLexem(43,7,434,"Queue",2),
+    new OmlLexem(43,13,265,":=",0),
+    new OmlLexem(43,16,355,"new",1),
+    new OmlLexem(43,20,434,"Queue",2),
+    new OmlLexem(43,25,40,"(",0),
+    new OmlLexem(43,26,41,")",0),
+    new OmlLexem(43,27,59,";",0),
+    new OmlLexem(46,1,419,"traces",1),
+    new OmlLexem(49,1,434,"S1",2),
+    new OmlLexem(49,3,58,":",0),
+    new OmlLexem(49,5,339,"let",1),
+    new OmlLexem(49,9,434,"i",2),
+    new OmlLexem(49,11,327,"in set",0),
+    new OmlLexem(49,18,123,"{",0),
+    new OmlLexem(49,19,436,"1",0),
+    new OmlLexem(49,20,44,",",0),
+    new OmlLexem(49,22,436,"2",0),
+    new OmlLexem(49,23,44,",",0),
+    new OmlLexem(49,25,436,"3",0),
+    new OmlLexem(49,26,125,"}",0),
+    new OmlLexem(49,28,319,"in",1),
+    new OmlLexem(50,1,339,"let",1),
+    new OmlLexem(50,5,434,"s",2),
+    new OmlLexem(50,7,327,"in set",0),
+    new OmlLexem(50,14,123,"{",0),
+    new OmlLexem(50,15,91,"[",0),
+    new OmlLexem(50,16,93,"]",0),
+    new OmlLexem(50,17,44,",",0),
+    new OmlLexem(50,19,91,"[",0),
+    new OmlLexem(50,20,436,"1",0),
+    new OmlLexem(50,21,93,"]",0),
+    new OmlLexem(50,22,44,",",0),
+    new OmlLexem(50,24,91,"[",0),
+    new OmlLexem(50,25,436,"1",0),
+    new OmlLexem(50,26,44,",",0),
+    new OmlLexem(50,27,436,"2",0),
+    new OmlLexem(50,28,93,"]",0),
+    new OmlLexem(50,29,44,",",0),
+    new OmlLexem(50,31,91,"[",0),
+    new OmlLexem(50,32,436,"1",0),
+    new OmlLexem(50,33,44,",",0),
+    new OmlLexem(50,34,436,"2",0),
+    new OmlLexem(50,35,44,",",0),
+    new OmlLexem(50,36,436,"3",0),
+    new OmlLexem(50,37,93,"]",0),
+    new OmlLexem(50,38,125,"}",0),
+    new OmlLexem(50,40,319,"in",1),
+    new OmlLexem(50,43,40,"(",0),
+    new OmlLexem(51,1,434,"q",2),
+    new OmlLexem(51,2,46,".",0),
+    new OmlLexem(51,3,434,"empty",2),
+    new OmlLexem(51,8,40,"(",0),
+    new OmlLexem(51,9,41,")",0),
+    new OmlLexem(51,10,59,";",0),
+    new OmlLexem(51,12,434,"q",2),
+    new OmlLexem(51,13,46,".",0),
+    new OmlLexem(51,14,434,"enQueue",2),
+    new OmlLexem(51,21,40,"(",0),
+    new OmlLexem(51,22,434,"i",2),
+    new OmlLexem(51,23,44,",",0),
+    new OmlLexem(51,25,434,"s",2),
+    new OmlLexem(51,26,41,")",0),
+    new OmlLexem(51,27,123,"{",0),
+    new OmlLexem(51,28,436,"1",0),
+    new OmlLexem(51,29,44,",",0),
+    new OmlLexem(51,31,436,"3",0),
+    new OmlLexem(51,32,125,"}",0),
+    new OmlLexem(51,33,59,";",0),
+    new OmlLexem(51,35,434,"q",2),
+    new OmlLexem(51,36,46,".",0),
+    new OmlLexem(51,37,434,"enQueue",2),
+    new OmlLexem(51,44,40,"(",0),
+    new OmlLexem(51,45,434,"i",2),
+    new OmlLexem(51,46,44,",",0),
+    new OmlLexem(51,48,434,"s",2),
+    new OmlLexem(51,49,41,")",0),
+    new OmlLexem(51,50,123,"{",0),
+    new OmlLexem(51,51,436,"1",0),
+    new OmlLexem(51,52,44,",",0),
+    new OmlLexem(51,54,436,"3",0),
+    new OmlLexem(51,55,125,"}",0),
+    new OmlLexem(51,56,59,";",0),
+    new OmlLexem(51,58,434,"q",2),
+    new OmlLexem(51,59,46,".",0),
+    new OmlLexem(51,60,434,"deQueue",2),
+    new OmlLexem(51,67,40,"(",0),
+    new OmlLexem(51,68,434,"s",2),
+    new OmlLexem(51,69,41,")",0),
+    new OmlLexem(51,70,123,"{",0),
+    new OmlLexem(51,71,436,"1",0),
+    new OmlLexem(51,72,44,",",0),
+    new OmlLexem(51,73,436,"3",0),
+    new OmlLexem(51,74,125,"}",0),
+    new OmlLexem(52,1,41,")",0),
+    new OmlLexem(55,1,298,"end",1),
+    new OmlLexem(55,5,434,"UseQueue",2)
+  ]
+);
+operations
  public static test_tracebracket_tracebracket_01: () ==> IOmlDocument
  test_tracebracket_tracebracket_01() == return new OmlDocument("",
   new OmlSpecifications([

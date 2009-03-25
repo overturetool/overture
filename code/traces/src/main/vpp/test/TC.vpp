@@ -28,7 +28,7 @@ test_expr_binaryexpr_logical_logical_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_expr_binaryexpr_logical_logical_01().getSpecifications(), 
-                           "logical-01.vpp") = {|->});
+                           "logical-01.vpp") = {"UseStack|PushBeforePop|8" |-> ["s.Reset()", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Push(if (( true <=> true ) and 5<>8) or  false  then 8/4 else 1234)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|7" |-> ["s.Reset()", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Push(if (( true <=> true ) and 5<>8) or  false  then 8/4 else 1234)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|6" |-> ["s.Reset()", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Push(if (( true <=> true ) and 5<>8) or  false  then 8/4 else 1234)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Push(if (( true <=> true ) and 5<>8) or  false  then 8/4 else 1234)"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Push(if (( true <=> true ) and 5<>8) or  false  then 8/4 else 1234)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Push(if (( true <=> true ) and 5<>8) or  false  then 8/4 else 1234)", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Push(if (( true <=> true ) and 5<>8) or  false  then 8/4 else 1234)", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Push(if (( true <=> true ) and 5<>8) or  false  then 8/4 else 1234)"]});
 );
 
 public test_expr_binaryexpr_logical_logical_02: () ==> ()
@@ -36,7 +36,7 @@ test_expr_binaryexpr_logical_logical_02 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_expr_binaryexpr_logical_logical_02().getSpecifications(), 
-                           "logical-02.vpp") = {|->});
+                           "logical-02.vpp") = {"UseStack|PushBeforePop|8" |-> ["s.Reset()", "let x42  =77  in s.Push(x42)", "let x42  =77  in s.Push(x42)", "let x43  =2  in s.Push(x43)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|7" |-> ["s.Reset()", "let x42  =77  in s.Push(x42)", "let x43  =2  in s.Push(x43)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|6" |-> ["s.Reset()", "let x42  =77  in s.Push(x42)", "let x42  =77  in s.Push(x42)", "let x43  =2  in s.Push(x43)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x42  =77  in s.Push(x42)", "let x43  =2  in s.Push(x43)"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "let x42  =77  in s.Push(x42)", "let x43  =2  in s.Push(x43)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x42  =77  in s.Push(x42)", "let x42  =77  in s.Push(x42)", "let x43  =2  in s.Push(x43)", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x42  =77  in s.Push(x42)", "let x43  =2  in s.Push(x43)", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x42  =77  in s.Push(x42)", "let x42  =77  in s.Push(x42)", "let x43  =2  in s.Push(x43)"]});
 );
 
 public test_expr_binaryexpr_numminus_numminus_01: () ==> ()
@@ -44,7 +44,7 @@ test_expr_binaryexpr_numminus_numminus_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_expr_binaryexpr_numminus_numminus_01().getSpecifications(), 
-                           "numminus-01.vpp") = {|->});
+                           "numminus-01.vpp") = {"UseStack|PushBeforePop|6" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "let x  =46  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "let x  =46  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "let x  =46  in s.Push(x)", "s.Pop()"]});
 );
 
 public test_expr_binaryexpr_setinter_setinter_01: () ==> ()
@@ -52,7 +52,7 @@ test_expr_binaryexpr_setinter_setinter_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_expr_binaryexpr_setinter_setinter_01().getSpecifications(), 
-                           "setinter-01.vpp") = {|->});
+                           "setinter-01.vpp") = {"UseTree|T2|1" |-> ["t2.addRoot(8)", "let x  =5  in t1.insertNode(x-(x div 2))"], "UseTree|T2|2" |-> ["t2.addRoot(8)", "let x  =5  in t2.insertNode(x*x)"], "UseTree|T2|3" |-> ["t2.addRoot(8)", "let x  =5  in t1.insertNode(x-(x div 2))", "let x  =5  in t1.insertNode(x-(x div 2))"], "UseTree|T2|4" |-> ["t2.addRoot(8)", "let x  =5  in t2.insertNode(x*x)", "let x  =5  in t1.insertNode(x-(x div 2))"], "UseTree|T2|5" |-> ["t2.addRoot(8)", "let x  =5  in t1.insertNode(x-(x div 2))", "let x  =5  in t2.insertNode(x*x)"], "UseTree|T2|14" |-> ["t2.addRoot(8)", "let x  =5  in t2.insertNode(x*x)", "let x  =5  in t2.insertNode(x*x)", "let x  =5  in t2.insertNode(x*x)"], "UseTree|T2|13" |-> ["t2.addRoot(8)", "let x  =5  in t1.insertNode(x-(x div 2))", "let x  =5  in t2.insertNode(x*x)", "let x  =5  in t2.insertNode(x*x)"], "UseTree|T2|12" |-> ["t2.addRoot(8)", "let x  =5  in t2.insertNode(x*x)", "let x  =5  in t1.insertNode(x-(x div 2))", "let x  =5  in t2.insertNode(x*x)"], "UseTree|T2|7" |-> ["t2.addRoot(8)", "let x  =5  in t1.insertNode(x-(x div 2))", "let x  =5  in t1.insertNode(x-(x div 2))", "let x  =5  in t1.insertNode(x-(x div 2))"], "UseTree|T1|3" |-> ["t1.addRoot(8)", "let x  =6  in t1.insertNode(x)"], "UseTree|T2|11" |-> ["t2.addRoot(8)", "let x  =5  in t1.insertNode(x-(x div 2))", "let x  =5  in t1.insertNode(x-(x div 2))", "let x  =5  in t2.insertNode(x*x)"], "UseTree|T2|6" |-> ["t2.addRoot(8)", "let x  =5  in t2.insertNode(x*x)", "let x  =5  in t2.insertNode(x*x)"], "UseTree|T1|4" |-> ["t1.addRoot(8)", "let x  =9  in t1.insertNode(x)"], "UseTree|T2|10" |-> ["t2.addRoot(8)", "let x  =5  in t2.insertNode(x*x)", "let x  =5  in t2.insertNode(x*x)", "let x  =5  in t1.insertNode(x-(x div 2))"], "UseTree|T2|9" |-> ["t2.addRoot(8)", "let x  =5  in t1.insertNode(x-(x div 2))", "let x  =5  in t2.insertNode(x*x)", "let x  =5  in t1.insertNode(x-(x div 2))"], "UseTree|T2|8" |-> ["t2.addRoot(8)", "let x  =5  in t2.insertNode(x*x)", "let x  =5  in t1.insertNode(x-(x div 2))", "let x  =5  in t1.insertNode(x-(x div 2))"], "UseTree|T1|1" |-> ["t1.addRoot(8)", "let x  =1  in t1.insertNode(x)"], "UseTree|T1|2" |-> ["t1.addRoot(8)", "let x  =3  in t1.insertNode(x)"]});
 );
 
 public test_expr_binaryexpr_setunion_setunion_01: () ==> ()
@@ -60,7 +60,7 @@ test_expr_binaryexpr_setunion_setunion_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_expr_binaryexpr_setunion_setunion_01().getSpecifications(), 
-                           "setunion-01.vpp") = {|->});
+                           "setunion-01.vpp") = {"UseTree|T2|1" |-> ["t2.addRoot(8)", "let x  =1  in t1.insertNode(x-(x rem 2))"], "UseTree|T2|2" |-> ["t2.addRoot(8)", "let x  =4  in t1.insertNode(x-(x rem 2))"], "UseTree|T2|3" |-> ["t2.addRoot(8)", "let x  =5  in t1.insertNode(x-(x rem 2))"], "UseTree|T2|4" |-> ["t2.addRoot(8)", "let x  =5.1  in t1.insertNode(x-(x rem 2))"], "UseTree|T2|5" |-> ["t2.addRoot(8)", "let x  =1  in t2.insertNode(x*x)"], "UseTree|T2|7" |-> ["t2.addRoot(8)", "let x  =5  in t2.insertNode(x*x)"], "UseTree|T2|6" |-> ["t2.addRoot(8)", "let x  =4  in t2.insertNode(x*x)"], "UseTree|T2|9" |-> ["t2.addRoot(8)", "t1.leftBranch()"], "UseTree|T2|8" |-> ["t2.addRoot(8)", "let x  =5.1  in t2.insertNode(x*x)"]});
 );
 
 public test_expr_ifthen_ifthen_01: () ==> ()
@@ -68,7 +68,7 @@ test_expr_ifthen_ifthen_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_expr_ifthen_ifthen_01().getSpecifications(), 
-                           "ifthen-01.vpp") = {|->});
+                           "ifthen-01.vpp") = {"UseStack|PushBeforePop|6" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "let x  =46  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "let x  =46  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "let x  =46  in s.Push(x)", "s.Pop()"]});
 );
 
 public test_expr_ifthen_ifthen_02: () ==> ()
@@ -76,7 +76,7 @@ test_expr_ifthen_ifthen_02 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_expr_ifthen_ifthen_02().getSpecifications(), 
-                           "ifthen-02.vpp") = {|->});
+                           "ifthen-02.vpp") = {"UseStack|PushBeforePop|8" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|7" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|6" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 else 66+11)"]});
 );
 
 public test_expr_ifthen_ifthen_03: () ==> ()
@@ -84,7 +84,7 @@ test_expr_ifthen_ifthen_03 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_expr_ifthen_ifthen_03().getSpecifications(), 
-                           "ifthen-03.vpp") = {|->});
+                           "ifthen-03.vpp") = {"UseStack|PushBeforePop|8" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 elseif "monkey" in set {"hi", <RR>, 88, 7} then 77 mod 2 else 66+11)", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 elseif "monkey" in set {"hi", <RR>, 88, 7} then 77 mod 2 else 66+11)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|7" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 elseif "monkey" in set {"hi", <RR>, 88, 7} then 77 mod 2 else 66+11)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|6" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 elseif "monkey" in set {"hi", <RR>, 88, 7} then 77 mod 2 else 66+11)", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 elseif "monkey" in set {"hi", <RR>, 88, 7} then 77 mod 2 else 66+11)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 elseif "monkey" in set {"hi", <RR>, 88, 7} then 77 mod 2 else 66+11)"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 elseif "monkey" in set {"hi", <RR>, 88, 7} then 77 mod 2 else 66+11)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 elseif "monkey" in set {"hi", <RR>, 88, 7} then 77 mod 2 else 66+11)", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 elseif "monkey" in set {"hi", <RR>, 88, 7} then 77 mod 2 else 66+11)", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 elseif "monkey" in set {"hi", <RR>, 88, 7} then 77 mod 2 else 66+11)", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 elseif "monkey" in set {"hi", <RR>, 88, 7} then 77 mod 2 else 66+11)", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), "hi", 8.7} then 78-65 div 2 elseif "monkey" in set {"hi", <RR>, 88, 7} then 77 mod 2 else 66+11)"]});
 );
 
 public test_expr_ifthen_ifthen_04: () ==> ()
@@ -92,7 +92,7 @@ test_expr_ifthen_ifthen_04 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_expr_ifthen_ifthen_04().getSpecifications(), 
-                           "ifthen-04.vpp") = {|->});
+                           "ifthen-04.vpp") = {"UseStack|PushBeforePop|6" |-> ["s.Reset()", "let x  =77  in s.Push(x)", "let x  =77  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =77  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "let x  =77  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x  =77  in s.Push(x)", "let x  =77  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x  =77  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =77  in s.Push(x)", "let x  =77  in s.Push(x)", "s.Pop()"]});
 );
 
 public test_expr_ifthen_ifthen_05: () ==> ()
@@ -100,7 +100,7 @@ test_expr_ifthen_ifthen_05 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_expr_ifthen_ifthen_05().getSpecifications(), 
-                           "ifthen-05.vpp") = {|->});
+                           "ifthen-05.vpp") = {"UseStack|PushBeforePop|6" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()"]});
 );
 
 public test_expr_letexpr_letexpr_01: () ==> ()
@@ -108,7 +108,7 @@ test_expr_letexpr_letexpr_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_expr_letexpr_letexpr_01().getSpecifications(), 
-                           "letexpr-01.vpp") = {|->});
+                           "letexpr-01.vpp") = {"UseStack|PushBeforePop|9" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|12" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|8" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|11" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|7" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|10" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|6" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()"]});
 );
 
 public test_expr_lookup_lookup_01: () ==> ()
@@ -116,7 +116,7 @@ test_expr_lookup_lookup_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_expr_lookup_lookup_01().getSpecifications(), 
-                           "lookup-01.vpp") = {|->});
+                           "lookup-01.vpp") = {"UseStack|Test2Dir2|4" |-> ["let z  =4  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|Test2Dir2|3" |-> ["let z  =5  in s.Push(z)"], "UseStack|Test2Dir2|2" |-> ["let z  =4  in s.Push(z)"], "UseStack|Test2Dir2|1" |-> [], "UseStack|Test2Dir2|8" |-> ["let z  =4  in s.Push(z)", "let z  =4  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|Test2Dir|3" |-> ["s2.Reset()"], "UseStack|Test2Dir2|7" |-> ["let z  =5  in s.Push(z)", "let z  =5  in s.Push(z)"], "UseStack|Test2Dir2|6" |-> ["let z  =4  in s.Push(z)", "let z  =5  in s.Push(z)"], "UseStack|Test2Dir|1" |-> ["s2.Reset()"], "UseStack|Test2Dir2|5" |-> ["let z  =5  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|Test2Dir|2" |-> ["s2.Reset()", "let a  =1 , b  =2  in s.Push(a)", "let a  =1 , b  =2  in s2.Push(b)"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()"], "UseStack|Test2Dir2|9" |-> ["let z  =5  in s.Push(z)", "let z  =4  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x  =2  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =2  in s.Push(x)", "s.Pop()"], "UseStack|Test2Dir2|13" |-> ["let z  =5  in s.Push(z)", "let z  =4  in s.Push(z)", "let z  =5  in s.Push(z)"], "UseStack|Test2Dir2|12" |-> ["let z  =4  in s.Push(z)", "let z  =4  in s.Push(z)", "let z  =5  in s.Push(z)"], "UseStack|Test2Dir2|11" |-> ["let z  =5  in s.Push(z)", "let z  =5  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|Test2Dir2|10" |-> ["let z  =4  in s.Push(z)", "let z  =5  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|Test2Dir2|15" |-> ["let z  =5  in s.Push(z)", "let z  =5  in s.Push(z)", "let z  =5  in s.Push(z)"], "UseStack|Test2Dir2|14" |-> ["let z  =4  in s.Push(z)", "let z  =5  in s.Push(z)", "let z  =5  in s.Push(z)"]});
 );
 
 public test_expr_lookup_lookup_02: () ==> ()
@@ -124,7 +124,7 @@ test_expr_lookup_lookup_02 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_expr_lookup_lookup_02().getSpecifications(), 
-                           "lookup-02.vpp") = {|->});
+                           "lookup-02.vpp") = {"UseStack|Test2Dir2|4" |-> ["let z  =4  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|Test2Dir2|3" |-> ["let z  =5  in s.Push(z)"], "UseStack|Test2Dir2|2" |-> ["let z  =4  in s.Push(z)"], "UseStack|Test2Dir2|1" |-> [], "UseStack|Test2Dir2|8" |-> ["let z  =4  in s.Push(z)", "let z  =4  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|Test2Dir|3" |-> ["s2.Reset()"], "UseStack|Test2Dir2|7" |-> ["let z  =5  in s.Push(z)", "let z  =5  in s.Push(z)"], "UseStack|Test2Dir2|6" |-> ["let z  =4  in s.Push(z)", "let z  =5  in s.Push(z)"], "UseStack|Test2Dir|1" |-> ["s2.Reset()"], "UseStack|Test2Dir2|5" |-> ["let z  =5  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|Test2Dir|2" |-> ["s2.Reset()", "let a  =1 , b  =2  in s.Push(a)", "let a  =1 , b  =2  in s2.Push(b)"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()"], "UseStack|Test2Dir2|9" |-> ["let z  =5  in s.Push(z)", "let z  =4  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x  =2  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =2  in s.Push(x)", "s.Pop()"], "UseStack|Test2Dir2|13" |-> ["let z  =5  in s.Push(z)", "let z  =4  in s.Push(z)", "let z  =5  in s.Push(z)"], "UseStack|Test2Dir2|12" |-> ["let z  =4  in s.Push(z)", "let z  =4  in s.Push(z)", "let z  =5  in s.Push(z)"], "UseStack|Test2Dir2|11" |-> ["let z  =5  in s.Push(z)", "let z  =5  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|Test2Dir2|10" |-> ["let z  =4  in s.Push(z)", "let z  =5  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|Test2Dir2|15" |-> ["let z  =5  in s.Push(z)", "let z  =5  in s.Push(z)", "let z  =5  in s.Push(z)"], "UseStack|Test2Dir2|14" |-> ["let z  =4  in s.Push(z)", "let z  =5  in s.Push(z)", "let z  =5  in s.Push(z)"]});
 );
 
 public test_expr_mapexpr_mapexpr_01: () ==> ()
@@ -132,7 +132,7 @@ test_expr_mapexpr_mapexpr_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_expr_mapexpr_mapexpr_01().getSpecifications(), 
-                           "mapexpr-01.vpp") = {|->});
+                           "mapexpr-01.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  ={8|->7, 5|->9}  in s.Push(x)", "s.Pop()"]});
 );
 
 public test_expr_mapexpr_mapexpr_02: () ==> ()
@@ -140,7 +140,7 @@ test_expr_mapexpr_mapexpr_02 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_expr_mapexpr_mapexpr_02().getSpecifications(), 
-                           "mapexpr-02.vpp") = {|->});
+                           "mapexpr-02.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  ={9|->5, 7|->8} , y  ={3, 5, 8, 9, 7} , z  ={9|->81, 7|->49, 8|->64, 5|->25, 3|->9}  in s.Push(z)", "s.Pop()"]});
 );
 
 public test_expr_mapexpr_mapexpr_03: () ==> ()
@@ -148,7 +148,7 @@ test_expr_mapexpr_mapexpr_03 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_expr_mapexpr_mapexpr_03().getSpecifications(), 
-                           "mapexpr-03.vpp") = {|->});
+                           "mapexpr-03.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "s.Push(let x  ={7|->8, 9|->5} , y  =dom x union rng x union elems [3, 3] , z  ={e|->e**2|e  in set y}  in z)", "s.Pop()"]});
 );
 
 public test_expr_newexpr_newexpr_01: () ==> ()
@@ -156,7 +156,7 @@ test_expr_newexpr_newexpr_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_expr_newexpr_newexpr_01().getSpecifications(), 
-                           "newexpr-01.vpp") = {|->});
+                           "newexpr-01.vpp") = {"UseOS|startok|2" |-> ["let p  =new Httpd() , rl  =2  in os.addProcess(rl, p)", "let p  =new Httpd() , rl  =2  in os.bootSequenceList(rl)"], "UseOS|startok|3" |-> ["let p  =new Kerneld() , rl  =1  in os.addProcess(rl, p)", "let p  =new Kerneld() , rl  =1  in os.bootSequenceList(rl)"], "UseOS|startok|1" |-> ["let p  =new Httpd() , rl  =1  in os.addProcess(rl, p)", "let p  =new Httpd() , rl  =1  in os.bootSequenceList(rl)"], "UseOS|startok|6" |-> ["let p  =new Httpd() , rl  =2  in os.addProcess(rl, p)", "let p  =new Httpd() , rl  =2  in os.bootSequence(rl)"], "UseOS|startok|7" |-> ["let p  =new Kerneld() , rl  =1  in os.addProcess(rl, p)", "let p  =new Kerneld() , rl  =1  in os.bootSequence(rl)"], "UseOS|startok|4" |-> ["let p  =new Kerneld() , rl  =2  in os.addProcess(rl, p)", "let p  =new Kerneld() , rl  =2  in os.bootSequenceList(rl)"], "UseOS|startok|5" |-> ["let p  =new Httpd() , rl  =1  in os.addProcess(rl, p)", "let p  =new Httpd() , rl  =1  in os.bootSequence(rl)"], "UseOS|startok|8" |-> ["let p  =new Kerneld() , rl  =2  in os.addProcess(rl, p)", "let p  =new Kerneld() , rl  =2  in os.bootSequence(rl)"]});
 );
 
 public test_expr_recordconstructor_recordconstructor_01: () ==> ()
@@ -164,7 +164,7 @@ test_expr_recordconstructor_recordconstructor_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_expr_recordconstructor_recordconstructor_01().getSpecifications(), 
-                           "recordconstructor-01.vpp") = {|->});
+                           "recordconstructor-01.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =mk_Stack`R(2)  in s.Push(x.a)", "s.Pop()"]});
 );
 
 public test_expr_recordconstructor_recordconstructor_02: () ==> ()
@@ -172,7 +172,7 @@ test_expr_recordconstructor_recordconstructor_02 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_expr_recordconstructor_recordconstructor_02().getSpecifications(), 
-                           "recordconstructor-02.vpp") = {|->});
+                           "recordconstructor-02.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "s.Push(mk_Stack`R(2).a)", "s.Pop()"]});
 );
 
 public test_expr_recordconstructor_recordconstructor_03: () ==> ()
@@ -180,7 +180,7 @@ test_expr_recordconstructor_recordconstructor_03 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_expr_recordconstructor_recordconstructor_03().getSpecifications(), 
-                           "recordconstructor-03.vpp") = {|->});
+                           "recordconstructor-03.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =mk_UseStack`T(2)  in s.Push(x.a)", "s.Pop()"]});
 );
 
 public test_missingpre_missingpre_01: () ==> ()
@@ -188,7 +188,7 @@ test_missingpre_missingpre_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_missingpre_missingpre_01().getSpecifications(), 
-                           "missingpre-01.vpp") = {|->});
+                           "missingpre-01.vpp") = {"UseStack|PushBeforePop|1" |-> ["let x  =19  in s.Push(x)", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|2" |-> ["let x  =73  in s.Push(x)", "s.Pop()", "s.Top()"]});
 );
 
 public test_missingpre_missingpre_02: () ==> ()
@@ -196,7 +196,7 @@ test_missingpre_missingpre_02 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_missingpre_missingpre_02().getSpecifications(), 
-                           "missingpre-02.vpp") = {|->});
+                           "missingpre-02.vpp") = {"UseStack|PushBeforePop|1" |-> ["let x  ={}  in s.Push(x)", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|3" |-> ["let x  ={}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|2" |-> ["let x  ={}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Top()"]});
 );
 
 public test_missingpre_missingpre_03: () ==> ()
@@ -204,7 +204,7 @@ test_missingpre_missingpre_03 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_missingpre_missingpre_03().getSpecifications(), 
-                           "missingpre-03.vpp") = {|->});
+                           "missingpre-03.vpp") = {"UseStack|PushBeforePop|9" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|8" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|7" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|6" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|1" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|5" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|4" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|3" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|2" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Top()"]});
 );
 
 public test_missingpre_missingpre_04: () ==> ()
@@ -212,7 +212,7 @@ test_missingpre_missingpre_04 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_missingpre_missingpre_04().getSpecifications(), 
-                           "missingpre-04.vpp") = {|->});
+                           "missingpre-04.vpp") = {"UseStack|PushBeforePop|9" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|8" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|7" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|6" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|1" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|5" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|4" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|3" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|2" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Top()"]});
 );
 
 public test_simpletraces_simpletraces_01: () ==> ()
@@ -220,7 +220,7 @@ test_simpletraces_simpletraces_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_simpletraces_simpletraces_01().getSpecifications(), 
-                           "simpletraces-01.vpp") = {|->});
+                           "simpletraces-01.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()"]});
 );
 
 public test_tmp_simpletraces_01: () ==> ()
@@ -244,7 +244,7 @@ test_tracebind_tracebind_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_tracebind_tracebind_01().getSpecifications(), 
-                           "tracebind-01.vpp") = {|->});
+                           "tracebind-01.vpp") = {"UseStack|DD|1" |-> ["let x  =3 , y  =4  in s.Push(y)"], "UseStack|PushBeforePop|6" |-> ["let x  =3 , y  =8  in s.Push(x+1)", "let x  =3 , y  =8  in s.Push(y)"], "UseStack|PushBeforePop|1" |-> ["let x  ='f' , y  =3  in s.Push(x+1)", "let x  ='f' , y  =3  in s.Push(y)"], "UseStack|PushBeforePop|5" |-> ["let x  =1 , y  =8  in s.Push(x+1)", "let x  =1 , y  =8  in s.Push(y)"], "UseStack|PushBeforePop|4" |-> ["let x  ='f' , y  =8  in s.Push(x+1)", "let x  ='f' , y  =8  in s.Push(y)"], "UseStack|DD|4" |-> ["let x  =['k', 'k', 'k'] , y  =0  in s.Push(y)"], "UseStack|PushBeforePop|3" |-> ["let x  =3 , y  =3  in s.Push(x+1)", "let x  =3 , y  =3  in s.Push(y)"], "UseStack|DD|3" |-> ["let x  =3 , y  =0  in s.Push(y)"], "UseStack|PushBeforePop|2" |-> ["let x  =1 , y  =3  in s.Push(x+1)", "let x  =1 , y  =3  in s.Push(y)"], "UseStack|DD|2" |-> ["let x  =['k', 'k', 'k'] , y  =4  in s.Push(y)"]});
 );
 
 public test_tracebind_tracebind_02: () ==> ()
@@ -252,7 +252,7 @@ test_tracebind_tracebind_02 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_tracebind_tracebind_02().getSpecifications(), 
-                           "tracebind-02.vpp") = {|->});
+                           "tracebind-02.vpp") = {"UseStack|PushBeforePop|12" |-> ["let x  =3 , y  =8  in s.Push(x)", "let x  =1 , y  =8  in s.Push(y)"], "UseStack|PushBeforePop|9" |-> ["let x  =1 , y  =3  in s.Push(x)", "let x  =1 , y  =8  in s.Push(y)"], "UseStack|PushBeforePop|11" |-> ["let x  =1 , y  =8  in s.Push(x)", "let x  =1 , y  =8  in s.Push(y)"], "UseStack|PushBeforePop|8" |-> ["let x  =3 , y  =8  in s.Push(x)", "let x  =3 , y  =3  in s.Push(y)"], "UseStack|PushBeforePop|10" |-> ["let x  =3 , y  =3  in s.Push(x)", "let x  =1 , y  =8  in s.Push(y)"], "UseStack|PushBeforePop|7" |-> ["let x  =1 , y  =8  in s.Push(x)", "let x  =3 , y  =3  in s.Push(y)"], "UseStack|PushBeforePop|6" |-> ["let x  =3 , y  =3  in s.Push(x)", "let x  =3 , y  =3  in s.Push(y)"], "UseStack|PushBeforePop|1" |-> ["let x  =1 , y  =3  in s.Push(x)", "let x  =1 , y  =3  in s.Push(y)"], "UseStack|PushBeforePop|5" |-> ["let x  =1 , y  =3  in s.Push(x)", "let x  =3 , y  =3  in s.Push(y)"], "UseStack|PushBeforePop|4" |-> ["let x  =3 , y  =8  in s.Push(x)", "let x  =1 , y  =3  in s.Push(y)"], "UseStack|PushBeforePop|3" |-> ["let x  =1 , y  =8  in s.Push(x)", "let x  =1 , y  =3  in s.Push(y)"], "UseStack|PushBeforePop|2" |-> ["let x  =3 , y  =3  in s.Push(x)", "let x  =1 , y  =3  in s.Push(y)"], "UseStack|PushBeforePop|13" |-> ["let x  =1 , y  =3  in s.Push(x)", "let x  =3 , y  =8  in s.Push(y)"], "UseStack|PushBeforePop|14" |-> ["let x  =3 , y  =3  in s.Push(x)", "let x  =3 , y  =8  in s.Push(y)"], "UseStack|PushBeforePop|15" |-> ["let x  =1 , y  =8  in s.Push(x)", "let x  =3 , y  =8  in s.Push(y)"], "UseStack|PushBeforePop|16" |-> ["let x  =3 , y  =8  in s.Push(x)", "let x  =3 , y  =8  in s.Push(y)"]});
 );
 
 public test_tracebind_tracebind_03: () ==> ()
@@ -260,7 +260,7 @@ test_tracebind_tracebind_03 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_tracebind_tracebind_03().getSpecifications(), 
-                           "tracebind-03.vpp") = {|->});
+                           "tracebind-03.vpp") = {"UseStack|PushBeforePop|6" |-> ["s.Reset()", "let x  =28  in s.Push(x)", "let x  =28  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =28  in s.Push(x)"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "let x  =28  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x  =28  in s.Push(x)", "let x  =28  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x  =28  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =28  in s.Push(x)", "let x  =28  in s.Push(x)"]});
 );
 
 public test_tracebind_tracebind_04: () ==> ()
@@ -268,7 +268,7 @@ test_tracebind_tracebind_04 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_tracebind_tracebind_04().getSpecifications(), 
-                           "tracebind-04.vpp") = {|->});
+                           "tracebind-04.vpp") = {"UseStack|PushBeforePop|6" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()"]});
 );
 
 public test_tracebind_tracebind_05: () ==> ()
@@ -276,7 +276,15 @@ test_tracebind_tracebind_05 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_tracebind_tracebind_05().getSpecifications(), 
-                           "tracebind-05.vpp") = {|->});
+                           "tracebind-05.vpp") = {"W1Use|S1|1" |-> ["let i  =-1 , j  =-1  in t.op1(i*j)"], "W1Use|S1|5" |-> ["let i  =0 , j  =0  in t.op1(i*j)"], "W1Use|S1|4" |-> ["let i  =-1 , j  =0  in t.op1(i*j)"], "W1Use|S1|3" |-> ["let i  =1 , j  =-1  in t.op1(i*j)"], "W1Use|S1|2" |-> ["let i  =0 , j  =-1  in t.op1(i*j)"], "W1Use|S1|9" |-> ["let i  =1 , j  =1  in t.op1(i*j)"], "W1Use|S1|8" |-> ["let i  =0 , j  =1  in t.op1(i*j)"], "W1Use|S1|7" |-> ["let i  =-1 , j  =1  in t.op1(i*j)"], "W1Use|S1|6" |-> ["let i  =1 , j  =0  in t.op1(i*j)"]});
+);
+
+public test_tracebind_tracebind_06: () ==> ()
+test_tracebind_tracebind_06 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracebind_tracebind_06().getSpecifications(), 
+                           "tracebind-06.vpp") = {|->});
 );
 
 public test_tracebracket_tracebracket_01: () ==> ()
@@ -284,7 +292,7 @@ test_tracebracket_tracebracket_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_tracebracket_tracebracket_01().getSpecifications(), 
-                           "tracebracket-01.vpp") = {|->});
+                           "tracebracket-01.vpp") = {"UseStack|PushBeforePop|1" |-> ["let x  =1 , y  =3  in s.Push(x)", "let x  =1 , y  =3  in let z  =6  in s.Push(y)", "let x  =1 , y  =3  in let z  =6  in s.Push(z)"], "UseStack|PushBeforePop|4" |-> ["let x  =3 , y  =8  in s.Push(x)", "let x  =3 , y  =8  in let z  =6  in s.Push(y)", "let x  =3 , y  =8  in let z  =6  in s.Push(z)"], "UseStack|PushBeforePop|3" |-> ["let x  =1 , y  =8  in s.Push(x)", "let x  =1 , y  =8  in let z  =6  in s.Push(y)", "let x  =1 , y  =8  in let z  =6  in s.Push(z)"], "UseStack|PushBeforePop|2" |-> ["let x  =3 , y  =3  in s.Push(x)", "let x  =3 , y  =3  in let z  =6  in s.Push(y)", "let x  =3 , y  =3  in let z  =6  in s.Push(z)"]});
 );
 
 public test_tracebracket_tracebracket_02: () ==> ()
@@ -292,7 +300,7 @@ test_tracebracket_tracebracket_02 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_tracebracket_tracebracket_02().getSpecifications(), 
-                           "tracebracket-02.vpp") = {|->});
+                           "tracebracket-02.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Push(1)", "s.Pop()", "s.Push(2)", "s.Top()"]});
 );
 
 public test_tracechoice_tracechoice_01: () ==> ()
@@ -300,7 +308,7 @@ test_tracechoice_tracechoice_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_tracechoice_tracechoice_01().getSpecifications(), 
-                           "tracechoice-01.vpp") = {|->});
+                           "tracechoice-01.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()"], "UseStack|PushBeforePop|2" |-> ["s.Push(6)"]});
 );
 
 public test_tracechoice_tracechoice_02: () ==> ()
@@ -308,7 +316,7 @@ test_tracechoice_tracechoice_02 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_tracechoice_tracechoice_02().getSpecifications(), 
-                           "tracechoice-02.vpp") = {|->});
+                           "tracechoice-02.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()"], "UseStack|PushBeforePop|5" |-> ["s.Push(6)", "s.Push(6)", "s.Push(6)"], "UseStack|PushBeforePop|4" |-> ["s.Push(6)", "s.Push(6)"], "UseStack|PushBeforePop|3" |-> ["s.Push(6)"], "UseStack|PushBeforePop|2" |-> []});
 );
 
 public test_tracechoice_tracechoice_03: () ==> ()
@@ -316,7 +324,7 @@ test_tracechoice_tracechoice_03 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_tracechoice_tracechoice_03().getSpecifications(), 
-                           "tracechoice-03.vpp") = {|->});
+                           "tracechoice-03.vpp") = {"CUP|InitBeforePlay|2" |-> ["gp.Win(<Norway>, <Morocco>)"], "CUP|InitBeforePlay|1" |-> ["gp.Win(<Brazil>, <Denmark>)"]});
 );
 
 public test_tracechoice_tracechoice_04: () ==> ()
@@ -324,7 +332,7 @@ test_tracechoice_tracechoice_04 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_tracechoice_tracechoice_04().getSpecifications(), 
-                           "tracechoice-04.vpp") = {|->});
+                           "tracechoice-04.vpp") = {"UseTree|insertionBST|13" |-> ["let n  =1  in t1.Insert(n)", "let n  =1  in t1.Insert(n)", "t1.isEmpty()"], "UseTree|insertionBST|14" |-> ["let n  =2  in t1.Insert(n)", "let n  =1  in t1.Insert(n)", "t1.isEmpty()"], "UseTree|insertionBST|11" |-> ["let n  =1  in t1.Insert(n)", "let n  =2  in t1.Insert(n)", "t1.inorder()"], "UseTree|insertionBST|12" |-> ["let n  =2  in t1.Insert(n)", "let n  =2  in t1.Insert(n)", "t1.inorder()"], "UseTree|insertionBST|15" |-> ["let n  =1  in t1.Insert(n)", "let n  =2  in t1.Insert(n)", "t1.isEmpty()"], "UseTree|insertionBST|16" |-> ["let n  =2  in t1.Insert(n)", "let n  =2  in t1.Insert(n)", "t1.isEmpty()"], "UseTree|insertionBST|10" |-> ["let n  =2  in t1.Insert(n)", "let n  =1  in t1.Insert(n)", "t1.inorder()"], "UseTree|insertionBST|8" |-> ["let n  =2  in t1.Insert(n)", "let n  =2  in t1.Insert(n)", "t1.depth_first_search()"], "UseTree|insertionBST|9" |-> ["let n  =1  in t1.Insert(n)", "let n  =1  in t1.Insert(n)", "t1.inorder()"], "UseTree|insertionBST|4" |-> ["let n  =2  in t1.Insert(n)", "let n  =2  in t1.Insert(n)", "t1.breadth_first_search()"], "UseTree|insertionBST|5" |-> ["let n  =1  in t1.Insert(n)", "let n  =1  in t1.Insert(n)", "t1.depth_first_search()"], "UseTree|insertionBST|6" |-> ["let n  =2  in t1.Insert(n)", "let n  =1  in t1.Insert(n)", "t1.depth_first_search()"], "UseTree|insertionBST|7" |-> ["let n  =1  in t1.Insert(n)", "let n  =2  in t1.Insert(n)", "t1.depth_first_search()"], "UseTree|insertionBST|1" |-> ["let n  =1  in t1.Insert(n)", "let n  =1  in t1.Insert(n)", "t1.breadth_first_search()"], "UseTree|insertionBST|2" |-> ["let n  =2  in t1.Insert(n)", "let n  =1  in t1.Insert(n)", "t1.breadth_first_search()"], "UseTree|insertionBST|3" |-> ["let n  =1  in t1.Insert(n)", "let n  =2  in t1.Insert(n)", "t1.breadth_first_search()"]});
 );
 
 public test_tracerepeat_tracerepeat_01: () ==> ()
@@ -332,7 +340,7 @@ test_tracerepeat_tracerepeat_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_tracerepeat_tracerepeat_01().getSpecifications(), 
-                           "tracerepeat-01.vpp") = {|->});
+                           "tracerepeat-01.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "s.Push(6)"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "s.Push(6)", "s.Push(6)", "s.Push(6)"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "s.Push(6)", "s.Push(6)"]});
 );
 
 public test_tracerepeat_tracerepeat_02: () ==> ()
@@ -340,7 +348,7 @@ test_tracerepeat_tracerepeat_02 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_tracerepeat_tracerepeat_02().getSpecifications(), 
-                           "tracerepeat-02.vpp") = {|->});
+                           "tracerepeat-02.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "s.Push(6)", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "s.Push(6)", "s.Push(6)", "s.Push(6)", "s.Push(6)", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "s.Push(6)", "s.Push(6)", "s.Push(6)", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "s.Push(6)", "s.Push(6)", "s.Pop()"]});
 );
 
 public test_tracerepeat_tracerepeat_03: () ==> ()
@@ -348,7 +356,7 @@ test_tracerepeat_tracerepeat_03 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_tracerepeat_tracerepeat_03().getSpecifications(), 
-                           "tracerepeat-03.vpp") = {|->});
+                           "tracerepeat-03.vpp") = {"UseStack|PushBeforePop|6" |-> ["s.Reset()", "s.Push(6)", "s.Push(6)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "s.Push(6)", "s.Pop()"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "s.Push(6)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "s.Push(6)", "s.Push(6)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "s.Push(6)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "s.Push(6)", "s.Push(6)", "s.Pop()"]});
 );
 
 public test_tracerepeat_tracerepeat_04: () ==> ()
@@ -356,7 +364,7 @@ test_tracerepeat_tracerepeat_04 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_tracerepeat_tracerepeat_04().getSpecifications(), 
-                           "tracerepeat-04.vpp") = {|->});
+                           "tracerepeat-04.vpp") = {"UseStack|PushBeforePop|1" |-> [], "UseStack|PushBeforePop|3" |-> ["s.Push(6)", "s.Push(6)"], "UseStack|PushBeforePop|2" |-> ["s.Push(6)"]});
 );
 
 public test_tracerepeat_tracerepeat_05: () ==> ()
@@ -364,7 +372,7 @@ test_tracerepeat_tracerepeat_05 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_tracerepeat_tracerepeat_05().getSpecifications(), 
-                           "tracerepeat-05.vpp") = {|->});
+                           "tracerepeat-05.vpp") = {"UseStack|trace7|1" |-> ["let x  =1  in s.Push3(x)", "s.Pop()"], "UseStack|trace7|2" |-> ["let x  =2  in s.Push3(x)", "s.Pop()"], "UseStack|trace7|3" |-> ["let x  =3  in s.Push3(x)", "s.Pop()"], "UseStack|trace8|1" |-> ["let x  =1  in s.Push3(x)"], "UseStack|trace5|1" |-> ["s.Pop()"], "UseStack|trace3|2" |-> [], "UseStack|trace10|1" |-> ["s.Push3(1)", "s.Push3(1)", "s.Push3(1)"], "UseStack|trace3|1" |-> ["s.Push3(1)"], "UseStack|trace4|1" |-> ["s.Push3(1)", "s.Push3(1)"], "UseStack|trace9|1" |-> ["s.Push3(2)"], "UseStack|trace1|1" |-> [], "UseStack|trace1|3" |-> ["s.Push3(1)", "s.Push3(1)"], "UseStack|trace9|2" |-> ["s.Push3(3)"], "UseStack|trace1|2" |-> ["s.Push3(1)"], "UseStack|trace13|1" |-> ["let x  =1  in var1.method(x)", "var2.meth2(10)"], "UseStack|trace13|2" |-> ["let x  =2  in var1.method(x)", "var2.meth2(10)"], "UseStack|trace1|4" |-> ["s.Push3(1)", "s.Push3(1)", "s.Push3(1)"], "UseStack|trace12|1" |-> ["var.method(1)"], "UseStack|trace6|3" |-> ["let x  =5  in s.Push3(x)", "s.Pop()"], "UseStack|trace6|1" |-> ["let x  =1  in s.Push3(x)", "s.Pop()"], "UseStack|trace12|2" |-> ["var.method(1)", "var.method(1)"], "UseStack|trace6|2" |-> ["let x  =10  in s.Push3(x)", "s.Pop()"], "UseStack|trace2|3" |-> ["s.Push3(1)", "s.Push3(1)", "s.Push3(1)"], "UseStack|trace2|1" |-> ["s.Push3(1)"], "UseStack|trace2|2" |-> ["s.Push3(1)", "s.Push3(1)"], "UseStack|trace5|3" |-> ["s.Push3(1)", "s.Push3(1)", "s.Pop()"], "UseStack|trace5|2" |-> ["s.Push3(1)", "s.Pop()"], "UseStack|trace11|1" |-> ["let x  =1  in var.method(x)"], "UseStack|trace5|5" |-> ["s.Push3(1)", "s.Push3(1)", "s.Push3(1)", "s.Push3(1)", "s.Pop()"], "UseStack|trace5|4" |-> ["s.Push3(1)", "s.Push3(1)", "s.Push3(1)", "s.Pop()"]});
 );
 
 public test_tracerepeat_tracerepeat_06: () ==> ()
@@ -372,7 +380,7 @@ test_tracerepeat_tracerepeat_06 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_tracerepeat_tracerepeat_06().getSpecifications(), 
-                           "tracerepeat-06.vpp") = {|->});
+                           "tracerepeat-06.vpp") = {"UseA|trace1|14" |-> ["let x  =2  in obj.op(x)", "let x  =2  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|13" |-> ["let x  =1  in obj.op(x)", "let x  =2  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|12" |-> ["let x  =2  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|1" |-> ["let x  =1  in obj.op(x)"], "UseA|trace1|2" |-> ["let x  =2  in obj.op(x)"], "UseA|trace1|5" |-> ["let x  =1  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|6" |-> ["let x  =2  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|3" |-> ["let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|4" |-> ["let x  =2  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|10" |-> ["let x  =2  in obj.op(x)", "let x  =2  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|9" |-> ["let x  =1  in obj.op(x)", "let x  =2  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|11" |-> ["let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|7" |-> ["let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|8" |-> ["let x  =2  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)"]});
 );
 
 public test_tracerepeat_tracerepeat_07: () ==> ()
@@ -380,7 +388,7 @@ test_tracerepeat_tracerepeat_07 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_tracerepeat_tracerepeat_07().getSpecifications(), 
-                           "tracerepeat-07.vpp") = {|->});
+                           "tracerepeat-07.vpp") = {"UseA|trace1|14" |-> ["let x  =2  in obj.op(x)", "let x  =2  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|13" |-> ["let x  =1  in obj.op(x)", "let x  =2  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|12" |-> ["let x  =2  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|1" |-> ["let x  =1  in obj.op(x)"], "UseA|trace1|2" |-> ["let x  =2  in obj.op(x)"], "UseA|trace1|5" |-> ["let x  =1  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|6" |-> ["let x  =2  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|3" |-> ["let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|4" |-> ["let x  =2  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|10" |-> ["let x  =2  in obj.op(x)", "let x  =2  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|9" |-> ["let x  =1  in obj.op(x)", "let x  =2  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|11" |-> ["let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|7" |-> ["let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|8" |-> ["let x  =2  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)"]});
 );
 
 public test_tracerepeat_tracerepeat_08: () ==> ()
@@ -388,7 +396,7 @@ test_tracerepeat_tracerepeat_08 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_tracerepeat_tracerepeat_08().getSpecifications(), 
-                           "tracerepeat-08.vpp") = {|->});
+                           "tracerepeat-08.vpp") = {"UseA|trace1|14" |-> ["let x  =4  in obj.op(x)", "let x  =4  in obj.op(x)", "let x  =4  in obj.op(x)"], "UseA|trace1|13" |-> ["let x  =1  in obj.op(x)", "let x  =4  in obj.op(x)", "let x  =4  in obj.op(x)"], "UseA|trace1|12" |-> ["let x  =4  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =4  in obj.op(x)"], "UseA|trace1|1" |-> ["let x  =1  in obj.op(x)"], "UseA|trace1|2" |-> ["let x  =4  in obj.op(x)"], "UseA|trace1|5" |-> ["let x  =1  in obj.op(x)", "let x  =4  in obj.op(x)"], "UseA|trace1|6" |-> ["let x  =4  in obj.op(x)", "let x  =4  in obj.op(x)"], "UseA|trace1|3" |-> ["let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|4" |-> ["let x  =4  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|10" |-> ["let x  =4  in obj.op(x)", "let x  =4  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|9" |-> ["let x  =1  in obj.op(x)", "let x  =4  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|11" |-> ["let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =4  in obj.op(x)"], "UseA|trace1|7" |-> ["let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|8" |-> ["let x  =4  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)"]});
 );
 
 public test_traceseq_traceseq_01: () ==> ()
@@ -396,7 +404,7 @@ test_traceseq_traceseq_01 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_traceseq_traceseq_01().getSpecifications(), 
-                           "traceseq-01.vpp") = {|->});
+                           "traceseq-01.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "s.Push(6)"]});
 );
 
 public test_traceseq_traceseq_02: () ==> ()
@@ -404,7 +412,7 @@ test_traceseq_traceseq_02 () ==
 (  let specTest : SpecTest = new SpecTest()
   in
    assertTrue(specTest.Run(TCTestData`test_traceseq_traceseq_02().getSpecifications(), 
-                           "traceseq-02.vpp") = {|->});
+                           "traceseq-02.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =2  in s.Push(x)", "s.Pop()"]});
 );
 
 public runTest: ( TestResult ) ==> ()
@@ -881,6 +889,20 @@ runTest (ptr) ==(
          else error
    in (
         test_tracebind_tracebind_05();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc)
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracebind_tracebind_06();
        );
 
 
