@@ -62,7 +62,7 @@ abstract public class Value implements Comparable<Value>
 
 		if (value.length() > max)
 		{
-			value = value.substring(1, max/2) +
+			value = value.substring(0, max/2) +
 				"..." + value.substring(value.length() - max/2);
 		}
 

@@ -269,7 +269,16 @@ public class ModuleInterpreter extends Interpreter
 			new LexIdentifierToken(ctxt.location.module, false, ctxt.location);
 		Module me = modules.findModule(name);
 		Environment env = new ModuleEnvironment(me);
-		typeCheck(expr, env);
+
+		try
+		{
+			typeCheck(expr, env);
+		}
+		catch (VDMErrorsException e)
+		{
+			// We don't care... we just needed to type check it.
+		}
+
 		ctxt.threadState.init();
 
 		return expr.eval(ctxt);
