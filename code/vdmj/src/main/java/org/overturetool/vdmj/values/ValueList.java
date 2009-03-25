@@ -83,7 +83,40 @@ public class ValueList extends Vector<Value>
     			}
 
     			CharacterValue ch = (CharacterValue)v;
-    			sb.append(ch.unicode);
+
+    			switch (ch.unicode)
+    			{
+//    				case '\n':
+//    					sb.append("\\n");
+//    					break;
+
+    				case '\t':
+    					sb.append("\\t");
+    					break;
+
+        		    case '\r':
+    					sb.append("\\r");
+    					break;
+
+        		    case '\f':
+    					sb.append("\\f");
+    					break;
+
+        		    case '\033':
+    					sb.append("\\e");
+    					break;
+
+        		    case '\007':
+    					sb.append("\\a");
+    					break;
+
+    				case '\"':
+    					sb.append("\\\"");
+    					break;
+
+     				default:
+    					sb.append(ch.unicode);
+    			}
     		}
 
     		sb.append("\"");
