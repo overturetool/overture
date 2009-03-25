@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE preferences SYSTEM "http://java.sun.com/dtd/preferences.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE preferences SYSTEM "http://java.sun.com/dtd/preferences.dtd">
 <preferences EXTERNAL_XML_VERSION="1.0">
 	<root type="user">
 		<map/>
@@ -8,10 +9,15 @@
 				<map/>
 				<node name="potrans">
 					<map/>
-					<node name="prep">
+					<node name="preparation">
 						<map>
-							<entry key="vppdeBinary" value="/Users/gentux/root/opt/vdmpp/bin/vppde"/>
-							<entry key="testModel" value="testinput/dosort.vpp"/>
+							<entry key="vppdeExecutable" value="/Users/gentux/root/opt/vdmpp/bin/vppde"/>
+							<entry key="testModel1" value="testinput/sorter.vpp"/>
+							<entry key="testModel2" value="testinput/dosort.vpp"/>
+							<entry key="testModel3" value="testinput/explsort.vpp"/>
+							<entry key="testDataDir" value="testinput"/>
+							<entry key="logOutputDir" value="testoutput"/>
+							<entry key="logOutputFile" value="error.log"/>
 						</map>
 					</node>
 				</node>
