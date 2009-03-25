@@ -384,9 +384,9 @@ public class DBGPReader
     	StringBuilder sb = new StringBuilder();
 
     	sb.append("<property");
-    	sb.append(" name=\"" + name + "\"");
-    	sb.append(" fullname=\"" + fullname + "\"");
-    	sb.append(" type=\"resource\"");
+    	sb.append(" name=\"" + quote(name) + "\"");
+    	sb.append(" fullname=\"" + quote(fullname) + "\"");
+    	sb.append(" type=\"string\"");
     	sb.append(" classname=\"" + clazz + "\"");
     	sb.append(" constant=\"0\"");
     	sb.append(" children=\"0\"");
@@ -398,6 +398,15 @@ public class DBGPReader
 
     	return sb;
     }
+
+	private static String quote(String in)
+	{
+		return in
+    		.replaceAll("&", "&amp;")
+    		.replaceAll("<", "&lt;")
+    		.replaceAll(">", "&gt;")
+    		.replaceAll("\\\"", "&quot;");
+	}
 
 	private void run() throws IOException
 	{
@@ -1097,6 +1106,40 @@ public class DBGPReader
 		response(null, names);
 	}
 
+	private NameValuePairMap getContextValues(DBGPContextType context, int depth)
+	{
+		NameValuePairMap vars = new NameValuePairMap();
+		Context frame = (depth < 0) ? breakContext : breakContext.getFrame(depth);
+
+		switch (context)
+		{
+			case LOCAL:
+				vars.putAll(frame.getFreeVariables());
+				break;
+
+			case CLASS:
+				RootContext root = frame.getRoot();
+
+				if (root instanceof ObjectContext)
+				{
+					ObjectContext octxt = (ObjectContext)root;
+					vars.putAll(octxt.self.members);
+				}
+				else
+				{
+					StateContext sctxt = (StateContext)root;
+					vars.putAll(sctxt.stateCtxt);
+				}
+				break;
+
+			case GLOBAL:
+				vars.putAll(frame.getGlobal());
+				break;
+		}
+
+		return vars;
+	}
+
 	private void contextGet(DBGPCommand c) throws DBGPException, IOException
 	{
 		if (c.data != null || c.options.size() > 3)
@@ -1127,34 +1170,7 @@ public class DBGPReader
 			depth = Integer.parseInt(option.value);
 		}
 
-		NameValuePairMap vars = new NameValuePairMap();
-		Context frame = (depth < 0) ? breakContext : breakContext.getFrame(depth);
-
-		switch (context)
-		{
-			case LOCAL:
-				vars.putAll(frame.getFreeVariables());
-				break;
-
-			case CLASS:
-				RootContext root = frame.getRoot();
-
-				if (root instanceof ObjectContext)
-				{
-					ObjectContext octxt = (ObjectContext)root;
-					vars.putAll(octxt.self.members);
-				}
-				else
-				{
-					StateContext sctxt = (StateContext)root;
-					vars.putAll(sctxt.stateCtxt);
-				}
-				break;
-
-			case GLOBAL:
-				vars.putAll(frame.getGlobal());
-				break;
-		}
+		NameValuePairMap vars = getContextValues(context, depth);
 
 		response(null, propertyResponse(vars));
 	}
@@ -1213,35 +1229,9 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.CANT_GET_PROPERTY, token.toString());
 		}
 
+		NameValuePairMap vars = getContextValues(context, depth);
 		LexNameToken longname = (LexNameToken)token;
-		Context frame = (depth < 0) ? breakContext : breakContext.getFrame(depth);
-		Value value = null;
-
-		switch (context)
-		{
-			case LOCAL:
-				value = frame.getFreeVariables().get(longname);
-				break;
-
-			case CLASS:
-				RootContext root = frame.getRoot();
-
-				if (root instanceof ObjectContext)
-				{
-					ObjectContext octxt = (ObjectContext)root;
-					value = octxt.self.members.get(longname);
-				}
-				else
-				{
-					StateContext sctxt = (StateContext)root;
-					value = sctxt.stateCtxt.get(longname);
-				}
-				break;
-
-			case GLOBAL:
-				value = frame.getGlobal().get(longname);
-				break;
-		}
+		Value value = vars.get(longname);
 
 		if (value == null)
 		{
