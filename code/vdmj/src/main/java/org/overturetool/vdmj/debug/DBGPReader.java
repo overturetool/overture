@@ -33,6 +33,7 @@ import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
 
@@ -205,12 +206,10 @@ public class DBGPReader
 		sb.append(features.getProperty("protocol_version"));
 		sb.append("\"");
 
-		for (File f: interpreter.getSourceFiles())
-		{
-			sb.append(" fileuri=\"");
-			sb.append(f.toURI());
-			sb.append("\"");
-		}
+		Set<File> files = interpreter.getSourceFiles();
+		sb.append(" fileuri=\"");
+		sb.append(files.iterator().next().toURI());		// Any old one...
+		sb.append("\"");
 
 		sb.append("/>\n");
 
@@ -730,6 +729,7 @@ public class DBGPReader
 
 		if (status == DBGPStatus.BREAK)
 		{
+			breakContext.threadState.set(0, null, null);
 			return false;	// run means continue
 		}
 
@@ -1095,7 +1095,17 @@ public class DBGPReader
 
 	private void contextNames(DBGPCommand c) throws DBGPException, IOException
 	{
-		checkArgs(c, 1, false);
+		if (c.data != null)
+		{
+			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
+		}
+
+		DBGPOption option = c.getOption(DBGPOptionType.D);
+
+		if (c.options.size() > ((option == null) ? 1 : 2))
+		{
+			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
+		}
 
 		StringBuilder names = new StringBuilder();
 
