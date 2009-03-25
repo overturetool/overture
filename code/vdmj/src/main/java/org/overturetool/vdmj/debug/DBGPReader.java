@@ -351,7 +351,6 @@ public class DBGPReader
 		sb.append(" filename=\"" + location.file.toURI() + "\"");
 		sb.append(" lineno=\"" + location.startLine + "\"");
 		sb.append(" cmdbegin=\"" + location.startLine + ":" + location.startPos + "\"");
-		sb.append(" cmdend=\"" + location.endLine + ":" + location.endPos + "\"");
 		sb.append("/>");
 
 		return sb;
@@ -739,11 +738,11 @@ public class DBGPReader
 		{
 			interpreter.init(this);
 			theAnswer = interpreter.execute(expression, this);
-			statusResponse(DBGPStatus.STOPPING, DBGPReason.OK, null);
+			statusResponse(DBGPStatus.STOPPED, DBGPReason.OK, null);
 		}
 		catch (Exception e)
 		{
-			status = DBGPStatus.STOPPING;
+			status = DBGPStatus.STOPPED;
 			statusReason = DBGPReason.ERROR;
 			errorResponse(DBGPErrorCode.EVALUATION_ERROR, e.getMessage());
 		}
@@ -777,7 +776,7 @@ public class DBGPReader
 		return true;
 	}
 
-	private void processStepInto(DBGPCommand c) throws DBGPException, IOException
+	private void processStepInto(DBGPCommand c) throws DBGPException
 	{
 		checkArgs(c, 1, false);
 
@@ -786,11 +785,10 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
 
-		statusResponse(DBGPStatus.BREAK, DBGPReason.OK, null);
    		breakContext.threadState.set(breakpoint.location.startLine, null, null);
 	}
 
-	private void processStepOver(DBGPCommand c) throws DBGPException, IOException
+	private void processStepOver(DBGPCommand c) throws DBGPException
 	{
 		checkArgs(c, 1, false);
 
@@ -799,11 +797,10 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
 
-		statusResponse(DBGPStatus.BREAK, DBGPReason.OK, null);
 		breakContext.threadState.set(breakpoint.location.startLine,	breakContext.getRoot(), null);
 	}
 
-	private void processStepOut(DBGPCommand c) throws DBGPException, IOException
+	private void processStepOut(DBGPCommand c) throws DBGPException
 	{
 		checkArgs(c, 1, false);
 
@@ -812,7 +809,6 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
 
-		statusResponse(DBGPStatus.BREAK, DBGPReason.OK, null);
 		breakContext.threadState.set(breakpoint.location.startLine, null, breakContext.getRoot().outer);
 	}
 
@@ -830,7 +826,7 @@ public class DBGPReader
 		Interpreter.stop(e, breakContext);
 	}
 
-	private void breakpointGet(DBGPCommand c) throws DBGPException
+	private void breakpointGet(DBGPCommand c) throws DBGPException, IOException
 	{
 		checkArgs(c, 2, false);
 
@@ -848,7 +844,7 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, c.toString());
 		}
 
-		breakpointResponse(bp);
+		response(null, breakpointResponse(bp));
 	}
 
 	private void breakpointSet(DBGPCommand c)
