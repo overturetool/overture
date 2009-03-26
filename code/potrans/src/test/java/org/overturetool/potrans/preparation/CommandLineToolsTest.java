@@ -17,6 +17,8 @@ import junit.framework.TestCase;
  */
 public class CommandLineToolsTest extends TestCase {
 	
+	private static String settingsWarning = 
+		"If this test fails check that you have the correct vaules set in Settings.xml. ";
 	private static String pogExtension = ".pog";
 	
 	private String vppdeExecutable = null;
@@ -108,10 +110,10 @@ public class CommandLineToolsTest extends TestCase {
 			+ "Generating proof obligations for Sorter...done";
 		
 		String output = CommandLineTools.executeProcess(cmdText);
-		assertTrue("As result of the method invocation here should be a new "
+		assertTrue(settingsWarning + "As result of the method invocation here should be a new "
 				+ testModel1 + pogExtension + " file.", 
 				new File(testModel2 + pogExtension).exists());
-		assertEquals(expected, output.trim());
+		assertEquals(settingsWarning, expected, output.trim());
 	}
 	
 	public void testGeneratePogFile() throws Exception {
@@ -132,10 +134,10 @@ public class CommandLineToolsTest extends TestCase {
 			+ "Generating proof obligations for Sorter...done";
 
 		String actual = CommandLineTools.generatePogFile(vdmFiles, vppdeExecutable);
-		assertTrue("As result of the method invocation here should be anew  "
+		assertTrue(settingsWarning + "As result of the method invocation here should be anew  "
 				+ testModel2 + pogExtension + " file.", 
 				new File(testModel2 + pogExtension).exists());
-		assertEquals(expected, actual.trim());
+		assertEquals(settingsWarning, expected, actual.trim());
 	}
 	
 	public void testGeneratePogFileInvalidVdmFile() throws Exception {
@@ -153,7 +155,7 @@ public class CommandLineToolsTest extends TestCase {
 		String expected = "Abnormal termination with exit value <2>, and error message:";
 
 		String actual = CommandLineTools.generatePogFile(vdmFiles, vppdeExecutable);
-		assertTrue(actual.trim().endsWith(expected));
+		assertTrue(settingsWarning, actual.trim().endsWith(expected));
 	}
 	
 	public void testGeneratePogFileEmptyVdmFiles() throws Exception {
@@ -162,7 +164,7 @@ public class CommandLineToolsTest extends TestCase {
 		try {
 			CommandLineTools.generatePogFile(vdmFiles, vppdeExecutable);
 		} catch(Exception e) {
-			assertEquals(IllegalArgumentException.class, e.getClass());
+			assertEquals(settingsWarning, IllegalArgumentException.class, e.getClass());
 		}
 	}
 	
@@ -172,7 +174,7 @@ public class CommandLineToolsTest extends TestCase {
 		try {
 			CommandLineTools.generatePogFile(vdmFiles, vppdeExecutable);
 		} catch(Exception e) {
-			assertEquals(IllegalArgumentException.class, e.getClass());
+			assertEquals(settingsWarning, IllegalArgumentException.class, e.getClass());
 		}
 	}
 	
@@ -183,7 +185,7 @@ public class CommandLineToolsTest extends TestCase {
 		try {
 			CommandLineTools.generatePogFile(vdmFiles, vppdeExecutable);
 		} catch(Exception e) {
-			assertEquals(IllegalArgumentException.class, e.getClass());
+			assertEquals(settingsWarning, IllegalArgumentException.class, e.getClass());
 		}
 	}
 	
@@ -194,7 +196,7 @@ public class CommandLineToolsTest extends TestCase {
 		try {
 			CommandLineTools.generatePogFile(vdmFiles, vppdeExecutable);
 		} catch(Exception e) {
-			assertEquals(IllegalArgumentException.class, e.getClass());
+			assertEquals(settingsWarning, IllegalArgumentException.class, e.getClass());
 		}
 	}
 	
@@ -204,7 +206,7 @@ public class CommandLineToolsTest extends TestCase {
 		try {
 			CommandLineTools.generatePogFile(vdmFiles, null);
 		} catch(Exception e) {
-			assertEquals(IllegalArgumentException.class, e.getClass());
+			assertEquals(settingsWarning, IllegalArgumentException.class, e.getClass());
 		}
 	}
 	
@@ -214,7 +216,7 @@ public class CommandLineToolsTest extends TestCase {
 		try {
 			CommandLineTools.generatePogFile(vdmFiles, "");
 		} catch(Exception e) {
-			assertEquals(IllegalArgumentException.class, e.getClass());
+			assertEquals(settingsWarning, IllegalArgumentException.class, e.getClass());
 		}
 	}
 	
@@ -224,7 +226,7 @@ public class CommandLineToolsTest extends TestCase {
 		try {
 			CommandLineTools.generatePogFile(vdmFiles, "some_inavlid_executable");
 		} catch(Exception e) {
-			assertEquals(IllegalArgumentException.class, e.getClass());
+			assertEquals(settingsWarning, IllegalArgumentException.class, e.getClass());
 		}
 	}
 }
