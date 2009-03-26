@@ -32,7 +32,7 @@ public class DBGPFeatures extends Properties
 {
 	public DBGPFeatures()
 	{
-		setProperty("lanuage_supports_threads", "0");	// for now!
+		setProperty("lanuage_supports_threads", "1");
 		setProperty("language_name", Settings.dialect.name());
 		setProperty("language_version", "1");
 		setProperty("encoding", "UTF-8");
@@ -41,7 +41,7 @@ public class DBGPFeatures extends Properties
     	setProperty("data_encoding", "base64");
     	setProperty("breakpoint_languages", "");
     	setProperty("breakpoint_types", "?");
-    	setProperty("multiple_sessions", "0");
+    	setProperty("multiple_sessions", "1");
     	setProperty("max_children", "10");
     	setProperty("max_data", "1000");
     	setProperty("max_depth", "10");

@@ -67,8 +67,11 @@ import org.overturetool.vdmj.values.Value;
 
 public class DBGPReader
 {
+	private final String host;
+	private final int port;
 	private final String sessionId;
 	private final String expression;
+	private final Socket socket;
 	private final InputStream input;
 	private final OutputStream output;
 	private final Interpreter interpreter;
@@ -158,6 +161,8 @@ public class DBGPReader
 		Interpreter interpreter, String expression)
 		throws Exception
 	{
+		this.host = host;
+		this.port = port;
 		this.sessionId = session;
 		this.expression = expression;
 		this.interpreter = interpreter;
@@ -165,18 +170,27 @@ public class DBGPReader
 		if (port > 0)
 		{
 			InetAddress server = InetAddress.getByName(host);
-			Socket socket = new Socket(server, port);
+			socket = new Socket(server, port);
 			input = socket.getInputStream();
 			output = socket.getOutputStream();
 		}
 		else
 		{
+			socket = null;
 			input = System.in;
 			output = System.out;
 			separator = ' ';
 		}
 
 		init();
+	}
+
+	public DBGPReader newThread() throws Exception
+	{
+		DBGPReader r = new DBGPReader(host, port, sessionId, interpreter, null);
+		r.command = DBGPCommandType.UNKNOWN;
+		r.transaction = "?";
+		return r;
 	}
 
 	private void init() throws IOException
@@ -436,6 +450,32 @@ public class DBGPReader
 		catch (Exception e)
 		{
 			errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
+		}
+	}
+
+	public void complete(DBGPReason reason)
+	{
+		try
+		{
+			statusResponse(DBGPStatus.STOPPED, reason, null);
+		}
+		catch (IOException e)
+		{
+			errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
+		}
+		finally
+		{
+			try
+			{
+				if (socket != null)
+				{
+					socket.close();
+				}
+			}
+			catch (IOException e)
+			{
+				// ?
+			}
 		}
 	}
 
@@ -733,7 +773,7 @@ public class DBGPReader
 			return false;	// run means continue
 		}
 
-		if (status != DBGPStatus.STARTING)
+		if (expression == null || status != DBGPStatus.STARTING)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}

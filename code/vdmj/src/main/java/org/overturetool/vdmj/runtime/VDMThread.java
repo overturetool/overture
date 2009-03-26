@@ -23,6 +23,9 @@
 
 package org.overturetool.vdmj.runtime;
 
+import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.debug.DBGPReader;
+import org.overturetool.vdmj.debug.DBGPReason;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
@@ -57,6 +60,18 @@ public class VDMThread extends Thread
 	@Override
 	public void run()
 	{
+		if (Settings.usingDBGP)
+		{
+			runDBGP();
+		}
+		else
+		{
+			runCmd();
+		}
+	}
+
+	private void runCmd()
+	{
 		try
 		{
 			ctxt.setThreadState(null);
@@ -77,6 +92,30 @@ public class VDMThread extends Thread
 		catch (Exception e)
 		{
 			Interpreter.stop(e, ctxt);
+		}
+		finally
+		{
+			VDMThreadSet.remove(this);
+		}
+	}
+
+	private void runDBGP()
+	{
+		DBGPReader reader = null;
+
+		try
+		{
+			reader = ctxt.threadState.dbgp.newThread();
+			ctxt.setThreadState(reader);
+			operation.eval(new ValueList(), ctxt);
+			reader.complete(DBGPReason.OK);
+		}
+		catch (Exception e)
+		{
+			if (reader != null)
+			{
+				reader.complete(DBGPReason.EXCEPTION);
+			}
 		}
 		finally
 		{
