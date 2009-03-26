@@ -1,6 +1,3 @@
-\section{Sorter class}
-
-\begin{vdm_al}
 class Sorter
  
 operations
@@ -11,6 +8,3 @@ operations
     is subclass responsibility
 
 end Sorter
-\end{vdm_al}
-
-

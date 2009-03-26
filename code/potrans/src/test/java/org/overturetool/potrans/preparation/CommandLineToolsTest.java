@@ -12,18 +12,19 @@ import junit.framework.TestCase;
  * CommandLineToolsTest is the JUnit TestClass for the {@link CommandLineTools}
  * class.
  * 
- * @author Miguel Ferreira
+ * @author miguel_ferreira
  *
  */
 public class CommandLineToolsTest extends TestCase {
 	
 	private static String settingsWarning = 
-		"If this test fails check that you have the correct vaules set in Settings.xml. ";
+		"If this test fails check that you have the correct vaules set in Settings.xml, " +
+		"namelly for the test VPP models and the VDMTools binary path. ";
 	private static String pogExtension = ".pog";
 	
-	private String vppdeExecutable = null;
-	private String testModel1 = null;
-	private String testModel2 = null;
+	private static String vppdeExecutable = null;
+	private static String testModel1 = null;
+	private static String testModel2 = null;
 	
 	/**
 	 * Sets the initial test conditions by obtaining necessary values:
@@ -97,7 +98,7 @@ public class CommandLineToolsTest extends TestCase {
 	public void textExecuteProcessVDMToolsPog() throws Exception {
 		String cmdText = vppdeExecutable + " -g " + testModel1;
 		String expected = 
-			  "Parsing \"testinput/sorter.vpp\" (Latex) ... done"
+			  "Parsing \"testinput/sorter.vpp\" (Plain Text) ... done"
 			+ CommandLineTools.newLine
 			+ "Type checking Sorter ... done"
 			+ CommandLineTools.newLine
@@ -121,7 +122,7 @@ public class CommandLineToolsTest extends TestCase {
 		String expected = 
 			  "Parsing \"testinput/dosort.vpp\" (Latex) ... done"
 			+ CommandLineTools.newLine
-			+ "Parsing \"testinput/sorter.vpp\" (Latex) ... done"
+			+ "Parsing \"testinput/sorter.vpp\" (Plain Text) ... done"
 			+ CommandLineTools.newLine
 			+ "Type checking Sorter ... done"
 			+ CommandLineTools.newLine
