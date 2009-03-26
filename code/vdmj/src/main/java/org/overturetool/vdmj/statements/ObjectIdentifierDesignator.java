@@ -60,8 +60,6 @@ public class ObjectIdentifierDesignator extends ObjectDesignator
 	@Override
 	public Value eval(Context ctxt)
 	{
-		// We evaluate the name in a context comprising only state...
-		return expression.eval(
-			updatablesOnly ? ctxt.getUpdateable() : ctxt);
+		return expression.eval(ctxt);
 	}
 }

@@ -45,8 +45,6 @@ public abstract class ObjectDesignator implements Serializable
 
 	public final LexLocation location;
 
-	protected boolean updatablesOnly = true;
-
 	public ObjectDesignator(LexLocation location)
 	{
 		this.location = location;
@@ -58,11 +56,6 @@ public abstract class ObjectDesignator implements Serializable
 	abstract public Type typeCheck(Environment env, TypeList qualifiers);
 
 	abstract public Value eval(Context ctxt);
-
-	public void setUpdatablesOnly(boolean value)
-	{
-		updatablesOnly = value;
-	}
 
 	public Value abort(int number, String msg, Context ctxt)
 	{

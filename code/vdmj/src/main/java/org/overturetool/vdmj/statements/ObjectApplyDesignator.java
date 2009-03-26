@@ -297,11 +297,4 @@ public class ObjectApplyDesignator extends ObjectDesignator
 
 		return optype.result;
 	}
-
-	@Override
-	public void setUpdatablesOnly(boolean value)
-	{
-		updatablesOnly = value;
-		object.setUpdatablesOnly(value);
-	}
 }

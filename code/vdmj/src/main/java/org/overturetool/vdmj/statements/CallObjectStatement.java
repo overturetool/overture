@@ -75,8 +75,6 @@ public class CallObjectStatement extends Statement
 		this.fieldname = fieldname;
 		this.args = args;
 		this.explicit = (classname != null);
-
-		designator.setUpdatablesOnly(false);	// Calls not state restricted
 	}
 
 	@Override

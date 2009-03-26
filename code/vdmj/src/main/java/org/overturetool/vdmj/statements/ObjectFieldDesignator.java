@@ -160,11 +160,4 @@ public class ObjectFieldDesignator extends ObjectDesignator
 			return abort(e);
 		}
 	}
-
-	@Override
-	public void setUpdatablesOnly(boolean value)
-	{
-		updatablesOnly = value;
-		object.setUpdatablesOnly(value);
-	}
 }
