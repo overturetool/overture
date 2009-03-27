@@ -51,6 +51,7 @@ import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.Token;
+import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.MessageException;
 import org.overturetool.vdmj.runtime.Breakpoint;
 import org.overturetool.vdmj.runtime.Context;
@@ -576,8 +577,11 @@ public class DBGPReader
     				break;
 
     			case STDOUT:
+       				processStdout(c);
+    				break;
+
        			case STDERR:
-       				processRedirect(c);
+       				processStderr(c);
     				break;
 
     			case DETACH:
@@ -1292,7 +1296,7 @@ public class DBGPReader
 		response(null, propertyResponse(longname, value));
 	}
 
-	private void processRedirect(DBGPCommand c) throws DBGPException, IOException
+	private void processStdout(DBGPCommand c) throws DBGPException, IOException
 	{
 		checkArgs(c, 2, false);
 		DBGPOption option = c.getOption(DBGPOptionType.C);
@@ -1302,9 +1306,41 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
 		}
 
-		StringBuilder hdr = new StringBuilder();
-		hdr.append("success=\"1\"");
+		DBGPRedirect redirect = DBGPRedirect.lookup(option.value);
+		Console.directStdout(this, redirect);
 
-		response(hdr, null);
+		response(new StringBuilder("success=\"1\""), null);
+	}
+
+	private void processStderr(DBGPCommand c) throws DBGPException, IOException
+	{
+		checkArgs(c, 2, false);
+		DBGPOption option = c.getOption(DBGPOptionType.C);
+
+		if (option == null)
+		{
+			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
+		}
+
+		DBGPRedirect redirect = DBGPRedirect.lookup(option.value);
+		Console.directStderr(this, redirect);
+
+		response(new StringBuilder("success=\"1\""), null);
+	}
+
+	public void stdout(String line) throws IOException
+	{
+		StringBuilder sb = new StringBuilder("<stream type=\"stdout\"><![CDATA[");
+		sb.append(Base64.encode(line.getBytes("UTF-8")));
+		sb.append("]]>\n");
+		write(sb);
+	}
+
+	public void stderr(String line) throws IOException
+	{
+		StringBuilder sb = new StringBuilder("<stream type=\"stderr\"><![CDATA[");
+		sb.append(Base64.encode(line.getBytes("UTF-8")));
+		sb.append("]]>\n");
+		write(sb);
 	}
 }

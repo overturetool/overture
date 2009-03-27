@@ -26,9 +26,11 @@ package org.overturetool.vdmj.messages;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+
+import org.overturetool.vdmj.debug.DBGPReader;
+import org.overturetool.vdmj.debug.DBGPRedirect;
 
 public class Console
 {
@@ -36,10 +38,10 @@ public class Console
 	public static String charset;
 
 	/** A print writer for stdout that uses a given encoding. */
-	public static PrintWriter out;
+	public static Redirector out;
 
 	/** A print writer for stderr that uses a given encoding. */
-	public static PrintWriter err;
+	public static Redirector err;
 
 	/** A buffered reader for stdin that uses a given encoding. */
 	public static BufferedReader in;
@@ -59,13 +61,23 @@ public class Console
 		try
 		{
 			charset = cs;
-			out = new PrintWriter(new OutputStreamWriter(System.out, charset), true);
-			err = new PrintWriter(new OutputStreamWriter(System.err, charset), true);
+			out = new StdoutRedirector(new OutputStreamWriter(System.out, charset));
+			err = new StderrRedirector(new OutputStreamWriter(System.err, charset));
 			in = new BufferedReader(new InputStreamReader(System.in, charset));
 		}
 		catch (UnsupportedEncodingException e)
 		{
 			System.err.println("Console encoding exception: " + e);
 		}
+	}
+
+	public static void directStdout(DBGPReader reader, DBGPRedirect redirect)
+	{
+		out.redirect(redirect, reader);
+	}
+
+	public static void directStderr(DBGPReader reader, DBGPRedirect redirect)
+	{
+		err.redirect(redirect, reader);
 	}
 }

@@ -40,6 +40,7 @@ import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.FlatEnvironment;
 import org.overturetool.vdmj.typechecker.PrivateClassEnvironment;
 import org.overturetool.vdmj.values.BooleanValue;
+import org.overturetool.vdmj.values.CharacterValue;
 import org.overturetool.vdmj.values.NilValue;
 import org.overturetool.vdmj.values.SeqValue;
 import org.overturetool.vdmj.values.TupleValue;
@@ -68,10 +69,10 @@ public class IO
 	public static BooleanValue fwriteval(Context ctxt)
 	{
 		Value tval = ctxt.lookup(new LexNameToken("IO", "val", null));
-		String text = tval.toString();
+		String text = stringOf(tval);
 
 		Value fval = ctxt.lookup(new LexNameToken("IO", "filename", null));
-		String filename = fval.toString().replace("\"", "");
+		String filename = stringOf(fval);
 
 		Value dval = ctxt.lookup(new LexNameToken("IO", "fdir", null));
 		String fdir = dval.toString();	// <start>|<append>
@@ -100,8 +101,8 @@ public class IO
 		try
 		{
 			Value fval = ctxt.lookup(new LexNameToken("IO", "f", null));
-			String filename = fval.toString().replace("\"", "");
-			File file = new File(filename);
+			File file = new File(stringOf(fval));
+
 			LexTokenReader ltr = new LexTokenReader(file, Dialect.VDM_PP);
 			ExpressionReader reader = new ExpressionReader(ltr);
 			reader.setCurrentModule("IO");
@@ -139,8 +140,7 @@ public class IO
 	public static BooleanValue fecho(Context ctxt)
 	{
 		Value tval = ctxt.lookup(new LexNameToken("IO", "text", null));
-		String text = tval.toString();
-		text = text.substring(1, text.length() - 1);
+		String text = stringOf(tval);
 
 		Value fval = ctxt.lookup(new LexNameToken("IO", "filename", null));
 		String filename = fval.toString().replace("\"", "");
@@ -176,5 +176,37 @@ public class IO
 	public static Value ferror()
 	{
 		return new SeqValue(lastError);
+	}
+
+	// We need this because the toString of the Value converts special
+	// characters back to their quoted form.
+
+	private static String stringOf(Value val)
+	{
+		StringBuilder s = new StringBuilder();
+
+		if (val instanceof SeqValue)
+		{
+			SeqValue sv = (SeqValue)val;
+
+			for (Value v: sv.values)
+			{
+				if (v instanceof CharacterValue)
+				{
+					CharacterValue cv = (CharacterValue)v;
+					s.append(cv.unicode);
+				}
+				else
+				{
+					s.append("?");
+				}
+			}
+
+			return s.toString();
+		}
+		else
+		{
+			return "?";
+		}
 	}
 }
