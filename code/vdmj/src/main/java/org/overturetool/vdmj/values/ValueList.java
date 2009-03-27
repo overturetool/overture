@@ -90,9 +90,9 @@ public class ValueList extends Vector<Value>
 //    					sb.append("\\n");
 //    					break;
 
-    				case '\t':
-    					sb.append("\\t");
-    					break;
+//    				case '\t':
+//    					sb.append("\\t");
+//    					break;
 
         		    case '\r':
     					sb.append("\\r");
@@ -112,6 +112,14 @@ public class ValueList extends Vector<Value>
 
     				case '\"':
     					sb.append("\\\"");
+    					break;
+
+    				case '\'':
+    					sb.append("\\\'");
+    					break;
+
+    				case '\\':
+    					sb.append("\\\\");
     					break;
 
      				default:
