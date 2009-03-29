@@ -42,7 +42,7 @@ public class Util {
 // ***** VDMTOOLS END Name=Util
 
 
-// ***** VDMTOOLS START Name=itoa#1|Integer KEEP=NO
+// ***** VDMTOOLS START Name=itoa#1|Integer KEEP=YES
   public String itoa (final Integer n) throws CGException {
 
     String varRes_2 = null;
@@ -52,6 +52,16 @@ public class Util {
       varRes_2 = itoaR(n);
     return varRes_2;
   }
+  
+  public String itoa (final Long n) throws CGException {
+
+	    String varRes_2 = null;
+	    if (new Boolean(n.intValue() == new Integer(0).intValue()).booleanValue()) 
+	      varRes_2 = new String("0");
+	    else 
+	      varRes_2 = itoaR(n);
+	    return varRes_2;
+	  }
 // ***** VDMTOOLS END Name=itoa#1|Integer
 
 
@@ -153,6 +163,104 @@ public class Util {
     }
     return varRes_2;
   }
+  
+  private String itoaR (final Long n) throws CGException {
+
+	    String varRes_2 = null;
+	    if (new Boolean(n.intValue() == new Integer(0).intValue()).booleanValue()) 
+	      varRes_2 = new String("");
+	    else {
+
+	      Integer first = new Integer((int) (n.intValue() / new Integer(10).intValue()));
+	      Integer last = new Integer((int) (n.doubleValue() - new Integer(10).doubleValue() * Math.floor(n.doubleValue() / new Integer(10).doubleValue())));
+	      String var2_16 = null;
+	      boolean succ_17 = true;
+	      {
+
+	        succ_17 = true;
+	        if (!UTIL.equals(last, new Integer(0))) 
+	          succ_17 = false;
+	        if (succ_17) 
+	          var2_16 = new String("0");
+	      }
+	      if (!succ_17) {
+
+	        succ_17 = true;
+	        if (!UTIL.equals(last, new Integer(1))) 
+	          succ_17 = false;
+	        if (succ_17) 
+	          var2_16 = new String("1");
+	      }
+	      if (!succ_17) {
+
+	        succ_17 = true;
+	        if (!UTIL.equals(last, new Integer(2))) 
+	          succ_17 = false;
+	        if (succ_17) 
+	          var2_16 = new String("2");
+	      }
+	      if (!succ_17) {
+
+	        succ_17 = true;
+	        if (!UTIL.equals(last, new Integer(3))) 
+	          succ_17 = false;
+	        if (succ_17) 
+	          var2_16 = new String("3");
+	      }
+	      if (!succ_17) {
+
+	        succ_17 = true;
+	        if (!UTIL.equals(last, new Integer(4))) 
+	          succ_17 = false;
+	        if (succ_17) 
+	          var2_16 = new String("4");
+	      }
+	      if (!succ_17) {
+
+	        succ_17 = true;
+	        if (!UTIL.equals(last, new Integer(5))) 
+	          succ_17 = false;
+	        if (succ_17) 
+	          var2_16 = new String("5");
+	      }
+	      if (!succ_17) {
+
+	        succ_17 = true;
+	        if (!UTIL.equals(last, new Integer(6))) 
+	          succ_17 = false;
+	        if (succ_17) 
+	          var2_16 = new String("6");
+	      }
+	      if (!succ_17) {
+
+	        succ_17 = true;
+	        if (!UTIL.equals(last, new Integer(7))) 
+	          succ_17 = false;
+	        if (succ_17) 
+	          var2_16 = new String("7");
+	      }
+	      if (!succ_17) {
+
+	        succ_17 = true;
+	        if (!UTIL.equals(last, new Integer(8))) 
+	          succ_17 = false;
+	        if (succ_17) 
+	          var2_16 = new String("8");
+	      }
+	      if (!succ_17) {
+
+	        succ_17 = true;
+	        if (!UTIL.equals(last, new Integer(9))) 
+	          succ_17 = false;
+	        if (succ_17) 
+	          var2_16 = new String("9");
+	      }
+	      if (!succ_17) 
+	        UTIL.RunTime("Run-Time Error:No \'others\' branch in CasesExpr");
+	      varRes_2 = itoaR(first).concat(var2_16);
+	    }
+	    return varRes_2;
+	  }
 // ***** VDMTOOLS END Name=itoaR#1|Integer
 
 }

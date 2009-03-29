@@ -16,7 +16,8 @@ package org.overturetool.potrans;
 // ***** VDMTOOLS END Name=package
 
 // ***** VDMTOOLS START Name=imports KEEP=YES
-
+import org.overturetool.ast.imp.*;
+import org.overturetool.ast.itf.*;
 import jp.co.csk.vdm.toolbox.VDM.*;
 import java.util.*;
 // ***** VDMTOOLS END Name=imports
@@ -2393,7 +2394,7 @@ public class VdmHolTranslator {
 
     Object varRes_2 = null;
     Boolean cond_4 = null;
-    Integer var1_5 = null;
+    Long var1_5 = null;
     var1_5 = vdm_operator.getValue();
     cond_4 = new Boolean(var1_5.intValue() == new Integer(0).intValue());
     if (cond_4.booleanValue()) 
@@ -2401,7 +2402,7 @@ public class VdmHolTranslator {
     else {
 
       Boolean cond_40 = null;
-      Integer var1_41 = null;
+      Long var1_41 = null;
       var1_41 = vdm_operator.getValue();
       cond_40 = new Boolean(var1_41.intValue() == new Integer(3).intValue());
       if (cond_40.booleanValue()) 
@@ -2409,7 +2410,7 @@ public class VdmHolTranslator {
       else {
 
         Boolean cond_36 = null;
-        Integer var1_37 = null;
+        Long var1_37 = null;
         var1_37 = vdm_operator.getValue();
         cond_36 = new Boolean(var1_37.intValue() == new Integer(4).intValue());
         if (cond_36.booleanValue()) 
@@ -2417,7 +2418,7 @@ public class VdmHolTranslator {
         else {
 
           Boolean cond_32 = null;
-          Integer var1_33 = null;
+          Long var1_33 = null;
           var1_33 = vdm_operator.getValue();
           cond_32 = new Boolean(var1_33.intValue() == new Integer(10).intValue());
           if (cond_32.booleanValue()) 
@@ -2425,7 +2426,7 @@ public class VdmHolTranslator {
           else {
 
             Boolean cond_28 = null;
-            Integer var1_29 = null;
+            Long var1_29 = null;
             var1_29 = vdm_operator.getValue();
             cond_28 = new Boolean(var1_29.intValue() == new Integer(11).intValue());
             if (cond_28.booleanValue()) 
@@ -2433,7 +2434,7 @@ public class VdmHolTranslator {
             else {
 
               Boolean cond_24 = null;
-              Integer var1_25 = null;
+              Long var1_25 = null;
               var1_25 = vdm_operator.getValue();
               cond_24 = new Boolean(var1_25.intValue() == new Integer(12).intValue());
               if (cond_24.booleanValue()) 
@@ -2441,7 +2442,7 @@ public class VdmHolTranslator {
               else {
 
                 Boolean cond_20 = null;
-                Integer var1_21 = null;
+                Long var1_21 = null;
                 var1_21 = vdm_operator.getValue();
                 cond_20 = new Boolean(var1_21.intValue() == new Integer(14).intValue());
                 if (cond_20.booleanValue()) 
@@ -2449,7 +2450,7 @@ public class VdmHolTranslator {
                 else {
 
                   Boolean cond_16 = null;
-                  Integer var1_17 = null;
+                  Long var1_17 = null;
                   var1_17 = vdm_operator.getValue();
                   cond_16 = new Boolean(var1_17.intValue() == new Integer(15).intValue());
                   if (cond_16.booleanValue()) 
@@ -2457,7 +2458,7 @@ public class VdmHolTranslator {
                   else {
 
                     Boolean cond_12 = null;
-                    Integer var1_13 = null;
+                    Long var1_13 = null;
                     var1_13 = vdm_operator.getValue();
                     cond_12 = new Boolean(var1_13.intValue() == new Integer(16).intValue());
                     if (cond_12.booleanValue()) 
@@ -2468,7 +2469,7 @@ public class VdmHolTranslator {
                       String var2_9 = null;
                       Util obj_10 = null;
                       obj_10 = (Util) new Util();
-                      Integer par_11 = null;
+                      Long par_11 = null;
                       par_11 = vdm_operator.getValue();
                       var2_9 = UTIL.ConvertToString(obj_10.itoa(par_11));
                       arg_7 = new String("Unknown unary operator: ").concat(var2_9);
@@ -2492,7 +2493,7 @@ public class VdmHolTranslator {
 
     Object varRes_2 = null;
     Boolean cond_4 = null;
-    Integer var1_5 = null;
+    Long var1_5 = null;
     var1_5 = vdm_operator.getValue();
     cond_4 = new Boolean(var1_5.intValue() == new Integer(0).intValue());
     if (cond_4.booleanValue()) 
@@ -2500,7 +2501,7 @@ public class VdmHolTranslator {
     else {
 
       Boolean cond_96 = null;
-      Integer var1_97 = null;
+      Long var1_97 = null;
       var1_97 = vdm_operator.getValue();
       cond_96 = new Boolean(var1_97.intValue() == new Integer(1).intValue());
       if (cond_96.booleanValue()) 
@@ -2508,7 +2509,7 @@ public class VdmHolTranslator {
       else {
 
         Boolean cond_92 = null;
-        Integer var1_93 = null;
+        Long var1_93 = null;
         var1_93 = vdm_operator.getValue();
         cond_92 = new Boolean(var1_93.intValue() == new Integer(3).intValue());
         if (cond_92.booleanValue()) 
@@ -2516,7 +2517,7 @@ public class VdmHolTranslator {
         else {
 
           Boolean cond_88 = null;
-          Integer var1_89 = null;
+          Long var1_89 = null;
           var1_89 = vdm_operator.getValue();
           cond_88 = new Boolean(var1_89.intValue() == new Integer(4).intValue());
           if (cond_88.booleanValue()) 
@@ -2524,7 +2525,7 @@ public class VdmHolTranslator {
           else {
 
             Boolean cond_84 = null;
-            Integer var1_85 = null;
+            Long var1_85 = null;
             var1_85 = vdm_operator.getValue();
             cond_84 = new Boolean(var1_85.intValue() == new Integer(5).intValue());
             if (cond_84.booleanValue()) 
@@ -2532,7 +2533,7 @@ public class VdmHolTranslator {
             else {
 
               Boolean cond_80 = null;
-              Integer var1_81 = null;
+              Long var1_81 = null;
               var1_81 = vdm_operator.getValue();
               cond_80 = new Boolean(var1_81.intValue() == new Integer(7).intValue());
               if (cond_80.booleanValue()) 
@@ -2540,7 +2541,7 @@ public class VdmHolTranslator {
               else {
 
                 Boolean cond_76 = null;
-                Integer var1_77 = null;
+                Long var1_77 = null;
                 var1_77 = vdm_operator.getValue();
                 cond_76 = new Boolean(var1_77.intValue() == new Integer(8).intValue());
                 if (cond_76.booleanValue()) 
@@ -2548,7 +2549,7 @@ public class VdmHolTranslator {
                 else {
 
                   Boolean cond_72 = null;
-                  Integer var1_73 = null;
+                  Long var1_73 = null;
                   var1_73 = vdm_operator.getValue();
                   cond_72 = new Boolean(var1_73.intValue() == new Integer(9).intValue());
                   if (cond_72.booleanValue()) 
@@ -2556,7 +2557,7 @@ public class VdmHolTranslator {
                   else {
 
                     Boolean cond_68 = null;
-                    Integer var1_69 = null;
+                    Long var1_69 = null;
                     var1_69 = vdm_operator.getValue();
                     cond_68 = new Boolean(var1_69.intValue() == new Integer(12).intValue());
                     if (cond_68.booleanValue()) 
@@ -2564,7 +2565,7 @@ public class VdmHolTranslator {
                     else {
 
                       Boolean cond_64 = null;
-                      Integer var1_65 = null;
+                      Long var1_65 = null;
                       var1_65 = vdm_operator.getValue();
                       cond_64 = new Boolean(var1_65.intValue() == new Integer(13).intValue());
                       if (cond_64.booleanValue()) 
@@ -2572,7 +2573,7 @@ public class VdmHolTranslator {
                       else {
 
                         Boolean cond_60 = null;
-                        Integer var1_61 = null;
+                        Long var1_61 = null;
                         var1_61 = vdm_operator.getValue();
                         cond_60 = new Boolean(var1_61.intValue() == new Integer(14).intValue());
                         if (cond_60.booleanValue()) 
@@ -2580,7 +2581,7 @@ public class VdmHolTranslator {
                         else {
 
                           Boolean cond_56 = null;
-                          Integer var1_57 = null;
+                          Long var1_57 = null;
                           var1_57 = vdm_operator.getValue();
                           cond_56 = new Boolean(var1_57.intValue() == new Integer(15).intValue());
                           if (cond_56.booleanValue()) 
@@ -2588,7 +2589,7 @@ public class VdmHolTranslator {
                           else {
 
                             Boolean cond_52 = null;
-                            Integer var1_53 = null;
+                            Long var1_53 = null;
                             var1_53 = vdm_operator.getValue();
                             cond_52 = new Boolean(var1_53.intValue() == new Integer(16).intValue());
                             if (cond_52.booleanValue()) 
@@ -2596,7 +2597,7 @@ public class VdmHolTranslator {
                             else {
 
                               Boolean cond_48 = null;
-                              Integer var1_49 = null;
+                              Long var1_49 = null;
                               var1_49 = vdm_operator.getValue();
                               cond_48 = new Boolean(var1_49.intValue() == new Integer(17).intValue());
                               if (cond_48.booleanValue()) 
@@ -2604,7 +2605,7 @@ public class VdmHolTranslator {
                               else {
 
                                 Boolean cond_44 = null;
-                                Integer var1_45 = null;
+                                Long var1_45 = null;
                                 var1_45 = vdm_operator.getValue();
                                 cond_44 = new Boolean(var1_45.intValue() == new Integer(20).intValue());
                                 if (cond_44.booleanValue()) 
@@ -2612,7 +2613,7 @@ public class VdmHolTranslator {
                                 else {
 
                                   Boolean cond_40 = null;
-                                  Integer var1_41 = null;
+                                  Long var1_41 = null;
                                   var1_41 = vdm_operator.getValue();
                                   cond_40 = new Boolean(var1_41.intValue() == new Integer(21).intValue());
                                   if (cond_40.booleanValue()) 
@@ -2620,7 +2621,7 @@ public class VdmHolTranslator {
                                   else {
 
                                     Boolean cond_36 = null;
-                                    Integer var1_37 = null;
+                                    Long var1_37 = null;
                                     var1_37 = vdm_operator.getValue();
                                     cond_36 = new Boolean(var1_37.intValue() == new Integer(22).intValue());
                                     if (cond_36.booleanValue()) 
@@ -2628,7 +2629,7 @@ public class VdmHolTranslator {
                                     else {
 
                                       Boolean cond_32 = null;
-                                      Integer var1_33 = null;
+                                      Long var1_33 = null;
                                       var1_33 = vdm_operator.getValue();
                                       cond_32 = new Boolean(var1_33.intValue() == new Integer(24).intValue());
                                       if (cond_32.booleanValue()) 
@@ -2636,7 +2637,7 @@ public class VdmHolTranslator {
                                       else {
 
                                         Boolean cond_28 = null;
-                                        Integer var1_29 = null;
+                                        Long var1_29 = null;
                                         var1_29 = vdm_operator.getValue();
                                         cond_28 = new Boolean(var1_29.intValue() == new Integer(26).intValue());
                                         if (cond_28.booleanValue()) 
@@ -2644,7 +2645,7 @@ public class VdmHolTranslator {
                                         else {
 
                                           Boolean cond_24 = null;
-                                          Integer var1_25 = null;
+                                          Long var1_25 = null;
                                           var1_25 = vdm_operator.getValue();
                                           cond_24 = new Boolean(var1_25.intValue() == new Integer(27).intValue());
                                           if (cond_24.booleanValue()) 
@@ -2652,7 +2653,7 @@ public class VdmHolTranslator {
                                           else {
 
                                             Boolean cond_20 = null;
-                                            Integer var1_21 = null;
+                                            Long var1_21 = null;
                                             var1_21 = vdm_operator.getValue();
                                             cond_20 = new Boolean(var1_21.intValue() == new Integer(28).intValue());
                                             if (cond_20.booleanValue()) 
@@ -2660,7 +2661,7 @@ public class VdmHolTranslator {
                                             else {
 
                                               Boolean cond_16 = null;
-                                              Integer var1_17 = null;
+                                              Long var1_17 = null;
                                               var1_17 = vdm_operator.getValue();
                                               cond_16 = new Boolean(var1_17.intValue() == new Integer(29).intValue());
                                               if (cond_16.booleanValue()) 
@@ -2668,7 +2669,7 @@ public class VdmHolTranslator {
                                               else {
 
                                                 Boolean cond_12 = null;
-                                                Integer var1_13 = null;
+                                                Long var1_13 = null;
                                                 var1_13 = vdm_operator.getValue();
                                                 cond_12 = new Boolean(var1_13.intValue() == new Integer(30).intValue());
                                                 if (cond_12.booleanValue()) 
@@ -2679,7 +2680,7 @@ public class VdmHolTranslator {
                                                   String var2_9 = null;
                                                   Util obj_10 = null;
                                                   obj_10 = (Util) new Util();
-                                                  Integer par_11 = null;
+                                                  Long par_11 = null;
                                                   par_11 = vdm_operator.getValue();
                                                   var2_9 = UTIL.ConvertToString(obj_10.itoa(par_11));
                                                   arg_7 = new String("Unknown binary operator: ").concat(var2_9);
@@ -2819,7 +2820,7 @@ public class VdmHolTranslator {
     String arg_3 = null;
     Util obj_4 = null;
     obj_4 = (Util) new Util();
-    Integer par_5 = null;
+    Long par_5 = null;
     par_5 = number.getVal();
     arg_3 = UTIL.ConvertToString(obj_4.itoa(par_5));
     varRes_2 = new HolNativeIdentifier(arg_3);
