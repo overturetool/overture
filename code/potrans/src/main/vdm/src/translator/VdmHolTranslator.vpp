@@ -11,38 +11,6 @@ HolTypeTranslation ::
 
 operations
 
--- main function
-public static
-main : seq of (seq of char) ==> ()
-main(argv) ==
- -- argv(1) app file
- -- argv(2) vset file
- -- argv(3) map file
- if   len argv < 3
- then usage()
- else (dcl ex      : Extractor,
-           doc     : OmlDocument,
-		   holdoc  : HolDocument,
-		   docprov : DocumentProver,
-		   io      : IO,
-		   result  : bool;
-	   io := new IO();
-	   ex := new Extractor(argv(2), argv(3));
-	   doc := io.freadval[OmlDocument](argv(1)).#2;
-	   holdoc := new VdmHolTranslator().translateDocument(doc);
-	   docprov := new DocumentProver(holdoc,ex.GetProofObligations());
-	   result := io.fecho("hol.out",docprov.getProofCounter().print(),<start>);
-	  );
-
-protected static
-usage : () ==> ()
-usage() == 
-  (dcl io : IO, result : bool;
-   result := io.echo("Usage information ..."));
-
-
-
-
 getUniqueID : () ==> seq of char
 getUniqueID() == 
 (
@@ -210,6 +178,11 @@ translateFieldListToName (fields) ==
 translateType: IOmlType -> HolTypeTranslation
 translateType (type) == 
 	if isofclass(IOmlUnionType, type) then translateUnionType(type)
+
+-- ###################################
+	elseif isofclass(IOmlBracketedType, type) then translateBracketedType(type)
+-- ###################################
+
 	elseif isofclass(IOmlQuoteType, type) then translateQuoteType(type)
 	elseif isofclass(IOmlTokenType, type) then mk_HolTypeTranslation(translateTokenType(type), [])
 	elseif isofclass(IOmlProductType, type) then translateProductType(type)
@@ -238,6 +211,20 @@ translateUnionType (type) ==
 			conc [lhs.additionalTypeDefs, rhs.additionalTypeDefs]
 		)
 ;
+
+-- ################################
+translateBracketedType: IOmlBracketedType -> HolTypeTranslation
+translateBracketedType (type) == 
+	let 
+		val = translateType(type.getType())
+	in
+		mk_HolTypeTranslation(
+			new HolBracketedType(val.type),
+			val.additionalTypeDefs
+		)
+;
+-- ################################
+
 
 translateQuoteType: IOmlQuoteType -> HolTypeTranslation
 translateQuoteType (type) == 
@@ -863,50 +850,64 @@ translateName(name) ==
 
 translateUnaryOperator: IOmlUnaryOperator -> HolIdentifier
 translateUnaryOperator(operator) == 
-	if     operator.getValue() = 0	then new HolNativeIdentifier("CARD")									-- Cardinality
-	elseif operator.getValue() = 3	then new HolNativeIdentifier("TL")									-- Sequence Tail	
-	elseif operator.getValue() = 4	then new HolNativeIdentifier("(\\s. {i:num | i > 0 /\\ i < LENGTH s})")	-- Indices
-	elseif operator.getValue() = 10	then new HolNativeIdentifier("LIST_TO_SET")								-- Elements
-	elseif operator.getValue() = 11	then new HolNativeIdentifier("FDOM")									-- Domain
-	elseif operator.getValue() = 12	then new HolNativeIdentifier("HD")									-- Sequence Head	
-	elseif operator.getValue() = 14	then new HolNativeIdentifier("FRANGE")									-- Range
-	elseif operator.getValue() = 15	then new HolNativeIdentifier("LENGTH")									-- Sequence Lenght	
-	elseif operator.getValue() = 16	then new HolNativeIdentifier("~")									-- Negation			
+	if     operator.getValue() = OmlUnaryOperatorQuotes`IQCARD then new HolNativeIdentifier("CARD")									-- Cardinality
+	elseif operator.getValue() = OmlUnaryOperatorQuotes`IQTL	then new HolNativeIdentifier("TL")									-- Sequence Tail	
+	elseif operator.getValue() = OmlUnaryOperatorQuotes`IQINDS	then new HolNativeIdentifier("(\\s. {i:num | i > 0 /\\ i < LENGTH s})")	-- Indices
+	elseif operator.getValue() = OmlUnaryOperatorQuotes`IQELEMS	then new HolNativeIdentifier("LIST_TO_SET")								-- Elements
+	elseif operator.getValue() = OmlUnaryOperatorQuotes`IQDOM	then new HolNativeIdentifier("FDOM")									-- Domain
+	elseif operator.getValue() = OmlUnaryOperatorQuotes`IQHD	then new HolNativeIdentifier("HD")									-- Sequence Head	
+	elseif operator.getValue() = OmlUnaryOperatorQuotes`IQRNG	then new HolNativeIdentifier("FRANGE")									-- Range
+	elseif operator.getValue() = OmlUnaryOperatorQuotes`IQLEN	then new HolNativeIdentifier("LENGTH")									-- Sequence Lenght	
+	elseif operator.getValue() = OmlUnaryOperatorQuotes`IQNOT	then new HolNativeIdentifier("~")									-- Negation			
+	
+-- ####################
+	elseif operator.getValue() = 15	then new HolNativeIdentifier("~")									-- Minus (negaive numbers)
+--	elseif operator.getValue() = 13	then new HolNativeIdentifier("BIGINTER")							-- Distributed intersection	
+--	elseif operator.getValue() = 5	then new HolNativeIdentifier("TL")									-- Sequence Tail	
+-- ####################
 																						--.............
 	else new HolIdentifierError("Unknown unary operator: " ^ new Util().itoa(operator.getValue()))
 ;
 
 translateBinaryOperator: IOmlBinaryOperator -> HolIdentifier
 translateBinaryOperator(operator) == 
-	if     operator.getValue() = 0	then new HolNativeIdentifier("$UNION")						-- Union
-	elseif operator.getValue() = 1	then new HolNativeIdentifier("$-")						-- Minus
+	if     operator.getValue() = OmlBinaryOperatorQuotes`IQUNION	then new HolNativeIdentifier("$UNION")						-- Union
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQMINUS	then new HolNativeIdentifier("$-")						-- Minus
 																						--.............
-	elseif operator.getValue() = 3	then new HolNativeIdentifier("$PSUBSET")					-- Proper subset
-	elseif operator.getValue() = 4	then new HolNativeIdentifier("$=")						-- Equals
-	elseif operator.getValue() = 5	then new HolNativeIdentifier("(\\x y . ~ (x IN y))")		-- notinset
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQPSUBSET	then new HolNativeIdentifier("$PSUBSET")					-- Proper subset
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQEQ	then new HolNativeIdentifier("$=")						-- Equals
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQNOTINSET	then new HolNativeIdentifier("(\\x y . ~ (x IN y))")		-- notinset
 																						--.............
-	elseif operator.getValue() = 7	then new HolNativeIdentifier("$<")						-- Less than
-	elseif operator.getValue() = 8	then new HolNativeIdentifier("$>")						-- Greater than
-	elseif operator.getValue() = 9	then new HolNativeIdentifier("(\\x y . ~ (x = y))")		-- Not equal
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQLT	then new HolNativeIdentifier("$<")						-- Less than
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQGT	then new HolNativeIdentifier("$>")						-- Greater than
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQNE	then new HolNativeIdentifier("(\\x y . ~ (x = y))")		-- Not equal
 																						--.............
-	elseif operator.getValue() = 12	then new HolNativeIdentifier("$DIFF")						-- Difference
-	elseif operator.getValue() = 13	then new HolNativeIdentifier("$IN")						-- in set
-	elseif operator.getValue() = 14	then new HolNativeIdentifier("$\\/")						-- Or
-	elseif operator.getValue() = 15	then new HolNativeIdentifier("$>=")						-- Greater or equal
-	elseif operator.getValue() = 16	then new HolNativeIdentifier("(\\x y . DRESTRICT y (COMPL x))")	-- Map domain restrict by (restrict map: second parameter, by set: first parameter regarding the domain)
-	elseif operator.getValue() = 17	then new HolNativeIdentifier("$/\\")						-- And
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQDIFFERENCE	then new HolNativeIdentifier("$DIFF")						-- Difference
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQINSET	then new HolNativeIdentifier("$IN")						-- in set
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQOR	then new HolNativeIdentifier("$\\/")						-- Or
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQGE	then new HolNativeIdentifier("$>=")						-- Greater or equal
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQMAPDOMRESBY	then new HolNativeIdentifier("(\\x y . DRESTRICT y (COMPL x))")	-- Map domain restrict by (restrict map: second parameter, by set: first parameter regarding the domain)
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQAND	then new HolNativeIdentifier("$/\\")						-- And
 																						--.............
-	elseif operator.getValue() = 20	then new HolNativeIdentifier("$INTER")					-- Intersection
-	elseif operator.getValue() = 21	then new HolNativeIdentifier("(\\x y . RRESTRICT (y COMPL x))")	-- Map range restrict by (restrict map: second parameter, to set: first parameter regarding the range)
-	elseif operator.getValue() = 22	then new HolNativeIdentifier("$<=")						-- Less or equal
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQINTER	then new HolNativeIdentifier("$INTER")					-- Intersection
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQMAPRNGRESTO	then new HolNativeIdentifier("(\\x y . RRESTRICT (y COMPL x))")	-- Map range restrict by (restrict map: second parameter, to set: first parameter regarding the range)
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQLE	then new HolNativeIdentifier("$<=")						-- Less or equal
 																						--.............
-	elseif operator.getValue() = 24	then new HolNativeIdentifier("(\\x y . FUNION y x)")	-- Map modify	(x ++ y is union of y and x, with precedence to y : y FUNION x) -- TODO does this also work for element in sequence????
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQMODIFY	then new HolNativeIdentifier("(\\x y . FUNION y x)")	-- Map modify	(x ++ y is union of y and x, with precedence to y : y FUNION x) -- TODO does this also work for element in sequence????
 																						--.............
-	elseif operator.getValue() = 26	then new HolNativeIdentifier("$SUBSET")					-- Subset
-	elseif operator.getValue() = 27	then new HolNativeIdentifier("FUNION")					-- Map union
-	elseif operator.getValue() = 28	then new HolNativeIdentifier("$+")						-- Plus
-	elseif operator.getValue() = 29	then new HolNativeIdentifier("$==>")						-- Implies
-	elseif operator.getValue() = 30	then new HolNativeIdentifier("$++")						-- Concatenation
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQSUBSET	then new HolNativeIdentifier("$SUBSET")					-- Subset
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQMUNION	then new HolNativeIdentifier("FUNION")					-- Map union
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQPLUS	then new HolNativeIdentifier("$+")						-- Plus
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQIMPLY	then new HolNativeIdentifier("$==>")						-- Implies
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQCONC	then new HolNativeIdentifier("$++")						-- Concatenation
+
+-- ####################
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQCOMP	then new HolNativeIdentifier("(\\fun1 fun2. (\\param1. fun1 (fun2 param1)))")    -- Composition
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQDIVIDE	then new HolNativeIdentifier("$/")                      -- Division
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQDIV	then new HolNativeIdentifier("$DIV")                    -- Integer Division
+	elseif operator.getValue() = OmlBinaryOperatorQuotes`IQMULTIPLY	then new HolNativeIdentifier("$*")                  	-- Multiplication
+-- ####################
+
 																						--.............
 	else new HolIdentifierError("Unknown binary operator: " ^ new Util().itoa(operator.getValue()))
 ;
