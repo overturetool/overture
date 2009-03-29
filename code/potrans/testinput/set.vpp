@@ -1,0 +1,18 @@
+class Set
+
+types
+
+Element = nat;
+
+Set = set of Element
+
+
+functions
+
+inSet : Set * Element -> bool
+inSet(s,e) == e in set s;
+
+subSet : Set * Set -> bool
+subSet(s1,s2) == s1 inter s2 = s1
+
+end Set

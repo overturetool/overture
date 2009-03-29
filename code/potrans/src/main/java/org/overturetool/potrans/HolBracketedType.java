@@ -10,155 +10,105 @@
 // ***** VDMTOOLS START Name=HeaderComment KEEP=NO
 // ***** VDMTOOLS END Name=HeaderComment
 
-// ***** VDMTOOLS START Name=package KEEP=NO
+// ***** VDMTOOLS START Name=package KEEP=YES
+package org.overturetool.potrans;
 // ***** VDMTOOLS END Name=package
 
 // ***** VDMTOOLS START Name=imports KEEP=NO
 
-import jp.co.csk.vdm.toolbox.VDM.*;
-import java.util.*;
-import jp.co.csk.vdm.toolbox.VDM.jdk.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Vector;
+
+import jp.co.csk.vdm.toolbox.VDM.CGException;
+import jp.co.csk.vdm.toolbox.VDM.UTIL;
+
+import org.overturetool.potrans.quotes.type;
+
 // ***** VDMTOOLS END Name=imports
-
-
 
 public class HolBracketedType extends HolType {
 
-// ***** VDMTOOLS START Name=vdmComp KEEP=NO
-  static UTIL.VDMCompare vdmComp = new UTIL.VDMCompare();
-// ***** VDMTOOLS END Name=vdmComp
+	// ***** VDMTOOLS START Name=vdmComp KEEP=NO
+	static UTIL.VDMCompare vdmComp = new UTIL.VDMCompare();
+	// ***** VDMTOOLS END Name=vdmComp
 
-// ***** VDMTOOLS START Name=val KEEP=NO
-  private volatile HolType val = null;
-// ***** VDMTOOLS END Name=val
+	// ***** VDMTOOLS START Name=val KEEP=NO
+	private volatile HolType val = null;
 
+	// ***** VDMTOOLS END Name=val
 
-// ***** VDMTOOLS START Name=HolBracketedTypeSentinel KEEP=NO
-  class HolBracketedTypeSentinel extends HolTypeSentinel {
+	// ***** VDMTOOLS START Name=vdm_init_HolBracketedType KEEP=NO
+	private void vdm_init_HolBracketedType() throws CGException {
+	}
 
-    public final int print = 3;
+	// ***** VDMTOOLS END Name=vdm_init_HolBracketedType
 
-    public final int requires = 4;
+	// ***** VDMTOOLS START Name=HolBracketedType KEEP=NO
+	public HolBracketedType() throws CGException {
+		vdm_init_HolBracketedType();
+	}
 
-    public final int HolBracketedType = 5;
+	// ***** VDMTOOLS END Name=HolBracketedType
 
-    public final int setTypeInformation = 6;
+	// ***** VDMTOOLS START Name=HolBracketedType#1|HolType KEEP=NO
+	public HolBracketedType(final HolType newVal) throws CGException {
 
-    public final int nr_functions = 7;
+		vdm_init_HolBracketedType();
+		val = (HolType) UTIL.clone(newVal);
+	}
 
+	// ***** VDMTOOLS END Name=HolBracketedType#1|HolType
 
-    public HolBracketedTypeSentinel () throws CGException {}
+	// ***** VDMTOOLS START Name=setTypeInformation#1|HolTypeDescription
+	// KEEP=YES
+	public void setTypeInformation(final HolTypeDescription typeInfo)
+			throws CGException {
+		val.setTypeInformation((HolTypeDescription) typeInfo);
+	}
 
+	// ***** VDMTOOLS END Name=setTypeInformation#1|HolTypeDescription
 
-    public HolBracketedTypeSentinel (EvaluatePP instance) throws CGException {
-      init(nr_functions, instance);
-    }
+	// ***** VDMTOOLS START Name=requires KEEP=NO
+	public HashSet requires() throws CGException {
+		HashSet rexpr_1 = new HashSet();
+		rexpr_1 = val.requires();
+		return rexpr_1;
+	}
 
-  }
-// ***** VDMTOOLS END Name=HolBracketedTypeSentinel
-;
+	// ***** VDMTOOLS END Name=requires
 
-// ***** VDMTOOLS START Name=setSentinel KEEP=NO
-  public void setSentinel () {
-    try {
-      sentinel = new HolBracketedTypeSentinel(this);
-    }
-    catch (CGException e) {
-      System.out.println(e.getMessage());
-    }
-  }
-// ***** VDMTOOLS END Name=setSentinel
+	// ***** VDMTOOLS START Name=print#1|Object KEEP=NO
+	public String print(final Object specType) throws CGException {
 
+		if (!this.pre_print(specType).booleanValue())
+			UTIL.RunTime("Run-Time Error:Precondition failure in print");
 
-// ***** VDMTOOLS START Name=vdm_init_HolBracketedType KEEP=NO
-  private void vdm_init_HolBracketedType () throws CGException {}
-// ***** VDMTOOLS END Name=vdm_init_HolBracketedType
+		String rexpr_2 = null;
+		Vector unArg_3 = null;
+		unArg_3 = new Vector();
+		unArg_3.add(new String(" ("));
+		String e_seq_5 = null;
+		e_seq_5 = val.print(new type());
+		unArg_3.add(e_seq_5);
+		unArg_3.add(new String(") "));
+		String rdcseq_8 = new String();
+		for (Iterator enm_11 = unArg_3.iterator(); enm_11.hasNext();) {
 
+			String e_9 = UTIL.ConvertToString(enm_11.next());
+			rdcseq_8 = rdcseq_8.concat(e_9);
+		}
+		rexpr_2 = rdcseq_8;
+		return rexpr_2;
+	
+	}
 
-// ***** VDMTOOLS START Name=HolBracketedType KEEP=NO
-  public HolBracketedType () throws CGException {
-    vdm_init_HolBracketedType();
-  }
-// ***** VDMTOOLS END Name=HolBracketedType
+	// ***** VDMTOOLS END Name=print#1|Object
 
+	// ***** VDMTOOLS START Name=pre_print#1|Object KEEP=NO
+	public Boolean pre_print(final Object specType) throws CGException {
+		return new Boolean(UTIL.equals(specType, new type()));
+	}
+	// ***** VDMTOOLS END Name=pre_print#1|Object
 
-// ***** VDMTOOLS START Name=HolBracketedType#1|HolType KEEP=NO
-  public HolBracketedType (final HolType newVal) throws CGException {
-
-    vdm_init_HolBracketedType();
-    val = (HolType) UTIL.clone(newVal);
-  }
-// ***** VDMTOOLS END Name=HolBracketedType#1|HolType
-
-
-// ***** VDMTOOLS START Name=setTypeInformation#1|HolTypeDescription KEEP=NO
-  public void setTypeInformation (final HolTypeDescription typeInfo) throws CGException {
-
-    sentinel.entering(((HolBracketedTypeSentinel) sentinel).setTypeInformation);
-    try {
-      val.setTypeInformation((HolTypeDescription) typeInfo);
-    }
-    finally {
-      sentinel.leaving(((HolBracketedTypeSentinel) sentinel).setTypeInformation);
-    }
-  }
-// ***** VDMTOOLS END Name=setTypeInformation#1|HolTypeDescription
-
-
-// ***** VDMTOOLS START Name=requires KEEP=NO
-  public HashSet requires () throws CGException {
-
-    sentinel.entering(((HolBracketedTypeSentinel) sentinel).requires);
-    try {
-
-      HashSet rexpr_1 = new HashSet();
-      rexpr_1 = val.requires();
-      return rexpr_1;
-    }
-    finally {
-      sentinel.leaving(((HolBracketedTypeSentinel) sentinel).requires);
-    }
-  }
-// ***** VDMTOOLS END Name=requires
-
-
-// ***** VDMTOOLS START Name=print#1|Object KEEP=NO
-  public String print (final Object specType) throws CGException {
-
-    if (!this.pre_print(specType).booleanValue()) 
-      UTIL.RunTime("Run-Time Error:Precondition failure in print");
-    sentinel.entering(((HolBracketedTypeSentinel) sentinel).print);
-    try {
-
-      String rexpr_2 = null;
-      Vector unArg_3 = null;
-      unArg_3 = new Vector();
-      unArg_3.add(new String(" ("));
-      String e_seq_5 = null;
-      e_seq_5 = val.print(new quotes.type());
-      unArg_3.add(e_seq_5);
-      unArg_3.add(new String(") "));
-      String rdcseq_8 = new String();
-      for (Iterator enm_11 = unArg_3.iterator(); enm_11.hasNext(); ) {
-
-        String e_9 = UTIL.ConvertToString(enm_11.next());
-        rdcseq_8 = rdcseq_8.concat(e_9);
-      }
-      rexpr_2 = rdcseq_8;
-      return rexpr_2;
-    }
-    finally {
-      sentinel.leaving(((HolBracketedTypeSentinel) sentinel).print);
-    }
-  }
-// ***** VDMTOOLS END Name=print#1|Object
-
-
-// ***** VDMTOOLS START Name=pre_print#1|Object KEEP=NO
-  public Boolean pre_print (final Object specType) throws CGException {
-    return new Boolean(UTIL.equals(specType, new quotes.type()));
-  }
-// ***** VDMTOOLS END Name=pre_print#1|Object
-
-}
-;
+};

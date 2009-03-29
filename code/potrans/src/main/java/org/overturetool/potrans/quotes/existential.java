@@ -11,7 +11,7 @@
 // ***** VDMTOOLS END Name=HeaderComment
 
 // ***** VDMTOOLS START Name=package KEEP=NO
-package quotes;
+package org.overturetool.potrans.quotes;
 
 // ***** VDMTOOLS END Name=package
 
