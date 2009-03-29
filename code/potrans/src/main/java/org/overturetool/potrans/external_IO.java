@@ -69,11 +69,18 @@ public class external_IO {
 // ***** VDMTOOLS END Name=impl_freadval#1|String
 
 
-// ***** VDMTOOLS START Name=impl_fecho#3|String|String|Object KEEP=NO
+// ***** VDMTOOLS START Name=impl_fecho#3|String|String|Object KEEP=YES
   public Boolean impl_fecho (final String filename, final String text, final Object fdir) throws CGException {
 
-    UTIL.RunTime("Run-Time Error:Preliminary fecho has been called");
-    return new Boolean(false);
+      
+	  if(filename.equals("")) {
+		 System.out.print(text);
+		 return new Boolean(true);
+	  } 
+	  else {
+		  UTIL.RunTime("Run-Time Error:Preliminary fecho has been called");
+		  return new Boolean(false);
+	  }
   }
 // ***** VDMTOOLS END Name=impl_fecho#3|String|String|Object
 

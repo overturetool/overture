@@ -106,16 +106,10 @@ public class CommandLineTools {
 	 */
 	private static void validateVppdeExectuableArgument(String vppdeExecutable)
 			throws IllegalArgumentException {
-		if(vppdeExecutable == null || vppdeExecutable.length() == 0) {
-			throw new IllegalArgumentException("No VDMTools executable supplied.");
-		}
+		Utils.validateStringNotEmptyNorNull(vppdeExecutable, "No VDMTools executable supplied.");
 		
-		File executable = new File(vppdeExecutable);
-		if(!executable.exists() || !executable.isFile()) { 
-			throw new IllegalArgumentException("No VDMTools executable supplied.");
-		}
+		Utils.validateIsFileAndExists(vppdeExecutable, "No VDMTools executable supplied.");
 	}
-
 
 	/**
 	 * @param vdmFiles
@@ -123,9 +117,6 @@ public class CommandLineTools {
 	 */
 	private static void validateVdmFilesArgument(String[] vdmFiles)
 			throws IllegalArgumentException {
-		if(vdmFiles == null || vdmFiles.length == 0 
-				|| vdmFiles[0] == null || vdmFiles[0].length() == 0 ) {
-			throw new IllegalArgumentException("No VDM files supplied.");
-		}
+		Utils.validateAtLeastOneFile(vdmFiles, "No VDM files supplied.");
 	}
 }

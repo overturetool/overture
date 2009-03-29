@@ -1,22 +1,14 @@
-%
-% WHAT
-%    Explicit version of the implicit sorting algorithm. 
-%    This is done by changing the IsPermutation test to a 
-%    generator function. 
-% ID
-%    $Id: explsort.vpp,v 1.8 2005/05/13 00:41:45 vdmtools Exp $
-% PROJECT
-%    Toolbox
-% COPYRIGHT
-%    (C) 2005 CSK
-%
+class Sorter
+ 
+operations
 
-\section{ExplSort}
+  public
+  Sort: seq of int ==> seq of int 
+  Sort(arg) ==
+    is subclass responsibility
 
-The class {\em ExplSort} is a refinement of the algorithm described in
-{\em ImplSort}.
+end Sorter
 
-\begin{vdm_al}
 class ExplSort is subclass of Sorter
 
 operations
@@ -49,5 +41,3 @@ functions
     forall i,j in set inds l & i > j => l(i) >= l(j)
 
 end ExplSort
-
-\end{vdm_al}
