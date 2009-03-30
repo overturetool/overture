@@ -29,6 +29,7 @@ import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.PrivateClassEnvironment;
+import org.overturetool.vdmj.typechecker.TypeCheckException;
 import org.overturetool.vdmj.types.Type;
 
 /**
@@ -51,6 +52,20 @@ public class InstanceVariableDefinition extends AssignmentDefinition
 	public boolean isInstanceVariable()
 	{
 		return true;
+	}
+
+	@Override
+	public void typeResolve(Environment env)
+	{
+		try
+		{
+			type = type.typeResolve(env, null);
+		}
+		catch (TypeCheckException e)
+		{
+			type.unResolve();
+			throw e;
+		}
 	}
 
 	@Override

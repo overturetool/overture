@@ -385,19 +385,37 @@ public class ClassDefinition extends Definition
 				if (def1 != def2 &&
 					def1.name != null && def2.name != null &&
 					def1.name.name.equals(def2.name.name) &&
-					def1.isFunctionOrOperation() &&
 					!done.contains(def1.name.name))
 				{
-					Type to = def1.getType();
-					Type from = def2.getType();
-
-					// Note this uses the "parameters only" comparator option
-
-					if (TypeComparator.compatible(to, from, true))
+					if (def1.isFunctionOrOperation() && def2.isFunctionOrOperation() &&
+						def1.getClass() == def2.getClass())		// Both fns or ops
 					{
-						def1.report(3008, "Overloaded members indistinguishable: " + def1.name.name);
-						detail2(def1.name.name, def1.getType(), def2.name.name, def2.getType());
-						done.add(def1.name.name);
+    					Type to = def1.getType();
+    					Type from = def2.getType();
+
+    					// Note this uses the "parameters only" comparator option
+
+    					if (TypeComparator.compatible(to, from, true))
+    					{
+    						def1.report(3008, "Overloaded members indistinguishable: " + def1.name.name);
+    						detail2(def1.name.name, def1.getType(), def2.name.name, def2.getType());
+    						done.add(def1.name.name);
+    					}
+					}
+					else
+					{
+						// Class invariants can duplicate if there are several
+						// "inv" clauses in one class...
+
+						if (!(def1 instanceof ClassInvariantDefinition) &&
+							!(def2 instanceof ClassInvariantDefinition) &&
+							!(def1 instanceof PerSyncDefinition) &&
+							!(def2 instanceof PerSyncDefinition))
+						{
+    						def1.report(3017, "Duplicate definitions for " + def1.name.name);
+    						detail2(def1.name.name, def1.getType(), def2.name.name, def2.getType());
+    						done.add(def1.name.name);
+						}
 					}
 				}
 			}

@@ -377,7 +377,7 @@ as the expected and actual values.
 3014, "Expression is not compatible with type bind"
 3015, "Set bind is not a set type?"
 3016, "Expression is not compatible with set bind"
-3017, -
+3017, "Duplicate definitions for <name>"
 3018, "Function returns unexpected type"
 3019, "Function type narrows function"
 3020, "Too many parameter patterns"
