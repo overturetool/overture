@@ -76,13 +76,13 @@ public class MapType extends Type
 	@Override
 	public void unResolve()
 	{
+		if (!resolved) return; else { resolved = false; }
+
 		if (!empty)
 		{
 			from.unResolve();
 			to.unResolve();
 		}
-
-		resolved = false;
 	}
 
 	@Override

@@ -104,12 +104,12 @@ public class ProductType extends Type
 	@Override
 	public void unResolve()
 	{
+		if (!resolved) return; else { resolved = false; }
+
 		for (Type t: types)
 		{
 			t.unResolve();
 		}
-
-		resolved = false;
 	}
 
 	@Override

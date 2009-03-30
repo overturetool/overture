@@ -691,12 +691,12 @@ public class UnionType extends Type
 	@Override
 	public void unResolve()
 	{
+		if (!resolved) return; else { resolved = false; }
+
 		for (Type t: types)
 		{
 			t.unResolve();
 		}
-
-		resolved = false;
 	}
 
 	private boolean infinite = false;

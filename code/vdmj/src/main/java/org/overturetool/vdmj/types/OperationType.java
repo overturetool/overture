@@ -115,13 +115,14 @@ public class OperationType extends Type
 	@Override
 	public void unResolve()
 	{
+		if (!resolved) return; else { resolved = false; }
+
 		for (Type type: parameters)
 		{
 			type.unResolve();
 		}
 
 		result.unResolve();
-		resolved = false;
 	}
 
 	@Override

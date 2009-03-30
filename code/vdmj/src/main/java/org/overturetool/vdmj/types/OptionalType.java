@@ -49,8 +49,8 @@ public class OptionalType extends Type
 	@Override
 	public void unResolve()
 	{
+		if (!resolved) return; else { resolved = false; }
 		type.unResolve();
-		resolved = false;
 	}
 
 	@Override

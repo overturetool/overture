@@ -72,8 +72,8 @@ public class SetType extends Type
 	@Override
 	public void unResolve()
 	{
+		if (!resolved) return; else { resolved = false; }
 		setof.unResolve();
-		resolved = false;
 	}
 
 	@Override

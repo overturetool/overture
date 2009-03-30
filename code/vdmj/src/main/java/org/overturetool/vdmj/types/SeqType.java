@@ -72,8 +72,8 @@ public class SeqType extends Type
 	@Override
 	public void unResolve()
 	{
+		if (!resolved) return; else { resolved = false; }
 		seqof.unResolve();
-		resolved = false;
 	}
 
 	@Override
