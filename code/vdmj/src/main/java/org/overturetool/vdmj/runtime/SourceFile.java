@@ -72,6 +72,11 @@ public class SourceFile
 		return lines.get(n-1);
 	}
 
+	public int getCount()
+	{
+		return lines.size();
+	}
+
 	public void printCoverage(PrintWriter out)
 	{
 		List<Integer> hitlist = LexLocation.getHitList(filename);

@@ -46,6 +46,7 @@ public enum DBGPCommandType
 	CONTEXT_GET("context_get"),
 	PROPERTY_GET("property_get"),
 	PROPERTY_SET("property_set"),
+	SOURCE("source"),
 	STDOUT("stdout"),
 	STDERR("stderr"),
 	UNKNOWN("?");

@@ -59,6 +59,7 @@ import org.overturetool.vdmj.runtime.DebuggerException;
 import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.RootContext;
+import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ParserException;
@@ -573,7 +574,8 @@ public class DBGPReader
     				propertyGet(c);
     				break;
 
-    			case PROPERTY_SET:
+    			case SOURCE:
+    				processSource(c);
     				break;
 
     			case STDOUT:
@@ -588,6 +590,7 @@ public class DBGPReader
     				carryOn = false;
     				break;
 
+    			case PROPERTY_SET:
     			default:
     				errorResponse(DBGPErrorCode.NOT_AVAILABLE, c.type.value);
     		}
@@ -1294,6 +1297,67 @@ public class DBGPReader
 		}
 
 		response(null, propertyResponse(longname, value));
+	}
+
+	private void processSource(DBGPCommand c) throws DBGPException, IOException
+	{
+		if (c.data != null || c.options.size() > 4)
+		{
+			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
+		}
+
+		DBGPOption option = c.getOption(DBGPOptionType.B);
+		int begin = 1;
+
+		if (option != null)
+		{
+			begin = Integer.parseInt(option.value);
+		}
+
+		option = c.getOption(DBGPOptionType.E);
+		int end = 0;
+
+		if (option != null)
+		{
+			end = Integer.parseInt(option.value);
+		}
+
+		option = c.getOption(DBGPOptionType.F);
+
+		if (option == null)
+		{
+			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
+		}
+
+		File file = null;
+
+		try
+		{
+			file = new File(new URI(option.value));
+		}
+		catch (URISyntaxException e)
+		{
+			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
+		}
+
+		SourceFile s = interpreter.getSourceFile(file);
+		StringBuilder sb = new StringBuilder();
+
+		if (end == 0)
+		{
+			end = s.getCount();
+		}
+
+		sb.append("<![CDATA[");
+
+		for (int n=begin; n<=end; n++)
+		{
+			sb.append(quote(s.getLine(n)));
+			sb.append("\n");
+		}
+
+		sb.append("]]>");
+		response(null, sb);
 	}
 
 	private void processStdout(DBGPCommand c) throws DBGPException, IOException
