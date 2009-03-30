@@ -11,7 +11,6 @@
 					<map/>
 					<node name="preparation">
 						<map>
-							<entry key="vppdeExecutable" value="/Users/gentux/root/opt/vdmpp/bin/vppde"/>
 							<entry key="testModel1" value="testinput/sorter.vpp"/>
 							<entry key="testModel2" value="testinput/dosort.vpp"/>
 							<entry key="testModel3" value="testinput/explsort.vpp"/>

@@ -3,7 +3,10 @@ package org.overturetool.potrans.preparation;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.LinkedList;
+import java.util.prefs.InvalidPreferencesFormatException;
 import java.util.prefs.Preferences;
 
 import junit.framework.TestCase;
@@ -37,15 +40,29 @@ public class CommandLineToolsTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		
-		Preferences.importPreferences(new BufferedInputStream(new FileInputStream("Settings.xml")));
-		Preferences preferences = Preferences.userNodeForPackage(CommandLineTools.class);
+		setUpPreferences();
 		
-		vppdeExecutable = preferences.get("vppdeExecutable", null);
-		testModel1 = preferences.get("testModel1", null);
-		testModel2 = preferences.get("testModel2", null);
+		vppdeExecutable = System.getProperty("vppdeExecutable");
+		if(vppdeExecutable == null || vppdeExecutable.length() == 0) {
+			throw new Exception("You have to set the flag -DvppdeExecutable=<path to executable> for the JVM in" +
+					" the JUnit launch configuration.");
+		}
 		
 		// remove previously generated files
 		removePreviousTestsData();
+	}
+
+	/**
+	 * @throws IOException
+	 * @throws InvalidPreferencesFormatException
+	 * @throws FileNotFoundException
+	 */
+	private void setUpPreferences() throws IOException,
+			InvalidPreferencesFormatException, FileNotFoundException {
+		Preferences.importPreferences(new BufferedInputStream(new FileInputStream("Settings.xml")));
+		Preferences preferences = Preferences.userNodeForPackage(CommandLineTools.class);
+		testModel1 = preferences.get("testModel1", null);
+		testModel2 = preferences.get("testModel2", null);
 	}
 
 	/**
