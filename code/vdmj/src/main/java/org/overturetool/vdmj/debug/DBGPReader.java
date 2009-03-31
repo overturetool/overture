@@ -33,6 +33,7 @@ import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
@@ -71,13 +72,14 @@ public class DBGPReader
 {
 	private final String host;
 	private final int port;
-	private final String sessionId;
+	private final String ideKey;
 	private final String expression;
 	private final Socket socket;
 	private final InputStream input;
 	private final OutputStream output;
 	private final Interpreter interpreter;
 
+	private int sessionId = 0;
 	private DBGPStatus status = null;
 	private DBGPReason statusReason = null;
 	private DBGPCommandType command = null;
@@ -89,7 +91,7 @@ public class DBGPReader
 	private Breakpoint breakpoint = null;
 	private Value theAnswer = null;
 
-	// Usage: <host> <port> <sessionId> <dialect> <expression> {<filename>}
+	// Usage: <host> <port> <ide key> <dialect> <expression> {<filename>}
 
 	public static void main(String[] args)
 	{
@@ -97,7 +99,7 @@ public class DBGPReader
 
 		String host = args[0];
 		int port = Integer.parseInt(args[1]);
-		String session = args[2];
+		String ideKey = args[2];
 		Settings.dialect = Dialect.valueOf(args[3]);
 		String expression = args[4];
 
@@ -139,7 +141,7 @@ public class DBGPReader
 				try
 				{
 					Interpreter i = controller.getInterpreter();
-					new DBGPReader(host, port, session, i, expression).run();
+					new DBGPReader(host, port, ideKey, i, expression).run();
 	    			System.exit(0);
 				}
 				catch (Exception e)
@@ -159,13 +161,13 @@ public class DBGPReader
 	}
 
 	public DBGPReader(
-		String host, int port, String session,
+		String host, int port, String ideKey,
 		Interpreter interpreter, String expression)
 		throws Exception
 	{
 		this.host = host;
 		this.port = port;
-		this.sessionId = session;
+		this.ideKey = ideKey;
 		this.expression = expression;
 		this.interpreter = interpreter;
 
@@ -189,7 +191,7 @@ public class DBGPReader
 
 	public DBGPReader newThread() throws Exception
 	{
-		DBGPReader r = new DBGPReader(host, port, sessionId, interpreter, null);
+		DBGPReader r = new DBGPReader(host, port, ideKey, interpreter, null);
 		r.command = DBGPCommandType.UNKNOWN;
 		r.transaction = "?";
 		return r;
@@ -197,6 +199,7 @@ public class DBGPReader
 
 	private void init() throws IOException
 	{
+		sessionId = Math.abs(new Random().nextInt());
 		status = DBGPStatus.STARTING;
 		statusReason = DBGPReason.OK;
 		features = new DBGPFeatures();
@@ -207,7 +210,7 @@ public class DBGPReader
 		sb.append("appid=\"");
 		sb.append(features.getProperty("language_name"));
 		sb.append("\" ");
-		sb.append("idekey=\"" + sessionId + "\" ");
+		sb.append("idekey=\"" + ideKey + "\" ");
 		sb.append("session=\"" + sessionId + "\" ");
 		sb.append("thread=\"");
 		sb.append(Thread.currentThread().getId());
@@ -1396,7 +1399,7 @@ public class DBGPReader
 	{
 		StringBuilder sb = new StringBuilder("<stream type=\"stdout\"><![CDATA[");
 		sb.append(Base64.encode(line.getBytes("UTF-8")));
-		sb.append("]]>\n");
+		sb.append("]]></stream>\n");
 		write(sb);
 	}
 
@@ -1404,7 +1407,7 @@ public class DBGPReader
 	{
 		StringBuilder sb = new StringBuilder("<stream type=\"stderr\"><![CDATA[");
 		sb.append(Base64.encode(line.getBytes("UTF-8")));
-		sb.append("]]>\n");
+		sb.append("]]></stream>\n");
 		write(sb);
 	}
 }
