@@ -34,7 +34,7 @@
             <phase>
               <!-- a lifecycle phase -->
               <!-- package -->
-              
+              package 
             </phase>
             <configuration>
               <tasks>
