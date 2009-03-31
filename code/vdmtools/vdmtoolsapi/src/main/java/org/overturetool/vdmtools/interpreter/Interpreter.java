@@ -162,7 +162,7 @@ public class Interpreter {
 		if (!isInilized)
 			throw new Exception("Initerpeter NOT inizialized");
 
-		return interpreter.EvalExpression(client, expression);
+		return interpreter.EvalExpression(client, ToolboxClient.toISO(expression));
 
 	}
 
