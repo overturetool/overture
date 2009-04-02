@@ -166,6 +166,15 @@ public class FieldExpression extends Expression
 			}
 			else if (ClassDefinition.isAccessible(env, fdef, false))
    			{
+				// The following gives lots of warnings for self.value access
+				// to values as though they are fields of self in the CSK test
+				// suite, so commented out for now.
+
+//				if (fdef.isStatic() && !env.isStatic())
+//				{
+//					warning(5005, "Should invoke member " + field + " from a static context");
+//				}
+
    				results.add(fdef.getType());
    				// At runtime, type qualifiers must match exactly
    				memberName.setTypeQualifier(fdef.name.typeQualifier);
