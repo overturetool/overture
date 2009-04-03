@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
+import org.overturetool.vdmj.expressions.NotYetSpecifiedExpression;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.util.Utils;
 
@@ -36,9 +37,24 @@ public class FuncPostConditionObligation extends ProofObligation
 		ExplicitFunctionDefinition func, POContextStack ctxt)
 	{
 		super(func.location, POType.FUNC_POST_CONDITION, ctxt);
+		String body = null;
+
+		if (func.body instanceof NotYetSpecifiedExpression)
+		{
+			// We have to say "f(a)" because we have no expression yet
+
+			StringBuilder sb = new StringBuilder();
+			sb.append(func.name.name);
+			sb.append(Utils.listToString("(", func.paramPatternList, ", ", ")"));
+			body = sb.toString();
+		}
+		else
+		{
+			body = func.body.toString();
+		}
 
 		value = ctxt.getObligation(generate(
-			func.predef, func.postdef, func.paramPatternList, func.body.toString()));
+			func.predef, func.postdef, func.paramPatternList, body));
 	}
 
 	public FuncPostConditionObligation(
@@ -50,6 +66,15 @@ public class FuncPostConditionObligation extends ProofObligation
 		if (func.body == null)
 		{
 			body = func.result.pattern.toString();
+		}
+		else if (func.body instanceof NotYetSpecifiedExpression)
+		{
+			// We have to say "f(a)" because we have no expression yet
+
+			StringBuilder sb = new StringBuilder();
+			sb.append(func.name.name);
+			sb.append(Utils.listToString("(", func.getParamPatternList(), ", ", ")"));
+			body = sb.toString();
 		}
 		else
 		{

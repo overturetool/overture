@@ -84,6 +84,7 @@ public class ImplicitFunctionDefinition extends Definition
 	public ExplicitFunctionDefinition postdef;
 
 	public boolean recursive = false;
+	private boolean isAbstract = false;
 	public int measureLexical = 0;
 	private Type actualResult;
 
@@ -169,6 +170,7 @@ public class ImplicitFunctionDefinition extends Definition
 			if (body instanceof SubclassResponsibilityExpression)
 			{
 				classDefinition.isAbstract = true;
+				isAbstract = true;
 			}
 		}
 
@@ -495,42 +497,46 @@ public class ImplicitFunctionDefinition extends Definition
 			obligations.addAll(precondition.getProofObligations(ctxt));
 		}
 
-		if (postcondition != null)
+		if (!isAbstract)
 		{
-			if (body != null)	// else satisfiability, below
-			{
-				ctxt.push(new POFunctionDefinitionContext(this, false));
-				obligations.add(new FuncPostConditionObligation(this, ctxt));
-				ctxt.pop();
-			}
+    		if (postcondition != null)
+    		{
+    			if (body != null)	// else satisfiability, below
+    			{
+    				ctxt.push(new POFunctionDefinitionContext(this, false));
+    				obligations.add(new FuncPostConditionObligation(this, ctxt));
+    				ctxt.pop();
+    			}
 
-			ctxt.push(new POFunctionResultContext(this));
-			obligations.addAll(postcondition.getProofObligations(ctxt));
-			ctxt.pop();
+    			ctxt.push(new POFunctionResultContext(this));
+    			obligations.addAll(postcondition.getProofObligations(ctxt));
+    			ctxt.pop();
+    		}
+
+    		ctxt.push(new POFunctionDefinitionContext(this, false));
+
+    		if (body == null)
+    		{
+    			if (postcondition != null)
+    			{
+    				obligations.add(
+    					new SatisfiabilityObligation(this, ctxt));
+    			}
+    		}
+    		else
+    		{
+        		obligations.addAll(body.getProofObligations(ctxt));
+
+    			if (!TypeComparator.isSubType(actualResult, type.result))
+    			{
+    				obligations.add(new SubTypeObligation(
+    					body, type.result, actualResult, ctxt));
+    			}
+    		}
+
+    		ctxt.pop();
 		}
 
-		ctxt.push(new POFunctionDefinitionContext(this, false));
-
-		if (body == null)
-		{
-			if (postcondition != null)
-			{
-				obligations.add(
-					new SatisfiabilityObligation(this, ctxt));
-			}
-		}
-		else
-		{
-    		obligations.addAll(body.getProofObligations(ctxt));
-
-			if (!TypeComparator.isSubType(actualResult, type.result))
-			{
-				obligations.add(new SubTypeObligation(
-					body, type.result, actualResult, ctxt));
-			}
-		}
-
-		ctxt.pop();
 		return obligations;
 	}
 

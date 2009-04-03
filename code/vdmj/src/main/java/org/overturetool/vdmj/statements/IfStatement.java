@@ -204,7 +204,11 @@ public class IfStatement extends Statement
 			obligations.addAll(stmt.getProofObligations(ctxt));
 		}
 
-		obligations.addAll(elseStmt.getProofObligations(ctxt));
+		if (elseStmt != null)
+		{
+			obligations.addAll(elseStmt.getProofObligations(ctxt));
+		}
+
 		return obligations;
 	}
 }
