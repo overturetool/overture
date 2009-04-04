@@ -9,7 +9,7 @@ import java.io.File;
  * @author miguel_ferreira
  * 
  */
-public class Utils {
+public class InputValidator {
 
 	public static void validateAtLeastOneFile(String[] fileNames, String message)
 			throws IllegalArgumentException {
