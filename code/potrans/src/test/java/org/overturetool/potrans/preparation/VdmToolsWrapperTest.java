@@ -19,6 +19,7 @@ import junit.framework.TestCase;
  */
 public class VdmToolsWrapperTest extends TestCase {
 
+	private final static String newLine = System.getProperty("line.separator");
 	private static String settingsWarning = 
 		"If this test fails check that you have the correct vaules set in Settings.xml, " +
 		"namelly for the test VPP models. Also check that you set the property " +
@@ -63,7 +64,7 @@ public class VdmToolsWrapperTest extends TestCase {
 	private void setUpPreferences() throws IOException,
 			InvalidPreferencesFormatException, FileNotFoundException {
 		Preferences.importPreferences(new BufferedInputStream(new FileInputStream("Settings.xml")));
-		Preferences preferences = Preferences.userNodeForPackage(CommandLineTools.class);
+		Preferences preferences = Preferences.userNodeForPackage(this.getClass());
 		testModel1 = preferences.get("testModel1", null);
 		testModel2 = preferences.get("testModel2", null);
 	}
@@ -89,34 +90,34 @@ public class VdmToolsWrapperTest extends TestCase {
 		String[] vdmFiles = new String[]{ testModel2, testModel1 };
 		String expected = 
 			  "Parsing \"testinput/dosort.vpp\" (Latex) ... done"
-			+ CommandLineTools.newLine
+			+ newLine
 			+ "Parsing \"testinput/sorter.vpp\" (Plain Text) ... done"
-			+ CommandLineTools.newLine
+			+ newLine
 			+ "Type checking Sorter ... done"
-			+ CommandLineTools.newLine
+			+ newLine
 			+ "Type checking DoSort ... testinput/dosort.vpp, l. 23, c. 3:"
-			+ CommandLineTools.newLine
+			+ newLine
 			+ "  Warning[412] : \"DoSorting\" is recursive but does not " +
 					"have a measure defined"
-			+ CommandLineTools.newLine
+			+ newLine
 			+ "testinput/dosort.vpp, l. 31, c. 3:"
-			+ CommandLineTools.newLine
+			+ newLine
 			+ "  Warning[412] : \"InsertSorted\" is recursive but does not " +
 					"have a measure defined"
-			+ CommandLineTools.newLine
+			+ newLine
 			+ "Warnings: 2"
-			+ CommandLineTools.newLine
+			+ newLine
 			+ "done"
-			+ CommandLineTools.newLine
+			+ newLine
 			+ "Class Sorter with super classes are POS type correct"
-			+ CommandLineTools.newLine
+			+ newLine
 			+ "Generating proof obligations for DoSort...done"
-			+ CommandLineTools.newLine
+			+ newLine
 			+ "Generating proof obligations for Sorter...done";
 
 		String actual = VdmToolsWrapper.generatePogFile(vppdeExecutable, vdmFiles);
 		String message = "The method invocation should have resulted in a new  "
-				+ testModel2 + pogExtension + " file." + CommandLineTools.newLine
+				+ testModel2 + pogExtension + " file." + newLine
 				+ settingsWarning;
 		File pogFile = new File(testModel2 + pogExtension);
 		assertTrue(message, pogFile.exists());

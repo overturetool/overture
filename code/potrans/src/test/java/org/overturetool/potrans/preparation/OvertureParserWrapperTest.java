@@ -8,11 +8,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.prefs.Preferences;
 
-import org.overturetool.ast.imp.OmlDocument;
-import org.overturetool.ast.itf.IOmlDocument;
-import org.overturetool.ast.itf.IOmlExpression;
-
 import junit.framework.TestCase;
+
+import org.overturetool.ast.itf.IOmlDocument;
 
 /**
  * @author miguel_ferreira

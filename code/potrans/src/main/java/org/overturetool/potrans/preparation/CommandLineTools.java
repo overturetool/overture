@@ -11,14 +11,10 @@ import java.util.List;
  * <li>...
  * </ul>
  * 
- * @author Miguel Ferreira
+ * @author miguel_ferreira
  *
  */
 public class CommandLineTools {
-	
-	public static String newLine = System.getProperty("line.separator");
-	public static String fileSeparator = System.getProperty("file.separator");
-	public static String userDir = System.getProperty("user.dir");
 	
 	public static String executeProcess(List<String> command) {
 		StringBuffer result = new StringBuffer();

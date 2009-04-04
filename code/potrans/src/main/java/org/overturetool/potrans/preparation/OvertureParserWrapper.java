@@ -5,7 +5,6 @@ package org.overturetool.potrans.preparation;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
@@ -13,7 +12,6 @@ import java.io.StringReader;
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 
 import org.overturetool.ast.imp.OmlDocument;
-import org.overturetool.ast.imp.OmlExpression;
 import org.overturetool.ast.itf.IOmlDocument;
 import org.overturetool.ast.itf.IOmlExpression;
 import org.overturetool.parser.imp.OvertureParser;

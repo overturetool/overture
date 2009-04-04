@@ -8,7 +8,9 @@
 			<node name="overturetool">
 				<map/>
 				<node name="potrans">
-					<map/>
+					<map>
+					   <entry key="setModel" value="testinput/set.vpp"/>
+					</map>
 					<node name="preparation">
 						<map>
 							<entry key="testModel1" value="testinput/sorter.vpp"/>
