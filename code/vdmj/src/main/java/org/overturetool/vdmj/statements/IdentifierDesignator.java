@@ -59,7 +59,7 @@ public class IdentifierDesignator extends StateDesignator
 		{
 			LexNameToken exname = name.getExplicit(true);
 			Expression expression = new VariableExpression(exname);
-			return expression.typeCheck(env, null, NameScope.NAMESANDSTATE);
+			return expression.typeCheck(env, null, NameScope.STATE);
 		}
 		else
 		{
