@@ -66,7 +66,7 @@ public class MapSeqDesignator extends StateDesignator
 	@Override
 	public Type typeCheck(Environment env)
 	{
-		Type etype = exp.typeCheck(env, null, NameScope.STATE);
+		Type etype = exp.typeCheck(env, null, NameScope.NAMESANDSTATE);
 		Type rtype = mapseq.typeCheck(env);
 		TypeSet result = new TypeSet();
 

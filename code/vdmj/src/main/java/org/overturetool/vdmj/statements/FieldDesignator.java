@@ -89,7 +89,7 @@ public class FieldDesignator extends StateDesignator
 			String cname = ctype.name.name;
 
 			objectfield = new LexNameToken(cname, field.name, location);
-			Definition fdef = ctype.classdef.findName(objectfield, NameScope.NAMESANDSTATE);
+			Definition fdef = ctype.classdef.findName(objectfield, NameScope.STATE);
 
 			if (fdef == null)
 			{
