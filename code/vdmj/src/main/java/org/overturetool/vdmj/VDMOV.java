@@ -71,9 +71,25 @@ public class VDMOV extends VDMPP
    	    	        GZIPInputStream gis = new GZIPInputStream(fis);
    	    	        ObjectInputStream ois = new ObjectInputStream(gis);
 
-   	    	        ClassList loaded = (ClassList)ois.readObject();
-   	    	        ois.close();
-   	    	        loaded.remap();
+   	    	        ClassList loaded = null;
+
+   	    	        try
+   	    	        {
+   	    	        	loaded = (ClassList)ois.readObject();
+   	    	        }
+       	 			catch (Exception e)
+       				{
+       	   				println("Object file is not compatible?");
+       	   				perrs++;
+       	   				continue;
+       				}
+       	 			finally
+       	 			{
+       	 				ois.close();
+       	 			}
+
+       	 			loaded.remap();
+       	 			loaded.setLoaded();
    	    	        classes.addAll(loaded);
 
    	    	   		infoln("Loaded " + plural(loaded.size(), "class", "es") + " from " + file);
