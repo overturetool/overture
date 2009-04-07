@@ -82,7 +82,7 @@ public class SeqValue extends Value
 
 	public Value get(Value arg, Context ctxt) throws ValueException
 	{
-		int i = (int)arg.intValue(ctxt);
+		int i = (int)arg.nat1Value(ctxt);
 
 		if (i < 1 || i > values.size())
 		{

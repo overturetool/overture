@@ -120,7 +120,7 @@ public class CompExpression extends BinaryExpression
 		{
 			report(3074, "Left hand of 'comp' is neither a map nor a function");
 			detail("Type", ltype);
-			results.add(new UnknownType(location));
+			return new UnknownType(location);
 		}
 
 		return results.getType(location);

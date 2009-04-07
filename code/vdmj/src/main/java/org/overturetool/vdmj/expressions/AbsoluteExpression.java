@@ -28,6 +28,8 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.types.IntegerType;
+import org.overturetool.vdmj.types.NaturalType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.values.NumericValue;
@@ -56,6 +58,10 @@ public class AbsoluteExpression extends UnaryExpression
 		if (!t.isNumeric())
 		{
 			report(3053, "Argument of 'abs' is not numeric");
+		}
+		else if (t instanceof IntegerType)
+		{
+			t = new NaturalType(t.location);
 		}
 
 		return t;
