@@ -23,13 +23,16 @@
 
 package org.overturetool.vdmj.types;
 
+import java.io.Serializable;
+
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 
-public class PatternTypePair
+public class PatternTypePair implements Serializable
 {
+	private static final long serialVersionUID = 1L;
 	public final Pattern pattern;
 	public Type type;
 	private boolean resolved = false;
