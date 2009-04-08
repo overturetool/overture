@@ -5,17 +5,17 @@
  *	Author: Nick Battle
  *
  *	This file is part of VDMJ.
- *	
+ *
  *	VDMJ is free software: you can redistribute it and/or modify
  *	it under the terms of the GNU General Public License as published by
  *	the Free Software Foundation, either version 3 of the License, or
  *	(at your option) any later version.
- *	
+ *
  *	VDMJ is distributed in the hope that it will be useful,
  *	but WITHOUT ANY WARRANTY; without even the implied warranty of
  *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *	GNU General Public License for more details.
- *	
+ *
  *	You should have received a copy of the GNU General Public License
  *	along with VDMJ.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -72,6 +72,8 @@ public class ModuleTypeChecker extends TypeChecker
 	{
 		// Check for module name duplication
 
+		boolean nothing = true;
+
 		for (Module m1: modules)
 		{
 			for (Module m2: modules)
@@ -81,21 +83,34 @@ public class ModuleTypeChecker extends TypeChecker
 					TypeChecker.report(3429, "Module " + m1.name + " duplicate " + m2.name.location, m1.name.location);
 				}
 			}
+
+			if (!m1.typechecked) nothing = false;
+		}
+
+		if (nothing)
+		{
+			return;
 		}
 
 		// Generate implicit definitions for pre_, post_, inv_ functions etc.
 
 		for (Module m: modules)
 		{
-			Environment env = new ModuleEnvironment(m);
-			m.defs.implicitDefinitions(env);
+			if (!m.typechecked)
+			{
+				Environment env = new ModuleEnvironment(m);
+				m.defs.implicitDefinitions(env);
+			}
 		}
 
 		// Exports have to be identified before imports can be processed.
 
 		for (Module m: modules)
 		{
-			m.processExports();			// Populate exportDefs
+			if (!m.typechecked)
+			{
+				m.processExports();			// Populate exportDefs
+			}
 		}
 
 		// Process the imports early because renamed imports create definitions
@@ -103,32 +118,38 @@ public class ModuleTypeChecker extends TypeChecker
 
 		for (Module m: modules)
 		{
-			m.processImports(modules);	// Populate importDefs
+			if (!m.typechecked)
+			{
+				m.processImports(modules);	// Populate importDefs
+			}
 		}
 
 		// Create a list of all definitions from all modules, including
 		// imports of renamed definitions.
 
 		DefinitionList alldefs = new DefinitionList();
+		DefinitionList checkDefs = new DefinitionList();
 
 		for (Module m: modules)
 		{
 			for (Definition d: m.importdefs)
 			{
 				alldefs.add(d);
+				if (!m.typechecked) checkDefs.add(d);
 			}
 
 			for (Definition d: m.defs)
 			{
 				alldefs.add(d);
+				if (!m.typechecked) checkDefs.add(d);
 			}
 		}
 
-		// Attempt type resolution of all definitions from all modules.
+		// Attempt type resolution of unchecked definitions from all modules.
 
 		Environment env = new FlatCheckedEnvironment(alldefs);
 
-		for (Definition d: alldefs)
+		for (Definition d: checkDefs)
 		{
 			try
 			{
@@ -147,21 +168,24 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			for (Module m: modules)
 			{
-				Environment e = new ModuleEnvironment(m);
-
-				for (Definition d: m.defs)
+				if (!m.typechecked)
 				{
-					if (d.pass == pass)
-					{
-						try
-						{
-							d.typeCheck(e, NameScope.NAMES);
-						}
-						catch (TypeCheckException te)
-						{
-							report(3431, te.getMessage(), te.location);
-						}
-					}
+    				Environment e = new ModuleEnvironment(m);
+
+    				for (Definition d: m.defs)
+    				{
+    					if (d.pass == pass)
+    					{
+    						try
+    						{
+    							d.typeCheck(e, NameScope.NAMES);
+    						}
+    						catch (TypeCheckException te)
+    						{
+    							report(3431, te.getMessage(), te.location);
+    						}
+    					}
+    				}
 				}
 			}
 		}
@@ -171,15 +195,18 @@ public class ModuleTypeChecker extends TypeChecker
 
 		for (Module m: modules)
 		{
-			m.processImports(modules);		// Re-populate importDefs
+			if (!m.typechecked)
+			{
+    			m.processImports(modules);		// Re-populate importDefs
 
-			try
-			{
-				m.typeCheckImports();		// Imports compared to exports
-			}
-			catch (TypeCheckException te)
-			{
-				report(3432, te.getMessage(), te.location);
+    			try
+    			{
+    				m.typeCheckImports();		// Imports compared to exports
+    			}
+    			catch (TypeCheckException te)
+    			{
+    				report(3432, te.getMessage(), te.location);
+    			}
 			}
 		}
 
@@ -188,8 +215,11 @@ public class ModuleTypeChecker extends TypeChecker
 
     	for (Module m: modules)
 		{
-    		m.importdefs.unusedCheck();
-    		m.defs.unusedCheck();
+			if (!m.typechecked)
+			{
+				m.importdefs.unusedCheck();
+				m.defs.unusedCheck();
+			}
 		}
 	}
 }

@@ -25,7 +25,6 @@ package org.overturetool.vdmj.typechecker;
 
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
-import org.overturetool.vdmj.definitions.Definition;
 
 /**
  * A class to coordinate all class type checking processing.
@@ -55,61 +54,85 @@ public class ClassTypeChecker extends TypeChecker
 	@Override
 	public void typeCheck()
 	{
-		for (Definition c1: classes)
+		boolean nothing = true;
+
+		for (ClassDefinition c1: classes)
 		{
-			for (Definition c2: classes)
+			for (ClassDefinition c2: classes)
 			{
 				if (c1 != c2 && c1.name.equals(c2.name))
 				{
 					TypeChecker.report(3426, "Class " + c1.name + " duplicates " + c2.name, c1.name.location);
 				}
 			}
+
+			if (!c1.typechecked) nothing = false;
+		}
+
+		if (nothing)
+		{
+			return;
 		}
 
 		Environment allClasses = new PublicClassEnvironment(classes);
 
 		for (ClassDefinition c: classes)
 		{
-    		c.implicitDefinitions(allClasses);
+			if (!c.typechecked)
+			{
+				c.implicitDefinitions(allClasses);
+			}
 		}
 
     	for (ClassDefinition c: classes)
 		{
-			try
+			if (!c.typechecked)
 			{
-				Environment self = new PrivateClassEnvironment(c, allClasses);
-				c.typeResolve(self);
-			}
-			catch (TypeCheckException te)
-			{
-				report(3427, te.getMessage(), te.location);
+    			try
+    			{
+    				Environment self = new PrivateClassEnvironment(c, allClasses);
+    				c.typeResolve(self);
+    			}
+    			catch (TypeCheckException te)
+    			{
+    				report(3427, te.getMessage(), te.location);
+    			}
 			}
 		}
 
 		for (ClassDefinition c: classes)
 		{
-    		c.checkOver();
+			if (!c.typechecked)
+			{
+				c.checkOver();
+			}
 		}
 
 	    for (Pass pass: Pass.values())
 		{
         	for (ClassDefinition c: classes)
     		{
-				try
-				{
-					Environment self = new PrivateClassEnvironment(c, allClasses);
-	         		c.typeCheckPass(pass, self);
-				}
-				catch (TypeCheckException te)
-				{
-					report(3428, te.getMessage(), te.location);
-				}
+    			if (!c.typechecked)
+    			{
+    				try
+    				{
+    					Environment self = new PrivateClassEnvironment(c, allClasses);
+    	         		c.typeCheckPass(pass, self);
+    				}
+    				catch (TypeCheckException te)
+    				{
+    					report(3428, te.getMessage(), te.location);
+    				}
+    			}
     		}
 		}
 
     	for (ClassDefinition c: classes)
 		{
-    		c.unusedCheck();
+			if (!c.typechecked)
+			{
+				c.unusedCheck();
+			}
 		}
 	}
 }

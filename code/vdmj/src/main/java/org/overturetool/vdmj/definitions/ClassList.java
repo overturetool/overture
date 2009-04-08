@@ -126,7 +126,7 @@ public class ClassList extends Vector<ClassDefinition>
 	{
 		for (ClassDefinition d: this)
 		{
-			d.loaded = true;
+			d.typechecked = true;
 		}
 	}
 
@@ -136,7 +136,7 @@ public class ClassList extends Vector<ClassDefinition>
 
 		for (ClassDefinition d: this)
 		{
-			if (!d.loaded) count++;
+			if (!d.typechecked) count++;
 		}
 
 		return count;

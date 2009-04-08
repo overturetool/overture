@@ -94,7 +94,7 @@ public class ClassDefinition extends Definition
 	volatile private Setting settingHierarchy = Setting.UNSET;
 
 	/** True if loaded from an object file (so type checked) */
-	public boolean loaded = false;
+	public boolean typechecked = false;
 
 	/** The private or protected static values in the class. */
 	private NameValuePairList privateStaticValues = null;
@@ -877,7 +877,7 @@ public class ClassDefinition extends Definition
 
 	public void typeCheckPass(Pass p, Environment base)
 	{
-		if (loaded) return;
+		if (typechecked) return;
 
 		for (Definition d: definitions)
 		{

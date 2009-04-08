@@ -71,8 +71,8 @@ public class VDMPP extends VDMJ
 	{
 		classes.clear();
 		LexLocation.resetLocations();
-		long before = System.currentTimeMillis();
    		int perrs = 0;
+   		long duration = 0;
 
    		for (File file: files)
    		{
@@ -114,10 +114,13 @@ public class VDMPP extends VDMJ
    				}
    				else
    				{
+   					long before = System.currentTimeMillis();
     				LexTokenReader ltr =
     					new LexTokenReader(file, Settings.dialect, filecharset);
         			reader = new ClassReader(ltr);
         			classes.addAll(reader.readClasses());
+        	   		long after = System.currentTimeMillis();
+        	   		duration += (after - before);
    				}
     		}
 			catch (MessageException e)
@@ -137,10 +140,9 @@ public class VDMPP extends VDMJ
 			}
    		}
 
-   		long after = System.currentTimeMillis();
 
    		info("Parsed " + plural(classes.notLoaded(), "class", "es") + " in " +
-   			(double)(after-before)/1000 + " secs. ");
+   			(double)(duration)/1000 + " secs. ");
    		infoln(perrs == 0 ? "No syntax errors" :
    			"Found " + plural(perrs, "syntax error", "s"));
 

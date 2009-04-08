@@ -57,9 +57,9 @@ public class VDMOV extends VDMPP
 	{
 		classes.clear();
 		LexLocation.resetLocations();
-		long before = System.currentTimeMillis();
 		long convert = 0;
    		int perrs = 0;
+   		long duration = 0;
 
    		for (File file: files)
    		{
@@ -100,11 +100,14 @@ public class VDMOV extends VDMPP
    				}
    				else
    				{
+   					long before = System.currentTimeMillis();
        				OvertureReader reader = new OvertureReader(file, filecharset);
     				long beforeConvert = System.currentTimeMillis();
         			classes.addAll(reader.readClasses());
         			convert += System.currentTimeMillis() - beforeConvert;
         			perrs += reader.getErrorCount();
+        	  		long after = System.currentTimeMillis();
+        	  		duration += (after - before);
    				}
     		}
 			catch (MessageException e)
@@ -118,10 +121,8 @@ public class VDMOV extends VDMPP
 			}
    		}
 
-  		long after = System.currentTimeMillis();
-
    		info("Overture parsed " + plural(classes.notLoaded(), "class", "es") + " in " +
-   			(double)(after-before)/1000 + " secs (" +
+   			(double)(duration)/1000 + " secs (" +
    			(double)convert/1000 + " secs AST convert). ");
    		infoln(perrs == 0 ? "No syntax errors" :
    			"Found " + plural(perrs, "syntax error", "s"));

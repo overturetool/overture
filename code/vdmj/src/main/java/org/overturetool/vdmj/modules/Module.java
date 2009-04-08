@@ -62,7 +62,7 @@ public class Module implements Serializable
 	/** Definitions of imported objects from other modules. */
 	public DefinitionList importdefs;
 	/** True if the module was loaded from an object file. */
-	public boolean loaded = false;
+	public boolean typechecked = false;
 	/** The default module number for flat definitions. */
 	public static int defNumber = 1;
 

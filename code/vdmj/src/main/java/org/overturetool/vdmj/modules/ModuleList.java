@@ -169,7 +169,7 @@ public class ModuleList extends Vector<Module>
 	{
 		for (Module m: this)
 		{
-			m.loaded = true;
+			m.typechecked = true;
 		}
 	}
 
@@ -179,7 +179,7 @@ public class ModuleList extends Vector<Module>
 
 		for (Module m: this)
 		{
-			if (!m.loaded) count++;
+			if (!m.typechecked) count++;
 		}
 
 		return count;
