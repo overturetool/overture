@@ -102,9 +102,9 @@ public class VDMPP extends VDMJ
        	 				ois.close();
        	 			}
 
-       	 			loaded.remap();
    	    	        loaded.setLoaded();
    	    	        classes.addAll(loaded);
+   	    	        classes.remap();
 
    	    	   		infoln("Loaded " + plural(loaded.size(), "class", "es") + " from " + file);
    				}

@@ -88,9 +88,9 @@ public class VDMOV extends VDMPP
        	 				ois.close();
        	 			}
 
-       	 			loaded.remap();
        	 			loaded.setLoaded();
    	    	        classes.addAll(loaded);
+   	    	        classes.remap();
 
    	    	   		infoln("Loaded " + plural(loaded.size(), "class", "es") + " from " + file);
    				}
