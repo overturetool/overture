@@ -184,6 +184,7 @@ public class IO
 	private static String stringOf(Value val)
 	{
 		StringBuilder s = new StringBuilder();
+		val = val.deref();
 
 		if (val instanceof SeqValue)
 		{
@@ -191,6 +192,8 @@ public class IO
 
 			for (Value v: sv.values)
 			{
+				v = v.deref();
+
 				if (v instanceof CharacterValue)
 				{
 					CharacterValue cv = (CharacterValue)v;
