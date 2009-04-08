@@ -121,11 +121,16 @@ public class VDMOV extends VDMPP
 			}
    		}
 
-   		info("Overture parsed " + plural(classes.notLoaded(), "class", "es") + " in " +
-   			(double)(duration)/1000 + " secs (" +
-   			(double)convert/1000 + " secs AST convert). ");
-   		infoln(perrs == 0 ? "No syntax errors" :
-   			"Found " + plural(perrs, "syntax error", "s"));
+   		int n = classes.notLoaded();
+
+   		if (n > 0)
+   		{
+       		info("Overture parsed " + plural(n, "class", "es") + " in " +
+       			(double)(duration)/1000 + " secs (" +
+       			(double)convert/1000 + " secs AST convert). ");
+       		infoln(perrs == 0 ? "No syntax errors" :
+       			"Found " + plural(perrs, "syntax error", "s"));
+   		}
 
    		return perrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
 	}

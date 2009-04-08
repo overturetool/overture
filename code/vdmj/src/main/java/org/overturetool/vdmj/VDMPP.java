@@ -140,11 +140,15 @@ public class VDMPP extends VDMJ
 			}
    		}
 
+   		int n = classes.notLoaded();
 
-   		info("Parsed " + plural(classes.notLoaded(), "class", "es") + " in " +
-   			(double)(duration)/1000 + " secs. ");
-   		infoln(perrs == 0 ? "No syntax errors" :
-   			"Found " + plural(perrs, "syntax error", "s"));
+   		if (n > 0)
+   		{
+       		info("Parsed " + plural(n, "class", "es") + " in " +
+       			(double)(duration)/1000 + " secs. ");
+       		infoln(perrs == 0 ? "No syntax errors" :
+       			"Found " + plural(perrs, "syntax error", "s"));
+   		}
 
    		return perrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
 	}
@@ -195,12 +199,17 @@ public class VDMPP extends VDMJ
 			TypeChecker.printWarnings(Console.out);
 		}
 
-		info("Type checked " + plural(classes.notLoaded(), "class", "es") + " in " +
-			(double)(after-before)/1000 + " secs. ");
-  		info(terrs == 0 ? "No type errors" :
-  			"Found " + plural(terrs, "type error", "s"));
-		infoln(twarn == 0 ? "" : " and " +
-			(warnings ? "" : "suppressed ") + plural(twarn, "warning", "s"));
+   		int n = classes.notLoaded();
+
+   		if (n > 0)
+   		{
+    		info("Type checked " + plural(n, "class", "es") + " in " +
+    			(double)(after-before)/1000 + " secs. ");
+      		info(terrs == 0 ? "No type errors" :
+      			"Found " + plural(terrs, "type error", "s"));
+    		infoln(twarn == 0 ? "" : " and " +
+    			(warnings ? "" : "suppressed ") + plural(twarn, "warning", "s"));
+   		}
 
 		if (outfile != null && terrs == 0)
 		{
