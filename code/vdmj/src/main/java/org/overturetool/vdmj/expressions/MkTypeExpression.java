@@ -80,7 +80,7 @@ public class MkTypeExpression extends Expression
 			return new UnknownType(location);
 		}
 
-		Type rec = typeDef.getType().typeResolve(env, null);
+		Type rec = typeDef.getType();
 
 		while (rec instanceof NamedType)
 		{

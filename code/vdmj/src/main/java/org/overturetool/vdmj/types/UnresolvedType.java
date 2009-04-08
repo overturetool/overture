@@ -55,8 +55,6 @@ public class UnresolvedType extends Type
 	@Override
 	public Type typeResolve(Environment env, TypeDefinition root)
 	{
-		// Was return dereference(env, root).typeResolve(env, root);
-
 		Type deref = dereference(env, root);
 
 		if (!(deref instanceof ClassType))

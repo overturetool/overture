@@ -69,8 +69,8 @@ public class AssignmentStatement extends Statement
 	@Override
 	public Type typeCheck(Environment env, NameScope scope)
 	{
-		targetType = target.typeCheck(env).typeResolve(env, null);
-		expType = exp.typeCheck(env, null, scope).typeResolve(env, null);
+		targetType = target.typeCheck(env);
+		expType = exp.typeCheck(env, null, scope);
 
 		if (!TypeComparator.compatible(targetType, expType))
 		{
