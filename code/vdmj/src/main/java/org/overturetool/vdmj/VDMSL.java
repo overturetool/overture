@@ -86,7 +86,9 @@ public class VDMSL extends VDMJ
    					FileInputStream fis = new FileInputStream(file);
    	    	        GZIPInputStream gis = new GZIPInputStream(fis);
    	    	        ObjectInputStream ois = new ObjectInputStream(gis);
+
    	    	        ModuleList loaded = null;
+   	    	        long begin = System.currentTimeMillis();
 
    	    	        try
    	    	        {
@@ -94,7 +96,7 @@ public class VDMSL extends VDMJ
    	    	        }
        	 			catch (Exception e)
        				{
-       	   				println("Library file is not compatible?");
+       	   				println(file + " is not a valid VDM-SL library");
        	   				perrs++;
        	   				continue;
        				}
@@ -103,10 +105,12 @@ public class VDMSL extends VDMJ
        	 				ois.close();
        	 			}
 
+   	    	        long end = System.currentTimeMillis();
    	    	        loaded.setLoaded();
    	    	        modules.addAll(loaded);
 
-   	    	   		infoln("Loaded " + plural(loaded.size(), "module", "s") + " from " + file);
+   	    	   		infoln("Loaded " + plural(loaded.size(), "module", "s") +
+   	    	   			" from " + file + " in " + (double)(end-begin)/1000 + " secs");
    				}
    				else
    				{

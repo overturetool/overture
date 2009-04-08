@@ -72,6 +72,7 @@ public class VDMOV extends VDMPP
    	    	        ObjectInputStream ois = new ObjectInputStream(gis);
 
    	    	        ClassList loaded = null;
+   	    	        long begin = System.currentTimeMillis();
 
    	    	        try
    	    	        {
@@ -79,7 +80,7 @@ public class VDMOV extends VDMPP
    	    	        }
        	 			catch (Exception e)
        				{
-       	   				println("Library file is not compatible?");
+       	   				println(file + " is not a valid VDM++ library");
        	   				perrs++;
        	   				continue;
        				}
@@ -88,11 +89,14 @@ public class VDMOV extends VDMPP
        	 				ois.close();
        	 			}
 
+
+   	    	        long end = System.currentTimeMillis();
        	 			loaded.setLoaded();
    	    	        classes.addAll(loaded);
    	    	        classes.remap();
 
-   	    	   		infoln("Loaded " + plural(loaded.size(), "class", "es") + " from " + file);
+   	    	   		infoln("Loaded " + plural(loaded.size(), "class", "es") +
+   	    	   			" from " + file + " in " + (double)(end-begin)/1000 + " secs");
    				}
    				else
    				{
