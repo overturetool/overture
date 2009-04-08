@@ -80,7 +80,7 @@ public class ModuleTypeChecker extends TypeChecker
 			{
 				if (m1 != m2 && m1.name.equals(m2.name))
 				{
-					TypeChecker.report(3429, "Module " + m1.name + " duplicate " + m2.name.location, m1.name.location);
+					TypeChecker.report(3429, "Module " + m1.name + " duplicates " + m2.name, m1.name.location);
 				}
 			}
 
