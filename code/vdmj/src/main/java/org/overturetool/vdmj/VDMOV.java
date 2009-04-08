@@ -65,7 +65,7 @@ public class VDMOV extends VDMPP
    		{
    			try
    			{
-   				if (file.getName().endsWith(".obj"))
+   				if (file.getName().endsWith(".lib"))
    				{
    					FileInputStream fis = new FileInputStream(file);
    	    	        GZIPInputStream gis = new GZIPInputStream(fis);
@@ -79,7 +79,7 @@ public class VDMOV extends VDMPP
    	    	        }
        	 			catch (Exception e)
        				{
-       	   				println("Object file is not compatible?");
+       	   				println("Library file is not compatible?");
        	   				perrs++;
        	   				continue;
        				}
@@ -116,7 +116,7 @@ public class VDMOV extends VDMPP
 
   		long after = System.currentTimeMillis();
 
-   		info("Overture parsed " + plural(classes.size(), "class", "es") + " in " +
+   		info("Overture parsed " + plural(classes.notLoaded(), "class", "es") + " in " +
    			(double)(after-before)/1000 + " secs (" +
    			(double)convert/1000 + " secs AST convert). ");
    		infoln(perrs == 0 ? "No syntax errors" :

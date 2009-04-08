@@ -130,6 +130,18 @@ public class ClassList extends Vector<ClassDefinition>
 		}
 	}
 
+	public int notLoaded()
+	{
+		int count = 0;
+
+		for (ClassDefinition d: this)
+		{
+			if (!d.loaded) count++;
+		}
+
+		return count;
+	}
+
 	public void unusedCheck()
 	{
 		for (ClassDefinition d: this)

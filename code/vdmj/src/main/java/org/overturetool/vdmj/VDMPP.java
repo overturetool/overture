@@ -80,7 +80,7 @@ public class VDMPP extends VDMJ
 
    			try
    			{
-   				if (file.getName().endsWith(".obj"))
+   				if (file.getName().endsWith(".lib"))
    				{
    					FileInputStream fis = new FileInputStream(file);
    	    	        GZIPInputStream gis = new GZIPInputStream(fis);
@@ -93,7 +93,7 @@ public class VDMPP extends VDMJ
    	    	        }
        	 			catch (Exception e)
        				{
-       	   				println("Object file is not compatible?");
+       	   				println("Library file is not compatible?");
        	   				perrs++;
        	   				continue;
        				}
@@ -135,7 +135,7 @@ public class VDMPP extends VDMJ
 
    		long after = System.currentTimeMillis();
 
-   		info("Parsed " + plural(classes.size(), "class", "es") + " in " +
+   		info("Parsed " + plural(classes.notLoaded(), "class", "es") + " in " +
    			(double)(after-before)/1000 + " secs. ");
    		infoln(perrs == 0 ? "No syntax errors" :
    			"Found " + plural(perrs, "syntax error", "s"));
@@ -189,7 +189,7 @@ public class VDMPP extends VDMJ
 			TypeChecker.printWarnings(Console.out);
 		}
 
-		info("Type checked " + plural(classes.size(), "class", "es") + " in " +
+		info("Type checked " + plural(classes.notLoaded(), "class", "es") + " in " +
 			(double)(after-before)/1000 + " secs. ");
   		info(terrs == 0 ? "No type errors" :
   			"Found " + plural(terrs, "type error", "s"));

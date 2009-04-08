@@ -114,15 +114,20 @@ abstract public class VDMJ
     				usage("-e option requires an expression");
     			}
     		}
-    		else if (arg.equals("-out"))
+    		else if (arg.equals("-o"))
     		{
     			if (i.hasNext())
     			{
+    				if (outfile != null)
+    				{
+    					usage("Only one -o option allowed");
+    				}
+
     				outfile = i.next();
     			}
     			else
     			{
-    				usage("-out option requires a filename");
+    				usage("-o option requires a filename");
     			}
     		}
     		else if (arg.equals("-c"))
@@ -236,7 +241,8 @@ abstract public class VDMJ
 		System.err.println("-e <exp>: evaluate <exp> and stop");
 		System.err.println("-c <charset>: select a file charset");
 		System.err.println("-t <charset>: select a console charset");
-		System.err.println("-pre: disable precondition checks");
+		System.err.println("-t <charset>: select a console charset");
+		System.err.println("-o <filename>: saved type checked specification");
 		System.err.println("-post: disable postcondition checks");
 		System.err.println("-inv: disable type/state invariant checks");
 		System.err.println("-dtc: disable all dynamic type checking");

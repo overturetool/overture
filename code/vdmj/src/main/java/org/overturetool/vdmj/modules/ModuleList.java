@@ -172,4 +172,16 @@ public class ModuleList extends Vector<Module>
 			m.loaded = true;
 		}
 	}
+
+	public int notLoaded()
+	{
+		int count = 0;
+
+		for (Module m: this)
+		{
+			if (!m.loaded) count++;
+		}
+
+		return count;
+	}
 }
