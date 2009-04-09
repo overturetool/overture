@@ -24,6 +24,8 @@
 package org.overturetool.vdmj.patterns;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.expressions.StringLiteralExpression;
 import org.overturetool.vdmj.lex.LexStringToken;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.PatternMatchException;
@@ -83,5 +85,11 @@ public class StringPattern extends Pattern
 	public Type getPossibleType()
 	{
 		return new SeqType(location, new CharacterType(location));
+	}
+
+	@Override
+	public Expression getMatchingExpression()
+	{
+		return new StringLiteralExpression(value);
 	}
 }

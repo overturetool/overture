@@ -26,6 +26,7 @@ package org.overturetool.vdmj.patterns;
 import java.io.Serializable;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.runtime.Context;
@@ -115,18 +116,15 @@ public abstract class Pattern implements Serializable
 	}
 
 	/**
-	 * A string, being an expression that matches the pattern. This is used in
+	 * An expression that matches the pattern. This is used in
 	 * PO generation when parameter patterns have to be passed to pre/post
 	 * conditions as arguments. The result is almost the same as toString(),
 	 * except for IgnorePatterns, which produce "don't care" variables.
 	 *
-	 * @return A string, being a value that matches the pattern.
+	 * @return An expression, being a value that matches the pattern.
 	 */
 
-	public String getMatchingValue()
-	{
-		return toString();		// Overridden by IgnorePattern
-	}
+	abstract public Expression getMatchingExpression();
 
 	/**
 	 * @see org.overturetool.vdmj.definitions.Definition#report

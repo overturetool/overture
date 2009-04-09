@@ -26,6 +26,9 @@ package org.overturetool.vdmj.patterns;
 import java.util.ListIterator;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.expressions.ExpressionList;
+import org.overturetool.vdmj.expressions.SeqEnumExpression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.runtime.Context;
@@ -85,9 +88,16 @@ public class SeqPattern extends Pattern
 	}
 
 	@Override
-	public String getMatchingValue()
+	public Expression getMatchingExpression()
 	{
-		return "[" + plist.getMatchingValues() + "]";
+		ExpressionList list = new ExpressionList();
+		
+		for (Pattern p: plist)
+		{
+			list.add(p.getMatchingExpression());
+		}
+		
+		return new SeqEnumExpression(location, list);
 	}
 
 	@Override

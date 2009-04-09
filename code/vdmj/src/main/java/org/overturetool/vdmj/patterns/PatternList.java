@@ -23,9 +23,9 @@
 
 package org.overturetool.vdmj.patterns;
 
-import java.util.List;
 import java.util.Vector;
 
+import org.overturetool.vdmj.expressions.ExpressionList;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.PatternMatchException;
@@ -45,18 +45,6 @@ public class PatternList extends Vector<Pattern>
 	public String toString()
 	{
 		return Utils.listToString(this);
-	}
-
-	public String getMatchingValues()
-	{
-		List<String> mvs = new Vector<String>();
-
-		for (Pattern p: this)
-		{
-			mvs.add(p.getMatchingValue());
-		}
-
-		return Utils.listToString(mvs);
 	}
 
 	public NameValuePairList getNamedValues(Value value, Context ctxt)
@@ -108,5 +96,17 @@ public class PatternList extends Vector<Pattern>
 
         		return list.getType(location);		// NB. a union of types
 		}
+	}
+
+	public ExpressionList getMatchingExpression()
+	{
+		ExpressionList list = new ExpressionList();
+
+		for (Pattern p: this)
+		{
+			list.add(p.getMatchingExpression());
+		}
+
+		return list;
 	}
 }

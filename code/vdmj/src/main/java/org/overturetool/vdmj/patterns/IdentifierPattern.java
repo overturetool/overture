@@ -25,6 +25,8 @@ package org.overturetool.vdmj.patterns;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.LocalDefinition;
+import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.expressions.VariableExpression;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
@@ -86,5 +88,11 @@ public class IdentifierPattern extends Pattern
 	public Type getPossibleType()
 	{
 		return new UnknownType(location);
+	}
+
+	@Override
+	public Expression getMatchingExpression()
+	{
+		return new VariableExpression(name);
 	}
 }

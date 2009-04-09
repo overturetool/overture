@@ -102,12 +102,7 @@ public class SubTypeObligation extends ProofObligation
 
 			for (Pattern p: func.paramPatternList.get(0))
 			{
-				for (LexNameToken n: p.getVariableNames())
-				{
-					// TODO This should generate expressions from the pattern
-					// like getMatchingValue but returning an Expression.
-					args.add(new VariableExpression(n));
-				}
+				args.add(p.getMatchingExpression());
 			}
 
 			body = new ApplyExpression(root, args);
@@ -139,12 +134,7 @@ public class SubTypeObligation extends ProofObligation
 			{
 				for (Pattern p: pltp.patterns)
 				{
-					for (LexNameToken n: p.getVariableNames())
-					{
-						// TODO This should generate expressions from the pattern
-						// like getMatchingValue but returning an Expression.
-						args.add(new VariableExpression(n));
-					}
+					args.add(p.getMatchingExpression());
 				}
 			}
 

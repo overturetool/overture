@@ -27,6 +27,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.expressions.ExpressionList;
+import org.overturetool.vdmj.expressions.SetEnumExpression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.runtime.Context;
@@ -86,9 +89,16 @@ public class SetPattern extends Pattern
 	}
 
 	@Override
-	public String getMatchingValue()
+	public Expression getMatchingExpression()
 	{
-		return "{" + plist.getMatchingValues() + "}";
+		ExpressionList list = new ExpressionList();
+		
+		for (Pattern p: plist)
+		{
+			list.add(p.getMatchingExpression());
+		}
+		
+		return new SetEnumExpression(location, list);
 	}
 
 	@Override

@@ -26,6 +26,9 @@ package org.overturetool.vdmj.patterns;
 import java.util.Iterator;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.expressions.ExpressionList;
+import org.overturetool.vdmj.expressions.MkTypeExpression;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
@@ -70,9 +73,16 @@ public class RecordPattern extends Pattern
 	}
 
 	@Override
-	public String getMatchingValue()
+	public Expression getMatchingExpression()
 	{
-		return "mk_" + type + "(" + plist.getMatchingValues() + ")";
+		ExpressionList list = new ExpressionList();
+		
+		for (Pattern p: plist)
+		{
+			list.add(p.getMatchingExpression());
+		}
+		
+		return new MkTypeExpression(typename, list);
 	}
 
 	@Override

@@ -24,6 +24,8 @@
 package org.overturetool.vdmj.patterns;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.expressions.RealLiteralExpression;
 import org.overturetool.vdmj.lex.LexRealToken;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.PatternMatchException;
@@ -82,5 +84,11 @@ public class RealPattern extends Pattern
 	public Type getPossibleType()
 	{
 		return new RealType(location);
+	}
+
+	@Override
+	public Expression getMatchingExpression()
+	{
+		return new RealLiteralExpression(value);
 	}
 }

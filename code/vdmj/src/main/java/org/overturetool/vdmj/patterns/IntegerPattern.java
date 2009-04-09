@@ -24,6 +24,8 @@
 package org.overturetool.vdmj.patterns;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.expressions.IntegerLiteralExpression;
 import org.overturetool.vdmj.lex.LexIntegerToken;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.PatternMatchException;
@@ -82,5 +84,11 @@ public class IntegerPattern extends Pattern
 	public Type getPossibleType()
 	{
 		return new IntegerType(location);
+	}
+
+	@Override
+	public Expression getMatchingExpression()
+	{
+		return new IntegerLiteralExpression(value);
 	}
 }

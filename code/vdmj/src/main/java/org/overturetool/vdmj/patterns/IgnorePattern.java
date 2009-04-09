@@ -24,7 +24,10 @@
 package org.overturetool.vdmj.patterns;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.expressions.VariableExpression;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Type;
@@ -49,9 +52,10 @@ public class IgnorePattern extends Pattern
 	}
 
 	@Override
-	public String getMatchingValue()
+	public Expression getMatchingExpression()
 	{
-		return "any" + var++;
+		LexNameToken any = new LexNameToken("", "any" + var++, location);
+		return new VariableExpression(any);
 	}
 
 	@Override

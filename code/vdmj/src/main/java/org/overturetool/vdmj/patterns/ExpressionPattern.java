@@ -93,4 +93,10 @@ public class ExpressionPattern extends Pattern
 	{
 		return new UnknownType(location);
 	}
+
+	@Override
+	public Expression getMatchingExpression()
+	{
+		return exp;
+	}
 }

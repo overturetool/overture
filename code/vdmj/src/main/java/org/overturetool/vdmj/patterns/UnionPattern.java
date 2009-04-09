@@ -27,8 +27,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.expressions.SetUnionExpression;
+import org.overturetool.vdmj.lex.LexKeywordToken;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
+import org.overturetool.vdmj.lex.LexToken;
+import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.PatternMatchException;
 import org.overturetool.vdmj.runtime.ValueException;
@@ -90,9 +95,11 @@ public class UnionPattern extends Pattern
 	}
 
 	@Override
-	public String getMatchingValue()
+	public Expression getMatchingExpression()
 	{
-		return left.getMatchingValue() + " union " + right.getMatchingValue();
+		LexToken op = new LexKeywordToken(Token.UNION, location);
+		return new SetUnionExpression(
+			left.getMatchingExpression(), op, right.getMatchingExpression());
 	}
 
 	@Override

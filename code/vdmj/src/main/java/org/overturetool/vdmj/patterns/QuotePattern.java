@@ -24,6 +24,8 @@
 package org.overturetool.vdmj.patterns;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.expressions.QuoteLiteralExpression;
 import org.overturetool.vdmj.lex.LexQuoteToken;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.PatternMatchException;
@@ -82,5 +84,11 @@ public class QuotePattern extends Pattern
 	public Type getPossibleType()
 	{
 		return new QuoteType(value);
+	}
+
+	@Override
+	public Expression getMatchingExpression()
+	{
+		return new QuoteLiteralExpression(value);
 	}
 }

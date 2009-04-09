@@ -31,6 +31,7 @@ import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
+import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.patterns.IdentifierPattern;
 import org.overturetool.vdmj.patterns.IgnorePattern;
 import org.overturetool.vdmj.patterns.Pattern;
@@ -110,7 +111,7 @@ public class ParameterPatternObligation extends ProofObligation
 					argnames.append(fprefix);
 					argnames.append(aname);
 
-					String pmatch = p.getMatchingValue();
+					Expression pmatch = p.getMatchingExpression();
 					exists.append(eprefix);
 					exists.append("(exists ");
 					exists.append(pmatch);
