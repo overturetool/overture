@@ -90,6 +90,12 @@ public class ConcatenationPattern extends Pattern
 	}
 
 	@Override
+	public String getMatchingValue()
+	{
+		return left.getMatchingValue() + " ^ " + right.getMatchingValue();
+	}
+
+	@Override
 	public DefinitionList getDefinitions(Type type, NameScope scope)
 	{
 		DefinitionList list = left.getDefinitions(type, scope);

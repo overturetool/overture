@@ -25,8 +25,11 @@ package org.overturetool.vdmj.pog;
 
 import java.util.Iterator;
 
+import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
+import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
+import org.overturetool.vdmj.expressions.ApplyExpression;
 import org.overturetool.vdmj.expressions.BooleanLiteralExpression;
 import org.overturetool.vdmj.expressions.CharLiteralExpression;
 import org.overturetool.vdmj.expressions.Expression;
@@ -35,10 +38,12 @@ import org.overturetool.vdmj.expressions.IntegerLiteralExpression;
 import org.overturetool.vdmj.expressions.MapEnumExpression;
 import org.overturetool.vdmj.expressions.MapletExpression;
 import org.overturetool.vdmj.expressions.MkTypeExpression;
+import org.overturetool.vdmj.expressions.NotYetSpecifiedExpression;
 import org.overturetool.vdmj.expressions.RealLiteralExpression;
 import org.overturetool.vdmj.expressions.SeqEnumExpression;
 import org.overturetool.vdmj.expressions.SetEnumExpression;
 import org.overturetool.vdmj.expressions.SetRangeExpression;
+import org.overturetool.vdmj.expressions.SubclassResponsibilityExpression;
 import org.overturetool.vdmj.expressions.SubseqExpression;
 import org.overturetool.vdmj.expressions.TupleExpression;
 import org.overturetool.vdmj.expressions.VariableExpression;
@@ -60,6 +65,7 @@ import org.overturetool.vdmj.types.NaturalOneType;
 import org.overturetool.vdmj.types.NaturalType;
 import org.overturetool.vdmj.types.NumericType;
 import org.overturetool.vdmj.types.OptionalType;
+import org.overturetool.vdmj.types.PatternListTypePair;
 import org.overturetool.vdmj.types.ProductType;
 import org.overturetool.vdmj.types.RecordType;
 import org.overturetool.vdmj.types.Seq1Type;
@@ -77,6 +83,79 @@ public class SubTypeObligation extends ProofObligation
 		super(exp.location, POType.SUB_TYPE, ctxt);
 		value = ctxt.getObligation(oneType(false, exp, etype, atype));
 		return;
+	}
+
+	public SubTypeObligation(
+		ExplicitFunctionDefinition func, Type etype, Type atype, POContextStack ctxt)
+	{
+		super(func.location, POType.SUB_TYPE, ctxt);
+
+		Expression body = null;
+
+		if (func.body instanceof NotYetSpecifiedExpression ||
+			func.body instanceof SubclassResponsibilityExpression)
+		{
+			// We have to say "f(a)" because we have no body
+
+			Expression root = new VariableExpression(func.name);
+			ExpressionList args = new ExpressionList();
+
+			for (Pattern p: func.paramPatternList.get(0))
+			{
+				for (LexNameToken n: p.getVariableNames())
+				{
+					// TODO This should generate expressions from the pattern
+					// like getMatchingValue but returning an Expression.
+					args.add(new VariableExpression(n));
+				}
+			}
+
+			body = new ApplyExpression(root, args);
+		}
+		else
+		{
+			body = func.body;
+		}
+
+		value = ctxt.getObligation(oneType(false, body, etype, atype));
+	}
+
+	public SubTypeObligation(
+		ImplicitFunctionDefinition func, Type etype, Type atype, POContextStack ctxt)
+	{
+		super(func.location, POType.SUB_TYPE, ctxt);
+
+		Expression body = null;
+
+		if (func.body instanceof NotYetSpecifiedExpression ||
+			func.body instanceof SubclassResponsibilityExpression)
+		{
+			// We have to say "f(a)" because we have no body
+
+			Expression root = new VariableExpression(func.name);
+			ExpressionList args = new ExpressionList();
+
+			for (PatternListTypePair pltp: func.parameterPatterns)
+			{
+				for (Pattern p: pltp.patterns)
+				{
+					for (LexNameToken n: p.getVariableNames())
+					{
+						// TODO This should generate expressions from the pattern
+						// like getMatchingValue but returning an Expression.
+						args.add(new VariableExpression(n));
+					}
+				}
+			}
+
+			body = new ApplyExpression(root, args);
+		}
+		else
+		{
+			body = func.body;
+		}
+
+		value = ctxt.getObligation(oneType(false, body, etype, atype));
 	}
 
 	public SubTypeObligation(

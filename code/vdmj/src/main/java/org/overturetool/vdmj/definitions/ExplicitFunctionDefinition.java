@@ -88,7 +88,7 @@ public class ExplicitFunctionDefinition extends Definition
 
 	private Type expectedResult = null;
 	private Type actualResult = null;
-	private boolean isAbstract = false;
+	public boolean isUndefined = false;
 	public boolean recursive = false;
 	public int measureLexical = 0;
 
@@ -183,7 +183,11 @@ public class ExplicitFunctionDefinition extends Definition
 			if (body instanceof SubclassResponsibilityExpression)
 			{
 				classDefinition.isAbstract = true;
-				isAbstract = true;
+				isUndefined = true;
+			}
+			else if (body instanceof NotYetSpecifiedExpression)
+			{
+				isUndefined = true;
 			}
 		}
 
@@ -608,29 +612,27 @@ public class ExplicitFunctionDefinition extends Definition
 			ctxt.pop();
 		}
 
-		if (!isAbstract)
+		if (postcondition != null)
 		{
-    		if (postcondition != null)
-    		{
-    			ctxt.push(new POFunctionDefinitionContext(this, false));
-    			obligations.add(new FuncPostConditionObligation(this, ctxt));
-    			ctxt.push(new POFunctionResultContext(this));
-    			obligations.addAll(postcondition.getProofObligations(ctxt));
-    			ctxt.pop();
-    			ctxt.pop();
-    		}
-
-    		ctxt.push(new POFunctionDefinitionContext(this, true));
-    		obligations.addAll(body.getProofObligations(ctxt));
-
-    		if (!TypeComparator.isSubType(actualResult, expectedResult))
-    		{
-    			obligations.add(
-    				new SubTypeObligation(body, expectedResult, actualResult, ctxt));
-    		}
-
-    		ctxt.pop();
+			ctxt.push(new POFunctionDefinitionContext(this, false));
+			obligations.add(new FuncPostConditionObligation(this, ctxt));
+			ctxt.push(new POFunctionResultContext(this));
+			obligations.addAll(postcondition.getProofObligations(ctxt));
+			ctxt.pop();
+			ctxt.pop();
 		}
+
+		ctxt.push(new POFunctionDefinitionContext(this, true));
+		obligations.addAll(body.getProofObligations(ctxt));
+
+		if (isUndefined ||
+			!TypeComparator.isSubType(actualResult, expectedResult))
+		{
+			obligations.add(
+				new SubTypeObligation(this, expectedResult, actualResult, ctxt));
+		}
+
+		ctxt.pop();
 
 		return obligations;
 	}

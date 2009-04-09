@@ -90,6 +90,12 @@ public class UnionPattern extends Pattern
 	}
 
 	@Override
+	public String getMatchingValue()
+	{
+		return left.getMatchingValue() + " union " + right.getMatchingValue();
+	}
+
+	@Override
 	public int getLength()
 	{
 		return left.getLength() + right.getLength();

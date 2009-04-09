@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.expressions.NotYetSpecifiedExpression;
 import org.overturetool.vdmj.expressions.SubclassResponsibilityExpression;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexNameList;
@@ -84,7 +85,7 @@ public class ImplicitFunctionDefinition extends Definition
 	public ExplicitFunctionDefinition postdef;
 
 	public boolean recursive = false;
-	private boolean isAbstract = false;
+	public boolean isUndefined = false;
 	public int measureLexical = 0;
 	private Type actualResult;
 
@@ -170,7 +171,11 @@ public class ImplicitFunctionDefinition extends Definition
 			if (body instanceof SubclassResponsibilityExpression)
 			{
 				classDefinition.isAbstract = true;
-				isAbstract = true;
+				isUndefined = true;
+			}
+			else if (body instanceof NotYetSpecifiedExpression)
+			{
+				isUndefined = true;
 			}
 		}
 
@@ -497,45 +502,43 @@ public class ImplicitFunctionDefinition extends Definition
 			obligations.addAll(precondition.getProofObligations(ctxt));
 		}
 
-		if (!isAbstract)
+		if (postcondition != null)
 		{
-    		if (postcondition != null)
-    		{
-    			if (body != null)	// else satisfiability, below
-    			{
-    				ctxt.push(new POFunctionDefinitionContext(this, false));
-    				obligations.add(new FuncPostConditionObligation(this, ctxt));
-    				ctxt.pop();
-    			}
+			if (body != null)	// else satisfiability, below
+			{
+				ctxt.push(new POFunctionDefinitionContext(this, false));
+				obligations.add(new FuncPostConditionObligation(this, ctxt));
+				ctxt.pop();
+			}
 
-    			ctxt.push(new POFunctionResultContext(this));
-    			obligations.addAll(postcondition.getProofObligations(ctxt));
-    			ctxt.pop();
-    		}
-
-    		ctxt.push(new POFunctionDefinitionContext(this, false));
-
-    		if (body == null)
-    		{
-    			if (postcondition != null)
-    			{
-    				obligations.add(
-    					new SatisfiabilityObligation(this, ctxt));
-    			}
-    		}
-    		else
-    		{
-        		obligations.addAll(body.getProofObligations(ctxt));
-
-    			if (!TypeComparator.isSubType(actualResult, type.result))
-    			{
-    				obligations.add(new SubTypeObligation(
-    					body, type.result, actualResult, ctxt));
-    			}
-    		}
-
-    		ctxt.pop();
+			ctxt.push(new POFunctionResultContext(this));
+			obligations.addAll(postcondition.getProofObligations(ctxt));
+			ctxt.pop();
 		}
+
+		ctxt.push(new POFunctionDefinitionContext(this, false));
+
+		if (body == null)
+		{
+			if (postcondition != null)
+			{
+				obligations.add(
+					new SatisfiabilityObligation(this, ctxt));
+			}
+		}
+		else
+		{
+    		obligations.addAll(body.getProofObligations(ctxt));
+
+			if (isUndefined ||
+				!TypeComparator.isSubType(actualResult, type.result))
+			{
+				obligations.add(new SubTypeObligation(
+					this, type.result, actualResult, ctxt));
+			}
+		}
+
+		ctxt.pop();
 
 		return obligations;
 	}

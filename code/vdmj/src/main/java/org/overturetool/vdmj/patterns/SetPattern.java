@@ -86,6 +86,12 @@ public class SetPattern extends Pattern
 	}
 
 	@Override
+	public String getMatchingValue()
+	{
+		return "{" + plist.getMatchingValues() + "}";
+	}
+
+	@Override
 	public int getLength()
 	{
 		return plist.size();

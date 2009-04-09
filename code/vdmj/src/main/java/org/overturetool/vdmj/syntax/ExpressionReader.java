@@ -907,8 +907,8 @@ public class ExpressionReader extends Reader
 				{
 					case NOT:
 						nextToken();
-						checkFor(Token.YET, 2125, "Expecting 'is not yet specified");
-						checkFor(Token.SPECIFIED, 2126, "Expecting 'is not yet specified");
+						checkFor(Token.YET, 2125, "Expecting 'is not yet specified'");
+						checkFor(Token.SPECIFIED, 2126, "Expecting 'is not yet specified'");
 						return new NotYetSpecifiedExpression(token.location);
 
 					case SUBCLASS:

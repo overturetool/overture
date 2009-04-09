@@ -23,13 +23,11 @@
 
 package org.overturetool.vdmj.pog;
 
-import java.util.List;
-
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
 import org.overturetool.vdmj.expressions.NotYetSpecifiedExpression;
+import org.overturetool.vdmj.expressions.SubclassResponsibilityExpression;
 import org.overturetool.vdmj.patterns.PatternList;
-import org.overturetool.vdmj.util.Utils;
 
 public class FuncPostConditionObligation extends ProofObligation
 {
@@ -37,15 +35,26 @@ public class FuncPostConditionObligation extends ProofObligation
 		ExplicitFunctionDefinition func, POContextStack ctxt)
 	{
 		super(func.location, POType.FUNC_POST_CONDITION, ctxt);
+
+		StringBuilder params = new StringBuilder();
+
+		for (PatternList pl: func.paramPatternList)
+		{
+			params.append(pl.getMatchingValues());
+		}
+
 		String body = null;
 
-		if (func.body instanceof NotYetSpecifiedExpression)
+		if (func.body instanceof NotYetSpecifiedExpression ||
+			func.body instanceof SubclassResponsibilityExpression)
 		{
 			// We have to say "f(a)" because we have no expression yet
 
 			StringBuilder sb = new StringBuilder();
 			sb.append(func.name.name);
-			sb.append(Utils.listToString("(", func.paramPatternList, ", ", ")"));
+			sb.append("(");
+			sb.append(params);
+			sb.append(")");
 			body = sb.toString();
 		}
 		else
@@ -53,27 +62,37 @@ public class FuncPostConditionObligation extends ProofObligation
 			body = func.body.toString();
 		}
 
-		value = ctxt.getObligation(generate(
-			func.predef, func.postdef, func.paramPatternList, body));
+		value = ctxt.getObligation(generate(func.predef, func.postdef, params, body));
 	}
 
 	public FuncPostConditionObligation(
 		ImplicitFunctionDefinition func, POContextStack ctxt)
 	{
 		super(func.location, POType.FUNC_POST_CONDITION, ctxt);
+
+		StringBuilder params = new StringBuilder();
+
+		for (PatternList pl: func.getParamPatternList())
+		{
+			params.append(pl.getMatchingValues());
+		}
+
 		String body = null;
 
 		if (func.body == null)
 		{
 			body = func.result.pattern.toString();
 		}
-		else if (func.body instanceof NotYetSpecifiedExpression)
+		else if (func.body instanceof NotYetSpecifiedExpression ||
+				 func.body instanceof SubclassResponsibilityExpression)
 		{
 			// We have to say "f(a)" because we have no expression yet
 
 			StringBuilder sb = new StringBuilder();
 			sb.append(func.name.name);
-			sb.append(Utils.listToString("(", func.getParamPatternList(), ", ", ")"));
+			sb.append("(");
+			sb.append(params);
+			sb.append(")");
 			body = sb.toString();
 		}
 		else
@@ -81,26 +100,27 @@ public class FuncPostConditionObligation extends ProofObligation
 			body = func.body.toString();
 		}
 
-		value = ctxt.getObligation(generate(
-			func.predef, func.postdef,	func.getParamPatternList(), body));
+		value = ctxt.getObligation(generate(func.predef, func.postdef, params, body));
 	}
 
 	private String generate(
 		ExplicitFunctionDefinition predef,
 		ExplicitFunctionDefinition postdef,
-		List<PatternList> params, String body)
+		StringBuilder params, String body)
 	{
 		StringBuilder sb = new StringBuilder();
 
 		if (predef != null)
 		{
 			sb.append(predef.name.name);
-			sb.append(Utils.listToString("(", params, ", ", ")"));
-			sb.append(" => ");
+			sb.append("(");
+			sb.append(params);
+			sb.append(") => ");
 		}
 
 		sb.append(postdef.name.name);
-		sb.append(Utils.listToString("(", params, ", ", ""));
+		sb.append("(");
+		sb.append(params);
 		sb.append(", ");
 		sb.append(body);
 		sb.append(")");
