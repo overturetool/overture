@@ -147,7 +147,7 @@ public class SatisfiabilityObligation extends ProofObligation
 		for (PatternListTypePair pltp: params)
 		{
 			sb.append(sep);
-			sb.append(pltp.patterns.getMatchingExpression());
+			sb.append(pltp.patterns.getMatchingExpressionList());
 			sep = ", ";
 		}
 	}

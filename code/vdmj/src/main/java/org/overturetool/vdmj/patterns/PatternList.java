@@ -98,7 +98,7 @@ public class PatternList extends Vector<Pattern>
 		}
 	}
 
-	public ExpressionList getMatchingExpression()
+	public ExpressionList getMatchingExpressionList()
 	{
 		ExpressionList list = new ExpressionList();
 

@@ -40,7 +40,7 @@ public class FuncPostConditionObligation extends ProofObligation
 
 		for (PatternList pl: func.paramPatternList)
 		{
-			params.append(pl.getMatchingExpression());
+			params.append(pl.getMatchingExpressionList());
 		}
 
 		String body = null;
@@ -52,7 +52,9 @@ public class FuncPostConditionObligation extends ProofObligation
 
 			StringBuilder sb = new StringBuilder();
 			sb.append(func.name.name);
+			sb.append("(");
 			sb.append(params);
+			sb.append(")");
 			body = sb.toString();
 		}
 		else
@@ -72,7 +74,7 @@ public class FuncPostConditionObligation extends ProofObligation
 
 		for (PatternList pl: func.getParamPatternList())
 		{
-			params.append(pl.getMatchingExpression());
+			params.append(pl.getMatchingExpressionList());
 		}
 
 		String body = null;
@@ -88,7 +90,9 @@ public class FuncPostConditionObligation extends ProofObligation
 
 			StringBuilder sb = new StringBuilder();
 			sb.append(func.name.name);
+			sb.append("(");
 			sb.append(params);
+			sb.append(")");
 			body = sb.toString();
 		}
 		else
@@ -109,8 +113,9 @@ public class FuncPostConditionObligation extends ProofObligation
 		if (predef != null)
 		{
 			sb.append(predef.name.name);
+			sb.append("(");
 			sb.append(params);
-			sb.append(" => ");
+			sb.append(") => ");
 		}
 
 		sb.append(postdef.name.name);

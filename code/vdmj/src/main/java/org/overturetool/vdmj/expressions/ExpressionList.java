@@ -36,7 +36,7 @@ public class ExpressionList extends Vector<Expression>
 	@Override
 	public String toString()
 	{
-		return "(" + Utils.listToString(this) + ")";
+		return Utils.listToString(this);
 	}
 
 	public ProofObligationList getProofObligations(POContextStack ctxt)

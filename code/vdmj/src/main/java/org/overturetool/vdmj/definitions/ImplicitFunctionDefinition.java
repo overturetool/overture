@@ -171,12 +171,13 @@ public class ImplicitFunctionDefinition extends Definition
 			if (body instanceof SubclassResponsibilityExpression)
 			{
 				classDefinition.isAbstract = true;
-				isUndefined = true;
 			}
-			else if (body instanceof NotYetSpecifiedExpression)
-			{
-				isUndefined = true;
-			}
+		}
+
+		if (body instanceof SubclassResponsibilityExpression ||
+			body instanceof NotYetSpecifiedExpression)
+		{
+			isUndefined = true;
 		}
 
 		if (precondition != null)
