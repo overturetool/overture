@@ -5,7 +5,6 @@ package org.overturetool.potrans.preparation;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
@@ -119,7 +118,6 @@ public class CommandLineProcessTest extends TestCase {
 		CommandLineProcessCommand command = new CommandLineProcessCommand(
 				"echo", new String[] { waitCommand });
 		CommandLineProcess cmdLineProcess = new CommandLineProcess(command);
-
 		cmdLineProcess.executeProcess();
 
 		try {
@@ -223,7 +221,6 @@ public class CommandLineProcessTest extends TestCase {
 				vppdeExecutable);
 		CommandLineProcess cmdLineProcess = new CommandLineProcess(command);
 		cmdLineProcess.executeProcess();
-
 		cmdLineProcess.setProcessInput(new CommandLineProcessStringInput("quit" + newLine));
 		cmdLineProcess.waitFor();
 

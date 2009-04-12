@@ -11,7 +11,7 @@ import java.io.IOException;
  */
 public class CommandLineProcessStringInput implements CommandLineProcessInput {
 
-	private final String input;
+	protected final String input;
 	
 	public CommandLineProcessStringInput(String input) {
 		this.input = input;

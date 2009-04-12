@@ -6,11 +6,11 @@ package org.overturetool.potrans.preparation;
  */
 public class CommandLineProcessCommand {
 
-	private String commandName = null;
-	private String[] arguments = new String[] {};
+	protected String name = null;
+	protected String[] arguments = new String[] {};
 	
-	public CommandLineProcessCommand(String commandName, String[] arguments) {
-		this.commandName = commandName;
+	public CommandLineProcessCommand(String name, String[] arguments) {
+		this.name = name;
 		if(arguments != null)
 			this.arguments = arguments;
 	}
@@ -23,7 +23,7 @@ public class CommandLineProcessCommand {
 	public String[] getCommandArray() {
 		String[] commandArray = new String[arguments.length + 1];
 		
-		commandArray[0] = commandName;
+		commandArray[0] = name;
 		for(int i = 0; i < arguments.length; i++) 
 			commandArray[i + 1] = new String(arguments[i]);
 		
