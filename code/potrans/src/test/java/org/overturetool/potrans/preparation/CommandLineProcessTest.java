@@ -224,7 +224,7 @@ public class CommandLineProcessTest extends TestCase {
 		CommandLineProcess cmdLineProcess = new CommandLineProcess(command);
 		cmdLineProcess.executeProcess();
 
-		cmdLineProcess.setProcessInput("quit" + newLine);
+		cmdLineProcess.setProcessInput(new CommandLineProcessStringInput("quit" + newLine));
 		cmdLineProcess.waitFor();
 
 		assertEquals(settingsWarning, 0, cmdLineProcess.getExitValue());
@@ -256,8 +256,8 @@ public class CommandLineProcessTest extends TestCase {
 				vppdeExecutable);
 		CommandLineProcess cmdLineProcess = new CommandLineProcess(command);
 		cmdLineProcess.executeProcess();
-		cmdLineProcess.setProcessInput("help" + newLine);
-		cmdLineProcess.setProcessInput("quit" + newLine);
+		cmdLineProcess.setProcessInput(new CommandLineProcessStringInput("help" + newLine));
+		cmdLineProcess.setProcessInput(new CommandLineProcessStringInput("quit" + newLine));
 		cmdLineProcess.waitFor();
 
 		assertEquals(settingsWarning, 0, cmdLineProcess.getExitValue());

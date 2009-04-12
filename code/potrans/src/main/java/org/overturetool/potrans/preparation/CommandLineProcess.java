@@ -66,15 +66,13 @@ public class CommandLineProcess {
 		return getProcessOutputFromStream(process.getInputStream());
 	}
 
-	public void setProcessInput(String input) throws IOException {
-		OutputStream outputStream = process.getOutputStream();
-		outputStream.write(input.getBytes());
-		outputStream.flush();
+	public void setProcessInput(CommandLineProcessInput input) throws IOException {
+		pipeInputToProcess(input);
 	}
 	
 	public void setProcessInput(List<CommandLineProcessInput> inputs) throws IOException {
-		OutputStream outputStream = process.getOutputStream();
-		loopThroughInputs(inputs, outputStream);
+		loopThroughInputs(inputs);
+		process.getOutputStream().flush();
 	}
 
 	/**
@@ -82,10 +80,9 @@ public class CommandLineProcess {
 	 * @param outputStream
 	 * @throws IOException
 	 */
-	private void loopThroughInputs(List<CommandLineProcessInput> inputs,
-			OutputStream outputStream) throws IOException {
+	private void loopThroughInputs(List<CommandLineProcessInput> inputs) throws IOException {
 		for(CommandLineProcessInput input : inputs)
-			pipeInputToProcess(outputStream, input);
+			pipeInputToProcess(input);
 	}
 
 	/**
@@ -93,14 +90,11 @@ public class CommandLineProcess {
 	 * @param input
 	 * @throws IOException
 	 */
-	private void pipeInputToProcess(OutputStream outputStream,
-			CommandLineProcessInput input) throws IOException {
+	private void pipeInputToProcess(CommandLineProcessInput input) throws IOException {
 		if(input.isStatic())
-			pipeStaticInputToProcess(outputStream, input);
+			pipeStaticInputToProcess(input);
 		else
-			pipeDynamicInputToProcess(outputStream, input);
-		
-		outputStream.flush();
+			pipeDynamicInputToProcess(input);
 	}
 
 	/**
@@ -108,8 +102,8 @@ public class CommandLineProcess {
 	 * @param input
 	 * @throws IOException
 	 */
-	private void pipeStaticInputToProcess(OutputStream outputStream,
-			CommandLineProcessInput input) throws IOException {
+	private void pipeStaticInputToProcess(CommandLineProcessInput input) throws IOException {
+		OutputStream outputStream = process.getOutputStream();
 		outputStream.write(input.getBytes());
 		outputStream.write((int)'\r');
 	}
@@ -119,8 +113,8 @@ public class CommandLineProcess {
 	 * @param input
 	 * @throws IOException
 	 */
-	private void pipeDynamicInputToProcess(OutputStream outputStream,
-			CommandLineProcessInput input) throws IOException {
+	private void pipeDynamicInputToProcess(CommandLineProcessInput input) throws IOException {
+		OutputStream outputStream = process.getOutputStream();
 		byte[] bytes = input.getBytes();
 		while(bytes != null) {
 			outputStream.write(bytes);
