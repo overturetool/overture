@@ -3,8 +3,6 @@
  */
 package org.overturetool.potrans.preparation;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author miguel_ferreira
