@@ -18,6 +18,14 @@ public class InputValidator {
 			throw new IllegalArgumentException(message);
 		}
 	}
+	
+	public static void validateAtLeastOneString(String[] strings,
+			String message) throws IllegalArgumentException {
+		if (strings == null || strings.length == 0 || strings[0] == null
+				|| strings[0].length() == 0) {
+			throw new IllegalArgumentException(message);
+		}
+	}
 
 	public static void validateStringNotEmptyNorNull(String string,
 			String message) throws IllegalArgumentException {

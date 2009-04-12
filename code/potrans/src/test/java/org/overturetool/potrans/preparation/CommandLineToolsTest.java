@@ -26,43 +26,35 @@ public class CommandLineToolsTest extends TestCase {
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
-	
 	}
 	
 	
 	public void testExecuteProcessValidCommand() throws Exception {
 		String inputText = "This is a test";
-		List<String> command = new ArrayList<String>(1);
-		command.add("echo");
-		command.add(inputText);
-		
-		String output = CommandLineTools.executeProcess(command);
+		String output = CommandLineTools.executeProcess("echo", new String[]{inputText});
 		
 		assertEquals(inputText, output.trim());
 	}
 	
 	public void testExecuteProcessNullCmd() throws Exception {
-		List<String> cmdText = null;
-
+		String inputText = "This is a test";
 		try {
-			CommandLineTools.executeProcess(cmdText);
+			CommandLineTools.executeProcess(null, new String[]{inputText});
 		} catch(Exception e) {
-			assertEquals("Given a null command the method should throw a NullPointerException from Rintime.",
+			assertEquals("Given a null command the method should throw a NullPointerException in Runtime.",
 					NullPointerException.class, e.getClass());
 		}
 	}
 	
 	public void testExecuteProcessEmptyCmd() throws Exception {
-		List<String> command = new ArrayList<String>(1);
-		command.add("");
+		String inputText = "This is a test";
 
 		try {
-			CommandLineTools.executeProcess(command);
+			CommandLineTools.executeProcess("", new String[]{inputText});
 		} catch(Exception e) {
-			assertEquals("Given an empty command the method should throw a IllegalArgumentException from Rintime.",
+			assertEquals("Given an empty command the method should throw a IllegalArgumentException in Runtime.",
 					IllegalArgumentException.class, e.getClass());
 			assertEquals("Empty command", e.getMessage().trim());
 		}
 	}
-
 }

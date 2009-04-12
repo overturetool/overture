@@ -1,6 +1,8 @@
 package org.overturetool.potrans.preparation;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 import java.util.List;
 
 /**
@@ -15,20 +17,81 @@ import java.util.List;
  *
  */
 public class CommandLineTools {
-	
-	public static String executeProcess(List<String> command) {
-		StringBuffer result = new StringBuffer();
+
+	public static String executeProcess(String command, String[] arguments) {
+		CommandLineProcessOutput processOutput = new CommandLineProcessOutput();
 		
 		try {
-			CommandLineProcess consoleProcess = new CommandLineProcess(command);
-			consoleProcess.executeProcess();
-			result.append(consoleProcess.getProcessOutput());
-		} catch (IOException e) {
-			result.append(e.getStackTrace());
-		} catch (InterruptedException e) {
-			result.append(e.getStackTrace());
+			processOutput.appendOutput(executeBatchProcess(command, arguments));
+		} catch (Exception e) {
+			processOutput.appendErrorTrace(e);
 		}
 		
-		return result.toString();
+		return processOutput.getOutput();
+	}
+
+	/**
+	 * @param result
+	 * @param e
+	 */
+	private static void appendErrorMessage(StringBuffer result, Exception e) {
+		result.append(e.getStackTrace());
+	}
+
+	/**
+	 * @param command
+	 * @param arguments
+	 * @param result
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	private static String executeBatchProcess(String command,
+			String[] arguments) throws IOException,
+			InterruptedException {
+		CommandLineProcess cmdLineProcess = new CommandLineProcess(
+				new CommandLineProcessCommand(command, arguments));
+		cmdLineProcess.executeProcessAndWaitForItToFinish();
+		return cmdLineProcess.getProcessOutput();
+	}
+	
+	public static String executeProcess(String commandName, String[] arguments, List<CommandLineProcessInput> inputs) {
+		CommandLineProcessOutput processOutput = new CommandLineProcessOutput();
+		CommandLineProcess cmdLineProcess = null;
+		
+		try {
+			cmdLineProcess = executeInteractiveProcess(commandName, arguments,
+					inputs);
+			processOutput.appendOutput(cmdLineProcess.getProcessOutput());
+		} catch (Exception e) {
+			processOutput.appendErrorTrace(e);
+		} finally {
+			cmdLineProcess.destroy();
+		}
+		
+		return processOutput.getOutput();
+	}
+
+	/**
+	 * @param commandName
+	 * @param arguments
+	 * @param inputs
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	private static CommandLineProcess executeInteractiveProcess(
+			String commandName, String[] arguments,
+			List<CommandLineProcessInput> inputs) throws IOException,
+			InterruptedException {
+		CommandLineProcess cmdLineProcess;
+		cmdLineProcess = new CommandLineProcess(new CommandLineProcessCommand(commandName, arguments));
+		cmdLineProcess.executeProcess();
+		cmdLineProcess.setProcessInput(inputs);
+		cmdLineProcess.waitFor();
+		return cmdLineProcess;
+	}
+	
+	public static String executeProcess(String commandName, List<CommandLineProcessInput> inputs) {
+		return executeProcess(commandName, null, inputs);
 	}
 }

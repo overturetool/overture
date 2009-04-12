@@ -19,45 +19,27 @@ public class VdmToolsWrapper {
 	public static String generatePogFile(String vppdeExecutable,
 			String[] vdmFiles) throws IllegalArgumentException {
 		validateGeneratePogFileArguments(vppdeExecutable, vdmFiles);
-		List<String> command = buildPogComand(vppdeExecutable, vdmFiles);
-		return CommandLineTools.executeProcess(command);
+		String[] arguments = buildFlaggedPogComamndArguments(vdmFiles);
+		return CommandLineTools.executeProcess(vppdeExecutable, arguments);
 	}
 
+
+
 	/**
-	 * @param vppdeExecutable
 	 * @param vdmFiles
-	 * @param commandSize
 	 * @return
 	 */
-	private static List<String> buildPogComand(String vppdeExecutable,
-			String[] vdmFiles) {
-		return buildFlggedCommand(vppdeExecutable, VDMTOOLS_POG_FLAG, vdmFiles);
+	private static String[] buildFlaggedPogComamndArguments(String[] vdmFiles) {
+		String[] arguments = new String[vdmFiles.length + 1];
+		arguments[0] = VDMTOOLS_POG_FLAG;
+		for(int i = 0; i < vdmFiles.length; i++)
+			arguments[i + 1] = vdmFiles[i];
+		return arguments;
 	}
 
-	/**
-	 * @param vppdeExecutable
-	 * @param vdmFiles
-	 * @param command
-	 */
-	private static List<String> buildFlggedCommand(String vppdeExecutable,
-			String flag, String[] vdmFiles) {
-		ArrayList<String> command = new ArrayList<String>(vdmFiles.length + 2);
-		command.add(vppdeExecutable);
-		command.add(flag);
-		addFilesToListAtOffset(vdmFiles, command, 2);
 
-		return command;
-	}
 
-	/**
-	 * @param vdmFiles
-	 * @param command
-	 */
-	private static void addFilesToListAtOffset(String[] vdmFiles,
-			ArrayList<String> command, int offset) {
-		for (int i = 0; i < vdmFiles.length; i++)
-			command.add(i + offset, vdmFiles[i]);
-	}
+
 
 	/**
 	 * @param vppdeExecutable

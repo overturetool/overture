@@ -20,13 +20,22 @@ import junit.framework.TestCase;
 public class VdmToolsWrapperTest extends TestCase {
 
 	private final static String newLine = System.getProperty("line.separator");
-	private static String settingsWarning = 
+
+	private final static String VPPDE_JVM_PROERTY = "-DvppdeExecutable=<path to executable>";
+	
+	private final static String VPPDE_PROPERTY_ERROR_MESSAGE = 
+		"You have to set the flag " + VPPDE_JVM_PROERTY + " for the JVM in"
+			+ " the JUnit launch configuration.";
+
+	private final static String settingsWarning = 
 		"If this test fails check that you have the correct vaules set in Settings.xml, " +
 		"namelly for the test VPP models. Also check that you set the property " +
-		"\"-DvppdeExecutable=</path/to/vdmtools/bin/>vppde\" in the JVM arguments.";
-	private static String pogExtension = ".pog";
+		"\"" + VPPDE_JVM_PROERTY + "\" in the JVM arguments.";
 	
-	private static String vppdeExecutable = null;
+	private final static String pogExtension = ".pog";
+	
+	private final static String vppdeExecutable = System.getProperty("vppdeExecutable");
+	
 	private static String testModel1 = null;
 	private static String testModel2 = null;
 	
@@ -37,12 +46,8 @@ public class VdmToolsWrapperTest extends TestCase {
 		super.setUp();
 		
 		setUpPreferences();
-		
-		vppdeExecutable = System.getProperty("vppdeExecutable");
-		if(vppdeExecutable == null || vppdeExecutable.length() == 0) {
-			throw new Exception("You have to set the flag -DvppdeExecutable=<path to executable> for the JVM in" +
-					" the JUnit launch configuration.");
-		}
+		InputValidator.validateStringNotEmptyNorNull(vppdeExecutable,
+				VPPDE_PROPERTY_ERROR_MESSAGE);
 		
 		// remove previously generated files
 		removePreviousTestsData();
@@ -68,7 +73,7 @@ public class VdmToolsWrapperTest extends TestCase {
 		testModel1 = preferences.get("testModel1", null);
 		testModel2 = preferences.get("testModel2", null);
 	}
-
+	
 	/**
 	 * 
 	 */
