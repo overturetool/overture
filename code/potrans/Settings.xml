@@ -11,7 +11,7 @@
 					<map>
 					   <entry key="setModel" value="testinput/set.vpp"/>
 					</map>
-					<node name="preparation">
+					<node name="external_tools">
 						<map>
 							<entry key="testModel1" value="testinput/sorter.vpp"/>
 							<entry key="testModel2" value="testinput/dosort.vpp"/>
