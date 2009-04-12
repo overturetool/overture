@@ -68,6 +68,7 @@ public class CommandLineProcess {
 
 	public void setProcessInput(CommandLineProcessInput input) throws IOException {
 		pipeInputToProcess(input);
+		process.getOutputStream().flush();
 	}
 	
 	public void setProcessInput(List<CommandLineProcessInput> inputs) throws IOException {
@@ -105,7 +106,6 @@ public class CommandLineProcess {
 	private void pipeStaticInputToProcess(CommandLineProcessInput input) throws IOException {
 		OutputStream outputStream = process.getOutputStream();
 		outputStream.write(input.getBytes());
-		outputStream.write((int)'\r');
 	}
 
 	/**
