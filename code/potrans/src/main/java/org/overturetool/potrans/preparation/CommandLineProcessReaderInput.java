@@ -12,10 +12,11 @@ import java.io.Reader;
  */
 public class CommandLineProcessReaderInput implements CommandLineProcessInput {
 
-	private BufferedReader buffer = null;
+	protected BufferedReader buffer = null;
 	
 	public CommandLineProcessReaderInput(Reader input) {
-		buffer = new BufferedReader(input);
+		if(input != null)
+			buffer = new BufferedReader(input);
 	}
 	
 	/**
@@ -37,6 +38,6 @@ public class CommandLineProcessReaderInput implements CommandLineProcessInput {
 	}
 
 	public String getText() throws IOException {
-		return buffer.readLine();
+		return (buffer != null) ? buffer.readLine() : null;
 	}
 }
