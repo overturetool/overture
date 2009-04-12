@@ -1,8 +1,5 @@
 package org.overturetool.potrans.preparation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import junit.framework.TestCase;
 
 /**
@@ -40,9 +37,8 @@ public class CommandLineToolsTest extends TestCase {
 		String inputText = "This is a test";
 		try {
 			CommandLineTools.executeProcess(null, new String[]{inputText});
-		} catch(Exception e) {
-			assertEquals("Given a null command the method should throw a NullPointerException in Runtime.",
-					NullPointerException.class, e.getClass());
+		} catch(CommandLineException e) {
+			assertNull(e.getCommand());
 		}
 	}
 	
@@ -51,10 +47,8 @@ public class CommandLineToolsTest extends TestCase {
 
 		try {
 			CommandLineTools.executeProcess("", new String[]{inputText});
-		} catch(Exception e) {
-			assertEquals("Given an empty command the method should throw a IllegalArgumentException in Runtime.",
-					IllegalArgumentException.class, e.getClass());
-			assertEquals("Empty command", e.getMessage().trim());
+		} catch(CommandLineException e) {
+			assertEquals("", e.getCommand());
 		}
 	}
 }

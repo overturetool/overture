@@ -145,7 +145,7 @@ public class VdmToolsWrapperTest extends TestCase {
 		try {
 			VdmToolsWrapper.generatePogFile(vppdeExecutable, vdmFiles);
 		} catch(Exception e) {
-			assertEquals(settingsWarning, IllegalArgumentException.class, e.getClass());
+			assertEquals(settingsWarning, InputException.class, e.getClass());
 		}
 	}
 	
@@ -155,7 +155,7 @@ public class VdmToolsWrapperTest extends TestCase {
 		try {
 			VdmToolsWrapper.generatePogFile(vppdeExecutable, vdmFiles);
 		} catch(Exception e) {
-			assertEquals(settingsWarning, IllegalArgumentException.class, e.getClass());
+			assertEquals(settingsWarning, InputException.class, e.getClass());
 		}
 	}
 	
@@ -166,7 +166,7 @@ public class VdmToolsWrapperTest extends TestCase {
 		try {
 			VdmToolsWrapper.generatePogFile(vppdeExecutable, vdmFiles);
 		} catch(Exception e) {
-			assertEquals(settingsWarning, IllegalArgumentException.class, e.getClass());
+			assertEquals(settingsWarning, InputException.class, e.getClass());
 		}
 	}
 	
@@ -177,7 +177,7 @@ public class VdmToolsWrapperTest extends TestCase {
 		try {
 			VdmToolsWrapper.generatePogFile(vppdeExecutable, vdmFiles);
 		} catch(Exception e) {
-			assertEquals(settingsWarning, IllegalArgumentException.class, e.getClass());
+			assertEquals(settingsWarning, InputException.class, e.getClass());
 		}
 	}
 	
@@ -187,7 +187,7 @@ public class VdmToolsWrapperTest extends TestCase {
 		try {
 			VdmToolsWrapper.generatePogFile(null, vdmFiles);
 		} catch(Exception e) {
-			assertEquals(settingsWarning, IllegalArgumentException.class, e.getClass());
+			assertEquals(settingsWarning, InputException.class, e.getClass());
 		}
 	}
 	
@@ -197,7 +197,7 @@ public class VdmToolsWrapperTest extends TestCase {
 		try {
 			VdmToolsWrapper.generatePogFile("", vdmFiles);
 		} catch(Exception e) {
-			assertEquals(settingsWarning, IllegalArgumentException.class, e.getClass());
+			assertEquals(settingsWarning, InputException.class, e.getClass());
 		}
 	}
 	
@@ -207,7 +207,7 @@ public class VdmToolsWrapperTest extends TestCase {
 		try {
 			VdmToolsWrapper.generatePogFile("some_inavlid_executable", vdmFiles);
 		} catch(Exception e) {
-			assertEquals(settingsWarning, IllegalArgumentException.class, e.getClass());
+			assertEquals(settingsWarning, InputException.class, e.getClass());
 		}
 	}
 

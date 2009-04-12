@@ -3,9 +3,12 @@
  */
 package org.overturetool.potrans.preparation;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Signals that an exception has occurred during the invocation of a command. 
- * @author Miguel Ferreira
+ * @author miguel_ferreira
  *
  */
 public class CommandLineException extends Exception {
@@ -16,26 +19,19 @@ public class CommandLineException extends Exception {
 	private static final long serialVersionUID = 4704674991014634560L;
 
 	/**
-	 * Creates a new CommandLineException.
+	 * time, command, message
 	 */
-	public CommandLineException() {
-		super();
-	}
-
+	private static final String messageFormat = "[%s] %s: %s";
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss,SSS");
+	
+	private final String command;
+	
 	/**
 	 * Creates a new CommandLineException.
-	 * @param message the message associated with the exception
 	 */
-	public CommandLineException(String message) {
-		super(message);
-	}
-
-	/**
-	 * Creates a new CommandLineException.
-	 * @param cause the cause for the exception
-	 */
-	public CommandLineException(Throwable cause) {
-		super(cause);
+	public CommandLineException(String command, String message) {
+		super(String.format(messageFormat, getDate(), command, message));
+		this.command = command;
 	}
 
 	/**
@@ -43,8 +39,19 @@ public class CommandLineException extends Exception {
 	 * @param message the message associated with the exception
 	 * @param cause   the cause for the exception
 	 */
-	public CommandLineException(String message, Throwable cause) {
-		super(message, cause);
+	public CommandLineException(String command, String message, Throwable cause) {
+		super(String.format(messageFormat, getDate(), command, message), cause);
+		this.command = command;
 	}
 
+	/**
+	 * @return
+	 */
+	protected static String getDate() {
+		return dateFormat.format(new Date(System.currentTimeMillis()));
+	}
+	
+	public String getCommand() {
+		return command;
+	}
 }

@@ -1,9 +1,9 @@
 package org.overturetool.potrans.preparation;
 
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
 import java.util.List;
+
 
 /**
  * CommandLinesTool is the static class responsible for invoking necessary 
@@ -18,25 +18,18 @@ import java.util.List;
  */
 public class CommandLineTools {
 
-	public static String executeProcess(String command, String[] arguments) {
+	public static String executeProcess(String command, String[] arguments) throws CommandLineException {
 		CommandLineProcessOutput processOutput = new CommandLineProcessOutput();
 		
 		try {
 			processOutput.appendOutput(executeBatchProcess(command, arguments));
 		} catch (Exception e) {
-			processOutput.appendErrorTrace(e);
+			throw new CommandLineException(command, e.getMessage(), e);
 		}
 		
 		return processOutput.getOutput();
 	}
 
-	/**
-	 * @param result
-	 * @param e
-	 */
-	private static void appendErrorMessage(StringBuffer result, Exception e) {
-		result.append(e.getStackTrace());
-	}
 
 	/**
 	 * @param command
@@ -45,7 +38,7 @@ public class CommandLineTools {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	private static String executeBatchProcess(String command,
+	protected static String executeBatchProcess(String command,
 			String[] arguments) throws IOException,
 			InterruptedException {
 		CommandLineProcess cmdLineProcess = new CommandLineProcess(
@@ -79,7 +72,7 @@ public class CommandLineTools {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	private static CommandLineProcess executeInteractiveProcess(
+	protected static CommandLineProcess executeInteractiveProcess(
 			String commandName, String[] arguments,
 			List<CommandLineProcessInput> inputs) throws IOException,
 			InterruptedException {

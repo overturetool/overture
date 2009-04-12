@@ -13,11 +13,11 @@ import java.util.List;
 public class VdmToolsWrapper {
 	
 	private static final String VDMTOOLS_POG_FLAG = "-g";
-	private static final String NO_VDM_FILES_SUPPLIED = "No VDM files supplied.";
-	private static final String NO_VDMTOOLS_EXECUTABLE_SUPPLIED = "No VDMTools executable supplied.";
+	private static final String NO_VDM_FILES_SUPPLIED = "No VDM-PP files supplied.";
+	private static final String NO_VDMTOOLS_EXECUTABLE_SUPPLIED = "No VDMTools command line executable supplied.";
 
 	public static String generatePogFile(String vppdeExecutable,
-			String[] vdmFiles) throws IllegalArgumentException {
+			String[] vdmFiles) throws InputException, CommandLineException {
 		validateGeneratePogFileArguments(vppdeExecutable, vdmFiles);
 		String[] arguments = buildFlaggedPogComamndArguments(vdmFiles);
 		return CommandLineTools.executeProcess(vppdeExecutable, arguments);
@@ -44,22 +44,22 @@ public class VdmToolsWrapper {
 	/**
 	 * @param vppdeExecutable
 	 * @param vdmFiles
-	 * @throws IllegalArgumentException
+	 * @throws InputException
 	 */
 	private static void validateGeneratePogFileArguments(
 			String vppdeExecutable, String[] vdmFiles)
-			throws IllegalArgumentException {
+			throws InputException {
 		validateVdmFilesArgument(vdmFiles);
 		validateVppdeExectuableArgument(vppdeExecutable);
 	}
 
 	/**
 	 * @param vppdeExecutable
-	 * @throws IllegalArgumentException
+	 * @throws InputException
 	 */
 	private static void validateVppdeExectuableArgument(String vppdeExecutable)
-			throws IllegalArgumentException {
-		InputValidator.validateStringNotEmptyNorNull(vppdeExecutable,
+			throws InputException {
+		InputValidator.validateStringNotEmptyNorNull(vppdeExecutable, 
 				NO_VDMTOOLS_EXECUTABLE_SUPPLIED);
 		InputValidator.validateIsFileAndExists(vppdeExecutable,
 				NO_VDMTOOLS_EXECUTABLE_SUPPLIED);
@@ -67,10 +67,10 @@ public class VdmToolsWrapper {
 
 	/**
 	 * @param vdmFiles
-	 * @throws IllegalArgumentException
+	 * @throws InputException
 	 */
 	private static void validateVdmFilesArgument(String[] vdmFiles)
-			throws IllegalArgumentException {
-		InputValidator.validateAtLeastOneFile(vdmFiles, NO_VDM_FILES_SUPPLIED);
+			throws InputException {
+		InputValidator.validateAtLeastOneString(vdmFiles, NO_VDM_FILES_SUPPLIED);
 	}
 }
