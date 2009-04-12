@@ -1,4 +1,7 @@
-package org.overturetool.potrans.preparation;
+package org.overturetool.potrans.external_tools;
+
+import org.overturetool.potrans.external_tools.CommandLineException;
+import org.overturetool.potrans.external_tools.CommandLineTools;
 
 import junit.framework.TestCase;
 

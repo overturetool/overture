@@ -1,7 +1,9 @@
 /**
  * 
  */
-package org.overturetool.potrans.preparation;
+package org.overturetool.potrans.external_tools;
+
+import org.overturetool.potrans.external_tools.CommandLineProcessStringInput;
 
 import junit.framework.TestCase;
 
@@ -26,7 +28,7 @@ public class CommandLineProcessStringInputTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.overturetool.potrans.preparation.CommandLineProcessStringInput#CommandLineProcessStringInput(java.lang.String)}.
+	 * Test method for {@link org.overturetool.potrans.external_tools.CommandLineProcessStringInput#CommandLineProcessStringInput(java.lang.String)}.
 	 */
 	public void testCommandLineProcessStringInput() {
 		String expected = "test string";
@@ -36,7 +38,7 @@ public class CommandLineProcessStringInputTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.overturetool.potrans.preparation.CommandLineProcessStringInput#getBytes()}.
+	 * Test method for {@link org.overturetool.potrans.external_tools.CommandLineProcessStringInput#getBytes()}.
 	 */
 	public void testGetBytes() {
 		String testString = "test string";
@@ -50,7 +52,7 @@ public class CommandLineProcessStringInputTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.overturetool.potrans.preparation.CommandLineProcessStringInput#isStatic()}.
+	 * Test method for {@link org.overturetool.potrans.external_tools.CommandLineProcessStringInput#isStatic()}.
 	 */
 	public void testIsStatic() {
 		String expected = "test string";
@@ -60,7 +62,7 @@ public class CommandLineProcessStringInputTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.overturetool.potrans.preparation.CommandLineProcessStringInput#getText()}.
+	 * Test method for {@link org.overturetool.potrans.external_tools.CommandLineProcessStringInput#getText()}.
 	 */
 	public void testGetText() throws Exception {
 		String expected = "test string";

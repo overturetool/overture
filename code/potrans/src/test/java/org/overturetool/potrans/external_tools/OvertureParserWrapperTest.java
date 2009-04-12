@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.overturetool.potrans.preparation;
+package org.overturetool.potrans.external_tools;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -11,6 +11,8 @@ import java.util.prefs.Preferences;
 import junit.framework.TestCase;
 
 import org.overturetool.ast.itf.IOmlDocument;
+import org.overturetool.potrans.external_tools.CommandLineTools;
+import org.overturetool.potrans.external_tools.OvertureParserWrapper;
 
 /**
  * @author miguel_ferreira
@@ -59,7 +61,7 @@ public class OvertureParserWrapperTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.OvertureParserWrapper#getOmlDocument(java.lang.String)}
+	 * {@link org.overturetool.potrans.external_tools.OvertureParserWrapper#getOmlDocument(java.lang.String)}
 	 * .
 	 */
 	public void testGetOmlDocument() throws Exception {
@@ -73,7 +75,7 @@ public class OvertureParserWrapperTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.OvertureParserWrapper#getOmlDocument(java.lang.String)}
+	 * {@link org.overturetool.potrans.external_tools.OvertureParserWrapper#getOmlDocument(java.lang.String)}
 	 * .
 	 */
 	public void testGetOmlDocumentEmptyFileName() throws Exception {
@@ -87,7 +89,7 @@ public class OvertureParserWrapperTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.OvertureParserWrapper#getOmlDocument(java.lang.String)}
+	 * {@link org.overturetool.potrans.external_tools.OvertureParserWrapper#getOmlDocument(java.lang.String)}
 	 * .
 	 */
 	public void testGetOmlDocumentNullFileName() throws Exception {
@@ -101,7 +103,7 @@ public class OvertureParserWrapperTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.OvertureParserWrapper#getOmlDocument(java.lang.String)}
+	 * {@link org.overturetool.potrans.external_tools.OvertureParserWrapper#getOmlDocument(java.lang.String)}
 	 * .
 	 */
 	public void testGetOmlDocumentInvalidFileName() throws Exception {

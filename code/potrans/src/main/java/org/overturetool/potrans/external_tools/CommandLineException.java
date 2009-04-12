@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.overturetool.potrans.preparation;
+package org.overturetool.potrans.external_tools;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

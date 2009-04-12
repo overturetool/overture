@@ -1,10 +1,15 @@
 /**
  * 
  */
-package org.overturetool.potrans.preparation;
+package org.overturetool.potrans.external_tools;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+
+import org.overturetool.potrans.external_tools.CommandLineProcess;
+import org.overturetool.potrans.external_tools.CommandLineProcessCommand;
+import org.overturetool.potrans.external_tools.CommandLineProcessStringInput;
+import org.overturetool.potrans.external_tools.InputValidator;
 
 import junit.framework.TestCase;
 
@@ -48,7 +53,7 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.CommandLineProcess#executeProcessAndWaitForItToFinish()}
+	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#executeProcessAndWaitForItToFinish()}
 	 * .
 	 */
 	public void testExecuteProcessAndWaitForItToFinish() throws Exception {
@@ -64,7 +69,7 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.CommandLineProcess#executeProcessAndWaitForItToFinish()}
+	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#executeProcessAndWaitForItToFinish()}
 	 * .
 	 */
 	public void testExecuteProcessAndWaitForItToFinishInvalidCommand()
@@ -85,7 +90,7 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.CommandLineProcess#executeProcessAndWaitForItToFinish()}
+	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#executeProcessAndWaitForItToFinish()}
 	 * .
 	 */
 	public void testExecuteProcessAndWaitForItToFinishEmptyCommand()
@@ -106,7 +111,7 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.CommandLineProcess#executeProcess()}
+	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#executeProcess()}
 	 * .
 	 */
 	public void testExecuteProcess() throws Exception {
@@ -132,7 +137,7 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.CommandLineProcess#executeProcess()}
+	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#executeProcess()}
 	 * .
 	 */
 	public void testExecuteProcessInvalidCommand() throws Exception {
@@ -153,7 +158,7 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.CommandLineProcess#executeProcess()}
+	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#executeProcess()}
 	 * .
 	 */
 	public void testExecuteProcessEmptyCommand() throws Exception {
@@ -174,7 +179,7 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.CommandLineProcess#getProcessOutput()}
+	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#getProcessOutput()}
 	 * .
 	 */
 	public void testGetProcessOutput() throws Exception {
@@ -191,7 +196,7 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.CommandLineProcess#getProcessError()}
+	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#getProcessError()}
 	 * .
 	 */
 	public void testGetProcessError() throws Exception {
@@ -210,7 +215,7 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.CommandLineProcess#setProcessInput(java.lang.String)}
+	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#setProcessInput(java.lang.String)}
 	 * .
 	 * 
 	 * Miguel: This test will probably fail on Windows. If it does please
@@ -263,7 +268,7 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.CommandLineProcess#getProcessOutputFromStream(java.io.InputStream)}
+	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#getProcessOutputFromStream(java.io.InputStream)}
 	 * .
 	 */
 	public void testGetProcessOutputFromStream() throws Exception {
@@ -279,7 +284,7 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.CommandLineProcess#getProcessOutputFromStream(java.io.InputStream)}
+	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#getProcessOutputFromStream(java.io.InputStream)}
 	 * .
 	 */
 	public void testGetProcessOutputFromStreamNullInputStream()
@@ -294,7 +299,7 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.CommandLineProcess#getTextFromStreamToStringBuffer(java.io.InputStream, java.lang.StringBuffer)}
+	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#getTextFromStreamToStringBuffer(java.io.InputStream, java.lang.StringBuffer)}
 	 * .
 	 */
 	public void testGetTextFromStreamToStringBuffer() throws Exception {
@@ -310,7 +315,7 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.CommandLineProcess#getTextFromStreamToStringBuffer(java.io.InputStream, java.lang.StringBuffer)}
+	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#getTextFromStreamToStringBuffer(java.io.InputStream, java.lang.StringBuffer)}
 	 * .
 	 */
 	public void testGetTextFromStreamToStringBufferNullInputStream()
@@ -325,7 +330,7 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.CommandLineProcess#getTextFromStreamToStringBuffer(java.io.InputStream, java.lang.StringBuffer)}
+	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#getTextFromStreamToStringBuffer(java.io.InputStream, java.lang.StringBuffer)}
 	 * .
 	 */
 	public void testGetTextFromStreamToStringBufferNullTextBuffer()
@@ -341,7 +346,7 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.CommandLineProcess#getExitValue()}
+	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#getExitValue()}
 	 * .
 	 */
 	public void testGetExitValue() throws Exception {
@@ -357,7 +362,7 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.CommandLineProcess#getExitValue()}
+	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#getExitValue()}
 	 * .
 	 */
 	public void testGetExitValueProcessNotFinished() throws Exception {

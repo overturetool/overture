@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.overturetool.potrans.preparation;
+package org.overturetool.potrans.external_tools;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -10,6 +10,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.prefs.InvalidPreferencesFormatException;
 import java.util.prefs.Preferences;
+
+import org.overturetool.potrans.external_tools.InputException;
+import org.overturetool.potrans.external_tools.InputValidator;
+import org.overturetool.potrans.external_tools.VdmToolsWrapper;
 
 import junit.framework.TestCase;
 

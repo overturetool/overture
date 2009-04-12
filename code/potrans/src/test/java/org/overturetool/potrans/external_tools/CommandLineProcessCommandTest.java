@@ -1,7 +1,9 @@
 /**
  * 
  */
-package org.overturetool.potrans.preparation;
+package org.overturetool.potrans.external_tools;
+
+import org.overturetool.potrans.external_tools.CommandLineProcessCommand;
 
 import junit.framework.TestCase;
 
@@ -26,7 +28,7 @@ public class CommandLineProcessCommandTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.overturetool.potrans.preparation.CommandLineProcessCommand#CommandLineProcessCommand(java.lang.String, java.lang.String[])}.
+	 * Test method for {@link org.overturetool.potrans.external_tools.CommandLineProcessCommand#CommandLineProcessCommand(java.lang.String, java.lang.String[])}.
 	 */
 	public void testCommandLineProcessCommandNameArguments() {
 		String name = "name";
@@ -79,7 +81,7 @@ public class CommandLineProcessCommandTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.overturetool.potrans.preparation.CommandLineProcessCommand#CommandLineProcessCommand(java.lang.String)}.
+	 * Test method for {@link org.overturetool.potrans.external_tools.CommandLineProcessCommand#CommandLineProcessCommand(java.lang.String)}.
 	 */
 	public void testCommandLineProcessCommandName() {
 		String name = "name";
@@ -108,7 +110,7 @@ public class CommandLineProcessCommandTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.overturetool.potrans.preparation.CommandLineProcessCommand#getCommandArray()}.
+	 * Test method for {@link org.overturetool.potrans.external_tools.CommandLineProcessCommand#getCommandArray()}.
 	 */
 	public void testGetCommandArray() {
 		String name = "name";

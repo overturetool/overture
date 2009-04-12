@@ -1,9 +1,11 @@
 /**
  * 
  */
-package org.overturetool.potrans.preparation;
+package org.overturetool.potrans.external_tools;
 
 import java.io.StringReader;
+
+import org.overturetool.potrans.external_tools.CommandLineProcessReaderInput;
 
 import junit.framework.TestCase;
 
@@ -33,7 +35,7 @@ public class CommandLineProcessReaderInputTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.CommandLineProcessReaderInput#CommandLineProcessReaderInput(java.io.Reader)}
+	 * {@link org.overturetool.potrans.external_tools.CommandLineProcessReaderInput#CommandLineProcessReaderInput(java.io.Reader)}
 	 * .
 	 */
 	public void testCommandLineProcessReaderInput() throws Exception {
@@ -64,7 +66,7 @@ public class CommandLineProcessReaderInputTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.CommandLineProcessReaderInput#getBytes()}
+	 * {@link org.overturetool.potrans.external_tools.CommandLineProcessReaderInput#getBytes()}
 	 * .
 	 */
 	public void testGetBytes() throws Exception {
@@ -98,7 +100,7 @@ public class CommandLineProcessReaderInputTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.CommandLineProcessReaderInput#isStatic()}
+	 * {@link org.overturetool.potrans.external_tools.CommandLineProcessReaderInput#isStatic()}
 	 * .
 	 */
 	public void testIsStatic() {
@@ -125,7 +127,7 @@ public class CommandLineProcessReaderInputTest extends TestCase {
 	
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.preparation.CommandLineProcessReaderInput#getText()}
+	 * {@link org.overturetool.potrans.external_tools.CommandLineProcessReaderInput#getText()}
 	 * .
 	 */
 	public void testGetText() throws Exception {

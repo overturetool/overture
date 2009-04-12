@@ -13,7 +13,7 @@ import java.util.prefs.Preferences;
 import junit.framework.TestCase;
 
 import org.overturetool.ast.itf.IOmlDocument;
-import org.overturetool.potrans.preparation.OvertureParserWrapper;
+import org.overturetool.potrans.external_tools.OvertureParserWrapper;
 
 /**
  * @author miguel_ferreira
