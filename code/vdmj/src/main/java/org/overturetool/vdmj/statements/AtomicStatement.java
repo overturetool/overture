@@ -110,7 +110,7 @@ public class AtomicStatement extends Statement
 			state = statedef.getState();
 			state.doInvariantChecks = false;
 		}
-		else if (classdef != null)
+		else if (classdef != null && classdef.invlistener != null)
 		{
 			listener = classdef.invlistener;
 			listener.doInvariantChecks = false;
@@ -126,7 +126,7 @@ public class AtomicStatement extends Statement
 			state.doInvariantChecks = true;
 			state.changedValue(location, null, ctxt);
 		}
-		else if (classdef != null)
+		else if (listener != null)
 		{
 			listener.doInvariantChecks = true;
 			listener.changedValue(location, null, ctxt);
