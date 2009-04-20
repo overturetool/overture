@@ -233,8 +233,7 @@ public class CommandLineProcessTest extends TestCase {
 	}
 	
 	public void testSetProcessInputOutputInterleaved() throws Exception {
-		String expected = "The VDM++ Toolbox v8.1.1b - Fri 24-Oct-2008 08:59:25" + newLine
-						+ "vpp> "
+		String expected = "vpp> "
 						+ "backtrace (bt)            init (i)                  tcov read file            " + newLine
 						+ "break (b)                 dlclose (dlc)             tcov write file           " + newLine
 						+ "classes                   disable (dis) ident       tcov reset                " + newLine
@@ -263,7 +262,7 @@ public class CommandLineProcessTest extends TestCase {
 		cmdLineProcess.waitFor();
 
 		assertEquals(settingsWarning, 0, cmdLineProcess.getExitValue());
-		assertEquals(settingsWarning, expected, cmdLineProcess.getProcessOutput());
+		assertTrue(settingsWarning, cmdLineProcess.getProcessOutput().endsWith(expected));
 	}
 
 	/**
