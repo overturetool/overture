@@ -22,6 +22,7 @@ Latest		Added I18N charset support and the -c and -t options.
 			Added MATH library support.
 			Added experimental VICE parse and type checking.
 			Added support for curried pre/post conditions.
-			Added experimental support for pre-compiled classes/modules, -out
+			Added experimental support for pre-compiled classes/modules, -o
+			Added Xdebug protocol support for Eclipse IDE
 			
 			
