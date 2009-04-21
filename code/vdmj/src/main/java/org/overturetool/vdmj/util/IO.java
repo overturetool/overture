@@ -124,7 +124,9 @@ public class IO
 			ip.typeCheck(exp, env);
 
 			result.add(new BooleanValue(true));
-			result.add(exp.eval(new Context(ctxt.location, "freadval", null)));
+			Context ectxt = new Context(ctxt.location, "freadval", null);
+			ectxt.setThreadState(null);
+			result.add(exp.eval(ectxt));
 		}
 		catch (Exception e)
 		{
