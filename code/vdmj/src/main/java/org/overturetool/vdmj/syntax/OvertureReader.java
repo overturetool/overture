@@ -43,7 +43,7 @@ import org.overturetool.vdmj.messages.VDMError;
  * A class to wrap an OvertureParser in a VDMJ syntax reader.
  */
 
-public class OvertureReader extends Reader
+public class OvertureReader extends SyntaxReader
 {
 	public final File filename;
 	public final OvertureParser theParser;

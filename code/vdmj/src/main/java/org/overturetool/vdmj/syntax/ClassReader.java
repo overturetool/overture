@@ -37,7 +37,7 @@ import org.overturetool.vdmj.lex.Token;
  * A syntax analyser to parse class definitions.
  */
 
-public class ClassReader extends Reader
+public class ClassReader extends SyntaxReader
 {
 	public ClassReader(LexTokenReader reader)
 	{

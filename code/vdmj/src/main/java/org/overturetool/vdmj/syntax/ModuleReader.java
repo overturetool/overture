@@ -64,7 +64,7 @@ import org.overturetool.vdmj.types.Type;
  * A syntax analyser to parse modules.
  */
 
-public class ModuleReader extends Reader
+public class ModuleReader extends SyntaxReader
 {
 	public ModuleReader(LexTokenReader reader)
 	{

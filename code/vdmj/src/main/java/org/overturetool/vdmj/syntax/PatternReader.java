@@ -57,7 +57,7 @@ import org.overturetool.vdmj.patterns.UnionPattern;
  * A syntax analyser to parse pattern definitions.
  */
 
-public class PatternReader extends Reader
+public class PatternReader extends SyntaxReader
 {
 	public PatternReader(LexTokenReader reader)
 	{

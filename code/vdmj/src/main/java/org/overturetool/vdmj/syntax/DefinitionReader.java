@@ -98,7 +98,7 @@ import org.overturetool.vdmj.types.UnresolvedType;
  * A syntax analyser to parse definitions.
  */
 
-public class DefinitionReader extends Reader
+public class DefinitionReader extends SyntaxReader
 {
 	private static final long MAX_TIMES = 5;
 

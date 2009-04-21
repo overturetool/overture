@@ -67,7 +67,7 @@ import org.overturetool.vdmj.types.UnresolvedType;
  * A syntax analyser to parse expressions.
  */
 
-public class ExpressionReader extends Reader
+public class ExpressionReader extends SyntaxReader
 {
 	public ExpressionReader(LexTokenReader reader)
 	{

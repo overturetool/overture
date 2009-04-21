@@ -68,7 +68,7 @@ import org.overturetool.vdmj.types.VoidType;
  * A syntax analyser to parse type expressions.
  */
 
-public class TypeReader extends Reader
+public class TypeReader extends SyntaxReader
 {
 	public TypeReader(LexTokenReader reader)
 	{

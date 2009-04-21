@@ -93,7 +93,7 @@ import org.overturetool.vdmj.types.Type;
  * A syntax analyser to parse statements.
  */
 
-public class StatementReader extends Reader
+public class StatementReader extends SyntaxReader
 {
 	public StatementReader(LexTokenReader reader)
 	{

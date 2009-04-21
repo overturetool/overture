@@ -44,7 +44,7 @@ import org.overturetool.vdmj.patterns.TypeBind;
  * A syntax analyser to parse set and type binds.
  */
 
-public class BindReader extends Reader
+public class BindReader extends SyntaxReader
 {
 	public BindReader(LexTokenReader reader)
 	{

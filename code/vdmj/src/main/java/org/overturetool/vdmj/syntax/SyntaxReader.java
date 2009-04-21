@@ -45,7 +45,7 @@ import org.overturetool.vdmj.messages.VDMError;
  * The parent class of all syntax readers.
  */
 
-public abstract class Reader
+public abstract class SyntaxReader
 {
 	/** The lexical analyser. */
 	protected final LexTokenReader reader;
@@ -71,7 +71,7 @@ public abstract class Reader
 	private List<VDMError> errors = new Vector<VDMError>();
 
 	/** The sub-readers defined, if any. */
-	private List<Reader> readers = new Vector<Reader>();
+	private List<SyntaxReader> readers = new Vector<SyntaxReader>();
 
 	/** The maximum number of syntax errors allowed in one Reader. */
 	private static final int MAX = 100;
@@ -80,13 +80,13 @@ public abstract class Reader
 	 * Create a reader with the given lexical analyser and VDM++ flag.
 	 */
 
-	protected Reader(LexTokenReader reader)
+	protected SyntaxReader(LexTokenReader reader)
 	{
 		this.reader = reader;
 		this.dialect = reader.dialect;
 	}
 
-	protected Reader()
+	protected SyntaxReader()
 	{
 		this.reader = null;
 		this.dialect = null;
@@ -522,7 +522,7 @@ public abstract class Reader
 	{
 		int size = 0;
 
-		for (Reader rdr: readers)
+		for (SyntaxReader rdr: readers)
 		{
 			size += rdr.getErrorCount();
 		}
@@ -538,7 +538,7 @@ public abstract class Reader
 	{
 		List<VDMError> list = new Vector<VDMError>();
 
-		for (Reader rdr: readers)
+		for (SyntaxReader rdr: readers)
 		{
 			list.addAll(rdr.getErrors());
 		}
