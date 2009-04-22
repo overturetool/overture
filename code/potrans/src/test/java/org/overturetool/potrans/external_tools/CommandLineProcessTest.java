@@ -233,8 +233,7 @@ public class CommandLineProcessTest extends TestCase {
 	}
 	
 	public void testSetProcessInputOutputInterleaved() throws Exception {
-		String expected = "vpp> "
-						+ "backtrace (bt)            init (i)                  tcov read file            " + newLine
+		String expected = "backtrace (bt)            init (i)                  tcov read file            " + newLine
 						+ "break (b)                 dlclose (dlc)             tcov write file           " + newLine
 						+ "classes                   disable (dis) ident       tcov reset                " + newLine
 						+ "codegen (cg) class [opt]  enable (ena) ident        script file               " + newLine
