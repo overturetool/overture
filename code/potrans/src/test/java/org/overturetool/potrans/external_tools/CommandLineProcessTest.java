@@ -233,25 +233,8 @@ public class CommandLineProcessTest extends TestCase {
 	}
 	
 	public void testSetProcessInputOutputInterleaved() throws Exception {
-		String expected = "backtrace (bt)            init (i)                  tcov read file            " + newLine
-						+ "break (b)                 dlclose (dlc)             tcov write file           " + newLine
-						+ "classes                   disable (dis) ident       tcov reset                " + newLine
-						+ "codegen (cg) class [opt]  enable (ena) ident        script file               " + newLine
-						+ "cont (c)                  instvars class            selthread                 " + newLine
-						+ "cquit                     javacg (jcg) class [opt]  set option                " + newLine
-						+ "create (cr)               last                      singlestep (g)            " + newLine
-						+ "curthread                 latex (l) opt ident       step (s)                  " + newLine
-						+ "debug (d) expr            next (n)                  stepin (si)               " + newLine
-						+ "delete (dl) ident,...     objects                   system (sys)              " + newLine
-						+ "destroy obj               operations class          threads                   " + newLine
-						+ "dir path,...              priorityfile (pf)         typecheck (tc) class opt  " + newLine
-						+ "encode                    previous (pr)             types class               " + newLine
-						+ "fscode                    print (p) expr,..         unset option              " + newLine
-						+ "finish                    pwd                       values class              " + newLine
-						+ "first (f)                 quit (q)                  version (v)               " + newLine
-						+ "functions class           read (r) file             " + newLine
-						+ "info (?) command          rtinfo ident              " + newLine
-						+ "vpp> ";
+		String expected = "codegen (cg) class [opt]  enable (ena) ident";
+						
 		CommandLineProcessCommand command = new CommandLineProcessCommand(
 				vppdeExecutable);
 		CommandLineProcess cmdLineProcess = new CommandLineProcess(command);
@@ -259,9 +242,11 @@ public class CommandLineProcessTest extends TestCase {
 		cmdLineProcess.setProcessInput(new CommandLineProcessStringInput("help" + newLine));
 		cmdLineProcess.setProcessInput(new CommandLineProcessStringInput("quit" + newLine));
 		cmdLineProcess.waitFor();
+		
+		String actual = cmdLineProcess.getProcessOutput();
 
 		assertEquals(settingsWarning, 0, cmdLineProcess.getExitValue());
-		assertTrue(settingsWarning, cmdLineProcess.getProcessOutput().endsWith(expected));
+		assertTrue(settingsWarning, actual.contains(expected));
 	}
 
 	/**
