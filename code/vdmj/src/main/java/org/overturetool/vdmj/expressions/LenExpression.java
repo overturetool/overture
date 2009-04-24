@@ -58,7 +58,6 @@ public class LenExpression extends UnaryExpression
 		if (!etype.isSeq())
 		{
 			report(3116, "Argument to 'len' is not a sequence");
-			return new UnknownType(location);
 		}
 
 		return new NaturalType(location);
