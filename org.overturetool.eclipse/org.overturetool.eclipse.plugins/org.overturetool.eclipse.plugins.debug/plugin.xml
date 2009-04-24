@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.overturetool.eclipse.debug.internal.debug.OvertureDebugPreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.dltk.debug.scriptDebugModel">
+      <debugModel
+            debugModelId="org.overturetool.debug.OvertureDebugModel"
+            debugToolkit="org.overturetool.eclipse.debug.internal.debug.OvertureDebugToolkit"
+            natureId="org.overturetool.eclipse.plugins.editor.core.nature"
+            typeFactory="org.overturetool.eclipse.debug.internal.debug.OvertureTypeFactory">
+      </debugModel>
+   </extension>
+</plugin>

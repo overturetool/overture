@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="org.overturetool.eclipse.plugins.editor.ui.scriptcolor.provider" 
+   					name="Overture Color Provider" 
+   					schema="schema/org.overturetool.eclipse.plugins.editor.ui.scriptcolor.provider.exsd"/>
+
+  <extension point="org.eclipse.ui.editors">
+      <editor
+            class="org.overturetool.eclipse.plugins.editor.internal.ui.editor.OvertureEditor"
+               id="org.overturetool.eclipse.plugins.editor.internal.ui.editor.OvertureEditor"
+            contributorClass="org.eclipse.dltk.internal.ui.editor.SourceModuleEditorActionContributor"
+            default="true"
+            extensions="vpp, tex, vdm"
+            icon="icons/vdm16.png"
+            name="%editor.name.0">
+         <contentTypeBinding
+               contentTypeId="org.overturetool.eclipse.plugins.editor.core.overtureContentType">
+         </contentTypeBinding>
+      </editor>
+   </extension>
+
+   <!--
+   *
+   * org.eclipse.core.runtime.preferences
+   *
+   -->   
+   <extension point="org.eclipse.core.runtime.preferences">
+        <initializer class="org.overturetool.eclipse.plugins.editor.internal.ui.OvertureUIPreferenceInitializer"/>
+    </extension>
+   <!--
+   *
+   * org.eclipse.search.searchPages
+   *
+   -->       
+    <extension point="org.eclipse.search.searchPages">
+      <page
+            canSearchEnclosingProjects="true"
+            class="org.overturetool.eclipse.plugins.editor.internal.ui.search.OvertureSearchPage"
+            enabled="true"
+            extensions="vpp, tex, vdm"
+            icon="/icons/vdm16.png"
+            id="org.overturetool.eclipse.plugins.editor.ui.search.OvertureSearchPage"
+            label="%DLTKSearchPage.label"
+            showScopeSection="true"
+            sizeHint="460,160">
+      </page>      
+   </extension>
+   
+   <!--
+   *
+   * org.eclipse.ui.actionSets
+   *
+   -->    
+   <extension
+       point="org.eclipse.ui.actionSets">
+        <actionSet
+            label="%ScriptCodingActionSet.label"
+            description="%ScriptCodingActionSet.description"
+            visible="false"
+            id="org.overturetool.eclipse.plugins.editor.ui.CodingActionSet">
+<!-- =========================================================================== -->
+<!-- Refactoring Menu                                                            -->
+<!-- =========================================================================== -->       
+	         
+       
+<!-- =========================================================================== -->
+<!-- Source Menu                                                                 -->
+<!-- =========================================================================== -->
+         <menu
+               label="%SourceMenu.label"
+               path="edit"
+               id="org.eclipse.dltk.ui.source.menu">
+		    <separator
+                  name="commentGroup">
+            </separator>
+            <separator
+                  name="editGroup">
+            </separator>
+            <separator
+                  name="importGroup">
+            </separator>
+            <separator
+                  name="generateGroup">
+            </separator>
+            <separator
+                  name="codeGroup">
+            </separator>
+            <separator
+                  name="externalizeGroup">
+            </separator>
+            <separator
+                  name="convertGroup">
+            </separator>
+         </menu>
+         <!-- Comment Group -->
+         <!--action
+               definitionId="org.eclipse.jdt.ui.edit.text.java.add.javadoc.comment"
+               label="%AddJavaDocCommentAction.label"
+               retarget="true"
+               menubarPath="org.eclipse.jdt.ui.source.menu/commentGroup"
+               id="org.eclipse.jdt.ui.actions.AddJavaDocComment">
+         </action-->
+         <action
+               definitionId="org.eclipse.dltk.ui.edit.text.script.quick.format"
+               label="%FormatElementAction.label"
+               retarget="true"
+               menubarPath="org.eclipse.dltk.ui.source.menu/editGroup"
+               id="org.eclipse.dltk.ui.actions.FormatElement">
+         </action>
+         <action
+               definitionId="org.eclipse.dltk.ui.edit.text.script.format"
+               label="%FormatAction.label"
+               retarget="true"
+               menubarPath="org.eclipse.dltk.ui.source.menu/editGroup"
+               id="org.eclipse.dltk.ui.actions.Format">
+         </action>
+         <action
+               definitionId="org.eclipse.dltk.ui.edit.text.script.indent"
+               label="%IndentAction.label"
+               retarget="true"
+               menubarPath="org.eclipse.dltk.ui.source.menu/editGroup"
+               id="org.eclipse.dltk.ui.actions.Indent">
+         </action>
+         <action
+               definitionId="org.eclipse.ui.edit.text.shiftLeft"
+               label="%ShiftLeftAction.label"
+               retarget="true"
+               menubarPath="org.eclipse.dltk.ui.source.menu/editGroup"
+               id="org.eclipse.dltk.ui.actions.ShiftLeft">
+         </action>
+         <action
+               definitionId="org.eclipse.ui.edit.text.shiftRight"
+               label="%ShiftRightAction.label"
+               retarget="true"
+               menubarPath="org.eclipse.dltk.ui.source.menu/editGroup"
+               id="org.eclipse.dltk.ui.actions.ShiftRight">
+         </action>
+         <action
+               definitionId="org.eclipse.dltk.ui.edit.text.script.uncomment"
+               label="%UncommentAction.label"
+               retarget="true"
+               id="org.eclipse.dltk.ui.actions.Uncomment">
+         </action>
+         <action
+               definitionId="org.eclipse.dltk.ui.edit.text.script.comment"
+               label="%CommentAction.label"
+               retarget="true"
+               id="org.eclipse.dltk.ui.actions.Comment">
+         </action>
+		<action
+               definitionId="org.eclipse.dltk.ui.edit.text.script.remove.block.comment"
+               label="%RemoveBlockCommentAction.label"
+               retarget="true"
+               menubarPath="org.eclipse.dltk.ui.source.menu/commentGroup"
+               id="org.eclipse.dltk.ui.actions.RemoveBlockComment">
+         </action>
+         <action
+               definitionId="org.eclipse.dltk.ui.edit.text.script.add.block.comment"
+               label="%AddBlockCommentAction.label"
+               retarget="true"
+               menubarPath="org.eclipse.dltk.ui.source.menu/commentGroup"
+               id="org.eclipse.dltk.ui.actions.AddBlockComment">
+         </action>
+      </actionSet>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <actionSet
+              description="%OvertureActionSet.description"
+              id="org.overturetool.eclipse.plugins.editor.ui.OvertureActionSet"
+              label="%OvertureActionSet.label">
+           <action
+                 class="org.overturetool.eclipse.plugins.editor.ui.actions.OpenMethodAction"
+                 definitionId="org.overturetool.eclipse.plugins.editor.ui.navigate.open.method"
+                 icon="icons/vdm16.png"
+                 id="openMethod"
+                 label="%OpenMethodAction.label"
+                 menubarPath="navigate/open.ext2"
+                 toolbarPath="org.eclipse.search.searchActionSet/Search"
+                 tooltip="%OpenMethodAction.tooltip">
+           </action>
+        </actionSet>
+ </extension>
+    
+    <!--
+    *
+    * org.eclipse.core.filebuffers.documentSetup
+    *
+    -->
+   <extension
+   	 	id="org.overturetool.eclipse.plugins.editor.ui.editor.DocumentSetupParticipant"
+      	name="%documentSetupParticipantName"
+      	point="org.eclipse.core.filebuffers.documentSetup">
+      		<participant extensions="vpp, tex, vdm" 
+			class="org.overturetool.eclipse.plugins.editor.internal.ui.editor.OvertureDocumentSetupParticipant">
+   		</participant>
+	</extension>
+	<extension
+       point="org.eclipse.ui.bindings">
+       <!-- <key
+            sequence="M1+M2+/"
+            contextId="org.overturetool.eclipse.plugins.editor.ui.overtureEditorScope"
+            commandId="org.eclipse.dltk.ui.edit.text.script.add.block.comment"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+            
+      -->
+      <!-- free this on MAC, see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=113981 -->
+      <key
+            platform="carbon"
+            sequence="M1+M2+/"
+            contextId="org.overturetool.eclipse.plugins.editor.ui.overtureEditorScope"
+            commandId=""
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+
+      <key
+            sequence="M1+M2+\"
+            contextId="org.overturetool.eclipse.plugins.editor.ui.overtureEditorScope"
+            commandId="org.overturetool.eclipse.plugins.editor.ui.edit.text.script.remove.block.comment"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <key
+            sequence="M1+I"
+            contextId="org.overturetool.eclipse.plugins.editor.ui.overtureEditorScope"
+            commandId="org.overturetool.eclipse.plugins.editor.ui.edit.text.script.indent"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+ 	<key
+            sequence="M1+M2+F"
+            contextId="org.overturetool.eclipse.plugins.editor.ui.overtureEditorScope"
+            commandId="org.overturetool.eclipse.plugins.editor.ui.edit.text.script.format"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <!-- alternative for some gtk input modes -->
+      <key
+            platform="gtk"
+            sequence="ESC CTRL+F"
+            contextId="org.overturetool.eclipse.plugins.editor.ui.overtureEditorScope"
+            commandId="org.overturetool.eclipse.plugins.editor.ui.edit.text.script.format"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <key
+            commandId="org.overturetool.eclipse.plugins.editor.ui.navigate.open.method"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+M">
+      </key>                   
+ 	</extension>
+ 	
+    <!--
+    * key shortcuts
+    * org.eclipse.ui.newWizards
+    *
+    --> 	 	
+	<extension point="org.eclipse.ui.newWizards">
+	<!-- wizards -->
+      <category
+            id="org.overturetool.eclipse.plugins.editor.ui"
+            name="%category.name.0"
+            >
+      </category>
+      <!--
+      Create Project wizard	
+      -->
+      <wizard
+            category="org.overturetool.eclipse.plugins.editor.ui"
+            class="org.overturetool.eclipse.plugins.editor.internal.ui.wizards.OvertureProjectCreationWizard"
+            finalPerspective="org.overturetool.eclipse.plugins.editor.ui.OverturePerspective"
+            icon="icons/oml16.png"
+            id="org.overturetool.eclipse.plugins.editor.internal.ui.wizards.OvertureProjectWizard"
+            name="%wizard.name.0"
+            preferredPerspectives="org.overturetool.eclipse.plugins.editor.ui.OverturePerspective"
+            project="true">
+         <description>
+            %wizard.description.0
+         </description>
+      </wizard>
+      
+      <!--
+      	Create file Wizard
+      -->
+       <wizard
+             category="org.overturetool.eclipse.plugins.editor.ui"
+             class="org.overturetool.eclipse.plugins.editor.internal.ui.wizards.OvertureFileCreationWizard"
+             icon="icons/vdm16.png"
+             id="org.overturetool.eclipse.plugins.editor.internal.ui.wizards.OvertureFileCreationWizard"
+             name="%NewVDMFile.label">
+          <description>
+          	%wizard.description.1
+          </description>
+       </wizard>
+      </extension>
+       
+    
+   <!--
+   		org.eclipse.ui.preferencePages
+   -->    
+    <extension point="org.eclipse.ui.preferencePages"> 	          
+	    <!--Global page -->
+	    <page	          
+	          class="org.overturetool.eclipse.plugins.editor.internal.ui.preferences.OvertureGlobalPreferencesPage"
+	          id="org.overturetool.eclipse.plugins.editor.ui.overture"
+	          name="%page.name.0"/>
+	    <!--Editor page -->     
+	    <page
+	          category="org.overturetool.eclipse.plugins.editor.ui.overture"
+	          class="org.overturetool.eclipse.plugins.editor.internal.ui.preferences.OvertureEditorPreferencesPage"
+	          id="org.overturetool.eclipse.plugins.editor.ui.EditorPreferences"
+	          name="%page.name.1"/>
+	    <!--Syntax Coloring -->
+	    <page
+	          category="org.overturetool.eclipse.plugins.editor.ui.EditorPreferences"
+	          class="org.overturetool.eclipse.plugins.editor.internal.ui.preferences.OvertureEditorSyntaxColoringPreferencePage"
+	          id="org.overturetool.eclipse.plugins.editor.ui.editor.SyntaxColoring"
+	          name="%page.syntax.2"/>
+	    <!-- Task Tags PreferencePage page -->
+        <page
+              category="org.overturetool.eclipse.plugins.editor.ui.overture"
+              class="org.overturetool.eclipse.plugins.editor.internal.ui.preferences.OvertureTodoTaskPreferencePage"
+              id="org.overturetool.preferences.todo"
+              name="%TaskTagsPreferencePage.name"/>
+	    <!--Typing page -->
+	    <page
+	          category="org.overturetool.eclipse.plugins.editor.ui.EditorPreferences"
+	          class="org.overturetool.eclipse.plugins.editor.internal.ui.preferences.OvertureSmartTypingPreferencePage"
+	          id="org.overturetool.eclipse.plugins.editor.ui.editor.SmartTyping"
+	          name="%page.name.3"/>     
+	    <!--Folding page -->     
+	    <page
+          category="org.overturetool.eclipse.plugins.editor.ui.EditorPreferences"
+          class="org.overturetool.eclipse.plugins.editor.internal.ui.preferences.OvertureFoldingPreferencePage"
+          id="org.overturetool.eclipse.plugins.editor.ui.editor.OvertureFolding"
+          name="%page.name.4"/>
+        <!--Templates page -->
+	    <page
+           category="org.overturetool.eclipse.plugins.editor.ui.EditorPreferences"
+           class="org.overturetool.eclipse.plugins.editor.internal.ui.templates.OvertureTemplatePreferencePage"
+           id="overtureTemplatePreferencePage"
+           name="%page.name.5" />     	          
+	 </extension>
+	 
+	 <!--
+	 	OverturePerspectiveName
+	  -->
+	 <extension point="org.eclipse.ui.perspectives">
+    	<perspective
+           class="org.overturetool.eclipse.plugins.editor.ui.OverturePerspective"
+           icon="icons/oml16.png"
+           id="org.overturetool.eclipse.plugins.editor.ui.OverturePerspective"
+           name="%OverturePerspectiveName"/>
+ 	  </extension>
+ 
+	 <!--
+	 
+	 Property Pages:
+	 
+	  -->
+	<extension point="org.eclipse.ui.propertyPages">
+	<!-- Build Page -->
+    <page
+          category="org.overturetool.propertyPage"
+          class="org.overturetool.eclipse.plugins.editor.internal.ui.preferences.OvertureBuildPathPropertyPage"
+          id="org.overturetool.eclipse.plugins.editor.ui.BuildpathProperties"
+          name="%OvertureBuildPathPropertyPage.name">
+          <enabledWhen>
+             <adapt type="org.eclipse.core.resources.IProject">
+                 <test property="org.eclipse.core.resources.projectNature" value="org.overturetool.eclipse.plugins.editor.core.nature"/>
+             </adapt>         
+           </enabledWhen>
+      <keywordReference id="org.eclipse.dltk.ui.buildpath" />
+    </page>
+    <!-- TaskTags Page -->
+    <page
+          category="org.overturetool.propertyPage"
+          class="org.overturetool.eclipse.plugins.editor.internal.ui.preferences.OverturePropertyPage"
+          id="org.overturetool.propertyPage.todo"
+          name="%TaskTagsPropertyPagePage.name">
+          <enabledWhen>
+             <adapt type="org.eclipse.core.resources.IProject">
+                 <test property="org.eclipse.core.resources.projectNature" value="org.overturetool.eclipse.plugins.editor.core.nature"/>
+             </adapt>         
+          </enabledWhen>
+    </page>
+    
+    <!--Property Page-->    
+    <page
+      id="org.overturetool.propertyPage"
+      class="org.overturetool.eclipse.plugins.editor.internal.ui.preferences.OverturePropertyPage"
+      name="%OverturePropertyPage.name"
+      >
+      <enabledWhen>
+        <adapt type="org.eclipse.core.resources.IProject">
+          <test property="org.eclipse.core.resources.projectNature" value="org.overturetool.eclipse.plugins.editor.core.nature"/>
+        </adapt>         
+      </enabledWhen>
+    </page>    
+ </extension>   
+ 
+ 
+  <!--
+  	 commands
+  -->
+ <extension
+         point="org.eclipse.ui.commands">
+         <command
+            name="%ActionDefinition.addBlockComment.name"
+            description="%ActionDefinition.addBlockComment.description"
+            categoryId="org.eclipse.dltk.ui.category.source"
+            id="org.overturetool.eclipse.plugins.editor.ui.edit.text.script.add.block.comment">
+      </command>
+      <command
+            name="%ActionDefinition.removeBlockComment.name"
+            description="%ActionDefinition.removeBlockComment.description"
+            categoryId="org.eclipse.dltk.ui.category.source"
+            id="org.overturetool.eclipse.plugins.editor.ui.edit.text.script.remove.block.comment">
+      </command>
+      <command
+            name="%ActionDefinition.indent.name"
+            description="%ActionDefinition.indent.description"
+            categoryId="org.eclipse.dltk.ui.category.source"
+            id="org.overturetool.eclipse.plugins.editor.ui.edit.text.script.indent">
+      </command>
+	<command
+            name="%ActionDefinition.format.name"
+            description="%ActionDefinition.format.description"
+            categoryId="org.eclipse.dltk.ui.category.source"
+            id="org.overturetool.eclipse.plugins.editor.ui.edit.text.script.format">
+      </command>
+      <command
+            name="%ActionDefinition.quickformat.name"
+            description="%ActionDefinition.quickformat.description"
+            categoryId="org.eclipse.dltk.ui.category.source"
+            id="org.overturetool.eclipse.plugins.editor.ui.edit.text.script.quick.format">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.navigate"
+            description="%ActionDefinition.OpenMethod.desciption"
+            id="org.overturetool.eclipse.plugins.editor.ui.navigate.open.method"
+            name="%ActionDefinition.OpenMethod.name">
+      </command>    
+  </extension>
+  
+  <!-- 
+  		org.eclipse.ui.contexts
+  -->
+  
+  <extension point="org.eclipse.ui.contexts">
+      <context
+            name="%context.editingOvertureSource.name"
+            description="%context.editingOvertureSource.description"
+            parentId="org.eclipse.dltk.ui.scriptEditorScope"
+            id="org.overturetool.eclipse.plugins.editor.ui.overtureEditorScope">
+      </context>
+  </extension>
+
+<!-- Code completion --> 
+	<extension
+		point="org.eclipse.dltk.ui.scriptCompletionProposalComputer"
+		id="OvertureTypeCompletionProposalComputer">
+		<scriptCompletionProposalComputer 
+			class="org.overturetool.eclipse.plugins.editor.internal.ui.text.completion.OvertureTypeCompletionProposalComputer"
+			categoryId="org.eclipse.dltk.ui.scriptTypeProposalCategory"
+			toolkitId="org.overturetool.eclipse.plugins.editor.core.nature">
+			<partition type="__dftl_partition_content_type"/>
+		</scriptCompletionProposalComputer>		
+	</extension>
+	
+	 <extension point="org.eclipse.dltk.ui.language">
+     <language
+          class="org.overturetool.eclipse.plugins.editor.internal.ui.OvertureUILanguageToolkit"
+          nature="org.overturetool.eclipse.plugins.editor.core.nature"/>
+     </extension>
+  <!--
+  <extension point="org.eclipse.dltk.ui.scriptDocumentationProviders">
+      <provider
+           class="org.overturetool.scriptdoc.ScriptDocumentationProvider"
+           id="org.overturetool.eclipse.plugins.editor.ui.OvertureDocumentationProvider"
+           nature="org.overturetool.eclipse.plugins.editor.core.nature">
+     </provider>
+  </extension>  
+  -->
+  
+  <!--TEMPLATE...  --> 
+  <extension point="org.eclipse.ui.editors.templates">
+    <contextType
+          class="org.overturetool.eclipse.plugins.editor.internal.ui.templates.OvertureUniversalTemplateContextType"
+          id="overtureUniversalTemplateContextType"
+          name="%OvertureTemplateContextName">
+    </contextType>
+      <!-- TODO --> 
+    <include
+          file="templates/templates.xml"
+          translations="templates/templates.properties">
+    </include>
+ </extension>
+ 
+ 
+ 
+ 
+ <extension
+         point="org.eclipse.ui.actionSetPartAssociations">
+ </extension> 
+ 
+ <extension point="org.eclipse.ui.actionSetPartAssociations">
+      <actionSetPartAssociation targetID="org.overturetool.eclipse.plugins.editor.ui.CodingActionSet">
+         <part id="org.overturetool.eclipse.plugins.editor.internal.ui.editor.OvertureEditor"/>
+	     <part id="org.eclipse.dltk.ui.ScriptExplorer"/>
+      </actionSetPartAssociation>   
+         
+      <actionSetPartAssociation targetID="org.eclipse.dltk.ui.ScriptCodingActionSet">
+           <part id="org.overturetool.eclipse.plugins.editor.internal.ui.editor.OvertureEditor"/>
+      </actionSetPartAssociation>    
+        
+      <actionSetPartAssociation
+            targetID="org.eclipse.ui.edit.text.actionSet.presentation">
+         <part id="org.overturetool.eclipse.plugins.editor.internal.ui.editor.OvertureEditor"/>
+	  </actionSetPartAssociation>  
+ </extension>
+ <extension 
+ 	point="org.eclipse.ui.console.consolePatternMatchListeners">
+    <consolePatternMatchListener
+          class="org.overturetool.eclipse.plugins.editor.internal.ui.OvertureDebugConsoleTracker"
+          id="org.overturetool.eclipse.plugins.editor.ui.OvertureDebugConsoleTracker"
+          regex="\tat (.*):(\d+)">
+       <enablement>
+          <instanceof 
+          		value="org.eclipse.dltk.debug.ui.ScriptDebugConsole">
+          </instanceof>
+      </enablement>
+    </consolePatternMatchListener>
+ </extension>
+</plugin>

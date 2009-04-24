@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Export-Package: org.overturetool.tex,org.overturetool.umltrans,org.ove
+ rturetool.umltrans.Main,org.overturetool.umltrans.xml,org.overturetoo
+ l.parser.imp,org.overturetool.scanner.imp,org.overturetool.visitor,or
+ g.overturetool.ast.imp,org.overturetool.ast.itf,org.overturetool.visi
+ tor,jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI,jp.co.csk.vdm.toolbox.
+ api.corba.ToolboxAPI.VDMCodeGeneratorPackage,jp.co.csk.vdm.toolbox.ap
+ i.corba.VDM,jp.co.csk.vdm.toolbox.api,jp.co.csk.vdm.toolbox.VDM,jp.co
+ .csk.vdm.toolbox.VDM.quotes,jp.co.csk.vdm.toolbox.VDM.ValueParser
+Bundle-Vendor: Princeton Softech Inc.
+Bundle-ClassPath: lib\umltrans-1.0.0.jar,lib\parser-1.0.0.jar,lib\ast-
+ 1.0.0.jar,lib\stdlib-1.0.0.jar
+Bundle-Version: 1.0.0
+Eclipse-BuddyPolicy: registered
+Bundle-Localization: plugin
+Bundle-Name: org.overturetool.eclipse.plugins.umltrans.core
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.overturetool.eclipse.plugins.umltrans.core
+Bundle-ActivationPolicy: lazy
+

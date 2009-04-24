@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="OvertureUml.actionSet"
+            label="UML transformation"
+            visible="true">
+         <menu
+               id="overtureMenu"
+               
+               label="Overture">
+            <separator
+                  name="slot1">
+            </separator>
+            
+         </menu>
+        <menu
+               id="umlMenu"
+               menubarPath="overtureMenu/umlMenu"
+               label="UML">
+         
+         </menu>
+         <action
+               class="org.overturetool.eclipse.plugins.umltrans.actions.Vdm2UmlAction"
+               icon="icons/ea.png"
+               id="overtureuml.actions.Overture"
+               label="&amp;VDM -&gt; UML"
+               menubarPath="overtureMenu/umlMenu"
+               toolbarPath="UML"
+               tooltip="Generate UML model from VDM files">
+         </action>
+         <action
+               class="org.overturetool.eclipse.plugins.umltrans.actions.Uml2VdmAction"
+               icon="icons/vdm1.png"
+               id="overtureuml.actions.Overture"
+               label="&amp;UML-&gt; VDM"
+               menubarPath="overtureMenu/UML"
+               toolbarPath="UML"
+               tooltip="Generate VDM files from a UML model">
+         </action>
+           <action
+               class="org.overturetool.eclipse.plugins.umltrans.actions.TexToVppAction"
+               icon="icons/texRemove.png"
+               id="overtureuml.actions.Overture"
+               label="&amp;Tex-&gt; Vpp"
+               menubarPath="overtureMenu/UML"
+               toolbarPath="UML"
+               tooltip="Convert VDM TEX files to VDM VPP files">
+         </action>
+      </actionSet>
+   </extension>
+
+</plugin>

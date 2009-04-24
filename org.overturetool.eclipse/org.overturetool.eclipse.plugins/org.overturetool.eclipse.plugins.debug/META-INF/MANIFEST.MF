@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-Vendor: Princeton Softech Inc.
+Bundle-ClassPath: .
+Bundle-Version: 1.0.0
+Eclipse-BuddyPolicy: registered
+Bundle-Localization: plugin
+Bundle-Name: org.overturetool.eclipse.plugins.debug
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.overturetool.eclipse.plugins.debug;singleton:=true
+Require-Bundle: org.eclipse.dltk.debug;bundle-version="1.0.0";resolution:=optional,
+ org.eclipse.debug.ui;bundle-version="3.4.2";resolution:=optional,
+ org.eclipse.debug.core;bundle-version="3.4.1";resolution:=optional,
+ org.eclipse.ui;bundle-version="3.4.2";resolution:=optional,
+ org.eclipse.core.runtime;bundle-version="3.4.0";resolution:=optional,
+ org.eclipse.jdt.debug.ui;bundle-version="3.3.1";resolution:=optional
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-Activator: org.overturetool.eclipse.debug.internal.debug.DebugPlugin
+Export-Package: org.overturetool.eclipse.debug.internal.debug

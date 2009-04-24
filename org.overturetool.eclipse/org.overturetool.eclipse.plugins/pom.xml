@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+
+    <groupId>org.overturetool.eclipse</groupId>
+    <artifactId>org.overturetool.eclipse</artifactId>
+    <version>1.0.-SNAPSHOT</version>
+  </parent>
+
+  <groupId>org.overturetool.eclipse.plugins</groupId>
+  <artifactId>org.overturetool.eclipse.plugins.core</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0.-SNAPSHOT</version>
+  <name>Eclipse Plug-ins</name>
+  <description>Top-level POM for Eclipse Plug-in projects.</description>
+
+  <modules>
+    <!-- Put all child Eclipse Plugin projects(modules) here -->
+    <module>org.overturetool.eclipse.plugins.foo</module>
+    <module>org.overturetool.eclipse.plugins.stdlib</module>
+    <!--<module>org.overturetool.eclipse.plugins.vdmtoolsapi</module>
+    <module>org.overturetool.eclipse.plugins.tracecore</module>
+    
+    <module>org.overturetool.eclipse.plugins.editorcore</module>
+    <module>org.overturetool.eclipse.plugins.ui</module>
+    <module>org.overturetool.eclipse.plugins.foo</module>
+    
+   
+    <module>org.overturetool.eclipse.plugins.traces</module>-->
+
+
+    <module>org.overturetool.eclipse.plugins.umltrans</module>
+    <module>org.overturetool.eclipse.plugins.umltrans.core</module>
+    <module>org.overturetool.eclipse.plugins.editor.core</module>
+    <module>org.overturetool.eclipse.plugins.editor.ui</module>
+    <module>org.overturetool.eclipse.plugins.debug.ui</module>
+    <module>org.overturetool.eclipse.plugins.launching</module>
+    <module>org.overturetool.eclipse.plugins.debug</module>
+  </modules>
+</project>
