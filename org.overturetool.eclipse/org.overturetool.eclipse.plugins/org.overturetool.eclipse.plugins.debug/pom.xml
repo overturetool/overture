@@ -8,7 +8,7 @@
   <groupId>org.overturetool.eclipse.plugins</groupId>
   <artifactId>org.overturetool.eclipse.plugins.debug</artifactId>
   <name>org.overturetool.eclipse.plugins.debug</name>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <url>http://maven.apache.org</url>
  <packaging>source-plugin</packaging>
 
