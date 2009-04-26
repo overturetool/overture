@@ -29,7 +29,6 @@
     
    
     <!-- Thrid build all source plugins-->
-    <module>org.overturetool.eclipse.plugins.foo</module>
     <module>org.overturetool.eclipse.plugins.umltrans</module>
     
     <module>org.overturetool.eclipse.plugins.editor.ui</module>
