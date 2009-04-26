@@ -9,8 +9,8 @@
   <url>http://www.overturetool.org</url>
   <modules>
     <module>core</module>
-    <module>org.overturetool.tools</module>
-  <!--  <module>org.overturetool.eclipse</module>  -->
+    <module>tools</module>
+   <module>org.overturetool.eclipse</module> 
 
   </modules>
   <dependencies>
