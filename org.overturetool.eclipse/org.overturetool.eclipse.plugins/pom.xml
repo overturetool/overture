@@ -18,22 +18,20 @@
 
   <modules>
     <!-- Put all child Eclipse Plugin projects(modules) here -->
-    <module>org.overturetool.eclipse.plugins.foo</module>
+    <!-- Build order matters here - when building eclipse plug-ins-->
+    
+    <!-- First build stdlib-->
     <module>org.overturetool.eclipse.plugins.stdlib</module>
-    <!--<module>org.overturetool.eclipse.plugins.vdmtoolsapi</module>
-    <module>org.overturetool.eclipse.plugins.tracecore</module>
-    
-    <module>org.overturetool.eclipse.plugins.editorcore</module>
-    <module>org.overturetool.eclipse.plugins.ui</module>
-    <module>org.overturetool.eclipse.plugins.foo</module>
-    
-   
-    <module>org.overturetool.eclipse.plugins.traces</module>-->
 
-
-    <module>org.overturetool.eclipse.plugins.umltrans</module>
+    <!-- Second build all core (binary) plug-ins -->
     <module>org.overturetool.eclipse.plugins.umltrans.core</module>
     <module>org.overturetool.eclipse.plugins.editor.core</module>
+    
+   
+    <!-- Thrid build all source plugins-->
+    <module>org.overturetool.eclipse.plugins.foo</module>
+    <module>org.overturetool.eclipse.plugins.umltrans</module>
+    
     <module>org.overturetool.eclipse.plugins.editor.ui</module>
     <module>org.overturetool.eclipse.plugins.debug.ui</module>
     <module>org.overturetool.eclipse.plugins.launching</module>
