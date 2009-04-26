@@ -18,7 +18,7 @@
          </menu>
         <menu
                id="umlMenu"
-               menubarPath="overtureMenu/umlMenu"
+               
                label="UML">
          
          </menu>

@@ -1,21 +1,12 @@
 package org.overturetool.eclipse.plugins.umltrans.actions;
 
-import java.awt.FileDialog;
-import java.io.File;
-
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
-
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-
+import org.eclipse.swt.SWT;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.overturetool.tex.ClassExstractorFromTexFiles;
-import org.overturetool.umltrans.Main.*;
-import org.eclipse.swt.*;
-import org.eclipse.swt.widgets.*;
+import org.overturetool.umltrans.Main.Translator;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -25,15 +16,13 @@ import org.eclipse.swt.widgets.*;
  * 
  * @see IWorkbenchWindowActionDelegate
  */
-public class Uml2VdmAction implements IWorkbenchWindowActionDelegate
-{
+public class Uml2VdmAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
 
 	/**
 	 * The constructor.
 	 */
-	public Uml2VdmAction()
-	{
+	public Uml2VdmAction() {
 	}
 
 	/**
@@ -42,41 +31,37 @@ public class Uml2VdmAction implements IWorkbenchWindowActionDelegate
 	 * 
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
-	public void run(IAction action)
-	{
+	public void run(IAction action) {
 		org.eclipse.swt.widgets.Shell s = new org.eclipse.swt.widgets.Shell();
 
-		org.eclipse.swt.widgets.FileDialog fd = new org.eclipse.swt.widgets.FileDialog(s, SWT.OPEN);
+		org.eclipse.swt.widgets.FileDialog fd = new org.eclipse.swt.widgets.FileDialog(
+				s, SWT.OPEN);
 		fd.setText("Open");
-		String[] filterExt =
-		{ "*.xml", "*.xmi" };
+		String[] filterExt = { "*.xml", "*.xmi" };
 		fd.setFilterExtensions(filterExt);
 
 		String inputFile = fd.open();
-		if (inputFile != null)
-		{
-			try
-			{
+		if (inputFile != null) {
+			try {
 				fd = new org.eclipse.swt.widgets.FileDialog(s, SWT.SAVE);
 				fd.setText("Save vpp file");
-				String[] filterExt1 =
-				{ "*.vpp", "*.tex", "*.*" };
+				String[] filterExt1 = { "*.vpp", "*.tex", "*.*" };
 				fd.setFilterExtensions(filterExt1);
 				fd.setFileName(inputFile + ".vpp");
 				String outFile = fd.open();
-				if (outFile != null)
-				{
+				if (outFile != null) {
 					if (!(outFile.endsWith(".vpp") || outFile.endsWith(".tex")))
 						outFile += ".vpp";
 					Translator.TransLateUmlToVdm(inputFile, outFile);
 
-					MessageDialog.openInformation(window.getShell(), "Uml 2 Vdm", "Processing completed: " + outFile);
+					MessageDialog.openInformation(window.getShell(),
+							"Uml 2 Vdm", "Processing completed: " + outFile);
 				}
 
-			} catch (Exception ex)
-			{
+			} catch (Exception ex) {
 				System.err.println(ex.getMessage() + ex.getStackTrace());
-				MessageDialog.openInformation(window.getShell(), "Error", "Processing completed with errors");
+				MessageDialog.openInformation(window.getShell(), "Error",
+						"Processing completed with errors");
 			}
 
 		}
@@ -90,8 +75,7 @@ public class Uml2VdmAction implements IWorkbenchWindowActionDelegate
 	 * 
 	 * @see IWorkbenchWindowActionDelegate#selectionChanged
 	 */
-	public void selectionChanged(IAction action, ISelection selection)
-	{
+	public void selectionChanged(IAction action, ISelection selection) {
 	}
 
 	/**
@@ -100,8 +84,7 @@ public class Uml2VdmAction implements IWorkbenchWindowActionDelegate
 	 * 
 	 * @see IWorkbenchWindowActionDelegate#dispose
 	 */
-	public void dispose()
-	{
+	public void dispose() {
 	}
 
 	/**
@@ -110,8 +93,7 @@ public class Uml2VdmAction implements IWorkbenchWindowActionDelegate
 	 * 
 	 * @see IWorkbenchWindowActionDelegate#init
 	 */
-	public void init(IWorkbenchWindow window)
-	{
+	public void init(IWorkbenchWindow window) {
 		this.window = window;
 	}
 }

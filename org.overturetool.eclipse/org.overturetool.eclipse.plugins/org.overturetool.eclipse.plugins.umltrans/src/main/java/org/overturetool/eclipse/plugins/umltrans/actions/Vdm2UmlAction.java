@@ -2,22 +2,15 @@ package org.overturetool.eclipse.plugins.umltrans.actions;
 
 import java.io.File;
 
-import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.overturetool.tex.ClassExstractorFromTexFiles;
-import org.overturetool.umltrans.Main.*;
-
-
-
-import javax.swing.filechooser.FileFilter;
+import org.overturetool.umltrans.Main.Translator;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -27,15 +20,13 @@ import javax.swing.filechooser.FileFilter;
  * 
  * @see IWorkbenchWindowActionDelegate
  */
-public class Vdm2UmlAction implements IWorkbenchWindowActionDelegate
-{
+public class Vdm2UmlAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
 
 	/**
 	 * The constructor.
 	 */
-	public Vdm2UmlAction()
-	{
+	public Vdm2UmlAction() {
 	}
 
 	/**
@@ -44,60 +35,54 @@ public class Vdm2UmlAction implements IWorkbenchWindowActionDelegate
 	 * 
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
-	public void run(IAction action)
-	{
+	public void run(IAction action) {
 
 		org.eclipse.swt.widgets.Shell s = new org.eclipse.swt.widgets.Shell();
 
-		org.eclipse.swt.widgets.FileDialog fd = new org.eclipse.swt.widgets.FileDialog(s, SWT.MULTI);
+		org.eclipse.swt.widgets.FileDialog fd = new org.eclipse.swt.widgets.FileDialog(
+				s, SWT.MULTI);
 		fd.setText("Open");
-		
-		String[] filterExt =
-		{ "*.vpp", "*.tex" };
+
+		String[] filterExt = { "*.vpp", "*.tex" };
 		fd.setFilterExtensions(filterExt);
 		String ret = fd.open();
 		String[] fLst = fd.getFileNames();
-		if (ret != null)
-		{
+		if (ret != null) {
 
-			try
-			{
+			try {
 				String[] files = new String[fLst.length];
-				for (int i = 0; i < fLst.length; i++)
-				{
+				for (int i = 0; i < fLst.length; i++) {
 					String separator = System.getProperty("file.separator");
-					files[i]= fd.getFilterPath()+ separator +fLst[i];
+					files[i] = fd.getFilterPath() + separator + fLst[i];
 				}
-				
-				
-			
-				
-				org.eclipse.swt.widgets.FileDialog	fdSave = new org.eclipse.swt.widgets.FileDialog(s, SWT.SAVE);
+
+				org.eclipse.swt.widgets.FileDialog fdSave = new org.eclipse.swt.widgets.FileDialog(
+						s, SWT.SAVE);
 				fdSave.setText("Save model");
 				// fd.setFilterPath("C:/");
-				String[] filterExt1 =
-				{ "*.xml", "*.xmi"};
+				String[] filterExt1 = { "*.xml", "*.xmi" };
 				fdSave.setFilterExtensions(filterExt1);
-				fdSave.setFileName(files[0]+".xml");
+				fdSave.setFileName(files[0] + ".xml");
 				String outFile = fdSave.open();
-				if (outFile != null)
-				{
+				if (outFile != null) {
 					// convert to vpp files the only format supported by the
 					// overture parser
-					//String[] vppFiles = ClassExstractorFromTexFiles.exstract(files);
+					// String[] vppFiles =
+					// ClassExstractorFromTexFiles.exstract(files);
 
 					if (!(outFile.endsWith(".xml") || outFile.endsWith(".xml")))
 						outFile += ".xml";
-					String tmp = new Translator().TransLateTexVdmToUml(files, outFile);
+					Translator.TransLateTexVdmToUml(files, outFile);
 
-					MessageDialog.openInformation(window.getShell(), "Vdm 2 Uml", "Processing completed: " + outFile);
+					MessageDialog.openInformation(window.getShell(),
+							"Vdm 2 Uml", "Processing completed: " + outFile);
 
 				}
 
-			} catch (Exception ex)
-			{
+			} catch (Exception ex) {
 				System.err.println(ex.getMessage() + ex.getStackTrace());
-				MessageDialog.openInformation(window.getShell(), "Error", "Processing completed with errors");
+				MessageDialog.openInformation(window.getShell(), "Error",
+						"Processing completed with errors");
 			}
 
 		}
@@ -111,8 +96,7 @@ public class Vdm2UmlAction implements IWorkbenchWindowActionDelegate
 	 * 
 	 * @see IWorkbenchWindowActionDelegate#selectionChanged
 	 */
-	public void selectionChanged(IAction action, ISelection selection)
-	{
+	public void selectionChanged(IAction action, ISelection selection) {
 	}
 
 	/**
@@ -121,8 +105,7 @@ public class Vdm2UmlAction implements IWorkbenchWindowActionDelegate
 	 * 
 	 * @see IWorkbenchWindowActionDelegate#dispose
 	 */
-	public void dispose()
-	{
+	public void dispose() {
 	}
 
 	/**
@@ -131,63 +114,49 @@ public class Vdm2UmlAction implements IWorkbenchWindowActionDelegate
 	 * 
 	 * @see IWorkbenchWindowActionDelegate#init
 	 */
-	public void init(IWorkbenchWindow window)
-	{
+	public void init(IWorkbenchWindow window) {
 		this.window = window;
 	}
 }
 
-class ExtensionFileFilter extends FileFilter
-{
+class ExtensionFileFilter extends FileFilter {
 	String description;
 
 	String extensions[];
 
-	public ExtensionFileFilter(String description, String extension)
-	{
-		this(description, new String[]
-		{ extension });
+	public ExtensionFileFilter(String description, String extension) {
+		this(description, new String[] { extension });
 	}
 
-	public ExtensionFileFilter(String description, String extensions[])
-	{
-		if (description == null)
-		{
+	public ExtensionFileFilter(String description, String extensions[]) {
+		if (description == null) {
 			this.description = extensions[0];
-		} else
-		{
+		} else {
 			this.description = description;
 		}
 		this.extensions = (String[]) extensions.clone();
 		toLower(this.extensions);
 	}
 
-	private void toLower(String array[])
-	{
-		for (int i = 0, n = array.length; i < n; i++)
-		{
+	private void toLower(String array[]) {
+		for (int i = 0, n = array.length; i < n; i++) {
 			array[i] = array[i].toLowerCase();
 		}
 	}
 
-	public String getDescription()
-	{
+	public String getDescription() {
 		return description;
 	}
 
-	public boolean accept(File file)
-	{
-		if (file.isDirectory())
-		{
+	public boolean accept(File file) {
+		if (file.isDirectory()) {
 			return true;
-		} else
-		{
+		} else {
 			String path = file.getAbsolutePath().toLowerCase();
-			for (int i = 0, n = extensions.length; i < n; i++)
-			{
+			for (int i = 0, n = extensions.length; i < n; i++) {
 				String extension = extensions[i];
-				if ((path.endsWith(extension) && (path.charAt(path.length() - extension.length() - 1)) == '.'))
-				{
+				if ((path.endsWith(extension) && (path.charAt(path.length()
+						- extension.length() - 1)) == '.')) {
 					return true;
 				}
 			}

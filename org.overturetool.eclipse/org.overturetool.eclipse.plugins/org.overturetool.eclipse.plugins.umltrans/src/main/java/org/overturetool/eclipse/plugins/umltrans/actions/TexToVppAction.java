@@ -2,20 +2,13 @@ package org.overturetool.eclipse.plugins.umltrans.actions;
 
 import java.io.File;
 
-import javax.swing.JFileChooser;
-
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.overturetool.tex.ClassExstractorFromTexFiles;
-import org.overturetool.umltrans.Main.*;
-
-import javax.swing.filechooser.FileFilter;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -25,15 +18,13 @@ import javax.swing.filechooser.FileFilter;
  * 
  * @see IWorkbenchWindowActionDelegate
  */
-public class TexToVppAction implements IWorkbenchWindowActionDelegate
-{
+public class TexToVppAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
 
 	/**
 	 * The constructor.
 	 */
-	public TexToVppAction()
-	{
+	public TexToVppAction() {
 	}
 
 	/**
@@ -42,45 +33,42 @@ public class TexToVppAction implements IWorkbenchWindowActionDelegate
 	 * 
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
-	public void run(IAction action)
-	{
+	public void run(IAction action) {
 
 		org.eclipse.swt.widgets.Shell s = new org.eclipse.swt.widgets.Shell();
 
-		org.eclipse.swt.widgets.FileDialog fd = new org.eclipse.swt.widgets.FileDialog(s, SWT.MULTI);
+		org.eclipse.swt.widgets.FileDialog fd = new org.eclipse.swt.widgets.FileDialog(
+				s, SWT.MULTI);
 		fd.setText("Open");
 
-		String[] filterExt =
-		{ "*.tex" };
+		String[] filterExt = { "*.tex" };
 		fd.setFilterExtensions(filterExt);
 		String ret = fd.open();
 		String[] fLst = fd.getFileNames();
-		if (ret != null)
-		{
+		if (ret != null) {
 
-			try
-			{
+			try {
 				String[] files = new String[fLst.length];
-				for (int i = 0; i < fLst.length; i++)
-				{
+				for (int i = 0; i < fLst.length; i++) {
 					String separator = System.getProperty("file.separator");
-					files[i] = fd.getFilterPath() + separator+ fLst[i];
+					files[i] = fd.getFilterPath() + separator + fLst[i];
 				}
 
 				String outputDir = new File(files[0]).getParent();
-				
-				String[] vppFiles = ClassExstractorFromTexFiles.exstract(files,outputDir);
+
+				String[] vppFiles = ClassExstractorFromTexFiles.exstract(files,
+						outputDir);
 				String outFile = "";
-				for (int i = 0; i < vppFiles.length; i++)
-				{
+				for (int i = 0; i < vppFiles.length; i++) {
 					outFile += "\n" + vppFiles[i];
 				}
-				MessageDialog.openInformation(window.getShell(), "Tex 2 vpp", "Processing completed: " + outFile);
+				MessageDialog.openInformation(window.getShell(), "Tex 2 vpp",
+						"Processing completed: " + outFile);
 
-			} catch (Exception ex)
-			{
+			} catch (Exception ex) {
 				System.err.println(ex.getMessage() + ex.getStackTrace());
-				MessageDialog.openInformation(window.getShell(), "Error", "Processing completed with errors");
+				MessageDialog.openInformation(window.getShell(), "Error",
+						"Processing completed with errors");
 			}
 
 		}
@@ -94,8 +82,7 @@ public class TexToVppAction implements IWorkbenchWindowActionDelegate
 	 * 
 	 * @see IWorkbenchWindowActionDelegate#selectionChanged
 	 */
-	public void selectionChanged(IAction action, ISelection selection)
-	{
+	public void selectionChanged(IAction action, ISelection selection) {
 	}
 
 	/**
@@ -104,8 +91,7 @@ public class TexToVppAction implements IWorkbenchWindowActionDelegate
 	 * 
 	 * @see IWorkbenchWindowActionDelegate#dispose
 	 */
-	public void dispose()
-	{
+	public void dispose() {
 	}
 
 	/**
@@ -114,9 +100,7 @@ public class TexToVppAction implements IWorkbenchWindowActionDelegate
 	 * 
 	 * @see IWorkbenchWindowActionDelegate#init
 	 */
-	public void init(IWorkbenchWindow window)
-	{
+	public void init(IWorkbenchWindow window) {
 		this.window = window;
 	}
 }
-
