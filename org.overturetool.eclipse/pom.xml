@@ -80,7 +80,7 @@
         <extensions>true</extensions>
         <configuration>
           <logModifications>true</logModifications>
-          <testFrameworkVersion>3.1.0</testFrameworkVersion>
+          <testFrameworkVersion>4.2.200.v200901090100</testFrameworkVersion>
         </configuration>
         <executions>
           <execution>
