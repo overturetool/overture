@@ -174,9 +174,9 @@
       </activation>
       <dependencies>
         <dependency>
-          <groupId>com.princetonsoftech.eclipse</groupId>
+          <groupId>org.overturetool.eclipse.plugins</groupId>
           <artifactId>org.eclipse.swt.gtk.linux.x86</artifactId>
-          <version>3.2.0</version>
+          <version>3.4.1</version>
           <type>jar</type>
         </dependency>
       </dependencies>
