@@ -30,10 +30,14 @@
    
     <!-- Thrid build all source plugins-->
     <module>org.overturetool.eclipse.plugins.umltrans</module>
+  
+    <module>org.overturetool.eclipse.plugins.debug</module>
+   
+    <module>org.overturetool.eclipse.plugins.launching</module>
+   
     
     <module>org.overturetool.eclipse.plugins.editor.ui</module>
     <module>org.overturetool.eclipse.plugins.debug.ui</module>
-    <module>org.overturetool.eclipse.plugins.launching</module>
-    <module>org.overturetool.eclipse.plugins.debug</module>
+  
   </modules>
 </project>
