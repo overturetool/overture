@@ -19,7 +19,7 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.4.2";resolution:=optional,
  org.eclipse.dltk.debug.ui;bundle-version="1.0.0";resolution:=optional,
  org.eclipse.search;bundle-version="3.4.1";resolution:=optional,
  org.eclipse.core.expressions;bundle-version="3.4.1";resolution:=optional,
- org.overturetool.eclipse.plugins.editor.core;bundle-version="1.0.0"
+ org.overturetool.eclipse.plugins.editor.core;bundle-version="1.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.overturetool.eclipse.plugins.editor.internal.ui,
