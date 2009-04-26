@@ -1,27 +1,27 @@
 Manifest-Version: 1.0
-Export-Package: org.overturetool.vdmj.ast,org.overturetool.vdmj.comman
- ds,org.overturetool.vdmj.debug,org.overturetool.vdmj.definitions,org.
- overturetool.vdmj,org.overturetool.vdmj.expressions,org.overturetool.
- vdmj.lex,org.overturetool.vdmj.messages,org.overturetool.vdmj.modules
- ,org.overturetool.vdmj.patterns,org.overturetool.vdmj.pog,org.overtur
- etool.vdmj.runtime,org.overturetool.vdmj.statements,org.overturetool.
- vdmj.syntax,org.overturetool.vdmj.traces,org.overturetool.vdmj.typech
- ecker,org.overturetool.vdmj.types,org.overturetool.vdmj.util,org.over
- turetool.vdmj.values,org.overturetool.parser.imp,org.overturetool.sca
- nner.imp,org.overturetool.visitor,org.overturetool.ast.imp,org.overtu
- retool.ast.itf,org.overturetool.visitor,jp.co.csk.vdm.toolbox.api.cor
+Export-Package: org.overturetool.vdmj,org.overturetool.vdmj.traces,org
+ .overturetool.vdmj.syntax,org.overturetool.vdmj.lex,org.overturetool.
+ vdmj.commands,org.overturetool.vdmj.debug,org.overturetool.vdmj.typec
+ hecker,org.overturetool.vdmj.definitions,org.overturetool.vdmj.expres
+ sions,org.overturetool.vdmj.types,org.overturetool.vdmj.util,org.over
+ turetool.vdmj.pog,org.overturetool.vdmj.statements,org.overturetool.v
+ dmj.modules,org.overturetool.vdmj.ast,org.overturetool.vdmj.patterns,
+ org.overturetool.vdmj.values,org.overturetool.vdmj.runtime,org.overtu
+ retool.vdmj.messages,org.overturetool.parser.imp,org.overturetool.vis
+ itor,org.overturetool.scanner.imp,org.overturetool.visitor,org.overtu
+ retool.ast.itf,org.overturetool.ast.imp,jp.co.csk.vdm.toolbox.api.cor
  ba.ToolboxAPI,jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.VDMCodeGener
  atorPackage,jp.co.csk.vdm.toolbox.api.corba.VDM,jp.co.csk.vdm.toolbox
- .api,jp.co.csk.vdm.toolbox.VDM,jp.co.csk.vdm.toolbox.VDM.quotes,jp.co
- .csk.vdm.toolbox.VDM.ValueParser
+ .api,jp.co.csk.vdm.toolbox.VDM,jp.co.csk.vdm.toolbox.VDM.ValueParser,
+ jp.co.csk.vdm.toolbox.VDM.quotes
 Bundle-Vendor: Princeton Softech Inc.
-Bundle-ClassPath: lib\vdmj-1.0.0.jar,lib\parser-1.0.0.jar,lib\ast-1.0.
- 0.jar,lib\stdlib-1.0.0.jar
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: lib/vdmj-1.0.0.jar,lib/parser-1.0.0.jar,lib/ast-1.0.
+ 0.jar,lib/stdlib-1.0.0.jar
 Bundle-Version: 1.0.0
 Eclipse-BuddyPolicy: registered
 Bundle-Localization: plugin
 Bundle-Name: org.overturetool.eclipse.plugins.stdlib
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overturetool.eclipse.plugins.stdlib
-Bundle-ActivationPolicy: lazy
 
