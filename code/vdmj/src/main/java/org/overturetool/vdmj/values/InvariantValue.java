@@ -32,14 +32,14 @@ import org.overturetool.vdmj.types.Type;
 public class InvariantValue extends ReferenceValue
 {
 	public final NamedType type;
-	public final FunctionValue invariant;
 
 	public InvariantValue(NamedType type, Value value, Context ctxt)
 		throws ValueException
 	{
 		super(value);
 		this.type = type;
-		this.invariant = type.getInvariant(ctxt);
+
+		FunctionValue invariant = type.getInvariant(ctxt);
 
 		if (invariant != null && Settings.invchecks &&
 			!invariant.eval(invariant.location, value, ctxt).boolValue(ctxt))
@@ -49,17 +49,16 @@ public class InvariantValue extends ReferenceValue
 	}
 
 	// For clone only
-	private InvariantValue(NamedType type, Value value, FunctionValue invariant)
+	private InvariantValue(NamedType type, Value value)
 	{
 		super(value);
 		this.type = type;
-		this.invariant = invariant;
 	}
 
 	@Override
 	public Value convertValueTo(Type to, Context ctxt) throws ValueException
 	{
-		if (to.isType(NamedType.class))
+		if (to.equals(type))
 		{
 			return this;
 		}
@@ -73,13 +72,12 @@ public class InvariantValue extends ReferenceValue
 	public Value getUpdatable(ValueListener listener)
 	{
 		return new UpdatableValue(
-			new InvariantValue(
-				type, value.getUpdatable(listener), invariant), listener);
+			new InvariantValue(type, value.getUpdatable(listener)), listener);
 	}
 
 	@Override
 	public Object clone()
 	{
-		return new InvariantValue(type, value, invariant);
+		return new InvariantValue(type, value);
 	}
 }
