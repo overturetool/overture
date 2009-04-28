@@ -31,7 +31,6 @@ import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.NaturalType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
-import org.overturetool.vdmj.types.UnknownType;
 import org.overturetool.vdmj.values.NaturalValue;
 import org.overturetool.vdmj.values.Value;
 
