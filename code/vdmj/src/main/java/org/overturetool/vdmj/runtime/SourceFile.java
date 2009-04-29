@@ -46,6 +46,26 @@ public class SourceFile
 
 	public SourceFile(File filename) throws IOException
 	{
+		if (filename.getName().endsWith(".lib"))
+		{
+			filename = new File(filename.getPath().replaceAll(".lib$", ".vpp"));
+
+			if (!filename.exists())
+			{
+				filename = new File(filename.getPath().replaceAll(".vpp$", ".vdm"));
+
+				if (!filename.exists())
+				{
+					filename = new File(filename.getPath().replaceAll(".vdm$", ".def"));
+
+					if (!filename.exists())
+					{
+						throw new IOException("Cannot find source of library");
+					}
+				}
+			}
+		}
+
 		this.filename = filename;
 		BufferedReader br = new BufferedReader(
 			new InputStreamReader(
