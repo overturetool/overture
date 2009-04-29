@@ -42,11 +42,9 @@ public class OvertureProjectWizardFirstPage extends ProjectWizardFirstPage {
 	}
 	
 	
-		
 	@Override
-	protected void createInterpreterGroup(Composite parent) {
-		// TODO Auto-generated method stub
-		
+	protected IInterpreterGroup createInterpreterGroup(Composite parent) {
+		return null;
 	}
 
 	@Override

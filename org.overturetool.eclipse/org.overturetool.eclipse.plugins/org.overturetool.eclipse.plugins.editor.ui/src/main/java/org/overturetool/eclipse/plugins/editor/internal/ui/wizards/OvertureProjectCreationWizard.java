@@ -69,9 +69,11 @@ public class OvertureProjectCreationWizard extends NewElementWizard implements
 				} 
 			};
 
-			protected void createInterpreterGroup(Composite parent) {
+			protected IInterpreterGroup createInterpreterGroup(Composite parent) {
 				fInterpreterGroup = new OvertureInterpreterGroup(parent);
+				return fInterpreterGroup;
 			}
+			
 
 			protected Observable getInterpreterGroupObservable() {
 				return fInterpreterGroup;
@@ -85,9 +87,6 @@ public class OvertureProjectCreationWizard extends NewElementWizard implements
 				return fInterpreterGroup.getSelectedInterpreter();
 			}
 
-			protected void handlePossibleInterpreterChange() {
-				fInterpreterGroup.handlePossibleInterpreterChange();
-			}
 
 			protected boolean interpeterRequired() {
 				// TODO Auto-generated method stub
