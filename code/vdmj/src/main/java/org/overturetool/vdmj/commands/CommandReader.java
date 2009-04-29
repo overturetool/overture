@@ -32,6 +32,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -169,7 +170,7 @@ abstract public class CommandReader
 				}
 				else if (line.equals("files"))
 				{
-					carryOn = doFiles(filenames);
+					carryOn = doFiles();
 				}
 				else if (line.equals("stop"))
 				{
@@ -233,7 +234,7 @@ abstract public class CommandReader
 				}
 				else if(line.startsWith("coverage"))
 				{
-					carryOn = doCoverage(line, filenames);
+					carryOn = doCoverage(line);
 				}
 				else if(line.startsWith("remove"))
 				{
@@ -366,8 +367,10 @@ abstract public class CommandReader
 		return notAvailable(line);
 	}
 
-	protected boolean doFiles(List<File> filenames)
+	protected boolean doFiles()
 	{
+		Set<File> filenames = interpreter.getSourceFiles();
+		
 		for (File file: filenames)
 		{
 			println(file.getPath());
@@ -505,13 +508,15 @@ abstract public class CommandReader
 		return notAvailable(line);
 	}
 
-	protected boolean doCoverage(String line, List<File> loaded)
+	protected boolean doCoverage(String line)
 	{
 		try
 		{
+			Set<File> loaded = interpreter.getSourceFiles();
+			
 			if (line.equals("coverage"))
 			{
-				for (File file: loaded)
+				for (File file: interpreter.getSourceFiles())
 				{
 					doCoverage(file);
 				}

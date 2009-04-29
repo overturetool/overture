@@ -308,13 +308,13 @@ public class DebuggerReader extends CommandReader
 	}
 
 	@Override
-	protected boolean doFiles(List<File> filenames)
+	protected boolean doFiles()
 	{
 		return notAvailable("");
 	}
 
 	@Override
-	protected boolean doCoverage(String line, List<File> filenames)
+	protected boolean doCoverage(String line)
 	{
 		return notAvailable(line);
 	}
