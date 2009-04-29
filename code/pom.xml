@@ -19,6 +19,8 @@
 <module>vdmtools</module>
 <module>traces</module>
 <module>vdmj</module>
+<module>showtrace</module>
+
 </modules>
 <dependencies>
 <dependency>
