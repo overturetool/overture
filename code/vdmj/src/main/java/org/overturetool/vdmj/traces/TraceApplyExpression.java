@@ -43,6 +43,7 @@ import org.overturetool.vdmj.typechecker.NameScope;
 
 public class TraceApplyExpression extends TraceCoreDefinition
 {
+    private static final long serialVersionUID = 1L;
 	public final CallObjectStatement statement;
 
 	public TraceApplyExpression(CallObjectStatement statement)

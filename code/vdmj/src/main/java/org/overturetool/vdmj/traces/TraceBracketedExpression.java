@@ -36,6 +36,7 @@ import org.overturetool.vdmj.typechecker.NameScope;
 
 public class TraceBracketedExpression extends TraceCoreDefinition
 {
+    private static final long serialVersionUID = 1L;
 	public final List<TraceDefinitionTerm> terms;
 
 	public TraceBracketedExpression(

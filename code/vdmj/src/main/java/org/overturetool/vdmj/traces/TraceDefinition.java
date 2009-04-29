@@ -24,6 +24,8 @@
 package org.overturetool.vdmj.traces;
 
 
+import java.io.Serializable;
+
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.typechecker.Environment;
@@ -33,8 +35,9 @@ import org.overturetool.vdmj.typechecker.NameScope;
  * A class representing a trace definition.
  */
 
-abstract public class TraceDefinition
+abstract public class TraceDefinition implements Serializable
 {
+    private static final long serialVersionUID = 1L;
 	public final LexLocation location;
 
 	public TraceDefinition(LexLocation location)

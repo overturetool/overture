@@ -35,6 +35,7 @@ import org.overturetool.vdmj.typechecker.TypeChecker;
 
 public class TraceRepeatDefinition extends TraceDefinition
 {
+    private static final long serialVersionUID = 1L;
 	public final TraceCoreDefinition core;
 	public final long from;
 	public final long to;

@@ -40,6 +40,7 @@ import org.overturetool.vdmj.typechecker.NameScope;
 
 public class TraceLetDefBinding extends TraceDefinition
 {
+    private static final long serialVersionUID = 1L;
 	public final List<ValueDefinition> localDefs;
 	public final TraceDefinition body;
 
