@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.overturetool.eclipse.features.showtrace_1.0.0.200904280918.jar" id="org.overturetool.eclipse.features.showtrace" version="1.0.0.200904280918">
+      <category name="OvertureTool"/>
+   </feature>
+   <feature url="features/org.overturetool.eclipse.features.showtrace_1.0.0.200904280919.jar" id="org.overturetool.eclipse.features.showtrace" version="1.0.0.200904280919">
+      <category name="OvertureTool"/>
+   </feature>
+   <category-def name="OvertureTool" label="OvertureTool">
+      <description>
+         The Overture project aims at developing a set of open source tools (as Eclipse plug-ins) to support the Overture Modeling Language (OML). OML is inspired by the object-oriented formal specification language VDM++ (Vienna Development Method).
+      </description>
+   </category-def>
+</site>
