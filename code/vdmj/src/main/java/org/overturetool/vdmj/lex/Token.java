@@ -100,6 +100,7 @@ public enum Token implements Serializable
 	MERGE("merge", "merge", Dialect.VDM_SL, Dialect.VDM_PP, Dialect.VDM_RT),
 	HEAD("hd", "hd", Dialect.VDM_SL, Dialect.VDM_PP, Dialect.VDM_RT),
 	TAIL("tl", "tl", Dialect.VDM_SL, Dialect.VDM_PP, Dialect.VDM_RT),
+	REV("rev", "rev", Dialect.VDM_SL, Dialect.VDM_PP, Dialect.VDM_RT),
 	FLOOR("floor", "floor", Dialect.VDM_SL, Dialect.VDM_PP, Dialect.VDM_RT),
 	DUNION("dunion", "dunion", Dialect.VDM_SL, Dialect.VDM_PP, Dialect.VDM_RT),
 	DISTCONC("conc", "conc", Dialect.VDM_SL, Dialect.VDM_PP, Dialect.VDM_RT),
