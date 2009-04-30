@@ -40,7 +40,7 @@ public class OvertureConsoleCompletionProcessor extends
 		}
 	}
 
-	protected IProposalDecorator tclDecorator = new IProposalDecorator() {
+	protected IProposalDecorator overtureDecorator = new IProposalDecorator() {
 		public String formatProposal(ScriptConsoleCompletionProposal c) {
 			return c.getDisplay();
 		}
@@ -83,7 +83,7 @@ public class OvertureConsoleCompletionProcessor extends
 			List list = getInterpreterShell().getCompletions(commandLine,
 					cursorPosition);
 
-			List proposals = createProposalsFromString(list, offset, tclDecorator);
+			List proposals = createProposalsFromString(list, offset, overtureDecorator);
 
 			return (ICompletionProposal[]) proposals
 					.toArray(new ICompletionProposal[proposals.size()]);
