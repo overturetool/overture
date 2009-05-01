@@ -42,7 +42,9 @@ public class RecursiveObligation extends ProofObligation
 		sb.append(")");
 		sb.append(def.measureLexical > 0 ? " LEX" + def.measureLexical + "> " : " > ");
 		sb.append(def.measure);
+		sb.append("(");
 		sb.append(apply.args);
+		sb.append(")");
 
 		value = ctxt.getObligation(sb.toString());
 	}
@@ -64,7 +66,9 @@ public class RecursiveObligation extends ProofObligation
 		sb.append(")");
 		sb.append(def.measureLexical > 0 ? " LEX" + def.measureLexical + "> " : " > ");
 		sb.append(def.measure);
+		sb.append("(");
 		sb.append(apply.args);
+		sb.append(")");
 
 		value = ctxt.getObligation(sb.toString());
 	}
