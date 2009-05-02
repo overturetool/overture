@@ -20,19 +20,18 @@ public class VdmProject {
 	private File baseDir;
 	private Log log;
 	private File vppde;
-	
+
 	private ArrayList<File> dependedArtifactsSourceLocation = new ArrayList<File>();
 
 	private ArrayList<File> files = new ArrayList<File>();
 
 	public VdmProject(Log log, File vppde, File baseDir,
-			ArrayList<File> dependedArtifactsSourceLocation
-			) {
+			ArrayList<File> dependedArtifactsSourceLocation) {
 		this.baseDir = baseDir;
 		this.dependedArtifactsSourceLocation = dependedArtifactsSourceLocation;
 		this.log = log;
 		this.vppde = vppde;
-		
+
 		exstractFiles();
 
 	}
@@ -74,7 +73,8 @@ public class VdmProject {
 	public void TypeCheck() {
 		String out = new String();
 
-		out = ExecuteCmdVdmTools(" -t" + GetSpecFiles(), GetJavaLocation(baseDir));
+		out = ExecuteCmdVdmTools(" -t" + GetSpecFiles(),
+				GetJavaLocation(baseDir));
 
 		if (out.contains("Errors detected") || out.contains("  Expected"))
 			new MojoFailureException("VDM Type check faild: Errors detected");
@@ -87,18 +87,31 @@ public class VdmProject {
 		String out = new String();
 		try {
 			String line;
-			ProcessBuilder pb = new ProcessBuilder("\""
-					+ vppde.getAbsolutePath() + "\"" + arguments);
+			ProcessBuilder pb = null;
+			log.debug("OS = "+System.getProperty("os.name"));
+			if (IsWindows()) {
+				
+				pb = new ProcessBuilder("\"" + vppde.getAbsolutePath() + "\""
+						+ arguments.trim());
+			} else if (IsMac()) {
+				pb = new ProcessBuilder("open " + vppde.getAbsolutePath() + " "
+						+ arguments.trim());
+			} else {
+				pb = new ProcessBuilder(vppde.getAbsolutePath() + " "
+						+ arguments.trim());
+			}
 			pb.directory(baseDirectory);
 			pb.redirectErrorStream(true);
 
 			Process p = pb.start();
 
-			BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			BufferedReader input = new BufferedReader(new InputStreamReader(p
+					.getInputStream()));
 			while ((line = input.readLine()) != null) {
 				out += "\n" + line;
 				if (!line.endsWith("done")
-						&& !line.endsWith("with super classes are POS type correct"))
+						&& !line
+								.endsWith("with super classes are POS type correct"))
 					if (line.startsWith("  Warning"))
 						log.warn("\n" + line);
 					else
@@ -107,22 +120,37 @@ public class VdmProject {
 			input.close();
 		} catch (Exception err) {
 			out += err.getMessage();
-			log.info("\n" + err.getMessage());
+
+			log.error("\n" + err.getMessage());
+			log.debug(err.getStackTrace().toString());
 		}
 		return out;
 	}
 
-	public void CodeGen(List<String> excludePackages,List<String> excludeClasses,List<String> importPackages) {
-		
-		if(excludePackages== null)
+	public static Boolean IsMac() {
+		String osName = System.getProperty("os.name");
+
+		return osName.toUpperCase().indexOf("MAC".toUpperCase()) > -1;
+	}
+
+	public static Boolean IsWindows() {
+		String osName = System.getProperty("os.name");
+
+		return osName.toUpperCase().indexOf("Windows".toUpperCase()) > -1;
+	}
+
+	public void CodeGen(List<String> excludePackages,
+			List<String> excludeClasses, List<String> importPackages) {
+
+		if (excludePackages == null)
 			excludePackages = new ArrayList<String>();
-		
-		if(excludeClasses== null)
+
+		if (excludeClasses == null)
 			excludeClasses = new ArrayList<String>();
-		
-		if(importPackages== null)
+
+		if (importPackages == null)
 			importPackages = new ArrayList<String>();
-		
+
 		Dictionary<String, File> classToJavaFile = new Hashtable<String, File>();
 		ArrayList<String> classes = new ArrayList<String>();
 		Dictionary<String, ArrayList<String>> packageToClasses = new Hashtable<String, ArrayList<String>>();
@@ -132,23 +160,28 @@ public class VdmProject {
 		for (File file : Util.GetFiles(GetVppLocation(baseDir), extension)) {
 			if (file.exists())
 				for (String className : Util.GetClasses(file.getAbsolutePath())) {
-					if(excludeClasses.contains(className))
+					if (excludeClasses.contains(className))
 						continue;
-					
+
 					classes.add(className);
 					// set the coresponding Java file
-					String tmp = Util.GetPackageAsPathPart(baseDir.getAbsolutePath(), file.getAbsolutePath());
-					String tmp2 = tmp.replace("/src/main/vpp".replace('/', File.separatorChar), "/src/main/java".replace('/', File.separatorChar));
+					String tmp = Util.GetPackageAsPathPart(baseDir
+							.getAbsolutePath(), file.getAbsolutePath());
+					String tmp2 = tmp.replace("/src/main/vpp".replace('/',
+							File.separatorChar), "/src/main/java".replace('/',
+							File.separatorChar));
 					String javaFile = baseDir.getAbsolutePath()
 							+ tmp2.replace(".vpp", ".java");
 					classToJavaFile.put(className, new File(javaFile));
 					javaFiles.add(new File(javaFile));
 					String packageName = Util.GetPackage(baseDir, file);
-					packageName = packageName.replace("src.main.vpp.", "").trim();
+					packageName = packageName.replace("src.main.vpp.", "")
+							.trim();
 					if (packageName.equals("src.main.vpp"))
 						packageName = "";
 
-					ArrayList<String> classList = packageToClasses.get(packageName);
+					ArrayList<String> classList = packageToClasses
+							.get(packageName);
 					if (classList == null) {
 						classList = new ArrayList<String>();
 						classList.add(className);
@@ -170,10 +203,10 @@ public class VdmProject {
 		}
 
 		log.info("Updating imports");
-		
+
 		for (String string : excludePackages) {
-			if(packages.contains(string))
-			packages.remove(string);
+			if (packages.contains(string))
+				packages.remove(string);
 		}
 		SetImports(packages, javaFiles);
 
