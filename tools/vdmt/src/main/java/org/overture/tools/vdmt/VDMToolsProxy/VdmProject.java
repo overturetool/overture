@@ -3,6 +3,8 @@ package org.overture.tools.vdmt.VDMToolsProxy;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -122,10 +124,19 @@ public class VdmProject {
 			out += err.getMessage();
 
 			log.error("\n" + err.getMessage());
-			log.debug(err.getStackTrace().toString());
+			log.debug(getStackTrace(err));
 		}
 		return out;
 	}
+	  public static String getStackTrace(Throwable t)
+	    {
+	        StringWriter sw = new StringWriter();
+	        PrintWriter pw = new PrintWriter(sw, true);
+	        t.printStackTrace(pw);
+	        pw.flush();
+	        sw.flush();
+	        return sw.toString();
+	    }
 
 	public static Boolean IsMac() {
 		String osName = System.getProperty("os.name");
