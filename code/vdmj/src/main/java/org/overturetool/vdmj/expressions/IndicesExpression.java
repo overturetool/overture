@@ -32,7 +32,6 @@ import org.overturetool.vdmj.types.NaturalType;
 import org.overturetool.vdmj.types.SetType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
-import org.overturetool.vdmj.types.UnknownType;
 import org.overturetool.vdmj.values.IntegerValue;
 import org.overturetool.vdmj.values.SetValue;
 import org.overturetool.vdmj.values.Value;
@@ -63,7 +62,6 @@ public class IndicesExpression extends UnaryExpression
 		{
 			report(3109, "Argument to 'inds' is not a sequence");
 			detail("Actual type", etype);
-			return new UnknownType(location);
 		}
 
 		return new SetType(location, new NaturalType(location));

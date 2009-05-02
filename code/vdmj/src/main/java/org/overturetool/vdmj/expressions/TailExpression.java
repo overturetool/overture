@@ -31,6 +31,7 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.types.SeqType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.types.UnknownType;
@@ -61,7 +62,7 @@ public class TailExpression extends UnaryExpression
 		if (!etype.isSeq())
 		{
 			report(3179, "Argument to 'tl' is not a sequence");
-			return new UnknownType(location);
+			return new SeqType(location, new UnknownType(location));
 		}
 
 		return etype;

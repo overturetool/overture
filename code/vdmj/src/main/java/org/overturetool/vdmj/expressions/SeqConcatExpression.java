@@ -28,9 +28,11 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.types.SeqType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.types.TypeSet;
+import org.overturetool.vdmj.types.UnknownType;
 import org.overturetool.vdmj.values.SeqValue;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.ValueList;
@@ -53,11 +55,13 @@ public class SeqConcatExpression extends BinaryExpression
 		if (!ltype.isSeq())
 		{
 			report(3157, "Left hand of '^' is not a sequence");
+			ltype = new SeqType(location, new UnknownType(location));
 		}
 
 		if (!rtype.isSeq())
 		{
 			report(3158, "Right hand of '^' is not a sequence");
+			rtype = new SeqType(location, new UnknownType(location));
 		}
 
 		TypeSet ts = new TypeSet(ltype, rtype);

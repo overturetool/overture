@@ -34,6 +34,7 @@ import org.overturetool.vdmj.types.SeqType;
 import org.overturetool.vdmj.types.SetType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
+import org.overturetool.vdmj.types.UnknownType;
 import org.overturetool.vdmj.values.SetValue;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.ValueList;
@@ -64,7 +65,7 @@ public class ElementsExpression extends SetExpression
 		if (!arg.isSeq())
 		{
 			report(3085, "Argument of 'elems' is not a sequence");
-			return arg;
+			return new SetType(location, new UnknownType(location));
 		}
 
 		SeqType seq = arg.getSeq();
