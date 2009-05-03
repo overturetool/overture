@@ -9,19 +9,18 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overturetool.vdmtools.interpreter.Interpreter;
-import org.overturetool.vdmtools.parser.Parser;
-
 import jp.co.csk.vdm.toolbox.api.ToolboxClient;
 import jp.co.csk.vdm.toolbox.api.ToolboxClient.CouldNotResolveObjectException;
 import jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.APIError;
 import jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.ErrorListHolder;
+import jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.FileListHolder;
 import jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.ToolType;
 import jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.VDMApplication;
 import jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.VDMErrors;
 import jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.VDMProject;
-import jp.co.csk.vdm.toolbox.api.corba.VDM.VDMError;
-import jp.co.csk.vdm.toolbox.api.corba.VDM.VDMFactory;
+
+import org.overturetool.vdmtools.interpreter.Interpreter;
+import org.overturetool.vdmtools.parser.Parser;
 
 public class VDMToolsProject {
 	private static boolean VDMToolsProcessStarted = false;
@@ -34,9 +33,12 @@ public class VDMToolsProject {
 	private short client;
 	private static VDMApplication app;
 	private VDMProject prj;
-	private boolean isSuccessfulPased;
-	private boolean isSuccessfulTypeChecked;
+	private boolean isSuccessfulPased = false;
+	private boolean isSuccessfulTypeChecked = false;
 	private VDMErrors vdmErrorListHandle;
+	private Interpreter interpreter;
+	private ArrayList<String> filenames;
+	private String pathToVdmTools;
 
 	public boolean isSuccessfulPased() {
 		return isSuccessfulPased;
@@ -77,15 +79,18 @@ public class VDMToolsProject {
 	}
 
 	private VDMToolsProject() {
-
+		filenames = new ArrayList<String>();
 	}
 
 	public Interpreter GetInterpreter() {
-		return new Interpreter(app, client);
+		if (interpreter == null) {
+			interpreter = new Interpreter(app, client);
+		}
+		return interpreter;		//return new Interpreter(app, client);
 	}
 
-	public void init(String pathToVdmTools, ToolType toolType)
-			throws IOException, CouldNotResolveObjectException {
+	public void init(String pathToVdmTools, ToolType toolType) throws IOException, CouldNotResolveObjectException {
+		this.pathToVdmTools = pathToVdmTools;
 		startVDMTools(pathToVdmTools);
 		int retries = 10;
 		logger.logp(Level.INFO, "VDMToolsProject", "init", "Trying to find VDM Tools corba config file");
@@ -101,8 +106,7 @@ public class VDMToolsProject {
 				else if (System.getenv("HOME") != null)
 					path = System.getenv("HOME");
 
-				if ((!new File(path + File.separatorChar + "vppref.ior")
-						.exists() && toolType == ToolType.PP_TOOLBOX)
+				if ((!new File(path + File.separatorChar + "vppref.ior").exists() && toolType == ToolType.PP_TOOLBOX)
 						|| (!new File(path + File.separatorChar + "vdmref.ior")
 								.exists() && toolType == ToolType.SL_TOOLBOX))
 				{
@@ -116,7 +120,7 @@ public class VDMToolsProject {
 
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
-logger.log(Level.SEVERE, "Thread interupted in init", e);
+				logger.log(Level.SEVERE, "Thread interupted in init", e);
 			}
 		}
 		RegistreClient();
@@ -136,25 +140,66 @@ logger.log(Level.SEVERE, "Thread interupted in init", e);
 	}
 
 	public void addFilesToProject(ArrayList<String> files) {
+		if (prj == null){
+			checkAndAdd();
+		}
 		try {
-			if (prj == null) {
+			if (prj == null)
+			{
 				prj = app.GetProject();
 				prj.New();
 			}
-
+			
 			// Configure the project to contain the necessary files.
 			// The files must be located in the same directory as where
 			// the VDM Toolbox was started. Otherwise the absolute path
 			// to the files should be used
-
-			for (String string : files) {
-				prj.AddFile(ToolboxClient.toISO(string));
-			}
-		} catch (APIError e) {
-			System.out
-					.println("Error setting up project.... " + e.getMessage());
 			
+			
+			for (String file : files) {
+				if (!filenames.contains(file)){
+					prj.AddFile(ToolboxClient.toISO(file));
+				}
+			}
+			
+			// removes a file file from proect
+			for (String filename : filenames) {
+				if (!files.contains(filename)){
+					prj.RemoveFile(ToolboxClient.toISO(filename));
+				}
+			}
+			
+		} catch (APIError e) {
+			System.out.println("Error setting up project.... " + e.msg);
 			logger.logp(Level.SEVERE, "VDMToolsProject", "addFilesToProject", "Error creating and adding file to vdm project", e);
+		}
+	}
+	
+	private void checkAndAdd() {
+		try {
+			if (processToolbox == null){
+				init(pathToVdmTools, ToolType.PP_TOOLBOX);
+			}
+			if (app == null) {
+				createOrb(ToolType.PP_TOOLBOX);
+				prj = app.GetProject();
+				prj.New();
+				FileListHolder fileHolder = new FileListHolder();
+				prj.GetFiles(fileHolder);
+				String[] files = fileHolder.value;
+				try {
+					if (files.length == 0) {
+						for (String ecFile : filenames) {
+							prj.AddFile(ToolboxClient.toISO(ecFile));
+						}
+					}
+					
+				} catch (APIError e) {
+					System.out.println("Error..  " + e.getMessage());
+				}
+			}			
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
 	}
 
@@ -197,10 +242,37 @@ logger.log(Level.SEVERE, "Thread interupted in init", e);
 				return errorList;
 		}
 
-		ArrayList<VDMToolsError> errorList = typeChecker.typeCheckProject(app,
-				prj);
+		ArrayList<VDMToolsError> errorList = typeChecker.typeCheckProject(app, prj);
 		isSuccessfulTypeChecked = errorList.size() == 0 ? true : false;
 		return errorList;
+	}
+	
+	public void typeCheckProjectNoReturn() throws Exception {
+		if (!isSuccessfulPased) {
+			return;
+		}
+		typeChecker.typeCheckProject2(app, prj);
+	}
+	
+	public static boolean isRunning(Process process) {
+		try {
+			process.exitValue();
+			return false;
+		} catch(IllegalThreadStateException e) {
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	public ArrayList<VDMToolsError> getTypeCheckErrorList()
+	{
+		return typeChecker.getErrorList();
+	}
+	
+	public ArrayList<VDMToolsWarning> getTypeCheckWarningList()
+	{
+		return typeChecker.getWarningList();
 	}
 
 	public static Boolean IsMac() {
@@ -223,8 +295,7 @@ logger.log(Level.SEVERE, "Thread interupted in init", e);
 		logger.logp(Level.INFO, "VDMToolsProject", "startVDMTools", "Launching VDM Tools");
 
 		if (IsMac())
-			processToolbox = Runtime.getRuntime()
-					.exec("open " + pathToVDMTools);
+			processToolbox = Runtime.getRuntime().exec("open " + pathToVDMTools);
 		else
 			processToolbox = Runtime.getRuntime().exec(pathToVDMTools);
 
@@ -273,13 +344,12 @@ logger.log(Level.SEVERE, "Thread interupted in init", e);
 		logger.logp(Level.INFO, "VDMToolsProject", "createOrb", "Connect to CORBA server in VDMTools");
 		
 		try{
-		app = (new ToolboxClient()).getVDMApplication(args, type);
-		System.out
-				.println("Connected to CORBA server in VDMTools server - SUCCESSFUL");
+			app = (new ToolboxClient()).getVDMApplication(args, type);
+			System.out.println("Connected to CORBA server in VDMTools server - SUCCESSFUL");
 		}catch(CouldNotResolveObjectException e)
 		{
 			logger.logp(Level.SEVERE, "VDMToolsProject", "createOrb",  "Problem connecting to VDM Tools ((new ToolboxClient()).getVDMApplication(args, type);)", e);
-		throw e;
+			throw e;
 		}
 
 	}
