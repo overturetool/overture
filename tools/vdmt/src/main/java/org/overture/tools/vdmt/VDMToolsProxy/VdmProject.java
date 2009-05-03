@@ -72,7 +72,7 @@ public class VdmProject {
 				+ "/src/main/java".replace('/', File.separatorChar));
 	}
 
-	public void TypeCheck() {
+	public void TypeCheck() throws MojoFailureException {
 		String out = new String();
 
 		out = ExecuteCmdVdmTools(" -t" + GetSpecFiles(),
@@ -81,62 +81,88 @@ public class VdmProject {
 		if (out.contains("Errors detected") || out.contains("  Expected"))
 			new MojoFailureException("VDM Type check faild: Errors detected");
 		else
-			log.info("VDM Type check OK");
+			PrintSuccess("VDM Type check");
 
 	}
 
-	private String ExecuteCmdVdmTools(String arguments, File baseDirectory) {
+	private String ExecuteCmdVdmTools(String arguments, File baseDirectory)
+			throws MojoFailureException {
 		String out = new String();
 		try {
 			String line;
-			ProcessBuilder pb = null;
-			log.debug("OS = "+System.getProperty("os.name"));
+			// ProcessBuilder pb = null;
+			String arg;
+			log.debug("ExecuteCmdVdmTools");
+			log.debug("VdmTools: " + vppde.getAbsolutePath() + " Exists: "
+					+ vppde.exists());
+			log.debug("Base directory: " + baseDirectory.getAbsolutePath()
+					+ " Exists:" + baseDirectory.exists());
+			log.debug("Parameters: " + arguments);
+			log.debug("OS = " + System.getProperty("os.name"));
 			if (IsWindows()) {
-				
-				pb = new ProcessBuilder("\"" + vppde.getAbsolutePath() + "\""
-						+ arguments.trim());
-			} else if (IsMac()) {
-				pb = new ProcessBuilder("open " + vppde.getAbsolutePath() + " "
-						+ arguments.trim());
-			} else {
-				pb = new ProcessBuilder(vppde.getAbsolutePath() + " "
-						+ arguments.trim());
-			}
-			pb.directory(baseDirectory);
-			pb.redirectErrorStream(true);
 
-			Process p = pb.start();
+				// pb = new ProcessBuilder("\"" + vppde.getAbsolutePath() + "\""
+				// + arguments.trim());
+				arg = "\"" + vppde.getAbsolutePath() + "\"" + arguments.trim();
+			} else if (IsMac()) {
+				// pb = new ProcessBuilder("open " + vppde.getAbsolutePath() +
+				// " "+ arguments.trim());
+				arg = "open " + vppde.getAbsolutePath() + " "
+						+ arguments.trim();
+			} else {
+				// pb = new ProcessBuilder(vppde.getAbsolutePath() + " "+
+				// arguments.trim());
+				arg = vppde.getAbsolutePath() + " " + arguments.trim();
+			}
+
+			// pb.directory(baseDirectory);
+
+			// pb.redirectErrorStream(true);
+			arg.replace("\"", "");
+			log.debug("Process args: " + arg);
+			Process p = Runtime.getRuntime().exec(arg, null, baseDirectory);
+
+			// Process p = pb.start();
 
 			BufferedReader input = new BufferedReader(new InputStreamReader(p
 					.getInputStream()));
 			while ((line = input.readLine()) != null) {
 				out += "\n" + line;
+				log.debug(line);
 				if (!line.endsWith("done")
 						&& !line
 								.endsWith("with super classes are POS type correct"))
 					if (line.startsWith("  Warning"))
 						log.warn("\n" + line);
-					else
-						log.info("\n" + line);
+					// else
+					// log.info("\n" + line);
+					else if (line.startsWith("Couldn't open file"))
+						throw new MojoFailureException(line);
 			}
 			input.close();
 		} catch (Exception err) {
-			out += err.getMessage();
+			if (err instanceof MojoFailureException)
+				throw (MojoFailureException) err;
+			else {
+				out += err.getMessage();
 
-			log.error("\n" + err.getMessage());
-			log.debug(getStackTrace(err));
+				log.error("\n" + err.getMessage());
+				log.debug(getStackTrace(err));
+				throw new MojoFailureException("ExecuteCmdVdmTools", err
+						.getMessage(), getStackTrace(err));
+			}
 		}
 		return out;
 	}
-	  public static String getStackTrace(Throwable t)
-	    {
-	        StringWriter sw = new StringWriter();
-	        PrintWriter pw = new PrintWriter(sw, true);
-	        t.printStackTrace(pw);
-	        pw.flush();
-	        sw.flush();
-	        return sw.toString();
-	    }
+
+	public static String getStackTrace(Throwable t) {
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw, true);
+		t.printStackTrace(pw);
+		pw.flush();
+		sw.flush();
+		return sw.toString();
+	}
 
 	public static Boolean IsMac() {
 		String osName = System.getProperty("os.name");
@@ -151,7 +177,8 @@ public class VdmProject {
 	}
 
 	public void CodeGen(List<String> excludePackages,
-			List<String> excludeClasses, List<String> importPackages) {
+			List<String> excludeClasses, List<String> importPackages)
+			throws MojoFailureException {
 
 		if (excludePackages == null)
 			excludePackages = new ArrayList<String>();
@@ -230,7 +257,8 @@ public class VdmProject {
 		}
 	}
 
-	private void CodeGen(ArrayList<String> vdmClasses, String packageName) {
+	private void CodeGen(ArrayList<String> vdmClasses, String packageName)
+			throws MojoFailureException {
 		if (vdmClasses.isEmpty())
 			log.info("Nothing to update");
 
@@ -263,12 +291,24 @@ public class VdmProject {
 			// GetJavaLocation(baseDir).getAbsolutePath()
 			// .length()) + "\"";
 			// else
-			f = " \"" + file.getAbsolutePath() + "\"";
+			if (IsWindows())
+				f = " \"" + file.getAbsolutePath() + "\"";
+			else
+				f = " " + file.getAbsolutePath();
+			log.debug("File: " + f + " Exists: " + file.exists());
 			filePaths += f;
 
 		}
 
 		// log.info("SpecFiles: " + filePaths);
 		return filePaths;
+	}
+
+	public void PrintSuccess(String message) {
+		log
+				.info("------------------------------------------------------------------------");
+		log.info(message + " SUCCESSFUL");
+		log
+				.info("------------------------------------------------------------------------");
 	}
 }
