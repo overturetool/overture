@@ -9,7 +9,7 @@
   <groupId>org.overturetool.tools</groupId>
   <artifactId>vdmt</artifactId>
   <packaging>maven-plugin</packaging>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <name>VDM Tools Typecheck and Java code generate for Maven</name>
   <url>http://www.overture.com</url>
   <build>

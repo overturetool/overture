@@ -275,7 +275,7 @@ public class VdmProject {
 				+ GetSpecFiles();
 
 		out = ExecuteCmdVdmTools(arg, GetJavaLocation(baseDir));
-
+PrintSuccess("VDM Code generation");
 	}
 
 	private String GetSpecFiles() {
