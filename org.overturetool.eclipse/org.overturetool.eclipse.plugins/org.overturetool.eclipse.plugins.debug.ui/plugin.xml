@@ -362,12 +362,12 @@
   <extension point="org.eclipse.debug.ui.debugModelPresentations">
     <debugModelPresentation
       class="org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.OvertureDebugModelPresentation"
-      id="org.overturetool.debug.OvertureDebugModel" />
+      id="org.overturetool.eclipse.plugin.debug.OvertureDebugModel" />
   </extension>
 
   <extension point="org.eclipse.debug.core.watchExpressionDelegates">
     <watchExpressionDelegate
-      debugModel="org.overturetool.debug.OvertureDebugModel"
+      debugModel="org.overturetool.eclipse.plugin.debug.OvertureDebugModel"
       delegateClass="org.eclipse.dltk.internal.debug.core.model.ScriptWatchExpressionDelegate">
     </watchExpressionDelegate>
   </extension>
@@ -375,7 +375,7 @@
   <extension point="org.eclipse.debug.ui.debugModelContextBindings">
     <modelContextBinding
       contextId="org.eclipse.dltk.debug.ui.debugging"
-      debugModelId="org.overturetool.debug.OvertureDebugModel" />
+      debugModelId="org.overturetool.eclipse.plugin.debug.OvertureDebugModel" />
   </extension>
 
   <extension point="org.eclipse.core.runtime.adapters">
