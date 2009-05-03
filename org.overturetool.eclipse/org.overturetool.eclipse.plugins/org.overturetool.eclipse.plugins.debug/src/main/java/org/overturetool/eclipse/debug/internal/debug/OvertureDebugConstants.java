@@ -8,9 +8,9 @@ public final class OvertureDebugConstants {
 
 	public static final String DEBUGGING_ENGINE_PATH_DEFAULT = "";
 	
-	public static final String PLUGIN_ID =  "org.overturetool.debug";
+	public static final String PLUGIN_ID =  "org.overturetool.eclipse.plugins.debug";
 	
-	public static final String DEBUG_MODEL_ID = "org.overturetool.debug.OvertureDebugModel";
+	public static final String DEBUG_MODEL_ID = "org.overturetool.eclipse.plugin.debug.OvertureDebugModel";
 
 	public static final String DEBUGGING_ENGINE_ID_KEY = "debugging_engine_id";
 	
