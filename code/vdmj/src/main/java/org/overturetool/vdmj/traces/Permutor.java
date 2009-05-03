@@ -71,21 +71,4 @@ public class Permutor
 	{
 		return !done;
 	}
-
-	public static void main(String[] args)
-	{
-		int[] a = {1,2,3};
-		Permutor p = new Permutor(a);
-
-		while (p.hasNext())
-		{
-			for (int i: p.next())
-			{
-				System.out.print(i);
-				System.out.print(" ");
-			}
-
-			System.out.println();
-		}
-	}
 }
