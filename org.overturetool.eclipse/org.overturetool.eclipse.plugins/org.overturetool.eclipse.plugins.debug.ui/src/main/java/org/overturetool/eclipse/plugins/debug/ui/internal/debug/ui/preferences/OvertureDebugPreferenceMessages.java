@@ -4,7 +4,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class OvertureDebugPreferenceMessages extends NLS
 {
-   private static String BUNDLE_NAME = "org.overturetool.internal.debug.ui.preferences.OvertureDebugPreferenceMessages";
+   private static String BUNDLE_NAME = "org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.preferences.OvertureDebugPreferenceMessages";
     
     static {
         NLS.initializeMessages(BUNDLE_NAME, OvertureDebugPreferenceMessages.class);

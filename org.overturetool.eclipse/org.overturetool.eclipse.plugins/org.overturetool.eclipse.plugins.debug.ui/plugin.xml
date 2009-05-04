@@ -59,18 +59,18 @@
  <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
     <launchConfigurationTypeImage
       icon="icons/vdm16.png"
-      configTypeID="org.overturetool.launching.OvertureLaunchConfigurationType"
-      id="org.overturetool.debug.ui.launchConfigurationTypeImage.localTCLScript">
+      configTypeID="org.overturetool.eclipse.plugins.launching.OvertureLaunchConfigurationType"
+      id="org.overturetool.debug.ui.launchConfigurationTypeImage.overture">
     </launchConfigurationTypeImage>
     <launchConfigurationTypeImage icon="icons/vdm16.png"
-            configTypeID="org.overturetool.launching.OvertureRemoteLaunchConfigurationType"
+            configTypeID="org.overturetool.eclipse.plugins.launching.OvertureRemoteLaunchConfigurationType"
             id="org.overturetool.debug.ui.remoteLaunchConfigurationTypeImage">
     </launchConfigurationTypeImage>
   </extension>
 
   <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
     <launchConfigurationTabGroup
-      type="org.overturetool.launching.OvertureLaunchConfigurationType"
+      type="org.overturetool.eclipse.plugins.launching.OvertureLaunchConfigurationType"
       class="org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.launchConfigurations.OvertureTabGroup"
       id="org.overturetool.internal.debug.ui.launchConfigurations.TclTabGroup">
       <launchMode
@@ -86,7 +86,7 @@
     <launchConfigurationTabGroup
             class="org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.launchConfigurations.OvertureRemoteTabGroup"
             id="org.overturetool.debug.ui.OvertureRemoteTabGroup"
-            type="org.overturetool.launching.OvertureRemoteLaunchConfigurationType">
+            type="org.overturetool.eclipse.plugins.launching.OvertureRemoteLaunchConfigurationType">
     </launchConfigurationTabGroup>
     
   </extension>
@@ -240,7 +240,7 @@
     <consolePatternMatchListener
       class="org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.console.OvertureConsoleTracker"
       regex="\(file &quot;.*&quot; line .*\)"
-      id="org.overturetool.debug.ui.TclConsoleTracker">
+      id="org.overturetool.debug.ui.OvertureConsoleTracker">
       <enablement>
         <or>
           <test
@@ -254,7 +254,7 @@
   <!--extension
     point="org.eclipse.debug.ui.launchConfigurationTabGroups">
     <launchConfigurationTabGroup
-    type="org.overturetool.launching.localTCLApplication"
+    type="org.overturetool.eclipse.plugins.launching.localTCLApplication"
     class="org.overturetool.internal.debug.ui.launchConfigurations.TclTabGroup"
     id="org.overturetool.debug.ui.TCLTabGroup">
     <launchMode 

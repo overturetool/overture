@@ -18,8 +18,7 @@ import org.eclipse.jface.viewers.IBaseLabelProvider;
 /**
  * Control used to edit the libraries associated with a Interpreter install
  */
-public class OvertureInterpreterLibraryBlock extends
-		AbstractInterpreterLibraryBlock {
+public class OvertureInterpreterLibraryBlock extends AbstractInterpreterLibraryBlock {
 
 	public OvertureInterpreterLibraryBlock(AddScriptInterpreterDialog d) {
 		super(d);
