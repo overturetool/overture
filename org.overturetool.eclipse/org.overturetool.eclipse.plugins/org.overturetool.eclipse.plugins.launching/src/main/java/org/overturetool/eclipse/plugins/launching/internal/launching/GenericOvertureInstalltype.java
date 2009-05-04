@@ -22,8 +22,8 @@ import org.overturetool.eclipse.plugins.launching.OvertureLaunchConstants;
 public class GenericOvertureInstalltype extends
 		AbstractInterpreterInstallType {
 
-	public static final String DBGP_FOR_ABSTRACT_BUNDLE_ID = "org.overturetool.dbgp";
-	public static final String DBGP_FOR_VDMTOOLS_BUNDLE_ID = "org.overturetool.vdmtools.dbgp";
+	//public static final String DBGP_FOR_ABSTRACT_BUNDLE_ID = "org.overturetool.dbgp";
+	//public static final String DBGP_FOR_VDMTOOLS_BUNDLE_ID = "org.overturetool.vdmtools.dbgp";
 	public static final String DBGP_FOR_VDMJ_BUNDLE_ID = "org.overturetool.eclipse.plugins.traces.core"; //$NON-NLS-1$
 //	public static final String EMBEDDED_VDMJ_BUNDLE_ID = "org.overturetool.vdmj"; //$NON-NLS-1$
 

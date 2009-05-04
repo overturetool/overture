@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.overturetool.eclipse.plugins.launching.internal.launching;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 		}
 
 		public String getRunnerClassName(InterpreterConfig config, ILaunch launch, IJavaProject project) {
-			return "OvertureRunner";
+			return "org.overturetool.vdmtools.dbgp.DBGPReader";
 		}
 
 		public String getRunnerOperationName(InterpreterConfig config, ILaunch launch, IJavaProject project) {
@@ -274,10 +275,20 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 //								arguments[a + fileHostPortSessionStrs.length] = eclipseArguments[a];
 //							}
 							
-							// add files
-							for (int a = 0; a < memberFilesList.size(); a++) 
-							{
-								arguments[argNumber++] = memberFilesList.get(a);
+							// add files 
+							// VDMJ takes a uri
+							// VDMTOools takes a normal file
+							if (toolType.equals(OvertureDebugConstants.TOOL_VDMTOOLS)){
+								for (int a = 0; a < memberFilesList.size(); a++) 
+								{
+									arguments[argNumber++] = memberFilesList.get(a);
+								}
+							}
+							else if (toolType.equals(OvertureDebugConstants.TOOL_VDMJ)){
+								for (int a = 0; a < memberFilesList.size(); a++) 
+								{
+									arguments[argNumber++] = new File( memberFilesList.get(a) ).toURI().toASCIIString();
+								}
 							}
 							
 							
@@ -314,8 +325,8 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 					new String[]
 					      {
 							GenericOvertureInstalltype.DBGP_FOR_VDMJ_BUNDLE_ID,
-							GenericOvertureInstalltype.DBGP_FOR_VDMTOOLS_BUNDLE_ID,
-							GenericOvertureInstalltype.DBGP_FOR_ABSTRACT_BUNDLE_ID
+							//GenericOvertureInstalltype.DBGP_FOR_VDMTOOLS_BUNDLE_ID,
+							//GenericOvertureInstalltype.DBGP_FOR_ABSTRACT_BUNDLE_ID
 					      },
 					result
 				);
