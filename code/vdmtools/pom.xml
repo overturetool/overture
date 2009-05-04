@@ -12,6 +12,7 @@
   <version>1.0.0</version>
 <modules>
 <module>vdmtoolsapi</module>
+<module>dbgp</module>
 </modules>
  
 </project>
