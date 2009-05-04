@@ -41,6 +41,7 @@
     <module>org.overturetool.eclipse.plugins.debug.ui</module>
    <!-- <module>org.overturetool.eclipse.plugins.showtrace</module>-->
     <module>org.overturetool.eclipse.plugins.traces</module>
+	<module>org.overturetool.eclipse.plugins.editor.overturedebugger</module>
     
   </modules>
 </project>
