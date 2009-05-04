@@ -19,5 +19,10 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+    	<groupId>org.overturetool</groupId>
+    	<artifactId>vdmtoolsapi</artifactId>
+    	<version>1.0.0</version>
+    </dependency>
   </dependencies>
 </project>

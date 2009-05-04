@@ -6,7 +6,7 @@ Export-Package:
  org.overturetool.eclipse.plugins.editor.core.internal.parser,
  org.overturetool.eclipse.plugins.editor.core.internal.parser.ast,
  org.overturetool.eclipse.plugins.editor.core.internal.parser.visitors
-Bundle-Vendor: Princeton Softech Inc.
+Bundle-Vendor: Overture
 Bundle-Version: 1.0.0
 Bundle-Name: org.overturetool.eclipse.plugins.editor.core
 Bundle-ManifestVersion: 2
@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.dltk.core;bundle-version="1.0.0";resolution:=optiona
  org.eclipse.core.runtime;bundle-version="3.4.0";resolution:=optional,
  org.eclipse.core.resources;bundle-version="3.4.2";resolution:=optional,
  org.eclipse.dltk.launching;bundle-version="1.0.0";resolution:=optional,
- org.overturetool.eclipse.plugins.stdlib;bundle-version="1.0.0";resolution:=optional
+ org.overturetool.eclipse.plugins.stdlib;bundle-version="1.0.0";resolution:=optional,
+ org.overturetool.eclipse.plugins.traces.core;bundle-version="1.0.0"
 Bundle-ClassPath: .
 Bundle-Activator: org.overturetool.eclipse.plugins.editor.core.OverturePlugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

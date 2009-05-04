@@ -16,33 +16,39 @@ import org.overturetool.eclipse.plugins.editor.core.internal.parser.OvertureSour
 public class OvertureBuilder implements IScriptBuilder {
 
 	private VDMJBuilder vdmjBuilder = null;
-	//private VDMToolsBuilder vdmToolsBuilder = null;
+	private VDMToolsBuilder vdmToolsBuilder = null;
 	
 	public IStatus buildModelElements(IScriptProject project, List elements, IProgressMonitor monitor, int status) {
 		
-		// temp... trying to get the path 
-		IInterpreterInstall hest2;
+		ToolType toolType = ToolType.VDMJ;
+
+		IInterpreterInstall interpreterInstall;
 		try {
-			hest2 = ScriptRuntime.getInterpreterInstall(project);
-			hest2.getInstallLocation();
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-		
-		
-		//TODO get project options dialect and tool
-		Dialect dialect = Dialect.VDM_PP; // ?? 
-		ToolType toolType = ToolType.VDMJ; 
-		
-		switch (toolType) {
-//			case VDMTools:
-//				vdmToolsBuilder = new VDMToolsBuilder(project);
-//				return vdmToolsBuilder.typeCheck();
+			interpreterInstall = ScriptRuntime.getInterpreterInstall(project);
+			interpreterInstall.getInstallLocation();
+			if (interpreterInstall.getInterpreterInstallType().getName().equals("VDMJ")) {
+				toolType = ToolType.VDMJ;
+			} else if (interpreterInstall.getInterpreterInstallType().getName().equals("VDMTools")) {
+				toolType = ToolType.VDMTools;
+			}
+
+			// OverturePlugin.getDefault().getPluginPreferences().getString()
+
+			// TODO get project options dialect and tool
+			Dialect dialect = Dialect.VDM_PP; // ??
+
+			switch (toolType) {
+			case VDMTools:
+				vdmToolsBuilder = new VDMToolsBuilder(project, interpreterInstall.getInstallLocation().toOSString());
+				return vdmToolsBuilder.typeCheck();
 			case VDMJ:
 				vdmjBuilder = new VDMJBuilder(project);
 				return vdmjBuilder.typeCheck();
 			default:
 				break;
+			}
+		} catch (CoreException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
