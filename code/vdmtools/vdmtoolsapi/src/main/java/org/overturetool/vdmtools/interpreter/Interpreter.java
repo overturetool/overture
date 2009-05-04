@@ -176,6 +176,20 @@ public class Interpreter {
 		return interpreter.EvalExpression(client, ToolboxClient.toISO(expression));
 	}
 	
+	/**
+	 * Evaluates expr Result of evaluation returned as result of method. 
+	 * Result will be echoed to screen if Verbose is true. 
+	 * Run-time errors cause exceptions to be raised.
+	 * @param expression
+	 * @return
+	 * @throws APIError
+	 */
+	public String EvalExpressionToString(String expression) throws Exception {
+		if (!isInilized)
+			throw new Exception("Initerpeter NOT inizialized");
+		return interpreter.EvalExpression(client, ToolboxClient.toISO(expression)).ToAscii();
+	}
+	
 	/***
 	 * Evaluates the command cmd as if it was written directly to the interpreter.
 	 * 

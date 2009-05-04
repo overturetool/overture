@@ -88,6 +88,20 @@ public class VDMToolsProject {
 		}
 		return interpreter;		//return new Interpreter(app, client);
 	}
+	
+	public void init(String pathToVdmTools, String toolType) throws Exception {
+		try {
+			if (toolType.equals("VDM_PP")){
+				init(pathToVdmTools, ToolType.PP_TOOLBOX);
+			}
+			else if (toolType.equals("VDM_SL"))
+			{
+				init(pathToVdmTools, ToolType.SL_TOOLBOX);
+			}
+		} catch (Exception e) {
+			throw new Exception("Could not initiate vdmtools: " + e.getMessage());
+		}
+	}
 
 	public void init(String pathToVdmTools, ToolType toolType) throws IOException, CouldNotResolveObjectException {
 		this.pathToVdmTools = pathToVdmTools;
