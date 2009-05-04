@@ -17,7 +17,7 @@ public class OvertureDebuggerRunner extends DebuggingEngineRunner implements ICo
 
 	public static String ENGINE_ID = "org.overturetool.overturedebugger";
 
-	IOvertureInterpreterRunnerConfig runnerconfig = OvertureInterpreterRunner.DEFAULT_CONFIG;
+	IOvertureInterpreterRunnerConfig runnerconfig = OvertureInterpreterRunner.VDMJ_CONFIG;
 
 	public OvertureDebuggerRunner(IInterpreterInstall install) {
 		super(install);
