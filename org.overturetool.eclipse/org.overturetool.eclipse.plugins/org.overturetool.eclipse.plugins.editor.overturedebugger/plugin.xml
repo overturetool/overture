@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+ <extension point="org.eclipse.dltk.launching.debuggingEngine">
+    <engineContribution natureId="org.overturetool.eclipse.plugins.editor.core.nature">
+      <engine
+        class="org.overturetool.eclipse.plugins.editor.overturedebugger.OvertureDebuggerRunnerFactory"
+        description="%DebuggingEngine.description"
+        id="org.overturetool.overturedebugger"
+        name="%DebuggingEngine.name"
+        priority="0"
+        propertyPageId="org.overturetool.propertyPage.debug.engines.overturedebugger"
+        preferencePageId="org.overturetool.preferences.debug.engines.overturedebugger">
+      </engine>
+    </engineContribution>
+  </extension>
+	  
+  <extension point="org.eclipse.ui.preferencePages">
+    <page
+      category="org.overturetool.preferences.debug.engines"
+      class="org.overturetool.eclipse.plugins.editor.overturedebugger.preferences.OvertureDebuggerPreferencePage"
+      id="org.overturetool.preferences.debug.engines.overturedebugger"
+      name="%PreferencePage.name">
+    </page>
+  </extension>
+  
+  <extension point="org.eclipse.ui.propertyPages">
+    <page
+      class="org.overturetool.eclipse.plugins.editor.overturedebugger.preferences.OvertureDebuggerPreferencePage"
+      category="org.overturetool.propertyPage.debug.engines"
+      id="org.overturetool.propertyPage.debug.engines.overturedebugger"
+      name="%PropertyPage.name">
+      <enabledWhen>
+        <adapt type="org.eclipse.core.resources.IProject">
+          <test
+            property="org.eclipse.core.resources.projectNature"
+            value="org.overturetool.core.nature" />
+        </adapt>
+      </enabledWhen>
+    </page>
+  </extension>
+</plugin>
