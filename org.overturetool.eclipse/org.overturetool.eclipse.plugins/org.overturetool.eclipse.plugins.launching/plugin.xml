@@ -44,8 +44,9 @@
       sourceLocatorId="overtureSourceLocator"
       sourcePathComputerId="overtureSourcePathComputer">
     </launchConfigurationType>
+    <!-- is it rigt with remote delegate here????  -->
     <launchConfigurationType
-               delegate="org.overturetool.eclipse.plugins.launching.OvertureLaunchConfigurationDelegate"
+               delegate="org.overturetool.eclipse.plugins.launching.OvertureRemoteLaunchConfigurationDelegate"
                id="org.overturetool.eclipse.plugins.launching.OvertureRemoteLaunchConfigurationType"
                modes="debug"
                name="%RemoteLaunchConfigurationType.name"

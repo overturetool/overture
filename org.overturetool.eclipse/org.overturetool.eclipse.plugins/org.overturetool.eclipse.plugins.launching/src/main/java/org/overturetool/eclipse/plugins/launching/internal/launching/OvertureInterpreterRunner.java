@@ -275,9 +275,10 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 //								arguments[a + fileHostPortSessionStrs.length] = eclipseArguments[a];
 //							}
 							
-							// add files 
-							// VDMJ takes a uri
-							// VDMTOools takes a normal file
+							// add files to the arguments
+							// 
+							// the VDMJ interpreter takes uri's
+							// The interpreter from VDMTOools takes a normal file path
 							if (toolType.equals(OvertureDebugConstants.TOOL_VDMTOOLS)){
 								for (int a = 0; a < memberFilesList.size(); a++) 
 								{
