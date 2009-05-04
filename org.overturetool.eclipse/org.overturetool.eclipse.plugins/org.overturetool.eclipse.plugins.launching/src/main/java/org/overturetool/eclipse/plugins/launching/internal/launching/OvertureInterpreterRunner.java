@@ -19,7 +19,6 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -36,6 +35,7 @@ import org.eclipse.dltk.launching.AbstractInterpreterRunner;
 import org.eclipse.dltk.launching.AbstractScriptLaunchConfigurationDelegate;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
+import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.launching.debug.DbgpConstants;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -49,7 +49,7 @@ import org.overturetool.eclipse.plugins.launching.OvertureLaunchConstants;
 
 public class OvertureInterpreterRunner extends AbstractInterpreterRunner implements org.overturetool.eclipse.plugins.launching.IConfigurableRunner {
 
-	public static final IOvertureInterpreterRunnerConfig DEFAULT_CONFIG = new IOvertureInterpreterRunnerConfig() {
+	public static final IOvertureInterpreterRunnerConfig VDMJ_CONFIG = new IOvertureInterpreterRunnerConfig() {
 
 		public void adjustRunnerConfiguration(VMRunnerConfiguration vconfig, InterpreterConfig iconfig, ILaunch launch, IJavaProject project) {
 
@@ -68,15 +68,53 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 		}
 
 		public String getRunnerOperationName(InterpreterConfig config, ILaunch launch, IJavaProject project) {
-			// TODO Auto-generated method stub
 			return null;
 		}
-
 	};
-	private IOvertureInterpreterRunnerConfig config = DEFAULT_CONFIG;
+	
+	public static final IOvertureInterpreterRunnerConfig VDMTOOLS_CONFIG = new IOvertureInterpreterRunnerConfig() {
+
+		public void adjustRunnerConfiguration(VMRunnerConfiguration vconfig, InterpreterConfig iconfig, ILaunch launch, IJavaProject project) {
+
+		}
+
+		public String[] computeClassPath(InterpreterConfig config, ILaunch launch, IJavaProject project) throws Exception {
+			return OvertureInterpreterRunner.getClassPath(project);
+		}
+
+		public String[] getProgramArguments(InterpreterConfig config, ILaunch launch, IJavaProject project) {
+			return new String[0];
+		}
+
+		public String getRunnerClassName(InterpreterConfig config, ILaunch launch, IJavaProject project) {
+			return "OvertureRunner";
+		}
+
+		public String getRunnerOperationName(InterpreterConfig config, ILaunch launch, IJavaProject project) {
+			return null;
+		}
+	};
+	
+	
+	
+	private IOvertureInterpreterRunnerConfig config = VDMJ_CONFIG;
+	private IOvertureInterpreterRunnerConfig vdmToolsConfig = VDMTOOLS_CONFIG;
+	
+	private static String[] exts = new String[] { "vpp", "tex", "vdm" };
 
 	public void run(InterpreterConfig config, ILaunch launch, IProgressMonitor monitor) throws CoreException {
-		doRunImpl(config, launch, this.config);
+		IScriptProject proj = AbstractScriptLaunchConfigurationDelegate.getScriptProject(launch.getLaunchConfiguration());
+		try {
+			IInterpreterInstall interpreterInstall = ScriptRuntime.getInterpreterInstall(proj);
+			interpreterInstall.getInstallLocation();
+			if (interpreterInstall.getInterpreterInstallType().getName().equals(OvertureDebugConstants.TOOL_VDMJ)) {
+				doRunImpl(config, launch, this.config);
+			} else if (interpreterInstall.getInterpreterInstallType().getName().equals(OvertureDebugConstants.TOOL_VDMTOOLS)) {
+				doRunImpl(config, launch, this.vdmToolsConfig);
+			}
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -113,7 +151,6 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 	}
 
 	public static void doRunImpl(InterpreterConfig config, ILaunch launch, IOvertureInterpreterRunnerConfig iconfig) throws CoreException {
-
 		String host = (String) config.getProperty(DbgpConstants.HOST_PROP);
 		if (host == null) {
 			host = "";
@@ -145,41 +182,107 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 							String[] newClassPath = getClassPath(myJavaProject);
 
 							VMRunnerConfiguration vmConfig = new VMRunnerConfiguration(iconfig.getRunnerClassName(config, launch, myJavaProject), newClassPath);
-							IPath scriptFilePath = config.getScriptFilePath();
-							if (scriptFilePath == null) {
-								throw new CoreException(new Status(IStatus.ERROR, OvertureDebugConstants.PLUGIN_ID, "Script File name is not specified..."));
-							}
-							String[] exts = new String[] { "vpp", "tex", "vdm" };
-
-							ArrayList<String> memberFilesList = getAllMemberFilesString(proj.getProject(), exts);
-
-							String[] strings = new String[] { scriptFilePath.toPortableString(), host, "" + port, sessionId };
-							String[] newStrings = iconfig.getProgramArguments(config, launch, myJavaProject);
-							// +2 in order to allocate space for debugClass, debugOperation, tool, dialect, debugFromConsole 
-							String[] rs = new String[strings.length + newStrings.length + memberFilesList.size() + 5];	
 							
-						
-							// add file host port sessionID
-							for (int a = 0; a < strings.length; a++)
-								rs[a] = strings[a];
-							// add program arguments
-							for (int a = 0; a < newStrings.length; a++)
-								rs[a + strings.length] = newStrings[a];
+							//TODO get the project dialect 
+							String dialect = "VDM_PP";
+							if (true){								
+								dialect = "VDM_PP";
+							}
+							else
+							{
+								dialect = "VDM_SL";
+							}
+							
+							
+							// Select interpreter:
+							String toolType = OvertureDebugConstants.TOOL_VDMJ;
+							IInterpreterInstall interpreterInstall;
+							String VDMToolsPath = "";
+							try {
+								interpreterInstall = ScriptRuntime.getInterpreterInstall(proj);
+								interpreterInstall.getInstallLocation();
+								if (interpreterInstall.getInterpreterInstallType().getName().equals(OvertureDebugConstants.TOOL_VDMJ)) {
+									toolType = OvertureDebugConstants.TOOL_VDMJ;
+								} else if (interpreterInstall.getInterpreterInstallType().getName().equals(OvertureDebugConstants.TOOL_VDMTOOLS)) {
+									toolType = OvertureDebugConstants.TOOL_VDMTOOLS;
+									VDMToolsPath = interpreterInstall.getInstallLocation().toOSString();
+								}
+							} catch (CoreException e) {
+								e.printStackTrace();
+							}
+							
+							
+							// ******************** 
+							// Create arguments:
+							// 
+							//VDMJ use these arguments:
+							// 0: host
+							// 1: port
+							// 2: ideKey
+							// 3: Dialect
+							// 4: expression
+							// 5..nFiles: files
+							
+							// VDMTools arguments: 
+							// 0: host
+							// 1: port
+							// 2: ideKey
+							// 3: Dialect
+							// 4: expression
+							// 5: path to vdmtools
+							// 6..nFiles: files
+							// 
+							// 
+							
+							int argNumber = 0;
+							
+							// scriptFilePath.toPortableString(),
+							
+							ArrayList<String> memberFilesList = getAllMemberFilesString(proj.getProject(), exts);
+//							String[] eclipseArguments = iconfig.getProgramArguments(config, launch, myJavaProject);
+							// +2 in order to allocate space for debugClass, debugOperation, tool, dialect, debugFromConsole 
+							
+							String[] arguments = new String[memberFilesList.size() + 5];	
+							if (toolType.equals(OvertureDebugConstants.TOOL_VDMTOOLS)){
+								arguments = new String[memberFilesList.size() + 6]; 
+							}
+							
+							// 0: host 
+							// 1: port
+							// 2: sessionID
+							arguments[argNumber++] = host;
+							arguments[argNumber++] = port;
+							arguments[argNumber++] = sessionId;
+							arguments[argNumber++] = dialect;
+							// 4: expression eg. : new className().operation()
+							String expression = 
+									"new " + 
+									launch.getLaunchConfiguration().getAttribute(OvertureDebugConstants.DEBUGGING_CLASS, "") + 
+									"()." +
+									launch.getLaunchConfiguration().getAttribute(OvertureDebugConstants.DEBUGGING_OPERATION, "") +
+									"()";
+							arguments[argNumber++] = expression;
+							
+							if (toolType.equals(OvertureDebugConstants.TOOL_VDMTOOLS)){
+								// VDMTool path
+								arguments[argNumber++] =  VDMToolsPath;
+							}
+
+							// TODO maybe get the arguments if we choose a non void filter add eclipse arguments:
+//							for (int a = 0; a < eclipseArguments.length; a++)
+//							{
+//								arguments[a + fileHostPortSessionStrs.length] = eclipseArguments[a];
+//							}
 							
 							// add files
-							for (int a = 0; a < memberFilesList.size(); a++) {
-								rs[a + strings.length + newStrings.length] = "-file " + memberFilesList.get(a);
+							for (int a = 0; a < memberFilesList.size(); a++) 
+							{
+								arguments[argNumber++] = memberFilesList.get(a);
 							}
 							
-							//TODO move to constant file
-							rs[rs.length - 5] = "-" + OvertureDebugConstants.DEBUGGING_CLASS + " " + launch.getLaunchConfiguration().getAttribute(OvertureDebugConstants.DEBUGGING_CLASS, "");
-							rs[rs.length - 4] = "-" + OvertureDebugConstants.DEBUGGING_OPERATION + " " + launch.getLaunchConfiguration().getAttribute(OvertureDebugConstants.DEBUGGING_OPERATION, "");
-							rs[rs.length - 3] = "-" + OvertureDebugConstants.DEBUGGING_FROM_CONSOLE + " " + launch.getLaunchConfiguration().getAttribute(OvertureDebugConstants.DEBUGGING_FROM_CONSOLE, false);
-							rs[rs.length - 2] = "-" + OvertureDebugConstants.DEBUGGING_DIALECT + ""; //TODO
-							rs[rs.length - 1] = "-" + OvertureDebugConstants.DEBUGGING_TOOL + " " + ""; //TODO
 							
-
-							vmConfig.setProgramArguments(rs);
+							// Run new java program:
+							vmConfig.setProgramArguments(arguments);
 							ILaunch launchr = new Launch(launch.getLaunchConfiguration(), ILaunchManager.DEBUG_MODE, null);
 							iconfig.adjustRunnerConfiguration(vmConfig, config, launch, myJavaProject);
 							vmRunner.run(vmConfig, launchr, null);

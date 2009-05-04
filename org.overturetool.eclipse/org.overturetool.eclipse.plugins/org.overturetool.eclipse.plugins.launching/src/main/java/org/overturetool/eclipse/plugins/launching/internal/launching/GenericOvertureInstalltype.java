@@ -24,15 +24,15 @@ public class GenericOvertureInstalltype extends
 
 	public static final String DBGP_FOR_ABSTRACT_BUNDLE_ID = "org.overturetool.dbgp";
 	public static final String DBGP_FOR_VDMTOOLS_BUNDLE_ID = "org.overturetool.vdmtools.dbgp";
-	public static final String DBGP_FOR_VDMJ_BUNDLE_ID = "org.overturetool.dbgp.vdmj"; //$NON-NLS-1$
-	public static final String EMBEDDED_VDMJ_BUNDLE_ID = "org.overturetool.vdmj"; //$NON-NLS-1$
+	public static final String DBGP_FOR_VDMJ_BUNDLE_ID = "org.overturetool.eclipse.plugins.traces.core"; //$NON-NLS-1$
+//	public static final String EMBEDDED_VDMJ_BUNDLE_ID = "org.overturetool.vdmj"; //$NON-NLS-1$
 
 	public String getNatureId() {
 		return OvertureNature.NATURE_ID;
 	}
 
 	public String getName() {
-		return "Generic VDMJ install"; //$NON-NLS-1$
+		return "VDMTools Interpreter"; //$NON-NLS-1$
 	}
 
 	public LibraryLocation[] getDefaultLibraryLocations(
@@ -50,7 +50,7 @@ public class GenericOvertureInstalltype extends
 		return new LibraryLocation[0];
 	}
 
-	private static String[] possibleExes = { "vpp", "tex" };
+	private static String[] possibleExes = { "eclipse", "eclipse.exe", "" };
 
 	protected String getPluginId() {
 		return OvertureLaunchConstants.PLUGIN_ID;

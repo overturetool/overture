@@ -2,7 +2,6 @@ package org.overturetool.eclipse.plugins.launching.internal.launching;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
 
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IPath;
@@ -31,7 +30,7 @@ public class VDMJInstallType extends AbstractInterpreterInstallType {
 	}
 
 	public String getName() {
-		return "VDMJ"; //$NON-NLS-1$
+		return "Embedded VDMJ"; //$NON-NLS-1$
 	}
 
 	public LibraryLocation[] getDefaultLibraryLocations(
@@ -49,7 +48,7 @@ public class VDMJInstallType extends AbstractInterpreterInstallType {
 		return new LibraryLocation[0];
 	}
 
-	private static String[] possibleExes = { "vpp", "tex" };
+	private static String[] possibleExes = { "js" };
 
 	protected String getPluginId() {
 		return OvertureLaunchConstants.PLUGIN_ID;
@@ -63,12 +62,12 @@ public class VDMJInstallType extends AbstractInterpreterInstallType {
 		return new GenericOvertureInstall(this, id);
 	}
 
-	protected void filterEnvironment(Map environment) {
-		// make sure that $auto_path is clean
-		environment.remove("TCLLIBPATH");
-		// block wish from showing window under linux
-		environment.remove("DISPLAY");
-	}
+//	protected void filterEnvironment(Map environment) {
+//		// make sure that $auto_path is clean
+////		environment.remove("TCLLIBPATH");
+//		// block wish from showing window under linux
+////		environment.remove("DISPLAY");
+//	}
 
 	public IStatus validateInstallLocation(IFileHandle installLocation) {
 		return Status.OK_STATUS;
