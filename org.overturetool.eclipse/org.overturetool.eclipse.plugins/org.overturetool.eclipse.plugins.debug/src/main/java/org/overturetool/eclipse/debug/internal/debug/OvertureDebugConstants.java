@@ -28,4 +28,8 @@ public final class OvertureDebugConstants {
 	
 	public static final String PREF_DEBUG_FROM_CONSOLE = "debug_from_console";
 	
+	public static final String TOOL_VDMJ = "VDMJ";
+	
+	public static final String TOOL_VDMTOOLS = "VDMTools";
+	
 }
