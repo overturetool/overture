@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bundle-Vendor: Princeton Softech Inc.
+Bundle-Vendor: Overture
 Bundle-ClassPath: .
 Bundle-Version: 1.0.0
 Eclipse-BuddyPolicy: registered

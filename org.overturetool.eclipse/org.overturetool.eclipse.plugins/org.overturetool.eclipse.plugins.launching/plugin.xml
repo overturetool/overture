@@ -7,7 +7,7 @@
      id="org.eclipse.dltk.internal.debug.ui.launcher.GenericOvertureInstallType"/>
     <interpreterInstallType
       class="org.overturetool.eclipse.plugins.launching.internal.launching.VDMJInstallType"
-      id="org.overturetool.internal.debug.ui.launcher.VDMJInstallType"/>
+      id="org.overturetool.eclipse.plugins.launching.internal.launching.VDMJInstallType"/>
   </extension>
  
   <extension point="org.eclipse.debug.core.launchDelegates">
@@ -29,15 +29,15 @@
   <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
     <launchConfigurationTypeImage
       icon="icons/vdm16.png"
-      configTypeID="org.overturetool.launching.OvertureLaunchConfigurationType"
-      id="org.overturetool.launching.OverturetoolLaunchConfigurationTypeImage">
+      configTypeID="org.overturetool.eclipse.plugins.launching.OvertureLaunchConfigurationType"
+      id="org.overturetool.eclipse.plugins.launching.OverturetoolLaunchConfigurationTypeImage">
     </launchConfigurationTypeImage>
   </extension>
 
   <extension point="org.eclipse.debug.core.launchConfigurationTypes">
     <launchConfigurationType
       delegate="org.overturetool.eclipse.plugins.launching.OvertureLaunchConfigurationDelegate"
-      id="org.overturetool.launching.OvertureLaunchConfigurationType"
+      id="org.overturetool.eclipse.plugins.launching.OvertureLaunchConfigurationType"
       modes="run,debug"
       name="%launchConfigurationType.name.0"
       public="true"
@@ -46,7 +46,7 @@
     </launchConfigurationType>
     <launchConfigurationType
                delegate="org.overturetool.eclipse.plugins.launching.OvertureLaunchConfigurationDelegate"
-               id="org.overturetool.launching.OvertureRemoteLaunchConfigurationType"
+               id="org.overturetool.eclipse.plugins.launching.OvertureRemoteLaunchConfigurationType"
                modes="debug"
                name="%RemoteLaunchConfigurationType.name"
                public="true"
@@ -79,4 +79,17 @@
       <selector class="org.overturetool.eclipse.plugins.launching.OvertureDebuggingEngineSelector" />
     </engineContribution>
   </extension>
+  
+  
+  <!-- create the embedded VDMJ interpreter -->
+  <extension point="org.eclipse.dltk.launching.interpreterInstalls">
+     <interpreterInstall
+           home="${eclipse_home}"
+           id="org.overturetool.eclipse.plugins.launching.internal.launching.embeddedVDMJ"
+           interpreterInstallType="org.overturetool.eclipse.plugins.launching.internal.launching.VDMJInstallType"
+           name="VDMJ Interpreter">
+     </interpreterInstall>
+  </extension>
+  
+  
 </plugin>
