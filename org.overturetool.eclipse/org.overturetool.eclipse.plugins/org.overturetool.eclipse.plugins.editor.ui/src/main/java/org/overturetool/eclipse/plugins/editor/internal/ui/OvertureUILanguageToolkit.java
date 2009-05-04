@@ -41,7 +41,7 @@ public class OvertureUILanguageToolkit implements IDLTKUILanguageToolkit {
 	}
 
 	public String getInterpreterContainerId() {
-		return EditorCoreUIConstants.INTERPRETER_CONTAINER_ID;//"org.overturetool.launching.INTERPRETER_CONTAINER";
+		return EditorCoreUIConstants.INTERPRETER_CONTAINER_ID;//"org.overturetool.eclipse.plugins.launching.INTERPRETER_CONTAINER";
 	}
 
 	public ScriptUILabelProvider createScriptUILabelProvider() {
