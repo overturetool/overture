@@ -78,9 +78,8 @@ public class VdmProject {
 		out = ExecuteCmdVdmTools(" -t" + GetSpecFiles(),
 				GetJavaLocation(baseDir));
 
-		if (out.contains("Errors detected") || out.contains("  Expected"))
-			new MojoFailureException("VDM Type check faild: Errors detected");
-		else
+		
+		
 			PrintSuccess("VDM Type check");
 
 	}
@@ -88,6 +87,7 @@ public class VdmProject {
 	private String ExecuteCmdVdmTools(String arguments, File baseDirectory)
 			throws MojoFailureException {
 		String out = new String();
+		Process p =null;
 		try {
 			String line;
 			// ProcessBuilder pb = null;
@@ -120,7 +120,7 @@ public class VdmProject {
 			// pb.redirectErrorStream(true);
 			arg.replace("\"", "");
 			log.debug("Process args: " + arg);
-			Process p = Runtime.getRuntime().exec(arg, null, baseDirectory);
+			 p = Runtime.getRuntime().exec(arg, null, baseDirectory);
 
 			// Process p = pb.start();
 
@@ -138,9 +138,12 @@ public class VdmProject {
 					// log.info("\n" + line);
 					else if (line.startsWith("Couldn't open file"))
 						throw new MojoFailureException(line);
+					else if(line.contains("Errors detected") || line.contains("  Expected"))
+					throw new MojoFailureException("VDM Type check faild: Errors detected",line,out);
 			}
 			input.close();
 		} catch (Exception err) {
+			
 			if (err instanceof MojoFailureException)
 				throw (MojoFailureException) err;
 			else {
@@ -151,6 +154,10 @@ public class VdmProject {
 				throw new MojoFailureException("ExecuteCmdVdmTools", err
 						.getMessage(), getStackTrace(err));
 			}
+		}finally
+		{
+			if(p!=null)
+				p.destroy();
 		}
 		return out;
 	}
