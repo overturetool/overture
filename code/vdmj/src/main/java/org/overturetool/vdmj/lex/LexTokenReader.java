@@ -998,22 +998,34 @@ public class LexTokenReader extends BacktrackInputReader
 		return last;
 	}
 
-	/*
-	 * These are exceptional characters that are allowed in Japanese names/IDs.
-	 */
-
-	private final String japanese =
-		"\u2212\u2260\u2266\u2267" +
-		"\u300c\u300d\u300e\u300f" +
-		"\uff0b\uff16\uff1c\uff1e\uff1d\uff1f";
-
 	/**
 	 * @return True if the character passed can be the start of a variable name.
 	 */
 
 	private boolean startOfName(char c)
 	{
-		return (Character.isLetter(c) || c == '$' || japanese.indexOf(c) >= 0);
+		if (c < 0x0100)
+		{
+			return Character.isLetter(c) || c == '$';
+		}
+		else
+		{
+			switch (Character.getType(c))
+			{
+				case Character.CONTROL:
+				case Character.LINE_SEPARATOR:
+				case Character.PARAGRAPH_SEPARATOR:
+				case Character.SPACE_SEPARATOR:
+				case Character.SURROGATE:
+				case Character.UNASSIGNED:
+				case Character.DECIMAL_DIGIT_NUMBER:
+				case Character.CONNECTOR_PUNCTUATION:
+					return false;
+
+				default:
+					return true;
+			}
+		}
 	}
 
 	/**
@@ -1022,8 +1034,26 @@ public class LexTokenReader extends BacktrackInputReader
 
 	private boolean restOfName(char c)
 	{
-		return (Character.isLetterOrDigit(c)
-			||	c == '$' || c == '_' || c == '\'' || japanese.indexOf(c) >= 0);
+		if (c < 0x0100)
+		{
+			return Character.isLetterOrDigit(c) || c == '$' || c == '_' || c == '\'';
+		}
+		else
+		{
+			switch (Character.getType(c))
+			{
+				case Character.CONTROL:
+				case Character.LINE_SEPARATOR:
+				case Character.PARAGRAPH_SEPARATOR:
+				case Character.SPACE_SEPARATOR:
+				case Character.SURROGATE:
+				case Character.UNASSIGNED:
+					return false;
+
+				default:
+					return true;
+			}
+		}
 	}
 
 	/**
