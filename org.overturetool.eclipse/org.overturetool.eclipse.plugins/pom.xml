@@ -28,6 +28,7 @@
     <module>org.overturetool.eclipse.plugins.editor.core</module>
     <module>org.overturetool.eclipse.plugins.traces.core</module>
     <module>org.overturetool.eclipse.plugins.showtrace.core</module>
+    <module>org.overturetool.eclipse.plugins.dbgp.core</module>
    
     <!-- Thrid build all source plugins-->
     <module>org.overturetool.eclipse.plugins.umltrans</module>
