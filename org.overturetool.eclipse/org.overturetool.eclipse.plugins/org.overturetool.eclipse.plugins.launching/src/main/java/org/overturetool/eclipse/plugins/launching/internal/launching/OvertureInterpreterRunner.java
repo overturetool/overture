@@ -65,7 +65,7 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 		}
 
 		public String getRunnerClassName(InterpreterConfig config, ILaunch launch, IJavaProject project) {
-			return "org.overturetool.vdmtools.dbgp.DBGPReader";
+			return "org.overturetool.vdmj.debug.DBGPReader";
 		}
 
 		public String getRunnerOperationName(InterpreterConfig config, ILaunch launch, IJavaProject project) {
@@ -88,7 +88,7 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 		}
 
 		public String getRunnerClassName(InterpreterConfig config, ILaunch launch, IJavaProject project) {
-			return "OvertureRunner";
+			return "org.overturetool.vdmtools.dbgp.VDMToolsRunner";
 		}
 
 		public String getRunnerOperationName(InterpreterConfig config, ILaunch launch, IJavaProject project) {
@@ -108,7 +108,7 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 		try {
 			IInterpreterInstall interpreterInstall = ScriptRuntime.getInterpreterInstall(proj);
 			interpreterInstall.getInstallLocation();
-			if (interpreterInstall.getInterpreterInstallType().getName().equals(OvertureDebugConstants.TOOL_VDMJ)) {
+			if (interpreterInstall.getInterpreterInstallType().getId().equals("org.overturetool.eclipse.plugins.launching.internal.launching.VDMJInstallType")) {
 				doRunImpl(config, launch, this.config);
 			} else if (interpreterInstall.getInterpreterInstallType().getName().equals(OvertureDebugConstants.TOOL_VDMTOOLS)) {
 				doRunImpl(config, launch, this.vdmToolsConfig);
@@ -194,19 +194,17 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 								dialect = "VDM_SL";
 							}
 							
-							
 							// Select interpreter:
 							String toolType = OvertureDebugConstants.TOOL_VDMJ;
 							IInterpreterInstall interpreterInstall;
 							String VDMToolsPath = "";
 							try {
 								interpreterInstall = ScriptRuntime.getInterpreterInstall(proj);
-								interpreterInstall.getInstallLocation();
-								if (interpreterInstall.getInterpreterInstallType().getName().equals(OvertureDebugConstants.TOOL_VDMJ)) {
-									toolType = OvertureDebugConstants.TOOL_VDMJ;
-								} else if (interpreterInstall.getInterpreterInstallType().getName().equals(OvertureDebugConstants.TOOL_VDMTOOLS)) {
+								if (!interpreterInstall.getInterpreterInstallType().getId().equals("org.overturetool.eclipse.plugins.launching.internal.launching.VDMJInstallType")) {
 									toolType = OvertureDebugConstants.TOOL_VDMTOOLS;
 									VDMToolsPath = interpreterInstall.getInstallLocation().toOSString();
+								} else {
+									toolType = OvertureDebugConstants.TOOL_VDMJ;
 								}
 							} catch (CoreException e) {
 								e.printStackTrace();
@@ -276,20 +274,9 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 //							}
 							
 							// add files to the arguments
-							// 
-							// the VDMJ interpreter takes uri's
-							// The interpreter from VDMTOools takes a normal file path
-							if (toolType.equals(OvertureDebugConstants.TOOL_VDMTOOLS)){
-								for (int a = 0; a < memberFilesList.size(); a++) 
-								{
-									arguments[argNumber++] = memberFilesList.get(a);
-								}
-							}
-							else if (toolType.equals(OvertureDebugConstants.TOOL_VDMJ)){
-								for (int a = 0; a < memberFilesList.size(); a++) 
-								{
-									arguments[argNumber++] = new File( memberFilesList.get(a) ).toURI().toASCIIString();
-								}
+							for (int a = 0; a < memberFilesList.size(); a++) 
+							{
+								arguments[argNumber++] = new File( memberFilesList.get(a) ).toURI().toASCIIString();
 							}
 							
 							
@@ -365,7 +352,7 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 		String[] newCmdLine = new String[cmdLine.length + 4];
 
 		newCmdLine[0] = cmdLine[0];
-		newCmdLine[1] = DLTKCore.getDefault().getStateLocation().append("tcl_proxy").toOSString();
+		newCmdLine[1] = DLTKCore.getDefault().getStateLocation().append("overture_proxy").toOSString();
 
 		newCmdLine[2] = "localhost";
 		newCmdLine[3] = port;

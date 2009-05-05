@@ -22,10 +22,7 @@ import org.overturetool.eclipse.plugins.launching.OvertureLaunchConstants;
 public class GenericOvertureInstalltype extends
 		AbstractInterpreterInstallType {
 
-	//public static final String DBGP_FOR_ABSTRACT_BUNDLE_ID = "org.overturetool.dbgp";
-	//public static final String DBGP_FOR_VDMTOOLS_BUNDLE_ID = "org.overturetool.vdmtools.dbgp";
-	public static final String DBGP_FOR_VDMJ_BUNDLE_ID = "org.overturetool.eclipse.plugins.traces.core"; //$NON-NLS-1$
-//	public static final String EMBEDDED_VDMJ_BUNDLE_ID = "org.overturetool.vdmj"; //$NON-NLS-1$
+	public static final String DBGP_FOR_VDMJ_BUNDLE_ID = "org.overturetool.eclipse.plugins.dbgp.core"; //$NON-NLS-1$
 
 	public String getNatureId() {
 		return OvertureNature.NATURE_ID;
@@ -65,8 +62,6 @@ public class GenericOvertureInstalltype extends
 	}
 
 	protected void filterEnvironment(Map environment) {
-		// make sure that $auto_path is clean
-		environment.remove("TCLLIBPATH");
 		// block wish from showing window under linux
 		environment.remove("DISPLAY");
 	}

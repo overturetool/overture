@@ -34,8 +34,7 @@ public class OvertureLocalApplicationLaunchConfigurationDelegate extends
 			dbgpService = DLTKDebugPlugin.getDefault().getDbgpService();
 //			dbgpService = DLTKDebugPlugin.getDefault().getRemoteDbgpService();
 			
-			IScriptDebugTarget target = new ScriptDebugTarget("org.overture.debug.OvertureDebugModel", dbgpService,
-					"hello", launch,null);
+			IScriptDebugTarget target = new ScriptDebugTarget("org.overturetool.eclipse.plugin.debug.OvertureDebugModel", dbgpService, "hello", launch, null);
 			IOConsole cs=new IOConsole("aa",null);
 			ScriptStreamProxy proxy = new ScriptStreamProxy(cs);
 			target.setStreamProxy(proxy);
