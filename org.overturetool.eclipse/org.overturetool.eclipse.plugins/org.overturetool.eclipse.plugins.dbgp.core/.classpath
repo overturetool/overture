@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" output="target/classes" path="src/main/java"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
+	<classpathentry exported="true" kind="lib" path="lib/vdmtoolsdbgp-1.0.0.jar" sourcepath="org.overturetool.eclipse.plugins.dbgp.coresrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/abstractdbgp-1.0.0.jar" sourcepath="org.overturetool.eclipse.plugins.dbgp.coresrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/vdmtoolsapi-1.0.0.jar" sourcepath="org.overturetool.eclipse.plugins.dbgp.coresrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/stdlib-1.0.0.jar" sourcepath="org.overturetool.eclipse.plugins.dbgp.coresrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/vdmj-1.0.0.jar" sourcepath="org.overturetool.eclipse.plugins.dbgp.coresrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/parser-1.0.0.jar" sourcepath="org.overturetool.eclipse.plugins.dbgp.coresrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/ast-1.0.0.jar" sourcepath="org.overturetool.eclipse.plugins.dbgp.coresrc.zip"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
