@@ -13,7 +13,7 @@
   <extension point="org.eclipse.debug.core.launchDelegates">
     <launchDelegate
       delegate="org.overturetool.eclipse.plugins.launching.internal.launching.OvertureLocalApplicationLaunchConfigurationDelegate"
-      id="com.Instantiations.profiler.localOvertureApplicationDelegate"
+      id="org.overturetool.eclipse.plugins.launching.OvertureLocalApplicationLaunchConfigurationDelegate"
       modes="debug"
       name="%launchDelegate.name.0"
       type="org.eclipse.jdt.launching.localJavaApplication">
@@ -44,7 +44,7 @@
       sourceLocatorId="overtureSourceLocator"
       sourcePathComputerId="overtureSourcePathComputer">
     </launchConfigurationType>
-    <!-- is it rigt with remote delegate here????  -->
+    <!-- is it right with remote delegate here????  -->
     <launchConfigurationType
                delegate="org.overturetool.eclipse.plugins.launching.OvertureRemoteLaunchConfigurationDelegate"
                id="org.overturetool.eclipse.plugins.launching.OvertureRemoteLaunchConfigurationType"
@@ -55,12 +55,21 @@
       </launchConfigurationType>
   </extension>
 
+<!--
   <extension point="org.eclipse.debug.core.sourcePathComputers">
     <sourcePathComputer
       class="org.overturetool.eclipse.plugins.launching.internal.launching.OvertureSourcePathComputer"
       id="overtureSourcePathComputer" />
   </extension>
+-->
 
+  <extension point="org.eclipse.debug.core.sourcePathComputers">
+        <sourcePathComputer
+            class="org.eclipse.dltk.launching.sourcelookup.ScriptSourcePathComputer"
+            id="overtureSourcePathComputer"/>
+   </extension>
+
+<!-- 
   <extension point="org.eclipse.debug.core.sourceLocators">
     <sourceLocator
       class="org.overturetool.eclipse.plugins.launching.internal.launching.OvertureSourceLookupDirector"
@@ -74,7 +83,23 @@
            name="%OvertureRemoteSourceLocator.name" 
         />
    </extension> 
+-->
 
+  <extension
+        point="org.eclipse.debug.core.sourceLocators">
+        <sourceLocator
+           class="org.eclipse.dltk.launching.sourcelookup.ScriptSourceLookupDirector"
+           id="overtureSourceLocator"
+           name="%sourceLocator.name.0" />
+   </extension>
+    <extension
+        point="org.eclipse.debug.core.sourceLocators">
+        <sourceLocator
+           class="org.eclipse.dltk.launching.sourcelookup.RemoteScriptSourceLookupDirector"
+           id="overtureRemoteSourceLocator"
+           name="%OvertureRemoteSourceLocator.name" />
+   </extension> 
+   
   <extension point="org.eclipse.dltk.launching.debuggingEngine">
     <engineContribution natureId="org.overturetool.eclipse.plugins.editor.core.nature">
       <selector class="org.overturetool.eclipse.plugins.launching.OvertureDebuggingEngineSelector" />

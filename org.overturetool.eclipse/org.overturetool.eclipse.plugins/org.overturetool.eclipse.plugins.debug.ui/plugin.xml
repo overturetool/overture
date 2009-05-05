@@ -72,7 +72,7 @@
     <launchConfigurationTabGroup
       type="org.overturetool.eclipse.plugins.launching.OvertureLaunchConfigurationType"
       class="org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.launchConfigurations.OvertureTabGroup"
-      id="org.overturetool.internal.debug.ui.launchConfigurations.TclTabGroup">
+      id="org.overturetool.internal.debug.ui.launchConfigurations.OvertureTabGroup">
       <launchMode
         mode="debug"
         perspective="org.eclipse.debug.ui.DebugPerspective"

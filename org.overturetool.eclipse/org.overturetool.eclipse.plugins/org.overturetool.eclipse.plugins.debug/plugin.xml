@@ -7,8 +7,8 @@
             class="org.overturetool.eclipse.debug.internal.debug.OvertureDebugPreferenceInitializer">
       </initializer>
    </extension>
-   <extension
-         point="org.eclipse.dltk.debug.scriptDebugModel">
+   
+   <extension point="org.eclipse.dltk.debug.scriptDebugModel">
       <debugModel
             debugModelId="org.overturetool.eclipse.plugin.debug.OvertureDebugModel"
             debugToolkit="org.overturetool.eclipse.debug.internal.debug.OvertureDebugToolkit"
