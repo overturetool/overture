@@ -90,8 +90,8 @@ public class VdmProject {
 		Process p =null;
 		try {
 			String line;
-			// ProcessBuilder pb = null;
-			String arg;
+			 ProcessBuilder pb = null;
+			String arg="";
 			log.debug("ExecuteCmdVdmTools");
 			log.debug("VdmTools: " + vppde.getAbsolutePath() + " Exists: "
 					+ vppde.exists());
@@ -101,27 +101,30 @@ public class VdmProject {
 			log.debug("OS = " + System.getProperty("os.name"));
 			if (IsWindows()) {
 
-				// pb = new ProcessBuilder("\"" + vppde.getAbsolutePath() + "\""
-				// + arguments.trim());
-				arg = "\"" + vppde.getAbsolutePath() + "\"" + arguments.trim();
+				 pb = new ProcessBuilder("\"" + vppde.getAbsolutePath() + "\" "
+				 + arguments.trim());
+				//arg = "\"" + vppde.getAbsolutePath() + "\" " + arguments.trim();
 			} else if (IsMac()) {
 				// pb = new ProcessBuilder("open " + vppde.getAbsolutePath() +
 				// " "+ arguments.trim());
-				arg = "open " + vppde.getAbsolutePath() + " "
+				arg =  vppde.getAbsolutePath() + " "
 						+ arguments.trim();
 			} else {
 				// pb = new ProcessBuilder(vppde.getAbsolutePath() + " "+
 				// arguments.trim());
 				arg = vppde.getAbsolutePath() + " " + arguments.trim();
 			}
-
-			// pb.directory(baseDirectory);
-
-			// pb.redirectErrorStream(true);
-			arg.replace("\"", "");
+if(pb!=null)
+{
+			 pb.directory(baseDirectory);
+			 pb.redirectErrorStream(true);
+			 p=pb.start();
+}else
+{
+//			arg.replace("\"", "");
 			log.debug("Process args: " + arg);
 			 p = Runtime.getRuntime().exec(arg, null, baseDirectory);
-
+}
 			// Process p = pb.start();
 
 			BufferedReader input = new BufferedReader(new InputStreamReader(p
@@ -129,16 +132,14 @@ public class VdmProject {
 			while ((line = input.readLine()) != null) {
 				out += "\n" + line;
 				log.debug(line);
-				if (!line.endsWith("done")
-						&& !line
-								.endsWith("with super classes are POS type correct"))
+				//if (!line.endsWith("done")&& !line.endsWith("with super classes are POS type correct"))
 					if (line.startsWith("  Warning"))
 						log.warn("\n" + line);
 					// else
 					// log.info("\n" + line);
 					else if (line.startsWith("Couldn't open file"))
 						throw new MojoFailureException(line);
-					else if(line.contains("Errors detected") || line.contains("  Expected"))
+					else if(line.contains("Errors detected") || line.contains("  Expected")|| line.startsWith("  Error["))
 					throw new MojoFailureException("VDM Type check faild: Errors detected",line,out);
 			}
 			input.close();
