@@ -187,8 +187,7 @@ public class OvertureDebuggerPlugin extends AbstractUIPlugin implements
 	}
 
 	private boolean isThisDebuggerLaunch(ILaunch launch) {
-		String engineId = launch
-				.getAttribute(DebuggingEngineRunner.LAUNCH_ATTR_DEBUGGING_ENGINE_ID);
+		String engineId = launch.getAttribute(DebuggingEngineRunner.LAUNCH_ATTR_DEBUGGING_ENGINE_ID);
 		if (OvertureDebuggerRunner.ENGINE_ID.equals(engineId)) {
 			return true;
 		}
