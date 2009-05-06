@@ -11,7 +11,9 @@ public class OvertureDebugPreferenceInitializer extends
 	public void initializeDefaultPreferences() {
 		Preferences store = DebugPlugin.getDefault().getPluginPreferences();
 
-		store.setDefault(OvertureDebugConstants.DEBUGGING_ENGINE_ID_KEY, "");
+		if (store.getDefaultString(OvertureDebugConstants.DEBUGGING_ENGINE_ID_KEY) == null)
+			store.setDefault(OvertureDebugConstants.DEBUGGING_ENGINE_ID_KEY, "org.overturetool.overturedebugger");
+		// org.overturetool.overturedebugger
 
 		store.setDefault(DLTKDebugPreferenceConstants.PREF_DBGP_BREAK_ON_FIRST_LINE, false);
 		store.setDefault(DLTKDebugPreferenceConstants.PREF_DBGP_ENABLE_LOGGING,	false);

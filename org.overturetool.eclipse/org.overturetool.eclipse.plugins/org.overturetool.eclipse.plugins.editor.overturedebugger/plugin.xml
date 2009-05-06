@@ -34,7 +34,7 @@
         <adapt type="org.eclipse.core.resources.IProject">
           <test
             property="org.eclipse.core.resources.projectNature"
-            value="org.overturetool.core.nature" />
+            value="org.overturetool.eclipse.plugins.editor.core.nature" />
         </adapt>
       </enabledWhen>
     </page>

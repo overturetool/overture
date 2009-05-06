@@ -5,7 +5,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.PreferencesLookupDelegate;
+import org.eclipse.dltk.internal.debug.core.model.ScriptDebugTarget;
 import org.eclipse.dltk.launching.AbstractScriptLaunchConfigurationDelegate;
+import org.eclipse.dltk.launching.DebugSessionAcceptor;
 import org.eclipse.dltk.launching.DebuggingEngineRunner;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
@@ -19,7 +21,7 @@ public class OvertureDebuggerRunner extends DebuggingEngineRunner implements ICo
 
 	public static String ENGINE_ID = "org.overturetool.overturedebugger";
 
-	IOvertureInterpreterRunnerConfig runnerconfig = OvertureInterpreterRunner.VDMJ_CONFIG;
+	private IOvertureInterpreterRunnerConfig runnerconfig = OvertureInterpreterRunner.VDMJ_CONFIG;
 	private IOvertureInterpreterRunnerConfig vdmToolsConfig = OvertureInterpreterRunner.VDMTOOLS_CONFIG;
 
 	public OvertureDebuggerRunner(IInterpreterInstall install) {
@@ -33,6 +35,8 @@ public class OvertureDebuggerRunner extends DebuggingEngineRunner implements ICo
 	public void run(InterpreterConfig config, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		initializeLaunch(launch, config,createPreferencesLookupDelegate(launch));
 		IScriptProject proj = AbstractScriptLaunchConfigurationDelegate.getScriptProject(launch.getLaunchConfiguration());
+		final ScriptDebugTarget target = (ScriptDebugTarget) launch.getDebugTarget();
+		final DebugSessionAcceptor acceptor = new DebugSessionAcceptor(target, monitor);
 		try {
 			IInterpreterInstall interpreterInstall = ScriptRuntime.getInterpreterInstall(proj);
 			if (!interpreterInstall.getInterpreterInstallType().getId().equals("org.overturetool.eclipse.plugins.launching.internal.launching.VDMJInstallType")) {
@@ -41,6 +45,7 @@ public class OvertureDebuggerRunner extends DebuggingEngineRunner implements ICo
 			else {
 				OvertureInterpreterRunner.doRunImpl(config, launch, this.runnerconfig);
 			}
+			waitDebuggerConnected(launch, acceptor);
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}

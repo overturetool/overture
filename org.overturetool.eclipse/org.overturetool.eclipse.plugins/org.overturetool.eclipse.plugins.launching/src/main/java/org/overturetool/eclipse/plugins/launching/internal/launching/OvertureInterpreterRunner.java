@@ -45,10 +45,11 @@ import org.eclipse.jdt.launching.IVMRunner;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.overturetool.eclipse.debug.internal.debug.OvertureDebugConstants;
+import org.overturetool.eclipse.plugins.launching.IConfigurableRunner;
 import org.overturetool.eclipse.plugins.launching.IOvertureInterpreterRunnerConfig;
 import org.overturetool.eclipse.plugins.launching.OvertureLaunchConstants;
 
-public class OvertureInterpreterRunner extends AbstractInterpreterRunner implements org.overturetool.eclipse.plugins.launching.IConfigurableRunner {
+public class OvertureInterpreterRunner extends AbstractInterpreterRunner implements IConfigurableRunner {
 
 	public static final IOvertureInterpreterRunnerConfig VDMJ_CONFIG = new IOvertureInterpreterRunnerConfig() {
 
@@ -95,8 +96,6 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 			return null;
 		}
 	};
-	
-	
 	
 	private IOvertureInterpreterRunnerConfig config = VDMJ_CONFIG;
 	private IOvertureInterpreterRunnerConfig vdmToolsConfig = VDMTOOLS_CONFIG;
@@ -329,41 +328,38 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 	}
 
 	protected static String[] computeBaseClassPath(IJavaProject myJavaProject) throws CoreException {
-		if (myJavaProject != null){
-			return JavaRuntime.computeDefaultRuntimeClassPath(myJavaProject);
-		}
 		if (!myJavaProject.exists())
 			return CharOperation.NO_STRINGS;
 		return JavaRuntime.computeDefaultRuntimeClassPath(myJavaProject);
 	}
 
-	protected String constructProgramString(InterpreterConfig config) throws CoreException {
-
-		return "";
-	}
+//	protected String constructProgramString(InterpreterConfig config) throws CoreException {
+//
+//		return "";
+//	}
 
 	public OvertureInterpreterRunner(IInterpreterInstall install) {
 		super(install);
 	}
 
-	protected String[] alterCommandLine(String[] cmdLine, String id) {
-		ScriptConsoleServer server = ScriptConsoleServer.getInstance();
-		String port = Integer.toString(server.getPort());
-		String[] newCmdLine = new String[cmdLine.length + 4];
-
-		newCmdLine[0] = cmdLine[0];
-		newCmdLine[1] = DLTKCore.getDefault().getStateLocation().append("overture_proxy").toOSString();
-
-		newCmdLine[2] = "localhost";
-		newCmdLine[3] = port;
-		newCmdLine[4] = id;
-
-		for (int i = 1; i < cmdLine.length; ++i) {
-			newCmdLine[i + 4] = cmdLine[i];
-		}
-
-		return newCmdLine;
-	}
+//	protected String[] alterCommandLine(String[] cmdLine, String id) {
+//		ScriptConsoleServer server = ScriptConsoleServer.getInstance();
+//		String port = Integer.toString(server.getPort());
+//		String[] newCmdLine = new String[cmdLine.length + 4];
+//
+//		newCmdLine[0] = cmdLine[0];
+//		newCmdLine[1] = DLTKCore.getDefault().getStateLocation().append("overture_proxy").toOSString();
+//
+//		newCmdLine[2] = "localhost";
+//		newCmdLine[3] = port;
+//		newCmdLine[4] = id;
+//
+//		for (int i = 1; i < cmdLine.length; ++i) {
+//			newCmdLine[i + 4] = cmdLine[i];
+//		}
+//
+//		return newCmdLine;
+//	}
 
 	protected String getProcessType() {
 		return OvertureLaunchConstants.ID_OVERTURE_PROCESS_TYPE;
