@@ -29,9 +29,11 @@ import org.eclipse.dltk.ui.wizards.ProjectWizardSecondPage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.INewWizard;
+import org.overturetool.eclipse.plugins.editor.core.OvertureConstants;
 import org.overturetool.eclipse.plugins.editor.core.OvertureNature;
 import org.overturetool.eclipse.plugins.editor.internal.ui.UIPlugin;
 import org.overturetool.eclipse.plugins.editor.internal.ui.preferences.OvertureBuildPathsBlock;
+import org.overturetool.eclipse.plugins.editor.ui.EditorCoreUIConstants;
 import org.overturetool.eclipse.plugins.editor.ui.OvertureImages;
 import org.overturetool.eclipse.plugins.editor.ui.OverturePreferenceConstants;
 
@@ -65,7 +67,7 @@ public class OvertureProjectCreationWizard extends NewElementWizard implements
 				}
 				
 				protected String getIntereprtersPreferencePageId() {
-					return null;
+					return EditorCoreUIConstants.INTERPRETER_PREFERENCE_PAGE; 
 				} 
 			};
 
