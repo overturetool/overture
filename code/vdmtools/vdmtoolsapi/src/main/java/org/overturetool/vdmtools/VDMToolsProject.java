@@ -14,10 +14,16 @@ import jp.co.csk.vdm.toolbox.api.ToolboxClient.CouldNotResolveObjectException;
 import jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.APIError;
 import jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.ErrorListHolder;
 import jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.FileListHolder;
+import jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.ModuleListHolder;
+import jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.ModuleStatus;
+import jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.ModuleStatusHolder;
 import jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.ToolType;
 import jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.VDMApplication;
+import jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.VDMCodeGenerator;
 import jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.VDMErrors;
+import jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.VDMModuleRepos;
 import jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.VDMProject;
+import jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.VDMCodeGeneratorPackage.LanguageType;
 
 import org.overturetool.vdmtools.interpreter.Interpreter;
 import org.overturetool.vdmtools.parser.Parser;
@@ -376,6 +382,80 @@ public class VDMToolsProject {
 				+ client);
 		
 		logger.logp(Level.INFO, "VDMToolsProject", "RegistreClient", "Client created with id: "+client);
+	}
+	
+	public void codeGenerateCPP(boolean newGeneratePosInfo) throws Exception
+	{
+		try {
+			parser.parseProject(app, prj);
+			typeChecker.typeCheckProject(app, prj);
+
+			VDMModuleRepos repos = app.GetModuleRepos();
+			ModuleListHolder ml = new ModuleListHolder();
+			prj.GetModules(ml);
+			String mlist[] = ml.value;
+			
+			VDMCodeGenerator codeGenerator =  app.GetCodeGenerator();
+			codeGenerator.GeneratePosInfo(newGeneratePosInfo);
+			codeGenerator.GenerateCodeList(mlist, LanguageType.CPP);
+			System.out.println("Modules:");
+			for(int i=0; i<mlist.length; i++){
+				  // This struct is used to hold the status of a module:
+				  ModuleStatusHolder stateholder = new ModuleStatusHolder();
+				  // Get the status of the i’th module
+				  repos.Status(stateholder, mlist[i]);
+				  ModuleStatus stat = stateholder.value;
+				  // Print the status.
+				  System.out.println(mlist[i]);
+				  System.out.println("SyntaxChecked: " + stat.SyntaxChecked);
+				  System.out.println("TypeChecked: " + stat.TypeChecked);
+				  System.out.println("Code generated: " + stat.CodeGenerated);
+				  System.out.println("PrettyPrinted: " + stat.PrettyPrinted);
+				}
+
+		
+			System.out.println("done showing status...");
+		} catch (APIError e) {
+			System.out.println("Error generating files: " + e.msg);
+			throw new Exception(e.msg);
+		}
+	}
+	
+	public void codeGenerateJava(boolean newGeneratePosInfo) throws Exception
+	{
+		try {
+			parser.parseProject(app, prj);
+			typeChecker.typeCheckProject(app, prj);
+
+			VDMModuleRepos repos = app.GetModuleRepos();
+			ModuleListHolder ml = new ModuleListHolder();
+			prj.GetModules(ml);
+			String mlist[] = ml.value;
+			
+			VDMCodeGenerator codeGenerator =  app.GetCodeGenerator();
+			codeGenerator.GeneratePosInfo(newGeneratePosInfo);
+			codeGenerator.GenerateCodeList(mlist, LanguageType.JAVA);
+			System.out.println("Modules:");
+			for(int i=0; i<mlist.length; i++){
+				  // This struct is used to hold the status of a module:
+				  ModuleStatusHolder stateholder = new ModuleStatusHolder();
+				  // Get the status of the i’th module
+				  repos.Status(stateholder, mlist[i]);
+				  ModuleStatus stat = stateholder.value;
+				  // Print the status.
+				  System.out.println(mlist[i]);
+				  System.out.println("SyntaxChecked: " + stat.SyntaxChecked);
+				  System.out.println("TypeChecked: " + stat.TypeChecked);
+				  System.out.println("Code generated: " + stat.CodeGenerated);
+				  System.out.println("PrettyPrinted: " + stat.PrettyPrinted);
+				}
+
+		
+			System.out.println("done showing status...");
+		} catch (APIError e) {
+			System.out.println("Error generating files: " + e.msg);
+			throw new Exception(e.msg);
+		}
 	}
 
 }
