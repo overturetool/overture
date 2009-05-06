@@ -271,7 +271,7 @@ public class OvertureEditor extends ScriptEditor {
 	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#initializeKeyBindingScopes()
 	 */
 	protected void initializeKeyBindingScopes() {
-		setKeyBindingScopes(new String[] { EditorCoreUIConstants.OVERTURE_EDITOR_SCOPE }); // "org.overturetool.ui.overtureEditorScope"//$NON-NLS-1$
+		setKeyBindingScopes(new String[] { EditorCoreUIConstants.OVERTURE_EDITOR_SCOPE }); // "org.overturetool.eclipse.plugins.editor.ui.overtureEditorScope"//$NON-NLS-1$
 	}
 
 	protected void createActions() {
