@@ -24,7 +24,7 @@ public static final String ACTION_MESSAGES_BUNDLE_NAME= "org.overturetool.eclips
 
 public static String CALL_HIERARCHY_ID="org.eclipse.dltk.callhierarchy.view";
 
-public static String OVERTURE_EDITOR_SCOPE=" org.overturetool.eclipse.plugins.editor.ui.overtureEditorScope";
+public static String OVERTURE_EDITOR_SCOPE="org.overturetool.eclipse.plugins.editor.ui.overtureEditorScope";
 
 public static final String FORMATTER_LINE_SPLIT = UIPlugin.PLUGIN_ID + ".formatter.lineSplit"; //$NON-NLS-1$
 
@@ -39,7 +39,7 @@ public static String TODO_PREFERENCE_PAGE_ID ="org.overturetool.eclipse.plugins.
 public static final String CUSTOM_TEMPLATES_KEY = "org.overturetool.eclipse.plugins.editor.Templates";
 
 public static final String CONTEXT_TYPE_ID = "overtureUniversalTemplateContextType";
-
+																  
 public static final String OVERTURE_WIZARD_MESSAGES_BUNDLE_NAME= "org.overturetool.eclipse.plugins.editor.internal.ui.wizards.OvertureWizardMessages";//$NON-NLS-1$
 
 public static String NAVIGATOR ="org.eclipse.dltk.ui.ScriptExplorer";
