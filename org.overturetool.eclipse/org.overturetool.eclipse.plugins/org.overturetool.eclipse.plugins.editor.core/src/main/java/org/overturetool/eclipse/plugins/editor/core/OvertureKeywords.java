@@ -3,7 +3,6 @@ package org.overturetool.eclipse.plugins.editor.core;
 public class OvertureKeywords {
 	  private static final String[] reservedwords = {
 		  "if", "then", "else", "elseif",
-		  "if", "then", "else", "elseif",
 		  "let", "def", 
 		  "cases", "others",
 		  "pre", "post", "inv", 
@@ -35,7 +34,7 @@ public class OvertureKeywords {
 		  "variables", "instance", "measure", "traces", 
 		  //TODO multiple hack.. :D
 		  "subclass", "specified", "yet", "all", "instance", 
-		  "variables", "set", "responsibility", "be", "st"
+		  "variables", "set", "responsibility", "be", "st", "seq"
 		  };
 	  //TODO init VDM-SL
 	  
