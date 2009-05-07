@@ -11,7 +11,7 @@ import org.osgi.framework.BundleContext;
 public class OvertureTracesPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.overturetool.eclipse.traces";
+	public static final String PLUGIN_ID = "org.overturetool.eclipse.plugins.traces";
 
 	// The shared instance
 	private static OvertureTracesPlugin plugin;
