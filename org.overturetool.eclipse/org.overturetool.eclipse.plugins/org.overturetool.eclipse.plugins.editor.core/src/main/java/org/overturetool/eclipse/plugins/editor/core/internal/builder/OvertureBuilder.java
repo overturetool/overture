@@ -83,5 +83,10 @@ public class OvertureBuilder implements IScriptBuilder {
 	public void reset(IScriptProject project) {
 		
 	}
+
+	public void endBuild(IScriptProject project, IProgressMonitor monitor) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
