@@ -1,0 +1,350 @@
+--
+-- define VDM++ equivalents to the JUnit 3.8.2 classes
+--
+
+-- forward definition of java.lang.Throwable
+-- do not code generate (but import from Java library)
+class Throwable
+end Throwable
+
+-- forward definition of java.lang.Error
+-- do not code generate (but import from Java library)
+class Error is subclass of Throwable
+end Error
+
+--
+-- forward definition of junit.framework.AssertionFailedError
+--
+
+class AssertionFailedError is subclass of Error
+
+instance variables
+  fMessage : seq of char := []
+  
+operations
+  public AssertionFailedError: () ==> AssertionFailedError
+  AssertionFailedError () == skip;
+  
+  public AssertionFailedError: seq of char ==> AssertionFailedError
+  AssertionFailedError (pmessage) == fMessage := pmessage;
+
+  public hasMessage: () ==> bool
+  hasMessage () == return len fMessage > 0;
+    
+  public getMessage: () ==> seq of char
+  getMessage () == return fMessage
+    pre hasMessage()
+    
+end AssertionFailedError
+
+--
+-- forward definition of junit.framework.Assert
+--
+
+class Assert
+
+operations
+  public static assertTrue: bool ==> ()
+  assertTrue (pbool) ==
+    if not pbool then exit new AssertionFailedError();
+  
+  public static assertTrue: seq of char * bool ==> ()
+  assertTrue (pmessage, pbool) ==
+    if not pbool then exit new AssertionFailedError(pmessage);
+    
+  public static assertFalse: bool ==> ()
+  assertFalse (pbool) ==
+    if pbool then exit new AssertionFailedError();
+  
+  public static assertFalse: seq of char * bool ==> ()
+  assertFalse (pmessage, pbool) ==
+    if pbool then exit new AssertionFailedError(pmessage);
+    
+  public static fail: () ==> ()
+  fail () == exit new AssertionFailedError();
+  
+  public static fail: seq of char ==> ()
+  fail (pmessage) == exit new AssertionFailedError(pmessage)
+    
+end Assert
+
+--
+-- forward definition of junit.framework.Test
+--
+
+class Test is subclass of Assert
+
+instance variables
+  private fName : seq of char := []
+  
+operations
+  -- instance variables access operations
+  public getName: () ==> seq of char
+  getName () == return fName;
+  
+  public getNames: () ==> set of seq of char
+  getNames () == is subclass responsibility;
+  
+  public setName: seq of char ==> ()
+  setName (name) == fName := name;
+  
+  public run: TestResult ==> ()
+  run (-) == is subclass responsibility;
+  
+  public runOnly: seq of char * TestResult ==> ()
+  runOnly (-,-) == is subclass responsibility
+    
+end Test
+
+--
+-- forward definition of junit.framework.TestCase
+--
+
+class TestCase is subclass of Test
+ 
+operations
+  -- constructor
+  public TestCase: seq of char ==> TestCase
+  TestCase (name) == setName(name);
+  
+  public getNames: () ==> set of seq of char
+  getNames () ==
+    return
+      cases (getName()):
+        [] -> {},
+        nm -> {nm}
+      end;
+  
+  -- template method pattern
+  public setUp: () ==> ()
+  setUp () == skip;
+  
+  public runTest: () ==> ()
+  runTest () ==
+    ( -- execute the sub-tests
+      test01();
+      test02();
+      test03();
+      test04();
+      test05();
+      test06();
+      test07();
+      test08();
+      test09();
+      test10() );
+  
+  public tearDown: () ==> ()
+  tearDown () == skip;
+
+  -- allow for sub-tests to be defined without reflection
+  -- but using another template method pattern
+  public test01: () ==> ()
+  test01 () == skip;
+  
+  public test02: () ==> ()
+  test02 () == skip;
+  
+  public test03: () ==> ()
+  test03 () == skip;
+  
+  public test04: () ==> ()
+  test04 () == skip;
+  
+  public test05: () ==> ()
+  test05 () == skip;
+  
+  public test06: () ==> ()
+  test06 () == skip;
+  
+  public test07: () ==> ()
+  test07 () == skip;
+  
+  public test08: () ==> ()
+  test08 () == skip;
+  
+  public test09: () ==> ()
+  test09 () == skip;
+  
+  public test10: () ==> ()
+  test10 () == skip;
+  
+  -- implementing the abstract run operation 
+  public run: TestResult ==> ()
+  run (ptr) ==
+    ( -- announce the start of the test
+      ptr.startTest(self);
+      -- execute the test
+      trap exc
+        with
+          if isofclass(AssertionFailedError,exc)
+          then ptr.addFailure(self, exc)
+          else if isofbaseclass(Throwable, exc)
+               then ptr.addError(self, exc)
+               -- the shit really hits the fan here
+               else error
+        in ( -- execute the test template methods
+             setUp();
+             runTest();
+             tearDown() );
+      -- announce the end of the test
+      ptr.endTest(self) );
+
+   -- implementing the abstract runOnly operation to invoke
+   -- a single named test case or test suite      
+   public runOnly: seq of char * TestResult ==> ()
+   runOnly (pname, ptr) == if pname = getName() then run(ptr)
+           
+end TestCase
+
+--
+-- forward definition of junit.framework.TestSuite
+--
+
+class TestSuite is subclass of Test
+
+instance variables
+  private fTests : seq of Test := []
+  
+operations
+  public TestSuite: seq of char ==> TestSuite
+  TestSuite (name) == setName(name);
+  
+  public getNames: () ==> set of seq of char
+  getNames () ==
+    ( dcl nms : set of seq of char := {};
+      for ptst in fTests do nms := nms union ptst.getNames();
+      return nms );
+  
+  public addTest: Test ==> ()
+  addTest (ptst) == fTests := fTests ^ [ptst];
+  
+  -- implementing the abstract run operation 
+  public run: TestResult ==> ()
+  run (ptr) ==
+    ( -- announce the start of the test
+      ptr.startTest(self);
+      -- iterate over the test cases
+      for ptst in fTests do ptst.run(ptr);
+      -- announce the end of the test
+      ptr.endTest(self) );
+      
+  public runOnly: seq of char * TestResult ==> ()
+  runOnly (pname, ptr) ==
+    if pname = getName()
+    then run(ptr)
+    else for ptst in fTests do ptst.runOnly(pname, ptr);
+      
+end TestSuite
+
+--
+-- forward definition of junit.framework.TestListener
+--
+
+class TestListener
+
+operations
+  public initListener: () ==> ()
+  initListener () == is subclass responsibility;
+  
+  public exitListener: () ==> ()
+  exitListener () == is subclass responsibility;
+  
+  public addFailure: Test * AssertionFailedError ==> ()
+  addFailure (-, -) == is subclass responsibility; 
+
+  public addError: Test * Throwable ==> ()
+  addError (-, -) == is subclass responsibility;
+  
+  public startTest: Test ==> ()
+  startTest (-) == is subclass responsibility;
+  
+  public endTest: Test ==> ()
+  endTest (-) == is subclass responsibility;
+  
+end TestListener
+
+--
+-- forward definition of junit.framework.TestResult
+--
+
+class TestResult
+
+types
+  private InternalError :: tcname : seq of char
+                           except : Throwable
+                   
+instance variables
+  -- keep track of assertions failed
+  private fFailures : seq of AssertionFailedError := [];
+  
+  -- keep track of exceptions thrown
+  private fErrors : seq of InternalError := [];
+  
+  -- count the number of executed tests
+  private fRunTests : nat := 0;
+  
+  -- the list of interested listeners
+  private fListeners : set of TestListener := {}
+  
+operations
+  public addListener: TestListener ==> ()
+  addListener (ptl) == 
+    ( -- first add the listener to the set
+      fListeners := fListeners union {ptl};
+      -- execute the initializer for the listener
+      ptl.initListener() )
+    pre ptl not in set fListeners;
+  
+  public removeListener: TestListener ==> ()
+  removeListener (ptl) ==
+    ( -- execute the exit operation for the listener
+      ptl.exitListener();
+      -- remove the listener from the set
+      fListeners := fListeners \ {ptl} )
+    pre ptl in set fListeners;
+  
+  public addFailure: Test * AssertionFailedError ==> ()
+  addFailure (ptst, pafe) == 
+    ( -- first handle the failed assertion locally
+      if pafe.hasMessage()
+      then fFailures := fFailures ^ [pafe]
+      else let str = "Assertion failed in test "^ptst.getName() in
+             fFailures := fFailures ^ [new AssertionFailedError(str)];
+      -- now inform all listeners
+      for all listener in set fListeners do
+        listener.addFailure(ptst, pafe) );
+  
+  public addError: Test * Throwable ==> ()
+  addError (ptst, perr) ==
+    ( -- add the error to the list of exceptions caught so far
+      fErrors := fErrors ^ [mk_ InternalError(ptst.getName(), perr)];
+      -- now inform all listeners
+      for all listener in set fListeners do
+        listener.addError(ptst, perr) );
+
+  public startTest: Test ==> ()
+  startTest (ptst) ==
+    ( -- first increase the local run test counter
+      fRunTests := fRunTests + 1;
+      -- now inform all listeners
+      for all listener in set fListeners do
+        listener.startTest(ptst) );
+  
+  public endTest: Test ==> ()
+  endTest (ptst) ==
+    for all listener in set fListeners do
+      listener.endTest(ptst);
+  
+  public runCount: () ==> nat
+  runCount () == return fRunTests;
+    
+  public failureCount: () ==> nat
+  failureCount () == return len fFailures;
+  
+  public errorCount: () ==> nat
+  errorCount () == return len fErrors;
+  
+  public wasSuccessful: () ==> bool
+  wasSuccessful () == return failureCount() = 0 and errorCount() = 0;
+  
+end TestResult  
