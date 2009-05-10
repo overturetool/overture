@@ -113,8 +113,8 @@ public class DocumentProverTest extends TestCase {
 				+ "val success = 0;"
 				+ newLine
 				+ "val success = success + boolToInteger(can TAC_PROOF(([]:(term list), " +
-						"``(!  uni_0_var_1.((((inv_Set uni_0_var_1)  /\\ " +
-						"(?  s.(s  = uni_0_var_1 )) )  /\\T )  ==> " +
+						"``(!  uni_0_var_1.((((inv_Set uni_0_var_1)  /\\ (?  " +
+						"s.(s  = uni_0_var_1 )) )  /\\ T )  ==> " +
 						"(let s = uni_0_var_1 in (pre_doNothing s)) ))``), " +
 						"VDM_GENERIC_TAC));"
 				+ newLine

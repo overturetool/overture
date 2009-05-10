@@ -50,8 +50,6 @@ public class VdmToolsWrapperTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		
-		System.err.println(vppdeExecutable);
-		
 		setUpPreferences();
 		InputValidator.validateStringNotEmptyNorNull(vppdeExecutable,
 				VPPDE_PROPERTY_ERROR_MESSAGE);
