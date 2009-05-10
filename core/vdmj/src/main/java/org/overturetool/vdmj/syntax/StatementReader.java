@@ -603,7 +603,7 @@ public class StatementReader extends SyntaxReader
 	{
 		PatternBind pb = getBindReader().readPatternOrBind();
 		checkFor(Token.IN, 2214, "Expecting 'in' after pattern bind");
-		boolean reverse = ignore(Token.REVERSE);
+		boolean reverse = false; // was ignore(Token.REVERSE);
 		Expression exp = getExpressionReader().readExpression();
 		checkFor(Token.DO, 2215, "Expecting 'do' before loop statement");
 		Statement body = getStatementReader().readStatement();

@@ -568,7 +568,7 @@ public class ExpressionReader extends SyntaxReader
 				exp = new TailExpression(location, readEvaluatorP6Expression());
 				break;
 
-			case REV:
+			case REVERSE:
 				nextToken();
 				exp = new ReverseExpression(location, readEvaluatorP6Expression());
 				break;
