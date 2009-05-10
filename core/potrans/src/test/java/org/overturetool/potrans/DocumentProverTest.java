@@ -1,25 +1,21 @@
-/**
- * 
- */
 package org.overturetool.potrans;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.prefs.InvalidPreferencesFormatException;
 import java.util.prefs.Preferences;
 
-import junit.framework.TestCase;
-
 import org.overturetool.ast.itf.IOmlDocument;
+import org.overturetool.ast.itf.IOmlExpression;
 import org.overturetool.potrans.external_tools.OvertureParserWrapper;
 
-/**
- * @author miguel_ferreira
- * 
- */
-public class VdmHolTranslatorTest extends TestCase {
+import jp.co.csk.vdm.toolbox.VDM.CGException;
+import junit.framework.TestCase;
+
+public class DocumentProverTest extends TestCase {
 
 	private final static String newLine = System.getProperty("line.separator");
 	private static String setModel = null;
@@ -58,35 +54,47 @@ public class VdmHolTranslatorTest extends TestCase {
 		setModel = preferences.get("setModel", null);
 	}
 
-	public void testTranslateDocument() throws Exception {
+	public void testGetProofCounter() throws Exception {
+		String po = "(forall s : Set & Set`pre_doNothing(s))";
 		VdmHolTranslator translator = new VdmHolTranslator();
 		IOmlDocument omlDocument = OvertureParserWrapper
 				.getOmlDocument(setModel);
-		String expected = "Define `inv_Element (inv_param:num)  = T`;"
+		IOmlExpression omlExpression = OvertureParserWrapper
+				.getOmlExpression(po);
+		HolDocument holDocument = translator.translateDocument(omlDocument);
+		HashSet poSet = new HashSet();
+		poSet.add(new ProofObligation(omlExpression, null));
+		DocumentProver docProv = new DocumentProver(holDocument, poSet);
+
+		String expected = "fun boolToInteger(true) = 1 | boolToInteger(false)=0;"
+				+ newLine
+				+ "Define `inv_Element (inv_param:num)  = T`;"
 				+ newLine
 				+ "BasicProvers.export_rewrites([\"inv_Element_def\"]);"
 				+ newLine
 				+ "BasicProvers.export_rewrites([\"inv_Element_def\"]);"
 				+ newLine
-				+ "Define `inv_Set (inv_Set_subj:(num set))  = (let s = inv_Set_subj " +
-						"in ((\\x y . ~ (x = y)) s {}))`;"
+				+ "Define `inv_Set (inv_Set_subj:(num set))  = (let s = " +
+						"inv_Set_subj in ((\\x y . ~ (x = y)) s {}))`;"
 				+ newLine
 				+ "BasicProvers.export_rewrites([\"inv_Set_def\"]);"
 				+ newLine
 				+ "BasicProvers.export_rewrites([\"inv_Set_def\"]);"
 				+ newLine
-				+ "Define `inSet (inSet_parameter_1:(num set)) (inSet_parameter_2:num)  " +
-						"= (let s = inSet_parameter_1 and e = inSet_parameter_2 in (e  IN s ))`;"
+				+ "Define `inSet (inSet_parameter_1:(num set)) (inSet_parameter_2:num)" +
+						"  = (let s = inSet_parameter_1 and e = inSet_parameter_2 in " +
+						"(e  IN s ))`;"
 				+ newLine
 				+ "BasicProvers.export_rewrites([\"inSet_def\"]);"
 				+ newLine
-				+ "Define `subSet (subSet_parameter_1:(num set)) (subSet_parameter_2:(num set))" +
-						"  = (let s1 = subSet_parameter_1 and s2 = subSet_parameter_2 in ((s1  INTER s2 )  = s1 ))`;"
+				+ "Define `subSet (subSet_parameter_1:(num set)) (subSet_parameter_2:" +
+						"(num set))  = (let s1 = subSet_parameter_1 and s2 = " +
+						"subSet_parameter_2 in ((s1  INTER s2 )  = s1 ))`;"
 				+ newLine
 				+ "BasicProvers.export_rewrites([\"subSet_def\"]);"
 				+ newLine
-				+ "Define `doNothing (doNothing_parameter_1:(num set))  " +
-						"= (let s = doNothing_parameter_1 in s)`;"
+				+ "Define `doNothing (doNothing_parameter_1:(num set))  = " +
+						"(let s = doNothing_parameter_1 in s)`;"
 				+ newLine
 				+ "BasicProvers.export_rewrites([\"doNothing_def\"]);"
 				+ newLine
@@ -98,11 +106,25 @@ public class VdmHolTranslatorTest extends TestCase {
 				+ "Define `doSomething (doSomething_parameter_1:(num set))  " +
 						"= (let s = doSomething_parameter_1 in (doNothing s))`;"
 				+ newLine
-				+ "BasicProvers.export_rewrites([\"doSomething_def\"]);" + newLine;
+				+ "BasicProvers.export_rewrites([\"doSomething_def\"]);"
+				+ newLine
+				+ "val total = 0;"
+				+ newLine
+				+ "val success = 0;"
+				+ newLine
+				+ "val success = success + boolToInteger(can TAC_PROOF(([]:(term list), " +
+						"``(!  uni_0_var_1.((((inv_Set uni_0_var_1)  /\\ " +
+						"(?  s.(s  = uni_0_var_1 )) )  /\\T )  ==> " +
+						"(let s = uni_0_var_1 in (pre_doNothing s)) ))``), " +
+						"VDM_GENERIC_TAC));"
+				+ newLine
+				+ "val total = total + 1;"
+				+ newLine
+				+ "total;"
+				+ newLine + "success;" + newLine;
 
-		HolDocument holDocument = translator.translateDocument(omlDocument);
-		String actual = holDocument.print();
+		assertEquals(expected, docProv.getProofCounter().print());
 
-		assertEquals(expected, actual);
 	}
+
 }

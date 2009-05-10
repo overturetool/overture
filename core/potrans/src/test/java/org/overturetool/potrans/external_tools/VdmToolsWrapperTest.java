@@ -38,6 +38,7 @@ public class VdmToolsWrapperTest extends TestCase {
 	
 	private final static String pogExtension = ".pog";
 	
+	
 	private final static String vppdeExecutable = System.getProperty("vppdeExecutable");
 	
 	private static String testModel1 = null;
@@ -48,6 +49,8 @@ public class VdmToolsWrapperTest extends TestCase {
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
+		
+		System.err.println(vppdeExecutable);
 		
 		setUpPreferences();
 		InputValidator.validateStringNotEmptyNorNull(vppdeExecutable,

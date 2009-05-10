@@ -8,9 +8,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.prefs.Preferences;
 
+import jp.co.csk.vdm.toolbox.VDM.VDMRunTimeException;
 import junit.framework.TestCase;
 
+import org.overturetool.ast.imp.OmlBracketedExpression;
 import org.overturetool.ast.itf.IOmlDocument;
+import org.overturetool.ast.itf.IOmlExpression;
 import org.overturetool.potrans.external_tools.CommandLineTools;
 import org.overturetool.potrans.external_tools.OvertureParserWrapper;
 
@@ -20,9 +23,8 @@ import org.overturetool.potrans.external_tools.OvertureParserWrapper;
  */
 public class OvertureParserWrapperTest extends TestCase {
 
-	private static String settingsWarning = 
-		  "If this test fails check that you have the correct vaules set in Settings.xml, "
-		+ "namelly for the test VPP models. ";
+	private static String settingsWarning = "If this test fails check that you have the correct vaules set in Settings.xml, "
+			+ "namelly for the test VPP models. ";
 
 	private static String testModel1 = null;
 
@@ -82,7 +84,7 @@ public class OvertureParserWrapperTest extends TestCase {
 		String fileName = "";
 		try {
 			OvertureParserWrapper.getOmlDocument(fileName);
-			fail("FileNotFoundException sohuld have been throuwn.");
+			fail("FileNotFoundException should have been thrown.");
 		} catch (FileNotFoundException e) {
 		}
 	}
@@ -96,7 +98,7 @@ public class OvertureParserWrapperTest extends TestCase {
 		String fileName = null;
 		try {
 			OvertureParserWrapper.getOmlDocument(fileName);
-			fail("NullPointerException sohuld have been throuwn.");
+			fail("NullPointerException should have been thrown.");
 		} catch (NullPointerException e) {
 		}
 	}
@@ -110,19 +112,50 @@ public class OvertureParserWrapperTest extends TestCase {
 		String fileName = "some_invalid_file";
 		try {
 			OvertureParserWrapper.getOmlDocument(fileName);
-			fail("FileNotFoundException sohuld have been throuwn.");
+			fail("FileNotFoundException should have been thrown.");
 		} catch (FileNotFoundException e) {
 		}
 	}
 
-	// public void testGetOmlExpression() throws Exception {
-	// String expression =
-	// "(forall l : seq of int & "
-	// + "(forall i,j in set inds (l) & "
-	// + "(i > j => j in set inds (l)))";
-	//		
-	// IOmlExpression omlExpression =
-	// OvertureParserWrapper.getOmlExpression(expression);
-	// assertNotNull(omlExpression);
-	// }
+	public void testGetOmlExpression() throws Exception {
+		String expression = "(forall l : seq of int & "
+				+ "  (forall i,j in set inds (l) & "
+				+ "    (i > j => j in set inds (l))))";
+
+		IOmlExpression omlExpression = OvertureParserWrapper
+				.getOmlExpression(expression);
+
+		assertNotNull(omlExpression);
+		assertEquals(OmlBracketedExpression.class, omlExpression.getClass());
+	}
+
+	public void testGetOmlExpressionEmptyExpression() throws Exception {
+		String expression = "";
+
+		try {
+			OvertureParserWrapper.getOmlExpression(expression);
+			fail("ClassCastException should have been thrown.");
+		} catch (ClassCastException e) {
+		}
+	}
+
+	public void testGetOmlExpressionNullExpression() throws Exception {
+		String expression = null;
+
+		try {
+			OvertureParserWrapper.getOmlExpression(expression);
+			fail("NullPointerException should have been thrown.");
+		} catch (NullPointerException e) {
+		}
+	}
+
+	public void testGetOmlExpressionInvalidExpression() throws Exception {
+		String expression = "invalid expression";
+
+		try {
+			OvertureParserWrapper.getOmlExpression(expression);
+			fail("VDMRunTimeException should have been thrown.");
+		} catch (VDMRunTimeException e) {
+		}
+	}
 }
