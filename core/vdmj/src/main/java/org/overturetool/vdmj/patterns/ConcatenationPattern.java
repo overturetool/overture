@@ -223,4 +223,10 @@ public class ConcatenationPattern extends Pattern
 	{
 		return new SeqType(location, new UnknownType(location));
 	}
+
+	@Override
+	public boolean isConstrained()
+	{
+		return left.isConstrained() || right.isConstrained();
+	}
 }

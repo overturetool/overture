@@ -76,12 +76,12 @@ public class RecordPattern extends Pattern
 	public Expression getMatchingExpression()
 	{
 		ExpressionList list = new ExpressionList();
-		
+
 		for (Pattern p: plist)
 		{
 			list.add(p.getMatchingExpression());
 		}
-		
+
 		return new MkTypeExpression(typename, list);
 	}
 
@@ -228,5 +228,16 @@ public class RecordPattern extends Pattern
 	public Type getPossibleType()
 	{
 		return type;
+	}
+
+	@Override
+	public boolean isConstrained()
+	{
+		for (Pattern p: plist)
+		{
+			if (p.isConstrained()) return true;
+		}
+
+		return false;
 	}
 }

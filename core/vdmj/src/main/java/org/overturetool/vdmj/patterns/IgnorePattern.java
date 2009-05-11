@@ -81,4 +81,10 @@ public class IgnorePattern extends Pattern
 	{
 		return new UnknownType(location);	// As we don't care
 	}
+
+	@Override
+	public boolean isConstrained()
+	{
+		return false;
+	}
 }

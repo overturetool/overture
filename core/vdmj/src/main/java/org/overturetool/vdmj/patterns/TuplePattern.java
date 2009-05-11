@@ -70,12 +70,12 @@ public class TuplePattern extends Pattern
 	public Expression getMatchingExpression()
 	{
 		ExpressionList list = new ExpressionList();
-		
+
 		for (Pattern p: plist)
 		{
 			list.add(p.getMatchingExpression());
 		}
-		
+
 		return new TupleExpression(location, list);
 	}
 
@@ -201,5 +201,16 @@ public class TuplePattern extends Pattern
 		}
 
 		return list.getType(location);
+	}
+
+	@Override
+	public boolean isConstrained()
+	{
+		for (Pattern p: plist)
+		{
+			if (p.isConstrained()) return true;
+		}
+
+		return false;
 	}
 }

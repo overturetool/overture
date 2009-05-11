@@ -95,4 +95,10 @@ public class IdentifierPattern extends Pattern
 	{
 		return new VariableExpression(name);
 	}
+
+	@Override
+	public boolean isConstrained()
+	{
+		return false;		// The variable can be anything
+	}
 }

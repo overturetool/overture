@@ -116,6 +116,16 @@ public abstract class Pattern implements Serializable
 	}
 
 	/**
+	 * @return True if the pattern has constraints, such that matching
+	 * values should be permuted, where necessary, to find a match.
+	 */
+
+	public boolean isConstrained()
+	{
+		return true;
+	}
+
+	/**
 	 * An expression that matches the pattern. This is used in
 	 * PO generation when parameter patterns have to be passed to pre/post
 	 * conditions as arguments. The result is almost the same as toString(),

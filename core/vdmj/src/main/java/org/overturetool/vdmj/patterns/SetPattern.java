@@ -25,6 +25,7 @@ package org.overturetool.vdmj.patterns;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.expressions.Expression;
@@ -92,12 +93,12 @@ public class SetPattern extends Pattern
 	public Expression getMatchingExpression()
 	{
 		ExpressionList list = new ExpressionList();
-		
+
 		for (Pattern p: plist)
 		{
 			list.add(p.getMatchingExpression());
 		}
-		
+
 		return new SetEnumExpression(location, list);
 	}
 
@@ -166,12 +167,23 @@ public class SetPattern extends Pattern
 			patternFail(4119, "Wrong number of elements for set pattern");
 		}
 
-		// Since the left and right may have specific set members, we
+		// Since the member patterns may indicate specific set members, we
 		// have to permute through the various set orderings to see
-		// whether there are any which match both sides...
-		// TODO There may be a more efficient way to do this!
+		// whether there are any which match both sides. If the members
+		// are not constrained however, the initial ordering will be
+		// fine.
 
-		List<ValueSet> allSets = values.permutedSets();
+		List<ValueSet> allSets;
+
+		if (isConstrained())
+		{
+			allSets = values.permutedSets();
+		}
+		else
+		{
+			allSets = new Vector<ValueSet>();
+			allSets.add(values);
+		}
 
 		for (ValueSet setPerm: allSets)
 		{
@@ -217,5 +229,16 @@ public class SetPattern extends Pattern
 	public Type getPossibleType()
 	{
 		return new SetType(location, new UnknownType(location));
+	}
+
+	@Override
+	public boolean isConstrained()
+	{
+		for (Pattern p: plist)
+		{
+			if (p.isConstrained()) return true;
+		}
+
+		return false;
 	}
 }

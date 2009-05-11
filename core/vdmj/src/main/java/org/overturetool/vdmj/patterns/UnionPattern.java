@@ -25,6 +25,7 @@ package org.overturetool.vdmj.patterns;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.expressions.Expression;
@@ -188,10 +189,21 @@ public class UnionPattern extends Pattern
 
 		// Since the left and right may have specific set members, we
 		// have to permute through the various set orderings to see
-		// whether there are any which match both sides...
-		// TODO There may be a more efficient way to do this!
+		// whether there are any which match both sides. If the patterns
+		// are not constrained however, the initial ordering will be
+		// fine.
 
-		List<ValueSet> allSets = values.permutedSets();
+		List<ValueSet> allSets;
+
+		if (isConstrained())
+		{
+			allSets = values.permutedSets();
+		}
+		else
+		{
+			allSets = new Vector<ValueSet>();
+			allSets.add(values);
+		}
 
 		for (ValueSet setPerm: allSets)
 		{
@@ -255,5 +267,11 @@ public class UnionPattern extends Pattern
 		list.add(right.getPossibleType());
 
 		return list.getType(location);
+	}
+
+	@Override
+	public boolean isConstrained()
+	{
+		return left.isConstrained() || right.isConstrained();
 	}
 }

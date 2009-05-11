@@ -91,12 +91,12 @@ public class SeqPattern extends Pattern
 	public Expression getMatchingExpression()
 	{
 		ExpressionList list = new ExpressionList();
-		
+
 		for (Pattern p: plist)
 		{
 			list.add(p.getMatchingExpression());
 		}
-		
+
 		return new SeqEnumExpression(location, list);
 	}
 
@@ -191,5 +191,16 @@ public class SeqPattern extends Pattern
 	public Type getPossibleType()
 	{
 		return new SeqType(location, new UnknownType(location));
+	}
+
+	@Override
+	public boolean isConstrained()
+	{
+		for (Pattern p: plist)
+		{
+			if (p.isConstrained()) return true;
+		}
+
+		return false;
 	}
 }
