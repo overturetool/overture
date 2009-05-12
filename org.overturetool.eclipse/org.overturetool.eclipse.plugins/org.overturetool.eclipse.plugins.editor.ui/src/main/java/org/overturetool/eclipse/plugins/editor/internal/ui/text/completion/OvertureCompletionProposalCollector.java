@@ -78,7 +78,6 @@ public class OvertureCompletionProposalCollector extends
 	// Specific proposals creation. May be use factory?
 	protected IScriptCompletionProposal createScriptCompletionProposal(
 			CompletionProposal proposal) {
-		// TODO Auto-generated method stub
 		final IScriptCompletionProposal createScriptCompletionProposal2 = super
 				.createScriptCompletionProposal(proposal);
 		AbstractScriptCompletionProposal createScriptCompletionProposal = (AbstractScriptCompletionProposal) createScriptCompletionProposal2;
