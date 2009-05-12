@@ -86,24 +86,21 @@ public class OvertureMainLaunchConfigurationTab extends MainLaunchConfigurationT
 	}
 	
 	private boolean validateOperation(){
-		if(fdebugInConsole.getSelection()){
-			return true;
-		}
-		try {
-			for (IModelElement element : this.getSourceModule().getChildren()) {
-				if (element instanceof SourceType) {
-					SourceType type = (SourceType) element;
-					if (type.getElementName().equals(fClassText.getText()) &&
-							type.getMethod(fOperationText.getText()).exists()) {
-						return true;
-					}
-				}
-			}
-		} catch (ModelException e) {
-			e.printStackTrace();
-		}
-		setErrorMessage("The operation: '" + fOperationText.getText() + "' does not exist in " + this.getSourceModule().getElementName());
-		return false;
+//		try {
+//			for (IModelElement element : this.getSourceModule().getChildren()) {
+//				if (element instanceof SourceType) {
+//					SourceType type = (SourceType) element;
+//					if (type.getElementName().equals(fClassText.getText()) &&
+//							type.getMethod(fOperationText.getText()).exists()) {
+//						return true;
+//					}
+//				}
+//			}
+//		} catch (ModelException e) {
+//			e.printStackTrace();
+//		}
+		//setErrorMessage("The operation: '" + fOperationText.getText() + "' does not exist in " + this.getSourceModule().getElementName());
+		return true;
 
 
 	}
@@ -181,13 +178,12 @@ public class OvertureMainLaunchConfigurationTab extends MainLaunchConfigurationT
 	}
 	
 	
+	
 	@Override
 	protected void createDebugOptions(Composite group) {
-		// TODO Auto-generated method stub
 		super.createDebugOptions(group);
-		fdebugInConsole = SWTFactory
-		.createCheckButton(group, OvertureDebugConstants.DEBUG_FROM_CONSOLE);
-		fdebugInConsole.addSelectionListener(fListener);		
+//		fdebugInConsole = SWTFactory.createCheckButton(group, OvertureDebugConstants.DEBUG_FROM_CONSOLE);
+//		fdebugInConsole.addSelectionListener(fListener);		
 	}
 	
 	/**
@@ -225,7 +221,7 @@ public class OvertureMainLaunchConfigurationTab extends MainLaunchConfigurationT
 		if (dialog.open() == IDialogConstants.OK_ID) {
 			SourceMethod method = (SourceMethod) dialog.getFirstResult();
 			String className = method.getParent().getElementName();
-			String operationName = method.getElementName();
+			String operationName = method.getElementName() + "()";
 			// check extension
 			fClassText.setText(className);
 			fOperationText.setText(operationName);
@@ -238,15 +234,15 @@ public class OvertureMainLaunchConfigurationTab extends MainLaunchConfigurationT
 	 */
 	protected boolean breakOnFirstLinePrefEnabled(
 			PreferencesLookupDelegate delegate) {
-		return delegate.getBoolean(OvertureDebugConstants.PLUGIN_ID,
-				DLTKDebugPreferenceConstants.PREF_DBGP_BREAK_ON_FIRST_LINE);
+		return false;
+		//return delegate.getBoolean(OvertureDebugConstants.PLUGIN_ID,DLTKDebugPreferenceConstants.PREF_DBGP_BREAK_ON_FIRST_LINE);
 	}
 	
-	protected boolean DebugFromConsolePrefEnabled(
-			PreferencesLookupDelegate delegate) {
-		return delegate.getBoolean(OvertureDebugConstants.PLUGIN_ID,
-				OvertureDebugConstants.PREF_DEBUG_FROM_CONSOLE);
-	}
+//	protected boolean DebugFromConsolePrefEnabled(
+//			PreferencesLookupDelegate delegate) {
+//		return delegate.getBoolean(OvertureDebugConstants.PLUGIN_ID,
+//				OvertureDebugConstants.PREF_DEBUG_FROM_CONSOLE);
+//	}
 
 	/*
 	 * @see org.eclipse.dltk.debug.ui.launchConfigurations.ScriptLaunchConfigurationTab#dbpgLoggingPrefEnabled(org.eclipse.dltk.core.PreferencesLookupDelegate)
@@ -270,20 +266,19 @@ public class OvertureMainLaunchConfigurationTab extends MainLaunchConfigurationT
 		// cons
 		config.setAttribute(OvertureDebugConstants.DEBUGGING_CLASS, fClassText.getText());
 		config.setAttribute(OvertureDebugConstants.DEBUGGING_OPERATION, fOperationText.getText());
-		config.setAttribute(OvertureDebugConstants.DEBUGGING_FROM_CONSOLE, fdebugInConsole.getSelection());
+		//config.setAttribute(OvertureDebugConstants.DEBUGGING_FROM_CONSOLE, fdebugInConsole.getSelection());
 		
 		super.doPerformApply(config);
 	}	
 	
 	@Override
 	protected void updateMainModuleFromConfig(ILaunchConfiguration config) {
-		// TODO Auto-generated method stub
 		try {			
 			fClassText.setText(config.getAttribute(OvertureDebugConstants.DEBUGGING_CLASS, ""));
 			fOperationText.setText(config.getAttribute(OvertureDebugConstants.DEBUGGING_OPERATION, ""));
-			fdebugInConsole.setSelection(config.getAttribute(OvertureDebugConstants.DEBUGGING_FROM_CONSOLE, false));
+			//fdebugInConsole.setSelection(config.getAttribute(OvertureDebugConstants.DEBUGGING_FROM_CONSOLE, false));
 			
-			fOperationText.setEnabled(!fdebugInConsole.getSelection());
+			//fOperationText.setEnabled(!fdebugInConsole.getSelection());
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -298,11 +293,11 @@ public class OvertureMainLaunchConfigurationTab extends MainLaunchConfigurationT
 		if (project.isAccessible()) {
 			final PreferencesLookupDelegate delegate = new PreferencesLookupDelegate(
 					project);
-			if (fdebugInConsole != null) {
-				fdebugInConsole.setSelection(org.eclipse.dltk.internal.launching.LaunchConfigurationUtils.getBoolean(config,
-						ScriptLaunchConfigurationConstants.ENABLE_DBGP_LOGGING,
-						DebugFromConsolePrefEnabled(delegate)));
-			}				
+//			if (fdebugInConsole != null) {
+//				fdebugInConsole.setSelection(org.eclipse.dltk.internal.launching.LaunchConfigurationUtils.getBoolean(config,
+//						ScriptLaunchConfigurationConstants.ENABLE_DBGP_LOGGING,
+//						DebugFromConsolePrefEnabled(delegate)));
+//			}				
 		}
 		
 		super.updateMainModuleFromConfig(config);
