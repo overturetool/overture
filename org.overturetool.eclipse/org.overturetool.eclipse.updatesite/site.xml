@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
    <feature url="features/org.overturetool.eclipse.features.showtrace_1.0.0.200904280918.jar" id="org.overturetool.eclipse.features.showtrace" version="1.0.0.200904280918">
-      <category name="OvertureTool"/>
+      <category name="showtrace"/>
    </feature>
    <feature url="features/org.overturetool.eclipse.features.showtrace_1.0.0.200904280919.jar" id="org.overturetool.eclipse.features.showtrace" version="1.0.0.200904280919">
-      <category name="OvertureTool"/>
+      <category name="showtrace"/>
    </feature>
-   <category-def name="OvertureTool" label="OvertureTool">
+   <feature url="features/org.overturetool.eclipse.core.features.traces_1.0.0.200905121354.jar" id="org.overturetool.eclipse.core.features.traces" version="1.0.0.200905121354">
+      <category name="Traces"/>
+   </feature>
+   <feature url="features/org.overturetool.eclipse.features.core_1.0.0.200905121354.jar" id="org.overturetool.eclipse.features.core" version="1.0.0.200905121354">
+      <category name="Overturetool"/>
+   </feature>
+   <category-def name="showtrace" label="showtrace">
+      <description>
+         The Overture project aims at developing a set of open source tools (as Eclipse plug-ins) to support the Overture Modeling Language (OML). OML is inspired by the object-oriented formal specification language VDM++ (Vienna Development Method).
+      </description>
+   </category-def>
+   <category-def name="Traces" label="Traces">
+      <description>
+         The Overture project aims at developing a set of open source tools (as Eclipse plug-ins) to support the Overture Modeling Language (OML). OML is inspired by the object-oriented formal specification language VDM++ (Vienna Development Method).
+      </description>
+   </category-def>
+   <category-def name="Overturetool" label="Overturetool">
       <description>
          The Overture project aims at developing a set of open source tools (as Eclipse plug-ins) to support the Overture Modeling Language (OML). OML is inspired by the object-oriented formal specification language VDM++ (Vienna Development Method).
       </description>
