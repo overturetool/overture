@@ -47,6 +47,7 @@ public class OvertureProjectCreationWizard extends NewElementWizard implements
 		setDefaultPageImageDescriptor(OvertureImages.DESC_WIZBAN_PROJECT_CREATION);
 		setDialogSettings(DLTKUIPlugin.getDefault().getDialogSettings());
 		setWindowTitle(OvertureWizardMessages.ProjectCreationWizard_title);
+		DLTKUIPlugin.getImageDescriptorRegistry();
 	}
 
 	public void addPages() {
@@ -81,19 +82,14 @@ public class OvertureProjectCreationWizard extends NewElementWizard implements
 				return fInterpreterGroup;
 			}
 
-			protected boolean supportInterpreter() {
-				return true;
-			}
+	
 
 			protected IInterpreterInstall getInterpreter() {
 				return fInterpreterGroup.getSelectedInterpreter();
 			}
 
 
-			protected boolean interpeterRequired() {
-				// TODO Auto-generated method stub
-				return false;
-			}
+			
 		};
 		fFirstPage
 				.setTitle(OvertureWizardMessages.ProjectCreationWizardFirstPage_title);
@@ -120,16 +116,19 @@ public class OvertureProjectCreationWizard extends NewElementWizard implements
 		
 	}
 
+	
 	protected void finishPage(IProgressMonitor monitor)
 			throws InterruptedException, CoreException {
 		fSecondPage.performFinish(monitor); // use the full progress monitor
 		
 	}
+	
+	
 
-	public boolean performFinish() {
+	public boolean performFinish() {	
 		
 		boolean res = super.performFinish();
-
+		
 		try {
 			IProject proj = fFirstPage.getProjectHandle();
 			QualifiedName qn = new QualifiedName(UIPlugin.PLUGIN_ID,OverturePreferenceConstants.OVERTURE_DIALECT_KEY);
@@ -138,7 +137,7 @@ public class OvertureProjectCreationWizard extends NewElementWizard implements
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
+		}	
 		
 		return res;
 	}

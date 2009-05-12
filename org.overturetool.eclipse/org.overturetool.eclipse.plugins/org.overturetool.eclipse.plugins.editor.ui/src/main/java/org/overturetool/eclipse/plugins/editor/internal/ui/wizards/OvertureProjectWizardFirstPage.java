@@ -29,52 +29,21 @@ public class OvertureProjectWizardFirstPage extends ProjectWizardFirstPage {
 	private Combo comboDialect;
 	private String dialectSetting;
 	
-	public String getDialectSetting() {
+	public String getDialectSetting() {		
 		return dialectSetting;
 	}
 
 	class WidgetListener implements ModifyListener {
-
 		public void modifyText(ModifyEvent e) {
-			// TODO Auto-generated method stub
 			dialectSetting = comboDialect.getText();
 		}
 	}
-	
-	
-	@Override
-	protected IInterpreterGroup createInterpreterGroup(Composite parent) {
-		return null;
-	}
-
-	@Override
-	protected IInterpreterInstall getInterpreter() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected Observable getInterpreterGroupObservable() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected void handlePossibleInterpreterChange() {
-		// TODO Auto-generated method stub
 		
-	}
 
 	@Override
 	protected boolean interpeterRequired() {
 		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	protected boolean supportInterpreter() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 	
 	@Override
@@ -91,8 +60,8 @@ public class OvertureProjectWizardFirstPage extends ProjectWizardFirstPage {
 											OverturePreferenceConstants.OVERTURE_VDM_PLUS_PLUS,
 											OverturePreferenceConstants.OVERTURE_VDM_PLUS_PLUS_REALTIME,
 											OverturePreferenceConstants.OVERTURE_VDM_SPECIFICATION_LANGUAGE});
-		comboDialect.select(0);
 		comboDialect.addModifyListener(fListener);
+		comboDialect.select(0);
 	}
 	
 	@Override 
@@ -100,6 +69,11 @@ public class OvertureProjectWizardFirstPage extends ProjectWizardFirstPage {
 		// TODO Auto-generated method stub
 		IDialogSettings temp = super.getDialogSettings();	
 		return temp;
+	}
+
+	@Override
+	protected IInterpreterGroup createInterpreterGroup(Composite parent) {
+		return null;
 	}
 
 }
