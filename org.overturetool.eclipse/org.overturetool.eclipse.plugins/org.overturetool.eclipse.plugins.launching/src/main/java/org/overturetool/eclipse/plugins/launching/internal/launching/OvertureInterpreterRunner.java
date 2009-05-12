@@ -253,12 +253,14 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 							arguments[argNumber++] = sessionId;
 							arguments[argNumber++] = dialect;
 							// 4: expression eg. : new className().operation()
+							String debugOperation = launch.getLaunchConfiguration().getAttribute(OvertureDebugConstants.DEBUGGING_OPERATION, "");
+							
+							
 							String expression = 
 									"new " + 
 									launch.getLaunchConfiguration().getAttribute(OvertureDebugConstants.DEBUGGING_CLASS, "") + 
-									"()." +
-									launch.getLaunchConfiguration().getAttribute(OvertureDebugConstants.DEBUGGING_OPERATION, "") +
-									"()";
+									"()." + debugOperation;
+									
 							arguments[argNumber++] = expression;
 							
 							if (toolType.equals(OvertureDebugConstants.TOOL_VDMTOOLS)){
