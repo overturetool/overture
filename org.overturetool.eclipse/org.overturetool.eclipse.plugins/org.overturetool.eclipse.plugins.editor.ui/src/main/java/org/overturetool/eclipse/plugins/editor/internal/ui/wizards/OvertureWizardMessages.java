@@ -18,9 +18,9 @@ public class OvertureWizardMessages {
 
 	public static String FileCreationWizard_title;
 
-	public static String ProjectCreationWizard_title;
-	public static String ProjectCreationWizardFirstPage_title;
-	public static String ProjectCreationWizardFirstPage_description;
+	public static String ProjectCreationWizard_title = "diego";
+	public static String ProjectCreationWizardFirstPage_title = "diego";
+	public static String ProjectCreationWizardFirstPage_description = "diego";
 		
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, OvertureWizardMessages.class);
