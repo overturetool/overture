@@ -457,5 +457,13 @@ public class VDMToolsProject {
 			throw new Exception(e.msg);
 		}
 	}
+	
+	public void saveAs(String path) throws Exception{
+		try {
+			prj.SaveAs(path);
+		} catch (APIError e) {
+			throw new Exception("an error happen when trying to save the project " + e.msg);
+		}
+	}
 
 }
