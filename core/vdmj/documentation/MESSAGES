@@ -650,6 +650,7 @@ as the expected and actual values.
 3289, "Delay argument must be less than the period"
 3290, "Argument to setPriority must be an operation"
 3291, "Argument to setPriority cannot be a constructor"
+3292, "Constructor is not accessible"
 
 4000, "Cannot instantiate abstract class <class>"
 4002, "Expression value is not in set bind"

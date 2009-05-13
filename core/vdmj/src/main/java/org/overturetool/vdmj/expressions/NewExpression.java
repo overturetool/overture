@@ -106,6 +106,11 @@ public class NewExpression extends Expression
     			report(3135, "Class has no constructor with these parameter types");
     			detail("Called", classdef.getCtorName(argtypes));
     		}
+			else if (!ClassDefinition.isAccessible(env, opdef, false))
+			{
+    			report(3292, "Constructor is not accessible");
+    			detail("Called", classdef.getCtorName(argtypes));
+			}
 			else
 			{
 				ctorDefinition = opdef;
