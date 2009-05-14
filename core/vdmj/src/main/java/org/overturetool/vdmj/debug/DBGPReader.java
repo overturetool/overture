@@ -803,6 +803,7 @@ public class DBGPReader
 		{
 			interpreter.init(this);
 			theAnswer = interpreter.execute(expression, this);
+			stdout(theAnswer.toString());
 			statusResponse(DBGPStatus.STOPPED, DBGPReason.OK, null);
 		}
 		catch (Exception e)
