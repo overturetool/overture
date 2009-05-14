@@ -52,7 +52,7 @@ AbstractOptionsBlock {
 	/**
 	 * Returns the 'break on first line' preference key
 	 */
-	protected abstract PreferenceKey getBreakOnFirstLineKey();
+	//protected abstract PreferenceKey getBreakOnFirstLineKey();
 
 	/**
 	 * Returns the 'dbgp logging enabled' preference key
@@ -82,22 +82,22 @@ AbstractOptionsBlock {
 				GridData.FILL_HORIZONTAL);
 
 		// Break on first line
-		Button b = SWTFactory.createCheckButton(group,
-				ScriptDebugPreferencesMessages.BreakOnFirstLineLabel, null,
-				false, 1);
+		//Button b = SWTFactory.createCheckButton(group,
+			//	ScriptDebugPreferencesMessages.BreakOnFirstLineLabel, null,
+				//false, 1);
 
-		bindControl(b, getBreakOnFirstLineKey(), null);
+		//bindControl(b, getBreakOnFirstLineKey(), null);
 
 		// Enable dbgp logging
-		b = SWTFactory.createCheckButton(group,
+		Button b = SWTFactory.createCheckButton(group,
 				ScriptDebugPreferencesMessages.EnableDbgpLoggingLabel, null,
 				false, 1);
 		bindControl(b, getDbgpLoggingEnabledKey(), null);
 		
-		b = SWTFactory.createCheckButton(group,
-				OvertureDebugConstants.DEBUG_FROM_CONSOLE, null,
-				false, 1);
-		bindControl(b, getDebugFromConsoleKey(), null);
+		//b = SWTFactory.createCheckButton(group,
+			//	OvertureDebugConstants.DEBUG_FROM_CONSOLE, null,
+				//false, 1);
+		//bindControl(b, getDebugFromConsoleKey(), null);
 		
 		
 	}
