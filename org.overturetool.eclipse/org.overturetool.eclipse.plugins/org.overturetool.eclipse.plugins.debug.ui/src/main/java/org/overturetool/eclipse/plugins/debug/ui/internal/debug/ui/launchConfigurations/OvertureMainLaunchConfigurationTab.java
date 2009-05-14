@@ -11,6 +11,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
@@ -18,6 +19,7 @@ import org.eclipse.dltk.core.PreferencesLookupDelegate;
 import org.eclipse.dltk.debug.core.DLTKDebugPreferenceConstants;
 import org.eclipse.dltk.debug.ui.launchConfigurations.MainLaunchConfigurationTab;
 import org.eclipse.dltk.debug.ui.messages.DLTKLaunchConfigurationsMessages;
+import org.eclipse.dltk.debug.ui.preferences.ScriptDebugPreferencesMessages;
 import org.eclipse.dltk.internal.core.SourceMethod;
 import org.eclipse.dltk.internal.core.SourceType;
 import org.eclipse.dltk.internal.launching.LaunchConfigurationUtils;
@@ -52,10 +54,11 @@ import org.overturetool.eclipse.plugins.editor.core.OvertureNature;
 public class OvertureMainLaunchConfigurationTab extends MainLaunchConfigurationTab {
 
 	
+	
 	public OvertureMainLaunchConfigurationTab(String mode) {
 		super(mode);
 	}
-	
+	private Button enableLogging;
 	private Button fOperationButton;
 	private Text fClassText;
 	private Text fOperationText;
@@ -181,9 +184,17 @@ public class OvertureMainLaunchConfigurationTab extends MainLaunchConfigurationT
 	
 	@Override
 	protected void createDebugOptions(Composite group) {
-		super.createDebugOptions(group);
+		//super.createDebugOptions(group);
+		addDbgpLoggingButton(group);
 //		fdebugInConsole = SWTFactory.createCheckButton(group, OvertureDebugConstants.DEBUG_FROM_CONSOLE);
 //		fdebugInConsole.addSelectionListener(fListener);		
+	}
+	
+	private void addDbgpLoggingButton(Composite group) {
+		enableLogging = createCheckButton(group,
+				ScriptDebugPreferencesMessages.EnableDbgpLoggingLabel);
+		enableLogging.addSelectionListener(getWidgetListener());
+		createVerticalSpacer(group, 1);
 	}
 	
 	/**
@@ -212,10 +223,10 @@ public class OvertureMainLaunchConfigurationTab extends MainLaunchConfigurationT
 		IScriptProject proj = getProject();
 		if (proj == null)
 			return;
-		
-		dialog.addFilter(new FieldsFilter());		
+		dialog.addFilter(new FieldsFilter());
+		dialog.addFilter(new MethodFilter());		
 		dialog.setInput(this.getSourceModule());
-
+		
 		
 		dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
 		if (dialog.open() == IDialogConstants.OK_ID) {
