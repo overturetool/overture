@@ -90,6 +90,7 @@ public class DBGPReader
 	private Context breakContext = null;
 	private Breakpoint breakpoint = null;
 	private Value theAnswer = null;
+	private boolean breaksSuspended = false;
 
 	// Usage: <host> <port> <ide key> <dialect> <expression> {<filename>}
 
@@ -439,6 +440,11 @@ public class DBGPReader
 
 	public void stopped(Context ctxt, Breakpoint bp)
 	{
+		if (breaksSuspended)
+		{
+			return;		// We're inside an eval command, so don't stop
+		}
+
 		try
 		{
 			breakContext = ctxt;
@@ -818,6 +824,8 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
 
+		breaksSuspended = true;
+
 		try
 		{
 			String exp = c.data;	// Already base64 decoded by the parser
@@ -830,6 +838,10 @@ public class DBGPReader
 		catch (Exception e)
 		{
 			errorResponse(DBGPErrorCode.EVALUATION_ERROR, e.getMessage());
+		}
+		finally
+		{
+			breaksSuspended = false;
 		}
 
 		return true;
