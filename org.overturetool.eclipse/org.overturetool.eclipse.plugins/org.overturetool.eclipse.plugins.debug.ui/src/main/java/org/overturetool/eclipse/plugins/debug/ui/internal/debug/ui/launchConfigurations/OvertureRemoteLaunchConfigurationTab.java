@@ -16,8 +16,9 @@ public class OvertureRemoteLaunchConfigurationTab extends RemoteLaunchConfigurat
 	@Override
 	protected boolean breakOnFirstLinePrefEnabled(
 			PreferencesLookupDelegate delegate) {
-		return delegate.getBoolean(OvertureDebugConstants.PLUGIN_ID,
-				DLTKDebugPreferenceConstants.PREF_DBGP_BREAK_ON_FIRST_LINE);
+		return false;
+		//return delegate.getBoolean(OvertureDebugConstants.PLUGIN_ID,
+			//	DLTKDebugPreferenceConstants.PREF_DBGP_BREAK_ON_FIRST_LINE);
 	}
 
 	@Override

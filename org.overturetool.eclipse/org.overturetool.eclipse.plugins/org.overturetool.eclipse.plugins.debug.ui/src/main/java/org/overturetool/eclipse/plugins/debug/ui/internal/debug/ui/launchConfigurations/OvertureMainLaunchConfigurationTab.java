@@ -249,11 +249,7 @@ public class OvertureMainLaunchConfigurationTab extends MainLaunchConfigurationT
 		//return delegate.getBoolean(OvertureDebugConstants.PLUGIN_ID,DLTKDebugPreferenceConstants.PREF_DBGP_BREAK_ON_FIRST_LINE);
 	}
 	
-//	protected boolean DebugFromConsolePrefEnabled(
-//			PreferencesLookupDelegate delegate) {
-//		return delegate.getBoolean(OvertureDebugConstants.PLUGIN_ID,
-//				OvertureDebugConstants.PREF_DEBUG_FROM_CONSOLE);
-//	}
+
 
 	/*
 	 * @see org.eclipse.dltk.debug.ui.launchConfigurations.ScriptLaunchConfigurationTab#dbpgLoggingPrefEnabled(org.eclipse.dltk.core.PreferencesLookupDelegate)
@@ -277,6 +273,7 @@ public class OvertureMainLaunchConfigurationTab extends MainLaunchConfigurationT
 		// cons
 		config.setAttribute(OvertureDebugConstants.DEBUGGING_CLASS, fClassText.getText());
 		config.setAttribute(OvertureDebugConstants.DEBUGGING_OPERATION, fOperationText.getText());
+		config.setAttribute(DLTKDebugPreferenceConstants.PREF_DBGP_BREAK_ON_FIRST_LINE, false);
 		//config.setAttribute(OvertureDebugConstants.DEBUGGING_FROM_CONSOLE, fdebugInConsole.getSelection());
 		
 		super.doPerformApply(config);
