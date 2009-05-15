@@ -17,10 +17,7 @@ import org.overturetool.eclipse.plugins.editor.core.OvertureNature;
 public class OvertureDebugPreferencePage extends
 			AbstractConfigurationBlockPropertyAndPreferencePage  {
 
-	private static PreferenceKey BREAK_ON_FIRST_LINE = new PreferenceKey(
-			OvertureDebugConstants.PLUGIN_ID,
-			DLTKDebugPreferenceConstants.PREF_DBGP_BREAK_ON_FIRST_LINE);
-
+	
 	private static PreferenceKey ENABLE_DBGP_LOGGING = new PreferenceKey(
 			OvertureDebugConstants.PLUGIN_ID,
 			DLTKDebugPreferenceConstants.PREF_DBGP_ENABLE_LOGGING);
@@ -37,17 +34,12 @@ public class OvertureDebugPreferencePage extends
 		return new OvertureAbstractDebuggingOptionsBlock(newStatusChangedListener,
 				project, getKeys(), container) {
 
-			protected PreferenceKey getBreakOnFirstLineKey() {
-				return BREAK_ON_FIRST_LINE;
-			}
+		
 
 			protected PreferenceKey getDbgpLoggingEnabledKey() {
 				return ENABLE_DBGP_LOGGING;
-			}
+			}			
 			
-			protected PreferenceKey getDebugFromConsoleKey() {
-				return DEBUG_FROM_CONSOLE;
-			}
 		};
 	}	
 	
@@ -107,7 +99,7 @@ public class OvertureDebugPreferencePage extends
 	}
 
 	private PreferenceKey[] getKeys() {
-		return new PreferenceKey[] { BREAK_ON_FIRST_LINE, ENABLE_DBGP_LOGGING, DEBUG_FROM_CONSOLE };
+		return new PreferenceKey[] { ENABLE_DBGP_LOGGING };
 	}
 	
 }

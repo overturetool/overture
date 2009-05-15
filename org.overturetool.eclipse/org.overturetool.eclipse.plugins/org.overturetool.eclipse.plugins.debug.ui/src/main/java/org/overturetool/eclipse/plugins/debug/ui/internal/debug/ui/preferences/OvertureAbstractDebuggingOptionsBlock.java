@@ -52,29 +52,14 @@ AbstractOptionsBlock {
 	/**
 	 * Returns the 'break on first line' preference key
 	 */
-	protected abstract PreferenceKey getBreakOnFirstLineKey();
+	//protected abstract PreferenceKey getBreakOnFirstLineKey();
 
 	/**
 	 * Returns the 'dbgp logging enabled' preference key
 	 */
 	protected abstract PreferenceKey getDbgpLoggingEnabledKey();
 	
-	protected abstract PreferenceKey getDebugFromConsoleKey();
 
-//	/**
-//	 * Returns the 'show global variables' preference key
-//	 */
-//	protected abstract PreferenceKey getShowGlobalVarsKey();
-//
-//	/**
-//	 * Returns the 'show class variables' preference key
-//	 */
-//	protected abstract PreferenceKey getShowClassVarsKey();
-//
-//	/**
-//	 * Returns the 'show local variables' preference key
-//	 */
-//	protected abstract PreferenceKey getShowLocalVarsKey();
 
 	private void createSettingsGroup(Composite parent) {
 		final Group group = SWTFactory.createGroup(parent,
@@ -102,29 +87,6 @@ AbstractOptionsBlock {
 		
 	}
 
-//	private void createVariablesGroup(Composite parent) {
-//		final Group group = SWTFactory.createGroup(parent,
-//				ScriptDebugPreferencesMessages.VariableSettingsLabel, 1, 1,
-//				GridData.FILL_HORIZONTAL);
-//
-//		// global variables
-//		Button b = SWTFactory.createCheckButton(group,
-//				ScriptDebugPreferencesMessages.ShowGlobalVarsLabel, null,
-//				false, 1);
-//		bindControl(b, getShowGlobalVarsKey(), null);
-//
-//		// class variables
-//		b = SWTFactory.createCheckButton(group,
-//				ScriptDebugPreferencesMessages.ShowClassVarsLabel, null, false,
-//				1);
-//		bindControl(b, getShowClassVarsKey(), null);
-//
-//		// local variables
-//		b = SWTFactory.createCheckButton(group,
-//				ScriptDebugPreferencesMessages.ShowLocalVarsLabel, null, false,
-//				1);
-//		bindControl(b, getShowLocalVarsKey(), null);
-//	}
 	
 	
 	
