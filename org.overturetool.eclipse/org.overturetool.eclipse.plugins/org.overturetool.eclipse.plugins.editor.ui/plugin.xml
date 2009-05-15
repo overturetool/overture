@@ -12,7 +12,7 @@
             contributorClass="org.eclipse.dltk.internal.ui.editor.SourceModuleEditorActionContributor"
             default="true"
             extensions="vpp, tex, vdm"
-            icon="icons/vdm16.png"
+            icon="icons/oml2_16.png"
             name="%editor.name.0">
          <contentTypeBinding
                contentTypeId="org.overturetool.eclipse.plugins.editor.core.overtureContentType">
@@ -39,7 +39,7 @@
             class="org.overturetool.eclipse.plugins.editor.internal.ui.search.OvertureSearchPage"
             enabled="true"
             extensions="vpp, tex, vdm"
-            icon="/icons/vdm16.png"
+            icon="/icons/oml16.png"
             id="org.overturetool.eclipse.plugins.editor.ui.search.OvertureSearchPage"
             label="%DLTKSearchPage.label"
             showScopeSection="true"
@@ -322,7 +322,7 @@
        <wizard
              category="org.overturetool.eclipse.plugins.editor.ui"
              class="org.overturetool.eclipse.plugins.editor.internal.ui.wizards.OvertureFileCreationWizard"
-             icon="icons/vdm16.png"
+             icon="icons/oml16.png"
              id="org.overturetool.eclipse.plugins.editor.internal.ui.wizards.OvertureFileCreationWizard"
              name="%NewVDMFile.label">
           <description>
