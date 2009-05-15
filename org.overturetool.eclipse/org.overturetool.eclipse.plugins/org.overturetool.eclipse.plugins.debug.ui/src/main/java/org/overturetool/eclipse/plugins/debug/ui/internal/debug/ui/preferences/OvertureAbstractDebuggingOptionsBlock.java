@@ -52,7 +52,7 @@ AbstractOptionsBlock {
 	/**
 	 * Returns the 'break on first line' preference key
 	 */
-	//protected abstract PreferenceKey getBreakOnFirstLineKey();
+	protected abstract PreferenceKey getBreakOnFirstLineKey();
 
 	/**
 	 * Returns the 'dbgp logging enabled' preference key

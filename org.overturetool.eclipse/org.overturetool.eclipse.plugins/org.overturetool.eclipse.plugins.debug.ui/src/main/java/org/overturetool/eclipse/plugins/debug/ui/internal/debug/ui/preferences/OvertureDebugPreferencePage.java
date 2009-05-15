@@ -37,9 +37,9 @@ public class OvertureDebugPreferencePage extends
 		return new OvertureAbstractDebuggingOptionsBlock(newStatusChangedListener,
 				project, getKeys(), container) {
 
-			//protected PreferenceKey getBreakOnFirstLineKey() {
-				//return BREAK_ON_FIRST_LINE;
-			//}
+			protected PreferenceKey getBreakOnFirstLineKey() {
+				return BREAK_ON_FIRST_LINE;
+			}
 
 			protected PreferenceKey getDbgpLoggingEnabledKey() {
 				return ENABLE_DBGP_LOGGING;
