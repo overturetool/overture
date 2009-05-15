@@ -7,45 +7,7 @@
       class="org.overturetool.eclipse.plugins.debug.ui.internal.ui.preferences.OvertureConsolePreferenceInitializer" />
     <initializer class="org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.OvertureDebugUIPreferenceInitializer" />
   </extension>
-  <!-- 
-  <extension point="org.eclipse.ui.viewActions">
- 		<viewContribution
-            targetID="org.eclipse.debug.ui.BreakpointView"
-            id="org.eclipse.dltk.debug.ui.BreakpointViewActions">
-    	    <action
-				id="org.eclipse.dltk.ruby.debug.ui.actions.AddExceptionBreakpoint"
-				toolbarPath="scriptExceptions"
-				hoverIcon="$nl$/icons/elcl16/exc_catch.gif"
-				class="org.eclipse.dltk.ruby.internal.debug.ui.actions.AddRubyExceptionAction"
-				disabledIcon="$nl$/icons/dlcl16/exc_catch.gif"
-				icon="$nl$/icons/elcl16/exc_catch.gif"
-				helpContextId="add_exception_action_context"
-				label="%exceptionAction.label"
-				tooltip="%exceptionAction.tooltip">
-	        </action>
-        </viewContribution>
-	</extension>
-  
-  
-  <extension point="org.eclipse.ui.viewActions">
-    <viewContribution
-      targetID="org.eclipse.debug.ui.VariableView"
-      id="org.overturetool.debug.ui.VariableViewActions">
-      <action
-        style="toggle"
-        id="org.overturetool.debug.ui.variableViewActions.ShowStatic"
-            class="org.overturetool.internal.console.ui.actions.ShowFunctionsAction"
-            helpContextId="show_functions_context"
-            icon="icons/vdm16.png"
-            label="%showFunctionsAction.label"
-            menubarPath="org.overturetool.debug.ui.menu.VariableView/js"
-            tooltip="%showFunctionsAction.tooltip">
-      </action>
-    </viewContribution>
-  </extension>
-  
-  -->
-  
+   
   <extension point="org.eclipse.dltk.ui.editorTextHovers">
     <hover
       label="%overtureVariabl1eHoverLabel"
@@ -97,7 +59,7 @@
   <extension point="org.eclipse.debug.ui.launchShortcuts">
     <shortcut
       class="org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.launcher.OvertureLaunchShortcut"
-      icon="icons/vdm16.png"
+      icon="icons/oml16.png"
       id="org.overturetool.debug.ui.launchShortcut"
       label="Overture"
       modes="run, debug">
@@ -157,7 +119,7 @@
       targetID="#OvertureRulerContext">
       <action
         class="org.eclipse.dltk.debug.ui.actions.RulerToggleWatchPointActionDelegate"
-        icon="icons/vdm16.png"
+        icon="icons/oml16.png"
         id="overture.doubleClickWatchPointAction"
         label="Toggle Watchpoint"
         menubarPath="debug"
@@ -199,14 +161,14 @@
       </visibility>
       <action
         label="%ScriptWatch.label"
-        icon="icons/vdm16.png"
+        icon="icons/oml16.png"
         class="org.eclipse.dltk.internal.debug.ui.actions.ScriptWatchAction"
         menubarPath="additions"
         id="org.overturetool.debug.ui.ScriptWatch">
       </action>
       <action
         label="%ScriptInspect.label"
-        icon="/icons/vdm16.png"
+        icon="/icons/oml16.png"
         definitionId="org.eclipse.dlkt.debug.ui.commands.ScriptInspect"
         class="org.eclipse.dltk.internal.debug.ui.actions.PopupScriptInspectAction"
         menubarPath="additions"
@@ -214,7 +176,7 @@
       </action>
       <action
         label="%ScriptDisplay.label"
-        icon="/icons/vdm16.png"
+        icon="/icons/oml16.png"
         definitionId="org.eclipse.dlkt.debug.ui.commands.ScriptDisplay"
         class="org.eclipse.dltk.internal.debug.ui.actions.PopupScriptDisplayAction"
         menubarPath="additions"
