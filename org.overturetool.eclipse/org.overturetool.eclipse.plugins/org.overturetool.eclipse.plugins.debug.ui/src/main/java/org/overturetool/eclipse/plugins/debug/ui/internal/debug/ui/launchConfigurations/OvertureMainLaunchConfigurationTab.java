@@ -7,6 +7,8 @@
  ******************************************************************************/
 package org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.launchConfigurations;
 
+import java.util.ResourceBundle.Control;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -184,18 +186,15 @@ public class OvertureMainLaunchConfigurationTab extends MainLaunchConfigurationT
 	
 	@Override
 	protected void createDebugOptions(Composite group) {
-		//super.createDebugOptions(group);
-		addDbgpLoggingButton(group);
+		super.createDebugOptions(group);
+		org.eclipse.swt.widgets.Control[] temp = group.getChildren();
+		
+		temp[0]. setVisible(false);//HACK TO REMOVE "BREAK OF FIRST LINE
+		temp[1]. setVisible(false);//HACK TO REMOVE "BREAK OF FIRST LINE
 //		fdebugInConsole = SWTFactory.createCheckButton(group, OvertureDebugConstants.DEBUG_FROM_CONSOLE);
 //		fdebugInConsole.addSelectionListener(fListener);		
 	}
-	
-	private void addDbgpLoggingButton(Composite group) {
-		enableLogging = createCheckButton(group,
-				ScriptDebugPreferencesMessages.EnableDbgpLoggingLabel);
-		enableLogging.addSelectionListener(getWidgetListener());
-		createVerticalSpacer(group, 1);
-	}
+
 	
 	/**
 	 * Show a dialog that lets the user select a project. This in turn provides
@@ -274,6 +273,7 @@ public class OvertureMainLaunchConfigurationTab extends MainLaunchConfigurationT
 		config.setAttribute(OvertureDebugConstants.DEBUGGING_CLASS, fClassText.getText());
 		config.setAttribute(OvertureDebugConstants.DEBUGGING_OPERATION, fOperationText.getText());
 		config.setAttribute(DLTKDebugPreferenceConstants.PREF_DBGP_BREAK_ON_FIRST_LINE, false);
+		config.setAttribute(DLTKDebugPreferenceConstants.PREF_DBGP_ENABLE_LOGGING, true);
 		//config.setAttribute(OvertureDebugConstants.DEBUGGING_FROM_CONSOLE, fdebugInConsole.getSelection());
 		
 		super.doPerformApply(config);
@@ -284,7 +284,8 @@ public class OvertureMainLaunchConfigurationTab extends MainLaunchConfigurationT
 		try {			
 			fClassText.setText(config.getAttribute(OvertureDebugConstants.DEBUGGING_CLASS, ""));
 			fOperationText.setText(config.getAttribute(OvertureDebugConstants.DEBUGGING_OPERATION, ""));
-			//fdebugInConsole.setSelection(config.getAttribute(OvertureDebugConstants.DEBUGGING_FROM_CONSOLE, false));
+			
+			//fdebugInConsole.setSelection(config.getAttribute(DLTKDebugPreferenceConstants.PREF_DBGP_ENABLE_LOGGING, true));
 			
 			//fOperationText.setEnabled(!fdebugInConsole.getSelection());
 		} catch (CoreException e) {
