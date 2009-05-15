@@ -28,7 +28,7 @@
 
   <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
     <launchConfigurationTypeImage
-      icon="icons/vdm16.png"
+      icon="icons/oml16.png"
       configTypeID="org.overturetool.eclipse.plugins.launching.OvertureLaunchConfigurationType"
       id="org.overturetool.eclipse.plugins.launching.OverturetoolLaunchConfigurationTypeImage">
     </launchConfigurationTypeImage>
