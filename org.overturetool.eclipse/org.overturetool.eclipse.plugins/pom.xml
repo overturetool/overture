@@ -43,6 +43,6 @@
    <!-- <module>org.overturetool.eclipse.plugins.showtrace</module>-->
     <module>org.overturetool.eclipse.plugins.traces</module>
 	<module>org.overturetool.eclipse.plugins.editor.overturedebugger</module>
-    
+    <module>org.overturetool.eclipse.plugins.vdmtoolsapi.core</module>
   </modules>
 </project>
