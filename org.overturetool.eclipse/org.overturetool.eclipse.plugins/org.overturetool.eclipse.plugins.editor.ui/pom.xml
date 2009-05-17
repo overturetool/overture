@@ -19,5 +19,11 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+    	<groupId>org.overturetool.eclipse.plugins</groupId>
+    	<artifactId>org.overturetool.eclipse.plugins.vdmtoolsapi.core</artifactId>
+    	<version>1.0-SNAPSHOT</version>
+    	<type>binary-plugin</type>
+    </dependency>
   </dependencies>
 </project>

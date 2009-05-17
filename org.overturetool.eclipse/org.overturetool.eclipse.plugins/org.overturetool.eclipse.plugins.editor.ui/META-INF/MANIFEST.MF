@@ -39,4 +39,6 @@ Export-Package: org.overturetool.eclipse.plugins.editor.internal.ui,
  org.overturetool.eclipse.plugins.editor.ui.scriptcolor.provider,
  org.overturetool.eclipse.plugins.editor.ui.text
 Bundle-Localization: plugin
+Import-Package: jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI,
+ org.overturetool.vdmtools
 
