@@ -6,11 +6,11 @@
    <feature url="features/org.overturetool.eclipse.features.showtrace_1.0.0.200904280919.jar" id="org.overturetool.eclipse.features.showtrace" version="1.0.0.200904280919">
       <category name="showtrace"/>
    </feature>
-   <feature url="features/org.overturetool.eclipse.core.features.traces_1.0.0.200905121354.jar" id="org.overturetool.eclipse.core.features.traces" version="1.0.0.200905121354">
-      <category name="Traces"/>
-   </feature>
-   <feature url="features/org.overturetool.eclipse.features.core_1.0.0.200905121354.jar" id="org.overturetool.eclipse.features.core" version="1.0.0.200905121354">
+   <feature url="features/org.overturetool.eclipse.features.core_1.0.0.200905182253.jar" id="org.overturetool.eclipse.features.core" version="1.0.0.200905182253">
       <category name="Overturetool"/>
+   </feature>
+   <feature url="features/org.overturetool.eclipse.core.features.traces_1.0.0.200905182305.jar" id="org.overturetool.eclipse.core.features.traces" version="1.0.0.200905182305">
+      <category name="Traces"/>
    </feature>
    <category-def name="showtrace" label="showtrace">
       <description>

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.overturetool.overturedebugger;singleton:=true
+Bundle-SymbolicName: org.overturetool.eclipse.plugins.overturedebugger;singleton:=true
 Bundle-Version: 0.0.0.qualifier
 Bundle-Activator: org.overturetool.eclipse.plugins.editor.overturedebugger.OvertureDebuggerPlugin
 Bundle-Localization: plugin

@@ -24,7 +24,8 @@
    </url>
 
    <requires>
-      <import feature="org.overturetool.eclipse.core.features.core" version="1.0.0"/>
+      <import plugin="org.overturetool.eclipse.plugins.editor.core" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.overturetool.eclipse.plugins.traces.core" version="1.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -39,5 +40,12 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="org.overturetool.eclipse.plugins.editor.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

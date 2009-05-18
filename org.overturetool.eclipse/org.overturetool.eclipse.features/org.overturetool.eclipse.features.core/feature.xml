@@ -23,7 +23,7 @@
    </url>
 
    <includes
-         id="org.eclipse.dltk.core.sdk"
+         id="org.eclipse.dltk.core"
          version="0.0.0"/>
 
    <requires>
@@ -93,14 +93,20 @@
          unpack="false"/>
 
    <plugin
-         id="org.overturetool.overturedebugger"
+         id="org.overturetool.eclipse.plugins.traces.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.overturetool.eclipse.plugins.overturedebugger"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.overturetool.eclipse.plugins.traces.core"
+         id="org.overturetool.eclipse.plugins.vdmtoolsapi.core"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
