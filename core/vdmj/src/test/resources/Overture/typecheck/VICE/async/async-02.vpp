@@ -1,0 +1,9 @@
+class A
+
+operations
+
+async Op: nat ==> ()
+Op(-) ==
+  skip
+
+end A
