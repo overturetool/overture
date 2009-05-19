@@ -162,7 +162,6 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 		}
 
 		String sessionId = (String) config.getProperty(DbgpConstants.SESSION_ID_PROP);
-		System.out.println(sessionId);
 
 		if (sessionId == null) {
 			sessionId = "";
