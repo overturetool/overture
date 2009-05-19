@@ -85,9 +85,11 @@ public class OvertureCompletionProposalCollector extends
 
 		ProposalInfo proposalInfo = new ProposalInfo(null) {
 
-			public String getInfo(IProgressMonitor monitor) {		
-				//TODO
-				return null;
+			public String getInfo(IProgressMonitor monitor) {
+				if (ref instanceof String) {
+					return (String) ref;
+				}
+				return "Documentation not resolved";
 			}
 
 			/**

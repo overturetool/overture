@@ -41,13 +41,11 @@ public class OvertureTypeCompletionProposalComputer extends
 		return new OvertureTemplateCompletionProcessor(context);
 	}
 
-	public List computeContextInformation(
-			ContentAssistInvocationContext context, IProgressMonitor monitor) {
+	public List computeContextInformation(ContentAssistInvocationContext context, IProgressMonitor monitor) {
 		System.out.println("Offset: " + context.getInvocationOffset());
 
 		if (DLTKCore.DEBUG) {
-			System.out
-					.println("TclTypeCompletionProposalComputer.computeContextInformation()");
+			System.out.println("OvertureTypeCompletionProposalComputer.computeContextInformation()");
 		}
 		// if (context instanceof ScriptContentAssistInvocationContext) {
 		// ScriptContentAssistInvocationContext scriptContext=

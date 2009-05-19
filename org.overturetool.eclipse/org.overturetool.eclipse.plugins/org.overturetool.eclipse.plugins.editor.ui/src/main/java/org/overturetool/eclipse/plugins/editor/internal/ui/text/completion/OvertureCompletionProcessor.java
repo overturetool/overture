@@ -22,8 +22,7 @@ import org.overturetool.eclipse.plugins.editor.internal.ui.UIPlugin;
  */
 public class OvertureCompletionProcessor extends ScriptCompletionProcessor {
 	
-	public OvertureCompletionProcessor(IEditorPart editor,
-			ContentAssistant assistant, String partition) {
+	public OvertureCompletionProcessor(IEditorPart editor, ContentAssistant assistant, String partition) {
 		super(editor, assistant, partition);
 	}
 

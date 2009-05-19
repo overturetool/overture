@@ -16,13 +16,11 @@ import org.eclipse.dltk.ui.text.completion.ScriptContentAssistInvocationContext;
 /**
  * Overture template completion processor
  */
-public class OvertureTemplateCompletionProcessor extends
-		ScriptTemplateCompletionProcessor {
+public class OvertureTemplateCompletionProcessor extends ScriptTemplateCompletionProcessor {
 
 	private static char[] IGNORE = new char[] {'.', ':', '@', '$' };
 	
-	public OvertureTemplateCompletionProcessor(
-			ScriptContentAssistInvocationContext context) {
+	public OvertureTemplateCompletionProcessor(ScriptContentAssistInvocationContext context) {
 		super(context);
 	}
 
