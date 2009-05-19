@@ -306,7 +306,7 @@
             category="org.overturetool.eclipse.plugins.editor.ui"
             class="org.overturetool.eclipse.plugins.editor.internal.ui.wizards.OvertureProjectCreationWizard"
             finalPerspective="org.overturetool.eclipse.plugins.editor.ui.OverturePerspective"
-            icon="icons/oml16.png"
+            icon="/icons/oml16.png"
             id="org.overturetool.eclipse.plugins.editor.internal.ui.wizards.OvertureProjectWizard"
             name="%wizard.name.0"
             preferredPerspectives="org.overturetool.eclipse.plugins.editor.ui.OverturePerspective"
@@ -322,7 +322,7 @@
        <wizard
              category="org.overturetool.eclipse.plugins.editor.ui"
              class="org.overturetool.eclipse.plugins.editor.internal.ui.wizards.OvertureFileCreationWizard"
-             icon="icons/oml16.png"
+             icon="/icons/oml16.png"
              id="org.overturetool.eclipse.plugins.editor.internal.ui.wizards.OvertureFileCreationWizard"
              name="%NewVDMFile.label">
           <description>
@@ -385,7 +385,7 @@
 	 <extension point="org.eclipse.ui.perspectives">
     	<perspective
            class="org.overturetool.eclipse.plugins.editor.ui.OverturePerspective"
-           icon="icons/oml16.png"
+           icon="/icons/oml16.png"
            id="org.overturetool.eclipse.plugins.editor.ui.OverturePerspective"
            name="%OverturePerspectiveName"/>
  	  </extension>
