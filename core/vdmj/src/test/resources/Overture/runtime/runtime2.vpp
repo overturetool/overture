@@ -1,0 +1,6 @@
+class A
+values
+	a = b;
+	b = a;
+	
+end A
