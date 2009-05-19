@@ -3,8 +3,8 @@
 <plugin>
 <extension point="org.eclipse.dltk.launching.interpreterInstallTypes">
     <interpreterInstallType
-     class="org.overturetool.eclipse.plugins.launching.internal.launching.GenericOvertureInstalltype"
-     id="org.eclipse.dltk.internal.debug.ui.launcher.GenericOvertureInstallType"/>
+     class="org.overturetool.eclipse.plugins.launching.internal.launching.VDMToolsInstallType"
+     id="org.overturetool.eclipse.plugins.launching.internal.launching.VDMToolsInstallType"/>
     <interpreterInstallType
       class="org.overturetool.eclipse.plugins.launching.internal.launching.VDMJInstallType"
       id="org.overturetool.eclipse.plugins.launching.internal.launching.VDMJInstallType"/>
@@ -109,12 +109,12 @@
   
   <!-- create the embedded VDMJ interpreter -->
   <extension point="org.eclipse.dltk.launching.interpreterInstalls">
-     <interpreterInstall
+     <interpreterInstall     		
            home="${eclipse_home}"
            id="org.overturetool.eclipse.plugins.launching.internal.launching.embeddedVDMJ"
            interpreterInstallType="org.overturetool.eclipse.plugins.launching.internal.launching.VDMJInstallType"
            name="VDMJ Interpreter">
-     </interpreterInstall>
+     </interpreterInstall>     
   </extension>
   
   
