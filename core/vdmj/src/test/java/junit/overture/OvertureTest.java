@@ -85,7 +85,7 @@ abstract public class OvertureTest extends TestCase
 
 		if (parser == null || parser.equalsIgnoreCase("vdmj"))
 		{
-    		LexTokenReader ltr = new LexTokenReader(new File(vpppath), Dialect.VDM_PP);
+    		LexTokenReader ltr = new LexTokenReader(new File(vpppath), Dialect.VDM_RT);
     		ClassReader cr = new ClassReader(ltr);
     		cr.readClasses();
     		cr.close();
@@ -126,7 +126,7 @@ abstract public class OvertureTest extends TestCase
 
 		if (parser == null || parser.equalsIgnoreCase("vdmj"))
 		{
-    		LexTokenReader ltr = new LexTokenReader(new File(vpppath), Dialect.VDM_PP);
+    		LexTokenReader ltr = new LexTokenReader(new File(vpppath), Dialect.VDM_RT);
     		ClassReader cr = new ClassReader(ltr);
     		classes = cr.readClasses();
     		cr.close();
@@ -156,6 +156,7 @@ abstract public class OvertureTest extends TestCase
 		TypeChecker.printWarnings(Console.out);
 
 		actual.addAll(TypeChecker.getErrors());
+		actual.addAll(TypeChecker.getWarnings());
 		checkErrors(actual, path + ".assert");
 	}
 
@@ -179,7 +180,7 @@ abstract public class OvertureTest extends TestCase
 
 		if (parser == null || parser.equalsIgnoreCase("vdmj"))
 		{
-    		LexTokenReader ltr = new LexTokenReader(new File(vpppath), Dialect.VDM_PP);
+    		LexTokenReader ltr = new LexTokenReader(new File(vpppath), Dialect.VDM_RT);
     		ClassReader cr = new ClassReader(ltr);
     		classes = cr.readClasses();
     		cr.close();
@@ -209,6 +210,7 @@ abstract public class OvertureTest extends TestCase
 		TypeChecker.printWarnings(Console.out);
 
 		actual.addAll(TypeChecker.getErrors());
+		actual.addAll(TypeChecker.getWarnings());
 
 		if (!actual.isEmpty())
 		{
@@ -261,7 +263,7 @@ abstract public class OvertureTest extends TestCase
 
 		if (parser == null || parser.equalsIgnoreCase("vdmj"))
 		{
-    		LexTokenReader ltr = new LexTokenReader(new File(vpppath), Dialect.VDM_PP);
+    		LexTokenReader ltr = new LexTokenReader(new File(vpppath), Dialect.VDM_RT);
     		ClassReader cr = new ClassReader(ltr);
     		classes = cr.readClasses();
     		cr.close();
@@ -291,6 +293,7 @@ abstract public class OvertureTest extends TestCase
 		TypeChecker.printWarnings(Console.out);
 
 		actual.addAll(TypeChecker.getErrors());
+		actual.addAll(TypeChecker.getWarnings());
 
 		if (!actual.isEmpty())
 		{

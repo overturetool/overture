@@ -247,6 +247,11 @@ public class ExplicitOperationDefinition extends Definition
 			detail2("Actual", actualResult, "Expected", type.result);
 		}
 
+		if (accessSpecifier.isAsync && !type.result.isType(VoidType.class))
+		{
+			report(3293, "Asynchronous operation " + name + " cannot return a value");
+		}
+
 		if (type.narrowerThan(accessSpecifier))
 		{
 			report(3028, "Operation type narrows operation");

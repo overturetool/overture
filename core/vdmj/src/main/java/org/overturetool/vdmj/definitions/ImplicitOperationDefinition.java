@@ -307,6 +307,11 @@ public class ImplicitOperationDefinition extends Definition
 			local.unusedCheck();
 		}
 
+		if (accessSpecifier.isAsync && !type.result.isType(VoidType.class))
+		{
+			report(3293, "Asynchronous operation " + name + " cannot return a value");
+		}
+
 		if (type.narrowerThan(accessSpecifier))
 		{
 			report(3036, "Operation type narrows operation");
