@@ -483,7 +483,6 @@ public abstract class SyntaxReader
 	 */
 
 	protected void report(LocatedException error, Token[] after, Token[] upto)
-		throws LexException
 	{
 		VDMError vdmerror = new VDMError(error);
 		errors.add(vdmerror);
@@ -500,17 +499,24 @@ public abstract class SyntaxReader
 		List<Token> afterList = Arrays.asList(after);
 		List<Token> uptoList = Arrays.asList(upto);
 
-		Token tok = lastToken().type;
-
-		while (!uptoList.contains(tok) && tok != Token.EOF)
+		try
 		{
-			if (afterList.contains(tok))
-			{
-				nextToken();
-				break;
-			}
+    		Token tok = lastToken().type;
 
-			tok = nextToken().type;
+    		while (!uptoList.contains(tok) && tok != Token.EOF)
+    		{
+    			if (afterList.contains(tok))
+    			{
+    				nextToken();
+    				break;
+    			}
+
+    			tok = nextToken().type;
+    		}
+		}
+		catch (LexException le)
+		{
+			errors.add(new VDMError(le));
 		}
 	}
 

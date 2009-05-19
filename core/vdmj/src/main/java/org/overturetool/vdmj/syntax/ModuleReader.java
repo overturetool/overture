@@ -71,38 +71,46 @@ public class ModuleReader extends SyntaxReader
 		super(reader);
 	}
 
-	public ModuleList readModules() throws ParserException, LexException
+	public ModuleList readModules()
 	{
 		ModuleList modules = new ModuleList();
 
-		while (lastToken().isNot(Token.EOF))
+		try
 		{
-			LexToken token = lastToken();
+    		while (lastToken().isNot(Token.EOF))
+    		{
+    			LexToken token = lastToken();
 
-			switch (token.type)
-			{
-				case MODULE:
-					modules.add(readModule());
-					break;
+    			switch (token.type)
+    			{
+    				case MODULE:
+    					modules.add(readModule());
+    					break;
 
-				case DLMODULE:
-					modules.add(readDLModule());
-					break;
+    				case DLMODULE:
+    					modules.add(readDLModule());
+    					break;
 
-				case IDENTIFIER:
-					LexIdentifierToken id = (LexIdentifierToken)token;
+    				case IDENTIFIER:
+    					LexIdentifierToken id = (LexIdentifierToken)token;
 
-					if (id.name.equals("class"))
-					{
-						throwMessage(2260, "Module starts with 'class' instead of 'module'");
-					}
-					// else fall through to a flat definition...
+    					if (id.name.equals("class"))
+    					{
+    						throwMessage(2260, "Module starts with 'class' instead of 'module'");
+    					}
+    					// else fall through to a flat definition...
 
-				default:
-					modules.add(readFlatModule());
-					break;
-			}
-		}
+    				default:
+    					modules.add(readFlatModule());
+    					break;
+    			}
+    		}
+    	}
+    	catch (LocatedException e)
+    	{
+    		Token[] end = new Token[0];
+    		report(e, end, end);
+    	}
 
 		return modules;
 	}
@@ -114,7 +122,7 @@ public class ModuleReader extends SyntaxReader
 		return new Module(definitions);
 	}
 
-	public Module readModule() throws ParserException, LexException
+	private Module readModule() throws ParserException, LexException
 	{
 		LexIdentifierToken name = null;
 		ModuleImports imports = null;
@@ -175,7 +183,7 @@ public class ModuleReader extends SyntaxReader
 		return new Module(name, imports, exports, defs);
 	}
 
-	public Module readDLModule() throws ParserException, LexException
+	private Module readDLModule() throws ParserException, LexException
 	{
 		LexIdentifierToken name = null;
 		ModuleImports imports = null;

@@ -32,6 +32,7 @@ import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.Token;
+import org.overturetool.vdmj.messages.LocatedException;
 
 /**
  * A syntax analyser to parse class definitions.
@@ -44,23 +45,31 @@ public class ClassReader extends SyntaxReader
 		super(reader);
 	}
 
-	public ClassList readClasses() throws ParserException, LexException
+	public ClassList readClasses()
 	{
 		ClassList list = new ClassList();
 
-		if (lastToken().isNot(Token.CLASS) && lastToken().isNot(Token.SYSTEM))
+		try
 		{
-			throwMessage(2005, "Expecting list of 'class' or 'system' definitions");
-		}
+    		if (lastToken().isNot(Token.CLASS) && lastToken().isNot(Token.SYSTEM))
+    		{
+    			throwMessage(2005, "Expecting list of 'class' or 'system' definitions");
+    		}
 
-		while (lastToken().is(Token.CLASS) || lastToken().is(Token.SYSTEM))
-		{
-			list.add(readClass());
-		}
+    		while (lastToken().is(Token.CLASS) || lastToken().is(Token.SYSTEM))
+    		{
+    			list.add(readClass());
+    		}
 
-		if (lastToken().isNot(Token.EOF))
+    		if (lastToken().isNot(Token.EOF))
+    		{
+    			throwMessage(2006, "Found tokens after class definitions");
+    		}
+		}
+		catch (LocatedException e)
 		{
-			throwMessage(2006, "Found tokens after class definitions");
+			Token[] end = new Token[0];
+			report(e, end, end);
 		}
 
 		return list;

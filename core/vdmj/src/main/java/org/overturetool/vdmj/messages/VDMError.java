@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.runtime.ContextException;
 
 
 /**
@@ -45,6 +46,11 @@ public class VDMError extends VDMMessage
 	public VDMError(LocatedException ne)
 	{
 		super(ne.number, ne.getMessage(), ne.location);
+	}
+
+	public VDMError(ContextException ce)
+	{
+		super(ce.number, ce.getMessage(), ce.location);
 	}
 
 	public void add(String det)
