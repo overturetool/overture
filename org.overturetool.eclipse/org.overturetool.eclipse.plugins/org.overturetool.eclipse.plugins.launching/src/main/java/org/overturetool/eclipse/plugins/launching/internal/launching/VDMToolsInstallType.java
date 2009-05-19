@@ -19,10 +19,10 @@ import org.overturetool.eclipse.plugins.editor.core.OvertureNature;
 import org.overturetool.eclipse.plugins.launching.LaunchingPlugin;
 import org.overturetool.eclipse.plugins.launching.OvertureLaunchConstants;
 
-public class GenericOvertureInstalltype extends
+public class VDMToolsInstallType extends
 		AbstractInterpreterInstallType {
 
-	public static final String DBGP_FOR_VDMJ_BUNDLE_ID = "org.overturetool.eclipse.plugins.dbgp.core"; //$NON-NLS-1$
+	public static final String DBGP_FOR_VDMTOOLS_BUNDLE_ID = "org.overturetool.eclipse.plugins.dbgp.core"; //$NON-NLS-1$
 
 	public String getNatureId() {
 		return OvertureNature.NATURE_ID;

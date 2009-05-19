@@ -199,11 +199,13 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 							String VDMToolsPath = "";
 							try {
 								interpreterInstall = ScriptRuntime.getInterpreterInstall(proj);
-								if (!interpreterInstall.getInterpreterInstallType().getId().equals("org.overturetool.eclipse.plugins.launching.internal.launching.VDMJInstallType")) {
+								if (interpreterInstall.getInterpreterInstallType().getId().equals(org.overturetool.eclipse.plugins.editor.core.OvertureConstants.VDMTOOLS_INTERPRETER_ID)) {
 									toolType = OvertureDebugConstants.TOOL_VDMTOOLS;
 									VDMToolsPath = interpreterInstall.getInstallLocation().toOSString();
-								} else {
+								} else if (interpreterInstall.getInterpreterInstallType().getId().equals(org.overturetool.eclipse.plugins.editor.core.OvertureConstants.VDMJ_INTERPRETER_ID)){
 									toolType = OvertureDebugConstants.TOOL_VDMJ;
+								}else{
+									throw new CoreException(null);//TODO;
 								}
 							} catch (CoreException e) {
 								e.printStackTrace();
@@ -313,7 +315,7 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 				(
 					new String[]
 					      {
-							GenericOvertureInstalltype.DBGP_FOR_VDMJ_BUNDLE_ID,
+							VDMToolsInstallType.DBGP_FOR_VDMTOOLS_BUNDLE_ID,
 							//GenericOvertureInstalltype.DBGP_FOR_VDMTOOLS_BUNDLE_ID,
 							//GenericOvertureInstalltype.DBGP_FOR_ABSTRACT_BUNDLE_ID
 					      },
