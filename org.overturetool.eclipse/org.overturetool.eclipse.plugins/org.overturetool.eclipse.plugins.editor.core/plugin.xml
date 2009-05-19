@@ -50,7 +50,13 @@
       </parser>
    </extension>
    
-   
+    <extension point="org.eclipse.dltk.core.completionEngine">
+      <completionEngine
+            class="org.overturetool.eclipse.plugins.editor.core.internal.codeassist.OvertureCompletionEngine"
+            nature="org.overturetool.eclipse.plugins.editor.core.nature"
+            priority="0">
+      </completionEngine>
+   </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
