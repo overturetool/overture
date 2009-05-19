@@ -108,7 +108,7 @@ abstract public class OvertureTest extends TestCase
 
 	protected void typecheck(String rpath) throws Exception
 	{
-		URL rurl = getClass().getResource(rpath + ".vpp");
+		URL rurl = getClass().getResource("/Overture/typecheck/" + rpath + ".vpp");
 
 		if (rurl == null)
 		{
@@ -161,7 +161,7 @@ abstract public class OvertureTest extends TestCase
 
 	protected void runtime(String rpath) throws Exception
 	{
-		URL rurl = getClass().getResource(rpath + ".vpp");
+		URL rurl = getClass().getResource("/Overture/runtime/" + rpath + ".vpp");
 
 		if (rurl == null)
 		{
@@ -243,7 +243,7 @@ abstract public class OvertureTest extends TestCase
 
 	protected void evaluate(String rpath, ResultType rt) throws Exception
 	{
-		URL rurl = getClass().getResource(rpath + ".vpp");
+		URL rurl = getClass().getResource("/Overture/evaluate/" + rpath + ".vpp");
 
 		if (rurl == null)
 		{
