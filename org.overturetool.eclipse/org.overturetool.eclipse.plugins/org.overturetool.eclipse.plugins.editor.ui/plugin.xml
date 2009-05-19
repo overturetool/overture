@@ -47,31 +47,6 @@
       </page>      
    </extension>
    
-   <extension point="org.eclipse.ui.actionSets">
-      <actionSet
-            id="org.overturetool.generateCpp"
-            label="Generate Cpp"
-            visible="true">
-         <menu
-               id="overtureMenu"
-               label="Overture">
-            <separator
-                  name="slot2">
-            </separator>
-            
-         </menu>
-         <menu
-               id="overtureCode"
-               label="123">
-         </menu>
-            <action
-                  class="org.overturetool.eclipse.plugins.editor.ui.actions.GenerateCppCode"
-                  id="org.overturetool.generatecpp"
-                  label="Model to C++"
-                  menubarPath="overtureMenu/overtureCode">
-         </action>
-      </actionSet>
-   </extension>
    
    
    <!--
@@ -395,6 +370,7 @@
 	 Property Pages:
 	 
 	  -->
+	
 	<extension point="org.eclipse.ui.propertyPages">
 	<!-- Build Page -->
     <page
