@@ -2,22 +2,28 @@
 Change the #req, #act and #fin counters to be summed by all overloads of an
 operation in an object, not per-operation as they are now.
 
-Check all the TC test error messages against the VDMTools error messages.
-
 Improve the exitCheck coverage to look at called operations.
 
 Fix object construction, once the rules are clear.
 
-Worry about scope bugs with qualified naming of function variables.
+Fix scope bugs with qualified naming of function variables.
 
 What we should generate for VDM++ satisfiability POs that call post conditions
 with self, self~?
 
-Add a refresh to ClassList and Modules to re-parse changed files?
+Correct POG for mutually recursive measured functions.
 
-Some internal errors and exceptions get printed, but not added to the error list.
+Modify POG to generate AST rather than strings.
 
-VICE specifications are type checked at the moment, but executed as VDM++.
+Implement runtime support for VICE extensions.
 
-Add DBGp protocol handler and clean up CommandReader system.
+Change command line to use DBGp for better threaded debugging.
 
+Change VDMJ parse tree to be AST compliant and/or define a type-aware tree
+structure using "ASTgen", and change type checking accordingly.
+
+Extend DBGp with XSchema definitions for VDM types.
+
+Produce a "complete" OML JUnit test suite, with code coverage.
+
+Add Java code generation, using Value classes.

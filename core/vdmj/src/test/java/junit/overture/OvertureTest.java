@@ -54,6 +54,9 @@ import junit.framework.TestCase;
 
 abstract public class OvertureTest extends TestCase
 {
+	private String vppName = null;
+	private String assertName = null;
+
 	@Override
 	protected void setUp() throws Exception
 	{
@@ -68,81 +71,17 @@ abstract public class OvertureTest extends TestCase
 
 	protected void syntax(String rpath) throws Exception
 	{
-		URL rurl = getClass().getResource("/Overture/syntax/" + rpath + ".vpp");
-
-		if (rurl == null)
-		{
-			fail("Cannot find resource: " + rpath + ".vpp");
-		}
-
-		String vpppath = rurl.getPath();
-		String path = vpppath.substring(0, vpppath.lastIndexOf('.'));
-
-		Console.out.println("Processing " + path + "...");
-
+		setNames("/Overture/syntax/", rpath);
 		List<VDMMessage> actual = new Vector<VDMMessage>();
-		String parser = System.getProperty("parser");
-
-		if (parser == null || parser.equalsIgnoreCase("vdmj"))
-		{
-    		LexTokenReader ltr = new LexTokenReader(new File(vpppath), Dialect.VDM_RT);
-    		ClassReader cr = new ClassReader(ltr);
-    		cr.readClasses();
-    		cr.close();
-    		actual.addAll(cr.getErrors());
-		}
-		else if (parser.equalsIgnoreCase("overture"))
-		{
-			OvertureReader or = new OvertureReader(new File(vpppath));
-			or.readClasses();
-			or.close();
-    		actual.addAll(or.getErrors());
-		}
-		else
-		{
-			fail("-D parser property must be 'overture' or 'vdmj', not " + parser);
-		}
-
-		checkErrors(actual, path + ".assert");
+		parse(actual);
+		checkErrors(actual);
 	}
 
 	protected void typecheck(String rpath) throws Exception
 	{
-		URL rurl = getClass().getResource("/Overture/typecheck/" + rpath + ".vpp");
-
-		if (rurl == null)
-		{
-			fail("Cannot find resource: " + rpath + ".vpp");
-		}
-
-		String vpppath = rurl.getPath();
-		String path = vpppath.substring(0, vpppath.lastIndexOf('.'));
-
-		Console.out.println("Processing " + path + "...");
-
+		setNames("/Overture/typecheck/", rpath);
 		List<VDMMessage> actual = new Vector<VDMMessage>();
-		String parser = System.getProperty("parser");
-		ClassList classes = null;
-
-		if (parser == null || parser.equalsIgnoreCase("vdmj"))
-		{
-    		LexTokenReader ltr = new LexTokenReader(new File(vpppath), Dialect.VDM_RT);
-    		ClassReader cr = new ClassReader(ltr);
-    		classes = cr.readClasses();
-    		cr.close();
-    		actual.addAll(cr.getErrors());
-		}
-		else if (parser.equalsIgnoreCase("overture"))
-		{
-			OvertureReader or = new OvertureReader(new File(vpppath));
-			classes = or.readClasses();
-			or.close();
-    		actual.addAll(or.getErrors());
-		}
-		else
-		{
-			fail("-D parser property must be 'overture' or 'vdmj', not " + parser);
-		}
+		ClassList classes = parse(actual);
 
 		if (!actual.isEmpty())
 		{
@@ -157,46 +96,14 @@ abstract public class OvertureTest extends TestCase
 
 		actual.addAll(TypeChecker.getErrors());
 		actual.addAll(TypeChecker.getWarnings());
-		checkErrors(actual, path + ".assert");
+		checkErrors(actual);
 	}
 
 	protected void runtime(String rpath) throws Exception
 	{
-		URL rurl = getClass().getResource("/Overture/runtime/" + rpath + ".vpp");
-
-		if (rurl == null)
-		{
-			fail("Cannot find resource: " + rpath + ".vpp");
-		}
-
-		String vpppath = rurl.getPath();
-		String path = vpppath.substring(0, vpppath.lastIndexOf('.'));
-
-		Console.out.println("Processing " + path + "...");
-
+		setNames("/Overture/runtime/", rpath);
 		List<VDMMessage> actual = new Vector<VDMMessage>();
-		String parser = System.getProperty("parser");
-		ClassList classes = null;
-
-		if (parser == null || parser.equalsIgnoreCase("vdmj"))
-		{
-    		LexTokenReader ltr = new LexTokenReader(new File(vpppath), Dialect.VDM_RT);
-    		ClassReader cr = new ClassReader(ltr);
-    		classes = cr.readClasses();
-    		cr.close();
-    		actual.addAll(cr.getErrors());
-		}
-		else if (parser.equalsIgnoreCase("overture"))
-		{
-			OvertureReader or = new OvertureReader(new File(vpppath));
-			classes = or.readClasses();
-			or.close();
-    		actual.addAll(or.getErrors());
-		}
-		else
-		{
-			fail("-D parser property must be 'overture' or 'vdmj', not " + parser);
-		}
+		ClassList classes = parse(actual);
 
 		if (!actual.isEmpty())
 		{
@@ -223,17 +130,18 @@ abstract public class OvertureTest extends TestCase
 			Interpreter interpreter = new ClassInterpreter(classes);
 			interpreter.init(null);
 
-			interpreter.execute(new File(path + ".assert"));
+			interpreter.execute(new File(assertName));
 			fail("Expecting a runtime error");
 		}
 		catch (ContextException e)
 		{
+			Console.out.println(e);
 			actual.add(new VDMError(e));
-			checkErrors(actual, path + ".assert");
+			checkErrors(actual);
 		}
 		catch (Exception e)
 		{
-			Console.out.print("Caught: " + e + " in " + path + ".assert");
+			Console.out.print("Caught: " + e + " in " + assertName);
 			throw e;
 		}
 	}
@@ -245,41 +153,9 @@ abstract public class OvertureTest extends TestCase
 
 	protected void evaluate(String rpath, ResultType rt) throws Exception
 	{
-		URL rurl = getClass().getResource("/Overture/evaluate/" + rpath + ".vpp");
-
-		if (rurl == null)
-		{
-			fail("Cannot find resource: " + rpath + ".vpp");
-		}
-
-		String vpppath = rurl.getPath();
-		String path = vpppath.substring(0, vpppath.lastIndexOf('.'));
-
-		Console.out.println("Processing " + path + "...");
-
+		setNames("/Overture/evaluate/", rpath);
 		List<VDMMessage> actual = new Vector<VDMMessage>();
-		String parser = System.getProperty("parser");
-		ClassList classes = null;
-
-		if (parser == null || parser.equalsIgnoreCase("vdmj"))
-		{
-    		LexTokenReader ltr = new LexTokenReader(new File(vpppath), Dialect.VDM_RT);
-    		ClassReader cr = new ClassReader(ltr);
-    		classes = cr.readClasses();
-    		cr.close();
-    		actual.addAll(cr.getErrors());
-		}
-		else if (parser.equalsIgnoreCase("overture"))
-		{
-			OvertureReader or = new OvertureReader(new File(vpppath));
-			classes = or.readClasses();
-			or.close();
-    		actual.addAll(or.getErrors());
-		}
-		else
-		{
-			fail("-D parser property must be 'overture' or 'vdmj', not " + parser);
-		}
+		ClassList classes = parse(actual);
 
 		if (!actual.isEmpty())
 		{
@@ -306,7 +182,7 @@ abstract public class OvertureTest extends TestCase
 			Interpreter interpreter = new ClassInterpreter(classes);
 			interpreter.init(null);
 
-			Value result = interpreter.execute(new File(path + ".assert"));
+			Value result = interpreter.execute(new File(assertName));
 
 			VDMThreadSet.abortAll();
 			Console.out.println("Result = " + result);
@@ -331,23 +207,23 @@ abstract public class OvertureTest extends TestCase
 		}
 		catch (ContextException e)
 		{
+			Console.out.println(e);
 			fail("Unexpected runtime error: " + e);
 		}
 		catch (Exception e)
 		{
-			fail("Caught: " + e + " in " + path + ".assert");
+			fail("Caught: " + e + " in " + assertName);
 		}
 	}
 
-	private void checkErrors(List<VDMMessage> actual, String assertFile)
-		throws Exception
+	private void checkErrors(List<VDMMessage> actual) throws Exception
 	{
 		try
 		{
 			Interpreter interpreter = new ClassInterpreter(new ClassList());
 			interpreter.init(null);
 
-			Value assertions = interpreter.execute(new File(assertFile));
+			Value assertions = interpreter.execute(new File(assertName));
 
 			assertTrue("Expecting error list", assertions instanceof SeqValue);
 
@@ -369,8 +245,52 @@ abstract public class OvertureTest extends TestCase
 		}
 		catch (Exception e)
 		{
-			fail("Caught: " + e + " in " + assertFile);
+			fail("Caught: " + e + " in " + assertName);
 		}
+	}
+
+	private void setNames(String prefix, String root)
+	{
+		URL rurl = getClass().getResource(prefix + root + ".vpp");
+
+		if (rurl == null)
+		{
+			fail("Cannot find resource: " + prefix + root + ".vpp");
+		}
+
+		vppName = rurl.getPath();
+		assertName = vppName.substring(0, vppName.lastIndexOf('.')) + ".assert";
+
+		Console.out.println("Processing " + prefix + root + "...");
+	}
+
+	private ClassList parse(List<VDMMessage> messages)
+		throws Exception
+	{
+		ClassList classes = null;
+		String parser = System.getProperty("parser");
+
+		if (parser == null || parser.equalsIgnoreCase("vdmj"))
+		{
+    		LexTokenReader ltr = new LexTokenReader(new File(vppName), Dialect.VDM_RT);
+    		ClassReader cr = new ClassReader(ltr);
+    		classes = cr.readClasses();
+    		cr.close();
+    		messages.addAll(cr.getErrors());
+		}
+		else if (parser.equalsIgnoreCase("overture"))
+		{
+			OvertureReader or = new OvertureReader(new File(vppName));
+			classes = or.readClasses();
+			or.close();
+    		messages.addAll(or.getErrors());
+		}
+		else
+		{
+			fail("-D parser property must be 'overture' or 'vdmj', not " + parser);
+		}
+
+		return classes;
 	}
 
 	private String listErrs(List<VDMMessage> list)
