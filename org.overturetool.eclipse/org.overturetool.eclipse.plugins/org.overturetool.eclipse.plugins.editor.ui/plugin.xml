@@ -328,12 +328,7 @@
 	          class="org.overturetool.eclipse.plugins.editor.internal.ui.preferences.OvertureEditorSyntaxColoringPreferencePage"
 	          id="org.overturetool.eclipse.plugins.editor.ui.editor.SyntaxColoring"
 	          name="%page.syntax.2"/>
-	    <!-- Task Tags PreferencePage page -->
-        <page
-              category="org.overturetool.eclipse.plugins.editor.ui.overture"
-              class="org.overturetool.eclipse.plugins.editor.internal.ui.preferences.OvertureTodoTaskPreferencePage"
-              id="org.overturetool.preferences.todo"
-              name="%TaskTagsPreferencePage.name"/>
+	    <!-- Task Tags PreferencePage page -->       
 	    <!--Typing page -->
 	    <page
 	          category="org.overturetool.eclipse.plugins.editor.ui.EditorPreferences"
@@ -341,11 +336,6 @@
 	          id="org.overturetool.eclipse.plugins.editor.ui.editor.SmartTyping"
 	          name="%page.name.3"/>     
 	    <!--Folding page -->     
-	    <page
-          category="org.overturetool.eclipse.plugins.editor.ui.EditorPreferences"
-          class="org.overturetool.eclipse.plugins.editor.internal.ui.preferences.OvertureFoldingPreferencePage"
-          id="org.overturetool.eclipse.plugins.editor.ui.editor.OvertureFolding"
-          name="%page.name.4"/>
         <!--Templates page -->
 	    <page
            category="org.overturetool.eclipse.plugins.editor.ui.EditorPreferences"
