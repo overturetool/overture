@@ -22,6 +22,12 @@
     	<groupId>org.overturetool.vdmtools.dbgp</groupId>
     	<artifactId>vdmtoolsdbgp</artifactId>
     	<version>1.0.0</version>
+    	<exclusions>
+    		<exclusion>
+    			<artifactId>stdlib</artifactId>
+    			<groupId>org.overturetool</groupId>
+    		</exclusion>
+    	</exclusions>
     </dependency>
   </dependencies>
 </project>

@@ -15,8 +15,8 @@ Require-Bundle: org.eclipse.dltk.core;bundle-version="1.0.0";resolution:=optiona
  org.eclipse.core.runtime;bundle-version="3.4.0";resolution:=optional,
  org.eclipse.core.resources;bundle-version="3.4.2";resolution:=optional,
  org.eclipse.dltk.launching;bundle-version="1.0.0";resolution:=optional,
- org.overturetool.eclipse.plugins.stdlib;bundle-version="1.0.0";resolution:=optional,
- org.overturetool.eclipse.plugins.traces.core;bundle-version="1.0.0"
+ org.overturetool.eclipse.plugins.stdlib;bundle-version="1.0.0",
+ org.overturetool.eclipse.plugins.vdmtoolsapi.core;bundle-version="1.0.0"
 Bundle-ClassPath: .
 Bundle-Activator: org.overturetool.eclipse.plugins.editor.core.OverturePlugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

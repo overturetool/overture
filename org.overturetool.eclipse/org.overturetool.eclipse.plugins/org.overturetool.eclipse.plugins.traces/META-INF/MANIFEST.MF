@@ -19,7 +19,3 @@ Require-Bundle: org.overturetool.eclipse.plugins.editor.core;bundle-version="1.0
  org.eclipse.ui.ide;bundle-version="3.4.2";resolution:=optional,
  org.overturetool.eclipse.plugins.traces.core;bundle-version="1.0"
 Bundle-Activator: org.overturetool.eclipse.plugins.traces.OvertureTracesPlugin
-Import-Package: org.overturetool.ast.itf,
- org.overturetool.vdmj,
- org.overturetool.vdmj.util
-

@@ -29,6 +29,26 @@
 			<groupId>org.overturetool</groupId>
 			<artifactId>traces</artifactId>
 			<version>1.0.0</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>vdmtoolsapi</artifactId>
+					<groupId>org.overturetool</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>vdmj</artifactId>
+					<groupId>org.overturetool</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.overturetool</groupId>
+			<artifactId>vdmj</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overturetool</groupId>
+			<artifactId>vdmtoolsapi</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 	</dependencies>
 </project>

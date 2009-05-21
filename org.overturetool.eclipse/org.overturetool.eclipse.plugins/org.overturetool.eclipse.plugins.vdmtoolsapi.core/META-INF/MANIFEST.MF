@@ -2,14 +2,11 @@ Manifest-Version: 1.0
 Export-Package: org.overturetool.vdmtools.dbgp,org.overturetool.vdmtoo
  ls.dbgp,org.overturetool.vdmtools.exceptions,org.overturetool.vdmtool
  s.interpreter,org.overturetool.vdmtools.parser,org.overturetool.vdmto
- ols,jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI,jp.co.csk.vdm.toolbox.
- api.corba.ToolboxAPI.VDMCodeGeneratorPackage,jp.co.csk.vdm.toolbox.ap
- i.corba.VDM,jp.co.csk.vdm.toolbox.api,jp.co.csk.vdm.toolbox.VDM,jp.co
- .csk.vdm.toolbox.VDM.quotes,jp.co.csk.vdm.toolbox.VDM.ValueParser
+ ols
 Bundle-Vendor: Overture.
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib\vdmtoolsdbgp-1.0.0.jar,lib\abstractdbgp-1.0.0.ja
- r,lib\vdmtoolsapi-1.0.0.jar,lib\stdlib-1.0.0.jar
+ r,lib\vdmtoolsapi-1.0.0.jar
 Bundle-Version: 1.0
 Eclipse-BuddyPolicy: registered
 Bundle-Localization: plugin
