@@ -26,25 +26,6 @@
          id="org.eclipse.dltk.core"
          version="0.0.0"/>
 
-   <requires>
-      <import plugin="org.overturetool.eclipse.plugins.traces.core" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.overturetool.eclipse.plugins.editor.core" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.overturetool.eclipse.plugins.editor.ui" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.dltk.console" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.dltk.console.ui" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.dltk.debug" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.overturetool.eclipse.plugins.debug" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.overturetool.eclipse.plugins.launching" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.dltk.launching" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.overturetool.eclipse.plugins.dbgp.core" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui" version="3.4.2" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.dltk.ui" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.dltk.debug.ui" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.debug.core" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.dltk.core" version="1.0.0" match="greaterOrEqual"/>
-   </requires>
-
    <plugin
          id="org.overturetool.eclipse.plugins.editor.core"
          download-size="0"
@@ -91,12 +72,6 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="org.overturetool.eclipse.plugins.traces.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
    <plugin
          id="org.overturetool.eclipse.plugins.overturedebugger"

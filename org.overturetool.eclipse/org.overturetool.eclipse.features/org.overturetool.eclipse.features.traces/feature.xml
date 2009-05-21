@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.overturetool.eclipse.core.features.traces"
-      label="Traces Feature"
+      id="org.overturetool.eclipse.features.traces"
+      label="OvertureTool Traces Feature"
       version="1.0.0.qualifier"
       provider-name="Overturetool">
 
@@ -22,11 +22,6 @@
       <discovery label="Sourceforge" url="http://sourceforge.net/projects/overture/"/>
       <discovery label="Overture Tool" url="http://www.overturetool.org/"/>
    </url>
-
-   <requires>
-      <import plugin="org.overturetool.eclipse.plugins.editor.core" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.overturetool.eclipse.plugins.traces.core" version="1.0.0" match="greaterOrEqual"/>
-   </requires>
 
    <plugin
          id="org.overturetool.eclipse.plugins.traces"
