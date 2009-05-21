@@ -135,6 +135,7 @@ public class OvertureASTTreePopulator {
 				
 				// Function or Operation
 				DefinitionList defList = classDef.getDefinitions();
+				
 				for (Definition def : defList) {
 					if (def != null){
 						if (def.isFunctionOrOperation())
@@ -200,6 +201,17 @@ public class OvertureASTTreePopulator {
 									 converter.convert(def.location.endLine, def.location.endPos -1),
 									 def.accessSpecifier)
 						 		);
+						}
+						if (def.getType().isUnknown()){
+							classDeclaration.getStatements().add(
+									 new VDMFieldDeclaration(
+										 def.name.name,
+										 converter.convert(def.location.startLine, def.location.startPos -1),
+										 converter.convert(def.location.endLine, def.location.endPos -1),
+										 converter.convert(def.location.startLine, def.location.startPos - 1),
+										 converter.convert(def.location.endLine, def.location.endPos -1),
+										 def.accessSpecifier)
+							 		);
 						}
 					}
 				}
