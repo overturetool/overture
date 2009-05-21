@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.overturetool.eclipse.features.umltrans"
+      label="OvertureTool UML Transformation Feature"
+      version="1.0.0.qualifier"
+      provider-name="Overturetool">
+
+   <description url="http://www.overturetool.org/updatesite">
+      Festure providing UML Transformation 
+   </description>
+
+   <copyright url="http://www.overturetool.org/copyright">
+      GNU General Public License version 3.0 (GPLv3)
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      GNU General Public License version 3.0 (GPLv3)
+   </license>
+
+   <url>
+      <update label="Overturetool updatesite" url="http://overturetool.org/updatesite"/>
+      <discovery label="Sourceforge" url="http://sourceforge.net/projects/overture/"/>
+      <discovery label="Overture Tool" url="http://www.overturetool.org/"/>
+   </url>
+
+   <plugin
+         id="org.overturetool.eclipse.plugins.umltrans"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.overturetool.eclipse.plugins.umltrans.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.overturetool.eclipse.plugins.editor.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
