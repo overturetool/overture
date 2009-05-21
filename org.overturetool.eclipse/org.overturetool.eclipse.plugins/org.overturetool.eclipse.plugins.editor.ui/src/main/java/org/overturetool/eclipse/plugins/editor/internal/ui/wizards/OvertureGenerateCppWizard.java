@@ -13,6 +13,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.MessageBox;
 import org.overturetool.eclipse.plugins.editor.core.OvertureConstants;
 import org.overturetool.eclipse.plugins.editor.core.OvertureNature;
 import org.overturetool.eclipse.plugins.editor.core.internal.OvertureCorePreferenceInitializer;
@@ -78,16 +80,21 @@ public class OvertureGenerateCppWizard extends Wizard {
 				
 				if (ScriptRuntime.getInterpreterInstallType(OvertureConstants.VDMTOOLS_INTERPRETER_ID) != null)
 				{
-					if (ScriptRuntime.getInterpreterInstallType(OvertureConstants.VDMTOOLS_INTERPRETER_ID).getInterpreterInstalls() != null)
+					if (ScriptRuntime.getInterpreterInstallType(OvertureConstants.VDMTOOLS_INTERPRETER_ID).getInterpreterInstalls().length > 0)
 					{						
 						interpreterInstall = ScriptRuntime.getInterpreterInstallType(OvertureConstants.VDMTOOLS_INTERPRETER_ID).getInterpreterInstalls()[0];
 						String VDMToolsPath = interpreterInstall.getInstallLocation().toOSString();
 						vdmProject.init(VDMToolsPath, ToolType.PP_TOOLBOX);
 					}
+					else{
+						MessageBox msgBox = new MessageBox(this.getShell(),SWT.OK);
+						msgBox.setMessage("VDMTools not isntalled\n window -> preferences... -> overture -> interpreter \n select the location of VDMtools");
+						msgBox.open();
+					}
 				}
 				else
 				{
-					System.out.println("VDMTools not installed");
+					
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
