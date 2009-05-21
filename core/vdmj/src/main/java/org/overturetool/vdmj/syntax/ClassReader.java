@@ -51,6 +51,11 @@ public class ClassReader extends SyntaxReader
 
 		try
 		{
+			if (lastToken().is(Token.EOF))
+			{
+				return list;	// The file is empty
+			}
+
     		if (lastToken().isNot(Token.CLASS) && lastToken().isNot(Token.SYSTEM))
     		{
     			throwMessage(2005, "Expecting list of 'class' or 'system' definitions");
