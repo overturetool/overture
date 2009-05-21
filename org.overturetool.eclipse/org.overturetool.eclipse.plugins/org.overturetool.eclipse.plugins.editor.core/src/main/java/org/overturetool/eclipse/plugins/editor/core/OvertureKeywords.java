@@ -20,8 +20,6 @@ public class OvertureKeywords {
 		  "sync", "per", "thread", "periodic", "threadid",
 		  "self",
 		  "atomic",
-		  "bool", "int", "nat", "nat1", "real", "rat", "char", "token",
-		  "true", "false", "nil",
 		  "mu","not", "and", "or",
 		  "abs", "floor", "div", "mod", "rem", "union", "inter", "subset",
 		  "psubset", "card", "dunion", "dinter", "power",
