@@ -830,6 +830,7 @@ public class DBGPReader
 		try
 		{
 			String exp = c.data;	// Already base64 decoded by the parser
+			interpreter.setDefaultName(breakpoint.location.module);
 			theAnswer = interpreter.evaluate(exp, breakContext);
 			StringBuilder property = propertyResponse(
 				exp, exp, interpreter.getDefaultName(), theAnswer.toString());
