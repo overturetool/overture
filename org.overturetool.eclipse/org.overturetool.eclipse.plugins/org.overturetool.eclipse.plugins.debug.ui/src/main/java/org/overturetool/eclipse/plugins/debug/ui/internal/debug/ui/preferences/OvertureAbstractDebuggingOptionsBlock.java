@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
-import org.overturetool.eclipse.debug.internal.debug.OvertureDebugConstants;
+
 
 
 public abstract class OvertureAbstractDebuggingOptionsBlock extends 
