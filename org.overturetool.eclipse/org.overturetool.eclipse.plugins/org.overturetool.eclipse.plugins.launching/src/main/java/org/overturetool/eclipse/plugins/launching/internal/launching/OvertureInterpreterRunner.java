@@ -19,6 +19,7 @@ import java.util.List;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -181,7 +182,7 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 							String[] newClassPath = getClassPath(myJavaProject);
 
 							VMRunnerConfiguration vmConfig = new VMRunnerConfiguration(iconfig.getRunnerClassName(config, launch, myJavaProject), newClassPath);
-							
+							vmConfig.setWorkingDirectory(proj.getProject().getLocation().toOSString());
 							//TODO get the project dialect 
 							String dialect = "VDM_PP";
 							if (true){								
