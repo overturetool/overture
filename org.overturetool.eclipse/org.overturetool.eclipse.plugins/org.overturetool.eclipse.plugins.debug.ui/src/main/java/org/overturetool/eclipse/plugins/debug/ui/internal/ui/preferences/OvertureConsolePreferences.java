@@ -114,8 +114,8 @@ public class OvertureConsolePreferences extends PreferencePage implements
 	}
 
 	protected void performDefaults() {
-		newPrompt.setText("=>");
-		appendPrompt.setText("->");
+		newPrompt.setText(OvertureConsoleConstants.DEFAULT_NEW_PROMPT);
+		appendPrompt.setText(OvertureConsoleConstants.PREF_CONTINUE_PROMPT);
 	}
 
 	public boolean performOk() {
