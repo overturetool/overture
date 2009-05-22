@@ -2,10 +2,32 @@
 <?eclipse version="3.2"?>
 <plugin>
 
+  <extension point="org.eclipse.core.runtime.adapters">
+    <factory
+      adaptableType="org.overturetool.eclipse.plugins.editor.internal.ui.editor.OvertureEditor"
+      class="org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.OvertureEditorDebugAdapterFactory">
+      <adapter type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget" />
+      <adapter type="org.eclipse.debug.ui.actions.IRunToLineTarget" />
+    </factory>
+  </extension>
+
   <extension point="org.eclipse.core.runtime.preferences">
     <initializer
       class="org.overturetool.eclipse.plugins.debug.ui.internal.ui.preferences.OvertureConsolePreferenceInitializer" />
     <initializer class="org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.OvertureDebugUIPreferenceInitializer" />
+  </extension>
+  <extension point="org.eclipse.dltk.ui.buildpathContainerPage">
+    <buildpathContainerPath
+      class="org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.interpreters.OvertureInterpreterContainerWizardPage"
+      id="org.overturetool.eclipse.plugins.editor.launching.INTERPRETER_CONTAINER"
+      name="overture Interpreter Libraries"
+      nature="org.overturetool.eclipse.plugins.editor.core.nature" />
+  </extension>
+
+  <extension point="org.eclipse.dltk.debug.ui.language">
+    <language
+      class="org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.OvertureDebugUILanguageToolkit"
+      nature="org.overturetool.eclipse.plugins.editor.core.nature"/>
   </extension>
    
   <extension point="org.eclipse.dltk.ui.editorTextHovers">
@@ -90,38 +112,23 @@
         name="org.eclipse.dltk.ui.nature"
         value="org.overturetool.eclipse.plugins.editor.core.nature">
       </filter>
-      <action
+      <!--action
         class="org.overturetool.eclipse.plugins.debug.ui.internal.console.ui.actions.PasteOvertureToConsole"
         id="org.overturetool.console.ui.internal.actions.PasteTclTextToConsoleAction"
-        label="%OvertureConsole.Actions.PasteToOvertureConsole" />
+        label="%OvertureConsole.Actions.PasteToOvertureConsole" / -->
     </objectContribution>
 
     <viewerContribution
-      id="org.overturetool.debug.ui.viewerContribution1"
-      targetID="#OvertureEditorContext">
-      <!--action
-        class="org.eclipse.dltk.debug.ui.actions.WatchExpressionAction"
-        id="org.overturetool.debug.ui.WatchExpressionAction"
-        label="%WatchVariable"
-        menubarPath="additions"/-->
-      <action
-        id="org.overturetool.console.ui.internal.actions.PasteToTclConsoleAction"
-        label="%OvertureConsole.Actions.PasteToOvertureConsole"
-        menubarPath="additions"
-        class="org.overturetool.eclipse.plugins.debug.ui.internal.console.ui.actions.PasteOvertureTextToConsoleAction">
-      </action>
-    </viewerContribution>
-    <viewerContribution
       id="org.overturetool.debug.ui.rulerContribution"
       targetID="#OvertureRulerContext">
-      <action
+      <!--action
         class="org.eclipse.dltk.debug.ui.actions.RulerToggleWatchPointActionDelegate"
         icon="/icons/oml16.png"
         id="overture.doubleClickWatchPointAction"
         label="Toggle Watchpoint"
         menubarPath="debug"
         style="push">
-      </action>
+      </action -->
       <action
         label="%EnableDisableBreakpoint.label"
         id="org.overturetool.ui.actions.RulerEnableDisableBreakpointActionDelegate"
@@ -185,31 +192,11 @@
   <extension point="org.eclipse.ui.actionSetPartAssociations">
     <actionSetPartAssociation
       targetID="org.eclipse.debug.ui.launchActionSet">
-      <part id="org.overturetool.eclipse.plugins.editor.internal.ui.editor.OvertureEditor"></part>
-    </actionSetPartAssociation>
-  </extension>
-  <extension point="org.eclipse.ui.actionSetPartAssociations">
-    <actionSetPartAssociation
-      targetID="org.eclipse.debug.ui.launchActionSet">
       <part id="org.eclipse.dltk.ui.ScriptExplorer"></part>
       <part id="org.overturetool.eclipse.plugins.editor.internal.ui.editor.OvertureEditor"></part>
     </actionSetPartAssociation>
   </extension>
-  <extension point="org.eclipse.ui.console.consolePatternMatchListeners">
-    <consolePatternMatchListener
-      class="org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.console.OvertureConsoleTracker"
-      regex="\(file &quot;.*&quot; line .*\)"
-      id="org.overturetool.debug.ui.OvertureConsoleTracker">
-      <enablement>
-        <or>
-          <test
-            property="org.eclipse.debug.ui.processTypeTest"
-            value="tclInterpreter" />
-        </or>
-      </enablement>
-    </consolePatternMatchListener>
-
-  </extension>
+  
   <!--extension
     point="org.eclipse.debug.ui.launchConfigurationTabGroups">
     <launchConfigurationTabGroup
@@ -231,30 +218,32 @@
       class="org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.interpreters.OvertureInterpreterPreferencePage"
       id="org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.interpreters.OvertureInterpreterPreferencePage"
       name="%Interpreters.PreferencePage" />
-    <page
+    <!--page
       category="org.overturetool.eclipse.plugins.editor.ui.overture"
       class="org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.preferences.OvertureDebugPreferencePage"
       id="org.overturetool.preferences.debug"
-      name="%Debug.PreferencePage" />
+      name="%Debug.PreferencePage" />    
+        
     <page
       category="org.overturetool.preferences.debug"
       class="org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.preferences.OvertureDebuggingEnginePreferencePage"
       id="org.overturetool.preferences.debug.engines"
       name="%Engines.PreferencePage" />
+     <page
+      category="org.overturetool.preferences.debug"
+      class="org.eclipse.dltk.debug.ui.preferences.ScriptDetailFormattersPreferencePage:org.overturetool.eclipse.plugins.editor.core.nature"
+      id="org.overturetool.preferences.debug.detailFormatters"
+      name="%DetailFormattersPreferencePage.name" />    
     <page
       category="org.overturetool.eclipse.plugins.editor.ui.overture"
       class="org.overturetool.eclipse.plugins.debug.ui.internal.ui.preferences.OvertureConsolePreferences"
       id="org.overturetool.console.ui.internal.preferences.OvertureConsolePreferences"
-      name="%Console.PreferencePage" />
-    <page
-      category="org.overturetool.preferences.debug"
-      class="org.eclipse.dltk.debug.ui.preferences.ScriptDetailFormattersPreferencePage:org.overturetool.eclipse.plugins.editor.core.nature"
-      id="org.overturetool.preferences.debug.detailFormatters"
-      name="%DetailFormattersPreferencePage.name" />       
+      name="%Console.PreferencePage" /-->
+       
   </extension>
 
-  <extension point="org.eclipse.ui.propertyPages">
-    <page
+  <!--extension point="org.eclipse.ui.propertyPages">
+    <page    
       class="org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.preferences.OvertureDebugPreferencePage"
       category="org.overturetool.propertyPage"
       id="org.overturetool.propertyPage.debug"
@@ -276,7 +265,7 @@
         </adapt>         
       </enabledWhen>
     </page> 
-  </extension>   
+  </extension-->   
 
   <extension point="org.eclipse.ui.editorActions">
     <editorContribution
@@ -292,24 +281,6 @@
 
 
     </editorContribution>
-  </extension>
-  <extension point="org.eclipse.ui.console.consoleFactories">
-    <consoleFactory
-      class="org.overturetool.eclipse.plugins.debug.ui.internal.console.ui.OvertureConsoleFactory"
-      label="%OvertureConsole.Console" />
-  </extension>
-
-  <extension point="org.eclipse.dltk.console.ui.scriptConsole">
-    <scriptConsole
-      class="org.overturetool.eclipse.plugins.debug.ui.internal.console.ui.OvertureConsoleFactory"
-      natureID="org.overturetool.eclipse.plugins.editor.core.nature" />
-  </extension>
-  <extension point="org.eclipse.dltk.ui.buildpathContainerPage">
-    <buildpathContainerPath
-      class="org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.interpreters.OvertureInterpreterContainerWizardPage"
-      id="org.overturetool.eclipse.plugins.editor.launching.INTERPRETER_CONTAINER"
-      name="overture Interpreter Libraries"
-      nature="org.overturetool.eclipse.plugins.editor.core.nature" />
   </extension>
   <extension point="org.eclipse.ui.perspectiveExtensions">
     <perspectiveExtension
@@ -335,15 +306,6 @@
     <modelContextBinding
       contextId="org.eclipse.dltk.debug.ui.debugging"
       debugModelId="org.overturetool.eclipse.plugin.debug.OvertureDebugModel" />
-  </extension>
-
-  <extension point="org.eclipse.core.runtime.adapters">
-    <factory
-      adaptableType="org.overturetool.eclipse.plugins.editor.internal.ui.editor.OvertureEditor"
-      class="org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.OvertureEditorDebugAdapterFactory">
-      <adapter type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget" />
-      <adapter type="org.eclipse.debug.ui.actions.IRunToLineTarget" />
-    </factory>
   </extension>
 
   <extension point="org.eclipse.ui.commands">
@@ -402,12 +364,6 @@
     <handler
       commandId="org.overturetool.debug.ui.commands.showPreferences"
       class="org.eclipse.dltk.debug.ui.handlers.VariablesViewOptionsHandler:org.overturetool.eclipse.plugins.editor.core.nature" />
-  </extension>
-
-  <extension point="org.eclipse.dltk.debug.ui.language">
-    <language
-      class="org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.OvertureDebugUILanguageToolkit"
-      nature="org.overturetool.eclipse.plugins.editor.core.nature"/>
   </extension>
 </plugin>
 
