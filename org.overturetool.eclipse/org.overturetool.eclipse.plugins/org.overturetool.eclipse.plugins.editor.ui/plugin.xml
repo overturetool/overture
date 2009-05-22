@@ -3,7 +3,47 @@
 <plugin>
    <extension-point id="org.overturetool.eclipse.plugins.editor.ui.scriptcolor.provider" 
    					name="Overture Color Provider" 
-   					schema="schema/org.overturetool.eclipse.plugins.editor.ui.scriptcolor.provider.exsd"/>
+   					schema="schema/org.overturetool.eclipse.plugins.editor.ui.scriptcolor.provider.exsd"/>   
+   <extension point="org.eclipse.core.runtime.preferences">
+        <initializer class="org.overturetool.eclipse.plugins.editor.internal.ui.OvertureUIPreferenceInitializer"/>
+    </extension>
+   <extension point="org.eclipse.core.filebuffers.documentSetup">
+   	 	id="org.overturetool.eclipse.plugins.editor.ui.editor.DocumentSetupParticipant"
+      	name="%documentSetupParticipantName"
+      	
+      		<participant extensions="vpp, tex, vdm" 
+			class="org.overturetool.eclipse.plugins.editor.internal.ui.editor.OvertureDocumentSetupParticipant">
+   		</participant>
+	</extension>       
+    <!--extension point="org.eclipse.search.searchPages">
+      <page
+            canSearchEnclosingProjects="true"
+            class="org.overturetool.eclipse.plugins.editor.internal.ui.search.OvertureSearchPage"
+            enabled="true"
+            extensions="vpp, tex, vdm"
+            icon="/icons/oml16.png"
+            id="org.overturetool.eclipse.plugins.editor.ui.search.OvertureSearchPage"
+            label="%DLTKSearchPage.label"
+            showScopeSection="true"
+            sizeHint="460,160">
+      </page>      
+   </extension--> 
+	<extension
+		point="org.eclipse.dltk.ui.scriptCompletionProposalComputer"
+		id="OvertureTypeCompletionProposalComputer">
+		<scriptCompletionProposalComputer 
+			class="org.overturetool.eclipse.plugins.editor.internal.ui.text.completion.OvertureTypeCompletionProposalComputer"
+			categoryId="org.eclipse.dltk.ui.scriptTypeProposalCategory"
+			toolkitId="org.overturetool.eclipse.plugins.editor.core.nature">
+			<partition type="__dftl_partition_content_type"/>
+		</scriptCompletionProposalComputer>		
+	</extension>
+	
+	 <extension point="org.eclipse.dltk.ui.language">
+     <language
+          class="org.overturetool.eclipse.plugins.editor.internal.ui.OvertureUILanguageToolkit"
+          nature="org.overturetool.eclipse.plugins.editor.core.nature"/>
+     </extension>
 
   <extension point="org.eclipse.ui.editors">
       <editor
@@ -24,29 +64,13 @@
    *
    * org.eclipse.core.runtime.preferences
    *
-   -->   
-   <extension point="org.eclipse.core.runtime.preferences">
-        <initializer class="org.overturetool.eclipse.plugins.editor.internal.ui.OvertureUIPreferenceInitializer"/>
-    </extension>
+   -->
    <!--
    *
    * org.eclipse.search.searchPages
    *
-   -->       
-    <extension point="org.eclipse.search.searchPages">
-      <page
-            canSearchEnclosingProjects="true"
-            class="org.overturetool.eclipse.plugins.editor.internal.ui.search.OvertureSearchPage"
-            enabled="true"
-            extensions="vpp, tex, vdm"
-            icon="/icons/oml16.png"
-            id="org.overturetool.eclipse.plugins.editor.ui.search.OvertureSearchPage"
-            label="%DLTKSearchPage.label"
-            showScopeSection="true"
-            sizeHint="460,160">
-      </page>      
-   </extension>
-   
+  -->
+    
    
    
    <!--
@@ -208,24 +232,16 @@
     * org.eclipse.core.filebuffers.documentSetup
     *
     -->
-   <extension
-   	 	id="org.overturetool.eclipse.plugins.editor.ui.editor.DocumentSetupParticipant"
-      	name="%documentSetupParticipantName"
-      	point="org.eclipse.core.filebuffers.documentSetup">
-      		<participant extensions="vpp, tex, vdm" 
-			class="org.overturetool.eclipse.plugins.editor.internal.ui.editor.OvertureDocumentSetupParticipant">
-   		</participant>
-	</extension>
-	<extension
+	<!--extension
        point="org.eclipse.ui.bindings">
-       <!-- <key
+       <key
             sequence="M1+M2+/"
             contextId="org.overturetool.eclipse.plugins.editor.ui.overtureEditorScope"
             commandId="org.eclipse.dltk.ui.edit.text.script.add.block.comment"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
             
-      -->
-      <!-- free this on MAC, see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=113981 -->
+      
+      <- - free this on MAC, see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=113981 - ->
       <key
             platform="carbon"
             sequence="M1+M2+/"
@@ -248,7 +264,7 @@
             contextId="org.overturetool.eclipse.plugins.editor.ui.overtureEditorScope"
             commandId="org.overturetool.eclipse.plugins.editor.ui.edit.text.script.format"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-      <!-- alternative for some gtk input modes -->
+     
       <key
             platform="gtk"
             sequence="ESC CTRL+F"
@@ -260,7 +276,7 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+M2+M">
       </key>                   
- 	</extension>
+ 	</extension -->
  	
     <!--
     * key shortcuts
@@ -459,23 +475,7 @@
       </context>
   </extension>
 
-<!-- Code completion --> 
-	<extension
-		point="org.eclipse.dltk.ui.scriptCompletionProposalComputer"
-		id="OvertureTypeCompletionProposalComputer">
-		<scriptCompletionProposalComputer 
-			class="org.overturetool.eclipse.plugins.editor.internal.ui.text.completion.OvertureTypeCompletionProposalComputer"
-			categoryId="org.eclipse.dltk.ui.scriptTypeProposalCategory"
-			toolkitId="org.overturetool.eclipse.plugins.editor.core.nature">
-			<partition type="__dftl_partition_content_type"/>
-		</scriptCompletionProposalComputer>		
-	</extension>
-	
-	 <extension point="org.eclipse.dltk.ui.language">
-     <language
-          class="org.overturetool.eclipse.plugins.editor.internal.ui.OvertureUILanguageToolkit"
-          nature="org.overturetool.eclipse.plugins.editor.core.nature"/>
-     </extension>
+<!-- Code completion -->
   <!--
   <extension point="org.eclipse.dltk.ui.scriptDocumentationProviders">
       <provider
@@ -487,25 +487,21 @@
   -->
   
   <!--TEMPLATE...  --> 
+   <!--
   <extension point="org.eclipse.ui.editors.templates">
     <contextType
           class="org.overturetool.eclipse.plugins.editor.internal.ui.templates.OvertureUniversalTemplateContextType"
           id="overtureUniversalTemplateContextType"
           name="%OvertureTemplateContextName">
     </contextType>
-      <!-- TODO --> 
+      
     <include
           file="templates/templates.xml"
           translations="templates/templates.properties">
     </include>
  </extension>
+ TODO --> 
  
- 
- 
- 
- <extension
-         point="org.eclipse.ui.actionSetPartAssociations">
- </extension> 
  
  <extension point="org.eclipse.ui.actionSetPartAssociations">
       <actionSetPartAssociation targetID="org.overturetool.eclipse.plugins.editor.ui.CodingActionSet">
