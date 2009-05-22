@@ -28,8 +28,17 @@ public class VDMJBuilder extends Builder {
 		}
 		ExitStatus parseStatus = vdmpp.parse(fileList);
 		clearMarkers();
-		
-		
+		if (parseStatus == ExitStatus.EXIT_ERRORS){
+			for (VDMError error : vdmpp.getParseErrors()) {
+				this.addMarker(
+						error.location.file.getAbsolutePath(),
+						error.message,
+						error.location.startLine,
+						IMarker.SEVERITY_ERROR,
+						error.location.startPos,
+						error.location.endPos);
+			}
+		}
 		ExitStatus typeCheckStatus = null;
 		if (parseStatus == ExitStatus.EXIT_OK)
 		{
