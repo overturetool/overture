@@ -23,12 +23,12 @@
 
 package org.overturetool.vdmj.lex;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.Stack;
 
@@ -85,14 +85,33 @@ public class BacktrackInputReader extends Reader
 	 * interpreter to parse expressions typed in.
 	 *
 	 * @param expression
-	 * @throws UnsupportedEncodingException
-	 * @throws IOException
 	 */
 
 	public BacktrackInputReader(String expression)
 	{
-		data = expression.toCharArray();
-		max = expression.length();
+    	try
+        {
+    		data = new char[expression.length() + 1];
+
+	        ByteArrayInputStream is =
+	        	new ByteArrayInputStream(expression.getBytes());
+	        
+	        InputStreamReader isr =
+	        	new LatexStreamReader(is, Charset.defaultCharset().name());
+	        
+	        max = isr.read(data);
+	        pos = 0;
+	        
+	        isr.close();
+	        is.close();
+        }
+        catch (IOException e)
+        {
+	        // This can never really happen...
+        }
+
+		// data = expression.toCharArray();
+		// max = expression.length();
 	}
 
 	/**
