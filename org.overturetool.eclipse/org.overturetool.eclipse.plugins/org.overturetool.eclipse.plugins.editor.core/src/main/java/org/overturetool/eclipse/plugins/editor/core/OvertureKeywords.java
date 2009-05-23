@@ -32,7 +32,7 @@ public class OvertureKeywords {
 		  "variables", "instance", "measure", "traces", 
 		  //TODO multiple hack.. :D
 		  "subclass", "specified", "yet", "all", "instance", 
-		  "variables", "set", "responsibility", "be", "st", "seq"
+		  "variables", "set", "responsibility", "be", "st", "seq", "seq1"
 		  };
 	  //TODO init VDM-SL
 	  
