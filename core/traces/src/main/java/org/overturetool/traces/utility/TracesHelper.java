@@ -407,10 +407,16 @@ public class TracesHelper {
 		ArrayList<IOmlSpecifications> specs = new ArrayList<IOmlSpecifications>();
 		// HashMap<String,String> fileClassMap = new HashMap<String, String>();
 		for (File file : files) {
+			System.out.println("Removing tex from vpp file:"+file.getName());
 			String data = ClassExstractorFromTexFiles.exstractAsString(file.getAbsolutePath());
 
 			OvertureParser parser = new OvertureParser(data);
 			parser.parseDocument();
+			System.out.println("Parse done file:"+file.getName());
+			if(parser.errors>0)
+			{
+				System.out.println("Parse error in trace: File="+ file.getName());
+			}
 			specs.add(parser.astDocument.getSpecifications());
 			for (Object c : parser.astDocument.getSpecifications().getClassList()) {
 				IOmlClass cl = (IOmlClass) c;

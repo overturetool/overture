@@ -127,9 +127,13 @@ public class ClassExstractorFromTexFiles
 			String currentClass = "";
 			Boolean enabled = false;
 			Boolean texTagsFound= false;
+			Boolean fileContainsTex=false;
 			while ((inLine = inputStream.readLine()) != null)
 			{
-				if (inLine.trim().startsWith(CLASS_START))
+				if(inLine.trim().startsWith("\\") )//&& (!inLine.trim().startsWith(VDM_START) ||!inLine.trim().startsWith(VDM_END)) )
+					fileContainsTex=true;
+				
+				if (inLine.trim().startsWith(CLASS_START) && ((fileContainsTex && texTagsFound)||(!fileContainsTex && !texTagsFound)))
 				{
 					String classString = inLine.trim().substring(CLASS_START.length()).trim();
 					int indexOfInh = classString.indexOf(':');
@@ -146,19 +150,21 @@ public class ClassExstractorFromTexFiles
 						currentClass = classString;
 					
 					enabled = true;
-					texTagsFound= true;
+					
 					//continue;
 				}
 				else if (inLine.trim().startsWith(CLASS_END+currentClass))
 				{
 					outputStream.append("\n"+inLine);
 					enabled = false;
+					texTagsFound= false;
 					continue;
 					
 				}
 				if (inLine.trim().startsWith(VDM_START))
 				{
 				    enabled = true;
+				    texTagsFound= true;
 				    outputStream.append("\n"+"");
 				    continue;
 				    
