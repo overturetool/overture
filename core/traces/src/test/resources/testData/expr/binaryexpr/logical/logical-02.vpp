@@ -39,7 +39,7 @@ instance variables
 traces
 
   PushBeforePop : s.Reset(); let x42 = if (true => false) and nil in set 
-                                          {7,'c',<Q>,nil,mk_token(8),"hi",8.7} 
+                                          {7,'c',<Q>,nil,mk_token(8),-7,8.7} 
                                        then 78 - 65 div 2
                                        else 66 + 11
                              in

@@ -40,7 +40,7 @@ instance variables
 traces
 
   PushBeforePop : s.Reset(); let x in set t
-                             in s.Push(x)){1,3}; 
+                             in s.Push(x){1,3}; 
                   s.Pop(){1,3}
  
 end UseStack

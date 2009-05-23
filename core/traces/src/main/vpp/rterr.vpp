@@ -26,16 +26,21 @@ types
     line : nat
     col  : nat
     mes  : seq of char;  
+
+  public WarningMsg ::
+    line : nat
+    col  : nat
+    mes  : seq of char;  
     
 instance variables
   errmsgs : map DEF`Identifier to map DEF`Identifier to set of ErrMsg := {|->};
   curcl : DEF`Identifier := "";
   curtr : DEF`Identifier := "";
-
+  internals : seq of (ErrMsg | WarningMsg) := [];
 
 operations
 
- public ReportError : [IOmlExpression | IOmlBind] * ERR ==> ()
+public ReportError : [IOmlExpression | IOmlBind] * ERR ==> ()
 ReportError(expr,errmsg) ==
   if expr = nil
   then 
@@ -45,12 +50,24 @@ ReportError(expr,errmsg) ==
            col  = node.getColumn()
        in
          AddErrMsg(curcl,curtr,line,col,errmsg);
-  
+ 
+public 
+ReportInternalError : [IOmlExpression | IOmlBind | IOmlPattern] * ERR * bool ==> ()
+ReportInternalError(expr,errmsg,err) ==
+  if expr = nil
+  then internals := internals ^ [mk_ErrMsg(1,1,errmsg)]
+  else let node : IOmlNode = expr,
+           line = node.getLine(),
+           col  = node.getColumn()
+       in
+         if err
+         then internals := internals ^ [mk_ErrMsg(line,col,errmsg)]
+         else internals := internals ^ [mk_WarningMsg(line,col,errmsg)];
 
 public  AddErrMsg: DEF`Identifier * DEF`Identifier * nat * nat * ERR ==> ()
 AddErrMsg(clnm, trnm,line, col,errmsg) ==
   if clnm in set dom errmsgs
-   then errmsgs(clnm)(trnm) := (if trnm in set dom errmsgs(clnm)
+  then errmsgs(clnm)(trnm) := (if trnm in set dom errmsgs(clnm)
                                then errmsgs(clnm)(trnm) 
                                else {}) union {mk_ErrMsg(line,col,errmsg)}
   else errmsgs := errmsgs ++ {clnm |-> {trnm |-> {mk_ErrMsg(line,col,errmsg)}
@@ -190,7 +207,7 @@ LIB_NOT_DEFINED = "160: couldn't open library: ";
 LIB_SYMBOL_NOT_DEFINED = "161: token not defined in library";
 LIB_ARGUMENT_WRONG_NUMBER = "162: actual number of argument didn't match the number the extern function expected";
 LIB_NOT_DECLARED = "163: Not declared in dl module";
-INTERNAL_ERROR = "164: Internal error, please report";
+public INTERNAL_ERROR = "164: Internal error, please report";
 LIB_TYPE_ERROR = "165: Incompatible type in dl module call";
 TYPE_NOT_SUPPORTED = "166: Type is not yet supported";
 LIB_CLOSE_ERR = "167: Couldn't close dynamic library";
@@ -286,6 +303,7 @@ STATIC_IV_NO_VALUE = "283: Static instance variable must be initialised";
 NOOVERLOADED = "285: No overloaded operation or function with this parameter list is in scope";
 NOOBJECT = "286: No object is present";
 public NONEMPTY_SEQ_EXPECTED = "287: A non-empty sequence was expected";
+public ONLY_ID_SUPPORTED = "288: Only value definitions using identifiers are supported";
 end RTERR
 \end{vdm_al}
 

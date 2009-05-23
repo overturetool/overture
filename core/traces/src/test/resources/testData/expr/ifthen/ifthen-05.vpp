@@ -39,7 +39,7 @@ instance variables
 traces
 
   PushBeforePop : s.Reset(); (let x:nat = if true and 5 in set 
-                                             {7,'c',<Q>,mk_token(8),"hi",8.7} 
+                                             {7,'c',<Q>,mk_token(8),8.7} 
                                           then 78 - 65 div 2
                                           elseif hd conc [[3,5],[4]] = hd tl [9,3] 
                                                  => not ([5](if true 

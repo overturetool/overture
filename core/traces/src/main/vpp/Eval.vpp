@@ -124,7 +124,11 @@ evaluateSeqComprehension(expr,cxt) ==
                                in
                                  evaluateExpression(elem,cxt2)
                              | i in set n_s  
-                             ])
+                             & pred = nil or
+                               let cxt2 = cxt ++ {id |-> mk_SEM`NUM(i)},
+                                   p_val = evaluateExpression(pred,cxt2)
+                               in
+                                 p_val = mk_SEM`BOOL(true)])
     else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
           return mk_SEM`SEQ([]));
 \end{vdm_al}

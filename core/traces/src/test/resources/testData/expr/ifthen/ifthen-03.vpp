@@ -39,9 +39,9 @@ instance variables
 traces
 
   PushBeforePop : s.Reset(); s.Push(if true and nil in set 
-                                       {7,'c',<Q>,nil,mk_token(8),"hi",8.7} 
+                                       {7,'c',<Q>,nil,mk_token(8),8.7} 
                                     then 78 - 65 div 2
-                                    elseif "monkey" in set {"hi", <RR>,88,7}
+                                    elseif 99.8 in set { <RR>,88,7}
                                     then 77 mod 2
                                     else 66 + 11){1,2}; 
                   s.Pop()*

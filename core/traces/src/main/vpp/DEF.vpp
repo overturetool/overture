@@ -65,7 +65,8 @@ ExpandValueDef(body) ==
      in
        if isofclass(OmlPatternIdentifier,pat)
        then v_m := v_m ++ MatchPatId2Expr(pat,expr)
-       else error; -- proper pattern matching is NOT supported now
+       else errorLog.ReportInternalError(pat,RTERR`ONLY_ID_SUPPORTED,false); 
+            -- proper pattern matching is NOT supported now
     return v_m); 
 
 ExpandInstVarDef: IOmlInstanceVariableDefinitions ==> ValueMap
@@ -76,9 +77,12 @@ ExpandInstVarDef(body) ==
      then let instdef2 : OmlInstanceVariable = instdef,
               idef = instdef2.getAssignmentDefinition(),
               id   = idef.getIdentifier(),
-              expr = idef.getExpression()
+              expr = if idef.hasExpression()
+                     then idef.getExpression()
+                     else nil
           in
-            v_m := v_m ++ {id |-> expr};
+            if expr <> nil
+            then v_m := v_m ++ {id |-> expr};
    return v_m); 
 
 ExpandRecTypeDefs: Identifier * seq of IOmlDefinitionBlock ==>
@@ -113,7 +117,7 @@ ExpandComplexTypeDef(clnm,shape) ==
 
 public LookUp: Identifier * Identifier ==> IOmlExpression
 LookUp(clnm,defnm) ==
-  if clnm in set dom valm
+ (if clnm in set dom valm
   then let vm = valm(clnm)
        in
          if defnm in set dom vm
@@ -124,9 +128,10 @@ LookUp(clnm,defnm) ==
                (for all sup in set supers do
                   if sup in set dom valm and defnm in set dom (valm(sup))
                   then return valm(sup)(defnm);
-                error)
-         else error
-  else error;
+                errorLog.ReportInternalError(nil,RTERR`INTERNAL_ERROR,true))
+         else errorLog.ReportInternalError(nil,RTERR`INTERNAL_ERROR,true)
+  else errorLog.ReportInternalError(nil,RTERR`INTERNAL_ERROR,true);
+  return new OmlName(nil,"Dummy"));
 
 public LookUpRecSel: SEM`REC * Identifier * IOmlFieldSelect ==> SEM`VAL
 LookUpRecSel(recval,selid,expr) ==
