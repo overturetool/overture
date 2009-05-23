@@ -49,7 +49,9 @@ ExpandValueMap(body_l) ==
   (dcl v_m : ValueMap := {|->};
    for body in body_l do
     if isofclass(OmlValueDefinitions,body)
-    then v_m := v_m ++ ExpandValueDef(body);
+    then v_m := v_m ++ ExpandValueDef(body)
+    elseif isofclass(OmlInstanceVariableDefinitions,body)
+    then v_m := v_m ++ ExpandInstVarDef(body);
    return v_m
   );
   
@@ -65,6 +67,19 @@ ExpandValueDef(body) ==
        then v_m := v_m ++ MatchPatId2Expr(pat,expr)
        else error; -- proper pattern matching is NOT supported now
     return v_m); 
+
+ExpandInstVarDef: IOmlInstanceVariableDefinitions ==> ValueMap
+ExpandInstVarDef(body) ==
+  (dcl v_m : ValueMap := {|->};
+   for instdef in body.getVariablesList() do
+     if not isofclass(OmlInstanceVariableInvariant,instdef)
+     then let instdef2 : OmlInstanceVariable = instdef,
+              idef = instdef2.getAssignmentDefinition(),
+              id   = idef.getIdentifier(),
+              expr = idef.getExpression()
+          in
+            v_m := v_m ++ {id |-> expr};
+   return v_m); 
 
 ExpandRecTypeDefs: Identifier * seq of IOmlDefinitionBlock ==>
                    map Name to map Identifier to nat1
