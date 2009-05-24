@@ -28,7 +28,7 @@ public class OvertureKeywords {
 		  "samebaseclass", "sameclass", "start", "startlist", "class", "end",
 		  "types", "functions", "operations", "values", "from", "mk_",
 		  "post", "pre", "inv", "init", "is",
-		  "for", "all", "match", "mutex", "to", "in", "of",
+		  "for", "all", "match", "mutex", "in", "of",
 		  "variables", "instance", "measure", "traces", 
 		  //TODO multiple hack.. :D
 		  "subclass", "specified", "yet", "all", "instance", 
