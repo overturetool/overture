@@ -146,7 +146,7 @@ public class OvertureCodeScanner extends AbstractScriptScanner {
 		}
 		
 		// operator
-		String[] operators = OvertureKeywords.getTypes();
+		String[] operators = OvertureKeywords.getOperators();
 		for (int i = 0; i < operators.length; i++) {
 			wordRule.addWord(operators[i], operator);
 		}
