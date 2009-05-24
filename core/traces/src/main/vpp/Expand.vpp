@@ -219,7 +219,7 @@ ExpandTraceBinds(bind_l,cxt_l) ==
                  then ExtractLetBinding(bind,c_l)
                  else ExtractLetBeBinding(bind,c_l)
      in
-       c_l := eval.CombineContexts(c_l,c_l2); 
+       c_l := c_l2; 
 
    return c_l);
 
@@ -449,7 +449,8 @@ ExtractLetBeSetBinding(bind,best,cxt_l) ==
   in
     return conc [ let val = eval.evaluateExpression(expr,cxt_l(i)),
                       c_l_l = if is_SEM`SET(val)
-                              then let l = {[eval.PatternMatch(p_l(i),v) 
+                              then let l = {[cxt_l(i)]^
+                                            [eval.PatternMatch(p_l(i),v) 
                                             | i in set inds p_l]
                                            | v in set val.v}
                                    in
