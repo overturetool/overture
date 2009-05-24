@@ -38,7 +38,7 @@ public class OverturePartitionScanner extends RuleBasedPartitionScanner {
 
 		//	rules.add(new EndOfLineRule("//", comment)); //$NON-NLS-1$		
 		// Add rule for character constants.
-		rules.add(new SingleLineRule("'", "'", string, '\\'));
+		//		rules.add(new SingleLineRule("'", "'", string, '\\'));
 		rules.add(new MultiLineRule("\"", "\"", string, '\\'));
 
 		IPredicateRule[] result = new IPredicateRule[rules.size()];
