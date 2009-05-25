@@ -18,14 +18,10 @@ import org.overturetool.ast.itf.IOmlClass;
 import org.overturetool.ast.itf.IOmlNamedTrace;
 import org.overturetool.ast.itf.IOmlSpecifications;
 import org.overturetool.parser.imp.OvertureParser;
-import org.overturetool.traces.Expand;
-import org.overturetool.traces.Filtering;
-import org.overturetool.traces.RTERR;
-import org.overturetool.traces.ToolBox;
-import org.overturetool.traces.Util;
-import org.overturetool.traces.VDMJToolBox;
-import org.overturetool.traces.VDMToolsToolBox;
-import org.overturetool.traces.external_VDMToolsToolBox;
+import org.overturetool.traces.*;
+import org.overturetool.traces.API.Util;
+
+import org.overturetool.traces.toolbox.*;
 @SuppressWarnings("unchecked")
 
 public class TracesHelper {

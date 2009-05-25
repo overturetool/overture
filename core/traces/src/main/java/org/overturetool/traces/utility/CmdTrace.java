@@ -14,10 +14,7 @@ import org.overturetool.parser.imp.OvertureParser;
 import org.overturetool.traces.Expand;
 import org.overturetool.traces.Filtering;
 import org.overturetool.traces.RTERR;
-import org.overturetool.traces.ToolBox;
-import org.overturetool.traces.VDMJToolBox;
-import org.overturetool.traces.VDMToolsToolBox;
-import org.overturetool.traces.external_VDMToolsToolBox;
+import org.overturetool.traces.toolbox.*;
 @SuppressWarnings("unchecked")
 public class CmdTrace {
 	public enum ToolBoxType {
