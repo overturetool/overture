@@ -8,6 +8,7 @@ values
   private nl : seq of char = "";
   
 
+
 instance variables
   public result : seq of char := [];
   private lvl : nat := 0
