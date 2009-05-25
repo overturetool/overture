@@ -6,7 +6,7 @@ import java.util.Hashtable;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import org.overturetool.traces.gui.MainFrame;
+
 import org.overturetool.traces.utility.CmdTrace;
 import org.overturetool.vdmj.types.ParameterType;
 
@@ -36,9 +36,9 @@ public class MainClass {
 				|| args[0].startsWith("/?")) {
 			PrintHelp();
 			return;
-		} else if (args[0].equals("-GUI")) {
-			RunGUI();
-			return;
+//		} else if (args[0].equals("-GUI")) {
+//			RunGUI();
+//			return;
 
 		} else if (par.containsKey("-outputPath") && par.containsKey("-c")
 				&& par.containsKey("-max") && par.containsKey("-toolbox")) {
@@ -75,15 +75,15 @@ public class MainClass {
 		CmdTrace.RunCmd(outputPath, cls, maximum, specFiles, tb, VDMToolsPath);
 	}
 
-	private static void RunGUI() throws Exception {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				MainFrame thisClass = new MainFrame();
-				thisClass.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				thisClass.setVisible(true);
-			}
-		});
-	}
+//	private static void RunGUI() throws Exception {
+//		SwingUtilities.invokeLater(new Runnable() {
+//			public void run() {
+//				MainFrame thisClass = new MainFrame();
+//				thisClass.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//				thisClass.setVisible(true);
+//			}
+//		});
+//	}
 
 	private static String[] SplitInputFiles(String files, String splitter) {
 		if (files.contains(splitter))
