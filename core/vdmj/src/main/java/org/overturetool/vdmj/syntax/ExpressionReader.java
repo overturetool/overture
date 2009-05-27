@@ -1481,7 +1481,7 @@ public class ExpressionReader extends SyntaxReader
 	private LetBeStExpression readLetBeStExpression(LexLocation start)
 		throws ParserException, LexException
 	{
-		Bind bind = getBindReader().readBind();
+		MultipleBind bind = getBindReader().readMultipleBind();
 		Expression stexp = null;
 
 		if (lastToken().is(Token.BE))

@@ -39,7 +39,7 @@ import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.Token;
-import org.overturetool.vdmj.patterns.Bind;
+import org.overturetool.vdmj.patterns.MultipleBind;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternBind;
 import org.overturetool.vdmj.patterns.PatternList;
@@ -860,7 +860,7 @@ public class StatementReader extends SyntaxReader
 	private LetBeStStatement readLetBeStStatement(LexLocation token)
 		throws ParserException, LexException
 	{
-		Bind bind = getBindReader().readBind();
+		MultipleBind bind = getBindReader().readMultipleBind();
 		Expression stexp = null;
 
 		if (lastToken().is(Token.BE))

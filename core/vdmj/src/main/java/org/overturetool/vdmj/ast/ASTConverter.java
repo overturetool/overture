@@ -1026,7 +1026,7 @@ public class ASTConverter
     		else
     		{
     			IOmlTraceLetBeBinding let = (IOmlTraceLetBeBinding)bind;
-    			Bind b = convertBind(let.getBind());
+    			MultipleBind b = convertMultiBind(let.getBind());
     			Expression e = let.hasBest() ? convertExpression(let.getBest()) : null;
     			return new TraceLetBeStBinding(
     				getLocation(let), b, e, convertBindings(bindings, repeat));
@@ -1091,7 +1091,7 @@ public class ASTConverter
 		else if (statement instanceof IOmlLetBeStatement)
 		{
 			IOmlLetBeStatement lbs = (IOmlLetBeStatement)statement;
-			Bind bind = convertBind(lbs.getBind());
+			MultipleBind bind = convertMultiBind(lbs.getBind());
 			Expression best = null;
 
 			if (lbs.hasBest())
@@ -1507,7 +1507,7 @@ public class ASTConverter
 		else if (expression instanceof IOmlLetBeExpression)
 		{
 			IOmlLetBeExpression lbe = (IOmlLetBeExpression)expression;
-			Bind bind = convertBind(lbe.getBind());
+			MultipleBind bind = convertMultiBind(lbe.getBind());
 			Expression best = null;
 
 			if (lbe.hasBest())

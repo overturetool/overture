@@ -59,8 +59,8 @@ import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.messages.LocatedException;
-import org.overturetool.vdmj.patterns.Bind;
 import org.overturetool.vdmj.patterns.IdentifierPattern;
+import org.overturetool.vdmj.patterns.MultipleBind;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.patterns.SetBind;
@@ -1427,7 +1427,7 @@ public class DefinitionReader extends SyntaxReader
 		throws ParserException, LexException
 	{
 		LexToken start = lastToken();
-		Bind bind = getBindReader().readBind();
+		MultipleBind bind = getBindReader().readMultipleBind();
 		Expression stexp = null;
 
 		if (lastToken().is(Token.BE))
