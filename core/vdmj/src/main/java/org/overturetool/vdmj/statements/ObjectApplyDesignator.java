@@ -74,7 +74,7 @@ public class ObjectApplyDesignator extends ObjectDesignator
 
 		for (Expression a: args)
 		{
-			argtypes.add(a.typeCheck(env, null, NameScope.NAMES));
+			argtypes.add(a.typeCheck(env, null, NameScope.NAMESANDSTATE));
 		}
 
 		Type type = object.typeCheck(env, argtypes);
