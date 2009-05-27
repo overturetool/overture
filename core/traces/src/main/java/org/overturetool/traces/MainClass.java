@@ -1,18 +1,23 @@
 package org.overturetool.traces;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 
 import org.overturetool.traces.utility.CmdTrace;
+import org.overturetool.traces.utility.TraceXmlWrapper;
+import org.overturetool.traces.vdmj.TraceInterpreter;
 import org.overturetool.vdmj.types.ParameterType;
 
 public class MainClass {
 	private static String[] paramterTypes = new String[] { "-outputPath", "-c",
-			"-max", "-toolbox", "-VDMToolsPath", "-help" };
+			"-max", "-toolbox", "-VDMToolsPath", "-help","-vdmjOnly" };
 
 	/**
 	 * @param args
@@ -39,6 +44,9 @@ public class MainClass {
 //		} else if (args[0].equals("-GUI")) {
 //			RunGUI();
 //			return;
+			} else if (par.containsKey("-outputPath") && par.containsKey("-vdmjOnly") && par.containsKey("-c") && par.containsKey("-max")) {
+			RunVdmjOnly(par.get("-outputPath"), par.get("-c"), par.get("-max"), files);
+			return;
 
 		} else if (par.containsKey("-outputPath") && par.containsKey("-c")
 				&& par.containsKey("-max") && par.containsKey("-toolbox")) {
@@ -52,6 +60,42 @@ public class MainClass {
 		// PrintHelp();
 		// }
 
+	}
+
+	private static void RunVdmjOnly(String outputPath, String classes,
+			String maxString, String[] files) {
+		// TODO Auto-generated method stub
+		Integer max = Integer.parseInt(maxString);
+		
+		List<String> cls = new ArrayList<String>();
+		for (String c : classes.split(",")) {
+			cls.add(c);
+		}
+		
+		TraceInterpreter ti = new TraceInterpreter();
+		
+		List<File> specFiles = new Vector<File>();
+		
+		for (String file : files) {
+			File f = new File(file);
+			if(f.exists())
+				specFiles.add(f);
+		}
+		
+		try {
+			
+			TraceXmlWrapper txw = new TraceXmlWrapper(outputPath+ File.separatorChar+cls.get(0)+".xml");
+			
+			
+			ti.test(specFiles, cls.get(0),txw);
+			txw.Stop();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
 	}
 
 	private static void RunCmd(String outputPath, String classes, String max,
