@@ -37,7 +37,6 @@ import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.PrivateClassEnvironment;
-import org.overturetool.vdmj.typechecker.ProtectedClassEnvironment;
 import org.overturetool.vdmj.typechecker.PublicClassEnvironment;
 import org.overturetool.vdmj.typechecker.TypeComparator;
 import org.overturetool.vdmj.types.ClassType;
@@ -114,19 +113,15 @@ public class CallObjectStatement extends Statement
 		ClassDefinition self = env.findClassDefinition();
 		Environment classenv = null;
 
-		if (self == classdef)
+		if (self == classdef || self.hasSupertype(classdef.getType()))
 		{
-			// All fields visible
-			classenv = new PrivateClassEnvironment(classdef);
-		}
-		else if (self.hasSupertype(classdef.getType()))
-		{
-			// Protected/public fields visible
-			classenv = new ProtectedClassEnvironment(classdef);
+			// All fields visible. Note that protected fields are inherited
+			// into "locals" so they are effectively private
+			classenv = new PrivateClassEnvironment(self);
 		}
 		else
 		{
-			// Only public fields visible
+			// Only public fields externally visible
 			classenv = new PublicClassEnvironment(classdef);
 		}
 
