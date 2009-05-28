@@ -17,7 +17,7 @@ import org.overturetool.vdmj.types.ParameterType;
 
 public class MainClass {
 	private static String[] paramterTypes = new String[] { "-outputPath", "-c",
-			"-max", "-toolbox", "-VDMToolsPath", "-help","-vdmjOnly" };
+			"-max", "-toolbox", "-VDMToolsPath", "-help","-vdmjOnly" ,"-projectRoot"};
 
 	/**
 	 * @param args
@@ -44,8 +44,14 @@ public class MainClass {
 //		} else if (args[0].equals("-GUI")) {
 //			RunGUI();
 //			return;
-			} else if (par.containsKey("-outputPath") && par.containsKey("-vdmjOnly") && par.containsKey("-c") && par.containsKey("-max")) {
-			RunVdmjOnly(par.get("-outputPath"), par.get("-c"), par.get("-max"), files);
+			}
+		else if (par.containsKey("-outputPath") && par.containsKey("-vdmjOnly") && par.containsKey("-c") && par.containsKey("-max")) 
+		{
+			String projectRoot=null;
+		if(par.containsKey("-projectRoot"))
+			projectRoot = par.get("-projectRoot");
+		
+			RunVdmjOnly(par.get("-outputPath"), par.get("-c"), par.get("-max"), files,projectRoot);
 			return;
 
 		} else if (par.containsKey("-outputPath") && par.containsKey("-c")
@@ -63,7 +69,7 @@ public class MainClass {
 	}
 
 	private static void RunVdmjOnly(String outputPath, String classes,
-			String maxString, String[] files) {
+			String maxString, String[] files,String projectRoot) {
 		// TODO Auto-generated method stub
 		Integer max = Integer.parseInt(maxString);
 		
@@ -82,6 +88,19 @@ public class MainClass {
 				specFiles.add(f);
 		}
 		
+		if(projectRoot!=null)
+		{
+			File projectRootFile = new File(projectRoot);
+			if(projectRootFile.exists())
+				for (File file : GetFiles(projectRootFile)) {
+					if(file.getName().endsWith(".vpp"))
+						specFiles.add(file);
+				}
+		}
+		
+		
+		
+		
 		try {
 			
 			TraceXmlWrapper txw = new TraceXmlWrapper(outputPath+ File.separatorChar+cls.get(0)+".xml");
@@ -97,6 +116,27 @@ public class MainClass {
 		
 		
 	}
+	
+	private static ArrayList<File> GetFiles(File file) {
+		ArrayList<File> files = new ArrayList<File>();
+		// if(file.getName().contains(".svn"))
+		// return files;
+		if (file.isDirectory())
+			for (File currentFile : file.listFiles()) {
+				if (currentFile.isDirectory()) {
+					for (File file2 : GetFiles(currentFile)) {
+						files.add(file2);
+					}
+
+					int ki = 0;
+				} else if (currentFile.isFile())
+					files.add(currentFile);
+			}
+		else
+			files.add(file);
+		return files;
+	}
+
 
 	private static void RunCmd(String outputPath, String classes, String max,
 			String[] files, String toolbox, String VDMToolsPath) throws Exception {
