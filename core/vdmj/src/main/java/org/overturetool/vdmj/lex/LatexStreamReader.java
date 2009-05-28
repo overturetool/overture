@@ -76,7 +76,7 @@ public class LatexStreamReader extends InputStreamReader
 				String label = line.substring(6).trim();
 				ifstack.push(supress);
 
-				if (!label.equals(Settings.dialect.name()))
+				if (!supress && !label.equals(Settings.dialect.name()))
 				{
 					supress = true;
 				}
@@ -85,8 +85,11 @@ public class LatexStreamReader extends InputStreamReader
 			}
 			else if (line.startsWith("#else"))
 			{
-				supress = !supress;
-				line = "";
+				if (!ifstack.peek())
+				{
+					supress = !supress;
+					line = "";
+				}
 			}
 			else if (line.startsWith("#endif"))
 			{
@@ -96,6 +99,7 @@ public class LatexStreamReader extends InputStreamReader
 
 			if (!supress)
 			{
+				System.err.println(line);
 				line.getChars(0, line.length(), array, pos);
 				pos += line.length();
 			}
