@@ -28,6 +28,7 @@ import org.overturetool.traces.*;
 import org.overturetool.traces.io.*;
 import org.overturetool.traces.toolbox.*;
 import jp.co.csk.vdm.toolbox.VDM.quotes.*;
+
 @SuppressWarnings("unused")
 // ***** VDMTOOLS END Name=imports
 
@@ -85,7 +86,7 @@ public class IOProxy {
     {
 
       Boolean tmpVal_6 = null;
-      tmpVal_6 = (Boolean) file.fwriteval(f, s, new quotes.start());
+      tmpVal_6 = (Boolean) file.fwriteval(f, s, new start());
     }
   }
 // ***** VDMTOOLS END Name=overwrite#2|String|String
