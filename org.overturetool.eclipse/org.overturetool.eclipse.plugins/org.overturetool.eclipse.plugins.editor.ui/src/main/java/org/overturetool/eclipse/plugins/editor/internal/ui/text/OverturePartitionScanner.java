@@ -33,13 +33,13 @@ public class OverturePartitionScanner extends RuleBasedPartitionScanner {
 		IToken doc = new Token(IOverturePartitions.OVERTURE_DOC);
 
 		List<IPredicateRule> rules = new ArrayList<IPredicateRule>();
+		rules.add(new MultiLineRule("\"", "\"", string, '\\'));
 		rules.add(new MultiLineRule("/**", "*/", doc)); //$NON-NLS-1$ //$NON-NLS-2$
 		rules.add(new MultiLineRule("/*", "*/", comment)); //$NON-NLS-1$ //$NON-NLS-2$
 
 		//	rules.add(new EndOfLineRule("//", comment)); //$NON-NLS-1$		
 		// Add rule for character constants.
 		//		rules.add(new SingleLineRule("'", "'", string, '\\'));
-		rules.add(new MultiLineRule("\"", "\"", string, '\\'));
 
 		IPredicateRule[] result = new IPredicateRule[rules.size()];
 		rules.toArray(result);
