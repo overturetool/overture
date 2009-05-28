@@ -27,6 +27,7 @@ import org.overturetool.traces.astspec.oml2vpp.*;
 import org.overturetool.traces.*;
 import org.overturetool.traces.io.*;
 import org.overturetool.traces.toolbox.*;
+import jp.co.csk.vdm.toolbox.VDM.quotes.*;
 @SuppressWarnings("unused")
 // ***** VDMTOOLS END Name=imports
 
@@ -71,7 +72,7 @@ public class IOProxy {
     {
 
       Boolean tmpVal_6 = null;
-      tmpVal_6 = (Boolean) file.fwriteval(f, s, new quotes.append());
+      tmpVal_6 = (Boolean) file.fwriteval(f, s, new append());
     }
   }
 // ***** VDMTOOLS END Name=append#2|String|String
