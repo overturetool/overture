@@ -216,7 +216,7 @@ public class OvertureMainLaunchConfigurationTab extends MainLaunchConfigurationT
 				getShell(), new WorkbenchLabelProvider(),
 				new WorkbenchContentProvider());
 		dialog
-				.setTitle(DLTKLaunchConfigurationsMessages.mainTab_searchButton_title);
+				.setTitle("Class and operation/function selection");
 		dialog
 				.setMessage(DLTKLaunchConfigurationsMessages.mainTab_searchButton_message);
 		IScriptProject proj = getProject();
