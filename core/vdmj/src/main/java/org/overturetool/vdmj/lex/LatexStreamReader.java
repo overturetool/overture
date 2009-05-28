@@ -99,7 +99,6 @@ public class LatexStreamReader extends InputStreamReader
 
 			if (!supress)
 			{
-				System.err.println(line);
 				line.getChars(0, line.length(), array, pos);
 				pos += line.length();
 			}
