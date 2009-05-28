@@ -22,6 +22,7 @@ import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.types.FunctionType;
 import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.Type;
 
@@ -148,7 +149,6 @@ public class OvertureASTTreePopulator {
 									converter.convert(def.location.endLine, def.location.endPos -1),
 			                        def.accessSpecifier);
 							
-			                classDeclaration.getStatements().add(methodDeclaration);
 			                if (def.getType() instanceof OperationType)
 			                {
 		                		OperationType type = (OperationType) def.getType();
@@ -157,6 +157,15 @@ public class OvertureASTTreePopulator {
 				                    methodDeclaration.addArgument(new Argument(argumentName, 0, null, 0));
 								}
 			                }
+			                if (def.getType() instanceof FunctionType)
+			                {
+			                	FunctionType type = (FunctionType) def.getType();
+		                		for (Type definition : type.parameters) {
+				                	SimpleReference argumentName = new SimpleReference(definition.location.startPos,definition.location.endPos, definition.toString());
+				                    methodDeclaration.addArgument(new Argument(argumentName, 0, null, 0));
+								}
+			                }
+			                classDeclaration.getStatements().add(methodDeclaration);
 						}
 						// InstanceVariable variable:
 						if (def.isInstanceVariable())
