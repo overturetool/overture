@@ -28,6 +28,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.Stack;
+
+import org.overturetool.vdmj.Settings;
 
 /**
  * A class to read LaTeX encoded VDM files.
@@ -35,6 +38,8 @@ import java.io.UnsupportedEncodingException;
 
 public class LatexStreamReader extends InputStreamReader
 {
+	private Stack<Boolean> ifstack = new Stack<Boolean>();
+
 	public LatexStreamReader(InputStream in, String charsetName)
 		throws UnsupportedEncodingException
 	{
@@ -64,6 +69,28 @@ public class LatexStreamReader extends InputStreamReader
 					 line.startsWith("%"))
 			{
 				supress = true;
+				line = "";
+			}
+			else if (line.startsWith("#ifdef"))
+			{
+				String label = line.substring(6).trim();
+				ifstack.push(supress);
+
+				if (!label.equals(Settings.dialect.name()))
+				{
+					supress = true;
+				}
+
+				line = "";
+			}
+			else if (line.startsWith("#else"))
+			{
+				supress = !supress;
+				line = "";
+			}
+			else if (line.startsWith("#endif"))
+			{
+				supress = ifstack.pop();
 				line = "";
 			}
 
