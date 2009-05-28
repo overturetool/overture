@@ -35,7 +35,7 @@ public class OvertureCompletionProposal extends ScriptCompletionProposal {
 	}
 
 	protected boolean isSmartTrigger(char trigger) {
-		if (trigger == '$') {
+		if (trigger == '.') {
 			return true;
 		}
 		return false;
