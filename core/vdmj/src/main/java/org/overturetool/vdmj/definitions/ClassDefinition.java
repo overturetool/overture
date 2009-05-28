@@ -97,9 +97,9 @@ public class ClassDefinition extends Definition
 	public boolean typechecked = false;
 
 	/** The private or protected static values in the class. */
-	private NameValuePairList privateStaticValues = null;
+	private NameValuePairMap privateStaticValues = null;
 	/** The public visible static values in the class. */
-	private NameValuePairList publicStaticValues = null;
+	private NameValuePairMap publicStaticValues = null;
 	/** True if the class' static members are initialized. */
 	private boolean staticInit = false;
 	/** True if the class' static values are initialized. */
@@ -154,8 +154,8 @@ public class ClassDefinition extends Definition
 		this(new LexNameToken("CLASS", "DEFAULT", new LexLocation()),
 			new LexNameList(), new DefinitionList(), false);
 
-		privateStaticValues = new NameValuePairList();
-		publicStaticValues = new NameValuePairList();
+		privateStaticValues = new NameValuePairMap();
+		publicStaticValues = new NameValuePairMap();
 	}
 
 	/**
@@ -610,7 +610,7 @@ public class ClassDefinition extends Definition
 
 	public boolean hasSupertype(Type other)
 	{
-		if (classtype.equals(other))
+		if (getType().equals(other))
 		{
 			return true;
 		}
@@ -937,57 +937,42 @@ public class ClassDefinition extends Definition
 			sdef.setStatics(initCtxt);
 		}
 
-		privateStaticValues = new NameValuePairList();
-		publicStaticValues = new NameValuePairList();
-
-		// We have to operate on the local definitions as well as the
-		// localInheritedDefinitions, as we can inherit statics
-
-		DefinitionList allDefs = new DefinitionList();
-		allDefs.addAll(definitions);
-		allDefs.addAll(localInheritedDefinitions);
+		privateStaticValues = new NameValuePairMap();
+		publicStaticValues = new NameValuePairMap();
 
 		// We initialize function and operation definitions first as these
 		// can be called by variable initializations.
 
-		for (Definition d: allDefs)
+		setStaticDefinitions(definitions, initCtxt);
+		setStaticDefinitions(localInheritedDefinitions, initCtxt);
+	}
+
+	private void setStaticDefinitions(DefinitionList defs, Context initCtxt)
+	{
+		for (Definition d: defs)
 		{
-			if (d.isStatic() && d.isFunctionOrOperation())
+			if ((d.isStatic() && d.isFunctionOrOperation()) ||
+				d.isTypeDefinition())
 			{
 				// Note function and operation values are not updatable.
-
-				NameValuePairList nvl = d.getNamedValues(initCtxt);
-
-				switch (d.accessSpecifier.access)
-				{
-					case PRIVATE:
-					case PROTECTED:
-						privateStaticValues.addAll(nvl);
-						initCtxt.put(nvl);
-						break;
-
-					case PUBLIC:
-						publicStaticValues.addAll(nvl);
-						initCtxt.put(nvl);
-						break;
-				}
-			}
-			else if (d.isTypeDefinition())
-			{
 				// Type invariants are implicitly static, but not updatable
 
-				NameValuePairList nvl = d.getNamedValues(initCtxt);
+				// The context here is just used for free variables, of
+				// which there are none at static func/op creation...
+
+				Context empty = new Context(location, "empty", null);
+				NameValuePairList nvl = d.getNamedValues(empty);
 
 				switch (d.accessSpecifier.access)
 				{
 					case PRIVATE:
 					case PROTECTED:
-						privateStaticValues.addAll(nvl);
+						privateStaticValues.putAllNew(nvl);
 						initCtxt.put(nvl);
 						break;
 
 					case PUBLIC:
-						publicStaticValues.addAll(nvl);
+						publicStaticValues.putAllNew(nvl);
 						initCtxt.put(nvl);
 						break;
 				}
@@ -1009,14 +994,13 @@ public class ClassDefinition extends Definition
 			sdef.setStaticValues(initCtxt);
 		}
 
-		// We have to operate on the local definitions as well as the
-		// localInheritedDefinitions, as we can inherit static values
+		setStaticValues(definitions, initCtxt);
+		setStaticValues(localInheritedDefinitions, initCtxt);
+	}
 
-		DefinitionList allDefs = new DefinitionList();
-		allDefs.addAll(definitions);
-		allDefs.addAll(localInheritedDefinitions);
-
-		for (Definition d: allDefs)
+	private void setStaticValues(DefinitionList defs, Context initCtxt)
+	{
+		for (Definition d: defs)
 		{
 			if (d.isValueDefinition())
 			{
@@ -1028,12 +1012,12 @@ public class ClassDefinition extends Definition
 				{
 					case PRIVATE:
 					case PROTECTED:
-						privateStaticValues.addAll(nvl);
+						privateStaticValues.putAllNew(nvl);
 						initCtxt.put(nvl);
 						break;
 
 					case PUBLIC:
-						publicStaticValues.addAll(nvl);
+						publicStaticValues.putAllNew(nvl);
 						initCtxt.put(nvl);
 						break;
 				}
@@ -1049,17 +1033,45 @@ public class ClassDefinition extends Definition
 				{
 					case PRIVATE:
 					case PROTECTED:
-						privateStaticValues.addAll(nvl);
+						privateStaticValues.putAllNew(nvl);
 						initCtxt.put(nvl);
 						break;
 
 					case PUBLIC:
-						publicStaticValues.addAll(nvl);
+						publicStaticValues.putAllNew(nvl);
 						initCtxt.put(nvl);
 						break;
 				}
 			}
 		}
+	}
+
+	public Value getStatic(LexNameToken sought)
+	{
+		LexNameToken local = (sought.explicit) ? sought :
+								sought.getModifiedName(name.name);
+
+		Value v = privateStaticValues.get(local);
+
+		if (v == null)
+		{
+			v = publicStaticValues.get(local);
+
+			if (v == null)
+			{
+				for (ClassDefinition sdef: superdefs)
+				{
+					v = sdef.getStatic(local);
+
+					if (v != null)
+					{
+						break;
+					}
+				}
+			}
+		}
+
+		return v;
 	}
 
 	/**
@@ -1279,17 +1291,6 @@ public class ClassDefinition extends Definition
     			}
     		}
 		}
-	}
-
-
-	public NameValuePairList getPublicStaticValues()
-	{
-		return publicStaticValues;
-	}
-
-	public NameValuePairList getPrivateStaticValues()
-	{
-		return privateStaticValues;
 	}
 
 	private boolean gettingInvDefs = false;

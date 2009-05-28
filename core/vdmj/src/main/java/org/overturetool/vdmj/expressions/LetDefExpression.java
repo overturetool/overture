@@ -87,6 +87,7 @@ public class LetDefExpression extends Expression
 				{
 					ClassDefinition cdef = env.findClassDefinition();
 					d.setClassDefinition(cdef);
+					d.setAccessSpecifier(d.accessSpecifier.getStatic(true));
 				}
 
 				d.typeCheck(local, scope);

@@ -30,7 +30,6 @@ import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.pog.POContextStack;
@@ -83,21 +82,6 @@ public class TypeDefinition extends Definition
 				name.name + " = " + type.toDetailedString() +
 				(invPattern == null ? "" :
 					"\n\tinv " + invPattern + " == " + invExpression);
-	}
-
-	@Override
-	public void setAccessSpecifier(AccessSpecifier access)
-	{
-		if (access == null)
-		{
-			access = new AccessSpecifier(true, false, Token.PRIVATE);
-		}
-		else if (!access.isStatic)
-		{
-			access = new AccessSpecifier(true, false, access.access);
-		}
-
-		super.setAccessSpecifier(access);
 	}
 
 	@Override

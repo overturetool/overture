@@ -90,6 +90,7 @@ public class LetDefStatement extends Statement
 				{
 					ClassDefinition cdef = env.findClassDefinition();
 					d.setClassDefinition(cdef);
+					d.setAccessSpecifier(d.accessSpecifier.getStatic(true));
 				}
 
 				d.typeCheck(local, scope);

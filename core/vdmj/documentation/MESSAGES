@@ -790,7 +790,7 @@ as the expected and actual values.
 5002, "Mutex of overloaded operation"
 5003, "Permission guard of overloaded operation"
 5004, "History expression of overloaded operation"
-5005, "Should invoke member <member> from a static context"
+5005, "Should access member <member> from a static context"
 5006, "Statement will not be reached"
 5007, "Duplicate definition: <name>"
 5008, "<name/location> hides <name/location>"

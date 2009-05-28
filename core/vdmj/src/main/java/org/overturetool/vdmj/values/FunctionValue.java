@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
 import org.overturetool.vdmj.expressions.Expression;
@@ -35,6 +36,7 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
+import org.overturetool.vdmj.runtime.ClassContext;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.PatternMatchException;
@@ -66,6 +68,7 @@ public class FunctionValue extends Value
 
 	public ObjectValue self = null;
 	public boolean isStatic = false;
+	private ClassDefinition classdef = null;
 
 	public FunctionValue(LexLocation location, String name, FunctionType type,
 		List<PatternList> paramPatternList, Expression body,
@@ -115,6 +118,7 @@ public class FunctionValue extends Value
 		this.postcondition = postcondition;
 		this.freeVariables = freeVariables;
 		this.checkInvariants = !def.isTypeInvariant;
+		this.classdef = def.classDefinition;
 	}
 
 	public FunctionValue(ImplicitFunctionDefinition def,
@@ -141,6 +145,7 @@ public class FunctionValue extends Value
 		this.postcondition = postcondition;
 		this.freeVariables = freeVariables;
 		this.checkInvariants = true;
+		this.classdef = def.classDefinition;
 	}
 
 	public FunctionValue(ImplicitFunctionDefinition fdef,
@@ -221,6 +226,11 @@ public class FunctionValue extends Value
 		}
 	}
 
+	public void setClass(ClassDefinition classdef)
+	{
+		this.classdef = classdef;
+	}
+
 	public Value eval(
 		LexLocation from, ValueList argValues, Context ctxt, Context sctxt) throws ValueException
 	{
@@ -232,15 +242,20 @@ public class FunctionValue extends Value
 		PatternList paramPatterns = paramPatternList.get(0);
 		RootContext evalContext = null;
 
-		if (self == null)
-		{
-			evalContext = new StateContext(from,
-				name + Utils.listToString("(", paramPatterns, ", ", ")"), ctxt, sctxt);
-		}
-		else
+		if (self != null)
 		{
 			evalContext = new ObjectContext(from,
 				name + Utils.listToString("(", paramPatterns, ", ", ")"), ctxt, self);
+		}
+		else if (classdef != null)
+		{
+			evalContext = new ClassContext(from,
+				name + Utils.listToString("(", paramPatterns, ", ", ")"), ctxt, classdef);
+		}
+		else
+		{
+			evalContext = new StateContext(from,
+				name + Utils.listToString("(", paramPatterns, ", ", ")"), ctxt, sctxt);
 		}
 
 		if (freeVariables != null)

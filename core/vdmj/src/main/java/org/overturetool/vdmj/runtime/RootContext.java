@@ -40,8 +40,12 @@ public abstract class RootContext extends Context
 	}
 
 	@Override
-	abstract public Context getFreeVariables();
-
+	public Context getFreeVariables()
+	{
+		Context free = new Context(location, title, null);
+		free.putAll(this);
+		return free;
+	}
 
 	@Override
 	public final int getDepth()

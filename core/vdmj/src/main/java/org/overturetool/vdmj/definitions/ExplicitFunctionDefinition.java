@@ -28,9 +28,11 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.NotYetSpecifiedExpression;
 import org.overturetool.vdmj.expressions.SubclassResponsibilityExpression;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -505,7 +507,12 @@ public class ExplicitFunctionDefinition extends Definition
 			nvl.add(new NameValuePair(postdef.name, postfunc));
 		}
 
-		free.put(nvl);		// So name is in scope inside, for recursion
+		if (Settings.dialect == Dialect.VDM_SL)
+		{
+			// This is needed for recursive local functions
+			free.put(nvl);
+		}
+
 		return nvl;
 	}
 

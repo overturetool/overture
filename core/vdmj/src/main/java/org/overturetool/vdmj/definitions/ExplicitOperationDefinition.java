@@ -344,15 +344,13 @@ public class ExplicitOperationDefinition extends Definition
 	@Override
 	public NameValuePairList getNamedValues(Context ctxt)
 	{
-		// Note, operations don't really acquire free lists, unlike functions.
 		NameValuePairList nvl = new NameValuePairList();
-		Context free = new Context(location, "free list", null);
 
 		FunctionValue prefunc =
-			(predef == null) ? null : new FunctionValue(predef, null, null, free);
+			(predef == null) ? null : new FunctionValue(predef, null, null, null);
 
 		FunctionValue postfunc =
-			(postdef == null) ? null : new FunctionValue(postdef, null, null, free);
+			(postdef == null) ? null : new FunctionValue(postdef, null, null, null);
 
 		OperationValue op = new OperationValue(this, prefunc, postfunc, state);
 		op.isConstructor = isConstructor;
@@ -371,7 +369,6 @@ public class ExplicitOperationDefinition extends Definition
 			nvl.add(new NameValuePair(postdef.name, postfunc));
 		}
 
-		free.put(nvl);		// So name is in scope inside, for recursion
 		return nvl;
 	}
 
@@ -422,7 +419,11 @@ public class ExplicitOperationDefinition extends Definition
 			null, type.getPreType(state, classDefinition, accessSpecifier.isStatic),
 			parameters, preop, null, null, false, false, null);
 
-		def.setAccessSpecifier(accessSpecifier);
+		// Operation precondition functions are effectively not static as
+		// their expression can directly refer to instance variables, even
+		// though at runtime these are passed via a "self" parameter.
+
+		def.setAccessSpecifier(accessSpecifier.getStatic(false));
 		def.classDefinition = classDefinition;
 		return def;
 	}
@@ -460,7 +461,11 @@ public class ExplicitOperationDefinition extends Definition
 			null, type.getPostType(state, classDefinition, accessSpecifier.isStatic),
 			parameters, postop, null, null, false, false, null);
 
-		def.setAccessSpecifier(accessSpecifier);
+		// Operation postcondition functions are effectively not static as
+		// their expression can directly refer to instance variables, even
+		// though at runtime these are passed via a "self" parameter.
+
+		def.setAccessSpecifier(accessSpecifier.getStatic(false));
 		def.classDefinition = classDefinition;
 		return def;
 	}

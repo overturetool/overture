@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.ListIterator;
 
 import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.StateDefinition;
@@ -39,6 +40,7 @@ import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.runtime.Breakpoint;
+import org.overturetool.vdmj.runtime.ClassContext;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.PatternMatchException;
@@ -64,6 +66,7 @@ public class OperationValue extends Value
 	public final FunctionValue precondition;
 	public final FunctionValue postcondition;
 	public final StateDefinition state;
+	public final ClassDefinition classdef;
 
 	private LexNameToken stateName = null;
 	private Context stateContext = null;
@@ -94,6 +97,7 @@ public class OperationValue extends Value
 		this.precondition = precondition;
 		this.postcondition = postcondition;
 		this.state = state;
+		this.classdef = def.classDefinition;
 	}
 
 	public OperationValue(ImplicitOperationDefinition def,
@@ -115,6 +119,7 @@ public class OperationValue extends Value
 		this.precondition = precondition;
 		this.postcondition = postcondition;
 		this.state = state;
+		this.classdef = def.classDefinition;
 	}
 
 	@Override
@@ -161,16 +166,23 @@ public class OperationValue extends Value
 
 		RootContext argContext = null;
 
-		if (self == null)
+		if (self != null)
+		{
+			argContext = new ObjectContext(name.location, name.name
+				+ Utils.listToString("(", paramPatterns, ", ", ")"), ctxt,
+				self);
+		}
+		else if (classdef != null)
+		{
+			argContext = new ClassContext(name.location, name.name
+				+ Utils.listToString("(", paramPatterns, ", ", ")"), ctxt,
+				classdef);
+		}
+		else
 		{
 			argContext = new StateContext(name.location, name.name
 				+ Utils.listToString("(", paramPatterns, ", ", ")"), ctxt,
 				stateContext);
-		}
-		else
-		{
-			argContext = new ObjectContext(name.location, name.name
-				+ Utils.listToString("(", paramPatterns, ", ", ")"), ctxt, self);
 		}
 
 		req();

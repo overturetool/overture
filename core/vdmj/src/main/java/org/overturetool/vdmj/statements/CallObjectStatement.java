@@ -168,7 +168,7 @@ public class CallObjectStatement extends Statement
 		}
 		else if (fdef.isStatic() && !env.isStatic())
 		{
-			warning(5005, "Should invoke member " + field + " from a static context");
+			// warning(5005, "Should invoke member " + field + " from a static context");
 		}
 
 		Type type = fdef.getType();

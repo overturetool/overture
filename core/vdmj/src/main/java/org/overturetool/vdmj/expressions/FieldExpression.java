@@ -170,10 +170,10 @@ public class FieldExpression extends Expression
 				// to values as though they are fields of self in the CSK test
 				// suite, so commented out for now.
 
-//				if (fdef.isStatic() && !env.isStatic())
-//				{
-//					warning(5005, "Should invoke member " + field + " from a static context");
-//				}
+				if (fdef.isStatic())// && !env.isStatic())
+				{
+					// warning(5005, "Should access member " + field + " from a static context");
+				}
 
    				results.add(fdef.getType());
    				// At runtime, type qualifiers must match exactly

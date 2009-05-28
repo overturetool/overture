@@ -49,6 +49,11 @@ public class AccessSpecifier implements Serializable
 		this.access = access;
 	}
 
+	public AccessSpecifier getStatic(boolean asStatic)
+	{
+		return new AccessSpecifier(asStatic, isAsync, access);
+	}
+
 	public boolean narrowerThan(AccessSpecifier other)
 	{
 		return narrowerThan(other.access);

@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *	Copyright (c) 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -23,47 +23,23 @@
 
 package org.overturetool.vdmj.runtime;
 
+import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.values.UpdatableValue;
 import org.overturetool.vdmj.values.Value;
 
-/**
- * A root context for non-object method invocations.
- */
-
 @SuppressWarnings("serial")
-public class StateContext extends RootContext
+public class ClassContext extends RootContext
 {
-	/** The state context, if any. */
-	public final Context stateCtxt;
+	public final ClassDefinition classdef;
 
-	/**
-	 * Create a RootContext from the values passed.
-	 *
-	 * @param location The location of the context.
-	 * @param title The name of the location.
-	 * @param outer The context chain (not searched).
-	 * @param sctxt Any state context.
-	 */
-
-	public StateContext(LexLocation location, String title, Context outer, Context sctxt)
+	public ClassContext(LexLocation location,
+		String title, Context outer, ClassDefinition classdef)
 	{
 		super(location, title, outer);
-		this.stateCtxt = sctxt;
-	}
-
-	/**
-	 * Create a RootContext with no outer context or state.
-	 * @param location The location of the context.
-	 * @param title The name of the location.
-	 */
-
-	public StateContext(LexLocation location, String title)
-	{
-		super(location, title, null);
-		this.stateCtxt = null;
+		this.classdef = classdef;
 	}
 
 	/**
@@ -85,7 +61,7 @@ public class StateContext extends RootContext
 	public Context getUpdateable()
 	{
 		Context outup = (outer == null) ? null : outer.getUpdateable();
-		Context result = new StateContext(location, title, outup, stateCtxt);
+		Context result = new ClassContext(location, title, outup, classdef);
 
 		for (LexNameToken var: keySet())
 		{
@@ -101,7 +77,7 @@ public class StateContext extends RootContext
 	}
 
 	/**
-	 * Check for the name in the current context and state, and if
+	 * Check for the name in the current context and classdef, and if
 	 * not present search the global context. Note that the context
 	 * chain is not followed.
 	 *
@@ -111,30 +87,29 @@ public class StateContext extends RootContext
 	@Override
 	public Value check(LexNameToken name)
 	{
-		Value v = get(name);
-
 		// A RootContext stops the name search from continuing down the
-		// context chain. It first checks any state context, then goes
-		// down to the global level.
+		// context chain. It first checks any local context, then it
+		// checks the "class" context, then it goes down to the global level.
 
-		if (v == null)
+		Value v = get(name);		// Local variables
+
+		if (v != null)
 		{
-			if (stateCtxt != null)
-			{
-				v = stateCtxt.check(name);
+			return v;
+		}
 
-				if (v != null)
-				{
-					return v;
-				}
-			}
+		v = classdef.getStatic(name);
 
-			Context g = getGlobal();
+		if (v != null)
+		{
+			return v;
+		}
 
-			if (g != this)
-			{
-				return g.check(name);
-			}
+		Context g = getGlobal();
+
+		if (g != this)
+		{
+			return g.check(name);
 		}
 
 		return v;
@@ -143,14 +118,7 @@ public class StateContext extends RootContext
 	@Override
 	public String toString()
 	{
-		if (stateCtxt != null)
-		{
-			return super.toString() + "\tState visible\n";
-		}
-		else
-		{
-			return super.toString();
-		}
+		return super.toString();	// Self there anyway ...+ self.toString();
 	}
 
 	@Override
@@ -158,21 +126,16 @@ public class StateContext extends RootContext
 	{
 		if (outer == null)		// Don't expand initial context
 		{
-			Console.out.println("In root context of " + title);
+			Console.out.println("In class context of " + title);
 		}
 		else
 		{
 			if (variables)
 			{
     			Console.out.print(this.format("\t", this));
-
-    			if (stateCtxt != null)
-    			{
-    				Console.out.println("\tState visible");
-    			}
 			}
 
-			Console.out.println("In root context of " + title + " " + location);
+			Console.out.println("In class context of " + title + " " + location);
 			outer.printStackTrace(false);
 		}
 	}

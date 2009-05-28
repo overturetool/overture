@@ -152,7 +152,9 @@ public class DefinitionReader extends SyntaxReader
         				{
         					AccessSpecifier access = readAccessSpecifier(false);
             				TypeDefinition def = readTypeDefinition();
-            				def.setAccessSpecifier(access);
+
+            				// Force all type defs (invs) to be static
+            				def.setAccessSpecifier(access.getStatic(true));
             				list.add(def);
 
             				if (!newSection())
@@ -177,7 +179,9 @@ public class DefinitionReader extends SyntaxReader
         				{
         					AccessSpecifier access = readAccessSpecifier(false);
             				Definition def = readFunctionDefinition(NameScope.GLOBAL);
-            				def.setAccessSpecifier(access);
+
+            				// Force all functions to be static - NOT YET!!
+            				def.setAccessSpecifier(access);	//.getStatic(true));
             				list.add(def);
 
             				if (!newSection())
@@ -220,7 +224,9 @@ public class DefinitionReader extends SyntaxReader
         				{
         					AccessSpecifier access = readAccessSpecifier(false);
             				Definition def = readValueDefinition(NameScope.GLOBAL);
-            				def.setAccessSpecifier(access);
+
+            				// Force all values to be static
+            				def.setAccessSpecifier(access.getStatic(true));
             				list.add(def);
 
             				if (!newSection())
@@ -400,7 +406,7 @@ public class DefinitionReader extends SyntaxReader
 	{
 		if (dialect == Dialect.VDM_SL)
 		{
-			return null;
+			return AccessSpecifier.DEFAULT;
 		}
 
 		// Defaults

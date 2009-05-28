@@ -338,11 +338,6 @@ public abstract class Definition implements Serializable
 
 	public void setAccessSpecifier(AccessSpecifier access)
 	{
-		if (access == null)
-		{
-			access = AccessSpecifier.DEFAULT;
-		}
-
 		accessSpecifier = access;
 	}
 

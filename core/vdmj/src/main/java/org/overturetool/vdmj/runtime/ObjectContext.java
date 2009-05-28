@@ -90,23 +90,6 @@ public class ObjectContext extends RootContext
 	}
 
 	/**
-	 * Get all visible names from this Context, with more visible
-	 * values overriding those below.
-	 *
-	 * @return	A new Context with all visible names.
-	 */
-
-	@Override
-	public Context getFreeVariables()
-	{
-		Context all = new Context(location, title, null);
-		// if (outer != null) all.putAll(getGlobal());
-		all.putAll(this);
-		return all;
-	}
-
-
-	/**
 	 * Check for the name in the current context and self, and if
 	 * not present search the global context. Note that the context
 	 * chain is not followed.
