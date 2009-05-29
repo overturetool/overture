@@ -14,17 +14,19 @@ import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.runtime.ClassInterpreter;
+import org.overturetool.vdmj.runtime.*;
+import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.syntax.ClassReader;
 import org.overturetool.vdmj.traces.CallSequence;
 import org.overturetool.vdmj.traces.TestSequence;
 import org.overturetool.vdmj.traces.Verdict;
-import org.overturetool.vdmj.typechecker.ClassTypeChecker;
+import org.overturetool.vdmj.typechecker.*;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.FlatEnvironment;
 import org.overturetool.vdmj.typechecker.PrivateClassEnvironment;
 import org.overturetool.vdmj.typechecker.PublicClassEnvironment;
 import org.overturetool.vdmj.typechecker.TypeChecker;
+import org.overturetool.vdmj.values.ObjectValue;
 
 public class TraceInterpreter {
 
@@ -76,9 +78,30 @@ public class TraceInterpreter {
 				if(storage!=null)
 					storage.StartTrace(mtd.name.name, mtd.location.startLine, mtd.location.startPos);
 				
-				TestSequence tests = mtd.getTests(ci.initialContext);
-				List<List<Object>> results = new Vector<List<Object>>();
-				List<String> testSatements = new Vector<String>();
+				
+              ObjectValue object = null; 
+				 
+				              try 
+				              { 
+				                      object = classdef.newInstance(null, null, ci.initialContext); 
+				              } 
+				              catch (ValueException e) 
+				              { 
+//				                      list.add(e.getMessage()); 
+//				                      list.add(Verdict.FAILED); 
+//				                      return list; 
+				              } 
+				 
+				              Context ctxt = new ObjectContext( 
+				                              classdef.name.location, classdef.name.name + "()", 
+				                              ci.initialContext, object); 
+
+				
+				
+				
+				TestSequence tests = mtd.getTests(ctxt);
+//				List<List<Object>> results = new Vector<List<Object>>();
+//				List<String> testSatements = new Vector<String>();
 //				for (CallSequence callSequence : ts) {
 //					List<Object> dd = interpreter.runtrace(me, env,
 //							callSequence);
@@ -132,9 +155,9 @@ public class TraceInterpreter {
 			    			}
 			    			
 			    			//Console.out.println("Test " + n + " = " + clean);
-			    			testSatements.add(clean);
+//			    			testSatements.add(clean);
 			    			//Console.out.println("Result = " + result);
-			    			results.add(result);
+//			    			results.add(result);
 						}
 
 						n++;
