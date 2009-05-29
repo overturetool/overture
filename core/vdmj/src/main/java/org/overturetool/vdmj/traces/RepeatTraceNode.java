@@ -23,14 +23,17 @@
 
 package org.overturetool.vdmj.traces;
 
+import org.overturetool.vdmj.runtime.Context;
+
 public class RepeatTraceNode extends TraceNode
 {
 	public final TraceNode repeat;
 	public final long from;
 	public final long to;
 
-	public RepeatTraceNode(TraceNode repeat, long from, long to)
+	public RepeatTraceNode(Context ctxt, TraceNode repeat, long from, long to)
 	{
+		super(ctxt);
 		this.repeat = repeat;
 		this.from = from;
 		this.to = to;
@@ -62,6 +65,7 @@ public class RepeatTraceNode extends TraceNode
     				seq.addAll(test);
     			}
 
+    			seq.setContext(test.ctxt);
     			tests.add(seq);
     		}
 		}

@@ -81,7 +81,7 @@ public class TraceRepeatDefinition extends TraceDefinition
 		}
 		else
 		{
-			return new RepeatTraceNode(body, from, to);
+			return new RepeatTraceNode(ctxt, body, from, to);
 		}
 	}
 }

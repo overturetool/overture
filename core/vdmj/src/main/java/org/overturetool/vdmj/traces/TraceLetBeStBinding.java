@@ -93,30 +93,7 @@ public class TraceLetBeStBinding extends TraceDefinition
 	@Override
 	public TraceNode expand(Context ctxt)
 	{
-		AlternativeTraceNode node = new AlternativeTraceNode();
-//		ValueList allValues = bind.getBindValues(ctxt);
-//
-//		for (Value current: allValues)
-//		{
-//    		try
-//    		{
-//    			Context evalContext = new Context(location, "let be st binding", ctxt);
-//    			evalContext.put(bind.pattern.getNamedValues(current, ctxt));
-//
-//    			if (stexp == null || stexp.eval(evalContext).boolValue(ctxt))
-//    			{
-//    				node.alternatives.add(body.expand(evalContext));
-//    			}
-//    		}
-//            catch (ValueException e)
-//            {
-//            	throw new ContextException(e, location);
-//            }
-//    		catch (PatternMatchException e)
-//    		{
-//    			// Silently try the others...
-//    		}
-//		}
+		AlternativeTraceNode node = new AlternativeTraceNode(ctxt);
 
 		QuantifierList quantifiers = new QuantifierList();
 

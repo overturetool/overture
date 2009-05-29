@@ -93,8 +93,8 @@ public class TraceApplyExpression extends TraceCoreDefinition
 
 		CallObjectStatement cos = new CallObjectStatement(
 			statement.designator, statement.classname, statement.fieldname,
-			newargs);
+			statement.args);	// WAS newargs);
 
-		return new StatementTraceNode(cos);
+		return new StatementTraceNode(cos, ctxt);
 	}
 }

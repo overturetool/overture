@@ -23,14 +23,16 @@
 
 package org.overturetool.vdmj.traces;
 
+import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.statements.CallObjectStatement;
 
 public class StatementTraceNode extends TraceNode
 {
 	public final CallObjectStatement statement;
 
-	public StatementTraceNode(CallObjectStatement statement)
+	public StatementTraceNode(CallObjectStatement statement, Context ctxt)
 	{
+		super(ctxt);
 		this.statement = statement;
 	}
 
@@ -46,6 +48,7 @@ public class StatementTraceNode extends TraceNode
 		TestSequence tests = new TestSequence();
 		CallSequence seq = new CallSequence();
 		seq.add(statement);
+		seq.setContext(ctxt);
 		tests.add(seq);
 		return tests;
 	}

@@ -142,6 +142,26 @@ public class Context extends HashMap<LexNameToken, Value>
 		return result;
 	}
 
+	public Context copy()
+	{
+		Context below = null;
+
+		if (outer != null)
+		{
+			below = outer.copy();
+		}
+
+		Context result = new Context(location, title, below);
+
+		for (LexNameToken var: keySet())
+		{
+			Value v = get(var);
+			result.put(var, (Value)v.clone());
+		}
+
+		return result;
+	}
+
 	/**
 	 * Add a list of name/value pairs to this context.
 	 *

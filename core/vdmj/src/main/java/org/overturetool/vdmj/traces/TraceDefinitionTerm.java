@@ -46,7 +46,7 @@ public class TraceDefinitionTerm extends Vector<TraceDefinition>
 
 	public TraceNode expand(Context ctxt)
 	{
-		AlternativeTraceNode node = new AlternativeTraceNode();
+		AlternativeTraceNode node = new AlternativeTraceNode(ctxt);
 
 		for (TraceDefinition term: this)
 		{

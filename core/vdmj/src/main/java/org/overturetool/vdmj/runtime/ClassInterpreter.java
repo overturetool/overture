@@ -434,41 +434,52 @@ public class ClassInterpreter extends Interpreter
 		ClassDefinition classdef, Environment env, CallSequence statements)
 	{
 		List<Object> list = new Vector<Object>();
-		ObjectValue object = null;
+
+//		ObjectValue object = null;
+//
+//		try
+//		{
+//			object = classdef.newInstance(null, null, initialContext);
+//		}
+//		catch (ValueException e)
+//		{
+//			list.add(e.getMessage());
+//			list.add(Verdict.FAILED);
+//			return list;
+//		}
+//
+//		Context ctxt = new ObjectContext(
+//				classdef.name.location, classdef.name.name + "()",
+//				initialContext, object);
+//
+//		ctxt.put(classdef.name.getSelfName(), object);
 
 		try
 		{
-			object = classdef.newInstance(null, null, initialContext);
-		}
-		catch (ValueException e)
-		{
-			list.add(e.getMessage());
-			list.add(Verdict.FAILED);
-			return list;
-		}
+			Context copy = statements.ctxt.copy();
+			copy.setThreadState(null);
 
-		Context ctxt = new ObjectContext(
-				classdef.name.location, classdef.name.name + "()",
-				initialContext, object);
-
-		ctxt.put(classdef.name.getSelfName(), object);
-
-		try
-		{
 			for (CallObjectStatement statement: statements)
 			{
-				typeCheck(statement, env);
-
-				if (TypeChecker.getErrorCount() != 0)
+				try
 				{
-					List<VDMError> errors = TypeChecker.getErrors();
-					list.add(Utils.listToString(errors, " and "));
-					list.add(Verdict.FAILED);
-					break;
+					typeCheck(statement, env);
 				}
-				else
+				catch (Exception e)
 				{
-					list.add(statement.eval(ctxt));
+					// So?
+				}
+
+//				if (TypeChecker.getErrorCount() != 0)
+//				{
+//					List<VDMError> errors = TypeChecker.getErrors();
+//					list.add(Utils.listToString(errors, " and "));
+//					list.add(Verdict.FAILED);
+//					break;
+//				}
+//				else
+				{
+					list.add(statement.eval(copy));
 				}
 			}
 

@@ -64,7 +64,7 @@ public class NamedTraceDefinition extends Definition
 		this.pathname = pathname;
 		this.terms = terms;
 
-		setAccessSpecifier(new AccessSpecifier(true, false, Token.PUBLIC));
+		setAccessSpecifier(new AccessSpecifier(false, false, Token.PUBLIC));
 	}
 
 	@Override
@@ -138,7 +138,7 @@ public class NamedTraceDefinition extends Definition
 
 	public TestSequence getTests(Context ctxt)
 	{
-		SequenceTraceNode traces = new SequenceTraceNode();
+		SequenceTraceNode traces = new SequenceTraceNode(ctxt);
 
 		for (TraceDefinitionTerm term: terms)
 		{

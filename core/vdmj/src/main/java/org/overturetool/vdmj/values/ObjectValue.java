@@ -336,7 +336,7 @@ public class ObjectValue extends Value
 	public ObjectValue copy(boolean shallow)
 	{
 		List<ObjectValue> supers = new Vector<ObjectValue>();
-		NameValuePairMap memcopy = null;
+		NameValuePairMap memcopy = new NameValuePairMap();
 
    		if (shallow)
 		{
@@ -348,8 +348,6 @@ public class ObjectValue extends Value
    	   				new ObjectValue(sobj.type,
    	   					new NameValuePairMap(), new Vector<ObjectValue>()));
    	   		}
-
-   	   		memcopy = new NameValuePairMap();
 
     		for (LexNameToken name: members.keySet())
     		{
@@ -372,7 +370,11 @@ public class ObjectValue extends Value
    	   			supers.add(sobj.copy(false));
    	   		}
 
-    		memcopy = (NameValuePairMap)members.clone();
+   	   		for (LexNameToken n: members.keySet())
+   	   		{
+   	   			Value v = members.get(n);
+   	   			memcopy.put(n, (Value)v.clone());
+   	   		}
 		}
 
 		return new ObjectValue(type, memcopy, supers);

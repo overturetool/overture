@@ -28,14 +28,17 @@ import java.util.Vector;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.statements.CallObjectStatement;
 import org.overturetool.vdmj.util.Utils;
-import org.overturetool.vdmj.values.SeqValue;
-import org.overturetool.vdmj.values.Value;
-import org.overturetool.vdmj.values.ValueList;
 
 @SuppressWarnings("serial")
 public class CallSequence extends Vector<CallObjectStatement>
 {
+	public Context ctxt = null;
 	private int filtered = 0;
+
+	public void setContext(Context ctxt)
+	{
+		this.ctxt = ctxt;
+	}
 
 	@Override
 	public String toString()
@@ -46,18 +49,6 @@ public class CallSequence extends Vector<CallObjectStatement>
 	public String toString(int upto)
 	{
 		return Utils.listToString(this.subList(0, upto), "; ");
-	}
-
-	public Value eval(Context ctxt)
-	{
-		ValueList values = new ValueList();
-
-		for (CallObjectStatement s: this)
-		{
-			values.add(s.eval(ctxt));
-		}
-
-		return new SeqValue(values);
 	}
 
 	public void setFilter(int n)

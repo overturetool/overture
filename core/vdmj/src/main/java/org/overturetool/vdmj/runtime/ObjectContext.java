@@ -79,6 +79,28 @@ public class ObjectContext extends RootContext
 		return result;
 	}
 
+	@Override
+	public Context copy()
+	{
+		Context below = null;
+
+		if (outer != null)
+		{
+			below = outer.copy();
+		}
+
+		Context result =
+			new ObjectContext(location, title, below, self.copy(false));
+
+		for (LexNameToken var: keySet())
+		{
+			Value v = get(var);
+			result.put(var, (Value)v.clone());
+		}
+
+		return result;
+	}
+
 	/**
 	 * Check for the name in the current context and self, and if
 	 * not present search the global context. Note that the context
