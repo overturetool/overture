@@ -973,6 +973,35 @@ public class DBGPReader
 		{
 			condition = c.data;
 		}
+		else
+		{
+			DBGPOption cond = c.getOption(DBGPOptionType.O);
+			DBGPOption hits = c.getOption(DBGPOptionType.H);
+
+			if (cond != null && hits != null)
+			{
+    			if (cond.value.equals("=="))
+    			{
+    				condition = "= " + hits.value;
+    			}
+    			else if (cond.value.equals(">="))
+    			{
+    				condition = ">= " + hits.value;
+    			}
+    			else if(cond.value.equals("%"))
+    			{
+    				condition = "mod " + hits.value;
+    			}
+    			else
+    			{
+    				throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
+    			}
+			}
+			else if (cond != null || hits != null)
+			{
+				throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
+			}
+		}
 
 		Breakpoint bp = null;
 		Statement stmt = interpreter.findStatement(filename, lineno);
@@ -1183,7 +1212,7 @@ public class DBGPReader
 	private NameValuePairMap getContextValues(DBGPContextType context, int depth)
 	{
 		NameValuePairMap vars = new NameValuePairMap();
-		Context frame = (depth < 0) ? breakContext : breakContext.getFrame(depth);
+		Context frame = (depth == 0) ? breakContext : breakContext.getFrame(depth);
 
 		switch (context)
 		{
@@ -1237,11 +1266,18 @@ public class DBGPReader
 		DBGPContextType context = DBGPContextType.lookup(type);
 
 		option = c.getOption(DBGPOptionType.D);
-		int depth = -1;
+		int depth = 0;
 
 		if (option != null)
 		{
 			depth = Integer.parseInt(option.value);
+		}
+
+		int actualDepth = breakContext.getDepth() - 1;
+
+		if (depth >= actualDepth)
+		{
+			throw new DBGPException(DBGPErrorCode.INVALID_STACK_DEPTH, c.toString());
 		}
 
 		NameValuePairMap vars = getContextValues(context, depth);

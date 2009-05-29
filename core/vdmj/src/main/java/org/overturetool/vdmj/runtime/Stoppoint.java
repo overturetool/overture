@@ -47,6 +47,8 @@ public class Stoppoint extends Breakpoint
 	public void check(LexLocation execl, Context ctxt)
 	{
 		location.hit();
+		hits++;
+
 		handleInterrupt(execl, ctxt);
 
 		try

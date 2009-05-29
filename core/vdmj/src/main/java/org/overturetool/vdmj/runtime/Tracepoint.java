@@ -45,6 +45,8 @@ public class Tracepoint extends Breakpoint
 	public void check(LexLocation execl, Context ctxt)
 	{
 		location.hit();
+		hits++;
+
 		handleInterrupt(execl, ctxt);
 
 		if (parsed == null)

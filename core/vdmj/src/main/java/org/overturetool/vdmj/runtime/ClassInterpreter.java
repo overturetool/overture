@@ -219,6 +219,7 @@ public class ClassInterpreter extends Interpreter
 		mainContext.putAll(initialContext);
 		mainContext.putAll(createdValues);
 		mainContext.setThreadState(dbgp);
+		clearBreakpointHits();
 
 		return expr.eval(mainContext);
 	}

@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.definitions.ClassDefinition;
@@ -204,7 +205,7 @@ abstract public class Interpreter
 	 * in the initial context.
 	 *
 	 * @param line A VDM expression.
-	 * @param dbgp TODO
+	 * @param dbgp The DBGPReader, if any
 	 * @return The value of the expression.
 	 * @throws Exception Parser, type checking or runtime errors.
 	 */
@@ -472,6 +473,14 @@ abstract public class Interpreter
 		}
 
 		return old;		// null if not found
+	}
+
+	public void clearBreakpointHits()
+	{
+		for (Entry<Integer, Breakpoint> e: breakpoints.entrySet())
+		{
+			e.getValue().clearHits();
+		}
 	}
 
 	abstract public Expression parseExpression(String line, String module)

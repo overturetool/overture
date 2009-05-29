@@ -25,11 +25,15 @@ package org.overturetool.vdmj.runtime;
 
 import java.io.Serializable;
 
+import org.overturetool.vdmj.expressions.BreakpointExpression;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
+import org.overturetool.vdmj.lex.LexIntegerToken;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
+import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.syntax.ParserException;
@@ -50,6 +54,9 @@ public class Breakpoint implements Serializable
 	public final Expression parsed;
 	/** The condition or trace expression, in raw form. */
 	public final String trace;
+
+	/** The number of times this breakpoint has been reached. */
+	public long hits = 0;
 
 	public Breakpoint(LexLocation location)
 	{
@@ -80,10 +87,36 @@ public class Breakpoint implements Serializable
 
 		if (trace != null)
 		{
-			LexTokenReader ltr = new LexTokenReader(trace, Dialect.VDM_PP);
-			ExpressionReader reader = new ExpressionReader(ltr);
-			reader.setCurrentModule(location.module);
-			parsed = reader.readExpression();
+			LexTokenReader ltr = new LexTokenReader(trace, Dialect.VDM_SL);
+
+			ltr.push();
+			LexToken tok = ltr.nextToken();
+
+			switch (tok.type)
+			{
+				case EQUALS:
+					parsed = readHitCondition(ltr, BreakpointCondition.EQ);
+					break;
+
+				case GT:
+					parsed = readHitCondition(ltr, BreakpointCondition.GT);
+					break;
+
+				case GE:
+					parsed = readHitCondition(ltr, BreakpointCondition.GE);
+					break;
+
+				case MOD:
+					parsed = readHitCondition(ltr, BreakpointCondition.MOD);
+					break;
+
+				default:
+					ltr.pop();
+					ExpressionReader reader = new ExpressionReader(ltr);
+        			reader.setCurrentModule(location.module);
+        			parsed = reader.readExpression();
+        			break;
+			}
 		}
 		else
 		{
@@ -91,10 +124,30 @@ public class Breakpoint implements Serializable
 		}
 	}
 
+	private Expression readHitCondition(
+		LexTokenReader ltr, BreakpointCondition cond)
+		throws ParserException, LexException
+	{
+		LexToken arg = ltr.nextToken();
+
+		if (arg.isNot(Token.NUMBER))
+		{
+			throw new ParserException(2279, "Invalid breakpoint hit condition", location, 0);
+		}
+
+		LexIntegerToken num = (LexIntegerToken)arg;
+		return new BreakpointExpression(this, cond, num.value);
+	}
+
 	@Override
 	public String toString()
 	{
 		return location.toString();
+	}
+
+	public void clearHits()
+	{
+		hits = 0;
 	}
 
 	/**
@@ -113,6 +166,8 @@ public class Breakpoint implements Serializable
 	public void check(LexLocation execl, Context ctxt)
 	{
 		location.hit();
+		hits++;
+
 		ThreadState state = ctxt.threadState;
 		handleInterrupt(execl, ctxt);
 

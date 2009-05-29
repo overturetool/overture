@@ -247,6 +247,7 @@ public class ModuleInterpreter extends Interpreter
 		mainContext = new StateContext(
 			defaultModule.name.location, "interpreter", initialContext, sctxt);
 		mainContext.setThreadState(dbgp);
+		clearBreakpointHits();
 
 		return expr.eval(mainContext);
 	}

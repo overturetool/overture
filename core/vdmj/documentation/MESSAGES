@@ -359,6 +359,7 @@ as the expected and actual values.
 2276, "Expecting ')' after cycles"
 2277, -
 2278, "Async only permitted for operations"
+2279, "Invalid breakpoint hit condition"
 
 3000, "Expression does not match declared type"
 3001, "Class inherits thread definition from multiple supertypes"
