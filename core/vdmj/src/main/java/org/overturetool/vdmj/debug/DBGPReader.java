@@ -978,28 +978,31 @@ public class DBGPReader
 			DBGPOption cond = c.getOption(DBGPOptionType.O);
 			DBGPOption hits = c.getOption(DBGPOptionType.H);
 
-			if (cond != null && hits != null)
+			if (cond != null || hits != null)
 			{
-    			if (cond.value.equals("=="))
+				String cs = (cond == null) ? ">=" : cond.value;
+				String hs = (hits == null) ? "0"  : hits.value;
+
+				if (hs.equals("0"))
+				{
+					condition = "= 0";		// impossible (disabled)
+				}
+				else if (cs.equals("=="))
     			{
-    				condition = "= " + hits.value;
+    				condition = "= " + hs;
     			}
-    			else if (cond.value.equals(">="))
+    			else if (cs.equals(">="))
     			{
-    				condition = ">= " + hits.value;
+    				condition = ">= " + hs;
     			}
-    			else if(cond.value.equals("%"))
+    			else if (cs.equals("%"))
     			{
-    				condition = "mod " + hits.value;
+    				condition = "mod " + hs;
     			}
     			else
     			{
     				throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
     			}
-			}
-			else if (cond != null || hits != null)
-			{
-				throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
 			}
 		}
 
