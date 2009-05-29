@@ -1148,8 +1148,7 @@ public class DBGPReader
 			depth = Integer.parseInt(option.value);	// 0 to n-1
 		}
 
-		// We omit the last two frames, as these are unhelpful (globals),
-		// but include the "current" non-root frame as this helps.
+		// We omit the last frame, as this is unhelpful (globals),
 
 		int actualDepth = breakContext.getDepth() - 1;
 
@@ -1164,7 +1163,7 @@ public class DBGPReader
 		}
 		else if (depth > 0)
 		{
-			RootContext ctxt = breakContext.getFrame(depth);
+			RootContext ctxt = breakContext.getFrame(depth).getRoot();
 			response(null, stackResponse(ctxt.location, depth));
 		}
 		else
@@ -1173,16 +1172,12 @@ public class DBGPReader
 			Context ctxt = breakContext;
 
 			int d = 0;
-			sb.append(stackResponse(breakpoint.location, d++));		// Top frame
+			sb.append(stackResponse(breakpoint.location, d++));
 
-			while (ctxt != null && d < actualDepth)
+			while (d < actualDepth)
 			{
-				if (ctxt instanceof RootContext)
-				{
-					sb.append(stackResponse(ctxt.location, d++));
-				}
-
-				ctxt = ctxt.outer;
+				ctxt = breakContext.getFrame(d);
+				sb.append(stackResponse(ctxt.location, d++));
 			}
 
 			response(null, sb);
@@ -1215,7 +1210,7 @@ public class DBGPReader
 	private NameValuePairMap getContextValues(DBGPContextType context, int depth)
 	{
 		NameValuePairMap vars = new NameValuePairMap();
-		Context frame = (depth == 0) ? breakContext : breakContext.getFrame(depth);
+		Context frame = breakContext.getFrame(depth);
 
 		switch (context)
 		{

@@ -43,16 +43,6 @@ public class ClassContext extends RootContext
 	}
 
 	/**
-	 * Find the nearest RootContext in the context chain.
-	 */
-
-	@Override
-	public RootContext getRoot()
-	{
-		return this;
-	}
-
-	/**
 	 * Build a new Context based on the current one, but with only the
 	 * updateable values included (eg. "dcl" definitions and state).
 	 */
