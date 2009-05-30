@@ -23,18 +23,8 @@
 
 package org.overturetool.vdmj.traces;
 
-import org.overturetool.vdmj.runtime.Context;
-
-
 public abstract class TraceNode
 {
-	protected final Context ctxt;
-
-	protected TraceNode(Context ctxt)
-	{
-		this.ctxt = ctxt;
-	}
-
 	@Override
 	abstract public String toString();
 

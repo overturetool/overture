@@ -430,29 +430,9 @@ public class ClassInterpreter extends Interpreter
 		return list;
 	}
 
-	public List<Object> runtrace(
-		ClassDefinition classdef, Environment env, CallSequence statements)
+	public List<Object> runtrace(Environment env, CallSequence statements)
 	{
 		List<Object> list = new Vector<Object>();
-
-//		ObjectValue object = null;
-//
-//		try
-//		{
-//			object = classdef.newInstance(null, null, initialContext);
-//		}
-//		catch (ValueException e)
-//		{
-//			list.add(e.getMessage());
-//			list.add(Verdict.FAILED);
-//			return list;
-//		}
-//
-//		Context ctxt = new ObjectContext(
-//				classdef.name.location, classdef.name.name + "()",
-//				initialContext, object);
-//
-//		ctxt.put(classdef.name.getSelfName(), object);
 
 		try
 		{
@@ -467,20 +447,11 @@ public class ClassInterpreter extends Interpreter
 				}
 				catch (Exception e)
 				{
-					// So?
+					// "Better to have tried and failed than never to have
+					// tried at all" :-)
 				}
 
-//				if (TypeChecker.getErrorCount() != 0)
-//				{
-//					List<VDMError> errors = TypeChecker.getErrors();
-//					list.add(Utils.listToString(errors, " and "));
-//					list.add(Verdict.FAILED);
-//					break;
-//				}
-//				else
-				{
-					list.add(statement.eval(copy));
-				}
+				list.add(statement.eval(copy));
 			}
 
 			list.add(Verdict.PASSED);

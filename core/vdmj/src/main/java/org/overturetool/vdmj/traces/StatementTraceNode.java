@@ -29,10 +29,11 @@ import org.overturetool.vdmj.statements.CallObjectStatement;
 public class StatementTraceNode extends TraceNode
 {
 	public final CallObjectStatement statement;
+	public final Context ctxt;
 
 	public StatementTraceNode(CallObjectStatement statement, Context ctxt)
 	{
-		super(ctxt);
+		this.ctxt = ctxt;
 		this.statement = statement;
 	}
 

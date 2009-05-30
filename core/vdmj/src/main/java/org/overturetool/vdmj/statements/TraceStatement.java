@@ -29,7 +29,6 @@ import java.util.ListIterator;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.messages.MessageException;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.Interpreter;
@@ -62,12 +61,6 @@ public class TraceStatement extends Statement
 		ClassInterpreter ci = (ClassInterpreter)Interpreter.getInstance();
 		ClassDefinition classdef = tracedef.classDefinition;
 
-		if (classdef == null)
-		{
-			throw new MessageException(
-				"Internal 0028: Class not found: " + location.module);
-		}
-
 		Environment env = new FlatEnvironment(
 			classdef.getSelfDefinition(),
 			new PrivateClassEnvironment(classdef, ci.getGlobalEnvironment()));
@@ -85,7 +78,7 @@ public class TraceStatement extends Statement
 			else
 			{
     			ci.init(null);	// Initialize completely between every run...
-    			List<Object> result = ci.runtrace(classdef, env, test);
+    			List<Object> result = ci.runtrace(env, test);
 
     			if (result.get(result.size()-1) == Verdict.FAILED)
     			{

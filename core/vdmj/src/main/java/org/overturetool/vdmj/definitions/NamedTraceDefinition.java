@@ -138,7 +138,7 @@ public class NamedTraceDefinition extends Definition
 
 	public TestSequence getTests(Context ctxt)
 	{
-		SequenceTraceNode traces = new SequenceTraceNode(ctxt);
+		SequenceTraceNode traces = new SequenceTraceNode();
 
 		for (TraceDefinitionTerm term: terms)
 		{

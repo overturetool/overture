@@ -26,15 +26,12 @@ package org.overturetool.vdmj.traces;
 import java.util.List;
 import java.util.Vector;
 
-import org.overturetool.vdmj.runtime.Context;
-
 public class SequenceTraceNode extends TraceNode
 {
 	public List<TraceNode> nodes;
 
-	public SequenceTraceNode(Context ctxt)
+	public SequenceTraceNode()
 	{
-		super(ctxt);
 		this.nodes = new Vector<TraceNode>();
 	}
 

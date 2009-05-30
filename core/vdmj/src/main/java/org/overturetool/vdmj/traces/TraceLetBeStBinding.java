@@ -93,7 +93,7 @@ public class TraceLetBeStBinding extends TraceDefinition
 	@Override
 	public TraceNode expand(Context ctxt)
 	{
-		AlternativeTraceNode node = new AlternativeTraceNode(ctxt);
+		AlternativeTraceNode node = new AlternativeTraceNode();
 
 		QuantifierList quantifiers = new QuantifierList();
 

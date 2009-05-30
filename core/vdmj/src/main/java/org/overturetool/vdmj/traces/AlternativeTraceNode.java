@@ -26,15 +26,12 @@ package org.overturetool.vdmj.traces;
 import java.util.List;
 import java.util.Vector;
 
-import org.overturetool.vdmj.runtime.Context;
-
 public class AlternativeTraceNode extends TraceNode
 {
 	public List<TraceNode> alternatives;
 
-	public AlternativeTraceNode(Context ctxt)
+	public AlternativeTraceNode()
 	{
-		super(ctxt);
 		this.alternatives = new Vector<TraceNode>();
 	}
 
@@ -65,8 +62,6 @@ public class AlternativeTraceNode extends TraceNode
 		{
 			// Alternatives within an alternative are just like larger alts,
 			// so we add all the lower alts to the list...
-
-			//tests.addAll(node.getTests());
 
     		for (CallSequence test: node.getTests())
     		{

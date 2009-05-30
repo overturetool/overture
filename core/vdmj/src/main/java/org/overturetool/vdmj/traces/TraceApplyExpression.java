@@ -23,7 +23,6 @@
 
 package org.overturetool.vdmj.traces;
 
-
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.ExpressionList;
 import org.overturetool.vdmj.lex.Dialect;
@@ -36,6 +35,8 @@ import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.values.ObjectValue;
+import org.overturetool.vdmj.values.Value;
 
 /**
  * A class representing a trace apply expression.
@@ -71,29 +72,39 @@ public class TraceApplyExpression extends TraceCoreDefinition
 
 		for (Expression arg: statement.args)
 		{
-			String value = arg.eval(ctxt).toString();
-			LexTokenReader ltr = new LexTokenReader(value, Dialect.VDM_PP);
-			ExpressionReader er = new ExpressionReader(ltr);
-
-			try
+			Value v = arg.eval(ctxt).deref();
+			
+			if (v instanceof ObjectValue)
 			{
-				newargs.add(er.readExpression());
+				// We can't save the value of an object
+				newargs.add(arg);
 			}
-			catch (ParserException e)
+			else
 			{
-				throw new ContextException(
-					e.number, e.getMessage(), e.location, ctxt);
-			}
-			catch (LexException e)
-			{
-				throw new ContextException(
-					e.number, e.getMessage(), e.location, ctxt);
+    			String value = v.toString();
+    			LexTokenReader ltr = new LexTokenReader(value, Dialect.VDM_PP);
+    			ExpressionReader er = new ExpressionReader(ltr);
+    
+    			try
+    			{
+    				newargs.add(er.readExpression());
+    			}
+    			catch (ParserException e)
+    			{
+    				throw new ContextException(
+    					e.number, e.getMessage(), e.location, ctxt);
+    			}
+    			catch (LexException e)
+    			{
+    				throw new ContextException(
+    					e.number, e.getMessage(), e.location, ctxt);
+    			}
 			}
 		}
 
 		CallObjectStatement cos = new CallObjectStatement(
 			statement.designator, statement.classname, statement.fieldname,
-			statement.args);	// WAS newargs);
+			newargs);
 
 		return new StatementTraceNode(cos, ctxt);
 	}
