@@ -26,14 +26,14 @@ package org.overturetool.vdmj.traces;
 public class RepeatTraceNode extends TraceNode
 {
 	public final TraceNode repeat;
-	public final long from;
-	public final long to;
+	public final int from;
+	public final int to;
 
 	public RepeatTraceNode(TraceNode repeat, long from, long to)
 	{
 		this.repeat = repeat;
-		this.from = from;
-		this.to = to;
+		this.from = (int)from;
+		this.to = (int)to;
 	}
 
 	@Override
@@ -50,21 +50,32 @@ public class RepeatTraceNode extends TraceNode
 	{
 		TestSequence tests = new TestSequence();
 		TestSequence rtests = repeat.getTests();
+		int count = rtests.size();
 
-		for (CallSequence test: rtests)
+		for (int r = from; r <= to; r++)
 		{
-    		for (long r = from; r <= to; r++)
-    		{
-    			CallSequence seq = new CallSequence();
-
-    			for (int i=0; i<r; i++)
+ 			int[] c = new int[(int)r];
+			
+			for (int i=0; i<r; i++)
+			{
+				c[i] = count;
+			}
+			
+			Permutor p = new Permutor(c);
+			
+			while (p.hasNext())
+			{
+	   			CallSequence seq = new CallSequence();
+	   			int[] select = p.next();
+	   			
+	   			for (int i=0; i<r; i++)
     			{
-    				seq.addAll(test);
+    				seq.addAll(rtests.get(select[i]));
     			}
 
-    			seq.setContext(test.ctxt);
+    			seq.setContext(rtests.get(select[r-1]).ctxt);	//?
     			tests.add(seq);
-    		}
+			}
 		}
 
 		return tests;

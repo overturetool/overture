@@ -56,57 +56,21 @@ public class AlternativeTraceNode extends TraceNode
 	@Override
 	public TestSequence getTests()
 	{
-		List<TestSequence> nodetests = new Vector<TestSequence>();
-		int count = alternatives.size();
-		int[] sizes = new int[count];
-		int n = 0;
+		TestSequence tests = new TestSequence();
 
 		for (TraceNode node: alternatives)
 		{
-			TestSequence nt = node.getTests();
-			nodetests.add(nt);
-			sizes[n++] = nt.size();
-		}
+			// Alternatives within an alternative are just like larger alts,
+			// so we add all the lower alts to the list...
 
-		TestSequence tests = new TestSequence();
-		Permutor p = new Permutor(sizes);
-
-		while (p.hasNext())
-		{
-			int[] select = p.next();
-			PermuteArray pa = new PermuteArray(count);
-			
-			while (pa.hasNext())
-			{
-				int[] perm = pa.next();
+    		for (CallSequence test: node.getTests())
+    		{
     			CallSequence seq = new CallSequence();
-    
-    			for (int i=0; i<count; i++)
-    			{
-    				CallSequence subseq = nodetests.get(perm[i]).get(select[perm[i]]);
-    				seq.addAll(subseq);
-    				seq.setContext(subseq.ctxt);
-    			}
-    
+    			seq.addAll(test);
+    			seq.setContext(test.ctxt);
     			tests.add(seq);
-			}
+    		}
 		}
-
-//		TestSequence tests = new TestSequence();
-//
-//		for (TraceNode node: alternatives)
-//		{
-//			// Alternatives within an alternative are just like larger alts,
-//			// so we add all the lower alts to the list...
-//
-//    		for (CallSequence test: node.getTests())
-//    		{
-//    			CallSequence seq = new CallSequence();
-//    			seq.addAll(test);
-//    			seq.setContext(test.ctxt);
-//    			tests.add(seq);
-//    		}
-//		}
 
 		return tests;
 	}
