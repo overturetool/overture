@@ -1,2 +1,2 @@
 new UseStack().PushBeforePop() = 
-Test 1 = bla bla
+Runtime: Error 4089: Can't get real value of seq in 'UseStack'
