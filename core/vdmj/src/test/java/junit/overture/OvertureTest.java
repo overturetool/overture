@@ -23,7 +23,11 @@
 
 package junit.overture;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileReader;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.List;
 import java.util.Vector;
@@ -38,6 +42,7 @@ import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.runtime.VDMThreadSet;
+import org.overturetool.vdmj.statements.TraceStatement;
 import org.overturetool.vdmj.syntax.ClassReader;
 import org.overturetool.vdmj.syntax.OvertureReader;
 import org.overturetool.vdmj.typechecker.ClassTypeChecker;
@@ -216,6 +221,59 @@ abstract public class OvertureTest extends TestCase
 		}
 	}
 
+	protected void combtest(String rpath, String testExp) throws Exception
+	{
+		setNames("/Overture/evaluate/", rpath);
+		List<VDMMessage> actual = new Vector<VDMMessage>();
+		ClassList classes = parse(actual);
+
+		if (!actual.isEmpty())
+		{
+			Console.out.println(Utils.listToString(actual, "\n"));
+			assertEquals("Expecting no syntax errors", 0, actual.size());
+		}
+
+		TypeChecker typeChecker = new ClassTypeChecker(classes);
+		typeChecker.typeCheck();
+		TypeChecker.printErrors(Console.out);
+		TypeChecker.printWarnings(Console.out);
+
+		actual.addAll(TypeChecker.getErrors());
+		// actual.addAll(TypeChecker.getWarnings());
+
+		if (!actual.isEmpty())
+		{
+			Console.out.println(Utils.listToString(actual, "\n"));
+			assertEquals("Expecting no typecheck errors", 0, actual.size());
+		}
+
+		try
+		{
+			Interpreter interpreter = new ClassInterpreter(classes);
+			interpreter.init(null);
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			PrintWriter pw = new PrintWriter(out);
+			TraceStatement.setOutput(pw);
+
+			interpreter.execute(testExp, null);
+
+			VDMThreadSet.abortAll();
+			pw.close();
+			String result = out.toString();
+			String expected = readFile(new File(assertName));
+			assertEquals("Evaluation error", expected, result);
+		}
+		catch (ContextException e)
+		{
+			Console.out.println(e);
+			fail("Unexpected runtime error: " + e);
+		}
+		catch (Exception e)
+		{
+			fail("Caught: " + e + " in " + assertName);
+		}
+	}
+
 	private void checkErrors(List<VDMMessage> actual) throws Exception
 	{
 		try
@@ -247,6 +305,25 @@ abstract public class OvertureTest extends TestCase
 		{
 			fail("Caught: " + e + " in " + assertName);
 		}
+	}
+
+	public String readFile(File file) throws Exception
+	{
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		PrintWriter pw = new PrintWriter(out);
+
+		String line = br.readLine();
+
+		while (line != null)
+		{
+			pw.println(line);
+			line = br.readLine();
+		}
+
+		br.close();
+		pw.close();
+		return out.toString();	// Same EOL convention as local machine
 	}
 
 	private void setNames(String prefix, String root)

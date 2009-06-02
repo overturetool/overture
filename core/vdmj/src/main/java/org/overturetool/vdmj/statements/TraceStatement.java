@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.statements;
 
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -46,12 +47,18 @@ import org.overturetool.vdmj.values.VoidValue;
 public class TraceStatement extends Statement
 {
 	private static final long serialVersionUID = 1L;
+	private static PrintWriter writer = null;
 	public final NamedTraceDefinition tracedef;
 
 	public TraceStatement(NamedTraceDefinition def)
 	{
 		super(def.location);
 		this.tracedef = def;
+
+		if (writer == null)
+		{
+			writer = Console.out;
+		}
 	}
 
 	@Override
@@ -71,8 +78,8 @@ public class TraceStatement extends Statement
 		{
 			if (test.getFilter() > 0)
 			{
-    			Console.out.println("Test " + n + " = " + test);
-				Console.out.println(
+    			writer.println("Test " + n + " = " + test);
+				writer.println(
 					"Test " + n + " FILTERED by test " + test.getFilter());
 			}
 			else
@@ -99,8 +106,8 @@ public class TraceStatement extends Statement
     			// Bodge until we figure out how to not have explicit op names.
     			String clean = test.toString().replaceAll("\\.\\w+`", ".");
 
-    			Console.out.println("Test " + n + " = " + clean);
-    			Console.out.println("Result = " + result);
+    			writer.println("Test " + n + " = " + clean);
+    			writer.println("Result = " + result);
 			}
 
 			n++;
@@ -126,5 +133,10 @@ public class TraceStatement extends Statement
 	{
 		assert false : "Shouldn't be calling TraceStatement's typeCheck";
 		return null;
+	}
+
+	public static void setOutput(PrintWriter pw)
+	{
+		writer = pw;
 	}
 }

@@ -1,4 +1,3 @@
-new UseStack().PushBeforePop() = 
 Test 1 = s.Push(1); s.Push(3)
 Result = [(), (), PASSED]
 Test 2 = s.Push(1); s.Push(3)
@@ -31,4 +30,3 @@ Test 15 = s.Push(3); s.Push(8)
 Result = [(), (), PASSED]
 Test 16 = s.Push(3); s.Push(8)
 Result = [(), (), PASSED]
-= ()

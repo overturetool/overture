@@ -27,12 +27,13 @@ import junit.overture.OvertureTest;
 
 public class CTTest extends OvertureTest
 {
-	public void test_Eval() throws Exception
+	public void test_Traces1() throws Exception
 	{
-		evaluate("VDM++\traces\tracesbind\tracesbind-01", ResultType.TRUE);
-		evaluate("VDM++\traces\tracesbind\tracesbind-02", ResultType.TRUE);
+		combtest("VDM++/traces/tracesbind/tracebind-01", "new UseStack().PushBeforePop()");
+	}
 
-
-
+	public void test_Traces2() throws Exception
+	{
+		combtest("VDM++/traces/tracesbind/tracebind-02", "new UseStack().PushBeforePop()");
 	}
 }
