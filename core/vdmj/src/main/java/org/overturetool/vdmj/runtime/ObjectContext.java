@@ -90,7 +90,7 @@ public class ObjectContext extends RootContext
 		}
 
 		Context result =
-			new ObjectContext(location, title, below, self.copy(false));
+			new ObjectContext(location, title, below, self.deepCopy());
 
 		for (LexNameToken var: keySet())
 		{

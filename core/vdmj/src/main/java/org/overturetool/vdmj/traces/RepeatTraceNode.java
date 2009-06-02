@@ -54,20 +54,20 @@ public class RepeatTraceNode extends TraceNode
 
 		for (int r = from; r <= to; r++)
 		{
- 			int[] c = new int[(int)r];
-			
+ 			int[] c = new int[r];
+
 			for (int i=0; i<r; i++)
 			{
 				c[i] = count;
 			}
-			
+
 			Permutor p = new Permutor(c);
-			
+
 			while (p.hasNext())
 			{
 	   			CallSequence seq = new CallSequence();
 	   			int[] select = p.next();
-	   			
+
 	   			for (int i=0; i<r; i++)
     			{
     				seq.addAll(rtests.get(select[i]));

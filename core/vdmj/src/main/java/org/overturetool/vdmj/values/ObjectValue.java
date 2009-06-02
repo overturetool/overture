@@ -23,10 +23,15 @@
 
 package org.overturetool.vdmj.values;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.messages.MessageException;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.types.ClassType;
@@ -37,6 +42,8 @@ import org.overturetool.vdmj.util.Utils;
 
 public class ObjectValue extends Value
 {
+	private static final long serialVersionUID = 1L;
+
 	private static int nextObjectReference = 0;
 
 	public final int objectReference;
@@ -330,7 +337,7 @@ public class ObjectValue extends Value
 	@Override
 	public Object clone()
 	{
-		return copy(false);		// Deep copy
+		return copy(false);
 	}
 
 	public ObjectValue copy(boolean shallow)
@@ -378,5 +385,24 @@ public class ObjectValue extends Value
 		}
 
 		return new ObjectValue(type, memcopy, supers);
+	}
+
+	public ObjectValue deepCopy()
+	{
+		try
+		{
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(os);
+			oos.writeObject(this);
+			oos.close();
+
+			ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+			ObjectInputStream ois = new ObjectInputStream(is);
+			return (ObjectValue)ois.readObject();
+		}
+		catch (Exception e)
+		{
+			throw new MessageException("Internal 0005, Illegal clone");
+		}
 	}
 }

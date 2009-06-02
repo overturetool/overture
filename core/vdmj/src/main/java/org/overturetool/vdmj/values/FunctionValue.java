@@ -52,6 +52,7 @@ import org.overturetool.vdmj.util.Utils;
 
 public class FunctionValue extends Value
 {
+	private static final long serialVersionUID = 1L;
 	public final LexLocation location;
 	public final String name;
 	public NameValuePairList typeValues;

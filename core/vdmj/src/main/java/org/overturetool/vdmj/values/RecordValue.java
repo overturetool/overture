@@ -34,6 +34,7 @@ import org.overturetool.vdmj.types.Type;
 
 public class RecordValue extends Value
 {
+	private static final long serialVersionUID = 1L;
 	public final RecordType type;
 	public final FieldMap fieldmap;
 	public final FunctionValue invariant;

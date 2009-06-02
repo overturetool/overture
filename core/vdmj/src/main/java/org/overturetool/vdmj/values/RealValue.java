@@ -30,6 +30,8 @@ import org.overturetool.vdmj.types.Type;
 
 public class RealValue extends NumericValue
 {
+	private static final long serialVersionUID = 1L;
+
 	public RealValue(double value) throws Exception
 	{
 		super(value);

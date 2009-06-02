@@ -31,6 +31,7 @@ import org.overturetool.vdmj.runtime.ValueException;
 
 public class IterFunctionValue extends FunctionValue
 {
+	private static final long serialVersionUID = 1L;
 	public final FunctionValue function;
 	public final long iterations;
 

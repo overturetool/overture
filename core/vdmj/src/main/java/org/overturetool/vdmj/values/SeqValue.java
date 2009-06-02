@@ -32,6 +32,7 @@ import org.overturetool.vdmj.types.Type;
 
 public class SeqValue extends Value
 {
+	private static final long serialVersionUID = 1L;
 	public final ValueList values;
 
 	public SeqValue()

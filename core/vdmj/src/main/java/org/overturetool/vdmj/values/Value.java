@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.values;
 
+import java.io.Serializable;
+
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
@@ -39,8 +41,10 @@ import org.overturetool.vdmj.types.UnknownType;
  * The parent of all runtime values.
  */
 
-abstract public class Value implements Comparable<Value>
+abstract public class Value implements Comparable<Value>, Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	abstract public String toString();
 

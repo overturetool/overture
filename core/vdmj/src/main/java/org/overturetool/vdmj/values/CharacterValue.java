@@ -30,6 +30,7 @@ import org.overturetool.vdmj.types.Type;
 
 public class CharacterValue extends Value
 {
+	private static final long serialVersionUID = 1L;
 	public final char unicode;
 
 	public CharacterValue(char value)

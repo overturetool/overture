@@ -57,6 +57,7 @@ import org.overturetool.vdmj.util.Utils;
 
 public class OperationValue extends Value
 {
+	private static final long serialVersionUID = 1L;
 	public final ExplicitOperationDefinition expldef;
 	public final ImplicitOperationDefinition impldef;
 	public final LexNameToken name;

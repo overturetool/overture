@@ -31,6 +31,8 @@ import org.overturetool.vdmj.types.Type;
 
 public class NaturalOneValue extends NaturalValue
 {
+	private static final long serialVersionUID = 1L;
+
 	public NaturalOneValue(long value) throws Exception
 	{
 		super(value);

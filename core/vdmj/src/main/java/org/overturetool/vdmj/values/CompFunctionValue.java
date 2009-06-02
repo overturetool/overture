@@ -31,6 +31,7 @@ import org.overturetool.vdmj.runtime.ValueException;
 
 public class CompFunctionValue extends FunctionValue
 {
+	private static final long serialVersionUID = 1L;
 	public final FunctionValue ff1;
 	public final FunctionValue ff2;
 

@@ -31,6 +31,7 @@ import org.overturetool.vdmj.types.Type;
 
 public class InvariantValue extends ReferenceValue
 {
+	private static final long serialVersionUID = 1L;
 	public final NamedType type;
 
 	public InvariantValue(NamedType type, Value value, Context ctxt)

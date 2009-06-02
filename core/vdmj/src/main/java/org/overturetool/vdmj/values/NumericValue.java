@@ -34,6 +34,7 @@ import org.overturetool.vdmj.types.Type;
 
 public abstract class NumericValue extends Value
 {
+	private static final long serialVersionUID = 1L;
 	public double value;
 
 	public NumericValue(double value)
