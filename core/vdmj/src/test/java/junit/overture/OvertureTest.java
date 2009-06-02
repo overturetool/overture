@@ -223,7 +223,7 @@ abstract public class OvertureTest extends TestCase
 
 	protected void combtest(String rpath, String testExp) throws Exception
 	{
-		setNames("/Overture/evaluate/", rpath);
+		setNames("/Overture/combtest/", rpath);
 		List<VDMMessage> actual = new Vector<VDMMessage>();
 		ClassList classes = parse(actual);
 
