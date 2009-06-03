@@ -1,5 +1,6 @@
 package org.overturetool.traces.utility;
 
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -47,7 +48,14 @@ public class XmlFileWriter {
 	
 	public static String NormalizeValue(String value)
 	{
-	return	value.replace("\"", "&quot;").replace("<", "").replace(">", "");
+	return	value.replace("\"", "&quot;").replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;").replace("'", "&apos;");
+	
+	
+//	&amp; (& or "ampersand") 
+//	&lt; (< or "less than") 
+//	&gt; (> or "greater than") 
+//	&apos; (' or "apostrophe") 
+//	&quot; (" or "quotation mark") 
 	}
 
 	public void StartElement(String name, String attribyteName,
@@ -61,15 +69,25 @@ public class XmlFileWriter {
 		level++;
 	}
 	
-	public void StartElement(String name, String attribyteName1,
-			String attributeValue1, String attribyteName2,
-			String attributeValue2) {
+	public void StartElement(String name, String... attribute) {
 
+		String element = GetIndentation(level) + "<" + name + " ";
 		
-		outputStream.println(GetIndentation(level) + "<" + name + " "
-				+ attribyteName1 + "=\"" +NormalizeValue( attributeValue1)
-				+ "\" "+ attribyteName2 + "=\"" + NormalizeValue(attributeValue2)
-				+ "\">");
+		for (int i = 0; i < attribute.length; i++)
+		{
+			
+			if(i%2==0)
+				element+=attribute[i]+"=";
+			else
+				element+="\""+NormalizeValue(attribute[i])+"\" ";
+		}
+		element+= ">";
+		outputStream.println(element);
+		
+//		outputStream.println(GetIndentation(level) + "<" + name + " "
+//				+ attribyteName1 + "=\"" +NormalizeValue( attributeValue1)
+//				+ "\" "+ attribyteName2 + "=\"" + NormalizeValue(attributeValue2)
+//				+ "\">");
 		inElement = true;
 		level++;
 	}

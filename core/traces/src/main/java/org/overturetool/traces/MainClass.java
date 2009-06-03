@@ -106,7 +106,7 @@ public class MainClass {
 			TraceXmlWrapper txw = new TraceXmlWrapper(outputPath+ File.separatorChar+cls.get(0)+".xml");
 			
 			
-			ti.test(specFiles, cls.get(0),txw);
+			ti.processTraces(specFiles, cls.get(0),txw);
 			txw.Stop();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
