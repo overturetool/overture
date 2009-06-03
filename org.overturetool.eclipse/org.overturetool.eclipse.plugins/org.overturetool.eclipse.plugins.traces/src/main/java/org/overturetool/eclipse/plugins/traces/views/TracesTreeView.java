@@ -59,6 +59,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.DrillDownAdapter;
@@ -1787,8 +1788,10 @@ public class TracesTreeView extends ViewPart {
 
 			public void selectionChanged(SelectionChangedEvent event) {
 				// TODO Auto-generated method stub
-				if (((ITreeSelection) event.getSelection()).getFirstElement() instanceof TraceTreeNode) {
-					TraceTreeNode tn = (TraceTreeNode) ((ITreeSelection) event.getSelection()).getFirstElement();
+				Object selection = ((ITreeSelection) event.getSelection()).getFirstElement();
+
+				if (selection instanceof TraceTreeNode) {
+					TraceTreeNode tn = (TraceTreeNode) selection;
 
 					IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 					String projectName = tn.getParent().getParent().getName();
@@ -1805,8 +1808,23 @@ public class TracesTreeView extends ViewPart {
 
 					}
 
+				}else if (selection instanceof TraceTestCaseTreeNode)
+				{
+					
+						try
+						{
+							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
+									"org.overturetool.eclipse.plugins.traces.views.TraceTest");
+						} catch (PartInitException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
 				}
 			}
+ 
+			
 
 		});
 

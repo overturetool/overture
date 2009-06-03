@@ -3,19 +3,32 @@
 <repository name='file:/C:/Overture/overtureSourceNew/trunk/org.overturetool.eclipse/org.overturetool.eclipse.updatesite/ - artifacts' type='org.eclipse.equinox.p2.artifact.repository.simpleRepository' version='1.0.0'>
   <properties size='2'>
     <property name='p2.compressed' value='false'/>
-    <property name='p2.timestamp' value='1242937954112'/>
+    <property name='p2.timestamp' value='1244053990284'/>
   </properties>
   <mappings size='3'>
     <rule filter='(&amp; (classifier=osgi.bundle))' output='${repoUrl}/plugins/${id}_${version}.jar'/>
     <rule filter='(&amp; (classifier=binary))' output='${repoUrl}/binary/${id}_${version}'/>
     <rule filter='(&amp; (classifier=org.eclipse.update.feature))' output='${repoUrl}/features/${id}_${version}.jar'/>
   </mappings>
-  <artifacts size='30'>
+  <artifacts size='44'>
+    <artifact classifier='osgi.bundle' id='org.overturetool.eclipse.plugins.overturedebugger' version='0.0.0.200906032032'>
+      <properties size='3'>
+        <property name='artifact.size' value='7744'/>
+        <property name='download.size' value='7744'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.dltk.validators.core' version='1.0.0.v20090425'>
       <properties size='3'>
         <property name='artifact.size' value='73682'/>
         <property name='download.size' value='73682'/>
         <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='org.overturetool.eclipse.features.core' version='1.0.0.200906032032'>
+      <properties size='2'>
+        <property name='artifact.size' value='951'/>
+        <property name='download.size' value='951'/>
       </properties>
     </artifact>
     <artifact classifier='org.eclipse.update.feature' id='org.overturetool.eclipse.features.umltrans' version='1.0.0.200905212232'>
@@ -65,10 +78,23 @@
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='org.overturetool.eclipse.features.traces' version='1.0.0.200906032032'>
+      <properties size='2'>
+        <property name='artifact.size' value='866'/>
+        <property name='download.size' value='866'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='org.overturetool.eclipse.plugins.umltrans.core' version='1.0.0'>
       <properties size='3'>
         <property name='artifact.size' value='2266915'/>
         <property name='download.size' value='2266915'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.overturetool.eclipse.plugins.editor.ui' version='1.0.0'>
+      <properties size='3'>
+        <property name='artifact.size' value='214314'/>
+        <property name='download.size' value='214314'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
@@ -93,6 +119,13 @@
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
+    <artifact classifier='osgi.bundle' id='org.overturetool.eclipse.plugins.editor.core' version='1.0.0'>
+      <properties size='3'>
+        <property name='artifact.size' value='49041'/>
+        <property name='download.size' value='49041'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='org.overturetool.eclipse.plugins.debug' version='1.0.0'>
       <properties size='3'>
         <property name='artifact.size' value='8781'/>
@@ -104,6 +137,12 @@
       <properties size='2'>
         <property name='artifact.size' value='868'/>
         <property name='download.size' value='868'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='org.overturetool.eclipse.features.umltrans' version='1.0.0.200906032032'>
+      <properties size='2'>
+        <property name='artifact.size' value='867'/>
+        <property name='download.size' value='867'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.dltk' version='1.0.0.v20080815-1326'>
@@ -127,6 +166,13 @@
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
+    <artifact classifier='osgi.bundle' id='org.overturetool.eclipse.plugins.debug.ui' version='1.0.0'>
+      <properties size='3'>
+        <property name='artifact.size' value='89785'/>
+        <property name='download.size' value='89785'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='org.overturetool.eclipse.plugins.stdlib' version='1.0.0'>
       <properties size='3'>
         <property name='artifact.size' value='3425533'/>
@@ -141,6 +187,13 @@
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
+    <artifact classifier='osgi.bundle' id='org.overturetool.eclipse.plugins.dbgp.core' version='1.0.0'>
+      <properties size='3'>
+        <property name='artifact.size' value='3581570'/>
+        <property name='download.size' value='3581570'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.dltk.ui' version='1.0.0.v20090427'>
       <properties size='3'>
         <property name='artifact.size' value='3890849'/>
@@ -148,10 +201,24 @@
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
+    <artifact classifier='osgi.bundle' id='org.overturetool.eclipse.plugins.launching' version='1.0.0'>
+      <properties size='3'>
+        <property name='artifact.size' value='35761'/>
+        <property name='download.size' value='35761'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='org.overturetool.eclipse.plugins.editor.core' version='1.0.0'>
       <properties size='3'>
         <property name='artifact.size' value='48890'/>
         <property name='download.size' value='48890'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.overturetool.eclipse.plugins.traces.core' version='1.0.0'>
+      <properties size='3'>
+        <property name='artifact.size' value='6242413'/>
+        <property name='download.size' value='6242413'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
@@ -169,10 +236,24 @@
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
+    <artifact classifier='osgi.bundle' id='org.overturetool.eclipse.plugins.stdlib' version='1.0.0'>
+      <properties size='3'>
+        <property name='artifact.size' value='3447867'/>
+        <property name='download.size' value='3447867'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='org.overturetool.eclipse.plugins.launching' version='1.0.0'>
       <properties size='3'>
         <property name='artifact.size' value='35703'/>
         <property name='download.size' value='35703'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.overturetool.eclipse.plugins.vdmtoolsapi.core' version='1.0.0'>
+      <properties size='3'>
+        <property name='artifact.size' value='139711'/>
+        <property name='download.size' value='139711'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
@@ -214,6 +295,20 @@
       <properties size='3'>
         <property name='artifact.size' value='93649'/>
         <property name='download.size' value='93649'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.overturetool.eclipse.plugins.traces' version='1.0.0'>
+      <properties size='3'>
+        <property name='artifact.size' value='131923'/>
+        <property name='download.size' value='131923'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.overturetool.eclipse.plugins.umltrans.core' version='1.0.0'>
+      <properties size='3'>
+        <property name='artifact.size' value='2269973'/>
+        <property name='download.size' value='2269973'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
