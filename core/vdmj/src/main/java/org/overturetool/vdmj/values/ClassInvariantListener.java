@@ -23,14 +23,17 @@
 
 package org.overturetool.vdmj.values;
 
+import java.io.Serializable;
+
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ValueException;
 
-public class ClassInvariantListener implements ValueListener
+public class ClassInvariantListener implements ValueListener, Serializable
 {
+    private static final long serialVersionUID = 1L;
 	public final OperationValue invopvalue;
 	public boolean doInvariantChecks = true;
 
