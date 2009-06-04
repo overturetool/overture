@@ -391,6 +391,11 @@ public class ObjectValue extends Value
 	{
 		try
 		{
+			// This is slow, but it has the advantage that Value copies,
+			// such as the parent and subclass copies of the same
+			// variable, are preserved as the same variable rather than
+			// being split, as they are in naive object copies.
+			
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(os);
 			oos.writeObject(this);
@@ -402,7 +407,7 @@ public class ObjectValue extends Value
 		}
 		catch (Exception e)
 		{
-			throw new MessageException("Internal 0005, Illegal clone");
+			throw new MessageException("Internal 0005, Illegal clone: " + e);
 		}
 	}
 }
