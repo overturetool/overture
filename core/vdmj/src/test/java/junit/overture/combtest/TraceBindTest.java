@@ -29,7 +29,7 @@ public class TraceBindTest extends OvertureTest
 {
 	public void test_Traces1() throws Exception
 	{
-		combtest("traces/tracesbind/tracebind-01", "new UseStack().PushBeforePop()");
+		combtest("traces/tracesbind/tracebind-01", "new UseStack().PushBeforePop()", 4089);
 	}
 
 	public void test_Traces2() throws Exception

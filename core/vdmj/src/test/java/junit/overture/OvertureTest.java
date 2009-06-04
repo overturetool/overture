@@ -153,10 +153,15 @@ abstract public class OvertureTest extends TestCase
 
 	protected static enum ResultType
 	{
-		TRUE, VOID, UNDEFINED
+		TRUE, VOID, UNDEFINED, ERROR
 	}
 
 	protected void evaluate(String rpath, ResultType rt) throws Exception
+	{
+		evaluate(rpath, rt, 0);
+	}
+
+	protected void evaluate(String rpath, ResultType rt, int error) throws Exception
 	{
 		setNames("/Overture/evaluate/", rpath);
 		List<VDMMessage> actual = new Vector<VDMMessage>();
@@ -209,11 +214,16 @@ abstract public class OvertureTest extends TestCase
 				}
 
 			assertEquals("Evaluation error", expected, result);
+			assertTrue("Expecting runtime error " + error, error == 0);
 		}
 		catch (ContextException e)
 		{
 			Console.out.println(e);
-			fail("Unexpected runtime error: " + e);
+
+			if (e.number != error)
+			{
+				fail("Unexpected runtime error: " + e);
+			}
 		}
 		catch (Exception e)
 		{
@@ -222,6 +232,12 @@ abstract public class OvertureTest extends TestCase
 	}
 
 	protected void combtest(String rpath, String testExp) throws Exception
+	{
+		combtest(rpath, testExp, 0);	// No expected error
+	}
+
+	protected void combtest(String rpath, String testExp, int error)
+		throws Exception
 	{
 		setNames("/Overture/combtest/", rpath);
 		List<VDMMessage> actual = new Vector<VDMMessage>();
@@ -262,11 +278,16 @@ abstract public class OvertureTest extends TestCase
 			String result = out.toString();
 			String expected = readFile(new File(assertName));
 			assertEquals("Evaluation error", expected, result);
+			assertTrue("Expecting runtime error " + error, error == 0);
 		}
 		catch (ContextException e)
 		{
 			Console.out.println(e);
-			fail("Unexpected runtime error: " + e);
+
+			if (e.number != error)
+			{
+				fail("Unexpected runtime error: " + e);
+			}
 		}
 		catch (Exception e)
 		{
@@ -307,7 +328,7 @@ abstract public class OvertureTest extends TestCase
 		}
 	}
 
-	public String readFile(File file) throws Exception
+	private String readFile(File file) throws Exception
 	{
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
