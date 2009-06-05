@@ -147,16 +147,19 @@ public class DBGPReader
 				}
 				catch (Exception e)
 				{
+					System.err.println(e.getMessage());
 					System.exit(3);
 				}
     		}
     		else
     		{
+				System.err.println("Type check errors");
     			System.exit(2);
     		}
 		}
 		else
 		{
+			System.err.println("Parse errors");
 			System.exit(1);
 		}
 	}
