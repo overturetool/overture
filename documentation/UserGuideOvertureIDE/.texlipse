@@ -1,0 +1,13 @@
+#TeXlipse project settings
+#Sat Jun 06 14:03:27 CEST 2009
+builderNum=2
+outputDir=
+makeIndSty=
+bibrefDir=
+outputFormat=pdf
+tempDir=tmp
+mainTexFile=UserGuideTemplate.tex
+outputFile=UserGuide.pdf
+langSpell=en
+markDer=true
+srcDir=

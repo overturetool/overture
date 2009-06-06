@@ -1,0 +1,91 @@
+\documentclass[11pt,a4paper,english,makeidx]{report}
+\usepackage{mathptmx}
+\renewcommand{\ttdefault}{mathptmx}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{latexsym}
+\usepackage{mathptmx}
+\usepackage{url}
+\usepackage{graphics}
+\usepackage{mathptmx}
+\renewcommand{\ttdefault}{mathptmx}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{babel}
+
+%
+%
+\makeatletter
+\def\maketitle{%
+  \null
+  \thispagestyle{empty}%
+  \vfill
+  \begin{center}\leavevmode
+    \normalfont
+    {\LARGE \@title\par}%
+    \vskip 1cm
+    {\Large \@author\par}%
+    \vskip 1cm
+    {\Large \@date\par}%
+  \end{center}%
+  \vfill
+  \null
+  \cleardoublepage
+  }
+\makeatother
+\title{User Guide for the Overture Plug-in for Eclipse}
+\author{David Holst M\o ller and Christian Thillemann}
+\date{2009}
+
+
+
+\begin{document}
+\maketitle
+
+
+\section*{Versions:}
+
+
+
+\begin{tabular}{|c|c|c|}
+\hline 
+date & Version & Comment\tabularnewline
+\hline
+\hline 
+03.06.2009 & 0.0.1 & First version of the user guide. Overture
+IDE\tabularnewline
+\hline
+\end{tabular}
+
+% Figures and Tables
+\newtheorem{fig}{Figure}\newtheorem{tab}{Table}
+
+% Counter commands
+\setcounter{page}{1} \setcounter{chapter}{0} \setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{3}
+
+% Page Headings
+% Chapter headings are in chapter files
+\pagestyle{myheadings}
+
+
+% TOC
+\pagenumbering{roman}
+\pagestyle{headings}
+\tableofcontents
+
+\pagebreak
+% MAIN FILESs 
+
+\pagenumbering{arabic}
+\input{UserGuide.tex}
+
+\end{document}
