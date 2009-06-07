@@ -15,10 +15,10 @@ public class VdmToolsWrapper {
 	private static final String NO_VDMTOOLS_EXECUTABLE_SUPPLIED = "No VDMTools command line executable supplied.";
 
 	public static String generatePogFile(String vppdeExecutable,
-			String[] vdmFiles) throws InputException, CommandLineException {
+			String[] vdmFiles) throws InputException, ConsoleException {
 		validateGeneratePogFileArguments(vppdeExecutable, vdmFiles);
 		String[] arguments = buildFlaggedPogComamndArguments(vdmFiles);
-		return CommandLineTools.executeProcess(vppdeExecutable, arguments);
+		return ConsoleTools.executeProcess(vppdeExecutable, arguments);
 	}
 
 
@@ -59,7 +59,7 @@ public class VdmToolsWrapper {
 			throws InputException {
 		InputValidator.validateStringNotEmptyNorNull(vppdeExecutable, 
 				NO_VDMTOOLS_EXECUTABLE_SUPPLIED);
-		InputValidator.validateIsFileAndExists(vppdeExecutable,
+		InputValidator.validateFileExists(vppdeExecutable,
 				NO_VDMTOOLS_EXECUTABLE_SUPPLIED);
 	}
 

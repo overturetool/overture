@@ -10,9 +10,9 @@ import java.io.File;
  * 
  */
 public class InputValidator {
-	
-	public static void validateAtLeastOneString(String[] strings,
-			String message) throws InputException {
+
+	public static void validateAtLeastOneString(String[] strings, String message)
+			throws InputException {
 		if (strings == null || strings.length == 0 || strings[0] == null
 				|| strings[0].length() == 0) {
 			throw new InputException(message);
@@ -21,19 +21,27 @@ public class InputValidator {
 
 	public static void validateStringNotEmptyNorNull(String string,
 			String message) throws InputException {
-		if(string == null || string.length() == 0) {
+		if (string == null || string.length() == 0) {
 			throw new InputException(message);
 		}
 	}
-	
+
 	/**
 	 * @param fileName
 	 * @throws InputException
 	 */
-	public static void validateIsFileAndExists(String fileName, String message)
+	public static void validateFileExists(String fileName, String message)
 			throws InputException {
 		File file = new File(fileName);
-		if(!file.exists() || !file.isFile()) { 
+		if (!file.exists() || !file.isFile()) {
+			throw new InputException(message);
+		}
+	}
+
+	public static void validateDirectoryExists(String fileName, String message)
+			throws InputException {
+		File file = new File(fileName);
+		if (!file.exists() || !file.isDirectory()) {
 			throw new InputException(message);
 		}
 	}
