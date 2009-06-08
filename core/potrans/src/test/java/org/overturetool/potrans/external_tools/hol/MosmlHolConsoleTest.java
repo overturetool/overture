@@ -1,4 +1,8 @@
-package org.overturetool.potrans.external_tools;
+package org.overturetool.potrans.external_tools.hol;
+
+import org.overturetool.potrans.external_tools.SystemProperties;
+import org.overturetool.potrans.external_tools.hol.HolEnvironmentBuilder;
+import org.overturetool.potrans.external_tools.hol.MosmlHolConsole;
 
 import junit.framework.TestCase;
 
