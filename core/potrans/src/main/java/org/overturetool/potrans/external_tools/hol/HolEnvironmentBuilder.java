@@ -1,7 +1,9 @@
-package org.overturetool.potrans.external_tools;
+package org.overturetool.potrans.external_tools.hol;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.overturetool.potrans.external_tools.SystemProperties;
 
 public class HolEnvironmentBuilder {
 

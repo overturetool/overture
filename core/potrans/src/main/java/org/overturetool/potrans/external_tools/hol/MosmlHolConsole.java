@@ -1,9 +1,12 @@
-package org.overturetool.potrans.external_tools;
+package org.overturetool.potrans.external_tools.hol;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import org.overturetool.potrans.external_tools.Console;
+import org.overturetool.potrans.external_tools.SystemProperties;
 
 public class MosmlHolConsole extends Console {
 
