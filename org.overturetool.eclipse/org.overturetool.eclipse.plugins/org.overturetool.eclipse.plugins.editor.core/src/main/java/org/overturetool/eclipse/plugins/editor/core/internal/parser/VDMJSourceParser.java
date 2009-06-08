@@ -10,6 +10,7 @@ import org.overturetool.eclipse.plugins.editor.core.internal.parser.OvertureSour
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.OvertureModuleDeclaration;
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.messages.VDMError;
+import org.overturetool.vdmj.messages.VDMWarning;
 
 public class VDMJSourceParser extends AbstractSourceParser {
 
@@ -54,11 +55,26 @@ public class VDMJSourceParser extends AbstractSourceParser {
 						error.number,
 						new String[] {},
 						ProblemSeverities.Error, 
-						converter.convert(error.location.startLine, error.location.startPos),
-						converter.convert(error.location.endLine, error.location.endPos),
+						converter.convert(error.location.startLine, error.location.startPos -1),
+						converter.convert(error.location.endLine, error.location.endPos -1),
 						error.location.startLine);
 				reporter.reportProblem(defaultProblem);
 			}
+		}
+		if (vdmPpParser.getParseWarnings().size() > 0)
+		{
+			for (VDMWarning warning : vdmPpParser.getParseWarnings()) {
+				DefaultProblem defaultProblem = new DefaultProblem(
+						new String(fileName),
+						warning.message,
+						warning.number,
+						new String[] {},
+						ProblemSeverities.Warning, 
+						converter.convert(warning.location.startLine, warning.location.startPos -1),
+						converter.convert(warning.location.endLine, warning.location.endPos -1),
+						warning.location.startLine);
+				reporter.reportProblem(defaultProblem);
+			}			
 		}
 		return moduleDeclaration;
 	}

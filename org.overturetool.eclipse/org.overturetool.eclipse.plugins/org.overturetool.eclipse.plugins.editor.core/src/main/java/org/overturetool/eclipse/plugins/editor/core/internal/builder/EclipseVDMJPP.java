@@ -30,6 +30,7 @@ public class EclipseVDMJPP extends VDMJ {
 	public ClassList classes = new ClassList();
 	private TypeChecker typeChecker;
 	private ArrayList<VDMError> parseErrors = new ArrayList<VDMError>();
+	private ArrayList<VDMWarning> parseWarnings = new ArrayList<VDMWarning>();
 	
 	public EclipseVDMJPP() {
 		Settings.dialect = Dialect.VDM_PP;
@@ -90,9 +91,9 @@ public class EclipseVDMJPP extends VDMJ {
 	@Override
 	public ExitStatus parse(List<File> files) {
 		parseErrors.clear();
+		parseWarnings.clear();
 		classes.clear();
 		LexLocation.resetLocations();
-		long before = System.currentTimeMillis();
    		int perrs = 0;
 
    		for (File file: files)
@@ -133,16 +134,11 @@ public class EclipseVDMJPP extends VDMJ {
 			for (VDMError error : reader.getErrors()) {
 				parseErrors.add(error);
 			}
+			for (VDMWarning warning : reader.getWarnings()) {
+				parseWarnings.add(warning);
+			}
 			
    		}
-
-   		long after = System.currentTimeMillis();
-
-   		info("Parsed " + plural(classes.size(), "class", "es") + " in " +
-   			(double)(after-before)/1000 + " secs. ");
-   		infoln(perrs == 0 ? "No syntax errors" :
-   			"Found " + plural(perrs, "syntax error", "s"));
-
    		return perrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
 	}
 	
@@ -155,9 +151,7 @@ public class EclipseVDMJPP extends VDMJ {
 		parseErrors.clear();
 		classes.clear();
 		LexLocation.resetLocations();
-		long before = System.currentTimeMillis();
    		int perrs = 0;
-
    		ClassReader reader = null;
 
 		try
@@ -188,13 +182,6 @@ public class EclipseVDMJPP extends VDMJ {
 			reader.printErrors(Console.out);
 		}
 
-   		long after = System.currentTimeMillis();
-
-   		info("Parsed " + plural(classes.size(), "class", "es") + " in " +
-   			(double)(after-before)/1000 + " secs. ");
-   		infoln(perrs == 0 ? "No syntax errors" :
-   			"Found " + plural(perrs, "syntax error", "s"));
-
    		for (VDMError error : reader.getErrors()) {
 			parseErrors.add(error);
 		}
@@ -202,10 +189,17 @@ public class EclipseVDMJPP extends VDMJ {
 	}
 	
 	
+	public List<VDMWarning> getParseWarnings()
+	{
+		return parseWarnings;
+	}
+	
 	public List<VDMError> getParseErrors()
 	{
 		return parseErrors;
 	}
+	
+	
 	
 	public List<VDMWarning> getTypeWarnings(){
 		return TypeChecker.getWarnings();
