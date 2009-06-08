@@ -799,3 +799,4 @@ as the expected and actual values.
 5010, -
 5011, -
 5012, "Recursive function has no measure"
+5013, "New reverse syntax affects this statement"

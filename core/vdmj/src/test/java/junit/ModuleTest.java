@@ -66,6 +66,7 @@ public class ModuleTest extends TestCase
 		Console.out.println("Parsed " + modules.size() + " modules in " +
    			(double)(after-before)/1000 + " secs. ");
 		mr.printErrors(Console.out);
+		mr.printWarnings(Console.out);
 		assertEquals("Parse errors", 0, mr.getErrorCount());
 
 		before = System.currentTimeMillis();

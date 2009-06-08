@@ -61,6 +61,7 @@ public class VDMTestCase extends TestCase
     		cr.close();
     		errs = cr.getErrorCount();
     		cr.printErrors(Console.out);
+    		cr.printWarnings(Console.out);
 		}
 		else if (parser.equalsIgnoreCase("overture"))
 		{
@@ -69,6 +70,7 @@ public class VDMTestCase extends TestCase
 			or.close();
 			errs = or.getErrorCount();
 			or.printErrors(Console.out);
+			or.printWarnings(Console.out);
 		}
 		else
 		{

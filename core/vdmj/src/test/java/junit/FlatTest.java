@@ -69,6 +69,7 @@ public class FlatTest extends TestCase
 		Console.out.println("Parsed " + definitions.size() + " definitions in " +
    			(double)(after-before)/1000 + " secs. ");
 		dr.printErrors(Console.out);
+		dr.printWarnings(Console.out);
 		assertEquals("Parse errors", 0, dr.getErrorCount());
 
 		// TypeChecker typeChecker = new FlatTypeChecker(definitions, false);

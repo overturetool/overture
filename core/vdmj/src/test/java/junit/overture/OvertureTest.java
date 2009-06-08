@@ -375,6 +375,7 @@ abstract public class OvertureTest extends TestCase
     		classes = cr.readClasses();
     		cr.close();
     		messages.addAll(cr.getErrors());
+    		messages.addAll(cr.getWarnings());
 		}
 		else if (parser.equalsIgnoreCase("overture"))
 		{
@@ -382,6 +383,7 @@ abstract public class OvertureTest extends TestCase
 			classes = or.readClasses();
 			or.close();
     		messages.addAll(or.getErrors());
+    		messages.addAll(or.getWarnings());
 		}
 		else
 		{

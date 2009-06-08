@@ -30,6 +30,7 @@ import org.overturetool.vdmj.definitions.AssignmentDefinition;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.ExpressionList;
+import org.overturetool.vdmj.expressions.ReverseExpression;
 import org.overturetool.vdmj.expressions.UndefinedExpression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
@@ -603,11 +604,49 @@ public class StatementReader extends SyntaxReader
 	{
 		PatternBind pb = getBindReader().readPatternOrBind();
 		checkFor(Token.IN, 2214, "Expecting 'in' after pattern bind");
-		boolean reverse = false; // was ignore(Token.REVERSE);
-		Expression exp = getExpressionReader().readExpression();
+
+		// The old syntax used to include a "reverse" keyword as part
+		// of the loop grammar, whereas the new syntax (LB:2791065)
+		// makes the reverse a unary sequence operator. The precedence
+		// changes though ("in reverse a ^ b" is now "in (reverse a) ^ b")
+		// so we parse both ways and give a warning if there is a change
+		// in semantics.
+
+		boolean reverse = lastToken().is(Token.REVERSE);
+
+		Expression newexp = null;
+		Expression oldexp = null;
+
+		if (reverse)
+		{
+    		try
+    		{
+        		reader.push();
+        		nextToken();
+        		Expression rev = getExpressionReader().readExpression();
+    			oldexp = new ReverseExpression(token, rev);
+    		}
+    		catch (ParserException e)
+    		{
+    			// Old syntax had errors
+    		}
+
+    		reader.pop();
+		}
+
+		newexp = getExpressionReader().readExpression();
+
+		if (oldexp != null)		// ie. if we parsed an old reverse
+		{
+			if (!oldexp.toString().equals(newexp.toString()))
+			{
+				warning(5013, "New reverse syntax affects this statement", token);
+			}
+		}
+
 		checkFor(Token.DO, 2215, "Expecting 'do' before loop statement");
 		Statement body = getStatementReader().readStatement();
-		return new ForPatternBindStatement(token, pb, reverse, exp, body);
+		return new ForPatternBindStatement(token, pb, false, newexp, body);
 	}
 
 	private Statement readForIndexStatement(LexLocation token)

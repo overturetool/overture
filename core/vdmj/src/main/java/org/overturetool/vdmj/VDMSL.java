@@ -72,6 +72,7 @@ public class VDMSL extends VDMJ
 		modules.clear();
 		LexLocation.resetLocations();
    		int perrs = 0;
+   		int pwarn = 0;
    		long duration = 0;
 
    		for (File file: files)
@@ -137,6 +138,12 @@ public class VDMSL extends VDMJ
     			perrs += reader.getErrorCount();
     			reader.printErrors(Console.out);
 			}
+
+			if (reader != null && reader.getWarningCount() > 0)
+			{
+				pwarn += reader.getWarningCount();
+    			reader.printWarnings(Console.out);
+			}
    		}
 
    		int n = modules.notLoaded();
@@ -145,8 +152,10 @@ public class VDMSL extends VDMJ
    		{
        		info("Parsed " + plural(n, "module", "s") + " in " +
        			(double)(duration)/1000 + " secs. ");
-       		infoln(perrs == 0 ? "No syntax errors" :
+       		info(perrs == 0 ? "No syntax errors" :
        			"Found " + plural(perrs, "syntax error", "s"));
+      		infoln(pwarn == 0 ? "" : " and " +
+      			(warnings ? "" : "suppressed ") + plural(pwarn, "warning", "s"));
    		}
 
    		return perrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;

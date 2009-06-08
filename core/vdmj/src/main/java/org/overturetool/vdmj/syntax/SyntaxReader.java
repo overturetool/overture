@@ -32,6 +32,7 @@ import java.util.Vector;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
@@ -39,6 +40,7 @@ import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.messages.LocatedException;
 import org.overturetool.vdmj.messages.MessageException;
 import org.overturetool.vdmj.messages.VDMError;
+import org.overturetool.vdmj.messages.VDMWarning;
 
 
 /**
@@ -69,6 +71,9 @@ public abstract class SyntaxReader
 
 	/** The errors raised. */
 	private List<VDMError> errors = new Vector<VDMError>();
+
+	/** The warnings raised. */
+	private List<VDMWarning> warnings = new Vector<VDMWarning>();
 
 	/** The sub-readers defined, if any. */
 	private List<SyntaxReader> readers = new Vector<SyntaxReader>();
@@ -521,6 +526,23 @@ public abstract class SyntaxReader
 	}
 
 	/**
+	 * Report a warning. Unlike errors, this does no token recovery.
+	 */
+
+	protected void warning(int no, String msg, LexLocation location)
+	{
+		VDMWarning vdmwarning = new VDMWarning(no, msg, location);
+		warnings.add(vdmwarning);
+
+		if (warnings.size() >= MAX-1)
+		{
+			errors.add(new VDMError(9, "Too many warnings", location));
+			throw new MessageException("Error: Too many warnings");
+		}
+	}
+
+
+	/**
 	 * @return The error count from all readers that can raise errors.
 	 */
 
@@ -553,11 +575,56 @@ public abstract class SyntaxReader
 		return list;
 	}
 
+	/**
+	 * @return The warning count from all readers that can raise warnings.
+	 */
+
+	public int getWarningCount()
+	{
+		int size = 0;
+
+		for (SyntaxReader rdr: readers)
+		{
+			size += rdr.getWarningCount();
+		}
+
+		return size + warnings.size();
+	}
+
+	/**
+	 * @return The warnings from all readers that can raise warnings.
+	 */
+
+	public List<VDMWarning> getWarnings()
+	{
+		List<VDMWarning> list = new Vector<VDMWarning>();
+
+		for (SyntaxReader rdr: readers)
+		{
+			list.addAll(rdr.getWarnings());
+		}
+
+		list.addAll(warnings);
+		return list;
+	}
+
+	/**
+	 * Print errors and warnings to the PrintWriter passed.
+	 */
+
 	public void printErrors(PrintWriter out)
 	{
 		for (VDMError e: getErrors())
 		{
 			out.println(e.toString());
+		}
+	}
+
+	public void printWarnings(PrintWriter out)
+	{
+		for (VDMWarning w: getWarnings())
+		{
+			out.println(w.toString());
 		}
 	}
 
