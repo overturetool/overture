@@ -6,9 +6,9 @@ package org.overturetool.potrans.external_tools;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import org.overturetool.potrans.external_tools.CommandLineProcess;
-import org.overturetool.potrans.external_tools.CommandLineProcessCommand;
-import org.overturetool.potrans.external_tools.CommandLineProcessStringInput;
+import org.overturetool.potrans.external_tools.ConsoleProcess;
+import org.overturetool.potrans.external_tools.ConsoleProcessCommand;
+import org.overturetool.potrans.external_tools.ConsoleProcessInputText;
 import org.overturetool.potrans.external_tools.InputValidator;
 
 import junit.framework.TestCase;
@@ -18,6 +18,8 @@ import junit.framework.TestCase;
  * 
  */
 public class CommandLineProcessTest extends TestCase {
+
+	private static final String THIS_IS_A_TEST = "This is a test.";
 
 	private final static String newLine = System.getProperty("line.separator");
 
@@ -53,36 +55,36 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#executeProcessAndWaitForItToFinish()}
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcess#executeBathProcess()}
 	 * .
 	 */
 	public void testExecuteProcessAndWaitForItToFinish() throws Exception {
 		String inputString = "This is a test";
-		CommandLineProcessCommand command = new CommandLineProcessCommand(
+		ConsoleProcessCommand command = new ConsoleProcessCommand(
 				"echo", new String[] { inputString });
-		CommandLineProcess cmdLineProcess = new CommandLineProcess(command);
+		ConsoleProcess cmdLineProcess = new ConsoleProcess(command);
 
-		int exitValue = cmdLineProcess.executeProcessAndWaitForItToFinish();
+		int exitValue = cmdLineProcess.executeBathProcess();
 
 		assertEquals(0, exitValue);
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#executeProcessAndWaitForItToFinish()}
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcess#executeBathProcess()}
 	 * .
 	 */
 	public void testExecuteProcessAndWaitForItToFinishInvalidCommand()
 			throws Exception {
 		String invalidCommand = "invalid_command";
-		CommandLineProcessCommand command = new CommandLineProcessCommand(
-				"echo", new String[] { invalidCommand });
-		CommandLineProcess cmdLineProcess = new CommandLineProcess(command);
+		ConsoleProcessCommand command = new ConsoleProcessCommand(
+				invalidCommand);
+		ConsoleProcess cmdLineProcess = new ConsoleProcess(command);
 
 		try {
-			cmdLineProcess.executeProcessAndWaitForItToFinish();
-		} catch (IOException e) {
-			assertEquals(invalidCommand + ": not found", e.getMessage());
+			cmdLineProcess.executeBathProcess();
+		} catch (ConsoleException e) {
+			assertEquals(invalidCommand + ": not found", e.getCause().getMessage());
 		} finally {
 			cmdLineProcess.destroy();
 		}
@@ -90,20 +92,20 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#executeProcessAndWaitForItToFinish()}
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcess#executeBathProcess()}
 	 * .
 	 */
 	public void testExecuteProcessAndWaitForItToFinishEmptyCommand()
 			throws Exception {
 		String emptyCommand = "";
-		CommandLineProcessCommand command = new CommandLineProcessCommand(
-				"echo", new String[] { emptyCommand });
-		CommandLineProcess cmdLineProcess = new CommandLineProcess(command);
+		ConsoleProcessCommand command = new ConsoleProcessCommand(
+				emptyCommand);
+		ConsoleProcess cmdLineProcess = new ConsoleProcess(command);
 
 		try {
-			cmdLineProcess.executeProcessAndWaitForItToFinish();
-		} catch (IOException e) {
-			assertEquals(emptyCommand + ": not found", e.getMessage());
+			cmdLineProcess.executeBathProcess();
+		} catch (ConsoleException e) {
+			assertEquals(emptyCommand + ": not found", e.getCause().getMessage());
 		} finally {
 			cmdLineProcess.destroy();
 		}
@@ -111,7 +113,7 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#executeProcess()}
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcess#executeProcess()}
 	 * .
 	 */
 	public void testExecuteProcess() throws Exception {
@@ -120,9 +122,9 @@ public class CommandLineProcessTest extends TestCase {
 			waitCommand = "PAUSE";
 		else
 			waitCommand = "read";
-		CommandLineProcessCommand command = new CommandLineProcessCommand(
-				"echo", new String[] { waitCommand });
-		CommandLineProcess cmdLineProcess = new CommandLineProcess(command);
+		ConsoleProcessCommand command = new ConsoleProcessCommand(
+				waitCommand);
+		ConsoleProcess cmdLineProcess = new ConsoleProcess(command);
 		cmdLineProcess.executeProcess();
 
 		try {
@@ -137,19 +139,19 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#executeProcess()}
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcess#executeProcess()}
 	 * .
 	 */
 	public void testExecuteProcessInvalidCommand() throws Exception {
 		String invalidCommand = "invalid_command";
-		CommandLineProcessCommand command = new CommandLineProcessCommand(
-				"echo", new String[] { invalidCommand });
-		CommandLineProcess cmdLineProcess = new CommandLineProcess(command);
+		ConsoleProcessCommand command = new ConsoleProcessCommand(
+				invalidCommand);
+		ConsoleProcess cmdLineProcess = new ConsoleProcess(command);
 
 		try {
 			cmdLineProcess.executeProcess();
-		} catch (IOException e) {
-			assertEquals(invalidCommand + ": not found", e.getMessage());
+		} catch (ConsoleException e) {
+			assertEquals(invalidCommand + ": not found", e.getCause().getMessage());
 		} finally {
 			if(!cmdLineProcess.isFinished())
 				cmdLineProcess.destroy();
@@ -158,19 +160,19 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#executeProcess()}
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcess#executeProcess()}
 	 * .
 	 */
 	public void testExecuteProcessEmptyCommand() throws Exception {
 		String emptyCommand = "";
-		CommandLineProcessCommand command = new CommandLineProcessCommand(
-				"echo", new String[] { emptyCommand });
-		CommandLineProcess cmdLineProcess = new CommandLineProcess(command);
+		ConsoleProcessCommand command = new ConsoleProcessCommand(
+				emptyCommand);
+		ConsoleProcess cmdLineProcess = new ConsoleProcess(command);
 
 		try {
 			cmdLineProcess.executeProcess();
-		} catch (IOException e) {
-			assertEquals(emptyCommand + ": not found", e.getMessage());
+		} catch (ConsoleException e) {
+			assertEquals(emptyCommand + ": not found", e.getCause().getMessage());
 		} finally {
 			if(!cmdLineProcess.isFinished())
 				cmdLineProcess.destroy();
@@ -179,32 +181,32 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#getProcessOutput()}
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcess#getProcessOutputString()}
 	 * .
 	 */
 	public void testGetProcessOutput() throws Exception {
 		String inputString = "This is a test";
-		CommandLineProcessCommand command = new CommandLineProcessCommand(
+		ConsoleProcessCommand command = new ConsoleProcessCommand(
 				"echo", new String[] { inputString });
-		CommandLineProcess cmdLineProcess = new CommandLineProcess(command);
-		cmdLineProcess.executeProcessAndWaitForItToFinish();
+		ConsoleProcess cmdLineProcess = new ConsoleProcess(command);
+		cmdLineProcess.executeBathProcess();
 
-		String actual = cmdLineProcess.getProcessOutput();
+		String actual = cmdLineProcess.getProcessOutputString();
 
 		assertEquals(inputString, actual.trim());
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#getProcessError()}
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcess#getProcessError()}
 	 * .
 	 */
 	public void testGetProcessError() throws Exception {
 		String invalidFlag = "-invalid_flag";
-		CommandLineProcessCommand command = new CommandLineProcessCommand(
+		ConsoleProcessCommand command = new ConsoleProcessCommand(
 				vppdeExecutable, new String[] { invalidFlag });
-		CommandLineProcess cmdLineProcess = new CommandLineProcess(command);
-		cmdLineProcess.executeProcessAndWaitForItToFinish();
+		ConsoleProcess cmdLineProcess = new ConsoleProcess(command);
+		cmdLineProcess.executeBathProcess();
 
 		String actual = cmdLineProcess.getProcessError();
 
@@ -215,18 +217,18 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#setProcessInput(java.lang.String)}
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcess#setProcessInput(java.lang.String)}
 	 * .
 	 * 
 	 * Miguel: This test will probably fail on Windows. If it does please
 	 * contact me and supply the output from JUnit.
 	 */
 	public void testSetProcessInput() throws Exception {
-		CommandLineProcessCommand command = new CommandLineProcessCommand(
+		ConsoleProcessCommand command = new ConsoleProcessCommand(
 				vppdeExecutable);
-		CommandLineProcess cmdLineProcess = new CommandLineProcess(command);
+		ConsoleProcess cmdLineProcess = new ConsoleProcess(command);
 		cmdLineProcess.executeProcess();
-		cmdLineProcess.setProcessInput(new CommandLineProcessStringInput("quit" + newLine));
+		cmdLineProcess.setProcessInput(new ConsoleProcessInputText("quit" + newLine));
 		cmdLineProcess.waitFor();
 
 		assertEquals(settingsWarning, 0, cmdLineProcess.getExitValue());
@@ -235,15 +237,15 @@ public class CommandLineProcessTest extends TestCase {
 	public void testSetProcessInputOutputInterleaved() throws Exception {
 		String expected = "codegen (cg) class [opt]  enable (ena) ident";
 						
-		CommandLineProcessCommand command = new CommandLineProcessCommand(
+		ConsoleProcessCommand command = new ConsoleProcessCommand(
 				vppdeExecutable);
-		CommandLineProcess cmdLineProcess = new CommandLineProcess(command);
+		ConsoleProcess cmdLineProcess = new ConsoleProcess(command);
 		cmdLineProcess.executeProcess();
-		cmdLineProcess.setProcessInput(new CommandLineProcessStringInput("help" + newLine));
-		cmdLineProcess.setProcessInput(new CommandLineProcessStringInput("quit" + newLine));
+		cmdLineProcess.setProcessInput(new ConsoleProcessInputText("help" + newLine));
+		cmdLineProcess.setProcessInput(new ConsoleProcessInputText("quit" + newLine));
 		cmdLineProcess.waitFor();
 		
-		String actual = cmdLineProcess.getProcessOutput();
+		String actual = cmdLineProcess.getProcessOutputString();
 
 		assertEquals(settingsWarning, 0, cmdLineProcess.getExitValue());
 		assertTrue(settingsWarning, actual.contains(expected));
@@ -251,15 +253,15 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#getProcessOutputFromStream(java.io.InputStream)}
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcess#getProcessOutputFromStream(java.io.InputStream)}
 	 * .
 	 */
 	public void testGetProcessOutputFromStream() throws Exception {
-		String expected = "This is a test.";
+		String expected = THIS_IS_A_TEST;
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(expected
 				.getBytes());
 
-		String actual = CommandLineProcess
+		String actual = new ConsoleProcess(new ConsoleProcessCommand(""))
 				.getProcessOutputFromStream(inputStream);
 
 		assertEquals(expected, actual);
@@ -267,14 +269,14 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#getProcessOutputFromStream(java.io.InputStream)}
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcess#getProcessOutputFromStream(java.io.InputStream)}
 	 * .
 	 */
 	public void testGetProcessOutputFromStreamNullInputStream()
 			throws Exception {
 		ByteArrayInputStream inputStream = null;
 
-		String actual = CommandLineProcess
+		String actual = new ConsoleProcess(new ConsoleProcessCommand(""))
 				.getProcessOutputFromStream(inputStream);
 
 		assertEquals("", actual);
@@ -282,23 +284,23 @@ public class CommandLineProcessTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#getTextFromStreamToStringBuffer(java.io.InputStream, java.lang.StringBuffer)}
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcess#getTextFromStreamToStringBuffer(java.io.InputStream, java.lang.StringBuffer)}
 	 * .
 	 */
 	public void testGetTextFromStreamToStringBuffer() throws Exception {
-		String expected = "This is a test.";
+		String expected = THIS_IS_A_TEST;
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(expected
 				.getBytes());
 		StringBuffer text = new StringBuffer();
 
-		CommandLineProcess.getTextFromStreamToStringBuffer(inputStream, text);
+		new ConsoleProcess(new ConsoleProcessCommand("")).getTextFromStreamToStringBuffer(inputStream, text);
 
 		assertEquals(expected, text.toString());
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#getTextFromStreamToStringBuffer(java.io.InputStream, java.lang.StringBuffer)}
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcess#getTextFromStreamToStringBuffer(java.io.InputStream, java.lang.StringBuffer)}
 	 * .
 	 */
 	public void testGetTextFromStreamToStringBufferNullInputStream()
@@ -306,46 +308,46 @@ public class CommandLineProcessTest extends TestCase {
 		ByteArrayInputStream inputStream = null;
 		StringBuffer text = new StringBuffer();
 
-		CommandLineProcess.getTextFromStreamToStringBuffer(inputStream, text);
+		new ConsoleProcess(new ConsoleProcessCommand("")).getTextFromStreamToStringBuffer(inputStream, text);
 
 		assertEquals("", text.toString());
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#getTextFromStreamToStringBuffer(java.io.InputStream, java.lang.StringBuffer)}
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcess#getTextFromStreamToStringBuffer(java.io.InputStream, java.lang.StringBuffer)}
 	 * .
 	 */
 	public void testGetTextFromStreamToStringBufferNullTextBuffer()
 			throws Exception {
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(
-				"This is a test.".getBytes());
+				THIS_IS_A_TEST.getBytes());
 		StringBuffer text = null;
 
-		CommandLineProcess.getTextFromStreamToStringBuffer(inputStream, text);
+		new ConsoleProcess(new ConsoleProcessCommand("")).getTextFromStreamToStringBuffer(inputStream, text);
 
 		assertNull(text);
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#getExitValue()}
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcess#getExitValue()}
 	 * .
 	 */
 	public void testGetExitValue() throws Exception {
-		String inputString = "This is a test";
-		CommandLineProcessCommand command = new CommandLineProcessCommand(
+		String inputString = THIS_IS_A_TEST;
+		ConsoleProcessCommand command = new ConsoleProcessCommand(
 				"echo", new String[] { inputString });
-		CommandLineProcess cmdLineProcess = new CommandLineProcess(command);
+		ConsoleProcess cmdLineProcess = new ConsoleProcess(command);
 
-		int expected = cmdLineProcess.executeProcessAndWaitForItToFinish();
+		int actual = cmdLineProcess.executeBathProcess();
 
-		assertEquals(expected, cmdLineProcess.getExitValue());
+		assertEquals(cmdLineProcess.getExitValue(), actual);
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.external_tools.CommandLineProcess#getExitValue()}
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcess#getExitValue()}
 	 * .
 	 */
 	public void testGetExitValueProcessNotFinished() throws Exception {
@@ -354,9 +356,29 @@ public class CommandLineProcessTest extends TestCase {
 			waitCommand = "PAUSE";
 		else
 			waitCommand = "read";
-		CommandLineProcessCommand command = new CommandLineProcessCommand(
-				"echo", new String[] { waitCommand });
-		CommandLineProcess cmdLineProcess = new CommandLineProcess(command);
+		ConsoleProcessCommand command = new ConsoleProcessCommand(
+				waitCommand);
+		ConsoleProcess cmdLineProcess = new ConsoleProcess(command);
+		cmdLineProcess.executeProcess();
+
+		try {
+			cmdLineProcess.getExitValue();
+		} catch (IllegalThreadStateException e) {
+			assertEquals("process hasn't exited", e.getMessage());
+		} finally {
+			if(!cmdLineProcess.isFinished())
+				cmdLineProcess.destroy();
+		}
+	}
+	
+	/**
+	 * Test method for
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcess#executeProcess()}
+	 * .
+	 */
+	public void testExecuteEcho() throws Exception {
+		ConsoleProcessCommand command = new ConsoleProcessCommand("echo");
+		ConsoleProcess cmdLineProcess = new ConsoleProcess(command);
 		cmdLineProcess.executeProcess();
 
 		try {

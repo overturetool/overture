@@ -14,8 +14,6 @@ import junit.framework.TestCase;
 import org.overturetool.ast.imp.OmlBracketedExpression;
 import org.overturetool.ast.itf.IOmlDocument;
 import org.overturetool.ast.itf.IOmlExpression;
-import org.overturetool.potrans.external_tools.CommandLineTools;
-import org.overturetool.potrans.external_tools.OvertureParserWrapper;
 
 /**
  * @author miguel_ferreira
@@ -39,7 +37,7 @@ public class OvertureParserWrapperTest extends TestCase {
 		Preferences.importPreferences(new BufferedInputStream(
 				new FileInputStream("Settings.xml")));
 		Preferences preferences = Preferences
-				.userNodeForPackage(CommandLineTools.class);
+				.userNodeForPackage(this.getClass());
 
 		testModel1 = preferences.get("testModel1", null);
 

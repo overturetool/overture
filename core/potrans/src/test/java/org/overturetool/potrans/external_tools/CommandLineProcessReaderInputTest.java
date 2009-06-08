@@ -5,7 +5,7 @@ package org.overturetool.potrans.external_tools;
 
 import java.io.StringReader;
 
-import org.overturetool.potrans.external_tools.CommandLineProcessReaderInput;
+import org.overturetool.potrans.external_tools.ConsoleProcessInputReader;
 
 import junit.framework.TestCase;
 
@@ -35,12 +35,12 @@ public class CommandLineProcessReaderInputTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.external_tools.CommandLineProcessReaderInput#CommandLineProcessReaderInput(java.io.Reader)}
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcessInputReader#CommandLineProcessReaderInput(java.io.Reader)}
 	 * .
 	 */
 	public void testCommandLineProcessReaderInput() throws Exception {
 		String expected = "test string";
-		CommandLineProcessReaderInput readerInput = new CommandLineProcessReaderInput(
+		ConsoleProcessInputReader readerInput = new ConsoleProcessInputReader(
 				new StringReader(expected));
 
 		String actual = readerInput.buffer.readLine();
@@ -50,14 +50,14 @@ public class CommandLineProcessReaderInputTest extends TestCase {
 	}
 	
 	public void testCommandLineProcessReaderInputNullInput() throws Exception {
-		CommandLineProcessReaderInput readerInput = new CommandLineProcessReaderInput(
+		ConsoleProcessInputReader readerInput = new ConsoleProcessInputReader(
 				null);
 
 		assertNull(readerInput.buffer);
 	}
 	
 	public void testCommandLineProcessReaderInputEmptyInput() throws Exception {
-		CommandLineProcessReaderInput readerInput = new CommandLineProcessReaderInput(
+		ConsoleProcessInputReader readerInput = new ConsoleProcessInputReader(
 				new StringReader(""));
 
 		assertNotNull(readerInput.buffer);
@@ -66,12 +66,12 @@ public class CommandLineProcessReaderInputTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.external_tools.CommandLineProcessReaderInput#getBytes()}
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcessInputReader#getBytes()}
 	 * .
 	 */
 	public void testGetBytes() throws Exception {
 		String testInput = "test string";
-		CommandLineProcessReaderInput readerInput = new CommandLineProcessReaderInput(
+		ConsoleProcessInputReader readerInput = new ConsoleProcessInputReader(
 				new StringReader(testInput));
 		byte[] expected = testInput.getBytes();
 		byte[] actual = readerInput.getBytes();
@@ -83,7 +83,7 @@ public class CommandLineProcessReaderInputTest extends TestCase {
 
 	public void testGetBytesEmptyInput() throws Exception {
 		String emptyString = "";
-		CommandLineProcessReaderInput readerInput = new CommandLineProcessReaderInput(
+		ConsoleProcessInputReader readerInput = new ConsoleProcessInputReader(
 				new StringReader(emptyString));
 		byte[] actual = readerInput.getBytes();
 
@@ -91,7 +91,7 @@ public class CommandLineProcessReaderInputTest extends TestCase {
 	}
 	
 	public void testGetBytesNullInput() throws Exception {
-		CommandLineProcessReaderInput readerInput = new CommandLineProcessReaderInput(
+		ConsoleProcessInputReader readerInput = new ConsoleProcessInputReader(
 				null);
 		byte[] actual = readerInput.getBytes();
 
@@ -100,26 +100,26 @@ public class CommandLineProcessReaderInputTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.external_tools.CommandLineProcessReaderInput#isStatic()}
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcessInputReader#isStatic()}
 	 * .
 	 */
 	public void testIsStatic() {
 		String expected = "test string";
-		CommandLineProcessReaderInput readerInput = new CommandLineProcessReaderInput(
+		ConsoleProcessInputReader readerInput = new ConsoleProcessInputReader(
 				new StringReader(expected));
 
 		assertFalse(readerInput.isStatic());
 	}
 	
 	public void testIsStaticEmptyInput() {
-		CommandLineProcessReaderInput readerInput = new CommandLineProcessReaderInput(
+		ConsoleProcessInputReader readerInput = new ConsoleProcessInputReader(
 				new StringReader(""));
 
 		assertFalse(readerInput.isStatic());
 	}
 
 	public void testIsStaticNullInput() {
-		CommandLineProcessReaderInput readerInput = new CommandLineProcessReaderInput(
+		ConsoleProcessInputReader readerInput = new ConsoleProcessInputReader(
 				null);
 
 		assertFalse(readerInput.isStatic());
@@ -127,12 +127,12 @@ public class CommandLineProcessReaderInputTest extends TestCase {
 	
 	/**
 	 * Test method for
-	 * {@link org.overturetool.potrans.external_tools.CommandLineProcessReaderInput#getText()}
+	 * {@link org.overturetool.potrans.external_tools.ConsoleProcessInputReader#getText()}
 	 * .
 	 */
 	public void testGetText() throws Exception {
 		String expected = "test string";
-		CommandLineProcessReaderInput readerInput = new CommandLineProcessReaderInput(
+		ConsoleProcessInputReader readerInput = new ConsoleProcessInputReader(
 				new StringReader(expected));
 
 		String actual = readerInput.getText();
@@ -141,14 +141,14 @@ public class CommandLineProcessReaderInputTest extends TestCase {
 	}
 	
 	public void testGetTextEmptyInput() throws Exception {
-		CommandLineProcessReaderInput readerInput = new CommandLineProcessReaderInput(
+		ConsoleProcessInputReader readerInput = new ConsoleProcessInputReader(
 				new StringReader(""));
 
 		assertNull(readerInput.getText());
 	}
 	
 	public void testGetTextNullInput() throws Exception {
-		CommandLineProcessReaderInput readerInput = new CommandLineProcessReaderInput(
+		ConsoleProcessInputReader readerInput = new ConsoleProcessInputReader(
 				null);
 
 		assertNull(readerInput.getText());

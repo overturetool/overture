@@ -3,7 +3,7 @@
  */
 package org.overturetool.potrans.external_tools;
 
-import org.overturetool.potrans.external_tools.CommandLineProcessCommand;
+import org.overturetool.potrans.external_tools.ConsoleProcessCommand;
 
 import junit.framework.TestCase;
 
@@ -28,13 +28,13 @@ public class CommandLineProcessCommandTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.overturetool.potrans.external_tools.CommandLineProcessCommand#CommandLineProcessCommand(java.lang.String, java.lang.String[])}.
+	 * Test method for {@link org.overturetool.potrans.external_tools.ConsoleProcessCommand#CommandLineProcessCommand(java.lang.String, java.lang.String[])}.
 	 */
 	public void testCommandLineProcessCommandNameArguments() {
 		String name = "name";
 		String argument = "argument";
 		String[] arguments = new String[] { argument };
-		CommandLineProcessCommand command = new CommandLineProcessCommand(name, arguments);
+		ConsoleProcessCommand command = new ConsoleProcessCommand(name, arguments);
 		
 		assertEquals(name, command.name);
 		assertEquals(argument, command.arguments[0]);
@@ -44,7 +44,7 @@ public class CommandLineProcessCommandTest extends TestCase {
 		String name = null;
 		String argument = "argument";
 		String[] arguments = new String[] { argument };
-		CommandLineProcessCommand command = new CommandLineProcessCommand(name, arguments);
+		ConsoleProcessCommand command = new ConsoleProcessCommand(name, arguments);
 		
 		assertNull(command.name);
 		assertEquals(argument, command.arguments[0]);
@@ -54,7 +54,7 @@ public class CommandLineProcessCommandTest extends TestCase {
 		String name = "";
 		String argument = "argument";
 		String[] arguments = new String[] { argument };
-		CommandLineProcessCommand command = new CommandLineProcessCommand(name, arguments);
+		ConsoleProcessCommand command = new ConsoleProcessCommand(name, arguments);
 		
 		assertEquals(name, command.name);
 		assertEquals(argument, command.arguments[0]);
@@ -63,7 +63,7 @@ public class CommandLineProcessCommandTest extends TestCase {
 	public void testCommandLineProcessCommandNameNullArguments() {
 		String name = "name";
 		String[] arguments = null;
-		CommandLineProcessCommand command = new CommandLineProcessCommand(name, arguments);
+		ConsoleProcessCommand command = new ConsoleProcessCommand(name, arguments);
 		
 		assertEquals(name, command.name);
 		assertNotNull(command.arguments);
@@ -73,7 +73,7 @@ public class CommandLineProcessCommandTest extends TestCase {
 	public void testCommandLineProcessCommandNameEmptyArguments() {
 		String name = "name";
 		String[] arguments = new String[] {};
-		CommandLineProcessCommand command = new CommandLineProcessCommand(name, arguments);
+		ConsoleProcessCommand command = new ConsoleProcessCommand(name, arguments);
 		
 		assertEquals(name, command.name);
 		assertNotNull(command.arguments);
@@ -81,11 +81,11 @@ public class CommandLineProcessCommandTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.overturetool.potrans.external_tools.CommandLineProcessCommand#CommandLineProcessCommand(java.lang.String)}.
+	 * Test method for {@link org.overturetool.potrans.external_tools.ConsoleProcessCommand#CommandLineProcessCommand(java.lang.String)}.
 	 */
 	public void testCommandLineProcessCommandName() {
 		String name = "name";
-		CommandLineProcessCommand command = new CommandLineProcessCommand(name);
+		ConsoleProcessCommand command = new ConsoleProcessCommand(name);
 		
 		assertEquals(name, command.name);
 		assertNotNull(command.arguments);
@@ -93,7 +93,7 @@ public class CommandLineProcessCommandTest extends TestCase {
 	}
 	
 	public void testCommandLineProcessCommandNullName() {
-		CommandLineProcessCommand command = new CommandLineProcessCommand(null);
+		ConsoleProcessCommand command = new ConsoleProcessCommand(null);
 		
 		assertNull(command.name);
 		assertNotNull(command.arguments);
@@ -102,7 +102,7 @@ public class CommandLineProcessCommandTest extends TestCase {
 	
 	public void testCommandLineProcessCommandEmptyName() {
 		String name = "";
-		CommandLineProcessCommand command = new CommandLineProcessCommand(name);
+		ConsoleProcessCommand command = new ConsoleProcessCommand(name);
 		
 		assertEquals(name, command.name);
 		assertNotNull(command.arguments);
@@ -110,14 +110,14 @@ public class CommandLineProcessCommandTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.overturetool.potrans.external_tools.CommandLineProcessCommand#getCommandArray()}.
+	 * Test method for {@link org.overturetool.potrans.external_tools.ConsoleProcessCommand#getCommandArray()}.
 	 */
 	public void testGetCommandArray() {
 		String name = "name";
 		String argument1 = "argument1";
 		String argument2 = "argument2";
 		String[] arguments = new String[] { argument1, argument2 };
-		CommandLineProcessCommand command = new CommandLineProcessCommand(name, arguments);
+		ConsoleProcessCommand command = new ConsoleProcessCommand(name, arguments);
 		String[] expected = new String[] { name, argument1, argument2 };
 		
 		String[] actual = command.getCommandArray();
@@ -132,7 +132,7 @@ public class CommandLineProcessCommandTest extends TestCase {
 		String argument1 = "argument1";
 		String argument2 = "argument2";
 		String[] arguments = new String[] { argument1, argument2 };
-		CommandLineProcessCommand command = new CommandLineProcessCommand(name, arguments);
+		ConsoleProcessCommand command = new ConsoleProcessCommand(name, arguments);
 		String[] expected = new String[] { name, argument1, argument2 };
 		
 		String[] actual = command.getCommandArray();
@@ -147,7 +147,7 @@ public class CommandLineProcessCommandTest extends TestCase {
 		String argument1 = "argument1";
 		String argument2 = "argument2";
 		String[] arguments = new String[] { argument1, argument2 };
-		CommandLineProcessCommand command = new CommandLineProcessCommand(name, arguments);
+		ConsoleProcessCommand command = new ConsoleProcessCommand(name, arguments);
 		String[] expected = new String[] { name, argument1, argument2 };
 		
 		String[] actual = command.getCommandArray();
@@ -160,7 +160,7 @@ public class CommandLineProcessCommandTest extends TestCase {
 	public void testGetCommandArrayNullArguments() {
 		String name = "name";
 		String[] arguments = null;
-		CommandLineProcessCommand command = new CommandLineProcessCommand(name, arguments);
+		ConsoleProcessCommand command = new ConsoleProcessCommand(name, arguments);
 		String[] expected = new String[] { name };
 		
 		String[] actual = command.getCommandArray();
@@ -173,7 +173,7 @@ public class CommandLineProcessCommandTest extends TestCase {
 	public void testGetCommandArrayEmptyArguments() {
 		String name = "name";
 		String[] arguments = new String[] {};
-		CommandLineProcessCommand command = new CommandLineProcessCommand(name, arguments);
+		ConsoleProcessCommand command = new ConsoleProcessCommand(name, arguments);
 		String[] expected = new String[] { name };
 		
 		String[] actual = command.getCommandArray();

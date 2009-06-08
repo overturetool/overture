@@ -1,12 +1,12 @@
 package org.overturetool.potrans.external_tools;
 
-import org.overturetool.potrans.external_tools.CommandLineException;
-import org.overturetool.potrans.external_tools.CommandLineTools;
+import org.overturetool.potrans.external_tools.ConsoleException;
+import org.overturetool.potrans.external_tools.ConsoleTools;
 
 import junit.framework.TestCase;
 
 /**
- * CommandLineToolsTest is the JUnit TestClass for the {@link CommandLineTools}
+ * CommandLineToolsTest is the JUnit TestClass for the {@link ConsoleTools}
  * class.
  * 
  * @author miguel_ferreira
@@ -31,7 +31,7 @@ public class CommandLineToolsTest extends TestCase {
 	
 	public void testExecuteProcessValidCommand() throws Exception {
 		String inputText = "This is a test";
-		String output = CommandLineTools.executeProcess("echo", new String[]{inputText});
+		String output = ConsoleTools.executeProcess("echo", new String[]{inputText});
 		
 		assertEquals(inputText, output.trim());
 	}
@@ -39,8 +39,8 @@ public class CommandLineToolsTest extends TestCase {
 	public void testExecuteProcessNullCmd() throws Exception {
 		String inputText = "This is a test";
 		try {
-			CommandLineTools.executeProcess(null, new String[]{inputText});
-		} catch(CommandLineException e) {
+			ConsoleTools.executeProcess(null, new String[]{inputText});
+		} catch(ConsoleException e) {
 			assertNull(e.getCommand());
 		}
 	}
@@ -49,8 +49,8 @@ public class CommandLineToolsTest extends TestCase {
 		String inputText = "This is a test";
 
 		try {
-			CommandLineTools.executeProcess("", new String[]{inputText});
-		} catch(CommandLineException e) {
+			ConsoleTools.executeProcess("", new String[]{inputText});
+		} catch(ConsoleException e) {
 			assertEquals("", e.getCommand());
 		}
 	}

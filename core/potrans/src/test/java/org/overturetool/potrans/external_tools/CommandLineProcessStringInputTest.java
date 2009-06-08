@@ -3,7 +3,7 @@
  */
 package org.overturetool.potrans.external_tools;
 
-import org.overturetool.potrans.external_tools.CommandLineProcessStringInput;
+import org.overturetool.potrans.external_tools.ConsoleProcessInputText;
 
 import junit.framework.TestCase;
 
@@ -28,21 +28,21 @@ public class CommandLineProcessStringInputTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.overturetool.potrans.external_tools.CommandLineProcessStringInput#CommandLineProcessStringInput(java.lang.String)}.
+	 * Test method for {@link org.overturetool.potrans.external_tools.ConsoleProcessInputText#CommandLineProcessStringInput(java.lang.String)}.
 	 */
 	public void testCommandLineProcessStringInput() {
 		String expected = "test string";
-		CommandLineProcessStringInput stringInput = new CommandLineProcessStringInput(expected);
+		ConsoleProcessInputText stringInput = new ConsoleProcessInputText(expected);
 		
 		assertEquals(expected, stringInput.input);
 	}
 
 	/**
-	 * Test method for {@link org.overturetool.potrans.external_tools.CommandLineProcessStringInput#getBytes()}.
+	 * Test method for {@link org.overturetool.potrans.external_tools.ConsoleProcessInputText#getBytes()}.
 	 */
 	public void testGetBytes() {
 		String testString = "test string";
-		CommandLineProcessStringInput stringInput = new CommandLineProcessStringInput(testString);
+		ConsoleProcessInputText stringInput = new ConsoleProcessInputText(testString);
 		byte[] expected = testString.getBytes();
 		byte[] actual = stringInput.getBytes();
 		
@@ -52,21 +52,21 @@ public class CommandLineProcessStringInputTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.overturetool.potrans.external_tools.CommandLineProcessStringInput#isStatic()}.
+	 * Test method for {@link org.overturetool.potrans.external_tools.ConsoleProcessInputText#isStatic()}.
 	 */
 	public void testIsStatic() {
 		String expected = "test string";
-		CommandLineProcessStringInput stringInput = new CommandLineProcessStringInput(expected);
+		ConsoleProcessInputText stringInput = new ConsoleProcessInputText(expected);
 		
 		assertTrue(stringInput.isStatic());
 	}
 
 	/**
-	 * Test method for {@link org.overturetool.potrans.external_tools.CommandLineProcessStringInput#getText()}.
+	 * Test method for {@link org.overturetool.potrans.external_tools.ConsoleProcessInputText#getText()}.
 	 */
 	public void testGetText() throws Exception {
 		String expected = "test string";
-		CommandLineProcessStringInput stringInput = new CommandLineProcessStringInput(expected);
+		ConsoleProcessInputText stringInput = new ConsoleProcessInputText(expected);
 		
 		assertEquals(expected, stringInput.getText());
 	}
