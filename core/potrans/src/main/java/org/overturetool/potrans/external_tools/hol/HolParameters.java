@@ -27,14 +27,14 @@ public class HolParameters {
 	public String getMosmlBinaryPath() {
 		StringBuffer sb = new StringBuffer(mosmlDir).append(
 				SystemProperties.FILE_SEPARATOR).append(MOSML_BIN_DIR).append(
-				MOSML_BINARY);
+				SystemProperties.FILE_SEPARATOR).append(MOSML_BINARY);
 		return sb.toString();
 	}
 
-	public String getUnquoteCommand() {
+	public String getUnquoteCommandPath() {
 		StringBuffer sb = new StringBuffer(holDir).append(
 				SystemProperties.FILE_SEPARATOR).append(HOL_BIN_DIR).append(
-				UNQUOTE_BINARY);
+				SystemProperties.FILE_SEPARATOR).append(UNQUOTE_BINARY);
 		return sb.toString();
 	}
 
