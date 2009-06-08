@@ -25,7 +25,7 @@ package junit.overture.combtest;
 
 import junit.overture.OvertureTest;
 
-public class TraceBindTest extends OvertureTest
+public class TraceSeqTest extends OvertureTest
 {
 	public void test_Traces1() throws Exception
 	{
