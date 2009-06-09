@@ -10,10 +10,10 @@ import org.overturetool.potrans.external_tools.SystemProperties;
 
 public class MosmlHolConsole extends Console {
 
-	// TODO: add quit() method
 	
 	private String promptBuffer = null;
-	
+
+	protected final static String HOL_QUIT_COMMAND = "quit();";
 	protected final static String HOL_PROMPT = "- ";
 	/**
 	 * HOL initial header text is 10 lines long.
@@ -107,5 +107,10 @@ public class MosmlHolConsole extends Console {
 		}
 		resetPromptBuffer();
 		return sb.toString();
+	}
+	
+	public void quitHol() throws InterruptedException {
+		writeLine(HOL_QUIT_COMMAND);
+		waitFor();
 	}
 }

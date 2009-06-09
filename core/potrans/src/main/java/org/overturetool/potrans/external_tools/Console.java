@@ -92,6 +92,19 @@ public class Console {
 	}
 	
 	/**
+	 * Writes a line to process input and reads a line of process output. Calling this 
+	 * method eventually results in an invocation of <code>BufferedReder.realLine()</code> 
+	 * that in principle blocks the current thread if no text is available, or returns 
+	 * null if the underlying stream is closed.
+	 * @return a line of text or null if the stream is closed
+	 * @throws IOException
+	 */
+	public String writeAndReadLine(String line) throws IOException {
+		writeLine(line);
+		return readLine();
+	}
+	
+	/**
 	 * Reads a line of process output. Calling this method results in an invocation of
 	 * <code>BufferedReder.realLine()</code> that in principle blocks the current thread
 	 * if no text is available, or returns null if the underlying stream is closed.
@@ -133,6 +146,10 @@ public class Console {
 		return error.readLine();
 	}
 
+	public void terminate() throws IOException {
+		input.close();
+	}
+	
 	public void destroy() {
 		process.destroy();
 	}
