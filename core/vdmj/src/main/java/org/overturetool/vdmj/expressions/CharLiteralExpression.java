@@ -47,7 +47,7 @@ public class CharLiteralExpression extends Expression
 	@Override
 	public String toString()
 	{
-		return value.toString();
+		return new CharacterValue(value.unicode).toString();
 	}
 
 	@Override

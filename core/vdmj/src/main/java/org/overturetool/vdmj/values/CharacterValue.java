@@ -64,7 +64,7 @@ public class CharacterValue extends Value
 	@Override
 	public String toString()
 	{
-		if (Character.isISOControl(unicode))
+		if (Character.isISOControl(unicode) || unicode > 0x7F)
 		{
 			return "'\\0" + Integer.toOctalString(unicode) + "'";
 		}
