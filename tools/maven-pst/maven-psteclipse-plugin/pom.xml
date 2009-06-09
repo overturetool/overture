@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <!-- 
+		Princeton Softech, Inc. PST Eclipse Maven Plugin POM
+	-->
+
+  <parent>
+    <groupId>org.overturetool.tools</groupId>
+    <artifactId>maven-pst</artifactId>
+    <version>1.0.1</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.overturetool.tools.maven-pst</groupId>
+  <artifactId>maven-psteclipse-plugin</artifactId>
+  <packaging>maven-plugin</packaging>
+  <version>1.0.3</version>
+  <name>Maven PST Eclipse Plugin</name>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-project</artifactId>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-archiver</artifactId>
+      <version>2.2</version>
+    </dependency>
+  </dependencies>
+  <build>
+
+
+
+    <plugins>
+    
+      <plugin>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <inherited>false</inherited>
+        <configuration>
+          <altDeploymentRepository>lausdahl.com::default::ftp://localhost</altDeploymentRepository>
+        </configuration>
+      </plugin>
+    </plugins>
+
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ftp</artifactId>
+        <version>1.0-beta-2</version>
+      </extension>
+    </extensions>
+  </build>
+  <!-- Enabling the use of FTP -->
+  <distributionManagement>
+    <repository>
+      <id>lausdahl.com</id>
+      <url>ftp://localhost</url>
+    </repository>
+  </distributionManagement>
+
+</project>
