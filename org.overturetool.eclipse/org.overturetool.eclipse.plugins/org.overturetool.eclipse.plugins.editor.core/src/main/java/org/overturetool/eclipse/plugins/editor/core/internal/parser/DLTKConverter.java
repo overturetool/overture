@@ -24,10 +24,17 @@ public class DLTKConverter {
 
 		public int[] getBounds(int lineNumber) {
 			String codeLine = codeLines[lineNumber];
-
+			char[] charLine = codeLine.toCharArray();
 			int start = codeLineLengths[lineNumber];
 			int end = start + codeLine.length();
-
+			
+			// TODO if tab is not 4 characters. 
+			for (char c : charLine) {
+				if (c == '\t'){
+					start -= 3;
+					end -= 3;
+				}
+			}
 			return new int[] { start, end };
 		}
 	}

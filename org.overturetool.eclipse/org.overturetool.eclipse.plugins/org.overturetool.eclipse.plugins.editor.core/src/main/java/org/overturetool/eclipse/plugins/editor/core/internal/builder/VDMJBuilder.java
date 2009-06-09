@@ -13,6 +13,7 @@ import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 
 public class VDMJBuilder extends Builder {
+	private final int adjustPosition = 1;
 	
 	public VDMJBuilder(IScriptProject project) {
 		super(project);
@@ -35,8 +36,8 @@ public class VDMJBuilder extends Builder {
 						error.message,
 						error.location.startLine,
 						IMarker.SEVERITY_ERROR,
-						error.location.startPos,
-						error.location.endPos);
+						error.location.startPos - adjustPosition,
+						error.location.endPos - adjustPosition);
 			}
 		}
 		ExitStatus typeCheckStatus = null;
@@ -51,8 +52,8 @@ public class VDMJBuilder extends Builder {
 							error.message,
 							error.location.startLine,
 							IMarker.SEVERITY_ERROR,
-							error.location.startPos,
-							error.location.endPos);
+							error.location.startPos - adjustPosition,
+							error.location.endPos - adjustPosition);
 				}
 			}
 			for (VDMWarning warning : vdmpp.getTypeWarnings()) {
@@ -62,8 +63,8 @@ public class VDMJBuilder extends Builder {
 						warning.message,
 						warning.location.startLine,
 						IMarker.SEVERITY_WARNING,
-						warning.location.startPos,
-						warning.location.endPos);
+						warning.location.startPos - adjustPosition,
+						warning.location.endPos - adjustPosition);
 			}
 		}
 		else
@@ -76,8 +77,8 @@ public class VDMJBuilder extends Builder {
 						error.message,
 						error.location.startLine,
 						IMarker.SEVERITY_ERROR,
-						error.location.startPos,
-						error.location.endPos);
+						error.location.startPos - adjustPosition,
+						error.location.endPos - adjustPosition);
 			}
 			
 		}

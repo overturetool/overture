@@ -2,6 +2,9 @@ package org.overturetool.eclipse.plugins.editor.core.internal.builder;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 
 import org.eclipse.core.resources.IContainer;
@@ -140,9 +143,36 @@ public abstract class Builder{
 					lineNumber = 1;
 				}
 				marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
+				StringBuilder content = inputStreamToString(file.getContents());
+				if (content != null)
+				{
+					converter = new DLTKConverter(content.toString().toCharArray());
+					marker.setAttribute(IMarker.CHAR_START, converter.convert(lineNumber, charStart));
+					marker.setAttribute(IMarker.CHAR_END, converter.convert(lineNumber, charEnd));				
+				}
 			}
 		} catch (CoreException e) {
 			System.out.println("Error when adding a marker... : " + e.getMessage());
+		}
+	}
+	
+	private StringBuilder inputStreamToString(InputStream is)
+	{
+		try {
+			final char[] buffer = new char[0x10000];
+			StringBuilder out = new StringBuilder();
+			Reader in = new InputStreamReader(is, "UTF-8");
+			int read;
+			do {
+				read = in.read(buffer, 0, buffer.length);
+				if (read>0) 
+				{
+					out.append(buffer, 0, read);
+				}
+			}		while (read>=0);
+			return out;			
+		} catch (Exception e) {
+			return null;
 		}
 	}
 	

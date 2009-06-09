@@ -12,11 +12,9 @@ import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.MessageException;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
-import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.Interpreter;
@@ -129,7 +127,7 @@ public class EclipseVDMJPP extends VDMJ {
 			if (reader != null && reader.getErrorCount() > 0)
 			{
     			perrs += reader.getErrorCount();
-    			reader.printErrors(Console.out);
+    			//reader.printErrors(Console.out);
 			}
 			for (VDMError error : reader.getErrors()) {
 				parseErrors.add(error);
@@ -149,6 +147,7 @@ public class EclipseVDMJPP extends VDMJ {
 	public ExitStatus parse(String content)
 	{
 		parseErrors.clear();
+		parseWarnings.clear();
 		classes.clear();
 		LexLocation.resetLocations();
    		int perrs = 0;
@@ -179,12 +178,17 @@ public class EclipseVDMJPP extends VDMJ {
 		if (reader != null && reader.getErrorCount() > 0)
 		{
 			perrs += reader.getErrorCount();
-			reader.printErrors(Console.out);
+			//reader.printErrors(Console.out);
 		}
 
    		for (VDMError error : reader.getErrors()) {
 			parseErrors.add(error);
 		}
+   		
+   		for (VDMWarning warning : reader.getWarnings()) {
+			parseWarnings.add(warning);
+		}
+   		
    		return perrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
 	}
 	
@@ -212,7 +216,6 @@ public class EclipseVDMJPP extends VDMJ {
 	@Override
 	public ExitStatus typeCheck() {
 		int terrs = 0;
-		long before = System.currentTimeMillis();
 
    		try
    		{
@@ -226,7 +229,6 @@ public class EclipseVDMJPP extends VDMJ {
 		catch (Throwable e)
 		{
 			println(e.toString());
-
 			if (e instanceof StackOverflowError)
 			{
 				e.printStackTrace();
@@ -234,31 +236,19 @@ public class EclipseVDMJPP extends VDMJ {
 
 			terrs++;
 		}
-
-		long after = System.currentTimeMillis();
 		terrs += TypeChecker.getErrorCount();
 
 		if (terrs > 0)
 		{
-			TypeChecker.printErrors(Console.out);
+			//TypeChecker.printErrors(Console.out);
 		}
 		
 
-		if (pog && terrs == 0)
-		{
-			ProofObligationList list = classes.getProofObligations();
-
-			if (list.isEmpty())
-			{
-				println("No proof obligations generated");
-			}
-			else
-			{
-    			println("Generated " +
-    				plural(list.size(), "proof obligation", "s") + ":\n");
-    			print(list.toString());
-			}
-		}
+//		if (pog && terrs == 0)
+//		{
+//			ProofObligationList list = classes.getProofObligations();
+//
+//		}
 
    		return terrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
 	}
