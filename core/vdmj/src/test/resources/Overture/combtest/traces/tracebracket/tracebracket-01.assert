@@ -1,0 +1,9 @@
+Test 1 = s.Push(1); s.Push(3); s.Push(6)
+Result = [(), (), (), PASSED]
+Test 2 = s.Push(1); s.Push(8); s.Push(6)
+Result = [(), (), (), PASSED]
+Test 3 = s.Push(3); s.Push(3); s.Push(6)
+Result = [(), (), (), PASSED]
+Test 4 = s.Push(3); s.Push(8); s.Push(6)
+Result = [(), (), (), PASSED]
+()

@@ -1,0 +1,3 @@
+Test 1 = s.Push(1); s.Pop(); s.Push(2); s.Top()
+Result = [(), 1, (), 2, PASSED]
+()
