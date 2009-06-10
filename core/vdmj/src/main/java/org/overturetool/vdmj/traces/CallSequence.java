@@ -26,11 +26,11 @@ package org.overturetool.vdmj.traces;
 import java.util.Vector;
 
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.statements.CallObjectStatement;
+import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.util.Utils;
 
 @SuppressWarnings("serial")
-public class CallSequence extends Vector<CallObjectStatement>
+public class CallSequence extends Vector<Statement>
 {
 	public Context ctxt = null;
 	private int filtered = 0;

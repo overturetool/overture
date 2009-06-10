@@ -36,6 +36,7 @@ public class Permutor
 		this.limit = limits;
 		this.count = limits.length;
 		this.current = new int[count];
+		this.done = (count == 0);
 	}
 
 	private int[] permute()

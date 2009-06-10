@@ -23,6 +23,9 @@
 
 package org.overturetool.vdmj.traces;
 
+import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.statements.SkipStatement;
+
 public class RepeatTraceNode extends TraceNode
 {
 	public final TraceNode repeat;
@@ -54,6 +57,15 @@ public class RepeatTraceNode extends TraceNode
 
 		for (int r = from; r <= to; r++)
 		{
+			if (r == 0)
+			{
+				CallSequence seq = new CallSequence();
+   				seq.add(new SkipStatement(new LexLocation()));
+   				seq.setContext(rtests.get(0).ctxt);
+    			tests.add(seq);
+				continue;
+			}
+
  			int[] c = new int[r];
 
 			for (int i=0; i<r; i++)
@@ -73,7 +85,7 @@ public class RepeatTraceNode extends TraceNode
     				seq.addAll(rtests.get(select[i]));
     			}
 
-    			seq.setContext(rtests.get(select[r-1]).ctxt);	//?
+    			seq.setContext(rtests.get(select[r-1]).ctxt);
     			tests.add(seq);
 			}
 		}

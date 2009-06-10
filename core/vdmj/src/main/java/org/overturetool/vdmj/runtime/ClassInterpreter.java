@@ -43,7 +43,6 @@ import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.pog.ProofObligationList;
-import org.overturetool.vdmj.statements.CallObjectStatement;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.syntax.StatementReader;
@@ -439,7 +438,7 @@ public class ClassInterpreter extends Interpreter
 
 		try
 		{
-			for (CallObjectStatement statement: statements)
+			for (Statement statement: statements)
 			{
 				try
 				{
