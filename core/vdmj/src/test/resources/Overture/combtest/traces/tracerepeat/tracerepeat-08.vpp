@@ -2,12 +2,12 @@ class A
 
 types
 
-T = nat
+public T = nat
 inv n == n < 3;
 
 operations
 
-  public op : T ==> ()
+  public op : T ==> T
   op(n) ==
     return n;
 

@@ -2,9 +2,10 @@ class A
 
 operations
 
-  public op : nat ==> ()
+  public op : nat ==> nat
   op(n) ==
-    return n;
+    return n
+  post RETURN = 2;
 
 end A
 class UseA

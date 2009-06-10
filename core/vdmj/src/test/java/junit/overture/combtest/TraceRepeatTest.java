@@ -49,21 +49,33 @@ public class TraceRepeatTest extends OvertureTest
 
 	public void test_Traces5() throws Exception
 	{
-		combtest("traces/tracerepeat/tracerepeat-05", "new UseStack().PushBeforePop()");
+		combtest("traces/tracerepeat/tracerepeat-051", "new UseStack().trace1()");
+		combtest("traces/tracerepeat/tracerepeat-052", "new UseStack().trace2()");
+		combtest("traces/tracerepeat/tracerepeat-053", "new UseStack().trace3()");
+		combtest("traces/tracerepeat/tracerepeat-054", "new UseStack().trace4()");
+		combtest("traces/tracerepeat/tracerepeat-055", "new UseStack().trace5()");
+		combtest("traces/tracerepeat/tracerepeat-056", "new UseStack().trace6()");
+		combtest("traces/tracerepeat/tracerepeat-057", "new UseStack().trace7()");
+		combtest("traces/tracerepeat/tracerepeat-058", "new UseStack().trace8()");
+		combtest("traces/tracerepeat/tracerepeat-059", "new UseStack().trace9()");
+		combtest("traces/tracerepeat/tracerepeat-0510", "new UseStack().trace10()");
+		combtest("traces/tracerepeat/tracerepeat-0511", "new UseStack().trace11()");
+		combtest("traces/tracerepeat/tracerepeat-0512", "new UseStack().trace12()");
+		combtest("traces/tracerepeat/tracerepeat-0513", "new UseStack().trace13()");
 	}
 
 	public void test_Traces6() throws Exception
 	{
-		combtest("traces/tracerepeat/tracerepeat-06", "new UseStack().PushBeforePop()");
+		combtest("traces/tracerepeat/tracerepeat-06", "new UseA().trace1()");
 	}
 
 	public void test_Traces7() throws Exception
 	{
-		combtest("traces/tracerepeat/tracerepeat-07", "new UseStack().PushBeforePop()");
+		combtest("traces/tracerepeat/tracerepeat-07", "new UseA().trace1()");
 	}
 
 	public void test_Traces8() throws Exception
 	{
-		combtest("traces/tracerepeat/tracerepeat-08", "new UseStack().PushBeforePop()");
+		combtest("traces/tracerepeat/tracerepeat-08", "new UseA().trace1()");
 	}
 }
