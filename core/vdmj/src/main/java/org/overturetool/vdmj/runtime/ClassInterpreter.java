@@ -457,7 +457,7 @@ public class ClassInterpreter extends Interpreter
 		}
 		catch (ContextException e)
 		{
-			list.add(e.getMessage());
+			list.add(e.getMessage().replaceAll(" \\(.+\\)", ""));
 
 			switch (e.number)
 			{
