@@ -74,7 +74,7 @@ public class FunctionValue extends Value
 	public FunctionValue(LexLocation location, String name, FunctionType type,
 		List<PatternList> paramPatternList, Expression body,
 		FunctionValue precondition, FunctionValue postcondition,
-		Context freeVariables)
+		Context freeVariables, boolean checkInvariants)
 	{
 		this.location = location;
 		this.name = name;
@@ -85,7 +85,7 @@ public class FunctionValue extends Value
 		this.precondition = precondition;
 		this.postcondition = postcondition;
 		this.freeVariables = freeVariables;
-		this.checkInvariants = true;
+		this.checkInvariants = checkInvariants;
 	}
 
 	public FunctionValue(LexLocation location, String name, FunctionType type,
@@ -384,7 +384,7 @@ public class FunctionValue extends Value
     			Value rv = new FunctionValue(location, "curried",
     				(FunctionType)type.result,
     				paramPatternList.subList(1, paramPatternList.size()),
-    				body, newpre, newpost, evalContext);
+    				body, newpre, newpost, evalContext, false);
 
         		return rv;
 			}
@@ -449,13 +449,14 @@ public class FunctionValue extends Value
 
 		return new FunctionValue(location, name, (FunctionType)type.result,
 			paramPatternList.subList(1, paramPatternList.size()),
-			body, precondition, postcondition, newFreeVariables);
+			body, precondition, postcondition, newFreeVariables, false);
 	}
 
 	@Override
 	public Object clone()
 	{
 		return new FunctionValue(location, name, type,
-			paramPatternList, body, precondition, postcondition, freeVariables);
+			paramPatternList, body, precondition, postcondition,
+			freeVariables, checkInvariants);
 	}
 }
