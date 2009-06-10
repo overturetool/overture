@@ -1,0 +1,12 @@
+Test 1 = obj.op(1)
+Result = [1, PASSED]
+Test 2 = obj.op(1); obj.op(1)
+Result = [1, 1, PASSED]
+Test 3 = obj.op(1); obj.op(1); obj.op(1)
+Result = [1, 1, 1, PASSED]
+Test 4 = obj.op(2)
+Result = [2, PASSED]
+Test 5 = obj.op(2); obj.op(2)
+Result = [2, 2, PASSED]
+Test 6 = obj.op(2); obj.op(2); obj.op(2)
+Result = [2, 2, 2, PASSED]
