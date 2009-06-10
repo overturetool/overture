@@ -434,11 +434,11 @@ public class ClassInterpreter extends Interpreter
 	{
 		List<Object> list = new Vector<Object>();
 
+		Context copy = statements.ctxt.copy();
+		copy.setThreadState(null);
+
 		try
 		{
-			Context copy = statements.ctxt.copy();
-			copy.setThreadState(null);
-
 			for (CallObjectStatement statement: statements)
 			{
 				try
@@ -467,7 +467,15 @@ public class ClassInterpreter extends Interpreter
 				case 4087:	// invalid type conversion
 				case 4060:	// type invariant failure
 				case 4130:	// class invariant failure
-					list.add(Verdict.INCONCLUSIVE);
+
+					if (e.ctxt.outer == copy)
+					{
+						list.add(Verdict.INCONCLUSIVE);
+					}
+					else
+					{
+						list.add(Verdict.FAILED);
+					}
 					break;
 
 				default:
