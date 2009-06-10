@@ -296,7 +296,7 @@ public class OperationValue extends Value
 
 			if (self != null)
 			{
-				originalSelf = self.copy(true);		// Shallow
+				originalSelf = self.deepCopy(); // copy(true);		// Shallow
 			}
 		}
 

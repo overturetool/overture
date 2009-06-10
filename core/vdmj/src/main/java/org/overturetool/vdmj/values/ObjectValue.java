@@ -337,7 +337,7 @@ public class ObjectValue extends Value
 	@Override
 	public Object clone()
 	{
-		return copy(false);
+		return deepCopy(); //copy(false);
 	}
 
 	public ObjectValue copy(boolean shallow)
@@ -395,7 +395,7 @@ public class ObjectValue extends Value
 			// such as the parent and subclass copies of the same
 			// variable, are preserved as the same variable rather than
 			// being split, as they are in naive object copies.
-			
+
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(os);
 			oos.writeObject(this);
