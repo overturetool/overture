@@ -1,0 +1,6 @@
+Test 1 = s.Push3(1); s.Pop()
+Result = [(), 1, PASSED]
+Test 2 = s.Push3(5); s.Pop()
+Result = [(), 5, PASSED]
+Test 3 = s.Push3(10); s.Pop()
+Result = [(), 10, PASSED]

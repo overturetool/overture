@@ -1,0 +1,2 @@
+Test 1 = var.method(1)
+Result = [(), PASSED]

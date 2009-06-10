@@ -1,0 +1,6 @@
+Test 1 = skip
+Result = [(), PASSED]
+Test 2 = s.Push(6)
+Result = [(), PASSED]
+Test 3 = s.Push(6); s.Push(6)
+Result = [(), (), PASSED]

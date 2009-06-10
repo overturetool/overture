@@ -1,0 +1,4 @@
+Test 1 = var.method(1)
+Result = [(), PASSED]
+Test 2 = var.method(1); var.method(1)
+Result = [(), (), PASSED]
