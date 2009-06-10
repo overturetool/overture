@@ -6,4 +6,3 @@ Test 3 = s.Push(3); s.Push(3); s.Push(6)
 Result = [(), (), (), PASSED]
 Test 4 = s.Push(3); s.Push(8); s.Push(6)
 Result = [(), (), (), PASSED]
-()
