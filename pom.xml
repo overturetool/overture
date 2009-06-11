@@ -41,4 +41,17 @@
     </extensions>
   </build>
 
+
+
+  <!-- Enabling the use of FTP -->
+  <distributionManagement>
+    <repository>
+      <id>overturetool.org</id>
+      <url>ftp://localhost</url>
+    </repository>
+  </distributionManagement>
+
+
+
+
 </project>
