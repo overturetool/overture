@@ -1661,9 +1661,6 @@ public class TracesTreeView extends ViewPart
 				{
 					TraceTreeNode tn = (TraceTreeNode) selection;
 
-				if (selection instanceof TraceTreeNode) {
-					TraceTreeNode tn = (TraceTreeNode) selection;
-
 					IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 					String projectName = tn.getParent().getParent().getName();
 					IProject iproject = iworkspaceRoot.getProject(projectName);
@@ -1711,8 +1708,6 @@ public class TracesTreeView extends ViewPart
 
 				}
 			}
- 
-			
 
 		});
 		viewer.addTreeListener(new ITreeViewerListener()
