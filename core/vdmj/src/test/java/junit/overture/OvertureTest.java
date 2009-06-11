@@ -233,13 +233,20 @@ abstract public class OvertureTest extends TestCase
 
 	protected void combtest(String rpath, String testExp) throws Exception
 	{
-		combtest(rpath, testExp, 0);	// No expected error
+		combtest(rpath, rpath, testExp, 0);	// No expected error
 	}
 
-	protected void combtest(String rpath, String testExp, int error)
+	protected void combtest(String rpath, String testExp, int error) throws Exception
+	{
+		combtest(rpath, rpath, testExp, error);
+	}
+
+	protected void combtest(String vpath, String apath, String testExp, int error)
 		throws Exception
 	{
-		setNames("/Overture/combtest/", rpath);
+		setVppName("/Overture/combtest/", vpath);
+		setAssertName("/Overture/combtest/", apath);
+
 		List<VDMMessage> actual = new Vector<VDMMessage>();
 		ClassList classes = parse(actual);
 
@@ -277,6 +284,12 @@ abstract public class OvertureTest extends TestCase
 			pw.close();
 			String result = out.toString();
 			String expected = readFile(new File(assertName));
+
+			if (!result.equals(expected))
+			{
+				Console.out.println(assertName + " should be:\n" + result);
+			}
+
 			assertEquals("Evaluation error", expected, result);
 			assertTrue("Expecting runtime error " + error, error == 0);
 		}
@@ -349,6 +362,13 @@ abstract public class OvertureTest extends TestCase
 
 	private void setNames(String prefix, String root)
 	{
+		setVppName(prefix, root);
+		setAssertName(prefix, root);
+		Console.out.println("Processing " + prefix + root + "...");
+	}
+
+	private void setVppName(String prefix, String root)
+	{
 		URL rurl = getClass().getResource(prefix + root + ".vpp");
 
 		if (rurl == null)
@@ -357,9 +377,18 @@ abstract public class OvertureTest extends TestCase
 		}
 
 		vppName = rurl.getPath();
-		assertName = vppName.substring(0, vppName.lastIndexOf('.')) + ".assert";
+	}
 
-		Console.out.println("Processing " + prefix + root + "...");
+	private void setAssertName(String prefix, String root)
+	{
+		URL rurl = getClass().getResource(prefix + root + ".assert");
+
+		if (rurl == null)
+		{
+			fail("Cannot find resource: " + prefix + root + ".assert");
+		}
+
+		assertName = rurl.getPath();
 	}
 
 	private ClassList parse(List<VDMMessage> messages)

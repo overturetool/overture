@@ -1,0 +1,10 @@
+Test 1 = skip; s.Pop()
+Result = [(), Error 4071: Precondition failure: pre_Pop in 'UseStack' at line 52:27, INCONCLUSIVE]
+Test 2 = s.Push3(1); s.Pop()
+Result = [(), 1, PASSED]
+Test 3 = s.Push3(1); s.Push3(1); s.Pop()
+Result = [(), (), 1, PASSED]
+Test 4 = s.Push3(1); s.Push3(1); s.Push3(1); s.Pop()
+Result = [(), (), (), 1, PASSED]
+Test 5 = s.Push3(1); s.Push3(1); s.Push3(1); s.Push3(1); s.Pop()
+Result = [(), (), (), Error 4071: Precondition failure: pre_Push3 in 'UseStack' at line 52:10, INCONCLUSIVE]
