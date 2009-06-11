@@ -26,6 +26,7 @@ import org.overturetool.vdmj.typechecker.FlatEnvironment;
 import org.overturetool.vdmj.typechecker.PrivateClassEnvironment;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 import org.overturetool.vdmj.values.ObjectValue;
+import org.overturetool.vdmj.values.Value;
 
 public class TraceInterpreter
 {
@@ -123,8 +124,10 @@ public class TraceInterpreter
 				if (storage != null)
 					storage.StartTrace(
 							mtd.name.name,
+							mtd.location.file.getName(),
 							mtd.location.startLine,
 							mtd.location.startPos,
+							
 							tests.size());
 				// List<List<Object>> results = new Vector<List<Object>>();
 				// List<String> testSatements = new Vector<String>();
@@ -140,6 +143,10 @@ public class TraceInterpreter
 								ci.getGlobalEnvironment()));
 
 				int n = 1;
+				
+				int faildCount = 0;
+				int inconclusiveCount = 0;
+				int skippedCount=0;
 
 				for (CallSequence test : tests)
 				{
@@ -156,6 +163,7 @@ public class TraceInterpreter
 
 					if (test.getFilter() > 0)
 					{
+						skippedCount++;
 						testFiltered(n,test.getFilter(),test);
 //						Console.out.println("Test " + n + " = " + test);
 //						Console.out.println("Test " + n + " FILTERED by test "
@@ -170,6 +178,7 @@ public class TraceInterpreter
 
 						if (result.get(result.size() - 1) == Verdict.FAILED)
 						{
+							faildCount++;
 							String stem = test.toString(result.size() - 1);
 							ListIterator<CallSequence> it = tests.listIterator(n);
 
@@ -182,7 +191,8 @@ public class TraceInterpreter
 									other.setFilter(n);
 								}
 							}
-						}
+						}else if (result.get(result.size() - 1) == Verdict.INCONCLUSIVE)
+							inconclusiveCount++;
 
 						if (storage != null)
 						{
@@ -205,7 +215,16 @@ public class TraceInterpreter
 				}
 
 				if (storage != null)
+				{
+					Verdict worstVerdict =Verdict.PASSED;
+					if(faildCount>0)
+						worstVerdict = Verdict.FAILED;
+					else if(inconclusiveCount>0)
+						worstVerdict = Verdict.INCONCLUSIVE;
+						
+					storage.AddTraceStatus(worstVerdict, tests.size(), skippedCount, faildCount,inconclusiveCount);
 					storage.StopElement();
+				}
 			}
 
 		}
@@ -215,6 +234,10 @@ public class TraceInterpreter
 		completed();
 	}
 
+	
+		
+	
+	
 	protected void processingClass(String className, Integer traceCount)
 	{
 

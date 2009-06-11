@@ -24,11 +24,19 @@ public class TraceXmlWrapper
 	public static final String VERDICT_TAG = "Verdict";
 	public static final String ROOT_TAG = "Traces";
 
+	public static final String FILE_NAME_TAG = "Filename";
+	public static final String START_LINE_TAG = "Line";
+	public static final String START_COL_TAG = "Column";
+	public static final String STATUS_TAG = "Status";
+	public static final String NUMBER_OF_SKIPPED_TESTS_TAG = "SkippedCount";
+	public static final String NUMBER_OF_FAILD_TESTS_TAG = "FaildCount";
+	public static final String NUMBER_OF_INCONCLUSIVE_TESTS_TAG = "InconclusiveCount";
+
 	public TraceXmlWrapper(String fileName) throws IOException
 	{
 		xml = new XmlFileWriter();
 		xml.StartDocument(fileName, ROOT_TAG);
-		//openElements.push(ROOT_TAG);
+		// openElements.push(ROOT_TAG);
 	}
 
 	Stack<String> openElements = new Stack<String>();
@@ -45,15 +53,21 @@ public class TraceXmlWrapper
 		xml.StopElement(element);
 	}
 
-	public void StartTrace(String traceName, Integer line, Integer col,
-			Integer numberOfTests)
+	public void StartTrace(String traceName, String fileName, Integer line,
+			Integer col, Integer numberOfTests)
 	{
 		xml.StartElement(
 				TRACE_TAG,
 				NAME_TAG,
 				traceName,
 				NUMBER_OF_TESTS_TAG,
-				numberOfTests.toString());
+				numberOfTests.toString(),
+				FILE_NAME_TAG,
+				fileName,
+				START_LINE_TAG,
+				line.toString(),
+				START_COL_TAG,
+				col.toString());
 		openElements.push(TRACE_TAG);
 	}
 
@@ -73,28 +87,46 @@ public class TraceXmlWrapper
 		{
 			if (object instanceof Verdict)
 				verdict = object.toString();
-			else if (object instanceof Value )
-					result += object.toString() +" ; ";
+			else if (object instanceof Value)
+				result += object.toString() + " ; ";
 			else
 				result += object.toString();
-				
 
 		}
 
-		if(result.length()>3)
-			result= result.substring(0,result.length()-3); // remove the last ;
-		
+		if (result.length() > 3)
+			result = result.substring(0, result.length() - 3); // remove the
+																// last ;
+
 		xml.StartElement(RESULT_TAG, NUMBER_TAG, testName, VERDICT_TAG, verdict);
 		xml.WriteValue(result);
 		xml.StopElement(RESULT_TAG);
 	}
 
+	public void AddTraceStatus(Verdict worstVerdict, Integer totalCountOfTests,
+			Integer skippedTests, Integer faildTests,Integer inconclusive)
+	{
+		xml.StartElement(
+				STATUS_TAG,
+				VERDICT_TAG,
+				worstVerdict.toString(),
+				NUMBER_OF_TESTS_TAG,
+				totalCountOfTests.toString(),
+				NUMBER_OF_SKIPPED_TESTS_TAG,
+				skippedTests.toString(),
+				NUMBER_OF_FAILD_TESTS_TAG,
+				faildTests.toString(),
+				NUMBER_OF_INCONCLUSIVE_TESTS_TAG,
+				inconclusive.toString());
+		xml.StopElement(STATUS_TAG);
+	}
+
 	public void Stop() throws IOException
 	{
-		while(!openElements.isEmpty())
+		while (!openElements.isEmpty())
 			xml.StopElement(openElements.pop());
 		xml.StopDocument();
-		
+
 	}
 
 	public void AddSkippedResult(String testName)

@@ -246,7 +246,8 @@ public class Util extends StdLib {
 
 // ***** VDMTOOLS START Name=ExprToString#1|Vector KEEP=NO
   static public Vector ExprToString (final Vector e_ul) throws CGException {
-
+	  Oml2VppVisitor ppvisitor = (Oml2VppVisitor) new Oml2VppVisitor();
+	  ppvisitor.result="";
     Vector argexpr_ul = new Vector();
     {
 
@@ -257,7 +258,7 @@ public class Util extends StdLib {
         e = (IOmlExpression) elem_3;
         {
 
-          Oml2VppVisitor ppvisitor = (Oml2VppVisitor) new Oml2VppVisitor();
+          
           {
 
             ppvisitor.visitExpression((IOmlExpression) e);
