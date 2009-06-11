@@ -80,13 +80,17 @@ public class LexLocation implements Serializable
 
 	public LexLocation()
 	{
-		this(new File("console"), "DEFAULT", 0, 0, 0, 0);
+		this(new File("?"), "?", 0, 0, 0, 0);
 	}
 
 	@Override
 	public String toString()
 	{
-		if (module == null || module.equals(""))
+		if (file.equals("?"))
+		{
+			return "";		// Default LexLocation has no location string
+		}
+		else if (module == null || module.equals(""))
 		{
 			return "in '" + file + "' at line " + startLine + ":" + startPos;
 		}

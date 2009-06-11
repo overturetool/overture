@@ -182,6 +182,7 @@ public class ASTConverter
 	public final File filename;
 	public final IOmlDocument document;
 	private String classname = null;
+	private LexNameToken classLexName = null;
 
 	public ASTConverter(File filename, IOmlDocument document)
 	{
@@ -235,7 +236,7 @@ public class ASTConverter
 
 		for (IOmlClass cls: astClasses)
 		{
-			classname = cls.getIdentifier();
+			setClassName(cls);
 			result.add(convertClass(cls));
 		}
 
@@ -244,10 +245,9 @@ public class ASTConverter
 
 	private ClassDefinition convertClass(IOmlClass cls) throws CGException
 	{
-		LexNameToken cname = new LexNameToken("CLASS", cls.getIdentifier(), getLocation(cls));
 		LexNameList supernames = convertInheritance(cls);
 		DefinitionList definitions = convertDefinitionsBlocks(cls.getClassBody());
-		return new ClassDefinition(cname, supernames, definitions, cls.getSystemSpec());
+		return new ClassDefinition(classLexName, supernames, definitions, cls.getSystemSpec());
 	}
 
 	private LexNameList convertInheritance(IOmlClass cls)
@@ -760,7 +760,7 @@ public class ASTConverter
 			IOmlInstanceVariableInvariant inv = (IOmlInstanceVariableInvariant)shape;
 
 			def = new ClassInvariantDefinition(
-				getClassName().getInvName(getLocation(inv)),
+				classLexName.getInvName(getLocation(inv)),
 				convertExpression(inv.getInvariant()));
 		}
 		else
@@ -1047,9 +1047,11 @@ public class ASTConverter
 		return lex;
 	}
 
-	private LexNameToken getClassName()
+	private void setClassName(IOmlClass cls) throws CGException
 	{
-		return new LexNameToken(classname, classname, new LexLocation());
+		// return new LexNameToken(classname, classname, new LexLocation());
+		classname = cls.getIdentifier();
+		classLexName =  new LexNameToken("CLASS", cls.getIdentifier(), getLocation(cls));
 	}
 
 	private LexIdentifierToken getId(String name, IOmlNode node) throws CGException
