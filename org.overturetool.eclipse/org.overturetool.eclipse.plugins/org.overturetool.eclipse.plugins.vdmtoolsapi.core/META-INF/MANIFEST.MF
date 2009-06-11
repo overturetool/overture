@@ -7,7 +7,7 @@ Bundle-Vendor: Overture.
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib\vdmtoolsdbgp-1.0.0.jar,lib\abstractdbgp-1.0.0.ja
  r,lib\vdmtoolsapi-1.0.0.jar
-Bundle-Version: 1.0
+Bundle-Version: 1.0.0
 Eclipse-BuddyPolicy: registered
 Bundle-Localization: plugin
 Bundle-Name: org.overturetool.eclipse.plugins.vdmtoolsapi.core

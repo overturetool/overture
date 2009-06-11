@@ -3,7 +3,7 @@
 <repository name='file:/C:/Overture/overtureSourceNew/trunk/org.overturetool.eclipse/org.overturetool.eclipse.updatesite/ - metadata' type='org.eclipse.equinox.internal.p2.metadata.repository.LocalMetadataRepository' version='1.0.0'>
   <properties size='2'>
     <property name='p2.compressed' value='false'/>
-    <property name='p2.timestamp' value='1244053990284'/>
+    <property name='p2.timestamp' value='1244675176355'/>
   </properties>
   <references size='8'>
     <repository url='http://download.eclipse.org/technology/dltk/updates/' type='0' options='0'/>
@@ -16,6 +16,41 @@
     <repository url='http://overturetool.org/updatesite' type='0' options='0'/>
   </references>
   <units size='47'>
+    <unit id='org.overturetool.eclipse.features.core.feature.jar' version='1.0.0.200906110106'>
+      <update id='org.overturetool.eclipse.features.core.feature.jar' range='[0.0.0,1.0.0.200906110106)' severity='0'/>
+      <properties size='3'>
+        <property name='org.eclipse.equinox.p2.name' value='Overturetool Core Feature'/>
+        <property name='org.eclipse.equinox.p2.description' value='Festure providing Core Editor'/>
+        <property name='org.eclipse.equinox.p2.description.url' value='http://www.overturetool.org/updatesite'/>
+      </properties>
+      <provides size='3'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.features.core.feature.jar' version='1.0.0.200906110106'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
+        <provided namespace='org.eclipse.update.feature' name='org.overturetool.eclipse.features.core' version='1.0.0.200906110106'/>
+      </provides>
+      <filter>
+        (org.eclipse.update.install.features=true)
+      </filter>
+      <artifacts size='1'>
+        <artifact classifier='org.eclipse.update.feature' id='org.overturetool.eclipse.features.core' version='1.0.0.200906110106'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='zipped'>
+            true
+          </instruction>
+        </instructions>
+      </touchpointData>
+      <licenses size='1'>
+        <license url='http://www.example.com/license'>
+          GNU General Public License version 3.0 (GPLv3)
+        </license>
+      </licenses>
+      <copyright url='http://www.overturetool.org/copyright'>
+        GNU General Public License version 3.0 (GPLv3)
+      </copyright>
+    </unit>
     <unit id='tooling.source.default' version='1.0.0' singleton='false'>
       <hostRequirements size='1'>
         <required namespace='org.eclipse.equinox.p2.eclipse.type' name='source' range='0.0.0' optional='true' multiple='true' greedy='false'/>
@@ -80,46 +115,7 @@
       <touchpointData size='1'>
         <instructions size='1'>
           <instruction key='manifest'>
-            Bundle-Name: org.overturetool.eclipse.plugins.launching&#xA;Bundle-ClassPath: .&#xA;Bundle-Version: 1.0.0&#xA;Bundle-Activator: org.overturetool.eclipse.plugins.launching.LaunchingPlugin&#xA;Bundle-Vendor: Overture&#xA;Require-Bundle: org.eclipse.core.runtime;bundle-version=&quot;3.4.0&quot;;resolution:=optional,org.eclipse.dltk.launching;bundle-version=&quot;1.0.0&quot;,org.eclipse.dltk.console;bundle-version=&quot;1.0.0&quot;;resolution:=optional,org.eclipse.dltk.core;bundle-version=&quot;1.0.0&quot;;resolution:=optional,org.eclipse.dltk.debug;bundle-version=&quot;1.0.0&quot;;resolution:=optional,org.overturetool.eclipse.plugins.debug;bundle-version=&quot;1.0.0&quot;,org.eclipse.jdt.launching;bundle-version=&quot;3.4.1&quot;;resolution:=optional,org.eclipse.jdt.core;bundle-version=&quot;3.4.4&quot;;resolution:=optional,org.eclipse.debug.ui;bundle-version=&quot;3.4.2&quot;;resolution:=optional,org.eclipse.jdt.debug.ui;bundle-version=&quot;3.3.1&quot;;resolution:=optional,org.eclipse.ui.console;bundle-version=&quot;3.3.1&quot;;resolution:=optional,org.eclipse.dltk.debug.ui;bundle-version=&quot;1.0.0&quot;;resolution:=optional,org.eclipse.jface;bundle-version=&quot;3.4.2&quot;;resolution:=optional,org.overturetool.eclipse.plugins.editor.core;bundle-version=&quot;1.0.0&quot;,org.overturetool.eclipse.plugins.dbgp.core;bundle-version=&quot;1.0.0&quot;&#xA;Export-Package: org.overturetool.eclipse.plugins.launching,org.overturetool.eclipse.plugins.launching.console,org.overturetool.eclipse.plugins.launching.internal.launching&#xA;Bundle-SymbolicName: org.overturetool.eclipse.plugins.launching;singleton:=true&#xA;Manifest-Version: 1.0&#xA;Eclipse-BuddyPolicy: registered&#xA;Bundle-ActivationPolicy: lazy&#xA;Bundle-ManifestVersion: 2&#xA;Bundle-RequiredExecutionEnvironment: J2SE-1.5&#xA;Bundle-Localization: plugin
-          </instruction>
-        </instructions>
-      </touchpointData>
-    </unit>
-    <unit id='org.overturetool.eclipse.plugins.overturedebugger' version='0.0.0.200905212232'>
-      <update id='org.overturetool.eclipse.plugins.overturedebugger' range='[0.0.0,0.0.0.200905212232)' severity='0'/>
-      <properties size='4'>
-        <property name='df_LT.pluginProvider' value='Eclipse.org'/>
-        <property name='df_LT.pluginName' value='Dynamic Languages Toolkit Overture debugging engine (Incubation)'/>
-        <property name='org.eclipse.equinox.p2.name' value='%pluginName'/>
-        <property name='org.eclipse.equinox.p2.provider' value='%pluginProvider'/>
-      </properties>
-      <provides size='4'>
-        <provided namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.overturedebugger' version='0.0.0.200905212232'/>
-        <provided namespace='osgi.bundle' name='org.overturetool.eclipse.plugins.overturedebugger' version='0.0.0.200905212232'/>
-        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
-        <provided namespace='org.eclipse.equinox.p2.localization' name='df_LT' version='1.0.0'/>
-      </provides>
-      <requires size='11'>
-        <required namespace='osgi.bundle' name='org.eclipse.ui' range='0.0.0' optional='true'/>
-        <required namespace='osgi.bundle' name='org.eclipse.core.runtime' range='0.0.0' optional='true'/>
-        <required namespace='osgi.bundle' name='org.eclipse.dltk.ui' range='1.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.dltk.debug.ui' range='1.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.dltk.launching' range='1.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.debug.core' range='3.4.0' optional='true'/>
-        <required namespace='osgi.bundle' name='org.eclipse.dltk.core' range='1.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.dltk.debug' range='1.0.0'/>
-        <required namespace='osgi.bundle' name='org.overturetool.eclipse.plugins.editor.core' range='1.0.0'/>
-        <required namespace='osgi.bundle' name='org.overturetool.eclipse.plugins.debug' range='1.0.0'/>
-        <required namespace='osgi.bundle' name='org.overturetool.eclipse.plugins.launching' range='1.0.0'/>
-      </requires>
-      <artifacts size='1'>
-        <artifact classifier='osgi.bundle' id='org.overturetool.eclipse.plugins.overturedebugger' version='0.0.0.200905212232'/>
-      </artifacts>
-      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
-      <touchpointData size='1'>
-        <instructions size='1'>
-          <instruction key='manifest'>
-            Bundle-Vendor: %pluginProvider&#xA;Bundle-ManifestVersion: 2&#xA;Bundle-Activator: org.overturetool.eclipse.plugins.editor.overturedebugger.OvertureDebuggerPlugin&#xA;Bundle-RequiredExecutionEnvironment: J2SE-1.5&#xA;Require-Bundle: org.eclipse.ui;resolution:=optional,org.eclipse.core.runtime;resolution:=optional,org.eclipse.dltk.ui;bundle-version=&quot;1.0.0&quot;,org.eclipse.dltk.debug.ui;bundle-version=&quot;1.0.0&quot;,org.eclipse.dltk.launching;bundle-version=&quot;1.0.0&quot;,org.eclipse.debug.core;bundle-version=&quot;3.4.0&quot;;resolution:=optional,org.eclipse.dltk.core;bundle-version=&quot;1.0.0&quot;,org.eclipse.dltk.debug;bundle-version=&quot;1.0.0&quot;,org.overturetool.eclipse.plugins.editor.core;bundle-version=&quot;1.0.0&quot;,org.overturetool.eclipse.plugins.debug;bundle-version=&quot;1.0.0&quot;,org.overturetool.eclipse.plugins.launching;bundle-version=&quot;1.0.0&quot;&#xA;Bundle-Name: %pluginName&#xA;Bundle-Localization: plugin&#xA;Bundle-ActivationPolicy: lazy&#xA;Manifest-Version: 1.0&#xA;Bundle-SymbolicName: org.overturetool.eclipse.plugins.overturedebugger;singleton:=true&#xA;Bundle-Version: 0.0.0.200905212232
+            Bundle-Name: org.overturetool.eclipse.plugins.launching&#xA;Bundle-ClassPath: .&#xA;Bundle-Version: 1.0.0&#xA;Bundle-Activator: org.overturetool.eclipse.plugins.launching.LaunchingPlugin&#xA;Bundle-Vendor: Overture&#xA;Require-Bundle: org.eclipse.core.runtime;bundle-version=&quot;3.4.0&quot;;resolution:=optional,org.eclipse.dltk.launching;bundle-version=&quot;1.0.0&quot;,org.eclipse.dltk.console;bundle-version=&quot;1.0.0&quot;;resolution:=optional,org.eclipse.dltk.core;bundle-version=&quot;1.0.0&quot;;resolution:=optional,org.eclipse.dltk.debug;bundle-version=&quot;1.0.0&quot;;resolution:=optional,org.overturetool.eclipse.plugins.debug;bundle-version=&quot;1.0.0&quot;,org.eclipse.jdt.launching;bundle-version=&quot;3.4.1&quot;;resolution:=optional,org.eclipse.jdt.core;bundle-version=&quot;3.4.4&quot;;resolution:=optional,org.eclipse.debug.ui;bundle-version=&quot;3.4.2&quot;;resolution:=optional,org.eclipse.jdt.debug.ui;bundle-version=&quot;3.3.1&quot;;resolution:=optional,org.eclipse.ui.console;bundle-version=&quot;3.3.1&quot;;resolution:=optional,org.eclipse.dltk.debug.ui;bundle-version=&quot;1.0.0&quot;;resolution:=optional,org.eclipse.jface;bundle-version=&quot;3.4.2&quot;;resolution:=optional,org.overturetool.eclipse.plugins.editor.core;bundle-version=&quot;1.0&quot;,org.overturetool.eclipse.plugins.dbgp.core;bundle-version=&quot;1.0&quot;&#xA;Export-Package: org.overturetool.eclipse.plugins.launching,org.overturetool.eclipse.plugins.launching.console,org.overturetool.eclipse.plugins.launching.internal.launching&#xA;Bundle-SymbolicName: org.overturetool.eclipse.plugins.launching;singleton:=true&#xA;Manifest-Version: 1.0&#xA;Eclipse-BuddyPolicy: registered&#xA;Bundle-ActivationPolicy: lazy&#xA;Bundle-ManifestVersion: 2&#xA;Bundle-RequiredExecutionEnvironment: J2SE-1.5&#xA;Bundle-Localization: plugin
           </instruction>
         </instructions>
       </touchpointData>
@@ -184,38 +180,6 @@
           </instruction>
         </instructions>
       </touchpointData>
-    </unit>
-    <unit id='org.overturetool.eclipse.features.umltrans.feature.group' version='1.0.0.200905212232' singleton='false'>
-      <update id='org.overturetool.eclipse.features.umltrans.feature.group' range='[0.0.0,1.0.0.200905212232)' severity='0'/>
-      <properties size='5'>
-        <property name='org.eclipse.equinox.p2.name' value='OvertureTool UML Transformation Feature'/>
-        <property name='org.eclipse.equinox.p2.description' value='Festure providing UML Transformation'/>
-        <property name='org.eclipse.equinox.p2.description.url' value='http://www.overturetool.org/updatesite'/>
-        <property name='org.eclipse.equinox.p2.provider' value='Overturetool'/>
-        <property name='org.eclipse.equinox.p2.type.group' value='true'/>
-      </properties>
-      <provides size='1'>
-        <provided namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.features.umltrans.feature.group' version='1.0.0.200905212232'/>
-      </provides>
-      <requires size='4'>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.umltrans' range='[1.0.0,1.0.0]'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.umltrans.core' range='[1.0.0,1.0.0]'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.editor.core' range='[1.0.0,1.0.0]'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.features.umltrans.feature.jar' range='[1.0.0.200905212232,1.0.0.200905212232]'>
-          <filter>
-            (org.eclipse.update.install.features=true)
-          </filter>
-        </required>
-      </requires>
-      <touchpoint id='null' version='0.0.0'/>
-      <licenses size='1'>
-        <license url='http://www.example.com/license'>
-          GNU General Public License version 3.0 (GPLv3)
-        </license>
-      </licenses>
-      <copyright url='http://www.overturetool.org/copyright'>
-        GNU General Public License version 3.0 (GPLv3)
-      </copyright>
     </unit>
     <unit id='org.overturetool.eclipse.plugins.editor.ui' version='1.0.0'>
       <update id='org.overturetool.eclipse.plugins.editor.ui' range='[0.0.0,1.0.0)' severity='0'/>
@@ -400,29 +364,33 @@
       </provides>
       <touchpoint id='org.eclipse.equinox.p2.native' version='1.0.0'/>
     </unit>
-    <unit id='org.overturetool.eclipse.features.traces.feature.group' version='1.0.0.200905212232' singleton='false'>
-      <update id='org.overturetool.eclipse.features.traces.feature.group' range='[0.0.0,1.0.0.200905212232)' severity='0'/>
-      <properties size='5'>
+    <unit id='org.overturetool.eclipse.features.traces.feature.jar' version='1.0.0.200906110106'>
+      <update id='org.overturetool.eclipse.features.traces.feature.jar' range='[0.0.0,1.0.0.200906110106)' severity='0'/>
+      <properties size='4'>
         <property name='org.eclipse.equinox.p2.name' value='OvertureTool Traces Feature'/>
         <property name='org.eclipse.equinox.p2.description' value='Festure providing Combinatorial Testing'/>
         <property name='org.eclipse.equinox.p2.description.url' value='http://www.overturetool.org/updatesite'/>
         <property name='org.eclipse.equinox.p2.provider' value='Overturetool'/>
-        <property name='org.eclipse.equinox.p2.type.group' value='true'/>
       </properties>
-      <provides size='1'>
-        <provided namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.features.traces.feature.group' version='1.0.0.200905212232'/>
+      <provides size='3'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.features.traces.feature.jar' version='1.0.0.200906110106'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
+        <provided namespace='org.eclipse.update.feature' name='org.overturetool.eclipse.features.traces' version='1.0.0.200906110106'/>
       </provides>
-      <requires size='4'>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.traces' range='[1.0.0,1.0.0]'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.traces.core' range='[1.0.0,1.0.0]'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.editor.core' range='[1.0.0,1.0.0]'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.features.traces.feature.jar' range='[1.0.0.200905212232,1.0.0.200905212232]'>
-          <filter>
-            (org.eclipse.update.install.features=true)
-          </filter>
-        </required>
-      </requires>
-      <touchpoint id='null' version='0.0.0'/>
+      <filter>
+        (org.eclipse.update.install.features=true)
+      </filter>
+      <artifacts size='1'>
+        <artifact classifier='org.eclipse.update.feature' id='org.overturetool.eclipse.features.traces' version='1.0.0.200906110106'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='zipped'>
+            true
+          </instruction>
+        </instructions>
+      </touchpointData>
       <licenses size='1'>
         <license url='http://www.example.com/license'>
           GNU General Public License version 3.0 (GPLv3)
@@ -506,10 +474,48 @@
       <touchpointData size='1'>
         <instructions size='1'>
           <instruction key='manifest'>
-            Bundle-Name: org.overturetool.eclipse.plugins.debug&#xA;Bundle-ClassPath: .&#xA;Bundle-Version: 1.0&#xA;Bundle-Activator: org.overturetool.eclipse.debug.internal.debug.DebugPlugin&#xA;Bundle-Vendor: Princeton Softech Inc.&#xA;Require-Bundle: org.eclipse.dltk.debug;bundle-version=&quot;1.0.0&quot;;resolution:=optional,org.eclipse.debug.ui;bundle-version=&quot;3.4.2&quot;;resolution:=optional,org.eclipse.debug.core;bundle-version=&quot;3.4.1&quot;;resolution:=optional,org.eclipse.ui;bundle-version=&quot;3.4.2&quot;;resolution:=optional,org.eclipse.core.runtime;bundle-version=&quot;3.4.0&quot;;resolution:=optional,org.eclipse.jdt.debug.ui;bundle-version=&quot;3.3.1&quot;;resolution:=optional&#xA;Export-Package: org.overturetool.eclipse.debug.internal.debug&#xA;Bundle-SymbolicName: org.overturetool.eclipse.plugins.debug;singleton:=true&#xA;Manifest-Version: 1.0&#xA;Eclipse-BuddyPolicy: registered&#xA;Bundle-ActivationPolicy: lazy&#xA;Bundle-ManifestVersion: 2&#xA;Bundle-RequiredExecutionEnvironment: J2SE-1.5&#xA;Bundle-Localization: plugin
+            Bundle-Name: org.overturetool.eclipse.plugins.debug&#xA;Bundle-ClassPath: .&#xA;Bundle-Version: 1.0.0&#xA;Bundle-Activator: org.overturetool.eclipse.debug.internal.debug.DebugPlugin&#xA;Bundle-Vendor: Princeton Softech Inc.&#xA;Require-Bundle: org.eclipse.dltk.debug;bundle-version=&quot;1.0.0&quot;;resolution:=optional,org.eclipse.debug.ui;bundle-version=&quot;3.4.2&quot;;resolution:=optional,org.eclipse.debug.core;bundle-version=&quot;3.4.1&quot;;resolution:=optional,org.eclipse.ui;bundle-version=&quot;3.4.2&quot;;resolution:=optional,org.eclipse.core.runtime;bundle-version=&quot;3.4.0&quot;;resolution:=optional,org.eclipse.jdt.debug.ui;bundle-version=&quot;3.3.1&quot;;resolution:=optional&#xA;Export-Package: org.overturetool.eclipse.debug.internal.debug&#xA;Bundle-SymbolicName: org.overturetool.eclipse.plugins.debug;singleton:=true&#xA;Manifest-Version: 1.0&#xA;Eclipse-BuddyPolicy: registered&#xA;Bundle-ActivationPolicy: lazy&#xA;Bundle-ManifestVersion: 2&#xA;Bundle-RequiredExecutionEnvironment: J2SE-1.5&#xA;Bundle-Localization: plugin
           </instruction>
         </instructions>
       </touchpointData>
+    </unit>
+    <unit id='org.overturetool.eclipse.features.core.feature.group' version='1.0.0.200906110106' singleton='false'>
+      <update id='org.overturetool.eclipse.features.core.feature.group' range='[0.0.0,1.0.0.200906110106)' severity='0'/>
+      <properties size='4'>
+        <property name='org.eclipse.equinox.p2.name' value='Overturetool Core Feature'/>
+        <property name='org.eclipse.equinox.p2.description' value='Festure providing Core Editor'/>
+        <property name='org.eclipse.equinox.p2.description.url' value='http://www.overturetool.org/updatesite'/>
+        <property name='org.eclipse.equinox.p2.type.group' value='true'/>
+      </properties>
+      <provides size='1'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.features.core.feature.group' version='1.0.0.200906110106'/>
+      </provides>
+      <requires size='11'>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.dltk.core.feature.group' range='[1.0.0.v20081009-1644-7B8T0EAAoOQAP8iY5FfLj,1.0.0.v20081009-1644-7B8T0EAAoOQAP8iY5FfLj]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.editor.core' range='[1.0.0,1.0.0]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.stdlib' range='[1.0.0,1.0.0]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.editor.ui' range='[1.0.0,1.0.0]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.dbgp.core' range='[1.0.0,1.0.0]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.debug' range='[1.0.0,1.0.0]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.debug.ui' range='[1.0.0,1.0.0]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.launching' range='[1.0.0,1.0.0]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.overturedebugger' range='[1.0.0,1.0.0]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.vdmtoolsapi.core' range='[1.0.0,1.0.0]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.features.core.feature.jar' range='[1.0.0.200906110106,1.0.0.200906110106]'>
+          <filter>
+            (org.eclipse.update.install.features=true)
+          </filter>
+        </required>
+      </requires>
+      <touchpoint id='null' version='0.0.0'/>
+      <licenses size='1'>
+        <license url='http://www.example.com/license'>
+          GNU General Public License version 3.0 (GPLv3)
+        </license>
+      </licenses>
+      <copyright url='http://www.overturetool.org/copyright'>
+        GNU General Public License version 3.0 (GPLv3)
+      </copyright>
     </unit>
     <unit id='org.overturetool.eclipse.plugins.traces' version='1.0.0'>
       <update id='org.overturetool.eclipse.plugins.traces' range='[0.0.0,1.0.0)' severity='0'/>
@@ -543,23 +549,94 @@
         </instructions>
       </touchpointData>
     </unit>
-    <unit id='org.overturetool.eclipse.features.core.feature.jar' version='1.0.0.200905212232'>
-      <update id='org.overturetool.eclipse.features.core.feature.jar' range='[0.0.0,1.0.0.200905212232)' severity='0'/>
-      <properties size='3'>
-        <property name='org.eclipse.equinox.p2.name' value='Overturetool Core Feature'/>
-        <property name='org.eclipse.equinox.p2.description' value='Festure providing Core Editor'/>
+    <unit id='org.overturetool.eclipse.features.traces.feature.group' version='1.0.0.200906110106' singleton='false'>
+      <update id='org.overturetool.eclipse.features.traces.feature.group' range='[0.0.0,1.0.0.200906110106)' severity='0'/>
+      <properties size='5'>
+        <property name='org.eclipse.equinox.p2.name' value='OvertureTool Traces Feature'/>
+        <property name='org.eclipse.equinox.p2.description' value='Festure providing Combinatorial Testing'/>
         <property name='org.eclipse.equinox.p2.description.url' value='http://www.overturetool.org/updatesite'/>
+        <property name='org.eclipse.equinox.p2.provider' value='Overturetool'/>
+        <property name='org.eclipse.equinox.p2.type.group' value='true'/>
+      </properties>
+      <provides size='1'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.features.traces.feature.group' version='1.0.0.200906110106'/>
+      </provides>
+      <requires size='4'>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.traces' range='[1.0.0,1.0.0]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.traces.core' range='[1.0.0,1.0.0]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.editor.core' range='[1.0.0,1.0.0]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.features.traces.feature.jar' range='[1.0.0.200906110106,1.0.0.200906110106]'>
+          <filter>
+            (org.eclipse.update.install.features=true)
+          </filter>
+        </required>
+      </requires>
+      <touchpoint id='null' version='0.0.0'/>
+      <licenses size='1'>
+        <license url='http://www.example.com/license'>
+          GNU General Public License version 3.0 (GPLv3)
+        </license>
+      </licenses>
+      <copyright url='http://www.overturetool.org/copyright'>
+        GNU General Public License version 3.0 (GPLv3)
+      </copyright>
+    </unit>
+    <unit id='org.overturetool.eclipse.plugins.overturedebugger' version='1.0.0'>
+      <update id='org.overturetool.eclipse.plugins.overturedebugger' range='[0.0.0,1.0.0)' severity='0'/>
+      <properties size='3'>
+        <property name='df_LT.pluginProvider' value='Eclipse.org'/>
+        <property name='org.eclipse.equinox.p2.name' value='org.overturetool.eclipse.plugins.overturedebugger'/>
+        <property name='org.eclipse.equinox.p2.provider' value='%pluginProvider'/>
+      </properties>
+      <provides size='4'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.overturedebugger' version='1.0.0'/>
+        <provided namespace='osgi.bundle' name='org.overturetool.eclipse.plugins.overturedebugger' version='1.0.0'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+        <provided namespace='org.eclipse.equinox.p2.localization' name='df_LT' version='1.0.0'/>
+      </provides>
+      <requires size='11'>
+        <required namespace='osgi.bundle' name='org.eclipse.ui' range='3.4.2' optional='true'/>
+        <required namespace='osgi.bundle' name='org.eclipse.core.runtime' range='3.4.0' optional='true'/>
+        <required namespace='osgi.bundle' name='org.eclipse.dltk.ui' range='1.0.0' optional='true'/>
+        <required namespace='osgi.bundle' name='org.eclipse.dltk.debug.ui' range='1.0.0' optional='true'/>
+        <required namespace='osgi.bundle' name='org.eclipse.dltk.launching' range='1.0.0' optional='true'/>
+        <required namespace='osgi.bundle' name='org.eclipse.debug.core' range='3.4.1' optional='true'/>
+        <required namespace='osgi.bundle' name='org.eclipse.dltk.core' range='1.0.0' optional='true'/>
+        <required namespace='osgi.bundle' name='org.eclipse.dltk.debug' range='1.0.0'/>
+        <required namespace='osgi.bundle' name='org.overturetool.eclipse.plugins.editor.core' range='1.0.0'/>
+        <required namespace='osgi.bundle' name='org.overturetool.eclipse.plugins.debug' range='1.0.0'/>
+        <required namespace='osgi.bundle' name='org.overturetool.eclipse.plugins.launching' range='1.0.0'/>
+      </requires>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='org.overturetool.eclipse.plugins.overturedebugger' version='1.0.0'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-RequiredExecutionEnvironment: J2SE-1.5&#xA;Bundle-Name: org.overturetool.eclipse.plugins.overturedebugger&#xA;Bundle-Activator: org.overturetool.eclipse.plugins.editor.overturedebugger.OvertureDebuggerPlugin&#xA;Manifest-Version: 1.0&#xA;Bundle-Vendor: %pluginProvider&#xA;Bundle-ClassPath: .&#xA;Bundle-ActivationPolicy: lazy&#xA;Bundle-SymbolicName: org.overturetool.eclipse.plugins.overturedebugger;singleton:=true&#xA;Bundle-ManifestVersion: 2&#xA;Bundle-Version: 1.0.0&#xA;Bundle-Localization: plugin&#xA;Eclipse-BuddyPolicy: registered&#xA;Require-Bundle: org.eclipse.ui;bundle-version=&quot;3.4.2&quot;;resolution:=optional,org.eclipse.core.runtime;bundle-version=&quot;3.4.0&quot;;resolution:=optional,org.eclipse.dltk.ui;bundle-version=&quot;1.0.0&quot;;resolution:=optional,org.eclipse.dltk.debug.ui;bundle-version=&quot;1.0.0&quot;;resolution:=optional, org.eclipse.dltk.launching;bundle-version=&quot;1.0.0&quot;;resolution:=optional,org.eclipse.debug.core;bundle-version=&quot;3.4.1&quot;;resolution:=optional, org.eclipse.dltk.core;bundle-version=&quot;1.0.0&quot;;resolution:=optional,org.eclipse.dltk.debug;bundle-version=&quot;1.0.0&quot;, org.overturetool.eclipse.plugins.editor.core;bundle-version=&quot;1.0&quot;,org.overturetool.eclipse.plugins.debug;bundle-version=&quot;1.0.0&quot;,org.overturetool.eclipse.plugins.launching;bundle-version=&quot;1.0.0&quot;
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+    <unit id='org.overturetool.eclipse.features.umltrans.feature.jar' version='1.0.0.200906110106'>
+      <update id='org.overturetool.eclipse.features.umltrans.feature.jar' range='[0.0.0,1.0.0.200906110106)' severity='0'/>
+      <properties size='4'>
+        <property name='org.eclipse.equinox.p2.name' value='OvertureTool UML Transformation Feature'/>
+        <property name='org.eclipse.equinox.p2.description' value='Festure providing UML Transformation'/>
+        <property name='org.eclipse.equinox.p2.description.url' value='http://www.overturetool.org/updatesite'/>
+        <property name='org.eclipse.equinox.p2.provider' value='Overturetool'/>
       </properties>
       <provides size='3'>
-        <provided namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.features.core.feature.jar' version='1.0.0.200905212232'/>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.features.umltrans.feature.jar' version='1.0.0.200906110106'/>
         <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
-        <provided namespace='org.eclipse.update.feature' name='org.overturetool.eclipse.features.core' version='1.0.0.200905212232'/>
+        <provided namespace='org.eclipse.update.feature' name='org.overturetool.eclipse.features.umltrans' version='1.0.0.200906110106'/>
       </provides>
       <filter>
         (org.eclipse.update.install.features=true)
       </filter>
       <artifacts size='1'>
-        <artifact classifier='org.eclipse.update.feature' id='org.overturetool.eclipse.features.core' version='1.0.0.200905212232'/>
+        <artifact classifier='org.eclipse.update.feature' id='org.overturetool.eclipse.features.umltrans' version='1.0.0.200906110106'/>
       </artifacts>
       <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
       <touchpointData size='1'>
@@ -615,80 +692,6 @@
         </instructions>
       </touchpointData>
     </unit>
-    <unit id='org.overturetool.eclipse.features.umltrans.feature.jar' version='1.0.0.200905212232'>
-      <update id='org.overturetool.eclipse.features.umltrans.feature.jar' range='[0.0.0,1.0.0.200905212232)' severity='0'/>
-      <properties size='4'>
-        <property name='org.eclipse.equinox.p2.name' value='OvertureTool UML Transformation Feature'/>
-        <property name='org.eclipse.equinox.p2.description' value='Festure providing UML Transformation'/>
-        <property name='org.eclipse.equinox.p2.description.url' value='http://www.overturetool.org/updatesite'/>
-        <property name='org.eclipse.equinox.p2.provider' value='Overturetool'/>
-      </properties>
-      <provides size='3'>
-        <provided namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.features.umltrans.feature.jar' version='1.0.0.200905212232'/>
-        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
-        <provided namespace='org.eclipse.update.feature' name='org.overturetool.eclipse.features.umltrans' version='1.0.0.200905212232'/>
-      </provides>
-      <filter>
-        (org.eclipse.update.install.features=true)
-      </filter>
-      <artifacts size='1'>
-        <artifact classifier='org.eclipse.update.feature' id='org.overturetool.eclipse.features.umltrans' version='1.0.0.200905212232'/>
-      </artifacts>
-      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
-      <touchpointData size='1'>
-        <instructions size='1'>
-          <instruction key='zipped'>
-            true
-          </instruction>
-        </instructions>
-      </touchpointData>
-      <licenses size='1'>
-        <license url='http://www.example.com/license'>
-          GNU General Public License version 3.0 (GPLv3)
-        </license>
-      </licenses>
-      <copyright url='http://www.overturetool.org/copyright'>
-        GNU General Public License version 3.0 (GPLv3)
-      </copyright>
-    </unit>
-    <unit id='org.overturetool.eclipse.features.core.feature.group' version='1.0.0.200905212232' singleton='false'>
-      <update id='org.overturetool.eclipse.features.core.feature.group' range='[0.0.0,1.0.0.200905212232)' severity='0'/>
-      <properties size='4'>
-        <property name='org.eclipse.equinox.p2.name' value='Overturetool Core Feature'/>
-        <property name='org.eclipse.equinox.p2.description' value='Festure providing Core Editor'/>
-        <property name='org.eclipse.equinox.p2.description.url' value='http://www.overturetool.org/updatesite'/>
-        <property name='org.eclipse.equinox.p2.type.group' value='true'/>
-      </properties>
-      <provides size='1'>
-        <provided namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.features.core.feature.group' version='1.0.0.200905212232'/>
-      </provides>
-      <requires size='11'>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.dltk.core.feature.group' range='[1.0.0.v20081009-1644-7B8T0EAAoOQAP8iY5FfLj,1.0.0.v20081009-1644-7B8T0EAAoOQAP8iY5FfLj]'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.editor.core' range='[1.0.0,1.0.0]'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.stdlib' range='[1.0.0,1.0.0]'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.editor.ui' range='[1.0.0,1.0.0]'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.dbgp.core' range='[1.0.0,1.0.0]'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.debug' range='[1.0.0,1.0.0]'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.debug.ui' range='[1.0.0,1.0.0]'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.launching' range='[1.0.0,1.0.0]'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.overturedebugger' range='[0.0.0.200905212232,0.0.0.200905212232]'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.vdmtoolsapi.core' range='[1.0.0,1.0.0]'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.features.core.feature.jar' range='[1.0.0.200905212232,1.0.0.200905212232]'>
-          <filter>
-            (org.eclipse.update.install.features=true)
-          </filter>
-        </required>
-      </requires>
-      <touchpoint id='null' version='0.0.0'/>
-      <licenses size='1'>
-        <license url='http://www.example.com/license'>
-          GNU General Public License version 3.0 (GPLv3)
-        </license>
-      </licenses>
-      <copyright url='http://www.overturetool.org/copyright'>
-        GNU General Public License version 3.0 (GPLv3)
-      </copyright>
-    </unit>
     <unit id='config.a.jre' version='1.6.0' singleton='false'>
       <hostRequirements size='1'>
         <required namespace='org.eclipse.equinox.p2.iu' name='a.jre' range='1.6.0'/>
@@ -711,33 +714,29 @@
         </instructions>
       </touchpointData>
     </unit>
-    <unit id='org.overturetool.eclipse.features.traces.feature.jar' version='1.0.0.200905212232'>
-      <update id='org.overturetool.eclipse.features.traces.feature.jar' range='[0.0.0,1.0.0.200905212232)' severity='0'/>
-      <properties size='4'>
-        <property name='org.eclipse.equinox.p2.name' value='OvertureTool Traces Feature'/>
-        <property name='org.eclipse.equinox.p2.description' value='Festure providing Combinatorial Testing'/>
+    <unit id='org.overturetool.eclipse.features.umltrans.feature.group' version='1.0.0.200906110106' singleton='false'>
+      <update id='org.overturetool.eclipse.features.umltrans.feature.group' range='[0.0.0,1.0.0.200906110106)' severity='0'/>
+      <properties size='5'>
+        <property name='org.eclipse.equinox.p2.name' value='OvertureTool UML Transformation Feature'/>
+        <property name='org.eclipse.equinox.p2.description' value='Festure providing UML Transformation'/>
         <property name='org.eclipse.equinox.p2.description.url' value='http://www.overturetool.org/updatesite'/>
         <property name='org.eclipse.equinox.p2.provider' value='Overturetool'/>
+        <property name='org.eclipse.equinox.p2.type.group' value='true'/>
       </properties>
-      <provides size='3'>
-        <provided namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.features.traces.feature.jar' version='1.0.0.200905212232'/>
-        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
-        <provided namespace='org.eclipse.update.feature' name='org.overturetool.eclipse.features.traces' version='1.0.0.200905212232'/>
+      <provides size='1'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.features.umltrans.feature.group' version='1.0.0.200906110106'/>
       </provides>
-      <filter>
-        (org.eclipse.update.install.features=true)
-      </filter>
-      <artifacts size='1'>
-        <artifact classifier='org.eclipse.update.feature' id='org.overturetool.eclipse.features.traces' version='1.0.0.200905212232'/>
-      </artifacts>
-      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
-      <touchpointData size='1'>
-        <instructions size='1'>
-          <instruction key='zipped'>
-            true
-          </instruction>
-        </instructions>
-      </touchpointData>
+      <requires size='4'>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.umltrans' range='[1.0.0,1.0.0]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.umltrans.core' range='[1.0.0,1.0.0]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.editor.core' range='[1.0.0,1.0.0]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.features.umltrans.feature.jar' range='[1.0.0.200906110106,1.0.0.200906110106]'>
+          <filter>
+            (org.eclipse.update.install.features=true)
+          </filter>
+        </required>
+      </requires>
+      <touchpoint id='null' version='0.0.0'/>
       <licenses size='1'>
         <license url='http://www.example.com/license'>
           GNU General Public License version 3.0 (GPLv3)
@@ -1119,12 +1118,16 @@
         <property name='org.eclipse.equinox.p2.name' value='org.overturetool.eclipse.plugins.traces.core'/>
         <property name='org.eclipse.equinox.p2.provider' value='Overture.'/>
       </properties>
-      <provides size='43'>
+      <provides size='47'>
         <provided namespace='org.eclipse.equinox.p2.iu' name='org.overturetool.eclipse.plugins.traces.core' version='1.0.0'/>
         <provided namespace='osgi.bundle' name='org.overturetool.eclipse.plugins.traces.core' version='1.0.0'/>
+        <provided namespace='java.package' name='org.overturetool.traces.API' version='0.0.0'/>
+        <provided namespace='java.package' name='org.overturetool.traces.astspec.oml2vpp' version='0.0.0'/>
         <provided namespace='java.package' name='org.overturetool.traces' version='0.0.0'/>
-        <provided namespace='java.package' name='org.overturetool.traces.gui' version='0.0.0'/>
+        <provided namespace='java.package' name='org.overturetool.traces.io' version='0.0.0'/>
+        <provided namespace='java.package' name='org.overturetool.traces.toolbox' version='0.0.0'/>
         <provided namespace='java.package' name='org.overturetool.traces.utility' version='0.0.0'/>
+        <provided namespace='java.package' name='org.overturetool.traces.vdmj' version='0.0.0'/>
         <provided namespace='java.package' name='quotes' version='0.0.0'/>
         <provided namespace='java.package' name='org.overturetool.vdmj.ast' version='0.0.0'/>
         <provided namespace='java.package' name='org.overturetool.vdmj.commands' version='0.0.0'/>
@@ -1171,7 +1174,7 @@
       <touchpointData size='1'>
         <instructions size='2'>
           <instruction key='manifest'>
-            Bundle-Vendor: Overture.&#xA;Bundle-ManifestVersion: 2&#xA;Bundle-ClassPath: lib\traces-1.0.0.jar,lib\vdmj-1.0.0.jar,lib\parser-1.0.0.jar,lib\ast-1.0.0.jar,lib\stdlib-1.0.0.jar,lib\vdmtoolsapi-1.0.0.jar&#xA;Bundle-Name: org.overturetool.eclipse.plugins.traces.core&#xA;Eclipse-BuddyPolicy: registered&#xA;Bundle-Localization: plugin&#xA;Bundle-ActivationPolicy: lazy&#xA;Manifest-Version: 1.0&#xA;Bundle-SymbolicName: org.overturetool.eclipse.plugins.traces.core&#xA;Bundle-Version: 1.0&#xA;Export-Package: org.overturetool.traces,org.overturetool.traces.gui,org.overturetool.traces.utility,quotes,org.overturetool.vdmj.ast,org.overturetool.vdmj.commands,org.overturetool.vdmj.debug,org.overturetool.vdmj.definitions,org.overturetool.vdmj,org.overturetool.vdmj.expressions,org.overturetool.vdmj.lex,org.overturetool.vdmj.messages,org.overturetool.vdmj.modules,org.overturetool.vdmj.patterns,org.overturetool.vdmj.pog,org.overturetool.vdmj.runtime,org.overturetool.vdmj.statements,org.overturetool.vdmj.syntax,org.overturetool.vdmj.traces,org.overturetool.vdmj.typechecker,org.overturetool.vdmj.types,org.overturetool.vdmj.util,org.overturetool.vdmj.values,org.overturetool.parser.imp,org.overturetool.scanner.imp,org.overturetool.visitor,org.overturetool.ast.imp,org.overturetool.ast.itf,org.overturetool.visitor,jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI,jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.VDMCodeGeneratorPackage,jp.co.csk.vdm.toolbox.api.corba.VDM,jp.co.csk.vdm.toolbox.api,jp.co.csk.vdm.toolbox.VDM,jp.co.csk.vdm.toolbox.VDM.quotes,jp.co.csk.vdm.toolbox.VDM.ValueParser,org.overturetool.vdmtools.exceptions,org.overturetool.vdmtools.interpreter,org.overturetool.vdmtools.parser,org.overturetool.vdmtools
+            Bundle-Vendor: Overture.&#xA;Bundle-ManifestVersion: 2&#xA;Bundle-ClassPath: lib\traces-1.0.0.jar,lib\vdmj-1.0.0.jar,lib\parser-1.0.0.jar,lib\ast-1.0.0.jar,lib\stdlib-1.0.0.jar,lib\vdmtoolsapi-1.0.0.jar&#xA;Bundle-Name: org.overturetool.eclipse.plugins.traces.core&#xA;Eclipse-BuddyPolicy: registered&#xA;Bundle-Localization: plugin&#xA;Bundle-ActivationPolicy: lazy&#xA;Manifest-Version: 1.0&#xA;Bundle-SymbolicName: org.overturetool.eclipse.plugins.traces.core&#xA;Bundle-Version: 1.0&#xA;Export-Package: org.overturetool.traces.API,org.overturetool.traces.astspec.oml2vpp,org.overturetool.traces,org.overturetool.traces.io,org.overturetool.traces.toolbox,org.overturetool.traces.utility,org.overturetool.traces.vdmj,quotes,org.overturetool.vdmj.ast,org.overturetool.vdmj.commands,org.overturetool.vdmj.debug,org.overturetool.vdmj.definitions,org.overturetool.vdmj,org.overturetool.vdmj.expressions,org.overturetool.vdmj.lex,org.overturetool.vdmj.messages,org.overturetool.vdmj.modules,org.overturetool.vdmj.patterns,org.overturetool.vdmj.pog,org.overturetool.vdmj.runtime,org.overturetool.vdmj.statements,org.overturetool.vdmj.syntax,org.overturetool.vdmj.traces,org.overturetool.vdmj.typechecker,org.overturetool.vdmj.types,org.overturetool.vdmj.util,org.overturetool.vdmj.values,org.overturetool.parser.imp,org.overturetool.scanner.imp,org.overturetool.visitor,org.overturetool.ast.imp,org.overturetool.ast.itf,org.overturetool.visitor,jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI,jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI.VDMCodeGeneratorPackage,jp.co.csk.vdm.toolbox.api.corba.VDM,jp.co.csk.vdm.toolbox.api,jp.co.csk.vdm.toolbox.VDM,jp.co.csk.vdm.toolbox.VDM.quotes,jp.co.csk.vdm.toolbox.VDM.ValueParser,org.overturetool.vdmtools.exceptions,org.overturetool.vdmtools.interpreter,org.overturetool.vdmtools.parser,org.overturetool.vdmtools&#xA;
           </instruction>
           <instruction key='zipped'>
             true
@@ -1568,7 +1571,7 @@
       <touchpointData size='1'>
         <instructions size='2'>
           <instruction key='manifest'>
-            Bundle-Vendor: Overture.&#xA;Bundle-ManifestVersion: 2&#xA;Bundle-ClassPath: lib\vdmtoolsdbgp-1.0.0.jar,lib\abstractdbgp-1.0.0.jar,lib\vdmtoolsapi-1.0.0.jar&#xA;Bundle-Name: org.overturetool.eclipse.plugins.vdmtoolsapi.core&#xA;Eclipse-BuddyPolicy: registered&#xA;Bundle-Localization: plugin&#xA;Bundle-ActivationPolicy: lazy&#xA;Manifest-Version: 1.0&#xA;Bundle-SymbolicName: org.overturetool.eclipse.plugins.vdmtoolsapi.core&#xA;Bundle-Version: 1.0&#xA;Export-Package: org.overturetool.vdmtools.dbgp,org.overturetool.vdmtools.dbgp,org.overturetool.vdmtools.exceptions,org.overturetool.vdmtools.interpreter,org.overturetool.vdmtools.parser,org.overturetool.vdmtools
+            Bundle-Vendor: Overture.&#xA;Bundle-ManifestVersion: 2&#xA;Bundle-ClassPath: lib\vdmtoolsdbgp-1.0.0.jar,lib\abstractdbgp-1.0.0.jar,lib\vdmtoolsapi-1.0.0.jar&#xA;Bundle-Name: org.overturetool.eclipse.plugins.vdmtoolsapi.core&#xA;Eclipse-BuddyPolicy: registered&#xA;Bundle-Localization: plugin&#xA;Bundle-ActivationPolicy: lazy&#xA;Manifest-Version: 1.0&#xA;Bundle-SymbolicName: org.overturetool.eclipse.plugins.vdmtoolsapi.core&#xA;Bundle-Version: 1.0.0&#xA;Export-Package: org.overturetool.vdmtools.dbgp,org.overturetool.vdmtools.dbgp,org.overturetool.vdmtools.exceptions,org.overturetool.vdmtools.interpreter,org.overturetool.vdmtools.parser,org.overturetool.vdmtools&#xA;
           </instruction>
           <instruction key='zipped'>
             true

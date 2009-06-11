@@ -19,16 +19,6 @@
 
   <build>
 
-    <!--deploy setting-->
-    <!--<extensions>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-ftp</artifactId>
-        <version>1.0-beta-2</version>
-      </extension>
-    </extensions>-->
-    <!--deploy setting-->
-
     <resources>
       <resource>
         <directory>src/main/java</directory>
@@ -72,40 +62,7 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-psteclipse-plugin</artifactId>
-        <!--  <version>1.1.0</version> -->
-        <version>1.0.2</version>
-        <extensions>true</extensions>
-        <configuration>
-          <logModifications>true</logModifications>
-          <testFrameworkVersion>4.2.200.v200901090100</testFrameworkVersion>
-        </configuration>
-        <executions>
-          <execution>
-            <id>test-package</id>
-            <phase>test-compile</phase>
-            <goals>
-              <goal>testPackage</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>update</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>update</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>update-site-classpath</id>
-            <phase>pre-site</phase>
-            <goals>
-              <goal>update</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+      
       <plugin>
         <artifactId>maven-eclipse-plugin</artifactId>
         <configuration>
@@ -122,6 +79,61 @@
             <classpathContainer>org.eclipse.pde.core.requiredPlugins</classpathContainer>
           </classpathContainers>
         </configuration>
+      </plugin>
+      <plugin>
+      	<groupId>org.overturetool.tools.maven-pst</groupId>
+      	<artifactId>maven-psteclipse-plugin</artifactId>
+      	<version>1.0.3</version>
+      	
+      	
+      	
+      	
+      	
+      	
+      	
+      	
+      	
+      	
+        <extensions>true</extensions>
+        <configuration>
+          <logModifications>true</logModifications>
+           <testFrameworkVersion>4.2.2</testFrameworkVersion> <!-- 4.2.200.v200901090100 -->
+        </configuration>
+        <executions>
+        
+       <!--    <execution>
+            <id>test-package</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>testPackage</goal>
+            </goals>
+          </execution> 
+           -->
+          <execution>
+            <id>update</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>update</goal>
+            </goals>
+          </execution>
+          
+          <execution>
+            <id>update-site-classpath</id>
+            <phase>pre-site</phase>
+            <goals>
+              <goal>update</goal>
+            </goals>
+          </execution>
+          
+        </executions>
+     
+      	
+      	
+      	
+      	
+      	
+      	
+      	
       </plugin>
     </plugins>
   </build>

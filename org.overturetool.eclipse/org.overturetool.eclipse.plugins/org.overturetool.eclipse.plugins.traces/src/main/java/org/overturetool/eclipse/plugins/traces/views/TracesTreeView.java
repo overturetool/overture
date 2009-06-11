@@ -1,10 +1,12 @@
 package org.overturetool.eclipse.plugins.traces.views;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 
@@ -20,7 +22,6 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -32,20 +33,20 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.ITreeSelection;
-import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ITreeViewerListener;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -56,21 +57,35 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.console.ConsolePlugin;
+import org.eclipse.ui.console.IConsole;
+import org.eclipse.ui.console.IConsoleManager;
+import org.eclipse.ui.console.MessageConsole;
+import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
-import org.overturetool.ast.itf.IOmlNamedTrace;
 import org.overturetool.eclipse.plugins.editor.core.OvertureNature;
 import org.overturetool.eclipse.plugins.traces.OvertureTracesPlugin;
-import org.overturetool.traces.utility.TracesHelper;
-import org.overturetool.traces.utility.TracesHelper.TestResultType;
-import org.overturetool.traces.utility.TracesHelper.TraceError;
-
+import org.overturetool.eclipse.plugins.traces.views.treeView.ClassTreeNode;
+import org.overturetool.eclipse.plugins.traces.views.treeView.NotYetReadyTreeNode;
+import org.overturetool.eclipse.plugins.traces.views.treeView.ProjectTreeNode;
+import org.overturetool.eclipse.plugins.traces.views.treeView.TraceTestGroup;
+import org.overturetool.eclipse.plugins.traces.views.treeView.TraceTestTreeNode;
+import org.overturetool.eclipse.plugins.traces.views.treeView.TraceTreeNode;
+import org.overturetool.traces.VdmjTracesHelper;
+import org.overturetool.traces.utility.ITracesHelper;
+import org.overturetool.traces.utility.TraceError;
+import org.overturetool.traces.utility.TraceTestStatus;
+import org.overturetool.traces.utility.ITracesHelper.TestResultType;
+import org.overturetool.vdmj.definitions.NamedTraceDefinition;
+import org.xml.sax.SAXException;
 
 /**
  * This sample class demonstrates how to plug-in a new workbench view. The view
@@ -85,9 +100,11 @@ import org.overturetool.traces.utility.TracesHelper.TraceError;
  * can be shared between views in order to ensure that objects of the same type
  * are presented in the same way everywhere.
  * <p>
+ * http://www.eclipse.org/articles/Article-TreeViewer/TreeViewerArticle.htm
  */
 
-public class TracesTreeView extends ViewPart {
+public class TracesTreeView extends ViewPart
+{
 	private TreeViewer viewer;
 	private DrillDownAdapter drillDownAdapter;
 	private Action actionRunSelected;
@@ -101,11 +118,12 @@ public class TracesTreeView extends ViewPart {
 	private Action actionSelectToolBox;
 	private Action actionSelectToolBoxVDMJ;
 	private Action actionSelectToolBoxVDMTools;
+	private Action actionRefreshTree;
 	// private Action doubleClickAction;
-	private Action treeAction;
+	// private Action treeAction;
 	private Action expandSpecInTree;
 	private Action saveTraceResultsAction;
-	private Dictionary<String, TracesHelper> traceHelpers;
+	private Dictionary<String, ITracesHelper> traceHelpers;
 	private Dictionary<String, IFile> pathTofile;
 	private String savePath = "";
 	// private boolean expandCompleted = false;
@@ -114,455 +132,17 @@ public class TracesTreeView extends ViewPart {
 	static String[] exts = new String[] { "vpp", "tex", "vdm" }; // TODO get
 	private IResourceChangeListener resourceChangedListener = null;
 	private IProject projectToUpdate = null;
+	private String VDMToolsPath = "";
+	final String VDM_TOOLS_PATH_DEFAULT = "C:\\Program Files\\The VDM++ Toolbox v8.2b\\bin";
+	private boolean UseVDMJ = true;
+	Button buttonSetSort = null;
 
-	public TracesHelper GetTracesHelper(String projectName) {
+	public ITracesHelper GetTracesHelper(String projectName)
+	{
 		return this.traceHelpers.get(projectName);
 		// ScriptRuntime.getInterpreterInstall(proj);
 
 	}
-
-	class ProjectTreeNode implements IAdaptable {
-		private ArrayList<ClassTreeNode> children;
-		private TreeParent parent;
-		private IProject project;
-
-		public ProjectTreeNode(IProject project) {
-			this.project = project;
-			children = new ArrayList<ClassTreeNode>();
-		}
-
-		public void setParent(TreeParent parent) {
-			this.parent = parent;
-		}
-
-		public TreeParent getParent() {
-			return parent;
-		}
-
-		public String toString() {
-			return getName();
-		}
-
-		public String getName() {
-			return project.getName();
-		}
-
-		public Object getAdapter(Class adapter) {
-			return null;
-		}
-
-		public void addChild(ClassTreeNode child) {
-			children.add(child);
-			child.setParent(this);
-		}
-
-		public void removeChild(ClassTreeNode child) {
-			children.remove(child);
-			child.setParent(null);
-		}
-
-		public ClassTreeNode[] getChildren() {
-			return children.toArray(new ClassTreeNode[children.size()]);
-		}
-
-		public boolean hasChildren() {
-			return children.size() > 0;
-		}
-
-	}
-
-	class ClassTreeNode implements IAdaptable {
-		private ProjectTreeNode parent;
-		private String className;
-		private ArrayList<TraceTreeNode> children;
-
-		public ClassTreeNode(String className) {
-			this.className = className;
-			children = new ArrayList<TraceTreeNode>();
-		}
-
-		public void setParent(ProjectTreeNode parent) {
-			this.parent = parent;
-		}
-
-		public ProjectTreeNode getParent() {
-			return parent;
-		}
-
-		public String toString() {
-			return getName();
-		}
-
-		public String getName() {
-			return className;
-		}
-
-		public Object getAdapter(Class adapter) {
-			return null;
-		}
-
-		public void addChild(TraceTreeNode child) {
-			children.add(child);
-			child.setParent(this);
-		}
-
-		public void removeChild(TraceTreeNode child) {
-			children.remove(child);
-			child.setParent(null);
-		}
-
-		public TraceTreeNode[] getChildren() {
-			return children.toArray(new TraceTreeNode[children.size()]);
-		}
-
-		public boolean hasChildren() {
-			return children.size() > 0;
-		}
-	}
-
-	class TraceTreeNode implements IAdaptable {
-		private IOmlNamedTrace traceDefinition;
-		private ClassTreeNode parent;
-		private ArrayList<TraceTestCaseTreeNode> children;
-		private int testSkippedCount = 0;
-
-		public TraceTreeNode(IOmlNamedTrace traceDef) {
-			traceDefinition = traceDef;
-			children = new ArrayList<TraceTestCaseTreeNode>();
-		}
-
-		public ClassTreeNode getParent() {
-			return parent;
-		}
-
-		public IOmlNamedTrace GetTraceDefinition() {
-			return traceDefinition;
-		}
-
-		public void SetSkippedCount(int skippedCount) {
-			testSkippedCount = skippedCount;
-		}
-
-		public String toString() {
-			if (testSkippedCount != 0)
-				return getName() + " (" + this.getChildren().length
-						+ " skipped " + testSkippedCount + ")";
-			else
-				return getName() + " (" + this.getChildren().length + ")";
-		}
-
-		public String getName() {
-			try {
-				return org.overturetool.vdmj.util.Utils.listToString(traceDefinition.getName(), "/");
-			} catch (CGException e) {
-				return "error.. ";
-			}
-		}
-
-		public void setParent(ClassTreeNode parent) {
-			this.parent = parent;
-		}
-
-		@SuppressWarnings("unchecked")
-		public Object getAdapter(Class adapter) {
-			return null;
-		}
-
-		public void addChild(TraceTestCaseTreeNode child) {
-			if (!children.contains(child)) {
-				boolean contains = false;
-				for (TraceTestCaseTreeNode node : getChildren()) {
-					if (node.getName().equals(child.getName()))
-						contains = true;
-				}
-				if (!contains) {
-					children.add(child);
-					child.setParent(this);
-				}
-			}
-		}
-
-		public void removeChild(TraceTestCaseTreeNode child) {
-			children.remove(child);
-			child.setParent(null);
-		}
-
-		public TraceTestCaseTreeNode[] getChildren() {
-			return children.toArray(new TraceTestCaseTreeNode[children.size()]);
-		}
-
-		public boolean hasChildren() {
-			return children.size() > 0;
-		}
-
-		public boolean hasChild(String name) {
-			for (TraceTestCaseTreeNode node : children) {
-				if (node.getName().equals(name))
-					return true;
-
-			}
-			return false;
-		}
-
-	}
-
-	class TraceTestCaseTreeNode implements IAdaptable {
-		private String name;
-		private TraceTreeNode parent;
-		private TestResultType status;
-		private boolean runTimeError = false;
-
-		public TraceTestCaseTreeNode(String traceTestCaseName, TestResultType status) {
-			this.name = traceTestCaseName;
-			this.status = status;
-		}
-
-		public boolean HasRunTimeError() {
-			return runTimeError;
-		}
-
-		public void SetRunTimeError() {
-			this.runTimeError = true;
-		}
-
-		public void SetStatus(TestResultType status) {
-			this.runTimeError = false;
-			this.status = status;
-		}
-
-		public TestResultType GetStatus() {
-			return this.status;
-		}
-
-		public TraceTreeNode getParent() {
-			return parent;
-		}
-
-		public String toString() {
-			String tmp = name;
-			while (tmp.length() < 6)
-				tmp = "0" + tmp;
-			return "Test " + tmp;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setParent(TraceTreeNode parent) {
-			this.parent = parent;
-		}
-
-		@SuppressWarnings("unchecked")
-		public Object getAdapter(Class adapter) {
-			return null;
-		}
-
-		// public boolean equals(Object obj)
-		// {
-		// if(obj instanceof TraceTestCaseTreeNode)
-		// return this.name.equals(((TraceTestCaseTreeNode)obj).getName());
-		// else
-		// return false;
-		// }
-
-	}
-
-	class TreeParent implements IAdaptable {
-		private String name;
-		private ArrayList<ProjectTreeNode> children;
-
-		public TreeParent(String name) {
-			this.name = name;
-			children = new ArrayList<ProjectTreeNode>();
-		}
-
-		public String toString() {
-			return getName();
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public Object getAdapter(Class adapter) {
-			return null;
-		}
-
-		public void addChild(ProjectTreeNode child) {
-			children.add(child);
-			child.setParent(this);
-		}
-
-		public void removeChild(ProjectTreeNode child) {
-			children.remove(child);
-			child.setParent(null);
-		}
-
-		public ProjectTreeNode[] getChildren() {
-			return children.toArray(new ProjectTreeNode[children.size()]);
-		}
-
-		public boolean hasChildren() {
-			return children.size() > 0;
-		}
-	}
-
-	class ViewContentProvider implements IStructuredContentProvider,
-			ITreeContentProvider {
-		private TreeParent invisibleRoot;
-		// private ArrayList<ProjectTreeNode> projectTraceTreeNodes;
-		Dictionary<String, TracesHelper> traceHelpers;
-
-		public ViewContentProvider(Dictionary<String, TracesHelper> trs) {
-			this.traceHelpers = trs;
-		}
-
-		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-		}
-
-		public void dispose() {
-		}
-
-		public void addChild(ProjectTreeNode project) {
-			invisibleRoot.addChild(project);
-		}
-
-		public Object[] getElements(Object parent) {
-			if (parent.equals(getViewSite())) {
-				if (invisibleRoot == null) {
-					initialize();
-				}
-				return getChildren(invisibleRoot);
-			}
-			return getChildren(parent);
-		}
-
-		public Object getParent(Object child) {
-			if (child instanceof ProjectTreeNode) {
-				return ((ProjectTreeNode) child).getParent();
-			}
-			if (child instanceof ClassTreeNode) {
-				return ((ClassTreeNode) child).getParent();
-			}
-			if (child instanceof TraceTreeNode) {
-				return ((TraceTreeNode) child).getParent();
-			}
-			if (child instanceof TraceTestCaseTreeNode) {
-				return ((TraceTestCaseTreeNode) child).getParent();
-			}
-			return null;
-		}
-
-		public Object[] getChildren(Object parent) {
-			if (parent instanceof TreeParent) {
-				return ((TreeParent) parent).getChildren();
-			}
-			if (parent instanceof ProjectTreeNode) {
-				return ((ProjectTreeNode) parent).getChildren();
-			}
-			if (parent instanceof ClassTreeNode) {
-				return ((ClassTreeNode) parent).getChildren();
-			}
-			if (parent instanceof TraceTreeNode) {
-				return ((TraceTreeNode) parent).getChildren();
-			}
-			return new Object[0];
-		}
-
-		public boolean hasChildren(Object parent) {
-			if (parent instanceof TreeParent) {
-				return ((TreeParent) parent).hasChildren();
-			}
-			if (parent instanceof ProjectTreeNode) {
-				return ((ProjectTreeNode) parent).hasChildren();
-			}
-			if (parent instanceof ClassTreeNode) {
-				return ((ClassTreeNode) parent).hasChildren();
-			}
-			if (parent instanceof TraceTreeNode) {
-				return ((TraceTreeNode) parent).hasChildren();
-			}
-			return false;
-		}
-
-		/*
-		 * We will set up a dummy model to initialize tree heararchy. In a real
-		 * code, you will connect to a real model and expose its hierarchy.
-		 */
-		private void initialize() {
-			invisibleRoot = new TreeParent("");
-			// projectTraceTreeNodes = new ArrayList<ProjectTreeNode>();
-			// String[] exts = new String[]{"vpp", "tex" , "vdm"}; // TODO get
-			// extension from core xml..
-			IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-			IProject[] iprojects = iworkspaceRoot.getProjects();
-			// ArrayList<String> fileNameList = new ArrayList<String>();
-
-			ProjectTreeNode projectTreeNode;
-
-			// ArrayList<TreeParent> projectTree = new ArrayList<TreeParent>();
-			for (int j = 0; j < iprojects.length; j++) {
-
-				try {
-					// if the project is a overture project
-					if (iprojects[j].isOpen()
-							&& iprojects[j].getNature(OvertureNature.NATURE_ID) != null) {
-						// fileNameList = getAllMemberFilesString(iproject,
-						// exts);
-
-						// create project node
-						projectTreeNode = new ProjectTreeNode(iprojects[j]);
-						// creates File array
-						// File[] fileArray = new File[fileNameList.size()];
-						// for (int i = 0; i < fileNameList.size(); i++) {
-						// fileArray[i] = new File(fileNameList.get(i));
-						// }
-						// children.toArray(new
-						// ProjectTreeNode[children.size()]);
-						// traceHelper = new
-						// TracesHelper("",fileArray,true,100);
-						// add a childnode for each class that have a trace
-						TracesHelper tr = (TracesHelper) traceHelpers.get(iprojects[j].getName());
-						if (tr == null)
-							continue;
-
-						ArrayList<String> classes = tr.GetClassNamesWithTraces();
-						boolean isTraceProject = false;
-						for (String className : classes) {
-							if (className != null) {
-								isTraceProject = true;
-								// ClassTreeNode classTreeNode = new
-								// ClassTreeNode(className);
-								//
-								// // addTraces
-								// for (String trace : tr.GetTraces(className))
-								// {
-								// IOmlNamedTrace omlTrace =
-								// tr.GetTraceDefinition(className, trace); //
-								// if
-								//
-								// TraceTreeNode traceNode = new
-								// TraceTreeNode(omlTrace);
-								// classTreeNode.addChild(traceNode);
-								// }
-								// // add to project and root
-								// projectTreeNode.addChild(classTreeNode);
-							}
-						}
-						if (isTraceProject && classes.size() > 0) {
-							invisibleRoot.addChild(projectTreeNode);
-						}
-					}
-				} catch (Exception e1) {
-					System.out.println("Exception: " + e1.getMessage());
-					e1.printStackTrace();
-				}
-			}
-		}
-	}
-
-	// ----------------------------------------------
 
 	/**
 	 * This method returns a list of files under the given directory or its
@@ -573,21 +153,28 @@ public class TracesTreeView extends ViewPart {
 	 * @return list of IResource objects representing the files under the given
 	 *         directory and its subdirectories
 	 */
-	private ArrayList<IFile> getAllMemberFiles(IContainer dir, String[] exts) {
+	private static List<IFile> getAllMemberFiles(IContainer dir, String[] exts)
+	{
 		ArrayList<IFile> list = new ArrayList<IFile>();
 		IResource[] arr = null;
-		try {
+		try
+		{
 			arr = dir.members();
-		} catch (CoreException e) {
+		} catch (CoreException e)
+		{
 		}
 
-		for (int i = 0; arr != null && i < arr.length; i++) {
-			if (arr[i].getType() == IResource.FOLDER) {
+		for (int i = 0; arr != null && i < arr.length; i++)
+		{
+			if (arr[i].getType() == IResource.FOLDER)
+			{
 				list.addAll(getAllMemberFiles((IFolder) arr[i], exts));
-			}
-			else {
-				for (int j = 0; j < exts.length; j++) {
-					if (exts[j].equalsIgnoreCase(arr[i].getFileExtension())) {
+			} else
+			{
+				for (int j = 0; j < exts.length; j++)
+				{
+					if (exts[j].equalsIgnoreCase(arr[i].getFileExtension()))
+					{
 						list.add((IFile) arr[i]);
 						break;
 					}
@@ -597,30 +184,43 @@ public class TracesTreeView extends ViewPart {
 		return list;
 	}
 
-	private void SetTraceHelper(IProject project) {
-		ArrayList<IFile> fileNameList = new ArrayList<IFile>();
+	private void SetTraceHelper(IProject project)
+	{
+		List<IFile> fileNameList = new ArrayList<IFile>();
 
-		try {
+		try
+		{
 			// if the project is a overture project
 			if (project.isOpen()
-					&& project.getNature(OvertureNature.NATURE_ID) != null) {
+					&& project.getNature(OvertureNature.NATURE_ID) != null)
+			{
 				fileNameList = getAllMemberFiles(project, exts);
 
 				// create project node
 				// creates File array
 				File[] fileArray = new File[fileNameList.size()];
-				for (int i = 0; i < fileNameList.size(); i++) {
+				for (int i = 0; i < fileNameList.size(); i++)
+				{
 					fileArray[i] = fileNameList.get(i).getLocation().toFile();
 
-					pathTofile.put(fileArray[i].getAbsolutePath(), fileNameList.get(i));
+					pathTofile.put(
+							fileArray[i].getAbsolutePath(),
+							fileNameList.get(i));
 					//						
 					final IFile tmpFile = fileNameList.get(i);
-					display.asyncExec(new Runnable() {
-						public void run() {
+					display.asyncExec(new Runnable()
+					{
+						public void run()
+						{
 							// TODO Auto-generated method stub
-							try {
-								tmpFile.deleteMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
-							} catch (CoreException e) {
+							try
+							{
+								tmpFile.deleteMarkers(
+										IMarker.PROBLEM,
+										false,
+										IResource.DEPTH_INFINITE);
+							} catch (CoreException e)
+							{
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
@@ -628,129 +228,58 @@ public class TracesTreeView extends ViewPart {
 					});
 				}
 				traceHelpers.remove(project.getName());
-				traceHelpers.put(project.getName(), new TracesHelper(VDMToolsPath, fileArray, UseVDMJ, 3));
-
+				// traceHelpers.put(project.getName(), new
+				// TracesHelper(VDMToolsPath, fileArray, UseVDMJ, 3));
+				traceHelpers.put(
+						project.getName(),
+						new VdmjTracesHelper(
+								new File(
+										project.getWorkspace().getRoot().getLocation().toOSString()
+												+ project.getFullPath().toOSString()),
+								fileArray, 3));
 			}
-		} catch (Exception e1) {
+		} catch (Exception e1)
+		{
 			System.out.println("Exception: " + e1.getMessage());
 			e1.printStackTrace();
 		}
 
 	}
 
-	private String VDMToolsPath = "";
-	final String VDM_TOOLS_PATH_DEFAULT = "C:\\Program Files\\The VDM++ Toolbox v8.2b\\bin";
-	private boolean UseVDMJ = true;
-
-	private void SetTraceHelpers() {
-
+	private void SetTraceHelpers()
+	{
 		IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		IProject[] iprojects = iworkspaceRoot.getProjects();
-		ArrayList<IFile> fileNameList = new ArrayList<IFile>();
-
-		this.traceHelpers = new Hashtable<String, TracesHelper>();
+		this.traceHelpers = new Hashtable<String, ITracesHelper>();
 		this.pathTofile = new Hashtable<String, IFile>();
 
-		for (int j = 0; j < iprojects.length; j++) {
-
-			try {
-				// if the project is a overture project
-				if (iprojects[j].isOpen()
-						&& iprojects[j].getNature(OvertureNature.NATURE_ID) != null) {
-					fileNameList = getAllMemberFiles(iprojects[j], exts);
-
-					if (fileNameList.size() == 0)
-						continue;
-					// create project node
-					// creates File array
-					File[] fileArray = new File[fileNameList.size()];
-					for (int i = 0; i < fileNameList.size(); i++) {
-						fileArray[i] = fileNameList.get(i).getLocation().toFile();
-
-						pathTofile.put(fileArray[i].getAbsolutePath(), fileNameList.get(i));
-						//						
-						final IFile tmpFile = fileNameList.get(i);
-						display.asyncExec(new Runnable() {
-							public void run() {
-								// TODO Auto-generated method stub
-								try {
-									tmpFile.deleteMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
-								} catch (CoreException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-							}
-						});
-					}
-					traceHelpers.put(iprojects[j].getName(), new TracesHelper(VDMToolsPath, fileArray, UseVDMJ, 3));
-
-				}
-			} catch (Exception e1) {
+		for (int j = 0; j < iprojects.length; j++)
+		{
+			try
+			{
+				SetTraceHelper(iprojects[j]);
+			} catch (Exception e1)
+			{
 				System.out.println("Exception: " + e1.getMessage());
 				e1.printStackTrace();
 			}
 		}
 	}
 
-	// ----------------------------------------------
-
-	class ViewLabelProvider extends LabelProvider {
-
-		public String getText(Object obj) {
-			return obj.toString();
-		}
-
-		public Image getImage(Object obj) {
-			if (obj instanceof ProjectTreeNode) {
-				String imageKey = IDE.SharedImages.IMG_OBJ_PROJECT;
-				return PlatformUI.getWorkbench().getSharedImages().getImage(imageKey);
-			}
-			if (obj instanceof ClassTreeNode) {
-				return OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_CLASS).createImage();
-			}
-			if (obj instanceof TraceTreeNode) {
-				return OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE).createImage();
-			}
-			if (obj instanceof TraceTestCaseTreeNode) {
-				String imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNKNOWN;
-				TestResultType status = (((TraceTestCaseTreeNode) obj).GetStatus());
-				if (status == TestResultType.Ok)
-					imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_SUCCES;
-				else if (status == TestResultType.Unknown)
-					imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNKNOWN;
-				else if (status == TestResultType.Inconclusive)
-					imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNDETERMINED;
-				else if (status == TestResultType.Fail)
-					imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FAIL;
-				else if (status == TestResultType.ExpansionFaild)
-					imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_EXPANSIN_FAIL;
-				else if (status == TestResultType.Skipped)
-					imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_SKIPPED;
-
-				if (((TraceTestCaseTreeNode) obj).HasRunTimeError())
-					imgPath = OvertureTracesPlugin.IMG_ERROR;
-
-				return OvertureTracesPlugin.getImageDescriptor(imgPath).createImage();
-			}
-			String imageKey = IDE.SharedImages.IMG_OBJ_PROJECT;
-			return PlatformUI.getWorkbench().getSharedImages().getImage(imageKey);
-		}
-	}
-
-	class NameSorter extends ViewerSorter {
-	}
-
 	/**
 	 * The constructor.
 	 */
-	public TracesTreeView() {
+	public TracesTreeView()
+	{
 	}
 
 	/**
 	 * This is a callback that will allow us to create the viewer and initialize
 	 * it.
 	 */
-	public void createPartControl(Composite parent) {
+	@Override
+	public void createPartControl(Composite parent)
+	{
 
 		// PatternFilter patternFilter = new PatternFilter();
 		// viewer = new FilteredTree(parent, SWT.MULTI
@@ -759,7 +288,8 @@ public class TracesTreeView extends ViewPart {
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		drillDownAdapter = new DrillDownAdapter(viewer);
 		SetTraceHelpers();
-		viewer.setContentProvider(new ViewContentProvider(this.traceHelpers));
+		viewer.setContentProvider(new ViewContentProvider(this.traceHelpers,
+				this));
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.setSorter(null);
 		viewer.setInput(getViewSite());
@@ -776,110 +306,131 @@ public class TracesTreeView extends ViewPart {
 		hookTreeAction();
 		contributeToActionBars();
 
-		final Job expandJob = new Job("Expand traces") {
+		ExpandTraces(1000);
+
+		resourceChangedListener = new IResourceChangeListener()
+		{
+			public void resourceChanged(IResourceChangeEvent event)
+			{
+				try
+				{
+					switch (event.getType())
+					{
+					case IResourceChangeEvent.POST_CHANGE:
+
+						IResourceDelta[] delta = event.getDelta().getAffectedChildren();
+
+						for (IResourceDelta resourceDelta : delta)
+						{
+
+							if (resourceDelta.getResource() instanceof IProject)
+							{
+
+								if (IsFileChange(resourceDelta)
+										|| (resourceDelta.getKind() & IResourceDelta.ADDED) == IResourceDelta.ADDED)
+								{
+									projectToUpdate = ((IProject) resourceDelta.getResource());
+									ExpandTraces(0);
+								}
+							}
+						}
+						break;
+					}
+				} catch (Exception e)
+				{
+					// TODO: handle exception
+				}
+			}
+
+		};
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(
+				resourceChangedListener,
+				IResourceChangeEvent.POST_CHANGE);
+
+	}
+
+	private void ExpandTraces(int delay)
+	{
+		final Job expandJob = new Job("Expand traces")
+		{
 
 			@Override
-			protected IStatus run(IProgressMonitor monitor) {
+			protected IStatus run(IProgressMonitor monitor)
+			{
 
 				// expandCompleted = false;
-				if (projectToUpdate != null) {
+				if (projectToUpdate != null)
+				{
 
 					SetTraceHelper(projectToUpdate);
 					monitor.worked(50);
 					// final IProject[] iprojects =
 					// iworkspaceRoot.getProjects();
 
-					display.asyncExec(new Runnable() {
+					display.asyncExec(new Runnable()
+					{
 
-						public void run() {
+						public void run()
+						{
 							UpdateProject(projectToUpdate);
 						}
 
 					});
 
-				}
-				else
+				} else
 					expandSpecInTree.run();
 				monitor.worked(100);
 				// expandCompleted = true;
 
-				return new Status(IStatus.OK, "org.overturetool.traces", IStatus.OK, "Expand completed", null);
+				return new Status(IStatus.OK, "org.overturetool.traces",
+						IStatus.OK, "Expand completed", null);
 
 			}
 
 		};
 		expandJob.setPriority(Job.INTERACTIVE);
-		expandJob.schedule(1000);
-
-		resourceChangedListener = new IResourceChangeListener() {
-
-			public void resourceChanged(IResourceChangeEvent event) {
-
-				try {
-
-					switch (event.getType()) {
-					case IResourceChangeEvent.POST_CHANGE:
-
-						IResourceDelta[] delta = event.getDelta().getAffectedChildren();
-
-						for (IResourceDelta resourceDelta : delta) {
-
-							if (resourceDelta.getResource() instanceof IProject) {
-
-								if (IsFileChange(resourceDelta)
-										|| (resourceDelta.getKind() & IResourceDelta.ADDED) == IResourceDelta.ADDED) {
-
-									projectToUpdate = ((IProject) resourceDelta.getResource());
-									expandJob.schedule();
-								}
-							}
-						}
-
-						break;
-					}
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-			}
-
-		};
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangedListener, IResourceChangeEvent.POST_CHANGE);
-
+		expandJob.schedule(delay);
 	}
 
-	Button buttonSetSort = null;
-
-	private boolean IsFileChange(IResourceDelta delta) {
+	private boolean IsFileChange(IResourceDelta delta)
+	{
 		boolean ret = false;
-		if (delta.getAffectedChildren().length == 0) {
+		if (delta.getAffectedChildren().length == 0)
+		{
 
-			int a = (delta.getFlags() & IResourceDelta.CONTENT);
-			int b = (delta.getFlags() & IResourceDelta.MARKERS);
-			boolean sync = (delta.getFlags() & IResourceDelta.SYNC) == IResourceDelta.SYNC;
+			// int a = (delta.getFlags() & IResourceDelta.CONTENT);
+			// int b = (delta.getFlags() & IResourceDelta.MARKERS);
+			// boolean sync = (delta.getFlags() & IResourceDelta.SYNC) ==
+			// IResourceDelta.SYNC;
 			boolean add = (delta.getKind() & IResourceDelta.ADDED) == IResourceDelta.ADDED;
 			if ((delta.getFlags() & IResourceDelta.CONTENT) == IResourceDelta.CONTENT
 					|| add)// &&
-				for (String ex : TracesTreeView.exts) {
+				for (String ex : TracesTreeView.exts)
+				{
 					if (delta.getFullPath().toString().endsWith(ex))
 						ret = true;
 				}
 
 			else
 				ret = false;
-		}
-		else {
-			for (IResourceDelta d : delta.getAffectedChildren()) {
+		} else
+		{
+			for (IResourceDelta d : delta.getAffectedChildren())
+			{
 				ret = ret || IsFileChange(d);
 			}
 		}
 		return ret;
 	}
 
-	private void hookContextMenu() {
+	private void hookContextMenu()
+	{
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
 		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
+		menuMgr.addMenuListener(new IMenuListener()
+		{
+			public void menuAboutToShow(IMenuManager manager)
+			{
 				TracesTreeView.this.fillContextMenu(manager);
 			}
 		});
@@ -888,18 +439,20 @@ public class TracesTreeView extends ViewPart {
 		getSite().registerContextMenu(menuMgr, viewer);
 	}
 
-	private void contributeToActionBars() {
+	private void contributeToActionBars()
+	{
 		IActionBars bars = getViewSite().getActionBars();
 		fillLocalPullDown(bars.getMenuManager());
 		fillLocalToolBar(bars.getToolBarManager());
 	}
 
-	private void fillLocalPullDown(IMenuManager manager) {
+	private void fillLocalPullDown(IMenuManager manager)
+	{
 		// manager.add(actionRunSelected);
 
 		manager.add(actionRunAll);
-		manager.add(new Separator());
-		manager.add(saveTraceResultsAction);
+//		manager.add(new Separator());
+//		manager.add(saveTraceResultsAction);
 		manager.add(new Separator());
 		manager.add(actionSetSort);
 		manager.add(new Separator());
@@ -907,22 +460,24 @@ public class TracesTreeView extends ViewPart {
 		manager.add(actionSetInconclusiveFilter);
 		manager.add(new Separator());
 		manager.add(actionSelectToolBoxVDMJ);
-		manager.add(actionSelectToolBoxVDMTools);
+//		manager.add(actionSelectToolBoxVDMTools);
 
 	}
 
-	private void fillContextMenu(IMenuManager manager) {
+	private void fillContextMenu(IMenuManager manager)
+	{
 		manager.add(actionRunSelected);
 		// manager.add(actionRunAll);
 
 		ISelection selection = viewer.getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
-		if (obj instanceof TraceTestCaseTreeNode)
-			if (((TraceTestCaseTreeNode) obj).GetStatus() != TestResultType.Unknown) {
+		if (obj instanceof TraceTestTreeNode)
+			if (((TraceTestTreeNode) obj).GetStatus() != TestResultType.Unknown)
+			{
 				manager.add(actionSendToInterpreter);
-				if (((TraceTestCaseTreeNode) obj).GetStatus() == TestResultType.Inconclusive)
-					manager.add(okTraceTestCaseAction);
-				manager.add(failTraceTestCaseAction);
+//				if (((TraceTestTreeNode) obj).GetStatus() == TestResultType.Inconclusive)
+//					manager.add(okTraceTestCaseAction);
+//				manager.add(failTraceTestCaseAction);
 
 			}
 
@@ -932,12 +487,13 @@ public class TracesTreeView extends ViewPart {
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
-	private void fillLocalToolBar(IToolBarManager manager) {
+	private void fillLocalToolBar(IToolBarManager manager)
+	{
 
 		manager.add(actionSetSort);
 		manager.add(new Separator());
 		manager.add(actionRunAll);
-		manager.add(saveTraceResultsAction);
+//		manager.add(saveTraceResultsAction);
 		manager.add(new Separator());
 		manager.add(actionSetOkFilter);
 		manager.add(actionSetInconclusiveFilter);
@@ -945,155 +501,239 @@ public class TracesTreeView extends ViewPart {
 		drillDownAdapter.addNavigationActions(manager);
 	}
 
-	private void makeActions() {
-		actionRunSelected = new Action() {
+	private void makeActions()
+	{
+		actionRunSelected = new Action()
+		{
 
-			public void run() {
+			@Override
+			public void run()
+			{
 
 				ISelection selection = viewer.getSelection();
 				final Object obj = ((IStructuredSelection) selection).getFirstElement();
 				int tracesTestCount = 0;
 
 				String projectName = "";
-				Dictionary<String, Dictionary<String, ArrayList<String>>> classTracesTestCase = new Hashtable<String, Dictionary<String, ArrayList<String>>>();
+				Dictionary<String, Dictionary<String, List<Integer>>> classTracesTestCase = new Hashtable<String, Dictionary<String, List<Integer>>>();
 
-				if (obj instanceof TraceTestCaseTreeNode) {
+				if (obj instanceof TraceTestTreeNode)
+				{
 
-					TraceTestCaseTreeNode node = (TraceTestCaseTreeNode) obj;
+					TraceTestTreeNode node = (TraceTestTreeNode) obj;
 					TraceTreeNode tn = node.getParent();
-					String className = ((ClassTreeNode) tn.getParent()).getName();
-					projectName = ((ProjectTreeNode) ((ClassTreeNode) tn.getParent()).getParent()).getName();
+					String className = (tn.getParent()).getName();
+					projectName = ((tn.getParent()).getParent()).getName();
 
-					ArrayList<String> tmpTestCases = new ArrayList<String>();
-					tmpTestCases.add(node.getName());
+					List<Integer> tmpTestCases = new ArrayList<Integer>();
+					tmpTestCases.add(node.getNumber());
 
-					Dictionary<String, ArrayList<String>> tmpTraces = new Hashtable<String, ArrayList<String>>();
+					Dictionary<String, List<Integer>> tmpTraces = new Hashtable<String, List<Integer>>();
 					tmpTraces.put(tn.getName(), tmpTestCases);
 
 					classTracesTestCase.put(className, tmpTraces);
 					tracesTestCount = 1;
 
-				}
-				else if (obj instanceof TraceTreeNode) {
+				} else if (obj instanceof TraceTreeNode)
+				{
 					TraceTreeNode tn = (TraceTreeNode) obj;
-					String className = ((ClassTreeNode) tn.getParent()).getName();
-					projectName = ((ProjectTreeNode) ((ClassTreeNode) tn.getParent()).getParent()).getName();
+					String className = (tn.getParent()).getName();
+					projectName = ((tn.getParent()).getParent()).getName();
 
-					ArrayList<String> tmpTestCases = new ArrayList<String>();
+					List<Integer> tmpTestCases = new ArrayList<Integer>();
 
-					Dictionary<String, ArrayList<String>> tmpTraces = new Hashtable<String, ArrayList<String>>();
+					Dictionary<String, List<Integer>> tmpTraces = new Hashtable<String, List<Integer>>();
 					tmpTraces.put(tn.getName(), tmpTestCases);
 
 					classTracesTestCase.put(className, tmpTraces);
 
-					tracesTestCount = tn.getChildren().length;
+					tracesTestCount = tn.getChildren().size();
 
-				}
-				else if (obj instanceof ClassTreeNode) {
+				} else if (obj instanceof ClassTreeNode)
+				{
 					ClassTreeNode cn = (ClassTreeNode) obj;
 
 					projectName = cn.getParent().getName();
 
-					Dictionary<String, ArrayList<String>> tmpTraces = new Hashtable<String, ArrayList<String>>();
+					Dictionary<String, List<Integer>> tmpTraces = new Hashtable<String, List<Integer>>();
 
 					classTracesTestCase.put(cn.getName(), tmpTraces);
 
-					for (TraceTreeNode tn : cn.getChildren()) {
-						tracesTestCount += tn.getChildren().length;
+					for (TraceTreeNode tn : cn.getChildren())
+					{
+						tracesTestCount += tn.getChildren().size();
 					}
 
-				}
-				else if (obj instanceof ProjectTreeNode) {
+				} else if (obj instanceof ProjectTreeNode)
+				{
 					ProjectTreeNode pn = (ProjectTreeNode) obj;
 					projectName = pn.getName();
 
-					for (ClassTreeNode cn : pn.getChildren()) {
-						for (TraceTreeNode tn : cn.getChildren()) {
-							tracesTestCount += tn.getChildren().length;
+					for (ClassTreeNode cn : pn.getChildren())
+					{
+						for (TraceTreeNode tn : cn.getChildren())
+						{
+							tracesTestCount += tn.getChildren().size();
 						}
 					}
 
 				}
 
-				final Dictionary<String, Dictionary<String, ArrayList<String>>> finalClassTracesTestCase = classTracesTestCase;
+				final Dictionary<String, Dictionary<String, List<Integer>>> finalClassTracesTestCase = classTracesTestCase;
 				final String finalProjectName = projectName;
 				final int tracesTestCountFinal = tracesTestCount;
-				Job executeTestJob = new Job("Execute CT tests") {
+				Job executeTestJob = new Job("Execute CT tests")
+				{
 
 					@Override
-					protected IStatus run(IProgressMonitor monitor) {
-						try {
-							monitor.beginTask("CT Running tests", tracesTestCountFinal);
-							int tmp = tracesTestCountFinal;
+					protected IStatus run(IProgressMonitor monitor)
+					{
+						try
+						{
 							int progress = 0;
-							monitor.worked(progress);
+							// monitor.worked(progress);
 
-							TracesHelper th = traceHelpers.get(finalProjectName);
+							ITracesHelper th = traceHelpers.get(finalProjectName);
 							if (finalClassTracesTestCase.size() == 0)
 								progress = RunTestProject(th, monitor, progress);
-							else {
+							else
+							{
 
 								Enumeration<String> classKeys = finalClassTracesTestCase.keys();
-								while (classKeys.hasMoreElements()) {
+								while (classKeys.hasMoreElements())
+								{
 									String className = classKeys.nextElement();
-									if (finalClassTracesTestCase.get(className).size() == 0)
-										progress = RunTestClass(th, className, monitor, progress);
-									else {
-										Enumeration<String> traceKeys = finalClassTracesTestCase.get(className).keys();
-										while (traceKeys.hasMoreElements()) {
-											String traceName = traceKeys.nextElement();
-
-											if (finalClassTracesTestCase.get(className).get(traceName).size() == 0)
-												progress = RunTestTrace(th, className, traceName, monitor, progress);
-											else {
-												ArrayList<String> tests = finalClassTracesTestCase.get(className).get(traceName);
-												for (String testCaseName : tests) {
-													progress = RunTestTraceTestCase(th, className, traceName, testCaseName, monitor, progress);
-
-												}
+									try
+									{
+										th.processClassTraces(
+												className,
+												monitor);
+									} catch (Exception e)
+									{
+										IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+										IProject[] iprojects = iworkspaceRoot.getProjects();
+										for (IProject project2 : iprojects)
+										{
+											if (project2.getName().equals(
+													finalProjectName))
+											{
+												addMarker(
+														GetFile(
+																project2,
+																th.GetFile(className)),
+														e.getMessage(),
+														1,
+														IMarker.SEVERITY_ERROR);
+												ConsolePrint(e.getMessage());
+												break;
 											}
-
 										}
+
 									}
+									// if
+									// (finalClassTracesTestCase.get(className).size()
+									// == 0)
+									// progress = RunTestClass(
+									// th,
+									// className,
+									// monitor,
+									// progress);
+									// else
+									// {
+									// Enumeration<String> traceKeys =
+									// finalClassTracesTestCase.get(
+									// className).keys();
+									// while (traceKeys.hasMoreElements())
+									// {
+									// String traceName =
+									// traceKeys.nextElement();
+									//
+									// if (finalClassTracesTestCase.get(
+									// className).get(traceName).size() == 0)
+									// progress = RunTestTrace(
+									// th,
+									// className,
+									// traceName,
+									// monitor,
+									// progress);
+									// // else
+									// // {
+									// // List<Integer> tests =
+									// finalClassTracesTestCase.get(
+									// // className).get(
+									// // traceName);
+									// // for (Integer testCaseName : tests)
+									// // {
+									// // progress = RunTestTraceTestCase(
+									// // th,
+									// // className,
+									// // traceName,
+									// // testCaseName,
+									// // monitor,
+									// // progress);
+									// //
+									// // }
+									// // }
+									//
+									// }
+									// }
 								}
 
 							}
 
-						} catch (Exception e) {
+						} catch (Exception e)
+						{
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 
-						display.asyncExec(new Runnable() {
-
-							public void run() {
-								TracesHelper th = traceHelpers.get(finalProjectName);
-								ISelection selection = viewer.getSelection();
-								Object obj1 = ((IStructuredSelection) selection).getFirstElement();
-								if (obj1 instanceof TraceTestCaseTreeNode) {
-									UpdateTraceTestCasesNodeStatus(th, (TraceTestCaseTreeNode) obj);
-									viewer.refresh((TraceTestCaseTreeNode) obj);
-								}
-								else if (obj1 instanceof TraceTreeNode) {
-									UpdateTraceTestCasesNodeStatus(th, (TraceTreeNode) obj);
-									viewer.refresh((TraceTreeNode) obj);
-								}
-								else if (obj1 instanceof ClassTreeNode) {
-									UpdateTraceTestCasesNodeStatus(th, (ClassTreeNode) obj);
-									viewer.refresh((ClassTreeNode) obj);
-								}
-								else if (obj1 instanceof ProjectTreeNode) {
-									UpdateTraceTestCasesNodeStatus(th, (ProjectTreeNode) obj);
-									viewer.refresh((ProjectTreeNode) obj);
-								}
-								// viewer.refresh();
-								saveTraceResultsAction.setEnabled(true);
-
-							}
-
-						});
-						monitor.done();
-						return new Status(IStatus.OK, "org.overturetool.traces", IStatus.OK, "Traces results saveing", null);
+						// display.asyncExec(new Runnable()
+						// {
+						//
+						// public void run()
+						// {
+						// UpdateProject(projectToUpdate);
+						// // ITracesHelper th =
+						// traceHelpers.get(finalProjectName);
+						// // ISelection selection = viewer.getSelection();
+						// // Object obj1 = ((IStructuredSelection)
+						// selection).getFirstElement();
+						// // if (obj1 instanceof TraceTestTreeNode)
+						// // {
+						// // UpdateTraceTestCasesNodeStatus(
+						// // th,
+						// // (TraceTestTreeNode) obj);
+						// // viewer.refresh(obj);
+						// // } else if (obj1 instanceof TraceTreeNode)
+						// // {
+						// // UpdateTraceTestCasesNodeStatus(
+						// // th,
+						// // (TraceTreeNode) obj);
+						// // viewer.refresh(obj);
+						// // } else if (obj1 instanceof ClassTreeNode)
+						// // {
+						// // UpdateTraceTestCasesNodeStatus(
+						// // th,
+						// // (ClassTreeNode) obj);
+						// // viewer.refresh(obj);
+						// // } else if (obj1 instanceof ProjectTreeNode)
+						// // {
+						// // UpdateTraceTestCasesNodeStatus(
+						// // th,
+						// // (ProjectTreeNode) obj);
+						// // viewer.refresh(obj);
+						// // }
+						// // // viewer.refresh();
+						// // saveTraceResultsAction.setEnabled(true);
+						//
+						// }
+						//
+						// });
+						// monitor.done();
+						ExpandTraces(0);
+						return new Status(IStatus.OK,
+								"org.overturetool.traces", IStatus.OK,
+								"Traces results saveing", null);
 					}
 
 				};
@@ -1108,90 +748,100 @@ public class TracesTreeView extends ViewPart {
 		actionRunSelected.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_RUN_SELECTED_TRACE));
 		// actionRunSelected.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
 
-		actionRunAll = new Action() {
-			public void run() {
+		actionRunAll = new Action()
+		{
+			@Override
+			public void run()
+			{
 
-				Job runAllTestsJob = new Job("CT Run all tests") {
+				Job runAllTestsJob = new Job("CT Run all tests")
+				{
 
 					@Override
-					protected IStatus run(IProgressMonitor monitor) {
+					protected IStatus run(IProgressMonitor monitor)
+					{
 						// TODO Auto-generated method stub
 
 						IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 						IProject[] iprojects = iworkspaceRoot.getProjects();
 						int totalCount = 0;
-						for (final IProject project : iprojects) {
-							try {
+						for (final IProject project : iprojects)
+						{
+							try
+							{
 								if (project.isOpen()
-										&& project.getNature(OvertureNature.NATURE_ID) != null) {
-									TracesHelper th = traceHelpers.get(project.getName());
+										&& project.getNature(OvertureNature.NATURE_ID) != null)
+								{
+									ITracesHelper th = traceHelpers.get(project.getName());
 									if (th != null)
-										for (String className : th.GetTraceClasNames()) {
-											for (String trace : th.GetTraces(className)) {
-												for (String testCaseNum : th.GetTraceTestCases(className, trace)) {
-													totalCount++;
-													
-												}
-											}
+										for (String className : th.GetClassNamesWithTraces())
+										{
+											totalCount += th.GetTraceDefinitions(
+													className).size();
+											// for (String trace :
+											// th.GetTraces(className)) {
+											// for (String testCaseNum :
+											// th.GetTraceTestCases(className,
+											// trace)) {
+											// totalCount++;
+											//													
+											// }
+											// }
 										}
 								}
-							} catch (CoreException e) {
+							} catch (CoreException e)
+							{
 								// TODO Auto-generated catch block
 								e.printStackTrace();
-							} catch (Exception e) {
+							} catch (Exception e)
+							{
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 
 						}
 
-						monitor.beginTask("CT Running tests", totalCount);
-						int progress = 1;
-						monitor.worked(progress);
-
-						for (final IProject project : iprojects) {
+						for (final IProject project : iprojects)
+						{
 							if (monitor.isCanceled())
 								break;
-							try {
+							try
+							{
 								if (project.isOpen()
-										&& project.getNature(OvertureNature.NATURE_ID) != null) {
-									TracesHelper th = traceHelpers.get(project.getName());
-									for (String className : th.GetTraceClasNames()) {
+										&& project.getNature(OvertureNature.NATURE_ID) != null)
+								{
+									ITracesHelper th = traceHelpers.get(project.getName());
+									for (String className : th.GetClassNamesWithTraces())
+									{
 										if (monitor.isCanceled())
 											break;
-										for (String trace : th.GetTraces(className)) {
-											if (monitor.isCanceled())
-												break;
-											monitor.subTask(project.getName()
-													+ "-" + className + " "
-													+ trace);
-											for (String testCaseNum : th.GetTraceTestCases(className, trace)) {
-												if (monitor.isCanceled())
-													break;
-												traceHelpers.get(project.getName()).RunSingle(className, trace, testCaseNum);
-												progress++;
-												monitor.worked(progress);
-											}
-										}
+										th.processClassTraces(
+												className,
+												monitor);
 									}
 								}
-							} catch (Exception e) {
+							} catch (Exception e)
+							{
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 
 							}
 
 						}
-						display.asyncExec(new Runnable() {
+						display.asyncExec(new Runnable()
+						{
 
-							public void run() {
+							public void run()
+							{
 								// TODO Auto-generated method stub
 								UpdateTraceTestCasesNodeStatus();
 								saveTraceResultsAction.setEnabled(true);
 							}
 
 						});
-						return new Status(IStatus.OK, "org.overturetool.traces", IStatus.OK, "CT Run all tests", null);
+						return new Status(IStatus.OK,
+								"org.overturetool.traces", IStatus.OK,
+								"CT Run all tests", null);
 					}
 
 				};
@@ -1203,165 +853,142 @@ public class TracesTreeView extends ViewPart {
 		actionRunAll.setToolTipText("Run all");
 		actionRunAll.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_RUN_ALL_TRACES));
 
-		// doubleClickAction = new Action() {
-		// public void run() {
-		// ISelection selection = viewer.getSelection();
-		// Object obj = ((IStructuredSelection) selection).getFirstElement();
-		// try {
-		//
-		// if (obj instanceof ClassTreeNode) {
-		// ClassTreeNode classNode = (ClassTreeNode) obj;
-		// TracesHelper tr = (TracesHelper)
-		// traceHelpers.get(classNode.getParent().getName());
-		// ExpandClassTreeNode(tr, classNode);
-		// } else if (obj instanceof ProjectTreeNode) {
-		// ProjectTreeNode projectNode = (ProjectTreeNode) obj;
-		// ExpandProjectTreeNode(projectNode);
-		// } else if (obj instanceof TraceTreeNode) {
-		// TraceTreeNode traceNode = (TraceTreeNode) obj;
-		// ClassTreeNode classNode = traceNode.getParent();
-		// String className = classNode.getName();
-		// TracesHelper tr = (TracesHelper)
-		// traceHelpers.get(classNode.getParent().getName());
-		// ExpandTraceTreeNode(tr, traceNode, className);
-		// }
-		// } catch (Exception e) {
-		// // TODO: handle exception
-		// }
-		// }
-		// };
+		
 
-		failTraceTestCaseAction = new Action() {
-			public void run() {
-				try {
-					ISelection selection = viewer.getSelection();
-					Object obj = ((IStructuredSelection) selection).getFirstElement();
-					TraceTestCaseTreeNode node = (TraceTestCaseTreeNode) obj;
-					TraceTreeNode tn = node.getParent();
-					String className = ((ClassTreeNode) tn.getParent()).getName();
-					String project = ((ProjectTreeNode) ((ClassTreeNode) tn.getParent()).getParent()).getName();
-					TracesHelper tr = traceHelpers.get(project);
+//		failTraceTestCaseAction = new Action()
+//		{
+//			@Override
+//			public void run()
+//			{
+//				// try
+//				// {
+//				// ISelection selection = viewer.getSelection();
+//				// Object obj = ((IStructuredSelection)
+//				// selection).getFirstElement();
+//				// TraceTestTreeNode node = (TraceTestTreeNode) obj;
+//				// TraceTreeNode tn = node.getParent();
+//				// String className = (tn.getParent()).getName();
+//				// String project = ((tn.getParent()).getParent()).getName();
+//				// ITracesHelper tr = traceHelpers.get(project);
+//				//
+//				// tr.SetFail(className, tn.getName(), node.getNumber());
+//				// node.SetStatus(tr.GetResult(
+//				// className,
+//				// tn.getName(),
+//				// node.getNumber()).getStatus());
+//				// viewer.refresh(node);
+//				// } catch (CGException e)
+//				// {
+//				// // TODO Auto-generated catch block
+//				// e.printStackTrace();
+//				// }
+//
+//			}
+//		};
+//		failTraceTestCaseAction.setText("Fail test");
+//		failTraceTestCaseAction.setToolTipText("Fail selected test");
+//		failTraceTestCaseAction.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FAIL));
 
-					tr.SetFail(className, tn.getName(), node.getName());
-					node.SetStatus(tr.GetResult(className, tn.getName(), node.getName()).Status);
-					viewer.refresh(node);
-				} catch (CGException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+//		okTraceTestCaseAction = new Action()
+//		{
+//			@Override
+//			public void run()
+//			{
+//				// try
+//				// {
+//				// ISelection selection = viewer.getSelection();
+//				// Object obj = ((IStructuredSelection)
+//				// selection).getFirstElement();
+//				// TraceTestTreeNode node = (TraceTestTreeNode) obj;
+//				// TraceTreeNode tn = node.getParent();
+//				// String className = (tn.getParent()).getName();
+//				// String project = ((tn.getParent()).getParent()).getName();
+//				// ITracesHelper tr = traceHelpers.get(project);
+//				//
+//				// tr.SetOk(className, tn.getName(), node.getNumber());
+//				// node.SetStatus(tr.GetResult(
+//				// className,
+//				// tn.getName(),
+//				// node.getNumber()).getStatus());
+//				// viewer.refresh(node);
+//				// } catch (CGException e)
+//				// {
+//				// // TODO Auto-generated catch block
+//				// e.printStackTrace();
+//				// }
+//
+//			}
+//		};
+//		okTraceTestCaseAction.setText("Approve test");
+//		okTraceTestCaseAction.setToolTipText("Approve selected test");
+//		okTraceTestCaseAction.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_CASE_SUCCES));
 
-			}
-		};
-		failTraceTestCaseAction.setText("Fail test");
-		failTraceTestCaseAction.setToolTipText("Fail selected test");
-		failTraceTestCaseAction.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FAIL));
+//		saveTraceResultsAction = new Action()
+//		{
+//			@Override
+//			public void run()
+//			{
+//				Shell shell = new Shell();
+//
+//				DirectoryDialog save = new DirectoryDialog(shell, SWT.SINGLE);
+//
+//				save.setText("Save CT results");
+//				savePath = save.open();
+//				if (savePath == null)
+//					return;
+//				Job job = new Job("Save Trace Results")
+//				{
+//
+//					@Override
+//					protected IStatus run(IProgressMonitor monitor)
+//					{
+//						// TODO Auto-generated method stub
+//						// monitor.beginTask("Saving trace results", 100);
+//						// monitor.worked(10);
+//						Enumeration<String> itr = traceHelpers.keys();
+//						while (itr.hasMoreElements())
+//						{
+//							String project = itr.nextElement();
+//							String outputPath = savePath + File.separatorChar
+//									+ project;
+//
+//							// traceHelpers.get(project).Save(outputPath);
+//							ConsolePrint("Save not implemented");
+//
+//						}
+//						// monitor.worked(100);
+//
+//						return new Status(IStatus.OK,
+//								"org.overturetool.traces", IStatus.OK,
+//								"Traces results saveing", null);
+//					}
+//
+//				};
+//				job.schedule();
+//
+//			}
+//		};
+//		saveTraceResultsAction.setText("Save results");
+//		saveTraceResultsAction.setToolTipText("Save result of trace test");
+//		saveTraceResultsAction.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_RUN_SAVE));
+//		saveTraceResultsAction.setEnabled(false);
+		
 
-		okTraceTestCaseAction = new Action() {
-			public void run() {
-				try {
-					ISelection selection = viewer.getSelection();
-					Object obj = ((IStructuredSelection) selection).getFirstElement();
-					TraceTestCaseTreeNode node = (TraceTestCaseTreeNode) obj;
-					TraceTreeNode tn = node.getParent();
-					String className = ((ClassTreeNode) tn.getParent()).getName();
-					String project = ((ProjectTreeNode) ((ClassTreeNode) tn.getParent()).getParent()).getName();
-					TracesHelper tr = traceHelpers.get(project);
-
-					tr.SetOk(className, tn.getName(), node.getName());
-					node.SetStatus(tr.GetResult(className, tn.getName(), node.getName()).Status);
-					viewer.refresh(node);
-				} catch (CGException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-			}
-		};
-		okTraceTestCaseAction.setText("Approve test");
-		okTraceTestCaseAction.setToolTipText("Approve selected test");
-		okTraceTestCaseAction.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_CASE_SUCCES));
-
-		saveTraceResultsAction = new Action() {
-			public void run() {
-				Shell shell = new Shell();
-
-				DirectoryDialog save = new DirectoryDialog(shell, SWT.SINGLE);
-
-				save.setText("Save CT results");
-				savePath = save.open();
-				if (savePath == null)
-					return;
-				Job job = new Job("Save Trace Results") {
-
-					@Override
-					protected IStatus run(IProgressMonitor monitor) {
-						// TODO Auto-generated method stub
-						monitor.beginTask("Saving trace results", 100);
-						monitor.worked(10);
-						Enumeration<String> itr = traceHelpers.keys();
-						while (itr.hasMoreElements()) {
-							String project = itr.nextElement();
-							String outputPath = savePath + File.separatorChar
-									+ project;
-							try {
-								traceHelpers.get(project).Save(outputPath);
-							} catch (CGException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-
-						}
-						monitor.worked(100);
-
-						return new Status(IStatus.OK, "org.overturetool.traces", IStatus.OK, "Traces results saveing", null);
-					}
-
-				};
-				job.schedule();
-
-			}
-		};
-		saveTraceResultsAction.setText("Save results");
-		saveTraceResultsAction.setToolTipText("Save result of trace test");
-		saveTraceResultsAction.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_RUN_SAVE));
-		saveTraceResultsAction.setEnabled(false);
-		treeAction = new Action() {
-			public void run() {
-				ISelection selection = viewer.getSelection();
-				Object obj = ((IStructuredSelection) selection).getFirstElement();
-				try {
-
-					if (obj instanceof ClassTreeNode) {
-						ClassTreeNode classNode = (ClassTreeNode) obj;
-						TracesHelper tr = (TracesHelper) traceHelpers.get(classNode.getParent().getName());
-						ExpandClassTreeNode(tr, classNode);
-					}
-					else if (obj instanceof ProjectTreeNode) {
-						ProjectTreeNode projectNode = (ProjectTreeNode) obj;
-						ExpandProjectTreeNode(projectNode);
-					}
-					else if (obj instanceof TraceTreeNode) {
-						TraceTreeNode traceNode = (TraceTreeNode) obj;
-						ClassTreeNode classNode = traceNode.getParent();
-						String className = classNode.getName();
-						TracesHelper tr = (TracesHelper) traceHelpers.get(classNode.getParent().getName());
-						ExpandTraceTreeNode(tr, traceNode, className);
-					}
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-			}
-		};
-
-		expandSpecInTree = new Action() {
-			public void run() {
+		expandSpecInTree = new Action()
+		{
+			@Override
+			public void run()
+			{
 				IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 				final IProject[] iprojects = iworkspaceRoot.getProjects();
 
-				display.asyncExec(new Runnable() {
+				display.asyncExec(new Runnable()
+				{
 
-					public void run() {
-						for (IProject project : iprojects) {
+					public void run()
+					{
+						for (IProject project : iprojects)
+						{
 							UpdateProject(project);
 						}
 						viewer.refresh();
@@ -1373,19 +1000,24 @@ public class TracesTreeView extends ViewPart {
 
 		};
 
-		actionSetOkFilter = new Action() {
-			public void run() {
+		actionSetOkFilter = new Action()
+		{
+			@Override
+			public void run()
+			{
 				ViewerFilter[] filters = viewer.getFilters();
 				boolean isSet = false;
-				for (ViewerFilter viewerFilter : filters) {
+				for (ViewerFilter viewerFilter : filters)
+				{
 					if (viewerFilter.equals(okFilter))
 						isSet = true;
 				}
-				if (isSet) {
+				if (isSet)
+				{
 					viewer.removeFilter(okFilter);
 					actionSetOkFilter.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FILTER_SUCCES));
-				}
-				else {
+				} else
+				{
 					viewer.addFilter(okFilter);
 					actionSetOkFilter.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FILTER_SUCCES_PRESSED));
 				}
@@ -1397,19 +1029,24 @@ public class TracesTreeView extends ViewPart {
 		actionSetOkFilter.setToolTipText("Filter all ok results from tree");
 		actionSetOkFilter.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FILTER_SUCCES));
 
-		actionSetInconclusiveFilter = new Action() {
-			public void run() {
+		actionSetInconclusiveFilter = new Action()
+		{
+			@Override
+			public void run()
+			{
 				ViewerFilter[] filters = viewer.getFilters();
 				boolean isSet = false;
-				for (ViewerFilter viewerFilter : filters) {
+				for (ViewerFilter viewerFilter : filters)
+				{
 					if (viewerFilter.equals(inconclusiveFilter))
 						isSet = true;
 				}
-				if (isSet) {
+				if (isSet)
+				{
 					viewer.removeFilter(inconclusiveFilter);
 					actionSetInconclusiveFilter.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FILTER_UNDETERMINED));
-				}
-				else {
+				} else
+				{
 					viewer.addFilter(inconclusiveFilter);
 					actionSetInconclusiveFilter.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FILTER_UNDETERMINED_PRESSED));
 				}
@@ -1421,13 +1058,17 @@ public class TracesTreeView extends ViewPart {
 		actionSetInconclusiveFilter.setToolTipText("Filter all inconclusive results from tree");
 		actionSetInconclusiveFilter.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FILTER_UNDETERMINED));
 
-		actionSetSort = new Action() {
-			public void run() {
-				if (viewer.getSorter() != null) {
+		actionSetSort = new Action()
+		{
+			@Override
+			public void run()
+			{
+				if (viewer.getSorter() != null)
+				{
 					viewer.setSorter(null);
 					actionSetSort.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_SORT));
-				}
-				else {
+				} else
+				{
 					viewer.setSorter(traceSorter);
 					actionSetSort.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_SORT_PRESSED));
 				}
@@ -1439,8 +1080,11 @@ public class TracesTreeView extends ViewPart {
 		actionSetSort.setToolTipText("Sort by verdict: Fail, Inconclusive, ok, etc.");
 		actionSetSort.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_SORT));
 
-		actionSelectToolBoxVDMJ = new Action("Use VDMJ") {
-			public void run() {
+		actionSelectToolBoxVDMJ = new Action("Use VDMJ")
+		{
+			@Override
+			public void run()
+			{
 				UseVDMJ = true;
 				actionSelectToolBoxVDMJ.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_VDMJ_LOGO_PRESSED));
 				actionSelectToolBoxVDMTools.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_VDM_TOOLS_LOGO));
@@ -1451,20 +1095,27 @@ public class TracesTreeView extends ViewPart {
 		};
 		actionSelectToolBoxVDMJ.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_VDMJ_LOGO_PRESSED));
 
-		actionSelectToolBoxVDMTools = new Action("Use VDM Tools") {
-			public void run() {
+		actionSelectToolBoxVDMTools = new Action("Use VDM Tools")
+		{
+			@Override
+			public void run()
+			{
 				UseVDMJ = false;
-				if (VDMToolsPath.length() == 0) {
-					display.asyncExec(new Runnable() {
+				if (VDMToolsPath.length() == 0)
+				{
+					display.asyncExec(new Runnable()
+					{
 
-						public void run() {
+						public void run()
+						{
 							Shell s = new Shell(display);
 
 							FileDialog fd = new FileDialog(s, SWT.OPEN
 									| SWT.SIMPLE);
 							fd.setText("Select VDM Tools (e.g. vppgde.exe)");
 
-							if (IsWindows()) {
+							if (IsWindows())
+							{
 								fd.setFilterPath(VDM_TOOLS_PATH_DEFAULT);
 								String[] filterExt = { "*.exe", "*.*" };
 								fd.setFilterExtensions(filterExt);
@@ -1476,8 +1127,8 @@ public class TracesTreeView extends ViewPart {
 							viewer.refresh();
 						}
 					});
-				}
-				else {
+				} else
+				{
 					SetTraceHelpers();
 					UpdateTraceTestCasesNodeStatus();
 					viewer.refresh();
@@ -1489,12 +1140,14 @@ public class TracesTreeView extends ViewPart {
 		};
 		actionSelectToolBoxVDMTools.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_VDM_TOOLS_LOGO));
 
-		actionSelectToolBox = new Action("Select toolbox") {
+		actionSelectToolBox = new Action("Select toolbox")
+		{
 
 		};
 		actionSelectToolBox.setText("Select toolbox");
 
-		actionSendToInterpreter = new Action() {
+		actionSendToInterpreter = new Action()
+		{
 		};
 		actionSendToInterpreter.setText("Send to Interpreter");
 		actionSendToInterpreter.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_INTERPRETER));
@@ -1503,15 +1156,20 @@ public class TracesTreeView extends ViewPart {
 	}
 
 	// -----------------------------update
-	private void UpdateTraceTestCasesNodeStatus() {
+	private void UpdateTraceTestCasesNodeStatus()
+	{
 		// TODO Auto-generated method stub
 		TreeItem[] aa = viewer.getTree().getItems();
-		for (TreeItem treeItem : aa) {
-			if (treeItem.getData() instanceof ProjectTreeNode) {
+		for (TreeItem treeItem : aa)
+		{
+			if (treeItem.getData() instanceof ProjectTreeNode)
+			{
 				ProjectTreeNode projectNode = ((ProjectTreeNode) treeItem.getData());
-				TracesHelper th = traceHelpers.get(projectNode.getName());
-				for (ClassTreeNode classNode : projectNode.getChildren()) {
-					for (TraceTreeNode traceNode : classNode.getChildren()) {
+				ITracesHelper th = traceHelpers.get(projectNode.getName());
+				for (ClassTreeNode classNode : projectNode.getChildren())
+				{
+					for (TraceTreeNode traceNode : classNode.getChildren())
+					{
 						UpdateTraceTestCasesNodeStatus(th, traceNode);
 
 					}
@@ -1523,86 +1181,148 @@ public class TracesTreeView extends ViewPart {
 		viewer.refresh();
 	}
 
-	private void UpdateTraceTestCasesNodeStatus(TracesHelper th, ProjectTreeNode projectNode) {
-		for (ClassTreeNode classNode : projectNode.getChildren()) {
-			UpdateTraceTestCasesNodeStatus(th, classNode);
-		}
-	}
+//	private void UpdateTraceTestCasesNodeStatus(ITracesHelper th,
+//			ProjectTreeNode projectNode)
+//	{
+//		for (ClassTreeNode classNode : projectNode.getChildren())
+//		{
+//			UpdateTraceTestCasesNodeStatus(th, classNode);
+//		}
+//	}
 
-	private void UpdateTraceTestCasesNodeStatus(TracesHelper th, ClassTreeNode classNode) {
-		for (TraceTreeNode traceNode : classNode.getChildren()) {
-			UpdateTraceTestCasesNodeStatus(th, traceNode);
-		}
-	}
+//	private void UpdateTraceTestCasesNodeStatus(ITracesHelper th,
+//			ClassTreeNode classNode)
+//	{
+//		for (TraceTreeNode traceNode : classNode.getChildren())
+//		{
+//			UpdateTraceTestCasesNodeStatus(th, traceNode);
+//		}
+//	}
 
-	private void UpdateTraceTestCasesNodeStatus(TracesHelper th, TraceTreeNode traceNode) {
-		for (TraceTestCaseTreeNode testNode : traceNode.getChildren()) {
-			try {
-				traceNode.SetSkippedCount(th.GetSkippedCount(traceNode.getParent().getName(), traceNode.getName()));
-			} catch (CGException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			UpdateTraceTestCasesNodeStatus(th, testNode);
-			// viewer.refresh(traceNode);
-		}
-	}
-
-	private void UpdateTraceTestCasesNodeStatus(TracesHelper th, TraceTestCaseTreeNode testNode) {
-		// TODO Auto-generated method stub
-
-		try {
-			TraceTreeNode traceNode = testNode.getParent();
-			ClassTreeNode classNode = testNode.getParent().getParent();
-			TracesHelper.TestResultType status = th.GetStatus(classNode.getName(), traceNode.getName(), testNode.getName());
-			if (status == TestResultType.Skipped)
-				traceNode.removeChild(testNode);
-			else {
-
-				testNode.SetStatus(status);
-			}
-		} catch (CGException e) {
+	private void UpdateTraceTestCasesNodeStatus(ITracesHelper th,
+			TraceTreeNode traceNode)
+	{
+		try
+		{
+			traceNode.SetSkippedCount(th.GetSkippedCount(
+					traceNode.getParent().getName(),
+					traceNode.getName()));
+		} catch (SAXException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// viewer.refresh(testNode);
+
+		// for (TraceTestCaseTreeNode testNode : traceNode.getChildren())
+		// {
+		//			
+		// UpdateTraceTestCasesNodeStatus(th, testNode);
+		// // viewer.refresh(traceNode);
+		// }
 	}
 
-	private void UpdateProject(IProject project) {
+//	private void UpdateTraceTestCasesNodeStatus(ITracesHelper th,
+//			TraceTestTreeNode testNode)
+//	{
+//		// TODO Auto-generated method stub
+//
+//		try
+//		{
+//			TraceTreeNode traceNode = testNode.getParent();
+//			ClassTreeNode classNode = testNode.getParent().getParent();
+//			TraceTestStatus status = th.GetStatus(
+//					classNode.getName(),
+//					traceNode.getName(),
+//					testNode.getNumber());
+//			if (status.getStatus() == TestResultType.Skipped)
+//				traceNode.removeChild(testNode);
+//			else
+//			{
+//
+//				testNode.SetStatus(status.getStatus());
+//			}
+//		}
+//		// viewer.refresh(testNode);
+//		catch (SAXException e)
+//		{
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e)
+//		{
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
+
+	private void UpdateProject(IProject project)
+	{
 		TreeItem[] aa = viewer.getTree().getItems();
 		boolean insertProject = true;
-		for (TreeItem treeItem : aa) {
+		for (TreeItem treeItem : aa)
+		{
 			if (treeItem.getData() instanceof ProjectTreeNode
-					&& ((ProjectTreeNode) treeItem.getData()).getName().equals(project.getName())) {
+					&& ((ProjectTreeNode) treeItem.getData()).getName().equals(
+							project.getName()))
+			{
 				insertProject = false;
 				ProjectTreeNode projectNode = ((ProjectTreeNode) treeItem.getData());
 				String projectName = projectNode.getName();
-				TracesHelper th = traceHelpers.get(projectName);
-				ClassTreeNode[] classNodes = projectNode.getChildren();
-				for (int i = 0; i < classNodes.length; i++) {
-					projectNode.removeChild(classNodes[i]);
-				}
+				ITracesHelper th = traceHelpers.get(projectName);
+
+				projectNode.getChildren().clear();
+
 				// now no nodes are present
-				try {
-					for (String className : th.GetClassNamesWithTraces()) {
+				try
+				{
+					for (String className : th.GetClassNamesWithTraces())
+					{
 						ClassTreeNode classNode = new ClassTreeNode(className);
-						for (String traceName : th.GetTraces(className)) {
-							if (th.HasError(className, traceName)) {
-								// set error marker
-								ArrayList<TraceError> errors = th.GetError(className, traceName);
-								for (TraceError traceError : errors) {
-									addMarker(GetFile(project, traceError.File), traceError.Message, traceError.Line, IMarker.SEVERITY_ERROR);
-								}
-							}
-							else {
-								TraceTreeNode traceNode = new TraceTreeNode(th.GetTraceDefinition(className, traceName));
+						for (NamedTraceDefinition traceName : th.GetTraceDefinitions(className))
+						{
+							// if (th.HasError(className, traceName.name.name))
+							// {
+							// // set error marker
+							// List<TraceError> errors = th.GetError(
+							// className,
+							// traceName.name.name);
+							// for (TraceError traceError : errors)
+							// {
+							// addMarker(
+							// GetFile(project, traceError.File),
+							// traceError.Message,
+							// traceError.Line,
+							// IMarker.SEVERITY_ERROR);
+							// }
+							// } else
+							{
+								TraceTreeNode traceNode = new TraceTreeNode(
+										traceName, th);
 
-								for (String traceTestCaseName : th.GetTraceTestCases(className, traceName)) {
-
-									TraceTestCaseTreeNode testCaseNode = new TraceTestCaseTreeNode(traceTestCaseName, th.GetStatus(className, traceName, traceTestCaseName));
-									traceNode.addChild(testCaseNode);
-
-								}
+								Integer totalTests = th.GetTraceTestCount(
+										className,
+										traceName.name.name);
+								traceNode.setTestTotal(totalTests);
+								
+								traceNode.SetSkippedCount(th.GetSkippedCount(className, traceName.name.name));
+								
+								if (totalTests > 0)
+									traceNode.addChild(new NotYetReadyTreeNode());
+								// for (TraceTestStatus traceTestCaseName :
+								// th.GetTraceTests(
+								// className,
+								// traceName.name.name))
+								// {
+								//
+								// TraceTestCaseTreeNode testCaseNode = new
+								// TraceTestCaseTreeNode(
+								// traceTestCaseName);
+								// traceNode.addChild(testCaseNode);
+								//
+								// }
 
 								classNode.addChild(traceNode);
 							}
@@ -1611,70 +1331,101 @@ public class TracesTreeView extends ViewPart {
 
 					}
 					viewer.refresh(projectNode);
-				} catch (Exception e) {
+				} catch (Exception e)
+				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				viewer.refresh(projectNode);
 			}
 		}
-		if (insertProject && traceHelpers.get(project.getName()) != null) {
-			((ViewContentProvider) viewer.getContentProvider()).addChild(new ProjectTreeNode(project));
+		if (insertProject && traceHelpers.get(project.getName()) != null)
+		{
+			((ViewContentProvider) viewer.getContentProvider()).addChild(new ProjectTreeNode(
+					project));
 			viewer.refresh();
 			UpdateProject(project);
 		}
 	}
 
 	// ---------------- Expand
-	private void ExpandProjectTreeNode(ProjectTreeNode projectNode) {
-		String projectName = projectNode.getName();
-		TracesHelper treaceHelper = (TracesHelper) traceHelpers.get(projectName);
-		for (ClassTreeNode classNode : projectNode.getChildren()) {
-			ExpandClassTreeNode(treaceHelper, classNode);
-		}
-		viewer.refresh(projectNode);
-	}
-
-	private void ExpandClassTreeNode(TracesHelper treaceHelper, ClassTreeNode classNode) {
-		String className = classNode.getName();
-		for (TraceTreeNode traceNode : classNode.getChildren()) {
-			ExpandTraceTreeNode(treaceHelper, traceNode, className);
-		}
-		viewer.refresh(classNode);
-	}
-
-	private void ExpandTraceTreeNode(TracesHelper traceHelper, TraceTreeNode traceNode, String className) {
-		try {
-			if (traceHelper.HasError(className, traceNode.getName())) {
-				// set error marker
-				IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-				IProject[] iprojects = iworkspaceRoot.getProjects();
-				String projectName = traceNode.getParent().getParent().getName();
-				ArrayList<TraceError> errors = this.traceHelpers.get(projectName).GetError(className, traceNode.getName());
-				for (TraceError traceError : errors) {
-
-					IProject project = iworkspaceRoot.getProject(projectName);
-					addMarker(GetFile(project, traceError.File), traceError.Message, traceError.Line, IMarker.SEVERITY_ERROR);
-
-				}
-			}
-			else
-				for (String traceTestCase : traceHelper.GetTraceTestCases(className, traceNode.getName())) {
-					traceNode.addChild(new TraceTestCaseTreeNode(traceTestCase, TestResultType.Unknown));
-				}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		viewer.refresh(traceNode);
-	}
+	// private void ExpandProjectTreeNode(ProjectTreeNode projectNode)
+	// {
+	// String projectName = projectNode.getName();
+	// ITracesHelper treaceHelper = traceHelpers.get(projectName);
+	// for (ClassTreeNode classNode : projectNode.getChildren())
+	// {
+	// ExpandClassTreeNode(treaceHelper, classNode);
+	// }
+	// viewer.refresh(projectNode);
+	// }
+	//
+	// private void ExpandClassTreeNode(ITracesHelper treaceHelper,
+	// ClassTreeNode classNode)
+	// {
+	// String className = classNode.getName();
+	// for (TraceTreeNode traceNode : classNode.getChildren())
+	// {
+	// ExpandTraceTreeNode(treaceHelper, traceNode, className);
+	// }
+	// viewer.refresh(classNode);
+	// }
+	//
+	// private void ExpandTraceTreeNode(ITracesHelper traceHelper,
+	// TraceTreeNode traceNode, String className)
+	// {
+	// try
+	// {
+	// if (traceHelper.HasError(className, traceNode.getName()))
+	// {
+	// // set error marker
+	// IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+	// IProject[] iprojects = iworkspaceRoot.getProjects();
+	// String projectName = traceNode.getParent().getParent().getName();
+	// List<TraceError> errors = this.traceHelpers.get(projectName).GetError(
+	// className,
+	// traceNode.getName());
+	// for (TraceError traceError : errors)
+	// {
+	//
+	// IProject project = iworkspaceRoot.getProject(projectName);
+	// addMarker(
+	// GetFile(project, traceError.File),
+	// traceError.Message,
+	// traceError.Line,
+	// IMarker.SEVERITY_ERROR);
+	//
+	// }
+	// } else
+	// {
+	// Integer count = traceHelper.GetTraceTests(
+	// className,
+	// traceNode.getName()).size();
+	// traceNode.setTestTotal(count);
+	// }
+	// // for (TraceTestStatus traceTestCase : traceHelper.GetTraceTests(
+	// // className,
+	// // traceNode.getName()))
+	// // {
+	// // traceNode.addChild(new TraceTestCaseTreeNode(traceTestCase));
+	// // }
+	// } catch (Exception e)
+	// {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// viewer.refresh(traceNode);
+	// }
 
 	// --------------
 	// ---------------- Get results
 
-	private int RunTestProject(TracesHelper th, IProgressMonitor monitor, int progress) throws Exception {
+	private int RunTestProject(ITracesHelper th, IProgressMonitor monitor,
+			int progress) throws Exception
+	{
 		int tmpProgress = progress;
-		for (String className : th.GetTraceClasNames()) {
+		for (String className : th.GetClassNamesWithTraces())
+		{
 			if (monitor != null && monitor.isCanceled())
 				return progress;
 
@@ -1683,88 +1434,198 @@ public class TracesTreeView extends ViewPart {
 		return tmpProgress;
 	}
 
-	private int RunTestClass(TracesHelper th, String className, IProgressMonitor monitor, int progress) throws Exception {
+	private int RunTestClass(ITracesHelper th, String className,
+			IProgressMonitor monitor, int progress) throws Exception
+	{
 		int tmpProgress = progress;
-		for (String traceName : th.GetTraces(className)) {
+		for (NamedTraceDefinition traceName : th.GetTraceDefinitions(className))
+		{
 
 			if (monitor != null && monitor.isCanceled())
 				return progress;
 
-			tmpProgress = RunTestTrace(th, className, traceName, monitor, tmpProgress);
+			tmpProgress = RunTestTrace(
+					th,
+					className,
+					traceName.name.name,
+					monitor,
+					tmpProgress);
 		}
 		return tmpProgress;
 	}
 
-	private int RunTestTrace(TracesHelper th, String className, String traceName, IProgressMonitor monitor, int progress) throws CGException, Exception {
-		int tmpProgress = progress;
-		for (String testCase : th.GetTraceTestCases(className, traceName)) {
+	private int RunTestTrace(ITracesHelper th, final String className,
+			final String traceName, IProgressMonitor monitor, int progress)
+			throws Exception
+	{
+		// int tmpProgress = progress;
+		//
+		// final ITracesHelper finalTh = th;
+		//
+		// List<TraceTestStatus> testsStatus = null;
+		try
+		{
 			if (monitor != null && monitor.isCanceled())
 				return progress;
 
-			monitor.subTask("Execution trace: " + traceName);
-			tmpProgress = RunTestTraceTestCase(th, className, traceName, testCase, monitor, tmpProgress);
-		}
-		return tmpProgress;
+			// monitor.subTask("Execution trace: " + traceName);
 
+			// testsStatus =
+			th.processSingleTrace(className, traceName, monitor);
+
+			// if (monitor != null)
+			// monitor.worked(progress + 1);
+
+		} catch (Exception e)
+		{
+			ConsolePrint(e.getMessage());
+		}
+
+		// final List<TraceTestStatus> testsStatusFinal = testsStatus;
+		// display.asyncExec(new Runnable()
+		// {
+		//
+		// public void run()
+		// {
+		// String projectName = "";
+		// Enumeration<String> keys = traceHelpers.keys();
+		// while (keys.hasMoreElements())
+		// {
+		// String string = keys.nextElement();
+		// if (traceHelpers.get(string).equals(finalTh))
+		// projectName = string;
+		//
+		// }
+		// TreeItem[] aa = viewer.getTree().getItems();
+		// for (TreeItem treeItem : aa)
+		// {
+		// if (treeItem.getData() instanceof ProjectTreeNode)
+		// {
+		// ProjectTreeNode projectNode = ((ProjectTreeNode) treeItem.getData());
+		// if (!projectNode.getName().equals(projectName))
+		// continue;
+		// for (ClassTreeNode classNode : projectNode.getChildren())
+		// {
+		// if (!classNode.getName().equals(className))
+		// continue;
+		// for (TraceTreeNode traceNode : classNode.getChildren())
+		// {
+		// if (!traceNode.getName().equals(traceName))
+		// continue;
+		//
+		// traceNode.getChildren().clear();
+		//
+		// for (TraceTestStatus traceTestStatus : testsStatusFinal)
+		// {
+		// traceNode.addChild(new TraceTestTreeNode(
+		// traceTestStatus));
+		// }
+		// viewer.refresh(traceNode);
+		// // for (TraceTestCaseTreeNode node :
+		// // traceNode.getChildren()) {
+		// // if (node.getName().equals(testCaseName)) {
+		// // node.SetRunTimeError();
+		// // viewer.refresh(node);
+		// // viewer.refresh(traceNode);
+		// // return;
+		// // }
+		// // }
+		// }
+		// }
+		// }
+		// }
+		// }
+		//
+		// });
+		return progress++;
 	}
 
-	private int RunTestTraceTestCase(TracesHelper th, final String className, final String traceName, final String testCaseName, IProgressMonitor monitor, int progress) throws CGException {
-		final TracesHelper finalTh = th;
-		try {
-			if (monitor != null && monitor.isCanceled())
-				return progress;
+	// for (String testCase : th.GetTraceTestCases(className, traceName)) {
+	// if (monitor != null && monitor.isCanceled())
+	// return progress;
+	//
+	// monitor.subTask("Execution trace: " + traceName);
+	// tmpProgress = RunTestTraceTestCase(th, className, traceName, testCase,
+	// monitor, tmpProgress);
+	// }
+	// return tmpProgress;
 
-			th.RunSingle(className, traceName, testCaseName);
-			if (monitor != null)
-				monitor.worked(progress + 1);
-			return progress + 1;
-		} catch (Exception e) {
-			display.asyncExec(new Runnable() {
-
-				public void run() {
-					String projectName = "";
-					Enumeration<String> keys = traceHelpers.keys();
-					while (keys.hasMoreElements()) {
-						String string = (String) keys.nextElement();
-						if (traceHelpers.get(string).equals(finalTh))
-							projectName = string;
-
-					}
-					TreeItem[] aa = viewer.getTree().getItems();
-					for (TreeItem treeItem : aa) {
-						if (treeItem.getData() instanceof ProjectTreeNode) {
-							ProjectTreeNode projectNode = ((ProjectTreeNode) treeItem.getData());
-							if (!projectNode.getName().equals(projectName))
-								continue;
-							for (ClassTreeNode classNode : projectNode.getChildren()) {
-								if (!classNode.getName().equals(className))
-									continue;
-								for (TraceTreeNode traceNode : classNode.getChildren()) {
-									if (!traceNode.getName().equals(traceName))
-										continue;
-									for (TraceTestCaseTreeNode node : traceNode.getChildren()) {
-										if (node.getName().equals(testCaseName)) {
-											node.SetRunTimeError();
-											viewer.refresh(node);
-											viewer.refresh(traceNode);
-											return;
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-
-			});
-
-		}
-		return progress;
-	}
+	// private int RunTestTraceTestCase(ITracesHelper th, final String
+	// className,
+	// final String traceName, final Integer testCaseName,
+	// IProgressMonitor monitor, int progress) throws CGException
+	// {
+	// final ITracesHelper finalTh = th;
+	// TraceTestStatus st=null;
+	// try
+	// {
+	// if (monitor != null && monitor.isCanceled())
+	// return progress;
+	//
+	// st= th.RunSingle(className, traceName, testCaseName);
+	// if (monitor != null)
+	// monitor.worked(progress + 1);
+	// return progress + 1;
+	// } catch (Exception e)
+	// {
+	// final TraceTestStatus status= st;
+	// display.asyncExec(new Runnable()
+	// {
+	//
+	// public void run()
+	// {
+	// String projectName = "";
+	// Enumeration<String> keys = traceHelpers.keys();
+	// while (keys.hasMoreElements())
+	// {
+	// String string = keys.nextElement();
+	// if (traceHelpers.get(string).equals(finalTh))
+	// projectName = string;
+	//
+	// }
+	// TreeItem[] aa = viewer.getTree().getItems();
+	// for (TreeItem treeItem : aa)
+	// {
+	// if (treeItem.getData() instanceof ProjectTreeNode)
+	// {
+	// ProjectTreeNode projectNode = ((ProjectTreeNode) treeItem.getData());
+	// if (!projectNode.getName().equals(projectName))
+	// continue;
+	// for (ClassTreeNode classNode : projectNode.getChildren())
+	// {
+	// if (!classNode.getName().equals(className))
+	// continue;
+	// for (TraceTreeNode traceNode : classNode.getChildren())
+	// {
+	// if (!traceNode.getName().equals(traceName))
+	// continue;
+	// for (TraceTestTreeNode node : traceNode.getChildren())
+	// {
+	// if (node.getName().equals(testCaseName))
+	// {
+	// node.SetRunTimeError();
+	// node.SetStatus(status.getStatus());
+	// viewer.refresh(node);
+	// viewer.refresh(traceNode);
+	// return;
+	// }
+	// }
+	// }
+	// }
+	// }
+	// }
+	// }
+	//
+	// });
+	//
+	// }
+	// return progress;
+	// }
 
 	// ----------------------
 
-	private void hookDoubleClickAction() {
+	private void hookDoubleClickAction()
+	{
 		// viewer.addDoubleClickListener(new IDoubleClickListener() {
 		// public void doubleClick(DoubleClickEvent event) {
 		// doubleClickAction.run();
@@ -1772,23 +1633,33 @@ public class TracesTreeView extends ViewPart {
 		// });
 	}
 
-	private IFile GetFile(IProject project, File file) {
+	private IFile GetFile(IProject project, File file)
+	{
 		IFile f = (IFile) project.findMember(file.getName(), true);
-		if (f == null) {
-			for (IFile projectFile : getAllMemberFiles(project, exts)) {
-				if (projectFile.getLocation().toOSString().equals(file.getPath()))
+		if (f == null)
+		{
+			for (IFile projectFile : getAllMemberFiles(project, exts))
+			{
+				if (projectFile.getLocation().toOSString().equals(
+						file.getPath()))
 					return projectFile;
 			}
 		}
 		return f;
 	}
 
-	private void hookTreeAction() {
-		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+	private void hookTreeAction()
+	{
+		viewer.addSelectionChangedListener(new ISelectionChangedListener()
+		{
 
-			public void selectionChanged(SelectionChangedEvent event) {
+			public void selectionChanged(SelectionChangedEvent event)
+			{
 				// TODO Auto-generated method stub
 				Object selection = ((ITreeSelection) event.getSelection()).getFirstElement();
+				if (selection instanceof TraceTreeNode)
+				{
+					TraceTreeNode tn = (TraceTreeNode) selection;
 
 				if (selection instanceof TraceTreeNode) {
 					TraceTreeNode tn = (TraceTreeNode) selection;
@@ -1797,20 +1668,37 @@ public class TracesTreeView extends ViewPart {
 					String projectName = tn.getParent().getParent().getName();
 					IProject iproject = iworkspaceRoot.getProject(projectName);
 
-					try {
-						TracesHelper helper = traceHelpers.get(projectName);
+					ITracesHelper helper = traceHelpers.get(projectName);
 
-						gotoLine(GetFile(iproject, helper.GetFile(tn.getParent().getName())), tn.GetTraceDefinition().getLine().intValue(), tn.getName());
-
-					} catch (CGException e) {
+					try
+					{
+						gotoLine(
+								GetFile(
+										iproject,
+										helper.GetFile(tn.getParent().getName())),
+								tn.GetTraceDefinition().location.startLine,
+								tn.getName());
+					} catch (IOException e)
+					{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-
 					}
 
-				}else if (selection instanceof TraceTestCaseTreeNode)
+				} else if (selection instanceof TraceTestTreeNode)
 				{
-					
+					if (!(selection instanceof NotYetReadyTreeNode)
+							&& !(selection instanceof TraceTestGroup)
+							&& ((TraceTestTreeNode) selection).GetStatus() == TestResultType.Unknown)
+						try
+						{
+							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
+									IPageLayout.ID_PROGRESS_VIEW);
+						} catch (PartInitException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					else
 						try
 						{
 							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
@@ -1827,33 +1715,111 @@ public class TracesTreeView extends ViewPart {
 			
 
 		});
+		viewer.addTreeListener(new ITreeViewerListener()
+		{
+
+			public void treeCollapsed(TreeExpansionEvent event)
+			{
+				Object expandingElement = event.getElement();
+				if (expandingElement instanceof TraceTreeNode)
+				{
+					TraceTreeNode node = (TraceTreeNode) expandingElement;
+					node.UnloadTests();
+					refreshTree();
+				} else if (expandingElement instanceof TraceTestGroup)
+				{
+					TraceTestGroup node = (TraceTestGroup) expandingElement;
+					node.UnloadTests();
+					refreshTree();
+				}
+
+			}
+
+			public void treeExpanded(TreeExpansionEvent event)
+			{
+				Object expandingElement = event.getElement();
+				if (expandingElement instanceof TraceTreeNode)
+				{
+					TraceTreeNode node = (TraceTreeNode) expandingElement;
+					try
+					{
+						node.LoadTests();
+					} catch (Exception e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					refreshTree();
+				} else if (expandingElement instanceof TraceTestGroup)
+				{
+					TraceTestGroup node = (TraceTestGroup) expandingElement;
+					try
+					{
+						node.LoadTests();
+					} catch (Exception e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					refreshTree();
+				}
+			}
+		});
 
 	}
 
-	private void showMessage(String message) {
-		MessageDialog.openInformation(viewer.getControl().getShell(), "Combinatorial Testing Overview", message);
+	private void refreshTree()
+	{
+		display.asyncExec(new Runnable()
+		{
+
+			public void run()
+			{
+				viewer.refresh();
+			}
+
+		});
+	}
+
+	private void showMessage(String message)
+	{
+		MessageDialog.openInformation(
+				viewer.getControl().getShell(),
+				"Combinatorial Testing Overview",
+				message);
 	}
 
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
-	public void setFocus() {
+	@Override
+	public void setFocus()
+	{
 		viewer.getControl().setFocus();
 	}
 
 	// private static final String MARKER_TYPE = "org.overturetool.traces";
 
-	private void addMarker(IFile file, String message, int lineNumber, int severity) {
-		try {
+	private void addMarker(IFile file, String message, int lineNumber,
+			int severity)
+	{
+		try
+		{
 			if (file == null)
 				return;
 			lineNumber -= 1;
-			IMarker[] markers = file.findMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
+			IMarker[] markers = file.findMarkers(
+					IMarker.PROBLEM,
+					false,
+					IResource.DEPTH_INFINITE);
 			boolean markerExist = false;
-			for (IMarker marker : markers) {
+			for (IMarker marker : markers)
+			{
 				if (marker.getAttribute(IMarker.MESSAGE).equals(message)
-						&& marker.getAttribute(IMarker.SEVERITY).equals(severity)
-						&& marker.getAttribute(IMarker.LINE_NUMBER).equals(lineNumber))
+						&& marker.getAttribute(IMarker.SEVERITY).equals(
+								severity)
+						&& marker.getAttribute(IMarker.LINE_NUMBER).equals(
+								lineNumber))
 					return;
 
 			}
@@ -1861,17 +1827,21 @@ public class TracesTreeView extends ViewPart {
 			marker.setAttribute(IMarker.MESSAGE, message);
 			marker.setAttribute(IMarker.SEVERITY, severity);
 			marker.setAttribute(IMarker.SOURCE_ID, "org.overturetool.traces");
-			if (lineNumber == -1) {
+			if (lineNumber == -1)
+			{
 				lineNumber = 1;
 			}
 			marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
-		} catch (CoreException e) {
+		} catch (CoreException e)
+		{
 			int jj = 8;
 		}
 	}
 
-	private void gotoLine(IFile file, int lineNumber, String message) {
-		try {
+	private void gotoLine(IFile file, int lineNumber, String message)
+	{
+		try
+		{
 			IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 			// IProject[] iprojects = iworkspaceRoot.getProjects();
 
@@ -1886,25 +1856,30 @@ public class TracesTreeView extends ViewPart {
 			IMarker marker = file.createMarker(IMarker.MARKER);
 			marker.setAttribute(IMarker.MESSAGE, message);
 			marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
-			if (lineNumber == -1) {
+			if (lineNumber == -1)
+			{
 				lineNumber = 1;
 			}
-			marker.setAttribute(IMarker.LINE_NUMBER, lineNumber - 1);
+			marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
 
 			IDE.gotoMarker(editor, marker);
 
-		} catch (CoreException e) {
+		} catch (CoreException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	private ViewerFilter okFilter = new ViewerFilter() {
+	private ViewerFilter okFilter = new ViewerFilter()
+	{
 
 		@Override
-		public boolean select(Viewer viewer, Object parentElement, Object element) {
-			if (element instanceof TraceTestCaseTreeNode
-					&& ((TraceTestCaseTreeNode) element).GetStatus() == TestResultType.Ok)
+		public boolean select(Viewer viewer, Object parentElement,
+				Object element)
+		{
+			if (element instanceof TraceTestTreeNode
+					&& ((TraceTestTreeNode) element).GetStatus() == TestResultType.Ok)
 				return false;
 			else
 				return true;
@@ -1912,12 +1887,15 @@ public class TracesTreeView extends ViewPart {
 
 	};
 
-	private ViewerFilter inconclusiveFilter = new ViewerFilter() {
+	private ViewerFilter inconclusiveFilter = new ViewerFilter()
+	{
 
 		@Override
-		public boolean select(Viewer viewer, Object parentElement, Object element) {
-			if (element instanceof TraceTestCaseTreeNode
-					&& ((TraceTestCaseTreeNode) element).GetStatus() == TestResultType.Inconclusive)
+		public boolean select(Viewer viewer, Object parentElement,
+				Object element)
+		{
+			if (element instanceof TraceTestTreeNode
+					&& ((TraceTestTreeNode) element).GetStatus() == TestResultType.Inconclusive)
 				return false;
 			else
 				return true;
@@ -1925,11 +1903,14 @@ public class TracesTreeView extends ViewPart {
 
 	};
 
-	private ViewerSorter traceSorter = new ViewerSorter() {
+	private ViewerSorter traceSorter = new ViewerSorter()
+	{
 		@Override
-		public int category(Object element) {
-			if (element instanceof TraceTestCaseTreeNode) {
-				TestResultType res = ((TraceTestCaseTreeNode) element).GetStatus();
+		public int category(Object element)
+		{
+			if (element instanceof TraceTestTreeNode)
+			{
+				TestResultType res = ((TraceTestTreeNode) element).GetStatus();
 				if (res == TestResultType.Fail)
 					return 1;
 				else if (res == TestResultType.Inconclusive)
@@ -1942,10 +1923,40 @@ public class TracesTreeView extends ViewPart {
 		}
 	};
 
-	public static Boolean IsWindows() {
+	public static Boolean IsWindows()
+	{
 		String osName = System.getProperty("os.name");
 
 		return osName.toUpperCase().indexOf("WINDOWS".toUpperCase()) > -1;
+	}
+
+	private void ConsolePrint(final String message)
+	{
+		display.asyncExec(new Runnable()
+		{
+
+			public void run()
+			{
+				MessageConsole myConsole = findConsole("TracesConsole");
+				MessageConsoleStream out = myConsole.newMessageStream();
+				out.println(message);
+			}
+		});
+
+	}
+
+	private MessageConsole findConsole(String name)
+	{
+		ConsolePlugin plugin = ConsolePlugin.getDefault();
+		IConsoleManager conMan = plugin.getConsoleManager();
+		IConsole[] existing = conMan.getConsoles();
+		for (int i = 0; i < existing.length; i++)
+			if (name.equals(existing[i].getName()))
+				return (MessageConsole) existing[i];
+		// no console found, so create a new one
+		MessageConsole myConsole = new MessageConsole(name, null);
+		conMan.addConsoles(new IConsole[] { myConsole });
+		return myConsole;
 	}
 
 }

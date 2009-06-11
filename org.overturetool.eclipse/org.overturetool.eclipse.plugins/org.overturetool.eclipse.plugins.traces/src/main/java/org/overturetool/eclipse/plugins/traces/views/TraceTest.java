@@ -1,32 +1,39 @@
 package org.overturetool.eclipse.plugins.traces.views;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Set;
-import java.util.Vector;
 
-import jp.co.csk.vdm.toolbox.VDM.CGException;
-
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.part.*;
-import org.eclipse.ui.views.IViewDescriptor;
-import org.eclipse.jface.resource.StringConverter;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.jface.action.*;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.*;
-import org.eclipse.swt.widgets.Menu;
+import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TableLayout;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.views.IViewDescriptor;
 import org.overturetool.eclipse.plugins.traces.OvertureTracesPlugin;
-import org.overturetool.traces.utility.*;
-import org.overturetool.traces.utility.TracesHelper.TestResult;
-import org.overturetool.traces.utility.TracesHelper.TestResultType;
-import org.overturetool.eclipse.plugins.traces.views.*;
-import org.overturetool.eclipse.plugins.traces.views.TracesTreeView.*;
+import org.overturetool.eclipse.plugins.traces.views.treeView.NotYetReadyTreeNode;
+import org.overturetool.eclipse.plugins.traces.views.treeView.TraceTestGroup;
+import org.overturetool.eclipse.plugins.traces.views.treeView.TraceTestTreeNode;
+import org.overturetool.traces.utility.TraceTestResult;
+import org.overturetool.traces.utility.ITracesHelper.TestResultType;
 
 /**
  * This sample class demonstrates how to plug-in a new workbench view. The view
@@ -43,24 +50,30 @@ import org.overturetool.eclipse.plugins.traces.views.TracesTreeView.*;
  * <p>
  */
 
-public class TraceTest extends ViewPart implements ISelectionListener {
+public class TraceTest extends ViewPart implements ISelectionListener
+{
 	private TableViewer viewer;
 	private Action action1;
 	private Action action2;
 	private Action doubleClickAction;
-
-	private class Data {
+	final Display display = Display.getCurrent();
+	private class Data
+	{
 		String traceDef;
 		String description;
 		TestResultType status;
 
-		private Data(String traceDef, String Description, TestResultType status) {
+		private Data(String traceDef, String Description, TestResultType status)
+		{
 			this.description = Description;
 			this.traceDef = traceDef;
 			this.status = status;
 		}
-		
-		public String GetDescription(){return this.description;}
+
+		public String GetDescription()
+		{
+			return this.description;
+		}
 
 	}
 
@@ -72,25 +85,32 @@ public class TraceTest extends ViewPart implements ISelectionListener {
 	 * example).
 	 */
 
-	class ViewContentProvider implements IStructuredContentProvider {
-		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
+	class ViewContentProvider implements IStructuredContentProvider
+	{
+		public void inputChanged(Viewer v, Object oldInput, Object newInput)
+		{
 		}
 
-		public void dispose() {
+		public void dispose()
+		{
 		}
 
-		public Object[] getElements(Object inputElement) {
-			return ((List) inputElement).toArray();
+		public Object[] getElements(Object inputElement)
+		{
+			return ((List<TraceTest.Data>) inputElement).toArray();
 		}
 
 	}
 
 	class ViewLabelProvider extends LabelProvider implements
-			ITableLabelProvider {
-		public String getColumnText(Object element, int columnIndex) {
+			ITableLabelProvider
+	{
+		public String getColumnText(Object element, int columnIndex)
+		{
 			Data data = (Data) element;
 			String columnText;
-			switch (columnIndex) {
+			switch (columnIndex)
+			{
 			case 0:
 				columnText = data.traceDef;
 				break;
@@ -107,46 +127,45 @@ public class TraceTest extends ViewPart implements ISelectionListener {
 
 		}
 
-		public Image getColumnImage(Object obj, int index) {
-			if (index == 2) {
+		public Image getColumnImage(Object obj, int index)
+		{
+			if (index == 2)
+			{
 				return getImage(obj);
 			}
 			return null;
 		}
 
-		public Image getImage(Object obj) {
+		public Image getImage(Object obj)
+		{
 			Data data = (Data) obj;
-//			if (data.status == TestResultType.Fail) {
-//				return OvertureTracesPlugin.getImageDescriptor(
-//						OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FAIL)
-//						.createImage();
-//			}
-//			if (data.status == TestResultType.Ok) {
-//				return OvertureTracesPlugin.getImageDescriptor(
-//						OvertureTracesPlugin.IMG_TRACE_TEST_CASE_SUCCES)
-//						.createImage();
-//			}
-			
+			// if (data.status == TestResultType.Fail) {
+			// return OvertureTracesPlugin.getImageDescriptor(
+			// OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FAIL)
+			// .createImage();
+			// }
+			// if (data.status == TestResultType.Ok) {
+			// return OvertureTracesPlugin.getImageDescriptor(
+			// OvertureTracesPlugin.IMG_TRACE_TEST_CASE_SUCCES)
+			// .createImage();
+			// }
+
 			String imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNKNOWN;
-			
-			if (data.status  == TestResultType.Ok)
+
+			if (data.status == TestResultType.Ok)
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_SUCCES;
-			else if (data.status  == TestResultType.Unknown)
+			else if (data.status == TestResultType.Unknown)
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNKNOWN;
-			else if (data.status  == TestResultType.Inconclusive)
+			else if (data.status == TestResultType.Inconclusive)
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNDETERMINED;
-			else if (data.status  == TestResultType.Fail)
+			else if (data.status == TestResultType.Fail)
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FAIL;
-			else if (data.status  == TestResultType.ExpansionFaild)
-				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_EXPANSIN_FAIL;
+			// else if (data.status == TestResultType.ExpansionFaild)
+			// imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_EXPANSIN_FAIL;
 			else if (data.status == TestResultType.Skipped)
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_SKIPPED;
 
-			return OvertureTracesPlugin.getImageDescriptor(imgPath)
-					.createImage();
-			
-			
-			
+			return OvertureTracesPlugin.getImageDescriptor(imgPath).createImage();
 
 			// return
 			// PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
@@ -154,27 +173,30 @@ public class TraceTest extends ViewPart implements ISelectionListener {
 		}
 	}
 
-	class NameSorter extends ViewerSorter {
+	class NameSorter extends ViewerSorter
+	{
 	}
 
 	/**
 	 * The constructor.
 	 */
-	public TraceTest() {
+	public TraceTest()
+	{
 	}
 
 	/**
 	 * This is a callback that will allow us to create the viewer and initialize
 	 * it.
 	 */
-	public void createPartControl(Composite parent) {
+	public void createPartControl(Composite parent)
+	{
 		viewer = new TableViewer(parent, SWT.FULL_SELECTION | SWT.H_SCROLL
 				| SWT.V_SCROLL);
 		// test setup columns...
 		TableLayout layout = new TableLayout();
 		layout.addColumnData(new ColumnWeightData(50, 100, true));
 		layout.addColumnData(new ColumnWeightData(50, 100, true));
-		//layout.addColumnData(new ColumnWeightData(50, 100, true));
+		// layout.addColumnData(new ColumnWeightData(50, 100, true));
 		viewer.getTable().setLayout(layout);
 		viewer.getTable().setLinesVisible(true);
 		viewer.getTable().setHeaderVisible(true);
@@ -189,9 +211,9 @@ public class TraceTest extends ViewPart implements ISelectionListener {
 		column2.setText("Result");
 		column2.setToolTipText("Show Description");
 
-//		TableColumn column3 = new TableColumn(viewer.getTable(), SWT.LEFT);
-//		column3.setText("Verdict");
-//		column3.setToolTipText("Show verdict");
+		// TableColumn column3 = new TableColumn(viewer.getTable(), SWT.LEFT);
+		// column3.setText("Verdict");
+		// column3.setToolTipText("Show verdict");
 
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
@@ -202,59 +224,63 @@ public class TraceTest extends ViewPart implements ISelectionListener {
 		// viewer.setInput(getViewSite());
 
 		makeActions();
-		//hookContextMenu();
+		// hookContextMenu();
 		hookDoubleClickAction();
-		//contributeToActionBars();
+		// contributeToActionBars();
 
-		getViewSite().getPage().addSelectionListener(this);
-
+		getViewSite().getPage().addSelectionListener("org.overturetool.eclipse.plugins.traces.views.TracesView",this);
+		
 	}
 
-	private void hookContextMenu() {
-		MenuManager menuMgr = new MenuManager("#PopupMenu");
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				TraceTest.this.fillContextMenu(manager);
-			}
-		});
-		Menu menu = menuMgr.createContextMenu(viewer.getControl());
-		viewer.getControl().setMenu(menu);
-		getSite().registerContextMenu(menuMgr, viewer);
-	}
+	// private void hookContextMenu() {
+	// MenuManager menuMgr = new MenuManager("#PopupMenu");
+	// menuMgr.setRemoveAllWhenShown(true);
+	// menuMgr.addMenuListener(new IMenuListener() {
+	// public void menuAboutToShow(IMenuManager manager) {
+	// TraceTest.this.fillContextMenu(manager);
+	// }
+	// });
+	// Menu menu = menuMgr.createContextMenu(viewer.getControl());
+	// viewer.getControl().setMenu(menu);
+	// getSite().registerContextMenu(menuMgr, viewer);
+	// }
+	//
+	// private void contributeToActionBars() {
+	// IActionBars bars = getViewSite().getActionBars();
+	// fillLocalPullDown(bars.getMenuManager());
+	// fillLocalToolBar(bars.getToolBarManager());
+	// }
 
-	private void contributeToActionBars() {
-		IActionBars bars = getViewSite().getActionBars();
-		fillLocalPullDown(bars.getMenuManager());
-		fillLocalToolBar(bars.getToolBarManager());
-	}
+	// private void fillLocalPullDown(IMenuManager manager) {
+	// manager.add(action1);
+	// manager.add(new Separator());
+	// manager.add(action2);
+	// }
+	//
+	// private void fillContextMenu(IMenuManager manager) {
+	// manager.add(action1);
+	// manager.add(action2);
+	// // Other plug-ins can contribute there actions here
+	// manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+	// }
+	//
+	// private void fillLocalToolBar(IToolBarManager manager) {
+	// manager.add(action1);
+	// manager.add(action2);
+	// }
 
-	private void fillLocalPullDown(IMenuManager manager) {
-		manager.add(action1);
-		manager.add(new Separator());
-		manager.add(action2);
-	}
-
-	private void fillContextMenu(IMenuManager manager) {
-		manager.add(action1);
-		manager.add(action2);
-		// Other plug-ins can contribute there actions here
-		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-	}
-
-	private void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(action1);
-		manager.add(action2);
-	}
-
-	private void makeActions() {
-		action1 = new Action() {
-			public void run() {
+	private void makeActions()
+	{
+		action1 = new Action()
+		{
+			public void run()
+			{
 				showMessage("Action 1 executed");
-				for (IViewDescriptor v : getViewSite().getWorkbenchWindow()
-						.getWorkbench().getViewRegistry().getViews()) {
+				for (IViewDescriptor v : getViewSite().getWorkbenchWindow().getWorkbench().getViewRegistry().getViews())
+				{
 					if (v.getId().equals(
-							"org.overturetool.traces.views.TracesView")) {
+							"org.overturetool.traces.views.TracesView"))
+					{
 						this.addListenerObject(v);
 					}
 				}
@@ -262,87 +288,109 @@ public class TraceTest extends ViewPart implements ISelectionListener {
 		};
 		action1.setText("Action 1");
 		action1.setToolTipText("Action 1 tooltip");
-		action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages()
-				.getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+		action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
+				ISharedImages.IMG_OBJS_INFO_TSK));
 
-		action2 = new Action() {
-			public void run() {
+		action2 = new Action()
+		{
+			public void run()
+			{
 				showMessage("Action 2 executed");
 			}
 		};
 		action2.setText("Action 2");
 		action2.setToolTipText("Action 2 tooltip");
-		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages()
-				.getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
-		doubleClickAction = new Action() {
-			public void run() {
+		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
+				ISharedImages.IMG_OBJS_INFO_TSK));
+		doubleClickAction = new Action()
+		{
+			public void run()
+			{
 				ISelection selection = viewer.getSelection();
-				Object obj = ((IStructuredSelection) selection)
-						.getFirstElement();
-				if(obj instanceof Data)
-				showMessage(((Data) obj).GetDescription().toString());
+				Object obj = ((IStructuredSelection) selection).getFirstElement();
+				if (obj instanceof Data)
+					showMessage(((Data) obj).GetDescription().toString());
 			}
 		};
 	}
 
-	private void hookDoubleClickAction() {
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
+	private void hookDoubleClickAction()
+	{
+		viewer.addDoubleClickListener(new IDoubleClickListener()
+		{
+			public void doubleClick(DoubleClickEvent event)
+			{
 				doubleClickAction.run();
 			}
 		});
 	}
 
-	private void showMessage(String message) {
-		MessageDialog.openInformation(viewer.getControl().getShell(),
-				"Trace Test", message);
+	private void showMessage(String message)
+	{
+		MessageDialog.openInformation(
+				viewer.getControl().getShell(),
+				"Trace Test",
+				message);
 	}
 
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
-	public void setFocus() {
+	public void setFocus()
+	{
 		viewer.getControl().setFocus();
 	}
 
-	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		// TODO Auto-generated method stub
-		if (selection instanceof IStructuredSelection) {
+	public void selectionChanged(IWorkbenchPart part, ISelection selection)
+	{
+
+		if (selection instanceof IStructuredSelection && part instanceof TracesTreeView)
+		{
 			Object first = ((IStructuredSelection) selection).getFirstElement();
-			if (first instanceof TraceTestCaseTreeNode
-					&& part instanceof TracesTreeView) {
-				TraceTestCaseTreeNode traceTestCaseNode = (TraceTestCaseTreeNode) first;
-				TraceTreeNode traceNode = (TraceTreeNode) traceTestCaseNode
-						.getParent();
-				ClassTreeNode classNode = (ClassTreeNode) traceNode.getParent();
-				ProjectTreeNode projectNode = (ProjectTreeNode) classNode
-						.getParent();
+//			System.out.println(first);
+			if (first instanceof TraceTestTreeNode
+					&& part instanceof TracesTreeView
+					&& !(first instanceof NotYetReadyTreeNode)
+					&& !(first instanceof TraceTestGroup))
+			{
+				TraceTestTreeNode traceTestCaseNode = (TraceTestTreeNode) first;
+			
+				TraceTestResult res = traceTestCaseNode.GetResult();
+				
+				List<Data> list = new ArrayList<Data>();
 
-				TracesHelper tr = ((TracesTreeView) part)
-						.GetTracesHelper(projectNode.getName());
-				try {
-					TestResult res = tr.GetResult(classNode.getName(),
-							traceNode.getName(), traceTestCaseNode.getName());
+				for (int i = 0; res != null && i < res.getArguments().size(); i++)
+				{
 
-					List<Data> list = new ArrayList<Data>();
-					//Set<Data> set = new HashSet<Data>();
-					for (int i = 0; i < res.args.length; i++) {
-						
-						if( res.result.length>i)
-						list.add(new Data(res.args[i], res.result[i], res.Status));
-						else if( res.result.length<=i)
-							list.add(new Data(res.args[i], "", res.Status));
-					}
-
-					viewer.setInput(list);
-
-				} catch (CGException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					if (res.getResults().size() > i)
+						list.add(new Data(res.getArguments().get(i),
+								res.getResults().get(i), res.getStatus()));
+					else if (res.getResults().size() <= i)
+						list.add(new Data(res.getArguments().get(i), "N / A",
+								res.getStatus()));
 				}
 
+				viewer.setInput(list);
+
+			}else
+			{
+				viewer.setInput(null);
+			
 			}
+			refreshList();
 		}
 
+	}
+	private void refreshList()
+	{
+		display.asyncExec(new Runnable()
+		{
+
+			public void run()
+			{
+				viewer.refresh();
+			}
+
+		});
 	}
 }

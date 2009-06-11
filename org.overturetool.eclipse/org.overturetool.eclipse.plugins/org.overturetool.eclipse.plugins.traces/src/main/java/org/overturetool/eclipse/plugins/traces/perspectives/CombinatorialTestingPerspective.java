@@ -57,7 +57,9 @@ public class CombinatorialTestingPerspective implements IPerspectiveFactory {
 				0.75f,
 				factory.getEditorArea());
 		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
+		bottom.addView("org.eclipse.ui.console.ConsoleView");
 		bottom.addView("org.overturetool.eclipse.plugins.traces.views.TraceTest"); //NON-NLS-1
+		
 
 		IFolderLayout right =
 			factory.createFolder(
@@ -65,6 +67,7 @@ public class CombinatorialTestingPerspective implements IPerspectiveFactory {
 				IPageLayout.RIGHT,
 				0.72f,
 				factory.getEditorArea());
+		
 		right.addView("org.overturetool.eclipse.plugins.traces.views.TracesView"); //NON-NLS-1
 
 	}

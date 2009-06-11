@@ -25,24 +25,27 @@
 
     <!-- Second build all core (binary) plug-ins -->
     <module>org.overturetool.eclipse.plugins.umltrans.core</module>
-    <module>org.overturetool.eclipse.plugins.editor.core</module>
+ 
     <module>org.overturetool.eclipse.plugins.traces.core</module>
     <module>org.overturetool.eclipse.plugins.showtrace.core</module>
     <module>org.overturetool.eclipse.plugins.dbgp.core</module>
     <module>org.overturetool.eclipse.plugins.vdmtoolsapi.core</module>
     <!-- Thrid build all source plugins-->
-    <module>org.overturetool.eclipse.plugins.umltrans</module>
+   <module>org.overturetool.eclipse.plugins.editor.core</module> 
+
+
+   <module>org.overturetool.eclipse.plugins.umltrans</module>
   
     <module>org.overturetool.eclipse.plugins.debug</module>
    
     <module>org.overturetool.eclipse.plugins.launching</module>
    
-    	<module>org.overturetool.eclipse.plugins.editor.overturedebugger</module>
+   
     <module>org.overturetool.eclipse.plugins.editor.ui</module>
     <module>org.overturetool.eclipse.plugins.debug.ui</module>
    <!-- <module>org.overturetool.eclipse.plugins.showtrace</module>-->
     <module>org.overturetool.eclipse.plugins.traces</module>
 
-   
+    <module>org.overturetool.eclipse.plugins.editor.overturedebugger</module>
   </modules>
 </project>
