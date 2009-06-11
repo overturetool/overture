@@ -27,11 +27,12 @@
 							<test-compile>
 								org.apache.maven.plugins:maven-compiler-plugin:testCompile
 							</test-compile>
-							<test>
-								org.apache.maven.plugins:maven-psteclipse-plugin:test
+						<!-- 	<test>
+								org.overturetool.tools.maven-pst:maven-psteclipse-plugin:test
 							</test>
+							 -->
 							<package>
-								org.apache.maven.plugins:maven-psteclipse-plugin:package
+								org.overturetool.tools.maven-pst:maven-psteclipse-plugin:package
 							</package>
 							<install>
 								org.apache.maven.plugins:maven-install-plugin:install
@@ -61,7 +62,7 @@
 								org.apache.maven.plugins:maven-site-plugin:attach-descriptor
 							</package>
 							<install>
-								org.apache.maven.plugins:maven-psteclipse-plugin:install
+								org.overturetool.tools.maven-pst:maven-psteclipse-plugin:install
 							</install>
 							<deploy>
 								org.apache.maven.plugins:maven-deploy-plugin:deploy

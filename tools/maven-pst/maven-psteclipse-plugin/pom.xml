@@ -31,35 +31,5 @@
       <version>2.2</version>
     </dependency>
   </dependencies>
-  <build>
-
-
-
-    <plugins>
-    
-      <plugin>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <inherited>false</inherited>
-        <configuration>
-          <altDeploymentRepository>lausdahl.com::default::ftp://localhost</altDeploymentRepository>
-        </configuration>
-      </plugin>
-    </plugins>
-
-    <extensions>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-ftp</artifactId>
-        <version>1.0-beta-2</version>
-      </extension>
-    </extensions>
-  </build>
-  <!-- Enabling the use of FTP -->
-  <distributionManagement>
-    <repository>
-      <id>lausdahl.com</id>
-      <url>ftp://localhost</url>
-    </repository>
-  </distributionManagement>
-
+ 
 </project>

@@ -179,7 +179,7 @@ public class PDETestDeployer extends AbstractEclipseMojoHelper {
             throw new MojoExecutionException("Unable to resolve", e);
         }
         ArrayList buddies = new ArrayList();
-        Plugin plugin = (Plugin) project.getBuild().getPluginsAsMap().get("org.apache.maven.plugins:maven-psteclipse-plugin");
+        Plugin plugin = (Plugin) project.getBuild().getPluginsAsMap().get("org.overturetool.tools.maven-pst:maven-psteclipse-plugin");
         if (plugin != null) {
             Xpp3Dom configuration = (Xpp3Dom) plugin.getConfiguration();
             if (configuration != null) {

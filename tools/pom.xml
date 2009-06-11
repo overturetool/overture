@@ -9,7 +9,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.overturetool.tools</groupId>
-  <artifactId>org.overturetool.tools</artifactId>
+  <artifactId>tools</artifactId>
   <packaging>pom</packaging>
   <version>1.0.0</version>
   <name>Maven tools for overture</name>
@@ -17,7 +17,7 @@
   <modules>
 
     <module>vdmt</module>
-
+<module>maven-pst</module>
   </modules>
 
 </project>

@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>org.overturetool.tools</groupId>
-    <artifactId>org.overturetool.tools</artifactId>
+    <artifactId>tools</artifactId>
     <version>1.0.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
