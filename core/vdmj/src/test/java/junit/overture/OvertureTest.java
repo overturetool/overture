@@ -244,6 +244,8 @@ abstract public class OvertureTest extends TestCase
 	protected void combtest(String vpath, String apath, String testExp, int error)
 		throws Exception
 	{
+		Console.out.println("Processing " + apath + "...");
+
 		setVppName("/Overture/combtest/", vpath);
 		setAssertName("/Overture/combtest/", apath);
 
