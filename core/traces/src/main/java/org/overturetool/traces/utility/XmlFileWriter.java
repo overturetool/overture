@@ -57,6 +57,18 @@ public class XmlFileWriter {
 //	&apos; (' or "apostrophe") 
 //	&quot; (" or "quotation mark") 
 	}
+	
+	public static String DeNormalizeValue(String value)
+	{
+	return	value.replace("&quot;","\"").replace( "&lt;","<").replace( "&gt;",">").replace( "&amp;","&").replace( "&apos;","'");
+	
+	
+//	&amp; (& or "ampersand") 
+//	&lt; (< or "less than") 
+//	&gt; (> or "greater than") 
+//	&apos; (' or "apostrophe") 
+//	&quot; (" or "quotation mark") 
+	}
 
 	public void StartElement(String name, String attribyteName,
 			String attributeValue) {
@@ -104,7 +116,7 @@ public class XmlFileWriter {
 
 		
 		if (inElement)
-			outputStream.println(GetIndentation(level) +value.replace("\"", "&quot;"));
+			outputStream.println(GetIndentation(level) +NormalizeValue( value));
 		else
 			System.err
 					.println("Errir priting value skipped since it was out side an element");

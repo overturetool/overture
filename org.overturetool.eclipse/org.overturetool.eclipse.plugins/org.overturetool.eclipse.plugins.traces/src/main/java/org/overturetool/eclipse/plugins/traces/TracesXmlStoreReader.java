@@ -86,6 +86,7 @@ public class TracesXmlStoreReader extends DefaultHandler
 		}
 	}
 
+	StringBuilder data= new StringBuilder();
 	File file;
 	String className;
 	String traceName;
@@ -317,6 +318,40 @@ public class TracesXmlStoreReader extends DefaultHandler
 
 	public void endElement(String uri, String name, String qName)
 	{
+		
+		
+		if (inClass && inTrace && traceTestResults!=null 
+				&& traceTestResults.size() > 0 && data.toString().length()>0) //&& currentResult != null
+		{
+			if (insertArgument)
+			{
+				List<String> arguments = new Vector<String>();
+				for (String string : XmlFileWriter.DeNormalizeValue(data.toString()).trim().split(";"))
+				{
+					arguments.add(string.trim());
+				}
+				traceTestResults.get(currentResultIndex).setArguments(arguments);
+
+			} else if (insertResult)
+			{
+				List<String> results = new Vector<String>();
+				for (String string : XmlFileWriter.DeNormalizeValue(data.toString()).trim().split(";"))
+				{
+					results.add(string.trim());
+				}
+				traceTestResults.get(currentResultIndex).setResults(results);
+
+			}
+
+		}
+		
+		
+		data = new StringBuilder();
+		
+		
+		
+		
+		
 		// if ("".equals(uri))
 		// System.out.println("End element: " + qName);
 		// else
@@ -365,31 +400,9 @@ public class TracesXmlStoreReader extends DefaultHandler
 		
 //		if(sb.toString().trim().length()>0)
 //			System.out.println(sb.toString().trim());
-
-		if (inClass && inTrace && traceTestResults!=null 
-				&& traceTestResults.size() > 0 && sb.toString().trim().length()>0) //&& currentResult != null
-		{
-			if (insertArgument)
-			{
-				List<String> arguments = new Vector<String>();
-				for (String string : sb.toString().trim().split(";"))
-				{
-					arguments.add(string.trim());
-				}
-				traceTestResults.get(currentResultIndex).setArguments(arguments);
-
-			} else if (insertResult)
-			{
-				List<String> results = new Vector<String>();
-				for (String string : sb.toString().trim().split(";"))
-				{
-					results.add(string.trim());
-				}
-				traceTestResults.get(currentResultIndex).setResults(results);
-
-			}
-
-		}
+		
+		
+		data.append(sb.toString());
 		// System.out.print("\"\n");
 	}
 
