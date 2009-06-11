@@ -340,51 +340,49 @@ public class ObjectValue extends Value
 		return deepCopy(); //copy(false);
 	}
 
-	public ObjectValue copy(boolean shallow)
+	private ObjectValue mycopy = null;
+
+	public ObjectValue shallowCopy()
 	{
-		List<ObjectValue> supers = new Vector<ObjectValue>();
-		NameValuePairMap memcopy = new NameValuePairMap();
+		mycopy = new ObjectValue(type,
+					new NameValuePairMap(), new Vector<ObjectValue>());
 
-   		if (shallow)
-		{
-   	   		for (ObjectValue sobj: superobjects)
-   	   		{
-   	   			// Type skeleton only...
+		List<ObjectValue> supers = mycopy.superobjects;
+		NameValuePairMap memcopy = mycopy.members;
 
-   	   			supers.add(
-   	   				new ObjectValue(sobj.type,
-   	   					new NameValuePairMap(), new Vector<ObjectValue>()));
-   	   		}
-
-    		for (LexNameToken name: members.keySet())
-    		{
-    			Value mv = members.get(name).deref();
-
-    			if (mv instanceof ObjectValue)
-    			{
-    				memcopy.put(name, ((ObjectValue)mv).copy(shallow));
-    			}
-    			else
-    			{
-    				memcopy.put(name, (Value)mv.clone());
-    			}
-    		}
-		}
-   		else
+   		for (ObjectValue sobj: superobjects)
    		{
-   	   		for (ObjectValue sobj: superobjects)
-   	   		{
-   	   			supers.add(sobj.copy(false));
-   	   		}
+   			supers.add(	// Type skeleton only...
+   				new ObjectValue(sobj.type,
+   					new NameValuePairMap(), new Vector<ObjectValue>()));
+   		}
 
-   	   		for (LexNameToken n: members.keySet())
-   	   		{
-   	   			Value v = members.get(n);
-   	   			memcopy.put(n, (Value)v.clone());
-   	   		}
+		for (LexNameToken name: members.keySet())
+		{
+			Value mv = members.get(name).deref();
+
+			if (mv instanceof ObjectValue)
+			{
+				ObjectValue om = (ObjectValue)mv;
+
+				if (om.mycopy != null)	// Currently copying it
+				{
+					memcopy.put(name, om.mycopy);
+				}
+				else
+				{
+					memcopy.put(name, om.shallowCopy());
+				}
+			}
+			else
+			{
+				memcopy.put(name, (Value)mv.clone());
+			}
 		}
 
-		return new ObjectValue(type, memcopy, supers);
+		ObjectValue rv = mycopy;
+		mycopy = null;
+		return rv;
 	}
 
 	public ObjectValue deepCopy()
