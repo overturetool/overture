@@ -60,13 +60,4 @@ public class ConsoleTest extends TestCase {
 
 		assertEquals(expected, actual);
 	}
-
-	public void testWriteLines() {
-		fail("Not yet implemented");
-	}
-
-	public void testReadErrorLine() {
-		fail("Not yet implemented");
-	}
-
 }
