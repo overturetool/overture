@@ -10,7 +10,6 @@ import org.overturetool.potrans.external_tools.SystemProperties;
 
 public class MosmlHolConsole extends Console {
 
-	
 	private String promptBuffer = null;
 
 	protected final static String HOL_QUIT_COMMAND = "quit();";
@@ -21,35 +20,13 @@ public class MosmlHolConsole extends Console {
 	protected final static int HEADER_SIZE = 10;
 	protected boolean consoleHeaderRemoved = false;
 
-	protected static String commandArgumentsFormat = "-quietdec -P full -I _HOLDIR_/sigobj "
-			+ "_HOLDIR_/std.prelude "
-			+ "_HOLDIR_/tools/unquote-init.sml "
-			+ "_HOLDIR_/tools/end-init-boss.sml";
-
-	public MosmlHolConsole(String mosmlCommand, String holDir)
-			throws IOException {
-		super(MosmlHolConsole.buildCommandList(mosmlCommand,
-				formatCommandArguments(holDir)));
+	public MosmlHolConsole(List<String> mosmlCmd) throws IOException {
+		super(mosmlCmd);
 	}
 
-	public MosmlHolConsole(String mosmlCommand, String holDir,
+	public MosmlHolConsole(List<String> mosmlCmd,
 			Map<String, String> holEnvironment) throws IOException {
-		super(buildCommandList(mosmlCommand, formatCommandArguments(holDir)),
-				holEnvironment);
-	}
-
-	protected static String[] formatCommandArguments(String holDir) {
-		return commandArgumentsFormat.replaceAll("_HOLDIR_", holDir).split(" ");
-	}
-
-
-	protected static List<String> buildCommandList(String command,
-			String[] arguments) {
-		ArrayList<String> list = new ArrayList<String>(arguments.length + 1);
-		list.add(command);
-		for (String argument : arguments)
-			list.add(argument);
-		return list;
+		super(mosmlCmd, holEnvironment);
 	}
 
 	public void removeConsoleHeader() throws IOException {
@@ -61,30 +38,30 @@ public class MosmlHolConsole extends Console {
 			consoleHeaderRemoved = true;
 		}
 	}
-	
+
 	protected String readPrompt() throws IOException {
 		char[] cbuf = new char[2];
 		output.read(cbuf);
 		return new String(cbuf);
 	}
-	
+
 	protected boolean isPromptNext() throws IOException {
 		char[] cbuf = new char[2];
 		output.read(cbuf);
 		promptBuffer = new String(cbuf);
 		return promptBuffer.equals(HOL_PROMPT);
 	}
-	
+
 	@Override
 	public String readLine() throws IOException {
 		String prefix = getAndResetPromptBuffer();
 		String line = super.readLine();
 		return prefix != "" ? prefix + line : line;
 	}
-	
+
 	private String getAndResetPromptBuffer() {
 		String result = "";
-		if(promptBuffer != null) {
+		if (promptBuffer != null) {
 			result = promptBuffer;
 			resetPromptBuffer();
 		}
@@ -98,8 +75,8 @@ public class MosmlHolConsole extends Console {
 	public String readOutputBlock() throws IOException {
 		StringBuffer sb = new StringBuffer();
 		String line = null;
-		while(!isPromptNext()) {
-			if(line != null) {
+		while (!isPromptNext()) {
+			if (line != null) {
 				sb.append(SystemProperties.LINE_SEPARATOR);
 			}
 			line = readLine();
@@ -108,7 +85,7 @@ public class MosmlHolConsole extends Console {
 		resetPromptBuffer();
 		return sb.toString();
 	}
-	
+
 	public void quitHol() throws InterruptedException {
 		writeLine(HOL_QUIT_COMMAND);
 		waitFor();

@@ -2,6 +2,7 @@ package org.overturetool.potrans.external_tools;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 public class Console {
 	
+	protected final static int WAIT_SECCONDS = 2000;
 	protected final Process process;
 	protected final PrintWriter input;
 	protected final BufferedReader output;
@@ -174,5 +176,16 @@ public class Console {
 		System.err.println();
 	}
 	
+	public void waitForSomeOutput(long timeout) throws IOException, InterruptedException {
+		// TODO fix this! implementation based on pooling is no the best option!
+		//      however calling output.wait() would generate an exception because
+		//      this Thread apparently doesn't own the object's monitor
+		while(!hasOutput())
+			Thread.sleep(WAIT_SECCONDS);
+	}
+
+	private boolean hasOutput() throws IOException {
+		return process.getInputStream().available() > 0;
+	}
 	
 }
