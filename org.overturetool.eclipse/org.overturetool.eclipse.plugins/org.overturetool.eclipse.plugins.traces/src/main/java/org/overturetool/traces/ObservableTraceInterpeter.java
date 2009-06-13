@@ -1,55 +1,123 @@
 package org.overturetool.traces;
 
+import java.util.concurrent.CancellationException;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.overturetool.traces.vdmj.TraceInterpreter;
 
 public class ObservableTraceInterpeter extends TraceInterpreter
 {
 	IProgressMonitor monitor;
-	Integer worked;
 	VdmjTracesHelper console;
-	public ObservableTraceInterpeter(IProgressMonitor monitor,VdmjTracesHelper console)
+	// long beginClass = 0;
+	// long beginTrace = 0;
+	// String activeClass = "";
+	// String activeTrace;
+	// int worked;
+	double workedUnit;
+	long testCounter;
+
+	public ObservableTraceInterpeter(IProgressMonitor monitor,
+			VdmjTracesHelper console)
 	{
 		super();
-		this.monitor=monitor;
-		this.console=console;
+		this.monitor = monitor;
+		this.console = console;
 	}
-	
-	
-	protected void processingClass(String className, Integer traceCount)
+
+	@Override
+	protected void preProcessingClass(String className, Integer traceCount)
 	{
-//		monitor.beginTask("Executing: " + className+ " - Trace count: " +traceCount,traceCount);
-//		worked=0;
-		console.ConsolePrint("Executing: " + className+ " - Trace count: " +traceCount);
+		// beginClass = System.currentTimeMillis();
+		// activeClass = className;
+		// monitor.beginTask("Executing: " + className+ " - Trace count: "
+		// +traceCount,traceCount);
+		// worked=0;
+		monitor.subTask("Evaluating tests");
+		console.ConsolePrint("Executing: " + className + " - Trace count: "
+				+ traceCount);
 	}
-	
-	protected void processingTrace(String className, String traceName,Integer testCount)
+
+	@Override
+	protected void preProcessingTrace(String className, String traceName,
+			Integer testCount)
 	{
-		monitor.beginTask("Executing: " + className+ " - " + traceName +" - Trace count: " +testCount,testCount);
-		monitor.worked(0);
-		
+		printTraceStatus();
+		// beginTrace = System.currentTimeMillis();
+		// activeTrace = traceName;
+
+		workedUnit = testCount.doubleValue() / 100;
+		int worked = 0;
+
+		monitor.beginTask("Executing: " + className + " - " + traceName
+				+ " - Trace count: " + testCount, 100);
+		monitor.worked(worked);
+
+		console.ConsolePrint(className + " - " + traceName + " Test count = "
+				+ testCount);
+
 	}
-	protected void processingTest(String className, String traceName,Integer testNumber)
+
+	@Override
+	protected void processingTest(String className, String traceName,
+			Integer testNumber)
 	{
-		monitor.worked(testNumber);
+		testCounter++;
+		if (testCounter >= workedUnit)
+		{
+			monitor.worked(1);
+			// console.ConsolePrint("Worked: "+worked);
+			testCounter = 0;
+		}
+		if (monitor.isCanceled())
+			throw new CancellationException(
+					"Trace execution has been cancelled");
+		// console.ConsolePrint("Worked=" + testNumber);
+		// console.ConsolePrint(className+"-"+traceName + "-" + testNumber);
 	}
-	
-	protected void completed()
+
+	@Override
+	protected void preCompleted()
 	{
-		monitor.done();
+
+		// printTraceStatus();
+
+		long endClass = System.currentTimeMillis();
+		console.ConsolePrint("Class " + activeClass + " processed in "
+				+ (double) (endClass - beginClass) / 1000 + " secs");
+
+		// monitor.done();
 	}
-	
+
+	protected void printTraceStatus()
+	{
+		if (super.activeTrace != null && super.beginTrace != 0)
+		{
+			long endTrace = System.currentTimeMillis();
+			console.ConsolePrint("Trace " + activeClass + " - " + activeTrace
+					+ " processed in " + (double) (endTrace - beginTrace)
+					/ 1000 + " secs");
+		}
+	}
+
+	@Override
 	protected void error(String message)
 	{
 		console.ConsolePrint(message);
 
 	}
-	
+
+	@Override
 	protected void typeError(String message)
 	{
 		console.ConsolePrint(message);
 
 	}
 
-	
+	@Override
+	protected void typeCheckStarted()
+	{
+		monitor.subTask("Type checking");
+	}
+
 }

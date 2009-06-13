@@ -11,7 +11,6 @@ import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ObjectContext;
@@ -26,12 +25,14 @@ import org.overturetool.vdmj.typechecker.FlatEnvironment;
 import org.overturetool.vdmj.typechecker.PrivateClassEnvironment;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 import org.overturetool.vdmj.values.ObjectValue;
-import org.overturetool.vdmj.values.Value;
 
 public class TraceInterpreter
 {
+	protected long beginClass = 0;
+	protected long beginTrace = 0;
+	protected String activeClass = "";
+	protected String activeTrace;
 
-	
 	ClassInterpreter ci;
 
 	public void processTraces(List<File> specFiles, String className,
@@ -62,6 +63,7 @@ public class TraceInterpreter
 	{
 
 		TypeChecker tc = new ClassTypeChecker(classes);
+		typeCheckStarted();
 		tc.typeCheck();
 		if (TypeChecker.getErrorCount() == 0)
 		{
@@ -127,7 +129,7 @@ public class TraceInterpreter
 							mtd.location.file.getName(),
 							mtd.location.startLine,
 							mtd.location.startPos,
-							
+
 							tests.size());
 				// List<List<Object>> results = new Vector<List<Object>>();
 				// List<String> testSatements = new Vector<String>();
@@ -143,10 +145,10 @@ public class TraceInterpreter
 								ci.getGlobalEnvironment()));
 
 				int n = 1;
-				
+
 				int faildCount = 0;
 				int inconclusiveCount = 0;
-				int skippedCount=0;
+				int skippedCount = 0;
 
 				for (CallSequence test : tests)
 				{
@@ -164,10 +166,11 @@ public class TraceInterpreter
 					if (test.getFilter() > 0)
 					{
 						skippedCount++;
-						testFiltered(n,test.getFilter(),test);
-//						Console.out.println("Test " + n + " = " + test);
-//						Console.out.println("Test " + n + " FILTERED by test "
-//								+ test.getFilter());
+						testFiltered(n, test.getFilter(), test);
+						// Console.out.println("Test " + n + " = " + test);
+						// Console.out.println("Test " + n +
+						// " FILTERED by test "
+						// + test.getFilter());
 
 						storage.AddSkippedResult(new Integer(n).toString());
 					} else
@@ -191,7 +194,7 @@ public class TraceInterpreter
 									other.setFilter(n);
 								}
 							}
-						}else if (result.get(result.size() - 1) == Verdict.INCONCLUSIVE)
+						} else if (result.get(result.size() - 1) == Verdict.INCONCLUSIVE)
 							inconclusiveCount++;
 
 						if (storage != null)
@@ -216,13 +219,18 @@ public class TraceInterpreter
 
 				if (storage != null)
 				{
-					Verdict worstVerdict =Verdict.PASSED;
-					if(faildCount>0)
+					Verdict worstVerdict = Verdict.PASSED;
+					if (faildCount > 0)
 						worstVerdict = Verdict.FAILED;
-					else if(inconclusiveCount>0)
+					else if (inconclusiveCount > 0)
 						worstVerdict = Verdict.INCONCLUSIVE;
-						
-					storage.AddTraceStatus(worstVerdict, tests.size(), skippedCount, faildCount,inconclusiveCount);
+
+					storage.AddTraceStatus(
+							worstVerdict,
+							tests.size(),
+							skippedCount,
+							faildCount,
+							inconclusiveCount);
 					storage.StopElement();
 				}
 			}
@@ -230,23 +238,41 @@ public class TraceInterpreter
 		}
 		if (storage != null)
 			storage.Stop();
-		
+
 		completed();
 	}
 
-	
-		
-	
-	
-	protected void processingClass(String className, Integer traceCount)
+	private void processingClass(String className, Integer traceCount)
 	{
-
+		beginClass = System.currentTimeMillis();
+		activeClass = className;
+		System.out.println("Executing: " + className + " - Trace count: "
+				+ traceCount);
+		
+		preProcessingClass(className,traceCount);
+	}
+	
+	protected void preProcessingClass(String className, Integer traceCount)
+	{
+		
 	}
 
 	protected void processingTrace(String className, String traceName,
 			Integer testCount)
 	{
-
+		printTraceStatus();
+		beginTrace = System.currentTimeMillis();
+		activeTrace = traceName;
+		System.out.println(className + " - " + traceName + " Test count = "
+				+ testCount);
+		
+		preProcessingTrace(className, traceName, testCount);
+	}
+	
+	protected void preProcessingTrace(String className, String traceName,
+			Integer testCount)
+	{
+		
 	}
 
 	protected void processingTest(String className, String traceName,
@@ -254,28 +280,54 @@ public class TraceInterpreter
 	{
 
 	}
-	
+
 	protected void completed()
 	{
+		printTraceStatus();
+
+		long endClass = System.currentTimeMillis();
+		System.out.println("Class " + activeClass + " processed in "
+				+ (double) (endClass - beginClass) / 1000 + " secs");
+		
+		preCompleted();
+	}
+	
+	protected void preCompleted()
+	{
 		
 	}
-	
-	protected void testFiltered(Integer number,Integer filteredBy,CallSequence test)
+
+	protected void testFiltered(Integer number, Integer filteredBy,
+			CallSequence test)
 	{
-//		Console.out.println("Test " + number + " = " + test);
-//		Console.out.println("Test " + number + " FILTERED by test "
-//				+ filteredBy);
+		// Console.out.println("Test " + number + " = " + test);
+		// Console.out.println("Test " + number + " FILTERED by test "
+		// + filteredBy);
 	}
-	
+
 	protected void error(String message)
 	{
-		
 
 	}
-	
+
 	protected void typeError(String message)
 	{
-		
 
+	}
+
+	protected void typeCheckStarted()
+	{
+
+	}
+
+	private void printTraceStatus()
+	{
+		if (activeTrace != null && beginTrace != 0)
+		{
+			long endTrace = System.currentTimeMillis();
+			System.out.println("Trace " + activeClass + " - " + activeTrace
+					+ " processed in " + (double) (endTrace - beginTrace)
+					/ 1000 + " secs");
+		}
 	}
 }

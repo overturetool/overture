@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
@@ -30,7 +31,6 @@ import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.statements.CallObjectStatement;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ClassReader;
 import org.overturetool.vdmj.traces.CallSequence;
