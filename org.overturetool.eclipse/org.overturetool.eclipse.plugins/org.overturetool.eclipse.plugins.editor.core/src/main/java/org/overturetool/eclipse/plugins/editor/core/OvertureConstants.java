@@ -8,4 +8,9 @@ public class OvertureConstants {
 	public static final String VDMJ_INTERPRETER_ID = LAUNCHING_PLUGIN_ID + ".internal.launching.VDMJInstallType";
 	
 	public static final String VDMTOOLS_INTERPRETER_ID = LAUNCHING_PLUGIN_ID + ".internal.launching.VDMToolsInstallType";
+	
+	public final static String OVERTURE_VDM_PLUS_PLUS = "VDM++";
+	public final static String OVERTURE_VDM_PLUS_PLUS_REALTIME = "VDM++ RT";
+	public final static String OVERTURE_VDM_SPECIFICATION_LANGUAGE = "VDM-SL";
+	public final static String OVERTURE_OVERTURE_MODELLING_LANGUAGE = "OML";
 }
