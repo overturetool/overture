@@ -182,18 +182,33 @@ public class TraceInterpreter
 						if (result.get(result.size() - 1) == Verdict.FAILED)
 						{
 							faildCount++;
-							String stem = test.toString(result.size() - 1);
-							ListIterator<CallSequence> it = tests.listIterator(n);
+							
+//							String stem = test.toString(result.size() - 1);
+//							ListIterator<CallSequence> it = tests.listIterator(n);
+//
+//							while (it.hasNext())
+//							{
+//								CallSequence other = it.next();
+//
+//								if (other.toString().startsWith(stem))
+//								{
+//									other.setFilter(n);
+//								}
+//							}
+							
+		    				int stem = result.size() - 1;
+		    				ListIterator<CallSequence> it = tests.listIterator(n);
 
-							while (it.hasNext())
-							{
-								CallSequence other = it.next();
+		    				while (it.hasNext())
+		    				{
+		    					CallSequence other = it.next();
 
-								if (other.toString().startsWith(stem))
-								{
-									other.setFilter(n);
-								}
-							}
+		    					if (other.compareStem(test, stem))
+		    					{
+		    						other.setFilter(n);
+		    					}
+		    				}
+
 						} else if (result.get(result.size() - 1) == Verdict.INCONCLUSIVE)
 							inconclusiveCount++;
 
