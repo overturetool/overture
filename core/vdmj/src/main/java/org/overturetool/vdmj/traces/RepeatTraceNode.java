@@ -62,6 +62,7 @@ public class RepeatTraceNode extends TraceNode
 				CallSequence seq = new CallSequence();
    				seq.add(new SkipStatement(new LexLocation()));
    				seq.setContext(rtests.get(0).ctxt);
+   				seq.hashes.add(0);
     			tests.add(seq);
 				continue;
 			}
@@ -83,6 +84,7 @@ public class RepeatTraceNode extends TraceNode
 	   			for (int i=0; i<r; i++)
     			{
     				seq.addAll(rtests.get(select[i]));
+    				seq.hashes.addAll(rtests.get(select[i]).hashes);
     			}
 
     			seq.setContext(rtests.get(select[r-1]).ctxt);

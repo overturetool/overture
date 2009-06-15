@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.traces;
 
+import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.vdmj.runtime.Context;
@@ -33,7 +34,13 @@ import org.overturetool.vdmj.util.Utils;
 public class CallSequence extends Vector<Statement>
 {
 	public Context ctxt = null;
+	public List<Integer> hashes = null;
 	private int filtered = 0;
+
+	public CallSequence()
+	{
+		hashes = new Vector<Integer>();
+	}
 
 	public void setContext(Context ctxt)
 	{
@@ -46,9 +53,26 @@ public class CallSequence extends Vector<Statement>
 		return Utils.listToString(this, "; ");
 	}
 
-	public String toString(int upto)
+	public boolean compareStem(CallSequence other, int upto)
 	{
-		return Utils.listToString(this.subList(0, upto), "; ");
+		for (int i=0; i<upto; i++)
+		{
+			if (!compareItem(other, i))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	private boolean compareItem(CallSequence other, int i)
+	{
+		Statement os = other.get(i);
+		int oi = other.hashes.get(i);
+
+		return (hashes.get(i) == oi) &&
+			   (get(i).toString().equals(os.toString()));
 	}
 
 	public void setFilter(int n)

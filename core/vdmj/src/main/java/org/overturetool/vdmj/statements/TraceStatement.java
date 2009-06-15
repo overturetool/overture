@@ -89,14 +89,15 @@ public class TraceStatement extends Statement
 
     			if (result.get(result.size()-1) == Verdict.FAILED)
     			{
-    				String stem = test.toString(result.size() - 1);
+    				//String stem = test.toString(result.size() - 1);
+    				int stem = result.size() - 1;
     				ListIterator<CallSequence> it = tests.listIterator(n);
 
     				while (it.hasNext())
     				{
     					CallSequence other = it.next();
 
-    					if (other.toString().startsWith(stem))
+    					if (other.compareStem(test, stem))
     					{
     						other.setFilter(n);
     					}

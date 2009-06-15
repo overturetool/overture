@@ -29,11 +29,13 @@ import org.overturetool.vdmj.statements.CallObjectStatement;
 public class StatementTraceNode extends TraceNode
 {
 	public final CallObjectStatement statement;
+	public final int hash;
 	public final Context ctxt;
 
-	public StatementTraceNode(CallObjectStatement statement, Context ctxt)
+	public StatementTraceNode(CallObjectStatement statement, int hash, Context ctxt)
 	{
 		this.ctxt = ctxt;
+		this.hash = hash;
 		this.statement = statement;
 	}
 
@@ -50,6 +52,7 @@ public class StatementTraceNode extends TraceNode
 		CallSequence seq = new CallSequence();
 		seq.add(statement);
 		seq.setContext(ctxt);
+		seq.hashes.add(hash);
 		tests.add(seq);
 		return tests;
 	}

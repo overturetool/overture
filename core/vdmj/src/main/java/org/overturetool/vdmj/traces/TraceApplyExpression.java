@@ -69,22 +69,24 @@ public class TraceApplyExpression extends TraceCoreDefinition
 	public TraceNode expand(Context ctxt)
 	{
 		ExpressionList newargs = new ExpressionList();
+		int hash = 0;
 
 		for (Expression arg: statement.args)
 		{
 			Value v = arg.eval(ctxt).deref();
-			
+
 			if (v instanceof ObjectValue)
 			{
-				// We can't save the value of an object
+				// We can't save the value of an object, so we use its hash.
 				newargs.add(arg);
+				hash += v.hashCode();
 			}
 			else
 			{
     			String value = v.toString();
     			LexTokenReader ltr = new LexTokenReader(value, Dialect.VDM_PP);
     			ExpressionReader er = new ExpressionReader(ltr);
-    
+
     			try
     			{
     				newargs.add(er.readExpression());
@@ -106,6 +108,6 @@ public class TraceApplyExpression extends TraceCoreDefinition
 			statement.designator, statement.classname, statement.fieldname,
 			newargs);
 
-		return new StatementTraceNode(cos, ctxt);
+		return new StatementTraceNode(cos, hash, ctxt);
 	}
 }
