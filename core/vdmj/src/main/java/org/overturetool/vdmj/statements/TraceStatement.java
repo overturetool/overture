@@ -89,7 +89,6 @@ public class TraceStatement extends Statement
 
     			if (result.get(result.size()-1) == Verdict.FAILED)
     			{
-    				//String stem = test.toString(result.size() - 1);
     				int stem = result.size() - 1;
     				ListIterator<CallSequence> it = tests.listIterator(n);
 
