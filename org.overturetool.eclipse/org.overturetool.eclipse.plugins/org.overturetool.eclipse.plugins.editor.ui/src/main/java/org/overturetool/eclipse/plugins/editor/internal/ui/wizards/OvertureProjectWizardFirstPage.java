@@ -6,6 +6,7 @@ package org.overturetool.eclipse.plugins.editor.internal.ui.wizards;
 import java.util.Observable;
 
 import org.eclipse.dltk.launching.IInterpreterInstall;
+import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.ui.util.SWTFactory;
 import org.eclipse.dltk.ui.wizards.ProjectWizardFirstPage;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -17,7 +18,10 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.overturetool.eclipse.plugins.editor.ui.OverturePreferenceConstants;
+import org.eclipse.ui.actions.ScrubLocalAction;
+import org.overturetool.eclipse.plugins.editor.core.OvertureConstants;
+import org.overturetool.eclipse.plugins.launching.internal.launching.IOvertureInstallType;
+
 
 /**
  * @author David
@@ -50,19 +54,25 @@ public class OvertureProjectWizardFirstPage extends ProjectWizardFirstPage {
 	protected void createCustomGroups(Composite composite) {
 		// TODO Auto-generated method stub
 		super.createCustomGroups(composite);
-		
+	
 		Group group = SWTFactory.createGroup(composite, "Dialect", 2, 2, GridData.FILL_HORIZONTAL);
 	
 		Label label = new Label(group, SWT.NONE);
 		label.setText("Select dialect");
 		comboDialect = new Combo(group, SWT.READ_ONLY);
-		comboDialect.setItems(new String[] {OverturePreferenceConstants.OVERTURE_OVERTURE_MODELLING_LANGUAGE,
-											OverturePreferenceConstants.OVERTURE_VDM_PLUS_PLUS,
-											OverturePreferenceConstants.OVERTURE_VDM_PLUS_PLUS_REALTIME,
-											OverturePreferenceConstants.OVERTURE_VDM_SPECIFICATION_LANGUAGE});
+		if(this.getInterpreter() != null && this.getInterpreter() instanceof IOvertureInstallType){
+			comboDialect.setItems(((IOvertureInstallType)this.getInterpreter()).getSupportedDialectStrings());
+		}else{
+			comboDialect.setItems(new String[]{"No supported dialects"});
+		}
 		comboDialect.addModifyListener(fListener);
 		comboDialect.select(0);
+		
 	}
+	
+	
+	
+	
 	
 	@Override 
 	protected IDialogSettings getDialogSettings() {
