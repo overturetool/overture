@@ -10,6 +10,7 @@ import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
 import org.eclipse.dltk.compiler.ISourceElementRequestor.FieldInfo;
+import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.OvertureCallStatement;
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.VDMFieldDeclaration;
 public class OvertureSourceElementRequestor extends SourceElementRequestVisitor {
 	private static class TypeField {
@@ -145,6 +146,7 @@ public class OvertureSourceElementRequestor extends SourceElementRequestVisitor 
 		}
 		return false;//TODO
 	}
+	
 
 //	private boolean canAddVariables(ASTNode type, String name) {
 //

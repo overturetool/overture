@@ -9,6 +9,7 @@ import org.overturetool.eclipse.plugins.editor.core.internal.builder.EclipseVDMJ
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.OvertureSourceParserFactory.Dialect;
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.OvertureModuleDeclaration;
 import org.overturetool.vdmj.ExitStatus;
+import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 

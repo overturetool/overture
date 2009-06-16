@@ -57,10 +57,9 @@ public class VDMJBuilder extends Builder {
 				}
 			}
 			for (VDMWarning warning : vdmpp.getTypeWarnings()) {
-				// TODO 
 				this.addMarker(
 						warning.location.file.getAbsolutePath(),
-						warning.message,
+						warning.message.toString(),
 						warning.location.startLine,
 						IMarker.SEVERITY_WARNING,
 						warning.location.startPos - adjustPosition,
@@ -82,8 +81,6 @@ public class VDMJBuilder extends Builder {
 			}
 			
 		}
-		
-		
 		
 		if (typeCheckStatus == ExitStatus.EXIT_ERRORS || parseStatus.EXIT_ERRORS == ExitStatus.EXIT_ERRORS ){
 			IStatus typeChecked = new Status(

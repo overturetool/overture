@@ -1,6 +1,9 @@
 package org.overturetool.eclipse.plugins.editor.core;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.dltk.core.DLTKCore;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -47,4 +50,14 @@ public class OverturePlugin extends Plugin {
 		return plugin;
 	}
 
+	public static void log(Exception ex) {
+		if (DLTKCore.DEBUG){
+			ex.printStackTrace();
+		}
+		String message = ex.getMessage();
+		if (message == null){		
+			message = "(no message)"; //$NON-NLS-1$
+		}
+		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, 0, message, ex));
+	}
 }

@@ -7,6 +7,7 @@ import jp.co.csk.vdm.toolbox.VDM.CGException;
 import org.eclipse.dltk.ast.declarations.Argument;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.overturetool.ast.imp.OmlInstanceVariable;
 import org.overturetool.ast.imp.OmlInstanceVariableDefinitions;
@@ -14,14 +15,21 @@ import org.overturetool.ast.imp.OmlOperationDefinition;
 import org.overturetool.ast.imp.OmlOperationDefinitions;
 import org.overturetool.ast.itf.IOmlClass;
 import org.overturetool.ast.itf.IOmlExplicitOperation;
+import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.OvertureCallStatement;
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.OvertureModuleDeclaration;
+import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.OvertureStatement;
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.VDMClassDeclaration;
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.VDMFieldDeclaration;
+import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.VDMJASTUtil;
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.VDMMethodDeclaration;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
+import org.overturetool.vdmj.statements.BlockStatement;
+import org.overturetool.vdmj.statements.CallStatement;
+import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.types.FunctionType;
 import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.Type;
@@ -141,31 +149,7 @@ public class OvertureASTTreePopulator {
 					if (def != null){
 						if (def.isFunctionOrOperation())
 						{
-							VDMMethodDeclaration methodDeclaration = new VDMMethodDeclaration(
-									def.name.name,
-									converter.convert(def.location.startLine, def.location.startPos -1),
-									converter.convert(def.location.endLine, def.location.endPos -1),
-									converter.convert(def.location.startLine, def.location.startPos -1),
-									converter.convert(def.location.endLine, def.location.endPos -1),
-			                        def.accessSpecifier);
-							
-			                if (def.getType() instanceof OperationType)
-			                {
-		                		OperationType type = (OperationType) def.getType();
-		                		for (Type definition : type.parameters) {
-				                	SimpleReference argumentName = new SimpleReference(definition.location.startPos,definition.location.endPos, definition.toString());
-				                    methodDeclaration.addArgument(new Argument(argumentName, 0, null, 0));
-								}
-			                }
-			                if (def.getType() instanceof FunctionType)
-			                {
-			                	FunctionType type = (FunctionType) def.getType();
-		                		for (Type definition : type.parameters) {
-				                	SimpleReference argumentName = new SimpleReference(definition.location.startPos,definition.location.endPos, definition.toString());
-				                    methodDeclaration.addArgument(new Argument(argumentName, 0, null, 0));
-								}
-			                }
-			                classDeclaration.getStatements().add(methodDeclaration);
+							addMethodDeclaration(def);
 						}
 						// InstanceVariable variable:
 						if (def.isInstanceVariable())
@@ -231,7 +215,68 @@ public class OvertureASTTreePopulator {
 			e.printStackTrace();
 			return null;
 		}
-
 	}
 	
+	
+	private void addMethodDeclaration(Definition def)
+	{
+		VDMMethodDeclaration methodDeclaration = new VDMMethodDeclaration(
+				def.name.name,
+				converter.convert(def.location.startLine, def.location.startPos -1),
+				converter.convert(def.location.endLine, def.location.endPos -1),
+				converter.convert(def.location.startLine, def.location.startPos -1),
+				converter.convert(def.location.endLine, def.location.endPos -1),
+                def.accessSpecifier);
+		
+        if (def.getType() instanceof OperationType)
+        {
+    		OperationType type = (OperationType) def.getType();
+    		for (Type definition : type.parameters) {
+            	SimpleReference argumentName = new SimpleReference(definition.location.startPos,definition.location.endPos, definition.toString());
+                methodDeclaration.addArgument(new Argument(argumentName, 0, null, 0));
+			}
+    		
+        }
+        if (def.getType() instanceof FunctionType)
+        {
+        	FunctionType type = (FunctionType) def.getType();
+    		for (Type definition : type.parameters) {
+            	SimpleReference argumentName = new SimpleReference(definition.location.startPos,definition.location.endPos, definition.toString());
+                methodDeclaration.addArgument(new Argument(argumentName, 0, null, 0));
+			}
+        }
+        
+        // -----------------------------------------
+        // Temp TODO all statements... 
+        // -----------------------------------------
+        if (def instanceof ExplicitOperationDefinition){        	
+        	ExplicitOperationDefinition exOp = (ExplicitOperationDefinition) def;
+       		if (exOp.body instanceof BlockStatement)
+       		{       			
+       			BlockStatement block = (BlockStatement) exOp.body;
+       			for (Statement statement : block.statements)
+       			{
+       				//methodDeclaration.getStatements().add(addStatement(statement));
+       				//methodDeclaration.getBody().addStatement(addStatement(statement));
+       				//System.out.println("statement: " + statement.toString());
+       				if (statement instanceof CallStatement){
+       					methodDeclaration.getBody().addStatement(VDMJASTUtil.createCallExpression((CallStatement)statement, converter));
+       				}
+       			}
+        	}
+        }
+        classDeclaration.getStatements().add(methodDeclaration);
+	}
+	
+	
+	private org.eclipse.dltk.ast.statements.Statement addStatement(Statement statement){
+		if (statement instanceof CallStatement)
+		{
+			return new OvertureCallStatement((CallStatement) statement, converter);
+		}
+		return new OvertureStatement(statement, converter);
+		// call Statement
+		// Assignment statement
+		// return statement
+	}
 }

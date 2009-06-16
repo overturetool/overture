@@ -24,6 +24,15 @@
       </parser>
    </extension>
    
+   <!-- Open declaration feature.  -->
+   <extension point="org.eclipse.dltk.core.selectionEngine">
+	   <selectionEngine
+	         class="org.overturetool.eclipse.plugins.editor.core.internal.codeassist.OvertureSelectionEngine"
+	         nature="org.overturetool.eclipse.plugins.editor.core.nature"
+	         priority="0">
+	   </selectionEngine>
+   </extension>
+   
     <extension point="org.eclipse.dltk.core.completionEngine">
       <completionEngine
             class="org.overturetool.eclipse.plugins.editor.core.internal.codeassist.OvertureCompletionEngine"
