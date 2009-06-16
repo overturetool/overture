@@ -5,13 +5,13 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 
-public class TreeParent implements IAdaptable {
+public class TreeParent implements IAdaptable,ITreeNode {
 	private String name;
-	private List<ProjectTreeNode> children;
+	private List<ITreeNode> children;
 
 	public TreeParent(String name) {
 		this.name = name;
-		children = new ArrayList<ProjectTreeNode>();
+		children = new ArrayList<ITreeNode>();
 	}
 
 	public String toString() {
@@ -27,21 +27,39 @@ public class TreeParent implements IAdaptable {
 		return null;
 	}
 
-	public void addChild(ProjectTreeNode child) {
+	public void addChild(ITreeNode child) {
 		children.add(child);
 		child.setParent(this);
 	}
 
-	public void removeChild(ProjectTreeNode child) {
+	public void removeChild(ITreeNode child) {
 		children.remove(child);
 		child.setParent(null);
 	}
 
-	public List<ProjectTreeNode> getChildren() {
+	public List<ITreeNode> getChildren() {
 		return children;
 	}
 
 	public boolean hasChildren() {
 		return children.size() > 0;
+	}
+
+	public ITreeNode getParent()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean hasChild(String name)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void setParent(ITreeNode parent)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

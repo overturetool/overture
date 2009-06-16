@@ -145,8 +145,9 @@ public class TracesXmlStoreReader extends DefaultHandler
 		this.traceTestParse = true;
 
 		Parse();
-
-		return traceTestResults;
+		List<TraceTestResult> traceTestResults1 = traceTestResults;
+		traceTestResults = null;
+		return traceTestResults1;
 	}
 
 	// //////////////////////////////////////////////////////////////////

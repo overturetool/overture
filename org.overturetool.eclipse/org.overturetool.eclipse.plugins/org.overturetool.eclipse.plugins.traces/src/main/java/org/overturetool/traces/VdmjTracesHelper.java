@@ -50,7 +50,7 @@ public class VdmjTracesHelper implements ITracesHelper
 
 	ClassList classes;
 	ClassInterpreter ci;
-	HashMap<NamedTraceDefinition, List<TraceTestResult>> traceResults = new HashMap<NamedTraceDefinition, List<TraceTestResult>>();
+	//HashMap<NamedTraceDefinition, List<TraceTestResult>> traceResults = new HashMap<NamedTraceDefinition, List<TraceTestResult>>();
 
 	HashMap<String, TracesXmlStoreReader> classTraceReaders = new HashMap<String, TracesXmlStoreReader>();
 	File projectDir;
@@ -94,7 +94,7 @@ public class VdmjTracesHelper implements ITracesHelper
 		org.overturetool.vdmj.Settings.dynamictypechecks = true;
 		ci.init(null);
 
-		traceResults = new HashMap<NamedTraceDefinition, List<TraceTestResult>>();
+	//	traceResults = new HashMap<NamedTraceDefinition, List<TraceTestResult>>();
 	}
 
 	public List<String> GetClassNamesWithTraces() throws IOException
@@ -128,31 +128,7 @@ public class VdmjTracesHelper implements ITracesHelper
 	public TraceTestResult GetResult(String className, String trace, Integer num)
 			throws IOException, SAXException
 	{
-		// ClassDefinition classdef = ci.findClass(className);
-		//
-		// for (Object string : classdef.definitions)
-		// {
-		// if (string instanceof NamedTraceDefinition)
-		// {
-		// NamedTraceDefinition mtd = (NamedTraceDefinition) string;
-		//
-		// // String clean =
-		// // mtd.name.name.toString().replaceAll("\\.\\w+`",
-		// // ".");
-		// if (!mtd.name.name.equals(trace))
-		// continue;
-		//
-		// if (traceResults.containsKey(mtd))
-		// for (TraceTestResult t : traceResults.get(mtd))
-		// {
-		// if (t.getNumber().equals(num))
-		// return t;
-		// }
-		//
-		// }
-		// }
-		// return null;
-
+		
 		return classTraceReaders.get(className).GetTraceTestResults(
 				trace,
 				num,
@@ -180,92 +156,27 @@ public class VdmjTracesHelper implements ITracesHelper
 	public TraceTestStatus GetStatus(String className, String trace, Integer num)
 
 	{
-		ClassDefinition classdef = ci.findClass(className);
-
-		for (Object string : classdef.definitions)
-		{
-			if (string instanceof NamedTraceDefinition)
-			{
-				NamedTraceDefinition mtd = (NamedTraceDefinition) string;
-
-				if (!mtd.name.name.equals(trace))
-					continue;
-				if (traceResults.containsKey(mtd))
-					for (TraceTestStatus t : traceResults.get(mtd))
-					{
-						if (t.getNumber().equals(num))
-							return t;
-					}
-
-			}
-		}
+//		ClassDefinition classdef = ci.findClass(className);
+//
+//		for (Object string : classdef.definitions)
+//		{
+//			if (string instanceof NamedTraceDefinition)
+//			{
+//				NamedTraceDefinition mtd = (NamedTraceDefinition) string;
+//
+//				if (!mtd.name.name.equals(trace))
+//					continue;
+//				if (traceResults.containsKey(mtd))
+//					for (TraceTestStatus t : traceResults.get(mtd))
+//					{
+//						if (t.getNumber().equals(num))
+//							return t;
+//					}
+//
+//			}
+//		}
 		return null;
 	}
-
-	// public IOmlNamedTrace GetTraceDefinition(String className, String trace)
-	// throws Exception {
-	// ClassDefinition classdef = ci.findClass(className);
-	// for (Object string : classdef.definitions) {
-	// if (string instanceof NamedTraceDefinition) {
-	// NamedTraceDefinition mtd = (NamedTraceDefinition) string;
-	// if (mtd.name.name.endsWith(trace))
-	//
-	// {
-	// Vector v = new Vector();
-	// for (char c : mtd.name.name.toCharArray()) {
-	// v.add(c);
-	// }
-	// return new OmlNamedTrace(v, null, new Long(
-	// mtd.location.startLine + 1), new Long(
-	// mtd.location.startPos));
-	// }
-	// }
-	// }
-	// return new OmlNamedTrace();
-	//
-	// }
-
-	// public String[] GetTraceTestCases(String className, String trace)
-	// throws Exception {
-	// ClassDefinition classdef = ci.findClass(className);
-	//
-	// // PublicClassEnvironment globals = new PublicClassEnvironment(classes);
-	// // Environment env = new PrivateClassEnvironment(me, globals);
-	//
-	// for (Object string : classdef.definitions) {
-	// if (string instanceof NamedTraceDefinition) {
-	// NamedTraceDefinition mtd = (NamedTraceDefinition) string;
-	//
-	// String clean = mtd.name.name.replaceAll("\\.\\w+`", ".");
-	// if (!clean.endsWith(trace))
-	// continue;
-	//
-	// ObjectValue object = null;
-	//
-	// try {
-	// object = classdef
-	// .newInstance(null, null, ci.initialContext);
-	// } catch (ValueException e) {
-	// // list.add(e.getMessage());
-	// // list.add(Verdict.FAILED);
-	// // return list;
-	// }
-	//
-	// Context ctxt = new ObjectContext(classdef.name.location,
-	// classdef.name.name + "()", ci.initialContext, object);
-	//
-	// TestSequence tests = mtd.getTests(ctxt);
-	// List<String> testNames = new ArrayList<String>();
-	// for (int i = 0; i < tests.size(); i++) {
-	// testNames.add(new Integer(i).toString());
-	// }
-	// String[] arr = new String[testNames.size()];
-	// testNames.toArray(arr);
-	// return arr;
-	// }
-	// }
-	// return new String[0];
-	// }
 
 	public void processClassTraces(String className, Object monitor)
 			throws Exception
@@ -288,15 +199,15 @@ public class VdmjTracesHelper implements ITracesHelper
 	private void SaveTraceTestResult(NamedTraceDefinition mtd,
 			TraceTestResult traceTestResult)
 	{
-		if (traceResults.containsKey(mtd))
-		{
-			traceResults.get(mtd).add(traceTestResult);
-		} else
-		{
-			List<TraceTestResult> tmp = new Vector<TraceTestResult>();
-			tmp.add(traceTestResult);
-			traceResults.put(mtd, tmp);
-		}
+//		if (traceResults.containsKey(mtd))
+//		{
+//			traceResults.get(mtd).add(traceTestResult);
+//		} else
+//		{
+//			List<TraceTestResult> tmp = new Vector<TraceTestResult>();
+//			tmp.add(traceTestResult);
+//			traceResults.put(mtd, tmp);
+//		}
 	}
 
 	private TraceTestResult ExstractResult(CallSequence callSequence,
@@ -304,8 +215,6 @@ public class VdmjTracesHelper implements ITracesHelper
 	{
 		TraceTestResult traceResult = new TraceTestResult();
 		traceResult.setNumber(number);
-		
-		
 		
 		for (Statement callObjectStatement : callSequence)
 		{
@@ -352,18 +261,7 @@ public class VdmjTracesHelper implements ITracesHelper
 			if (string instanceof NamedTraceDefinition)
 			{
 				NamedTraceDefinition mtd = (NamedTraceDefinition) string;
-				// if (mtd.name.name.endsWith(trace))
-				//
 				traces.add(mtd);
-				// // {
-				// Vector v = new Vector();
-				// for (char c : mtd.name.name.toCharArray()) {
-				// v.add(c);
-				// }
-				// traces.add(new OmlNamedTrace(v, null, new Long(
-				// mtd.location.startLine + 1), new Long(
-				// mtd.location.startPos)));
-				// // }
 			}
 		}
 
@@ -396,63 +294,14 @@ public class VdmjTracesHelper implements ITracesHelper
 			throws IOException, SAXException
 
 	{
-		// ClassDefinition classdef = ci.findClass(className);
-		//
-		// // PublicClassEnvironment globals = new
-		// PublicClassEnvironment(classes);
-		// // Environment env = new PrivateClassEnvironment(me, globals);
-		//
-		// for (Object string : classdef.definitions)
-		// {
-		// if (string instanceof NamedTraceDefinition)
-		// {
-		// NamedTraceDefinition mtd = (NamedTraceDefinition) string;
-		//
-		// String clean = mtd.name.name.replaceAll("\\.\\w+`", ".");
-		// if (!clean.endsWith(trace))
-		// continue;
-		//
-		// ObjectValue object = null;
-		//
-		// try
-		// {
-		// object = classdef.newInstance(null, null, ci.initialContext);
-		// } catch (ValueException e)
-		// {
-		// // list.add(e.getMessage());
-		// // list.add(Verdict.FAILED);
-		// // return list;
-		// }
-		//
-		// Context ctxt = new ObjectContext(classdef.name.location,
-		// classdef.name.name + "()", ci.initialContext, object);
-		//
-		// TestSequence tests = mtd.getTests(ctxt);
+	
 		List<TraceTestResult> testStatus = classTraceReaders.get(className).GetTraceTestResults(
 				trace,
 				1,
 				classTraceReaders.get(className).GetTraceTestCount(trace));
 
-		// for (int i = 0; i < tests.size(); i++)
-		// {
-		//
-		// TraceTestResult status = new TraceTestResult();
-		// status.setNumber(i);
-		//					
-		// TraceTestResult tmpStatus= GetResult(className, trace, i+1);
-		// if(tmpStatus!=null)
-		// status.setStatus(tmpStatus.getStatus());
-		// // status.status =
-		// // TODO lookup status
-		//
-		// testStatus.add(status);
-		// }
-
 		return testStatus;
 
-		// }
-		// }
-		// return new Vector<TraceTestResult>();
 	}
 
 	public void processSingleTrace(String className, String traceName,
@@ -460,88 +309,88 @@ public class VdmjTracesHelper implements ITracesHelper
 
 	{
 
-		List<TraceTestStatus> returnValue = new Vector<TraceTestStatus>();
-
-		ClassDefinition classdef = ci.findClass(className);
-
-		for (Object string : classdef.definitions)
-		{
-			if (string instanceof NamedTraceDefinition)
-			{
-				NamedTraceDefinition mtd = (NamedTraceDefinition) string;
-
-				if (!mtd.name.name.equals(traceName))
-					continue;
-
-				ObjectValue object = null;
-
-				try
-				{
-					object = classdef.newInstance(null, null, ci.initialContext);
-				} catch (ValueException e)
-				{
-					// list.add(e.getMessage());
-					// list.add(Verdict.FAILED);
-					// return list;
-				}
-
-				Context ctxt = new ObjectContext(classdef.name.location,
-						classdef.name.name + "()", ci.initialContext, object);
-
-				TestSequence tests = mtd.getTests(ctxt);
-
-				Environment env = new FlatEnvironment(
-						classdef.getSelfDefinition(),
-						new PrivateClassEnvironment(classdef,
-								ci.getGlobalEnvironment()));
-
-				int n = 0;
-
-				for (CallSequence test : tests)
-				{
-
-					if (test.getFilter() > 0)
-					{
-						ConsolePrint("Test " + n + " = " + test);
-						ConsolePrint("Test " + n + " FILTERED by test "
-								+ test.getFilter());
-					} else
-					{
-						ci.init(null); // Initialize completely between every
-						// run...
-						List<Object> result = ci.runtrace(env, test);
-
-						if (result.get(result.size() - 1) == Verdict.FAILED)
-						{
-							String stem = test.toString(result.size() - 1);
-							ListIterator<CallSequence> it = tests.listIterator(n);
-
-							while (it.hasNext())
-							{
-								CallSequence other = it.next();
-
-								if (other.toString().startsWith(stem))
-								{
-									other.setFilter(n);
-								}
-							}
-						}
-
-						// Bodge until we figure out how to not have explicit op
-						// names.
-						TraceTestResult traceResult = ExstractResult(
-								test,
-								result,
-								n);
-
-						SaveTraceTestResult(mtd, traceResult);
-						returnValue.add(traceResult);
-						n++;
-					}
-				}
-				break;
-			}
-		}
+//		List<TraceTestStatus> returnValue = new Vector<TraceTestStatus>();
+//
+//		ClassDefinition classdef = ci.findClass(className);
+//
+//		for (Object string : classdef.definitions)
+//		{
+//			if (string instanceof NamedTraceDefinition)
+//			{
+//				NamedTraceDefinition mtd = (NamedTraceDefinition) string;
+//
+//				if (!mtd.name.name.equals(traceName))
+//					continue;
+//
+//				ObjectValue object = null;
+//
+//				try
+//				{
+//					object = classdef.newInstance(null, null, ci.initialContext);
+//				} catch (ValueException e)
+//				{
+//					// list.add(e.getMessage());
+//					// list.add(Verdict.FAILED);
+//					// return list;
+//				}
+//
+//				Context ctxt = new ObjectContext(classdef.name.location,
+//						classdef.name.name + "()", ci.initialContext, object);
+//
+//				TestSequence tests = mtd.getTests(ctxt);
+//
+//				Environment env = new FlatEnvironment(
+//						classdef.getSelfDefinition(),
+//						new PrivateClassEnvironment(classdef,
+//								ci.getGlobalEnvironment()));
+//
+//				int n = 0;
+//
+//				for (CallSequence test : tests)
+//				{
+//
+//					if (test.getFilter() > 0)
+//					{
+//						ConsolePrint("Test " + n + " = " + test);
+//						ConsolePrint("Test " + n + " FILTERED by test "
+//								+ test.getFilter());
+//					} else
+//					{
+//						ci.init(null); // Initialize completely between every
+//						// run...
+//						List<Object> result = ci.runtrace(env, test);
+//
+//						if (result.get(result.size() - 1) == Verdict.FAILED)
+//						{
+//							String stem = test.toString(result.size() - 1);
+//							ListIterator<CallSequence> it = tests.listIterator(n);
+//
+//							while (it.hasNext())
+//							{
+//								CallSequence other = it.next();
+//
+//								if (other.toString().startsWith(stem))
+//								{
+//									other.setFilter(n);
+//								}
+//							}
+//						}
+//
+//						// Bodge until we figure out how to not have explicit op
+//						// names.
+//						TraceTestResult traceResult = ExstractResult(
+//								test,
+//								result,
+//								n);
+//
+//						SaveTraceTestResult(mtd, traceResult);
+//						returnValue.add(traceResult);
+//						n++;
+//					}
+//				}
+//				break;
+//			}
+//		}
 
 	}
 
@@ -570,14 +419,6 @@ public class VdmjTracesHelper implements ITracesHelper
 
 	public Integer GetTraceTestCount(String className, String trace)
 	{
-		// try
-		// {
-		// return GetTraceTests(className, trace).size();
-		// } catch (Exception e)
-		// {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
 		if (classTraceReaders.containsKey(className))
 			return classTraceReaders.get(className).GetTraceTestCount(trace);
 		else
@@ -589,20 +430,12 @@ public class VdmjTracesHelper implements ITracesHelper
 			Integer startNumber, Integer stopNumber) throws IOException,
 			SAXException
 	{
-		// List<TraceTestStatus> traceStatus = GetTraceTests(className,trace);
-		//		
-		// return traceStatus.subList(startNumber, stopNumber);
-
+		
 		List<TraceTestResult> list = classTraceReaders.get(className).GetTraceTestResults(
 				trace,
 				startNumber,
 				stopNumber);
 
-		// List<TraceTestStatus> traceStatus = new Vector<TraceTestStatus>();
-		// for (TraceTestStatus traceTestStatus : list)
-		// {
-		// traceStatus.add(traceTestStatus);
-		// }
 		return list;
 	}
 

@@ -8,12 +8,12 @@ import org.overturetool.traces.utility.ITracesHelper;
 import org.overturetool.traces.utility.TraceTestResult;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 
-public class TraceTreeNode implements IAdaptable
+public class TraceTreeNode implements IAdaptable,ITreeNode
 {
 
 	private NamedTraceDefinition traceDefinition;
-	private ClassTreeNode parent;
-	private List<TraceTestTreeNode> children;
+	private ITreeNode parent;
+	private List<ITreeNode> children;
 	private int testSkippedCount = 0;
 	private int testTotal = 0;
 	private ITracesHelper traceHelper;
@@ -23,10 +23,10 @@ public class TraceTreeNode implements IAdaptable
 	{
 		this.traceDefinition = traceDef;
 		this.setTraceHelper(traceHelper);
-		this.children = new ArrayList<TraceTestTreeNode>();
+		this.children = new ArrayList<ITreeNode>();
 	}
 
-	public ClassTreeNode getParent()
+	public ITreeNode getParent()
 	{
 		return parent;
 	}
@@ -58,7 +58,7 @@ public class TraceTreeNode implements IAdaptable
 
 	}
 
-	public void setParent(ClassTreeNode parent)
+	public void setParent(ITreeNode parent)
 	{
 		this.parent = parent;
 	}
@@ -69,12 +69,12 @@ public class TraceTreeNode implements IAdaptable
 		return null;
 	}
 
-	public void addChild(TraceTestTreeNode child)
+	public void addChild(ITreeNode child)
 	{
 		if (!children.contains(child))
 		{
 			boolean contains = false;
-			for (TraceTestTreeNode node : getChildren())
+			for (ITreeNode node : getChildren())
 			{
 				if (node.getName().equals(child.getName()))
 					contains = true;
@@ -93,7 +93,7 @@ public class TraceTreeNode implements IAdaptable
 		child.setParent(null);
 	}
 
-	public List<TraceTestTreeNode> getChildren()
+	public List<ITreeNode> getChildren()
 	{
 		return children;
 	}
@@ -105,7 +105,7 @@ public class TraceTreeNode implements IAdaptable
 
 	public boolean hasChild(String name)
 	{
-		for (TraceTestTreeNode node : children)
+		for (ITreeNode node : children)
 		{
 			if (node.getName().equals(name))
 				return true;
@@ -199,5 +199,7 @@ public class TraceTreeNode implements IAdaptable
 	{
 		return traceHelper;
 	}
+
+	
 
 }

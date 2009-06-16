@@ -1,12 +1,14 @@
 package org.overturetool.eclipse.plugins.traces.views.treeView;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.IAdaptable;
 import org.overturetool.traces.utility.TraceTestResult;
 import org.overturetool.traces.utility.ITracesHelper.TestResultType;
 
-public class TraceTestTreeNode implements IAdaptable {
+public class TraceTestTreeNode implements IAdaptable ,ITreeNode{
 	private TraceTestResult result;
-	private TraceTreeNode parent;
+	protected ITreeNode parent;
 	
 	private boolean runTimeError = false;
 
@@ -27,12 +29,17 @@ public class TraceTestTreeNode implements IAdaptable {
 		this.runTimeError = false;
 		this.result.setStatus(status);
 	}
+	
+	public void SetResult(TraceTestResult result) {
+		
+		this.result=result;
+	}
 
 	public TestResultType GetStatus() {
 		return this.result.getStatus();
 	}
 
-	public TraceTreeNode getParent() {
+	public ITreeNode getParent() {
 		return parent;
 	}
 	
@@ -58,7 +65,7 @@ public class TraceTestTreeNode implements IAdaptable {
 		return result.getNumber();
 	}
 
-	public void setParent(TraceTreeNode parent) {
+	public void setParent(ITreeNode parent) {
 		this.parent = parent;
 	}
 
@@ -66,6 +73,32 @@ public class TraceTestTreeNode implements IAdaptable {
 	public Object getAdapter(Class adapter) {
 		return null;
 	}
+
+	public void addChild(ITreeNode child)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	public List<ITreeNode> getChildren()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean hasChild(String name)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean hasChildren()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
 
 	// public boolean equals(Object obj)
 	// {

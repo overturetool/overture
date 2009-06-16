@@ -8,7 +8,7 @@ import org.overturetool.eclipse.plugins.traces.OvertureTracesPlugin;
 import org.overturetool.eclipse.plugins.traces.views.treeView.ClassTreeNode;
 import org.overturetool.eclipse.plugins.traces.views.treeView.NotYetReadyTreeNode;
 import org.overturetool.eclipse.plugins.traces.views.treeView.ProjectTreeNode;
-import org.overturetool.eclipse.plugins.traces.views.treeView.TraceTestGroup;
+
 import org.overturetool.eclipse.plugins.traces.views.treeView.TraceTestTreeNode;
 import org.overturetool.eclipse.plugins.traces.views.treeView.TraceTreeNode;
 import org.overturetool.traces.utility.ITracesHelper.TestResultType;

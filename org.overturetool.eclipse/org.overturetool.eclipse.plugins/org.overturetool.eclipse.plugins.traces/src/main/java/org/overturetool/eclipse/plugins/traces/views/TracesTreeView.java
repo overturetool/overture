@@ -71,6 +71,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.overturetool.eclipse.plugins.editor.core.OvertureNature;
 import org.overturetool.eclipse.plugins.traces.OvertureTracesPlugin;
 import org.overturetool.eclipse.plugins.traces.views.treeView.ClassTreeNode;
+import org.overturetool.eclipse.plugins.traces.views.treeView.ITreeNode;
 import org.overturetool.eclipse.plugins.traces.views.treeView.NotYetReadyTreeNode;
 import org.overturetool.eclipse.plugins.traces.views.treeView.ProjectTreeNode;
 import org.overturetool.eclipse.plugins.traces.views.treeView.TraceTestGroup;
@@ -1055,11 +1056,11 @@ public class TracesTreeView extends ViewPart
 			{
 				ProjectTreeNode projectNode = ((ProjectTreeNode) treeItem.getData());
 				ITracesHelper th = traceHelpers.get(projectNode.getName());
-				for (ClassTreeNode classNode : projectNode.getChildren())
+				for (ITreeNode classNode : projectNode.getChildren())
 				{
-					for (TraceTreeNode traceNode : classNode.getChildren())
+					for (ITreeNode traceNode : classNode.getChildren())
 					{
-						UpdateTraceTestCasesNodeStatus(th, traceNode);
+						UpdateTraceTestCasesNodeStatus(th, (TraceTreeNode)traceNode);
 
 					}
 
@@ -1429,11 +1430,15 @@ public class TracesTreeView extends ViewPart
 				{
 					TraceTreeNode node = (TraceTreeNode) expandingElement;
 					node.UnloadTests();
+
 					refreshTree();
 				} else if (expandingElement instanceof TraceTestGroup)
 				{
 					TraceTestGroup node = (TraceTestGroup) expandingElement;
 					node.UnloadTests();
+					//viewer.remove(node);
+//					viewer.getTree().clearAll(true);
+//					viewer.refresh(node);
 					refreshTree();
 				}
 
@@ -1460,6 +1465,7 @@ public class TracesTreeView extends ViewPart
 					try
 					{
 						node.LoadTests();
+						
 					} catch (Exception e)
 					{
 						// TODO Auto-generated catch block
@@ -1479,7 +1485,10 @@ public class TracesTreeView extends ViewPart
 
 			public void run()
 			{
+				
+				
 				viewer.refresh();
+				viewer.getControl().update();
 			}
 
 		});

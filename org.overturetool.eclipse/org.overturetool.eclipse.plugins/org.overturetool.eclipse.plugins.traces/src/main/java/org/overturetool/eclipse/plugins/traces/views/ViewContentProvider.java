@@ -12,6 +12,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.part.ViewPart;
 import org.overturetool.eclipse.plugins.editor.core.OvertureNature;
 import org.overturetool.eclipse.plugins.traces.views.treeView.ClassTreeNode;
+import org.overturetool.eclipse.plugins.traces.views.treeView.ITreeNode;
 import org.overturetool.eclipse.plugins.traces.views.treeView.NotYetReadyTreeNode;
 import org.overturetool.eclipse.plugins.traces.views.treeView.ProjectTreeNode;
 import org.overturetool.eclipse.plugins.traces.views.treeView.TraceTestGroup;
@@ -26,13 +27,16 @@ ITreeContentProvider {
 	private TreeParent invisibleRoot;
 	// private ArrayList<ProjectTreeNode> projectTraceTreeNodes;
 	Dictionary<String, ITracesHelper> traceHelpers;
-	ViewPart parent;
+	ViewPart viewer;
 	public ViewContentProvider(Dictionary<String, ITracesHelper> trs,ViewPart p) {
 		this.traceHelpers = trs;
-		parent =p;
+		viewer =p;
 	}
 
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
+		
+		
+		
 	}
 
 	public void dispose() {
@@ -53,62 +57,62 @@ ITreeContentProvider {
 	}
 
 	public Object getParent(Object child) {
-		if (child instanceof ProjectTreeNode) {
-			return ((ProjectTreeNode) child).getParent();
+		if (child instanceof ITreeNode) {
+			return ((ITreeNode) child).getParent();
 		}
-		if (child instanceof ClassTreeNode) {
-			return ((ClassTreeNode) child).getParent();
-		}
-		if (child instanceof TraceTreeNode) {
-			return ((TraceTreeNode) child).getParent();
-		}
-		if (child instanceof TraceTestGroup) {
-			return ((TraceTestGroup) child).getParent();
-		}
-		if (child instanceof TraceTestTreeNode) {
-			return ((TraceTestTreeNode) child).getParent();
-		}
+//		if (child instanceof ClassTreeNode) {
+//			return ((ClassTreeNode) child).getParent();
+//		}
+//		if (child instanceof TraceTreeNode) {
+//			return ((TraceTreeNode) child).getParent();
+//		}
+//		if (child instanceof TraceTestGroup) {
+//			return ((TraceTestGroup) child).getParent();
+//		}
+//		if (child instanceof TraceTestTreeNode) {
+//			return ((TraceTestTreeNode) child).getParent();
+//		}
 		return null;
 	}
 
 	public Object[] getChildren(Object parent) {
-		if (parent instanceof TreeParent) {
-			return ((TreeParent) parent).getChildren().toArray();
+		if (parent instanceof ITreeNode) {
+			return ((ITreeNode) parent).getChildren().toArray();
 		}
-		if (parent instanceof ProjectTreeNode) {
-			return ((ProjectTreeNode) parent).getChildren().toArray();
-		}
-		if (parent instanceof ClassTreeNode) {
-			return ((ClassTreeNode) parent).getChildren().toArray();
-		}
-		if (parent instanceof TraceTestGroup) {
-			return ((TraceTestGroup) parent).getChildren().toArray();
-		}
-		if (parent instanceof TraceTreeNode) {
-			return ((TraceTreeNode) parent).getChildren().toArray();
-		}
+//		if (parent instanceof ProjectTreeNode) {
+//			return ((ProjectTreeNode) parent).getChildren().toArray();
+//		}
+//		if (parent instanceof ClassTreeNode) {
+//			return ((ClassTreeNode) parent).getChildren().toArray();
+//		}
+//		if (parent instanceof TraceTestGroup) {
+//			return ((TraceTestGroup) parent).getChildren().toArray();
+//		}
+//		if (parent instanceof TraceTreeNode) {
+//			return ((TraceTreeNode) parent).getChildren().toArray();
+//		}
 		return new Object[0];
 	}
 
 	public boolean hasChildren(Object parent) {
-		if (parent instanceof TreeParent) {
-			return ((TreeParent) parent).hasChildren();
-		}
-		if (parent instanceof ProjectTreeNode) {
-			return ((ProjectTreeNode) parent).hasChildren();
-		}
-		if (parent instanceof ClassTreeNode) {
-			return ((ClassTreeNode) parent).hasChildren();
-		}
+//		if (parent instanceof TreeParent) {
+//			return ((TreeParent) parent).hasChildren();
+//		}
+//		if (parent instanceof ProjectTreeNode) {
+//			return ((ProjectTreeNode) parent).hasChildren();
+//		}
+//		if (parent instanceof ClassTreeNode) {
+//			return ((ClassTreeNode) parent).hasChildren();
+//		}
 		if (parent instanceof NotYetReadyTreeNode) {
 			return false;
 		}
-		if (parent instanceof TraceTestGroup) {
-			return ((TraceTestGroup) parent).hasChildren();
+		if (parent instanceof ITreeNode) {
+			return ((ITreeNode) parent).hasChildren();
 		}
-		if (parent instanceof TraceTreeNode) {
-			return ((TraceTreeNode) parent).hasChildren();
-		}
+//		if (parent instanceof TraceTreeNode) {
+//			return ((TraceTreeNode) parent).hasChildren();
+//		}
 		return false;
 	}
 
@@ -138,7 +142,7 @@ ITreeContentProvider {
 					// create project node
 					projectTreeNode = new ProjectTreeNode(iprojects[j]);
 					
-					ITracesHelper tr = (ITracesHelper) traceHelpers.get(iprojects[j].getName());
+					ITracesHelper tr = traceHelpers.get(iprojects[j].getName());
 					if (tr == null)
 						continue;
 

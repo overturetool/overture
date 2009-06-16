@@ -8,21 +8,21 @@ import org.eclipse.core.runtime.IAdaptable;
 
 
 
-public 	class ProjectTreeNode implements IAdaptable {
-	private List<ClassTreeNode> children;
-	private TreeParent parent;
+public 	class ProjectTreeNode implements IAdaptable,ITreeNode {
+	private List<ITreeNode> children;
+	private ITreeNode parent;
 	private IProject project;
 
 	public ProjectTreeNode(IProject project) {
 		this.project = project;
-		children = new ArrayList<ClassTreeNode>();
+		children = new ArrayList<ITreeNode>();
 	}
 
-	public void setParent(TreeParent parent) {
+	public void setParent(ITreeNode parent) {
 		this.parent = parent;
 	}
 
-	public TreeParent getParent() {
+	public ITreeNode getParent() {
 		return parent;
 	}
 
@@ -39,7 +39,7 @@ public 	class ProjectTreeNode implements IAdaptable {
 		return null;
 	}
 
-	public void addChild(ClassTreeNode child) {
+	public void addChild(ITreeNode child) {
 		children.add(child);
 		child.setParent(this);
 	}
@@ -49,12 +49,20 @@ public 	class ProjectTreeNode implements IAdaptable {
 		child.setParent(null);
 	}
 
-	public List<ClassTreeNode> getChildren() {
+	public List<ITreeNode> getChildren() {
 		return children;
 	}
 
 	public boolean hasChildren() {
 		return children.size() > 0;
+	}
+
+	
+
+	public boolean hasChild(String name)
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

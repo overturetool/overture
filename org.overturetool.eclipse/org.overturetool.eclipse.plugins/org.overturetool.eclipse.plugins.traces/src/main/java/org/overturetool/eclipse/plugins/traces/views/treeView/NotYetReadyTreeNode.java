@@ -6,7 +6,7 @@ import org.overturetool.traces.utility.TraceTestResult;
 
 public class NotYetReadyTreeNode extends TraceTestTreeNode implements IAdaptable {
 //	private NamedTraceDefinition traceDefinition;
-	private TraceTreeNode parent;
+	private ITreeNode parent;
 	
 
 	public NotYetReadyTreeNode() {
@@ -15,7 +15,7 @@ public class NotYetReadyTreeNode extends TraceTestTreeNode implements IAdaptable
 		
 	}
 
-	public TraceTreeNode getParent() {
+	public ITreeNode getParent() {
 		return parent;
 	}
 
@@ -37,7 +37,7 @@ public class NotYetReadyTreeNode extends TraceTestTreeNode implements IAdaptable
 		
 	}
 
-	public void setParent(TraceTreeNode parent) {
+	public void setParent(ITreeNode parent) {
 		this.parent = parent;
 	}
 
