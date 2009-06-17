@@ -426,12 +426,6 @@ public class OverturePreferenceConstants extends PreferenceConstants {
 	public final static String OVERTURE_DIALECT_KEY = "VDM_DIALECT";
 	
 	
-	public final static String OVERTURE_VDM_PLUS_PLUS = "VDM++";
-	public final static String OVERTURE_VDM_PLUS_PLUS_REALTIME = "VDM++ RT";
-	public final static String OVERTURE_VDM_SPECIFICATION_LANGUAGE = "VDM-SL";
-	public final static String OVERTURE_OVERTURE_MODELLING_LANGUAGE = "OML";
-
-
 	public static void initializeDefaultValues(IPreferenceStore store) {
 		PreferenceConstants.initializeDefaultValues(store);
 
