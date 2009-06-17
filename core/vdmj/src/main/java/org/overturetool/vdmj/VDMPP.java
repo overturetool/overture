@@ -127,6 +127,7 @@ public class VDMPP extends VDMJ
 			catch (MessageException e)
 			{
    				println(e.toString());
+   				perrs++;
 			}
 			catch (Throwable e)
 			{

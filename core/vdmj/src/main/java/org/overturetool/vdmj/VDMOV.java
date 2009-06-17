@@ -113,6 +113,7 @@ public class VDMOV extends VDMPP
 			catch (MessageException e)
 			{
    				println(e.toString());
+   				perrs++;
 			}
 			catch (Throwable e)
 			{
