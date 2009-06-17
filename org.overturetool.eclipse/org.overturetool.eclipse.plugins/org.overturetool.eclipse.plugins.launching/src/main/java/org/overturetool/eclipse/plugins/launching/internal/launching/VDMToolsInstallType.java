@@ -15,12 +15,13 @@ import org.eclipse.dltk.internal.launching.AbstractInterpreterInstallType;
 import org.eclipse.dltk.launching.EnvironmentVariable;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.LibraryLocation;
+import org.overturetool.eclipse.plugins.editor.core.OvertureConstants;
 import org.overturetool.eclipse.plugins.editor.core.OvertureNature;
 import org.overturetool.eclipse.plugins.launching.LaunchingPlugin;
 import org.overturetool.eclipse.plugins.launching.OvertureLaunchConstants;
 
 public class VDMToolsInstallType extends
-		AbstractInterpreterInstallType {
+		AbstractInterpreterInstallType implements IOvertureInstallType {
 
 	public static final String DBGP_FOR_VDMTOOLS_BUNDLE_ID = "org.overturetool.eclipse.plugins.dbgp.core"; //$NON-NLS-1$
 
@@ -110,5 +111,11 @@ public class VDMToolsInstallType extends
 
 	protected ILog getLog() {
 		return LaunchingPlugin.getDefault().getLog();
+	}
+
+	public String[] getSupportedDialectStrings() {
+		return new String[] {OvertureConstants.OVERTURE_VDM_PLUS_PLUS,
+				OvertureConstants.OVERTURE_VDM_PLUS_PLUS_REALTIME,
+				OvertureConstants.OVERTURE_VDM_SPECIFICATION_LANGUAGE};
 	}
 }
