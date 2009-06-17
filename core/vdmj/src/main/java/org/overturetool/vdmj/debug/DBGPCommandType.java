@@ -30,6 +30,7 @@ public enum DBGPCommandType
 	FEATURE_SET("feature_set"),
 	RUN("run"),
 	EVAL("eval"),
+	EXPR("expr"),
 	STEP_INTO("step_into"),
 	STEP_OVER("step_over"),
 	STEP_OUT("step_out"),

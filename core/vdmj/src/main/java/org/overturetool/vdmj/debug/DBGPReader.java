@@ -147,19 +147,17 @@ public class DBGPReader
 				}
 				catch (Exception e)
 				{
-					System.err.println(e.getMessage());
+					System.err.println(e);
 					System.exit(3);
 				}
     		}
     		else
     		{
-				System.err.println("Type check errors");
     			System.exit(2);
     		}
 		}
 		else
 		{
-			System.err.println("Parse errors");
 			System.exit(1);
 		}
 	}
@@ -527,6 +525,10 @@ public class DBGPReader
     				carryOn = processEval(c);
     				break;
 
+    			case EXPR:
+    				carryOn = processExpr(c);
+    				break;
+
     			case STEP_INTO:
     				processStepInto(c);
     				carryOn = false;
@@ -847,6 +849,32 @@ public class DBGPReader
 		finally
 		{
 			breaksSuspended = false;
+		}
+
+		return true;
+	}
+
+	private boolean processExpr(DBGPCommand c) throws DBGPException
+	{
+		checkArgs(c, 1, true);
+
+		if (status == DBGPStatus.BREAK)
+		{
+			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+		}
+
+		try
+		{
+			String exp = c.data;	// Already base64 decoded by the parser
+			theAnswer = interpreter.execute(exp, this);
+			StringBuilder property = propertyResponse(
+				exp, exp, interpreter.getDefaultName(), theAnswer.toString());
+			StringBuilder hdr = new StringBuilder("success=\"1\"");
+			response(hdr, property);
+		}
+		catch (Exception e)
+		{
+			errorResponse(DBGPErrorCode.EVALUATION_ERROR, e.getMessage());
 		}
 
 		return true;
