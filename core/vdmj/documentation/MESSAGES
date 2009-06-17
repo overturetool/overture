@@ -15,6 +15,7 @@ different places in the code, and so the exact error number may be used to
 distinguish the cases. Some errors are followed by additional detail, such
 as the expected and actual values.
 
+0000, File IO errors, eg. "File not found"
 0001, "Mark/reset not supported - use push/pop"
 0002, "Cannot change type qualifier: <name><qualifiers> to <qualifiers>"
 0003, "PatternBind passed <class name>"

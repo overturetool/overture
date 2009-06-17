@@ -24,7 +24,6 @@
 package org.overturetool.vdmj.lex;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Stack;
@@ -120,10 +119,9 @@ public class LexTokenReader extends BacktrackInputReader
 	 *
 	 * @param file	The filename to parse.
 	 * @param dialect if VDM-SL or VDM++ tokens should be processed.
-	 * @throws IOException
 	 */
 
-	public LexTokenReader(File file, Dialect dialect) throws IOException
+	public LexTokenReader(File file, Dialect dialect)
 	{
 		super(file);
 		this.file = file;
@@ -137,11 +135,9 @@ public class LexTokenReader extends BacktrackInputReader
 	 * @param file	The filename to parse.
 	 * @param dialect if VDM-SL or VDM++ tokens should be processed.
 	 * @param charset The charset for the file.
-	 * @throws IOException
 	 */
 
 	public LexTokenReader(File file, Dialect dialect, String charset)
-		throws IOException
 	{
 		super(file, charset);
 		this.file = file;

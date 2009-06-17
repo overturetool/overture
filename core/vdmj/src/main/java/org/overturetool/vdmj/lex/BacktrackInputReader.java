@@ -32,6 +32,8 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.Stack;
 
+import org.overturetool.vdmj.messages.MessageException;
+
 /**
  * A class to allow arbitrary checkpoints and backtracking while
  * parsing a file.
@@ -55,27 +57,32 @@ public class BacktrackInputReader extends Reader
 	 * Create an object to read the file name passed with the given charset.
 	 *
 	 * @param file	The filename to open
-	 * @throws IOException
 	 */
 
-	public BacktrackInputReader(File file, String charset) throws IOException
+	public BacktrackInputReader(File file, String charset)
 	{
-		data = new char[(int)file.length() + 1];
-		InputStreamReader isr =
-			new LatexStreamReader(new FileInputStream(file), charset);
-		max = isr.read(data);
-		pos = 0;
-		isr.close();
+		try
+		{
+			data = new char[(int)file.length() + 1];
+			InputStreamReader isr =
+				new LatexStreamReader(new FileInputStream(file), charset);
+			max = isr.read(data);
+			pos = 0;
+			isr.close();
+		}
+		catch (IOException e)
+		{
+			throw new MessageException("Internal 0000: " + e.getMessage());
+		}
 	}
 
 	/**
 	 * Create an object to read the file name passed with the default charset.
 	 *
 	 * @param file	The filename to open
-	 * @throws IOException
 	 */
 
-	public BacktrackInputReader(File file) throws IOException
+	public BacktrackInputReader(File file)
 	{
 		this(file, Charset.defaultCharset().name());
 	}
@@ -95,13 +102,13 @@ public class BacktrackInputReader extends Reader
 
 	        ByteArrayInputStream is =
 	        	new ByteArrayInputStream(expression.getBytes());
-	        
+
 	        InputStreamReader isr =
 	        	new LatexStreamReader(is, Charset.defaultCharset().name());
-	        
+
 	        max = isr.read(data);
 	        pos = 0;
-	        
+
 	        isr.close();
 	        is.close();
         }
