@@ -354,7 +354,7 @@ public class DBGPReader
 
 		if (bp.trace != null)
 		{
-			sb.append("<expression>" + bp.trace + "</expression>");
+			sb.append("<expression>" + quote(bp.trace) + "</expression>");
 		}
 
 		sb.append("</breakpoint>");
