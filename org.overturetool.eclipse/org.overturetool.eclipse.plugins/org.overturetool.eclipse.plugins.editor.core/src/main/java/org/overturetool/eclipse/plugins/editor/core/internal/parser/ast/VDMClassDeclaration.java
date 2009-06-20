@@ -1,5 +1,7 @@
 package org.overturetool.eclipse.plugins.editor.core.internal.parser.ast;
 
+import org.eclipse.dltk.ast.ASTListNode;
+import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.overturetool.vdmj.definitions.AccessSpecifier;
 
@@ -16,4 +18,5 @@ public class VDMClassDeclaration extends TypeDeclaration {
 		super(name, nameStart, nameEnd, start, end);
 		this.setModifiers(specifier);
 	}
+	
 }

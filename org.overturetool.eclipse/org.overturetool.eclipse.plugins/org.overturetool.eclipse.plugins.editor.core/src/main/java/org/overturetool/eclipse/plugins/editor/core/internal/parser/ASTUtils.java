@@ -20,6 +20,7 @@ import org.eclipse.dltk.core.SourceParserUtil;
 import org.overturetool.eclipse.plugins.editor.core.OvertureNature;
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.OvertureCallStatement;
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.OvertureStatement;
+import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.VDMMethodDeclaration;
 
 public class ASTUtils {
 	private ASTUtils() {
@@ -161,11 +162,16 @@ public class ASTUtils {
 					realStart = declaration.sourceStart();
 					realEnd = declaration.sourceEnd();
 				}
-				else if (s instanceof CallExpression){
-					CallExpression callExpression = (CallExpression) s;
-					realStart = callExpression.sourceStart();
-					realEnd = callExpression.sourceEnd();
-				}
+//				else if (s instanceof VDMMethodDeclaration) {
+//					MethodDeclaration declaration = (MethodDeclaration) s;
+//					realStart = declaration.sourceStart();
+//					realEnd = declaration.sourceEnd();
+//				}
+//				else if (s instanceof CallExpression){
+//					CallExpression callExpression = (CallExpression) s;
+//					realStart = callExpression.sourceStart();
+//					realEnd = callExpression.sourceEnd();
+//				}
 				if (realStart <= start && realEnd >= end) {
 					if (result != null) {
 						if ((s.sourceStart() >= result.sourceStart())

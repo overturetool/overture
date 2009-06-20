@@ -1,9 +1,11 @@
 package org.overturetool.eclipse.plugins.editor.core;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IShutdownListener;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -59,5 +61,11 @@ public class OverturePlugin extends Plugin {
 			message = "(no message)"; //$NON-NLS-1$
 		}
 		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, 0, message, ex));
+	}
+	
+	private final ListenerList shutdownListeners = new ListenerList();
+
+	public void addShutdownListener(IShutdownListener listener) {
+		shutdownListeners.add(listener);
 	}
 }
