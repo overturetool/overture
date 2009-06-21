@@ -7,12 +7,14 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.internal.core.builder.State;
+import org.eclipse.dltk.internal.debug.ui.interpreters.InterpretersBlock;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.ComboDialogField;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.IInterpreterInstallType;
@@ -31,6 +33,7 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.overturetool.eclipse.plugins.editor.core.OvertureNature;
 import org.overturetool.eclipse.plugins.editor.internal.ui.UIPlugin;
+import org.overturetool.eclipse.plugins.editor.internal.ui.preferences.OverturePropertyPage.InterpreterWidgetListener.Temp;
 import org.overturetool.eclipse.plugins.editor.ui.OverturePreferenceConstants;
 import org.overturetool.eclipse.plugins.launching.internal.launching.IOvertureInstallType;
 
@@ -44,6 +47,20 @@ public class OverturePropertyPage extends PropertyPage {
 	
 	class InterpreterWidgetListener implements SelectionListener{
 
+		class Temp extends InterpretersBlock{
+
+			@Override
+			protected String getCurrentNature() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			public Temp() {
+				// TODO Auto-generated constructor stub
+			}
+			
+		}
+		
+		
 		public void widgetDefaultSelected(SelectionEvent e) {
 			// TODO Auto-generated method stub
 			
@@ -60,6 +77,8 @@ public class OverturePropertyPage extends PropertyPage {
 	}
 	
 	protected Control createContents(Composite parent) {
+		Temp
+		temp.createControl(parent);
 		
 		fGroup = SWTFactory.createGroup(parent, "Interpreter and Dialect", 2, 2, GridData.FILL_HORIZONTAL);
 		Label label = new Label(fGroup, SWT.NONE);
@@ -176,9 +195,7 @@ public class OverturePropertyPage extends PropertyPage {
 			project.setPersistentProperty(qn, interpreterName);
 			IInterpreterInstall projectInterpreter = getSelectedInterpreterInstall(interpreterName);
 			final IEnvironment interpreterEnv = projectInterpreter.getEnvironment();
-			EnvironmentManager.setEnvironmentId(project,interpreterEnv.getId(), false);
-			EnvironmentManager.fireEnvirontmentChange();
-			
+			EnvironmentManager.setEnvironmentId(project,interpreterEnv.getId(), false);	
 		
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
