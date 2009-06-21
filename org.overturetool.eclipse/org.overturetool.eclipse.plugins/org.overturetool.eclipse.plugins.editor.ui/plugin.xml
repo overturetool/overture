@@ -379,6 +379,7 @@
 	
 	<extension point="org.eclipse.ui.propertyPages">
 	<!-- Build Page -->
+
     <page
           category="org.overturetool.propertyPage"
           class="org.overturetool.eclipse.plugins.editor.internal.ui.preferences.OvertureBuildPathPropertyPage"
@@ -403,7 +404,6 @@
              </adapt>         
           </enabledWhen>
     </page>
-    
     <!--Property Page-->    
     <page
       id="org.overturetool.propertyPage"
@@ -415,7 +415,7 @@
           <test property="org.eclipse.core.resources.projectNature" value="org.overturetool.eclipse.plugins.editor.core.nature"/>
         </adapt>         
       </enabledWhen>
-    </page>    
+    </page>
  </extension>   
  
  
