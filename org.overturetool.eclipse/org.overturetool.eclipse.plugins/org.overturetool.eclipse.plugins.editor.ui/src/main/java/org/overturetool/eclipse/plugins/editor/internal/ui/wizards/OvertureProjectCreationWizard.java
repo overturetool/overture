@@ -56,8 +56,7 @@ public class OvertureProjectCreationWizard extends NewElementWizard implements
 
 			OvertureInterpreterGroup fInterpreterGroup;
 
-			final class OvertureInterpreterGroup extends
-					AbstractInterpreterGroup {
+			final class OvertureInterpreterGroup extends AbstractInterpreterGroup {
 
 				public OvertureInterpreterGroup(Composite composite) {
 					super(composite);
@@ -131,16 +130,25 @@ public class OvertureProjectCreationWizard extends NewElementWizard implements
 		
 		try {
 			IProject proj = fFirstPage.getProjectHandle();
-			QualifiedName qn = new QualifiedName(UIPlugin.PLUGIN_ID,OverturePreferenceConstants.OVERTURE_DIALECT_KEY);
+			QualifiedName qn = new QualifiedName(UIPlugin.PLUGIN_ID, OverturePreferenceConstants.OVERTURE_DIALECT_KEY);
 			proj.setPersistentProperty(qn, fFirstPage.getDialectSetting());
+			
+			qn = new QualifiedName(UIPlugin.PLUGIN_ID, OverturePreferenceConstants.OVERTURE_INTERPETER_KEY);
+			proj.setPersistentProperty(qn, fFirstPage.getSelectedInterpreter().getName());
+			
 			
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}catch (Exception e) {
+			int erik = 60;
+			// TODO: handle exception
 		}	
 		
 		return res;
 	}
+	
+	
 	
 	
 	@Override

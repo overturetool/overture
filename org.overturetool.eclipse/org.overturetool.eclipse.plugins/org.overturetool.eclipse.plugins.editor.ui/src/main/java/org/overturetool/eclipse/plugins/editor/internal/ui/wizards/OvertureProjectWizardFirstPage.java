@@ -45,7 +45,20 @@ public class OvertureProjectWizardFirstPage extends ProjectWizardFirstPage {
 	private Combo comboInterpreter;
 	private Button buttonUseDefaultInterpreter;
 	private String dialectSetting;
+	private IInterpreterInstall defaultInterpreter;
 	
+
+	
+	@Override
+	public IInterpreterInstall getSelectedInterpreter() {
+		// TODO Auto-generated method stub
+		if(super.getSelectedInterpreter() != null){
+			return super.getSelectedInterpreter();
+		}
+		else{
+			return defaultInterpreter;
+		}
+	}
 	public String getDialectSetting() {		
 		return dialectSetting;
 	}
@@ -67,7 +80,7 @@ public class OvertureProjectWizardFirstPage extends ProjectWizardFirstPage {
 			// TODO Auto-generated method stub
 			if(e.widget instanceof Combo){			
 				setDialects(((Combo)e.widget).getItem(((Combo)e.widget).getSelectionIndex()));
-			}else if (e.widget instanceof org.eclipse.swt.widgets.Button ){				
+			}else if (e.widget instanceof org.eclipse.swt.widgets.Button){
 				if(((org.eclipse.swt.widgets.Button)e.widget).equals(buttonUseDefaultInterpreter) && buttonUseDefaultInterpreter.isEnabled()){
 					setDialectFromDefaultInterpreter();
 				}else if(comboInterpreter != null){
@@ -93,7 +106,9 @@ public class OvertureProjectWizardFirstPage extends ProjectWizardFirstPage {
 			IInterpreterInstall[] interpreters = interpreterInstallType.getInterpreterInstalls();
 			for (IInterpreterInstall interpreterInstall : interpreters) {
 				if(buttonUseDefaultInterpreter.getText().contains("'"+interpreterInstall.getName()+"'")){									
-					setDialects(interpreterInstall.getName());
+					defaultInterpreter = interpreterInstall;
+					setDialects(defaultInterpreter.getName());
+					
 					//comboDialect.setItems(((IOvertureInstallType)interpreterInstall.getInterpreterInstallType()).getSupportedDialectStrings());
 					
 				}
@@ -156,16 +171,11 @@ public class OvertureProjectWizardFirstPage extends ProjectWizardFirstPage {
 		
 					
 		comboDialect.addModifyListener(fDialectComboListener);
-		
+		setDialectFromDefaultInterpreter();
 		
 		
 	}
 	
-	@Override
-	protected void handlePossibleInterpreterChange() {
-		// TODO Auto-generated method stub
-		super.handlePossibleInterpreterChange();
-	}
 	
 	private void setDialects(String selectedInterpreter){
 		boolean dialectsFound = false;
@@ -175,8 +185,7 @@ public class OvertureProjectWizardFirstPage extends ProjectWizardFirstPage {
 			for (IInterpreterInstall interpreterInstall : interpreters) {
 				if(interpreterInstall.getName().equals(selectedInterpreter)){									
 					comboDialect.setItems(((IOvertureInstallType)interpreterInstall.getInterpreterInstallType()).getSupportedDialectStrings());
-					dialectsFound = true;
-					int erik = 60;
+					dialectsFound = true;					
 				}
 			}
 		}
@@ -198,6 +207,8 @@ public class OvertureProjectWizardFirstPage extends ProjectWizardFirstPage {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	
 
 
 
