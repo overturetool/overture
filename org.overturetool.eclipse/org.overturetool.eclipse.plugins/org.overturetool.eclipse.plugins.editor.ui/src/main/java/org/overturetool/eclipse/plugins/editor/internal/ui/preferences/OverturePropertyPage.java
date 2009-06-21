@@ -33,7 +33,6 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.overturetool.eclipse.plugins.editor.core.OvertureNature;
 import org.overturetool.eclipse.plugins.editor.internal.ui.UIPlugin;
-import org.overturetool.eclipse.plugins.editor.internal.ui.preferences.OverturePropertyPage.InterpreterWidgetListener.Temp;
 import org.overturetool.eclipse.plugins.editor.ui.OverturePreferenceConstants;
 import org.overturetool.eclipse.plugins.launching.internal.launching.IOvertureInstallType;
 
@@ -47,18 +46,7 @@ public class OverturePropertyPage extends PropertyPage {
 	
 	class InterpreterWidgetListener implements SelectionListener{
 
-		class Temp extends InterpretersBlock{
-
-			@Override
-			protected String getCurrentNature() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			public Temp() {
-				// TODO Auto-generated constructor stub
-			}
-			
-		}
+		
 		
 		
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -77,9 +65,6 @@ public class OverturePropertyPage extends PropertyPage {
 	}
 	
 	protected Control createContents(Composite parent) {
-		Temp
-		temp.createControl(parent);
-		
 		fGroup = SWTFactory.createGroup(parent, "Interpreter and Dialect", 2, 2, GridData.FILL_HORIZONTAL);
 		Label label = new Label(fGroup, SWT.NONE);
 		label.setText("Select Interpreter");
