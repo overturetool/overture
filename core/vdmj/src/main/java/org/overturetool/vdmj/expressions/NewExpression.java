@@ -27,6 +27,7 @@ import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
@@ -106,7 +107,7 @@ public class NewExpression extends Expression
     			report(3135, "Class has no constructor with these parameter types");
     			detail("Called", classdef.getCtorName(argtypes));
     		}
-			else if (!ClassDefinition.isAccessible(env, opdef, false))
+			else if (opdef.accessSpecifier.access == Token.PRIVATE) //!ClassDefinition.isAccessible(env, opdef, false))
 			{
     			report(3292, "Constructor is not accessible");
     			detail("Called", classdef.getCtorName(argtypes));
