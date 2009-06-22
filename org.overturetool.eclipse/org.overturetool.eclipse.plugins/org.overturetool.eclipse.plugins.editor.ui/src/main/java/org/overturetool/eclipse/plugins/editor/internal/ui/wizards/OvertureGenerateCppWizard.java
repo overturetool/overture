@@ -84,7 +84,7 @@ public class OvertureGenerateCppWizard extends Wizard {
 					{						
 						interpreterInstall = ScriptRuntime.getInterpreterInstallType(OvertureConstants.VDMTOOLS_INTERPRETER_ID).getInterpreterInstalls()[0];
 						String VDMToolsPath = interpreterInstall.getInstallLocation().toOSString();
-						vdmProject.init(VDMToolsPath, ToolType.PP_TOOLBOX);
+						//vdmProject.init(VDMToolsPath, ToolType.PP_TOOLBOX);
 					}
 					else{
 						MessageBox msgBox = new MessageBox(this.getShell(),SWT.OK);
