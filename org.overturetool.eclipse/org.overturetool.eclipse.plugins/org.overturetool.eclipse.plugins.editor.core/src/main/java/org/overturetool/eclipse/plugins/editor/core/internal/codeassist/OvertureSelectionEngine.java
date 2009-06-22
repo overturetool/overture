@@ -17,6 +17,7 @@ import org.eclipse.dltk.ast.references.ConstantReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.codeassist.ISelectionEngine;
 import org.eclipse.dltk.core.DLTKLanguageManager;
+import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMember;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
@@ -44,6 +45,7 @@ import org.eclipse.dltk.ti.types.ClassType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.overturetool.eclipse.plugins.editor.core.OverturePlugin;
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.ASTUtils;
+import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.OvertureAssignment;
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.VDMMethodDeclaration;
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.mixin.ConstantReferenceEvaluator;
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.mixin.NonTypeConstantTypeGoal;
@@ -53,6 +55,7 @@ import org.overturetool.eclipse.plugins.editor.core.internal.parser.mixin.Overtu
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.mixin.OvertureMixinModel;
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.mixin.OvertureModelUtils;
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.mixin.OvertureTypeInferencingUtils;
+import org.overturetool.eclipse.plugins.editor.core.model.FakeField;
 import org.overturetool.eclipse.plugins.editor.core.utils.OvertureSyntaxUtils;
 
 /***
@@ -126,9 +129,9 @@ public class OvertureSelectionEngine implements ISelectionEngine {
 				else if (node instanceof ConstantReference) {
 					selectTypes(parsedUnit, node);
 				}
-//				else if (node instanceof VariableReference) {
-//					selectionOnVariable(parsedUnit, (VariableReference) node);
-//				}
+				else if (node instanceof VariableReference) {
+					selectionOnVariable(parsedUnit, (VariableReference) node);
+				}
 //				else if (node instanceof RubyMethodArgument) {
 //					selectOnMethodArgument(parsedUnit,
 //							(RubyMethodArgument) node);
@@ -397,6 +400,44 @@ public class OvertureSelectionEngine implements ISelectionEngine {
 		} catch (CoreException e) {
 			OverturePlugin.log(e);
 		}
+	}
+	
+	private void selectionOnVariable(ModuleDeclaration parsedUnit, VariableReference e) {
+		String name = e.getName();
+		IField[] fields = OvertureModelUtils.findFields(mixinModel, sourceModule, parsedUnit, name, e.sourceStart());
+		if (fields.length > 0)
+		{
+			addArrayToCollection(fields, selectionElements);
+		} else {
+			/*
+			 * local vars (legacy, saved for speed reasons: we don't need to use
+			 * mixin model for local vars)
+			 */
+			ASTNode parentScope = null;
+			for (int i = wayToNode.length; --i >= 0;) {
+				final ASTNode node = wayToNode[i];
+				if (node instanceof MethodDeclaration
+						|| node instanceof TypeDeclaration
+						|| node instanceof ModuleDeclaration
+						/* || node instanceof OvertureForStatement2*/) {
+					parentScope = node;
+					break;
+				}
+			}
+			if (parentScope != null) {
+				OvertureAssignment[] assignments = OvertureTypeInferencingUtils.findLocalVariableAssignments(parentScope, e, name);
+				if (assignments.length > 0) {
+					final ASTNode left = assignments[0].getLeft();
+					selectionElements.add(createLocalVariable(name, left.sourceStart(), left.sourceEnd()));
+				} else {
+					selectionElements.add(createLocalVariable(name, e.sourceStart(), e.sourceEnd()));
+				}
+			}
+		}
+	}
+	
+	private IField createLocalVariable(String name, int nameStart, int nameEnd) {
+		return new FakeField(sourceModule, name, nameStart, nameEnd - nameStart);
 	}
 	
 	

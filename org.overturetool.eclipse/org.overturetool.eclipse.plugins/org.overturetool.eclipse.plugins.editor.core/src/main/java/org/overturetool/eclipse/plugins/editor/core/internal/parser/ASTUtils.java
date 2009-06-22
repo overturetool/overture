@@ -36,8 +36,7 @@ public class ASTUtils {
 		methodDeclaration.setModifiers(modifiers | newVisibility);
 	}
 
-	public static ASTNode[] restoreWayToNode(ModuleDeclaration module,
-			final ASTNode nde) {
+	public static ASTNode[] restoreWayToNode(ModuleDeclaration module, final ASTNode nde) {
 		final Stack stack = new Stack();
 
 		ASTVisitor visitor = new ASTVisitor() {
@@ -206,8 +205,7 @@ public class ASTUtils {
 	 * @param position
 	 * @return
 	 */
-	public static ASTNode findMaximalNodeEndingAt(ModuleDeclaration unit,
-			final int boundaryOffset) {
+	public static ASTNode findMaximalNodeEndingAt(ModuleDeclaration unit, final int boundaryOffset) {
 
 		class Visitor extends ASTVisitor {
 			ASTNode result = null;
@@ -228,11 +226,8 @@ public class ASTUtils {
 				}
 				return true;
 			}
-
 		}
-
 		Visitor visitor = new Visitor();
-
 		try {
 			unit.traverse(visitor);
 		} catch (Exception e) {
@@ -247,10 +242,8 @@ public class ASTUtils {
 	}
 
 	public static ModuleDeclaration getAST(char[] cs) {
-		ISourceParser sourceParser = DLTKLanguageManager
-				.getSourceParser(OvertureNature.NATURE_ID);
-		ModuleDeclaration declaration = sourceParser.parse("RawSource" //$NON-NLS-1$
-				.toCharArray(), cs, null);
+		ISourceParser sourceParser = DLTKLanguageManager.getSourceParser(OvertureNature.NATURE_ID);
+		ModuleDeclaration declaration = sourceParser.parse("RawSource".toCharArray(), cs, null);
 		return declaration;
 	}
 

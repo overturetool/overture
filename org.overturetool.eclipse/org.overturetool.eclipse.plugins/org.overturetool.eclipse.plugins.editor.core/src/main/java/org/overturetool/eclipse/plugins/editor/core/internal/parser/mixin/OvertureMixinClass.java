@@ -18,10 +18,6 @@ import java.util.Set;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.mixin.IMixinElement;
 import org.eclipse.dltk.core.mixin.MixinModel;
-import org.eclipse.dltk.ti.BasicContext;
-import org.eclipse.dltk.ti.DLTKTypeInferenceEngine;
-import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
-import org.eclipse.dltk.ti.types.IEvaluatedType;
 
 public class OvertureMixinClass implements IOvertureMixinElement {
 
@@ -231,13 +227,11 @@ public class OvertureMixinClass implements IOvertureMixinElement {
 				.size()]);
 	}
 
-	public void findMethods(IMixinSearchPattern pattern,
-			IMixinSearchRequestor requestor) {
+	public void findMethods(IMixinSearchPattern pattern, IMixinSearchRequestor requestor) {
 		findMethods(pattern, requestor, new HashSet());
 	}
 
-	protected void findMethods(IMixinSearchPattern pattern,
-			IMixinSearchRequestor requestor, Set processedKeys) {
+	protected void findMethods(IMixinSearchPattern pattern, IMixinSearchRequestor requestor, Set processedKeys) {
 		if (!processedKeys.add(key)) {
 			return;
 		}
@@ -388,16 +382,13 @@ public class OvertureMixinClass implements IOvertureMixinElement {
 				result.add(element);
 		}
 		OvertureMixinClass superclass = getSuperclass();
-		if (superclass != null && superclass.key != "Object" //$NON-NLS-1$
-				&& superclass.key != "Object%") { //$NON-NLS-1$
+		if (superclass != null && superclass.key != "Object" && superclass.key != "Object%") {
 			if (superclass.getKey().equals(key))
 				return null;
 			OvertureMixinVariable[] superFields = superclass.getFields();
 			result.addAll(Arrays.asList(superFields));
 		}
-
-		return (OvertureMixinVariable[]) result
-				.toArray(new OvertureMixinVariable[result.size()]);
+		return (OvertureMixinVariable[]) result.toArray(new OvertureMixinVariable[result.size()]);
 	}
 
 }

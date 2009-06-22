@@ -1,5 +1,8 @@
 package org.overturetool.eclipse.plugins.editor.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class OvertureKeywords {
 	  private static final String[] reservedwords = {
 		  "if", "then", "else", "elseif",
@@ -110,5 +113,15 @@ public class OvertureKeywords {
 
 	public static String[] getConstants() {
 		return constants;
+	}
+	
+
+	public static String[] findByPrefix (String prefix) {
+		List result = new ArrayList ();
+		for (int i = 0; i < reservedwords.length; i++) {
+			if (reservedwords[i].startsWith(prefix))
+				result.add(reservedwords[i]);
+		}		
+		return (String[]) result.toArray(new String[result.size()]);
 	}
 }

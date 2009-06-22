@@ -138,8 +138,6 @@ public class OvertureASTTreePopulator {
 						}
 					}
 				}
-				
-				
 			}
 		}
 		return moduleDeclaration;
@@ -326,14 +324,14 @@ public class OvertureASTTreePopulator {
 		}
 		if (statement instanceof CallObjectStatement)
 		{
-			// TODO
+			methodDeclaration.getBody().addStatement(VDMJASTUtil.createCallObject((CallObjectStatement)statement, converter));
 		}
 		// TODO 
 		// while        ** TODO
 		// elseif       ** TODO
 		// forall       ** TODO
 		// forIndex     ** TODO
-		// forpattern   ** TODO 
+		// forpattern   ** TODO
 		// if 			** TODO
 		// letBeST      ** TODO
 		// LetDef       ** TODO
@@ -389,7 +387,7 @@ public class OvertureASTTreePopulator {
 		if (exp instanceof VariableExpression)
 		{
 			VariableExpression varExp = (VariableExpression) exp;
-			VariableReference varReference = VDMJASTUtil.createVariableReference(varExp.getPreName(), varExp.location, converter);
+			VariableReference varReference = VDMJASTUtil.createVariableReference(varExp, varExp.location, converter);
 			overtureAssignment = new OvertureAssignment(leftVarRef, varReference);
 		}
 		if (exp instanceof NewExpression)

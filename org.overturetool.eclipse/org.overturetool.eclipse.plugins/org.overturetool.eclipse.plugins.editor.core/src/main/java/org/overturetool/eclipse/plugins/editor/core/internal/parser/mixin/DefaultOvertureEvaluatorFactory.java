@@ -127,8 +127,7 @@ public class DefaultOvertureEvaluatorFactory implements IGoalEvaluatorFactory {
 				return new ConstantTypeGoal(context, reference.sourceStart(),
 						reference.getName());
 			} else if (expr instanceof OvertureConstantDeclaration) {
-				SimpleReference reference = ((OvertureConstantDeclaration) expr)
-						.getName();
+				SimpleReference reference = ((OvertureConstantDeclaration) expr).getName();
 				// TODO: consider the constant's path
 				return new ConstantTypeGoal(context, reference.sourceStart(), reference.getName());
 			} 

@@ -32,17 +32,19 @@
 	         priority="0">
 	   </selectionEngine>
    </extension>
-   
+
+<!-- code completion -->
+ 
     <extension point="org.eclipse.dltk.core.completionEngine">
-      <completionEngine
-            class="org.overturetool.eclipse.plugins.editor.core.internal.codeassist.OvertureCompletionEngine"
+        <completionEngine
+            class="org.overturetool.eclipse.plugins.editor.core.internal.codeassist.OvertureCompletionEngine2"
             nature="org.overturetool.eclipse.plugins.editor.core.nature"
             priority="0">
-      </completionEngine>
+        </completionEngine>
    </extension>
 
-   <extension
-         point="org.eclipse.dltk.core.buildParticipant">
+<!-- build participant -->
+   <extension point="org.eclipse.dltk.core.buildParticipant">
       <buildParticipant
             class="org.overturetool.eclipse.plugins.editor.core.internal.builder.OvertureBuilder"
             id="org.overturetool.builder.overturebuildParticipant"
@@ -50,8 +52,9 @@
             nature="org.overturetool.eclipse.plugins.editor.core.nature">
       </buildParticipant>
    </extension>
-   <extension
-         point="org.eclipse.dltk.core.language">
+
+
+	<extension point="org.eclipse.dltk.core.language">
       <language
             class="org.overturetool.eclipse.plugins.editor.core.OvertureLanguageToolkit"
             nature="org.overturetool.eclipse.plugins.editor.core.nature">

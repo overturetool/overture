@@ -46,36 +46,37 @@ public class VDMJSourceParser extends AbstractSourceParser {
 		ExitStatus status = vdmPpParser.parse(new String(source));
 		OvertureASTTreePopulator populator = new OvertureASTTreePopulator(moduleDeclaration,converter);
 		moduleDeclaration = populator.populateVDMJ(vdmPpParser.classes);
-		
-		if (status == ExitStatus.EXIT_ERRORS)
-		{
-			for (VDMError error : vdmPpParser.getParseErrors()) {
-				DefaultProblem defaultProblem = new DefaultProblem(
-						new String(fileName),
-						error.message,
-						error.number,
-						new String[] {},
-						ProblemSeverities.Error, 
-						converter.convert(error.location.startLine, error.location.startPos -1),
-						converter.convert(error.location.endLine, error.location.endPos -1),
-						error.location.startLine);
-				reporter.reportProblem(defaultProblem);
+		if (reporter != null){
+			if (status == ExitStatus.EXIT_ERRORS)
+			{
+				for (VDMError error : vdmPpParser.getParseErrors()) {
+					DefaultProblem defaultProblem = new DefaultProblem(
+							new String(fileName),
+							error.message,
+							error.number,
+							new String[] {},
+							ProblemSeverities.Error, 
+							converter.convert(error.location.startLine, error.location.startPos -1),
+							converter.convert(error.location.endLine, error.location.endPos -1),
+							error.location.startLine);
+					reporter.reportProblem(defaultProblem);
+				}
 			}
-		}
-		if (vdmPpParser.getParseWarnings().size() > 0)
-		{
-			for (VDMWarning warning : vdmPpParser.getParseWarnings()) {
-				DefaultProblem defaultProblem = new DefaultProblem(
-						new String(fileName),
-						warning.message,
-						warning.number,
-						new String[] {},
-						ProblemSeverities.Warning, 
-						converter.convert(warning.location.startLine, warning.location.startPos -1),
-						converter.convert(warning.location.endLine, warning.location.endPos -1),
-						warning.location.startLine);
-				reporter.reportProblem(defaultProblem);
-			}			
+			if (vdmPpParser.getParseWarnings().size() > 0)
+			{
+				for (VDMWarning warning : vdmPpParser.getParseWarnings()) {
+					DefaultProblem defaultProblem = new DefaultProblem(
+							new String(fileName),
+							warning.message,
+							warning.number,
+							new String[] {},
+							ProblemSeverities.Warning, 
+							converter.convert(warning.location.startLine, warning.location.startPos -1),
+							converter.convert(warning.location.endLine, warning.location.endPos -1),
+							warning.location.startLine);
+					reporter.reportProblem(defaultProblem);
+				}			
+			}
 		}
 		return moduleDeclaration;
 	}

@@ -10,7 +10,7 @@
 package org.overturetool.eclipse.plugins.editor.core.internal.parser.mixin;
 
 /**
- * This class is descendant of RubyMixinClass specified for ruby "Object" class.
+ * This class is descendant of OvertureMixinClass specified for overture "Object" class.
  * The idea was to additionally search for the top-level methods (defined at the
  * source module scope), but that is not needed anymore since now they are
  * indexed as part of the "Object" class.
@@ -20,8 +20,7 @@ package org.overturetool.eclipse.plugins.editor.core.internal.parser.mixin;
 public class OvertureObjectMixinClass extends OvertureMixinClass {
 
 	public OvertureObjectMixinClass(OvertureMixinModel model, boolean meta) {
-		super(model, meta ? OvertureMixinUtils.OBJECT
-				: OvertureMixinUtils.OBJECT_INSTANCE, false);
+		super(model, meta ? OvertureMixinUtils.OBJECT : OvertureMixinUtils.OBJECT_INSTANCE, false);
 	}
 
 	public OvertureMixinVariable[] getFields() {

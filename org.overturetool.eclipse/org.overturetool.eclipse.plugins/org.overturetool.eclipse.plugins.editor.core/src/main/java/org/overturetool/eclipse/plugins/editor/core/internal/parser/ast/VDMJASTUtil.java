@@ -4,13 +4,16 @@ import org.eclipse.dltk.ast.expressions.BooleanLiteral;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.expressions.NumericLiteral;
+import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.DLTKConverter;
 import org.overturetool.vdmj.expressions.ApplyExpression;
 import org.overturetool.vdmj.expressions.BooleanLiteralExpression;
 import org.overturetool.vdmj.expressions.ExpressionList;
 import org.overturetool.vdmj.expressions.IntegerLiteralExpression;
+import org.overturetool.vdmj.expressions.VariableExpression;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.statements.CallObjectStatement;
 import org.overturetool.vdmj.statements.CallStatement;
 import org.overturetool.vdmj.statements.IfStatement;
 
@@ -47,7 +50,7 @@ public class VDMJASTUtil {
 		}	
 		else
 		{
-			return new CallExpression(start, end, null, name, null);			
+			return new CallExpression(start, end, null, name, CallArgumentsList.EMPTY);			
 		}
 	}
 	
@@ -56,6 +59,20 @@ public class VDMJASTUtil {
 		int start = getStartPos(location, converter);
 		int end = getEndPos(location, converter);
 		return new VariableReference(start, end, name);
+	}
+	
+	public static VariableReference createVariableReference(VariableExpression varExp, LexLocation location, DLTKConverter converter){
+		int start = getStartPos(location, converter);
+		int end = getEndPos(location, converter);
+		
+		if (varExp.getPreName() != null)
+		{
+			return new VariableReference(start, end, varExp.getPreName());
+		}
+		else
+		{
+			return new VariableReference(start, end, varExp.name.name);
+		}
 	}
 	
 	private static CallArgumentsList processArgumentList(ExpressionList args, DLTKConverter converter)
@@ -92,6 +109,23 @@ public class VDMJASTUtil {
 
 	public static OvertureIfStatement createIfStatement(IfStatement statement, DLTKConverter converter) {
 		return null;
+	}
+
+	public static CallExpression createCallObject(CallObjectStatement statement, DLTKConverter converter) {
+		
+		// receiver
+		String varName = statement.designator.toString();
+		int varStartPos = getStartPos(statement.designator.location, converter);
+		int varEndPos = getEndPos(statement.designator.location, converter);
+		VariableReference variableReference = new VariableReference(varStartPos, varEndPos, varName);
+		
+		// simpleReference 
+		int simpleRefStartPos = getEndPos(statement.location, converter) + 1; // the dot  e.g. var.op()
+		int simpleRefEndPos = simpleRefStartPos + statement.fieldname.length();
+		SimpleReference simpleReference = new SimpleReference(simpleRefStartPos, simpleRefEndPos, statement.fieldname);
+		
+		
+		return new CallExpression(varStartPos, simpleRefEndPos, variableReference, simpleReference , CallArgumentsList.EMPTY);
 	}
 }
 

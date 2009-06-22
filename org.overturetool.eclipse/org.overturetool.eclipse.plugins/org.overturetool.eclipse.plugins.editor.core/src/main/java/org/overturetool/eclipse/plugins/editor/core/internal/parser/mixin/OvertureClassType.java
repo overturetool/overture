@@ -43,7 +43,4 @@ public class OvertureClassType extends ClassType implements IClassType {
 			return false;
 		return true;
 	}
-	
-	
-
 }

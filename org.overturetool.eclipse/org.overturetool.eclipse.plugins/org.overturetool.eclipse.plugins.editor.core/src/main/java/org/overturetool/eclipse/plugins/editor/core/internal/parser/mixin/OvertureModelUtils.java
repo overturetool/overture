@@ -165,26 +165,25 @@ public class OvertureModelUtils {
 
 	}
 
-	public static IField[] findFields(OvertureMixinModel rubyModel,
-			ISourceModule modelModule, ModuleDeclaration parsedUnit,
-			String prefix, int position) {
+	public static IField[] findFields(
+				OvertureMixinModel overtureModel,
+				ISourceModule modelModule, ModuleDeclaration parsedUnit,
+				String prefix, int position) {
 		Assert.isNotNull(prefix);
 		List result = new ArrayList();
 
-		String[] keys = OvertureTypeInferencingUtils.getModelStaticScopesKeys(
-				rubyModel.getRawModel(), parsedUnit, position);
+		String[] keys = OvertureTypeInferencingUtils.getModelStaticScopesKeys(overtureModel.getRawModel(), parsedUnit, position);
 
 		IOvertureMixinElement innerElement = null;
-		OvertureMixinClass selfClass = new OvertureObjectMixinClass(rubyModel, true);
+		OvertureMixinClass selfClass = new OvertureObjectMixinClass(overtureModel, true);
 
 		if (keys != null && keys.length > 0) {
 			String inner = keys[keys.length - 1];
-			if (prefix.length() > 0 && !prefix.startsWith("@")) { //$NON-NLS-1$ // locals & constants
+			if (prefix.length() > 0) { //$NON-NLS-1$ // locals & constants
 				String varkey = inner + MixinModel.SEPARATOR + prefix;
-				String[] keys2 = rubyModel.getRawModel().findKeys(varkey + "*"); //$NON-NLS-1$
+				String[] keys2 = overtureModel.getRawModel().findKeys(varkey + "*"); //$NON-NLS-1$
 				for (int i = 0; i < keys2.length; i++) {
-					IOvertureMixinElement element = rubyModel
-							.createOvertureElement(keys2[i]);
+					IOvertureMixinElement element = overtureModel.createOvertureElement(keys2[i]);
 					if (element instanceof OvertureMixinVariable) {
 						OvertureMixinVariable variable = (OvertureMixinVariable) element;
 						IField field = variable.getSourceFields()[0];
@@ -193,7 +192,7 @@ public class OvertureModelUtils {
 					}
 				}
 			} else {
-				innerElement = rubyModel.createOvertureElement(inner);
+				innerElement = overtureModel.createOvertureElement(inner);
 				if (innerElement instanceof OvertureMixinMethod) {
 					OvertureMixinMethod method = (OvertureMixinMethod) innerElement;
 					selfClass = method.getSelfType();
