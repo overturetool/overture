@@ -433,7 +433,7 @@ public class ClassInterpreter extends Interpreter
 	{
 		List<Object> list = new Vector<Object>();
 
-		Context copy = statements.ctxt.copy();
+		Context copy = statements.ctxt.deepCopy();
 		copy.setThreadState(null);
 
 		try

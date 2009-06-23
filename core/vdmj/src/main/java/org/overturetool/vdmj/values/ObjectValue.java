@@ -337,11 +337,12 @@ public class ObjectValue extends Value
 	@Override
 	public Object clone()
 	{
-		return deepCopy(); //copy(false);
+		return shallowCopy();
 	}
 
 	private ObjectValue mycopy = null;
 
+	@Override
 	public ObjectValue shallowCopy()
 	{
 		mycopy = new ObjectValue(type,
@@ -385,6 +386,7 @@ public class ObjectValue extends Value
 		return rv;
 	}
 
+	@Override
 	public ObjectValue deepCopy()
 	{
 		try

@@ -60,6 +60,16 @@ abstract public class Value implements Comparable<Value>, Serializable
 	@Override
 	abstract public Object clone();
 
+	public Value deepCopy()
+	{
+		return (Value)clone();
+	}
+
+	public Value shallowCopy()
+	{
+		return (Value)clone();
+	}
+
 	public String toShortString(int max)
 	{
 		String value = toString();

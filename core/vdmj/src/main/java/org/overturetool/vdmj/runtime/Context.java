@@ -142,13 +142,13 @@ public class Context extends HashMap<LexNameToken, Value>
 		return result;
 	}
 
-	public Context copy()
+	public Context deepCopy()
 	{
 		Context below = null;
 
 		if (outer != null)
 		{
-			below = outer.copy();
+			below = outer.deepCopy();
 		}
 
 		Context result = new Context(location, title, below);
@@ -156,7 +156,7 @@ public class Context extends HashMap<LexNameToken, Value>
 		for (LexNameToken var: keySet())
 		{
 			Value v = get(var);
-			result.put(var, (Value)v.clone());
+			result.put(var, v.deepCopy());
 		}
 
 		return result;
