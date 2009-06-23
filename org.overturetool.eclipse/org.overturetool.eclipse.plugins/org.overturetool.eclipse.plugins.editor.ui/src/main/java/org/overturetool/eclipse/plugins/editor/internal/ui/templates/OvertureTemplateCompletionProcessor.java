@@ -18,7 +18,7 @@ import org.eclipse.dltk.ui.text.completion.ScriptContentAssistInvocationContext;
  */
 public class OvertureTemplateCompletionProcessor extends ScriptTemplateCompletionProcessor {
 
-	private static char[] IGNORE = new char[] {'.', ':', '@', '$' };
+	private static char[] IGNORE = new char[] {'.'};
 	
 	public OvertureTemplateCompletionProcessor(ScriptContentAssistInvocationContext context) {
 		super(context);

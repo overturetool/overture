@@ -52,8 +52,9 @@
 	
 	 <extension point="org.eclipse.dltk.ui.language">
      <language
-          class="org.overturetool.eclipse.plugins.editor.internal.ui.OvertureUILanguageToolkit"
-          nature="org.overturetool.eclipse.plugins.editor.core.nature"/>
+          class="org.overturetool.eclipse.plugins.editor.internal.ui.OvertureUILanguageToolkit2"
+          nature="org.overturetool.eclipse.plugins.editor.core.nature"
+          priority="1" />
      </extension>
 
   <extension point="org.eclipse.ui.editors">
@@ -518,20 +519,18 @@
 <!-- Code completion -->
   
   <!--TEMPLATE...  --> 
-   <!--
   <extension point="org.eclipse.ui.editors.templates">
     <contextType
           class="org.overturetool.eclipse.plugins.editor.internal.ui.templates.OvertureUniversalTemplateContextType"
           id="overtureUniversalTemplateContextType"
           name="%OvertureTemplateContextName">
     </contextType>
-      
     <include
           file="templates/templates.xml"
           translations="templates/templates.properties">
     </include>
  </extension>
- TODO --> 
+
   
  <extension point="org.eclipse.ui.actionSetPartAssociations">
       <actionSetPartAssociation targetID="org.overturetool.eclipse.plugins.editor.ui.CodingActionSet">

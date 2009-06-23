@@ -32,9 +32,7 @@ public class OvertureUniversalTemplateContextType extends
 		super(id, name);
 	}
 
-	public ScriptTemplateContext createContext(IDocument document, int offset,
-			int length, ISourceModule sourceModule) {
-		return new OvertureTemplateContext(this, document, offset, length,
-				sourceModule);
+	public ScriptTemplateContext createContext(IDocument document, int offset, int length, ISourceModule sourceModule) {
+		return new OvertureTemplateContext(this, document, offset, length, sourceModule);
 	}
 }
