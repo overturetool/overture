@@ -50,7 +50,11 @@ public enum DBGPCommandType
 	SOURCE("source"),
 	STDOUT("stdout"),
 	STDERR("stderr"),
-	UNKNOWN("?");
+	UNKNOWN("?"),
+
+	// Overture extras
+	XCMD_OVERTURE_CURRENTLINE("xcmd_overture_currentline"),
+	XCMD_OVERTURE_CURRENTSOURCE("xcmd_overture_currentsource");
 
 	public String value;
 

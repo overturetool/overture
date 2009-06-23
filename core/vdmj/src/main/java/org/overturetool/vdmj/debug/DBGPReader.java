@@ -56,6 +56,7 @@ import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.MessageException;
 import org.overturetool.vdmj.runtime.Breakpoint;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.DebuggerException;
 import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.runtime.ObjectContext;
@@ -91,6 +92,8 @@ public class DBGPReader
 	private Breakpoint breakpoint = null;
 	private Value theAnswer = null;
 	private boolean breaksSuspended = false;
+
+	private static final int SOURCE_LINES = 5;
 
 	// Usage: <host> <port> <ide key> <dialect> <expression> {<filename>}
 
@@ -145,9 +148,15 @@ public class DBGPReader
 					new DBGPReader(host, port, ideKey, i, expression).run();
 	    			System.exit(0);
 				}
+				catch (ContextException e)
+				{
+					System.out.println("Initialization: " + e);
+					e.ctxt.printStackTrace(true);
+					System.exit(3);
+				}
 				catch (Exception e)
 				{
-					System.err.println(e);
+					System.out.println("Initialization: " + e);
 					System.exit(3);
 				}
     		}
@@ -320,10 +329,10 @@ public class DBGPReader
 
 	private void statusResponse() throws IOException
 	{
-		statusResponse(status, statusReason, null);
+		statusResponse(status, statusReason);
 	}
 
-	private void statusResponse(DBGPStatus s, DBGPReason reason, StringBuilder body)
+	private void statusResponse(DBGPStatus s, DBGPReason reason)
 		throws IOException
 	{
 		StringBuilder sb = new StringBuilder();
@@ -338,7 +347,7 @@ public class DBGPReader
 		sb.append(statusReason);
 		sb.append("\"");
 
-		response(sb, body);
+		response(sb, null);
 	}
 
 	private StringBuilder breakpointResponse(Breakpoint bp)
@@ -450,14 +459,13 @@ public class DBGPReader
 		{
 			breakContext = ctxt;
 			breakpoint = bp;
-			statusResponse(DBGPStatus.BREAK, DBGPReason.OK, null);
+			statusResponse(DBGPStatus.BREAK, DBGPReason.OK);
 
 			run();
 
 			breakContext = null;
 			breakpoint = null;
-			status = DBGPStatus.RUNNING;
-			statusReason = DBGPReason.OK;
+			statusResponse(DBGPStatus.RUNNING, DBGPReason.OK);
 		}
 		catch (Exception e)
 		{
@@ -469,7 +477,7 @@ public class DBGPReader
 	{
 		try
 		{
-			statusResponse(DBGPStatus.STOPPED, reason, null);
+			statusResponse(DBGPStatus.STOPPED, reason);
 		}
 		catch (IOException e)
 		{
@@ -602,6 +610,14 @@ public class DBGPReader
 
     			case DETACH:
     				carryOn = false;
+    				break;
+
+    			case XCMD_OVERTURE_CURRENTLINE:
+    				processCurrentLine(c);
+    				break;
+
+    			case XCMD_OVERTURE_CURRENTSOURCE:
+    				processCurrentSource(c);
     				break;
 
     			case PROPERTY_SET:
@@ -806,10 +822,11 @@ public class DBGPReader
 
 		try
 		{
+			statusResponse(DBGPStatus.RUNNING, DBGPReason.OK);
 			interpreter.init(this);
 			theAnswer = interpreter.execute(expression, this);
 			stdout(theAnswer.toString());
-			statusResponse(DBGPStatus.STOPPED, DBGPReason.OK, null);
+			statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
 		}
 		catch (Exception e)
 		{
@@ -866,14 +883,19 @@ public class DBGPReader
 		try
 		{
 			String exp = c.data;	// Already base64 decoded by the parser
+			statusResponse(DBGPStatus.RUNNING, DBGPReason.OK);
 			theAnswer = interpreter.execute(exp, this);
 			StringBuilder property = propertyResponse(
 				exp, exp, interpreter.getDefaultName(), theAnswer.toString());
 			StringBuilder hdr = new StringBuilder("success=\"1\"");
+			status = DBGPStatus.STOPPED;
+			statusReason = DBGPReason.OK;
 			response(hdr, property);
 		}
 		catch (Exception e)
 		{
+			status = DBGPStatus.STOPPED;
+			statusReason = DBGPReason.ERROR;
 			errorResponse(DBGPErrorCode.EVALUATION_ERROR, e.getMessage());
 		}
 
@@ -925,7 +947,7 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
 
-		statusResponse(DBGPStatus.STOPPING, DBGPReason.OK, null);
+		statusResponse(DBGPStatus.STOPPING, DBGPReason.OK);
 		DebuggerException e = new DebuggerException("terminated");
 		Interpreter.stop(e, breakContext);
 	}
@@ -1432,7 +1454,7 @@ public class DBGPReader
 
 		sb.append("<![CDATA[");
 
-		for (int n=begin; n<=end; n++)
+		for (int n = begin; n <= end; n++)
 		{
 			sb.append(quote(s.getLine(n)));
 			sb.append("\n");
@@ -1488,5 +1510,55 @@ public class DBGPReader
 		sb.append(Base64.encode(line.getBytes("UTF-8")));
 		sb.append("]]></stream>\n");
 		write(sb);
+	}
+
+	private void processCurrentLine(DBGPCommand c) throws DBGPException, IOException
+	{
+		checkArgs(c, 1, false);
+
+		if (status != DBGPStatus.BREAK)
+		{
+			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+		}
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("<![CDATA[");
+		sb.append(quote(interpreter.getSourceLine(
+			breakpoint.location.file, breakpoint.location.startLine, ":  ")));
+		sb.append("\n");
+		sb.append("]]>");
+
+		response(null, sb);
+	}
+
+	private void processCurrentSource(DBGPCommand c) throws DBGPException, IOException
+	{
+		checkArgs(c, 1, false);
+
+		if (status != DBGPStatus.BREAK)
+		{
+			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+		}
+
+		StringBuilder sb = new StringBuilder();
+		File file = breakpoint.location.file;
+		int current = breakpoint.location.startLine;
+
+		int start = current - SOURCE_LINES;
+		if (start < 1) start = 1;
+		int end = start + SOURCE_LINES*2 + 1;
+
+		sb.append("<![CDATA[");
+
+		for (int src = start; src < end; src++)
+		{
+			sb.append(quote(interpreter.getSourceLine(
+				file, src, (src == current) ? ":>>" : ":  ")));
+			sb.append("\n");
+		}
+
+		sb.append("]]>");
+		response(null, sb);
 	}
 }
