@@ -25,6 +25,7 @@ package org.overturetool.vdmj.statements;
 
 import java.io.Serializable;
 
+import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -121,6 +122,11 @@ public abstract class Statement implements Serializable
 	public Statement findStatement(int lineno)
 	{
 		return (location.startLine == lineno) ? this : null;
+	}
+
+	public Expression findExpression(@SuppressWarnings("unused") int lineno)
+	{
+		return null;
 	}
 
 	/** Evaluate the statement in the context given. */

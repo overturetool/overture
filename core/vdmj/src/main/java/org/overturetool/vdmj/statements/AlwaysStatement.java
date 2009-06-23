@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.statements;
 
+import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -84,6 +85,14 @@ public class AlwaysStatement extends Statement
 		found = always.findStatement(lineno);
 		if (found != null) return found;
 		return body.findStatement(lineno);
+	}
+
+	@Override
+	public Expression findExpression(int lineno)
+	{
+		Expression found = always.findExpression(lineno);
+		if (found != null) return found;
+		return body.findExpression(lineno);
 	}
 
 	@Override

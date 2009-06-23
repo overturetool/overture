@@ -111,6 +111,14 @@ public class ForAllStatement extends Statement
 	}
 
 	@Override
+	public Expression findExpression(int lineno)
+	{
+		Expression found = set.findExpression(lineno);
+		if (found != null) return found;
+		return statement.findExpression(lineno);
+	}
+
+	@Override
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);

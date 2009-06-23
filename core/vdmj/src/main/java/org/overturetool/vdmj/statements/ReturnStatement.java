@@ -109,6 +109,12 @@ public class ReturnStatement extends Statement
 	}
 
 	@Override
+	public Expression findExpression(int lineno)
+	{
+		return expression == null ? null : expression.findExpression(lineno);
+	}
+
+	@Override
 	public ProofObligationList getProofObligations(POContextStack ctxt)
 	{
 		ProofObligationList obligations = new ProofObligationList();

@@ -122,6 +122,12 @@ public class StartStatement extends Statement
 	}
 
 	@Override
+	public Expression findExpression(int lineno)
+	{
+		return objects.findExpression(lineno);
+	}
+
+	@Override
 	public ProofObligationList getProofObligations(POContextStack ctxt)
 	{
 		return objects.getProofObligations(ctxt);

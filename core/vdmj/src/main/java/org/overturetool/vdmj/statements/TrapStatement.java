@@ -24,6 +24,7 @@
 package org.overturetool.vdmj.statements;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.patterns.PatternBind;
 import org.overturetool.vdmj.patterns.SetBind;
@@ -118,6 +119,14 @@ public class TrapStatement extends Statement
 		found = body.findStatement(lineno);
 		if (found != null) return found;
 		return with.findStatement(lineno);
+	}
+
+	@Override
+	public Expression findExpression(int lineno)
+	{
+		Expression found = body.findExpression(lineno);
+		if (found != null) return found;
+		return with.findExpression(lineno);
 	}
 
 	@Override

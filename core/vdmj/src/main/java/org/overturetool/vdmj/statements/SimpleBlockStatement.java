@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
+import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -158,6 +159,20 @@ public class SimpleBlockStatement extends Statement
 		for (Statement stmt: statements)
 		{
 			found = stmt.findStatement(lineno);
+			if (found != null) break;
+		}
+
+		return found;
+	}
+
+	@Override
+	public Expression findExpression(int lineno)
+	{
+		Expression found = null;
+
+		for (Statement stmt: statements)
+		{
+			found = stmt.findExpression(lineno);
 			if (found != null) break;
 		}
 

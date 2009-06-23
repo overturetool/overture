@@ -25,6 +25,7 @@ package org.overturetool.vdmj.statements;
 
 import java.util.List;
 
+import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -107,6 +108,21 @@ public class TixeStatement extends Statement
 		for (TixeStmtAlternative tsa: traps)
 		{
 			found = tsa.statement.findStatement(lineno);
+			if (found != null) break;
+		}
+
+		return found;
+	}
+
+	@Override
+	public Expression findExpression(int lineno)
+	{
+		Expression found = body.findExpression(lineno);
+		if (found != null) return found;
+
+		for (TixeStmtAlternative tsa: traps)
+		{
+			found = tsa.statement.findExpression(lineno);
 			if (found != null) break;
 		}
 

@@ -290,6 +290,12 @@ public class CallObjectStatement extends Statement
 	}
 
 	@Override
+	public Expression findExpression(int lineno)
+	{
+		return args.findExpression(lineno);
+	}
+
+	@Override
 	public ProofObligationList getProofObligations(POContextStack ctxt)
 	{
 		ProofObligationList obligations = new ProofObligationList();

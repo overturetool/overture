@@ -120,6 +120,12 @@ public class ExitStatement extends Statement
 	}
 
 	@Override
+	public Expression findExpression(int lineno)
+	{
+		return expression.findExpression(lineno);
+	}
+
+	@Override
 	public ProofObligationList getProofObligations(POContextStack ctxt)
 	{
 		ProofObligationList obligations = new ProofObligationList();

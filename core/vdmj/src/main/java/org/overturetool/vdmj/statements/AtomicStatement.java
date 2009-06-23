@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.StateDefinition;
+import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -91,6 +92,20 @@ public class AtomicStatement extends Statement
 		for (AssignmentStatement stmt: assignments)
 		{
 			found = stmt.findStatement(lineno);
+			if (found != null) break;
+		}
+
+		return found;
+	}
+
+	@Override
+	public Expression findExpression(int lineno)
+	{
+		Expression found = null;
+
+		for (AssignmentStatement stmt: assignments)
+		{
+			found = stmt.findExpression(lineno);
 			if (found != null) break;
 		}
 

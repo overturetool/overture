@@ -87,6 +87,12 @@ public class ElseIfStatement extends Statement
 	}
 
 	@Override
+	public Expression findExpression(int lineno)
+	{
+		return thenStmt.findExpression(lineno);
+	}
+
+	@Override
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);

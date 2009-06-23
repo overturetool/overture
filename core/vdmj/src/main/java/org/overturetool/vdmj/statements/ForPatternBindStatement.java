@@ -120,6 +120,14 @@ public class ForPatternBindStatement extends Statement
 	}
 
 	@Override
+	public Expression findExpression(int lineno)
+	{
+		Expression found = exp.findExpression(lineno);
+		if (found != null) return found;
+		return statement.findExpression(lineno);
+	}
+
+	@Override
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);

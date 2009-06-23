@@ -122,6 +122,18 @@ public class ForIndexStatement extends Statement
 	}
 
 	@Override
+	public Expression findExpression(int lineno)
+	{
+		Expression found = from.findExpression(lineno);
+		if (found != null) return found;
+		found = to.findExpression(lineno);
+		if (found != null) return found;
+		found = by.findExpression(lineno);
+		if (found != null) return found;
+		return statement.findExpression(lineno);
+	}
+
+	@Override
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);

@@ -133,6 +133,20 @@ public class CasesStatement extends Statement
 	}
 
 	@Override
+	public Expression findExpression(int lineno)
+	{
+		Expression found = null;
+
+		for (CaseStmtAlternative stmt: cases)
+		{
+			found = stmt.statement.findExpression(lineno);
+			if (found != null) break;
+		}
+
+		return found;
+	}
+
+	@Override
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);

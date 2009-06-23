@@ -370,7 +370,7 @@ public class ImplicitOperationDefinition extends Definition
 			if (found != null) return found;
 		}
 
-		return null;
+		return body == null ? null : body.findExpression(lineno);
 	}
 
 	@Override

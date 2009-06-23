@@ -109,6 +109,14 @@ public class WhileStatement extends Statement
 	}
 
 	@Override
+	public Expression findExpression(int lineno)
+	{
+		Expression found = exp.findExpression(lineno);
+		if (found != null) return found;
+		return statement.findExpression(lineno);
+	}
+
+	@Override
 	public ProofObligationList getProofObligations(POContextStack ctxt)
 	{
 		ProofObligationList obligations = new ProofObligationList();

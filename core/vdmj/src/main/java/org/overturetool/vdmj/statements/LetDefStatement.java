@@ -27,6 +27,7 @@ import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
+import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.pog.POContextStack;
@@ -124,6 +125,15 @@ public class LetDefStatement extends Statement
 		if (found != null) return found;
 
 		return statement.findStatement(lineno);
+	}
+
+	@Override
+	public Expression findExpression(int lineno)
+	{
+		Expression found = localDefs.findExpression(lineno);
+		if (found != null) return found;
+
+		return statement.findExpression(lineno);
 	}
 
 	@Override

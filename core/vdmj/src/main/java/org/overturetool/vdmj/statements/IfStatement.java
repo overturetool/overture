@@ -161,6 +161,26 @@ public class IfStatement extends Statement
 	}
 
 	@Override
+	public Expression findExpression(int lineno)
+	{
+		Expression found = thenStmt.findExpression(lineno);
+		if (found != null) return found;
+
+		for (ElseIfStatement stmt: elseList)
+		{
+			found = stmt.findExpression(lineno);
+			if (found != null) return found;
+		}
+
+		if (elseStmt != null)
+		{
+			found = elseStmt.findExpression(lineno);
+		}
+
+		return found;
+	}
+
+	@Override
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);

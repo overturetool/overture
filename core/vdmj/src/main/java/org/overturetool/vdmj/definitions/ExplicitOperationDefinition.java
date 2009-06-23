@@ -332,7 +332,7 @@ public class ExplicitOperationDefinition extends Definition
 			if (found != null) return found;
 		}
 
-		return null;
+		return body.findExpression(lineno);
 	}
 
 	@Override

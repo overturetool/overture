@@ -83,4 +83,16 @@ public class CyclesStatement extends Statement
 
 		return statement.typeCheck(env, scope);
 	}
+
+	@Override
+	public Statement findStatement(int lineno)
+	{
+		return statement.findStatement(lineno);
+	}
+
+	@Override
+	public Expression findExpression(int lineno)
+	{
+		return statement.findExpression(lineno);
+	}
 }
