@@ -9,7 +9,7 @@ public class XmlFileWriter {
 
 	FileWriter outputFileReader;
 	PrintWriter outputStream;
-	int level = -1;
+	int level = 0;
 	Boolean inElement = false;
 	String rootName;
 

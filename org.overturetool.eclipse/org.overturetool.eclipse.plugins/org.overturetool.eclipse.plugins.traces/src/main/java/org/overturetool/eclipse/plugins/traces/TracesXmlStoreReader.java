@@ -9,12 +9,8 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.traces.utility.TraceTestResult;
-import org.overturetool.traces.utility.TraceTestStatus;
-import org.overturetool.traces.utility.TraceXmlStorageManager;
 import org.overturetool.traces.utility.TraceXmlWrapper;
 import org.overturetool.traces.utility.XmlFileWriter;
-import org.overturetool.traces.utility.ITracesHelper.TestResultType;
-import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.traces.Verdict;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -31,7 +27,7 @@ public class TracesXmlStoreReader extends DefaultHandler
 	{
 		private Integer testCount;
 		private Integer skippedTestCount;
-		private TestResultType verdict;
+		private Verdict verdict;
 		private Integer faildCount;
 		private Integer inconclusiveCount;
 
@@ -55,12 +51,12 @@ public class TracesXmlStoreReader extends DefaultHandler
 			return skippedTestCount;
 		}
 
-		public void setVerdict(TestResultType verdict)
+		public void setVerdict(Verdict verdict)
 		{
 			this.verdict = verdict;
 		}
 
-		public TestResultType getVerdict()
+		public Verdict getVerdict()
 		{
 			return verdict;
 		}
@@ -86,7 +82,7 @@ public class TracesXmlStoreReader extends DefaultHandler
 		}
 	}
 
-	StringBuilder data= new StringBuilder();
+	StringBuilder data = new StringBuilder();
 	File file;
 	String className;
 	String traceName;
@@ -173,12 +169,12 @@ public class TracesXmlStoreReader extends DefaultHandler
 			Attributes atts)
 	{
 		// if ("".equals(uri))
-//		 String kkk=("Start element: " + qName);
-//		for (int i = 0; i < atts.getLength(); i++)
-//		{
-//			kkk+=(" "+ atts.getLocalName(i)+ "=" + atts.getValue(i));
-//		}
-//		System.out.println(kkk);
+		// String kkk=("Start element: " + qName);
+		// for (int i = 0; i < atts.getLength(); i++)
+		// {
+		// kkk+=(" "+ atts.getLocalName(i)+ "=" + atts.getValue(i));
+		// }
+		// System.out.println(kkk);
 		// else
 		// System.out.println("Start element: {" + uri + "}" + name);
 
@@ -216,45 +212,47 @@ public class TracesXmlStoreReader extends DefaultHandler
 						&& traceTaceTestStopNumber >= number)
 				{
 
-//					boolean found = false;
-//					for (int i = 0; i < traceTestResults.size(); i++)
-//					{
-//						TraceTestResult res = traceTestResults.get(i);
-//						if (res.getNumber().equals(number))
-//						{
-//							if (name.equals(TraceXmlWrapper.TEST_CASE_TAG))
-//								this.insertArgument = true;
-//							else if (name.equals(TraceXmlWrapper.RESULT_TAG))
-//							{
-//								String verdict = atts.getValue(TraceXmlWrapper.VERDICT_TAG);
-//
-//								res.setStatus(GetVerdict(verdict));
-//
-//								this.insertResult = true;
-//							}
-//
-//							this.currentResult = res;
-//							currentResultIndex = i;
-//							found = true;
-//							break;
-//						}
-//					}
-//					if (!found)
-//					{
-						TraceTestResult res = GetResult(number); // new TraceTestResult();
-//						res.setNumber(number);
-						String verdict = atts.getValue(TraceXmlWrapper.VERDICT_TAG);
-						if (name.equals(TraceXmlWrapper.TEST_CASE_TAG))
-							this.insertArgument = true;
-						else if (name.equals(TraceXmlWrapper.RESULT_TAG))
-						{
-							res.setStatus(GetVerdict(verdict));
-							this.insertResult = true;
-						}
-//						traceTestResults.add(res);
-//						currentResultIndex = traceTestResults.size() - 1;
+					// boolean found = false;
+					// for (int i = 0; i < traceTestResults.size(); i++)
+					// {
+					// TraceTestResult res = traceTestResults.get(i);
+					// if (res.getNumber().equals(number))
+					// {
+					// if (name.equals(TraceXmlWrapper.TEST_CASE_TAG))
+					// this.insertArgument = true;
+					// else if (name.equals(TraceXmlWrapper.RESULT_TAG))
+					// {
+					// String verdict =
+					// atts.getValue(TraceXmlWrapper.VERDICT_TAG);
+					//
+					// res.setStatus(GetVerdict(verdict));
+					//
+					// this.insertResult = true;
+					// }
+					//
+					// this.currentResult = res;
+					// currentResultIndex = i;
+					// found = true;
+					// break;
+					// }
+					// }
+					// if (!found)
+					// {
+					TraceTestResult res = GetResult(number); // new
+																// TraceTestResult();
+					// res.setNumber(number);
+					String verdict = atts.getValue(TraceXmlWrapper.VERDICT_TAG);
+					if (name.equals(TraceXmlWrapper.TEST_CASE_TAG))
+						this.insertArgument = true;
+					else if (name.equals(TraceXmlWrapper.RESULT_TAG))
+					{
+						res.setStatus(GetVerdict(verdict));
+						this.insertResult = true;
+					}
+					// traceTestResults.add(res);
+					// currentResultIndex = traceTestResults.size() - 1;
 
-//					}
+					// }
 				}
 			}
 		}
@@ -278,10 +276,10 @@ public class TracesXmlStoreReader extends DefaultHandler
 		// String systemId = locator.getSystemId();
 		// }
 	}
-	
+
 	private TraceTestResult GetResult(Integer number)
 	{
-		
+
 		for (int i = 0; i < traceTestResults.size(); i++)
 		{
 			TraceTestResult res = traceTestResults.get(i);
@@ -291,43 +289,45 @@ public class TracesXmlStoreReader extends DefaultHandler
 				return res;
 			}
 		}
-		
-			TraceTestResult res = new TraceTestResult();
-			res.setNumber(number);
-			traceTestResults.add(res);
-			currentResultIndex = traceTestResults.size() - 1;
-			return res;
 
-		
+		TraceTestResult res = new TraceTestResult();
+		res.setNumber(number);
+		traceTestResults.add(res);
+		currentResultIndex = traceTestResults.size() - 1;
+		return res;
+
 	}
 
-	private static TestResultType GetVerdict(String verdict)
+	private static Verdict GetVerdict(String verdict)
 	{
 		if (verdict != null)
 		{
-			if (verdict.equals(Verdict.FAILED.toString()))
-				return (TestResultType.Fail);
-			else if (verdict.equals(Verdict.INCONCLUSIVE.toString()))
-				return (TestResultType.Inconclusive);
-			else if (verdict.equals(Verdict.PASSED.toString()))
-				return (TestResultType.Ok);
-			else if (verdict.equals("SKIPPED"))
-				return (TestResultType.Skipped);
+			try
+			{
+				return Verdict.valueOf(Verdict.class, verdict);
+			} catch (IllegalArgumentException ex)
+			{
+				return null;
+			}
 		}
-		return TestResultType.Unknown;
+
+		return null;
 	}
 
 	public void endElement(String uri, String name, String qName)
 	{
-		
-		
-		if (inClass && inTrace && traceTestResults!=null 
-				&& traceTestResults.size() > 0 && data.toString().length()>0) //&& currentResult != null
+
+		if (inClass && inTrace && traceTestResults != null
+				&& traceTestResults.size() > 0 && data.toString().length() > 0) // &&
+																				// currentResult
+																				// !=
+																				// null
 		{
 			if (insertArgument)
 			{
 				List<String> arguments = new Vector<String>();
-				for (String string : XmlFileWriter.DeNormalizeValue(data.toString()).trim().split(";"))
+				for (String string : XmlFileWriter.DeNormalizeValue(
+						data.toString()).trim().split(";"))
 				{
 					arguments.add(string.trim());
 				}
@@ -336,7 +336,8 @@ public class TracesXmlStoreReader extends DefaultHandler
 			} else if (insertResult)
 			{
 				List<String> results = new Vector<String>();
-				for (String string : XmlFileWriter.DeNormalizeValue(data.toString()).trim().split(";"))
+				for (String string : XmlFileWriter.DeNormalizeValue(
+						data.toString()).trim().split(";"))
 				{
 					results.add(string.trim());
 				}
@@ -345,14 +346,9 @@ public class TracesXmlStoreReader extends DefaultHandler
 			}
 
 		}
-		
-		
+
 		data = new StringBuilder();
-		
-		
-		
-		
-		
+
 		// if ("".equals(uri))
 		// System.out.println("End element: " + qName);
 		// else
@@ -398,11 +394,10 @@ public class TracesXmlStoreReader extends DefaultHandler
 				break;
 			}
 		}
-		
-//		if(sb.toString().trim().length()>0)
-//			System.out.println(sb.toString().trim());
-		
-		
+
+		// if(sb.toString().trim().length()>0)
+		// System.out.println(sb.toString().trim());
+
 		data.append(sb.toString());
 		// System.out.print("\"\n");
 	}

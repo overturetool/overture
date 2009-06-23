@@ -8,10 +8,9 @@ import org.overturetool.eclipse.plugins.traces.OvertureTracesPlugin;
 import org.overturetool.eclipse.plugins.traces.views.treeView.ClassTreeNode;
 import org.overturetool.eclipse.plugins.traces.views.treeView.NotYetReadyTreeNode;
 import org.overturetool.eclipse.plugins.traces.views.treeView.ProjectTreeNode;
-
 import org.overturetool.eclipse.plugins.traces.views.treeView.TraceTestTreeNode;
 import org.overturetool.eclipse.plugins.traces.views.treeView.TraceTreeNode;
-import org.overturetool.traces.utility.ITracesHelper.TestResultType;
+import org.overturetool.vdmj.traces.Verdict;
 
 public class ViewLabelProvider extends LabelProvider {
 
@@ -38,18 +37,18 @@ public class ViewLabelProvider extends LabelProvider {
 //		}
 		if (obj instanceof TraceTestTreeNode) {
 			String imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNKNOWN;
-			TestResultType status = (((TraceTestTreeNode) obj).GetStatus());
-			if (status == TestResultType.Ok)
+			Verdict status = (((TraceTestTreeNode) obj).GetStatus());
+			if (status == Verdict.PASSED)
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_SUCCES;
-			else if (status == TestResultType.Unknown)
+			else if (status == null)
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNKNOWN;
-			else if (status == TestResultType.Inconclusive)
+			else if (status == Verdict.INCONCLUSIVE)
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNDETERMINED;
-			else if (status == TestResultType.Fail)
+			else if (status == Verdict.FAILED)
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FAIL;
 //			else if (status == TestResultType.ExpansionFaild)
 //				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_EXPANSIN_FAIL;
-			else if (status == TestResultType.Skipped)
+			else if (status == Verdict.SKIPPED)
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_SKIPPED;
 
 			if (((TraceTestTreeNode) obj).HasRunTimeError())

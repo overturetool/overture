@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.overturetool.traces.utility.TraceTestResult;
-import org.overturetool.traces.utility.ITracesHelper.TestResultType;
+import org.overturetool.vdmj.traces.Verdict;
 
 public class TraceTestTreeNode implements IAdaptable ,ITreeNode{
 	private TraceTestResult result;
@@ -25,7 +25,7 @@ public class TraceTestTreeNode implements IAdaptable ,ITreeNode{
 		this.runTimeError = true;
 	}
 
-	public void SetStatus(TestResultType status) {
+	public void SetStatus(Verdict status) {
 		this.runTimeError = false;
 		this.result.setStatus(status);
 	}
@@ -35,7 +35,7 @@ public class TraceTestTreeNode implements IAdaptable ,ITreeNode{
 		this.result=result;
 	}
 
-	public TestResultType GetStatus() {
+	public Verdict GetStatus() {
 		return this.result.getStatus();
 	}
 

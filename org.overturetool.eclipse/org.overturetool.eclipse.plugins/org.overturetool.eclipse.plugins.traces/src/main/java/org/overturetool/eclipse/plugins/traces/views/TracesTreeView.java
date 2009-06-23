@@ -79,8 +79,8 @@ import org.overturetool.eclipse.plugins.traces.views.treeView.TraceTestTreeNode;
 import org.overturetool.eclipse.plugins.traces.views.treeView.TraceTreeNode;
 import org.overturetool.traces.VdmjTracesHelper;
 import org.overturetool.traces.utility.ITracesHelper;
-import org.overturetool.traces.utility.ITracesHelper.TestResultType;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
+import org.overturetool.vdmj.traces.Verdict;
 import org.xml.sax.SAXException;
 
 /**
@@ -475,7 +475,7 @@ public class TracesTreeView extends ViewPart
 			manager.add(actionRunSelected);
 
 		if (obj instanceof TraceTestTreeNode)
-			if (((TraceTestTreeNode) obj).GetStatus() != TestResultType.Unknown)
+			if (((TraceTestTreeNode) obj).GetStatus() != null)
 			{
 				manager.add(actionSendToInterpreter);
 				// if (((TraceTestTreeNode) obj).GetStatus() ==
@@ -597,8 +597,16 @@ public class TracesTreeView extends ViewPart
 										th.processClassTraces(
 												className,
 												monitor);
-									} catch (Exception e)
+									} 
+									catch(CancellationException e)
 									{
+										ConsolePrint(e.getMessage());
+									}
+									catch (Exception e)
+									{
+										
+										e.printStackTrace();
+										
 										IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 										IProject[] iprojects = iworkspaceRoot.getProjects();
 										for (IProject project2 : iprojects)
@@ -614,6 +622,7 @@ public class TracesTreeView extends ViewPart
 														1,
 														IMarker.SEVERITY_ERROR);
 												ConsolePrint(e.getMessage());
+												
 												break;
 											}
 										}
@@ -1395,7 +1404,7 @@ public class TracesTreeView extends ViewPart
 				{
 					if (!(selection instanceof NotYetReadyTreeNode)
 							&& !(selection instanceof TraceTestGroup)
-							&& ((TraceTestTreeNode) selection).GetStatus() == TestResultType.Unknown)
+							&& ((TraceTestTreeNode) selection).GetStatus() == null)
 						try
 						{
 							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
@@ -1592,7 +1601,7 @@ public class TracesTreeView extends ViewPart
 				Object element)
 		{
 			if (element instanceof TraceTestTreeNode
-					&& ((TraceTestTreeNode) element).GetStatus() == TestResultType.Ok)
+					&& ((TraceTestTreeNode) element).GetStatus() == Verdict.PASSED)
 				return false;
 			else
 				return true;
@@ -1608,7 +1617,7 @@ public class TracesTreeView extends ViewPart
 				Object element)
 		{
 			if (element instanceof TraceTestTreeNode
-					&& ((TraceTestTreeNode) element).GetStatus() == TestResultType.Inconclusive)
+					&& ((TraceTestTreeNode) element).GetStatus() == Verdict.INCONCLUSIVE)
 				return false;
 			else
 				return true;
@@ -1623,12 +1632,12 @@ public class TracesTreeView extends ViewPart
 		{
 			if (element instanceof TraceTestTreeNode)
 			{
-				TestResultType res = ((TraceTestTreeNode) element).GetStatus();
-				if (res == TestResultType.Fail)
+				Verdict res = ((TraceTestTreeNode) element).GetStatus();
+				if (res == Verdict.FAILED)
 					return 1;
-				else if (res == TestResultType.Inconclusive)
+				else if (res == Verdict.INCONCLUSIVE)
 					return 2;
-				else if (res == TestResultType.Ok)
+				else if (res == Verdict.PASSED)
 					return 3;
 			}
 			return 3;

@@ -33,7 +33,7 @@ import org.overturetool.eclipse.plugins.traces.views.treeView.NotYetReadyTreeNod
 import org.overturetool.eclipse.plugins.traces.views.treeView.TraceTestGroup;
 import org.overturetool.eclipse.plugins.traces.views.treeView.TraceTestTreeNode;
 import org.overturetool.traces.utility.TraceTestResult;
-import org.overturetool.traces.utility.ITracesHelper.TestResultType;
+import org.overturetool.vdmj.traces.Verdict;
 
 /**
  * This sample class demonstrates how to plug-in a new workbench view. The view
@@ -61,9 +61,9 @@ public class TraceTest extends ViewPart implements ISelectionListener
 	{
 		String traceDef;
 		String description;
-		TestResultType status;
+		Verdict status;
 
-		private Data(String traceDef, String Description, TestResultType status)
+		private Data(String traceDef, String Description, Verdict status)
 		{
 			this.description = Description;
 			this.traceDef = traceDef;
@@ -152,17 +152,17 @@ public class TraceTest extends ViewPart implements ISelectionListener
 
 			String imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNKNOWN;
 
-			if (data.status == TestResultType.Ok)
+			if (data.status == Verdict.PASSED)
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_SUCCES;
-			else if (data.status == TestResultType.Unknown)
+			else if (data.status == null)
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNKNOWN;
-			else if (data.status == TestResultType.Inconclusive)
+			else if (data.status == Verdict.INCONCLUSIVE)
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNDETERMINED;
-			else if (data.status == TestResultType.Fail)
+			else if (data.status == Verdict.FAILED)
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FAIL;
 			// else if (data.status == TestResultType.ExpansionFaild)
 			// imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_EXPANSIN_FAIL;
-			else if (data.status == TestResultType.Skipped)
+			else if (data.status == Verdict.SKIPPED)
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_SKIPPED;
 
 			return OvertureTracesPlugin.getImageDescriptor(imgPath).createImage();

@@ -1,35 +1,45 @@
 package org.overturetool.traces.utility;
 
-import org.overturetool.traces.utility.ITracesHelper.TestResultType;
 
-public class TraceTestStatus {
+import org.overturetool.vdmj.traces.Verdict;
+
+public class TraceTestStatus
+{
 	private Integer number = -1;
-	private TestResultType status = TestResultType.Unknown;
+	private Verdict status = null;
+
 	/**
-	 * @param number the number to set
+	 * @param number
+	 *            the number to set
 	 */
-	public void setNumber(Integer number) {
+	public void setNumber(Integer number)
+	{
 		this.number = number;
 	}
+
 	/**
 	 * @return the number
 	 */
-	public Integer getNumber() {
+	public Integer getNumber()
+	{
 		return number;
 	}
+
 	/**
-	 * @param status the status to set
+	 * @param status
+	 *            the status to set
 	 */
-public	void setStatus(TestResultType status) {
+	public void setStatus(Verdict status)
+	{
 		this.status = status;
 	}
+
 	/**
 	 * @return the status
 	 */
-public	TestResultType getStatus() {
+	public Verdict getStatus()
+	{
 		return status;
 	}
-	
-	
 
 }

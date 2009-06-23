@@ -3,16 +3,13 @@ package org.overturetool.traces.utility;
 import java.io.IOException;
 import java.util.List;
 import java.util.Stack;
-
 import org.overturetool.vdmj.traces.Verdict;
-import org.overturetool.vdmj.values.TupleValue;
 import org.overturetool.vdmj.values.Value;
 
 public class TraceXmlWrapper
 {
 	XmlFileWriter xml;
 
-	private String rootPath;
 	public static final String CLASS_TAG = "Class";
 	public static final String TRACE_TAG = "Trace";
 	public static final String TEST_CASE_TAG = "Test";
@@ -87,6 +84,8 @@ public class TraceXmlWrapper
 		{
 			if (object instanceof Verdict)
 				verdict = object.toString();
+			else if (object ==null)
+				result += "null" + " ; ";
 			else if (object instanceof Value)
 				result += object.toString() + " ; ";
 			else
@@ -136,7 +135,7 @@ public class TraceXmlWrapper
 				NUMBER_TAG,
 				testName,
 				VERDICT_TAG,
-				"SKIPPED");
+				Verdict.SKIPPED.toString());
 		xml.StopElement(RESULT_TAG);
 
 	}

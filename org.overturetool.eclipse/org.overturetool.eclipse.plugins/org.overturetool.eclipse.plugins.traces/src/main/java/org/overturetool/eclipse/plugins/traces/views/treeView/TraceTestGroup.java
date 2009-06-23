@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.traces.utility.TraceTestResult;
-import org.overturetool.traces.utility.ITracesHelper.TestResultType;
+import org.overturetool.vdmj.traces.Verdict;
 
 public class TraceTestGroup extends TraceTestTreeNode
 {
 	public static final Long GROUP_SIZE = new Long(200);
 	Long startNumber;
 	Long stopNumber;
-	TestResultType lastKnownStatus = TestResultType.Unknown;
+	Verdict lastKnownStatus = null;
 
 	public TraceTestGroup(Long startNumber, Long stopNumber)
 	{
@@ -104,25 +104,25 @@ public class TraceTestGroup extends TraceTestTreeNode
 		return false;
 	}
 
-	public TestResultType GetStatus()
+	public Verdict GetStatus()
 	{
-		if (lastKnownStatus != TestResultType.Unknown)
+		if (lastKnownStatus != null)
 			return lastKnownStatus;
 
-		TestResultType status = TestResultType.Unknown;
+		Verdict status = null;
 
 		for (ITreeNode n : children)
 		{
 			if (n instanceof TraceTestTreeNode)
 			{
 				TraceTestTreeNode node = ((TraceTestTreeNode) n);
-				if (node.GetStatus() == TestResultType.Fail)
+				if (node.GetStatus() == Verdict.FAILED)
 					status = node.GetStatus();
-				else if (node.GetStatus() == TestResultType.Inconclusive
-						&& status != TestResultType.Fail)
+				else if (node.GetStatus() == Verdict.INCONCLUSIVE
+						&& status != Verdict.FAILED)
 					status = node.GetStatus();
-				else if (node.GetStatus() == TestResultType.Ok
-						&& status == TestResultType.Unknown)
+				else if (node.GetStatus() == Verdict.PASSED
+						&& status == null)
 					status = node.GetStatus();
 			}
 		}

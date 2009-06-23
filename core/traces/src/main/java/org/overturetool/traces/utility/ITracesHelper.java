@@ -62,9 +62,9 @@ public interface ITracesHelper
 	public abstract int GetSkippedCount(String className, String traceName)
 			throws SAXException, IOException;
 
-	public enum TestResultType
-	{
-		Ok, Fail, Inconclusive, Unknown, Skipped
-	}
+//	public enum TestResultType
+//	{
+//		Ok, Fail, Inconclusive, Unknown, Skipped
+//	}
 	// ExpansionFaild,
 }

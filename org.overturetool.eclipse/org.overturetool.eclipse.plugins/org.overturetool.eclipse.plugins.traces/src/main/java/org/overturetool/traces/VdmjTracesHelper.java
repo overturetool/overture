@@ -225,13 +225,9 @@ public class VdmjTracesHelper implements ITracesHelper
 		{
 			if (object2 instanceof Verdict)
 			{
-				String verdict = object2.toString();
-				if (verdict.endsWith("PASSED"))
-					traceResult.setStatus(TestResultType.Ok);
-				else if (verdict.endsWith("INCONCLUSIVE"))
-					traceResult.setStatus(TestResultType.Inconclusive);
-				else if (verdict.endsWith("FAILED"))
-					traceResult.setStatus(TestResultType.Fail);
+				
+					traceResult.setStatus((Verdict)object2);
+				
 			} else if (object2 instanceof TupleValue)
 			{
 				TupleValue v = (TupleValue) object2;
