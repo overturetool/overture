@@ -25,5 +25,5 @@ package org.overturetool.vdmj.traces;
 
 public enum Verdict
 {
-	PASSED, INCONCLUSIVE, FAILED
+	PASSED, INCONCLUSIVE, FAILED, SKIPPED
 }
