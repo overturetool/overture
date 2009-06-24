@@ -23,6 +23,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
@@ -46,6 +47,7 @@ import org.eclipse.jdt.launching.IVMRunner;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.overturetool.eclipse.debug.internal.debug.OvertureDebugConstants;
+import org.overturetool.eclipse.plugins.editor.core.EditorCoreConstants;
 import org.overturetool.eclipse.plugins.launching.IConfigurableRunner;
 import org.overturetool.eclipse.plugins.launching.IOvertureInterpreterRunnerConfig;
 import org.overturetool.eclipse.plugins.launching.OvertureLaunchConstants;
@@ -184,15 +186,10 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 							VMRunnerConfiguration vmConfig = new VMRunnerConfiguration(iconfig.getRunnerClassName(config, launch, myJavaProject), newClassPath);
 							vmConfig.setWorkingDirectory(proj.getProject().getLocation().toOSString());
 							//TODO get the project dialect 
-							String dialect = "VDM_PP";
-							if (true){								
-								dialect = "VDM_PP";
-							}
-							else
-							{
-								dialect = "VDM_SL";
-							}
-							
+							String dialect;
+							QualifiedName qn = new QualifiedName(EditorCoreConstants.PLUGIN_ID,
+									EditorCoreConstants.OVERTURE_DIALECT_KEY);
+							dialect = proj.getProject().getPersistentProperty(qn);
 							// Select interpreter:
 							String toolType = OvertureDebugConstants.TOOL_VDMJ;
 							IInterpreterInstall interpreterInstall;

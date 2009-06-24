@@ -24,7 +24,17 @@ public class VDMJInstallType extends AbstractInterpreterInstallType implements I
 	public static final String DBGP_FOR_VDMJ_BUNDLE_ID = "org.overturetool.dbgp.vdmj"; //$NON-NLS-1$
 	public static final String EMBEDDED_VDMJ_BUNDLE_ID = "org.overturetool.vdmj"; //$NON-NLS-1$
 
+	public final static String OVERTURE_VDM_PLUS_PLUS = "VDM++";
+	public final static String OVERTURE_VDM_SPECIFICATION_LANGUAGE = "VDM-SL";
+	public final static String OVERTURE_VDM_REALTIME = "VDM-RT";
 	
+	public final static String OVERTURE_VDM_PLUS_PLUS_ID = "VDM_PP";
+	public final static String OVERTURE_VDM_SPECIFICATION_LANGUAGE_ID = "VDM_SL";
+	public final static String OVERTURE_VDM_REALTIME_ID = "VDM_RT";
+	
+	public final static Dialect[] DIALECTS = {new Dialect(OVERTURE_VDM_PLUS_PLUS, OVERTURE_VDM_PLUS_PLUS_ID),
+		new Dialect(OVERTURE_VDM_SPECIFICATION_LANGUAGE, OVERTURE_VDM_SPECIFICATION_LANGUAGE_ID),
+		new Dialect(OVERTURE_VDM_REALTIME, OVERTURE_VDM_REALTIME_ID)};
 	
 	public String getNatureId() {
 		return OvertureNature.NATURE_ID;
@@ -116,10 +126,17 @@ public class VDMJInstallType extends AbstractInterpreterInstallType implements I
 		return LaunchingPlugin.getDefault().getLog();
 	}
 
-	public String[] getSupportedDialectStrings() {
-		return new String[] {OvertureConstants.OVERTURE_OVERTURE_MODELLING_LANGUAGE,
-				OvertureConstants.OVERTURE_VDM_PLUS_PLUS,
-				OvertureConstants.OVERTURE_VDM_PLUS_PLUS_REALTIME,
-				OvertureConstants.OVERTURE_VDM_SPECIFICATION_LANGUAGE};
+	public Dialect[] getSupportedDialects() {
+		return DIALECTS;
+	
+	}
+
+	public String getDialectNameFromId(String id) {
+		for (Dialect dialect : DIALECTS) {
+			if(dialect.getId().equals(id)){
+				return dialect.getName();
+			}
+		}
+		return null;
 	}
 }

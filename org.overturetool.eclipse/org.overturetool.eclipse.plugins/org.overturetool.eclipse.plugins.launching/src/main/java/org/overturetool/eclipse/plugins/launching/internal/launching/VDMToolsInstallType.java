@@ -22,9 +22,21 @@ import org.overturetool.eclipse.plugins.launching.OvertureLaunchConstants;
 
 public class VDMToolsInstallType extends
 		AbstractInterpreterInstallType implements IOvertureInstallType {
+	
+	
 
 	public static final String DBGP_FOR_VDMTOOLS_BUNDLE_ID = "org.overturetool.eclipse.plugins.dbgp.core"; //$NON-NLS-1$
 
+	
+	public final static String OVERTURE_VDM_PLUS_PLUS = "VDM++";
+	public final static String OVERTURE_VDM_SPECIFICATION_LANGUAGE = "VDM-SL";
+	
+	public final static String OVERTURE_VDM_PLUS_PLUS_ID = "PP_TOOLBOX";
+	public final static String OVERTURE_VDM_SPECIFICATION_LANGUAGE_ID = "SL_TOOLBOX";
+	
+	public final static Dialect[] DIALECTS = {new Dialect(OVERTURE_VDM_PLUS_PLUS, OVERTURE_VDM_PLUS_PLUS_ID),
+		new Dialect(OVERTURE_VDM_SPECIFICATION_LANGUAGE, OVERTURE_VDM_SPECIFICATION_LANGUAGE_ID)};
+		
 	public String getNatureId() {
 		return OvertureNature.NATURE_ID;
 	}
@@ -113,9 +125,16 @@ public class VDMToolsInstallType extends
 		return LaunchingPlugin.getDefault().getLog();
 	}
 
-	public String[] getSupportedDialectStrings() {
-		return new String[] {OvertureConstants.OVERTURE_VDM_PLUS_PLUS,
-				OvertureConstants.OVERTURE_VDM_PLUS_PLUS_REALTIME,
-				OvertureConstants.OVERTURE_VDM_SPECIFICATION_LANGUAGE};
+	public Dialect[] getSupportedDialects() {
+		return DIALECTS;
+	}
+	
+	public String getDialectNameFromId(String id) {
+		for (Dialect dialect : DIALECTS) {
+			if(dialect.getId().equals(id)){
+				return dialect.getName();
+			}
+		}
+		return null;
 	}
 }
