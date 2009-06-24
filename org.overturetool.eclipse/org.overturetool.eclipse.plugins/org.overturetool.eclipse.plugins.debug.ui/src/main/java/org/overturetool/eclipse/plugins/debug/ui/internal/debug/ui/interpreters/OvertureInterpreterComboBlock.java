@@ -14,7 +14,7 @@ public class OvertureInterpreterComboBlock extends
 	}
 
 	protected void showInterpreterPreferencePage() {
-		IPreferencePage page = new OvertureInterpreterPreferencePage();
+		IPreferencePage page = new OvertureInterpreterPreferencePage();		
 		//showPrefPage("org.eclipse.dltk.tcl.debug.ui.interpreters.TclInterpreterPreferencePage", page); //$NON-NLS-1$
 	}
 

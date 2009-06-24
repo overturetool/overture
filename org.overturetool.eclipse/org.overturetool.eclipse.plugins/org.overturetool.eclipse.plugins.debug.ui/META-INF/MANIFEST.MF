@@ -32,3 +32,4 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.4.2";resolution:=optional,
  org.overturetool.eclipse.plugins.launching;bundle-version="1.0.0",
  org.eclipse.debug.ui;bundle-version="3.4.2";resolution:=optional
 Bundle-Activator: org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.OvertureDebugUIPlugin
+Export-Package: org.overturetool.eclipse.plugins.debug.ui.internal.debug.ui.interpreters

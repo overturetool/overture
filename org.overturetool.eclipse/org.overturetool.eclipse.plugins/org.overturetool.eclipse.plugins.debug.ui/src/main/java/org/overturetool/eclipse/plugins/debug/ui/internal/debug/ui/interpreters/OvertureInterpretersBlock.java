@@ -8,12 +8,15 @@ import org.overturetool.eclipse.plugins.editor.core.OvertureNature;
 
 
 public class OvertureInterpretersBlock extends InterpretersBlock {
+
 	protected AddScriptInterpreterDialog createInterpreterDialog(IInterpreterInstall standin) {
 		AddOvertureInterpreterDialog dialog = new AddOvertureInterpreterDialog(this, 
 				getShell(), ScriptRuntime.getInterpreterInstallTypes(getCurrentNature()), 
 				standin);
 		return dialog;
 	}
+	
+	
 
 	protected String getCurrentNature() {
 		return OvertureNature.NATURE_ID;
