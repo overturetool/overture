@@ -1,9 +1,6 @@
 package org.overturetool.eclipse.plugins.editor.core.internal.parser;
 
-import jp.co.csk.vdm.toolbox.VDM.CGException;
-
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.OvertureModuleDeclaration;
-import org.overturetool.parser.imp.OvertureParser;
 
 public class OvertureParserMarcel {
 
@@ -44,25 +41,26 @@ public class OvertureParserMarcel {
 	
 	public OvertureModuleDeclaration parseContent(String content, String filename)
 	{
-		OvertureModuleDeclaration moduleDeclaration = new OvertureModuleDeclaration(content.length(), true);
-		OvertureParser parser = new OvertureParser(content);
-		try {
-			
-			parser.parseDocument();
-			parser.astDocument.setFilename(filename);
-			if (parser.errors > 0){
-				System.err.println("#Errors: " + parser.errors);
-			}
-			else
-			{
-				OvertureASTTreePopulator populator = new OvertureASTTreePopulator(moduleDeclaration, new DLTKConverter(content.toCharArray()));
-				return populator.populateOverture(parser.astDocument.getSpecifications().getClassList());
-			}
-			return moduleDeclaration;
-		} catch (CGException e) {
-			System.out.println("Couldn't parse the document" + e.getMessage());
-			e.printStackTrace();
-			return null;
-		}
+//		OvertureModuleDeclaration moduleDeclaration = new OvertureModuleDeclaration(content.length(), true);
+//		OvertureParser parser = new OvertureParser(content);
+//		try {
+//			
+//			parser.parseDocument();
+//			parser.astDocument.setFilename(filename);
+//			if (parser.errors > 0){
+//				System.err.println("#Errors: " + parser.errors);
+//			}
+//			else
+//			{
+//				OvertureASTTreePopulator populator = new OvertureASTTreePopulator(moduleDeclaration, new DLTKConverter(content.toCharArray()));
+//				return populator.populateOverture(parser.astDocument.getSpecifications().getClassList());
+//			}
+//			return moduleDeclaration;
+//		} catch (CGException e) {
+//			System.out.println("Couldn't parse the document" + e.getMessage());
+//			e.printStackTrace();
+//			return null;
+//		}
+		return null;
 	}
 }

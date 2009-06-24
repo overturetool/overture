@@ -20,6 +20,9 @@ import org.overturetool.ast.imp.OmlOperationDefinition;
 import org.overturetool.ast.imp.OmlOperationDefinitions;
 import org.overturetool.ast.itf.IOmlClass;
 import org.overturetool.ast.itf.IOmlExplicitOperation;
+import org.overturetool.eclipse.plugins.editor.core.internal.builder.EclipseVDMJ;
+import org.overturetool.eclipse.plugins.editor.core.internal.builder.EclipseVDMJPP;
+import org.overturetool.eclipse.plugins.editor.core.internal.builder.EclipseVDMJSL;
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.AccessModifierConvert;
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.OvertureAssignment;
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.OvertureCallStatement;
@@ -63,87 +66,100 @@ public class OvertureASTTreePopulator {
 		this.converter = converter;
 	}
 	
-	public OvertureModuleDeclaration populateOverture(Vector classList) throws CGException
+//	public OvertureModuleDeclaration populateOverture(Vector classList) throws CGException
+//	{
+//		for (Object object : classList) {
+//			if (object instanceof IOmlClass)
+//			{
+//				
+//				// class
+//				IOmlClass classDef = (IOmlClass) object;
+//				int offset = converter.convert(classDef.getLine().intValue(), classDef.getColumn().intValue());
+//				VDMClassDeclaration classDeclaration = new VDMClassDeclaration(
+//						classDef.getIdentifier(),
+//						offset,
+//						offset,
+//						offset,
+//						offset,
+//						TypeDeclaration.AccPublic);
+//				moduleDeclaration.addStatement(classDeclaration);
+//				
+//				// method
+//				for (Object body : classDef.getClassBody()) {
+//					if (body instanceof IOmlExplicitOperation)
+//					{
+//						IOmlClass explicitOperation = (IOmlClass) body;
+//						int offsetOperation = converter.convert(explicitOperation.getLine().intValue(), explicitOperation.getColumn().intValue());
+//						VDMMethodDeclaration methodDeclaration = new VDMMethodDeclaration(
+//								explicitOperation.getIdentifier(),
+//								offsetOperation,
+//								offsetOperation,
+//								offsetOperation,
+//								offsetOperation,
+//				                MethodDeclaration.AccPublic);
+//						classDeclaration.getStatements().add(methodDeclaration);
+//					}
+//					if (body instanceof OmlOperationDefinitions){
+//						OmlOperationDefinitions operationDefinitions = (OmlOperationDefinitions) body;
+//						for (Object opDef : operationDefinitions.getOperationList()) {
+//							if (opDef instanceof OmlOperationDefinition)
+//							{
+//								OmlOperationDefinition operation = (OmlOperationDefinition) opDef;
+//								int offsetOperation = converter.convert(operation.getLine().intValue(), operation.getColumn().intValue());
+//								VDMMethodDeclaration methodDeclaration = new VDMMethodDeclaration(
+//										operation.getShape().identity(),
+//										offsetOperation,
+//										offsetOperation,
+//										offsetOperation,
+//										offsetOperation,
+//										operation.getAccess());
+//								classDeclaration.getStatements().add(methodDeclaration);
+//							}
+//						}
+//					}
+//					
+//					if (body instanceof OmlInstanceVariableDefinitions){
+//						OmlInstanceVariableDefinitions varDefs = (OmlInstanceVariableDefinitions) body;
+//						for (Object varDef : varDefs.getVariablesList()) {
+//							if (varDef instanceof OmlInstanceVariable)
+//							{
+//								OmlInstanceVariable instanceVar = (OmlInstanceVariable) varDef;
+//								int offsetField = converter.convert(instanceVar.getLine().intValue(), instanceVar.getColumn().intValue());
+//								VDMFieldDeclaration fieldDeclaration = new VDMFieldDeclaration(
+//										instanceVar.getAssignmentDefinition().getIdentifier(),
+//										offsetField,
+//										offsetField,
+//										offsetField,
+//										offsetField,
+//										instanceVar.getAccess()
+//								);
+//								
+//								classDeclaration.getStatements().add(fieldDeclaration);
+//							}
+//							
+////							int offsetOperation = converter.convert(explicitOperation.getLine().intValue(), explicitOperation.getColumn().intValue());
+//						}
+//					}
+//				}
+//			}
+//		}
+//		return moduleDeclaration;
+//	}
+	
+	public OvertureModuleDeclaration populateVDMJ(EclipseVDMJ eclipseVDMJ)
 	{
-		for (Object object : classList) {
-			if (object instanceof IOmlClass)
-			{
-				
-				// class
-				IOmlClass classDef = (IOmlClass) object;
-				int offset = converter.convert(classDef.getLine().intValue(), classDef.getColumn().intValue());
-				VDMClassDeclaration classDeclaration = new VDMClassDeclaration(
-						classDef.getIdentifier(),
-						offset,
-						offset,
-						offset,
-						offset,
-						TypeDeclaration.AccPublic);
-				moduleDeclaration.addStatement(classDeclaration);
-				
-				// method
-				for (Object body : classDef.getClassBody()) {
-					if (body instanceof IOmlExplicitOperation)
-					{
-						IOmlClass explicitOperation = (IOmlClass) body;
-						int offsetOperation = converter.convert(explicitOperation.getLine().intValue(), explicitOperation.getColumn().intValue());
-						VDMMethodDeclaration methodDeclaration = new VDMMethodDeclaration(
-								explicitOperation.getIdentifier(),
-								offsetOperation,
-								offsetOperation,
-								offsetOperation,
-								offsetOperation,
-				                MethodDeclaration.AccPublic);
-						classDeclaration.getStatements().add(methodDeclaration);
-					}
-					if (body instanceof OmlOperationDefinitions){
-						OmlOperationDefinitions operationDefinitions = (OmlOperationDefinitions) body;
-						for (Object opDef : operationDefinitions.getOperationList()) {
-							if (opDef instanceof OmlOperationDefinition)
-							{
-								OmlOperationDefinition operation = (OmlOperationDefinition) opDef;
-								int offsetOperation = converter.convert(operation.getLine().intValue(), operation.getColumn().intValue());
-								VDMMethodDeclaration methodDeclaration = new VDMMethodDeclaration(
-										operation.getShape().identity(),
-										offsetOperation,
-										offsetOperation,
-										offsetOperation,
-										offsetOperation,
-										operation.getAccess());
-								classDeclaration.getStatements().add(methodDeclaration);
-							}
-						}
-					}
-					
-					if (body instanceof OmlInstanceVariableDefinitions){
-						OmlInstanceVariableDefinitions varDefs = (OmlInstanceVariableDefinitions) body;
-						for (Object varDef : varDefs.getVariablesList()) {
-							if (varDef instanceof OmlInstanceVariable)
-							{
-								OmlInstanceVariable instanceVar = (OmlInstanceVariable) varDef;
-								int offsetField = converter.convert(instanceVar.getLine().intValue(), instanceVar.getColumn().intValue());
-								VDMFieldDeclaration fieldDeclaration = new VDMFieldDeclaration(
-										instanceVar.getAssignmentDefinition().getIdentifier(),
-										offsetField,
-										offsetField,
-										offsetField,
-										offsetField,
-										instanceVar.getAccess()
-								);
-								
-								classDeclaration.getStatements().add(fieldDeclaration);
-							}
-							
-//							int offsetOperation = converter.convert(explicitOperation.getLine().intValue(), explicitOperation.getColumn().intValue());
-						}
-					}
-				}
-			}
+		if (eclipseVDMJ instanceof EclipseVDMJPP)
+		{
+			return populateVDMJPP(((EclipseVDMJPP)eclipseVDMJ).classes);
 		}
-		return moduleDeclaration;
+		else if (eclipseVDMJ instanceof EclipseVDMJSL)
+		{
+			return null;
+		}
+		return null;
 	}
 	
-	public OvertureModuleDeclaration populateVDMJ(ClassList classList)
+	private OvertureModuleDeclaration populateVDMJPP(ClassList classList)
 	{
 		try
 		{

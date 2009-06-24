@@ -302,8 +302,7 @@ public class OvertureMixinClass implements IOvertureMixinElement {
 			}
 
 		}, new HashSet());
-		return (OvertureMixinMethod[]) result.toArray(new OvertureMixinMethod[result
-				.size()]);
+		return (OvertureMixinMethod[]) result.toArray(new OvertureMixinMethod[result.size()]);
 	}
 
 	public OvertureMixinMethod getMethod(String name) {

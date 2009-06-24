@@ -57,7 +57,7 @@ public abstract class CodeFormatter {
      * Kind used to format a Javadoc comment
      * @since 0.8.0
      */
-    public static final int K_RUBY_DOC = 0x40;
+    public static final int K_OVERTURE_DOC = 0x40;
 
     /** 
      * Format <code>source</code>,

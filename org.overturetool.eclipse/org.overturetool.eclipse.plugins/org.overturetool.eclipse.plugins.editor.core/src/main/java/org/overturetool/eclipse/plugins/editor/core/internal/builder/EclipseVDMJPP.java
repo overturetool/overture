@@ -1,7 +1,6 @@
 package org.overturetool.eclipse.plugins.editor.core.internal.builder;
 
 import java.io.File;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import org.overturetool.vdmj.ExitStatus;
@@ -24,7 +23,7 @@ import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.typechecker.ClassTypeChecker;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 
-public class EclipseVDMJPP extends VDMJ {
+public class EclipseVDMJPP extends VDMJ implements EclipseVDMJ{
 
 	public ClassList classes = new ClassList();
 	private TypeChecker typeChecker;
@@ -32,8 +31,8 @@ public class EclipseVDMJPP extends VDMJ {
 	private ArrayList<VDMWarning> parseWarnings = new ArrayList<VDMWarning>();
 	
 	public EclipseVDMJPP() {
-		Settings.dialect = Dialect.VDM_PP;
 		typeChecker = null;
+		Settings.dialect = Dialect.VDM_PP;
 	}
 	
 	@Override
@@ -50,8 +49,8 @@ public class EclipseVDMJPP extends VDMJ {
 		catch (ContextException e)
 		{
 			println("Initialization: " + e);
-			PrintWriter pw = new PrintWriter(System.out,true);
-			e.ctxt.printStackTrace(pw,true);
+//			PrintWriter pw = new PrintWriter(System.out,true);
+//			e.ctxt.printStackTrace(pw,true);
 			return ExitStatus.EXIT_ERRORS;
 		}
 		catch (Exception e)
@@ -78,8 +77,8 @@ public class EclipseVDMJPP extends VDMJ {
 		catch (ContextException e)
 		{
 			println("Execution: " + e);
-			PrintWriter pw = new PrintWriter(System.out,true);
-			e.ctxt.printStackTrace(pw,true);
+//			PrintWriter pw = new PrintWriter(System.out,true);
+//			e.ctxt.printStackTrace(pw,true);
 		}
 		catch (Exception e)
 		{

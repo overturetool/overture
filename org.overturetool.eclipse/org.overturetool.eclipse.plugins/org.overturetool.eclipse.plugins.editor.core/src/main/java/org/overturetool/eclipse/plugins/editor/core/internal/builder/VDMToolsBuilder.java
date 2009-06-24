@@ -21,8 +21,8 @@ public class VDMToolsBuilder extends Builder {
 
 	private VDMToolsProject vdmToolsProject;
 	
-	public VDMToolsBuilder(IScriptProject project, String  vdmtoolsPath) {
-		super(project);
+	public VDMToolsBuilder(IScriptProject project, String  vdmtoolsPath, String dialect) {
+		super(project, dialect);
 		vdmToolsProject = VDMToolsProject.getInstance();
 //		vdmToolsProject.setPath(vdmtoolsPath);
 	}

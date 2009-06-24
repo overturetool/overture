@@ -6,25 +6,26 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.builder.IScriptBuilder;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
+import org.overturetool.eclipse.plugins.editor.core.EditorCoreConstants;
 import org.overturetool.eclipse.plugins.editor.core.OvertureConstants;
-import org.overturetool.eclipse.plugins.editor.core.internal.parser.OvertureSourceParserFactory.Dialect;
-import org.overturetool.eclipse.plugins.editor.core.internal.parser.OvertureSourceParserFactory.ToolType;
 //
 public class OvertureBuilder implements IScriptBuilder {
 
 	private VDMJBuilder vdmjBuilder = null;
 	private VDMToolsBuilder vdmToolsBuilder = null;
+	private enum ToolType {VDMJ,VDMTools};
 	
 	public IStatus buildModelElements(IScriptProject project, List elements, IProgressMonitor monitor, int status) {
-		
 		ToolType toolType = ToolType.VDMJ;
 
 		IInterpreterInstall interpreterInstall;
 		try {
+			// find interpreter
 			interpreterInstall = ScriptRuntime.getInterpreterInstall(project);
 			interpreterInstall.getInstallLocation();
 			if (interpreterInstall.getInterpreterInstallType().getId().equals(OvertureConstants.VDMJ_INTERPRETER_ID)) {
@@ -32,22 +33,22 @@ public class OvertureBuilder implements IScriptBuilder {
 			} else if (interpreterInstall.getInterpreterInstallType().getId().equals(OvertureConstants.VDMTOOLS_INTERPRETER_ID)) {
 				toolType = ToolType.VDMTools;
 			}
-
-			// OverturePlugin.getDefault().getPluginPreferences().getString()
-
-			// TODO get project options dialect and tool
-			Dialect dialect = Dialect.VDM_PP; // ??
+			
+			// find dialect
+			QualifiedName qn = new QualifiedName(EditorCoreConstants.PLUGIN_ID, EditorCoreConstants.OVERTURE_DIALECT_KEY);
+			String dialect = project.getProject().getPersistentProperty(qn);
 
 			switch (toolType) {
-			case VDMTools:
-				vdmToolsBuilder = new VDMToolsBuilder(project, interpreterInstall.getInstallLocation().toOSString());
-				return vdmToolsBuilder.typeCheck();
-			case VDMJ:
-				vdmjBuilder = new VDMJBuilder(project);
-				return vdmjBuilder.typeCheck();
-			default:
-				break;
+				case VDMJ:
+					vdmjBuilder = new VDMJBuilder(project, dialect);
+					return vdmjBuilder.typeCheck();
+				case VDMTools:
+					vdmToolsBuilder = new VDMToolsBuilder(project, interpreterInstall.getInstallLocation().toOSString(), dialect);
+					return vdmToolsBuilder.typeCheck();					
+				default:
+					return null;
 			}
+			
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
@@ -55,15 +56,6 @@ public class OvertureBuilder implements IScriptBuilder {
 	}
 
 	public IStatus buildResources(IScriptProject project, List resources, IProgressMonitor monitor, int status) {
-		// TODO VDMJ
-//		if (true) {
-//			VDMJBuilder vdmjBuilder = new VDMJBuilder(project);
-//			return vdmjBuilder.typeCheck();
-//
-//		} else {
-//			VDMToolsBuilder vdmToolsBuilder = new VDMToolsBuilder(project);
-//			return vdmToolsBuilder.typeCheck();
-//		}
 		return null;
 	}
 
@@ -86,7 +78,6 @@ public class OvertureBuilder implements IScriptBuilder {
 	}
 
 	public void endBuild(IScriptProject project, IProgressMonitor monitor) {
-		// TODO Auto-generated method stub
 		
 	}
 	

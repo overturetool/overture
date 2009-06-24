@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     xored software, Inc. - initial API and Implementation (Andrei Sobolev)
- *     xored software, Inc. - RubyDocumentation display improvements (Alex Panchenko <alex@xored.com>)
+ *     xored software, Inc. - OvertureDocumentation display improvements (Alex Panchenko <alex@xored.com>)
  *******************************************************************************/
 package org.overturetool.eclipse.plugins.editor.core.internal.parser.mixin;
 

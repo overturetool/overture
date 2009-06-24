@@ -15,38 +15,32 @@ import org.overturetool.vdmj.messages.VDMWarning;
 public class VDMJBuilder extends Builder {
 	private final int adjustPosition = 1;
 	
-	public VDMJBuilder(IScriptProject project) {
-		super(project);
+	public VDMJBuilder(IScriptProject project, String dialect) {
+		super(project, dialect);
 	}
 
 	public IStatus typeCheck() {
 		
-		//TODO check projectProperties if it is a VDM-SL and VDM++
-		EclipseVDMJPP vdmpp = new EclipseVDMJPP();
-		ArrayList<File> fileList = new ArrayList<File>(); 
-		for (String filename : getSoruceFiles()) {
-			fileList.add(new File(filename));
-		}
-		ExitStatus parseStatus = vdmpp.parse(fileList);
-		clearMarkers();
-		if (parseStatus == ExitStatus.EXIT_ERRORS){
-			for (VDMError error : vdmpp.getParseErrors()) {
-				this.addMarker(
-						error.location.file.getAbsolutePath(),
-						error.message,
-						error.location.startLine,
-						IMarker.SEVERITY_ERROR,
-						error.location.startPos - adjustPosition,
-						error.location.endPos - adjustPosition);
-			}
-		}
-		ExitStatus typeCheckStatus = null;
-		if (parseStatus == ExitStatus.EXIT_OK)
+		EclipseVDMJ eclipseType = null;
+		if (this.dialect.equals("VDM_PP"))
 		{
-			typeCheckStatus = vdmpp.typeCheck();
-			if (typeCheckStatus == ExitStatus.EXIT_ERRORS)
-			{
-				for (VDMError error : vdmpp.getTypeErrors()) { 
+			eclipseType = new EclipseVDMJPP();
+		}
+		else if (this.dialect.equals("VDM_SL")){
+			eclipseType = new EclipseVDMJSL();
+		}
+		else if (this.dialect.equals("VDM_RT")){
+			eclipseType = null;
+		} 
+		if ( eclipseType != null ){
+			ArrayList<File> fileList = new ArrayList<File>(); 
+			for (String filename : getSoruceFiles()) {
+				fileList.add(new File(filename));
+			}
+			ExitStatus parseStatus = eclipseType.parse(fileList);
+			clearMarkers();
+			if (parseStatus == ExitStatus.EXIT_ERRORS){
+				for (VDMError error : eclipseType.getParseErrors()) {
 					this.addMarker(
 							error.location.file.getAbsolutePath(),
 							error.message,
@@ -56,54 +50,77 @@ public class VDMJBuilder extends Builder {
 							error.location.endPos - adjustPosition);
 				}
 			}
-			for (VDMWarning warning : vdmpp.getTypeWarnings()) {
-				this.addMarker(
-						warning.location.file.getAbsolutePath(),
-						warning.message.toString(),
-						warning.location.startLine,
-						IMarker.SEVERITY_WARNING,
-						warning.location.startPos - adjustPosition,
-						warning.location.endPos - adjustPosition);
+			ExitStatus typeCheckStatus = null;
+			if (parseStatus == ExitStatus.EXIT_OK)
+			{
+				typeCheckStatus = eclipseType.typeCheck();
+				if (typeCheckStatus == ExitStatus.EXIT_ERRORS)
+				{
+					for (VDMError error : eclipseType.getTypeErrors()) { 
+						this.addMarker(
+								error.location.file.getAbsolutePath(),
+								error.message,
+								error.location.startLine,
+								IMarker.SEVERITY_ERROR,
+								error.location.startPos - adjustPosition,
+								error.location.endPos - adjustPosition);
+					}
+				}
+				for (VDMWarning warning : eclipseType.getTypeWarnings()) {
+					this.addMarker(
+							warning.location.file.getAbsolutePath(),
+							warning.message.toString(),
+							warning.location.startLine,
+							IMarker.SEVERITY_WARNING,
+							warning.location.startPos - adjustPosition,
+							warning.location.endPos - adjustPosition);
+				}
+			}
+			else
+			{
+				System.out.println("numbers of errors: " + eclipseType.getParseErrors().size() );
+				for (VDMError error : eclipseType.getParseErrors()) {
+					this.addMarker(
+							error.location.file.getAbsolutePath(),
+							error.message,
+							error.location.startLine,
+							IMarker.SEVERITY_ERROR,
+							error.location.startPos - adjustPosition,
+							error.location.endPos - adjustPosition);
+				}
+				
+			}
+			
+			if (typeCheckStatus == ExitStatus.EXIT_ERRORS || parseStatus.EXIT_ERRORS == ExitStatus.EXIT_ERRORS ){
+				IStatus typeChecked = new Status(
+						IStatus.ERROR,
+						OverturePlugin.PLUGIN_ID,
+						0,
+						"not typechecked",
+						null);
+				return typeChecked;			
+			}
+			else
+			{
+				
+				IStatus typeChecked = new Status(
+						IStatus.OK,
+						OverturePlugin.PLUGIN_ID,
+						0,
+						"Type Checked",
+						null);
+				return typeChecked;	
 			}
 		}
 		else
 		{
-			System.out.println("numbers of errors: " + vdmpp.getParseErrors().size() );
-			for (VDMError error : vdmpp.getParseErrors()) {
-				// TODO 
-				this.addMarker(
-						error.location.file.getAbsolutePath(),
-						error.message,
-						error.location.startLine,
-						IMarker.SEVERITY_ERROR,
-						error.location.startPos - adjustPosition,
-						error.location.endPos - adjustPosition);
-			}
-			
-		}
-		
-		if (typeCheckStatus == ExitStatus.EXIT_ERRORS || parseStatus.EXIT_ERRORS == ExitStatus.EXIT_ERRORS ){
-			IStatus typeChecked = new Status(
+			return new Status(
 					IStatus.ERROR,
 					OverturePlugin.PLUGIN_ID,
 					0,
-					"not typechecked",
+					"eclipseError",
 					null);
-			return typeChecked;			
 		}
-		else
-		{
-			
-			IStatus typeChecked = new Status(
-					IStatus.OK,
-					OverturePlugin.PLUGIN_ID,
-					0,
-					"Type Checked",
-					null);
-			return typeChecked;	
-		}
-		
-		
 	}
 
 

@@ -311,12 +311,12 @@ public class OvertureModelUtils {
 			String prefix) {
 		List result = new ArrayList();
 		if (type instanceof OvertureClassType) {
-			OvertureClassType rubyClassType = (OvertureClassType) type;
-			OvertureMixinClass rubyClass = mixinModel
-					.createOvertureClass(rubyClassType);
-			if (rubyClass != null) {
-				OvertureMixinMethod[] methods = rubyClass.findMethods(new PrefixMixinSearchPattern(prefix));
-				result.addAll(getAllSourceMethods(methods, rubyClass));
+			OvertureClassType overtureClassType = (OvertureClassType) type;
+			OvertureMixinClass overtureClass = mixinModel
+					.createOvertureClass(overtureClassType);
+			if (overtureClass != null) {
+				OvertureMixinMethod[] methods = overtureClass.findMethods(new PrefixMixinSearchPattern(prefix));
+				result.addAll(getAllSourceMethods(methods, overtureClass));
 			}
 
 		} else if (type instanceof AmbiguousType) {
@@ -340,13 +340,13 @@ public class OvertureModelUtils {
 			String methodName) {
 		List result = new ArrayList();
 		if (type instanceof OvertureClassType) {
-			OvertureClassType rubyClassType = (OvertureClassType) type;
-			OvertureMixinClass rubyClass = mixinModel
-					.createOvertureClass(rubyClassType);
-			if (rubyClass != null) {
-				OvertureMixinMethod[] methods = rubyClass
+			OvertureClassType overtureClassType = (OvertureClassType) type;
+			OvertureMixinClass overtureClass = mixinModel
+					.createOvertureClass(overtureClassType);
+			if (overtureClass != null) {
+				OvertureMixinMethod[] methods = overtureClass
 						.findMethods(new ExactMixinSearchPattern(methodName));
-				result.addAll(getAllSourceMethods(methods, rubyClass));
+				result.addAll(getAllSourceMethods(methods, overtureClass));
 			}
 
 		} else if (type instanceof AmbiguousType) {
@@ -401,10 +401,10 @@ public class OvertureModelUtils {
 			}
 			IOvertureMixinElement element = mixinModel.createOvertureElement(possibleName);
 			if (element instanceof OvertureMixinClass) {
-				OvertureMixinClass rubyMixinClass = (OvertureMixinClass) element;
+				OvertureMixinClass overtureMixinClass = (OvertureMixinClass) element;
 				res = OvertureModelUtils.searchClassMethodsExact(mixinModel,
 						modelModule, parsedUnit, new OvertureClassType(
-								rubyMixinClass.getKey()), methodName);
+								overtureMixinClass.getKey()), methodName);
 			}
 		}
 		return res;

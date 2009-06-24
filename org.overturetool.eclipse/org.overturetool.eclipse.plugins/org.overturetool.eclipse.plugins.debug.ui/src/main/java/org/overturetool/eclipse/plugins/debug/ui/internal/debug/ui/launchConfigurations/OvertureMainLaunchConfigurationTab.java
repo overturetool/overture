@@ -120,6 +120,8 @@ public class OvertureMainLaunchConfigurationTab extends MainLaunchConfigurationT
 					}
 				}
 			}
+			// todo temp
+			return true;
 		} catch (ModelException e) {
 			e.printStackTrace();
 		}

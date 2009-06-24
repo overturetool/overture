@@ -24,10 +24,12 @@ public abstract class Builder{
 	private IProblemReporter reporter;
 	private DLTKConverter converter;
 	private ArrayList<IResource> resourceList = new ArrayList<IResource>();
+	protected String dialect;
 //	private Hashtable<String, IProblemReporter> reporters;	
 	
-	public Builder(IScriptProject project) {
+	public Builder(IScriptProject project, String dialect) {
 		this.project = project;
+		this.dialect = dialect;
 	}
 	
 	public ArrayList<String> getSoruceFiles()

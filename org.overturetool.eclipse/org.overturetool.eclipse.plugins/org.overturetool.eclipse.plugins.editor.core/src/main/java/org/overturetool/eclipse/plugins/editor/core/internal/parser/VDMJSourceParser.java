@@ -1,55 +1,51 @@
 package org.overturetool.eclipse.plugins.editor.core.internal.parser;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.ast.parser.AbstractSourceParser;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
+import org.overturetool.eclipse.plugins.editor.core.internal.builder.EclipseVDMJ;
 import org.overturetool.eclipse.plugins.editor.core.internal.builder.EclipseVDMJPP;
-import org.overturetool.eclipse.plugins.editor.core.internal.parser.OvertureSourceParserFactory.Dialect;
+import org.overturetool.eclipse.plugins.editor.core.internal.builder.EclipseVDMJSL;
 import org.overturetool.eclipse.plugins.editor.core.internal.parser.ast.OvertureModuleDeclaration;
 import org.overturetool.vdmj.ExitStatus;
-import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 
-public class VDMJSourceParser extends AbstractSourceParser {
-
-		
-	public VDMJSourceParser(Dialect dialect) {
-		//TODO VDM++ / VDM-SL
-		switch (dialect)
-		{
-			case VDM_PP:
-				break;
-			
-			case VDM_SL:
-				break;
-		
-			case VDM_RT:
-				break;
-			default:
-				
-		}
+public class VDMJSourceParser{
+	
+	String dialect;
+	
+	VDMJSourceParser(String dialect){
+		this.dialect = dialect;
 	}
 	
 	public ModuleDeclaration parse(char[] fileName, char[] source, IProblemReporter reporter) {
 		// test
-//		OverturePlugin.getDefault().getBundle().
 		
 		// 
 		OvertureModuleDeclaration moduleDeclaration = new OvertureModuleDeclaration(source.length, true);
 		DLTKConverter converter = new DLTKConverter(source);
 		
-		EclipseVDMJPP vdmPpParser = new EclipseVDMJPP();
+		EclipseVDMJ eclipseParser = null;
+		if (dialect.equals("VDM_PP")){			
+			eclipseParser = new EclipseVDMJPP();
+		}
+		else if (dialect.equals("VDM_SL")) {
+			eclipseParser = new EclipseVDMJSL();
+		}
+		else if (dialect.equals("VDM_RT)")) {
+			eclipseParser = null; // TODO
+		}
 		
-		ExitStatus status = vdmPpParser.parse(new String(source));
+		ExitStatus status = eclipseParser.parse(new String(source));
 		OvertureASTTreePopulator populator = new OvertureASTTreePopulator(moduleDeclaration,converter);
-		moduleDeclaration = populator.populateVDMJ(vdmPpParser.classes);
+
+		moduleDeclaration = populator.populateVDMJ(eclipseParser);
 		if (reporter != null){
 			if (status == ExitStatus.EXIT_ERRORS)
 			{
-				for (VDMError error : vdmPpParser.getParseErrors()) {
+				for (VDMError error : eclipseParser.getParseErrors()) {
 					DefaultProblem defaultProblem = new DefaultProblem(
 							new String(fileName),
 							error.message,
@@ -62,9 +58,9 @@ public class VDMJSourceParser extends AbstractSourceParser {
 					reporter.reportProblem(defaultProblem);
 				}
 			}
-			if (vdmPpParser.getParseWarnings().size() > 0)
+			if (eclipseParser.getParseWarnings().size() > 0)
 			{
-				for (VDMWarning warning : vdmPpParser.getParseWarnings()) {
+				for (VDMWarning warning : eclipseParser.getParseWarnings()) {
 					DefaultProblem defaultProblem = new DefaultProblem(
 							new String(fileName),
 							warning.message,

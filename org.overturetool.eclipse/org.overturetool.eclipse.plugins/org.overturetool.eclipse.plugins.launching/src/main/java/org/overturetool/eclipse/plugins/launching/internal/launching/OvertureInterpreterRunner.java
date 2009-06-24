@@ -185,10 +185,9 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 
 							VMRunnerConfiguration vmConfig = new VMRunnerConfiguration(iconfig.getRunnerClassName(config, launch, myJavaProject), newClassPath);
 							vmConfig.setWorkingDirectory(proj.getProject().getLocation().toOSString());
-							//TODO get the project dialect 
+							//get the project dialect 
 							String dialect;
-							QualifiedName qn = new QualifiedName(EditorCoreConstants.PLUGIN_ID,
-									EditorCoreConstants.OVERTURE_DIALECT_KEY);
+							QualifiedName qn = new QualifiedName(EditorCoreConstants.PLUGIN_ID, EditorCoreConstants.OVERTURE_DIALECT_KEY);
 							dialect = proj.getProject().getPersistentProperty(qn);
 							// Select interpreter:
 							String toolType = OvertureDebugConstants.TOOL_VDMJ;
@@ -259,6 +258,9 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 									"new " + 
 									launch.getLaunchConfiguration().getAttribute(OvertureDebugConstants.DEBUGGING_CLASS, "") + 
 									"()." + debugOperation;
+							if (dialect.equals("VDM_SL")){
+								expression = debugOperation;
+							}
 									
 							arguments[argNumber++] = expression;
 							
