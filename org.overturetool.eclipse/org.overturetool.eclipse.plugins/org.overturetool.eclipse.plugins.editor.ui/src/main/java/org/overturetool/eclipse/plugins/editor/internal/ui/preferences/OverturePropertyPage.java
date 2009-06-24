@@ -44,9 +44,11 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
+import org.overturetool.eclipse.plugins.editor.core.EditorCoreConstants;
 import org.overturetool.eclipse.plugins.editor.core.OvertureNature;
 import org.overturetool.eclipse.plugins.editor.internal.ui.UIPlugin;
 import org.overturetool.eclipse.plugins.editor.ui.OverturePreferenceConstants;
+import org.overturetool.eclipse.plugins.launching.internal.launching.Dialect;
 import org.overturetool.eclipse.plugins.launching.internal.launching.IOvertureInstallType;
 
 public class OverturePropertyPage extends PropertyPage {
@@ -90,20 +92,21 @@ public class OverturePropertyPage extends PropertyPage {
 		label2.setText("Select dialect");
 		comboDialect = new Combo(fGroup, SWT.READ_ONLY);
 
-		String dialect = "";
+		String dialectId = "";
 		String interpreterName = "";
 
 		try {
-			QualifiedName qn = new QualifiedName(UIPlugin.PLUGIN_ID,
-					OverturePreferenceConstants.OVERTURE_DIALECT_KEY);
-			dialect = project.getPersistentProperty(qn);
-			qn = new QualifiedName(UIPlugin.PLUGIN_ID,
-					OverturePreferenceConstants.OVERTURE_INTERPETER_KEY);
+			QualifiedName qn = new QualifiedName( EditorCoreConstants.PLUGIN_ID, EditorCoreConstants.OVERTURE_DIALECT_KEY);
+			dialectId = project.getPersistentProperty(qn);
+			qn = new QualifiedName(EditorCoreConstants.PLUGIN_ID, EditorCoreConstants.OVERTURE_INTERPETER_KEY);
 			interpreterName = project.getPersistentProperty(qn);
+			
+			
+			selectInterpreter(interpreterName);			
 			setDialects(interpreterName);
-			selectDialect(dialect);
-			selectInterpreter(interpreterName);
-
+			
+			
+			selectDialect(((IOvertureInstallType)getSelectedInterpreterInstall(interpreterName).getInterpreterInstallType()).getDialectNameFromId(dialectId));
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -121,20 +124,26 @@ public class OverturePropertyPage extends PropertyPage {
 		}
 	}
 
-	private void selectDialect(String dialect) {
+	private void selectDialect(String dialect) {	
 		for (int i = 0; i < comboDialect.getItemCount(); i++) {
 			if (comboDialect.getItem(i).equals(dialect)) {
 				comboDialect.select(i);
 			}
 		}
 	}
+	
+	
 
 	private void setDialects(String selectedInterpreterName) {
 		IInterpreterInstall interpreter = getSelectedInterpreterInstall(selectedInterpreterName);
 
 		if (interpreter != null) {
-			comboDialect.setItems(((IOvertureInstallType) interpreter
-					.getInterpreterInstallType()).getSupportedDialectStrings());
+			Dialect[] dialects = ((IOvertureInstallType)interpreter.getInterpreterInstallType()).getSupportedDialects();
+			String[] dialectNames = new String[dialects.length];
+			for (int i = 0; i < dialects.length; i++) {
+				dialectNames[i] = dialects[i].getName();
+			}
+			comboDialect.setItems(dialectNames);			
 		} else {
 			comboDialect.setItems(new String[] { "No supported dialects" });
 		}
@@ -194,27 +203,30 @@ public class OverturePropertyPage extends PropertyPage {
 
 			IScriptProject scriptProj = ModelManager.getModelManager()
 					.getModel().getScriptProject(project.getName());
-			IInterpreterInstall interpreterInstall;
 			IBuildpathEntry[] buildPaths;
 			// buildPaths[1].getPath().
 			// IBuildpathEntry bp =
-			interpreterInstall = ScriptRuntime.getInterpreterInstall(scriptProj);
+			IInterpreterInstall oldInterpreterInstall = ScriptRuntime.getInterpreterInstall(scriptProj);
+			String interpreterName = comboInterpreter.getItem(comboInterpreter.getSelectionIndex());
+			IInterpreterInstall newInterpreterInstall = getSelectedInterpreterInstall(interpreterName);
+			
 			buildPaths = scriptProj.getRawBuildpath();
-			QualifiedName qn = new QualifiedName(UIPlugin.PLUGIN_ID,OverturePreferenceConstants.OVERTURE_DIALECT_KEY);
-			project.setPersistentProperty(qn, comboDialect.getItem(comboDialect.getSelectionIndex()));
+			QualifiedName qn = new QualifiedName(EditorCoreConstants.PLUGIN_ID,EditorCoreConstants.OVERTURE_DIALECT_KEY);
+			Dialect[] dialects = ((IOvertureInstallType)newInterpreterInstall.getInterpreterInstallType()).getSupportedDialects();
+			
+			project.setPersistentProperty(qn, dialects[comboDialect.getSelectionIndex()].getId());
 
-			qn = new QualifiedName(UIPlugin.PLUGIN_ID,
-					OverturePreferenceConstants.OVERTURE_INTERPETER_KEY);
-			String interpreterName = comboInterpreter.getItem(comboInterpreter
-					.getSelectionIndex());
+			qn = new QualifiedName(EditorCoreConstants.PLUGIN_ID,EditorCoreConstants.OVERTURE_INTERPETER_KEY);
+			
+			
 			project.setPersistentProperty(qn, interpreterName);
-			IInterpreterInstall projectInterpreter = getSelectedInterpreterInstall(interpreterName);
+
 			int erik = 60;
 			List<BPListElement> bpList = new ArrayList<BPListElement>();
 			for(int i = 0; i < buildPaths.length; i++){
 				if(buildPaths[i].getEntryKind() == IBuildpathEntry.BPE_CONTAINER 
 						&& buildPaths[i].getPath().toString().startsWith("org.eclipse.dltk.launching.INTERPRETER_CONTAINER")){
-					String path = "org.eclipse.dltk.launching.INTERPRETER_CONTAINER/" + projectInterpreter.getInterpreterInstallType().getId() + "/" + projectInterpreter.getName();
+					String path = "org.eclipse.dltk.launching.INTERPRETER_CONTAINER/" + newInterpreterInstall.getInterpreterInstallType().getId() + "/" + newInterpreterInstall.getName();
 					bpList.add(new BPListElement(scriptProj, IBuildpathEntry.BPE_CONTAINER, new Path(path), res, buildPaths[i].isExternal()));
 				}else{
 					bpList.add(new BPListElement(scriptProj, buildPaths[i].getEntryKind(), buildPaths[i].getPath(), res, buildPaths[i].isExternal()));
