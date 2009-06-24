@@ -50,8 +50,7 @@ abstract public class Redirector extends PrintWriter
 	@Override
 	public void println(String line)
 	{
-		print(line);
-		print("\n");
+		print(line + "\n");
 		flush();
 	}
 }

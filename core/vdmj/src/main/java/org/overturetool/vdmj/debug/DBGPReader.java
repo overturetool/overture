@@ -23,16 +23,19 @@
 
 package org.overturetool.vdmj.debug;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.Vector;
@@ -44,6 +47,8 @@ import org.overturetool.vdmj.VDMJ;
 import org.overturetool.vdmj.VDMPP;
 import org.overturetool.vdmj.VDMRT;
 import org.overturetool.vdmj.VDMSL;
+import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
@@ -54,11 +59,16 @@ import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.MessageException;
+import org.overturetool.vdmj.modules.Module;
+import org.overturetool.vdmj.pog.ProofObligation;
+import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Breakpoint;
+import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.DebuggerException;
 import org.overturetool.vdmj.runtime.Interpreter;
+import org.overturetool.vdmj.runtime.ModuleInterpreter;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.RootContext;
 import org.overturetool.vdmj.runtime.SourceFile;
@@ -151,7 +161,7 @@ public class DBGPReader
 				catch (ContextException e)
 				{
 					System.out.println("Initialization: " + e);
-					e.ctxt.printStackTrace(true);
+					e.ctxt.printStackTrace(Console.out, true);
 					System.exit(3);
 				}
 				catch (Exception e)
@@ -428,6 +438,12 @@ public class DBGPReader
     	return sb;
     }
 
+	private void cdataResponse(String msg) throws IOException
+	{
+		// Send back a CDATA response with a plain message
+		response(null, new StringBuilder("<![CDATA[" + quote(msg) + "]]>"));
+	}
+
 	private static String quote(String in)
 	{
 		return in
@@ -471,6 +487,18 @@ public class DBGPReader
 		{
 			errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
 		}
+	}
+
+	public void tracing(String display)
+	{
+    	try
+    	{
+    		cdataResponse(display);
+    	}
+    	catch (Exception e)
+    	{
+    		errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
+    	}
 	}
 
 	public void complete(DBGPReason reason)
@@ -612,12 +640,8 @@ public class DBGPReader
     				carryOn = false;
     				break;
 
-    			case XCMD_OVERTURE_CURRENTLINE:
-    				processCurrentLine(c);
-    				break;
-
-    			case XCMD_OVERTURE_CURRENTSOURCE:
-    				processCurrentSource(c);
+    			case XCMD_OVERTURE_CMD:
+    				processOvertureCmd(c);
     				break;
 
     			case PROPERTY_SET:
@@ -1287,7 +1311,7 @@ public class DBGPReader
 				break;
 
 			case GLOBAL:
-				vars.putAll(frame.getGlobal());
+				vars.putAll(interpreter.initialContext);
 				break;
 		}
 
@@ -1512,36 +1536,324 @@ public class DBGPReader
 		write(sb);
 	}
 
-	private void processCurrentLine(DBGPCommand c) throws DBGPException, IOException
+	private void processOvertureCmd(DBGPCommand c)
+		throws DBGPException, IOException, URISyntaxException
 	{
-		checkArgs(c, 1, false);
+		checkArgs(c, 2, false);
+		DBGPOption option = c.getOption(DBGPOptionType.C);
 
+		if (option == null)
+		{
+			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
+		}
+
+		if (option.value.equals("init"))
+		{
+			processInit(c);
+		}
+		else if (option.value.equals("create"))
+		{
+			processCreate(c);
+		}
+		else if (option.value.equals("currentline"))
+		{
+			processCurrentLine(c);
+		}
+		else if (option.value.equals("source"))
+		{
+			processCurrentSource(c);
+		}
+		else if (option.value.equals("coverage"))
+		{
+			processCoverage(c);
+		}
+		else if (option.value.equals("pog"))
+		{
+			processPOG(c);
+		}
+		else if (option.value.equals("stack"))
+		{
+			processStack(c);
+		}
+		else if (option.value.equals("trace"))
+		{
+			processTrace(c);
+		}
+		else if (option.value.equals("list"))
+		{
+			processList();
+		}
+		else if (option.value.equals("files"))
+		{
+			processFiles();
+		}
+		else if (option.value.equals("classes"))
+		{
+			processClasses(c);
+		}
+		else if (option.value.equals("modules"))
+		{
+			processModules(c);
+		}
+		else if (option.value.equals("default"))
+		{
+			processDefault(c);
+		}
+		else
+		{
+			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
+		}
+	}
+
+	private void processInit(DBGPCommand c) throws IOException, DBGPException
+	{
+		if (status == DBGPStatus.BREAK)
+		{
+			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+		}
+
+		LexLocation.clearLocations();
+		interpreter.init(this);
+		cdataResponse("Global context and test coverage initialized");
+	}
+
+	private void processCreate(DBGPCommand c) throws DBGPException
+	{
+		if (!(interpreter instanceof ClassInterpreter))
+		{
+			throw new DBGPException(DBGPErrorCode.INTERNAL_ERROR, c.toString());
+		}
+
+		try
+		{
+			int i = c.data.indexOf(' ');
+			String var = c.data.substring(0, i);
+			String exp = c.data.substring(i + 1);
+
+			((ClassInterpreter)interpreter).create(var, exp);
+		}
+		catch (Exception e)
+		{
+			throw new DBGPException(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
+		}
+	}
+
+	private void processStack(DBGPCommand c) throws IOException, DBGPException
+	{
 		if (status != DBGPStatus.BREAK)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
 
-		StringBuilder sb = new StringBuilder();
+		OutputStream out = new ByteArrayOutputStream();
+		PrintWriter pw = new PrintWriter(out);
+		pw.println("Stopped at " + breakpoint);
+		breakContext.printStackTrace(pw, true);
+		pw.close();
+		cdataResponse(out.toString());
+	}
 
-		sb.append("<![CDATA[");
-		sb.append(quote(interpreter.getSourceLine(
-			breakpoint.location.file, breakpoint.location.startLine, ":  ")));
-		sb.append("\n");
-		sb.append("]]>");
+	private void processTrace(DBGPCommand c) throws DBGPException
+	{
+		File file = null;
+		int line = 0;
+		String trace = null;
 
-		response(null, sb);
+		try
+		{
+    		int i = c.data.indexOf(' ');
+    		int j = c.data.indexOf(' ', i+1);
+    		file = new File(new URI(c.data.substring(0, i)));
+    		line = Integer.parseInt(c.data.substring(i+1, j));
+    		trace = c.data.substring(j+1);
+
+    		if (trace.length() == 0) trace = null;
+
+    		OutputStream out = new ByteArrayOutputStream();
+    		PrintWriter pw = new PrintWriter(out);
+
+    		Statement stmt = interpreter.findStatement(file, line);
+
+    		if (stmt == null)
+    		{
+    			Expression exp = interpreter.findExpression(file, line);
+
+    			if (exp == null)
+    			{
+    				throw new DBGPException(DBGPErrorCode.CANT_SET_BREAKPOINT,
+    					"No breakable expressions or statements at " + file + ":" + line);
+    			}
+    			else
+    			{
+    				interpreter.clearBreakpoint(exp.breakpoint.number);
+    				Breakpoint bp = interpreter.setTracepoint(exp, trace);
+    				pw.println("Created " + bp);
+    				pw.println(interpreter.getSourceLine(bp.location));
+    			}
+    		}
+    		else
+    		{
+    			interpreter.clearBreakpoint(stmt.breakpoint.number);
+    			Breakpoint bp = interpreter.setTracepoint(stmt, trace);
+    			pw.println("Created " + bp);
+    			pw.println(interpreter.getSourceLine(bp.location));
+    		}
+
+    		pw.close();
+    		cdataResponse(out.toString());
+		}
+		catch (Exception e)
+		{
+			throw new DBGPException(DBGPErrorCode.CANT_SET_BREAKPOINT, e.getMessage());
+		}
+	}
+
+	private void processList() throws IOException
+	{
+		Map<Integer, Breakpoint> map = interpreter.getBreakpoints();
+		OutputStream out = new ByteArrayOutputStream();
+		PrintWriter pw = new PrintWriter(out);
+
+		for (Integer key: map.keySet())
+		{
+			Breakpoint bp = map.get(key);
+			pw.println(bp.toString());
+			pw.println(interpreter.getSourceLine(bp.location));
+		}
+
+		pw.close();
+		cdataResponse(out.toString());
+	}
+
+	private void processFiles() throws IOException
+	{
+		Set<File> filenames = interpreter.getSourceFiles();
+		OutputStream out = new ByteArrayOutputStream();
+		PrintWriter pw = new PrintWriter(out);
+
+		for (File file: filenames)
+		{
+			pw.println(file.getPath());
+		}
+
+		pw.close();
+		cdataResponse(out.toString());
+	}
+
+	private void processClasses(DBGPCommand c) throws IOException, DBGPException
+	{
+		if (!(interpreter instanceof ClassInterpreter))
+		{
+			throw new DBGPException(DBGPErrorCode.INTERNAL_ERROR, c.toString());
+		}
+
+		ClassInterpreter cinterpreter = (ClassInterpreter)interpreter;
+		String def = cinterpreter.getDefaultName();
+		ClassList classes = cinterpreter.getClasses();
+		OutputStream out = new ByteArrayOutputStream();
+		PrintWriter pw = new PrintWriter(out);
+
+		for (ClassDefinition cls: classes)
+		{
+			if (cls.name.name.equals(def))
+			{
+				pw.println(cls.name.name + " (default)");
+			}
+			else
+			{
+				pw.println(cls.name.name);
+			}
+		}
+
+		pw.close();
+		cdataResponse(out.toString());
+	}
+
+	private void processModules(DBGPCommand c) throws DBGPException, IOException
+	{
+		if (!(interpreter instanceof ModuleInterpreter))
+		{
+			throw new DBGPException(DBGPErrorCode.INTERNAL_ERROR, c.toString());
+		}
+
+		ModuleInterpreter minterpreter = (ModuleInterpreter)interpreter;
+		String def = minterpreter.getDefaultName();
+		List<Module> modules = minterpreter.getModules();
+		OutputStream out = new ByteArrayOutputStream();
+		PrintWriter pw = new PrintWriter(out);
+
+		for (Module m: modules)
+		{
+			if (m.name.name.equals(def))
+			{
+				pw.println(m.name.name + " (default)");
+			}
+			else
+			{
+				pw.println(m.name.name);
+			}
+		}
+
+		pw.close();
+		cdataResponse(out.toString());
+	}
+
+	private void processDefault(DBGPCommand c) throws DBGPException
+	{
+		try
+		{
+			interpreter.setDefaultName(c.data);
+			cdataResponse("Default set to " + interpreter.getDefaultName());
+		}
+		catch (Exception e)
+		{
+			throw new DBGPException(DBGPErrorCode.INTERNAL_ERROR, c.toString());
+		}
+	}
+
+	private void processCoverage(DBGPCommand c)
+		throws DBGPException, IOException, URISyntaxException
+	{
+		if (status == DBGPStatus.BREAK)
+		{
+			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+		}
+
+		File file = new File(new URI(c.data));
+		SourceFile source = interpreter.getSourceFile(file);
+
+		if (source == null)
+		{
+			cdataResponse(file + ": file not found");
+		}
+		else
+		{
+			OutputStream out = new ByteArrayOutputStream();
+			PrintWriter pw = new PrintWriter(out);
+			source.printCoverage(pw);
+			pw.close();
+			cdataResponse(out.toString());
+		}
+	}
+
+	private void processCurrentLine(DBGPCommand c) throws DBGPException, IOException
+	{
+		if (status != DBGPStatus.BREAK)
+		{
+			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+		}
+
+		cdataResponse(interpreter.getSourceLine(
+			breakpoint.location.file, breakpoint.location.startLine, ":  "));
 	}
 
 	private void processCurrentSource(DBGPCommand c) throws DBGPException, IOException
 	{
-		checkArgs(c, 1, false);
-
 		if (status != DBGPStatus.BREAK)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
 
-		StringBuilder sb = new StringBuilder();
 		File file = breakpoint.location.file;
 		int current = breakpoint.location.startLine;
 
@@ -1549,16 +1861,58 @@ public class DBGPReader
 		if (start < 1) start = 1;
 		int end = start + SOURCE_LINES*2 + 1;
 
-		sb.append("<![CDATA[");
+		StringBuilder sb = new StringBuilder();
 
 		for (int src = start; src < end; src++)
 		{
-			sb.append(quote(interpreter.getSourceLine(
-				file, src, (src == current) ? ":>>" : ":  ")));
+			sb.append(interpreter.getSourceLine(
+				file, src, (src == current) ? ":>>" : ":  "));
 			sb.append("\n");
 		}
 
-		sb.append("]]>");
-		response(null, sb);
+		cdataResponse(sb.toString());
+	}
+
+	private void processPOG(DBGPCommand c) throws IOException
+	{
+		ProofObligationList all = interpreter.getProofObligations();
+		ProofObligationList list = null;
+
+		if (c.data.equals("*"))
+		{
+			list = all;
+		}
+		else
+		{
+			list = new ProofObligationList();
+			String name = c.data + "(";
+
+			for (ProofObligation po: all)
+			{
+				if (po.name.indexOf(name) >= 0)
+				{
+					list.add(po);
+				}
+			}
+ 		}
+
+		if (list.isEmpty())
+		{
+			cdataResponse("No proof obligations generated");
+		}
+		else
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.append("Generated ");
+			sb.append(plural(list.size(), "proof obligation", "s"));
+			sb.append(":\n");
+			sb.append(list);
+			cdataResponse(sb.toString());
+		}
+	}
+
+	private String plural(int n, String s, String pl)
+	{
+		return n + " " + (n != 1 ? s + pl : s);
 	}
 }

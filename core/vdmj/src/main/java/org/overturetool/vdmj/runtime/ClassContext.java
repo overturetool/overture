@@ -23,10 +23,11 @@
 
 package org.overturetool.vdmj.runtime;
 
+import java.io.PrintWriter;
+
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.values.UpdatableValue;
 import org.overturetool.vdmj.values.Value;
 
@@ -112,21 +113,21 @@ public class ClassContext extends RootContext
 	}
 
 	@Override
-	public void printStackTrace(boolean variables)
+	public void printStackTrace(PrintWriter out, boolean variables)
 	{
 		if (outer == null)		// Don't expand initial context
 		{
-			Console.out.println("In class context of " + title);
+			out.println("In class context of " + title);
 		}
 		else
 		{
 			if (variables)
 			{
-    			Console.out.print(this.format("\t", this));
+    			out.print(this.format("\t", this));
 			}
 
-			Console.out.println("In class context of " + title + " " + location);
-			outer.printStackTrace(false);
+			out.println("In class context of " + title + " " + location);
+			outer.printStackTrace(out, false);
 		}
 	}
 }

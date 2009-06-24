@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.runtime;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.syntax.ParserException;
@@ -51,11 +52,29 @@ public class Tracepoint extends Breakpoint
 
 		if (parsed == null)
 		{
-			println("Reached [" + number + "]" );
+			String s = "Reached [" + number + "]";
+
+			if (Settings.usingDBGP)
+			{
+				ctxt.threadState.dbgp.tracing(s);
+			}
+			else
+			{
+				println(s);
+			}
 		}
 		else
 		{
-			println(trace + " = " + parsed.eval(ctxt) + " at [" + number + "]" );
+			String s = trace + " = " + parsed.eval(ctxt) + " at [" + number + "]";
+
+			if (Settings.usingDBGP)
+			{
+				ctxt.threadState.dbgp.tracing(s);
+			}
+			else
+			{
+				println(s);
+			}
 		}
 	}
 

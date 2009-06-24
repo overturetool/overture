@@ -798,7 +798,7 @@ abstract public class CommandReader
 			{
 				println("FAILED: " + assertion);
 				println("Runtime: " + e.getMessage());
-				e.ctxt.printStackTrace(true);
+				e.ctxt.printStackTrace(Console.out, true);
 				assertErrors++;
 				break;
 			}

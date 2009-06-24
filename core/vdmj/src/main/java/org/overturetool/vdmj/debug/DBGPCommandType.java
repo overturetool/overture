@@ -53,8 +53,7 @@ public enum DBGPCommandType
 	UNKNOWN("?"),
 
 	// Overture extras
-	XCMD_OVERTURE_CURRENTLINE("xcmd_overture_currentline"),
-	XCMD_OVERTURE_CURRENTSOURCE("xcmd_overture_currentsource");
+	XCMD_OVERTURE_CMD("xcmd_overture_cmd");
 
 	public String value;
 

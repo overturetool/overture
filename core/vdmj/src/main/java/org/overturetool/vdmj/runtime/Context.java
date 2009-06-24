@@ -23,12 +23,12 @@
 
 package org.overturetool.vdmj.runtime;
 
+import java.io.PrintWriter;
 import java.util.HashMap;
 
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.values.NameValuePair;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.ObjectValue;
@@ -288,21 +288,21 @@ public class Context extends HashMap<LexNameToken, Value>
 		return sb.toString();
 	}
 
-	public void printStackTrace(boolean variables)
+	public void printStackTrace(PrintWriter out, boolean variables)
 	{
 		if (outer == null)		// Don't expand initial context
 		{
-			Console.out.println("In context of " + title);
+			out.println("In context of " + title);
 		}
 		else
 		{
 			if (variables)
 			{
-				Console.out.print(this.format("\t", this));
+				out.print(this.format("\t", this));
 			}
 
-			Console.out.println("In context of " + title + " " + location);
-			outer.printStackTrace(variables);
+			out.println("In context of " + title + " " + location);
+			outer.printStackTrace(out, variables);
 		}
 	}
 

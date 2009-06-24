@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.vdmj.ExitStatus;
+import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.MessageException;
 import org.overturetool.vdmj.runtime.Breakpoint;
 import org.overturetool.vdmj.runtime.Context;
@@ -192,7 +193,7 @@ public class DebuggerReader extends CommandReader
 	protected boolean doStack(String line)
 	{
 		println("Stopped at " + this.breakpoint);
-		getFrame().printStackTrace(true);
+		getFrame().printStackTrace(Console.out, true);
 		return true;
 	}
 
