@@ -1,6 +1,7 @@
 package org.overturetool.eclipse.plugins.editor.core.internal.builder;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import org.overturetool.vdmj.ExitStatus;
@@ -49,7 +50,8 @@ public class EclipseVDMJPP extends VDMJ {
 		catch (ContextException e)
 		{
 			println("Initialization: " + e);
-			e.ctxt.printStackTrace(true);
+			PrintWriter pw = new PrintWriter(System.out,true);
+			e.ctxt.printStackTrace(pw,true);
 			return ExitStatus.EXIT_ERRORS;
 		}
 		catch (Exception e)
@@ -76,7 +78,8 @@ public class EclipseVDMJPP extends VDMJ {
 		catch (ContextException e)
 		{
 			println("Execution: " + e);
-			e.ctxt.printStackTrace(true);
+			PrintWriter pw = new PrintWriter(System.out,true);
+			e.ctxt.printStackTrace(pw,true);
 		}
 		catch (Exception e)
 		{
