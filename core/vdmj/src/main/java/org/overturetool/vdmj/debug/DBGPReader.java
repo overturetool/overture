@@ -1843,8 +1843,13 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
 
-		cdataResponse(interpreter.getSourceLine(
+		OutputStream out = new ByteArrayOutputStream();
+		PrintWriter pw = new PrintWriter(out);
+		pw.println("Stopped at " + breakpoint);
+		pw.println(interpreter.getSourceLine(
 			breakpoint.location.file, breakpoint.location.startLine, ":  "));
+		pw.close();
+		cdataResponse(out.toString());
 	}
 
 	private void processCurrentSource(DBGPCommand c) throws DBGPException, IOException
