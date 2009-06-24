@@ -281,7 +281,7 @@ public class ExplicitFunctionDefinition extends Definition
 		else if (measure != null)
 		{
 			LexNameToken mname = new LexNameToken(name.module, measure);
-			mname.setTypeQualifier(type.parameters);
+			if (base.isVDMPP()) mname.setTypeQualifier(type.parameters);
 			Definition mdef = base.findName(mname, scope);
 
 			if (mdef == null)
