@@ -29,6 +29,7 @@ import org.eclipse.dltk.ui.wizards.ProjectWizardSecondPage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.INewWizard;
+import org.overturetool.eclipse.plugins.editor.core.EditorCoreConstants;
 import org.overturetool.eclipse.plugins.editor.core.OvertureConstants;
 import org.overturetool.eclipse.plugins.editor.core.OvertureNature;
 import org.overturetool.eclipse.plugins.editor.internal.ui.UIPlugin;
@@ -36,6 +37,8 @@ import org.overturetool.eclipse.plugins.editor.internal.ui.preferences.OvertureB
 import org.overturetool.eclipse.plugins.editor.ui.EditorCoreUIConstants;
 import org.overturetool.eclipse.plugins.editor.ui.OvertureImages;
 import org.overturetool.eclipse.plugins.editor.ui.OverturePreferenceConstants;
+import org.overturetool.eclipse.plugins.launching.internal.launching.Dialect;
+import org.overturetool.eclipse.plugins.launching.internal.launching.IOvertureInstallType;
 
 public class OvertureProjectCreationWizard extends NewElementWizard implements
 		INewWizard, IExecutableExtension {
@@ -130,10 +133,17 @@ public class OvertureProjectCreationWizard extends NewElementWizard implements
 		
 		try {
 			IProject proj = fFirstPage.getProjectHandle();
-			QualifiedName qn = new QualifiedName(UIPlugin.PLUGIN_ID, OverturePreferenceConstants.OVERTURE_DIALECT_KEY);
-			proj.setPersistentProperty(qn, fFirstPage.getDialectSetting());
 			
-			qn = new QualifiedName(UIPlugin.PLUGIN_ID, OverturePreferenceConstants.OVERTURE_INTERPETER_KEY);
+			QualifiedName qn = new QualifiedName(EditorCoreConstants.PLUGIN_ID,EditorCoreConstants.OVERTURE_DIALECT_KEY);
+			Dialect[] dialects = ((IOvertureInstallType)fFirstPage.getSelectedInterpreter().getInterpreterInstallType()).getSupportedDialects();
+			for (Dialect dialect : dialects) {
+				if(dialect.getName().equals(fFirstPage.getDialectSetting())){
+					proj.setPersistentProperty(qn, dialect.getId());
+				}
+			}
+			
+			
+			qn = new QualifiedName(EditorCoreConstants.PLUGIN_ID, EditorCoreConstants.OVERTURE_INTERPETER_KEY);
 			proj.setPersistentProperty(qn, fFirstPage.getSelectedInterpreter().getName());
 			
 			

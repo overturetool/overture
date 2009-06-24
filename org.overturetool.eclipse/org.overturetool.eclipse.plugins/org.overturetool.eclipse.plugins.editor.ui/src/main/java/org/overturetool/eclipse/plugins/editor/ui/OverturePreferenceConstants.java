@@ -423,8 +423,6 @@ public class OverturePreferenceConstants extends PreferenceConstants {
 	public static final String OVERTURE_PREDICATE = OvertureColorConstants.OVERTURE_PREDICATE;
 	
 	
-	public final static String OVERTURE_DIALECT_KEY = "OVERTURE_DIALECT_KEY";
-	public final static String OVERTURE_INTERPETER_KEY = "OVERTURE_INTERPETER_KEY";
 	
 	
 	public static void initializeDefaultValues(IPreferenceStore store) {

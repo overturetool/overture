@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.actions.ScrubLocalAction;
 import org.overturetool.eclipse.plugins.editor.core.OvertureConstants;
 import org.overturetool.eclipse.plugins.editor.core.OvertureNature;
+import org.overturetool.eclipse.plugins.launching.internal.launching.Dialect;
 import org.overturetool.eclipse.plugins.launching.internal.launching.IOvertureInstallType;
 
 
@@ -183,8 +184,13 @@ public class OvertureProjectWizardFirstPage extends ProjectWizardFirstPage {
 		for (IInterpreterInstallType interpreterInstallType : interpreterTypes) {
 			IInterpreterInstall[] interpreters = interpreterInstallType.getInterpreterInstalls();
 			for (IInterpreterInstall interpreterInstall : interpreters) {
-				if(interpreterInstall.getName().equals(selectedInterpreter)){									
-					comboDialect.setItems(((IOvertureInstallType)interpreterInstall.getInterpreterInstallType()).getSupportedDialectStrings());
+				if(interpreterInstall.getName().equals(selectedInterpreter)){	
+					Dialect[] dialects = ((IOvertureInstallType)interpreterInstall.getInterpreterInstallType()).getSupportedDialects();
+					String[] dialectNames = new String[dialects.length];
+					for (int i = 0; i < dialects.length; i++) {
+						dialectNames[i] = dialects[i].getName();
+					}
+					comboDialect.setItems(dialectNames);
 					dialectsFound = true;					
 				}
 			}
