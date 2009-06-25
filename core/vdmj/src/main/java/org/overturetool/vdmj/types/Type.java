@@ -32,7 +32,7 @@ import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.messages.MessageException;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ValueException;
@@ -311,7 +311,7 @@ public abstract class Type implements Comparable<Type>, Serializable
 
 	public ValueList getAllValues()
 	{
-		throw new MessageException("Internal 0004: Cannot get bind values for type " + this
+		throw new InternalException(4, "Cannot get bind values for type " + this
 			+ " " + location);
 	}
 

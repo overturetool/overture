@@ -63,7 +63,7 @@ import org.overturetool.vdmj.lex.LexRealToken;
 import org.overturetool.vdmj.lex.LexStringToken;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.Token;
-import org.overturetool.vdmj.messages.MessageException;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.patterns.Bind;
 import org.overturetool.vdmj.patterns.BooleanPattern;
 import org.overturetool.vdmj.patterns.CharacterPattern;
@@ -200,12 +200,12 @@ public class ASTConverter
 			}
 			else
 			{
-				throw new MessageException("Internal 0012: Document has no specifications?");
+				throw new InternalException(12, "Document has no specifications?");
 			}
 		}
 		catch (CGException e)
 		{
-			throw new MessageException(e.getMessage());
+			throw new InternalException(0, e.getMessage());
 		}
 	}
 
@@ -219,12 +219,12 @@ public class ASTConverter
 			}
 			else
 			{
-				throw new MessageException("Internal 0013: Document has no expression?");
+				throw new InternalException(13, "Document has no expression?");
 			}
 		}
 		catch (CGException e)
 		{
-			throw new MessageException(e.getMessage());
+			throw new InternalException(0, e.getMessage());
 		}
 	}
 
@@ -328,7 +328,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0014: Unexpected type in definition block");
+			throw new InternalException(14, "Unexpected type in definition block");
 		}
 
 		return defs;
@@ -394,7 +394,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0015: Unexpected type definition shape: " + shape);
+			throw new InternalException(15, "Unexpected type definition shape: " + shape);
 		}
 
 		def.setAccessSpecifier(convertAccess(access));
@@ -519,11 +519,11 @@ public class ASTConverter
 		}
 		else if (shape instanceof IOmlTypelessExplicitFunction)
 		{
-			throw new MessageException("Internal 0016: Typeless functions not supported");
+			throw new InternalException(16, "Typeless functions not supported");
 		}
 		else
 		{
-			throw new MessageException("Internal 0017: Unexpected function shape: " + shape);
+			throw new InternalException(17, "Unexpected function shape: " + shape);
 		}
 
 		def.setAccessSpecifier(convertAccess(access));
@@ -547,7 +547,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0018: Unknown function body type");
+			throw new InternalException(18, "Unknown function body type");
 		}
 	}
 
@@ -620,7 +620,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0019: Unexpected operation shape: " + shape);
+			throw new InternalException(19, "Unexpected operation shape: " + shape);
 		}
 
 		def.setAccessSpecifier(convertAccess(access));
@@ -644,7 +644,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0020: Unknown operation body type");
+			throw new InternalException(20, "Unknown operation body type");
 		}
 	}
 
@@ -765,7 +765,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0021: Unknown instance variable type");
+			throw new InternalException(21, "Unknown instance variable type");
 		}
 
 		return def;
@@ -811,7 +811,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0022: Unknown sync predicate type");
+			throw new InternalException(22, "Unknown sync predicate type");
 		}
 
 		return def;
@@ -834,7 +834,7 @@ public class ASTConverter
 			}
 			else if (th instanceof IOmlSporadicThread)
 			{
-				throw new MessageException("Internal 0024: Sporadic threads not implemented");
+				throw new InternalException(24, "Sporadic threads not implemented");
 			}
 			else if (th instanceof IOmlProcedureThread)
 			{
@@ -843,7 +843,7 @@ public class ASTConverter
 			}
 			else
 			{
-				throw new MessageException("Internal 0025: Unknown thread specification type");
+				throw new InternalException(25, "Unknown thread specification type");
 			}
 		}
 
@@ -908,7 +908,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0028: Unknown trace specification type");
+			throw new InternalException(28, "Unknown trace specification type");
 		}
 
 		return terms;
@@ -1016,7 +1016,7 @@ public class ASTConverter
     				}
     				else
     				{
-    					throw new MessageException("Internal 0026: Let binding expects value definition");
+    					throw new InternalException(26, "Let binding expects value definition");
     				}
     			}
 
@@ -1320,7 +1320,7 @@ public class ASTConverter
 		else if (statement instanceof IOmlDclStatement)
 		{
 			// These should only appear inside BlockStatements (above).
-			throw new MessageException("Internal 0027: Bare Dcl statement encountered");
+			throw new InternalException(27, "Bare Dcl statement encountered");
 		}
 		else if (statement instanceof IOmlDurationStatement)
 		{
@@ -1340,7 +1340,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0030: Statement type unsupported: " + statement);
+			throw new InternalException(30, "Statement type unsupported: " + statement);
 		}
 
 		return stmt;
@@ -1393,7 +1393,7 @@ public class ASTConverter
 			}
 			else
 			{
-				throw new MessageException("Internal 0031: Expected object state designator type");
+				throw new InternalException(31, "Expected object state designator type");
 			}
 		}
 		else if (des instanceof IOmlObjectFieldReference)
@@ -1414,7 +1414,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0032: Expected object state designator type");
+			throw new InternalException(32, "Expected object state designator type");
 		}
 	}
 
@@ -1443,7 +1443,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0033: Expected state designator type");
+			throw new InternalException(33, "Expected state designator type");
 		}
 	}
 
@@ -1886,7 +1886,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0035: Expression type unsupported: " + expression);
+			throw new InternalException(35, "Expression type unsupported: " + expression);
 		}
 
 		return exp;
@@ -2042,7 +2042,7 @@ public class ASTConverter
 			}
 			else
 			{
-				throw new MessageException("Internal 0036: Unexpected pattern/bind type");
+				throw new InternalException(36, "Unexpected pattern/bind type");
 			}
 		}
 
@@ -2071,7 +2071,7 @@ public class ASTConverter
 			}
 			else
 			{
-				throw new MessageException("Internal 0037: Unexpected pattern/bind type");
+				throw new InternalException(37, "Unexpected pattern/bind type");
 			}
 		}
 
@@ -2092,7 +2092,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0038: Unexpected pattern/bind type");
+			throw new InternalException(38, "Unexpected pattern/bind type");
 		}
 	}
 
@@ -2128,7 +2128,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0039: Unexpected bind type");
+			throw new InternalException(39, "Unexpected bind type");
 		}
 
 		return multibind;
@@ -2154,7 +2154,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0040: Unexpected bind type");
+			throw new InternalException(40, "Unexpected bind type");
 		}
 
 		return multibind;
@@ -2184,7 +2184,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0041: Expected set bind type");
+			throw new InternalException(41, "Expected set bind type");
 		}
 	}
 
@@ -2199,7 +2199,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0042: Expected set bind type");
+			throw new InternalException(42, "Expected set bind type");
 		}
 	}
 
@@ -2332,7 +2332,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0043: Operator type unsupported: " + op.getStringValue());
+			throw new InternalException(43, "Operator type unsupported: " + op.getStringValue());
 		}
 
 		return result;
@@ -2520,7 +2520,7 @@ public class ASTConverter
 			}
 			else
 			{
-				throw new MessageException("Internal 0044: Tuple field select is not a number");
+				throw new InternalException(44, "Tuple field select is not a number");
 			}
 
 			exp = new FieldNumberExpression(lhs, lit);
@@ -2532,7 +2532,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0045: Unexpected expression type: " + op.getStringValue());
+			throw new InternalException(45, "Unexpected expression type: " + op.getStringValue());
 		}
 
 		return exp;
@@ -2585,7 +2585,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0046: Unexpected literal expression");
+			throw new InternalException(46, "Unexpected literal expression");
 		}
 
 		return exp;
@@ -2744,11 +2744,11 @@ public class ASTConverter
 		}
 		else if (type instanceof IOmlClassTypeInstantiation)
 		{
-			throw new MessageException("Internal 0047: Class instantiation not supported");
+			throw new InternalException(47, "Class instantiation not supported");
 		}
 		else
 		{
-			throw new MessageException("Internal 0048: Unexpected type expression");
+			throw new InternalException(48, "Unexpected type expression");
 		}
 
 		return tp;
@@ -2996,7 +2996,7 @@ public class ASTConverter
 			}
 			else
 			{
-				throw new MessageException("Internal 0049: Unexpected literal pattern type");
+				throw new InternalException(49, "Unexpected literal pattern type");
 			}
 		}
 		else if (pattern instanceof IOmlSetEnumPattern)
@@ -3032,7 +3032,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0050: Unexpected pattern type");
+			throw new InternalException(50, "Unexpected pattern type");
 		}
 
 		return pat;
@@ -3063,7 +3063,7 @@ public class ASTConverter
 		}
 		else
 		{
-			throw new MessageException("Internal 0051: Unexpected scope value");
+			throw new InternalException(51, "Unexpected scope value");
 		}
 
 		return new AccessSpecifier(

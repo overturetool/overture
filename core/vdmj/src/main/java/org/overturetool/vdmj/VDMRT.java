@@ -26,7 +26,7 @@ package org.overturetool.vdmj;
 import org.overturetool.vdmj.definitions.BUSClassDefinition;
 import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.messages.MessageException;
+import org.overturetool.vdmj.messages.InternalException;
 
 public class VDMRT extends VDMPP
 {
@@ -45,7 +45,7 @@ public class VDMRT extends VDMPP
 		}
 		catch (Exception e)
 		{
-			throw new MessageException("Internal 0011: CPU or BUS creation failure");
+			throw new InternalException(11, "CPU or BUS creation failure");
 		}
 
 		return super.typeCheck();

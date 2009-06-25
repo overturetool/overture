@@ -497,13 +497,13 @@ abstract public class Interpreter
 
 	public ClassDefinition findClass(@SuppressWarnings("unused") String classname)
 	{
-		assert true : "findClass cannot be called for modules";
+		assert false : "findClass cannot be called for modules";
 		return null;
 	}
 
 	public Module findModule(@SuppressWarnings("unused") String module)
 	{
-		assert true : "findModule cannot be called for classes";
+		assert false : "findModule cannot be called for classes";
 		return null;
 	}
 }

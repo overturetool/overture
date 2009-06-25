@@ -36,7 +36,7 @@ import jp.co.csk.vdm.toolbox.VDM.CGException;
 import org.overturetool.parser.imp.OvertureParser;
 import org.overturetool.vdmj.ast.ASTConverter;
 import org.overturetool.vdmj.definitions.ClassList;
-import org.overturetool.vdmj.messages.MessageException;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.messages.VDMError;
 
 /**
@@ -68,7 +68,7 @@ public class OvertureReader extends SyntaxReader
 		}
 		catch (CGException e)
 		{
-			throw new MessageException(e.getMessage());
+			throw new InternalException(0, e.getMessage());
 		}
 
 		theStream.close();

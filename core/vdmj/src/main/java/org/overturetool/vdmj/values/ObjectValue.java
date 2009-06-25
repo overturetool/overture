@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.messages.MessageException;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.types.ClassType;
@@ -407,7 +407,7 @@ public class ObjectValue extends Value
 		}
 		catch (Exception e)
 		{
-			throw new MessageException("Internal 0005, Illegal clone: " + e);
+			throw new InternalException(5, "Illegal clone: " + e);
 		}
 	}
 }

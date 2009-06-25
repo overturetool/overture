@@ -39,7 +39,7 @@ import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.messages.MessageException;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.ContextException;
@@ -123,7 +123,7 @@ public class VDMSL extends VDMJ
         	   		duration += (after - before);
    				}
     		}
-			catch (MessageException e)
+			catch (InternalException e)
 			{
    				println(e.toString());
 			}
@@ -176,7 +176,7 @@ public class VDMSL extends VDMJ
    			TypeChecker typeChecker = new ModuleTypeChecker(modules);
    			typeChecker.typeCheck();
    		}
-		catch (MessageException e)
+		catch (InternalException e)
 		{
 			println(e.toString());
 		}

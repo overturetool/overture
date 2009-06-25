@@ -25,7 +25,7 @@ package org.overturetool.vdmj.lex;
 
 import java.io.Serializable;
 
-import org.overturetool.vdmj.messages.MessageException;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.typechecker.TypeComparator;
 import org.overturetool.vdmj.types.TypeList;
 
@@ -163,8 +163,8 @@ public class LexNameToken extends LexToken implements Serializable
 			if ((typeQualifier == null && types != null) ||
 				(typeQualifier != null && !typeQualifier.equals(types)))
 			{
-				throw new MessageException(
-					"Internal 0002: Cannot change type qualifier: " + this + " to " + types);
+				throw new InternalException(
+					2, "Cannot change type qualifier: " + this + " to " + types);
 			}
 		}
 

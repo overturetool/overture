@@ -29,7 +29,7 @@ import java.util.Vector;
 
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.messages.MessageException;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.runtime.Breakpoint;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
@@ -84,8 +84,7 @@ public class DebuggerReader extends CommandReader
 			}
 			catch (Exception e)
 			{
-				throw new MessageException(
-					"Internal 0052: Cannot set default name at breakpoint");
+				throw new InternalException(52, "Cannot set default name at breakpoint");
 			}
 
        		ExitStatus status = super.run(new Vector<File>());

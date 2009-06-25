@@ -34,7 +34,7 @@ import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.messages.MessageException;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.syntax.OvertureReader;
 
 /**
@@ -110,7 +110,7 @@ public class VDMOV extends VDMPP
         	  		duration += (after - before);
    				}
     		}
-			catch (MessageException e)
+			catch (InternalException e)
 			{
    				println(e.toString());
    				perrs++;
@@ -146,7 +146,7 @@ public class VDMOV extends VDMPP
 		}
 		catch (Exception e)
 		{
-			throw new MessageException("Internal 0011: CPU or BUS creation failure");
+			throw new InternalException(11, "CPU or BUS creation failure");
 		}
 
 		return super.typeCheck();

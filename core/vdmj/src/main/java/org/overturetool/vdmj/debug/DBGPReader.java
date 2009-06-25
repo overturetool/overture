@@ -58,7 +58,7 @@ import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.messages.MessageException;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.pog.ProofObligation;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -333,7 +333,7 @@ public class DBGPReader
 		}
 		catch (IOException e)
 		{
-			throw new MessageException("Internal 0029: DBGP: " + reason);
+			throw new InternalException(29, "DBGP: " + reason);
 		}
 	}
 

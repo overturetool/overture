@@ -38,7 +38,7 @@ import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.messages.LocatedException;
-import org.overturetool.vdmj.messages.MessageException;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 
@@ -495,7 +495,7 @@ public abstract class SyntaxReader
 		if (errors.size() >= MAX-1)
 		{
 			errors.add(new VDMError(9, "Too many syntax errors", error.location));
-			throw new MessageException("Error: Too many syntax errors");
+			throw new InternalException(9, "Too many syntax errors");
 		}
 
 		// Either leave one token beyond something in the after list, or
@@ -537,7 +537,7 @@ public abstract class SyntaxReader
 		if (warnings.size() >= MAX-1)
 		{
 			errors.add(new VDMError(9, "Too many warnings", location));
-			throw new MessageException("Error: Too many warnings");
+			throw new InternalException(9, "Too many warnings");
 		}
 	}
 

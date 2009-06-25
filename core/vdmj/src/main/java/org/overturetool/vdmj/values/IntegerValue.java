@@ -23,7 +23,7 @@
 
 package org.overturetool.vdmj.values;
 
-import org.overturetool.vdmj.messages.MessageException;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.types.IntegerType;
@@ -126,7 +126,7 @@ public class IntegerValue extends RationalValue
 		}
 		catch (Exception e)
 		{
-			throw new MessageException("Internal 0005: Illegal clone");
+			throw new InternalException(5, "Illegal clone");
 		}
 	}
 }

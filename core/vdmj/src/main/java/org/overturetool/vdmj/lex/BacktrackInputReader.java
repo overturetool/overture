@@ -32,7 +32,7 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.Stack;
 
-import org.overturetool.vdmj.messages.MessageException;
+import org.overturetool.vdmj.messages.InternalException;
 
 /**
  * A class to allow arbitrary checkpoints and backtracking while
@@ -72,7 +72,7 @@ public class BacktrackInputReader extends Reader
 		}
 		catch (IOException e)
 		{
-			throw new MessageException("Internal 0000: " + e.getMessage());
+			throw new InternalException(0, e.getMessage());
 		}
 	}
 

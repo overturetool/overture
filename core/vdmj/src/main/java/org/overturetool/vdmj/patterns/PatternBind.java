@@ -29,7 +29,7 @@ import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.MultiBindListDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.messages.MessageException;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeComparator;
@@ -62,8 +62,8 @@ public class PatternBind implements Serializable
 		}
 		else
 		{
-			throw new MessageException(
-				"Internal 0003: PatternBind passed " + patternOrBind.getClass().getName());
+			throw new InternalException(
+				3, "PatternBind passed " + patternOrBind.getClass().getName());
 		}
 	}
 

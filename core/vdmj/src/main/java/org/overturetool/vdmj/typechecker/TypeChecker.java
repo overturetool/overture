@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.messages.MessageException;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 
@@ -59,7 +59,7 @@ abstract public class TypeChecker
 		if (errors.size() >= MAX-1)
 		{
 			errors.add(new VDMError(10, "Too many type checking errors", location));
-			throw new MessageException("Error: Too many type checking errors");
+			throw new InternalException(10, "Too many type checking errors");
 		}
 	}
 
