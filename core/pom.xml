@@ -19,6 +19,7 @@
 <module>vdmtools</module>
 <module>traces</module>
 <module>vdmj</module>
+<module>vdmjc</module>
 <module>showtrace</module>
 
 </modules>
