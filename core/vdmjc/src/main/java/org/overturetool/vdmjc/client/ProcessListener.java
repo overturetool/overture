@@ -112,6 +112,13 @@ public class ProcessListener extends Thread
 		{
 			// Killed by die() or VDMJ crashed
 		}
+		catch (IOException e)
+		{
+			if (!e.getMessage().equals("Stream closed"))
+			{
+				CommandLine.message("VDMJ process exception: " + e);
+			}
+		}
 		catch (Exception e)
 		{
 			CommandLine.message("VDMJ process exception: " + e);
