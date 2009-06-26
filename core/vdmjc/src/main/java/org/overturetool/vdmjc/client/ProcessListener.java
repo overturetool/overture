@@ -27,6 +27,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketException;
 import java.util.List;
 import java.util.Vector;
 
@@ -50,7 +51,7 @@ public class ProcessListener extends Thread
 		this.files = files;
 		this.expression = expression;
 
-		setName("ProcessListener");
+		setName("Process Listener");
 		setDaemon(true);
 	}
 
@@ -107,17 +108,20 @@ public class ProcessListener extends Thread
 			poll(stdout, stdoutline);
 			poll(stderr, stderrline);
 		}
+		catch (SocketException e)
+		{
+			// Killed by die() or VDMJ crashed
+		}
 		catch (Exception e)
 		{
 			CommandLine.message("VDMJ process exception: " + e);
 		}
 
-		CommandLine.message(
-			"VDMJ process died " + (exitCode == 0 ? "(OK)" : "(errors)"));
+		CommandLine.message("");	// Refresh prompt
 		die();
 	}
 
-	public boolean waitStarted()
+	public synchronized boolean waitStarted()
 	{
 		while (process == null)
 		{
@@ -127,7 +131,7 @@ public class ProcessListener extends Thread
 		return !hasEnded();
 	}
 
-	public int waitEnded()
+	public synchronized int waitEnded()
 	{
 		while (!hasEnded())
 		{
@@ -137,7 +141,7 @@ public class ProcessListener extends Thread
 		return exitCode;
 	}
 
-	public boolean hasEnded()
+	public synchronized boolean hasEnded()
 	{
 		if (process == null)
 		{
@@ -197,6 +201,13 @@ public class ProcessListener extends Thread
 
 	public ConnectionThread[] getConnections()
 	{
-		return listener.getConnections();
+		return listener == null ?
+			new ConnectionThread[0] : listener.getConnections();
+	}
+
+	public ConnectionThread getPrincipal()
+	{
+		return listener == null ?
+			null : listener.getPrincipal();
 	}
 }

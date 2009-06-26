@@ -34,7 +34,8 @@ public class ConnectionListener extends Thread
 {
 	private ServerSocket socket;
 	private ThreadGroup group;
-	private long connectionId = 0;
+	private boolean listening;
+	private long nextId = 1;
 	private ConnectionThread principal = null;
 
 	public ConnectionListener() throws IOException
@@ -44,7 +45,7 @@ public class ConnectionListener extends Thread
 
 		group = new ThreadGroup("Connections");
 		setDaemon(true);
-		setName("ConnectionListener");
+		setName("Connection Listener");
 	}
 
 	public int getPort()
@@ -52,7 +53,7 @@ public class ConnectionListener extends Thread
 		return socket.getLocalPort();
 	}
 
-	public ConnectionThread getPrincipal()
+	public synchronized ConnectionThread getPrincipal()
 	{
 		return principal;
 	}
@@ -60,9 +61,11 @@ public class ConnectionListener extends Thread
 	@Override
 	public void run()
 	{
+		listening = true;
+
 		try
 		{
-			while (true)
+			while (listening)
 			{
 				Socket conn = socket.accept();
 
@@ -74,7 +77,7 @@ public class ConnectionListener extends Thread
 				}
 
 				ConnectionThread worker =
-					new ConnectionThread(group, conn, ++connectionId, (principal == null));
+					new ConnectionThread(group, conn, nextId++, (principal == null));
 
 				if (principal == null)
 				{
@@ -86,18 +89,21 @@ public class ConnectionListener extends Thread
 		}
 		catch (SocketException e)
 		{
-			// Killed by die()
+			// Killed by die() or VDMJ crash
 		}
 		catch (IOException e)
 		{
-			CommandLine.message("Connection listener has died");
+			CommandLine.message("Listener exception: " + e.getMessage());
 		}
+
+		die();
 	}
 
-	public void die()
+	public synchronized void die()
 	{
 		try
 		{
+			listening = false;
 			socket.close();
 
 			for (ConnectionThread ct: getConnections())

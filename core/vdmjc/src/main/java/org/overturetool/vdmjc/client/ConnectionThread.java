@@ -54,7 +54,7 @@ public class ConnectionThread extends Thread
 
 	private long tid = 0;
 	private DBGPStatus status;
-	private boolean connected = true;
+	private boolean connected;
 	private static boolean trace = false;
 
 	public ConnectionThread(ThreadGroup group, Socket conn, long id, boolean principal)
@@ -94,7 +94,7 @@ public class ConnectionThread extends Thread
 		return status;
 	}
 
-	public static boolean setTrace()
+	public static synchronized boolean setTrace()
 	{
 		trace = !trace;
 		return trace;
@@ -103,28 +103,34 @@ public class ConnectionThread extends Thread
 	@Override
 	public void run()
 	{
-		while (connected)
-		{
-    		try
-            {
-   				receive();		// Blocking
-            }
-            catch (IOException e)
-            {
-            	if (e instanceof SocketException)
-            	{
-            		break;		// Caused by die(), and VDMJ death
-            	}
+		connected = true;
 
-            	CommandLine.message("Connection exception: " + e);
-            }
-		}
+		try
+        {
+			while (connected)
+			{
+				receive();		// Blocking
+			}
+        }
+        catch (SocketException e)
+        {
+    		// Caused by die(), and VDMJ death
+        }
+        catch (IOException e)
+        {
+        	CommandLine.message("Connection exception: " + e.getMessage());
+        	die();
+        }
 
 		status = DBGPStatus.STOPPED;
-		CommandLine.message("Thread stopped: " + this);
+
+		if (!principal)
+		{
+			CommandLine.message("Thread stopped: " + this);
+		}
 	}
 
-	public void die()
+	public synchronized void die()
 	{
 		try
 		{
@@ -478,8 +484,7 @@ public class ConnectionThread extends Thread
 			" -t line" +
 			" -f " + file.toURI() +
 			" -n " + line +
-			(condition == null ? "" :
-				" -- " + Base64.encode(condition)));
+			(condition == null ? "" : " -- " + Base64.encode(condition)));
 	}
 
 	public void breakpoint_list() throws IOException

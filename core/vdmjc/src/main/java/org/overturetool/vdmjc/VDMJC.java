@@ -23,7 +23,11 @@
 
 package org.overturetool.vdmjc;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.overturetool.vdmjc.client.CommandLine;
+import org.overturetool.vdmjc.client.Dialect;
 import org.overturetool.vdmjc.config.Config;
 
 public class VDMJC
@@ -41,7 +45,54 @@ public class VDMJC
 
 		try
 		{
-			new CommandLine(args).run();
+			Dialect dialect = Dialect.VDM_PP;
+			String startLine = null;
+
+			if (args.length > 0)
+			{
+				List<String> cmds = new Vector<String>();
+
+				for (String arg: args)
+				{
+					if (arg.equals("-vdmpp"))
+					{
+						dialect = Dialect.VDM_PP;
+					}
+					else if (arg.equals("-vdmsl"))
+					{
+						dialect = Dialect.VDM_SL;
+					}
+					else if (arg.equals("-vdmrt"))
+					{
+						dialect = Dialect.VDM_RT;
+					}
+					else if (arg.startsWith("-"))
+					{
+						System.err.println("Usage: VDMJC [-vdmpp | -vdmsl | -vdmrt] [command]");
+						System.exit(1);
+					}
+					else
+					{
+						cmds.add(arg);
+					}
+				}
+
+				if (!cmds.isEmpty())
+				{
+					StringBuilder sb = new StringBuilder();
+
+					for (String file: cmds)
+					{
+						sb.append(file);
+						sb.append(" ");
+					}
+
+					startLine = sb.toString();
+				}
+			}
+
+			System.out.println("Dialect is " + dialect.name());
+			new CommandLine(dialect, startLine).run();
 			System.exit(0);
 		}
 		catch (Exception e)
