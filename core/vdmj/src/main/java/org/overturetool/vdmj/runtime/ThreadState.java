@@ -38,6 +38,7 @@ public class ThreadState
 	public RootContext nextctxt;
 	public Context outctxt;
 	public DBGPReader dbgp;
+	private long timestep;
 
 	public ThreadState(DBGPReader dbgp)
 	{
@@ -49,6 +50,7 @@ public class ThreadState
 	public void init()
 	{
 		this.action = InterruptAction.RUNNING;
+		this.setTimestep(0);
 		set(0, null, null);
 	}
 
@@ -58,5 +60,15 @@ public class ThreadState
 		this.stepline = stepline;
 		this.nextctxt = nextctxt;
 		this.outctxt = outctxt;
+	}
+
+	public synchronized void setTimestep(long timestep)
+	{
+		this.timestep = timestep;
+	}
+
+	public synchronized long getTimestep()
+	{
+		return timestep;
 	}
 }

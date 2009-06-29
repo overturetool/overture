@@ -46,23 +46,22 @@ import org.overturetool.vdmjc.xml.XMLTagNode;
 
 public class ConnectionThread extends Thread
 {
-	private final long id;
 	private final boolean principal;
 	private final Socket socket;
 	private final BufferedInputStream input;
 	private final BufferedOutputStream output;
 
-	private long tid = 0;
+	private long id = 0;
+	private long xid = 0;
 	private DBGPStatus status;
 	private boolean connected;
 	private static boolean trace = false;
 
-	public ConnectionThread(ThreadGroup group, Socket conn, long id, boolean principal)
+	public ConnectionThread(ThreadGroup group, Socket conn, boolean principal)
 		throws IOException
 	{
 		super(group, null, "DBGp Connection");
 
-		this.id = id;
 		this.socket = conn;
 		this.input = new BufferedInputStream(conn.getInputStream());
 		this.output = new BufferedOutputStream(conn.getOutputStream());
@@ -70,17 +69,12 @@ public class ConnectionThread extends Thread
 		this.status = (principal ? DBGPStatus.STARTING : DBGPStatus.RUNNING);
 
 		setDaemon(true);
-
-		if (!principal)
-		{
-			CommandLine.message("New thread: " + this);
-		}
 	}
 
 	@Override
 	public String toString()
 	{
-		return "Id " + id + ": " + getStatus();
+		return "Id " + (id == 0 ? "?" : id) + ": " + getStatus();
 	}
 
 	@Override
@@ -231,12 +225,17 @@ public class ConnectionThread extends Thread
 
 	private void processInit(XMLTagNode tagnode) throws IOException
 	{
-		tagnode.getAttr("thread");	// And do what...?
+		String sid = tagnode.getAttr("thread");
+		id = Integer.parseInt(sid);
 
 		if (principal)
 		{
 			redirect("stdout", DBGPRedirect.REDIRECT);
 			redirect("stderr", DBGPRedirect.REDIRECT);
+		}
+		else
+		{
+			CommandLine.message("New thread: " + this);
 		}
 	}
 
@@ -429,58 +428,58 @@ public class ConnectionThread extends Thread
 
 	public void status() throws IOException
 	{
-		write("status -i " + (++tid));
+		write("status -i " + (++xid));
 	}
 
 	public void detach() throws IOException
 	{
-		write("detach -i " + (++tid));
+		write("detach -i " + (++xid));
 	}
 
 	public void allstop() throws IOException
 	{
-		write("stop -i " + (++tid));
+		write("stop -i " + (++xid));
 	}
 
 	public void redirect(String command, DBGPRedirect option) throws IOException
 	{
-		write(command + " -i " + (++tid) + " -c " + option.value);
+		write(command + " -i " + (++xid) + " -c " + option.value);
 	}
 
 	public void runme() throws IOException
 	{
-		write("run -i " + (++tid));
+		write("run -i " + (++xid));
 	}
 
 	public void step_into() throws IOException
 	{
-		write("step_into -i " + (++tid));
+		write("step_into -i " + (++xid));
 	}
 
 	public void step_over() throws IOException
 	{
-		write("step_into -i " + (++tid));
+		write("step_into -i " + (++xid));
 	}
 
 	public void step_out() throws IOException
 	{
-		write("step_into -i " + (++tid));
+		write("step_into -i " + (++xid));
 	}
 
 	public void expr(String expression) throws IOException
 	{
-		write("expr -i " + (++tid) + " -- " + Base64.encode(expression));
+		write("expr -i " + (++xid) + " -- " + Base64.encode(expression));
 	}
 
 	public void eval(String expression) throws IOException
 	{
-		write("eval -i " + (++tid) + " -- " + Base64.encode(expression));
+		write("eval -i " + (++xid) + " -- " + Base64.encode(expression));
 	}
 
 	public void breakpoint_set(File file, int line, String condition)
 		throws IOException
 	{
-		write("breakpoint_set -i " + (++tid) +
+		write("breakpoint_set -i " + (++xid) +
 			" -t line" +
 			" -f " + file.toURI() +
 			" -n " + line +
@@ -489,33 +488,33 @@ public class ConnectionThread extends Thread
 
 	public void breakpoint_list() throws IOException
 	{
-		write("breakpoint_list -i " + (++tid));
+		write("breakpoint_list -i " + (++xid));
 	}
 
 	public void breakpoint_remove(int n) throws IOException
     {
-		write("breakpoint_remove -i " + (++tid) + " -d " + n);
+		write("breakpoint_remove -i " + (++xid) + " -d " + n);
     }
 
 	public void stack_get() throws IOException
     {
-		write("stack_get -i " + (++tid));
+		write("stack_get -i " + (++xid));
     }
 
 	public void context_get(int type, int depth) throws IOException
 	{
-		write("context_get -i " + (++tid) + " -c " + type + " -d " + depth);
+		write("context_get -i " + (++xid) + " -c " + type + " -d " + depth);
 	}
 
 	private void xcmd_overture_cmd(String cmd, String arg) throws IOException
 	{
 		if (arg == null)
 		{
-			write("xcmd_overture_cmd -i " + (++tid) + " -c " + cmd);
+			write("xcmd_overture_cmd -i " + (++xid) + " -c " + cmd);
 		}
 		else
 		{
-			write("xcmd_overture_cmd -i " + (++tid) + " -c " + cmd +
+			write("xcmd_overture_cmd -i " + (++xid) + " -c " + cmd +
 				" -- " + Base64.encode(arg));
 		}
 	}

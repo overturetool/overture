@@ -26,7 +26,9 @@ package org.overturetool.vdmj.runtime;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.debug.DBGPReason;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
 import org.overturetool.vdmj.values.ValueList;
@@ -55,6 +57,21 @@ public class VDMThread extends Thread
 		this.ctxt = new ObjectContext(location, title, global, object);
 		this.operation = object.getThreadOperation(ctxt);
 		VDMThreadSet.add(this);
+
+		if (Settings.dialect == Dialect.VDM_RT)
+		{
+			Console.out.println(
+				"ThreadCreate -> id: " + getId() +
+				" period: false objref: " + object.objectReference +
+				" clnm: \"" + object.type + "\"" +
+				" cpunm: 0 time: " + VDMThreadSet.getWallTime());
+		}
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return (int)getId();
 	}
 
 	@Override

@@ -27,6 +27,7 @@ import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.IntegerLiteralExpression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.VDMThreadSet;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Type;
@@ -37,6 +38,8 @@ public class DurationStatement extends Statement
 	private static final long serialVersionUID = 1L;
 	public final Expression duration;
 	public final Statement statement;
+
+	private long step = 0;
 
 	public DurationStatement(
 		LexLocation location, Expression duration, Statement stmt)
@@ -49,7 +52,19 @@ public class DurationStatement extends Statement
 	@Override
 	public Value eval(Context ctxt)
 	{
-		return statement.eval(ctxt);
+		if (ctxt.threadState.getTimestep() > 0)
+		{
+			// Already in a timed step, so ignore nesting
+			return statement.eval(ctxt);
+		}
+		else
+		{
+			ctxt.threadState.setTimestep(step);
+			Value rv = statement.eval(ctxt);
+			VDMThreadSet.timeStep(step);
+			ctxt.threadState.setTimestep(0);
+			return rv;
+		}
 	}
 
 	@Override
@@ -79,6 +94,8 @@ public class DurationStatement extends Statement
 			{
 				duration.report(3281, "Arguments to duration must be >= 0");
 			}
+
+			step = i.value.value;
 		}
 
 		return statement.typeCheck(env, scope);

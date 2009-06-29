@@ -32,8 +32,22 @@ import java.util.Set;
 
 public class VDMThreadSet
 {
-	private static Set<VDMThread> threads = new HashSet<VDMThread>();
+	private static Set<VDMThread> threads = null;
 	private static int debugStopped = 0;
+
+	private static int timeSteppers = 0;
+	private static long minimumStep = 0;
+	private static long wallTime = 0;
+
+	public static synchronized void init()
+	{
+		threads = new HashSet<VDMThread>();
+		debugStopped = 0;
+
+		timeSteppers = 0;
+		minimumStep = 0;
+		wallTime = 0;
+	}
 
 	public static synchronized void add(VDMThread th)
 	{
@@ -125,5 +139,77 @@ public class VDMThreadSet
 	public static synchronized void decDebugStopped()
 	{
 		debugStopped--;
+	}
+
+	public static synchronized long getWallTime()
+	{
+		return wallTime;
+	}
+
+	public static synchronized void timeStep(long interval)
+	{
+		long endTime = wallTime + interval;
+
+		while (wallTime < endTime)
+		{
+    		timeSteppers++;
+
+    		if (timeSteppers == threads.size() + 1)	// Plus main thread
+    		{
+    			// Calculate the minimum time step, then wake everyone
+    			minimumStep = Interpreter.mainContext.threadState.getTimestep();
+
+    			for (VDMThread th: threads)
+    			{
+    				if (th.ctxt.threadState.getTimestep() < minimumStep)
+    				{
+    					minimumStep = th.ctxt.threadState.getTimestep();
+    				}
+    			}
+
+    			wallTime += minimumStep;
+    			notifyWaiters();
+    		}
+    		else
+    		{
+    			waitNotify();	// Wait until all threads ready to step
+    		}
+
+    		timeSteppers--;
+
+    		// Wait until everyone is ready to continue before letting
+    		// anyone continue - otherwise we'll start the next step before
+    		// everyone has checked their duration.
+
+    		if (timeSteppers == 0)
+    		{
+    			notifyWaiters();
+    		}
+    		else
+    		{
+    			waitNotify();	// Wait until everyone can continue
+    		}
+		}
+	}
+
+	private static void notifyWaiters()
+	{
+		VDMThreadSet.class.notifyAll();
+	}
+
+	private static void waitNotify()
+	{
+		while (true)
+		{
+			try
+			{
+				VDMThreadSet.class.wait();
+				break;
+			}
+			catch (InterruptedException e)
+			{
+				// Ignore
+			}
+		}
 	}
 }

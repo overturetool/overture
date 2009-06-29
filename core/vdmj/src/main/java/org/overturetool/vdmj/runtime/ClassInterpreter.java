@@ -153,6 +153,7 @@ public class ClassInterpreter extends Interpreter
 	@Override
 	public void init(DBGPReader dbgp)
 	{
+		VDMThreadSet.init();
 		initialContext = classes.initialize(dbgp);
 		createdValues = new NameValuePairMap();
 		createdDefinitions = new DefinitionSet();

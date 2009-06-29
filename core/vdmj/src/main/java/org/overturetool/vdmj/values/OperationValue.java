@@ -33,6 +33,7 @@ import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.StateDefinition;
 import org.overturetool.vdmj.expressions.AndExpression;
 import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexKeywordToken;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.Token;
@@ -201,7 +202,7 @@ public class OperationValue extends Value
     			{
     				try
     				{
-						debug("WAITING on " + guard);
+    					debug("WAITING on " + guard);
 						self.wait(DEADLOCK_DELAY_MS);
 						debug("RESUME on " + guard);
 
@@ -445,21 +446,21 @@ public class OperationValue extends Value
 	{
 		hashReq++;
 		guardPasses++;
-		debug("REQ");
+		if (Settings.dialect == Dialect.VDM_RT) trace("OpRequest");
 	}
 
 	private synchronized void act()
 	{
 		hashAct++;
 		guardPasses++;
-		debug("ACT");
+		if (Settings.dialect == Dialect.VDM_RT) trace("OpActivate");
 	}
 
 	private synchronized void fin()
 	{
 		hashFin++;
 		guardPasses++;
-		debug("FIN");
+		if (Settings.dialect == Dialect.VDM_RT) trace("OpComplete");
 	}
 
 	private void notifySelf()
@@ -473,15 +474,19 @@ public class OperationValue extends Value
 		}
 	}
 
-	private void debug(@SuppressWarnings("unused") String message)
+	private void trace(String kind)
 	{
-//		Console.out.println(
-//			Thread.currentThread().getId() +
-//			(self == null ? " no object" : (" object #" + self.objectReference)) +
-//			" <" + name.name + ">" +
-//			" #req=" + hashReq +
-//			" #act=" + hashAct +
-//			" #fin=" + hashFin + " " + message
-//			);
+		Console.out.println(
+			kind + " -> id: " + Thread.currentThread().getId() +
+			" opname: \"" + name + "\"" +
+			(self == null ? "" : (" objref: " + self.objectReference)) +
+			" clnm: \"" + name.module + "\"" +
+			" cpunm: 0 async: false time: " + VDMThreadSet.getWallTime()
+			);
+	}
+
+	private void debug(@SuppressWarnings("unused") String string)
+	{
+		// Put useful diags here, like print hashReq, hashAct, hashFin...
 	}
 }

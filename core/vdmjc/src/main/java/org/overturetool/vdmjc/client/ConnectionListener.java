@@ -35,7 +35,6 @@ public class ConnectionListener extends Thread
 	private ServerSocket socket;
 	private ThreadGroup group;
 	private boolean listening;
-	private long nextId = 1;
 	private ConnectionThread principal = null;
 
 	public ConnectionListener() throws IOException
@@ -77,7 +76,7 @@ public class ConnectionListener extends Thread
 				}
 
 				ConnectionThread worker =
-					new ConnectionThread(group, conn, nextId++, (principal == null));
+					new ConnectionThread(group, conn, (principal == null));
 
 				if (principal == null)
 				{
