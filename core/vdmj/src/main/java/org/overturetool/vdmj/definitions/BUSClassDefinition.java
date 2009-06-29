@@ -47,7 +47,7 @@ public class BUSClassDefinition extends ClassDefinition
 
 	private static String defs =
 		"operations " +
-		"BUS:(<FCFS>|<CSMACD>) * real * set of CPU ==> BUS " +
+		"public BUS:(<FCFS>|<CSMACD>) * real * set of CPU ==> BUS " +
 		"	BUS(-, -, -) == is not yet specified;";
 
 	private static DefinitionList operationDefs()
