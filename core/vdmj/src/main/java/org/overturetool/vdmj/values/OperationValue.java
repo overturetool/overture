@@ -79,7 +79,7 @@ public class OperationValue extends Value
 	private Expression guard = null;
 	private static long guardPasses = 0;
 	private static final int DEADLOCK_DELAY_MS = 10;
-	private static final int DEADLOCK_RETRIES = 100;
+	private static final int DEADLOCK_RETRIES = 500;
 
 	public int hashAct = 0; // Number of activations
 	public int hashFin = 0; // Number of finishes
@@ -205,7 +205,8 @@ public class OperationValue extends Value
 						self.wait(DEADLOCK_DELAY_MS);
 						debug("RESUME on " + guard);
 
-						if (guardPasses == previousPasses)
+						if (guardPasses == previousPasses &&
+							!VDMThreadSet.isDebugStopped())
 						{
     						if (--retries <= 0)
     						{

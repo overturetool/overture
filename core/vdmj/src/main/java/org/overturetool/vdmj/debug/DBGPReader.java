@@ -1520,7 +1520,7 @@ public class DBGPReader
 		response(new StringBuilder("success=\"1\""), null);
 	}
 
-	public void stdout(String line) throws IOException
+	public synchronized void stdout(String line) throws IOException
 	{
 		StringBuilder sb = new StringBuilder("<stream type=\"stdout\"><![CDATA[");
 		sb.append(Base64.encode(line.getBytes("UTF-8")));
@@ -1528,7 +1528,7 @@ public class DBGPReader
 		write(sb);
 	}
 
-	public void stderr(String line) throws IOException
+	public synchronized void stderr(String line) throws IOException
 	{
 		StringBuilder sb = new StringBuilder("<stream type=\"stderr\"><![CDATA[");
 		sb.append(Base64.encode(line.getBytes("UTF-8")));

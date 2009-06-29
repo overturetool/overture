@@ -71,12 +71,12 @@ public class Console
 		}
 	}
 
-	public static void directStdout(DBGPReader reader, DBGPRedirect redirect)
+	public static synchronized void directStdout(DBGPReader reader, DBGPRedirect redirect)
 	{
 		out.redirect(redirect, reader);
 	}
 
-	public static void directStderr(DBGPReader reader, DBGPRedirect redirect)
+	public static synchronized void directStderr(DBGPReader reader, DBGPRedirect redirect)
 	{
 		err.redirect(redirect, reader);
 	}

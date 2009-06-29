@@ -55,6 +55,8 @@ public class Stoppoint extends Breakpoint
 		{
 			if (parsed == null || parsed.eval(ctxt).boolValue(ctxt))
 			{
+				VDMThreadSet.incDebugStopped();
+
 				if (Settings.usingDBGP)
 				{
 					ctxt.threadState.dbgp.stopped(ctxt, this);
@@ -72,6 +74,10 @@ public class Stoppoint extends Breakpoint
 		catch (ValueException e)
 		{
 			println("Breakpoint [" + number + "]: " + e.getMessage() + " \"" + trace + "\"");
+		}
+		finally
+		{
+			VDMThreadSet.decDebugStopped();
 		}
 	}
 

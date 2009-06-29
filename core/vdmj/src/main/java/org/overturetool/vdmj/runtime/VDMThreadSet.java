@@ -33,6 +33,7 @@ import java.util.Set;
 public class VDMThreadSet
 {
 	private static Set<VDMThread> threads = new HashSet<VDMThread>();
+	private static int debugStopped = 0;
 
 	public static synchronized void add(VDMThread th)
 	{
@@ -109,5 +110,20 @@ public class VDMThreadSet
 		}
 
 		return sb.toString();
+	}
+
+	public static synchronized boolean isDebugStopped()
+	{
+		return debugStopped > 0;
+	}
+
+	public static synchronized void incDebugStopped()
+	{
+		debugStopped++;
+	}
+
+	public static synchronized void decDebugStopped()
+	{
+		debugStopped--;
 	}
 }

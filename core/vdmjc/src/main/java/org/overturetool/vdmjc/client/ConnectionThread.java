@@ -23,10 +23,10 @@
 
 package org.overturetool.vdmjc.client;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URI;
@@ -49,8 +49,8 @@ public class ConnectionThread extends Thread
 	private final long id;
 	private final boolean principal;
 	private final Socket socket;
-	private final InputStream input;
-	private final OutputStream output;
+	private final BufferedInputStream input;
+	private final BufferedOutputStream output;
 
 	private long tid = 0;
 	private DBGPStatus status;
@@ -64,8 +64,8 @@ public class ConnectionThread extends Thread
 
 		this.id = id;
 		this.socket = conn;
-		this.input = conn.getInputStream();
-		this.output = conn.getOutputStream();
+		this.input = new BufferedInputStream(conn.getInputStream());
+		this.output = new BufferedOutputStream(conn.getOutputStream());
 		this.principal = principal;
 		this.status = (principal ? DBGPStatus.STARTING : DBGPStatus.RUNNING);
 
@@ -173,7 +173,7 @@ public class ConnectionThread extends Thread
 
 		if (c != 0)
 		{
-			throw new IOException("Malformed DBGp count");
+			throw new IOException("Malformed DBGp count on " + this);
 		}
 
 		byte[] data = new byte[length];
@@ -192,7 +192,7 @@ public class ConnectionThread extends Thread
 
 		if (input.read() != 0)
 		{
-			throw new IOException("Malformed DBGp terminator");
+			throw new IOException("Malformed DBGp terminator on " + this);
 		}
 
 		process(data);
