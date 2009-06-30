@@ -298,8 +298,8 @@ public class ProcessCommandLine extends CommandLine
     		println("  files");
     		println("  classes");
     		println("  modules");
-    		println("  threads");
-    		println("  thread <id>");
+    		println("  t[hreads]");
+    		println("  t[hread] <id>");
     		println("  unload");
     		println("  reload");
     		println("");
