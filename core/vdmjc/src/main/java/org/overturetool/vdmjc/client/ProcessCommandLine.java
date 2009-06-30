@@ -205,11 +205,11 @@ public class ProcessCommandLine extends CommandLine
 	            {
 	            	carryOn = processDefault(line);
 	            }
-	            else if (line.equals("threads"))
+	            else if (line.equals("threads") || line.equals("t"))
 	            {
 	            	carryOn = processThreads();
 	            }
-	            else if (line.startsWith("thread"))
+	            else if (line.startsWith("thread") || line.startsWith("t "))
 	            {
 	            	carryOn = processThread(line);
 	            }
@@ -447,7 +447,7 @@ public class ProcessCommandLine extends CommandLine
 	{
 		try
 		{
-			long newId = Integer.parseInt(line.substring(7));
+			long newId = Integer.parseInt(line.substring(line.indexOf(' ') + 1));
 			ConnectionThread th = process.findConnection(newId);
 
 			if (th != null)
