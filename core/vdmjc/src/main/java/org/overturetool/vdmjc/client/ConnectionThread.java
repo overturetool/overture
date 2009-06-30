@@ -248,7 +248,7 @@ public class ConnectionThread extends Thread
 
 			if (newstatus != null)
 			{
-				DBGPStatus news = DBGPStatus.lookup(newstatus);
+				DBGPStatus news = DBGPStatus.valueOf(newstatus.toUpperCase());
 
 				if (news != null)
 				{

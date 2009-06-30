@@ -26,17 +26,4 @@ package org.overturetool.vdmjc.dbgp;
 public enum DBGPStatus
 {
 	STARTING, RUNNING, BREAK, STOPPING, STOPPED;
-
-	public static DBGPStatus lookup(String string)
-	{
-		for (DBGPStatus opt: values())
-		{
-			if (opt.name().equalsIgnoreCase(string))
-			{
-				return opt;
-			}
-		}
-
-		return null;
-	}
 }
