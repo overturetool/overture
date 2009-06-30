@@ -34,13 +34,16 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.VDMThreadSet;
-import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.syntax.DefinitionReader;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.NameValuePairMap;
+import org.overturetool.vdmj.values.NaturalValue;
 import org.overturetool.vdmj.values.ObjectValue;
+import org.overturetool.vdmj.values.QuoteValue;
+import org.overturetool.vdmj.values.RealValue;
+import org.overturetool.vdmj.values.SeqValue;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.ValueList;
 import org.overturetool.vdmj.values.VoidValue;
@@ -50,6 +53,8 @@ public class CPUClassDefinition extends ClassDefinition
 	private static final long serialVersionUID = 1L;
 	private static int nextCPU = 0;
 
+	public static CPUValue virtualCPU = null;
+
 	public CPUClassDefinition() throws ParserException, LexException
 	{
 		super(
@@ -57,6 +62,13 @@ public class CPUClassDefinition extends ClassDefinition
 			new LexNameList(),
 			operationDefs(),
 			false);
+
+		ValueList args = new ValueList();
+
+		args.add(new QuoteValue("FP"));
+		args.add(new RealValue(0));
+
+		virtualCPU = new CPUValue(getType(), new NameValuePairMap(), args, nextCPU++);
 	}
 
 	private static String defs =
@@ -68,7 +80,7 @@ public class CPUClassDefinition extends ClassDefinition
 		"public deploy: ? * seq of char ==> () " +
 		"	deploy(obj, name) == is not yet specified; " +
 		"public setPriority: ? * nat ==> () " +
-		"	setPriority(obj, priority) == is not yet specified;";
+		"	setPriority(opname, priority) == is not yet specified;";
 
 	private static DefinitionList operationDefs()
 		throws ParserException, LexException
@@ -82,13 +94,12 @@ public class CPUClassDefinition extends ClassDefinition
 	@Override
 	public ObjectValue newInstance(
 		Definition ctorDefinition, ValueList argvals, Context ctxt)
-		throws ValueException
 	{
 		NameValuePairList nvpl = definitions.getNamedValues(ctxt);
 		NameValuePairMap map = new NameValuePairMap();
 		map.putAll(nvpl);
 
-		return new CPUValue(classtype, map, argvals, ++nextCPU);
+		return new CPUValue(getType(), map, argvals, nextCPU++);
 	}
 
 	public static Value deploy(Context ctxt)
@@ -98,11 +109,14 @@ public class CPUClassDefinition extends ClassDefinition
     		ObjectContext octxt = (ObjectContext)ctxt;
     		CPUValue cpu = (CPUValue)octxt.self;
     		ObjectValue obj = (ObjectValue)octxt.lookup(varName("obj"));
+    		SeqValue name = (SeqValue)octxt.check(varName("name"));
 
     		obj.setCPU(cpu);
+    		cpu.addDeployed(obj);
 
    			Console.out.println(
     				"DeployObject -> objref: " + obj.objectReference +
+    				(name == null ? "" : " name: " + name) +
     				" clnm: \"" + obj.type.name.name + "\"" +
     				" cpunm: " + cpu.cpuNumber +
     				" time: " + VDMThreadSet.getWallTime());
@@ -112,6 +126,29 @@ public class CPUClassDefinition extends ClassDefinition
 		catch (Exception e)
 		{
 			throw new ContextException(4136, "Cannot deploy to CPU", ctxt.location, ctxt);
+		}
+	}
+
+	public static Value setPriority(Context ctxt)
+	{
+		try
+		{
+    		ObjectContext octxt = (ObjectContext)ctxt;
+    		CPUValue cpu = (CPUValue)octxt.self;
+    		SeqValue opname = (SeqValue)octxt.lookup(varName("opname"));
+    		NaturalValue priority = (NaturalValue)octxt.check(varName("priority"));
+
+    		if (!cpu.setPriority(opname.stringValue(ctxt), priority.intValue(ctxt)))
+    		{
+    			throw new ContextException(
+    				4137, "Cannot set operation priority on CPU", ctxt.location, ctxt);
+    		}
+
+   			return new VoidValue();
+		}
+		catch (Exception e)
+		{
+			throw new ContextException(4137, "Cannot set operation priority on CPU", ctxt.location, ctxt);
 		}
 	}
 

@@ -165,4 +165,10 @@ public class ObjectContext extends RootContext
 			outer.printStackTrace(out, false);
 		}
 	}
+
+	@Override
+	public ObjectValue getSelf()
+	{
+		return self;
+	}
 }

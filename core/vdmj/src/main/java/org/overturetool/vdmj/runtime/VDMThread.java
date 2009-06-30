@@ -64,7 +64,8 @@ public class VDMThread extends Thread
 				"ThreadCreate -> id: " + getId() +
 				" period: false objref: " + object.objectReference +
 				" clnm: \"" + object.type + "\"" +
-				" cpunm: 0 time: " + VDMThreadSet.getWallTime());
+				" cpunm: " + object.getCPU().cpuNumber +
+				" time: " + VDMThreadSet.getWallTime());
 		}
 	}
 

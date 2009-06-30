@@ -788,6 +788,8 @@ as the expected and actual values.
 4134, "Infinite or NaN trouble"
 4135, "Cannot instantiate a system class"
 4136, "Cannot deploy to CPU"
+4137, "Cannot set operation priority on CPU"
+4138, "Cannot set CPU priority for operation"
 
 5000, "Definition <name> not used"
 5001, "Instance variable is not initialized: <name>"

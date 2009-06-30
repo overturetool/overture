@@ -317,4 +317,9 @@ public class Context extends HashMap<LexNameToken, Value>
 				outer == null ? this :
 					outer.getFrame(depth);
 	}
+
+	public ObjectValue getSelf()
+	{
+		return outer == null ? null : outer.getSelf();
+	}
 }

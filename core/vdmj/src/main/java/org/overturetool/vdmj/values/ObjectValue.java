@@ -30,6 +30,7 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Vector;
 
+import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.runtime.Context;
@@ -51,7 +52,7 @@ public class ObjectValue extends Value
 	public final NameValuePairMap members;
 	public final List<ObjectValue> superobjects;
 
-	private ObjectValue CPU = null;
+	private CPUValue CPU = null;
 
 	public ObjectValue(ClassType type,
 		NameValuePairMap members, List<ObjectValue> superobjects)
@@ -413,13 +414,13 @@ public class ObjectValue extends Value
 		}
 	}
 
-	public synchronized void setCPU(ObjectValue cpu)
+	public synchronized void setCPU(CPUValue cpu)
 	{
 		CPU = cpu;
 	}
 
-	public synchronized ObjectValue getCPU()
+	public synchronized CPUValue getCPU()
 	{
-		return CPU;
+		return CPU == null ? CPUClassDefinition.virtualCPU : CPU;
 	}
 }

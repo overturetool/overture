@@ -86,6 +86,9 @@ public class OperationValue extends Value
 	public int hashFin = 0; // Number of finishes
 	public int hashReq = 0; // Number of requests
 
+	private long priority = 0;
+	private boolean traceRT = true;
+
 	public OperationValue(ExplicitOperationDefinition def,
 		FunctionValue precondition, FunctionValue postcondition,
 		StateDefinition state)
@@ -100,6 +103,14 @@ public class OperationValue extends Value
 		this.postcondition = postcondition;
 		this.state = state;
 		this.classdef = def.classDefinition;
+
+		traceRT =
+			Settings.dialect == Dialect.VDM_RT &&
+			classdef != null &&
+			!classdef.isSystem &&
+			!classdef.name.name.equals("CPU") &&
+			!classdef.name.name.equals("BUS") &&
+			!name.name.equals("thread");
 	}
 
 	public OperationValue(ImplicitOperationDefinition def,
@@ -122,6 +133,14 @@ public class OperationValue extends Value
 		this.postcondition = postcondition;
 		this.state = state;
 		this.classdef = def.classDefinition;
+
+		traceRT =
+			Settings.dialect == Dialect.VDM_RT &&
+			classdef != null &&
+			!classdef.isSystem &&
+			!classdef.name.name.equals("CPU") &&
+			!classdef.name.name.equals("BUS") &&
+			!name.name.equals("thread");
 	}
 
 	@Override
@@ -446,21 +465,21 @@ public class OperationValue extends Value
 	{
 		hashReq++;
 		guardPasses++;
-		if (Settings.dialect == Dialect.VDM_RT) trace("OpRequest");
+		trace("OpRequest");
 	}
 
 	private synchronized void act()
 	{
 		hashAct++;
 		guardPasses++;
-		if (Settings.dialect == Dialect.VDM_RT) trace("OpActivate");
+		trace("OpActivate");
 	}
 
 	private synchronized void fin()
 	{
 		hashFin++;
 		guardPasses++;
-		if (Settings.dialect == Dialect.VDM_RT) trace("OpComplete");
+		trace("OpComplete");
 	}
 
 	private void notifySelf()
@@ -476,17 +495,32 @@ public class OperationValue extends Value
 
 	private void trace(String kind)
 	{
-		Console.out.println(
-			kind + " -> id: " + Thread.currentThread().getId() +
-			" opname: \"" + name + "\"" +
-			(self == null ? "" : (" objref: " + self.objectReference)) +
-			" clnm: \"" + name.module + "\"" +
-			" cpunm: 0 async: false time: " + VDMThreadSet.getWallTime()
-			);
+		if (traceRT)
+		{
+    		Console.out.println(
+    			kind + " -> id: " + Thread.currentThread().getId() +
+    			" opname: \"" + name + "\"" +
+    			" objref: " + self.objectReference +
+    			" clnm: \"" + self.type.name.name + "\"" +
+    			" cpunm: " + self.getCPU().cpuNumber +
+    			" async: false" +
+    			" time: " + VDMThreadSet.getWallTime()
+    			);
+		}
 	}
 
 	private void debug(@SuppressWarnings("unused") String string)
 	{
 		// Put useful diags here, like print hashReq, hashAct, hashFin...
+	}
+
+	public synchronized void setPriority(long priority)
+	{
+		this.priority = priority;
+	}
+
+	public synchronized long getPriority()
+	{
+		return priority;
 	}
 }

@@ -23,14 +23,18 @@
 
 package org.overturetool.vdmj.statements;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.pog.StateInvariantObligation;
 import org.overturetool.vdmj.pog.SubTypeObligation;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.VDMThreadSet;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -106,6 +110,16 @@ public class AssignmentStatement extends Statement
 		catch (ValueException e)
 		{
 			abort(e);
+		}
+
+		if (Settings.dialect == Dialect.VDM_RT)
+		{
+			Console.out.println(
+				"InstVarChange -> instnm: \"" + target.toString() + "\"" +
+				" val: \"" + newval + "\"" +
+				" objref: " + ctxt.getSelf().objectReference +
+				" time: " + VDMThreadSet.getWallTime() +
+				" id: " + Thread.currentThread().getId());
 		}
 
 		return new VoidValue();

@@ -68,6 +68,19 @@ public class SeqValue extends Value
 	}
 
 	@Override
+	public String stringValue(Context ctxt) throws ValueException
+	{
+		String s = values.toString();
+
+		if (s.charAt(0) == '"')
+		{
+			return s.substring(1, s.length()-1);
+		}
+
+		return super.stringValue(ctxt);
+	}
+
+	@Override
 	public Value getUpdatable(ValueListener listener)
 	{
 		ValueList nseq = new ValueList();

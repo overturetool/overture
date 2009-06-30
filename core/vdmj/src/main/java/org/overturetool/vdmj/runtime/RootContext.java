@@ -24,6 +24,7 @@
 package org.overturetool.vdmj.runtime;
 
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.values.ObjectValue;
 
 /**
  * A Context class, specialized to represent points in a context chain where
@@ -65,5 +66,11 @@ public abstract class RootContext extends Context
 		return depth == 0 ? this :
 				outer == null ? this :
 					outer.getFrame(depth - 1);
+	}
+
+	@Override
+	public ObjectValue getSelf()
+	{
+		return null;	// Overridden in ObjectContext
 	}
 }

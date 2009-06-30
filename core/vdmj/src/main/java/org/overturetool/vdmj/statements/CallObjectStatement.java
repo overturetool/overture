@@ -28,8 +28,11 @@ import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.ExpressionList;
+import org.overturetool.vdmj.expressions.StringLiteralExpression;
+import org.overturetool.vdmj.expressions.VariableExpression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.lex.LexStringToken;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
@@ -151,12 +154,17 @@ public class CallObjectStatement extends Statement
 			}
 			else
 			{
-//    			OperationType op = (OperationType)(atypes.get(0));
-//
-//    			if (it's a constructor)	// How?
-//    			{
-//    				args.get(0).report(3291, "Argument to setPriority cannot be a constructor");
-//    			}
+				// Convert the variable expression to a string...
+    			VariableExpression a1 = (VariableExpression)args.get(0);
+    			args.remove(0);
+    			args.add(0, new StringLiteralExpression(
+    				new LexStringToken(
+    					a1.name.getExplicit(true).getName(), a1.location)));
+
+    			if (a1.name.module.equals(a1.name.name))	// it's a constructor
+    			{
+    				args.get(0).report(3291, "Argument to setPriority cannot be a constructor");
+    			}
 			}
 
 			return new VoidType(location);

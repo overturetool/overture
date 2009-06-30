@@ -73,6 +73,14 @@ public class NotYetSpecifiedStatement extends Statement
 		{
 			return CPUClassDefinition.deploy(ctxt);
 		}
+		else if (ctxt.title.equals("deploy(obj, name)"))
+		{
+			return CPUClassDefinition.deploy(ctxt);
+		}
+		else if (ctxt.title.equals("setPriority(opname, priority)"))
+		{
+			return CPUClassDefinition.setPriority(ctxt);
+		}
 		else if (ctxt.title.equals("fecho(filename, text, fdir)"))
 		{
 			return IO.fecho(ctxt);

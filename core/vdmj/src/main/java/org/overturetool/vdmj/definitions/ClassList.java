@@ -35,11 +35,13 @@ import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.RootContext;
 import org.overturetool.vdmj.runtime.StateContext;
+import org.overturetool.vdmj.runtime.VDMThreadSet;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.typechecker.Environment;
@@ -59,6 +61,8 @@ public class ClassList extends Vector<ClassDefinition>
 	private static Map<String, ClassDefinition> map =
 					new HashMap<String, ClassDefinition>();
 
+	public static ClassDefinition systemClass = null;
+
 	public ClassList()
 	{
 		super();
@@ -73,6 +77,12 @@ public class ClassList extends Vector<ClassDefinition>
 	public boolean add(ClassDefinition cdef)
 	{
 		map.put(cdef.name.name, cdef);
+
+		if (cdef.isSystem)
+		{
+			systemClass = cdef;
+		}
+
 		return super.add(cdef);
 	}
 
@@ -213,19 +223,27 @@ public class ClassList extends Vector<ClassDefinition>
 		// If we're VDM-RT and we have a system class, we need to "run"
 		// the default constructor to deploy the objects declared.
 
-		ClassDefinition system = findSystem();
-
-		if (system != null)
+		if (systemClass != null)
 		{
 			TypeList args = new TypeList();
-			Definition opdef = system.findConstructor(args);
+			Definition opdef = systemClass.findConstructor(args);
 
 			if (opdef != null && opdef instanceof ExplicitOperationDefinition)
 			{
 				try
 				{
 					ExplicitOperationDefinition ctor = (ExplicitOperationDefinition)opdef;
-					system.uncheckedNewInstance(ctor, new ValueList(), globalContext);
+					systemClass.uncheckedNewInstance(ctor, new ValueList(), globalContext);
+
+					// Show the main thread creation...
+
+					Console.out.println(
+						"ThreadCreate -> id: " + Thread.currentThread().getId() +
+						" period: false objref: nil" +
+						" clnm: nil" +
+						" cpunm: 0" +
+						" time: " + VDMThreadSet.getWallTime());
+
 				}
 				catch (ValueException e)
 				{
@@ -263,19 +281,6 @@ public class ClassList extends Vector<ClassDefinition>
 			if (def != null)
 			{
 				return def;
-			}
-		}
-
-		return null;
-	}
-
-	public ClassDefinition findSystem()
-	{
-		for (ClassDefinition d: this)
-		{
-			if (d.isSystem)
-			{
-				return d;
 			}
 		}
 
