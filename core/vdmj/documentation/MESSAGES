@@ -654,6 +654,7 @@ as the expected and actual values.
 3291, "Argument to setPriority cannot be a constructor"
 3292, "Constructor is not accessible"
 3293, "Asynchronous operation <name> cannot return a value"
+3294, "Only one system class permitted"
 
 4000, "Cannot instantiate abstract class <class>"
 4002, "Expression value is not in set bind"
@@ -786,6 +787,7 @@ as the expected and actual values.
 4133, "Map range is not a subset of its domain: <key>"
 4134, "Infinite or NaN trouble"
 4135, "Cannot instantiate a system class"
+4136, "Cannot deploy to CPU"
 
 5000, "Definition <name> not used"
 5001, "Instance variable is not initialized: <name>"

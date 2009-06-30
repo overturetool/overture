@@ -51,6 +51,8 @@ public class ObjectValue extends Value
 	public final NameValuePairMap members;
 	public final List<ObjectValue> superobjects;
 
+	private ObjectValue CPU = null;
+
 	public ObjectValue(ClassType type,
 		NameValuePairMap members, List<ObjectValue> superobjects)
 	{
@@ -409,5 +411,15 @@ public class ObjectValue extends Value
 		{
 			throw new InternalException(5, "Illegal clone: " + e);
 		}
+	}
+
+	public synchronized void setCPU(ObjectValue cpu)
+	{
+		CPU = cpu;
+	}
+
+	public synchronized ObjectValue getCPU()
+	{
+		return CPU;
 	}
 }

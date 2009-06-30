@@ -55,6 +55,7 @@ public class ClassTypeChecker extends TypeChecker
 	public void typeCheck()
 	{
 		boolean nothing = true;
+		boolean hasSystem = false;
 
 		for (ClassDefinition c1: classes)
 		{
@@ -67,6 +68,18 @@ public class ClassTypeChecker extends TypeChecker
 			}
 
 			if (!c1.typechecked) nothing = false;
+
+			if (c1.isSystem)
+			{
+				if (hasSystem)
+				{
+					TypeChecker.report(3294, "Only one system class permitted", c1.location);
+				}
+				else
+				{
+					hasSystem = true;
+				}
+			}
 		}
 
 		if (nothing)

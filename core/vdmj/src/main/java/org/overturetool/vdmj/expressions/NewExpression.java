@@ -23,18 +23,14 @@
 
 package org.overturetool.vdmj.expressions;
 
-import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.Token;
-import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.VDMThreadSet;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -153,14 +149,6 @@ public class NewExpression extends Expression
     			// Check the initial values of the object's fields
     			classdef.invlistener.doInvariantChecks = true;
     			classdef.invlistener.changedValue(location, objval, ctxt);
-    		}
-
-    		if (Settings.dialect == Dialect.VDM_RT)
-    		{
-    			Console.out.println(
-    				"DeployObject -> objref: " + objval.objectReference +
-    				" clnm: \"" + classdef.name.name + "\"" +
-    				" cpunm: 0 time: " + VDMThreadSet.getWallTime());
     		}
 
     		return objval;

@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.statements;
 
+import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
@@ -68,7 +69,11 @@ public class NotYetSpecifiedStatement extends Statement
 	{
 		breakpoint.check(location, ctxt);
 
-		if (ctxt.title.equals("fecho(filename, text, fdir)"))
+		if (ctxt.title.equals("deploy(obj)"))
+		{
+			return CPUClassDefinition.deploy(ctxt);
+		}
+		else if (ctxt.title.equals("fecho(filename, text, fdir)"))
 		{
 			return IO.fecho(ctxt);
 		}

@@ -1098,6 +1098,14 @@ public class ClassDefinition extends Definition
 			ctorDefinition, argvals, ctxt, new HashMap<LexNameToken, ObjectValue>());
 	}
 
+	public ObjectValue uncheckedNewInstance(
+		Definition ctorDefinition, ValueList argvals, Context ctxt)
+		throws ValueException
+	{
+		return makeNewInstance(
+			ctorDefinition, argvals, ctxt, new HashMap<LexNameToken, ObjectValue>());
+	}
+
 	/**
 	 * A private method to make new instances, including a list of supertype
 	 * objects already constructed to allow for virtual inheritance in

@@ -40,9 +40,12 @@ import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.RootContext;
 import org.overturetool.vdmj.runtime.StateContext;
+import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.types.TypeList;
+import org.overturetool.vdmj.values.ValueList;
 
 
 /**
@@ -111,14 +114,6 @@ public class ClassList extends Vector<ClassDefinition>
 		for (ClassDefinition d: this)
 		{
 			d.implicitDefinitions(env);
-		}
-	}
-
-	public void typeCheck(Environment env, NameScope scope)
-	{
-		for (ClassDefinition d: this)
-		{
-			d.typeCheck(env, scope);
 		}
 	}
 
@@ -215,6 +210,30 @@ public class ClassList extends Vector<ClassDefinition>
 			throw failed;
 		}
 
+		// If we're VDM-RT and we have a system class, we need to "run"
+		// the default constructor to deploy the objects declared.
+
+		ClassDefinition system = findSystem();
+
+		if (system != null)
+		{
+			TypeList args = new TypeList();
+			Definition opdef = system.findConstructor(args);
+
+			if (opdef != null && opdef instanceof ExplicitOperationDefinition)
+			{
+				try
+				{
+					ExplicitOperationDefinition ctor = (ExplicitOperationDefinition)opdef;
+					system.uncheckedNewInstance(ctor, new ValueList(), globalContext);
+				}
+				catch (ValueException e)
+				{
+					throw new ContextException(e, opdef.location);
+				}
+			}
+		}
+
 		return globalContext;
 	}
 
@@ -244,6 +263,19 @@ public class ClassList extends Vector<ClassDefinition>
 			if (def != null)
 			{
 				return def;
+			}
+		}
+
+		return null;
+	}
+
+	public ClassDefinition findSystem()
+	{
+		for (ClassDefinition d: this)
+		{
+			if (d.isSystem)
+			{
+				return d;
 			}
 		}
 

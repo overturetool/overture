@@ -29,12 +29,20 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
+import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.syntax.DefinitionReader;
 import org.overturetool.vdmj.syntax.ParserException;
+import org.overturetool.vdmj.values.BUSValue;
+import org.overturetool.vdmj.values.NameValuePairList;
+import org.overturetool.vdmj.values.NameValuePairMap;
+import org.overturetool.vdmj.values.ObjectValue;
+import org.overturetool.vdmj.values.ValueList;
 
 public class BUSClassDefinition extends ClassDefinition
 {
 	private static final long serialVersionUID = 1L;
+	private static int nextBUS = 0;
 
 	public BUSClassDefinition() throws ParserException, LexException
 	{
@@ -48,7 +56,7 @@ public class BUSClassDefinition extends ClassDefinition
 	private static String defs =
 		"operations " +
 		"public BUS:(<FCFS>|<CSMACD>) * real * set of CPU ==> BUS " +
-		"	BUS(-, -, -) == is not yet specified;";
+		"	BUS(policy, speed, cpus) == is not yet specified;";
 
 	private static DefinitionList operationDefs()
 		throws ParserException, LexException
@@ -57,5 +65,17 @@ public class BUSClassDefinition extends ClassDefinition
 		DefinitionReader dr = new DefinitionReader(ltr);
 		dr.setCurrentModule("BUS");
 		return dr.readDefinitions();
+	}
+
+	@Override
+	public ObjectValue newInstance(
+		Definition ctorDefinition, ValueList argvals, Context ctxt)
+		throws ValueException
+	{
+		NameValuePairList nvpl = definitions.getNamedValues(ctxt);
+		NameValuePairMap map = new NameValuePairMap();
+		map.putAll(nvpl);
+
+		return new BUSValue(classtype, map, argvals, ++nextBUS);
 	}
 }
