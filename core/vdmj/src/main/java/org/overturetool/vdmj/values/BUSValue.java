@@ -25,6 +25,7 @@ package org.overturetool.vdmj.values;
 
 import java.util.Vector;
 
+import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.BUSPolicy;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Type;
@@ -32,18 +33,20 @@ import org.overturetool.vdmj.types.Type;
 public class BUSValue extends ObjectValue
 {
 	private static final long serialVersionUID = 1L;
+	private static int nextBUS = 1;
 
 	public final int busNumber;
 	public final BUSPolicy policy;
 	public final double speed;
 	public final ValueSet cpus;
 
-	public BUSValue(
-		Type classtype, NameValuePairMap map, ValueList argvals, int busNumber)
+	public String name;
+
+	public BUSValue(Type classtype, NameValuePairMap map, ValueList argvals)
 	{
 		super((ClassType)classtype, map, new Vector<ObjectValue>());
 
-		this.busNumber = busNumber;
+		this.busNumber = nextBUS++;
 
 		QuoteValue parg = (QuoteValue)argvals.get(0);
 		this.policy = BUSPolicy.valueOf(parg.value.toUpperCase());
@@ -53,5 +56,43 @@ public class BUSValue extends ObjectValue
 
 		SetValue set = (SetValue)argvals.get(2);
 		cpus = set.values;
+	}
+
+	public BUSValue(
+		int number, Type classtype, NameValuePairMap map, ValueList argvals)
+	{
+		super((ClassType)classtype, map, new Vector<ObjectValue>());
+
+		this.busNumber = number;
+
+		QuoteValue parg = (QuoteValue)argvals.get(0);
+		this.policy = BUSPolicy.valueOf(parg.value.toUpperCase());
+
+		RealValue sarg = (RealValue)argvals.get(1);
+		this.speed = sarg.value;
+
+		SetValue set = (SetValue)argvals.get(2);
+		cpus = set.values;
+	}
+
+	public void setName(LexNameToken m)
+	{
+		this.name = m.name;
+	}
+
+	public String declString() throws Exception
+	{
+		ValueSet set = new ValueSet();
+
+		for (Value v: cpus)
+		{
+			CPUValue cpu = (CPUValue)v.deref();
+			set.add(new NaturalValue(cpu.cpuNumber));
+		}
+
+		return
+			"BUSdecl -> id: " + busNumber +
+			" topo: " + set +
+			" name: \"" + name + "\"";
 	}
 }

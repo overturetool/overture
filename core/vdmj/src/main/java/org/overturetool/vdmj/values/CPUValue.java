@@ -26,9 +26,7 @@ package org.overturetool.vdmj.values;
 import java.util.List;
 import java.util.Vector;
 
-import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.runtime.CPUPolicy;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Type;
@@ -36,18 +34,21 @@ import org.overturetool.vdmj.types.Type;
 public class CPUValue extends ObjectValue
 {
 	private static final long serialVersionUID = 1L;
+	private static int nextCPU = 1;
 
 	public final int cpuNumber;
 	public final CPUPolicy policy;
 	public final double cyclesPerSec;
 	public final List<ObjectValue> deployed;
 
-	public CPUValue(
-		Type classtype, NameValuePairMap map, ValueList argvals, int cpuNumber)
+	public String name;
+	public static ValueSet allCPUs = new ValueSet();
+
+	public CPUValue(Type classtype, NameValuePairMap map, ValueList argvals)
 	{
 		super((ClassType)classtype, map, new Vector<ObjectValue>());
 
-		this.cpuNumber = cpuNumber;
+		this.cpuNumber = nextCPU++;
 
 		QuoteValue parg = (QuoteValue)argvals.get(0);
 		this.policy = CPUPolicy.valueOf(parg.value.toUpperCase());
@@ -56,14 +57,24 @@ public class CPUValue extends ObjectValue
 		this.cyclesPerSec = sarg.value;
 
 		deployed = new Vector<ObjectValue>();
+		allCPUs.add(this);
+	}
 
-		if (cpuNumber > 0)
-		{
-			Console.out.println(
-				"CPUdecl -> id: " + cpuNumber +
-				" expl: true sys: \"" + ClassList.systemClass.name.name + "\"" +
-				" name : \"?\"");
-		}
+	public CPUValue(
+		int number, Type classtype, NameValuePairMap map, ValueList argvals)
+	{
+		super((ClassType)classtype, map, new Vector<ObjectValue>());
+
+		this.cpuNumber = number;
+
+		QuoteValue parg = (QuoteValue)argvals.get(0);
+		this.policy = CPUPolicy.valueOf(parg.value.toUpperCase());
+
+		RealValue sarg = (RealValue)argvals.get(1);
+		this.cyclesPerSec = sarg.value;
+
+		deployed = new Vector<ObjectValue>();
+		allCPUs.add(this);
 	}
 
 	public void addDeployed(ObjectValue obj)
@@ -77,11 +88,11 @@ public class CPUValue extends ObjectValue
 
 		for (ObjectValue obj: deployed)
 		{
-			for (LexNameToken name: obj.members.keySet())
+			for (LexNameToken m: obj.members.keySet())
 			{
-				if (name.getExplicit(true).getName().equals(opname))
+				if (m.getExplicit(true).getName().equals(opname))
 				{
-					OperationValue op = (OperationValue)obj.members.get(name);
+					OperationValue op = (OperationValue)obj.members.get(m);
 					op.setPriority(priority);
 					found = true;
 				}
@@ -94,5 +105,19 @@ public class CPUValue extends ObjectValue
 	public long getDuration(long cycles)
 	{
 		return (long)(cycles/cyclesPerSec * 1000);		// millisecs
+	}
+
+	public void setName(LexNameToken m)
+	{
+		this.name = m.name;
+	}
+
+	public String declString(String sysname, boolean explicit)
+	{
+		return
+			"CPUdecl -> id: " + cpuNumber +
+			" expl: " + explicit +
+			" sys: \"" + sysname + "\"" +
+			" name: \"" + name + "\"";
 	}
 }

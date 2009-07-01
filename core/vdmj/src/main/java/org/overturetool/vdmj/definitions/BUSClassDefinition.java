@@ -34,15 +34,21 @@ import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.syntax.DefinitionReader;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.values.BUSValue;
+import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.NameValuePairMap;
 import org.overturetool.vdmj.values.ObjectValue;
+import org.overturetool.vdmj.values.QuoteValue;
+import org.overturetool.vdmj.values.RealValue;
+import org.overturetool.vdmj.values.SetValue;
 import org.overturetool.vdmj.values.ValueList;
 
 public class BUSClassDefinition extends ClassDefinition
 {
 	private static final long serialVersionUID = 1L;
-	private static int nextBUS = 0;
+	private static BUSClassDefinition instance = null;
+
+	public static BUSValue virtualBUS = null;
 
 	public BUSClassDefinition() throws ParserException, LexException
 	{
@@ -50,6 +56,8 @@ public class BUSClassDefinition extends ClassDefinition
 			new LexNameToken("CLASS", "BUS", new LexLocation()),
 			new LexNameList(),
 			operationDefs());
+
+		instance = this;
 	}
 
 	private static String defs =
@@ -75,6 +83,28 @@ public class BUSClassDefinition extends ClassDefinition
 		NameValuePairMap map = new NameValuePairMap();
 		map.putAll(nvpl);
 
-		return new BUSValue(classtype, map, argvals, ++nextBUS);
+		return new BUSValue(classtype, map, argvals);
+	}
+
+	public static BUSValue newBUS()
+	{
+		ValueList args = new ValueList();
+
+		args.add(new QuoteValue("FCFS"));
+		args.add(new RealValue(0));
+		args.add(new SetValue(CPUValue.allCPUs));
+
+		return new BUSValue(instance.getType(), new NameValuePairMap(), args);
+	}
+
+	public static BUSValue newDefaultBUS()
+	{
+		ValueList args = new ValueList();
+
+		args.add(new QuoteValue("FCFS"));
+		args.add(new RealValue(0));
+		args.add(new SetValue(CPUValue.allCPUs));
+
+		return new BUSValue(0, instance.getType(), new NameValuePairMap(), args);
 	}
 }

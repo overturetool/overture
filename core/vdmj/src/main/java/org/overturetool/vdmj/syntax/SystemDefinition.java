@@ -25,6 +25,8 @@ package org.overturetool.vdmj.syntax;
 
 import java.util.HashMap;
 
+import org.overturetool.vdmj.definitions.BUSClassDefinition;
+import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
@@ -39,7 +41,13 @@ import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.VDMThreadSet;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
+import org.overturetool.vdmj.types.ClassType;
+import org.overturetool.vdmj.types.Type;
+import org.overturetool.vdmj.types.UndefinedType;
+import org.overturetool.vdmj.values.BUSValue;
+import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.ObjectValue;
+import org.overturetool.vdmj.values.UpdatableValue;
 import org.overturetool.vdmj.values.ValueList;
 
 public class SystemDefinition extends ClassDefinition
@@ -97,7 +105,7 @@ public class SystemDefinition extends ClassDefinition
 	{
 		try
 		{
-   			makeNewInstance(null, new ValueList(),
+   			ObjectValue system = makeNewInstance(null, new ValueList(),
     				ctxt, new HashMap<LexNameToken, ObjectValue>());
 
 			// Show the main thread creation...
@@ -109,11 +117,81 @@ public class SystemDefinition extends ClassDefinition
 				" cpunm: 0" +
 				" time: " + VDMThreadSet.getWallTime());
 
+			// Do CPUs first so that default BUSses can connect all CPUs.
+
+			for (Definition d: definitions)
+			{
+				Type t = d.getType();
+
+				if (t instanceof ClassType)
+				{
+					UpdatableValue v = (UpdatableValue)system.members.get(d.name);
+					InstanceVariableDefinition ivd = (InstanceVariableDefinition)d;
+					ClassType ct = (ClassType)t;
+
+					if (ct.classdef instanceof CPUClassDefinition)
+					{
+						CPUValue cpu = null;
+
+						if (v.isUndefined())
+						{
+							cpu = CPUClassDefinition.newCPU();
+							v.set(location, cpu, null);
+						}
+						else
+						{
+							cpu = (CPUValue)v.deref();
+						}
+
+	    				cpu.setName(d.name);
+	    				Console.out.println(
+	    					cpu.declString(
+	    						name.name, !(ivd.expType instanceof UndefinedType)));
+					}
+				}
+			}
+
+			// We can create this now that all the CPUs have been created
+			BUSClassDefinition.virtualBUS = BUSClassDefinition.newDefaultBUS();
+
+			for (Definition d: definitions)
+			{
+				Type t = d.getType();
+
+				if (t instanceof ClassType)
+				{
+					ClassType ct = (ClassType)t;
+
+					if (ct.classdef instanceof BUSClassDefinition)
+					{
+						UpdatableValue v = (UpdatableValue)system.members.get(d.name);
+	    				BUSValue bus = null;
+
+						if (v.isUndefined())
+						{
+							bus = BUSClassDefinition.newBUS();
+							v.set(location, bus, null);
+						}
+						else
+						{
+							bus = (BUSValue)v.deref();
+						}
+
+	    				bus.setName(d.name);
+	    				Console.out.println(bus.declString());
+					}
+				}
+			}
 		}
 		catch (ValueException e)
 		{
 			throw new ContextException(e, location);
 		}
+    	catch (Exception e)
+    	{
+    		throw new ContextException(
+    			4135, "Cannot instantiate a system class", location, ctxt);
+    	}
 	}
 
 	@Override

@@ -51,7 +51,7 @@ import org.overturetool.vdmj.values.VoidValue;
 public class CPUClassDefinition extends ClassDefinition
 {
 	private static final long serialVersionUID = 1L;
-	private static int nextCPU = 0;
+	private static CPUClassDefinition instance = null;
 
 	public static CPUValue virtualCPU = null;
 
@@ -62,12 +62,8 @@ public class CPUClassDefinition extends ClassDefinition
 			new LexNameList(),
 			operationDefs());
 
-		ValueList args = new ValueList();
-
-		args.add(new QuoteValue("FP"));
-		args.add(new RealValue(0));
-
-		virtualCPU = new CPUValue(getType(), new NameValuePairMap(), args, nextCPU++);
+		instance = this;
+		virtualCPU = newDefaultCPU();
 	}
 
 	private static String defs =
@@ -90,6 +86,26 @@ public class CPUClassDefinition extends ClassDefinition
 		return dr.readDefinitions();
 	}
 
+	public static CPUValue newCPU()
+	{
+		ValueList args = new ValueList();
+
+		args.add(new QuoteValue("FP"));
+		args.add(new RealValue(0));
+
+		return new CPUValue(instance.getType(), new NameValuePairMap(), args);
+	}
+
+	public static CPUValue newDefaultCPU()
+	{
+		ValueList args = new ValueList();
+
+		args.add(new QuoteValue("FP"));
+		args.add(new RealValue(0));
+
+		return new CPUValue(0, instance.getType(), new NameValuePairMap(), args);
+	}
+
 	@Override
 	public ObjectValue newInstance(
 		Definition ctorDefinition, ValueList argvals, Context ctxt)
@@ -98,7 +114,7 @@ public class CPUClassDefinition extends ClassDefinition
 		NameValuePairMap map = new NameValuePairMap();
 		map.putAll(nvpl);
 
-		return new CPUValue(getType(), map, argvals, nextCPU++);
+		return new CPUValue(getType(), map, argvals);
 	}
 
 	public static Value deploy(Context ctxt)
