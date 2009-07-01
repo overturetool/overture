@@ -25,6 +25,7 @@ package org.overturetool.vdmj.typechecker;
 
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
+import org.overturetool.vdmj.syntax.SystemDefinition;
 
 /**
  * A class to coordinate all class type checking processing.
@@ -69,7 +70,7 @@ public class ClassTypeChecker extends TypeChecker
 
 			if (!c1.typechecked) nothing = false;
 
-			if (c1.isSystem)
+			if (c1 instanceof SystemDefinition)
 			{
 				if (hasSystem)
 				{

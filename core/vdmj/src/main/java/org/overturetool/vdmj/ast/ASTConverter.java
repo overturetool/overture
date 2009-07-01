@@ -133,6 +133,7 @@ import org.overturetool.vdmj.statements.TixeStatement;
 import org.overturetool.vdmj.statements.TixeStmtAlternative;
 import org.overturetool.vdmj.statements.TrapStatement;
 import org.overturetool.vdmj.statements.WhileStatement;
+import org.overturetool.vdmj.syntax.SystemDefinition;
 import org.overturetool.vdmj.traces.TraceApplyExpression;
 import org.overturetool.vdmj.traces.TraceBracketedExpression;
 import org.overturetool.vdmj.traces.TraceCoreDefinition;
@@ -247,7 +248,15 @@ public class ASTConverter
 	{
 		LexNameList supernames = convertInheritance(cls);
 		DefinitionList definitions = convertDefinitionsBlocks(cls.getClassBody());
-		return new ClassDefinition(classLexName, supernames, definitions, cls.getSystemSpec());
+
+		if (cls.getSystemSpec())
+		{
+			return new SystemDefinition(classLexName, definitions);
+		}
+		else
+		{
+			return new ClassDefinition(classLexName, supernames, definitions);
+		}
 	}
 
 	private LexNameList convertInheritance(IOmlClass cls)

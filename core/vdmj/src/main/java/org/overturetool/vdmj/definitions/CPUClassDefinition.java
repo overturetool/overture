@@ -60,8 +60,7 @@ public class CPUClassDefinition extends ClassDefinition
 		super(
 			new LexNameToken("CLASS", "CPU", new LexLocation()),
 			new LexNameList(),
-			operationDefs(),
-			false);
+			operationDefs());
 
 		ValueList args = new ValueList();
 

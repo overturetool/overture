@@ -193,11 +193,6 @@ public class ExplicitOperationDefinition extends Definition
 			{
 				isConstructor = true;
 
-				if (classDefinition.isSystem && !ptypes.isEmpty())
-				{
-					report(3285, "System class can only define a default constructor");
-				}
-
 				if (accessSpecifier.isAsync)
 				{
 					report(3286, "Constructor cannot be 'async'");
@@ -218,10 +213,6 @@ public class ExplicitOperationDefinition extends Definition
 					type.result.report(3026,
 						"Constructor operation must have return type " + classDefinition.name.name);
 				}
-			}
-			else if (classDefinition.isSystem)
-			{
-				report(3284, "System class can only define instance variables and a constructor");
 			}
 		}
 

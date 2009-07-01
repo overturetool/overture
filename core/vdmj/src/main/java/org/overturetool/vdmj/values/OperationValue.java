@@ -50,6 +50,7 @@ import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.runtime.VDMThreadSet;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.statements.Statement;
+import org.overturetool.vdmj.syntax.SystemDefinition;
 import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.PatternListTypePair;
 import org.overturetool.vdmj.types.Type;
@@ -107,7 +108,7 @@ public class OperationValue extends Value
 		traceRT =
 			Settings.dialect == Dialect.VDM_RT &&
 			classdef != null &&
-			!classdef.isSystem &&
+			!(classdef instanceof SystemDefinition) &&
 			!classdef.name.name.equals("CPU") &&
 			!classdef.name.name.equals("BUS") &&
 			!name.name.equals("thread");
@@ -137,7 +138,7 @@ public class OperationValue extends Value
 		traceRT =
 			Settings.dialect == Dialect.VDM_RT &&
 			classdef != null &&
-			!classdef.isSystem &&
+			!(classdef instanceof SystemDefinition) &&
 			!classdef.name.name.equals("CPU") &&
 			!classdef.name.name.equals("BUS") &&
 			!name.name.equals("thread");

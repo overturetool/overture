@@ -361,6 +361,8 @@ as the expected and actual values.
 2277, -
 2278, "Async only permitted for operations"
 2279, "Invalid breakpoint hit condition"
+2280, "System class cannot be a subclass"
+2290, "System class can only define instance variables and a constructor"
 
 3000, "Expression does not match declared type"
 3001, "Class inherits thread definition from multiple supertypes"
@@ -643,7 +645,7 @@ as the expected and actual values.
 3280, "Argument to deploy must be an object"
 3281, "Arguments to duration must be >= 0"
 3282, "Arguments to cycles must be >= 0"
-3283, "System class cannot be a subclass"
+3283, "System class constructor cannot be implicit"
 3284, "System class can only define instance variables and a constructor"
 3285, "System class can only define a default constructor"
 3286, "Constructor cannot be 'async'"

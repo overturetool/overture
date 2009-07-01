@@ -144,57 +144,11 @@ public class DefinitionReader extends SyntaxReader
 			switch (lastToken().type)
 			{
 				case TYPES:
-        			nextToken();
-
-        			while (!newSection())
-        			{
-        				try
-        				{
-        					AccessSpecifier access = readAccessSpecifier(false);
-            				TypeDefinition def = readTypeDefinition();
-
-            				// Force all type defs (invs) to be static
-            				def.setAccessSpecifier(access.getStatic(true));
-            				list.add(def);
-
-            				if (!newSection())
-            				{
-            					checkFor(Token.SEMICOLON,
-            						2078, "Missing ';' after type definition");
-            				}
-        				}
-        				catch (LocatedException e)
-        				{
-        					report(e, afterArray, sectionArray);
-        				}
-        			}
+					list.addAll(readTypes());
         			break;
 
 				case FUNCTIONS:
-        			nextToken();
-
-        			while (!newSection())
-        			{
-        				try
-        				{
-        					AccessSpecifier access = readAccessSpecifier(false);
-            				Definition def = readFunctionDefinition(NameScope.GLOBAL);
-
-            				// Force all functions to be static - NOT YET!!
-            				def.setAccessSpecifier(access);	//.getStatic(true));
-            				list.add(def);
-
-            				if (!newSection())
-            				{
-            					checkFor(Token.SEMICOLON,
-            						2079, "Missing ';' after function definition");
-            				}
-        				}
-        				catch (LocatedException e)
-        				{
-        					report(e, afterArray, sectionArray);
-        				}
-        			}
+					list.addAll(readFunctions());
         			break;
 
 				case STATE:
@@ -216,111 +170,19 @@ public class DefinitionReader extends SyntaxReader
 					break;
 
 				case VALUES:
-        			nextToken();
-
-        			while (!newSection())
-        			{
-        				try
-        				{
-        					AccessSpecifier access = readAccessSpecifier(false);
-            				Definition def = readValueDefinition(NameScope.GLOBAL);
-
-            				// Force all values to be static
-            				def.setAccessSpecifier(access.getStatic(true));
-            				list.add(def);
-
-            				if (!newSection())
-            				{
-            					checkFor(Token.SEMICOLON,
-            						2081, "Missing ';' after value definition");
-            				}
-        				}
-        				catch (LocatedException e)
-        				{
-        					report(e, afterArray, sectionArray);
-        				}
-        			}
+        			list.addAll(readValues());
 					break;
 
 				case OPERATIONS:
-        			nextToken();
-
-        			while (!newSection())
-        			{
-        				try
-        				{
-        					AccessSpecifier access = readAccessSpecifier(dialect == Dialect.VDM_RT);
-            				Definition def = readOperationDefinition();
-            				def.setAccessSpecifier(access);
-            				list.add(def);
-
-            				if (!newSection())
-            				{
-            					checkFor(Token.SEMICOLON,
-            						2082, "Missing ';' after operation definition");
-            				}
-        				}
-        				catch (LocatedException e)
-        				{
-        					report(e, afterArray, sectionArray);
-        				}
-        			}
+        			list.addAll(readOperations());
 					break;
 
 				case INSTANCE:
-					if (dialect == Dialect.VDM_SL)
-					{
-						throwMessage(2009, "Can't have instance variables in VDM-SL");
-					}
-
-        			nextToken();
-        			checkFor(Token.VARIABLES, 2083, "Expecting 'instance variables'");
-
-        			while (!newSection())
-        			{
-        				try
-        				{
-            				Definition def = readInstanceVariableDefinition();
-            				list.add(def);
-
-            				if (!newSection())
-            				{
-            					checkFor(Token.SEMICOLON,
-            						2084, "Missing ';' after instance variable definition");
-            				}
-        				}
-        				catch (LocatedException e)
-        				{
-        					report(e, afterArray, sectionArray);
-        				}
-        			}
+					list.addAll(readInstanceVariables());
 					break;
 
 				case TRACES:
-					if (dialect == Dialect.VDM_SL)
-					{
-						throwMessage(2262, "Can't have traces in VDM-SL");
-					}
-
-        			nextToken();
-
-        			while (!newSection())
-        			{
-        				try
-        				{
-            				Definition def = readNamedTraceDefinition();
-            				list.add(def);
-
-            				if (!newSection())
-            				{
-            					ignore(Token.SEMICOLON);	// Optional?
-            				}
-        				}
-        				catch (LocatedException e)
-        				{
-        					report(e, afterArray, sectionArray);
-        				}
-        			}
+					list.addAll(readTraces());
 					break;
 
 				case THREAD:
@@ -356,31 +218,7 @@ public class DefinitionReader extends SyntaxReader
 					break;
 
 				case SYNC:
-					if (dialect == Dialect.VDM_SL)
-					{
-						throwMessage(2012, "Can't have a sync clause in VDM-SL");
-					}
-
-        			nextToken();
-
-        			while (!newSection())
-        			{
-        				try
-        				{
-            				Definition def = readPermissionPredicateDefinition();
-            				list.add(def);
-
-            				if (!newSection())
-            				{
-            					checkFor(Token.SEMICOLON,
-            						2086, "Missing ';' after sync definition");
-            				}
-        				}
-        				catch (LocatedException e)
-        				{
-        					report(e, afterArray, sectionArray);
-        				}
-        			}
+					list.addAll(readSyncs());
 					break;
 
 				case EOF:
@@ -401,7 +239,7 @@ public class DefinitionReader extends SyntaxReader
 		return list;
 	}
 
-	public AccessSpecifier readAccessSpecifier(boolean async)
+	private AccessSpecifier readAccessSpecifier(boolean async)
 		throws LexException, ParserException
 	{
 		if (dialect == Dialect.VDM_SL)
@@ -496,6 +334,224 @@ public class DefinitionReader extends SyntaxReader
 		}
 
 		return new TypeDefinition(idToName(id), invtype, invPattern, invExpression);
+	}
+
+	private DefinitionList readTypes() throws LexException, ParserException
+	{
+		checkFor(Token.TYPES, 2013, "Expected 'types'");
+		DefinitionList list = new DefinitionList();
+
+		while (!newSection())
+		{
+			try
+			{
+				AccessSpecifier access = readAccessSpecifier(false);
+				TypeDefinition def = readTypeDefinition();
+
+				// Force all type defs (invs) to be static
+				def.setAccessSpecifier(access.getStatic(true));
+				list.add(def);
+
+				if (!newSection())
+				{
+					checkFor(Token.SEMICOLON,
+						2078, "Missing ';' after type definition");
+				}
+			}
+			catch (LocatedException e)
+			{
+				report(e, afterArray, sectionArray);
+			}
+		}
+
+		return list;
+	}
+
+	private DefinitionList readValues() throws LexException, ParserException
+	{
+		checkFor(Token.VALUES, 2013, "Expected 'values'");
+		DefinitionList list = new DefinitionList();
+
+		while (!newSection())
+		{
+			try
+			{
+				AccessSpecifier access = readAccessSpecifier(false);
+				Definition def = readValueDefinition(NameScope.GLOBAL);
+
+				// Force all values to be static
+				def.setAccessSpecifier(access.getStatic(true));
+				list.add(def);
+
+				if (!newSection())
+				{
+					checkFor(Token.SEMICOLON,
+						2081, "Missing ';' after value definition");
+				}
+			}
+			catch (LocatedException e)
+			{
+				report(e, afterArray, sectionArray);
+			}
+		}
+
+		return list;
+	}
+
+	private DefinitionList readFunctions() throws LexException, ParserException
+	{
+		checkFor(Token.FUNCTIONS, 2013, "Expected 'functions'");
+		DefinitionList list = new DefinitionList();
+
+		while (!newSection())
+		{
+			try
+			{
+				AccessSpecifier access = readAccessSpecifier(false);
+				Definition def = readFunctionDefinition(NameScope.GLOBAL);
+
+				// Force all functions to be static - NOT YET!!
+				def.setAccessSpecifier(access);	//.getStatic(true));
+				list.add(def);
+
+				if (!newSection())
+				{
+					checkFor(Token.SEMICOLON,
+						2079, "Missing ';' after function definition");
+				}
+			}
+			catch (LocatedException e)
+			{
+				report(e, afterArray, sectionArray);
+			}
+		}
+
+		return list;
+	}
+
+	public DefinitionList readOperations() throws LexException, ParserException
+	{
+		checkFor(Token.OPERATIONS, 2013, "Expected 'operations'");
+		DefinitionList list = new DefinitionList();
+
+		while (!newSection())
+		{
+			try
+			{
+				AccessSpecifier access = readAccessSpecifier(dialect == Dialect.VDM_RT);
+				Definition def = readOperationDefinition();
+				def.setAccessSpecifier(access);
+				list.add(def);
+
+				if (!newSection())
+				{
+					checkFor(Token.SEMICOLON,
+						2082, "Missing ';' after operation definition");
+				}
+			}
+			catch (LocatedException e)
+			{
+				report(e, afterArray, sectionArray);
+			}
+		}
+
+		return list;
+	}
+
+	public DefinitionList readInstanceVariables() throws LexException, ParserException
+	{
+		if (dialect == Dialect.VDM_SL)
+		{
+			throwMessage(2009, "Can't have instance variables in VDM-SL");
+		}
+
+		checkFor(Token.INSTANCE, 2083, "Expected 'instance variables'");
+		checkFor(Token.VARIABLES, 2083, "Expecting 'instance variables'");
+		DefinitionList list = new DefinitionList();
+
+		while (!newSection())
+		{
+			try
+			{
+				Definition def = readInstanceVariableDefinition();
+				list.add(def);
+
+				if (!newSection())
+				{
+					checkFor(Token.SEMICOLON,
+						2084, "Missing ';' after instance variable definition");
+				}
+			}
+			catch (LocatedException e)
+			{
+				report(e, afterArray, sectionArray);
+			}
+		}
+
+		return list;
+	}
+
+	private DefinitionList readTraces() throws LexException, ParserException
+	{
+		if (dialect == Dialect.VDM_SL)
+		{
+			throwMessage(2262, "Can't have traces in VDM-SL");
+		}
+
+		checkFor(Token.TRACES, 2013, "Expected 'traces'");
+		DefinitionList list = new DefinitionList();
+
+		while (!newSection())
+		{
+			try
+			{
+				Definition def = readNamedTraceDefinition();
+				list.add(def);
+
+				if (!newSection())
+				{
+					ignore(Token.SEMICOLON);	// Optional?
+				}
+			}
+			catch (LocatedException e)
+			{
+				report(e, afterArray, sectionArray);
+			}
+		}
+
+		return list;
+	}
+
+	private DefinitionList readSyncs() throws LexException, ParserException
+	{
+		if (dialect == Dialect.VDM_SL)
+		{
+			throwMessage(2012, "Can't have a sync clause in VDM-SL");
+		}
+
+		checkFor(Token.SYNC, 2013, "Expected 'sync'");
+		DefinitionList list = new DefinitionList();
+
+		while (!newSection())
+		{
+			try
+			{
+				Definition def = readPermissionPredicateDefinition();
+				list.add(def);
+
+				if (!newSection())
+				{
+					checkFor(Token.SEMICOLON,
+						2086, "Missing ';' after sync definition");
+				}
+			}
+			catch (LocatedException e)
+			{
+				report(e, afterArray, sectionArray);
+			}
+		}
+
+		return list;
 	}
 
 	private Definition readFunctionDefinition(NameScope scope)
@@ -1129,7 +1185,7 @@ public class DefinitionReader extends SyntaxReader
 		}
  	}
 
-	public Definition readInstanceVariableDefinition()
+	private Definition readInstanceVariableDefinition()
 		throws ParserException, LexException
     {
 		LexToken token = lastToken();

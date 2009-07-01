@@ -32,6 +32,7 @@ import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.syntax.SystemDefinition;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Type;
@@ -78,7 +79,7 @@ public class NewExpression extends Expression
 
 		classdef = (ClassDefinition)cdef;
 
-		if (classdef.isSystem)
+		if (classdef instanceof SystemDefinition)
 		{
 			report(3279, "Cannot instantiate system class " + classdef.name);
 		}

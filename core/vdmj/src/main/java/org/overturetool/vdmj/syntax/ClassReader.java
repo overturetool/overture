@@ -63,7 +63,14 @@ public class ClassReader extends SyntaxReader
 
     		while (lastToken().is(Token.CLASS) || lastToken().is(Token.SYSTEM))
     		{
-    			list.add(readClass());
+    			if (lastToken().is(Token.CLASS))
+    			{
+    				list.add(readClass());
+    			}
+    			else
+    			{
+    				list.add(readSystem());
+    			}
     		}
 
     		if (lastToken().isNot(Token.EOF))
@@ -84,9 +91,8 @@ public class ClassReader extends SyntaxReader
 	{
 		LexNameList superclasses = new LexNameList();
 
-		if (lastToken().is(Token.CLASS) || lastToken().is(Token.SYSTEM))
+		if (lastToken().is(Token.CLASS))
 		{
-			boolean system = lastToken().is(Token.SYSTEM);
 			setCurrentModule("");
 			nextToken();
 			LexIdentifierToken classId = readIdToken("Expecting class ID");
@@ -120,11 +126,82 @@ public class ClassReader extends SyntaxReader
 				throwMessage(2007, "Expecting 'end " + classId.name + "'");
 			}
 
-			return new ClassDefinition(className, superclasses, members, system);
+			return new ClassDefinition(className, superclasses, members);
 		}
 		else
 		{
 			throwMessage(2008, "Class does not start with 'class'");
+		}
+
+		return null;
+	}
+
+	private SystemDefinition readSystem() throws ParserException, LexException
+	{
+		if (lastToken().is(Token.SYSTEM))
+		{
+			setCurrentModule("");
+			nextToken();
+			LexIdentifierToken classId = readIdToken("Expecting class ID");
+			LexNameToken className = classId.getClassName();
+			setCurrentModule(classId.name);
+
+			if (lastToken().is(Token.IS))
+			{
+				nextToken();
+				checkFor(Token.SUBCLASS, 2075, "Expecting 'is subclass of'");
+				checkFor(Token.OF, 2076, "Expecting 'is subclass of'");
+
+				throwMessage(2280, "System class cannot be a subclass");
+			}
+
+			DefinitionList members = new DefinitionList();
+			DefinitionReader dr = getDefinitionReader();
+
+    		while (lastToken().is(Token.INSTANCE) || lastToken().is(Token.OPERATIONS))
+    		{
+    			if (lastToken().is(Token.INSTANCE))
+    			{
+    				members.addAll(dr.readInstanceVariables());
+    			}
+    			else
+    			{
+    				members.addAll(dr.readOperations());
+    			}
+    		}
+
+    		switch (lastToken().type)
+    		{
+    			case TYPES:
+    			case VALUES:
+    			case FUNCTIONS:
+    			case THREAD:
+    			case SYNC:
+    				throwMessage(2290,
+    					"System class can only define instance variables and a constructor");
+    				break;
+
+    			case END:
+    				nextToken();
+    				break;
+
+    			default:
+    				throwMessage(2077, "Expecting 'end' after system members");
+    		}
+
+			LexIdentifierToken endname =
+				readIdToken("Expecting 'end <name>' after system members");
+
+			if (classId != null && !classId.equals(endname))
+			{
+				throwMessage(2007, "Expecting 'end " + classId.name + "'");
+			}
+
+			return new SystemDefinition(className, members);
+		}
+		else
+		{
+			throwMessage(2008, "System class does not start with 'system'");
 		}
 
 		return null;

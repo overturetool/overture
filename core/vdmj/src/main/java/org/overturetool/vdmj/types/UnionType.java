@@ -416,7 +416,7 @@ public class UnionType extends Type
     		classType = (classname == null) ? null :
     			new ClassType(location,
     				new ClassDefinition(classname,
-    					new LexNameList(), newdefs, false));
+    					new LexNameList(), newdefs));
 		}
 
 		return classType;

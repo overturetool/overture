@@ -35,19 +35,15 @@ import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.RootContext;
 import org.overturetool.vdmj.runtime.StateContext;
-import org.overturetool.vdmj.runtime.VDMThreadSet;
-import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.statements.Statement;
+import org.overturetool.vdmj.syntax.SystemDefinition;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
-import org.overturetool.vdmj.types.TypeList;
-import org.overturetool.vdmj.values.ValueList;
 
 
 /**
@@ -61,7 +57,7 @@ public class ClassList extends Vector<ClassDefinition>
 	private static Map<String, ClassDefinition> map =
 					new HashMap<String, ClassDefinition>();
 
-	public static ClassDefinition systemClass = null;
+	public static SystemDefinition systemClass = null;
 
 	public ClassList()
 	{
@@ -78,9 +74,9 @@ public class ClassList extends Vector<ClassDefinition>
 	{
 		map.put(cdef.name.name, cdef);
 
-		if (cdef.isSystem)
+		if (cdef instanceof SystemDefinition)
 		{
-			systemClass = cdef;
+			systemClass = (SystemDefinition)cdef;
 		}
 
 		return super.add(cdef);
@@ -225,31 +221,7 @@ public class ClassList extends Vector<ClassDefinition>
 
 		if (systemClass != null)
 		{
-			TypeList args = new TypeList();
-			Definition opdef = systemClass.findConstructor(args);
-
-			if (opdef != null && opdef instanceof ExplicitOperationDefinition)
-			{
-				try
-				{
-					ExplicitOperationDefinition ctor = (ExplicitOperationDefinition)opdef;
-					systemClass.uncheckedNewInstance(ctor, new ValueList(), globalContext);
-
-					// Show the main thread creation...
-
-					Console.out.println(
-						"ThreadCreate -> id: " + Thread.currentThread().getId() +
-						" period: false objref: nil" +
-						" clnm: nil" +
-						" cpunm: 0" +
-						" time: " + VDMThreadSet.getWallTime());
-
-				}
-				catch (ValueException e)
-				{
-					throw new ContextException(e, opdef.location);
-				}
-			}
+			systemClass.init(globalContext);
 		}
 
 		return globalContext;

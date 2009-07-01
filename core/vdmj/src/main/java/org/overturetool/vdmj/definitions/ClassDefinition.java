@@ -42,6 +42,7 @@ import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.statements.ClassInvariantStatement;
 import org.overturetool.vdmj.statements.Statement;
+import org.overturetool.vdmj.syntax.SystemDefinition;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.FlatEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -72,8 +73,6 @@ public class ClassDefinition extends Definition
 	public final LexNameList supernames;
 	/** The definitions in this class (excludes superclasses). */
 	public final DefinitionList definitions;
-	/** True if the class is a VICE system class. */
-	public final boolean isSystem;
 
 	/** Definitions inherited from superclasses. */
 	public DefinitionList superInheritedDefinitions = null;
@@ -125,13 +124,12 @@ public class ClassDefinition extends Definition
 	 */
 
 	public ClassDefinition(LexNameToken className,
-		LexNameList supernames, DefinitionList definitions, boolean system)
+		LexNameList supernames, DefinitionList definitions)
 	{
 		super(Pass.DEFS, className.location, className, NameScope.CLASSNAME);
 
 		this.supernames = supernames;
 		this.definitions = definitions;
-		this.isSystem = system;
 
 		this.used = true;
 		this.superdefs = new ClassList();
@@ -152,7 +150,7 @@ public class ClassDefinition extends Definition
 	public ClassDefinition()
 	{
 		this(new LexNameToken("CLASS", "DEFAULT", new LexLocation()),
-			new LexNameList(), new DefinitionList(), false);
+			new LexNameList(), new DefinitionList());
 
 		privateStaticValues = new NameValuePairMap();
 		publicStaticValues = new NameValuePairMap();
@@ -430,15 +428,9 @@ public class ClassDefinition extends Definition
 	{
 		DefinitionList indefs = new DefinitionList();
 
-		if (isSystem && !superdefs.isEmpty())
-		{
-			report(3283, "System class cannot be a subclass");
-			return;
-		}
-
 		for (ClassDefinition sclass: superdefs)
 		{
-			if (sclass.isSystem)
+			if (sclass instanceof SystemDefinition)
 			{
 				report(3278, "Cannot inherit from system class " + sclass.name);
 			}
@@ -883,15 +875,7 @@ public class ClassDefinition extends Definition
 		{
 			if (d.pass == p)
 			{
-				if (isSystem && !d.isCallableOperation() && !d.isInstanceVariable())
-				{
-					d.report(3284,
-						"System class can only define instance variables and a constructor");
-				}
-				else
-				{
-					d.typeCheck(base, NameScope.NAMES);
-				}
+				d.typeCheck(base, NameScope.NAMES);
 			}
 		}
 
@@ -1089,30 +1073,18 @@ public class ClassDefinition extends Definition
 		{
 			abort(4000, "Cannot instantiate abstract class " + name, ctxt);
 		}
-		else if (isSystem)
-		{
-			abort(4135, "Cannot instantiate system class " + name, ctxt);
-		}
 
-		return makeNewInstance(
-			ctorDefinition, argvals, ctxt, new HashMap<LexNameToken, ObjectValue>());
-	}
-
-	public ObjectValue uncheckedNewInstance(
-		Definition ctorDefinition, ValueList argvals, Context ctxt)
-		throws ValueException
-	{
 		return makeNewInstance(
 			ctorDefinition, argvals, ctxt, new HashMap<LexNameToken, ObjectValue>());
 	}
 
 	/**
-	 * A private method to make new instances, including a list of supertype
+	 * A method to make new instances, including a list of supertype
 	 * objects already constructed to allow for virtual inheritance in
 	 * "diamond" inheritance graphs.
 	 */
 
-	private ObjectValue makeNewInstance(
+	protected ObjectValue makeNewInstance(
 		Definition ctorDefinition, ValueList argvals,
 		Context ctxt, Map<LexNameToken, ObjectValue> done)
 		throws ValueException

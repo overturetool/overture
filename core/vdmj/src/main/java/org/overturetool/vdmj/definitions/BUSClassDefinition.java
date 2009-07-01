@@ -49,8 +49,7 @@ public class BUSClassDefinition extends ClassDefinition
 		super(
 			new LexNameToken("CLASS", "BUS", new LexLocation()),
 			new LexNameList(),
-			operationDefs(),
-			false);
+			operationDefs());
 	}
 
 	private static String defs =
