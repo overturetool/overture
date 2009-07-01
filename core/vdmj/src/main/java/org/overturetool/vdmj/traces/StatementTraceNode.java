@@ -52,7 +52,7 @@ public class StatementTraceNode extends TraceNode
 		CallSequence seq = new CallSequence();
 		seq.add(statement);
 		seq.setContext(ctxt);
-		seq.hashes.add(hash);
+		seq.addHash(hash);
 		tests.add(seq);
 		return tests;
 	}

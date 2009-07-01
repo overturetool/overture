@@ -430,12 +430,46 @@ public class ClassInterpreter extends Interpreter
 		return list;
 	}
 
-	public List<Object> runtrace(Environment env, CallSequence statements)
+	public List<Object> runtrace(
+		String classname, Environment env, CallSequence statements)
 	{
 		List<Object> list = new Vector<Object>();
 
-		Context copy = statements.ctxt.deepCopy();
-		copy.setThreadState(null);
+		Context ctxt = null;
+
+		if (statements.needsContext)
+		{
+			ctxt = statements.ctxt.deepCopy();
+			ctxt.setThreadState(null);
+		}
+		else
+		{
+			ClassDefinition classdef = findClass(classname);
+
+			if (classdef == null)
+			{
+				list.add("Class " + classname + " not found");
+				return list;
+			}
+
+			ObjectValue object = null;
+
+			try
+			{
+				object = classdef.newInstance(null, null, initialContext);
+			}
+			catch (ValueException e)
+			{
+				list.add(e.getMessage());
+				return list;
+			}
+
+			ctxt = new ObjectContext(
+					classdef.name.location, classdef.name.name + "()",
+					initialContext, object);
+
+			ctxt.put(classdef.name.getSelfName(), object);
+		}
 
 		try
 		{
@@ -451,7 +485,7 @@ public class ClassInterpreter extends Interpreter
 					// tried at all" :-)
 				}
 
-				list.add(statement.eval(copy));
+				list.add(statement.eval(ctxt));
 			}
 
 			list.add(Verdict.PASSED);
@@ -468,7 +502,7 @@ public class ClassInterpreter extends Interpreter
 				case 4060:	// type invariant failure
 				case 4130:	// class invariant failure
 
-					if (e.ctxt.outer == copy)
+					if (e.ctxt.outer == ctxt)
 					{
 						list.add(Verdict.INCONCLUSIVE);
 					}

@@ -78,7 +78,7 @@ public class SequenceTraceNode extends TraceNode
 			{
 				CallSequence subseq = nodetests.get(i).get(select[i]);
 				seq.addAll(subseq);
-				seq.hashes.addAll(subseq.hashes);
+				seq.addHashes(subseq.getHashes());
 				seq.setContext(subseq.ctxt);
 			}
 

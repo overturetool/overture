@@ -34,7 +34,8 @@ import org.overturetool.vdmj.util.Utils;
 public class CallSequence extends Vector<Statement>
 {
 	public Context ctxt = null;
-	public List<Integer> hashes = null;
+	public boolean needsContext = false;
+	private List<Integer> hashes = null;
 	private int filtered = 0;
 
 	public CallSequence()
@@ -45,6 +46,25 @@ public class CallSequence extends Vector<Statement>
 	public void setContext(Context ctxt)
 	{
 		this.ctxt = ctxt;
+	}
+
+	public void addHash(int n)
+	{
+		hashes.add(n);
+		if (n != 0) needsContext = true;
+	}
+
+	public void addHashes(List<Integer> list)
+	{
+		for (Integer i: list)
+		{
+			addHash(i);
+		}
+	}
+
+	public List<Integer> getHashes()
+	{
+		return hashes;
 	}
 
 	@Override

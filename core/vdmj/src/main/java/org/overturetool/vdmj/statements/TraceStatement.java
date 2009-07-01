@@ -85,7 +85,7 @@ public class TraceStatement extends Statement
 			else
 			{
     			ci.init(null);	// Initialize completely between every run...
-    			List<Object> result = ci.runtrace(env, test);
+    			List<Object> result = ci.runtrace(tracedef.name.module, env, test);
 
     			if (result.get(result.size()-1) == Verdict.FAILED)
     			{

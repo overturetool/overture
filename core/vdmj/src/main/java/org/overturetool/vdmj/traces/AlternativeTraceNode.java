@@ -68,7 +68,7 @@ public class AlternativeTraceNode extends TraceNode
     			CallSequence seq = new CallSequence();
     			seq.addAll(test);
     			seq.setContext(test.ctxt);
-    			seq.hashes.addAll(test.hashes);
+    			seq.addHashes(test.getHashes());
     			tests.add(seq);
     		}
 		}

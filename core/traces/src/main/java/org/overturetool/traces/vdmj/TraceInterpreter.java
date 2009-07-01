@@ -186,7 +186,7 @@ public class TraceInterpreter
 							ci.init(null); // Initialize completely between
 											// every
 							// run...
-							List<Object> result = ci.runtrace(env, test);
+							List<Object> result = ci.runtrace(className, env, test);
 
 							if (result.get(result.size() - 1) == Verdict.FAILED)
 							{
