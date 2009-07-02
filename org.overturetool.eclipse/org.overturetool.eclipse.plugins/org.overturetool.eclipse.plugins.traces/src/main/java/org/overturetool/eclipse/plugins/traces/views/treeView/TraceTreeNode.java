@@ -150,8 +150,8 @@ public class TraceTreeNode implements IAdaptable,ITreeNode
 			}
 		} else
 		{
-			Double numberOfGroups = size.doubleValue()
-					/ TraceTestGroup.GROUP_SIZE;
+			Double numberOfGroups = Math.ceil(size.doubleValue()
+					/ TraceTestGroup.GROUP_SIZE);
 			// Double t = TraceTestGroup.NumberOfLevels(size,
 			// TraceTestGroup.GROUP_SIZE);
 

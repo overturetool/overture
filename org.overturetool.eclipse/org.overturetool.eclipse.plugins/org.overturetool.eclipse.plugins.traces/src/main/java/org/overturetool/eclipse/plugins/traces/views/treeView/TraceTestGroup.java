@@ -176,8 +176,8 @@ public class TraceTestGroup extends TraceTestTreeNode
 			LoadTestNodes();
 		} else
 		{
-			Double numberOfGroups = new Double(size)
-					/ TraceTestGroup.GROUP_SIZE;
+			Double numberOfGroups =Math.ceil( new Double(size)
+					/ TraceTestGroup.GROUP_SIZE);
 			// Double t = TraceTestGroup.NumberOfLevels(new Long(size),
 			// TraceTestGroup.GROUP_SIZE);
 

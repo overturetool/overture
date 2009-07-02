@@ -42,7 +42,7 @@ public class ObservableTraceInterpeter extends TraceInterpreter
 	protected void preProcessingTrace(String className, String traceName,
 			Integer testCount)
 	{
-		printTraceStatus();
+		
 		// beginTrace = System.currentTimeMillis();
 		// activeTrace = traceName;
 
@@ -88,8 +88,8 @@ public class ObservableTraceInterpeter extends TraceInterpreter
 
 		// monitor.done();
 	}
-
-	protected void printTraceStatus()
+	@Override
+	protected void prePrintTraceStatus()
 	{
 		if (super.activeTrace != null && super.beginTrace != 0)
 		{
