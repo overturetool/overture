@@ -100,7 +100,7 @@ public class CmdTrace {
 		System.out.println("-------------------------------------------------");
 
 		long stop = System.currentTimeMillis(); // stop timing
-		System.out.println("Elapsed seconds: " + (stop - start) / 1000); // print
+		System.out.println("Elapsed seconds: " + (double)(stop - start) / 1000); // print
 		// execution
 		// time
 		System.out.println();
@@ -108,13 +108,13 @@ public class CmdTrace {
 		TraceStorageManager tsm = new TraceStorageManager(outputPath);
 		TraceXmlStorageManager tsmXml = new TraceXmlStorageManager(outputPath);
 		System.out.println("Saving results...");
-		//tsm.SaveResults(filter.GetResults());
+		tsm.SaveResults(filter.GetResults());
 		System.out.println("Saving arguments...");
-		//tsm.SaveStatements(filter.GetStatements());
-tsmXml.SaveStatements(filter.GetStatements(),filter.GetResults());
+		tsm.SaveStatements(filter.GetStatements());
+//tsmXml.SaveStatements(filter.GetStatements(),filter.GetResults());
 		
 		stop = System.currentTimeMillis(); // stop timing
-		System.out.println("Saving elapsed in seconds: " + (stop - start)
+		System.out.println("Saving elapsed in seconds: " + (double)(stop - start)
 				/ 1000); // print execution time
 
 		System.out.println();

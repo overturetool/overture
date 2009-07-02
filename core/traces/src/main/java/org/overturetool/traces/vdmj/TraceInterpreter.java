@@ -2,6 +2,8 @@ package org.overturetool.traces.vdmj;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -49,6 +51,12 @@ public class TraceInterpreter
 
 			ClassReader mr = new ClassReader(ltr);
 			parsErrors += mr.getErrorCount();
+			if(mr.getErrorCount()>0)
+			{
+				Writer parseErrors = new StringWriter();
+				mr.printErrors(new PrintWriter(parseErrors));
+				parseError(parseErrors.toString());
+			}
 			classes.addAll(mr.readClasses());
 		}
 
@@ -72,9 +80,9 @@ public class TraceInterpreter
 
 			} else
 			{
-				String typeErrors = "";
+				Writer typeErrors = new StringWriter();
 				TypeChecker.printErrors(new PrintWriter(typeErrors));
-				typeError(typeErrors);
+				typeError(typeErrors.toString());
 			}
 
 			org.overturetool.vdmj.Settings.prechecks = true;
@@ -83,6 +91,12 @@ public class TraceInterpreter
 			ci.init(null);
 
 			ClassDefinition classdef = ci.findClass(className);
+			
+			if(classdef==null)
+			{
+				error("Class not found: " +className);
+				throw new ClassNotFoundException(className);
+			}
 
 			// PublicClassEnvironment globals = new
 			// PublicClassEnvironment(classes);
@@ -184,9 +198,12 @@ public class TraceInterpreter
 						} else
 						{
 							ci.init(null); // Initialize completely between
-											// every
+							// every
 							// run...
-							List<Object> result = ci.runtrace(className, env, test);
+							List<Object> result = ci.runtrace(
+									className,
+									env,
+									test);
 
 							if (result.get(result.size() - 1) == Verdict.FAILED)
 							{
@@ -340,12 +357,17 @@ public class TraceInterpreter
 
 	protected void error(String message)
 	{
-
+		System.out.println(message);
 	}
 
 	protected void typeError(String message)
 	{
-
+		System.out.println(message);
+	}
+	
+	protected void parseError(String message)
+	{
+		System.out.println(message);
 	}
 
 	protected void typeCheckStarted()
@@ -362,5 +384,11 @@ public class TraceInterpreter
 					+ " processed in " + (double) (endTrace - beginTrace)
 					/ 1000 + " secs");
 		}
+		prePrintTraceStatus();
+	}
+
+	protected void prePrintTraceStatus()
+	{
+
 	}
 }
