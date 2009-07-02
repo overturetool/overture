@@ -793,6 +793,7 @@ as the expected and actual values.
 4136, "Cannot deploy to CPU"
 4137, "Cannot set operation priority on CPU"
 4138, "Cannot set CPU priority for operation"
+4139, "Multiple BUS routes between CPUs <name> and <name>"
 
 5000, "Definition <name> not used"
 5001, "Instance variable is not initialized: <name>"
@@ -808,3 +809,4 @@ as the expected and actual values.
 5011, -
 5012, "Recursive function has no measure"
 5013, "New reverse syntax affects this statement"
+5014, "Uninitialized BUS ignored" 

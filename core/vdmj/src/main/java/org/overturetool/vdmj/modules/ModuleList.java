@@ -125,7 +125,7 @@ public class ModuleList extends Vector<Module>
 				new StateContext(this.get(0).name.location, "global environment");
 		}
 
-		initialContext.setThreadState(dbgp);
+		initialContext.setThreadState(dbgp, null);
 		ContextException problems = null;
 		int retries = 2;
 

@@ -23,10 +23,15 @@
 
 package org.overturetool.vdmj.values;
 
+import java.util.List;
 import java.util.Vector;
 
-import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.runtime.AsyncThread;
 import org.overturetool.vdmj.runtime.BUSPolicy;
+import org.overturetool.vdmj.runtime.MessageRequest;
+import org.overturetool.vdmj.runtime.MessageResponse;
+import org.overturetool.vdmj.runtime.VDMThreadSet;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Type;
 
@@ -41,6 +46,13 @@ public class BUSValue extends ObjectValue
 	public final ValueSet cpus;
 
 	public String name;
+	public static List<BUSValue> allBUSSES;
+
+	public static void init()
+	{
+		nextBUS = 1;
+		allBUSSES = new Vector<BUSValue>();
+	}
 
 	public BUSValue(Type classtype, NameValuePairMap map, ValueList argvals)
 	{
@@ -55,7 +67,9 @@ public class BUSValue extends ObjectValue
 		this.speed = sarg.value;
 
 		SetValue set = (SetValue)argvals.get(2);
-		cpus = set.values;
+		this.cpus = set.values;
+
+		allBUSSES.add(this);
 	}
 
 	public BUSValue(
@@ -72,12 +86,59 @@ public class BUSValue extends ObjectValue
 		this.speed = sarg.value;
 
 		SetValue set = (SetValue)argvals.get(2);
-		cpus = set.values;
+		this.cpus = set.values;
+
+		allBUSSES.add(this);
 	}
 
-	public void setName(LexNameToken m)
+	public void send(MessageRequest request, AsyncThread thread)
 	{
-		this.name = m.name;
+		Console.out.println(
+			"MessageRequest -> busid: " + busNumber +
+			" fromcpu: " + request.from.cpuNumber +
+			" tocpu: " + request.to.cpuNumber +
+			" msgid: " + request.msgId +
+			" callthr: " + request.threadId +
+			" opname: " + "\"" + thread.operation.name + "\"" +
+			" objref: " + thread.self.objectReference +
+			" size: " + request.args.toString().length() +
+			" time: " + VDMThreadSet.getWallTime());
+
+		Console.out.println(
+			"MessageActivate -> msgid: " + request.msgId +
+			" time: " + VDMThreadSet.getWallTime());
+
+		thread.queue.add(request);
+
+		Console.out.println(
+			"MessageComplete -> msgid: " + request.msgId +
+			" time: " + VDMThreadSet.getWallTime());
+	}
+
+	public void reply(MessageResponse response, MessageRequest request)
+	{
+		Console.out.println(
+			"ReplyRequest -> busid: " + busNumber +
+			" fromcpu: " + response.from.cpuNumber +
+			" tocpu: " + response.to.cpuNumber +
+			" msgid: " + response.msgId +
+			" callthr: " + request.threadId +
+			" calleethr: " + response.threadId +
+			" size: " + request.args.toString().length() +
+			" time: " + VDMThreadSet.getWallTime());
+
+		request.replyTo.add(response);
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	@Override
+	public String toString()
+	{
+		return name;
 	}
 
 	public String declString() throws Exception
@@ -92,7 +153,7 @@ public class BUSValue extends ObjectValue
 
 		return
 			"BUSdecl -> id: " + busNumber +
-			" topo: " + set +
+			" topo: " + cpus +
 			" name: \"" + name + "\"";
 	}
 }

@@ -125,7 +125,7 @@ public class IO
 
 			result.add(new BooleanValue(true));
 			Context ectxt = new Context(ctxt.location, "freadval", null);
-			ectxt.setThreadState(null);
+			ectxt.setThreadState(null, ctxt.threadState.CPU);
 			result.add(exp.eval(ectxt));
 		}
 		catch (Exception e)

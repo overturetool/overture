@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *	Copyright (c) 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -23,57 +23,45 @@
 
 package org.overturetool.vdmj.runtime;
 
-import org.overturetool.vdmj.debug.DBGPReader;
-import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.values.CPUValue;
+import org.overturetool.vdmj.values.Value;
 
-/**
- * A class to hold some runtime information for each VDM thread.
- */
-
-public class ThreadState
+public class MessageResponse extends MessagePacket
 {
+	public final long msgId;
 	public final long threadId;
+	public final CPUValue from;
+	public final CPUValue to;
+	public final Value result;
+	public final ValueException exception;
 
-	public InterruptAction action;
-	public int stepline;
-	public RootContext nextctxt;
-	public Context outctxt;
-	public DBGPReader dbgp;
-	public CPUValue CPU;
-
-	private long timestep;
-
-	public ThreadState(DBGPReader dbgp, CPUValue cpu)
+	public MessageResponse(Value result, MessageRequest request)
 	{
-		this.dbgp = dbgp;
+		this.msgId = nextId++;
 		this.threadId = Thread.currentThread().getId();
-		this.CPU = cpu == null ? CPUClassDefinition.virtualCPU : cpu;
-		init();
+		this.from = request.to;
+		this.to = request.from;
+		this.result = result;
+		this.exception = null;
 	}
 
-	public void init()
+	public MessageResponse(ValueException exception, MessageRequest request)
 	{
-		this.action = InterruptAction.RUNNING;
-		this.setTimestep(0);
-		set(0, null, null);
+		this.msgId = nextId++;
+		this.threadId = Thread.currentThread().getId();
+		this.from = request.to;
+		this.to = request.from;
+		this.result = null;
+		this.exception = exception;
 	}
 
-	public synchronized void set(
-		int stepline, RootContext nextctxt, Context outctxt)
+	public Value getValue() throws ValueException
 	{
-		this.stepline = stepline;
-		this.nextctxt = nextctxt;
-		this.outctxt = outctxt;
-	}
+		if (exception != null)
+		{
+			throw exception;
+		}
 
-	public synchronized void setTimestep(long timestep)
-	{
-		this.timestep = timestep;
-	}
-
-	public synchronized long getTimestep()
-	{
-		return timestep;
+		return result;
 	}
 }

@@ -42,7 +42,14 @@ public class CPUValue extends ObjectValue
 	public final List<ObjectValue> deployed;
 
 	public String name;
-	public static ValueSet allCPUs = new ValueSet();
+	public static List<CPUValue> allCPUs;
+	private boolean active = false;
+
+	public static void init()
+	{
+		nextCPU = 1;
+		allCPUs = new Vector<CPUValue>();
+	}
 
 	public CPUValue(Type classtype, NameValuePairMap map, ValueList argvals)
 	{
@@ -102,14 +109,43 @@ public class CPUValue extends ObjectValue
 		return found;
 	}
 
+	public synchronized void activate()
+	{
+		while (active)
+		{
+			try
+			{
+				wait();
+			}
+			catch (InterruptedException e)
+			{
+				// continue;
+			}
+		}
+
+		active = true;
+	}
+
+	public synchronized void passivate()
+	{
+		active = false;
+		notify();
+	}
+
 	public long getDuration(long cycles)
 	{
 		return (long)(cycles/cyclesPerSec * 1000);		// millisecs
 	}
 
-	public void setName(LexNameToken m)
+	public void setName(String name)
 	{
-		this.name = m.name;
+		this.name = name;
+	}
+
+	@Override
+	public String toString()
+	{
+		return name;
 	}
 
 	public String declString(String sysname, boolean explicit)

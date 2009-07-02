@@ -306,8 +306,6 @@ abstract public class CommandReader
    			println("= " + interpreter.execute(line, null));
    			long after = System.currentTimeMillis();
 			println("Executed in " + (double)(after-before)/1000 + " secs. ");
-
-			VDMThreadSet.abortAll();
 		}
 		catch (ParserException e)
 		{
@@ -370,7 +368,7 @@ abstract public class CommandReader
 	protected boolean doFiles()
 	{
 		Set<File> filenames = interpreter.getSourceFiles();
-		
+
 		for (File file: filenames)
 		{
 			println(file.getPath());
@@ -513,7 +511,7 @@ abstract public class CommandReader
 		try
 		{
 			Set<File> loaded = interpreter.getSourceFiles();
-			
+
 			if (line.equals("coverage"))
 			{
 				for (File file: interpreter.getSourceFiles())

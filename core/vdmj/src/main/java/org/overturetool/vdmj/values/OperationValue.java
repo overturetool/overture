@@ -25,8 +25,9 @@ package org.overturetool.vdmj.values;
 
 import java.util.Iterator;
 import java.util.ListIterator;
-
 import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.definitions.BUSClassDefinition;
+import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
@@ -40,9 +41,13 @@ import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
+import org.overturetool.vdmj.runtime.AsyncThread;
 import org.overturetool.vdmj.runtime.Breakpoint;
 import org.overturetool.vdmj.runtime.ClassContext;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.MessageQueue;
+import org.overturetool.vdmj.runtime.MessageRequest;
+import org.overturetool.vdmj.runtime.MessageResponse;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.PatternMatchException;
 import org.overturetool.vdmj.runtime.RootContext;
@@ -174,6 +179,25 @@ public class OperationValue extends Value
 	}
 
 	public Value eval(ValueList argValues, Context ctxt) throws ValueException
+	{
+		if (Settings.dialect == Dialect.VDM_RT)
+		{
+			if (ctxt.threadState.CPU == self.getCPU())
+			{
+				return localEval(argValues, ctxt);
+			}
+			else
+			{
+				return remoteEval(argValues, ctxt);
+			}
+		}
+		else
+		{
+			return localEval(argValues, ctxt);
+		}
+	}
+
+	private Value localEval(ValueList argValues, Context ctxt) throws ValueException
 	{
 		if (body == null)
 		{
@@ -399,6 +423,24 @@ public class OperationValue extends Value
 		return rv;
 	}
 
+	private Value remoteEval(ValueList argValues, Context ctxt) throws ValueException
+	{
+		// Spawn a thread, send a message, wait for a reply...
+
+		AsyncThread thread = new AsyncThread(self, this);
+		thread.start();
+
+		trace("OpRequest");
+
+		BUSValue bus = BUSClassDefinition.findBUS(ctxt.threadState.CPU, self.getCPU());
+		MessageQueue<MessageResponse> queue = new MessageQueue<MessageResponse>();
+		MessageRequest request = new MessageRequest(bus, ctxt.threadState.CPU, self.getCPU(), argValues, queue);
+		bus.send(request, thread);
+		MessageResponse reply = queue.take();
+
+		return reply.getValue();	// Can throw a returned exception
+	}
+
 	@Override
 	public boolean equals(Object other)
 	{
@@ -523,5 +565,10 @@ public class OperationValue extends Value
 	public synchronized long getPriority()
 	{
 		return priority;
+	}
+
+	public synchronized CPUValue getCPU()
+	{
+		return self == null ? CPUClassDefinition.virtualCPU : self.getCPU();
 	}
 }

@@ -92,7 +92,7 @@ public class VDMThread extends Thread
 	{
 		try
 		{
-			ctxt.setThreadState(null);
+			ctxt.setThreadState(null, operation.getCPU());
 			operation.eval(new ValueList(), ctxt);
 		}
 		catch (StopException e)
@@ -124,7 +124,7 @@ public class VDMThread extends Thread
 		try
 		{
 			reader = ctxt.threadState.dbgp.newThread();
-			ctxt.setThreadState(reader);
+			ctxt.setThreadState(reader, operation.getCPU());
 			operation.eval(new ValueList(), ctxt);
 			reader.complete(DBGPReason.OK);
 		}

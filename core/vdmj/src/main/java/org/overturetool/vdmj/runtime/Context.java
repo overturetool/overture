@@ -29,6 +29,7 @@ import java.util.HashMap;
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.NameValuePair;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.ObjectValue;
@@ -76,11 +77,12 @@ public class Context extends HashMap<LexNameToken, Value>
 	 * Set the current thread state. Note this must be called from the thread
 	 * where the context will run, which may not be where the thread is created.
 	 * And it must be called before any context chaining is performed.
+	 * @param cpu TODO
 	 */
 
-	public void setThreadState(DBGPReader dbgp)
+	public void setThreadState(DBGPReader dbgp, CPUValue cpu)
 	{
-		threadState = new ThreadState(dbgp);
+		threadState = new ThreadState(dbgp, cpu);
 	}
 
 	/**

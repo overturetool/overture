@@ -166,7 +166,13 @@ public class ClassList extends Vector<ClassDefinition>
 				this.get(0).location, "public static environment");
 		}
 
-		globalContext.setThreadState(dbgp);
+		if (systemClass != null)
+		{
+			CPUClassDefinition.init();
+			BUSClassDefinition.init();
+		}
+
+		globalContext.setThreadState(dbgp, null);
 
 		// Initialize all the functions/operations first because the values
 		// "statics" can call them.

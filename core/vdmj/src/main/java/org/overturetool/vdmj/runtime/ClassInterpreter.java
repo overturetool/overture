@@ -218,7 +218,7 @@ public class ClassInterpreter extends Interpreter
 
 		mainContext.putAll(initialContext);
 		mainContext.putAll(createdValues);
-		mainContext.setThreadState(dbgp);
+		mainContext.setThreadState(dbgp, null);
 		clearBreakpointHits();
 
 		return expr.eval(mainContext);
@@ -440,7 +440,7 @@ public class ClassInterpreter extends Interpreter
 		if (statements.needsContext)
 		{
 			ctxt = statements.ctxt.deepCopy();
-			ctxt.setThreadState(null);
+			ctxt.setThreadState(null, null);
 		}
 		else
 		{

@@ -27,7 +27,6 @@ import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;

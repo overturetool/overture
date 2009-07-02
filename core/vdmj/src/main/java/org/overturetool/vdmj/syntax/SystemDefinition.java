@@ -33,6 +33,7 @@ import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
+import org.overturetool.vdmj.expressions.UndefinedExpression;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.Console;
@@ -44,6 +45,7 @@ import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.UndefinedType;
+import org.overturetool.vdmj.types.UnresolvedType;
 import org.overturetool.vdmj.values.BUSValue;
 import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.ObjectValue;
@@ -68,7 +70,18 @@ public class SystemDefinition extends ClassDefinition
 		{
 			if (d instanceof InstanceVariableDefinition)
 			{
-				// Fine
+				InstanceVariableDefinition iv = (InstanceVariableDefinition)d;
+
+				if (iv.type instanceof UnresolvedType &&
+					iv.expression instanceof UndefinedExpression)
+				{
+					UnresolvedType ut = (UnresolvedType)iv.type;
+
+					if (ut.typename.getName().equals("BUS"))
+					{
+						d.warning(5014, "Uninitialized BUS ignored");
+					}
+				}
 			}
 			else if (d instanceof ExplicitOperationDefinition)
 			{
@@ -143,7 +156,7 @@ public class SystemDefinition extends ClassDefinition
 							cpu = (CPUValue)v.deref();
 						}
 
-	    				cpu.setName(d.name);
+	    				cpu.setName(d.name.name);
 	    				Console.out.println(
 	    					cpu.declString(
 	    						name.name, !(ivd.expType instanceof UndefinedType)));
@@ -167,21 +180,22 @@ public class SystemDefinition extends ClassDefinition
 						UpdatableValue v = (UpdatableValue)system.members.get(d.name);
 	    				BUSValue bus = null;
 
-						if (v.isUndefined())
-						{
-							bus = BUSClassDefinition.newBUS();
-							v.set(location, bus, null);
-						}
-						else
+						if (!v.isUndefined())
 						{
 							bus = (BUSValue)v.deref();
+							bus.setName(d.name.name);
+							Console.out.println(bus.declString());
 						}
-
-	    				bus.setName(d.name);
-	    				Console.out.println(bus.declString());
 					}
 				}
 			}
+
+			// Now we can create the CPU-BUS map as everything is initialized
+			BUSClassDefinition.createMap(ctxt);
+		}
+		catch (ContextException e)
+		{
+			throw e;
 		}
 		catch (ValueException e)
 		{

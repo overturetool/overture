@@ -55,6 +55,12 @@ public class CPUClassDefinition extends ClassDefinition
 
 	public static CPUValue virtualCPU = null;
 
+	public static void init()
+	{
+		CPUValue.init();
+		virtualCPU = newDefaultCPU();
+	}
+
 	public CPUClassDefinition() throws ParserException, LexException
 	{
 		super(
@@ -63,7 +69,6 @@ public class CPUClassDefinition extends ClassDefinition
 			operationDefs());
 
 		instance = this;
-		virtualCPU = newDefaultCPU();
 	}
 
 	private static String defs =
@@ -103,7 +108,9 @@ public class CPUClassDefinition extends ClassDefinition
 		args.add(new QuoteValue("FP"));
 		args.add(new RealValue(0));
 
-		return new CPUValue(0, instance.getType(), new NameValuePairMap(), args);
+		CPUValue cv = new CPUValue(0, instance.getType(), new NameValuePairMap(), args);
+		cv.setName("CPU:0");
+		return cv;
 	}
 
 	@Override
