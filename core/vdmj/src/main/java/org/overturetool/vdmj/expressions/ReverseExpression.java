@@ -60,7 +60,7 @@ public class ReverseExpression extends UnaryExpression
 
 		if (!etype.isSeq())
 		{
-			report(3292, "Argument to 'reverse' is not a sequence");
+			report(3295, "Argument to 'reverse' is not a sequence");
 			return new SeqType(location, new UnknownType(location));
 		}
 

@@ -657,6 +657,7 @@ as the expected and actual values.
 3292, "Constructor is not accessible"
 3293, "Asynchronous operation <name> cannot return a value"
 3294, "Only one system class permitted"
+3295, "Argument to 'reverse' is not a sequence"
 
 4000, "Cannot instantiate abstract class <class>"
 4002, "Expression value is not in set bind"

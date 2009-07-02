@@ -108,7 +108,7 @@ public class NewExpression extends Expression
     			report(3135, "Class has no constructor with these parameter types");
     			detail("Called", classdef.getCtorName(argtypes));
     		}
-			else if (opdef.accessSpecifier.access == Token.PRIVATE) //!ClassDefinition.isAccessible(env, opdef, false))
+			else if (!ClassDefinition.isAccessible(env, opdef, false)) // (opdef.accessSpecifier.access == Token.PRIVATE)
 			{
     			report(3292, "Constructor is not accessible");
     			detail("Called", classdef.getCtorName(argtypes));
