@@ -243,6 +243,7 @@ abstract public class VDMJ
 		System.err.println("-t <charset>: select a console charset");
 		System.err.println("-t <charset>: select a console charset");
 		System.err.println("-o <filename>: saved type checked specification");
+		System.err.println("-pre: disable precondition checks");
 		System.err.println("-post: disable postcondition checks");
 		System.err.println("-inv: disable type/state invariant checks");
 		System.err.println("-dtc: disable all dynamic type checking");
