@@ -31,5 +31,12 @@ import java.io.Serializable;
 
 public enum Dialect implements Serializable
 {
-	VDM_SL, VDM_PP, VDM_RT
+	VDM_SL("-vdmsl"), VDM_PP("-vdmpp"), VDM_RT("-vdmrt");
+
+	public final String argstring;
+
+	Dialect(String arg)
+	{
+		argstring = arg;
+	}
 }

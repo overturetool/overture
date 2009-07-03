@@ -34,6 +34,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -111,13 +113,18 @@ public class DBGPReader
 	{
 		Settings.usingDBGP = true;
 
-		String host = args[0];
-		int port = Integer.parseInt(args[1]);
-		String ideKey = args[2];
-		Settings.dialect = Dialect.valueOf(args[3]);
-		String expression = args[4];
-
+		String host = null;
+		int port = 0;
+		String ideKey = null;
+		Settings.dialect = null;
+		String expression = null;
 		List<File> files = new Vector<File>();
+
+		host = args[0];
+		port = Integer.parseInt(args[1]);
+		ideKey = args[2];
+		Settings.dialect = Dialect.valueOf(args[3]);
+		expression = args[4];
 
 		for (int i=5; i<args.length; i++)
 		{
@@ -147,6 +154,100 @@ public class DBGPReader
 				controller = new VDMRT();
 				break;
 		}
+
+		/********************
+
+		List<String> largs = Arrays.asList(args);
+		VDMJ controller = null;
+
+		for (Iterator<String> i = largs.iterator(); i.hasNext();)
+		{
+			String arg = i.next();
+
+    		if (arg.equals("-vdmsl"))
+    		{
+    			controller = new VDMSL();
+    		}
+    		else if (arg.equals("-vdmpp"))
+    		{
+    			controller = new VDMPP();
+    		}
+    		else if (arg.equals("-vdmrt"))
+    		{
+    			controller = new VDMRT();
+    		}
+    		else if (arg.equals("-overture"))
+    		{
+    			controller = new VDMOV();
+    		}
+    		else if (arg.equals("-h"))
+    		{
+    			if (i.hasNext())
+    			{
+    				host = i.next();
+    			}
+    			else
+    			{
+    				usage("-h option requires a hostname");
+    			}
+    		}
+    		else if (arg.equals("-p"))
+    		{
+    			try
+    			{
+    				port = Integer.parseInt(i.next());
+    			}
+    			catch (Exception e)
+    			{
+    				usage("-p option requires a port");
+    			}
+    		}
+    		else if (arg.equals("-k"))
+    		{
+    			if (i.hasNext())
+    			{
+    				ideKey = i.next();
+    			}
+    			else
+    			{
+    				usage("-k option requires a key");
+    			}
+    		}
+    		else if (arg.equals("-e"))
+    		{
+    			if (i.hasNext())
+    			{
+    				expression = i.next();
+    			}
+    			else
+    			{
+    				usage("-e option requires an expression");
+    			}
+    		}
+    		else if (arg.startsWith("-"))
+    		{
+    			usage("Unknown option " + arg);
+    		}
+    		else
+    		{
+    			try
+    			{
+    				files.add(new File(new URI(arg)));
+    			}
+    			catch (URISyntaxException e)
+    			{
+    				System.exit(4);
+    			}
+    		}
+		}
+
+		if (host == null || port == 0 || controller == null ||
+			ideKey == null || expression == null || Settings.dialect == null ||
+			files.isEmpty())
+		{
+			usage("Missing mandatory arguments");
+		}
+		****************/
 
 		if (controller.parse(files) == ExitStatus.EXIT_OK)
 		{
@@ -179,6 +280,13 @@ public class DBGPReader
 		{
 			System.exit(1);
 		}
+	}
+
+	private static void usage(String string)
+	{
+		System.err.println(string);
+		System.err.println("Usage: -h <host> -p <port> -k <ide key> <-vdmpp|-vdmsl|-vdmrt> -e <expression> {<filenames>}");
+		System.exit(1);
 	}
 
 	public DBGPReader(
