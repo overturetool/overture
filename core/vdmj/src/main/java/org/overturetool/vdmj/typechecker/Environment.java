@@ -128,6 +128,9 @@ abstract public class Environment
 	/** True if this is a VDM++ environment. */
 	abstract public boolean isVDMPP();
 
+	/** True if this is a VDM-RT "system" environment. */
+	abstract public boolean isSystem();
+
 	/** Find functions and operations of the given basic name. */
 	abstract public DefinitionSet findMatches(LexNameToken name);
 

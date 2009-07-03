@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.expressions;
 
+import org.overturetool.vdmj.definitions.BUSClassDefinition;
+import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
@@ -99,6 +101,11 @@ public class NewExpression extends Expression
     			report(3134, "Class has no constructor with these parameter types");
     			detail("Called", classdef.getCtorName(argtypes));
     		}
+			else if (classdef instanceof CPUClassDefinition ||
+					 classdef instanceof BUSClassDefinition)
+			{
+				report(3297, "Cannot use default constructor for this class");
+			}
 		}
 		else
 		{

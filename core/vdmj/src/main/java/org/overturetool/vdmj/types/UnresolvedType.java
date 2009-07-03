@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.types;
 
+import org.overturetool.vdmj.definitions.BUSClassDefinition;
+import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
@@ -101,6 +103,12 @@ public class UnresolvedType extends Type
 			{
 				root.infinite = true;
 			}
+		}
+
+		if ((def instanceof CPUClassDefinition ||
+			 def instanceof BUSClassDefinition) && !env.isSystem())
+		{
+			report(3296, "Cannot use '" + typename + "' outside system class");
 		}
 
 		Type r = def.getType();

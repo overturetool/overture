@@ -658,6 +658,8 @@ as the expected and actual values.
 3293, "Asynchronous operation <name> cannot return a value"
 3294, "Only one system class permitted"
 3295, "Argument to 'reverse' is not a sequence"
+3296, "Cannot use '" + typename + "' outside system class"
+3297, "Cannot use default constructor for this class"
 
 4000, "Cannot instantiate abstract class <class>"
 4002, "Expression value is not in set bind"
