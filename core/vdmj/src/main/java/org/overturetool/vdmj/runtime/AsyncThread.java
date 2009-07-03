@@ -41,6 +41,7 @@ public class AsyncThread extends Thread
 		this.self = self;
 		this.operation = operation;
 		this.queue = new MessageQueue<MessageRequest>();
+		self.getCPU().addThread(this);
 	}
 
 	@Override
@@ -55,11 +56,10 @@ public class AsyncThread extends Thread
 			" cpunm: " + cpu.cpuNumber +
 			" time: " + VDMThreadSet.getWallTime());
 
-		cpu.addThread(this);
 		MessageRequest request = queue.take();		// Blocking
 		ValueList arglist = request.args;
 
-		cpu.activate();
+		cpu.activate(self);
 		MessageResponse response = null;
 
 		try
@@ -82,10 +82,10 @@ public class AsyncThread extends Thread
 
 		if (response != null && request.bus != null)
 		{
-			request.bus.reply(response, request);
+			request.bus.reply(response);
 		}
 
-		cpu.passivate();
+		cpu.passivate(self);
 
 		Console.out.println(
 			"ThreadKill -> id: " + Thread.currentThread().getId() +

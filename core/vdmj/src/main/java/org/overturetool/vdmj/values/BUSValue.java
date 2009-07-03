@@ -115,19 +115,28 @@ public class BUSValue extends ObjectValue
 			" time: " + VDMThreadSet.getWallTime());
 	}
 
-	public void reply(MessageResponse response, MessageRequest request)
+	public void reply(MessageResponse response)
 	{
 		Console.out.println(
 			"ReplyRequest -> busid: " + busNumber +
 			" fromcpu: " + response.from.cpuNumber +
 			" tocpu: " + response.to.cpuNumber +
 			" msgid: " + response.msgId +
-			" callthr: " + request.threadId +
+			" origmsgid: " + response.request.msgId +
+			" callthr: " + response.request.threadId +
 			" calleethr: " + response.threadId +
-			" size: " + request.args.toString().length() +
+			" size: " + response.toString().length() +
 			" time: " + VDMThreadSet.getWallTime());
 
-		request.replyTo.add(response);
+		Console.out.println(
+			"MessageActivate -> msgid: " + response.msgId +
+			" time: " + VDMThreadSet.getWallTime());
+
+		response.request.replyTo.add(response);
+
+		Console.out.println(
+			"MessageComplete -> msgid: " + response.msgId +
+			" time: " + VDMThreadSet.getWallTime());
 	}
 
 	public void setName(String name)

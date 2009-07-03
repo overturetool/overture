@@ -66,6 +66,8 @@ public class VDMThread extends Thread
 				" clnm: \"" + object.type + "\"" +
 				" cpunm: " + object.getCPU().cpuNumber +
 				" time: " + VDMThreadSet.getWallTime());
+
+			object.getCPU().activate(object);
 		}
 	}
 

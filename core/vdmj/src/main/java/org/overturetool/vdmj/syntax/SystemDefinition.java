@@ -130,6 +130,14 @@ public class SystemDefinition extends ClassDefinition
 				" cpunm: 0" +
 				" time: " + VDMThreadSet.getWallTime());
 
+			Console.out.println(
+				"ThreadSwapIn -> id: " + Thread.currentThread().getId() +
+				" objref: nil" +
+				" clnm: nil" +
+				" cpunum: 0" +
+				" overhead: 0" +
+				" time: " + VDMThreadSet.getWallTime());
+
 			// Do CPUs first so that default BUSses can connect all CPUs.
 
 			for (Definition d: definitions)

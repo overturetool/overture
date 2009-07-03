@@ -447,7 +447,7 @@ public class OperationValue extends Value
 		{
     		MessageRequest request = new MessageRequest(null, ctxt.threadState.CPU, self.getCPU(), argValues, null);
     		thread.queue.add(request);
-    		ctxt.threadState.CPU.yield();
+    		ctxt.threadState.CPU.yield(self);
     		return new VoidValue();
 		}
 	}

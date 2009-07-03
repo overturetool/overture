@@ -29,8 +29,10 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.runtime.AsyncThread;
 import org.overturetool.vdmj.runtime.CPUPolicy;
+import org.overturetool.vdmj.runtime.VDMThreadSet;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Type;
 
@@ -117,7 +119,7 @@ public class CPUValue extends ObjectValue
 		return found;
 	}
 
-	public synchronized void activate()
+	public synchronized void activate(ObjectValue self)
 	{
 		while (active)
 		{
@@ -133,17 +135,33 @@ public class CPUValue extends ObjectValue
 
 		active = true;
 		notify();	// For any yielders
+
+		Console.out.println(
+			"ThreadSwapIn -> id: " + Thread.currentThread().getId() +
+			" objref: " + self.objectReference +
+			" clnm: \"" + self.type.name.name + "\"" +
+			" cpunum: " + cpuNumber +
+			" overhead: " + 0 +
+			" time: " + VDMThreadSet.getWallTime());
 	}
 
-	public synchronized void passivate()
+	public synchronized void passivate(ObjectValue self)
 	{
 		active = false;
 		notify();
+
+		Console.out.println(
+			"ThreadSwapOut -> id: " + Thread.currentThread().getId() +
+			" objref: " + self.objectReference +
+			" clnm: \"" + self.type.name.name + "\"" +
+			" cpunum: " + cpuNumber +
+			" overhead: " + 0 +
+			" time: " + VDMThreadSet.getWallTime());
 	}
 
-	public synchronized void yield()
+	public synchronized void yield(ObjectValue self)
 	{
-		passivate();
+		passivate(self);
 
 		while (!active && threads.size() > 1)	// Wait for someone else...
 		{
@@ -157,7 +175,7 @@ public class CPUValue extends ObjectValue
 			}
 		}
 
-		activate();
+		activate(self);
 	}
 
 	public long getDuration(long cycles)

@@ -34,6 +34,7 @@ public class MessageResponse extends MessagePacket
 	public final CPUValue to;
 	public final Value result;
 	public final ValueException exception;
+	public final MessageRequest request;
 
 	public MessageResponse(Value result, MessageRequest request)
 	{
@@ -43,6 +44,7 @@ public class MessageResponse extends MessagePacket
 		this.to = request.from;
 		this.result = result;
 		this.exception = null;
+		this.request = request;
 	}
 
 	public MessageResponse(ValueException exception, MessageRequest request)
@@ -53,6 +55,7 @@ public class MessageResponse extends MessagePacket
 		this.to = request.from;
 		this.result = null;
 		this.exception = exception;
+		this.request = request;
 	}
 
 	public Value getValue() throws ValueException
@@ -63,5 +66,11 @@ public class MessageResponse extends MessagePacket
 		}
 
 		return result;
+	}
+
+	@Override
+	public String toString()
+	{
+		return result == null ? exception.getMessage() : result.toString();
 	}
 }
