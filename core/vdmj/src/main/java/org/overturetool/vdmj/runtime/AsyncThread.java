@@ -27,6 +27,7 @@ import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
+import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.ValueList;
 
 public class AsyncThread extends Thread
@@ -54,6 +55,7 @@ public class AsyncThread extends Thread
 			" cpunm: " + cpu.cpuNumber +
 			" time: " + VDMThreadSet.getWallTime());
 
+		cpu.addThread(this);
 		MessageRequest request = queue.take();		// Blocking
 		ValueList arglist = request.args;
 
@@ -65,14 +67,24 @@ public class AsyncThread extends Thread
     		RootContext global = ClassInterpreter.getInstance().initialContext;
     		Context ctxt = new ObjectContext(operation.name.location, "async", global, self);
     		ctxt.setThreadState(null, cpu);
-    		response = new MessageResponse(operation.eval(arglist, ctxt), request);
+
+    		Value rv = operation.localEval(arglist, ctxt);
+
+    		if (!rv.isVoid())
+    		{
+    			response = new MessageResponse(rv, request);
+    		}
 		}
 		catch (ValueException e)
 		{
 			response = new MessageResponse(e, request);
 		}
 
-		request.bus.reply(response, request);
+		if (response != null && request.bus != null)
+		{
+			request.bus.reply(response, request);
+		}
+
 		cpu.passivate();
 
 		Console.out.println(
@@ -80,5 +92,13 @@ public class AsyncThread extends Thread
 			" cpunm: " + cpu.cpuNumber +
 			" time: " + VDMThreadSet.getWallTime() +
 			" msg: AAAaaaarrgggg!!!");
+
+		cpu.removeThread(this);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return (int)getId();
 	}
 }

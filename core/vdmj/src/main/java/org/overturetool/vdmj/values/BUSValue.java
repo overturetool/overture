@@ -39,6 +39,7 @@ public class BUSValue extends ObjectValue
 {
 	private static final long serialVersionUID = 1L;
 	private static int nextBUS = 1;
+	public static List<BUSValue> allBUSSES;
 
 	public final int busNumber;
 	public final BUSPolicy policy;
@@ -46,7 +47,6 @@ public class BUSValue extends ObjectValue
 	public final ValueSet cpus;
 
 	public String name;
-	public static List<BUSValue> allBUSSES;
 
 	public static void init()
 	{

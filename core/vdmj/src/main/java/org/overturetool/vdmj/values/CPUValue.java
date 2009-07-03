@@ -23,10 +23,13 @@
 
 package org.overturetool.vdmj.values;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.runtime.AsyncThread;
 import org.overturetool.vdmj.runtime.CPUPolicy;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Type;
@@ -35,14 +38,15 @@ public class CPUValue extends ObjectValue
 {
 	private static final long serialVersionUID = 1L;
 	private static int nextCPU = 1;
+	public static List<CPUValue> allCPUs;
 
 	public final int cpuNumber;
 	public final CPUPolicy policy;
 	public final double cyclesPerSec;
 	public final List<ObjectValue> deployed;
+	public final Set<AsyncThread> threads;
 
 	public String name;
-	public static List<CPUValue> allCPUs;
 	private boolean active = false;
 
 	public static void init()
@@ -64,6 +68,8 @@ public class CPUValue extends ObjectValue
 		this.cyclesPerSec = sarg.value;
 
 		deployed = new Vector<ObjectValue>();
+		threads = new HashSet<AsyncThread>();
+
 		allCPUs.add(this);
 	}
 
@@ -81,6 +87,8 @@ public class CPUValue extends ObjectValue
 		this.cyclesPerSec = sarg.value;
 
 		deployed = new Vector<ObjectValue>();
+		threads = new HashSet<AsyncThread>();
+
 		allCPUs.add(this);
 	}
 
@@ -124,12 +132,32 @@ public class CPUValue extends ObjectValue
 		}
 
 		active = true;
+		notify();	// For any yielders
 	}
 
 	public synchronized void passivate()
 	{
 		active = false;
 		notify();
+	}
+
+	public synchronized void yield()
+	{
+		passivate();
+
+		while (!active && threads.size() > 1)	// Wait for someone else...
+		{
+			try
+			{
+				wait();
+			}
+			catch (InterruptedException e)
+			{
+				// continue;
+			}
+		}
+
+		activate();
 	}
 
 	public long getDuration(long cycles)
@@ -155,5 +183,16 @@ public class CPUValue extends ObjectValue
 			" expl: " + explicit +
 			" sys: \"" + sysname + "\"" +
 			" name: \"" + name + "\"";
+	}
+
+	public synchronized void addThread(AsyncThread thread)
+	{
+		threads.add(thread);
+	}
+
+	public synchronized void removeThread(AsyncThread thread)
+	{
+		threads.remove(thread);
+		notify();	// Yield may be waiting for no-one, otherwise
 	}
 }

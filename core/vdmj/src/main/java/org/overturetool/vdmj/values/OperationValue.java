@@ -82,6 +82,7 @@ public class OperationValue extends Value
 
 	public boolean isConstructor = false;
 	public boolean isStatic = false;
+	public boolean isAsync = false;
 
 	private Expression guard = null;
 	private static long guardPasses = 0;
@@ -109,6 +110,7 @@ public class OperationValue extends Value
 		this.postcondition = postcondition;
 		this.state = state;
 		this.classdef = def.classDefinition;
+		this.isAsync = def.accessSpecifier.isAsync;
 
 		traceRT =
 			Settings.dialect == Dialect.VDM_RT &&
@@ -139,6 +141,7 @@ public class OperationValue extends Value
 		this.postcondition = postcondition;
 		this.state = state;
 		this.classdef = def.classDefinition;
+		this.isAsync = def.accessSpecifier.isAsync;
 
 		traceRT =
 			Settings.dialect == Dialect.VDM_RT &&
@@ -182,13 +185,13 @@ public class OperationValue extends Value
 	{
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
-			if (ctxt.threadState.CPU == self.getCPU())
+			if (ctxt.threadState.CPU != self.getCPU() || isAsync)
 			{
-				return localEval(argValues, ctxt);
+				return asyncEval(argValues, ctxt);
 			}
 			else
 			{
-				return remoteEval(argValues, ctxt);
+				return localEval(argValues, ctxt);
 			}
 		}
 		else
@@ -197,7 +200,7 @@ public class OperationValue extends Value
 		}
 	}
 
-	private Value localEval(ValueList argValues, Context ctxt) throws ValueException
+	public Value localEval(ValueList argValues, Context ctxt) throws ValueException
 	{
 		if (body == null)
 		{
@@ -423,22 +426,30 @@ public class OperationValue extends Value
 		return rv;
 	}
 
-	private Value remoteEval(ValueList argValues, Context ctxt) throws ValueException
+	private Value asyncEval(ValueList argValues, Context ctxt) throws ValueException
 	{
 		// Spawn a thread, send a message, wait for a reply...
 
 		AsyncThread thread = new AsyncThread(self, this);
 		thread.start();
 
-		trace("OpRequest");
-
-		BUSValue bus = BUSClassDefinition.findBUS(ctxt.threadState.CPU, self.getCPU());
-		MessageQueue<MessageResponse> queue = new MessageQueue<MessageResponse>();
-		MessageRequest request = new MessageRequest(bus, ctxt.threadState.CPU, self.getCPU(), argValues, queue);
-		bus.send(request, thread);
-		MessageResponse reply = queue.take();
-
-		return reply.getValue();	// Can throw a returned exception
+		if (ctxt.threadState.CPU != self.getCPU())
+		{
+    		trace("OpRequest");
+    		BUSValue bus = BUSClassDefinition.findBUS(ctxt.threadState.CPU, self.getCPU());
+    		MessageQueue<MessageResponse> queue = new MessageQueue<MessageResponse>();
+    		MessageRequest request = new MessageRequest(bus, ctxt.threadState.CPU, self.getCPU(), argValues, queue);
+    		bus.send(request, thread);
+    		MessageResponse reply = queue.take();
+    		return reply.getValue();	// Can throw a returned exception
+		}
+		else	// local async
+		{
+    		MessageRequest request = new MessageRequest(null, ctxt.threadState.CPU, self.getCPU(), argValues, null);
+    		thread.queue.add(request);
+    		ctxt.threadState.CPU.yield();
+    		return new VoidValue();
+		}
 	}
 
 	@Override
@@ -546,7 +557,7 @@ public class OperationValue extends Value
     			" objref: " + self.objectReference +
     			" clnm: \"" + self.type.name.name + "\"" +
     			" cpunm: " + self.getCPU().cpuNumber +
-    			" async: false" +
+    			" async: " + isAsync +
     			" time: " + VDMThreadSet.getWallTime()
     			);
 		}
