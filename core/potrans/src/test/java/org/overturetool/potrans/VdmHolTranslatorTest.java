@@ -3,17 +3,12 @@
  */
 package org.overturetool.potrans;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.prefs.InvalidPreferencesFormatException;
-import java.util.prefs.Preferences;
-
 import junit.framework.TestCase;
 
 import org.overturetool.ast.itf.IOmlDocument;
 import org.overturetool.potrans.external_tools.OvertureParserWrapper;
+import org.overturetool.potrans.external_tools.Utilities;
+import org.overturetool.potrans.test.TestSettings;
 
 /**
  * @author miguel_ferreira
@@ -21,7 +16,8 @@ import org.overturetool.potrans.external_tools.OvertureParserWrapper;
  */
 public class VdmHolTranslatorTest extends TestCase {
 
-	private final static String newLine = System.getProperty("line.separator");
+	private final static String newLine = Utilities.UNIVERSAL_LINE_SEPARATOR;
+	private static TestSettings settings = null;
 	private static String setModel = null;
 
 	/*
@@ -35,27 +31,9 @@ public class VdmHolTranslatorTest extends TestCase {
 		setUpPreferences();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
-	/**
-	 * @throws IOException
-	 * @throws InvalidPreferencesFormatException
-	 * @throws FileNotFoundException
-	 */
-	private void setUpPreferences() throws IOException,
-			InvalidPreferencesFormatException, FileNotFoundException {
-		Preferences.importPreferences(new BufferedInputStream(
-				new FileInputStream("Settings.xml")));
-		Preferences preferences = Preferences.userNodeForPackage(this
-				.getClass());
-		setModel = preferences.get("setModel", null);
+	private void setUpPreferences() throws Exception {
+		settings = new TestSettings();
+		setModel = settings.get(TestSettings.SET_MODEL);
 	}
 
 	public void testTranslateDocument() throws Exception {

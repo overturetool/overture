@@ -3,7 +3,7 @@ package org.overturetool.potrans.external_tools.hol;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.overturetool.potrans.external_tools.SystemProperties;
+import org.overturetool.potrans.external_tools.Utilities;
 
 public class HolEnvironmentBuilder {
 
@@ -26,8 +26,8 @@ public class HolEnvironmentBuilder {
 	public Map<String,String> getEnvironment() {
 		HashMap<String,String> map = new HashMap<String,String>(3);
 		map.put(MOSMLHOME, mosmlDir);
-		map.put(DYLD_LIBRARY_PATH, MOSMLHOMEVAR + SystemProperties.FILE_SEPARATOR + mosmlLibDir);
-		map.put(PATH, MOSMLHOMEVAR + SystemProperties.FILE_SEPARATOR + mosmlBinDir);
+		map.put(DYLD_LIBRARY_PATH, mosmlDir + Utilities.FILE_SEPARATOR + mosmlLibDir);
+		map.put(PATH, mosmlDir + Utilities.FILE_SEPARATOR + mosmlBinDir);
 		
 		return map;
 	}

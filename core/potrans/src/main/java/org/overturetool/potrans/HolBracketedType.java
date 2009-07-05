@@ -81,8 +81,9 @@ public class HolBracketedType extends HolType {
 	// ***** VDMTOOLS START Name=print#1|Object KEEP=NO
 	public String print(final Object specType) throws CGException {
 
-		if (!this.pre_print(specType).booleanValue())
-			UTIL.RunTime("Run-Time Error:Precondition failure in print");
+		// TODO check this method
+		//if (!this.pre_print(specType).booleanValue())
+		//	UTIL.RunTime("Run-Time Error:Precondition failure in print");
 
 		String rexpr_2 = null;
 		Vector unArg_3 = null;

@@ -759,8 +759,9 @@ public class VdmHolTranslator implements EvaluatePP {
         if (new Boolean(type instanceof IOmlQuoteType).booleanValue()) 
           varRes_2 = translateQuoteType((IOmlQuoteType) type);
         else 
+        	// TODO check this condition
           if (new Boolean(type instanceof IOmlTokenType).booleanValue()) 
-            varRes_2 = new HolTypeTranslation((HolType) (HolNativeTypeIdentifier) translateTokenType((IOmlUnionType) type), new Vector());
+            varRes_2 = new HolTypeTranslation((HolType) (HolNativeTypeIdentifier) translateTokenType((IOmlTokenType) type), new Vector());
           else 
             if (new Boolean(type instanceof IOmlProductType).booleanValue()) 
               varRes_2 = translateProductType((IOmlProductType) type);
@@ -913,7 +914,7 @@ public class VdmHolTranslator implements EvaluatePP {
 
 
 // ***** VDMTOOLS START Name=translateTokenType#1|IOmlUnionType KEEP=NO
-  private HolNativeTypeIdentifier translateTokenType (final IOmlUnionType var_1_1) throws CGException {
+  private HolNativeTypeIdentifier translateTokenType (final IOmlTokenType var_1_1) throws CGException {
     return (HolNativeTypeIdentifier) new HolNativeTypeIdentifier(new String("ind"));
   }
 // ***** VDMTOOLS END Name=translateTokenType#1|IOmlUnionType

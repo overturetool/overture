@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE preferences SYSTEM "http://java.sun.com/dtd/preferences.dtd">
+<preferences EXTERNAL_XML_VERSION="1.0">
+	<root type="user">
+		<map />
+		<node name="org">
+			<map />
+			<node name="overturetool">
+				<map />
+				<node name="potrans">
+					<map/>
+					<node name="test">
+						<map>
+							<entry key="setModel" value="testinput/set.vpp" />
+							<entry key="stackModel" value="testinput/stack.vpp" />
+							<entry key="testModel1" value="testinput/sorter.vpp" />
+							<entry key="testModel2" value="testinput/dosort.vpp" />
+							<entry key="testModel3" value="testinput/explsort.vpp" />
+							<entry key="testTheory1" value="testinput/set.hol" />
+							<entry key="testPogFileNoNewLine" value="testinput/dosort_test_no_new_line.vpp.pog" />
+							<entry key="testPogFileWithNewLine" value="testinput/dosort_test_with_new_line.vpp.pog" />
+							<entry key="stackModelPogFile" value="testinput/stack_test.vpp.pog" />
+							<entry key="vdmHolTactics" value="testinput/vdmHolTactics.txt" />
+							<entry key="testDataDir" value="testinput" />
+						</map>
+					</node>
+				</node>
+			</node>
+		</node>
+	</root>
+</preferences>

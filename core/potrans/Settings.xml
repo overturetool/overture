@@ -8,19 +8,10 @@
 			<node name="overturetool">
 				<map/>
 				<node name="potrans">
-					<map>
-					   <entry key="setModel" value="testinput/set.vpp"/>
-					</map>
-					<node name="external_tools">
+					<map/>
+					<node name="proof_system">
 						<map>
-							<entry key="testModel1" value="testinput/sorter.vpp"/>
-							<entry key="testModel2" value="testinput/dosort.vpp"/>
-							<entry key="testModel3" value="testinput/explsort.vpp"/>
-							<entry key="testTheory1" value="testinput/set.hol"/>
-							<entry key="vdmHolTactics" value="testinput/vdmHolTactics.txt"/>
-							<entry key="testDataDir" value="testinput"/>
-							<entry key="logOutputDir" value="testoutput"/>
-							<entry key="logOutputFile" value="error.log"/>
+							<entry key="vdmHolTactics" value="src/resources/hol/VdmHolTactics.txt"/>
 						</map>
 					</node>
 				</node>

@@ -1,23 +1,23 @@
 package org.overturetool.potrans;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.prefs.InvalidPreferencesFormatException;
-import java.util.prefs.Preferences;
+
+import junit.framework.TestCase;
 
 import org.overturetool.ast.itf.IOmlDocument;
 import org.overturetool.ast.itf.IOmlExpression;
 import org.overturetool.potrans.external_tools.OvertureParserWrapper;
-
-import jp.co.csk.vdm.toolbox.VDM.CGException;
-import junit.framework.TestCase;
+import org.overturetool.potrans.external_tools.Utilities;
+import org.overturetool.potrans.test.TestSettings;
 
 public class DocumentProverTest extends TestCase {
 
-	private final static String newLine = System.getProperty("line.separator");
+	
+	private final static String newLine = Utilities.UNIVERSAL_LINE_SEPARATOR;
+	private static TestSettings settings;
 	private static String setModel = null;
 
 	/*
@@ -45,15 +45,12 @@ public class DocumentProverTest extends TestCase {
 	 * @throws InvalidPreferencesFormatException
 	 * @throws FileNotFoundException
 	 */
-	private void setUpPreferences() throws IOException,
-			InvalidPreferencesFormatException, FileNotFoundException {
-		Preferences.importPreferences(new BufferedInputStream(
-				new FileInputStream("Settings.xml")));
-		Preferences preferences = Preferences.userNodeForPackage(this
-				.getClass());
-		setModel = preferences.get("setModel", null);
+	private void setUpPreferences() throws Exception {
+		settings = new TestSettings();
+		setModel = settings.get(TestSettings.SET_MODEL);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testGetProofCounter() throws Exception {
 		String po = "(forall s : Set & Set`pre_doNothing(s))";
 		VdmHolTranslator translator = new VdmHolTranslator();

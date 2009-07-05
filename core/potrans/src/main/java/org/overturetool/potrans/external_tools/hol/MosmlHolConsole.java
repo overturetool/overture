@@ -1,12 +1,12 @@
 package org.overturetool.potrans.external_tools.hol;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.overturetool.potrans.external_tools.Console;
-import org.overturetool.potrans.external_tools.SystemProperties;
+import org.overturetool.potrans.external_tools.Utilities;
+import org.overturetool.potrans.proof_system.ApplicationSettings;
 
 public class MosmlHolConsole extends Console {
 
@@ -31,9 +31,8 @@ public class MosmlHolConsole extends Console {
 
 	public void removeConsoleHeader() throws IOException {
 		if (!consoleHeaderRemoved) {
-			String l;
 			for (int i = 0; i < HEADER_SIZE; i++)
-				l = readLine();
+				readLine();
 			readPrompt();
 			consoleHeaderRemoved = true;
 		}
@@ -77,7 +76,7 @@ public class MosmlHolConsole extends Console {
 		String line = null;
 		while (!isPromptNext()) {
 			if (line != null) {
-				sb.append(SystemProperties.LINE_SEPARATOR);
+				sb.append(Utilities.LINE_SEPARATOR);
 			}
 			line = readLine();
 			sb.append(line);

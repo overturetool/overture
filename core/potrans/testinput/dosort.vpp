@@ -1,15 +1,3 @@
-% WHAT
-%    The dosort algorithm. 
-% ID
-%    $Id: dosort.vpp,v 1.9 2005/05/13 00:41:45 vdmtools Exp $
-% PROJECT
-%    Toolbox
-% COPYRIGHT
-%    (C) 2005 CSK
-
-
-\section{DoSort}
-\begin{vdm_al}
 class DoSort is subclass of Sorter
 
 operations
@@ -36,20 +24,4 @@ functions
       others      -> [hd l] ^ InsertSorted(i,tl l)
     end
 
-
-
-end DoSort 
-\end{vdm_al}
-
-An overview of the test coverage information for the {\em DoSort}
-class is listed in the table below. The test coverage information is
-generated using the argument file {\em sort.arg}.
-
-
-\begin{rtinfo}
-[InsertSorted]{vdm.tc}[DoSort]
-DoSorting
-InsertSorted
-Sort
-\end{rtinfo}
-
+end DoSort

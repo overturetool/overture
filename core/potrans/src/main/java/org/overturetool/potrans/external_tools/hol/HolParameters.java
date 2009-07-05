@@ -3,8 +3,9 @@ package org.overturetool.potrans.external_tools.hol;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
-import org.overturetool.potrans.external_tools.SystemProperties;
+import org.overturetool.potrans.external_tools.Utilities;
 
 public class HolParameters {
 
@@ -18,11 +19,11 @@ public class HolParameters {
 	protected String mosmlDir = null;
 	protected String holDir = null;
 	protected Map<String, String> holEnv = null;
-	
+
 	protected static String commandArgumentsFormat = "-quietdec -P full -I _HOLDIR_/sigobj "
-		+ "_HOLDIR_/std.prelude "
-		+ "_HOLDIR_/tools/unquote-init.sml "
-		+ "_HOLDIR_/tools/end-init-boss.sml";
+			+ "_HOLDIR_/std.prelude "
+			+ "_HOLDIR_/tools/unquote-init.sml "
+			+ "_HOLDIR_/tools/end-init-boss.sml";
 
 	public HolParameters(String mosmlDir, String holDir) {
 		this.mosmlDir = mosmlDir;
@@ -33,15 +34,15 @@ public class HolParameters {
 
 	public String getMosmlBinaryPath() {
 		StringBuffer sb = new StringBuffer(mosmlDir).append(
-				SystemProperties.FILE_SEPARATOR).append(MOSML_BIN_DIR).append(
-				SystemProperties.FILE_SEPARATOR).append(MOSML_BINARY);
+				Utilities.FILE_SEPARATOR).append(MOSML_BIN_DIR).append(
+				Utilities.FILE_SEPARATOR).append(MOSML_BINARY);
 		return sb.toString();
 	}
 
 	public String getUnquoteBinaryPath() {
 		StringBuffer sb = new StringBuffer(holDir).append(
-				SystemProperties.FILE_SEPARATOR).append(HOL_BIN_DIR).append(
-				SystemProperties.FILE_SEPARATOR).append(UNQUOTE_BINARY);
+				Utilities.FILE_SEPARATOR).append(HOL_BIN_DIR).append(
+				Utilities.FILE_SEPARATOR).append(UNQUOTE_BINARY);
 		return sb.toString();
 	}
 
@@ -53,28 +54,37 @@ public class HolParameters {
 		this.holDir = holDir;
 	}
 
+	/**
+	 * Returns the mapping between environment variable names and the respective
+	 * values. Changes to the mapping will be reflected in subsequent calls of
+	 * this method.
+	 * 
+	 * @param HOL_DIR
+	 */
 	public Map<String, String> getHolEnv() {
 		return holEnv;
 	}
 
-	public void setHolEnv(Map<String, String> holEnv) {
-		this.holEnv = holEnv;
-	}
-	
 	protected String[] formatCommandArguments() {
-		return commandArgumentsFormat.replaceAll("_HOLDIR_", holDir).split(" ");
+		String[] preFormatedArgs = commandArgumentsFormat.split(" ");
+		String[] formatedArgs = new String[preFormatedArgs.length];
+		for (int i = 0; i < preFormatedArgs.length; i++)
+			formatedArgs[i] = preFormatedArgs[i].replaceAll("_HOLDIR_", Matcher
+					.quoteReplacement(holDir));
+		return formatedArgs;
 	}
-	
+
 	public List<String> buildMosmlHolCommand() {
 		String[] mosmlArguments = formatCommandArguments();
-		ArrayList<String> list = new ArrayList<String>(mosmlArguments.length + 1);
+		ArrayList<String> list = new ArrayList<String>(
+				mosmlArguments.length + 1);
 		list.add(getMosmlBinaryPath());
 		for (String argument : mosmlArguments)
 			list.add(argument);
 		return list;
 	}
-	
-	public  List<String> buildUnquoteCommand() {
+
+	public List<String> buildUnquoteCommand() {
 		ArrayList<String> list = new ArrayList<String>(1);
 		list.add(getUnquoteBinaryPath());
 		return list;

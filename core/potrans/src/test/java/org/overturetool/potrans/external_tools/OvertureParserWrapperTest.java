@@ -3,17 +3,12 @@
  */
 package org.overturetool.potrans.external_tools;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.prefs.Preferences;
-
-import jp.co.csk.vdm.toolbox.VDM.VDMRunTimeException;
 import junit.framework.TestCase;
 
 import org.overturetool.ast.imp.OmlBracketedExpression;
 import org.overturetool.ast.itf.IOmlDocument;
 import org.overturetool.ast.itf.IOmlExpression;
+import org.overturetool.potrans.test.TestSettings;
 
 /**
  * @author miguel_ferreira
@@ -21,42 +16,20 @@ import org.overturetool.ast.itf.IOmlExpression;
  */
 public class OvertureParserWrapperTest extends TestCase {
 
-	private static String settingsWarning = "If this test fails check that you have the correct vaules set in Settings.xml, "
-			+ "namelly for the test VPP models. ";
+	protected static TestSettings settings = null;
+	protected static String testModel1 = null;
 
-	private static String testModel1 = null;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#setUp()
-	 */
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		Preferences.importPreferences(new BufferedInputStream(
-				new FileInputStream("Settings.xml")));
-		Preferences preferences = Preferences
-				.userNodeForPackage(this.getClass());
-
-		testModel1 = preferences.get("testModel1", null);
-
-		// remove previously generated files
-		removePreviousTestsData();
+		setUpPreferences();
 	}
 
-	private void removePreviousTestsData() {
-		// TODO Auto-generated method stub
 
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	private void setUpPreferences() throws Exception {
+		settings = new TestSettings();
+		testModel1 = settings.get(TestSettings.TEST_MODEL_1);
 	}
 
 	/**
@@ -68,8 +41,8 @@ public class OvertureParserWrapperTest extends TestCase {
 		IOmlDocument omlDocument = OvertureParserWrapper
 				.getOmlDocument(testModel1);
 
-		assertNotNull(settingsWarning, omlDocument);
-		assertEquals(settingsWarning, testModel1, omlDocument.getFilename()
+		assertNotNull(omlDocument);
+		assertEquals(testModel1, omlDocument.getFilename()
 				.trim());
 	}
 
@@ -82,8 +55,8 @@ public class OvertureParserWrapperTest extends TestCase {
 		String fileName = "";
 		try {
 			OvertureParserWrapper.getOmlDocument(fileName);
-			fail("FileNotFoundException should have been thrown.");
-		} catch (FileNotFoundException e) {
+			fail("OvertureParserException should have been thrown.");
+		} catch (OvertureParserException e) {
 		}
 	}
 
@@ -110,8 +83,8 @@ public class OvertureParserWrapperTest extends TestCase {
 		String fileName = "some_invalid_file";
 		try {
 			OvertureParserWrapper.getOmlDocument(fileName);
-			fail("FileNotFoundException should have been thrown.");
-		} catch (FileNotFoundException e) {
+			fail("OvertureParserException should have been thrown.");
+		} catch (OvertureParserException e) {
 		}
 	}
 
@@ -152,8 +125,8 @@ public class OvertureParserWrapperTest extends TestCase {
 
 		try {
 			OvertureParserWrapper.getOmlExpression(expression);
-			fail("VDMRunTimeException should have been thrown.");
-		} catch (VDMRunTimeException e) {
+			fail("OvertureParserException should have been thrown.");
+		} catch (OvertureParserException e) {
 		}
 	}
 }
