@@ -18,7 +18,6 @@ public class AutomaticProofSystem {
 	private final TranslationPreProcessor prep;
 	private final Translator translator;
 	private final HolParameters holParam;
-	private final ApplicationSettings settings;
 	private final String vdmTacticsFile;
 
 	public AutomaticProofSystem(String mosmlDir, String holDir, PogGenerator pogGen, PogProcessor pogProc)
@@ -31,8 +30,7 @@ public class AutomaticProofSystem {
 			throw new AutomaicProofSystemException("[TRANSLATOR] " + e.getMessage(), e);
 		}
 		try {
-			this.settings = new ApplicationSettings();
-			this.vdmTacticsFile = settings.get(ApplicationSettings.VDM_HOL_TACTICS);
+			this.vdmTacticsFile = new ApplicationSettings().get(ApplicationSettings.VDM_HOL_TACTICS);
 		} catch (Exception e) {
 			throw new AutomaicProofSystemException("[APS] " + e.getMessage(), e);
 		}

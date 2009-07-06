@@ -19,11 +19,6 @@ public abstract class AbstractSettings {
 		loadPreferences(settingsFile, this.getClass());
 	}
 
-	public AbstractSettings(String settingsFile, Class c)
-			throws FileNotFoundException, IOException,
-			InvalidPreferencesFormatException, BackingStoreException {
-		loadPreferences(settingsFile, c);
-	}
 
 	private void loadPreferences(String settingsFile, Class c)
 			throws IOException, InvalidPreferencesFormatException,

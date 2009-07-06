@@ -16,7 +16,7 @@ import org.overturetool.potrans.test.TestSettings;
  */
 public class VdmHolTranslatorTest extends TestCase {
 
-	private final static String newLine = Utilities.UNIVERSAL_LINE_SEPARATOR;
+	private final static String newLine = Utilities.NEW_CHARACTER;
 	private static TestSettings settings = null;
 	private static String setModel = null;
 

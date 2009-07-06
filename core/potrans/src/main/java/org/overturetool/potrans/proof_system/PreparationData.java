@@ -22,24 +22,11 @@ public class PreparationData {
 		return omlModel;
 	}
 
-	public void setOmlModel(IOmlDocument omlModel) {
-		this.omlModel = omlModel;
-	}
-
 	public List<IOmlDocument> getOmlContextDocuments() {
 		return omlContextDocuments;
-	}
-
-	public void setOmlContextDocuments(List<IOmlDocument> omlContextDocuments) {
-		this.omlContextDocuments = omlContextDocuments;
 	}
 
 	public List<IOmlExpression> getOmlPos() {
 		return omlPos;
 	}
-
-	public void setOmlPos(List<IOmlExpression> omlPos) {
-		this.omlPos = omlPos;
-	}	
-	
 }

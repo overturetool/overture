@@ -46,7 +46,7 @@ public class MosmlHolConsoleTest extends TestCase {
 		while((line = mosml.readLine()) != null) {
 			sb.append(line);
 			if(line != null && !line.equals("- "))
-				sb.append(Utilities.UNIVERSAL_LINE_SEPARATOR);
+				sb.append(Utilities.NEW_CHARACTER);
 		}
 		
 		assertEquals(0, returnValue);

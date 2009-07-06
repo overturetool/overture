@@ -56,7 +56,7 @@ public class HolInterpreter {
 
 	public String[] interpretModel(String holCode) throws HolInterpreterException {
 		List<String> output = new LinkedList<String>();
-		String[] holLines = Utilities.splitString(holCode, Utilities.UNIVERSAL_LINE_SEPARATOR);
+		String[] holLines = Utilities.splitString(holCode, Utilities.NEW_CHARACTER);
 		for (String holLine : holLines)
 			output.add(interpretLine(holLine));
 		return output.toArray(new String[] {});
