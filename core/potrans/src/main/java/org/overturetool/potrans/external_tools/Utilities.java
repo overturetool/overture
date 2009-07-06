@@ -27,6 +27,7 @@ public abstract class Utilities {
 		String lineBuffer = "";
 		while((lineBuffer = reader.readLine()) != null)
 			sb.append(lineBuffer).append(LINE_SEPARATOR);
+		reader.close();
 		return sb.toString();
 	}
 	

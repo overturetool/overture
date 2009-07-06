@@ -16,6 +16,7 @@ public class HolInterpreterTest extends TestCase {
 	public void testInterpretLineHelp()  throws Exception {
 		HolParameters holParam = new HolParameters(MOSML_DIR, HOL_DIR);
 		HolInterpreter hol = new HolInterpreter(holParam);
+		hol.start();
 		
 		String expected = "> val it = fn : string -> unit";
 		String actual = hol.interpretLine("help;");
@@ -27,6 +28,7 @@ public class HolInterpreterTest extends TestCase {
 	public void testQuit() throws Exception {
 		HolParameters holParam = new HolParameters(MOSML_DIR, HOL_DIR);
 		HolInterpreter hol = new HolInterpreter(holParam);
+		hol.start();
 		
 		hol.quit();
 		

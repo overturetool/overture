@@ -39,14 +39,18 @@ public class MosmlHolConsole extends Console {
 	}
 
 	protected String readPrompt() throws IOException {
-		char[] cbuf = new char[2];
-		output.read(cbuf);
+		char[] cbuf = readTwoChars();
 		return new String(cbuf);
 	}
 
-	protected boolean isPromptNext() throws IOException {
+	private char[] readTwoChars() throws IOException {
 		char[] cbuf = new char[2];
 		output.read(cbuf);
+		return cbuf;
+	}
+
+	protected boolean isPromptNext() throws IOException {
+		char[] cbuf = readTwoChars();
 		promptBuffer = new String(cbuf);
 		return promptBuffer.equals(HOL_PROMPT);
 	}

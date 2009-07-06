@@ -33,15 +33,19 @@ public class VdmToolsWrapperTest extends TestCase {
 	}
 
 	private void removePreviousTestsData() throws Exception {
-		File testModel1Pog = new File(testModel1 + pogExtension);
-		File testModel2Pog = new File(testModel2 + pogExtension);
+		String model1FileName = testModel1 + pogExtension;
+		String model2FileName = testModel2 + pogExtension;
+		File testModel1Pog = new File(model1FileName);
+		File testModel2Pog = new File(model2FileName);
 		
 		if(testModel1Pog.exists()) {
-			testModel1Pog.delete();
+			if(!testModel1Pog.delete())
+				throw new Exception("Can't remove file '" + model1FileName + "'.");
 		}
 		
 		if(testModel2Pog.exists()) {
-			testModel2Pog.delete();
+			if(!testModel2Pog.delete())
+				throw new Exception("Can't remove file '" + model2FileName + "'.");
 		}
 	}
 

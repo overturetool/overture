@@ -68,6 +68,8 @@ public class AutomaticProofSystem {
 		HolInterpreter hol = null;
 		try {
 			hol = new HolInterpreter(holParam);
+			hol.start();
+			
 			// load tactics
 			String tacticsCode = Utilities.readHolCodeFile(vdmTacticsFile);
 			hol.interpretModel(tacticsCode);

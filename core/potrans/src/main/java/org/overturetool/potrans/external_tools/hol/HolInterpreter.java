@@ -28,6 +28,9 @@ public class HolInterpreter {
 			throw new HolInterpreterException("IO error while connectiong to Moscow ML CLI.", e);
 		}
 		pipe = new Thread(new ConsolePipe(unquote, mosml));
+	}
+	
+	public void start() {
 		pipe.start();
 	}
 
