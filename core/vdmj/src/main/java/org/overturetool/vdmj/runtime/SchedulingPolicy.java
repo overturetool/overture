@@ -23,22 +23,11 @@
 
 package org.overturetool.vdmj.runtime;
 
-import org.overturetool.vdmj.values.CPUValue;
+import org.overturetool.vdmj.values.ObjectValue;
 
-public enum CPUPolicy
+abstract public class SchedulingPolicy
 {
-	FP, FCFS;
-
-	public SchedulingPolicy factory(CPUValue cpu)
-	{
-		switch (this)
-		{
-			case FP:
-				return new FPPolicy(cpu);
-
-			case FCFS:
-			default:
-				return new FCFSPolicy(cpu);
-		}
-	}
+	abstract public void acquire(ObjectValue self);
+	abstract public void release(ObjectValue self);
+	abstract public void yield(ObjectValue self);
 }

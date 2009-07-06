@@ -432,22 +432,24 @@ public class OperationValue extends Value
 
 		AsyncThread thread = new AsyncThread(self, this);
 		thread.start();
+		CPUValue from = ctxt.threadState.CPU;
+		CPUValue to = self.getCPU();
 
-		if (ctxt.threadState.CPU != self.getCPU())
+		if (from != to)
 		{
     		trace("OpRequest");
-    		BUSValue bus = BUSClassDefinition.findBUS(ctxt.threadState.CPU, self.getCPU());
-    		MessageQueue<MessageResponse> queue = new MessageQueue<MessageResponse>();
-    		MessageRequest request = new MessageRequest(bus, ctxt.threadState.CPU, self.getCPU(), argValues, queue);
+    		BUSValue bus = BUSClassDefinition.findBUS(from, to);
+    		MessageQueue<MessageResponse> queue = new MessageQueue<MessageResponse>(from);
+    		MessageRequest request = new MessageRequest(bus, from, to, argValues, queue);
     		bus.send(request, thread);
-    		MessageResponse reply = queue.take();
+    		MessageResponse reply = queue.take(self);
     		return reply.getValue();	// Can throw a returned exception
 		}
 		else	// local async
 		{
-    		MessageRequest request = new MessageRequest(null, ctxt.threadState.CPU, self.getCPU(), argValues, null);
-    		thread.queue.add(request);
-    		ctxt.threadState.CPU.yield(self);
+    		MessageRequest request = new MessageRequest(null, from, to, argValues, null);
+    		thread.send(request);
+    		from.yield(self);
     		return new VoidValue();
 		}
 	}

@@ -108,7 +108,7 @@ public class BUSValue extends ObjectValue
 			"MessageActivate -> msgid: " + request.msgId +
 			" time: " + VDMThreadSet.getWallTime());
 
-		thread.queue.add(request);
+		thread.send(request);
 
 		Console.out.println(
 			"MessageComplete -> msgid: " + request.msgId +

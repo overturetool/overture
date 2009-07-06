@@ -29,10 +29,9 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.runtime.AsyncThread;
 import org.overturetool.vdmj.runtime.CPUPolicy;
-import org.overturetool.vdmj.runtime.VDMThreadSet;
+import org.overturetool.vdmj.runtime.SchedulingPolicy;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Type;
 
@@ -43,13 +42,12 @@ public class CPUValue extends ObjectValue
 	public static List<CPUValue> allCPUs;
 
 	public final int cpuNumber;
-	public final CPUPolicy policy;
+	public final SchedulingPolicy policy;
 	public final double cyclesPerSec;
 	public final List<ObjectValue> deployed;
 	public final Set<AsyncThread> threads;
 
 	public String name;
-	private boolean active = false;
 
 	public static void init()
 	{
@@ -64,7 +62,8 @@ public class CPUValue extends ObjectValue
 		this.cpuNumber = nextCPU++;
 
 		QuoteValue parg = (QuoteValue)argvals.get(0);
-		this.policy = CPUPolicy.valueOf(parg.value.toUpperCase());
+		CPUPolicy cpup = CPUPolicy.valueOf(parg.value.toUpperCase());
+		policy = cpup.factory(this);
 
 		RealValue sarg = (RealValue)argvals.get(1);
 		this.cyclesPerSec = sarg.value;
@@ -83,7 +82,8 @@ public class CPUValue extends ObjectValue
 		this.cpuNumber = number;
 
 		QuoteValue parg = (QuoteValue)argvals.get(0);
-		this.policy = CPUPolicy.valueOf(parg.value.toUpperCase());
+		CPUPolicy cpup = CPUPolicy.valueOf(parg.value.toUpperCase());
+		policy = cpup.factory(this);
 
 		RealValue sarg = (RealValue)argvals.get(1);
 		this.cyclesPerSec = sarg.value;
@@ -119,65 +119,6 @@ public class CPUValue extends ObjectValue
 		return found;
 	}
 
-	public synchronized void activate(ObjectValue self)
-	{
-		while (active)
-		{
-			try
-			{
-				wait();
-			}
-			catch (InterruptedException e)
-			{
-				// continue;
-			}
-		}
-
-		active = true;
-		notify();	// For any yielders
-
-		Console.out.println(
-			"ThreadSwapIn -> id: " + Thread.currentThread().getId() +
-			" objref: " + self.objectReference +
-			" clnm: \"" + self.type.name.name + "\"" +
-			" cpunum: " + cpuNumber +
-			" overhead: " + 0 +
-			" time: " + VDMThreadSet.getWallTime());
-	}
-
-	public synchronized void passivate(ObjectValue self)
-	{
-		active = false;
-		notify();
-
-		Console.out.println(
-			"ThreadSwapOut -> id: " + Thread.currentThread().getId() +
-			" objref: " + self.objectReference +
-			" clnm: \"" + self.type.name.name + "\"" +
-			" cpunum: " + cpuNumber +
-			" overhead: " + 0 +
-			" time: " + VDMThreadSet.getWallTime());
-	}
-
-	public synchronized void yield(ObjectValue self)
-	{
-		passivate(self);
-
-		while (!active && threads.size() > 1)	// Wait for someone else...
-		{
-			try
-			{
-				wait();
-			}
-			catch (InterruptedException e)
-			{
-				// continue;
-			}
-		}
-
-		activate(self);
-	}
-
 	public long getDuration(long cycles)
 	{
 		return (long)(cycles/cyclesPerSec * 1000);		// millisecs
@@ -211,6 +152,20 @@ public class CPUValue extends ObjectValue
 	public synchronized void removeThread(AsyncThread thread)
 	{
 		threads.remove(thread);
-		notify();	// Yield may be waiting for no-one, otherwise
+	}
+
+	public void release(ObjectValue self)
+	{
+		policy.release(self);
+	}
+
+	public void acquire(ObjectValue self)
+	{
+		policy.acquire(self);
+	}
+
+	public void yield(ObjectValue self)
+	{
+		policy.yield(self);
 	}
 }

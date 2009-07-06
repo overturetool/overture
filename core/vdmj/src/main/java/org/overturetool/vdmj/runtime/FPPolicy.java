@@ -23,74 +23,31 @@
 
 package org.overturetool.vdmj.runtime;
 
-import java.util.concurrent.LinkedBlockingQueue;
-
 import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.ObjectValue;
 
-public class MessageQueue<T> extends LinkedBlockingQueue<T>
+public class FPPolicy extends SchedulingPolicy
 {
-	private static final long serialVersionUID = 1L;
-	private final CPUValue cpu;
-
-	public MessageQueue(CPUValue cpu)
+	public FPPolicy(CPUValue cpu)
 	{
-		this.cpu = cpu;
+		throw new RuntimeException("Not implemented");
 	}
 
 	@Override
-	public synchronized boolean add(T item)
+	public void acquire(ObjectValue self)
 	{
-		boolean rv = super.add(item);
-		notifyAll();
-		return rv;
+		throw new RuntimeException("Not implemented");
 	}
 
-	public synchronized T take(ObjectValue self)
+	@Override
+	public void release(ObjectValue self)
 	{
-		if (!isEmpty())
-		{
-			while (true)
-			{
-	    		try
-	    		{
-	    			return super.take();
-	       		}
-	    		catch (InterruptedException e)
-	    		{
-	    			// retry
-	    		}
-			}
-		}
-		else
-		{
-			cpu.release(self);
+		throw new RuntimeException("Not implemented");
+	}
 
-			while (isEmpty())
-			{
-				try
-				{
-					wait();
-				}
-				catch (InterruptedException e)
-				{
-					// retry
-				}
-			}
-
-			cpu.acquire(self);
-
-			while (true)
-			{
-	    		try
-	    		{
-	    			return super.take();
-	       		}
-	    		catch (InterruptedException e)
-	    		{
-	    			// retry
-	    		}
-			}
- 		}
+	@Override
+	public void yield(ObjectValue self)
+	{
+		throw new RuntimeException("Not implemented");
 	}
 }

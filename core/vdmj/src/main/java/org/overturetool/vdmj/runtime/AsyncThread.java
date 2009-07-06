@@ -32,34 +32,37 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class AsyncThread extends Thread
 {
-	public MessageQueue<MessageRequest> queue;
+	private MessageQueue<MessageRequest> queue;
 	public final ObjectValue self;
 	public final OperationValue operation;
 
 	public AsyncThread(ObjectValue self, OperationValue operation)
 	{
+		setName("Async Thread " + getId());
+
 		this.self = self;
 		this.operation = operation;
-		this.queue = new MessageQueue<MessageRequest>();
-		self.getCPU().addThread(this);
+		CPUValue cpu = self.getCPU();
+		this.queue = new MessageQueue<MessageRequest>(cpu);
+		cpu.addThread(this);
+
+		Console.out.println(
+			"ThreadCreate -> id: " + getId() +
+			" period: " + false +
+			" objref: " + self.objectReference +
+			" clnm: " + self.type.name +
+			" cpunm: " + cpu.cpuNumber +
+			" time: " + VDMThreadSet.getWallTime());
 	}
 
 	@Override
 	public void run()
 	{
 		CPUValue cpu = self.getCPU();
+		cpu.acquire(self);
 
-		Console.out.println(
-			"ThreadCreate -> id: " + Thread.currentThread().getId() +
-			" period: false objref: " + self.objectReference +
-			" clnm: " + self.type.name +
-			" cpunm: " + cpu.cpuNumber +
-			" time: " + VDMThreadSet.getWallTime());
-
-		MessageRequest request = queue.take();		// Blocking
+		MessageRequest request = queue.take(self);		// Blocking on CPU
 		ValueList arglist = request.args;
-
-		cpu.activate(self);
 		MessageResponse response = null;
 
 		try
@@ -85,7 +88,7 @@ public class AsyncThread extends Thread
 			request.bus.reply(response);
 		}
 
-		cpu.passivate(self);
+		cpu.release(self);
 
 		Console.out.println(
 			"ThreadKill -> id: " + Thread.currentThread().getId() +
@@ -94,6 +97,11 @@ public class AsyncThread extends Thread
 			" msg: AAAaaaarrgggg!!!");
 
 		cpu.removeThread(this);
+	}
+
+	public void send(MessageRequest request)
+	{
+		queue.add(request);
 	}
 
 	@Override

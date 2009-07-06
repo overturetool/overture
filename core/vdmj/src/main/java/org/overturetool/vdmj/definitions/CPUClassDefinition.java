@@ -95,7 +95,7 @@ public class CPUClassDefinition extends ClassDefinition
 	{
 		ValueList args = new ValueList();
 
-		args.add(new QuoteValue("FP"));
+		args.add(new QuoteValue("FCFS"));
 		args.add(new RealValue(0));
 
 		return new CPUValue(instance.getType(), new NameValuePairMap(), args);
@@ -105,7 +105,7 @@ public class CPUClassDefinition extends ClassDefinition
 	{
 		ValueList args = new ValueList();
 
-		args.add(new QuoteValue("FP"));
+		args.add(new QuoteValue("FCFS"));
 		args.add(new RealValue(0));
 
 		CPUValue cv = new CPUValue(0, instance.getType(), new NameValuePairMap(), args);
