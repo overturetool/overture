@@ -10,10 +10,18 @@ import org.overturetool.potrans.proof_system.AbstractSettings;
 
 public class TestSettings extends AbstractSettings {
 
-	protected static final String SETTINGS_FILE = "src/test/java/org/overturetool/potrans/test/Settings.xml";
 	protected static final String VPPDE_BIN = System.getProperty("potrans.vppde.bin");
 	protected static final String MOSML_DIR = System.getProperty("potrans.mosml.dir");
 	protected static final String HOL_DIR = System.getProperty("potrans.hol.dir");
+	static {
+		if(VPPDE_BIN == null || MOSML_DIR == null || HOL_DIR == null)
+			throw new IllegalArgumentException("In order to execute the unit tests you need to supply the following VM arguments:\n" +
+					"-Dpotrans.vppde.bin=\"<value>\"\n" +
+					"-Dpotrans.mosml.dir=\"<value>\"\n" +
+					"-Dpotrans.hol.dir=\"<value>\"\n");
+	}
+	
+	protected static final String SETTINGS_FILE = "src/test/java/org/overturetool/potrans/test/Settings.xml";
 	protected static final String OS_NAME = System.getProperty("os.name");
 
 	protected static final String CAT_PROGRAM;
