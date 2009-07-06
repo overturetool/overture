@@ -18,7 +18,7 @@ import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.messages.MessageException;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 import org.overturetool.vdmj.modules.ModuleList;
@@ -113,7 +113,7 @@ public class EclipseVDMJSL extends VDMJ implements EclipseVDMJ {
         	   		duration += (after - before);
    				}
     		}
-			catch (MessageException e)
+			catch (InternalException e)
 			{
    				println(e.toString());
 			}
@@ -142,17 +142,17 @@ public class EclipseVDMJSL extends VDMJ implements EclipseVDMJ {
 			}
    		}
 
-   		int n = modules.notLoaded();
-
-   		if (n > 0)
-   		{
-       		info("Parsed " + plural(n, "module", "s") + " in " +
-       			(double)(duration)/1000 + " secs. ");
-       		info(perrs == 0 ? "No syntax errors" :
-       			"Found " + plural(perrs, "syntax error", "s"));
-      		infoln(pwarn == 0 ? "" : " and " +
-      			(warnings ? "" : "suppressed ") + plural(pwarn, "warning", "s"));
-   		}
+//   		int n = modules.notLoaded();
+//
+//   		if (n > 0)
+//   		{
+//       		info("Parsed " + plural(n, "module", "s") + " in " +
+//       			(double)(duration)/1000 + " secs. ");
+//       		info(perrs == 0 ? "No syntax errors" :
+//       			"Found " + plural(perrs, "syntax error", "s"));
+//      		infoln(pwarn == 0 ? "" : " and " +
+//      			(warnings ? "" : "suppressed ") + plural(pwarn, "warning", "s"));
+//   		}
 
    		return perrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
 	}
@@ -174,7 +174,7 @@ public class EclipseVDMJSL extends VDMJ implements EclipseVDMJ {
     	   		long after = System.currentTimeMillis();
     	   		duration += (after - before);
     		}
-			catch (MessageException e)
+			catch (InternalException e)
 			{
    				println(e.toString());
 			}
@@ -196,17 +196,17 @@ public class EclipseVDMJSL extends VDMJ implements EclipseVDMJ {
     			reader.printWarnings(Console.out);
 			}
 
-   		int n = modules.notLoaded();
-
-   		if (n > 0)
-   		{
-       		info("Parsed " + plural(n, "module", "s") + " in " +
-       			(double)(duration)/1000 + " secs. ");
-       		info(perrs == 0 ? "No syntax errors" :
-       			"Found " + plural(perrs, "syntax error", "s"));
-      		infoln(pwarn == 0 ? "" : " and " +
-      			(warnings ? "" : "suppressed ") + plural(pwarn, "warning", "s"));
-   		}
+//   		int n = modules.notLoaded();
+//
+//   		if (n > 0)
+//   		{
+//       		info("Parsed " + plural(n, "module", "s") + " in " +
+//       			(double)(duration)/1000 + " secs. ");
+//       		info(perrs == 0 ? "No syntax errors" :
+//       			"Found " + plural(perrs, "syntax error", "s"));
+//      		infoln(pwarn == 0 ? "" : " and " +
+//      			(warnings ? "" : "suppressed ") + plural(pwarn, "warning", "s"));
+//   		}
 
    		return perrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
 	}
@@ -220,7 +220,7 @@ public class EclipseVDMJSL extends VDMJ implements EclipseVDMJ {
    			typeChecker = new ModuleTypeChecker(modules);
    			typeChecker.typeCheck();
    		}
-		catch (MessageException e)
+		catch (InternalException e)
 		{
 			println(e.toString());
 		}

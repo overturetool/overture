@@ -1,8 +1,12 @@
 package org.overturetool.eclipse.plugins.editor.core.internal.builder;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
+
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.VDMJ;
@@ -12,7 +16,8 @@ import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.messages.MessageException;
+import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
@@ -92,9 +97,13 @@ public class EclipseVDMJPP extends VDMJ implements EclipseVDMJ{
 	public ExitStatus parse(List<File> files) {
 		parseErrors.clear();
 		parseWarnings.clear();
+		
+		
 		classes.clear();
 		LexLocation.resetLocations();
    		int perrs = 0;
+   		int pwarn = 0;
+   		long duration = 0;
 
    		for (File file: files)
    		{
@@ -102,27 +111,50 @@ public class EclipseVDMJPP extends VDMJ implements EclipseVDMJ{
 
    			try
    			{
-				LexTokenReader ltr = new LexTokenReader(file, Settings.dialect, filecharset);
-    			reader = new ClassReader(ltr);
-    			classes.addAll(reader.readClasses());
+   				if (file.getName().endsWith(".lib"))
+   				{
+   					FileInputStream fis = new FileInputStream(file);
+   	    	        GZIPInputStream gis = new GZIPInputStream(fis);
+   	    	        ObjectInputStream ois = new ObjectInputStream(gis);
+
+   	    	        ClassList loaded = null;
+   	    	        long begin = System.currentTimeMillis();
+
+   	    	        try
+   	    	        {
+   	    	        	loaded = (ClassList)ois.readObject();
+   	    	        }
+       	 			catch (Exception e)
+       				{
+       	   				//println(file + " is not a valid VDM++ library");
+       	   				perrs++;
+       	   				continue;
+       				}
+       	 			finally
+       	 			{
+       	 				ois.close();
+       	 			}
+
+   	    	        long end = System.currentTimeMillis();
+   	    	        loaded.setLoaded();
+   	    	        classes.addAll(loaded);
+   	    	        classes.remap();
+
+   	    	   		//infoln("Loaded " + plural(loaded.size(), "class", "es") + " from " + file + " in " + (double)(end-begin)/1000 + " secs");
+   				}
+   				else
+   				{
+    				LexTokenReader ltr = new LexTokenReader(file, Settings.dialect, filecharset);
+        			reader = new ClassReader(ltr);
+        			classes.addAll(reader.readClasses());
+   				}
     		}
-			catch (MessageException e)
+			catch (InternalException e)
 			{
-   				println(e.toString());
+   				perrs++;
 			}
 			catch (Throwable e)
 			{
-   				println(e.toString());
-   				if (e instanceof ParserException)
-   				{
-   					ParserException parserException = (ParserException) e;
-   					parseErrors.add(new VDMError(parserException));
-   				}
-   				// TODO Add to parseErrors
-   				if (e instanceof StackOverflowError)
-   				{
-   					e.printStackTrace();
-   				}
    				perrs++;
 			}
 
@@ -130,16 +162,87 @@ public class EclipseVDMJPP extends VDMJ implements EclipseVDMJ{
 			{
     			perrs += reader.getErrorCount();
     			//reader.printErrors(Console.out);
+    			for (VDMError error : reader.getErrors()) {
+    				parseErrors.add(error);
+    			}
 			}
-			for (VDMError error : reader.getErrors()) {
-				parseErrors.add(error);
+
+			if (reader != null && reader.getWarningCount() > 0)
+			{
+				pwarn += reader.getWarningCount();
+    			//reader.printWarnings(Console.out);
+				for (VDMWarning warning : reader.getWarnings()) {
+					parseWarnings.add(warning);
+				}
 			}
-			for (VDMWarning warning : reader.getWarnings()) {
-				parseWarnings.add(warning);
-			}
-			
    		}
+
+//   		int n = classes.notLoaded();
+//
+//   		if (n > 0)
+//   		{
+//       		info("Parsed " + plural(n, "class", "es") + " in " +
+//       			(double)(duration)/1000 + " secs. ");
+//       		info(perrs == 0 ? "No syntax errors" :
+//       			"Found " + plural(perrs, "syntax error", "s"));
+//    		infoln(pwarn == 0 ? "" : " and " +
+//    			(warnings ? "" : "suppressed ") + plural(pwarn, "warning", "s"));
+//   		}
+
    		return perrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
+		
+		////////////////////////////////7
+		// old parser 
+		/////////////////////////
+		
+//		classes.clear();
+//		LexLocation.resetLocations();
+//   		int perrs = 0;
+//
+//   		for (File file: files)
+//   		{
+//   			ClassReader reader = null;
+//
+//   			try
+//   			{
+//				LexTokenReader ltr = new LexTokenReader(file, Settings.dialect, filecharset);
+//    			reader = new ClassReader(ltr);
+//    			classes.addAll(reader.readClasses());
+//    		}
+//			catch (MessageException e)
+//			{
+//   				println(e.toString());
+//			}
+//			catch (Throwable e)
+//			{
+//   				println(e.toString());
+//   				if (e instanceof ParserException)
+//   				{
+//   					ParserException parserException = (ParserException) e;
+//   					parseErrors.add(new VDMError(parserException));
+//   				}
+//   				// TODO Add to parseErrors
+//   				if (e instanceof StackOverflowError)
+//   				{
+//   					e.printStackTrace();
+//   				}
+//   				perrs++;
+//			}
+//
+//			if (reader != null && reader.getErrorCount() > 0)
+//			{
+//    			perrs += reader.getErrorCount();
+//    			//reader.printErrors(Console.out);
+//			}
+//			for (VDMError error : reader.getErrors()) {
+//				parseErrors.add(error);
+//			}
+//			for (VDMWarning warning : reader.getWarnings()) {
+//				parseWarnings.add(warning);
+//			}
+//			
+//   		}
+//   		return perrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
 	}
 	
 
@@ -161,7 +264,7 @@ public class EclipseVDMJPP extends VDMJ implements EclipseVDMJ{
 			reader = new ClassReader(ltr);
 			classes.addAll(reader.readClasses());
 		}
-		catch (MessageException e)
+		catch (InternalException e)
 		{
 			println(e.toString());
 		}
@@ -181,14 +284,17 @@ public class EclipseVDMJPP extends VDMJ implements EclipseVDMJ{
 		{
 			perrs += reader.getErrorCount();
 			//reader.printErrors(Console.out);
+			for (VDMError error : reader.getErrors()) {
+				parseErrors.add(error);
+			}
 		}
-
-   		for (VDMError error : reader.getErrors()) {
-			parseErrors.add(error);
-		}
-   		
-   		for (VDMWarning warning : reader.getWarnings()) {
-			parseWarnings.add(warning);
+		
+		if (reader != null && reader.getWarningCount() > 0)
+		{
+			//reader.printWarnings(Console.out);
+			for (VDMWarning warning : reader.getWarnings()) {
+				parseWarnings.add(warning);
+			}
 		}
    		
    		return perrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
@@ -224,7 +330,7 @@ public class EclipseVDMJPP extends VDMJ implements EclipseVDMJ{
    			typeChecker = new ClassTypeChecker(classes);
    			typeChecker.typeCheck();
    		}
-		catch (MessageException e)
+		catch (InternalException e)
 		{
 			println(e.toString());
 		}
