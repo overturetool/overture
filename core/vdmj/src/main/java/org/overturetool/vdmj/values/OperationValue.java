@@ -435,17 +435,25 @@ public class OperationValue extends Value
 		CPUValue from = ctxt.threadState.CPU;
 		CPUValue to = self.getCPU();
 
-		if (from != to)
+		if (from != to)		// Remote CPU call
 		{
     		trace("OpRequest");
     		BUSValue bus = BUSClassDefinition.findBUS(from, to);
     		MessageQueue<MessageResponse> queue = new MessageQueue<MessageResponse>(from);
     		MessageRequest request = new MessageRequest(bus, from, to, argValues, queue);
     		bus.send(request, thread);
-    		MessageResponse reply = queue.take(self);
-    		return reply.getValue();	// Can throw a returned exception
+
+    		if (isAsync)
+    		{
+        		return new VoidValue();
+    		}
+    		else
+    		{
+        		MessageResponse reply = queue.take(self);
+        		return reply.getValue();	// Can throw a returned exception
+    		}
 		}
-		else	// local async
+		else	// local, must be async
 		{
     		MessageRequest request = new MessageRequest(null, from, to, argValues, null);
     		thread.send(request);

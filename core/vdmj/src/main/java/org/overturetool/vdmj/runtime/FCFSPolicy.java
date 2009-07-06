@@ -35,11 +35,13 @@ public class FCFSPolicy extends SchedulingPolicy
 	private final CPUValue cpu;
 	private final Queue<Thread> waiters;
 	private Thread running = null;
+	private long switches = 0;
 
 	public FCFSPolicy(CPUValue cpu)
 	{
 		this.cpu = cpu;
 		this.waiters = new LinkedBlockingQueue<Thread>();
+		this.switches = 0;
 	}
 
 	@Override
@@ -57,6 +59,7 @@ public class FCFSPolicy extends SchedulingPolicy
 
 			running = Thread.currentThread();
     		notifyAll();	// For yielders
+    		switches++;
 		}
 		else
 		{
@@ -79,6 +82,7 @@ public class FCFSPolicy extends SchedulingPolicy
     		}
 
     		running = waiters.poll();
+    		switches++;
 
     		Console.out.println(
 				"ThreadSwapIn -> id: " + running.getId() +
@@ -111,8 +115,9 @@ public class FCFSPolicy extends SchedulingPolicy
 		// Only called when we *know* another thread can run...
 
 		release(self);
+		long old = switches;
 
-		while (running == null)
+		while (switches == old)
 		{
 			try
 			{
