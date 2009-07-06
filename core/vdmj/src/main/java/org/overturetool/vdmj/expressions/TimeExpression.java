@@ -25,6 +25,7 @@ package org.overturetool.vdmj.expressions;
 
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.VDMThreadSet;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.IntegerType;
@@ -45,7 +46,7 @@ public class TimeExpression extends Expression
 	@Override
 	public Value eval(Context ctxt)
 	{
-		return new IntegerValue(System.currentTimeMillis());
+		return new IntegerValue(VDMThreadSet.getWallTime());
 	}
 
 	@Override

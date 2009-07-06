@@ -42,7 +42,7 @@ public class ThreadState
 	public DBGPReader dbgp;
 	public CPUValue CPU;
 
-	private long timestep;
+	private long timestep;		// Current step being made (not wall time)
 
 	public ThreadState(DBGPReader dbgp, CPUValue cpu)
 	{
