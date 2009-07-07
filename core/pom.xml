@@ -8,14 +8,15 @@
 <name>Top-level POM for OvertureTool</name>
 <url>http://www.overturetool.org</url>
 <modules>
+<!--<module>jmltrans</module>-->
 <module>stdlib</module>
 <module>ast</module>
 <module>vdmunit</module>
 <module>parser</module>
 <module>eclipse</module>
-<!--Tests faild <module>potrans</module>-->
+<module>potrans</module>
+<module>proofsupport</module>
 <module>umltrans</module>
-<!--<module>jmltrans</module>-->
 <module>vdmtools</module>
 <module>traces</module>
 <module>vdmj</module>
