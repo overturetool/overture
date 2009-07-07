@@ -615,22 +615,7 @@ public class DBGPReader
 		{
 			if (reason == DBGPReason.EXCEPTION && ctxt != null)
 			{
-				try
-				{
-					breakContext = ctxt;
-					breakpoint = new Breakpoint(ctxt.location);;
-					statusResponse(DBGPStatus.STOPPING, reason);
-
-					run();
-
-					breakContext = null;
-					breakpoint = null;
-					statusResponse(DBGPStatus.STOPPED, reason);
-				}
-				catch (Exception e)
-				{
-					errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
-				}				
+				dyingThread(ctxt);
 			}
 			else
 			{
@@ -953,12 +938,32 @@ public class DBGPReader
 
 		response(hdr, null);
 	}
+	
+	private void dyingThread(Context ctxt)
+	{
+		try
+		{
+			breakContext = ctxt;
+			breakpoint = new Breakpoint(ctxt.location);
+			statusResponse(DBGPStatus.STOPPING, DBGPReason.EXCEPTION);
+
+			run();
+
+			breakContext = null;
+			breakpoint = null;
+			statusResponse(DBGPStatus.STOPPED, DBGPReason.EXCEPTION);
+		}
+		catch (Exception ex)
+		{
+			errorResponse(DBGPErrorCode.INTERNAL_ERROR, ex.getMessage());
+		}				
+	}
 
 	private boolean processRun(DBGPCommand c) throws DBGPException
 	{
 		checkArgs(c, 1, false);
 
-		if (status == DBGPStatus.BREAK)
+		if (status == DBGPStatus.BREAK || status == DBGPStatus.STOPPING)
 		{
 			breakContext.threadState.set(0, null, null);
 			return false;	// run means continue
@@ -981,6 +986,10 @@ public class DBGPReader
 			theAnswer = interpreter.execute(expression, this);
 			stdout(theAnswer.toString());
 			statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
+		}
+		catch (ContextException e)
+		{
+			dyingThread(e.ctxt);
 		}
 		catch (Exception e)
 		{
@@ -1012,6 +1021,10 @@ public class DBGPReader
 				exp, exp, interpreter.getDefaultName(), theAnswer.toString());
 			StringBuilder hdr = new StringBuilder("success=\"1\"");
 			response(hdr, property);
+		}
+		catch (ContextException e)
+		{
+			dyingThread(e.ctxt);
 		}
 		catch (Exception e)
 		{
@@ -1045,6 +1058,10 @@ public class DBGPReader
 			status = DBGPStatus.STOPPED;
 			statusReason = DBGPReason.OK;
 			response(hdr, property);
+		}
+		catch (ContextException e)
+		{
+			dyingThread(e.ctxt);
 		}
 		catch (Exception e)
 		{
@@ -1770,7 +1787,7 @@ public class DBGPReader
 
 	private void processStack(DBGPCommand c) throws IOException, DBGPException
 	{
-		if (status != DBGPStatus.BREAK)
+		if (status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
