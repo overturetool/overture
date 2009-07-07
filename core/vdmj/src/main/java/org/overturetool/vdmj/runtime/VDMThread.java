@@ -132,7 +132,7 @@ public class VDMThread extends Thread
 		}
 		catch (ContextException e)
 		{
-			reader.complete(DBGPReason.EXCEPTION, e.ctxt);
+			reader.complete(DBGPReason.EXCEPTION, e);
 		}
 		catch (Exception e)
 		{

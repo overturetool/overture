@@ -609,7 +609,7 @@ public class DBGPReader
     	}
 	}
 
-	public void complete(DBGPReason reason, Context ctxt)
+	public void complete(DBGPReason reason, ContextException ctxt)
 	{
 		try
 		{
@@ -939,13 +939,14 @@ public class DBGPReader
 		response(hdr, null);
 	}
 	
-	private void dyingThread(Context ctxt)
+	private void dyingThread(ContextException ex)
 	{
 		try
 		{
-			breakContext = ctxt;
-			breakpoint = new Breakpoint(ctxt.location);
+			breakContext = ex.ctxt;
+			breakpoint = new Breakpoint(ex.ctxt.location);
 			statusResponse(DBGPStatus.STOPPING, DBGPReason.EXCEPTION);
+			errorResponse(DBGPErrorCode.EVALUATION_ERROR, ex.getMessage());
 
 			run();
 
@@ -953,9 +954,9 @@ public class DBGPReader
 			breakpoint = null;
 			statusResponse(DBGPStatus.STOPPED, DBGPReason.EXCEPTION);
 		}
-		catch (Exception ex)
+		catch (Exception e)
 		{
-			errorResponse(DBGPErrorCode.INTERNAL_ERROR, ex.getMessage());
+			errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
 		}				
 	}
 
@@ -989,7 +990,7 @@ public class DBGPReader
 		}
 		catch (ContextException e)
 		{
-			dyingThread(e.ctxt);
+			dyingThread(e);
 		}
 		catch (Exception e)
 		{
@@ -1005,7 +1006,7 @@ public class DBGPReader
 	{
 		checkArgs(c, 1, true);
 
-		if (status != DBGPStatus.BREAK)
+		if (status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
@@ -1024,7 +1025,7 @@ public class DBGPReader
 		}
 		catch (ContextException e)
 		{
-			dyingThread(e.ctxt);
+			dyingThread(e);
 		}
 		catch (Exception e)
 		{
@@ -1042,7 +1043,7 @@ public class DBGPReader
 	{
 		checkArgs(c, 1, true);
 
-		if (status == DBGPStatus.BREAK)
+		if (status == DBGPStatus.BREAK || status == DBGPStatus.STOPPING)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
@@ -1061,7 +1062,7 @@ public class DBGPReader
 		}
 		catch (ContextException e)
 		{
-			dyingThread(e.ctxt);
+			dyingThread(e);
 		}
 		catch (Exception e)
 		{
@@ -1344,7 +1345,7 @@ public class DBGPReader
 	{
 		checkArgs(c, 1, false);
 
-		if (status != DBGPStatus.BREAK)
+		if (status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
@@ -1359,7 +1360,7 @@ public class DBGPReader
 	{
 		checkArgs(c, 1, false);
 
-		if (status != DBGPStatus.BREAK)
+		if (status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
@@ -1472,7 +1473,7 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
 		}
 
-		if (status != DBGPStatus.BREAK)
+		if (status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
@@ -1514,7 +1515,7 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
 		}
 
-		if (status != DBGPStatus.BREAK)
+		if (status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
@@ -1754,7 +1755,7 @@ public class DBGPReader
 
 	private void processInit(DBGPCommand c) throws IOException, DBGPException
 	{
-		if (status == DBGPStatus.BREAK)
+		if (status == DBGPStatus.BREAK || status == DBGPStatus.STOPPING)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
@@ -1985,7 +1986,7 @@ public class DBGPReader
 
 	private void processCurrentLine(DBGPCommand c) throws DBGPException, IOException
 	{
-		if (status != DBGPStatus.BREAK)
+		if (status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
@@ -2001,7 +2002,7 @@ public class DBGPReader
 
 	private void processCurrentSource(DBGPCommand c) throws DBGPException, IOException
 	{
-		if (status != DBGPStatus.BREAK)
+		if (status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}

@@ -255,12 +255,13 @@ public class ConnectionThread extends Thread
 					if (status != news)
 					{
 						status = news;
-						CommandLine.message("");	// Just update prompt
 
-						if (status == DBGPStatus.BREAK)
+						if (status == DBGPStatus.BREAK || status == DBGPStatus.STOPPING)
 						{
 							xcmd_overture_currentline();
 						}
+						
+						return "";	// Just update prompt
 					}
 				}
 
@@ -319,7 +320,7 @@ public class ConnectionThread extends Thread
     					int code = Utils.parseInt(err.getAttr("code"));
     					XMLOpenTagNode m = (XMLOpenTagNode)err.getChild("message");
     					DBGPErrorCode dbgp = DBGPErrorCode.lookup(code);
-    					return("[" + dbgp.value + "] " + dbgp + ": " + m.text);
+    					return("[" + this + "] " + dbgp + ": " + m.text);
     				}
 
     				if (command.equals("breakpoint_list"))

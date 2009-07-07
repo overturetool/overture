@@ -531,7 +531,8 @@ public class ProcessCommandLine extends CommandLine
 	{
    		String exp = line.substring(line.indexOf(' ') + 1);
 
-   		if (currentThread.getStatus() == DBGPStatus.BREAK)
+   		if (currentThread.getStatus() == DBGPStatus.BREAK ||
+   			currentThread.getStatus() == DBGPStatus.STOPPING)
    		{
    	   		currentThread.eval(exp);
    		}
