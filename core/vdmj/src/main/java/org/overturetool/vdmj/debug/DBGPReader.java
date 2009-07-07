@@ -609,11 +609,33 @@ public class DBGPReader
     	}
 	}
 
-	public void complete(DBGPReason reason)
+	public void complete(DBGPReason reason, Context ctxt)
 	{
 		try
 		{
-			statusResponse(DBGPStatus.STOPPED, reason);
+			if (reason == DBGPReason.EXCEPTION && ctxt != null)
+			{
+				try
+				{
+					breakContext = ctxt;
+					breakpoint = new Breakpoint(ctxt.location);;
+					statusResponse(DBGPStatus.STOPPING, reason);
+
+					run();
+
+					breakContext = null;
+					breakpoint = null;
+					statusResponse(DBGPStatus.STOPPED, reason);
+				}
+				catch (Exception e)
+				{
+					errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
+				}				
+			}
+			else
+			{
+				statusResponse(DBGPStatus.STOPPED, reason);
+			}
 		}
 		catch (IOException e)
 		{

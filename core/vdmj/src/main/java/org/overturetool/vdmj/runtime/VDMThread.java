@@ -128,13 +128,17 @@ public class VDMThread extends Thread
 			reader = ctxt.threadState.dbgp.newThread();
 			ctxt.setThreadState(reader, operation.getCPU());
 			operation.eval(new ValueList(), ctxt);
-			reader.complete(DBGPReason.OK);
+			reader.complete(DBGPReason.OK, null);
+		}
+		catch (ContextException e)
+		{
+			reader.complete(DBGPReason.EXCEPTION, e.ctxt);
 		}
 		catch (Exception e)
 		{
 			if (reader != null)
 			{
-				reader.complete(DBGPReason.EXCEPTION);
+				reader.complete(DBGPReason.EXCEPTION, null);
 			}
 		}
 		finally
