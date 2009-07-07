@@ -69,9 +69,12 @@ public class ProcessListener extends Thread
 			pargs.add("-cp");
 			pargs.add(Config.vdmj_jar);
 
-			for (String a: Config.vdmj_jvm.split("\\s+"))
+			if (!Config.vdmj_jvm.isEmpty())
 			{
-				pargs.add(a);
+    			for (String a: Config.vdmj_jvm.split("\\s+"))
+    			{
+    				pargs.add(a);
+    			}
 			}
 
 			pargs.add("org.overturetool.vdmj.debug.DBGPReader");
