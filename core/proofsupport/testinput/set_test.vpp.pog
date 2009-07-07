@@ -1,0 +1,5 @@
+Integrity property #1 :
+In function Set doSomething, file: testinput/set.vpp l. 24 c. 28: function application from doNothing
+------------------------------------------------------------------------------------------------------
+(forall s : Set &
+Set`pre_doNothing(s))

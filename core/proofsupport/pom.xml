@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>
-    <artifactId>core</artifactId>
-    <groupId>org.overturetool</groupId>
-    <version>1.0.0</version>
-  </parent>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.overturetool</groupId>
-  <artifactId>proofsupport</artifactId>
-  <name>The Automatic Proof Support</name>
-  <version>1.0.0</version>
-  <url>http://www.overturetool.org</url>
-  <dependencies>
-    <dependency>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>core</artifactId>
 		<groupId>org.overturetool</groupId>
-	    <artifactId>potrans</artifactId>
-	    <version>1.0.0</version>
-	 </dependency>
-  </dependencies>
+		<version>1.0.0</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.overturetool</groupId>
+	<artifactId>proofsupport</artifactId>
+	<name>The Automatic Proof Support</name>
+	<version>1.0.0</version>
+	<url>http://www.overturetool.org</url>
+	<dependencies>
+		<dependency>
+			<groupId>org.overturetool</groupId>
+			<artifactId>potrans</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overturetool</groupId>
+			<artifactId>stdlib</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overturetool</groupId>
+			<artifactId>parser</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+	</dependencies>
 </project>

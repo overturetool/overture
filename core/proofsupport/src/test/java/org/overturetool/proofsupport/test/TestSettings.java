@@ -1,10 +1,12 @@
-package org.overturetool.potrans.test;
+package org.overturetool.proofsupport.test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.InvalidPreferencesFormatException;
+
+import org.overturetool.proofsupport.AbstractSettings;
 
 public class TestSettings extends AbstractSettings {
 
@@ -19,7 +21,7 @@ public class TestSettings extends AbstractSettings {
 					"-Dpotrans.hol.dir=\"<value>\"\n");
 	}
 	
-	protected static final String SETTINGS_FILE = "src/test/java/org/overturetool/potrans/test/Settings.xml";
+	protected static final String SETTINGS_FILE = "src/test/java/org/overturetool/proofsupport/test/Settings.xml";
 	protected static final String OS_NAME = System.getProperty("os.name");
 
 	protected static final String CAT_PROGRAM;

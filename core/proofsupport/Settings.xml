@@ -7,13 +7,10 @@
 			<map />
 			<node name="overturetool">
 				<map />
-				<node name="potrans">
-					<map/>
-					<node name="test">
-						<map>
-							<entry key="setModel" value="testinput/set.vpp" />
-						</map>
-					</node>
+				<node name="proofsupport">
+					<map>
+						<entry key="vdmHolTactics" value="src/resources/hol/VdmHolTactics.txt" />
+					</map>
 				</node>
 			</node>
 		</node>
