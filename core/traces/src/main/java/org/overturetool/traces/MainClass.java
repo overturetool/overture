@@ -129,13 +129,10 @@ public class MainClass
 
 			ti.processTraces(specFiles, cls.get(0), txw);
 			txw.Stop();
-		}catch(ContextException e)
-		{
-		System.out.println(e.toString());
 		}catch(ClassNotFoundException e)
 		{
 			
-		}
+		}catch(ContextException e){}
 		catch (Exception e)
 		{
 			// TODO Auto-generated catch block

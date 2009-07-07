@@ -92,8 +92,12 @@ public class VdmjTracesHelper implements ITracesHelper
 		org.overturetool.vdmj.Settings.prechecks = true;
 		org.overturetool.vdmj.Settings.postchecks = true;
 		org.overturetool.vdmj.Settings.dynamictypechecks = true;
+		try{
 		ci.init(null);
-
+		}catch(Exception ex)
+		{
+			ConsolePrint(ex.getMessage());
+		}
 	//	traceResults = new HashMap<NamedTraceDefinition, List<TraceTestResult>>();
 	}
 

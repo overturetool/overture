@@ -80,6 +80,7 @@ import org.overturetool.eclipse.plugins.traces.views.treeView.TraceTreeNode;
 import org.overturetool.traces.VdmjTracesHelper;
 import org.overturetool.traces.utility.ITracesHelper;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
+import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.traces.Verdict;
 import org.xml.sax.SAXException;
 
@@ -601,6 +602,30 @@ public class TracesTreeView extends ViewPart
 									catch(CancellationException e)
 									{
 										ConsolePrint(e.getMessage());
+									}
+									catch(ContextException e)
+									{
+										ConsolePrint(e.getMessage());
+										
+										IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+										IProject[] iprojects = iworkspaceRoot.getProjects();
+										for (IProject project2 : iprojects)
+										{
+											if (project2.getName().equals(
+													finalProjectName))
+											{
+												addMarker(
+														GetFile(
+																project2,
+																e.location.file),
+														e.getMessage(),
+														e.location.startLine,
+														IMarker.SEVERITY_ERROR);
+												ConsolePrint(e.getMessage());
+												
+												break;
+											}
+										}
 									}
 									catch (Exception e)
 									{

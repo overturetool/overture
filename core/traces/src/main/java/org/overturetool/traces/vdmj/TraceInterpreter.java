@@ -7,6 +7,7 @@ import java.io.Writer;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.omg.CORBA.RepositoryIdHelper;
 import org.overturetool.traces.utility.TraceXmlWrapper;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
@@ -15,6 +16,7 @@ import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.syntax.ClassReader;
@@ -51,7 +53,7 @@ public class TraceInterpreter
 
 			ClassReader mr = new ClassReader(ltr);
 			parsErrors += mr.getErrorCount();
-			if(mr.getErrorCount()>0)
+			if (mr.getErrorCount() > 0)
 			{
 				Writer parseErrors = new StringWriter();
 				mr.printErrors(new PrintWriter(parseErrors));
@@ -91,10 +93,10 @@ public class TraceInterpreter
 			ci.init(null);
 
 			ClassDefinition classdef = ci.findClass(className);
-			
-			if(classdef==null)
+
+			if (classdef == null)
 			{
-				error("Class not found: " +className);
+				error("Class not found: " + className);
 				throw new ClassNotFoundException(className);
 			}
 
@@ -281,6 +283,10 @@ public class TraceInterpreter
 			}
 
 			completed();
+		} catch (ContextException e)
+		{
+			error(e.getMessage());
+			throw e;
 		} catch (Exception e)
 		{
 
@@ -364,7 +370,7 @@ public class TraceInterpreter
 	{
 		System.out.println(message);
 	}
-	
+
 	protected void parseError(String message)
 	{
 		System.out.println(message);
