@@ -65,6 +65,7 @@ import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.pog.ProofObligation;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Breakpoint;
+import org.overturetool.vdmj.runtime.ClassContext;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
@@ -1450,6 +1451,11 @@ public class DBGPReader
 				{
 					ObjectContext octxt = (ObjectContext)root;
 					vars.putAll(octxt.self.members);
+				}
+				else if (root instanceof ClassContext)
+				{
+					ClassContext cctxt = (ClassContext)root;
+					vars.putAll(cctxt);
 				}
 				else
 				{
