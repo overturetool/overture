@@ -183,7 +183,7 @@ public class RecordValue extends Value
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append("mk_" + type.name.name + "(");
+		sb.append("mk_" + type.name + "(");
 
 		Iterator<Field> fi = type.fields.iterator();
 

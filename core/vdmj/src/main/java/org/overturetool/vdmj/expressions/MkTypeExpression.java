@@ -96,6 +96,15 @@ public class MkTypeExpression extends Expression
 
 		recordType = (RecordType)rec;
 
+		if (typename.explicit)
+		{
+			// If the type name is explicit, the Type ought to have an explicit
+			// name. This only really affects trace expansion.
+
+			recordType =
+				new RecordType(recordType.name.getExplicit(true), recordType.fields);
+		}
+
 		if (recordType.fields.size() != args.size())
 		{
 			report(3128, "Record and constructor do not have same number of fields");
