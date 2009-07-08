@@ -162,6 +162,10 @@ public class ProcessCommandLine extends CommandLine
 				{
 					carryOn = processQuiet();
 				}
+	            else if (line.equals("ls") || line.equals("dir"))
+				{
+					carryOn = processLs();
+				}
 	            else if (line.startsWith("load"))
 	            {
 	            	println("Process still running - try 'unload'");
@@ -309,6 +313,7 @@ public class ProcessCommandLine extends CommandLine
     		println("  unload");
     		println("  reload");
     		println("  quiet");
+    		println("  ls | dir");
     		println("");
     		println("Debugging:");
     		println("  s[tep]");
@@ -345,7 +350,15 @@ public class ProcessCommandLine extends CommandLine
 
 	private boolean processInit() throws IOException
 	{
-		currentThread.xcmd_overture_init();
+   		if (currentThread.getStatus() == DBGPStatus.RUNNING)
+   		{
+   			println("Thread is running...");
+   		}
+   		else
+   		{
+   			currentThread.xcmd_overture_init();
+   		}
+
 		return true;
 	}
 
@@ -355,6 +368,10 @@ public class ProcessCommandLine extends CommandLine
 		{
 			println("Create is only available for VDM++");
 		}
+		else if (currentThread.getStatus() == DBGPStatus.RUNNING)
+   		{
+   			println("Thread is running...");
+   		}
 		else
 		{
     		Pattern p = Pattern.compile("^create (\\w+)\\s*?:=\\s*(.+)$");
@@ -378,7 +395,15 @@ public class ProcessCommandLine extends CommandLine
 
 	private boolean processFiles() throws IOException
 	{
-		currentThread.xcmd_overture_files();
+   		if (currentThread.getStatus() == DBGPStatus.RUNNING)
+   		{
+   			println("Thread is running...");
+   		}
+   		else
+   		{
+   			currentThread.xcmd_overture_files();
+   		}
+
 		return true;
 	}
 
@@ -388,6 +413,10 @@ public class ProcessCommandLine extends CommandLine
 		{
 			println("Current dialect has no classes - try 'modules'");
 		}
+		else if (currentThread.getStatus() == DBGPStatus.RUNNING)
+   		{
+   			println("Thread is running...");
+   		}
 		else
 		{
 			currentThread.xcmd_overture_classes();
@@ -402,7 +431,11 @@ public class ProcessCommandLine extends CommandLine
 		{
 			println("Current dialect has no modules - try 'classes'");
 		}
-		else
+		else if (currentThread.getStatus() == DBGPStatus.RUNNING)
+   		{
+   			println("Thread is running...");
+   		}
+   		else
 		{
 			currentThread.xcmd_overture_modules();
 		}
@@ -418,6 +451,10 @@ public class ProcessCommandLine extends CommandLine
 		{
 			println("Usage: default <default class/module name>");
 		}
+		else if (currentThread.getStatus() == DBGPStatus.RUNNING)
+   		{
+   			println("Thread is running...");
+   		}
 		else
 		{
 			currentThread.xcmd_overture_default(parts[1]);
@@ -428,7 +465,11 @@ public class ProcessCommandLine extends CommandLine
 
 	private boolean processPOG(String line) throws IOException
 	{
-		if (line.equals("pog"))
+   		if (currentThread.getStatus() == DBGPStatus.RUNNING)
+   		{
+   			println("Thread is running...");
+   		}
+   		else if (line.equals("pog"))
 		{
 			currentThread.xcmd_overture_pog("*");
 		}
@@ -489,7 +530,13 @@ public class ProcessCommandLine extends CommandLine
 
 	private boolean processCoverage(String line)
 	{
-		try
+   		if (currentThread.getStatus() == DBGPStatus.RUNNING)
+   		{
+   			println("Thread is running...");
+   			return true;
+   		}
+
+   		try
 		{
 			List<File> files = getFiles(line);
 
@@ -519,54 +566,112 @@ public class ProcessCommandLine extends CommandLine
 
 	private boolean processStep() throws IOException
 	{
- 		currentThread.step_into();
+   		if (currentThread.getStatus() != DBGPStatus.BREAK)
+   		{
+   			println("Thread is not at a breakpoint");
+   		}
+   		else
+   		{
+   			currentThread.step_into();
+   		}
+
 		return true;
 	}
 
 	private boolean processNext() throws IOException
 	{
- 		currentThread.step_over();
+   		if (currentThread.getStatus() != DBGPStatus.BREAK)
+   		{
+   			println("Thread is not at a breakpoint");
+   		}
+   		else
+   		{
+   			currentThread.step_over();
+   		}
+
 		return true;
 	}
 
 	private boolean processOut() throws IOException
 	{
- 		currentThread.step_out();
+   		if (currentThread.getStatus() != DBGPStatus.BREAK)
+   		{
+   			println("Thread is not at a breakpoint");
+   		}
+   		else
+   		{
+   			currentThread.step_out();
+   		}
+
 		return true;
 	}
 
 	private boolean processPrint(String line) throws IOException
 	{
    		String exp = line.substring(line.indexOf(' ') + 1);
+   		DBGPStatus status = currentThread.getStatus();
 
-   		if (currentThread.getStatus() == DBGPStatus.BREAK ||
-   			currentThread.getStatus() == DBGPStatus.STOPPING)
+   		if (status == DBGPStatus.RUNNING)
+   		{
+   			println("Thread is still running...");
+   		}
+   		else if (status == DBGPStatus.BREAK || status == DBGPStatus.STOPPING)
    		{
    	   		currentThread.eval(exp);
    		}
-   		else
-   		{
-   	   		currentThread.expr(exp);
-   		}
+   		else if (process.getConnections().length > 1)
+		{
+			println("Threads are still running...");
+			processThreads();
+		}
+		else
+		{
+			currentThread.expr(exp);
+		}
 
 		return true;
 	}
 
 	private boolean processStack() throws IOException
     {
-		// currentThread.stack_get();
-		currentThread.xcmd_overture_stack();
+   		if (currentThread.getStatus() != DBGPStatus.BREAK &&
+   			currentThread.getStatus() != DBGPStatus.STOPPING)
+   		{
+   			println("Thread is not at a breakpoint");
+   		}
+   		else
+   		{
+   			// currentThread.stack_get();
+   			currentThread.xcmd_overture_stack();
+   		}
+
 		return true;
     }
 
 	private boolean processSource() throws IOException
 	{
-		currentThread.xcmd_overture_source();
+   		if (currentThread.getStatus() != DBGPStatus.BREAK &&
+   			currentThread.getStatus() != DBGPStatus.STOPPING)
+   		{
+   			println("Thread is not at a breakpoint");
+   		}
+   		else
+   		{
+   			currentThread.xcmd_overture_source();
+   		}
+
 		return true;
 	}
 
 	private boolean processGet(String line) throws IOException
 	{
+   		if (currentThread.getStatus() != DBGPStatus.BREAK &&
+   			currentThread.getStatus() != DBGPStatus.STOPPING)
+   		{
+   			println("Thread is not at a breakpoint");
+   			return true;
+   		}
+
    		String[] parts = line.split("\\s+");
 
    		if (parts.length != 2 && parts.length != 3)
@@ -602,12 +707,27 @@ public class ProcessCommandLine extends CommandLine
 
 	private boolean processStop() throws IOException
 	{
-		currentThread.allstop();
+   		if (currentThread.getStatus() != DBGPStatus.BREAK &&
+   			currentThread.getStatus() != DBGPStatus.STOPPING)
+   		{
+   			println("Thread is not at a breakpoint");
+   		}
+   		else
+   		{
+   			currentThread.allstop();
+   		}
+
 		return true;
 	}
 
 	private boolean processBreak(String line)
 	{
+   		if (currentThread.getStatus() == DBGPStatus.RUNNING)
+   		{
+   			println("Thread is running...");
+   			return true;
+   		}
+
 		try
 		{
 			Pattern p = Pattern.compile("^break ([\\w./\\\\]+) (\\d+) ?(.*)?$");
@@ -648,6 +768,12 @@ public class ProcessCommandLine extends CommandLine
 
 	private boolean processTrace(String line)
 	{
+   		if (currentThread.getStatus() == DBGPStatus.RUNNING)
+   		{
+   			println("Thread is running...");
+   			return true;
+   		}
+
 		try
 		{
 			Pattern p = Pattern.compile("^trace ([\\w./\\\\]+) (\\d+) ?(.*)?$");
@@ -688,22 +814,38 @@ public class ProcessCommandLine extends CommandLine
 
 	private boolean processList() throws IOException
 	{
-		// currentThread.breakpoint_list();
-		currentThread.xcmd_overture_list();
+   		if (currentThread.getStatus() == DBGPStatus.RUNNING)
+   		{
+   			println("Thread is running...");
+   		}
+   		else
+   		{
+   			// currentThread.breakpoint_list();
+   			currentThread.xcmd_overture_list();
+   		}
+
 		return true;
 	}
 
 	private boolean processRemove(String line) throws IOException
     {
-		try
-		{
-			int n = Integer.parseInt(line.substring(7));
-			currentThread.breakpoint_remove(n);
-		}
-		catch (NumberFormatException e)
-		{
-			println("Usage: remove <#id>");
-		}
+   		if (currentThread.getStatus() == DBGPStatus.RUNNING)
+   		{
+   			println("Thread is running...");
+   		}
+   		else
+   		{
+    		try
+    		{
+    			int n = Integer.parseInt(line.substring(7));
+    			currentThread.breakpoint_remove(n);
+    		}
+    		catch (NumberFormatException e)
+    		{
+    			println("Usage: remove <#id>");
+    		}
+   		}
+
 		return true;
     }
 }

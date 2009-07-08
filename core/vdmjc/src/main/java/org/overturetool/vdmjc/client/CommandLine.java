@@ -208,6 +208,10 @@ public class CommandLine
 				{
 					carryOn = processQuiet();
 				}
+	            else if (line.equals("ls") || line.equals("dir"))
+				{
+					carryOn = processLs();
+				}
 	            else if (line.startsWith("load"))
 	            {
 	            	carryOn = processLoad(line);
@@ -230,6 +234,26 @@ public class CommandLine
     	println("Bye");
 	}
 
+	protected boolean processLs()
+	{
+		try
+		{
+			File dir = new File(".");
+			println("Directory: " + dir.getCanonicalPath());
+
+			for (File f: dir.listFiles())
+			{
+				println(f.getName());
+			}
+		}
+		catch (IOException e)
+		{
+			println("IO error: " + e.getMessage());
+		}
+
+		return true;
+	}
+
 	protected boolean processHelp(String line)
 	{
 		if (line.equals("help"))
@@ -240,6 +264,7 @@ public class CommandLine
     		println("  dbgp");
     		println("  quiet");
     		println("  help");
+    		println("  ls | dir");
     		println("  q[uit]");
      		println("");
     		println("Use 'help <command>' for more help");
