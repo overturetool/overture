@@ -9,7 +9,7 @@
 				<map />
 				<node name="proofsupport">
 					<map>
-						<entry key="vdmHolTactics" value="src/resources/hol/VdmHolTactics.txt" />
+						<entry key="vdmHolTactics" value="src/main/resources/hol/VdmHolTactics.txt" />
 					</map>
 				</node>
 			</node>

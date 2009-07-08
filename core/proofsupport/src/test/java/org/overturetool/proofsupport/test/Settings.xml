@@ -11,17 +11,17 @@
 					<map/>
 					<node name="test">
 						<map>
-							<entry key="setModel" value="testinput/set.vpp" />
-							<entry key="stackModel" value="testinput/stack.vpp" />
-							<entry key="testModel1" value="testinput/sorter.vpp" />
-							<entry key="testModel2" value="testinput/dosort.vpp" />
-							<entry key="testModel3" value="testinput/explsort.vpp" />
-							<entry key="testTheory1" value="testinput/set.hol" />
-							<entry key="testPogFileNoNewLine" value="testinput/dosort_test_no_new_line.vpp.pog" />
-							<entry key="testPogFileWithNewLine" value="testinput/dosort_test_with_new_line.vpp.pog" />
-							<entry key="stackModelPogFile" value="testinput/stack_test.vpp.pog" />
-							<entry key="vdmHolTactics" value="testinput/vdmHolTactics.txt" />
-							<entry key="testDataDir" value="testinput" />
+							<entry key="setModel" value="src/test/resources/testinput/set.vpp" />
+							<entry key="stackModel" value="src/test/resources/testinput/stack.vpp" />
+							<entry key="testModel1" value="src/test/resources/testinput/sorter.vpp" />
+							<entry key="testModel2" value="src/test/resources/testinput/dosort.vpp" />
+							<entry key="testModel3" value="src/test/resources/testinput/explsort.vpp" />
+							<entry key="testTheory1" value="src/test/resources/testinput/set.hol" />
+							<entry key="testPogFileNoNewLine" value="src/test/resources/testinput/dosort_test_no_new_line.vpp.pog" />
+							<entry key="testPogFileWithNewLine" value="src/test/resources/testinput/dosort_test_with_new_line.vpp.pog" />
+							<entry key="stackModelPogFile" value="src/test/resources/testinput/stack_test.vpp.pog" />
+							<entry key="vdmHolTactics" value="src/test/resources/testinput/vdmHolTactics.txt" />
+							<entry key="testDataDir" value="src/test/resources/testinput" />
 						</map>
 					</node>
 				</node>

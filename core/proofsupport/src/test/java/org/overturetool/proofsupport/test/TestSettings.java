@@ -16,9 +16,9 @@ public class TestSettings extends AbstractSettings {
 	static {
 		if(VPPDE_BIN == null || MOSML_DIR == null || HOL_DIR == null)
 			throw new IllegalArgumentException("In order to execute the unit tests you need to supply the following VM arguments:\n" +
-					"-Dpotrans.vppde.bin=\"<value>\"\n" +
-					"-Dpotrans.mosml.dir=\"<value>\"\n" +
-					"-Dpotrans.hol.dir=\"<value>\"\n");
+					"-Dproofsupport.vppde.bin=\"<value>\"\n" +
+					"-Dproofsupport.mosml.dir=\"<value>\"\n" +
+					"-Dproofsupport.hol.dir=\"<value>\"\n");
 	}
 	
 	protected static final String SETTINGS_FILE = "src/test/java/org/overturetool/proofsupport/test/Settings.xml";
