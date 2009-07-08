@@ -56,6 +56,8 @@ public class ConnectionThread extends Thread
 	private DBGPStatus status;
 	private boolean connected;
 	private static boolean trace = false;
+	private static boolean quiet = false;
+	private static ConnectionThread focus = null;
 
 	public ConnectionThread(ThreadGroup group, Socket conn, boolean principal)
 		throws IOException
@@ -94,6 +96,17 @@ public class ConnectionThread extends Thread
 		return trace;
 	}
 
+	public static synchronized boolean setQuiet()
+	{
+		quiet = !quiet;
+		return quiet;
+	}
+
+	public static synchronized void setFocus(ConnectionThread f)
+	{
+		focus = f;
+	}
+
 	@Override
 	public void run()
 	{
@@ -118,7 +131,7 @@ public class ConnectionThread extends Thread
 
 		status = DBGPStatus.STOPPED;
 
-		if (!principal)
+		if (!principal && !quiet)
 		{
 			CommandLine.message("Thread stopped: " + this);
 		}
@@ -209,12 +222,7 @@ public class ConnectionThread extends Thread
 			}
 			else
 			{
-				String msg = processResponse(tagnode);
-
-				if (msg != null)
-				{
-					CommandLine.message(msg);
-				}
+				processResponse(tagnode);
 			}
 		}
 		catch (Exception e)
@@ -235,11 +243,14 @@ public class ConnectionThread extends Thread
 		}
 		else
 		{
-			CommandLine.message("New thread: " + this);
+			if (!quiet)
+			{
+				CommandLine.message("New thread: " + this);
+			}
 		}
 	}
 
-	private String processResponse(XMLTagNode msg)
+	private void processResponse(XMLTagNode msg)
 	{
 		try
     	{
@@ -260,12 +271,13 @@ public class ConnectionThread extends Thread
 						{
 							xcmd_overture_currentline();
 						}
-						
-						return "";	// Just update prompt
+
+						if (this == focus)
+						{
+							CommandLine.message("");	// Just update prompt
+						}
 					}
 				}
-
-				return null;
 			}
 			else if (command != null && command.equals("xcmd_overture_cmd"))
     		{
@@ -278,12 +290,14 @@ public class ConnectionThread extends Thread
 					int code = Utils.parseInt(err.getAttr("code"));
 					XMLOpenTagNode m = (XMLOpenTagNode)err.getChild("message");
 					DBGPErrorCode dbgp = DBGPErrorCode.lookup(code);
-					return("[" + dbgp.value + "] " + dbgp + ": " + m.text);
+					CommandLine.message("[" + dbgp.value + "] " + dbgp + ": " + m.text);
 				}
-
-				// All successful xcmds are CDATA:
-    			XMLDataNode data = (XMLDataNode)otn.children.get(0);
-    			return data.cdata;
+				else
+				{
+					// All successful xcmds are CDATA:
+					XMLDataNode data = (XMLDataNode)otn.children.get(0);
+					CommandLine.message(data.cdata);
+				}
     		}
 			else if (msg.tag.equals("stream"))
     		{
@@ -291,7 +305,7 @@ public class ConnectionThread extends Thread
     			String stream = otn.getAttr("type");
     			XMLDataNode data = (XMLDataNode)otn.children.get(0);
     			String text = new String(Base64.decode(data.cdata));
-    			return stream + ": " + text;
+    			CommandLine.message(stream + ": " + text);
     		}
     		else if (msg.tag.equals("response"))
     		{
@@ -301,7 +315,7 @@ public class ConnectionThread extends Thread
 
     				if (otn.children.isEmpty())		// No content
     				{
-    					return null;
+    					return;
     				}
 
     				if (otn.children.size() == 1 &&
@@ -309,7 +323,8 @@ public class ConnectionThread extends Thread
     				{
     					// Just one CDATA node, so print the message:
     	    			XMLDataNode data = (XMLDataNode)otn.children.get(0);
-    	    			return "[" + this + "] " + data.cdata;
+    	    			CommandLine.message("[" + this + "] " + data.cdata);
+    	    			return;
     				}
 
     				XMLNode child = otn.getChild("error");
@@ -320,7 +335,8 @@ public class ConnectionThread extends Thread
     					int code = Utils.parseInt(err.getAttr("code"));
     					XMLOpenTagNode m = (XMLOpenTagNode)err.getChild("message");
     					DBGPErrorCode dbgp = DBGPErrorCode.lookup(code);
-    					return("[" + this + "] " + dbgp + ": " + m.text);
+    					CommandLine.message("[" + this + "] " + dbgp + ": " + m.text);
+    					return;
     				}
 
     				if (command.equals("breakpoint_list"))
@@ -339,7 +355,8 @@ public class ConnectionThread extends Thread
        						exp = "when " + bp.text;
        					}
 
-    					return("Breakpoint [" + bid + "] set at " + file.getName() + ":" + location + " " + exp);
+       					CommandLine.message("Breakpoint [" + bid + "] set at " + file.getName() + ":" + location + " " + exp);
+       					return;
     				}
 
        				child = otn.getChild("stack");
@@ -367,7 +384,8 @@ public class ConnectionThread extends Thread
            					sep = "\n";
     					}
 
-     					return sb.toString();
+     					CommandLine.message(sb.toString());
+     					return;
     				}
 
       				child = otn.getChild("property");
@@ -388,42 +406,44 @@ public class ConnectionThread extends Thread
             				sep = "\n";
     					}
 
-     					return sb.toString();
+     					CommandLine.message(sb.toString());
+     					return;
     				}
 
-   					return "Cannot display: " + msg;
+    				CommandLine.message("Cannot display: " + msg);
     			}
     			else
     			{
     				if (command.equals("breakpoint_set"))
     				{
-     					return "Breakpoint [" + msg.getAttr("id") + "] set";
+    					CommandLine.message("Breakpoint [" + msg.getAttr("id") + "] set");
      				}
     				else if (command.equals("breakpoint_remove"))
     				{
-    					return "Breakpoint removed";
+    					CommandLine.message("Breakpoint removed");
     				}
-    				if (command.equals("stdout"))
+    				else if (command.equals("stdout"))
     				{
-    					return "Standard output redirected to client";
+    					CommandLine.message("Standard output redirected to client");
     				}
-    				if (command.equals("stderr"))
+    				else if (command.equals("stderr"))
     				{
-    					return "Standard error redirected to client";
+    					CommandLine.message("Standard error redirected to client");
     				}
-
-    				return "Cannot display: " + msg;
+    				else
+    				{
+    					CommandLine.message("Cannot display: " + msg);
+    				}
     			}
     		}
     		else
     		{
-    			return "Cannot display: " + msg;
+    			CommandLine.message("Cannot display: " + msg);
     		}
     	}
     	catch (Exception e)
     	{
     		CommandLine.message("Cannot display: " + msg);
-    		return null;
     	}
 	}
 

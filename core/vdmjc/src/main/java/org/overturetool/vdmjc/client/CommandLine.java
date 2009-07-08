@@ -204,6 +204,10 @@ public class CommandLine
 				{
 					carryOn = processDBGP();
 				}
+	            else if (line.equals("quiet"))
+				{
+					carryOn = processQuiet();
+				}
 	            else if (line.startsWith("load"))
 	            {
 	            	carryOn = processLoad(line);
@@ -234,6 +238,7 @@ public class CommandLine
     		println("  load [<files>]");
     		println("  eval [<files>]");
     		println("  dbgp");
+    		println("  quiet");
     		println("  help");
     		println("  q[uit]");
      		println("");
@@ -251,6 +256,13 @@ public class CommandLine
 	{
 		println("DBGp trace is now " +
 			(ConnectionThread.setTrace() ? "ON" : "OFF"));
+		return true;
+	}
+
+	protected boolean processQuiet()
+	{
+		println("Quiet setting is now " +
+			(ConnectionThread.setQuiet() ? "ON" : "OFF"));
 		return true;
 	}
 

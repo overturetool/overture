@@ -63,6 +63,7 @@ public class ProcessCommandLine extends CommandLine
 		if (currentThread == null || !currentThread.isAlive())
 		{
 			currentThread = process.getPrincipal();
+			ConnectionThread.setFocus(currentThread);
 		}
 	}
 
@@ -105,6 +106,7 @@ public class ProcessCommandLine extends CommandLine
 				currentThread = process.getPrincipal();
 			}
 
+			ConnectionThread.setFocus(currentThread);
 			return !process.hasEnded();
 		}
 	}
@@ -155,6 +157,10 @@ public class ProcessCommandLine extends CommandLine
 	            else if (line.equals("dbgp"))
 				{
 	            	carryOn = processDBGP();
+				}
+	            else if (line.equals("quiet"))
+				{
+					carryOn = processQuiet();
 				}
 	            else if (line.startsWith("load"))
 	            {
@@ -302,6 +308,7 @@ public class ProcessCommandLine extends CommandLine
     		println("  t[hread] <id>");
     		println("  unload");
     		println("  reload");
+    		println("  quiet");
     		println("");
     		println("Debugging:");
     		println("  s[tep]");
@@ -453,6 +460,7 @@ public class ProcessCommandLine extends CommandLine
 			if (th != null)
 			{
 				currentThread = th;
+				ConnectionThread.setFocus(currentThread);
 			}
 			else
 			{
