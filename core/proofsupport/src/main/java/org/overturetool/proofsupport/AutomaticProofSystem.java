@@ -52,27 +52,22 @@ public class AutomaticProofSystem {
 	}
 
 	private String doTranslation(PreparationData prepData) throws AutomaicProofSystemException {
-		String holCode = "";
 		try {
-			holCode = translator.translateOmlToHol(prepData);
+			return translator.translateOmlToHol(prepData);
 		} catch (TranslatorException e) {
 			throw new AutomaicProofSystemException("[TRANSLATOR] " + e.getMessage(), e);
 		}
-		return holCode;
 	}
 
-	private String[] doBatchProof(String holCode) throws AutomaicProofSystemException {
+	public String[] doBatchProof(String holCode) throws AutomaicProofSystemException {
 		String[] result = new String[] {};
 		HolInterpreter hol = null;
 		try {
 			hol = new HolInterpreter(holParam);
 			hol.start();
 			
-			// load tactics
-			String tacticsCode = Utilities.readHolCodeFile(vdmTacticsFile);
-			hol.interpretModel(tacticsCode);
+			loadTactics(hol);
 
-			// proof
 			result = hol.interpretModel(holCode);
 		} catch (HolInterpreterException e) {
 			throw new AutomaicProofSystemException("[HOL] " + e.getMessage(), e);
@@ -83,6 +78,12 @@ public class AutomaticProofSystem {
 			finishUp(hol);
 		}
 		return result;
+	}
+
+	private void loadTactics(HolInterpreter hol) throws IOException,
+			HolInterpreterException {
+		String tacticsCode = Utilities.readHolCodeFile(vdmTacticsFile);
+		hol.interpretModel(tacticsCode);
 	}
 
 	private void finishUp(HolInterpreter hol) throws AutomaicProofSystemException {
