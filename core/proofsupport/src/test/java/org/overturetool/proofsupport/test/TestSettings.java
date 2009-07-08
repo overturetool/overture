@@ -10,9 +10,9 @@ import org.overturetool.proofsupport.AbstractSettings;
 
 public class TestSettings extends AbstractSettings {
 
-	protected static final String VPPDE_BIN = System.getProperty("potrans.vppde.bin");
-	protected static final String MOSML_DIR = System.getProperty("potrans.mosml.dir");
-	protected static final String HOL_DIR = System.getProperty("potrans.hol.dir");
+	protected static final String VPPDE_BIN = System.getProperty("proofsupport.vppde.bin");
+	protected static final String MOSML_DIR = System.getProperty("proofsupport.mosml.dir");
+	protected static final String HOL_DIR = System.getProperty("proofsupport.hol.dir");
 	static {
 		if(VPPDE_BIN == null || MOSML_DIR == null || HOL_DIR == null)
 			throw new IllegalArgumentException("In order to execute the unit tests you need to supply the following VM arguments:\n" +
