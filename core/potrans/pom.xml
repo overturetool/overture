@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.overturetool</groupId>
@@ -12,15 +13,32 @@
 	<version>1.0.0</version>
 	<url>http://www.overturetool.org</url>
 	<dependencies>
-	    <dependency>
-	        <groupId>org.overturetool</groupId>
-	        <artifactId>stdlib</artifactId>
-	        <version>1.0.0</version>
-	    </dependency>
-	    <dependency>
-	        <groupId>org.overturetool</groupId>
-	        <artifactId>parser</artifactId>
-	        <version>1.0.0</version>
-	    </dependency>
+		<dependency>
+			<groupId>org.overturetool</groupId>
+			<artifactId>stdlib</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overturetool</groupId>
+			<artifactId>ast</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.overturetool.tools</groupId>
+				<artifactId>vdmt</artifactId>
+				<configuration>
+					<importPackages>
+						<param>org.overturetool.ast.itf</param>
+					</importPackages>
+					<excludePackages />
+					<excludeClasses />
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>
