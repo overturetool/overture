@@ -23,9 +23,11 @@
 
 package org.overturetool.vdmj.syntax;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexNameList;
@@ -58,7 +60,10 @@ public class ClassReader extends SyntaxReader
 
     		if (lastToken().isNot(Token.CLASS) && lastToken().isNot(Token.SYSTEM))
     		{
-    			throwMessage(2005, "Expecting list of 'class' or 'system' definitions");
+    			throwMessage(2005,
+    				Settings.dialect == Dialect.VDM_RT ?
+    					"Expecting list of 'class' or 'system' definitions" :
+    					"Expecting list of 'class' definitions");
     		}
 
     		while (lastToken().is(Token.CLASS) || lastToken().is(Token.SYSTEM))
