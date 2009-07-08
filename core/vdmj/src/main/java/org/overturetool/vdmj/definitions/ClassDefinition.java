@@ -120,7 +120,6 @@ public class ClassDefinition extends Definition
 	 * @param className
 	 * @param supernames
 	 * @param definitions
-	 * @param system
 	 */
 
 	public ClassDefinition(LexNameToken className,
