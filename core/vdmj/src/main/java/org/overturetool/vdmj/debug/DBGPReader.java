@@ -939,14 +939,16 @@ public class DBGPReader
 
 		response(hdr, null);
 	}
-	
+
 	private void dyingThread(ContextException ex)
 	{
 		try
 		{
 			breakContext = ex.ctxt;
 			breakpoint = new Breakpoint(ex.ctxt.location);
-			statusResponse(DBGPStatus.STOPPING, DBGPReason.EXCEPTION);
+			// statusResponse(DBGPStatus.STOPPING, DBGPReason.EXCEPTION);
+			status = DBGPStatus.STOPPING;
+			statusReason = DBGPReason.EXCEPTION;
 			errorResponse(DBGPErrorCode.EVALUATION_ERROR, ex.getMessage());
 
 			run();
@@ -958,7 +960,7 @@ public class DBGPReader
 		catch (Exception e)
 		{
 			errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
-		}				
+		}
 	}
 
 	private boolean processRun(DBGPCommand c) throws DBGPException
@@ -983,7 +985,7 @@ public class DBGPReader
 
 		try
 		{
-			statusResponse(DBGPStatus.RUNNING, DBGPReason.OK);
+			// statusResponse(DBGPStatus.RUNNING, DBGPReason.OK);
 			interpreter.init(this);
 			theAnswer = interpreter.execute(expression, this);
 			stdout(theAnswer.toString());
@@ -1052,7 +1054,7 @@ public class DBGPReader
 		try
 		{
 			String exp = c.data;	// Already base64 decoded by the parser
-			statusResponse(DBGPStatus.RUNNING, DBGPReason.OK);
+			// statusResponse(DBGPStatus.RUNNING, DBGPReason.OK);
 			theAnswer = interpreter.execute(exp, this);
 			StringBuilder property = propertyResponse(
 				exp, exp, interpreter.getDefaultName(), theAnswer.toString());
@@ -1304,7 +1306,7 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, c.toString());
 		}
 
-		// ???
+		throw new DBGPException(DBGPErrorCode.UNIMPLEMENTED, c.toString());
 	}
 
 	private void breakpointRemove(DBGPCommand c) throws DBGPException, IOException

@@ -90,6 +90,11 @@ public class ConnectionThread extends Thread
 		return status;
 	}
 
+	public synchronized void setStatus(DBGPStatus s)
+	{
+		status = s;
+	}
+
 	public static synchronized boolean setTrace()
 	{
 		trace = !trace;
@@ -129,7 +134,7 @@ public class ConnectionThread extends Thread
         	die();
         }
 
-		status = DBGPStatus.STOPPED;
+		setStatus(DBGPStatus.STOPPED);
 
 		if (!principal && !quiet)
 		{
@@ -150,7 +155,7 @@ public class ConnectionThread extends Thread
 		}
 	}
 
-	private void write(String cmd) throws IOException
+	private synchronized void write(String cmd) throws IOException
 	{
 		if (trace) System.err.println("[" + id + "] " + cmd);	// diags!
 
@@ -265,7 +270,7 @@ public class ConnectionThread extends Thread
 				{
 					if (status != news)
 					{
-						status = news;
+						setStatus(news);
 
 						if (status == DBGPStatus.BREAK || status == DBGPStatus.STOPPING)
 						{
@@ -335,6 +340,7 @@ public class ConnectionThread extends Thread
     					int code = Utils.parseInt(err.getAttr("code"));
     					XMLOpenTagNode m = (XMLOpenTagNode)err.getChild("message");
     					DBGPErrorCode dbgp = DBGPErrorCode.lookup(code);
+    					setStatus(DBGPStatus.STOPPING);
     					CommandLine.message("[" + this + "] " + dbgp + ": " + m.text);
     					return;
     				}

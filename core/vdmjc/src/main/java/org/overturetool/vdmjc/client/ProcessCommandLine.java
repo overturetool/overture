@@ -560,6 +560,7 @@ public class ProcessCommandLine extends CommandLine
 
 	private boolean processContinue() throws IOException
 	{
+		currentThread.setStatus(DBGPStatus.RUNNING);
  		currentThread.runme();
 		return true;
 	}
@@ -572,6 +573,7 @@ public class ProcessCommandLine extends CommandLine
    		}
    		else
    		{
+   			currentThread.setStatus(DBGPStatus.RUNNING);
    			currentThread.step_into();
    		}
 
@@ -586,6 +588,7 @@ public class ProcessCommandLine extends CommandLine
    		}
    		else
    		{
+   			currentThread.setStatus(DBGPStatus.RUNNING);
    			currentThread.step_over();
    		}
 
@@ -600,6 +603,7 @@ public class ProcessCommandLine extends CommandLine
    		}
    		else
    		{
+   			currentThread.setStatus(DBGPStatus.RUNNING);
    			currentThread.step_out();
    		}
 
@@ -626,6 +630,7 @@ public class ProcessCommandLine extends CommandLine
 		}
 		else
 		{
+			currentThread.setStatus(DBGPStatus.RUNNING);
 			currentThread.expr(exp);
 		}
 
