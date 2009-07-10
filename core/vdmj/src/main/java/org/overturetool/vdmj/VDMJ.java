@@ -289,6 +289,11 @@ abstract public class VDMJ
 
 	abstract protected ExitStatus interpret(List<File> filenames);
 
+	public void setWarnings(boolean w)
+	{
+		warnings = w;
+	}
+
 	protected static void info(String m)
 	{
 		if (!quiet)

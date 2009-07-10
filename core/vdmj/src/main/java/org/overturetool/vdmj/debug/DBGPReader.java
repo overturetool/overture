@@ -160,6 +160,7 @@ public class DBGPReader
 
 		List<String> largs = Arrays.asList(args);
 		VDMJ controller = null;
+		boolean warnings = true;
 
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
 		{
@@ -225,6 +226,10 @@ public class DBGPReader
     				usage("-e option requires an expression");
     			}
     		}
+    		else if (arg.equals("-w"))
+    		{
+    			warnings = false;
+    		}
     		else if (arg.startsWith("-"))
     		{
     			usage("Unknown option " + arg);
@@ -248,6 +253,9 @@ public class DBGPReader
 		{
 			usage("Missing mandatory arguments");
 		}
+
+		controller.setWarnings(warnings);
+
 		****************/
 
 		if (controller.parse(files) == ExitStatus.EXIT_OK)
