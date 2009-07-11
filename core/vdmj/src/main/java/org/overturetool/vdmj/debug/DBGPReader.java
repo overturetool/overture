@@ -598,7 +598,7 @@ public class DBGPReader
 
 			breakContext = null;
 			breakpoint = null;
-			statusResponse(DBGPStatus.RUNNING, DBGPReason.OK);
+//			statusResponse(DBGPStatus.RUNNING, DBGPReason.OK);
 		}
 		catch (Exception e)
 		{
