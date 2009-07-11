@@ -39,6 +39,7 @@ public class VdmjTracesHelper implements ITracesHelper
 	ClassList classes;
 	ClassInterpreter ci;
 	String projectName;
+	final String TRACE_STORE_DIR_NAME=".traces";
 
 	HashMap<String, TracesXmlStoreReader> classTraceReaders = new HashMap<String, TracesXmlStoreReader>();
 	File projectDir;
@@ -48,7 +49,7 @@ public class VdmjTracesHelper implements ITracesHelper
 	{
 
 		this.projectDir = new File(projectDir.getAbsolutePath()
-				+ File.separatorChar + "Traces");
+				+ File.separatorChar + TRACE_STORE_DIR_NAME);
 		if (!this.projectDir.exists())
 			this.projectDir.mkdirs();
 		classes = new ClassList();
