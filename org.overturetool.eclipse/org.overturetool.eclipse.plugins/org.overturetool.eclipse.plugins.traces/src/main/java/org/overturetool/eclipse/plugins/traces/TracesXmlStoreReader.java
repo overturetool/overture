@@ -183,14 +183,14 @@ public class TracesXmlStoreReader extends DefaultHandler
 			String cName = atts.getValue(TraceXmlWrapper.NAME_TAG);
 			if (cName != null && cName.equals(className))
 				inClass = true;
-		} else if (initialParse && inClass
+		} else if (inClass
 				&& name.equals(TraceXmlWrapper.TRACE_TAG))
 		{
 			String tName = atts.getValue(TraceXmlWrapper.NAME_TAG);
 
 			inTrace = true;
 			currentTraceName = tName;
-
+if(initialParse )
 			traceCount.put(
 					atts.getValue(TraceXmlWrapper.NAME_TAG),
 					Integer.parseInt(atts.getValue(TraceXmlWrapper.NUMBER_OF_TESTS_TAG)));
@@ -202,7 +202,7 @@ public class TracesXmlStoreReader extends DefaultHandler
 				inTrace = true;
 		} else if (inClass
 				&& this.traceTestParse
-				&& (name.equals(TraceXmlWrapper.TEST_CASE_TAG) || name.equals(TraceXmlWrapper.RESULT_TAG)))
+				&& (name.equals(TraceXmlWrapper.TEST_CASE_TAG) || name.equals(TraceXmlWrapper.RESULT_TAG)) && traceName.equals(currentTraceName))
 		{
 			String numberValue = atts.getValue(TraceXmlWrapper.NUMBER_TAG);
 			if (numberValue != null)
