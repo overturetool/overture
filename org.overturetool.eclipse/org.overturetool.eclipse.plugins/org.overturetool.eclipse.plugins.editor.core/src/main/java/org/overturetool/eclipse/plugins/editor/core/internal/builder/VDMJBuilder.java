@@ -78,7 +78,7 @@ public class VDMJBuilder extends Builder {
 			}
 			else
 			{
-				System.out.println("numbers of errors: " + eclipseType.getParseErrors().size() );
+				System.out.println("numbers of parse errors: " + eclipseType.getParseErrors().size() );
 				for (VDMError error : eclipseType.getParseErrors()) {
 					this.addMarker(
 							error.location.file.getAbsolutePath(),

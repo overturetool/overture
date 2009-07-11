@@ -25,12 +25,7 @@ public class TraceTestGroup extends TraceTestTreeNode
 
 	private List<ITreeNode> children;
 
-	// TraceTreeNode parent;
-
-	// public ITreeNode getParent()
-	// {
-	// return parent;
-	// }
+	
 
 	@Override
 	public String toString()
@@ -170,34 +165,25 @@ public class TraceTestGroup extends TraceTestTreeNode
 		// }
 
 		Long size = stopNumber - startNumber;
+		
+		GroupSizeCalculator gs = new GroupSizeCalculator(size);
 
-		if (size <= TraceTestGroup.GROUP_SIZE)
+		if (!gs.hasGroups())
 		{
 			LoadTestNodes();
 		} else
 		{
-			Double numberOfGroups =Math.ceil( new Double(size)
-					/ TraceTestGroup.GROUP_SIZE);
-			// Double t = TraceTestGroup.NumberOfLevels(new Long(size),
-			// TraceTestGroup.GROUP_SIZE);
-
-			if (numberOfGroups >= TraceTestGroup.GROUP_SIZE)
-				numberOfGroups = TraceTestGroup.GROUP_SIZE.doubleValue();
-
-			Double testCountInGroup = (size.doubleValue())
-					/ TraceTestGroup.GROUP_SIZE;
-
-			if (testCountInGroup.longValue() == 1)
-			{
-				testCountInGroup = TraceTestGroup.GROUP_SIZE.doubleValue();
-			}
+//			if (testCountInGroup.longValue() == 1)
+//			{
+//				testCountInGroup = TraceTestGroup.GROUP_SIZE.doubleValue();
+//			}
 
 			Long currentCount = startNumber - 1;
-			for (int i = 0; i < numberOfGroups - 1; i++)
+			for (int i = 0; i < gs.getNumberOfGroups()- 1; i++)
 			{
 				TraceTestGroup group = new TraceTestGroup(currentCount + 1,
-						currentCount + testCountInGroup.longValue());
-				currentCount += testCountInGroup;
+						currentCount + gs.getGroupSize());
+				currentCount += gs.getGroupSize();
 				this.addChild(group);
 			}
 

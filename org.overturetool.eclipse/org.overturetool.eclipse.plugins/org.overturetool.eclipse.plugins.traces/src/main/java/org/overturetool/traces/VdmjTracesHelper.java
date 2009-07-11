@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -18,6 +17,7 @@ import org.eclipse.ui.console.MessageConsoleStream;
 import org.overturetool.eclipse.plugins.traces.TracesXmlStoreReader;
 import org.overturetool.eclipse.plugins.traces.TracesXmlStoreReader.TraceStatusXml;
 import org.overturetool.traces.utility.ITracesHelper;
+import org.overturetool.traces.utility.TraceHelperNotInitializedException;
 import org.overturetool.traces.utility.TraceTestResult;
 import org.overturetool.traces.utility.TraceTestStatus;
 import org.overturetool.traces.utility.TraceXmlWrapper;
@@ -28,36 +28,25 @@ import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ObjectContext;
-import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ClassReader;
-import org.overturetool.vdmj.traces.CallSequence;
-import org.overturetool.vdmj.traces.TestSequence;
-import org.overturetool.vdmj.traces.Verdict;
 import org.overturetool.vdmj.typechecker.ClassTypeChecker;
-import org.overturetool.vdmj.typechecker.Environment;
-import org.overturetool.vdmj.typechecker.FlatEnvironment;
-import org.overturetool.vdmj.typechecker.PrivateClassEnvironment;
 import org.overturetool.vdmj.typechecker.TypeChecker;
-import org.overturetool.vdmj.values.ObjectValue;
-import org.overturetool.vdmj.values.TupleValue;
 import org.xml.sax.SAXException;
 
 public class VdmjTracesHelper implements ITracesHelper
 {
-
+	boolean initialized = false;
 	ClassList classes;
 	ClassInterpreter ci;
-	//HashMap<NamedTraceDefinition, List<TraceTestResult>> traceResults = new HashMap<NamedTraceDefinition, List<TraceTestResult>>();
+	String projectName;
 
 	HashMap<String, TracesXmlStoreReader> classTraceReaders = new HashMap<String, TracesXmlStoreReader>();
 	File projectDir;
 
-	public VdmjTracesHelper(File projectDir, File[] specFiles, int max)
-			throws Exception
+	public VdmjTracesHelper(String projectName, File projectDir,
+			File[] specFiles, int max) throws Exception
 	{
+
 		this.projectDir = new File(projectDir.getAbsolutePath()
 				+ File.separatorChar + "Traces");
 		if (!this.projectDir.exists())
@@ -72,6 +61,8 @@ public class VdmjTracesHelper implements ITracesHelper
 
 			ClassReader mr = new ClassReader(ltr);
 			parsErrors += mr.getErrorCount();
+
+			mr.printErrors(new PrintWriter(System.out));
 			classes.addAll(mr.readClasses());
 		}
 
@@ -82,23 +73,30 @@ public class VdmjTracesHelper implements ITracesHelper
 			if (TypeChecker.getErrorCount() == 0)
 			{
 				ci = new ClassInterpreter(classes);
+				classes.setLoaded();
 
 			} else
 			{
 				TypeChecker.printErrors(new PrintWriter(System.out));
 			}
+		} else
+		{
+			ConsolePrint("Parse errors: " + parsErrors);
 		}
 
 		org.overturetool.vdmj.Settings.prechecks = true;
 		org.overturetool.vdmj.Settings.postchecks = true;
 		org.overturetool.vdmj.Settings.dynamictypechecks = true;
-		try{
-		ci.init(null);
-		}catch(Exception ex)
+		try
+		{
+			ci.init(null);
+			initialized = true;
+		} catch (Exception ex)
 		{
 			ConsolePrint(ex.getMessage());
 		}
-	//	traceResults = new HashMap<NamedTraceDefinition, List<TraceTestResult>>();
+		// traceResults = new HashMap<NamedTraceDefinition,
+		// List<TraceTestResult>>();
 	}
 
 	public List<String> GetClassNamesWithTraces() throws IOException
@@ -123,16 +121,20 @@ public class VdmjTracesHelper implements ITracesHelper
 	}
 
 	public File GetFile(String className)
+			throws TraceHelperNotInitializedException, ClassNotFoundException
 	{
-		// TODO Auto-generated method stub
+		CheckInitialization();
 		ClassDefinition classdef = ci.findClass(className);
+		if (classdef == null)
+			throw new ClassNotFoundException(className);
+
 		return classdef.location.file;
 	}
 
 	public TraceTestResult GetResult(String className, String trace, Integer num)
 			throws IOException, SAXException
 	{
-		
+
 		return classTraceReaders.get(className).GetTraceTestResults(
 				trace,
 				num,
@@ -153,37 +155,37 @@ public class VdmjTracesHelper implements ITracesHelper
 			}
 		}
 
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	public TraceTestStatus GetStatus(String className, String trace, Integer num)
 
 	{
-//		ClassDefinition classdef = ci.findClass(className);
-//
-//		for (Object string : classdef.definitions)
-//		{
-//			if (string instanceof NamedTraceDefinition)
-//			{
-//				NamedTraceDefinition mtd = (NamedTraceDefinition) string;
-//
-//				if (!mtd.name.name.equals(trace))
-//					continue;
-//				if (traceResults.containsKey(mtd))
-//					for (TraceTestStatus t : traceResults.get(mtd))
-//					{
-//						if (t.getNumber().equals(num))
-//							return t;
-//					}
-//
-//			}
-//		}
+		// ClassDefinition classdef = ci.findClass(className);
+		//
+		// for (Object string : classdef.definitions)
+		// {
+		// if (string instanceof NamedTraceDefinition)
+		// {
+		// NamedTraceDefinition mtd = (NamedTraceDefinition) string;
+		//
+		// if (!mtd.name.name.equals(trace))
+		// continue;
+		// if (traceResults.containsKey(mtd))
+		// for (TraceTestStatus t : traceResults.get(mtd))
+		// {
+		// if (t.getNumber().equals(num))
+		// return t;
+		// }
+		//
+		// }
+		// }
 		return null;
 	}
 
 	public void processClassTraces(String className, Object monitor)
-			throws Exception
+			throws ClassNotFoundException, TraceHelperNotInitializedException,
+			IOException, Exception
 	{
 		TraceInterpreter interpeter = null;
 		if (monitor instanceof IProgressMonitor)
@@ -200,62 +202,51 @@ public class VdmjTracesHelper implements ITracesHelper
 
 	}
 
-	private void SaveTraceTestResult(NamedTraceDefinition mtd,
-			TraceTestResult traceTestResult)
-	{
-//		if (traceResults.containsKey(mtd))
-//		{
-//			traceResults.get(mtd).add(traceTestResult);
-//		} else
-//		{
-//			List<TraceTestResult> tmp = new Vector<TraceTestResult>();
-//			tmp.add(traceTestResult);
-//			traceResults.put(mtd, tmp);
-//		}
-	}
-
-	private TraceTestResult ExstractResult(CallSequence callSequence,
-			List<Object> res, Integer number)
-	{
-		TraceTestResult traceResult = new TraceTestResult();
-		traceResult.setNumber(number);
-		
-		for (Statement callObjectStatement : callSequence)
-		{
-			traceResult.addArgument(callObjectStatement.toString());
-		}
-
-		for (Object object2 : res)
-		{
-			if (object2 instanceof Verdict)
-			{
-				
-					traceResult.setStatus((Verdict)object2);
-				
-			} else if (object2 instanceof TupleValue)
-			{
-				TupleValue v = (TupleValue) object2;
-				for (Object object : v.values)
-				{
-					traceResult.addResult(object.toString());
-				}
-
-			} else if (object2 instanceof String)
-				traceResult.addResult(object2.toString());
-
-		}
-
-		return traceResult;
-	}
+	// private TraceTestResult ExstractResult(CallSequence callSequence,
+	// List<Object> res, Integer number)
+	// {
+	// TraceTestResult traceResult = new TraceTestResult();
+	// traceResult.setNumber(number);
+	//
+	// for (Statement callObjectStatement : callSequence)
+	// {
+	// traceResult.addArgument(callObjectStatement.toString());
+	// }
+	//
+	// for (Object object2 : res)
+	// {
+	// if (object2 instanceof Verdict)
+	// {
+	//
+	// traceResult.setStatus((Verdict) object2);
+	//
+	// } else if (object2 instanceof TupleValue)
+	// {
+	// TupleValue v = (TupleValue) object2;
+	// for (Object object : v.values)
+	// {
+	// traceResult.addResult(object.toString());
+	// }
+	//
+	// } else if (object2 instanceof String)
+	// traceResult.addResult(object2.toString());
+	//
+	// }
+	//
+	// return traceResult;
+	// }
 
 	public List<NamedTraceDefinition> GetTraceDefinitions(String className)
-			throws IOException, SAXException
+			throws IOException, SAXException, ClassNotFoundException,
+			TraceHelperNotInitializedException
 
 	{
-
+		CheckInitialization();
 		List<NamedTraceDefinition> traces = new Vector<NamedTraceDefinition>();
 
 		ClassDefinition classdef = ci.findClass(className);
+		if (classdef == null)
+			throw new ClassNotFoundException(className);
 		for (Object string : classdef.definitions)
 		{
 			if (string instanceof NamedTraceDefinition)
@@ -294,7 +285,7 @@ public class VdmjTracesHelper implements ITracesHelper
 			throws IOException, SAXException
 
 	{
-	
+
 		List<TraceTestResult> testStatus = classTraceReaders.get(className).GetTraceTestResults(
 				trace,
 				1,
@@ -305,92 +296,93 @@ public class VdmjTracesHelper implements ITracesHelper
 	}
 
 	public void processSingleTrace(String className, String traceName,
-			Object monitor) throws Exception
+			Object monitor) throws ClassNotFoundException,
+			TraceHelperNotInitializedException
 
 	{
 
-//		List<TraceTestStatus> returnValue = new Vector<TraceTestStatus>();
-//
-//		ClassDefinition classdef = ci.findClass(className);
-//
-//		for (Object string : classdef.definitions)
-//		{
-//			if (string instanceof NamedTraceDefinition)
-//			{
-//				NamedTraceDefinition mtd = (NamedTraceDefinition) string;
-//
-//				if (!mtd.name.name.equals(traceName))
-//					continue;
-//
-//				ObjectValue object = null;
-//
-//				try
-//				{
-//					object = classdef.newInstance(null, null, ci.initialContext);
-//				} catch (ValueException e)
-//				{
-//					// list.add(e.getMessage());
-//					// list.add(Verdict.FAILED);
-//					// return list;
-//				}
-//
-//				Context ctxt = new ObjectContext(classdef.name.location,
-//						classdef.name.name + "()", ci.initialContext, object);
-//
-//				TestSequence tests = mtd.getTests(ctxt);
-//
-//				Environment env = new FlatEnvironment(
-//						classdef.getSelfDefinition(),
-//						new PrivateClassEnvironment(classdef,
-//								ci.getGlobalEnvironment()));
-//
-//				int n = 0;
-//
-//				for (CallSequence test : tests)
-//				{
-//
-//					if (test.getFilter() > 0)
-//					{
-//						ConsolePrint("Test " + n + " = " + test);
-//						ConsolePrint("Test " + n + " FILTERED by test "
-//								+ test.getFilter());
-//					} else
-//					{
-//						ci.init(null); // Initialize completely between every
-//						// run...
-//						List<Object> result = ci.runtrace(env, test);
-//
-//						if (result.get(result.size() - 1) == Verdict.FAILED)
-//						{
-//							String stem = test.toString(result.size() - 1);
-//							ListIterator<CallSequence> it = tests.listIterator(n);
-//
-//							while (it.hasNext())
-//							{
-//								CallSequence other = it.next();
-//
-//								if (other.toString().startsWith(stem))
-//								{
-//									other.setFilter(n);
-//								}
-//							}
-//						}
-//
-//						// Bodge until we figure out how to not have explicit op
-//						// names.
-//						TraceTestResult traceResult = ExstractResult(
-//								test,
-//								result,
-//								n);
-//
-//						SaveTraceTestResult(mtd, traceResult);
-//						returnValue.add(traceResult);
-//						n++;
-//					}
-//				}
-//				break;
-//			}
-//		}
+		// List<TraceTestStatus> returnValue = new Vector<TraceTestStatus>();
+		//
+		// ClassDefinition classdef = ci.findClass(className);
+		//
+		// for (Object string : classdef.definitions)
+		// {
+		// if (string instanceof NamedTraceDefinition)
+		// {
+		// NamedTraceDefinition mtd = (NamedTraceDefinition) string;
+		//
+		// if (!mtd.name.name.equals(traceName))
+		// continue;
+		//
+		// ObjectValue object = null;
+		//
+		// try
+		// {
+		// object = classdef.newInstance(null, null, ci.initialContext);
+		// } catch (ValueException e)
+		// {
+		// // list.add(e.getMessage());
+		// // list.add(Verdict.FAILED);
+		// // return list;
+		// }
+		//
+		// Context ctxt = new ObjectContext(classdef.name.location,
+		// classdef.name.name + "()", ci.initialContext, object);
+		//
+		// TestSequence tests = mtd.getTests(ctxt);
+		//
+		// Environment env = new FlatEnvironment(
+		// classdef.getSelfDefinition(),
+		// new PrivateClassEnvironment(classdef,
+		// ci.getGlobalEnvironment()));
+		//
+		// int n = 0;
+		//
+		// for (CallSequence test : tests)
+		// {
+		//
+		// if (test.getFilter() > 0)
+		// {
+		// ConsolePrint("Test " + n + " = " + test);
+		// ConsolePrint("Test " + n + " FILTERED by test "
+		// + test.getFilter());
+		// } else
+		// {
+		// ci.init(null); // Initialize completely between every
+		// // run...
+		// List<Object> result = ci.runtrace(env, test);
+		//
+		// if (result.get(result.size() - 1) == Verdict.FAILED)
+		// {
+		// String stem = test.toString(result.size() - 1);
+		// ListIterator<CallSequence> it = tests.listIterator(n);
+		//
+		// while (it.hasNext())
+		// {
+		// CallSequence other = it.next();
+		//
+		// if (other.toString().startsWith(stem))
+		// {
+		// other.setFilter(n);
+		// }
+		// }
+		// }
+		//
+		// // Bodge until we figure out how to not have explicit op
+		// // names.
+		// TraceTestResult traceResult = ExstractResult(
+		// test,
+		// result,
+		// n);
+		//
+		// SaveTraceTestResult(mtd, traceResult);
+		// returnValue.add(traceResult);
+		// n++;
+		// }
+		// }
+		// break;
+		// }
+		// }
 
 	}
 
@@ -430,13 +422,30 @@ public class VdmjTracesHelper implements ITracesHelper
 			Integer startNumber, Integer stopNumber) throws IOException,
 			SAXException
 	{
-		
+
 		List<TraceTestResult> list = classTraceReaders.get(className).GetTraceTestResults(
 				trace,
 				startNumber,
 				stopNumber);
 
 		return list;
+	}
+
+	public boolean Initialized()
+	{
+		return initialized;
+	}
+
+	private void CheckInitialization()
+			throws TraceHelperNotInitializedException
+	{
+		if (ci == null)
+			throw new TraceHelperNotInitializedException(projectName);
+	}
+
+	public String GetProjectName()
+	{
+		return projectName;
 	}
 
 }

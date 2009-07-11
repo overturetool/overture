@@ -7,7 +7,6 @@ import java.io.Writer;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.omg.CORBA.RepositoryIdHelper;
 import org.overturetool.traces.utility.TraceXmlWrapper;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
@@ -76,6 +75,7 @@ public class TraceInterpreter
 			TypeChecker tc = new ClassTypeChecker(classes);
 			typeCheckStarted();
 			tc.typeCheck();
+			classes.setLoaded(); //do not type check this classes again
 			if (TypeChecker.getErrorCount() == 0)
 			{
 				ci = new ClassInterpreter(classes);

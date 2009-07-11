@@ -14,8 +14,8 @@
 <module>vdmunit</module>
 <module>parser</module>
 <module>eclipse</module>
-<module>potrans</module>
-<module>proofsupport</module>
+<!--<module>potrans</module>
+<module>proofsupport</module>-->
 <module>umltrans</module>
 <module>vdmtools</module>
 <module>traces</module>

@@ -131,6 +131,56 @@ public class TraceTreeNode implements IAdaptable,ITreeNode
 		return testTotal;
 	}
 
+//	public void LoadTests() throws Exception
+//	{
+//		children.clear();
+//
+//		Long size = new Long(getTraceHelper().GetTraceTestCount(
+//				parent.getName(),
+//				getName()));
+//
+//		if (size <= TraceTestGroup.GROUP_SIZE)
+//		{
+//			List<TraceTestResult> traceStatus = getTraceHelper().GetTraceTests(
+//					parent.getName(),
+//					getName());
+//			for (TraceTestResult traceTestStatus : traceStatus)
+//			{
+//				this.addChild(new TraceTestTreeNode(traceTestStatus));
+//			}
+//		} else
+//		{
+//			Double numberOfGroups = Math.ceil(size.doubleValue()
+//					/ TraceTestGroup.GROUP_SIZE);
+//			// Double t = TraceTestGroup.NumberOfLevels(size,
+//			// TraceTestGroup.GROUP_SIZE);
+//
+//			if (numberOfGroups > TraceTestGroup.GROUP_SIZE)
+//				numberOfGroups = TraceTestGroup.GROUP_SIZE.doubleValue();
+//
+//			Long testCountInGroup = (size) / numberOfGroups.longValue();
+//			
+//			if(testCountInGroup<TraceTestGroup.GROUP_SIZE && size>=TraceTestGroup.GROUP_SIZE)
+//				testCountInGroup= TraceTestGroup.GROUP_SIZE; //top up all groups
+//			
+//			Long currentCount = new Long(0);
+//			for (int i = 0; i < numberOfGroups - 1 && currentCount<size; i++)
+//			{
+//				TraceTestGroup group = new TraceTestGroup(currentCount + 1,
+//						currentCount + testCountInGroup.longValue() + 1);
+//				currentCount += testCountInGroup;
+//				this.addChild(group);
+//			}
+//			if (!currentCount.equals( size))
+//			{
+//				TraceTestGroup group = new TraceTestGroup(currentCount + 1,
+//						size + 1);
+//				this.addChild(group);
+//
+//			}
+//		}
+//	}
+
 	public void LoadTests() throws Exception
 	{
 		children.clear();
@@ -138,8 +188,10 @@ public class TraceTreeNode implements IAdaptable,ITreeNode
 		Long size = new Long(getTraceHelper().GetTraceTestCount(
 				parent.getName(),
 				getName()));
+		
+		GroupSizeCalculator gs = new GroupSizeCalculator(size);
 
-		if (size <= TraceTestGroup.GROUP_SIZE)
+		if (!gs.hasGroups())
 		{
 			List<TraceTestResult> traceStatus = getTraceHelper().GetTraceTests(
 					parent.getName(),
@@ -150,21 +202,13 @@ public class TraceTreeNode implements IAdaptable,ITreeNode
 			}
 		} else
 		{
-			Double numberOfGroups = Math.ceil(size.doubleValue()
-					/ TraceTestGroup.GROUP_SIZE);
-			// Double t = TraceTestGroup.NumberOfLevels(size,
-			// TraceTestGroup.GROUP_SIZE);
-
-			if (numberOfGroups > TraceTestGroup.GROUP_SIZE)
-				numberOfGroups = TraceTestGroup.GROUP_SIZE.doubleValue();
-
-			Long testCountInGroup = (size) / numberOfGroups.longValue();
+						
 			Long currentCount = new Long(0);
-			for (int i = 0; i < numberOfGroups - 1; i++)
+			for (int i = 0; i < gs.getNumberOfGroups() - 1 && currentCount<size; i++)
 			{
 				TraceTestGroup group = new TraceTestGroup(currentCount + 1,
-						currentCount + testCountInGroup.longValue() + 1);
-				currentCount += testCountInGroup;
+						currentCount + gs.getGroupSize() + 1);
+				currentCount += gs.getGroupSize();
 				this.addChild(group);
 			}
 			if (!currentCount.equals( size))
@@ -176,7 +220,7 @@ public class TraceTreeNode implements IAdaptable,ITreeNode
 			}
 		}
 	}
-
+	
 	public void UnloadTests()
 	{
 		children.clear();
