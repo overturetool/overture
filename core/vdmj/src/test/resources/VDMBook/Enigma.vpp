@@ -570,8 +570,21 @@ operations
 
   protected TearDown: () ==> ()
   TearDown () == skip
-
 end SimpleEnigmaTest
+
+class UseSimpleEnigma
+
+instance variables
+
+  s : SimpleEnigma := new SimpleEnigma()
+  
+traces
+
+T: let c in set {'a','b','c','d','e','f','g','h','A','B'}
+   in
+     s.Keystroke(c){8}
+
+end UseSimpleEnigma
 
 class Test
 
