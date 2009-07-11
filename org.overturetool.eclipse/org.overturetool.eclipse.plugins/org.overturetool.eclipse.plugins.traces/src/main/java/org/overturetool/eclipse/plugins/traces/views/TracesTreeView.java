@@ -198,18 +198,22 @@ public class TracesTreeView extends ViewPart
 				}
 				traceHelpers.remove(project.getName());
 			
+				ITracesHelper tmpHelper = new VdmjTracesHelper(
+						project.getName(),
+						new File(
+								project.getWorkspace().getRoot().getLocation().toOSString()
+										+ project.getFullPath().toOSString()),
+						fileArray, 3);
+				
+				if(tmpHelper.GetClassNamesWithTraces().size()>0)
+				
 				traceHelpers.put(
 						project.getName(),
-						new VdmjTracesHelper(
-								project.getName(),
-								new File(
-										project.getWorkspace().getRoot().getLocation().toOSString()
-												+ project.getFullPath().toOSString()),
-								fileArray, 3));
+				tmpHelper		);
 			}
 		} catch (Exception e1)
 		{
-			System.out.println("Exception: " + e1.getMessage());
+			System.out.println("CT Init Exception: " + e1.getMessage());
 			e1.printStackTrace();
 		}
 
@@ -330,9 +334,9 @@ public class TracesTreeView extends ViewPart
 				// expandCompleted = false;
 				if (projectToUpdate != null)
 				{
-
+monitor.worked(IProgressMonitor.UNKNOWN);
 					SetTraceHelper(projectToUpdate);
-					monitor.worked(50);
+					
 					// final IProject[] iprojects =
 					// iworkspaceRoot.getProjects();
 
@@ -348,7 +352,8 @@ public class TracesTreeView extends ViewPart
 
 				} else
 					expandSpecInTree.run();
-				monitor.worked(100);
+				refreshTree();
+				monitor.done();
 				// expandCompleted = true;
 
 				return new Status(IStatus.OK, "org.overturetool.traces",
@@ -699,6 +704,7 @@ public class TracesTreeView extends ViewPart
 							}
 
 						});
+						refreshTree();
 						return new Status(IStatus.OK,
 								"org.overturetool.traces", IStatus.OK,
 								"CT Test evaluation finished", null);

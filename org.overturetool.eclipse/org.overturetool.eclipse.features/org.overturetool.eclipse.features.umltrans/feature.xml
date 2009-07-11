@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.overturetool.eclipse.features.umltrans"
-      label="OvertureTool UML Transformation Feature"
+      label="UML Transformation"
       version="1.0.0.qualifier"
       provider-name="Overturetool">
 
    <description url="http://www.overturetool.org/updatesite">
-      Festure providing UML Transformation 
+      Festure providing UML Transformation
    </description>
 
    <copyright url="http://www.overturetool.org/copyright">
@@ -18,10 +18,25 @@
    </license>
 
    <url>
-      <update label="Overturetool updatesite" url="http://overturetool.org/updatesite"/>
+      <update label="Overturetool updatesite" url="http://www.overturetool.org/updatesite"/>
       <discovery label="Sourceforge" url="http://sourceforge.net/projects/overture/"/>
       <discovery label="Overture Tool" url="http://www.overturetool.org/"/>
    </url>
+
+   <includes
+         id="org.eclipse.dltk.core"
+         version="0.0.0"/>
+
+   <requires>
+      <import plugin="org.eclipse.ui" version="3.4.2" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.runtime" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.resources" version="3.4.2" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.jdt.ui" version="3.4.2" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.console" version="3.3.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.ide" version="3.4.2" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.dltk.core" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.dltk.launching" version="1.0.0" match="greaterOrEqual"/>
+   </requires>
 
    <plugin
          id="org.overturetool.eclipse.plugins.umltrans"
