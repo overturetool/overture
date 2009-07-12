@@ -1,5 +1,5 @@
 %\documentclass[slidestop]{beamer}
-\documentclass[slidestop,uncompress,mathserif]{beamer}
+\documentclass[slidestop,uncompress,mathserif,notes]{beamer}
 
 % Import packages %
 \usepackage{color, graphicx}
@@ -23,6 +23,7 @@
 
 
 % Util commands %
+\newcommand{\pgl}[1]{Peter Gorm Larsen} 
 \newcommand{\mail}[1]{{\small \texttt{#1}}}
 \newcommand{\yellow}[1]{{\color{yellow} #1}}
 \newcommand{\blue}[1]{{\color{blue} #1}}
@@ -34,7 +35,7 @@
 \newcommand{\from}[1]{%
 \noindent%
 \begin{flushright}%
-    \emph{\small #1}%
+    \emph{\footnotesize #1}%
 \end{flushright}%
 } 
 
@@ -43,7 +44,7 @@
 \title[Bootstrapping in Overture]{Bootstrapping tools for VDM in Overture}
 
 
-\subtitle{The Fifth Overture Workshop}
+\subtitle{Rodin User and Developer Workshop}
 
 \author[K. Lausdahl, M. Ferreira]{
   Kenneth Lausdahl \\
@@ -90,35 +91,39 @@
 
   \pause
   \begin{itemize}
-	\item There's an obvious instantiation of the \alert{chicken and the egg} problem.
+	\item There's an obvious instantiation of the \alert{chicken and egg} problem.
   \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Boostrapping}
+  \frametitle{Bootstrapping}
   \framesubtitle{How is it done?}
 
   \pause
   \begin{itemize}
-	\item How to produce the first egg of a \alert{new} chicken breed?
+	\item How to produce the first compiler of a \alert{new} language?
   \end{itemize}
 
   \pause
-  \begin{block}{Solutions}
+  \begin{block}{Solutions \from{From Wikipedia, the free encyclopedia}}
   \begin{itemize}
 	  \pause
-	\item using an ostrich --- Niklaus Wirth implemented the first Pascal compiler using Fortran;
+	\item Use a different language  --- Niklaus Wirth implemented the first Pascal compiler using Fortran;
 	  \pause
-	\item using an ancient chicken --- its how some supersets of Java and Haskell compilers are bootstrapped;
+	\item Use a previous version of the compiler --- some Java and Haskell compilers are created this way.
 	  \pause
-	\item using a chicken form a different breed --- its how C compilers are cross compiled;
+	\item Use a compiler in a different architecture --- C compilers are usually ported through cross compilation.
 	  \pause
-	\item do it yourself --- Donald Knuth hand-compiled his literate programming system.
+	\item Do compilation manually --- Donald Knuth hand-compiled his literate programming system.
   \end{itemize}
   \end{block}
   \from{From Wikipedia, the free encyclopedia}
 \end{frame}
 
+\note{
+\textbf{Item 1.} 
+Writing the first implementation of a complier for a new language in a pre-existing language enables a first (non-bootstrapped) compiler.
+Then it is possible to re-write the compiler in the new language and compile it, producing witht his the first bootstrapped compiler for the language.}
 
 \section[VDMTools]{History of VDMTools Bootstrapping} 
 \label{sec:vdmtools}
@@ -129,26 +134,29 @@
 \end{frame}
 
 
-
 \begin{frame}[c]
   \frametitle{Architecture}
-  \framesubtitle{\emph{Peter Gorm Larsen \cite{Larsen01}}}
+  \framesubtitle{\emph{\pgl \cite{Larsen01}}}
 
-  % lots of components ..
-  % but only 4 main groups:
-  % - front end: parser, uml link
-  % - validation tools: type checker, interpreter, debugger, proof support
-  % - back end: code generator, pretty printer, uml link
-  % - user and application interface: gui, editor connection, corba
   \begin{center}
     \includegraphics[width=\textwidth]{images/vdmtools_arch.pdf}
   \end{center}
-%  \from{Peter Gorm Larsen \cite{Larsen01}}
+%  \from{\pgl \cite{Larsen01}}
 \end{frame}
+
+\note{
+Lots of components ..
+But only 4 main groups:
+\begin{itemize}
+  \item front end: parser, uml link
+  \item validation tools: type checker, interpreter, debugger, proof support
+  \item back end: code generator, pretty printer, uml link
+  \item user and application interface: gui, editor connection, corba
+\end{itemize}}
 
 \begin{frame}
   \frametitle{Components}
-  \framesubtitle{Peter Gorm Larsen \cite{Larsen01}}
+  \framesubtitle{\emph{\pgl \cite{Larsen01}}}
 
   \begin{block}{Conventional development}
 	{\scriptsize \begin{itemize}
@@ -157,7 +165,7 @@
 		\item Interfaces (user \& application)
 	  \end{itemize}}
   \end{block}
-
+%
   \begin{block}{Formally specified}
 	{\scriptsize \begin{itemize}
 	  \item Interpreter / Debugger
@@ -165,7 +173,7 @@
 	  \item Code Generators
 	\end{itemize}}
   \end{block}
-  
+% 
   \begin{block}{Generated from spec}
 	{\scriptsize \begin{itemize}
 		\item Specification Manager
@@ -177,7 +185,7 @@
 
 \begin{frame}[c]
   \frametitle{Bootstrapping}
-  \framesubtitle{Test and improvement --- Peter Gorm Larsen \cite{Larsen01}}
+  \framesubtitle{Test and improvement --- \emph{\pgl \cite{Larsen01}}}
  
   \begin{center}
     \includegraphics[width=.6\textwidth]{images/test_improve.pdf}
@@ -186,7 +194,7 @@
 
 \begin{frame}[c]
   \frametitle{Bootstrapping}
-  \framesubtitle{Tool generation --- Peter Gorm Larsen \cite{Larsen01}}
+  \framesubtitle{Tool generation --- \emph{\pgl \cite{Larsen01}}}
 
   \begin{center}
     \includegraphics[width=.7\textwidth]{images/code_gen.pdf}
@@ -195,7 +203,7 @@
 
 \begin{frame}[c]
   \frametitle{Bootstrapping}
-  \framesubtitle{Tool generation --- Peter Gorm Larsen \cite{Larsen01}}
+  \framesubtitle{Tool generation --- \emph{\pgl \cite{Larsen01}}}
  
   \begin{center}
     \includegraphics[width=.7\textwidth]{images/code_gen2.pdf}
@@ -216,7 +224,10 @@
   \frametitle{Architecture}
   \framesubtitle{}
 
-  \fixin{arch picture}
+  \begin{center}
+    \includegraphics[width=\textwidth]{images/overture_arch.png}
+  \end{center}
+
 
   \fixin{AST plays key role in arch}
 
@@ -227,7 +238,28 @@
   \frametitle{Components}
   \framesubtitle{}
 
-  \fixin{components per dev category (hand, spec, code gen).}
+  \begin{block}{Conventional development}
+	{\scriptsize \begin{itemize}
+		\item Scanner / Parser (jflex \& bison)
+		\item Type Checker (VDMJ)
+		\item Interpreter / Debugger (VDMJ)
+		\item Proof Obligation Generator (VDMJ)
+		\item Test Generation (VDMJ + GUI)
+		\item Editor with syntax highlighting (integrates in Eclipse)
+		\item Automatic Proof System (translator + theorem prover)
+	  \end{itemize}}
+  \end{block}
+%  
+  \begin{block}{Generated from spec}
+	{\scriptsize \begin{itemize}
+	  	\item AST Generator
+		\item Oml AST
+		\item VDM to HOL Translator (integrates in APS)
+		\item Traces Visualization (integrates in Eclipse)
+		\item UML Visualization (integrates in Eclipse)
+	  \end{itemize}}
+  \end{block}
+
 \end{frame}
 
 \begin{frame}
@@ -237,16 +269,27 @@
   %ASTGEN tool key role -> OML AST key structure for interoperability
 
   \begin{center}
-    \includegraphics[width=.5\textwidth]{images/ast_gen_spec.pdf}
-  \end{center}
-
-  \pause
-
-  \begin{center}
-    \includegraphics[width=.5\textwidth]{images/oml_ast_gen.pdf}
+    \includegraphics[width=\textwidth]{images/ast_gen_oml_ast_gen.pdf}
   \end{center}
 
 \end{frame}
+
+\note{
+\begin{itemize}
+  \item ASTGen plays a key role in Overture bootstrapping.
+
+  \item It allows for AST generation from a VDM-SL spec of the language.
+
+  \item It was used to generate both VDM++ and Java classes for the Overture Modelling Language.
+
+  \item But can also be used to generate ASTs for other languages. Allows:
+	\begin{itemize}
+	  \item for agile development of language extensions
+	  \item to specify other languages in VDM and have the AST in both VDM++ and Java classes
+	  \item to specify translators in VDM (from which implementations can be generated) 
+	\end{itemize}
+\end{itemize}
+}
 
 
 \bibliographystyle{plain}
