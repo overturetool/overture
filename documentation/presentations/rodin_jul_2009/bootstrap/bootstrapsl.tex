@@ -1,0 +1,254 @@
+%\documentclass[slidestop]{beamer}
+\documentclass[slidestop,uncompress,mathserif]{beamer}
+
+% Import packages %
+\usepackage{color, graphicx}
+\usepackage[draft]{fixme}
+\usepackage[utf8]{inputenc}
+
+
+% Beamer theme configuration %
+\usetheme{Copenhagen} 
+%\usetheme{Berlin} 
+%\usetheme{Berkeley} 
+%\usetheme{Singapore} 
+%\usetheme{Warsaw} 
+%\usetheme{umbc1} 
+%\usetheme{umbc2} 
+%\usetheme{umbc3} 
+%\usetheme{umbc4} 
+%\usefonttheme{structuresmallcapsserif}
+%\useoutertheme[subsection=false,footline=authorinstitute]{smoothbars}
+%\setbeamertemplate{navigation symbols}{}
+
+
+% Util commands %
+\newcommand{\mail}[1]{{\small \texttt{#1}}}
+\newcommand{\yellow}[1]{{\color{yellow} #1}}
+\newcommand{\blue}[1]{{\color{blue} #1}}
+\newcommand{\red}[1]{{\color{red} #1}}
+\newcommand{\green}[1]{{\color{green} #1}}
+\newcommand{\fixin}[1]{\fixme[inline]{\texttt{#1}}} 
+\newcommand{\fixfo}[1]{\fixme[footnote]{\texttt{#1}}} 
+\newcommand{\fixma}[1]{\fixme[margin]{\texttt{#1}}} 
+\newcommand{\from}[1]{%
+\noindent%
+\begin{flushright}%
+    \emph{\small #1}%
+\end{flushright}%
+} 
+
+
+% title slide %
+\title[Overture Proof Component]{Introduction to the Overture Proof Support Component}
+
+\subtitle{The Fifth Overture Workshop}
+
+\author[K. Lausdahl, M. Ferreira]{
+  Kenneth Lausdahl \\
+  \mail{kennethemail AT email.com} \\
+  Miguel Ferreira \\
+  \mail{m.ferreira AT sig.nl}
+}
+
+\institute[IHA, SIG]{
+  Aarhus School of Engineering\\
+  Software Improvement Group
+}
+
+\date{July ?, 2009 --- Southampton}
+
+
+\begin{document} 
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Outline}
+  \tableofcontents %[pausesections] %[current,currentsubsection]
+%  \tableofcontents[current]
+\end{frame}
+
+%\section[History]{History of VDM Bootstrapping} 
+%\label{sec:history}
+
+\section{Bootstrapping}
+\label{sec:bootstrapping}
+
+\begin{frame}
+  \frametitle{Boostrapping}
+  \framesubtitle{Compilers}
+
+
+  \begin{quotation}
+	``Bootstrapping is a term used in computer science to describe the techniques involved in \textbf{writing a compiler} (\dots) in the \textbf{target programming language} which \textbf{it is intended to compile}.''
+  \end{quotation}
+  \from{From Wikipedia, the free encyclopedia}
+
+  \pause
+  \begin{itemize}
+	\item There's an obvious instantiation of the \alert{chicken and the egg} problem.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Boostrapping}
+  \framesubtitle{How is it done?}
+
+  \pause
+  \begin{itemize}
+	\item How to produce the first egg of a \alert{new} chicken breed?
+  \end{itemize}
+
+  \pause
+  \begin{block}{Solutions}
+  \begin{itemize}
+	  \pause
+	\item using an ostrich --- Niklaus Wirth implemented the first Pascal compiler using Fortran;
+	  \pause
+	\item using an ancient chicken --- its how some supersets of Java and Haskell compilers are bootstrapped;
+	  \pause
+	\item using a chicken form a different breed --- its how C compilers are cross compiled;
+	  \pause
+	\item do it yourself --- Donald Knuth hand-compiled his literate programming system.
+  \end{itemize}
+  \end{block}
+  \from{From Wikipedia, the free encyclopedia}
+\end{frame}
+
+
+\section[VDMTools]{History of VDMTools Bootstrapping} 
+\label{sec:vdmtools}
+
+\begin{frame}
+  \frametitle{Outline}
+  \tableofcontents[current]
+\end{frame}
+
+
+
+\begin{frame}[c]
+  \frametitle{Architecture}
+  \framesubtitle{\emph{Peter Gorm Larsen \cite{Larsen01}}}
+
+  % lots of components ..
+  % but only 4 main groups:
+  % - front end: parser, uml link
+  % - validation tools: type checker, interpreter, debugger, proof support
+  % - back end: code generator, pretty printer, uml link
+  % - user and application interface: gui, editor connection, corba
+  \begin{center}
+    \includegraphics[width=\textwidth]{images/vdmtools_arch.pdf}
+  \end{center}
+%  \from{Peter Gorm Larsen \cite{Larsen01}}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Components}
+  \framesubtitle{Peter Gorm Larsen \cite{Larsen01}}
+
+  \begin{block}{Conventional development}
+	{\scriptsize \begin{itemize}
+		\item Scanner / Parser
+		\item Pretty Printer
+		\item Interfaces (user \& application)
+	  \end{itemize}}
+  \end{block}
+
+  \begin{block}{Formally specified}
+	{\scriptsize \begin{itemize}
+	  \item Interpreter / Debugger
+	  \item Type Checker
+	  \item Code Generators
+	\end{itemize}}
+  \end{block}
+  
+  \begin{block}{Generated from spec}
+	{\scriptsize \begin{itemize}
+		\item Specification Manager
+		\item Proof Support
+		\item Coupling to graphical tools
+	  \end{itemize}}
+  \end{block}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Bootstrapping}
+  \framesubtitle{Test and improvement --- Peter Gorm Larsen \cite{Larsen01}}
+ 
+  \begin{center}
+    \includegraphics[width=.6\textwidth]{images/test_improve.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Bootstrapping}
+  \framesubtitle{Tool generation --- Peter Gorm Larsen \cite{Larsen01}}
+
+  \begin{center}
+    \includegraphics[width=.7\textwidth]{images/code_gen.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Bootstrapping}
+  \framesubtitle{Tool generation --- Peter Gorm Larsen \cite{Larsen01}}
+ 
+  \begin{center}
+    \includegraphics[width=.7\textwidth]{images/code_gen2.pdf}
+  \end{center}
+\end{frame}
+
+
+
+\section[Overture]{Bootstrapping Overture Tools for VDM}
+\label{sec:overture}
+
+\begin{frame}
+  \frametitle{Outline}
+  \tableofcontents[current]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Architecture}
+  \framesubtitle{}
+
+  \fixin{arch picture}
+
+  \fixin{AST plays key role in arch}
+
+  \fixin{objective integration -> combination to create whole}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Components}
+  \framesubtitle{}
+
+  \fixin{components per dev category (hand, spec, code gen).}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Bootstrapping}
+  \framesubtitle{cite Marcel presentation}
+
+  %ASTGEN tool key role -> OML AST key structure for interoperability
+
+  \begin{center}
+    \includegraphics[width=.5\textwidth]{images/ast_gen_spec.pdf}
+  \end{center}
+
+  \pause
+
+  \begin{center}
+    \includegraphics[width=.5\textwidth]{images/oml_ast_gen.pdf}
+  \end{center}
+
+\end{frame}
+
+
+\bibliographystyle{plain}
+\bibliography{mf}
+
+\end{document} 
