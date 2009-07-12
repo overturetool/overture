@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.overturetool.eclipse.features.core_1.0.0.200907112358.jar" id="org.overturetool.eclipse.features.core" version="1.0.0.200907112358">
+   <feature url="features/org.overturetool.eclipse.features.core_1.0.0.200907120241.jar" id="org.overturetool.eclipse.features.core" version="1.0.0.200907120241">
       <category name="Overturetool"/>
    </feature>
-   <feature url="features/org.overturetool.eclipse.features.traces_1.0.0.200907112358.jar" id="org.overturetool.eclipse.features.traces" version="1.0.0.200907112358">
+   <feature url="features/org.overturetool.eclipse.features.traces_1.0.0.200907120241.jar" id="org.overturetool.eclipse.features.traces" version="1.0.0.200907120241">
       <category name="Overturetool"/>
    </feature>
-   <feature url="features/org.overturetool.eclipse.features.umltrans_1.0.0.200907112358.jar" id="org.overturetool.eclipse.features.umltrans" version="1.0.0.200907112358">
+   <feature url="features/org.overturetool.eclipse.features.umltrans_1.0.0.200907120241.jar" id="org.overturetool.eclipse.features.umltrans" version="1.0.0.200907120241">
       <category name="Overturetool"/>
    </feature>
    <category-def name="Overturetool" label="Overturetool">
