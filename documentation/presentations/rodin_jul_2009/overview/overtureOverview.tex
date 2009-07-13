@@ -1,10 +1,38 @@
-\documentclass{beamer}
-
+\documentclass[slidestop,uncompress,mathserif,notes]{beamer}
+\usepackage{pgf}
 \usepackage{beamerthemesplit}
+
 \usetheme{Copenhagen}
 
+% Util commands %
+\newcommand{\pgl}[1]{Peter Gorm Larsen} 
+\newcommand{\mail}[1]{{\small \texttt{#1}}}
+\newcommand{\yellow}[1]{{\color{yellow} #1}}
+\newcommand{\blue}[1]{{\color{blue} #1}}
+\newcommand{\red}[1]{{\color{red} #1}}
+\newcommand{\green}[1]{{\color{green} #1}}
+\newcommand{\fixin}[1]{\fixme[inline]{\texttt{#1}}} 
+\newcommand{\fixfo}[1]{\fixme[footnote]{\texttt{#1}}} 
+\newcommand{\fixma}[1]{\fixme[margin]{\texttt{#1}}} 
+\newcommand{\from}[1]{%
+\noindent%
+\begin{flushright}%
+    \emph{\footnotesize #1}%
+\end{flushright}%
+} 
+
+
 \title{An Overview of Overture}
-\author{Miguel Ferriera and Kenneth Lausdahl}
+
+\author[K. Lausdahl, M. Ferreira]{
+  Kenneth Lausdahl \\
+  \mail{kenneth AT lausdahl.com} \\
+  Miguel Ferreira \\
+  \mail{m.ferreira AT sig.nl}
+}
+
+\pgfputat{\pgfxy(0,-6.5)}{\pgfbox[left,base]{\includegraphics[width=2cm]{images/OMLlogoattempt.jpg}}}
+
 \date{\today}
 
 \begin{document}
@@ -15,7 +43,7 @@
 \frame{\tableofcontents}
 
 \section{Introduction}
-\subsection{Abstract}
+\subsection{The Overture Project}
 \frame
 {
   \frametitle{Abstract}
@@ -28,147 +56,15 @@ A short introduction to the Overture project showing how to bootstrap the tools 
 }
 
 
-\subsection{Overview of the Overture components}
-\frame
-{
-  \frametitle{Overview of the Overture components}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\textwidth]{images/OvertureOverview}
-%\caption{}
-\label{fig:}
-\end{figure}
-
-}
-
-\frame
-{
-  \frametitle{Overview of the Overture components}
-Main component categories:
-  \begin{itemize}
-  \item<1-> Basic automatic checks and GUI.
-  \item<2-> Connections to standard development environments.
-  \item<3-> Validation support.      
-  \item<4-> Verification support.
-  \end{itemize}
-}
-
-\frame
-{
-  \frametitle{Basic automatic checks and GUI}
-
-  \begin{itemize}
-  \item<1-> Refactoring support.
-  \item<1-> Editor with syntax highlighting.
-  \item<1-> Syntax check.      
-  \item<1-> Type check.
-  \end{itemize}
-}
-
-\frame
-{
-  \frametitle{Connections to standard development environments}
-
-  \begin{itemize}
-  \item<1-> Code Generators C++, Java.
-  \item<1-> Reverse Engineering support.
-  \item<1-> GUI generators.      
-  \item<1-> UML visualization support.
-  \item<1-> SysML, AADL visualization support.
-  \end{itemize}
-}
-
-\frame
-{
-  \frametitle{Validation support}
-
-  \begin{itemize}
-  \item<1-> Interpreter (with debug protocol).
-  \item<1-> Test generation support.
-  \item<1-> Visualization for execution traces.      
-  \item<1-> Pretty Printing with coverage.
-  \end{itemize}
-}
-
-\frame
-{
-  \frametitle{Verification support}
-
-  \begin{itemize}
-  \item<1-> Model checking support.
-  \item<1-> Interactive Proof support.
-  \item<1-> Automatic proof support.      
-  \item<1-> Proof obligation generation.
-  \end{itemize}
-}
-
-
-\section{Overture Tools}
-
-
-\subsection{VDMJ}
-\frame
-{
-  \frametitle{VDMJ}
-
-Supported features
-  \begin{itemize}
-  \item<1-> Syntax check.      
-  \item<1-> Type check.
-  \item<1-> Interpreter (with debug protocol).
-  \item<1-> Pretty Printing with coverage. (partly)
-  \item<1-> Test generation support.
-  \item<1-> Proof obligation generation.
-% Multi dialect VDM pp sl VICE
-  \end{itemize}
-}
-
-
-\subsection{Overture Editor}
-\frame
-{
-  \frametitle{Overture Editor}
-
-Supported features
-  \begin{itemize}
-  \item<1-> Editor with syntax highlighting.
-  \item<1-> Syntax check.      
-  \item<1-> Type check.
-  \item<1-> UML visualization support.
-  \item<1-> Interpreter (with debug protocol).
-  \item<1-> Test generation support.
-  \end{itemize}
-}
-
-\frame
-{
-  \frametitle{Overture Editor Main view}
-
- A picture of the editor
-}
-
-\frame
-{
-  \frametitle{Overture Editor Demo}
-
-  \begin{itemize}
-  \item<1-> Demo Editor with syntax highlighting, syntax and type check.
-  \item<2-> Debug with break points.      
-
-  \end{itemize}
-}
-
-\section{About Overture}
 \frame
 {
   \frametitle{The Overture project}
 
 \begin{block}<+->{Mission}
-Overture's mission is twofold: 
+	Overture's mission is twofold: 
   \begin{itemize}
-  \item<1-> to provide an industrial-strength tool that supports the use of precise abstract models in software development, and 
-  \item<1-> to foster an environment that allows researchers and other interested parties to experiment with modifications and extensions to the tool.      
+  		\item to provide an industrial-strength tool that supports the use of precise abstract models in software development, and 
+  		\item to foster an environment that allows researchers and other interested parties to experiment with modifications and extensions to the tool.      
 
   \end{itemize}
 \end{block}
@@ -180,6 +76,221 @@ The Overture tools are being developed by volunteers, research scientists and st
 
 }
 
+
+\subsection{Overview of the Overture Tools}
+\frame
+{
+  \frametitle{Overview of the Overture Tools}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{images/OvertureOverview}
+%\caption{}
+\label{fig:}
+\end{figure}
+
+}
+
+\begin{frame}
+	\frametitle{Overture components}
+	\begin{columns}
+		\column{.5\textwidth}
+			\begin{block}{Basic automatic checks and GUI}
+				{\scriptsize\begin{itemize}
+				  \item Refactoring support.
+				  \item Editor with syntax highlighting.
+				  \item Syntax check.      
+				  \item Type check.
+				\end{itemize}}
+			\end{block}
+		\column{.5\textwidth}
+			\begin{block}{Connections to standard development environments}
+				{\scriptsize\begin{itemize}
+			  \item Code Generators C++, Java.
+			  \item Reverse Engineering support.
+			  \item GUI generators.      
+			  \item UML visualization support.
+			  \item SysML, AADL visualization support.
+				\end{itemize}}
+			\end{block}
+		\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Overture components}
+	\begin{columns}
+		\column{.5\textwidth}
+			\begin{block}{Validation support}
+				{\scriptsize\begin{itemize}
+				  \item Interpreter (with debug protocol).
+				  \item Test generation support.
+				  \item Visualization for execution traces.      
+				  \item Pretty Printing with coverage.
+				\end{itemize}}
+			\end{block}
+		\column{.5\textwidth}
+			\begin{block}{Verification support}
+				{\scriptsize\begin{itemize}
+				  \item Model checking support.
+				  \item Interactive Proof support.
+				  \item Automatic proof support.      
+				  \item Proof obligation generation.
+				\end{itemize}}
+			\end{block}
+		\end{columns}
+
+%\xdefinecolor{ugreen}{rgb}{0.243,0.615,0.235}%
+\xdefinecolor{ugreen}{rgb}{0.192,0.482,0.184}%
+\xdefinecolor{lgreen}{rgb}{0.88,0.905,0.874}%
+\setbeamercolor{uppercol}{fg=white,bg=ugreen}%
+\setbeamercolor{lowercol}{fg=black,bg=lgreen}%
+\onslide<2->
+
+\begin{beamerboxesrounded}[upper=uppercol,lower=lowercol,shadow=true]{Connection to Rodin}
+As another feature for Automatic proof support a connection to Rodin would be interesting.
+\end{beamerboxesrounded}
+
+\end{frame}
+
+
+
+
+%\frame
+%{
+%  \frametitle{Overview of the Overture components}
+%Main component categories:
+%  \begin{itemize}
+%  \item<1-> Basic automatic checks and GUI.
+%  \item<2-> Connections to standard development environments.
+%  \item<3-> Validation support.      
+%  \item<4-> Verification support.
+%  \end{itemize}
+%}
+%
+%\frame
+%{
+%  \frametitle{Basic automatic checks and GUI}
+%
+%  \begin{itemize}
+%  \item<1-> Refactoring support.
+%  \item<1-> Editor with syntax highlighting.
+%  \item<1-> Syntax check.      
+%  \item<1-> Type check.
+%  \end{itemize}
+%}
+%
+%\frame
+%{
+%  \frametitle{Connections to standard development environments}
+%
+%  \begin{itemize}
+%  \item Code Generators C++, Java.
+%  \item Reverse Engineering support.
+%  \item GUI generators.      
+%  \item UML visualization support.
+%  \item SysML, AADL visualization support.
+%  \end{itemize}
+%}
+
+%\frame
+%{
+%  \frametitle{Validation support}
+%
+%  \begin{itemize}
+%  \item Interpreter (with debug protocol).
+%  \item Test generation support.
+%  \item Visualization for execution traces.      
+%  \item Pretty Printing with coverage.
+%  \end{itemize}
+%}
+%
+%\frame
+%{
+%  \frametitle{Verification support}
+%
+%  \begin{itemize}
+%  \item Model checking support.
+%  \item Interactive Proof support.
+%  \item Automatic proof support.      
+%  \item Proof obligation generation.
+%  \end{itemize}
+%
+%Somewhere on this slide the Rodin tool should be mentioned.
+%}
+
+
+\section{Overture Tools}
+
+
+\subsection{Components}
+\frame
+{
+  \frametitle{VDMJ}
+
+  \begin{block}{Features}
+	{\scriptsize\begin{itemize}
+	  \item Syntax check.      
+	  \item Type check.
+	  \item Interpreter (with debug protocol).
+	  \item Pretty Printing with coverage. (partly)
+	  \item Test generation support.
+	  \item Proof obligation generation.
+% Multi dialect VDM pp sl VICE
+  \end{itemize}}
+  \end{block}
+}
+
+
+\subsection{Overture Eclipse integration}
+\frame
+{
+  \frametitle{Overture Editor}
+
+  \begin{block}{Features}
+	{\scriptsize\begin{itemize}
+	  \item Editor with syntax highlighting.
+	  \item Syntax check.      
+	  \item Type check.
+	  \item UML visualization support.
+	  \item Interpreter (with debug protocol).
+	  \item Test generation support.
+  \end{itemize}}
+  \end{block}
+}
+
+\frame
+{
+  \frametitle{Overture Editor Main view}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.8\textwidth]{images/EditorOverview}
+%\caption{}
+\label{fig:}
+\end{figure}
+}
+
+\frame
+{
+  \frametitle{Overture Editor Demo}
+
+  \begin{itemize}
+  \item<1-> \href{http://mt.lausdahl.com/downloads/ScreenCasts/CreateProjectWithOutline/}{Overture Editor.}
+  \item<2-> \href{http://mt.lausdahl.com/downloads/ScreenCasts/DemoOvertureDebugger/}{Overture Debugger.}     
+
+  \end{itemize}
+}
+
+
+\frame
+{
+  \frametitle{Overture Tools}
+
+\begin{center}
+\href{www.overturetool.org}{www.overturetool.org}
+\end{center}
+
+}
 
 
 \end{document}
