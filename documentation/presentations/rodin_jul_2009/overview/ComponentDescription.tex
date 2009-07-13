@@ -9,7 +9,11 @@
 
 \section{Basic automatic checks and GUI}
 \begin{description}
-	\item[\textbf{Refactoring support}] \fixme{Refactoring support?}
+	\item[\textbf{Refactoring support}] Whenever systematic
+          changes needs to be made throughout a large model it is an
+          advantage to have automatic support assisting in these
+          updates. Eclipse and other IDEs have support for this called
+          refactoring but this needs to be adapted for Overture.
 
 	\item[\textbf{Editor with syntax highlighting}] Editor for editing VDM models in the same way as know for Java including syntax highlighting of keywords etc.
 
@@ -23,9 +27,15 @@
 \begin{description}
 	\item[\textbf{Code Generators C++, Java}] Code generator like in VDM Tools. Generating compilable source code from VDM models.
 
-	\item[\textbf{Reverse Engineering support}] \fixme{Reverse Engineering support?}
+	\item[\textbf{Reverse Engineering support}] Support for going
+          from a programming language such as Java up to a VDM++ model
+          would be desirable. A prototype of this was developed for VDMTools.
 
-	\item[\textbf{GUI generators}] \fixme{GUI generators} 
+	\item[\textbf{GUI generators}] Tool support for automatically
+          providing a basic GUI for each of the main
+          functions/operations in a VDM++ model could be made. EPROL
+          had somethinmg like this that could be used for inspiration
+          for a similar Overture feature.
      
 	\item[\textbf{UML visualization support}] \textbf{umltrans}
 Enabling VDM models to be transformed into UML diagrams Class Diagrams, Sequence Diagram etc. A bidirectional transformations where a class can be modified in either VDM or UML and transfered into the other and merged.
@@ -53,13 +63,21 @@ The AADL is especially effective for model-based analysis and specification of c
 
 \section{Verification support}
 \begin{description}
-	\item[\textbf{Model checking support}] \fixme{Model checking support?}
+	\item[\textbf{Proof obligation generation}] \textbf{VDMJ} but
+          user interface for this have to be developed.
+	\item[\textbf{Model checking support}] For a subset of VDM
+          model checking could be possible by translating to an
+          existing model checker. 
 
-	\item[\textbf{Interactive Proof support}] \fixme{Interactive Proof support?}
+	\item[\textbf{Interactive Proof support}] GUI for manually
+          applying proof rules whenever the automatic prover cannot
+          complete the task.
 
-	\item[\textbf{Automatic proof support}] \fixme{Automatic proof support?}
+	\item[\textbf{Automatic proof support}] At the moment this is
+          done by the the translation to HOL and the tactics defined
+          inside HOL specifically for VDM models that have been
+          translated to HOL.
 
-	\item[\textbf{Proof obligation generation}] \textbf{VDMJ}
 \end{description}
 
 
