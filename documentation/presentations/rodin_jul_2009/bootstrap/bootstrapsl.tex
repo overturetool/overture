@@ -8,10 +8,10 @@
 
 
 % Beamer theme configuration %
-\usetheme{Copenhagen} 
+%\usetheme{Copenhagen} 
 %\usetheme{Berlin} 
 %\usetheme{Berkeley} 
-%\usetheme{Singapore} 
+\usetheme{Singapore} 
 %\usetheme{Warsaw} 
 %\usetheme{umbc1} 
 %\usetheme{umbc2} 
@@ -23,7 +23,7 @@
 
 
 % Util commands %
-\newcommand{\pgl}[1]{Peter Gorm Larsen} 
+\newcommand{\pgl}[0]{Peter Gorm Larsen} 
 \newcommand{\mail}[1]{{\small \texttt{#1}}}
 \newcommand{\yellow}[1]{{\color{yellow} #1}}
 \newcommand{\blue}[1]{{\color{blue} #1}}
@@ -63,11 +63,11 @@
 
 \begin{document} 
 
-\begin{frame}
+\begin{frame}[c]
 	\titlepage
 \end{frame}
 
-\begin{frame}
+\begin{frame}[c]
   \frametitle{Outline}
   \tableofcontents %[pausesections] %[current,currentsubsection]
 %  \tableofcontents[current]
@@ -79,7 +79,7 @@
 \section{Bootstrapping}
 \label{sec:bootstrapping}
 
-\begin{frame}
+\begin{frame}[c]
   \frametitle{Boostrapping}
   \framesubtitle{Compilers}
 
@@ -91,44 +91,36 @@
 
   \pause
   \begin{itemize}
-	\item There's an obvious instantiation of the \alert{chicken and egg} problem.
+	\item Instantiation of the \alert{chicken and egg} problem.
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[t]
   \frametitle{Bootstrapping}
   \framesubtitle{How is it done?}
 
   \pause
   \begin{itemize}
-	\item How to produce the first compiler of a \alert{new} language?
+	\item How to produce the first \alert{compiler} for a new \alert{language}?
   \end{itemize}
+
+  \vspace{\fill}
 
   \pause
-  \begin{block}{Solutions \from{From Wikipedia, the free encyclopedia}}
+  \begin{block}{Niklaus Wirth --- the first Pascal compiler}
   \begin{itemize}
+	\itemsep=.5cm
+	\item Used a \alert{different language}  --- first implementation was written in Fortan;
 	  \pause
-	\item Use a different language  --- Niklaus Wirth implemented the first Pascal compiler using Fortran;
-	  \pause
-	\item Use a previous version of the compiler --- some Java and Haskell compilers are created this way.
-	  \pause
-	\item Use a compiler in a different architecture --- C compilers are usually ported through cross compilation.
-	  \pause
-	\item Do compilation manually --- Donald Knuth hand-compiled his literate programming system.
+	\item \alert{Manually compiled} the compiler --- second implementation was written in Pascal and hand compiled.
   \end{itemize}
   \end{block}
-  \from{From Wikipedia, the free encyclopedia}
 \end{frame}
 
-\note{
-\textbf{Item 1.} 
-Writing the first implementation of a complier for a new language in a pre-existing language enables a first (non-bootstrapped) compiler.
-Then it is possible to re-write the compiler in the new language and compile it, producing witht his the first bootstrapped compiler for the language.}
-
-\section[VDMTools]{History of VDMTools Bootstrapping} 
+\section[VDMTools]{History of VDMTools Bootstrapping --- \pgl~\cite{Larsen01}} 
 \label{sec:vdmtools}
 
-\begin{frame}
+\begin{frame}[c]
   \frametitle{Outline}
   \tableofcontents[current]
 \end{frame}
@@ -136,7 +128,7 @@ Then it is possible to re-write the compiler in the new language and compile it,
 
 \begin{frame}[c]
   \frametitle{Architecture}
-  \framesubtitle{\emph{\pgl \cite{Larsen01}}}
+  %\framesubtitle{\emph{\pgl~\cite{Larsen01}}}
 
   \begin{center}
     \includegraphics[width=\textwidth]{images/vdmtools_arch.pdf}
@@ -145,47 +137,50 @@ Then it is possible to re-write the compiler in the new language and compile it,
 \end{frame}
 
 \note{
-Lots of components ..
-But only 4 main groups:
+4 main groups:
 \begin{itemize}
   \item front end: parser, uml link
   \item validation tools: type checker, interpreter, debugger, proof support
   \item back end: code generator, pretty printer, uml link
   \item user and application interface: gui, editor connection, corba
-\end{itemize}}
+\end{itemize}
+}
 
-\begin{frame}
-  \frametitle{Components}
-  \framesubtitle{\emph{\pgl \cite{Larsen01}}}
+\begin{frame}[c]
+  \frametitle{Architecture}
+  %\framesubtitle{Conventional development --- \emph{\pgl~\cite{Larsen01}}}
+  \framesubtitle{Conventional development}
 
-  \begin{block}{Conventional development}
-	{\scriptsize \begin{itemize}
-		\item Scanner / Parser
-		\item Pretty Printer
-		\item Interfaces (user \& application)
-	  \end{itemize}}
-  \end{block}
-%
-  \begin{block}{Formally specified}
-	{\scriptsize \begin{itemize}
-	  \item Interpreter / Debugger
-	  \item Type Checker
-	  \item Code Generators
-	\end{itemize}}
-  \end{block}
-% 
-  \begin{block}{Generated from spec}
-	{\scriptsize \begin{itemize}
-		\item Specification Manager
-		\item Proof Support
-		\item Coupling to graphical tools
-	  \end{itemize}}
-  \end{block}
+  \begin{center}
+    \includegraphics[width=\textwidth]{images/vdmtools_arch_conv_dev.pdf}
+  \end{center}
 \end{frame}
 
 \begin{frame}[c]
+  \frametitle{Architecture}
+  %\framesubtitle{Formally specified --- \emph{\pgl~\cite{Larsen01}}}
+  \framesubtitle{Formally specified}
+
+  \begin{center}
+    \includegraphics[width=\textwidth]{images/vdmtools_arch_spec.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Architecture}
+  %\framesubtitle{Generated code --- \emph{\pgl~\cite{Larsen01}}}
+  \framesubtitle{Generated code}
+
+  \begin{center}
+    \includegraphics[width=\textwidth]{images/vdmtools_arch_cg.pdf}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}[c]
   \frametitle{Bootstrapping}
-  \framesubtitle{Test and improvement --- \emph{\pgl \cite{Larsen01}}}
+  %\framesubtitle{Test and improvement --- \emph{\pgl~\cite{Larsen01}}}
+  \framesubtitle{Test and improvement}
  
   \begin{center}
     \includegraphics[width=.6\textwidth]{images/test_improve.pdf}
@@ -194,7 +189,8 @@ But only 4 main groups:
 
 \begin{frame}[c]
   \frametitle{Bootstrapping}
-  \framesubtitle{Tool generation --- \emph{\pgl \cite{Larsen01}}}
+  %\framesubtitle{Tool generation --- \emph{\pgl~\cite{Larsen01}}}
+  \framesubtitle{Tool generation}
 
   \begin{center}
     \includegraphics[width=.7\textwidth]{images/code_gen.pdf}
@@ -203,7 +199,8 @@ But only 4 main groups:
 
 \begin{frame}[c]
   \frametitle{Bootstrapping}
-  \framesubtitle{Tool generation --- \emph{\pgl \cite{Larsen01}}}
+  %\framesubtitle{Tool generation --- \emph{\pgl~\cite{Larsen01}}}
+  \framesubtitle{Tool generation}
  
   \begin{center}
     \includegraphics[width=.7\textwidth]{images/code_gen2.pdf}
@@ -215,26 +212,28 @@ But only 4 main groups:
 \section[Overture]{Bootstrapping Overture Tools for VDM}
 \label{sec:overture}
 
-\begin{frame}
+\begin{frame}[c]
   \frametitle{Outline}
   \tableofcontents[current]
 \end{frame}
 
-\begin{frame}
+\begin{frame}[c]
   \frametitle{Architecture}
   \framesubtitle{}
 
   \begin{center}
     \includegraphics[width=\textwidth]{images/overture_arch.png}
   \end{center}
-
-
-  \fixin{AST plays key role in arch}
-
-  \fixin{objective integration -> combination to create whole}
 \end{frame}
 
-\begin{frame}
+\note{
+\begin{itemize}
+\item AST plays a key role in the arch because it is (should be) the pillar that supports all other components.
+\item Objective: interoperability to achieve an integrated tool set.
+\end{itemize}
+}
+
+\begin{frame}[c]
   \frametitle{Components}
   \framesubtitle{}
 
@@ -262,11 +261,10 @@ But only 4 main groups:
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}[c]
   \frametitle{Bootstrapping}
-  \framesubtitle{cite Marcel presentation}
+  \framesubtitle{}
 
-  %ASTGEN tool key role -> OML AST key structure for interoperability
 
   \begin{center}
     \includegraphics[width=\textwidth]{images/ast_gen_oml_ast_gen.pdf}
@@ -290,6 +288,14 @@ But only 4 main groups:
 	\end{itemize}
 \end{itemize}
 }
+
+\begin{frame}[c]
+  \frametitle{Bootstrapping}
+  \framesubtitle{}
+
+
+  \fixin{picture: bootstrapping potrans + showtrce + umlvdm}
+\end{frame}
 
 
 \bibliographystyle{plain}
