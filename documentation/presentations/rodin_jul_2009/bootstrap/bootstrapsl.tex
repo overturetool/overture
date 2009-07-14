@@ -80,7 +80,7 @@
 \label{sec:bootstrapping}
 
 \begin{frame}[c]
-  \frametitle{Boostrapping}
+  \frametitle{Bootstrapping}
   \framesubtitle{Compilers}
 
 
@@ -222,7 +222,7 @@
   \framesubtitle{}
 
   \begin{center}
-    \includegraphics[width=\textwidth]{images/overture_arch.png}
+    \includegraphics[width=\textwidth]{images/overture_arch.pdf}
   \end{center}
 \end{frame}
 
@@ -234,31 +234,30 @@
 }
 
 \begin{frame}[c]
-  \frametitle{Components}
-  \framesubtitle{}
+  \frametitle{Architecture}
+  \framesubtitle{Conventional development}
 
-  \begin{block}{Conventional development}
-	{\scriptsize \begin{itemize}
-		\item Scanner / Parser (jflex \& bison)
-		\item Type Checker (VDMJ)
-		\item Interpreter / Debugger (VDMJ)
-		\item Proof Obligation Generator (VDMJ)
-		\item Test Generation (VDMJ + GUI)
-		\item Editor with syntax highlighting (integrates in Eclipse)
-		\item Automatic Proof System (translator + theorem prover)
-	  \end{itemize}}
-  \end{block}
-%  
-  \begin{block}{Generated from spec}
-	{\scriptsize \begin{itemize}
-	  	\item AST Generator
-		\item Oml AST
-		\item VDM to HOL Translator (integrates in APS)
-		\item Traces Visualization (integrates in Eclipse)
-		\item UML Visualization (integrates in Eclipse)
-	  \end{itemize}}
-  \end{block}
+  \begin{center}
+    \includegraphics[width=\textwidth]{images/overture_arch_conv_dev.pdf}
+  \end{center}
+\end{frame}
 
+\begin{frame}[c]
+  \frametitle{Architecture}
+  \framesubtitle{Formally specified}
+
+  \begin{center}
+    \includegraphics[width=\textwidth]{images/overture_arch_spec.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Architecture}
+  \framesubtitle{Generated code}
+
+  \begin{center}
+    \includegraphics[width=\textwidth]{images/overture_arch_cg.pdf}
+  \end{center}
 \end{frame}
 
 \begin{frame}[c]
@@ -271,6 +270,18 @@
   \end{center}
 
 \end{frame}
+
+\begin{frame}[c]
+  \frametitle{Bootstrapping}
+  \framesubtitle{}
+
+
+  \begin{center}
+    \includegraphics[width=\textwidth]{images/ast_gen_oml_ast_gen_2.pdf}
+  \end{center}
+
+\end{frame}
+
 
 \note{
 \begin{itemize}
@@ -293,8 +304,10 @@
   \frametitle{Bootstrapping}
   \framesubtitle{}
 
+  \begin{center}
+    \includegraphics[width=.8\textwidth]{images/ovt_bootstrap.pdf}
+  \end{center}
 
-  \fixin{picture: bootstrapping potrans + showtrce + umlvdm}
 \end{frame}
 
 
