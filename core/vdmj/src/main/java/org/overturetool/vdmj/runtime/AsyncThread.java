@@ -23,7 +23,7 @@
 
 package org.overturetool.vdmj.runtime;
 
-import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
@@ -35,6 +35,7 @@ public class AsyncThread extends Thread
 	private MessageQueue<MessageRequest> queue;
 	public final ObjectValue self;
 	public final OperationValue operation;
+	public final CPUValue cpu;
 
 	public AsyncThread(ObjectValue self, OperationValue operation)
 	{
@@ -42,11 +43,12 @@ public class AsyncThread extends Thread
 
 		this.self = self;
 		this.operation = operation;
-		CPUValue cpu = self.getCPU();
+		this.cpu = self.getCPU();
 		this.queue = new MessageQueue<MessageRequest>(cpu);
-		cpu.addThread(this);
 
-		Console.out.println(
+		cpu.addThread(this, self);
+
+		RTLogger.log(
 			"ThreadCreate -> id: " + getId() +
 			" period: " + false +
 			" objref: " + self.objectReference +
@@ -58,8 +60,7 @@ public class AsyncThread extends Thread
 	@Override
 	public void run()
 	{
-		CPUValue cpu = self.getCPU();
-		cpu.acquire(self);
+		cpu.reschedule(RunState.WAITING);
 
 		MessageRequest request = queue.take(self);		// Blocking on CPU
 		ValueList arglist = request.args;
@@ -88,13 +89,10 @@ public class AsyncThread extends Thread
 			request.bus.reply(response);
 		}
 
-		cpu.release(self);
-
-		Console.out.println(
+		RTLogger.log(
 			"ThreadKill -> id: " + Thread.currentThread().getId() +
 			" cpunm: " + cpu.cpuNumber +
-			" time: " + VDMThreadSet.getWallTime() +
-			" msg: AAAaaaarrgggg!!!");
+			" time: " + VDMThreadSet.getWallTime());
 
 		cpu.removeThread(this);
 	}
@@ -102,6 +100,7 @@ public class AsyncThread extends Thread
 	public void send(MessageRequest request)
 	{
 		queue.add(request);
+		cpu.setState(this, RunState.RUNNABLE);
 	}
 
 	@Override

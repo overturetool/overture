@@ -64,8 +64,6 @@ public class MessageQueue<T> extends LinkedBlockingQueue<T>
 		}
 		else
 		{
-			cpu.release(self);
-
 			while (isEmpty())
 			{
 				try
@@ -77,8 +75,6 @@ public class MessageQueue<T> extends LinkedBlockingQueue<T>
 					// retry
 				}
 			}
-
-			cpu.acquire(self);
 
 			while (true)
 			{

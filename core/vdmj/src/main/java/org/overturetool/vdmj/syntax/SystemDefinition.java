@@ -36,10 +36,9 @@ import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
 import org.overturetool.vdmj.expressions.UndefinedExpression;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
-import org.overturetool.vdmj.runtime.VDMThreadSet;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.types.ClassType;
@@ -121,23 +120,6 @@ public class SystemDefinition extends ClassDefinition
    			ObjectValue system = makeNewInstance(null, new ValueList(),
     				ctxt, new HashMap<LexNameToken, ObjectValue>());
 
-			// Show the main thread creation...
-
-			Console.out.println(
-				"ThreadCreate -> id: " + Thread.currentThread().getId() +
-				" period: false objref: nil" +
-				" clnm: nil" +
-				" cpunm: 0" +
-				" time: " + VDMThreadSet.getWallTime());
-
-			Console.out.println(
-				"ThreadSwapIn -> id: " + Thread.currentThread().getId() +
-				" objref: nil" +
-				" clnm: nil" +
-				" cpunum: 0" +
-				" overhead: 0" +
-				" time: " + VDMThreadSet.getWallTime());
-
 			// Do CPUs first so that default BUSses can connect all CPUs.
 
 			for (Definition d: definitions)
@@ -165,7 +147,7 @@ public class SystemDefinition extends ClassDefinition
 						}
 
 	    				cpu.setName(d.name.name);
-	    				Console.out.println(
+	    				RTLogger.log(
 	    					cpu.declString(
 	    						name.name, !(ivd.expType instanceof UndefinedType)));
 					}
@@ -192,7 +174,7 @@ public class SystemDefinition extends ClassDefinition
 						{
 							bus = (BUSValue)v.deref();
 							bus.setName(d.name.name);
-							Console.out.println(bus.declString());
+							RTLogger.log(bus.declString());
 						}
 					}
 				}

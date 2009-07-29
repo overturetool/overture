@@ -23,10 +23,12 @@
 
 package org.overturetool.vdmj.runtime;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.ObjectValue;
 
@@ -34,101 +36,111 @@ public class FCFSPolicy extends SchedulingPolicy
 {
 	private final CPUValue cpu;
 	private final Queue<Thread> waiters;
-	private Thread running = null;
+	private final Map<Thread, ObjectValue> objects;
+	private final Map<Thread, RunState> state;
+
+	private Thread bestThread = null;
+	private ObjectValue bestObject = null;
 	private long switches = 0;
 
 	public FCFSPolicy(CPUValue cpu)
 	{
 		this.cpu = cpu;
 		this.waiters = new LinkedBlockingQueue<Thread>();
+		this.objects = new HashMap<Thread, ObjectValue>();
+		this.state = new HashMap<Thread, RunState>();
 		this.switches = 0;
 	}
 
 	@Override
-	public synchronized void acquire(ObjectValue self)
+	public synchronized void addThread(Thread thread, ObjectValue object)
 	{
-		if (running == null)
-		{
-			Console.out.println(
-				"ThreadSwapIn -> id: " + Thread.currentThread().getId() +
-				" objref: " + self.objectReference +
-				" clnm: \"" + self.type.name.name + "\"" +
-				" cpunum: " + cpu.cpuNumber +
-				" overhead: " + 0 +
-				" time: " + VDMThreadSet.getWallTime());
+		waiters.add(thread);
+		objects.put(thread, object);
+		state.put(thread, RunState.CREATED);
+	}
 
-			running = Thread.currentThread();
-    		notifyAll();	// For yielders
-    		switches++;
+	@Override
+	public synchronized void removeThread(Thread thread)
+	{
+		waiters.remove(thread);
+		objects.remove(thread);
+		state.remove(thread);
+
+		if (bestThread == thread)
+		{
+			bestThread = null;
+			bestObject = null;
+		}
+	}
+
+	@Override
+	public synchronized ObjectValue getObject()
+	{
+		return bestObject;
+	}
+
+	@Override
+	public synchronized Thread getThread()
+	{
+		return bestThread;
+	}
+
+	@Override
+	public synchronized void setState(Thread thread, RunState newstate)
+	{
+		state.put(thread, newstate);
+	}
+
+	@Override
+	public synchronized boolean reschedule()
+	{
+		if (!waiters.isEmpty())
+		{
+			Thread original = bestThread;
+    		ObjectValue object = bestObject;
+
+    		do
+    		{
+    			bestThread = waiters.poll();
+    			waiters.add(bestThread);
+    		}
+    		while (state.get(bestThread) != RunState.RUNNABLE);
+
+    		if (bestThread != original)
+    		{
+    			if (original != null)
+    			{
+    				RTLogger.log(
+    					"ThreadSwapOut -> id: " + original.getId() +
+    					" objref: " + object.objectReference +
+    					" clnm: \"" + object.type.name.name + "\"" +
+    					" cpunum: " + cpu.cpuNumber +
+    					" overhead: " + 0 +
+    					" time: " + VDMThreadSet.getWallTime());
+    			}
+
+    			bestObject = objects.get(bestThread);
+
+    			RTLogger.log(
+    				"ThreadSwapIn -> id: " + bestThread.getId() +
+    				" objref: " + bestObject.objectReference +
+    				" clnm: \"" + bestObject.type.name.name + "\"" +
+    				" cpunum: " + cpu.cpuNumber +
+    				" overhead: " + 0 +
+    				" time: " + VDMThreadSet.getWallTime());
+
+    			switches++;
+    			return true;
+    		}
+    		else
+    		{
+    			return false;
+    		}
 		}
 		else
 		{
-    		// Put me on the run queue, signal all waiters (head can proceed)
-
-    		waiters.add(Thread.currentThread());
-    		notifyAll();
-
-    		while (waiters.peek() != Thread.currentThread() ||
-    			   running != null)
-    		{
-    			try
-    			{
-    				wait();
-    			}
-    			catch (InterruptedException e)
-    			{
-    				// Ignore
-    			}
-    		}
-
-    		running = waiters.poll();
-    		switches++;
-
-    		Console.out.println(
-				"ThreadSwapIn -> id: " + running.getId() +
-				" objref: " + self.objectReference +
-				" clnm: \"" + self.type.name.name + "\"" +
-				" cpunum: " + cpu.cpuNumber +
-				" overhead: " + 0 +
-				" time: " + VDMThreadSet.getWallTime());
+			return false;
 		}
-	}
-
-	@Override
-	public synchronized void release(ObjectValue self)
-	{
-		Console.out.println(
-			"ThreadSwapOut -> id: " + Thread.currentThread().getId() +
-			" objref: " + self.objectReference +
-			" clnm: \"" + self.type.name.name + "\"" +
-			" cpunum: " + cpu.cpuNumber +
-			" overhead: " + 0 +
-			" time: " + VDMThreadSet.getWallTime());
-
-		running = null;
-		notifyAll();
-	}
-
-	@Override
-	public synchronized void yield(ObjectValue self)
-	{
-		// Only called when we *know* another thread can run...
-
-		release(self);
-		long old = switches;
-
-		while (switches == old)
-		{
-			try
-			{
-				wait();
-			}
-			catch (InterruptedException e)
-			{
-				// Ignore
-			}
-		}
-
-		acquire(self);		// OK, someone else has set running
 	}
 }

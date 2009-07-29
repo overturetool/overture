@@ -28,7 +28,8 @@ import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.debug.DBGPReason;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.messages.RTLogger;
+import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
 import org.overturetool.vdmj.values.ValueList;
@@ -39,6 +40,7 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class VDMThread extends Thread
 {
+	public final ObjectValue object;
 	public final OperationValue operation;
 	public final Context ctxt;
 	public final String title;
@@ -53,21 +55,23 @@ public class VDMThread extends Thread
 			", self #" + object.objectReference +
 			", class " + object.type.name.name;
 
-		Context global = ctxt.getGlobal();
-		this.ctxt = new ObjectContext(location, title, global, object);
+		this.object = object;
+		this.ctxt = new ObjectContext(location, title, ctxt.getGlobal(), object);
 		this.operation = object.getThreadOperation(ctxt);
+
 		VDMThreadSet.add(this);
 
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
-			Console.out.println(
+			CPUValue cpu = object.getCPU();
+			cpu.addThread(this, object);
+
+			RTLogger.log(
 				"ThreadCreate -> id: " + getId() +
 				" period: false objref: " + object.objectReference +
 				" clnm: \"" + object.type + "\"" +
-				" cpunm: " + object.getCPU().cpuNumber +
+				" cpunm: " + cpu.cpuNumber +
 				" time: " + VDMThreadSet.getWallTime());
-
-			object.getCPU().acquire(object);
 		}
 	}
 
@@ -80,6 +84,12 @@ public class VDMThread extends Thread
 	@Override
 	public void run()
 	{
+		if (Settings.dialect == Dialect.VDM_RT)
+		{
+			CPUValue cpu = object.getCPU();
+			cpu.reschedule(RunState.RUNNABLE);
+		}
+
 		if (Settings.usingDBGP)
 		{
 			runDBGP();

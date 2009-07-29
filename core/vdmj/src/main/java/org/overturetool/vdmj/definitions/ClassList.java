@@ -35,6 +35,7 @@ import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.ContextException;
@@ -170,6 +171,23 @@ public class ClassList extends Vector<ClassDefinition>
 		{
 			CPUClassDefinition.init();
 			BUSClassDefinition.init();
+
+			// Show the main thread creation...
+
+			RTLogger.log(
+				"ThreadCreate -> id: " + Thread.currentThread().getId() +
+				" period: false objref: nil" +
+				" clnm: nil" +
+				" cpunm: 0" +
+				" time: 0");
+
+			RTLogger.log(
+				"ThreadSwapIn -> id: " + Thread.currentThread().getId() +
+				" objref: nil" +
+				" clnm: nil" +
+				" cpunum: 0" +
+				" overhead: 0" +
+				" time: 0");
 		}
 
 		globalContext.setThreadState(dbgp, null);

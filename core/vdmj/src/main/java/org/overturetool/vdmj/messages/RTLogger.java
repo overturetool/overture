@@ -21,51 +21,27 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overturetool.vdmj.messages;
 
-import org.overturetool.vdmj.values.CPUValue;
-import org.overturetool.vdmj.values.ObjectValue;
+import java.io.PrintWriter;
+import java.util.List;
+import java.util.Vector;
 
-public class FPPolicy extends SchedulingPolicy
+public class RTLogger
 {
-	public FPPolicy(CPUValue cpu)
+	private static List<String> events = new Vector<String>();
+
+	public static void log(String event)
 	{
-		throw new RuntimeException("Not implemented");
+		events.add(event);
+		Console.out.println(event);		// for now...
 	}
 
-	@Override
-	public void addThread(Thread thread, ObjectValue object)
+	public void print(PrintWriter out)
 	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public ObjectValue getObject()
-	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public Thread getThread()
-	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public void removeThread(Thread thread)
-	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public boolean reschedule()
-	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public void setState(Thread thread, RunState newstate)
-	{
-		throw new RuntimeException("Not implemented");
+		for (String event: events)
+		{
+			out.println(event);
+		}
 	}
 }

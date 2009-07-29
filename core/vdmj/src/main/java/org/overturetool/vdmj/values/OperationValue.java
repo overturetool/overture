@@ -39,6 +39,7 @@ import org.overturetool.vdmj.lex.LexKeywordToken;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.runtime.AsyncThread;
@@ -457,7 +458,6 @@ public class OperationValue extends Value
 		{
     		MessageRequest request = new MessageRequest(null, from, to, argValues, null);
     		thread.send(request);
-    		from.yield(self);
     		return new VoidValue();
 		}
 	}
@@ -561,7 +561,7 @@ public class OperationValue extends Value
 	{
 		if (traceRT)
 		{
-    		Console.out.println(
+    		RTLogger.log(
     			kind + " -> id: " + Thread.currentThread().getId() +
     			" opname: \"" + name + "\"" +
     			" objref: " + self.objectReference +

@@ -25,6 +25,7 @@ package org.overturetool.vdmj.runtime;
 
 import java.io.Serializable;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.expressions.BreakpointExpression;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
@@ -170,6 +171,11 @@ public class Breakpoint implements Serializable
 
 		ThreadState state = ctxt.threadState;
 		handleInterrupt(execl, ctxt);
+
+		if (Settings.dialect == Dialect.VDM_RT)
+		{
+			state.CPU.reschedule(RunState.RUNNABLE);
+		}
 
 		if (state.stepline > 0)
 		{

@@ -26,7 +26,7 @@ package org.overturetool.vdmj.values;
 import java.util.List;
 import java.util.Vector;
 
-import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.runtime.AsyncThread;
 import org.overturetool.vdmj.runtime.BUSPolicy;
 import org.overturetool.vdmj.runtime.MessageRequest;
@@ -93,7 +93,7 @@ public class BUSValue extends ObjectValue
 
 	public void send(MessageRequest request, AsyncThread thread)
 	{
-		Console.out.println(
+		RTLogger.log(
 			"MessageRequest -> busid: " + busNumber +
 			" fromcpu: " + request.from.cpuNumber +
 			" tocpu: " + request.to.cpuNumber +
@@ -104,20 +104,20 @@ public class BUSValue extends ObjectValue
 			" size: " + request.args.toString().length() +
 			" time: " + VDMThreadSet.getWallTime());
 
-		Console.out.println(
+		RTLogger.log(
 			"MessageActivate -> msgid: " + request.msgId +
 			" time: " + VDMThreadSet.getWallTime());
 
 		thread.send(request);
 
-		Console.out.println(
+		RTLogger.log(
 			"MessageComplete -> msgid: " + request.msgId +
 			" time: " + VDMThreadSet.getWallTime());
 	}
 
 	public void reply(MessageResponse response)
 	{
-		Console.out.println(
+		RTLogger.log(
 			"ReplyRequest -> busid: " + busNumber +
 			" fromcpu: " + response.from.cpuNumber +
 			" tocpu: " + response.to.cpuNumber +
@@ -128,13 +128,13 @@ public class BUSValue extends ObjectValue
 			" size: " + response.toString().length() +
 			" time: " + VDMThreadSet.getWallTime());
 
-		Console.out.println(
+		RTLogger.log(
 			"MessageActivate -> msgid: " + response.msgId +
 			" time: " + VDMThreadSet.getWallTime());
 
 		response.request.replyTo.add(response);
 
-		Console.out.println(
+		RTLogger.log(
 			"MessageComplete -> msgid: " + response.msgId +
 			" time: " + VDMThreadSet.getWallTime());
 	}

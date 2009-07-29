@@ -28,7 +28,7 @@ import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.pog.StateInvariantObligation;
@@ -114,7 +114,7 @@ public class AssignmentStatement extends Statement
 
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
-			Console.out.println(
+			RTLogger.log(
 				"InstVarChange -> instnm: \"" + target.toString() + "\"" +
 				" val: \"" + newval + "\"" +
 				" objref: " + ctxt.getSelf().objectReference +

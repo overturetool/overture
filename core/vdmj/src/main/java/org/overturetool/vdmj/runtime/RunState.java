@@ -23,49 +23,7 @@
 
 package org.overturetool.vdmj.runtime;
 
-import org.overturetool.vdmj.values.CPUValue;
-import org.overturetool.vdmj.values.ObjectValue;
-
-public class FPPolicy extends SchedulingPolicy
+public enum RunState
 {
-	public FPPolicy(CPUValue cpu)
-	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public void addThread(Thread thread, ObjectValue object)
-	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public ObjectValue getObject()
-	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public Thread getThread()
-	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public void removeThread(Thread thread)
-	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public boolean reschedule()
-	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public void setState(Thread thread, RunState newstate)
-	{
-		throw new RuntimeException("Not implemented");
-	}
+	CREATED, RUNNABLE, WAITING
 }

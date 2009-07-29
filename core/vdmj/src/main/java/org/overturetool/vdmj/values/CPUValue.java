@@ -23,14 +23,12 @@
 
 package org.overturetool.vdmj.values;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.runtime.AsyncThread;
 import org.overturetool.vdmj.runtime.CPUPolicy;
+import org.overturetool.vdmj.runtime.RunState;
 import org.overturetool.vdmj.runtime.SchedulingPolicy;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Type;
@@ -45,9 +43,10 @@ public class CPUValue extends ObjectValue
 	public final SchedulingPolicy policy;
 	public final double cyclesPerSec;
 	public final List<ObjectValue> deployed;
-	public final Set<AsyncThread> threads;
 
 	public String name;
+	public Thread runningThread;
+	public ObjectValue runningObject;
 
 	public static void init()
 	{
@@ -69,7 +68,6 @@ public class CPUValue extends ObjectValue
 		this.cyclesPerSec = sarg.value;
 
 		deployed = new Vector<ObjectValue>();
-		threads = new HashSet<AsyncThread>();
 
 		allCPUs.add(this);
 	}
@@ -89,7 +87,6 @@ public class CPUValue extends ObjectValue
 		this.cyclesPerSec = sarg.value;
 
 		deployed = new Vector<ObjectValue>();
-		threads = new HashSet<AsyncThread>();
 
 		allCPUs.add(this);
 	}
@@ -144,28 +141,58 @@ public class CPUValue extends ObjectValue
 			" name: \"" + name + "\"";
 	}
 
-	public synchronized void addThread(AsyncThread thread)
+	public synchronized void addThread(Thread thread, ObjectValue object)
 	{
-		threads.add(thread);
+		policy.addThread(thread, object);
 	}
 
-	public synchronized void removeThread(AsyncThread thread)
+	public synchronized void removeThread(Thread thread)
 	{
-		threads.remove(thread);
+		policy.removeThread(thread);
 	}
 
-	public void release(ObjectValue self)
+	public synchronized void reschedule(RunState newstate)
 	{
-		policy.release(self);
+		setState(runningThread, newstate);
+
+		if (policy.reschedule())
+		{
+			runningThread = policy.getThread();
+			runningObject = policy.getObject();
+
+			synchronized (runningThread)
+			{
+				runningThread.notify();		// Wake from sleep
+			}
+
+			sleep();
+		}
 	}
 
-	public void acquire(ObjectValue self)
+	private synchronized void sleep()
 	{
-		policy.acquire(self);
+		Thread current = Thread.currentThread();
+
+		while (runningThread != current)
+		{
+			synchronized (current)
+			{
+				try
+				{
+					current.wait();
+				}
+				catch (InterruptedException e)
+				{
+					// So?
+				}
+			}
+		}
+
+		setState(current, RunState.RUNNABLE);
 	}
 
-	public void yield(ObjectValue self)
+	public synchronized void setState(Thread thread, RunState newstate)
 	{
-		policy.yield(self);
+		policy.setState(thread, newstate);
 	}
 }

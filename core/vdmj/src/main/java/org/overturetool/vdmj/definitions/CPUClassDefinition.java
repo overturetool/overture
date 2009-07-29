@@ -29,7 +29,7 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ObjectContext;
@@ -136,7 +136,7 @@ public class CPUClassDefinition extends ClassDefinition
     		obj.setCPU(cpu);
     		cpu.addDeployed(obj);
 
-   			Console.out.println(
+   			RTLogger.log(
     				"DeployObject -> objref: " + obj.objectReference +
     				(name == null ? "" : " name: " + name) +
     				" clnm: \"" + obj.type.name.name + "\"" +
