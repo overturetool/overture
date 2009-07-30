@@ -23,14 +23,11 @@
 
 package org.overturetool.vdmj.runtime;
 
-import org.overturetool.vdmj.values.ObjectValue;
-
 abstract public class SchedulingPolicy
 {
 	abstract public boolean reschedule();
 	abstract public Thread getThread();
-	abstract public ObjectValue getObject();
-	abstract public void addThread(Thread thread, ObjectValue object);
+	abstract public void addThread(Thread thread);
 	abstract public void removeThread(Thread thread);
 	abstract public void setState(Thread thread, RunState newstate);
 }

@@ -23,7 +23,6 @@
 
 package org.overturetool.vdmj.runtime;
 
-import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
@@ -44,25 +43,17 @@ public class AsyncThread extends Thread
 		this.self = self;
 		this.operation = operation;
 		this.cpu = self.getCPU();
-		this.queue = new MessageQueue<MessageRequest>(cpu);
+		this.queue = new MessageQueue<MessageRequest>();
 
 		cpu.addThread(this, self);
-
-		RTLogger.log(
-			"ThreadCreate -> id: " + getId() +
-			" period: " + false +
-			" objref: " + self.objectReference +
-			" clnm: " + self.type.name +
-			" cpunm: " + cpu.cpuNumber +
-			" time: " + VDMThreadSet.getWallTime());
 	}
 
 	@Override
 	public void run()
 	{
-		cpu.reschedule(RunState.WAITING);
+		MessageRequest request = queue.take();		// Blocking, until RUNNABLE
+		cpu.sleep();
 
-		MessageRequest request = queue.take(self);		// Blocking on CPU
 		ValueList arglist = request.args;
 		MessageResponse response = null;
 
@@ -89,18 +80,13 @@ public class AsyncThread extends Thread
 			request.bus.reply(response);
 		}
 
-		RTLogger.log(
-			"ThreadKill -> id: " + Thread.currentThread().getId() +
-			" cpunm: " + cpu.cpuNumber +
-			" time: " + VDMThreadSet.getWallTime());
-
 		cpu.removeThread(this);
 	}
 
 	public void send(MessageRequest request)
 	{
-		queue.add(request);
 		cpu.setState(this, RunState.RUNNABLE);
+		queue.add(request);
 	}
 
 	@Override

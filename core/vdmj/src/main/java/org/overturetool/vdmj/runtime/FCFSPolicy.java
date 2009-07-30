@@ -24,60 +24,40 @@
 package org.overturetool.vdmj.runtime;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import org.overturetool.vdmj.messages.RTLogger;
-import org.overturetool.vdmj.values.CPUValue;
-import org.overturetool.vdmj.values.ObjectValue;
 
 public class FCFSPolicy extends SchedulingPolicy
 {
-	private final CPUValue cpu;
-	private final Queue<Thread> waiters;
-	private final Map<Thread, ObjectValue> objects;
+	private final List<Thread> threads;
 	private final Map<Thread, RunState> state;
 
 	private Thread bestThread = null;
-	private ObjectValue bestObject = null;
-	private long switches = 0;
 
-	public FCFSPolicy(CPUValue cpu)
+	public FCFSPolicy()
 	{
-		this.cpu = cpu;
-		this.waiters = new LinkedBlockingQueue<Thread>();
-		this.objects = new HashMap<Thread, ObjectValue>();
+		this.threads = new LinkedList<Thread>();
 		this.state = new HashMap<Thread, RunState>();
-		this.switches = 0;
 	}
 
 	@Override
-	public synchronized void addThread(Thread thread, ObjectValue object)
+	public synchronized void addThread(Thread thread)
 	{
-		waiters.add(thread);
-		objects.put(thread, object);
+		threads.add(thread);
 		state.put(thread, RunState.CREATED);
 	}
 
 	@Override
 	public synchronized void removeThread(Thread thread)
 	{
-		waiters.remove(thread);
-		objects.remove(thread);
+		threads.remove(thread);
 		state.remove(thread);
 
 		if (bestThread == thread)
 		{
-			bestThread = null;
-			bestObject = null;
+			reschedule();
 		}
-	}
-
-	@Override
-	public synchronized ObjectValue getObject()
-	{
-		return bestObject;
 	}
 
 	@Override
@@ -95,52 +75,20 @@ public class FCFSPolicy extends SchedulingPolicy
 	@Override
 	public synchronized boolean reschedule()
 	{
-		if (!waiters.isEmpty())
+		Thread original = bestThread;
+		bestThread = null;
+
+		for (Thread th: threads)	// Queue order
 		{
-			Thread original = bestThread;
-    		ObjectValue object = bestObject;
-
-    		do
-    		{
-    			bestThread = waiters.poll();
-    			waiters.add(bestThread);
-    		}
-    		while (state.get(bestThread) != RunState.RUNNABLE);
-
-    		if (bestThread != original)
-    		{
-    			if (original != null)
-    			{
-    				RTLogger.log(
-    					"ThreadSwapOut -> id: " + original.getId() +
-    					" objref: " + object.objectReference +
-    					" clnm: \"" + object.type.name.name + "\"" +
-    					" cpunum: " + cpu.cpuNumber +
-    					" overhead: " + 0 +
-    					" time: " + VDMThreadSet.getWallTime());
-    			}
-
-    			bestObject = objects.get(bestThread);
-
-    			RTLogger.log(
-    				"ThreadSwapIn -> id: " + bestThread.getId() +
-    				" objref: " + bestObject.objectReference +
-    				" clnm: \"" + bestObject.type.name.name + "\"" +
-    				" cpunum: " + cpu.cpuNumber +
-    				" overhead: " + 0 +
-    				" time: " + VDMThreadSet.getWallTime());
-
-    			switches++;
-    			return true;
-    		}
-    		else
-    		{
-    			return false;
-    		}
+			if (state.get(th) == RunState.RUNNABLE)
+			{
+				bestThread = th;
+				threads.remove(th);
+				threads.add(th);	// Add at the end of the queue
+				break;
+			}
 		}
-		else
-		{
-			return false;
-		}
+
+		return (bestThread != original);
 	}
 }

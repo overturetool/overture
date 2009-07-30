@@ -440,7 +440,7 @@ public class OperationValue extends Value
 		{
     		trace("OpRequest");
     		BUSValue bus = BUSClassDefinition.findBUS(from, to);
-    		MessageQueue<MessageResponse> queue = new MessageQueue<MessageResponse>(from);
+    		MessageQueue<MessageResponse> queue = new MessageQueue<MessageResponse>();
     		MessageRequest request = new MessageRequest(bus, from, to, argValues, queue);
     		bus.send(request, thread);
 
@@ -450,7 +450,7 @@ public class OperationValue extends Value
     		}
     		else
     		{
-        		MessageResponse reply = queue.take(self);
+        		MessageResponse reply = queue.take();
         		return reply.getValue();	// Can throw a returned exception
     		}
 		}

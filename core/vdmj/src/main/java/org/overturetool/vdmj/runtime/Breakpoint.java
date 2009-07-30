@@ -174,7 +174,7 @@ public class Breakpoint implements Serializable
 
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
-			state.CPU.reschedule(RunState.RUNNABLE);
+			state.CPU.reschedule();
 		}
 
 		if (state.stepline > 0)

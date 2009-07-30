@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.overturetool.vdmj.debug.DBGPReader;
+import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.definitions.Definition;
@@ -218,7 +219,7 @@ public class ClassInterpreter extends Interpreter
 
 		mainContext.putAll(initialContext);
 		mainContext.putAll(createdValues);
-		mainContext.setThreadState(dbgp, null);
+		mainContext.setThreadState(dbgp, CPUClassDefinition.virtualCPU);
 		clearBreakpointHits();
 
 		return expr.eval(mainContext);
@@ -440,7 +441,7 @@ public class ClassInterpreter extends Interpreter
 		if (statements.needsContext)
 		{
 			ctxt = statements.ctxt.deepCopy();
-			ctxt.setThreadState(null, null);
+			ctxt.setThreadState(null, CPUClassDefinition.virtualCPU);
 		}
 		else
 		{

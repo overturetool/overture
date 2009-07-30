@@ -23,24 +23,15 @@
 
 package org.overturetool.vdmj.runtime;
 
-import org.overturetool.vdmj.values.CPUValue;
-import org.overturetool.vdmj.values.ObjectValue;
-
 public class FPPolicy extends SchedulingPolicy
 {
-	public FPPolicy(CPUValue cpu)
+	public FPPolicy()
 	{
 		throw new RuntimeException("Not implemented");
 	}
 
 	@Override
-	public void addThread(Thread thread, ObjectValue object)
-	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public ObjectValue getObject()
+	public void addThread(Thread thread)
 	{
 		throw new RuntimeException("Not implemented");
 	}

@@ -28,7 +28,6 @@ import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.debug.DBGPReason;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
@@ -65,13 +64,6 @@ public class VDMThread extends Thread
 		{
 			CPUValue cpu = object.getCPU();
 			cpu.addThread(this, object);
-
-			RTLogger.log(
-				"ThreadCreate -> id: " + getId() +
-				" period: false objref: " + object.objectReference +
-				" clnm: \"" + object.type + "\"" +
-				" cpunm: " + cpu.cpuNumber +
-				" time: " + VDMThreadSet.getWallTime());
 		}
 	}
 
@@ -87,7 +79,8 @@ public class VDMThread extends Thread
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
 			CPUValue cpu = object.getCPU();
-			cpu.reschedule(RunState.RUNNABLE);
+			cpu.setState(RunState.RUNNABLE);
+			cpu.sleep();
 		}
 
 		if (Settings.usingDBGP)
@@ -97,6 +90,12 @@ public class VDMThread extends Thread
 		else
 		{
 			runCmd();
+		}
+
+		if (Settings.dialect == Dialect.VDM_RT)
+		{
+			CPUValue cpu = object.getCPU();
+			cpu.removeThread(this);
 		}
 	}
 

@@ -24,7 +24,6 @@
 package org.overturetool.vdmj.runtime;
 
 import org.overturetool.vdmj.debug.DBGPReader;
-import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.values.CPUValue;
 
 /**
@@ -34,13 +33,13 @@ import org.overturetool.vdmj.values.CPUValue;
 public class ThreadState
 {
 	public final long threadId;
+	public final DBGPReader dbgp;
+	public final CPUValue CPU;
 
 	public InterruptAction action;
 	public int stepline;
 	public RootContext nextctxt;
 	public Context outctxt;
-	public DBGPReader dbgp;
-	public CPUValue CPU;
 
 	private long timestep;		// Current step being made (not wall time)
 
@@ -48,7 +47,7 @@ public class ThreadState
 	{
 		this.dbgp = dbgp;
 		this.threadId = Thread.currentThread().getId();
-		this.CPU = cpu == null ? CPUClassDefinition.virtualCPU : cpu;
+		this.CPU = cpu;
 		init();
 	}
 

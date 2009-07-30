@@ -25,17 +25,13 @@ package org.overturetool.vdmj.runtime;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.overturetool.vdmj.values.CPUValue;
-import org.overturetool.vdmj.values.ObjectValue;
-
 public class MessageQueue<T> extends LinkedBlockingQueue<T>
 {
 	private static final long serialVersionUID = 1L;
-	private final CPUValue cpu;
 
-	public MessageQueue(CPUValue cpu)
+	public MessageQueue()
 	{
-		this.cpu = cpu;
+		// ?
 	}
 
 	@Override
@@ -46,7 +42,8 @@ public class MessageQueue<T> extends LinkedBlockingQueue<T>
 		return rv;
 	}
 
-	public synchronized T take(ObjectValue self)
+	@Override
+	public synchronized T take()
 	{
 		if (!isEmpty())
 		{

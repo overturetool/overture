@@ -23,13 +23,17 @@
 
 package org.overturetool.vdmj.values;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.runtime.CPUPolicy;
 import org.overturetool.vdmj.runtime.RunState;
 import org.overturetool.vdmj.runtime.SchedulingPolicy;
+import org.overturetool.vdmj.runtime.VDMThreadSet;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Type;
 
@@ -43,10 +47,11 @@ public class CPUValue extends ObjectValue
 	public final SchedulingPolicy policy;
 	public final double cyclesPerSec;
 	public final List<ObjectValue> deployed;
+	public final Map<Thread, ObjectValue> objects;
 
 	public String name;
 	public Thread runningThread;
-	public ObjectValue runningObject;
+	public int switches;
 
 	public static void init()
 	{
@@ -62,12 +67,14 @@ public class CPUValue extends ObjectValue
 
 		QuoteValue parg = (QuoteValue)argvals.get(0);
 		CPUPolicy cpup = CPUPolicy.valueOf(parg.value.toUpperCase());
-		policy = cpup.factory(this);
+		policy = cpup.factory();
 
 		RealValue sarg = (RealValue)argvals.get(1);
 		this.cyclesPerSec = sarg.value;
 
-		deployed = new Vector<ObjectValue>();
+		this.deployed = new Vector<ObjectValue>();
+		this.objects = new HashMap<Thread, ObjectValue>();
+		this.switches = 0;
 
 		allCPUs.add(this);
 	}
@@ -81,12 +88,14 @@ public class CPUValue extends ObjectValue
 
 		QuoteValue parg = (QuoteValue)argvals.get(0);
 		CPUPolicy cpup = CPUPolicy.valueOf(parg.value.toUpperCase());
-		policy = cpup.factory(this);
+		policy = cpup.factory();
 
 		RealValue sarg = (RealValue)argvals.get(1);
 		this.cyclesPerSec = sarg.value;
 
-		deployed = new Vector<ObjectValue>();
+		this.deployed = new Vector<ObjectValue>();
+		this.objects = new HashMap<Thread, ObjectValue>();
+		this.switches = 0;
 
 		allCPUs.add(this);
 	}
@@ -143,56 +152,132 @@ public class CPUValue extends ObjectValue
 
 	public synchronized void addThread(Thread thread, ObjectValue object)
 	{
-		policy.addThread(thread, object);
+		policy.addThread(thread);
+		objects.put(thread, object);
+
+		RTLogger.log(
+			"ThreadCreate -> id: " + thread.getId() +
+			" period: false " +
+			" objref: " + object.objectReference +
+			" clnm: \"" + object.type + "\"" +
+			" cpunm: " + cpuNumber +
+			" time: " + VDMThreadSet.getWallTime());
+	}
+
+	public synchronized void addThread(Thread thread)
+	{
+		policy.addThread(thread);
+		objects.put(thread, null);
+
+		RTLogger.log(
+			"ThreadCreate -> id: " + thread.getId() +
+			" period: false " +
+			" objref: nil " +
+			" clnm: nil " +
+			" cpunm: " + cpuNumber +
+			" time: " + VDMThreadSet.getWallTime());
 	}
 
 	public synchronized void removeThread(Thread thread)
 	{
-		policy.removeThread(thread);
-	}
+		boolean kickMe = false;
 
-	public synchronized void reschedule(RunState newstate)
-	{
-		setState(runningThread, newstate);
-
-		if (policy.reschedule())
+		if (runningThread == thread)
 		{
-			runningThread = policy.getThread();
-			runningObject = policy.getObject();
+			ObjectValue object = objects.get(thread);
 
-			synchronized (runningThread)
-			{
-				runningThread.notify();		// Wake from sleep
-			}
+			RTLogger.log(
+				"ThreadSwapOut -> id: " + thread.getId() +
+				" objref: " + object.objectReference +
+				" clnm: \"" + object.type.name.name + "\"" +
+				" cpunum: " + cpuNumber +
+				" overhead: " + 0 +
+				" time: " + VDMThreadSet.getWallTime());
 
-			sleep();
+			kickMe = true;
+		}
+
+		policy.removeThread(thread);
+		objects.remove(thread);
+
+		RTLogger.log(
+			"ThreadKill -> id: " + thread.getId() +
+			" cpunm: " + cpuNumber +
+			" time: " + VDMThreadSet.getWallTime());
+
+		if (kickMe)
+		{
+			kick();
 		}
 	}
 
-	private synchronized void sleep()
+	public synchronized void reschedule()
 	{
 		Thread current = Thread.currentThread();
+		policy.reschedule();
+		runningThread = policy.getThread();
+
+		if (runningThread != current)
+		{
+			notifyAll();
+
+			ObjectValue object = objects.get(current);
+
+			RTLogger.log(
+				"ThreadSwapOut -> id: " + current.getId() +
+				" objref: " + object.objectReference +
+				" clnm: \"" + object.type.name.name + "\"" +
+				" cpunum: " + cpuNumber +
+				" overhead: " + 0 +
+				" time: " + VDMThreadSet.getWallTime());
+
+			sleep();
+			switches++;
+		}
+	}
+
+	public synchronized void sleep()
+	{
+		Thread current = Thread.currentThread();
+		ObjectValue object = objects.get(current);
 
 		while (runningThread != current)
 		{
-			synchronized (current)
+			try
 			{
-				try
-				{
-					current.wait();
-				}
-				catch (InterruptedException e)
-				{
-					// So?
-				}
+				wait();
+			}
+			catch (InterruptedException e)
+			{
+				// So?
 			}
 		}
 
-		setState(current, RunState.RUNNABLE);
+		RTLogger.log(
+			"ThreadSwapIn -> id: " + current.getId() +
+			" objref: " + object.objectReference +
+			" clnm: \"" + object.type.name.name + "\"" +
+			" cpunum: " + cpuNumber +
+			" overhead: " + 0 +
+			" time: " + VDMThreadSet.getWallTime());
 	}
 
 	public synchronized void setState(Thread thread, RunState newstate)
 	{
 		policy.setState(thread, newstate);
+		kick();
+	}
+
+	public synchronized void setState(RunState newstate)
+	{
+		policy.setState(Thread.currentThread(), newstate);
+		kick();
+	}
+
+	private void kick()
+	{
+		policy.reschedule();
+		runningThread = policy.getThread();
+		notifyAll();
 	}
 }

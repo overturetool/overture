@@ -40,11 +40,13 @@ import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.RootContext;
+import org.overturetool.vdmj.runtime.RunState;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.SystemDefinition;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.values.CPUValue;
 
 
 /**
@@ -174,23 +176,23 @@ public class ClassList extends Vector<ClassDefinition>
 
 			// Show the main thread creation...
 
-			RTLogger.log(
-				"ThreadCreate -> id: " + Thread.currentThread().getId() +
-				" period: false objref: nil" +
-				" clnm: nil" +
-				" cpunm: 0" +
-				" time: 0");
+			CPUValue vCPU = CPUClassDefinition.virtualCPU;
+			Thread main = Thread.currentThread();
+
+			vCPU.addThread(main);
 
 			RTLogger.log(
-				"ThreadSwapIn -> id: " + Thread.currentThread().getId() +
-				" objref: nil" +
-				" clnm: nil" +
-				" cpunum: 0" +
-				" overhead: 0" +
-				" time: 0");
+    			"ThreadSwapIn -> id: " + main.getId() +
+    			" objref: nil" +
+    			" clnm: nil" +
+    			" cpunum: 0" +
+    			" overhead: 0" +
+    			" time: 0");
+
+			vCPU.setState(main, RunState.RUNNABLE);
 		}
 
-		globalContext.setThreadState(dbgp, null);
+		globalContext.setThreadState(dbgp, CPUClassDefinition.virtualCPU);
 
 		// Initialize all the functions/operations first because the values
 		// "statics" can call them.
