@@ -117,7 +117,32 @@ public class SystemDefinition extends ClassDefinition
 	{
 		try
 		{
-   			ObjectValue system = makeNewInstance(null, new ValueList(),
+			// Do CPUdecls first so that constructor's deploys are OK.
+			int cpuNumber = 1;
+
+			for (Definition d: definitions)
+			{
+				Type t = d.getType();
+
+				if (t instanceof ClassType)
+				{
+					InstanceVariableDefinition ivd = (InstanceVariableDefinition)d;
+					ClassType ct = (ClassType)t;
+
+					if (ct.classdef instanceof CPUClassDefinition)
+					{
+	    				RTLogger.log(
+	    					"CPUdecl -> id: " + (cpuNumber++) +
+	    					" expl: " + !(ivd.expType instanceof UndefinedType) +
+	    					" sys: \"" + name.name + "\"" +
+	    					" name: \"" + d.name.name + "\"");
+					}
+				}
+			}
+
+			// Now run the constructor to do any deploys.
+
+			ObjectValue system = makeNewInstance(null, new ValueList(),
     				ctxt, new HashMap<LexNameToken, ObjectValue>());
 
 			// Do CPUs first so that default BUSses can connect all CPUs.
@@ -129,7 +154,6 @@ public class SystemDefinition extends ClassDefinition
 				if (t instanceof ClassType)
 				{
 					UpdatableValue v = (UpdatableValue)system.members.get(d.name);
-					InstanceVariableDefinition ivd = (InstanceVariableDefinition)d;
 					ClassType ct = (ClassType)t;
 
 					if (ct.classdef instanceof CPUClassDefinition)
@@ -147,9 +171,6 @@ public class SystemDefinition extends ClassDefinition
 						}
 
 	    				cpu.setName(d.name.name);
-	    				RTLogger.log(
-	    					cpu.declString(
-	    						name.name, !(ivd.expType instanceof UndefinedType)));
 					}
 				}
 			}

@@ -185,7 +185,7 @@ public class ClassList extends Vector<ClassDefinition>
     			"ThreadSwapIn -> id: " + main.getId() +
     			" objref: nil" +
     			" clnm: nil" +
-    			" cpunum: 0" +
+    			" cpunm: 0" +
     			" overhead: 0" +
     			" time: 0");
 

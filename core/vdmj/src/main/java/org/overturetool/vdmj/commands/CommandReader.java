@@ -316,7 +316,7 @@ abstract public class CommandReader
 
 			if (RTLogger.getLogSize() > 0)
 			{
-				println("Dumping " + RTLogger.getLogSize() + " RT events:");
+				println("Dumping " + RTLogger.getLogSize() + " RT events");
 				RTLogger.dump(false);
 			}
 		}
@@ -362,7 +362,7 @@ abstract public class CommandReader
 	{
 		if (RTLogger.getLogSize() > 0)
 		{
-			println("Dumping " + RTLogger.getLogSize() + " RT events:");
+			println("Dumping " + RTLogger.getLogSize() + " RT events");
 			RTLogger.dump(true);
 		}
 
@@ -446,6 +446,19 @@ abstract public class CommandReader
 
 	protected boolean doLog(String line)
 	{
+		if (line.equals("log"))
+		{
+			if (RTLogger.getLogSize() > 0)
+			{
+				println("Flushing " + RTLogger.getLogSize() + " RT events");
+			}
+
+			RTLogger.dump(true);
+			RTLogger.setLogfile(null);
+			println("RT events now logged to the console");
+			return true;
+		}
+
 		String[] parts = line.split("\\s+");
 
 		if (parts.length != 2 || !parts[0].equals("log"))
@@ -892,7 +905,7 @@ abstract public class CommandReader
 		println("files - list files in the current specification");
 		println("reload - reload the current specification files");
 		println("load <files> - replace current loaded specification files");
-		println("log <file> - log RT events to file");
+		println("log [<file>] - log RT events to file");
 		println("quit - leave the interpreter");
 	}
 

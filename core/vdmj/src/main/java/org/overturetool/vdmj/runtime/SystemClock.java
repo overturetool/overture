@@ -54,6 +54,7 @@ public class SystemClock
 
 			wallTime += minStepTime;
 			waiters = 0;
+			minStepTime = Long.MAX_VALUE;
 			unblock();
 		}
 		else
@@ -74,6 +75,7 @@ public class SystemClock
 			try
 			{
 				SystemClock.class.wait();
+				break;
 			}
 			catch (InterruptedException e)
 			{

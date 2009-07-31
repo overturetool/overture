@@ -108,11 +108,11 @@ public class BUSValue extends ObjectValue
 			"MessageActivate -> msgid: " + request.msgId +
 			" time: " + SystemClock.getWallTime());
 
-		thread.send(request);
-
 		RTLogger.log(
 			"MessageCompleted -> msgid: " + request.msgId +
 			" time: " + SystemClock.getWallTime());
+
+		thread.send(request);
 	}
 
 	public void reply(MessageResponse response)
@@ -132,11 +132,11 @@ public class BUSValue extends ObjectValue
 			"MessageActivate -> msgid: " + response.msgId +
 			" time: " + SystemClock.getWallTime());
 
-		response.request.replyTo.add(response);
-
 		RTLogger.log(
 			"MessageCompleted -> msgid: " + response.msgId +
 			" time: " + SystemClock.getWallTime());
+
+		response.request.replyTo.add(response);
 	}
 
 	public void setName(String name)

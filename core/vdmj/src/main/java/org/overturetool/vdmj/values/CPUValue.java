@@ -198,7 +198,7 @@ public class CPUValue extends ObjectValue
 				"ThreadSwapOut -> id: " + thread.getId() +
 				" objref: " + object.objectReference +
 				" clnm: \"" + object.type.name.name + "\"" +
-				" cpunum: " + cpuNumber +
+				" cpunm: " + cpuNumber +
 				" overhead: " + 0 +
 				" time: " + SystemClock.getWallTime());
 
@@ -236,7 +236,7 @@ public class CPUValue extends ObjectValue
 				"ThreadSwapOut -> id: " + current.getId() +
 				" objref: " + object.objectReference +
 				" clnm: \"" + object.type.name.name + "\"" +
-				" cpunum: " + cpuNumber +
+				" cpunm: " + cpuNumber +
 				" overhead: " + 0 +
 				" time: " + SystemClock.getWallTime());
 
@@ -266,7 +266,7 @@ public class CPUValue extends ObjectValue
 			"ThreadSwapIn -> id: " + current.getId() +
 			" objref: " + object.objectReference +
 			" clnm: \"" + object.type.name.name + "\"" +
-			" cpunum: " + cpuNumber +
+			" cpunm: " + cpuNumber +
 			" overhead: " + 0 +
 			" time: " + SystemClock.getWallTime());
 	}
