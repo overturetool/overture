@@ -1,6 +1,8 @@
 package org.overturetool.eclipse.plugins.umltrans.actions;
 
 import java.io.File;
+import java.util.List;
+import java.util.Vector;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -48,19 +50,24 @@ public class TexToVppAction implements IWorkbenchWindowActionDelegate {
 		if (ret != null) {
 
 			try {
-				String[] files = new String[fLst.length];
+				List<String> files = new Vector<String>();
 				for (int i = 0; i < fLst.length; i++) {
 					String separator = System.getProperty("file.separator");
-					files[i] = fd.getFilterPath() + separator + fLst[i];
+					files.add( fd.getFilterPath() + separator + fLst[i]);
 				}
 
-				String outputDir = new File(files[0]).getParent();
+				String outputDir = new File(files.get(0)).getParent();
 
-				String[] vppFiles = ClassExstractorFromTexFiles.exstract(files,
+				List<String> vppFiles = ClassExstractorFromTexFiles.exstract(files,
 						outputDir);
 				String outFile = "";
-				for (int i = 0; i < vppFiles.length; i++) {
-					outFile += "\n" + vppFiles[i];
+//				for (int i = 0; i < vppFiles.length; i++) {
+//					outFile += "\n" + vppFiles[i];
+//				}
+				
+				for (String string : vppFiles)
+				{
+					outFile += "\n" +string;
 				}
 				MessageDialog.openInformation(window.getShell(), "Tex 2 vpp",
 						"Processing completed: " + outFile);

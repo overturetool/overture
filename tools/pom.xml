@@ -17,6 +17,8 @@
   <modules>
 
     <module>vdmt</module>
+ <module>astgen</module>
+
 <module>maven-pst</module>
   </modules>
 

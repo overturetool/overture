@@ -46,7 +46,7 @@ public class TypeCheckMojo extends VdmBaseMojo {
 		super.execute();
 
 		VdmProject p = new VdmProject(getLog(),vdmToolsCmd, project.getFile().getParentFile(),dependedVppLocations);
-		p.TypeCheck();
+		p.typeCheck();
 		
 	
 	}

@@ -39,8 +39,13 @@ public class CodeGenJavaMojo extends VdmBaseMojo {
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		super.execute();
 
+		try{
 		VdmProject p = new VdmProject(getLog(), vdmToolsCmd, project.getFile().getParentFile(), dependedVppLocations);
-		p.CodeGen(excludePackages,excludeClasses,importPackages);
+		p.codeGen(excludePackages,excludeClasses,importPackages);
+		}catch (MojoExecutionException e)
+		{
+			throw e;
+		}
 
 	}
 

@@ -14,7 +14,7 @@
 <module>ast</module>
 <module>vdmunit</module>
 <module>parser</module>
-<module>eclipse</module>
+
 <module>potrans</module>
 <module>umltrans</module>
 <module>vdmtools</module>
@@ -43,5 +43,30 @@
 </configuration>
 </plugin>
 </plugins>
+  <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ftp</artifactId>
+        <version>1.0-beta-2</version>
+      </extension>
+    </extensions>
+
 </build>
+
+<!-- Enabling the use of FTP -->
+  <distributionManagement>
+    <repository>
+      <id>overturetool.org</id>
+<name>overturetool.org</name>
+      <url>ftp://localhost</url>
+    </repository>
+
+ <snapshotRepository>
+      <id>overturetool.org</id>
+<name>overturetool.org</name>
+      <url>ftp://localhost</url>
+    </snapshotRepository>
+
+  </distributionManagement>
 </project>
+

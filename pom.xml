@@ -47,8 +47,16 @@
   <distributionManagement>
     <repository>
       <id>overturetool.org</id>
+<name>overturetool.org</name>
       <url>ftp://localhost</url>
     </repository>
+
+ <snapshotRepository>
+      <id>overturetool.org</id>
+<name>overturetool.org</name>
+      <url>ftp://localhost</url>
+    </snapshotRepository>
+
   </distributionManagement>
 
 

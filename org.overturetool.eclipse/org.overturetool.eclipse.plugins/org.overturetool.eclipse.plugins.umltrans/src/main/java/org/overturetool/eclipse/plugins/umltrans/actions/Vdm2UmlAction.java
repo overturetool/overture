@@ -1,6 +1,8 @@
 package org.overturetool.eclipse.plugins.umltrans.actions;
 
 import java.io.File;
+import java.util.List;
+import java.util.Vector;
 
 import javax.swing.filechooser.FileFilter;
 
@@ -50,10 +52,10 @@ public class Vdm2UmlAction implements IWorkbenchWindowActionDelegate {
 		if (ret != null) {
 
 			try {
-				String[] files = new String[fLst.length];
+				List<String> files = new Vector<String>();
 				for (int i = 0; i < fLst.length; i++) {
 					String separator = System.getProperty("file.separator");
-					files[i] = fd.getFilterPath() + separator + fLst[i];
+					files.add(( fd.getFilterPath() + separator + fLst[i]));
 				}
 
 				org.eclipse.swt.widgets.FileDialog fdSave = new org.eclipse.swt.widgets.FileDialog(
@@ -62,7 +64,7 @@ public class Vdm2UmlAction implements IWorkbenchWindowActionDelegate {
 				// fd.setFilterPath("C:/");
 				String[] filterExt1 = { "*.xml", "*.xmi" };
 				fdSave.setFilterExtensions(filterExt1);
-				fdSave.setFileName(files[0] + ".xml");
+				fdSave.setFileName(files.get(0) + ".xml");
 				String outFile = fdSave.open();
 				if (outFile != null) {
 					// convert to vpp files the only format supported by the
