@@ -64,18 +64,14 @@ public class AsyncThread extends Thread
     		ctxt.setThreadState(null, cpu);
 
     		Value rv = operation.localEval(arglist, ctxt);
-
-    		if (!rv.isVoid())
-    		{
-    			response = new MessageResponse(rv, request);
-    		}
+   			response = new MessageResponse(rv, request);
 		}
 		catch (ValueException e)
 		{
 			response = new MessageResponse(e, request);
 		}
 
-		if (response != null && request.bus != null)
+		if (request.replyTo != null)
 		{
 			request.bus.reply(response);
 		}

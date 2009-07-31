@@ -30,4 +30,5 @@ abstract public class SchedulingPolicy
 	abstract public void addThread(Thread thread);
 	abstract public void removeThread(Thread thread);
 	abstract public void setState(Thread thread, RunState newstate);
+	abstract public boolean canTimeStep();
 }

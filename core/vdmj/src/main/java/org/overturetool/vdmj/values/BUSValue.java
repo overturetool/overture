@@ -31,7 +31,7 @@ import org.overturetool.vdmj.runtime.AsyncThread;
 import org.overturetool.vdmj.runtime.BUSPolicy;
 import org.overturetool.vdmj.runtime.MessageRequest;
 import org.overturetool.vdmj.runtime.MessageResponse;
-import org.overturetool.vdmj.runtime.VDMThreadSet;
+import org.overturetool.vdmj.runtime.SystemClock;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Type;
 
@@ -102,17 +102,17 @@ public class BUSValue extends ObjectValue
 			" opname: " + "\"" + thread.operation.name + "\"" +
 			" objref: " + thread.self.objectReference +
 			" size: " + request.args.toString().length() +
-			" time: " + VDMThreadSet.getWallTime());
+			" time: " + SystemClock.getWallTime());
 
 		RTLogger.log(
 			"MessageActivate -> msgid: " + request.msgId +
-			" time: " + VDMThreadSet.getWallTime());
+			" time: " + SystemClock.getWallTime());
 
 		thread.send(request);
 
 		RTLogger.log(
-			"MessageComplete -> msgid: " + request.msgId +
-			" time: " + VDMThreadSet.getWallTime());
+			"MessageCompleted -> msgid: " + request.msgId +
+			" time: " + SystemClock.getWallTime());
 	}
 
 	public void reply(MessageResponse response)
@@ -126,17 +126,17 @@ public class BUSValue extends ObjectValue
 			" callthr: " + response.request.threadId +
 			" calleethr: " + response.threadId +
 			" size: " + response.toString().length() +
-			" time: " + VDMThreadSet.getWallTime());
+			" time: " + SystemClock.getWallTime());
 
 		RTLogger.log(
 			"MessageActivate -> msgid: " + response.msgId +
-			" time: " + VDMThreadSet.getWallTime());
+			" time: " + SystemClock.getWallTime());
 
 		response.request.replyTo.add(response);
 
 		RTLogger.log(
-			"MessageComplete -> msgid: " + response.msgId +
-			" time: " + VDMThreadSet.getWallTime());
+			"MessageCompleted -> msgid: " + response.msgId +
+			" time: " + SystemClock.getWallTime());
 	}
 
 	public void setName(String name)

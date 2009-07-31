@@ -33,7 +33,7 @@ import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ObjectContext;
-import org.overturetool.vdmj.runtime.VDMThreadSet;
+import org.overturetool.vdmj.runtime.SystemClock;
 import org.overturetool.vdmj.syntax.DefinitionReader;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.values.CPUValue;
@@ -137,11 +137,11 @@ public class CPUClassDefinition extends ClassDefinition
     		cpu.addDeployed(obj);
 
    			RTLogger.log(
-    				"DeployObject -> objref: " + obj.objectReference +
+    				"DeployObj -> objref: " + obj.objectReference +
     				(name == null ? "" : " name: " + name) +
     				" clnm: \"" + obj.type.name.name + "\"" +
     				" cpunm: " + cpu.cpuNumber +
-    				" time: " + VDMThreadSet.getWallTime());
+    				" time: " + SystemClock.getWallTime());
 
    			return new VoidValue();
 		}

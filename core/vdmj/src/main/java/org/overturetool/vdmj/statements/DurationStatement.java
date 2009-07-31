@@ -27,7 +27,6 @@ import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.IntegerLiteralExpression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.VDMThreadSet;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Type;
@@ -61,7 +60,7 @@ public class DurationStatement extends Statement
 		{
 			ctxt.threadState.setTimestep(step);
 			Value rv = statement.eval(ctxt);
-			VDMThreadSet.timeStep(step);
+			ctxt.threadState.CPU.duration(step);
 			ctxt.threadState.setTimestep(0);
 			return rv;
 		}

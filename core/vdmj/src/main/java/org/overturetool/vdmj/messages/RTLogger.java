@@ -30,18 +30,48 @@ import java.util.Vector;
 public class RTLogger
 {
 	private static List<String> events = new Vector<String>();
+	private static PrintWriter logfile = null;
 
-	public static void log(String event)
+	public static synchronized void log(String event)
 	{
 		events.add(event);
-		Console.out.println(event);		// for now...
+
+		if (events.size() > 1000)
+		{
+			dump(false);
+		}
 	}
 
-	public void print(PrintWriter out)
+	public static void setLogfile(PrintWriter out)
 	{
+		if (logfile != null)
+		{
+			dump(true);		// Write out and close previous
+		}
+
+		logfile = out;
+	}
+
+	public static int getLogSize()
+	{
+		return events.size();
+	}
+
+	public static synchronized void dump(boolean close)
+	{
+		PrintWriter target = logfile == null ? Console.out : logfile;
+
 		for (String event: events)
 		{
-			out.println(event);
+			target.println(event);
+		}
+
+		target.flush();
+		events.clear();
+
+		if (close && logfile != null)
+		{
+			logfile.close();
 		}
 	}
 }

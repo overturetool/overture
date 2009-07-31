@@ -27,8 +27,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +49,7 @@ import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.pog.ProofObligation;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -272,6 +275,10 @@ abstract public class CommandReader
 				{
 					carryOn = doPog(line);
 				}
+				else if(line.startsWith("log"))
+				{
+					carryOn = doLog(line);
+				}
 				else if (line.startsWith("print") || line.startsWith("p "))
 				{
 					carryOn = doEvaluate(line);
@@ -306,6 +313,12 @@ abstract public class CommandReader
    			println("= " + interpreter.execute(line, null));
    			long after = System.currentTimeMillis();
 			println("Executed in " + (double)(after-before)/1000 + " secs. ");
+
+			if (RTLogger.getLogSize() > 0)
+			{
+				println("Dumping " + RTLogger.getLogSize() + " RT events:");
+				RTLogger.dump(false);
+			}
 		}
 		catch (ParserException e)
 		{
@@ -347,6 +360,12 @@ abstract public class CommandReader
 
 	protected boolean doQuit(@SuppressWarnings("unused") String line)
 	{
+		if (RTLogger.getLogSize() > 0)
+		{
+			println("Dumping " + RTLogger.getLogSize() + " RT events:");
+			RTLogger.dump(true);
+		}
+
 		return false;
 	}
 
@@ -420,6 +439,31 @@ abstract public class CommandReader
 			println("Generated " +
 				plural(list.size(), "proof obligation", "s") + ":\n");
 			print(list.toString());
+		}
+
+		return true;
+	}
+
+	protected boolean doLog(String line)
+	{
+		String[] parts = line.split("\\s+");
+
+		if (parts.length != 2 || !parts[0].equals("log"))
+		{
+			println("Usage: log <file>");
+		}
+		else
+		{
+			try
+			{
+				PrintWriter p = new PrintWriter(new FileOutputStream(parts[1], true));
+				RTLogger.setLogfile(p);
+				println("RT events now logged to " + parts[1]);
+			}
+			catch (FileNotFoundException e)
+			{
+				println("Cannot create RT event log: " + e.getMessage());
+			}
 		}
 
 		return true;
@@ -848,6 +892,7 @@ abstract public class CommandReader
 		println("files - list files in the current specification");
 		println("reload - reload the current specification files");
 		println("load <files> - replace current loaded specification files");
+		println("log <file> - log RT events to file");
 		println("quit - leave the interpreter");
 	}
 

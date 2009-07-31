@@ -91,4 +91,18 @@ public class FCFSPolicy extends SchedulingPolicy
 
 		return (bestThread != original);
 	}
+
+	@Override
+	public boolean canTimeStep()
+	{
+		for (Thread th: threads)
+		{
+			if (state.get(th) != RunState.TIMESTEP)
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
 }

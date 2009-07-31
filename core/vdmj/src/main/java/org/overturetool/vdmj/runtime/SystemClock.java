@@ -23,46 +23,62 @@
 
 package org.overturetool.vdmj.runtime;
 
-public class FPPolicy extends SchedulingPolicy
+import org.overturetool.vdmj.values.CPUValue;
+
+public class SystemClock
 {
-	public FPPolicy()
+	private static long wallTime = 0;
+	private static long minStepTime = Long.MAX_VALUE;
+	private static int waiters = 0;
+
+	public static synchronized long getWallTime()
 	{
-		throw new RuntimeException("Not implemented");
+		return wallTime;
 	}
 
-	@Override
-	public void addThread(Thread thread)
+	public static synchronized void timeStep(long cpuMin)
 	{
-		throw new RuntimeException("Not implemented");
+		if (cpuMin < minStepTime)
+		{
+			minStepTime = cpuMin;
+		}
+
+		waiters++;
+
+		if (waiters == CPUValue.nextCPU - 1)
+		{
+			for (CPUValue cpu: CPUValue.allCPUs)
+			{
+				cpu.timeStep(minStepTime);
+			}
+
+			wallTime += minStepTime;
+			waiters = 0;
+			unblock();
+		}
+		else
+		{
+			block();
+		}
 	}
 
-	@Override
-	public Thread getThread()
+	private static synchronized void unblock()
 	{
-		throw new RuntimeException("Not implemented");
+		SystemClock.class.notifyAll();
 	}
 
-	@Override
-	public void removeThread(Thread thread)
+	private static void block()
 	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public boolean reschedule()
-	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public void setState(Thread thread, RunState newstate)
-	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public boolean canTimeStep()
-	{
-		throw new RuntimeException("Not implemented");
+		while (true)
+		{
+			try
+			{
+				SystemClock.class.wait();
+			}
+			catch (InterruptedException e)
+			{
+				// So?
+			}
+		}
 	}
 }

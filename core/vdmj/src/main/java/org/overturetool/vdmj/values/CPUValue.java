@@ -33,14 +33,14 @@ import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.runtime.CPUPolicy;
 import org.overturetool.vdmj.runtime.RunState;
 import org.overturetool.vdmj.runtime.SchedulingPolicy;
-import org.overturetool.vdmj.runtime.VDMThreadSet;
+import org.overturetool.vdmj.runtime.SystemClock;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Type;
 
 public class CPUValue extends ObjectValue
 {
 	private static final long serialVersionUID = 1L;
-	private static int nextCPU = 1;
+	public static int nextCPU = 1;
 	public static List<CPUValue> allCPUs;
 
 	public final int cpuNumber;
@@ -48,10 +48,12 @@ public class CPUValue extends ObjectValue
 	public final double cyclesPerSec;
 	public final List<ObjectValue> deployed;
 	public final Map<Thread, ObjectValue> objects;
+	public Map<Thread, Long> durations;
 
 	public String name;
 	public Thread runningThread;
 	public int switches;
+	private long minTimeStep;
 
 	public static void init()
 	{
@@ -74,7 +76,9 @@ public class CPUValue extends ObjectValue
 
 		this.deployed = new Vector<ObjectValue>();
 		this.objects = new HashMap<Thread, ObjectValue>();
+		this.durations = new HashMap<Thread, Long>();
 		this.switches = 0;
+		this.minTimeStep = Long.MAX_VALUE;
 
 		allCPUs.add(this);
 	}
@@ -95,6 +99,8 @@ public class CPUValue extends ObjectValue
 
 		this.deployed = new Vector<ObjectValue>();
 		this.objects = new HashMap<Thread, ObjectValue>();
+		this.durations = new HashMap<Thread, Long>();
+		this.minTimeStep = Long.MAX_VALUE;
 		this.switches = 0;
 
 		allCPUs.add(this);
@@ -154,6 +160,7 @@ public class CPUValue extends ObjectValue
 	{
 		policy.addThread(thread);
 		objects.put(thread, object);
+		durations.put(thread, -1L);
 
 		RTLogger.log(
 			"ThreadCreate -> id: " + thread.getId() +
@@ -161,13 +168,14 @@ public class CPUValue extends ObjectValue
 			" objref: " + object.objectReference +
 			" clnm: \"" + object.type + "\"" +
 			" cpunm: " + cpuNumber +
-			" time: " + VDMThreadSet.getWallTime());
+			" time: " + SystemClock.getWallTime());
 	}
 
 	public synchronized void addThread(Thread thread)
 	{
 		policy.addThread(thread);
 		objects.put(thread, null);
+		durations.put(thread, -1L);
 
 		RTLogger.log(
 			"ThreadCreate -> id: " + thread.getId() +
@@ -175,7 +183,7 @@ public class CPUValue extends ObjectValue
 			" objref: nil " +
 			" clnm: nil " +
 			" cpunm: " + cpuNumber +
-			" time: " + VDMThreadSet.getWallTime());
+			" time: " + SystemClock.getWallTime());
 	}
 
 	public synchronized void removeThread(Thread thread)
@@ -192,18 +200,19 @@ public class CPUValue extends ObjectValue
 				" clnm: \"" + object.type.name.name + "\"" +
 				" cpunum: " + cpuNumber +
 				" overhead: " + 0 +
-				" time: " + VDMThreadSet.getWallTime());
+				" time: " + SystemClock.getWallTime());
 
 			kickMe = true;
 		}
 
 		policy.removeThread(thread);
 		objects.remove(thread);
+		durations.remove(thread);
 
 		RTLogger.log(
 			"ThreadKill -> id: " + thread.getId() +
 			" cpunm: " + cpuNumber +
-			" time: " + VDMThreadSet.getWallTime());
+			" time: " + SystemClock.getWallTime());
 
 		if (kickMe)
 		{
@@ -229,7 +238,7 @@ public class CPUValue extends ObjectValue
 				" clnm: \"" + object.type.name.name + "\"" +
 				" cpunum: " + cpuNumber +
 				" overhead: " + 0 +
-				" time: " + VDMThreadSet.getWallTime());
+				" time: " + SystemClock.getWallTime());
 
 			sleep();
 			switches++;
@@ -259,7 +268,7 @@ public class CPUValue extends ObjectValue
 			" clnm: \"" + object.type.name.name + "\"" +
 			" cpunum: " + cpuNumber +
 			" overhead: " + 0 +
-			" time: " + VDMThreadSet.getWallTime());
+			" time: " + SystemClock.getWallTime());
 	}
 
 	public synchronized void setState(Thread thread, RunState newstate)
@@ -272,6 +281,57 @@ public class CPUValue extends ObjectValue
 	{
 		policy.setState(Thread.currentThread(), newstate);
 		kick();
+	}
+
+	public synchronized void duration(long step)
+	{
+		long end = SystemClock.getWallTime() + step;
+
+		policy.setState(Thread.currentThread(), RunState.TIMESTEP);
+		durations.put(Thread.currentThread(), step);
+
+		if (step < minTimeStep)
+		{
+			minTimeStep = step;
+		}
+
+		if (policy.canTimeStep())
+		{
+			SystemClock.timeStep(minTimeStep);
+		}
+
+		while (SystemClock.getWallTime() < end)
+		{
+			reschedule();
+		}
+	}
+
+	public void timeStep(long step)
+	{
+		minTimeStep = Long.MAX_VALUE;
+		Map<Thread, Long> remaining = new HashMap<Thread, Long>();
+
+		for (Thread th: durations.keySet())
+		{
+			long duration = durations.get(th);
+
+			if (duration > step)
+			{
+				long reduced = duration - step;
+				remaining.put(th, reduced);
+
+				if (reduced < minTimeStep)
+				{
+					minTimeStep = reduced;
+				}
+			}
+			else
+			{
+				policy.setState(th, RunState.RUNNABLE);
+			}
+		}
+
+		durations = remaining;
 	}
 
 	private void kick()

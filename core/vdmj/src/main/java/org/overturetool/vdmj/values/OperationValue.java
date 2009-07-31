@@ -53,6 +53,7 @@ import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.PatternMatchException;
 import org.overturetool.vdmj.runtime.RootContext;
 import org.overturetool.vdmj.runtime.StateContext;
+import org.overturetool.vdmj.runtime.SystemClock;
 import org.overturetool.vdmj.runtime.VDMThreadSet;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.statements.Statement;
@@ -440,16 +441,18 @@ public class OperationValue extends Value
 		{
     		trace("OpRequest");
     		BUSValue bus = BUSClassDefinition.findBUS(from, to);
-    		MessageQueue<MessageResponse> queue = new MessageQueue<MessageResponse>();
-    		MessageRequest request = new MessageRequest(bus, from, to, argValues, queue);
-    		bus.send(request, thread);
 
     		if (isAsync)
     		{
+        		MessageRequest request = new MessageRequest(bus, from, to, argValues, null);
+        		bus.send(request, thread);
         		return new VoidValue();
     		}
     		else
     		{
+        		MessageQueue<MessageResponse> queue = new MessageQueue<MessageResponse>();
+        		MessageRequest request = new MessageRequest(bus, from, to, argValues, queue);
+        		bus.send(request, thread);
         		MessageResponse reply = queue.take();
         		return reply.getValue();	// Can throw a returned exception
     		}
@@ -543,7 +546,7 @@ public class OperationValue extends Value
 	{
 		hashFin++;
 		guardPasses++;
-		trace("OpComplete");
+		trace("OpCompleted");
 	}
 
 	private void notifySelf()
@@ -568,7 +571,7 @@ public class OperationValue extends Value
     			" clnm: \"" + self.type.name.name + "\"" +
     			" cpunm: " + self.getCPU().cpuNumber +
     			" async: " + isAsync +
-    			" time: " + VDMThreadSet.getWallTime()
+    			" time: " + SystemClock.getWallTime()
     			);
 		}
 	}
