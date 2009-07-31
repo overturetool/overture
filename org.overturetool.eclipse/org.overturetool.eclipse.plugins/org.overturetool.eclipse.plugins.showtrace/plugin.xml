@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Overture Trace"
+            id="org.overturetool.eclipse.plugins.showtrace">
+      </category>
+      <view
+            name="Tracefile viewer"
+            icon="icons/overture.gif"
+            category="org.overturetool.eclipse.plugins.showtrace"
+            class="org.overturetool.eclipse.plugins.showtrace.viewer.TracefileViewer"
+            id="org.overturetool.eclipse.plugins.showtrace.viewer.TracefileViewer">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.ui.resourcePerspective">
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.TaskList"
+               relationship="right"
+               id="org.overturetool.eclipse.plugins.showtrace.TracefileViewer">
+         </view>
+      </perspectiveExtension>
+   </extension>
+</plugin>
