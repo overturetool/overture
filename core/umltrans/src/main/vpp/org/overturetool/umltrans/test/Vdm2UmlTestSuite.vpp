@@ -1,0 +1,57 @@
+
+
+
+\begin{vdm_al}
+class Vdm2UmlTestSuite 
+
+
+operations
+public static suite: () ==> Test
+suite () ==
+(
+  dcl ts : TestSuite := new TestSuite("VDM - UML Total test");
+--  ts.addTest(new Vdm2UmlTest("Vdm2UmlTest"));
+--  ts.addTest(new Uml2XmiEATest("Uml2XmiEATest"));
+--  --ts.addTest(new Uml2XmiEclipseUmlTest("Uml2XmiEclipseUmlTest"));
+--  ts.addTest(new Uml2VdmTest("Uml2VdmTest"));
+--  --ts.addTest(new Vdm2UmlActiveClassTest("Vdm2UmlActiveClassTest"));
+--  ts.addTest(new Uml2VdmTracesTest("Uml2VdmTracesTest"));
+
+ ts.addTest(new Vdm2UmlTest());
+  ts.addTest(new Uml2XmiEATest());
+  --ts.addTest(new Uml2XmiEclipseUmlTest("Uml2XmiEclipseUmlTest"));
+  ts.addTest(new Uml2VdmTest());
+  --ts.addTest(new Vdm2UmlActiveClassTest("Vdm2UmlActiveClassTest"));
+  ts.addTest(new Uml2VdmTracesTest());
+
+  return ts;
+);
+
+
+public Execute : () ==> ()
+Execute() ==
+(
+  dcl ntr : TestResult := new TestResult();
+  let ts = suite()
+  in
+  (
+    ts.run(ntr);
+    
+    Util`DebugPrint("Test Suite: " ^ts.getName());
+    if ntr.wasSuccessful() then
+      Util`DebugPrint("\n:-) passed")
+    else
+    (
+      Util`DebugPrint("\nNumber of errors: " ^ Util`ToString[nat](ntr.errorCount()));
+      Util`DebugPrint("\nNumber of faild : " ^ Util`ToString[nat](ntr.failureCount()));
+    );
+    Util`DebugPrint("\nCount of TestCases and TestSuites: " ^ Util`ToString[nat](ntr.runCount()));
+    for all testName in set ts.getNames() 
+    do 
+      Util`DebugPrint("\n " ^testName);
+  );
+);
+
+
+end Vdm2UmlTestSuite 
+\end{vdm_al}

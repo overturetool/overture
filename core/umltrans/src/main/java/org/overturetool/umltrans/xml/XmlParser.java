@@ -7,7 +7,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 
-import org.overturetool.umltrans.XmlDoc;
+import org.overturetool.umltrans.vdm2uml.XmlDoc;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;

@@ -1,0 +1,2281 @@
+
+
+
+class TestData
+values
+ public static ClassAbstractOperation = new OmlDocument("",
+  new OmlSpecifications([
+    new OmlClass(
+      "ClassAbstractOperation",
+      [
+        
+      ],
+      nil,
+      [
+        new OmlTypeDefinitions([
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,6,1),
+              6,
+              1
+            ),
+            new OmlSimpleType(
+              "String",
+              new OmlSeq0Type(new OmlCharType(6,24),6,17),
+              nil,
+              6,
+              17
+            ),
+            6,
+            8
+          ),
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,7,1),
+              7,
+              1
+            ),
+            new OmlSimpleType(
+              "Integer",
+              new OmlIntType(7,18),
+              nil,
+              7,
+              18
+            ),
+            7,
+            8
+          ),
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,8,1),
+              8,
+              1
+            ),
+            new OmlSimpleType(
+              "Character",
+              new OmlCharType(8,20),
+              nil,
+              8,
+              20
+            ),
+            8,
+            8
+          ),
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,9,1),
+              9,
+              1
+            ),
+            new OmlSimpleType(
+              "MySet",
+              new OmlSetType(new OmlIntType(9,23),9,16),
+              nil,
+              9,
+              16
+            ),
+            9,
+            8
+          )
+        ],5,1),
+        new OmlOperationDefinitions([
+          new OmlOperationDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,13,1),
+              13,
+              1
+            ),
+            new OmlExplicitOperation(
+              "HelloWorld",
+              new OmlOperationType(
+                new OmlIntType(13,21),
+                new OmlBoolType(13,29),
+                13,
+                21
+              ),
+              [
+                new OmlPatternIdentifier("parm1",14,12)
+              ],
+              new OmlOperationBody(
+                nil,
+                false,
+                true,
+                14,
+                22
+              ),
+              new OmlOperationTrailer(
+                nil,
+                nil,
+                nil,
+                nil,
+                0,
+                0
+              ),
+              13,
+              8
+            ),
+            13,
+            8
+          )
+        ],11,1)
+      ],
+      false,
+      3,
+      1
+    )
+  ],0,0),
+  [
+    new OmlLexem(3,1,275,"class",1),
+    new OmlLexem(3,7,433,"ClassAbstractOperation",2),
+    new OmlLexem(5,1,420,"types",1),
+    new OmlLexem(6,1,375,"public",1),
+    new OmlLexem(6,8,433,"String",2),
+    new OmlLexem(6,15,299,"=",0),
+    new OmlLexem(6,17,390,"seq",1),
+    new OmlLexem(6,21,360,"of",1),
+    new OmlLexem(6,24,274,"char",1),
+    new OmlLexem(6,28,59,";",0),
+    new OmlLexem(7,1,375,"public",1),
+    new OmlLexem(7,8,433,"Integer",2),
+    new OmlLexem(7,16,299,"=",0),
+    new OmlLexem(7,18,324,"int",1),
+    new OmlLexem(7,21,59,";",0),
+    new OmlLexem(8,1,375,"public",1),
+    new OmlLexem(8,8,433,"Character",2),
+    new OmlLexem(8,18,299,"=",0),
+    new OmlLexem(8,20,274,"char",1),
+    new OmlLexem(8,24,59,";",0),
+    new OmlLexem(9,1,375,"public",1),
+    new OmlLexem(9,8,433,"MySet",2),
+    new OmlLexem(9,14,299,"=",0),
+    new OmlLexem(9,16,393,"set",1),
+    new OmlLexem(9,20,360,"of",1),
+    new OmlLexem(9,23,324,"int",1),
+    new OmlLexem(9,26,59,";",0),
+    new OmlLexem(11,1,361,"operations",1),
+    new OmlLexem(13,1,375,"public",1),
+    new OmlLexem(13,8,433,"HelloWorld",2),
+    new OmlLexem(13,19,58,":",0),
+    new OmlLexem(13,21,324,"int",1),
+    new OmlLexem(13,25,362,"==>",0),
+    new OmlLexem(13,29,270,"bool",1),
+    new OmlLexem(14,1,433,"HelloWorld",2),
+    new OmlLexem(14,11,40,"(",0),
+    new OmlLexem(14,12,433,"parm1",2),
+    new OmlLexem(14,17,41,")",0),
+    new OmlLexem(14,19,333,"==",0),
+    new OmlLexem(14,22,329,"is",1),
+    new OmlLexem(14,25,404,"subclass",1),
+    new OmlLexem(14,34,383,"responsibility",1),
+    new OmlLexem(14,48,59,";",0),
+    new OmlLexem(18,1,298,"end",1),
+    new OmlLexem(18,5,433,"ClassAbstractOperation",2)
+  ]
+);
+values
+ public static ClassActive = new OmlDocument("",
+  new OmlSpecifications([
+    new OmlClass(
+      "ClassActive",
+      [
+        
+      ],
+      nil,
+      [
+        new OmlThreadDefinition(new OmlProcedureThread(new OmlWhileLoop(
+          new OmlSymbolicLiteralExpression(new OmlBooleanLiteral(true,6,7),6,7),
+          new OmlSkipStatement(7,3),
+          6,
+          1
+        ),5,1),5,1)
+      ],
+      false,
+      3,
+      1
+    )
+  ],0,0),
+  [
+    new OmlLexem(3,1,275,"class",1),
+    new OmlLexem(3,7,433,"ClassActive",2),
+    new OmlLexem(5,1,411,"thread",1),
+    new OmlLexem(6,1,425,"while",1),
+    new OmlLexem(6,7,430,"true",1),
+    new OmlLexem(6,12,285,"do",1),
+    new OmlLexem(7,3,397,"skip",1),
+    new OmlLexem(7,7,59,";",0),
+    new OmlLexem(9,1,298,"end",1),
+    new OmlLexem(9,5,433,"ClassActive",2)
+  ]
+);
+values
+ public static ClassAssociation = new OmlDocument("",
+  new OmlSpecifications([
+    new OmlClass(
+      "A",
+      [
+        
+      ],
+      nil,
+      [
+        new OmlInstanceVariableDefinitions([
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(3,7,1),
+              0,
+              0
+            ),
+            new OmlAssignmentDefinition(
+              "att1",
+              new OmlTypeName(new OmlName(
+                nil,
+                "B",
+                7,
+                8
+              ),7,8),
+              new OmlNewExpression(
+                new OmlName(
+                  nil,
+                  "B",
+                  7,
+                  16
+                ),
+                [
+                  
+                ],
+                [
+                  
+                ],
+                7,
+                12
+              ),
+              7,
+              1
+            ),
+            0,
+            0
+          ),
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(3,8,1),
+              0,
+              0
+            ),
+            new OmlAssignmentDefinition(
+              "att2NoAssociation",
+              new OmlNatType(8,21),
+              new OmlSymbolicLiteralExpression(new OmlNumericLiteral(0,8,28),8,28),
+              8,
+              1
+            ),
+            0,
+            0
+          )
+        ],5,1)
+      ],
+      false,
+      3,
+      1
+    ),
+    new OmlClass(
+      "B",
+      [
+        
+      ],
+      nil,
+      [
+        
+      ],
+      false,
+      11,
+      1
+    )
+  ],0,0),
+  [
+    new OmlLexem(3,1,275,"class",1),
+    new OmlLexem(3,7,433,"A",2),
+    new OmlLexem(5,1,323,"instance",1),
+    new OmlLexem(5,10,423,"variables",1),
+    new OmlLexem(7,1,433,"att1",2),
+    new OmlLexem(7,6,58,":",0),
+    new OmlLexem(7,8,433,"B",2),
+    new OmlLexem(7,9,265,":=",0),
+    new OmlLexem(7,12,354,"new",1),
+    new OmlLexem(7,16,433,"B",2),
+    new OmlLexem(7,17,40,"(",0),
+    new OmlLexem(7,18,41,")",0),
+    new OmlLexem(7,19,59,";",0),
+    new OmlLexem(8,1,433,"att2NoAssociation",2),
+    new OmlLexem(8,19,58,":",0),
+    new OmlLexem(8,21,352,"nat",1),
+    new OmlLexem(8,25,265,":=",0),
+    new OmlLexem(8,28,435,"0",0),
+    new OmlLexem(8,29,59,";",0),
+    new OmlLexem(9,1,298,"end",1),
+    new OmlLexem(9,5,433,"A",2),
+    new OmlLexem(11,1,275,"class",1),
+    new OmlLexem(11,7,433,"B",2),
+    new OmlLexem(13,1,298,"end",1),
+    new OmlLexem(13,5,433,"B",2)
+  ]
+);
+values
+ public static ClassAssociationN = new OmlDocument("",
+  new OmlSpecifications([
+    new OmlClass(
+      "A",
+      [
+        
+      ],
+      nil,
+      [
+        new OmlInstanceVariableDefinitions([
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(3,7,1),
+              0,
+              0
+            ),
+            new OmlAssignmentDefinition(
+              "att1",
+              new OmlProductType(
+                new OmlProductType(
+                  new OmlSeq0Type(new OmlTypeName(new OmlName(
+                    nil,
+                    "B",
+                    7,
+                    15
+                  ),7,15),7,8),
+                  new OmlTypeName(new OmlName(
+                    nil,
+                    "C",
+                    7,
+                    19
+                  ),7,19),
+                  7,
+                  17
+                ),
+                new OmlTypeName(new OmlName(
+                  nil,
+                  "D",
+                  7,
+                  23
+                ),7,23),
+                7,
+                21
+              ),
+              nil,
+              7,
+              1
+            ),
+            0,
+            0
+          ),
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(3,8,1),
+              0,
+              0
+            ),
+            new OmlAssignmentDefinition(
+              "att2NoAssociation",
+              new OmlNatType(8,21),
+              new OmlSymbolicLiteralExpression(new OmlNumericLiteral(0,8,28),8,28),
+              8,
+              1
+            ),
+            0,
+            0
+          )
+        ],5,1)
+      ],
+      false,
+      3,
+      1
+    ),
+    new OmlClass(
+      "B",
+      [
+        
+      ],
+      nil,
+      [
+        
+      ],
+      false,
+      11,
+      1
+    ),
+    new OmlClass(
+      "C",
+      [
+        
+      ],
+      nil,
+      [
+        
+      ],
+      false,
+      15,
+      1
+    ),
+    new OmlClass(
+      "D",
+      [
+        
+      ],
+      nil,
+      [
+        
+      ],
+      false,
+      19,
+      1
+    )
+  ],0,0),
+  [
+    new OmlLexem(3,1,275,"class",1),
+    new OmlLexem(3,7,433,"A",2),
+    new OmlLexem(5,1,323,"instance",1),
+    new OmlLexem(5,10,423,"variables",1),
+    new OmlLexem(7,1,433,"att1",2),
+    new OmlLexem(7,6,58,":",0),
+    new OmlLexem(7,8,390,"seq",1),
+    new OmlLexem(7,12,360,"of",1),
+    new OmlLexem(7,15,433,"B",2),
+    new OmlLexem(7,17,42,"*",0),
+    new OmlLexem(7,19,433,"C",2),
+    new OmlLexem(7,21,42,"*",0),
+    new OmlLexem(7,23,433,"D",2),
+    new OmlLexem(7,24,59,";",0),
+    new OmlLexem(8,1,433,"att2NoAssociation",2),
+    new OmlLexem(8,19,58,":",0),
+    new OmlLexem(8,21,352,"nat",1),
+    new OmlLexem(8,25,265,":=",0),
+    new OmlLexem(8,28,435,"0",0),
+    new OmlLexem(8,29,59,";",0),
+    new OmlLexem(9,1,298,"end",1),
+    new OmlLexem(9,5,433,"A",2),
+    new OmlLexem(11,1,275,"class",1),
+    new OmlLexem(11,7,433,"B",2),
+    new OmlLexem(13,1,298,"end",1),
+    new OmlLexem(13,5,433,"B",2),
+    new OmlLexem(15,1,275,"class",1),
+    new OmlLexem(15,7,433,"C",2),
+    new OmlLexem(17,1,298,"end",1),
+    new OmlLexem(17,5,433,"C",2),
+    new OmlLexem(19,1,275,"class",1),
+    new OmlLexem(19,7,433,"D",2),
+    new OmlLexem(21,1,298,"end",1),
+    new OmlLexem(21,5,433,"D",2)
+  ]
+);
+values
+ public static ClassComplete = new OmlDocument("",
+  new OmlSpecifications([
+    new OmlClass(
+      "ClassComplete",
+      [
+        
+      ],
+      nil,
+      [
+        new OmlTypeDefinitions([
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,6,1),
+              6,
+              1
+            ),
+            new OmlSimpleType(
+              "String",
+              new OmlSeq0Type(new OmlCharType(6,24),6,17),
+              nil,
+              6,
+              17
+            ),
+            6,
+            8
+          ),
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,7,1),
+              7,
+              1
+            ),
+            new OmlSimpleType(
+              "Integer",
+              new OmlIntType(7,18),
+              nil,
+              7,
+              18
+            ),
+            7,
+            8
+          ),
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,8,1),
+              8,
+              1
+            ),
+            new OmlSimpleType(
+              "Character",
+              new OmlCharType(8,20),
+              nil,
+              8,
+              20
+            ),
+            8,
+            8
+          ),
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,9,1),
+              9,
+              1
+            ),
+            new OmlSimpleType(
+              "MySet",
+              new OmlSetType(new OmlIntType(9,23),9,16),
+              nil,
+              9,
+              16
+            ),
+            9,
+            8
+          )
+        ],5,1),
+        new OmlValueDefinitions([
+          new OmlValueDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,13,1),
+              13,
+              1
+            ),
+            new OmlValueShape(
+              new OmlPatternIdentifier("val1",13,8),
+              new OmlSeq0Type(new OmlCharType(13,22),13,15),
+              new OmlSymbolicLiteralExpression(new OmlTextLiteral("Hello World",13,29),13,29),
+              13,
+              8
+            ),
+            13,
+            8
+          ),
+          new OmlValueDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(1,14,1),
+              14,
+              1
+            ),
+            new OmlValueShape(
+              new OmlPatternIdentifier("val2",14,9),
+              new OmlNatType(14,16),
+              new OmlSymbolicLiteralExpression(new OmlNumericLiteral(4,14,22),14,22),
+              14,
+              9
+            ),
+            14,
+            9
+          )
+        ],11,1),
+        new OmlInstanceVariableDefinitions([
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,18,1),
+              18,
+              1
+            ),
+            new OmlAssignmentDefinition(
+              "att1",
+              new OmlSeq0Type(new OmlCharType(18,22),18,15),
+              nil,
+              18,
+              8
+            ),
+            18,
+            1
+          ),
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(3,19,1),
+              0,
+              0
+            ),
+            new OmlAssignmentDefinition(
+              "att2",
+              new OmlTypeName(new OmlName(
+                nil,
+                "String",
+                19,
+                8
+              ),19,8),
+              nil,
+              19,
+              1
+            ),
+            0,
+            0
+          ),
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(1,20,1),
+              20,
+              1
+            ),
+            new OmlAssignmentDefinition(
+              "att3",
+              new OmlIntType(20,16),
+              nil,
+              20,
+              9
+            ),
+            20,
+            1
+          )
+        ],16,1),
+        new OmlOperationDefinitions([
+          new OmlOperationDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,25,1),
+              25,
+              1
+            ),
+            new OmlExplicitOperation(
+              "Op1",
+              new OmlOperationType(
+                new OmlIntType(25,14),
+                new OmlBoolType(25,22),
+                25,
+                14
+              ),
+              [
+                new OmlPatternIdentifier("parm1",26,5)
+              ],
+              new OmlOperationBody(
+                nil,
+                false,
+                true,
+                26,
+                15
+              ),
+              new OmlOperationTrailer(
+                nil,
+                nil,
+                nil,
+                nil,
+                0,
+                0
+              ),
+              25,
+              8
+            ),
+            25,
+            8
+          ),
+          new OmlOperationDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(1,28,1),
+              28,
+              1
+            ),
+            new OmlExplicitOperation(
+              "Op2",
+              new OmlOperationType(
+                new OmlEmptyType(28,15),
+                new OmlTypeName(new OmlName(
+                  nil,
+                  "String",
+                  28,
+                  22
+                ),28,22),
+                28,
+                15
+              ),
+              [
+                
+              ],
+              new OmlOperationBody(
+                new OmlReturnStatement(new OmlSymbolicLiteralExpression(new OmlTextLiteral("HI",29,17),29,17),29,10),
+                false,
+                false,
+                29,
+                10
+              ),
+              new OmlOperationTrailer(
+                nil,
+                nil,
+                nil,
+                nil,
+                0,
+                0
+              ),
+              28,
+              9
+            ),
+            28,
+            9
+          )
+        ],23,1),
+        new OmlFunctionDefinitions([
+          new OmlFunctionDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,33,1),
+              33,
+              1
+            ),
+            new OmlExplicitFunction(
+              "Funk1",
+              [
+                
+              ],
+              new OmlPartialFunctionType(
+                new OmlCharType(33,16),
+                new OmlBoolType(33,24),
+                33,
+                16
+              ),
+              [
+                new OmlParameter([
+                  new OmlDontCarePattern(34,7)
+                ],34,6)
+              ],
+              new OmlFunctionBody(
+                new OmlSymbolicLiteralExpression(new OmlBooleanLiteral(true,34,13),34,13),
+                false,
+                false,
+                34,
+                13
+              ),
+              new OmlFunctionTrailer(
+                nil,
+                nil,
+                0,
+                0
+              ),
+              33,
+              8
+            ),
+            33,
+            8
+          ),
+          new OmlFunctionDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(1,36,1),
+              36,
+              1
+            ),
+            new OmlExplicitFunction(
+              "Funk2",
+              [
+                
+              ],
+              new OmlPartialFunctionType(
+                new OmlCharType(36,17),
+                new OmlBoolType(36,25),
+                36,
+                17
+              ),
+              [
+                new OmlParameter([
+                  new OmlDontCarePattern(37,7)
+                ],37,6)
+              ],
+              new OmlFunctionBody(
+                new OmlSymbolicLiteralExpression(new OmlBooleanLiteral(true,37,13),37,13),
+                false,
+                false,
+                37,
+                13
+              ),
+              new OmlFunctionTrailer(
+                nil,
+                nil,
+                0,
+                0
+              ),
+              36,
+              9
+            ),
+            36,
+            9
+          )
+        ],32,1)
+      ],
+      false,
+      3,
+      1
+    )
+  ],0,0),
+  [
+    new OmlLexem(3,1,275,"class",1),
+    new OmlLexem(3,7,433,"ClassComplete",2),
+    new OmlLexem(5,1,420,"types",1),
+    new OmlLexem(6,1,375,"public",1),
+    new OmlLexem(6,8,433,"String",2),
+    new OmlLexem(6,15,299,"=",0),
+    new OmlLexem(6,17,390,"seq",1),
+    new OmlLexem(6,21,360,"of",1),
+    new OmlLexem(6,24,274,"char",1),
+    new OmlLexem(6,28,59,";",0),
+    new OmlLexem(7,1,375,"public",1),
+    new OmlLexem(7,8,433,"Integer",2),
+    new OmlLexem(7,16,299,"=",0),
+    new OmlLexem(7,18,324,"int",1),
+    new OmlLexem(7,21,59,";",0),
+    new OmlLexem(8,1,375,"public",1),
+    new OmlLexem(8,8,433,"Character",2),
+    new OmlLexem(8,18,299,"=",0),
+    new OmlLexem(8,20,274,"char",1),
+    new OmlLexem(8,24,59,";",0),
+    new OmlLexem(9,1,375,"public",1),
+    new OmlLexem(9,8,433,"MySet",2),
+    new OmlLexem(9,14,299,"=",0),
+    new OmlLexem(9,16,393,"set",1),
+    new OmlLexem(9,20,360,"of",1),
+    new OmlLexem(9,23,324,"int",1),
+    new OmlLexem(11,1,422,"values",1),
+    new OmlLexem(13,1,375,"public",1),
+    new OmlLexem(13,8,433,"val1",2),
+    new OmlLexem(13,13,58,":",0),
+    new OmlLexem(13,15,390,"seq",1),
+    new OmlLexem(13,19,360,"of",1),
+    new OmlLexem(13,22,274,"char",1),
+    new OmlLexem(13,27,299,"=",0),
+    new OmlLexem(13,29,437,"\"Hello World\"",0),
+    new OmlLexem(13,42,59,";",0),
+    new OmlLexem(14,1,372,"private",1),
+    new OmlLexem(14,9,433,"val2",2),
+    new OmlLexem(14,14,58,":",0),
+    new OmlLexem(14,16,352,"nat",1),
+    new OmlLexem(14,20,299,"=",0),
+    new OmlLexem(14,22,435,"4",0),
+    new OmlLexem(14,23,59,";",0),
+    new OmlLexem(16,1,323,"instance",1),
+    new OmlLexem(16,10,423,"variables",1),
+    new OmlLexem(18,1,375,"public",1),
+    new OmlLexem(18,8,433,"att1",2),
+    new OmlLexem(18,13,58,":",0),
+    new OmlLexem(18,15,390,"seq",1),
+    new OmlLexem(18,19,360,"of",1),
+    new OmlLexem(18,22,274,"char",1),
+    new OmlLexem(18,26,59,";",0),
+    new OmlLexem(19,1,433,"att2",2),
+    new OmlLexem(19,6,58,":",0),
+    new OmlLexem(19,8,433,"String",2),
+    new OmlLexem(19,14,59,";",0),
+    new OmlLexem(20,1,372,"private",1),
+    new OmlLexem(20,9,433,"att3",2),
+    new OmlLexem(20,14,58,":",0),
+    new OmlLexem(20,16,324,"int",1),
+    new OmlLexem(20,19,59,";",0),
+    new OmlLexem(23,1,361,"operations",1),
+    new OmlLexem(25,1,375,"public",1),
+    new OmlLexem(25,8,433,"Op1",2),
+    new OmlLexem(25,12,58,":",0),
+    new OmlLexem(25,14,324,"int",1),
+    new OmlLexem(25,18,362,"==>",0),
+    new OmlLexem(25,22,270,"bool",1),
+    new OmlLexem(26,1,433,"Op1",2),
+    new OmlLexem(26,4,40,"(",0),
+    new OmlLexem(26,5,433,"parm1",2),
+    new OmlLexem(26,10,41,")",0),
+    new OmlLexem(26,12,333,"==",0),
+    new OmlLexem(26,15,329,"is",1),
+    new OmlLexem(26,18,404,"subclass",1),
+    new OmlLexem(26,27,383,"responsibility",1),
+    new OmlLexem(26,41,59,";",0),
+    new OmlLexem(28,1,372,"private",1),
+    new OmlLexem(28,9,433,"Op2",2),
+    new OmlLexem(28,13,58,":",0),
+    new OmlLexem(28,15,40,"(",0),
+    new OmlLexem(28,16,41,")",0),
+    new OmlLexem(28,18,362,"==>",0),
+    new OmlLexem(28,22,433,"String",2),
+    new OmlLexem(29,1,433,"Op2",2),
+    new OmlLexem(29,4,40,"(",0),
+    new OmlLexem(29,5,41,")",0),
+    new OmlLexem(29,7,333,"==",0),
+    new OmlLexem(29,10,384,"return",1),
+    new OmlLexem(29,17,437,"\"HI\"",0),
+    new OmlLexem(29,21,59,";",0),
+    new OmlLexem(32,1,312,"functions",1),
+    new OmlLexem(33,1,375,"public",1),
+    new OmlLexem(33,8,433,"Funk1",2),
+    new OmlLexem(33,14,58,":",0),
+    new OmlLexem(33,16,274,"char",1),
+    new OmlLexem(33,21,264,"->",0),
+    new OmlLexem(33,24,270,"bool",1),
+    new OmlLexem(34,1,433,"Funk1",2),
+    new OmlLexem(34,6,40,"(",0),
+    new OmlLexem(34,7,45,"-",0),
+    new OmlLexem(34,8,41,")",0),
+    new OmlLexem(34,10,333,"==",0),
+    new OmlLexem(34,13,430,"true",1),
+    new OmlLexem(34,17,59,";",0),
+    new OmlLexem(36,1,372,"private",1),
+    new OmlLexem(36,9,433,"Funk2",2),
+    new OmlLexem(36,15,58,":",0),
+    new OmlLexem(36,17,274,"char",1),
+    new OmlLexem(36,22,264,"->",0),
+    new OmlLexem(36,25,270,"bool",1),
+    new OmlLexem(37,1,433,"Funk2",2),
+    new OmlLexem(37,6,40,"(",0),
+    new OmlLexem(37,7,45,"-",0),
+    new OmlLexem(37,8,41,")",0),
+    new OmlLexem(37,10,333,"==",0),
+    new OmlLexem(37,13,430,"true",1),
+    new OmlLexem(37,17,59,";",0),
+    new OmlLexem(40,1,298,"end",1),
+    new OmlLexem(40,5,433,"ClassComplete",2)
+  ]
+);
+values
+ public static ClassInheritance = new OmlDocument("",
+  new OmlSpecifications([
+    new OmlClass(
+      "A",
+      [
+        
+      ],
+      new OmlInheritanceClause([
+        "B",
+        "C",
+        "D"
+      ],3,9),
+      [
+        
+      ],
+      false,
+      3,
+      1
+    ),
+    new OmlClass(
+      "B",
+      [
+        
+      ],
+      nil,
+      [
+        
+      ],
+      false,
+      8,
+      1
+    ),
+    new OmlClass(
+      "C",
+      [
+        
+      ],
+      nil,
+      [
+        
+      ],
+      false,
+      12,
+      1
+    ),
+    new OmlClass(
+      "D",
+      [
+        
+      ],
+      nil,
+      [
+        
+      ],
+      false,
+      16,
+      1
+    )
+  ],0,0),
+  [
+    new OmlLexem(3,1,275,"class",1),
+    new OmlLexem(3,7,433,"A",2),
+    new OmlLexem(3,9,329,"is",1),
+    new OmlLexem(3,12,404,"subclass",1),
+    new OmlLexem(3,21,360,"of",1),
+    new OmlLexem(3,24,433,"B",2),
+    new OmlLexem(3,25,44,",",0),
+    new OmlLexem(3,26,433,"C",2),
+    new OmlLexem(3,27,44,",",0),
+    new OmlLexem(3,28,433,"D",2),
+    new OmlLexem(6,1,298,"end",1),
+    new OmlLexem(6,5,433,"A",2),
+    new OmlLexem(8,1,275,"class",1),
+    new OmlLexem(8,7,433,"B",2),
+    new OmlLexem(10,1,298,"end",1),
+    new OmlLexem(10,5,433,"B",2),
+    new OmlLexem(12,1,275,"class",1),
+    new OmlLexem(12,7,433,"C",2),
+    new OmlLexem(14,1,298,"end",1),
+    new OmlLexem(14,5,433,"C",2),
+    new OmlLexem(16,1,275,"class",1),
+    new OmlLexem(16,7,433,"D",2),
+    new OmlLexem(18,1,298,"end",1),
+    new OmlLexem(18,5,433,"D",2)
+  ]
+);
+values
+ public static ClassInstanceUnionType = new OmlDocument("",
+  new OmlSpecifications([
+    new OmlClass(
+      "A",
+      [
+        
+      ],
+      nil,
+      [
+        new OmlInstanceVariableDefinitions([
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(3,7,1),
+              0,
+              0
+            ),
+            new OmlAssignmentDefinition(
+              "att1",
+              new OmlUnionType(
+                new OmlUnionType(
+                  new OmlTypeName(new OmlName(
+                    nil,
+                    "B",
+                    7,
+                    8
+                  ),7,8),
+                  new OmlTypeName(new OmlName(
+                    nil,
+                    "C",
+                    7,
+                    12
+                  ),7,12),
+                  7,
+                  10
+                ),
+                new OmlNatType(7,16),
+                7,
+                14
+              ),
+              nil,
+              7,
+              1
+            ),
+            0,
+            0
+          ),
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(3,8,1),
+              0,
+              0
+            ),
+            new OmlAssignmentDefinition(
+              "att2NoAssociation",
+              new OmlNatType(8,21),
+              new OmlSymbolicLiteralExpression(new OmlNumericLiteral(0,8,28),8,28),
+              8,
+              1
+            ),
+            0,
+            0
+          )
+        ],5,1)
+      ],
+      false,
+      3,
+      1
+    ),
+    new OmlClass(
+      "B",
+      [
+        
+      ],
+      nil,
+      [
+        
+      ],
+      false,
+      12,
+      1
+    ),
+    new OmlClass(
+      "C",
+      [
+        
+      ],
+      nil,
+      [
+        
+      ],
+      false,
+      16,
+      1
+    )
+  ],0,0),
+  [
+    new OmlLexem(3,1,275,"class",1),
+    new OmlLexem(3,7,433,"A",2),
+    new OmlLexem(5,1,323,"instance",1),
+    new OmlLexem(5,10,423,"variables",1),
+    new OmlLexem(7,1,433,"att1",2),
+    new OmlLexem(7,6,58,":",0),
+    new OmlLexem(7,8,433,"B",2),
+    new OmlLexem(7,10,124,"|",0),
+    new OmlLexem(7,12,433,"C",2),
+    new OmlLexem(7,14,124,"|",0),
+    new OmlLexem(7,16,352,"nat",1),
+    new OmlLexem(7,19,59,";",0),
+    new OmlLexem(8,1,433,"att2NoAssociation",2),
+    new OmlLexem(8,19,58,":",0),
+    new OmlLexem(8,21,352,"nat",1),
+    new OmlLexem(8,25,265,":=",0),
+    new OmlLexem(8,28,435,"0",0),
+    new OmlLexem(8,29,59,";",0),
+    new OmlLexem(10,1,298,"end",1),
+    new OmlLexem(10,5,433,"A",2),
+    new OmlLexem(12,1,275,"class",1),
+    new OmlLexem(12,7,433,"B",2),
+    new OmlLexem(14,1,298,"end",1),
+    new OmlLexem(14,5,433,"B",2),
+    new OmlLexem(16,1,275,"class",1),
+    new OmlLexem(16,7,433,"C",2),
+    new OmlLexem(18,1,298,"end",1),
+    new OmlLexem(18,5,433,"C",2)
+  ]
+);
+values
+ public static ClassInstanceVar = new OmlDocument("",
+  new OmlSpecifications([
+    new OmlClass(
+      "ClassInstanceVar",
+      [
+        
+      ],
+      nil,
+      [
+        new OmlTypeDefinitions([
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,6,1),
+              6,
+              1
+            ),
+            new OmlSimpleType(
+              "String",
+              new OmlSeq0Type(new OmlCharType(6,24),6,17),
+              nil,
+              6,
+              17
+            ),
+            6,
+            8
+          ),
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,7,1),
+              7,
+              1
+            ),
+            new OmlSimpleType(
+              "Integer",
+              new OmlIntType(7,18),
+              nil,
+              7,
+              18
+            ),
+            7,
+            8
+          ),
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,8,1),
+              8,
+              1
+            ),
+            new OmlSimpleType(
+              "Character",
+              new OmlCharType(8,20),
+              nil,
+              8,
+              20
+            ),
+            8,
+            8
+          ),
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,9,1),
+              9,
+              1
+            ),
+            new OmlSimpleType(
+              "MySet",
+              new OmlSetType(new OmlIntType(9,23),9,16),
+              nil,
+              9,
+              16
+            ),
+            9,
+            8
+          )
+        ],5,1),
+        new OmlInstanceVariableDefinitions([
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,13,1),
+              13,
+              1
+            ),
+            new OmlAssignmentDefinition(
+              "att1SeqOfChar",
+              new OmlSeq0Type(new OmlCharType(13,31),13,24),
+              nil,
+              13,
+              8
+            ),
+            13,
+            1
+          ),
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,14,1),
+              14,
+              1
+            ),
+            new OmlAssignmentDefinition(
+              "att4SeqOfCharDefault",
+              new OmlSeq0Type(new OmlCharType(14,38),14,31),
+              new OmlSymbolicLiteralExpression(new OmlTextLiteral("Hello World",14,44),14,44),
+              14,
+              8
+            ),
+            14,
+            1
+          ),
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(3,15,1),
+              0,
+              0
+            ),
+            new OmlAssignmentDefinition(
+              "att2String",
+              new OmlTypeName(new OmlName(
+                nil,
+                "String",
+                15,
+                14
+              ),15,14),
+              nil,
+              15,
+              1
+            ),
+            0,
+            0
+          ),
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(3,16,1),
+              0,
+              0
+            ),
+            new OmlAssignmentDefinition(
+              "att3Int",
+              new OmlIntType(16,11),
+              nil,
+              16,
+              1
+            ),
+            0,
+            0
+          ),
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(0,17,1),
+              17,
+              1
+            ),
+            new OmlAssignmentDefinition(
+              "att5Protected",
+              new OmlIntType(17,27),
+              new OmlSymbolicLiteralExpression(new OmlNumericLiteral(8,17,34),17,34),
+              17,
+              11
+            ),
+            17,
+            1
+          ),
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(3,18,1),
+              0,
+              0
+            ),
+            new OmlAssignmentDefinition(
+              "att6Set",
+              new OmlSetType(new OmlIntType(18,18),18,11),
+              nil,
+              18,
+              1
+            ),
+            0,
+            0
+          ),
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(3,19,1),
+              0,
+              0
+            ),
+            new OmlAssignmentDefinition(
+              "att7Seq",
+              new OmlSeq1Type(new OmlCharType(19,19),19,11),
+              nil,
+              19,
+              1
+            ),
+            0,
+            0
+          ),
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(3,20,1),
+              0,
+              0
+            ),
+            new OmlAssignmentDefinition(
+              "att8Nat1",
+              new OmlNat1Type(20,12),
+              nil,
+              20,
+              1
+            ),
+            0,
+            0
+          ),
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(3,21,1),
+              0,
+              0
+            ),
+            new OmlAssignmentDefinition(
+              "att9Real",
+              new OmlRealType(21,12),
+              nil,
+              21,
+              1
+            ),
+            0,
+            0
+          )
+        ],11,1)
+      ],
+      false,
+      3,
+      1
+    )
+  ],0,0),
+  [
+    new OmlLexem(3,1,275,"class",1),
+    new OmlLexem(3,7,433,"ClassInstanceVar",2),
+    new OmlLexem(5,1,420,"types",1),
+    new OmlLexem(6,1,375,"public",1),
+    new OmlLexem(6,8,433,"String",2),
+    new OmlLexem(6,15,299,"=",0),
+    new OmlLexem(6,17,390,"seq",1),
+    new OmlLexem(6,21,360,"of",1),
+    new OmlLexem(6,24,274,"char",1),
+    new OmlLexem(6,28,59,";",0),
+    new OmlLexem(7,1,375,"public",1),
+    new OmlLexem(7,8,433,"Integer",2),
+    new OmlLexem(7,16,299,"=",0),
+    new OmlLexem(7,18,324,"int",1),
+    new OmlLexem(7,21,59,";",0),
+    new OmlLexem(8,1,375,"public",1),
+    new OmlLexem(8,8,433,"Character",2),
+    new OmlLexem(8,18,299,"=",0),
+    new OmlLexem(8,20,274,"char",1),
+    new OmlLexem(8,24,59,";",0),
+    new OmlLexem(9,1,375,"public",1),
+    new OmlLexem(9,8,433,"MySet",2),
+    new OmlLexem(9,14,299,"=",0),
+    new OmlLexem(9,16,393,"set",1),
+    new OmlLexem(9,20,360,"of",1),
+    new OmlLexem(9,23,324,"int",1),
+    new OmlLexem(9,26,59,";",0),
+    new OmlLexem(11,1,323,"instance",1),
+    new OmlLexem(11,10,423,"variables",1),
+    new OmlLexem(13,1,375,"public",1),
+    new OmlLexem(13,8,433,"att1SeqOfChar",2),
+    new OmlLexem(13,22,58,":",0),
+    new OmlLexem(13,24,390,"seq",1),
+    new OmlLexem(13,28,360,"of",1),
+    new OmlLexem(13,31,274,"char",1),
+    new OmlLexem(13,35,59,";",0),
+    new OmlLexem(14,1,375,"public",1),
+    new OmlLexem(14,8,433,"att4SeqOfCharDefault",2),
+    new OmlLexem(14,29,58,":",0),
+    new OmlLexem(14,31,390,"seq",1),
+    new OmlLexem(14,35,360,"of",1),
+    new OmlLexem(14,38,274,"char",1),
+    new OmlLexem(14,42,265,":=",0),
+    new OmlLexem(14,44,437,"\"Hello World\"",0),
+    new OmlLexem(14,57,59,";",0),
+    new OmlLexem(15,1,433,"att2String",2),
+    new OmlLexem(15,12,58,":",0),
+    new OmlLexem(15,14,433,"String",2),
+    new OmlLexem(15,20,59,";",0),
+    new OmlLexem(16,1,433,"att3Int",2),
+    new OmlLexem(16,9,58,":",0),
+    new OmlLexem(16,11,324,"int",1),
+    new OmlLexem(16,14,59,";",0),
+    new OmlLexem(17,1,374,"protected",1),
+    new OmlLexem(17,11,433,"att5Protected",2),
+    new OmlLexem(17,25,58,":",0),
+    new OmlLexem(17,27,324,"int",1),
+    new OmlLexem(17,31,265,":=",0),
+    new OmlLexem(17,34,435,"8",0),
+    new OmlLexem(17,35,59,";",0),
+    new OmlLexem(18,1,433,"att6Set",2),
+    new OmlLexem(18,9,58,":",0),
+    new OmlLexem(18,11,393,"set",1),
+    new OmlLexem(18,15,360,"of",1),
+    new OmlLexem(18,18,324,"int",1),
+    new OmlLexem(18,21,59,";",0),
+    new OmlLexem(19,1,433,"att7Seq",2),
+    new OmlLexem(19,9,58,":",0),
+    new OmlLexem(19,11,391,"seq1",1),
+    new OmlLexem(19,16,360,"of",1),
+    new OmlLexem(19,19,274,"char",1),
+    new OmlLexem(19,23,59,";",0),
+    new OmlLexem(20,1,433,"att8Nat1",2),
+    new OmlLexem(20,10,58,":",0),
+    new OmlLexem(20,12,353,"nat1",1),
+    new OmlLexem(20,16,59,";",0),
+    new OmlLexem(21,1,433,"att9Real",2),
+    new OmlLexem(21,10,58,":",0),
+    new OmlLexem(21,12,380,"real",1),
+    new OmlLexem(21,16,59,";",0),
+    new OmlLexem(24,1,298,"end",1),
+    new OmlLexem(24,5,433,"ClassInstanceVar",2)
+  ]
+);
+values
+ public static ClassSimpleFunction = new OmlDocument("",
+  new OmlSpecifications([
+    new OmlClass(
+      "ClassSimpleFunction",
+      [
+        
+      ],
+      nil,
+      [
+        new OmlFunctionDefinitions([
+          new OmlFunctionDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,9,1),
+              9,
+              1
+            ),
+            new OmlExplicitFunction(
+              "HelloWorld",
+              [
+                
+              ],
+              new OmlPartialFunctionType(
+                new OmlProductType(
+                  new OmlIntType(9,21),
+                  new OmlCharType(9,27),
+                  9,
+                  25
+                ),
+                new OmlBoolType(9,35),
+                9,
+                25
+              ),
+              [
+                new OmlParameter([
+                  new OmlPatternIdentifier("parm1",10,12),
+                  new OmlPatternIdentifier("parm2",10,18)
+                ],10,11)
+              ],
+              new OmlFunctionBody(
+                new OmlIfExpression(
+                  new OmlBinaryExpression(
+                    new OmlName(
+                      nil,
+                      "parm1",
+                      10,
+                      32
+                    ),
+                    new OmlBinaryOperator(23,10,38),
+                    new OmlSymbolicLiteralExpression(new OmlNumericLiteral(0,10,40),10,40),
+                    10,
+                    38
+                  ),
+                  new OmlSymbolicLiteralExpression(new OmlBooleanLiteral(true,10,48),10,48),
+                  [
+                    
+                  ],
+                  new OmlSymbolicLiteralExpression(new OmlBooleanLiteral(false,10,59),10,59),
+                  10,
+                  29
+                ),
+                false,
+                false,
+                10,
+                29
+              ),
+              new OmlFunctionTrailer(
+                nil,
+                nil,
+                0,
+                0
+              ),
+              9,
+              8
+            ),
+            9,
+            8
+          )
+        ],6,1)
+      ],
+      false,
+      3,
+      1
+    )
+  ],0,0),
+  [
+    new OmlLexem(3,1,275,"class",1),
+    new OmlLexem(3,7,433,"ClassSimpleFunction",2),
+    new OmlLexem(6,1,312,"functions",1),
+    new OmlLexem(9,1,375,"public",1),
+    new OmlLexem(9,8,433,"HelloWorld",2),
+    new OmlLexem(9,19,58,":",0),
+    new OmlLexem(9,21,324,"int",1),
+    new OmlLexem(9,25,42,"*",0),
+    new OmlLexem(9,27,274,"char",1),
+    new OmlLexem(9,32,264,"->",0),
+    new OmlLexem(9,35,270,"bool",1),
+    new OmlLexem(10,1,433,"HelloWorld",2),
+    new OmlLexem(10,11,40,"(",0),
+    new OmlLexem(10,12,433,"parm1",2),
+    new OmlLexem(10,17,44,",",0),
+    new OmlLexem(10,18,433,"parm2",2),
+    new OmlLexem(10,23,41,")",0),
+    new OmlLexem(10,25,333,"==",0),
+    new OmlLexem(10,29,317,"if",1),
+    new OmlLexem(10,32,433,"parm1",2),
+    new OmlLexem(10,38,313,">",0),
+    new OmlLexem(10,40,435,"0",0),
+    new OmlLexem(10,42,410,"then",1),
+    new OmlLexem(10,48,430,"true",1),
+    new OmlLexem(10,53,296,"else",1),
+    new OmlLexem(10,59,429,"false",1),
+    new OmlLexem(10,64,59,";",0),
+    new OmlLexem(15,1,298,"end",1),
+    new OmlLexem(15,5,433,"ClassSimpleFunction",2)
+  ]
+);
+values
+ public static ClassSimpleOperation = new OmlDocument("",
+  new OmlSpecifications([
+    new OmlClass(
+      "ClassSimpleOper",
+      [
+        
+      ],
+      nil,
+      [
+        new OmlTypeDefinitions([
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,6,1),
+              6,
+              1
+            ),
+            new OmlSimpleType(
+              "String",
+              new OmlSeq0Type(new OmlCharType(6,24),6,17),
+              nil,
+              6,
+              17
+            ),
+            6,
+            8
+          ),
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,7,1),
+              7,
+              1
+            ),
+            new OmlSimpleType(
+              "Integer",
+              new OmlIntType(7,18),
+              nil,
+              7,
+              18
+            ),
+            7,
+            8
+          ),
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,8,1),
+              8,
+              1
+            ),
+            new OmlSimpleType(
+              "Character",
+              new OmlCharType(8,20),
+              nil,
+              8,
+              20
+            ),
+            8,
+            8
+          ),
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,9,1),
+              9,
+              1
+            ),
+            new OmlSimpleType(
+              "MySet",
+              new OmlSetType(new OmlIntType(9,23),9,16),
+              nil,
+              9,
+              16
+            ),
+            9,
+            8
+          )
+        ],5,1),
+        new OmlOperationDefinitions([
+          new OmlOperationDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,13,1),
+              13,
+              1
+            ),
+            new OmlExplicitOperation(
+              "HelloWorld",
+              new OmlOperationType(
+                new OmlProductType(
+                  new OmlIntType(13,21),
+                  new OmlCharType(13,27),
+                  13,
+                  25
+                ),
+                new OmlBoolType(13,36),
+                13,
+                25
+              ),
+              [
+                new OmlPatternIdentifier("parm1",14,12),
+                new OmlPatternIdentifier("parm2",14,18)
+              ],
+              new OmlOperationBody(
+                new OmlReturnStatement(new OmlSymbolicLiteralExpression(new OmlBooleanLiteral(true,14,35),14,35),14,28),
+                false,
+                false,
+                14,
+                28
+              ),
+              new OmlOperationTrailer(
+                nil,
+                nil,
+                nil,
+                nil,
+                0,
+                0
+              ),
+              13,
+              8
+            ),
+            13,
+            8
+          ),
+          new OmlOperationDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,16,1),
+              16,
+              1
+            ),
+            new OmlExplicitOperation(
+              "HelloWorldNoParms",
+              new OmlOperationType(
+                new OmlEmptyType(16,28),
+                new OmlEmptyType(16,35),
+                16,
+                28
+              ),
+              [
+                
+              ],
+              new OmlOperationBody(
+                new OmlSkipStatement(17,24),
+                false,
+                false,
+                17,
+                24
+              ),
+              new OmlOperationTrailer(
+                nil,
+                nil,
+                nil,
+                nil,
+                0,
+                0
+              ),
+              16,
+              8
+            ),
+            16,
+            8
+          )
+        ],11,1)
+      ],
+      false,
+      3,
+      1
+    )
+  ],0,0),
+  [
+    new OmlLexem(3,1,275,"class",1),
+    new OmlLexem(3,7,433,"ClassSimpleOper",2),
+    new OmlLexem(5,1,420,"types",1),
+    new OmlLexem(6,1,375,"public",1),
+    new OmlLexem(6,8,433,"String",2),
+    new OmlLexem(6,15,299,"=",0),
+    new OmlLexem(6,17,390,"seq",1),
+    new OmlLexem(6,21,360,"of",1),
+    new OmlLexem(6,24,274,"char",1),
+    new OmlLexem(6,28,59,";",0),
+    new OmlLexem(7,1,375,"public",1),
+    new OmlLexem(7,8,433,"Integer",2),
+    new OmlLexem(7,16,299,"=",0),
+    new OmlLexem(7,18,324,"int",1),
+    new OmlLexem(7,21,59,";",0),
+    new OmlLexem(8,1,375,"public",1),
+    new OmlLexem(8,8,433,"Character",2),
+    new OmlLexem(8,18,299,"=",0),
+    new OmlLexem(8,20,274,"char",1),
+    new OmlLexem(8,24,59,";",0),
+    new OmlLexem(9,1,375,"public",1),
+    new OmlLexem(9,8,433,"MySet",2),
+    new OmlLexem(9,14,299,"=",0),
+    new OmlLexem(9,16,393,"set",1),
+    new OmlLexem(9,20,360,"of",1),
+    new OmlLexem(9,23,324,"int",1),
+    new OmlLexem(9,26,59,";",0),
+    new OmlLexem(11,1,361,"operations",1),
+    new OmlLexem(13,1,375,"public",1),
+    new OmlLexem(13,8,433,"HelloWorld",2),
+    new OmlLexem(13,19,58,":",0),
+    new OmlLexem(13,21,324,"int",1),
+    new OmlLexem(13,25,42,"*",0),
+    new OmlLexem(13,27,274,"char",1),
+    new OmlLexem(13,32,362,"==>",0),
+    new OmlLexem(13,36,270,"bool",1),
+    new OmlLexem(14,1,433,"HelloWorld",2),
+    new OmlLexem(14,11,40,"(",0),
+    new OmlLexem(14,12,433,"parm1",2),
+    new OmlLexem(14,17,44,",",0),
+    new OmlLexem(14,18,433,"parm2",2),
+    new OmlLexem(14,23,41,")",0),
+    new OmlLexem(14,25,333,"==",0),
+    new OmlLexem(14,28,384,"return",1),
+    new OmlLexem(14,35,430,"true",1),
+    new OmlLexem(14,39,59,";",0),
+    new OmlLexem(16,1,375,"public",1),
+    new OmlLexem(16,8,433,"HelloWorldNoParms",2),
+    new OmlLexem(16,26,58,":",0),
+    new OmlLexem(16,28,40,"(",0),
+    new OmlLexem(16,29,41,")",0),
+    new OmlLexem(16,31,362,"==>",0),
+    new OmlLexem(16,35,40,"(",0),
+    new OmlLexem(16,36,41,")",0),
+    new OmlLexem(17,1,433,"HelloWorldNoParms",2),
+    new OmlLexem(17,18,40,"(",0),
+    new OmlLexem(17,19,41,")",0),
+    new OmlLexem(17,21,333,"==",0),
+    new OmlLexem(17,24,397,"skip",1),
+    new OmlLexem(17,28,59,";",0),
+    new OmlLexem(20,1,298,"end",1),
+    new OmlLexem(20,5,433,"ClassSimpleOper",2)
+  ]
+);
+values
+ public static ClassTemplates = new OmlDocument("",
+  new OmlSpecifications([
+    new OmlClass(
+      "A",
+      [
+        new OmlTypeName(new OmlName(
+          nil,
+          "T1",
+          3,
+          11
+        ),3,11),
+        new OmlTypeName(new OmlName(
+          nil,
+          "T2",
+          3,
+          15
+        ),3,15)
+      ],
+      nil,
+      [
+        
+      ],
+      false,
+      3,
+      1
+    )
+  ],0,0),
+  [
+    new OmlLexem(3,1,275,"class",1),
+    new OmlLexem(3,7,433,"A",2),
+    new OmlLexem(3,9,440,"<[",0),
+    new OmlLexem(3,11,433,"T1",2),
+    new OmlLexem(3,13,44,",",0),
+    new OmlLexem(3,15,433,"T2",2),
+    new OmlLexem(3,17,441,"]>",0),
+    new OmlLexem(6,1,298,"end",1),
+    new OmlLexem(6,5,433,"A",2)
+  ]
+);
+values
+ public static ClassWithMap = new OmlDocument("",
+  new OmlSpecifications([
+    new OmlClass(
+      "ClassWithMap",
+      [
+        
+      ],
+      nil,
+      [
+        new OmlInstanceVariableDefinitions([
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(3,6,1),
+              0,
+              0
+            ),
+            new OmlAssignmentDefinition(
+              "products",
+              new OmlGeneralMapType(
+                new OmlNatType(6,16),
+                new OmlTypeName(new OmlName(
+                  nil,
+                  "Price",
+                  6,
+                  23
+                ),6,23),
+                6,
+                12
+              ),
+              nil,
+              6,
+              1
+            ),
+            0,
+            0
+          ),
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(3,7,1),
+              0,
+              0
+            ),
+            new OmlAssignmentDefinition(
+              "productBarcode",
+              new OmlInjectiveMapType(
+                new OmlNatType(7,24),
+                new OmlTypeName(new OmlName(
+                  nil,
+                  "Barcode",
+                  7,
+                  31
+                ),7,31),
+                7,
+                18
+              ),
+              nil,
+              7,
+              1
+            ),
+            0,
+            0
+          ),
+          new OmlInstanceVariable(
+            new OmlAccessDefinition(
+              false,
+              true,
+              new OmlScope(3,8,1),
+              8,
+              1
+            ),
+            new OmlAssignmentDefinition(
+              "seqMap",
+              new OmlGeneralMapType(
+                new OmlNatType(8,21),
+                new OmlSeq0Type(new OmlCharType(8,35),8,28),
+                8,
+                17
+              ),
+              nil,
+              8,
+              8
+            ),
+            8,
+            1
+          )
+        ],4,1)
+      ],
+      false,
+      2,
+      1
+    ),
+    new OmlClass(
+      "Price",
+      [
+        
+      ],
+      nil,
+      [
+        
+      ],
+      false,
+      12,
+      1
+    ),
+    new OmlClass(
+      "Barcode",
+      [
+        
+      ],
+      nil,
+      [
+        
+      ],
+      false,
+      16,
+      1
+    )
+  ],0,0),
+  [
+    new OmlLexem(2,1,275,"class",1),
+    new OmlLexem(2,7,433,"ClassWithMap",2),
+    new OmlLexem(4,1,323,"instance",1),
+    new OmlLexem(4,10,423,"variables",1),
+    new OmlLexem(6,1,433,"products",2),
+    new OmlLexem(6,10,58,":",0),
+    new OmlLexem(6,12,341,"map",1),
+    new OmlLexem(6,16,352,"nat",1),
+    new OmlLexem(6,20,416,"to",1),
+    new OmlLexem(6,23,433,"Price",2),
+    new OmlLexem(6,28,59,";",0),
+    new OmlLexem(7,1,433,"productBarcode",2),
+    new OmlLexem(7,16,58,":",0),
+    new OmlLexem(7,18,322,"inmap",1),
+    new OmlLexem(7,24,352,"nat",1),
+    new OmlLexem(7,28,416,"to",1),
+    new OmlLexem(7,31,433,"Barcode",2),
+    new OmlLexem(7,38,59,";",0),
+    new OmlLexem(8,1,403,"static",1),
+    new OmlLexem(8,8,433,"seqMap",2),
+    new OmlLexem(8,15,58,":",0),
+    new OmlLexem(8,17,341,"map",1),
+    new OmlLexem(8,21,352,"nat",1),
+    new OmlLexem(8,25,416,"to",1),
+    new OmlLexem(8,28,390,"seq",1),
+    new OmlLexem(8,32,360,"of",1),
+    new OmlLexem(8,35,274,"char",1),
+    new OmlLexem(8,39,59,";",0),
+    new OmlLexem(10,1,298,"end",1),
+    new OmlLexem(10,5,433,"ClassWithMap",2),
+    new OmlLexem(12,1,275,"class",1),
+    new OmlLexem(12,7,433,"Price",2),
+    new OmlLexem(14,1,298,"end",1),
+    new OmlLexem(14,5,433,"Price",2),
+    new OmlLexem(16,1,275,"class",1),
+    new OmlLexem(16,7,433,"Barcode",2),
+    new OmlLexem(18,1,298,"end",1),
+    new OmlLexem(18,5,433,"Barcode",2)
+  ]
+);
+values
+ public static ClassWithTypes = new OmlDocument("",
+  new OmlSpecifications([
+    new OmlClass(
+      "ClassWithTypes",
+      [
+        
+      ],
+      nil,
+      [
+        new OmlTypeDefinitions([
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,6,1),
+              6,
+              1
+            ),
+            new OmlSimpleType(
+              "String",
+              new OmlSeq0Type(new OmlCharType(6,24),6,17),
+              nil,
+              6,
+              17
+            ),
+            6,
+            8
+          ),
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,7,1),
+              7,
+              1
+            ),
+            new OmlSimpleType(
+              "Integer",
+              new OmlIntType(7,18),
+              nil,
+              7,
+              18
+            ),
+            7,
+            8
+          ),
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,8,1),
+              8,
+              1
+            ),
+            new OmlSimpleType(
+              "Character",
+              new OmlCharType(8,20),
+              nil,
+              8,
+              20
+            ),
+            8,
+            8
+          ),
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,9,1),
+              9,
+              1
+            ),
+            new OmlSimpleType(
+              "MySet",
+              new OmlSetType(new OmlIntType(9,23),9,16),
+              nil,
+              9,
+              16
+            ),
+            9,
+            8
+          )
+        ],5,1)
+      ],
+      false,
+      3,
+      1
+    )
+  ],0,0),
+  [
+    new OmlLexem(3,1,275,"class",1),
+    new OmlLexem(3,7,433,"ClassWithTypes",2),
+    new OmlLexem(5,1,420,"types",1),
+    new OmlLexem(6,1,375,"public",1),
+    new OmlLexem(6,8,433,"String",2),
+    new OmlLexem(6,15,299,"=",0),
+    new OmlLexem(6,17,390,"seq",1),
+    new OmlLexem(6,21,360,"of",1),
+    new OmlLexem(6,24,274,"char",1),
+    new OmlLexem(6,28,59,";",0),
+    new OmlLexem(7,1,375,"public",1),
+    new OmlLexem(7,8,433,"Integer",2),
+    new OmlLexem(7,16,299,"=",0),
+    new OmlLexem(7,18,324,"int",1),
+    new OmlLexem(7,21,59,";",0),
+    new OmlLexem(8,1,375,"public",1),
+    new OmlLexem(8,8,433,"Character",2),
+    new OmlLexem(8,18,299,"=",0),
+    new OmlLexem(8,20,274,"char",1),
+    new OmlLexem(8,24,59,";",0),
+    new OmlLexem(9,1,375,"public",1),
+    new OmlLexem(9,8,433,"MySet",2),
+    new OmlLexem(9,14,299,"=",0),
+    new OmlLexem(9,16,393,"set",1),
+    new OmlLexem(9,20,360,"of",1),
+    new OmlLexem(9,23,324,"int",1),
+    new OmlLexem(9,26,59,";",0),
+    new OmlLexem(10,1,298,"end",1),
+    new OmlLexem(10,5,433,"ClassWithTypes",2)
+  ]
+);
+values
+ public static ClassWithValues = new OmlDocument("",
+  new OmlSpecifications([
+    new OmlClass(
+      "ClassWithValues",
+      [
+        
+      ],
+      nil,
+      [
+        new OmlValueDefinitions([
+          new OmlValueDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,7,1),
+              7,
+              1
+            ),
+            new OmlValueShape(
+              new OmlPatternIdentifier("val1",7,8),
+              new OmlSeq0Type(new OmlCharType(7,22),7,15),
+              new OmlSymbolicLiteralExpression(new OmlTextLiteral("Hello World",7,29),7,29),
+              7,
+              8
+            ),
+            7,
+            8
+          )
+        ],5,1)
+      ],
+      false,
+      3,
+      1
+    )
+  ],0,0),
+  [
+    new OmlLexem(3,1,275,"class",1),
+    new OmlLexem(3,7,433,"ClassWithValues",2),
+    new OmlLexem(5,1,422,"values",1),
+    new OmlLexem(7,1,375,"public",1),
+    new OmlLexem(7,8,433,"val1",2),
+    new OmlLexem(7,13,58,":",0),
+    new OmlLexem(7,15,390,"seq",1),
+    new OmlLexem(7,19,360,"of",1),
+    new OmlLexem(7,22,274,"char",1),
+    new OmlLexem(7,27,299,"=",0),
+    new OmlLexem(7,29,437,"\"Hello World\"",0),
+    new OmlLexem(7,42,59,";",0),
+    new OmlLexem(10,1,298,"end",1),
+    new OmlLexem(10,5,433,"ClassWithValues",2)
+  ]
+);
+
+end TestData

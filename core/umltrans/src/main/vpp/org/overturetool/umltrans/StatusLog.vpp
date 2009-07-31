@@ -1,0 +1,85 @@
+class StatusLog
+
+instance variables
+
+log : seq of ClassStatus := [];
+
+operations
+
+public addNewClassInfo : seq of char ==> ()
+addNewClassInfo(name)==
+  log := log ^ [new ClassStatus(name,"",getTime(),0)];
+ 
+public addNewClassInfo : seq of char * seq of char ==> ()
+addNewClassInfo(name,i)==
+  log := log ^ [new ClassStatus(name,i,getTime(),0)]; 
+  
+public endClass : seq of char * seq of char ==> ()
+endClass(name,id) ==
+   let a = { setdd(c,id) | c in set elems log & c.name = name} in skip; 
+ 
+public endClass : seq of char  ==> ()
+endClass(name) ==
+   let a = { setd(c) | c in set elems log & c.name = name} in skip; 
+
+setdd: ClassStatus * seq of char ==> nat
+setdd(node,id) == 
+(
+node.setId(id);
+node.setEndTime( getTime());
+return 0;
+);
+
+setd: ClassStatus * seq of char ==> nat
+setd(node,id) == 
+(
+node.setId(id);
+node.setEndTime( getTime());
+return 0;
+);
+
+setd: ClassStatus  ==> nat
+setd(node) == 
+(
+
+node.setEndTime( getTime());
+return 0;
+);
+
+private getTime : () ==> nat
+getTime() == return 0;
+
+public mappingNotSupported : IOmlValueDefinition ==> ()
+mappingNotSupported(item) == skip;
+
+public mappingNotSupported : seq of IOmlPattern * IOmlType ==> ()
+mappingNotSupported(items,type) == skip;
+ 
+end StatusLog
+
+
+class ClassStatus
+operations
+
+public ClassStatus : seq of char * seq of char * nat * nat ==> ClassStatus
+ClassStatus(n,i,s,e)==
+(
+name := n;
+id := i;
+startTime := s;
+endTime := e;
+
+);
+
+public setId : seq of char ==> ()
+setId(i) == id := i;
+
+public setEndTime : nat ==> ()
+setEndTime(t) == endTime := t;
+
+instance variables
+ public name : seq of char := "";
+ public id : seq of char := "";
+public  startTime : nat := 0;
+public  endTime : nat := 0;
+end ClassStatus

@@ -1,0 +1,11 @@
+class basicValues
+
+values
+
+valInt : int = -5;
+valNat : nat = 0;
+valNat1 : nat1 = 1;
+valReal : real = 2.2345;
+valBool : bool = false;
+
+end basicValues

@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import java.io.Writer;
+import java.util.List;
+import java.util.Vector;
 
 @SuppressWarnings("unused")
 public class ClassExstractorFromTexFiles
@@ -18,7 +20,7 @@ public class ClassExstractorFromTexFiles
 	private static final String VDM_START = "\\begin{vdm_al}";
 	private static final String VDM_END =  "\\end{vdm_al}";
 
-	public static String[] exstract(String[] files, String outputDir) throws IOException
+	public static List<String> exstract(List<String> files, String outputDir) throws IOException
 	{
 		File outputDirrectory = new File(outputDir);
 		if(outputDir.length()==0  )
@@ -28,24 +30,25 @@ public class ClassExstractorFromTexFiles
 			outputDirrectory.mkdir();
 		
 		
-		String[] newFiles = new String[files.length];
-		for (int i = 0; i < files.length; i++)
+		List<String> newFiles = new Vector<String>();
+		for (int i = 0; i < files.size(); i++)
 		{
 			//if (!files[i].endsWith(".tex"))
 			//{
-				newFiles[i] = files[i];
+				String currentFile =  files.get(i);
 			//	continue;
 			//}
-				File f = new File(files[i]);
+				File f = new File(currentFile);
 				
-			newFiles[i] = outputDirrectory.getAbsolutePath() + File.separatorChar + f.getName();
-			if(newFiles[i].endsWith(".tex"))
-				newFiles[i] = newFiles[i]+".vpp";
+			currentFile = outputDirrectory.getAbsolutePath() + File.separatorChar + f.getName();
+			if(currentFile.endsWith(".tex"))
+				currentFile = currentFile+".vpp";
 			
-			System.out.println(newFiles[i]);
+			newFiles.add(currentFile);
+			System.out.println(currentFile);
 
-			FileReader inputFileReader = new FileReader(files[i]);
-			FileWriter outputFileReader = new FileWriter(newFiles[i]);
+			FileReader inputFileReader = new FileReader(files.get(i));
+			FileWriter outputFileReader = new FileWriter(currentFile);
 
 			// Create Buffered/PrintWriter Objects
 			BufferedReader inputStream = new BufferedReader(inputFileReader);
@@ -109,7 +112,7 @@ public class ClassExstractorFromTexFiles
 			outputStream.close();
 			inputStream.close();
 			if(!texTagsFound)
-				new File(newFiles[i]).delete();
+				new File(newFiles.get(i)).delete();
 
 		}
 		return newFiles;

@@ -1,0 +1,9 @@
+class XmiFileOutputVisitor
+  is subclass of XmlFileOutputVisitor
+
+operations
+  
+protected print: seq of char ==> ()
+print (text) == Util`WriteFile(text);
+  
+end XmiFileOutputVisitor

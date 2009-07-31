@@ -1,0 +1,37 @@
+
+
+
+\begin{vdm_al}
+class Oml2Vpp 
+types
+  public String = seq of char;
+
+
+operations
+
+public Save : String * IOmlDocument * StatusLog ==> ()
+Save(fileName,doc,log) ==
+(
+ 
+ let classes : seq of IOmlClass = doc.getSpecifications().getClassList() 
+ in
+  for all cl in set elems classes
+  do
+  (
+    dcl visitor : Oml2VppVisitor := new Oml2VppVisitor();
+  	visitor.useNewLineSeparator(true);
+  	visitor.visitClass(cl);
+  	Util`CreateFile(fileName ^ cl.getIdentifier()^".vpp");
+  	Util`WriteFile(visitor.result);
+  	Util`CloseFile();
+  	log.endClass(cl.getIdentifier());
+  );
+);
+
+end Oml2Vpp
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[Oml2Vpp]
+
+\end{rtinfo}

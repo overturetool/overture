@@ -1,0 +1,84 @@
+
+
+
+\begin{vdm_al}
+
+class Vdm2UmlTest is subclass of TestCase
+types
+  public String = seq of char;
+
+instance variables
+  testSpec : [IOmlSpecifications] := nil;
+
+operations
+public Vdm2UmlTest: () ==> Vdm2UmlTest
+  Vdm2UmlTest() == TestCase("Uml2XmiEclipseUmlTest");
+
+  protected SetUp: () ==> ()
+  SetUp () == 
+  (
+    --testSpec := new TestData().ClassAbstractOperation.getSpecifications();
+  skip;
+  );
+
+  public test01: () ==> ()
+  test01 () == 
+    ( 
+      dcl vu : Vdm2Uml := new Vdm2Uml();
+      
+      --abstract class
+      testSpec := new TestData().ClassAbstractOperation.getSpecifications();
+      assertTrue(card(vu.init(testSpec).getDefinitions())>0);
+      
+      --ClassAssociation
+      vu := new Vdm2Uml();
+      testSpec := new TestData().ClassAssociation.getSpecifications();
+      assertTrue(card(vu.init(testSpec).getDefinitions())>0);
+      --ClassAssociationN
+      vu := new Vdm2Uml();
+      testSpec := new TestData().ClassAssociationN.getSpecifications();
+      assertTrue(card(vu.init(testSpec).getDefinitions())>0);
+      --ClassInheritance
+      vu := new Vdm2Uml();
+      testSpec := new TestData().ClassInheritance.getSpecifications();
+      assertTrue(card(vu.init(testSpec).getDefinitions())>0);
+      --ClassInstanceUnionType
+      vu := new Vdm2Uml();
+      testSpec := new TestData().ClassInstanceUnionType.getSpecifications();
+      assertTrue(card(vu.init(testSpec).getDefinitions())>0);
+      --ClassSimpleOperation
+      vu := new Vdm2Uml();
+      testSpec := new TestData().ClassSimpleOperation.getSpecifications();
+      assertTrue(card(vu.init(testSpec).getDefinitions())>0);
+      --ClassTemplates
+      vu := new Vdm2Uml();
+      testSpec := new TestData().ClassTemplates.getSpecifications();
+      assertTrue(card(vu.init(testSpec).getDefinitions())>0);
+      --ClassWithMap
+      vu := new Vdm2Uml();
+      testSpec := new TestData().ClassWithMap.getSpecifications();
+      assertTrue(card(vu.init(testSpec).getDefinitions())>0);
+      --ClassWithTypes
+      vu := new Vdm2Uml();
+      testSpec := new TestData().ClassWithTypes.getSpecifications();
+      assertTrue(card(vu.init(testSpec).getDefinitions())>0);
+      --ClassWithValues
+      vu := new Vdm2Uml();
+      testSpec := new TestData().ClassWithValues.getSpecifications();
+      assertTrue(card(vu.init(testSpec).getDefinitions())>0);
+      --ClassSimpleFunction
+      vu := new Vdm2Uml();
+      testSpec := new TestData().ClassSimpleFunction.getSpecifications();
+      assertTrue(card(vu.init(testSpec).getDefinitions())>0);
+      --ClassInstanceVar
+      vu := new Vdm2Uml();
+      testSpec := new TestData().ClassInstanceVar.getSpecifications();
+      assertTrue(card(vu.init(testSpec).getDefinitions())>0);
+    );
+     
+  
+  protected TearDown: () ==> ()
+  TearDown () == skip
+
+end Vdm2UmlTest 
+\end{vdm_al}

@@ -1,0 +1,225 @@
+-----------------------------------------------
+-- UML ABSTRACT SYNTAX DEFINITION
+--
+-- File: UML.ast
+-- Created: 09 - 2008
+-- Authour: Kenneth Lausdahl 
+--          and 
+--          Hans Kristian Lintrup
+-- Description: Subpart of UML represented as
+--  an AST. Contains the UML static structure
+------------------------------------------------
+%prefix Uml;
+%package org.overturetool.uml.ast;
+%directory "C:\COMU\build";
+%top Model;
+
+Model ::
+ name : String
+ definitions : set of ModelElement;
+  
+ModelElement = Class | Association | 
+               Constraint | Collaboration; 
+
+Class ::
+  name       : String
+  classBody  : set of DefinitionBlock
+  isAbstract : bool
+  superClass : seq of ClassNameType
+  visibility : VisibilityKind
+  isStatic   : bool
+  isActive   : bool
+  templatesignature : [TemplateSignature];
+
+VisibilityKind = <PUBLIC> | <PRIVATE> | <PROTECTED> ;
+  
+TemplateSignature ::
+  templateParameters : set of TemplateParameter; 
+  
+TemplateParameter :: 
+  name       : String;
+  
+DefinitionBlock = 
+  OwnedOperations | OwnedProperties | NestedClassifiers;
+
+-------------------------------
+-- Operation
+-------------------------------
+OwnedOperations ::
+  operationList :set of Operation;
+  
+Operation ::
+  name            : String
+  visibility      : VisibilityKind
+  multiplicity    : MultiplicityElement --aka return type
+  isQuery         : bool
+  type            : [Type]              --aka return type
+  isStatic        : bool
+  ownedParameters : [Parameters];
+  
+Parameters ::
+  parameterList : seq of Parameter;
+  
+Parameter ::
+  name         : String
+  type         : Type
+  multiplicity : MultiplicityElement
+  default      : String
+  direction    : ParameterDirectionKind;
+  
+ParameterDirectionKind = <IN> | <INOUT> | <OUT> | <RETURN>;
+
+MultiplicityElement::
+  isOrdered : bool
+  isUnique  : bool 
+  lower     : nat
+  upper     : [nat];
+
+-------------------------------
+-- Property
+-------------------------------  
+OwnedProperties :: 
+  propetityList : set of Property;
+
+Property ::
+  name         : String
+  visibility   : VisibilityKind
+  multiplicity : [MultiplicityElement]
+  type         : Type
+  isReadOnly   : [bool]
+  default      : [ValueSpecification]
+  isComposite  : bool
+  isDerived    : [bool] 
+  isStatic     : [bool]
+  ownerClass   : String
+  qualifier    : [Type];
+
+-------------------------------
+-- Types
+-------------------------------  
+NestedClassifiers ::
+  typeList : set of Type;
+  
+Type =  
+  BoolType |
+  IntegerType |
+  StringType |
+  UnlimitedNatural |
+  VoidType |
+  CharType |
+  ClassNameType;
+  
+BoolType ::;
+IntegerType ::;
+StringType ::;
+UnlimitedNatural ::;
+VoidType :: ;
+CharType :: ;
+
+ClassNameType ::
+  name : String;
+  
+-------------------------------
+-- Association
+-------------------------------  
+Association ::
+  ownedEnds : set of Property
+  ownedNavigableEnds : set of Property
+  name : [String]
+  id : Id;
+
+-------------------------------
+-- Constraint
+-------------------------------  
+Constraint ::
+  constraintElements : set of Id
+  specification : ValueSpecification; 
+ 
+ValueSpecification = LiteralString | LiteralInteger;
+
+ 
+
+-------------------------------
+-- Diagrams
+-------------------------------  
+Collaboration :: -- Unknown in superstructure
+  ownedBehavior : set of Interaction;
+  
+Interaction ::
+  name : String
+  lifeLines : set of LifeLine
+  fragments : set of InteractionFragment
+  messages  : seq of Message;
+  
+LifeLine ::
+  name : String
+  represents : [Type]; -- ConnectableElement - TypedElement - Class
+  --coveredBy : set of InteractionFragment;
+  
+InteractionFragment = OccurrenceSpecification | 
+                      InteractionOperand | 
+                      CombinedFragment | 
+                      ExecutionSpecification;
+
+OccurrenceSpecification = Mos; -- Mos = MessageOccurrenceSpecification
+ExecutionSpecification = Bes; -- Bes = BehaviorExecutionSpecification
+
+Mos :: 
+  name    : String
+  message : [Message]
+  covered : LifeLine
+  event   : [CallEvent];
+  
+CallEvent ::
+  operation : Operation;
+
+Bes ::
+  name     : String
+  startOs  : OccurrenceSpecification
+  finishOs : OccurrenceSpecification
+  covered  : set of LifeLine;
+
+CombinedFragment ::
+  name    : String
+  interactionOperator : InteractionOperatorKind
+  operand : seq of InteractionOperand --seq1
+  covered : set of LifeLine;
+
+InteractionOperatorKind = <ALT> | <LOOP>; 
+
+InteractionOperand ::
+  name     : String
+  fragments: seq of InteractionFragment
+  covered  : set of Mos --LifeLine
+  guard    : [InteractionConstraint];
+--inv io == forall cf in set elems io.fragments & is_CombinedFragment(cf) 
+--                                         and forall mos in set io.covered 
+--                                           & forall childMos in set dunion {op.covered | op in set elems cf.operand}
+--                                             & mos <> childMos;
+
+InteractionConstraint ::
+  minint : [ValueSpecification]
+  maxint : [ValueSpecification];
+  
+Message ::
+  name        : String
+  messageKind : MessageKind
+  messageSort : MessageSort
+  sendEvent   : Mos
+  sendReceive : Mos
+  argument    : seq of ValueSpecification;  
+  
+MessageKind = <COMPLETE> | <UNKNOWN>; 
+MessageSort = <SYNCHCALL> | <ASYNCHCALL>; 
+              
+LiteralString ::
+ value : String;
+ 
+LiteralInteger ::
+  value : nat;
+ 
+-------------------------------
+-- Others
+-------------------------------  
+String = seq of char;
+Id = String
