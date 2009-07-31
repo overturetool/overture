@@ -8,8 +8,27 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.overturetool</groupId>
   <artifactId>ast</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <name>The Overture Abstract Syntax</name>
+  <build>
+  	<plugins>
+  		<plugin>
+				<groupId>org.overturetool.tools</groupId>
+				<artifactId>vdmt</artifactId>
+				<configuration>
+					<excludePackages>
+						
+					</excludePackages>
+					<excludeClasses>
+						
+					</excludeClasses>
+					<importPackages>
+					
+					</importPackages>
+				</configuration>
+			</plugin>
+  	</plugins>
+  </build>
   <dependencies>
   	<dependency>
   		<groupId>org.overturetool</groupId>

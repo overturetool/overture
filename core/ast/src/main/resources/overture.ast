@@ -397,7 +397,7 @@ TraceDefinitions ::
   traces : seq of NamedTrace;
   
 NamedTrace ::
-  name : seq of char 
+  name : seq of seq of char -- kenneth lausdahl 
   defs : TraceDefinition;
 
 TraceDefinition =

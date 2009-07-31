@@ -9,19 +9,20 @@
 <url>http://www.overturetool.org</url>
 <modules>
 <!--<module>jmltrans</module>-->
+<module>proofsupport</module>
 <module>stdlib</module>
 <module>ast</module>
 <module>vdmunit</module>
 <module>parser</module>
 <module>eclipse</module>
-<!--<module>potrans</module>
-<module>proofsupport</module>-->
+<module>potrans</module>
 <module>umltrans</module>
 <module>vdmtools</module>
 <module>traces</module>
 <module>vdmj</module>
 <module>vdmjc</module>
 <module>showtrace</module>
+<module>xmljunit</module>
 
 </modules>
 <dependencies>

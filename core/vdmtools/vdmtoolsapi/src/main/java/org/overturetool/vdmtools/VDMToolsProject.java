@@ -31,6 +31,7 @@ import org.overturetool.vdmtools.parser.Parser;
 public class VDMToolsProject {
 	private static boolean VDMToolsProcessStarted = false;
 	public static Logger logger = Logger.getLogger("org.overturetools.vdmtoolsapi");
+	private ArrayList<String> parseErrors = new ArrayList<String>();
 	private static FileHandler fh = null;
 
 	private Process processToolbox;
@@ -52,6 +53,11 @@ public class VDMToolsProject {
 
 	public boolean isSuccessfulTypeChecked() {
 		return isSuccessfulTypeChecked;
+	}
+	
+	public ArrayList<String> getParseErrors()
+	{
+		return parseErrors;
 	}
 
 	public ArrayList<VDMToolsError> GetErrors() {
@@ -191,12 +197,14 @@ public class VDMToolsProject {
 			
 		} catch (APIError e) {
 			System.out.println("Error setting up project.... " + e.msg);
+			parseErrors.add(e.msg);
 			logger.logp(Level.SEVERE, "VDMToolsProject", "addFilesToProject", "Error creating and adding file to vdm project", e);
 		}
 	}
 	
 	private void checkAndAdd() {
 		try {
+			parseErrors.clear();
 			if (processToolbox == null){
 				init(pathToVdmTools, ToolType.PP_TOOLBOX);
 			}
@@ -216,6 +224,7 @@ public class VDMToolsProject {
 					
 				} catch (APIError e) {
 					System.out.println("Error..  " + e.getMessage());
+					parseErrors.add(e.msg);
 				}
 			}			
 		} catch (Exception e) {
