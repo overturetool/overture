@@ -17,7 +17,7 @@
 // ***** VDMTOOLS START Name=package KEEP=NO
 package org.overturetool.umltrans.api;
 
-// ***** VDMTOOLS END Name=package// ***** VDMTOOLS START Name=imports KEEP=NO
+// ***** VDMTOOLS END Name=package// ***** VDMTOOLS START Name=imports KEEP=YES
 
 import jp.co.csk.vdm.toolbox.VDM.*;
 import java.util.*;
@@ -31,6 +31,7 @@ import org.overturetool.umltrans.*;
 import org.overturetool.umltrans.uml.*;
 import org.overturetool.umltrans.uml2vdm.*;
 import org.overturetool.umltrans.vdm2uml.*;
+import jp.co.csk.vdm.toolbox.VDM.quotes.*;
 // ***** VDMTOOLS END Name=imports
 
 
@@ -41,8 +42,8 @@ public class Util extends StdLib {
   static UTIL.VDMCompare vdmComp = new UTIL.VDMCompare();
 // ***** VDMTOOLS END Name=vdmComp
 
-// ***** VDMTOOLS START Name=writeType KEEP=NO
-  private static Object writeType = new quotes.start();
+// ***** VDMTOOLS START Name=writeType KEEP=YES
+  private static Object writeType = new start();
 // ***** VDMTOOLS END Name=writeType
 
 // ***** VDMTOOLS START Name=outputFileName KEEP=NO
@@ -75,7 +76,7 @@ public class Util extends StdLib {
   static public void CreateFile (final String fName) throws CGException {
 
   file.CreateFile(fName);
-  writeType = new quotes.append();
+  writeType = new append();
   }
 // ***** VDMTOOLS END Name=CreateFile#1|String
 
