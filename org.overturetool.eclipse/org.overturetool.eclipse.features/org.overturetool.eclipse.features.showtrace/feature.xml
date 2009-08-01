@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.overturetool.eclipse.features.showtrace"
+      label="Showtrace Feature"
+      version="1.0.0.qualifier">
+
+   <description url="http://www.overturetool.org/updatesite">
+      Tool to graphically show the execution trace of a VDM model.
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <url>
+      <update label="Overturetool updatesite" url="http://www.overturetool.org/updatesite"/>
+   </url>
+
+   <includes
+         id="org.eclipse.draw2d"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.emf.common"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.emf.ecore"
+         version="0.0.0"/>
+
+   <requires>
+      <import plugin="org.eclipse.ui" version="3.4.2" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.resources" version="3.4.2" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.runtime" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.dltk.core" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.dltk.launching" version="1.0.0" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="org.overturetool.eclipse.plugins.showtrace"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.overturetool.eclipse.plugins.showtrace.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.overturetool.eclipse.plugins.editor.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

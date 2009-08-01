@@ -23,10 +23,6 @@
       <discovery label="Overture Tool" url="http://www.overturetool.org/"/>
    </url>
 
-   <includes
-         id="org.overturetool.eclipse.features.core"
-         version="0.0.0"/>
-
    <requires>
       <import feature="org.eclipse.platform" version="3.4.2.R342_v20090122-9I96EiWElHi8lheoJKJIvhM3JfVsYbRrgVIWL"/>
    </requires>
