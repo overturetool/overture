@@ -7,7 +7,6 @@ import org.overturetool.proofsupport.external_tools.Utilities;
 import org.overturetool.proofsupport.external_tools.hol.HolInterpreter;
 import org.overturetool.proofsupport.external_tools.hol.HolInterpreterException;
 import org.overturetool.proofsupport.external_tools.hol.HolInterpreterFactory;
-import org.overturetool.proofsupport.external_tools.hol.HolInterpreterImpl;
 import org.overturetool.proofsupport.external_tools.hol.HolParameters;
 import org.overturetool.proofsupport.external_tools.omlparser.ParserException;
 import org.overturetool.proofsupport.external_tools.pog.PogGenerator;

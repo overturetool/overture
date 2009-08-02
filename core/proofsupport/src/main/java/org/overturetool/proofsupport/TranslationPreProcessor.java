@@ -48,7 +48,6 @@ public class TranslationPreProcessor {
 
 	protected List<IOmlDocument> parseContext(List<String> vdmContextFiles) throws ParserException {
 		List<IOmlDocument> omlContextDocuments = new ArrayList<IOmlDocument>(vdmContextFiles.size());
-		// TODO check if this works or if all files have to be parsed together
 		for (String vdmContextFile : vdmContextFiles)
 			omlContextDocuments.add(omlAstGen.getOmlDocument(vdmContextFile));
 		return omlContextDocuments;

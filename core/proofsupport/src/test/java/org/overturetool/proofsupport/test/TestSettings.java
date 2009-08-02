@@ -21,13 +21,9 @@ public class TestSettings extends AbstractSettings
 		try
 		{
 			MavenSettings s = new MavenSettings();
-			checkValue(s);
-			if (!isString(MOSML_DIR))
-				MOSML_DIR = s.getDefaultProfile().getProperty(
-						Profile.USER_MOS_ML_DIR);
-			if (!isString(HOL_DIR))
-				HOL_DIR = s.getDefaultProfile().getProperty(
-						Profile.USER_HOL_DIR);
+			VPPDE_BIN = checkAndSetValue(s, VPPDE_BIN, Profile.USER_VPPDE_BIN);
+			MOSML_DIR = checkAndSetValue(s, MOSML_DIR, Profile.USER_MOSML_DIR);
+			HOL_DIR = checkAndSetValue(s, MOSML_DIR, Profile.USER_HOL_DIR);
 		} catch (Exception e)
 		{
 			throw new IllegalArgumentException(
@@ -38,14 +34,15 @@ public class TestSettings extends AbstractSettings
 		}
 	}
 
-	private static void checkValue(MavenSettings s) {
-		if (!isString(VPPDE_BIN))
-			setValueFromMavenSettings(s);
+	private static String checkAndSetValue(MavenSettings s, String value, String mvnParameter) {
+		if (!isString(value))
+			return setValueFromMavenSettings(s, mvnParameter);
+		else
+			return value;
 	}
 
-	private static void setValueFromMavenSettings(MavenSettings s) {
-		VPPDE_BIN = s.getDefaultProfile().getProperty(
-				Profile.USER_VDMTOOLS_CMD_PATH);
+	private static String setValueFromMavenSettings(MavenSettings s, String mvnParameter) {
+		return s.getDefaultProfile().getProperty(mvnParameter);
 	}
 
 	protected static boolean isString(String s) {

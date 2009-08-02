@@ -20,6 +20,7 @@ public abstract class AbstractSettings {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	private void loadPreferences(String settingsFile, Class c)
 			throws IOException, InvalidPreferencesFormatException,
 			FileNotFoundException, BackingStoreException {

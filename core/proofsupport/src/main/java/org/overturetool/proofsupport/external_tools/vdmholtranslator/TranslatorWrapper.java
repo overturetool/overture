@@ -103,7 +103,6 @@ public class TranslatorWrapper implements VdmToHolTranslator {
 
 	private List<HolDocument> translateDocuments(List<IOmlDocument> omlContextDocuments) throws TranslatorException {
 		List<HolDocument> holContext = new ArrayList<HolDocument>(omlContextDocuments.size());
-		// TODO check if this code passes VdmHolTans dependency checker
 		for (IOmlDocument omlContextDocument : omlContextDocuments)
 			holContext.add(translateDocument(omlContextDocument));
 		return holContext;

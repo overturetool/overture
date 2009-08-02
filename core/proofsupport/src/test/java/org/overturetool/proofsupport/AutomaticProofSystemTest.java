@@ -30,7 +30,6 @@ public class AutomaticProofSystemTest extends TestCase {
 		stackModel = testSettings.get(TestSettings.STACK_MODEL);
 	}
 
-	// TODO add asserts
 	public void testDischargeAllPosSet() throws Exception {
 		AutomaticProofSystem aps = new AutomaticProofSystem(mosmlDir,
 				holDir, new VdmToolsWrapper(vppdeExecutable),

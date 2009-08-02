@@ -4,9 +4,9 @@ import java.util.HashMap;
 
 public class Profile
 {
-	public final static String USER_VDMTOOLS_CMD_PATH = "proofsupport.vppde.bin";
-	public final static String USER_MOS_ML_DIR = "proofsupport.mosml.dir";
-	public final static String USER_HOL_DIR = "proofsupport.hol.dir";
+	public final static String USER_VPPDE_BIN = "user.vppde.bin";
+	public final static String USER_MOSML_DIR = "user.mosml.dir";
+	public final static String USER_HOL_DIR = "user.hol.dir";
 
 	HashMap<String, String> properties = new HashMap<String, String>();
 	String id;
