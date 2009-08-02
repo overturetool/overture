@@ -26,7 +26,6 @@ public class ConsolePipeTest extends TestCase {
 		pipe.start();
 		
 		input.writeLine(TEST_MESSAGE);
-		output.waitForSomeOutput(5000);
 		input.destroy();
 		pipe.join();
 		String actual = output.readLine();

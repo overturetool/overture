@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.co.csk.vdm.toolbox.VDM.CGException;
 import junit.framework.TestCase;
 
 import org.overturetool.ast.itf.IOmlDocument;
@@ -37,106 +38,64 @@ public class TranslationPreProcessorTest extends TestCase {
 		stackModelPogFile = settings.get(TestSettings.STACK_MODEL_POG_FILE);
 	}
 
-	// TODO refactor this test method so that it doesn't violate PreparationData
-	// encapsulation!
 	public void testPrepareVdmFiles() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
 				VPPDE_BIN), new VdmToolsPogProcessor());
 		String modelFile = testModel2;
-		List<String> contextFiles = new ArrayList<String>(1);
+		int expectedPoSize = 5;
+		int expectedContextSize = 1;
+		List<String> contextFiles = new ArrayList<String>(expectedContextSize);
 		contextFiles.add(testModel1);
 
 		PreparationData actual = prep.prepareVdmFiles(modelFile, contextFiles);
-
-		assertTrue(actual.omlModel != null);
-		assertEquals(modelFile, actual.omlModel.getFilename());
-		assertTrue(actual.omlModel.toVdmPpValue() != null);
-		assertTrue(actual.omlModel.toVdmPpValue().length() > 0);
-
-		assertEquals(1, actual.omlContextDocuments.size());
-		for (IOmlDocument doc : actual.omlContextDocuments) {
-			assertTrue(doc != null);
-			assertTrue(doc.toVdmPpValue() != null);
-			assertTrue(doc.toVdmPpValue().length() > 0);
-		}
-
-		assertEquals(5, actual.omlPos.size());
-		for (IOmlExpression s : actual.omlPos)
-			assertTrue(s != null);
+		
+		assertPreparationDataIsGood(modelFile, expectedContextSize,
+				expectedPoSize, actual);
 	}
 
-	// TODO refactor this test method so that it doesn't violate PreparationData
-	// encapsulation!
 	public void testPrepareVdmFilesNoContext() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
 				VPPDE_BIN), new VdmToolsPogProcessor());
 		String modelFile = stackModel;
-		List<String> contextFiles = new ArrayList<String>(0);
+		int expectedPoSize = 2;
+		int expectedContextSize = 0;
+		List<String> contextFiles = new ArrayList<String>(expectedContextSize);
 
 		PreparationData actual = prep.prepareVdmFiles(modelFile, contextFiles);
 
-		assertTrue(actual.omlModel != null);
-		assertEquals(modelFile, actual.omlModel.getFilename());
-		assertTrue(actual.omlModel.toVdmPpValue() != null);
-		assertTrue(actual.omlModel.toVdmPpValue().length() > 0);
-
-		assertEquals(0, actual.omlContextDocuments.size());
-
-		assertEquals(2, actual.omlPos.size());
-		for (IOmlExpression s : actual.omlPos)
-			assertTrue(s != null);
+		assertPreparationDataIsGood(modelFile, expectedContextSize,
+				expectedPoSize, actual);
 	}
 
-	// TODO refactor this test method so that it doesn't violate PreparationData
-	// encapsulation!
 	public void testGenerateOmlAst() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
 				VPPDE_BIN), new VdmToolsPogProcessor());
 		String modelFile = testModel2;
-		List<String> contextFiles = new ArrayList<String>(1);
+		int expectedPoSize = 5;
+		int expectedContextSize = 1;
+		List<String> contextFiles = new ArrayList<String>(expectedContextSize);
 		contextFiles.add(testModel1);
 		List<String> poExpressions = prep.processPogFile(testPogFileNoNewLine);
 
 		PreparationData actual = prep.generateOmlAst(modelFile, contextFiles, poExpressions);
-
-		assertTrue(actual.omlModel != null);
-		assertEquals(modelFile, actual.omlModel.getFilename());
-		assertTrue(actual.omlModel.toVdmPpValue() != null);
-		assertTrue(actual.omlModel.toVdmPpValue().length() > 0);
-
-		assertEquals(1, actual.omlContextDocuments.size());
-		for (IOmlDocument doc : actual.omlContextDocuments) {
-			assertTrue(doc != null);
-			assertTrue(doc.toVdmPpValue() != null);
-			assertTrue(doc.toVdmPpValue().length() > 0);
-		}
-
-		assertEquals(5, actual.omlPos.size());
-		for (IOmlExpression s : actual.omlPos)
-			assertTrue(s != null);
+		
+		assertPreparationDataIsGood(modelFile, expectedContextSize,
+				expectedPoSize, actual);
 	}
 
-	// TODO refactor this test method so that it doesn't violate PreparationData
-	// encapsulation!
 	public void testGenerateOmlAstNoContext() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
 				VPPDE_BIN), new VdmToolsPogProcessor());
 		String modelFile = stackModel;
-		List<String> contextFiles = new ArrayList<String>(0);
+		int expectedPoSize = 2;
+		int expectedContextSize = 0;
+		List<String> contextFiles = new ArrayList<String>(expectedContextSize);
 		List<String> poExpressions = prep.processPogFile(stackModelPogFile);
 
 		PreparationData actual = prep.generateOmlAst(modelFile, contextFiles, poExpressions);
 
-		assertTrue(actual.omlModel != null);
-		assertEquals(modelFile, actual.omlModel.getFilename());
-		assertTrue(actual.omlModel.toVdmPpValue() != null);
-		assertTrue(actual.omlModel.toVdmPpValue().length() > 0);
-
-		assertEquals(0, actual.omlContextDocuments.size());
-
-		assertEquals(2, actual.omlPos.size());
-		for (IOmlExpression s : actual.omlPos)
-			assertTrue(s != null);
+		assertPreparationDataIsGood(modelFile, expectedContextSize,
+				expectedPoSize, actual);
 	}
 
 	public void testParseContext() throws Exception {
@@ -195,5 +154,31 @@ public class TranslationPreProcessorTest extends TestCase {
 
 		assertTrue(pogFile.exists());
 		assertEquals(expected, actual.trim());
+	}
+	
+	private void assertPreparationDataIsGood(String modelFile,
+			int expectedContextSize, int expectedPoSize, PreparationData actual)
+			throws CGException {
+		IOmlDocument omlModel = actual.getOmlModel();
+		List<IOmlDocument> omlContextDocuments = actual.getOmlContextDocuments();
+		List<IOmlExpression> omlPos = actual.getOmlPos();
+		
+		assertTrue(omlModel != null);
+		assertEquals(modelFile, omlModel.getFilename());
+		assertTrue(omlModel.toVdmPpValue() != null);
+		assertTrue(actual.omlModel.toVdmPpValue().length() > expectedContextSize);
+
+		assertEquals(expectedContextSize, omlContextDocuments.size());
+		if(expectedContextSize > 0)
+			for (IOmlDocument doc : omlContextDocuments) {
+				assertTrue(doc != null);
+				assertTrue(doc.toVdmPpValue() != null);
+				assertTrue(doc.toVdmPpValue().length() > 0);
+			}
+		
+		assertEquals(expectedPoSize, omlPos.size());
+		if(expectedPoSize > 0)
+			for (IOmlExpression s : omlPos)
+				assertTrue(s != null);
 	}
 }

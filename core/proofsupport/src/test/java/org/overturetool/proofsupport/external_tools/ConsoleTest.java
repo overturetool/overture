@@ -122,21 +122,6 @@ public class ConsoleTest extends TestCase {
 		assertTrue(actual.contains(INVALID_FILE_NAME));
 	}
 
-	// TODO fix: test method not compatible with windows
-//	public void testReadErrorLineNoError() throws Exception {
-//		ArrayList<String> command = new ArrayList<String>();
-//		command.add("java");
-//		command.add("-help");
-//		Console console = new Console(command);
-//		console.closeInput();
-//		// help take a bit more to print all output.
-//		Thread.sleep(5000);
-//		String actual = console.readErrorLine();
-//
-//		System.err.println(actual);
-//		assertNull(actual);
-//	}
-
 	public void testCloseInput() throws Exception {
 		ArrayList<String> command = new ArrayList<String>();
 		command.add(TestSettings.getCatProgram());
@@ -186,15 +171,6 @@ public class ConsoleTest extends TestCase {
 		Console console = new Console(command);
 
 		assertFalse(console.hasOutput());
-	}
-	
-	public void testWaitForSomeOuput() throws Exception {
-		ArrayList<String> command = new ArrayList<String>();
-		command.add("java");
-		Console console = new Console(command);
-		console.waitForSomeOutput(5000);
-		
-		assertTrue(console.hasOutput());
 	}
 	
 	public void testBuildCommandList() throws Exception {

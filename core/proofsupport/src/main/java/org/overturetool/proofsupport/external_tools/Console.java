@@ -189,15 +189,6 @@ public class Console {
 		System.out.println();
 	}
 
-	public void waitForSomeOutput(long timeout) throws IOException,
-			InterruptedException {
-		// TODO fix this! implementation based on pooling is no the best option!
-		// however calling output.wait() would generate an exception because
-		// this Thread apparently doesn't own the object's monitor
-		while (!hasOutput())
-			Thread.sleep(WAIT_SECCONDS);
-	}
-
 	public boolean hasOutput() throws IOException {
 		return process.getInputStream().available() > 0;
 	}
