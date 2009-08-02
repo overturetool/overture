@@ -40,16 +40,16 @@ public class ConsoleTest extends TestCase {
 		console.waitFor();
 	}
 
-	public void testWriteReadLineHol() throws Exception {
-		ArrayList<String> command = new ArrayList<String>();
-		command.add(HOL_DIR + "/bin/" + TestSettings.getHolBin());
-		Console console = new Console(command);
-
-		String quit = "quit();";
-		console.writeLine(quit);
-
-		Thread.sleep(3000);
-	}
+//	public void testWriteReadLineHol() throws Exception {
+//		ArrayList<String> command = new ArrayList<String>();
+//		command.add(HOL_DIR + "/bin/" + TestSettings.getHolBin());
+//		Console console = new Console(command);
+//
+//		String quit = "quit();";
+//		console.writeLine(quit);
+//
+//		Thread.sleep(3000);
+//	}
 
 	public void testWriteReadLineUnquote() throws Exception {
 		ArrayList<String> command = new ArrayList<String>();
