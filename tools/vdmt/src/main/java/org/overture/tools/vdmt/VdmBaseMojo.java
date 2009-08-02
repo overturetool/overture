@@ -45,7 +45,7 @@ public class VdmBaseMojo extends AbstractMojo {
 	/**
 	 * My File.
 	 * 
-	 * @parameter expression="${user.vdmtoolscmdpath}"
+	 * @parameter expression="${user.vppde.bin}"
 	 */
 	protected File vdmToolsCmd;
 	/**
