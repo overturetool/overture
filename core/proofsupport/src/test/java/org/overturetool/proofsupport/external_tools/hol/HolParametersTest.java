@@ -44,18 +44,6 @@ public class HolParametersTest extends TestCase {
 		assertEquals(expected, actual);
 	}
 
-	public void testGetHolEnv() {
-		HolEnvironmentBuilder holEnvBuilder = new HolEnvironmentBuilder(
-				MOSML_DIR, "lib", "bin");
-		Map<String, String> expected = holEnvBuilder.getEnvironment();
-		Map<String, String> actual = holParam.getHolEnv();
-
-		assertTrue(expected.keySet().containsAll(actual.keySet()));
-		assertTrue(actual.keySet().containsAll(expected.keySet()));
-		for (String key : actual.keySet())
-			assertEquals(expected.get(key), actual.get(key));
-	}
-
 	public void testBuildMosmlCommand() throws Exception {
 		List<String> expected = new ArrayList<String>();
 		expected.add(MOSML_DIR + Utilities.FILE_SEPARATOR + "bin" + Utilities.FILE_SEPARATOR + "mosml");

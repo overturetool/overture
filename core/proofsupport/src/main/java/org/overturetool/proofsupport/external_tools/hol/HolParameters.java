@@ -18,7 +18,6 @@ public class HolParameters {
 
 	protected String mosmlDir = null;
 	protected String holDir = null;
-	protected Map<String, String> holEnv = null;
 
 	protected static String commandArgumentsFormat = "-quietdec -P full -I _HOLDIR_/sigobj "
 			+ "_HOLDIR_/std.prelude "
@@ -28,8 +27,6 @@ public class HolParameters {
 	public HolParameters(String mosmlDir, String holDir) {
 		this.mosmlDir = mosmlDir;
 		this.holDir = holDir;
-		this.holEnv = new HolEnvironmentBuilder(mosmlDir, MOSML_LIB_DIR,
-				MOSML_BIN_DIR).getEnvironment();
 	}
 
 	public String getMosmlBinaryPath() {
@@ -52,17 +49,6 @@ public class HolParameters {
 
 	public void setHolDir(String holDir) {
 		this.holDir = holDir;
-	}
-
-	/**
-	 * Returns the mapping between environment variable names and the respective
-	 * values. Changes to the mapping will be reflected in subsequent calls of
-	 * this method.
-	 * 
-	 * @param HOL_DIR
-	 */
-	public Map<String, String> getHolEnv() {
-		return holEnv;
 	}
 
 	protected String[] formatCommandArguments() {

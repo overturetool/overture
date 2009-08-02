@@ -88,7 +88,7 @@ public class MosmlHolConsoleTest extends TestCase {
 	
 	public void testQuitHol() throws Exception {
 		HolParameters holParam = new HolParameters(MOSML_DIR, HOL_DIR);
-		MosmlHolConsole console = new MosmlHolConsole(holParam.buildMosmlHolCommand(), holParam.getHolEnv());
+		MosmlHolConsole console = new MosmlHolConsole(holParam.buildMosmlHolCommand());
 		console.quitHol();
 		
 		assertTrue(console.hasTerminated());

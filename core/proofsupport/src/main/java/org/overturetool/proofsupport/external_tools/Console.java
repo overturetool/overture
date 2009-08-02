@@ -25,16 +25,6 @@ public class Console {
 				.getErrorStream()));
 	}
 
-	public Console(List<String> command, Map<String, String> commandEnvironment)
-			throws IOException {
-		process = startProcess(command, commandEnvironment);
-		input = new PrintWriter(process.getOutputStream());
-		output = new BufferedReader(new InputStreamReader(process
-				.getInputStream()));
-		error = new BufferedReader(new InputStreamReader(process
-				.getErrorStream()));
-	}
-
 	protected Process startProcess(List<String> command,
 			Map<String, String> commandEnvironment) throws IOException {
 		ProcessBuilder processBuilder = initProcessBuilder(command,

@@ -23,11 +23,6 @@ public class MosmlHolConsole extends Console {
 		super(mosmlCmd);
 	}
 
-	public MosmlHolConsole(List<String> mosmlCmd,
-			Map<String, String> holEnvironment) throws IOException {
-		super(mosmlCmd, holEnvironment);
-	}
-
 	public void removeConsoleHeader() throws IOException {
 		if (!consoleHeaderRemoved) {
 			for (int i = 0; i < HEADER_SIZE; i++)
