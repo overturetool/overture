@@ -1,12 +1,12 @@
-package org.overturetool.proofsupport.maven;
+package org.overturetool.proofsupport.test.maven;
 
 import java.util.HashMap;
 
 public class Profile
 {
-	public final static String USER_VDMTOOLS_CMD_PATH = "user.vdmtoolscmdpath";
-	public final static String USER_MOS_ML_DIR = "user.mosmlDir";
-	public final static String USER_HOL_DIR = "user.holDir";
+	public final static String USER_VDMTOOLS_CMD_PATH = "proofsupport.vppde.bin";
+	public final static String USER_MOS_ML_DIR = "proofsupport.mosml.dir";
+	public final static String USER_HOL_DIR = "proofsupport.hol.dir";
 
 	HashMap<String, String> properties = new HashMap<String, String>();
 	String id;

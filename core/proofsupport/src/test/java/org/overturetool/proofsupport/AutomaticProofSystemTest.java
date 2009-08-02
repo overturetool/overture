@@ -36,9 +36,14 @@ public class AutomaticProofSystemTest extends TestCase {
 				holDir, new VdmToolsWrapper(vppdeExecutable),
 				new VdmToolsPogProcessor());
 		List<String> contextFiles = new ArrayList<String>(0);
+		
+		String[] expected = new String[] { "> val it = 1 : int", "> val it = 0 : int" };
 		String[] actual = aps.dischargeAllPos(setModel, contextFiles);
-		for (String s : actual)
-			System.err.println(s);
+		
+		assertEquals(23, actual.length);
+		assertEquals(expected[0], actual[actual.length - 2]);
+		assertEquals(expected[1], actual[actual.length - 1]);
+
 	}
 
 	public void testDischargeAllPosStack() throws Exception {

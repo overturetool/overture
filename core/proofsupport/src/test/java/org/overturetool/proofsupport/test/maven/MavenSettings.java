@@ -1,4 +1,4 @@
-package org.overturetool.proofsupport.maven;
+package org.overturetool.proofsupport.test.maven;
 
 import java.io.File;
 import java.io.FileNotFoundException;

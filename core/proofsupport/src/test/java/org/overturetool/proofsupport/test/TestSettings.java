@@ -7,8 +7,8 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.InvalidPreferencesFormatException;
 
 import org.overturetool.proofsupport.AbstractSettings;
-import org.overturetool.proofsupport.maven.MavenSettings;
-import org.overturetool.proofsupport.maven.Profile;
+import org.overturetool.proofsupport.test.maven.MavenSettings;
+import org.overturetool.proofsupport.test.maven.Profile;
 
 public class TestSettings extends AbstractSettings
 {
