@@ -8,11 +8,9 @@ import junit.framework.TestCase;
 
 import org.overturetool.ast.itf.IOmlDocument;
 import org.overturetool.ast.itf.IOmlExpression;
+import org.overturetool.proofsupport.external_tools.pog.VdmToolsPogProcessor;
+import org.overturetool.proofsupport.external_tools.pog.VdmToolsWrapper;
 import org.overturetool.proofsupport.test.TestSettings;
-import org.overturetool.proofsupport.PreparationData;
-import org.overturetool.proofsupport.TranslationPreProcessor;
-import org.overturetool.proofsupport.external_tools.VdmToolsPogProcessor;
-import org.overturetool.proofsupport.external_tools.VdmToolsWrapper;
 
 public class TranslationPreProcessorTest extends TestCase {
 

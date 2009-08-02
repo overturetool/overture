@@ -2,7 +2,6 @@ package org.overturetool.proofsupport.maven;
 
 import java.io.FileReader;
 import java.io.IOException;
-
 import java.util.Stack;
 
 import org.xml.sax.Attributes;

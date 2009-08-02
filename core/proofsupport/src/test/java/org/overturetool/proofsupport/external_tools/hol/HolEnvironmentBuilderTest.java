@@ -3,11 +3,10 @@ package org.overturetool.proofsupport.external_tools.hol;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.overturetool.proofsupport.external_tools.Utilities;
-import org.overturetool.proofsupport.external_tools.hol.HolEnvironmentBuilder;
-import org.overturetool.proofsupport.test.TestSettings;
-
 import junit.framework.TestCase;
+
+import org.overturetool.proofsupport.external_tools.Utilities;
+import org.overturetool.proofsupport.test.TestSettings;
 
 public class HolEnvironmentBuilderTest extends TestCase {
 

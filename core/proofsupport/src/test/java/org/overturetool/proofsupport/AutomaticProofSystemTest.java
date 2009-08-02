@@ -5,10 +5,9 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.overturetool.proofsupport.external_tools.pog.VdmToolsPogProcessor;
+import org.overturetool.proofsupport.external_tools.pog.VdmToolsWrapper;
 import org.overturetool.proofsupport.test.TestSettings;
-import org.overturetool.proofsupport.AutomaticProofSystem;
-import org.overturetool.proofsupport.external_tools.VdmToolsPogProcessor;
-import org.overturetool.proofsupport.external_tools.VdmToolsWrapper;
 
 public class AutomaticProofSystemTest extends TestCase {
 

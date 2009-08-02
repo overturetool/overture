@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import org.overturetool.proofsupport.ApplicationSettings;
 import org.overturetool.proofsupport.external_tools.Console;
 import org.overturetool.proofsupport.external_tools.Utilities;
 

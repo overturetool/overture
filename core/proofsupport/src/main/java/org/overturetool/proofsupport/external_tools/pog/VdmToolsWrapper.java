@@ -1,8 +1,10 @@
-package org.overturetool.proofsupport.external_tools;
+package org.overturetool.proofsupport.external_tools.pog;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.overturetool.proofsupport.external_tools.Console;
 
 public class VdmToolsWrapper implements PogGenerator {
 

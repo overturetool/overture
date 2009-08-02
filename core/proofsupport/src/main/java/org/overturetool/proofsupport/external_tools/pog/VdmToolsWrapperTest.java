@@ -1,11 +1,10 @@
-package org.overturetool.proofsupport.external_tools;
+package org.overturetool.proofsupport.external_tools.pog;
 
 import java.io.File;
 
 import junit.framework.TestCase;
 
 import org.overturetool.proofsupport.test.TestSettings;
-import org.overturetool.proofsupport.external_tools.VdmToolsWrapper;
 
 public class VdmToolsWrapperTest extends TestCase {
 	

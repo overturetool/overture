@@ -3,20 +3,25 @@ package org.overturetool.proofsupport;
 import java.io.IOException;
 import java.util.List;
 
-import org.overturetool.proofsupport.external_tools.OvertureParserException;
-import org.overturetool.proofsupport.external_tools.PogGenerator;
-import org.overturetool.proofsupport.external_tools.PogGeneratorException;
-import org.overturetool.proofsupport.external_tools.PogProcessor;
-import org.overturetool.proofsupport.external_tools.PogProcessorException;
 import org.overturetool.proofsupport.external_tools.Utilities;
 import org.overturetool.proofsupport.external_tools.hol.HolInterpreter;
 import org.overturetool.proofsupport.external_tools.hol.HolInterpreterException;
+import org.overturetool.proofsupport.external_tools.hol.HolInterpreterFactory;
+import org.overturetool.proofsupport.external_tools.hol.HolInterpreterImpl;
 import org.overturetool.proofsupport.external_tools.hol.HolParameters;
+import org.overturetool.proofsupport.external_tools.omlparser.ParserException;
+import org.overturetool.proofsupport.external_tools.pog.PogGenerator;
+import org.overturetool.proofsupport.external_tools.pog.PogGeneratorException;
+import org.overturetool.proofsupport.external_tools.pog.PogProcessor;
+import org.overturetool.proofsupport.external_tools.pog.PogProcessorException;
+import org.overturetool.proofsupport.external_tools.vdmholtranslator.TranslatorException;
+import org.overturetool.proofsupport.external_tools.vdmholtranslator.VdmToHolTranslator;
+import org.overturetool.proofsupport.external_tools.vdmholtranslator.VdmToHolTranslatorFactory;
 
 public class AutomaticProofSystem {
 
 	private final TranslationPreProcessor prep;
-	private final Translator translator;
+	private final VdmToHolTranslator translator;
 	private final HolParameters holParam;
 	private final String vdmTacticsFile;
 
@@ -25,7 +30,7 @@ public class AutomaticProofSystem {
 		this.prep = new TranslationPreProcessor(pogGen, pogProc);
 		this.holParam = new HolParameters(mosmlDir, holDir);
 		try {
-			this.translator = new Translator();
+			this.translator = VdmToHolTranslatorFactory.newVdmToHolTranslatorInstance();
 		} catch (TranslatorException e) {
 			throw new AutomaicProofSystemException("[TRANSLATOR] " + e.getMessage(), e);
 		}
@@ -63,7 +68,7 @@ public class AutomaticProofSystem {
 		String[] result = new String[] {};
 		HolInterpreter hol = null;
 		try {
-			hol = new HolInterpreter(holParam);
+			hol = HolInterpreterFactory.newHolInterepterInstance(holParam);
 			hol.start();
 			
 			loadTactics(hol);
@@ -103,8 +108,8 @@ public class AutomaticProofSystem {
 			throw new AutomaicProofSystemException("[PO-GEN] " + e.getMessage(), e);
 		} catch (PogProcessorException e) {
 			throw new AutomaicProofSystemException("[PO-PROC] " + e.getMessage(), e);
-		} catch (OvertureParserException e) {
-			throw new AutomaicProofSystemException("[OVTPARSER] " + e.getMessage(), e);
+		} catch (ParserException e) {
+			throw new AutomaicProofSystemException("[PARSER] " + e.getMessage(), e);
 		}
 		return prepData;
 	}

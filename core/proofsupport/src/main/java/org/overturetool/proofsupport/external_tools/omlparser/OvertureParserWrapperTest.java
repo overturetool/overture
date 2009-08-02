@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.overturetool.proofsupport.external_tools;
+package org.overturetool.proofsupport.external_tools.omlparser;
 
 import junit.framework.TestCase;
 
@@ -9,8 +9,6 @@ import org.overturetool.ast.imp.OmlBracketedExpression;
 import org.overturetool.ast.itf.IOmlDocument;
 import org.overturetool.ast.itf.IOmlExpression;
 import org.overturetool.proofsupport.test.TestSettings;
-import org.overturetool.proofsupport.external_tools.OvertureParserException;
-import org.overturetool.proofsupport.external_tools.OvertureParserWrapper;
 
 /**
  * @author miguel_ferreira
@@ -36,11 +34,11 @@ public class OvertureParserWrapperTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.proofsupport.external_tools.OvertureParserWrapper#getOmlDocument(java.lang.String)}
+	 * {@link org.overturetool.proofsupport.external_tools.omlparser.OvertureParserWrapper#getOmlDocument(java.lang.String)}
 	 * .
 	 */
 	public void testGetOmlDocument() throws Exception {
-		IOmlDocument omlDocument = OvertureParserWrapper
+		IOmlDocument omlDocument = new OvertureParserWrapper()
 				.getOmlDocument(testModel1);
 
 		assertNotNull(omlDocument);
@@ -50,13 +48,13 @@ public class OvertureParserWrapperTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.proofsupport.external_tools.OvertureParserWrapper#getOmlDocument(java.lang.String)}
+	 * {@link org.overturetool.proofsupport.external_tools.omlparser.OvertureParserWrapper#getOmlDocument(java.lang.String)}
 	 * .
 	 */
 	public void testGetOmlDocumentEmptyFileName() throws Exception {
 		String fileName = "";
 		try {
-			OvertureParserWrapper.getOmlDocument(fileName);
+			new OvertureParserWrapper().getOmlDocument(fileName);
 			fail("OvertureParserException should have been thrown.");
 		} catch (OvertureParserException e) {
 		}
@@ -64,13 +62,13 @@ public class OvertureParserWrapperTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.proofsupport.external_tools.OvertureParserWrapper#getOmlDocument(java.lang.String)}
+	 * {@link org.overturetool.proofsupport.external_tools.omlparser.OvertureParserWrapper#getOmlDocument(java.lang.String)}
 	 * .
 	 */
 	public void testGetOmlDocumentNullFileName() throws Exception {
 		String fileName = null;
 		try {
-			OvertureParserWrapper.getOmlDocument(fileName);
+			new OvertureParserWrapper().getOmlDocument(fileName);
 			fail("NullPointerException should have been thrown.");
 		} catch (NullPointerException e) {
 		}
@@ -78,13 +76,13 @@ public class OvertureParserWrapperTest extends TestCase {
 
 	/**
 	 * Test method for
-	 * {@link org.overturetool.proofsupport.external_tools.OvertureParserWrapper#getOmlDocument(java.lang.String)}
+	 * {@link org.overturetool.proofsupport.external_tools.omlparser.OvertureParserWrapper#getOmlDocument(java.lang.String)}
 	 * .
 	 */
 	public void testGetOmlDocumentInvalidFileName() throws Exception {
 		String fileName = "some_invalid_file";
 		try {
-			OvertureParserWrapper.getOmlDocument(fileName);
+			new OvertureParserWrapper().getOmlDocument(fileName);
 			fail("OvertureParserException should have been thrown.");
 		} catch (OvertureParserException e) {
 		}
@@ -95,7 +93,7 @@ public class OvertureParserWrapperTest extends TestCase {
 				+ "  (forall i,j in set inds (l) & "
 				+ "    (i > j => j in set inds (l))))";
 
-		IOmlExpression omlExpression = OvertureParserWrapper
+		IOmlExpression omlExpression = new OvertureParserWrapper()
 				.getOmlExpression(expression);
 
 		assertNotNull(omlExpression);
@@ -106,7 +104,7 @@ public class OvertureParserWrapperTest extends TestCase {
 		String expression = "";
 
 		try {
-			OvertureParserWrapper.getOmlExpression(expression);
+			new OvertureParserWrapper().getOmlExpression(expression);
 			fail("ClassCastException should have been thrown.");
 		} catch (ClassCastException e) {
 		}
@@ -116,7 +114,7 @@ public class OvertureParserWrapperTest extends TestCase {
 		String expression = null;
 
 		try {
-			OvertureParserWrapper.getOmlExpression(expression);
+			new OvertureParserWrapper().getOmlExpression(expression);
 			fail("NullPointerException should have been thrown.");
 		} catch (NullPointerException e) {
 		}
@@ -126,7 +124,7 @@ public class OvertureParserWrapperTest extends TestCase {
 		String expression = "invalid expression";
 
 		try {
-			OvertureParserWrapper.getOmlExpression(expression);
+			new OvertureParserWrapper().getOmlExpression(expression);
 			fail("OvertureParserException should have been thrown.");
 		} catch (OvertureParserException e) {
 		}

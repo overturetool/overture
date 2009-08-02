@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.overturetool.proofsupport.external_tools.Utilities;
-import org.overturetool.proofsupport.external_tools.hol.HolEnvironmentBuilder;
-import org.overturetool.proofsupport.external_tools.hol.HolParameters;
-import org.overturetool.proofsupport.test.TestSettings;
-
 import junit.framework.TestCase;
+
+import org.overturetool.proofsupport.external_tools.Utilities;
+import org.overturetool.proofsupport.test.TestSettings;
 
 public class HolParametersTest extends TestCase {
 

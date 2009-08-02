@@ -1,19 +1,18 @@
-package org.overturetool.proofsupport;
+package org.overturetool.proofsupport.external_tools.vdmholtranslator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.overturetool.proofsupport.test.TestSettings;
 import org.overturetool.proofsupport.PreparationData;
 import org.overturetool.proofsupport.TranslationPreProcessor;
-import org.overturetool.proofsupport.Translator;
 import org.overturetool.proofsupport.external_tools.Utilities;
-import org.overturetool.proofsupport.external_tools.VdmToolsPogProcessor;
-import org.overturetool.proofsupport.external_tools.VdmToolsWrapper;
+import org.overturetool.proofsupport.external_tools.pog.VdmToolsPogProcessor;
+import org.overturetool.proofsupport.external_tools.pog.VdmToolsWrapper;
+import org.overturetool.proofsupport.test.TestSettings;
 
-public class TranslatorTest extends TestCase {
+public class TranslatorWrapperTest extends TestCase {
 
 	private static TestSettings settings = null;
 	private static String stackModel = null;
@@ -54,7 +53,7 @@ public class TranslatorTest extends TestCase {
 				TestSettings.getVppdeBinary()), new VdmToolsPogProcessor());
 		List<String> contextFiles = new ArrayList<String>(0);
 		PreparationData prepData = prep.prepareVdmFiles(stackModel, contextFiles);
-		Translator trans = new Translator();
+		TranslatorWrapper trans = new TranslatorWrapper();
 
 		String expected = "fun boolToInteger(true) = 1 | boolToInteger(false)=0;" + Utilities.NEW_CHARACTER
 				+ "Define `inv_Stack (inv_param:(num list))  = T`;" + Utilities.NEW_CHARACTER

@@ -1,4 +1,4 @@
-package org.overturetool.proofsupport.external_tools;
+package org.overturetool.proofsupport.external_tools.pog;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.overturetool.proofsupport.external_tools.Utilities;
 
 public class VdmToolsPogProcessor implements PogProcessor {
 

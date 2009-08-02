@@ -1,4 +1,4 @@
-package org.overturetool.proofsupport.external_tools;
+package org.overturetool.proofsupport.external_tools.pog;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -7,9 +7,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.overturetool.proofsupport.test.TestSettings;
 import org.overturetool.proofsupport.external_tools.Utilities;
-import org.overturetool.proofsupport.external_tools.VdmToolsPogProcessor;
+import org.overturetool.proofsupport.test.TestSettings;
 
 public class VdmToolsPogProcessorTest extends TestCase {
 

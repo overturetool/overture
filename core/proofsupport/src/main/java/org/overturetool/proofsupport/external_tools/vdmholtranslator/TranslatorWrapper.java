@@ -1,4 +1,4 @@
-package org.overturetool.proofsupport;
+package org.overturetool.proofsupport.external_tools.vdmholtranslator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,13 +13,14 @@ import org.overturetool.potrans.HolDocument;
 import org.overturetool.potrans.MLExpression;
 import org.overturetool.potrans.ProofObligation;
 import org.overturetool.potrans.VdmHolTranslator;
+import org.overturetool.proofsupport.PreparationData;
 import org.overturetool.proofsupport.external_tools.Utilities;
 
-public class Translator {
+public class TranslatorWrapper implements VdmToHolTranslator {
 	
 	private final VdmHolTranslator vdmHolTrans;
 
-	public Translator() throws TranslatorException {
+	public TranslatorWrapper() throws TranslatorException {
 		try {
 			this.vdmHolTrans = new VdmHolTranslator();
 		} catch (CGException e) {

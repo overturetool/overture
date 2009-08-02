@@ -1,12 +1,10 @@
 package org.overturetool.proofsupport.external_tools.hol;
 
-import org.overturetool.proofsupport.test.TestSettings;
-import org.overturetool.proofsupport.external_tools.hol.HolInterpreter;
-import org.overturetool.proofsupport.external_tools.hol.HolParameters;
-
 import junit.framework.TestCase;
 
-public class HolInterpreterTest extends TestCase {
+import org.overturetool.proofsupport.test.TestSettings;
+
+public class HolInterpreterImplTest extends TestCase {
 
 	protected static final String HOL_DIR = TestSettings.getHolDir();
 	protected static final String MOSML_DIR = TestSettings.getMosmlDir();
@@ -17,7 +15,7 @@ public class HolInterpreterTest extends TestCase {
 
 	public void testInterpretLineHelp()  throws Exception {
 		HolParameters holParam = new HolParameters(MOSML_DIR, HOL_DIR);
-		HolInterpreter hol = new HolInterpreter(holParam);
+		HolInterpreterImpl hol = new HolInterpreterImpl(holParam);
 		hol.start();
 		
 		String expected = "> val it = fn : string -> unit";
@@ -29,7 +27,7 @@ public class HolInterpreterTest extends TestCase {
 
 	public void testQuit() throws Exception {
 		HolParameters holParam = new HolParameters(MOSML_DIR, HOL_DIR);
-		HolInterpreter hol = new HolInterpreter(holParam);
+		HolInterpreterImpl hol = new HolInterpreterImpl(holParam);
 		hol.start();
 		
 		hol.quit();

@@ -4,12 +4,10 @@ import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
-import org.overturetool.proofsupport.test.TestSettings;
-import org.overturetool.proofsupport.external_tools.Console;
-import org.overturetool.proofsupport.external_tools.ConsolePipe;
 import org.overturetool.proofsupport.external_tools.hol.HolParameters;
 import org.overturetool.proofsupport.external_tools.hol.MosmlHolConsole;
 import org.overturetool.proofsupport.external_tools.hol.UnquoteConsole;
+import org.overturetool.proofsupport.test.TestSettings;
 
 public class ConsolePipeTest extends TestCase {
 

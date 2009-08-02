@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.overturetool.proofsupport.external_tools;
+package org.overturetool.proofsupport.external_tools.omlparser;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,9 +20,13 @@ import org.overturetool.parser.imp.OvertureParser;
  * @author miguel_ferreira
  * 
  */
-public abstract class OvertureParserWrapper {
+public class OvertureParserWrapper implements OmlAstGenerator {
 
-	public static IOmlDocument getOmlDocument(String vdmFileName) throws OvertureParserException {
+	public OvertureParserWrapper() {
+		super();
+	}
+
+	public IOmlDocument getOmlDocument(String vdmFileName) throws OvertureParserException {
 		try {
 			InputStreamReader fileStream = new InputStreamReader(new FileInputStream(vdmFileName));
 			return getOmlDocumentFromReader(vdmFileName, fileStream);
@@ -34,7 +38,7 @@ public abstract class OvertureParserWrapper {
 
 	}
 
-	public static IOmlExpression getOmlExpression(String vdmExpression) throws OvertureParserException {
+	public IOmlExpression getOmlExpression(String vdmExpression) throws OvertureParserException {
 		StringReader sr = new StringReader(vdmExpression);
 		
 		try {

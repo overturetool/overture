@@ -2,10 +2,8 @@ package org.overturetool.proofsupport.external_tools.hol;
 
 import junit.framework.TestCase;
 
-import org.overturetool.proofsupport.test.TestSettings;
 import org.overturetool.proofsupport.external_tools.Utilities;
-import org.overturetool.proofsupport.external_tools.hol.HolParameters;
-import org.overturetool.proofsupport.external_tools.hol.MosmlHolConsole;
+import org.overturetool.proofsupport.test.TestSettings;
 
 public class MosmlHolConsoleTest extends TestCase {
 

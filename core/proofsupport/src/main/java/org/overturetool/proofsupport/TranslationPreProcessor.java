@@ -5,49 +5,52 @@ import java.util.List;
 
 import org.overturetool.ast.itf.IOmlDocument;
 import org.overturetool.ast.itf.IOmlExpression;
-import org.overturetool.proofsupport.external_tools.OvertureParserException;
-import org.overturetool.proofsupport.external_tools.OvertureParserWrapper;
-import org.overturetool.proofsupport.external_tools.PogGenerator;
-import org.overturetool.proofsupport.external_tools.PogGeneratorException;
-import org.overturetool.proofsupport.external_tools.PogProcessor;
-import org.overturetool.proofsupport.external_tools.PogProcessorException;
+import org.overturetool.proofsupport.external_tools.omlparser.OmlAstGenerator;
+import org.overturetool.proofsupport.external_tools.omlparser.OmlAstGeneratorFactory;
+import org.overturetool.proofsupport.external_tools.omlparser.ParserException;
+import org.overturetool.proofsupport.external_tools.pog.PogGenerator;
+import org.overturetool.proofsupport.external_tools.pog.PogGeneratorException;
+import org.overturetool.proofsupport.external_tools.pog.PogProcessor;
+import org.overturetool.proofsupport.external_tools.pog.PogProcessorException;
 
 public class TranslationPreProcessor {
 
 	private final PogGenerator pogGen;
 	private final PogProcessor pogProc;
+	private final OmlAstGenerator omlAstGen;
 
 	public TranslationPreProcessor(PogGenerator pogGen, PogProcessor pogProc) {
 		this.pogGen = pogGen;
 		this.pogProc = pogProc;
+		this.omlAstGen = OmlAstGeneratorFactory.newOmlAstGenertorInstance();
 	}
 
-	public PreparationData prepareVdmFiles(String vdmModelFile, List<String> vdmContextFiles) throws PogGeneratorException, PogProcessorException, OvertureParserException {
+	public PreparationData prepareVdmFiles(String vdmModelFile, List<String> vdmContextFiles) throws PogGeneratorException, PogProcessorException, ParserException {
 		String pogFilePath = generatePogFile(vdmModelFile, vdmContextFiles);
 		List<String> poExpressions = processPogFile(pogFilePath);
 		return generateOmlAst(vdmModelFile, vdmContextFiles, poExpressions);
 	}
 
 	protected PreparationData generateOmlAst(String vdmModelFile, List<String> vdmContextFiles,
-			List<String> poExpressions) throws OvertureParserException  {
-		IOmlDocument omlModel = OvertureParserWrapper.getOmlDocument(vdmModelFile);
+			List<String> poExpressions) throws ParserException  {
+		IOmlDocument omlModel = omlAstGen.getOmlDocument(vdmModelFile);
 		List<IOmlDocument> omlContextDocuments = parseContext(vdmContextFiles);
 		List<IOmlExpression> omlPos = parsePos(poExpressions);
 		return new PreparationData(omlModel, omlContextDocuments, omlPos);
 	}
 
-	private List<IOmlExpression> parsePos(List<String> poExpressions) throws OvertureParserException  {
+	private List<IOmlExpression> parsePos(List<String> poExpressions) throws ParserException  {
 		List<IOmlExpression> omlPos = new ArrayList<IOmlExpression>(poExpressions.size());
 		for (String poExpression : poExpressions)
-			omlPos.add(OvertureParserWrapper.getOmlExpression(poExpression));
+			omlPos.add(omlAstGen.getOmlExpression(poExpression));
 		return omlPos;
 	}
 
-	protected List<IOmlDocument> parseContext(List<String> vdmContextFiles) throws OvertureParserException {
+	protected List<IOmlDocument> parseContext(List<String> vdmContextFiles) throws ParserException {
 		List<IOmlDocument> omlContextDocuments = new ArrayList<IOmlDocument>(vdmContextFiles.size());
 		// TODO check if this works or if all files have to be parsed together
 		for (String vdmContextFile : vdmContextFiles)
-			omlContextDocuments.add(OvertureParserWrapper.getOmlDocument(vdmContextFile));
+			omlContextDocuments.add(omlAstGen.getOmlDocument(vdmContextFile));
 		return omlContextDocuments;
 	}
 

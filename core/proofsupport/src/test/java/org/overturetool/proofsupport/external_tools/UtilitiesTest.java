@@ -3,8 +3,6 @@ package org.overturetool.proofsupport.external_tools;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.overturetool.proofsupport.external_tools.Utilities;
-
 import junit.framework.TestCase;
 
 public class UtilitiesTest extends TestCase {

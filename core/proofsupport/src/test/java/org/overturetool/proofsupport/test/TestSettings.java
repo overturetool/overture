@@ -7,9 +7,8 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.InvalidPreferencesFormatException;
 
 import org.overturetool.proofsupport.AbstractSettings;
-import org.overturetool.proofsupport.maven.Profile;
 import org.overturetool.proofsupport.maven.MavenSettings;
-import org.xml.sax.SAXException;
+import org.overturetool.proofsupport.maven.Profile;
 
 public class TestSettings extends AbstractSettings
 {
@@ -22,13 +21,11 @@ public class TestSettings extends AbstractSettings
 		try
 		{
 			MavenSettings s = new MavenSettings();
-			if (VPPDE_BIN == null || VPPDE_BIN.length() == 0)
-				VPPDE_BIN = s.getDefaultProfile().getProperty(
-						Profile.USER_VDMTOOLS_CMD_PATH);
-			if (MOSML_DIR == null || MOSML_DIR.length() == 0)
+			checkValue(s);
+			if (!isString(MOSML_DIR))
 				MOSML_DIR = s.getDefaultProfile().getProperty(
 						Profile.USER_MOS_ML_DIR);
-			if (HOL_DIR == null || HOL_DIR.length() == 0)
+			if (!isString(HOL_DIR))
 				HOL_DIR = s.getDefaultProfile().getProperty(
 						Profile.USER_HOL_DIR);
 		} catch (Exception e)
@@ -39,6 +36,20 @@ public class TestSettings extends AbstractSettings
 							+ "-Dproofsupport.mosml.dir=\"<value>\"\n"
 							+ "-Dproofsupport.hol.dir=\"<value>\"\n", e);
 		}
+	}
+
+	private static void checkValue(MavenSettings s) {
+		if (!isString(VPPDE_BIN))
+			setValueFromMavenSettings(s);
+	}
+
+	private static void setValueFromMavenSettings(MavenSettings s) {
+		VPPDE_BIN = s.getDefaultProfile().getProperty(
+				Profile.USER_VDMTOOLS_CMD_PATH);
+	}
+
+	protected static boolean isString(String s) {
+		return s != null && s.length() != 0;
 	}
 
 	protected static final String SETTINGS_FILE = "src/test/java/org/overturetool/proofsupport/test/Settings.xml";

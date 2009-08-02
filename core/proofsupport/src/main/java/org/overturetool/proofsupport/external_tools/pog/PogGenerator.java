@@ -1,4 +1,6 @@
-package org.overturetool.proofsupport.external_tools;
+package org.overturetool.proofsupport.external_tools.pog;
+
+import java.io.IOException;
 
 public interface PogGenerator {
 

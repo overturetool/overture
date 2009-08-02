@@ -1,4 +1,4 @@
-package org.overturetool.proofsupport.external_tools;
+package org.overturetool.proofsupport.external_tools.pog;
 
 public class PogProcessorException extends Exception {
 

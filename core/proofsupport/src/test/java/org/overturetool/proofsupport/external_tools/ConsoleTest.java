@@ -6,8 +6,6 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.overturetool.proofsupport.test.TestSettings;
-import org.overturetool.proofsupport.external_tools.Console;
-import org.overturetool.proofsupport.external_tools.Utilities;
 
 public class ConsoleTest extends TestCase {
 

@@ -1,4 +1,4 @@
-package org.overturetool.proofsupport;
+package org.overturetool.proofsupport.external_tools.vdmholtranslator;
 
 public class TranslatorException extends Exception {
 	
