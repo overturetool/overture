@@ -442,7 +442,7 @@ public class OperationValue extends Value
     		trace("OpRequest");
     		BUSValue bus = BUSClassDefinition.findBUS(from, to);
 
-    		if (isAsync)
+    		if (isAsync)	// Don't wait
     		{
         		MessageRequest request = new MessageRequest(bus, from, to, argValues, null);
         		bus.send(request, thread);
@@ -458,7 +458,7 @@ public class OperationValue extends Value
         		return reply.getValue();	// Can throw a returned exception
     		}
 		}
-		else	// local, must be async
+		else	// local, must be async so don't wait
 		{
     		MessageRequest request = new MessageRequest(null, from, to, argValues, null);
     		thread.send(request);

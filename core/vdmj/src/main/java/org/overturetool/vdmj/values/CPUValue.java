@@ -214,7 +214,7 @@ public class CPUValue extends ObjectValue
 			" time: " + SystemClock.getWallTime());
 	}
 
-	public synchronized void reschedule()
+	public synchronized long reschedule()
 	{
 		Thread current = Thread.currentThread();
 		policy.reschedule();
@@ -236,6 +236,8 @@ public class CPUValue extends ObjectValue
 			sleep();
 			switches++;
 		}
+
+		return policy.getTimeslice();
 	}
 
 	public synchronized void sleep()

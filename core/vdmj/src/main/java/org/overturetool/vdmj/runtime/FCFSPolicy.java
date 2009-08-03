@@ -30,6 +30,7 @@ import java.util.Map;
 
 public class FCFSPolicy extends SchedulingPolicy
 {
+	private static final long TIMESLICE = 100;
 	private final List<Thread> threads;
 	private final Map<Thread, RunState> state;
 
@@ -104,5 +105,11 @@ public class FCFSPolicy extends SchedulingPolicy
 		}
 
 		return true;
+	}
+
+	@Override
+	public long getTimeslice()
+	{
+		return TIMESLICE;
 	}
 }

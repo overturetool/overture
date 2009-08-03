@@ -36,6 +36,8 @@ public class ThreadState
 	public final DBGPReader dbgp;
 	public final CPUValue CPU;
 
+	private long timesliceLeft = 0;
+
 	public InterruptAction action;
 	public int stepline;
 	public RootContext nextctxt;
@@ -74,5 +76,13 @@ public class ThreadState
 	public synchronized long getTimestep()
 	{
 		return timestep;
+	}
+
+	public void reschedule()
+	{
+		if (--timesliceLeft < 0)
+		{
+			timesliceLeft = CPU.reschedule();
+		}
 	}
 }

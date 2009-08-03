@@ -65,4 +65,10 @@ public class FPPolicy extends SchedulingPolicy
 	{
 		throw new RuntimeException("Not implemented");
 	}
+
+	@Override
+	public long getTimeslice()
+	{
+		throw new RuntimeException("Not implemented");
+	}
 }

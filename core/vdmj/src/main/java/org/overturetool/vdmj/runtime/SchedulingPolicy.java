@@ -27,6 +27,7 @@ abstract public class SchedulingPolicy
 {
 	abstract public boolean reschedule();
 	abstract public Thread getThread();
+	abstract public long getTimeslice();
 	abstract public void addThread(Thread thread);
 	abstract public void removeThread(Thread thread);
 	abstract public void setState(Thread thread, RunState newstate);
