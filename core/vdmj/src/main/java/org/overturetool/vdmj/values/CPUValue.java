@@ -156,6 +156,13 @@ public class CPUValue extends ObjectValue
 			" name: \"" + name + "\"";
 	}
 
+	private String objRefString(ObjectValue object)
+	{
+		return
+			" objref: " + (object == null ? "nil" : object.objectReference) +
+			" clnm: " + (object == null ? "nil" : ("\"" + object.type + "\""));
+	}
+
 	public synchronized void addThread(Thread thread, ObjectValue object)
 	{
 		policy.addThread(thread);
@@ -165,8 +172,7 @@ public class CPUValue extends ObjectValue
 		RTLogger.log(
 			"ThreadCreate -> id: " + thread.getId() +
 			" period: false " +
-			" objref: " + object.objectReference +
-			" clnm: \"" + object.type + "\"" +
+			objRefString(object) +
 			" cpunm: " + cpuNumber +
 			" time: " + SystemClock.getWallTime());
 	}
@@ -180,30 +186,23 @@ public class CPUValue extends ObjectValue
 		RTLogger.log(
 			"ThreadCreate -> id: " + thread.getId() +
 			" period: false " +
-			" objref: nil " +
-			" clnm: nil " +
+			objRefString(null) +
 			" cpunm: " + cpuNumber +
 			" time: " + SystemClock.getWallTime());
 	}
 
 	public synchronized void removeThread(Thread thread)
 	{
-		boolean kickMe = false;
+		ObjectValue object = objects.get(thread);
 
-		if (runningThread == thread)
-		{
-			ObjectValue object = objects.get(thread);
+		RTLogger.log(
+			"ThreadSwapOut -> id: " + thread.getId() +
+			objRefString(object) +
+			" cpunm: " + cpuNumber +
+			" overhead: " + 0 +
+			" time: " + SystemClock.getWallTime());
 
-			RTLogger.log(
-				"ThreadSwapOut -> id: " + thread.getId() +
-				" objref: " + object.objectReference +
-				" clnm: \"" + object.type.name.name + "\"" +
-				" cpunm: " + cpuNumber +
-				" overhead: " + 0 +
-				" time: " + SystemClock.getWallTime());
-
-			kickMe = true;
-		}
+		wakeUp(thread, RunState.KILLED);
 
 		policy.removeThread(thread);
 		objects.remove(thread);
@@ -213,11 +212,6 @@ public class CPUValue extends ObjectValue
 			"ThreadKill -> id: " + thread.getId() +
 			" cpunm: " + cpuNumber +
 			" time: " + SystemClock.getWallTime());
-
-		if (kickMe)
-		{
-			kick();
-		}
 	}
 
 	public synchronized void reschedule()
@@ -234,8 +228,7 @@ public class CPUValue extends ObjectValue
 
 			RTLogger.log(
 				"ThreadSwapOut -> id: " + current.getId() +
-				" objref: " + object.objectReference +
-				" clnm: \"" + object.type.name.name + "\"" +
+				objRefString(object) +
 				" cpunm: " + cpuNumber +
 				" overhead: " + 0 +
 				" time: " + SystemClock.getWallTime());
@@ -264,30 +257,56 @@ public class CPUValue extends ObjectValue
 
 		RTLogger.log(
 			"ThreadSwapIn -> id: " + current.getId() +
-			" objref: " + object.objectReference +
-			" clnm: \"" + object.type.name.name + "\"" +
+			objRefString(object) +
 			" cpunm: " + cpuNumber +
 			" overhead: " + 0 +
 			" time: " + SystemClock.getWallTime());
 	}
 
-	public synchronized void setState(Thread thread, RunState newstate)
+	public synchronized void waiting()
+	{
+		Thread current = Thread.currentThread();
+		policy.setState(current, RunState.WAITING);
+		policy.reschedule();
+		runningThread = policy.getThread();
+		notifyAll();
+
+		ObjectValue object = objects.get(current);
+
+		RTLogger.log(
+			"ThreadSwapOut -> id: " + current.getId() +
+			objRefString(object) +
+			" cpunm: " + cpuNumber +
+			" overhead: " + 0 +
+			" time: " + SystemClock.getWallTime());
+
+		sleep();
+		switches++;
+	}
+
+	public synchronized void wakeUp(Thread thread, RunState newstate)
 	{
 		policy.setState(thread, newstate);
-		kick();
+		policy.reschedule();
+		runningThread = policy.getThread();
+		notifyAll();
+	}
+
+	public synchronized void setState(Thread thread, RunState newstate)
+	{
+		wakeUp(thread, newstate);
 	}
 
 	public synchronized void setState(RunState newstate)
 	{
-		policy.setState(Thread.currentThread(), newstate);
-		kick();
+		wakeUp(Thread.currentThread(), newstate);
 	}
 
 	public synchronized void duration(long step)
 	{
 		long end = SystemClock.getWallTime() + step;
 
-		policy.setState(Thread.currentThread(), RunState.TIMESTEP);
+		setState(RunState.TIMESTEP);
 		durations.put(Thread.currentThread(), step);
 
 		if (step < minTimeStep)
@@ -332,12 +351,5 @@ public class CPUValue extends ObjectValue
 		}
 
 		durations = remaining;
-	}
-
-	private void kick()
-	{
-		policy.reschedule();
-		runningThread = policy.getThread();
-		notifyAll();
 	}
 }

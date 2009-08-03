@@ -51,7 +51,7 @@ public class AsyncThread extends Thread
 	@Override
 	public void run()
 	{
-		MessageRequest request = queue.take();		// Blocking, until RUNNABLE
+		MessageRequest request = queue.take();
 		cpu.sleep();
 
 		ValueList arglist = request.args;

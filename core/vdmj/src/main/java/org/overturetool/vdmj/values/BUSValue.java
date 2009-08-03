@@ -31,6 +31,7 @@ import org.overturetool.vdmj.runtime.AsyncThread;
 import org.overturetool.vdmj.runtime.BUSPolicy;
 import org.overturetool.vdmj.runtime.MessageRequest;
 import org.overturetool.vdmj.runtime.MessageResponse;
+import org.overturetool.vdmj.runtime.RunState;
 import org.overturetool.vdmj.runtime.SystemClock;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Type;
@@ -98,7 +99,7 @@ public class BUSValue extends ObjectValue
 			" fromcpu: " + request.from.cpuNumber +
 			" tocpu: " + request.to.cpuNumber +
 			" msgid: " + request.msgId +
-			" callthr: " + request.threadId +
+			" callthr: " + request.thread.getId() +
 			" opname: " + "\"" + thread.operation.name + "\"" +
 			" objref: " + thread.self.objectReference +
 			" size: " + request.args.toString().length() +
@@ -123,8 +124,8 @@ public class BUSValue extends ObjectValue
 			" tocpu: " + response.to.cpuNumber +
 			" msgid: " + response.msgId +
 			" origmsgid: " + response.request.msgId +
-			" callthr: " + response.request.threadId +
-			" calleethr: " + response.threadId +
+			" callthr: " + response.request.thread.getId() +
+			" calleethr: " + response.thread.getId() +
 			" size: " + response.toString().length() +
 			" time: " + SystemClock.getWallTime());
 
@@ -137,6 +138,7 @@ public class BUSValue extends ObjectValue
 			" time: " + SystemClock.getWallTime());
 
 		response.request.replyTo.add(response);
+		response.request.from.wakeUp(response.request.thread, RunState.RUNNABLE);
 	}
 
 	public void setName(String name)

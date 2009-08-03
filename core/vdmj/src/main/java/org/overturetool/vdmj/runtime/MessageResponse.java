@@ -29,7 +29,7 @@ import org.overturetool.vdmj.values.Value;
 public class MessageResponse extends MessagePacket
 {
 	public final long msgId;
-	public final long threadId;
+	public final Thread thread;
 	public final CPUValue from;
 	public final CPUValue to;
 	public final Value result;
@@ -39,7 +39,7 @@ public class MessageResponse extends MessagePacket
 	public MessageResponse(Value result, MessageRequest request)
 	{
 		this.msgId = nextId++;
-		this.threadId = Thread.currentThread().getId();
+		this.thread = Thread.currentThread();
 		this.from = request.to;
 		this.to = request.from;
 		this.result = result;
@@ -50,7 +50,7 @@ public class MessageResponse extends MessagePacket
 	public MessageResponse(ValueException exception, MessageRequest request)
 	{
 		this.msgId = nextId++;
-		this.threadId = Thread.currentThread().getId();
+		this.thread = Thread.currentThread();
 		this.from = request.to;
 		this.to = request.from;
 		this.result = null;

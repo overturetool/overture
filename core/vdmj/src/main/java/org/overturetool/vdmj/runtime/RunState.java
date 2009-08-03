@@ -25,5 +25,5 @@ package org.overturetool.vdmj.runtime;
 
 public enum RunState
 {
-	CREATED, RUNNABLE, WAITING, TIMESTEP
+	CREATED, RUNNABLE, WAITING, TIMESTEP, KILLED
 }

@@ -453,6 +453,7 @@ public class OperationValue extends Value
         		MessageQueue<MessageResponse> queue = new MessageQueue<MessageResponse>();
         		MessageRequest request = new MessageRequest(bus, from, to, argValues, queue);
         		bus.send(request, thread);
+        		from.waiting();
         		MessageResponse reply = queue.take();
         		return reply.getValue();	// Can throw a returned exception
     		}

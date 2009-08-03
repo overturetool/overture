@@ -453,7 +453,6 @@ abstract public class CommandReader
 				println("Flushing " + RTLogger.getLogSize() + " RT events");
 			}
 
-			RTLogger.dump(true);
 			RTLogger.setLogfile(null);
 			println("RT events now logged to the console");
 			return true;

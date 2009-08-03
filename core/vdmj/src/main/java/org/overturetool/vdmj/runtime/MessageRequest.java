@@ -32,7 +32,7 @@ import org.overturetool.vdmj.values.ValueList;
 public class MessageRequest extends MessagePacket
 {
 	public final long msgId;
-	public final long threadId;
+	public final Thread thread;
 	public final CPUValue from;
 	public final CPUValue to;
 	public final BUSValue bus;
@@ -44,7 +44,7 @@ public class MessageRequest extends MessagePacket
 		ValueList args, Queue<MessageResponse> replyTo)
 	{
 		this.msgId = nextId++;
-		this.threadId = Thread.currentThread().getId();
+		this.thread = Thread.currentThread();
 		this.bus = bus;
 		this.from = from;
 		this.to = to;

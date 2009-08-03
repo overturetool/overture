@@ -34,21 +34,24 @@ public class RTLogger
 
 	public static synchronized void log(String event)
 	{
-		events.add(event);
-
-		if (events.size() > 1000)
+		if (logfile == null)
 		{
-			dump(false);
+			Console.out.println(event);
+		}
+		else
+		{
+    		events.add(event);
+
+    		if (events.size() > 1000)
+    		{
+    			dump(false);
+    		}
 		}
 	}
 
 	public static void setLogfile(PrintWriter out)
 	{
-		if (logfile != null)
-		{
-			dump(true);		// Write out and close previous
-		}
-
+		dump(true);		// Write out and close previous
 		logfile = out;
 	}
 
@@ -59,19 +62,20 @@ public class RTLogger
 
 	public static synchronized void dump(boolean close)
 	{
-		PrintWriter target = logfile == null ? Console.out : logfile;
-
-		for (String event: events)
+		if (logfile != null)
 		{
-			target.println(event);
-		}
+    		for (String event: events)
+    		{
+    			logfile.println(event);
+    		}
 
-		target.flush();
-		events.clear();
+    		logfile.flush();
+    		events.clear();
 
-		if (close && logfile != null)
-		{
-			logfile.close();
+    		if (close)
+    		{
+    			logfile.close();
+    		}
 		}
 	}
 }
