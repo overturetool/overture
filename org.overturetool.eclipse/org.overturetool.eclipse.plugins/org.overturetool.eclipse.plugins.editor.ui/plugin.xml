@@ -449,7 +449,7 @@
 
 <!--views -->
 <extension point="org.eclipse.ui.views">  
-		<category id="org.overturetool.eclipse.plugin.editor.ui" name="Overture Category"/>
+		<category id="org.overturetool.eclipse.plugin.editor.ui" name="Overture"/>
 		<view
             name="Overture documentation"
             icon="icons/oml16.png"

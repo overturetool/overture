@@ -1,55 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            id="OvertureUml.actionSet"
-            label="UML transformation"
-            visible="true">
+
+
+ <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IProject"
+            id="org.overturetool.eclipse.plugins.umltrans.contribution1">
+            <filter
+         name="projectNature"
+         value="org.overturetool.eclipse.plugins.editor.core.nature">
+      </filter>
          <menu
-               id="overtureMenu"
-               
-               label="Overture">
+               label="UML Transformation"
+               path="additions"
+               id="org.overturetool.eclipse.plugins.umltrans.menuMain">
             <separator
-                  name="slot1">
+                  name="groupUml">
             </separator>
-            
          </menu>
-        <menu
-               id="umlMenu"
-               
-               label="UML">
          
-         </menu>
-         <action
+          <action
                class="org.overturetool.eclipse.plugins.umltrans.actions.Vdm2UmlAction"
                icon="icons/ea.png"
-               id="overtureuml.actions.Overture"
-               label="&amp;VDM -&gt; UML"
-               menubarPath="overtureMenu/umlMenu"
+               id="org.overturetool.eclipse.plugins.umltrans.actions.Vdm2UmlAction"
+               label="Export XMI"
+               menubarPath="org.overturetool.eclipse.plugins.umltrans.menuMain/groupUml"
                toolbarPath="UML"
-               tooltip="Generate UML model from VDM files">
+               enablesFor="1"
+               tooltip="Generate UML XMI from VDM files">
          </action>
-         <action
+         
+          <action
                class="org.overturetool.eclipse.plugins.umltrans.actions.Uml2VdmAction"
                icon="icons/vdm1.png"
-               id="overtureuml.actions.Overture"
-               label="&amp;UML-&gt; VDM"
-               menubarPath="overtureMenu/UML"
+               id="org.overturetool.eclipse.plugins.umltrans.actions.Uml2VdmAction"
+               label="Import XMI"
+               menubarPath="org.overturetool.eclipse.plugins.umltrans.menuMain/groupUml"
                toolbarPath="UML"
+               enablesFor="1"
                tooltip="Generate VDM files from a UML model">
          </action>
-           <action
+         <action
                class="org.overturetool.eclipse.plugins.umltrans.actions.TexToVppAction"
                icon="icons/texRemove.png"
-               id="overtureuml.actions.Overture"
-               label="&amp;Tex-&gt; Vpp"
-               menubarPath="overtureMenu/UML"
+               id="org.overturetool.eclipse.plugins.umltrans.actions.TexToVppAction"
+               label="Remove LaTex from VDM file"
+               menubarPath="org.overturetool.eclipse.plugins.umltrans.menuMain/groupUml"
                toolbarPath="UML"
+               enablesFor="1"
                tooltip="Convert VDM TEX files to VDM VPP files">
          </action>
-      </actionSet>
+      </objectContribution>
    </extension>
+
+
+
+
 
 </plugin>

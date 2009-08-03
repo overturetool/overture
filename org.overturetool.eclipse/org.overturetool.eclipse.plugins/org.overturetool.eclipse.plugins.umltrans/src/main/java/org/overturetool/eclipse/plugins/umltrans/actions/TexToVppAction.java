@@ -8,35 +8,38 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IObjectActionDelegate;
+import org.eclipse.ui.IWorkbenchPart;
 import org.overturetool.tex.ClassExstractorFromTexFiles;
 
-/**
- * Our sample action implements workbench action delegate. The action proxy will
- * be created by the workbench and shown in the UI. When the user tries to use
- * the action, this delegate will be created and execution will be delegated to
- * it.
- * 
- * @see IWorkbenchWindowActionDelegate
- */
-public class TexToVppAction implements IWorkbenchWindowActionDelegate {
-	private IWorkbenchWindow window;
 
+public class TexToVppAction implements IObjectActionDelegate {
+
+	private Shell shell;
+	
 	/**
-	 * The constructor.
+	 * Constructor for Action1.
 	 */
 	public TexToVppAction() {
+		super();
 	}
 
 	/**
-	 * The action has been activated. The argument of the method represents the
-	 * 'real' action sitting in the workbench UI.
-	 * 
-	 * @see IWorkbenchWindowActionDelegate#run
+	 * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
+	 */
+	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+		shell = targetPart.getSite().getShell();
+	}
+
+	/**
+	 * @see IActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
-
+//		MessageDialog.openInformation(
+//			shell,
+//			"MenuTest Plug-in",
+//			"New Action was executed.");
 		org.eclipse.swt.widgets.Shell s = new org.eclipse.swt.widgets.Shell();
 
 		org.eclipse.swt.widgets.FileDialog fd = new org.eclipse.swt.widgets.FileDialog(
@@ -69,45 +72,22 @@ public class TexToVppAction implements IWorkbenchWindowActionDelegate {
 				{
 					outFile += "\n" +string;
 				}
-				MessageDialog.openInformation(window.getShell(), "Tex 2 vpp",
+				MessageDialog.openInformation(shell, "Tex 2 vpp",
 						"Processing completed: " + outFile);
 
 			} catch (Exception ex) {
 				System.err.println(ex.getMessage() + ex.getStackTrace());
-				MessageDialog.openInformation(window.getShell(), "Error",
+				MessageDialog.openInformation(shell, "Error",
 						"Processing completed with errors");
 			}
 
 		}
-
 	}
 
 	/**
-	 * Selection in the workbench has been changed. We can change the state of
-	 * the 'real' action here if we want, but this can only happen after the
-	 * delegate has been created.
-	 * 
-	 * @see IWorkbenchWindowActionDelegate#selectionChanged
+	 * @see IActionDelegate#selectionChanged(IAction, ISelection)
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
 	}
 
-	/**
-	 * We can use this method to dispose of any system resources we previously
-	 * allocated.
-	 * 
-	 * @see IWorkbenchWindowActionDelegate#dispose
-	 */
-	public void dispose() {
-	}
-
-	/**
-	 * We will cache window object in order to be able to provide parent shell
-	 * for the message dialog.
-	 * 
-	 * @see IWorkbenchWindowActionDelegate#init
-	 */
-	public void init(IWorkbenchWindow window) {
-		this.window = window;
-	}
 }

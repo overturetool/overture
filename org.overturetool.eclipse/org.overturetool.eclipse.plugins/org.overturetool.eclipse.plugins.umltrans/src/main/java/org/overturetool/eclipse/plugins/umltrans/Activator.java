@@ -9,7 +9,7 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.overturetool.eclipse.umltrans.OvertureUml";
+	public static final String PLUGIN_ID = "org.overturetool.eclipse.plugins.umltrans";
 
 	// The shared instance
 	private static Activator plugin;

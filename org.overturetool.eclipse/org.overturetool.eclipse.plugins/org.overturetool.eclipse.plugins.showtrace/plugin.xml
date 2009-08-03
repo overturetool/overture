@@ -4,14 +4,11 @@
 
    <extension
          point="org.eclipse.ui.views">
-      <category
-            name="Overture Trace"
-            id="org.overturetool.eclipse.plugins.showtrace">
-      </category>
+      
       <view
             name="Tracefile viewer"
             icon="icons/overture.gif"
-            category="org.overturetool.eclipse.plugins.showtrace"
+            category="org.overturetool.eclipse.plugin.editor.ui"
             class="org.overturetool.eclipse.plugins.showtrace.viewer.TracefileViewer"
             id="org.overturetool.eclipse.plugins.showtrace.viewer.TracefileViewer">
       </view>

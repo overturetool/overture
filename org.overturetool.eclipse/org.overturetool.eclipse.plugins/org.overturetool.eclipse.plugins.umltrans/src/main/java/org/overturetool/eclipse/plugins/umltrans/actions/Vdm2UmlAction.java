@@ -4,165 +4,103 @@ import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.filechooser.FileFilter;
-
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.SWT;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IObjectActionDelegate;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.internal.ObjectPluginAction;
 import org.overturetool.umltrans.Main.Translator;
 
-/**
- * Our sample action implements workbench action delegate. The action proxy will
- * be created by the workbench and shown in the UI. When the user tries to use
- * the action, this delegate will be created and execution will be delegated to
- * it.
- * 
- * @see IWorkbenchWindowActionDelegate
- */
-public class Vdm2UmlAction implements IWorkbenchWindowActionDelegate {
-	private IWorkbenchWindow window;
+public class Vdm2UmlAction implements IObjectActionDelegate
+{
+
+	private Shell shell;
 
 	/**
-	 * The constructor.
+	 * Constructor for Action1.
 	 */
-	public Vdm2UmlAction() {
+	public Vdm2UmlAction()
+	{
+		super();
 	}
 
 	/**
-	 * The action has been activated. The argument of the method represents the
-	 * 'real' action sitting in the workbench UI.
-	 * 
-	 * @see IWorkbenchWindowActionDelegate#run
+	 * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
 	 */
-	public void run(IAction action) {
-
-		org.eclipse.swt.widgets.Shell s = new org.eclipse.swt.widgets.Shell();
-
-		org.eclipse.swt.widgets.FileDialog fd = new org.eclipse.swt.widgets.FileDialog(
-				s, SWT.MULTI);
-		fd.setText("Open");
-
-		String[] filterExt = { "*.vpp", "*.tex" };
-		fd.setFilterExtensions(filterExt);
-		String ret = fd.open();
-		String[] fLst = fd.getFileNames();
-		if (ret != null) {
-
-			try {
-				List<String> files = new Vector<String>();
-				for (int i = 0; i < fLst.length; i++) {
-					String separator = System.getProperty("file.separator");
-					files.add(( fd.getFilterPath() + separator + fLst[i]));
-				}
-
-				org.eclipse.swt.widgets.FileDialog fdSave = new org.eclipse.swt.widgets.FileDialog(
-						s, SWT.SAVE);
-				fdSave.setText("Save model");
-				// fd.setFilterPath("C:/");
-				String[] filterExt1 = { "*.xml", "*.xmi" };
-				fdSave.setFilterExtensions(filterExt1);
-				fdSave.setFileName(files.get(0) + ".xml");
-				String outFile = fdSave.open();
-				if (outFile != null) {
-					// convert to vpp files the only format supported by the
-					// overture parser
-					// String[] vppFiles =
-					// ClassExstractorFromTexFiles.exstract(files);
-
-					if (!(outFile.endsWith(".xml") || outFile.endsWith(".xml")))
-						outFile += ".xml";
-					Translator.TransLateTexVdmToUml(files, outFile);
-
-					MessageDialog.openInformation(window.getShell(),
-							"Vdm 2 Uml", "Processing completed: " + outFile);
-
-				}
-
-			} catch (Exception ex) {
-				System.err.println(ex.getMessage() + ex.getStackTrace());
-				MessageDialog.openInformation(window.getShell(), "Error",
-						"Processing completed with errors");
-			}
-
-		}
+	public void setActivePart(IAction action, IWorkbenchPart targetPart)
+	{
+		shell = targetPart.getSite().getShell();
 
 	}
 
 	/**
-	 * Selection in the workbench has been changed. We can change the state of
-	 * the 'real' action here if we want, but this can only happen after the
-	 * delegate has been created.
-	 * 
-	 * @see IWorkbenchWindowActionDelegate#selectionChanged
+	 * @see IActionDelegate#run(IAction)
 	 */
-	public void selectionChanged(IAction action, ISelection selection) {
-	}
-
-	/**
-	 * We can use this method to dispose of any system resources we previously
-	 * allocated.
-	 * 
-	 * @see IWorkbenchWindowActionDelegate#dispose
-	 */
-	public void dispose() {
-	}
-
-	/**
-	 * We will cache window object in order to be able to provide parent shell
-	 * for the message dialog.
-	 * 
-	 * @see IWorkbenchWindowActionDelegate#init
-	 */
-	public void init(IWorkbenchWindow window) {
-		this.window = window;
-	}
-}
-
-class ExtensionFileFilter extends FileFilter {
-	String description;
-
-	String extensions[];
-
-	public ExtensionFileFilter(String description, String extension) {
-		this(description, new String[] { extension });
-	}
-
-	public ExtensionFileFilter(String description, String extensions[]) {
-		if (description == null) {
-			this.description = extensions[0];
-		} else {
-			this.description = description;
-		}
-		this.extensions = (String[]) extensions.clone();
-		toLower(this.extensions);
-	}
-
-	private void toLower(String array[]) {
-		for (int i = 0, n = array.length; i < n; i++) {
-			array[i] = array[i].toLowerCase();
-		}
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public boolean accept(File file) {
-		if (file.isDirectory()) {
-			return true;
-		} else {
-			String path = file.getAbsolutePath().toLowerCase();
-			for (int i = 0, n = extensions.length; i < n; i++) {
-				String extension = extensions[i];
-				if ((path.endsWith(extension) && (path.charAt(path.length()
-						- extension.length() - 1)) == '.')) {
-					return true;
-				}
+	public void run(IAction action)
+	{
+		IProject selectedProject = null;
+		if (action instanceof ObjectPluginAction)
+		{
+			ObjectPluginAction objectPluginAction = (ObjectPluginAction) action;
+			if (objectPluginAction.getSelection() instanceof ITreeSelection)
+			{
+				ITreeSelection selection = (ITreeSelection) objectPluginAction.getSelection();
+				if (selection.getPaths().length > 0)
+					selectedProject = (IProject) selection.getPaths()[0].getFirstSegment();
 			}
 		}
-		return false;
+
+		String[] filterExt = { "vpp", "tex" };
+
+		try
+		{
+
+			List<IFile> files = ProjectHelper.getAllMemberFiles(
+					selectedProject,
+					filterExt);
+			List<String> filesPathes = new Vector<String>();
+			for (IFile file : files)
+			{
+				filesPathes.add(file.getLocation().toFile().getAbsolutePath());
+			}
+
+			String outFile = new File(selectedProject.getLocation().toFile(),
+					selectedProject.getName() + ".xmi").getAbsolutePath();
+			if (outFile != null)
+			{
+
+				if (!(outFile.endsWith(".xml") || outFile.endsWith(".xml")))
+					outFile += ".xml";
+				Translator.TransLateTexVdmToUml(filesPathes, outFile);
+
+				MessageDialog.openInformation(
+						shell,
+						"Vdm 2 Uml",
+						"Processing completed: " + outFile);
+
+			}
+
+		} catch (Exception ex)
+		{
+			System.err.println(ex.getMessage() + ex.getStackTrace());
+			MessageDialog.openInformation(
+					shell,
+					"Error",
+					"Processing completed with errors");
+		}
+
 	}
+
+	/**
+	 * @see IActionDelegate#selectionChanged(IAction, ISelection)
+	 */
+	public void selectionChanged(IAction action, ISelection selection)
+	{
+	}
+
 }
