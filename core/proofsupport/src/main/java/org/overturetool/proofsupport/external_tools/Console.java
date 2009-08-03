@@ -25,14 +25,16 @@ public class Console {
 				.getErrorStream()));
 	}
 
-	// public Console(List<String> command, ConsoleReader outputeader) throws
-	// IOException {
-	// process = startProcess(command, null);
-	// input = new PrintWriter(process.getOutputStream());
-	// output = reader;
-	// error = new BufferedReader(new InputStreamReader(process
-	// .getErrorStream()));
-	// }
+	public Console(List<String> command, ConsoleReader outputReader)
+			throws IOException {
+		process = startProcess(command, null);
+		input = new PrintWriter(process.getOutputStream());
+		output = outputReader;
+		output.setInputStream(process.getInputStream());
+		error = new BufferedReader(new InputStreamReader(process
+				.getErrorStream()));
+		output.removeConsoleHeader();
+	}
 
 	protected Process startProcess(List<String> command,
 			Map<String, String> commandEnvironment) throws IOException {

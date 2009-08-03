@@ -23,7 +23,8 @@ public class HolInterpreterImpl implements HolInterpreter {
 		}
 		try {
 			mosml = new MosmlHolConsole(holParam.buildMosmlHolCommand());
-			mosml.removeConsoleHeader();
+			// TODO
+//			mosml.removeConsoleHeader();
 		} catch (IOException e) {
 			throw new HolInterpreterException("IO error while connectiong to Moscow ML CLI.", e);
 		}

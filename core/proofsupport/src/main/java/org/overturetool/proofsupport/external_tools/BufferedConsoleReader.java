@@ -25,4 +25,12 @@ public class BufferedConsoleReader implements ConsoleReader {
 		return bis.read(cbuf);
 	}
 
+	public String readBlock() throws IOException {
+		return readLine();
+	}
+
+	public void removeConsoleHeader() throws IOException {
+		// Buffered reader doesn't know the underlying process
+	}
+
 }

@@ -43,7 +43,7 @@ public class ConsolePipeTest extends TestCase {
 		HolParameters holParam = new HolParameters(TestSettings.getMosmlDir(), TestSettings.getHolDir());
 		UnquoteConsole input = new UnquoteConsole(holParam.getUnquoteBinaryPath());
 		MosmlHolConsole output = new MosmlHolConsole(holParam.buildMosmlHolCommand());
-		output.removeConsoleHeader();
+//		output.removeConsoleHeader();
 		Thread pipe = new Thread(new ConsolePipe(input, output), "PipeThread");
 		pipe.start();
 		
