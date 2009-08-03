@@ -26,6 +26,11 @@ public class ConsolePipeTest extends TestCase {
 		pipe.start();
 		
 		input.writeLine(TEST_MESSAGE);
+		
+		// have to wait before calling destroy
+		// otherwise will kill the stream
+		Thread.sleep(1000);
+		
 		input.destroy();
 		pipe.join();
 		String actual = output.readLine();

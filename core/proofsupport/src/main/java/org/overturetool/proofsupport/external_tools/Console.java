@@ -13,17 +13,26 @@ public class Console {
 	protected final static int WAIT_SECCONDS = 2000;
 	protected final Process process;
 	protected final PrintWriter input;
-	protected final BufferedReader output;
+	protected final ConsoleReader output;
 	protected final BufferedReader error;
 
 	public Console(List<String> command) throws IOException {
 		process = startProcess(command, null);
 		input = new PrintWriter(process.getOutputStream());
-		output = new BufferedReader(new InputStreamReader(process
-				.getInputStream()));
+		output = new BufferedConsoleReader();
+		output.setInputStream(process.getInputStream());
 		error = new BufferedReader(new InputStreamReader(process
 				.getErrorStream()));
 	}
+
+	// public Console(List<String> command, ConsoleReader outputeader) throws
+	// IOException {
+	// process = startProcess(command, null);
+	// input = new PrintWriter(process.getOutputStream());
+	// output = reader;
+	// error = new BufferedReader(new InputStreamReader(process
+	// .getErrorStream()));
+	// }
 
 	protected Process startProcess(List<String> command,
 			Map<String, String> commandEnvironment) throws IOException {

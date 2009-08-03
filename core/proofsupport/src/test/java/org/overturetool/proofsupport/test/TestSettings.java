@@ -23,7 +23,7 @@ public class TestSettings extends AbstractSettings
 			MavenSettings s = new MavenSettings();
 			VPPDE_BIN = checkAndSetValue(s, VPPDE_BIN, Profile.USER_VPPDE_BIN);
 			MOSML_DIR = checkAndSetValue(s, MOSML_DIR, Profile.USER_MOSML_DIR);
-			HOL_DIR = checkAndSetValue(s, MOSML_DIR, Profile.USER_HOL_DIR);
+			HOL_DIR = checkAndSetValue(s, HOL_DIR, Profile.USER_HOL_DIR);
 		} catch (Exception e)
 		{
 			throw new IllegalArgumentException(
