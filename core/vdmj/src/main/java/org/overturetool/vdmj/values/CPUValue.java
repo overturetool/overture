@@ -62,6 +62,22 @@ public class CPUValue extends ObjectValue
 		allCPUs = new Vector<CPUValue>();
 	}
 
+	public static void abortAll()
+	{
+		for (CPUValue cpu: allCPUs)
+		{
+			cpu.abort();
+		}
+	}
+
+	private void abort()
+	{
+		for (Thread th: objects.keySet())
+		{
+			th.interrupt();
+		}
+	}
+
 	public CPUValue(Type classtype, NameValuePairMap map, ValueList argvals)
 	{
 		super((ClassType)classtype, map, new Vector<ObjectValue>());
@@ -152,7 +168,7 @@ public class CPUValue extends ObjectValue
 	@Override
 	public String toString()
 	{
-		return "CPU:" + cpuNumber + (name == null ? "" : ("(" + name + ")"));
+		return name == null ? ("CPU:" + cpuNumber) : name;
 	}
 
 	public String declString(String sysname, boolean explicit)
@@ -262,7 +278,7 @@ public class CPUValue extends ObjectValue
 			}
 			catch (InterruptedException e)
 			{
-				// So?
+				throw new RuntimeException("Thread stopped");
 			}
 		}
 

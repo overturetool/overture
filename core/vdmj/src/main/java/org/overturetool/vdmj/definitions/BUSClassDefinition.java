@@ -135,10 +135,8 @@ public class BUSClassDefinition extends ClassDefinition
 
 		for (int i=0; i<max; i++)
 		{
-			for (int j=0; j<max; j++)
-			{
-				cpumap[i][j] = virtualBUS;
-			}
+			cpumap[i][0] = virtualBUS;
+			cpumap[0][i] = virtualBUS;
 		}
 
 		for (BUSValue bus: BUSValue.allBUSSES)
@@ -162,7 +160,7 @@ public class BUSClassDefinition extends ClassDefinition
 					{
 						continue;
 					}
-					else if (cpumap[n1][n2] == virtualBUS)
+					else if (cpumap[n1][n2] == null)
 					{
 						cpumap[n1][n2] = bus;
 					}

@@ -51,32 +51,44 @@ public class AsyncThread extends Thread
 	@Override
 	public void run()
 	{
-		MessageRequest request = queue.take();
-		cpu.sleep();
-
-		ValueList arglist = request.args;
-		MessageResponse response = null;
-
 		try
 		{
-    		RootContext global = ClassInterpreter.getInstance().initialContext;
-    		Context ctxt = new ObjectContext(operation.name.location, "async", global, self);
-    		ctxt.setThreadState(null, cpu);
+    		MessageRequest request = queue.take();
+    		cpu.sleep();
 
-    		Value rv = operation.localEval(arglist, ctxt);
-   			response = new MessageResponse(rv, request);
+    		ValueList arglist = request.args;
+    		MessageResponse response = null;
+
+    		try
+    		{
+        		RootContext global = ClassInterpreter.getInstance().initialContext;
+        		Context ctxt = new ObjectContext(operation.name.location, "async", global, self);
+        		ctxt.setThreadState(null, cpu);
+
+        		Value rv = operation.localEval(arglist, ctxt);
+       			response = new MessageResponse(rv, request);
+    		}
+    		catch (ValueException e)
+    		{
+    			response = new MessageResponse(e, request);
+    		}
+
+    		if (request.replyTo != null)
+    		{
+    			request.bus.reply(response);
+    		}
+
+    		cpu.removeThread(this);
 		}
-		catch (ValueException e)
+		catch (ContextException e)
 		{
-			response = new MessageResponse(e, request);
+			CPUValue.abortAll();	// Thread stopped
+			throw e;
 		}
-
-		if (request.replyTo != null)
+		catch (RuntimeException e)
 		{
-			request.bus.reply(response);
+			CPUValue.abortAll();	// Thread stopped
 		}
-
-		cpu.removeThread(this);
 	}
 
 	public void send(MessageRequest request)

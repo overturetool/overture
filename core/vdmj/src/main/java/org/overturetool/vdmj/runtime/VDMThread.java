@@ -112,14 +112,17 @@ public class VDMThread extends Thread
 		}
 		catch (ValueException e)
 		{
+			CPUValue.abortAll();
 			Interpreter.stop(e, e.ctxt);
 		}
 		catch (ContextException e)
 		{
+			CPUValue.abortAll();
 			Interpreter.stop(e, e.ctxt);
 		}
 		catch (Exception e)
 		{
+			CPUValue.abortAll();
 			Interpreter.stop(e, ctxt);
 		}
 		finally

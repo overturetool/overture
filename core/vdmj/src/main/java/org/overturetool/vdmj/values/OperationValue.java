@@ -442,6 +442,12 @@ public class OperationValue extends Value
     		trace("OpRequest");
     		BUSValue bus = BUSClassDefinition.findBUS(from, to);
 
+    		if (bus == null)
+    		{
+    			abort(4140,
+    				"No BUS between CPUs " + from.name + " and " + to.name, ctxt);
+    		}
+
     		if (isAsync)	// Don't wait
     		{
         		MessageRequest request = new MessageRequest(bus, from, to, argValues, null);

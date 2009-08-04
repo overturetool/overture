@@ -79,7 +79,7 @@ public class SystemClock
 			}
 			catch (InterruptedException e)
 			{
-				// So?
+				throw new RuntimeException("Thread stopped");
 			}
 		}
 	}
