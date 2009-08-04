@@ -33,6 +33,7 @@ import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.runtime.CPUPolicy;
 import org.overturetool.vdmj.runtime.RunState;
 import org.overturetool.vdmj.runtime.SchedulingPolicy;
+import org.overturetool.vdmj.runtime.FPPolicy;
 import org.overturetool.vdmj.runtime.SystemClock;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Type;
@@ -113,12 +114,19 @@ public class CPUValue extends ObjectValue
 
 	public boolean setPriority(String opname, long priority)
 	{
+		if (!(policy instanceof FPPolicy))
+		{
+			return false;
+		}
+
 		boolean found = false;
 
 		for (ObjectValue obj: deployed)
 		{
 			for (LexNameToken m: obj.members.keySet())
 			{
+				// Set priority for all overloads of opname
+
 				if (m.getExplicit(true).getName().equals(opname))
 				{
 					OperationValue op = (OperationValue)obj.members.get(m);
@@ -144,7 +152,7 @@ public class CPUValue extends ObjectValue
 	@Override
 	public String toString()
 	{
-		return name;
+		return "CPU:" + cpuNumber + (name == null ? "" : ("(" + name + ")"));
 	}
 
 	public String declString(String sysname, boolean explicit)
@@ -163,9 +171,10 @@ public class CPUValue extends ObjectValue
 			" clnm: " + (object == null ? "nil" : ("\"" + object.type + "\""));
 	}
 
-	public synchronized void addThread(Thread thread, ObjectValue object)
+	public synchronized void addThread(
+		Thread thread, ObjectValue object, OperationValue op)
 	{
-		policy.addThread(thread);
+		policy.addThread(thread, op.getPriority());
 		objects.put(thread, object);
 		durations.put(thread, -1L);
 
@@ -179,7 +188,7 @@ public class CPUValue extends ObjectValue
 
 	public synchronized void addThread(Thread thread)
 	{
-		policy.addThread(thread);
+		policy.addThread(thread, 1);
 		objects.put(thread, null);
 		durations.put(thread, -1L);
 
@@ -217,14 +226,14 @@ public class CPUValue extends ObjectValue
 	public synchronized long reschedule()
 	{
 		Thread current = Thread.currentThread();
+		ObjectValue object = objects.get(current);
+
 		policy.reschedule();
 		runningThread = policy.getThread();
 
 		if (runningThread != current)
 		{
 			notifyAll();
-
-			ObjectValue object = objects.get(current);
 
 			RTLogger.log(
 				"ThreadSwapOut -> id: " + current.getId() +

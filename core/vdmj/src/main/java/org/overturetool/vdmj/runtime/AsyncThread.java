@@ -45,7 +45,7 @@ public class AsyncThread extends Thread
 		this.cpu = self.getCPU();
 		this.queue = new MessageQueue<MessageRequest>();
 
-		cpu.addThread(this, self);
+		cpu.addThread(this, self, operation);
 	}
 
 	@Override

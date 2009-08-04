@@ -34,7 +34,7 @@ public class FCFSPolicy extends SchedulingPolicy
 	private final List<Thread> threads;
 	private final Map<Thread, RunState> state;
 
-	private Thread bestThread = null;
+	protected Thread bestThread = null;
 
 	public FCFSPolicy()
 	{
@@ -43,7 +43,7 @@ public class FCFSPolicy extends SchedulingPolicy
 	}
 
 	@Override
-	public synchronized void addThread(Thread thread)
+	public synchronized void addThread(Thread thread, long priority)
 	{
 		threads.add(thread);
 		state.put(thread, RunState.CREATED);

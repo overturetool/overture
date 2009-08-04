@@ -23,52 +23,28 @@
 
 package org.overturetool.vdmj.runtime;
 
-public class FPPolicy extends SchedulingPolicy
+import java.util.HashMap;
+import java.util.Map;
+
+public class FPPolicy extends FCFSPolicy
 {
+	private final Map<Thread, Long> priorities;
+
 	public FPPolicy()
 	{
-		throw new RuntimeException("Not implemented");
+		this.priorities = new HashMap<Thread, Long>();
 	}
 
 	@Override
-	public void addThread(Thread thread)
+	public synchronized void addThread(Thread thread, long priority)
 	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public Thread getThread()
-	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public void removeThread(Thread thread)
-	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public boolean reschedule()
-	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public void setState(Thread thread, RunState newstate)
-	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public boolean canTimeStep()
-	{
-		throw new RuntimeException("Not implemented");
+		super.addThread(thread, priority);
+		priorities.put(thread, priority);
 	}
 
 	@Override
 	public long getTimeslice()
 	{
-		throw new RuntimeException("Not implemented");
+		return priorities.get(bestThread);
 	}
 }
