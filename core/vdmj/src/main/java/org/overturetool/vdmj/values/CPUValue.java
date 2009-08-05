@@ -227,11 +227,11 @@ public class CPUValue extends ObjectValue
 			" overhead: " + 0 +
 			" time: " + SystemClock.getWallTime());
 
-		wakeUp(thread, RunState.KILLED);
-
 		policy.removeThread(thread);
 		objects.remove(thread);
 		durations.remove(thread);
+
+		wakeUp();
 
 		RTLogger.log(
 			"ThreadKill -> id: " + thread.getId() +
@@ -293,10 +293,7 @@ public class CPUValue extends ObjectValue
 	public synchronized void waiting()
 	{
 		Thread current = Thread.currentThread();
-		policy.setState(current, RunState.WAITING);
-		policy.reschedule();
-		runningThread = policy.getThread();
-		notifyAll();
+		wakeUp(current, RunState.WAITING);
 
 		ObjectValue object = objects.get(current);
 
@@ -314,6 +311,11 @@ public class CPUValue extends ObjectValue
 	public synchronized void wakeUp(Thread thread, RunState newstate)
 	{
 		policy.setState(thread, newstate);
+		wakeUp();
+	}
+
+	public synchronized void wakeUp()
+	{
 		policy.reschedule();
 		runningThread = policy.getThread();
 		notifyAll();
@@ -332,24 +334,30 @@ public class CPUValue extends ObjectValue
 	public synchronized void duration(long step)
 	{
 		long end = SystemClock.getWallTime() + step;
+		Thread current = Thread.currentThread();
 
-		setState(RunState.TIMESTEP);
-		durations.put(Thread.currentThread(), step);
+		policy.setState(current, RunState.TIMESTEP);
+		durations.put(current, step);
 
 		if (step < minTimeStep)
 		{
 			minTimeStep = step;
 		}
 
-		if (policy.canTimeStep())
+		do
 		{
-			SystemClock.timeStep(minTimeStep);
+    		if (policy.canTimeStep())
+    		{
+    			RTLogger.diag("CPU " + name + " ready to TIMESTEP");
+    			SystemClock.timeStep(minTimeStep);
+    		}
+    		else
+    		{
+    			RTLogger.diag("Thread " + current.getId()+ " waiting for TIMESTEP");
+    			sleep();
+    		}
 		}
-
-		while (SystemClock.getWallTime() < end)
-		{
-			reschedule();
-		}
+		while (SystemClock.getWallTime() < end);
 	}
 
 	public void timeStep(long step)

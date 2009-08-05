@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.runtime;
 
+import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.values.CPUValue;
 
 public class SystemClock
@@ -53,6 +54,8 @@ public class SystemClock
 			}
 
 			wallTime += minStepTime;
+			RTLogger.diag("TIMESTEP = " + minStepTime + ", now = " + wallTime);
+
 			waiters = 0;
 			minStepTime = Long.MAX_VALUE;
 			unblock();
