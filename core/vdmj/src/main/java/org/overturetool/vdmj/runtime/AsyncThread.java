@@ -82,10 +82,9 @@ public class AsyncThread extends Thread
 		}
 		catch (ContextException e)
 		{
-			CPUValue.abortAll();	// Thread stopped
-			throw e;
+			Interpreter.stop(e, e.ctxt);
 		}
-		catch (RuntimeException e)
+		catch (RTException e)
 		{
 			CPUValue.abortAll();	// Thread stopped
 		}

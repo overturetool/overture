@@ -32,6 +32,13 @@ public class SystemClock
 	private static long minStepTime = Long.MAX_VALUE;
 	private static int waiters = 0;
 
+	public static void reset()
+	{
+		wallTime = 0;
+		minStepTime = Long.MAX_VALUE;
+		waiters = 0;
+	}
+
 	public static synchronized long getWallTime()
 	{
 		return wallTime;
@@ -82,7 +89,7 @@ public class SystemClock
 			}
 			catch (InterruptedException e)
 			{
-				throw new RuntimeException("Thread stopped");
+				throw new RTException("Thread stopped");
 			}
 		}
 	}

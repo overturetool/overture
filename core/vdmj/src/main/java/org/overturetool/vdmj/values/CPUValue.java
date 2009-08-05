@@ -28,9 +28,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.runtime.CPUPolicy;
+import org.overturetool.vdmj.runtime.RTException;
 import org.overturetool.vdmj.runtime.RunState;
 import org.overturetool.vdmj.runtime.SchedulingPolicy;
 import org.overturetool.vdmj.runtime.FPPolicy;
@@ -76,6 +78,40 @@ public class CPUValue extends ObjectValue
 		{
 			th.interrupt();
 		}
+	}
+
+	public static void resetAll()
+	{
+		for (CPUValue cpu: allCPUs)
+		{
+			cpu.reset();
+		}
+
+		SystemClock.reset();
+
+		// Show the main thread creation...
+
+		CPUValue vCPU = CPUClassDefinition.virtualCPU;
+		Thread main = Thread.currentThread();
+
+		vCPU.addThread(main);
+
+		RTLogger.log(
+			"ThreadSwapIn -> id: " + main.getId() +
+			" objref: nil" +
+			" clnm: nil" +
+			" cpunm: 0" +
+			" overhead: 0" +
+			" time: 0");
+
+		vCPU.setState(main, RunState.RUNNABLE);
+	}
+
+	private void reset()
+	{
+		policy.reset();
+		objects.clear();
+		durations.clear();
 	}
 
 	public CPUValue(Type classtype, NameValuePairMap map, ValueList argvals)
@@ -278,7 +314,7 @@ public class CPUValue extends ObjectValue
 			}
 			catch (InterruptedException e)
 			{
-				throw new RuntimeException("Thread stopped");
+				throw new RTException("Thread stopped");
 			}
 		}
 

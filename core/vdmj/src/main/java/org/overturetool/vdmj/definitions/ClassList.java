@@ -35,12 +35,10 @@ import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.RootContext;
-import org.overturetool.vdmj.runtime.RunState;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.SystemDefinition;
@@ -173,23 +171,7 @@ public class ClassList extends Vector<ClassDefinition>
 		{
 			CPUClassDefinition.init();
 			BUSClassDefinition.init();
-
-			// Show the main thread creation...
-
-			CPUValue vCPU = CPUClassDefinition.virtualCPU;
-			Thread main = Thread.currentThread();
-
-			vCPU.addThread(main);
-
-			RTLogger.log(
-    			"ThreadSwapIn -> id: " + main.getId() +
-    			" objref: nil" +
-    			" clnm: nil" +
-    			" cpunm: 0" +
-    			" overhead: 0" +
-    			" time: 0");
-
-			vCPU.setState(main, RunState.RUNNABLE);
+			CPUValue.resetAll();		// Allocate main thread to vCPU
 		}
 
 		globalContext.setThreadState(dbgp, CPUClassDefinition.virtualCPU);

@@ -23,14 +23,12 @@
 
 package org.overturetool.vdmj.runtime;
 
-abstract public class SchedulingPolicy
+public class RTException extends RuntimeException
 {
-	abstract public boolean reschedule();
-	abstract public Thread getThread();
-	abstract public long getTimeslice();
-	abstract public void addThread(Thread thread, long priority);
-	abstract public void removeThread(Thread thread);
-	abstract public void setState(Thread thread, RunState newstate);
-	abstract public boolean canTimeStep();
-	abstract public void reset();
+	private static final long serialVersionUID = 1L;
+
+	public RTException(String msg)
+	{
+		super(msg);
+	}
 }

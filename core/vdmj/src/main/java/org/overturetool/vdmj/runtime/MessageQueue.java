@@ -55,7 +55,7 @@ public class MessageQueue<T> extends LinkedBlockingQueue<T>
 	       		}
 	    		catch (InterruptedException e)
 	    		{
-					throw new RuntimeException("Thread stopped");
+					throw new RTException("Thread stopped");
 	    		}
 			}
 		}
@@ -69,7 +69,7 @@ public class MessageQueue<T> extends LinkedBlockingQueue<T>
 				}
 				catch (InterruptedException e)
 				{
-					throw new RuntimeException("Thread stopped");
+					throw new RTException("Thread stopped");
 				}
 			}
 
@@ -81,7 +81,7 @@ public class MessageQueue<T> extends LinkedBlockingQueue<T>
 	       		}
 	    		catch (InterruptedException e)
 	    		{
-					throw new RuntimeException("Thread stopped");
+					throw new RTException("Thread stopped");
 	    		}
 			}
  		}

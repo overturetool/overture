@@ -45,6 +45,7 @@ import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.types.Type;
+import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.Value;
 
 
@@ -150,6 +151,7 @@ abstract public class Interpreter
 		mainContext.threadState.action = InterruptAction.STOPPING;
 		mainThread.interrupt();
 		VDMThreadSet.abortAll();
+		CPUValue.abortAll();
 	}
 
 	/**

@@ -58,6 +58,7 @@ import org.overturetool.vdmj.typechecker.PublicClassEnvironment;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.util.Utils;
+import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.NameValuePair;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.NameValuePairMap;
@@ -221,6 +222,7 @@ public class ClassInterpreter extends Interpreter
 		mainContext.putAll(createdValues);
 		mainContext.setThreadState(dbgp, CPUClassDefinition.virtualCPU);
 		clearBreakpointHits();
+		CPUValue.resetAll();
 
 		return expr.eval(mainContext);
 	}
