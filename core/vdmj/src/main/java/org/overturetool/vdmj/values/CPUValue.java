@@ -28,7 +28,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.CPUClassDefinition;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.runtime.CPUPolicy;
@@ -44,7 +46,7 @@ public class CPUValue extends ObjectValue
 {
 	private static final long serialVersionUID = 1L;
 	public static int nextCPU = 1;
-	public static List<CPUValue> allCPUs;
+	public static List<CPUValue> allCPUs = new Vector<CPUValue>();
 
 	public final int cpuNumber;
 	public final SchedulingPolicy policy;
@@ -61,7 +63,7 @@ public class CPUValue extends ObjectValue
 	public static void init()
 	{
 		nextCPU = 1;
-		allCPUs = new Vector<CPUValue>();
+		allCPUs.clear();
 	}
 
 	public static void abortAll()
@@ -82,29 +84,32 @@ public class CPUValue extends ObjectValue
 
 	public static void resetAll()
 	{
-		for (CPUValue cpu: allCPUs)
+		if (Settings.dialect == Dialect.VDM_RT)
 		{
-			cpu.reset();
+    		for (CPUValue cpu: allCPUs)
+    		{
+    			cpu.reset();
+    		}
+
+    		SystemClock.reset();
+
+    		// Show the main thread creation...
+
+    		CPUValue vCPU = CPUClassDefinition.virtualCPU;
+    		Thread main = Thread.currentThread();
+
+    		vCPU.addThread(main);
+
+    		RTLogger.log(
+    			"ThreadSwapIn -> id: " + main.getId() +
+    			" objref: nil" +
+    			" clnm: nil" +
+    			" cpunm: 0" +
+    			" overhead: 0" +
+    			" time: 0");
+
+    		vCPU.setState(main, RunState.RUNNABLE);
 		}
-
-		SystemClock.reset();
-
-		// Show the main thread creation...
-
-		CPUValue vCPU = CPUClassDefinition.virtualCPU;
-		Thread main = Thread.currentThread();
-
-		vCPU.addThread(main);
-
-		RTLogger.log(
-			"ThreadSwapIn -> id: " + main.getId() +
-			" objref: nil" +
-			" clnm: nil" +
-			" cpunm: 0" +
-			" overhead: 0" +
-			" time: 0");
-
-		vCPU.setState(main, RunState.RUNNABLE);
 	}
 
 	private void reset()
