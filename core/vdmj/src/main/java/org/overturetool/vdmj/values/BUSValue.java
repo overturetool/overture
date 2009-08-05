@@ -26,13 +26,11 @@ package org.overturetool.vdmj.values;
 import java.util.List;
 import java.util.Vector;
 
-import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.runtime.AsyncThread;
 import org.overturetool.vdmj.runtime.BUSPolicy;
 import org.overturetool.vdmj.runtime.MessageRequest;
 import org.overturetool.vdmj.runtime.MessageResponse;
 import org.overturetool.vdmj.runtime.RunState;
-import org.overturetool.vdmj.runtime.SystemClock;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Type;
 
@@ -94,49 +92,11 @@ public class BUSValue extends ObjectValue
 
 	public void send(MessageRequest request, AsyncThread thread)
 	{
-		RTLogger.log(
-			"MessageRequest -> busid: " + busNumber +
-			" fromcpu: " + request.from.cpuNumber +
-			" tocpu: " + request.to.cpuNumber +
-			" msgid: " + request.msgId +
-			" callthr: " + request.thread.getId() +
-			" opname: " + "\"" + thread.operation.name + "\"" +
-			" objref: " + thread.self.objectReference +
-			" size: " + request.args.toString().length() +
-			" time: " + SystemClock.getWallTime());
-
-		RTLogger.log(
-			"MessageActivate -> msgid: " + request.msgId +
-			" time: " + SystemClock.getWallTime());
-
-		RTLogger.log(
-			"MessageCompleted -> msgid: " + request.msgId +
-			" time: " + SystemClock.getWallTime());
-
 		thread.send(request);
 	}
 
 	public void reply(MessageResponse response)
 	{
-		RTLogger.log(
-			"ReplyRequest -> busid: " + busNumber +
-			" fromcpu: " + response.from.cpuNumber +
-			" tocpu: " + response.to.cpuNumber +
-			" msgid: " + response.msgId +
-			" origmsgid: " + response.request.msgId +
-			" callthr: " + response.request.thread.getId() +
-			" calleethr: " + response.thread.getId() +
-			" size: " + response.toString().length() +
-			" time: " + SystemClock.getWallTime());
-
-		RTLogger.log(
-			"MessageActivate -> msgid: " + response.msgId +
-			" time: " + SystemClock.getWallTime());
-
-		RTLogger.log(
-			"MessageCompleted -> msgid: " + response.msgId +
-			" time: " + SystemClock.getWallTime());
-
 		response.request.replyTo.add(response);
 		response.request.from.wakeUp(response.request.thread, RunState.RUNNABLE);
 	}

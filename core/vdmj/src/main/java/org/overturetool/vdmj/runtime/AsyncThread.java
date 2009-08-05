@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.runtime;
 
+import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
@@ -56,6 +57,34 @@ public class AsyncThread extends Thread
     		MessageRequest request = queue.take();
     		cpu.sleep();
 
+    		if (request.bus != null)
+    		{
+        		RTLogger.log(
+        			"MessageRequest -> busid: " + request.bus.busNumber +
+        			" fromcpu: " + request.from.cpuNumber +
+        			" tocpu: " + request.to.cpuNumber +
+        			" msgid: " + request.msgId +
+        			" callthr: " + request.thread.getId() +
+        			" opname: " + "\"" + operation.name + "\"" +
+        			" objref: " + self.objectReference +
+        			" size: " + request.args.toString().length() +
+        			" time: " + SystemClock.getWallTime());
+
+        		RTLogger.log(
+        			"MessageActivate -> msgid: " + request.msgId +
+        			" time: " + SystemClock.getWallTime());
+
+        		if (request.bus.busNumber > 0)
+        		{
+        			//long pause = request.args.toString().length();
+        			//cpu.duration(pause);
+        		}
+
+        		RTLogger.log(
+        			"MessageCompleted -> msgid: " + request.msgId +
+        			" time: " + SystemClock.getWallTime());
+    		}
+
     		ValueList arglist = request.args;
     		MessageResponse response = null;
 
@@ -75,6 +104,31 @@ public class AsyncThread extends Thread
 
     		if (request.replyTo != null)
     		{
+    			RTLogger.log(
+    				"ReplyRequest -> busid: " + request.bus.busNumber +
+    				" fromcpu: " + response.from.cpuNumber +
+    				" tocpu: " + response.to.cpuNumber +
+    				" msgid: " + response.msgId +
+    				" origmsgid: " + response.request.msgId +
+    				" callthr: " + response.request.thread.getId() +
+    				" calleethr: " + response.thread.getId() +
+    				" size: " + response.toString().length() +
+    				" time: " + SystemClock.getWallTime());
+
+    			if (request.bus.busNumber > 0)
+    			{
+    				//long pause = response.result.toString().length();
+    				//cpu.duration(pause);
+    			}
+
+    			RTLogger.log(
+    				"MessageActivate -> msgid: " + response.msgId +
+    				" time: " + SystemClock.getWallTime());
+
+    			RTLogger.log(
+    				"MessageCompleted -> msgid: " + response.msgId +
+    				" time: " + SystemClock.getWallTime());
+
     			request.bus.reply(response);
     		}
 

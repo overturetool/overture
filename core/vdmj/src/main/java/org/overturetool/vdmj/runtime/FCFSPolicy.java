@@ -28,8 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.overturetool.vdmj.messages.RTLogger;
-
 public class FCFSPolicy extends SchedulingPolicy
 {
 	private static final long TIMESLICE = 100;
@@ -110,7 +108,6 @@ public class FCFSPolicy extends SchedulingPolicy
 		{
 			if (state.get(th) != RunState.TIMESTEP)
 			{
-				RTLogger.diag("Thread " + th.getId() + " not in TIMESTAMP");
 				return false;
 			}
 		}

@@ -117,6 +117,10 @@ public class CPUValue extends ObjectValue
 		policy.reset();
 		objects.clear();
 		durations.clear();
+
+		runningThread = null;
+		minTimeStep = Long.MAX_VALUE;
+		switches = 0;
 	}
 
 	public CPUValue(Type classtype, NameValuePairMap map, ValueList argvals)
@@ -347,6 +351,11 @@ public class CPUValue extends ObjectValue
 
 		sleep();
 		switches++;
+	}
+
+	public synchronized boolean canTimeStep()
+	{
+		return cpuNumber == 0 ? true : policy.canTimeStep();
 	}
 
 	public synchronized void wakeUp(Thread thread, RunState newstate)

@@ -30,13 +30,11 @@ public class SystemClock
 {
 	private static long wallTime = 0;
 	private static long minStepTime = Long.MAX_VALUE;
-	private static int waiters = 0;
 
 	public static void reset()
 	{
 		wallTime = 0;
 		minStepTime = Long.MAX_VALUE;
-		waiters = 0;
 	}
 
 	public static synchronized long getWallTime()
@@ -51,9 +49,17 @@ public class SystemClock
 			minStepTime = cpuMin;
 		}
 
-		waiters++;
+		boolean canStep = true;
 
-		if (waiters == CPUValue.nextCPU - 1)
+		for (CPUValue cpu: CPUValue.allCPUs)
+		{
+			if (!cpu.canTimeStep())
+			{
+				canStep = false;
+			}
+		}
+
+		if (canStep)
 		{
 			for (CPUValue cpu: CPUValue.allCPUs)
 			{
@@ -63,7 +69,6 @@ public class SystemClock
 			wallTime += minStepTime;
 			RTLogger.diag("TIMESTEP = " + minStepTime + ", now = " + wallTime);
 
-			waiters = 0;
 			minStepTime = Long.MAX_VALUE;
 			unblock();
 		}
