@@ -58,7 +58,7 @@ public class CPUValue extends ObjectValue
 	public String name;
 	public Thread runningThread;
 	public int switches;
-	private long minTimeStep;
+	private boolean stepping;
 
 	public static void init()
 	{
@@ -119,8 +119,8 @@ public class CPUValue extends ObjectValue
 		durations.clear();
 
 		runningThread = null;
-		minTimeStep = Long.MAX_VALUE;
 		switches = 0;
+		stepping = false;
 	}
 
 	public CPUValue(Type classtype, NameValuePairMap map, ValueList argvals)
@@ -140,7 +140,6 @@ public class CPUValue extends ObjectValue
 		this.objects = new HashMap<Thread, ObjectValue>();
 		this.durations = new HashMap<Thread, Long>();
 		this.switches = 0;
-		this.minTimeStep = Long.MAX_VALUE;
 
 		allCPUs.add(this);
 	}
@@ -162,7 +161,6 @@ public class CPUValue extends ObjectValue
 		this.deployed = new Vector<ObjectValue>();
 		this.objects = new HashMap<Thread, ObjectValue>();
 		this.durations = new HashMap<Thread, Long>();
-		this.minTimeStep = Long.MAX_VALUE;
 		this.switches = 0;
 
 		allCPUs.add(this);
@@ -289,22 +287,25 @@ public class CPUValue extends ObjectValue
 		Thread current = Thread.currentThread();
 		ObjectValue object = objects.get(current);
 
-		policy.reschedule();
-		runningThread = policy.getThread();
-
-		if (runningThread != current)
+		if (!stepping)	// No swap-out for duration statements
 		{
-			notifyAll();
+    		policy.reschedule();
+    		runningThread = policy.getThread();
 
-			RTLogger.log(
-				"ThreadSwapOut -> id: " + current.getId() +
-				objRefString(object) +
-				" cpunm: " + cpuNumber +
-				" overhead: " + 0 +
-				" time: " + SystemClock.getWallTime());
+    		if (runningThread != current)
+    		{
+    			notifyAll();
 
-			sleep();
-			switches++;
+    			RTLogger.log(
+    				"ThreadSwapOut -> id: " + current.getId() +
+    				objRefString(object) +
+    				" cpunm: " + cpuNumber +
+    				" overhead: " + 0 +
+    				" time: " + SystemClock.getWallTime());
+
+    			sleep();
+    			switches++;
+    		}
 		}
 
 		return policy.getTimeslice();
@@ -355,7 +356,7 @@ public class CPUValue extends ObjectValue
 
 	public synchronized boolean canTimeStep()
 	{
-		return cpuNumber == 0 ? true : policy.canTimeStep();
+		return cpuNumber == 0 ? true : (stepping || runningThread == null) ; //policy.canTimeStep();
 	}
 
 	public synchronized void wakeUp(Thread thread, RunState newstate)
@@ -381,60 +382,19 @@ public class CPUValue extends ObjectValue
 		wakeUp(Thread.currentThread(), newstate);
 	}
 
-	public synchronized void duration(long step)
+	public void duration(long step)		// NB Not synchronized
 	{
 		long end = SystemClock.getWallTime() + step;
-		Thread current = Thread.currentThread();
 
-		policy.setState(current, RunState.TIMESTEP);
-		durations.put(current, step);
-
-		if (step < minTimeStep)
-		{
-			minTimeStep = step;
-		}
+		stepping = true;
 
 		do
 		{
-    		if (policy.canTimeStep())
-    		{
-    			RTLogger.diag("CPU " + name + " ready to TIMESTEP");
-    			SystemClock.timeStep(minTimeStep);
-    		}
-    		else
-    		{
-    			RTLogger.diag("Thread " + current.getId()+ " waiting for TIMESTEP");
-    			sleep();
-    		}
+   			RTLogger.diag("CPU " + name + " ready to TIMESTEP");
+   			SystemClock.timeStep(step);
 		}
 		while (SystemClock.getWallTime() < end);
-	}
 
-	public void timeStep(long step)
-	{
-		minTimeStep = Long.MAX_VALUE;
-		Map<Thread, Long> remaining = new HashMap<Thread, Long>();
-
-		for (Thread th: durations.keySet())
-		{
-			long duration = durations.get(th);
-
-			if (duration > step)
-			{
-				long reduced = duration - step;
-				remaining.put(th, reduced);
-
-				if (reduced < minTimeStep)
-				{
-					minTimeStep = reduced;
-				}
-			}
-			else
-			{
-				policy.setState(th, RunState.RUNNABLE);
-			}
-		}
-
-		durations = remaining;
+		stepping = false;
 	}
 }

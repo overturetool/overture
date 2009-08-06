@@ -56,16 +56,12 @@ public class SystemClock
 			if (!cpu.canTimeStep())
 			{
 				canStep = false;
+				break;
 			}
 		}
 
 		if (canStep)
 		{
-			for (CPUValue cpu: CPUValue.allCPUs)
-			{
-				cpu.timeStep(minStepTime);
-			}
-
 			wallTime += minStepTime;
 			RTLogger.diag("TIMESTEP = " + minStepTime + ", now = " + wallTime);
 

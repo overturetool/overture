@@ -76,8 +76,8 @@ public class AsyncThread extends Thread
 
         		if (request.bus.busNumber > 0)
         		{
-        			//long pause = request.args.toString().length();
-        			//cpu.duration(pause);
+        			long pause = request.args.toString().length();
+        			cpu.duration(pause);
         		}
 
         		RTLogger.log(
@@ -117,8 +117,8 @@ public class AsyncThread extends Thread
 
     			if (request.bus.busNumber > 0)
     			{
-    				//long pause = response.result.toString().length();
-    				//cpu.duration(pause);
+    				long pause = response.result.toString().length();
+    				cpu.duration(pause);
     			}
 
     			RTLogger.log(
