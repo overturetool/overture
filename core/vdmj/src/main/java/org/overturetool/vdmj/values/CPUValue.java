@@ -53,7 +53,6 @@ public class CPUValue extends ObjectValue
 	public final double cyclesPerSec;
 	public final List<ObjectValue> deployed;
 	public final Map<Thread, ObjectValue> objects;
-	public Map<Thread, Long> durations;
 
 	public String name;
 	public Thread runningThread;
@@ -116,7 +115,6 @@ public class CPUValue extends ObjectValue
 	{
 		policy.reset();
 		objects.clear();
-		durations.clear();
 
 		runningThread = null;
 		switches = 0;
@@ -138,7 +136,6 @@ public class CPUValue extends ObjectValue
 
 		this.deployed = new Vector<ObjectValue>();
 		this.objects = new HashMap<Thread, ObjectValue>();
-		this.durations = new HashMap<Thread, Long>();
 		this.switches = 0;
 
 		allCPUs.add(this);
@@ -160,7 +157,6 @@ public class CPUValue extends ObjectValue
 
 		this.deployed = new Vector<ObjectValue>();
 		this.objects = new HashMap<Thread, ObjectValue>();
-		this.durations = new HashMap<Thread, Long>();
 		this.switches = 0;
 
 		allCPUs.add(this);
@@ -235,7 +231,6 @@ public class CPUValue extends ObjectValue
 	{
 		policy.addThread(thread, op.getPriority());
 		objects.put(thread, object);
-		durations.put(thread, -1L);
 
 		RTLogger.log(
 			"ThreadCreate -> id: " + thread.getId() +
@@ -249,7 +244,6 @@ public class CPUValue extends ObjectValue
 	{
 		policy.addThread(thread, 1);
 		objects.put(thread, null);
-		durations.put(thread, -1L);
 
 		RTLogger.log(
 			"ThreadCreate -> id: " + thread.getId() +
@@ -272,7 +266,6 @@ public class CPUValue extends ObjectValue
 
 		policy.removeThread(thread);
 		objects.remove(thread);
-		durations.remove(thread);
 
 		wakeUp();
 
@@ -287,25 +280,22 @@ public class CPUValue extends ObjectValue
 		Thread current = Thread.currentThread();
 		ObjectValue object = objects.get(current);
 
-		if (!stepping)	// No swap-out for duration statements
+		policy.reschedule();
+		runningThread = policy.getThread();
+
+		if (runningThread != current)
 		{
-    		policy.reschedule();
-    		runningThread = policy.getThread();
+			notifyAll();
 
-    		if (runningThread != current)
-    		{
-    			notifyAll();
+			RTLogger.log(
+				"ThreadSwapOut -> id: " + current.getId() +
+				objRefString(object) +
+				" cpunm: " + cpuNumber +
+				" overhead: " + 0 +
+				" time: " + SystemClock.getWallTime());
 
-    			RTLogger.log(
-    				"ThreadSwapOut -> id: " + current.getId() +
-    				objRefString(object) +
-    				" cpunm: " + cpuNumber +
-    				" overhead: " + 0 +
-    				" time: " + SystemClock.getWallTime());
-
-    			sleep();
-    			switches++;
-    		}
+			sleep();
+			switches++;
 		}
 
 		return policy.getTimeslice();
@@ -354,9 +344,25 @@ public class CPUValue extends ObjectValue
 		switches++;
 	}
 
+	public void duration(long step)		// NB. Not synchronized
+    {
+    	long end = SystemClock.getWallTime() + step;
+    
+    	stepping = true;
+    
+    	do
+    	{
+    		RTLogger.diag("CPU " + name + " ready to TIMESTEP");
+    		SystemClock.timeStep(step);
+    	}
+    	while (SystemClock.getWallTime() < end);
+    
+    	stepping = false;
+    }
+
 	public synchronized boolean canTimeStep()
 	{
-		return cpuNumber == 0 ? true : (stepping || runningThread == null) ; //policy.canTimeStep();
+		return cpuNumber == 0 ? true : (stepping || runningThread == null);
 	}
 
 	public synchronized void wakeUp(Thread thread, RunState newstate)
@@ -380,21 +386,5 @@ public class CPUValue extends ObjectValue
 	public synchronized void setState(RunState newstate)
 	{
 		wakeUp(Thread.currentThread(), newstate);
-	}
-
-	public void duration(long step)		// NB Not synchronized
-	{
-		long end = SystemClock.getWallTime() + step;
-
-		stepping = true;
-
-		do
-		{
-   			RTLogger.diag("CPU " + name + " ready to TIMESTEP");
-   			SystemClock.timeStep(step);
-		}
-		while (SystemClock.getWallTime() < end);
-
-		stepping = false;
 	}
 }
