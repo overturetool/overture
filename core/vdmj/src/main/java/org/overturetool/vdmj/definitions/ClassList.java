@@ -44,6 +44,7 @@ import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.SystemDefinition;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.values.BUSValue;
 import org.overturetool.vdmj.values.CPUValue;
 
 
@@ -172,6 +173,7 @@ public class ClassList extends Vector<ClassDefinition>
 			CPUClassDefinition.init();
 			BUSClassDefinition.init();
 			CPUValue.resetAll();		// Allocate main thread to vCPU
+			BUSValue.resetAll();
 		}
 
 		globalContext.setThreadState(dbgp, CPUClassDefinition.virtualCPU);

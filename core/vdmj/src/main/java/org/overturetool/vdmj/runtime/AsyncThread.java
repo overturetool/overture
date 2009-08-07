@@ -33,6 +33,8 @@ import org.overturetool.vdmj.values.ValueList;
 public class AsyncThread extends Thread
 {
 	private MessageQueue<MessageRequest> queue;
+	private MessageRequest request = null;
+
 	public final ObjectValue self;
 	public final OperationValue operation;
 	public final CPUValue cpu;
@@ -49,13 +51,23 @@ public class AsyncThread extends Thread
 		cpu.addThread(this, self, operation);
 	}
 
+	public AsyncThread(ObjectValue target, OperationValue operation,
+		MessageRequest request)
+	{
+		this(target, operation);
+		this.request = request;
+	}
+
 	@Override
 	public void run()
 	{
 		try
 		{
-    		MessageRequest request = queue.take();
-    		cpu.sleep();
+			if (request == null)
+			{
+				request = queue.take();
+				cpu.sleep();
+			}
 
     		if (request.bus != null)
     		{
@@ -144,10 +156,10 @@ public class AsyncThread extends Thread
 		}
 	}
 
-	public void send(MessageRequest request)
+	public void send(MessageRequest req)
 	{
 		cpu.setState(this, RunState.RUNNABLE);
-		queue.add(request);
+		queue.add(req);
 	}
 
 	@Override
