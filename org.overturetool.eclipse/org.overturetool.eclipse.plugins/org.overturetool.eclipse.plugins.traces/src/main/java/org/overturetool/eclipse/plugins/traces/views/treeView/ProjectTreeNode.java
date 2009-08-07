@@ -34,7 +34,6 @@ public 	class ProjectTreeNode implements IAdaptable,ITreeNode {
 		return project.getName();
 	}
 
-	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
 		return null;
 	}

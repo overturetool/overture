@@ -5,14 +5,16 @@
 
 package org.overturetool.eclipse.plugins.showtrace.viewer;
 
-import java.io.PrintStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 
-import jp.co.csk.vdm.toolbox.VDM.*;
+import jp.co.csk.vdm.toolbox.VDM.CGException;
+import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            tdResource, TraceData, tdThread, tdObject
-
+@SuppressWarnings("unchecked")
 public class tdCPU extends tdResource
 {
 

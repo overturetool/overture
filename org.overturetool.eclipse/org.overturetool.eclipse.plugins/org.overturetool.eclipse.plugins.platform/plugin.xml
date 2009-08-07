@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+ 
+ <extension
+       id="overturetool"
+       point="org.eclipse.core.runtime.products">
+    <product
+          application="org.eclipse.ui.ide.workbench"
+          name="Overture Tools">
+       <property
+             name="appName"
+             value="Overture Tools">
+       </property>
+        <property
+             name="aboutText"
+             value="Overture tool about">
+       </property>
+       <property
+             name="aboutImage"
+             value="resources/128.png">
+       </property>
+       <property
+             name="startupProgressRect"
+             value="5,275,445,15">
+       </property>
+       <property
+             name="preferenceCustomization"
+             value="plugin_customization.ini">
+       </property>
+       <property
+             name="startupForegroundColor"
+             value="000000">
+       </property>
+       <property
+             name="startupMessageRect"
+             value="7,252,445,20">
+       </property>
+    </product>
+ </extension>
+ <extension
+       point="org.eclipse.ui.intro">
+    <intro
+          class="org.eclipse.ui.intro.config.CustomizableIntroPart"
+          id="org.overturetool.eclipse.plugins.platform.intro">
+    </intro>
+    <introProductBinding
+          introId="org.overturetool.eclipse.plugins.platform.intro"
+          productId="org.overturetool.eclipse.plugins.platform.product">
+    </introProductBinding>
+ </extension>
+ <extension
+       point="org.eclipse.ui.intro.config">
+    <config
+          content="introContent.xml"
+          id="org.overturetool.eclipse.plugins.platform.introConfigId"
+          introId="org.overturetool.eclipse.plugins.platform.intro">
+       <presentation
+             home-page-id="root">
+          <implementation
+                kind="html"
+                os="win32,linux,macosx"
+                style="content/shared.css">
+          </implementation>
+       </presentation>
+    </config>
+ </extension>
+ <extension
+       id="product"
+       point="org.eclipse.core.runtime.products">
+    <product
+          application="org.eclipse.ui.ide.workbench"
+          name="Overture Tools">
+       <property
+             name="windowImages"
+             value="resources/16.png,resources/32.png,resources/48.png,resources/128.png">
+       </property>
+       <property
+             name="aboutText"
+             value="Overture tool about">
+       </property>
+       <property
+             name="aboutImage"
+             value="resources/128.png">
+       </property>
+       <property
+             name="startupForegroundColor"
+             value="000000">
+       </property>
+       <property
+             name="startupProgressRect"
+             value="5,275,445,15">
+       </property>
+       <property
+             name="startupMessageRect"
+             value="7,252,445,20">
+       </property>
+       <property
+             name="preferenceCustomization"
+             value="plugin_customization.ini">
+       </property>
+       <property
+             name="appName"
+             value="Overture Tools">
+       </property>
+    </product>
+ </extension>
+ 
+</plugin>

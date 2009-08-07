@@ -1,6 +1,5 @@
 package org.overturetool.eclipse.plugins.editor.overturedebugger;
 
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.debug.core.DebugEvent;

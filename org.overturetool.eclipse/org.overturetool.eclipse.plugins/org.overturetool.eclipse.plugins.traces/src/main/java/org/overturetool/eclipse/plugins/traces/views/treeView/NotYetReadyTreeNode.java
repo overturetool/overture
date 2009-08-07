@@ -41,7 +41,6 @@ public class NotYetReadyTreeNode extends TraceTestTreeNode implements IAdaptable
 		this.parent = parent;
 	}
 
-	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
 		return null;
 	}

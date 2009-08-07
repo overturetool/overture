@@ -33,7 +33,6 @@ public class ClassTreeNode implements IAdaptable,ITreeNode {
 		return className;
 	}
 
-	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
 		return null;
 	}

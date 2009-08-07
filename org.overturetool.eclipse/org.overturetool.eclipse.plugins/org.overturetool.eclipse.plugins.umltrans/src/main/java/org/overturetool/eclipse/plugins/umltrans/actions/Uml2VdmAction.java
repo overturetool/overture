@@ -1,15 +1,22 @@
 package org.overturetool.eclipse.plugins.umltrans.actions;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import jp.co.csk.vdm.toolbox.VDM.CGException;
+
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.internal.ObjectPluginAction;
 import org.overturetool.umltrans.Main.Translator;
 
 public class Uml2VdmAction implements IObjectActionDelegate
@@ -52,37 +59,104 @@ public class Uml2VdmAction implements IObjectActionDelegate
 			try
 			{
 
+				
 				IProject selectedProject = null;
-				if (action instanceof ObjectPluginAction)
+				selectedProject = ProjectHelper.getSelectedProject(action, selectedProject);
+				if(selectedProject==null)
 				{
-					ObjectPluginAction objectPluginAction = (ObjectPluginAction) action;
-					if (objectPluginAction.getSelection() instanceof ITreeSelection)
-					{
-						ITreeSelection selection = (ITreeSelection) objectPluginAction.getSelection();
-						if (selection.getPaths().length > 0)
-							selectedProject = (IProject) selection.getPaths()[0].getFirstSegment();
-					}
+					ProjectHelper.ConsolePrint(shell,"Could not find selected project");
+					return ;
 				}
 
-				Translator.TransLateUmlToVdm(
-						inputFile,
-						selectedProject.getLocation().toFile().getAbsolutePath());
+				translate(inputFile, selectedProject);
 
-				MessageDialog.openInformation(
-						shell,
-						"Uml 2 Vdm",
-						"Processing completed");
+				
 
 			} catch (Exception ex)
 			{
 				System.err.println(ex.getMessage() + ex.getStackTrace());
-				MessageDialog.openInformation(
-						shell,
-						"Error",
-						"Processing completed with errors");
+				
+				ProjectHelper.ConsolePrint(shell, ex);
 			}
 
 		}
+
+	}
+
+
+	
+	
+	private void translate(final String inputFile,  final IProject selectedProject)
+			throws FileNotFoundException, CGException, IOException
+	{
+
+		final Job expandJob = new Job("Translating VDM to UML")
+		{
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor)
+			{
+
+				monitor.worked(IProgressMonitor.UNKNOWN);
+				try
+				{
+					Translator.TransLateUmlToVdm(
+							inputFile,
+							selectedProject.getLocation().toFile().getAbsolutePath());
+				} catch (FileNotFoundException e)
+				{
+					
+					e.printStackTrace();
+					return new Status(IStatus.ERROR, "org.overturetool.umltrans",
+							 "Translation error in file", e);
+				} catch (CGException e)
+				{
+					
+					e.printStackTrace();
+					return new Status(IStatus.ERROR, "org.overturetool.umltrans",
+							 "Translation error in specification", e);
+				} catch (IOException e)
+				{
+					
+					e.printStackTrace();
+					return new Status(IStatus.ERROR, "org.overturetool.umltrans",
+							 "Translation error in file", e);
+				} catch (Exception e)
+				{
+				
+					e.printStackTrace();
+					return new Status(IStatus.ERROR, "org.overturetool.umltrans",
+							 "Translation error", e);
+				}
+
+				shell.getDisplay().asyncExec(new Runnable()
+				{
+
+					public void run()
+					{
+						try
+						{
+							selectedProject.refreshLocal(1, null);
+						} catch (CoreException e)
+						{
+							
+							e.printStackTrace();
+						}
+					}
+
+				});
+
+				monitor.done();
+				// expandCompleted = true;
+
+				return new Status(IStatus.OK, "org.overturetool.umltrans",
+						IStatus.OK, "Translation completed", null);
+
+			}
+
+		};
+		expandJob.setPriority(Job.INTERACTIVE);
+		expandJob.schedule(0);
 
 	}
 

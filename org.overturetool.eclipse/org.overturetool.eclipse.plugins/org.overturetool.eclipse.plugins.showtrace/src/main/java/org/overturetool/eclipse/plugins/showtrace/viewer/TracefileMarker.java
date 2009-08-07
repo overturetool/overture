@@ -5,15 +5,15 @@
 
 package org.overturetool.eclipse.plugins.showtrace.viewer;
 
-import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import jp.co.csk.vdm.toolbox.VDM.*;
+import jp.co.csk.vdm.toolbox.VDM.CGException;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-
+@SuppressWarnings("unchecked")
 public class TracefileMarker
 {
 

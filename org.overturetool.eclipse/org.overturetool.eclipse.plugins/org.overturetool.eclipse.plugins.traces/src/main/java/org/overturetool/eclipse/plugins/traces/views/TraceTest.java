@@ -97,7 +97,12 @@ public class TraceTest extends ViewPart implements ISelectionListener
 
 		public Object[] getElements(Object inputElement)
 		{
-			return ((List<TraceTest.Data>) inputElement).toArray();
+			if(inputElement instanceof List)
+			{
+			List list = (List) inputElement;
+			return list.toArray();
+			}
+			return new Object[0];
 		}
 
 	}

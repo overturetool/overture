@@ -155,8 +155,8 @@ public class GenericTabItem
             theFont.dispose();
     }
 
-    private static final int XMAX = 3000;
-    private static final int YMAX = 3000;
+//    private static final int XMAX = 3000;
+//    private static final int YMAX = 3000;
     private TabItem theTabItem;
     private FigureCanvas theCanvas;
     private Figure theFigure;
@@ -164,6 +164,6 @@ public class GenericTabItem
     private int ymax;
     private tdCPU theCPU;
     private Font theFont;
-    static final boolean $assertionsDisabled = true;//!org.overturetool.tracefile.viewer.GenericTabItem.desiredAssertionStatus();
+    static final boolean $assertionsDisabled = false;//!org.overturetool.tracefile.viewer.GenericTabItem.desiredAssertionStatus();
 
 }

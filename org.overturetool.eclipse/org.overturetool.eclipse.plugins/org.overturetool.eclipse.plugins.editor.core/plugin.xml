@@ -93,5 +93,6 @@
             class="org.overturetool.eclipse.plugins.editor.core.internal.OvertureCorePreferenceInitializer">
       </initializer>
    </extension>
+  
 
 </plugin>

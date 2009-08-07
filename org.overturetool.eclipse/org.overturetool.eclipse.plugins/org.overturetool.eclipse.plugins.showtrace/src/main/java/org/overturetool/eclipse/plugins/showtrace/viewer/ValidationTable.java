@@ -215,9 +215,9 @@ public class ValidationTable
 
     private Table theTable;
     private TracefileViewer theViewer;
-    private static final String FAIL = "  FAIL";
-    private static final String PASS = "  PASS";
-    static final boolean $assertionsDisabled = true; //!org/overturetool/tracefile/viewer/ValidationTable.desiredAssertionStatus();
+//    private static final String FAIL = "  FAIL";
+//    private static final String PASS = "  PASS";
+    static final boolean $assertionsDisabled = false; //!org/overturetool/tracefile/viewer/ValidationTable.desiredAssertionStatus();
 
 
 

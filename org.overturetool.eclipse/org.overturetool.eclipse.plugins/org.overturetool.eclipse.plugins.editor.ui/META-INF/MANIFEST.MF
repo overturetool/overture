@@ -43,4 +43,5 @@ Export-Package: org.overturetool.eclipse.plugins.editor.internal.ui,
 Bundle-Localization: plugin
 Import-Package: jp.co.csk.vdm.toolbox.api.corba.ToolboxAPI,
  org.overturetool.vdmtools
+Bundle-Vendor: Overture.
 

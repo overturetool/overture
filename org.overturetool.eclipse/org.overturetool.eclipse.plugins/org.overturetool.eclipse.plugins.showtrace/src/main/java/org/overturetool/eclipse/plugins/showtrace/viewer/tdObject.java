@@ -5,15 +5,16 @@
 
 package org.overturetool.eclipse.plugins.showtrace.viewer;
 
-import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.Vector;
 
-import jp.co.csk.vdm.toolbox.VDM.*;
+import jp.co.csk.vdm.toolbox.VDM.CGException;
+import jp.co.csk.vdm.toolbox.VDM.Tuple;
+import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            tdResource, TraceData
-
+@SuppressWarnings("unchecked")
 public class tdObject extends tdResource
 {
 

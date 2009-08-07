@@ -5,15 +5,19 @@
 
 package org.overturetool.eclipse.plugins.showtrace.viewer;
 
-import java.io.PrintStream;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Vector;
 
-import jp.co.csk.vdm.toolbox.VDM.*;
+import jp.co.csk.vdm.toolbox.VDM.CGException;
+import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            tdHistory, tdCPU, tdBUS, tdThread, 
 //            tdMessage, tdObject
-
+@SuppressWarnings("unchecked")
 public class TraceData extends tdHistory
 {
 

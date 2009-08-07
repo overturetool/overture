@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product name="Overture Tools" uid="org.overturetool.eclipse.plugins.platform.product" id="org.overturetool.eclipse.plugins.platform.product" application="org.eclipse.ui.ide.workbench" version="1.0.0" useFeatures="false" includeLaunchers="true">
+
+   <aboutInfo>
+      <image path="/org.overturetool.eclipse.plugins.platform/resources/128.png"/>
+      <text>
+         Overture tool about
+      </text>
+   </aboutInfo>
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <vmArgs>-Xmx512m</vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <windowImages i16="/org.overturetool.eclipse.plugins.platform/resources/16.png" i32="/org.overturetool.eclipse.plugins.platform/resources/32.png" i48="/org.overturetool.eclipse.plugins.platform/resources/48.png" i128="/org.overturetool.eclipse.plugins.platform/resources/128.png"/>
+
+   <splash
+      location="org.overturetool.eclipse.plugins.platform"
+      startupProgressRect="5,275,445,15"
+      startupMessageRect="7,252,445,20"
+      startupForegroundColor="000000" />
+   <launcher name="overture">
+      <linux icon="/org.overturetool.eclipse.plugins.platform/resources/overture3.xpm"/>
+      <macosx icon="/org.overturetool.eclipse.plugins.platform/resources/overture.icns"/>
+      <solaris/>
+      <win useIco="true">
+         <ico path="/org.overturetool.eclipse.plugins.platform/resources/overture.ico"/>
+         <bmp
+            winSmallHigh="/org.overturetool.eclipse.plugins.platform/resources/16.bmp"
+            winSmallLow="/org.overturetool.eclipse.plugins.platform/resources/816.bmp"
+            winMediumHigh="/org.overturetool.eclipse.plugins.platform/resources/32.bmp"
+            winMediumLow="/org.overturetool.eclipse.plugins.platform/resources/832.bmp"
+            winLargeHigh="/org.overturetool.eclipse.plugins.platform/resources/48.bmp"
+            winLargeLow="/org.overturetool.eclipse.plugins.platform/resources/848.bmp"/>
+      </win>
+   </launcher>
+
+   <intro introId="org.overturetool.eclipse.plugins.platform.intro"/>
+
+   <vm>
+   </vm>
+
+   <plugins>
+      <plugin id="com.ibm.icu"/>
+      <plugin id="org.eclipse.compare"/>
+      <plugin id="org.eclipse.compare.core"/>
+      <plugin id="org.eclipse.core.commands"/>
+      <plugin id="org.eclipse.core.contenttype"/>
+      <plugin id="org.eclipse.core.databinding"/>
+      <plugin id="org.eclipse.core.databinding.observable"/>
+      <plugin id="org.eclipse.core.databinding.property"/>
+      <plugin id="org.eclipse.core.expressions"/>
+      <plugin id="org.eclipse.core.filebuffers"/>
+      <plugin id="org.eclipse.core.filesystem"/>
+      <plugin id="org.eclipse.core.filesystem.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.core.jobs"/>
+      <plugin id="org.eclipse.core.net"/>
+      <plugin id="org.eclipse.core.net.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.core.resources"/>
+      <plugin id="org.eclipse.core.resources.compatibility" fragment="true"/>
+      <plugin id="org.eclipse.core.resources.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.core.runtime"/>
+      <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
+      <plugin id="org.eclipse.core.variables"/>
+      <plugin id="org.eclipse.debug.core"/>
+      <plugin id="org.eclipse.debug.ui"/>
+      <plugin id="org.eclipse.dltk.console"/>
+      <plugin id="org.eclipse.dltk.console.ui"/>
+      <plugin id="org.eclipse.dltk.core"/>
+      <plugin id="org.eclipse.dltk.debug"/>
+      <plugin id="org.eclipse.dltk.debug.ui"/>
+      <plugin id="org.eclipse.dltk.launching"/>
+      <plugin id="org.eclipse.dltk.ui"/>
+      <plugin id="org.eclipse.draw2d"/>
+      <plugin id="org.eclipse.ecf"/>
+      <plugin id="org.eclipse.ecf.filetransfer"/>
+      <plugin id="org.eclipse.ecf.identity"/>
+      <plugin id="org.eclipse.ecf.ssl" fragment="true"/>
+      <plugin id="org.eclipse.emf.common"/>
+      <plugin id="org.eclipse.emf.ecore"/>
+      <plugin id="org.eclipse.emf.ecore.xmi"/>
+      <plugin id="org.eclipse.equinox.app"/>
+      <plugin id="org.eclipse.equinox.common"/>
+      <plugin id="org.eclipse.equinox.p2.artifact.repository"/>
+      <plugin id="org.eclipse.equinox.p2.core"/>
+      <plugin id="org.eclipse.equinox.p2.engine"/>
+      <plugin id="org.eclipse.equinox.p2.jarprocessor"/>
+      <plugin id="org.eclipse.equinox.p2.metadata"/>
+      <plugin id="org.eclipse.equinox.p2.metadata.repository"/>
+      <plugin id="org.eclipse.equinox.p2.repository"/>
+      <plugin id="org.eclipse.equinox.preferences"/>
+      <plugin id="org.eclipse.equinox.registry"/>
+      <plugin id="org.eclipse.equinox.security"/>
+      <plugin id="org.eclipse.equinox.security.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.help"/>
+      <plugin id="org.eclipse.jdt.compiler.apt" fragment="true"/>
+      <plugin id="org.eclipse.jdt.compiler.tool" fragment="true"/>
+      <plugin id="org.eclipse.jdt.core"/>
+      <plugin id="org.eclipse.jdt.core.manipulation"/>
+      <plugin id="org.eclipse.jdt.debug"/>
+      <plugin id="org.eclipse.jdt.debug.ui"/>
+      <plugin id="org.eclipse.jdt.launching"/>
+      <plugin id="org.eclipse.jdt.ui"/>
+      <plugin id="org.eclipse.jface"/>
+      <plugin id="org.eclipse.jface.databinding"/>
+      <plugin id="org.eclipse.jface.text"/>
+      <plugin id="org.eclipse.ltk.core.refactoring"/>
+      <plugin id="org.eclipse.ltk.ui.refactoring"/>
+      <plugin id="org.eclipse.osgi"/>
+      <plugin id="org.eclipse.osgi.services"/>
+      <plugin id="org.eclipse.platform"/>
+      <plugin id="org.eclipse.search"/>
+      <plugin id="org.eclipse.swt"/>
+      <plugin id="org.eclipse.swt.win32.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.team.core"/>
+      <plugin id="org.eclipse.team.ui"/>
+      <plugin id="org.eclipse.text"/>
+      <plugin id="org.eclipse.ui"/>
+      <plugin id="org.eclipse.ui.console"/>
+      <plugin id="org.eclipse.ui.editors"/>
+      <plugin id="org.eclipse.ui.forms"/>
+      <plugin id="org.eclipse.ui.ide"/>
+      <plugin id="org.eclipse.ui.ide.application"/>
+      <plugin id="org.eclipse.ui.intro"/>
+      <plugin id="org.eclipse.ui.intro.universal"/>
+      <plugin id="org.eclipse.ui.navigator"/>
+      <plugin id="org.eclipse.ui.navigator.resources"/>
+      <plugin id="org.eclipse.ui.views"/>
+      <plugin id="org.eclipse.ui.views.properties.tabbed"/>
+      <plugin id="org.eclipse.ui.win32" fragment="true"/>
+      <plugin id="org.eclipse.ui.workbench"/>
+      <plugin id="org.eclipse.ui.workbench.texteditor"/>
+      <plugin id="org.overturetool.eclipse.plugins.dbgp.core"/>
+      <plugin id="org.overturetool.eclipse.plugins.debug"/>
+      <plugin id="org.overturetool.eclipse.plugins.debug.ui"/>
+      <plugin id="org.overturetool.eclipse.plugins.editor.core"/>
+      <plugin id="org.overturetool.eclipse.plugins.editor.ui"/>
+      <plugin id="org.overturetool.eclipse.plugins.launching"/>
+      <plugin id="org.overturetool.eclipse.plugins.overturedebugger"/>
+      <plugin id="org.overturetool.eclipse.plugins.platform"/>
+      <plugin id="org.overturetool.eclipse.plugins.showtrace"/>
+      <plugin id="org.overturetool.eclipse.plugins.showtrace.core"/>
+      <plugin id="org.overturetool.eclipse.plugins.stdlib"/>
+      <plugin id="org.overturetool.eclipse.plugins.traces"/>
+      <plugin id="org.overturetool.eclipse.plugins.traces.core"/>
+      <plugin id="org.overturetool.eclipse.plugins.umltrans"/>
+      <plugin id="org.overturetool.eclipse.plugins.umltrans.core"/>
+      <plugin id="org.overturetool.eclipse.plugins.vdmtoolsapi.core"/>
+   </plugins>
+
+   <configurations>
+      <plugin id="org.overturetool.eclipse.plugins.editor.core" autoStart="true" startLevel="0" />
+      <plugin id="org.overturetool.eclipse.plugins.editor.ui" autoStart="true" startLevel="0" />
+   </configurations>
+
+</product>

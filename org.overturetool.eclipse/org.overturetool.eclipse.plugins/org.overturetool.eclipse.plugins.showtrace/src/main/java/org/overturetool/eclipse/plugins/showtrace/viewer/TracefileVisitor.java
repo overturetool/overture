@@ -5,30 +5,59 @@
 
 package org.overturetool.eclipse.plugins.showtrace.viewer;
 
-import java.io.PrintStream;
-import java.util.*;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Vector;
 
-import jp.co.csk.vdm.toolbox.VDM.*;
+import jp.co.csk.vdm.toolbox.VDM.CGException;
+import jp.co.csk.vdm.toolbox.VDM.Record;
+import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
-import org.eclipse.draw2d.*;
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Ellipse;
+import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Color;
-import org.overturetool.traceviewer.ast.itf.*;
+import org.overturetool.traceviewer.ast.itf.IOmlBUSdecl;
+import org.overturetool.traceviewer.ast.itf.IOmlCPUdecl;
+import org.overturetool.traceviewer.ast.itf.IOmlDelayedThreadSwapIn;
+import org.overturetool.traceviewer.ast.itf.IOmlDeployObj;
+import org.overturetool.traceviewer.ast.itf.IOmlMessageActivate;
+import org.overturetool.traceviewer.ast.itf.IOmlMessageCompleted;
+import org.overturetool.traceviewer.ast.itf.IOmlMessageRequest;
+import org.overturetool.traceviewer.ast.itf.IOmlOpActivate;
+import org.overturetool.traceviewer.ast.itf.IOmlOpCompleted;
+import org.overturetool.traceviewer.ast.itf.IOmlOpRequest;
+import org.overturetool.traceviewer.ast.itf.IOmlReplyRequest;
+import org.overturetool.traceviewer.ast.itf.IOmlThreadCreate;
+import org.overturetool.traceviewer.ast.itf.IOmlThreadKill;
+import org.overturetool.traceviewer.ast.itf.IOmlThreadSwapIn;
+import org.overturetool.traceviewer.ast.itf.IOmlThreadSwapOut;
+import org.overturetool.traceviewer.ast.itf.IOmlTraceEvent;
+import org.overturetool.traceviewer.ast.itf.IOmlTraceFile;
 import org.overturetool.traceviewer.visitor.OmlVisitor;
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            TraceData, tdCPU, GenericTabItem, NormalLabel, 
 //            RectangleLabelFigure, tdBUS, Line, tdThread, 
 //            tdObject, RotatedLabel, tdResource, tdMessage
-
+@SuppressWarnings("unchecked")
 public class TracefileVisitor extends OmlVisitor
 {
     private static class ConjectureLimit
         implements Record
     {
 
-        public Object clone()
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public Object clone()
         {
             return new ConjectureLimit(obstime, thrid, name);
         }
@@ -55,7 +84,8 @@ public class TracefileVisitor extends OmlVisitor
         public Long thrid;
         public String name;
 
-        public ConjectureLimit()
+        @SuppressWarnings("unused")
+		public ConjectureLimit()
         {
         }
 
@@ -3095,8 +3125,10 @@ public class TracefileVisitor extends OmlVisitor
     }
 
     static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
-    private GenericTabItem theTabItem;
-    private tdCPU theCpu;
+    @SuppressWarnings("unused")
+	private GenericTabItem theTabItem;
+    @SuppressWarnings("unused")
+	private tdCPU theCpu;
     private TraceData data;
     private Long ov_uxpos;
     private Long ov_uypos;

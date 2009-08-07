@@ -24,7 +24,7 @@ import org.overturetool.traceviewer.parser.TraceParser;
 //            ValidationTable, GenericTabItem, TracefileMarker, TracefileViewerPlugin, 
 //            SelectTimeDialog, TracefileVisitor, TracefileParser, TracefileChecker, 
 //            tdCPU
-
+@SuppressWarnings("unchecked")
 public class TracefileViewer extends ViewPart
 {
 
@@ -407,7 +407,7 @@ public class TracefileViewer extends ViewPart
     private Action openValidationAction;
     private TracefileVisitor theVisitor;
     private TracefileMarker theMarkers;
-    static final boolean $assertionsDisabled = true;//!org/overturetool/tracefile/viewer/TracefileViewer.desiredAssertionStatus();
+    static final boolean $assertionsDisabled = false;//!org/overturetool/tracefile/viewer/TracefileViewer.desiredAssertionStatus();
 
 
 

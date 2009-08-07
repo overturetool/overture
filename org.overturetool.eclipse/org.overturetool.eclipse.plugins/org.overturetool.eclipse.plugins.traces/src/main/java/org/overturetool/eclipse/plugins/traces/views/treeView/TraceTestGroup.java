@@ -43,7 +43,6 @@ public class TraceTestGroup extends TraceTestTreeNode
 	// this.parent = parent;
 	// }
 
-	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter)
 	{
 		return null;
