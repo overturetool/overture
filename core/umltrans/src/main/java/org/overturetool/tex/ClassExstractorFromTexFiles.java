@@ -14,36 +14,37 @@ import java.util.Vector;
 @SuppressWarnings("unused")
 public class ClassExstractorFromTexFiles
 {
-	private static final String CLASS_START = "class ";//"\\begin{vdm_al}";
-	private static final String CLASS_END =  "end ";//"\\end{vdm_al}";
-	
-	private static final String VDM_START = "\\begin{vdm_al}";
-	private static final String VDM_END =  "\\end{vdm_al}";
+	private static final String CLASS_START = "class ";// "\\begin{vdm_al}";
+	private static final String CLASS_END = "end ";// "\\end{vdm_al}";
 
-	public static List<String> exstract(List<String> files, String outputDir) throws IOException
+	private static final String VDM_START = "\\begin{vdm_al}";
+	private static final String VDM_END = "\\end{vdm_al}";
+
+	/**
+	 * Creates a temporary file where all latex tags have been removed. Line numbers are preserved by insertion of empty lines
+	 * @param files The files where LaTex should be removed from 
+	 * @param outputDirrectory The directory to put the temporary files
+	 * @return A list of Files where the LaTex text have been removed from 
+	 * @throws IOException If any file error occures
+	 */
+	public static List<File> exstract(List<File> files, File outputDirrectory)
+			throws IOException
 	{
-		File outputDirrectory = new File(outputDir);
-		if(outputDir.length()==0  )
+		if (outputDirrectory==null )
 			return null;
-		
-		if(!outputDirrectory.exists())
+
+		if (!outputDirrectory.exists())
 			outputDirrectory.mkdir();
-		
-		
-		List<String> newFiles = new Vector<String>();
+
+		List<File> newFiles = new Vector<File>();
 		for (int i = 0; i < files.size(); i++)
 		{
-			//if (!files[i].endsWith(".tex"))
-			//{
-				String currentFile =  files.get(i);
-			//	continue;
-			//}
-				File f = new File(currentFile);
-				
-			currentFile = outputDirrectory.getAbsolutePath() + File.separatorChar + f.getName();
-			if(currentFile.endsWith(".tex"))
-				currentFile = currentFile+".vpp";
-			
+			File currentFile = files.get(i);
+
+			currentFile = new File(outputDirrectory, currentFile.getName());
+			if (currentFile.getName().endsWith(".tex"))
+				currentFile = new File(currentFile.getAbsolutePath() + ".vpp");
+
 			newFiles.add(currentFile);
 			System.out.println(currentFile);
 
@@ -58,52 +59,53 @@ public class ClassExstractorFromTexFiles
 			Boolean skip = true;
 			String currentClass = "";
 			Boolean enabled = false;
-			Boolean texTagsFound= false;
+			Boolean texTagsFound = false;
 			while ((inLine = inputStream.readLine()) != null)
 			{
 				if (inLine.trim().startsWith(CLASS_START))
 				{
-					String classString = inLine.trim().substring(CLASS_START.length()).trim();
+					String classString = inLine.trim().substring(
+							CLASS_START.length()).trim();
 					int indexOfInh = classString.indexOf(':');
 					int indexOfSpace = classString.indexOf(' ');
-					if(indexOfInh >= 0 || indexOfSpace >=0)
+					if (indexOfInh >= 0 || indexOfSpace >= 0)
 					{
-						
-						if(indexOfInh >= 0)
-							currentClass = classString.substring(0,indexOfInh);
+
+						if (indexOfInh >= 0)
+							currentClass = classString.substring(0, indexOfInh);
 						else
-							currentClass = classString.substring(0,indexOfSpace);
-					
-					}else
+							currentClass = classString.substring(
+									0,
+									indexOfSpace);
+
+					} else
 						currentClass = classString;
-					
+
 					enabled = true;
-					texTagsFound= true;
-					//continue;
-				}
-				else if (inLine.trim().startsWith(CLASS_END+currentClass))
+					texTagsFound = true;
+					// continue;
+				} else if (inLine.trim().startsWith(CLASS_END + currentClass))
 				{
 					outputStream.println(inLine);
 					enabled = false;
 					continue;
-					
+
 				}
 				if (inLine.trim().startsWith(VDM_START))
 				{
-				    enabled = true;
-				    outputStream.println("");
-				    continue;
-				    
+					enabled = true;
+					outputStream.println("");
+					continue;
+
 				}
 				if (inLine.trim().startsWith(VDM_END))
 				{
 					enabled = false;
 					outputStream.println("");
-				continue;
-				
+					continue;
+
 				}
-				
-			
+
 				if (enabled)
 					outputStream.println(inLine);
 				else
@@ -111,8 +113,8 @@ public class ClassExstractorFromTexFiles
 			}
 			outputStream.close();
 			inputStream.close();
-			if(!texTagsFound)
-				new File(newFiles.get(i)).delete();
+			if (!texTagsFound)
+				newFiles.get(i).delete();
 
 		}
 		return newFiles;
@@ -120,69 +122,68 @@ public class ClassExstractorFromTexFiles
 
 	public static String exstractAsString(String file) throws IOException
 	{
-			FileReader inputFileReader = new FileReader(file);
-			// Create Buffered/PrintWriter Objects
-			BufferedReader inputStream = new BufferedReader(inputFileReader);
-		
-			StringBuilder outputStream =new StringBuilder();
+		FileReader inputFileReader = new FileReader(file);
+		// Create Buffered/PrintWriter Objects
+		BufferedReader inputStream = new BufferedReader(inputFileReader);
 
-			String inLine = null;
-			Boolean skip = true;
-			String currentClass = "";
-			Boolean enabled = false;
-			Boolean texTagsFound= false;
-			while ((inLine = inputStream.readLine()) != null)
+		StringBuilder outputStream = new StringBuilder();
+
+		String inLine = null;
+		Boolean skip = true;
+		String currentClass = "";
+		Boolean enabled = false;
+		Boolean texTagsFound = false;
+		while ((inLine = inputStream.readLine()) != null)
+		{
+			if (inLine.trim().startsWith(CLASS_START))
 			{
-				if (inLine.trim().startsWith(CLASS_START))
+				String classString = inLine.trim().substring(
+						CLASS_START.length()).trim();
+				int indexOfInh = classString.indexOf(':');
+				int indexOfSpace = classString.indexOf(' ');
+				if (indexOfInh >= 0 || indexOfSpace >= 0)
 				{
-					String classString = inLine.trim().substring(CLASS_START.length()).trim();
-					int indexOfInh = classString.indexOf(':');
-					int indexOfSpace = classString.indexOf(' ');
-					if(indexOfInh >= 0 || indexOfSpace >=0)
-					{
-						
-						if(indexOfInh >= 0)
-							currentClass = classString.substring(0,indexOfInh);
-						else
-							currentClass = classString.substring(0,indexOfSpace);
-					
-					}else
-						currentClass = classString;
-					
-					enabled = true;
-					texTagsFound= true;
-					//continue;
-				}
-				else if (inLine.trim().startsWith(CLASS_END+currentClass))
-				{
-					outputStream.append("\n"+inLine);
-					enabled = false;
-					continue;
-					
-				}
-				if (inLine.trim().startsWith(VDM_START))
-				{
-				    enabled = true;
-				    outputStream.append("\n"+"");
-				    continue;
-				    
-				}
-				if (inLine.trim().startsWith(VDM_END))
-				{
-					enabled = false;
-					outputStream.append("\n"+"");
+
+					if (indexOfInh >= 0)
+						currentClass = classString.substring(0, indexOfInh);
+					else
+						currentClass = classString.substring(0, indexOfSpace);
+
+				} else
+					currentClass = classString;
+
+				enabled = true;
+				texTagsFound = true;
+				// continue;
+			} else if (inLine.trim().startsWith(CLASS_END + currentClass))
+			{
+				outputStream.append("\n" + inLine);
+				enabled = false;
 				continue;
-				
-				}
-				
-			
-				if (enabled)
-					outputStream.append("\n"+inLine);
-				else
-					outputStream.append("\n"+"");
+
 			}
-			inputStream.close();
-			
+			if (inLine.trim().startsWith(VDM_START))
+			{
+				enabled = true;
+				outputStream.append("\n" + "");
+				continue;
+
+			}
+			if (inLine.trim().startsWith(VDM_END))
+			{
+				enabled = false;
+				outputStream.append("\n" + "");
+				continue;
+
+			}
+
+			if (enabled)
+				outputStream.append("\n" + inLine);
+			else
+				outputStream.append("\n" + "");
+		}
+		inputStream.close();
+
 		return outputStream.toString();
 	}
 }

@@ -20,6 +20,8 @@ package org.overturetool.umltrans;
 // ***** VDMTOOLS END Name=package// ***** VDMTOOLS START Name=imports KEEP=NO
 
 import jp.co.csk.vdm.toolbox.VDM.*;
+
+import java.io.PrintWriter;
 import java.util.*;
 import org.overturetool.ast.itf.*;
 import org.overturetool.ast.imp.*;
@@ -41,8 +43,9 @@ public class StatusLog {
   static UTIL.VDMCompare vdmComp = new UTIL.VDMCompare();
 // ***** VDMTOOLS END Name=vdmComp
 
-// ***** VDMTOOLS START Name=log KEEP=NO
+// ***** VDMTOOLS START Name=log KEEP=YES
   private Vector log = null;
+  public static PrintWriter out=new PrintWriter(System.out);
 // ***** VDMTOOLS END Name=log
 
 
@@ -69,7 +72,7 @@ public class StatusLog {
 
 //***** VDMTOOLS START Name=addNewClassInfo#1|String KEEP=YES
   public void addNewClassInfo (final String name) throws CGException {
-	  System.out.println("Mapping Class: " + name);
+	  out.println("Mapping Class: " + name);
     log.add(new ClassStatus(name, new String(""), getTime(), new Long(0)));
   }
 // ***** VDMTOOLS END Name=addNewClassInfo#1|String
@@ -81,7 +84,7 @@ public class StatusLog {
 
 // ***** VDMTOOLS START Name=addNewClassInfo#2|String|String KEEP=NO
   public void addNewClassInfo (final String name, final String i) throws CGException {
-	  System.out.println("Mapping Class: " + name + " id: "+ i);
+	  out.println("Mapping Class: " + name + " id: "+ i);
     log.add(new ClassStatus(name, i, getTime(), new Long(0)));
   }
 // ***** VDMTOOLS END Name=addNewClassInfo#2|String|String
@@ -107,7 +110,7 @@ public class StatusLog {
           pred_9 = new Boolean(UTIL.equals(var1_10, name));
           if (pred_9.booleanValue()) {
             res_s_5.add(setd((ClassStatus) c, id));
-            System.out.println("Completed Class: ("+(double) (c.endTime - c.startTime) / 1000 + " secs | 1 / "+log.size()+") " + c.name + "id: " + c.id );
+            out.println("Completed Class: ("+(double) (c.endTime - c.startTime) / 1000 + " secs | 1 / "+log.size()+") " + c.name + "id: " + c.id );
           }
         }
       }
@@ -140,7 +143,7 @@ public class StatusLog {
             Long res_s_5 = null;
             res_s_5 = UTIL.NumberToLong(setd(c));
             res_s_4.add(res_s_5);
-            System.out.println("Completed Class: ("+(double) (c.endTime - c.startTime) / 1000 + " secs | 1 / "+log.size()+") " + c.name + "id: " + c.id );
+            out.println("Completed Class: ("+(double) (c.endTime - c.startTime) / 1000 + " secs | 1 / "+log.size()+") " + c.name + "id: " + c.id );
           }
         }
       }

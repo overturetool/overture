@@ -69,7 +69,7 @@ public class CmdLineProcesser extends CmdLineHelper
 
 	@Override
 	protected void handleCommand(Hashtable<String, String> parameters,
-			List<String> files) throws Exception
+			List<File> files) throws Exception
 	{
 		Long beginTime = System.currentTimeMillis();
 		if (containsKeys(
@@ -77,24 +77,24 @@ public class CmdLineProcesser extends CmdLineHelper
 				new String[] { OUTPUT_PATH, CMD_REMOVE_TEX }))
 			removeTex(parameters.get(OUTPUT_PATH), files);
 		if (containsKeys(parameters, new String[] { OUTPUT_FILE, CMD_TO_UML }))
-			toUml(parameters.get(OUTPUT_FILE), files);
+			toUml(new File(parameters.get(OUTPUT_FILE)), files);
 		if (containsKeys(parameters, new String[] { OUTPUT_PATH, CMD_TO_VPP }))
-			toVpp(parameters.get(OUTPUT_PATH), files);
+			toVpp(new File(parameters.get(OUTPUT_PATH)), files);
 		if (containsKeys(parameters, new String[] { OUTPUT_PATH, CMD_PRINT_XML }))
 			printXmlDoc(files.get(0));
 		
 		System.out.println("Command completed in "+(double) (System.currentTimeMillis() - beginTime) / 1000 + " secs");
 	}
 
-	public static void removeTex(String outputDirectory, List<String> files)
+	public static void removeTex(String outputDirectory, List<File> files)
 			throws IOException
 	{
 		File output = new File(outputDirectory + File.separatorChar + "tmp");
 		output.mkdirs();
-		ClassExstractorFromTexFiles.exstract(files, output.getAbsolutePath());
+		ClassExstractorFromTexFiles.exstract(files, output);
 	}
 
-	public static void toUml(String outputFile, List<String> files)
+	public static void toUml(File outputFile, List<File> files)
 			throws FileNotFoundException, CGException, IOException
 	{
 		// for (String string : files)
@@ -104,13 +104,13 @@ public class CmdLineProcesser extends CmdLineHelper
 
 		for (int i = 0; i < files.size(); i++)
 		{
-			if (files.get(i).endsWith(".prj"))
+			if (files.get(i).getName().endsWith(".prj"))
 			{
 				// VDM Tools project detected
 				try
 				{
-					List<String> list = GetFilesFromVDMToolsProjectFile(new File(
-							files.get(i)));
+					List<File> list = GetFilesFromVDMToolsProjectFile(
+							files.get(i));
 					
 //					for (int j = 0; j < list.size(); j++)
 //					{
@@ -134,11 +134,11 @@ public class CmdLineProcesser extends CmdLineHelper
 
 	}
 
-	public static void toVpp(String outputDirectory, List<String> files)
+	public static void toVpp(File outputDirectory, List<File> files)
 			throws Exception
 	{
 
-		for (String file : files)
+		for (File file : files)
 		{
 			Translator.TransLateUmlToVdm(file, outputDirectory);
 		}
@@ -147,14 +147,14 @@ public class CmdLineProcesser extends CmdLineHelper
 
 	}
 
-	public static void printXmlDoc(String string) throws Exception
+	public static void printXmlDoc(File string) throws Exception
 	{
 
-		XmlParser.Parse(string, true);
+		XmlParser.Parse(string.getAbsolutePath(), true);
 
 	}
 
-	public static List<String> GetFilesFromVDMToolsProjectFile(File projectFile)
+	public static List<File> GetFilesFromVDMToolsProjectFile(File projectFile)
 			throws Exception
 	{
 		FileReader inputFileReader = new FileReader(
@@ -166,7 +166,7 @@ public class CmdLineProcesser extends CmdLineHelper
 		while ((inLine = inputStream.readLine()) != null)
 			result += inLine;
 		inputStream.close();
-		List<String> files = new Vector<String>();
+		List<File> files = new Vector<File>();
 		final String VDM_TOOLS_PROJECT_FILE_INFO = "e2,m4,filem";
 		String[] tmp = result.substring(
 				result.indexOf(VDM_TOOLS_PROJECT_FILE_INFO)).split(
@@ -180,7 +180,7 @@ public class CmdLineProcesser extends CmdLineHelper
 			String filePath = fileData[1].substring(0, length);
 
 			if (!filePath.contains("./") && new File(filePath).exists())
-				files.add(filePath);
+				files.add(new File(filePath));
 			else
 			{
 				filePath = filePath.replace("../", ":");
@@ -194,8 +194,7 @@ public class CmdLineProcesser extends CmdLineHelper
 					parentFile = parentFile.getParentFile();
 				}
 				
-				files.add(parentFile.getAbsolutePath()
-						+ File.separatorChar + f);
+				files.add(new File(parentFile, f));
 			}
 
 		}

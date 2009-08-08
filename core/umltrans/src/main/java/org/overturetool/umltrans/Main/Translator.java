@@ -3,6 +3,7 @@ package org.overturetool.umltrans.Main;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
@@ -20,6 +21,10 @@ import org.overturetool.umltrans.xml.XmlParser;
 
 public class Translator
 {
+	public static void setOutput(PrintWriter outputWriter)
+	{
+		StatusLog.out = outputWriter;
+	}
 	public static String TranslateVdmToUml(String specData, String outputFile)
 			throws CGException
 	{
@@ -38,22 +43,17 @@ public class Translator
 		return xmiDocumentFileName;
 	}
 
-	public static String TransLateTexVdmToUml(List<String> files,
-			String outputFile) throws FileNotFoundException, CGException,
+	public static String TransLateTexVdmToUml(List<File> files,
+			File outputFile) throws FileNotFoundException, CGException,
 			IOException
 	{
-		// File output =new File(files[0]+ File.separatorChar + "tmp");
-		// output.createNewFile();
-
-		StringBuilder sb = new StringBuilder();
-		for (String file : files)
+			StringBuilder sb = new StringBuilder();
+		for (File file : files)
 		{
-			sb.append("\n" + ClassExstractorFromTexFiles.exstractAsString(file));
+			sb.append("\n" + ClassExstractorFromTexFiles.exstractAsString(file.getAbsolutePath()));
 		}
 
-		// String[] files1 =
-		// ClassExstractorFromTexFiles.exstract(files,output.getAbsolutePath());
-		return Translator.TranslateVdmToUml(sb.toString(), outputFile);
+		return Translator.TranslateVdmToUml(sb.toString(), outputFile.getAbsolutePath());
 
 	}
 
@@ -62,22 +62,22 @@ public class Translator
 		return par;
 	}
 
-	public static List<String> TexConvert(List<String> files)
+	public static List<File> TexConvert(List<File> files)
 			throws IOException
 	{
-		File output = new File(files.get(0) + File.separatorChar + "tmp");
+		File output = new File(files.get(0), "tmp");
 		output.createNewFile();
 		new ClassExstractorFromTexFiles();
 		return ClassExstractorFromTexFiles.exstract(
 				files,
-				output.getAbsolutePath());
+				output);
 	}
 
-	public static void TransLateUmlToVdm(String file, String outputFile)
+	public static void TransLateUmlToVdm(File file, File outputFile)
 			throws Exception
 	{
 
-		XmlDocument doc = XmlParser.Parse(file, false);
+		XmlDocument doc = XmlParser.Parse(file.getAbsolutePath(), false);
 		
 		StatusLog log = new StatusLog();
 		
@@ -87,8 +87,14 @@ public class Translator
 		Uml2Vdm u = new Uml2Vdm();
 		Oml2Vpp vpp = new Oml2Vpp();
 
-		if (!outputFile.endsWith(new Character(File.separatorChar).toString()))
-			outputFile += File.separatorChar;
-		vpp.Save(outputFile, u.init(xmlUmlModel.result),log);
+
+		if(!outputFile.isDirectory())
+			throw new Exception("Output directory not valid: "+ outputFile.getAbsolutePath());
+		
+		String outputPath = outputFile.getAbsolutePath();
+		if (!outputPath.endsWith(new Character(File.separatorChar).toString()))
+			outputPath += File.separatorChar;
+		
+		vpp.Save(outputPath, u.init(xmlUmlModel.result),log);
 	}
 }
