@@ -7,8 +7,6 @@ import org.overturetool.proofsupport.external_tools.Console;
 
 public class MosmlHolConsole extends Console {
 
-	private String promptBuffer = null;
-
 	protected final static String HOL_QUIT_COMMAND = "quit();";
 	protected final static String HOL_PROMPT = "- ";
 	/**
