@@ -32,13 +32,13 @@ public class VdmToolsProxyProject extends VdmProject
 				project.addFilesToProject(new File[]{file});
 				project.parseProject();
 				if(VDMToolsProject.getInstance().getParseErrors().size()>0)
-					log.info("eeeeeeeeeeee");
+					log.info("Parse errors");
 			}
 			//project.addFilesToProject(vppFiles);
 			
 			
 			if(VDMToolsProject.getInstance().getParseErrors().size()>0)
-				log.info("eeeeeeeeeeee");
+				log.info("Parse errors");
 
 		} catch (Exception e)
 		{

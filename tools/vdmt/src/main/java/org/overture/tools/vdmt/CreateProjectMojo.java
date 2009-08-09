@@ -16,16 +16,9 @@ package org.overture.tools.vdmt;
  * limitations under the License.
  */
 
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-
-import org.overture.tools.vdmt.VDMToolsProxy.*;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
+import org.overture.tools.vdmt.VDMToolsProxy.VdmProject;
 
 /**
  * Says "Hi" to the user.

@@ -52,6 +52,11 @@
     	<artifactId>vdmtoolsapi</artifactId>
     	<version>1.0.0</version>
     </dependency>
+    <dependency>
+    	<groupId>org.overturetool</groupId>
+    	<artifactId>stdlib</artifactId>
+    	<version>1.0.1</version>
+    </dependency>
 
 
   </dependencies>

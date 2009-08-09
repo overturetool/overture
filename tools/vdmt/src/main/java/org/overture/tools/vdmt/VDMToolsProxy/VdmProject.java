@@ -8,13 +8,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -31,13 +28,13 @@ public class VdmProject
 	protected File vppde;
 	CodeGenCheckSum checkSum ;
 
-	protected ArrayList<File> dependedArtifactsSourceLocation = new ArrayList<File>();
+	protected List<File> dependedArtifactsSourceLocation = new ArrayList<File>();
 
-	protected ArrayList<File> files = new ArrayList<File>();
+	protected List<File> files = new ArrayList<File>();
 	private final String LOG_SPLIT_LINE = "------------------------------------------------------------------------";
 
 	public VdmProject(Log log, File vppde, File baseDir,
-			ArrayList<File> dependedArtifactsSourceLocation)
+			List<File> dependedArtifactsSourceLocation)
 	{
 		this.baseDir = baseDir;
 		this.dependedArtifactsSourceLocation = dependedArtifactsSourceLocation;
@@ -107,9 +104,9 @@ public class VdmProject
 	 */
 	public void typeCheck() throws MojoFailureException, MojoExecutionException
 	{
-		String out = new String();
+//		String out = new String();
 
-		out = executeCmdVdmTools(
+		/*out =*/ executeCmdVdmTools(
 				" -t" + getSpecFiles(),
 				getJavaLocation(baseDir));
 

@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class VdmJavaFile
 	final String IMPORT_TAG_END = "// ***** VDMTOOLS END Name=imports";
 	final String UTIL_RUNTIME_ERROR = "UTIL.RunTime(\"Run-Time Error:Can not evaluate an error statement\");";
 	final String THROW_CGEXCEPTION = "throw new CGException();";
-	final String ELSE ="else {";
+	final String ELSE = "else {";
 
 	/*
 	 * 
@@ -49,12 +48,15 @@ public class VdmJavaFile
 
 			String inLine = null;
 			Boolean tagFound = false;
-
+			Boolean textFound = false;
 			while ((inLine = inputStream.readLine()) != null)
 			{
+				if (inLine.length() == 0 && !textFound)
+					continue;
+				textFound = true;
 				if (inLine.trim().startsWith(IMPORT_TAG_START))
 				{
-					sb.append( inLine);
+					sb.append("\n" + inLine);
 					tagFound = true;
 					continue;
 
@@ -131,31 +133,29 @@ public class VdmJavaFile
 			StringBuilder sb = new StringBuilder();
 
 			String inLine = null;
-			String previousInLine ="";
-			String previousInLine2 ="";
+			String previousInLine = "";
+			String previousInLine2 = "";
 			Boolean tagFound = false;
 
 			while ((inLine = inputStream.readLine()) != null)
 			{
 				if (tagFound)
 				{
-					sb.append("\n" +THROW_CGEXCEPTION + " // " + inLine);
+					sb.append("\n" + THROW_CGEXCEPTION + " // " + inLine);
 					tagFound = false;
 
-					
-				}
-				else if (inLine.trim().contains(UTIL_RUNTIME_ERROR) && previousInLine2.contains(ELSE))
+				} else if (inLine.trim().contains(UTIL_RUNTIME_ERROR)
+						&& previousInLine2.contains(ELSE))
 				{
 					sb.append("\n" + inLine);
 					tagFound = true;
-					
 
-				} else 
-				sb.append("\n" + inLine);
-				
+				} else
+					sb.append("\n" + inLine);
+
 				previousInLine2 = previousInLine;
-				previousInLine=inLine;
-				
+				previousInLine = inLine;
+
 			}
 			inputStream.close();
 			FileWriter outputFileReader = new FileWriter(file);

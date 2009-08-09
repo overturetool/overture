@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class Util {
 	
@@ -67,10 +66,7 @@ public class Util {
 
 			String inLine = null;
 
-			Boolean skip = true;
 			String currentClass = "";
-			Boolean enabled = false;
-			Boolean texTagsFound= false;
 			while ((inLine = inputStream.readLine()) != null) {
 							
 				if (inLine.trim().startsWith(CLASS_START))
@@ -89,28 +85,22 @@ public class Util {
 					}else
 						currentClass = classString;
 					
-					enabled = true;
-					texTagsFound= true;
 					classNames.add(currentClass.trim());
 					//continue;
 				}
 				else if (inLine.trim().startsWith(CLASS_END+currentClass))
 				{
-					//outputStream.println(inLine);
-					enabled = false;
 					continue;
 					
 				}
 				if (inLine.trim().startsWith(VDM_START))
 				{
-				    enabled = true;
-				   // outputStream.println("");
+				    // outputStream.println("");
 				    continue;
 				    
 				}
 				if (inLine.trim().startsWith(VDM_END))
 				{
-					enabled = false;
 					//outputStream.println("");
 				continue;
 				

@@ -2,7 +2,6 @@ package org.overture.tools.vdmt;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.overture.tools.vdmt.VDMToolsProxy.VdmProject;
 import org.overture.tools.vdmt.VDMToolsProxy.VdmToolsProxyProject;
 
 

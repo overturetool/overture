@@ -15,8 +15,6 @@ import java.util.Vector;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
-import org.netbeans.lib.cvsclient.commandLine.command.checkout;
-
 public class CodeGenCheckSum
 {
 	File checkSumFile;
@@ -35,12 +33,12 @@ public class CodeGenCheckSum
 		FileReader inputFileReader;
 		try
 		{
+			if(!checkSumFile.exists())
+				return;
 			inputFileReader = new FileReader(checkSumFile);
 
 			// Create Buffered/PrintWriter Objects
 			BufferedReader inputStream = new BufferedReader(inputFileReader);
-			StringBuilder sb = new StringBuilder();
-
 			String inLine = null;
 
 			while ((inLine = inputStream.readLine()) != null)
@@ -77,10 +75,7 @@ public class CodeGenCheckSum
 				{
 					classes.remove(className);
 				}
-				else
-				{
-					String f = "";
-				}
+				
 			}
 			}
 		}
@@ -118,7 +113,6 @@ public class CodeGenCheckSum
 	public void addCheckSum(String filePath)
 	{
 		File file = new File(filePath);
-		String className = getClassName(file);
 		if (file.exists())
 		{
 
@@ -147,8 +141,6 @@ public class CodeGenCheckSum
 
 			// Create Buffered/PrintWriter Objects
 			BufferedReader inputStream = new BufferedReader(inputFileReader);
-			StringBuilder sb = new StringBuilder();
-
 			String inLine = null;
 
 			while ((inLine = inputStream.readLine()) != null)
