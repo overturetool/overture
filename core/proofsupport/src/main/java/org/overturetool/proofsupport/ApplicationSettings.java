@@ -2,6 +2,7 @@ package org.overturetool.proofsupport;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.InvalidPreferencesFormatException;
 
@@ -19,5 +20,10 @@ public class ApplicationSettings extends AbstractSettings {
 	
 	public static boolean isOsWindows() {
 		return OS_NAME.contains("Windows");
+	}
+	
+	public static InputStream getHolTacticsFile(String filePath) {
+		ClassLoader cl = ApplicationSettings.class.getClassLoader();
+		return cl.getResourceAsStream(filePath);
 	}
 }

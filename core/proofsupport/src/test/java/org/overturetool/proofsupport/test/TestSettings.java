@@ -49,7 +49,7 @@ public class TestSettings extends AbstractSettings
 		return s != null && s.length() != 0;
 	}
 
-	protected static final String SETTINGS_FILE = "src/test/java/org/overturetool/proofsupport/test/Settings.xml";
+	protected static final String SETTINGS_FILE = "Settings.xml";
 	protected static final String OS_NAME = System.getProperty("os.name");
 
 	protected static final String CAT_PROGRAM;

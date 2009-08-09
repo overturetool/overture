@@ -86,7 +86,7 @@ public class AutomaticProofSystem {
 
 	private void loadTactics(HolInterpreter hol) throws IOException,
 			HolInterpreterException {
-		String tacticsCode = Utilities.readHolCodeFile(vdmTacticsFile);
+		String tacticsCode = Utilities.readHolCodeFile(ApplicationSettings.getHolTacticsFile(vdmTacticsFile));
 		hol.interpretModel(tacticsCode);
 	}
 
@@ -113,4 +113,5 @@ public class AutomaticProofSystem {
 		return prepData;
 	}
 
+	
 }

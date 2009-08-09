@@ -1,7 +1,6 @@
 package org.overturetool.proofsupport;
 
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,8 +23,11 @@ public abstract class AbstractSettings {
 	private void loadPreferences(String settingsFile, Class c)
 			throws IOException, InvalidPreferencesFormatException,
 			FileNotFoundException, BackingStoreException {
+//		Preferences.importPreferences(new BufferedInputStream(
+//				new FileInputStream(settingsFile)));
+		ClassLoader cl = this.getClass().getClassLoader();
 		Preferences.importPreferences(new BufferedInputStream(
-				new FileInputStream(settingsFile)));
+				cl.getResourceAsStream(settingsFile)));
 		Preferences preferences = Preferences.userNodeForPackage(c);
 		String[] keys = preferences.keys();
 		for (String key : keys)

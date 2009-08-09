@@ -2,6 +2,8 @@ package org.overturetool.proofsupport.external_tools;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -21,9 +23,9 @@ public abstract class Utilities {
 		return formatedDate;
 	}
 	
-	public final static String readHolCodeFile(String fileName) throws IOException {
+	public final static String readHolCodeFile(InputStream file) throws IOException {
 		StringBuffer sb = new StringBuffer();
-		HolCodeReader reader = new HolCodeReader(new FileReader(fileName));
+		HolCodeReader reader = new HolCodeReader(new InputStreamReader(file));
 		String lineBuffer = "";
 		while((lineBuffer = reader.readLine()) != null)
 			sb.append(lineBuffer).append(LINE_SEPARATOR);
