@@ -1,0 +1,36 @@
+\section{ThrusterSelection Class}
+
+\begin{vdm_al}
+class ThrusterSelectionTable 
+
+types
+  public
+  ThrSelMap = map (Command`Direction * Command`Direction * 
+                   Command`Direction) 
+              to ThrusterControl`ThrSel;
+
+instance variables
+  selections : ThrSelMap := {|->};
+
+
+operations
+  public
+  Lookup : Command`Direction * Command`Direction * Command`Direction ==> 
+           ThrusterControl`ThrSel
+  Lookup(dir1, dir2, dir3) ==
+    return selections(mk_(dir1, dir2, dir3));
+
+  public
+  MakeTable : ThrSelMap ==> ()
+  MakeTable(m) ==
+    selections:= m;
+
+end ThrusterSelectionTable
+\end{vdm_al}
+
+The test coverage table for the ThrusterSelectionTable class looks like:
+
+\begin{rtinfo}{vdm.tc}[ThrusterSelectionTable]
+\end{rtinfo}
+
+

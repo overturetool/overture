@@ -1,0 +1,32 @@
+\section{The CheckSpeedEvent Test Class}
+
+The CheckSpeedEvent class implements a test event that checks the
+speed of a train (i.e.\ of a KLV instance). It provides a setSpeed and
+an execute operation. The execute operation returns the status of the
+Cab Display and of the Emergency Break.
+
+\begin{vdm_al}
+class CheckSpeedEvent is subclass of Event
+
+instance variables
+
+  speed : real;
+
+operations 
+
+  public
+  CheckSpeedEvent: real ==> CheckSpeedEvent
+  CheckSpeedEvent (s) ==
+    speed := s;
+
+  public
+  execute : KLV ==> Test`TestResult
+  execute (klv) ==
+    ( klv.checkSpeed(speed);
+      let mk_(a,e,g) = klv.getCabDisplay().getDisplay(),
+          e' =  klv.getEmergencyBreak().getEmergencyBreak() in
+      return mk_Test`KLVstate(mk_Test`CabDisp(a,e,g), 
+                              mk_Test`EmerBreak(e')) );
+
+end CheckSpeedEvent
+\end{vdm_al}

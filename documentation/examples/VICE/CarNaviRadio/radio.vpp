@@ -1,0 +1,18 @@
+class Radio
+
+operations
+  async 
+  public AdjustVolume: nat ==> ()
+  AdjustVolume (pno) ==
+    ( cycles (1E5) skip;
+      --duration (1E5) skip;
+      RadNavSys`mmi.UpdateScreen(1, pno) );
+
+  async 
+  public HandleTMC: nat ==> ()
+  HandleTMC (pno) ==
+    ( cycles (1E6) skip;
+      --duration (1E6) skip;
+      RadNavSys`navigation.DecodeTMC(pno) )
+
+end Radio

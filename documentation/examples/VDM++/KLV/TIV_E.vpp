@@ -1,0 +1,31 @@
+\section{The TIV\_E Class}
+
+The TIV_E class represents the TIV_E beacon and implements the
+abstract Beacon class. The instance variable represents the restricted
+speed. A TIV_E beacon corresponds to a TIV_D beacon, and the
+restricted speed is set by to the target speed of that announcement
+when met. Set and get operations of the restricted speed exist.
+
+\begin{vdm_al}
+class TIV_E is subclass of Beacon
+
+instance variables
+
+  speed : [real] := nil;
+
+operations
+
+  public
+  setSpeedRestriction : real ==> ()
+  setSpeedRestriction (s) ==
+    speed := s;
+
+  public
+  getSpeedRestriction : () ==> real
+  getSpeedRestriction () ==
+    return speed
+  pre speed <> nil;
+
+end TIV_E
+\end{vdm_al}
+

@@ -1,0 +1,34 @@
+\section{The EmergencyBreak Class}
+
+The EmergencyBreak class models the emergency break of a train. The
+instance variable maintains the state of the emergency break. There
+are operations for setting and unsetting the emergency break, and for
+getting the status of it.
+
+\begin{vdm_al}
+class EmergencyBreak
+
+instance variables
+
+  emergencybreak : bool := false;
+
+operations
+
+  public
+  setEmergencyBreak : () ==> ()
+  setEmergencyBreak () ==
+    emergencybreak := true;
+ 
+  public
+  unsetEmergencyBreak : () ==> ()
+  unsetEmergencyBreak () ==
+    emergencybreak := false;
+
+  public
+  getEmergencyBreak : () ==> bool
+  getEmergencyBreak () ==
+    return emergencybreak;
+
+end EmergencyBreak
+\end{vdm_al}
+

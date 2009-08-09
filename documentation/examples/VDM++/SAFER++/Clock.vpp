@@ -1,0 +1,32 @@
+\section{Clock Class}
+
+\begin{vdm_al}
+class Clock
+ 
+instance variables
+  count : nat := 0;
+
+operations
+  public
+  SetTime : nat ==> ()
+  SetTime(t) ==
+    count := t;
+
+  public
+  IncrTime : () ==> ()
+  IncrTime() ==
+    count := count + 1;
+
+  public
+  ReadTime : () ==> nat
+  ReadTime() ==
+    return count;
+
+end Clock
+\end{vdm_al}
+
+The test coverage table for the Clock class looks like:
+
+\begin{rtinfo}{vdm.tc}[Clock]
+\end{rtinfo}
+

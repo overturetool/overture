@@ -1,0 +1,116 @@
+\section{AAH Class}
+
+\begin{vdm_al}
+class AAH
+ 
+types
+  public
+  EngageState = <AAH_off> | <AAH_started> | <AAH_on> | <pressed_once> |
+                <AAH_closing> | <pressed_twice>;
+
+values
+  click_timeout : nat = 10;
+
+instance variables
+  hcu : HandControlUnit;
+  clock : Clock;
+  rotcmd : RotationCommand := new RotationCommand();
+  toggle : EngageState := <AAH_off>;
+  gripcmd : SixDOfCommand;
+  timeout : nat := 0;
+  ignore_hcm_rot : set of Command`Axis := {};
+  active_rot_axes : set of Command`Axis := {};
+
+operations
+  public
+  Update : () ==> ()
+  Update() ==
+    let engage = ButtonTransition(hcu.ReadAAH(), clock.ReadTime()),
+        starting = (toggle = <AAH_off>) and (engage = <AAH_started>),
+        mk_(-, rot) = gripcmd.GetCommand() 
+    in (active_rot_axes := {a | a in set Command`allaxes & starting or 
+                            (engage <> <AAH_off> and 
+                               a in set active_rot_axes and
+                            (rot(a) = <Zero> or 
+                             a in set ignore_hcm_rot))};
+        ignore_hcm_rot := {a | a in set Command`allaxes & 
+                           (starting and rot(a) <> <Zero>) or 
+                           (not starting and a in set ignore_hcm_rot)};
+        timeout := if toggle = <AAH_on> and engage = <pressed_once>
+                    then clock.ReadTime() + click_timeout
+                    else timeout;
+        toggle := engage);
+
+  public
+  GetRotcmd : () ==> Command`AxisMap
+  GetRotcmd() ==
+    return rotcmd.GetAxesdir();
+
+  public
+  SetRotcmd : Command`AxisMap ==> ()
+  SetRotcmd(m) ==
+    rotcmd.SetAxesdir(m);
+
+  public
+  AllAxesOff : () ==> bool
+  AllAxesOff() ==
+    return (active_rot_axes = {});
+
+  public
+  SetHCULink : HandControlUnit ==> ()
+  SetHCULink(h) ==
+    hcu := h;
+
+  public
+  SetClockLink : Clock ==> ()
+  SetClockLink(c) ==
+    clock := c;
+
+  public
+  GetIgnore_hcm : () ==> set of Command`Axis
+  GetIgnore_hcm() ==
+    return ignore_hcm_rot;
+
+  public
+  SetSixDOfLink : SixDOfCommand ==> ()
+  SetSixDOfLink(s) ==
+    gripcmd := s;
+
+  public
+  GetActive_axes : () ==> set of Command`Axis
+  GetActive_axes() ==
+    return active_rot_axes;
+
+  ButtonTransition : HandControlUnit`Button * nat ==> EngageState
+  ButtonTransition(button_pos, count) ==
+    return 
+      (cases mk_(toggle,button_pos) :
+         mk_(<AAH_off>,<Up>)         -> <AAH_off>,
+         mk_(<AAH_off>,<Down>)       -> <AAH_started>,
+         mk_(<AAH_started>,<Up>)     -> <AAH_on>,
+         mk_(<AAH_started>,<Down>)   -> <AAH_started>,
+         mk_(<AAH_on>,<Up>)          -> if AllAxesOff()
+                                        then <AAH_off>
+                                        else <AAH_on>,
+         mk_(<AAH_on>,<Down>)        -> <pressed_once>,
+         mk_(<pressed_once>,<Up>)    -> <AAH_closing>,
+         mk_(<pressed_once>,<Down>)  -> <pressed_once>,
+         mk_(<AAH_closing>,<Up>)     -> if AllAxesOff()
+                                        then <AAH_off>
+                                        elseif count > timeout
+                                        then <AAH_on>
+                                        else <AAH_closing>,
+         mk_(<AAH_closing>,<Down>)   -> <pressed_twice>,
+         mk_(<pressed_twice>,<Up>)   -> <AAH_off>,
+         mk_(<pressed_twice>,<Down>) -> <pressed_twice>
+       end);
+
+end AAH
+\end{vdm_al}
+
+The test coverage table for the AAH class looks like:
+
+\begin{rtinfo}{vdm.tc}[AAH]
+\end{rtinfo}
+
+

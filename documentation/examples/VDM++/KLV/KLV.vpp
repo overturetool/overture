@@ -1,0 +1,262 @@
+\section{The KLV Class}
+
+The KLV class is the main class of the KLV system. It controls a Cab
+Display, an On Board Computer, and an Emergency Break. Furthermore, it
+contains operations corresponding to the kinds of events that can
+trigger the KLV system
+
+\begin{vdm_al}
+class KLV
+\end{vdm_al}
+
+The onboardcomp, cabdisplay, and emergencybreak instance variables are
+references to objects representing the on-board computer, the cab
+display, and the emergency break.
+
+\begin{vdm_al}
+instance variables
+  onboardcomp : OnBoardComp := new OnBoardComp();
+  cabdisplay : CabDisplay := new CabDisplay();
+  emergencybreak : EmergencyBreak := new EmergencyBreak();
+\end{vdm_al}
+
+The announcements and speedrestrictions instance variables model the
+TIV_D beacons (speed restriction announcements) met and the current
+TIV_E beacons (speed restrictions) active. Notice the limit of at most
+5 active speed restrictions.
+
+\begin{vdm_al}
+instance variables
+
+  announcements : seq of TIV_D := [];
+
+  speedrestrictions : seq of TIV_E := [];
+  inv len speedrestrictions <= 5;
+\end{vdm_al}
+
+The firstspeedrestriction instance variable ensures that the first
+TIV_E beacon is not removed when the train tail meets it.
+
+\begin{vdm_al}
+instance variables
+
+  firstspeedrestriction : bool := true;
+\end{vdm_al}
+
+The maxspeed value represents the general maximal speed of the train.
+
+\begin{vdm_al}
+values
+  maxspeed : real = 140;
+\end{vdm_al}
+
+The operation headMeetsBeacon represents the event that the train head
+meets a beacon. Depending on what kind of beacon is met the actions
+are different. That the train head meets an FLTV beacon does not
+trigger any event.
+
+\begin{vdm_al}
+operations
+
+public
+headMeetsBeacon : Beacon ==> ()
+headMeetsBeacon (beacon) ==
+  cases true:
+    (isofclass(TIV_D, beacon)) -> announceSpeedRestriction(beacon),
+    (isofclass(TIV_E, beacon)) -> addSpeedRestriction(beacon),
+    (isofclass(TIV_A, beacon)) -> deleteAnnouncements(),
+    (isofclass(FLTV, beacon))  -> skip
+  end;
+\end{vdm_al}
+
+The operation tailMeetsBeacon represents the event that the end of the
+train meets a beacon. Depending on what kind of beacon is met the
+actions are different. That the end of the train meets either a TIV_D
+or a TIV_A beacon does not trigger any event.
+
+If a TIV_E beacon is the first of a sequence of speed restrictions
+then it should not be removed when the train tail meets it. Instead
+the firstspeedrestriction variable is set to false. When an FLTV
+beacon is met it marks the end of a sequence of speed restrictions and
+firstspeedrestriction variable is set back to true.
+
+\begin{vdm_al}
+public
+tailMeetsBeacon : Beacon ==> ()
+tailMeetsBeacon (beacon) ==
+  cases true:
+    (isofclass(TIV_D, beacon)) -> skip,
+    (isofclass(TIV_E, beacon)) -> if not firstspeedrestriction
+                                  then removeSpeedRestriction()
+                                  else firstspeedrestriction := false,
+    (isofclass(TIV_A, beacon)) -> skip,
+    (isofclass(FLTV, beacon))  -> ( firstspeedrestriction := true;
+                                    removeSpeedRestriction () )
+  end;
+\end{vdm_al}
+
+The announceSpeedRestriction operation performs the action of the
+train head meeting a TIV_D beacon. This action is that the
+announcement of a speed restriction is registered.
+
+\begin{vdm_al}
+public
+announceSpeedRestriction : TIV_D ==> ()
+announceSpeedRestriction (tiv_d) ==
+( announcements := announcements ^ [tiv_d];
+  deletePossibleGroundFault () );
+\end{vdm_al}
+
+The addSpeedRestriction operation performs the action that the train
+head meets a TIV_E beacon. This action is that an announcement is
+registered as an actual speed restriction.
+
+\begin{vdm_al}
+public
+addSpeedRestriction : TIV_E ==> ()
+addSpeedRestriction (tiv_e) ==
+  if len speedrestrictions < 5
+  then ( let speed = (hd announcements).getTargetSpeed() in
+         tiv_e.setSpeedRestriction (speed);
+         speedrestrictions := speedrestrictions ^ [tiv_e];
+         announcements := tl announcements;
+         deletePossibleGroundFault() )
+  else raiseGroundFault()
+pre announcements <> [];
+\end{vdm_al}
+
+The deleteAnnuoncements operation performs the action that the train
+head meets a TIV_A beacon. This action is that all the speed
+restriction announcements are deleted.
+
+\begin{vdm_al}
+public
+deleteAnnouncements : () ==> ()
+deleteAnnouncements () ==
+( announcements := [];
+  deletePossibleGroundFault() )
+pre announcements <> [];
+\end{vdm_al}
+
+The removeSpeedRestriction operation performs the action that the end
+of the train meets either a TIV_E or an FLTV beacon. This action is
+that a speed restriction is cancelled.
+
+\begin{vdm_al}
+public
+removeSpeedRestriction : () ==> ()
+removeSpeedRestriction () ==
+( speedrestrictions := tl speedrestrictions;
+  deletePossibleGroundFault() )
+pre speedrestrictions <> [];
+\end{vdm_al}
+
+The raiseGroundFault operation raises a ground fault in the CabDisplay.
+
+\begin{vdm_al}
+public
+raiseGroundFault : () ==> ()
+raiseGroundFault () ==
+  cabdisplay.setGroundFault();
+\end{vdm_al}
+
+The deletePossibleGroundFault operation is invoked when a beacon is
+met. If the ground fault lamp is switched on it must be switched off
+when the next beacon is met. The operation switches the ground fault
+lamp off if it is switched on.
+
+\begin{vdm_al}
+public
+deletePossibleGroundFault: () ==> ()
+deletePossibleGroundFault () ==
+  let mk_(-,-,gf) = cabdisplay.getDisplay() in
+  if gf 
+  then cabdisplay.unsetGroundFault();
+\end{vdm_al}
+
+The noBeaconMet operation performs the action that a TIV_E beacon has
+not been met corresponding to a TIV_D announcement.
+
+\begin{vdm_al}
+public
+noBeaconMet : () ==> ()
+noBeaconMet () ==
+( announcements := tl announcements;
+  raiseGroundFault() )
+pre announcements <> [];
+\end{vdm_al}
+
+The checkSpeed operation checks whether a speed (the speed of the
+train) is below the maximal speed, within the alarm speed limit, or
+above the emergency break speed. The On Board Computer performs that
+actual calculation. The result is switching on and off lamps in the
+Cab Display, and performing emergency break.
+
+\begin{vdm_al}
+public
+checkSpeed : real ==> ()
+checkSpeed (speed) ==
+  let speedalarm = onboardcomp.checkSpeed (speed, getMaxSpeed()) in
+  cases speedalarm:
+    <SpeedOk> -> if not emergencybreak.getEmergencyBreak()
+                  then cabdisplay.unsetAlarm(),
+    <AlarmSpeed> -> if not emergencybreak.getEmergencyBreak()
+                    then cabdisplay.setAlarm(),
+    <EmergencyBreakSpeed> -> ( cabdisplay.setEmergencyBreak();
+                               emergencybreak.setEmergencyBreak() )
+  end;
+\end{vdm_al}
+
+The getMaxSpeed operation computes what the actual maximal speed
+is. If there are speed restrictions the maximal speed will be the
+minimal speed of the speed restrictions. Otherwise it will be the
+maximal speed.
+
+\begin{vdm_al}
+public
+getMaxSpeed : () ==> real
+getMaxSpeed () ==
+  if speedrestrictions <> []
+  then let speeds = { tiv_e.getSpeedRestriction()
+                    | tiv_e in set elems speedrestrictions } in
+       let minspeed in set speeds be st forall sp in set speeds &
+           minspeed <= sp in
+       return minspeed
+  else return maxspeed;
+
+public
+releaseEmergencyBreak : real ==> ()
+releaseEmergencyBreak (sp) ==
+if sp = 0
+then ( cabdisplay.unsetEmergencyBreak ();
+       emergencybreak.unsetEmergencyBreak () )
+pre let mk_(-,eb,-) = cabdisplay.getDisplay() in eb and
+    emergencybreak.getEmergencyBreak();
+\end{vdm_al}
+
+The following four operations returns state information of a KLV object.
+
+\begin{vdm_al}
+public
+getCabDisplay : () ==> CabDisplay
+getCabDisplay () ==
+  return cabdisplay;
+
+public
+getEmergencyBreak : () ==> EmergencyBreak
+getEmergencyBreak () ==
+  return emergencybreak;
+
+public
+getAnnouncements: () ==> seq of TIV_D
+getAnnouncements () ==
+  return announcements;
+
+public
+getSpeedRestrictions: () ==> seq of TIV_E
+getSpeedRestrictions () ==
+  return speedrestrictions;
+
+end KLV
+\end{vdm_al}
+

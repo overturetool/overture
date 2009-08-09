@@ -1,0 +1,73 @@
+\section{WorkSpace Class}
+
+\begin{vdm_al}
+class WorkSpace 
+
+values
+  check : bool = true;
+
+instance variables
+  hcu: HandControlUnit := new HandControlUnit();
+  aah: AAH := new AAH();
+  intcmd: IntegratedCommand := new IntegratedCommand();
+  thrcontrol: ThrusterControl := new ThrusterControl();
+  vda: ValveDriveAssembly := new ValveDriveAssembly();
+  clock: Clock := new Clock();
+
+operations
+  public
+  SetupTopology() ==
+    (aah.SetHCULink(hcu);
+     aah.SetSixDOfLink(intcmd);
+     aah.SetClockLink(clock);
+     intcmd.SetHCULink(hcu);
+     intcmd.SetAAHLink(aah);
+     thrcontrol.SetIntCmdLink(intcmd);
+     thrcontrol.SetVDALink(vda));
+  
+  public
+  ControlCycle : Command`Direction * Command`Direction * Command`Direction * 
+                 Command`Direction * 
+                 HandControlUnit`Mode * HandControlUnit`Button * 
+                 Command`AxisMap ==>
+                 set of ThrusterControl`ThrusterPosition
+  ControlCycle(x,pitch,yaw_y,roll_z,modeswitch,aahbutton,aahcmd) ==
+    (clock.IncrTime();
+     hcu.SetAAH(aahbutton);
+     hcu.SetGrip(x, pitch, yaw_y, roll_z);
+     hcu.SetMode(modeswitch);
+     aah.SetRotcmd(aahcmd);
+     intcmd.ConvertGrip();
+     aah.Update();
+     intcmd.IntegrateCmds();
+     thrcontrol.SelectThrusters();
+     thrcontrol.SignalThrusters();
+     vda.ThrustersOn())
+  post card RESULT <= 4 and ThrusterConsistency(RESULT);
+
+  ThrusterConsistency : set of ThrusterControl`ThrusterPosition ==> bool 
+  ThrusterConsistency(thrusters) ==
+    return 
+    (not({<B1>, <F1>} subset thrusters) and
+     not({<B2>, <F2>} subset thrusters) and
+     not({<B3>, <F3>} subset thrusters) and
+     not({<B4>, <F4>} subset thrusters) and
+     not(thrusters inter {<L1R>, <L1F>} <> {} and
+       thrusters inter {<R2R>, <R2F>} <> {}) and
+     not(thrusters inter {<L3R>, <L3F>} <> {} and 
+       thrusters inter {<R4R>, <R4F>} <> {}) and
+     not(thrusters inter {<D1R>, <D1F>} <> {} and
+       thrusters inter {<U3R>, <U3F>} <> {}) and
+     not(thrusters inter {<D2R>, <D2F>} <> {} and 
+       thrusters inter {<U4R>, <U4F>} <> {}));
+  
+end WorkSpace
+\end{vdm_al}
+
+
+The test coverage table for the WorkSpace class looks like:
+
+\begin{rtinfo}{vdm.tc}[WorkSpace]
+\end{rtinfo}
+
+

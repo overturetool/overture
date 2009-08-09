@@ -1,0 +1,31 @@
+\section{The TIV\_D Class}
+
+The TIV_D class represents the TIV_D beacon, and implements the
+abstract Beacon class. The instance variables represent the
+information provided by the TIV_D, the target speed (target distance
+to the speed restriction and declivity are not used in the model and
+have therefore been left out). In this model only the target speed is
+used. An operation create for setting the instance variables,
+operations for getting the target speed and entire information exist.
+
+\begin{vdm_al}
+class TIV_D is subclass of Beacon
+
+instance variables
+  targetspeed : real;
+
+operations
+
+  public
+  TIV_D: real ==> TIV_D
+  TIV_D (ts) ==
+    targetspeed := ts;
+
+  public
+  getTargetSpeed : () ==> real
+  getTargetSpeed () ==
+    return targetspeed;
+
+end TIV_D
+\end{vdm_al}
+

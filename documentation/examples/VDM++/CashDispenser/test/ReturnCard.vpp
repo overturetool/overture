@@ -1,0 +1,30 @@
+\section{The ReturnCard Testing Class}
+
+The event ReturnCard corresponds to a client asking for getting the
+card out from one of the tills in this system.
+
+\begin{vdm_al}
+class ReturnCard is subclass of Event
+
+instance variables
+
+  tillid : System`TillId;
+
+operations
+
+  public Init : System`TillId ==> ReturnCard
+  Init(tid) ==
+    (tillid := tid;
+     return self);
+
+  public execute : System ==> Test`TestResult
+  execute(sys) ==
+    (let till = sys.GetTill(tillid)
+     in
+       if till.CardInside()
+       then till.ReturnCard()
+       else return false;
+     return true);
+
+end ReturnCard
+\end{vdm_al}
