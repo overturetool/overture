@@ -1,0 +1,46 @@
+--The World Class
+
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		20/4 - 2008
+-- Updated:	
+-- Description: 	World class in the HomeAutomation project
+-----------------------------------------------
+
+--
+-- class definition
+--
+class World
+
+--
+-- instance variables
+--
+instance variables
+
+public static env		: Environment := new Environment();
+
+--
+-- Types definition section
+--
+types   
+
+--
+-- Operations definition section
+--
+operations
+
+public Run: () ==> ()
+	Run() ==
+		is not yet specified;
+
+--
+-- Functions definition section
+--
+functions
+
+--
+-- Values definition section
+--
+values
+
+end World
