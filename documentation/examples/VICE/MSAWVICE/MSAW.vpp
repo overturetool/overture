@@ -1,0 +1,31 @@
+system MSAW
+
+instance variables 
+
+cpu1 : CPU := new CPU(<FCFS>,1E6);
+cpu2 : CPU := new CPU(<FCFS>,1E6);
+cpu3 : CPU := new CPU(<FCFS>,1E6);
+
+bus1 : BUS := new BUS(<FCFS>,1E6,{cpu1,cpu2,cpu3});
+
+public static atc : AirTrafficController := new AirTrafficController();
+
+public static radar1 : Radar := new Radar(6,11,20);
+
+public static radar2 : Radar := new Radar (30,30,5);  
+
+public static airspace : AirSpace := new AirSpace();
+
+public static militaryZone : Obstacle := 
+  new Obstacle(<NotAllowed>,mk_GLOBAL`Coordinates(25,0),5,5,<Military_Area>);
+
+operations 
+
+public MSAW : () ==> MSAW
+MSAW() ==
+ (cpu1.deploy(atc);
+  cpu2.deploy(radar1);
+  cpu3.deploy(radar2);
+ );
+
+end MSAW
