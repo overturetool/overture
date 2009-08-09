@@ -17,9 +17,11 @@ package org.overturetool.api.io;
 
 // ***** VDMTOOLS END Name=package
 
-// ***** VDMTOOLS START Name=imports KEEP=NO
+// ***** VDMTOOLS START Name=imports KEEP=YES
 
 import jp.co.csk.vdm.toolbox.VDM.*;
+import jp.co.csk.vdm.toolbox.VDM.quotes.*;
+
 import java.util.*;
 import org.overturetool.ast.itf.*;
 import org.overturetool.ast.imp.*;
@@ -74,7 +76,7 @@ public class IOProxy {
     {
 
       Boolean tmpVal_6 = null;
-      tmpVal_6 = (Boolean) file.fwriteval(f, s, new quotes.append());
+      tmpVal_6 = (Boolean) file.fwriteval(f, s, new append());
     }
   }
 // ***** VDMTOOLS END Name=append#2|String|String
@@ -87,7 +89,7 @@ public class IOProxy {
     {
 
       Boolean tmpVal_6 = null;
-      tmpVal_6 = (Boolean) file.fwriteval(f, s, new quotes.start());
+      tmpVal_6 = (Boolean) file.fwriteval(f, s, new start());
     }
   }
 // ***** VDMTOOLS END Name=overwrite#2|String|String
