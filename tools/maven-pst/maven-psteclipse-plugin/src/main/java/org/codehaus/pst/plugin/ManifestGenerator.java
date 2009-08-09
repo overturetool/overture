@@ -15,9 +15,12 @@
  */
 package org.codehaus.pst.plugin;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -45,7 +48,8 @@ import org.apache.maven.project.MavenProject;
  * @version $Revision: 1.7 $
  */
 public class ManifestGenerator extends AbstractMojoHelper implements
-		ManifestConstants {
+		ManifestConstants
+{
 	/**
 	 * Legal copyright notice.
 	 */
@@ -59,7 +63,7 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 	/**
 	 * The project.
 	 */
-	private MavenProject project;
+	protected MavenProject project;
 
 	/**
 	 * The buddies.
@@ -69,7 +73,7 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 	/**
 	 * The destination directory.
 	 */
-	private File destinationDirectory;
+	protected File destinationDirectory;
 
 	/**
 	 * The baseDir/lib directory where downloaded jars will live
@@ -86,7 +90,8 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 	 * @param destinationDirectory
 	 */
 	public ManifestGenerator(Log log, File baseDirectory, MavenProject project,
-			ArrayList buddies, File destinationDirectory) {
+			ArrayList buddies, File destinationDirectory)
+	{
 		super(log, baseDirectory);
 		this.project = project;
 		this.buddies = buddies;
@@ -99,34 +104,118 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 	 * @see org.codehaus.pst.plugin.AbstractMojoHelper#doExecute()
 	 */
 	protected void doExecute() throws MojoExecutionException,
-			MojoFailureException {
-		File manifestDirectory = new File(destinationDirectory,
-				MANIFEST_DIRECTORY);
-		getLog().debug("The manifestDir is " + manifestDirectory);
-		if (!manifestDirectory.exists()) {
-			if (!manifestDirectory.mkdir()) {
-				throw new MojoExecutionException("Unable to create directory '"
-						+ manifestDirectory + "'");
+			MojoFailureException
+	{
+		if (project.getPackaging().equals(
+				EclipseConstants.PACKING_SOURCE_PLUGIN)
+				|| project.getPackaging().equals(
+						EclipseConstants.PACKING_BINARY_PLUGIN))
+
+		{
+			File manifestDirectory = new File(destinationDirectory,
+					MANIFEST_DIRECTORY);
+			getLog().debug("The manifestDir is " + manifestDirectory);
+			if (!manifestDirectory.exists())
+			{
+				if (!manifestDirectory.mkdir())
+				{
+					throw new MojoExecutionException(
+							"Unable to create directory '" + manifestDirectory
+									+ "'");
+				}
+			}
+			libDirectory = new File(destinationDirectory, LIB_DIRECTORY);
+			getLog().debug("The libDir is " + libDirectory);
+			if (!libDirectory.exists()
+					&& project.getPackaging().equals(
+							EclipseConstants.PACKING_BINARY_PLUGIN))
+			{
+				if (!libDirectory.mkdir())
+				{
+					throw new MojoExecutionException(
+							"Unable to create directory '" + libDirectory + "'");
+				}
+			}
+
+			createPluginPropetiesFile();
+			createBuildPropertiesFile();
+
+			File manifestFile = getManifestFile(manifestDirectory);
+			if (manifestFile != null)
+			{
+				Manifest manifest = new Manifest();
+				Attributes mainAttributes = manifest.getMainAttributes();
+				writeInitialManifestAttributes(mainAttributes);
+				resolveBundleClasspathEntries(mainAttributes);
+				writeManifestToFile(manifestFile, manifest);
 			}
 		}
-		libDirectory = new File(destinationDirectory, LIB_DIRECTORY);
-		getLog().debug("The libDir is " + libDirectory);
-		if (!libDirectory.exists()
-				&& project.getPackaging().equals(
-						EclipseConstants.PACKING_BINARY_PLUGIN)) {
-			if (!libDirectory.mkdir()) {
-				throw new MojoExecutionException("Unable to create directory '"
-						+ libDirectory + "'");
+	}
+
+	private void createBuildPropertiesFile() throws MojoExecutionException
+	{
+		File buildPropetiesFile = new File(destinationDirectory,
+				EclipseConstants.BUILD_PROPERTIES);
+
+		if(buildPropetiesFile.exists())
+			buildPropetiesFile.delete();
+		
+		if (!buildPropetiesFile.exists())
+		{
+			PrintWriter out = null;
+
+			try
+			{
+				// buildPropetiesFile.createNewFile();
+
+				FileWriter outputFileReader;
+
+				outputFileReader = new FileWriter(buildPropetiesFile);
+
+			BufferedWriter	outputStream = new BufferedWriter(outputFileReader);
+
+				 out
+				   = new PrintWriter(outputStream);
+				
+				String [] tmp = EclipseConstants.BUILD_PROPERTIES_CONTENT.replace('\n', '#').split("#");
+				
+				for(int i = 0; i < tmp.length ; i++)
+				{
+//					getLog().info(tmp[i]);
+				out.println(tmp[i]);
+				}
+				
+
+			} catch (IOException e)
+			{
+				throw new MojoExecutionException("Could not create "
+						+ EclipseConstants.BUILD_PROPERTIES + " in "
+						+ buildPropetiesFile.getAbsolutePath());
+			} finally
+			{
+				if (out != null)
+					out.close();
 			}
 		}
-		File manifestFile = getManifestFile(manifestDirectory);
-		if (manifestFile != null) {
-			Manifest manifest = new Manifest();
-			Attributes mainAttributes = manifest.getMainAttributes();
-			writeInitialManifestAttributes(mainAttributes);
-			resolveBundleClasspathEntries(mainAttributes);
-			writeManifestToFile(manifestFile, manifest);
-		}
+
+	}
+
+	private void createPluginPropetiesFile() throws MojoExecutionException
+	{
+		File pluginPropetiesFile = new File(destinationDirectory,
+				EclipseConstants.PLUGIN_PROPERTIES);
+
+		if (!pluginPropetiesFile.exists())
+			try
+			{
+				pluginPropetiesFile.createNewFile();
+			} catch (IOException e)
+			{
+				throw new MojoExecutionException("Could not create "
+						+ EclipseConstants.PLUGIN_PROPERTIES + " in "
+						+ pluginPropetiesFile.getAbsolutePath());
+			}
+
 	}
 
 	/**
@@ -138,20 +227,26 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 	 * @throws MojoExecutionException
 	 */
 	private File getManifestFile(File manifestDirectory)
-			throws MojoExecutionException {
+			throws MojoExecutionException
+	{
 		File manifestFile = new File(manifestDirectory, MANIFEST_FILE_NAME);
-		if (!manifestFile.exists()) {
-			try {
+		if (!manifestFile.exists())
+		{
+			try
+			{
 				manifestFile.createNewFile();
-			} catch (IOException e) {
+			} catch (IOException e)
+			{
 				throw new MojoExecutionException(
 						"Could not create Manifest File", e);
 			}
-		} else {
+		} else
+		{
 			if (project.getPackaging().equals(
 					EclipseConstants.PACKING_BINARY_PLUGIN))
 				getLog().warn("PST Mojo Overwriting existing Manifest File");
-			else {
+			else
+			{
 				getLog().warn("PST Mojo Skipping existing Manifest File");
 				return null;
 			}
@@ -169,14 +264,17 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 	 * @throws MojoExecutionException
 	 */
 	private void writeManifestToFile(File manifestFile, Manifest manifest)
-			throws MojoExecutionException {
-		try {
+			throws MojoExecutionException
+	{
+		try
+		{
 			FileOutputStream fileOutputStream = new FileOutputStream(
 					manifestFile);
 			manifest.write(fileOutputStream);
 			fileOutputStream.flush();
 			fileOutputStream.close();
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			throw new MojoExecutionException(
 					"Could not write out Manifest File");
 		}
@@ -190,21 +288,25 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 	 * @throws MojoExecutionException
 	 */
 	private void resolveBundleClasspathEntries(Attributes mainAttributes)
-			throws MojoExecutionException {
+			throws MojoExecutionException
+	{
 		Iterator dependecies = project.getCompileArtifacts().iterator();
 		StringBuffer classpath = new StringBuffer();
 		StringBuffer exportedPackages = new StringBuffer();
-		while (dependecies.hasNext()) {
+		while (dependecies.hasNext())
+		{
 			Artifact artifact = (Artifact) dependecies.next();
 
 			if (artifact.getArtifactId().startsWith(
-					EclipseConstants.ORG_ECLIPSE_SWT_FILE_PREFIX)) {
+					EclipseConstants.ORG_ECLIPSE_SWT_FILE_PREFIX))
+			{
 				getLog().debug(
 						"Skipping ArtifactId: " + artifact.getArtifactId());
 				continue;
 			}
 
-			if (classpath.length() > 0) {
+			if (classpath.length() > 0)
+			{
 				classpath.append(",");
 			}
 			classpath.append(LIB_DIRECTORY);
@@ -219,10 +321,14 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 		if (classpath.toString().length() == 0)
 			classpath.append("."); // default to "."
 
-		mainAttributes.put(new Attributes.Name(BUNDLE_CLASSPATH), classpath
-				.toString());
-		mainAttributes.put(new Attributes.Name(EXPORT_PACKAGE),
-				exportedPackages.toString());
+		mainAttributes.put(
+				new Attributes.Name(BUNDLE_CLASSPATH),
+				classpath.toString());
+
+		if (exportedPackages.toString().length() > 0)
+			mainAttributes.put(
+					new Attributes.Name(EXPORT_PACKAGE),
+					exportedPackages.toString());
 	}
 
 	/**
@@ -235,30 +341,39 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 	 * @throws MojoExecutionException
 	 */
 	private void addExportedPackages(File file, StringBuffer exportedPackages)
-			throws MojoExecutionException {
+			throws MojoExecutionException
+	{
 		ArrayList packageList = new ArrayList();
-		try {
+		try
+		{
 			JarFile jar = new JarFile(file);
 			Enumeration entries = jar.entries();
-			while (entries.hasMoreElements()) {
+			while (entries.hasMoreElements())
+			{
 				JarEntry jarEntry = (JarEntry) entries.nextElement();
 				String entryName = jarEntry.getName();
-				if (entryName.endsWith(".class")) {
+				if (entryName.endsWith(".class"))
+				{
 					String packageName = getPackageForName(entryName);
-					if (!packageList.contains(packageName)) {
+					if (!packageList.contains(packageName))
+					{
 						packageList.add(packageName);
 					}
 				}
 			}
 			jar.close();
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			throw new MojoExecutionException("Could not introspect jar "
 					+ file.getAbsolutePath(), e);
 		}
-		if (packageList.size() > 0) {
+		if (packageList.size() > 0)
+		{
 			Object[] packages = packageList.toArray();
-			for (int i = 0; i < packages.length; i++) {
-				if (i > 0 || exportedPackages.length() > 0) {
+			for (int i = 0; i < packages.length; i++)
+			{
+				if (i > 0 || exportedPackages.length() > 0)
+				{
 					exportedPackages.append(",");
 				}
 				exportedPackages.append(packages[i]);
@@ -273,7 +388,8 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 	 *            the jar entry's name.
 	 * @return the package name for the entry.
 	 */
-	private String getPackageForName(String entryName) {
+	private String getPackageForName(String entryName)
+	{
 		entryName = entryName.substring(0, entryName.lastIndexOf('/'));
 		String packageName = entryName.replace('/', '.');
 		return packageName;
@@ -287,23 +403,29 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 	 * @return the copy.
 	 * @throws MojoExecutionException
 	 */
-	private File copyArtifact(File file) throws MojoExecutionException {
+	private File copyArtifact(File file) throws MojoExecutionException
+	{
 		String fileName = file.getName();
 		File copy = new File(libDirectory, fileName);
 
-		if (!copy.exists()) {
-			try {
+		if (!copy.exists())
+		{
+			try
+			{
 
 				copy.createNewFile();
-			} catch (IOException e) {
+			} catch (IOException e)
+			{
 				throw new MojoExecutionException("Could not create new File "
 						+ fileName, e);
 			}
 		}
-		try {
+		try
+		{
 			getLog().debug("Copying jar ........." + copy.getName());
 			copyFile(file, copy);
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			throw new MojoExecutionException("Error Copying file " + fileName,
 					e);
 		}
@@ -316,51 +438,68 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 	 * @param mainAttributes
 	 *            the main attributes.
 	 */
-	private void writeInitialManifestAttributes(Attributes mainAttributes) {
-		mainAttributes.put(Attributes.Name.MANIFEST_VERSION,
+	private void writeInitialManifestAttributes(Attributes mainAttributes)
+	{
+		mainAttributes.put(
+				Attributes.Name.MANIFEST_VERSION,
 				MANIFEST_VERSION_VALUE);
-		mainAttributes.put(new Attributes.Name(BUNDLE_MANIFEST_VERSION),
+		mainAttributes.put(
+				new Attributes.Name(BUNDLE_MANIFEST_VERSION),
 				BUNDLE_MANIFEST_VERSION_VALUE);
 		mainAttributes.put(new Attributes.Name(BUNDLE_NAME), project.getName());
 
 		if (project.getPackaging().equals(
-				EclipseConstants.PACKING_SOURCE_PLUGIN)) {
-			mainAttributes.put(new Attributes.Name(BUNDLE_SYMBOLIC_NAME),
+				EclipseConstants.PACKING_SOURCE_PLUGIN))
+		{
+			mainAttributes.put(
+					new Attributes.Name(BUNDLE_SYMBOLIC_NAME),
 					project.getArtifactId() + ";"
 							+ BUNDLE_SYMBOLIC_NAME_SINGLETON);
-			mainAttributes.put(new Attributes.Name(
-					BUNDLE_REQUIRED_EXECUTION_ENVIRONMENT),
-					BUNDLE_REQUIRED_EXECUTION_ENVIRONMENT_J2SE15);
+
 		} else
-			mainAttributes.put(new Attributes.Name(BUNDLE_SYMBOLIC_NAME),
+			mainAttributes.put(
+					new Attributes.Name(BUNDLE_SYMBOLIC_NAME),
 					project.getArtifactId());
+
+		mainAttributes.put(
+				new Attributes.Name(BUNDLE_REQUIRED_EXECUTION_ENVIRONMENT),
+				BUNDLE_REQUIRED_EXECUTION_ENVIRONMENT_J2SE15);
 
 		String version = project.getVersion();
 		int index = version.indexOf("-SNAPSHOT");
-		if (index > 0) {
+		if (index > 0)
+		{
 			version = version.substring(0, index);
 		}
 		mainAttributes.put(new Attributes.Name(BUNDLE_VERSION), version);
-		mainAttributes.put(new Attributes.Name(BUNDLE_VENDOR),
+		mainAttributes.put(
+				new Attributes.Name(BUNDLE_VENDOR),
 				BUNDLE_VENDOR_VALUE);
-		mainAttributes.put(new Attributes.Name(BUNDLE_LOCALIZATION),
+		mainAttributes.put(
+				new Attributes.Name(BUNDLE_LOCALIZATION),
 				BUNDLE_LOCALIZATION_VALUE);
 
-		mainAttributes.put(new Attributes.Name(BUNDLE_ACTIVATION),
+		mainAttributes.put(
+				new Attributes.Name(BUNDLE_ACTIVATION),
 				BUNDLE_ACTIVATION_LAZY);
 
-		mainAttributes.put(new Attributes.Name(ECLIPSE_BUDDY_POLICY),
+		mainAttributes.put(
+				new Attributes.Name(ECLIPSE_BUDDY_POLICY),
 				ECLIPSE_BUDDY_POLICY_VALUE);
-		if (buddies != null && buddies.size() > 0) {
+		if (buddies != null && buddies.size() > 0)
+		{
 			StringBuffer buddyList = new StringBuffer();
 			Object[] buddyArray = buddies.toArray();
-			for (int i = 0; i < buddyArray.length; i++) {
-				if (i > 0) {
+			for (int i = 0; i < buddyArray.length; i++)
+			{
+				if (i > 0)
+				{
 					buddyList.append(",");
 				}
 				buddyList.append(buddyArray[i]);
 			}
-			mainAttributes.put(new Attributes.Name(ECLIPSE_REGISTER_BUDDY),
+			mainAttributes.put(
+					new Attributes.Name(ECLIPSE_REGISTER_BUDDY),
 					buddyList.toString());
 		}
 	}

@@ -92,7 +92,7 @@ public class ManifestGeneratorMojoTest extends AbstractMojoTestCase {
         mavenProject.setArtifactId(artifactId);
         mavenProject.setVersion("2.0");
         mavenProject.setName("Test POM");
-        mavenProject.setPackaging("binary-plugin");
+        mavenProject.setPackaging(EclipseConstants.PACKING_BINARY_PLUGIN);
         Dependency dependency = new Dependency();
         dependency.setArtifactId("hibernate");
         dependency.setGroupId("org.hibernate");

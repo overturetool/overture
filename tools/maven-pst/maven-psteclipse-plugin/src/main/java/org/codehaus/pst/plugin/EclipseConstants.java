@@ -55,4 +55,9 @@ public interface EclipseConstants {
     
     public static final String PACKING_SOURCE_PLUGIN="source-plugin";
     public static final String PACKING_BINARY_PLUGIN="binary-plugin";
+
+	public static final String PLUGIN_PROPERTIES = "plugin.properties";
+
+	public static final String BUILD_PROPERTIES = "build.properties";
+	public static final String BUILD_PROPERTIES_CONTENT = "bin.includes = lib/,\\\n               META-INF/,\\\n               plugin.properties,\\\n               build.properties\n";
 }

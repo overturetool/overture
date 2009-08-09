@@ -194,20 +194,20 @@ public class ManifestParser implements ManifestConstants {
         for (int i = 0; i < requiredBundles.length; i++) {
             String[] requiredBundleAttributes = requiredBundles[i].split(";");
             String symbolicName = requiredBundleAttributes[0].trim();
-            String visibility = null;
-            String resolution = null;
+//            String visibility = null;
+//            String resolution = null;
             String bundleVersion = null;
             if (requiredBundleAttributes.length > 1) {
                 for (int j = 1; j < requiredBundleAttributes.length; j++) {
                     String attr = requiredBundleAttributes[j];
                     if (attr.indexOf(":=") > 0) {
-                        String key = attr.substring(0, attr.indexOf(":=")).trim();
-                        String value = attr.substring(attr.indexOf(":=") + 2).trim();
-                        if (key.equalsIgnoreCase(KEY_VISIBILITY)) {
-                            visibility = value;
-                        } else if (key.equalsIgnoreCase(KEY_RESOLUTION)) {
-                            resolution = value;
-                        }
+//                        String key = attr.substring(0, attr.indexOf(":=")).trim();
+//                        String value = attr.substring(attr.indexOf(":=") + 2).trim();
+//                        if (key.equalsIgnoreCase(KEY_VISIBILITY)) {
+//                            visibility = value;
+//                        } else if (key.equalsIgnoreCase(KEY_RESOLUTION)) {
+//                            resolution = value;
+//                        }
                     } else if (attr.indexOf("=") > 0) {
                         String key = attr.substring(0, attr.indexOf("=")).trim();
                         String value = attr.substring(attr.indexOf("=") + 1).trim();
