@@ -2278,4 +2278,75 @@ values
   ]
 );
 
+public static ClassTypesUnion = new OmlDocument("C:\\COMU\\VDMTools\\Tools\\parser\\types.txt",
+  new OmlSpecifications([
+    new OmlClass(
+      "A",
+      [
+        
+      ],
+      nil,
+      [
+        new OmlTypeDefinitions([
+          new OmlTypeDefinition(
+            new OmlAccessDefinition(
+              false,
+              false,
+              new OmlScope(2,5,1),
+              5,
+              1
+            ),
+            new OmlSimpleType(
+              "Qualification",
+              new OmlUnionType(
+                new OmlUnionType(
+                  new OmlUnionType(
+                    new OmlQuoteType(new OmlQuoteLiteral("Mech",5,24),5,24),
+                    new OmlQuoteType(new OmlQuoteLiteral("Chem",5,33),5,33),
+                    5,
+                    31
+                  ),
+                  new OmlQuoteType(new OmlQuoteLiteral("Bio",5,42),5,42),
+                  5,
+                  40
+                ),
+                new OmlQuoteType(new OmlQuoteLiteral("Elec",5,50),5,50),
+                5,
+                48
+              ),
+              nil,
+              5,
+              48
+            ),
+            5,
+            8
+          )
+        ],3,1)
+      ],
+      false,
+      1,
+      1
+    )
+  ],0,0),
+  [
+    new OmlLexem(1,1,275,"class",1),
+    new OmlLexem(1,7,433,"A",2),
+    new OmlLexem(3,1,420,"types",1),
+    new OmlLexem(5,1,375,"public",1),
+    new OmlLexem(5,8,433,"Qualification",2),
+    new OmlLexem(5,22,299,"=",0),
+    new OmlLexem(5,24,434,"<Mech>",0),
+    new OmlLexem(5,31,124,"|",0),
+    new OmlLexem(5,33,434,"<Chem>",0),
+    new OmlLexem(5,40,124,"|",0),
+    new OmlLexem(5,42,434,"<Bio>",0),
+    new OmlLexem(5,48,124,"|",0),
+    new OmlLexem(5,50,434,"<Elec>",0),
+    new OmlLexem(5,56,59,";",0),
+    new OmlLexem(7,1,298,"end",1),
+    new OmlLexem(7,5,433,"A",2)
+  ]
+);
+
+
 end TestData

@@ -17,7 +17,8 @@
 // ***** VDMTOOLS START Name=package KEEP=NO
 package org.overturetool.umltrans.api;
 
-// ***** VDMTOOLS END Name=package// ***** VDMTOOLS START Name=imports KEEP=YES
+// ***** VDMTOOLS END Name=package
+// ***** VDMTOOLS START Name=imports KEEP=YES
 
 import jp.co.csk.vdm.toolbox.VDM.*;
 import java.util.*;

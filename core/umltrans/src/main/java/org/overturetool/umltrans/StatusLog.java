@@ -78,6 +78,9 @@ public class StatusLog {
 // ***** VDMTOOLS END Name=addNewClassInfo#1|String
 
 
+//***** VDMTOOLS START Name=info#1|String KEEP=NO
+  public void info (final String message) throws CGException {}
+// ***** VDMTOOLS END Name=info#1|String
 
 
 

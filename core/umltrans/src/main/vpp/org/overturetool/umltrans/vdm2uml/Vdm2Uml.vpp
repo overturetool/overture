@@ -13,7 +13,7 @@ constraints : set of IUmlConstraint := {};
 runningId : nat :=0;
 log : StatusLog := new StatusLog();
 classFilter : seq of String := [];
-
+nestedClasses : set of IUmlClass := {};
 operations
 
 public getLog : () ==> StatusLog
@@ -47,7 +47,7 @@ public build_uml : IOmlSpecifications ==> UmlModel
 build_uml(specs) == 
   let classes = specs.getClassList(),
 	  uml_classes = [ build_Class(classes(i)) 
-	                | i in set inds classes & classes(i).getIdentifier() not in set elems classFilter]
+	                | i in set inds classes & classes(i).getIdentifier() not in set elems classFilter] ^ StdLib`SetToSeq[IUmlClass]( nestedClasses)
   in return new UmlModel("Root",elems uml_classes);
 
 -- Convert a OML class to a UML class
@@ -324,15 +324,95 @@ buildValue(var,owner) ==
 public build_def_block : IOmlTypeDefinitions * String ==> IUmlNestedClassifiers
 build_def_block(td,-) == 
   let q = td.getTypeList(),
-      tps = [ buildType(q(i).getShape()) 
+      tps = [ buildType(q(i).getShape(),q(i).getAccess()) 
             | i in set inds q 
             & isofclass(IOmlSimpleType,q(i).getShape()) ]
   in return new UmlNestedClassifiers(elems tps);
 
 -- Convert simple type to UML type
-public buildType : IOmlSimpleType ==> IUmlType
-buildType(var) == 
+public buildType : IOmlSimpleType * IOmlAccessDefinition ==> IUmlType
+buildType(var,access) ==
+( 
+  if isofclass(IOmlUnionType,var.getType()) then
+  (
+    nestedClasses := nestedClasses union {buildClassFromType(var,access.getScope())};
+    return new UmlClassNameType(var.getIdentifier()); -- return a class ref to the new nested class.
+  );
+  if isofclass(IOmlSeq0Type,var.getType()) then
+  (
+    let seqT : IOmlSeq0Type = var.getType()
+    in
+      if isofclass(IOmlCharType,seqT.getType()) then
+      (
+         nestedClasses := nestedClasses union {buildClassFromType(var,access.getScope())};
+         return new UmlClassNameType(var.getIdentifier()); -- return a class ref to the new nested class.
+      );
+   );
+
+
   return Vdm2UmlType`convertType(var.getType()); 
+);
+
+private buildClassFromType : IOmlSimpleType * IOmlScope ==> IUmlClass
+buildClassFromType(t,scope) ==
+  let name : String                            = t.getIdentifier(),
+      classBody  : set of IUmlDefinitionBlock  = {buildTypeDefinitionBlocks(name,t.getType())},
+      isAbstract : bool                        = false,
+      superClass : seq of IUmlClassNameType    = [],
+      visibility : IUmlVisibilityKind          = convertScopeToVisibility(scope),
+      isStatic   : bool                        = false,
+      isActive   : bool                        = false,
+      templatesignature : [IUmlTemplateSignature] = nil
+  in
+    return new UmlClass(name,classBody,isAbstract,superClass,visibility,isStatic,isActive,templatesignature);
+    
+private buildTypeDefinitionBlocks : String * IOmlType ==> IUmlDefinitionBlock
+buildTypeDefinitionBlocks(ownerName,t) ==
+(
+  if isofclass(IOmlUnionType,t) then
+    let ut : IOmlUnionType = t
+    in
+      let lhs : IUmlOwnedProperties = buildTypeDefinitionBlocks(ownerName,ut.getLhsType()),
+          rhs : IUmlOwnedProperties = buildTypeDefinitionBlocks(ownerName,ut.getRhsType())
+      in
+        return new UmlOwnedProperties( lhs.getPropetityList()union rhs.getPropetityList());
+        
+  if isofclass(IOmlQuoteType,t) then
+    let qt : IOmlQuoteType = t
+    in
+      let props : set of IUmlProperty = { buildValueFromQuoteType(ownerName,qt) }
+      in
+        return new UmlOwnedProperties(props);
+        
+ return new UmlOwnedProperties({});
+);
+
+buildValueFromQuoteType : String * IOmlQuoteType ==> IUmlProperty
+buildValueFromQuoteType(ownerName,q) ==
+let
+      isStatic : bool    = true,
+      name     : seq of char    = q.getQuoteLiteral().getVal(),
+      visibility : IUmlVisibilityKind  = new UmlVisibilityKind(UmlVisibilityKindQuotes`IQPUBLIC),
+      multiplicity : IUmlMultiplicityElement= new UmlMultiplicityElement(true, false, 0, nil),--new UmlMultiplicityElement(isOrdered, isUnique, lower, upper);
+      type : IUmlType        = new UmlIntegerType(),--Vdm2UmlType`convertType(shape.getType()),
+      isReadOnly   = true,
+      default  : [IUmlValueSpecification]    = nil,
+      isComposite  = isSimpleType(q),
+      isDerived    = false,
+      qualifier : [IUmlType] = nil--Vdm2UmlType`getQualifier(shape.getType()),
+      
+  in 
+  return new UmlProperty(name, 
+                         visibility, 
+                         multiplicity, 
+                         type, 
+                         isReadOnly, 
+                         default, 
+                         isComposite, 
+                         isDerived, 
+                         isStatic,
+                         ownerName,
+                         qualifier);
 
 -----------------------------------------------------
 -- Operations 

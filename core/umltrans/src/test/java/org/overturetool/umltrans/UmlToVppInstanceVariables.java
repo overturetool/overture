@@ -1,9 +1,8 @@
 package org.overturetool.umltrans;
 
-import org.overturetool.umltrans.basic.UmlToVppTestRunner;
-import org.overturetool.umltrans.basic.VppToUmlTestRunner;
-
 import junit.framework.TestCase;
+
+import org.overturetool.umltrans.basic.UmlToVppTestRunner;
 
 public class UmlToVppInstanceVariables extends TestCase
 {

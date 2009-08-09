@@ -10,7 +10,6 @@ import java.util.Vector;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.custommonkey.xmlunit.XMLTestCase;
 import org.overturetool.umltrans.Main.CmdLineProcesser;
 import org.overturetool.umltrans.Main.FileCompare;
 

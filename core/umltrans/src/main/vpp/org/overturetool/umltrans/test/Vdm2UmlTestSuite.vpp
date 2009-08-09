@@ -18,11 +18,11 @@ suite () ==
 --  ts.addTest(new Uml2VdmTracesTest("Uml2VdmTracesTest"));
 
  ts.addTest(new Vdm2UmlTest());
-  ts.addTest(new Uml2XmiEATest());
-  --ts.addTest(new Uml2XmiEclipseUmlTest("Uml2XmiEclipseUmlTest"));
-  ts.addTest(new Uml2VdmTest());
-  --ts.addTest(new Vdm2UmlActiveClassTest("Vdm2UmlActiveClassTest"));
-  ts.addTest(new Uml2VdmTracesTest());
+--  ts.addTest(new Uml2XmiEATest());
+--  --ts.addTest(new Uml2XmiEclipseUmlTest("Uml2XmiEclipseUmlTest"));
+--  ts.addTest(new Uml2VdmTest());
+--  --ts.addTest(new Vdm2UmlActiveClassTest("Vdm2UmlActiveClassTest"));
+--  ts.addTest(new Uml2VdmTracesTest());
 
   return ts;
 );

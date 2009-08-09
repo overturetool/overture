@@ -60,4 +60,6 @@ public class VppToUmlInstanceVariablesTest extends XMLTestCase
 				"objectRefInstanceVariablesClass.vpp");
 		tc.test(this);
 	}
+	
+	
 }
