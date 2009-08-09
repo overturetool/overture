@@ -157,9 +157,15 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 		File buildPropetiesFile = new File(destinationDirectory,
 				EclipseConstants.BUILD_PROPERTIES);
 
-		if(buildPropetiesFile.exists())
-			buildPropetiesFile.delete();
-		
+		if (buildPropetiesFile.exists())
+		{
+			if (project.getPackaging().equals(
+					EclipseConstants.PACKING_SOURCE_PLUGIN))
+				return;
+			else
+				buildPropetiesFile.delete();
+		}
+
 		if (!buildPropetiesFile.exists())
 		{
 			PrintWriter out = null;
@@ -172,19 +178,20 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 
 				outputFileReader = new FileWriter(buildPropetiesFile);
 
-			BufferedWriter	outputStream = new BufferedWriter(outputFileReader);
+				BufferedWriter outputStream = new BufferedWriter(
+						outputFileReader);
 
-				 out
-				   = new PrintWriter(outputStream);
-				
-				String [] tmp = EclipseConstants.BUILD_PROPERTIES_CONTENT.replace('\n', '#').split("#");
-				
-				for(int i = 0; i < tmp.length ; i++)
+				out = new PrintWriter(outputStream);
+
+				String[] tmp = EclipseConstants.BUILD_PROPERTIES_CONTENT.replace(
+						'\n',
+						'#').split("#");
+
+				for (int i = 0; i < tmp.length; i++)
 				{
-//					getLog().info(tmp[i]);
-				out.println(tmp[i]);
+					// getLog().info(tmp[i]);
+					out.println(tmp[i]);
 				}
-				
 
 			} catch (IOException e)
 			{
