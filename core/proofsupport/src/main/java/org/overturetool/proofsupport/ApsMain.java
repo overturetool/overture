@@ -42,13 +42,10 @@ public class ApsMain {
 			ApsMain apsMain = new ApsMain();
 			apsMain.parseArguments(args);
 			apsMain.run();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (AutomaicProofSystemException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (CmdLineException e) {
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

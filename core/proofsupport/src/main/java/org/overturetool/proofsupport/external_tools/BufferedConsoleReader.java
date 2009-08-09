@@ -20,11 +20,6 @@ public class BufferedConsoleReader implements ConsoleReader {
 		bis = new BufferedReader(new InputStreamReader(is));
 	}
 
-	// TODO remove this method after refactoring MosmlHolConsoles
-	public int read(char[] cbuf) throws IOException {
-		return bis.read(cbuf);
-	}
-
 	public String readBlock() throws IOException {
 		return readLine();
 	}

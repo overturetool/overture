@@ -82,17 +82,4 @@ public class TranslatorWrapperTest extends TestCase {
 		//      as the POs can be printed in a different order in subsequent calls
 		assertEquals(expected.length(), actual.length());
 	}
-	
-//	public void testTranslateFS() throws Exception {
-//		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-//				"/Users/gentux/root/opt/vdmpp/bin/vppde"), new VdmToolsPogProcessor());
-//		List<String> contextFiles = new ArrayList<String>(0);
-//		PreparationData prepData = prep.prepareVdmFiles("/Users/gentux/sig/sbmf09/models/vdm/filesystem.vpp.mod", contextFiles);
-//		Translator trans = new Translator();
-//
-//
-//		String actual = trans.translateOmlToHol(prepData);
-//
-//		System.err.println(actual);
-//	}
 }

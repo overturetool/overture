@@ -20,65 +20,8 @@ public class MosmlHolConsole extends Console {
 		
 	}
 
-//	public void removeConsoleHeader() throws IOException {
-//		if (!consoleHeaderRemoved) {
-//			for (int i = 0; i < HEADER_SIZE; i++)
-//				readLine();
-//			readPrompt();
-//			consoleHeaderRemoved = true;
-//		}
-//	}
-
-//	protected String readPrompt() throws IOException {
-//		char[] cbuf = readTwoChars();
-//		return new String(cbuf);
-//	}
-
-//	private char[] readTwoChars() throws IOException {
-//		char[] cbuf = new char[2];
-//		output.read(cbuf);
-//		return cbuf;
-//	}
-
-//	protected boolean isPromptNext() throws IOException {
-//		char[] cbuf = readTwoChars();
-//		promptBuffer = new String(cbuf);
-//		return promptBuffer.equals(HOL_PROMPT);
-//	}
-
-//	@Override
-//	public String readLine() throws IOException {
-//		String prefix = getAndResetPromptBuffer();
-//		String line = super.readLine();
-//		return prefix != "" ? prefix + line : line;
-//	}
-
-//	private String getAndResetPromptBuffer() {
-//		String result = "";
-//		if (promptBuffer != null) {
-//			result = promptBuffer;
-//			resetPromptBuffer();
-//		}
-//		return result;
-//	}
-
-//	protected void resetPromptBuffer() {
-//		promptBuffer = null;
-//	}
-
 	public String readOutputBlock() throws IOException {
 		return output.readBlock();
-//		StringBuffer sb = new StringBuffer();
-//		String line = null;
-//		while (!isPromptNext()) {
-//			if (line != null) {
-//				sb.append(Utilities.LINE_SEPARATOR);
-//			}
-//			line = readLine();
-//			sb.append(line);
-//		}
-//		resetPromptBuffer();
-//		return sb.toString();
 	}
 
 	public void quitHol() throws InterruptedException {

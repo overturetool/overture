@@ -62,22 +62,6 @@ public class ConsoleTest extends TestCase {
 		assertEquals(expected, actual);
 	}
 
-	// TODO make commented test compatible with windows (it doesn't have env command!)
-//	public void testEnvironmentVariables() throws Exception {
-//		HolEnvironmentBuilder holEnvBuilder = new HolEnvironmentBuilder(
-//				MOSML_DIR, "lib", "bin");
-//		Map<String, String> holEnv = holEnvBuilder.getEnvironment();
-//
-//		ArrayList<String> command = new ArrayList<String>();
-//		command.add("env");
-//		Console console = new Console(command, holEnv);
-//		String actual = console.readAllLines();
-//
-//		assertTrue(actual.contains("MOSMLHOME=" + MOSML_DIR));
-//		assertTrue(actual.contains("DYLD_LIBRARY_PATH=" + MOSML_DIR));
-//		assertTrue(actual.contains("PATH=" + MOSML_DIR));
-//	}
-
 	public void testExitValueHasExited() throws Exception {
 		Console console = new Console(TestSettings.getNopProgramCommand());
 		Thread.sleep(3000);

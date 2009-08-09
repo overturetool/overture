@@ -12,7 +12,4 @@ public interface ConsoleReader {
 	public void removeConsoleHeader() throws IOException;
 	
 	public void setInputStream(InputStream is);
-	
-	// TODO remove method from interface after refctoring
-	public int read(char[] cbuf) throws IOException;
 }
