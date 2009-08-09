@@ -83,7 +83,7 @@
       <plugin>
       	<groupId>org.overturetool.tools.maven-pst</groupId>
       	<artifactId>maven-psteclipse-plugin</artifactId>
-      	<version>1.0.3</version>
+      	<version>1.0.4</version>
       	
       	
       	

@@ -24,18 +24,11 @@
          id="org.eclipse.draw2d"
          version="0.0.0"/>
 
-   <includes
-         id="org.eclipse.emf.common"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.emf.ecore"
-         version="0.0.0"/>
-
    <requires>
       <import plugin="org.eclipse.ui" version="3.4.2" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources" version="3.4.2" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.runtime" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.draw2d" version="3.4.2" match="greaterOrEqual"/>
       <import plugin="org.eclipse.dltk.core" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.dltk.launching" version="1.0.0" match="greaterOrEqual"/>
    </requires>

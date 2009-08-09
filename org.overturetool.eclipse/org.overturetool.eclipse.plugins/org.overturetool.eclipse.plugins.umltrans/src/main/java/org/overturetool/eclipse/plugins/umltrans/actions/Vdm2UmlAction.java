@@ -55,7 +55,7 @@ public class Vdm2UmlAction implements IObjectActionDelegate
 				selectedProject);
 		if (selectedProject == null)
 		{
-			ProjectHelper.ConsolePrint(shell, "Could not find selected project");
+			ConsoleWriter.ConsolePrint(shell, "Could not find selected project");
 			return;
 		}
 
@@ -67,19 +67,19 @@ public class Vdm2UmlAction implements IObjectActionDelegate
 			List<IFile> files = ProjectHelper.getAllMemberFiles(
 					selectedProject,
 					filterExt);
-			List<String> filesPathes = new Vector<String>();
+			List<File> filesPathes = new Vector<File>();
 			for (IFile file : files)
 			{
-				filesPathes.add(file.getLocation().toFile().getAbsolutePath());
+				filesPathes.add(file.getLocation().toFile());
 			}
 
-			String outFile = new File(selectedProject.getLocation().toFile(),
-					selectedProject.getName() + ".xmi").getAbsolutePath();
+			File outFile = new File(selectedProject.getLocation().toFile(),
+					selectedProject.getName() + ".xmi");
 			if (outFile != null)
 			{
 
-				if (!(outFile.endsWith(".xml") || outFile.endsWith(".xml")))
-					outFile += ".xml";
+//				if (!(outFile.endsWith(".xml") || outFile.endsWith(".xml")))
+//					outFile += ".xml";
 				translate(filesPathes, outFile,selectedProject);
 
 
@@ -88,14 +88,14 @@ public class Vdm2UmlAction implements IObjectActionDelegate
 		} catch (Exception ex)
 		{
 			System.err.println(ex.getMessage() + ex.getStackTrace());
-			ProjectHelper.ConsolePrint(shell, ex);
+			ConsoleWriter.ConsolePrint(shell, ex);
 
 		}
 
 	}
 
-	private void translate(final List<String> filesPathes,
-			final String outFile, final IProject selectedProject)
+	private void translate(final List<File> filesPathes,
+			final File outFile, final IProject selectedProject)
 			throws FileNotFoundException, CGException, IOException
 	{
 
@@ -109,6 +109,7 @@ public class Vdm2UmlAction implements IObjectActionDelegate
 				monitor.worked(IProgressMonitor.UNKNOWN);
 				try
 				{
+					Translator.setOutput(new ConsoleWriter(shell));
 					Translator.TransLateTexVdmToUml(filesPathes, outFile);
 				} catch (FileNotFoundException e)
 				{

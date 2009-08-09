@@ -1,5 +1,6 @@
 package org.overturetool.eclipse.plugins.umltrans.actions;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -53,7 +54,7 @@ public class Uml2VdmAction implements IObjectActionDelegate
 		String[] filterExt = { "*.xml", "*.xmi" };
 		fd.setFilterExtensions(filterExt);
 
-		String inputFile = fd.open();
+		File inputFile =new File( fd.open());
 		if (inputFile != null)
 		{
 			try
@@ -64,7 +65,7 @@ public class Uml2VdmAction implements IObjectActionDelegate
 				selectedProject = ProjectHelper.getSelectedProject(action, selectedProject);
 				if(selectedProject==null)
 				{
-					ProjectHelper.ConsolePrint(shell,"Could not find selected project");
+					ConsoleWriter.ConsolePrint(shell,"Could not find selected project");
 					return ;
 				}
 
@@ -76,7 +77,7 @@ public class Uml2VdmAction implements IObjectActionDelegate
 			{
 				System.err.println(ex.getMessage() + ex.getStackTrace());
 				
-				ProjectHelper.ConsolePrint(shell, ex);
+				ConsoleWriter.ConsolePrint(shell, ex);
 			}
 
 		}
@@ -86,7 +87,7 @@ public class Uml2VdmAction implements IObjectActionDelegate
 
 	
 	
-	private void translate(final String inputFile,  final IProject selectedProject)
+	private void translate(final File inputFile,  final IProject selectedProject)
 			throws FileNotFoundException, CGException, IOException
 	{
 
@@ -102,7 +103,7 @@ public class Uml2VdmAction implements IObjectActionDelegate
 				{
 					Translator.TransLateUmlToVdm(
 							inputFile,
-							selectedProject.getLocation().toFile().getAbsolutePath());
+							selectedProject.getLocation().toFile());
 				} catch (FileNotFoundException e)
 				{
 					

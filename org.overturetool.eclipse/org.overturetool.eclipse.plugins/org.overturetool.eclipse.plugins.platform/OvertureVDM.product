@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Overture Tools" uid="org.overturetool.eclipse.plugins.platform.product" id="org.overturetool.eclipse.plugins.platform.product" application="org.eclipse.ui.ide.workbench" version="1.0.0" useFeatures="false" includeLaunchers="true">
+<product name="Overture Tools" uid="org.overturetool.eclipse.plugins.platform.product" id="org.overturetool.eclipse.plugins.platform.product" application="org.eclipse.ui.ide.workbench" version="1.0.0" useFeatures="false" includeLaunchers="false">
 
    <aboutInfo>
       <image path="/org.overturetool.eclipse.plugins.platform/resources/128.png"/>
@@ -18,13 +18,13 @@
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="/org.overturetool.eclipse.plugins.platform/resources/16.png" i32="/org.overturetool.eclipse.plugins.platform/resources/32.png" i48="/org.overturetool.eclipse.plugins.platform/resources/48.png" i128="/org.overturetool.eclipse.plugins.platform/resources/128.png"/>
+   <windowImages i16="/org.overturetool.eclipse.plugins.platform/resources/16.png" i32="/org.overturetool.eclipse.plugins.platform/resources/32.png" i48="/org.overturetool.eclipse.plugins.platform/resources/48.png" i64="/org.overturetool.eclipse.plugins.platform/resources/64.png" i128="/org.overturetool.eclipse.plugins.platform/resources/128.png"/>
 
    <splash
       location="org.overturetool.eclipse.plugins.platform"
-      startupProgressRect="5,275,445,15"
-      startupMessageRect="7,252,445,20"
-      startupForegroundColor="000000" />
+      startupProgressRect="10,217,630,8"
+      startupMessageRect="15,203,630,15"
+      startupForegroundColor="808080" />
    <launcher name="overture">
       <linux icon="/org.overturetool.eclipse.plugins.platform/resources/overture3.xpm"/>
       <macosx icon="/org.overturetool.eclipse.plugins.platform/resources/overture.icns"/>

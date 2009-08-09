@@ -62,28 +62,28 @@ public class TexToVppAction implements IObjectActionDelegate
 
 			try
 			{
-				List<String> files = new Vector<String>();
+				List<File> files = new Vector<File>();
 				for (int i = 0; i < fLst.length; i++)
 				{
 					String separator = System.getProperty("file.separator");
-					files.add(fd.getFilterPath() + separator + fLst[i]);
+					files.add(new File(fd.getFilterPath() + separator + fLst[i]));
 				}
 
-				String outputDir = new File(files.get(0)).getParent();
+				
 
-				translate(files, outputDir);
+				translate(files, new File(files.get(0).getParent()));
 				
 
 			} catch (Exception ex)
 			{
 				System.err.println(ex.getMessage() + ex.getStackTrace());
-				ProjectHelper.ConsolePrint(s, ex);
+				ConsoleWriter.ConsolePrint(s, ex);
 			}
 
 		}
 	}
 
-	private void translate(final List<String> files, final String outputDir)
+	private void translate(final List<File> files, final File outputDir)
 			throws FileNotFoundException, CGException, IOException
 	{
 
@@ -97,12 +97,12 @@ public class TexToVppAction implements IObjectActionDelegate
 				monitor.worked(IProgressMonitor.UNKNOWN);
 				try
 				{
-					final List<String> vppFiles = ClassExstractorFromTexFiles.exstract(
+					final List<File> vppFiles = ClassExstractorFromTexFiles.exstract(
 							files,
 							outputDir);
 
 					for (int i = 0; vppFiles != null && i < vppFiles.size(); i++)
-						ProjectHelper.ConsolePrint(shell, "Output file: "
+						ConsoleWriter.ConsolePrint(shell, "Output file: "
 								+ vppFiles.get(i));
 
 				} catch (FileNotFoundException e)

@@ -48,5 +48,8 @@
     <module>org.overturetool.eclipse.plugins.showtrace</module>
     <module>org.overturetool.eclipse.plugins.editor.overturedebugger</module>
 
+    <module>org.overturetool.eclipse.plugins.platform</module>
+
+
   </modules>
 </project>

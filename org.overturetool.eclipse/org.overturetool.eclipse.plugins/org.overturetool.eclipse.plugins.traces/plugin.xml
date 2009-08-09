@@ -40,8 +40,8 @@
       <perspective
             class="org.overturetool.eclipse.plugins.traces.perspectives.CombinatorialTestingPerspective"
             id="org.overturetool.eclipse.plugins.traces.perspective"
-            name="Overture Combinatorial Testing"
-            icon="icons/OML16.jpg">
+            name="Combinatorial Testing"
+            icon="icons/CT.png">
       </perspective>
    </extension>
 

@@ -14,9 +14,10 @@
          value="org.overturetool.eclipse.plugins.editor.core.nature">
       </filter>
          <menu
+               icon="icons/uml.png"
+               id="org.overturetool.eclipse.plugins.umltrans.menuMain"
                label="UML Transformation"
-               path="additions"
-               id="org.overturetool.eclipse.plugins.umltrans.menuMain">
+               path="additions">
             <separator
                   name="groupUml">
             </separator>
@@ -34,7 +35,7 @@
          
           <action
                class="org.overturetool.eclipse.plugins.umltrans.actions.Uml2VdmAction"
-               icon="icons/vdm1.png"
+               icon="icons/vdm.png"
                id="org.overturetool.eclipse.plugins.umltrans.actions.Uml2VdmAction"
                label="Import XMI"
                menubarPath="org.overturetool.eclipse.plugins.umltrans.menuMain/groupUml"
@@ -43,7 +44,7 @@
          </action>
          <action
                class="org.overturetool.eclipse.plugins.umltrans.actions.TexToVppAction"
-               icon="icons/texRemove.png"
+               icon="icons/filter16.png"
                id="org.overturetool.eclipse.plugins.umltrans.actions.TexToVppAction"
                label="Remove LaTex from VDM file"
                menubarPath="org.overturetool.eclipse.plugins.umltrans.menuMain/groupUml"
