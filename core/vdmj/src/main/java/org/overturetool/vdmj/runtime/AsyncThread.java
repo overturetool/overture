@@ -23,7 +23,9 @@
 
 package org.overturetool.vdmj.runtime;
 
-import org.overturetool.vdmj.messages.RTLogger;
+import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.debug.DBGPReader;
+import org.overturetool.vdmj.debug.DBGPReason;
 import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
@@ -32,71 +34,89 @@ import org.overturetool.vdmj.values.ValueList;
 
 public class AsyncThread extends Thread
 {
-	private MessageQueue<MessageRequest> queue;
 	private MessageRequest request = null;
 
 	public final ObjectValue self;
 	public final OperationValue operation;
 	public final CPUValue cpu;
 
-	public AsyncThread(ObjectValue self, OperationValue operation)
+	public AsyncThread(MessageRequest request)
 	{
 		setName("Async Thread " + getId());
 
-		this.self = self;
-		this.operation = operation;
+		this.self = request.target;
+		this.request = request;
+		this.operation = request.operation;
 		this.cpu = self.getCPU();
-		this.queue = new MessageQueue<MessageRequest>();
 
 		cpu.addThread(this, self, operation);
-	}
-
-	public AsyncThread(ObjectValue target, OperationValue operation,
-		MessageRequest request)
-	{
-		this(target, operation);
-		this.request = request;
 	}
 
 	@Override
 	public void run()
 	{
+		cpu.startThread();
+
+		if (Settings.usingDBGP)
+		{
+			runDBGP();
+		}
+		else
+		{
+			runCmd();
+		}
+
+		cpu.removeThread();
+	}
+
+	private void runDBGP()
+	{
+		DBGPReader reader = null;
+
 		try
 		{
-			if (request == null)
-			{
-				request = queue.take();
-				cpu.sleep();
-			}
+    		ValueList arglist = request.args;
+    		MessageResponse response = null;
 
-    		if (request.bus != null)
+    		try
     		{
-        		RTLogger.log(
-        			"MessageRequest -> busid: " + request.bus.busNumber +
-        			" fromcpu: " + request.from.cpuNumber +
-        			" tocpu: " + request.to.cpuNumber +
-        			" msgid: " + request.msgId +
-        			" callthr: " + request.thread.getId() +
-        			" opname: " + "\"" + operation.name + "\"" +
-        			" objref: " + self.objectReference +
-        			" size: " + request.args.toString().length() +
-        			" time: " + SystemClock.getWallTime());
+        		RootContext global = ClassInterpreter.getInstance().initialContext;
+        		Context ctxt = new ObjectContext(operation.name.location, "async", global, self);
+    			reader = ctxt.threadState.dbgp.newThread();
+    			ctxt.setThreadState(reader, cpu);
 
-        		RTLogger.log(
-        			"MessageActivate -> msgid: " + request.msgId +
-        			" time: " + SystemClock.getWallTime());
-
-        		if (request.bus.busNumber > 0)
-        		{
-        			long pause = request.args.toString().length();
-        			cpu.duration(pause);
-        		}
-
-        		RTLogger.log(
-        			"MessageCompleted -> msgid: " + request.msgId +
-        			" time: " + SystemClock.getWallTime());
+        		Value rv = operation.localEval(arglist, ctxt);
+       			response = new MessageResponse(rv, request);
+    		}
+    		catch (ValueException e)
+    		{
+    			response = new MessageResponse(e, request);
     		}
 
+    		if (request.replyTo != null)
+    		{
+    			request.bus.reply(response);
+    		}
+
+			reader.complete(DBGPReason.OK, null);
+		}
+		catch (ContextException e)
+		{
+			reader.complete(DBGPReason.EXCEPTION, e);
+		}
+		catch (Exception e)
+		{
+			if (reader != null)
+			{
+				reader.complete(DBGPReason.EXCEPTION, null);
+			}
+		}
+	}
+
+	private void runCmd()
+	{
+		try
+		{
     		ValueList arglist = request.args;
     		MessageResponse response = null;
 
@@ -116,35 +136,8 @@ public class AsyncThread extends Thread
 
     		if (request.replyTo != null)
     		{
-    			RTLogger.log(
-    				"ReplyRequest -> busid: " + request.bus.busNumber +
-    				" fromcpu: " + response.from.cpuNumber +
-    				" tocpu: " + response.to.cpuNumber +
-    				" msgid: " + response.msgId +
-    				" origmsgid: " + response.request.msgId +
-    				" callthr: " + response.request.thread.getId() +
-    				" calleethr: " + response.thread.getId() +
-    				" size: " + response.toString().length() +
-    				" time: " + SystemClock.getWallTime());
-
-    			if (request.bus.busNumber > 0)
-    			{
-    				long pause = response.result.toString().length();
-    				cpu.duration(pause);
-    			}
-
-    			RTLogger.log(
-    				"MessageActivate -> msgid: " + response.msgId +
-    				" time: " + SystemClock.getWallTime());
-
-    			RTLogger.log(
-    				"MessageCompleted -> msgid: " + response.msgId +
-    				" time: " + SystemClock.getWallTime());
-
     			request.bus.reply(response);
     		}
-
-    		cpu.removeThread(this);
 		}
 		catch (ContextException e)
 		{
@@ -154,12 +147,6 @@ public class AsyncThread extends Thread
 		{
 			CPUValue.abortAll();	// Thread stopped
 		}
-	}
-
-	public void send(MessageRequest req)
-	{
-		cpu.setState(this, RunState.RUNNABLE);
-		queue.add(req);
 	}
 
 	@Override

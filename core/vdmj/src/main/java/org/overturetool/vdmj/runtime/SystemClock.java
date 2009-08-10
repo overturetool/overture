@@ -53,7 +53,7 @@ public class SystemClock
 
 		for (CPUValue cpu: CPUValue.allCPUs)
 		{
-			if (!cpu.canTimeStep())
+			if (!cpu.canTimeStep())		// NB not sync'd on CPU
 			{
 				canStep = false;
 				break;

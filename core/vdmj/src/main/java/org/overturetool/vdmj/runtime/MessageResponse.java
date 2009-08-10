@@ -23,39 +23,37 @@
 
 package org.overturetool.vdmj.runtime;
 
-import org.overturetool.vdmj.values.CPUValue;
+import java.util.Queue;
+
 import org.overturetool.vdmj.values.Value;
 
 public class MessageResponse extends MessagePacket
 {
-	public final long msgId;
-	public final Thread thread;
-	public final CPUValue from;
-	public final CPUValue to;
 	public final Value result;
 	public final ValueException exception;
-	public final MessageRequest request;
+	public final Queue<MessageResponse> replyTo;
+	public final Thread caller;
 
 	public MessageResponse(Value result, MessageRequest request)
 	{
-		this.msgId = nextId++;
-		this.thread = Thread.currentThread();
-		this.from = request.to;
-		this.to = request.from;
+		super(request.bus, request.to, request.from,	// NB to->from
+			request.target, request.operation);
+
 		this.result = result;
 		this.exception = null;
-		this.request = request;
+		this.replyTo = request.replyTo;
+		this.caller = request.thread;
 	}
 
 	public MessageResponse(ValueException exception, MessageRequest request)
 	{
-		this.msgId = nextId++;
-		this.thread = Thread.currentThread();
-		this.from = request.to;
-		this.to = request.from;
+		super(request.bus, request.to, request.from,	// NB to->from
+			request.target, request.operation);
+
 		this.result = null;
 		this.exception = exception;
-		this.request = request;
+		this.replyTo = request.replyTo;
+		this.caller = request.thread;
 	}
 
 	public Value getValue() throws ValueException
@@ -72,5 +70,11 @@ public class MessageResponse extends MessagePacket
 	public String toString()
 	{
 		return result == null ? exception.getMessage() : result.toString();
+	}
+
+	public int getSize()
+	{
+		return result == null ?
+			exception.toString().length() : result.toString().length();
 	}
 }

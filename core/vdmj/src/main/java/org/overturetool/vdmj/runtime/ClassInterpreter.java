@@ -222,9 +222,12 @@ public class ClassInterpreter extends Interpreter
 		mainContext.putAll(createdValues);
 		mainContext.setThreadState(dbgp, CPUClassDefinition.virtualCPU);
 		clearBreakpointHits();
-		CPUValue.resetAll();
 
-		return expr.eval(mainContext);
+		CPUValue.resetAll();
+		Value rv = expr.eval(mainContext);
+		CPUValue.abortAll();
+
+		return rv;
 	}
 
 	/**

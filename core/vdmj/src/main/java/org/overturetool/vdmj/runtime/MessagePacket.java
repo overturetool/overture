@@ -23,7 +23,32 @@
 
 package org.overturetool.vdmj.runtime;
 
+import org.overturetool.vdmj.values.BUSValue;
+import org.overturetool.vdmj.values.CPUValue;
+import org.overturetool.vdmj.values.ObjectValue;
+import org.overturetool.vdmj.values.OperationValue;
+
 public abstract class MessagePacket
 {
-	protected static long nextId = 0;
+	protected static long nextId = 1;
+
+	public final long msgId;
+	public final BUSValue bus;
+	public final Thread thread;
+	public final CPUValue from;
+	public final CPUValue to;
+	public final ObjectValue target;
+	public final OperationValue operation;
+
+	public MessagePacket(
+		BUSValue bus, CPUValue from, CPUValue to, ObjectValue target, OperationValue operation)
+	{
+		this.msgId = nextId++;
+		this.thread = Thread.currentThread();
+		this.bus = bus;
+		this.from = from;
+		this.to = to;
+		this.target = target;
+		this.operation = operation;
+	}
 }

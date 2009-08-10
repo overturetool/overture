@@ -79,8 +79,7 @@ public class VDMThread extends Thread
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
 			CPUValue cpu = object.getCPU();
-			cpu.setState(RunState.RUNNABLE);
-			cpu.sleep();
+			cpu.startThread();
 		}
 
 		if (Settings.usingDBGP)
@@ -95,7 +94,7 @@ public class VDMThread extends Thread
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
 			CPUValue cpu = object.getCPU();
-			cpu.removeThread(this);
+			cpu.removeThread();
 		}
 	}
 

@@ -52,6 +52,7 @@ import org.overturetool.vdmj.runtime.MessageResponse;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.PatternMatchException;
 import org.overturetool.vdmj.runtime.RootContext;
+import org.overturetool.vdmj.runtime.RunState;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.runtime.SystemClock;
 import org.overturetool.vdmj.runtime.VDMThreadSet;
@@ -432,14 +433,11 @@ public class OperationValue extends Value
 	{
 		// Spawn a thread, send a message, wait for a reply...
 
-		AsyncThread thread = new AsyncThread(self, this);
-		thread.start();
 		CPUValue from = ctxt.threadState.CPU;
 		CPUValue to = self.getCPU();
 
 		if (from != to)		// Remote CPU call
 		{
-    		trace("OpRequest");
     		BUSValue bus = BUSClassDefinition.findBUS(from, to);
 
     		if (bus == null)
@@ -450,24 +448,30 @@ public class OperationValue extends Value
 
     		if (isAsync)	// Don't wait
     		{
-        		MessageRequest request = new MessageRequest(bus, from, to, argValues, null);
-        		bus.send(request, thread);
+        		MessageRequest request =
+        			new MessageRequest(bus, from, to, self, this, argValues, null);
+
+        		bus.transmit(request);
         		return new VoidValue();
     		}
     		else
     		{
         		MessageQueue<MessageResponse> queue = new MessageQueue<MessageResponse>();
-        		MessageRequest request = new MessageRequest(bus, from, to, argValues, queue);
-        		bus.send(request, thread);
-        		from.waiting();
+        		MessageRequest request =
+        			new MessageRequest(bus, from, to, self, this, argValues, queue);
+
+        		bus.transmit(request);
+        		from.yield(RunState.WAITING);
         		MessageResponse reply = queue.take();
         		return reply.getValue();	// Can throw a returned exception
     		}
 		}
 		else	// local, must be async so don't wait
 		{
-    		MessageRequest request = new MessageRequest(null, from, to, argValues, null);
-    		thread.send(request);
+    		MessageRequest request =
+    			new MessageRequest(null, from, to, self, this, argValues, null);
+
+    		new AsyncThread(request).start();
     		return new VoidValue();
 		}
 	}

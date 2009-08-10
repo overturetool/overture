@@ -23,32 +23,16 @@
 
 package org.overturetool.vdmj.runtime;
 
-import java.util.Queue;
-
-import org.overturetool.vdmj.values.BUSValue;
 import org.overturetool.vdmj.values.CPUValue;
-import org.overturetool.vdmj.values.ObjectValue;
-import org.overturetool.vdmj.values.OperationValue;
-import org.overturetool.vdmj.values.ValueList;
 
-public class MessageRequest extends MessagePacket
+public class CPUThread
 {
-	public final ValueList args;
-	public final Queue<MessageResponse> replyTo;
+	public final CPUValue cpu;
+	public final Thread thread;
 
-	public MessageRequest(
-		BUSValue bus, CPUValue from, CPUValue to, ObjectValue target,
-		OperationValue operation,
-		ValueList args, Queue<MessageResponse> replyTo)
+	public CPUThread(CPUValue cpu, Thread thread)
 	{
-		super(bus, from, to, target, operation);
-
-		this.args = args;
-		this.replyTo = replyTo;
-	}
-
-	public int getSize()
-	{
-		return args.toString().length();
+		this.cpu = cpu;
+		this.thread = thread;
 	}
 }

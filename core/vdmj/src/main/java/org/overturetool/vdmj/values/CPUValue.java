@@ -85,6 +85,8 @@ public class CPUValue extends ObjectValue
 	{
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
+			Thread.interrupted();		// Clears interrupted flag
+
     		for (CPUValue cpu: allCPUs)
     		{
     			cpu.reset();
@@ -107,7 +109,7 @@ public class CPUValue extends ObjectValue
     			" overhead: 0" +
     			" time: 0");
 
-    		vCPU.setState(main, RunState.RUNNABLE);
+    		vCPU.policy.setState(main, RunState.RUNNABLE);
 		}
 	}
 
@@ -253,84 +255,9 @@ public class CPUValue extends ObjectValue
 			" time: " + SystemClock.getWallTime());
 	}
 
-	public synchronized void removeThread(Thread thread)
-	{
-		ObjectValue object = objects.get(thread);
-
-		RTLogger.log(
-			"ThreadSwapOut -> id: " + thread.getId() +
-			objRefString(object) +
-			" cpunm: " + cpuNumber +
-			" overhead: " + 0 +
-			" time: " + SystemClock.getWallTime());
-
-		policy.removeThread(thread);
-		objects.remove(thread);
-
-		wakeUp();
-
-		RTLogger.log(
-			"ThreadKill -> id: " + thread.getId() +
-			" cpunm: " + cpuNumber +
-			" time: " + SystemClock.getWallTime());
-	}
-
-	public synchronized long reschedule()
+	public synchronized void removeThread()
 	{
 		Thread current = Thread.currentThread();
-		ObjectValue object = objects.get(current);
-
-		policy.reschedule();
-		runningThread = policy.getThread();
-
-		if (runningThread != current)
-		{
-			notifyAll();
-
-			RTLogger.log(
-				"ThreadSwapOut -> id: " + current.getId() +
-				objRefString(object) +
-				" cpunm: " + cpuNumber +
-				" overhead: " + 0 +
-				" time: " + SystemClock.getWallTime());
-
-			sleep();
-			switches++;
-		}
-
-		return policy.getTimeslice();
-	}
-
-	public synchronized void sleep()
-	{
-		Thread current = Thread.currentThread();
-		ObjectValue object = objects.get(current);
-
-		while (runningThread != current)
-		{
-			try
-			{
-				wait();
-			}
-			catch (InterruptedException e)
-			{
-				throw new RTException("Thread stopped");
-			}
-		}
-
-		RTLogger.log(
-			"ThreadSwapIn -> id: " + current.getId() +
-			objRefString(object) +
-			" cpunm: " + cpuNumber +
-			" overhead: " + 0 +
-			" time: " + SystemClock.getWallTime());
-	}
-
-	public synchronized void waiting()
-	{
-		Thread current = Thread.currentThread();
-		wakeUp(current, RunState.WAITING);
-
 		ObjectValue object = objects.get(current);
 
 		RTLogger.log(
@@ -340,51 +267,140 @@ public class CPUValue extends ObjectValue
 			" overhead: " + 0 +
 			" time: " + SystemClock.getWallTime());
 
-		sleep();
-		switches++;
+		policy.removeThread(current);
+		objects.remove(current);
+
+		RTLogger.log(
+			"ThreadKill -> id: " + current.getId() +
+			" cpunm: " + cpuNumber +
+			" time: " + SystemClock.getWallTime());
+
+		policy.reschedule();
+		runningThread = policy.getThread();
+		notifyAll();
 	}
 
 	public void duration(long step)		// NB. Not synchronized
     {
     	long end = SystemClock.getWallTime() + step;
-    
+
     	stepping = true;
-    
+
     	do
     	{
     		RTLogger.diag("CPU " + name + " ready to TIMESTEP");
     		SystemClock.timeStep(step);
     	}
     	while (SystemClock.getWallTime() < end);
-    
+
     	stepping = false;
     }
 
-	public synchronized boolean canTimeStep()
+	public boolean canTimeStep()
 	{
 		return cpuNumber == 0 ? true : (stepping || runningThread == null);
 	}
 
-	public synchronized void wakeUp(Thread thread, RunState newstate)
+	public synchronized void yield(Thread thread, RunState newstate)
 	{
 		policy.setState(thread, newstate);
-		wakeUp();
+		yield();
 	}
 
-	public synchronized void wakeUp()
+	public synchronized void yield(RunState newstate)
 	{
+		policy.setState(Thread.currentThread(), newstate);
+		yield();
+	}
+
+	public synchronized long reschedule()
+	{
+		yield();
+		return policy.getTimeslice();
+	}
+
+	public synchronized void yield()
+	{
+		Thread current = Thread.currentThread();
 		policy.reschedule();
 		runningThread = policy.getThread();
-		notifyAll();
+
+		if (runningThread != current)
+		{
+			notifyAll();
+    		ObjectValue object = objects.get(current);
+
+    		RTLogger.log(
+    			"ThreadSwapOut -> id: " + current.getId() +
+    			objRefString(object) +
+    			" cpunm: " + cpuNumber +
+    			" overhead: " + 0 +
+    			" time: " + SystemClock.getWallTime());
+
+    		while (runningThread != current)
+    		{
+    			try
+    			{
+    				wait();
+    			}
+    			catch (InterruptedException e)
+    			{
+    				throw new RTException("Thread stopped");
+    			}
+    		}
+
+    		switches++;
+
+    		RTLogger.log(
+    			"ThreadSwapIn -> id: " + current.getId() +
+    			objRefString(object) +
+    			" cpunm: " + cpuNumber +
+    			" overhead: " + 0 +
+    			" time: " + SystemClock.getWallTime());
+		}
 	}
 
-	public synchronized void setState(Thread thread, RunState newstate)
+	public synchronized void startThread()
 	{
-		wakeUp(thread, newstate);
+		Thread current = Thread.currentThread();
+		policy.setState(current, RunState.RUNNABLE);
+		wakeUp();
+
+    	while (runningThread != current)
+    	{
+    		try
+    		{
+    			wait();
+    		}
+    		catch (InterruptedException e)
+    		{
+    			throw new RTException("Thread stopped");
+    		}
+    	}
+
+		ObjectValue object = objects.get(current);
+    	switches++;
+
+    	RTLogger.log(
+    		"ThreadSwapIn -> id: " + current.getId() +
+    		objRefString(object) +
+    		" cpunm: " + cpuNumber +
+    		" overhead: " + 0 +
+    		" time: " + SystemClock.getWallTime());
+    }
+
+	public void setState(Thread thread, RunState newstate)
+	{
+		policy.setState(thread, newstate);
 	}
 
-	public synchronized void setState(RunState newstate)
+	public synchronized void wakeUp()	// Wake up idle CPUs
 	{
-		wakeUp(Thread.currentThread(), newstate);
+		if (runningThread == null)
+		{
+			policy.reschedule();
+			runningThread = policy.getThread();
+			notifyAll();
+		}
 	}
 }

@@ -31,6 +31,7 @@ import java.util.Vector;
 import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.runtime.AsyncThread;
 import org.overturetool.vdmj.runtime.BUSPolicy;
+import org.overturetool.vdmj.runtime.CPUThread;
 import org.overturetool.vdmj.runtime.MessageRequest;
 import org.overturetool.vdmj.runtime.MessageResponse;
 import org.overturetool.vdmj.runtime.RunState;
@@ -51,7 +52,7 @@ public class BUSValue extends ObjectValue
 
 	public String name;
 	public boolean busBusy = false;
-	public Queue<Thread> waiters = new LinkedList<Thread>();
+	public Queue<CPUThread> waiters = new LinkedList<CPUThread>();
 
 	public static void init()
 	{
@@ -110,26 +111,14 @@ public class BUSValue extends ObjectValue
 		allBUSSES.add(this);
 	}
 
-	public void send(MessageRequest request, AsyncThread thread)
-	{
-		thread.send(request);
-	}
-
-	public void reply(MessageResponse response)
-	{
-		response.request.replyTo.add(response);
-		response.request.from.wakeUp(response.request.thread, RunState.RUNNABLE);
-	}
-
-	public void transmit(
-		ObjectValue target, OperationValue operation, MessageRequest request)
+	public void transmit(MessageRequest request)
 	{
 		RTLogger.log(
 			"OpRequest -> id: " + Thread.currentThread().getId() +
-			" opname: \"" + name + "\"" +
-			" objref: " + target.objectReference +
-			" clnm: \"" + target.type.name.name + "\"" +
-			" cpunm: " + target.getCPU().cpuNumber +
+			" opname: \"" + request.operation.name + "\"" +
+			" objref: " + request.target.objectReference +
+			" clnm: \"" + request.target.type.name.name + "\"" +
+			" cpunm: " + request.from.cpuNumber +
 			" async: " + (request.replyTo == null) +
 			" time: " + SystemClock.getWallTime()
 			);
@@ -140,15 +129,15 @@ public class BUSValue extends ObjectValue
 			" tocpu: " + request.to.cpuNumber +
 			" msgid: " + request.msgId +
 			" callthr: " + request.thread.getId() +
-			" opname: " + "\"" + operation.name + "\"" +
-			" objref: " + target.objectReference +
-			" size: " + request.args.toString().length() +
+			" opname: " + "\"" + request.operation.name + "\"" +
+			" objref: " + request.target.objectReference +
+			" size: " + request.getSize() +
 			" time: " + SystemClock.getWallTime());
 
 		if (busBusy)
 		{
-			waiters.add(Thread.currentThread());
-			request.from.waiting();
+			waiters.add(new CPUThread(request.from, Thread.currentThread()));
+			request.from.yield();
 		}
 
 		busBusy = true;
@@ -160,7 +149,7 @@ public class BUSValue extends ObjectValue
 		if (request.bus.busNumber > 0)
 		{
 			long pause = request.args.toString().length();
-			target.getCPU().duration(pause);
+			request.from.duration(pause);
 		}
 
 		RTLogger.log(
@@ -169,13 +158,61 @@ public class BUSValue extends ObjectValue
 
 		busBusy = false;
 
-		AsyncThread thread = new AsyncThread(target, operation, request);
+		AsyncThread thread = new AsyncThread(request);
 		thread.start();
 
 		if (!waiters.isEmpty())
 		{
-			Thread next = waiters.remove();
-			request.from.wakeUp(next, RunState.RUNNABLE);
+			CPUThread next = waiters.remove();
+			next.cpu.setState(next.thread, RunState.RUNNABLE);
+		}
+	}
+
+	public void reply(MessageResponse response)
+	{
+		RTLogger.log(
+			"ReplyRequest -> busid: " + response.bus.busNumber +
+			" fromcpu: " + response.from.cpuNumber +
+			" tocpu: " + response.to.cpuNumber +
+			" msgid: " + response.msgId +
+			" callthr: " + response.thread.getId() +
+			" opname: " + "\"" + response.operation.name + "\"" +
+			" objref: " + response.target.objectReference +
+			" size: " + response.getSize() +
+			" time: " + SystemClock.getWallTime());
+
+		if (busBusy)
+		{
+			waiters.add(new CPUThread(response.from, Thread.currentThread()));
+			response.from.yield();
+		}
+
+		busBusy = true;
+
+		RTLogger.log(
+			"MessageActivate -> msgid: " + response.msgId +
+			" time: " + SystemClock.getWallTime());
+
+		if (response.bus.busNumber > 0)
+		{
+			long pause = response.getSize();
+			response.from.duration(pause);
+		}
+
+		RTLogger.log(
+			"MessageCompleted -> msgid: " + response.msgId +
+			" time: " + SystemClock.getWallTime());
+
+		busBusy = false;
+
+		response.replyTo.add(response);
+		response.to.setState(response.caller, RunState.RUNNABLE);
+		response.to.wakeUp();
+
+		if (!waiters.isEmpty())
+		{
+			CPUThread next = waiters.remove();
+			next.cpu.setState(next.thread, RunState.RUNNABLE);
 		}
 	}
 
