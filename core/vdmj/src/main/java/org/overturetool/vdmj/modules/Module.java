@@ -96,7 +96,7 @@ public class Module implements Serializable
 		}
 		else
 		{
-    		this.name = nextName(defs.get(0).location);
+    		this.name = defaultName(defs.get(0).location);
     		defNumber++;
  		}
 
@@ -118,18 +118,15 @@ public class Module implements Serializable
 	}
 
 	/**
-	 * Generate the next default module name. Default names are the
-	 * string "DEFAULT" plus a number starting at 1. A specification
-	 * comprising three flat files would be parsed into three modules
-	 * called DEFAULT1, DEFAULT2 and DEFAULT3.
+	 * Generate the default module name.
 	 *
 	 * @param location	The textual location of the name
-	 * @return	The next default module name.
+	 * @return	The default module name.
 	 */
 
-	public static LexIdentifierToken nextName(LexLocation location)
+	public static LexIdentifierToken defaultName(LexLocation location)
 	{
-		return new LexIdentifierToken("DEFAULT" + defNumber, false, location);
+		return new LexIdentifierToken("DEFAULT", false, location);
 	}
 
 	/**
