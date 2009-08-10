@@ -170,6 +170,7 @@ public class VDMSL extends VDMJ
 		if (!list.isEmpty())
 		{
 			Module def = new Module();
+			ModuleList named = new ModuleList();
 
 			for (Module m: list)
 			{
@@ -177,16 +178,16 @@ public class VDMSL extends VDMJ
 				{
 					def.defs.addAll(m.defs);
 				}
-				else if (!def.defs.isEmpty())
+				else
 				{
-					println("Cannot mix modules and flat specifications");
-					rv = 1;
+					named.add(m);
 				}
 			}
 
 			if (!def.defs.isEmpty())
 			{
 				list.clear();
+				list.addAll(named);
 				list.add(def);
 			}
 		}
