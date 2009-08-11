@@ -317,7 +317,7 @@ public class ProcessCommandLine extends CommandLine
     		println("  unload");
     		println("  reload");
     		println("  quiet");
-    		println("  log [<file>]");
+    		println("  log [<file>] | off");
     		println("  ls | dir");
     		println("");
     		println("Debugging:");
@@ -373,7 +373,7 @@ public class ProcessCommandLine extends CommandLine
 
 		if (parts.length > 2)
 		{
-			println("Usage: log [<file>]");
+			println("Usage: log [<file>] | off");
 		}
 		else if (parts.length == 1)
 		{

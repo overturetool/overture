@@ -1804,6 +1804,11 @@ public class DBGPReader
 				RTLogger.setLogfile(null);
 				out.append("RT events now logged to the console");
 			}
+			else if (c.data.equals("off"))
+			{
+				RTLogger.enable(false);
+				out.append("RT event logging disabled");
+			}
 			else
 			{
 				PrintWriter p = new PrintWriter(new FileOutputStream(c.data, true));

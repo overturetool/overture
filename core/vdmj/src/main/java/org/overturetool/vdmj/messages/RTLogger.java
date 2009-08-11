@@ -29,12 +29,27 @@ import java.util.Vector;
 
 public class RTLogger
 {
+	private static boolean enabled = false;
 	private static List<String> events = new Vector<String>();
 	private static PrintWriter logfile = null;
 
+	public static synchronized void enable(boolean on)
+	{
+		if (!on && events.size() > 0)
+		{
+			dump(true);
+		}
+
+		enabled = on;
+	}
+
 	public static synchronized void log(String event)
 	{
-		if (logfile == null)
+		if (!enabled)
+		{
+			return;
+		}
+		else if (logfile == null)
 		{
 			Console.out.println(event);
 		}
@@ -51,6 +66,7 @@ public class RTLogger
 
 	public static void setLogfile(PrintWriter out)
 	{
+		enabled = true;
 		dump(true);		// Write out and close previous
 		logfile = out;
 	}

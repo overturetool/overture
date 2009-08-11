@@ -462,7 +462,12 @@ abstract public class CommandReader
 
 		if (parts.length != 2 || !parts[0].equals("log"))
 		{
-			println("Usage: log <file>");
+			println("Usage: log [<file>] | off");
+		}
+		else if (parts[1].equals("off"))
+		{
+			RTLogger.enable(false);
+			println("RT event logging disabled");
 		}
 		else
 		{
