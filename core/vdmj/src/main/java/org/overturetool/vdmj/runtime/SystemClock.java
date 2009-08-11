@@ -49,18 +49,7 @@ public class SystemClock
 			minStepTime = cpuMin;
 		}
 
-		boolean canStep = true;
-
-		for (CPUValue cpu: CPUValue.allCPUs)
-		{
-			if (!cpu.canTimeStep())		// NB not sync'd on CPU
-			{
-				canStep = false;
-				break;
-			}
-		}
-
-		if (canStep)
+		if (canStep())
 		{
 			wallTime += minStepTime;
 			RTLogger.diag("TIMESTEP = " + minStepTime + ", now = " + wallTime);
@@ -72,6 +61,22 @@ public class SystemClock
 		{
 			block();
 		}
+	}
+
+	private static boolean canStep()
+	{
+		boolean canStep = true;
+
+		for (CPUValue cpu: CPUValue.allCPUs)
+		{
+			if (!cpu.canTimeStep())		// NB not sync'd on CPU
+			{
+				canStep = false;
+				break;
+			}
+		}
+
+		return canStep;
 	}
 
 	private static synchronized void unblock()

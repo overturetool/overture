@@ -85,7 +85,7 @@ public class AsyncThread extends Thread
     			reader = ctxt.threadState.dbgp.newThread();
     			ctxt.setThreadState(reader, cpu);
 
-        		Value rv = operation.localEval(arglist, ctxt);
+        		Value rv = operation.localEval(arglist, ctxt, false);
        			response = new MessageResponse(rv, request);
     		}
     		catch (ValueException e)
@@ -126,7 +126,7 @@ public class AsyncThread extends Thread
         		Context ctxt = new ObjectContext(operation.name.location, "async", global, self);
         		ctxt.setThreadState(null, cpu);
 
-        		Value rv = operation.localEval(arglist, ctxt);
+        		Value rv = operation.localEval(arglist, ctxt, false);
        			response = new MessageResponse(rv, request);
     		}
     		catch (ValueException e)

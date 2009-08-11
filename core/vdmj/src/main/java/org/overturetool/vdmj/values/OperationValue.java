@@ -46,7 +46,7 @@ import org.overturetool.vdmj.runtime.AsyncThread;
 import org.overturetool.vdmj.runtime.Breakpoint;
 import org.overturetool.vdmj.runtime.ClassContext;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.MessageQueue;
+import org.overturetool.vdmj.runtime.Holder;
 import org.overturetool.vdmj.runtime.MessageRequest;
 import org.overturetool.vdmj.runtime.MessageResponse;
 import org.overturetool.vdmj.runtime.ObjectContext;
@@ -194,16 +194,17 @@ public class OperationValue extends Value
 			}
 			else
 			{
-				return localEval(argValues, ctxt);
+				return localEval(argValues, ctxt, true);
 			}
 		}
 		else
 		{
-			return localEval(argValues, ctxt);
+			return localEval(argValues, ctxt, true);
 		}
 	}
 
-	public Value localEval(ValueList argValues, Context ctxt) throws ValueException
+	public Value localEval(ValueList argValues, Context ctxt, boolean logreq)
+		throws ValueException
 	{
 		if (body == null)
 		{
@@ -237,7 +238,7 @@ public class OperationValue extends Value
 				stateContext);
 		}
 
-		req();
+		req(logreq);
 		notifySelf();
 
 		if (guard != null)
@@ -436,6 +437,8 @@ public class OperationValue extends Value
 		CPUValue from = ctxt.threadState.CPU;
 		CPUValue to = self.getCPU();
 
+		trace("OpRequest");		// Done by caller for async calls
+
 		if (from != to)		// Remote CPU call
 		{
     		BUSValue bus = BUSClassDefinition.findBUS(from, to);
@@ -456,13 +459,13 @@ public class OperationValue extends Value
     		}
     		else
     		{
-        		MessageQueue<MessageResponse> queue = new MessageQueue<MessageResponse>();
+        		Holder<MessageResponse> result = new Holder<MessageResponse>();
         		MessageRequest request =
-        			new MessageRequest(bus, from, to, self, this, argValues, queue);
+        			new MessageRequest(bus, from, to, self, this, argValues, result);
 
         		bus.transmit(request);
         		from.yield(RunState.WAITING);
-        		MessageResponse reply = queue.take();
+        		MessageResponse reply = result.get();
         		return reply.getValue();	// Can throw a returned exception
     		}
 		}
@@ -539,11 +542,15 @@ public class OperationValue extends Value
 		}
 	}
 
-	private synchronized void req()
+	private synchronized void req(boolean logreq)
 	{
 		hashReq++;
 		guardPasses++;
-		trace("OpRequest");
+
+		if (logreq)		// Async OpRequests are made in asyncEval
+		{
+			trace("OpRequest");
+		}
 	}
 
 	private synchronized void act()

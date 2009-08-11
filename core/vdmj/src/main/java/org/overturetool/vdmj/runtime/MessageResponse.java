@@ -23,15 +23,13 @@
 
 package org.overturetool.vdmj.runtime;
 
-import java.util.Queue;
-
 import org.overturetool.vdmj.values.Value;
 
 public class MessageResponse extends MessagePacket
 {
 	public final Value result;
 	public final ValueException exception;
-	public final Queue<MessageResponse> replyTo;
+	public final Holder<MessageResponse> replyTo;
 	public final Thread caller;
 
 	public MessageResponse(Value result, MessageRequest request)

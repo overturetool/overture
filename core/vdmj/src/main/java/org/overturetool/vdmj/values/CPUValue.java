@@ -298,7 +298,7 @@ public class CPUValue extends ObjectValue
 
 	public boolean canTimeStep()
 	{
-		return cpuNumber == 0 ? true : (stepping || runningThread == null);
+		return (cpuNumber == 0 || stepping || runningThread == null);
 	}
 
 	public synchronized void yield(Thread thread, RunState newstate)

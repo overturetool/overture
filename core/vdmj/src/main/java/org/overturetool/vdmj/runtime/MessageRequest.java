@@ -23,8 +23,6 @@
 
 package org.overturetool.vdmj.runtime;
 
-import java.util.Queue;
-
 import org.overturetool.vdmj.values.BUSValue;
 import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.ObjectValue;
@@ -34,12 +32,12 @@ import org.overturetool.vdmj.values.ValueList;
 public class MessageRequest extends MessagePacket
 {
 	public final ValueList args;
-	public final Queue<MessageResponse> replyTo;
+	public final Holder<MessageResponse> replyTo;
 
 	public MessageRequest(
 		BUSValue bus, CPUValue from, CPUValue to, ObjectValue target,
 		OperationValue operation,
-		ValueList args, Queue<MessageResponse> replyTo)
+		ValueList args, Holder<MessageResponse> replyTo)
 	{
 		super(bus, from, to, target, operation);
 

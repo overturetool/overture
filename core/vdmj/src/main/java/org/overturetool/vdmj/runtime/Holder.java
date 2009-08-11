@@ -23,67 +23,17 @@
 
 package org.overturetool.vdmj.runtime;
 
-import java.util.concurrent.LinkedBlockingQueue;
-
-public class MessageQueue<T> extends LinkedBlockingQueue<T>
+public class Holder<T>
 {
-	private static final long serialVersionUID = 1L;
+	private T contents = null;
 
-	public MessageQueue()
+	public synchronized void set(T object)
 	{
-		// ?
+		contents = object;
 	}
 
-	@Override
-	public synchronized boolean add(T item)
+	public synchronized T get()
 	{
-		boolean rv = super.add(item);
-		notifyAll();
-		return rv;
-	}
-
-	@Override
-	public synchronized T take()
-	{
-		if (!isEmpty())
-		{
-			while (true)
-			{
-	    		try
-	    		{
-	    			return super.take();
-	       		}
-	    		catch (InterruptedException e)
-	    		{
-					throw new RTException("Thread stopped");
-	    		}
-			}
-		}
-		else
-		{
-			while (isEmpty())
-			{
-				try
-				{
-					wait();
-				}
-				catch (InterruptedException e)
-				{
-					throw new RTException("Thread stopped");
-				}
-			}
-
-			while (true)
-			{
-	    		try
-	    		{
-	    			return super.take();
-	       		}
-	    		catch (InterruptedException e)
-	    		{
-					throw new RTException("Thread stopped");
-	    		}
-			}
- 		}
+		return contents;
 	}
 }

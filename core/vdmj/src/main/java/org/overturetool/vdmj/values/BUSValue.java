@@ -114,16 +114,6 @@ public class BUSValue extends ObjectValue
 	public void transmit(MessageRequest request)
 	{
 		RTLogger.log(
-			"OpRequest -> id: " + Thread.currentThread().getId() +
-			" opname: \"" + request.operation.name + "\"" +
-			" objref: " + request.target.objectReference +
-			" clnm: \"" + request.target.type.name.name + "\"" +
-			" cpunm: " + request.from.cpuNumber +
-			" async: " + (request.replyTo == null) +
-			" time: " + SystemClock.getWallTime()
-			);
-
-		RTLogger.log(
 			"MessageRequest -> busid: " + request.bus.busNumber +
 			" fromcpu: " + request.from.cpuNumber +
 			" tocpu: " + request.to.cpuNumber +
@@ -205,7 +195,7 @@ public class BUSValue extends ObjectValue
 
 		busBusy = false;
 
-		response.replyTo.add(response);
+		response.replyTo.set(response);
 		response.to.setState(response.caller, RunState.RUNNABLE);
 		response.to.wakeUp();
 
