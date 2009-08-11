@@ -36,8 +36,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -268,7 +266,7 @@ public class DBGPReader
 				try
 				{
 					Interpreter i = controller.getInterpreter();
-					new DBGPReader(host, port, ideKey, i, expression).run();
+					new DBGPReader(host, port, ideKey, i, expression).run(true);
 	    			System.exit(0);
 				}
 				catch (ContextException e)
@@ -573,8 +571,13 @@ public class DBGPReader
     		.replaceAll("\\\"", "&quot;");
 	}
 
-	private void run() throws IOException
+	private void run(boolean init) throws IOException
 	{
+		if (init)
+		{
+			interpreter.init(this);
+		}
+
 		String line = null;
 
 		do
@@ -597,11 +600,10 @@ public class DBGPReader
 			breakpoint = bp;
 			statusResponse(DBGPStatus.BREAK, DBGPReason.OK);
 
-			run();
+			run(false);
 
 			breakContext = null;
 			breakpoint = null;
-//			statusResponse(DBGPStatus.RUNNING, DBGPReason.OK);
 		}
 		catch (Exception e)
 		{
@@ -957,12 +959,11 @@ public class DBGPReader
 		{
 			breakContext = ex.ctxt;
 			breakpoint = new Breakpoint(ex.ctxt.location);
-			// statusResponse(DBGPStatus.STOPPING, DBGPReason.EXCEPTION);
 			status = DBGPStatus.STOPPING;
 			statusReason = DBGPReason.EXCEPTION;
 			errorResponse(DBGPErrorCode.EVALUATION_ERROR, ex.getMessage());
 
-			run();
+			run(false);
 
 			breakContext = null;
 			breakpoint = null;
@@ -996,7 +997,6 @@ public class DBGPReader
 
 		try
 		{
-			// statusResponse(DBGPStatus.RUNNING, DBGPReason.OK);
 			interpreter.init(this);
 			theAnswer = interpreter.execute(expression, this);
 			stdout(theAnswer.toString());
@@ -1065,7 +1065,6 @@ public class DBGPReader
 		try
 		{
 			String exp = c.data;	// Already base64 decoded by the parser
-			// statusResponse(DBGPStatus.RUNNING, DBGPReason.OK);
 			theAnswer = interpreter.execute(exp, this);
 			StringBuilder property = propertyResponse(
 				exp, exp, interpreter.getDefaultName(), theAnswer.toString());

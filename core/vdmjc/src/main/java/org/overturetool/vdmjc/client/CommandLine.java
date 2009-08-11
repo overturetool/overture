@@ -313,8 +313,6 @@ public class CommandLine
 	{
 		try
 		{
-			List<File> loadedFiles = getFiles(line);
-
 			BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
 			print("Evaluate: ");
 			String expression = stdin.readLine().trim();
@@ -326,7 +324,7 @@ public class CommandLine
 				expression = stdin.readLine().trim();
 			}
 
-			new ProcessCommandLine(dialect, loadedFiles, expression).run();
+			new ProcessCommandLine(dialect, getFiles(line), expression).run();
 		}
 		catch (IOException e)
 		{

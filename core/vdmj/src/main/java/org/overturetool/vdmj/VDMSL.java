@@ -303,6 +303,7 @@ public class VDMSL extends VDMJ
 		{
    			long before = System.currentTimeMillis();
    			interpreter = getInterpreter();
+   			interpreter.init(null);
    			long after = System.currentTimeMillis();
 
    	   		infoln("Initialized " + plural(modules.size(), "module", "s") + " in " +
@@ -351,7 +352,6 @@ public class VDMSL extends VDMJ
 	public ModuleInterpreter getInterpreter() throws Exception
 	{
 		ModuleInterpreter interpreter = new ModuleInterpreter(modules);
-		interpreter.init(null);
 		return interpreter;
 	}
 }

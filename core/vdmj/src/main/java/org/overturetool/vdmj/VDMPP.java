@@ -277,6 +277,7 @@ public class VDMPP extends VDMJ
 		{
    			long before = System.currentTimeMillis();
    			interpreter = getInterpreter();
+   			interpreter.init(null);
    			long after = System.currentTimeMillis();
 
    	   		infoln("Initialized " + plural(classes.size(), "class", "es") + " in " +
@@ -325,7 +326,6 @@ public class VDMPP extends VDMJ
 	public ClassInterpreter getInterpreter() throws Exception
 	{
 		ClassInterpreter interpreter = new ClassInterpreter(classes);
-		interpreter.init(null);
 		return interpreter;
 	}
 }
