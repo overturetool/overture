@@ -191,6 +191,10 @@ public class ProcessCommandLine extends CommandLine
 	            {
 	            	carryOn = processInit();
 	            }
+	            else if (line.startsWith("log"))
+	            {
+	            	carryOn = processLog(line);
+	            }
 	            else if (line.startsWith("create"))
 	            {
 	            	carryOn = processCreate(line);
@@ -313,6 +317,7 @@ public class ProcessCommandLine extends CommandLine
     		println("  unload");
     		println("  reload");
     		println("  quiet");
+    		println("  log [<file>]");
     		println("  ls | dir");
     		println("");
     		println("Debugging:");
@@ -358,6 +363,26 @@ public class ProcessCommandLine extends CommandLine
    		{
    			currentThread.xcmd_overture_init();
    		}
+
+		return true;
+	}
+
+	private boolean processLog(String line) throws IOException
+	{
+		String parts[] = line.split("\\s+");
+
+		if (parts.length > 2)
+		{
+			println("Usage: log [<file>]");
+		}
+		else if (parts.length == 1)
+		{
+			currentThread.xcmd_overture_log(null);
+		}
+		else if (parts.length == 2)
+		{
+			currentThread.xcmd_overture_log(parts[1]);
+		}
 
 		return true;
 	}

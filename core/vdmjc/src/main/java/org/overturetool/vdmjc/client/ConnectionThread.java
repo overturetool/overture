@@ -610,4 +610,9 @@ public class ConnectionThread extends Thread
 	{
 		xcmd_overture_cmd("trace", file.toURI() + " " + lnum + " " + display);
 	}
+
+	public void xcmd_overture_log(String file) throws IOException
+	{
+		xcmd_overture_cmd("log", file);
+	}
 }

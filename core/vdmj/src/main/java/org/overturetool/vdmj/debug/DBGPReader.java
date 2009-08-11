@@ -25,6 +25,8 @@ package org.overturetool.vdmj.debug;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -61,6 +63,7 @@ import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.InternalException;
+import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.pog.ProofObligation;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -1763,6 +1766,10 @@ public class DBGPReader
 		{
 			processDefault(c);
 		}
+		else if (option.value.equals("log"))
+		{
+			processLog(c);
+		}
 		else
 		{
 			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
@@ -1779,6 +1786,37 @@ public class DBGPReader
 		LexLocation.clearLocations();
 		interpreter.init(this);
 		cdataResponse("Global context and test coverage initialized");
+	}
+
+	private void processLog(DBGPCommand c) throws IOException
+	{
+		StringBuilder out = new StringBuilder();
+
+		try
+		{
+			if (c.data == null)
+			{
+				if (RTLogger.getLogSize() > 0)
+				{
+					out.append("Flushing " + RTLogger.getLogSize() + " RT events\n");
+				}
+
+				RTLogger.setLogfile(null);
+				out.append("RT events now logged to the console");
+			}
+			else
+			{
+				PrintWriter p = new PrintWriter(new FileOutputStream(c.data, true));
+				RTLogger.setLogfile(p);
+				out.append("RT events now logged to " + c.data);
+			}
+		}
+		catch (FileNotFoundException e)
+		{
+			out.append("Cannot create RT event log: " + e.getMessage());
+		}
+
+		cdataResponse(out.toString());
 	}
 
 	private void processCreate(DBGPCommand c) throws DBGPException
