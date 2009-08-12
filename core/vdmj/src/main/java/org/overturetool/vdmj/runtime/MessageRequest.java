@@ -45,6 +45,14 @@ public class MessageRequest extends MessagePacket
 		this.replyTo = replyTo;
 	}
 
+	public MessageRequest()
+	{
+		super();
+
+		this.args = null;
+		this.replyTo = null;
+	}
+
 	public int getSize()
 	{
 		return args.toString().length();

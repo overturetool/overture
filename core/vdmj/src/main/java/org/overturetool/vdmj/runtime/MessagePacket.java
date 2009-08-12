@@ -51,4 +51,15 @@ public abstract class MessagePacket
 		this.target = target;
 		this.operation = operation;
 	}
+
+	public MessagePacket()
+	{
+		this.msgId = 0;
+		this.thread = null;
+		this.bus = null;
+		this.from = null;
+		this.to = null;
+		this.target = null;
+		this.operation = null;
+	}
 }

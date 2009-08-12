@@ -67,9 +67,12 @@ public class CPUValue extends ObjectValue
 
 	public static void abortAll()
 	{
-		for (CPUValue cpu: allCPUs)
+		synchronized (allCPUs)
 		{
-			cpu.abort();
+    		for (CPUValue cpu: allCPUs)
+    		{
+    			cpu.abort();
+    		}
 		}
 	}
 

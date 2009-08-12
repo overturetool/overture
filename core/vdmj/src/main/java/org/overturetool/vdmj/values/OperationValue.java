@@ -168,6 +168,11 @@ public class OperationValue extends Value
 		}
 	}
 
+	public ObjectValue getSelf()
+	{
+		return self;
+	}
+
 	public void setGuard(Expression add)
 	{
 		if (guard == null)

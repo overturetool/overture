@@ -38,16 +38,24 @@ public class AsyncThread extends Thread
 
 	public final ObjectValue self;
 	public final OperationValue operation;
+	public final ValueList args;
 	public final CPUValue cpu;
 
 	public AsyncThread(MessageRequest request)
 	{
+		this(request.target, request.operation, request.args);
+		this.request = request;
+	}
+
+	public AsyncThread(ObjectValue self, OperationValue operation, ValueList args)
+	{
 		setName("Async Thread " + getId());
 
-		this.self = request.target;
-		this.request = request;
-		this.operation = request.operation;
+		this.self = self;
+		this.operation = operation;
+		this.args = args;
 		this.cpu = self.getCPU();
+		this.request = new MessageRequest();
 
 		cpu.addThread(this, self, operation);
 	}
@@ -75,7 +83,6 @@ public class AsyncThread extends Thread
 
 		try
 		{
-    		ValueList arglist = request.args;
     		MessageResponse response = null;
 
     		try
@@ -85,7 +92,7 @@ public class AsyncThread extends Thread
     			reader = ctxt.threadState.dbgp.newThread();
     			ctxt.setThreadState(reader, cpu);
 
-        		Value rv = operation.localEval(arglist, ctxt, false);
+        		Value rv = operation.localEval(args, ctxt, false);
        			response = new MessageResponse(rv, request);
     		}
     		catch (ValueException e)
@@ -121,7 +128,6 @@ public class AsyncThread extends Thread
 	{
 		try
 		{
-    		ValueList arglist = request.args;
     		MessageResponse response = null;
 
     		try
@@ -130,7 +136,7 @@ public class AsyncThread extends Thread
         		Context ctxt = new ObjectContext(operation.name.location, "async", global, self);
         		ctxt.setThreadState(null, cpu);
 
-        		Value rv = operation.localEval(arglist, ctxt, false);
+        		Value rv = operation.localEval(args, ctxt, false);
        			response = new MessageResponse(rv, request);
     		}
     		catch (ValueException e)
