@@ -23,33 +23,74 @@
 
 package org.overturetool.vdmj.runtime;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.overturetool.vdmj.values.CPUValue;
 
-public class Holder<T>
+public class ControlQueue
 {
-	private ControlQueue cq = new ControlQueue();
-	private T contents = null;
+	private CPUThread joined = null;
+	private boolean stimmed = false;
+	private List<CPUThread> waiters = new LinkedList<CPUThread>();
 
-	public synchronized void set(T object)
+	public void join(CPUValue cpu)
 	{
-		contents = object;
-		cq.stim();
-	}
+		CPUThread self = new CPUThread(cpu);
 
-	public T get(CPUValue cpu)
-	{
-		cq.join(cpu);
-		cq.block();
-
-		T result = null;
+		if (joined != null)
+		{
+			waiters.add(self);
+			cpu.yield(RunState.WAITING);
+		}
 
 		synchronized (this)
 		{
-			result = contents;
+			joined = self;
+		}
+	}
+
+	public void block()
+	{
+		if (stimmed)
+		{
+			synchronized (this)
+			{
+				stimmed = false;
+			}
+		}
+		else
+		{
+			joined.cpu.yield(RunState.WAITING);
+		}
+	}
+
+	public void stim()
+	{
+		synchronized (this)
+		{
+			stimmed = false;
 		}
 
-		cq.leave();
+		if (joined != null)
+		{
+			joined.setState(RunState.RUNNABLE);
+			joined.cpu.wakeUp();
+		}
+	}
 
-		return result;
+	public void leave()
+	{
+		synchronized (this)
+		{
+			joined = null;
+		}
+
+		if (!waiters.isEmpty())
+		{
+			CPUThread w = waiters.remove(0);
+			w.setState(RunState.RUNNABLE);
+			w.cpu.wakeUp();
+		}
 	}
 }

@@ -191,7 +191,7 @@ public class ConnectionThread extends Thread
 		byte[] data = new byte[length];
 		int offset = 0;
 		int remaining = length;
-		int retries = 5;
+		int retries = 10;
 		int done = input.read(data, offset, remaining);
 
 		while (done < remaining && --retries > 0)
@@ -202,9 +202,22 @@ public class ConnectionThread extends Thread
 			done = input.read(data, offset, remaining);
 		}
 
+		if (retries == 0)
+		{
+			throw new IOException("Timeout DBGp reply on thread " + this.id +
+				", got [" + new String(data) + "]");
+		}
+
+		if (done != remaining)
+		{
+			throw new IOException("Short DBGp reply on thread " + this.id +
+				", got [" + new String(data) + "]");
+		}
+
 		if (input.read() != 0)
 		{
-			throw new IOException("Malformed DBGp terminator on " + this);
+			throw new IOException("Malformed DBGp terminator on thread " + this.id +
+				", got [" + new String(data) + "]");
 		}
 
 		process(data);

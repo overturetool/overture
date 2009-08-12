@@ -35,4 +35,15 @@ public class CPUThread
 		this.cpu = cpu;
 		this.thread = thread;
 	}
+
+	public CPUThread(CPUValue cpu)
+	{
+		this.cpu = cpu;
+		this.thread = Thread.currentThread();
+	}
+
+	public void setState(RunState newstate)
+	{
+		cpu.setState(thread, newstate);
+	}
 }

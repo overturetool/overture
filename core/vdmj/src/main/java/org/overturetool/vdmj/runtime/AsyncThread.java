@@ -104,6 +104,10 @@ public class AsyncThread extends Thread
 		{
 			reader.complete(DBGPReason.EXCEPTION, e);
 		}
+		catch (RTException e)
+		{
+			CPUValue.abortAll();	// Thread stopped
+		}
 		catch (Exception e)
 		{
 			if (reader != null)

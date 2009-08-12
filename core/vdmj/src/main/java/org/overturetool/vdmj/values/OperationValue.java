@@ -52,7 +52,6 @@ import org.overturetool.vdmj.runtime.MessageResponse;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.PatternMatchException;
 import org.overturetool.vdmj.runtime.RootContext;
-import org.overturetool.vdmj.runtime.RunState;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.runtime.SystemClock;
 import org.overturetool.vdmj.runtime.VDMThreadSet;
@@ -437,7 +436,19 @@ public class OperationValue extends Value
 		CPUValue from = ctxt.threadState.CPU;
 		CPUValue to = self.getCPU();
 
-		trace("OpRequest");		// Done by caller for async calls
+		// Async calls have the OpRequest made by the caller using the
+		// "from" CPU, whereas the OpActivate and OpComplete are made
+		// by the called object, using self's CPU (see trace(msg)).
+
+		RTLogger.log(
+			"OpRequest -> id: " + Thread.currentThread().getId() +
+			" opname: \"" + name + "\"" +
+			" objref: " + self.objectReference +
+			" clnm: \"" + self.type.name.name + "\"" +
+			" cpunm: " + from.cpuNumber +
+			" async: " + isAsync +
+			" time: " + SystemClock.getWallTime()
+			);
 
 		if (from != to)		// Remote CPU call
 		{
@@ -464,8 +475,7 @@ public class OperationValue extends Value
         			new MessageRequest(bus, from, to, self, this, argValues, result);
 
         		bus.transmit(request);
-        		from.yield(RunState.WAITING);
-        		MessageResponse reply = result.get();
+        		MessageResponse reply = result.get(from);
         		return reply.getValue();	// Can throw a returned exception
     		}
 		}

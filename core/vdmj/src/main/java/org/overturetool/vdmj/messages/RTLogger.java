@@ -97,6 +97,6 @@ public class RTLogger
 
 	public static void diag(String msg)
 	{
-		log("-- " + msg);
+		// log("-- " + msg);
 	}
 }
