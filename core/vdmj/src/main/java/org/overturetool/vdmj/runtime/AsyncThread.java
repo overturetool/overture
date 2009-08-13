@@ -42,6 +42,7 @@ public class AsyncThread extends Thread
 	public final CPUValue cpu;
 	public final long period;
 	public final long expected;
+	public final boolean first;
 
 	public AsyncThread(MessageRequest request)
 	{
@@ -59,9 +60,19 @@ public class AsyncThread extends Thread
 		this.operation = operation;
 		this.args = args;
 		this.cpu = self.getCPU();
-		this.expected = expected;
 		this.period = period;
 		this.request = new MessageRequest();
+
+		if (period > 0 && expected == 0)
+		{
+			this.first = true;
+			this.expected = SystemClock.getWallTime();
+		}
+		else
+		{
+			this.first = false;
+			this.expected = expected;
+		}
 
 		cpu.addThread(this, self, operation, period > 0);
 	}
@@ -90,7 +101,10 @@ public class AsyncThread extends Thread
 
     		if (period > 0)
     		{
-   				cpu.duration(period);
+    			if (!first)
+    			{
+    				cpu.duration(period);
+    			}
 
     			new AsyncThread(
     				self, operation, new ValueList(), period, expected + period).start();
@@ -145,7 +159,10 @@ public class AsyncThread extends Thread
 
     		if (period > 0)
     		{
-   				cpu.duration(period);
+    			if (!first)
+    			{
+    				cpu.duration(period);
+    			}
 
     			new AsyncThread(
     				self, operation, new ValueList(), period, expected + period).start();
