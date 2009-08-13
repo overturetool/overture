@@ -69,7 +69,7 @@ public class ControlQueue
 	{
 		synchronized (this)
 		{
-			stimmed = false;
+			stimmed = true;
 		}
 
 		if (joined != null)
