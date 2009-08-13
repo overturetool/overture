@@ -215,7 +215,7 @@ public class PeriodicStatement extends Statement
 
 		while (true)
 		{
-			AsyncThread th = new AsyncThread(op.getSelf(), op, new ValueList());
+			AsyncThread th = new AsyncThread(op.getSelf(), op, new ValueList(), true);
 			th.start();
 
 			if (th.cpu == cpu)

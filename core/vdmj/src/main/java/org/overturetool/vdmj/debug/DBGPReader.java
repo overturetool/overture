@@ -292,6 +292,7 @@ public class DBGPReader
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private static void usage(String string)
 	{
 		System.err.println(string);

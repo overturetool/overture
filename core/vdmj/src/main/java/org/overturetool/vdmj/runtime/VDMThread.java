@@ -63,7 +63,7 @@ public class VDMThread extends Thread
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
 			CPUValue cpu = object.getCPU();
-			cpu.addThread(this, object, operation);
+			cpu.addThread(this, object, operation, false);
 		}
 	}
 

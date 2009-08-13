@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class FCFSPolicy extends SchedulingPolicy
 {
-	private static final long TIMESLICE = 100;
+	protected static final long TIMESLICE = 100;
 	private final List<Thread> threads;
 	private final Map<Thread, RunState> state;
 
@@ -99,20 +99,6 @@ public class FCFSPolicy extends SchedulingPolicy
 		}
 
 		return (bestThread != original);
-	}
-
-	@Override
-	public boolean canTimeStep()
-	{
-		for (Thread th: threads)
-		{
-			if (state.get(th) != RunState.TIMESTEP)
-			{
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 	@Override

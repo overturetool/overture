@@ -23,18 +23,25 @@
 
 package org.overturetool.vdmj.runtime;
 
-import org.overturetool.vdmj.messages.RTLogger;
-import org.overturetool.vdmj.values.CPUValue;
+import java.util.BitSet;
 
 public class SystemClock
 {
 	private static long wallTime = 0;
 	private static long minStepTime = Long.MAX_VALUE;
+	private static BitSet runningCPUs = new BitSet();
 
 	public static void reset()
 	{
 		wallTime = 0;
 		minStepTime = Long.MAX_VALUE;
+		runningCPUs.clear();
+	}
+
+	public static synchronized void cpuRunning(int cpu, boolean running)
+	{
+		runningCPUs.set(cpu, running);
+		if (!running) unblock();
 	}
 
 	public static synchronized long getWallTime()
@@ -42,41 +49,29 @@ public class SystemClock
 		return wallTime;
 	}
 
-	public static synchronized void timeStep(long cpuMin)
+	@SuppressWarnings("unused")
+	public static synchronized void timeStep(int cpu, long step)
 	{
-		if (cpuMin < minStepTime)
+		if (step < minStepTime)
 		{
-			minStepTime = cpuMin;
+			minStepTime = step;
 		}
 
-		if (canStep())
+		// RTLogger.log("CPU " + cpu + " ready to TIMESTEP by " + step);
+
+		if (runningCPUs.cardinality() == 0)
 		{
 			wallTime += minStepTime;
-			RTLogger.diag("TIMESTEP = " + minStepTime + ", now = " + wallTime);
+			// RTLogger.log("TIMESTEP = " + minStepTime + ", now = " + wallTime);
 
 			minStepTime = Long.MAX_VALUE;
+			runningCPUs.clear();
 			unblock();
 		}
 		else
 		{
 			block();
 		}
-	}
-
-	private static boolean canStep()
-	{
-		boolean canStep = true;
-
-		for (CPUValue cpu: CPUValue.allCPUs)
-		{
-			if (!cpu.canTimeStep())		// NB not sync'd on CPU
-			{
-				canStep = false;
-				break;
-			}
-		}
-
-		return canStep;
 	}
 
 	private static synchronized void unblock()

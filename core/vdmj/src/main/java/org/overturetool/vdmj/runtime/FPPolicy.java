@@ -39,7 +39,7 @@ public class FPPolicy extends FCFSPolicy
 	public synchronized void addThread(Thread thread, long priority)
 	{
 		super.addThread(thread, priority);
-		priorities.put(thread, priority);
+		priorities.put(thread, priority == 0 ? TIMESLICE : priority);
 	}
 
 	@Override

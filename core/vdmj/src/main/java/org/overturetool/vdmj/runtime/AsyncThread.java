@@ -43,11 +43,12 @@ public class AsyncThread extends Thread
 
 	public AsyncThread(MessageRequest request)
 	{
-		this(request.target, request.operation, request.args);
+		this(request.target, request.operation, request.args, false);
 		this.request = request;
 	}
 
-	public AsyncThread(ObjectValue self, OperationValue operation, ValueList args)
+	public AsyncThread(
+		ObjectValue self, OperationValue operation, ValueList args, boolean periodic)
 	{
 		setName("Async Thread " + getId());
 
@@ -57,14 +58,12 @@ public class AsyncThread extends Thread
 		this.cpu = self.getCPU();
 		this.request = new MessageRequest();
 
-		cpu.addThread(this, self, operation);
+		cpu.addThread(this, self, operation, periodic);
 	}
 
 	@Override
 	public void run()
 	{
-		cpu.startThread();
-
 		if (Settings.usingDBGP)
 		{
 			runDBGP();
@@ -73,8 +72,6 @@ public class AsyncThread extends Thread
 		{
 			runCmd();
 		}
-
-		cpu.removeThread();
 	}
 
 	private void runDBGP()
@@ -83,6 +80,7 @@ public class AsyncThread extends Thread
 
 		try
 		{
+			cpu.startThread();
     		MessageResponse response = null;
 
     		try
@@ -106,6 +104,7 @@ public class AsyncThread extends Thread
     		}
 
 			reader.complete(DBGPReason.OK, null);
+			cpu.removeThread();
 		}
 		catch (ContextException e)
 		{
@@ -113,7 +112,7 @@ public class AsyncThread extends Thread
 		}
 		catch (RTException e)
 		{
-			CPUValue.abortAll();	// Thread stopped
+			// Thread stopped
 		}
 		catch (Exception e)
 		{
@@ -128,6 +127,7 @@ public class AsyncThread extends Thread
 	{
 		try
 		{
+			cpu.startThread();
     		MessageResponse response = null;
 
     		try
@@ -148,6 +148,8 @@ public class AsyncThread extends Thread
     		{
     			request.bus.reply(response);
     		}
+
+    		cpu.removeThread();
 		}
 		catch (ContextException e)
 		{
@@ -155,7 +157,7 @@ public class AsyncThread extends Thread
 		}
 		catch (RTException e)
 		{
-			CPUValue.abortAll();	// Thread stopped
+			// Thread stopped
 		}
 	}
 

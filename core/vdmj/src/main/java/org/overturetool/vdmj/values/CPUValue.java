@@ -57,7 +57,6 @@ public class CPUValue extends ObjectValue
 	public String name;
 	public Thread runningThread;
 	public int switches;
-	private boolean stepping;
 
 	public static void init()
 	{
@@ -67,12 +66,9 @@ public class CPUValue extends ObjectValue
 
 	public static void abortAll()
 	{
-		synchronized (allCPUs)
+		for (CPUValue cpu: allCPUs)
 		{
-    		for (CPUValue cpu: allCPUs)
-    		{
-    			cpu.abort();
-    		}
+			cpu.abort();
 		}
 	}
 
@@ -113,6 +109,7 @@ public class CPUValue extends ObjectValue
     			" time: 0");
 
     		vCPU.policy.setState(main, RunState.RUNNABLE);
+    		SystemClock.cpuRunning(vCPU.cpuNumber, true);
 		}
 	}
 
@@ -123,7 +120,6 @@ public class CPUValue extends ObjectValue
 
 		runningThread = null;
 		switches = 0;
-		stepping = false;
 	}
 
 	public CPUValue(Type classtype, NameValuePairMap map, ValueList argvals)
@@ -232,22 +228,22 @@ public class CPUValue extends ObjectValue
 	}
 
 	public synchronized void addThread(
-		Thread thread, ObjectValue object, OperationValue op)
+		Thread thread, ObjectValue object, OperationValue op, boolean periodic)
 	{
 		policy.addThread(thread, op.getPriority());
 		objects.put(thread, object);
 
 		RTLogger.log(
 			"ThreadCreate -> id: " + thread.getId() +
-			" period: false " +
+			" period: " + periodic +
 			objRefString(object) +
 			" cpunm: " + cpuNumber +
 			" time: " + SystemClock.getWallTime());
 	}
 
-	public synchronized void addThread(Thread thread)
+	private void addThread(Thread thread)
 	{
-		policy.addThread(thread, 1);
+		policy.addThread(thread, 0);	// Default priority
 		objects.put(thread, null);
 
 		RTLogger.log(
@@ -285,24 +281,18 @@ public class CPUValue extends ObjectValue
 
 	public void duration(long step)		// NB. Not synchronized
     {
-    	long end = SystemClock.getWallTime() + step;
+		long end = SystemClock.getWallTime() + step;
+		SystemClock.cpuRunning(cpuNumber, false);
 
-    	stepping = true;
-
-    	do
+		do
     	{
-    		RTLogger.diag("CPU " + name + " ready to TIMESTEP");
-    		SystemClock.timeStep(step);
+    		SystemClock.timeStep(cpuNumber, step);
+    		step = end - SystemClock.getWallTime();
     	}
-    	while (SystemClock.getWallTime() < end);
+		while (step > 0);
 
-    	stepping = false;
+    	SystemClock.cpuRunning(cpuNumber, true);
     }
-
-	public boolean canTimeStep()
-	{
-		return (cpuNumber == 0 || stepping || runningThread == null);
-	}
 
 	public synchronized void yield(Thread thread, RunState newstate)
 	{
@@ -340,6 +330,13 @@ public class CPUValue extends ObjectValue
     			" overhead: " + 0 +
     			" time: " + SystemClock.getWallTime());
 
+    		boolean idle = (runningThread == null);
+
+    		if (idle)
+    		{
+    			SystemClock.cpuRunning(cpuNumber, false);
+    		}
+
     		while (runningThread != current)
     		{
     			try
@@ -350,6 +347,11 @@ public class CPUValue extends ObjectValue
     			{
     				throw new RTException("Thread stopped");
     			}
+    		}
+
+    		if (idle)	// ie. was idle
+    		{
+    			SystemClock.cpuRunning(cpuNumber, true);
     		}
 
     		switches++;
@@ -390,6 +392,8 @@ public class CPUValue extends ObjectValue
     		" cpunm: " + cpuNumber +
     		" overhead: " + 0 +
     		" time: " + SystemClock.getWallTime());
+
+    	SystemClock.cpuRunning(cpuNumber, true);
     }
 
 	public void setState(Thread thread, RunState newstate)
