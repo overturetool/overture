@@ -40,15 +40,18 @@ public class AsyncThread extends Thread
 	public final OperationValue operation;
 	public final ValueList args;
 	public final CPUValue cpu;
+	public final long period;
+	public final long expected;
 
 	public AsyncThread(MessageRequest request)
 	{
-		this(request.target, request.operation, request.args, false);
+		this(request.target, request.operation, request.args, 0, 0);
 		this.request = request;
 	}
 
 	public AsyncThread(
-		ObjectValue self, OperationValue operation, ValueList args, boolean periodic)
+		ObjectValue self, OperationValue operation, ValueList args,
+		long period, long expected)
 	{
 		setName("Async Thread " + getId());
 
@@ -56,9 +59,11 @@ public class AsyncThread extends Thread
 		this.operation = operation;
 		this.args = args;
 		this.cpu = self.getCPU();
+		this.expected = expected;
+		this.period = period;
 		this.request = new MessageRequest();
 
-		cpu.addThread(this, self, operation, periodic);
+		cpu.addThread(this, self, operation, period > 0);
 	}
 
 	@Override
@@ -80,8 +85,16 @@ public class AsyncThread extends Thread
 
 		try
 		{
-			cpu.startThread();
+			cpu.startThread(expected);
     		MessageResponse response = null;
+
+    		if (period > 0)
+    		{
+   				cpu.duration(period);
+
+    			new AsyncThread(
+    				self, operation, new ValueList(), period, expected + period).start();
+    		}
 
     		try
     		{
@@ -127,8 +140,16 @@ public class AsyncThread extends Thread
 	{
 		try
 		{
-			cpu.startThread();
+			cpu.startThread(expected);
     		MessageResponse response = null;
+
+    		if (period > 0)
+    		{
+   				cpu.duration(period);
+
+    			new AsyncThread(
+    				self, operation, new ValueList(), period, expected + period).start();
+    		}
 
     		try
     		{

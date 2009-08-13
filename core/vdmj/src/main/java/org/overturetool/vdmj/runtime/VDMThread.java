@@ -26,9 +26,7 @@ package org.overturetool.vdmj.runtime;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.debug.DBGPReason;
-import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
 import org.overturetool.vdmj.values.ValueList;
@@ -59,12 +57,6 @@ public class VDMThread extends Thread
 		this.operation = object.getThreadOperation(ctxt);
 
 		VDMThreadSet.add(this);
-
-		if (Settings.dialect == Dialect.VDM_RT)
-		{
-			CPUValue cpu = object.getCPU();
-			cpu.addThread(this, object, operation, false);
-		}
 	}
 
 	@Override
@@ -76,12 +68,6 @@ public class VDMThread extends Thread
 	@Override
 	public void run()
 	{
-		if (Settings.dialect == Dialect.VDM_RT)
-		{
-			CPUValue cpu = object.getCPU();
-			cpu.startThread();
-		}
-
 		if (Settings.usingDBGP)
 		{
 			runDBGP();
@@ -89,12 +75,6 @@ public class VDMThread extends Thread
 		else
 		{
 			runCmd();
-		}
-
-		if (Settings.dialect == Dialect.VDM_RT)
-		{
-			CPUValue cpu = object.getCPU();
-			cpu.removeThread();
 		}
 	}
 
@@ -116,10 +96,6 @@ public class VDMThread extends Thread
 		catch (ContextException e)
 		{
 			Interpreter.stop(e, e.ctxt);
-		}
-		catch (RTException e)
-		{
-			// OK...
 		}
 		catch (Exception e)
 		{

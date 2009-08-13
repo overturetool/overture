@@ -23,10 +23,13 @@
 
 package org.overturetool.vdmj.statements;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
+import org.overturetool.vdmj.runtime.AsyncThread;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.VDMThread;
 import org.overturetool.vdmj.runtime.ValueException;
@@ -36,8 +39,11 @@ import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.SetType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.VoidType;
+import org.overturetool.vdmj.values.ObjectValue;
+import org.overturetool.vdmj.values.OperationValue;
 import org.overturetool.vdmj.values.SetValue;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 import org.overturetool.vdmj.values.ValueSet;
 import org.overturetool.vdmj.values.VoidValue;
 
@@ -94,6 +100,70 @@ public class StartStatement extends Statement
 
 	@Override
 	public Value eval(Context ctxt)
+	{
+		if (Settings.dialect == Dialect.VDM_RT)
+		{
+			return evalRT(ctxt);
+		}
+		else
+		{
+			return evalPP(ctxt);
+		}
+	}
+
+	private Value evalRT(Context ctxt)
+	{
+		try
+		{
+			Value value = objects.eval(ctxt);
+
+			if (value.isType(SetValue.class))
+			{
+				ValueSet set = value.setValue(ctxt);
+
+				for (Value v: set)
+				{
+					ObjectValue self = v.objectValue(ctxt);
+					OperationValue op = self.getThreadOperation(ctxt);
+
+					startRT(self, op, ctxt);
+				}
+			}
+			else
+			{
+				ObjectValue self = value.objectValue(ctxt);
+				OperationValue op = self.getThreadOperation(ctxt);
+
+				startRT(self, op, ctxt);
+			}
+
+			return new VoidValue();
+		}
+		catch (ValueException e)
+		{
+			return abort(e);
+		}
+	}
+
+	// Note that RT does not use VDMThreads at all...
+
+	private void startRT(ObjectValue self, OperationValue op, Context ctxt)
+		throws ValueException
+	{
+		if (op.body instanceof PeriodicStatement)
+		{
+			PeriodicStatement ps = (PeriodicStatement)op.body;
+			long period = ps.args.get(0).eval(ctxt).intValue(ctxt);
+			OperationValue pop = ctxt.lookup(ps.opname).operationValue(ctxt);
+			new AsyncThread(self, pop, new ValueList(), period, 0).start();
+		}
+		else
+		{
+			new AsyncThread(self, op, new ValueList(), 0, 0).start();
+		}
+	}
+
+	private Value evalPP(Context ctxt)
 	{
 		try
 		{

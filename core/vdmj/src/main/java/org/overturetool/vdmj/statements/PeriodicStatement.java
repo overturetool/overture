@@ -33,7 +33,6 @@ import org.overturetool.vdmj.expressions.IntegerLiteralExpression;
 import org.overturetool.vdmj.expressions.RealLiteralExpression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.runtime.AsyncThread;
 import org.overturetool.vdmj.runtime.Breakpoint;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
@@ -45,11 +44,9 @@ import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.types.UnknownType;
 import org.overturetool.vdmj.types.VoidType;
 import org.overturetool.vdmj.util.Utils;
-import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.OperationValue;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.ValueList;
-import org.overturetool.vdmj.values.VoidValue;
 
 public class PeriodicStatement extends Statement
 {
@@ -168,62 +165,28 @@ public class PeriodicStatement extends Statement
 	{
 		try
 		{
-			if (Settings.dialect == Dialect.VDM_PP)
-			{
-				ppThread(ctxt);
-			}
-			else
-			{
-				rtThread(ctxt);
-			}
+			OperationValue op = ctxt.lookup(opname).operationValue(ctxt);
+			long period = args.get(0).eval(ctxt).intValue(ctxt);
 
-			return new VoidValue();		// Never reached
+			while (true)
+			{
+				long start = System.currentTimeMillis();
+				op.eval(new ValueList(), ctxt);
+				long duration = System.currentTimeMillis() - start;
+
+				try
+				{
+					Thread.sleep(duration > period ? 1 : period - duration);
+				}
+				catch (InterruptedException e)
+				{
+					Breakpoint.handleInterrupt(location, ctxt);
+				}
+			}
 		}
 		catch (ValueException e)
 		{
 			return abort(e);
-		}
-	}
-
-	private void ppThread(Context ctxt) throws ValueException
-	{
-		OperationValue op = ctxt.lookup(opname).operationValue(ctxt);
-		long period = args.get(0).eval(ctxt).intValue(ctxt);
-
-		while (true)
-		{
-			long start = System.currentTimeMillis();
-			op.eval(new ValueList(), ctxt);
-			long duration = System.currentTimeMillis() - start;
-
-			try
-			{
-				Thread.sleep(duration > period ? 1 : period - duration);
-			}
-			catch (InterruptedException e)
-			{
-				Breakpoint.handleInterrupt(location, ctxt);
-			}
-		}
-	}
-
-	private void rtThread(Context ctxt) throws ValueException
-	{
-		OperationValue op = ctxt.lookup(opname).operationValue(ctxt);
-		long period = args.get(0).eval(ctxt).intValue(ctxt);
-		CPUValue cpu = ctxt.threadState.CPU;
-
-		while (true)
-		{
-			AsyncThread th = new AsyncThread(op.getSelf(), op, new ValueList(), true);
-			th.start();
-
-			if (th.cpu == cpu)
-			{
-				cpu.yield();
-			}
-
-			cpu.duration(period);
 		}
 	}
 

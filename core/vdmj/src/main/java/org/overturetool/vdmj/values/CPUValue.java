@@ -277,6 +277,11 @@ public class CPUValue extends ObjectValue
 		policy.reschedule();
 		runningThread = policy.getThread();
 		notifyAll();
+
+		if (runningThread == null)	// idle
+		{
+			SystemClock.cpuRunning(cpuNumber, false);
+		}
 	}
 
 	public void duration(long step)		// NB. Not synchronized
@@ -365,7 +370,7 @@ public class CPUValue extends ObjectValue
 		}
 	}
 
-	public synchronized void startThread()
+	public synchronized void startThread(long start)
 	{
 		Thread current = Thread.currentThread();
 		policy.setState(current, RunState.RUNNABLE);
@@ -386,12 +391,27 @@ public class CPUValue extends ObjectValue
 		ObjectValue object = objects.get(current);
     	switches++;
 
-    	RTLogger.log(
-    		"ThreadSwapIn -> id: " + current.getId() +
-    		objRefString(object) +
-    		" cpunm: " + cpuNumber +
-    		" overhead: " + 0 +
-    		" time: " + SystemClock.getWallTime());
+    	long time = SystemClock.getWallTime();
+
+    	if (start == 0 || start >= time)
+    	{
+        	RTLogger.log(
+        		"ThreadSwapIn -> id: " + current.getId() +
+        		objRefString(object) +
+        		" cpunm: " + cpuNumber +
+        		" overhead: " + 0 +
+        		" time: " + time);
+    	}
+    	else
+    	{
+        	RTLogger.log(
+        		"DelayedThreadSwapIn -> id: " + current.getId() +
+        		objRefString(object) +
+        		" delay: " + (time - start) +
+        		" cpunm: " + cpuNumber +
+        		" overhead: " + 0 +
+        		" time: " + time);
+    	}
 
     	SystemClock.cpuRunning(cpuNumber, true);
     }
