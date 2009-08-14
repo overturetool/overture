@@ -151,7 +151,10 @@ public class AsyncThread extends Thread
 		}
 		catch (RTException e)
 		{
-			// Thread stopped
+			if (reader != null)
+			{
+				reader.complete(DBGPReason.OK, null);
+			}
 		}
 		catch (Exception e)
 		{
