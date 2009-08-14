@@ -35,7 +35,7 @@ public class RTLogger
 
 	public static synchronized void enable(boolean on)
 	{
-		if (!on && events.size() > 0)
+		if (!on)
 		{
 			dump(true);
 		}

@@ -169,10 +169,11 @@ public class ClassList extends Vector<ClassDefinition>
 
 		if (systemClass != null)
 		{
-			SystemClock.init();
+			SystemClock.init();				// Set time back to zero
 			CPUClassDefinition.init();
 			BUSClassDefinition.init();
 			CPUClassDefinition.virtualCPU.swapinMainThread();
+			systemClass.CPUdecls();
 		}
 
 		globalContext.setThreadState(dbgp, CPUClassDefinition.virtualCPU);

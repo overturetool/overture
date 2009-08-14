@@ -75,8 +75,6 @@ public class CPUValue extends ObjectValue
     		{
     			cpu.abort();
     		}
-
-    		CPUClassDefinition.virtualCPU.swapoutMainThread();
 		}
 	}
 
@@ -93,14 +91,15 @@ public class CPUValue extends ObjectValue
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
 			Thread.interrupted();		// Clears interrupted flag
-			AsyncThread.reset();
+			AsyncThread.reset();		// Allowed period threads
+			SystemClock.reset();		// Clears runningCPUs, doesn't reset time
 
     		for (CPUValue cpu: allCPUs)
     		{
     			cpu.reset();
     		}
 
-    		CPUClassDefinition.virtualCPU.swapinMainThread();
+    		CPUClassDefinition.virtualCPU.addMainThread();
 		}
 	}
 
@@ -232,34 +231,35 @@ public class CPUValue extends ObjectValue
 			" time: " + SystemClock.getWallTime());
 	}
 
-	public synchronized void swapinMainThread()
+	public synchronized void addMainThread()
 	{
 		Thread main = Thread.currentThread();
 		policy.addThread(main, 0);		// Default priority
 		objects.put(main, null);
+		policy.setState(main, RunState.RUNNABLE);
+		SystemClock.cpuRunning(cpuNumber, true);
+	}
+
+	public synchronized void swapinMainThread()
+	{
+		long main = Thread.currentThread().getId();
 
 		RTLogger.log(
-			"ThreadCreate -> id: " + main.getId() +
+			"ThreadCreate -> id: " + main +
 			" period: false " +
 			objRefString(null) +
 			" cpunm: " + cpuNumber +
 			" time: " + SystemClock.getWallTime());
 
 		RTLogger.log(
-			"ThreadSwapIn -> id: " + main.getId() +
+			"ThreadSwapIn -> id: " + main +
 			" objref: nil" +
 			" clnm: nil" +
 			" cpunm: 0" +
 			" overhead: 0" +
-			" time: 0");
+			" time: " + SystemClock.getWallTime());
 
-		policy.setState(main, RunState.RUNNABLE);
-		SystemClock.cpuRunning(cpuNumber, true);
-	}
-
-	private synchronized void swapoutMainThread()
-	{
-		removeThread();
+		addMainThread();
 	}
 
 	public synchronized void removeThread()

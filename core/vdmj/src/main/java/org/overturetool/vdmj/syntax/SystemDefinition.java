@@ -113,34 +113,36 @@ public class SystemDefinition extends ClassDefinition
 		}
 	}
 
+	public void CPUdecls()
+	{
+		int cpuNumber = 1;
+
+		for (Definition d: definitions)
+		{
+			Type t = d.getType();
+
+			if (t instanceof ClassType)
+			{
+				InstanceVariableDefinition ivd = (InstanceVariableDefinition)d;
+				ClassType ct = (ClassType)t;
+
+				if (ct.classdef instanceof CPUClassDefinition)
+				{
+    				RTLogger.log(
+    					"CPUdecl -> id: " + (cpuNumber++) +
+    					" expl: " + !(ivd.expType instanceof UndefinedType) +
+    					" sys: \"" + name.name + "\"" +
+    					" name: \"" + d.name.name + "\"");
+				}
+			}
+		}
+	}
+
 	public void init(Context ctxt)
 	{
 		try
 		{
-			// Do CPUdecls first so that constructor's deploys are OK.
-			int cpuNumber = 1;
-
-			for (Definition d: definitions)
-			{
-				Type t = d.getType();
-
-				if (t instanceof ClassType)
-				{
-					InstanceVariableDefinition ivd = (InstanceVariableDefinition)d;
-					ClassType ct = (ClassType)t;
-
-					if (ct.classdef instanceof CPUClassDefinition)
-					{
-	    				RTLogger.log(
-	    					"CPUdecl -> id: " + (cpuNumber++) +
-	    					" expl: " + !(ivd.expType instanceof UndefinedType) +
-	    					" sys: \"" + name.name + "\"" +
-	    					" name: \"" + d.name.name + "\"");
-					}
-				}
-			}
-
-			// Now run the constructor to do any deploys.
+			// Run the constructor to do any deploys.
 
 			ObjectValue system = makeNewInstance(null, new ValueList(),
     				ctxt, new HashMap<LexNameToken, ObjectValue>());
