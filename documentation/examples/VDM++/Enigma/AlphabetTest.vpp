@@ -1,0 +1,26 @@
+\begin{vdm_al}
+class AlphabetTest
+  is subclass of TestCase
+
+values
+  str : seq of char = "ABCD"
+
+operations
+  protected SetUp: () ==> ()
+  SetUp () == skip;
+
+  protected RunTest: () ==> ()
+  RunTest () ==
+    ( dcl tc : Alphabet := new Alphabet(str);
+      for all i in set inds str do
+        ( AssertTrue(tc.GetChar(i) = str(i));
+          AssertTrue(tc.GetIndex(str(i)) = i);
+          AssertTrue(tc.Shift(1,i) = tc.Shift(i)) );
+      AssertTrue(tc.GetSize() = 4);
+      AssertTrue(tc.GetIndices() = {1,...,4}) );
+      
+  protected TearDown: () ==> ()
+  TearDown () == skip;
+
+end AlphabetTest
+\end{vdm_al}

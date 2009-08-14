@@ -1,0 +1,61 @@
+class Rotor
+  is subclass of Configuration
+
+instance variables
+  latch_pos : nat;
+  latch_lock : bool := false;
+
+inv RotorInv(latch_pos, config, alph)
+
+functions
+  RotorInv: nat * inmap nat to nat * Alphabet -> bool
+  RotorInv (platch_pos, pconfig, palph) ==
+    let ainds = palph.GetIndices() in
+      platch_pos in set ainds and
+      dom pconfig = ainds and
+      rng pconfig = ainds and
+      exists x in set dom pconfig & x <> pconfig(x)
+
+operations
+  public Rotor:
+    nat * nat * Alphabet * inmap nat to nat ==> Rotor
+  Rotor (psp, plp, pa, pcfg) == 
+    atomic (latch_pos := pa.Shift(plp,psp-1); 
+      alph := pa;
+      config := {pa.Shift(i,psp-1) |->
+                 pa.Shift(pcfg(i),psp-1) |
+                 i in set dom pcfg})
+  pre psp in set pa.GetIndices() and
+      RotorInv(plp, pcfg, pa);
+
+  public Rotate: () ==> ()
+  Rotate () ==
+    (-- propagate the rotation to the next component
+     -- and tell it where our latch position is
+     next.Rotate(latch_pos);
+     -- update our own latch position and take the
+     -- alphabet size into account
+     if latch_pos = alph.GetSize()
+     then latch_pos := 1
+     else latch_pos := latch_pos+1;
+     -- update the transpositioning relation by
+     -- shifting all indices one position
+     config := {alph.Shift(i) |->
+                alph.Shift(config(i)) |
+                i in set dom config};
+     -- remember the rotation
+     latch_lock := true)
+  pre isofclass(Rotor,next) or
+      isofclass(Reflector,next);
+
+  public Rotate: nat ==> ()
+  Rotate (ppos) ==
+    -- compare the latch position and the lock
+    if ppos = latch_pos and not latch_lock
+    -- perform the actual rotation
+    then Rotate()
+    -- otherwise reset the lock
+    else latch_lock := false
+  pre ppos in set alph.GetIndices();
+    
+end Rotor
