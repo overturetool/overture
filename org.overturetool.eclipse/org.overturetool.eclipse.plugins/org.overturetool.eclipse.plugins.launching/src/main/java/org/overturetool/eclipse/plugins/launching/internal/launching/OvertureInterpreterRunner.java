@@ -186,9 +186,9 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 							VMRunnerConfiguration vmConfig = new VMRunnerConfiguration(iconfig.getRunnerClassName(config, launch, myJavaProject), newClassPath);
 							vmConfig.setWorkingDirectory(proj.getProject().getLocation().toOSString());
 							//get the project dialect 
-							String dialect;
+							
 							QualifiedName qn = new QualifiedName(EditorCoreConstants.PLUGIN_ID, EditorCoreConstants.OVERTURE_DIALECT_KEY);
-							dialect = proj.getProject().getPersistentProperty(qn);
+							String dialect = proj.getProject().getPersistentProperty(qn);
 							// Select interpreter:
 							String toolType = OvertureDebugConstants.TOOL_VDMJ;
 							IInterpreterInstall interpreterInstall;
@@ -238,30 +238,56 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 //							String[] eclipseArguments = iconfig.getProgramArguments(config, launch, myJavaProject);
 							// +2 in order to allocate space for debugClass, debugOperation, tool, dialect, debugFromConsole 
 							
-							String[] arguments = new String[memberFilesList.size() + 5];	
+							String[] arguments = new String[memberFilesList.size() + 9]; // TODO 5->10	
 							if (toolType.equals(OvertureDebugConstants.TOOL_VDMTOOLS)){
-								arguments = new String[memberFilesList.size() + 6]; 
+								arguments = new String[memberFilesList.size() + 10]; 
 							}
 							
 							// 0: host 
 							// 1: port
 							// 2: sessionID
+							arguments[argNumber++] = "-h";
 							arguments[argNumber++] = host;
+							arguments[argNumber++] = "-p";
 							arguments[argNumber++] = port;
+							arguments[argNumber++] = "-k";
 							arguments[argNumber++] = sessionId;
-							arguments[argNumber++] = dialect;
+							
+							if (toolType.equals(OvertureDebugConstants.TOOL_VDMJ)){
+								String vdmjDialect = "";
+								if (dialect.equals("VDM_PP"))
+								{
+									vdmjDialect = "vdmpp";
+								}
+								else if (dialect.equals("VDM_SL")){
+									vdmjDialect = "vdmsl";
+								}
+								else if (dialect.equals("VDM_RT"))
+								{
+									vdmjDialect = "vdmrt";
+								}
+								arguments[argNumber++] = "-" + vdmjDialect;
+							}
+							else
+							{
+								arguments[argNumber++] = "-" + dialect;
+							}
+							
+							
+							
+							
 							// 4: expression eg. : new className().operation()
 							String debugOperation = launch.getLaunchConfiguration().getAttribute(OvertureDebugConstants.DEBUGGING_OPERATION, "");
 							
 							
 							String expression = 
-									"new " + 
-									launch.getLaunchConfiguration().getAttribute(OvertureDebugConstants.DEBUGGING_CLASS, "") + 
-									"()." + debugOperation;
+								"new " + 
+								launch.getLaunchConfiguration().getAttribute(OvertureDebugConstants.DEBUGGING_CLASS, "") + 
+								"()." + debugOperation;
 							if (dialect.equals("VDM_SL")){
 								expression = debugOperation;
 							}
-									
+							arguments[argNumber++] = "-e";		
 							arguments[argNumber++] = expression;
 							
 							if (toolType.equals(OvertureDebugConstants.TOOL_VDMTOOLS)){
@@ -280,7 +306,6 @@ public class OvertureInterpreterRunner extends AbstractInterpreterRunner impleme
 							{
 								arguments[argNumber++] = new File( memberFilesList.get(a) ).toURI().toASCIIString();
 							}
-							
 							
 							// Run new java program:
 							vmConfig.setProgramArguments(arguments);

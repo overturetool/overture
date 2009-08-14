@@ -36,6 +36,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -46,6 +48,7 @@ import java.util.Map.Entry;
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.VDMJ;
+import org.overturetool.vdmj.VDMOV;
 import org.overturetool.vdmj.VDMPP;
 import org.overturetool.vdmj.VDMRT;
 import org.overturetool.vdmj.VDMSL;
@@ -122,42 +125,42 @@ public class DBGPReader
 		String expression = null;
 		List<File> files = new Vector<File>();
 
-		host = args[0];
-		port = Integer.parseInt(args[1]);
-		ideKey = args[2];
-		Settings.dialect = Dialect.valueOf(args[3]);
-		expression = args[4];
+//		host = args[0];
+//		port = Integer.parseInt(args[1]);
+//		ideKey = args[2];
+//		Settings.dialect = Dialect.valueOf(args[3]);
+//		expression = args[4];
+//
+//		for (int i=5; i<args.length; i++)
+//		{
+//			try
+//			{
+//				files.add(new File(new URI(args[i])));
+//			}
+//			catch (URISyntaxException e)
+//			{
+//				System.exit(4);
+//			}
+//		}
+//
+//		VDMJ controller = null;
+//
+//		switch (Settings.dialect)
+//		{
+//			case VDM_SL:
+//				controller = new VDMSL();
+//				break;
+//
+//			case VDM_PP:
+//				controller = new VDMPP();
+//				break;
+//
+//			case VDM_RT:
+//				controller = new VDMRT();
+//				break;
+//		}
 
-		for (int i=5; i<args.length; i++)
-		{
-			try
-			{
-				files.add(new File(new URI(args[i])));
-			}
-			catch (URISyntaxException e)
-			{
-				System.exit(4);
-			}
-		}
-
-		VDMJ controller = null;
-
-		switch (Settings.dialect)
-		{
-			case VDM_SL:
-				controller = new VDMSL();
-				break;
-
-			case VDM_PP:
-				controller = new VDMPP();
-				break;
-
-			case VDM_RT:
-				controller = new VDMRT();
-				break;
-		}
-
-		/********************
+		
 
 		List<String> largs = Arrays.asList(args);
 		VDMJ controller = null;
@@ -257,7 +260,7 @@ public class DBGPReader
 
 		controller.setWarnings(warnings);
 
-		****************/
+		
 
 		if (controller.parse(files) == ExitStatus.EXIT_OK)
 		{
