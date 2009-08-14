@@ -44,6 +44,18 @@ public class AsyncThread extends Thread
 	public final long expected;
 	public final boolean first;
 
+	private static boolean stopping = false;
+
+	public static synchronized void periodicStop()
+	{
+		stopping = true;
+	}
+
+	public static void reset()
+	{
+		stopping = false;
+	}
+
 	public AsyncThread(MessageRequest request)
 	{
 		this(request.target, request.operation, request.args, 0, 0);
@@ -99,7 +111,7 @@ public class AsyncThread extends Thread
 			cpu.startThread(expected);
     		MessageResponse response = null;
 
-    		if (period > 0)
+    		if (period > 0 && !stopping)
     		{
     			if (!first)
     			{
@@ -157,7 +169,7 @@ public class AsyncThread extends Thread
 			cpu.startThread(expected);
     		MessageResponse response = null;
 
-    		if (period > 0)
+    		if (period > 0 && !stopping)
     		{
     			if (!first)
     			{

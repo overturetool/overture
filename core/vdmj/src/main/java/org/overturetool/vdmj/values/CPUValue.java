@@ -33,6 +33,7 @@ import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.RTLogger;
+import org.overturetool.vdmj.runtime.AsyncThread;
 import org.overturetool.vdmj.runtime.CPUPolicy;
 import org.overturetool.vdmj.runtime.RTException;
 import org.overturetool.vdmj.runtime.RunState;
@@ -66,9 +67,16 @@ public class CPUValue extends ObjectValue
 
 	public static void abortAll()
 	{
-		for (CPUValue cpu: allCPUs)
+		if (Settings.dialect == Dialect.VDM_RT)
 		{
-			cpu.abort();
+			AsyncThread.periodicStop();
+
+    		for (CPUValue cpu: allCPUs)
+    		{
+    			cpu.abort();
+    		}
+
+    		CPUClassDefinition.virtualCPU.swapoutMainThread();
 		}
 	}
 
@@ -85,31 +93,14 @@ public class CPUValue extends ObjectValue
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
 			Thread.interrupted();		// Clears interrupted flag
+			AsyncThread.reset();
 
     		for (CPUValue cpu: allCPUs)
     		{
     			cpu.reset();
     		}
 
-    		SystemClock.reset();
-
-    		// Show the main thread creation...
-
-    		CPUValue vCPU = CPUClassDefinition.virtualCPU;
-    		Thread main = Thread.currentThread();
-
-    		vCPU.addThread(main);
-
-    		RTLogger.log(
-    			"ThreadSwapIn -> id: " + main.getId() +
-    			" objref: nil" +
-    			" clnm: nil" +
-    			" cpunm: 0" +
-    			" overhead: 0" +
-    			" time: 0");
-
-    		vCPU.policy.setState(main, RunState.RUNNABLE);
-    		SystemClock.cpuRunning(vCPU.cpuNumber, true);
+    		CPUClassDefinition.virtualCPU.swapinMainThread();
 		}
 	}
 
@@ -241,17 +232,34 @@ public class CPUValue extends ObjectValue
 			" time: " + SystemClock.getWallTime());
 	}
 
-	private void addThread(Thread thread)
+	public synchronized void swapinMainThread()
 	{
-		policy.addThread(thread, 0);	// Default priority
-		objects.put(thread, null);
+		Thread main = Thread.currentThread();
+		policy.addThread(main, 0);		// Default priority
+		objects.put(main, null);
 
 		RTLogger.log(
-			"ThreadCreate -> id: " + thread.getId() +
+			"ThreadCreate -> id: " + main.getId() +
 			" period: false " +
 			objRefString(null) +
 			" cpunm: " + cpuNumber +
 			" time: " + SystemClock.getWallTime());
+
+		RTLogger.log(
+			"ThreadSwapIn -> id: " + main.getId() +
+			" objref: nil" +
+			" clnm: nil" +
+			" cpunm: 0" +
+			" overhead: 0" +
+			" time: 0");
+
+		policy.setState(main, RunState.RUNNABLE);
+		SystemClock.cpuRunning(cpuNumber, true);
+	}
+
+	private synchronized void swapoutMainThread()
+	{
+		removeThread();
 	}
 
 	public synchronized void removeThread()
@@ -376,6 +384,8 @@ public class CPUValue extends ObjectValue
 		policy.setState(current, RunState.RUNNABLE);
 		wakeUp();
 
+		boolean idle = (runningThread == null);
+
     	while (runningThread != current)
     	{
     		try
@@ -413,7 +423,10 @@ public class CPUValue extends ObjectValue
         		" time: " + time);
     	}
 
-    	SystemClock.cpuRunning(cpuNumber, true);
+		if (idle)	// ie. was idle
+		{
+			SystemClock.cpuRunning(cpuNumber, true);
+		}
     }
 
 	public void setState(Thread thread, RunState newstate)

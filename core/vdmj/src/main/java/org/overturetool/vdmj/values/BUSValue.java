@@ -23,15 +23,15 @@
 
 package org.overturetool.vdmj.values;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Vector;
 
+import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.runtime.AsyncThread;
 import org.overturetool.vdmj.runtime.BUSPolicy;
-import org.overturetool.vdmj.runtime.CPUThread;
+import org.overturetool.vdmj.runtime.ControlQueue;
 import org.overturetool.vdmj.runtime.MessageRequest;
 import org.overturetool.vdmj.runtime.MessageResponse;
 import org.overturetool.vdmj.runtime.RunState;
@@ -51,8 +51,7 @@ public class BUSValue extends ObjectValue
 	public final ValueSet cpus;
 
 	public String name;
-	public boolean busBusy = false;
-	public Queue<CPUThread> waiters = new LinkedList<CPUThread>();
+	public ControlQueue cq;
 
 	public static void init()
 	{
@@ -62,16 +61,18 @@ public class BUSValue extends ObjectValue
 
 	public static void resetAll()
 	{
-		for (BUSValue bus: allBUSSES)
+		if (Settings.dialect == Dialect.VDM_RT)
 		{
-			bus.reset();
+    		for (BUSValue bus: allBUSSES)
+    		{
+    			bus.reset();
+    		}
 		}
 	}
 
 	public void reset()
 	{
-		busBusy = false;
-		waiters.clear();
+		cq = new ControlQueue();
 	}
 
 	public BUSValue(Type classtype, NameValuePairMap map, ValueList argvals)
@@ -113,6 +114,8 @@ public class BUSValue extends ObjectValue
 
 	public void transmit(MessageRequest request)
 	{
+		cq.join(request.from);
+
 		RTLogger.log(
 			"MessageRequest -> busid: " + request.bus.busNumber +
 			" fromcpu: " + request.from.cpuNumber +
@@ -123,14 +126,6 @@ public class BUSValue extends ObjectValue
 			" objref: " + request.target.objectReference +
 			" size: " + request.getSize() +
 			" time: " + SystemClock.getWallTime());
-
-		if (busBusy)
-		{
-			waiters.add(new CPUThread(request.from, Thread.currentThread()));
-			request.from.yield();
-		}
-
-		busBusy = true;
 
 		RTLogger.log(
 			"MessageActivate -> msgid: " + request.msgId +
@@ -146,20 +141,16 @@ public class BUSValue extends ObjectValue
 			"MessageCompleted -> msgid: " + request.msgId +
 			" time: " + SystemClock.getWallTime());
 
-		busBusy = false;
-
 		AsyncThread thread = new AsyncThread(request);
 		thread.start();
 
-		if (!waiters.isEmpty())
-		{
-			CPUThread next = waiters.remove();
-			next.cpu.setState(next.thread, RunState.RUNNABLE);
-		}
+		cq.leave();
 	}
 
 	public void reply(MessageResponse response)
 	{
+		cq.join(response.from);
+
 		RTLogger.log(
 			"ReplyRequest -> busid: " + response.bus.busNumber +
 			" fromcpu: " + response.from.cpuNumber +
@@ -170,14 +161,6 @@ public class BUSValue extends ObjectValue
 			" objref: " + response.target.objectReference +
 			" size: " + response.getSize() +
 			" time: " + SystemClock.getWallTime());
-
-		if (busBusy)
-		{
-			waiters.add(new CPUThread(response.from, Thread.currentThread()));
-			response.from.yield();
-		}
-
-		busBusy = true;
 
 		RTLogger.log(
 			"MessageActivate -> msgid: " + response.msgId +
@@ -193,17 +176,11 @@ public class BUSValue extends ObjectValue
 			"MessageCompleted -> msgid: " + response.msgId +
 			" time: " + SystemClock.getWallTime());
 
-		busBusy = false;
-
 		response.replyTo.set(response);
 		response.to.setState(response.caller, RunState.RUNNABLE);
 		response.to.wakeUp();
 
-		if (!waiters.isEmpty())
-		{
-			CPUThread next = waiters.remove();
-			next.cpu.setState(next.thread, RunState.RUNNABLE);
-		}
+		cq.leave();
 	}
 
 	public void setName(String name)

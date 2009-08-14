@@ -40,12 +40,11 @@ import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.RootContext;
 import org.overturetool.vdmj.runtime.StateContext;
+import org.overturetool.vdmj.runtime.SystemClock;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.SystemDefinition;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
-import org.overturetool.vdmj.values.BUSValue;
-import org.overturetool.vdmj.values.CPUValue;
 
 
 /**
@@ -170,10 +169,10 @@ public class ClassList extends Vector<ClassDefinition>
 
 		if (systemClass != null)
 		{
+			SystemClock.init();
 			CPUClassDefinition.init();
 			BUSClassDefinition.init();
-			CPUValue.resetAll();		// Allocate main thread to vCPU
-			BUSValue.resetAll();
+			CPUClassDefinition.virtualCPU.swapinMainThread();
 		}
 
 		globalContext.setThreadState(dbgp, CPUClassDefinition.virtualCPU);

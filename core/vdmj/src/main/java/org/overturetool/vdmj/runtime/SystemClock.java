@@ -31,11 +31,16 @@ public class SystemClock
 	private static long minStepTime = Long.MAX_VALUE;
 	private static BitSet runningCPUs = new BitSet();
 
-	public static void reset()
+	public static void init()
 	{
 		wallTime = 0;
-		minStepTime = Long.MAX_VALUE;
+		reset();
+	}
+
+	public static void reset()
+	{
 		runningCPUs.clear();
+		minStepTime = Long.MAX_VALUE;
 	}
 
 	public static synchronized void cpuRunning(int cpu, boolean running)

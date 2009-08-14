@@ -58,6 +58,7 @@ import org.overturetool.vdmj.typechecker.PublicClassEnvironment;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.util.Utils;
+import org.overturetool.vdmj.values.BUSValue;
 import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.NameValuePair;
 import org.overturetool.vdmj.values.NameValuePairList;
@@ -224,6 +225,7 @@ public class ClassInterpreter extends Interpreter
 		clearBreakpointHits();
 
 		CPUValue.resetAll();
+		BUSValue.resetAll();
 		Value rv = expr.eval(mainContext);
 		CPUValue.abortAll();
 
