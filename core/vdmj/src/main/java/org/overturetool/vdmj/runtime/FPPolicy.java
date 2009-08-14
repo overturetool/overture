@@ -47,4 +47,10 @@ public class FPPolicy extends FCFSPolicy
 	{
 		return priorities.get(bestThread);
 	}
+
+	@Override
+	public boolean hasPriorities()
+	{
+		return true;
+	}
 }

@@ -38,7 +38,6 @@ import org.overturetool.vdmj.runtime.CPUPolicy;
 import org.overturetool.vdmj.runtime.RTException;
 import org.overturetool.vdmj.runtime.RunState;
 import org.overturetool.vdmj.runtime.SchedulingPolicy;
-import org.overturetool.vdmj.runtime.FPPolicy;
 import org.overturetool.vdmj.runtime.SystemClock;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Type;
@@ -158,11 +157,11 @@ public class CPUValue extends ObjectValue
 		deployed.add(obj);
 	}
 
-	public boolean setPriority(String opname, long priority)
+	public void setPriority(String opname, long priority) throws Exception
 	{
-		if (!(policy instanceof FPPolicy))
+		if (!policy.hasPriorities())
 		{
-			return false;
+			throw new Exception("CPUs policy does not support priorities");
 		}
 
 		boolean found = false;
@@ -182,7 +181,10 @@ public class CPUValue extends ObjectValue
 			}
 		}
 
-		return found;
+		if (!found)
+		{
+			throw new Exception("Operation name not found");
+		}
 	}
 
 	public long getDuration(long cycles)

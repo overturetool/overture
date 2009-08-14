@@ -106,4 +106,10 @@ public class FCFSPolicy extends SchedulingPolicy
 	{
 		return TIMESLICE;
 	}
+
+	@Override
+	public boolean hasPriorities()
+	{
+		return false;
+	}
 }

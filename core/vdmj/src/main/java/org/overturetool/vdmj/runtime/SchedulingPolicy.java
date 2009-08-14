@@ -25,6 +25,7 @@ package org.overturetool.vdmj.runtime;
 
 abstract public class SchedulingPolicy
 {
+	abstract public boolean hasPriorities();
 	abstract public boolean reschedule();
 	abstract public Thread getThread();
 	abstract public long getTimeslice();
