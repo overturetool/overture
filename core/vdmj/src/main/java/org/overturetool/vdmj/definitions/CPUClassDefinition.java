@@ -34,6 +34,7 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.SystemClock;
+import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.syntax.DefinitionReader;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.values.CPUValue;
@@ -163,12 +164,12 @@ public class CPUClassDefinition extends ClassDefinition
     		if (!cpu.setPriority(opname.stringValue(ctxt), priority.intValue(ctxt)))
     		{
     			throw new ContextException(
-    				4137, "Cannot set operation priority on CPU", ctxt.location, ctxt);
+    				4141, "CPU policy does not allow priorities", ctxt.location, ctxt);
     		}
 
    			return new VoidValue();
 		}
-		catch (Exception e)
+		catch (ValueException e)
 		{
 			throw new ContextException(4137, "Cannot set operation priority on CPU", ctxt.location, ctxt);
 		}
