@@ -564,6 +564,15 @@ public class OperationValue extends Value
 
 		if (logreq)		// Async OpRequests are made in asyncEval
 		{
+			if (isConstructor && traceRT)
+			{
+	   			RTLogger.log(
+    				"DeployObj -> objref: " + self.objectReference +
+    				" clnm: \"" + self.type.name.name + "\"" +
+    				" cpunm: " + self.getCPU().cpuNumber +
+    				" time: " + SystemClock.getWallTime());
+			}
+
 			trace("OpRequest");
 		}
 	}
