@@ -1,0 +1,90 @@
+\section{DOO mode requirements}
+
+The DOO code states
+
+\begin{itemize}
+\item[D] Pace the atria and ventricle
+\item[O] Without sensing the chambers
+\item[O] Without response to sensing
+\end{itemize}
+
+\noindent This means the pacemaker must pace the atria chamber and ventricle discarding any sensed data from the chambers just regarding the programmable parameters.
+
+\paragraph{Programmable parameter requirements}
+
+\begin{itemize}
+\item LRL\ref{sym:LRL} shall be 60 ppm.
+\item URL\ref{sym:URL} shall be 120 ppm.
+\item Fixed AV\ref{sym:FixedAVDelay} shall be 150 ms.
+\end{itemize}
+
+\paragraph{Purpose and abstraction level}
+
+Model and validate the requirements of the Pacemaker DOO mode.
+
+\begin{itemize}
+\item Atrial/Ventricular Amplitude, Pulse Width and Sensitivity are discarded because they are not relevant for us, as they don't add any understanding of the mode of pacing.
+\end{itemize}
+
+
+
+\subsection*{VDM-SL module}
+
+ The model of the requirements start by defining the input of the system as a set of the senses in a chamber at a given time.
+
+
+
+\begin{vdm_al}
+module PacemakerDOO
+
+definitions 
+
+types 
+
+Time = nat;
+
+SensedTimeline = set of (Chamber * Time);
+
+Chamber = <ATRIA> | <VENTRICLE>;
+\end{vdm_al}
+
+Reactions will be an identical set but representing the discharged pulses.
+
+\begin{vdm_al}
+ReactionTimeline = set of (Chamber * Time);
+
+\end{vdm_al}
+
+The programmable parameters are defined as values.
+
+\begin{vdm_al}
+values
+   LRL     : nat = 60;
+   URL     : nat = 120;
+   FixedAV : nat = 150;
+\end{vdm_al}
+
+The Pacemaker system transforms the input set into an output set containing the amount of atrial and ventricular pulses in order to achieve the expected ppm rate. The FixedAV requirement is expressed in the last universal quantifier.
+
+\begin{vdm_al}                         
+functions
+
+Pacemaker (mk_(inp,n) : SensedTimeline * nat1) r : ReactionTimeline
+post let nPulsesAtria = card {i | i in set r & i.#1 = <ATRIA>}, 
+         nPulsesVentricle = card {i | i in set r & i.#1 = <VENTRICLE>}
+     in  nPulsesAtria / n >= (LRL / 60) / 1000
+         and
+         nPulsesVentricle / n <= (URL / 60) / 1000
+         and
+         forall mk_(<ATRIA>,ta) in set r & (exists mk_(<VENTRICLE>,tv) in set r & tv = ta + FixedAV) ;
+	                             
+end PacemakerDOO
+\end{vdm_al}
+
+\paragraph{Requirements review}
+
+\begin{itemize}
+\item LRL \textbf{Modeled}.
+\item URL \textbf{Modeled}.
+\item Fixed AV \textbf{Modeled}.
+\end{itemize}

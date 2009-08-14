@@ -1,0 +1,111 @@
+\section{AAI mode requirements}
+
+The AAI code states
+
+\begin{itemize}
+\item[A] Pace the Atria.
+\item[A] Sensing the Atria chamber.
+\item[I] With inhibited response to sensing. A sense in the Atria inhibits a scheduled pace in it. 
+\end{itemize}
+
+\noindent This means the pacemaker must pace the atria chamber regarding the valid sensed data from the atria and the programmable parameters.
+
+
+\paragraph{Programmable parameter requirements}
+
+\begin{itemize}
+\item LRL\ref{sym:LRL} shall be 60 ppm
+\item URL\ref{sym:URL} shall be 120 ppm
+\item ARP\ref{sym:ARP} shall be 250 ms
+\item PVARP\ref{sym:PVARP} shall be 250 ms
+\end{itemize}
+
+\subsection*{Purpose and abstraction level}
+
+The purpose is to model and validate the requirements of the Pacemaker AAI mode.
+
+\begin{itemize}
+\item Atrial Amplitude, Atrial Pulse With and Sensivity are discarded because they are not relevant for the propose.
+\item In this mode the chamber is always the atria so the other chambers are discarded in the model.
+\end{itemize}
+
+\subsection*{VDM-SL module}
+
+ The model of the requirements start by defining the input of the system as a sequence of senses in a chamber at a given time.
+
+ The model of the requirements start by defining the value of the LRL.
+
+\begin{vdm_al}
+module PacemakerAAI
+
+definitions 
+
+values 
+LRL     : nat = 60;
+ARP     : nat = 250;
+\end{vdm_al}
+
+The input is a sequence and of sensed stimuli and the time of it.
+
+\begin{vdm_al}
+types 
+SenseTimeline = seq of Sense;
+
+Sense = <NONE> | <PULSE>;
+
+\end{vdm_al}
+
+The output will be a sequence of the reactions to the input that can be either do nothing or discharge a pulse on the Atria at a particular time.
+
+\begin{vdm_al}
+ReactionTimeline = seq of Reaction; 
+
+Reaction = <NONE> | <PULSE>;
+   
+functions
+\end{vdm_al}
+
+The pacemaker its modelled as an implicit function stating that the bpm rate is larger or equal the LRL\cite{www:PacemakerCycles} and that every valid stimuli from the input triggers an artificial pulse response. The invalid ones are filtered by the ARP interval.
+
+\begin{vdm_al}                         
+Pacemaker (inp : SenseTimeline) r : ReactionTimeline
+post let m = {i | i in set inds r & r(i) = <PULSE>}
+     in len r = len inp 
+        and
+        r(1) = <PULSE> 
+        and
+        forall x in set m & (
+           (exists y in set m & y > x) => 
+                 (exists z in set m &  z >= x and z - x <= 60000/LRL)
+                 or
+                 (exists z in set inds inp &  z >= x and z - x > ARP and inp(z) = <PULSE>)
+           );
+
+
+end PacemakerAAI
+\end{vdm_al}
+
+\subsection{Requirements review}
+
+\begin{itemize}
+\item LRL \textbf{Modeled}
+\item URL \textbf{Not modelled}\footnote{We discovered this requirement is contradictory and its a minor error in a table from the specification.}
+\item ARP \textbf{Modeled}.
+\item PVARP available to modes with atrial sensing is the time interval following a ventricular event when an atrial cardiac event shall not 
+   \begin{enumerate}
+   \item Inhibit an atrial pace. 
+   \item Trigger a ventricular pace.
+   \end{enumerate} \textbf{Not modelled}\footnote{We discovered this requirement is contradictory and its a minor error in a table from the specification.}
+\end{itemize}
+
+
+%\begin{rtinfo}
+%[TotalxCoverage]{vdm.tc}[PacemakerAAI]
+%Pace
+%Pulse
+%\end{rtinfo}
+
+%>> p PacemakerAAI`post_Pacemaker({1|-><NONE>,250 |-> <PULSE>},{ 1 |-> <PULSE>, 500|-> <PULSE>})
+
+%Should return false
+
