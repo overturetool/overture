@@ -28,7 +28,21 @@ public class VdmToolsWrapper implements PogGenerator {
 		List<String> command = buildPogCommand(vppdeBinaryPath, vdmFiles);
 		Console vdmToolsConsole = createVdmToolsConsole(command);
 		waitForPogToFinish(vdmToolsConsole);
+		validateOperation(vdmToolsConsole);
 		return vdmFiles[0] + POG_FILE_EXTENSION;
+	}
+
+	private void validateOperation(Console vdmToolsConsole) throws PogGeneratorException {
+		try {
+			StringBuffer sb = new StringBuffer();
+			String line = null;
+			while((line = vdmToolsConsole.readErrorLine()) != null)
+				sb.append(line);
+			if(sb.length() > 0)
+				throw new PogGeneratorException(sb.toString());
+		} catch (IOException e) {
+			throw new PogGeneratorException("Interrupted while validating VDMTools concole output.", e);
+		}
 	}
 
 	private void waitForPogToFinish(Console vdmToolsConsole) throws PogGeneratorException {
@@ -58,5 +72,7 @@ public class VdmToolsWrapper implements PogGenerator {
 			command.add(file);
 		return command;
 	}
+	
+	
 
 }

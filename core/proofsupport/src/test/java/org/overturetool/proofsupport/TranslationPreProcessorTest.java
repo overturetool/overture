@@ -9,6 +9,7 @@ import junit.framework.TestCase;
 
 import org.overturetool.ast.itf.IOmlDocument;
 import org.overturetool.ast.itf.IOmlExpression;
+import org.overturetool.proofsupport.external_tools.pog.PogGeneratorException;
 import org.overturetool.proofsupport.external_tools.pog.VdmToolsPogProcessor;
 import org.overturetool.proofsupport.external_tools.pog.VdmToolsWrapper;
 import org.overturetool.proofsupport.test.TestSettings;
@@ -20,12 +21,13 @@ public class TranslationPreProcessorTest extends TestCase {
 	private static String testModel1 = null;
 	private static String testModel2 = null;
 	private static String stackModel = null;
+	private static String emptyModel = null;
+	private static String parseError = null;
 	private static String testPogFileNoNewLine = null;
 	private static String stackModelPogFile = null;
 
 	protected void setUp() throws Exception {
 		super.setUp();
-
 		setUpTestValues();
 	}
 
@@ -34,6 +36,8 @@ public class TranslationPreProcessorTest extends TestCase {
 		testModel1 = settings.get(TestSettings.TEST_MODEL_1);
 		testModel2 = settings.get(TestSettings.TEST_MODEL_2);
 		stackModel = settings.get(TestSettings.STACK_MODEL);
+		emptyModel = settings.get(TestSettings.EMPTY_MODEL);
+		parseError = settings.get(TestSettings.PARSE_ERROR);
 		testPogFileNoNewLine = settings.get(TestSettings.TEST_POG_FILE_NO_NEW_LINE);
 		stackModelPogFile = settings.get(TestSettings.STACK_MODEL_POG_FILE);
 	}
@@ -65,6 +69,48 @@ public class TranslationPreProcessorTest extends TestCase {
 
 		assertPreparationDataIsGood(modelFile, expectedContextSize,
 				expectedPoSize, actual);
+	}
+	
+	public void testPrepareVdmFilesEmptyModel() throws Exception {
+		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
+				VPPDE_BIN), new VdmToolsPogProcessor());
+		String modelFile = emptyModel;
+		List<String> contextFiles = new ArrayList<String>(0);
+
+		try {
+			prep.prepareVdmFiles(modelFile, contextFiles);
+			fail("The model was empty and method should have thrown an exception.");
+		} catch(PogGeneratorException e) {
+			
+		}
+	}
+	
+	public void testPrepareVdmFilesCantParse() throws Exception {
+		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
+				VPPDE_BIN), new VdmToolsPogProcessor());
+		String modelFile = parseError;
+		List<String> contextFiles = new ArrayList<String>(0);
+
+		try {
+			prep.prepareVdmFiles(modelFile, contextFiles);
+			fail("The model doesn't parse and method should have thrown an exception.");
+		} catch(PogGeneratorException e) {
+			
+		}
+	}
+	
+	public void testPrepareVdmFilesNullFile() throws Exception {
+		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
+				VPPDE_BIN), new VdmToolsPogProcessor());
+		String modelFile = null;
+		List<String> contextFiles = new ArrayList<String>(0);
+
+		try {
+			prep.prepareVdmFiles(modelFile, contextFiles);
+			fail("The model file name was null and method should have thrown an exception.");
+		} catch(PogGeneratorException e) {
+			
+		}
 	}
 
 	public void testGenerateOmlAst() throws Exception {
