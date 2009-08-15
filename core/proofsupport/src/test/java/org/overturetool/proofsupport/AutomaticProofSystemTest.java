@@ -58,5 +58,4 @@ public class AutomaticProofSystemTest extends TestCase {
 		assertEquals(expected[0], actual[actual.length - 2]);
 		assertEquals(expected[1], actual[actual.length - 1]);
 	}
-
 }

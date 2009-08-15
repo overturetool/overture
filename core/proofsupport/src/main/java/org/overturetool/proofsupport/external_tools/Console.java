@@ -102,7 +102,7 @@ public class Console {
 	/**
 	 * Writes a line to process input and reads a line of process output.
 	 * Calling this method eventually results in an invocation of
-	 * <code>BufferedReder.realLine()</code> that in principle blocks the
+	 * <code>BufferedReder.readLine()</code> that in principle blocks the
 	 * current thread if no text is available, or returns null if the underlying
 	 * stream is closed.
 	 * 
@@ -116,7 +116,7 @@ public class Console {
 
 	/**
 	 * Reads a line of process output. Calling this method results in an
-	 * invocation of <code>BufferedReder.realLine()</code> that in principle
+	 * invocation of <code>BufferedReder.readLine()</code> that in principle
 	 * blocks the current thread if no text is available, or returns null if the
 	 * underlying stream is closed.
 	 * 
@@ -129,7 +129,7 @@ public class Console {
 
 	/**
 	 * Reads all lines of process output. Calling this method results in a
-	 * sequence of invocations of <code>BufferedReder.realLine()</code> until
+	 * sequence of invocations of <code>BufferedReder.readLine()</code> until
 	 * the end of the underlying stream is reached. If this method is called
 	 * before the process has terminated the caller tread will block until the
 	 * process terminates.
@@ -151,7 +151,7 @@ public class Console {
 
 	/**
 	 * Reads a line of process error. Calling this method results in an
-	 * invocation of <code>BufferedReder.realLine()</code> that in principle
+	 * invocation of <code>BufferedReder.readLine()</code> that in principle
 	 * blocks the current thread if no text is available, or returns null if the
 	 * stream is closed.
 	 * 

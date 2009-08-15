@@ -1,7 +1,6 @@
 package org.overturetool.proofsupport.external_tools.hol;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.overturetool.proofsupport.external_tools.BufferedConsoleReader;
 import org.overturetool.proofsupport.external_tools.ConsoleReader;
@@ -19,10 +18,6 @@ public class MosmlHolConsoleReader extends BufferedConsoleReader implements Cons
 	
 	public MosmlHolConsoleReader() throws IOException {
 		super();
-	}
-
-	public void setInputStream(InputStream is) {
-		super.setInputStream(is);
 	}
 	
 	@Override

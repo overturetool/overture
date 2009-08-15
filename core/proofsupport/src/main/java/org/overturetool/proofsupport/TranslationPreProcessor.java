@@ -25,43 +25,52 @@ public class TranslationPreProcessor {
 		this.omlAstGen = OmlAstGeneratorFactory.newOmlAstGenertorInstance();
 	}
 
-	public PreparationData prepareVdmFiles(String vdmModelFile, List<String> vdmContextFiles) throws PogGeneratorException, PogProcessorException, ParserException {
+	public PreparationData prepareVdmFiles(String vdmModelFile,
+			List<String> vdmContextFiles) throws PogGeneratorException,
+			PogProcessorException, ParserException {
 		String pogFilePath = generatePogFile(vdmModelFile, vdmContextFiles);
 		List<String> poExpressions = processPogFile(pogFilePath);
 		return generateOmlAst(vdmModelFile, vdmContextFiles, poExpressions);
 	}
 
-	protected PreparationData generateOmlAst(String vdmModelFile, List<String> vdmContextFiles,
-			List<String> poExpressions) throws ParserException  {
+	protected PreparationData generateOmlAst(String vdmModelFile,
+			List<String> vdmContextFiles, List<String> poExpressions)
+			throws ParserException {
 		IOmlDocument omlModel = omlAstGen.getOmlDocument(vdmModelFile);
 		List<IOmlDocument> omlContextDocuments = parseContext(vdmContextFiles);
 		List<IOmlExpression> omlPos = parsePos(poExpressions);
 		return new PreparationData(omlModel, omlContextDocuments, omlPos);
 	}
 
-	private List<IOmlExpression> parsePos(List<String> poExpressions) throws ParserException  {
-		List<IOmlExpression> omlPos = new ArrayList<IOmlExpression>(poExpressions.size());
+	private List<IOmlExpression> parsePos(List<String> poExpressions)
+			throws ParserException {
+		List<IOmlExpression> omlPos = new ArrayList<IOmlExpression>(
+				poExpressions.size());
 		for (String poExpression : poExpressions)
 			omlPos.add(omlAstGen.getOmlExpression(poExpression));
 		return omlPos;
 	}
 
-	protected List<IOmlDocument> parseContext(List<String> vdmContextFiles) throws ParserException {
-		List<IOmlDocument> omlContextDocuments = new ArrayList<IOmlDocument>(vdmContextFiles.size());
+	protected List<IOmlDocument> parseContext(List<String> vdmContextFiles)
+			throws ParserException {
+		List<IOmlDocument> omlContextDocuments = new ArrayList<IOmlDocument>(
+				vdmContextFiles.size());
 		for (String vdmContextFile : vdmContextFiles)
 			omlContextDocuments.add(omlAstGen.getOmlDocument(vdmContextFile));
 		return omlContextDocuments;
 	}
 
-	protected List<String> processPogFile(String pogFilePath) throws PogProcessorException {
+	protected List<String> processPogFile(String pogFilePath)
+			throws PogProcessorException {
 		List<String[]> pos = pogProc.extractPosFromFile(pogFilePath);
 		return pogProc.extractPoExpressions(pos);
 	}
 
-	protected String generatePogFile(String vdmModelFile, List<String> vdmContextFiles) throws PogGeneratorException {
+	protected String generatePogFile(String vdmModelFile,
+			List<String> vdmContextFiles) throws PogGeneratorException {
 		List<String> tmpList = new ArrayList<String>(vdmContextFiles.size() + 1);
 		tmpList.add(0, vdmModelFile);
-		for(String ctxFile : vdmContextFiles)
+		for (String ctxFile : vdmContextFiles)
 			tmpList.add(ctxFile);
 		return pogGen.generatePogFile(tmpList.toArray(new String[] {}));
 	}

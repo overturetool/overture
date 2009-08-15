@@ -43,10 +43,7 @@ public class AutomaticProofSystem {
 	public String[] dischargeAllPos(String vdmModelFile, List<String> vdmContextFiles)
 			throws AutomaicProofSystemException {
 		String holCode = translateModelAndPos(vdmModelFile, vdmContextFiles);
-
-		String[] result = doBatchProof(holCode);
-
-		return result;
+		return doBatchProof(holCode);
 	}
 
 	public String translateModelAndPos(String vdmModelFile,

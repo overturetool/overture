@@ -45,5 +45,4 @@ public class InputValidator {
 			throw new InputException(message);
 		}
 	}
-
 }
