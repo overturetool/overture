@@ -34,7 +34,7 @@ public class OvertureKeywords {
 		  "for", "all", "match", "mutex", "in", "of",
 		  "variables", "instance", "measure", "traces", 
                   //PGL added forgotten VDM-SL keywords
-                  "module", "exports", "imports", "struct", "state",
+                  "module", "exports", "imports", "struct", "state","state",
                   //PGL added forgotten VICE keywords
                   "async", "system", "duration", "cycles",
 		  //TODO multiple hack.. :D
