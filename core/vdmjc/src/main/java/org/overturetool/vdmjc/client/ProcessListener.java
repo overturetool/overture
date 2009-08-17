@@ -79,14 +79,14 @@ public class ProcessListener extends Thread
 
 			pargs.add("org.overturetool.vdmj.debug.DBGPReader");
 
-			// pargs.add("-h");
+			pargs.add("-h");
 			pargs.add("localhost");
-			// pargs.add("-p");
+			pargs.add("-p");
 			pargs.add(Integer.toString(listener.getPort()));
-			// pargs.add("-k");
+			pargs.add("-k");
 			pargs.add("12345678");
-			pargs.add(dialect.name()); //.argstring);
-			// pargs.add("-e");
+			pargs.add(dialect.argstring);
+			pargs.add("-e");
 			pargs.add(expression);
 
 			for (File file: files)

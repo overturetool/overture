@@ -112,8 +112,6 @@ public class DBGPReader
 
 	private static final int SOURCE_LINES = 5;
 
-	// Usage: <host> <port> <ide key> <dialect> <expression> {<filename>}
-
 	public static void main(String[] args)
 	{
 		Settings.usingDBGP = true;
@@ -124,44 +122,6 @@ public class DBGPReader
 		Settings.dialect = null;
 		String expression = null;
 		List<File> files = new Vector<File>();
-
-//		host = args[0];
-//		port = Integer.parseInt(args[1]);
-//		ideKey = args[2];
-//		Settings.dialect = Dialect.valueOf(args[3]);
-//		expression = args[4];
-//
-//		for (int i=5; i<args.length; i++)
-//		{
-//			try
-//			{
-//				files.add(new File(new URI(args[i])));
-//			}
-//			catch (URISyntaxException e)
-//			{
-//				System.exit(4);
-//			}
-//		}
-//
-//		VDMJ controller = null;
-//
-//		switch (Settings.dialect)
-//		{
-//			case VDM_SL:
-//				controller = new VDMSL();
-//				break;
-//
-//			case VDM_PP:
-//				controller = new VDMPP();
-//				break;
-//
-//			case VDM_RT:
-//				controller = new VDMRT();
-//				break;
-//		}
-
-		
-
 		List<String> largs = Arrays.asList(args);
 		VDMJ controller = null;
 		boolean warnings = true;
@@ -246,7 +206,11 @@ public class DBGPReader
     			}
     			catch (URISyntaxException e)
     			{
-    				System.exit(4);
+    				usage(e.getMessage() + ": " + arg);
+    			}
+    			catch (IllegalArgumentException e)
+    			{
+    				usage(e.getMessage() + ": " + arg);
     			}
     		}
 		}
@@ -260,7 +224,7 @@ public class DBGPReader
 
 		controller.setWarnings(warnings);
 
-		
+
 
 		if (controller.parse(files) == ExitStatus.EXIT_OK)
 		{
@@ -295,11 +259,10 @@ public class DBGPReader
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private static void usage(String string)
 	{
 		System.err.println(string);
-		System.err.println("Usage: -h <host> -p <port> -k <ide key> <-vdmpp|-vdmsl|-vdmrt> -e <expression> {<filenames>}");
+		System.err.println("Usage: -h <host> -p <port> -k <ide key> <-vdmpp|-vdmsl|-vdmrt> -e <expression> {<filename URLs>}");
 		System.exit(1);
 	}
 
