@@ -60,8 +60,6 @@ public class ClassList extends Vector<ClassDefinition>
 	private static Map<String, ClassDefinition> map =
 					new HashMap<String, ClassDefinition>();
 
-	public static SystemDefinition systemClass = null;
-
 	public ClassList()
 	{
 		super();
@@ -76,11 +74,6 @@ public class ClassList extends Vector<ClassDefinition>
 	public boolean add(ClassDefinition cdef)
 	{
 		map.put(cdef.name.name, cdef);
-
-		if (cdef instanceof SystemDefinition)
-		{
-			systemClass = (SystemDefinition)cdef;
-		}
 
 		return super.add(cdef);
 	}
@@ -156,6 +149,7 @@ public class ClassList extends Vector<ClassDefinition>
 
 	public RootContext initialize(DBGPReader dbgp)
 	{
+		SystemDefinition systemClass = null;
 		StateContext globalContext = null;
 
 		if (isEmpty())
@@ -171,6 +165,14 @@ public class ClassList extends Vector<ClassDefinition>
 
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
+			for (ClassDefinition cdef: this)
+			{
+    			if (cdef instanceof SystemDefinition)
+    			{
+    				systemClass = (SystemDefinition)cdef;
+    			}
+			}
+
 			SystemClock.init();				// Set time back to zero
 			CPUClassDefinition.init();
 			BUSClassDefinition.init();

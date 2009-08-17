@@ -82,7 +82,10 @@ public class CPUValue extends ObjectValue
 	{
 		for (Thread th: objects.keySet())
 		{
-			th.interrupt();
+			if (th instanceof AsyncThread)		// Don't interrupt main
+			{
+				th.interrupt();
+			}
 		}
 	}
 

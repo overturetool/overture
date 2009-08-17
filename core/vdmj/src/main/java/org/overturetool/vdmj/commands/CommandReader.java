@@ -58,6 +58,7 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.DebuggerException;
 import org.overturetool.vdmj.runtime.Interpreter;
+import org.overturetool.vdmj.runtime.RTException;
 import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.runtime.StopException;
 import org.overturetool.vdmj.runtime.VDMThreadSet;
@@ -331,6 +332,14 @@ abstract public class CommandReader
 			new DebuggerReader(interpreter, bp, e.ctxt).run();
 		}
 		catch (StopException e)
+		{
+			println("Stopped: " + Interpreter.stoppedException.getMessage());
+			Breakpoint bp = new Breakpoint(Interpreter.stoppedContext.location);
+			Context cx = Interpreter.stoppedContext;
+			Interpreter.stopped();
+			new DebuggerReader(interpreter, bp, cx).run();
+		}
+		catch (RTException e)
 		{
 			println("Stopped: " + Interpreter.stoppedException.getMessage());
 			Breakpoint bp = new Breakpoint(Interpreter.stoppedContext.location);

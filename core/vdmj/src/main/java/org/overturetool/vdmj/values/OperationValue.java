@@ -52,6 +52,7 @@ import org.overturetool.vdmj.runtime.MessageResponse;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.PatternMatchException;
 import org.overturetool.vdmj.runtime.RootContext;
+import org.overturetool.vdmj.runtime.RunState;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.runtime.SystemClock;
 import org.overturetool.vdmj.runtime.VDMThreadSet;
@@ -247,43 +248,13 @@ public class OperationValue extends Value
 
 		if (guard != null)
 		{
-			synchronized (self)		// So that test and act() are atomic
+			if (Settings.dialect == Dialect.VDM_RT)
 			{
-    			debug("TEST " + guard);
-    			int retries = DEADLOCK_RETRIES;
-    			long previousPasses = guardPasses;
-
-    			while (!guard.eval(argContext).boolValue(ctxt))
-    			{
-    				try
-    				{
-    					debug("WAITING on " + guard);
-						self.wait(DEADLOCK_DELAY_MS);
-						debug("RESUME on " + guard);
-
-						if (guardPasses == previousPasses &&
-							!VDMThreadSet.isDebugStopped())
-						{
-    						if (--retries <= 0)
-    						{
-    							Console.out.print(VDMThreadSet.dump());
-    							abort(4067, "Deadlock detected", argContext);
-    						}
-						}
-						else
-						{
-							previousPasses = guardPasses;
-							retries = DEADLOCK_RETRIES;
-						}
-    				}
-    				catch (InterruptedException e)
-    				{
-    					debug("INTERRUPT on " + guard);
-    					Breakpoint.handleInterrupt(guard.location, ctxt);
-    				}
-    			}
-
-    			act();
+				guardRT(argContext, ctxt);
+			}
+			else
+			{
+				guardPP(argContext, ctxt);
 			}
 		}
 		else
@@ -432,6 +403,58 @@ public class OperationValue extends Value
 		}
 
 		return rv;
+	}
+
+	private void guardPP(Context argContext, Context ctxt) throws ValueException
+	{
+		synchronized (self)		// So that test and act() are atomic
+		{
+			debug("TEST " + guard);
+			int retries = DEADLOCK_RETRIES;
+			long previousPasses = guardPasses;
+
+			while (!guard.eval(argContext).boolValue(ctxt))
+			{
+				try
+				{
+					debug("WAITING on " + guard);
+					self.wait(DEADLOCK_DELAY_MS);
+					debug("RESUME on " + guard);
+
+					if (guardPasses == previousPasses &&
+						!VDMThreadSet.isDebugStopped())
+					{
+						if (--retries <= 0)
+						{
+							Console.out.print(VDMThreadSet.dump());
+							abort(4067, "Deadlock detected", argContext);
+						}
+					}
+					else
+					{
+						previousPasses = guardPasses;
+						retries = DEADLOCK_RETRIES;
+					}
+				}
+				catch (InterruptedException e)
+				{
+					debug("INTERRUPT on " + guard);
+					Breakpoint.handleInterrupt(guard.location, ctxt);
+				}
+			}
+
+			act();
+		}
+	}
+
+	private void guardRT(Context argContext, Context ctxt) throws ValueException
+	{
+		while (!guard.eval(argContext).boolValue(ctxt))
+		{
+			self.getCPU().yield(RunState.RUNNABLE);
+		}
+
+		act();
 	}
 
 	private Value asyncEval(ValueList argValues, Context ctxt) throws ValueException
