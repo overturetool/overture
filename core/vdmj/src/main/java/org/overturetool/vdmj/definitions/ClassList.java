@@ -31,8 +31,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.pog.POContextStack;
@@ -167,13 +169,17 @@ public class ClassList extends Vector<ClassDefinition>
 				this.get(0).location, "public static environment");
 		}
 
-		if (systemClass != null)
+		if (Settings.dialect == Dialect.VDM_RT)
 		{
 			SystemClock.init();				// Set time back to zero
 			CPUClassDefinition.init();
 			BUSClassDefinition.init();
 			CPUClassDefinition.virtualCPU.swapinMainThread();
-			systemClass.CPUdecls();
+
+			if (systemClass != null)
+			{
+				systemClass.CPUdecls();
+			}
 		}
 
 		globalContext.setThreadState(dbgp, CPUClassDefinition.virtualCPU);

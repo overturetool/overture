@@ -32,6 +32,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Vector;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexTokenReader;
@@ -66,6 +67,7 @@ abstract public class OvertureTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
+		Settings.dialect = Dialect.VDM_PP;
 	}
 
 	@Override

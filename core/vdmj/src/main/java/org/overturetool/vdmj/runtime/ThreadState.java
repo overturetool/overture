@@ -37,6 +37,7 @@ public class ThreadState
 	public final CPUValue CPU;
 
 	private long timesliceLeft = 0;
+	private boolean atomic = false;		// don't reschedule
 
 	public InterruptAction action;
 	public int stepline;
@@ -80,9 +81,14 @@ public class ThreadState
 
 	public void reschedule()
 	{
-		if (--timesliceLeft < 0)
+		if (!atomic && --timesliceLeft < 0)
 		{
 			timesliceLeft = CPU.reschedule();
 		}
+	}
+
+	public synchronized void setAtomic(boolean atomic)
+	{
+		this.atomic = atomic;
 	}
 }

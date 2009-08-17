@@ -45,6 +45,7 @@ import org.overturetool.vdmj.types.Type;
 public class CPUValue extends ObjectValue
 {
 	private static final long serialVersionUID = 1L;
+	private static final long SWAPIN_DURATION = 2;
 	public static int nextCPU = 1;
 	public static List<CPUValue> allCPUs = new Vector<CPUValue>();
 
@@ -242,7 +243,7 @@ public class CPUValue extends ObjectValue
 		SystemClock.cpuRunning(cpuNumber, true);
 	}
 
-	public synchronized void swapinMainThread()
+	public void swapinMainThread()
 	{
 		long main = Thread.currentThread().getId();
 
@@ -252,6 +253,8 @@ public class CPUValue extends ObjectValue
 			objRefString(null) +
 			" cpunm: " + cpuNumber +
 			" time: " + SystemClock.getWallTime());
+
+		duration(SWAPIN_DURATION);
 
 		RTLogger.log(
 			"ThreadSwapIn -> id: " + main +
@@ -309,33 +312,36 @@ public class CPUValue extends ObjectValue
     	SystemClock.cpuRunning(cpuNumber, true);
     }
 
-	public synchronized void yield(Thread thread, RunState newstate)
+	public void yield(Thread thread, RunState newstate)
 	{
 		policy.setState(thread, newstate);
 		yield();
 	}
 
-	public synchronized void yield(RunState newstate)
+	public void yield(RunState newstate)
 	{
 		policy.setState(Thread.currentThread(), newstate);
 		yield();
 	}
 
-	public synchronized long reschedule()
+	public long reschedule()
 	{
 		yield();
 		return policy.getTimeslice();
 	}
 
-	public synchronized void yield()
+	private void yield()
 	{
 		Thread current = Thread.currentThread();
 		policy.reschedule();
-		runningThread = policy.getThread();
+
+		synchronized (this)
+		{
+			runningThread = policy.getThread();
+		}
 
 		if (runningThread != current)
 		{
-			notifyAll();
     		ObjectValue object = objects.get(current);
 
     		RTLogger.log(
@@ -345,31 +351,36 @@ public class CPUValue extends ObjectValue
     			" overhead: " + 0 +
     			" time: " + SystemClock.getWallTime());
 
-    		boolean idle = (runningThread == null);
+    		synchronized (this)
+			{
+    			notifyAll();
+        		boolean idle = (runningThread == null);
 
-    		if (idle)
-    		{
-    			SystemClock.cpuRunning(cpuNumber, false);
-    		}
+        		if (idle)
+        		{
+        			SystemClock.cpuRunning(cpuNumber, false);
+        		}
 
-    		while (runningThread != current)
-    		{
-    			try
-    			{
-    				wait();
-    			}
-    			catch (InterruptedException e)
-    			{
-    				throw new RTException("Thread stopped");
-    			}
-    		}
+				while (runningThread != current)
+				{
+					try
+					{
+						wait();
+					}
+					catch (InterruptedException e)
+					{
+						throw new RTException("Thread stopped");
+					}
+				}
 
-    		if (idle)	// ie. was idle
-    		{
-    			SystemClock.cpuRunning(cpuNumber, true);
-    		}
+    			if (idle)	// ie. was idle
+        		{
+        			SystemClock.cpuRunning(cpuNumber, true);
+        		}
+			}
 
     		switches++;
+    		duration(SWAPIN_DURATION);
 
     		RTLogger.log(
     			"ThreadSwapIn -> id: " + current.getId() +
@@ -380,26 +391,35 @@ public class CPUValue extends ObjectValue
 		}
 	}
 
-	public synchronized void startThread(long start)
+	public void startThread(long start)
 	{
 		Thread current = Thread.currentThread();
 		policy.setState(current, RunState.RUNNABLE);
 		wakeUp();
 
-		boolean idle = (runningThread == null);
+    	synchronized (this)
+		{
+    		boolean idle = (runningThread == null);
 
-    	while (runningThread != current)
-    	{
-    		try
-    		{
-    			wait();
-    		}
-    		catch (InterruptedException e)
-    		{
-    			throw new RTException("Thread stopped");
-    		}
-    	}
+			while (runningThread != current)
+			{
+				try
+				{
+					wait();
+				}
+				catch (InterruptedException e)
+				{
+					throw new RTException("Thread stopped");
+				}
+			}
 
+			if (idle)	// ie. was idle
+			{
+				SystemClock.cpuRunning(cpuNumber, true);
+			}
+		}
+
+    	duration(SWAPIN_DURATION);
 		ObjectValue object = objects.get(current);
     	switches++;
 
@@ -424,11 +444,6 @@ public class CPUValue extends ObjectValue
         		" overhead: " + 0 +
         		" time: " + time);
     	}
-
-		if (idle)	// ie. was idle
-		{
-			SystemClock.cpuRunning(cpuNumber, true);
-		}
     }
 
 	public void setState(Thread thread, RunState newstate)

@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.definitions.ClassDefinition;
@@ -37,7 +38,6 @@ import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionSet;
 import org.overturetool.vdmj.definitions.LocalDefinition;
 import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
@@ -166,7 +166,7 @@ public class ClassInterpreter extends Interpreter
 	public Expression parseExpression(String line, String module)
 		throws Exception
 	{
-		LexTokenReader ltr = new LexTokenReader(line, Dialect.VDM_PP);
+		LexTokenReader ltr = new LexTokenReader(line, Settings.dialect);
 		ExpressionReader reader = new ExpressionReader(ltr);
 		reader.setCurrentModule(module);
 		return reader.readExpression();
@@ -176,7 +176,7 @@ public class ClassInterpreter extends Interpreter
 	public Statement parseStatement(String line, String module)
 		throws Exception
 	{
-		LexTokenReader ltr = new LexTokenReader(line, Dialect.VDM_PP);
+		LexTokenReader ltr = new LexTokenReader(line, Settings.dialect);
 		StatementReader sr = new StatementReader(ltr);
 		sr.setCurrentModule(module);
 		return sr.readStatement();
