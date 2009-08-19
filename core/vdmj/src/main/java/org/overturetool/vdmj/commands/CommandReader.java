@@ -317,7 +317,7 @@ abstract public class CommandReader
 
 			if (RTLogger.getLogSize() > 0)
 			{
-				println("Dumping " + RTLogger.getLogSize() + " RT events");
+				println("Dumped RT events");
 				RTLogger.dump(false);
 			}
 		}
@@ -371,7 +371,7 @@ abstract public class CommandReader
 	{
 		if (RTLogger.getLogSize() > 0)
 		{
-			println("Dumping " + RTLogger.getLogSize() + " RT events");
+			println("Dumping RT events");
 			RTLogger.dump(true);
 		}
 

@@ -30,7 +30,7 @@ import org.overturetool.vdmj.types.Type;
 abstract public class ReferenceValue extends Value
 {
 	private static final long serialVersionUID = 1L;
-	public Value value;
+	protected Value value;
 
 	public ReferenceValue(Value value)
 	{
