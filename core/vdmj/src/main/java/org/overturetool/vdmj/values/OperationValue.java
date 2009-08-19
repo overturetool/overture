@@ -250,11 +250,11 @@ public class OperationValue extends Value
 		{
 			if (Settings.dialect == Dialect.VDM_RT)
 			{
-				guardRT(argContext, ctxt);
+				guardRT(argContext);
 			}
 			else
 			{
-				guardPP(argContext, ctxt);
+				guardPP(argContext);
 			}
 		}
 		else
@@ -405,7 +405,7 @@ public class OperationValue extends Value
 		return rv;
 	}
 
-	private void guardPP(Context argContext, Context ctxt) throws ValueException
+	private void guardPP(Context ctxt) throws ValueException
 	{
 		synchronized (self)		// So that test and act() are atomic
 		{
@@ -413,7 +413,7 @@ public class OperationValue extends Value
 			int retries = DEADLOCK_RETRIES;
 			long previousPasses = guardPasses;
 
-			while (!guard.eval(argContext).boolValue(ctxt))
+			while (!guard.eval(ctxt).boolValue(ctxt))
 			{
 				try
 				{
@@ -427,7 +427,7 @@ public class OperationValue extends Value
 						if (--retries <= 0)
 						{
 							Console.out.print(VDMThreadSet.dump());
-							abort(4067, "Deadlock detected", argContext);
+							abort(4067, "Deadlock detected", ctxt);
 						}
 					}
 					else
@@ -447,14 +447,30 @@ public class OperationValue extends Value
 		}
 	}
 
-	private void guardRT(Context argContext, Context ctxt) throws ValueException
+	private void guardRT(Context ctxt) throws ValueException
 	{
-		while (!guard.eval(argContext).boolValue(ctxt))
+		while (true)
 		{
+			synchronized (self)		// So that test and act() are atomic
+			{
+				// We have to suspend thread swapping round the guard,
+				// else we will reschedule another CPU thread while
+				// having self locked, and that locks up everything!
+
+				ctxt.threadState.setAtomic(true);
+    			boolean ok = guard.eval(ctxt).boolValue(ctxt);
+    			ctxt.threadState.setAtomic(false);
+
+    			if (ok)
+    			{
+    				act();
+    				break;	// Out of while loop
+    			}
+			}
+
+			// else suspend for a while
 			self.getCPU().yield(RunState.RUNNABLE);
 		}
-
-		act();
 	}
 
 	private Value asyncEval(ValueList argValues, Context ctxt) throws ValueException
