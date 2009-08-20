@@ -227,6 +227,7 @@ public class ClassInterpreter extends Interpreter
 		CPUValue.resetAll();
 		BUSValue.resetAll();
 		Value rv = expr.eval(mainContext);
+		VDMThreadSet.abortAll();
 		CPUValue.abortAll();
 
 		return rv;
