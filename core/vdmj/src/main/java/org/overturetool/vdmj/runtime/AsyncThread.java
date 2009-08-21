@@ -206,7 +206,7 @@ public class AsyncThread extends Thread
 		}
 		catch (ContextException e)
 		{
-			Interpreter.stop(e, e.ctxt);
+			Interpreter.stop(e.location, e, e.ctxt);
 		}
 		catch (RTException e)
 		{

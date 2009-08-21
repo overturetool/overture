@@ -79,8 +79,11 @@ abstract public class Interpreter
 	/** The interrupted exception. */
 	public static Exception stoppedException = null;
 
-	/** The interrupted exception. */
+	/** The interrupted context. */
 	public static Context stoppedContext = null;
+
+	/** The interrupted location. */
+	public static LexLocation stoppedLocation = null;
 
 	/**
 	 * Create an Interpreter.
@@ -144,10 +147,11 @@ abstract public class Interpreter
 	 * Cause the interpreter to stop, with an exception.
 	 */
 
-	public static void stop(Exception e, Context ctxt)
+	public static void stop(LexLocation location, Exception e, Context ctxt)
 	{
 		stoppedException = e;
 		stoppedContext = ctxt;
+		stoppedLocation = location == null ? ctxt.location : location;
 		mainContext.threadState.action = InterruptAction.STOPPING;
 		mainThread.interrupt();
 		VDMThreadSet.abortAll();
@@ -162,6 +166,7 @@ abstract public class Interpreter
 	{
 		stoppedException = null;
 		stoppedContext = null;
+		stoppedLocation = null;
 	}
 
 	/**

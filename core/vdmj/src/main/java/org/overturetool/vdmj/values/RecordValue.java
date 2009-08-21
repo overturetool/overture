@@ -141,7 +141,7 @@ public class RecordValue extends Value
 			nm.add(fv.name, uv, fv.comparable);
 		}
 
-		return new UpdatableValue(new RecordValue(type, nm, invariant), listener);
+		return UpdatableValue.factory(new RecordValue(type, nm, invariant), listener);
 	}
 
 	@Override

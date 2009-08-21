@@ -91,7 +91,7 @@ public class SeqValue extends Value
 			nseq.add(v);
 		}
 
-		return new UpdatableValue(new SeqValue(nseq), listener);
+		return UpdatableValue.factory(new SeqValue(nseq), listener);
 	}
 
 	public Value get(Value arg, Context ctxt) throws ValueException

@@ -279,7 +279,7 @@ public class DebuggerReader extends CommandReader
 	protected boolean doStop(String line)
 	{
 		DebuggerException e = new DebuggerException("terminated");
-		Interpreter.stop(e, ctxt);
+		Interpreter.stop(null, e, ctxt);
 		throw e;
 	}
 

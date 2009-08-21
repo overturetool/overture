@@ -59,7 +59,7 @@ public class TupleValue extends Value
 			ntup.add(v);
 		}
 
-		return new UpdatableValue(new TupleValue(ntup), listener);
+		return UpdatableValue.factory(new TupleValue(ntup), listener);
 	}
 
 	@Override

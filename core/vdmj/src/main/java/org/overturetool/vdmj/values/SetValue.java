@@ -78,7 +78,7 @@ public class SetValue extends Value
 			nset.add(v);
 		}
 
-		return new UpdatableValue(new SetValue(nset), listener);
+		return UpdatableValue.factory(new SetValue(nset), listener);
 	}
 
 	@Override

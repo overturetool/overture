@@ -91,15 +91,15 @@ public class VDMThread extends Thread
 		}
 		catch (ValueException e)
 		{
-			Interpreter.stop(e, e.ctxt);
+			Interpreter.stop(null, e, e.ctxt);
 		}
 		catch (ContextException e)
 		{
-			Interpreter.stop(e, e.ctxt);
+			Interpreter.stop(e.location, e, e.ctxt);
 		}
 		catch (Exception e)
 		{
-			Interpreter.stop(e, ctxt);
+			Interpreter.stop(null, e, ctxt);
 		}
 		finally
 		{

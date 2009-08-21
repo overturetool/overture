@@ -237,7 +237,7 @@ abstract public class Value implements Comparable<Value>, Serializable
 
 	public Value getUpdatable(ValueListener listener)
 	{
-		return new UpdatableValue(this, listener);
+		return UpdatableValue.factory(this, listener);
 	}
 
 	/**

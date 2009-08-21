@@ -72,7 +72,7 @@ public class InvariantValue extends ReferenceValue
 	@Override
 	public Value getUpdatable(ValueListener listener)
 	{
-		return new UpdatableValue(
+		return UpdatableValue.factory(
 			new InvariantValue(type, value.getUpdatable(listener)), listener);
 	}
 

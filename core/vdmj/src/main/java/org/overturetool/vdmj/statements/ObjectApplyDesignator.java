@@ -132,7 +132,7 @@ public class ObjectApplyDesignator extends ObjectDesignator
 
 				if (rv == null)		// Not already in map
 				{
-					rv = new UpdatableValue(null);
+					rv = UpdatableValue.factory(null);
 					mv.put(a, rv);
 				}
 

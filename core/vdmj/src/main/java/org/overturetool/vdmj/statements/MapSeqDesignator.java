@@ -130,7 +130,7 @@ public class MapSeqDesignator extends StateDesignator
 					// Assignment to a non-existent map key creates the value
 					// in order to have it updated.
 
-					result = new UpdatableValue(null);
+					result = UpdatableValue.factory(null);
 					map.put(index, result);
 				}
 			}

@@ -23,220 +23,228 @@
 
 package org.overturetool.vdmj.values;
 
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.Dialect;
+import java.util.List;
+import java.util.Vector;
+
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.types.Type;
 
 /**
- * A class to hold an updatable value. This is almost identical to a
- * ReferenceValue, except that is has a set method which changes the
- * referenced value and calls a listener, and all the remaining methods
- * here are synchronized, to guarantee that the sets and gets see all
- * changes (to the same UpdateableValue) produced by other threads.
+ * A class to hold an updatable value that can be modified by VDM-RT
+ * threads in transactions, committed at a duration point.
  */
 
-public class UpdatableValue extends ReferenceValue
+public class TransactionValue extends UpdatableValue
 {
 	private static final long serialVersionUID = 1L;
-	protected final ValueListener listener;
 
-	public static UpdatableValue factory(Value value, ValueListener listener)
+	private static List<TransactionValue> commitList = new Vector<TransactionValue>();
+
+	private Value newvalue = null;		// The pending value before a commit
+	private long newthreadid = -1;		// The thread that made the change
+
+	protected TransactionValue(Value value, ValueListener listener)
 	{
-		if (Settings.dialect == Dialect.VDM_RT)
-		{
-			return new TransactionValue(value, listener);
-		}
-		else
-		{
-			return new UpdatableValue(value, listener);
-		}
+		super(value, listener);
+		newvalue = value;
 	}
 
-	public static UpdatableValue factory(ValueListener listener)
+	protected TransactionValue(ValueListener listener)
 	{
-		if (Settings.dialect == Dialect.VDM_RT)
-		{
-			return new TransactionValue(listener);
-		}
-		else
-		{
-			return new UpdatableValue(listener);
-		}
-	}
-
-	protected UpdatableValue(Value value, ValueListener listener)
-	{
-		super(value);
-		this.listener = listener;
-	}
-
-	protected UpdatableValue(ValueListener listener)
-	{
-		super();
-		this.listener = listener;
+		super(listener);
+		newvalue = value;
 	}
 
 	@Override
 	public synchronized Value getUpdatable(ValueListener watch)
 	{
-		return new UpdatableValue(value, watch);
+		return new TransactionValue(newvalue, watch);
 	}
 
 	@Override
 	public synchronized Value convertValueTo(Type to, Context ctxt) throws ValueException
 	{
-		return value.convertValueTo(to, ctxt).getUpdatable(listener);
+		return newvalue.convertValueTo(to, ctxt).getUpdatable(listener);
 	}
 
 	@Override
 	public synchronized void set(LexLocation location, Value newval, Context ctxt)
 	{
-		// Anything with structure added to an UpdateableValue has to be
-		// updatable, otherwise you can "freeze" part of the substructure
-		// such that it can't be changed.
+		long current = Thread.currentThread().getId();
+
+		if (newthreadid > 0 && current != newthreadid)
+		{
+			throw new ContextException(
+				4142, "Value already updated by thread " + newthreadid, location, ctxt);
+		}
 
 		if (newval instanceof UpdatableValue)
 		{
-			value = newval.deref();		// To avoid nested updatables
+			newvalue = newval.deref();		// To avoid nested updatables
 		}
 		else
 		{
-			value = newval.getUpdatable(listener).deref();
+			newvalue = newval.getUpdatable(listener).deref();
+		}
+
+		if (current != newthreadid)
+		{
+			newthreadid = Thread.currentThread().getId();
+			commitList.add(this);
 		}
 
 		if (listener != null)
 		{
-			listener.changedValue(location, value, ctxt);
+			listener.changedValue(location, newvalue, ctxt);
+		}
+	}
+
+	public static synchronized void commitAll()
+	{
+		for (TransactionValue v: commitList)
+		{
+			v.commit();
+		}
+
+		commitList.clear();
+	}
+
+	private void commit()
+	{
+		if (newthreadid > 0)
+		{
+			value = newvalue;		// Listener called for original "set"
+			newthreadid = -1;
 		}
 	}
 
 	@Override
 	public synchronized Object clone()
 	{
-		return new UpdatableValue((Value)value.clone(), listener);
+		return new TransactionValue((Value)newvalue.clone(), listener);
 	}
 
 	@Override
 	public synchronized boolean isType(Class<? extends Value> valueclass)
 	{
-		return valueclass.isInstance(this.value);
+		return valueclass.isInstance(this.newvalue);
 	}
 
 	@Override
 	public synchronized Value deref()
 	{
-		return value.deref();
+		return newvalue.deref();
 	}
 
 	@Override
 	public synchronized boolean isUndefined()
 	{
-		return value.isUndefined();
+		return newvalue.isUndefined();
 	}
 
 	@Override
 	public synchronized boolean isVoid()
 	{
-		return value.isVoid();
+		return newvalue.isVoid();
 	}
 
 	@Override
 	public synchronized double realValue(Context ctxt) throws ValueException
 	{
-		return value.realValue(ctxt);
+		return newvalue.realValue(ctxt);
 	}
 
 	@Override
 	public synchronized long intValue(Context ctxt) throws ValueException
 	{
-		return value.intValue(ctxt);
+		return newvalue.intValue(ctxt);
 	}
 
 	@Override
 	public synchronized long natValue(Context ctxt) throws ValueException
 	{
-		return value.nat1Value(ctxt);
+		return newvalue.nat1Value(ctxt);
 	}
 
 	@Override
 	public synchronized long nat1Value(Context ctxt) throws ValueException
 	{
-		return value.nat1Value(ctxt);
+		return newvalue.nat1Value(ctxt);
 	}
 
 	@Override
 	public synchronized boolean boolValue(Context ctxt) throws ValueException
 	{
-		return value.boolValue(ctxt);
+		return newvalue.boolValue(ctxt);
 	}
 
 	@Override
 	public synchronized char charValue(Context ctxt) throws ValueException
 	{
-		return value.charValue(ctxt);
+		return newvalue.charValue(ctxt);
 	}
 
 	@Override
 	public synchronized ValueList tupleValue(Context ctxt) throws ValueException
 	{
-		return value.tupleValue(ctxt);
+		return newvalue.tupleValue(ctxt);
 	}
 
 	@Override
 	public synchronized RecordValue recordValue(Context ctxt) throws ValueException
 	{
-		return value.recordValue(ctxt);
+		return newvalue.recordValue(ctxt);
 	}
 
 	@Override
 	public synchronized ObjectValue objectValue(Context ctxt) throws ValueException
 	{
-		return value.objectValue(ctxt);
+		return newvalue.objectValue(ctxt);
 	}
 
 	@Override
 	public synchronized String quoteValue(Context ctxt) throws ValueException
 	{
-		return value.quoteValue(ctxt);
+		return newvalue.quoteValue(ctxt);
 	}
 
 	@Override
 	public synchronized ValueList seqValue(Context ctxt) throws ValueException
 	{
-		return value.seqValue(ctxt);
+		return newvalue.seqValue(ctxt);
 	}
 
 	@Override
 	public synchronized ValueSet setValue(Context ctxt) throws ValueException
 	{
-		return value.setValue(ctxt);
+		return newvalue.setValue(ctxt);
 	}
 
 	@Override
 	public synchronized String stringValue(Context ctxt) throws ValueException
 	{
-		return value.stringValue(ctxt);
+		return newvalue.stringValue(ctxt);
 	}
 
 	@Override
 	public synchronized ValueMap mapValue(Context ctxt) throws ValueException
 	{
-		return value.mapValue(ctxt);
+		return newvalue.mapValue(ctxt);
 	}
 
 	@Override
 	public synchronized FunctionValue functionValue(Context ctxt) throws ValueException
 	{
-		return value.functionValue(ctxt);
+		return newvalue.functionValue(ctxt);
 	}
 
 	@Override
 	public synchronized OperationValue operationValue(Context ctxt) throws ValueException
 	{
-		return value.operationValue(ctxt);
+		return newvalue.operationValue(ctxt);
 	}
 
 	@Override
@@ -246,14 +254,19 @@ public class UpdatableValue extends ReferenceValue
 		{
 			Value val = ((Value)other).deref();
 
-    		if (val instanceof ReferenceValue)
+    		if (val instanceof TransactionValue)
+    		{
+    			TransactionValue tvo = (TransactionValue)val;
+    			return newvalue.equals(tvo.newvalue);
+    		}
+    		else if (val instanceof ReferenceValue)
     		{
     			ReferenceValue rvo = (ReferenceValue)val;
-    			return value.equals(rvo.value);
+    			return newvalue.equals(rvo.value);
     		}
     		else
     		{
-    			return value.equals(other);
+    			return newvalue.equals(other);
     		}
 		}
 
@@ -263,18 +276,18 @@ public class UpdatableValue extends ReferenceValue
 	@Override
 	public synchronized String kind()
 	{
-		return value.kind();
+		return newvalue.kind();
 	}
 
 	@Override
 	public synchronized int hashCode()
 	{
-		return value.hashCode();
+		return newvalue.hashCode();
 	}
 
 	@Override
 	public synchronized String toString()
 	{
-		return value.toString();
+		return newvalue.toString();
 	}
 }

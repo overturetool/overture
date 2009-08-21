@@ -61,7 +61,7 @@ public class MapValue extends Value
 			nm.put(k, v);
 		}
 
-		return new UpdatableValue(new MapValue(nm), listener);
+		return UpdatableValue.factory(new MapValue(nm), listener);
 	}
 
 	public Value lookup(Value arg, Context ctxt) throws ValueException

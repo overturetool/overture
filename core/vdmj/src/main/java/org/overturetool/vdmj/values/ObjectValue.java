@@ -127,7 +127,7 @@ public class ObjectValue extends Value
 		// that objects can be updated as a whole, rather than recursing into
 		// the member list.
 
-		return new UpdatableValue(this, listener);
+		return UpdatableValue.factory(this, listener);
 	}
 
 	public OperationValue getThreadOperation(Context ctxt) throws ValueException

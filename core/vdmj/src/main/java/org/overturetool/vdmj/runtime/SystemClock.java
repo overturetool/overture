@@ -25,6 +25,8 @@ package org.overturetool.vdmj.runtime;
 
 import java.util.BitSet;
 
+import org.overturetool.vdmj.values.TransactionValue;
+
 public class SystemClock
 {
 	private static long wallTime = 0;
@@ -68,6 +70,7 @@ public class SystemClock
 		{
 			wallTime += minStepTime;
 			// RTLogger.log("TIMESTEP = " + minStepTime + ", now = " + wallTime);
+			TransactionValue.commitAll();
 
 			minStepTime = Long.MAX_VALUE;
 			runningCPUs.clear();

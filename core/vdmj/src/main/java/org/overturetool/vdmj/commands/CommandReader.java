@@ -334,7 +334,7 @@ abstract public class CommandReader
 		catch (StopException e)
 		{
 			println("Stopped: " + Interpreter.stoppedException.getMessage());
-			Breakpoint bp = new Breakpoint(Interpreter.stoppedContext.location);
+			Breakpoint bp = new Breakpoint(Interpreter.stoppedLocation);
 			Context cx = Interpreter.stoppedContext;
 			Interpreter.stopped();
 			new DebuggerReader(interpreter, bp, cx).run();
@@ -342,7 +342,7 @@ abstract public class CommandReader
 		catch (RTException e)
 		{
 			println("Stopped: " + Interpreter.stoppedException.getMessage());
-			Breakpoint bp = new Breakpoint(Interpreter.stoppedContext.location);
+			Breakpoint bp = new Breakpoint(Interpreter.stoppedLocation);
 			Context cx = Interpreter.stoppedContext;
 			Interpreter.stopped();
 			new DebuggerReader(interpreter, bp, cx).run();

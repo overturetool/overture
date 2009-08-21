@@ -48,11 +48,11 @@ public class State implements ValueListener
 
 		for (Field f: definition.fields)
 		{
-			fieldvalues.add(new NameValuePair(f.tagname, new UpdatableValue(this)));
+			fieldvalues.add(new NameValuePair(f.tagname, UpdatableValue.factory(this)));
 		}
 
 		RecordType rt = (RecordType)definition.getType();
-		this.recordValue = new UpdatableValue(new RecordValue(rt, fieldvalues), this);
+		this.recordValue = UpdatableValue.factory(new RecordValue(rt, fieldvalues), this);
 
 		this.context = new Context(definition.location, "module state", null);
 		this.context.put(definition.name, recordValue);

@@ -798,6 +798,7 @@ as the expected and actual values.
 4139, "Multiple BUS routes between CPUs <name> and <name>"
 4140, "No BUS between CPUs <name> and <name>"
 4141, "CPU policy does not allow priorities"
+4142, "Value already updated by thread <n>"
 
 5000, "Definition <name> not used"
 5001, "Instance variable is not initialized: <name>"

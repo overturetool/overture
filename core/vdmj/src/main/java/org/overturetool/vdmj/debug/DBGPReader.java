@@ -1101,7 +1101,7 @@ public class DBGPReader
 
 		statusResponse(DBGPStatus.STOPPING, DBGPReason.OK);
 		DebuggerException e = new DebuggerException("terminated");
-		Interpreter.stop(e, breakContext);
+		Interpreter.stop(null, e, breakContext);
 	}
 
 	private void breakpointGet(DBGPCommand c) throws DBGPException, IOException
