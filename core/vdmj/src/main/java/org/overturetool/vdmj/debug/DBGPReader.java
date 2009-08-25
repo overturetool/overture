@@ -117,7 +117,7 @@ public class DBGPReader
 		Settings.usingDBGP = true;
 
 		String host = null;
-		int port = 0;
+		int port = -1;
 		String ideKey = null;
 		Settings.dialect = null;
 		String expression = null;
@@ -215,7 +215,7 @@ public class DBGPReader
     		}
 		}
 
-		if (host == null || port == 0 || controller == null ||
+		if (host == null || port == -1 || controller == null ||
 			ideKey == null || expression == null || Settings.dialect == null ||
 			files.isEmpty())
 		{
