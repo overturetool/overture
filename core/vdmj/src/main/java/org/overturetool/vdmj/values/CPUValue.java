@@ -23,9 +23,7 @@
 
 package org.overturetool.vdmj.values;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 import org.overturetool.vdmj.Settings;
@@ -39,6 +37,7 @@ import org.overturetool.vdmj.runtime.RTException;
 import org.overturetool.vdmj.runtime.RunState;
 import org.overturetool.vdmj.runtime.SchedulingPolicy;
 import org.overturetool.vdmj.runtime.SystemClock;
+import org.overturetool.vdmj.runtime.ThreadObjectMap;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Type;
 
@@ -53,7 +52,7 @@ public class CPUValue extends ObjectValue
 	public final SchedulingPolicy policy;
 	public final double cyclesPerSec;
 	public final List<ObjectValue> deployed;
-	public final Map<Thread, ObjectValue> objects;
+	public final ThreadObjectMap objects;
 
 	public String name;
 	public Thread runningThread;
@@ -80,13 +79,7 @@ public class CPUValue extends ObjectValue
 
 	private void abort()
 	{
-		for (Thread th: objects.keySet())
-		{
-			if (th instanceof AsyncThread)		// Don't interrupt main
-			{
-				th.interrupt();
-			}
-		}
+		objects.abort();
 	}
 
 	public static void resetAll()
@@ -129,7 +122,7 @@ public class CPUValue extends ObjectValue
 		this.cyclesPerSec = sarg.value;
 
 		this.deployed = new Vector<ObjectValue>();
-		this.objects = new HashMap<Thread, ObjectValue>();
+		this.objects = new ThreadObjectMap();
 		this.switches = 0;
 
 		allCPUs.add(this);
@@ -150,7 +143,7 @@ public class CPUValue extends ObjectValue
 		this.cyclesPerSec = sarg.value;
 
 		this.deployed = new Vector<ObjectValue>();
-		this.objects = new HashMap<Thread, ObjectValue>();
+		this.objects = new ThreadObjectMap();
 		this.switches = 0;
 
 		allCPUs.add(this);
