@@ -25,6 +25,7 @@ package org.overturetool.vdmj.statements;
 
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.IntegerLiteralExpression;
+import org.overturetool.vdmj.expressions.RealLiteralExpression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.typechecker.Environment;
@@ -81,20 +82,30 @@ public class DurationStatement extends Statement
 	@Override
 	public Type typeCheck(Environment env, NameScope scope)
 	{
-		if (!(duration instanceof IntegerLiteralExpression))
-		{
-			duration.report(3281, "Arguments to duration must be >= 0");
-		}
-		else
+		if (duration instanceof IntegerLiteralExpression)
 		{
 			IntegerLiteralExpression i = (IntegerLiteralExpression)duration;
 
 			if (i.value.value < 0)
 			{
-				duration.report(3281, "Arguments to duration must be >= 0");
+				duration.report(3281, "Arguments to duration must be integer >= 0");
 			}
 
 			step = i.value.value;
+		}
+		else if (duration instanceof RealLiteralExpression)
+		{
+			RealLiteralExpression i = (RealLiteralExpression)duration;
+
+			if (i.value.value < 0 ||
+				Math.floor(i.value.value) != i.value.value)
+			{
+				duration.report(3282, "Argument to duration must be integer >= 0");
+			}
+		}
+		else
+		{
+			duration.report(3281, "Arguments to duration must be integer >= 0");
 		}
 
 		return statement.typeCheck(env, scope);

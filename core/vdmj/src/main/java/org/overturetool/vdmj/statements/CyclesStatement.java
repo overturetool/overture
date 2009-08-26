@@ -25,6 +25,7 @@ package org.overturetool.vdmj.statements;
 
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.IntegerLiteralExpression;
+import org.overturetool.vdmj.expressions.RealLiteralExpression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
@@ -90,18 +91,28 @@ public class CyclesStatement extends Statement
 	@Override
 	public Type typeCheck(Environment env, NameScope scope)
 	{
-		if (!(cycles instanceof IntegerLiteralExpression))
-		{
-			cycles.report(3282, "Arguments to cycles must be >= 0");
-		}
-		else
+		if (cycles instanceof IntegerLiteralExpression)
 		{
 			IntegerLiteralExpression i = (IntegerLiteralExpression)cycles;
 
 			if (i.value.value < 0)
 			{
-				cycles.report(3282, "Arguments to cycles must be >= 0");
+				cycles.report(3282, "Argument to cycles must be integer >= 0");
 			}
+		}
+		else if (cycles instanceof RealLiteralExpression)
+		{
+			RealLiteralExpression i = (RealLiteralExpression)cycles;
+
+			if (i.value.value < 0 ||
+				Math.floor(i.value.value) != i.value.value)
+			{
+				cycles.report(3282, "Argument to cycles must be integer >= 0");
+			}
+		}
+		else
+		{
+			cycles.report(3282, "Argument to cycles must be integer >= 0");
 		}
 
 		return statement.typeCheck(env, scope);

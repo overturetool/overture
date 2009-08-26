@@ -30,7 +30,10 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.AsyncThread;
+import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ObjectContext;
+import org.overturetool.vdmj.runtime.RootContext;
 import org.overturetool.vdmj.runtime.VDMThread;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
@@ -126,7 +129,7 @@ public class StartStatement extends Statement
 					ObjectValue self = v.objectValue(ctxt);
 					OperationValue op = self.getThreadOperation(ctxt);
 
-					startRT(self, op, ctxt);
+					startRT(self, op);
 				}
 			}
 			else
@@ -134,7 +137,7 @@ public class StartStatement extends Statement
 				ObjectValue self = value.objectValue(ctxt);
 				OperationValue op = self.getThreadOperation(ctxt);
 
-				startRT(self, op, ctxt);
+				startRT(self, op);
 			}
 
 			return new VoidValue();
@@ -147,14 +150,18 @@ public class StartStatement extends Statement
 
 	// Note that RT does not use VDMThreads at all...
 
-	private void startRT(ObjectValue self, OperationValue op, Context ctxt)
+	private void startRT(ObjectValue self, OperationValue op)
 		throws ValueException
 	{
 		if (op.body instanceof PeriodicStatement)
 		{
+    		RootContext global = ClassInterpreter.getInstance().initialContext;
+    		Context ctxt = new ObjectContext(op.name.location, "async", global, self);
+
 			PeriodicStatement ps = (PeriodicStatement)op.body;
 			long period = ps.args.get(0).eval(ctxt).intValue(ctxt);
 			OperationValue pop = ctxt.lookup(ps.opname).operationValue(ctxt);
+
 			new AsyncThread(self, pop, new ValueList(), period, 0).start();
 		}
 		else

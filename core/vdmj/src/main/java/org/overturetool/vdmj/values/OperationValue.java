@@ -453,6 +453,14 @@ public class OperationValue extends Value
 		{
 			synchronized (self)		// So that test and act() are atomic
 			{
+				// For the purpose of doing durations, guard tests
+				// are not really swapped-in threads. So we cheat and
+				// mark the CPU as not-running at this point, which
+				// is cleared again when (below) we return from our
+				// yield, or we pass the guard test.
+
+				SystemClock.cpuRunning(self.getCPU().cpuNumber, false);
+
 				// We have to suspend thread swapping round the guard,
 				// else we will reschedule another CPU thread while
 				// having self locked, and that locks up everything!
@@ -464,6 +472,7 @@ public class OperationValue extends Value
     			if (ok)
     			{
     				act();
+    				SystemClock.cpuRunning(self.getCPU().cpuNumber, true);
     				break;	// Out of while loop
     			}
 			}
