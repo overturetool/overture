@@ -510,7 +510,7 @@ public class ExplicitFunctionDefinition extends Definition
 		if (Settings.dialect == Dialect.VDM_SL)
 		{
 			// This is needed for recursive local functions
-			free.put(nvl);
+			free.putList(nvl);
 		}
 
 		return nvl;

@@ -144,7 +144,7 @@ public class LetDefExpression extends Expression
 				}
 			}
 
-			evalContext.put(values);
+			evalContext.putList(values);
 		}
 
 		return expression.eval(evalContext);

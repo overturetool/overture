@@ -82,7 +82,7 @@ public class TixeStmtAlternative
 			if (patternBind.pattern != null)
 			{
 				evalContext = new Context(location, "tixe pattern", ctxt);
-				evalContext.put(patternBind.pattern.getNamedValues(exval, ctxt));
+				evalContext.putList(patternBind.pattern.getNamedValues(exval, ctxt));
 			}
 			else if (patternBind.bind instanceof SetBind)
 			{
@@ -92,7 +92,7 @@ public class TixeStmtAlternative
 				if (set.contains(exval))
 				{
 					evalContext = new Context(location, "tixe set", ctxt);
-					evalContext.put(setbind.pattern.getNamedValues(exval, ctxt));
+					evalContext.putList(setbind.pattern.getNamedValues(exval, ctxt));
 				}
 				else
 				{
@@ -105,7 +105,7 @@ public class TixeStmtAlternative
 				// Note we always perform DTC checks here...
 				Value converted = exval.convertValueTo(typebind.type, ctxt);
 				evalContext = new Context(location, "tixe type", ctxt);
-				evalContext.put(typebind.pattern.getNamedValues(converted, ctxt));
+				evalContext.putList(typebind.pattern.getNamedValues(converted, ctxt));
 			}
 		}
 		catch (ValueException ve)	// Type bind convert failure

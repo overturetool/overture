@@ -47,6 +47,7 @@ import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.SystemDefinition;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.values.TransactionValue;
 
 
 /**
@@ -235,11 +236,13 @@ public class ClassList extends Vector<ClassDefinition>
 		}
 
 		// If we're VDM-RT and we have a system class, we need to "run"
-		// the default constructor to deploy the objects declared.
+		// the default constructor to deploy the objects declared. We
+		// also have to commit any transactional updates made.
 
 		if (systemClass != null)
 		{
 			systemClass.init(globalContext);
+			TransactionValue.commitAll();
 		}
 
 		return globalContext;

@@ -87,7 +87,7 @@ public class TraceLetDefBinding extends TraceDefinition
 
 		for (Definition d: localDefs)
 		{
-			evalContext.put(d.getNamedValues(evalContext));
+			evalContext.putList(d.getNamedValues(evalContext));
 		}
 
 		return body.expand(evalContext);

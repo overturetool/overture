@@ -104,7 +104,7 @@ public class DefStatement extends Statement
 
 		for (Definition d: equalsDefs)
 		{
-			evalContext.put(d.getNamedValues(evalContext));
+			evalContext.putList(d.getNamedValues(evalContext));
 		}
 
 		return statement.eval(evalContext);

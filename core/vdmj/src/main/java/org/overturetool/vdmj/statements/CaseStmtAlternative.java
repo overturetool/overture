@@ -113,7 +113,7 @@ public class CaseStmtAlternative implements Serializable
 		{
 			try
 			{
-				evalContext.put(p.getNamedValues(val, ctxt));
+				evalContext.putList(p.getNamedValues(val, ctxt));
 				return statement.eval(evalContext);
 			}
 			catch (PatternMatchException e)

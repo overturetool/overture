@@ -161,7 +161,7 @@ public class LetDefStatement extends Statement
 				}
 			}
 
-			evalContext.put(values);
+			evalContext.putList(values);
 		}
 
 		return statement.eval(evalContext);

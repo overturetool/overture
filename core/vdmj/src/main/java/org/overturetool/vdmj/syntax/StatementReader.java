@@ -358,10 +358,12 @@ public class StatementReader extends SyntaxReader
 		List<AssignmentStatement> assignments = new Vector<AssignmentStatement>();
 
 		assignments.add(readAssignmentStatement(lastToken().location));
+		ignore(Token.SEMICOLON);
 
-		while (ignore(Token.SEMICOLON))
+		while (lastToken().isNot(Token.KET))
 		{
 			assignments.add(readAssignmentStatement(lastToken().location));
+			ignore(Token.SEMICOLON);
 		}
 
 		checkFor(Token.KET, 2205, "Expecting ')' after atomic assignments");

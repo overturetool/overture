@@ -66,7 +66,12 @@ public class SystemClock
 
 		// RTLogger.log("CPU " + cpu + " ready to TIMESTEP by " + step);
 
-		if (runningCPUs.cardinality() == 0)
+		if (step == 0)
+		{
+			TransactionValue.commitOne(Thread.currentThread().getId());
+			unblock();
+		}
+		else if (runningCPUs.cardinality() == 0)
 		{
 			wallTime += minStepTime;
 			// RTLogger.log("TIMESTEP = " + minStepTime + ", now = " + wallTime);

@@ -132,7 +132,7 @@ public class ForAllStatement extends Statement
 				try
 				{
 					Context evalContext = new Context(location, "for all", ctxt);
-					evalContext.put(pattern.getNamedValues(val, ctxt));
+					evalContext.putList(pattern.getNamedValues(val, ctxt));
 					Value rv = statement.eval(evalContext);
 
 					if (!rv.isVoid())

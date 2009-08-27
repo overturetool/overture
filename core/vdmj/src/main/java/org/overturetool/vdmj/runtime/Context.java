@@ -170,11 +170,27 @@ public class Context extends HashMap<LexNameToken, Value>
 	 * @param nvl A list of name/value pairs.
 	 */
 
-	public void put(NameValuePairList nvl)
+	public void putList(NameValuePairList nvl)
 	{
 		for (NameValuePair nv: nvl)
 		{
 			put(nv.name, nv.value);
+		}
+	}
+
+	public void putNew(NameValuePair nvp)
+	{
+		if (get(nvp.name) == null)
+		{
+			put(nvp.name, nvp.value);
+		}
+	}
+
+	public void putAllNew(NameValuePairList list)
+	{
+		for (NameValuePair nvp: list)
+		{
+			putNew(nvp);
 		}
 	}
 

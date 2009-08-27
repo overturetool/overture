@@ -24,6 +24,7 @@
 package org.overturetool.vdmj.values;
 
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Vector;
 
 import org.overturetool.vdmj.lex.LexLocation;
@@ -110,6 +111,22 @@ public class TransactionValue extends UpdatableValue
 		}
 
 		commitList.clear();
+	}
+
+	public static synchronized void commitOne(long tid)
+	{
+		ListIterator<TransactionValue> it = commitList.listIterator();
+
+		while (it.hasNext())
+		{
+			TransactionValue v = it.next();
+
+			if (v.newthreadid == tid)
+			{
+				v.commit();
+				it.remove();
+			}
+		}
 	}
 
 	private void commit()

@@ -102,7 +102,7 @@ public class Exists1Expression extends Expression
 			try
 			{
 				Context evalContext = new Context(location, "exists1", ctxt);
-				evalContext.put(bind.pattern.getNamedValues(val, ctxt));
+				evalContext.putList(bind.pattern.getNamedValues(val, ctxt));
 
 				if (predicate.eval(evalContext).boolValue(ctxt))
 				{

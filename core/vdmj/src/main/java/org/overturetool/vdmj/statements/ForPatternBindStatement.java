@@ -156,7 +156,7 @@ public class ForPatternBindStatement extends Statement
 					try
 					{
 						Context evalContext = new Context(location, "for pattern", ctxt);
-						evalContext.put(patternBind.pattern.getNamedValues(val, ctxt));
+						evalContext.putList(patternBind.pattern.getNamedValues(val, ctxt));
 						Value rv = statement.eval(evalContext);
 
 						if (!rv.isVoid())
@@ -185,7 +185,7 @@ public class ForPatternBindStatement extends Statement
 						}
 
 						Context evalContext = new Context(location, "for set bind", ctxt);
-						evalContext.put(setbind.pattern.getNamedValues(val, ctxt));
+						evalContext.putList(setbind.pattern.getNamedValues(val, ctxt));
 						Value rv = statement.eval(evalContext);
 
 						if (!rv.isVoid())
@@ -210,7 +210,7 @@ public class ForPatternBindStatement extends Statement
 						Value converted = val.convertTo(typebind.type, ctxt);
 
 						Context evalContext = new Context(location, "for type bind", ctxt);
-						evalContext.put(typebind.pattern.getNamedValues(converted, ctxt));
+						evalContext.putList(typebind.pattern.getNamedValues(converted, ctxt));
 						Value rv = statement.eval(evalContext);
 
 						if (!rv.isVoid())

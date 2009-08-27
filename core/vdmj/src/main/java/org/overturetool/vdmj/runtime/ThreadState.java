@@ -57,7 +57,7 @@ public class ThreadState
 	public void init()
 	{
 		this.action = InterruptAction.RUNNING;
-		this.setTimestep(0);
+		this.setTimestep(-1);
 		set(0, null, null);
 	}
 

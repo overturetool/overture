@@ -138,7 +138,7 @@ public class CallObjectStatement extends Statement
 		if (Settings.dialect == Dialect.VDM_RT &&
 			classname.equals("CPU") && field.name.equals("deploy"))
 		{
-			if (!(atypes.get(0) instanceof ClassType))
+			if (!atypes.get(0).isType(ClassType.class))
 			{
 				args.get(0).report(3280, "Argument to deploy must be an object");
 			}

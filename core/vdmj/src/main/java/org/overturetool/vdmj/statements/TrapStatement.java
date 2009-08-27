@@ -148,7 +148,7 @@ public class TrapStatement extends Statement
     			if (patternBind.pattern != null)
     			{
     				Context evalContext = new Context(location, "trap pattern", ctxt);
-    				evalContext.put(patternBind.pattern.getNamedValues(exval, ctxt));
+    				evalContext.putList(patternBind.pattern.getNamedValues(exval, ctxt));
     				rv = with.eval(evalContext);
     			}
     			else if (patternBind.bind instanceof SetBind)
@@ -159,7 +159,7 @@ public class TrapStatement extends Statement
     				if (set.contains(exval))
     				{
     					Context evalContext = new Context(location, "trap set", ctxt);
-    					evalContext.put(setbind.pattern.getNamedValues(exval, ctxt));
+    					evalContext.putList(setbind.pattern.getNamedValues(exval, ctxt));
     					rv = with.eval(evalContext);
     				}
     				else
@@ -172,7 +172,7 @@ public class TrapStatement extends Statement
     				TypeBind typebind = (TypeBind)patternBind.bind;
     				Value converted = exval.convertTo(typebind.type, ctxt);
     				Context evalContext = new Context(location, "trap type", ctxt);
-    				evalContext.put(typebind.pattern.getNamedValues(converted, ctxt));
+    				evalContext.putList(typebind.pattern.getNamedValues(converted, ctxt));
     				rv = with.eval(evalContext);
     			}
 			}

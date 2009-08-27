@@ -96,7 +96,7 @@ public class BlockStatement extends SimpleBlockStatement
 
 		for (Definition d: assignmentDefs)
 		{
-			evalContext.put(d.getNamedValues(evalContext));
+			evalContext.putList(d.getNamedValues(evalContext));
 		}
 
 		for (Statement s: statements)

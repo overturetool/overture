@@ -109,7 +109,7 @@ public class IotaExpression extends Expression
 			try
 			{
 				Context evalContext = new Context(location, "iota", ctxt);
-				evalContext.put(bind.pattern.getNamedValues(val, ctxt));
+				evalContext.putList(bind.pattern.getNamedValues(val, ctxt));
 
 				if (predicate.eval(evalContext).boolValue(ctxt))
 				{

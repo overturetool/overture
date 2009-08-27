@@ -58,7 +58,7 @@ public class DefExpression extends LetDefExpression
 
 		for (Definition d: localDefs)
 		{
-			evalContext.put(d.getNamedValues(evalContext));
+			evalContext.putList(d.getNamedValues(evalContext));
 		}
 
 		return expression.eval(evalContext);

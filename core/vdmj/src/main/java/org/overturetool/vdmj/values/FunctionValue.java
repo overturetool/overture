@@ -271,7 +271,7 @@ public class FunctionValue extends Value
 		if (typeValues != null)
 		{
 			// Add any @T type values, for recursive polymorphic functions
-			evalContext.put(typeValues);
+			evalContext.putList(typeValues);
 		}
 
 		if (argValues.size() != paramPatterns.size())

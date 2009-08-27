@@ -103,7 +103,7 @@ public class CaseAlternative implements Serializable
 		{
 			try
 			{
-				evalContext.put(p.getNamedValues(val, ctxt));
+				evalContext.putList(p.getNamedValues(val, ctxt));
 				return result.eval(evalContext);
 			}
 			catch (PatternMatchException e)

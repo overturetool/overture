@@ -52,7 +52,7 @@ public class DurationStatement extends Statement
 	@Override
 	public Value eval(Context ctxt)
 	{
-		if (ctxt.threadState.getTimestep() > 0)
+		if (ctxt.threadState.getTimestep() >= 0)
 		{
 			// Already in a timed step, so ignore nesting
 			return statement.eval(ctxt);
@@ -62,7 +62,7 @@ public class DurationStatement extends Statement
 			ctxt.threadState.setTimestep(step);
 			Value rv = statement.eval(ctxt);
 			ctxt.threadState.CPU.duration(step);
-			ctxt.threadState.setTimestep(0);
+			ctxt.threadState.setTimestep(-1);
 			return rv;
 		}
 	}

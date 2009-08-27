@@ -210,7 +210,7 @@ public class Module implements Serializable
 			{
 				try
 				{
-					initialContext.put(d.getNamedValues(initialContext));
+					initialContext.putList(d.getNamedValues(initialContext));
 				}
 				catch (ContextException e)
 				{
@@ -223,7 +223,7 @@ public class Module implements Serializable
 		{
 			try
 			{
-				initialContext.put(d.getNamedValues(initialContext));
+				initialContext.putList(d.getNamedValues(initialContext));
 			}
 			catch (ContextException e)
 			{

@@ -951,12 +951,12 @@ public class ClassDefinition extends Definition
 					case PRIVATE:
 					case PROTECTED:
 						privateStaticValues.putAllNew(nvl);
-						initCtxt.put(nvl);
+						initCtxt.putList(nvl);
 						break;
 
 					case PUBLIC:
 						publicStaticValues.putAllNew(nvl);
-						initCtxt.put(nvl);
+						initCtxt.putList(nvl);
 						break;
 				}
 			}
@@ -996,12 +996,12 @@ public class ClassDefinition extends Definition
 					case PRIVATE:
 					case PROTECTED:
 						privateStaticValues.putAllNew(nvl);
-						initCtxt.put(nvl);
+						initCtxt.putAllNew(nvl);
 						break;
 
 					case PUBLIC:
 						publicStaticValues.putAllNew(nvl);
-						initCtxt.put(nvl);
+						initCtxt.putAllNew(nvl);
 						break;
 				}
 			}
@@ -1017,12 +1017,12 @@ public class ClassDefinition extends Definition
 					case PRIVATE:
 					case PROTECTED:
 						privateStaticValues.putAllNew(nvl);
-						initCtxt.put(nvl);
+						initCtxt.putAllNew(nvl);
 						break;
 
 					case PUBLIC:
 						publicStaticValues.putAllNew(nvl);
-						initCtxt.put(nvl);
+						initCtxt.putAllNew(nvl);
 						break;
 				}
 			}
@@ -1163,7 +1163,7 @@ public class ClassDefinition extends Definition
 		// initializations are restricted.
 
 		Context initCtxt = new StateContext(location, "field initializers", ctxt, null);
-		initCtxt.put(members.asList());
+		initCtxt.putList(members.asList());
 
 		// We create an empty context to pass for function creation, so that
 		// there are no spurious free variables created.
@@ -1175,7 +1175,7 @@ public class ClassDefinition extends Definition
 			if (!d.isStatic() && d.isFunctionOrOperation())
 			{
 				NameValuePairList nvpl = d.getNamedValues(empty);
-				initCtxt.put(nvpl);
+				initCtxt.putList(nvpl);
 				members.putAll(nvpl);
 			}
 		}
@@ -1187,7 +1187,7 @@ public class ClassDefinition extends Definition
 				NameValuePairList nvpl =
 					d.getNamedValues(initCtxt).getUpdatable(invlistener);
 
-				initCtxt.put(nvpl);
+				initCtxt.putList(nvpl);
 				members.putAll(nvpl);
 			}
 		}

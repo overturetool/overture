@@ -56,7 +56,7 @@ public class State implements ValueListener
 
 		this.context = new Context(definition.location, "module state", null);
 		this.context.put(definition.name, recordValue);
-		this.context.put(fieldvalues);
+		this.context.putList(fieldvalues);
 	}
 
 	public void initialize(Context globals)

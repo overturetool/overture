@@ -122,7 +122,7 @@ public class SeqCompExpression extends SeqExpression
 			try
 			{
 				Context evalContext = new Context(location, "seq comprehension", ctxt);
-				evalContext.put(setbind.pattern.getNamedValues(val, ctxt));
+				evalContext.putList(setbind.pattern.getNamedValues(val, ctxt));
 
 				if (predicate == null || predicate.eval(evalContext).boolValue(ctxt))
 				{
