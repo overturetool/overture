@@ -43,6 +43,7 @@ import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeSet;
 import org.overturetool.vdmj.types.UnknownType;
 import org.overturetool.vdmj.types.VoidType;
+import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.VoidValue;
 
@@ -114,12 +115,26 @@ public class AssignmentStatement extends Statement
 
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
-			RTLogger.log(
-				"InstVarChange -> instnm: \"" + target.toString() + "\"" +
-				" val: \"" + newval + "\"" +
-				" objref: " + ctxt.getSelf().objectReference +
-				" time: " + SystemClock.getWallTime() +
-				" id: " + Thread.currentThread().getId());
+			ObjectValue self = ctxt.getSelf();	// May be a static
+
+			if (self == null)
+			{
+    			RTLogger.log(
+    				"InstVarChange -> instnm: \"" + target.toString() + "\"" +
+    				" val: \"" + newval + "\"" +
+    				" objref: nil" +
+    				" time: " + SystemClock.getWallTime() +
+    				" id: " + Thread.currentThread().getId());
+			}
+			else
+			{
+    			RTLogger.log(
+    				"InstVarChange -> instnm: \"" + target.toString() + "\"" +
+    				" val: \"" + newval + "\"" +
+    				" objref: " + self.objectReference +
+    				" time: " + SystemClock.getWallTime() +
+    				" id: " + Thread.currentThread().getId());
+			}
 		}
 
 		return new VoidValue();

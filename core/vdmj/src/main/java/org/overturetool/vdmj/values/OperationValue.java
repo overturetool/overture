@@ -193,7 +193,7 @@ public class OperationValue extends Value
 	{
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
-			if (ctxt.threadState.CPU != self.getCPU() || isAsync)
+			if (!isStatic && (ctxt.threadState.CPU != self.getCPU() || isAsync))
 			{
 				return asyncEval(argValues, ctxt);
 			}
@@ -654,15 +654,30 @@ public class OperationValue extends Value
 	{
 		if (traceRT)
 		{
-    		RTLogger.log(
-    			kind + " -> id: " + Thread.currentThread().getId() +
-    			" opname: \"" + name + "\"" +
-    			" objref: " + self.objectReference +
-    			" clnm: \"" + self.type.name.name + "\"" +
-    			" cpunm: " + self.getCPU().cpuNumber +
-    			" async: " + isAsync +
-    			" time: " + SystemClock.getWallTime()
-    			);
+			if (isStatic)
+			{
+	    		RTLogger.log(
+	    			kind + " -> id: " + Thread.currentThread().getId() +
+	    			" opname: \"" + name + "\"" +
+	    			" objref: nil" +
+	    			" clnm: \"" + classdef.name.name + "\"" +
+	    			" cpunm: 0" +
+	    			" async: " + isAsync +
+	    			" time: " + SystemClock.getWallTime()
+	    			);
+			}
+			else
+			{
+        		RTLogger.log(
+        			kind + " -> id: " + Thread.currentThread().getId() +
+        			" opname: \"" + name + "\"" +
+        			" objref: " + self.objectReference +
+        			" clnm: \"" + self.type.name.name + "\"" +
+        			" cpunm: " + self.getCPU().cpuNumber +
+        			" async: " + isAsync +
+        			" time: " + SystemClock.getWallTime()
+        			);
+			}
 		}
 	}
 
