@@ -240,7 +240,19 @@ public class ClassDefinition extends Definition
 
 			if (def == null)
 			{
-				supername.report(3003, "Undefined superclass: " + supername);
+				report(3003, "Undefined superclass: " + supername);
+			}
+			else if (def instanceof CPUClassDefinition)
+			{
+				report(3298, "Cannot inherit from CPU");
+			}
+			else if (def instanceof BUSClassDefinition)
+			{
+				report(3299, "Cannot inherit from BUS");
+			}
+			else if (def instanceof SystemDefinition)
+			{
+				report(3278, "Cannot inherit from system class " + supername);
 			}
 			else if (def instanceof ClassDefinition)
 			{
@@ -429,14 +441,7 @@ public class ClassDefinition extends Definition
 
 		for (ClassDefinition sclass: superdefs)
 		{
-			if (sclass instanceof SystemDefinition)
-			{
-				report(3278, "Cannot inherit from system class " + sclass.name);
-			}
-			else
-			{
-				indefs.addAll(sclass.getInheritable());
-			}
+			indefs.addAll(sclass.getInheritable());
 		}
 
 		// The inherited definitions are ordered such that the
