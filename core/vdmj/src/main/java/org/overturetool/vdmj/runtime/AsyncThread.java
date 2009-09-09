@@ -105,7 +105,7 @@ public class AsyncThread extends Thread
 		long noise = (jitter == 0) ? 0 : PRNG.nextLong() % (jitter + 1);
 		long next = expected + period + noise;
 
-		if (delay > 0 && next - expected > delay)
+		if (delay > 0 && next - expected < delay)	// Too close?
 		{
 			next = expected + delay;
 		}
