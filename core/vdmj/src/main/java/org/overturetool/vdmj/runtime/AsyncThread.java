@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.runtime;
 
+import java.util.Random;
+
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.debug.DBGPReason;
@@ -41,10 +43,13 @@ public class AsyncThread extends Thread
 	public final ValueList args;
 	public final CPUValue cpu;
 	public final long period;
+	public final long jitter;
+	public final long delay;
 	public final long expected;
 	public final boolean first;
 
 	private static boolean stopping = false;
+	private static Random PRNG = new Random();
 
 	public static synchronized void periodicStop()
 	{
@@ -58,13 +63,13 @@ public class AsyncThread extends Thread
 
 	public AsyncThread(MessageRequest request)
 	{
-		this(request.target, request.operation, request.args, 0, 0);
+		this(request.target, request.operation, request.args, 0, 0, 0, 0);
 		this.request = request;
 	}
 
 	public AsyncThread(
 		ObjectValue self, OperationValue operation, ValueList args,
-		long period, long expected)
+		long period, long jitter, long delay, long expected)
 	{
 		setName("Async Thread " + getId());
 
@@ -73,6 +78,8 @@ public class AsyncThread extends Thread
 		this.args = args;
 		this.cpu = self.getCPU();
 		this.period = period;
+		this.jitter = jitter;
+		this.delay = delay;
 		this.request = new MessageRequest();
 
 		if (period > 0 && expected == 0)
@@ -87,6 +94,23 @@ public class AsyncThread extends Thread
 		}
 
 		cpu.addThread(this, self, operation, period > 0);
+	}
+
+	private long nextTime()
+	{
+		// "expected" was last run time, the next is one "period" away, but this
+		// is influenced by jitter as long as it's at least "delay" since
+		// "expected".
+
+		long noise = (jitter == 0) ? 0 : PRNG.nextLong() % (jitter + 1);
+		long next = expected + period + noise;
+
+		if (delay > 0 && next - expected > delay)
+		{
+			next = expected + delay;
+		}
+
+		return next;
 	}
 
 	@Override
@@ -111,15 +135,16 @@ public class AsyncThread extends Thread
 			cpu.startThread(expected);
     		MessageResponse response = null;
 
-    		if (period > 0 && !stopping)
+    		if (period > 0 && !stopping)	// period = 0 is a one shot thread
     		{
     			if (!first)
     			{
-    				cpu.duration(period);
+    				cpu.waitUntil(expected);
     			}
 
     			new AsyncThread(
-    				self, operation, new ValueList(), period, expected + period).start();
+    				self, operation, new ValueList(), period, jitter, delay,
+    				nextTime()).start();
     		}
 
     		try
@@ -172,15 +197,16 @@ public class AsyncThread extends Thread
 			cpu.startThread(expected);
     		MessageResponse response = null;
 
-    		if (period > 0 && !stopping)
+    		if (period > 0 && !stopping)	// period = 0 is a one shot thread
     		{
     			if (!first)
     			{
-    				cpu.duration(period);
+    				cpu.waitUntil(expected);
     			}
 
     			new AsyncThread(
-    				self, operation, new ValueList(), period, expected + period).start();
+    				self, operation, new ValueList(), period, jitter, delay,
+    				nextTime()).start();
     		}
 
     		try

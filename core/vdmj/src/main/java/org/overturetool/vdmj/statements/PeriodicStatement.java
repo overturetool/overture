@@ -54,6 +54,8 @@ public class PeriodicStatement extends Statement
 	public final LexNameToken opname;
 	public final ExpressionList args;
 
+	public long[] values = new long[4];
+
 	public PeriodicStatement(LexNameToken opname, ExpressionList args)
 	{
 		super(opname.location);
@@ -64,7 +66,6 @@ public class PeriodicStatement extends Statement
 	@Override
 	public Type typeCheck(Environment env, NameScope scope)
 	{
-		double[] values = new double[4];
 		int nargs = (Settings.dialect == Dialect.VDM_RT) ? 4 : 1;
 
 		if (args.size() != nargs)
@@ -87,7 +88,7 @@ public class PeriodicStatement extends Statement
 				else if (arg instanceof RealLiteralExpression)
 				{
 					RealLiteralExpression r = (RealLiteralExpression)arg;
-					values[i] = r.value.value;
+					values[i] = Math.round(r.value.value);
 				}
 
 				if (values[i] < 0)
@@ -166,7 +167,7 @@ public class PeriodicStatement extends Statement
 		try
 		{
 			OperationValue op = ctxt.lookup(opname).operationValue(ctxt);
-			long period = args.get(0).eval(ctxt).intValue(ctxt);
+			long period = values[0];
 
 			while (true)
 			{

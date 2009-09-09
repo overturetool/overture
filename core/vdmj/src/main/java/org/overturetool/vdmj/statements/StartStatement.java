@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.statements;
 
+import java.util.Random;
+
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
@@ -34,6 +36,7 @@ import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.RootContext;
+import org.overturetool.vdmj.runtime.SystemClock;
 import org.overturetool.vdmj.runtime.VDMThread;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
@@ -159,14 +162,28 @@ public class StartStatement extends Statement
     		Context ctxt = new ObjectContext(op.name.location, "async", global, self);
 
 			PeriodicStatement ps = (PeriodicStatement)op.body;
-			long period = ps.args.get(0).eval(ctxt).intValue(ctxt);
 			OperationValue pop = ctxt.lookup(ps.opname).operationValue(ctxt);
 
-			new AsyncThread(self, pop, new ValueList(), period, 0).start();
+			long period = ps.values[0];
+			long jitter = ps.values[1];
+			long delay  = ps.values[2];
+
+			long offset = ps.values[3];
+			long time = SystemClock.getWallTime();
+
+			if (time < offset)
+			{
+				long noise = (jitter == 0) ? 0 :
+					Math.abs(new Random().nextLong() % (jitter + 1));
+
+				self.getCPU().duration(offset - time + noise);	// Initial delay
+			}
+
+			new AsyncThread(self, pop, new ValueList(), period, jitter, delay, 0).start();
 		}
 		else
 		{
-			new AsyncThread(self, op, new ValueList(), 0, 0).start();
+			new AsyncThread(self, op, new ValueList(), 0, 0, 0, 0).start();
 		}
 	}
 

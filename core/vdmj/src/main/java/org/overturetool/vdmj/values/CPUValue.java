@@ -456,4 +456,14 @@ public class CPUValue extends ObjectValue
 			notifyAll();
 		}
 	}
+
+	public void waitUntil(long expected)
+	{
+		long time = SystemClock.getWallTime();
+
+		if (expected > time)
+		{
+			duration(expected - time);
+		}
+	}
 }

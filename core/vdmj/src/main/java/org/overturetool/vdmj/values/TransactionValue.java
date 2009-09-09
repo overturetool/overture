@@ -93,8 +93,11 @@ public class TransactionValue extends UpdatableValue
 
 		if (current != newthreadid)
 		{
-			newthreadid = Thread.currentThread().getId();
-			commitList.add(this);
+			synchronized (commitList)
+			{
+				newthreadid = Thread.currentThread().getId();
+				commitList.add(this);
+			}
 		}
 
 		if (listener != null)
@@ -103,29 +106,35 @@ public class TransactionValue extends UpdatableValue
 		}
 	}
 
-	public static synchronized void commitAll()
+	public static void commitAll()
 	{
-		for (TransactionValue v: commitList)
+		synchronized (commitList)
 		{
-			v.commit();
-		}
+    		for (TransactionValue v: commitList)
+    		{
+    			v.commit();
+    		}
 
-		commitList.clear();
+    		commitList.clear();
+		}
 	}
 
-	public static synchronized void commitOne(long tid)
+	public static void commitOne(long tid)
 	{
-		ListIterator<TransactionValue> it = commitList.listIterator();
-
-		while (it.hasNext())
+		synchronized (commitList)
 		{
-			TransactionValue v = it.next();
+    		ListIterator<TransactionValue> it = commitList.listIterator();
 
-			if (v.newthreadid == tid)
-			{
-				v.commit();
-				it.remove();
-			}
+    		while (it.hasNext())
+    		{
+    			TransactionValue v = it.next();
+
+    			if (v.newthreadid == tid)
+    			{
+    				v.commit();
+    				it.remove();
+    			}
+    		}
 		}
 	}
 

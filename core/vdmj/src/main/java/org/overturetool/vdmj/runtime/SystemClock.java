@@ -59,12 +59,15 @@ public class SystemClock
 	@SuppressWarnings("unused")
 	public static synchronized void timeStep(int cpu, long step)
 	{
+		if (step < 0)
+		{
+			return;		// Illegal?
+		}
+
 		if (step < minStepTime)
 		{
 			minStepTime = step;
 		}
-
-		// RTLogger.log("CPU " + cpu + " ready to TIMESTEP by " + step);
 
 		if (step == 0)
 		{
@@ -74,7 +77,6 @@ public class SystemClock
 		else if (runningCPUs.cardinality() == 0)
 		{
 			wallTime += minStepTime;
-			// RTLogger.log("TIMESTEP = " + minStepTime + ", now = " + wallTime);
 			TransactionValue.commitAll();
 
 			minStepTime = Long.MAX_VALUE;
