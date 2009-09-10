@@ -47,8 +47,11 @@ public class SystemClock
 
 	public static synchronized void cpuRunning(int cpu, boolean running)
 	{
-		runningCPUs.set(cpu, running);
-		if (!running) unblock();
+		if (cpu > 0)	// virtual CPU never stops anything
+		{
+			runningCPUs.set(cpu, running);
+			if (!running) unblock();
+		}
 	}
 
 	public static synchronized long getWallTime()
