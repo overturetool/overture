@@ -29,8 +29,8 @@ import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionSet;
 import org.overturetool.vdmj.definitions.StateDefinition;
+import org.overturetool.vdmj.definitions.SystemDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.syntax.SystemDefinition;
 
 /**
  * Define the type checking environment for a class as observed from inside.

@@ -25,7 +25,7 @@ package org.overturetool.vdmj.typechecker;
 
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
-import org.overturetool.vdmj.syntax.SystemDefinition;
+import org.overturetool.vdmj.definitions.SystemDefinition;
 
 /**
  * A class to coordinate all class type checking processing.
