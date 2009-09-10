@@ -36,7 +36,6 @@ import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.RootContext;
-import org.overturetool.vdmj.runtime.SystemClock;
 import org.overturetool.vdmj.runtime.VDMThread;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
@@ -167,16 +166,14 @@ public class StartStatement extends Statement
 			long period = ps.values[0];
 			long jitter = ps.values[1];
 			long delay  = ps.values[2];
-
 			long offset = ps.values[3];
-			long time = SystemClock.getWallTime();
 
-			if (time < offset)
+			if (offset > 0 || jitter > 0)
 			{
-				long noise = (jitter == 0) ? 0 :
-					Math.abs(new Random().nextLong() % (jitter + 1));
+    			long noise = (jitter == 0) ? 0 :
+    				Math.abs(new Random().nextLong() % (jitter + 1));
 
-				self.getCPU().duration(offset - time + noise);	// Initial delay
+    			self.getCPU().duration(offset + noise);
 			}
 
 			new AsyncThread(self, pop, new ValueList(), period, jitter, delay, 0).start();
