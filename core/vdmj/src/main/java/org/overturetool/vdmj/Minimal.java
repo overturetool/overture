@@ -42,6 +42,7 @@ public class Minimal
 {
 	public static void main(String[] args) throws Exception
 	{
+		Settings.dialect = Dialect.VDM_SL;
 		File file = new File(args[0]);
 		LexTokenReader ltr = new LexTokenReader(file, Dialect.VDM_SL);
 		ModuleReader mr = new ModuleReader(ltr);
