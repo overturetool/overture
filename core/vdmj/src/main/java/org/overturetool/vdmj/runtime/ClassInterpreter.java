@@ -64,6 +64,7 @@ import org.overturetool.vdmj.values.NameValuePair;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.NameValuePairMap;
 import org.overturetool.vdmj.values.ObjectValue;
+import org.overturetool.vdmj.values.TransactionValue;
 import org.overturetool.vdmj.values.Value;
 
 /**
@@ -229,6 +230,7 @@ public class ClassInterpreter extends Interpreter
 		Value rv = expr.eval(mainContext);
 		VDMThreadSet.abortAll();
 		CPUValue.abortAll();
+		TransactionValue.commitAll();
 
 		return rv;
 	}

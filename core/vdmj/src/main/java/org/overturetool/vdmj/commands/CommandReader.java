@@ -27,10 +27,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
@@ -455,44 +453,7 @@ abstract public class CommandReader
 
 	protected boolean doLog(String line)
 	{
-		if (line.equals("log"))
-		{
-			if (RTLogger.getLogSize() > 0)
-			{
-				println("Flushing " + RTLogger.getLogSize() + " RT events");
-			}
-
-			RTLogger.setLogfile(null);
-			println("RT events now logged to the console");
-			return true;
-		}
-
-		String[] parts = line.split("\\s+");
-
-		if (parts.length != 2 || !parts[0].equals("log"))
-		{
-			println("Usage: log [<file>] | off");
-		}
-		else if (parts[1].equals("off"))
-		{
-			RTLogger.enable(false);
-			println("RT event logging disabled");
-		}
-		else
-		{
-			try
-			{
-				PrintWriter p = new PrintWriter(new FileOutputStream(parts[1], true));
-				RTLogger.setLogfile(p);
-				println("RT events now logged to " + parts[1]);
-			}
-			catch (FileNotFoundException e)
-			{
-				println("Cannot create RT event log: " + e.getMessage());
-			}
-		}
-
-		return true;
+		return notAvailable(line);
 	}
 
 	protected boolean doCreate(String line) throws Exception
@@ -918,7 +879,6 @@ abstract public class CommandReader
 		println("files - list files in the current specification");
 		println("reload - reload the current specification files");
 		println("load <files> - replace current loaded specification files");
-		println("log [<file>] - log RT events to file");
 		println("quit - leave the interpreter");
 	}
 

@@ -59,16 +59,29 @@ public class TransactionValue extends UpdatableValue
 		newvalue = value;
 	}
 
+	private Value select()
+	{
+		if (newthreadid > 0 &&
+			Thread.currentThread().getId() == newthreadid)
+		{
+			return newvalue;
+		}
+		else
+		{
+			return value;
+		}
+	}
+
 	@Override
 	public synchronized Value getUpdatable(ValueListener watch)
 	{
-		return new TransactionValue(newvalue, watch);
+		return new TransactionValue(select(), watch);
 	}
 
 	@Override
 	public synchronized Value convertValueTo(Type to, Context ctxt) throws ValueException
 	{
-		return newvalue.convertValueTo(to, ctxt).getUpdatable(listener);
+		return select().convertValueTo(to, ctxt).getUpdatable(listener);
 	}
 
 	@Override
@@ -91,7 +104,7 @@ public class TransactionValue extends UpdatableValue
 			newvalue = newval.getUpdatable(listener).deref();
 		}
 
-		if (current != newthreadid)
+		if (newthreadid < 0)
 		{
 			synchronized (commitList)
 			{
@@ -150,127 +163,127 @@ public class TransactionValue extends UpdatableValue
 	@Override
 	public synchronized Object clone()
 	{
-		return new TransactionValue((Value)newvalue.clone(), listener);
+		return new TransactionValue((Value)select().clone(), listener);
 	}
 
 	@Override
 	public synchronized boolean isType(Class<? extends Value> valueclass)
 	{
-		return valueclass.isInstance(this.newvalue);
+		return valueclass.isInstance(select());
 	}
 
 	@Override
 	public synchronized Value deref()
 	{
-		return newvalue.deref();
+		return select().deref();
 	}
 
 	@Override
 	public synchronized boolean isUndefined()
 	{
-		return newvalue.isUndefined();
+		return select().isUndefined();
 	}
 
 	@Override
 	public synchronized boolean isVoid()
 	{
-		return newvalue.isVoid();
+		return select().isVoid();
 	}
 
 	@Override
 	public synchronized double realValue(Context ctxt) throws ValueException
 	{
-		return newvalue.realValue(ctxt);
+		return select().realValue(ctxt);
 	}
 
 	@Override
 	public synchronized long intValue(Context ctxt) throws ValueException
 	{
-		return newvalue.intValue(ctxt);
+		return select().intValue(ctxt);
 	}
 
 	@Override
 	public synchronized long natValue(Context ctxt) throws ValueException
 	{
-		return newvalue.nat1Value(ctxt);
+		return select().nat1Value(ctxt);
 	}
 
 	@Override
 	public synchronized long nat1Value(Context ctxt) throws ValueException
 	{
-		return newvalue.nat1Value(ctxt);
+		return select().nat1Value(ctxt);
 	}
 
 	@Override
 	public synchronized boolean boolValue(Context ctxt) throws ValueException
 	{
-		return newvalue.boolValue(ctxt);
+		return select().boolValue(ctxt);
 	}
 
 	@Override
 	public synchronized char charValue(Context ctxt) throws ValueException
 	{
-		return newvalue.charValue(ctxt);
+		return select().charValue(ctxt);
 	}
 
 	@Override
 	public synchronized ValueList tupleValue(Context ctxt) throws ValueException
 	{
-		return newvalue.tupleValue(ctxt);
+		return select().tupleValue(ctxt);
 	}
 
 	@Override
 	public synchronized RecordValue recordValue(Context ctxt) throws ValueException
 	{
-		return newvalue.recordValue(ctxt);
+		return select().recordValue(ctxt);
 	}
 
 	@Override
 	public synchronized ObjectValue objectValue(Context ctxt) throws ValueException
 	{
-		return newvalue.objectValue(ctxt);
+		return select().objectValue(ctxt);
 	}
 
 	@Override
 	public synchronized String quoteValue(Context ctxt) throws ValueException
 	{
-		return newvalue.quoteValue(ctxt);
+		return select().quoteValue(ctxt);
 	}
 
 	@Override
 	public synchronized ValueList seqValue(Context ctxt) throws ValueException
 	{
-		return newvalue.seqValue(ctxt);
+		return select().seqValue(ctxt);
 	}
 
 	@Override
 	public synchronized ValueSet setValue(Context ctxt) throws ValueException
 	{
-		return newvalue.setValue(ctxt);
+		return select().setValue(ctxt);
 	}
 
 	@Override
 	public synchronized String stringValue(Context ctxt) throws ValueException
 	{
-		return newvalue.stringValue(ctxt);
+		return select().stringValue(ctxt);
 	}
 
 	@Override
 	public synchronized ValueMap mapValue(Context ctxt) throws ValueException
 	{
-		return newvalue.mapValue(ctxt);
+		return select().mapValue(ctxt);
 	}
 
 	@Override
 	public synchronized FunctionValue functionValue(Context ctxt) throws ValueException
 	{
-		return newvalue.functionValue(ctxt);
+		return select().functionValue(ctxt);
 	}
 
 	@Override
 	public synchronized OperationValue operationValue(Context ctxt) throws ValueException
 	{
-		return newvalue.operationValue(ctxt);
+		return select().operationValue(ctxt);
 	}
 
 	@Override
@@ -283,16 +296,16 @@ public class TransactionValue extends UpdatableValue
     		if (val instanceof TransactionValue)
     		{
     			TransactionValue tvo = (TransactionValue)val;
-    			return newvalue.equals(tvo.newvalue);
+    			return select().equals(tvo.select());
     		}
     		else if (val instanceof ReferenceValue)
     		{
     			ReferenceValue rvo = (ReferenceValue)val;
-    			return newvalue.equals(rvo.value);
+    			return select().equals(rvo.value);
     		}
     		else
     		{
-    			return newvalue.equals(other);
+    			return select().equals(other);
     		}
 		}
 
@@ -302,18 +315,18 @@ public class TransactionValue extends UpdatableValue
 	@Override
 	public synchronized String kind()
 	{
-		return newvalue.kind();
+		return select().kind();
 	}
 
 	@Override
 	public synchronized int hashCode()
 	{
-		return newvalue.hashCode();
+		return select().hashCode();
 	}
 
 	@Override
 	public synchronized String toString()
 	{
-		return newvalue.toString();
+		return select().toString();
 	}
 }

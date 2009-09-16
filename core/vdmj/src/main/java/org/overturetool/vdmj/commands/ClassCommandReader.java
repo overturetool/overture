@@ -23,11 +23,17 @@
 
 package org.overturetool.vdmj.commands;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
+import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.VDMThreadSet;
 
@@ -112,12 +118,66 @@ public class ClassCommandReader extends CommandReader
 	}
 
 	@Override
+	protected boolean doLog(String line)
+	{
+		if (Settings.dialect != Dialect.VDM_RT)
+		{
+			return super.doLog(line);
+		}
+
+		if (line.equals("log"))
+		{
+			if (RTLogger.getLogSize() > 0)
+			{
+				println("Flushing " + RTLogger.getLogSize() + " RT events");
+			}
+
+			RTLogger.setLogfile(null);
+			println("RT events now logged to the console");
+			return true;
+		}
+
+		String[] parts = line.split("\\s+");
+
+		if (parts.length != 2 || !parts[0].equals("log"))
+		{
+			println("Usage: log [<file> | off]");
+		}
+		else if (parts[1].equals("off"))
+		{
+			RTLogger.enable(false);
+			println("RT event logging disabled");
+		}
+		else
+		{
+			try
+			{
+				PrintWriter p = new PrintWriter(new FileOutputStream(parts[1], true));
+				RTLogger.setLogfile(p);
+				println("RT events now logged to " + parts[1]);
+			}
+			catch (FileNotFoundException e)
+			{
+				println("Cannot create RT event log: " + e.getMessage());
+			}
+		}
+
+		return true;
+	}
+
+	@Override
 	protected void doHelp(String line)
 	{
 		println("classes - list the loaded class names");
 		println("threads - list active threads");
 		println("default <class> - set the default class name");
 		println("create <id> := <exp> - create a named variable");
+
+		if (Settings.dialect == Dialect.VDM_RT)
+		{
+			println("log [<file> | off] - log RT events to file");
+		}
+
 		super.doHelp(line);
 	}
 }
