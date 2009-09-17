@@ -26,6 +26,7 @@ package junit;
 import java.io.File;
 import java.nio.charset.Charset;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexTokenReader;
@@ -49,6 +50,7 @@ public class VDMTestCase extends TestCase
 
 	protected ClassList parseClasses(String vpppath, String charset) throws Exception
 	{
+		Settings.dialect = Dialect.VDM_PP;
 		ClassList classes = null;
 		int errs = 0;
 		String parser = System.getProperty("parser");
