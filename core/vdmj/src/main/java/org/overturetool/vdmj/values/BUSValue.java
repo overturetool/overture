@@ -156,10 +156,9 @@ public class BUSValue extends ObjectValue
 			" fromcpu: " + response.from.cpuNumber +
 			" tocpu: " + response.to.cpuNumber +
 			" msgid: " + response.msgId +
+			" origmsgid: " + response.originalId +
 			" callthr: " + response.caller.getId() +
 			" calleethr: " + response.thread.getId() +
-			" opname: " + "\"" + response.operation.name + "\"" +
-			" objref: " + response.target.objectReference +
 			" size: " + response.getSize() +
 			" time: " + SystemClock.getWallTime());
 

@@ -31,6 +31,7 @@ public class MessageResponse extends MessagePacket
 	public final ValueException exception;
 	public final Holder<MessageResponse> replyTo;
 	public final Thread caller;
+	public final long originalId;
 
 	public MessageResponse(Value result, MessageRequest request)
 	{
@@ -41,6 +42,7 @@ public class MessageResponse extends MessagePacket
 		this.exception = null;
 		this.replyTo = request.replyTo;
 		this.caller = request.thread;
+		this.originalId = request.msgId;
 	}
 
 	public MessageResponse(ValueException exception, MessageRequest request)
@@ -52,6 +54,7 @@ public class MessageResponse extends MessagePacket
 		this.exception = exception;
 		this.replyTo = request.replyTo;
 		this.caller = request.thread;
+		this.originalId = request.msgId;
 	}
 
 	public Value getValue() throws ValueException
