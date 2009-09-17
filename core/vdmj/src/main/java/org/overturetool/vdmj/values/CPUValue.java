@@ -257,7 +257,7 @@ public class CPUValue extends ObjectValue
 			" objref: nil" +
 			" clnm: nil" +
 			" cpunm: 0" +
-			" overhead: 0" +
+			" overhead: " + SWAPIN_DURATION +
 			" time: " + SystemClock.getWallTime());
 
 		addMainThread();
@@ -382,7 +382,7 @@ public class CPUValue extends ObjectValue
     			"ThreadSwapIn -> id: " + current.getId() +
     			objRefString(object) +
     			" cpunm: " + cpuNumber +
-    			" overhead: " + 0 +
+    			" overhead: " + SWAPIN_DURATION +
     			" time: " + SystemClock.getWallTime());
 		}
 	}
@@ -427,7 +427,7 @@ public class CPUValue extends ObjectValue
         		"ThreadSwapIn -> id: " + current.getId() +
         		objRefString(object) +
         		" cpunm: " + cpuNumber +
-        		" overhead: " + 0 +
+        		" overhead: " + SWAPIN_DURATION +
         		" time: " + time);
     	}
     	else
@@ -437,7 +437,7 @@ public class CPUValue extends ObjectValue
         		objRefString(object) +
         		" delay: " + (time - start) +
         		" cpunm: " + cpuNumber +
-        		" overhead: " + 0 +
+        		" overhead: " + SWAPIN_DURATION +
         		" time: " + time);
     	}
     }
