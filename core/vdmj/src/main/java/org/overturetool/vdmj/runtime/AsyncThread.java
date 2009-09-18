@@ -134,6 +134,7 @@ public class AsyncThread extends Thread
 		{
 			cpu.startThread(expected);
     		MessageResponse response = null;
+    		boolean logreq = false;
 
     		if (period > 0 && !stopping)	// period = 0 is a one shot thread
     		{
@@ -141,6 +142,8 @@ public class AsyncThread extends Thread
     			{
     				cpu.waitUntil(expected);
     			}
+
+    			logreq = true;
 
     			new AsyncThread(
     				self, operation, new ValueList(), period, jitter, delay,
@@ -154,7 +157,7 @@ public class AsyncThread extends Thread
     			reader = ctxt.threadState.dbgp.newThread();
     			ctxt.setThreadState(reader, cpu);
 
-        		Value rv = operation.localEval(args, ctxt, false);
+        		Value rv = operation.localEval(args, ctxt, logreq);
        			response = new MessageResponse(rv, request);
     		}
     		catch (ValueException e)
@@ -196,6 +199,7 @@ public class AsyncThread extends Thread
 		{
 			cpu.startThread(expected);
     		MessageResponse response = null;
+    		boolean logreq = false;
 
     		if (period > 0 && !stopping)	// period = 0 is a one shot thread
     		{
@@ -203,6 +207,8 @@ public class AsyncThread extends Thread
     			{
     				cpu.waitUntil(expected);
     			}
+
+    			logreq = true;
 
     			new AsyncThread(
     				self, operation, new ValueList(), period, jitter, delay,
@@ -215,7 +221,7 @@ public class AsyncThread extends Thread
         		Context ctxt = new ObjectContext(operation.name.location, "async", global, self);
         		ctxt.setThreadState(null, cpu);
 
-        		Value rv = operation.localEval(args, ctxt, false);
+        		Value rv = operation.localEval(args, ctxt, logreq);
        			response = new MessageResponse(rv, request);
     		}
     		catch (ValueException e)
