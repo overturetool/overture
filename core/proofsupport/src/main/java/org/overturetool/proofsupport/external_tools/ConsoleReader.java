@@ -12,4 +12,6 @@ public interface ConsoleReader {
 	public void removeConsoleHeader() throws IOException;
 	
 	public void setInputStream(InputStream is);
+	
+	public boolean ready() throws IOException;
 }

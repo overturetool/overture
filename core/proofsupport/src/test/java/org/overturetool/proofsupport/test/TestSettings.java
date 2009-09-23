@@ -78,6 +78,7 @@ public class TestSettings extends AbstractSettings
 	public static final String EMPTY_MODEL = "emptyModel";
 	public static final String PARSE_ERROR = "parseError";
 	public static final String TEST_THEORY = "testTheory1";
+	public static final String HOL_ERROR = "holError";
 	public static final String TEST_POG_FILE_NO_NEW_LINE = "testPogFileNoNewLine";
 	public static final String TEST_POG_FILE_WITH_NEW_LINE = "testPogFileWithNewLine";
 	public static final String STACK_MODEL_POG_FILE = "stackModelPogFile";

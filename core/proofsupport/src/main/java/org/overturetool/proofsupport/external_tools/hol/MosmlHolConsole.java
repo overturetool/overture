@@ -20,8 +20,18 @@ public class MosmlHolConsole extends Console {
 		
 	}
 
-	public String readOutputBlock() throws IOException {
-		return output.readBlock();
+	public String readOutputBlock() throws IOException, HolInterpreterException {
+		String block = output.readBlock();
+		validateInterpretation();
+		return block;
+	}
+
+	private void validateInterpretation() throws IOException, HolInterpreterException {
+		String errorMessage = null;
+		if(error.ready())
+			errorMessage = readAllErrorLines();
+		if(errorMessage != null) 
+			throw new HolInterpreterException("Interpretation failed." + errorMessage);
 	}
 
 	public void quitHol() throws InterruptedException {

@@ -39,10 +39,20 @@ public class VdmToolsWrapper implements PogGenerator {
 			while((line = vdmToolsConsole.readErrorLine()) != null)
 				sb.append(line);
 			if(sb.length() > 0)
-				throw new PogGeneratorException(sb.toString());
+				analyzeErrorMessage(sb);
 		} catch (IOException e) {
 			throw new PogGeneratorException("Interrupted while validating VDMTools concole output.", e);
 		}
+	}
+
+	private void analyzeErrorMessage(StringBuffer sb)
+			throws PogGeneratorException {
+		String error = sb.toString();
+		if(error.contains("Errors"))
+			throw new PogGeneratorException(sb.toString());
+		else if(error.contains("Warning"))
+			// TODO log warning!!
+			;
 	}
 
 	private void waitForPogToFinish(Console vdmToolsConsole) throws PogGeneratorException {

@@ -14,15 +14,15 @@ public class Console {
 	protected final Process process;
 	protected final PrintWriter input;
 	protected final ConsoleReader output;
-	protected final BufferedReader error;
+	protected final ConsoleReader error;
 
 	public Console(List<String> command) throws IOException {
 		process = startProcess(command, null);
 		input = new PrintWriter(process.getOutputStream());
 		output = new BufferedConsoleReader();
 		output.setInputStream(process.getInputStream());
-		error = new BufferedReader(new InputStreamReader(process
-				.getErrorStream()));
+		error = new BufferedConsoleReader();
+		error.setInputStream(process.getErrorStream());
 	}
 
 	public Console(List<String> command, ConsoleReader outputReader)
@@ -31,8 +31,8 @@ public class Console {
 		input = new PrintWriter(process.getOutputStream());
 		output = outputReader;
 		output.setInputStream(process.getInputStream());
-		error = new BufferedReader(new InputStreamReader(process
-				.getErrorStream()));
+		error = new BufferedConsoleReader();
+		error.setInputStream(process.getErrorStream());
 		output.removeConsoleHeader();
 	}
 
@@ -138,15 +138,11 @@ public class Console {
 	 * @throws IOException
 	 */
 	public String readAllLines() throws IOException {
-		StringBuffer sb = new StringBuffer();
-		String line = "";
-		while ((line = readLine()) != null) {
-			sb.append(line).append(Utilities.LINE_SEPARATOR);
-		}
-		// remove the last LINE_SEPARATOR
-		sb.deleteCharAt(sb.length() - 1);
+		return readAllLinesFromReader(output);
+	}
 
-		return sb.toString();
+	public String readAllErrorLines() throws IOException {
+		return readAllLinesFromReader(error);
 	}
 
 	/**
@@ -202,5 +198,19 @@ public class Console {
 			result = false;
 		}
 		return result;
+	}
+
+	protected String readAllLinesFromReader(ConsoleReader reader)
+			throws IOException {
+		StringBuffer sb = new StringBuffer();
+//		String line = "";
+		while (reader.ready()) {
+			sb.append(reader.readLine()).append(Utilities.LINE_SEPARATOR);
+		}
+		// remove the last LINE_SEPARATOR
+		if(sb.length() > 0)
+			sb.deleteCharAt(sb.length() - 1);
+
+		return sb.toString();
 	}
 }

@@ -108,7 +108,7 @@ public class TranslationPreProcessorTest extends TestCase {
 		try {
 			prep.prepareVdmFiles(modelFile, contextFiles);
 			fail("The model file name was null and method should have thrown an exception.");
-		} catch(PogGeneratorException e) {
+		} catch(NullPointerException e) {
 			
 		}
 	}

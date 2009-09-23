@@ -141,14 +141,6 @@ public class ConsoleTest extends TestCase {
 		assertEquals(THIS_IS_A_TEST + Utilities.LINE_SEPARATOR + THIS_IS_A_TEST, actual.trim());
 	}
 	
-	
-//	public void testHasOutput() throws Exception {
-//		Console console = new Console(TestSettings.getNopProgramCommand());
-//		console.waitForSomeOutput(2000);
-//		
-//		assertTrue(console.hasOutput());
-//	}
-	
 	public void testHasNoOutput() throws Exception {
 		ArrayList<String> command = new ArrayList<String>();
 		command.add(TestSettings.getCatProgram());

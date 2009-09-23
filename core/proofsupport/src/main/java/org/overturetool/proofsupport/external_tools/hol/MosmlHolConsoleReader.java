@@ -24,7 +24,7 @@ public class MosmlHolConsoleReader extends BufferedConsoleReader implements Cons
 	public String readLine() throws IOException {
 		String prefix = getAndResetPromptBuffer();
 		String line = super.readLine();
-		return prefix != "" ? prefix + line : line;
+		return !prefix.equals("") ? prefix + line : line;
 	}
 	
 	public void removeConsoleHeader() throws IOException {
