@@ -294,7 +294,8 @@ public class ObjectValue extends Value
 	@Override
 	public int hashCode()
 	{
-		return type.hashCode() + members.hashCode() + superobjects.hashCode();
+		// return type.hashCode() + members.hashCode() + superobjects.hashCode();
+		return type.hashCode() + objectReference + superobjects.hashCode();
 	}
 
 	@Override
