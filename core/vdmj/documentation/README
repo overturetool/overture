@@ -1,0 +1,74 @@
+Features and surprises in VDMJ
+------------------------------
+
+There are some differences between VDMJ and other VDM tools. This note tries
+to list the most obvious.
+
+VDMJ's "model" of quantifiers considers every ordering of the members of a
+(sub*)set, whereas VDMTools only considers one (though I believe it's a well
+defined one). For example, VDMJ regards the following as true, but VDMTools
+considers it false:
+
+	exists1 {x,y} in set {{1,2},{3,4}} & x=3 and y=4
+
+VDMJ type checking is "context free", so for example the check for the "then"
+and "else" clauses of an "if" are not aware of the type the overall expected
+result. When the type of the whole "if" is established (as A|B) then
+this is checked against whatever the value is being assigned to at that point.
+VDMTools would complain if the "then" and/or "else" clauses did not yield the
+expected type separately.
+
+VDMJ implements non-static object operation pre and post condition functions
+with a similar function prototype to VDM-SL stateful pre and post conditions:
+
+	pre_op(args, self) -> bool
+	post_op(args, RESULT, self~, self) -> bool
+	
+The self~ object is a copy, but note that other aspects of the global environment
+are not available to post conditions. All self~'s instance variables are available
+with a "~" name. Also, note old names must be accessed with an identifier rather
+than a name (so x~ not C`x~) in the post condition expression. Static operations'
+pre and post functions are the same as functions' pre and post functions (no self).
+
+When debugging on the command line, next, step and out are sometimes confusing
+about where they stop. Step (or 's') will stop at any Statement or Expression
+evaluation which is on a different line to the current line; next (or 'n') will
+stop at any Statement or Expression which is being executed in a RootContext
+(a function/operation call) that is not "above" the current one; out (or 'o')
+will stop at at any Statement or Expression which is being executed in a Context
+which is "below" the current one. The "source" command is useful to find out
+where you are!
+
+Note that the "default" command changes the current default class or module name
+(so you don't have to type xxx`yyy), but this is not available in a debugging
+state. Rather, the debugger sets the default to the latest breakpoint's
+class/module name, but this remains in force when the debugging session ends. 
+
+Symbolic break/tracepoints in VDM++ cannot distinguish overloaded names. If a
+function or operation is overloaded, the first declared name is used to set the
+breakpoint. To set a break/tracepoint on other overloaded names, you have to
+use the <class>:line syntax.
+
+Multi-threaded debugging is very confusing when multiple threads stop at the same
+breakpoint, but only one at a time can access the console. See the User Guide. It
+is much better to use the VDMJC client for threaded debugging, especially for
+VICE specifications.
+
+VDMJ doesn't do an implicit "exports all". So if you want to import a symbol from
+a module, it must have some sort of export. If you try to import from a module
+with no exports, you get a specific type check error. Similarly, VDMJ doesn't
+implicitly import a function's pre_ and post_ functions (if any), or a type's
+inv_ etc. These need to be explicitly imported (though "imports from X all" will
+include them).
+
+VDMJ's VDM++ threads are just Java threads, all of the same priority. They are
+therefore non-deterministic, and threaded behaviour can differ from run to run.
+This can reveal synchronization bugs that might not be revealed by VDMTools.
+
+There are several differences in object-oriented behaviour between VDMJ and
+VDMTools. These are the topic of ongoing Language Board issues, and will be
+resolved (in both tools) in due course. See the Overture Sourceforge project.
+
+The column number for error messages on lines which include tabs, or a mixture of
+tabs and spaces, will only be correct if the tab stop is set to 4.
+

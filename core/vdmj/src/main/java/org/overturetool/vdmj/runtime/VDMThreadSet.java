@@ -32,12 +32,12 @@ import java.util.Set;
 
 public class VDMThreadSet
 {
-	private static Set<VDMThread> threads = null;
+	private static Set<VDMThread> threads = new HashSet<VDMThread>();
 	private static int debugStopped = 0;
 
 	public static synchronized void init()
 	{
-		threads = new HashSet<VDMThread>();
+		threads.clear();
 		debugStopped = 0;
 	}
 

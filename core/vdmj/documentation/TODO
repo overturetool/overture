@@ -1,29 +1,13 @@
 
-Change the #req, #act and #fin counters to be summed by all overloads of an
-operation in an object, not per-operation as they are now.
-
-Improve the exitCheck coverage to look at called operations.
-
 Fix object construction, once the rules are clear.
 
-Fix scope bugs with qualified naming of function variables.
-
-What we should generate for VDM++ satisfiability POs that call post conditions
-with self, self~?
-
-Correct POG for mutually recursive measured functions.
-
 Modify POG to generate AST rather than strings.
-
-Implement runtime support for VICE extensions.
-
-Change command line to use DBGp for better threaded debugging.
 
 Change VDMJ parse tree to be AST compliant and/or define a type-aware tree
 structure using "ASTgen", and change type checking accordingly.
 
 Extend DBGp with XSchema definitions for VDM types.
 
-Produce a "complete" OML JUnit test suite, with code coverage.
+Produce a "complete" JUnit test suite, with code coverage.
 
 Add Java code generation, using Value classes.
