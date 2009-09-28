@@ -1,0 +1,25 @@
+\documentclass[]{article}
+
+\title{Implementing the Overture Automatic Proof System}
+
+\author{Miguel Alexandre Ferreira\\
+        Software Improvement Group, The Netherlands\\ 
+		\texttt{m.ferreira@sig.nl}}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\begin{abstract}
+Sander Vermolen has produced a VDM to HOL translator prototype together with HOL tactics that allow VDM proof obligations to be discharged in the theorem prover HOL.
+Vermolen's VDM++ prototype is complete enough to discharge proof obligations arising from functional VDM++ models.
+However the prototype's performance is very limited as it can only be executed within a VDM++ interpreter.
+Through the VDM++ to Java code generator tool, provided by the VDMTools, the prototype was implemented in Java allowing for its integration in the Overture Automatic Proof System.
+
+The Automatic Proof System is a Java program that promotes the interoperation between a VDM proof obligation generation tool, the VDM to HOL translator, and the theorem prover HOL.
+The current paper reports on the challenges and achievements of the Automatic Proof System's implementation, as part of the Overture Tool framework.
+\end{abstract}
+
+
+\end{document}
