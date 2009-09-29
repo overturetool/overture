@@ -1,6 +1,6 @@
 \documentclass[]{article}
 
-\title{Implementing the Overture Automatic Proof System}
+\title{Implementing the Overture Automatic Proof System for VDM}
 
 \author{Miguel Alexandre Ferreira\\
         Software Improvement Group, The Netherlands\\ 
@@ -21,5 +21,63 @@ The Automatic Proof System is a Java program that promotes the interoperation be
 The current paper reports on the challenges and achievements of the Automatic Proof System's implementation, as part of the Overture Tool framework.
 \end{abstract}
 
+\section{Introduction}
+\label{sec:introduction}
+
+The Overture initiative is a platform that enables researchers, students and practitioners to experiment with software modelling languages and tools.
+Although the initiative has mainly focused in VDM and its three dialects, due to its open-source nature, everyone is welcome to contribute with tools and extensions to other languages.
+Through Overture, extensions to the different VDM dialects and supporting tools have been proposed, analysed, tested and finally transferred to industrial settings, namely to the VDMTools~\cite{VDMTools}.
+However Overture's contribution has gone further than that, as new tools have been developed that supersede the functionality provided by the VDMTools.
+
+One of the tools that adds to the capabilities of the VDMTools is the Automatic Proof Support (APS), which is capable of discharging proof obligations arising from functional VDM models using the theorem prover HOL~\cite{HOL}.
+Due to VDM's formal semantics it is possible to analyse a VDM model and pinpoint the locations where inconsistencies might occur.
+Such inconsistencies can arise from invariants violations, miss usage of partial functions and mappings, etc.
+Furthermore, besides pinpointing possible inconsistencies, it is also possible to generate verification conditions that if be proven true assure the model's consistency.
+In a VDM context, these verification conditions are deemed proof obligations.
+
+The APS was designed by Sander Verm\"olen during his MSc project~\cite{Sander}.
+As deliverables from the project, Verm\"olen produced a VDM++ model of a tool that translates VDM to HOL syntax (the VdmHolTranslator); plus a set of lemmas, which he identified as useful in a VDM context, together with a set of tactics to automate the proofs.
+
+The implementation described in this paper follows Verm\"olen's design as truly as possible, but also adds to it whenever found necessary.
+
+\section{Architecture}
+\label{sec:intended_architecure}
+
+Sander's architecture \ldots
+
+Description of components \ldots
+
+\subsection{Difficulties and Solutions}
+\label{sub:architectural_difficulties}
+
+There is no POG that generates AST \ldots
+
+\ldots
+
+\section{Implementation}
+\label{sec:implementation}
+
+Integration of components \ldots
+
+Usability \ldots
+
+\subsection{Difficulties and Solutions}
+\label{sub:implementation_difficulties}
+
+Ad-hoc parsing of POs \ldots
+
+Java child process bug \ldots
+
+\section{Future Work}
+\label{sec:future_work}
+
+Eclipse \ldots
+
+\ldots
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+\ldots
 
 \end{document}
