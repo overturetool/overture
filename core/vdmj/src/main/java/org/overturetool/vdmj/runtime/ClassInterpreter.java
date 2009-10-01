@@ -48,6 +48,7 @@ import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.syntax.StatementReader;
 import org.overturetool.vdmj.traces.CallSequence;
+import org.overturetool.vdmj.traces.TraceVariableStatement;
 import org.overturetool.vdmj.traces.Verdict;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
@@ -445,42 +446,31 @@ public class ClassInterpreter extends Interpreter
 		String classname, Environment env, CallSequence statements)
 	{
 		List<Object> list = new Vector<Object>();
+		ClassDefinition classdef = findClass(classname);
 
-		Context ctxt = null;
-
-		if (statements.copyContext)
+		if (classdef == null)
 		{
-			ctxt = statements.ctxt.deepCopy();
-			ctxt.setThreadState(null, CPUClassDefinition.virtualCPU);
+			list.add("Class " + classname + " not found");
+			return list;
 		}
-		else
+
+		ObjectValue object = null;
+
+		try
 		{
-			ClassDefinition classdef = findClass(classname);
-
-			if (classdef == null)
-			{
-				list.add("Class " + classname + " not found");
-				return list;
-			}
-
-			ObjectValue object = null;
-
-			try
-			{
-				object = classdef.newInstance(null, null, initialContext);
-			}
-			catch (ValueException e)
-			{
-				list.add(e.getMessage());
-				return list;
-			}
-
-			ctxt = new ObjectContext(
-					classdef.name.location, classdef.name.name + "()",
-					initialContext, object);
-
-			ctxt.put(classdef.name.getSelfName(), object);
+			object = classdef.newInstance(null, null, initialContext);
 		}
+		catch (ValueException e)
+		{
+			list.add(e.getMessage());
+			return list;
+		}
+
+		Context ctxt = new ObjectContext(
+				classdef.name.location, classdef.name.name + "()",
+				initialContext, object);
+
+		ctxt.put(classdef.name.getSelfName(), object);
 
 		try
 		{
@@ -496,7 +486,12 @@ public class ClassInterpreter extends Interpreter
 					// tried at all" :-)
 				}
 
-				list.add(statement.eval(ctxt));
+				Value v = statement.eval(ctxt);
+
+				if (!(statement instanceof TraceVariableStatement))
+				{
+					list.add(v);
+				}
 			}
 
 			list.add(Verdict.PASSED);

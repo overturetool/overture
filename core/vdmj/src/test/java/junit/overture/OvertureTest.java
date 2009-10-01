@@ -291,7 +291,8 @@ abstract public class OvertureTest extends TestCase
 
 			if (!result.equals(expected))
 			{
-				Console.out.println(assertName + " should be:\n" + result);
+				Console.out.println(assertName + " actual:\n" + result);
+				Console.out.println("\n" + assertName + " expected:\n" + expected);
 			}
 
 			assertEquals("Evaluation error", expected, result);

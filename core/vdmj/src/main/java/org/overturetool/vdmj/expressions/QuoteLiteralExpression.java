@@ -68,10 +68,4 @@ public class QuoteLiteralExpression extends Expression
 	{
 		return "quote";
 	}
-
-	@Override
-	public boolean isLiteral()
-	{
-		return true;
-	}
 }

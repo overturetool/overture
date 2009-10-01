@@ -90,10 +90,4 @@ public class IntegerLiteralExpression extends Expression
 	{
 		return "literal";
 	}
-
-	@Override
-	public boolean isLiteral()
-	{
-		return true;
-	}
 }

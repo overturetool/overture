@@ -90,6 +90,8 @@ public class TraceLetDefBinding extends TraceDefinition
 			evalContext.putList(d.getNamedValues(evalContext));
 		}
 
-		return body.expand(evalContext);
+		TraceNode node = body.expand(evalContext);
+		node.setVariables(new TraceVariableList(evalContext));
+		return node;
 	}
 }

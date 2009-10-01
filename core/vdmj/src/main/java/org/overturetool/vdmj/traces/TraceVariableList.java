@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (c) 2008 Fujitsu Services Ltd.
+ *	Copyright (c) 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,52 +21,41 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.expressions;
+package org.overturetool.vdmj.traces;
 
-import org.overturetool.vdmj.lex.LexBooleanToken;
+import java.util.Vector;
+
+import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.typechecker.Environment;
-import org.overturetool.vdmj.typechecker.NameScope;
-import org.overturetool.vdmj.types.BooleanType;
-import org.overturetool.vdmj.types.Type;
-import org.overturetool.vdmj.types.TypeList;
-import org.overturetool.vdmj.values.BooleanValue;
 import org.overturetool.vdmj.values.Value;
 
-public class BooleanLiteralExpression extends Expression
+public class TraceVariableList extends Vector<TraceVariable>
 {
 	private static final long serialVersionUID = 1L;
 
-	public final LexBooleanToken value;
-
-	public BooleanLiteralExpression(LexBooleanToken value)
+	public TraceVariableList(Context ctxt)
 	{
-		super(value.location);
-		this.value = value;
+		for (LexNameToken key: ctxt.keySet())
+		{
+			Value value = ctxt.get(key);
+			add(new TraceVariable(key.location, key, value));
+		}
 	}
 
-	@Override
-	public String toString()
+	public TraceVariableList()
 	{
-		return value.toString();
+		super();
 	}
 
-	@Override
-	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
+	public CallSequence getVariables()
 	{
-		return new BooleanType(location);
-	}
+		CallSequence seq = new CallSequence();
 
-	@Override
-	public Value eval(Context ctxt)
-	{
-		breakpoint.check(location, ctxt);
-		return new BooleanValue(value.value);
-	}
+		for (TraceVariable var: this)
+		{
+			seq.add(new TraceVariableStatement(var));
+		}
 
-	@Override
-	public String kind()
-	{
-		return value.toString();
+		return seq;
 	}
 }

@@ -59,10 +59,8 @@ public class RepeatTraceNode extends TraceNode
 		{
 			if (r == 0)
 			{
-				CallSequence seq = new CallSequence();
+				CallSequence seq = getVariables();
    				seq.add(new SkipStatement(new LexLocation()));
-   				seq.setContext(rtests.get(0));
-   				seq.addHash(0);
     			tests.add(seq);
 				continue;
 			}
@@ -78,16 +76,15 @@ public class RepeatTraceNode extends TraceNode
 
 			while (p.hasNext())
 			{
-	   			CallSequence seq = new CallSequence();
+	   			CallSequence seq = getVariables();
 	   			int[] select = p.next();
 
 	   			for (int i=0; i<r; i++)
     			{
     				seq.addAll(rtests.get(select[i]));
-    				seq.addHashes(rtests.get(select[i]).getHashes());
+    				// seq.addHashes(rtests.get(select[i]).getHashes());
     			}
 
-    			seq.setContext(rtests.get(select[r-1]));
     			tests.add(seq);
 			}
 		}

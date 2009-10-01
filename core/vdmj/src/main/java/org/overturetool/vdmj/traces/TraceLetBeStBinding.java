@@ -139,7 +139,11 @@ public class TraceLetBeStBinding extends TraceDefinition
 				if (matches &&
 					(stexp == null || stexp.eval(evalContext).boolValue(ctxt)))
 				{
-					node.alternatives.add(body.expand(evalContext));
+					// node.alternatives.add(body.expand(evalContext));
+
+					TraceNode exp = body.expand(evalContext);
+					exp.setVariables(new TraceVariableList(evalContext));
+					node.alternatives.add(exp);
 				}
 			}
 		}

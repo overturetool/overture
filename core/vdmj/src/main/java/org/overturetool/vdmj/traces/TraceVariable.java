@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008, 2009 Fujitsu Services Ltd.
+ *	Copyright (c) 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -23,30 +23,26 @@
 
 package org.overturetool.vdmj.traces;
 
-import org.overturetool.vdmj.statements.CallObjectStatement;
+import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.values.Value;
 
-public class StatementTraceNode extends TraceNode
+public class TraceVariable
 {
-	public final CallObjectStatement statement;
+	public final LexLocation location;
+	public final LexNameToken name;
+	public final Value value;
 
-	public StatementTraceNode(CallObjectStatement statement)
+	public TraceVariable(LexLocation location, LexNameToken name, Value value)
 	{
-		this.statement = statement;
+		this.location = location;
+		this.name = name;
+		this.value = value;
 	}
 
 	@Override
 	public String toString()
 	{
-		return statement.toString();
-	}
-
-	@Override
-	public TestSequence getTests()
-	{
-		TestSequence tests = new TestSequence();
-		CallSequence seq = getVariables();
-		seq.add(statement);
-		tests.add(seq);
-		return tests;
+		return name + " = " + value;
 	}
 }

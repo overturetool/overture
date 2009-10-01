@@ -72,14 +72,12 @@ public class SequenceTraceNode extends TraceNode
 		while (p.hasNext())
 		{
 			int[] select = p.next();
-			CallSequence seq = new CallSequence();
+			CallSequence seq = getVariables();
 
 			for (int i=0; i<count; i++)
 			{
 				CallSequence subseq = nodetests.get(i).get(select[i]);
 				seq.addAll(subseq);
-				seq.addHashes(subseq.getHashes());
-				seq.setContext(subseq);
 			}
 
 			tests.add(seq);

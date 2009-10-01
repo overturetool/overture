@@ -93,10 +93,4 @@ abstract public class BinaryExpression extends Expression
 	{
 		return "(" + left + " " + op + " " + right + ")";
 	}
-
-	@Override
-	public boolean isLiteral()
-	{
-		return left.isLiteral() && right.isLiteral();
-	}
 }

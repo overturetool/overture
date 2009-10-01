@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (c) 2008 Fujitsu Services Ltd.
+ *	Copyright (c) 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,60 +21,50 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.expressions;
+package org.overturetool.vdmj.traces;
 
-import org.overturetool.vdmj.lex.LexRealToken;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
-import org.overturetool.vdmj.types.RealType;
 import org.overturetool.vdmj.types.Type;
-import org.overturetool.vdmj.types.TypeList;
-import org.overturetool.vdmj.values.NumericValue;
+import org.overturetool.vdmj.types.UnknownType;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.VoidValue;
 
-public class RealLiteralExpression extends Expression
+public class TraceVariableStatement extends Statement
 {
 	private static final long serialVersionUID = 1L;
-	public final LexRealToken value;
+	public final TraceVariable var;
 
-	public RealLiteralExpression(LexRealToken value)
+	public TraceVariableStatement(TraceVariable var)
 	{
-		super(value.location);
-		this.value = value;
-	}
-
-	@Override
-	public String toString()
-	{
-		return value.toString();
-	}
-
-	@Override
-	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
-	{
-		return new RealType(location);
+		super(var.name.location);
+		this.var = var;
 	}
 
 	@Override
 	public Value eval(Context ctxt)
 	{
-		breakpoint.check(location, ctxt);
-
-		try
-		{
-			return NumericValue.valueOf(value.value, ctxt);
-		}
-		catch (ValueException e)
-		{
-			return abort(e);
-		}
+		ctxt.put(var.name, var.value);
+		return new VoidValue();
 	}
 
 	@Override
 	public String kind()
 	{
-		return "literal";
+		return "trace variable";
+	}
+
+	@Override
+	public String toString()
+	{
+		return var.toString();
+	}
+
+	@Override
+	public Type typeCheck(Environment env, NameScope scope)
+	{
+		return new UnknownType(location);
 	}
 }

@@ -65,10 +65,8 @@ public class AlternativeTraceNode extends TraceNode
 
     		for (CallSequence test: node.getTests())
     		{
-    			CallSequence seq = new CallSequence();
+    			CallSequence seq = getVariables();
     			seq.addAll(test);
-    			seq.setContext(test);
-    			seq.addHashes(test.getHashes());
     			tests.add(seq);
     		}
 		}

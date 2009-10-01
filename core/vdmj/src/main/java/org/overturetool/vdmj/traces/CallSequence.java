@@ -23,70 +23,50 @@
 
 package org.overturetool.vdmj.traces;
 
-import java.util.List;
 import java.util.Vector;
-
-import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.statements.Statement;
-import org.overturetool.vdmj.util.Utils;
 
 @SuppressWarnings("serial")
 public class CallSequence extends Vector<Statement>
 {
-	public Context ctxt = null;
-	public boolean copyContext = false;
-	private List<Integer> hashes = null;
 	private int filtered = 0;
-
-	public CallSequence()
-	{
-		hashes = new Vector<Integer>();
-	}
-
-	public void setContext(CallSequence other)
-	{
-		this.ctxt = other.ctxt;
-		this.copyContext = this.copyContext || other.copyContext;
-	}
-
-	public void setContext(Context ctxt, boolean copy)
-	{
-		this.ctxt = ctxt;
-		this.copyContext = this.copyContext || copy;
-	}
-
-	public void addHash(int n)
-	{
-		hashes.add(n);
-	}
-
-	public void addHashes(List<Integer> list)
-	{
-		for (Integer i: list)
-		{
-			addHash(i);
-		}
-	}
-
-	public List<Integer> getHashes()
-	{
-		return hashes;
-	}
 
 	@Override
 	public String toString()
 	{
-		return Utils.listToString(this, "; ");
+		StringBuilder sb = new StringBuilder();
+		String sep = "";
+
+		for (Statement stmt: this)
+		{
+    		if (!(stmt instanceof TraceVariableStatement))
+    		{
+       			sb.append(sep);
+       			sb.append(stmt.toString());
+       			sep = "; ";
+     		}
+		}
+
+		return sb.toString();
 	}
 
 	public boolean compareStem(CallSequence other, int upto)
 	{
-		for (int i=0; i<upto; i++)
+		int i = 0;
+
+		for (int count=0; count<upto;)
 		{
 			if (!compareItem(other, i))
 			{
 				return false;
 			}
+
+			if (!(get(i) instanceof TraceVariableStatement))
+			{
+				count++;
+			}
+
+			i++;
 		}
 
 		return true;
@@ -94,8 +74,7 @@ public class CallSequence extends Vector<Statement>
 
 	private boolean compareItem(CallSequence other, int i)
 	{
-		return (hashes.get(i) == other.hashes.get(i)) &&
-			   (get(i).toString().equals(other.get(i).toString()));
+		return get(i).toString().equals(other.get(i).toString());
 	}
 
 	public void setFilter(int n)
