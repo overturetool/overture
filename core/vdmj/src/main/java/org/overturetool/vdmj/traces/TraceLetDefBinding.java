@@ -83,7 +83,7 @@ public class TraceLetDefBinding extends TraceDefinition
 	@Override
 	public TraceNode expand(Context ctxt)
 	{
-		Context evalContext = new Context(location, "let binding", ctxt);
+		Context evalContext = new Context(location, "TRACE", ctxt);
 
 		for (Definition d: localDefs)
 		{

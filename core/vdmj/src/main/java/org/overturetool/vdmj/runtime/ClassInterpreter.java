@@ -448,7 +448,7 @@ public class ClassInterpreter extends Interpreter
 
 		Context ctxt = null;
 
-		if (statements.needsContext)
+		if (statements.copyContext)
 		{
 			ctxt = statements.ctxt.deepCopy();
 			ctxt.setThreadState(null, CPUClassDefinition.virtualCPU);

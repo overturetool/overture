@@ -69,4 +69,10 @@ public class BooleanLiteralExpression extends Expression
 	{
 		return value.toString();
 	}
+
+	@Override
+	public boolean isLiteral()
+	{
+		return true;
+	}
 }

@@ -34,7 +34,7 @@ import org.overturetool.vdmj.util.Utils;
 public class CallSequence extends Vector<Statement>
 {
 	public Context ctxt = null;
-	public boolean needsContext = false;
+	public boolean copyContext = false;
 	private List<Integer> hashes = null;
 	private int filtered = 0;
 
@@ -43,15 +43,21 @@ public class CallSequence extends Vector<Statement>
 		hashes = new Vector<Integer>();
 	}
 
-	public void setContext(Context ctxt)
+	public void setContext(CallSequence other)
+	{
+		this.ctxt = other.ctxt;
+		this.copyContext = this.copyContext || other.copyContext;
+	}
+
+	public void setContext(Context ctxt, boolean copy)
 	{
 		this.ctxt = ctxt;
+		this.copyContext = this.copyContext || copy;
 	}
 
 	public void addHash(int n)
 	{
 		hashes.add(n);
-		if (n != 0) needsContext = true;
 	}
 
 	public void addHashes(List<Integer> list)
@@ -88,11 +94,8 @@ public class CallSequence extends Vector<Statement>
 
 	private boolean compareItem(CallSequence other, int i)
 	{
-		Statement os = other.get(i);
-		int oi = other.hashes.get(i);
-
-		return (hashes.get(i) == oi) &&
-			   (get(i).toString().equals(os.toString()));
+		return (hashes.get(i) == other.hashes.get(i)) &&
+			   (get(i).toString().equals(other.get(i).toString()));
 	}
 
 	public void setFilter(int n)

@@ -77,4 +77,10 @@ public class RealLiteralExpression extends Expression
 	{
 		return "literal";
 	}
+
+	@Override
+	public boolean isLiteral()
+	{
+		return true;
+	}
 }

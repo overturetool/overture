@@ -98,6 +98,15 @@ public abstract class Expression implements Serializable
 	public abstract String kind();
 
 	/**
+	 *	True for literals that can be evaluated without a context.
+	 */
+
+	public boolean isLiteral()
+	{
+		return false;
+	}
+
+	/**
 	 * Perform a type check of the expression. The method returns the
 	 * {@link Type} of the expression it checked, and is used
 	 * recursively across an expression tree. For example, a boolean "and"

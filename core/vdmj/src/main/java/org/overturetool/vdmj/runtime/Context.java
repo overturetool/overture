@@ -268,6 +268,31 @@ public class Context extends HashMap<LexNameToken, Value>
 	}
 
 	/**
+	 * Locate the Context in a chain that contains a name, if any.
+	 */
+
+	public Context locate(LexNameToken name)
+	{
+		Value v = get(name);
+
+		if (v == null)
+		{
+			if (outer != null)
+			{
+				return outer.locate(name);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		else
+		{
+			return this;
+		}
+	}
+
+	/**
 	 * Return the value of a name, else fail. If the name is not present, a
 	 * {@link ContextException} is thrown.
 	 *

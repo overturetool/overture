@@ -114,7 +114,7 @@ public class TraceLetBeStBinding extends TraceDefinition
 		{
 			while (quantifiers.hasNext(ctxt))
 			{
-				Context evalContext = new Context(location, "let be st statement", ctxt);
+				Context evalContext = new Context(location, "TRACE", ctxt);
 				NameValuePairList nvpl = quantifiers.next();
 				boolean matches = true;
 

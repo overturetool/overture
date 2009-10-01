@@ -30,12 +30,15 @@ public class StatementTraceNode extends TraceNode
 {
 	public final CallObjectStatement statement;
 	public final int hash;
+	public final boolean copyCtxt;
 	public final Context ctxt;
 
-	public StatementTraceNode(CallObjectStatement statement, int hash, Context ctxt)
+	public StatementTraceNode(
+		CallObjectStatement statement, int hash, boolean copyCtxt, Context ctxt)
 	{
 		this.ctxt = ctxt;
 		this.hash = hash;
+		this.copyCtxt = copyCtxt;
 		this.statement = statement;
 	}
 
@@ -51,7 +54,7 @@ public class StatementTraceNode extends TraceNode
 		TestSequence tests = new TestSequence();
 		CallSequence seq = new CallSequence();
 		seq.add(statement);
-		seq.setContext(ctxt);
+		seq.setContext(ctxt, copyCtxt);
 		seq.addHash(hash);
 		tests.add(seq);
 		return tests;

@@ -25,12 +25,14 @@ package org.overturetool.vdmj.traces;
 
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.ExpressionList;
+import org.overturetool.vdmj.expressions.VariableExpression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.statements.CallObjectStatement;
+import org.overturetool.vdmj.statements.ObjectIdentifierDesignator;
 import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.typechecker.Environment;
@@ -70,9 +72,24 @@ public class TraceApplyExpression extends TraceCoreDefinition
 	{
 		ExpressionList newargs = new ExpressionList();
 		int hash = 0;
+		boolean copyCtxt = false;
 
 		for (Expression arg: statement.args)
 		{
+			if (arg instanceof VariableExpression)
+			{
+				// Locate the arg variable and see whether it is within the
+				// Context chain of the trace (or the outside).
+
+				VariableExpression ve = (VariableExpression)arg;
+				Context c = ctxt.locate(ve.name);
+				copyCtxt = (c != null && c.title.equals("TRACE"));
+			}
+			else
+			{
+				copyCtxt = !arg.isLiteral();
+			}
+
 			Value v = arg.eval(ctxt).deref();
 
 			if (v instanceof ObjectValue)
@@ -104,10 +121,22 @@ public class TraceApplyExpression extends TraceCoreDefinition
 			}
 		}
 
+		if (copyCtxt == false)
+		{
+			// Locate the root variable and see whether it is within the
+			// Context chain of the trace (or the outside).
+
+			ObjectIdentifierDesignator id =
+				(ObjectIdentifierDesignator)statement.designator;
+
+			Context c = ctxt.locate(id.name);
+			copyCtxt = (c != null && c.title.equals("TRACE"));
+		}
+
 		CallObjectStatement cos = new CallObjectStatement(
 			statement.designator, statement.classname, statement.fieldname,
 			newargs);
 
-		return new StatementTraceNode(cos, hash, ctxt);
+		return new StatementTraceNode(cos, hash, copyCtxt, ctxt);
 	}
 }

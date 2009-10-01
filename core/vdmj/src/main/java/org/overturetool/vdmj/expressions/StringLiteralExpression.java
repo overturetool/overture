@@ -69,4 +69,10 @@ public class StringLiteralExpression extends Expression
 	{
 		return "string";
 	}
+
+	@Override
+	public boolean isLiteral()
+	{
+		return true;
+	}
 }
