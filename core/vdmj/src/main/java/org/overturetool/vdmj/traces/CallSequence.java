@@ -52,6 +52,11 @@ public class CallSequence extends Vector<Statement>
 
 	public boolean compareStem(CallSequence other, int upto)
 	{
+		// Note that the upto count does not include the variable statements
+		// that may be in the sequences, but those variables do need to be
+		// included in the stem match. "count" is the position ignoring any
+		// variable statements.
+
 		int i = 0;
 
 		for (int count=0; count<upto;)
@@ -63,7 +68,7 @@ public class CallSequence extends Vector<Statement>
 
 			if (!(get(i) instanceof TraceVariableStatement))
 			{
-				count++;
+				count++;	// Only increment for non-variable statements
 			}
 
 			i++;

@@ -476,21 +476,24 @@ public class ClassInterpreter extends Interpreter
 		{
 			for (Statement statement: statements)
 			{
-				try
+				if (statement instanceof TraceVariableStatement)
 				{
-					typeCheck(statement, env);
+					// Just update the context...
+					statement.eval(ctxt);
 				}
-				catch (Exception e)
+				else
 				{
-					// "Better to have tried and failed than never to have
-					// tried at all" :-)
-				}
+    				try
+    				{
+    					typeCheck(statement, env);
+    				}
+    				catch (Exception e)
+    				{
+    					// "Better to have tried and failed than never to have
+    					// tried at all" :-)
+    				}
 
-				Value v = statement.eval(ctxt);
-
-				if (!(statement instanceof TraceVariableStatement))
-				{
-					list.add(v);
+					list.add(statement.eval(ctxt));
 				}
 			}
 
@@ -510,6 +513,11 @@ public class ClassInterpreter extends Interpreter
 
 					if (e.ctxt.outer == ctxt)
 					{
+						// These exceptions are inconclusive if they occur
+						// in a call directly from the test because it could
+						// be a test error, but if the test call has made
+						// further call(s), then they are real failures.
+
 						list.add(Verdict.INCONCLUSIVE);
 					}
 					else
