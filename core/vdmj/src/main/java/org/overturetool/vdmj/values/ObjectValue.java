@@ -341,7 +341,7 @@ public class ObjectValue extends Value
 	@Override
 	public Object clone()
 	{
-		return shallowCopy();
+		return deepCopy(); 	// shallowCopy(); ?
 	}
 
 	private ObjectValue mycopy = null;
@@ -364,11 +364,11 @@ public class ObjectValue extends Value
 
 		for (LexNameToken name: members.keySet())
 		{
-			Value mv = members.get(name).deref();
+			Value mv = members.get(name);
 
-			if (mv instanceof ObjectValue)
+			if (mv.deref() instanceof ObjectValue)
 			{
-				ObjectValue om = (ObjectValue)mv;
+				ObjectValue om = (ObjectValue)mv.deref();
 
 				if (om.mycopy != null)	// Currently copying it
 				{

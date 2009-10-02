@@ -4,25 +4,25 @@ Test 2 = obj.op(4)
 Result = [Error 4060: Type invariant violated for T in 'UseA' at line 23:33, FAILED]
 Test 3 = obj.op(1); obj.op(1)
 Result = [1, 1, PASSED]
-Test 4 = obj.A`op(4); obj.A`op(1)
+Test 4 = obj.op(4); obj.op(1)
 Test 4 FILTERED by test 2
 Test 5 = obj.op(1); obj.op(4)
 Result = [1, Error 4060: Type invariant violated for T in 'UseA' at line 23:33, FAILED]
-Test 6 = obj.A`op(4); obj.A`op(4)
+Test 6 = obj.op(4); obj.op(4)
 Test 6 FILTERED by test 2
 Test 7 = obj.op(1); obj.op(1); obj.op(1)
 Result = [1, 1, 1, PASSED]
-Test 8 = obj.A`op(4); obj.A`op(1); obj.A`op(1)
+Test 8 = obj.op(4); obj.op(1); obj.op(1)
 Test 8 FILTERED by test 2
-Test 9 = obj.A`op(1); obj.A`op(4); obj.A`op(1)
+Test 9 = obj.op(1); obj.op(4); obj.op(1)
 Test 9 FILTERED by test 5
-Test 10 = obj.A`op(4); obj.A`op(4); obj.A`op(1)
+Test 10 = obj.op(4); obj.op(4); obj.op(1)
 Test 10 FILTERED by test 2
 Test 11 = obj.op(1); obj.op(1); obj.op(4)
 Result = [1, 1, Error 4060: Type invariant violated for T in 'UseA' at line 23:33, FAILED]
-Test 12 = obj.A`op(4); obj.A`op(1); obj.A`op(4)
+Test 12 = obj.op(4); obj.op(1); obj.op(4)
 Test 12 FILTERED by test 2
-Test 13 = obj.A`op(1); obj.A`op(4); obj.A`op(4)
+Test 13 = obj.op(1); obj.op(4); obj.op(4)
 Test 13 FILTERED by test 5
-Test 14 = obj.A`op(4); obj.A`op(4); obj.A`op(4)
+Test 14 = obj.op(4); obj.op(4); obj.op(4)
 Test 14 FILTERED by test 2

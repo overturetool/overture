@@ -29,6 +29,7 @@ import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.UnknownType;
+import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.VoidValue;
 
@@ -46,7 +47,14 @@ public class TraceVariableStatement extends Statement
 	@Override
 	public Value eval(Context ctxt)
 	{
-		ctxt.put(var.name, var.value);
+		Value val = var.value;
+
+		if (val.isType(ObjectValue.class))
+		{
+			val = (Value)var.value.clone();		// To allow updates to objects
+		}
+
+		ctxt.put(var.name, val);
 		return new VoidValue();
 	}
 

@@ -2,27 +2,27 @@ Test 1 = obj.op(1)
 Result = [Error 4072: Postcondition failure: post_op in 'UseA' at line 19:33, FAILED]
 Test 2 = obj.op(2)
 Result = [2, PASSED]
-Test 3 = obj.A`op(1); obj.A`op(1)
+Test 3 = obj.op(1); obj.op(1)
 Test 3 FILTERED by test 1
 Test 4 = obj.op(2); obj.op(1)
 Result = [2, Error 4072: Postcondition failure: post_op in 'UseA' at line 19:33, FAILED]
-Test 5 = obj.A`op(1); obj.A`op(2)
+Test 5 = obj.op(1); obj.op(2)
 Test 5 FILTERED by test 1
 Test 6 = obj.op(2); obj.op(2)
 Result = [2, 2, PASSED]
-Test 7 = obj.A`op(1); obj.A`op(1); obj.A`op(1)
+Test 7 = obj.op(1); obj.op(1); obj.op(1)
 Test 7 FILTERED by test 1
-Test 8 = obj.A`op(2); obj.A`op(1); obj.A`op(1)
+Test 8 = obj.op(2); obj.op(1); obj.op(1)
 Test 8 FILTERED by test 4
-Test 9 = obj.A`op(1); obj.A`op(2); obj.A`op(1)
+Test 9 = obj.op(1); obj.op(2); obj.op(1)
 Test 9 FILTERED by test 1
 Test 10 = obj.op(2); obj.op(2); obj.op(1)
 Result = [2, 2, Error 4072: Postcondition failure: post_op in 'UseA' at line 19:33, FAILED]
-Test 11 = obj.A`op(1); obj.A`op(1); obj.A`op(2)
+Test 11 = obj.op(1); obj.op(1); obj.op(2)
 Test 11 FILTERED by test 1
-Test 12 = obj.A`op(2); obj.A`op(1); obj.A`op(2)
+Test 12 = obj.op(2); obj.op(1); obj.op(2)
 Test 12 FILTERED by test 4
-Test 13 = obj.A`op(1); obj.A`op(2); obj.A`op(2)
+Test 13 = obj.op(1); obj.op(2); obj.op(2)
 Test 13 FILTERED by test 1
 Test 14 = obj.op(2); obj.op(2); obj.op(2)
 Result = [2, 2, 2, PASSED]

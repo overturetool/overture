@@ -76,9 +76,12 @@ public class TraceStatement extends Statement
 
 		for (CallSequence test: tests)
 		{
+			// Bodge until we figure out how to not have explicit op names.
+			String clean = test.toString().replaceAll("\\.\\w+`", ".");
+
 			if (test.getFilter() > 0)
 			{
-    			writer.println("Test " + n + " = " + test);
+    			writer.println("Test " + n + " = " + clean);
 				writer.println(
 					"Test " + n + " FILTERED by test " + test.getFilter());
 			}
@@ -102,9 +105,6 @@ public class TraceStatement extends Statement
     					}
     				}
     			}
-
-    			// Bodge until we figure out how to not have explicit op names.
-    			String clean = test.toString().replaceAll("\\.\\w+`", ".");
 
     			writer.println("Test " + n + " = " + clean);
     			writer.println("Result = " + result);
