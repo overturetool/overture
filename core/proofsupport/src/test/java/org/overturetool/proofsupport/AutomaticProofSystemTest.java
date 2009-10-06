@@ -31,7 +31,7 @@ public class AutomaticProofSystemTest extends TestCase {
 	}
 
 	public void testDischargeAllPosSet() throws Exception {
-		AutomaticProofSystem aps = new AutomaticProofSystem(mosmlDir,
+		AutomaticProofSystemBatch aps = new AutomaticProofSystemBatch(mosmlDir,
 				holDir, new VdmToolsWrapper(vppdeExecutable),
 				new VdmToolsPogProcessor());
 		List<String> contextFiles = new ArrayList<String>(0);
@@ -46,7 +46,7 @@ public class AutomaticProofSystemTest extends TestCase {
 	}
 
 	public void testDischargeAllPosStack() throws Exception {
-		AutomaticProofSystem aps = new AutomaticProofSystem(mosmlDir,
+		AutomaticProofSystemBatch aps = new AutomaticProofSystemBatch(mosmlDir,
 				holDir, new VdmToolsWrapper(vppdeExecutable),
 				new VdmToolsPogProcessor());
 		List<String> contextFiles = new ArrayList<String>(0);

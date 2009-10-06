@@ -32,14 +32,18 @@ public class TranslationPreProcessor {
 		List<String> poExpressions = processPogFile(pogFilePath);
 		return generateOmlAst(vdmModelFile, vdmContextFiles, poExpressions);
 	}
-
+	
+	public IOmlExpression prepareExpression(String vdmExpression) throws ParserException {
+		return omlAstGen.getOmlExpression(vdmExpression);
+	}
+	
 	protected PreparationData generateOmlAst(String vdmModelFile,
 			List<String> vdmContextFiles, List<String> poExpressions)
 			throws ParserException {
 		IOmlDocument omlModel = omlAstGen.getOmlDocument(vdmModelFile);
 		List<IOmlDocument> omlContextDocuments = parseContext(vdmContextFiles);
 		List<IOmlExpression> omlPos = parsePos(poExpressions);
-		return new PreparationData(omlModel, omlContextDocuments, omlPos);
+		return new PreparationData(poExpressions, omlModel, omlContextDocuments, omlPos);
 	}
 
 	private List<IOmlExpression> parsePos(List<String> poExpressions)

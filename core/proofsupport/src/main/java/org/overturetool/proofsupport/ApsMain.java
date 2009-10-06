@@ -50,7 +50,7 @@ public class ApsMain {
 	}
 
 	private void run() throws AutomaicProofSystemException, IOException {
-		AutomaticProofSystem aps = new AutomaticProofSystem(mosmlDir, holDir,
+		AutomaticProofSystemBatch aps = new AutomaticProofSystemBatch(mosmlDir, holDir,
 				new VdmToolsWrapper(vppdeBinary), new VdmToolsPogProcessor());
 		if (translation)
 			System.out.println(aps.translateModelAndPos(vdmModelFile,
@@ -88,7 +88,7 @@ public class ApsMain {
 			// an error message.
 			System.err.println(e.getMessage());
 			System.err
-					.println("java ApsMain [-p|[-t -hol HOL_DIR -mosml MOSML_DIR]] -vppde VPPDE_BINARY <vpp files>");
+					.println("java ApsMain [-t|[-p -hol HOL_DIR -mosml MOSML_DIR]] -vppde VPPDE_BINARY <vpp files>");
 			// print the list of available options
 			parser.printUsage(System.err);
 			System.err.println();

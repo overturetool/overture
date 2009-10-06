@@ -76,7 +76,7 @@ public class TranslatorWrapperTest extends TestCase {
 				+ "total;" + Utilities.NEW_CHARACTER
 				+ "success;" + Utilities.NEW_CHARACTER;
 
-		String actual = trans.translateOmlToHol(prepData);
+		String actual = trans.translateModelAndPos(prepData);
 		
 		// TODO can't compare strings because output is not deterministic
 		//      as the POs can be printed in a different order in subsequent calls
