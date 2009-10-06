@@ -1,5 +1,6 @@
 \documentclass[]{article}
 \usepackage[draft]{fixme}
+\usepackage{url}
 
 \title{Implementing the Overture Automatic Proof System for VDM}
 
@@ -83,15 +84,15 @@ Each of these high level components can be decomposed in sub components, which m
 
 \fixme[inline]{Add breakdown pictures for each component.}
 
-\subsection{Difficulties and Solutions}
-\label{sub:architectural_difficulties}
+\subsection{Adjustments}
+\label{sub:adjustments}
 
 The architecture, as described up until now, can be regarded as the ideal architecture for a scenario where all external tools provide the necessary features.
-However, his is not yet the case and two adjustments have to be made.
+However, this is not yet the case and two adjustments have to be made.
 
 % There is no POG that generates AST \ldots
 The first thing to notice is that, although Verm\"olen's design makes perfect sense, there is no available combination of POG tool and public VDM AST format to be used in preparation.
-There are two POG tools that can be used both belonging to tool sets that are implemented in monolithic packages, namely the commercial VDMTools and open source VDMJ.
+There are two POG tools that can be used both belonging to tool sets that are implemented in monolithic packages, namely the commercial VDMTools and the open source VDMJ.
 Moreover, the translation tool of the translation step expects both the model and POs to be in the Overture Modelling Language (OML) AST representation, and neither of the POG tools available expects the model to be in this format, let alone generating POs in OML AST.
 Both these POG tools expect the models to be in VDM concrete syntax and produce textual, human readable, representations of the POs.
 This mismatch between the available tools and the intended architecture makes it necessary to adjust the architecture by introducing the Overture Parser as part of the preparation step, as depicted in Figure~\ref{fig:archi_with_ovt_parser}.
@@ -107,37 +108,105 @@ This issue was not addressed in the first version of the APS and is left as futu
 \label{sec:implementation}
 
 The APS is a component of the Overture Tool, and therefore must abide by the development standards of the Overture Initiative.
-The Overture Tool is a formal modelling and verification tool suite that is completely modular, and integrates in the Eclipse platform through several plugins.
-The main implementation language is Java and the APS will be no exception to that.
+The Overture Tool is a formal modelling and verification tool suite that is modular, and integrates in the Eclipse platform through several plugins.
+The main implementation language is Java and the APS is no exception to that.
 
 Figure~\ref{fig:??} clearly shows that the APS is nothing more than a tool-chain of components that contribute to the system's goal.
-All the computations that are in fact implemented in the APS are either to promote interoperation fo the components or to increase usability.
+All the computations that are in fact implemented in the APS are either to promote interoperation of the components, or to increase usability.
 
 %Integration of components \ldots
-As far as the integration of components goes the implementation uses several ways to achieve it.
+As far as the integration of components goes the implementation uses two ways to achieve it:
+\begin{itemize}
+  \item direct calls from Java code using external component's public APIs;
+  \item or through the command line interface (CLI) of external processes.
+\end{itemize}
+
 Both Overture Parser and the Overture VDM-to-HOL Translator have a publicly available Java API and therefore can be seemingly integrated with the APS.
-As for the generation of POs, the VDMTools was chosen to perform the underlying tasks and because its CORBA interface doesn't provided the necessary API the interoperation is done though the Command Line Interface (CLI).
-The choice could have been VDMJ as it offers a Java API that could be called directly from the APS code.
-However, the VDMJ was still under development at the time of the implementation and the VDMTools is much more mature and haevily tested.
+As for the generation of POs, the VDMTools was chosen to perform the underlying tasks and because its CORBA interface doesn't provided the necessary API, the interoperation is done though the CLI.
+The choice here could have been VDMJ as it offers a Java API that could be called directly from the APS code.
+However, the VDMJ was still under development at the time of the implementation, and the VDMTools is much more mature and heavily tested.
 This doesn't mean that the APS relies exclusively on the VDMTools because the PO generation and parsing of their textual representations are abstracted by Java interfaces that provide the necessary decoupling from implementations.
 Although the VDMJ is not yet supported as a POG tool for the APS, the system is prepared to allow its integration in the tool-chain (see Section~\ref{sec:future_work} for more information on this subject).
+The CLI is also used to interoperate with the theorem prover HOL.
 
+% Interoperation
+The interoperation of the different tools though CLI raises some difficulties in terms of parsing the output of a tool to supply the needed data to the next.
+This difficulties are due to the nature of the CLI the components, as these are meant to be operated by humans.
+The most notorious example is the parsing of the list of POs generated by the POG component.
+If the tool (in this case the VDMTools) would provide a machine readable format, like XML for instance, it would make the implementation a lot easier and cleaner.
+Also the output from HOL must be parsed to check whether a statement is valid or it contains errors, as well as to check the result from a  proof.
+
+Interoperation with the CLI of the different components was implemented through a \emph{console} abstraction layer.
+The \emph{console} mimics the behaviour a human expects from the CLI of a tool, as well as the behaviour the tool expects from its user.
+This implementation decision helped clear the clutter involved in the interaction with the CLIs, as well as to better structure and re-utilize code.
+On top of the \emph{console} abstraction layer wrapper obects were implemented for each component, taking advantage of methods the layer provides and adding more, component, specific features.
+Furthermore all components are implement a given interface to decouple the actual implementation from the APS core.
 
 %Usability \ldots
+Usability issues also arise from the experience obtained using the system as it was still a prototype.
+Many times it paid off to try a different tactic to tackle some PO, and the reason behind this was not always straight forward.
+So if the APS was able to detect a failing, or non terminating, proof and tried a different tactic it would increase the success rate of the overall system.
 
-\subsection{Difficulties and Solutions}
+
+\subsection{Difficulties}
 \label{sub:implementation_difficulties}
 
-Ad-hoc parsing of POs \ldots
+% Lack of proper documentation
+Documentation, or the lack of it, was one of the major drawbacks during implementation, even regarding components that are part of the Overture Initiative.
+For instance the Overture Parser has had the capability to parse a single VDM expression separated from the context of a model for a long time now.
+This feature is what enables the APS system to generate OML AST representations for each PO individually.
+However, during the implementation of the APS the development was stopped for some weeks because there was no knowledge of this feature.
+This lack of knowledge was due to a momentary lack of availability from the implementer of the Overture Parser.
+If better documentation was available some time could have been saved. 
+The same goes for the APS, as no documentation whatsoever was created apart from Verm\"olen's MSc thesis, and the this paper.
 
-Java child process bug \ldots
+It is not only on the open source side that documentation lacked. 
+The APS uses the VDMTools to generate the POs through the CLI.
+However the flag that is used to trigger the PO generation in the VDMTools is also not documented.
+Neither in the usage information provided through the CLI, nor the actual manual of the tool.
+It was only though the close connection and cooperation with CSK, the current suppliers of the VDMTools, that this information was obtained.
+
+%Java child process bug \ldots
+Other major drawback for the implantation of the APS was the way Java handles external processes, and especially child processes\footnote{A child process is a process that is created within another process.} of the processes one instantiates within a Java application.
+
+The theorem prover HOL, its version 4, is built on top of the Moscow ML interpreter which is one of the many implementations of the Standard ML interpreter.
+This means that HOL runs inside the ML interpreter.
+HOL's executable is in fact a script that pipes its input to a first command, named \emph{unquote}, which basically replaces the quotes in HOL concrete syntax by machine readable markers.
+The output of \emph{unquote} is then re-piped to the ML interpreter.
+So whenever the HOL executable is invoked from the command line two child processes are also invoked, one for \emph{unquote} and another for the ML interpreter.
+This is the case both in Windows and Unix alike platforms.
+
+The problem with creating this processes within a Java application was not in the creation itself, but rather in the destruction of the child processes.
+In Java, like in most other programming languages, it is a good programming practice to wait for the processes to finish.
+However, in this case after issuing the termination command in the HOL process, the method that waits for it to finish would hand eternally.
+On the other hand, if a forced destruction of the HOL process would be issued the result would be even worse.
+One of HOL's child processes would start to allocate all the memory it could get, until the machine would become unusable.
+
+This strange behaviour has to do with the way Java handles external processes.
+If a process, say $A$, creates a child process, say $B$, then if $A$ is terminated, and a waiting for termination method is issued on $A$ and $B$ does not terminate the method issued on $A$ will wait eternally.
+This means that the wait method does not return until all child processes are terminated.
+However, if a destroy method is called on $A$ it's child processes will not be destroyed, as it is the responsibility of the parent process to terminate its child processes.
+This behaviour is well documented in the Java bug/issue tracking system~\footnote{See \url{http://bugs.sun.com/bugdatabase/view\_bug.do?bug\_id=4770092} for a detailed description.}.
+
+\subsection{Current Status}
+
+The APS is currently in its version 1.0.0, and is only available as a command line application.
+It uses the Args4J~\footnot{\url{https://args4j.dev.java.net}} library to parse command line parameters and arguments.
+
+There are two execution modes: \emph{translation} that simply translates the VDM model and its POs to HOL syntax; and \emph{proof} that not only translates the model but also attempts to discharge the POs directly in HOL.
+The execution of the tool in either mode is done in a batch, meaning that inputs are supplied to the tool and it produces an output.
 
 \section{Future Work}
 \label{sec:future_work}
 
-Eclipse \ldots
+Interactive execution \ldots
 
-\ldots
+Integration in Eclipse\ldots
+
+Support for VDMJ as a POG tool \ldots
+
+Use timer to avoid non terminating proofs, and be able to try different tactics if a proof takes too long \ldots
+
 
 \section{Conclusion}
 \label{sec:conclusion}
