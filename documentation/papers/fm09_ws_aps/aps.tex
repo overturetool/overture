@@ -147,7 +147,6 @@ Usability issues also arise from the experience obtained using the system as it 
 Many times it paid off to try a different tactic to tackle some PO, and the reason behind this was not always straight forward.
 So if the APS was able to detect a failing, or non terminating, proof and tried a different tactic it would increase the success rate of the overall system.
 
-
 \subsection{Difficulties}
 \label{sub:implementation_difficulties}
 
@@ -191,7 +190,10 @@ This behaviour is well documented in the Java bug/issue tracking system~\footnot
 \subsection{Current Status}
 
 The APS is currently in its version 1.0.0, and is only available as a command line application.
-It uses the Args4J~\footnot{\url{https://args4j.dev.java.net}} library to parse command line parameters and arguments.
+It uses the Args4j~\footnot{\url{https://args4j.dev.java.net}} library to parse command line parameters and arguments.
+
+Testing was done through the jUnit test framework with a code coverage of 74.3\%, covering all major components and their interaction.
+However the code coverage percentage is brought down by the exceptions that overide the default Java $Exception$ class constructors, but not all these constructor methods are called in the code.
 
 There are two execution modes: \emph{translation} that simply translates the VDM model and its POs to HOL syntax; and \emph{proof} that not only translates the model but also attempts to discharge the POs directly in HOL.
 The execution of the tool in either mode is done in a batch, meaning that inputs are supplied to the tool and it produces an output.
