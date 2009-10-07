@@ -185,7 +185,7 @@ This strange behaviour has to do with the way Java handles external processes.
 If a process, say $A$, creates a child process, say $B$, then if $A$ is terminated, and a waiting for termination method is issued on $A$ and $B$ does not terminate the method issued on $A$ will wait eternally.
 This means that the wait method does not return until all child processes are terminated.
 However, if a destroy method is called on $A$ it's child processes will not be destroyed, as it is the responsibility of the parent process to terminate its child processes.
-This behaviour is well documented in the Java bug/issue tracking system~\footnote{See \url{http://bugs.sun.com/bugdatabase/view\_bug.do?bug\_id=4770092} for a detailed description.}.
+This behaviour is well documented in the Java bug/issue tracking system~\footnote{For more details see \url{http://bugs.sun.com/bugdatabase/view\_bug.do?bug\_id=4770092}.}.
 
 \subsection{Current Status}
 
