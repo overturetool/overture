@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-Vendor: Overture.
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .
+Bundle-Version: 1.0.0
+Eclipse-BuddyPolicy: registered
+Bundle-Localization: plugin
+Bundle-Name: org.overture.ide.ast
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.overture.ide.ast;singleton:=true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.overture.ide.ast,
+ org.overture.ide.ast.dltk
+Bundle-Activator: org.overture.ide.ast.AstPlugin
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.5.0",
+ org.eclipse.core.resources;bundle-version="3.5.0",
+ org.eclipse.dltk.core;bundle-version="1.0.0",
+ org.overture.ide.generated.vdmj;bundle-version="1.0.0",
+ org.overture.ide.vdmsl.parser;bundle-version="1.0.0"
+

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <!-- Interpreter install types -->
+   <extension point="org.eclipse.dltk.launching.interpreterInstallTypes">
+      <interpreterInstallType
+            class="org.overture.ide.vdmpp.debug.VDMJPPInstallType" 
+            id="org.overture.ide.vdmpp.debug.VDMJPPInstallType">
+      </interpreterInstallType>
+   </extension>
+   
+  <!-- create the built-in VDMJ interpreter for VDM++ -->
+  <extension point="org.eclipse.dltk.launching.interpreterInstalls">
+     <interpreterInstall     		
+           home="${eclipse_home}"
+           id="org.overture.ide.debug.launching.interpreterInstallType.vdmj"
+           interpreterInstallType="org.overture.ide.vdmpp.debug.VDMJPPInstallType"
+           name="VDMJ Interpreter for VDM++">
+     </interpreterInstall>
+  </extension>
+
+   <!-- lauch delegate for the VDMJ interpreter using the language VDM++ -->
+   <extension point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="org.overture.ide.vdmpp.debug.VdmjVdmPPLaunchConfigurationDelegate"
+            id="org.overture.ide.vdmpp.debug.launchConfigurationTypeVDMJ"
+            modes="debug, run"
+            name="VDMJ VDM++"
+            public="true"
+            sourceLocatorId="overtureSourceLocator"
+            sourcePathComputerId="overtureSourcePathComputer">
+      </launchConfigurationType>
+   </extension>
+   
+   <!-- VDM++ Debugging engine (both selector and engine) -->
+    <extension point="org.eclipse.dltk.launching.debuggingEngine">
+       <engineContribution natureId="org.overture.ide.vdmpp.core.nature">
+          <selector
+                class="org.overture.ide.vdmpp.debug.VDMPPDebuggingEngineSelector">
+          </selector>
+          <engine
+                class="org.overture.ide.vdmpp.debug.VDMPPDebuggerRunnerFactory"
+                description="Overture Debugging engine"
+                id="org.overture.ide.debug.launching.OvertureDebuggerRunnerFactory"
+                priority="0">
+          </engine>
+       </engineContribution>
+    </extension>
+    
+   <!-- the script debug model --> 
+   <extension point="org.eclipse.dltk.debug.scriptDebugModel">
+      <debugModel
+            debugModelId="org.overture.ide.vdmpp.debug.OvertureDebugModel"
+            debugToolkit="org.overture.ide.debug.internal.debug.OvertureDebugToolkit"
+            natureId="org.overture.ide.vdmpp.core.nature"
+            typeFactory="org.overture.ide.debug.internal.debug.OvertureTypeFactory">
+      </debugModel>
+   </extension>
+   
+   <!-- vdmpp -->
+   
+   
+</plugin>

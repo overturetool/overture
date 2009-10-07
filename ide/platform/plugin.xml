@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+ 
+ 
+ <extension
+       point="org.eclipse.ui.intro.config">
+    <config
+          content="introContent.xml"
+          id="org.overture.ide.platform.introConfigId"
+          introId="org.eclipse.ui.intro.universal">
+       <presentation
+             home-page-id="root">
+          <implementation
+                kind="html"
+                os="win32,linux,macosx"
+                style="content/shared.css">
+          </implementation>
+       </presentation>
+    </config>
+ </extension>
+ <extension
+       id="org.overture.ide.platform.product"
+       name="%productName"
+       point="org.eclipse.core.runtime.products">
+    <product
+          application="org.eclipse.ui.ide.workbench"
+          name="%productName">
+       <property
+             name="windowImages"
+             value="resources/16.png,resources/32.png,resources/48.png,resources/64.png,resources/128.png">
+       </property>
+       <property
+             name="aboutText"
+             value="Overture tool about">
+       </property>
+       <property
+             name="aboutImage"
+             value="/org.overture.eclipse.plugins.platform/resources/128.png">
+       </property>
+       <property
+             name="startupForegroundColor"
+             value="FFFFFF">
+       </property>
+       <property
+             name="startupProgressRect"
+             value="75,235,300,20">
+       </property>
+       <property
+             name="startupMessageRect"
+             value="75,250,300,15">
+       </property>
+       <property
+             name="appName"
+             value="%productName">
+       </property>
+        <property
+                   name="preferenceCustomization"
+                   value="plugin_customization.ini">
+                    </property>
+    </product>
+ </extension>
+ 
+ 
+ 
+</plugin>

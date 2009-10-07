@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+<extension point="org.eclipse.ui.newWizards">
+     
+      <category
+            id="org.overture.ide.category"
+            name="Overture">
+      </category>
+   </extension>
+   
+    <!--
+	 	OverturePerspectiveName
+	  -->
+	 <extension point="org.eclipse.ui.perspectives">
+    	<perspective
+           class="org.overture.ide.ui.VdmDefaultPerspective"
+           icon="/icons/cview16/overture_nav.gif"
+           id="org.overture.ide.ui.VdmDefaultPerspective"
+           name="%VdmDefaultPerspectiveName"/>
+ 	  </extension>
+
+</plugin>

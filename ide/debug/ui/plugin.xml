@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+<!-- preference pages -->
+<extension point="org.eclipse.ui.preferencePages">
+    <page
+      category="org.overture.ide.ui.OvertureGlobalPreferencesPage"
+      class="org.overture.ide.debug.ui.preferences.OvertureInterpreterPreferencePage"
+      id="org.overture.ide.debug.ui.preferences.OvertureInterpreterPreferencePage"
+      name="Interpreters" />
+    <page
+          category="org.overture.ide.debug.ui.preferences.OvertureInterpreterPreferencePage"
+          class="org.overture.ide.debug.ui.preferences.vdmpp.VDMPPInterpreterPreferencePage"
+          id="org.overture.ide.debug.ui.preferences.vdmpp.VDMPPInterpreterPreferencePage"
+          name="VDM++">
+    </page>       
+  </extension>
+
+<!-- 
+	register a shortcut which appears in the run and/or debug cascade menus 
+	to launch the workbench selection or active editor  
+-->
+<extension point="org.eclipse.debug.ui.launchShortcuts">
+   <shortcut
+         class="org.overture.ide.debug.ui.VDMPPVDMJOvertureLaunchShortcut"
+         id="org.overture.ide.debug.ui.VDMPPVDMJOvertureLaunchShortcut"
+         label="Launch VDMJ VDM++"
+         modes="run, debug"
+         icon="icons/oml16.png">
+   <contextualLaunch>
+        <enablement>
+          <with variable="selection">
+            <count value="1" />
+            <iterate>
+              <or>
+                <test
+                  property="org.eclipse.dltk.launching.hasProjectNature"
+                  args="org.overture.ide.vdmpp.core.nature" />
+              </or>
+            </iterate>
+          </with>
+        </enablement>
+      </contextualLaunch>
+   </shortcut>
+</extension>
+
+<!-- add tab groups for the vdm++ -->
+<extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+   <launchConfigurationTabGroup
+         class="org.overture.ide.debug.ui.VDMPPTabGroup"
+         id="org.overture.ide.debug.ui.VDMPPTabGroup"
+         type="org.overture.ide.vdmpp.debug.launchConfigurationTypeVDMJ">
+      <launchMode
+            description="Run VDM++ specification"
+            mode="run"
+            perspective="org.overture.ide.ui.VdmDefaultPerspective">
+      </launchMode>
+      <launchMode
+            description="Debug VDM++ Model"
+            mode="debug"
+            perspective="org.eclipse.debug.ui.DebugPerspective">
+      </launchMode>
+   </launchConfigurationTabGroup>
+</extension>
+
+<!-- pop TODO filter vdm-sl as well-->
+<extension point="org.eclipse.ui.popupMenus">
+    <objectContribution
+      adaptable="false"
+      id="org.overture.ide.console.ui.objectContribution"
+      nameFilter="*"
+      objectClass="org.eclipse.dltk.core.ISourceModule">
+      <filter
+        name="org.eclipse.dltk.ui.nature"
+        value="org.overture.ide.vdmpp.core.nature">
+      </filter>
+      <!--action
+        class="org.overturetool.eclipse.plugins.debug.ui.internal.console.ui.actions.PasteOvertureToConsole"
+        id="org.overturetool.console.ui.internal.actions.PasteTclTextToConsoleAction"
+        label="%OvertureConsole.Actions.PasteToOvertureConsole" / -->
+    </objectContribution>
+
+    <viewerContribution
+      id="org.overturetool.debug.ui.rulerContribution"
+      targetID="#OvertureRulerContext">
+      <!--action
+        class="org.eclipse.dltk.debug.ui.actions.RulerToggleWatchPointActionDelegate"
+        icon="/icons/oml16.png"
+        id="overture.doubleClickWatchPointAction"
+        label="Toggle Watchpoint"
+        menubarPath="debug"
+        style="push">
+      </action -->
+      <action
+        label="%EnableDisableBreakpoint.label"
+        id="org.overturetool.ui.actions.RulerEnableDisableBreakpointActionDelegate"
+        class="org.eclipse.debug.ui.actions.RulerEnableDisableBreakpointActionDelegate"
+        menubarPath="debug">
+      </action>
+
+      <action
+        label="%ToggleBreakpoint.label"
+        id="org.overturetool.ui.actions.RulerToggleBreakpointActionDelegate"
+        class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
+        menubarPath="debug">
+      </action>
+
+      <action
+        class="org.eclipse.dltk.debug.ui.actions.ScriptBreakpointPropertiesRulerActionDelegate"
+        id="org.overturetool.debug.ui.ScriptBreakpointPropertiesRulerActionDelegate"
+        label="%BreakpointProperties.label"
+        menubarPath="group.properties" />
+    </viewerContribution>
+    
+    <viewerContribution
+      targetID="#OvertureEditorContext"
+      id="org.eclipse.dltk.debug.ui.DebugPopupActions">
+      <visibility>
+        <and>
+          <systemProperty
+            name="org.eclipse.dltk.debug.ui.debuggerActive"
+            value="true">
+          </systemProperty>
+          <objectClass name="org.eclipse.jface.text.ITextSelection">
+          </objectClass>
+        </and>
+      </visibility>
+      <action
+        label="%ScriptWatch.label"
+        icon="/icons/oml16.png"
+        class="org.eclipse.dltk.internal.debug.ui.actions.ScriptWatchAction"
+        menubarPath="additions"
+        id="org.overturetool.debug.ui.ScriptWatch">
+      </action>
+      <action
+        label="%ScriptInspect.label"
+        icon="/icons/oml16.png"
+        definitionId="org.eclipse.dltk.debug.ui.commands.ScriptInspect"
+        class="org.eclipse.dltk.internal.debug.ui.actions.PopupScriptInspectAction"
+        menubarPath="additions"
+        id="org.overturetool.debug.ui.ScriptInspect">
+      </action>
+      <action
+        label="%ScriptDisplay.label"
+        icon="/icons/oml16.png"
+        definitionId="org.eclipse.dltk.debug.ui.commands.ScriptDisplay"
+        class="org.eclipse.dltk.internal.debug.ui.actions.PopupScriptDisplayAction"
+        menubarPath="additions"
+        id="org.overturetool.debug.ui.ScriptDisplay">
+      </action>
+    </viewerContribution>
+  </extension>
+
+</plugin>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<project>
+  <parent>
+    <groupId>org.overture</groupId>
+    <artifactId>org.overture.ide</artifactId>
+    <version>1.0.0</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.overture.ide</groupId>
+  <artifactId>
+    org.overture.ide.platform
+  </artifactId>
+  <name>
+    org.overture.ide.platform
+  </name>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>source-plugin</packaging>
+  <url>http://maven.apache.org</url>
+
+
+</project>

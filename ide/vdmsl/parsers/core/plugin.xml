@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.dltk.core.sourceElementParsers">
+      <parser
+            class="org.overture.ide.vdmsl.parsers.core.SourceElementParser"
+            nature="org.overture.ide.vdmsl.core.nature"
+            priority="0">
+      </parser>
+   </extension>
+
+</plugin>

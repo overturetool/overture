@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<project>
+  <parent>
+    <groupId>org.overture</groupId>
+    <artifactId>org.overture.ide</artifactId>
+    <version>1.0.0</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.overture.ide</groupId>
+  <artifactId>org.overture.ide.ast</artifactId>
+  <name>org.overture.ide.ast</name>
+  <version>1.0.0</version>
+  <url>http://overture.org</url>
+  <packaging>source-plugin</packaging>
+
+
+</project>

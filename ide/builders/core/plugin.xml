@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="org.overture.ide.builder" name="Builder" schema="schema/org.overture.ide.builder.exsd"/>
+   <extension
+         point="org.eclipse.dltk.core.builder">
+      <builder
+            class="org.overture.ide.builders.builder.BuildParticipant"
+            nature="org.overture.ide.vdmsl.core.nature">
+      </builder>
+   </extension>
+   
+   <extension
+         point="org.eclipse.dltk.core.builder">
+      <builder
+            class="org.overture.ide.builders.builder.BuildParticipant"
+            nature="org.overture.ide.vdmpp.core.nature">
+      </builder>
+   </extension>
+   
+   
+   
+  <!-- <extension
+         point="org.eclipse.dltk.core.buildParticipant">
+      <buildParticipant
+            class="org.overture.ide.vdmsl.builders.core.VdmSlBuildParticipant"
+            id="org.overture.ide.vdmsl.builders.core.buildParticipant3"
+            name="org.overture.ide.vdmsl.builders.core.buildParticipant3"
+            nature="org.overture.ide.vdmsl.core.nature">
+      </buildParticipant>
+   </extension>-->
+
+</plugin>

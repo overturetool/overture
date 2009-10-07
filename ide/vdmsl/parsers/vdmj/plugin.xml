@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+ 
+   
+   <extension
+         point="org.eclipse.dltk.core.sourceParsers">
+      <parserContribution
+            natureId="org.overture.ide.vdmsl.core.nature">
+         <parser
+               class="org.overture.ide.vdmsl.parsers.vdmj.VdmjSourceParserFactory"
+               description="VDM-SL Source Parser"
+               id="org.overture.ide.vdmsl.parsers.vdmj"
+               name="VDMJ VDM-SL Source Parser"
+               priority="0">
+         </parser>
+      </parserContribution>
+   </extension>
+  
+  
+
+</plugin>

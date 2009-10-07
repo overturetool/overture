@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+  
+  <!-- source locators - a mechanism specifying a source locator to be used with a launch configuration.-->
+  <extension point="org.eclipse.debug.core.sourceLocators">
+       <sourceLocator
+           class="org.eclipse.dltk.launching.sourcelookup.ScriptSourceLookupDirector"
+           id="overtureSourceLocator"
+           name="%sourceLocator.name.0" />
+       <sourceLocator
+           class="org.eclipse.dltk.launching.sourcelookup.RemoteScriptSourceLookupDirector"
+           id="overtureRemoteSourceLocator"
+           name="%OvertureRemoteSourceLocator.name" />
+   </extension>
+  
+  <!-- sourcePathComputers - a computer that can describe a default source lookup path for a launch configuration -->
+    <extension point="org.eclipse.debug.core.sourcePathComputers">
+        <sourcePathComputer
+            class="org.eclipse.dltk.launching.sourcelookup.ScriptSourcePathComputer"
+            id="overtureSourcePathComputer"/>
+   </extension>
+  
+</plugin>
