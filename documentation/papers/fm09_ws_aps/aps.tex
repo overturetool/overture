@@ -201,18 +201,38 @@ The execution of the tool in either mode is done in a batch, meaning that inputs
 \section{Future Work}
 \label{sec:future_work}
 
-Interactive execution \ldots
+%Integration in Eclipse\ldots
+Although the APS has its utility as a standalone application, the objective is to have it integrated in the Overture Tool as an Eclipse plugin.
+This integration can be done in two steps. 
+First through a minimalistic plugin that acts as a ``console'' for the APS, simply showing the user the results from each PO proof attempt.
+If all goes right with the first, and minimalistic, plugin then a more sophisticated approach could be taken.
+This approach would be to have a graphical user interface for the APS, where POs would be displayed in a table aggregating the information of automated proof attempts.
+In the case that some POs are not automatically discharged, the GUI would give the user the opportunity to assist the theorem prover.
 
-Integration in Eclipse\ldots
+%Interactive execution \ldots
 
-Support for VDMJ as a POG tool \ldots
 
-Use timer to avoid non terminating proofs, and be able to try different tactics if a proof takes too long \ldots
+%Support for VDMJ as a POG tool \ldots
+The generation of the POs is an open issue in the context of Overture since there are two available POG tools, but non works at the AST level.
+This fact implicates unnecessary parsing and diminishes the interoperability between components.
+The APS doesn't yet support VDMJ as a POG generator, although it is prepared for that, and this is also something to be done in the upcoming releases.
 
+%Use timer to avoid non terminating proofs, and be able to try different tactics if a proof takes too long \ldots
+Proofs in HOL might not terminate in feasible time.
+Therefore the APS must be equipped with, configurable, timers to detect those situations, and abort the proof if necessary.
+
+% Panellisation
+Given the current multi-core tendency in the hardware industry, the APS could take advantage of multi-core architectures to launch proofs in parallel, and with this improve its performance.
+
+% Improve on translation \ldots
+Although the translation of VDM syntax in HOL syntax is the responsibility of other Overture component, this is crucial for the usability of the APS.
+At the moment the APS, even if was already integrated in the Overture Tool through Eclipse, wouldn't bring much value to VDM modelers because of the quite small subset of the language supported by the translator.
 
 \section{Conclusion}
 \label{sec:conclusion}
 
-\ldots
+In conclusion, the APS is basically a tool-chain of components that when properly interoperated work together to discharge VDM POs using the theorem prover HOL.
+Its implementation was not always straight forward but it was still successful.
+The basic functionality as designed and prototyped by Sander Verm\"olen is now implemented but, there is still much room for improvements.
 
 \end{document}
