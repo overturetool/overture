@@ -5,6 +5,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.overturetool.proofsupport.AutomaticProofSystemBatch;
 import org.overturetool.proofsupport.PreparationData;
 import org.overturetool.proofsupport.TranslationPreProcessor;
 import org.overturetool.proofsupport.external_tools.Utilities;
@@ -17,6 +18,8 @@ public class TranslatorWrapperTest extends TestCase {
 	private static TestSettings settings = null;
 	private static String stackModel = null;
 
+	protected static final String VPPDE_BIN = TestSettings.getVppdeBinary();
+	
 	protected void setUp() throws Exception {
 		super.setUp();
 
@@ -81,5 +84,20 @@ public class TranslatorWrapperTest extends TestCase {
 		// TODO can't compare strings because output is not deterministic
 		//      as the POs can be printed in a different order in subsequent calls
 		assertEquals(expected.length(), actual.length());
+	}
+	
+	public void testDoModelTranslation() throws Exception {
+		TranslationPreProcessor prep = new TranslationPreProcessor(
+				new VdmToolsWrapper(VPPDE_BIN), new VdmToolsPogProcessor());
+		String modelFile = stackModel;
+		List<String> contextFiles = new ArrayList<String>(0);
+		PreparationData prepData = prep.prepareVdmFiles(modelFile, contextFiles);
+		
+		TranslatorWrapper translator = new TranslatorWrapper();
+		
+		String holCode = translator.translateModel(prepData);
+
+		assertNotNull(holCode);
+		assertEquals(732, holCode.length());
 	}
 }
