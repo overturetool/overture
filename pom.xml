@@ -49,45 +49,23 @@
 
 
 
-  <!-- Enabling the use of FTP -->
-  <!--distributionManagement>
-    <repository>
-      <id>overturetool.org</id>
-      <name>overturetool.org</name>
-      <url>ftp://localhost</url>
-    </repository>
-
-    <snapshotRepository>
-      <id>overturetool.org</id>
-      <name>overturetool.org</name>
-      <url>ftp://localhost</url>
-    </snapshotRepository>
-
-
-
-  </distributionManagement-->
-
-  <!-- Enabling the use of FTP -->
   <distributionManagement>
     <repository>
-      <id>overturetool.org</id>
-      <name>overturetool.org</name>
-      <url>ftp://localhost</url>
+      <id>sourceforge.net</id>
+      <name>Overture Repo af SF.Net</name>
+      <url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/repo</url>
     </repository>
-
     <snapshotRepository>
-      <id>overturetool.org</id>
-      <name>overturetool.org</name>
-      <url>ftp://localhost</url>
+      <id>sourceforge.net</id>
+      <name>Overture Snapshot Repo af SF.Net</name>
+      <url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/snapshotrepo</url>
     </snapshotRepository>
-
-
     <site>
-      <id>overturetool.org</id>
-      <url>dav:http://localhost/sites/${project.artifactId}/</url>
+      <id>sourceforge.net</id>
+      <url>scp://shell.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/doc</url>
     </site>
   </distributionManagement>
-  
+
 
 
   <scm>
@@ -102,5 +80,5 @@
   </issueManagement>
 
 
-  
+
 </project>

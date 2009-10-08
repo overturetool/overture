@@ -1,72 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-<modelVersion>4.0.0</modelVersion>
-<groupId>org.overturetool</groupId>
-<artifactId>core</artifactId>
-<packaging>pom</packaging>
-<version>1.0.0</version>
-<name>Top-level POM for OvertureTool</name>
-<url>http://www.overturetool.org</url>
-<modules>
-<!--<module>jmltrans</module>-->
-<module>proofsupport</module>
-<module>stdlib</module>
-<module>ast</module>
-<module>vdmunit</module>
-<module>parser</module>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.overturetool</groupId>
+  <artifactId>core</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0.0</version>
+  <name>Top-level POM for OvertureTool</name>
+  <url>http://www.overturetool.org</url>
+  <modules>
+    <!--<module>jmltrans</module>-->
+    <module>proofsupport</module>
+    <module>stdlib</module>
+    <module>ast</module>
+    <module>vdmunit</module>
+    <module>parser</module>
 
-<module>potrans</module>
-<module>umltrans</module>
-<module>vdmtools</module>
-<module>traces</module>
-<module>vdmj</module>
-<module>vdmjc</module>
-<module>showtrace</module>
-<module>xmljunit</module>
+    <module>potrans</module>
+    <module>umltrans</module>
+    <module>vdmtools</module>
+    <module>traces</module>
+    <module>vdmj</module>
+    <module>vdmjc</module>
+    <module>showtrace</module>
+    <module>xmljunit</module>
 
-</modules>
-<dependencies>
-<dependency>
-<groupId>junit</groupId>
-<artifactId>junit</artifactId>
-<version>3.8.1</version>
-<scope>test</scope>
-</dependency>
-</dependencies>
-<build>
-<plugins>
-<plugin>
-<artifactId>maven-compiler-plugin</artifactId>
-<configuration>
-<source>1.5</source>
-<target>1.5</target>
-</configuration>
-</plugin>
-</plugins>
-  <extensions>
+  </modules>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+    </plugins>
+    <extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
         <artifactId>wagon-ftp</artifactId>
         <version>1.0-beta-2</version>
       </extension>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-webdav</artifactId>
+        <version>1.0-beta-2</version>
+      </extension>
     </extensions>
 
-</build>
+  </build>
 
-<!-- Enabling the use of FTP -->
-  <distributionManagement>
-    <repository>
-      <id>overturetool.org</id>
-<name>overturetool.org</name>
-      <url>ftp://localhost</url>
-    </repository>
-
- <snapshotRepository>
-      <id>overturetool.org</id>
-<name>overturetool.org</name>
-      <url>ftp://localhost</url>
-    </snapshotRepository>
-
-  </distributionManagement>
 </project>
 

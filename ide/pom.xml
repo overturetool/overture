@@ -28,15 +28,20 @@
     <module>plugins</module>
   </modules>
 
-  <reporting>
+<reporting>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>2.5</version>
+        <configuration>
+         <failOnError>false</failOnError>
+          <excludePackageNames>*org.eclipse.*</excludePackageNames>
+          
+        </configuration>
       </plugin>
     </plugins>
-
+   
   </reporting>
   
   <build>
@@ -104,7 +109,7 @@
       <plugin>
       	<groupId>org.overturetool.tools.maven-pst</groupId>
       	<artifactId>maven-psteclipse-plugin</artifactId>
-      	<version>1.0.4</version>    	
+      	<version>1.0.5</version>    	
         <extensions>true</extensions>
         <configuration>
           <logModifications>true</logModifications>

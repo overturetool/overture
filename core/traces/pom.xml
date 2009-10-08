@@ -1,152 +1,212 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.overturetool</groupId>
-		<artifactId>core</artifactId>
-		<version>1.0.0</version>
-	</parent>
-	<groupId>org.overturetool</groupId>
-	<artifactId>traces</artifactId>
-	<name>Combinatorial Testing of VDM++ models</name>
-	<dependencies>
-		<dependency>
-			<groupId>org.overturetool</groupId>
-			<artifactId>vdmj</artifactId>
-			<version>1.0.0</version>
-		</dependency>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.overturetool</groupId>
+    <artifactId>core</artifactId>
+    <version>1.0.0</version>
+  </parent>
+  <groupId>org.overturetool</groupId>
+  <artifactId>traces</artifactId>
+  <name>Combinatorial Testing of VDM++ models</name>
+  <dependencies>
+    <dependency>
+      <groupId>org.overturetool</groupId>
+      <artifactId>vdmj</artifactId>
+      <version>1.0.0</version>
+    </dependency>
 
-		<dependency>
-			<groupId>org.overturetool</groupId>
-			<artifactId>vdmtoolsapi</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-	
-	</dependencies>
+    <dependency>
+      <groupId>org.overturetool</groupId>
+      <artifactId>vdmtoolsapi</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+
+  </dependencies>
 
 
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>
-							<!-- a lifecycle phase -->
-							<!-- package -->
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>
+              <!-- a lifecycle phase -->
+              <!-- package -->
 
-						</phase>
-						<configuration>
-							<tasks>
+            </phase>
+            <configuration>
+              <tasks>
 
-								<!--
+                <!--
 									Place any Ant task here. You can add anything you can add
 									between <target> and </target> in a build.xml.
 								-->
-								<tstamp>
-									<format property="date" pattern="yyMMdd" />
-								</tstamp>
-								<property name="version" value="0.1" />
+                <tstamp>
+                  <format property="date" pattern="yyMMdd" />
+                </tstamp>
+                <property name="version" value="0.1" />
 
-								<mkdir dir="target/release" />
-								<mkdir dir="target/tmp" />
-
-
-
-								<copy todir="target/tmp">
-									<fileset dir="../ast/target/classes">
-										<exclude name="**/*.java" />
-									</fileset>
-								</copy>
-
-								<copy todir="target/tmp">
-									<fileset dir="../parser/target/classes">
-										<exclude name="**/*.java" />
-									</fileset>
-								</copy>
-
-								<copy todir="target/tmp">
-									<fileset dir="../stdlib/src/main/resources">
-										<exclude name="**/*.java" />
-									</fileset>
-								</copy>
-
-								<copy todir="target/tmp">
-									<fileset dir="../vdmj/target/classes">
-										<exclude name="**/*.java" />
-									</fileset>
-								</copy>
-
-								<copy todir="target/tmp">
-									<fileset dir="../vdmtools/vdmtoolsapi/target/classes">
-										<exclude name="**/*.java" />
-									</fileset>
-								</copy>
+                <mkdir dir="target/release" />
+                <mkdir dir="target/tmp" />
 
 
 
-								<copy todir="target/tmp">
-									<fileset dir="target/classes">
-										<exclude name="**/*.java" />
-									</fileset>
-								</copy>
+                <copy todir="target/tmp">
+                  <fileset dir="../ast/target/classes">
+                    <exclude name="**/*.java" />
+                  </fileset>
+                </copy>
 
-								<jar
+                <copy todir="target/tmp">
+                  <fileset dir="../parser/target/classes">
+                    <exclude name="**/*.java" />
+                  </fileset>
+                </copy>
+
+                <copy todir="target/tmp">
+                  <fileset dir="../stdlib/src/main/resources">
+                    <exclude name="**/*.java" />
+                  </fileset>
+                </copy>
+
+                <copy todir="target/tmp">
+                  <fileset dir="../vdmj/target/classes">
+                    <exclude name="**/*.java" />
+                  </fileset>
+                </copy>
+
+                <copy todir="target/tmp">
+                  <fileset dir="../vdmtools/vdmtoolsapi/target/classes">
+                    <exclude name="**/*.java" />
+                  </fileset>
+                </copy>
+
+
+
+                <copy todir="target/tmp">
+                  <fileset dir="target/classes">
+                    <exclude name="**/*.java" />
+                  </fileset>
+                </copy>
+
+                <jar
 									destfile="target/release/org.overturetool.traces_${version}_${date}.jar"
 									basedir="target/tmp" includes="**/*.class">
-									<manifest>
-										<attribute name="Main-Class" value="org.overturetool.traces.MainClass" />
-									</manifest>
-								</jar>
+                  <manifest>
+                    <attribute name="Main-Class" value="org.overturetool.traces.MainClass" />
+                  </manifest>
+                </jar>
 
-								<delete dir="target/tmp" />
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+                <delete dir="target/tmp" />
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
-			<plugin>
-				<groupId>org.overturetool.tools</groupId>
-				<artifactId>vdmt</artifactId>
-				<configuration>
-					<excludePackages>
-						<param>org.overturetool.traces.test
-						</param>
-						<param>org.overturetool.traces.astspec
-						</param>
-						<param>org.overturetool.traces.API.vdmunit</param>
-					</excludePackages>
-					<excludeClasses>
-						
-					</excludeClasses>
-					<importPackages>
-						<param>org.overturetool.ast.itf</param>
-						<param>org.overturetool.ast.imp</param>
-					</importPackages>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+      <plugin>
+        <groupId>org.overturetool.tools</groupId>
+        <artifactId>vdmt</artifactId>
+        <configuration>
+          <excludePackages>
+            <param>
+              org.overturetool.traces.test
+            </param>
+            <param>
+              org.overturetool.traces.astspec
+            </param>
+            <param>org.overturetool.traces.API.vdmunit</param>
+          </excludePackages>
+          <excludeClasses>
 
+          </excludeClasses>
+          <importPackages>
+            <param>org.overturetool.ast.itf</param>
+            <param>org.overturetool.ast.imp</param>
+          </importPackages>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+
+
+  <!-- Reporting section used in site generation-->
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.5</version>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jxr-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-clover-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-changes-plugin</artifactId>
+        <inherited>false</inherited>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>changes-report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+        <configuration>
+          <issueLinkTemplate>http://sourceforge.net/support/tracker.php?aid=%ISSUE%</issueLinkTemplate>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+
+
+        <artifactId>maven-pmd-plugin</artifactId>
+        <configuration>
+          <targetjdk>1.5</targetjdk>
+          <rulesets>
+            <ruleset>/rulesets/basic.xml</ruleset>
+            <ruleset>/rulesets/controversial.xml</ruleset>
+          </rulesets>
+          <format>xml</format>
+          <linkXref>true</linkXref>
+          <sourceEncoding>utf-8</sourceEncoding>
+
+
+          <minimumTokens>100</minimumTokens>
+        </configuration>
+      </plugin>
+    </plugins>
+
+  </reporting>
 </project>
 
 

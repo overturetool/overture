@@ -13,5 +13,18 @@
   <url>http://overture.org</url>
   <packaging>source-plugin</packaging>
 
-
+ <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.5</version>
+        <configuration>
+        <skip>true</skip>
+         <failOnError>false</failOnError>
+          <excludePackageNames>*org.eclipse.*</excludePackageNames>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>

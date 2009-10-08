@@ -1,89 +1,151 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.overturetool</groupId>
-		<artifactId>core</artifactId>
-		<version>1.0.0</version>
-	</parent>
-	<groupId>org.overturetool</groupId>
-	<artifactId>umltrans</artifactId>
-	<version>1.0.0</version>
-	<name>Bi-directional OML to UML translator</name>
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<testFailureIgnore>true</testFailureIgnore>
-					<includes>
-						<include>**/*Test.java</include>
-						<include>**/*Test?.java</include>
-					</includes>
-				</configuration>
-			</plugin>
-			
-			
-			<plugin>
-				<groupId>org.overturetool.tools</groupId>
-				<artifactId>vdmt</artifactId>
-				<configuration>
-					<excludePackages>
-						<param>org.overturetool.umltrans.test
-						</param>
-						<param>org.overturetool.umltrans.test.spec
-						</param>
-						<param>org.overturetool.api.vdmunit
-						</param>
-						
-						
-					</excludePackages>
-					<excludeClasses>
-						
-					</excludeClasses>
-					<importPackages>
-						<param>org.overturetool.ast.itf</param>
-						<param>org.overturetool.ast.imp</param>
-						<param>org.overturetool.api.io</param>
-					</importPackages>
-				</configuration>
-			</plugin>
-			
-			<plugin>
-				<groupId>org.overturetool.tools</groupId>
-				<artifactId>astgen</artifactId>
-				<configuration>
-					<prefix>Uml</prefix>
-					<packageName>org.overturetool.umltrans.uml</packageName>
-					<top>
-						<param>Model</param>
-						
-					</top>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-	<dependencies>
-		<dependency>
-			<groupId>org.overturetool</groupId>
-			<artifactId>parser</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overturetool</groupId>
-			<artifactId>xmljunit</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-	 	<dependency>
-			<groupId>org.overturetool</groupId>
-			<artifactId>ast</artifactId>
-			<version>1.0.1</version>
-		</dependency>
-	 	<dependency>
-	 		<groupId>org.overturetool</groupId>
-	 		<artifactId>stdlib</artifactId>
-	 		<version>1.0.1</version>
-	 	</dependency> 
-	</dependencies>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.overturetool</groupId>
+    <artifactId>core</artifactId>
+    <version>1.0.0</version>
+  </parent>
+  <groupId>org.overturetool</groupId>
+  <artifactId>umltrans</artifactId>
+  <version>1.0.0</version>
+  <name>Bi-directional OML to UML translator</name>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <testFailureIgnore>true</testFailureIgnore>
+          <includes>
+            <include>**/*Test.java</include>
+            <include>**/*Test?.java</include>
+          </includes>
+        </configuration>
+      </plugin>
+
+
+      <plugin>
+        <groupId>org.overturetool.tools</groupId>
+        <artifactId>vdmt</artifactId>
+        <configuration>
+          <excludePackages>
+            <param>
+              org.overturetool.umltrans.test
+            </param>
+            <param>
+              org.overturetool.umltrans.test.spec
+            </param>
+            <param>
+              org.overturetool.api.vdmunit
+            </param>
+
+
+          </excludePackages>
+          <excludeClasses>
+
+          </excludeClasses>
+          <importPackages>
+            <param>org.overturetool.ast.itf</param>
+            <param>org.overturetool.ast.imp</param>
+            <param>org.overturetool.api.io</param>
+          </importPackages>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.overturetool.tools</groupId>
+        <artifactId>astgen</artifactId>
+        <configuration>
+          <prefix>Uml</prefix>
+          <packageName>org.overturetool.umltrans.uml</packageName>
+          <top>
+            <param>Model</param>
+
+          </top>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>org.overturetool</groupId>
+      <artifactId>parser</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool</groupId>
+      <artifactId>xmljunit</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool</groupId>
+      <artifactId>ast</artifactId>
+      <version>1.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool</groupId>
+      <artifactId>stdlib</artifactId>
+      <version>1.0.1</version>
+    </dependency>
+  </dependencies>
+
+
+
+  <!-- Reporting section used in site generation-->
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.5</version>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jxr-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-clover-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-changes-plugin</artifactId>
+        <inherited>false</inherited>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>changes-report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+        <configuration>
+          <issueLinkTemplate>http://sourceforge.net/support/tracker.php?aid=%ISSUE%</issueLinkTemplate>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+
+
+        <artifactId>maven-pmd-plugin</artifactId>
+        <configuration>
+          <targetjdk>1.5</targetjdk>
+          <rulesets>
+            <ruleset>/rulesets/basic.xml</ruleset>
+            <ruleset>/rulesets/controversial.xml</ruleset>
+          </rulesets>
+          <format>xml</format>
+          <linkXref>true</linkXref>
+          <sourceEncoding>utf-8</sourceEncoding>
+
+
+          <minimumTokens>100</minimumTokens>
+        </configuration>
+      </plugin>
+    </plugins>
+
+  </reporting>
 </project>

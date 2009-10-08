@@ -15,12 +15,12 @@
 					<lifecycle>
 						<id>default</id>
 						<phases>
-							<process-resources>
+						<!--	<process-resources>
 								org.apache.maven.plugins:maven-resources-plugin:resources
 							</process-resources>
 							<compile>
 								org.apache.maven.plugins:maven-compiler-plugin:compile
-							</compile>
+							</compile>-->
 							<process-test-resources>
 								org.apache.maven.plugins:maven-resources-plugin:testResources
 							</process-test-resources>

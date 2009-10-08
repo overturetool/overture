@@ -12,14 +12,14 @@
   <artifactId>tools</artifactId>
   <packaging>pom</packaging>
   <version>1.0.0</version>
-  <name>Maven tools for overture</name>
+  <name>Overture Maven tool plugins</name>
   <url>http://www.overturetool.org</url>
+
+
   <modules>
-
     <module>vdmt</module>
- <module>astgen</module>
-
-<module>maven-pst</module>
+    <module>astgen</module>
+    <module>maven-pst</module>
   </modules>
 
 </project>
