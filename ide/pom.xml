@@ -8,7 +8,7 @@
   </parent>
 
   <groupId>org.overture</groupId>
-  <artifactId>org.overture.ide</artifactId>
+  <artifactId>ide</artifactId>
   <packaging>pom</packaging>
   <version>1.0.0</version>
   <name>Overture IDE Top-level</name>

@@ -2,7 +2,7 @@
 <project>
   <parent>
     <groupId>org.overture</groupId>
-    <artifactId>org.overture.ide</artifactId>
+    <artifactId>ide</artifactId>
     <version>1.0.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
