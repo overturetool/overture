@@ -17,7 +17,7 @@
 
 \maketitle
 \begin{abstract}
-Sander Vermolen has produced a VDM to HOL translator prototype together with HOL tactics that allow VDM proof obligations to be discharged in the theorem prover HOL.
+Sander Verm\"olen has produced a VDM to HOL translator formal prototype together with HOL tactics that allow VDM proof obligations to be discharged in the theorem prover HOL.
 Vermolen's VDM++ prototype is complete enough to discharge proof obligations arising from functional VDM++ models.
 However the prototype's performance is very limited as it can only be executed within a VDM++ interpreter.
 Through the VDM++ to Java code generator tool, provided by the VDMTools, the prototype was implemented in Java allowing for its integration in the Overture Automatic Proof System.
@@ -29,14 +29,15 @@ The current paper reports on the challenges and achievements of the Automatic Pr
 \section{Introduction}
 \label{sec:introduction}
 
-The Overture initiative is a platform that enables researchers, students and practitioners to experiment with software modelling languages and tools~\cite{OverturePaper}.
+The Overture initiative is a platform that enables researchers, students and practitioners to experiment with software modelling languages and tools~\cite{LarsenBFL08}\fixme[margin]{Update this bib entry because there are now more authors\ldots}.
 Although the initiative has mainly focused in VDM and its three dialects, due to its open source nature everyone is welcome to contribute with tools and extensions to other languages.
-Through Overture, extensions to the different VDM dialects and supporting tools have been proposed, analysed, tested and finally transferred to industrial settings, namely to the VDMTools~\cite{VDMTools}.
+Through Overture, extensions to the different VDM dialects and supporting tools have been proposed, analysed, tested and finally transferred to industrial settings, namely to the VDMTools~\cite{DBLP:journals/sigplan/FitzgeraldLS08}.
+The tools that connects VDM to UML~\cite{Lausdahl08,Lausdahl09} is a good example of such a transfer of knowledge to industry.
 However, Overture's contribution has gone further than that, as new tools have been developed that supersede the functionality provided by the VDMTools.
 
-One of the tools that adds to the capabilities of the VDMTools is the Automatic Proof Support (APS), which is capable of discharging proof obligations (POs) arising from functional VDM models, using the theorem prover HOL~\cite{HOL}.
+One of the tools that adds to the capabilities of the VDMTools is the Automatic Proof Support (APS), which is able to discharge proof obligations (POs) arising from functional VDM models, using the theorem prover HOL~\cite{DBLP:conf/tphol/Gordon91}.
 Due to VDM's formal semantics it is possible to analyse a VDM model and pinpoint the locations where inconsistencies might occur (Figure~\ref{fig:pog}).
-Such inconsistencies can arise from invariants violations, miss usage of partial functions and mappings, etc.
+Such inconsistencies can arise from invariant violations, miss usage of partial functions and mappings, etc.
 Furthermore, besides pinpointing possible inconsistencies, it is also possible to generate verification conditions that if proven to be true assure the model's consistency.
 In a VDM context, these verification conditions are deemed POs.
 
@@ -44,17 +45,17 @@ In a VDM context, these verification conditions are deemed POs.
   \begin{center}
     \includegraphics[width=\textwidth]{images/pic_pog.pdf}
     \caption[VDM PO generation]{Generation of proof obligations from a VDM model.}
-    \label{fig:sander_arch}
+    \label{fig:pog}
   \end{center}
 \end{figure}
 
-The APS was designed by Sander Verm\"olen during his MSc project~\cite{Sander}.
-As deliverables from the project, Verm\"olen produced a VDM++ model of a tool that translates VDM to HOL syntax (the Overture VDM-to-HOL Translator); plus a set of lemmas, which he identified as useful in a VDM context, together with a set of tactics to automate the proofs.
+The APS was designed by Sander Verm\"olen during his MSc project~\cite{SanderThesis}\fixme[margin]{Search for Sander's thesis reference at home.}.
+As deliverables from the project, Verm\"olen produced a VDM++ formal model of a tool that translates VDM to HOL syntax (the Overture VDM-to-HOL Translator); plus a set of lemmas, which he identified as useful in a VDM context, together with a set of tactics to automate the proofs.
 
 The implementation described in this paper follows Verm\"olen's design as truly as possible, but also adds to it whenever found necessary.
 
 In the next section Verm\"olen's architecture for APS is described together with the discussion of the difficulties to implement it, and possible solutions.
-Section~\ref{sec:implementation} covers the actual implementation issues both at architectural and code level.
+Section~\ref{sec:implementation} covers the actual implementation issues both at architectural and implementation level.
 Future work is presented in Section~\ref{sec:future_work}, and the paper terminates with some conclusions in Section~\ref{sec:conclusion}.
 
 
@@ -81,13 +82,13 @@ The APS workflow as originally designed by Verm\"olen divides the system's opera
 
 \begin{description}
   \item[Preparation.] Preparation is the step that converts a VDM model concrete syntax into the abstract syntax tree (AST) format, as expected by the translator tool.
-	It's also in the preparation step that the POs, arising from the model, get generated by a PO generation (POG) tool (Figure~\ref{fig:arch_preparation}).
-The POG performs an analyses of the model's abstract representation and produces the PO expressions in the same abstract format.
+	It's also in the preparation step that the POs, arising from the model, get generated by a PO generation (POG) tool.
+	The POG performs an analysis of the model's abstract representation and produces the PO expressions in the same abstract format (Figure~\ref{fig:arch_preparation}).
 
-  \item[Translation.] Given both model and POs in abstract representation, in the translation step an abstract representation of an equivalent HOL model is created. 
-	The translated HOL model consists of a theory, obtained from the VDM model, and a set of proof commands, obtained from the VDM model's POs (Figure~\ref{fig:arch_trasnlation}).
+  \item[Translation.] Given both model and POs in abstract representation, in the translation step, an abstract representation of an equivalent HOL model is created. 
+	The translated HOL model consists of a theory, obtained from the VDM model, and a set of proof commands, obtained from the VDM model's POs (Figure~\ref{fig:arch_translation}).
 
-  \item[Proof.] In last step of§ the workflow, the proof, the concrete HOL syntax is generated from its abstract representation and a proof tactic is selected for each PO, according with its type~\footnote{There are several types of PO. For more detailed information see~\ref{VDMToolsManual}}. The last activity in the workflow is the actual proof carried out in the theorem prover (Figure~\ref{fig:arch_proof}).
+  \item[Proof.] In last step of§ the workflow, the proof, the concrete HOL syntax is generated from its abstract representation and a proof tactic is selected for each PO, according with its type~\footnote{There are several types of PO. For more detailed information see~\cite{CSK:2007lr}}. The last activity in the workflow is the actual proof carried out in the theorem prover (Figure~\ref{fig:arch_proof}).
 \end{description}
 
 Following from the described workflow, the architecture of the system is composed of three high level components, one per each step.
@@ -134,26 +135,26 @@ However, this is not yet the case and two adjustments have to be made.
 
 % There is no POG that generates AST \ldots
 The first thing to notice is that, although Verm\"olen's design makes perfect sense, there is no available combination of POG tool and public VDM AST format to be used in preparation.
-There are two POG tools that can be used both belonging to tool sets that are implemented in monolithic packages, namely the commercial VDMTools and the open source VDMJ.
+There are two POG tools that can be used, both belonging to tool sets that are implemented in monolithic packages, namely the commercial VDMTools and the open source VDMJ.
 Moreover, the translation tool, in the translation step, expects both the model and POs to be in the Overture Modelling Language (OML) AST representation, and neither of the POG tools available expects the model to be in this format, let alone generating POs in OML AST.
 Both POG tools expect the models to be in VDM concrete syntax and produce textual, human readable, representations of the POs.
-This mismatch between the available tools and the intended architecture makes it necessary to adjust the architecture by introducing the Overture Parser as part of the preparation step, as depicted in Figure~\ref{fig:archi_with_ovt_parser}.
+This mismatch between the available tools and the intended architecture makes it necessary to adjust the architecture by introducing the Overture Parser as part of the preparation step, as depicted in Figure~\ref{fig:aps_class}.
 In this arrangement the system uses the Overture Parser to generate OML AST representations for the model and each POs individually.
 
 % The HOL code generation and tactics selection is done by the translator tool
-The second adjustment needed is related with the proof step, more specifically with the HOL concrete syntax generation and tactics selection.
+The second adjustment is related with the proof step, more specifically with the HOL concrete syntax generation and tactics selection.
 Both of these activities are performed by the translation tool, and therefore they are performed in the translation step instead of the proof step.
-However, from the experience gathered by the use of the APS in some case studies~\cite{MiguelMSc,SBMF09paper}, the tactics selection as done by the translation tool is suboptimal as the same tactic gets chosen for each and every type of PO.
+However, from the experience gathered from using the APS in some case studies~\cite{FerreiraSO2008,Ferreira2009,SBMF09paper}\fixme[margin]{Add bib entry for SBMF09 paper.}, the tactics selection as done by the translation tool is suboptimal as the same tactic gets chosen for each and every type of PO.
 This issue was not yet addressed in the APS and is left as future work (see Section~\ref{sec:future_work}).
 
 \section{Implementation}
 \label{sec:implementation}
 
-The APS is a component of the Overture Tool, and therefore must abide by the development standards of the Overture initiative~\cite{OverturePaper}.
+The APS is a component of the Overture Tool, and therefore must abide by the development standards of the Overture initiative~\cite{LarsenBFL08}.
 The Overture Tool is a formal modelling and verification tool suite that is modular, and integrates in the Eclipse platform through several plugins.
 The main implementation language is Java and the APS is no exception to that.
 
-Figure~\ref{fig:??} clearly shows that the APS is nothing more than a tool-chain of components that contribute to the system's goal.
+Figure~\ref{fig:aps_class} clearly shows that the APS is mainly a tool-chain of components that contribute to the system's goal.
 All the computations that are in fact implemented in the APS are either to promote interoperation of the components, or to increase usability.
 
 %Integration of components \ldots
@@ -163,11 +164,11 @@ As far as the integration of components goes the implementation uses two ways to
   \item or through the command line interface (CLI) of external processes.
 \end{itemize}
 
-Both Overture Parser and the Overture VDM-to-HOL Translator have a publicly available Java API and therefore can be seemingly integrated with the APS.
-As for the generation of POs, the VDMTools was chosen to perform the underlying tasks and because its CORBA interface doesn't provided the necessary API, the interoperation was done though the CLI.
+Both Overture Parser and the Overture VDM-to-HOL Translator have publicly available Java APIs and therefore can be seemingly integrated with the APS.
+As for the generation of POs, the VDMTools was chosen to perform the underlying tasks, and because its CORBA interface doesn't provided the necessary API, the interoperation was done though the CLI.
 The choice here could have been VDMJ as it offers a Java API that could be called directly from the APS code.
 However, the VDMJ was still under development at the time of the implementation, and the VDMTools is a much more mature and heavily tested POG.
-This doesn't mean that the APS relies exclusively on the VDMTools, because the PO generation and parsing of their textual representations are abstracted by Java interfaces, which provide the necessary decoupling from implementations.
+This doesn't mean that the APS relies exclusively on the VDMTools, because the PO generation and parsing of their textual representations are abstracted by Java interfaces (Figure~\ref{fig:aps_class}), which provide the necessary decoupling from implementations.
 Although the VDMJ is not yet supported as a POG tool for the APS, the system is prepared to allow its integration in the tool-chain (see Section~\ref{sec:future_work} for more information on this subject).
 The CLI is also used to interoperate with the theorem prover HOL.
 
@@ -178,25 +179,44 @@ The most notorious example is the parsing of the list of POs generated by the PO
 If the tool (in this case the VDMTools) would provide a machine readable format, like XML for instance, it would make the implementation a lot easier and cleaner.
 Also the output from HOL must be parsed to check whether a statement is valid or it contains errors, as well as to check the result from a  proof.
 
-Interoperation with the CLI of the different components was implemented through a \emph{console} abstraction layer.
+Interoperation with the CLI of the different components was implemented through a \emph{console} abstraction layer (Figure~\ref{fig:aps_console_class}.
 The \emph{console} mimics the behaviour a human expects from the CLI of a tool, as well as the behaviour the tool expects from its user.
 This implementation decision helped clear the clutter involved in the interaction with the CLIs, as well as to better structure and re-utilize code.
 On top of the \emph{console} abstraction layer wrapper objects were implemented for each component, taking advantage of methods the layer provides and adding more, component specific, features.
-Furthermore all external components implement an interface to decouple the actual implementation from the APS core.
+Furthermore all external components implement an interface to decouple the actual implementation from the APS core (Figure~\ref{fig:aps_class}).
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=.8\textwidth]{images/aps_console_class_diagram.pdf}
+    \caption[Console asbtraction class diagram]{Console abstraction layer class diagram.}
+    \label{fig:aps_console_class}
+  \end{center}
+\end{figure}
+
 
 %Usability \ldots
 Usability issues also arise from the experience obtained using the system as it was still a prototype.
 Many times it paid off to try a different tactic to tackle some PO, and the reason behind this was not always straight forward.
 So if the APS was able to detect a failing, or non terminating, proof and tried a different tactic it would increase the success rate of the overall system (see Section~\ref{sec:future_work} for more information).
 
+\begin{figure}[p]
+%  \begin{center}
+    \includegraphics[width=1.2\textwidth]{images/aps_class_diagram.pdf}
+    \caption[APS class diagram]{Automatic Proof System class diagram.}
+    \label{fig:aps_class}
+%  \end{center}
+\end{figure}
+
+
+
 \subsection{Difficulties}
 \label{sub:implementation_difficulties}
 
 % Lack of proper documentation
-Documentation, or the lack of it, was one of the major drawbacks during implementation, even regarding components that are part of the Overture Initiative.
+Documentation, or the lack of it, was one of the major drawbacks during implementation, even regarding components that are part of the Overture initiative.
 For instance the Overture Parser has had the capability to parse a single VDM expression separated from the context of a model for a long time now.
 This feature is what enables the APS system to generate OML AST representations for each PO individually.
-However, during the implementation of the APS the development was stopped for some weeks because there was no knowledge of this feature.
+However, during the implementation of the APS the development was stalled for some weeks because there was no knowledge of this feature.
 This lack of knowledge was due to a momentary lack of availability from the implementer of the Overture Parser.
 If better documentation was available some time could have been saved. 
 The same goes for the APS, as no documentation whatsoever was created apart from Verm\"olen's MSc thesis, and this paper.
@@ -236,7 +256,7 @@ This way both processes are directly managed by the APS, thus avoiding the unwan
 
 \subsection{Current Status}
 
-The APS is currently in its version 1.0.0, and is only available as a command line application.
+The APS is currently in its version 1, and is only available as a command line application.
 It uses the Args4j~\footnote{\url{https://args4j.dev.java.net}} library to parse command line parameters and arguments.
 
 Testing was done through the jUnit test framework, and 69 unit tests were created to monitor the APS code.
@@ -249,7 +269,7 @@ The execution of the tool in either mode is done in a batch, meaning that inputs
 \label{sec:future_work}
 
 %Integration in Eclipse\ldots
-Although the APS has its utility as a standalone application, the objective is to have it integrated in the Overture Tool as an Eclipse plugin.
+Although the APS is useful as a standalone application, the objective is to have it integrated in the Overture Tool as an Eclipse plugin.
 This integration can be done in two steps. 
 First through a minimalistic plugin that acts as a ``console'' for the APS, simply showing the user the results from each PO proof attempt.
 If all goes right with the first, and minimalistic, plugin then a more sophisticated approach could be taken.
@@ -273,15 +293,24 @@ Given the current multi-core trend in computer hardware, the APS could take adva
 
 % Improve on translation \ldots
 Although the translation of VDM syntax in HOL syntax is the responsibility of other Overture component, this is crucial for the usability of the APS.
-At the moment the APS, even if was already integrated in the Overture Tool through Eclipse, wouldn't bringso much value to VDM modellers because of the quite small subset of the language supported by the translator.
-There are also problems in the translation that were already identifyed by Verm\"olen in his thesis~\cite[OpenIssues]{Sander} but remain unresolved.
+At the moment the APS, even if was already integrated in the Overture Tool through Eclipse, wouldn't bring so much value to VDM modellers because of the quite small subset of the language supported by the translator.
+
+There are also problems in the translation that were already identified by Verm\"olen in his thesis~\cite[OpenIssues]{SandersThesis}\fixme[margin]{Add reference to Sander's thesis open issues, or to the website.} but remain unresolved.
 Some of these issues result in syntax errors in the produced HOL code.
 
 \section{Conclusion}
 \label{sec:conclusion}
 
-In conclusion, the APS is basically a tool-chain of components that when properly interoperated work together to discharge VDM POs.
+The APS is basically a tool-chain of components that when properly interoperated work together to discharge VDM POs.
 Its implementation was not always straight forward but it was still successful.
-The basic functionality as designed and prototyped by Sander Verm\"olen is now implemented but, there is still much room for improvements.
+
+Verm\"olens effort in the formal specification of the translation tool and design of the workflow of the system had a very positive impact in the actual implementation.
+Implementing a system like the APS following carefully laid out guidelines certainly reduces the time and cost, as opposed to having an idea and starting to implement it straight away.
+Furthermore, the value of the VDM++ formal prototype transcended the prototype's function in the design phase, as the actual Java code, that is being used by the APS, was automatically generated from it.
+
+In conclusion, the basic functionality as designed and formally prototyped by Sander Verm\"olen is now implemented, but there is still much room for improvement.
+
+\bibliographystyle{plain}
+\bibliography{mf}
 
 \end{document}
