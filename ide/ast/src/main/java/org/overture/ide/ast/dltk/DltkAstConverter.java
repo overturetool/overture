@@ -9,7 +9,7 @@ import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.references.SimpleReference;
-import org.overturetool.vdmj.definitions.Definition;
+//import org.overture.ide.util.VDMJUtil;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ValueDefinition;
 import org.overturetool.vdmj.expressions.ApplyExpression;
@@ -148,7 +148,7 @@ public class DltkAstConverter {
 								.convertEnd(location)-1, converter
 								.convertStart(location), converter
 								.convertEnd(location)-1);
-				fieldValue.setModifier(TypeDeclaration.USER_MODIFIER);
+				fieldValue.setModifier(TypeDeclaration.AccPrivate);
 				moduleDefinition.getStatements().add(fieldValue);
 			}			
 			
@@ -162,9 +162,9 @@ public class DltkAstConverter {
 
 		LexLocation location = def.location;
 		FieldDeclaration type = new FieldDeclaration(def.name.name, converter
-				.convertStart(location), converter.convertEnd(location),
+				.convertStart(location), converter.convertEnd(location) -1,
 				converter.convertStart(location), converter
-						.convertEnd(location));
+						.convertEnd(location)-1);
 		type.setModifier(TypeDeclaration.D_TYPE_DECL);
 		moduleDefinition.getStatements().add(type);
 
@@ -225,7 +225,7 @@ public class DltkAstConverter {
 		if(expression instanceof ApplyExpression)
 		{
 //			ApplyExpression appExpr = (ApplyExpression) expression;
-			//CallExpression exp = VDMJUtil.createCallExpression(appExpr, converter);
+//			CallExpression exp = VDMJUtil.createCallExpression(appExpr, converter);
 		}
 		
 		if(expression instanceof BinaryExpression)
