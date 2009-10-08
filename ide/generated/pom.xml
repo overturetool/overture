@@ -19,6 +19,7 @@
 
     <module>vdmj</module>
     <module>umltrans</module>
+    <module>showtrace</module>
 
   </modules>
 </project>

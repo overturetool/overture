@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<project>
+  <parent>
+    <groupId>org.overture.ide</groupId>
+    <artifactId>org.overture.ide.generated</artifactId>
+    <version>1.0.0</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>
+    org.overture.ide.generated
+  </groupId>
+  <artifactId>
+    org.overture.ide.generated.showtrace
+  </artifactId>
+  <name>
+    org.overture.ide.generated.showtrace
+  </name>
+  <version>1.0.0</version>
+  <url>http://maven.apache.org</url>
+  <packaging>binary-plugin</packaging>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>org.overturetool</groupId>
+      <artifactId>showtrace</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+
+  </dependencies>
+</project>
