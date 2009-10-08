@@ -10,6 +10,7 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.references.SimpleReference;
 //import org.overture.ide.util.VDMJUtil;
+import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ValueDefinition;
 import org.overturetool.vdmj.expressions.ApplyExpression;
