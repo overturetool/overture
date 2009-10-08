@@ -24,10 +24,10 @@
 							<process-test-resources>
 								org.apache.maven.plugins:maven-resources-plugin:testResources
 							</process-test-resources>
-							<test-compile>
+						<!-- 	<test-compile>
 								org.apache.maven.plugins:maven-compiler-plugin:testCompile
 							</test-compile>
-						<!-- 	<test>
+							<test>
 								org.overturetool.tools.maven-pst:maven-psteclipse-plugin:test
 							</test>
 							 -->

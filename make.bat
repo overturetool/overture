@@ -16,20 +16,20 @@ echo Making overutre
 echo making core
 
 cd core
-cmd.exe /Q /C mvn install -Dmaven.test.skip=true -o
+cmd.exe /Q /C mvn install -Dmaven.test.skip=true
 
 cd..
 
 TITLE Making Overture - Eclipse Projects
 echo Making Eclipse:eclipse
 
-cmd.exe /Q /C mvn eclipse:eclipse -o
+cmd.exe /Q /C mvn eclipse:eclipse
 
 TITLE Making Overture - Updating Generated plugins
 echo Updating generated core components for the IDE
 
 cd ide\generated
-cmd.exe /Q /C mvn psteclipse:eclipse-plugin -o
+cmd.exe /Q /C mvn psteclipse:eclipse-plugin
 cd..
 cd..
 
