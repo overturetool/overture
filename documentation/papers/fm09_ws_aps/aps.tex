@@ -17,8 +17,10 @@
 
 \maketitle
 \begin{abstract}
-Sander Verm\"olen has produced a VDM to HOL translator formal prototype together with HOL tactics that allow VDM proof obligations to be discharged in the theorem prover HOL.
-Vermolen's VDM++ prototype is complete enough to discharge proof obligations arising from functional VDM++ models.
+The paper reports on the implementation of the Overture Automatic Proof System as a tool-chain of components each borrowing a specific functionalities, enabling the system to discharge VDM proof obligations.
+
+In previous research work Sander Verm\"olen has produced a VDM to HOL translator formal prototype together with HOL tactics that allow VDM proof obligations to be discharged in the theorem prover HOL.
+Verm\"olen's VDM++ prototype is complete enough to discharge proof obligations arising from functional VDM++ models.
 However the prototype's performance is very limited as it can only be executed within a VDM++ interpreter.
 Through the VDM++ to Java code generator tool, provided by the VDMTools, the prototype was implemented in Java allowing for its integration in the Overture Automatic Proof System.
 
@@ -30,7 +32,7 @@ The current paper reports on the challenges and achievements of the Automatic Pr
 \label{sec:introduction}
 
 The Overture initiative is a platform that enables researchers, students and practitioners to experiment with software modelling languages and tools~\cite{LarsenBFL08}\fixme[margin]{Update this bib entry because there are now more authors\ldots}.
-Although the initiative has mainly focused in VDM and its three dialects, due to its open source nature everyone is welcome to contribute with tools and extensions to other languages.
+Although the initiative has mainly focused in VDM, due to its open source nature everyone is welcome to contribute with tools and extensions to other languages.
 Through Overture, extensions to the different VDM dialects and supporting tools have been proposed, analysed, tested and finally transferred to industrial settings, namely to the VDMTools~\cite{DBLP:journals/sigplan/FitzgeraldLS08}.
 The tools that connects VDM to UML~\cite{Lausdahl08,Lausdahl09} is a good example of such a transfer of knowledge to industry.
 However, Overture's contribution has gone further than that, as new tools have been developed that supersede the functionality provided by the VDMTools.
@@ -88,7 +90,7 @@ The APS workflow as originally designed by Verm\"olen divides the system's opera
   \item[Translation.] Given both model and POs in abstract representation, in the translation step, an abstract representation of an equivalent HOL model is created. 
 	The translated HOL model consists of a theory, obtained from the VDM model, and a set of proof commands, obtained from the VDM model's POs (Figure~\ref{fig:arch_translation}).
 
-  \item[Proof.] In last step of§ the workflow, the proof, the concrete HOL syntax is generated from its abstract representation and a proof tactic is selected for each PO, according with its type~\footnote{There are several types of PO. For more detailed information see~\cite{CSK:2007lr}}. The last activity in the workflow is the actual proof carried out in the theorem prover (Figure~\ref{fig:arch_proof}).
+  \item[Proof.] In last step of§ the workflow, the proof, the concrete HOL syntax is generated from its abstract representation and a proof tactic is selected for each PO, according to its type~\footnote{There are several types of PO. For more detailed information see~\cite{CSK:2007lr}}. The last activity in the workflow is the actual proof carried out in the theorem prover (Figure~\ref{fig:arch_proof}).
 \end{description}
 
 Following from the described workflow, the architecture of the system is composed of three high level components, one per each step.
@@ -196,7 +198,7 @@ Furthermore all external components implement an interface to decouple the actua
 
 %Usability \ldots
 Usability issues also arise from the experience obtained using the system as it was still a prototype.
-Many times it paid off to try a different tactic to tackle some PO, and the reason behind this was not always straight forward.
+Many times it paid off to try a different tactic to tackle some PO, and the reason behind this was not always straightforward.
 So if the APS was able to detect a failing, or non terminating, proof and tried a different tactic it would increase the success rate of the overall system (see Section~\ref{sec:future_work} for more information).
 
 \begin{figure}[p]
@@ -218,7 +220,6 @@ For instance the Overture Parser has had the capability to parse a single VDM ex
 This feature is what enables the APS system to generate OML AST representations for each PO individually.
 However, during the implementation of the APS the development was stalled for some weeks because there was no knowledge of this feature.
 This lack of knowledge was due to a momentary lack of availability from the implementer of the Overture Parser.
-If better documentation was available some time could have been saved. 
 The same goes for the APS, as no documentation whatsoever was created apart from Verm\"olen's MSc thesis, and this paper.
 
 It is not only on the open source side that documentation lacked. 
@@ -229,6 +230,10 @@ It was only though the close connection and cooperation with CSK, the current su
 
 %Java child process bug \ldots
 Other major drawback for the implementation of the APS was the way Java handles external processes, and especially child processes\footnote{A child process is a process that is created within another process.} of the processes one instantiates within a Java application.
+In Java if a process, say $A$, creates a child process, say $B$, then if $A$ is terminated, and a waiting for termination method is issued on $A$ but $B$ does not terminate, then the method issued on $A$ will never return.
+This means that the wait method does not return until all child processes are terminated.
+However, if a destroy method is called on $A$ it's child processes will not be destroyed, as it is the responsibility of the parent process to terminate its child processes.
+This behaviour is well documented in the Java bug/issue tracking system~\footnote{For more details see \url{http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4770092}.}.
 
 The theorem prover HOL, in its version 4, is built on top of the Moscow ML~\footnote{\url{http://www.itu.dk/~sestoft/mosml.html}} interpreter which an implementation of the Standard ML language interpreter.
 This means that HOL runs inside the Moscow ML interpreter.
@@ -237,17 +242,10 @@ The output of \emph{unquote} is then re-piped to the \emph{ML interpreter}.
 So whenever the HOL executable is invoked from the command line two child processes are also invoked, one for \emph{unquote} and another for the \emph{ML interpreter}.
 This is the case both in Windows and Unix alike platforms.
 
-The problem with creating this processes within a Java application was not in the creation itself, but rather in the destruction of the child processes.
-In Java, like in most other programming languages, it is a good programming practice to wait for the processes to finish.
+It is a good programming practice to wait for the processes to finish.
 However, in this case after issuing the termination command in the HOL process, the method that waits for it to finish would enter a deadlock state.
 On the other hand, if a forced destruction of the HOL process would be issued, the result would be even worse.
 One of HOL's child processes would start to allocate all the memory it could get, until the machine would become unusable.
-
-This strange behaviour has to do with the way Java handles external processes.
-If a process, say $A$, creates a child process, say $B$, then if $A$ is terminated, and a waiting for termination method is issued on $A$ but $B$ does not terminate, then the method issued on $A$ will never return.
-This means that the wait method does not return until all child processes are terminated.
-However, if a destroy method is called on $A$ it's child processes will not be destroyed, as it is the responsibility of the parent process to terminate its child processes.
-This behaviour is well documented in the Java bug/issue tracking system~\footnote{For more details see \url{http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4770092}.}.
 
 To overcome this problem regarding HOL's child processes and the pipe in between them, the implementation never calls HOL's executable directly.
 Instead, it creates two independent processes, one for \emph{unquote} and another for the \emph{ML interpreter}.
