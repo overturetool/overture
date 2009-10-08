@@ -538,7 +538,7 @@ public class DBGPReader
     		.replaceAll("\\\"", "&quot;");
 	}
 
-	private void run(boolean init) throws IOException
+	public void run(boolean init) throws IOException
 	{
 		if (init)
 		{
