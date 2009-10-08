@@ -5,11 +5,10 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.overturetool.proofsupport.AutomaticProofSystemBatch;
 import org.overturetool.proofsupport.PreparationData;
 import org.overturetool.proofsupport.TranslationPreProcessor;
 import org.overturetool.proofsupport.external_tools.Utilities;
-import org.overturetool.proofsupport.external_tools.pog.VdmToolsPogProcessor;
+import org.overturetool.proofsupport.external_tools.pog.VdmToolsPoProcessor;
 import org.overturetool.proofsupport.external_tools.pog.VdmToolsWrapper;
 import org.overturetool.proofsupport.test.TestSettings;
 
@@ -53,7 +52,7 @@ public class TranslatorWrapperTest extends TestCase {
 
 	public void testTranslateOmlToHolNoContext() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				TestSettings.getVppdeBinary()), new VdmToolsPogProcessor());
+				TestSettings.getVppdeBinary()), new VdmToolsPoProcessor());
 		List<String> contextFiles = new ArrayList<String>(0);
 		PreparationData prepData = prep.prepareVdmFiles(stackModel, contextFiles);
 		TranslatorWrapper trans = new TranslatorWrapper();
@@ -88,7 +87,7 @@ public class TranslatorWrapperTest extends TestCase {
 	
 	public void testDoModelTranslation() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(
-				new VdmToolsWrapper(VPPDE_BIN), new VdmToolsPogProcessor());
+				new VdmToolsWrapper(VPPDE_BIN), new VdmToolsPoProcessor());
 		String modelFile = stackModel;
 		List<String> contextFiles = new ArrayList<String>(0);
 		PreparationData prepData = prep.prepareVdmFiles(modelFile, contextFiles);

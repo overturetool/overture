@@ -28,7 +28,7 @@ public class BufferedConsoleReader implements ConsoleReader {
 		// Buffered reader doesn't know the underlying process
 	}
 
-	public boolean ready() throws IOException {
+	public boolean isReady() throws IOException {
 		return bis.ready();
 	}
 }

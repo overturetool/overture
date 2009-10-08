@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.overturetool.proofsupport.external_tools.Console;
 
-public class VdmToolsWrapper implements PogGenerator {
+public class VdmToolsWrapper implements PoGenerator {
 
 	private static final String POG_FILE_EXTENSION = ".pog";
 	protected static final String VDMTOOLS_POG_FLAG = "-g";
@@ -16,15 +16,15 @@ public class VdmToolsWrapper implements PogGenerator {
 		this.vppdeBinaryPath = vppdeBinaryPath;
 	}
 
-	public String generatePogFile(String[] vdmFiles) throws PogGeneratorException {
+	public String generatePogFile(String[] vdmFiles) throws PoGeneratorException {
 		if ((vdmFiles != null) && (vdmFiles.length > 0)) {
 			return runPogGenerator(vdmFiles);
 		}
 		else
-			throw new PogGeneratorException("No VDM files supplied.");
+			throw new PoGeneratorException("No VDM files supplied.");
 	}
 
-	private String runPogGenerator(String[] vdmFiles) throws PogGeneratorException {
+	private String runPogGenerator(String[] vdmFiles) throws PoGeneratorException {
 		List<String> command = buildPogCommand(vppdeBinaryPath, vdmFiles);
 		Console vdmToolsConsole = createVdmToolsConsole(command);
 		waitForPogToFinish(vdmToolsConsole);
@@ -32,7 +32,7 @@ public class VdmToolsWrapper implements PogGenerator {
 		return vdmFiles[0] + POG_FILE_EXTENSION;
 	}
 
-	private void validateOperation(Console vdmToolsConsole) throws PogGeneratorException {
+	private void validateOperation(Console vdmToolsConsole) throws PoGeneratorException {
 		try {
 			StringBuffer sb = new StringBuffer();
 			String line = null;
@@ -41,34 +41,34 @@ public class VdmToolsWrapper implements PogGenerator {
 			if(sb.length() > 0)
 				analyzeErrorMessage(sb);
 		} catch (IOException e) {
-			throw new PogGeneratorException("Interrupted while validating VDMTools concole output.", e);
+			throw new PoGeneratorException("Interrupted while validating VDMTools concole output.", e);
 		}
 	}
 
 	private void analyzeErrorMessage(StringBuffer sb)
-			throws PogGeneratorException {
+			throws PoGeneratorException {
 		String error = sb.toString();
 		if(error.contains("Errors"))
-			throw new PogGeneratorException(sb.toString());
+			throw new PoGeneratorException(sb.toString());
 		else if(error.contains("Warning"))
 			// TODO log warning!!
 			;
 	}
 
-	private void waitForPogToFinish(Console vdmToolsConsole) throws PogGeneratorException {
+	private void waitForPogToFinish(Console vdmToolsConsole) throws PoGeneratorException {
 		try {
 			vdmToolsConsole.waitFor();
 		} catch (InterruptedException e) {
-			throw new PogGeneratorException("Interrupted while generating proof obligations.", e);
+			throw new PoGeneratorException("Interrupted while generating proof obligations.", e);
 		}
 	}
 
-	private Console createVdmToolsConsole(List<String> command) throws PogGeneratorException {
+	private Console createVdmToolsConsole(List<String> command) throws PoGeneratorException {
 		Console vdmConsole;
 		try {
 			vdmConsole = new Console(command);
 		} catch (IOException e) {
-			throw new PogGeneratorException("IO error while connecting to the VDMTools CLI.", e);
+			throw new PoGeneratorException("IO error while connecting to the VDMTools CLI.", e);
 		}
 		return vdmConsole;
 	}

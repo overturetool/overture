@@ -10,13 +10,13 @@ import java.util.List;
 
 import org.overturetool.proofsupport.external_tools.Utilities;
 
-public class VdmToolsPogProcessor implements PogProcessor {
+public class VdmToolsPoProcessor implements PoProcessor {
 
 	protected String lineBuffer = "";
 	protected List<String> poBuffer = new LinkedList<String>();
 	protected List<String[]> poLines = new LinkedList<String[]>();;
 
-	public VdmToolsPogProcessor() {
+	public VdmToolsPoProcessor() {
 	}
 
 	private void initObjectState() {
@@ -24,7 +24,7 @@ public class VdmToolsPogProcessor implements PogProcessor {
 		poLines = new LinkedList<String[]>();
 	}
 
-	public List<String[]> extractPosFromFile(String pogFileName) throws PogProcessorException {
+	public List<String[]> extractPosFromFile(String pogFileName) throws PoProcessorException {
 		initObjectState();
 
 		BufferedReader fin;
@@ -32,9 +32,9 @@ public class VdmToolsPogProcessor implements PogProcessor {
 			fin = new BufferedReader(new FileReader(pogFileName));
 			readPos(fin);
 		} catch (FileNotFoundException e) {
-			throw new PogProcessorException("Can't find proof obligations file '" + pogFileName + "'.", e);
+			throw new PoProcessorException("Can't find proof obligations file '" + pogFileName + "'.", e);
 		} catch (IOException e) {
-			throw new PogProcessorException("IO error while reading proof obligations file '" + pogFileName + "'.", e);
+			throw new PoProcessorException("IO error while reading proof obligations file '" + pogFileName + "'.", e);
 		}
 
 		return poLines;

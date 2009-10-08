@@ -5,7 +5,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.overturetool.proofsupport.external_tools.pog.VdmToolsPogProcessor;
+import org.overturetool.proofsupport.external_tools.pog.VdmToolsPoProcessor;
 import org.overturetool.proofsupport.external_tools.pog.VdmToolsWrapper;
 import org.overturetool.proofsupport.test.TestSettings;
 
@@ -37,7 +37,7 @@ public class AutomaticProofSystemTest extends TestCase {
 	public void testDischargeAllPosSet() throws Exception {
 		AutomaticProofSystemBatch aps = new AutomaticProofSystemBatch(mosmlDir,
 				holDir, new VdmToolsWrapper(vppdeExecutable),
-				new VdmToolsPogProcessor());
+				new VdmToolsPoProcessor());
 		List<String> contextFiles = new ArrayList<String>(0);
 
 		String[] expected = new String[] { "> val it = 1 : int",
@@ -53,7 +53,7 @@ public class AutomaticProofSystemTest extends TestCase {
 	public void testDischargeAllPosStack() throws Exception {
 		AutomaticProofSystemBatch aps = new AutomaticProofSystemBatch(mosmlDir,
 				holDir, new VdmToolsWrapper(vppdeExecutable),
-				new VdmToolsPogProcessor());
+				new VdmToolsPoProcessor());
 		List<String> contextFiles = new ArrayList<String>(0);
 		String[] expected = new String[] { "> val it = 2 : int",
 				"> val it = 1 : int" };
@@ -67,14 +67,14 @@ public class AutomaticProofSystemTest extends TestCase {
 
 	public void testDoModelTranslation() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(
-				new VdmToolsWrapper(VPPDE_BIN), new VdmToolsPogProcessor());
+				new VdmToolsWrapper(VPPDE_BIN), new VdmToolsPoProcessor());
 		String modelFile = setModel;
 		List<String> contextFiles = new ArrayList<String>(0);
 		PreparationData prepData = prep.prepareVdmFiles(modelFile, contextFiles);
 		
 		AutomaticProofSystemBatch aps = new AutomaticProofSystemBatch(mosmlDir,
 				holDir, new VdmToolsWrapper(vppdeExecutable),
-				new VdmToolsPogProcessor());
+				new VdmToolsPoProcessor());
 		String holCode = aps.doModelTranslation(prepData);
 
 		assertNotNull(holCode);

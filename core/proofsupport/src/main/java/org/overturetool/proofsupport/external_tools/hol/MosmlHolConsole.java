@@ -28,7 +28,7 @@ public class MosmlHolConsole extends Console {
 
 	private void validateInterpretation() throws IOException, HolInterpreterException {
 		String errorMessage = null;
-		if(error.ready())
+		if(error.isReady())
 			errorMessage = readAllErrorLines();
 		if(errorMessage != null) 
 			throw new HolInterpreterException("Interpretation failed." + errorMessage);

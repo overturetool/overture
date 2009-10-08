@@ -8,10 +8,10 @@ import org.overturetool.proofsupport.external_tools.hol.HolInterpreter;
 import org.overturetool.proofsupport.external_tools.hol.HolInterpreterException;
 import org.overturetool.proofsupport.external_tools.hol.HolParameters;
 import org.overturetool.proofsupport.external_tools.omlparser.ParserException;
-import org.overturetool.proofsupport.external_tools.pog.PogGenerator;
-import org.overturetool.proofsupport.external_tools.pog.PogGeneratorException;
-import org.overturetool.proofsupport.external_tools.pog.PogProcessor;
-import org.overturetool.proofsupport.external_tools.pog.PogProcessorException;
+import org.overturetool.proofsupport.external_tools.pog.PoGenerator;
+import org.overturetool.proofsupport.external_tools.pog.PoGeneratorException;
+import org.overturetool.proofsupport.external_tools.pog.PoProcessor;
+import org.overturetool.proofsupport.external_tools.pog.PoProcessorException;
 import org.overturetool.proofsupport.external_tools.vdmholtranslator.TranslatorException;
 import org.overturetool.proofsupport.external_tools.vdmholtranslator.VdmToHolTranslator;
 import org.overturetool.proofsupport.external_tools.vdmholtranslator.VdmToHolTranslatorFactory;
@@ -30,7 +30,7 @@ public abstract class AutomaticProofSystem {
 	protected final String vdmTacticsFile;
 
 	protected AutomaticProofSystem(String mosmlDir, String holDir,
-			PogGenerator pogGen, PogProcessor pogProc)
+			PoGenerator pogGen, PoProcessor pogProc)
 			throws AutomaicProofSystemException {
 		this.prep = new TranslationPreProcessor(pogGen, pogProc);
 		this.holParam = new HolParameters(mosmlDir, holDir);
@@ -69,9 +69,9 @@ public abstract class AutomaticProofSystem {
 		PreparationData prepData = null;
 		try {
 			prepData = prep.prepareVdmFiles(vdmModelFile, vdmContextFiles);
-		} catch (PogGeneratorException e) {
+		} catch (PoGeneratorException e) {
 			throw wrapException(PO_GENERATOR_COMPONENT, e);
-		} catch (PogProcessorException e) {
+		} catch (PoProcessorException e) {
 			wrapException(PO_PROCESSOR_COMPONENT, e);
 		} catch (ParserException e) {
 			wrapException(PARSER_COMPONENT, e);

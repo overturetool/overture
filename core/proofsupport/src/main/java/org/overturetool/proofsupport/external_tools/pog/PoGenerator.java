@@ -2,7 +2,7 @@ package org.overturetool.proofsupport.external_tools.pog;
 
 import java.io.IOException;
 
-public interface PogGenerator {
+public interface PoGenerator {
 
 	/**
 	 * Generates a POG file based on the supplied <code>vdmFiles</code>.
@@ -10,5 +10,5 @@ public interface PogGenerator {
 	 * @return the path to the generated file, or null if the input is empty.
 	 * @throws IOException
 	 */
-	public String generatePogFile(String[] vdmFiles) throws PogGeneratorException;
+	public String generatePogFile(String[] vdmFiles) throws PoGeneratorException;
 }

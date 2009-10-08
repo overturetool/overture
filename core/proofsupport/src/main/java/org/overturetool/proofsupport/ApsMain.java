@@ -8,7 +8,7 @@ import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-import org.overturetool.proofsupport.external_tools.pog.VdmToolsPogProcessor;
+import org.overturetool.proofsupport.external_tools.pog.VdmToolsPoProcessor;
 import org.overturetool.proofsupport.external_tools.pog.VdmToolsWrapper;
 
 public class ApsMain {
@@ -51,7 +51,7 @@ public class ApsMain {
 
 	private void run() throws AutomaicProofSystemException, IOException {
 		AutomaticProofSystemBatch aps = new AutomaticProofSystemBatch(mosmlDir, holDir,
-				new VdmToolsWrapper(vppdeBinary), new VdmToolsPogProcessor());
+				new VdmToolsWrapper(vppdeBinary), new VdmToolsPoProcessor());
 		if (translation)
 			System.out.println(aps.translateModelAndPos(vdmModelFile,
 					vdmContextFiles));

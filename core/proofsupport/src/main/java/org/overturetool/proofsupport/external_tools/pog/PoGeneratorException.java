@@ -1,14 +1,14 @@
 package org.overturetool.proofsupport.external_tools.pog;
 
-public class PogGeneratorException extends Exception {
+public class PoGeneratorException extends Exception {
 
 	private static final long serialVersionUID = 546632902976040631L;
 
-	public PogGeneratorException(String message) {
+	public PoGeneratorException(String message) {
 		super(message);
 	}
 
-	public PogGeneratorException(String message, Throwable cause) {
+	public PoGeneratorException(String message, Throwable cause) {
 		super(message, cause);
 	}
 

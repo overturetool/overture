@@ -42,7 +42,7 @@ public class VdmToolsPogProcessorTest extends TestCase {
 		for (String line : expected.split(Utilities.LINE_SEPARATOR))
 			po.add(line);
 
-		VdmToolsPogProcessor pogProc = new VdmToolsPogProcessor();
+		VdmToolsPoProcessor pogProc = new VdmToolsPoProcessor();
 		String actual = pogProc
 				.extractPoExpression(po.toArray(new String[] {}));
 
@@ -50,7 +50,7 @@ public class VdmToolsPogProcessorTest extends TestCase {
 	}
 
 	public void testExtractPosFromFileNoNewLine() throws Exception {
-		VdmToolsPogProcessor pogProc = new VdmToolsPogProcessor();
+		VdmToolsPoProcessor pogProc = new VdmToolsPoProcessor();
 		List<String[]> poList = pogProc
 				.extractPosFromFile(testPogFileNoNewLine);
 
@@ -66,7 +66,7 @@ public class VdmToolsPogProcessorTest extends TestCase {
 	}
 
 	public void testExtractPosFromFileWithNewLine() throws Exception {
-		VdmToolsPogProcessor pogProc = new VdmToolsPogProcessor();
+		VdmToolsPoProcessor pogProc = new VdmToolsPoProcessor();
 		List<String[]> poList = pogProc
 				.extractPosFromFile(testPogFileWithNewLine);
 
@@ -84,7 +84,7 @@ public class VdmToolsPogProcessorTest extends TestCase {
 	public void testReadPosNoNewLine() throws Exception {
 		BufferedReader fin = new BufferedReader(new FileReader(
 				testPogFileNoNewLine));
-		VdmToolsPogProcessor pogProc = new VdmToolsPogProcessor();
+		VdmToolsPoProcessor pogProc = new VdmToolsPoProcessor();
 		pogProc.readPos(fin);
 
 		assertEquals(5, pogProc.poLines.size());
@@ -101,7 +101,7 @@ public class VdmToolsPogProcessorTest extends TestCase {
 	public void testReadPosWithNewLine() throws Exception {
 		BufferedReader fin = new BufferedReader(new FileReader(
 				testPogFileWithNewLine));
-		VdmToolsPogProcessor pogProc = new VdmToolsPogProcessor();
+		VdmToolsPoProcessor pogProc = new VdmToolsPoProcessor();
 		pogProc.readPos(fin);
 
 		assertEquals(5, pogProc.poLines.size());
@@ -116,7 +116,7 @@ public class VdmToolsPogProcessorTest extends TestCase {
 	}
 
 	public void testInitBuffers() {
-		VdmToolsPogProcessor pogProc = new VdmToolsPogProcessor();
+		VdmToolsPoProcessor pogProc = new VdmToolsPoProcessor();
 		pogProc.lineBuffer = THIS_IS_A_TEST;
 		pogProc.poBuffer.add(THIS_IS_A_TEST);
 
@@ -127,7 +127,7 @@ public class VdmToolsPogProcessorTest extends TestCase {
 	}
 
 	public void testHandleLineSomeLine() {
-		VdmToolsPogProcessor pogProc = new VdmToolsPogProcessor();
+		VdmToolsPoProcessor pogProc = new VdmToolsPoProcessor();
 		pogProc.lineBuffer = THIS_IS_A_TEST;
 		pogProc.handleLine();
 
@@ -136,7 +136,7 @@ public class VdmToolsPogProcessorTest extends TestCase {
 	}
 
 	public void testHandleLineNoLine() {
-		VdmToolsPogProcessor pogProc = new VdmToolsPogProcessor();
+		VdmToolsPoProcessor pogProc = new VdmToolsPoProcessor();
 		pogProc.handleLine();
 
 		assertEquals(0, pogProc.poBuffer.size());

@@ -2,9 +2,9 @@ package org.overturetool.proofsupport.external_tools.pog;
 
 import java.util.List;
 
-public interface PogProcessor {
+public interface PoProcessor {
 
-	public List<String[]> extractPosFromFile(String pogFileName) throws PogProcessorException;
+	public List<String[]> extractPosFromFile(String pogFileName) throws PoProcessorException;
 	
 	public String extractPoExpression(String[] poText);
 	

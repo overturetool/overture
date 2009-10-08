@@ -6,13 +6,13 @@ import java.util.List;
 import org.overturetool.proofsupport.external_tools.hol.HolInterpreter;
 import org.overturetool.proofsupport.external_tools.hol.HolInterpreterException;
 import org.overturetool.proofsupport.external_tools.hol.HolInterpreterFactory;
-import org.overturetool.proofsupport.external_tools.pog.PogGenerator;
-import org.overturetool.proofsupport.external_tools.pog.PogProcessor;
+import org.overturetool.proofsupport.external_tools.pog.PoGenerator;
+import org.overturetool.proofsupport.external_tools.pog.PoProcessor;
 
 public class AutomaticProofSystemBatch extends AutomaticProofSystem {
 
 	public AutomaticProofSystemBatch(String mosmlDir, String holDir,
-			PogGenerator pogGen, PogProcessor pogProc)
+			PoGenerator pogGen, PoProcessor pogProc)
 			throws AutomaicProofSystemException {
 		super(mosmlDir, holDir, pogGen, pogProc);
 	}

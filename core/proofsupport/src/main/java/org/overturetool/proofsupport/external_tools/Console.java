@@ -1,8 +1,6 @@
 package org.overturetool.proofsupport.external_tools;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -204,7 +202,7 @@ public class Console {
 			throws IOException {
 		StringBuffer sb = new StringBuffer();
 //		String line = "";
-		while (reader.ready()) {
+		while (reader.isReady()) {
 			sb.append(reader.readLine()).append(Utilities.LINE_SEPARATOR);
 		}
 		// remove the last LINE_SEPARATOR

@@ -13,5 +13,5 @@ public interface ConsoleReader {
 	
 	public void setInputStream(InputStream is);
 	
-	public boolean ready() throws IOException;
+	public boolean isReady() throws IOException;
 }

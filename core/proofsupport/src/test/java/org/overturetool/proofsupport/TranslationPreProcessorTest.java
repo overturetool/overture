@@ -9,8 +9,8 @@ import junit.framework.TestCase;
 
 import org.overturetool.ast.itf.IOmlDocument;
 import org.overturetool.ast.itf.IOmlExpression;
-import org.overturetool.proofsupport.external_tools.pog.PogGeneratorException;
-import org.overturetool.proofsupport.external_tools.pog.VdmToolsPogProcessor;
+import org.overturetool.proofsupport.external_tools.pog.PoGeneratorException;
+import org.overturetool.proofsupport.external_tools.pog.VdmToolsPoProcessor;
 import org.overturetool.proofsupport.external_tools.pog.VdmToolsWrapper;
 import org.overturetool.proofsupport.test.TestSettings;
 
@@ -44,7 +44,7 @@ public class TranslationPreProcessorTest extends TestCase {
 
 	public void testPrepareVdmFiles() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPogProcessor());
+				VPPDE_BIN), new VdmToolsPoProcessor());
 		String modelFile = testModel2;
 		int expectedPoSize = 5;
 		int expectedContextSize = 1;
@@ -59,7 +59,7 @@ public class TranslationPreProcessorTest extends TestCase {
 
 	public void testPrepareVdmFilesNoContext() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPogProcessor());
+				VPPDE_BIN), new VdmToolsPoProcessor());
 		String modelFile = stackModel;
 		int expectedPoSize = 2;
 		int expectedContextSize = 0;
@@ -73,35 +73,35 @@ public class TranslationPreProcessorTest extends TestCase {
 	
 	public void testPrepareVdmFilesEmptyModel() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPogProcessor());
+				VPPDE_BIN), new VdmToolsPoProcessor());
 		String modelFile = emptyModel;
 		List<String> contextFiles = new ArrayList<String>(0);
 
 		try {
 			prep.prepareVdmFiles(modelFile, contextFiles);
 			fail("The model was empty and method should have thrown an exception.");
-		} catch(PogGeneratorException e) {
+		} catch(PoGeneratorException e) {
 			
 		}
 	}
 	
 	public void testPrepareVdmFilesCantParse() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPogProcessor());
+				VPPDE_BIN), new VdmToolsPoProcessor());
 		String modelFile = parseError;
 		List<String> contextFiles = new ArrayList<String>(0);
 
 		try {
 			prep.prepareVdmFiles(modelFile, contextFiles);
 			fail("The model doesn't parse and method should have thrown an exception.");
-		} catch(PogGeneratorException e) {
+		} catch(PoGeneratorException e) {
 			
 		}
 	}
 	
 	public void testPrepareVdmFilesNullFile() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPogProcessor());
+				VPPDE_BIN), new VdmToolsPoProcessor());
 		String modelFile = null;
 		List<String> contextFiles = new ArrayList<String>(0);
 
@@ -115,7 +115,7 @@ public class TranslationPreProcessorTest extends TestCase {
 
 	public void testGenerateOmlAst() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPogProcessor());
+				VPPDE_BIN), new VdmToolsPoProcessor());
 		String modelFile = testModel2;
 		int expectedPoSize = 5;
 		int expectedContextSize = 1;
@@ -131,7 +131,7 @@ public class TranslationPreProcessorTest extends TestCase {
 
 	public void testGenerateOmlAstNoContext() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPogProcessor());
+				VPPDE_BIN), new VdmToolsPoProcessor());
 		String modelFile = stackModel;
 		int expectedPoSize = 2;
 		int expectedContextSize = 0;
@@ -146,7 +146,7 @@ public class TranslationPreProcessorTest extends TestCase {
 
 	public void testParseContext() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPogProcessor());
+				VPPDE_BIN), new VdmToolsPoProcessor());
 		List<String> contextFiles = new ArrayList<String>(1);
 		contextFiles.add(testModel1);
 		contextFiles.add(testModel2);
@@ -162,7 +162,7 @@ public class TranslationPreProcessorTest extends TestCase {
 
 	public void testProcessPogFile() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPogProcessor());
+				VPPDE_BIN), new VdmToolsPoProcessor());
 
 		List<String> actual = prep.processPogFile(testPogFileNoNewLine);
 
@@ -178,7 +178,7 @@ public class TranslationPreProcessorTest extends TestCase {
 		List<String> contextFiles = new ArrayList<String>(1);
 		contextFiles.add(testModel1);
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPogProcessor());
+				VPPDE_BIN), new VdmToolsPoProcessor());
 
 		String actual = prep.generatePogFile(modelFile, contextFiles);
 		String expected = testModel2 + ".pog";
@@ -192,7 +192,7 @@ public class TranslationPreProcessorTest extends TestCase {
 		String modelFile = stackModel;
 		List<String> contextFiles = new ArrayList<String>(0);
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPogProcessor());
+				VPPDE_BIN), new VdmToolsPoProcessor());
 
 		String actual = prep.generatePogFile(modelFile, contextFiles);
 		String expected = modelFile + ".pog";
