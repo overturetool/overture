@@ -17,10 +17,11 @@
 
 \maketitle
 \begin{abstract}
-The paper reports on the implementation of the Overture Automatic Proof System as a tool-chain of components each borrowing a specific functionalities, enabling the system to discharge VDM proof obligations.
+The paper reports on the implementation of the Overture Automatic Proof System as a tool-chain of components.
+Each component borrows specific functionalities to the tool-chain, enabling the system to discharge VDM proof obligations.
 
-In previous research work Sander Verm\"olen has produced a VDM to HOL translator formal prototype together with HOL tactics that allow VDM proof obligations to be discharged in the theorem prover HOL.
-Verm\"olen's VDM++ prototype is complete enough to discharge proof obligations arising from functional VDM++ models.
+In previous research work, Sander Verm\"olen has produced a formal model of a VDM to HOL translator prototype, together with HOL tactics that allow VDM proof obligations to be automatically discharged in the theorem prover HOL.
+Verm\"olen's prototype is complete enough to discharge proof obligations arising from functional VDM++ models.
 However the prototype's performance is very limited as it can only be executed within a VDM++ interpreter.
 Through the VDM++ to Java code generator tool, provided by the VDMTools, the prototype was implemented in Java allowing for its integration in the Overture Automatic Proof System.
 
@@ -31,31 +32,49 @@ The current paper reports on the challenges and achievements of the Automatic Pr
 \section{Introduction}
 \label{sec:introduction}
 
-The Overture initiative is a platform that enables researchers, students and practitioners to experiment with software modelling languages and tools~\cite{LarsenBFL08}\fixme[margin]{Update this bib entry because there are now more authors\ldots}.
+The Overture initiative is a platform that enables researchers, students and practitioners to experiment with software modelling languages and tools~\cite{LarsenBFL08}.
 Although the initiative has mainly focused in VDM, due to its open source nature everyone is welcome to contribute with tools and extensions to other languages.
 Through Overture, extensions to the different VDM dialects and supporting tools have been proposed, analysed, tested and finally transferred to industrial settings, namely to the VDMTools~\cite{DBLP:journals/sigplan/FitzgeraldLS08}.
 The tools that connects VDM to UML~\cite{Lausdahl08,Lausdahl09} is an example of such a transfer of knowledge to industry.
 However, Overture's contribution has gone further than that, as new tools have been developed that supersede the functionality provided by the VDMTools.
 
 One of the tools that adds to the capabilities of the VDMTools is the Automatic Proof Support (APS), which is able to discharge proof obligations (POs) arising from functional VDM models, using the theorem prover HOL~\cite{DBLP:conf/tphol/Gordon91}.
-Due to VDM's formal semantics it is possible to analyse a VDM model and pinpoint the locations where inconsistencies might occur (Figure~\ref{fig:pog}).
+Due to VDM's formal semantics it is possible to analyse a VDM model and pinpoint the locations where inconsistencies might occur.
 Such inconsistencies can arise from invariant violations, miss usage of partial functions and mappings, etc.
 Furthermore, besides pinpointing possible inconsistencies, it is also possible to generate verification conditions that if proven to be true assure the model's consistency.
 In a VDM context, these verification conditions are deemed POs.
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=\textwidth]{images/pic_pog.pdf}
-    \caption[VDM PO generation]{Generation of proof obligations from a VDM model.}
-    \label{fig:pog}
+    \includegraphics[width=.6\textwidth]{images/vermolen_contribution.pdf}
+    \caption[Verm\"olen's contribution]{Deliverables from Sander Verm\"olen's MSc project.}
+    \label{fig:aps_class}
   \end{center}
 \end{figure}
 
-The APS was designed by Sander Verm\"olen during his MSc project~\cite{SanderThesis}\fixme[margin]{Search for Sander's thesis reference at home.}.
-As deliverables from the project, Verm\"olen produced a VDM++ formal model of a tool that translates VDM to HOL syntax (the Overture VDM-to-HOL Translator); plus a set of lemmas, which he identified as useful in a VDM context, together with a set of tactics to automate the proofs.
+The APS was designed by Sander Verm\"olen during his MSc project~\cite{Vermolen07}.
+The deliverables from Verm\"olen project, as depicted in Figure~\ref{fig:sander_deliverables}, are:
+\begin{itemize}
+  \item a VDM++ formal model of a prototype tool that translates VDM to HOL syntax (the Overture VDM-to-HOL Translator);
+  \item a Java implementation of the prototype that was automatically generated using the VDMTools;
+  \item a set of lemmas which he identified as useful in a VDM context;
+  \item and a set of HOL tactics to automate the proofs.
+\end{itemize}
 
-The contribution described in this paper focused on the development of the core of the APS and fringe interfaces for external components, allowing for a loose coupling between the core and the other components.
+The contribution described in this paper focused on the development of the core of the APS , and its the integration of several external components.
+The external components are integrated through Java interfaces, allowing for a loose coupling between them and the APS core.
 Furthermore, the external components were wrapped in utility classes that handle their intrinsic specificities, and plugged to the APS by implementing the appropriate interfaces.
+Figure~\ref{fig:aps_contrib} depicts an abstraction of the APS tool-chain, from which the core, wrapper and utility classes, and their integration are the main contributions from this paper.
+Note that the external components inside the wrappers were previously available.
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=.6\textwidth]{images/tool_chain.pdf}
+    \caption[APS tool-chain]{The Automated Proof System tool-chain.}
+    \label{fig:aps_contrib}
+  \end{center}
+\end{figure}
+
 
 In the next section Verm\"olen's architecture for APS is described together with the discussion of the difficulties to implement it, and possible solutions.
 Section~\ref{sec:implementation} covers the actual implementation issues both at architectural and implementation level.
@@ -99,7 +118,7 @@ Each of these high level components can be decomposed in sub components, which m
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=\textwidth]{images/pic_arch.pdf}
+    \includegraphics[width=.6\textwidth]{images/pic_arch.pdf}
     \caption[APS workflow]{Automatic Proof System workflow as designed by Sander Verm\"olen.}
     \label{fig:sander_arch}
   \end{center}
@@ -107,7 +126,7 @@ Each of these high level components can be decomposed in sub components, which m
 
 \begin{figure}
   \begin{center}
-  \includegraphics[height=.5\textheight]{images/pic_preparation.pdf}
+  \includegraphics[height=.4\textheight]{images/pic_preparation.pdf}
   \caption[Preparation workflow]{Preparation step workflow as designed by Sander Verm\"olen.}
   \label{fig:arch_preparation}
   \end{center}
@@ -115,7 +134,7 @@ Each of these high level components can be decomposed in sub components, which m
 
 \begin{figure}
   \begin{center}
-  \includegraphics[width=\textwidth]{images/pic_translation.pdf}
+  \includegraphics[width=.6\textwidth]{images/pic_translation.pdf}
   \caption[Translation workflow]{Translation step workflow as designed by Sander Verm\"olen.}
   \label{fig:arch_translation}
   \end{center}
@@ -123,7 +142,7 @@ Each of these high level components can be decomposed in sub components, which m
 
 \begin{figure}
   \begin{center}
-  \includegraphics[width=\textwidth]{images/pic_proof.pdf}
+  \includegraphics[width=.6\textwidth]{images/pic_proof.pdf}
   \caption[Proof workflow]{Proof step workflow as designed by Sander Verm\"olen.}
   \label{fig:arch_proof}
   \end{center}
@@ -147,7 +166,7 @@ In this arrangement the system uses the Overture Parser to generate OML AST repr
 % The HOL code generation and tactics selection is done by the translator tool
 The second adjustment is related with the proof step, more specifically with the HOL concrete syntax generation and tactics selection.
 Both of these activities are performed by the translation tool, and therefore they are performed in the translation step instead of the proof step.
-However, from the experience gathered from using the APS in some case studies~\cite{FerreiraSO2008,Ferreira2009,SBMF09paper}\fixme[margin]{Add bib entry for SBMF09 paper.}, the tactics selection as done by the translation tool is suboptimal as the same tactic gets chosen for each and every type of PO.
+However, from the experience gathered from using the APS in some case studies~\cite{FerreiraSO2008,Ferreira2009,FerreiraSBMF09}, the tactics selection as done by the translation tool is suboptimal as the same tactic gets chosen for each and every type of PO.
 This issue was not yet addressed in the APS and is left as future work (see Section~\ref{sec:future_work}).
 
 \section{Implementation}
@@ -157,7 +176,7 @@ The APS is a component of the Overture Tool, and therefore must abide by the dev
 The Overture Tool is a formal modelling and verification tool suite that is modular, and integrates in the Eclipse platform through several plugins.
 The main implementation language is Java and the APS is no exception to that.
 
-Figure~\ref{fig:aps_class} clearly shows that the APS is mainly a tool-chain of components that contribute to the system's goal.
+Figure~\ref{fig:aps_contrib} clearly shows that the APS is mainly a tool-chain of components that contribute to the system's goal.
 All the computations that are in fact implemented in the APS are either to promote interoperation of the components, or to increase usability.
 
 %Integration of components \ldots
@@ -204,7 +223,7 @@ So if the APS was able to detect a failing, or non terminating, proof and tried 
 
 \begin{figure}[p]
 %  \begin{center}
-    \includegraphics[width=1.2\textwidth]{images/aps_class_diagram.pdf}
+    \includegraphics[width=\textwidth]{images/aps_class_diagram.pdf}
     \caption[APS class diagram]{Automatic Proof System class diagram.}
     \label{fig:aps_class}
 %  \end{center}
@@ -294,7 +313,7 @@ Given the current multi-core trend in computer hardware, the APS could take adva
 Although the translation of VDM syntax in HOL syntax is the responsibility of other Overture component, this is crucial for the usability of the APS.
 At the moment the APS, even if was already integrated in the Overture Tool through Eclipse, wouldn't bring so much value to VDM modellers because of the quite small subset of the language supported by the translator.
 
-There are also problems in the translation that were already identified by Verm\"olen in his thesis~\cite[OpenIssues]{SandersThesis}\fixme[margin]{Add reference to Sander's thesis open issues, or to the website.} but remain unresolved.
+There are also problems in the translation that were already identified by Verm\"olen in his thesis~\cite[Section 7.3]{Vermolen07} but remain unresolved.
 Some of these issues result in syntax errors in the produced HOL code.
 
 \section{Conclusion}
