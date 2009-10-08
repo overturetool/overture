@@ -25,7 +25,8 @@ Require-Bundle: org.eclipse.dltk.ui;bundle-version="1.0.0",
  org.overture.ide.vdmpp.core;bundle-version="1.0.0",
  org.overture.ide.debug.launching;bundle-version="1.0.0",
  org.overture.ide.vdmpp.debug;bundle-version="1.0.0",
- org.eclipse.jface.text;bundle-version="3.5.0"
+ org.eclipse.jface.text;bundle-version="3.5.0",
+ org.overture.ide.debug.core;bundle-version="1.0.0"
 Import-Package: org.eclipse.jdt.core,
  org.eclipse.jdt.launching,
  org.overture.ide.ast,

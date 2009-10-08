@@ -3,17 +3,13 @@ package org.overture.ide.ast.dltk;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.Argument;
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
-import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.references.SimpleReference;
-import org.overture.ide.util.VDMJUtil;
 import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ValueDefinition;
 import org.overturetool.vdmj.expressions.ApplyExpression;
@@ -30,7 +26,6 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.modules.Module;
-import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.types.FunctionType;
 import org.overturetool.vdmj.types.MapType;
 import org.overturetool.vdmj.types.SeqType;
@@ -195,10 +190,9 @@ public class DltkAstConverter {
 
 			}
 
-			Type definition = functionType.result;
+//			Type definition = functionType.result;
 
-			SimpleReference resultName = new SimpleReference(0, 0, definition
-					.toString());
+//			SimpleReference resultName = new SimpleReference(0, 0, definition.toString());
 
 			if (def instanceof ExplicitFunctionDefinition){        	
 	        	ExplicitFunctionDefinition exFunc = (ExplicitFunctionDefinition) def;
@@ -230,8 +224,8 @@ public class DltkAstConverter {
 		
 		if(expression instanceof ApplyExpression)
 		{
-			ApplyExpression appExpr = (ApplyExpression) expression;
-			CallExpression exp = VDMJUtil.createCallExpression(appExpr, converter);
+//			ApplyExpression appExpr = (ApplyExpression) expression;
+			//CallExpression exp = VDMJUtil.createCallExpression(appExpr, converter);
 		}
 		
 		if(expression instanceof BinaryExpression)

@@ -1,88 +1,82 @@
 package org.overture.ide.vdmsl.parsers.core;
 
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.ast.PositionInformation;
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
-import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
 import org.eclipse.dltk.compiler.ISourceElementRequestor.FieldInfo;
 
 public class OvertureSourceElementRequestor extends SourceElementRequestVisitor {
-	private static class TypeField {
-		private String fName;
-
-		private String fInitValue;
-
-		private PositionInformation fPos;
-
-		private Expression fExpression;
-
-		private ASTNode fToNode;
-
-		private ASTNode declaredIn; // The node where the declaration was found
-									// (should be either class or method node)
-		TypeField(String name, String initValue, PositionInformation pos,
-				Expression expression, ASTNode toNode, ASTNode declaredIn) {
-
-			this.fName = name;
-			this.fInitValue = initValue;
-			this.fPos = pos;
-			this.fExpression = expression;
-			this.fToNode = toNode;
-			this.declaredIn = declaredIn;
-		}
-
-		String getName() {
-
-			return this.fName;
-		}
-
-		String getInitValue() {
-
-			return this.fInitValue;
-		}
-
-		PositionInformation getPos() {
-
-			return this.fPos;
-		}
-
-		Expression getExpression() {
-
-			return this.fExpression;
-		}
-
-		ASTNode getToNode() {
-
-			return this.fToNode;
-		}
-
-		public boolean equals(Object obj) {
-
-			if (obj instanceof TypeField) {
-				TypeField second = (TypeField) obj;
-				return second.fName.equals(this.fName)
-						&& second.fToNode.equals(this.fToNode);
-			}
-			return super.equals(obj);
-		}
-
-		public String toString() {
-
-			return this.fName;
-		}
-
-		public ASTNode getDeclaredIn() {
-			return declaredIn;
-		}
-
-	}
+//	private static class TypeField {
+//		private String fName;
+//
+//		private String fInitValue;
+//
+//		private PositionInformation fPos;
+//
+//		private Expression fExpression;
+//
+//		private ASTNode fToNode;
+//
+//		private ASTNode declaredIn; // The node where the declaration was found
+//									// (should be either class or method node)
+////		TypeField(String name, String initValue, PositionInformation pos,
+////				Expression expression, ASTNode toNode, ASTNode declaredIn) {
+////
+////			this.fName = name;
+////			this.fInitValue = initValue;
+////			this.fPos = pos;
+////			this.fExpression = expression;
+////			this.fToNode = toNode;
+////			this.declaredIn = declaredIn;
+////		}
+//
+////		String getName() {
+////
+////			return this.fName;
+////		}
+////
+////		String getInitValue() {
+////
+////			return this.fInitValue;
+////		}
+////
+////		PositionInformation getPos() {
+////
+////			return this.fPos;
+////		}
+////
+////		Expression getExpression() {
+////
+////			return this.fExpression;
+////		}
+//
+////		ASTNode getToNode() {
+////
+////			return this.fToNode;
+////		}
+//
+//		public boolean equals(Object obj) {
+//
+//			if (obj instanceof TypeField) {
+//				TypeField second = (TypeField) obj;
+//				return second.fName.equals(this.fName)
+//						&& second.fToNode.equals(this.fToNode);
+//			}
+//			return super.equals(obj);
+//		}
+//
+//		public String toString() {
+//
+//			return this.fName;
+//		}
+//
+//		public ASTNode getDeclaredIn() {
+//			return declaredIn;
+//		}
+//
+//	}
 
 //	private static String ANONYMOUS_LAMBDA_FORM_MARKER = "<anonymous>";
 //	// Used to prehold fields if adding in methods.
@@ -93,7 +87,7 @@ public class OvertureSourceElementRequestor extends SourceElementRequestVisitor 
 	/**
 	 * Used to depermine duplicate names.
 	 */
-	private Map fTypeVariables = new HashMap();
+//	private Map fTypeVariables = new HashMap();
 
 	public OvertureSourceElementRequestor(ISourceElementRequestor requestor) {
 		super(requestor);

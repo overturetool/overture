@@ -116,6 +116,14 @@ public class AstManager implements IAstManager
 		else
 			return null;
 	}
+	
+	public RootNode getRootNode(IProject project, String nature){
+		Map<String, RootNode> natureAst = asts.get(project);
+		if (natureAst != null && natureAst.containsKey(nature)){
+			return natureAst.get(nature);
+		}
+		return null;
+	}
 
 	public void setAstAsTypeChecked(IProject project, String nature)
 	{

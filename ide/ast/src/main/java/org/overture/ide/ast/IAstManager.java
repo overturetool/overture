@@ -59,7 +59,15 @@ public interface IAstManager
 	 * @return The existing AST for the current project + nature
 	 */
 	Object getAstList(IProject project, String nature);
-	
+
+	/**
+	 * Get the RootNode from a project and the corresponding nature
+	 * @param project The project to select
+	 * @param nature The nature if filter the AST
+	 * @return The rootnode for the current project + nature
+	 */
+	RootNode getRootNode(IProject project, String nature);
 	
 	void setAstAsTypeChecked(IProject project, String nature);
+	
 }

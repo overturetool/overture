@@ -13,9 +13,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.core.Launch;
-import org.eclipse.debug.core.model.IDebugTarget;
-import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.launching.AbstractInterpreterRunner;
 import org.eclipse.dltk.launching.AbstractScriptLaunchConfigurationDelegate;
@@ -30,6 +27,7 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.overture.ide.ast.AstManager;
 import org.overture.ide.ast.IAstManager;
+import org.overture.ide.ast.RootNode;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
 import org.overture.ide.vdmpp.debug.VDMPPDebugConstants;
 import org.overture.ide.vdmpp.debug.launching.ClasspathUtils;
@@ -172,10 +170,16 @@ public class VDMPPVDMJInterpreterRunner extends AbstractInterpreterRunner {
 							//System.out.println("running");
 							try {
 								IAstManager astManager = AstManager.instance();
-								ClassList classList = (ClassList) astManager.getAstList(proj.getProject(), VdmPpProjectNature.VDM_PP_NATURE);
-								ClassInterpreter classInterpreter = new ClassInterpreter(classList);
-								DBGPReader reader = new DBGPReader(host, Integer.parseInt(port), sessionId, (Interpreter)classInterpreter, expression);
-								reader.run(true);
+								RootNode rootNode = astManager.getRootNode(proj.getProject(), VdmPpProjectNature.VDM_PP_NATURE);
+								if (rootNode.isChecked()){							
+									ClassList classList = (ClassList) astManager.getAstList(proj.getProject(), VdmPpProjectNature.VDM_PP_NATURE);
+									ClassInterpreter classInterpreter = new ClassInterpreter(classList);
+									new DBGPReader(host, Integer.parseInt(port), sessionId, (Interpreter)classInterpreter, expression).run(true);
+								}
+								else
+								{
+									throw new CoreException(new Status(IStatus.ERROR, "", "The project is not type checked"));
+								}
 							} catch (Exception e) {
 								System.out.println(e.getMessage());
 							}
