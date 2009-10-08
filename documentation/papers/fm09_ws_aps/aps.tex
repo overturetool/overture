@@ -34,7 +34,7 @@ The current paper reports on the challenges and achievements of the Automatic Pr
 The Overture initiative is a platform that enables researchers, students and practitioners to experiment with software modelling languages and tools~\cite{LarsenBFL08}\fixme[margin]{Update this bib entry because there are now more authors\ldots}.
 Although the initiative has mainly focused in VDM, due to its open source nature everyone is welcome to contribute with tools and extensions to other languages.
 Through Overture, extensions to the different VDM dialects and supporting tools have been proposed, analysed, tested and finally transferred to industrial settings, namely to the VDMTools~\cite{DBLP:journals/sigplan/FitzgeraldLS08}.
-The tools that connects VDM to UML~\cite{Lausdahl08,Lausdahl09} is a good example of such a transfer of knowledge to industry.
+The tools that connects VDM to UML~\cite{Lausdahl08,Lausdahl09} is an example of such a transfer of knowledge to industry.
 However, Overture's contribution has gone further than that, as new tools have been developed that supersede the functionality provided by the VDMTools.
 
 One of the tools that adds to the capabilities of the VDMTools is the Automatic Proof Support (APS), which is able to discharge proof obligations (POs) arising from functional VDM models, using the theorem prover HOL~\cite{DBLP:conf/tphol/Gordon91}.
@@ -54,7 +54,8 @@ In a VDM context, these verification conditions are deemed POs.
 The APS was designed by Sander Verm\"olen during his MSc project~\cite{SanderThesis}\fixme[margin]{Search for Sander's thesis reference at home.}.
 As deliverables from the project, Verm\"olen produced a VDM++ formal model of a tool that translates VDM to HOL syntax (the Overture VDM-to-HOL Translator); plus a set of lemmas, which he identified as useful in a VDM context, together with a set of tactics to automate the proofs.
 
-The implementation described in this paper follows Verm\"olen's design as truly as possible, but also adds to it whenever found necessary.
+The contribution described in this paper focused on the development of the core of the APS and fringe interfaces for external components, allowing for a loose coupling between the core and the other components.
+Furthermore, the external components were wrapped in utility classes that handle their intrinsic specificities, and plugged to the APS by implementing the appropriate interfaces.
 
 In the next section Verm\"olen's architecture for APS is described together with the discussion of the difficulties to implement it, and possible solutions.
 Section~\ref{sec:implementation} covers the actual implementation issues both at architectural and implementation level.
