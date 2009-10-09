@@ -1,4 +1,4 @@
-package org.overture.ide.plugins.umltrans.actions;
+package org.overture.ide.plugins.idedebughelper.actions;
 
 import java.util.ArrayList;
 import java.util.List;

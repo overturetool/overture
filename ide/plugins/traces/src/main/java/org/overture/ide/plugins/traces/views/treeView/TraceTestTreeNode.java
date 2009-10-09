@@ -69,6 +69,7 @@ public class TraceTestTreeNode implements IAdaptable ,ITreeNode{
 		this.parent = parent;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
 		return null;
 	}

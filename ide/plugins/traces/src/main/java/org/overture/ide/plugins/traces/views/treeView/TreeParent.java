@@ -22,6 +22,7 @@ public class TreeParent implements IAdaptable,ITreeNode {
 		return name;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
 		return null;
 	}

@@ -13,11 +13,12 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
-
+@SuppressWarnings("unchecked")
 public class SelectTimeDialog extends TitleAreaDialog
 {
 
-    public SelectTimeDialog(Shell parentShell, Vector pTimes)
+   
+	public SelectTimeDialog(Shell parentShell, Vector pTimes)
     {
         super(parentShell);
         currentTime = 0L;

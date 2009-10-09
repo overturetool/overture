@@ -19,6 +19,7 @@
     <module>umltrans</module>
     <module>showtrace</module>
     <module>traces</module>
+    <module>idedebughelper</module>
 
   </modules>
 </project>
