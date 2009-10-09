@@ -18,6 +18,7 @@
     <!-- Put all child Eclipse Plugin projects(modules) here -->
     <module>umltrans</module>
     <module>showtrace</module>
+    <module>traces</module>
 
   </modules>
 </project>
