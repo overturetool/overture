@@ -19,5 +19,13 @@
            id="org.overture.ide.ui.VdmDefaultPerspective"
            name="%VdmDefaultPerspectiveName"/>
  	  </extension>
-
+  
+  <!-- preferences -->
+  <extension point="org.eclipse.ui.preferencePages">
+     <page
+           class="org.overture.ide.ui.preferences.OvertureGlobalPreferencesPage"
+           id="org.overture.ide.ui.OvertureGlobalPreferencesPage"
+           name="Overture">
+     </page>
+  </extension>
 </plugin>

@@ -111,7 +111,7 @@ public class VdmWordRule implements IRule {
                 scanner.unread();
 
                 String str = fBuffer.toString();
-                IToken token= (IToken) fWords.get(str);
+                IToken token= fWords.get(str);
                 if (token != null){
 //                    lastFound = str;
                     return token;
