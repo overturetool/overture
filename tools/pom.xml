@@ -13,7 +13,7 @@
   <packaging>pom</packaging>
   <version>1.0.0</version>
   <name>Overture Maven tool plugins</name>
-  <url>http://www.overturetool.org</url>
+
 
 
   <modules>

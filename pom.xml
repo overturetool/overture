@@ -5,8 +5,8 @@
   <artifactId>root</artifactId>
   <packaging>pom</packaging>
   <version>1.0.0</version>
-  <name>Super POM for OvertureTool</name>
-  <url>http://www.overturetool.org</url>
+  <name>OvertureTool</name>
+ 
   <modules>
     <module>core</module>
     <module>tools</module>
@@ -79,6 +79,9 @@
     <url>http://sourceforge.net/tracker/?group_id=141350</url>
   </issueManagement>
 
-
+<organization>
+  <name>Overture</name> 
+  <url>http://www.overturetool.org</url> 
+  </organization>
 
 </project>

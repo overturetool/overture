@@ -10,7 +10,7 @@
   <artifactId>org.overture.ide.debug.launching</artifactId>
   <name>org.overture.ide.debug.launching</name>
   <version>1.0.0</version>
-  <url>http://overture.org</url>
+ 
   <packaging>source-plugin</packaging>
 
 

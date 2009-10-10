@@ -10,8 +10,8 @@
   <artifactId>core</artifactId>
   <packaging>pom</packaging>
   <version>1.0.0</version>
-  <name>Top-level POM for OvertureTool</name>
-  <url>http://www.overturetool.org</url>
+  <name>Core Tools</name>
+  
   <modules>
     <!--<module>jmltrans</module>-->
     <module>proofsupport</module>

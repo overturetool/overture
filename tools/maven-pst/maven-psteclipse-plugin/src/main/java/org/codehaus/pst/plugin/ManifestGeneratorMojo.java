@@ -69,6 +69,8 @@ public class ManifestGeneratorMojo extends AbstractEclipseMojo implements Manife
      * @optional
      */
     private ArrayList buddies;
+    
+
 
     /**
      * Constructs a new <code>ManifestGeneratorMojo</code> instance.
@@ -130,7 +132,19 @@ public class ManifestGeneratorMojo extends AbstractEclipseMojo implements Manife
      * @see org.codehaus.pst.plugin.AbstractEclipseMojo#doExecute()
      */
     protected void doExecute() throws MojoExecutionException, MojoFailureException {
-        ManifestGenerator generator = new ManifestGenerator(getLog(), baseDirectory, project, buddies, baseDirectory);
+      
+//    	if(doNotExportPackagePrefixes!=null)
+//    	{
+//    		getLog().info("Exclude packages");
+//    		java.util.Iterator itr = doNotExportPackagePrefixes.iterator();
+//    		while(itr.hasNext())
+//    		{
+//    		Object s = itr.next();
+//    		getLog().info(s.toString());
+//    		}
+//    	}
+    	
+    	ManifestGenerator generator = new ManifestGenerator(getLog(), baseDirectory, project, buddies, baseDirectory,doNotExportPackagePrefixes);
         generator.execute();
     }
 }

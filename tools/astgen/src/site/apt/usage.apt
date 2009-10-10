@@ -1,0 +1,55 @@
+Introduction
+
+ This plug-in for Maven provides an easy integration with astGen into in the maven build cycle. AstGen is a tool which can compile a VDM-SL type specification done as a tree into a VDM and Java tree structure which can be used for tool building.
+   
+ 
+
+Usage
+
+ The goals of the plugin is described below.
+ 
+*----------+------------------------------+
+| gen    | Generates the VDM-SL type specification into VDM-PP classes |
+*----------+------------------------------+
+  
+* Commands
+
+ Execute the goal like shown below for gen check: 
+ 
++-------------------------------+
+mvn gen
++-------------------------------+
+
+* Enable the plugin in the POM file
+
++-------------------------------+
+<build>
+  <plugins>
+       <plugin>
+      <groupId>org.overturetool.tools</groupId>
+      <artifactId>astgen</artifactId>
+      <configuration>
+        <prefix>Uml</prefix>
+        <packageName>org.overturetool.umltrans.uml</packageName>
+        <top>
+          <param>Model</param>
+        </top>
+      </configuration>
+    </plugin>
+  </plugins>
+</build>
++-------------------------------+
+
+* Configuration
+ 
+ The plugin include some configuration options which are needed to make the source compile directly after code generation.
+ 
+*----------+------------------------------+
+| prefix    | This element is used to inducate the prefix used in all AST classes |
+*----------+------------------------------+
+| packageName     | This element is used to inducate the package name of the AST classes |
+*----------+------------------------------+
+| top  | This element is used to inducate the top of the thee |
+*----------+------------------------------+
+
+

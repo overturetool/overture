@@ -10,7 +10,7 @@
   <artifactId>org.overture.ide.vdmpp.core</artifactId>
   <name>org.overture.ide.vdmpp.core</name>
   <version>1.0.0</version>
-  <url>http://overture.org</url>
+ 
   <packaging>source-plugin</packaging>
 
 

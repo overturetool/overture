@@ -11,7 +11,7 @@
 	<artifactId>potrans</artifactId>
 	<name>The Proof Obligation Translator</name>
 	<version>1.0.0</version>
-	<url>http://www.overturetool.org</url>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.overturetool</groupId>

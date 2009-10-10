@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -52,6 +53,13 @@ public abstract class AbstractEclipseMojo extends AbstractMojo {
     public AbstractEclipseMojo() {
         super();
     }
+    
+    /**
+     * The packages that should not be exported in the manifest.
+     * @parameter
+     * @optional
+     */
+    protected List doNotExportPackagePrefixes;
 
     /*
      * (non-Javadoc)

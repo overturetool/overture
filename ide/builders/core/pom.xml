@@ -10,7 +10,7 @@
   <artifactId>org.overture.ide.builders.core</artifactId>
   <name>org.overture.ide.vdmsl.core</name>
   <version>1.0.0</version>
-  <url>http://overture.org</url>
+ 
   <packaging>source-plugin</packaging>
 
 

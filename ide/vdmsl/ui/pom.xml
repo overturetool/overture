@@ -10,7 +10,7 @@
   <artifactId>org.overture.ide.vdmsl.ui</artifactId>
   <name>org.overture.ide.vdmsl.ui</name>
   <version>1.0.0</version>
-  <url>http://overture.org</url>
+  
   <packaging>source-plugin</packaging>
 
  <reporting>

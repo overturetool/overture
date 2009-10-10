@@ -1,0 +1,102 @@
+Introduction
+
+ This plug-in for Maven provides an easy integration of maven artifacts into the Eclipse plugin structure. There exist two types of plugins which can be made.
+ 
+  * binary-plugin - which only can include jar references
+  
+  * source-plugin - which only can include source for the plugin
+  
+ 
+ The goals which can be used to pack maven artifacts into Eclipse plugins are
+ 
+   * psteclipse:eclipse-plugin
+   
+   * psteclipse:clean
+   
+* Source plugins
+ 
+ Source plugins has the maven packing set to source-plugin as shown below. It can only contain source, this means that it cannot wrap other jar files (this is what the binary-plugin is fore).
+
++-------------------------------+
+ <packaging>source-plugin</packaging>
++-------------------------------+
+
+* Binary plugins
+ 
+ Binary plugins has the maven packing set to binary-plugin as shown below. It can only contain references to jar files, this means that it cannot include any source code (this is what the source-plugin is fore).
+
++-------------------------------+
+ <packaging>binary-plugin</packaging>
++-------------------------------+ 
+
+Usage
+
+ There exist two types of goals which can be used to pack maven artifacts into Eclipse plugins.
+ 
+*----------+------------------------------+
+| psteclipse:eclipse-plugin 	| Pack a plugin based on the packing (binary-plugin/source-plugin) |
+*----------+------------------------------+
+| psteclipse:clean 	| Delete generated code       |
+*----------+------------------------------+
+  
+* Commands
+
+ Execute the goal like shown below: 
+ 
++-------------------------------+
+mvn psteclipse:eclipse-plugin
++-------------------------------+
+
+* Enable the plugin in the POM file
+
++-------------------------------+
+<build>
+  <plugins>
+    <plugin>
+      <artifactId>maven-eclipse-plugin</artifactId>
+      <configuration>
+        <projectnatures>
+          <projectnature>org.eclipse.jdt.core.javanature</projectnature>
+          <projectnature>org.eclipse.pde.PluginNature</projectnature>
+        </projectnatures>
+        <buildcommands>
+          <buildcommand>org.eclipse.jdt.core.javabuilder</buildcommand>
+          <buildcommand>org.eclipse.pde.ManifestBuilder</buildcommand>
+          <buildcommand>org.eclipse.pde.SchemaBuilder</buildcommand>
+        </buildcommands>
+        <classpathContainers>
+          <classpathContainer>org.eclipse.pde.core.requiredPlugins</classpathContainer>
+        </classpathContainers>
+      </configuration>
+    </plugin>
+    <plugin>
+      <groupId>org.overturetool.tools.maven-pst</groupId>
+      <artifactId>maven-psteclipse-plugin</artifactId>
+      <version>1.0.6</version>
+      <extensions>true</extensions>
+      <configuration>
+        <logModifications>true</logModifications>
+        <testFrameworkVersion>4.2.2</testFrameworkVersion>
+        <doNotExportPackagePrefixes>
+          <param>org.apache</param>
+          <param>org.w3c.dom</param>
+          <param>org.xml.sax</param>
+          <param>org.custommonkey</param>
+          <param>javax</param>
+          <param>net.sf.xmlunit</param>
+          <param>java</param>
+        </doNotExportPackagePrefixes>
+      </configuration>
+      <executions>
+        <execution>
+          <id>update</id>
+          <phase>process-resources</phase>
+          <goals>
+            <goal>update</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+  </plugins>
+</build>
++-------------------------------+

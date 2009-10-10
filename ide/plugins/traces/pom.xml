@@ -10,7 +10,7 @@
   <artifactId>org.overture.ide.plugins.traces</artifactId>
   <name>Combinatorial Testing</name>
   <version>1.0.0</version>
-  <url>http://overture.org</url>
+ 
   <packaging>source-plugin</packaging>
 <description>Graphical tool which provides a userinterface for the (traces) combinatorial testing plugin.</description>
 

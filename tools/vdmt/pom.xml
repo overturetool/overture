@@ -10,8 +10,8 @@
   <artifactId>vdmt</artifactId>
   <packaging>maven-plugin</packaging>
   <version>1.0.3</version>
-  <name>VDM Tools Typecheck and Java code generator plugin for Maven</name>
-  <url>http://www.overture.com</url>
+  <name>VDM Tools integration</name>
+  
   <build>
     <plugins>
       <plugin>

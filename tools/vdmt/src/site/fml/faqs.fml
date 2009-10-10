@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<faqs title="About the vdmt plugin">
+
+  <part id="about">
+    <faq>
+      <question>None.</question>
+      <answer>
+        <p>
+          ...
+        </p>
+      </answer>
+    </faq>
+
+    
+  </part>
+</faqs>

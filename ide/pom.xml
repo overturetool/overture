@@ -109,11 +109,21 @@
       <plugin>
       	<groupId>org.overturetool.tools.maven-pst</groupId>
       	<artifactId>maven-psteclipse-plugin</artifactId>
-      	<version>1.0.5</version>    	
+      	<version>1.0.6</version>    	
         <extensions>true</extensions>
         <configuration>
           <logModifications>true</logModifications>
            <testFrameworkVersion>4.2.2</testFrameworkVersion> <!-- 4.2.200.v200901090100 -->
+           <doNotExportPackagePrefixes>
+           <param>org.apache</param>
+            <param>org.w3c.dom</param>
+            <param>org.xml.sax</param>
+            <param>org.custommonkey</param>
+            <param>javax</param>
+            <param>net.sf.xmlunit</param>
+            <param>java</param>
+          
+           </doNotExportPackagePrefixes>
         </configuration>
         <executions>
         

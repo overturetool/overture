@@ -10,7 +10,7 @@ echo install
 
 TITLE Making Overture - Core
 
-echo Making overutre
+echo Making overture
 
 
 echo making core

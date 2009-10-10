@@ -173,7 +173,7 @@ public class BinaryPluginDeployerMojo extends AbstractEclipseMojo {
         if (!pluginDirectory.exists()) {
             pluginDirectory.mkdir();
         }
-        ManifestGenerator generator = new ManifestGenerator(getLog(), baseDirectory, project, buddies, pluginDirectory);
+        ManifestGenerator generator = new ManifestGenerator(getLog(), baseDirectory, project, buddies, pluginDirectory,doNotExportPackagePrefixes);
         generator.execute();
     }
 

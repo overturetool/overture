@@ -16,7 +16,7 @@
     org.overture.ide.generated.umltrans
   </name>
   <version>1.0.0</version>
-  <url>http://maven.apache.org</url>
+  
   <packaging>binary-plugin</packaging>
 
   <dependencies>
