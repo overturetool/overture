@@ -64,6 +64,38 @@
          
        
       </objectContribution>
+      
+      
+       <objectContribution
+            adaptable="true"
+            id="org.overture.ide.idedebughelper.contribution1"
+            objectClass="org.eclipse.core.resources.IProject">
+            <filter
+         name="projectNature"
+         value="org.overture.ide.vdmrt.core.nature">
+      </filter>
+         <menu
+              
+               id="org.overture.ide.idedebughelper.menuMain"
+               label="Overture IDE Debug Helper"
+               path="additions">
+            <separator
+                  name="groupIdedebughelper">
+            </separator>
+         </menu>
+         
+          <action
+               class="org.overture.ide.plugins.idedebughelper.actions.AssociateFilesWithNatureAction"
+              
+               id="org.overture.ide.idedebughelper.actions.AssociateFilesWithNatureAction"
+               label="Associate files with nature"
+               menubarPath="org.overture.ide.idedebughelper.menuMain/groupIdedebughelper"
+               enablesFor="1"
+               tooltip="Associate all files in the project with the nature">
+         </action>
+         
+       
+      </objectContribution>
    </extension>
 
 

@@ -14,5 +14,12 @@
             class="org.overture.ide.builders.vdmj.BuilderPp">
       </builder>
    </extension>
+   
+    <extension
+         point="org.overture.ide.builder">
+      <builder
+            class="org.overture.ide.builders.vdmj.BuilderRt">
+      </builder>
+   </extension>
 
 </plugin>

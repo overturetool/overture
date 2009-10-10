@@ -15,6 +15,7 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
+import org.overture.ide.vdmrt.core.VdmRtProjectNature;
 import org.overture.ide.vdmsl.core.VdmSlProjectNature;
 
 public class AssociateFilesWithNatureAction implements IObjectActionDelegate {
@@ -55,8 +56,8 @@ public class AssociateFilesWithNatureAction implements IObjectActionDelegate {
 				renameFiles(selectedProject, "vdmpp");
 			if (selectedProject.hasNature(VdmSlProjectNature.VDM_SL_NATURE))
 				renameFiles(selectedProject, "vdmsl");
-			// if(selectedProject.hasNature(""))
-			// renameFiles(selectedProject,"vdmpp");
+			 if(selectedProject.hasNature(VdmRtProjectNature.VDM_RT_NATURE))
+			 renameFiles(selectedProject,"vdmrt");
 
 		} catch (Exception ex) {
 			System.err.println(ex.getMessage() + ex.getStackTrace());

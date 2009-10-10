@@ -19,6 +19,7 @@
 
     <module>vdmsl</module>
     <module>vdmpp</module>
+    <module>vdmrt</module>
     <module>ast</module>
     <module>generated</module>
     <module>platform</module>

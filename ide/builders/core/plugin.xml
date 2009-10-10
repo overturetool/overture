@@ -20,14 +20,12 @@
    
    
    
-  <!-- <extension
-         point="org.eclipse.dltk.core.buildParticipant">
-      <buildParticipant
-            class="org.overture.ide.vdmsl.builders.core.VdmSlBuildParticipant"
-            id="org.overture.ide.vdmsl.builders.core.buildParticipant3"
-            name="org.overture.ide.vdmsl.builders.core.buildParticipant3"
-            nature="org.overture.ide.vdmsl.core.nature">
-      </buildParticipant>
-   </extension>-->
+   <extension
+         point="org.eclipse.dltk.core.builder">
+      <builder
+            class="org.overture.ide.builders.builder.BuildParticipant"
+            nature="org.overture.ide.vdmrt.core.nature">
+      </builder>
+   </extension>
 
 </plugin>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
+import org.overture.ide.vdmsl.core.VdmSlProjectNature;
 import org.overturetool.vdmj.modules.ModuleList;
 
 
@@ -23,7 +24,7 @@ public class BuilderSl extends VdmjBuilder
 	@Override
 	public String getNatureId()
 	{
-		return VdmjBuilderPluginConstants.NATURE_ID_VDMSL;
+		return VdmSlProjectNature.VDM_SL_NATURE;
 	}
 
 }

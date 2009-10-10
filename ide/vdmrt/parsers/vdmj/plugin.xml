@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+ 
+   
+   <extension
+         point="org.eclipse.dltk.core.sourceParsers">
+      <parserContribution
+            natureId="org.overture.ide.vdmrt.core.nature">
+         <parser
+               class="org.overture.ide.vdmrt.parsers.vdmj.VdmjSourceParserFactory"
+               description="VDM-RT Source Parser"
+               id="org.overture.ide.vdmrt.parsers.vdmj"
+               name="VDMJ VDM-RT Source Parser"
+               priority="0">
+         </parser>
+      </parserContribution>
+   </extension>
+  
+  
+
+</plugin>

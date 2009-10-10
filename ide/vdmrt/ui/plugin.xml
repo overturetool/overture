@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.dltk.ui.language">
+      <language
+            class="org.overture.ide.vdmrt.ui.VdmRtUILanguageToolkit"
+            nature="org.overture.ide.vdmrt.core.nature"
+            priority="0">
+      </language>
+   </extension>
+<extension point="org.eclipse.ui.newWizards">
+      <wizard
+            category="org.overture.ide.category"
+            class="org.overture.ide.ui.wizards.CreateVdmProjectWizard:org.overture.ide.vdmrt.core.nature"
+            id="org.overture.ide.vdmrt.createprojectwizard"
+            name="VDM-RT Project"
+            project="true">
+      </wizard>
+    
+   </extension>
+<extension
+      point="org.eclipse.ui.ide.projectNatureImages">
+   <image
+         icon="icons/ovr16/vdmrt_ovr.gif"
+         id="org.overture.ide.vdmrt.ui.nature.image"
+         natureId="org.overture.ide.vdmrt.core.nature">
+   </image>
+</extension>
+
+
+  <!-- Editor -->
+<extension point="org.eclipse.ui.editors">
+      <editor
+            class="org.overture.ide.vdmrt.ui.internal.editor.VdmRtEditor"
+            contributorClass="org.eclipse.dltk.internal.ui.editor.SourceModuleEditorActionContributor"
+            default="false"
+            icon="icons/cview16/vdmsl_file_tsk.gif"
+            id="org.overutre.ide.vdmrt.ui.internal.editor"
+            name="VDM PP Editor">
+         <contentTypeBinding contentTypeId="org.overture.ide.vdmrt.content-type"/>
+      </editor>
+   </extension>
+
+<!-- partitioning -->
+<extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.overture.ide.vdmrt.ui.internal.editor.VdmRtUIPreferenceInitializer">
+      </initializer>
+   </extension>
+</plugin>
