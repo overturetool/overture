@@ -1,19 +1,17 @@
-#!/bin/bash
+#!/bin/sh
 # Make of Overture
-
-
 
 # install function
 install()
 {
-echo install
+echo "install"
 echo
-echo Making Overture - Core
+echo "Making Overture - Core"
 echo
 echo
-echo Making overutre
+echo "Making overutre"
 echo
-echo making core
+echo "making core"
 cd core
 
 mvn install -Dmaven.test.skip=true
@@ -27,19 +25,19 @@ echo
 mvn eclipse:eclipse
 
 echo
-echo Making Overture - Updating Generated plugins
+echo "Making Overture - Updating Generated plugins"
 echo
-echo Updating generated core components of the IDE
+echo "Updating generated core components of the IDE"
 
 cd ide/generated
 mvn psteclipse:eclipse-plugin
 cd ..
 cd ..
 echo
-echo Making Overture - Ready to Eclise import as Maven Projects
+echo "Making Overture - Ready to Eclise import as Maven Projects"
 echo
 echo "Now you can import (Maven Projects) the IDE module in eclipse and develop new stuff here. Remember to update classpath on the manifest in org.overture.ide.generated.* packages";
-return
+
 }
 
 
@@ -47,32 +45,35 @@ return
 clean()
 {
 echo
-echo Clean Overture - Core
+echo "Clean Overture - Core"
 echo
-echo Making overutre
+echo "Making overutre"
 echo
-echo clean core
+echo "clean core"
 
 cd core
 mvn clean -o
 
 cd ..
 echo
-echo Clean Overture - Eclipse Projects
+echo "Clean Overture - Eclipse Projects"
 echo
-echo Making Eclipse:clean
+echo "Making Eclipse:clean"
 
 mvn eclipse:eclean -o
 
-return
+
 }
 
-if [ "$1" == "install" ]
-then
-	install
-elif [ "$1" == "clean" ]
-then
-	clean
+while [ ! -z "$1" ]; do
+case $1 in
+    install)
+install
+;;
+clean)
+clean
+;;
 
-fi
-
+esac
+shift
+done
