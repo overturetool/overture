@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<project>
+  <parent>
+    <groupId>org.overture.ide</groupId>
+    <artifactId>org.overture.ide.generated</artifactId>
+    <version>1.0.0</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>
+    org.overture.ide.generated
+  </groupId>
+  <artifactId>
+    org.overture.ide.generated.proofsupport
+  </artifactId>
+  <name>
+    org.overture.ide.generated.proofsupport
+  </name>
+  <version>1.0.0</version>
+
+  <packaging>binary-plugin</packaging>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>org.overturetool</groupId>
+      <artifactId>potrans</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.overturetool</groupId>
+      <artifactId>proofsupport</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+
+  </dependencies>
+</project>

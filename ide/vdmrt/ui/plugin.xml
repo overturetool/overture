@@ -35,9 +35,9 @@
             class="org.overture.ide.vdmrt.ui.internal.editor.VdmRtEditor"
             contributorClass="org.eclipse.dltk.internal.ui.editor.SourceModuleEditorActionContributor"
             default="false"
-            icon="icons/cview16/vdmsl_file_tsk.gif"
+            icon="icons/cview16/vdmrt_file_tsk.gif"
             id="org.overutre.ide.vdmrt.ui.internal.editor"
-            name="VDM PP Editor">
+            name="VDM RT Editor">
          <contentTypeBinding contentTypeId="org.overture.ide.vdmrt.content-type"/>
       </editor>
    </extension>

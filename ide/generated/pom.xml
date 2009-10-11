@@ -21,6 +21,7 @@
     <module>umltrans</module>
     <module>showtrace</module>
     <module>traces</module>
+    <module>proofsupport</module>
 
   </modules>
 </project>

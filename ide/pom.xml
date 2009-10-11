@@ -123,7 +123,7 @@
             <param>javax</param>
             <param>net.sf.xmlunit</param>
             <param>java</param>
-          
+            <param>org.kohsuke</param>
            </doNotExportPackagePrefixes>
         </configuration>
         <executions>

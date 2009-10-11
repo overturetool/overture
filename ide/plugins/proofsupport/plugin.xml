@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+
+ <extension
+         point="org.eclipse.ui.popupMenus">
+      
+      <!-- Enable the menu on sl projects -->
+      <objectContribution
+            adaptable="true"
+            id="org.overture.ide.plugins.proofsupport.contribution1"
+            objectClass="org.eclipse.core.resources.IProject">
+            <filter
+         name="projectNature"
+         value="org.overture.ide.vdmsl.core.nature">
+      </filter>
+         <menu
+               id="org.overture.ide.plugins.proofsupport.menuMain"
+               label="Proofsupport"
+               path="additions">
+            <separator
+                  name="groupProofsupport">
+            </separator>
+         </menu>
+         
+          <action
+               class="org.overture.ide.plugins.proofsupport.actions.RunProofsupportAction"
+              
+               id="org.overture.ide.plugins.proofsupport.actions.RunProofsupportAction"
+               label="Run Proofsupport generation"
+               menubarPath="org.overture.ide.plugins.proofsupport.menuMain/groupProofsupport"
+               enablesFor="1"
+               tooltip="Get proofobligations">
+         </action>
+      </objectContribution>
+      
+      
+      
+      
+         <!-- Enable the menu on pp projects 
+      <objectContribution
+            adaptable="true"
+            id="org.overture.ide.plugins.proofsupport.contribution1"
+            objectClass="org.eclipse.core.resources.IProject">
+            <filter
+         name="projectNature"
+         value="org.overture.ide.vdmpp.core.nature">
+      </filter>
+         <menu
+               id="org.overture.ide.plugins.proofsupport.menuMain"
+               label="Proofsupport"
+               path="additions">
+            <separator
+                  name="groupProofsupport">
+            </separator>
+         </menu>
+         
+          <action
+               class="org.overture.ide.plugins.proofsupport.actions.RunProofsupportAction"
+              
+               id="org.overture.ide.plugins.proofsupport.actions.RunProofsupportAction"
+               label="Run Proofsupport generation"
+               menubarPath="org.overture.ide.plugins.proofsupport.menuMain/groupProofsupport"
+               enablesFor="1"
+               tooltip="Get proofobligations">
+         </action>
+      </objectContribution>
+      
+      -->
+      
+      
+         <!-- Enable the menu on rt projects 
+      <objectContribution
+            adaptable="true"
+            id="org.overture.ide.plugins.proofsupport.contribution1"
+            objectClass="org.eclipse.core.resources.IProject">
+            <filter
+         name="projectNature"
+         value="org.overture.ide.vdmrt.core.nature">
+      </filter>
+         <menu
+               id="org.overture.ide.plugins.proofsupport.menuMain"
+               label="Proofsupport"
+               path="additions">
+            <separator
+                  name="groupProofsupport">
+            </separator>
+         </menu>
+         
+          <action
+               class="org.overture.ide.plugins.proofsupport.actions.RunProofsupportAction"
+              
+               id="org.overture.ide.plugins.proofsupport.actions.RunProofsupportAction"
+               label="Run Proofsupport generation"
+               menubarPath="org.overture.ide.plugins.proofsupport.menuMain/groupProofsupport"
+               enablesFor="1"
+               tooltip="Get proofobligations">
+         </action>
+      </objectContribution>
+      -->
+   </extension>
+
+
+
+   <extension
+         point="org.eclipse.ui.views">
+     
+     
+   
+      <view
+           category="org.overture.ide.category"
+            class="org.overture.ide.plugins.proofsupport.views.actions.PoTableView"
+            id="org.overture.ide.plugins.proofsupport.views.PoTableView"
+            name="PO result">
+      </view>
+   </extension>
+
+</plugin>

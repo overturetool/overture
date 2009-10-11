@@ -20,6 +20,6 @@
     <module>showtrace</module>
     <module>traces</module>
     <module>idedebughelper</module>
-
+    <module>proofsupport</module>
   </modules>
 </project>
