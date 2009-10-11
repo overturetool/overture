@@ -13,20 +13,20 @@ import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Vector;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.overture.tools.vdmt.Util;
 
-public class VdmProject
-{
+public class VdmProject {
 	private static final String SRC_MAIN_JAVA = "/src/main/java";
 	final String extension = ".vpp";
 	protected File baseDir;
 	protected Log log;
 	protected File vppde;
-	CodeGenCheckSum checkSum ;
+	CodeGenCheckSum checkSum;
 
 	protected List<File> dependedArtifactsSourceLocation = new ArrayList<File>();
 
@@ -34,13 +34,12 @@ public class VdmProject
 	private final String LOG_SPLIT_LINE = "------------------------------------------------------------------------";
 
 	public VdmProject(Log log, File vppde, File baseDir,
-			List<File> dependedArtifactsSourceLocation)
-	{
+			List<File> dependedArtifactsSourceLocation) {
 		this.baseDir = baseDir;
 		this.dependedArtifactsSourceLocation = dependedArtifactsSourceLocation;
 		this.log = log;
 		this.vppde = vppde;
-	checkSum	= new CodeGenCheckSum(baseDir);
+		checkSum = new CodeGenCheckSum(baseDir);
 		exstractFiles();
 
 	}
@@ -48,20 +47,16 @@ public class VdmProject
 	/*
 	 * Extract vpp files from project and depended projects and add to addFile
 	 */
-	private void exstractFiles()
-	{
+	private void exstractFiles() {
 		// Get files in base dir
-		for (File file : Util.GetFiles(getVppLocation(baseDir), extension))
-		{
+		for (File file : Util.GetFiles(getVppLocation(baseDir), extension)) {
 
 			addFile(file);
 		}
 
 		// get files from dependencies
-		for (File dFile : dependedArtifactsSourceLocation)
-		{
-			for (File file : Util.GetFiles(getVppLocation(dFile), extension))
-			{
+		for (File dFile : dependedArtifactsSourceLocation) {
+			for (File file : Util.GetFiles(getVppLocation(dFile), extension)) {
 				addFile(file);
 			}
 		}
@@ -71,10 +66,8 @@ public class VdmProject
 	/*
 	 * Add vpp file to files for the current project
 	 */
-	private void addFile(File file)
-	{
-		if (file.exists())
-		{
+	private void addFile(File file) {
+		if (file.exists()) {
 			files.add(file);
 			log.info("File added: " + file.getAbsolutePath());
 		}
@@ -84,8 +77,7 @@ public class VdmProject
 	/*
 	 * Get location of vpp files for the a project from the main folder
 	 */
-	private File getVppLocation(File mainSource)
-	{
+	private File getVppLocation(File mainSource) {
 		return new File(mainSource.getAbsolutePath()
 				+ "/src/main/vpp".replace('/', File.separatorChar));
 	}
@@ -93,8 +85,7 @@ public class VdmProject
 	/*
 	 * Get location of java files from a projects main folder
 	 */
-	private File getJavaLocation(File mainSource)
-	{
+	private File getJavaLocation(File mainSource) {
 		return new File(mainSource.getAbsolutePath()
 				+ SRC_MAIN_JAVA.replace('/', File.separatorChar));
 	}
@@ -102,12 +93,10 @@ public class VdmProject
 	/*
 	 * Type check a project
 	 */
-	public void typeCheck() throws MojoFailureException, MojoExecutionException
-	{
-//		String out = new String();
+	public void typeCheck() throws MojoFailureException, MojoExecutionException {
+		// String out = new String();
 
-		/*out =*/ executeCmdVdmTools(
-				" -t" + getSpecFiles(),
+		/* out = */executeCmdVdmTools(" -t" + getSpecFiles(),
 				getJavaLocation(baseDir));
 
 		printSuccess("VDM Type check");
@@ -118,12 +107,10 @@ public class VdmProject
 	 * Execute VDM Tools command line
 	 */
 	private String executeCmdVdmTools(String arguments, File baseDirectory)
-			throws MojoFailureException, MojoExecutionException
-	{
+			throws MojoFailureException, MojoExecutionException {
 		String out = new String();
 		Process p = null;
-		try
-		{
+		try {
 			String line;
 			ProcessBuilder pb = null;
 			String arg = "";
@@ -137,41 +124,35 @@ public class VdmProject
 					+ " Exists:" + baseDirectory.exists());
 			log.debug("Parameters: " + arguments);
 			log.debug("OS = " + System.getProperty("os.name"));
-			if (isWindows())
-			{
+			if (isWindows()) {
 
 				pb = new ProcessBuilder("\"" + vppde.getAbsolutePath() + "\" "
 						+ arguments.trim());
 				// arg = "\"" + vppde.getAbsolutePath() + "\" " +
 				// arguments.trim();
-			} else if (isMac())
-			{
+			} else if (isMac()) {
 				// pb = new ProcessBuilder("open " + vppde.getAbsolutePath() +
 				// " "+ arguments.trim());
 				arg = vppde.getAbsolutePath() + " " + arguments.trim();
-			} else
-			{
+			} else {
 				// pb = new ProcessBuilder(vppde.getAbsolutePath() + " "+
 				// arguments.trim());
 				arg = vppde.getAbsolutePath() + " " + arguments.trim();
 			}
-			if (pb != null)
-			{
+			if (pb != null) {
 				pb.directory(baseDirectory);
 				pb.redirectErrorStream(true);
 				p = pb.start();
-			} else
-			{
+			} else {
 				// arg.replace("\"", "");
 				log.debug("Process args: " + arg);
 				p = Runtime.getRuntime().exec(arg, null, baseDirectory);
 			}
 			// Process p = pb.start();
 
-			BufferedReader input = new BufferedReader(new InputStreamReader(
-					p.getInputStream()));
-			while ((line = input.readLine()) != null)
-			{
+			BufferedReader input = new BufferedReader(new InputStreamReader(p
+					.getInputStream()));
+			while ((line = input.readLine()) != null) {
 				out += "\n" + line;
 				log.debug(line);
 				// if (!line.endsWith("done")&&
@@ -189,30 +170,26 @@ public class VdmProject
 							"VDM Type check faild: Errors detected", line, out);
 			}
 			input.close();
-		} catch (Exception err)
-		{
+		} catch (Exception err) {
 
 			if (err instanceof MojoFailureException)
 				throw (MojoFailureException) err;
-			else
-			{
+			else {
 				out += err.getMessage();
 
 				log.error("\n" + err.getMessage());
 				log.debug(getStackTrace(err));
-				throw new MojoExecutionException("ExecuteCmdVdmTools",
-						err.getMessage(), getStackTrace(err));
+				throw new MojoExecutionException("ExecuteCmdVdmTools", err
+						.getMessage(), getStackTrace(err));
 			}
-		} finally
-		{
+		} finally {
 			if (p != null)
 				p.destroy();
 		}
 		return out;
 	}
 
-	public static String getStackTrace(Throwable t)
-	{
+	public static String getStackTrace(Throwable t) {
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw, true);
 		t.printStackTrace(pw);
@@ -221,15 +198,13 @@ public class VdmProject
 		return sw.toString();
 	}
 
-	public static Boolean isMac()
-	{
+	public static Boolean isMac() {
 		String osName = System.getProperty("os.name");
 
 		return osName.toUpperCase().indexOf("MAC".toUpperCase()) > -1;
 	}
 
-	public static Boolean isWindows()
-	{
+	public static Boolean isWindows() {
 		String osName = System.getProperty("os.name");
 
 		return osName.toUpperCase().indexOf("Windows".toUpperCase()) > -1;
@@ -237,8 +212,7 @@ public class VdmProject
 
 	public void codeGen(List<String> excludePackages,
 			List<String> excludeClasses, List<String> importPackages)
-			throws MojoFailureException, MojoExecutionException
-	{
+			throws MojoFailureException, MojoExecutionException {
 
 		if (excludePackages == null)
 			excludePackages = new ArrayList<String>();
@@ -255,36 +229,32 @@ public class VdmProject
 
 		ArrayList<File> javaFiles = new ArrayList<File>();
 		List<String> packages = importPackages;
-		for (File file : Util.GetFiles(getVppLocation(baseDir), extension))
-		{
+		for (File file : Util.GetFiles(getVppLocation(baseDir), extension)) {
 			if (file.exists())
-				for (String className : Util.GetClasses(file.getAbsolutePath()))
-				{
+				for (String className : Util.GetClasses(file.getAbsolutePath())) {
 					if (excludeClasses.contains(className))
 						continue;
 
 					classes.add(className);
 					// set the corresponding Java file
-					String tmp = Util.GetPackageAsPathPart(
-							baseDir.getAbsolutePath(),
-							file.getAbsolutePath());
-					String tmp2 = tmp.replace("/src/main/vpp".replace(
-							'/',
-							File.separatorChar), SRC_MAIN_JAVA.replace(
-							'/',
+					String tmp = Util.GetPackageAsPathPart(baseDir
+							.getAbsolutePath(), file.getAbsolutePath());
+					String tmp2 = tmp.replace("/src/main/vpp".replace('/',
+							File.separatorChar), SRC_MAIN_JAVA.replace('/',
 							File.separatorChar));
 					String javaFile = baseDir.getAbsolutePath()
 							+ tmp2.replace(".vpp", ".java");
 					classToJavaFile.put(className, new File(javaFile));
 					javaFiles.add(new File(javaFile));
 					String packageName = Util.GetPackage(baseDir, file);
-					packageName = packageName.replace("src.main.vpp.", "").trim();
+					packageName = packageName.replace("src.main.vpp.", "")
+							.trim();
 					if (packageName.equals("src.main.vpp"))
 						packageName = "";
 
-					ArrayList<String> classList = packageToClasses.get(packageName);
-					if (classList == null)
-					{
+					ArrayList<String> classList = packageToClasses
+							.get(packageName);
+					if (classList == null) {
 						classList = new ArrayList<String>();
 						classList.add(className);
 						packageToClasses.put(packageName, classList);
@@ -298,20 +268,17 @@ public class VdmProject
 
 		Enumeration<String> itr = packageToClasses.keys();
 
-		
-		
-		while (itr.hasMoreElements())
-		{
+		while (itr.hasMoreElements()) {
 			String packageName = (String) itr.nextElement();
-			if (!excludePackages.contains(packageName))
-			{
-				List<String> filteredClasses = checkSum.filter( packageToClasses.get(packageName),files);
-				if(filteredClasses.size()>0)
-				codeGen(filteredClasses, packageName);
+			if (!excludePackages.contains(packageName)) {
+				List<String> filteredClasses = checkSum.filter(packageToClasses
+						.get(packageName), files);
+				if (filteredClasses.size() > 0)
+					codeGen(filteredClasses, packageName);
 			}
-			
+
 		}
-		
+
 		updateCheckSums(files);
 
 		updateImports(excludePackages, packages, javaFiles);
@@ -321,27 +288,22 @@ public class VdmProject
 		printSuccess("VDM Code generation finished");
 	}
 
-	private void updateCheckSums(List<File> vppFiles)
-	{
-		
-		for (File file : vppFiles)
-		{
-			if(!file.exists())
+	private void updateCheckSums(List<File> vppFiles) {
+
+		for (File file : vppFiles) {
+			if (!file.exists())
 				continue;
-			checkSum.addCheckSum( file.getAbsolutePath());
+			checkSum.addCheckSum(file.getAbsolutePath());
 		}
-		
+
 		checkSum.saveCheckSums();
-		
+
 	}
 
-	
-
-	private void updateErrorUndefined(List<File> javaFiles)
-	{
-		log.info("Updating VDM error / undefined - Util.Runtime error replace by CGException");
-		for (File file : javaFiles)
-		{
+	private void updateErrorUndefined(List<File> javaFiles) {
+		log
+				.info("Updating VDM error / undefined - Util.Runtime error replace by CGException");
+		for (File file : javaFiles) {
 
 			if (file.exists())
 				new VdmJavaFile(file).replaceUtilRuntimeErrorWithCGException();
@@ -349,27 +311,22 @@ public class VdmProject
 	}
 
 	private void updateImports(List<String> excludePackages,
-			List<String> packages, List<File> javaFiles)
-	{
+			List<String> packages, List<File> javaFiles) {
 		log.info("Updating imports");
 
-		for (String string : excludePackages)
-		{
+		for (String string : excludePackages) {
 			if (packages.contains(string))
 				packages.remove(string);
 		}
 		setImports(packages, javaFiles);
 	}
 
-	private void setImports(List<String> packages, List<File> files)
-	{
+	private void setImports(List<String> packages, List<File> files) {
 		log.info("Packages to auto import");
-		for (String string : packages)
-		{
+		for (String string : packages) {
 			log.info(string);
 		}
-		for (File file : files)
-		{
+		for (File file : files) {
 
 			if (file.exists())
 				new VdmJavaFile(file).addPackages(packages);
@@ -377,8 +334,7 @@ public class VdmProject
 	}
 
 	private void codeGen(List<String> vdmClasses, String packageName)
-			throws MojoFailureException, MojoExecutionException
-	{
+			throws MojoFailureException, MojoExecutionException {
 		if (vdmClasses.isEmpty())
 			log.info("Nothing to update");
 
@@ -386,8 +342,7 @@ public class VdmProject
 			codeGen(vdmClasses.subList(20, vdmClasses.size()), packageName);
 
 		String classes = "";
-		for (Object object : vdmClasses)
-		{
+		for (Object object : vdmClasses) {
 			classes += object.toString().trim() + ",";
 		}
 		classes = classes.substring(0, classes.lastIndexOf(","));
@@ -398,8 +353,7 @@ public class VdmProject
 				+ ")");
 		log.info("");
 
-		for (String className : vdmClasses)
-		{
+		for (String className : vdmClasses) {
 			log.info("Class: " + className);
 		}
 		log.info("");
@@ -414,12 +368,10 @@ public class VdmProject
 	/*
 	 * Create command line format for specification files
 	 */
-	private String getSpecFiles()
-	{
+	private String getSpecFiles() {
 		String filePaths = new String();
 
-		for (File file : files)
-		{
+		for (File file : files) {
 
 			String f = "";
 			if (isWindows())
@@ -438,8 +390,7 @@ public class VdmProject
 	/*
 	 * Print successful message
 	 */
-	public void printSuccess(String message)
-	{
+	public void printSuccess(String message) {
 		log.info(LOG_SPLIT_LINE);
 		log.info(message + " SUCCESSFUL");
 		log.info(LOG_SPLIT_LINE);
@@ -468,17 +419,14 @@ public class VdmProject
 			+ "j2v_stubsOnly:0\n" + "j2v_transforms:0";
 
 	public void createVdmToolsProject(String projectName)
-			throws MojoExecutionException
-	{
+			throws MojoExecutionException {
 		StringBuilder sb = new StringBuilder();
 		sb.append(VDM_TOOLS_PROJECT_INIT.replaceAll(
 				VDM_TOOLS_PROJECT_FILE_COUNT,
-				new Integer(files.size()).toString()).replaceAll(
-				"COUNT1",
+				new Integer(files.size()).toString()).replaceAll("COUNT1",
 				new Integer(files.size() + 3).toString()));
 
-		for (File file : files)
-		{
+		for (File file : files) {
 			String filePath = file.getAbsolutePath();
 			if (filePath.startsWith(baseDir.getAbsolutePath()))
 				filePath = "."
@@ -488,63 +436,61 @@ public class VdmProject
 						+ ".."
 						+ File.separatorChar
 						+ ".."
-						+ filePath.substring(new Long(
-								baseDir.getAbsolutePath().length()).intValue());
+						+ filePath.substring(new Long(baseDir.getAbsolutePath()
+								.length()).intValue());
 			sb.append(VDM_TOOLS_PROJECT_FILE_INFO.replaceAll(
 					VDM_TOOLS_PROJECT_FILE_INFO_FILE_PATH_LENGTH_TOKEN,
 					new Integer(filePath.length()).toString())
 					+ filePath.replace('\\', '/'));
 		}
 
-		createProjectFile(projectName, sb);
+		createProjectFile(projectName, sb,".prj");
 
 		createProjectOptionsFile(projectName);
 		printSuccess("VDM Tools project created");
-		log.info("Note: There is a file length limitation in VDM Tools so if squares are");
-		log.info("shown inside a file path and VDM Tools log window says cannot open file");
-		log.info("the path to the file is to long. To resolve it make the path shorter.");
-		log.info("Or you can place the file inside the current project since the path then");
+		log
+				.info("Note: There is a file length limitation in VDM Tools so if squares are");
+		log
+				.info("shown inside a file path and VDM Tools log window says cannot open file");
+		log
+				.info("the path to the file is to long. To resolve it make the path shorter.");
+		log
+				.info("Or you can place the file inside the current project since the path then");
 		log.info("will be relative");
 	}
 
 	private void createProjectOptionsFile(String projectName)
-			throws MojoExecutionException
-	{
+			throws MojoExecutionException {
 		// Write opt file
 		File optFile = new File(getJavaLocation(baseDir).getAbsolutePath()
 				+ File.separatorChar + projectName + ".opt");
 
 		FileWriter outputFileReader;
-		try
-		{
+		try {
 			if (optFile.exists())
 				optFile.delete();
 			outputFileReader = new FileWriter(optFile);
 
 			BufferedWriter outputStream = new BufferedWriter(outputFileReader);
-			outputStream.write(VDM_TOOLS_PROJECT_OPT.replaceAll(
-					"JCG_PACKAGE:",
+			outputStream.write(VDM_TOOLS_PROJECT_OPT.replaceAll("JCG_PACKAGE:",
 					"JCG_PACKAGE:org.overturetool." + projectName));
 			outputStream.close();
 			log.info("Options file: " + optFile.getAbsolutePath());
 
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			throw new MojoExecutionException(
 					"Fail to create VDM Tools options file", e);
 		}
 	}
 
-	private File createProjectFile(String projectName, StringBuilder sb)
-			throws MojoExecutionException
-	{
+	private File createProjectFile(String projectName, StringBuilder sb,String extension)
+			throws MojoExecutionException {
 		// Write project file
 		File projectFile = new File(getJavaLocation(baseDir).getAbsolutePath()
-				+ File.separatorChar + projectName + ".prj");
+				+ File.separatorChar + projectName + extension);
 
 		FileWriter outputFileReader;
-		try
-		{
+		try {
 			if (projectFile.exists())
 				projectFile.delete();
 			outputFileReader = new FileWriter(projectFile);
@@ -553,29 +499,26 @@ public class VdmProject
 			outputStream.write(sb.toString());
 			outputStream.close();
 			log.info("Project file: " + projectFile.getAbsolutePath());
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			throw new MojoExecutionException(
 					"Fail to create VDM Tools project file", e);
 		}
 		return projectFile;
 	}
 
-	public void createSpecfileParameter(String projectName) throws MojoExecutionException
-	{
+	public void createSpecfileParameter(String projectName)
+			throws MojoExecutionException {
 		File projectFile = new File(baseDir.getAbsolutePath()
 				+ File.separatorChar + projectName + ".log");
 
 		FileWriter outputFileReader;
-		try
-		{
+		try {
 			if (projectFile.exists())
 				projectFile.delete();
 			outputFileReader = new FileWriter(projectFile);
 			StringBuilder sb = new StringBuilder();
 
-			for (File file : files)
-			{
+			for (File file : files) {
 				sb.append(file.getAbsolutePath() + " ");
 			}
 
@@ -583,10 +526,63 @@ public class VdmProject
 			outputStream.write(sb.toString());
 			outputStream.close();
 			log.info("Project file: " + projectFile.getAbsolutePath());
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			throw new MojoExecutionException(
 					"Fail to create VDM Tools project file", e);
 		}
+	}
+
+	final String overtureProjectFile = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+			+ "<projectDescription>\n" + "<name>PROJECT_NAME</name>\n" +
+			"	<comment></comment>\n" +
+			"	<projects>\n" +
+			"	</projects>\n" +
+			"	<buildSpec>\n" +
+			"		<buildCommand>\n" +
+			"			<name>org.eclipse.dltk.core.scriptbuilder</name>\n" +
+			"			<arguments>\n" +
+			"			</arguments>\n" +
+			"		</buildCommand>\n" +
+			"	</buildSpec>\n" +
+			"	<natures>\n" +
+			"		<nature>org.overture.ide.vdmpp.core.nature</nature>\n" +
+			"	</natures>\n" + "LINKED_SOURCE" + "</projectDescription>";
+	
+	final String overtureLinkedSourceFolder = "	<linkedResources>\n"+
+"LINK"+
+"	</linkedResources>\n";
+final String overtureSourceLink =		"		<link>\n"+
+"		<name>NAME</name>\n"+
+"		<type>2</type>\n"+
+"		<location>PATH</location>\n"+
+"		</link>\n";
+	public void createOvertureProject(String projectName) throws MojoExecutionException {
+		StringBuilder sb = new StringBuilder();
+		List<String> linkedLocations = new Vector<String>();
+log.info("Creating overture project file");
+		for (File file : files) {
+			File f = file.getParentFile();
+			while(f!=null && f.isDirectory()&&f.getParent()!=null && !f.getName().equals("vpp"))
+			{
+				f=f.getParentFile();
+//				log.info(f.getAbsolutePath());
+			}
+			
+			if(f!=null && !linkedLocations.contains(f.getAbsolutePath()))
+			{
+				linkedLocations.add(f.getAbsolutePath());
+				sb.append(overtureSourceLink.replace("NAME", f.getName()+linkedLocations.size()).replace("PATH", f.getAbsolutePath()));
+			}
+		}
+
+		StringBuilder data = new StringBuilder();
+		data.append(overtureProjectFile.replace("PROJECT_NAME", projectName).replace("LINKED_SOURCE",overtureLinkedSourceFolder.replace("LINK", sb.toString())));
+		
+		createProjectFile(".project", data,"");
+
+		
+		printSuccess("Overture project created");
+		
+
 	}
 }

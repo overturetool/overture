@@ -16,23 +16,15 @@ package org.overture.tools.vdmt;
  * limitations under the License.
  */
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProject;
-import org.overture.tools.vdmt.VDMToolsProxy.*;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Says "Hi" to the user.
@@ -87,10 +79,10 @@ public class VdmBaseMojo extends AbstractMojo {
 			getLog().error("VDM Tools cmd path not located. Check your settings file \"user.vdmtoolscmdpath\" not found in active profile");
 		}
 
-		Artifact artifact = project.getArtifact();
+//		Artifact artifact = project.getArtifact();
 
-		String id = artifact.getArtifactId();
-		String group = artifact.getGroupId();
+//		String id = artifact.getArtifactId();
+//		String group = artifact.getGroupId();
 
 		Iterator ite = project.getDependencyArtifacts().iterator();
 		while (ite.hasNext()) {
@@ -98,12 +90,12 @@ public class VdmBaseMojo extends AbstractMojo {
 			if (ooo instanceof Artifact) {
 				Artifact a = (Artifact) ooo;
 
-				String did = a.getArtifactId();
-				String dgroup = a.getGroupId();
+//				String did = a.getArtifactId();
+//				String dgroup = a.getGroupId();
 				File df = a.getFile();
-				String fileName = "";
-				if (df != null)
-					fileName = df.getAbsolutePath();
+//				String fileName = "";
+//				if (df != null)
+//					fileName = df.getAbsolutePath();
 
 				// getLog().info("Dependency: Group:" + dgroup + " Id: "+ did +
 				// " File: " + fileName);

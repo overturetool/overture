@@ -19,7 +19,9 @@ Usage
 *----------+------------------------------+
 | type     | Type check the vdm files through the VDM Tools commandline interface  |
 *----------+------------------------------+
-  
+| eclipse  | Create a eclipse project file with the linked source of the project. The DLTK script builder is added as builder and the nature is set to VDM-PP.  |
+*----------+------------------------------+
+   
 * Commands
 
  Execute the goal like shown below for type check: 

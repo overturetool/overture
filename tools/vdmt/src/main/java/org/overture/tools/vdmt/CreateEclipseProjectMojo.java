@@ -23,18 +23,18 @@ import org.overture.tools.vdmt.VDMToolsProxy.VdmProject;
 /**
  * Says "Hi" to the user.
  * 
- * @goal overture
+ * @goal eclipse
  * @phase process-resources
  * @requiresDependencyResolution compile
  */
-public class CreateProjectMojo extends VdmBaseMojo {
+public class CreateEclipseProjectMojo extends VdmBaseMojo {
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		super.execute();
 
 		
 		VdmProject p = new VdmProject(getLog(), vdmToolsCmd, project.getFile().getParentFile(), dependedVppLocations);
-		p.createOvertureProject(project.getArtifactId());
+		p.createVdmToolsProject(project.getArtifactId());
 		
 
 	}
