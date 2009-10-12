@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -34,17 +35,7 @@ public class BuildParticipant implements IScriptBuilder
 	{
 		System.out.println("buildModelElements");
 
-		if (!project.getProject().isSynchronized(IResource.DEPTH_INFINITE))
-			try
-			{
-				project.getProject().refreshLocal(
-						IResource.DEPTH_INFINITE,
-						monitor);
-			} catch (CoreException e1)
-			{
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+		
 
 		// TODO Auto-generated method stub
 
@@ -157,6 +148,14 @@ public class BuildParticipant implements IScriptBuilder
 	{
 		// TODO Auto-generated method stub
 		System.out.println("initialize");
+		
+		AbstractBuilder.syncProjectResources(project.getProject());
+		
+		AbstractBuilder.clearProblemMarkers(project.getProject());
+			
+			
+			
+			
 	}
 
 }

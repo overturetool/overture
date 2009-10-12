@@ -9,6 +9,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -81,5 +82,40 @@ public abstract class AbstractBuilder
 		{
 			return null;
 		}
+	}
+	
+	/***
+	 * This method syncs the project resources. 
+	 * It is called before an instance of the AbstractBuilder is created
+	 * @param project The project which should be synced
+	 */
+	public static void syncProjectResources(IProject project)
+	{
+		if (!project.isSynchronized(IResource.DEPTH_INFINITE))
+			try
+			{
+				project.refreshLocal(
+						IResource.DEPTH_INFINITE,
+						null);
+			} catch (CoreException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	}
+	/***
+	 * This method removed all problem markers and its sub-types from the project.
+	 * It is called before an instance of the AbstractBuilder is created
+	 * @param project The project which should be build.
+	 */
+	public static void clearProblemMarkers(IProject project)
+	{
+		try {
+			project.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }
