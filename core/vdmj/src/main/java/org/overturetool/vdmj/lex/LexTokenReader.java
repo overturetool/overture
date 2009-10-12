@@ -160,6 +160,23 @@ public class LexTokenReader extends BacktrackInputReader
 		this.dialect = dialect;
 		init();
 	}
+	
+	/**
+	 * Create a LexTokenReader to read content which originates from a file
+	 *  which is not yet saved and enable the source of the file to be set.
+	 * This is used in the IDE to provide while typing outline and parse error info.
+	 * @param the content to parse.
+	 * @param dialect Parse VDM++ or VDM-SL tokens.
+	 * @param the file from which the content originates
+	 * @throws UnsupportedEncodingException
+	 */
+	public LexTokenReader(String content, Dialect dialect,File file)
+	{
+		super(content);
+		this.file = file;
+		this.dialect = dialect;
+		init();
+	}
 
 	/**
 	 * A string representation of the current location.
