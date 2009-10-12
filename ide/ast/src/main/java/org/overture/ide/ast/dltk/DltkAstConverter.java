@@ -8,8 +8,12 @@ import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.ast.expressions.CallExpression;
+import org.eclipse.dltk.ast.references.ConstantReference;
 import org.eclipse.dltk.ast.references.SimpleReference;
 //import org.overture.ide.util.VDMJUtil;
+import org.overture.ide.ast.util.VdmAstUtil;
+import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ValueDefinition;
@@ -46,19 +50,43 @@ public class DltkAstConverter {
 		converter = new DltkConverter(source);
 	}
 
-	public ModuleDeclaration parse(List<Module> modules) {
+	public ModuleDeclaration parse(List modules) {
 
-		for (Iterator<Module> i = modules.iterator(); i.hasNext();) {
+		for (Iterator i = modules.iterator(); i.hasNext();) {
 			Object next = i.next();
 			if(next instanceof Module){
 				Module module = (Module) next;
-
-			addModuleDefinition(module);
+				addModuleDefinition(module);
+				}
+			if(next instanceof ClassDefinition){
+				ClassDefinition _class = (ClassDefinition) next;
+				addClassDefinition(_class);
+				}
 			}
-		}
-
+		
 		return model;
 	}
+		
+	private void addClassDefinition(ClassDefinition _class)
+	{
+		LexLocation loc = _class.name.location;
+		TypeDeclaration classDefinition = new TypeDeclaration(
+				_class.name.name, converter.convertStart(loc), converter
+						.convertEnd(loc), converter.convertStart(loc),
+				converter.convertEnd(loc));
+
+		for (Iterator<Definition> i = _class.definitions.iterator(); i.hasNext();) {
+
+			Definition def = i.next();
+
+			addDefinition(classDefinition, def);
+
+		}
+						
+		model.addStatement(classDefinition);
+	}
+
+	
 
 	/**
 	 * Add class declaration to the module declaration. If any super classes
@@ -178,6 +206,9 @@ public class DltkAstConverter {
 			Definition def) {
 		LexLocation loc = def.location;
 
+		System.out.println("Method name:" +  def.name.name + " Start: " + converter.convertStart(loc) + " End: " + 
+				converter.convertEnd(loc));
+		
 		MethodDeclaration method = new MethodDeclaration(def.name.name,
 				converter.convertStart(loc), converter.convertEnd(loc),
 				converter.convertStart(loc), converter.convertEnd(loc));
@@ -225,8 +256,9 @@ public class DltkAstConverter {
 		
 		if(expression instanceof ApplyExpression)
 		{
-//			ApplyExpression appExpr = (ApplyExpression) expression;
-//			CallExpression exp = VDMJUtil.createCallExpression(appExpr, converter);
+			ApplyExpression appExpr = (ApplyExpression) expression;
+			CallExpression exp = VdmAstUtil.createCallExpression(appExpr, converter);
+			method.getBody().addStatement(exp);
 		}
 		
 		if(expression instanceof BinaryExpression)
