@@ -25,7 +25,9 @@ package org.overturetool.vdmj.lex;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.overturetool.vdmj.lex.Dialect.VDM_SL;
 import static org.overturetool.vdmj.lex.Dialect.VDM_PP;
@@ -272,6 +274,46 @@ public enum Token implements Serializable
 	/** The dialect(s) of the keyword, VDM-SL, VDM++ or VICE. */
 	private List<Dialect> dialects = null;
 
+	/** Maps to speed up the lookup of individual token strings. */
+	private static Map<String, Token> sltokens;
+	private static Map<String, Token> pptokens;
+	private static Map<String, Token> rttokens;
+
+	static
+	{
+		// This has to happen in a static block because an enum always
+		// initializes its members before any statics (or member inits)
+		// are performed.
+
+		sltokens = new HashMap<String, Token>(256);
+		pptokens = new HashMap<String, Token>(256);
+		rttokens = new HashMap<String, Token>(256);
+
+		for (Token token: values())
+		{
+			if (token.keyword != null)
+			{
+				for (Dialect dialect: token.dialects)
+				{
+					switch (dialect)
+					{
+						case VDM_SL:
+							sltokens.put(token.keyword, token);
+							break;
+
+						case VDM_PP:
+							pptokens.put(token.keyword, token);
+							break;
+
+						case VDM_RT:
+							rttokens.put(token.keyword, token);
+							break;
+					}
+				}
+			}
+		}
+	}
+
 	/**
 	 * Construct a token with the associated keyword, display and dialect.
 	 */
@@ -289,14 +331,16 @@ public enum Token implements Serializable
 
 	public static Token lookup(String word, Dialect dialect)
 	{
-		for (Token token: values())
+		switch (dialect)
 		{
-			if (token.keyword != null &&
-				token.keyword.equals(word) &&
-				token.dialects.contains(dialect))
-			{
-				return token;
-			}
+			case VDM_SL:
+				return sltokens.get(word);
+
+			case VDM_PP:
+				return pptokens.get(word);
+
+			case VDM_RT:
+				return rttokens.get(word);
 		}
 
 		return null;
