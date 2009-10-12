@@ -24,11 +24,26 @@ public abstract class AbstractBuilder
 	
 	public abstract String getNatureId();
 	
-	protected IFile findIFile(File file)
+	protected IFile findIFile(IProject project,File file)
 	{
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IPath location = Path.fromOSString(file.getAbsolutePath());
 		IFile ifile = workspace.getRoot().getFileForLocation(location);
+		
+		if(ifile==null)
+		{
+			IPath absolutePath = new Path(file.getAbsolutePath());
+			boolean s= absolutePath.isAbsolute();
+			absolutePath.setDevice("c:");
+//			Object gg  = workspace.getRoot().findFilesForLocation(absolutePath);
+//			ifile = ((IFile[])gg)[1];
+//			ifile.getProject()
+			for(IFile selectedFile : workspace.getRoot().findFilesForLocation(absolutePath))
+			{
+				if(selectedFile.getProject().equals(project))
+					return selectedFile;
+			}
+		}
 		return ifile;
 	}
 

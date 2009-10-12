@@ -24,12 +24,12 @@ public abstract class VdmjBuilder  extends AbstractBuilder
 		{
 			for (VDMError error : eclipseType.getTypeErrors())
 			{
-				addErrorMarker(error);
+				addErrorMarker(project,error);
 			}
 		}
 		for (VDMWarning warning : eclipseType.getTypeWarnings())
 		{
-			addWarningMarker(warning);
+			addWarningMarker(project,warning);
 		}
 
 		if (typeCheckStatus == ExitStatus.EXIT_ERRORS)
@@ -49,12 +49,12 @@ public abstract class VdmjBuilder  extends AbstractBuilder
 		
 	}
 
-	private void addErrorMarker(VDMError error)
+	private void addErrorMarker(IProject project,VDMError error)
 	{
 		try
 		{
 			this.addMarker(
-					findIFile(error.location.file),
+					findIFile(project,error.location.file),
 					error.message,
 					error.location.startLine,
 					IMarker.SEVERITY_ERROR,
@@ -68,12 +68,12 @@ public abstract class VdmjBuilder  extends AbstractBuilder
 	}
 
 
-	private void addWarningMarker(VDMWarning error)
+	private void addWarningMarker(IProject project,VDMWarning error)
 	{
 		try
 		{
 			this.addMarker(
-					findIFile(error.location.file),
+					findIFile(project,error.location.file),
 					error.message,
 					error.location.startLine,
 					IMarker.SEVERITY_WARNING,
