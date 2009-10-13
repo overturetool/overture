@@ -1,6 +1,7 @@
 package org.overture.ide.ast.dltk;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.dltk.ast.declarations.Argument;
@@ -10,12 +11,15 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.references.ConstantReference;
-import org.eclipse.dltk.ast.references.SimpleReference;
-//import org.overture.ide.util.VDMJUtil;
+import org.eclipse.dltk.ast.references.SimpleReference; //import org.overture.ide.util.VDMJUtil;
 import org.overture.ide.ast.util.VdmAstUtil;
+
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
+import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
+import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
+import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.ValueDefinition;
 import org.overturetool.vdmj.expressions.ApplyExpression;
 import org.overturetool.vdmj.expressions.BinaryExpression;
@@ -27,12 +31,87 @@ import org.overturetool.vdmj.expressions.ElseIfExpression;
 import org.overturetool.vdmj.expressions.Exists1Expression;
 import org.overturetool.vdmj.expressions.ExistsExpression;
 import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.expressions.FieldExpression;
+import org.overturetool.vdmj.expressions.FieldNumberExpression;
+import org.overturetool.vdmj.expressions.ForAllExpression;
+import org.overturetool.vdmj.expressions.FuncInstantiationExpression;
+import org.overturetool.vdmj.expressions.HistoryExpression;
+import org.overturetool.vdmj.expressions.IfExpression;
+import org.overturetool.vdmj.expressions.IntegerLiteralExpression;
+import org.overturetool.vdmj.expressions.IotaExpression;
+import org.overturetool.vdmj.expressions.IsExpression;
+import org.overturetool.vdmj.expressions.IsOfBaseClassExpression;
+import org.overturetool.vdmj.expressions.IsOfClassExpression;
+import org.overturetool.vdmj.expressions.LambdaExpression;
+import org.overturetool.vdmj.expressions.LetBeStExpression;
+import org.overturetool.vdmj.expressions.LetDefExpression;
+import org.overturetool.vdmj.expressions.MapExpression;
+import org.overturetool.vdmj.expressions.MkBasicExpression;
+import org.overturetool.vdmj.expressions.MkTypeExpression;
+import org.overturetool.vdmj.expressions.MuExpression;
+import org.overturetool.vdmj.expressions.NewExpression;
+import org.overturetool.vdmj.expressions.NilExpression;
+import org.overturetool.vdmj.expressions.NotYetSpecifiedExpression;
+import org.overturetool.vdmj.expressions.PostOpExpression;
+import org.overturetool.vdmj.expressions.PreExpression;
+import org.overturetool.vdmj.expressions.PreOpExpression;
+import org.overturetool.vdmj.expressions.QuoteLiteralExpression;
+import org.overturetool.vdmj.expressions.RealLiteralExpression;
+import org.overturetool.vdmj.expressions.SameBaseClassExpression;
+import org.overturetool.vdmj.expressions.SelfExpression;
+import org.overturetool.vdmj.expressions.SeqExpression;
+import org.overturetool.vdmj.expressions.SetExpression;
+import org.overturetool.vdmj.expressions.StateInitExpression;
+import org.overturetool.vdmj.expressions.StringLiteralExpression;
+import org.overturetool.vdmj.expressions.SubclassResponsibilityExpression;
+import org.overturetool.vdmj.expressions.SubseqExpression;
+import org.overturetool.vdmj.expressions.ThreadIdExpression;
+import org.overturetool.vdmj.expressions.TimeExpression;
+import org.overturetool.vdmj.expressions.TupleExpression;
+import org.overturetool.vdmj.expressions.UnaryExpression;
+import org.overturetool.vdmj.expressions.UndefinedExpression;
+import org.overturetool.vdmj.expressions.VariableExpression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.modules.Module;
+import org.overturetool.vdmj.statements.AlwaysStatement;
+import org.overturetool.vdmj.statements.AssignmentStatement;
+import org.overturetool.vdmj.statements.AtomicStatement;
+import org.overturetool.vdmj.statements.BlockStatement;
+import org.overturetool.vdmj.statements.CallObjectStatement;
+import org.overturetool.vdmj.statements.CallStatement;
+import org.overturetool.vdmj.statements.CasesStatement;
+import org.overturetool.vdmj.statements.ClassInvariantStatement;
+import org.overturetool.vdmj.statements.CyclesStatement;
+import org.overturetool.vdmj.statements.DefStatement;
+import org.overturetool.vdmj.statements.DurationStatement;
+import org.overturetool.vdmj.statements.ElseIfStatement;
+import org.overturetool.vdmj.statements.ErrorStatement;
+import org.overturetool.vdmj.statements.ExitStatement;
+import org.overturetool.vdmj.statements.ForAllStatement;
+import org.overturetool.vdmj.statements.ForIndexStatement;
+import org.overturetool.vdmj.statements.ForPatternBindStatement;
+import org.overturetool.vdmj.statements.IfStatement;
+import org.overturetool.vdmj.statements.LetBeStStatement;
+import org.overturetool.vdmj.statements.LetDefStatement;
+import org.overturetool.vdmj.statements.NotYetSpecifiedStatement;
+import org.overturetool.vdmj.statements.PeriodicStatement;
+import org.overturetool.vdmj.statements.ReturnStatement;
+import org.overturetool.vdmj.statements.SimpleBlockStatement;
+import org.overturetool.vdmj.statements.SkipStatement;
+import org.overturetool.vdmj.statements.SpecificationStatement;
+import org.overturetool.vdmj.statements.StartStatement;
+import org.overturetool.vdmj.statements.Statement;
+import org.overturetool.vdmj.statements.SubclassResponsibilityStatement;
+import org.overturetool.vdmj.statements.TixeStatement;
+import org.overturetool.vdmj.statements.TraceStatement;
+import org.overturetool.vdmj.statements.TrapStatement;
+import org.overturetool.vdmj.statements.WhileStatement;
+import org.overturetool.vdmj.traces.TraceVariableStatement;
 import org.overturetool.vdmj.types.FunctionType;
 import org.overturetool.vdmj.types.MapType;
+import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.SeqType;
 import org.overturetool.vdmj.types.SetType;
 import org.overturetool.vdmj.types.Type;
@@ -54,39 +133,52 @@ public class DltkAstConverter {
 
 		for (Iterator i = modules.iterator(); i.hasNext();) {
 			Object next = i.next();
-			if(next instanceof Module){
+			if (next instanceof Module) {
 				Module module = (Module) next;
 				addModuleDefinition(module);
-				}
-			if(next instanceof ClassDefinition){
+			}
+			if (next instanceof ClassDefinition) {
 				ClassDefinition _class = (ClassDefinition) next;
 				addClassDefinition(_class);
-				}
 			}
-		
+		}
+
 		return model;
 	}
-		
-	private void addClassDefinition(ClassDefinition _class)
-	{
-		LexLocation loc = _class.name.location;
+
+	private void addClassDefinition(ClassDefinition classDef) {
+
+		LexLocation loc = classDef.name.location;
 		TypeDeclaration classDefinition = new TypeDeclaration(
-				_class.name.name, converter.convertStart(loc), converter
+				classDef.name.name, converter.convertStart(loc), converter
 						.convertEnd(loc), converter.convertStart(loc),
 				converter.convertEnd(loc));
 
-		for (Iterator<Definition> i = _class.definitions.iterator(); i.hasNext();) {
+		if (classDef.supernames.size() > 0) {
+
+			for (LexNameToken lexName : classDef.supernames) {
+				// create ConstantReference to super classes
+				int startPos = converter.convert(lexName.location.startLine,
+						lexName.location.startPos - 1);
+				int endPos = converter.convert(lexName.location.endLine,
+						lexName.location.endPos - 1);
+				ConstantReference constRef = new ConstantReference(startPos,
+						endPos, lexName.name);
+				classDefinition.addSuperClass(constRef);
+			}
+		}
+
+		for (Iterator<Definition> i = classDef.definitions.iterator(); i
+				.hasNext();) {
 
 			Definition def = i.next();
 
 			addDefinition(classDefinition, def);
 
 		}
-						
+
 		model.addStatement(classDefinition);
 	}
-
-	
 
 	/**
 	 * Add class declaration to the module declaration. If any super classes
@@ -143,7 +235,7 @@ public class DltkAstConverter {
 
 	private void addDefinition(TypeDeclaration moduleDefinition, Definition def) {
 		if (def.name != null && def.isFunctionOrOperation()) {
-			addFunctionDefinition(moduleDefinition, def);
+			addFunctionOrOperationDefinition(moduleDefinition, def);
 			return;
 		}
 
@@ -156,33 +248,240 @@ public class DltkAstConverter {
 			addValueDefinition(moduleDefinition, def);
 			return;
 		}
+
+		if (def.name != null && def.isInstanceVariable()) {
+			addInstanceVariable(moduleDefinition, def);
+			return;
+		}
+	}
+
+	private void addInstanceVariable(TypeDeclaration moduleDefinition,
+			Definition def) {
+		LexLocation location = def.location;
+
+		FieldDeclaration field = new FieldDeclaration(def.name.name, converter
+				.convertStart(location), converter.convertEnd(location) - 1,
+				converter.convertStart(location), converter
+						.convertEnd(location) - 1);
+		field.setModifier(VdmAstUtil.getModifier(def.accessSpecifier));
+
+		moduleDefinition.getStatements().add(field);
+
+	}
+
+	private void addFunctionOrOperationDefinition(
+			TypeDeclaration moduleDefinition, Definition def) {
+
+		if (def instanceof ImplicitFunctionDefinition
+				|| def instanceof ExplicitFunctionDefinition)
+			addFunctionDefinition(moduleDefinition, def);
+
+		if (def instanceof ImplicitOperationDefinition
+				|| def instanceof ExplicitOperationDefinition)
+			addOperationDefinition(moduleDefinition, def);
+		// TODO Auto-generated method stub
+
+	}
+
+	private void addOperationDefinition(TypeDeclaration moduleDefinition,
+			Definition def) {
+
+		int startPos = converter.convert(def.location.startLine,
+				def.location.startPos - 1);
+		int endPos = converter.convert(def.location.endLine,
+				def.location.endPos - 1);
+		MethodDeclaration methodDeclaration = new MethodDeclaration(
+				def.name.name, startPos, endPos, startPos, endPos);
+		methodDeclaration.setModifiers(VdmAstUtil
+				.getModifier(def.accessSpecifier));
+
+		if (def.getType() instanceof OperationType) {
+			OperationType type = (OperationType) def.getType();
+			for (Type definition : type.parameters) {
+				String name = ProcessUnresolved(definition);
+				LexLocation loc = definition.location;
+				SimpleReference argumentName = new SimpleReference(
+						definition.location.startPos,
+						definition.location.endPos, name);
+				methodDeclaration.addArgument(new Argument(argumentName,
+						converter.convertStart(loc), null, 0));
+			}
+
+		}
+
+		if (def instanceof ExplicitOperationDefinition) {
+			ExplicitOperationDefinition exOp = (ExplicitOperationDefinition) def;
+
+			if (exOp.body instanceof BlockStatement) {
+				BlockStatement block = (BlockStatement) exOp.body;
+				for (Statement statement : block.statements) {
+					addStatement(statement, methodDeclaration);
+					// methodDeclaration.getBody().addStatement(addStatement(exOp.body));
+				}
+			} else {
+				addStatement(exOp.body, methodDeclaration);
+				// methodDeclaration.getBody().addStatement(addStatement(exOp.body));
+			}
+		}
+		moduleDefinition.getStatements().add(methodDeclaration);
+
+	}
+
+	private void addStatement(Statement statement,
+			MethodDeclaration methodDeclaration) {
+		if (statement instanceof AlwaysStatement) {
+
+		}
+
+		if (statement instanceof AssignmentStatement) {
+
+		}
+
+		if (statement instanceof AtomicStatement) {
+
+		}
+
+		if (statement instanceof CallObjectStatement) {
+
+		}
+
+		if (statement instanceof CallStatement) {
+
+		}
+
+		if (statement instanceof CasesStatement) {
+
+		}
+
+		if (statement instanceof ClassInvariantStatement) {
+
+		}
+
+		if (statement instanceof CyclesStatement) {
+
+		}
+
+		if (statement instanceof DefStatement) {
+
+		}
+
+		if (statement instanceof DurationStatement) {
+
+		}
+
+		if (statement instanceof ElseIfStatement) {
+
+		}
+
+		if (statement instanceof ErrorStatement) {
+
+		}
+
+		if (statement instanceof ExitStatement) {
+
+		}
+
+		if (statement instanceof ForAllStatement) {
+
+		}
+
+		if (statement instanceof ForIndexStatement) {
+
+		}
+
+		if (statement instanceof ForPatternBindStatement) {
+
+		}
+
+		if (statement instanceof IfStatement) {
+
+		}
+
+		if (statement instanceof LetBeStStatement) {
+
+		}
+
+		if (statement instanceof LetDefStatement) {
+
+		}
+
+		if (statement instanceof NotYetSpecifiedStatement) {
+
+		}
+
+		if (statement instanceof PeriodicStatement) {
+
+		}
+
+		if (statement instanceof ReturnStatement) {
+
+		}
+
+		if (statement instanceof SimpleBlockStatement) {
+
+		}
+
+		if (statement instanceof SkipStatement) {
+
+		}
+
+		if (statement instanceof SpecificationStatement) {
+
+		}
+
+		if (statement instanceof StartStatement) {
+
+		}
+
+		if (statement instanceof SubclassResponsibilityStatement) {
+
+		}
+
+		if (statement instanceof TixeStatement) {
+
+		}
+
+		if (statement instanceof TraceStatement) {
+
+		}
+
+		if (statement instanceof TraceVariableStatement) {
+
+		}
+
+		if (statement instanceof TrapStatement) {
+
+		}
+
+		if (statement instanceof WhileStatement) {
+
+		}
 	}
 
 	private void addValueDefinition(TypeDeclaration moduleDefinition,
 			Definition def) {
 		if (def instanceof ValueDefinition) {
 			ValueDefinition value = (ValueDefinition) def;
-			
+
 			LexNameList lexlist = value.getVariableNames();
-			
+
 			Iterator<LexNameToken> it = lexlist.iterator();
-			
-			while(it.hasNext())
-			{
+
+			while (it.hasNext()) {
 				LexNameToken ltoken = it.next();
 				LexLocation location = ltoken.location;
-				
+
 				FieldDeclaration fieldValue = new FieldDeclaration(ltoken.name,
 						converter.convertStart(location), converter
-								.convertEnd(location)-1, converter
+								.convertEnd(location) - 1, converter
 								.convertStart(location), converter
-								.convertEnd(location)-1);
-				fieldValue.setModifier(TypeDeclaration.AccPrivate);
+								.convertEnd(location) - 1);
+				// fieldValue.setModifier(TypeDeclaration.AccPrivate);
+				fieldValue.setModifier(VdmAstUtil
+						.getModifier(value.accessSpecifier));
 				moduleDefinition.getStatements().add(fieldValue);
-			}			
-			
-			
-			
+			}
+
 		}
 	}
 
@@ -191,9 +490,9 @@ public class DltkAstConverter {
 
 		LexLocation location = def.location;
 		FieldDeclaration type = new FieldDeclaration(def.name.name, converter
-				.convertStart(location), converter.convertEnd(location) -1,
+				.convertStart(location), converter.convertEnd(location) - 1,
 				converter.convertStart(location), converter
-						.convertEnd(location)-1);
+						.convertEnd(location) - 1);
 		type.setModifier(TypeDeclaration.D_TYPE_DECL);
 		moduleDefinition.getStatements().add(type);
 
@@ -204,11 +503,15 @@ public class DltkAstConverter {
 
 	private void addFunctionDefinition(TypeDeclaration moduleDefinition,
 			Definition def) {
+
 		LexLocation loc = def.location;
 
-//		System.out.println("Method name:" +  def.name.name + " Start: " + converter.convertStart(loc) + " End: " + 
-//				converter.convertEnd(loc));
-		
+
+		System.out.println("Method name:" + def.name.name + " Start: "
+				+ converter.convertStart(loc) + " End: "
+				+ converter.convertEnd(loc));
+
+
 		MethodDeclaration method = new MethodDeclaration(def.name.name,
 				converter.convertStart(loc), converter.convertEnd(loc),
 				converter.convertStart(loc), converter.convertEnd(loc));
@@ -219,87 +522,238 @@ public class DltkAstConverter {
 				String name = ProcessUnresolved(definition);
 				SimpleReference argumentName = new SimpleReference(0, 0, name);
 				method.addArgument(new Argument(argumentName, 0, null, 0));
-
 			}
 
-//			Type definition = functionType.result;
+			Type definition = functionType.result;
+			SimpleReference resultName = new SimpleReference(0, 0, definition
+					.toString());
 
-//			SimpleReference resultName = new SimpleReference(0, 0, definition.toString());
+			if (def instanceof ExplicitFunctionDefinition) {
+				ExplicitFunctionDefinition exFunc = (ExplicitFunctionDefinition) def;
 
-			if (def instanceof ExplicitFunctionDefinition){        	
-	        	ExplicitFunctionDefinition exFunc = (ExplicitFunctionDefinition) def;
-	        	
-	        	addExpression(exFunc.body,method);
-	        	
-//	       		if (exFunc.body instanceof BlockStatement)
-//	       		{
-//	       			BlockStatement block = (BlockStatement) exOp.body;
-//	       			for (Statement statement : block.statements)
-//	       			{
-//	       				addStatement(statement, methodDeclaration);
-//	       				//methodDeclaration.getBody().addStatement(addStatement(exOp.body));
-//	       			}
-//	        	}
-//	       		else
-//	       		{
-//	       			addStatement(exOp.body, methodDeclaration);
-//	       			//methodDeclaration.getBody().addStatement(addStatement(exOp.body));
-//	       		}
+				addExpression(exFunc.body, method);
+
+				// if (exFunc.body instanceof BlockStatement)
+				// {
+				// BlockStatement block = (BlockStatement) exOp.body;
+				// for (Statement statement : block.statements)
+				// {
+				// addStatement(statement, methodDeclaration);
+				// //methodDeclaration.getBody().addStatement(addStatement(exOp.body));
+				// }
+				// }
+				// else
+				// {
+				// addStatement(exOp.body, methodDeclaration);
+				// //methodDeclaration.getBody().addStatement(addStatement(exOp.body));
+				// }
 			}
-			
-			
+
 		}
 		moduleDefinition.getStatements().add(method);
 	}
 
 	private void addExpression(Expression expression, MethodDeclaration method) {
-		
-		if(expression instanceof ApplyExpression)
-		{
+
+		if (expression instanceof ApplyExpression) {
 			ApplyExpression appExpr = (ApplyExpression) expression;
-			CallExpression exp = VdmAstUtil.createCallExpression(appExpr, converter);
+			CallExpression exp = VdmAstUtil.createCallExpression(appExpr,
+					converter);
 			method.getBody().addStatement(exp);
 		}
+
+		if (expression instanceof BinaryExpression) {
+
+		}
+
+		if (expression instanceof BooleanLiteralExpression) {
+
+		}
+
+		if (expression instanceof BreakpointExpression) {
+
+		}
+
+		if (expression instanceof CasesExpression) {
+
+		}
+
+		if (expression instanceof CharLiteralExpression) {
+
+		}
+
+		if (expression instanceof ElseIfExpression) {
+
+		}
+
+		if (expression instanceof Exists1Expression) {
+
+		}
+
+		if (expression instanceof ExistsExpression) {
+
+		}
+
+		if (expression instanceof FieldExpression) {
+
+		}
+
+		if (expression instanceof FieldNumberExpression) {
+
+		}
+
+		if (expression instanceof ForAllExpression) {
+
+		}
+
+		if (expression instanceof FuncInstantiationExpression) {
+
+		}
+
+		if (expression instanceof HistoryExpression) {
+
+		}
+
+		if (expression instanceof IfExpression) {
+
+		}
+
+		if (expression instanceof IntegerLiteralExpression) {
+
+		}
+
+		if (expression instanceof IotaExpression) {
+
+		}
+
+		if (expression instanceof IsExpression) {
+
+		}
+
+		if (expression instanceof IsOfBaseClassExpression) {
+
+		}
+
+		if (expression instanceof IsOfClassExpression) {
+
+		}
+
+		if (expression instanceof LambdaExpression) {
+
+		}
+
+		if (expression instanceof LetBeStExpression) {
+
+		}
+
+		if (expression instanceof LetDefExpression) {
+
+		}
+
+		if (expression instanceof MapExpression) {
+
+		}
+
+		if (expression instanceof MkBasicExpression) {
+
+		}
+
+		if (expression instanceof MkTypeExpression) {
+
+		}
+
+		if (expression instanceof MuExpression) {
+
+		}
+
+		if (expression instanceof NewExpression) {
+
+		}
+
+		if (expression instanceof NilExpression) {
+
+		}
+
+		if (expression instanceof NotYetSpecifiedExpression) {
+
+		}
 		
-		if(expression instanceof BinaryExpression)
-		{
+		if(expression instanceof PostOpExpression){
 			
 		}
 		
-		if(expression instanceof BooleanLiteralExpression)
-		{
+		if(expression instanceof PreExpression){
 			
 		}
 		
-		if(expression instanceof BreakpointExpression)
-		{
+		if(expression instanceof PreOpExpression){
 			
 		}
 		
-		if(expression instanceof CasesExpression)
-		{
-		
-		}
-		
-		if(expression instanceof CharLiteralExpression)
-		{
+		if(expression instanceof QuoteLiteralExpression){
 			
 		}
 		
-		if(expression instanceof ElseIfExpression)
-		{
+		if(expression instanceof RealLiteralExpression){
 			
 		}
 		
-		if(expression instanceof Exists1Expression)
-		{
+		if(expression instanceof SameBaseClassExpression){
 			
 		}
 		
-		if(expression instanceof ExistsExpression)
-		{
+		if(expression instanceof SelfExpression){
 			
 		}
+		
+		if(expression instanceof SeqExpression){
+			
+		}
+		
+		if(expression instanceof SetExpression){
+			
+		}
+		
+		if(expression instanceof StateInitExpression){
+			
+		}
+		
+		if(expression instanceof StringLiteralExpression){
+			
+		}
+		
+		if(expression instanceof SubclassResponsibilityExpression){
+			
+		}
+		
+		if(expression instanceof SubseqExpression){
+			
+		}
+		
+		if(expression instanceof ThreadIdExpression){
+			
+		}
+		
+		if(expression instanceof TimeExpression){
+			
+		}
+		
+		if(expression instanceof TupleExpression){
+			
+		}
+		
+		if(expression instanceof UnaryExpression){
+			
+		}
+		
+		if(expression instanceof UndefinedExpression){
+			
+		}
+		
+		if(expression instanceof VariableExpression){
+			
+		}
+
 	}
 
 	private String ProcessUnresolved(Type definition) {

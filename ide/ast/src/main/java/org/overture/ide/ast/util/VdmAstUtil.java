@@ -1,6 +1,8 @@
 package org.overture.ide.ast.util;
 
 
+import org.eclipse.dltk.ast.declarations.MethodDeclaration;
+import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.BooleanLiteral;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.CallExpression;
@@ -8,8 +10,18 @@ import org.eclipse.dltk.ast.expressions.NumericLiteral;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.overture.ide.ast.dltk.DltkConverter;
+
+import org.overturetool.vdmj.definitions.AccessSpecifier;
 import org.overturetool.vdmj.expressions.ApplyExpression;
+import org.overturetool.vdmj.expressions.BinaryExpression;
 import org.overturetool.vdmj.expressions.BooleanLiteralExpression;
+import org.overturetool.vdmj.expressions.BreakpointExpression;
+import org.overturetool.vdmj.expressions.CasesExpression;
+import org.overturetool.vdmj.expressions.CharLiteralExpression;
+import org.overturetool.vdmj.expressions.ElseIfExpression;
+import org.overturetool.vdmj.expressions.Exists1Expression;
+import org.overturetool.vdmj.expressions.ExistsExpression;
+import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.ExpressionList;
 import org.overturetool.vdmj.expressions.IntegerLiteralExpression;
 import org.overturetool.vdmj.expressions.VariableExpression;
@@ -81,11 +93,23 @@ public class VdmAstUtil {
 			int startPos = getStartPos(args.get(0).location, converter);
 			int endPos = getEndPos(args.get(args.size()-1).location, converter);
 			
-			// TODO add args
+			
+			
+			
 			CallArgumentsList argList = new CallArgumentsList(startPos, endPos);
+			
+			for(Expression exp : args)
+			{
+				
+			}
+			
+			
 			
 			return argList;
 		}
+		
+		
+		
 
 		public static BooleanLiteral createBooleanLiteral(BooleanLiteralExpression exp, DltkConverter converter) {
 			int start = getStartPos(exp.location, converter);
@@ -129,5 +153,31 @@ public class VdmAstUtil {
 			
 			return new CallExpression(varStartPos, simpleRefEndPos, variableReference, simpleReference , CallArgumentsList.EMPTY);
 		}
+		
+		public static int getModifier(AccessSpecifier specifier) {
+			try {
+				int modifiers = 0;
+				if(specifier.isStatic){
+					modifiers |= TypeDeclaration.AccStatic;
+				}
+				if (specifier.access.name().equals("PRIVATE"))
+				{
+					modifiers |=  TypeDeclaration.AccPrivate;
+				}
+				if (specifier.access.name().equals("PROTECTED"))
+				{
+					modifiers |=  TypeDeclaration.AccProtected;
+				}
+				if (specifier.access.name().equals("PUBLIC"))
+				{
+					modifiers |=  TypeDeclaration.AccPublic;
+				}
+				return modifiers;
+			} catch (Exception e) {
+				System.out.println("Could not create field.. " + e.getMessage());
+				return -666;
+			}
+		}
+		
 	
 }
