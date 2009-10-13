@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="%productName" uid="org.overture.ide.platform.product" id="org.overture.ide.platform.product" application="org.eclipse.ui.ide.workbench" version="@version@" useFeatures="false" includeLaunchers="true">
+<product name="%productName" uid="org.overture.ide.platform.product" id="org.overture.ide.platform.product" application="org.eclipse.ui.ide.workbench" version="1.6" useFeatures="false" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/org.overture.eclipse.plugins.platform/resources/128.png"/>
@@ -69,10 +69,15 @@
       <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
       <plugin id="org.eclipse.core.variables"/>
       <plugin id="org.eclipse.debug.core"/>
+      <plugin id="org.eclipse.debug.ui"/>
+      <plugin id="org.eclipse.dltk.console"/>
+      <plugin id="org.eclipse.dltk.console.ui"/>
       <plugin id="org.eclipse.dltk.core"/>
       <plugin id="org.eclipse.dltk.debug"/>
+      <plugin id="org.eclipse.dltk.debug.ui"/>
       <plugin id="org.eclipse.dltk.launching"/>
       <plugin id="org.eclipse.dltk.ui"/>
+      <plugin id="org.eclipse.draw2d"/>
       <plugin id="org.eclipse.ecf"/>
       <plugin id="org.eclipse.ecf.filetransfer"/>
       <plugin id="org.eclipse.ecf.identity"/>
@@ -82,6 +87,8 @@
       <plugin id="org.eclipse.emf.ecore.xmi"/>
       <plugin id="org.eclipse.equinox.app"/>
       <plugin id="org.eclipse.equinox.common"/>
+      <plugin id="org.eclipse.equinox.launcher"/>
+      <plugin id="org.eclipse.equinox.launcher.win32.win32.x86" fragment="true"/>
       <plugin id="org.eclipse.equinox.p2.artifact.repository"/>
       <plugin id="org.eclipse.equinox.p2.core"/>
       <plugin id="org.eclipse.equinox.p2.engine"/>
@@ -94,6 +101,13 @@
       <plugin id="org.eclipse.equinox.security"/>
       <plugin id="org.eclipse.equinox.security.win32.x86" fragment="true"/>
       <plugin id="org.eclipse.help"/>
+      <plugin id="org.eclipse.jdt.compiler.apt" fragment="true"/>
+      <plugin id="org.eclipse.jdt.compiler.tool" fragment="true"/>
+      <plugin id="org.eclipse.jdt.core"/>
+      <plugin id="org.eclipse.jdt.core.manipulation"/>
+      <plugin id="org.eclipse.jdt.debug"/>
+      <plugin id="org.eclipse.jdt.launching"/>
+      <plugin id="org.eclipse.jdt.ui"/>
       <plugin id="org.eclipse.jface"/>
       <plugin id="org.eclipse.jface.databinding"/>
       <plugin id="org.eclipse.jface.text"/>
@@ -101,6 +115,7 @@
       <plugin id="org.eclipse.ltk.ui.refactoring"/>
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.osgi.services"/>
+      <plugin id="org.eclipse.osgi.util"/>
       <plugin id="org.eclipse.search"/>
       <plugin id="org.eclipse.swt"/>
       <plugin id="org.eclipse.swt.win32.win32.x86" fragment="true"/>
@@ -114,6 +129,8 @@
       <plugin id="org.eclipse.ui.ide"/>
       <plugin id="org.eclipse.ui.ide.application"/>
       <plugin id="org.eclipse.ui.intro"/>
+      <plugin id="org.eclipse.ui.intro.universal"/>
+      <plugin id="org.eclipse.ui.intro.universal.source"/>
       <plugin id="org.eclipse.ui.navigator"/>
       <plugin id="org.eclipse.ui.navigator.resources"/>
       <plugin id="org.eclipse.ui.views"/>
@@ -124,16 +141,30 @@
       <plugin id="org.overture.ide.ast"/>
       <plugin id="org.overture.ide.builders.core"/>
       <plugin id="org.overture.ide.builders.vdmj"/>
+      <plugin id="org.overture.ide.debug.core"/>
+      <plugin id="org.overture.ide.debug.launching"/>
+      <plugin id="org.overture.ide.debug.ui"/>
+      <plugin id="org.overture.ide.generated.proofsupport"/>
+      <plugin id="org.overture.ide.generated.showtrace"/>
+      <plugin id="org.overture.ide.generated.traces"/>
+      <plugin id="org.overture.ide.generated.umltrans"/>
       <plugin id="org.overture.ide.generated.vdmj"/>
+      <plugin id="org.overture.ide.parsers.vdmj"/>
       <plugin id="org.overture.ide.platform"/>
+      <plugin id="org.overture.ide.plugins.idedebughelper"/>
+      <plugin id="org.overture.ide.plugins.proofsupport"/>
+      <plugin id="org.overture.ide.plugins.showtrace"/>
+      <plugin id="org.overture.ide.plugins.traces"/>
+      <plugin id="org.overture.ide.plugins.umltrans"/>
       <plugin id="org.overture.ide.ui"/>
+      <plugin id="org.overture.ide.utility"/>
       <plugin id="org.overture.ide.vdmpp.core"/>
-      <plugin id="org.overture.ide.vdmpp.parsers.core"/>
-      <plugin id="org.overture.ide.vdmpp.parsers.vdmj"/>
+      <plugin id="org.overture.ide.vdmpp.debug"/>
       <plugin id="org.overture.ide.vdmpp.ui"/>
+      <plugin id="org.overture.ide.vdmrt.core"/>
+      <plugin id="org.overture.ide.vdmrt.debug"/>
+      <plugin id="org.overture.ide.vdmrt.ui"/>
       <plugin id="org.overture.ide.vdmsl.core"/>
-      <plugin id="org.overture.ide.vdmsl.parser"/>
-      <plugin id="org.overture.ide.vdmsl.parsers.vdmj"/>
       <plugin id="org.overture.ide.vdmsl.ui"/>
    </plugins>
 

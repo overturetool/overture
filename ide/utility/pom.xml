@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<project>
+  <parent>
+    <groupId>org.overture</groupId>
+    <artifactId>ide</artifactId>
+    <version>1.0.0</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.overture.ide</groupId>
+  <artifactId>org.overture.ide.utility</artifactId>
+  <name>Overture IDE Utility</name>
+  <version>1.0.0</version>
+ <description>Plugin with utility functions to access the Eclipse file structure etc.</description>
+  <packaging>source-plugin</packaging>
+
+
+</project>

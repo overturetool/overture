@@ -14,10 +14,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -27,6 +24,7 @@ import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.overture.ide.ast.AstManager;
 import org.overture.ide.ast.RootNode;
 import org.overture.ide.ast.dltk.DltkConverter;
+import org.overture.ide.utility.ProjectUtility;
 
 public abstract class AbstractBuilder {
 	@SuppressWarnings("unchecked")
@@ -35,22 +33,8 @@ public abstract class AbstractBuilder {
 
 	public abstract String getNatureId();
 
-	@SuppressWarnings("deprecation")
-	protected IFile findIFile(IProject project, File file) {
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		IPath location = Path.fromOSString(file.getAbsolutePath());
-		IFile ifile = workspace.getRoot().getFileForLocation(location);
-
-		if (ifile == null) {
-			IPath absolutePath = new Path(file.getAbsolutePath());
-			
-			for (IFile selectedFile : workspace.getRoot().findFilesForLocation(
-					absolutePath)) {
-				if (selectedFile.getProject().equals(project))
-					return selectedFile;
-			}
-		}
-		return ifile;
+	public static IFile findIFile(IProject project, File file) {
+		return ProjectUtility.findIFile(project, file);
 	}
 
 	protected static void addMarker(IFile file, String message, int lineNumber,

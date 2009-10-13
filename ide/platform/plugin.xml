@@ -19,9 +19,10 @@
        </presentation>
     </config>
  </extension>
+ 
+ 
  <extension
-       id="org.overture.ide.platform.product"
-       name="%productName"
+       id="product"
        point="org.eclipse.core.runtime.products">
     <product
           application="org.eclipse.ui.ide.workbench"
@@ -51,15 +52,17 @@
              value="75,250,300,15">
        </property>
        <property
+             name="preferenceCustomization"
+             value="plugin_customization.ini">
+       </property>
+       <property
              name="appName"
              value="%productName">
        </property>
-        <property
-                   name="preferenceCustomization"
-                   value="plugin_customization.ini">
-                    </property>
     </product>
  </extension>
+ 
+ 
  
  
  

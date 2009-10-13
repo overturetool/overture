@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.overture.ide.utility.ProjectUtility;
 import org.overturetool.umltrans.Main.Translator;
 
 public class Vdm2UmlAction implements IObjectActionDelegate
@@ -59,14 +60,13 @@ public class Vdm2UmlAction implements IObjectActionDelegate
 			return;
 		}
 
-		String[] filterExt = { "vpp", "tex" };
+		//String[] filterExt = { "vpp", "tex" };
 
 		try
 		{
 
-			List<IFile> files = ProjectHelper.getAllMemberFiles(
-					selectedProject,
-					filterExt);
+			List<IFile> files = ProjectUtility.getFiles(selectedProject);
+			
 			List<File> filesPathes = new Vector<File>();
 			for (IFile file : files)
 			{

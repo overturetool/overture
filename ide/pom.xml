@@ -28,6 +28,7 @@
     <module>ui</module>
     <module>debug</module>
     <module>plugins</module>
+    <module>utility</module>
   </modules>
 
 <reporting>

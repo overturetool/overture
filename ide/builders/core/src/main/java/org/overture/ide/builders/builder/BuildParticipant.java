@@ -47,7 +47,6 @@ public class BuildParticipant implements IScriptBuilder {
 
 						}
 
-						@SuppressWarnings("unchecked")
 						public void run() throws Exception {
 							AbstractBuilder builder = (AbstractBuilder) o;
 

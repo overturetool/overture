@@ -22,6 +22,11 @@ import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.typechecker.ClassTypeChecker;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 
+/***
+ * VDMJ interface used to build VDM-RT models
+ * @author kela
+ *
+ */
 public class EclipseVdmjRt extends VDMJ implements IEclipseVdmj {
 	public ClassList modules;
 	private ArrayList<VDMError> parseErrors = new ArrayList<VDMError>();

@@ -8,6 +8,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.overture.ide.ast.dltk.DltkAstConverter;
+import org.overture.ide.utility.ConsoleWriter;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.modules.Module;
 
@@ -42,9 +43,8 @@ public class AstManager implements IAstManager {
 		
 
 		updateAst(project, nature, modules);
-		
-		System.out.println("addAstModuleDeclaration : " + project.getName()
-				+ "(" + nature + ") - " + new Path(new String( fileName)).toString()+" Modules: "+ getNames(modules));
+		new ConsoleWriter().println("AST update : " + project.getName()
+				+ "(" + nature + ") - " + new Path(new String( fileName)).lastSegment().toString()+" Modules: "+ getNames(modules));
 
 		try {
 			return new DltkAstConverter(fileName, source).parse(modules);
