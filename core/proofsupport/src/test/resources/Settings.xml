@@ -13,9 +13,9 @@
 						<map>
 							<entry key="setModel" value="src/test/resources/testinput/set.vpp" />
 							<entry key="stackModel" value="src/test/resources/testinput/stack.vpp" />
-							<entry key="testModel1" value="src/test/resources/testinput/sorter.vpp" />
-							<entry key="testModel2" value="src/test/resources/testinput/dosort.vpp" />
-							<entry key="testModel3" value="src/test/resources/testinput/explsort.vpp" />
+							<entry key="sorterModel" value="src/test/resources/testinput/sorter.vpp" />
+							<entry key="doSortModel" value="src/test/resources/testinput/dosort.vpp" />
+							<entry key="explSortModel" value="src/test/resources/testinput/explsort.vpp" />
 							<entry key="emptyModel" value="src/test/resources/testinput/empty.vpp" />
 							<entry key="parseError" value="src/test/resources/testinput/parse_error.vpp" />
 							<entry key="testTheory1" value="src/test/resources/testinput/set.hol" />

@@ -64,7 +64,7 @@ public class ApsMain {
 	private void parseArgumentModelFiles() {
 		vdmModelFile = arguments.get(0);
 		if (arguments.size() > 1)
-			vdmContextFiles = arguments.subList(1, arguments.size() - 1);
+			vdmContextFiles = arguments.subList(1, arguments.size());
 	}
 
 	public void parseArguments(String[] args) throws CmdLineException {

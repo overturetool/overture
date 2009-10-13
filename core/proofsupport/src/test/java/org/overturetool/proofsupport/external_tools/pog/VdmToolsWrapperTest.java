@@ -28,8 +28,8 @@ public class VdmToolsWrapperTest extends TestCase {
 	
 	private void setUpPreferences() throws Exception {
 		settings = new TestSettings();
-		testModel1 = settings.get(TestSettings.TEST_MODEL_1);
-		testModel2 = settings.get(TestSettings.TEST_MODEL_2);
+		testModel1 = settings.get(TestSettings.SORTER_MODEL);
+		testModel2 = settings.get(TestSettings.DO_SORT_MODEL);
 	}
 
 	private void removePreviousTestsData() throws Exception {
@@ -51,15 +51,14 @@ public class VdmToolsWrapperTest extends TestCase {
 
 	public void testGeneratePogFile() throws Exception {
 		String[] vdmFiles = new String[]{ testModel2, testModel1 };
-		String expected = testModel2 + ".pog";
+		String expected = testModel2 + pogExtension;
 
 		VdmToolsWrapper vdmTools = new VdmToolsWrapper(VPPDE_BIN);
 		String actual = vdmTools.generatePogFile(vdmFiles);
 
-		File pogFile = new File(testModel2 + pogExtension);
+		File pogFile = new File(expected);
 		
 		assertTrue(pogFile.exists());
 		assertEquals(expected, actual.trim());
 	}
-
 }

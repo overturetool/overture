@@ -12,6 +12,8 @@ import org.overturetool.proofsupport.test.TestSettings;
 public class AutomaticProofSystemTest extends TestCase {
 
 	private static TestSettings testSettings = null;
+	private static String doSortModel = null;
+	private static String sorterModel = null;
 	private static String setModel = null;
 	private static String stackModel = null;
 	private static String vppdeExecutable = TestSettings.getVppdeBinary();
@@ -28,6 +30,8 @@ public class AutomaticProofSystemTest extends TestCase {
 
 	private void setUpTestValues() throws Exception {
 		testSettings = new TestSettings();
+		doSortModel = testSettings.get(TestSettings.DO_SORT_MODEL);
+		sorterModel = testSettings.get(TestSettings.SORTER_MODEL);
 		setModel = testSettings.get(TestSettings.SET_MODEL);
 		stackModel = testSettings.get(TestSettings.STACK_MODEL);
 		testPogFileNoNewLine = testSettings
@@ -79,5 +83,22 @@ public class AutomaticProofSystemTest extends TestCase {
 
 		assertNotNull(holCode);
 		assertEquals(1210, holCode.length());
+	}
+	
+	public void testDoModelTranslationWithDependenContext() throws Exception {
+		TranslationPreProcessor prep = new TranslationPreProcessor(
+				new VdmToolsWrapper(VPPDE_BIN), new VdmToolsPoProcessor());
+		String modelFile = doSortModel;
+		List<String> contextFiles = new ArrayList<String>(1);
+		contextFiles.add(sorterModel);
+		PreparationData prepData = prep.prepareVdmFiles(modelFile, contextFiles);
+		
+		AutomaticProofSystemBatch aps = new AutomaticProofSystemBatch(mosmlDir,
+				holDir, new VdmToolsWrapper(vppdeExecutable),
+				new VdmToolsPoProcessor());
+		String holCode = aps.doModelTranslation(prepData);
+
+		assertNotNull(holCode);
+		assertEquals(780, holCode.length());
 	}
 }

@@ -72,9 +72,9 @@ public class TestSettings extends AbstractSettings
 
 	public static final String SET_MODEL = "setModel";
 	public static final String STACK_MODEL = "stackModel";
-	public static final String TEST_MODEL_1 = "testModel1";
-	public static final String TEST_MODEL_2 = "testModel2";
-	public static final String TEST_MODEL_3 = "testModel3";
+	public static final String SORTER_MODEL = "sorterModel";
+	public static final String DO_SORT_MODEL = "doSortModel";
+	public static final String EXPL_SORT_MODEL = "explSortModel";
 	public static final String EMPTY_MODEL = "emptyModel";
 	public static final String PARSE_ERROR = "parseError";
 	public static final String TEST_THEORY = "testTheory1";

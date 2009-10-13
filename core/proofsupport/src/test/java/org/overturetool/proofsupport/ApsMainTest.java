@@ -27,5 +27,4 @@ public class ApsMainTest extends TestCase {
 				TestSettings.getVppdeBinary(), settings.get(TestSettings.SET_MODEL) };
 		ApsMain.main(args);
 	}
-
 }

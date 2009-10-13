@@ -33,8 +33,8 @@ public class TranslationPreProcessorTest extends TestCase {
 
 	private void setUpTestValues() throws Exception {
 		settings = new TestSettings();
-		testModel1 = settings.get(TestSettings.TEST_MODEL_1);
-		testModel2 = settings.get(TestSettings.TEST_MODEL_2);
+		testModel1 = settings.get(TestSettings.SORTER_MODEL);
+		testModel2 = settings.get(TestSettings.DO_SORT_MODEL);
 		stackModel = settings.get(TestSettings.STACK_MODEL);
 		emptyModel = settings.get(TestSettings.EMPTY_MODEL);
 		parseError = settings.get(TestSettings.PARSE_ERROR);
