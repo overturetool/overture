@@ -28,6 +28,9 @@ public class ApsMain {
 	@Option(name = "-hol", usage = "path to the hol directory", metaVar = "HOL_DIR")
 	private String holDir = "";
 
+	@Option(name = "-pog", usage = "path to a proof obligations file", metaVar = "POG_FILE")
+	private String pogFile = "";
+
 	@Argument
 	private List<String> arguments = new ArrayList<String>();
 
@@ -43,22 +46,33 @@ public class ApsMain {
 			apsMain.parseArguments(args);
 			apsMain.run();
 		} catch (CmdLineException e) {
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void run() throws AutomaicProofSystemException, IOException {
-		AutomaticProofSystemBatch aps = new AutomaticProofSystemBatch(mosmlDir, holDir,
-				new VdmToolsWrapper(vppdeBinary), new VdmToolsPoProcessor());
+		AutomaticProofSystemBatch aps = new AutomaticProofSystemBatch(mosmlDir,
+				holDir, new VdmToolsWrapper(vppdeBinary),
+				new VdmToolsPoProcessor());
 		if (translation)
-			System.out.println(aps.translateModelAndPos(vdmModelFile,
-					vdmContextFiles));
-		else if (proof)
-			for (String outputLine : aps.dischargeAllPos(vdmModelFile,
-					vdmContextFiles))
+			if (!pogFile.equals(""))
+				System.out.println(aps.translateModelAndPos(vdmModelFile,
+						vdmContextFiles, pogFile));
+			else
+				System.out.println(aps.translateModelAndPos(vdmModelFile,
+						vdmContextFiles));
+		else if (proof) {
+			String[] outputLines = new String[] {};
+			if (!pogFile.equals(""))
+				outputLines = aps.dischargeAllPos(vdmModelFile,
+						vdmContextFiles, pogFile);
+			else
+				outputLines = aps
+						.dischargeAllPos(vdmModelFile, vdmContextFiles);
+			for (String outputLine : outputLines)
 				System.out.println(outputLine);
+		}
 	}
 
 	private void parseArgumentModelFiles() {
@@ -88,7 +102,7 @@ public class ApsMain {
 			// an error message.
 			System.err.println(e.getMessage());
 			System.err
-					.println("java ApsMain [-t|[-p -hol HOL_DIR -mosml MOSML_DIR]] -vppde VPPDE_BINARY <vpp files>");
+					.println("java ApsMain [-t|[-p -hol HOL_DIR -mosml MOSML_DIR]] -vppde VPPDE_BINARY [-pog POG_FILE] <vpp files>");
 			// print the list of available options
 			parser.printUsage(System.err);
 			System.err.println();

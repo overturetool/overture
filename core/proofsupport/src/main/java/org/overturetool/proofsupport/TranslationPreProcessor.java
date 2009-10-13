@@ -33,6 +33,13 @@ public class TranslationPreProcessor {
 		return generateOmlAst(vdmModelFile, vdmContextFiles, poExpressions);
 	}
 	
+	public PreparationData prepareVdmFiles(String vdmModelFile,
+			List<String> vdmContextFiles, String pogFile) throws PoGeneratorException,
+			PoProcessorException, ParserException {
+		List<String> poExpressions = processPogFile(pogFile);
+		return generateOmlAst(vdmModelFile, vdmContextFiles, poExpressions);
+	}
+	
 	public IOmlExpression prepareVdmExpression(String vdmExpression) throws ParserException {
 		return omlAstGen.getOmlExpression(vdmExpression);
 	}

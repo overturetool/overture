@@ -22,10 +22,22 @@ public class AutomaticProofSystemBatch extends AutomaticProofSystem {
 		String holCode = translateModelAndPos(vdmModelFile, vdmContextFiles);
 		return doBatchProof(holCode);
 	}
+	
+	public String[] dischargeAllPos(String vdmModelFile,
+			List<String> vdmContextFiles, String pogFile) throws AutomaicProofSystemException {
+		String holCode = translateModelAndPos(vdmModelFile, vdmContextFiles, pogFile);
+		return doBatchProof(holCode);
+	}
 
 	public String translateModelAndPos(String vdmModelFile,
 			List<String> vdmContextFiles) throws AutomaicProofSystemException {
 		PreparationData prepData = doPreparation(vdmModelFile, vdmContextFiles);
+		return doModelAndPosTranslation(prepData);
+	}
+	
+	public String translateModelAndPos(String vdmModelFile,
+			List<String> vdmContextFiles, String pogFile) throws AutomaicProofSystemException {
+		PreparationData prepData = doPreparation(vdmModelFile, vdmContextFiles, pogFile);
 		return doModelAndPosTranslation(prepData);
 	}
 

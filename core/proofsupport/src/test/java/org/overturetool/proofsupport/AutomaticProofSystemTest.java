@@ -74,8 +74,9 @@ public class AutomaticProofSystemTest extends TestCase {
 				new VdmToolsWrapper(VPPDE_BIN), new VdmToolsPoProcessor());
 		String modelFile = setModel;
 		List<String> contextFiles = new ArrayList<String>(0);
-		PreparationData prepData = prep.prepareVdmFiles(modelFile, contextFiles);
-		
+		PreparationData prepData = prep
+				.prepareVdmFiles(modelFile, contextFiles);
+
 		AutomaticProofSystemBatch aps = new AutomaticProofSystemBatch(mosmlDir,
 				holDir, new VdmToolsWrapper(vppdeExecutable),
 				new VdmToolsPoProcessor());
@@ -84,15 +85,16 @@ public class AutomaticProofSystemTest extends TestCase {
 		assertNotNull(holCode);
 		assertEquals(1210, holCode.length());
 	}
-	
+
 	public void testDoModelTranslationWithDependenContext() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(
 				new VdmToolsWrapper(VPPDE_BIN), new VdmToolsPoProcessor());
 		String modelFile = doSortModel;
 		List<String> contextFiles = new ArrayList<String>(1);
 		contextFiles.add(sorterModel);
-		PreparationData prepData = prep.prepareVdmFiles(modelFile, contextFiles);
-		
+		PreparationData prepData = prep
+				.prepareVdmFiles(modelFile, contextFiles);
+
 		AutomaticProofSystemBatch aps = new AutomaticProofSystemBatch(mosmlDir,
 				holDir, new VdmToolsWrapper(vppdeExecutable),
 				new VdmToolsPoProcessor());

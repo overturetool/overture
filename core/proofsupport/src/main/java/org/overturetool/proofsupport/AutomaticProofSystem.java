@@ -78,6 +78,21 @@ public abstract class AutomaticProofSystem {
 		}
 		return prepData;
 	}
+	
+	protected PreparationData doPreparation(String vdmModelFile,
+			List<String> vdmContextFiles, String pogFile) throws AutomaicProofSystemException {
+		PreparationData prepData = null;
+		try {
+			prepData = prep.prepareVdmFiles(vdmModelFile, vdmContextFiles, pogFile);
+		} catch (PoGeneratorException e) {
+			throw wrapException(PO_GENERATOR_COMPONENT, e);
+		} catch (PoProcessorException e) {
+			wrapException(PO_PROCESSOR_COMPONENT, e);
+		} catch (ParserException e) {
+			wrapException(PARSER_COMPONENT, e);
+		}
+		return prepData;
+	}
 
 	protected String doModelTranslation(PreparationData prepData)
 			throws AutomaicProofSystemException {
