@@ -23,6 +23,7 @@
     <module>ast</module>
     <module>generated</module>
     <module>platform</module>
+    <module>parsers</module>
     <module>builders</module>
     <module>ui</module>
     <module>debug</module>

@@ -53,7 +53,7 @@ public abstract class VdmjBuilder  extends AbstractBuilder
 	{
 		try
 		{
-			this.addMarker(
+			AbstractBuilder.addMarker(
 					findIFile(project,error.location.file),
 					error.message,
 					error.location.startLine,
@@ -72,7 +72,7 @@ public abstract class VdmjBuilder  extends AbstractBuilder
 	{
 		try
 		{
-			this.addMarker(
+			AbstractBuilder.addMarker(
 					findIFile(project,error.location.file),
 					error.message,
 					error.location.startLine,

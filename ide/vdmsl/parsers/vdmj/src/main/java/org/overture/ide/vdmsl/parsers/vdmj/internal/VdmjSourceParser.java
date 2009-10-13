@@ -1,8 +1,15 @@
 package org.overture.ide.vdmsl.parsers.vdmj.internal;
 
+import java.io.File;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.parser.AbstractSourceParser;
@@ -18,7 +25,28 @@ import org.overturetool.vdmj.messages.VDMWarning;
 
 public class VdmjSourceParser extends AbstractSourceParser
 {
-
+	protected IFile findIFile(IProject project,File file)
+	{
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IPath location = Path.fromOSString(file.getAbsolutePath());
+		IFile ifile = workspace.getRoot().getFileForLocation(location);
+		
+		if(ifile==null)
+		{
+			IPath absolutePath = new Path(file.getAbsolutePath());
+			boolean s= absolutePath.isAbsolute();
+			absolutePath.setDevice("c:");
+//			Object gg  = workspace.getRoot().findFilesForLocation(absolutePath);
+//			ifile = ((IFile[])gg)[1];
+//			ifile.getProject()
+			for(IFile selectedFile : workspace.getRoot().findFilesForLocation(absolutePath))
+			{
+				if(selectedFile.getProject().equals(project))
+					return selectedFile;
+			}
+		}
+		return ifile;
+	}
 	public ModuleDeclaration parse(char[] fileName, char[] source,
 			IProblemReporter reporter)
 	{
@@ -28,12 +56,19 @@ public class VdmjSourceParser extends AbstractSourceParser
 		IResource res = ResourcesPlugin.getWorkspace().getRoot().findMember(
 				path);
 		IProject project = res.getProject();
+		
+		try {
+			res.deleteMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		DltkConverter converter = new DltkConverter(source);
 
 		IEclipseVdmj eclipseParser = new EclipseVdmjSl();
 
-		ExitStatus status = eclipseParser.parse(project.getFile(path.removeFirstSegments(1)).getLocation().toFile());//parse(new String(source));
+		ExitStatus status = eclipseParser.parse(new String(source),project.getFile(path.removeFirstSegments(1)).getLocation().toFile());//project.getFile(path.removeFirstSegments(1)).getLocation().toFile()//parse(new String(source));
 
 		if (reporter != null)
 		{

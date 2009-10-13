@@ -19,7 +19,7 @@
 
     <module>core</module>
     <module>ui</module>
-    <module>parsers</module>
+  
 
   </modules>
   

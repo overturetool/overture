@@ -49,6 +49,7 @@ public class VdmRtCodeScanner extends AbstractScriptScanner implements IScriptCo
 		return p;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected List createRules()
 	{

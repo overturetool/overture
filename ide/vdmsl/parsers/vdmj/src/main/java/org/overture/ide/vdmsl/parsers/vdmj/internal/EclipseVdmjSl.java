@@ -128,7 +128,7 @@ public class EclipseVdmjSl extends VDMJ implements IEclipseVdmj
 	/**
 	 * @see org.overturetool.vdmj.VDMJ#parse(java.util.List)
 	 */
-	public ExitStatus parse(String content)
+	public ExitStatus parse(String content,File file)
 	{
 		parseErrors.clear();
 		parseWarnings.clear();
@@ -139,7 +139,7 @@ public class EclipseVdmjSl extends VDMJ implements IEclipseVdmj
 
 		try
 		{
-			LexTokenReader ltr = new LexTokenReader(content, Settings.dialect);
+			LexTokenReader ltr = new LexTokenReader(content, Settings.dialect,file);
 			reader = new ModuleReader(ltr);
 			modules.addAll(reader.readModules());
 		} catch (InternalException e)

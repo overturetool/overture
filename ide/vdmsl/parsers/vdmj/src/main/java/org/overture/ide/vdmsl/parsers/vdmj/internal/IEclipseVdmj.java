@@ -12,7 +12,7 @@ public interface IEclipseVdmj
 {
 public ExitStatus parse(List<File> files);
 	
-	//public ExitStatus parse(String content);
+	public ExitStatus parse(String content,File file);
 public ExitStatus parse(File fileName);
 	
 	public ExitStatus typeCheck();

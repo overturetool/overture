@@ -49,4 +49,15 @@
             class="org.overture.ide.vdmrt.ui.internal.editor.VdmRtUIPreferenceInitializer">
       </initializer>
    </extension>
+   
+   
+     <!-- customize the outline to include fileds etc. -->
+      <extension
+         point="org.eclipse.dltk.core.sourceElementParsers">
+      <parser
+            class="org.overture.ide.vdmrt.ui.internal.outline.SourceElementParser"
+            nature="org.overture.ide.vdmrt.core.nature"
+            priority="0">
+      </parser>
+   </extension>
 </plugin>

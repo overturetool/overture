@@ -17,6 +17,7 @@ public interface IAstManager
 	 * @param classList
 	 *            A new class list or module list
 	 */
+	@SuppressWarnings("unchecked")
 	void updateAst(IProject project, String nature, List data);
 
 	
@@ -47,6 +48,7 @@ public interface IAstManager
 	 *            The modules constructed by the parser
 	 * @return Returns a ModuleDeclaration of the AST parsed by the parser
 	 */
+	@SuppressWarnings("unchecked")
 	ModuleDeclaration addAstModuleDeclaration(IProject project, String nature,
 			char[] fileName, char[] source, List modules);
 	

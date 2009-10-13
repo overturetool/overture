@@ -13,7 +13,6 @@ import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.VDMJ;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
@@ -22,6 +21,11 @@ import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.typechecker.ClassTypeChecker;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 
+/***
+ * VDMJ interface used to build VDM-PP models
+ * @author kela
+ *
+ */
 public class EclipseVdmjPp extends VDMJ implements IEclipseVdmj {
 	public ClassList modules;
 	private ArrayList<VDMError> parseErrors = new ArrayList<VDMError>();
@@ -82,14 +86,14 @@ public class EclipseVdmjPp extends VDMJ implements IEclipseVdmj {
 
 		if (terrs > 0)
 		{
-			TypeChecker.printErrors(Console.out);
+			//TypeChecker.printErrors(Console.out);
 		}
 
   		int twarn = TypeChecker.getWarningCount();
 
 		if (twarn > 0 && warnings)
 		{
-			TypeChecker.printWarnings(Console.out);
+//			TypeChecker.printWarnings(Console.out);
 		}
 
    		int n = modules.notLoaded();
@@ -166,5 +170,25 @@ public class EclipseVdmjPp extends VDMJ implements IEclipseVdmj {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	protected static void println(String m)
+	{
+		//Console.out.println(m);
+	}
+	
+	protected static void info(String m)
+	{
 
+	}
+
+	protected static void infoln(String m)
+	{
+
+	}
+
+	protected static void print(String m)
+	{
+	
+
+	}
 }

@@ -5,18 +5,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
-
+import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.overture.ide.ast.dltk.DltkAstConverter;
-import org.overturetool.vdmj.definitions.ClassList;
-import org.overturetool.vdmj.modules.ModuleList;
+import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.modules.Module;
 
-public class AstManager implements IAstManager
-{
+public class AstManager implements IAstManager {
 	Map<IProject, Map<String, RootNode>> asts;
 
-	protected AstManager()
-	{
+	protected AstManager() {
 		asts = new HashMap<IProject, Map<String, RootNode>>();
 	}
 
@@ -28,106 +26,86 @@ public class AstManager implements IAstManager
 	/**
 	 * @return The unique instance of this class.
 	 */
-	static public IAstManager instance()
-	{
-		if (null == _instance)
-		{
+	static public IAstManager instance() {
+		if (null == _instance) {
 			_instance = new AstManager();
 		}
 		return _instance;
 	}
 
-	public ModuleDeclaration addAstModuleDeclaration(IProject project,
-			String nature, char[] fileName, char[] source, List modules)
-	{
-		// TODO Auto-generated method stub
-		System.out.println("addAstModuleDeclaration ");
-		System.out.println(fileName);
+	@SuppressWarnings("unchecked")
+	public synchronized ModuleDeclaration addAstModuleDeclaration(
+			IProject project, String nature, char[] fileName, char[] source,
+			List modules) {
+		
+		
+		
 
 		updateAst(project, nature, modules);
+		
+		System.out.println("addAstModuleDeclaration : " + project.getName()
+				+ "(" + nature + ") - " + new Path(new String( fileName)).toString()+" Modules: "+ getNames(modules));
 
-		return new DltkAstConverter(fileName, source).parse(modules);
+		try {
+			return new DltkAstConverter(fileName, source).parse(modules);
+		} catch (Exception e) {
+			System.out.println("DLTK AST convertion error");
+			e.printStackTrace();
+			return new ModuleDeclaration(0);
+		}
 	}
 
-	
-	
-	public void updateAst(IProject project, String nature, List modules)
-	{
+	@SuppressWarnings("unchecked")
+	public synchronized void updateAst(IProject project, String nature,
+			List modules) {
 		Map<String, RootNode> natureAst = asts.get(project);
-		if (natureAst != null)
-		{
+		if (natureAst != null) {
 			RootNode root = natureAst.get(nature);
-			if (root != null && root.getRootElementList() != null)
-			{
-				List ast = root.getRootElementList();
-				boolean okForInsert = true;
-				for (int i = 0; i < ast.size(); i++)
-				{
-					for (int j = 0; j < modules.size(); j++)
-					{
-						if (ast instanceof ModuleList
-								&& modules instanceof ModuleList)
-						{
-							ModuleList astModules = (ModuleList) ast;
-							if (astModules.elementAt(i).name.equals(((ModuleList) modules).elementAt(j).name))
-							{
-								astModules.remove(i);
-								astModules.add(((ModuleList) modules).elementAt(j));
-								okForInsert = false;
-								break;
-
-							}
-						} else if (ast instanceof ClassList
-								&& modules instanceof ClassList)
-						{
-							ClassList astModules = (ClassList) ast;
-							if (astModules.elementAt(i).name.equals(((ClassList) modules).elementAt(j).name))
-							{
-								astModules.remove(i);
-								astModules.add(((ClassList) modules).elementAt(j));
-								okForInsert = false;
-								break;
-
-							}
-						}
-					}
-				}
-				if (okForInsert)
-					if (ast instanceof ModuleList)
-						((ModuleList) ast).addAll((ModuleList) modules);
-					else if (ast instanceof ClassList)
-						((ClassList) ast).addAll((ClassList) modules);
+			if (root != null && root.getRootElementList() != null) {
+				root.update(modules);
 			} else
 				natureAst.put(nature, new RootNode(modules));
-		} else
-		{
+		} else {
 			HashMap<String, RootNode> astModules = new HashMap<String, RootNode>();
 			astModules.put(nature, new RootNode(modules));
 			asts.put(project, astModules);
 		}
-
+//		System.out.println("addAstModuleDeclaration : " + project.getName()
+//				+ "(" + nature + ") - " + getNames(modules));
 	}
 
-	public Object getAstList(IProject project, String nature)
+	@SuppressWarnings("unchecked")
+	private static String getNames(List modules)
 	{
+		String s = "";
+		for(Object ss:modules)
+		{
+			if(ss instanceof ClassDefinition)
+			s+=((ClassDefinition)ss).name+ ", ";
+			if(ss instanceof Module)
+				s+=((Module)ss).name+ ", ";
+		}
+		return s;
+	}
+	
+	public Object getAstList(IProject project, String nature) {
 		Map<String, RootNode> natureAst = asts.get(project);
 		if (natureAst != null && natureAst.containsKey(nature))
 			return natureAst.get(nature).getRootElementList();
 		else
 			return null;
 	}
-	
-	public RootNode getRootNode(IProject project, String nature){
+
+	public RootNode getRootNode(IProject project, String nature) {
 		Map<String, RootNode> natureAst = asts.get(project);
-		if (natureAst != null && natureAst.containsKey(nature)){
+		if (natureAst != null && natureAst.containsKey(nature)) {
 			return natureAst.get(nature);
 		}
 		return null;
 	}
 
-	public void setAstAsTypeChecked(IProject project, String nature)
-	{
-		
+	public void setAstAsTypeChecked(IProject project, String nature) {
+
 	}
 
 }

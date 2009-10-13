@@ -206,8 +206,8 @@ public class DltkAstConverter {
 			Definition def) {
 		LexLocation loc = def.location;
 
-		System.out.println("Method name:" +  def.name.name + " Start: " + converter.convertStart(loc) + " End: " + 
-				converter.convertEnd(loc));
+//		System.out.println("Method name:" +  def.name.name + " Start: " + converter.convertStart(loc) + " End: " + 
+//				converter.convertEnd(loc));
 		
 		MethodDeclaration method = new MethodDeclaration(def.name.name,
 				converter.convertStart(loc), converter.convertEnd(loc),
@@ -306,8 +306,9 @@ public class DltkAstConverter {
 
 		if (definition.isFunction()) {
 			FunctionType funcType = definition.getFunction();
-
-			TypeList parameters = funcType.parameters;
+if(funcType==null)
+	return "";
+			TypeList parameters = funcType.parameters;//TODO check for null first
 			Type result = funcType.result;
 
 			StringBuilder resultF = new StringBuilder();
@@ -341,7 +342,7 @@ public class DltkAstConverter {
 		}
 
 		if (definition.isProduct()) {
-			System.out.print("Product");
+			//System.out.print("Product");
 		}
 
 		if (definition.isRecord()) {
