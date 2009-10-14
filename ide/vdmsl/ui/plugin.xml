@@ -49,6 +49,15 @@
             class="org.overture.ide.vdmsl.ui.internal.editor.VdmSlUIPreferenceInitializer">
       </initializer>
    </extension>
+<extension
+      point="org.eclipse.dltk.core.selectionEngine">
+   <selectionEngine
+         class="org.overture.ide.vdmsl.ui.selection.VdmSlSelectionEngine"
+         nature="org.overture.ide.vdmsl.core.nature"
+         priority="0">
+   </selectionEngine>
+</extension>
+
    
    
    <!-- customize the outline to include fileds etc. -->

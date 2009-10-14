@@ -20,5 +20,6 @@ Require-Bundle: org.eclipse.dltk.ui;bundle-version="1.0.0",
  org.overture.ide.ui;bundle-version="1.0.0",
  org.overture.ide.ast;bundle-version="1.0.0"
 Bundle-Activator: org.overture.ide.vdmsl.ui.UIPlugin
+Export-Package: org.overture.ide.vdmsl.ui.selection
 
 
