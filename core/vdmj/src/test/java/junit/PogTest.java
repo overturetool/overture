@@ -141,7 +141,7 @@ public class PogTest extends TestCase
 		"2 in set dom m\n",
 		"3 in set dom m\n",
 		"while (x > 0) do ...\n",
-		"iv := (iv + 1)\n"
+		"-- After iv := (iv + 1)\n(iv < 10)\n"
 	};
 
 	public void testPOG() throws Exception
@@ -164,10 +164,16 @@ public class PogTest extends TestCase
 
 		for (ProofObligation po: polist)
 		{
-//			Console.out.println(po.toString());
+			if (!expected[i].equals(po.value))
+			{
+				Console.out.println("Expected: " + expected[i]);
+				Console.out.println("Actual: " + po.value);
+			}
+
 			assertEquals("PO #" + i+1, expected[i], po.value);
 			i++;
 
+//			Comment this in to re-generate the expected from the actuals...
 //			Console.out.println("\"" + po.value.replaceAll("\n", "\\\\n") + "\",");
 		}
 	}

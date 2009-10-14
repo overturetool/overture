@@ -23,6 +23,10 @@
 
 package org.overturetool.vdmj.pog;
 
+import org.overturetool.vdmj.definitions.ClassInvariantDefinition;
+import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.definitions.StateDefinition;
 import org.overturetool.vdmj.statements.AssignmentStatement;
 
 public class StateInvariantObligation extends ProofObligation
@@ -30,6 +34,36 @@ public class StateInvariantObligation extends ProofObligation
 	public StateInvariantObligation(AssignmentStatement ass, POContextStack ctxt)
 	{
 		super(ass.location, POType.STATE_INVARIANT, ctxt);
-		value = ctxt.getObligation(ass.toString());
+		StringBuilder sb = new StringBuilder();
+		sb.append("-- After ");
+		sb.append(ass);
+		sb.append("\n");
+
+		if (ass.classDefinition != null)
+		{
+    		DefinitionList invdefs = ass.classDefinition.getInvDefs();
+    		String sep = "";
+
+    		for (Definition d: invdefs)
+    		{
+    			ClassInvariantDefinition cid = (ClassInvariantDefinition)d;
+    			sb.append(sep);
+    			sb.append(cid.expression);
+    			sep = " and ";
+    		}
+		}
+		else	// must be because we have a module state invariant
+		{
+			StateDefinition def = ass.stateDefinition;
+
+			sb.append("let ");
+			sb.append(def.invPattern);
+			sb.append(" = ");
+			sb.append(def.name);
+			sb.append(" in ");
+			sb.append(def.invExpression);
+		}
+
+		value = ctxt.getObligation(sb.toString());
 	}
 }

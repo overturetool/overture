@@ -25,6 +25,7 @@ package org.overturetool.vdmj.statements;
 
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.definitions.StateDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -55,7 +56,8 @@ public class AssignmentStatement extends Statement
 	public final StateDesignator target;
 	public Type targetType;
 	public Type expType;
-	private boolean classInvExists = false;
+	public ClassDefinition classDefinition = null;
+	public StateDefinition stateDefinition = null;
 
 	public AssignmentStatement(
 		LexLocation location, StateDesignator target, Expression exp)
@@ -83,8 +85,8 @@ public class AssignmentStatement extends Statement
 			detail2("Target", targetType, "Expression", expType);
 		}
 
-		ClassDefinition cdef = env.findClassDefinition();
-		classInvExists = (cdef != null && cdef.invariant != null);
+		classDefinition = env.findClassDefinition();
+		stateDefinition = env.findStateDefinition();
 
 		return new VoidType(location);
 	}
@@ -151,7 +153,8 @@ public class AssignmentStatement extends Statement
 	{
 		ProofObligationList obligations = new ProofObligationList();
 
-		if (classInvExists)
+		if ((classDefinition != null && classDefinition.invariant != null) ||
+			(stateDefinition != null && stateDefinition.invExpression != null))
 		{
 			obligations.add(new StateInvariantObligation(this, ctxt));
 		}

@@ -1283,7 +1283,7 @@ public class ClassDefinition extends Definition
 	 * all of its supertypes.
 	 */
 
-	private DefinitionList getInvDefs()
+	public DefinitionList getInvDefs()
 	{
 		DefinitionList invdefs = new DefinitionList();
 
