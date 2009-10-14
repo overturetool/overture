@@ -29,10 +29,13 @@ import java.util.ListIterator;
 
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
+import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.Interpreter;
+import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.traces.CallSequence;
 import org.overturetool.vdmj.traces.TestSequence;
 import org.overturetool.vdmj.traces.Verdict;
@@ -41,6 +44,7 @@ import org.overturetool.vdmj.typechecker.FlatEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.PrivateClassEnvironment;
 import org.overturetool.vdmj.types.Type;
+import org.overturetool.vdmj.types.VoidType;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.VoidValue;
 
@@ -49,6 +53,7 @@ public class TraceStatement extends Statement
 	private static final long serialVersionUID = 1L;
 	private static PrintWriter writer = null;
 	public final NamedTraceDefinition tracedef;
+	private LexNameToken arg;
 
 	public TraceStatement(NamedTraceDefinition def)
 	{
@@ -59,6 +64,8 @@ public class TraceStatement extends Statement
 		{
 			writer = Console.out;
 		}
+
+		arg = new LexNameToken(tracedef.name.module, "test", location);
 	}
 
 	@Override
@@ -72,10 +79,70 @@ public class TraceStatement extends Statement
 			classdef.getSelfDefinition(),
 			new PrivateClassEnvironment(classdef, ci.getGlobalEnvironment()));
 
-		int n = 1;
+		Value argval = ctxt.check(arg);
 
-		for (CallSequence test: tests)
+		if (argval == null)
 		{
+    		int n = 1;
+
+    		for (CallSequence test: tests)
+    		{
+    			// Bodge until we figure out how to not have explicit op names.
+    			String clean = test.toString().replaceAll("\\.\\w+`", ".");
+
+    			if (test.getFilter() > 0)
+    			{
+        			writer.println("Test " + n + " = " + clean);
+    				writer.println(
+    					"Test " + n + " FILTERED by test " + test.getFilter());
+    			}
+    			else
+    			{
+        			ci.init(null);	// Initialize completely between every run...
+        			List<Object> result = ci.runtrace(tracedef.name.module, env, test);
+
+        			if (result.get(result.size()-1) == Verdict.FAILED)
+        			{
+        				int stem = result.size() - 1;
+        				ListIterator<CallSequence> it = tests.listIterator(n);
+
+        				while (it.hasNext())
+        				{
+        					CallSequence other = it.next();
+
+        					if (other.compareStem(test, stem))
+        					{
+        						other.setFilter(n);
+        					}
+        				}
+        			}
+
+        			writer.println("Test " + n + " = " + clean);
+        			writer.println("Result = " + result);
+    			}
+
+    			n++;
+    		}
+		}
+		else
+		{
+			long n = 0;
+
+			try
+			{
+				n = argval.nat1Value(ctxt);
+			}
+			catch (ValueException e)
+			{
+				throw new ContextException(e, location);
+			}
+
+			if (n > tests.size())		// Arg is 1 to n
+			{
+				abort(4143, "No such test number: " + n, ctxt);
+			}
+
+			CallSequence test = tests.get((int)(n - 1));
 			// Bodge until we figure out how to not have explicit op names.
 			String clean = test.toString().replaceAll("\\.\\w+`", ".");
 
@@ -90,27 +157,9 @@ public class TraceStatement extends Statement
     			ci.init(null);	// Initialize completely between every run...
     			List<Object> result = ci.runtrace(tracedef.name.module, env, test);
 
-    			if (result.get(result.size()-1) == Verdict.FAILED)
-    			{
-    				int stem = result.size() - 1;
-    				ListIterator<CallSequence> it = tests.listIterator(n);
-
-    				while (it.hasNext())
-    				{
-    					CallSequence other = it.next();
-
-    					if (other.compareStem(test, stem))
-    					{
-    						other.setFilter(n);
-    					}
-    				}
-    			}
-
     			writer.println("Test " + n + " = " + clean);
     			writer.println("Result = " + result);
 			}
-
-			n++;
 		}
 
 		return new VoidValue();
@@ -131,8 +180,9 @@ public class TraceStatement extends Statement
 	@Override
 	public Type typeCheck(Environment env, NameScope scope)
 	{
-		assert false : "Shouldn't be calling TraceStatement's typeCheck";
-		return null;
+
+		env.findName(arg, scope);	// Just to avoid a "not used" warning
+		return new VoidType(location);
 	}
 
 	public static void setOutput(PrintWriter pw)

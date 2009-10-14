@@ -29,6 +29,7 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.Token;
+import org.overturetool.vdmj.patterns.IdentifierPattern;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.statements.TraceStatement;
@@ -38,10 +39,12 @@ import org.overturetool.vdmj.traces.TraceDefinitionTerm;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
+import org.overturetool.vdmj.types.NaturalOneType;
 import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.Type;
+import org.overturetool.vdmj.types.TypeList;
+import org.overturetool.vdmj.types.VoidType;
 import org.overturetool.vdmj.util.Utils;
-import org.overturetool.vdmj.values.NameValuePair;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.OperationValue;
 
@@ -52,6 +55,7 @@ public class NamedTraceDefinition extends Definition
 	public final List<TraceDefinitionTerm> terms;
 
 	private StateDefinition state;
+	private ExplicitOperationDefinition oneTest;
 
 	public NamedTraceDefinition(
 		LexLocation location, List<String> pathname, List<TraceDefinitionTerm> terms)
@@ -71,12 +75,24 @@ public class NamedTraceDefinition extends Definition
 	public void implicitDefinitions(Environment base)
 	{
 		state = base.findStateDefinition();
+		oneTest = getOneTestDefinition();
 	}
 
 	@Override
 	public Definition findName(LexNameToken sought, NameScope scope)
 	{
-		return (sought.equals(name) ? this : null);
+		// return (sought.equals(name) || sought.equals(name2) ? this : null);
+		if (super.findName(sought, scope) != null)
+		{
+			return this;
+		}
+
+		if (oneTest.findName(sought, scope) != null)
+		{
+			return oneTest;
+		}
+
+		return null;
 	}
 
 	@Override
@@ -110,9 +126,31 @@ public class NamedTraceDefinition extends Definition
 			name, new OperationType(location),
 			new PatternList(), null, null, new TraceStatement(this));
 
-		OperationValue opval = new OperationValue(opdef, null, null, state);
+		NameValuePairList nvpl = new NameValuePairList();
+		nvpl.add(name, new OperationValue(opdef, null, null, state));
+		nvpl.add(oneTest.name, new OperationValue(oneTest, null, null, state));
 
-		return new NameValuePairList(new NameValuePair(name, opval));
+		return nvpl;
+	}
+
+	private ExplicitOperationDefinition getOneTestDefinition()
+	{
+		LexNameToken oneName = name.copy();
+		TypeList ptypes = new TypeList(new NaturalOneType(location));
+		oneName.setTypeQualifier(ptypes);
+		PatternList params = new PatternList();
+
+		params.add(
+			new IdentifierPattern(
+				new LexNameToken(name.module, "test", name.location)));
+
+		ExplicitOperationDefinition def = new ExplicitOperationDefinition(
+			oneName, new OperationType(location, ptypes, new VoidType(location)),
+			params, null, null, new TraceStatement(this));
+
+		def.setAccessSpecifier(accessSpecifier);
+		def.classDefinition = classDefinition;
+		return def;
 	}
 
 	@Override
@@ -134,6 +172,8 @@ public class NamedTraceDefinition extends Definition
 		{
 			term.typeCheck(base, NameScope.NAMESANDSTATE);
 		}
+
+		oneTest.typeCheck(base, NameScope.NAMESANDSTATE);
 	}
 
 	public TestSequence getTests(Context ctxt)
