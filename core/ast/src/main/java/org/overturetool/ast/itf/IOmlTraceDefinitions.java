@@ -5,6 +5,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 public abstract interface IOmlTraceDefinitions extends IOmlDefinitionBlock
 {
+	@SuppressWarnings("unchecked")
 	abstract Vector getTraces() throws CGException;
 }
 

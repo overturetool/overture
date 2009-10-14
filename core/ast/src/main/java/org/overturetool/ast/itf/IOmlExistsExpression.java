@@ -5,6 +5,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 public abstract interface IOmlExistsExpression extends IOmlExpression
 {
+	@SuppressWarnings("unchecked")
 	abstract Vector getBindList() throws CGException;
 	abstract IOmlExpression getExpression() throws CGException;
 }

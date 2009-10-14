@@ -10,6 +10,7 @@ public abstract interface IOmlDocument
 	abstract IOmlSpecifications getSpecifications() throws CGException;
 	abstract Boolean hasExpression() throws CGException;
 	abstract IOmlExpression getExpression() throws CGException;
+	@SuppressWarnings("unchecked")
 	abstract Vector getLexems() throws CGException;
 	abstract String toVdmSlValue() throws CGException;
 	abstract String toVdmPpValue() throws CGException;

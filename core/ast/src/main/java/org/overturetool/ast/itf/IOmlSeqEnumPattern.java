@@ -5,6 +5,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 public abstract interface IOmlSeqEnumPattern extends IOmlPattern
 {
+	@SuppressWarnings("unchecked")
 	abstract Vector getPatternList() throws CGException;
 }
 

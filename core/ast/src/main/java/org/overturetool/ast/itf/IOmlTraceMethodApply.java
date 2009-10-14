@@ -7,6 +7,7 @@ public abstract interface IOmlTraceMethodApply extends IOmlTraceCoreDefinition
 {
 	abstract String getVariableName() throws CGException;
 	abstract String getMethodName() throws CGException;
+	@SuppressWarnings("unchecked")
 	abstract Vector getArgs() throws CGException;
 }
 

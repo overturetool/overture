@@ -5,6 +5,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 public abstract interface IOmlWaitingExpression extends IOmlExpression
 {
+	@SuppressWarnings("unchecked")
 	abstract Vector getNameList() throws CGException;
 }
 

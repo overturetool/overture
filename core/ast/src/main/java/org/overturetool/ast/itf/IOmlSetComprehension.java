@@ -6,6 +6,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 public abstract interface IOmlSetComprehension extends IOmlExpression
 {
 	abstract IOmlExpression getExpression() throws CGException;
+	@SuppressWarnings("unchecked")
 	abstract Vector getBindList() throws CGException;
 	abstract IOmlExpression getGuard() throws CGException;
 	abstract Boolean hasGuard() throws CGException;

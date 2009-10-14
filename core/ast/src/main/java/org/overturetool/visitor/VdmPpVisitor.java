@@ -24,7 +24,7 @@ import org.overturetool.ast.itf.*;
 // ***** VDMTOOLS END Name=imports
 
 
-
+@SuppressWarnings("all")
 public class VdmPpVisitor extends OmlVisitor {
 
 // ***** VDMTOOLS START Name=vdmComp KEEP=NO

@@ -5,6 +5,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 public abstract interface IOmlSynchronizationDefinitions extends IOmlDefinitionBlock
 {
+	@SuppressWarnings("unchecked")
 	abstract Vector getSyncList() throws CGException;
 }
 

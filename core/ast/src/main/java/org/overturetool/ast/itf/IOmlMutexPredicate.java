@@ -5,6 +5,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 public abstract interface IOmlMutexPredicate extends IOmlSyncPredicate
 {
+	@SuppressWarnings("unchecked")
 	abstract Vector getNameList() throws CGException;
 }
 

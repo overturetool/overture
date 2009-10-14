@@ -5,6 +5,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 public abstract interface IOmlValueDefinitions extends IOmlDefinitionBlock
 {
+	@SuppressWarnings("unchecked")
 	abstract Vector getValueList() throws CGException;
 }
 
