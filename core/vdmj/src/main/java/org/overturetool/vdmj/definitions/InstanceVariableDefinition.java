@@ -26,6 +26,9 @@ package org.overturetool.vdmj.definitions;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.UndefinedExpression;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.pog.POContextStack;
+import org.overturetool.vdmj.pog.ProofObligationList;
+import org.overturetool.vdmj.pog.StateInvariantObligation;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.PrivateClassEnvironment;
@@ -98,6 +101,19 @@ public class InstanceVariableDefinition extends AssignmentDefinition
 		if (found != null) return found;
 		return scope.matches(NameScope.OLDSTATE) &&
 				oldname.equals(sought) ? this : null;
+	}
+
+	@Override
+	public ProofObligationList getProofObligations(POContextStack ctxt)
+	{
+		ProofObligationList obligations = super.getProofObligations(ctxt);
+
+		if (classDefinition != null && classDefinition.invariant != null)
+		{
+			obligations.add(new StateInvariantObligation(this, ctxt));
+		}
+
+		return obligations;
 	}
 
 	@Override

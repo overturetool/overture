@@ -26,6 +26,7 @@ package org.overturetool.vdmj.pog;
 import org.overturetool.vdmj.definitions.ClassInvariantDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
 import org.overturetool.vdmj.definitions.StateDefinition;
 import org.overturetool.vdmj.statements.AssignmentStatement;
 
@@ -65,5 +66,29 @@ public class StateInvariantObligation extends ProofObligation
 		}
 
 		value = ctxt.getObligation(sb.toString());
+	}
+
+	public StateInvariantObligation(
+		InstanceVariableDefinition def,
+		POContextStack ctxt)
+	{
+		super(def.location, POType.STATE_INVARIANT, ctxt);
+		StringBuilder sb = new StringBuilder();
+		sb.append("-- After ");
+		sb.append(def);
+		sb.append("\n");
+
+		DefinitionList invdefs = def.classDefinition.getInvDefs();
+		String sep = "";
+
+		for (Definition d: invdefs)
+		{
+			ClassInvariantDefinition cid = (ClassInvariantDefinition)d;
+			sb.append(sep);
+			sb.append(cid.expression);
+			sep = " and ";
+		}
+
+    	value = ctxt.getObligation(sb.toString());
 	}
 }
