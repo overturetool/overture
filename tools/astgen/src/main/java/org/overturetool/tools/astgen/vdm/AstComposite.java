@@ -11,7 +11,7 @@ import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
 // Referenced classes of package nl.marcelverhoef.vdm.ast:
 //            AstCore, AstVisitor
-
+@SuppressWarnings("all")
 public class AstComposite extends AstCore
 {
 

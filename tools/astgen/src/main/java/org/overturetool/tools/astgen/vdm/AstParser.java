@@ -15,7 +15,7 @@ import jp.co.csk.vdm.toolbox.VDM.CGException;
 //            AstComposite, AstShorthand, AstType, AstField, 
 //            AstTypeName, AstQuotedType, AstUnionType, AstOptionalType, 
 //            AstSeqOfType, AstSetOfType, AstMapType
-
+@SuppressWarnings("all")
 public class AstParser
     implements AstParserTokens
 {

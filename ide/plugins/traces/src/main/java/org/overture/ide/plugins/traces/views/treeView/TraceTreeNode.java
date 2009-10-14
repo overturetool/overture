@@ -8,6 +8,7 @@ import org.overturetool.traces.utility.ITracesHelper;
 import org.overturetool.traces.utility.TraceTestResult;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 
+
 public class TraceTreeNode implements IAdaptable,ITreeNode
 {
 

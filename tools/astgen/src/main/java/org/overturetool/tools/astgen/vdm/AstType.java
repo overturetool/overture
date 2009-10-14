@@ -11,7 +11,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 // Referenced classes of package nl.marcelverhoef.vdm.ast:
 //            AstCore, AstUnionType, AstQuotedType, AstTypeName
-
+@SuppressWarnings("all")
 public class AstType extends AstCore
 {
 

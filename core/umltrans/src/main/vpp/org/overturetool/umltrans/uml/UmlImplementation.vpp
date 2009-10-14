@@ -8,7 +8,7 @@ operations
   public accept: IUmlVisitor ==> ()
   accept (pVisitor) == pVisitor.visitAssociation(self);
 
-  public UmlAssociation:
+  public UmlAssociation: 
     (set of IUmlProperty) *
     (set of IUmlProperty) *
     [seq of char] *
@@ -1574,8 +1574,8 @@ class UmlMessageSort is subclass of IUmlMessageSort
 operations
   public identity: () ==> seq of char
   identity () == return "MessageSort";
-
-  public accept: IUmlVisitor ==> ()
+ 
+  public accept: IUmlVisitor ==> () 
   accept (pVisitor) == pVisitor.visitMessageSort(self);
 
   public UmlMessageSort: nat ==> UmlMessageSort
@@ -1975,9 +1975,9 @@ types
 instance variables
   private ivInfo : map nat to IUmlContextInfo := {|->}
 
-operations
+operations 
   public identity: () ==> seq of char
-  identity () == return "Node";
+  identity () == return "Node"; 
 
   public accept: IUmlVisitor ==> ()
   accept (pVisitor) == pVisitor.visitNode(self);

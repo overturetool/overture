@@ -9,8 +9,8 @@ import org.overture.tools.vdmt.VDMToolsProxy.VdmToolsProxyProject;
  * Says "Hi" to the user.
  * 
  * @goal codec
- * @phase process-resources
- * @requiresDependencyResolution compile
+ * @goal eclipse
+ * @requiresDependencyResolution test scopes
  */
 public class CodeGenJavaCorbaMojo extends VdmBaseMojo {
 

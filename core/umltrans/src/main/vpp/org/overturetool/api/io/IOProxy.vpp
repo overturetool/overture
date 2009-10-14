@@ -1,16 +1,16 @@
 class IOProxy
-types
+types 
 public string = seq of char;
-operations
+operations    
 public print: string ==> ()
 print(s) ==
 --			let - = IO`fecho("", s, nil) in skip;
-(
+( 
   def file = new IO()
   in
     def - = file.echo(s) in skip;
-);
-		
+);     
+		 
 --	public print: int ==> ()
 --		print(n) ==
 --			let - = IO`fecho("", str(n), nil) in skip;

@@ -3,24 +3,7 @@
 <plugin>
  
  
- <extension
-       point="org.eclipse.ui.intro.config">
-    <config
-          content="introContent.xml"
-          id="org.overture.ide.platform.introConfigId"
-          introId="org.eclipse.ui.intro.universal">
-       <presentation
-             home-page-id="root">
-          <implementation
-                kind="html"
-                os="win32,linux,macosx"
-                style="content/shared.css">
-          </implementation>
-       </presentation>
-    </config>
- </extension>
- 
- 
+
  <extension
        id="product"
        point="org.eclipse.core.runtime.products">
@@ -29,7 +12,7 @@
           name="%productName">
        <property
              name="windowImages"
-             value="resources/16.png,resources/32.png,resources/48.png,resources/64.png,resources/128.png">
+             value="icons/ctool16/overture_misc.png,icons/ctool32/overture_misc.png,icons/ctool48/overture_misc.png,icons/ctool64/overture_misc.png,icons/ctool128/overture_misc.png">
        </property>
        <property
              name="aboutText"
@@ -37,7 +20,7 @@
        </property>
        <property
              name="aboutImage"
-             value="/org.overture.eclipse.plugins.platform/resources/128.png">
+             value="icons/ctool128/overture_misc.png">
        </property>
        <property
              name="startupForegroundColor"
@@ -52,17 +35,45 @@
              value="75,250,300,15">
        </property>
        <property
-             name="preferenceCustomization"
-             value="plugin_customization.ini">
-       </property>
-       <property
              name="appName"
              value="%productName">
        </property>
+       <property
+             name="preferenceCustomization"
+             value="plugin_customization.ini">
+       </property>
     </product>
- </extension>
+ </extension> 
+  <extension
+         point="org.eclipse.ui.intro">
+      <intro
+            class="org.eclipse.ui.intro.config.CustomizableIntroPart"
+            id="org.overture.ide.platform.intro">
+      </intro>
+      <introProductBinding
+            introId="org.overture.ide.platform.intro"
+            productId="org.overture.ide.platform.product">
+      </introProductBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro.config">
+      <config
+            content="introContent.xml"
+            id="org.overture.ide.platform.introConfigId"
+            introId="org.overture.ide.platform.intro">
+         <presentation
+               home-page-id="root">
+            <implementation
+                  kind="html"
+                  os="win32,linux,macosx"
+                  >
+            </implementation>
+         </presentation>
+      </config>
+   </extension>
+
  
- 
+
  
  
  

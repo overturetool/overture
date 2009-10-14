@@ -14,7 +14,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 //            AstField, AstTypeName, AstDefinitions, AstUnionType, 
 //            AstSeqOfType, AstSetOfType, AstOptionalType, AstMapType, 
 //            AstQuotedType
-
+@SuppressWarnings("all")
 public class wfCheckVisitor extends AstVisitor
 {
 

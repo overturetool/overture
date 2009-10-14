@@ -24,8 +24,8 @@ import org.overture.tools.vdmt.VDMToolsProxy.VdmProject;
  * Says "Hi" to the user.
  * 
  * @goal code
- * @phase process-resources
- * @requiresDependencyResolution compile
+ * @goal eclipse
+ * @requiresDependencyResolution test scopes
  */
 public class CodeGenJavaMojo extends VdmBaseMojo {
 

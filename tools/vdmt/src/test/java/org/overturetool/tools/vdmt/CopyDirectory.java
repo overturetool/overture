@@ -10,7 +10,7 @@ public class CopyDirectory
 	public void copyDirectory(File srcPath, File dstPath) throws IOException
 	{
 
-		if (srcPath.isDirectory())
+		if (srcPath.isDirectory()&& !srcPath.getName().toLowerCase().equals(".svn"))
 		{
 
 			if (!dstPath.exists())
@@ -43,7 +43,7 @@ public class CopyDirectory
 
 			}
 
-			else
+			else if(srcPath.isFile())
 
 			{
 

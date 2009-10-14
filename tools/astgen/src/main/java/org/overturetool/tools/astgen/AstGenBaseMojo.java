@@ -49,7 +49,7 @@ public class AstGenBaseMojo extends AbstractMojo {
      *
      * @parameter
      */
-    protected List top;
+    protected List<String> top;
 
      
 	/**

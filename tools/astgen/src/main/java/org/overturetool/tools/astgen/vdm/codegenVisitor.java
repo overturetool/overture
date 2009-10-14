@@ -14,7 +14,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 //            AstComposite, AstField, AstTypeName, AstOptionalType, 
 //            AstSeqOfType, AstSetOfType, AstMapType, AstQuotedType, 
 //            AstUnionType
-
+@SuppressWarnings("all")
 public class codegenVisitor extends AstVisitor
 {
 

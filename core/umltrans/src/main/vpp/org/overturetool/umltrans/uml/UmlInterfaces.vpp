@@ -826,7 +826,7 @@ operations
 
 end IUmlVisibilityKind
 \end{vdm_al}
-
+ 
 
 \begin{vdm_al}
 class IUmlVisitor

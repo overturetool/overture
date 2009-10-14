@@ -48,8 +48,8 @@ public class VdmToolsProxyProject extends VdmProject
 
 	}
 
-	public void typeCheck(List excludePackages, List excludeClasses,
-			List importPackages) throws MojoExecutionException
+	public void typeCheck(List<String> excludePackages, List<String> excludeClasses,
+			List<String> importPackages) throws MojoExecutionException
 	{
 		StringBuilder sb = new StringBuilder();
 		try

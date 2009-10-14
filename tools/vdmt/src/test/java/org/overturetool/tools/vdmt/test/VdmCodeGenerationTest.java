@@ -115,5 +115,29 @@ public class VdmCodeGenerationTest extends VdmCodeGeneration
 				importPackages);
 	}
 	
-	
+	public void testInheritance() throws IOException
+	{
+		Log log = (Log) new LogTesting();
+		List<File> dependedArtifactsSourceLocation = new Vector<File>();
+
+		File baseDir = createTestProject("inheritance");
+		assertNotNull("Cannot create test project", baseDir);
+
+		System.out.println("Test project location: "
+				+ baseDir.getAbsolutePath());
+
+		List<String> excludePackages = new Vector<String>();
+		List<String> excludeClasses = new Vector<String>();
+		List<String> importPackages = new Vector<String>();
+		importPackages.add("jp.co.csk.vdm.toolbox.VDM.quotes");
+
+		runGeneration(
+				log,
+				vppde,
+				baseDir,
+				dependedArtifactsSourceLocation,
+				excludePackages,
+				excludeClasses,
+				importPackages);
+	}
 }

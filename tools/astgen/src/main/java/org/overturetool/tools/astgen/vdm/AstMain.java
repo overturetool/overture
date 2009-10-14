@@ -9,7 +9,7 @@ import java.io.PrintStream;
 
 // Referenced classes of package nl.marcelverhoef.vdm.ast:
 //            AstParser, wfCheckVisitor, AstDefinitions, codegenVisitor
-
+@SuppressWarnings("all")
 public class AstMain
 {
 

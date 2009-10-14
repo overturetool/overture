@@ -9,7 +9,7 @@ import java.io.*;
 
 // Referenced classes of package nl.marcelverhoef.vdm.ast:
 //            AstParserTokens, AstParserVal, AstParser
-
+@SuppressWarnings("all")
 class AstScanner
     implements AstParserTokens
 {

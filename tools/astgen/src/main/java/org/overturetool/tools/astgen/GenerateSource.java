@@ -29,7 +29,8 @@ public class GenerateSource
 		this.projectFile = parentFile;
 	}
 
-	public void generate(String prefix, String packageName, List top)
+	@SuppressWarnings("unchecked")
+	public void generate(String prefix, String packageName, List<String> top)
 	{
 		File file = exstractAstFile();
 		if (file == null || !file.exists())
@@ -220,9 +221,9 @@ public class GenerateSource
 
 	}
 
-	private Vector getPackageFromString(String data)
+	private Vector<String> getPackageFromString(String data)
 	{
-		Vector v = new Vector();
+		Vector<String> v = new Vector<String>();
 		if (data.contains("."))
 		{
 			data.replace('.', ':');

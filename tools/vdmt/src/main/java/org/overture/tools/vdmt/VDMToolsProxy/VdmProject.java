@@ -213,7 +213,8 @@ public class VdmProject {
 	public void codeGen(List<String> excludePackages,
 			List<String> excludeClasses, List<String> importPackages)
 			throws MojoFailureException, MojoExecutionException {
-
+		long before = System.currentTimeMillis();
+		
 		if (excludePackages == null)
 			excludePackages = new ArrayList<String>();
 
@@ -236,16 +237,19 @@ public class VdmProject {
 						continue;
 
 					classes.add(className);
-					// set the corresponding Java file
-					String tmp = Util.GetPackageAsPathPart(baseDir
-							.getAbsolutePath(), file.getAbsolutePath());
-					String tmp2 = tmp.replace("/src/main/vpp".replace('/',
-							File.separatorChar), SRC_MAIN_JAVA.replace('/',
-							File.separatorChar));
-					String javaFile = baseDir.getAbsolutePath()
-							+ tmp2.replace(".vpp", ".java");
-					classToJavaFile.put(className, new File(javaFile));
-					javaFiles.add(new File(javaFile));
+					
+					File javaFile = getJavaFile(file);
+					
+					if(!javaFile.exists() ){
+						javaFile=getValidJavaFileName(javaFile,className);
+					}
+					
+//					LexTokenReader ltr = new LexTokenReader(file,Dialect.VDM_PP);
+//					ClassReader reader = new ClassReader(ltr);
+//				ClassList clList=	reader.readClasses();
+					
+					classToJavaFile.put(className, javaFile);
+					javaFiles.add(javaFile);
 					String packageName = Util.GetPackage(baseDir, file);
 					packageName = packageName.replace("src.main.vpp.", "")
 							.trim();
@@ -284,8 +288,35 @@ public class VdmProject {
 		updateImports(excludePackages, packages, javaFiles);
 
 		updateErrorUndefined(javaFiles);
+		
+		updateSuppressWarnings(javaFiles);
+		
+		
+		long after = System.currentTimeMillis();
 
-		printSuccess("VDM Code generation finished");
+	
+
+		printSuccess("VDM Code generation finished in "+(double) (after - before) / 1000 + " secs. ");
+	}
+
+	private File getValidJavaFileName(File javaFile,String className) {
+		
+		
+		if(javaFile.getName().substring(0,javaFile.getName().length()-4).equals(className))
+			return javaFile;
+		else
+			return new File(javaFile.getParentFile(),className+".java");
+	}
+
+	private File getJavaFile(File vppFile) {
+		// set the corresponding Java file
+		String tmp = Util.GetPackageAsPathPart(baseDir
+				.getAbsolutePath(), vppFile.getAbsolutePath());
+		String tmp2 = tmp.replace("/src/main/vpp".replace('/',
+				File.separatorChar), SRC_MAIN_JAVA.replace('/',
+				File.separatorChar));
+		return new File( baseDir.getAbsolutePath()
+				+ tmp2.replace(".vpp", ".java"));
 	}
 
 	private void updateCheckSums(List<File> vppFiles) {
@@ -319,6 +350,21 @@ public class VdmProject {
 				packages.remove(string);
 		}
 		setImports(packages, javaFiles);
+	}
+	
+	private void updateSuppressWarnings(List<File> javaFiles) {
+		List<String> warnigs = new ArrayList<String>();
+		warnigs.add("all");
+		warnigs.add("unchecked");
+		warnigs.add("unused");
+		
+		log
+				.info("Updating Suppress warnings");
+		for (File file : javaFiles) {
+
+			if (file.exists())
+				new VdmJavaFile(file).addSuppressWarnings(warnigs);
+		}
 	}
 
 	private void setImports(List<String> packages, List<File> files) {
@@ -444,7 +490,9 @@ public class VdmProject {
 					+ filePath.replace('\\', '/'));
 		}
 
-		createProjectFile(projectName, sb,".prj");
+		
+
+		createProjectFile(getJavaLocation(baseDir).getAbsolutePath(),projectName, sb,".prj");
 
 		createProjectOptionsFile(projectName);
 		printSuccess("VDM Tools project created");
@@ -483,10 +531,10 @@ public class VdmProject {
 		}
 	}
 
-	private File createProjectFile(String projectName, StringBuilder sb,String extension)
+	private File createProjectFile( String outputDirPath,String projectName, StringBuilder sb,String extension)
 			throws MojoExecutionException {
 		// Write project file
-		File projectFile = new File(getJavaLocation(baseDir).getAbsolutePath()
+		File projectFile = new File(outputDirPath
 				+ File.separatorChar + projectName + extension);
 
 		FileWriter outputFileReader;
@@ -556,7 +604,7 @@ final String overtureSourceLink =		"		<link>\n"+
 "		<type>2</type>\n"+
 "		<location>PATH</location>\n"+
 "		</link>\n";
-	public void createOvertureProject(String projectName) throws MojoExecutionException {
+	public void createOvertureProject(String projectName,  String outputDirPath) throws MojoExecutionException {
 		StringBuilder sb = new StringBuilder();
 		List<String> linkedLocations = new Vector<String>();
 log.info("Creating overture project file");
@@ -571,14 +619,14 @@ log.info("Creating overture project file");
 			if(f!=null && !linkedLocations.contains(f.getAbsolutePath()))
 			{
 				linkedLocations.add(f.getAbsolutePath());
-				sb.append(overtureSourceLink.replace("NAME", f.getName()+linkedLocations.size()).replace("PATH", f.getAbsolutePath()));
+				sb.append(overtureSourceLink.replace("NAME", f.getName()+linkedLocations.size()).replace("PATH", f.getAbsolutePath().replace('\\', '/')));
 			}
 		}
 
 		StringBuilder data = new StringBuilder();
 		data.append(overtureProjectFile.replace("PROJECT_NAME", projectName).replace("LINKED_SOURCE",overtureLinkedSourceFolder.replace("LINK", sb.toString())));
 		
-		createProjectFile(".project", data,"");
+		createProjectFile(outputDirPath,".project", data,"");
 
 		
 		printSuccess("Overture project created");

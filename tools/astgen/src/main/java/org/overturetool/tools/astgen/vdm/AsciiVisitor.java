@@ -5,8 +5,10 @@
 
 package org.overturetool.tools.astgen.vdm;
 
-import java.io.PrintStream;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Vector;
+
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
@@ -15,7 +17,7 @@ import jp.co.csk.vdm.toolbox.VDM.UTIL;
 //            AstType, AstField, AstTypeName, AstQuotedType, 
 //            AstUnionType, AstSeqOfType, AstSetOfType, AstOptionalType, 
 //            AstMapType
-
+@SuppressWarnings("all")
 public class AsciiVisitor extends AstVisitor
 {
 

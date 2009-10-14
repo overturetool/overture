@@ -9,8 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VdmJavaFile
-{
+public class VdmJavaFile {
 	final String IMPORT_TAG_START = "// ***** VDMTOOLS START Name=imports";
 	final String IMPORT_TAG_END = "// ***** VDMTOOLS END Name=imports";
 	final String UTIL_RUNTIME_ERROR = "UTIL.RunTime(\"Run-Time Error:Can not evaluate an error statement\");";
@@ -24,8 +23,7 @@ public class VdmJavaFile
 	 * import jp.co.csk.vdm.toolbox.VDM.; import java.util.; // VDMTOOLS END
 	 * Name=imports
 	 */
-	public VdmJavaFile(File file)
-	{
+	public VdmJavaFile(File file) {
 		this.file = file;
 	}
 
@@ -34,12 +32,10 @@ public class VdmJavaFile
 	/*
 	 * Add packages to the code generated file.
 	 */
-	public void addPackages(List<String> packages)
-	{
+	public void addPackages(List<String> packages) {
 
 		ArrayList<String> packagesInFile = new ArrayList<String>();
-		try
-		{
+		try {
 			FileReader inputFileReader = new FileReader(file);
 
 			// Create Buffered/PrintWriter Objects
@@ -49,24 +45,19 @@ public class VdmJavaFile
 			String inLine = null;
 			Boolean tagFound = false;
 			Boolean textFound = false;
-			while ((inLine = inputStream.readLine()) != null)
-			{
+			while ((inLine = inputStream.readLine()) != null) {
 				if (inLine.length() == 0 && !textFound)
 					continue;
 				textFound = true;
-				if (inLine.trim().startsWith(IMPORT_TAG_START))
-				{
+				if (inLine.trim().startsWith(IMPORT_TAG_START)) {
 					sb.append("\n" + inLine);
 					tagFound = true;
 					continue;
 
-				} else if (inLine.trim().startsWith(IMPORT_TAG_END))
-				{
+				} else if (inLine.trim().startsWith(IMPORT_TAG_END)) {
 
-					for (String packageName : packages)
-					{
-						if (!packagesInFile.contains(packageName))
-						{
+					for (String packageName : packages) {
+						if (!packagesInFile.contains(packageName)) {
 							sb.append("\n" + createImportLine(packageName));
 						}
 					}
@@ -74,8 +65,7 @@ public class VdmJavaFile
 					tagFound = false;
 					continue;
 				}
-				if (tagFound && inLine.length() > 0)
-				{
+				if (tagFound && inLine.length() > 0) {
 					packagesInFile.add(parseImport(inLine));
 				}
 
@@ -87,21 +77,17 @@ public class VdmJavaFile
 			BufferedWriter outputStream = new BufferedWriter(outputFileReader);
 			outputStream.write(sb.toString());
 			outputStream.close();
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	private String parseImport(String line)
-	{
+	private String parseImport(String line) {
 		String packageName = line.replace("import ", "").trim();
 		int lastLetter = 0;
-		for (int i = packageName.length() - 1; i > 0; i--)
-		{
-			if (Character.isLetter(packageName.charAt(i)))
-			{
+		for (int i = packageName.length() - 1; i > 0; i--) {
+			if (Character.isLetter(packageName.charAt(i))) {
 				lastLetter = i + 1;
 				break;
 			}
@@ -110,8 +96,7 @@ public class VdmJavaFile
 		return packageName;
 	}
 
-	private String createImportLine(String packageName)
-	{
+	private String createImportLine(String packageName) {
 		return "import " + packageName.trim() + ".*;";
 	}
 
@@ -121,11 +106,9 @@ public class VdmJavaFile
 	 * with interface types since a function them may return an instance of an
 	 * interface which is illegal in Java.
 	 */
-	public void replaceUtilRuntimeErrorWithCGException()
-	{
+	public void replaceUtilRuntimeErrorWithCGException() {
 
-		try
-		{
+		try {
 			FileReader inputFileReader = new FileReader(file);
 
 			// Create Buffered/PrintWriter Objects
@@ -137,16 +120,13 @@ public class VdmJavaFile
 			String previousInLine2 = "";
 			Boolean tagFound = false;
 
-			while ((inLine = inputStream.readLine()) != null)
-			{
-				if (tagFound)
-				{
+			while ((inLine = inputStream.readLine()) != null) {
+				if (tagFound) {
 					sb.append("\n" + THROW_CGEXCEPTION + " // " + inLine);
 					tagFound = false;
 
 				} else if (inLine.trim().contains(UTIL_RUNTIME_ERROR)
-						&& previousInLine2.contains(ELSE))
-				{
+						&& previousInLine2.contains(ELSE)) {
 					sb.append("\n" + inLine);
 					tagFound = true;
 
@@ -162,8 +142,42 @@ public class VdmJavaFile
 			BufferedWriter outputStream = new BufferedWriter(outputFileReader);
 			outputStream.write(sb.toString());
 			outputStream.close();
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void addSuppressWarnings(List<String> warnings) {
+
+		try {
+			FileReader inputFileReader = new FileReader(file);
+
+			// Create Buffered/PrintWriter Objects
+			BufferedReader inputStream = new BufferedReader(inputFileReader);
+			StringBuilder sb = new StringBuilder();
+
+			String inLine = null;
+			while ((inLine = inputStream.readLine()) != null) {
+				if (inLine.trim().startsWith("public")
+						&& inLine.contains("class")) {
+					String suppressWarningLine = "@SuppressWarnings({";
+					for (String w : warnings)
+						suppressWarningLine += "\"" + w + "\"" + ",";
+					suppressWarningLine = suppressWarningLine.substring(0,
+							suppressWarningLine.length() - 1)
+							+ "})";
+					sb.append("\n" + suppressWarningLine);
+				}
+				if (!inLine.trim().startsWith("@SuppressWarnings"))
+					sb.append("\n" + inLine);
+			}
+			inputStream.close();
+			FileWriter outputFileReader = new FileWriter(file);
+			BufferedWriter outputStream = new BufferedWriter(outputFileReader);
+			outputStream.write(sb.toString());
+			outputStream.close();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 

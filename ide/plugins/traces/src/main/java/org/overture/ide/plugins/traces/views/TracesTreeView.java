@@ -81,6 +81,8 @@ import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.traces.Verdict;
 import org.xml.sax.SAXException;
+import org.overture.ide.utility.ConsoleWriter;
+import org.overture.ide.utility.ProjectUtility;
 import org.overture.ide.vdmpp.core.*;
 /**
  * This sample class demonstrates how to plug-in a new workbench view. The view
@@ -116,7 +118,7 @@ public class TracesTreeView extends ViewPart
 	private Dictionary<String, ITracesHelper> traceHelpers;
 	private Dictionary<String, IFile> pathTofile;
 	final Display display = Display.getCurrent();
-	static String[] exts = new String[] { "vpp", "vdmpp" }; // TODO get
+	//static String[] exts = new String[] { "vpp", "vdmpp" }; // TODO get
 	private IResourceChangeListener resourceChangedListener = null;
 	private IProject projectToUpdate = null;
 	private String VDMToolsPath = "";
@@ -130,90 +132,52 @@ public class TracesTreeView extends ViewPart
 
 	}
 
-	/**
-	 * This method returns a list of files under the given directory or its
-	 * subdirectories. The directories themselves are not returned.
-	 * 
-	 * @param dir
-	 *            a directory
-	 * @return list of IResource objects representing the files under the given
-	 *         directory and its subdirectories
-	 */
-	private static List<IFile> getAllMemberFiles(IContainer dir, String[] exts)
+	private void SetTraceHelper(final IProject project)
 	{
-		ArrayList<IFile> list = new ArrayList<IFile>();
-		IResource[] arr = null;
-		try
-		{
-			arr = dir.members();
-		} catch (CoreException e)
-		{
-		}
-
-		for (int i = 0; arr != null && i < arr.length; i++)
-		{
-			if (arr[i].getType() == IResource.FOLDER)
-			{
-				list.addAll(getAllMemberFiles((IFolder) arr[i], exts));
-			} else
-			{
-				for (int j = 0; j < exts.length; j++)
+		
+//		Job initCtJob = new Job("CT init")
+//		{
+//
+//			@Override
+//			protected IStatus run(IProgressMonitor monitor)
+//			{
+				
+				try
 				{
-					if (exts[j].equalsIgnoreCase(arr[i].getFileExtension()))
-					{
-						list.add((IFile) arr[i]);
-						break;
-					}
-				}
-			}
-		}
-		return list;
-	}
-
-	private void SetTraceHelper(IProject project)
-	{
-		List<IFile> fileNameList = new ArrayList<IFile>();
-
-		try
-		{
-			// if the project is a overture project
-			if (project.isOpen()
-					&& project.getNature(VdmPpProjectNature.VDM_PP_NATURE) != null)
-			{
-				fileNameList = getAllMemberFiles(project, exts);
-
-				// create project node
-				// creates File array
-				File[] fileArray = new File[fileNameList.size()];
-				for (int i = 0; i < fileNameList.size(); i++)
-				{
-					fileArray[i] = fileNameList.get(i).getLocation().toFile();
-
-					pathTofile.put(
-							fileArray[i].getAbsolutePath(),
-							fileNameList.get(i));
 					
+					if (project.isOpen()
+							&& project.hasNature(VdmPpProjectNature.VDM_PP_NATURE))
+					{
+
+						traceHelpers.remove(project.getName());
+					
+						ITracesHelper tmpHelper = new VdmjTracesHelper(
+								project, 3);
+						
+						if(tmpHelper.GetClassNamesWithTraces().size()>0)
+						
+						traceHelpers.put(
+								project.getName(),
+						tmpHelper		);
+					}
+				} catch (Exception e1)
+				{
+					System.out.println("CT Init Exception: " + e1.getMessage());
+					e1.printStackTrace();
 				}
-				traceHelpers.remove(project.getName());
+				
 			
-				ITracesHelper tmpHelper = new VdmjTracesHelper(
-						project.getName(),
-						new File(
-								project.getWorkspace().getRoot().getLocation().toOSString()
-										+ project.getFullPath().toOSString()),
-						fileArray, 3);
-				
-				if(tmpHelper.GetClassNamesWithTraces().size()>0)
-				
-				traceHelpers.put(
-						project.getName(),
-				tmpHelper		);
-			}
-		} catch (Exception e1)
-		{
-			System.out.println("CT Init Exception: " + e1.getMessage());
-			e1.printStackTrace();
-		}
+//				return new Status(IStatus.OK,
+//						"org.overture.ide.plugins.traces", IStatus.OK,
+//						"CT init finished", null);
+//			}
+//
+//		};
+//
+//		initCtJob.schedule();
+		
+		
+		
 
 	}
 
@@ -294,7 +258,7 @@ public class TracesTreeView extends ViewPart
 						for (IResourceDelta resourceDelta : delta)
 						{
 
-							if (resourceDelta.getResource() instanceof IProject)
+							if (resourceDelta.getResource() instanceof IProject && ((IProject)resourceDelta.getResource()).hasNature(VdmPpProjectNature.VDM_PP_NATURE))
 							{
 
 								if (IsFileChange(resourceDelta)
@@ -377,11 +341,11 @@ monitor.worked(IProgressMonitor.UNKNOWN);
 			boolean add = (delta.getKind() & IResourceDelta.ADDED) == IResourceDelta.ADDED;
 			if ((delta.getFlags() & IResourceDelta.CONTENT) == IResourceDelta.CONTENT
 					|| add)// &&
-				for (String ex : TracesTreeView.exts)
-				{
-					if (delta.getFullPath().toString().endsWith(ex))
+//				for (String ex : TracesTreeView.exts)
+//				{
+//					if (delta.getFullPath().toString().endsWith(ex))
 						ret = true;
-				}
+//				}
 
 			else
 				ret = false;
@@ -553,8 +517,7 @@ monitor.worked(IProgressMonitor.UNKNOWN);
 													finalProjectName))
 											{
 												addMarker(
-														GetFile(
-																project2,
+													ProjectUtility.findIFile(project2, 
 																e.location.file),
 														e.getMessage(),
 														e.location.startLine,
@@ -577,7 +540,7 @@ monitor.worked(IProgressMonitor.UNKNOWN);
 													finalProjectName))
 											{
 												addMarker(
-														GetFile(
+														ProjectUtility.findIFile(
 																project2,
 																th.GetFile(className)),
 														e.getMessage(),
@@ -1060,20 +1023,20 @@ monitor.worked(IProgressMonitor.UNKNOWN);
 		// });
 	}
 
-	private IFile GetFile(IProject project, File file)
-	{
-		IFile f = (IFile) project.findMember(file.getName(), true);
-		if (f == null)
-		{
-			for (IFile projectFile : getAllMemberFiles(project, exts))
-			{
-				if (projectFile.getLocation().toOSString().equals(
-						file.getPath()))
-					return projectFile;
-			}
-		}
-		return f;
-	}
+//	private IFile GetFile(IProject project, File file)
+//	{
+//		IFile f = (IFile) project.findMember(file.getName(), true);
+//		if (f == null)
+//		{
+//			for (IFile projectFile : getAllMemberFiles(project, exts))
+//			{
+//				if (projectFile.getLocation().toOSString().equals(
+//						file.getPath()))
+//					return projectFile;
+//			}
+//		}
+//		return f;
+//	}
 
 	private void hookTreeAction()
 	{
@@ -1097,7 +1060,7 @@ monitor.worked(IProgressMonitor.UNKNOWN);
 					try
 					{
 						gotoLine(
-								GetFile(
+								ProjectUtility.findIFile(
 										iproject,
 										helper.GetFile(tn.getParent().getName())),
 								tn.GetTraceDefinition().location.startLine,
