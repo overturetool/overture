@@ -72,14 +72,14 @@ public class IOProxy {
 // ***** VDMTOOLS END Name=print#1|String
 
 
-// ***** VDMTOOLS START Name=append#2|String|String KEEP=NO
+// ***** VDMTOOLS START Name=append#2|String|String KEEP=YES
   public void append (final String f, final String s) throws CGException {
 
     IO file = (IO) new IO();
     {
 
       Boolean tmpVal_6 = null;
-      tmpVal_6 = (Boolean) file.fwriteval(f, s, new quotes.append());
+      tmpVal_6 = (Boolean) file.fwriteval(f, s, new append());
     }
   }
 // ***** VDMTOOLS END Name=append#2|String|String
@@ -92,7 +92,7 @@ public class IOProxy {
     {
 
       Boolean tmpVal_6 = null;
-      tmpVal_6 = (Boolean) file.fwriteval(f, s, new quotes.start());
+      tmpVal_6 = (Boolean) file.fwriteval(f, s, new start());
     }
   }
 // ***** VDMTOOLS END Name=overwrite#2|String|String
