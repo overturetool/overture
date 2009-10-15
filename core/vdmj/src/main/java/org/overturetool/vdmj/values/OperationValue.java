@@ -91,6 +91,7 @@ public class OperationValue extends Value
 	private static long guardPasses = 0;
 	private static final int DEADLOCK_DELAY_MS = 10;
 	private static final int DEADLOCK_RETRIES = 500;
+	private static final int DEADLOCK_TIMEOUT_MS = DEADLOCK_RETRIES * DEADLOCK_DELAY_MS;
 
 	public int hashAct = 0; // Number of activations
 	public int hashFin = 0; // Number of finishes
@@ -422,13 +423,11 @@ public class OperationValue extends Value
 					debug("RESUME on " + guard);
 
 					if (guardPasses == previousPasses &&
-						!VDMThreadSet.isDebugStopped())
+						!VDMThreadSet.isDebugStopped() &&
+						--retries <= 0)
 					{
-						if (--retries <= 0)
-						{
-							Console.out.print(VDMThreadSet.dump());
-							abort(4067, "Deadlock detected", ctxt);
-						}
+						Console.out.print(VDMThreadSet.dump());
+						abort(4067, "Deadlock detected", ctxt);
 					}
 					else
 					{
@@ -449,6 +448,15 @@ public class OperationValue extends Value
 
 	private void guardRT(Context ctxt) throws ValueException
 	{
+		// RT deadlocks are detected by time rather than a wait(t) for
+		// a certain number of retries. This is because other threads
+		// on the same CPU have to be allowed to run immediately; we
+		// can't pause the whole CPU with a wait(t) and starve the others.
+		// DEADLOCK_TIMEOUT_MS is just the product of the pause and retries.
+
+		long previousPasses = guardPasses;
+		long previousTime = System.currentTimeMillis();
+
 		while (true)
 		{
 			synchronized (self)		// So that test and act() are atomic
@@ -479,6 +487,18 @@ public class OperationValue extends Value
 
 			// else suspend for a while
 			self.getCPU().yield(RunState.RUNNABLE);
+
+			if (guardPasses == previousPasses &&
+				!VDMThreadSet.isDebugStopped() &&
+				System.currentTimeMillis() - previousTime > DEADLOCK_TIMEOUT_MS)
+			{
+				abort(4067, "Deadlock detected", ctxt);
+			}
+			else
+			{
+				previousPasses = guardPasses;
+				previousTime = System.currentTimeMillis();
+			}
 		}
 	}
 
