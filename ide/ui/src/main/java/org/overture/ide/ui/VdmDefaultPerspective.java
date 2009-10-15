@@ -21,14 +21,14 @@ public class VdmDefaultPerspective  implements IPerspectiveFactory  {
 		String navigator = VdmUIPluginConstants.NAVIGATOR;//"org.eclipse.dltk.ui.ScriptExplorer";
 
 		folder.addView(navigator);		
-		folder.addPlaceholder(IPageLayout.ID_BOOKMARKS);
+		//folder.addPlaceholder(IPageLayout.ID_BOOKMARKS);
 		
 		IFolderLayout outputfolder= layout.createFolder("bottom", IPageLayout.BOTTOM, (float)0.75, editorArea); //$NON-NLS-1$
 		outputfolder.addView(IPageLayout.ID_PROBLEM_VIEW);
 		outputfolder.addView(IPageLayout.ID_TASK_LIST);
 		outputfolder.addView(IConsoleConstants.ID_CONSOLE_VIEW);
 		
-		outputfolder.addPlaceholder(IConsoleConstants.ID_CONSOLE_VIEW);
+		//outputfolder.addPlaceholder(IConsoleConstants.ID_CONSOLE_VIEW);
 		outputfolder.addPlaceholder(IPageLayout.ID_BOOKMARKS);
 		outputfolder.addPlaceholder(IProgressConstants.PROGRESS_VIEW_ID);
 		
