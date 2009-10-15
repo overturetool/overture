@@ -35,7 +35,6 @@ import org.overture.ide.vdmpp.debug.launching.IOvertureInterpreterRunnerConfig;
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
-import org.overturetool.vdmj.runtime.Interpreter;
 
 //TODO test if this is a specific runner or a common runner for both VDMTools and VDMJ
 public class VDMPPVDMJInterpreterRunner extends AbstractInterpreterRunner {
@@ -171,17 +170,19 @@ public class VDMPPVDMJInterpreterRunner extends AbstractInterpreterRunner {
 							try {
 								IAstManager astManager = AstManager.instance();
 								RootNode rootNode = astManager.getRootNode(proj.getProject(), VdmPpProjectNature.VDM_PP_NATURE);
-								if (rootNode.isChecked()){							
+								if (rootNode.isChecked() == false){ //TODO changed when builders is updated							
 									ClassList classList = (ClassList) astManager.getAstList(proj.getProject(), VdmPpProjectNature.VDM_PP_NATURE);
 									ClassInterpreter classInterpreter = new ClassInterpreter(classList);
-									new DBGPReader(host, Integer.parseInt(port), sessionId, (Interpreter)classInterpreter, expression).run(true);
+									new DBGPReader(host, Integer.parseInt(port), sessionId, classInterpreter, expression).run(true);
 								}
 								else
 								{
-									throw new CoreException(new Status(IStatus.ERROR, "", "The project is not type checked"));
+									// TODO if project isn't type checked..
+									throw new CoreException(new Status(IStatus.ERROR, VDMPPDebugConstants.VDMPP_DEBUG_PLUGIN_ID, "The project is not type checked"));
 								}
 							} catch (Exception e) {
-								System.out.println(e.getMessage());
+								return;
+								//throw new CoreException(new Status(IStatus.ERROR, VDMPPDebugConstants.VDMPP_DEBUG_PLUGIN_ID, e.getMessage()));
 							}
 							//System.out.println("stopped");
 							return;

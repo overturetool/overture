@@ -5,21 +5,21 @@
    <extension point="org.eclipse.dltk.launching.interpreterInstallTypes">
       <interpreterInstallType
             class="org.overture.ide.vdmrt.debug.VdmjRtInstallType" 
-            id="org.overture.ide.vdmrt.debug.VDMJPPInstallType">
+            id="org.overture.ide.vdmrt.debug.VDMJRTInstallType">
       </interpreterInstallType>
    </extension>
    
-  <!-- create the built-in VDMJ interpreter for VDM++ -->
+  <!-- create the built-in VDMJ interpreter for VDM-RT -->
   <extension point="org.eclipse.dltk.launching.interpreterInstalls">
-     <interpreterInstall     		
+     <interpreterInstall
            home="${eclipse_home}"
-           id="org.overture.ide.debug.launching.interpreterInstallType.vdmj"
-           interpreterInstallType="org.overture.ide.vdmrt.debug.VdmjRtInstallType"
+           id="org.overture.ide.debug.launching.interpreterInstallType.vdmjrt"
+           interpreterInstallType="org.overture.ide.vdmrt.debug.VDMJRTInstallType"
            name="VDMJ Interpreter for VDMRT">
      </interpreterInstall>
   </extension>
 
-   <!-- lauch delegate for the VDMJ interpreter using the language VDM++ -->
+   <!-- lauch delegate for the VDMJ interpreter using the language VDM-RT -->
    <extension point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
             delegate="org.overture.ide.vdmrt.debug.VdmjVdmRtLaunchConfigurationDelegate"

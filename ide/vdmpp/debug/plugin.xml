@@ -13,7 +13,7 @@
   <extension point="org.eclipse.dltk.launching.interpreterInstalls">
      <interpreterInstall     		
            home="${eclipse_home}"
-           id="org.overture.ide.debug.launching.interpreterInstallType.vdmj"
+           id="org.overture.ide.debug.launching.interpreterInstallType.vdmjpp"
            interpreterInstallType="org.overture.ide.vdmpp.debug.VDMJPPInstallType"
            name="VDMJ Interpreter for VDM++">
      </interpreterInstall>

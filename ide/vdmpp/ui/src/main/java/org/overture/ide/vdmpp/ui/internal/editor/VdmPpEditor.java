@@ -26,6 +26,7 @@ public class VdmPpEditor  extends ScriptEditor
 	{
 		super.initializeEditor();
 		setEditorContextMenuId(VdmppEditorConstants.EDITOR_CONTEXT);
+		setRulerContextMenuId(VdmppEditorConstants.RULER_CONTEXT);
 
 	}
 

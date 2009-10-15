@@ -64,7 +64,22 @@
    </launchConfigurationTabGroup>
 </extension>
 
-<!-- pop TODO filter vdm-sl as well-->
+<!-- TODO -->
+<!-- popupmenus 
+       right clicking in the editor use #VdmPpEditorContext
+       right clicking in the ruler use  #VdmPpRulerContext
+
+	This adds the following popup menus in the ruler:
+	   Toggle Breakpoint
+	   Enable/Disable breakpoint
+	   Breakpoint properties...
+	
+	If the debugger is active the following menus is available in the editor:
+		watch
+		inspect
+		display 
+	   
+-->
 <extension point="org.eclipse.ui.popupMenus">
     <objectContribution
       adaptable="false"
@@ -83,7 +98,7 @@
 
     <viewerContribution
       id="org.overturetool.debug.ui.rulerContribution"
-      targetID="#OvertureRulerContext">
+      targetID="#VdmPpRulerContext">
       <!--action
         class="org.eclipse.dltk.debug.ui.actions.RulerToggleWatchPointActionDelegate"
         icon="/icons/oml16.png"
@@ -92,29 +107,31 @@
         menubarPath="debug"
         style="push">
       </action -->
+      <!-- Enable/Disable Breakpoint in the ruler -->
       <action
-        label="%EnableDisableBreakpoint.label"
+        label="Enable/Disable breakpoint"
         id="org.overturetool.ui.actions.RulerEnableDisableBreakpointActionDelegate"
         class="org.eclipse.debug.ui.actions.RulerEnableDisableBreakpointActionDelegate"
         menubarPath="debug">
       </action>
 
+	<!-- Toggle Breakpoint in the ruler -->
       <action
-        label="%ToggleBreakpoint.label"
+        label="Toggle Breakpoint"
         id="org.overturetool.ui.actions.RulerToggleBreakpointActionDelegate"
         class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
         menubarPath="debug">
       </action>
-
+      <!-- Breakpoint properties in the ruler -->
       <action
+        label="Breakpoint properties..."
         class="org.eclipse.dltk.debug.ui.actions.ScriptBreakpointPropertiesRulerActionDelegate"
         id="org.overturetool.debug.ui.ScriptBreakpointPropertiesRulerActionDelegate"
-        label="%BreakpointProperties.label"
         menubarPath="group.properties" />
     </viewerContribution>
     
     <viewerContribution
-      targetID="#OvertureEditorContext"
+      targetID="#VdmPpEditorContext"
       id="org.eclipse.dltk.debug.ui.DebugPopupActions">
       <visibility>
         <and>
@@ -127,14 +144,14 @@
         </and>
       </visibility>
       <action
-        label="%ScriptWatch.label"
+        label="Watch"
         icon="/icons/oml16.png"
         class="org.eclipse.dltk.internal.debug.ui.actions.ScriptWatchAction"
         menubarPath="additions"
         id="org.overturetool.debug.ui.ScriptWatch">
       </action>
       <action
-        label="%ScriptInspect.label"
+        label="Inspect"
         icon="/icons/oml16.png"
         definitionId="org.eclipse.dltk.debug.ui.commands.ScriptInspect"
         class="org.eclipse.dltk.internal.debug.ui.actions.PopupScriptInspectAction"
@@ -142,7 +159,7 @@
         id="org.overturetool.debug.ui.ScriptInspect">
       </action>
       <action
-        label="%ScriptDisplay.label"
+        label="Display"
         icon="/icons/oml16.png"
         definitionId="org.eclipse.dltk.debug.ui.commands.ScriptDisplay"
         class="org.eclipse.dltk.internal.debug.ui.actions.PopupScriptDisplayAction"
@@ -151,5 +168,26 @@
       </action>
     </viewerContribution>
   </extension>
+
+<!-- 
+	The adapters extension point allows plug-ins to declaratively register adapter factories
+		
+	Two adapter get registred here: 
+		RunToLineTarget
+		ToggleBreakpoint target
+		
+	this enables the breakpoint toggle feature 
+-->
+	<extension point="org.eclipse.core.runtime.adapters">
+		<factory
+		    adaptableType="org.overture.ide.vdmpp.ui.internal.editor.VdmPpEditor"
+		    class="org.overture.ide.debug.ui.VdmPpEditorDebugAdapterFactory">
+		    <adapter type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget"/>
+		    <adapter type="org.eclipse.debug.ui.actions.IRunToLineTarget"/>	
+		</factory>
+	</extension>
+
+
+
 
 </plugin>
