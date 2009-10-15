@@ -65,6 +65,26 @@
           </top>
         </configuration>
       </plugin>
+      
+      
+       <plugin>
+        <!-- NOTE: We don't need a groupId specification because the group is
+             org.apache.maven.plugins ...which is assumed by default.
+         -->
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+           <archive>
+            <manifest>
+              <mainClass>org.overturetool.umltrans.Main.MainClass</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+        </plugin>
+      
+      
     </plugins>
   </build>
   <dependencies>

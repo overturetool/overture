@@ -1,0 +1,17 @@
+<project>
+
+<parent>
+    <groupId>org.overturetool.tools</groupId>
+    <artifactId>tools</artifactId>
+    <version>1.0.0</version>
+  </parent>
+
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.overturetool.tools</groupId>
+	<artifactId>overture-skin</artifactId>
+	<packaging>maven-plugin</packaging>
+	<version>1.0</version>
+	<name>Custom skin for overture application project</name>
+	
+</project>

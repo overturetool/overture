@@ -78,7 +78,7 @@ mvn type
 
  VDM Tools must be installed and set in the active profile
  
- +-------------------------------+
++-------------------------------+
 <profile>
   <id>default</id>
   <activation>

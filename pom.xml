@@ -11,7 +11,7 @@
     <module>core</module>
     <module>tools</module>
     <module>ide</module>
-    <!--module>org.overturetool.eclipse</module-->
+    
 
   </modules>
   <dependencies>
@@ -30,6 +30,22 @@
           <source>1.5</source>
           <target>1.5</target>
         </configuration>
+      </plugin>
+      
+      
+        <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.0-beta-7</version>
+        <configuration>
+          <tagBase>svn:https://overture.svn.sourceforge.net/svnroot/overture/tags</tagBase>
+        </configuration>
+      </plugin>
+      
+        <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>2.0.1</version>
       </plugin>
     </plugins>
 
