@@ -515,6 +515,8 @@ public class DltkAstConverter {
 		MethodDeclaration method = new MethodDeclaration(def.name.name,
 				converter.convertStart(loc), converter.convertEnd(loc),
 				converter.convertStart(loc), converter.convertEnd(loc));
+		method.setModifier(VdmAstUtil.getModifier(def.accessSpecifier));
+		
 		if (def.getType() instanceof FunctionType) {
 			FunctionType functionType = (FunctionType) def.getType();
 			for (Type definition : functionType.parameters) {
