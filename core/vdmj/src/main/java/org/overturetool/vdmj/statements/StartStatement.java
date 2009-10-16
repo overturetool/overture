@@ -23,8 +23,6 @@
 
 package org.overturetool.vdmj.statements;
 
-import java.util.Random;
-
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
@@ -128,18 +126,18 @@ public class StartStatement extends Statement
 
 				for (Value v: set)
 				{
-					ObjectValue self = v.objectValue(ctxt);
-					OperationValue op = self.getThreadOperation(ctxt);
+					ObjectValue target = v.objectValue(ctxt);
+					OperationValue op = target.getThreadOperation(ctxt);
 
-					startRT(self, op);
+					startRT(target, op);
 				}
 			}
 			else
 			{
-				ObjectValue self = value.objectValue(ctxt);
-				OperationValue op = self.getThreadOperation(ctxt);
+				ObjectValue target = value.objectValue(ctxt);
+				OperationValue op = target.getThreadOperation(ctxt);
 
-				startRT(self, op);
+				startRT(target, op);
 			}
 
 			return new VoidValue();
@@ -152,13 +150,13 @@ public class StartStatement extends Statement
 
 	// Note that RT does not use VDMThreads at all...
 
-	private void startRT(ObjectValue self, OperationValue op)
+	private void startRT(ObjectValue target, OperationValue op)
 		throws ValueException
 	{
 		if (op.body instanceof PeriodicStatement)
 		{
     		RootContext global = ClassInterpreter.getInstance().initialContext;
-    		Context ctxt = new ObjectContext(op.name.location, "async", global, self);
+    		Context ctxt = new ObjectContext(op.name.location, "async", global, target);
 
 			PeriodicStatement ps = (PeriodicStatement)op.body;
 			OperationValue pop = ctxt.lookup(ps.opname).operationValue(ctxt);
@@ -168,19 +166,11 @@ public class StartStatement extends Statement
 			long delay  = ps.values[2];
 			long offset = ps.values[3];
 
-			if (offset > 0 || jitter > 0)
-			{
-    			long noise = (jitter == 0) ? 0 :
-    				Math.abs(new Random().nextLong() % (jitter + 1));
-
-    			self.getCPU().duration(offset + noise);
-			}
-
-			new AsyncThread(self, pop, new ValueList(), period, jitter, delay, 0).start();
+			new AsyncThread(target, pop, new ValueList(), period, jitter, delay, offset, 0).start();
 		}
 		else
 		{
-			new AsyncThread(self, op, new ValueList(), 0, 0, 0, 0).start();
+			new AsyncThread(target, op, new ValueList(), 0, 0, 0, 0, 0).start();
 		}
 	}
 

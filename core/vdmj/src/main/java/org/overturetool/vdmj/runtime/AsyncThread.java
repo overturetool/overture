@@ -42,6 +42,7 @@ public class AsyncThread extends Thread
 	public final OperationValue operation;
 	public final ValueList args;
 	public final CPUValue cpu;
+	public final long offset;
 	public final long period;
 	public final long jitter;
 	public final long delay;
@@ -63,13 +64,13 @@ public class AsyncThread extends Thread
 
 	public AsyncThread(MessageRequest request)
 	{
-		this(request.target, request.operation, request.args, 0, 0, 0, 0);
+		this(request.target, request.operation, request.args, 0, 0, 0, 0, 0);
 		this.request = request;
 	}
 
 	public AsyncThread(
 		ObjectValue self, OperationValue operation, ValueList args,
-		long period, long jitter, long delay, long expected)
+		long period, long jitter, long delay, long offset, long expected)
 	{
 		setName("Async Thread " + getId());
 
@@ -80,6 +81,7 @@ public class AsyncThread extends Thread
 		this.period = period;
 		this.jitter = jitter;
 		this.delay = delay;
+		this.offset = offset;
 		this.request = new MessageRequest();
 
 		if (period > 0 && expected == 0)
@@ -138,7 +140,14 @@ public class AsyncThread extends Thread
 
     		if (period > 0 && !stopping)	// period = 0 is a one shot thread
     		{
-    			if (!first)
+    			if (first)
+    			{
+        			long noise = (jitter == 0) ? 0 :
+        				Math.abs(new Random().nextLong() % (jitter + 1));
+
+        			cpu.duration(offset + noise);
+    			}
+    			else
     			{
     				cpu.waitUntil(expected);
     			}
@@ -146,7 +155,7 @@ public class AsyncThread extends Thread
     			logreq = true;
 
     			new AsyncThread(
-    				self, operation, new ValueList(), period, jitter, delay,
+    				self, operation, new ValueList(), period, jitter, delay, offset,
     				nextTime()).start();
     		}
 
@@ -203,7 +212,17 @@ public class AsyncThread extends Thread
 
     		if (period > 0 && !stopping)	// period = 0 is a one shot thread
     		{
-    			if (!first)
+    			if (first)
+    			{
+    				if (offset > 0 || jitter > 0)
+   					{
+    					long noise = (jitter == 0) ? 0 :
+    						Math.abs(new Random().nextLong() % (jitter + 1));
+
+    					cpu.duration(offset + noise);
+   					}
+    			}
+    			else
     			{
     				cpu.waitUntil(expected);
     			}
@@ -211,7 +230,7 @@ public class AsyncThread extends Thread
     			logreq = true;
 
     			new AsyncThread(
-    				self, operation, new ValueList(), period, jitter, delay,
+    				self, operation, new ValueList(), period, jitter, delay, offset,
     				nextTime()).start();
     		}
 

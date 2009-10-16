@@ -122,7 +122,8 @@ public class OperationValue extends Value
 			!(classdef instanceof SystemDefinition) &&
 			!classdef.name.name.equals("CPU") &&
 			!classdef.name.name.equals("BUS") &&
-			!name.name.equals("thread");
+			!name.name.equals("thread") &&
+			!name.name.startsWith("inv_");
 	}
 
 	public OperationValue(ImplicitOperationDefinition def,
