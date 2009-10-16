@@ -1,8 +1,10 @@
 package org.overture.ide.vdmpp.ui.internal.outline;
 
+import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
+import org.eclipse.dltk.compiler.ISourceElementRequestor.FieldInfo;
 
 /***
  * Class used to customize the model build for the outline
@@ -27,14 +29,41 @@ public class VdmPpSourceElementRequestor extends SourceElementRequestVisitor {
 
 	@Override
 	public boolean visit(Statement statement) throws Exception {
-//		System.out.println("Source element parser visiting: "
-//				+ statement.debugString());
-
+		if (statement instanceof FieldDeclaration) {
+			return addField((FieldDeclaration) statement);
+		}
 		return false;// TODO
 	}
 
-	@Override
 	public boolean endvisit(Statement s) throws Exception {
+		if (s instanceof FieldDeclaration) {
+			return endField((FieldDeclaration) s);
+		}
 		return true;
+	}
+
+	private boolean addField(FieldDeclaration statement) {
+		try {
+			FieldInfo fieldInfo = new ISourceElementRequestor.FieldInfo();
+			fieldInfo.name = statement.getName();
+			fieldInfo.declarationStart = statement.sourceStart();
+			fieldInfo.nameSourceStart = statement.getNameStart();
+			fieldInfo.nameSourceEnd = statement.getNameEnd();
+			fieldInfo.modifiers = statement.getModifiers();
+
+			fRequestor.enterField(fieldInfo);
+
+			return true;
+
+		} catch (Exception e) {
+			System.err.println("error: " + e.getMessage());
+			return false;
+		}
+	}
+
+	private boolean endField(FieldDeclaration statement) {
+
+		fRequestor.exitField(statement.sourceEnd());
+		return false;
 	}
 }
