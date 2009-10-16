@@ -56,8 +56,11 @@ VisitXmlDocument (doc) ==
                    isAttributeType(pes(i),"uml:Class") and
                    (getAttribute(pes(i),"name").val not in set primiticeTypes)};
                    
-    associations := associations union {build_Association(pes(i)) | i in set inds pes & 
-                   isAttributeType(pes(i),"uml:Association")};
+    associations := associations union 
+                    {build_Association(pes(i)) 
+                    | i in set inds pes 
+                    & isAttributeType(pes(i),"uml:Association") or
+                      isAttributeType(pes(i),"uml:Connector")};
                    
     constraints := constraints union {build_Constraint(pes(i)) | i in set inds pes & 
                    isAttributeType(pes(i),"uml:Constraint")};
@@ -135,7 +138,9 @@ build_defBlock(e,name) ==
 -- Create property from property element
 private build_Property : XmlEntity * String ==> IUmlProperty
 build_Property(e,ownerClass) ==
-  let name         : seq of char = getAttribute(e,"name").val,
+  let name         : seq of char = if hasAttribute(e,"name")
+                                   then getAttribute(e,"name").val
+                                   else "",
       visibility   : (IUmlVisibilityKind) = if hasAttribute(e,"visibility") 
                                             then GetVisibility(getAttribute(e,"visibility")) 
                                             else
@@ -275,12 +280,21 @@ private build_Association : XmlEntity ==> IUmlAssociation
 build_Association(e) ==
   let elist = e.entities.entities,
       props = {elist(i) | i in set inds elist & isAttributeType(elist(i),"uml:Property")},
-      ownedNavivableEnds : (set of IUmlProperty) = { build_Property(p,"") | p in set props & hasAttributeValue(p,"name","")},
+      ownedNavivableEnds : (set of IUmlProperty) = 
+                           { build_Property(p,"") 
+                           | p in set props & not hasAttribute(p,"name") or
+                                              hasAttributeValue(p,"name","")},
       one = Util`SetToSeq[IUmlProperty](ownedNavivableEnds),
       ownerClassType = hd [ one(i).getType() | i in set inds one],
       ownerClass = let ct : IUmlClassNameType = ownerClassType in ct.getName(),
-      ownedEnds : (set of IUmlProperty) = {build_Property(p,ownerClass) | p in set props & len getAttribute(p,"name").val>0},
-      name : seq of char = getAttribute(e,"name").val,
+      ownedEnds : (set of IUmlProperty) = 
+                  {build_Property(p,ownerClass) 
+                  | p in set props 
+                  & hasAttribute(p,"name") and 
+                    len getAttribute(p,"name").val>0},
+      name : seq of char = if hasAttribute(e,"name")
+                           then getAttribute(e,"name").val
+                           else "",
       id : String = getAttribute(e,"xmi:id").val
   in
     return new UmlAssociation(ownedEnds,ownedNavivableEnds,name,id)
