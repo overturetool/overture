@@ -507,9 +507,9 @@ public class DltkAstConverter {
 		LexLocation loc = def.location;
 
 
-		System.out.println("Method name:" + def.name.name + " Start: "
-				+ converter.convertStart(loc) + " End: "
-				+ converter.convertEnd(loc));
+//		System.out.println("Method name:" + def.name.name + " Start: "
+//				+ converter.convertStart(loc) + " End: "
+//				+ converter.convertEnd(loc));
 
 
 		MethodDeclaration method = new MethodDeclaration(def.name.name,

@@ -32,19 +32,19 @@ public class VdmSlSelectionEngine extends ScriptSelectionEngine implements ISele
 			return new IModelElement[0];
 		}
 		actualSelectionEnd--;
-		if (true) {
-			System.out.print("SELECTION - Checked : \""); //$NON-NLS-1$
-			System.out.print(source.substring(actualSelectionStart,
-					actualSelectionEnd + 1));
-			System.out.println('"');
-		}
-		
+//		if (true) {
+//			System.out.print("SELECTION - Checked : \""); //$NON-NLS-1$
+//			System.out.print(source.substring(actualSelectionStart,
+//					actualSelectionEnd + 1));
+//			System.out.println('"');
+//		}
+//		
 		ModuleDeclaration parsedUnit = SourceParserUtil.getModuleDeclaration((org.eclipse.dltk.core.ISourceModule) module
 				.getModelElement());
 		
 		ASTNode node = ASTUtils.findMinimalNode(parsedUnit,
 				actualSelectionStart, actualSelectionEnd);
-		System.out.println(node.toString());
+//		System.out.println(node.toString());
 		
 		if (node == null)
 			return new IModelElement[0];
