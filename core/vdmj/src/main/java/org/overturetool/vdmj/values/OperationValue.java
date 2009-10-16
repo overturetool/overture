@@ -633,15 +633,6 @@ public class OperationValue extends Value
 
 		if (logreq)		// Async OpRequests are made in asyncEval
 		{
-			if (isConstructor && traceRT)
-			{
-	   			RTLogger.log(
-    				"DeployObj -> objref: " + self.objectReference +
-    				" clnm: \"" + self.type.name.name + "\"" +
-    				" cpunm: " + self.getCPU().cpuNumber +
-    				" time: " + SystemClock.getWallTime());
-			}
-
 			trace("OpRequest");
 		}
 	}
@@ -650,14 +641,22 @@ public class OperationValue extends Value
 	{
 		hashAct++;
 		guardPasses++;
-		trace("OpActivate");
+
+		if (!AsyncThread.stopping())	// else makes a mess of shutdown trace
+		{
+			trace("OpActivate");
+		}
 	}
 
 	private synchronized void fin()
 	{
 		hashFin++;
 		guardPasses++;
-		trace("OpCompleted");
+
+		if (!AsyncThread.stopping())	// else makes a mess of shutdown trace
+		{
+			trace("OpCompleted");
+		}
 	}
 
 	private void notifySelf()

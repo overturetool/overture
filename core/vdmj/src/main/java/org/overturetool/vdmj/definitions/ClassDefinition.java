@@ -28,17 +28,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.Token;
+import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.StateContext;
+import org.overturetool.vdmj.runtime.SystemClock;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.statements.ClassInvariantStatement;
 import org.overturetool.vdmj.statements.Statement;
@@ -1221,6 +1225,15 @@ public class ClassDefinition extends Definition
 		else
 		{
      		ctor = object.get(ctorDefinition.name, false);
+		}
+
+		if (Settings.dialect ==	Dialect.VDM_RT)
+		{
+   			RTLogger.log(
+				"DeployObj -> objref: " + object.objectReference +
+				" clnm: \"" + object.type.name.name + "\"" +
+				" cpunm: " + object.getCPU().cpuNumber +
+				" time: " + SystemClock.getWallTime());
 		}
 
 		if (ctor != null)	// Class may have no constructor defined

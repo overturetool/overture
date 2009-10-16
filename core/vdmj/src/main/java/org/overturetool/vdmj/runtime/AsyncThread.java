@@ -57,6 +57,11 @@ public class AsyncThread extends Thread
 		stopping = true;
 	}
 
+	public static synchronized boolean stopping()
+	{
+		return stopping;
+	}
+
 	public static void reset()
 	{
 		stopping = false;
