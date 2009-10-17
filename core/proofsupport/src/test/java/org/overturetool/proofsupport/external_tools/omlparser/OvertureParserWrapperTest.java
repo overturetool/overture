@@ -3,34 +3,16 @@
  */
 package org.overturetool.proofsupport.external_tools.omlparser;
 
-import junit.framework.TestCase;
-
 import org.overturetool.ast.imp.OmlBracketedExpression;
 import org.overturetool.ast.itf.IOmlDocument;
 import org.overturetool.ast.itf.IOmlExpression;
-import org.overturetool.proofsupport.test.TestSettings;
+import org.overturetool.proofsupport.test.AutomaticProofSystemTestCase;
 
 /**
  * @author miguel_ferreira
  * 
  */
-public class OvertureParserWrapperTest extends TestCase {
-
-	protected static TestSettings settings = null;
-	protected static String testModel1 = null;
-
-
-	protected void setUp() throws Exception {
-		super.setUp();
-
-		setUpPreferences();
-	}
-
-
-	private void setUpPreferences() throws Exception {
-		settings = new TestSettings();
-		testModel1 = settings.get(TestSettings.TEST_MODEL_1);
-	}
+public class OvertureParserWrapperTest extends AutomaticProofSystemTestCase {
 
 	/**
 	 * Test method for
@@ -39,10 +21,10 @@ public class OvertureParserWrapperTest extends TestCase {
 	 */
 	public void testGetOmlDocument() throws Exception {
 		IOmlDocument omlDocument = new OvertureParserWrapper()
-				.getOmlDocument(testModel1);
+				.getOmlDocument(sorterModel);
 
 		assertNotNull(omlDocument);
-		assertEquals(testModel1, omlDocument.getFilename()
+		assertEquals(sorterModel, omlDocument.getFilename()
 				.trim());
 	}
 

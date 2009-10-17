@@ -2,39 +2,20 @@ package org.overturetool.proofsupport.external_tools.pog;
 
 import java.io.File;
 
-import junit.framework.TestCase;
+import org.overturetool.proofsupport.test.AutomaticProofSystemTestCase;
 
-import org.overturetool.proofsupport.test.TestSettings;
-
-public class VdmToolsWrapperTest extends TestCase {
-	
-	private static final String pogExtension = ".pog";
-	
-	
-	private static final  String VPPDE_BIN = TestSettings.getVppdeBinary();
-	
-	private static TestSettings settings = null;
-	private static String testModel1 = null;
-	private static String testModel2 = null;
+public class VdmToolsWrapperTest extends AutomaticProofSystemTestCase {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		
-		setUpPreferences();
-		
+
 		// remove previously generated files
 		removePreviousTestsData();
 	}
-	
-	private void setUpPreferences() throws Exception {
-		settings = new TestSettings();
-		testModel1 = settings.get(TestSettings.SORTER_MODEL);
-		testModel2 = settings.get(TestSettings.DO_SORT_MODEL);
-	}
 
 	private void removePreviousTestsData() throws Exception {
-		String model1FileName = testModel1 + pogExtension;
-		String model2FileName = testModel2 + pogExtension;
+		String model1FileName = sorterModel + POG_FILE_EXTENSION;
+		String model2FileName = doSortModel + POG_FILE_EXTENSION;
 		File testModel1Pog = new File(model1FileName);
 		File testModel2Pog = new File(model2FileName);
 		
@@ -50,8 +31,8 @@ public class VdmToolsWrapperTest extends TestCase {
 	}
 
 	public void testGeneratePogFile() throws Exception {
-		String[] vdmFiles = new String[]{ testModel2, testModel1 };
-		String expected = testModel2 + pogExtension;
+		String[] vdmFiles = new String[]{ doSortModel, sorterModel };
+		String expected = doSortModel + POG_FILE_EXTENSION;
 
 		VdmToolsWrapper vdmTools = new VdmToolsWrapper(VPPDE_BIN);
 		String actual = vdmTools.generatePogFile(vdmFiles);

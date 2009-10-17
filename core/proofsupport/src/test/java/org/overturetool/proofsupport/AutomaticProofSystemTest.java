@@ -3,40 +3,11 @@ package org.overturetool.proofsupport;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.overturetool.proofsupport.external_tools.pog.VdmToolsPoProcessor;
 import org.overturetool.proofsupport.external_tools.pog.VdmToolsWrapper;
-import org.overturetool.proofsupport.test.TestSettings;
+import org.overturetool.proofsupport.test.AutomaticProofSystemTestCase;
 
-public class AutomaticProofSystemTest extends TestCase {
-
-	private static TestSettings testSettings = null;
-	private static String doSortModel = null;
-	private static String sorterModel = null;
-	private static String setModel = null;
-	private static String stackModel = null;
-	private static String vppdeExecutable = TestSettings.getVppdeBinary();
-	private static String mosmlDir = TestSettings.getMosmlDir();
-	private static String holDir = TestSettings.getHolDir();
-
-	private static String testPogFileNoNewLine = null;
-	protected static final String VPPDE_BIN = TestSettings.getVppdeBinary();
-
-	protected void setUp() throws Exception {
-		super.setUp();
-		setUpTestValues();
-	}
-
-	private void setUpTestValues() throws Exception {
-		testSettings = new TestSettings();
-		doSortModel = testSettings.get(TestSettings.DO_SORT_MODEL);
-		sorterModel = testSettings.get(TestSettings.SORTER_MODEL);
-		setModel = testSettings.get(TestSettings.SET_MODEL);
-		stackModel = testSettings.get(TestSettings.STACK_MODEL);
-		testPogFileNoNewLine = testSettings
-				.get(TestSettings.TEST_POG_FILE_NO_NEW_LINE);
-	}
+public class AutomaticProofSystemTest extends AutomaticProofSystemTestCase {
 
 	public void testDischargeAllPosSet() throws Exception {
 		AutomaticProofSystemBatch aps = new AutomaticProofSystemBatch(mosmlDir,

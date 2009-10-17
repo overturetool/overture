@@ -3,9 +3,11 @@ package org.overturetool.proofsupport.external_tools;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.overturetool.proofsupport.test.AutomaticProofSystemTestCase;
+
 import junit.framework.TestCase;
 
-public class UtilitiesTest extends TestCase {
+public class UtilitiesTest extends AutomaticProofSystemTestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();

@@ -1,20 +1,15 @@
 package org.overturetool.proofsupport.external_tools.hol;
 
-import junit.framework.TestCase;
+import org.overturetool.proofsupport.test.AutomaticProofSystemTestCase;
 
-import org.overturetool.proofsupport.test.TestSettings;
-
-public class HolInterpreterImplTest extends TestCase {
-
-	protected static final String HOL_DIR = TestSettings.getHolDir();
-	protected static final String MOSML_DIR = TestSettings.getMosmlDir();
+public class HolInterpreterImplTest extends AutomaticProofSystemTestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
 	}
 
 	public void testInterpretLineHelp()  throws Exception {
-		HolParameters holParam = new HolParameters(MOSML_DIR, HOL_DIR);
+		HolParameters holParam = new HolParameters(mosmlDir, holDir);
 		HolInterpreterImpl hol = new HolInterpreterImpl(holParam);
 		hol.start();
 		
@@ -26,7 +21,7 @@ public class HolInterpreterImplTest extends TestCase {
 	}
 
 	public void testQuit() throws Exception {
-		HolParameters holParam = new HolParameters(MOSML_DIR, HOL_DIR);
+		HolParameters holParam = new HolParameters(mosmlDir, holDir);
 		HolInterpreterImpl hol = new HolInterpreterImpl(holParam);
 		hol.start();
 		

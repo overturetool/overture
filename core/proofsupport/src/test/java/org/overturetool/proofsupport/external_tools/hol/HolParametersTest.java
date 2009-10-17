@@ -3,25 +3,17 @@ package org.overturetool.proofsupport.external_tools.hol;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.overturetool.proofsupport.external_tools.Utilities;
-import org.overturetool.proofsupport.test.TestSettings;
+import org.overturetool.proofsupport.test.AutomaticProofSystemTestCase;
 
-public class HolParametersTest extends TestCase {
-
-	private static final String THIS_IS_A_TEST = "this is a test";
-	protected static final String HOL_DIR = TestSettings.getHolDir();
-	protected static final String MOSML_DIR = TestSettings.getMosmlDir();
-	protected final static HolParameters holParam = new HolParameters(
-			MOSML_DIR, HOL_DIR);
+public class HolParametersTest extends AutomaticProofSystemTestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
 	}
 
 	public void testGetMosmlBinaryPath() {
-		String expected = MOSML_DIR + Utilities.FILE_SEPARATOR + "bin"
+		String expected = mosmlDir + Utilities.FILE_SEPARATOR + "bin"
 				+ Utilities.FILE_SEPARATOR + "mosml";
 		String actual = holParam.getMosmlBinaryPath();
 
@@ -29,7 +21,7 @@ public class HolParametersTest extends TestCase {
 	}
 
 	public void testGetUnquoteCommand() {
-		String expected = HOL_DIR + Utilities.FILE_SEPARATOR + "bin"
+		String expected = holDir + Utilities.FILE_SEPARATOR + "bin"
 				+ Utilities.FILE_SEPARATOR + "unquote";
 		String actual = holParam.getUnquoteBinaryPath();
 
@@ -37,7 +29,7 @@ public class HolParametersTest extends TestCase {
 	}
 
 	public void testGetHolDir() {
-		String expected = HOL_DIR;
+		String expected = holDir;
 		String actual = holParam.getHolDir();
 
 		assertEquals(expected, actual);
@@ -45,17 +37,17 @@ public class HolParametersTest extends TestCase {
 
 	public void testBuildMosmlCommand() throws Exception {
 		List<String> expected = new ArrayList<String>();
-		expected.add(MOSML_DIR + Utilities.FILE_SEPARATOR + "bin" + Utilities.FILE_SEPARATOR + "mosml");
+		expected.add(mosmlDir + Utilities.FILE_SEPARATOR + "bin" + Utilities.FILE_SEPARATOR + "mosml");
 		expected.add("-quietdec");
 		expected.add("-P");
 		expected.add("full");
 		expected.add("-I");
-		expected.add(HOL_DIR + "/sigobj");
-		expected.add(HOL_DIR + "/std.prelude");
-		expected.add(HOL_DIR + "/tools/unquote-init.sml");
-		expected.add(HOL_DIR + "/tools/end-init-boss.sml");
+		expected.add(holDir + "/sigobj");
+		expected.add(holDir + "/std.prelude");
+		expected.add(holDir + "/tools/unquote-init.sml");
+		expected.add(holDir + "/tools/end-init-boss.sml");
 
-		HolParameters holParam = new HolParameters(MOSML_DIR, HOL_DIR);
+		HolParameters holParam = new HolParameters(mosmlDir, holDir);
 		List<String> actual = holParam.buildMosmlHolCommand();
 
 		assertEquals(expected.size(), actual.size());
@@ -65,9 +57,9 @@ public class HolParametersTest extends TestCase {
 
 	public void testBuildUnquoteCommand() throws Exception {
 		List<String> expected = new ArrayList<String>();
-		expected.add(HOL_DIR + Utilities.FILE_SEPARATOR + "bin" + Utilities.FILE_SEPARATOR + "unquote");
+		expected.add(holDir + Utilities.FILE_SEPARATOR + "bin" + Utilities.FILE_SEPARATOR + "unquote");
 
-		HolParameters holParam = new HolParameters(MOSML_DIR, HOL_DIR);
+		HolParameters holParam = new HolParameters(mosmlDir, holDir);
 		List<String> actual = holParam.buildUnquoteCommand();
 
 		assertEquals(expected.size(), actual.size());
@@ -81,12 +73,12 @@ public class HolParametersTest extends TestCase {
 		expected[1] = "-P";
 		expected[2] = "full";
 		expected[3] = "-I";
-		expected[4] = HOL_DIR + "/sigobj";
-		expected[5] = HOL_DIR + "/std.prelude";
-		expected[6] = HOL_DIR + "/tools/unquote-init.sml";
-		expected[7] = HOL_DIR + "/tools/end-init-boss.sml";
+		expected[4] = holDir + "/sigobj";
+		expected[5] = holDir + "/std.prelude";
+		expected[6] = holDir + "/tools/unquote-init.sml";
+		expected[7] = holDir + "/tools/end-init-boss.sml";
 
-		HolParameters holParam = new HolParameters(MOSML_DIR, HOL_DIR);
+		HolParameters holParam = new HolParameters(mosmlDir, holDir);
 		String[] actual = holParam.formatCommandArguments();
 
 		assertEquals(expected.length, actual.length);
@@ -95,9 +87,9 @@ public class HolParametersTest extends TestCase {
 	}
 
 	public void testSetHolDir() throws Exception {
-		HolParameters holParam = new HolParameters(MOSML_DIR, HOL_DIR);
-		holParam.setHolDir(THIS_IS_A_TEST);
+		HolParameters holParam = new HolParameters(mosmlDir, holDir);
+		holParam.setHolDir(TEST_MESSAGE);
 
-		assertEquals(THIS_IS_A_TEST, holParam.getHolDir());
+		assertEquals(TEST_MESSAGE, holParam.getHolDir());
 	}
 }

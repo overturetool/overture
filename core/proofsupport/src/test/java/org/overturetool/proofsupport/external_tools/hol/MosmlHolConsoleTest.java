@@ -3,19 +3,17 @@ package org.overturetool.proofsupport.external_tools.hol;
 import junit.framework.TestCase;
 
 import org.overturetool.proofsupport.external_tools.Utilities;
+import org.overturetool.proofsupport.test.AutomaticProofSystemTestCase;
 import org.overturetool.proofsupport.test.TestSettings;
 
-public class MosmlHolConsoleTest extends TestCase {
-
-	protected static final String HOL_DIR = TestSettings.getHolDir();
-	protected static final String MOSML_DIR = TestSettings.getMosmlDir();
+public class MosmlHolConsoleTest extends AutomaticProofSystemTestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
 	}
 
 	public void testQuit() throws Exception {
-		HolParameters holParam = new HolParameters(MOSML_DIR, HOL_DIR);
+		HolParameters holParam = new HolParameters(mosmlDir, holDir);
 		MosmlHolConsole mosml = new MosmlHolConsole(holParam
 				.buildMosmlHolCommand());
 		mosml.writeLine("quit();");
@@ -25,7 +23,7 @@ public class MosmlHolConsoleTest extends TestCase {
 	}
 
 	public void testInputOutputQuit() throws Exception {
-		HolParameters holParam = new HolParameters(MOSML_DIR, HOL_DIR);
+		HolParameters holParam = new HolParameters(mosmlDir, holDir);
 		MosmlHolConsole mosml = new MosmlHolConsole(holParam
 				.buildMosmlHolCommand());
 		mosml.writeLine("help;");
@@ -36,7 +34,7 @@ public class MosmlHolConsoleTest extends TestCase {
 	}
 
 	public void testRemoveConsoleHeader() throws Exception {
-		HolParameters holParam = new HolParameters(MOSML_DIR, HOL_DIR);
+		HolParameters holParam = new HolParameters(mosmlDir, holDir);
 		MosmlHolConsole mosml = new MosmlHolConsole(holParam
 				.buildMosmlHolCommand());
 		mosml.writeLine("help;");
@@ -56,7 +54,7 @@ public class MosmlHolConsoleTest extends TestCase {
 	}
 
 	public void testReadOutputOneLineBlock() throws Exception {
-		HolParameters holParam = new HolParameters(MOSML_DIR, HOL_DIR);
+		HolParameters holParam = new HolParameters(mosmlDir, holDir);
 		MosmlHolConsole mosml = new MosmlHolConsole(holParam
 				.buildMosmlHolCommand());
 
@@ -76,7 +74,7 @@ public class MosmlHolConsoleTest extends TestCase {
 				+ Utilities.LINE_SEPARATOR + "! Unbound value identifier: "
 				+ invalidId;
 
-		HolParameters holParam = new HolParameters(MOSML_DIR, HOL_DIR);
+		HolParameters holParam = new HolParameters(mosmlDir, holDir);
 		MosmlHolConsole mosml = new MosmlHolConsole(holParam
 				.buildMosmlHolCommand());
 
@@ -90,7 +88,7 @@ public class MosmlHolConsoleTest extends TestCase {
 	}
 
 	public void testQuitHol() throws Exception {
-		HolParameters holParam = new HolParameters(MOSML_DIR, HOL_DIR);
+		HolParameters holParam = new HolParameters(mosmlDir, holDir);
 		MosmlHolConsole console = new MosmlHolConsole(holParam
 				.buildMosmlHolCommand());
 		console.quitHol();
@@ -99,7 +97,7 @@ public class MosmlHolConsoleTest extends TestCase {
 	}
 
 	public void testHolError() throws Exception {
-		HolParameters holParam = new HolParameters(MOSML_DIR, HOL_DIR);
+		HolParameters holParam = new HolParameters(mosmlDir, holDir);
 		MosmlHolConsole console = new MosmlHolConsole(holParam
 				.buildMosmlHolCommand());
 		console

@@ -10,25 +10,10 @@ import org.overturetool.proofsupport.TranslationPreProcessor;
 import org.overturetool.proofsupport.external_tools.Utilities;
 import org.overturetool.proofsupport.external_tools.pog.VdmToolsPoProcessor;
 import org.overturetool.proofsupport.external_tools.pog.VdmToolsWrapper;
+import org.overturetool.proofsupport.test.AutomaticProofSystemTestCase;
 import org.overturetool.proofsupport.test.TestSettings;
 
-public class TranslatorWrapperTest extends TestCase {
-
-	private static TestSettings settings = null;
-	private static String stackModel = null;
-
-	protected static final String VPPDE_BIN = TestSettings.getVppdeBinary();
-	
-	protected void setUp() throws Exception {
-		super.setUp();
-
-		setUpTestValues();
-	}
-
-	private void setUpTestValues() throws Exception {
-		settings = new TestSettings();
-		stackModel = settings.get(TestSettings.STACK_MODEL);
-	}
+public class TranslatorWrapperTest extends AutomaticProofSystemTestCase {
 
 	// TODO this method reveals a bug in the VDMTools POG generator:
 	//        -- the generated pog file will have two POs together (with no line separating them),

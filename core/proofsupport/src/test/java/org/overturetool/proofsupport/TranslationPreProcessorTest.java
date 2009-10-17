@@ -5,51 +5,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
-import junit.framework.TestCase;
 
 import org.overturetool.ast.itf.IOmlDocument;
 import org.overturetool.ast.itf.IOmlExpression;
 import org.overturetool.proofsupport.external_tools.pog.PoGeneratorException;
 import org.overturetool.proofsupport.external_tools.pog.VdmToolsPoProcessor;
 import org.overturetool.proofsupport.external_tools.pog.VdmToolsWrapper;
-import org.overturetool.proofsupport.test.TestSettings;
+import org.overturetool.proofsupport.test.AutomaticProofSystemTestCase;
 
-public class TranslationPreProcessorTest extends TestCase {
-
-	protected static final String VPPDE_BIN = TestSettings.getVppdeBinary();
-	private static TestSettings settings = null;
-	private static String testModel1 = null;
-	private static String testModel2 = null;
-	private static String stackModel = null;
-	private static String emptyModel = null;
-	private static String parseError = null;
-	private static String testPogFileNoNewLine = null;
-	private static String stackModelPogFile = null;
-
-	protected void setUp() throws Exception {
-		super.setUp();
-		setUpTestValues();
-	}
-
-	private void setUpTestValues() throws Exception {
-		settings = new TestSettings();
-		testModel1 = settings.get(TestSettings.SORTER_MODEL);
-		testModel2 = settings.get(TestSettings.DO_SORT_MODEL);
-		stackModel = settings.get(TestSettings.STACK_MODEL);
-		emptyModel = settings.get(TestSettings.EMPTY_MODEL);
-		parseError = settings.get(TestSettings.PARSE_ERROR);
-		testPogFileNoNewLine = settings.get(TestSettings.TEST_POG_FILE_NO_NEW_LINE);
-		stackModelPogFile = settings.get(TestSettings.STACK_MODEL_POG_FILE);
-	}
+public class TranslationPreProcessorTest extends AutomaticProofSystemTestCase {
 
 	public void testPrepareVdmFiles() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
 				VPPDE_BIN), new VdmToolsPoProcessor());
-		String modelFile = testModel2;
+		String modelFile = doSortModel;
 		int expectedPoSize = 5;
 		int expectedContextSize = 1;
 		List<String> contextFiles = new ArrayList<String>(expectedContextSize);
-		contextFiles.add(testModel1);
+		contextFiles.add(sorterModel);
 
 		PreparationData actual = prep.prepareVdmFiles(modelFile, contextFiles);
 		
@@ -88,7 +61,7 @@ public class TranslationPreProcessorTest extends TestCase {
 	public void testPrepareVdmFilesCantParse() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
 				VPPDE_BIN), new VdmToolsPoProcessor());
-		String modelFile = parseError;
+		String modelFile = parseErrorModel;
 		List<String> contextFiles = new ArrayList<String>(0);
 
 		try {
@@ -116,11 +89,11 @@ public class TranslationPreProcessorTest extends TestCase {
 	public void testGenerateOmlAst() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
 				VPPDE_BIN), new VdmToolsPoProcessor());
-		String modelFile = testModel2;
+		String modelFile = doSortModel;
 		int expectedPoSize = 5;
 		int expectedContextSize = 1;
 		List<String> contextFiles = new ArrayList<String>(expectedContextSize);
-		contextFiles.add(testModel1);
+		contextFiles.add(sorterModel);
 		List<String> poExpressions = prep.processPogFile(testPogFileNoNewLine);
 
 		PreparationData actual = prep.generateOmlAst(modelFile, contextFiles, poExpressions);
@@ -148,8 +121,8 @@ public class TranslationPreProcessorTest extends TestCase {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
 				VPPDE_BIN), new VdmToolsPoProcessor());
 		List<String> contextFiles = new ArrayList<String>(1);
-		contextFiles.add(testModel1);
-		contextFiles.add(testModel2);
+		contextFiles.add(sorterModel);
+		contextFiles.add(doSortModel);
 		List<IOmlDocument> omlDocs = prep.parseContext(contextFiles);
 
 		assertEquals(2, omlDocs.size());
@@ -174,14 +147,14 @@ public class TranslationPreProcessorTest extends TestCase {
 	}
 
 	public void testGeneratePogFile() throws Exception {
-		String modelFile = testModel2;
+		String modelFile = doSortModel;
 		List<String> contextFiles = new ArrayList<String>(1);
-		contextFiles.add(testModel1);
+		contextFiles.add(sorterModel);
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
 				VPPDE_BIN), new VdmToolsPoProcessor());
 
 		String actual = prep.generatePogFile(modelFile, contextFiles);
-		String expected = testModel2 + ".pog";
+		String expected = doSortModel + ".pog";
 		File pogFile = new File(expected);
 
 		assertTrue(pogFile.exists());

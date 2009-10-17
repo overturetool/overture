@@ -3,16 +3,12 @@ package org.overturetool.proofsupport.external_tools;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-
+import org.overturetool.proofsupport.test.AutomaticProofSystemTestCase;
 import org.overturetool.proofsupport.test.TestSettings;
 
-public class ConsoleTest extends TestCase {
+public class ConsoleTest extends AutomaticProofSystemTestCase {
 
-	protected static final String INVALID_FILE_NAME = "invalid_file_name";
-	private static final String MOSML_DIR = TestSettings.getMosmlDir();
-	private static final String HOL_DIR = TestSettings.getHolDir();
-	private static final String THIS_IS_A_TEST = "this is a test";
+	
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -22,15 +18,15 @@ public class ConsoleTest extends TestCase {
 		ArrayList<String> command = new ArrayList<String>();
 		command.add(TestSettings.getCatProgram());
 		Console console = new Console(command);
-		console.writeLine(THIS_IS_A_TEST);
+		console.writeLine(TEST_MESSAGE);
 		String actual = console.readLine();
 
-		assertEquals(THIS_IS_A_TEST, actual);
+		assertEquals(TEST_MESSAGE, actual);
 	}
 
 	public void testWriteReadLineMosml() throws Exception {
 		ArrayList<String> command = new ArrayList<String>();
-		command.add(MOSML_DIR + "/bin/mosml");
+		command.add(mosmlDir + "/bin/mosml");
 		Console console = new Console(command);
 
 		console.writeLine("quit();");
@@ -51,11 +47,11 @@ public class ConsoleTest extends TestCase {
 
 	public void testWriteReadLineUnquote() throws Exception {
 		ArrayList<String> command = new ArrayList<String>();
-		command.add(HOL_DIR + "/bin/unquote");
+		command.add(holDir + "/bin/unquote");
 		Console console = new Console(command);
 
-		String expected = "(Parse.Term [QUOTE \" (*#loc 1 4*)this is a test\"])";
-		console.writeLine("``" + THIS_IS_A_TEST + "``");
+		String expected = "(Parse.Term [QUOTE \" (*#loc 1 4*)" + TEST_MESSAGE + "\"])";
+		console.writeLine("``" + TEST_MESSAGE + "``");
 		String actual = console.readLine();
 		console.destroy();
 
@@ -124,9 +120,9 @@ public class ConsoleTest extends TestCase {
 		command.add(TestSettings.getCatProgram());
 		Console console = new Console(command);
 		
-		String actual = console.writeAndReadLine(THIS_IS_A_TEST);
+		String actual = console.writeAndReadLine(TEST_MESSAGE);
 		
-		assertEquals(THIS_IS_A_TEST, actual);
+		assertEquals(TEST_MESSAGE, actual);
 	}
 	
 	// TODO: check this test because it sometimes fails, sometimes doesn't
@@ -152,8 +148,8 @@ public class ConsoleTest extends TestCase {
 	
 	public void testBuildCommandList() throws Exception {
 		List<String> expected = new ArrayList<String>();
-		expected.add(THIS_IS_A_TEST);
-		List<String> actual = Console.buildCommandList(THIS_IS_A_TEST);
+		expected.add(TEST_MESSAGE);
+		List<String> actual = Console.buildCommandList(TEST_MESSAGE);
 		
 		assertEquals(expected.size(), actual.size());
 		for(int i = 0; i < expected.size(); i++)
@@ -162,7 +158,7 @@ public class ConsoleTest extends TestCase {
 	
 	public void testPrintCommandList() throws Exception {
 		List<String> command = new ArrayList<String>();
-		command.add(THIS_IS_A_TEST);
+		command.add(TEST_MESSAGE);
 		Console.printCommand(command);
 		
 		assertTrue(true);

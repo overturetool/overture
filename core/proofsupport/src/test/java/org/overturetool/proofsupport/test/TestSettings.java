@@ -76,7 +76,7 @@ public class TestSettings extends AbstractSettings
 	public static final String DO_SORT_MODEL = "doSortModel";
 	public static final String EXPL_SORT_MODEL = "explSortModel";
 	public static final String EMPTY_MODEL = "emptyModel";
-	public static final String PARSE_ERROR = "parseError";
+	public static final String PARSE_ERROR_MODEL = "parseErrorModel";
 	public static final String TEST_THEORY = "testTheory1";
 	public static final String HOL_ERROR = "holError";
 	public static final String TEST_POG_FILE_NO_NEW_LINE = "testPogFileNoNewLine";

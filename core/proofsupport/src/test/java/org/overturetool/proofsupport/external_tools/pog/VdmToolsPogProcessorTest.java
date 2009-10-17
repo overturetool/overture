@@ -5,30 +5,10 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.overturetool.proofsupport.external_tools.Utilities;
-import org.overturetool.proofsupport.test.TestSettings;
+import org.overturetool.proofsupport.test.AutomaticProofSystemTestCase;
 
-public class VdmToolsPogProcessorTest extends TestCase {
-
-	protected static final String THIS_IS_A_TEST = "this is a test";
-
-	protected static TestSettings settings = null;
-	protected static String testPogFileNoNewLine = null;
-	protected static String testPogFileWithNewLine = null;
-
-	protected void setUp() throws Exception {
-		super.setUp();
-
-		setUpPreferences();
-	}
-
-	private void setUpPreferences() throws Exception {
-		settings = new TestSettings();
-		testPogFileNoNewLine = settings.get(TestSettings.TEST_POG_FILE_NO_NEW_LINE);
-		testPogFileWithNewLine = settings.get(TestSettings.TEST_POG_FILE_WITH_NEW_LINE);
-	}
+public class VdmToolsPogProcessorTest extends AutomaticProofSystemTestCase {
 
 	public void testExtractPoExpression() throws Exception {
 		String expected = "(forall i : int, l : seq of int &"
@@ -117,8 +97,8 @@ public class VdmToolsPogProcessorTest extends TestCase {
 
 	public void testInitBuffers() {
 		VdmToolsPoProcessor pogProc = new VdmToolsPoProcessor();
-		pogProc.lineBuffer = THIS_IS_A_TEST;
-		pogProc.poBuffer.add(THIS_IS_A_TEST);
+		pogProc.lineBuffer = TEST_MESSAGE;
+		pogProc.poBuffer.add(TEST_MESSAGE);
 
 		pogProc.initBuffers();
 
@@ -128,10 +108,10 @@ public class VdmToolsPogProcessorTest extends TestCase {
 
 	public void testHandleLineSomeLine() {
 		VdmToolsPoProcessor pogProc = new VdmToolsPoProcessor();
-		pogProc.lineBuffer = THIS_IS_A_TEST;
+		pogProc.lineBuffer = TEST_MESSAGE;
 		pogProc.handleLine();
 
-		assertEquals(THIS_IS_A_TEST, pogProc.poBuffer.get(0));
+		assertEquals(TEST_MESSAGE, pogProc.poBuffer.get(0));
 		assertEquals(0, pogProc.poLines.size());
 	}
 

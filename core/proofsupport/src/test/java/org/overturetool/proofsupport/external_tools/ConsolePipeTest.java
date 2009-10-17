@@ -2,16 +2,14 @@ package org.overturetool.proofsupport.external_tools;
 
 import java.util.ArrayList;
 
-import junit.framework.TestCase;
-
 import org.overturetool.proofsupport.external_tools.hol.HolParameters;
 import org.overturetool.proofsupport.external_tools.hol.MosmlHolConsole;
 import org.overturetool.proofsupport.external_tools.hol.UnquoteConsole;
+import org.overturetool.proofsupport.test.AutomaticProofSystemTestCase;
 import org.overturetool.proofsupport.test.TestSettings;
 
-public class ConsolePipeTest extends TestCase {
+public class ConsolePipeTest extends AutomaticProofSystemTestCase {
 
-	protected static final String TEST_MESSAGE = "This is a test!";
 	
 	protected void setUp() throws Exception {
 		super.setUp();
