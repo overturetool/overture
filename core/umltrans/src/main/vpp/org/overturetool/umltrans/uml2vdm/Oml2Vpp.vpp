@@ -21,12 +21,16 @@ Save(fileName,doc,log) ==
     dcl visitor : Oml2VppVisitor := new Oml2VppVisitor();
   	visitor.useNewLineSeparator(true);
   	visitor.visitClass(cl);
-  	Util`CreateFile(fileName ^ cl.getIdentifier()^".vpp");
+  	Util`CreateFile(fileName ^ Normalize(cl.getIdentifier())^".vpp");
   	Util`WriteFile(visitor.result);
   	Util`CloseFile();
   	log.endClass(cl.getIdentifier());
   );
 );
+
+-- This function is implemented at Java level and ensures that the filename does not include chars which is not allowed by the file system
+public Normalize : String ==> String
+Normalize(fileName) == return fileName;
 
 end Oml2Vpp
 \end{vdm_al}

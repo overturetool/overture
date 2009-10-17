@@ -168,4 +168,32 @@
     </plugins>
 
   </reporting>
+  
+  
+    <developers>
+    <developer>
+      <id>KennethLausdahl</id>
+      <name>Kenneth Lausdahl</name>
+      <email></email>
+      <url>http://www.lausdahl.com</url>
+      <organization>IHA</organization>
+      <organizationUrl>http://iha.dk</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+     <developer>
+      <id>HansKristianLintrup</id>
+      <name>Hans Kristian Lintrup</name>
+      <email></email>
+      <url>-</url>
+      <organization>-</organization>
+      <organizationUrl>-</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
 </project>

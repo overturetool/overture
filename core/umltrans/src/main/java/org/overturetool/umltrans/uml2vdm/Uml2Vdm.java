@@ -1839,7 +1839,7 @@ public class Uml2Vdm {
           else {
 
             UTIL.RunTime("Run-Time Error:Can not evaluate an error statement");
-throw new CGException(); // throw new CGException(); //             return new IOmlScope();
+throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); //             return new IOmlScope();
           }
         }
       }

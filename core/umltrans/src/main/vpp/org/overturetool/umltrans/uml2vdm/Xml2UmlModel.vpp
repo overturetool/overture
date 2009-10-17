@@ -131,7 +131,7 @@ build_defBlock(e,name) ==
       props = { build_Property(eList(i),name)| 
             i in set inds eList & isAttributeType(eList(i),"uml:Property")},
       ops   = { build_Operation(p)| 
-            p in set elems eList & isAttributeType(p,"uml:Operation")}
+            p in set elems eList & isAttributeType(p,"uml:Operation") or p.name = "ownedOperation"}
   in
     return {new UmlOwnedProperties(props)} union {new UmlOwnedOperations(ops)};
            
