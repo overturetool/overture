@@ -34,7 +34,7 @@ public class VdmToolsWrapperTest extends AutomaticProofSystemTestCase {
 		String[] vdmFiles = new String[]{ doSortModel, sorterModel };
 		String expected = doSortModel + POG_FILE_EXTENSION;
 
-		VdmToolsWrapper vdmTools = new VdmToolsWrapper(VPPDE_BIN);
+		VdmToolsWrapper vdmTools = new VdmToolsWrapper(vppdeExecutable);
 		String actual = vdmTools.generatePogFile(vdmFiles);
 
 		File pogFile = new File(expected);

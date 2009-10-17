@@ -42,7 +42,7 @@ public class AutomaticProofSystemTest extends AutomaticProofSystemTestCase {
 
 	public void testDoModelTranslation() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(
-				new VdmToolsWrapper(VPPDE_BIN), new VdmToolsPoProcessor());
+				new VdmToolsWrapper(vppdeExecutable), new VdmToolsPoProcessor());
 		String modelFile = setModel;
 		List<String> contextFiles = new ArrayList<String>(0);
 		PreparationData prepData = prep
@@ -59,7 +59,7 @@ public class AutomaticProofSystemTest extends AutomaticProofSystemTestCase {
 
 	public void testDoModelTranslationWithDependenContext() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(
-				new VdmToolsWrapper(VPPDE_BIN), new VdmToolsPoProcessor());
+				new VdmToolsWrapper(vppdeExecutable), new VdmToolsPoProcessor());
 		String modelFile = doSortModel;
 		List<String> contextFiles = new ArrayList<String>(1);
 		contextFiles.add(sorterModel);

@@ -72,7 +72,7 @@ public class TranslatorWrapperTest extends AutomaticProofSystemTestCase {
 	
 	public void testDoModelTranslation() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(
-				new VdmToolsWrapper(VPPDE_BIN), new VdmToolsPoProcessor());
+				new VdmToolsWrapper(vppdeExecutable), new VdmToolsPoProcessor());
 		String modelFile = stackModel;
 		List<String> contextFiles = new ArrayList<String>(0);
 		PreparationData prepData = prep.prepareVdmFiles(modelFile, contextFiles);

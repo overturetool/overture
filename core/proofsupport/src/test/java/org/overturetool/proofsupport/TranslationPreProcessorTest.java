@@ -17,7 +17,7 @@ public class TranslationPreProcessorTest extends AutomaticProofSystemTestCase {
 
 	public void testPrepareVdmFiles() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPoProcessor());
+				vppdeExecutable), new VdmToolsPoProcessor());
 		String modelFile = doSortModel;
 		int expectedPoSize = 5;
 		int expectedContextSize = 1;
@@ -32,7 +32,7 @@ public class TranslationPreProcessorTest extends AutomaticProofSystemTestCase {
 
 	public void testPrepareVdmFilesNoContext() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPoProcessor());
+				vppdeExecutable), new VdmToolsPoProcessor());
 		String modelFile = stackModel;
 		int expectedPoSize = 2;
 		int expectedContextSize = 0;
@@ -46,7 +46,7 @@ public class TranslationPreProcessorTest extends AutomaticProofSystemTestCase {
 	
 	public void testPrepareVdmFilesEmptyModel() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPoProcessor());
+				vppdeExecutable), new VdmToolsPoProcessor());
 		String modelFile = emptyModel;
 		List<String> contextFiles = new ArrayList<String>(0);
 
@@ -60,7 +60,7 @@ public class TranslationPreProcessorTest extends AutomaticProofSystemTestCase {
 	
 	public void testPrepareVdmFilesCantParse() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPoProcessor());
+				vppdeExecutable), new VdmToolsPoProcessor());
 		String modelFile = parseErrorModel;
 		List<String> contextFiles = new ArrayList<String>(0);
 
@@ -74,7 +74,7 @@ public class TranslationPreProcessorTest extends AutomaticProofSystemTestCase {
 	
 	public void testPrepareVdmFilesNullFile() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPoProcessor());
+				vppdeExecutable), new VdmToolsPoProcessor());
 		String modelFile = null;
 		List<String> contextFiles = new ArrayList<String>(0);
 
@@ -88,7 +88,7 @@ public class TranslationPreProcessorTest extends AutomaticProofSystemTestCase {
 
 	public void testGenerateOmlAst() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPoProcessor());
+				vppdeExecutable), new VdmToolsPoProcessor());
 		String modelFile = doSortModel;
 		int expectedPoSize = 5;
 		int expectedContextSize = 1;
@@ -104,7 +104,7 @@ public class TranslationPreProcessorTest extends AutomaticProofSystemTestCase {
 
 	public void testGenerateOmlAstNoContext() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPoProcessor());
+				vppdeExecutable), new VdmToolsPoProcessor());
 		String modelFile = stackModel;
 		int expectedPoSize = 2;
 		int expectedContextSize = 0;
@@ -119,7 +119,7 @@ public class TranslationPreProcessorTest extends AutomaticProofSystemTestCase {
 
 	public void testParseContext() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPoProcessor());
+				vppdeExecutable), new VdmToolsPoProcessor());
 		List<String> contextFiles = new ArrayList<String>(1);
 		contextFiles.add(sorterModel);
 		contextFiles.add(doSortModel);
@@ -135,7 +135,7 @@ public class TranslationPreProcessorTest extends AutomaticProofSystemTestCase {
 
 	public void testProcessPogFile() throws Exception {
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPoProcessor());
+				vppdeExecutable), new VdmToolsPoProcessor());
 
 		List<String> actual = prep.processPogFile(testPogFileNoNewLine);
 
@@ -151,7 +151,7 @@ public class TranslationPreProcessorTest extends AutomaticProofSystemTestCase {
 		List<String> contextFiles = new ArrayList<String>(1);
 		contextFiles.add(sorterModel);
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPoProcessor());
+				vppdeExecutable), new VdmToolsPoProcessor());
 
 		String actual = prep.generatePogFile(modelFile, contextFiles);
 		String expected = doSortModel + ".pog";
@@ -165,7 +165,7 @@ public class TranslationPreProcessorTest extends AutomaticProofSystemTestCase {
 		String modelFile = stackModel;
 		List<String> contextFiles = new ArrayList<String>(0);
 		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
-				VPPDE_BIN), new VdmToolsPoProcessor());
+				vppdeExecutable), new VdmToolsPoProcessor());
 
 		String actual = prep.generatePogFile(modelFile, contextFiles);
 		String expected = modelFile + ".pog";

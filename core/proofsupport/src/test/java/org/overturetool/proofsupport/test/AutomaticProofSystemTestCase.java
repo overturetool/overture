@@ -30,8 +30,6 @@ public abstract class AutomaticProofSystemTestCase extends TestCase {
 	protected final static HolParameters holParam = new HolParameters(
 			mosmlDir, holDir);
 
-	protected static final String VPPDE_BIN = TestSettings.getVppdeBinary();
-
 	protected void setUp() throws Exception {
 		super.setUp();
 		setUpTestValues();
