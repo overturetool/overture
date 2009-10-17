@@ -100,6 +100,12 @@ public interface ManifestConstants {
      * Constant for "Export-Package" main attribute.
      */
     public static final String EXPORT_PACKAGE = "Export-Package";
+    
+    /**
+     * Constant for "Import-Package" main attribute.
+     */
+    public static final String IMPORT_PACKAGE = "Import-Package";
+    
 
     /**
      * Constant for "com.princetonsoftech.nex" group id.

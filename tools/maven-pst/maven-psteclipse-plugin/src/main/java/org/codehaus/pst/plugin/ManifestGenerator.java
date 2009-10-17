@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -85,6 +86,10 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 	 * The packages that should not be exported in the manifest.
 	 */
 	private List doNotExportPackagePrefixes;
+	/**
+	 * The packages that should not be exported in the manifest.
+	 */
+	private List importInsteadOfExportPackagePrefixes;
 
 	/**
 	 * Constructs a new <code>ManifestGeneratorHelper</code> instance.
@@ -97,12 +102,22 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 	 */
 	public ManifestGenerator(Log log, File baseDirectory, MavenProject project,
 			ArrayList buddies, File destinationDirectory,
-			List doNotExportPackagePrefixes) {
+			List doNotExportPackagePrefixes,
+			List importInsteadOfExportPackagePrefixes) {
 		super(log, baseDirectory);
 		this.project = project;
 		this.buddies = buddies;
 		this.destinationDirectory = destinationDirectory;
 		this.doNotExportPackagePrefixes = doNotExportPackagePrefixes;
+		this.importInsteadOfExportPackagePrefixes = importInsteadOfExportPackagePrefixes;
+		
+		//we add import instead of export to do not export since we do not want them to be exported 
+		if(importInsteadOfExportPackagePrefixes!=null )
+		{
+			if(doNotExportPackagePrefixes==null)
+				doNotExportPackagePrefixes=new Vector();
+			doNotExportPackagePrefixes.addAll(importInsteadOfExportPackagePrefixes);
+		}
 	}
 
 	/**
@@ -136,14 +151,12 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 						EclipseConstants.PACKING_BINARY_PLUGIN))
 
 		{
-			File manifestDirectory = new File(destinationDirectory,
-					MANIFEST_DIRECTORY);
+			File manifestDirectory = new File(destinationDirectory, MANIFEST_DIRECTORY);
 			getLog().debug("The manifestDir is " + manifestDirectory);
 			if (!manifestDirectory.exists()) {
 				if (!manifestDirectory.mkdir()) {
-					throw new MojoExecutionException(
-							"Unable to create directory '" + manifestDirectory
-									+ "'");
+					throw new MojoExecutionException("Unable to create directory '"
+							+ manifestDirectory + "'");
 				}
 			}
 			libDirectory = new File(destinationDirectory, LIB_DIRECTORY);
@@ -152,8 +165,8 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 					&& project.getPackaging().equals(
 							EclipseConstants.PACKING_BINARY_PLUGIN)) {
 				if (!libDirectory.mkdir()) {
-					throw new MojoExecutionException(
-							"Unable to create directory '" + libDirectory + "'");
+					throw new MojoExecutionException("Unable to create directory '"
+							+ libDirectory + "'");
 				}
 			}
 
@@ -172,8 +185,7 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 	}
 
 	private void createBuildPropertiesFile() throws MojoExecutionException {
-		File buildPropetiesFile = new File(destinationDirectory,
-				EclipseConstants.BUILD_PROPERTIES);
+		File buildPropetiesFile = new File(destinationDirectory, EclipseConstants.BUILD_PROPERTIES);
 
 		if (buildPropetiesFile.exists()) {
 			if (project.getPackaging().equals(
@@ -193,13 +205,12 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 
 				outputFileReader = new FileWriter(buildPropetiesFile);
 
-				BufferedWriter outputStream = new BufferedWriter(
-						outputFileReader);
+				BufferedWriter outputStream = new BufferedWriter(outputFileReader);
 
 				out = new PrintWriter(outputStream);
 
-				String[] tmp = EclipseConstants.BUILD_PROPERTIES_CONTENT
-						.replace('\n', '#').split("#");
+				String[] tmp = EclipseConstants.BUILD_PROPERTIES_CONTENT.replace(
+						'\n', '#').split("#");
 
 				for (int i = 0; i < tmp.length; i++) {
 					// getLog().info(tmp[i]);
@@ -219,8 +230,7 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 	}
 
 	private void createPluginPropetiesFile() throws MojoExecutionException {
-		File pluginPropetiesFile = new File(destinationDirectory,
-				EclipseConstants.PLUGIN_PROPERTIES);
+		File pluginPropetiesFile = new File(destinationDirectory, EclipseConstants.PLUGIN_PROPERTIES);
 
 		if (!pluginPropetiesFile.exists())
 			try {
@@ -248,8 +258,7 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 			try {
 				manifestFile.createNewFile();
 			} catch (IOException e) {
-				throw new MojoExecutionException(
-						"Could not create Manifest File", e);
+				throw new MojoExecutionException("Could not create Manifest File", e);
 			}
 		} else {
 			if (project.getPackaging().equals(
@@ -275,74 +284,69 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 	private void writeManifestToFile(File manifestFile, Manifest manifest)
 			throws MojoExecutionException {
 		try {
-			FileOutputStream fileOutputStream = new FileOutputStream(
-					manifestFile,false);
-			
-			//manifest.write(fileOutputStream);
+			FileOutputStream fileOutputStream = new FileOutputStream(manifestFile, false);
+
+			// manifest.write(fileOutputStream);
 
 			FileOutputWriterOnCrLf d = new FileOutputWriterOnCrLf();
 			manifest.write(d);
 			fileOutputStream.write(d.getBytes());
 
-			//getLog().info("Manifest:");
-			//manifest.write(System.out);
+			// getLog().info("Manifest:");
+			// manifest.write(System.out);
 			fileOutputStream.flush();
 			fileOutputStream.close();
 		} catch (IOException e) {
-			
-			throw new MojoExecutionException(
-					"Could not write out Manifest File");
+
+			throw new MojoExecutionException("Could not write out Manifest File");
 		}
 	}
-	
+
 	/***
 	 * Class implemented to revoce CrLf from manifest file on windows
+	 * 
 	 * @author kela
-	 *
+	 * 
 	 */
-	private class FileOutputWriterOnCrLf extends OutputStream
-	{
-List bytes = new ArrayList();
+	private class FileOutputWriterOnCrLf extends OutputStream {
+		List bytes = new ArrayList();
+
 		public void write(int b) throws IOException {
 			bytes.add(new Integer(b));
-			
+
 		}
-		
-		private void removeCrAndLfLf()
-		{
+
+		private void removeCrAndLfLf() {
 			Object a[] = bytes.toArray();
 			for (int i = 0; i < a.length; i++) {
-				byte thisByte = ((Integer)a[i]).byteValue();
-				if(i+1<a.length)
-				{
-					byte nextByte = ((Integer)a[i+1]).byteValue();
-					if((thisByte==0x0d || thisByte==0x0a) && nextByte== 0x0a)
-					{
-						bytes.remove(i);//remove 0x0d
-//						getLog().info("Removing: "+i + "("+thisByte+")");
+				byte thisByte = ((Integer) a[i]).byteValue();
+				if (i + 1 < a.length) {
+					byte nextByte = ((Integer) a[i + 1]).byteValue();
+					if ((thisByte == 0x0d || thisByte == 0x0a)
+							&& nextByte == 0x0a) {
+						bytes.remove(i);// remove 0x0d
+						// getLog().info("Removing: "+i + "("+thisByte+")");
 						removeCrAndLfLf();
 						return;
 					}
 				}
 			}
 		}
-		
-		public byte[] getBytes()
-		{
-			
+
+		public byte[] getBytes() {
+
 			removeCrAndLfLf();
-			
+
 			byte[] arr = new byte[bytes.size()];
-			
-			
+
 			Object a[] = bytes.toArray();
 			for (int i = 0; i < a.length; i++) {
-				byte thisByte = ((Integer)a[i]).byteValue();
-				arr[i]=thisByte;
+				byte thisByte = ((Integer) a[i]).byteValue();
+				arr[i] = thisByte;
 			}
 			return arr;
 		}
-		
+
 	}
 
 	/**
@@ -357,6 +361,7 @@ List bytes = new ArrayList();
 		Iterator dependecies = project.getCompileArtifacts().iterator();
 		StringBuffer classpath = new StringBuffer();
 		StringBuffer exportedPackages = new StringBuffer();
+		StringBuffer importedPackages = new StringBuffer();
 		while (dependecies.hasNext()) {
 			Artifact artifact = (Artifact) dependecies.next();
 
@@ -377,17 +382,21 @@ List bytes = new ArrayList();
 			classpath.append(fileName);
 			File localCopy = copyArtifact(file);
 			addExportedPackages(localCopy, exportedPackages);
+			addImportedPackages(localCopy, importedPackages);
 		}
 
 		if (classpath.toString().length() == 0)
 			classpath.append("."); // default to "."
 
-		mainAttributes.put(new Attributes.Name(BUNDLE_CLASSPATH), classpath
-				.toString());
+		mainAttributes.put(new Attributes.Name(BUNDLE_CLASSPATH),
+				classpath.toString());
 
 		if (exportedPackages.toString().length() > 0)
 			mainAttributes.put(new Attributes.Name(EXPORT_PACKAGE),
 					exportedPackages.toString());
+		if (importedPackages.toString().length() > 0)
+			mainAttributes.put(new Attributes.Name(IMPORT_PACKAGE),
+					importedPackages.toString());
 	}
 
 	/**
@@ -413,7 +422,7 @@ List bytes = new ArrayList();
 					if (!packageList.contains(packageName)) {
 						// check for do not export package
 						boolean excludePackage = false;
-						excludePackage = excludePackage(packageName);
+						excludePackage = isPackageInList(doNotExportPackagePrefixes,packageName);
 						if (!excludePackage)
 							packageList.add(packageName);
 					}
@@ -434,24 +443,63 @@ List bytes = new ArrayList();
 			}
 		}
 	}
+	
+	/**
+	 * Adds exported packages.
+	 * 
+	 * @param file
+	 *            the jar file.
+	 * @param exportedPackages
+	 *            the buffer that holds the exported packages.
+	 * @throws MojoExecutionException
+	 */
+	private void addImportedPackages(File file, StringBuffer importedPackages)
+			throws MojoExecutionException {
+		ArrayList packageList = new ArrayList();
+		try {
+			JarFile jar = new JarFile(file);
+			Enumeration entries = jar.entries();
+			while (entries.hasMoreElements()) {
+				JarEntry jarEntry = (JarEntry) entries.nextElement();
+				String entryName = jarEntry.getName();
+				if (entryName.endsWith(".class")) {
+					String packageName = getPackageForName(entryName);
+					if (!packageList.contains(packageName)) {
+						// check for do not export package
+						boolean excludePackage = false;
+						excludePackage = isPackageInList(importInsteadOfExportPackagePrefixes,packageName);
+						if (excludePackage)
+							packageList.add(packageName);
+					}
+				}
+			}
+			jar.close();
+		} catch (IOException e) {
+			throw new MojoExecutionException("Could not introspect jar "
+					+ file.getAbsolutePath(), e);
+		}
+		if (packageList.size() > 0) {
+			Object[] packages = packageList.toArray();
+			for (int i = 0; i < packages.length; i++) {
+				if (i > 0 || importedPackages.length() > 0) {
+					importedPackages.append(",");
+				}
+				importedPackages.append(packages[i]);
+			}
+		}
+	}
 
-	private boolean excludePackage(String packageName) {
-		if (doNotExportPackagePrefixes != null
-				&& !doNotExportPackagePrefixes.isEmpty()) {
-			Iterator doNotExportPackageItr = doNotExportPackagePrefixes
-					.iterator();
-			while (doNotExportPackageItr.hasNext()) {
+	private boolean isPackageInList(List list,String packageName) {
+		if (list != null
+				&& !list.isEmpty()) {
+			Iterator listItr = list.iterator();
+			while (listItr.hasNext()) {
 
-				Object doNotExportPackage = doNotExportPackageItr
-						.next();
+				Object item = listItr.next();
 
-				if (packageName.startsWith(doNotExportPackage
-						.toString())) {
+				if (packageName.startsWith(item.toString())) {
 
-					getLog()
-							.debug(
-									"Excluding package: "
-											+ packageName);
+					getLog().debug("Excluding/importing package: " + packageName);
 					return true;
 				}
 			}
@@ -498,8 +546,7 @@ List bytes = new ArrayList();
 			getLog().debug("Copying jar ........." + copy.getName());
 			copyFile(file, copy);
 		} catch (IOException e) {
-			throw new MojoExecutionException("Error Copying file " + fileName,
-					e);
+			throw new MojoExecutionException("Error Copying file " + fileName, e);
 		}
 		return copy;
 	}
@@ -527,8 +574,8 @@ List bytes = new ArrayList();
 			mainAttributes.put(new Attributes.Name(BUNDLE_SYMBOLIC_NAME),
 					project.getArtifactId());
 
-		mainAttributes.put(new Attributes.Name(
-				BUNDLE_REQUIRED_EXECUTION_ENVIRONMENT),
+		mainAttributes.put(
+				new Attributes.Name(BUNDLE_REQUIRED_EXECUTION_ENVIRONMENT),
 				BUNDLE_REQUIRED_EXECUTION_ENVIRONMENT_J2SE15);
 
 		String version = project.getVersion();

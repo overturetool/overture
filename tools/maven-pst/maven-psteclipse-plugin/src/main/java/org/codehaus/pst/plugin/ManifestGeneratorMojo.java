@@ -144,7 +144,7 @@ public class ManifestGeneratorMojo extends AbstractEclipseMojo implements Manife
 //    		}
 //    	}
     	
-    	ManifestGenerator generator = new ManifestGenerator(getLog(), baseDirectory, project, buddies, baseDirectory,doNotExportPackagePrefixes);
+    	ManifestGenerator generator = new ManifestGenerator(getLog(), baseDirectory, project, buddies, baseDirectory,doNotExportPackagePrefixes,importInsteadOfExportPackagePrefixes);
         generator.execute();
     }
 }

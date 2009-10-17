@@ -217,7 +217,7 @@ public class AssemblyMojo extends AbstractEclipseMojo {
         if (!pluginDirectory.exists()) {
             pluginDirectory.mkdir();
         }
-        ManifestGenerator generator = new ManifestGenerator(getLog(), project.getBasedir(), project, buddies, pluginDirectory,doNotExportPackagePrefixes);
+        ManifestGenerator generator = new ManifestGenerator(getLog(), project.getBasedir(), project, buddies, pluginDirectory,doNotExportPackagePrefixes,importInsteadOfExportPackagePrefixes);
         generator.execute();
 
     }

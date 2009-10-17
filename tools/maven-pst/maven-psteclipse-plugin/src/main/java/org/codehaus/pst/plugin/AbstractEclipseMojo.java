@@ -61,6 +61,13 @@ public abstract class AbstractEclipseMojo extends AbstractMojo {
      */
     protected List doNotExportPackagePrefixes;
 
+    /**
+	 * The packages that should be imported instead of exported.
+	 * @parameter
+     * @optional
+	 */
+	protected List importInsteadOfExportPackagePrefixes;
+    
     /*
      * (non-Javadoc)
      * @see org.apache.maven.plugin.Mojo#execute()
