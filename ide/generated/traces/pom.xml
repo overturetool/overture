@@ -28,4 +28,29 @@
     </dependency>
 
   </dependencies>
+  
+  
+  
+  
+  
+  
+  <build>
+  <plugins>
+    <plugin>
+      	<groupId>org.overturetool.tools.maven-pst</groupId>
+      	<artifactId>maven-psteclipse-plugin</artifactId>
+      		
+        <extensions>true</extensions>
+        <configuration>
+         
+           <importInsteadOfExportPackagePrefixes>
+           <param>org.overturetool.vdmj</param>
+           
+           </importInsteadOfExportPackagePrefixes>
+        </configuration>
+       
+      	
+      </plugin>
+    </plugins>
+  </build>
 </project>

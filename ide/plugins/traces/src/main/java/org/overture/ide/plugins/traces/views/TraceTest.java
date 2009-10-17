@@ -29,6 +29,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.IViewDescriptor;
 import org.overture.ide.plugins.traces.OvertureTracesPlugin;
+import org.overture.ide.plugins.traces.TracesConstants;
 import org.overture.ide.plugins.traces.views.treeView.NotYetReadyTreeNode;
 import org.overture.ide.plugins.traces.views.treeView.TraceTestGroup;
 import org.overture.ide.plugins.traces.views.treeView.TraceTestTreeNode;
@@ -95,6 +96,7 @@ public class TraceTest extends ViewPart implements ISelectionListener
 		{
 		}
 
+		@SuppressWarnings("unchecked")
 		public Object[] getElements(Object inputElement)
 		{
 			if(inputElement instanceof List)
@@ -233,7 +235,7 @@ public class TraceTest extends ViewPart implements ISelectionListener
 		hookDoubleClickAction();
 		// contributeToActionBars();
 
-		getViewSite().getPage().addSelectionListener("org.overturetool.eclipse.plugins.traces.views.TracesView",this);
+		getViewSite().getPage().addSelectionListener(TracesConstants.TRACES_VIEW_ID,this);
 		
 	}
 
@@ -284,7 +286,7 @@ public class TraceTest extends ViewPart implements ISelectionListener
 				for (IViewDescriptor v : getViewSite().getWorkbenchWindow().getWorkbench().getViewRegistry().getViews())
 				{
 					if (v.getId().equals(
-							"org.overturetool.traces.views.TracesView"))
+							TracesConstants.TRACES_VIEW_ID))
 					{
 						this.addListenerObject(v);
 					}

@@ -143,6 +143,7 @@ public abstract class AbstractBuilder {
 			IProgressMonitor monitor) throws CoreException, IOException {
 		if (monitor != null)
 			monitor.subTask("Parsing files");
+		AbstractBuilder.syncProjectResources(project);
 		for (IResource res : project.members(IContainer.INCLUDE_PHANTOMS
 				| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS)) {
 			parseMissingFiles(project, natureId, res);

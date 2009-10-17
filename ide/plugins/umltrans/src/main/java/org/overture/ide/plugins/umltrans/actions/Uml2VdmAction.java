@@ -106,19 +106,19 @@ public class Uml2VdmAction implements IObjectActionDelegate
 							selectedProject.getLocation().toFile());
 				} catch (FileNotFoundException e)
 				{
-					
+					ConsoleWriter.ConsolePrint(shell, e);
 					e.printStackTrace();
 					return new Status(IStatus.ERROR, "org.overture.ide.umltrans",
 							 "Translation error in file", e);
 				} catch (CGException e)
 				{
-					
+					ConsoleWriter.ConsolePrint(shell, e);
 					e.printStackTrace();
 					return new Status(IStatus.ERROR, "org.overture.ide.umltrans",
 							 "Translation error in specification", e);
 				} catch (IOException e)
 				{
-					
+					ConsoleWriter.ConsolePrint(shell, e);
 					e.printStackTrace();
 					return new Status(IStatus.ERROR, "org.overture.ide.umltrans",
 							 "Translation error in file", e);
@@ -126,6 +126,7 @@ public class Uml2VdmAction implements IObjectActionDelegate
 				{
 				
 					e.printStackTrace();
+					ConsoleWriter.ConsolePrint(shell, e);
 					return new Status(IStatus.ERROR, "org.overture.ide.umltrans",
 							 "Translation error", e);
 				}

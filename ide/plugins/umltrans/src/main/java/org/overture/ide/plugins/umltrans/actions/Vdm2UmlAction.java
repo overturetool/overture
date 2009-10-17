@@ -113,22 +113,27 @@ public class Vdm2UmlAction implements IObjectActionDelegate
 					Translator.TransLateTexVdmToUml(filesPathes, outFile);
 				} catch (FileNotFoundException e)
 				{
-					
+					ConsoleWriter.ConsolePrint(shell, e);
 					e.printStackTrace();
 					return new Status(IStatus.ERROR, "org.overture.ide.umltrans",
 							 "Translation error in file", e);
 				} catch (CGException e)
 				{
-					
+					ConsoleWriter.ConsolePrint(shell, e);
 					e.printStackTrace();
 					return new Status(IStatus.ERROR, "org.overture.ide.umltrans",
 							 "Translation error in specification", e);
 				} catch (IOException e)
 				{
-					
+					ConsoleWriter.ConsolePrint(shell, e);
 					e.printStackTrace();
 					return new Status(IStatus.ERROR, "org.overture.ide.umltrans",
 							 "Translation error in file", e);
+				}catch(Exception e)
+				{
+					ConsoleWriter.ConsolePrint(shell, e);
+					return new Status(IStatus.ERROR, "org.overture.ide.umltrans",
+							 "Unknown error", e);
 				}
 
 				shell.getDisplay().asyncExec(new Runnable()

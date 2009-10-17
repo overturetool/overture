@@ -2,7 +2,6 @@ package org.overture.ide.plugins.traces.internal;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,58 +29,26 @@ import org.overturetool.traces.vdmj.TraceInterpreter;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
-import org.overturetool.vdmj.syntax.ClassReader;
-import org.overturetool.vdmj.typechecker.ClassTypeChecker;
-import org.overturetool.vdmj.typechecker.TypeChecker;
 import org.xml.sax.SAXException;
 
 public class VdmjTracesHelper implements ITracesHelper {
 	boolean initialized = false;
-	//ClassList classes;
+	// ClassList classes;
 	ClassInterpreter ci;
 	String projectName;
 	final String TRACE_STORE_DIR_NAME = ".traces";
-IProject project;
-final String nature = VdmPpProjectNature.VDM_PP_NATURE;
+	IProject project;
+	final String nature = VdmPpProjectNature.VDM_PP_NATURE;
 	HashMap<String, TracesXmlStoreReader> classTraceReaders = new HashMap<String, TracesXmlStoreReader>();
 	File projectDir;
 
 	public VdmjTracesHelper(IProject project, int max) throws Exception {
-this.project = project;
+		this.project = project;
 		this.projectDir = new File(project.getLocation().toFile(), TRACE_STORE_DIR_NAME);
 		if (!this.projectDir.exists())
 			this.projectDir.mkdirs();
-//		
-//		classes = new ClassList();
-//		int parsErrors = 0;
-//		for (File file : specFiles) {
-//			LexTokenReader ltr;
-//
-//			ltr = new LexTokenReader(file, Dialect.VDM_PP);
-//
-//			ClassReader mr = new ClassReader(ltr);
-//			parsErrors += mr.getErrorCount();
-//
-//			mr.printErrors(new PrintWriter(System.out));
-//			classes.addAll(mr.readClasses());
-//		}
-//
-//		if (parsErrors == 0) {
-//			TypeChecker tc = new ClassTypeChecker(classes);
-//			tc.typeCheck();
-//			if (TypeChecker.getErrorCount() == 0) {
-//				ci = new ClassInterpreter(classes);
-//				classes.setLoaded();
-//
-//			} else {
-//				TypeChecker.printErrors(new PrintWriter(System.out));
-//			}
-//		} else {
-//			ConsolePrint("Parse errors: " + parsErrors);
-//		}
+
 		AbstractBuilder.parseMissingFiles(project, nature, null);
 
 		org.overturetool.vdmj.Settings.prechecks = true;
@@ -96,18 +63,16 @@ this.project = project;
 		}
 
 	}
-	
-	private ClassList getClasses()
-	{
+
+	private ClassList getClasses() {
 		RootNode root = AstManager.instance().getRootNode(project, nature);
 		ClassList classes = new ClassList();
-		if(root!=null)
-		for(Object o : root.getRootElementList())
-		{
-			if(o instanceof ClassDefinition)
-				classes.add((ClassDefinition) o);
-	
-		}
+		if (root != null)
+			for (Object o : root.getRootElementList()) {
+				if (o instanceof ClassDefinition)
+					classes.add((ClassDefinition) o);
+
+			}
 		return classes;
 	}
 
@@ -215,9 +180,6 @@ this.project = project;
 			}
 
 		}
-		// else
-		// throw new FileNotFoundException(
-		// "Class Trace result XML file not found");
 
 		return traces;
 	}

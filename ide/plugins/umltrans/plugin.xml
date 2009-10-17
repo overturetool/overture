@@ -42,7 +42,7 @@
                enablesFor="1"
                tooltip="Generate VDM files from a UML model">
          </action>
-         <action
+      <!--   <action
                class="org.overture.ide.plugins.umltrans.actions.TexToVppAction"
                icon="icons/filter16.png"
                id="org.overture.ide.umltrans.actions.TexToVppAction"
@@ -50,7 +50,7 @@
                menubarPath="org.overture.ide.umltrans.menuMain/groupUml"
                enablesFor="1"
                tooltip="Convert VDM TEX files to VDM VPP files">
-         </action>
+         </action>-->
       </objectContribution>
    </extension>
 

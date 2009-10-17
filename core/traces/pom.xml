@@ -144,6 +144,35 @@
     </plugins>
 
   </reporting>
+  
+  
+  
+   <developers>
+    <developer>
+      <id>KennethLausdahl</id>
+      <name>Kenneth Lausdahl</name>
+      <email></email>
+      <url>http://www.lausdahl.com</url>
+      <organization>IHA</organization>
+      <organizationUrl>http://iha.dk</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+     <developer>
+      <id>PeterGormLarsen</id>
+      <name>Peter Gorm Larsen</name>
+      <email></email>
+      <url>-</url>
+      <organization>IHA</organization>
+      <organizationUrl>http://www.iha.dk</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
 </project>
 
 

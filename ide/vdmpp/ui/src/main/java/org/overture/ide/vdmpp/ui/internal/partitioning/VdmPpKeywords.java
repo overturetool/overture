@@ -22,7 +22,7 @@ public class VdmPpKeywords implements IVdmKeywords
 	      "protected", "psubset", "public", "rat", "rd", "real",
 	      "rem", "responsibility", "return", "reverse", "rng",
 	      "samebaseclass", "sameclass", "self", "seq", "seq1",
-	      "set", "skip", "specified", "st", "start", "startlist",
+	      "set", "skip", "specified", "st", "static","start", "startlist",
 	      "subclass", "subset", "sync",
 	      "then", "thread", "threadid",
 	      "tixe", "tl", "to", "token", "traces", "trap", "true",

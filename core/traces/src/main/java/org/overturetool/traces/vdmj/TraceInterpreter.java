@@ -133,9 +133,7 @@ public class TraceInterpreter
 					{
 						error(e.getMessage());
 						throw e;
-						// list.add(e.getMessage());
-						// list.add(Verdict.FAILED);
-						// return list;
+						
 					}
 
 					Context ctxt = new ObjectContext(classdef.name.location,
@@ -153,14 +151,7 @@ public class TraceInterpreter
 								mtd.location.startPos,
 
 								tests.size());
-					// List<List<Object>> results = new Vector<List<Object>>();
-					// List<String> testSatements = new Vector<String>();
-					// for (CallSequence callSequence : ts) {
-					// List<Object> dd = interpreter.runtrace(me, env,
-					// callSequence);
-					// results.add(dd);
-					// int yy = 8;
-					// }
+					
 					Environment env = new FlatEnvironment(
 							classdef.getSelfDefinition(),
 							new PrivateClassEnvironment(classdef,
@@ -191,10 +182,7 @@ public class TraceInterpreter
 						{
 							skippedCount++;
 							testFiltered(n, test.getFilter(), test);
-							// Console.out.println("Test " + n + " = " + test);
-							// Console.out.println("Test " + n +
-							// " FILTERED by test "
-							// + test.getFilter());
+							
 
 							storage.AddSkippedResult(new Integer(n).toString());
 						} else
@@ -211,20 +199,7 @@ public class TraceInterpreter
 							{
 								faildCount++;
 
-								// String stem = test.toString(result.size() -
-								// 1);
-								// ListIterator<CallSequence> it =
-								// tests.listIterator(n);
-								//
-								// while (it.hasNext())
-								// {
-								// CallSequence other = it.next();
-								//
-								// if (other.toString().startsWith(stem))
-								// {
-								// other.setFilter(n);
-								// }
-								// }
+								
 
 								int stem = result.size() - 1;
 								ListIterator<CallSequence> it = tests.listIterator(n);
@@ -244,19 +219,12 @@ public class TraceInterpreter
 
 							if (storage != null)
 							{
-								// storage.StartTest(new
-								// Integer(n).toString(),clean);
-								// storage.StopElement();
-
 								storage.AddResults(
 										new Integer(n).toString(),
 										result);
 							}
 
-							// Console.out.println("Test " + n + " = " + clean);
-							// testSatements.add(clean);
-							// Console.out.println("Result = " + result);
-							// results.add(result);
+							
 						}
 
 						n++;
