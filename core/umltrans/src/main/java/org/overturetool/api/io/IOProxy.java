@@ -85,14 +85,14 @@ public class IOProxy {
 // ***** VDMTOOLS END Name=append#2|String|String
 
 
-// ***** VDMTOOLS START Name=overwrite#2|String|String KEEP=NO
+// ***** VDMTOOLS START Name=overwrite#2|String|String KEEP=YES
   public void overwrite (final String f, final String s) throws CGException {
 
     IO file = (IO) new IO();
     {
 
       Boolean tmpVal_6 = null;
-      tmpVal_6 = (Boolean) file.fwriteval(f, s, new quotes.start());
+      tmpVal_6 = (Boolean) file.fwriteval(f, s, new start());
     }
   }
 // ***** VDMTOOLS END Name=overwrite#2|String|String
