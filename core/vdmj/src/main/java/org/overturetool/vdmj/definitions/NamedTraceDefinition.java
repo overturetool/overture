@@ -140,9 +140,12 @@ public class NamedTraceDefinition extends Definition
 		oneName.setTypeQualifier(ptypes);
 		PatternList params = new PatternList();
 
+		// Note the _test_ parameter name is illegal in VDM to avoid name
+		// clashes between the parameter and test class names.
+		
 		params.add(
 			new IdentifierPattern(
-				new LexNameToken(name.module, "test", name.location)));
+				new LexNameToken(name.module, "_test_", name.location)));
 
 		ExplicitOperationDefinition def = new ExplicitOperationDefinition(
 			oneName, new OperationType(location, ptypes, new VoidType(location)),

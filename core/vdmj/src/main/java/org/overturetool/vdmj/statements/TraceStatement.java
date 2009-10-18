@@ -65,7 +65,7 @@ public class TraceStatement extends Statement
 			writer = Console.out;
 		}
 
-		arg = new LexNameToken(tracedef.name.module, "test", location);
+		arg = new LexNameToken(tracedef.name.module, "_test_", location);
 	}
 
 	@Override
