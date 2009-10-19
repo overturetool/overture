@@ -29,8 +29,7 @@ import org.overturetool.vdmj.typechecker.PrivateClassEnvironment;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 import org.overturetool.vdmj.values.ObjectValue;
 
-public class TraceInterpreter
-{
+public class TraceInterpreter {
 	protected long beginClass = 0;
 	protected long beginTrace = 0;
 	protected String activeClass = "";
@@ -39,21 +38,18 @@ public class TraceInterpreter
 	ClassInterpreter ci;
 
 	public void processTraces(List<File> specFiles, String className,
-			TraceXmlWrapper storage) throws Exception
-	{
+			TraceXmlWrapper storage) throws Exception {
 
 		ClassList classes = new ClassList();
 		int parsErrors = 0;
-		for (File file : specFiles)
-		{
+		for (File file : specFiles) {
 			LexTokenReader ltr;
 
 			ltr = new LexTokenReader(file, Dialect.VDM_PP);
 
 			ClassReader mr = new ClassReader(ltr);
 			parsErrors += mr.getErrorCount();
-			if (mr.getErrorCount() > 0)
-			{
+			if (mr.getErrorCount() > 0) {
 				Writer parseErrors = new StringWriter();
 				mr.printErrors(new PrintWriter(parseErrors));
 				parseError(parseErrors.toString());
@@ -61,27 +57,22 @@ public class TraceInterpreter
 			classes.addAll(mr.readClasses());
 		}
 
-		if (parsErrors == 0)
-		{
+		if (parsErrors == 0) {
 			processTraces(classes, className, storage);
 		}
 	}
 
 	public void processTraces(ClassList classes, String className,
-			TraceXmlWrapper storage) throws Exception
-	{
-		try
-		{
+			TraceXmlWrapper storage) throws Exception {
+		try {
 			TypeChecker tc = new ClassTypeChecker(classes);
 			typeCheckStarted();
 			tc.typeCheck();
-			classes.setLoaded(); //do not type check this classes again
-			if (TypeChecker.getErrorCount() == 0)
-			{
+			classes.setLoaded(); // do not type check this classes again
+			if (TypeChecker.getErrorCount() == 0) {
 				ci = new ClassInterpreter(classes);
 
-			} else
-			{
+			} else {
 				Writer typeErrors = new StringWriter();
 				TypeChecker.printErrors(new PrintWriter(typeErrors));
 				typeError(typeErrors.toString());
@@ -94,8 +85,7 @@ public class TraceInterpreter
 
 			ClassDefinition classdef = ci.findClass(className);
 
-			if (classdef == null)
-			{
+			if (classdef == null) {
 				error("Class not found: " + className);
 				throw new ClassNotFoundException(className);
 			}
@@ -108,54 +98,44 @@ public class TraceInterpreter
 				storage.StartClass(className);
 
 			Integer numberOfTraces = 0;
-			for (Object string : classdef.definitions)
-			{
+			for (Object string : classdef.definitions) {
 				if (string instanceof NamedTraceDefinition)
 					numberOfTraces++;
 
 			}
 			processingClass(className, numberOfTraces);
 
-			for (Object string : classdef.definitions)
-			{
-				if (string instanceof NamedTraceDefinition)
-				{
+			for (Object string : classdef.definitions) {
+				if (string instanceof NamedTraceDefinition) {
 					NamedTraceDefinition mtd = (NamedTraceDefinition) string;
 					ObjectValue object = null;
 
-					try
-					{
-						object = classdef.newInstance(
-								null,
-								null,
+					try {
+						object = classdef.newInstance(null, null,
 								ci.initialContext);
-					} catch (ValueException e)
-					{
+					} catch (ValueException e) {
 						error(e.getMessage());
 						throw e;
-						
+
 					}
 
-					Context ctxt = new ObjectContext(classdef.name.location,
-							classdef.name.name + "()", ci.initialContext,
-							object);
+					Context ctxt = new ObjectContext(classdef.name.location, classdef.name.name
+							+ "()", ci.initialContext, object);
 
 					TestSequence tests = mtd.getTests(ctxt);
 
 					processingTrace(className, mtd.name.name, tests.size());
 					if (storage != null)
-						storage.StartTrace(
-								mtd.name.name,
+						storage.StartTrace(mtd.name.name,
 								mtd.location.file.getName(),
-								mtd.location.startLine,
-								mtd.location.startPos,
+								mtd.location.startLine, mtd.location.startPos,
 
 								tests.size());
-					
-					Environment env = new FlatEnvironment(
-							classdef.getSelfDefinition(),
-							new PrivateClassEnvironment(classdef,
-									ci.getGlobalEnvironment()));
+
+					// Environment env = new FlatEnvironment(
+					// classdef.getSelfDefinition(),
+					// new PrivateClassEnvironment(classdef,
+					// ci.getGlobalEnvironment()));
 
 					int n = 1;
 
@@ -163,87 +143,57 @@ public class TraceInterpreter
 					int inconclusiveCount = 0;
 					int skippedCount = 0;
 
-					for (CallSequence test : tests)
-					{
+					for (CallSequence test : tests) {
 						processingTest(className, mtd.name.name, n);
 						// Bodge until we figure out how to not have explicit op
 						// names.
-						String clean = test.toString().replaceAll(
-								"\\.\\w+`",
+						String clean = test.toString().replaceAll("\\.\\w+`",
 								".");
 
-						if (storage != null)
-						{
+						if (storage != null) {
 							storage.StartTest(new Integer(n).toString(), clean);
 							storage.StopElement();
 						}
 
-						if (test.getFilter() > 0)
-						{
+						if (test.getFilter() > 0) {
 							skippedCount++;
 							testFiltered(n, test.getFilter(), test);
-							
 
 							storage.AddSkippedResult(new Integer(n).toString());
-						} else
-						{
+						} else {
 							ci.init(null); // Initialize completely between
 							// every
 							// run...
 							List<Object> result = ci.runtrace(
-									className,
-									env,
-									test);
+									mtd.classDefinition, test);
 
-							if (result.get(result.size() - 1) == Verdict.FAILED)
-							{
+							tests.filter(result, test, n);
+							
+							if (result.get(result.size() - 1) == Verdict.FAILED) 
 								faildCount++;
 
-								
-
-								int stem = result.size() - 1;
-								ListIterator<CallSequence> it = tests.listIterator(n);
-
-								while (it.hasNext())
-								{
-									CallSequence other = it.next();
-
-									if (other.compareStem(test, stem))
-									{
-										other.setFilter(n);
-									}
-								}
-
-							} else if (result.get(result.size() - 1) == Verdict.INCONCLUSIVE)
+							else if (result.get(result.size() - 1) == Verdict.INCONCLUSIVE)
 								inconclusiveCount++;
 
-							if (storage != null)
-							{
-								storage.AddResults(
-										new Integer(n).toString(),
+							if (storage != null) {
+								storage.AddResults(new Integer(n).toString(),
 										result);
 							}
 
-							
 						}
 
 						n++;
 					}
 
-					if (storage != null)
-					{
+					if (storage != null) {
 						Verdict worstVerdict = Verdict.PASSED;
 						if (faildCount > 0)
 							worstVerdict = Verdict.FAILED;
 						else if (inconclusiveCount > 0)
 							worstVerdict = Verdict.INCONCLUSIVE;
 
-						storage.AddTraceStatus(
-								worstVerdict,
-								tests.size(),
-								skippedCount,
-								faildCount,
-								inconclusiveCount);
+						storage.AddTraceStatus(worstVerdict, tests.size(),
+								skippedCount, faildCount, inconclusiveCount);
 						storage.StopElement();
 					}
 				}
@@ -251,23 +201,20 @@ public class TraceInterpreter
 			}
 
 			completed();
-		} catch (ContextException e)
-		{
+		} catch (ContextException e) {
+
 			error(e.getMessage());
 			throw e;
-		} catch (Exception e)
-		{
-
+		} catch (Exception e) {
+			error(e.getMessage());
 			throw e;
-		} finally
-		{
+		} finally {
 			if (storage != null)
 				storage.Stop();
 		}
 	}
 
-	private void processingClass(String className, Integer traceCount)
-	{
+	private void processingClass(String className, Integer traceCount) {
 		beginClass = System.currentTimeMillis();
 		activeClass = className;
 		System.out.println("Executing: " + className + " - Trace count: "
@@ -276,14 +223,12 @@ public class TraceInterpreter
 		preProcessingClass(className, traceCount);
 	}
 
-	protected void preProcessingClass(String className, Integer traceCount)
-	{
+	protected void preProcessingClass(String className, Integer traceCount) {
 
 	}
 
 	protected void processingTrace(String className, String traceName,
-			Integer testCount)
-	{
+			Integer testCount) {
 		printTraceStatus();
 		beginTrace = System.currentTimeMillis();
 		activeTrace = traceName;
@@ -294,19 +239,16 @@ public class TraceInterpreter
 	}
 
 	protected void preProcessingTrace(String className, String traceName,
-			Integer testCount)
-	{
+			Integer testCount) {
 
 	}
 
 	protected void processingTest(String className, String traceName,
-			Integer testNumber)
-	{
+			Integer testNumber) {
 
 	}
 
-	protected void completed()
-	{
+	protected void completed() {
 		printTraceStatus();
 
 		long endClass = System.currentTimeMillis();
@@ -316,43 +258,35 @@ public class TraceInterpreter
 		preCompleted();
 	}
 
-	protected void preCompleted()
-	{
+	protected void preCompleted() {
 
 	}
 
 	protected void testFiltered(Integer number, Integer filteredBy,
-			CallSequence test)
-	{
+			CallSequence test) {
 		// Console.out.println("Test " + number + " = " + test);
 		// Console.out.println("Test " + number + " FILTERED by test "
 		// + filteredBy);
 	}
 
-	protected void error(String message)
-	{
+	protected void error(String message) {
 		System.out.println(message);
 	}
 
-	protected void typeError(String message)
-	{
+	protected void typeError(String message) {
 		System.out.println(message);
 	}
 
-	protected void parseError(String message)
-	{
+	protected void parseError(String message) {
 		System.out.println(message);
 	}
 
-	protected void typeCheckStarted()
-	{
+	protected void typeCheckStarted() {
 
 	}
 
-	private void printTraceStatus()
-	{
-		if (activeTrace != null && beginTrace != 0)
-		{
+	private void printTraceStatus() {
+		if (activeTrace != null && beginTrace != 0) {
 			long endTrace = System.currentTimeMillis();
 			System.out.println("Trace " + activeClass + " - " + activeTrace
 					+ " processed in " + (double) (endTrace - beginTrace)
@@ -361,8 +295,7 @@ public class TraceInterpreter
 		prePrintTraceStatus();
 	}
 
-	protected void prePrintTraceStatus()
-	{
+	protected void prePrintTraceStatus() {
 
 	}
 }

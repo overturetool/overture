@@ -113,17 +113,17 @@ TypeChecker.printErrors(new PrintWriter(System.out));
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		List<Object> res = interpreter.runtrace(className, expr);
+		//List<Object> res = interpreter.runtrace(className, expr);
+throw new CGException("This trace execution of VDMJ is no longer supported.");
+//		Vector iResult = new Vector();
 
-		Vector iResult = new Vector();
-
-		for (int j = 0; j < res.size(); j++) {
-			boolean isError = false;
-			 if (res.size()-1==j && res.get(j).toString().startsWith("Error"))
-			 isError= true;
-			iResult.add(new ToolBox.InterpreterResult(!isError, res.get(j).toString()));
-		}
-		return iResult;
+//		for (int j = 0; j < res.size(); j++) {
+//			boolean isError = false;
+//			 if (res.size()-1==j && res.get(j).toString().startsWith("Error"))
+//			 isError= true;
+//			iResult.add(new ToolBox.InterpreterResult(!isError, res.get(j).toString()));
+//		}
+//		return iResult;
 
 	}
 // ***** VDMTOOLS END Name=impl_runTestCase#2|String|Vector
