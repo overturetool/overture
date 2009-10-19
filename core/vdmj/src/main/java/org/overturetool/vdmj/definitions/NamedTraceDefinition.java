@@ -142,7 +142,7 @@ public class NamedTraceDefinition extends Definition
 
 		// Note the _test_ parameter name is illegal in VDM to avoid name
 		// clashes between the parameter and test class names.
-		
+
 		params.add(
 			new IdentifierPattern(
 				new LexNameToken(name.module, "_test_", name.location)));
@@ -188,6 +188,8 @@ public class NamedTraceDefinition extends Definition
 			traces.nodes.add(term.expand(ctxt));
 		}
 
-		return traces.getTests();
+		TestSequence tests = traces.getTests();
+		tests.typeCheck(classDefinition);
+		return tests;
 	}
 }

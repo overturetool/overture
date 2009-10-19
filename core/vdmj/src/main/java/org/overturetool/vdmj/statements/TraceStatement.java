@@ -25,9 +25,7 @@ package org.overturetool.vdmj.statements;
 
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.ListIterator;
 
-import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.Console;
@@ -38,11 +36,8 @@ import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.traces.CallSequence;
 import org.overturetool.vdmj.traces.TestSequence;
-import org.overturetool.vdmj.traces.Verdict;
 import org.overturetool.vdmj.typechecker.Environment;
-import org.overturetool.vdmj.typechecker.FlatEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
-import org.overturetool.vdmj.typechecker.PrivateClassEnvironment;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.VoidType;
 import org.overturetool.vdmj.values.Value;
@@ -73,12 +68,6 @@ public class TraceStatement extends Statement
 	{
 		TestSequence tests = tracedef.getTests(ctxt);
 		ClassInterpreter ci = (ClassInterpreter)Interpreter.getInstance();
-		ClassDefinition classdef = tracedef.classDefinition;
-
-		Environment env = new FlatEnvironment(
-			classdef.getSelfDefinition(),
-			new PrivateClassEnvironment(classdef, ci.getGlobalEnvironment()));
-
 		Value argval = ctxt.check(arg);
 
 		if (argval == null)
@@ -99,23 +88,8 @@ public class TraceStatement extends Statement
     			else
     			{
         			ci.init(null);	// Initialize completely between every run...
-        			List<Object> result = ci.runtrace(tracedef.name.module, env, test);
-
-        			if (result.get(result.size()-1) == Verdict.FAILED)
-        			{
-        				int stem = result.size() - 1;
-        				ListIterator<CallSequence> it = tests.listIterator(n);
-
-        				while (it.hasNext())
-        				{
-        					CallSequence other = it.next();
-
-        					if (other.compareStem(test, stem))
-        					{
-        						other.setFilter(n);
-        					}
-        				}
-        			}
+        			List<Object> result = ci.runtrace(tracedef.classDefinition, test);
+        			tests.filter(result, test, n);
 
         			writer.println("Test " + n + " = " + clean);
         			writer.println("Result = " + result);
@@ -155,7 +129,7 @@ public class TraceStatement extends Statement
 			else
 			{
     			ci.init(null);	// Initialize completely between every run...
-    			List<Object> result = ci.runtrace(tracedef.name.module, env, test);
+    			List<Object> result = ci.runtrace(tracedef.classDefinition, test);
 
     			writer.println("Test " + n + " = " + clean);
     			writer.println("Result = " + result);

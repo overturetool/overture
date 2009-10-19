@@ -23,7 +23,17 @@
 
 package org.overturetool.vdmj.traces;
 
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Vector;
+
+import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.runtime.ClassInterpreter;
+import org.overturetool.vdmj.runtime.Interpreter;
+import org.overturetool.vdmj.statements.Statement;
+import org.overturetool.vdmj.typechecker.Environment;
+import org.overturetool.vdmj.typechecker.FlatEnvironment;
+import org.overturetool.vdmj.typechecker.PrivateClassEnvironment;
 import org.overturetool.vdmj.util.Utils;
 
 @SuppressWarnings("serial")
@@ -33,5 +43,55 @@ public class TestSequence extends Vector<CallSequence>
 	public String toString()
 	{
 		return Utils.listToString(this, "\n");
+	}
+
+	/**
+	 * Filter remaining tests based on one set of results. The result list
+	 * passed in is the result of running the test, which is the n'th test
+	 * in the TestSequence (from 1 - size).
+	 */
+
+	public void filter(List<Object> result, CallSequence test, int n)
+	{
+		if (result.get(result.size()-1) == Verdict.FAILED)
+		{
+			int stem = result.size() - 1;
+			ListIterator<CallSequence> it = listIterator(n);
+
+			while (it.hasNext())
+			{
+				CallSequence other = it.next();
+
+				if (other.compareStem(test, stem))
+				{
+					other.setFilter(n);
+				}
+			}
+		}
+	}
+
+	public void typeCheck(ClassDefinition classdef)
+	{
+		ClassInterpreter ci = (ClassInterpreter)Interpreter.getInstance();
+
+		Environment env = new FlatEnvironment(
+			classdef.getSelfDefinition(),
+			new PrivateClassEnvironment(classdef, ci.getGlobalEnvironment()));
+
+		for (CallSequence test: this)
+		{
+    		for (Statement statement: test)
+    		{
+				try
+				{
+					ci.typeCheck(statement, env);
+				}
+				catch (Exception e)
+				{
+					// "Better to have tried and failed than never to have
+					// tried at all" :-)
+				}
+    		}
+		}
 	}
 }

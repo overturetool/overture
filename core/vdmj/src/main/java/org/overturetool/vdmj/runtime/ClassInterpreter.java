@@ -24,7 +24,6 @@
 package org.overturetool.vdmj.runtime;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -41,7 +40,6 @@ import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.statements.Statement;
@@ -52,7 +50,6 @@ import org.overturetool.vdmj.traces.TraceVariableStatement;
 import org.overturetool.vdmj.traces.Verdict;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
-import org.overturetool.vdmj.typechecker.FlatEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.PrivateClassEnvironment;
 import org.overturetool.vdmj.typechecker.PublicClassEnvironment;
@@ -376,88 +373,14 @@ public class ClassInterpreter extends Interpreter
 		return classes.getProofObligations();
 	}
 
-	public List<Object> runtrace(String classname, String... statements)
-	{
-		return runtrace(classname, Arrays.asList(statements));
-	}
-
-	public List<Object> runtrace(String classname, List<String> statements)
+	public List<Object> runtrace(ClassDefinition classdef, CallSequence statements)
 	{
 		List<Object> list = new Vector<Object>();
-		ClassDefinition classdef = findClass(classname);
-
-		if (classdef == null)
-		{
-			list.add("Class " + classname + " not found");
-			return list;
-		}
-
-		Environment env = new FlatEnvironment(
-			classdef.getSelfDefinition(),
-			new PrivateClassEnvironment(classdef, getGlobalEnvironment()));
-
 		ObjectValue object = null;
 
 		try
 		{
-			object = classdef.newInstance(null, null, initialContext);
-		}
-		catch (ValueException e)
-		{
-			list.add(e.getMessage());
-			return list;
-		}
-
-		Context ctxt = new ObjectContext(
-				classdef.name.location, classdef.name.name + "()",
-				initialContext, object);
-
-		ctxt.put(classdef.name.getSelfName(), object);
-
-		for (String statement: statements)
-		{
-			try
-			{
-				Statement s = parseStatement(statement, classname);
-				typeCheck(s, env);
-
-				if (TypeChecker.getErrorCount() != 0)
-				{
-					List<VDMError> errors = TypeChecker.getErrors();
-					list.add(Utils.listToString(errors, " and "));
-					break;
-				}
-				else
-				{
-					list.add(s.eval(ctxt));
-				}
-			}
-			catch (Exception e)
-			{
-				list.add(e.getMessage());
-				break;
-			}
-		}
-
-		return list;
-	}
-
-	public List<Object> runtrace(
-		String classname, Environment env, CallSequence statements)
-	{
-		List<Object> list = new Vector<Object>();
-		ClassDefinition classdef = findClass(classname);
-
-		if (classdef == null)
-		{
-			list.add("Class " + classname + " not found");
-			return list;
-		}
-
-		ObjectValue object = null;
-
-		try
-		{
+			// Create a new test object
 			object = classdef.newInstance(null, null, initialContext);
 		}
 		catch (ValueException e)
@@ -483,17 +406,7 @@ public class ClassInterpreter extends Interpreter
 				}
 				else
 				{
-    				try
-    				{
-    					typeCheck(statement, env);
-    				}
-    				catch (Exception e)
-    				{
-    					// "Better to have tried and failed than never to have
-    					// tried at all" :-)
-    				}
-
-					list.add(statement.eval(ctxt));
+ 					list.add(statement.eval(ctxt));
 				}
 			}
 
