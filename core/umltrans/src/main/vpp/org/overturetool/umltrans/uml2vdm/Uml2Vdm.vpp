@@ -40,8 +40,15 @@ init(model) ==
   (
     extractInstanceVarsFromAssociations(associations,constraints);
     return new OmlDocument(model.getName(),
-      new OmlSpecifications(build_classes(model)),[]);
-    );
+      new OmlSpecifications(filterIlligalClassNames(build_classes(model))),[]);
+  );
+  
+private filterIlligalClassNames : seq of IOmlClass ==> seq of IOmlClass
+filterIlligalClassNames(classes) == 
+  return [classes(i) 
+         | i in set inds classes 
+         & '$' not in set elems classes(i).getIdentifier() 
+         and ':' not in set elems classes(i).getIdentifier()]; 
 
 -- Build Oml Classes from the Uml model.
 --  This needs the constraints and associations to be 
@@ -367,7 +374,12 @@ extractBinaryAssociation(props) ==
       clName    = let t : IUmlClassNameType = pOwnerEnd.getType() in
         t.getName(),
       multiplicity= if pTypeEnd.hasMultiplicity() then pTypeEnd.getMultiplicity() else nil,
-      type        = ConvertType(pTypeEnd.getType(),multiplicity)
+      qualifiers = {p.getQualifier() | p in set props & p.hasQualifier()},
+       
+      tmpType        = ConvertType(pTypeEnd.getType(),multiplicity),
+      type       = if card qualifiers = 0 
+                   then tmpType
+                   else let a in set qualifiers in new OmlGeneralMapType(ConvertType(a,nil),tmpType)
   in
     AddInstanceVarToClass(clName,
                           CreateInstanceVar(pTypeEnd,
@@ -514,8 +526,9 @@ public ConvertVisibility : IUmlVisibilityKind ==> IOmlScope
  ConvertType(t,mul) == 
    cases true:
      (isofclass(IUmlClassNameType,t)) 	-> 
-       return new OmlTypeName(let tmp : IUmlClassNameType = t 
-                              in new OmlName(nil,tmp.getName())),
+       return ApplyMultiplicity( new OmlTypeName(let tmp : IUmlClassNameType = t 
+                              in new OmlName(nil,tmp.getName()))
+                              ,mul),
      (isofclass(IUmlCharType,t)) 		-> return ApplyMultiplicity(new OmlCharType(),mul),
      (isofclass(IUmlStringType,t)) 		-> return new OmlSeq0Type(new OmlCharType()),
      (isofclass(IUmlIntegerType,t)) 	-> return ApplyMultiplicity(new OmlIntType(),mul),
@@ -535,6 +548,8 @@ ApplyMultiplicity(t, mul) == -- NOT COMPLETED
  else
    if mul.getLower() = 0 and not mul.hasUpper() then
      return new OmlSeq0Type(t)
+   else if mul.getLower() = 1 and not mul.hasUpper() then
+     return new OmlSeq1Type(t)     
    else return t;  
 ------------------------------------------------------
 --  Traces

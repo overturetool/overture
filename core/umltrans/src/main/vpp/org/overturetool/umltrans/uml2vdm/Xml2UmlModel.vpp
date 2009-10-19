@@ -7,6 +7,9 @@ class Xml2UmlModel is subclass of XmlVisitor
 types
 
 public String = seq of char;
+public QualifierInfo ::
+                       classId : String
+                       qualifier : String;
 instance variables
 
 public result : [IUmlModel] := nil;
@@ -27,6 +30,9 @@ mosMap            : map String to IUmlMos              := {|->};
 besMap            : map String to IUmlBes              := {|->};
 combiMap          : map String to IUmlCombinedFragment := {|->};
 
+associationToQualifier 
+                  : map String to QualifierInfo        := {|->};
+
 log               : StatusLog                          := new StatusLog();
 operations
 
@@ -41,10 +47,18 @@ VisitXmlDocument (doc) ==
 (
   dcl root : XmlEntity := hd doc.entities.entities;
   dcl firstPackageAndRoot : seq of XmlEntity := root.entities.entities ^ [root]; --compatibility EX and EUML
-  dcl model : XmlEntity := hd [firstPackageAndRoot(i) | i in set inds firstPackageAndRoot & 
-    firstPackageAndRoot(i).name ="uml:Model"];
-  dcl package : XmlEntity := hd [model.entities.entities(i) | i in set inds model.entities.entities & 
-    isAttributeType(model.entities.entities(i),"uml:Package")];
+  dcl model : XmlEntity := hd [firstPackageAndRoot(i) 
+                              | i in set inds firstPackageAndRoot 
+                              & firstPackageAndRoot(i).name ="uml:Model"];
+                              
+  dcl extention : XmlEntity := hd [firstPackageAndRoot(i) 
+                                  | i in set inds firstPackageAndRoot 
+                                  & hasAttributeValue(firstPackageAndRoot(i),"extender","Enterprise Architect") 
+                                  and hasAttributeValue(firstPackageAndRoot(i),"extenderID","6.5") ];
+                                    
+  dcl package : XmlEntity := hd [model.entities.entities(i) 
+                                | i in set inds model.entities.entities 
+                                & isAttributeType(model.entities.entities(i),"uml:Package")];
   
   let pes = package.entities.entities
   in
@@ -55,6 +69,20 @@ VisitXmlDocument (doc) ==
     classes := classes union {exstractClass(pes(i)) | i in set inds pes & 
                    isAttributeType(pes(i),"uml:Class") and
                    (getAttribute(pes(i),"name").val not in set primiticeTypes)};
+                   
+    let connectors : set of XmlEntity =
+                              dunion 
+                              { elems e.entities.entities 
+                              | e in set elems extention.entities.entities 
+                              & e.name = "connectors" }
+                              --getElement(pes(i),"connectors") | i in set inds pes & 
+                              --hasAttributeValue(pes(i),"extender","Enterprise Architect") and
+                              --hasAttributeValue(pes(i),"extenderID","6.5") and 
+                              --getElement(pes(i),"connectors") <> nil}
+                              in 
+                              for all v in set connectors
+                              do
+                                build_AssociationQualifier(v);
                    
     associations := associations union 
                     {build_Association(pes(i)) 
@@ -128,7 +156,7 @@ pre isAttributeType(e,"uml:Generalization");
 private build_defBlock : XmlEntity * String ==> (set of IUmlDefinitionBlock)
 build_defBlock(e,name) ==
   let eList = e.entities.entities, 
-      props = { build_Property(eList(i),name)| 
+      props = { build_Property(eList(i),name,nil)| 
             i in set inds eList & isAttributeType(eList(i),"uml:Property")},
       ops   = { build_Operation(p)| 
             p in set elems eList & isAttributeType(p,"uml:Operation") or p.name = "ownedOperation"}
@@ -136,8 +164,8 @@ build_defBlock(e,name) ==
     return {new UmlOwnedProperties(props)} union {new UmlOwnedOperations(ops)};
            
 -- Create property from property element
-private build_Property : XmlEntity * String ==> IUmlProperty
-build_Property(e,ownerClass) ==
+private build_Property : XmlEntity * String * [String] ==> IUmlProperty
+build_Property(e,ownerClass,associationId) ==
   let name         : seq of char = if hasAttribute(e,"name")
                                    then getAttribute(e,"name").val
                                    else "",
@@ -146,7 +174,8 @@ build_Property(e,ownerClass) ==
                                             else
                                               new UmlVisibilityKind(UmlVisibilityKindQuotes`IQPRIVATE), 
       multiplicity : [IUmlMultiplicityElement] = getMultiplicity(e),
-      type         : (IUmlType) = lookUpType(e),-- | i in set inds e.entities.entities & e.entities.entities(i).name = "type"}),
+      typeId : String = getTypeId(e),
+      type         : (IUmlType) = findType(typeId),-- | i in set inds e.entities.entities & e.entities.entities(i).name = "type"}),
       isReadOnly   : [bool] = if hasAttribute(e,"isReadOnly") 
                                             then StdLib`StringToBool(getAttribute(e,"isReadOnly").val) 
                                             else false,
@@ -158,9 +187,16 @@ build_Property(e,ownerClass) ==
                                                    else nil,
       isComposite  : (bool) = false,
       isDerived    : [bool] = false,
-      isStatic     : [bool] = false,
+      isStatic     : [bool] = false, 
       --ownerClass   : [seq of char] = ,
-      qualifier    : [IUmlType] = nil 
+      qualifier    : [IUmlType] = if associationId <> nil 
+                                     and associationId in set dom associationToQualifier
+                                     and associationToQualifier(associationId).classId = typeId
+                                  then 
+                                    let qInfo = associationToQualifier(associationId)
+                                    in findType(qInfo.qualifier)
+                                  else 
+                                    nil 
   in
     return new UmlProperty(name,
                     visibility,
@@ -195,14 +231,15 @@ pre e.name ="defaultValue";
 private getMultiplicity : XmlEntity ==> [IUmlMultiplicityElement]
 getMultiplicity(e) ==
 let eList = e.entities.entities,
-    lowerSet =  {getAttribute(el,"value").val | el in set elems eList & el.name = "lowerValue" and hasAttribute(e,"value")},
-    upperSet =  {getAttribute(el,"value").val | el in set elems eList & el.name = "upperValue" and hasAttribute(e,"value")}
+    lowerSet =  {getAttribute(el,"value").val | el in set elems eList & el.name = "lowerValue" and hasAttribute(el,"value")},
+    upperSet =  {getAttribute(el,"value").val | el in set elems eList & el.name = "upperValue" and hasAttribute(el,"value")}
 in
   if card upperSet = 0 and card lowerSet = 0 then
     return nil
   else
     let lower : nat = if card lowerSet = 0 then 0 else let p in set lowerSet in StdLib`StringToInt(p),
-        upper : [nat] = if card upperSet = 0 then nil else let p in set upperSet in StdLib`StringToInt(p)
+        upVal : nat = let p in set upperSet in StdLib`StringToInt(p),
+        upper : [nat] = if card upperSet = 0 or upVal < 0 then nil else upVal
     in
       return new UmlMultiplicityElement(false,false,lower,upper);
 
@@ -279,16 +316,17 @@ operations
 private build_Association : XmlEntity ==> IUmlAssociation
 build_Association(e) ==
   let elist = e.entities.entities,
+      associationId : [String] = if hasAttribute(e,"xmi:id") then getAttribute(e,"xmi:id").val else nil, 
       props = {elist(i) | i in set inds elist & isAttributeType(elist(i),"uml:Property")},
       ownedNavivableEnds : (set of IUmlProperty) = 
-                           { build_Property(p,"") 
+                           { build_Property(p,"",associationId) 
                            | p in set props & not hasAttribute(p,"name") or
                                               hasAttributeValue(p,"name","")},
       one = Util`SetToSeq[IUmlProperty](ownedNavivableEnds),
       ownerClassType = hd [ one(i).getType() | i in set inds one],
       ownerClass = let ct : IUmlClassNameType = ownerClassType in ct.getName(),
       ownedEnds : (set of IUmlProperty) = 
-                  {build_Property(p,ownerClass) 
+                  {build_Property(p,ownerClass,associationId) 
                   | p in set props 
                   & hasAttribute(p,"name") and 
                     len getAttribute(p,"name").val>0},
@@ -300,9 +338,73 @@ build_Association(e) ==
     return new UmlAssociation(ownedEnds,ownedNavivableEnds,name,id)
 pre isAttributeType(e,"uml:Association");
 
+--build qualifier info
+private build_AssociationQualifier : XmlEntity ==> ()
+build_AssociationQualifier(e) ==
+  let list = [ e.entities.entities(i) 
+             | i in set inds e.entities.entities 
+             & e.entities.entities(i).name = "source" 
+             or e.entities.entities(i).name = "target"],
+      qualifiers : set of [QualifierInfo] =
+        {getQualifierInfo(sOrT) | sOrT in set elems list}
+      --  , 
+     -- qualifiersTarget : set of [QualifierInfo] =
+       -- {getQualifierInfo(getElement(list(i),"target")) 
+         --                                   | i in set inds list 
+           --                                 & getElement(list(i),"target") <> nil
+             --                               }                                             
+  in
+  (
+    associationToQualifier := associationToQualifier 
+                                 munion
+                                 { let id : String = getAttribute(e,"xmi:idref").val in id 
+                                   |-> q
+                                 | q in set qualifiers & q <> nil
+                                 };
+ --   associationToQualifier := associationToQualifier 
+ --                                munion {let id : String = getAttribute(e,"xmi:idref").val in id 
+   --                                     |-> let a in set 
+--                                            {getQualifierInfo(getElement(list(i),"source")) 
+--                                            | i in set inds list 
+--                                            & getElement(list(i),"source") <> nil
+--                                            } 
+--                                            in a};
+--    associationToQualifier := associationToQualifier 
+--                                 munion {let id : String = getAttribute(e,"xmi:idref").val in id 
+--                                        |-> let a in set 
+--                                            {getQualifierInfo(getElement(list(i),"target")) 
+--                                            | i in set inds list 
+--                                            & getElement(list(i),"target") <> nil
+--                                            } 
+--                                            in a};   
+  
+  
+  );
+ 
+private getQualifierInfo : XmlEntity ==> [QualifierInfo]
+getQualifierInfo(e) == 
+  let ec  = getElement(e,"constraints")
+  in
+    if ec <> nil then
+      let a   : [String] = if hasAttribute(ec,"qualifier") then getAttribute(ec,"qualifier").val else nil,
+          id  : [String] = if hasAttribute(e,"xmi:idref") then getAttribute(e,"xmi:idref").val else nil
+      in
+      (
+        if a <> nil then 
+          return mk_QualifierInfo(id,a)
+        else
+          return nil;
+      )
+    else 
+      return nil;
+
 -- Get UmlType from  XML type name
 private lookUpType : XmlEntity ==> IUmlType
 lookUpType(e) ==
+  return findType(getTypeId(e));
+
+private getTypeId : XmlEntity ==> String
+getTypeId(e) ==
   let elist = e.entities.entities,
   typeOption1 = if hasAttribute(e,"type") 
                 then {getAttribute(e,"type").val} 
@@ -311,11 +413,19 @@ lookUpType(e) ==
    --    {a.val | a in set {getAttribute(e,"type")} & a <> nil}
   in 
     let id in set typeOption1-- union typeOption2 
-    in
-      let typeName = if id in set dom classesTypeMap then classesTypeMap(id) else nil 
+      in
+        return id;
+
+
+private findType : String ==> IUmlType
+findType(name) ==
+      let typeName = if name in set dom classesTypeMap 
+                     then classesTypeMap(name) 
+                     else nil 
       in
         cases typeName:
-         (nil)-> return new UmlIntegerType(),
+        (nil) -> (log.warn("Issuing unknown type: "^name);return new UmlClassNameType(name)),
+        -- (nil)-> return new UmlIntegerType(),
          ("String")-> return new UmlStringType(),
          ("int")-> return new UmlIntegerType(),
          ("bool")-> return new UmlBoolType(),
@@ -323,6 +433,21 @@ lookUpType(e) ==
          ("unlimitedNatural")-> return new UmlUnlimitedNatural(),
          others -> return new UmlClassNameType(typeName)
         end;
+        
+--private tryFindType : String ==> IUmlType
+--tryFindType(id) ==
+--  let t : IUmlType = findType(id),
+--      typeNameOnFailure : String = t
+--  in
+--     cases true:
+--    (isofclass(IUmlClassNameType,t))-> 
+--      let nct : IUmlClassNameType = t
+--      in if nct.getName() = nil
+--         then return new UmlClassNameType(typeNameOnFailure)
+--         else return nct
+--    others -> return t
+--  end;
+
 -- Visit element and build classes or association dependet on
 --  the element type attribute
 public VisitXmlEntity: XmlEntity ==> ()
@@ -364,6 +489,17 @@ getElementType(e) ==
   if getAttribute(e,"xmi:type") <> nil 
   then getAttribute(e,"xmi:type").val
   else e.name;
+
+-- Get XML element from name. If unknown return nil
+private getElement : XmlEntity * String -> [XmlEntity]
+getElement(e,name) ==
+  let list = e.entities.entities,
+      allList = [ list(i) | i in set inds list & list(i).name=name ]
+  in 
+    if len allList > 0 then 
+      hd allList
+    else
+      nil;
 
 -- Get XML attribute from name. If unknown return nil
 private getAttribute : XmlEntity * String -> [XmlAttribute]
@@ -409,7 +545,7 @@ pre isAttributeType(e,"uml:Collaboration");
 private build_Interaction : XmlEntity ==> IUmlInteraction
 build_Interaction(e) ==
   let elist = e.entities.entities,
-      props : map String to IUmlProperty = { getAttribute(p,"xmi:id").val |-> build_Property(p,"") | p in set elems elist & isAttributeType(p,"uml:Property")}
+      props : map String to IUmlProperty = { getAttribute(p,"xmi:id").val |-> build_Property(p,"",nil) | p in set elems elist & isAttributeType(p,"uml:Property")}
   in
   (
       

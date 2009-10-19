@@ -58,10 +58,10 @@ public class CmdLineProcesser extends CmdLineHelper
 		System.out.print("UMLTRANS: You must specify direction\n");
 		System.out.print("\nUsage: org.overture.umltrans.jar (-r | -v | -u) option file1 ; file2 ; ...\n\n");
 		System.out.print(CMD_REMOVE_TEX
-				+ " create vpp files from VDM tex files\n");
-		System.out.print(CMD_TO_VPP + " create VDM vpp file from UML model\n");
+				+ " create vpp files from VDM tex files ("+CMD_REMOVE_TEX+" "+OUTPUT_FILE+")\n");
+		System.out.print(CMD_TO_VPP + " create VDM vpp file from UML model ("+CMD_TO_UML+" "+OUTPUT_PATH+")\n");
 		System.out.print(CMD_TO_UML
-				+ " create UML model from VDM vpp files\n\n");
+				+ " create UML model from VDM vpp files ("+CMD_TO_VPP+" "+OUTPUT_PATH+")\n\n");
 		System.out.print(CMD_PRINT_XML
 				+ " Print XML fils as VDM XML Doc operation\n\n");
 		// System.out.print("\n Example: org.overture.umltrans.jar -u file1.vpp;file2.vpp\n");

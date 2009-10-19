@@ -9,6 +9,9 @@ operations
 public info : seq of char ==> ()
 info(message)== skip;
 
+public warn : seq of char ==> ()
+warn(message)== skip;
+
 public addNewClassInfo : seq of char ==> ()
 addNewClassInfo(name)==
   log := log ^ [new ClassStatus(name,"",getTime(),0)];
