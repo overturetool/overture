@@ -64,6 +64,7 @@ StringToInt(text) ==
 
 -------------------------------------
 -- Convert a Char to a int
+-- We implement the final version of this in Java Long.parseLong
 -------------------------------------
 private static CharToInt : char * int -> int
 CharToInt(c,pos) ==

@@ -134,15 +134,16 @@ public class StdLib {
 // ***** VDMTOOLS END Name=GetStringFromNum#1|Long
 
 
-// ***** VDMTOOLS START Name=StringToInt#1|String KEEP=NO
+// ***** VDMTOOLS START Name=StringToInt#1|String KEEP=YES
   static public Long StringToInt (final String text) throws CGException {
 
-    Long varRes_2 = null;
-    if (new Boolean(new Long(text.length()).intValue() == new Long(1).intValue()).booleanValue()) 
-      varRes_2 = CharToInt(new Character(text.charAt(0)), new Long(text.length()));
-    else 
-      varRes_2 = new Long(CharToInt(new Character(text.charAt(0)), new Long(text.length())).intValue() + StringToInt(text.substring(1)).intValue());
-    return varRes_2;
+//    Long varRes_2 = null;
+//    if (new Boolean(new Long(text.length()).intValue() == new Long(1).intValue()).booleanValue()) 
+//      varRes_2 = CharToInt(new Character(text.charAt(0)), new Long(text.length()));
+//    else 
+//      varRes_2 = new Long(CharToInt(new Character(text.charAt(0)), new Long(text.length())).intValue() + StringToInt(text.substring(1)).intValue());
+//    return varRes_2;
+	  return Long.parseLong(text);
   }
 // ***** VDMTOOLS END Name=StringToInt#1|String
 
