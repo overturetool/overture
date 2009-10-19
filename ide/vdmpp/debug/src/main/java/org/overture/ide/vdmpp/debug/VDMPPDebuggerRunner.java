@@ -11,7 +11,7 @@ import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
-import org.overture.ide.vdmpp.debug.interpreter.VDMPPVDMJInterpreterRunner;
+import org.overture.ide.vdmpp.debug.interpreter.VdmppVdmjVMInterpreterRunner;
 import org.overture.ide.vdmpp.debug.launching.ClasspathUtils;
 import org.overture.ide.vdmpp.debug.launching.IOvertureInterpreterRunnerConfig;
 
@@ -36,7 +36,7 @@ public class VDMPPDebuggerRunner extends DebuggingEngineRunner {
 	 */
 	@Override
 	protected String getDebugPreferenceQualifier() {
-		return VDMPPDebugConstants.VDMPP_DEBUG_PLUGIN_ID;
+		return VDMPPDebugConstants.DEBUG_CORE_PLUGIN;
 	}
 
 	@Override
@@ -49,7 +49,9 @@ public class VDMPPDebuggerRunner extends DebuggingEngineRunner {
 	 */
 	@Override
 	protected String getDebuggingEnginePreferenceQualifier() {
-		return "org.overturetool.overturedebugger"; //TODO fix this constant
+		System.out.println("DIEGO!!!___ __GASDGAGA ");
+		return "org.overture.ide.debug.launching.OvertureDebuggerRunnerFactory"; 
+		//TODO fix this constant
 	}
 
 	/* (non-Javadoc)
@@ -71,7 +73,8 @@ public class VDMPPDebuggerRunner extends DebuggingEngineRunner {
 		try {
 			//TODO ( VDMTools / VDMJ) ??? set config?
 			setVDMJRunnerConfig();
-			VDMPPVDMJInterpreterRunner.doRunImpl(config, launch, this.runnerconfig);
+			//VDMPPVDMJInterpreterRunner.doRunImpl(config, launch, this.runnerconfig);
+			VdmppVdmjVMInterpreterRunner.doRunImpl(config, launch, this.runnerconfig);
 			waitDebuggerConnected(launch, acceptor);
 		} catch (CoreException e) {
 			e.printStackTrace();

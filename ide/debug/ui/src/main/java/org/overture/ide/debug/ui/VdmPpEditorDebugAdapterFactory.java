@@ -11,7 +11,13 @@ import org.eclipse.dltk.internal.debug.ui.ScriptRunToLineAdapter;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.overture.ide.vdmpp.debug.VDMPPDebugConstants;
-
+/***
+ * 
+ * @author Christian Thillemann
+ * 
+ * extension point: org.eclipse.core.runtime.adapters
+ *
+ */
 public class VdmPpEditorDebugAdapterFactory implements IAdapterFactory {
 
 	public Object getAdapter(Object adaptableObject, Class adapterType) {

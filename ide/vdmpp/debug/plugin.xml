@@ -42,7 +42,10 @@
                 class="org.overture.ide.vdmpp.debug.VDMPPDebuggerRunnerFactory"
                 description="Overture Debugging engine"
                 id="org.overture.ide.debug.launching.OvertureDebuggerRunnerFactory"
-                priority="0">
+                priority="0"
+                propertyPageId="org.overture.ide.propertyPage.debug.engines.overturedebugger"
+        		preferencePageId="org.overture.ide.preferences.debug.engines.overturedebugger"
+                >
           </engine>
        </engineContribution>
     </extension>
@@ -50,7 +53,7 @@
    <!-- the script debug model --> 
    <extension point="org.eclipse.dltk.debug.scriptDebugModel">
       <debugModel
-            debugModelId="org.overture.ide.vdmpp.debug.OvertureDebugModel"
+            debugModelId="org.overture.ide.debug.ui.vdmpp.VDMPPDEbugModelPresentation"
             debugToolkit="org.overture.ide.debug.core.OvertureDebugToolkit"
             natureId="org.overture.ide.vdmpp.core.nature"
             typeFactory="org.overture.ide.debug.core.OvertureTypeFactory">

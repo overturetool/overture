@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
@@ -33,6 +35,7 @@ import org.overture.ide.vdmpp.debug.VDMPPDebugConstants;
 import org.overture.ide.vdmpp.debug.launching.ClasspathUtils;
 import org.overture.ide.vdmpp.debug.launching.IOvertureInterpreterRunnerConfig;
 import org.overturetool.vdmj.debug.DBGPReader;
+import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 
@@ -79,7 +82,7 @@ public class VDMPPVDMJInterpreterRunner extends AbstractInterpreterRunner {
 	}
 	
 	public static void doRunImpl(InterpreterConfig config, ILaunch launch, IOvertureInterpreterRunnerConfig iconfig) throws CoreException {
-		String host = (String) config.getProperty(DbgpConstants.HOST_PROP);
+  		String host = (String) config.getProperty(DbgpConstants.HOST_PROP);
 		if (host == null) {
 			host = "";
 		}
@@ -170,14 +173,29 @@ public class VDMPPVDMJInterpreterRunner extends AbstractInterpreterRunner {
 							try {
 								IAstManager astManager = AstManager.instance();
 								RootNode rootNode = astManager.getRootNode(proj.getProject(), VdmPpProjectNature.VDM_PP_NATURE);
-								if (rootNode.isChecked() == false){ //TODO changed when builders is updated							
-									ClassList classList = (ClassList) astManager.getAstList(proj.getProject(), VdmPpProjectNature.VDM_PP_NATURE);
-									ClassInterpreter classInterpreter = new ClassInterpreter(classList);
-									new DBGPReader(host, Integer.parseInt(port), sessionId, classInterpreter, expression).run(true);
+								
+								if (rootNode.isChecked()){
+									ClassList classList = new ClassList();
+																		
+									List classDefinitions = rootNode.getRootElementList();
+									for (Iterator iterator = classDefinitions.iterator(); iterator.hasNext();) {
+										Object object = iterator.next();
+										if (object instanceof ClassDefinition)
+										{
+											classList.add((ClassDefinition)object);
+										}
+									}
+									
+									if (classList.size() > 0)
+									{
+										ClassInterpreter classInterpreter = new ClassInterpreter(classList);
+										new DBGPReader(host, Integer.parseInt(port), sessionId, classInterpreter, expression).run(true);
+									}
 								}
 								else
 								{
-									// TODO if project isn't type checked..
+									// TODO if project isn't type checked..make some kind of 
+									// message dialog telling it to the user
 									throw new CoreException(new Status(IStatus.ERROR, VDMPPDebugConstants.VDMPP_DEBUG_PLUGIN_ID, "The project is not type checked"));
 								}
 							} catch (Exception e) {

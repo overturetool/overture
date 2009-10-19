@@ -36,7 +36,7 @@
             contributorClass="org.eclipse.dltk.internal.ui.editor.SourceModuleEditorActionContributor"
             default="false"
             icon="icons/cview16/vdmsl_file_tsk.gif"
-            id="org.overutre.ide.vdmpp.ui.internal.editor"
+            id="org.overture.ide.vdmpp.ui.internal.editor.VdmPpEditor"
             name="VDM PP Editor">
          <contentTypeBinding contentTypeId="org.overture.ide.vdmpp.content-type"/>
       </editor>

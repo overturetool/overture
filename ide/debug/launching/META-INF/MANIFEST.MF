@@ -21,4 +21,6 @@ Import-Package: org.eclipse.core.runtime,
  org.eclipse.dltk.core.environment,
  org.osgi.framework
 Export-Package: org.overture.ide.vdmpp.debug.launching
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.overture.ide.vdmpp.debug.launching.LaunchingPlugin
 

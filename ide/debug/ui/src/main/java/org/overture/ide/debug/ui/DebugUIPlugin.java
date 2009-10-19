@@ -4,13 +4,13 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 public class DebugUIPlugin extends AbstractUIPlugin {
+	// The shared instance.
+	private static DebugUIPlugin plugin;
 	
 	public DebugUIPlugin() {
 		plugin = this;
 	}
 	
-	// The shared instance.
-	private static DebugUIPlugin plugin;
 
 	/**
 	 * This method is called upon plug-in activation

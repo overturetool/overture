@@ -57,7 +57,7 @@ public class VdmPpUILanguageToolkit implements IDLTKUILanguageToolkit {
     }
     
     public String getInterpreterContainerId() {
-        return "com.yoursway.hello.launching.INTERPRETER_CONTAINER";
+        return "org.overture.vdmpp.launching.INTERPRETER_CONTAINER";
     }
     
     public ScriptUILabelProvider createScriptUILabelProvider() {

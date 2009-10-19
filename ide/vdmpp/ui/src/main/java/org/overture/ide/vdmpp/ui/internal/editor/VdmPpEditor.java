@@ -17,7 +17,6 @@ public class VdmPpEditor  extends ScriptEditor
 	@Override
 	public String getEditorId()
 	{
-		// TODO Auto-generated method stub
 		return VdmppEditorConstants.EDITOR_ID;
 	}
 
