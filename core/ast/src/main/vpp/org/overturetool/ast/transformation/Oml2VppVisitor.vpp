@@ -1128,7 +1128,13 @@ visitTraceSequenceDefinition(pcmp) ==
 
 
   public visitGeneralMapType: IOmlGeneralMapType ==> ()
-  visitGeneralMapType (-) == result := "NOT YET SUPPORTED";
+  visitGeneralMapType (pcmp) ==  
+  ( dcl str : seq of char := "map ";
+      printNodeField(pcmp.getDomType());
+      str := str ^result ^" to ";
+      printNodeField(pcmp.getRngType());
+      str := str ^result;
+      result := str );
 
 
   public visitSpecificationStatement: IOmlSpecificationStatement ==> ()
