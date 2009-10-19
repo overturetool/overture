@@ -1,6 +1,5 @@
 package org.overture.ide.builders.vdmj;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -10,7 +9,7 @@ import java.util.zip.GZIPOutputStream;
 
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.VDMJ;
+import org.overturetool.vdmj.VDMRT;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.messages.Console;
@@ -18,7 +17,6 @@ import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 import org.overturetool.vdmj.pog.ProofObligationList;
-import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.typechecker.ClassTypeChecker;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 
@@ -27,7 +25,7 @@ import org.overturetool.vdmj.typechecker.TypeChecker;
  * @author kela
  *
  */
-public class EclipseVdmjRt extends VDMJ implements IEclipseVdmj {
+public class EclipseVdmjRt extends VDMRT implements IEclipseVdmj {
 	public ClassList modules;
 	private ArrayList<VDMError> parseErrors = new ArrayList<VDMError>();
 	private ArrayList<VDMWarning> parseWarnings = new ArrayList<VDMWarning>();
@@ -60,6 +58,7 @@ public class EclipseVdmjRt extends VDMJ implements IEclipseVdmj {
 
 
 
+	@Override
 	public ExitStatus typeCheck() {
 		int terrs = 0;
 		if(modules==null)
@@ -152,24 +151,8 @@ public class EclipseVdmjRt extends VDMJ implements IEclipseVdmj {
    		return terrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
 	}
 
-	@Override
-	public Interpreter getInterpreter() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected ExitStatus interpret(List<File> arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 
-	@Override
-	public ExitStatus parse(List<File> arg0)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 }
