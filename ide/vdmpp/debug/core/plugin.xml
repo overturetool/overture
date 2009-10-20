@@ -4,8 +4,8 @@
    <!-- Interpreter install types -->
    <extension point="org.eclipse.dltk.launching.interpreterInstallTypes">
       <interpreterInstallType
-            class="org.overture.ide.vdmpp.debug.VDMJPPInstallType" 
-            id="org.overture.ide.vdmpp.debug.VDMJPPInstallType">
+            class="org.overture.ide.vdmpp.debug.core.VDMJPPInstallType" 
+            id="org.overture.ide.vdmpp.debug.core.VDMJPPInstallType">
       </interpreterInstallType>
    </extension>
    
@@ -14,7 +14,7 @@
      <interpreterInstall     		
            home="${eclipse_home}"
            id="org.overture.ide.debug.launching.interpreterInstallType.vdmjpp"
-           interpreterInstallType="org.overture.ide.vdmpp.debug.VDMJPPInstallType"
+           interpreterInstallType="org.overture.ide.vdmpp.debug.core.VDMJPPInstallType"
            name="VDMJ Interpreter for VDM++">
      </interpreterInstall>
   </extension>
@@ -22,8 +22,8 @@
    <!-- lauch delegate for the VDMJ interpreter using the language VDM++ -->
    <extension point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
-            delegate="org.overture.ide.vdmpp.debug.VdmjVdmPPLaunchConfigurationDelegate"
-            id="org.overture.ide.vdmpp.debug.launchConfigurationTypeVDMJ"
+            delegate="org.overture.ide.vdmpp.debug.core.VdmjVdmPPLaunchConfigurationDelegate"
+            id="org.overture.ide.vdmpp.debug.core.launchConfigurationTypeVDMJ"
             modes="debug, run"
             name="VDMJ VDM++"
             public="true"
@@ -36,10 +36,10 @@
     <extension point="org.eclipse.dltk.launching.debuggingEngine">
        <engineContribution natureId="org.overture.ide.vdmpp.core.nature">
           <selector
-                class="org.overture.ide.vdmpp.debug.VDMPPDebuggingEngineSelector">
+                class="org.overture.ide.vdmpp.debug.core.VDMPPDebuggingEngineSelector">
           </selector>
           <engine
-                class="org.overture.ide.vdmpp.debug.VDMPPDebuggerRunnerFactory"
+                class="org.overture.ide.vdmpp.debug.core.VDMPPDebuggerRunnerFactory"
                 description="Overture Debugging engine"
                 id="org.overture.ide.debug.launching.OvertureDebuggerRunnerFactory"
                 priority="0"

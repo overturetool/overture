@@ -1,4 +1,4 @@
-package org.overture.ide.vdmpp.debug.interpreter;
+package org.overture.ide.vdmpp.debug.core.interpreter;
 
 import java.io.File;
 import java.io.IOException;

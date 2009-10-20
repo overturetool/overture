@@ -7,8 +7,8 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.overture.ide.vdmpp.debug</groupId>
-  <artifactId>org.overture.ide.vdmpp.debug.core</artifactId>
-  <name>org.overture.ide.vdmpp.debug.core</name>
+  <artifactId>org.overture.ide.vdmpp.debug.ui</artifactId>
+  <name>org.overture.ide.vdmpp.debug.ui</name>
   <version>1.0.0</version>
  
   <packaging>source-plugin</packaging>
