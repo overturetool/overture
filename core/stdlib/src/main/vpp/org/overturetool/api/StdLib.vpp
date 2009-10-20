@@ -59,6 +59,8 @@ public static StringToInt : String  -> int --| nat | real
 StringToInt(text) == 
   if len text = 1 then
     CharToInt(hd text,len text) 
+  elseif hd text = '-'
+  then - StringToInt(tl text)
   else
     CharToInt(hd text,len text) + StringToInt(tl text);
 
