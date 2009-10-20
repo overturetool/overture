@@ -18,14 +18,10 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="3.5.0",
  org.eclipse.ui.editors;bundle-version="3.5.0",
  org.eclipse.ui;bundle-version="3.5.0",
  org.eclipse.ui.console;bundle-version="3.4.0"
-Export-Package: org,
- org.overture,
- org.overture.ide,
- org.overture.ide.ui,
+Export-Package: org.overture.ide.ui,
  org.overture.ide.ui.partitioning,
  org.overture.ide.ui.preferences,
- org.overture.ide.ui.scriptcolor,
- org.overture.ide.ui.scriptcolor.provider,
+ org.overture.ide.ui.scriptcolor.provider, 
  org.overture.ide.ui.wizards
 Bundle-Activator: org.overture.ide.ui.VdmUIPlugin
 

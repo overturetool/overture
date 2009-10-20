@@ -11,9 +11,9 @@ import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
-import org.overture.ide.vdmpp.debug.interpreter.VdmppVdmjVMInterpreterRunner;
 import org.overture.ide.debug.launching.ClasspathUtils;
 import org.overture.ide.debug.launching.IOvertureInterpreterRunnerConfig;
+import org.overture.ide.vdmpp.debug.core.interpreter.VdmppVdmjVMInterpreterRunner;
 
 public class VDMPPDebuggerRunner extends DebuggingEngineRunner {
 

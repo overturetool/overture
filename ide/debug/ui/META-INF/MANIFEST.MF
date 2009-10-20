@@ -25,8 +25,7 @@ Require-Bundle: org.eclipse.dltk.ui;bundle-version="1.0.0",
  org.eclipse.jface.text;bundle-version="3.5.0",
  org.overture.ide.debug.core;bundle-version="1.0.0"
 Export-Package: org.overture.ide.debug.ui,
- org.overture.ide.debug.ui.preferences,
- org.overture.ide.debug.ui.preferences.vdmpp,
- org.overture.ide.debug.ui.vdmpp
+ org.overture.ide.debug.ui.handlers,
+ org.overture.ide.debug.ui.preferences
 Bundle-Activator: org.overture.ide.debug.ui.DebugUIPlugin
 Bundle-ActivationPolicy: lazy

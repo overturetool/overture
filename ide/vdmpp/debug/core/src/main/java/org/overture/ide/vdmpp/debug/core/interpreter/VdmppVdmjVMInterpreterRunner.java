@@ -6,11 +6,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -39,7 +36,7 @@ import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.overture.ide.debug.launching.ClasspathUtils;
 import org.overture.ide.debug.launching.IOvertureInterpreterRunnerConfig;
 import org.overture.ide.utility.ProjectUtility;
-import org.overture.ide.vdmpp.debug.VDMPPDebugConstants;
+import org.overture.ide.vdmpp.debug.core.VDMPPDebugConstants;
 
 public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 
@@ -59,30 +56,31 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 	 * @return list of IResource objects representing the files under the given
 	 *         directory and its subdirectories
 	 */
-	private static ArrayList<String> getAllMemberFilesString(IContainer dir,
-			String[] exts) {
-		ArrayList<String> list = new ArrayList<String>();
-		IResource[] arr = null;
-		try {
-			arr = dir.members();
-		} catch (CoreException e) {
-		}
-
-		for (int i = 0; arr != null && i < arr.length; i++) {
-			if (arr[i].getType() == IResource.FOLDER) {
-				list.addAll(getAllMemberFilesString((IFolder) arr[i], exts));
-			} else {
-
-				for (int j = 0; j < exts.length; j++) {
-					if (exts[j].equalsIgnoreCase(arr[i].getFileExtension())) {
-						list.add(arr[i].getLocation().toOSString());
-						break;
-					}
-				}
-			}
-		}
-		return list;
-	}
+//	private static ArrayList<String> getAllMemberFilesString(IContainer dir,
+//			String[] exts) {
+//		ArrayList<String> list = new ArrayList<String>();
+//		IResource[] arr = null;
+//		try {
+//			arr = dir.members();
+//		} catch (CoreException e) {
+//		}
+//
+//		for (int i = 0; arr != null && i < arr.length; i++) {
+//			if (arr[i].getType() == IResource.FOLDER) {
+//				list.addAll(getAllMemberFilesString((IFolder) arr[i], exts));
+//			} else {
+//
+//				for (int j = 0; j < exts.length; j++) {
+//					if (exts[j].equalsIgnoreCase(arr[i].getFileExtension())) {
+//						list.add(arr[i].getLocation().toOSString());
+//						break;
+//					}
+//				}
+//			}
+//		}
+//		return list;
+//	}
+	// TODO remove if this works ok 
 
 	public static void doRunImpl(InterpreterConfig config, ILaunch launch,
 			IOvertureInterpreterRunnerConfig iconfig) throws CoreException {

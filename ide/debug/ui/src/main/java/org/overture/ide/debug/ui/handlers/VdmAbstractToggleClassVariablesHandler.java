@@ -1,17 +1,14 @@
 package org.overture.ide.debug.ui.handlers;
 
-import org.eclipse.dltk.debug.ui.handlers.AbstractToggleLocalVariableHandler;
+import org.eclipse.dltk.debug.ui.handlers.AbstractToggleClassVariableHandler;
 import org.eclipse.dltk.ui.PreferencesAdapter;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.overture.ide.debug.core.DebugCorePlugin;
-import org.overture.ide.vdmpp.debug.VDMPPDebugConstants;
 
-public class VdmppToggleLocalVariablesHandler extends AbstractToggleLocalVariableHandler {
+public abstract class VdmAbstractToggleClassVariablesHandler extends AbstractToggleClassVariableHandler {
 
 	@Override
-	protected String getModelId() {
-		return VDMPPDebugConstants.VDMPP_DEBUG_MODEL;
-	}
+	abstract protected String getModelId();
 
 	@SuppressWarnings("deprecation")
 	@Override

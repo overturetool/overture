@@ -1,4 +1,4 @@
-package org.overture.ide.debug.ui.preferences.vdmpp;
+package org.overture.ide.debug.ui.preferences;
 
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AbstractInterpreterLibraryBlock;
@@ -6,23 +6,16 @@ import org.eclipse.dltk.internal.debug.ui.interpreters.AddScriptInterpreterDialo
 import org.eclipse.dltk.internal.debug.ui.interpreters.IScriptInterpreterDialog;
 import org.eclipse.dltk.internal.debug.ui.interpreters.InterpretersBlock;
 import org.eclipse.dltk.internal.debug.ui.interpreters.LibraryLabelProvider;
-import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
-import org.overture.ide.vdmpp.core.VdmPpProjectNature;
 
-public class VDMPPInterpreterBlock extends InterpretersBlock {
+public abstract class AbstractInterpreterBlock extends InterpretersBlock {
 
 	@Override
-	protected String getCurrentNature() {
-		return VdmPpProjectNature.VDM_PP_NATURE;
-	}
+	protected abstract String getCurrentNature();
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.internal.debug.ui.interpreters.InterpretersBlock#createInterpreterDialog(org.eclipse.dltk.core.environment.IEnvironment, org.eclipse.dltk.launching.IInterpreterInstall)
-	 */
-	protected IScriptInterpreterDialog createInterpreterDialog(IEnvironment environment, IInterpreterInstall standin) {
-		
+	protected IScriptInterpreterDialog createInterpreterDialog(IEnvironment environment, org.eclipse.dltk.launching.IInterpreterInstall standin) 
+	{
 		/**
 		 * create a Interpreter dialog
 		 */
@@ -51,6 +44,5 @@ public class VDMPPInterpreterBlock extends InterpretersBlock {
 			} // end libraryBlock
 		
 		}; // end interpreter dialog
-		
 	};
 }

@@ -31,7 +31,7 @@ import org.overture.ide.ast.AstManager;
 import org.overture.ide.ast.IAstManager;
 import org.overture.ide.ast.RootNode;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
-import org.overture.ide.vdmpp.debug.VDMPPDebugConstants;
+import org.overture.ide.vdmpp.debug.core.VDMPPDebugConstants;
 import org.overture.ide.debug.launching.ClasspathUtils;
 import org.overture.ide.debug.launching.IOvertureInterpreterRunnerConfig;
 import org.overturetool.vdmj.debug.DBGPReader;
@@ -81,6 +81,7 @@ public class VDMPPVDMJInterpreterRunner extends AbstractInterpreterRunner {
 		super(install);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static void doRunImpl(InterpreterConfig config, ILaunch launch, IOvertureInterpreterRunnerConfig iconfig) throws CoreException {
   		String host = (String) config.getProperty(DbgpConstants.HOST_PROP);
 		if (host == null) {

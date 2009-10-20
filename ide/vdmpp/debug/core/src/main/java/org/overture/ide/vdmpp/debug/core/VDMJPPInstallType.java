@@ -14,7 +14,6 @@ import org.eclipse.dltk.launching.EnvironmentVariable;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.LibraryLocation;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
-import org.overture.ide.vdmpp.debug.VDMJVDMPPInterpreterInstall;
 
 public class VDMJPPInstallType extends AbstractInterpreterInstallType {
 
