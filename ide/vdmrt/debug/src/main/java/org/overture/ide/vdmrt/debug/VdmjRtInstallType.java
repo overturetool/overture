@@ -51,7 +51,7 @@ public class VdmjRtInstallType extends AbstractInterpreterInstallType {
 
 	@Override
 	protected ILog getLog() {
-		return DebugPlugin.getDefault().getLog();
+		return DebugRtPlugin.getDefault().getLog();
 	}
 
 	/*** returns the id of the plug-in 

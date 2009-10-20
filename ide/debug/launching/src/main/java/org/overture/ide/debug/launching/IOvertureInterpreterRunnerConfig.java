@@ -1,4 +1,4 @@
-package org.overture.ide.vdmpp.debug.launching;
+package org.overture.ide.debug.launching;
 
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.dltk.launching.InterpreterConfig;

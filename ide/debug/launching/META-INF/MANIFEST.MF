@@ -9,7 +9,6 @@ Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.debug.launching;singleton:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.dltk.launching;bundle-version="1.0.0",
- org.overture.ide.vdmpp.core;bundle-version="1.0.0",
  org.eclipse.dltk.core,
  org.eclipse.core.resources;bundle-version="3.5.0",
  org.eclipse.jdt.core;bundle-version="3.5.0",
@@ -20,7 +19,7 @@ Require-Bundle: org.eclipse.dltk.launching;bundle-version="1.0.0",
 Import-Package: org.eclipse.core.runtime,
  org.eclipse.dltk.core.environment,
  org.osgi.framework
-Export-Package: org.overture.ide.vdmpp.debug.launching
+Export-Package: org.overture.ide.debug.launching
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.overture.ide.vdmpp.debug.launching.LaunchingPlugin
+Bundle-Activator: org.overture.ide.debug.launching.LaunchingPlugin
 

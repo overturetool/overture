@@ -33,3 +33,4 @@ Require-Bundle: org.eclipse.dltk.ui;bundle-version="1.0.0",
  org.eclipse.jdt.launching;bundle-version="3.5.0",
  org.overture.ide.utility;bundle-version="1.0.0"
 Export-Package: org.overture.ide.vdmpp.debug
+Bundle-Activator: org.overture.ide.vdmpp.debug.DebugPpPlugin

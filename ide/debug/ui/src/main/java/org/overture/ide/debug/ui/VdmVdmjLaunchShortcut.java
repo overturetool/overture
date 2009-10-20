@@ -5,7 +5,7 @@ import org.eclipse.dltk.internal.debug.ui.launcher.AbstractScriptLaunchShortcut;
 import org.overture.ide.vdmpp.core.VdmPpCorePluginConstants;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
 
-public class VDMPPVDMJOvertureLaunchShortcut extends AbstractScriptLaunchShortcut {
+public class VdmVdmjLaunchShortcut extends AbstractScriptLaunchShortcut {
 
 	@Override
 	protected ILaunchConfigurationType getConfigurationType() {

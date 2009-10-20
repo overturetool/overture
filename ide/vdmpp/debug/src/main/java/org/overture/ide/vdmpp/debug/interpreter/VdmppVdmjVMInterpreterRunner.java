@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.core.runtime.content.IContentTypeMatcher;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
@@ -37,10 +36,10 @@ import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMRunner;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
+import org.overture.ide.debug.launching.ClasspathUtils;
+import org.overture.ide.debug.launching.IOvertureInterpreterRunnerConfig;
 import org.overture.ide.utility.ProjectUtility;
 import org.overture.ide.vdmpp.debug.VDMPPDebugConstants;
-import org.overture.ide.vdmpp.debug.launching.ClasspathUtils;
-import org.overture.ide.vdmpp.debug.launching.IOvertureInterpreterRunnerConfig;
 
 public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 

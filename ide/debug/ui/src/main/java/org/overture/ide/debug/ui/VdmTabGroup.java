@@ -6,10 +6,9 @@ import org.eclipse.debug.ui.ILaunchConfigurationTab;
 import org.eclipse.dltk.debug.ui.launchConfigurations.IMainLaunchConfigurationTabListenerManager;
 import org.eclipse.dltk.debug.ui.launchConfigurations.InterpreterTab;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AbstractInterpreterComboBlock;
-import org.overture.ide.vdmpp.core.VdmPpProjectNature;
-import org.overture.ide.vdmpp.debug.launching.VDMLaunchingConstants;
+import org.overture.ide.debug.launching.VDMLaunchingConstants;
 
-public class VDMPPTabGroup extends AbstractLaunchConfigurationTabGroup {
+public class VdmTabGroup extends AbstractLaunchConfigurationTabGroup {
 
 	class VDMPPInterpreterTab extends InterpreterTab
 	{
@@ -40,7 +39,7 @@ public class VDMPPTabGroup extends AbstractLaunchConfigurationTabGroup {
 		
 	}
 	
-	public VDMPPTabGroup() {
+	public VdmTabGroup() {
 	}
 
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {

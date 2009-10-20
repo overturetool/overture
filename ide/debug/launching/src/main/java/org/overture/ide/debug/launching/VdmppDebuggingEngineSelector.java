@@ -1,4 +1,4 @@
-package org.overture.ide.vdmpp.debug.launching;
+package org.overture.ide.debug.launching;
 
 import org.eclipse.dltk.core.DLTKIdContributionSelector;
 import org.eclipse.dltk.core.PreferencesLookupDelegate;

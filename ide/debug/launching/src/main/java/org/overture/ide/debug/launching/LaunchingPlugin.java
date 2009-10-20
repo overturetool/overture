@@ -1,4 +1,4 @@
-package org.overture.ide.vdmpp.debug.launching;
+package org.overture.ide.debug.launching;
 
 import java.io.IOException;
 

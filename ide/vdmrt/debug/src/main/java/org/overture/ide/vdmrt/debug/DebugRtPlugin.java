@@ -1,4 +1,4 @@
-package org.overture.ide.vdmpp.debug;
+package org.overture.ide.vdmrt.debug;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
@@ -9,8 +9,8 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class DebugPlugin extends Plugin {
-	private static DebugPlugin fgPlugin;
+public class DebugRtPlugin extends Plugin {
+	private static DebugRtPlugin fgPlugin;
 			
 	public static final int INTERNAL_ERROR = 120;
 	
@@ -27,16 +27,16 @@ public class DebugPlugin extends Plugin {
 
 	public static void logTraceMessage(String message) {
 		if (getDefault().isTraceMode()) {
-			IStatus s = new Status(IStatus.WARNING, VDMPPDebugConstants.VDMPP_DEBUG_PLUGIN_ID, INTERNAL_ERROR, message, null);
+			IStatus s = new Status(IStatus.WARNING, VdmRtDebugConstants.vdmrt_DEBUG_PLUGIN_ID, INTERNAL_ERROR, message, null);
 			getDefault().getLog().log(s);
 		}
 	}	
 
-	public static DebugPlugin getDefault() {		
+	public static DebugRtPlugin getDefault() {		
 		return fgPlugin;
 	}
 
-	public DebugPlugin() {
+	public DebugRtPlugin() {
 		super();	
 		fgPlugin = this;
 	}
@@ -67,6 +67,6 @@ public class DebugPlugin extends Plugin {
 		} 
 		// this message is intentionally not internationalized, as an exception may
 		// be due to the resource bundle itself
-		log(new Status(IStatus.ERROR, VDMPPDebugConstants.VDMPP_DEBUG_PLUGIN_ID, INTERNAL_ERROR, "Internal error logged from Tcl Debug: ", top));		
+		log(new Status(IStatus.ERROR, VdmRtDebugConstants.vdmrt_DEBUG_PLUGIN_ID, INTERNAL_ERROR, "Internal error logged from Tcl Debug: ", top));		
 	}	
 }

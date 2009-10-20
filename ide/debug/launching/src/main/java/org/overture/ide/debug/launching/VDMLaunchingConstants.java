@@ -1,4 +1,4 @@
-package org.overture.ide.vdmpp.debug.launching;
+package org.overture.ide.debug.launching;
 
 public interface VDMLaunchingConstants {
 	
@@ -10,7 +10,7 @@ public interface VDMLaunchingConstants {
 	final String VDMPP_DEBUG_PLUGIN_ID = "org.overture.ide.debug.vdmpp";
 	// TODO move VDMPPInterpreterPreferencePage to ui ???
 	public final String VDMPP_DEBUG_INTERPRETER_TAB = "org.overture.ide.debug.ui.preferences.vdmpp.VDMPPInterpreterPreferencePage";
-	final String VDMPP_LaunchPluginID = "org.overture.ide.vdmpp.debug.launching";
+	final String VDMPP_LaunchPluginID = "org.overture.ide.debug.launching";
 	
 	/*******************
 	 **  VDM-SL
