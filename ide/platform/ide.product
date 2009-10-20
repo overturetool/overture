@@ -81,6 +81,8 @@
       <plugin id="org.eclipse.ecf"/>
       <plugin id="org.eclipse.ecf.filetransfer"/>
       <plugin id="org.eclipse.ecf.identity"/>
+      <plugin id="org.eclipse.ecf.provider.filetransfer"/>
+      <plugin id="org.eclipse.ecf.provider.filetransfer.ssl" fragment="true"/>
       <plugin id="org.eclipse.ecf.ssl" fragment="true"/>
       <plugin id="org.eclipse.emf.common"/>
       <plugin id="org.eclipse.emf.ecore"/>
@@ -137,6 +139,9 @@
       <plugin id="org.overture.ide.ast"/>
       <plugin id="org.overture.ide.builders.core"/>
       <plugin id="org.overture.ide.builders.vdmj"/>
+      <plugin id="org.overture.ide.debug.core"/>
+      <plugin id="org.overture.ide.debug.launching"/>
+      <plugin id="org.overture.ide.debug.ui"/>
       <plugin id="org.overture.ide.generated.proofsupport"/>
       <plugin id="org.overture.ide.generated.showtrace"/>
       <plugin id="org.overture.ide.generated.traces"/>
@@ -152,8 +157,10 @@
       <plugin id="org.overture.ide.ui"/>
       <plugin id="org.overture.ide.utility"/>
       <plugin id="org.overture.ide.vdmpp.core"/>
+      <plugin id="org.overture.ide.vdmpp.debug"/>
       <plugin id="org.overture.ide.vdmpp.ui"/>
       <plugin id="org.overture.ide.vdmrt.core"/>
+      <plugin id="org.overture.ide.vdmrt.debug"/>
       <plugin id="org.overture.ide.vdmrt.ui"/>
       <plugin id="org.overture.ide.vdmsl.core"/>
       <plugin id="org.overture.ide.vdmsl.ui"/>

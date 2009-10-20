@@ -8,13 +8,13 @@
       <view
             name="CT Overview"
             icon="icons/ctool16/ct_tsk.png"
-            category="org.overture.ide.category"
+            category="org.overture.ide.ui.view.category"
             class="org.overture.ide.plugins.traces.views.TracesTreeView"
             id="org.overture.ide.plugins.traces.views.TracesView">
       </view>
    
       <view
-           category="org.overture.ide.category"
+           category="org.overture.ide.ui.view.category"
             class="org.overture.ide.plugins.traces.views.TraceTest"
             icon="icons/ctool16/ct_tsk.png"
             id="org.overture.ide.plugins.traces.views.TraceTest"

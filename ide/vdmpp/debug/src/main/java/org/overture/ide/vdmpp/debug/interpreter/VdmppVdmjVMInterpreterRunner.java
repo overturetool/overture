@@ -7,12 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.content.IContentTypeManager;
+import org.eclipse.core.runtime.content.IContentTypeMatcher;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.Launch;
@@ -26,7 +30,6 @@ import org.eclipse.dltk.launching.AbstractInterpreterRunner;
 import org.eclipse.dltk.launching.AbstractScriptLaunchConfigurationDelegate;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
-import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.launching.debug.DbgpConstants;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -34,7 +37,7 @@ import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMRunner;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
-import org.overture.ide.vdmpp.debug.DebugPlugin;
+import org.overture.ide.utility.ProjectUtility;
 import org.overture.ide.vdmpp.debug.VDMPPDebugConstants;
 import org.overture.ide.vdmpp.debug.launching.ClasspathUtils;
 import org.overture.ide.vdmpp.debug.launching.IOvertureInterpreterRunnerConfig;
@@ -45,9 +48,9 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 		super(install);
 	}
 
-	private static String[] exts = new String[] { "vpp", "tex", "vdm", "vdmpp", "vdmsl", "vdmrt" };
+	// private static String[] exts = new String[] { "vpp", "tex", "vdm",
+	// "vdmpp", "vdmsl", "vdmrt" };
 
-	
 	/**
 	 * This method returns a list of files under the given directory or its
 	 * subdirectories. The directories themselves are not returned.
@@ -57,7 +60,8 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 	 * @return list of IResource objects representing the files under the given
 	 *         directory and its subdirectories
 	 */
-	private static ArrayList<String> getAllMemberFilesString(IContainer dir, String[] exts) {
+	private static ArrayList<String> getAllMemberFilesString(IContainer dir,
+			String[] exts) {
 		ArrayList<String> list = new ArrayList<String>();
 		IResource[] arr = null;
 		try {
@@ -81,7 +85,8 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 		return list;
 	}
 
-	public static void doRunImpl(InterpreterConfig config, ILaunch launch, IOvertureInterpreterRunnerConfig iconfig) throws CoreException {
+	public static void doRunImpl(InterpreterConfig config, ILaunch launch,
+			IOvertureInterpreterRunnerConfig iconfig) throws CoreException {
 
 		String host = (String) config.getProperty(DbgpConstants.HOST_PROP);
 		if (host == null) {
@@ -102,7 +107,8 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 
 		IScriptProject proj = AbstractScriptLaunchConfigurationDelegate.getScriptProject(launch.getLaunchConfiguration());
 		IJavaProject myJavaProject = JavaCore.create(proj.getProject());
-		IVMInstall vmInstall = myJavaProject.exists() ? JavaRuntime.getVMInstall(myJavaProject) : JavaRuntime.getDefaultVMInstall();
+		IVMInstall vmInstall = myJavaProject.exists() ? JavaRuntime.getVMInstall(myJavaProject)
+				: JavaRuntime.getDefaultVMInstall();
 		if (vmInstall != null) {
 			IVMRunner vmRunner = vmInstall.getVMRunner(ILaunchManager.DEBUG_MODE);
 			if (vmRunner != null) {
@@ -113,31 +119,38 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 						try {
 							String[] newClassPath = getClassPath(myJavaProject);
 
-							VMRunnerConfiguration vmConfig = new VMRunnerConfiguration(iconfig.getRunnerClassName(config, launch, myJavaProject), newClassPath);
+							VMRunnerConfiguration vmConfig = new VMRunnerConfiguration(iconfig.getRunnerClassName(
+									config, launch, myJavaProject), newClassPath);
 							IPath scriptFilePath = config.getScriptFilePath();
 							if (scriptFilePath == null) {
 								throw new CoreException(new Status(IStatus.ERROR, VDMPPDebugConstants.VDMPP_DEBUG_PLUGIN_ID, "Script File name is not specified..."));
 							}
-							
-							// ******************** 
+
+							// ********************
 							// Create arguments:
 							// Missing mandatory arguments
-							// Usage: -h <host> -p <port> -k <ide key> <-vdmpp|-vdmsl|-vdmrt> -e <expression> {<filename URLs>}
-							//VDMJ use these arguments:
+							// Usage: -h <host> -p <port> -k <ide key>
+							// <-vdmpp|-vdmsl|-vdmrt> -e <expression> {<filename
+							// URLs>}
+							// VDMJ use these arguments:
 							// 0: host
 							// 1: port
 							// 2: ideKey
 							// 3: Dialect
 							// 4: expression
 							// 5..nFiles: files
-							
+
 							int argNumber = 0;
-							
-							ArrayList<String> memberFilesList = getAllMemberFilesString(proj.getProject(), exts);
-							
-							String[] arguments = new String[memberFilesList.size() + 9]; 
-							
-							// 0: host 
+							IProject project = proj.getProject();
+
+							List<String> memberFilesList = getProjectMemberFiles(project);
+
+							// List<String> memberFilesList =
+							// getAllMemberFilesString(proj.getProject(), exts);
+
+							String[] arguments = new String[memberFilesList.size() + 9];
+
+							// 0: host
 							// 1: port
 							// 2: sessionID
 							arguments[argNumber++] = "-h";
@@ -146,29 +159,32 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 							arguments[argNumber++] = port;
 							arguments[argNumber++] = "-k";
 							arguments[argNumber++] = sessionId;
-							
+
 							// 3: dialect
-							arguments[argNumber++] = "-" + VDMPPDebugConstants.VDMPP_VDMJ_DIALECT;
-							
+							arguments[argNumber++] = "-"
+									+ VDMPPDebugConstants.VDMPP_VDMJ_DIALECT;
+
 							// 4: expression eg. : new className().operation()
-							String debugOperation = launch.getLaunchConfiguration().getAttribute(VDMPPDebugConstants.VDMPP_DEBUGGING_OPERATION, "");
-							
-							String expression = 
-								"new " + 
-								launch.getLaunchConfiguration().getAttribute(VDMPPDebugConstants.VDMPP_DEBUGGING_CLASS, "") + 
-								"()." + debugOperation;
-							arguments[argNumber++] = "-e";		
+							String debugOperation = launch.getLaunchConfiguration().getAttribute(
+									VDMPPDebugConstants.VDMPP_DEBUGGING_OPERATION,
+									"");
+
+							String expression = "new "
+									+ launch.getLaunchConfiguration().getAttribute(
+											VDMPPDebugConstants.VDMPP_DEBUGGING_CLASS,
+											"") + "()." + debugOperation;
+							arguments[argNumber++] = "-e";
 							arguments[argNumber++] = expression;
-							
+
 							// 5-n: add files to the arguments
-							for (int a = 0; a < memberFilesList.size(); a++) 
-							{
-								arguments[argNumber++] = new File( memberFilesList.get(a) ).toURI().toASCIIString();
+							for (int a = 0; a < memberFilesList.size(); a++) {
+								arguments[argNumber++] = new File(memberFilesList.get(a)).toURI().toASCIIString();
 							}
 
 							vmConfig.setProgramArguments(arguments);
 							ILaunch launchr = new Launch(launch.getLaunchConfiguration(), ILaunchManager.DEBUG_MODE, null);
-							iconfig.adjustRunnerConfiguration(vmConfig, config, launch, myJavaProject);
+							iconfig.adjustRunnerConfiguration(vmConfig, config,
+									launch, myJavaProject);
 							vmRunner.run(vmConfig, launchr, null);
 							IDebugTarget[] debugTargets = launchr.getDebugTargets();
 							for (int a = 0; a < debugTargets.length; a++) {
@@ -190,17 +206,27 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 		throw new CoreException(new Status(IStatus.ERROR, "", ""));
 	}
 
-	public static String[] getClassPath(IJavaProject myJavaProject) throws IOException, URISyntaxException {
+	private static List<String> getProjectMemberFiles(IProject project)
+			throws CoreException {
+
+		List<IFile> files = ProjectUtility.getFiles(project);
+		IContentTypeMatcher contentTypeMatcher = project.getContentTypeMatcher();
+		List<String> memberFilesList = new ArrayList<String>();
+		for (IFile file : files) {
+			if (contentTypeMatcher.findContentTypeFor(file.toString()) != null)
+				memberFilesList.add(ProjectUtility.getFile(project, file).getAbsolutePath());
+		}
+		return memberFilesList;
+	}
+
+	public static String[] getClassPath(IJavaProject myJavaProject)
+			throws IOException, URISyntaxException {
 		final List<String> result = new ArrayList<String>();
-		// TODO ClasspathUtils.collectClasspath(new String[] { GenericOvertureInstallType.EMBEDDED_VDMJ_BUNDLE_ID, GenericOvertureInstallType.DBGP_FOR_VDMJ_BUNDLE_ID }, result);
-		ClasspathUtils.collectClasspath
-				(
-					new String[]
-					      {
-							"org.overture.ide.generated.vdmj",
-					      },
-					result
-				);
+		// TODO ClasspathUtils.collectClasspath(new String[] {
+		// GenericOvertureInstallType.EMBEDDED_VDMJ_BUNDLE_ID,
+		// GenericOvertureInstallType.DBGP_FOR_VDMJ_BUNDLE_ID }, result);
+		ClasspathUtils.collectClasspath(
+				new String[] { "org.overture.ide.generated.vdmj", }, result);
 		try {
 			final String[] classPath = computeBaseClassPath(myJavaProject);
 			for (int i = 0; i < classPath.length; ++i) {
@@ -211,16 +237,17 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 		return (String[]) result.toArray(new String[result.size()]);
 	}
 
-	protected static String[] computeBaseClassPath(IJavaProject myJavaProject) throws CoreException {
-		if (myJavaProject != null){
+	protected static String[] computeBaseClassPath(IJavaProject myJavaProject)
+			throws CoreException {
+		if (myJavaProject != null) {
 			return JavaRuntime.computeDefaultRuntimeClassPath(myJavaProject);
-		}
-		else if (myJavaProject == null)
+		} else if (myJavaProject == null)
 			return CharOperation.NO_STRINGS;
 		return JavaRuntime.computeDefaultRuntimeClassPath(myJavaProject);
 	}
 
-	protected String constructProgramString(InterpreterConfig config) throws CoreException {
+	protected String constructProgramString(InterpreterConfig config)
+			throws CoreException {
 
 		return "";
 	}
@@ -231,7 +258,8 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 		String[] newCmdLine = new String[cmdLine.length + 4];
 
 		newCmdLine[0] = cmdLine[0];
-		newCmdLine[1] = DLTKCore.getDefault().getStateLocation().append("overture_proxy").toOSString();
+		newCmdLine[1] = DLTKCore.getDefault().getStateLocation().append(
+				"overture_proxy").toOSString();
 
 		newCmdLine[2] = "localhost";
 		newCmdLine[3] = port;

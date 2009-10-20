@@ -109,7 +109,7 @@
      
    
       <view
-           category="org.overture.ide.category"
+           category="org.overture.ide.ui.view.category"
             class="org.overture.ide.plugins.proofsupport.views.actions.PoTableView"
             id="org.overture.ide.plugins.proofsupport.views.PoTableView"
             name="PO result">

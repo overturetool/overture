@@ -1,7 +1,6 @@
 package org.overture.ide.ast.dltk;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.dltk.ast.declarations.Argument;
@@ -11,9 +10,8 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.references.ConstantReference;
-import org.eclipse.dltk.ast.references.SimpleReference; //import org.overture.ide.util.VDMJUtil;
+import org.eclipse.dltk.ast.references.SimpleReference;
 import org.overture.ide.ast.util.VdmAstUtil;
-
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
@@ -119,7 +117,7 @@ import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.types.TypeSet;
 import org.overturetool.vdmj.types.UnionType;
 import org.overturetool.vdmj.types.UnresolvedType;
-
+@SuppressWarnings("unchecked")
 public class DltkAstConverter {
 	ModuleDeclaration model;
 	DltkConverter converter;
@@ -458,6 +456,7 @@ public class DltkAstConverter {
 		}
 	}
 
+	
 	private void addValueDefinition(TypeDeclaration moduleDefinition,
 			Definition def) {
 		if (def instanceof ValueDefinition) {

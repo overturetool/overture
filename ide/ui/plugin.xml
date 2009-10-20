@@ -28,4 +28,11 @@
            name="Overture">
      </page>
   </extension>
+  <extension
+        point="org.eclipse.ui.views">
+     <category
+           id="org.overture.ide.ui.view.category"
+           name="Overture">
+     </category>
+  </extension>
 </plugin>

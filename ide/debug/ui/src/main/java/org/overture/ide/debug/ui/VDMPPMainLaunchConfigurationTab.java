@@ -204,6 +204,7 @@ public class VDMPPMainLaunchConfigurationTab extends MainLaunchConfigurationTab 
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("restriction")
 	protected void chooseOperation() {
 		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(
 				getShell(), new WorkbenchLabelProvider(),
