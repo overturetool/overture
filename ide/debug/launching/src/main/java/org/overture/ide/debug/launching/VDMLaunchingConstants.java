@@ -9,7 +9,7 @@ public interface VDMLaunchingConstants {
 	final String VDMPP_DEBUGGING_ENGINE_ID_KEY = "vdmpp_debugging_engine_id";
 	final String VDMPP_DEBUG_PLUGIN_ID = "org.overture.ide.debug.vdmpp";
 	// TODO move VDMPPInterpreterPreferencePage to ui ???
-	public final String VDMPP_DEBUG_INTERPRETER_TAB = "org.overture.ide.debug.ui.preferences.vdmpp.VDMPPInterpreterPreferencePage";
+	public final String VDMPP_DEBUG_INTERPRETER_TAB = "org.overture.ide.vdmpp.debug.ui.preferences.VDMPPInterpreterPreferencePage";
 	final String VDMPP_LaunchPluginID = "org.overture.ide.debug.launching";
 	
 	/*******************

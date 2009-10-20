@@ -14,6 +14,7 @@ import org.eclipse.dltk.internal.debug.ui.ScriptRunToLineAdapter;
  */
 public abstract class VdmEditorDebugAdapterFactory implements IAdapterFactory {
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		if (adapterType == IRunToLineTarget.class){
 			return new ScriptRunToLineAdapter();
@@ -25,6 +26,7 @@ public abstract class VdmEditorDebugAdapterFactory implements IAdapterFactory {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Class[] getAdapterList() {
 		return new Class[]{IRunToLineTarget.class, IToggleBreakpointsTarget.class};
 	}

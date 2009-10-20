@@ -61,7 +61,7 @@
 <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
    <launchConfigurationTabGroup
          class="org.overture.ide.vdmpp.debug.ui.tabs.VdmppTabGroup"
-         id="org.overture.ide.debug.ui.VDMPPTabGroup"
+         id="org.overture.ide.vdmpp.debug.ui.tabs.VdmppTabGroup"
          type="org.overture.ide.vdmpp.debug.core.launchConfigurationTypeVDMJ">
       <launchMode
             description="Run VDM++ specification"
