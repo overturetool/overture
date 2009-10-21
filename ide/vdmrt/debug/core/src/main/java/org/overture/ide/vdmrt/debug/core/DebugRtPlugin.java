@@ -27,7 +27,7 @@ public class DebugRtPlugin extends Plugin {
 
 	public static void logTraceMessage(String message) {
 		if (getDefault().isTraceMode()) {
-			IStatus s = new Status(IStatus.WARNING, VdmRtDebugConstants.vdmrt_DEBUG_PLUGIN_ID, INTERNAL_ERROR, message, null);
+			IStatus s = new Status(IStatus.WARNING, VdmRtDebugConstants.VDMRT_DEBUG_PLUGIN_ID, INTERNAL_ERROR, message, null);
 			getDefault().getLog().log(s);
 		}
 	}	
@@ -67,6 +67,6 @@ public class DebugRtPlugin extends Plugin {
 		} 
 		// this message is intentionally not internationalized, as an exception may
 		// be due to the resource bundle itself
-		log(new Status(IStatus.ERROR, VdmRtDebugConstants.vdmrt_DEBUG_PLUGIN_ID, INTERNAL_ERROR, "Internal error logged from Tcl Debug: ", top));		
+		log(new Status(IStatus.ERROR, VdmRtDebugConstants.VDMRT_DEBUG_PLUGIN_ID, INTERNAL_ERROR, "Internal error logged from Tcl Debug: ", top));		
 	}	
 }

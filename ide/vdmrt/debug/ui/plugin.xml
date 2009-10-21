@@ -1,76 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-
-   <!-- preference pages -->
-   <extension point="org.eclipse.ui.preferencePages">
+   <extension
+         point="org.eclipse.ui.preferencePages">
       <page
             category="org.overture.ide.ui.OvertureGlobalPreferencesPage"
-            class="org.overture.ide.vdmsl.debug.ui.preferences.VdmSlInterpreterPreferencePage"
-            id="org.overture.ide.vdmsl.debug.ui.preferences.VdmSlInterpreterPreferencePage"
-            name="VDM-SL">
+            class="org.overture.ide.vdmrt.debug.ui.preferences.VdmRtInterpreterPreferencePage"
+            id="org.overture.ide.vdmrt.debug.ui.preferences.VdmRtInterpreterPreferencePage"
+            name="VDM-RT">
       </page>
       <page
       	category="org.overture.ide.ui.OvertureGlobalPreferencesPage"
-      	class="org.eclipse.dltk.debug.ui.preferences.ScriptDetailFormattersPreferencePage:org.overture.ide.vdmsl.core.nature"
-      	id="org.overture.ide.vdmsl.debug.ui.preferences.debug.detailFormatters"
+      	class="org.eclipse.dltk.debug.ui.preferences.ScriptDetailFormattersPreferencePage:org.overture.ide.vdmrt.core.nature"
+      	id="org.overture.ide.vdmrt.debug.ui.preferences.debug.detailFormatters"
       	name="Detail formatter" />
    </extension>
+
 	<!--
-		VDM++ preference initializer
+		VDM-RT preference initializer
 	-->  
-  <extension point="org.eclipse.core.runtime.preferences">
-      <initializer class="org.overture.ide.vdmsl.debug.ui.preferences.VdmSlDebugUIPreferenceInitializer" />
-  </extension>
-  
+	  <extension point="org.eclipse.core.runtime.preferences">
+	      <initializer class="org.overture.ide.vdmrt.debug.ui.preferences.VdmRtDebugUIPreferenceInitializer" />
+	  </extension>
+	  
+	  
+	<!-- 
+		register a shortcut which appears in the run and/or debug cascade menus 
+		to launch the workbench selection or active editor  
+	-->
+	<extension point="org.eclipse.debug.ui.launchShortcuts">
+	   <shortcut
+	         class="org.overture.ide.vdmrt.debug.ui.shortcuts.VdmRtVdmjLaunchShortcut"
+	         id="org.overture.ide.vdmrt.debug.ui.shortcuts.VdmRtVdmjLaunchShortcut"
+	         label="Launch VDMJ VDM-RT"
+	         modes="run, debug"
+	         icon="icons/cview16/vdmsl_file_tsk.gif">
+	   <contextualLaunch>
+	        <enablement>
+	          <with variable="selection">
+	            <count value="1" />
+	            <iterate>
+	              <or>
+	                <test
+	                  property="org.eclipse.dltk.launching.hasProjectNature"
+	                  args="org.overture.ide.vdmrt.core.nature" />
+	              </or>
+	            </iterate>
+	          </with>
+	        </enablement>
+	      </contextualLaunch>
+	   </shortcut>
+	</extension>
 
-<!-- 
-	register a shortcut which appears in the run and/or debug cascade menus 
-	to launch the workbench selection or active editor  
--->
-<extension point="org.eclipse.debug.ui.launchShortcuts">
-   <shortcut
-         class="org.overture.ide.vdmsl.debug.ui.shortcuts.VdmSlVdmjLaunchShortcut"
-         id="org.overture.ide.vdmsl.debug.ui.shortcuts.VdmSlVdmjLaunchShortcut"
-         label="Launch VDMJ VDM-SL"
-         modes="run, debug"
-         icon="icons/cview16/vdmsl_file_tsk.gif">
-   <contextualLaunch>
-        <enablement>
-          <with variable="selection">
-            <count value="1" />
-            <iterate>
-              <or>
-                <test
-                  property="org.eclipse.dltk.launching.hasProjectNature"
-                  args="org.overture.ide.vdmsl.core.nature" />
-              </or>
-            </iterate>
-          </with>
-        </enablement>
-      </contextualLaunch>
-   </shortcut>
-</extension>
-
-
-<!-- add tab groups for the vdm++ -->
-<extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
-   <launchConfigurationTabGroup
-         class="org.overture.ide.vdmsl.debug.ui.tabs.VdmSlTabGroup"
-         id="org.overture.ide.vdmsl.debug.ui.tabs.VdmSlTabGroup"
-         type="org.overture.ide.vdmsl.debug.core.launchConfigurationTypeVDMJ">
-      <launchMode
-            description="Run VDM++ specification"
-            mode="run"
-            perspective="org.overture.ide.ui.VdmDefaultPerspective">
-      </launchMode>
-      <launchMode
-            description="Debug VDM++ Model"
-            mode="debug"
-            perspective="org.eclipse.debug.ui.DebugPerspective">
-      </launchMode>
-   </launchConfigurationTabGroup>
-</extension>
+	
+	<!-- add tab groups for the vdm-RT-->
+	<extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+	   <launchConfigurationTabGroup
+	         class="org.overture.ide.vdmrt.debug.ui.tabs.VdmRtTabGroup"
+	         id="org.overture.ide.vdmrt.debug.ui.tabs.VdmRtTabGroup"
+	         type="org.overture.ide.vdmrt.debug.core.VdmjVdmRtLaunchConfigurationDelegate">
+	      <launchMode
+	            description="Run VDM-RT specification"
+	            mode="run"
+	            perspective="org.overture.ide.ui.VdmDefaultPerspective">
+	      </launchMode>
+	      <launchMode
+	            description="Debug VDM-RT Model"
+	            mode="debug"
+	            perspective="org.eclipse.debug.ui.DebugPerspective">
+	      </launchMode>
+	   </launchConfigurationTabGroup>
+	</extension>
 
 
 <!-- popupmenus 
@@ -96,7 +96,7 @@
       objectClass="org.eclipse.dltk.core.ISourceModule">
       <filter
         name="org.eclipse.dltk.ui.nature"
-        value="org.overture.ide.vdmsl.core.nature">
+        value="org.overture.ide.vdmrt.core.nature">
       </filter>
       <!--action
         class="org.overturetool.eclipse.plugins.debug.ui.internal.console.ui.actions.PasteOvertureToConsole"
@@ -105,8 +105,8 @@
     </objectContribution>
 
     <viewerContribution
-      id="org.overturetool.debug.ui.vdmsl.rulerContribution"
-      targetID="#VdmSlRulerContext">
+      id="org.overturetool.debug.ui.vdmrt.rulerContribution"
+      targetID="#VdmRtRulerContext">
       <!--action
         class="org.eclipse.dltk.debug.ui.actions.RulerToggleWatchPointActionDelegate"
         icon="/icons/oml16.png"
@@ -126,7 +126,7 @@
 	<!-- Toggle Breakpoint in the ruler -->
       <action
         label="Toggle Breakpoint"
-        id="org.overture.ide.vdmsl.debug.ui.actions.RulerToggleBreakpointActionDelegate"
+        id="org.overture.ide.vdmrt.debug.ui.actions.RulerToggleBreakpointActionDelegate"
         class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
         menubarPath="debug">
       </action>
@@ -134,12 +134,12 @@
       <action
         label="Breakpoint properties..."
         class="org.eclipse.dltk.debug.ui.actions.ScriptBreakpointPropertiesRulerActionDelegate"
-        id="org.overture.ide.vdmsl..debug.ui.ScriptBreakpointPropertiesRulerActionDelegate"
+        id="org.overture.ide.vdmrt.debug.ui.ScriptBreakpointPropertiesRulerActionDelegate"
         menubarPath="group.properties" />
     </viewerContribution>
     
     <viewerContribution
-      targetID="#VdmSlEditorContext"
+      targetID="#VdmRtEditorContext"
       id="org.eclipse.dltk.debug.ui.DebugPopupActions">
       <visibility>
         <and>
@@ -156,7 +156,7 @@
         icon="icons/cview16/vdmsl_file_tsk.gif"
         class="org.eclipse.dltk.internal.debug.ui.actions.ScriptWatchAction"
         menubarPath="additions"
-        id="org.overture.ide.vdmsl.debug.ui.ScriptWatch">
+        id="org.overture.ide.vdmrt.debug.ui.ScriptWatch">
       </action>
       <action
         label="Inspect"
@@ -164,7 +164,7 @@
         definitionId="org.eclipse.dltk.debug.ui.commands.ScriptInspect"
         class="org.eclipse.dltk.internal.debug.ui.actions.PopupScriptInspectAction"
         menubarPath="additions"
-        id="org.overture.ide.vdmsl.debug.ui.ScriptInspect">
+        id="org.overture.ide.vdmrt.debug.ui.ScriptInspect">
       </action>
       <action
         label="Display"
@@ -172,7 +172,7 @@
         definitionId="org.eclipse.dltk.debug.ui.commands.ScriptDisplay"
         class="org.eclipse.dltk.internal.debug.ui.actions.PopupScriptDisplayAction"
         menubarPath="additions"
-        id="org.overture.ide.vdmsl.debug.ui.ScriptDisplay">
+        id="org.overture.ide.vdmrt.debug.ui.ScriptDisplay">
       </action>
     </viewerContribution>
   </extension>
@@ -180,8 +180,8 @@
   <!-- Add double click to the ruler -->
   <extension point="org.eclipse.ui.editorActions">
     <editorContribution
-      targetID="org.overture.ide.vdmsl.ui.internal.editor.VdmSlEditor"
-      id="org.overture.ide.vdmsl.debug.VDMSLEditor.BreakpointRulerActions">
+      targetID="org.overture.ide.vdmrt.ui.internal.editor.VdmRtEditor"
+      id="org.overture.ide.vdmrt.debug.VDMRTEditor.BreakpointRulerActions">
       <action
         label="Togle Breakpoint (label not used TODO)"
         class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
@@ -192,9 +192,17 @@
   </extension>
   
   
-    
+  
+  
+  
+  
+  
+  
+  
+  
+      
 <!-- 
-    VDM-SL
+    VDM-RT
 	The adapters extension point allows plug-ins to declaratively register adapter factories
 		
 	Two adapter get registred here: 
@@ -205,8 +213,8 @@
 -->
 	<extension point="org.eclipse.core.runtime.adapters">
 		<factory
-		    adaptableType="org.overture.ide.vdmsl.ui.internal.editor.VdmSlEditor"
-		    class="org.overture.ide.vdmsl.debug.ui.VdmSlEditorAdapter">
+		    adaptableType="org.overture.ide.vdmrt.ui.internal.editor.VdmRtEditor"
+		    class="org.overture.ide.vdmrt.debug.ui.VdmRtEditorAdapter">
 		    <adapter type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget"/>
 		    <adapter type="org.eclipse.debug.ui.actions.IRunToLineTarget"/>	
 		</factory>
@@ -214,20 +222,20 @@
 
 	
  <!-- 
-  	VDM-SL
+  	VDM-Rt
   	 
   	Provides access to plugin specific debug ui implementations.
   -->
   <extension point="org.eclipse.dltk.debug.ui.language">
 	<language
-      class="org.overture.ide.vdmsl.debug.ui.VdmSlDebugUILanguageToolkit"
-      nature="org.overture.ide.vdmsl.core.nature"/>
+      class="org.overture.ide.vdmrt.debug.ui.VdmRtDebugUILanguageToolkit"
+      nature="org.overture.ide.vdmrt.core.nature"/>
   </extension>
 
 
  
   <!-- 
-  	VDM-sl
+  	VDM-RT
   	 
   	When mouse over text
   -->
@@ -235,9 +243,9 @@
     <hover
       label="Mouse over variable"
       description="When mouse over text"
-      nature="org.overture.ide.vdmsl.core.nature"
-      class="org.overture.ide.vdmsl.debug.ui.VdmSlDebugHover"
-      id="org.overture.ide.vdmsl.debug.ui.VdmSlDebugHover">
+      nature="org.overture.ide.vdmrt.core.nature"
+      class="org.overture.ide.vdmrt.debug.ui.VdmRtDebugHover"
+      id="org.overture.ide.vdmrt.debug.ui.VdmRtDebugHover">
     </hover>
   </extension>
   
@@ -248,8 +256,8 @@
  <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
     <launchConfigurationTypeImage
       icon="icons/cview16/vdmsl_file_tsk.gif"
-      configTypeID="org.overture.ide.vdmsl.debug.core.launchConfigurationTypeVDMJ"
-      id="org.overture.ide.vdmsl.debug.ui.launchConfigurationTypeImage.overture">
+      configTypeID="org.overture.ide.vdmrt.debug.core.VdmjVdmRtLaunchConfigurationDelegate"
+      id="org.overture.ide.vdmrt.debug.ui.launchConfigurationTypeImage.overture">
     </launchConfigurationTypeImage>
   </extension>
   
@@ -264,7 +272,7 @@
   <extension point="org.eclipse.ui.actionSetPartAssociations">
     <actionSetPartAssociation targetID="org.eclipse.debug.ui.launchActionSet">
       <part id="org.eclipse.dltk.ui.ScriptExplorer"></part>
-      <part id="org.overture.ide.vdmsl.ui.internal.editor.VdmSlEditor"></part>
+      <part id="org.overture.ide.vdmrt.ui.internal.editor.VdmRtEditor"></part>
     </actionSetPartAssociation>
   </extension>
 
@@ -277,8 +285,8 @@
   -->
   <extension point="org.eclipse.debug.ui.debugModelPresentations">
     <debugModelPresentation
-      class="org.overture.ide.vdmsl.debug.ui.VdmSlDebugModelPresentation"
-      id="org.overture.ide.vdmsl.debug.ui.VdmSlDebugModelPresentation" />
+      class="org.overture.ide.vdmrt.debug.ui.VdmRtDebugModelPresentation"
+      id="org.overture.ide.vdmrt.debug.ui.VdmRtDebugModelPresentation" />
   </extension>
   
     <!-- 
@@ -288,7 +296,7 @@
   -->
   <extension point="org.eclipse.debug.core.watchExpressionDelegates">
     <watchExpressionDelegate
-      debugModel="org.overture.ide.vdmsl.debug.ui.VdmSlDebugModelPresentation"
+      debugModel="org.overture.ide.vdmrt.debug.ui.VdmRtDebugModelPresentation"
       delegateClass="org.eclipse.dltk.internal.debug.core.model.ScriptWatchExpressionDelegate">
     </watchExpressionDelegate>
   </extension>
@@ -304,7 +312,7 @@
   <extension point="org.eclipse.debug.ui.debugModelContextBindings">
     <modelContextBinding
       contextId="org.eclipse.dltk.debug.ui.debugging"
-      debugModelId="org.overture.ide.vdmsl.debug.ui.VdmSlDebugModelPresentation" />
+      debugModelId="org.overture.ide.vdmrt.debug.ui.VdmRtDebugModelPresentation" />
   </extension>
 
 
@@ -318,19 +326,19 @@
   -->
   <extension point="org.eclipse.ui.commands">
     <command
-      id="org.overture.ide.vdmsl.debug.ui.commands.toggleGlobalVariables"
+      id="org.overture.ide.vdmrt.debug.ui.commands.toggleGlobalVariables"
       description="Toggle Global Variables"
       name="Show Global Variables" />
     <command
-      id="org.overture.ide.vdmsl.debug.ui.commands.toggleClassVariables"
+      id="org.overture.ide.vdmrt.debug.ui.commands.toggleClassVariables"
       description="Toggle Class Variables"
       name="Show Class Variables" />
     <command
-      id="org.overture.ide.vdmsl.debug.ui.commands.toggleLocalVariables"
+      id="org.overture.ide.vdmrt.debug.ui.commands.toggleLocalVariables"
       description="Toggle Local Variables"
       name="Show Local Variables" />      
     <command
-      id="org.overture.ide.vdmsl.debug.ui.commands.showPreferences"
+      id="org.overture.ide.vdmrt.debug.ui.commands.showPreferences"
       description="Show Preferences"
       name="Show Preferences" />         
   </extension>
@@ -342,23 +350,23 @@
     <menuContribution locationURI="menu:org.eclipse.debug.ui.VariableView">
       <menu
         label="Variables"
-        id="org.overture.ide.vdmsl.debug.ui.menu.VariableView" />
+        id="org.overture.ide.vdmrt.debug.ui.menu.VariableView" />
     </menuContribution>
-    <menuContribution locationURI="menu:org.overture.ide.vdmsl.debug.ui.menu.VariableView">
+    <menuContribution locationURI="menu:org.overture.ide.vdmrt.debug.ui.menu.VariableView">
       <command 
-        commandId="org.overture.ide.vdmsl.debug.ui.commands.toggleGlobalVariables"
+        commandId="org.overture.ide.vdmrt.debug.ui.commands.toggleGlobalVariables"
         tooltip="Show Global variables"     
         style="toggle" />
       <command 
-        commandId="org.overture.ide.vdmsl.debug.ui.commands.toggleClassVariables"
+        commandId="org.overture.ide.vdmrt.debug.ui.commands.toggleClassVariables"
         tooltip="Show class variables"      
         style="toggle" />
       <command 
-        commandId="org.overture.ide.vdmsl.debug.ui.commands.toggleLocalVariables"
+        commandId="org.overture.ide.vdmrt.debug.ui.commands.toggleLocalVariables"
         tooltip="Show Local Variables" 
         style="toggle" />                      
       <command
-        commandId="org.overture.ide.vdmsl.debug.ui.commands.showPreferences" />                          
+        commandId="org.overture.ide.vdmrt.debug.ui.commands.showPreferences" />                          
     </menuContribution>  
   </extension>
   
@@ -366,17 +374,19 @@
   
     <extension point="org.eclipse.ui.handlers">
     <handler 
-      commandId="org.overture.ide.vdmsl.debug.ui.commands.toggleGlobalVariables"
-      class="org.overture.ide.vdmsl.debug.ui.handlers.VdmSlToggleGlobalVariableHandler" />
+      commandId="org.overture.ide.vdmrt.debug.ui.commands.toggleGlobalVariables"
+      class="org.overture.ide.vdmrt.debug.ui.handlers.VdmRtToggleGlobalVariableHandler" />
     <handler 
-      commandId="org.overture.ide.vdmsl.debug.ui.commands.toggleClassVariables"
-      class="org.overture.ide.vdmsl.debug.ui.handlers.VdmSlToggleClassVariablesHandler" />
+      commandId="org.overture.ide.vdmrt.debug.ui.commands.toggleClassVariables"
+      class="org.overture.ide.vdmrt.debug.ui.handlers.VdmRtToggleClassVariablesHandler" />
     <handler 
-      commandId="org.overture.ide.vdmsl.debug.ui.commands.toggleLocalVariables"
-      class="org.overture.ide.vdmsl.debug.ui.handlers.VdmSlToggleLocalVariableHandler" />      
+      commandId="org.overture.ide.vdmrt.debug.ui.commands.toggleLocalVariables"
+      class="org.overture.ide.vdmrt.debug.ui.handlers.VdmRtToggleLocalVariableHandler" />      
     <handler
-      commandId="org.overture.ide.vdmsl.debug.ui.commands.showPreferences"
-      class="org.eclipse.dltk.debug.ui.handlers.VariablesViewOptionsHandler:org.overture.ide.vdmsl.core.nature" />
+      commandId="org.overture.ide.vdmrt.debug.ui.commands.showPreferences"
+      class="org.eclipse.dltk.debug.ui.handlers.VariablesViewOptionsHandler:org.overture.ide.vdmrt.core.nature" />
   </extension>
+  
+  
 
 </plugin>

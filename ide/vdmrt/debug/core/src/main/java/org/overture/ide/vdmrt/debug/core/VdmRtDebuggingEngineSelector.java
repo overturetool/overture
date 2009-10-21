@@ -7,6 +7,6 @@ public class VdmRtDebuggingEngineSelector extends DLTKIdContributionSelector {
 
 	@Override
 	protected String getSavedContributionId(PreferencesLookupDelegate delegate) {
-		return delegate.getString(VdmRtDebugConstants.vdmrt_DEBUG_PLUGIN_ID, VdmRtDebugConstants.vdmrt_DEBUGGING_ENGINE_ID_KEY);
+		return delegate.getString(VdmRtDebugConstants.VDMRT_DEBUG_PLUGIN_ID, VdmRtDebugConstants.vdmrt_DEBUGGING_ENGINE_ID_KEY);
 	}
 }

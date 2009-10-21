@@ -20,4 +20,8 @@ Require-Bundle: org.eclipse.dltk.ui;bundle-version="1.0.0",
  org.overture.ide.vdmrt.core;bundle-version="1.0.0",
  org.overture.ide.ui;bundle-version="1.0.0"
 Bundle-Activator: org.overture.ide.vdmrt.ui.UIPlugin
+Export-Package: org.overture.ide.vdmrt.ui,
+ org.overture.ide.vdmrt.ui.internal.editor,
+ org.overture.ide.vdmrt.ui.internal.outline,
+ org.overture.ide.vdmrt.ui.internal.partitioning
 

@@ -13,7 +13,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.overture.ide.debug.launching.ClasspathUtils;
 import org.overture.ide.debug.launching.IOvertureInterpreterRunnerConfig;
-import org.overture.ide.vdmrt.debug.core.interpreter.VdmRtVdmjInterpreterRunner;
+import org.overture.ide.vdmrt.debug.core.interpreter.VdmRtVdmjVMInterpreterRunner;
 
 public class VdmRtDebuggerRunner extends DebuggingEngineRunner {
 
@@ -36,7 +36,7 @@ public class VdmRtDebuggerRunner extends DebuggingEngineRunner {
 	 */
 	@Override
 	protected String getDebugPreferenceQualifier() {
-		return VdmRtDebugConstants.vdmrt_DEBUG_PLUGIN_ID;
+		return VdmRtDebugConstants.VDMRT_DEBUG_PLUGIN_ID;
 	}
 
 	@Override
@@ -71,7 +71,8 @@ public class VdmRtDebuggerRunner extends DebuggingEngineRunner {
 		try {
 			//TODO ( VDMTools / VDMJ) ??? set config?
 			setVDMJRunnerConfig();
-			VdmRtVdmjInterpreterRunner.doRunImpl(config, launch, this.runnerconfig);
+			//VdmRtVdmjInterpreterRunner.doRunImpl(config, launch, this.runnerconfig);
+			VdmRtVdmjVMInterpreterRunner.doRunImpl(config, launch, this.runnerconfig);
 			waitDebuggerConnected(launch, acceptor);
 		} catch (CoreException e) {
 			e.printStackTrace();

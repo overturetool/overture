@@ -22,4 +22,5 @@ public interface VDMLaunchingConstants {
 	/***************************
 	 **  VDM-RT (concurrency)
 	 ***************************/
+	public final String VDMRT_DEBUG_INTERPRETER_TAB = "org.overture.ide.vdmrt.debug.ui.preferences.VdmRtInterpreterPreferencePage";
 }

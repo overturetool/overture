@@ -59,12 +59,12 @@ public class VdmjRtInstallType extends AbstractInterpreterInstallType {
 	 */
 	@Override
 	protected String getPluginId() {
-		return VdmRtDebugConstants.vdmrt_DEBUG_PLUGIN_ID;
+		return VdmRtDebugConstants.VDMRT_DEBUG_PLUGIN_ID;
 	}
 
 	@Override
 	protected String[] getPossibleInterpreterNames() {
-		return new String[] {VdmRtDebugConstants.vdmrt_VDMJ_InterpreterType}; //TODO more than one VDMJ interpreter (like version 0.1, 0.2)????? 
+		return new String[] {VdmRtDebugConstants.VDMRT_VDMJ_InterpreterType}; //TODO more than one VDMJ interpreter (like version 0.1, 0.2)????? 
 		//return new String[] {"eclipse","eclipse.exe"}; //TODO more than one VDMJ interpreter (like version 0.1, 0.2)?????
 	}
 	
@@ -73,7 +73,7 @@ public class VdmjRtInstallType extends AbstractInterpreterInstallType {
 	 * @see org.eclipse.dltk.launching.IInterpreterInstallType#getName()
 	 */
 	public String getName() {
-		return VdmRtDebugConstants.vdmrt_VDMJ_InterpreterName;
+		return VdmRtDebugConstants.VDMRT_VDMJ_InterpreterName;
 	}
 
 	

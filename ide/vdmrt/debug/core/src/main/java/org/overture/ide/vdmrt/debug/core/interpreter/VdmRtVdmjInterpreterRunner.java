@@ -142,14 +142,14 @@ public class VdmRtVdmjInterpreterRunner extends AbstractInterpreterRunner {
 							arguments[argNumber++] = sessionId;
 							
 							// 3: dialect
-							arguments[argNumber++] = "-" + VdmRtDebugConstants.vdmrt_VDMJ_DIALECT;
+							arguments[argNumber++] = "-" + VdmRtDebugConstants.VDMRT_VDMJ_DIALECT;
 							
 							// 4: expression eg. : new className().operation()
-							String debugOperation = launch.getLaunchConfiguration().getAttribute(VdmRtDebugConstants.vdmrt_DEBUGGING_OPERATION, "");
+							String debugOperation = launch.getLaunchConfiguration().getAttribute(VdmRtDebugConstants.VDMRT_DEBUGGING_OPERATION, "");
 							
 							String expression = 
 								"new " + 
-								launch.getLaunchConfiguration().getAttribute(VdmRtDebugConstants.vdmrt_DEBUGGING_CLASS, "") + 
+								launch.getLaunchConfiguration().getAttribute(VdmRtDebugConstants.VDMRT_DEBUGGING_CLASS, "") + 
 								"()." + debugOperation;
 							arguments[argNumber++] = "-e";		
 							arguments[argNumber++] = expression;
