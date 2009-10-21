@@ -32,4 +32,4 @@ Import-Package: org.eclipse.jdt.core,
  org.overturetool.vdmj.debug,
  org.overturetool.vdmj.definitions,
  org.overturetool.vdmj.runtime
-Bundle-Activator: org.overture.ide.vdmrt.debug.DebugRtPlugin
+Bundle-Activator: org.overture.ide.vdmrt.debug.core.DebugRtPlugin
