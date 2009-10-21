@@ -130,6 +130,7 @@
       <plugin id="org.eclipse.ui.navigator"/>
       <plugin id="org.eclipse.ui.navigator.resources"/>
       <plugin id="org.eclipse.ui.views"/>
+      <plugin id="org.eclipse.ui.views.log"/>
       <plugin id="org.eclipse.ui.views.properties.tabbed"/>
       <plugin id="org.eclipse.ui.workbench"/>
       <plugin id="org.eclipse.ui.workbench.texteditor"/>
@@ -154,7 +155,8 @@
       <plugin id="org.overture.ide.ui"/>
       <plugin id="org.overture.ide.utility"/>
       <plugin id="org.overture.ide.vdmpp.core"/>
-      <plugin id="org.overture.ide.vdmpp.debug"/>
+      <plugin id="org.overture.ide.vdmpp.debug.core"/>
+      <plugin id="org.overture.ide.vdmpp.debug.ui"/>
       <plugin id="org.overture.ide.vdmpp.ui"/>
       <plugin id="org.overture.ide.vdmrt.core"/>
       <plugin id="org.overture.ide.vdmrt.debug"/>
