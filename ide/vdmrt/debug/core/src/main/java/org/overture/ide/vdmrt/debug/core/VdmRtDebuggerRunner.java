@@ -1,4 +1,4 @@
-package org.overture.ide.vdmrt.debug;
+package org.overture.ide.vdmrt.debug.core;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -13,7 +13,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.overture.ide.debug.launching.ClasspathUtils;
 import org.overture.ide.debug.launching.IOvertureInterpreterRunnerConfig;
-import org.overture.ide.vdmrt.debug.interpreter.VdmRtVdmjInterpreterRunner;
+import org.overture.ide.vdmrt.debug.core.interpreter.VdmRtVdmjInterpreterRunner;
 
 public class VdmRtDebuggerRunner extends DebuggingEngineRunner {
 

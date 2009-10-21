@@ -22,16 +22,14 @@ Require-Bundle: org.eclipse.dltk.ui;bundle-version="1.0.0",
  org.eclipse.debug.ui,
  org.eclipse.ui.editors;bundle-version="3.5.0",
  org.eclipse.core.runtime;bundle-version="3.5.0",
- org.overture.ide.vdmrt.core;bundle-version="1.0.0",
  org.overture.ide.debug.launching;bundle-version="1.0.0",
- org.overture.ide.vdmrt.debug;bundle-version="1.0.0",
  org.eclipse.jface.text;bundle-version="3.5.0",
- org.overture.ide.debug.core;bundle-version="1.0.0"
+ org.overture.ide.debug.core;bundle-version="1.0.0",
+ org.overture.ide.vdmrt.core;bundle-version="1.0.0"
 Import-Package: org.eclipse.jdt.core,
  org.eclipse.jdt.launching,
  org.overture.ide.ast,
  org.overturetool.vdmj.debug,
  org.overturetool.vdmj.definitions,
  org.overturetool.vdmj.runtime
-Export-Package: org.overture.ide.vdmrt.debug
 Bundle-Activator: org.overture.ide.vdmrt.debug.DebugRtPlugin

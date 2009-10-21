@@ -1,4 +1,4 @@
-package org.overture.ide.vdmrt.debug;
+package org.overture.ide.vdmrt.debug.core;
 
 import org.eclipse.dltk.launching.AbstractInterpreterInstall;
 import org.eclipse.dltk.launching.IInterpreterInstallType;

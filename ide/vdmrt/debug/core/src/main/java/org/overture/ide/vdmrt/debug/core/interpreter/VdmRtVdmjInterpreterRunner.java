@@ -1,4 +1,4 @@
-package org.overture.ide.vdmrt.debug.interpreter;
+package org.overture.ide.vdmrt.debug.core.interpreter;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +31,7 @@ import org.overture.ide.ast.RootNode;
 import org.overture.ide.debug.launching.ClasspathUtils;
 import org.overture.ide.debug.launching.IOvertureInterpreterRunnerConfig;
 import org.overture.ide.vdmrt.core.VdmRtProjectNature;
-import org.overture.ide.vdmrt.debug.VdmRtDebugConstants;
+import org.overture.ide.vdmrt.debug.core.VdmRtDebugConstants;
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.runtime.ClassInterpreter;

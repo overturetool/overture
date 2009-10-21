@@ -1,4 +1,4 @@
-package org.overture.ide.vdmrt.debug;
+package org.overture.ide.vdmrt.debug.core;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;

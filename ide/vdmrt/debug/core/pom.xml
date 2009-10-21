@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <project>
   <parent>
-    <groupId>org.overture.ide</groupId>
-    <artifactId>org.overture.ide.vdmrt</artifactId>
+    <groupId>org.overture.ide.vdmrt</groupId>
+    <artifactId>org.overture.ide.vdmrt.debug</artifactId>
     <version>1.0.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.overture.ide.vdmrt</groupId>
-  <artifactId>org.overture.ide.vdmrt.debug</artifactId>
-  <name>org.overture.ide.debug.ui</name>
+  <groupId>org.overture.ide.vdmrt.debug</groupId>
+  <artifactId>org.overture.ide.vdmrt.debug.core</artifactId>
+  <name>org.overture.ide.vdmrt.debug.core</name>
   <version>1.0.0</version>
  
   <packaging>source-plugin</packaging>
