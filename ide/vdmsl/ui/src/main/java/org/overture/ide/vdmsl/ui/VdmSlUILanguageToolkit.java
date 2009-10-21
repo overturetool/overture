@@ -52,7 +52,7 @@ public class VdmSlUILanguageToolkit implements IDLTKUILanguageToolkit {
 //    }
     
     public String getEditorId(Object inputElement) {
-        return VdmslEditorConstants.EDITOR_ID;     //"org.overutretool.ide.vdmsl.ui.internal.editor";
+        return VdmslEditorConstants.EDITOR_ID;
     }
     
     public String getInterpreterContainerId() {

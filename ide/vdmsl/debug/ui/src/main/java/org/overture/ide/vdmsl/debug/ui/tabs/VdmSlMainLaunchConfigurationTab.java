@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  ******************************************************************************/
-package org.overture.ide.vdmpp.debug.ui.tabs;
+package org.overture.ide.vdmsl.debug.ui.tabs;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -35,16 +35,16 @@ import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
-import org.overture.ide.vdmpp.core.VdmPpProjectNature;
-import org.overture.ide.vdmpp.debug.core.VDMPPDebugConstants;
+import org.overture.ide.vdmsl.core.VdmSlProjectNature;
+import org.overture.ide.vdmsl.debug.core.VdmSlDebugConstants;
 
 /**
  * Main launch configuration tab for overture scripts
  */
 @SuppressWarnings("restriction")
-public class VdmppMainLaunchConfigurationTab extends MainLaunchConfigurationTab {
+public class VdmSlMainLaunchConfigurationTab extends MainLaunchConfigurationTab {
 
-	public VdmppMainLaunchConfigurationTab(String mode) {
+	public VdmSlMainLaunchConfigurationTab(String mode) {
 		super(mode);
 	}
 //	private Button enableLogging;
@@ -144,7 +144,7 @@ public class VdmppMainLaunchConfigurationTab extends MainLaunchConfigurationTab 
 		
 		
 		Label label = new Label(group,SWT.MIN);
-		label.setText("Class:");
+		label.setText("Module:");
 		gd = new GridData(GridData.BEGINNING);
 		label.setLayoutData(gd);
 		
@@ -242,9 +242,7 @@ public class VdmppMainLaunchConfigurationTab extends MainLaunchConfigurationTab 
 	 * @see org.eclipse.dltk.debug.ui.launchConfigurations.ScriptLaunchConfigurationTab#dbpgLoggingPrefEnabled(org.eclipse.dltk.core.PreferencesLookupDelegate)
 	 */
 	protected boolean dbpgLoggingPrefEnabled(PreferencesLookupDelegate delegate) {
-		return delegate.getBoolean(
-				VDMPPDebugConstants.VDMPP_DEBUG_PLUGIN_ID,
-				DLTKDebugPreferenceConstants.PREF_DBGP_ENABLE_LOGGING);
+		return delegate.getBoolean(VdmSlDebugConstants.VDMSL_DEBUG_PLUGIN_ID, DLTKDebugPreferenceConstants.PREF_DBGP_ENABLE_LOGGING);
 	}
 	
 	
@@ -253,14 +251,14 @@ public class VdmppMainLaunchConfigurationTab extends MainLaunchConfigurationTab 
 	 * @see org.eclipse.dltk.debug.ui.launchConfigurations.ScriptLaunchConfigurationTab#getNatureID()
 	 */
 	protected String getNatureID() {
-		return VdmPpProjectNature.VDM_PP_NATURE;
+		return VdmSlProjectNature.VDM_SL_NATURE;
 	}
 	
 	@Override
 	protected void doPerformApply(ILaunchConfigurationWorkingCopy config) {
 		// cons
-		config.setAttribute(VDMPPDebugConstants.VDMPP_DEBUGGING_CLASS, fClassText.getText());
-		config.setAttribute(VDMPPDebugConstants.VDMPP_DEBUGGING_OPERATION, fOperationText.getText());
+		config.setAttribute(VdmSlDebugConstants.VDMSL_DEBUGGING_MODULE, fClassText.getText());
+		config.setAttribute(VdmSlDebugConstants.VDMSL_DEBUGGING_OPERATION, fOperationText.getText());
 		config.setAttribute(DLTKDebugPreferenceConstants.PREF_DBGP_BREAK_ON_FIRST_LINE, false);
 		config.setAttribute(DLTKDebugPreferenceConstants.PREF_DBGP_ENABLE_LOGGING, true);
 		//config.setAttribute(OvertureDebugConstants.DEBUGGING_FROM_CONSOLE, fdebugInConsole.getSelection());
@@ -271,8 +269,8 @@ public class VdmppMainLaunchConfigurationTab extends MainLaunchConfigurationTab 
 	@Override
 	protected void updateMainModuleFromConfig(ILaunchConfiguration config) {
 		try {			
-			fClassText.setText(config.getAttribute(VDMPPDebugConstants.VDMPP_DEBUGGING_CLASS , ""));
-			fOperationText.setText(config.getAttribute(VDMPPDebugConstants.VDMPP_DEBUGGING_OPERATION, ""));
+			fClassText.setText(config.getAttribute(VdmSlDebugConstants.VDMSL_DEBUGGING_MODULE, ""));
+			fOperationText.setText(config.getAttribute(VdmSlDebugConstants.VDMSL_DEBUGGING_OPERATION, ""));
 			//fdebugInConsole.setSelection(config.getAttribute(DLTKDebugPreferenceConstants.PREF_DBGP_ENABLE_LOGGING, true));
 			//fOperationText.setEnabled(!fdebugInConsole.getSelection());
 		} catch (CoreException e) {

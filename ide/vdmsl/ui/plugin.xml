@@ -36,7 +36,7 @@
             contributorClass="org.eclipse.dltk.internal.ui.editor.SourceModuleEditorActionContributor"
             default="false"
             icon="icons/cview16/vdmsl_file_tsk.gif"
-            id="org.overutre.ide.vdmsl.ui.internal.editor"
+            id="org.overture.ide.vdmsl.ui.internal.editor.VdmSlEditor"
             name="VDM SL Editor">
          <contentTypeBinding contentTypeId="org.overture.ide.vdmsl.content-type"/>
       </editor>

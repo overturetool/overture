@@ -53,7 +53,7 @@ public class VdmPpUILanguageToolkit implements IDLTKUILanguageToolkit {
 //    }
     
     public String getEditorId(Object inputElement) {
-        return VdmppEditorConstants.EDITOR_ID;//"org.overutretool.ide.vdmpp.ui.internal.editor";
+        return VdmppEditorConstants.EDITOR_ID;
     }
     
     public String getInterpreterContainerId() {

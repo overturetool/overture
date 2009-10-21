@@ -4,6 +4,6 @@ public interface VdmslEditorConstants
 {
 	
 	String EDITOR_CONTEXT = "#VdmSlEditorContext";
-	String EDITOR_ID = "org.overutre.ide.vdmsl.ui.internal.editor";
+	String EDITOR_ID = "org.overture.ide.vdmsl.ui.internal.editor.VdmSlEditor";
 
 }

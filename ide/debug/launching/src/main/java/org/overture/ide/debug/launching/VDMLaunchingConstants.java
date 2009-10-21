@@ -17,6 +17,7 @@ public interface VDMLaunchingConstants {
 	 *******************/
 	public final String VDMSL_DEBUG_PLUGIN_ID = "org.overture.ide.debug.vdmsl";
 	public final String VDMSL_DEBUGGING_ENGINE_ID_KEY = "vdmsl_debugging_engine_id";
+	public final String VDMSL_DEBUG_INTERPRETER_TAB = "org.overture.ide.vdmsl.debug.ui.preferences.VdmSlInterpreterPreferencePage";
 
 	/***************************
 	 **  VDM-RT (concurrency)

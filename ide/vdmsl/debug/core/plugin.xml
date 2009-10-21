@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+	<!-- Interpreter install types -->
+   <extension point="org.eclipse.dltk.launching.interpreterInstallTypes">
+      <interpreterInstallType
+            class="org.overture.ide.vdmsl.debug.core.VdmjSlInstallType"
+            id="org.overture.ide.vdmsl.debug.core.VdmjSlInstallType">
+      </interpreterInstallType>
+   </extension>
+   
+  <!-- create the built-in VDMJ interpreter for VDM-SL -->
+  <extension point="org.eclipse.dltk.launching.interpreterInstalls">
+     <interpreterInstall 	
+           home="${eclipse_home}"
+           id="org.overture.ide.debug.launching.interpreterInstallType.vdmjpp"
+           interpreterInstallType="org.overture.ide.vdmsl.debug.core.VdmjSlInstallType"
+           name="VDMJ Interpreter for VDM-SL">
+     </interpreterInstall>
+  </extension>
+  
+   <!-- lauch delegate for the VDMJ interpreter using the language VDM++ -->
+   <extension point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="org.overture.ide.vdmsl.debug.core.VdmjVdmSlLaunchConfigurationDelegate"
+            id="org.overture.ide.vdmsl.debug.core.launchConfigurationTypeVDMJ"
+            modes="debug, run"
+            name="VDMJ VDM-SL"
+            public="true"
+            sourceLocatorId="overtureSourceLocator"
+            sourcePathComputerId="overtureSourcePathComputer">
+      </launchConfigurationType>
+   </extension>
+   
+    <!-- VDM++ Debugging engine (both selector and engine) -->
+    <extension point="org.eclipse.dltk.launching.debuggingEngine">
+       <engineContribution natureId="org.overture.ide.vdmsl.core.nature">
+          <selector
+                class="org.overture.ide.vdmsl.debug.core.VdmSlDebuggingEngineSelector">
+          </selector>
+          <engine
+                class="org.overture.ide.vdmsl.debug.core.VdmSlDebuggerRunnerFactory"
+                description="Overture Debugging engine for VDM-SL"
+                id="org.overture.ide.debug.launching.OvertureDebuggerRunnerFactory"
+                priority="0"
+                propertyPageId="org.overture.ide.propertyPage.debug.engines.overturedebugger"
+        		preferencePageId="org.overture.ide.preferences.debug.engines.overturedebugger"
+                >
+          </engine>
+       </engineContribution>
+    </extension>   
+
+   <!-- the script debug model --> 
+   <extension point="org.eclipse.dltk.debug.scriptDebugModel">
+      <debugModel
+            debugModelId="org.overture.ide.vdmsl.debug.ui.VdmSlDebugModelPresentation"
+            debugToolkit="org.overture.ide.debug.core.OvertureDebugToolkit"
+            natureId="org.overture.ide.vdmsl.core.nature"
+            typeFactory="org.overture.ide.debug.core.OvertureTypeFactory">
+      </debugModel>
+   </extension>
+
+</plugin>
