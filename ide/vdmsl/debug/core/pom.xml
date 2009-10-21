@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<project>
+  <parent>
+    <groupId>org.overture.ide.vdmsl</groupId>
+    <artifactId>org.overture.ide.vdmsl.debug</artifactId>
+    <version>1.0.0</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.overture.ide.vdmsl.debug</groupId>
+  <artifactId>org.overture.ide.vdmsl.debug.core</artifactId>
+  <name>org.overture.ide.vdmsl.debug.core</name>
+  <version>1.0.0</version>
+ 
+  <packaging>source-plugin</packaging>
+
+
+</project>

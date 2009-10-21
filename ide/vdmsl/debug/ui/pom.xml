@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<project>
+  <parent>
+    <groupId>org.overture.ide.vdmsl</groupId>
+    <artifactId>org.overture.ide.vdmsl.debug</artifactId>
+    <version>1.0.0</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.overture.ide.vdmsl.debug</groupId>
+  <artifactId>org.overture.ide.vdmsl.debug.ui</artifactId>
+  <name>org.overture.ide.vdmsl.debug.ui</name>
+  <version>1.0.0</version>
+ 
+  <packaging>source-plugin</packaging>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.eclipse.debug</groupId>
+  		<artifactId>ui</artifactId>
+  		<version>3.3.0-v20070607-1800</version>
+  	</dependency>
+  </dependencies>
+
+
+</project>

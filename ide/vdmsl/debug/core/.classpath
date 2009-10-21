@@ -1,0 +1,8 @@
+<classpath>
+  <classpathentry kind="src" path="." including="plugin.xml|plugin.properties|model/**|icons/**" excluding="**/*.java"/>
+  <classpathentry kind="output" path="target/classes"/>
+  <classpathentry kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/overturetool/eclipse/plugins/org.eclipse.swt.gtk.linux.x86/3.4.1/org.eclipse.swt.gtk.linux.x86-3.4.1.jar"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+</classpath>
