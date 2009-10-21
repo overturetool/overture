@@ -8,7 +8,7 @@ import java.util.List;
 import org.overturetool.proofsupport.external_tools.Utilities;
 import org.overturetool.proofsupport.test.AutomaticProofSystemTestCase;
 
-public class VdmToolsPogProcessorTest extends AutomaticProofSystemTestCase {
+public class VdmToolsPoProcessorTest extends AutomaticProofSystemTestCase {
 
 	public void testExtractPoExpression() throws Exception {
 		String expected = "(forall i : int, l : seq of int &"

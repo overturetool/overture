@@ -40,6 +40,11 @@ public class TranslationPreProcessor {
 		return generateOmlAst(vdmModelFile, vdmContextFiles, poExpressions);
 	}
 	
+	public PreparationData prepareVdmModels(IOmlDocument vdmModel,
+			List<IOmlDocument> vdmContext) {
+		return new PreparationData(vdmModel, vdmContext);
+	}
+	
 	public IOmlExpression prepareVdmExpression(String vdmExpression) throws ParserException {
 		return omlAstGen.getOmlExpression(vdmExpression);
 	}

@@ -11,7 +11,20 @@
 	<artifactId>proofsupport</artifactId>
 	<name>The Automatic Proof Support</name>
 	<version>1.0.0</version>
-	
+	<developers>
+		<developer>
+			<id>MiguelFerreira</id>
+			<name>Miguel Ferreira</name>
+			<email>m.ferreira@sig.nl</email>
+			<url></url>
+			<organization>Software Improvement Group</organization>
+			<organizationUrl>http://www.sig.nl</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
 	<dependencies>
 		<dependency>
 			<groupId>org.overturetool</groupId>

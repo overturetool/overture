@@ -17,7 +17,7 @@
 							<entry key="doSortModel" value="src/test/resources/testinput/dosort.vpp" />
 							<entry key="explSortModel" value="src/test/resources/testinput/explsort.vpp" />
 							<entry key="emptyModel" value="src/test/resources/testinput/empty.vpp" />
-							<entry key="parseError" value="src/test/resources/testinput/parse_error.vpp" />
+							<entry key="parseErrorModel" value="src/test/resources/testinput/parse_error.vpp" />
 							<entry key="testTheory1" value="src/test/resources/testinput/set.hol" />
 							<entry key="holError" value="src/test/resources/testinput/error.hol" />
 							<entry key="testPogFileNoNewLine" value="src/test/resources/testinput/dosort_test_no_new_line.vpp.pog" />
