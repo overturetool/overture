@@ -91,7 +91,7 @@ public class Oml2Vpp {
           par_26 = cl.getIdentifier();
           var2_25 = Normalize(par_26);
           var1_23 = fileName.concat(var2_25);
-          tmpArg_v_22 = var1_23.concat(new String(".vpp"));
+          tmpArg_v_22 = var1_23.concat(new String(".vdmpp"));
           Util.CreateFile(tmpArg_v_22);
           String tmpArg_v_29 = null;
           tmpArg_v_29 = visitor.result;

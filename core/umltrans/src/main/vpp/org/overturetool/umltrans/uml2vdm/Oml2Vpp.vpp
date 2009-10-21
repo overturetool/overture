@@ -21,7 +21,7 @@ Save(fileName,doc,log) ==
     dcl visitor : Oml2VppVisitor := new Oml2VppVisitor();
   	visitor.useNewLineSeparator(true);
   	visitor.visitClass(cl);
-  	Util`CreateFile(fileName ^ Normalize(cl.getIdentifier())^".vpp");
+  	Util`CreateFile(fileName ^ Normalize(cl.getIdentifier())^".vdmpp");
   	Util`WriteFile(visitor.result);
   	Util`CloseFile();
   	log.endClass(cl.getIdentifier());
