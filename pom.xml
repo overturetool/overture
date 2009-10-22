@@ -84,8 +84,8 @@
 
 
   <scm>
-    <connection>scm:svn:svn:https://overture.svn.sourceforge.net/svnroot/overture/tags/2.0.0</connection>
-    <developerConnection>scm:svn:svn:https://overture.svn.sourceforge.net/svnroot/overture/tags/2.0.0</developerConnection>
+    <connection>scm:svn:https://overture.svn.sourceforge.net/svnroot/overture/tags/2.0.0</connection>
+    <developerConnection>scm:svn:https://overture.svn.sourceforge.net/svnroot/overture/tags/2.0.0</developerConnection>
     <url>svn:https://overture.svn.sourceforge.net/svnroot/overture/tags/2.0.0</url>
   </scm>
 
