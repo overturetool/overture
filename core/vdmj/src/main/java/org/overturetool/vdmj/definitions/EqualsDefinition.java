@@ -64,6 +64,7 @@ public class EqualsDefinition extends Definition
 	public final Expression test;
 
 	public Type expType = null;
+	private Type defType = null;
 	private DefinitionList defs = null;
 
 	public EqualsDefinition(LexLocation location, Pattern pattern, Expression test)
@@ -96,7 +97,7 @@ public class EqualsDefinition extends Definition
 	@Override
 	public Type getType()
 	{
-		return expType != null ? expType : new UnknownType(location);
+		return defType != null ? defType : new UnknownType(location);
 	}
 
 	@Override
@@ -115,6 +116,7 @@ public class EqualsDefinition extends Definition
 		{
 			pattern.typeResolve(base);
 			defs = pattern.getDefinitions(expType, nameScope);
+			defType = expType;
 		}
 		else if (typebind != null)
 		{
@@ -125,6 +127,7 @@ public class EqualsDefinition extends Definition
 				typebind.report(3014, "Expression is not compatible with type bind");
 			}
 
+			defType = typebind.type;	// Effectively a cast
 			defs = typebind.pattern.getDefinitions(expType, nameScope);
 		}
 		else
@@ -143,6 +146,8 @@ public class EqualsDefinition extends Definition
     			{
     				setbind.report(3016, "Expression is not compatible with set bind");
     			}
+
+    			defType = setof;	// Effectively a cast
 			}
 
 			setbind.pattern.typeResolve(base);
@@ -285,7 +290,10 @@ public class EqualsDefinition extends Definition
 		}
 		else if (typebind != null)
 		{
-			// Nothing to do
+			if (!TypeComparator.isSubType(expType, defType))
+			{
+				list.add(new SubTypeObligation(test, defType, expType, ctxt));
+			}
 		}
 		else if (setbind != null)
 		{

@@ -1365,4 +1365,10 @@ public class ClassDefinition extends Definition
 	{
 		return definitions.getProofObligations(ctxt);
 	}
+
+	@Override
+	public boolean isTypeDefinition()
+	{
+		return true;
+	}
 }
