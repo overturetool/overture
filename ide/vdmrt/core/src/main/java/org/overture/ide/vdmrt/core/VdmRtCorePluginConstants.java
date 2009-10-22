@@ -7,5 +7,5 @@ public interface VdmRtCorePluginConstants
 	String CONTENT_TYPE = "org.overture.ide.vdmrt.content-type";
 	String LANGUAGE_NAME = "VDM-RT";
 	
-	String LAUNCH_CONFIGURATION_TYPE_vdmrt_VDMJ = "org.overture.ide.vdmrt.debug.launchConfigurationTypeVDMJ";
+	String LAUNCH_CONFIGURATION_TYPE_vdmrt_VDMJ = "org.overture.ide.vdmrt.debug.core.VdmjVdmRtLaunchConfigurationDelegate";
 }

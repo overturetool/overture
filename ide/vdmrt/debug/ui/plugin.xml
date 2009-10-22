@@ -13,7 +13,7 @@
       	category="org.overture.ide.ui.OvertureGlobalPreferencesPage"
       	class="org.eclipse.dltk.debug.ui.preferences.ScriptDetailFormattersPreferencePage:org.overture.ide.vdmrt.core.nature"
       	id="org.overture.ide.vdmrt.debug.ui.preferences.debug.detailFormatters"
-      	name="Detail formatter" />
+      	name="Detail formatter (VDM-RT)" />
    </extension>
 
 	<!--
@@ -187,7 +187,7 @@
         class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
         style="push"
         actionID="RulerDoubleClick"
-        id="vdmsl.doubleClickBreakpointAction" />
+        id="vdmrt.doubleClickBreakpointAction" />
     </editorContribution>
   </extension>
   
@@ -349,7 +349,7 @@
    <extension point="org.eclipse.ui.menus">
     <menuContribution locationURI="menu:org.eclipse.debug.ui.VariableView">
       <menu
-        label="Variables"
+        label="Variables (VDM-RT)"
         id="org.overture.ide.vdmrt.debug.ui.menu.VariableView" />
     </menuContribution>
     <menuContribution locationURI="menu:org.overture.ide.vdmrt.debug.ui.menu.VariableView">

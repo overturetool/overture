@@ -36,7 +36,7 @@ public class VdmRtDebuggerRunner extends DebuggingEngineRunner {
 	 */
 	@Override
 	protected String getDebugPreferenceQualifier() {
-		return VdmRtDebugConstants.VDMRT_DEBUG_PLUGIN_ID;
+		return VdmRtDebugConstants.DEBUG_CORE_PLUGIN;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class VdmRtDebuggerRunner extends DebuggingEngineRunner {
 	 */
 	@Override
 	protected String getDebuggingEnginePreferenceQualifier() {
-		return "org.overturetool.overturedebugger"; //TODO fix this constant
+		return "org.overture.ide.debug.launching.OvertureDebuggerRunnerFactory"; //TODO fix this constant
 	}
 
 	/* (non-Javadoc)

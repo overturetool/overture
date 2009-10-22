@@ -5,7 +5,7 @@ public interface VdmSlDebugConstants {
 	final String DEBUG_CORE_PLUGIN = "org.overture.ide.debug.core";
 	// VDM++
 	final String VDMSL_DEBUGGING_ENGINE_ID_KEY = "vdmpp_debugging_engine_id";
-	final String VDMSL_DEBUG_PLUGIN_ID = "org.overture.ide.debug.vdmpp";
+	final String VDMSL_DEBUG_PLUGIN_ID = "org.overture.ide.debug.vdmsl";
 	
 
 	// used in the launch configuration

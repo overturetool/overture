@@ -341,7 +341,7 @@
    <extension point="org.eclipse.ui.menus">
     <menuContribution locationURI="menu:org.eclipse.debug.ui.VariableView">
       <menu
-        label="Variables"
+        label="Variables (VDM-SL)"
         id="org.overture.ide.vdmsl.debug.ui.menu.VariableView" />
     </menuContribution>
     <menuContribution locationURI="menu:org.overture.ide.vdmsl.debug.ui.menu.VariableView">

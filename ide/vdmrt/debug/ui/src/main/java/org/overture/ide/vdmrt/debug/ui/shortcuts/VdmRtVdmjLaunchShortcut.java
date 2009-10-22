@@ -9,7 +9,7 @@ public class VdmRtVdmjLaunchShortcut extends AbstractScriptLaunchShortcut {
 
 	@Override
 	protected ILaunchConfigurationType getConfigurationType() {
-		return getLaunchManager().getLaunchConfigurationType(VdmRtDebugConstants.LAUNCH_CONFIGURATION_TYPE_VDMSL_VDMJ);
+		return getLaunchManager().getLaunchConfigurationType(VdmRtDebugConstants.LAUNCH_CONFIGURATION_TYPE_VDMRT_VDMJ);
 	}
 
 	@Override
