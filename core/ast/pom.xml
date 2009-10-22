@@ -2,12 +2,12 @@
   <parent>
     
     <groupId>org.overturetool</groupId><artifactId>core</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.overturetool</groupId>
   <artifactId>ast</artifactId>
-  <version>1.0.1</version>
+  <version>2.0.0</version>
   <name>The Overture Abstract Syntax</name>
   <build>
   	<plugins>

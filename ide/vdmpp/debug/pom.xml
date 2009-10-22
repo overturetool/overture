@@ -3,13 +3,13 @@
   <parent>
     <groupId>org.overture.ide</groupId>
   <artifactId>org.overture.ide.vdmpp</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
   </parent>
 
   <groupId>org.overture.ide.vdmpp</groupId>
   <artifactId>org.overture.ide.vdmpp.debug</artifactId>
   <packaging>pom</packaging>
-  <version>1.0.0</version>
+  <version>2.0.0</version>
   <name>Overture IDE VDM-PP Debug Top-level</name>
   <description>Top level of the Overture IDE Debug for VDM-PP</description>
   

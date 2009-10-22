@@ -2,13 +2,13 @@
 	<parent>
 		<artifactId>core</artifactId>
 		<groupId>org.overturetool</groupId>
-		<version>1.0.0</version>
+		<version>2.0.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overturetool</groupId>
 	<artifactId>proofsupport</artifactId>
 	<name>The Automatic Proof Support</name>
-	<version>1.0.0</version>
+	<version>2.0.0</version>
 	<developers>
 		<developer>
 			<id>MiguelFerreira</id>
@@ -27,7 +27,7 @@
 		<dependency>
 			<groupId>org.overturetool</groupId>
 			<artifactId>potrans</artifactId>
-			<version>1.0.0</version>
+			<version>2.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overturetool</groupId>
@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>org.overturetool</groupId>
 			<artifactId>parser</artifactId>
-			<version>1.0.0</version>
+			<version>2.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>args4j</groupId>

@@ -9,7 +9,7 @@
   <groupId>org.overture</groupId>
   <artifactId>ide</artifactId>
   <packaging>pom</packaging>
-  <version>1.0.0</version>
+  <version>2.0.0</version>
   <name>Overture IDE Top-level</name>
   <description>Super POM for all IDE (Eclipse) artifacts.</description>
 
@@ -111,7 +111,7 @@
       <plugin>
       	<groupId>org.overturetool.tools.maven-pst</groupId>
       	<artifactId>maven-psteclipse-plugin</artifactId>
-      	<version>1.0.7</version>    	
+      	<version>2.0.0</version>    	
         <extensions>true</extensions>
         <configuration>
           <logModifications>true</logModifications>

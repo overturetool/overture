@@ -2,13 +2,13 @@
   <parent>
     <groupId>org.overturetool.tools</groupId>
     <artifactId>tools</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.overturetool.tools</groupId>
   <artifactId>vdmt</artifactId>
   <packaging>maven-plugin</packaging>
-  <version>1.0.6</version>
+  <version>2.0.0</version>
   <name>VDM Tools integration</name>
   
   <build>
@@ -49,12 +49,12 @@
     <dependency>
       <groupId>org.overturetool</groupId>
       <artifactId>vdmtoolsapi</artifactId>
-      <version>1.0.0</version>
+      <version>2.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.overturetool</groupId>
       <artifactId>stdlib</artifactId>
-      <version>1.0.1</version>
+      <version>2.0.0</version>
     </dependency>
    
 
