@@ -5,22 +5,19 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.builder.IScriptBuilder;
 import org.overture.ide.ast.AstManager;
-import org.overture.ide.ast.RootNode;
 import org.overture.ide.builders.core.VdmSlBuilderCorePluginConstants;
 
 public class BuildParticipant implements IScriptBuilder {
 	// This must be the ID from your extension point
-	private static final String BUILDER_ID = "org.overture.ide.builder";
+	public static final String BUILDER_ID = "org.overture.ide.builder";
 
 	public BuildParticipant() {
 		
@@ -34,47 +31,33 @@ public class BuildParticipant implements IScriptBuilder {
 		final IProject currentProject = project.getProject();
 		
 		final List<IStatus> statusList = new Vector<IStatus>();
-		try {
-			IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(
-					BUILDER_ID);
-			for (IConfigurationElement e : config) {
-				final Object o = e.createExecutableExtension("class");
-				if (o instanceof AbstractBuilder) {
-					ISafeRunnable runnable = new ISafeRunnable() {
+		
+	final	SafeBuilder builder = new SafeBuilder(currentProject,statusList,monitor);
+		
+		builder.start();
+		
+		
+		ISafeRunnable runnable = new ISafeRunnable() {
 
-						public void handleException(Throwable exception) {
-							exception.printStackTrace();
+			public void handleException(Throwable exception) {
+				exception.printStackTrace();
 
-						}
+			}
 
-						public void run() throws Exception {
-							AbstractBuilder builder = (AbstractBuilder) o;
-
-							if (currentProject.hasNature(builder.getNatureId())) {
-
-								AbstractBuilder.parseMissingFiles(currentProject,builder.getNatureId(),monitor);
-
-								final List ast = (List) AstManager.instance().getAstList(
-										currentProject, builder.getNatureId());
-
-								monitor.subTask("Type checking");
-								statusList.add(builder.buileModelElements(
-										currentProject, ast));
-								//  mark ast root as type checked
-								RootNode root =AstManager.instance().getRootNode(currentProject, builder.getNatureId());
-								if(root!=null)
-									root.setChecked(statusList.get(statusList.size()-1).getCode()< IStatus.ERROR);
-							}
-						}
-
-					};
-					SafeRunner.run(runnable);
+			public void run() throws Exception {
+				while(builder.isAlive())
+				{
+				Thread.sleep(500);
+				if(monitor.isCanceled())
+					builder.stop();
 				}
 			}
-		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
-		}
 
+		};
+		SafeRunner.run(runnable);
+		
+		
+		
 		for (IStatus s : statusList) {
 			if (!s.isOK())
 				return s;
@@ -97,7 +80,9 @@ public class BuildParticipant implements IScriptBuilder {
 
 	public void clean(IScriptProject project, IProgressMonitor monitor) {
 		System.out.println("clean");
-		// TODO Auto-generated method stub
+		monitor.beginTask("Cleaning project: "+ project.getProject().getName(), IProgressMonitor.UNKNOWN);
+		AstManager.instance().clean(project.getProject());
+		monitor.done();
 
 	}
 

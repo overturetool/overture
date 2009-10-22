@@ -1,0 +1,39 @@
+\begin{vdm_al}
+class AstShorthand is subclass of AstCore
+
+instance variables
+  private lhs  : seq of char;
+  private rhs  : AstType;
+  private isqt : bool;
+  private istn : bool
+
+operations
+  public AstShorthand: seq of char * AstType ==> AstShorthand
+  AstShorthand (plhs, prhs) == ( lhs := plhs; rhs := prhs; isqt := false; istn := false );
+
+  public getName: () ==> seq of char
+  getName () == return stripUnderscore(lhs);
+  
+  public getType: () ==> AstType
+  getType () == return rhs;
+  
+  public setType: AstType ==> ()
+  setType (ptp) == rhs := ptp;
+  
+  public setQuotedTypeUnion: () ==> ()
+  setQuotedTypeUnion () == isqt := true;
+  
+  public isQuotedTypeUnion: () ==> bool
+  isQuotedTypeUnion () == return isqt;
+  
+  public setTypeNameUnion: () ==> ()
+  setTypeNameUnion () == istn := true;
+  
+  public isTypeNameUnion: () ==> bool
+  isTypeNameUnion () == return istn;
+  
+  public accept: AstVisitor ==> ()
+  accept (pv) == pv.visit(self)
+    
+end AstShorthand
+\end{vdm_al}

@@ -1,0 +1,140 @@
+\begin{vdm_al}
+class AsciiVisitor is subclass of AstVisitor
+
+instance variables
+  static level : nat := 0;
+  public res : seq of char := []
+
+operations
+  pushLevel: () ==> ()
+  pushLevel () == level := level + 2;
+  
+  popLevel: () ==> ()
+  popLevel () == level := level - 2;
+  
+  nl: () ==> seq of char
+  nl () ==
+    ( dcl str : seq of char := "\n";
+      for i = 1 to level do str := str ^ " ";
+      return str );
+
+  public visit : AstDefinitions ==> ()
+  visit (ad) == 
+    ( res := res ^ "mk_ AstDefinitions([";
+      -- print the definitions
+      if card ad.getComposites() > 0
+      then ( dcl cmps : set of seq of char := ad.getComposites();
+             pushLevel();
+             while card cmps > 0 do
+               ( res := res ^ nl();
+                 let cmp in set cmps in
+                   ( ad.getComposite(cmp).accept(self);
+                     cmps := cmps \ {cmp} );
+                 if card cmps > 1
+                 then res := res ^ "," );
+             popLevel();
+             res := res ^ nl() );
+      res := res ^ "],[";
+      -- print the shorthands
+      if card ad.getShorthands() > 0
+      then ( dcl shs : set of seq of char := ad.getShorthands();
+             pushLevel();
+             while card shs > 0 do
+               ( res := res ^ nl();
+                 let sh in set shs in
+                   ( ad.getShorthand(sh).accept(self);
+                     shs := shs \ {sh} );
+                 if card shs > 1
+                 then res := res ^ "," );
+             popLevel();
+             res := res ^ nl() );
+      res := res ^ "])\n";
+      res := res ^ "prefix = \"" ^ ad.getPrefix() ^ "\"\n";
+      res := res ^ "package = \"" ^ ad.getPackage() ^ "\"\n";
+      res := res ^ "directory = \"" ^ ad.getDirectory() ^ "\"");
+           
+  public visit : AstShorthand ==> ()
+  visit (ash) ==
+    ( res := res ^ "mk_ AstShorthand(";
+      pushLevel();
+      res := res ^ "\"" ^ ash.getName() ^ "\"," ^ nl();
+      ash.getType().accept(self);
+      res := res ^ ")";
+      popLevel() );
+  
+  public visit : AstComposite ==> ()
+  visit (ac) ==
+    ( dcl fields : seq of AstField := ac.getFields();
+      res := res ^ "mk_ AstComposite(";
+      res := res ^ "\"" ^ ac.getName() ^ "\",[";
+      if len fields > 0
+      then ( pushLevel();
+             for i = 1 to len fields - 1 do
+               ( res := res ^ nl();
+                 fields(i).accept(self);
+                 res := res ^ "," );
+             res := res ^ nl();
+             fields(len fields).accept(self);
+             popLevel();
+             res := res ^ nl() );
+      res := res ^ "])" );
+  
+  public visit : AstField ==> ()
+  visit (af) ==
+    ( res := res ^ "mk_ AstField(";
+      pushLevel();
+      res := res ^ "\"" ^ af.getName() ^ "\"," ^ nl();
+      af.getType().accept(self);
+      res := res ^ ")";
+      popLevel() );
+  
+  public visit : AstTypeName ==> ()
+  visit (at) == 
+    ( res := res ^ "mk_ AstTypeName(";
+      res := res ^ "\"" ^ at.getName() ^ "\")" );
+  
+  public visit : AstQuotedType ==> ()
+  visit (aqt) ==
+    ( res := res ^ "mk_ AstQuotedType(";
+      res := res ^ "\"" ^ aqt.getName() ^ "\")" );
+  
+  public visit : AstUnionType ==> ()
+  visit (aut) ==
+    ( res := res ^ "mk_ AstUnionType(";
+      pushLevel();
+      res := res ^ nl();
+      aut.getLhs().accept(self);
+      res := res ^ "," ^ nl();
+      aut.getRhs().accept(self);
+      res := res ^ ")";
+      popLevel() );
+  
+  public visit : AstSeqOfType ==> ()
+  visit (asot) ==
+    ( res := res ^ "mk_ AstSeqOfType(";
+      asot.getType().accept(self);
+      res := res ^ ")"  );
+      
+  public visit : AstSetOfType ==> ()
+  visit (asot) ==
+    ( res := res ^ "mk_ AstSetOfType(";
+      asot.getType().accept(self);
+      res := res ^ ")"  );
+      
+  public visit : AstOptionalType ==> ()
+  visit (aopt) == 
+    ( res := res ^ "mk_ AstOptionalType(";
+      aopt.getType().accept(self);
+      res := res ^ ")" );
+  
+  public visit : AstMapType ==> ()
+  visit (amt) ==
+    ( res := res ^ "mk_ AstMapType(";
+      amt.getDomType().accept(self);
+      res := res ^ ",";
+      amt.getRngType().accept(self);
+      res := res ^ ")" );
+  
+end AsciiVisitor
+\end{vdm_al}
+

@@ -108,32 +108,46 @@ public class ProjectUtility {
 	 *            the File to look up
 	 * @return a new IFile representing the file in the eclipse filesystem
 	 */
-	@SuppressWarnings("deprecation")
 	public static IFile findIFile(IProject project, File file) {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IPath location = Path.fromOSString(file.getAbsolutePath());
 		IFile ifile = workspace.getRoot().getFileForLocation(location);
 
 		if (ifile == null) {
-			IPath absolutePath = new Path(file.getAbsolutePath());
 
-			for (IFile selectedFile : workspace.getRoot().findFilesForLocation(
-					absolutePath)) {
-				if (selectedFile.getProject().equals(project))
-					return selectedFile;
-			}
+			IPath absolutePath = new Path(file.getAbsolutePath());
+			// check if the project contains a IFile which maps to the same filesystem location
+			try {
+				for (IFile f : getFiles(project)) {
+					if(f.getLocation().equals(absolutePath))
+						return f;
+				}
+			} catch (CoreException e1) {}
+
+			// project does not contain this file, this means that the file has been include elsewhere and a link will be created to the file instead.
+			try {
+				linkFileToProject(project, file);
+			} catch (CoreException e) {	}
+
 		}
 		return ifile;
+	}
+	
+	public static void linkFileToProject(IProject project, File file) throws CoreException
+	{
+		IPath absolutePath = new Path(file.getAbsolutePath());
+		IFile ifile = project.getFile(absolutePath.lastSegment());
+		ifile.createLink(absolutePath, IResource.NONE, null);
 	}
 
 	public static File getFile(IProject project, IPath path) {
 		return project.getFile(path.removeFirstSegments(1)).getLocation().toFile();
 	}
-	
-	public static File getFile(IProject project,IFile file) {
+
+	public static File getFile(IProject project, IFile file) {
 		Path path = new Path(project.getFullPath().addTrailingSeparator().toString()
 				+ file.getProjectRelativePath().toString());
-		return getFile(project,path);
-	}	
-	
+		return getFile(project, path);
+	}
+
 }

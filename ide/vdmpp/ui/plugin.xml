@@ -13,6 +13,7 @@
       <wizard
             category="org.overture.ide.category"
             class="org.overture.ide.ui.wizards.CreateVdmProjectWizard:org.overture.ide.vdmpp.core.nature"
+            icon="icons/cview16/vdmpp_file_tsk.gif"
             id="org.overture.ide.vdmpp.createprojectwizard"
             name="VDM-PP Project"
             project="true">
@@ -35,7 +36,7 @@
             class="org.overture.ide.vdmpp.ui.internal.editor.VdmPpEditor"
             contributorClass="org.eclipse.dltk.internal.ui.editor.SourceModuleEditorActionContributor"
             default="false"
-            icon="icons/cview16/vdmsl_file_tsk.gif"
+            icon="icons/cview16/vdmpp_file_tsk.gif"
             id="org.overture.ide.vdmpp.ui.internal.editor.VdmPpEditor"
             name="VDM PP Editor">
          <contentTypeBinding contentTypeId="org.overture.ide.vdmpp.content-type"/>

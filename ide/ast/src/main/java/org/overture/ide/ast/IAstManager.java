@@ -72,4 +72,10 @@ public interface IAstManager
 	
 	void setAstAsTypeChecked(IProject project, String nature);
 	
+	
+	/**
+	 * Removed all AST info from the current project 
+	 * @param project the project which should be cleaned
+	 */
+	void clean(IProject project);
 }

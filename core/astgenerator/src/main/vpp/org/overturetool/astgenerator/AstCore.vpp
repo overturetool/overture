@@ -1,0 +1,43 @@
+\begin{vdm_al}
+class AstCore
+
+values
+  lower : seq of char = "abcdefghijklmnopqrstuvwxyz";
+  upper : seq of char = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  
+functions
+  public toUpper: char -> char
+  toUpper (pch) ==
+    if pch in set elems lower
+    then let i in set inds lower be st lower(i) = pch in upper(i)
+    else pch
+    
+operations    
+  public stripUnderscore: seq of char ==> seq of char
+  stripUnderscore (pstr) ==
+    ( dcl str : seq of char := [],
+          cnt : nat := 1,
+          up : bool := true;
+      while cnt <= len pstr do
+        if pstr(cnt) = '_'
+        then ( up := true;
+               cnt := cnt + 1)
+        else ( if up
+               then str := str ^ [toUpper(pstr(cnt))]
+               else str := str ^ [pstr(cnt)];
+               cnt := cnt + 1;
+               up := false );
+      return str )
+    post len RESULT > 0;
+                           
+  public stringUpper: seq of char ==> seq of char
+  stringUpper (pstr) ==
+    ( dcl str : seq of char := [];
+      for ch in pstr do str := str ^ [toUpper(ch)];
+      return str );
+
+  public accept: AstVisitor ==> ()
+  accept (-) == skip
+  
+end AstCore
+\end{vdm_al}

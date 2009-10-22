@@ -1,0 +1,39 @@
+\begin{vdm_al}
+class AstVisitor
+
+operations
+  public visit : AstDefinitions ==> ()
+  visit (-) == skip;
+  
+  public visit : AstShorthand ==> ()
+  visit (-) == skip;
+  
+  public visit : AstComposite ==> ()
+  visit (-) == skip;
+  
+  public visit : AstField ==> ()
+  visit (-) == skip;
+  
+  public visit : AstTypeName ==> ()
+  visit (-) == skip;
+  
+  public visit : AstQuotedType ==> ()
+  visit (-) == skip;
+  
+  public visit : AstUnionType ==> ()
+  visit (-) == skip;
+  
+  public visit : AstSeqOfType ==> ()
+  visit (-) == skip;
+  
+  public visit : AstSetOfType ==> ()
+  visit (-) == skip;
+  
+  public visit : AstOptionalType ==> ()
+  visit (-) == skip;
+  
+  public visit : AstMapType ==> ()
+  visit (-) == skip
+  
+end AstVisitor
+\end{vdm_al}

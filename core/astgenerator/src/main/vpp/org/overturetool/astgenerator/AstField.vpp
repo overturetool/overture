@@ -1,0 +1,28 @@
+\begin{vdm_al}
+class AstField is subclass of AstCore
+
+instance variables
+  private lhs : seq of char;
+  private rhs : AstType
+  
+operations
+  public AstField: seq of char * AstType ==> AstField
+  AstField (plhs, prhs) == ( lhs := plhs; rhs := prhs );
+  
+  public getName: () ==> seq of char
+  getName () == return stripUnderscore(lhs);
+  
+  public getRawName: () ==> seq of char
+  getRawName () == return lhs;
+  
+  public getType: () ==> AstType
+  getType () == return rhs;
+  
+  public setType: AstType ==> ()
+  setType (ptp) == rhs := ptp;
+  
+  public accept: AstVisitor ==> ()
+  accept (pv) == pv.visit(self)
+    
+end AstField
+\end{vdm_al}

@@ -1,0 +1,34 @@
+\begin{vdm_al}
+class AstTypeName is subclass of AstType
+
+instance variables
+  private name : seq of char
+  
+operations
+  public AstTypeName: seq of char ==> AstTypeName
+  AstTypeName (pname) == name := pname;
+  
+  public getName: () ==> seq of char
+  getName () == return stripUnderscore(name);
+  
+  public accept: AstVisitor ==> ()
+  accept (pv) == pv.visit(self);
+  
+  public isBoolType: () ==> bool
+  isBoolType () == return name = "bool";
+  
+  public isCharType: () ==> bool
+  isCharType () == return name = "char";
+      
+  public isNatType: () ==> bool
+  isNatType () == return name = "nat";
+      
+  public isRealType: () ==> bool
+  isRealType () == return name = "real";
+  
+  public isTypeName: () ==> bool
+  isTypeName () == return not isBasicType()
+       
+end AstTypeName
+\end{vdm_al}
+

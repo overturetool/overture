@@ -13,6 +13,7 @@
       <wizard
             category="org.overture.ide.category"
             class="org.overture.ide.ui.wizards.CreateVdmProjectWizard:org.overture.ide.vdmrt.core.nature"
+            icon="icons/cview16/vdmrt_file_tsk.gif"
             id="org.overture.ide.vdmrt.createprojectwizard"
             name="VDM-RT Project"
             project="true">

@@ -3,6 +3,7 @@ package org.overture.ide.utility;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
@@ -18,7 +19,12 @@ public class ConsoleWriter extends PrintWriter
 	private Shell getShell()
 	{
 		if(shell==null)
+			try{
 			shell = new Shell();
+			}catch(SWTException e)
+			{
+				
+			}
 		return shell;
 	}
 	
@@ -37,7 +43,11 @@ public class ConsoleWriter extends PrintWriter
 	@Override
 	public void println(String x)
 	{
-		ConsolePrint(getShell(), x);
+		Shell s = getShell();
+		if(s==null)
+			System.out.println(x);
+		else
+			ConsolePrint(s, x);
 	}
 	
 	public void Show()

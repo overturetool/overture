@@ -1,0 +1,2 @@
+d:\dev\byaccj\yacc.exe -d -Jclass=AstParser -Jpackage=nl.marcelverhoef.vdm.ast -Jthrows=java.io.IOException,jp.co.csk.vdm.toolbox.VDM.CGException -Jnorun VdmAst.y
+d:\dev\jflex-1.4.1\bin\jflex -nobak -q VdmAst.l

@@ -1,0 +1,106 @@
+\begin{vdm_al}
+class AstDefinitions is subclass of AstCore
+
+instance variables
+  private composites : map seq of char to AstComposite;
+  private shorthands : map seq of char to AstShorthand;
+  private inherit    : map seq of char to seq of char;
+  private prefix     : seq of char;
+  private package    : seq of seq of char;
+  private directory  : seq of char;
+  private top		 : seq of seq of char;
+  
+operations
+  public AstDefinitions: () ==> AstDefinitions
+  AstDefinitions () ==
+    ( composites := {|->}; shorthands := {|->}; inherit := {|->};
+      package := []; directory := []; prefix := []; top := [] );
+  
+  public addComposite: AstComposite ==> ()
+  addComposite (pcomposite) ==
+    if pcomposite.getName() not in set dom composites
+    then composites := composites munion {pcomposite.getName() |-> pcomposite};
+  
+  public addShorthand: AstShorthand ==> ()
+  addShorthand (pshorthand) ==
+    if pshorthand.getName() not in set dom shorthands
+    then shorthands := shorthands munion {pshorthand.getName() |-> pshorthand};
+  
+  public addInherit: seq of char * seq of char ==> ()
+  addInherit (pkey,pval) ==
+    if pkey not in set dom inherit
+    then inherit := inherit munion {pkey |-> pval};
+    
+  public getInherit: seq of char ==> seq of char
+  getInherit (pkey) == return inherit(pkey)
+    pre hasInherit(pkey);
+  
+  public getInheritPrefix: seq of char ==> seq of char
+  getInheritPrefix (pkey) == return getPrefix() ^ getInherit(pkey);
+  
+  public hasInherit: seq of char ==> bool
+  hasInherit (pkey) == return pkey in set dom inherit;
+  
+  public setPrefix: seq of char ==> ()
+  setPrefix (pstr) == prefix := pstr;
+  
+  public getPrefix: () ==> seq of char
+  getPrefix () == return prefix;
+  
+  public setPackage: seq of seq of char ==> ()
+  setPackage (psstr) == package := psstr;
+  
+  public getRawPackage: () ==> seq of seq of char
+  getRawPackage () == return package;
+
+  public getPackage: () ==> seq of char
+  getPackage () ==
+    ( dcl str : seq of char := [];
+      for pstr in package do
+        if str = []
+        then str := pstr
+        else str := str ^ "." ^ pstr;
+      return str );
+  
+  public setDirectory: seq of char ==> ()
+  setDirectory(pdir) == directory := pdir;
+  
+  public getDirectory: () ==> seq of char
+  getDirectory () == return directory;
+  
+  public getShorthands: () ==> set of seq of char
+  getShorthands () == return dom shorthands;
+  
+  public getUnionShorthands: () ==> set of seq of char
+  getUnionShorthands() ==
+    return { id | id in set dom shorthands &
+             shorthands(id).getType().isUnionType() };
+
+  public getShorthand: seq of char ==> AstShorthand
+  getShorthand (pshnm) == return shorthands(pshnm)
+    pre isShorthand(pshnm);
+  
+  public isShorthand: seq of char ==> bool
+  isShorthand (pshnm) == return pshnm in set dom shorthands;
+  
+  public getComposites: () ==> set of seq of char
+  getComposites () == return dom composites;
+
+  public getComposite: seq of char ==> AstComposite
+  getComposite (pcpnm) == return composites(pcpnm)
+    pre isComposite(pcpnm);
+    
+  public isComposite: seq of char ==> bool
+  isComposite (pcpnm) == return pcpnm in set dom composites;
+  
+  public setTop: seq of seq of char ==> ()
+  setTop (ptop) == top := ptop;
+  
+  public getTop: () ==> seq of seq of char
+  getTop () == return top;
+    
+  public accept: AstVisitor ==> ()
+  accept (pv) == pv.visit(self)
+                
+end AstDefinitions
+\end{vdm_al}

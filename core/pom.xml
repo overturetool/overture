@@ -17,6 +17,7 @@
     <module>proofsupport</module>
     <module>stdlib</module>
     <module>ast</module>
+    <module>astgenerator</module>
     <module>vdmunit</module>
     <module>parser</module>
 

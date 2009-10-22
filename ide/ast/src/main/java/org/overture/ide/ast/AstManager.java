@@ -108,4 +108,10 @@ public class AstManager implements IAstManager {
 
 	}
 
+	public void clean(IProject project) {
+		if(asts.get(project)!=null)
+			asts.remove(project);
+		
+	}
+
 }

@@ -13,6 +13,7 @@
       <wizard
             category="org.overture.ide.category"
             class="org.overture.ide.ui.wizards.CreateVdmProjectWizard:org.overture.ide.vdmsl.core.nature"
+            icon="icons/cview16/vdmsl_file_tsk.gif"
             id="org.overture.ide.vdmsl.createprojectwizard"
             name="VDM-SL Project"
             project="true">

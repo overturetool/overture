@@ -1,0 +1,29 @@
+\begin{vdm_al}
+class AstComposite is subclass of AstCore
+
+instance variables
+  private name : seq of char;
+  private fields : seq of AstField;
+  private adts : bool
+  
+operations
+  public AstComposite: seq of char * seq of AstField ==> AstComposite
+  AstComposite (pname, pfields) == ( name := pname; fields := pfields; adts := false );
+  
+  public getName: () ==> seq of char
+  getName () == return stripUnderscore(name);
+  
+  public getFields: () ==> seq of AstField
+  getFields () == return fields;
+  
+  public setAdts: bool ==> ()
+  setAdts (padts) == adts := padts;
+  
+  public hasAdts: () ==> bool
+  hasAdts () == return adts;
+  
+  public accept: AstVisitor ==> ()
+  accept (pv) == pv.visit(self)
+      
+end AstComposite
+\end{vdm_al}

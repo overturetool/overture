@@ -17,7 +17,7 @@ Usage
  Execute the goal like shown below for gen check: 
  
 +-------------------------------+
-mvn gen
+mvn astgen:gen
 +-------------------------------+
 
 * Enable the plugin in the POM file

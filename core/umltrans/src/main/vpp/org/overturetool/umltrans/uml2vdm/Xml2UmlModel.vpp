@@ -10,6 +10,22 @@ public String = seq of char;
 public QualifierInfo ::
                        classId : String
                        qualifier : String;
+                       
+values
+
+eaTypePrefixes : set of String = {
+"EAJava_", 
+"EAVisual Basic_", 
+"EAActionScript_", 
+"EAnone_", 
+"EAC_", 
+"EAVBNet_", 
+"EAC++_", 
+"EAPHP_", 
+"EAPython_", 
+"EAC#_"};
+
+
 instance variables
 
 public result : [IUmlModel] := nil;
@@ -63,12 +79,12 @@ VisitXmlDocument (doc) ==
   let pes = package.entities.entities
   in
   (
-    classesTypeMap := classesTypeMap ++ {getAttribute(pes(i),"xmi:id").val |-> getAttribute(pes(i),"name").val | i in set inds pes & 
+    classesTypeMap := classesTypeMap ++ {getAttribute(pes(i),"xmi:id").val |-> getNameAttribute(pes(i)) | i in set inds pes & 
                    isAttributeType(pes(i),"uml:Class") };
     
     classes := classes union {exstractClass(pes(i)) | i in set inds pes & 
                    isAttributeType(pes(i),"uml:Class") and
-                   (getAttribute(pes(i),"name").val not in set primiticeTypes)};
+                   (getNameAttribute(pes(i)) not in set primiticeTypes)};
                    
     let connectors : set of XmlEntity =
                               dunion 
@@ -100,14 +116,14 @@ VisitXmlDocument (doc) ==
                    isAttributeType(pes(i),"uml:Collaboration")};
   );
     
-  result := new UmlModel(getAttribute(package,"name").val,
+  result := new UmlModel(getNameAttribute(package),
                          classes union associations union constraints union collaborations);
 
 );
 -- Exstract UML class from XML element
 private exstractClass : XmlEntity ==> IUmlClass
 exstractClass(e) ==
-  let name       : seq of char  = getAttribute(e,"name").val,
+  let name       : seq of char  = getNameAttribute(e),
       
       dBlocks    : (set of IUmlDefinitionBlock) =build_defBlock(e,name),
       abstract   : bool = if hasAttribute(e,"isAbstract") then StdLib`StringToBool(getAttribute(e,"isAbstract").val) else false,
@@ -167,7 +183,7 @@ build_defBlock(e,name) ==
 private build_Property : XmlEntity * String * [String] ==> IUmlProperty
 build_Property(e,ownerClass,associationId) ==
   let name         : seq of char = if hasAttribute(e,"name")
-                                   then getAttribute(e,"name").val
+                                   then getNameAttribute(e)
                                    else "",
       visibility   : (IUmlVisibilityKind) = if hasAttribute(e,"visibility") 
                                             then GetVisibility(getAttribute(e,"visibility")) 
@@ -247,7 +263,7 @@ in
 -- Create operation from xml element element
 private build_Operation : XmlEntity ==> IUmlOperation
 build_Operation(e) ==
-  let name         : seq of char = getAttribute(e,"name").val,
+  let name         : seq of char = getNameAttribute(e),
       visibility   : (IUmlVisibilityKind) = GetVisibility(getAttribute(e,"visibility")), 
       multiplicity : IUmlMultiplicityElement = new UmlMultiplicityElement(false,false,0,0), --FIXME this is added since the static model isend implemented with this yet
       isQuery      : bool = if hasAttribute(e,"isQuery") then StdLib`StringToBool(getAttribute(e,"isQuery").val) else false,
@@ -274,7 +290,7 @@ pre isAttributeType(e,"uml:Operation");
 protected CreateOperstionParameters : XmlEntity ==> [seq of IUmlParameter]
 CreateOperstionParameters(e) ==
   let elist = e.entities.entities,
-      parms = [new UmlParameter(getAttribute(elist(i),"name").val,
+      parms = [new UmlParameter(getNameAttribute(elist(i)),
                              lookUpType(elist(i)),-- getAttribute(p,"xmi:type").val
                              new UmlMultiplicityElement(false,false,1,1),
                              "",
@@ -331,7 +347,7 @@ build_Association(e) ==
                   & hasAttribute(p,"name") and 
                     len getAttribute(p,"name").val>0},
       name : seq of char = if hasAttribute(e,"name")
-                           then getAttribute(e,"name").val
+                           then getNameAttribute(e)
                            else "",
       id : String = getAttribute(e,"xmi:id").val
   in
@@ -424,7 +440,7 @@ findType(name) ==
                      else nil 
       in
         cases typeName:
-        (nil) -> (log.warn("Issuing unknown type: "^name);return new UmlClassNameType(name)),
+        (nil) -> (log.warn("Issuing unknown type: "^name);return new UmlClassNameType(removeEaPrefix(name))),
         -- (nil)-> return new UmlIntegerType(),
          ("String")-> return new UmlStringType(),
          ("int")-> return new UmlIntegerType(),
@@ -455,7 +471,7 @@ VisitXmlEntity (e) ==
 ( 
   classes := classes union {exstractClass(entity) | entity in set {e} & 
                    isAttributeType(entity,"uml:Class") and
-                   (getAttribute(entity,"name").val not in set primiticeTypes)};
+                   (getNameAttribute(entity) not in set primiticeTypes)};
                    
   associations := associations union {build_Association(entity) | entity in set {e} & 
                    isAttributeType(entity,"uml:Association")};
@@ -550,13 +566,13 @@ build_Interaction(e) ==
   (
       
       lifeLineMap := lifeLineMap ++ {getAttribute(p,"xmi:id").val |-> 
-                                       new UmlLifeLine(getAttribute(p,"name").val,
+                                       new UmlLifeLine(getNameAttribute(p),
                                            props(getAttribute(p,"represents").val).getType()) 
                                      | p in set elems elist 
                                      & p.name = "lifeline"};
 
       let
-      name : seq of char = getAttribute(e,"name").val,
+      name : seq of char = getNameAttribute(e),
       lifeLines : set of IUmlLifeLine = rng lifeLineMap,
       mosfragments : set of IUmlInteractionFragment = 
         {build_Fragment(f) | f in set elems elist 
@@ -624,7 +640,7 @@ pre isAttributeType(e,"uml:MessageOccurrenceSpecification") or
 -- Create MOS from XmlElement
 private build_Mos : XmlEntity ==> IUmlMos
 build_Mos(e) ==
-  let name = getAttribute(e,"name").val,
+  let name = getNameAttribute(e),
       message : [IUmlMessage] = nil,
       lifeLines : IUmlLifeLine = let l in set {lifeLineMap(c) | c in set elems GetCovered(e)} in l,
       id = getAttribute(e,"xmi:id").val,
@@ -643,7 +659,7 @@ pre isAttributeType(e,"uml:MessageOccurrenceSpecification");
 -- Create BES from XmlElement
 private build_Bes : XmlEntity ==> IUmlBes
 build_Bes(e) ==
-  let name               = getAttribute(e,"name").val,
+  let name               = getNameAttribute(e),
       startOc : IUmlMos  = mosMap(getAttribute(e,"start").val),
       finishOc : IUmlMos = mosMap(getAttribute(e,"finish").val),
       covered : set of IUmlLifeLine = {lifeLineMap(c) | c in set elems GetCovered(e)},
@@ -663,7 +679,7 @@ pre isAttributeType(e,"uml:BehaviorExecutionSpecification");
 private build_Combi : XmlEntity ==> IUmlCombinedFragment
 build_Combi(e) ==
   let elist = e.entities.entities,
-      name               = getAttribute(e,"name").val,
+      name               = getNameAttribute(e),
       interactionOperatorKind : IUmlInteractionOperatorKind = GetIntOperationKind(getAttribute(e,"interactionOperator").val),
       operands : seq of IUmlInteractionOperand = [build_Operand(elist(i)) | i in set inds elist & elist(i).name ="operand"  ],
       covered : set of IUmlLifeLine = {lifeLineMap(c) | c in set elems GetCovered(e)},
@@ -708,6 +724,22 @@ build_Operand(e) ==
                        guard) 
 
 pre e.name = "operand";
+
+-- remove EA prefix from name
+public removeEaPrefix : String ==> String
+removeEaPrefix(name) == return name;
+/*
+* if(name !=null && name.startsWith("EA") && name.contains("_") && name.indexOf('_')+1 < name.length())
+*	  {
+*		  log.warn("Removing: " + name.substring(0,name.indexOf('_')+1)+" from: "+ name + " => "+name.substring(name.indexOf('_')+1));
+*		  return name.substring(name.indexOf('_')+1);
+*	  }
+ *   return name;
+*/
+
+-- gets the name attribyte but removes EA prefixes first
+public getNameAttribute : XmlEntity ==> String
+getNameAttribute(e) == return removeEaPrefix(getAttribute(e,"name").val)
 
 functions
 -- Get covered extension. Exstracts covered string

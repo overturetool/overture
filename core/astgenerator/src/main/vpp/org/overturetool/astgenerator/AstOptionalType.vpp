@@ -1,0 +1,21 @@
+\begin{vdm_al}
+class AstOptionalType is subclass of AstType
+
+instance variables
+  private opttype : AstType
+  
+operations
+  public AstOptionalType: AstType ==> AstOptionalType
+  AstOptionalType (popttype) == opttype := popttype;
+
+  public getType: () ==> AstType
+  getType () == return opttype;
+  
+  public accept: AstVisitor ==> ()
+  accept (pv) == pv.visit(self);
+  
+  public isOptionalType: () ==> bool
+  isOptionalType () == return true
+  
+end AstOptionalType
+\end{vdm_al}

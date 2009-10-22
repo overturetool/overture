@@ -233,7 +233,7 @@ public class TracesTreeView extends ViewPart {
 						for (IResourceDelta resourceDelta : delta) {
 
 							if (resourceDelta.getResource() instanceof IProject
-									&& ((IProject) resourceDelta.getResource()).hasNature(VdmPpProjectNature.VDM_PP_NATURE)) {
+									&& ((IProject) resourceDelta.getResource()).isAccessible() && ((IProject) resourceDelta.getResource()).isOpen() && ((IProject) resourceDelta.getResource()).hasNature(VdmPpProjectNature.VDM_PP_NATURE)) {
 
 								if (IsFileChange(resourceDelta)
 										|| (resourceDelta.getKind() & IResourceDelta.ADDED) == IResourceDelta.ADDED) {

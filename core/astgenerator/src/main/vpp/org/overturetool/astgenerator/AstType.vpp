@@ -1,0 +1,94 @@
+\begin{vdm_al}
+class AstType is subclass of AstCore
+
+operations
+  public isBasicType: () ==> bool
+  isBasicType () ==
+    return
+      isCharType() or
+      isBoolType() or
+      isNatType() or
+      isRealType();
+  
+  public isCharType: () ==> bool
+  isCharType () == return false;
+  
+  public isBoolType: () ==> bool
+  isBoolType () == return false;
+  
+  public isNatType: () ==> bool
+  isNatType () == return false;
+  
+  public isRealType: () ==> bool
+  isRealType () == return false;
+  
+  public isTypeName: () ==> bool
+  isTypeName () == return false;
+  
+  public isQuotedType: () ==> bool
+  isQuotedType () == return false;
+  
+  public isUnionType: () ==> bool
+  isUnionType () == return false;
+  
+  public isSeqType: () ==> bool
+  isSeqType () == return false;
+  
+  public isSetType: () ==> bool
+  isSetType () == return false;
+  
+  public isStringType: () ==> bool
+  isStringType () == return false;
+  
+  public isOptionalType: () ==> bool
+  isOptionalType () == return false;
+  
+  public isMapType: () ==> bool
+  isMapType () == return false;
+  
+  public isQuotedTypeUnion: () ==> bool * set of seq of char
+  isQuotedTypeUnion () ==
+    ( dcl retb : bool := true,
+          rets : set of seq of char := {};
+      if isUnionType()
+      then ( dcl aut : AstUnionType := self;
+             def mk_(lb,ls) = aut.getLhs().isQuotedTypeUnion() in
+               if lb
+               then rets := rets union ls
+               else retb := false;
+             def mk_(rb,rs) = aut.getRhs().isQuotedTypeUnion() in
+               if rb
+               then rets := rets union rs
+               else retb := false )
+      elseif isQuotedType()
+      then ( dcl aqt : AstQuotedType := self;
+             rets := rets union {aqt.getName()} )
+      else retb := false;
+      if retb
+      then return mk_ (retb,rets)
+      else return mk_ (false,{}) );
+      
+  public isTypeNameUnion: () ==> bool * set of seq of char
+  isTypeNameUnion () ==
+    ( dcl retb : bool := true,
+          rets : set of seq of char := {};
+      if isUnionType()
+      then ( dcl aut : AstUnionType := self;
+             def mk_(lb,ls) = aut.getLhs().isTypeNameUnion() in
+               if lb
+               then rets := rets union ls
+               else retb := false;
+             def mk_(rb,rs) = aut.getRhs().isTypeNameUnion() in
+               if rb
+               then rets := rets union rs
+               else retb := false )
+      elseif isTypeName()
+      then ( dcl atn : AstTypeName := self;
+             rets := rets union {atn.getName()} )
+      else retb := false;
+      if retb
+      then return mk_ (retb,rets)
+      else return mk_ (false,{}) )
+      
+end AstType
+\end{vdm_al}

@@ -1,0 +1,21 @@
+\begin{vdm_al}
+class AstSetOfType is subclass of AstType
+
+instance variables
+  private sotype : AstType
+  
+operations
+  public AstSetOfType: AstType ==> AstSetOfType
+  AstSetOfType (psotype) == sotype := psotype;
+
+  public getType: () ==> AstType
+  getType () == return sotype;
+  
+  public accept: AstVisitor ==> ()
+  accept (pv) == pv.visit(self);
+  
+  public isSetType: () ==> bool
+  isSetType () == return true
+  
+end AstSetOfType
+\end{vdm_al}
