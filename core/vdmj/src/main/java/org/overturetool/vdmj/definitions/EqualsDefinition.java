@@ -128,7 +128,7 @@ public class EqualsDefinition extends Definition
 			}
 
 			defType = typebind.type;	// Effectively a cast
-			defs = typebind.pattern.getDefinitions(expType, nameScope);
+			defs = typebind.pattern.getDefinitions(defType, nameScope);
 		}
 		else
 		{
@@ -137,6 +137,7 @@ public class EqualsDefinition extends Definition
 			if (!st.isSet())
 			{
 				report(3015, "Set bind is not a set type?");
+				defType = expType;
 			}
 			else
 			{
@@ -151,7 +152,7 @@ public class EqualsDefinition extends Definition
 			}
 
 			setbind.pattern.typeResolve(base);
-			defs = setbind.pattern.getDefinitions(expType, nameScope);
+			defs = setbind.pattern.getDefinitions(defType, nameScope);
 		}
 
 		defs.typeCheck(base, scope);
