@@ -118,6 +118,8 @@ public class EqualsDefinition extends Definition
 		}
 		else if (typebind != null)
 		{
+			typebind.typeResolve(base);
+
 			if (!TypeComparator.compatible(typebind.type, expType))
 			{
 				typebind.report(3014, "Expression is not compatible with type bind");

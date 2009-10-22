@@ -86,6 +86,7 @@ public class LetDefStatement extends Statement
 
 				local = new FlatCheckedEnvironment(d, local);	// cumulative
 				d.implicitDefinitions(local);
+				d.typeResolve(local);
 
 				if (env.isVDMPP())
 				{
@@ -99,6 +100,7 @@ public class LetDefStatement extends Statement
 			else
 			{
 				d.implicitDefinitions(local);
+				d.typeResolve(local);
 				d.typeCheck(local, scope);
 				local = new FlatCheckedEnvironment(d, local);	// cumulative
 			}

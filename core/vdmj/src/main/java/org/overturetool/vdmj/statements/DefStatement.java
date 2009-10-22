@@ -25,36 +25,27 @@ package org.overturetool.vdmj.statements;
 
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
-import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.typechecker.Environment;
-import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
-import org.overturetool.vdmj.typechecker.NameScope;
-import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.util.Utils;
 import org.overturetool.vdmj.values.Value;
 
-public class DefStatement extends Statement
+public class DefStatement extends LetDefStatement
 {
 	private static final long serialVersionUID = 1L;
-	public final DefinitionList equalsDefs;
-	public final Statement statement;
 
 	public DefStatement(LexLocation location, DefinitionList equalsDefs, Statement statement)
 	{
-		super(location);
-		this.equalsDefs = equalsDefs;
-		this.statement = statement;
+		super(location, equalsDefs, statement);
 	}
 
 	@Override
 	public String toString()
 	{
-		return "def " + Utils.listToString(equalsDefs) + " in " + statement;
+		return "def " + Utils.listToString(localDefs) + " in " + statement;
 	}
 
 	@Override
@@ -64,45 +55,13 @@ public class DefStatement extends Statement
 	}
 
 	@Override
-	public Type typeCheck(Environment base, NameScope scope)
-	{
-		// Each local definition is in scope for later local definitions...
-
-		Environment local = base;
-
-		for (Definition d: equalsDefs)
-		{
-			if (d instanceof ExplicitFunctionDefinition)
-			{
-				// Functions' names are in scope in their bodies, whereas
-				// simple variable declarations aren't
-
-				local = new FlatCheckedEnvironment(d, local);	// cumulative
-				d.implicitDefinitions(local);
-				d.typeCheck(local, scope);
-			}
-			else
-			{
-				d.implicitDefinitions(local);
-				d.typeCheck(local, scope);
-				local = new FlatCheckedEnvironment(d, local);	// cumulative
-			}
-		}
-
-		local = new FlatCheckedEnvironment(equalsDefs, base);
-		Type rt = statement.typeCheck(local, scope);
-		local.unusedCheck();
-		return rt;
-	}
-
-	@Override
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);
 
 		Context evalContext = new Context(location, "def statement", ctxt);
 
-		for (Definition d: equalsDefs)
+		for (Definition d: localDefs)
 		{
 			evalContext.putList(d.getNamedValues(evalContext));
 		}
@@ -125,7 +84,7 @@ public class DefStatement extends Statement
 	@Override
 	public ProofObligationList getProofObligations(POContextStack ctxt)
 	{
-		ProofObligationList obligations = equalsDefs.getProofObligations(ctxt);
+		ProofObligationList obligations = localDefs.getProofObligations(ctxt);
 		obligations.addAll(statement.getProofObligations(ctxt));
 		return obligations;
 	}
