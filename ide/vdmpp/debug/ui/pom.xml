@@ -12,13 +12,7 @@
   <version>1.0.0</version>
  
   <packaging>source-plugin</packaging>
-  <dependencies>
-  	<dependency>
-  		<groupId>org.eclipse.debug</groupId>
-  		<artifactId>ui</artifactId>
-  		<version>3.3.0-v20070607-1800</version>
-  	</dependency>
-  </dependencies>
+  
 
 
 </project>
