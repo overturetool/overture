@@ -85,8 +85,8 @@
 
 
   <scm>
-    <connection>scm:svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk/</connection>
-    <developerConnection>scm:svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk/</developerConnection>
+    <connection>scm:svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk</connection>
+    <developerConnection>scm:svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk</developerConnection>
     <url>https://overture.svn.sourceforge.net/svnroot/overture/trunk</url>
   </scm>
 
