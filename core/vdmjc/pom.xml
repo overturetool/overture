@@ -49,7 +49,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>org.overturetool.vdmj.VDMJC</mainClass>
+							<mainClass>org.overturetool.vdmjc.VDMJC</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

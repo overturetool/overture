@@ -8,8 +8,33 @@
 <groupId>org.overturetool</groupId>
 <artifactId>parser</artifactId>
 <name>The VDM++ parser</name>
+
+
+<build>
+		<plugins>
+<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>org.overturetool.parser.imp.TestParser</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+
+
 	<dependencies>
 		<dependency>
 			<groupId>org.overturetool</groupId>
 			<artifactId>ast</artifactId>
-			<version>1.0.0</version></dependency></dependencies></project>
+			<version>1.0.0</version>
+		</dependency>
+	</dependencies>
+</project>

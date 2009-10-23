@@ -7,7 +7,28 @@ import org.overturetool.ast.itf.*;
 
 public class TestParser {
 
+	public static void printHelp()
+{
+
+System.out.println("java -jar parserJar.jar <options> <files>");
+System.out.println("where options can be:");
+
+System.out.println("-d to run the parser in debug mode, showing the complete derivation history performed by the parser");
+
+System.out.println("-e to specify the encoding used in the UTF-8 input file. E.g. specify -eSJIS when parsing Japanese VDM++ specifications");
+System.out.println("-sl to produce an abstract syntax tree as one VDM-SL value to standard output");
+System.out.println("-pp to produce an abstract syntax tree as one VDM++ value to standard output");
+System.out.println("-O (used in combination with -sl) generates an .asl file containing the abstract syntax tree");
+System.out.println("-O (used in combination with -pp) generates an .app file containing the abstract syntax tree");
+System.out.println("a list of filenames. If no filename is specified, the tool will read from standard input.");
+System.out.println("");
+
+}
+
 	public static void main(String[] args) {
+
+if(args==null || args.length==0)
+printHelp();
 		
 		// output a welcome message
 		System.out.println("Start test parser");
