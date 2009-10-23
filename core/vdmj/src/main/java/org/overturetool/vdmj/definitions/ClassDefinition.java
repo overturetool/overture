@@ -42,7 +42,6 @@ import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.StateContext;
-import org.overturetool.vdmj.runtime.SystemClock;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.statements.ClassInvariantStatement;
 import org.overturetool.vdmj.statements.Statement;
@@ -1232,8 +1231,7 @@ public class ClassDefinition extends Definition
    			RTLogger.log(
 				"DeployObj -> objref: " + object.objectReference +
 				" clnm: \"" + object.type.name.name + "\"" +
-				" cpunm: " + object.getCPU().cpuNumber +
-				" time: " + SystemClock.getWallTime());
+				" cpunm: " + object.getCPU().cpuNumber);
 		}
 
 		if (ctor != null)	// Class may have no constructor defined

@@ -35,7 +35,6 @@ import org.overturetool.vdmj.runtime.ControlQueue;
 import org.overturetool.vdmj.runtime.MessageRequest;
 import org.overturetool.vdmj.runtime.MessageResponse;
 import org.overturetool.vdmj.runtime.RunState;
-import org.overturetool.vdmj.runtime.SystemClock;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Type;
 
@@ -124,12 +123,10 @@ public class BUSValue extends ObjectValue
 			" callthr: " + request.thread.getId() +
 			" opname: " + "\"" + request.operation.name + "\"" +
 			" objref: " + request.target.objectReference +
-			" size: " + request.getSize() +
-			" time: " + SystemClock.getWallTime());
+			" size: " + request.getSize());
 
 		RTLogger.log(
-			"MessageActivate -> msgid: " + request.msgId +
-			" time: " + SystemClock.getWallTime());
+			"MessageActivate -> msgid: " + request.msgId);
 
 		if (request.bus.busNumber > 0)
 		{
@@ -138,8 +135,7 @@ public class BUSValue extends ObjectValue
 		}
 
 		RTLogger.log(
-			"MessageCompleted -> msgid: " + request.msgId +
-			" time: " + SystemClock.getWallTime());
+			"MessageCompleted -> msgid: " + request.msgId);
 
 		AsyncThread thread = new AsyncThread(request);
 		thread.start();
@@ -159,12 +155,10 @@ public class BUSValue extends ObjectValue
 			" origmsgid: " + response.originalId +
 			" callthr: " + response.caller.getId() +
 			" calleethr: " + response.thread.getId() +
-			" size: " + response.getSize() +
-			" time: " + SystemClock.getWallTime());
+			" size: " + response.getSize());
 
 		RTLogger.log(
-			"MessageActivate -> msgid: " + response.msgId +
-			" time: " + SystemClock.getWallTime());
+			"MessageActivate -> msgid: " + response.msgId);
 
 		if (response.bus.busNumber > 0)
 		{
@@ -173,8 +167,7 @@ public class BUSValue extends ObjectValue
 		}
 
 		RTLogger.log(
-			"MessageCompleted -> msgid: " + response.msgId +
-			" time: " + SystemClock.getWallTime());
+			"MessageCompleted -> msgid: " + response.msgId);
 
 		response.replyTo.set(response);
 		response.to.setState(response.caller, RunState.RUNNABLE);

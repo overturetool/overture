@@ -520,8 +520,7 @@ public class OperationValue extends Value
 			" objref: " + self.objectReference +
 			" clnm: \"" + self.type.name.name + "\"" +
 			" cpunm: " + from.cpuNumber +
-			" async: " + isAsync +
-			" time: " + SystemClock.getWallTime()
+			" async: " + isAsync
 			);
 
 		if (from != to)		// Remote CPU call
@@ -682,8 +681,7 @@ public class OperationValue extends Value
 	    			" objref: nil" +
 	    			" clnm: \"" + classdef.name.name + "\"" +
 	    			" cpunm: 0" +
-	    			" async: " + isAsync +
-	    			" time: " + SystemClock.getWallTime()
+	    			" async: " + isAsync
 	    			);
 			}
 			else
@@ -694,8 +692,7 @@ public class OperationValue extends Value
         			" objref: " + self.objectReference +
         			" clnm: \"" + self.type.name.name + "\"" +
         			" cpunm: " + self.getCPU().cpuNumber +
-        			" async: " + isAsync +
-        			" time: " + SystemClock.getWallTime()
+        			" async: " + isAsync
         			);
 			}
 		}

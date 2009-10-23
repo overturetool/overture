@@ -35,7 +35,6 @@ import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.pog.StateInvariantObligation;
 import org.overturetool.vdmj.pog.SubTypeObligation;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.SystemClock;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -125,7 +124,6 @@ public class AssignmentStatement extends Statement
     				"InstVarChange -> instnm: \"" + target.toString() + "\"" +
     				" val: \"" + newval + "\"" +
     				" objref: nil" +
-    				" time: " + SystemClock.getWallTime() +
     				" id: " + Thread.currentThread().getId());
 			}
 			else
@@ -134,7 +132,6 @@ public class AssignmentStatement extends Statement
     				"InstVarChange -> instnm: \"" + target.toString() + "\"" +
     				" val: \"" + newval + "\"" +
     				" objref: " + self.objectReference +
-    				" time: " + SystemClock.getWallTime() +
     				" id: " + Thread.currentThread().getId());
 			}
 		}
