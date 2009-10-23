@@ -116,9 +116,8 @@ private  IVdmKeywords keywords=null;
 		rules.add(new MultiLineRule("/*", "*/", commentMulti));
 	//	rules.add(new MultiLineRule("\\begin{", "\\end{", commentMulti));
 
-		rules.add(new MultiLineRule("\\end{vdm_al}", "\\begin{vdm_al}",
-				commentMulti));
-		rules.add(new EndOfLineRule("\\", comment));
+		rules.add(new MultiLineRule("\\end{vdm_al}", "\\begin{vdm_al}",  commentMulti));
+		//rules.add(new EndOfLineRule("\\", comment)); 
 		return rules;
 	}
 
