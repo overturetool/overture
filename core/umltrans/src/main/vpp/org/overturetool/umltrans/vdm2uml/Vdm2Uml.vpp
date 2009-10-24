@@ -66,9 +66,11 @@ build_Class(c) ==
                         | i in set inds body 
                         & isofclass(IOmlThreadDefinition,body(i))} 
                         > 0,
-      dBlock     = [ let dbs : IOmlDefinitionBlock = 
-                     body(i) in build_def_b(dbs,name) 
-                     | i in set inds body],         
+      dBlock     = [ let dbs : IOmlDefinitionBlock = body(i) 
+                     in 
+                       build_def_b(dbs,name) 
+                   | i in set inds body
+                   & not isofclass(IOmlTraceDefinitions,body(i))],         
       dBlockSet  = { d | d in set elems dBlock & d <> nil},
       isAbstract = hasSubclassResponsibilityDefinition(body),
       supers     = getSuperClasses(inh),
