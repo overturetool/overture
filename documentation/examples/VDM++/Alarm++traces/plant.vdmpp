@@ -68,7 +68,8 @@ RemoveExpertFromSchedule(p,ex) ==
   in
     schedule := if card exs = 1
                 then {p} <-: schedule
-                else schedule ++ {p |-> exs \ {ex}};
+                else schedule ++ {p |-> exs \ {ex}}
+pre p in set dom schedule;
                 
 end Plant
 \end{vdm_al}
