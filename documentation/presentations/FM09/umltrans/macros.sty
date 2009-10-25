@@ -1,0 +1,12 @@
+\newcommand{\vdmSpecLineNum}[4][0]{
+\lstset{language=VDM++}
+{\lstset{style=vdmNumber}
+\ifthenelse{\equal{#1}{0}}
+{
+\lstinputlisting[caption={#3},label=#4]{vdm/#2}%
+}
+{
+\lstinputlisting[caption={#3},label=#4,#1]{vdm/#2}%
+}%
+	}
+}

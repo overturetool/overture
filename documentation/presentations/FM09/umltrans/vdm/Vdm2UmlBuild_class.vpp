@@ -1,0 +1,30 @@
+public build_Class : IOmlClass ==> IUmlClass
+build_Class(c) ==
+  let name       = c.getIdentifier(),
+      inh : [IOmlInheritanceClause]  = if c.hasInheritanceClause() 
+                                       then c.getInheritanceClause() 
+                                       else nil,
+      body       = c.getClassBody(),
+      isStatic   = false,
+      isActive   = card {body(i) 
+                        | i in set inds body 
+                        & isofclass(IOmlThreadDefinition,body(i))} 
+                        > 0,
+      dBlock     = [ let dbs : IOmlDefinitionBlock = 
+                     body(i) in build_def_b(dbs,name) 
+                   | i in set inds body],         
+      dBlockSet  = { d | d in set elems dBlock & d <> nil},
+      isAbstract = hasSubclassResponsibilityDefinition(body),
+      supers     = getSuperClasses(inh),
+      visibility = 
+        new UmlVisibilityKind(UmlVisibilityKindQuotes`IQPUBLIC),
+      templateParameters = getGenericTypes(c.getGenericTypes())	    
+  in 
+    return new UmlClass(name,
+                        dBlockSet, 
+                        isAbstract, 
+                        supers, 
+                        visibility,
+                        isStatic,
+                        isActive,
+                        templateParameters);

@@ -13,45 +13,57 @@
 \end{frame}
 
 
-
-
-
 %-----------------------------------------------------------------------
-\subsection{Transforming VDM++ to UML}
+\subsection{Static diagram - Class Diagrams}
 %-----------------------------------------------------------------------
 
 %
-% Transformation
+% Basic rules
 %
 \frame
 {
-  \frametitle{The Vienna Development Method}
+  \frametitle{Basic rules - Class Diagram}
 
-\begin{center}
-	\begin{block}<+->{Not created yet}
-	Some thing about VDM
-	\end{block}
+\begin{columns}
+\begin{column}[l]{5cm}
 
-\end{center}
+A UML class diagram
+
+
+\end{column}
+\begin{column}[r]{5cm}
+
+  \begin{itemize}
+	%\itemsep=1cm
+  		\item Class rule
+  		\item Inheritance
+  		\item Associations
+		\item Data types
+  		\item Thread
+	  	
+  \end{itemize}
+
+\end{column}
+\end{columns}
+}
+
+%-----------------------------------------------------------------------
+\subsection{Dynamic diagram}
+%-----------------------------------------------------------------------
+
+%
+% Basic rules
+%
+\frame
+{
+  \frametitle{Basic rules - Sequence Diagram}
+
 }
 
 
-%-----------------------------------------------------------------------
-\subsection{Transforming UML to VDM++}
-%-----------------------------------------------------------------------
-
-
-
 
 %-----------------------------------------------------------------------
-\subsection{Merging}
-%-----------------------------------------------------------------------
-
-
-
-
-%-----------------------------------------------------------------------
-\subsection{Supported features}
+%\subsection{Supported features}
 %-----------------------------------------------------------------------
 
 %
@@ -61,31 +73,51 @@
 {
   \frametitle{Supported features Overview}
 \begin{center}
-\begin{tabular}{lcc}
-  Description        & VDM to UML & UML to VDM \\\hline
-  Classes            & X & X  \pause\\
-  Abstract Classes   & X & X  \pause\\
-  Inheritance        & X & X  \pause\\
-  Fields             & X & X  \pause\\
-  Static access      & X & X  \pause\\      
-  Default Fields     & X & X  \pause\\
-  Visibility         & X & X  \pause\\
-  Threads            & X & X  \pause\\
-  
-  Types             & & \\\hline
-  set, seq, seq1     & X & X  \pause\\
-  Product            & X & X  \pause\\
-  Union              & X & X  \pause\\
-  Record             & X & X  \pause\\ 
-  Optional           & X & X  \pause\\
-  Object reference   & X & X  \pause\\
-  
-  Combinatorial Testing & & \\\hline
-  Repeat             & X & X  \pause\\
-  Choice             & X & X  \pause\\
-  
-  
-\end{tabular}
+
+
+
+\begin{columns}
+\begin{column}[l]{5cm}
+
+General constructs
+  \begin{itemize}
+	%\itemsep=1cm
+  		\item Classes
+  		\item Abstract Classes
+  		\item Inheritance
+  		\item Fields
+  		\item Static access
+  		\item Default Fields
+  		\item Visibility
+  		\item Threads	  	
+  \end{itemize}
+
+\end{column}
+\begin{column}[r]{5cm}
+
+Types
+  \begin{itemize}
+	%\itemsep=1cm
+  		\item set, seq, seq1
+  		\item Product
+  		\item Union
+  		\item Record	
+  		\item Optional
+  		\item Object reference
+  \end{itemize}
+
+Combinatorial Testing
+  \begin{itemize}
+	%\itemsep=1cm
+  		\item Repeat
+  		\item Choice	
+  \end{itemize}
+
+
+
+\end{column}
+\end{columns}
+
 
 \end{center}
 }

@@ -1,0 +1,9 @@
+Class ::
+  name       : String
+  classBody  : set of DefinitionBlock
+  isAbstract : bool
+  superClass : seq of ClassNameType
+  visibility : VisibilityKind
+  isStatic   : bool
+  isActive   : bool
+  templatesignature : [TemplateSignature];
