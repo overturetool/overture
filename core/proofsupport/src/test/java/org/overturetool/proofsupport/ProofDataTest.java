@@ -2,9 +2,9 @@ package org.overturetool.proofsupport;
 
 import java.util.ArrayList;
 
-import org.overturetool.proofsupport.external_tools.Utilities;
-
 import junit.framework.TestCase;
+
+import org.overturetool.proofsupport.external_tools.Utilities;
 
 public class ProofDataTest extends TestCase {
 

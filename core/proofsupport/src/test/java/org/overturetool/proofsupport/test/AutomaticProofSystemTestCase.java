@@ -1,8 +1,8 @@
 package org.overturetool.proofsupport.test;
 
-import org.overturetool.proofsupport.external_tools.hol.HolParameters;
-
 import junit.framework.TestCase;
+
+import org.overturetool.proofsupport.external_tools.hol.HolParameters;
 
 public abstract class AutomaticProofSystemTestCase extends TestCase {
 

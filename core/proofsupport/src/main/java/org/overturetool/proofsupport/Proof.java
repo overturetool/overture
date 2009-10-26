@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.overturetool.proofsupport.external_tools.Utilities;
 
-// TODO refactor the class to Proof
 public class Proof {
 
 	private static final String VDM_ADDITIONAL_TAC = "VDM_ADDITIONAL_TAC";

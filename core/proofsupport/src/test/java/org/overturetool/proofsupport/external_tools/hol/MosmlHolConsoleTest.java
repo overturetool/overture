@@ -1,10 +1,7 @@
 package org.overturetool.proofsupport.external_tools.hol;
 
-import junit.framework.TestCase;
-
 import org.overturetool.proofsupport.external_tools.Utilities;
 import org.overturetool.proofsupport.test.AutomaticProofSystemTestCase;
-import org.overturetool.proofsupport.test.TestSettings;
 
 public class MosmlHolConsoleTest extends AutomaticProofSystemTestCase {
 

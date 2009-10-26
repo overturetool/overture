@@ -2,7 +2,6 @@ package org.overturetool.proofsupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.overturetool.ast.itf.IOmlExpression;
