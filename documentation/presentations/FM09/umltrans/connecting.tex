@@ -14,113 +14,148 @@
 
 
 %-----------------------------------------------------------------------
-\subsection{Static diagram - Class Diagrams}
+\subsection{History}
 %-----------------------------------------------------------------------
-
 %
-% Basic rules
+% VDM Tools
 %
 \frame
 {
-  \frametitle{Basic rules - Class Diagram}
-
-\begin{columns}
-\begin{column}[l]{5cm}
-
-A UML class diagram
-
-
-\end{column}
-\begin{column}[r]{5cm}
-
+  \frametitle{Existing tool VDM Tools}
+\begin{center}
   \begin{itemize}
 	%\itemsep=1cm
-  		\item Class rule
-  		\item Inheritance
-  		\item Associations
-		\item Data types
-  		\item Thread
+  		\item Commercial tool from CSK
+  		\item Includes a UML transformation - Rose VDM Link first release (1997)
+  		\item Rose VDM Link implemented in UML 1.4
 	  	
   \end{itemize}
-
-\end{column}
-\end{columns}
-}
-
-%-----------------------------------------------------------------------
-\subsection{Dynamic diagram}
-%-----------------------------------------------------------------------
-
-%
-% Basic rules
-%
-\frame
-{
-  \frametitle{Basic rules - Sequence Diagram}
-
-}
-
-
-
-%-----------------------------------------------------------------------
-%\subsection{Supported features}
-%-----------------------------------------------------------------------
-
-%
-% Overview of supported features
-%
-\frame
-{
-  \frametitle{Supported features Overview}
-\begin{center}
-
-
-
-\begin{columns}
-\begin{column}[l]{5cm}
-
-General constructs
-  \begin{itemize}
-	%\itemsep=1cm
-  		\item Classes
-  		\item Abstract Classes
-  		\item Inheritance
-  		\item Fields
-  		\item Static access
-  		\item Default Fields
-  		\item Visibility
-  		\item Threads	  	
-  \end{itemize}
-
-\end{column}
-\begin{column}[r]{5cm}
-
-Types
-  \begin{itemize}
-	%\itemsep=1cm
-  		\item set, seq, seq1
-  		\item Product
-  		\item Union
-  		\item Record	
-  		\item Optional
-  		\item Object reference
-  \end{itemize}
-
-Combinatorial Testing
-  \begin{itemize}
-	%\itemsep=1cm
-  		\item Repeat
-  		\item Choice	
-  \end{itemize}
-
-
-
-\end{column}
-\end{columns}
-
 
 \end{center}
 }
 
 
+\note
+{
+
+  \begin{itemize}
+	%\itemsep=1cm
+  		\item Only tool
+  		\item Commercial
+  		\item Older UML Transformation Rose VDM Link from (1997)
+  		\item UML 1.4
+	  	
+  \end{itemize}
+
+
+
+
+}
+
+
+%-----------------------------------------------------------------------
+\subsection{Extending UML support}
+%-----------------------------------------------------------------------
+
+%
+% extending uml trans
+%
+\frame
+{
+  \frametitle{Extending UML support}
+\begin{center}
+  \begin{itemize}
+	%\itemsep=1cm
+  		\item UML 2.x
+  		\item Extending UML subset for Class Diagrams
+  		\item UML Sequence Diagrams
+	  	
+  \end{itemize}
+
+\end{center}
+}
+
+\note
+{
+
+  \begin{itemize}
+	%\itemsep=1cm
+  		\item Since UML 2 has since been released look into new features and uses
+  		\item Extending the subset of UML used to model VDM, active, abstract,x-or association
+  		\item Look into new diagrams which could be use full, new VDM feature for testing \textbf{Traces}
+	  	
+  \end{itemize}
+
+}
+
+
+%
+% Traces
+%
+\frame
+{
+  \frametitle{New feature Combinatorial Testing feature in VDM}
+\begin{center}
+  \begin{itemize}
+	%\itemsep=1cm
+  		\item New Combinatorial Testing feature recently introduced to VDM (Traces)
+  		\item Easy way of specifying a large number of tests
+  		\item Graphical representation of Traces as UML Sequence Diagrams
+	  	
+  \end{itemize}
+
+\end{center}
+}
+
+%
+% Traces example
+%
+\frame
+{
+  \frametitle{VDM Combinatorial Test example}
+\begin{center}
+\vdmSpecLineNum{UseStack.vpp}{Traces}{VDM:Collections}
+
+\end{center}
+}
+
+%
+% Traces example expanded
+%
+\frame
+{
+  \frametitle{VDM Combinatorial Test example evaluation}
+\begin{center}
+Example of a trace
+
+\end{center}
+}
+
+
+%
+% Traces example UML
+%
+\frame
+{
+  \frametitle{VDM Combinatorial Test example Sequence Diagram}
+  
+\begin{columns}
+\begin{column}[l]{5cm}
+
+	\begin{center}
+	\vdmSpecLineNum{UseStackTrace.vpp}{Traces}{VDM:Collections}
+	\end{center}
+
+\end{column}
+\begin{column}[r]{5cm}
+
+	\begin{center}
+	\includegraphics<1->[width=\textwidth]{images/TracesSequenceDiagramEx2.png}%
+	\end{center}
+
+\end{column}
+\end{columns}
+  
+
+}
 

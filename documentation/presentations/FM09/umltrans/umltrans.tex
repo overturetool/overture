@@ -1,4 +1,10 @@
-\documentclass[slidestop,uncompress,mathserif,final]{beamer}
+\documentclass[slidestop,uncompress,mathserif,final,notes]{beamer}
+\usecolortheme[RGB={108,0,161}]{structure}
+%\usecolortheme[RGB={68,0,101}]{structure}
+%\setbeamertemplate{blocks}[rounded][shadow=true] 
+%\definecolor[named]{colorlightlilla}{RGB}{124,0,184} 
+%\definecolor[named]{colordarklille}{RGB}{28,0,41} 
+%\setbeamertemplate{background canvas}[vertical shading][bottom=colorlightlilla!20,top=colordarklille!30]
 
 \usepackage{color, graphicx}
 \usepackage[draft]{fixme}
@@ -6,10 +12,12 @@
 \usepackage{pgf}
 %\usepackage{beamerthemesplit}
 \usepackage{listings}
-\usepackage{vdmmodelstyle}
+
+\input{vdmmodelstyle}
 \usepackage{macros}
 
-\usetheme{Singapore} 
+%\usetheme{Singapore} 
+\usetheme{Copenhagen} 
 
 % Util commands %
 \newcommand{\pgl}[0]{Peter Gorm Larsen} 
@@ -32,7 +40,7 @@
 
 \subtitle{16th International Symposium on Formal Methods}
 
-\author[K. Lausdahl, H.K.A Lintrup, Peter G. Larsen]{
+\author[K. Lausdahl, H.K.A Lintrup, P.G. Larsen]{
   Kenneth Lausdahl \\
   \mail{kenneth AT lausdahl.com} \\
   Hans Kristian Agerlund Lintrup \\

@@ -24,7 +24,37 @@
 \end{center}
 }
 
+%
+% Motivation combining knowlage
+%
+\frame
+{
+  \frametitle{Communication}
 
+
+\begin{center}
+  \begin{itemize}
+	%\itemsep=1cm
+  		\item Formal Method (VDM)
+  		\item Unified Modeling Language (UML)
+  		\item Provide a brother platform of information sharing
+  \end{itemize}
+\end{center}
+}
+
+\note
+{
+
+  \begin{itemize}
+	%\itemsep=1cm
+  		\item Use a formal method to exactly specify what the system should do and prove that it does so.
+  		\item Use UML to communicate to domain experts, thus a larger number of people can verify the model.
+  		
+  \end{itemize}
+
+
+
+}
 
 %
 % Goal
@@ -34,39 +64,26 @@
   \frametitle{Goal}
 
 \begin{center}
-  \begin{itemize}
-	%\itemsep=1cm
-  		\item Provide a connection between VDM and UML
-  		\item Display a VDM static structure diagram (Class Diagram)
-  		\item Creation of Combinatorial Test statements from a dynamic diagram (Sequence Diagram)
-  		\item Integrate the transformation tool into Eclipse
-  		\item Open source
-	  	
-  \end{itemize}
+
+	\begin{block}<+->{Transformation}
+	Provide a connection between VDM and UML. Including UML Class and Sequence Diagrams
+	\end{block}
+
+	\begin{block}<+->{Availability, Extendibility}
+	Provide a open source easy to use extensible interface
+	\end{block}
+%  \begin{itemize}
+%	%\itemsep=1cm
+%  		\item Provide a connection between VDM and UML
+%  		\item Display a VDM static structure diagram (Class Diagram)
+%  		\item Creation of Combinatorial Test statements from a dynamic diagram (Sequence Diagram)
+%  		\item Integrate the transformation tool into Eclipse
+%  		\item Open source
+%	  	
+%  \end{itemize}
 \end{center}
 }
 
-%-----------------------------------------------------------------------
-\subsection{Open Source Tool support}
-%-----------------------------------------------------------------------
-%
-% Improce Tools support
-%
-\frame
-{
-  \frametitle{Improve tool support}
-\begin{center}
-  \begin{itemize}
-	%\itemsep=1cm
-  		\item Improve tools support for VDM development
-  		\item Only one commercial tool for VDM (VDM Tools by CSK)
-  		\item UML transformation in VDM Tools - Rose VDM Link first release (1997)
-  		\item Enable UML tool support for VDM.
-	  	
-  \end{itemize}
-
-\end{center}
-}
 
 %-----------------------------------------------------------------------
 \subsection{Vienna Development Method}
@@ -129,15 +146,30 @@
 
 
 %
-% Small VDM example
+% Class Diagram
 %
 \frame
 {
-  \frametitle{Some UML example}
+  \frametitle{Class Diagram}
 
 \begin{center}
 
 \includegraphics[width=\textwidth]{images/ClassDiagramOverview.png}
 
+\end{center}
+}
+
+%
+% Sequence Diagram
+%
+\frame
+{
+  \frametitle{Sequence Diagram}
+
+	\begin{block}<+->{Needs update}
+	This diagram is not the correct one
+	\end{block}
+\begin{center}
+\includegraphics<1->[width=0.5\textwidth]{images/TracesSequenceDiagramEx2.png}%
 \end{center}
 }
