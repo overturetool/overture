@@ -117,5 +117,10 @@ public class VdmSlSourceViewerConfiguration extends
 		return this.fCodeScanner.affectsBehavior(event)
 				|| this.fStringScanner.affectsBehavior(event);
 	}
+	
+	@Override
+	protected String getCommentPrefix() {
+		return "--"; //$NON-NLS-1$
+	}
 
 }

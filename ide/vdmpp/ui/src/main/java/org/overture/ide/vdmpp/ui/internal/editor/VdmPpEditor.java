@@ -64,6 +64,9 @@ public class VdmPpEditor  extends ScriptEditor
 		}
 	}
 	
+	protected void initializeKeyBindingScopes() {
+		setKeyBindingScopes(new String[] { "org.overture.ide.vdmpp.ui.vdmPpEditorScope" }); //$NON-NLS-1$
+	}
 	
 
 }

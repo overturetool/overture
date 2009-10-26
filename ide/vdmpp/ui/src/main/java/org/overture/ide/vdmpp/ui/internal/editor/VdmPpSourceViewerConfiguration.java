@@ -119,4 +119,8 @@ public class VdmPpSourceViewerConfiguration extends
 				|| this.fStringScanner.affectsBehavior(event);
 	}
 
+	@Override
+	protected String getCommentPrefix() {
+		return "--"; //$NON-NLS-1$
+	}
 }

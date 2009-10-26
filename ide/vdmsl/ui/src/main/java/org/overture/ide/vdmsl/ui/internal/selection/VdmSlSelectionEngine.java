@@ -17,6 +17,7 @@ import org.eclipse.dltk.codeassist.ScriptSelectionEngine;
 import org.eclipse.dltk.compiler.env.ISourceModule;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.internal.core.SourceMethod;
 import org.overture.ide.ast.*;
@@ -24,11 +25,12 @@ import org.overture.ide.ast.*;
 public class VdmSlSelectionEngine extends ScriptSelectionEngine implements
 		ISelectionEngine {
 
-	private ISourceModule sourceModule;
+	private org.eclipse.dltk.core.ISourceModule sourceModule;
 	protected int actualSelectionStart;
 	protected int actualSelectionEnd;
 	private ASTNode[] wayToNode;
-	private Set selectionElements = new HashSet();
+	private Set<IModelElement> selectionElements = new HashSet();
+	
 
 	@Override
 	public IAssistParser getParser() {
@@ -39,7 +41,7 @@ public class VdmSlSelectionEngine extends ScriptSelectionEngine implements
 	public IModelElement[] select(ISourceModule module,
 			int selectionSourceStart, int selectionSourceEnd) {
 
-		sourceModule = (ISourceModule) module.getModelElement();
+		sourceModule = (org.eclipse.dltk.core.ISourceModule) module.getModelElement();
 		String source = module.getSourceContents();
 
 		if (!checkSelection(source, selectionSourceStart, selectionSourceEnd)) {
@@ -73,7 +75,8 @@ public class VdmSlSelectionEngine extends ScriptSelectionEngine implements
 			}
 		}
 
-		return null;
+		return (IModelElement[]) selectionElements
+		.toArray(new IModelElement[selectionElements.size()]);
 	}
 
 	private void selectOnMethod(ModuleDeclaration parsedUnit,
@@ -93,6 +96,15 @@ public class VdmSlSelectionEngine extends ScriptSelectionEngine implements
 					MethodDeclaration m = (MethodDeclaration) method;
 					if (m.getName().equals(methodName)) {
 						System.out.println("METHOD MATCH");
+						try {
+							IModelElement elem = sourceModule.getElementAt(m.sourceStart());
+							
+							selectionElements.add(elem);
+							System.out.println(elem);
+						} catch (ModelException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 //						SourceMethod sm = new SourceMethod();
 					}
 				}

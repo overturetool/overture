@@ -8,10 +8,12 @@ import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.references.ConstantReference;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.overture.ide.ast.util.VdmAstUtil;
+import org.overture.ide.ast.util.VdmAstUtilExpression;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
@@ -29,6 +31,7 @@ import org.overturetool.vdmj.expressions.ElseIfExpression;
 import org.overturetool.vdmj.expressions.Exists1Expression;
 import org.overturetool.vdmj.expressions.ExistsExpression;
 import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.expressions.ExpressionList;
 import org.overturetool.vdmj.expressions.FieldExpression;
 import org.overturetool.vdmj.expressions.FieldNumberExpression;
 import org.overturetool.vdmj.expressions.ForAllExpression;
@@ -122,6 +125,10 @@ public class DltkAstConverter {
 	ModuleDeclaration model;
 	DltkConverter converter;
 
+	public DltkConverter getDltkConverter(){
+		return converter;
+	}
+	
 	public DltkAstConverter(char[] fileName, char[] source) {
 		model = new ModuleDeclaration(source.length);
 		converter = new DltkConverter(source);
@@ -532,7 +539,7 @@ public class DltkAstConverter {
 			if (def instanceof ExplicitFunctionDefinition) {
 				ExplicitFunctionDefinition exFunc = (ExplicitFunctionDefinition) def;
 
-				addExpression(exFunc.body, method);
+				VdmAstUtilExpression.addExpression(exFunc.body, method,converter);
 
 				// if (exFunc.body instanceof BlockStatement)
 				// {
@@ -554,208 +561,13 @@ public class DltkAstConverter {
 		moduleDefinition.getStatements().add(method);
 	}
 
-	private void addExpression(Expression expression, MethodDeclaration method) {
+	
+	
+	
+	
 
-		if (expression instanceof ApplyExpression) {
-			ApplyExpression appExpr = (ApplyExpression) expression;
-			CallExpression exp = VdmAstUtil.createCallExpression(appExpr,
-					converter);
-			method.getBody().addStatement(exp);
-		}
 
-		if (expression instanceof BinaryExpression) {
 
-		}
-
-		if (expression instanceof BooleanLiteralExpression) {
-
-		}
-
-		if (expression instanceof BreakpointExpression) {
-
-		}
-
-		if (expression instanceof CasesExpression) {
-
-		}
-
-		if (expression instanceof CharLiteralExpression) {
-
-		}
-
-		if (expression instanceof ElseIfExpression) {
-
-		}
-
-		if (expression instanceof Exists1Expression) {
-
-		}
-
-		if (expression instanceof ExistsExpression) {
-
-		}
-
-		if (expression instanceof FieldExpression) {
-
-		}
-
-		if (expression instanceof FieldNumberExpression) {
-
-		}
-
-		if (expression instanceof ForAllExpression) {
-
-		}
-
-		if (expression instanceof FuncInstantiationExpression) {
-
-		}
-
-		if (expression instanceof HistoryExpression) {
-
-		}
-
-		if (expression instanceof IfExpression) {
-
-		}
-
-		if (expression instanceof IntegerLiteralExpression) {
-
-		}
-
-		if (expression instanceof IotaExpression) {
-
-		}
-
-		if (expression instanceof IsExpression) {
-
-		}
-
-		if (expression instanceof IsOfBaseClassExpression) {
-
-		}
-
-		if (expression instanceof IsOfClassExpression) {
-
-		}
-
-		if (expression instanceof LambdaExpression) {
-
-		}
-
-		if (expression instanceof LetBeStExpression) {
-
-		}
-
-		if (expression instanceof LetDefExpression) {
-
-		}
-
-		if (expression instanceof MapExpression) {
-
-		}
-
-		if (expression instanceof MkBasicExpression) {
-
-		}
-
-		if (expression instanceof MkTypeExpression) {
-
-		}
-
-		if (expression instanceof MuExpression) {
-
-		}
-
-		if (expression instanceof NewExpression) {
-
-		}
-
-		if (expression instanceof NilExpression) {
-
-		}
-
-		if (expression instanceof NotYetSpecifiedExpression) {
-
-		}
-		
-		if(expression instanceof PostOpExpression){
-			
-		}
-		
-		if(expression instanceof PreExpression){
-			
-		}
-		
-		if(expression instanceof PreOpExpression){
-			
-		}
-		
-		if(expression instanceof QuoteLiteralExpression){
-			
-		}
-		
-		if(expression instanceof RealLiteralExpression){
-			
-		}
-		
-		if(expression instanceof SameBaseClassExpression){
-			
-		}
-		
-		if(expression instanceof SelfExpression){
-			
-		}
-		
-		if(expression instanceof SeqExpression){
-			
-		}
-		
-		if(expression instanceof SetExpression){
-			
-		}
-		
-		if(expression instanceof StateInitExpression){
-			
-		}
-		
-		if(expression instanceof StringLiteralExpression){
-			
-		}
-		
-		if(expression instanceof SubclassResponsibilityExpression){
-			
-		}
-		
-		if(expression instanceof SubseqExpression){
-			
-		}
-		
-		if(expression instanceof ThreadIdExpression){
-			
-		}
-		
-		if(expression instanceof TimeExpression){
-			
-		}
-		
-		if(expression instanceof TupleExpression){
-			
-		}
-		
-		if(expression instanceof UnaryExpression){
-			
-		}
-		
-		if(expression instanceof UndefinedExpression){
-			
-		}
-		
-		if(expression instanceof VariableExpression){
-			
-		}
-
-	}
 
 	private String ProcessUnresolved(Type definition) {
 
@@ -837,6 +649,16 @@ if(funcType==null)
 			return uType.typename.toString();
 		} else
 			return definition.toString();
+	}
+	
+	private static int getStartPos(LexLocation loc, DltkConverter converter)
+	{
+		return converter.convert(loc.startLine, loc.startPos) - 1;
+	}
+	
+	private static int getEndPos(LexLocation loc, DltkConverter converter)
+	{
+		return converter.convert(loc.endLine, loc.endPos);
 	}
 
 }

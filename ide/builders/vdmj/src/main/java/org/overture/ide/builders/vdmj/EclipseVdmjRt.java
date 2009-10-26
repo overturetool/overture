@@ -86,14 +86,14 @@ public class EclipseVdmjRt extends VDMRT implements IEclipseVdmj {
 
 		if (terrs > 0)
 		{
-			TypeChecker.printErrors(Console.out);
+			//TypeChecker.printErrors(Console.out);
 		}
 
   		int twarn = TypeChecker.getWarningCount();
 
 		if (twarn > 0 && warnings)
 		{
-			TypeChecker.printWarnings(Console.out);
+//			TypeChecker.printWarnings(Console.out);
 		}
 
    		int n = modules.notLoaded();

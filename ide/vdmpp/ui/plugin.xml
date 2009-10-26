@@ -60,4 +60,20 @@
             priority="0">
       </parser>
    </extension>
+     <extension
+           point="org.eclipse.ui.bindings">
+        <key
+              commandId="org.eclipse.dltk.ui.edit.text.script.toggle.comment"
+              contextId="org.overture.ide.vdmpp.ui.vdmPpEditorScope"
+              schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+              sequence="M1+7">
+        </key>
+     </extension>
+     <extension
+           point="org.eclipse.ui.contexts">
+        <context
+              id="org.overture.ide.vdmpp.ui.vdmPpEditorScope"
+              name="vdmPpEditorScope">
+        </context>
+     </extension>
 </plugin>
