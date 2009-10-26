@@ -8,6 +8,7 @@ import jp.co.csk.vdm.toolbox.VDM.CGException;
 
 import org.overturetool.ast.itf.IOmlDocument;
 import org.overturetool.ast.itf.IOmlExpression;
+import org.overturetool.ast.itf.IOmlForAllExpression;
 import org.overturetool.proofsupport.external_tools.pog.PoGeneratorException;
 import org.overturetool.proofsupport.external_tools.pog.VdmToolsPoProcessor;
 import org.overturetool.proofsupport.external_tools.pog.VdmToolsWrapper;
@@ -84,6 +85,20 @@ public class TranslationPreProcessorTest extends AutomaticProofSystemTestCase {
 		} catch(NullPointerException e) {
 			
 		}
+	}
+	
+	public void testPrepareVdmExpression() throws Exception {
+		TranslationPreProcessor prep = new TranslationPreProcessor(new VdmToolsWrapper(
+				vppdeExecutable), new VdmToolsPoProcessor());
+		String vdmExpression = 
+			  "forall i : int, l : seq of int &"
+			+ "not (true = (l = [])) =>"
+            + "true = (i <= hd (l)) =>"
+            + "l <> []";
+		IOmlExpression omlExpression = prep.prepareVdmExpression(vdmExpression);
+		
+		assertNotNull(omlExpression);
+		assertTrue(omlExpression instanceof IOmlForAllExpression);
 	}
 
 	public void testGenerateOmlAst() throws Exception {

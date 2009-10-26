@@ -1,8 +1,11 @@
 package org.overturetool.proofsupport;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.overturetool.ast.itf.IOmlExpression;
 import org.overturetool.proofsupport.external_tools.Utilities;
 import org.overturetool.proofsupport.external_tools.hol.HolInterpreter;
 import org.overturetool.proofsupport.external_tools.hol.HolInterpreterException;
@@ -60,7 +63,8 @@ public abstract class AutomaticProofSystem {
 		try {
 			hol.quit();
 		} catch (HolInterpreterException e) {
-			throw wrapException(HOL_COMPONENT, "Error terminting interpreter.", e);
+			throw wrapException(HOL_COMPONENT, "Error terminting interpreter.",
+					e);
 		}
 	}
 
@@ -78,12 +82,14 @@ public abstract class AutomaticProofSystem {
 		}
 		return prepData;
 	}
-	
+
 	protected PreparationData doPreparation(String vdmModelFile,
-			List<String> vdmContextFiles, String pogFile) throws AutomaicProofSystemException {
+			List<String> vdmContextFiles, String pogFile)
+			throws AutomaicProofSystemException {
 		PreparationData prepData = null;
 		try {
-			prepData = prep.prepareVdmFiles(vdmModelFile, vdmContextFiles, pogFile);
+			prepData = prep.prepareVdmFiles(vdmModelFile, vdmContextFiles,
+					pogFile);
 		} catch (PoGeneratorException e) {
 			throw wrapException(PO_GENERATOR_COMPONENT, e);
 		} catch (PoProcessorException e) {
@@ -103,17 +109,26 @@ public abstract class AutomaticProofSystem {
 		}
 	}
 
-	
-
-	protected String doModelAndPosTranslation(PreparationData prepData)
+	protected ArrayList<String> doPosTranslation(PreparationData prepData)
 			throws AutomaicProofSystemException {
 		try {
-			return translator.translateModelAndPos(prepData);
+			ArrayList<String> pos = new ArrayList<String>(prepData.posSize());
+			for (IOmlExpression po : prepData.getOmlPos()) {
+				pos.add(translator.translateExpression(po));
+			}
+			return pos;
 		} catch (TranslatorException e) {
 			throw wrapException(TRANSLATOR_COMPONENT, e);
 		}
 	}
-	
+
+	protected Proof doModelAndPosTranslation(PreparationData prepData)
+			throws AutomaicProofSystemException {
+		String model = doModelTranslation(prepData);
+		ArrayList<String> pos = doPosTranslation(prepData);
+		return new Proof(model, pos, prepData.vdmPos);
+	}
+
 	protected AutomaicProofSystemException wrapException(String componentLabel,
 			Exception e) {
 		return wrapException(componentLabel, null, e);
@@ -124,9 +139,9 @@ public abstract class AutomaticProofSystem {
 		return new AutomaicProofSystemException(componentLabel
 				+ (message != null ? message : "") + e.getMessage(), e);
 	}
-	
-	protected AutomaicProofSystemException buildException(String componentLabel,
-			String message) {
+
+	protected AutomaicProofSystemException buildException(
+			String componentLabel, String message) {
 		return new AutomaicProofSystemException(componentLabel
 				+ (message != null ? message : ""), null);
 	}

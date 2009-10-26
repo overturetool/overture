@@ -9,6 +9,7 @@ import org.overturetool.proofsupport.external_tools.Utilities;
 
 public class HolInterpreterImpl implements HolInterpreter {
 
+	private static final String SUCCESS = "> val it = 1 : int";
 	protected final HolParameters holPram;
 	protected final UnquoteConsole unquote;
 	protected final MosmlHolConsole mosml;
@@ -26,7 +27,7 @@ public class HolInterpreterImpl implements HolInterpreter {
 		} catch (IOException e) {
 			throw new HolInterpreterException("IO error while connectiong to Moscow ML CLI.", e);
 		}
-		pipe = new Thread(new ConsolePipe(unquote, mosml));
+		pipe = new Thread(new ConsolePipe(unquote, mosml), "UnquoteMosmlPipe");
 	}
 	
 	public void start() {
@@ -59,6 +60,12 @@ public class HolInterpreterImpl implements HolInterpreter {
 		for (String holLine : holLines)
 			output.add(interpretLine(holLine));
 		return output.toArray(new String[] {});
+	}
+
+	// TODO: add timer
+	public boolean dischargeProof(String proofCommand) throws HolInterpreterException {
+		String output = interpretLine(proofCommand).trim();
+		return output.endsWith("val it = true : bool");
 	}
 
 }

@@ -10,4 +10,6 @@ public interface HolInterpreter {
 	
 	public String[] interpretModel(String holCode) throws HolInterpreterException;
 	
+	public boolean dischargeProof(String proofCommand) throws HolInterpreterException;
+	
 }

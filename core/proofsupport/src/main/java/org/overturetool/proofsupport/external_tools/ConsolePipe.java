@@ -27,6 +27,7 @@ public class ConsolePipe implements Runnable {
 		output.writeLine(buffer);
 	}
 
+
 	protected boolean readNextLine() throws IOException {
 		return (buffer = input.readLine()) != null;
 	}

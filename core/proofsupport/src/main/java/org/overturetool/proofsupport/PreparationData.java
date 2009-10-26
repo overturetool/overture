@@ -1,6 +1,7 @@
 package org.overturetool.proofsupport;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.overturetool.ast.itf.IOmlDocument;
@@ -41,5 +42,9 @@ public class PreparationData {
 
 	public List<IOmlExpression> getOmlPos() {
 		return omlPos;
+	}
+
+	public int posSize() {
+		return omlPos.size();
 	}
 }
