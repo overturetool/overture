@@ -24,14 +24,14 @@ public class SettingsParser extends DefaultHandler
 	boolean inPropeties;
 	String property = null;
 
-	public Stack<Profile> GetProfiles()
+	public Stack<Profile> getProfiles()
 	{
 		return profiles;
 	}
 
 	Stack<Profile> profiles = new Stack<Profile>();
 
-	public void Parse(String file) throws SAXException, IOException
+	public void parse(String file) throws SAXException, IOException
 	{
 		XMLReader xr = XMLReaderFactory.createXMLReader();
 

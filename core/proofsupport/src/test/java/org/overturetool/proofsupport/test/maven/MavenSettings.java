@@ -8,7 +8,7 @@ import org.xml.sax.SAXException;
 
 public class MavenSettings
 {
-	public static Boolean IsWindows()
+	public static Boolean isWindows()
 	{
 		String osName = System.getProperty("os.name");
 
@@ -26,8 +26,7 @@ public class MavenSettings
 	public MavenSettings() throws SAXException, IOException
 	{
 		String settingsLocation = "";
-		System.out.println("Testing path to Maven 2 user settings file");
-		if (IsWindows())
+		if (isWindows())
 		{
 			String homeDrive = System.getenv("HOMEDRIVE");
 			String usersHome = System.getenv("HOMEPATH");
@@ -49,8 +48,8 @@ public class MavenSettings
 
 		SettingsParser sp = new SettingsParser();
 
-		sp.Parse(settingsFilePath);
+		sp.parse(settingsFilePath);
 
-		this.profile = sp.GetProfiles().lastElement();
+		this.profile = sp.getProfiles().lastElement();
 	}
 }
