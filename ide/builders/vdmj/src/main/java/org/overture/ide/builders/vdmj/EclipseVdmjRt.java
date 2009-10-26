@@ -12,12 +12,10 @@ import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.VDMRT;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 import org.overturetool.vdmj.pog.ProofObligationList;
-import org.overturetool.vdmj.typechecker.ClassTypeChecker;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 
 /***
@@ -29,11 +27,11 @@ public class EclipseVdmjRt extends VDMRT implements IEclipseVdmj {
 	public ClassList modules;
 	private ArrayList<VDMError> parseErrors = new ArrayList<VDMError>();
 	private ArrayList<VDMWarning> parseWarnings = new ArrayList<VDMWarning>();
-	private TypeChecker typeChecker;
+	//private TypeChecker typeChecker;
 	
 	public EclipseVdmjRt(ClassList m) {
 		modules=m;
-		typeChecker = null;
+		//typeChecker = null;
 		parseErrors = new ArrayList<VDMError>();
 		parseWarnings = new ArrayList<VDMWarning>();
 		Settings.dialect = Dialect.VDM_RT;
@@ -68,12 +66,13 @@ public class EclipseVdmjRt extends VDMRT implements IEclipseVdmj {
 
    		try
    		{
-   			typeChecker = new ClassTypeChecker(modules);
-   			typeChecker.typeCheck();
+   			classes.addAll(modules);
+   		return	super.typeCheck();
    		}
 		catch (InternalException e)
 		{
 			println(e.toString());
+			
 		}
 		catch (Throwable e)
 		{
@@ -152,7 +151,26 @@ public class EclipseVdmjRt extends VDMRT implements IEclipseVdmj {
 	}
 
 
+	protected static void println(String m)
+	{
+		//Console.out.println(m);
+	}
+	
+	protected static void info(String m)
+	{
 
+	}
+
+	protected static void infoln(String m)
+	{
+
+	}
+
+	protected static void print(String m)
+	{
+	
+
+	}
 
 
 }
