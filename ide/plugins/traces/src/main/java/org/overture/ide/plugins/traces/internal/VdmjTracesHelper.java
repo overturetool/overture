@@ -7,8 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.core.internal.events.InternalBuilder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
@@ -144,8 +148,26 @@ public class VdmjTracesHelper implements ITracesHelper {
 		TraceXmlWrapper storage = new TraceXmlWrapper(projectDir.getAbsolutePath()
 				+ File.separatorChar + className + ".xml");
 
+		
+		
+		
 		interpeter.processTraces(getClasses(), className, storage);
 
+	}
+	
+	
+	void buildProjectIfRequired()
+	{
+		RootNode root = AstManager.instance().getRootNode(project, nature);
+		if(root!=null && root.isChecked())
+			return;
+		else
+			try {
+				project.build(IncrementalProjectBuilder.FULL_BUILD,(IProgressMonitor)new ProgressMonitorDialog(null));
+			} catch (CoreException e) {
+				System.out.println("Error forcing build from traces");
+				e.printStackTrace();
+			}
 	}
 
 	public List<NamedTraceDefinition> GetTraceDefinitions(String className)
