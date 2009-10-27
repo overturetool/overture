@@ -725,17 +725,24 @@ build_Operand(e) ==
 
 pre e.name = "operand";
 
--- remove EA prefix from name
+-- remove EA prefix from name overridden in Java
 public removeEaPrefix : String ==> String
-removeEaPrefix(name) == return name;
-/*
-* if(name !=null && name.startsWith("EA") && name.contains("_") && name.indexOf('_')+1 < name.length())
-*	  {
-*		  log.warn("Removing: " + name.substring(0,name.indexOf('_')+1)+" from: "+ name + " => "+name.substring(name.indexOf('_')+1));
-*		  return name.substring(name.indexOf('_')+1);
-*	  }
- *   return name;
-*/
+removeEaPrefix(name) == 
+  return 
+  cases name:
+     "EAJava_" ^ nm, 
+     "EAVisual Basic_" ^nm, 
+     "EAActionScript_" ^nm, 
+     "EAnone_" ^nm, 
+     "EAC_" ^nm, 
+     "EAVBNet_" ^nm, 
+     "EAC++_" ^nm, 
+     "EAPHP_" ^ nm, 
+     "EAPython_" ^nm, 
+     "EAC#_" ^nm -> nm,
+     others -> name
+  end;
+
 
 -- gets the name attribyte but removes EA prefixes first
 public getNameAttribute : XmlEntity ==> String

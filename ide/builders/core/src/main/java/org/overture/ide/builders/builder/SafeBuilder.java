@@ -46,7 +46,7 @@ public class SafeBuilder extends Thread {
 
 							if (currentProject.hasNature(builder.getNatureId())) {
 
-								AbstractBuilder.parseMissingFiles(currentProject,builder.getNatureId(),monitor);
+								AbstractBuilder.parseMissingFiles(currentProject,builder.getNatureId(),builder.getContentTypeId(),monitor);
 
 								final List ast = (List) AstManager.instance().getAstList(
 										currentProject, builder.getNatureId());

@@ -30,6 +30,7 @@ public class BuilderRt extends VdmjBuilder {
 				modules.add((ClassDefinition) classDefinition);
 			}
 		}
+		
 		IEclipseVdmj eclipseType = new EclipseVdmjRt(modules);
 		return buileModelElements(project, eclipseType);
 	}
@@ -37,6 +38,11 @@ public class BuilderRt extends VdmjBuilder {
 	@Override
 	public String getNatureId() {
 		return VdmRtProjectNature.VDM_RT_NATURE;
+	}
+
+	@Override
+	public String getContentTypeId() {
+		return VdmRtCorePluginConstants.CONTENT_TYPE;
 	}
 
 }

@@ -23,6 +23,7 @@ import org.overture.ide.ast.RootNode;
 import org.overture.ide.builders.builder.AbstractBuilder;
 import org.overture.ide.plugins.traces.TracesXmlStoreReader;
 import org.overture.ide.plugins.traces.TracesXmlStoreReader.TraceStatusXml;
+import org.overture.ide.vdmpp.core.VdmPpCorePluginConstants;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
 import org.overturetool.traces.utility.ITracesHelper;
 import org.overturetool.traces.utility.TraceHelperNotInitializedException;
@@ -46,6 +47,7 @@ public class VdmjTracesHelper implements ITracesHelper {
 	final String nature = VdmPpProjectNature.VDM_PP_NATURE;
 	HashMap<String, TracesXmlStoreReader> classTraceReaders = new HashMap<String, TracesXmlStoreReader>();
 	File projectDir;
+	final String contentTypeId = VdmPpCorePluginConstants.CONTENT_TYPE;
 
 	public VdmjTracesHelper(IProject project, int max) throws Exception {
 		this.project = project;
@@ -53,7 +55,7 @@ public class VdmjTracesHelper implements ITracesHelper {
 		if (!this.projectDir.exists())
 			this.projectDir.mkdirs();
 
-		AbstractBuilder.parseMissingFiles(project, nature, null);
+		AbstractBuilder.parseMissingFiles(project, nature, contentTypeId ,null);
 
 		org.overturetool.vdmj.Settings.prechecks = true;
 		org.overturetool.vdmj.Settings.postchecks = true;
@@ -163,6 +165,7 @@ public class VdmjTracesHelper implements ITracesHelper {
 			return;
 		else
 			try {
+				
 				project.build(IncrementalProjectBuilder.FULL_BUILD,(IProgressMonitor)new ProgressMonitorDialog(null));
 			} catch (CoreException e) {
 				System.out.println("Error forcing build from traces");

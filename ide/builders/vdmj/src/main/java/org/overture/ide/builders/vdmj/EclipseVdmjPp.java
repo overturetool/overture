@@ -73,10 +73,13 @@ public class EclipseVdmjPp extends VDMJ implements IEclipseVdmj {
    		}
 		catch (InternalException e)
 		{
+			TypeChecker.getErrors().add(new VDMError(e.number, e.getMessage(), modules.get(0).location));
 			println(e.toString());
+			
 		}
 		catch (Throwable e)
 		{
+			TypeChecker.getErrors().add(new VDMError(0, e.getMessage(), modules.get(0).location));
 			println(e.toString());
 			terrs++;
 		}

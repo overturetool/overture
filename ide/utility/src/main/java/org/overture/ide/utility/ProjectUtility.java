@@ -73,18 +73,18 @@ public class ProjectUtility {
 		List<IFile> list = new Vector<IFile>();
 
 		if (resource instanceof IFolder)
+		{
+			if (resource instanceof IFolder
+					&& resource.getLocation().lastSegment().startsWith("."))// skip
+				return list;
+			// . folders like.svn
 			for (IResource res : ((IFolder) resource).members(IContainer.INCLUDE_PHANTOMS
 					| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS)) {
 
-				if (res instanceof IFolder
-						&& res.getLocation().lastSegment().startsWith("."))// skip
-					continue;
-				// .
-				// folders
-				// like
-				// .svn
+				
 				list.addAll(getFiles(project, res, contentTypeId));
 			}
+		}
 		// check if it is a IFile and that there exists a known content type for
 		// this file and the project
 		else if (resource instanceof IFile) {

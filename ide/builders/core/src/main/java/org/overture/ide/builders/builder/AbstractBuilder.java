@@ -32,6 +32,7 @@ public abstract class AbstractBuilder {
 			List modelElements);
 
 	public abstract String getNatureId();
+	public abstract String getContentTypeId();
 
 	public static IFile findIFile(IProject project, File file) {
 		return ProjectUtility.findIFile(project, file);
@@ -139,16 +140,21 @@ public abstract class AbstractBuilder {
 	 * @throws CoreException
 	 * @throws IOException
 	 */
-	public static void parseMissingFiles(IProject project, String natureId,
+	public static void parseMissingFiles(IProject project, String natureId, String contentTypeId,
 			IProgressMonitor monitor) throws CoreException, IOException {
 		if (monitor != null)
 			monitor.subTask("Parsing files");
 		AbstractBuilder.syncProjectResources(project);
-		for (IResource res : project.members(IContainer.INCLUDE_PHANTOMS
-				| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS)) {
-			parseMissingFiles(project, natureId, res);
-		}
+//		for (IResource res : project.members(IContainer.INCLUDE_PHANTOMS
+//				| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS)) {
+//			parseMissingFiles(project, natureId, res);
+//		}
 
+	List<IFile> files=	ProjectUtility.getFiles(project, contentTypeId);
+	for (IFile iFile : files) {
+		parseFile(project, natureId, iFile);
+	}
+		
 	}
 
 	/***
@@ -199,16 +205,23 @@ public abstract class AbstractBuilder {
 	private static void parseMissingFiles(IProject project, String natureId,
 			final IFile f) throws CoreException, IOException {
 
-		Path path = new Path(f.getProject().getFullPath().addTrailingSeparator().toString()
-				+ f.getProjectRelativePath().toString());
+		
+		
+	}
+	
+	public static void parseFile(IProject project, String natureId,final IFile file) throws CoreException, IOException
+	{
+		Path path = new Path(file.getProject().getFullPath().addTrailingSeparator().toString()
+				+ file.getProjectRelativePath().toString());
 		File fileSystemFile = project.getFile(path.removeFirstSegments(1)).getLocation().toFile();
+		
 		RootNode rootNode = AstManager.instance().getRootNode(project, natureId);
 		if (rootNode !=null && rootNode.hasFile(
 						fileSystemFile))
 			return;
 
-		System.out.println("Trying to parse missing file: " + f.getName());
-		InputStream inStream = f.getContents();
+		System.out.println("Trying to parse missing file: " + file.getName());
+		InputStream inStream = file.getContents();
 		List<Character> content = new Vector<Character>();
 		int c = -1;
 		while ((c = inStream.read()) != -1)
@@ -228,7 +241,7 @@ public abstract class AbstractBuilder {
 					severity = IMarker.SEVERITY_WARNING;
 
 				try {
-					addMarker(f, problem.getMessage(),
+					addMarker(file, problem.getMessage(),
 							problem.getSourceLineNumber(), severity,
 							problem.getSourceStart(), problem.getSourceEnd());
 				} catch (CoreException e) {

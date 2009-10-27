@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
+import org.overture.ide.vdmpp.core.VdmPpCorePluginConstants;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
@@ -47,6 +48,13 @@ public class BuilderPp extends VdmjBuilder
 	public String getNatureId()
 	{
 		return VdmPpProjectNature.VDM_PP_NATURE;
+	}
+
+
+
+	@Override
+	public String getContentTypeId() {
+		return VdmPpCorePluginConstants.CONTENT_TYPE;
 	}
 
 }

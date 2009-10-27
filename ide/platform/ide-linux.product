@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="%productName" uid="org.overture.ide.platform.product" id="org.overture.ide.platform.product" application="org.eclipse.ui.ide.workbench" version="2.0.0" useFeatures="false" includeLaunchers="true">
+<product name="%productName" uid="org.overture.ide.platform.product" id="org.overture.ide.platform.product" application="org.eclipse.ui.ide.workbench" version="@version@" useFeatures="false" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/org.overture.ide.platform/icons/ctool128/overture_misc.png"/>
@@ -159,7 +159,7 @@
       <plugin id="org.overture.ide.vdmpp.debug.ui"/>
       <plugin id="org.overture.ide.vdmpp.ui"/>
       <plugin id="org.overture.ide.vdmrt.core"/>
-      <plugin id="org.overture.ide.vdmrt.debug"/>
+      <plugin id="org.overture.ide.vdmrt.debug" fragment=""/>
       <plugin id="org.overture.ide.vdmrt.ui"/>
       <plugin id="org.overture.ide.vdmsl.core"/>
       <plugin id="org.overture.ide.vdmsl.ui"/>

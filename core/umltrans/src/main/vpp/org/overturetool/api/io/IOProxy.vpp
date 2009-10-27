@@ -1,5 +1,5 @@
 class IOProxy
-types
+types 
 public string = seq of char;
 operations    
 public print: string ==> ()
