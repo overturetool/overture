@@ -30,6 +30,7 @@ import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.overture.ide.ast.AstManager;
 import org.overture.ide.ast.IAstManager;
 import org.overture.ide.ast.RootNode;
+import org.overture.ide.builders.vdmj.BuilderPp;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
 import org.overture.ide.vdmpp.debug.core.VDMPPDebugConstants;
 import org.overture.ide.debug.launching.ClasspathUtils;
@@ -173,8 +174,11 @@ public class VDMPPVDMJInterpreterRunner extends AbstractInterpreterRunner {
 							//System.out.println("running");
 							try {
 								IAstManager astManager = AstManager.instance();
-								RootNode rootNode = astManager.getRootNode(proj.getProject(), VdmPpProjectNature.VDM_PP_NATURE);
 								
+								BuilderPp builder = new BuilderPp();
+								final List ast = (List) astManager.getAstList(proj.getProject(), VdmPpProjectNature.VDM_PP_NATURE);
+								builder.buileModelElements(proj.getProject(),ast);
+								RootNode rootNode = astManager.getRootNode(proj.getProject(), VdmPpProjectNature.VDM_PP_NATURE);
 								if (rootNode.isChecked()){
 									ClassList classList = new ClassList();
 																		

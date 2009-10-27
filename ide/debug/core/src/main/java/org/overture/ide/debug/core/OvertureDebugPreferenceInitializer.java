@@ -11,8 +11,10 @@ public class OvertureDebugPreferenceInitializer extends AbstractPreferenceInitia
 	public void initializeDefaultPreferences() {
 		Preferences store = DebugCorePlugin.getDefault().getPluginPreferences();
 
-		if (store.getDefaultString(DebugCoreConstants.VDMPP_DEBUGGING_ENGINE_ID_KEY) == null)
+		if (!store.getDefaultString(DebugCoreConstants.VDMPP_DEBUGGING_ENGINE_ID_KEY).equals(""))
+		{
 			store.setDefault(DebugCoreConstants.VDMPP_DEBUGGING_ENGINE_ID_KEY, "org.overturetool.overturedebugger");
+		}
 		// org.overturetool.overturedebugger
 
 		store.setDefault(DLTKDebugPreferenceConstants.PREF_DBGP_BREAK_ON_FIRST_LINE, false);

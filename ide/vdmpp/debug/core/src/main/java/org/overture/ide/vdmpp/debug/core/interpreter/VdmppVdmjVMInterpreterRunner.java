@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentTypeMatcher;
 import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.Launch;
 import org.eclipse.debug.core.model.IDebugTarget;
@@ -96,7 +97,7 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 		}
 
 		String sessionId = (String) config.getProperty(DbgpConstants.SESSION_ID_PROP);
-		System.out.println(sessionId);
+		//System.out.println(sessionId);
 
 		if (sessionId == null) {
 			sessionId = "";
@@ -180,8 +181,7 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 
 							vmConfig.setProgramArguments(arguments);
 							ILaunch launchr = new Launch(launch.getLaunchConfiguration(), ILaunchManager.DEBUG_MODE, null);
-							iconfig.adjustRunnerConfiguration(vmConfig, config,
-									launch, myJavaProject);
+							iconfig.adjustRunnerConfiguration(vmConfig, config, launch, myJavaProject);
 							vmRunner.run(vmConfig, launchr, null);
 							IDebugTarget[] debugTargets = launchr.getDebugTargets();
 							for (int a = 0; a < debugTargets.length; a++) {
