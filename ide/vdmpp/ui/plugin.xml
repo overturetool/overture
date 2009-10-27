@@ -60,7 +60,7 @@
             priority="0">
       </parser>
    </extension>
-     <extension
+   <extension
            point="org.eclipse.ui.bindings">
         <key
               commandId="org.eclipse.dltk.ui.edit.text.script.toggle.comment"
@@ -76,4 +76,38 @@
               name="vdmPpEditorScope">
         </context>
      </extension>
+   <!--
+   	templates
+   -->
+   
+   <extension point="org.eclipse.ui.preferencePages">
+         <page
+              class="org.overture.ide.vdmpp.ui.preferences.VdmPpCodeTemplatesPreferencePage"
+              id="org.overture.ide.vdmpp.ui.VdmPpCodeTemplatesPreferencePage"
+              name="Templates VDM++"
+              category="org.overture.ide.ui.OvertureGlobalPreferencesPage"
+              />
+	</extension>
+    
+   <extension point="org.eclipse.dltk.ui.language">
+      <language
+            class="org.overture.ide.vdmpp.ui.internal.editor.VdmPpUILanguageToolkit2"
+            nature="org.overture.ide.vdmpp.core.nature"
+            priority="1">
+      </language>
+   </extension>
+   
+   <extension point="org.eclipse.ui.editors.templates">
+       <contextType
+          class="org.overture.ide.ui.completion.templates.VdmUniversalTemplateContextType"
+          id="org.overture.ide.vdmpp.ui.completion.templates.VdmUniversalTemplateContextType"
+          name="VDM++ Template content">
+       </contextType>
+      <include
+          file="templates/templates.xml"
+       >
+       </include>
+
+    </extension>
+   
 </plugin>
