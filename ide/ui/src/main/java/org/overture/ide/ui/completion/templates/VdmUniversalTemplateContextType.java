@@ -5,6 +5,12 @@ import org.eclipse.dltk.ui.templates.ScriptTemplateContext;
 import org.eclipse.dltk.ui.templates.ScriptTemplateContextType;
 import org.eclipse.jface.text.IDocument;
 
+/**
+ * Template context type
+ * extension point: org.eclipse.ui.editors.templates
+ * @author kedde
+ *
+ */
 public class VdmUniversalTemplateContextType extends ScriptTemplateContextType {
 
 	

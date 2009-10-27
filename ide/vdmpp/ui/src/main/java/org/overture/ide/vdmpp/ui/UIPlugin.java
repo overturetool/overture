@@ -49,12 +49,12 @@ public class UIPlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 	
-	private VdmPpTextTools fPythonTextTools;
+	private VdmPpTextTools fVdmPpTextTools;
 	 
 	public synchronized VdmPpTextTools getTextTools() {
-		if (fPythonTextTools == null)
-			fPythonTextTools= new VdmPpTextTools(true);
-	        return fPythonTextTools;
+		if (fVdmPpTextTools == null)
+			fVdmPpTextTools= new VdmPpTextTools(true);
+	        return fVdmPpTextTools;
 	}
 	
 	

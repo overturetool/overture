@@ -12,14 +12,9 @@ public class VdmPpUIPreferenceInitializer extends
 		AbstractPreferenceInitializer {
  
 	public void initializeDefaultPreferences() {
-		IPreferenceStore store = UIPlugin.getDefault()
-				.getPreferenceStore();
- 
+		IPreferenceStore store = UIPlugin.getDefault().getPreferenceStore();
 		EditorsUI.useAnnotationsPreferencePage(store);
 		EditorsUI.useQuickDiffPreferencePage(store);
- 
 		VdmPreferenceConstants.initializeDefaultValues(store);
 	}
 }
-
-

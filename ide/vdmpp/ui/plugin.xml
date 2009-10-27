@@ -60,22 +60,22 @@
             priority="0">
       </parser>
    </extension>
-   <extension
-           point="org.eclipse.ui.bindings">
-        <key
-              commandId="org.eclipse.dltk.ui.edit.text.script.toggle.comment"
-              contextId="org.overture.ide.vdmpp.ui.vdmPpEditorScope"
-              schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-              sequence="M1+7">
-        </key>
-     </extension>
-     <extension
-           point="org.eclipse.ui.contexts">
+ 
+     
+     
+     <!-- vdmPpEditorScope -->
+     <extension point="org.eclipse.ui.contexts">
         <context
+              description="VDM++ editor scope"
               id="org.overture.ide.vdmpp.ui.vdmPpEditorScope"
-              name="vdmPpEditorScope">
+              name="vdmPpEditorScope"
+              parentId="org.eclipse.dltk.ui.scriptEditorScope">
         </context>
      </extension>
+     
+   
+     
+     
    <!--
    	templates
    -->
@@ -109,5 +109,15 @@
        </include>
 
     </extension>
-   
+
+	<!-- completion added because of the template.. -->
+	<extension point="org.eclipse.dltk.ui.scriptCompletionProposalComputer"
+		id="VdmPpCompletionProposalComputer">
+		<scriptCompletionProposalComputer
+			class="org.overture.ide.vdmpp.ui.completions.VdmPpCompletionProposalComputer"
+			categoryId="org.eclipse.dltk.ui.scriptTypeProposalCategory"
+			toolkitId="org.overture.ide.vdmpp.core.nature">
+			<partition type="__dftl_partition_content_type"/>
+		</scriptCompletionProposalComputer>
+</extension>   
 </plugin>

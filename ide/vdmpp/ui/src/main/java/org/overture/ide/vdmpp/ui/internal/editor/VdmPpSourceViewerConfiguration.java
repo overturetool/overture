@@ -11,6 +11,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.DefaultIndentLineAutoEditStrategy;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.contentassist.ContentAssistant;
+import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
@@ -19,6 +21,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.overture.ide.ui.partitioning.IVdmColorConstants;
+import org.overture.ide.vdmpp.ui.completions.VdmPpCompletionProcessor;
 import org.overture.ide.vdmpp.ui.internal.partitioning.VdmPpCodeScanner;
 
 
@@ -122,5 +125,13 @@ public class VdmPpSourceViewerConfiguration extends
 	@Override
 	protected String getCommentPrefix() {
 		return "--"; //$NON-NLS-1$
+	}
+	
+	
+	@Override
+	protected void alterContentAssistant(ContentAssistant assistant) {
+		// IDocument.DEFAULT_CONTENT_TYPE
+		IContentAssistProcessor scriptProcessor = new VdmPpCompletionProcessor(getEditor(), assistant, IDocument.DEFAULT_CONTENT_TYPE);
+		assistant.setContentAssistProcessor(scriptProcessor, IDocument.DEFAULT_CONTENT_TYPE);
 	}
 }

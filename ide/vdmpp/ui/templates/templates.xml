@@ -10,20 +10,18 @@
 		end</template>
 	
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.completion.templates.VdmUniversalTemplateContextType"
-		deleted="false" description="Class pattern" enabled="true" name="classPattern" id="classPattern">class
-		${className}
+		deleted="false" description="Class pattern" enabled="true" name="classPattern" id="classPattern">class ${className}
+	instance variables
 
-		instance variables
+	types
 
-		types
+	values
 
-		values
+	operations
 
-		operations
+	functions
 
-		functions
-
-		end ${className} </template>
+end ${className}</template>
 	
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.completion.templates.VdmUniversalTemplateContextType"
 		deleted="false" description="Declare" enabled="true" name="dclStatement" id="dclStatement">dcl

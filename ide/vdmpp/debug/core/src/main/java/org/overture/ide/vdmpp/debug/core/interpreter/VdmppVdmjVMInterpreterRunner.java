@@ -146,7 +146,7 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 							// List<String> memberFilesList =
 							// getAllMemberFilesString(proj.getProject(), exts);
 
-							String[] arguments = new String[memberFilesList.size() + 9];
+							String[] arguments = new String[memberFilesList.size() + 10];
 
 							// 0: host
 							// 1: port
@@ -157,6 +157,8 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 							arguments[argNumber++] = port;
 							arguments[argNumber++] = "-k";
 							arguments[argNumber++] = sessionId;
+							arguments[argNumber++] = "-w"; // no warnings
+							//arguments[argNumber++] = "-q"; // no information
 
 							// 3: dialect
 							arguments[argNumber++] = "-"

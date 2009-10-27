@@ -15,6 +15,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.dltk.console.ScriptConsoleServer;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.launching.AbstractInterpreterRunner;
 import org.eclipse.dltk.launching.AbstractScriptLaunchConfigurationDelegate;
@@ -234,6 +236,26 @@ public class VDMPPVDMJInterpreterRunner extends AbstractInterpreterRunner {
 			}
 		}
 		throw new CoreException(new Status(IStatus.ERROR, "", ""));
+	}
+	
+	protected String[] alterCommandLine(String[] cmdLine, String id) {
+		ScriptConsoleServer server = ScriptConsoleServer.getInstance();
+		String port = Integer.toString(server.getPort());
+		String[] newCmdLine = new String[cmdLine.length + 4];
+
+		newCmdLine[0] = cmdLine[0];
+		newCmdLine[1] = DLTKCore.getDefault().getStateLocation().append(
+				"overture_proxy").toOSString();
+
+		newCmdLine[2] = "localhost";
+		newCmdLine[3] = port;
+		newCmdLine[4] = id;
+
+		for (int i = 1; i < cmdLine.length; ++i) {
+			newCmdLine[i + 4] = cmdLine[i];
+		}
+
+		return newCmdLine;
 	}
 
 

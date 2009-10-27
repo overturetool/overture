@@ -18,7 +18,7 @@ public class VdmPpTemplateCompletionProcessor  extends VdmTemplateCompletionProc
 
 	@Override
 	protected ScriptTemplateAccess getTemplateAccess() {
-		return null;
+		return VdmPpTemplateAccess.getInstance();
 	}
 
 }

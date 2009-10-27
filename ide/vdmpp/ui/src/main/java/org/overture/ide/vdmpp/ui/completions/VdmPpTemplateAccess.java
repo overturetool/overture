@@ -14,7 +14,7 @@ public class VdmPpTemplateAccess extends VdmTemplateAccess {
 
 	@Override
 	protected String getCustomTemplatesKey() {
-		return VdmPpUiPluginConstants.CONTEXT_TYPE_ID;
+		return VdmPpUiPluginConstants.CONTEXT_TYPE_ID + ".TEMPLATE";
 	}
 	
 	public static VdmPpTemplateAccess getInstance()

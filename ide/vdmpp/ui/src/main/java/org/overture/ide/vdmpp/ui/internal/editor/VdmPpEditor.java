@@ -68,5 +68,4 @@ public class VdmPpEditor  extends ScriptEditor
 		setKeyBindingScopes(new String[] { "org.overture.ide.vdmpp.ui.vdmPpEditorScope" }); //$NON-NLS-1$
 	}
 	
-
 }

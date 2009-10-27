@@ -11,6 +11,8 @@ import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.overture.ide.vdmpp.core.VdmPpLanguageToolkit;
+import org.overture.ide.vdmpp.ui.internal.editor.IVdmPpPartitions;
+import org.overture.ide.vdmpp.ui.internal.editor.VdmPpTextTools;
 import org.overture.ide.vdmpp.ui.internal.editor.VdmppEditorConstants;
 //public class VdmPpUILanguageToolkit extends AbstractDLTKUILanguageToolkit
 //{
@@ -104,14 +106,12 @@ public class VdmPpUILanguageToolkit implements IDLTKUILanguageToolkit {
 
 	public String getPartitioningId()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return IVdmPpPartitions.VDMPP_PARTITIONING;
 	}
 
 	public ScriptTextTools getTextTools()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return UIPlugin.getDefault().getTextTools();
 	}
     
 }
