@@ -164,6 +164,15 @@ public abstract class AbstractBuilder {
 	private static void parseMissingFiles(IProject project, String natureId,
 			IResource resource) throws CoreException, IOException {
 		if (resource instanceof IFolder)
+		{
+			if (resource instanceof IFolder
+					&& resource.getLocation().lastSegment().startsWith("."))// skip
+				return;
+				// .
+				// folders
+				// like
+				// .svn
+			
 			for (IResource res : ((IFolder) resource).members(IContainer.INCLUDE_PHANTOMS
 					| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS)) {
 				// System.out.println("Looking at file for parse: "
@@ -171,21 +180,19 @@ public abstract class AbstractBuilder {
 				// System.out.println(project.getContentTypeMatcher().findContentTypeFor(
 				// res.getFullPath().toString()));
 
-				if (res instanceof IFolder
-						&& res.getLocation().lastSegment().startsWith("."))// skip
-					continue;
-					// .
-					// folders
-					// like
-					// .svn
+				
 					parseMissingFiles(project, natureId, res);
 			}
+		}
 		// check if it is a IFile and that there exists a known content type for
 		// this file and the project
 		else if (resource instanceof IFile
 				&& project.getContentTypeMatcher().findContentTypeFor(
 						resource.toString()) != null)
+		{
+			//System.out.println("Parsing file: "+resource);
 			parseMissingFiles(project, natureId, (IFile) resource);
+		}
 
 	}
 
