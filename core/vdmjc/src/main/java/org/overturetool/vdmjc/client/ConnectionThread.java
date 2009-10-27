@@ -68,7 +68,7 @@ public class ConnectionThread extends Thread
 		this.input = new BufferedInputStream(conn.getInputStream());
 		this.output = new BufferedOutputStream(conn.getOutputStream());
 		this.principal = principal;
-		this.status = (principal ? DBGPStatus.STARTING : DBGPStatus.RUNNING);
+		this.status = DBGPStatus.STARTING;
 
 		setDaemon(true);
 	}
@@ -116,9 +116,13 @@ public class ConnectionThread extends Thread
 	public void run()
 	{
 		connected = true;
-
 		try
         {
+			if (!principal)
+			{
+				runme();		// Send run command to start new thread
+			}
+
 			while (connected)
 			{
 				receive();		// Blocking

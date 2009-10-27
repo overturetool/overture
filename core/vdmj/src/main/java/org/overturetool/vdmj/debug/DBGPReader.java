@@ -300,6 +300,7 @@ public class DBGPReader
 		DBGPReader r = new DBGPReader(host, port, ideKey, interpreter, null);
 		r.command = DBGPCommandType.UNKNOWN;
 		r.transaction = "?";
+		r.run(false);			// New threads wait for a "run -i"
 		return r;
 	}
 
@@ -946,6 +947,11 @@ public class DBGPReader
 	{
 		checkArgs(c, 1, false);
 
+		if (expression == null)
+		{
+			return false;	// a run for a new thread, means continue
+		}
+
 		if (status == DBGPStatus.BREAK || status == DBGPStatus.STOPPING)
 		{
 			breakContext.threadState.set(0, null, null);
@@ -1226,8 +1232,15 @@ public class DBGPReader
 			{
 				try
 				{
-					interpreter.clearBreakpoint(exp.breakpoint.number);
-					bp = interpreter.setBreakpoint(exp, condition);
+					if (exp.breakpoint.number != 0)
+					{
+						// Multiple threads set BPs multiple times, so...
+						bp = exp.breakpoint;	// Re-use the existing one
+					}
+					else
+					{
+						bp = interpreter.setBreakpoint(exp, condition);
+					}
 				}
 				catch (ParserException e)
 				{
@@ -1245,8 +1258,15 @@ public class DBGPReader
 		{
 			try
 			{
-				interpreter.clearBreakpoint(stmt.breakpoint.number);
-				bp = interpreter.setBreakpoint(stmt, condition);
+				if (stmt.breakpoint.number != 0)
+				{
+					// Multiple threads set BPs multiple times, so...
+					bp = stmt.breakpoint;	// Re-use the existing one
+				}
+				else
+				{
+					bp = interpreter.setBreakpoint(stmt, condition);
+				}
 			}
 			catch (ParserException e)
 			{
@@ -1301,7 +1321,8 @@ public class DBGPReader
 
 		if (old == null)
 		{
-			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, c.toString());
+			// Multiple threads remove BPs multiple times
+			// throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, c.toString());
 		}
 
 		response(null, null);
