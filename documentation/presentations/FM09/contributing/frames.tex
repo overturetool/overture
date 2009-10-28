@@ -58,14 +58,21 @@ The Overture tools are being developed by volunteers, researchers and students.
   \frametitle{Development environment}
 
 
-\begin{center}
+\begin{block}{Base environment}
   \begin{itemize}
 	%\itemsep=1cm
-  		\item Maven 2
-  		\item Eclipse 3.5 Classic
+  		\item Maven 2 + overture repositories
+  		\item Java SDK 1.5 or greater
+  \end{itemize}
+\end{block}
+
+\begin{block}{GUI environment}
+  \begin{itemize}
+	%\itemsep=1cm
+  		\item Eclipse 3.5.1 Classic
   		\item DLTK 1.0
   \end{itemize}
-\end{center}
+\end{block}
 }
 
 %#######################################################################
@@ -85,9 +92,8 @@ The Overture tools are being developed by volunteers, researchers and students.
   \frametitle{How to contribute}
 
 
-\begin{center}
-  ...
-\end{center}
+Our source is located in Source Forge and is frealy avaliable to download.
+Request to join your group and give us an idea of what you want to contribute.
 }
 
 %-----------------------------------------------------------------------
@@ -95,26 +101,99 @@ The Overture tools are being developed by volunteers, researchers and students.
 %-----------------------------------------------------------------------
 \frame
 {
-  \frametitle{Development environment}
+  \frametitle{Project structure}
 
+\begin{columns}
+\begin{column}{5cm}
+	\begin{block}{Core}
+		\begin{itemize}
+			\item AST
+			\item Parser
+			\item VDMJ Interpeter
+			\item Proofsupport
+			\item Traces
+			\item Umltrans
+		\end{itemize}
+	 \end{block}
+\end{column}
+\begin{column}{5cm}
+\pause
+	\begin{block}{IDE}
+		\begin{itemize}
+			\item Base Editor
+			\item VDM-SL editor
+			\item VDM-PP editor
+			\item VDM-RT editor
+			\item *generated* plugins
+			\item *plugins* GUI plugins
+			\item ...
+		\end{itemize}
+		
+	\end{block}
+\end{column}
+\end{columns}
+\pause
+\begin{block}{Tools}
+	\begin{itemize}
+		\item Maven pst. Enables Maven-Eclipse integration (generated plugins)
+		\item ASTGen - AST generation
+		\item VDMT - VDM Tools integration
+	\end{itemize}
+\end{block}
 
-\begin{center}
-  \begin{itemize}
-	%\itemsep=1cm
-  		\item Core
-  		\item IDE
-  \end{itemize}
-\end{center}
 }
+
+
+\frame
+{
+  \frametitle{Project structure - Eclipse plug-ins}
+
+The Overture Eclipse plug-ins are structures into two groups
+
+\begin{columns}
+\begin{column}{5cm}
+	\begin{block}{Generated}
+	\begin{itemize}
+	%\itemsep=1cm
+		\item VDMJ Interpeter
+		\item Proofsupport
+		\item Traces
+		\item Umltrans
+		
+	 \end{itemize}
+	\end{block}
+\end{column}
+\begin{column}{5cm}
+	\pause
+	\begin{block}{GUI plug-ins}
+	\begin{itemize}
+		\item Combinatorial Testing
+		\item UML Transformation
+	\end{itemize}
+	\end{block}
+\end{column}
+\end{columns}
+
+}
+
 
 \frame
 {
   \frametitle{Check out}
 
-
-\begin{center}
+Subversion on Source Forge:
+\begin{block}{SVN}
 \small \texttt{svn checkout https://overture.svn.sourceforge.net/svnroot/overture/trunk overture}
-\end{center}
+\end{block}
+
+Prepare source for development after check-out
+\begin{block}{Prepare source}
+\begin{itemize}
+	\item Windows: \small \texttt{make.bat install}
+	\item Linux and Mac: \small \texttt{sh make.sh install}
+\end{itemize}
+\end{block}
+
 }
 
 %#######################################################################
