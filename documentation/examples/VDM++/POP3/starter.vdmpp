@@ -1,0 +1,7 @@
+class Starter
+
+operations
+public Start : POP3Server ==> ()
+Start(server) == start(server);
+
+end Starter
