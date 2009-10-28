@@ -128,10 +128,10 @@ public class VdmPpSourceViewerConfiguration extends
 	}
 	
 	
-	@Override
-	protected void alterContentAssistant(ContentAssistant assistant) {
-		// IDocument.DEFAULT_CONTENT_TYPE
-		IContentAssistProcessor scriptProcessor = new VdmPpCompletionProcessor(getEditor(), assistant, IDocument.DEFAULT_CONTENT_TYPE);
-		assistant.setContentAssistProcessor(scriptProcessor, IDocument.DEFAULT_CONTENT_TYPE);
-	}
+//	@Override
+//	protected void alterContentAssistant(ContentAssistant assistant) {
+//		// IDocument.DEFAULT_CONTENT_TYPE
+//		IContentAssistProcessor scriptProcessor = new VdmPpCompletionProcessor(getEditor(), assistant, IDocument.DEFAULT_CONTENT_TYPE);
+//		assistant.setContentAssistProcessor(scriptProcessor, IDocument.DEFAULT_CONTENT_TYPE);
+//	}
 }
