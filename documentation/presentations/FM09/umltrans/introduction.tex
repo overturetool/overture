@@ -129,13 +129,30 @@
 {
   \frametitle{Unified Modeling Language - UML}
 
-\begin{center}
+	\begin{itemize}
+	%\itemsep=1cm
+  		\item UML is a semi-formal visual modeling language
+  		\item Enabled developers to look at the system from different view points.
+  		\item Comprised of differnt kinds of diagrams.
+		\begin{itemize}
+			\item Primiary categoies of diagrams
+			\begin{itemize}
+				\item Structure: Class Diagrams
+				\item Behavior: Sequence Diagrams
+			\end{itemize}
+		\end{itemize}
+  		 
+	  	
+  \end{itemize}
 
-	\begin{block}<+->{Not created yet}
-	Some thing about UML
-	\end{block}
+}
 
-\end{center}
+\note
+{
+Used by developers to model a system at a desired levet of abstraction.
+
+
+
 }
 
 
@@ -153,6 +170,22 @@
 \end{center}
 }
 
+\note
+{
+\begin{itemize}
+	\item Active class
+	\item Generalization
+	\item Visibility: public, proteted, private
+	\item Association
+	\begin{itemize}
+		\item Qualified (int)
+		\item N-ary
+		\item Constraint (xor)
+	\end{itemize}
+\end{itemize}
+
+}
+
 %
 % Sequence Diagram
 %
@@ -160,10 +193,19 @@
 {
   \frametitle{Sequence Diagram}
 
-	\begin{block}<+->{Needs update}
-	This diagram is not the correct one
-	\end{block}
 \begin{center}
-\includegraphics<1->[width=0.5\textwidth]{images/TracesSequenceDiagramEx2.png}%
+	\includegraphics<1->[width=0.5\textwidth]{images/SequenceDiagram.png}%
 \end{center}
+}
+
+
+\note
+{
+\begin{itemize}
+	\item Life line
+	\item Alternative: alt
+	\item Loop
+	\item Constraint
+\end{itemize}
+
 }

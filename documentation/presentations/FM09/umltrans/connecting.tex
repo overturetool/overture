@@ -126,10 +126,34 @@ VDM Tools
 \frame
 {
   \frametitle{VDM Combinatorial Test example evaluation}
-\begin{center}
-Example of a trace
+\begin{columns}
+\begin{column}[l]{5cm}
 
-\end{center}
+	\begin{center}
+	\vdmSpecLineNum{UseStackTrace.vpp}{Traces}{VDM:Collections}
+	\end{center}
+
+\end{column}
+\begin{column}[r]{5cm}
+	\begin{itemize}
+		\item<2-> TC1:
+		\begin{itemize}
+			\item stack.Reset()
+			\item stack.Push(2)
+			\item stack.Push(9)
+		\end{itemize}
+		\item<3-> TC2:
+		\begin{itemize}
+			\item stack.Reset()
+			\item stack.Push(8)
+			\item stack.Push(8)
+			\item stack.Pop()
+		\end{itemize}
+		\item<4-> ... 14 more
+	\end{itemize}
+
+\end{column}
+\end{columns}
 }
 
 
@@ -149,9 +173,9 @@ Example of a trace
 
 \end{column}
 \begin{column}[r]{5cm}
-
+	
 	\begin{center}
-	\includegraphics<1->[width=\textwidth]{images/TracesSequenceDiagramEx2.png}%
+	\includegraphics<2->[width=\textwidth]{images/TracesSequenceDiagramEx2.png}%
 	\end{center}
 
 \end{column}

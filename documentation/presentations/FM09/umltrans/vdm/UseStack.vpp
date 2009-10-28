@@ -7,5 +7,5 @@ instance variables
 traces
  TS: stack.Reset() ;
      let x in set {2,8} in stack.Push(x){1,4};
-     (stack.Push(9) | stack.Pop())
+     (stack.Push(5) | stack.Pop())
 end UseStack
