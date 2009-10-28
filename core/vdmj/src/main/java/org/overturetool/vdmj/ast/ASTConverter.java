@@ -1925,7 +1925,11 @@ public class ASTConverter
 		{
 			PatternList plist = convertPatternList(alt.getPatternList());
 			Statement result = convertStatement(alt.getStatement());
-			list.add(new CaseStmtAlternative(plist, result));
+
+			for (Pattern p: plist)
+			{
+				list.add(new CaseStmtAlternative(p, result));
+			}
 		}
 
 		return list;
@@ -1940,7 +1944,11 @@ public class ASTConverter
 		{
 			PatternList plist = convertPatternList(alt.getPatternList());
 			Expression result = convertExpression(alt.getExpression());
-			list.add(new CaseAlternative(cexp, plist, result));
+
+			for (Pattern p: plist)
+			{
+				list.add(new CaseAlternative(cexp, p, result));
+			}
 		}
 
 		return list;

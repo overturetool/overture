@@ -55,6 +55,12 @@ public class StringPattern extends Pattern
 	}
 
 	@Override
+	public int getLength()
+	{
+		return value.value.length();
+	}
+
+	@Override
 	public DefinitionList getDefinitions(Type type, NameScope scope)
 	{
 		return new DefinitionList();

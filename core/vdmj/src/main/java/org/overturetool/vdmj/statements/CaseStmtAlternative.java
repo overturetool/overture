@@ -29,7 +29,6 @@ import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.patterns.ExpressionPattern;
 import org.overturetool.vdmj.patterns.Pattern;
-import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
@@ -47,22 +46,22 @@ public class CaseStmtAlternative implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	public final LexLocation location;
-	public final PatternList plist;
+	public final Pattern pattern;
 	public final Statement statement;
 
 	private DefinitionList defs = null;
 
-	public CaseStmtAlternative(PatternList plist, Statement stmt)
+	public CaseStmtAlternative(Pattern pattern, Statement stmt)
 	{
 		this.location = stmt.location;
-		this.plist = plist;
+		this.pattern = pattern;
 		this.statement = stmt;
 	}
 
 	@Override
 	public String toString()
 	{
-		return "case " + plist + " -> " + statement;
+		return "case " + pattern + " -> " + statement;
 	}
 
 	public Type typeCheck(Environment base, NameScope scope, Type ctype)
@@ -71,25 +70,22 @@ public class CaseStmtAlternative implements Serializable
 		{
 			defs = new DefinitionList();
 
-			for (Pattern p: plist)
+			if (pattern instanceof ExpressionPattern)
 			{
-				if (p instanceof ExpressionPattern)
-				{
-					// Only expression patterns need type checking...
-					ExpressionPattern ep = (ExpressionPattern)p;
-					ep.exp.typeCheck(base, null, scope);
-				}
+				// Only expression patterns need type checking...
+				ExpressionPattern ep = (ExpressionPattern)pattern;
+				ep.exp.typeCheck(base, null, scope);
+			}
 
-				try
-				{
-					p.typeResolve(base);
-					defs.addAll(p.getDefinitions(ctype, NameScope.LOCAL));
-				}
-				catch (TypeCheckException e)
-				{
-					defs = null;
-					throw e;
-				}
+			try
+			{
+				pattern.typeResolve(base);
+				defs.addAll(pattern.getDefinitions(ctype, NameScope.LOCAL));
+			}
+			catch (TypeCheckException e)
+			{
+				defs = null;
+				throw e;
 			}
 		}
 
@@ -109,17 +105,14 @@ public class CaseStmtAlternative implements Serializable
 	{
 		Context evalContext = new Context(location, "case alternative", ctxt);
 
-		for (Pattern p: plist)
+		try
 		{
-			try
-			{
-				evalContext.putList(p.getNamedValues(val, ctxt));
-				return statement.eval(evalContext);
-			}
-			catch (PatternMatchException e)
-			{
-				// Try them all
-			}
+			evalContext.putList(pattern.getNamedValues(val, ctxt));
+			return statement.eval(evalContext);
+		}
+		catch (PatternMatchException e)
+		{
+			// CasesStatement tries the others
 		}
 
 		return null;

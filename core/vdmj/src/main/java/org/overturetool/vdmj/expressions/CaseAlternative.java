@@ -29,7 +29,6 @@ import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.patterns.ExpressionPattern;
 import org.overturetool.vdmj.patterns.Pattern;
-import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.pog.POCaseContext;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.PONotCaseContext;
@@ -48,23 +47,23 @@ public class CaseAlternative implements Serializable
 
 	public final LexLocation location;
 	public final Expression cexp;
-	public final PatternList plist;
+	public final Pattern pattern;
 	public final Expression result;
 
 	private DefinitionList defs = null;
 
-	public CaseAlternative(Expression cexp, PatternList plist, Expression result)
+	public CaseAlternative(Expression cexp, Pattern pattern, Expression result)
 	{
-		this.location = result.location;
+		this.location = pattern.location;
 		this.cexp = cexp;
-		this.plist = plist;
+		this.pattern = pattern;
 		this.result = result;
 	}
 
 	@Override
 	public String toString()
 	{
-		return "case " + plist + " -> " + result;
+		return "case " + pattern + " -> " + result;
 	}
 
 	public Type typeCheck(Environment base, NameScope scope, Type expType)
@@ -72,20 +71,17 @@ public class CaseAlternative implements Serializable
 		if (defs == null)
 		{
 			defs = new DefinitionList();
-			plist.typeResolve(base);
+			pattern.typeResolve(base);
 
-			for (Pattern p: plist)
+			if (pattern instanceof ExpressionPattern)
 			{
-				if (p instanceof ExpressionPattern)
-				{
-					// Only expression patterns need type checking...
-					ExpressionPattern ep = (ExpressionPattern)p;
-					ep.exp.typeCheck(base, null, scope);
-				}
-
-				p.typeResolve(base);
-				defs.addAll(p.getDefinitions(expType, NameScope.LOCAL));
+				// Only expression patterns need type checking...
+				ExpressionPattern ep = (ExpressionPattern)pattern;
+				ep.exp.typeCheck(base, null, scope);
 			}
+
+			pattern.typeResolve(base);
+			defs.addAll(pattern.getDefinitions(expType, NameScope.LOCAL));
 		}
 
 		defs.typeCheck(base, scope);
@@ -99,17 +95,14 @@ public class CaseAlternative implements Serializable
 	{
 		Context evalContext = new Context(location, "case alternative", ctxt);
 
-		for (Pattern p: plist)
+		try
 		{
-			try
-			{
-				evalContext.putList(p.getNamedValues(val, ctxt));
-				return result.eval(evalContext);
-			}
-			catch (PatternMatchException e)
-			{
-				// Try them all
-			}
+			evalContext.putList(pattern.getNamedValues(val, ctxt));
+			return result.eval(evalContext);
+		}
+		catch (PatternMatchException e)
+		{
+			// Silently fail (CasesExpression will try the others)
 		}
 
 		return null;
@@ -119,13 +112,10 @@ public class CaseAlternative implements Serializable
 	{
 		ProofObligationList obligations = new ProofObligationList();
 
-		for (Pattern p: plist)
-		{
-			ctxt.push(new POCaseContext(p, type, cexp));
-			obligations.addAll(result.getProofObligations(ctxt));
-			ctxt.pop();
-			ctxt.push(new PONotCaseContext(p, type, cexp));
-		}
+		ctxt.push(new POCaseContext(pattern, type, cexp));
+		obligations.addAll(result.getProofObligations(ctxt));
+		ctxt.pop();
+		ctxt.push(new PONotCaseContext(pattern, type, cexp));
 
 		return obligations;
 	}

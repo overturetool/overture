@@ -46,6 +46,7 @@ import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.patterns.Bind;
 import org.overturetool.vdmj.patterns.MultipleBind;
+import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.patterns.SetBind;
 import org.overturetool.vdmj.patterns.TypeBind;
@@ -1395,16 +1396,16 @@ public class ExpressionReader extends SyntaxReader
 
 		List<CaseAlternative> cases = new Vector<CaseAlternative>();
 		Expression others = null;
-		cases.add(readCaseAlternative(exp));
+		cases.addAll(readCaseAlternatives(exp));
 
 		while (ignore(Token.COMMA))
 		{
-			if (lastToken().is(Token.OTHERS) || lastToken().is(Token.END))
+			if (lastToken().is(Token.OTHERS))
 			{
 				break;
 			}
 
-			cases.add(readCaseAlternative(exp));
+			cases.addAll(readCaseAlternatives(exp));
 		}
 
 		if (lastToken().is(Token.OTHERS))
@@ -1418,12 +1419,20 @@ public class ExpressionReader extends SyntaxReader
 		return new CasesExpression(start, exp, cases, others);
 	}
 
-	private CaseAlternative readCaseAlternative(Expression exp)
+	private List<CaseAlternative> readCaseAlternatives(Expression exp)
 		throws ParserException, LexException
 	{
+		List<CaseAlternative> alts = new Vector<CaseAlternative>();
 		PatternList plist = getPatternReader().readPatternList();
 		checkFor(Token.ARROW, 2149, "Expecting '->' after case pattern list");
-		return new CaseAlternative(exp, plist, readExpression());
+		Expression then = readExpression();
+
+		for (Pattern p: plist)
+		{
+			alts.add(new CaseAlternative(exp, p, then));
+		}
+
+		return alts;
 	}
 
 	private Expression readLetExpression(LexLocation start)

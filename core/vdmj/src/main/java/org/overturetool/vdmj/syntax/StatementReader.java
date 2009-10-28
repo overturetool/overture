@@ -923,19 +923,18 @@ public class StatementReader extends SyntaxReader
 		checkFor(Token.COLON, 2235, "Expecting ':' after cases expression");
 
 		List<CaseStmtAlternative> cases = new Vector<CaseStmtAlternative>();
-		PatternReader pr = getPatternReader();
-
-		while (lastToken().isNot(Token.OTHERS) &&
-			   lastToken().isNot(Token.END))
-		{
-			PatternList plist = pr.readPatternList();
-			checkFor(Token.ARROW, 2236, "Expecting '->' after case pattern list");
-			Statement result = readStatement();
-			cases.add(new CaseStmtAlternative(plist, result));
-			ignore(Token.COMMA);
-		}
-
 		Statement others = null;
+		cases.addAll(readCaseAlternatives());
+
+		while (ignore(Token.COMMA))
+		{
+			if (lastToken().is(Token.OTHERS))
+			{
+				break;
+			}
+
+			cases.addAll(readCaseAlternatives());
+		}
 
 		if (lastToken().is(Token.OTHERS))
 		{
@@ -947,6 +946,22 @@ public class StatementReader extends SyntaxReader
 		checkFor(Token.END, 2238, "Expecting 'end' after cases");
 		return new CasesStatement(token, exp, cases, others);
 	}
+
+	private List<CaseStmtAlternative> readCaseAlternatives()
+    	throws ParserException, LexException
+    {
+    	List<CaseStmtAlternative> alts = new Vector<CaseStmtAlternative>();
+    	PatternList plist = getPatternReader().readPatternList();
+    	checkFor(Token.ARROW, 2236, "Expecting '->' after case pattern list");
+    	Statement result = readStatement();
+
+    	for (Pattern p: plist)
+    	{
+    		alts.add(new CaseStmtAlternative(p, result));
+    	}
+
+    	return alts;
+    }
 
 	private DefStatement readDefStatement(LexLocation token)
 		throws ParserException, LexException

@@ -25,7 +25,6 @@ package org.overturetool.vdmj.pog;
 
 import org.overturetool.vdmj.expressions.CaseAlternative;
 import org.overturetool.vdmj.expressions.CasesExpression;
-import org.overturetool.vdmj.patterns.Pattern;
 
 public class CasesExhaustiveObligation extends ProofObligation
 {
@@ -37,31 +36,28 @@ public class CasesExhaustiveObligation extends ProofObligation
 
 		for (CaseAlternative alt: exp.cases)
 		{
-			for (Pattern p: alt.plist)
+			sb.append(prefix);
+
+			if (alt.pattern.getVariableNames().size() == 0)
 			{
-				sb.append(prefix);
-
-				if (p.getVariableNames().size() == 0)
-				{
-					sb.append(exp.exp);
-					sb.append(" = ");
-					sb.append(p);
-				}
-				else
-				{
-		    		sb.append("(exists ");
-		    		sb.append(p);
-		    		sb.append(":");
-		    		sb.append(exp.expType);
-		    		sb.append(" & ");
-		    		sb.append(exp.exp);
-		    		sb.append(" = ");
-		    		sb.append(p);
-		    		sb.append(")");
-				}
-
-				prefix = " or ";
+				sb.append(exp.exp);
+				sb.append(" = ");
+				sb.append(alt.pattern);
 			}
+			else
+			{
+	    		sb.append("(exists ");
+	    		sb.append(alt.pattern);
+	    		sb.append(":");
+	    		sb.append(exp.expType);
+	    		sb.append(" & ");
+	    		sb.append(exp.exp);
+	    		sb.append(" = ");
+	    		sb.append(alt.pattern);
+	    		sb.append(")");
+			}
+
+			prefix = " or ";
 		}
 
 		value = ctxt.getObligation(sb.toString());

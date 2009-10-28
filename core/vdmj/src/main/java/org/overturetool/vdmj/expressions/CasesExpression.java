@@ -126,12 +126,10 @@ public class CasesExpression extends Expression
 	public ProofObligationList getProofObligations(POContextStack ctxt)
 	{
 		ProofObligationList obligations = new ProofObligationList();
-		int pop = 0;
 
 		for (CaseAlternative alt: cases)
 		{
 			obligations.addAll(alt.getProofObligations(ctxt, expType));
-			pop += alt.plist.size();
 		}
 
 		if (others != null)
@@ -139,7 +137,7 @@ public class CasesExpression extends Expression
 			obligations.addAll(others.getProofObligations(ctxt));
 		}
 
-		for (int i=0; i<pop; i++)
+		for (int i=0; i<cases.size(); i++)
 		{
 			ctxt.pop();
 		}
