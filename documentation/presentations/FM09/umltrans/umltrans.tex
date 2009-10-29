@@ -6,6 +6,7 @@
 %\definecolor[named]{colorlightlilla}{RGB}{124,0,184} 
 %\definecolor[named]{colordarklille}{RGB}{28,0,41} 
 %\setbeamertemplate{background canvas}[vertical shading][bottom=colorlightlilla!20,top=colordarklille!30]
+\usepackage{times}
 
 \usepackage{color, graphicx}
 \usepackage[draft]{fixme}
@@ -16,6 +17,44 @@
 
 \input{vdmmodelstyle}
 \usepackage{macros}
+\lstdefinestyle{tool}{basicstyle=\ttfamily,
+                         frame=trBL, 
+			 showstringspaces=false, 
+			 frameround=ffff, 
+			 framexleftmargin=0mm, 
+			 framexrightmargin=0mm}
+\lstdefinestyle{mystyle}{basicstyle=\ttfamily,
+                         frame=trBL, 
+%                         numbers=left, 
+%			 gobble=0, 
+			 showstringspaces=false, 
+%			 linewidth=\textwidth, 
+			 frameround=fttt, 
+			 aboveskip=5mm,
+			 belowskip=5mm,
+			 framexleftmargin=0mm, 
+			 framexrightmargin=0mm}
+%\lstdefinestyle{mystyle}{basicstyle=\sffamily\small,
+%			 frame=tb,
+%                         numbers=left,
+%			 gobble=0,
+%			 showstringspaces=false,
+%			 linewidth=345pt,
+%			 frameround=ffff,
+%			 framexleftmargin=8mm,
+%			 framexrightmargin=8mm,
+%			 framextopmargin=1mm,
+%			 framexbottommargin=1mm,
+%			 aboveskip=7mm,
+%			 belowskip=5mm,
+%			 xleftmargin=10mm,}
+
+\lstset{style=mystyle}
+\lstset{language=VDM++}
+\lstset{alsolanguage=Java}
+% The command below enables you to escape into normal LaTeX mode inside your 
+% VDM chunks by starting with a `?´ character and ending with a `£´
+%\lstset{escapeinside=?£}
 
 %\usetheme{Singapore} 
 \usetheme{Copenhagen} 
