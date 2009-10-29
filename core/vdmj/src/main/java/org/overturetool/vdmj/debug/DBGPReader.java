@@ -947,29 +947,42 @@ public class DBGPReader
 	{
 		checkArgs(c, 1, false);
 
-		if (expression == null)
+		if (status == DBGPStatus.BREAK || status == DBGPStatus.STOPPING)
 		{
+			if (breakContext != null)
+			{
+				breakContext.threadState.set(0, null, null);
+				status = DBGPStatus.RUNNING;
+				statusReason = DBGPReason.OK;
+				return false;	// run means continue
+			}
+			else
+			{
+				throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+			}
+		}
+
+		if (status == DBGPStatus.STARTING && expression == null)
+		{
+			status = DBGPStatus.RUNNING;
+			statusReason = DBGPReason.OK;
 			return false;	// a run for a new thread, means continue
 		}
 
-		if (status == DBGPStatus.BREAK || status == DBGPStatus.STOPPING)
-		{
-			breakContext.threadState.set(0, null, null);
-			return false;	// run means continue
-		}
-
-		if (expression == null || status != DBGPStatus.STARTING)
+		if (status != DBGPStatus.STARTING)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
 
-		if (c.data != null)
+		if (c.data != null)	// data is in "expression"
 		{
 			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
 		}
 
 		try
 		{
+			status = DBGPStatus.RUNNING;
+			statusReason = DBGPReason.OK;
 			interpreter.init(this);
 			theAnswer = interpreter.execute(expression, this);
 			stdout(theAnswer.toString());
@@ -993,7 +1006,8 @@ public class DBGPReader
 	{
 		checkArgs(c, 1, true);
 
-		if (status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
+		if ((status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
+			|| breakpoint == null)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
@@ -1037,6 +1051,8 @@ public class DBGPReader
 
 		try
 		{
+			status = DBGPStatus.RUNNING;
+			statusReason = DBGPReason.OK;
 			String exp = c.data;	// Already base64 decoded by the parser
 			theAnswer = interpreter.execute(exp, this);
 			StringBuilder property = propertyResponse(
@@ -1064,43 +1080,48 @@ public class DBGPReader
 	{
 		checkArgs(c, 1, false);
 
-		if (status != DBGPStatus.BREAK || breakpoint == null)
+		if (breakpoint != null)
 		{
-			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+	   		breakContext.threadState.set(breakpoint.location.startLine, null, null);
 		}
 
-   		breakContext.threadState.set(breakpoint.location.startLine, null, null);
+		status = DBGPStatus.RUNNING;
+		statusReason = DBGPReason.OK;
 	}
 
 	private void processStepOver(DBGPCommand c) throws DBGPException
 	{
 		checkArgs(c, 1, false);
 
-		if (status != DBGPStatus.BREAK || breakpoint == null)
+		if (breakpoint != null)
 		{
-			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+			breakContext.threadState.set(
+				breakpoint.location.startLine, breakContext.getRoot(), null);
 		}
 
-		breakContext.threadState.set(breakpoint.location.startLine,	breakContext.getRoot(), null);
+		status = DBGPStatus.RUNNING;
+		statusReason = DBGPReason.OK;
 	}
 
 	private void processStepOut(DBGPCommand c) throws DBGPException
 	{
 		checkArgs(c, 1, false);
 
-		if (status != DBGPStatus.BREAK)
+		if (breakpoint != null)
 		{
-			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+			breakContext.threadState.set(
+				breakpoint.location.startLine, null, breakContext.getRoot().outer);
 		}
 
-		breakContext.threadState.set(breakpoint.location.startLine, null, breakContext.getRoot().outer);
+		status = DBGPStatus.RUNNING;
+		statusReason = DBGPReason.OK;
 	}
 
 	private void processStop(DBGPCommand c) throws DBGPException, IOException
 	{
 		checkArgs(c, 1, false);
 
-		if (status != DBGPStatus.BREAK)
+		if (breakpoint == null)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
@@ -1361,7 +1382,8 @@ public class DBGPReader
 	{
 		checkArgs(c, 1, false);
 
-		if (status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
+		if ((status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
+			|| breakpoint == null)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
@@ -1834,7 +1856,8 @@ public class DBGPReader
 
 	private void processStack(DBGPCommand c) throws IOException, DBGPException
 	{
-		if (status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
+		if ((status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
+			|| breakpoint == null)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
@@ -2032,7 +2055,8 @@ public class DBGPReader
 
 	private void processCurrentLine(DBGPCommand c) throws DBGPException, IOException
 	{
-		if (status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
+		if ((status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
+			|| breakpoint == null)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
@@ -2048,7 +2072,8 @@ public class DBGPReader
 
 	private void processCurrentSource(DBGPCommand c) throws DBGPException, IOException
 	{
-		if (status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
+		if ((status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
+			|| breakpoint == null)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}

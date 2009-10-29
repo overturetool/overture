@@ -104,6 +104,8 @@ public class StartStatement extends Statement
 	@Override
 	public Value eval(Context ctxt)
 	{
+		breakpoint.check(location, ctxt);
+
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
 			return evalRT(ctxt);
