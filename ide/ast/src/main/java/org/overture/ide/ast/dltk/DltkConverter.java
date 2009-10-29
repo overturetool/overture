@@ -30,7 +30,7 @@ public class DltkConverter
 
 		public int[] getBounds(int lineNumber)
 		{
-			if (codeLines.length > lineNumber)
+			if (lineNumber > 0 && codeLines.length > lineNumber)
 			{
 				String codeLine = codeLines[lineNumber];
 				char[] charLine = codeLine.toCharArray();

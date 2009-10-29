@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-<!--
+
 
  <extension
          point="org.eclipse.ui.popupMenus">
@@ -25,7 +25,7 @@
           <action
                class="org.overture.ide.plugins.idedebughelper.actions.AssociateFilesWithNatureAction"
               
-               id="org.overture.ide.idedebughelper.actions.AssociateFilesWithNatureAction"
+               id="org.overture.ide.idedebughelper.actions.AssociateFilesWithNatureActionSl"
                label="Associate files with nature"
                menubarPath="org.overture.ide.idedebughelper.menuMain/groupIdedebughelper"
                enablesFor="1"
@@ -55,7 +55,7 @@
           <action
                class="org.overture.ide.plugins.idedebughelper.actions.AssociateFilesWithNatureAction"
               
-               id="org.overture.ide.idedebughelper.actions.AssociateFilesWithNatureAction"
+               id="org.overture.ide.idedebughelper.actions.AssociateFilesWithNatureActionPp"
                label="Associate files with nature"
                menubarPath="org.overture.ide.idedebughelper.menuMain/groupIdedebughelper"
                enablesFor="1"
@@ -87,7 +87,7 @@
           <action
                class="org.overture.ide.plugins.idedebughelper.actions.AssociateFilesWithNatureAction"
               
-               id="org.overture.ide.idedebughelper.actions.AssociateFilesWithNatureAction"
+               id="org.overture.ide.idedebughelper.actions.AssociateFilesWithNatureActionRt"
                label="Associate files with nature"
                menubarPath="org.overture.ide.idedebughelper.menuMain/groupIdedebughelper"
                enablesFor="1"
@@ -96,7 +96,7 @@
          
        
       </objectContribution>
-   </extension> -->
+   </extension> 
 
 
 
