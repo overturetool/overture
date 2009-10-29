@@ -134,13 +134,28 @@ Request to join your group and give us an idea of what you want to contribute.
 \end{columns}
 \pause
 \begin{block}{Tools}
-	\begin{itemize}
+	Maven pst, ASTGen, VDMT
+\end{block}
+
+}
+
+\note
+{
+\begin{itemize}
 		\item Maven pst. Enables Maven-Eclipse integration (generated plugins)
 		\item ASTGen - AST generation
 		\item VDMT - VDM Tools integration
-	\end{itemize}
-\end{block}
+\end{itemize}
 
+}
+
+\frame
+{
+  \frametitle{IDE packages}
+
+\begin{center}
+	\includegraphics<1->[width=0.8\textwidth]{images/idepackages.png}%
+\end{center}
 }
 
 
@@ -196,6 +211,17 @@ Prepare source for development after check-out
 
 }
 
+\note
+{
+\begin{block}{Use full maven goals}
+\begin{itemize}
+	\item install - installs a plugin in the local repository
+	\item eclipse:eclipse - generates eclipse project files (needed before eclipse import)
+	\item psteclipse:eclipse-plugin - fetched jar files from local repository and generated binary plugins from the e.g. Manifest files
+\end{itemize}
+\end{block}
+}
+
 %#######################################################################
 \section{Example}
 %-----------------------------------------------------------------------
@@ -211,15 +237,67 @@ Prepare source for development after check-out
 %-----------------------------------------------------------------------
 \subsection{Core}
 %-----------------------------------------------------------------------
-\frame
-{
+\begin{frame}[fragile]
   \frametitle{Adding a core component}
+\begin{columns}
+\begin{column}{5cm}
+	\begin{itemize}
+	%\itemsep=1cm
+		\item Navigate to trunk/core
+		\item Create dir e.g. "umltrans"
+		\item Create pom
+		\begin{itemize}
+			\item Name
+			\item Group
+			\item Version
+			\item Parent name,group,version
+			\item Description
+			\item Depended artifacts
+		\end{itemize}
+		
+	 \end{itemize}
+\end{column}
+\begin{column}{6cm}
+	\pause
+	\lstset{language=XML,
+		frame=ltrb,
+		framesep=5pt,
+		showtabs=true,
+		basicstyle=\tiny,
+		keywordstyle=\ttfamily,
+		identifierstyle=\ttfamily\color{blue}\bfseries,
+		commentstyle=\color{Brown},
+		stringstyle=\ttfamily,
+		showstringspaces=ture}
+	\begin{lstlisting}
+<project>
+  <parent>
+    <groupId>org.overturetool</groupId>
+    <artifactId>core</artifactId>
+    <version>2.0.0</version>
+  </parent>
+  <groupId>org.overturetool</groupId>
+  <artifactId>umltrans</artifactId>
+  <version>2.0.0</version>
+  <name>Bi-directional   
+        UML translator</name>
+  <description>
+    A descriping text
+  </description>
+  <dependencies>
+    <dependency>
+      <groupId>org.overturetool</groupId>
+      <artifactId>stdlib</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+  </dependencies>
+</project>
+	\end{lstlisting}
+\end{column}
+\end{columns}
 
 
-\begin{center}
- 
-\end{center}
-}
+\end{frame}
 
 %-----------------------------------------------------------------------
 \subsection{Eclipse}
@@ -229,31 +307,67 @@ Prepare source for development after check-out
 \frame
 {
   \frametitle{How to create a GUI}
+\begin{itemize}
+	\item Install core artifact
+	\item Create core artifact plug-in wrapper
+	\item Run maven psteclipse:eclipse.plugin to create the eclipse plug-in
+	\item Create the gui plug-in
+	\item Reference the wrapped core plug-in
+\end{itemize}
 
 
-\begin{center}
- 
-\end{center}
 }
 
-\frame
-{
+\begin{frame}[fragile]
   \frametitle{Wrap core component into a plug-in}
 
 
-\begin{center}
- 
-\end{center}
-}
+\lstset{language=XML,
+		frame=ltrb,
+		framesep=5pt,
+		showtabs=true,
+		basicstyle=\tiny,
+		keywordstyle=\ttfamily,
+		identifierstyle=\ttfamily\color{blue}\bfseries,
+		commentstyle=\color{Brown},
+		stringstyle=\ttfamily,
+		showstringspaces=ture}
+\begin{lstlisting}
+<project>
+  <parent>
+    <groupId>org.overture.ide</groupId>
+    <artifactId>org.overture.ide.generated</artifactId>
+    <version>2.0.0</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>
+    org.overture.ide.generated
+  </groupId>
+  <artifactId>
+    org.overture.ide.generated.umltrans
+  </artifactId>
+  <name>
+    org.overture.ide.generated.umltrans
+  </name>
+  <version>2.0.0</version>
+  <packaging>binary-plugin</packaging>
+  <dependencies>
+    <dependency>
+      <groupId>org.overturetool</groupId>
+      <artifactId>umltrans</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+  </dependencies>
+</project>
+\end{lstlisting}
+\end{frame}
 
 \frame
 {
   \frametitle{Creating Eclipse plug-in}
 
 
-\begin{center}
- 
-\end{center}
+
 }
 
 
