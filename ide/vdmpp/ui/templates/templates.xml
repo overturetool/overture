@@ -60,8 +60,8 @@ end ${className}</template>
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.completion.templates.VdmUniversalTemplateContextType"
 		deleted="false" description="Explicit function" enabled="true"
 		name="functionExplicit" id="functionExplicit">${accessSpecifier}
-		${functionName} ${parameterTypes} -&gt; ${resultType}
-		${functionName} ${parameterNames} == ${expression}
+		${functionName} :  ${parameterTypes} -&gt; ${resultType}
+		${functionName} (${parameterNames}) == ${expression}
 		pre ${preCondition}
 		post ${postCondition}</template>
 		
