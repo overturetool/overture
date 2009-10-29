@@ -6,7 +6,7 @@
  <extension
          point="org.eclipse.ui.popupMenus">
       
-      <!-- Enable the menu on sl projects -->
+      <!-- Enable the menu on sl projects
       <objectContribution
             adaptable="true"
             id="org.overture.ide.plugins.proofsupport.contribution1"
@@ -28,17 +28,18 @@
                class="org.overture.ide.plugins.proofsupport.actions.RunProofsupportAction"
               
                id="org.overture.ide.plugins.proofsupport.actions.RunProofsupportAction"
-               label="Run Proofsupport generation"
+               label="Attempt discharge of Proof Obligations"
                menubarPath="org.overture.ide.plugins.proofsupport.menuMain/groupProofsupport"
                enablesFor="1"
                tooltip="Get proofobligations">
          </action>
       </objectContribution>
+      -->
       
       
       
       
-         <!-- Enable the menu on pp projects 
+         <!-- Enable the menu on pp projects -->
       <objectContribution
             adaptable="true"
             id="org.overture.ide.plugins.proofsupport.contribution1"
@@ -60,14 +61,14 @@
                class="org.overture.ide.plugins.proofsupport.actions.RunProofsupportAction"
               
                id="org.overture.ide.plugins.proofsupport.actions.RunProofsupportAction"
-               label="Run Proofsupport generation"
+               label="Attempt to dicharge Proof Obligations"
                menubarPath="org.overture.ide.plugins.proofsupport.menuMain/groupProofsupport"
                enablesFor="1"
                tooltip="Get proofobligations">
          </action>
       </objectContribution>
       
-      -->
+      
       
       
          <!-- Enable the menu on rt projects 

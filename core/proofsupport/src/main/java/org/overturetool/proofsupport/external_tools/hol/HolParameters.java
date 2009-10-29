@@ -16,6 +16,10 @@ public class HolParameters {
 	protected final static String UNQUOTE_BINARY = "unquote";
 
 	protected String mosmlDir = null;
+	public String getMosmlDir() {
+		return mosmlDir;
+	}
+
 	protected String holDir = null;
 
 	protected static String commandArgumentsFormat = "-quietdec -P full -I _HOLDIR_/sigobj "

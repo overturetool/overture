@@ -60,7 +60,8 @@ public abstract class AutomaticProofSystem {
 	protected void finishUp(HolInterpreter hol)
 			throws AutomaicProofSystemException {
 		try {
-			hol.quit();
+			if(hol != null)
+				hol.quit();
 		} catch (HolInterpreterException e) {
 			throw wrapException(HOL_COMPONENT, "Error terminting interpreter.",
 					e);
