@@ -46,6 +46,7 @@ import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.values.CPUValue;
+import org.overturetool.vdmj.values.TransactionValue;
 import org.overturetool.vdmj.values.Value;
 
 
@@ -156,6 +157,7 @@ abstract public class Interpreter
 		mainThread.interrupt();
 		VDMThreadSet.abortAll();
 		CPUValue.abortAll();
+		TransactionValue.commitAll();
 	}
 
 	/**

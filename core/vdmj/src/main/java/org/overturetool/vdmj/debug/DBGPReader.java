@@ -73,17 +73,19 @@ import org.overturetool.vdmj.runtime.ClassContext;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
-import org.overturetool.vdmj.runtime.DebuggerException;
 import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.runtime.ModuleInterpreter;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.RootContext;
 import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.runtime.StateContext;
+import org.overturetool.vdmj.runtime.VDMThreadSet;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.util.Base64;
+import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.NameValuePairMap;
+import org.overturetool.vdmj.values.TransactionValue;
 import org.overturetool.vdmj.values.Value;
 
 public class DBGPReader
@@ -195,7 +197,19 @@ public class DBGPReader
     		{
     			if (i.hasNext())
     			{
-    				logfile = i.next();
+        			try
+        			{
+        				logfile = new URI(i.next()).getPath();
+        			}
+        			catch (URISyntaxException e)
+        			{
+        				usage(e.getMessage() + ": " + arg);
+        			}
+        			catch (IllegalArgumentException e)
+        			{
+        				usage(e.getMessage() + ": " + arg);
+        			}
+
     			}
     			else
     			{
@@ -249,7 +263,8 @@ public class DBGPReader
 				{
 					if (logfile != null)
 					{
-		    			PrintWriter p = new PrintWriter(new FileOutputStream(logfile, true));
+		    			PrintWriter p = new PrintWriter(
+		    				new FileOutputStream(logfile, true));
 		    			RTLogger.setLogfile(p);
 					}
 
@@ -287,7 +302,7 @@ public class DBGPReader
 	private static void usage(String string)
 	{
 		System.err.println(string);
-		System.err.println("Usage: -h <host> -p <port> -k <ide key> <-vdmpp|-vdmsl|-vdmrt> -e <expression> {<filename URLs>}");
+		System.err.println("Usage: -h <host> -p <port> -k <ide key> <-vdmpp|-vdmsl|-vdmrt> -e <expression> [-w] [-log <logfile>] {<filename URLs>}");
 		System.exit(1);
 	}
 
@@ -1146,14 +1161,10 @@ public class DBGPReader
 	{
 		checkArgs(c, 1, false);
 
-		if (breakpoint == null)
-		{
-			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
-		}
-
 		statusResponse(DBGPStatus.STOPPING, DBGPReason.OK);
-		DebuggerException e = new DebuggerException("terminated");
-		Interpreter.stop(null, e, breakContext);
+		VDMThreadSet.abortAll();
+		CPUValue.abortAll();
+		TransactionValue.commitAll();
 	}
 
 	private void breakpointGet(DBGPCommand c) throws DBGPException, IOException
