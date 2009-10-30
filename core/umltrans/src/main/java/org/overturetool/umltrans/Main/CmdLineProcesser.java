@@ -63,7 +63,8 @@ public class CmdLineProcesser extends CmdLineHelper
 		System.out.print(CMD_TO_UML
 				+ " create UML model from VDM vpp files ("+CMD_TO_VPP+" "+OUTPUT_PATH+")\n\n");
 		System.out.print(CMD_PRINT_XML
-				+ " Print XML fils as VDM XML Doc operation\n\n");
+				+ " Print XML fils as VDM XML Doc operation");
+		System.out.print( "		-x -o test filepath\n\n");
 		// System.out.print("\n Example: org.overture.umltrans.jar -u file1.vpp;file2.vpp\n");
 	}
 

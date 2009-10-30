@@ -21,13 +21,18 @@ public Uml2VdmTracesTest: () ==> Uml2VdmTracesTest
     skip;
   );
 
+--  public test01: () ==> ()
+--  test01 () == 
+--    ( 
+--      test(new TestDataTrace().GetSDExample2(),"sdExample2.vpp");
+--      assertTrue(true);  
+--    );
   public test01: () ==> ()
   test01 () == 
-    ( 
-      test(new TestDataTrace().GetSDExample2(),"sdExample2.vpp");
+    (  
+      test(new TestDataTrace().Getalarm(),"alarm.vpp");
       assertTrue(true);  
     );
-
   public test02: () ==> ()
   test02 () == 
     ( 
