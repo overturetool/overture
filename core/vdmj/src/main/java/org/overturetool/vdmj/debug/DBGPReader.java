@@ -125,6 +125,7 @@ public class DBGPReader
 		List<String> largs = Arrays.asList(args);
 		VDMJ controller = null;
 		boolean warnings = true;
+		String logfile = null;
 
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
 		{
@@ -190,6 +191,17 @@ public class DBGPReader
     				usage("-e option requires an expression");
     			}
     		}
+    		else if (arg.equals("-log"))
+    		{
+    			if (i.hasNext())
+    			{
+    				logfile = i.next();
+    			}
+    			else
+    			{
+    				usage("-log option requires a filename");
+    			}
+    		}
     		else if (arg.equals("-w"))
     		{
     			warnings = false;
@@ -222,9 +234,12 @@ public class DBGPReader
 			usage("Missing mandatory arguments");
 		}
 
+		if (Settings.dialect != Dialect.VDM_RT && logfile != null)
+		{
+			usage("-log can only be used with -vdmrt");
+		}
+
 		controller.setWarnings(warnings);
-
-
 
 		if (controller.parse(files) == ExitStatus.EXIT_OK)
 		{
@@ -232,19 +247,29 @@ public class DBGPReader
     		{
 				try
 				{
+					if (logfile != null)
+					{
+		    			PrintWriter p = new PrintWriter(new FileOutputStream(logfile, true));
+		    			RTLogger.setLogfile(p);
+					}
+
 					Interpreter i = controller.getInterpreter();
 					new DBGPReader(host, port, ideKey, i, expression).run(true);
+
+					RTLogger.dump(true);
 	    			System.exit(0);
 				}
 				catch (ContextException e)
 				{
 					System.out.println("Initialization: " + e);
 					e.ctxt.printStackTrace(Console.out, true);
+					RTLogger.dump(true);
 					System.exit(3);
 				}
 				catch (Exception e)
 				{
 					System.out.println("Initialization: " + e);
+					RTLogger.dump(true);
 					System.exit(3);
 				}
     		}

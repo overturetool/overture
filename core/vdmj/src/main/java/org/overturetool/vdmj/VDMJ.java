@@ -47,6 +47,7 @@ abstract public class VDMJ
 	protected static boolean quiet = false;
 	protected static String script = null;
 	protected static String outfile = null;
+	protected static String logfile = null;
 
 	public static String filecharset = Charset.defaultCharset().name();
 
@@ -170,6 +171,17 @@ abstract public class VDMJ
     			Settings.invchecks = false;
     			Settings.dynamictypechecks = false;
     		}
+    		else if (arg.equals("-log"))
+    		{
+    			if (i.hasNext())
+    			{
+    				logfile = i.next();
+    			}
+    			else
+    			{
+    				usage("-log option requires a filename");
+    			}
+    		}
     		else if (arg.startsWith("-"))
     		{
     			usage("Unknown option " + arg);
@@ -183,6 +195,11 @@ abstract public class VDMJ
 		if (controller == null)
 		{
 			usage("You must specify either -vdmsl, -vdmpp, -vdmrt or -overture");
+		}
+
+		if (logfile != null && !(controller instanceof VDMRT))
+		{
+			usage("The -log option can only be used with -vdmrt");
 		}
 
 		ExitStatus status = null;
@@ -241,12 +258,12 @@ abstract public class VDMJ
 		System.err.println("-e <exp>: evaluate <exp> and stop");
 		System.err.println("-c <charset>: select a file charset");
 		System.err.println("-t <charset>: select a console charset");
-		System.err.println("-t <charset>: select a console charset");
 		System.err.println("-o <filename>: saved type checked specification");
 		System.err.println("-pre: disable precondition checks");
 		System.err.println("-post: disable postcondition checks");
 		System.err.println("-inv: disable type/state invariant checks");
 		System.err.println("-dtc: disable all dynamic type checking");
+		System.err.println("-log: enable real-time event logging");
 
 		System.exit(1);
 	}

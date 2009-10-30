@@ -25,10 +25,12 @@ package org.overturetool.vdmj;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -41,6 +43,7 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.InternalException;
+import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.ContextException;
@@ -272,6 +275,21 @@ public class VDMPP extends VDMJ
 	protected ExitStatus interpret(List<File> filenames)
 	{
 		ClassInterpreter interpreter = null;
+
+		if (logfile != null)
+		{
+    		try
+    		{
+    			PrintWriter p = new PrintWriter(new FileOutputStream(logfile, true));
+    			RTLogger.setLogfile(p);
+    			println("RT events now logged to " + logfile);
+    		}
+    		catch (FileNotFoundException e)
+    		{
+    			println("Cannot create RT event log: " + e.getMessage());
+    			return ExitStatus.EXIT_ERRORS;
+    		}
+		}
 
 		try
 		{
