@@ -30,14 +30,14 @@ import org.overture.ide.plugins.proofsupport.views.actions.PoTableView;
 import org.overture.ide.utility.ProjectUtility;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
 import org.overture.ide.vdmsl.core.VdmSlProjectNature;
-import org.overturetool.proofsupport.AutomaticProofSystemBatch;
 import org.overturetool.proofsupport.ProofResult;
+import org.overturetool.proofsupport.external_tools.Utilities;
 import org.overturetool.proofsupport.external_tools.pog.PoGenerator;
 import org.overturetool.proofsupport.external_tools.pog.PoProcessor;
 import org.overturetool.proofsupport.external_tools.pog.VdmToolsPoProcessor;
 import org.overturetool.proofsupport.external_tools.pog.VdmToolsWrapper;
 
-public class RunProofsupportAction implements IObjectActionDelegate {
+public class RunGeneratePosAction implements IObjectActionDelegate {
 
 	private Shell shell;
 	private IWorkbenchPart targetPart;
@@ -45,7 +45,7 @@ public class RunProofsupportAction implements IObjectActionDelegate {
 	/**
 	 * Constructor for Action1.
 	 */
-	public RunProofsupportAction() {
+	public RunGeneratePosAction() {
 		super();
 	}
 
@@ -78,8 +78,6 @@ public class RunProofsupportAction implements IObjectActionDelegate {
 			List<IFile> files = ProjectUtility.getFiles(selectedProject,
 					"org.eclipse.core.runtime.text");
 			VdmToolsWrapper vdmTools = null;
-			String holDir = null;
-			String mosmlDir = null;
 
 			// TODO: this code is a hack and should be replaced by a proper
 			// configuration menu
@@ -93,14 +91,12 @@ public class RunProofsupportAction implements IObjectActionDelegate {
 							new InputStreamReader(new FileInputStream(f
 									.getLocation().toFile())));
 					String vppdeExecutable = reader.readLine();
-					mosmlDir = reader.readLine();
-					holDir = reader.readLine();
-					reader.close();
 					vdmTools = new VdmToolsWrapper(vppdeExecutable);
+					reader.close();
 				}
 			}
 
-			if (mosmlDir != null && holDir != null && vdmTools != null) {
+			if (vdmTools != null) {
 				ConsoleWriter.ConsolePrint(s, "Proof system settings loaded");
 
 				String vdmModel = selectModelFile(s, selectedProject);
@@ -110,9 +106,8 @@ public class RunProofsupportAction implements IObjectActionDelegate {
 							.hasNature(VdmPpProjectNature.VDM_PP_NATURE)
 							|| selectedProject
 									.hasNature(VdmSlProjectNature.VDM_SL_NATURE))
-						createProofs(selectedProject, vdmModel, holDir,
-								mosmlDir, vdmTools, new VdmToolsPoProcessor(),
-								s);
+						generatePos(selectedProject, vdmModel, vdmTools,
+								new VdmToolsPoProcessor(), s);
 				} else
 					ConsoleWriter.ConsolePrint(s, "Operation canceled.");
 			} else {
@@ -155,10 +150,9 @@ public class RunProofsupportAction implements IObjectActionDelegate {
 		return fd.open();
 	}
 
-	private void createProofs(final IProject selectedProject,
-			final String vdmModel, final String holDir, final String mosmlDir,
-			final PoGenerator poGen, final PoProcessor poProc,
-			final Shell output) {
+	private void generatePos(final IProject selectedProject,
+			final String vdmModel, final PoGenerator poGen,
+			final PoProcessor poProc, final Shell output) {
 		final Job expandJob = new Job("Automatic Proof System running") {
 
 			@Override
@@ -167,19 +161,32 @@ public class RunProofsupportAction implements IObjectActionDelegate {
 				monitor.worked(IProgressMonitor.UNKNOWN);
 				try {
 
-					ConsoleWriter.ConsolePrint(output, "Starting proof system");
-					AutomaticProofSystemBatch aps = new AutomaticProofSystemBatch(
-							mosmlDir, holDir, poGen, poProc);
-					ProofResult[] result = aps.dischargeAllPos(vdmModel,
-							new ArrayList<String>(0));
+					ConsoleWriter.ConsolePrint(output,
+							"Generating Proof Obligations");
+					List<String[]> pos = poProc.extractPosFromFile(poGen
+							.generatePogFile(new String[] { vdmModel }));
+					if (pos.size() > 0) {
+						ProofResult[] proofs = new ProofResult[pos.size()];
+						for (int i = 0; i < pos.size(); i++) {
+							StringBuffer sb = new StringBuffer();
+							for (String s : pos.get(i))
+								sb.append(s).append(Utilities.LINE_SEPARATOR);
+							proofs[i] = new ProofResult("PO-" + (i + 1), sb
+									.toString(), false);
+						}
+						for (ProofResult r : proofs)
+							ConsoleWriter.ConsolePrint(output, r.toString());
+						
+						ConsoleWriter.ConsolePrint(output,
+								"Generation of Proof Obligations done.");
 
-					for (ProofResult r : result)
-						ConsoleWriter.ConsolePrint(output, r.toString());
+						addDataToTable(proofs);
+					} else {
+						ConsoleWriter.ConsolePrint(output,
+								"No Proof Obligations were generated.");
+					}
 
-					ConsoleWriter.ConsolePrint(output, "Proof system done.");
 					ConsoleWriter.Show();
-
-					addDataToTable(result);
 
 					selectedProject
 							.refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -197,7 +204,7 @@ public class RunProofsupportAction implements IObjectActionDelegate {
 
 				return new Status(IStatus.OK,
 						"org.overture.ide..plugins.proofsupport", IStatus.OK,
-						"Automatic Proof System completed", null);
+						"Proof Obligations generated", null);
 
 			}
 

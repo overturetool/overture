@@ -39,30 +39,36 @@
       
       
       
-         <!-- Enable the menu on pp projects -->
+      <!-- Enable the menu on pp projects -->
       <objectContribution
             adaptable="true"
             id="org.overture.ide.plugins.proofsupport.contribution1"
             objectClass="org.eclipse.core.resources.IProject">
             <filter
-         name="projectNature"
-         value="org.overture.ide.vdmpp.core.nature">
-      </filter>
-         <menu
+         		name="projectNature"
+         		value="org.overture.ide.vdmpp.core.nature">
+      		</filter>
+         	<menu
                id="org.overture.ide.plugins.proofsupport.menuMain"
                label="Automatic Proof Support"
                path="additions">
             <separator
-                  name="groupProofsupport">
+                  name="groupProofSupport">
             </separator>
          </menu>
-         
-          <action
+         <action
+               class="org.overture.ide.plugins.proofsupport.actions.RunGeneratePosAction"
+               id="org.overture.ide.plugins.proofsupport.actions.RunGeneratePosAction"
+               label="Generate Proof Obligations"
+               menubarPath="org.overture.ide.plugins.proofsupport.menuMain/groupProofSupport"
+               enablesFor="1"
+               tooltip="Select a file to generate its proof obligations">
+         </action>
+         <action
                class="org.overture.ide.plugins.proofsupport.actions.RunProofsupportAction"
-              
                id="org.overture.ide.plugins.proofsupport.actions.RunProofsupportAction"
                label="Attempt to dicharge Proof Obligations"
-               menubarPath="org.overture.ide.plugins.proofsupport.menuMain/groupProofsupport"
+               menubarPath="org.overture.ide.plugins.proofsupport.menuMain/groupProofSupport"
                enablesFor="1"
                tooltip="Select a file to discharge its proof obligations">
          </action>
@@ -104,17 +110,5 @@
 
 
 
-   <extension
-         point="org.eclipse.ui.views">
-     
-     
-   
-      <view
-           category="org.overture.ide.ui.view.category"
-            class="org.overture.ide.plugins.proofsupport.views.actions.PoTableView"
-            id="org.overture.ide.plugins.proofsupport.views.PoTableView"
-            name="PO result">
-      </view>
-   </extension>
 
 </plugin>

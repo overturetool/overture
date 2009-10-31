@@ -18,7 +18,6 @@ public class AutomaticProofSystemTest extends AutomaticProofSystemTestCase {
 		String[] expected = new String[] { "PO-1\nExpression:\n(forall s : Set &\nSet`pre_doNothing(s))\nStatus: NOT DISCHARGED" };
 		ProofResult[] actual = aps.dischargeAllPos(setModel, contextFiles);
 
-
 		assertEquals(1, actual.length);
 		assertEquals(expected[0], actual[0].toString());		
 	}
