@@ -19,26 +19,30 @@
   \begin{itemize}[<+->]
 \itemsep=1cm
   \item<1-> Best of both by combining VDM and UML.
-  \item<2-> Improve the limited tool support for VDM.
-  \item<3-> Provide an easy to use and extensible user interface.
+  \item<2-> Improve the tool support for VDM.
+%  \item<3-> Provide an easy to use and extensible user interface.
   \end{itemize}
 %\end{center}
 }
+\note{
+VDM = precession
+UML = overview, less details
 
+}
 %
 % Motivation combining knowlage
 %
-\frame
-{
-\frametitle{Communication}
-  \begin{itemize}
-	\itemsep=1cm
-  		\item<1-> Formal Method (VDM)
-  		\item<2-> Unified Modeling Language (UML)
-  		\item<3-> Provide a broader platform of information sharing
-  \end{itemize}
-
-}
+%\frame
+%{
+%\frametitle{Communication}
+%  \begin{itemize}
+%	\itemsep=1cm
+%  		\item<1-> Formal Method (VDM)
+%  		\item<2-> Unified Modeling Language (UML)
+%  		\item<3-> Provide a broader platform of information sharing
+%  \end{itemize}
+%
+%}
 
 \note
 {
@@ -64,19 +68,15 @@
 \begin{center}
 
 	\begin{block}<+->{Transformation}
-	Provide a connection between VDM and UML. 
+	Provide a bidirectional connection between VDM and UML 2.x. 
 	\begin{itemize}
 		\item Class Diagrams
-		\item Sequence Diagrams
+		\item Sequence Diagrams (new)
 	\end{itemize}
 	\end{block}
 \vspace{1cm}
 	\begin{block}<+->{Tool}
-	Provide a open source easy to use extensible interface
-	\begin{itemize}
-		\item Availability
-		\item Extendibility
-	\end{itemize}
+	Provide a open source tool as part of the Overture Tool suite
 	\end{block}
 %  \begin{itemize}
 %	%\itemsep=1cm
@@ -105,15 +105,24 @@
   \begin{itemize}
 	%\itemsep=1cm
   		\item<1-> VDM originates from Vienna in the 1970s
-  		\item<2-> VDM Specification Language (VDM-SL) ISO released in '96
+  		\item<2-> VDM Specification Language (VDM-SL) ISO standardised in '96
   		\item<3-> Extended in 1992-94 with object oriented structure and concurrency handling (VDM++).
-  		\item<4-> Last extension made for distributed real-time systems (VICE).
+  		\item<4-> Extended in 1999-2007 with distributed real-time systems (VICE).
+	  	\item<5-> VDM++ Extended with Traces for test automation in 2008
   		\item<5-> Two most significant tool suites.
   		\begin{itemize}
   			\item VDM Tools - commercial
+			\begin{itemize}
+				\item Existing bidirectional link to UML 1.4 (Rational Rose)
+				\item First released in 1997
+			\end{itemize}
   			\item Overture - open source
+			\begin{itemize}
+				\item New bidirectional link to UML 2.x (Enterprise Architect)
+				\item First released in 2009
+			\end{itemize}
   		\end{itemize}
-	  	
+
   \end{itemize}
 
 
@@ -146,13 +155,15 @@
 	\begin{itemize}
 	%\itemsep=1cm
   		\item<1-> UML is a semi-formal visual modeling language
+		\item UML 1 - 
+		\item UML 2 -
   		\item<2-> Enabled developers to look at the system from different view points.
-  		\item<3-> Comprised of differnt kinds of diagrams.
+  		\item<3-> Comprised of different kinds of diagrams.
 		\begin{itemize}
 			%\item Primiary categoies of diagrams
 			%\begin{itemize}
 				\item Structure: Class Diagrams
-				\item Behavior: Sequence Diagrams
+				\item Behavior: Sequence Diagrams (significant improvements in UML 2)
 			%\end{itemize}
 		\end{itemize}
   		 
@@ -163,9 +174,9 @@
 
 \note
 {
-Used by developers to model a system at a desired levet of abstraction.
+Used by developers to model a system at a desired level of abstraction.
 
-
+Sequence diagrams: loops, alt
 
 }
 

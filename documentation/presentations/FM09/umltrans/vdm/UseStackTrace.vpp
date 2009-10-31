@@ -6,7 +6,7 @@ traces
       stack.Push(x){1,4};
       (
         stack.Push(5) 
-        | 
+        |  
         stack.Pop()
       )
 
