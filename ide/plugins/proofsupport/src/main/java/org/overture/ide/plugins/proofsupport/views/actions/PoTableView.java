@@ -81,13 +81,13 @@ public class PoTableView  extends ViewPart implements ISelectionListener
 			switch (columnIndex)
 			{
 			case 0:
-				columnText = data.traceDef;
+				columnText = data.getPoId();
 				break;
 			case 1:
-				columnText = data.description; // StringConverter.asString(data.number);
+				columnText = data.getVdmPo(); // StringConverter.asString(data.number);
 				break;
 			case 2:
-				columnText = ""; // StringConverter.asString(data.number);
+				columnText = data.getStatus(); // StringConverter.asString(data.number);
 				break;
 			default:
 				columnText = "not set";
@@ -108,7 +108,7 @@ public class PoTableView  extends ViewPart implements ISelectionListener
 		
 	}
 
-	class NameSorter extends ViewerSorter
+	class IdSorter extends ViewerSorter
 	{
 	}
 
@@ -131,7 +131,7 @@ public class PoTableView  extends ViewPart implements ISelectionListener
 		TableLayout layout = new TableLayout();
 		layout.addColumnData(new ColumnWeightData(50, 100, true));
 		layout.addColumnData(new ColumnWeightData(50, 100, true));
-		// layout.addColumnData(new ColumnWeightData(50, 100, true));
+		layout.addColumnData(new ColumnWeightData(50, 100, true));
 		viewer.getTable().setLayout(layout);
 		viewer.getTable().setLinesVisible(true);
 		viewer.getTable().setHeaderVisible(true);
@@ -140,19 +140,19 @@ public class PoTableView  extends ViewPart implements ISelectionListener
 
 		TableColumn column = new TableColumn(viewer.getTable(), SWT.LEFT);
 		column.setText("PO");
-		column.setToolTipText("PO Name");
+		column.setToolTipText("PO Number");
 
 		TableColumn column2 = new TableColumn(viewer.getTable(), SWT.LEFT);
-		column2.setText("Result");
-		column2.setToolTipText("Show Description");
+		column2.setText("Expression");
+		column2.setToolTipText("Show Expression");
 
-		// TableColumn column3 = new TableColumn(viewer.getTable(), SWT.LEFT);
-		// column3.setText("Verdict");
-		// column3.setToolTipText("Show verdict");
+		TableColumn column3 = new TableColumn(viewer.getTable(), SWT.LEFT);
+		column3.setText("Status");
+		column3.setToolTipText("Show status");
 
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
-		// viewer.setSorter(new NameSorter());
+		//viewer.setSorter(new IdSorter());
 
 		// input
 
@@ -244,7 +244,7 @@ public class PoTableView  extends ViewPart implements ISelectionListener
 				ISelection selection = viewer.getSelection();
 				Object obj = ((IStructuredSelection) selection).getFirstElement();
 				if (obj instanceof Data)
-					showMessage(((Data) obj).GetDescription().toString());
+					showMessage(((Data) obj).toString());
 			}
 		};
 	}

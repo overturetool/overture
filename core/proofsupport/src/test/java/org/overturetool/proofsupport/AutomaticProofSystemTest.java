@@ -15,12 +15,12 @@ public class AutomaticProofSystemTest extends AutomaticProofSystemTestCase {
 				new VdmToolsPoProcessor());
 		List<String> contextFiles = new ArrayList<String>(0);
 
-		String[] expected = new String[] { "PO-1\nExpression:\n(forall s : Set &\nSet`pre_doNothing(s))\nResult: NOT DISCHARGED" };
-		String[] actual = aps.dischargeAllPos(setModel, contextFiles);
+		String[] expected = new String[] { "PO-1\nExpression:\n(forall s : Set &\nSet`pre_doNothing(s))\nStatus: NOT DISCHARGED" };
+		ProofResult[] actual = aps.dischargeAllPos(setModel, contextFiles);
 
 
 		assertEquals(1, actual.length);
-		assertEquals(expected[0], actual[0]);		
+		assertEquals(expected[0], actual[0].toString());		
 	}
 
 	public void testDischargeAllPosStack() throws Exception {
@@ -28,14 +28,14 @@ public class AutomaticProofSystemTest extends AutomaticProofSystemTestCase {
 				holDir, new VdmToolsWrapper(vppdeExecutable),
 				new VdmToolsPoProcessor());
 		List<String> contextFiles = new ArrayList<String>(0);
-		String[] expected = new String[] { "PO-1\nExpression:\n(forall s : Stack &\ns <> [])\nResult: NOT DISCHARGED",
-				"PO-2\nExpression:\n(forall s : Stack &\ns <> [] =>\n s <> [])\nResult: DISCHARGED" };
+		String[] expected = new String[] { "PO-1\nExpression:\n(forall s : Stack &\ns <> [])\nStatus: NOT DISCHARGED",
+				"PO-2\nExpression:\n(forall s : Stack &\ns <> [] =>\n s <> [])\nStatus: DISCHARGED" };
 
-		String[] actual = aps.dischargeAllPos(stackModel, contextFiles);
+		ProofResult[] actual = aps.dischargeAllPos(stackModel, contextFiles);
 		
 		assertEquals(2, actual.length);
-		assertEquals(expected[0], actual[0]);
-		assertEquals(expected[1], actual[1]);
+		assertEquals(expected[0], actual[0].toString());
+		assertEquals(expected[1], actual[1].toString());
 	}
 
 	public void testDoModelTranslation() throws Exception {

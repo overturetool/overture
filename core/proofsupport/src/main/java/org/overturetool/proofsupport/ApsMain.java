@@ -63,15 +63,15 @@ public class ApsMain {
 				System.out.println(aps.translateModelAndPos(vdmModelFile,
 						vdmContextFiles));
 		else if (proof) {
-			String[] outputLines = new String[] {};
+			ProofResult[] outputLines = new ProofResult[] {};
 			if (!pogFile.equals(""))
 				outputLines = aps.dischargeAllPos(vdmModelFile,
 						vdmContextFiles, pogFile);
 			else
 				outputLines = aps
 						.dischargeAllPos(vdmModelFile, vdmContextFiles);
-			for (String outputLine : outputLines)
-				System.out.println(outputLine);
+			for (ProofResult outputLine : outputLines)
+				System.out.println(outputLine.toString());
 		}
 	}
 

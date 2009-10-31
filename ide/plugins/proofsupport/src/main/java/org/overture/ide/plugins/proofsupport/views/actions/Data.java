@@ -1,20 +1,36 @@
 package org.overture.ide.plugins.proofsupport.views.actions;
 
+import org.overturetool.proofsupport.ProofResult;
+
 public class Data
 {
-	String traceDef;
-	String description;
+	private ProofResult proofResult = null;
 	
-	public Data(String traceDef, String Description)
+	public Data(ProofResult profResult)
 	{
-		this.description = Description;
-		this.traceDef = traceDef;
+		this.proofResult = profResult;
 		
 	}
 
-	public String GetDescription()
-	{
-		return this.description;
+	public String getStatus() {
+		return proofResult.getStatus();
 	}
+
+	public String getPoId() {
+		return proofResult.getPoId();
+	}
+
+	public String getVdmPo() {
+		return proofResult.getVdmPo();
+	}
+
+	public boolean isDischarged() {
+		return proofResult.isDischarged();
+	}
+
+	public String toString() {
+		return proofResult.toString();
+	}
+
 
 }

@@ -21,13 +21,13 @@ public class AutomaticProofSystemBatch extends AutomaticProofSystem {
 		super(mosmlDir, holDir, pogGen, pogProc);
 	}
 
-	public String[] dischargeAllPos(String vdmModelFile,
+	public ProofResult[] dischargeAllPos(String vdmModelFile,
 			List<String> vdmContextFiles) throws AutomaicProofSystemException {
 		Proof proof = translateModelAndPos(vdmModelFile, vdmContextFiles);
 		return doBatchProof(proof);
 	}
 
-	public String[] dischargeAllPos(String vdmModelFile,
+	public ProofResult[] dischargeAllPos(String vdmModelFile,
 			List<String> vdmContextFiles, String pogFile)
 			throws AutomaicProofSystemException {
 		Proof proof = translateModelAndPos(vdmModelFile, vdmContextFiles,
@@ -49,9 +49,9 @@ public class AutomaticProofSystemBatch extends AutomaticProofSystem {
 		return doModelAndPosTranslation(prepData);
 	}
 
-	public String[] doBatchProof(Proof proofData)
+	public ProofResult[] doBatchProof(Proof proofData)
 			throws AutomaicProofSystemException {
-		LinkedList<String> result = new LinkedList<String>();
+		LinkedList<ProofResult> result = new LinkedList<ProofResult>();
 		HolInterpreter hol = null;
 		try {
 			hol = HolInterpreterFactory.newHolInterepterInstance(holParam);
@@ -62,16 +62,11 @@ public class AutomaticProofSystemBatch extends AutomaticProofSystem {
 			hol.interpretModel(proofData.getTheory());
 			// TODO: detect errors in theory
 
-			for (int i = 0; i < proofData.proofCommandsSize(); i++) {
-				StringBuffer sb  = new StringBuffer();
-				sb.append("PO-").append(i + 1).append(Utilities.LINE_SEPARATOR);
-				sb.append("Expression:").append(Utilities.LINE_SEPARATOR);
-				sb.append(proofData.getProofExpression(i)).append(Utilities.LINE_SEPARATOR);
-				sb.append("Result: ").append(hol.dischargeProof(proofData
-						.getProofCommand(i)) ? "DISCHARGED"
-								: "NOT DISCHARGED");
-				result.add(sb.toString());
-			}		
+			for (int i = 0; i < proofData.proofCommandsSize(); i++)
+				result.add(new ProofResult("PO-" + (i + 1), proofData
+						.getProofExpression(i), hol.dischargeProof(proofData
+						.getProofCommand(i))));
+
 		} catch (HolInterpreterException e) {
 			throw new AutomaicProofSystemException("[HOL] " + e.getMessage(), e);
 		} catch (IOException e) {
@@ -81,6 +76,6 @@ public class AutomaticProofSystemBatch extends AutomaticProofSystem {
 		} finally {
 			finishUp(hol);
 		}
-		return result.toArray(new String[result.size()]);
+		return result.toArray(new ProofResult[result.size()]);
 	}
 }

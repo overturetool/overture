@@ -50,7 +50,7 @@
       </filter>
          <menu
                id="org.overture.ide.plugins.proofsupport.menuMain"
-               label="Proofsupport"
+               label="Automatic Proof Support"
                path="additions">
             <separator
                   name="groupProofsupport">
@@ -64,7 +64,7 @@
                label="Attempt to dicharge Proof Obligations"
                menubarPath="org.overture.ide.plugins.proofsupport.menuMain/groupProofsupport"
                enablesFor="1"
-               tooltip="Get proofobligations">
+               tooltip="Select a file to discharge its proof obligations">
          </action>
       </objectContribution>
       

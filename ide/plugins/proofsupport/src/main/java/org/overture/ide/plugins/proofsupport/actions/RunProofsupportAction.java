@@ -27,6 +27,7 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
+import org.overture.ide.plugins.proofsupport.views.actions.Data;
 import org.overture.ide.plugins.proofsupport.views.actions.PoTableView;
 import org.overture.ide.utility.ProjectUtility;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
@@ -35,6 +36,7 @@ import org.overture.ide.vdmsl.core.VdmSlCorePluginConstants;
 import org.overture.ide.vdmsl.core.VdmSlProjectNature;
 import org.overturetool.proofsupport.AutomaticProofSystem;
 import org.overturetool.proofsupport.AutomaticProofSystemBatch;
+import org.overturetool.proofsupport.ProofResult;
 import org.overturetool.proofsupport.external_tools.hol.HolParameters;
 import org.overturetool.proofsupport.external_tools.pog.PoGenerator;
 import org.overturetool.proofsupport.external_tools.pog.PoProcessor;
@@ -79,56 +81,47 @@ public class RunProofsupportAction implements IObjectActionDelegate {
 				return;
 			}
 
-			IWorkspace workspace = ResourcesPlugin.getWorkspace();
-			IWorkspaceRoot root = workspace.getRoot();
-			IPath location = root.getLocation();
+			List<IFile> files = ProjectUtility.getFiles(selectedProject,
+					"org.eclipse.core.runtime.text");
+			VdmToolsWrapper vdmTools = null;
+			String holDir = null;
+			String mosmlDir = null;
 
-			IPath projectPath = selectedProject.getFullPath();
-
-			String vdmModel = selectFileToProcess(s, location.toOSString()
-					+ System.getProperty("file.separator")
-					+ projectPath.toOSString(),
-					"Select the model to be analyzed");
-			if (vdmModel != null) {
-
-				List<IFile> files = ProjectUtility.getFiles(selectedProject,
-						"org.eclipse.core.runtime.text");
-				VdmToolsWrapper vdmTools = null;
-				String holDir = null;
-				String mosmlDir = null;
-
-				// TODO: this code is a hack and should be replaced by a proper
-				// configuration menu
-				// and calls to where the resources reside!
-				String fileName = null;
-				for (IFile f : files) {
-					fileName = f.getName();
-					ConsoleWriter.ConsolePrint(s, "file: " + fileName);
-					if (fileName.equals("proverSettings.txt")) {
-						BufferedReader reader = new BufferedReader(
-								new InputStreamReader(new FileInputStream(f
-										.getLocation().toFile())));
-						mosmlDir = reader.readLine();
-						holDir = reader.readLine();
-						String vppdeExecutable = reader.readLine();
-						vdmTools = new VdmToolsWrapper(vppdeExecutable);
-						reader.close();
-					}
+			// TODO: this code is a hack and should be replaced by a proper
+			// configuration menu
+			// and calls to where the resources reside!
+			String fileName = null;
+			for (IFile f : files) {
+				fileName = f.getName();
+				ConsoleWriter.ConsolePrint(s, "file: " + fileName);
+				if (fileName.equals("proverSettings.txt")) {
+					BufferedReader reader = new BufferedReader(
+							new InputStreamReader(new FileInputStream(f
+									.getLocation().toFile())));
+					mosmlDir = reader.readLine();
+					holDir = reader.readLine();
+					String vppdeExecutable = reader.readLine();
+					vdmTools = new VdmToolsWrapper(vppdeExecutable);
+					reader.close();
 				}
+			}
 
-				if (mosmlDir != null && holDir != null && vdmTools != null) {
-					if (selectedProject
-							.hasNature(VdmPpProjectNature.VDM_PP_NATURE)
-							|| selectedProject
-									.hasNature(VdmSlProjectNature.VDM_SL_NATURE))
-						createProofs(selectedProject, vdmModel, holDir, mosmlDir,
-								vdmTools, new VdmToolsPoProcessor(), s);
-				} else {
-					ConsoleWriter
-							.ConsolePrint(
-									s,
-									"Can't access settings for prover, please set the required variables in provrSettings.txt.");
-				}
+			if (mosmlDir != null && holDir != null && vdmTools != null) {
+				ConsoleWriter.ConsolePrint(s, "Proof system settings loaded");
+
+				String vdmModel = selectModelFile(s, selectedProject);
+				if (vdmModel != null)
+					ConsoleWriter.ConsolePrint(s, vdmModel + " selected.");
+				if (selectedProject.hasNature(VdmPpProjectNature.VDM_PP_NATURE)
+						|| selectedProject
+								.hasNature(VdmSlProjectNature.VDM_SL_NATURE))
+					createProofs(selectedProject, vdmModel, holDir, mosmlDir,
+							vdmTools, new VdmToolsPoProcessor(), s);
+			} else {
+				ConsoleWriter
+						.ConsolePrint(
+								s,
+								"Can't access settings for prover, please set the required variables in proverSettings.txt");
 			}
 
 		} catch (Exception ex) {
@@ -136,6 +129,20 @@ public class RunProofsupportAction implements IObjectActionDelegate {
 			ConsoleWriter.ConsolePrint(s, ex);
 		}
 
+	}
+
+	private String selectModelFile(org.eclipse.swt.widgets.Shell s,
+			IProject selectedProject) {
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IWorkspaceRoot root = workspace.getRoot();
+		IPath location = root.getLocation();
+
+		IPath projectPath = selectedProject.getFullPath();
+
+		String vdmModel = selectFileToProcess(s, location.toOSString()
+				+ System.getProperty("file.separator")
+				+ projectPath.toOSString(), "Select the model to be analyzed");
+		return vdmModel;
 	}
 
 	private String selectFileToProcess(org.eclipse.swt.widgets.Shell s,
@@ -152,8 +159,9 @@ public class RunProofsupportAction implements IObjectActionDelegate {
 
 	private void createProofs(final IProject selectedProject,
 			final String vdmModel, final String holDir, final String mosmlDir,
-			final PoGenerator poGen, final PoProcessor poProc, final Shell output) {
-		final Job expandJob = new Job("Proofgenerating") {
+			final PoGenerator poGen, final PoProcessor poProc,
+			final Shell output) {
+		final Job expandJob = new Job("Automatic Proof System running") {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
@@ -161,35 +169,19 @@ public class RunProofsupportAction implements IObjectActionDelegate {
 				monitor.worked(IProgressMonitor.UNKNOWN);
 				try {
 
+					ConsoleWriter.ConsolePrint(output, "Starting proof system");
 					AutomaticProofSystemBatch aps = new AutomaticProofSystemBatch(
 							mosmlDir, holDir, poGen, poProc);
-					String[] result = aps.dischargeAllPos(vdmModel,
+					ProofResult[] result = aps.dischargeAllPos(vdmModel,
 							new ArrayList<String>(0));
 
+					for (ProofResult r : result)
+						ConsoleWriter.ConsolePrint(output, r.toString());
 
-					for (String s : result)
-						ConsoleWriter.ConsolePrint(output, s);
+					ConsoleWriter.ConsolePrint(output, "Proof system done.");
 					ConsoleWriter.Show();
 
-					// TODO work here
-					// List<IFile> files= ProjectUtility.getFiles(project,
-					// contentTypeId);
-					// where contentTypeId is found in
-					// VdmSlCorePluginConstants.CONTENT_TYPE;
-					// see class TraceTest in org.overture.ide.plugins.traces
-					// for example of table view to select multiple files
-
-					// for (File f : selectedProject.getLocation().toFile()
-					// .listFiles()) {
-					// if (f.isFile()) {
-					// ConsoleWriter.ConsolePrint(shell,
-					// "File in project: " + f.getName());
-					// }
-					//
-					// }
-
-					// addDataToTable(selectedProject.getLocation().toFile()
-					// .listFiles());
+					addDataToTable(result);
 
 					selectedProject
 							.refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -211,13 +203,12 @@ public class RunProofsupportAction implements IObjectActionDelegate {
 
 			}
 
-			private void addDataToTable(File[] files) {
-				final List<org.overture.ide.plugins.proofsupport.views.actions.Data> list = new ArrayList<org.overture.ide.plugins.proofsupport.views.actions.Data>();
+			private void addDataToTable(ProofResult[] result) {
+				final List<Data> list = new ArrayList<Data>();
 
-				for (File f : files) {
+				for (ProofResult r : result) {
 					list
-							.add(new org.overture.ide.plugins.proofsupport.views.actions.Data(
-									f.getName(), ""));
+							.add(new Data(r));
 				}
 
 				shell.getDisplay().asyncExec(new Runnable() {
@@ -231,6 +222,7 @@ public class RunProofsupportAction implements IObjectActionDelegate {
 
 						if (v instanceof PoTableView) {
 							((PoTableView) v).setDataList(list);
+
 						}
 					}
 
