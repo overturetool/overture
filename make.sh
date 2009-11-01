@@ -22,7 +22,7 @@ fi
 cd ..
 
 
-echo "Making Overture - Eclipse Projects (clipse:eclipse)..."
+echo "Making Overture - Eclipse Projects (eclipse:eclipse)..."
 
 mvn eclipse:eclipse > /tmp/overtureInstall.log
 
