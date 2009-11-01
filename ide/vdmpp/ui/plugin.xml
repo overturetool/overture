@@ -100,7 +100,7 @@
    <extension point="org.eclipse.ui.editors.templates">
        <contextType
           class="org.overture.ide.ui.completion.templates.VdmUniversalTemplateContextType"
-          id="org.overture.ide.vdmsl.ui.completion.templates.VdmUniversalTemplateContextType"
+          id="org.overture.ide.vdmpp.ui.completion.templates.VdmUniversalTemplateContextType"
           name="VDM++ Template content">
        </contextType>
       <include
