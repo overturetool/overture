@@ -1,0 +1,178 @@
+\section{Environment class}
+
+The environment class is the class responsible for read a file containing inputs labelled by time and deliver them to the correct system sensor at the right time. It also collects the (re)actions from the system and provides functionality to enable the inspection of them.
+
+The starting point is the definition of the types for input and output.
+
+\begin{vdm_al}
+class Environment is subclass of GLOBAL
+
+types
+
+public InputTP   = (Time * seq of Inpline)
+inv inp == forall line in set elems inp.#2 & inp.#1 >= line.#4;
+
+public Inpline = (Sense * Chamber * ActivityData * Time);
+
+public Outline = (Pulse * Chamber * Time);  
+\end{vdm_al}
+
+Then the io abstraction is defined as an instance variable of the VDM IO library, and the input and output variables are defined.
+
+\begin{vdm_al}
+ instance variables
+
+-- Input/Output 
+io : IO := new IO();
+
+inplines : seq of Inpline := [];
+outlines : seq of Outline := [];
+\end{vdm_al}
+
+Also a boolean flag indicating that the environment is still sending stimuli to the environmet called busy is defined, and simtime represents the amount of time we want to simulate.
+
+\begin{vdm_al}
+instance variables
+-- Environment  
+
+busy : bool := true;
+
+-- Amount of time we want to simulate
+simtime : Time;
+\end{vdm_al}
+
+Then we define the sensors attachment place where the ``physician will screw'' the leads and where the accelerometer is set up.
+
+\begin{vdm_al}
+ instance variables
+-- Sensors
+
+-- Leads
+
+leads : map Chamber to Lead := {|->};
+
+-- Accelerometer
+accelerometer : Accelerometer;
+
+\end{vdm_al}
+
+The environment constructor reads the test file which name is provided in the variable fname, extracting the amount of time we want to simulate and the inputs in that amount of time.
+
+\begin{vdm_al}
+ operations
+
+-- Constructor
+public 
+Environment : seq of char ==> Environment
+Environment (fname) ==
+  def mk_(-,mk_(timeval,input)) = io.freadval[InputTP](fname) 
+  in (inplines := input;
+      simtime  := timeval
+     );
+
+\end{vdm_al}
+
+The operations to connect the environment with the system.
+
+\begin{vdm_al}
+public 
+addLeadSensor : Lead ==> ()
+addLeadSensor(lsens) == 
+   leads := leads ++ {lsens.getChamber() |-> lsens};
+
+public 
+addAccelerometer : Accelerometer ==> ()
+addAccelerometer(acc) == 
+   accelerometer := acc;
+
+\end{vdm_al}
+
+Run is the main operation, starting a session of system stimulation controlling the time and system execution invoking the Step operation on the system components.
+
+\begin{vdm_al}
+
+public 
+Run: () ==> ()
+Run () ==
+   (
+    while not (isFinished() 
+               and 
+               Pacemaker`heartController.isFinished()
+               and 
+               World`timerRef.GetTime() > simtime)
+    do 
+      (
+       createSignal();
+       Pacemaker`rateController.Step();
+       Pacemaker`heartController.Step();        
+       World`timerRef.StepTime();
+      );
+    );
+
+\end{vdm_al}
+
+The createSignal operation delivers stimuli to the different components
+choosing between all the inputs the ones that should be delivered at the current time.
+
+\begin{vdm_al}
+
+private 
+createSignal : () ==> ()
+createSignal () == 
+   ( 
+    if len inplines > 0 
+    then (dcl curtime : Time := World`timerRef.GetTime(),
+              done : bool := false;
+          while not done do
+             let mk_(sensed,chamber,accinfo,stime) = hd inplines 
+             in if stime <= curtime
+                then
+                (
+                 leads(chamber).stimulate(sensed);
+                 accelerometer.stimulate(accinfo);
+                 inplines := tl inplines;
+                 done := len inplines = 0
+                )
+                else done := true
+           );
+     if len inplines = 0 then busy := false;
+    );
+
+\end{vdm_al}
+
+The (re)actions from the pacemaker are delivered to the environment through the handleEvent operation which updates the collection of outputs.
+
+\begin{vdm_al}
+
+public 
+handleEvent : Pulse * Chamber * Time ==> ()
+handleEvent(p,c,t) == outlines := outlines ^ [mk_(p,c,t)]; 
+
+\end{vdm_al}
+
+ShowResult is an operation used to inspect the output collection.
+
+\begin{vdm_al}
+public
+showResult : () ==> ()
+showResult () ==
+   def - = io.writeval[seq of Outline](outlines) in skip;
+
+\end{vdm_al}
+
+The last operation called isFinished its used to have a mean of knowing if the environment finished the stimulation of the system phase.
+
+\begin{vdm_al}
+public 
+isFinished: () ==> bool
+isFinished () == return inplines = [] and not busy;
+
+end Environment
+
+\end{vdm_al}
+
+\subsection*{Test coverage}
+
+\begin{rtinfo}
+{tc.info}[Environment]
+\end{rtinfo}
