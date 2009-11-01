@@ -41,6 +41,7 @@ import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
 import org.overturetool.vdmj.util.Utils;
+import org.overturetool.vdmj.values.ValueList;
 
 
 public class UnionType extends Type
@@ -778,5 +779,18 @@ public class UnionType extends Type
 		{
 			return Utils.setToString(types, " | ");
 		}
+	}
+
+	@Override
+	public ValueList getAllValues()
+	{
+		ValueList v = new ValueList();
+		
+		for (Type type: types)
+		{
+			v.addAll(type.getAllValues());
+		}
+
+		return v;
 	}
 }

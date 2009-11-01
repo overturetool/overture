@@ -27,6 +27,7 @@ import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
+import org.overturetool.vdmj.values.ValueList;
 
 public class NamedType extends InvariantType
 {
@@ -244,5 +245,11 @@ public class NamedType extends InvariantType
 	public String toDisplay()
 	{
 		return typename.toString();
+	}
+
+	@Override
+	public ValueList getAllValues()
+	{
+		return type.getAllValues();
 	}
 }

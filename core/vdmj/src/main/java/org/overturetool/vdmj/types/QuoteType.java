@@ -24,6 +24,8 @@
 package org.overturetool.vdmj.types;
 
 import org.overturetool.vdmj.lex.LexQuoteToken;
+import org.overturetool.vdmj.values.QuoteValue;
+import org.overturetool.vdmj.values.ValueList;
 
 public class QuoteType extends Type
 {
@@ -63,5 +65,13 @@ public class QuoteType extends Type
 	public int hashCode()
 	{
 		return value.hashCode();
+	}
+
+	@Override
+	public ValueList getAllValues()
+	{
+		ValueList v = new ValueList();
+		v.add(new QuoteValue(value));
+		return v;
 	}
 }
