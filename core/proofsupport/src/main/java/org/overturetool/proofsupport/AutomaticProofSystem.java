@@ -20,6 +20,7 @@ import org.overturetool.proofsupport.external_tools.vdmholtranslator.VdmToHolTra
 
 public abstract class AutomaticProofSystem {
 
+	private static final String TRANSLATOR_MISSING_DEPENDENCIES = "Error, the HolAst cannot be printed, there are missing dependencies";
 	protected static final String PO_GENERATOR_COMPONENT = "[PO-GEN] ";
 	protected static final String APS_COMPONENT = "[APS] ";
 	protected static final String HOL_COMPONENT = "[HOL] ";
@@ -76,9 +77,9 @@ public abstract class AutomaticProofSystem {
 		} catch (PoGeneratorException e) {
 			throw wrapException(PO_GENERATOR_COMPONENT, e);
 		} catch (PoProcessorException e) {
-			wrapException(PO_PROCESSOR_COMPONENT, e);
+			throw wrapException(PO_PROCESSOR_COMPONENT, e);
 		} catch (ParserException e) {
-			wrapException(PARSER_COMPONENT, e);
+			throw wrapException(PARSER_COMPONENT, e);
 		}
 		return prepData;
 	}
@@ -93,9 +94,9 @@ public abstract class AutomaticProofSystem {
 		} catch (PoGeneratorException e) {
 			throw wrapException(PO_GENERATOR_COMPONENT, e);
 		} catch (PoProcessorException e) {
-			wrapException(PO_PROCESSOR_COMPONENT, e);
+			throw wrapException(PO_PROCESSOR_COMPONENT, e);
 		} catch (ParserException e) {
-			wrapException(PARSER_COMPONENT, e);
+			throw wrapException(PARSER_COMPONENT, e);
 		}
 		return prepData;
 	}
@@ -127,7 +128,10 @@ public abstract class AutomaticProofSystem {
 		String model = doModelTranslation(prepData);
 		ArrayList<String> pos = doPosTranslation(prepData);
 		if(model != null && pos.size() > 0) {
-			return new Proof(model, pos, prepData.vdmPos);
+			if(!model.contains(TRANSLATOR_MISSING_DEPENDENCIES))
+				return new Proof(model, pos, prepData.vdmPos);
+			else 
+				throw new AutomaicProofSystemException("[TRANSLATOR] Can't translate model: " + model);
 		}
 		else 
 			return null;

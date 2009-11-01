@@ -1,5 +1,7 @@
 package org.overturetool.proofsupport;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -55,8 +57,17 @@ public class AutomaticProofSystemBatch extends AutomaticProofSystem {
 
 	public Proof translateModelAndPos(String vdmModelFile,
 			List<String> vdmContextFiles) throws AutomaicProofSystemException {
+		checkModelsExist(vdmModelFile, vdmContextFiles);
 		PreparationData prepData = doPreparation(vdmModelFile, vdmContextFiles);
 		return doModelAndPosTranslation(prepData);
+	}
+
+	private void checkModelsExist(String vdmModelFile,
+			List<String> vdmContextFiles) throws AutomaicProofSystemException {
+		if(!new File(vdmModelFile).exists())
+			throw new AutomaicProofSystemException("[APS] Can't find file: " + vdmModelFile);
+		for(String file : vdmContextFiles)
+			throw new AutomaicProofSystemException("[APS] Can't find file: " + file);
 	}
 
 	public Proof translateModelAndPos(String vdmModelFile,
