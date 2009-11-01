@@ -1,0 +1,44 @@
+\section{VDMComplete Main test class}
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			TestVDMComplete
+-- Description: 	Test all test suites and classes in VDM system 
+-----------------------------------------------
+
+--
+-- class definition
+--
+
+class TestVDMComplete
+
+
+instance variables
+
+
+--
+-- Operations definition section
+--
+operations
+
+public Execute: () ==> ()
+	Execute() ==
+		(
+		dcl w : World := new World() , ts : TestSuite := new TestSuite();
+		ts.AddTest(new TestVehicle("TestVehicle"));
+		ts.AddTest(new TestPosition("TestPosition")); 
+		ts.AddTest(new TestTrafficLight("TestTrafficLight"));
+		ts.AddTest(new TestTrafficData("TestTrafficData"));
+		ts.AddTest(new TestTraffic("TestTraffic"));
+		ts.AddTest(new TestController("TestController"));
+	    ts.AddTest(new TestVDMController("TestVDMController"));
+		ts.Run();
+		);
+		
+end TestVDMComplete
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[TestVDMComplete]
+\end{rtinfo}
