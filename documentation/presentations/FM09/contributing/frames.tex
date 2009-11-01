@@ -44,9 +44,9 @@ The Overture tools are being developed by volunteers, researchers and students.
 \begin{center}
   \begin{itemize}
 	%\itemsep=1cm
-  		\item Main page (Twiki): www.overturetool.org
-  		\item Download page: https://sf.net/projects/overture/
-  		\item Documentation: http://overture.sf.net/maven/doc/
+  		\item Main page (Twiki): \url{www.overturetool.org}
+  		\item Download page: \url{http://sf.net/projects/overture}
+  		\item Documentation: \url{http://overture.sf.net/maven/doc}
   \end{itemize}
 \end{center}
 }
@@ -58,18 +58,19 @@ The Overture tools are being developed by volunteers, researchers and students.
   \frametitle{Development environment}
 
 
-\begin{block}{Base environment}
+\begin{block}<1->{Base environment}
   \begin{itemize}
 	%\itemsep=1cm
-  		\item Maven 2 + overture repositories
-  		\item Java SDK 1.5 or greater
+  		\item Maven 2 + Overture repositories
+  		\item Java SDK 1.5 or newer
   \end{itemize}
 \end{block}
 
-\begin{block}{GUI environment}
+\begin{block}<2->{GUI environment}
   \begin{itemize}
 	%\itemsep=1cm
   		\item Eclipse 3.5.1 Classic
+		\item Maven Integration for Eclipse
   		\item DLTK 1.0
   \end{itemize}
 \end{block}
@@ -86,18 +87,27 @@ The Overture tools are being developed by volunteers, researchers and students.
   \tableofcontents[current]
 \end{frame}
 
+%-----------------------------------------------------------------------
+\subsection{Contributing}
+%-----------------------------------------------------------------------
 
 \frame
 {
   \frametitle{How to contribute}
 
+\begin{itemize}
+\item Join us at Source Forge
+	\begin{itemize}
+	\item Project name: \textbf{Overture Tool}
+	\end{itemize}
+\item Send us a short description of the project
+\item Check out the source
+\end{itemize}
 
-Our source is located in Source Forge and is freely available to download.
-Request to join your group and give us an idea of what you want to contribute.
 }
 
 %-----------------------------------------------------------------------
-\subsection{Structure}
+\subsection{Project structure}
 %-----------------------------------------------------------------------
 \frame
 {
@@ -109,7 +119,7 @@ Request to join your group and give us an idea of what you want to contribute.
 		\begin{itemize}
 			\item AST
 			\item Parser
-			\item VDMJ Interpeter
+			\item VDMJ Interpreter
 			\item Proofsupport
 			\item Traces
 			\item Umltrans
@@ -124,9 +134,8 @@ Request to join your group and give us an idea of what you want to contribute.
 			\item VDM-SL editor
 			\item VDM-PP editor
 			\item VDM-RT editor
-			\item *generated* plugins
-			\item *plugins* GUI plugins
-			\item ...
+			\item \textbf{Generated} plug-ins
+			\item GUI plug-ins
 		\end{itemize}
 		
 	\end{block}
@@ -159,18 +168,38 @@ Request to join your group and give us an idea of what you want to contribute.
 }
 
 
-\frame
-{
+\begin{frame}[fragile]
+
   \frametitle{Project structure - Eclipse plug-ins}
 
-The Overture Eclipse plug-ins are structures into two groups
+The Overture Eclipse plug-ins are structured into two groups
+
+\vspace{1cm}
+\begin{center}
+
+
+\tikzstyle{int}=[draw, fill=blue!20, minimum size=2em]
+\tikzstyle{init} = [pin edge={to-,thin,black}]
+\begin{tikzpicture}[node distance=3cm,auto,>=latex']
+    \node [int] (a) {Core};
+    \node (b) [left of=a,node distance=1cm, coordinate] {};
+    \node [int] (c) [right of=a] {Generated plug-in};
+    \node [coordinate] (end) [right of=c, node distance=1cm]{};
+	\node [int] (d) [right of=end] {GUI plug-in};
+%\node [coordinate1] (end1) [right of=d, node distance=1cm]{};
+    \path[->] (b) edge node {} (a);
+    \path[->] (a) edge node {} (c);
+    \path[->] (c) edge node {} (d);
+%    \draw[->] (d) edge node {} (end1) ;
+\end{tikzpicture}
+\end{center}
 
 \begin{columns}
 \begin{column}{5cm}
-	\begin{block}{Generated}
+	\begin{block}<2->{Generated}
 	\begin{itemize}
 	%\itemsep=1cm
-		\item VDMJ Interpeter
+		\item VDMJ Interpreter
 		\item Proofsupport
 		\item Traces
 		\item Umltrans
@@ -180,7 +209,7 @@ The Overture Eclipse plug-ins are structures into two groups
 \end{column}
 \begin{column}{5cm}
 	\pause
-	\begin{block}{GUI plug-ins}
+	\begin{block}<2->{GUI plug-ins}
 	\begin{itemize}
 		\item Combinatorial Testing
 		\item UML Transformation
@@ -189,8 +218,12 @@ The Overture Eclipse plug-ins are structures into two groups
 \end{column}
 \end{columns}
 
-}
 
+\end{frame}
+
+%-----------------------------------------------------------------------
+\subsection{Getting the sources}
+%-----------------------------------------------------------------------
 
 \frame
 {
@@ -205,7 +238,7 @@ Prepare source for development after check-out
 \begin{block}{Prepare source}
 \begin{itemize}
 	\item Windows: \small \texttt{make.bat install}
-	\item Linux and Mac: \small \texttt{sh make.sh install}
+	\item Linux and Mac: \small \texttt{./make.sh install}
 \end{itemize}
 \end{block}
 
@@ -217,7 +250,7 @@ Prepare source for development after check-out
 \begin{itemize}
 	\item install - installs a plugin in the local repository
 	\item eclipse:eclipse - generates eclipse project files (needed before eclipse import)
-	\item psteclipse:eclipse-plugin - fetched jar files from local repository and generated binary plugins from the e.g. Manifest files
+	\item psteclipse:eclipse-plugin - fetched jar files from local repository and generated binary plugins from e.g. the Manifest files
 \end{itemize}
 \end{block}
 }
@@ -240,7 +273,7 @@ Prepare source for development after check-out
 \begin{frame}[fragile]
   \frametitle{Adding a core component}
   
-  Navigate to trunk/core
+  Navigate to \ttfamily{trunk/core}
    
   \lstset{language=XML,
 		frame=ltrb,
@@ -319,13 +352,13 @@ Prepare source for development after check-out
 \frame
 {
   \frametitle{How to create a GUI}
-\begin{itemize}
+\begin{enumerate}
 	\item Install core artifact
 	\item Create core artifact plug-in wrapper
 	\item Run maven psteclipse:eclipse.plugin to create the eclipse plug-in
 	\item Create the gui plug-in
 	\item Reference the wrapped core plug-in
-\end{itemize}
+\end{enumerate}
 
 
 }
@@ -461,13 +494,13 @@ Navigate to ide/plugins/
   \frametitle{Import in Eclipse}
   \begin{columns}
 \begin{column}{5cm}
-\begin{itemize}
+\begin{enumerate}
 	\item<1-> Run make install
 	\item<2-> Import Maven Projects
 	\item<4-> Update classpath and clean generated plugins
 	\item<6-> Add reference in manifest to generated plugin
 	\item<7-> Ready to build GUI
-\end{itemize}
+\end{enumerate}
 \end{column}
 \begin{column}{6cm}
 
@@ -488,7 +521,7 @@ Navigate to ide/plugins/
 \begin{block}<1>{Prepare source}
 \begin{itemize}
 	\item Windows: \small \texttt{make.bat install}
-	\item Linux and Mac: \small \texttt{sh make.sh install}
+	\item Linux and Mac: \small \texttt{./make.sh install}
 \end{itemize}
 \end{block}
 

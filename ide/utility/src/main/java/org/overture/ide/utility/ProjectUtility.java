@@ -143,6 +143,8 @@ public class ProjectUtility {
 	public static File getFile(IProject project, IPath path) {
 		return project.getFile(path.removeFirstSegments(1)).getLocation().toFile();
 	}
+	
+	
 
 	public static File getFile(IProject project, IFile file) {
 		Path path = new Path(project.getFullPath().addTrailingSeparator().toString()

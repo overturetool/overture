@@ -120,6 +120,7 @@ public class RunProofsupportAction implements IObjectActionDelegate {
 						.ConsolePrint(
 								s,
 								"Can't access settings for prover, please set the required variables in proverSettings.txt");
+				ProverSettings.createDefaultFile(selectedProject);
 			}
 
 		} catch (Exception ex) {

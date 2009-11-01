@@ -1,6 +1,7 @@
 package org.overture.ide.plugins.proofsupport.actions;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -115,6 +116,7 @@ public class RunGeneratePosAction implements IObjectActionDelegate {
 						.ConsolePrint(
 								s,
 								"Can't access settings for prover, please set the required variables in proverSettings.txt");
+				ProverSettings.createDefaultFile(selectedProject);
 			}
 
 		} catch (Exception ex) {
@@ -130,11 +132,17 @@ public class RunGeneratePosAction implements IObjectActionDelegate {
 		IWorkspaceRoot root = workspace.getRoot();
 		IPath location = root.getLocation();
 
-		IPath projectPath = selectedProject.getFullPath();
+		String projectPath = selectedProject.getFullPath().toOSString();
+		String projectLocation =new File(location.toFile(),projectPath).getAbsolutePath();
+//		IFile[] posibleProjects =workspace.getRoot().findFilesForLocation(projectPath);
+//		if(posibleProjects.length>0)
+//			projectLocation = posibleProjects[0].getLocation().toFile().getAbsolutePath();
+		
+	
+		//=projectPath.toFile().getAbsolutePath(); 
 
-		String vdmModel = selectFileToProcess(s, location.toOSString()
-				+ System.getProperty("file.separator")
-				+ projectPath.toOSString(), "Select the model to be analyzed");
+
+		String vdmModel = selectFileToProcess(s, projectLocation, "Select the model to be analyzed");
 		return vdmModel;
 	}
 
