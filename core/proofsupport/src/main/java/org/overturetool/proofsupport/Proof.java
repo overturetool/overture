@@ -34,7 +34,7 @@ public class Proof {
 		// TODO: replace VDM_GEENRIC_TAC by VDM_ADDITIONAL_TAC
 		//       when some kind of timer is in place to make the proofs timeout
 		//       if needed.
-		return String.format(proofCommand, predicate, VDM_GENERIC_TAC);
+		return String.format(proofCommand, predicate, VDM_ADDITIONAL_TAC);
 	}
 
 	public int proofCommandsSize() {

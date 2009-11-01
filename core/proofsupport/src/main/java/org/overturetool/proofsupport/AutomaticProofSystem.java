@@ -126,7 +126,11 @@ public abstract class AutomaticProofSystem {
 			throws AutomaicProofSystemException {
 		String model = doModelTranslation(prepData);
 		ArrayList<String> pos = doPosTranslation(prepData);
-		return new Proof(model, pos, prepData.vdmPos);
+		if(model != null && pos.size() > 0) {
+			return new Proof(model, pos, prepData.vdmPos);
+		}
+		else 
+			return null;
 	}
 
 	protected AutomaicProofSystemException wrapException(String componentLabel,

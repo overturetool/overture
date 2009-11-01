@@ -221,6 +221,8 @@ val VDM_ADDITIONAL_TAC =
 			Q.UNABBREV_ALL_TAC THEN
 			VDM_SIMPLIFICATION_TAC THEN
 			VDM_GENERIC_PROVE_TAC THEN
+		)
+		(* Commented because most of the proofs go on forever
 			(PROVE_TAC (tacticBuiltInTheorems @ tacticCustomTheorems))
 		)
 		ORELSE
@@ -228,6 +230,7 @@ val VDM_ADDITIONAL_TAC =
 			VDM_GENERIC_PROVE_TAC THEN
 			(PROVE_TAC (tacticBuiltInTheorems @ tacticCustomTheorems))
 		)
+		*)
 	)
 );
 	

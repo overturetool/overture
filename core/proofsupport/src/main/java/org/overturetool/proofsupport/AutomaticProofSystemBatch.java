@@ -1,10 +1,10 @@
 package org.overturetool.proofsupport;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overturetool.proofsupport.external_tools.Utilities;
 import org.overturetool.proofsupport.external_tools.hol.HolInterpreter;
 import org.overturetool.proofsupport.external_tools.hol.HolInterpreterException;
 import org.overturetool.proofsupport.external_tools.hol.HolInterpreterFactory;
@@ -23,16 +23,34 @@ public class AutomaticProofSystemBatch extends AutomaticProofSystem {
 
 	public ProofResult[] dischargeAllPos(String vdmModelFile,
 			List<String> vdmContextFiles) throws AutomaicProofSystemException {
-		Proof proof = translateModelAndPos(vdmModelFile, vdmContextFiles);
-		return doBatchProof(proof);
+		if (vdmModelFile != null) {
+			Proof proof = translateModelAndPos(vdmModelFile,
+					validateAndFixContext(vdmContextFiles));
+			if (proof != null)
+				return doBatchProof(proof);
+			else
+				return new ProofResult[] {};
+		} else
+			throw new AutomaicProofSystemException("[APS] Invalid model.");
+	}
+
+	private List<String> validateAndFixContext(List<String> vdmContextFiles) {
+		return vdmContextFiles != null ? vdmContextFiles
+				: new ArrayList<String>(0);
 	}
 
 	public ProofResult[] dischargeAllPos(String vdmModelFile,
 			List<String> vdmContextFiles, String pogFile)
 			throws AutomaicProofSystemException {
-		Proof proof = translateModelAndPos(vdmModelFile, vdmContextFiles,
+		if (vdmModelFile != null) {
+		Proof proof = translateModelAndPos(vdmModelFile, validateAndFixContext(vdmContextFiles),
 				pogFile);
-		return doBatchProof(proof);
+		if (proof != null)
+			return doBatchProof(proof);
+		else
+			return new ProofResult[] {};
+		} else
+			throw new AutomaicProofSystemException("[APS] Invalid model.");
 	}
 
 	public Proof translateModelAndPos(String vdmModelFile,
