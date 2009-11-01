@@ -1,0 +1,41 @@
+class Vector 
+ 
+  values
+    public NullVector : vector = mk_vector (mk_(0,0),mk_(0,0))
+ 
+  types
+    public
+    vector :: head: Position
+              tail: Position;
+ 
+    public
+    Position = Coordinate * Coordinate;
+ 
+    public
+    Coordinate = nat
+ 
+  functions
+    public
+    inproduct: vector * vector -> real
+    inproduct (v1, v2) ==
+      let mk_vector (mk_(hd1x, hd1y), mk_(tl1x, tl1y)) = v1,
+          mk_vector (mk_(hd2x, hd2y), mk_(tl2x, tl2y)) = v2 in
+        (tl1x - hd1x) * (tl2x - hd2x) + (tl1y - hd1y) * (tl2y - hd2y);
+ 
+    public
+    length: vector -> real
+    length (v) ==
+      let mk_vector (mk_(hdx, hdy), mk_(tlx, tly)) = v in
+        let math = new MATH ()
+        in
+          math.sqrt ((tlx - hdx)**2 + (tly - hdy)**2);              
+ 
+    public
+    add: vector * vector -> vector
+    add (v1, v2) ==
+      let mk_vector (hd1, mk_(tl1x, tl1y)) = v1,
+          mk_vector (mk_(hd2x, hd2y), mk_(tl2x, tl2y)) = v2 in
+        mk_vector(hd1, mk_(tl1x + (tl2x - hd2x), tl1y + (tl2y - hd2y)))
+ 
+end Vector
+
