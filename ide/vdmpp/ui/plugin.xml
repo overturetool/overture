@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.dltk.ui.language">
       <language
-            class="org.overture.ide.vdmpp.ui.VdmPpUILanguageToolkit"
+            class="org.overture.ide.vdmpp.ui.VdmRtUILanguageToolkit"
             nature="org.overture.ide.vdmpp.core.nature"
             priority="0">
       </language>
@@ -100,7 +100,7 @@
    <extension point="org.eclipse.ui.editors.templates">
        <contextType
           class="org.overture.ide.ui.completion.templates.VdmUniversalTemplateContextType"
-          id="org.overture.ide.vdmpp.ui.completion.templates.VdmUniversalTemplateContextType"
+          id="org.overture.ide.vdmsl.ui.completion.templates.VdmUniversalTemplateContextType"
           name="VDM++ Template content">
        </contextType>
       <include

@@ -3,7 +3,10 @@ package org.overture.ide.vdmrt.debug.core.interpreter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -12,7 +15,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.content.IContentTypeMatcher;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.Launch;
@@ -36,6 +38,7 @@ import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.overture.ide.debug.launching.ClasspathUtils;
 import org.overture.ide.debug.launching.IOvertureInterpreterRunnerConfig;
 import org.overture.ide.utility.ProjectUtility;
+import org.overture.ide.vdmrt.core.VdmRtCorePluginConstants;
 import org.overture.ide.vdmrt.debug.core.VdmRtDebugConstants;
 
 public class VdmRtVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
@@ -96,7 +99,6 @@ public class VdmRtVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 		}
 
 		String sessionId = (String) config.getProperty(DbgpConstants.SESSION_ID_PROP);
-		System.out.println(sessionId);
 
 		if (sessionId == null) {
 			sessionId = "";
@@ -110,9 +112,7 @@ public class VdmRtVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 			IVMRunner vmRunner = vmInstall.getVMRunner(ILaunchManager.DEBUG_MODE);
 			if (vmRunner != null) {
 				{
-
 					try {
-
 						try {
 							String[] newClassPath = getClassPath(myJavaProject);
 
@@ -140,12 +140,12 @@ public class VdmRtVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 							int argNumber = 0;
 							IProject project = proj.getProject();
 
-							List<String> memberFilesList = getProjectMemberFiles(project);
+							List<IFile> memberFilesList = ProjectUtility.getFiles(project, VdmRtCorePluginConstants.CONTENT_TYPE);
 
 							// List<String> memberFilesList =
 							// getAllMemberFilesString(proj.getProject(), exts);
 
-							String[] arguments = new String[memberFilesList.size() + 9];
+							String[] arguments = new String[memberFilesList.size() + 11];
 
 							// 0: host
 							// 1: port
@@ -156,13 +156,31 @@ public class VdmRtVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 							arguments[argNumber++] = port;
 							arguments[argNumber++] = "-k";
 							arguments[argNumber++] = sessionId;
-
+							
+							// log
+							DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+							Date date = new Date();
+							File logDir = new File(  config.getWorkingDirectoryPath().toOSString()  + File.separatorChar + "logs" + File.separatorChar + launch.getLaunchConfiguration().getName() );
+							logDir.mkdirs();
+							String logFilename = dateFormat.format(date) + ".logrt";
+							File f = new File(logDir.toURI().toASCIIString() , logFilename);
+						    if (!f.exists()){
+						      f.getParentFile().mkdirs();
+						      f.createNewFile();
+						    }
+						    
+							arguments[argNumber++] = "-log";
+							arguments[argNumber++] = logDir.toURI().toASCIIString() + logFilename;  
+							
+							
+							project.refreshLocal(IProject.DEPTH_INFINITE, null);
+							
 							// 3: dialect
 							arguments[argNumber++] = "-" + VdmRtDebugConstants.VDMRT_VDMJ_DIALECT;
 
 							// 4: expression eg. : new className().operation()
 							String debugOperation = launch.getLaunchConfiguration().getAttribute(VdmRtDebugConstants.VDMRT_DEBUGGING_OPERATION, "");
-
+							
 							String expression = "new "
 									+ launch.getLaunchConfiguration().getAttribute(
 											VdmRtDebugConstants.VDMRT_DEBUGGING_CLASS,
@@ -173,14 +191,15 @@ public class VdmRtVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 
 							// 5-n: add files to the arguments
 							for (int a = 0; a < memberFilesList.size(); a++) {
-								arguments[argNumber++] = new File(memberFilesList.get(a)).toURI().toASCIIString();
+								arguments[argNumber++] = memberFilesList.get(a).getLocationURI().toASCIIString();
 							}
-
+							
 							vmConfig.setProgramArguments(arguments);
+							vmConfig.setWorkingDirectory(config.getWorkingDirectoryPath().toOSString());
 							ILaunch launchr = new Launch(launch.getLaunchConfiguration(), ILaunchManager.DEBUG_MODE, null);
-							iconfig.adjustRunnerConfiguration(vmConfig, config,
-									launch, myJavaProject);
+							iconfig.adjustRunnerConfiguration(vmConfig, config, launch, myJavaProject);
 							vmRunner.run(vmConfig, launchr, null);
+							
 							IDebugTarget[] debugTargets = launchr.getDebugTargets();
 							for (int a = 0; a < debugTargets.length; a++) {
 								launch.addDebugTarget(debugTargets[a]);
@@ -201,18 +220,20 @@ public class VdmRtVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 		throw new CoreException(new Status(IStatus.ERROR, "", ""));
 	}
 
-	private static List<String> getProjectMemberFiles(IProject project)
-			throws CoreException {
-
-		List<IFile> files = ProjectUtility.getFiles(project);
-		IContentTypeMatcher contentTypeMatcher = project.getContentTypeMatcher();
-		List<String> memberFilesList = new ArrayList<String>();
-		for (IFile file : files) {
-			if (contentTypeMatcher.findContentTypeFor(file.toString()) != null)
-				memberFilesList.add(ProjectUtility.getFile(project, file).getAbsolutePath());
-		}
-		return memberFilesList;
-	}
+//	private static List<String> getProjectMemberFiles(IProject project)
+//			throws CoreException {
+//
+//		List<IFile> files = ProjectUtility.getFiles(project);
+//		IContentTypeMatcher contentTypeMatcher = project.getContentTypeMatcher();
+//		List<String> memberFilesList = new ArrayList<String>();
+//		for (IFile file : files) {
+//			if (contentTypeMatcher.findContentTypeFor(file.toString()) != null)
+//				memberFilesList.add(ProjectUtility.getFile(project, file).getAbsolutePath());
+//		}
+//		return memberFilesList;
+//	}
+	
+	
 
 	public static String[] getClassPath(IJavaProject myJavaProject)
 			throws IOException, URISyntaxException {

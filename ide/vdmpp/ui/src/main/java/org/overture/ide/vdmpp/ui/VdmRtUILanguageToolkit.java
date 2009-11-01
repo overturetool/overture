@@ -28,13 +28,13 @@ import org.overture.ide.vdmpp.ui.internal.editor.VdmppEditorConstants;
 //	}
 //
 //}
-public class VdmPpUILanguageToolkit implements IDLTKUILanguageToolkit {
+public class VdmRtUILanguageToolkit implements IDLTKUILanguageToolkit {
     
-    private static VdmPpUILanguageToolkit sToolkit = null;
+    private static VdmRtUILanguageToolkit sToolkit = null;
     
     public static IDLTKUILanguageToolkit getInstance() {
         if (sToolkit == null)
-            sToolkit = new VdmPpUILanguageToolkit();
+            sToolkit = new VdmRtUILanguageToolkit();
         return sToolkit;
     }
     

@@ -1,31 +1,31 @@
-package org.overture.ide.vdmpp.ui.preferences;
+package org.overture.ide.vdmrt.ui.preferences;
 
 import org.eclipse.dltk.ui.templates.ScriptTemplateAccess;
 import org.eclipse.dltk.ui.templates.ScriptTemplatePreferencePage;
 import org.eclipse.dltk.ui.text.ScriptSourceViewerConfiguration;
 import org.eclipse.jface.text.IDocument;
 import org.overture.ide.ui.VdmUIPlugin;
-import org.overture.ide.vdmpp.ui.UIPlugin;
-import org.overture.ide.vdmpp.ui.completions.VdmPpTemplateAccess;
-import org.overture.ide.vdmpp.ui.internal.editor.IVdmPpPartitions;
-import org.overture.ide.vdmpp.ui.internal.editor.SimpleVdmPpSourceViewerConfiguration;
-import org.overture.ide.vdmpp.ui.internal.editor.VdmPpTextTools;
+import org.overture.ide.vdmrt.ui.UIPlugin;
+import org.overture.ide.vdmrt.ui.completions.VdmRtTemplateAccess;
+import org.overture.ide.vdmrt.ui.internal.editor.IVdmRtPartitions;
+import org.overture.ide.vdmrt.ui.internal.editor.SimpleVdmRtSourceViewerConfiguration;
+import org.overture.ide.vdmrt.ui.internal.editor.VdmRtTextTools;
 
-public class VdmPpCodeTemplatesPreferencePage extends ScriptTemplatePreferencePage {
+public class VdmRtCodeTemplatesPreferencePage extends ScriptTemplatePreferencePage {
 
 	@Override
 	protected ScriptSourceViewerConfiguration createSourceViewerConfiguration() {
-		return new SimpleVdmPpSourceViewerConfiguration(
+		return new SimpleVdmRtSourceViewerConfiguration(
 				getTextTools().getColorManager(), 
 				getPreferenceStore(), 
 				null,
-				IVdmPpPartitions.VDMPP_PARTITIONING, 
+				IVdmRtPartitions.vdmrt_PARTITIONING, 
 				false);
 	}
 
 	@Override
 	protected ScriptTemplateAccess getTemplateAccess() {
-		return VdmPpTemplateAccess.getInstance();
+		return VdmRtTemplateAccess.getInstance();
 	}
 
 	@Override
@@ -34,12 +34,13 @@ public class VdmPpCodeTemplatesPreferencePage extends ScriptTemplatePreferencePa
 		
 	}
 
-	private VdmPpTextTools getTextTools() {
+	private VdmRtTextTools getTextTools() {
 		return UIPlugin.getDefault().getTextTools();
 	}
 	
 	protected void setDocumentParticioner(IDocument document) {
-		getTextTools().setupDocumentPartitioner(document, IVdmPpPartitions.VDMPP_PARTITIONING);
+		getTextTools().setupDocumentPartitioner(document, IVdmRtPartitions.vdmrt_PARTITIONING);
 	}
+
 
 }

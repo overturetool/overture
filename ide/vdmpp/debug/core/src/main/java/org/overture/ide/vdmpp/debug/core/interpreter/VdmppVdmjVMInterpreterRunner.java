@@ -1,6 +1,5 @@
 package org.overture.ide.vdmpp.debug.core.interpreter;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -12,9 +11,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.content.IContentTypeMatcher;
 import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.Launch;
 import org.eclipse.debug.core.model.IDebugTarget;
@@ -37,6 +34,7 @@ import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.overture.ide.debug.launching.ClasspathUtils;
 import org.overture.ide.debug.launching.IOvertureInterpreterRunnerConfig;
 import org.overture.ide.utility.ProjectUtility;
+import org.overture.ide.vdmpp.core.VdmPpCorePluginConstants;
 import org.overture.ide.vdmpp.debug.core.VDMPPDebugConstants;
 
 public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
@@ -141,7 +139,7 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 							int argNumber = 0;
 							IProject project = proj.getProject();
 
-							List<String> memberFilesList = getProjectMemberFiles(project);
+							List<IFile> memberFilesList = ProjectUtility.getFiles(project, VdmPpCorePluginConstants.CONTENT_TYPE);
 
 							// List<String> memberFilesList =
 							// getAllMemberFilesString(proj.getProject(), exts);
@@ -178,10 +176,11 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 
 							// 5-n: add files to the arguments
 							for (int a = 0; a < memberFilesList.size(); a++) {
-								arguments[argNumber++] = new File(memberFilesList.get(a)).toURI().toASCIIString();
+								arguments[argNumber++] = memberFilesList.get(a).getLocationURI().toASCIIString();
 							}
 
 							vmConfig.setProgramArguments(arguments);
+							vmConfig.setWorkingDirectory(config.getWorkingDirectoryPath().toOSString());
 							ILaunch launchr = new Launch(launch.getLaunchConfiguration(), ILaunchManager.DEBUG_MODE, null);
 							iconfig.adjustRunnerConfiguration(vmConfig, config, launch, myJavaProject);
 							vmRunner.run(vmConfig, launchr, null);
@@ -205,18 +204,6 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 		throw new CoreException(new Status(IStatus.ERROR, "", ""));
 	}
 
-	private static List<String> getProjectMemberFiles(IProject project)
-			throws CoreException {
-
-		List<IFile> files = ProjectUtility.getFiles(project);
-		IContentTypeMatcher contentTypeMatcher = project.getContentTypeMatcher();
-		List<String> memberFilesList = new ArrayList<String>();
-		for (IFile file : files) {
-			if (contentTypeMatcher.findContentTypeFor(file.toString()) != null)
-				memberFilesList.add(ProjectUtility.getFile(project, file).getAbsolutePath());
-		}
-		return memberFilesList;
-	}
 
 	public static String[] getClassPath(IJavaProject myJavaProject)
 			throws IOException, URISyntaxException {

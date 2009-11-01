@@ -1,4 +1,4 @@
-package org.overture.ide.vdmpp.ui.internal.editor;
+package org.overture.ide.vdmsl.ui.internal.editor;
 
 import org.eclipse.dltk.ui.text.IColorManager;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -12,12 +12,12 @@ import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class SimpleVdmPpSourceViewerConfiguration extends VdmPpSourceViewerConfiguration {
+public class SimpleVdmSlSourceViewerConfiguration extends VdmSlSourceViewerConfiguration {
 
 	private boolean fConfigureFormatter;
 
 	
-	public SimpleVdmPpSourceViewerConfiguration(IColorManager colorManager,
+	public SimpleVdmSlSourceViewerConfiguration(IColorManager colorManager,
 			IPreferenceStore preferenceStore, ITextEditor editor,
 			String partitioning, boolean configureFormatter) {
 		super(colorManager, preferenceStore, editor, partitioning);
@@ -84,4 +84,6 @@ public class SimpleVdmPpSourceViewerConfiguration extends VdmPpSourceViewerConfi
 		return null;
 	}
  
+
+
 }

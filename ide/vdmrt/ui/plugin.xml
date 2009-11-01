@@ -61,4 +61,51 @@
             priority="0">
       </parser>
    </extension>
+   
+   <!--
+   	templates
+   -->
+   
+   <extension point="org.eclipse.ui.preferencePages">
+         <page
+              class="org.overture.ide.vdmrt.ui.preferences.VdmRtCodeTemplatesPreferencePage"
+              id="org.overture.ide.vdmrt.ui.VdmRtCodeTemplatesPreferencePage"
+              name="Templates VDM-RT"
+              category="org.overture.ide.ui.OvertureGlobalPreferencesPage"
+              />
+	</extension>
+    
+   <extension point="org.eclipse.dltk.ui.language">
+      <language
+            class="org.overture.ide.vdmrt.ui.internal.editor.VdmRtUILanguageToolkit2"
+            nature="org.overture.ide.vdmrt.core.nature"
+            priority="1">
+      </language>
+   </extension>
+   
+   <extension point="org.eclipse.ui.editors.templates">
+       <contextType
+          class="org.overture.ide.ui.completion.templates.VdmUniversalTemplateContextType"
+          id="org.overture.ide.vdmrt.ui.completion.templates.VdmUniversalTemplateContextType"
+          name="VDM-RT Template content">
+       </contextType>
+      <include
+          file="templates/templates.xml"
+       >
+       </include>
+
+    </extension>
+
+	<!-- completion added because of the template.. -->
+	<extension point="org.eclipse.dltk.ui.scriptCompletionProposalComputer"
+		id="VdmRtCompletionProposalComputer">
+		<scriptCompletionProposalComputer
+			class="org.overture.ide.vdmrt.ui.completions.VdmRtCompletionProposalComputer"
+			categoryId="org.eclipse.dltk.ui.scriptTypeProposalCategory"
+			toolkitId="org.overture.ide.vdmrt.core.nature">
+			<partition type="__dftl_partition_content_type"/>
+		</scriptCompletionProposalComputer>
+</extension>   
+   
+   
 </plugin>
