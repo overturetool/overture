@@ -20,6 +20,11 @@ private pos : Position;
 -- Operations definition section
 --
 operations
+public TestVDMController: seq of char ==> TestVDMController
+TestVDMController(s) ==
+(
+	TestCase(s);
+);
 
 protected SetUp: () ==> ()
 SetUp () == pos := new Position(1,1); 

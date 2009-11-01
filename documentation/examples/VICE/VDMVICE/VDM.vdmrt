@@ -17,7 +17,7 @@ system VDM
 --
 instance variables
 
-cpu0 : CPU := new CPU (<FCFS>,1E6);
+cpu0 : CPU := new CPU (<FP>,1E6);		-- changed for setPriority to work
 cpu1 : CPU := new CPU (<FCFS>,1E6);
 cpu2 : CPU := new CPU (<FCFS>,1E6);
 cpu3 : CPU := new CPU (<FCFS>,1E6);

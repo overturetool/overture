@@ -25,6 +25,13 @@ private pos : Position;
 --
 operations
 
+public TestVehicle: seq of char ==> TestVehicle
+TestVehicle(s) ==
+(
+	TestCase(s);
+);
+
+
 protected SetUp: () ==> ()
 SetUp () == 
 (

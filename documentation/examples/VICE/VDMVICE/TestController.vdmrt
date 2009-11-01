@@ -20,6 +20,11 @@ private pos : Position;
 -- Operations definition section
 --
 operations
+public TestController: seq of char ==> TestController
+TestController(s) ==
+(
+	TestCase(s);
+);
 
 protected SetUp: () ==> ()
 SetUp () == pos := new Position(1,1); 

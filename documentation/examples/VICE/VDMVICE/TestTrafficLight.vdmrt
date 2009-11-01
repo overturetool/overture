@@ -20,6 +20,11 @@ private pos : Position;
 -- Operations definition section
 --
 operations
+public TestTrafficLight: seq of char ==> TestTrafficLight
+TestTrafficLight(s) ==
+(
+	TestCase(s);
+);
 
 protected SetUp: () ==> ()
 SetUp () == pos := new Position(5,1); 

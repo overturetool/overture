@@ -20,6 +20,11 @@ instance variables
 -- Operations definition section
 --
 operations
+public TestPosition: seq of char ==> TestPosition
+TestPosition(s) ==
+(
+	TestCase(s);
+);
 
 protected SetUp: () ==> ()
 SetUp () == skip;
