@@ -1,0 +1,57 @@
+
+\section{Types}
+
+\begin{vdm_al}
+
+class MessageTypes
+
+types
+
+--Message Types
+public REQUESTPLAN :: 
+		navi : CyberRail`NavigationInput 
+		tokdev : TokenDevice;
+public RETURNPLAN :: 
+		plan : TransportPlan`DTO 
+		tokdev : TokenDevice;
+public CALCPLAN :: 
+		navi : CyberRail`NavigationInput 
+		tokdev : TokenDevice;
+public INACTIVEROUTE :: 
+		routeid : nat;
+public ACTIVEROUTE :: 
+		routeid : nat;
+public ADDROUTE :: 
+		route : TransportPlan`Route;	 
+public REMOVEROUTE :: 
+		route : TransportPlan`Route;	 
+public STRATEGYINIT :: ;
+public STRATEGYEND :: ;
+public STRATEGYNOTIFY ::
+		routeid : nat;
+
+public MessageT = REQUESTPLAN | RETURNPLAN | CALCPLAN | 
+			INACTIVEROUTE | ACTIVEROUTE | ADDROUTE | REMOVEROUTE |
+			STRATEGYINIT | STRATEGYEND | STRATEGYNOTIFY;
+
+
+
+
+operations
+
+--public test : MessageT ==> seq of char
+--test (cmd) ==
+--(
+--	cases cmd:
+--		mk_MessageTypes`INACTIVEROUTE(-) -> return "inactiveroute",
+--		mk_MessageTypes`REQUESTPLAN(-) -> return "request"
+--	end;
+--	return "fail";
+--)
+
+	
+
+end MessageTypes
+
+
+\end{vdm_al}

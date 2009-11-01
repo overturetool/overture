@@ -1,0 +1,31 @@
+\section{Strategy class}
+\begin{vdm_al}
+
+class Strategy
+
+types
+
+
+operations
+
+strategyInit : () ==> ()
+strategyInit() == 
+is subclass responsibility;
+
+strategyNotify : () ==> ()
+strategyNotify() == 
+is subclass responsibility;
+
+strategyEnd : () ==> ()
+strategyEnd() == 
+is subclass responsibility;
+
+handleEvents : () ==> ()
+handleEvents() == 
+is subclass responsibility;
+
+
+
+end Strategy
+
+\end{vdm_al}

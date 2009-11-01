@@ -1,0 +1,56 @@
+\section{Timestamp}
+
+\begin{vdm_al}
+class TimeStamp is subclass of WaitNotify
+
+instance variables
+  
+public currentTime : nat := 0;
+public wakeUpMap : map nat to nat := {0|->0};
+
+operations
+
+public TimeStamp : () ==> TimeStamp
+TimeStamp() ==
+(
+	currentTime := 0;
+	wakeUpMap := {0|->0};
+);
+
+public WaitRelative : nat ==> ()
+WaitRelative(val) ==
+( AddToWakeUpMap(threadid, currentTime + val);
+  WaitNotify`Wait();
+);
+
+public AddToWakeUpMap : nat * nat ==> ()
+AddToWakeUpMap(tId, val) ==
+  wakeUpMap := wakeUpMap ++ { tId |-> val };
+
+public NotifyAndIncTime : () ==> ()
+NotifyAndIncTime() ==
+( currentTime := currentTime + 1;
+  for all t in set dom (wakeUpMap :> {currentTime}) do
+    NotifyThread2(t)
+);
+
+public NotifyThread2 : nat ==> ()
+NotifyThread2(tId) ==
+( wakeUpMap := {tId} <-: wakeUpMap;
+  WaitNotify`NotifyThread(tId)
+);
+
+public GetTime : () ==> nat
+GetTime() ==
+  return currentTime;
+
+sync
+
+mutex(AddToWakeUpMap);
+
+
+mutex (AddToWakeUpMap, Notify, NotifyThread2, NotifyAll);
+
+end TimeStamp
+
+\end{vdm_al}
