@@ -1,10 +1,13 @@
-class VolumeKnob
+class InsertAddress
   is subclass of EnvironmentTask
 
 operations
+  public InsertAddress: nat ==> InsertAddress
+  InsertAddress (pno) == max_stimuli := pno;
+
   public HandleEvent: nat ==> ()
   HandleEvent (pev) == logSysToEnv(pev)
-  post checkResponseTimes(e2s,s2e,22000);
+  post checkResponseTimes(e2s,s2e,24000);
 
   public Run: () ==> ()
   Run () == start(self); --,VolumeKnobT);
@@ -13,10 +16,10 @@ operations
   createSignal () ==
     ( dcl num2 : nat := getNum();
       logEnvToSys(num2);
-      RadNavSys`mmi.HandleKeyPress(1,num2) )
+      RadNavSys`mmi.HandleKeyPress(2,num2) )
 
 thread
-  periodic (1000,50,500,0) 
+  periodic (2000,100,1000,0) 
     (createSignal)
 
-end VolumeKnob
+end InsertAddress

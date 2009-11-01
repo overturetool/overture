@@ -36,6 +36,9 @@ operations
   public Run: () ==> ()
   Run () == is subclass responsibility;
 
+  public HandleEvent: nat ==> ()
+  HandleEvent (pev) == is subclass responsibility;
+ 
   -- logEnvToSys is used to register when an event was inserted into
   -- the system. note that the 'time' keyword refers to the internal
   -- simulation wall clock of VDMTools

@@ -29,7 +29,7 @@ operations
       -- deploy radio on CPU2
       CPU2.deploy(radio,"RadioT");
       CPU2.setPriority(Radio`AdjustVolume,100);
-      CPU2.setPriority(Radio`DecodeTMC,90);
+--      CPU2.setPriority(Radio`DecodeTMC,90);
       -- deploy navigation on CPU3
       CPU3.deploy(navigation,"NavT");
       CPU3.setPriority(Navigation`DatabaseLookup, 100);

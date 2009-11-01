@@ -2,6 +2,9 @@ class TransmitTMC
   is subclass of EnvironmentTask
 
 operations
+  public TransmitTMC: nat ==> TransmitTMC
+  TransmitTMC (pno) == max_stimuli := pno;
+
   public HandleEvent: nat ==> ()
   HandleEvent (pev) == logSysToEnv(pev)
   post checkResponseTimes(e2s,s2e,40000);
