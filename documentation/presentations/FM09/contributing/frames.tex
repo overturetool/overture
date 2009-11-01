@@ -246,7 +246,7 @@ Prepare source for development after check-out
 		frame=ltrb,
 		framesep=5pt,
 		showtabs=true,
-		basicstyle=\tiny,
+		basicstyle=\ttfamily\tiny,
 		keywordstyle=\ttfamily,
 		identifierstyle=\ttfamily\color{blue}\bfseries,
 		commentstyle=\color{Brown},
@@ -277,7 +277,7 @@ Prepare source for development after check-out
 		frame=ltrb,
 		framesep=5pt,
 		showtabs=true,
-		basicstyle=\tiny,
+		basicstyle=\ttfamily\tiny,
 		keywordstyle=\ttfamily,
 		identifierstyle=\ttfamily\color{blue}\bfseries,
 		commentstyle=\color{Brown},
@@ -333,27 +333,42 @@ Prepare source for development after check-out
 \begin{frame}[fragile]
   \frametitle{Wrap core component into a plug-in}
 
-Navigate to ide/generated/
+Navigate to \ttfamily{ide/generated/}
   \lstset{language=XML,
 		frame=ltrb,
 		framesep=5pt,
 		showtabs=true,
-		basicstyle=\tiny,
+		basicstyle=\ttfamily\tiny,
 		keywordstyle=\ttfamily,
 		identifierstyle=\ttfamily\color{blue}\bfseries,
 		commentstyle=\color{Brown},
 		stringstyle=\ttfamily,
 		showstringspaces=ture}
   \begin{lstlisting}
-  mvn archetype:create -DgroupId=org.overture.ide.generated -DartifactId=org.overture.ide.generated.umltrans 
-  <packaging>binary-plugin</packaging>
+  mvn archetype:create 
+		-DgroupId=org.overture.ide.generated
+		-DartifactId=org.overture.ide.generated.umltrans 
   \end{lstlisting}
+
+
+
+\onslide<2->{ 
+\begin{tikzpicture}
+[
+	overlay,
+	xscale	= 1,	% to scale horizontally everything but the text
+	yscale	= 1,	% to scale vertically everything but the text
+]
+	\node[fill=green!20,text height=0.2ex,text width=30ex, text depth=0.25ex]	at	(2.5,-2.2) (t1){ };
+
+\end{tikzpicture}
+}
 
 \lstset{language=XML,
 		frame=ltrb,
 		framesep=5pt,
 		showtabs=true,
-		basicstyle=\tiny,
+		basicstyle=\ttfamily\tiny,
 		keywordstyle=\ttfamily,
 		identifierstyle=\ttfamily\color{blue}\bfseries,
 		commentstyle=\color{Brown},
@@ -361,23 +376,14 @@ Navigate to ide/generated/
 		showstringspaces=ture}
 \begin{lstlisting}
 <project>
-  <parent>
-    <groupId>org.overture.ide</groupId>
-    <artifactId>org.overture.ide.generated</artifactId>
-    <version>2.0.0</version>
-  </parent>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>
-    org.overture.ide.generated
-  </groupId>
-  <artifactId>
-    org.overture.ide.generated.umltrans
-  </artifactId>
-  <name>
-    org.overture.ide.generated.umltrans
-  </name>
+  ...
+  <groupId>org.overture.ide.generated</groupId>
+  <artifactId>org.overture.ide.generated.umltrans</artifactId>
+  <name>org.overture.ide.generated.umltrans</name>
   <version>2.0.0</version>
+
   <packaging>binary-plugin</packaging>
+
   <dependencies>
     <dependency>
       <groupId>org.overturetool</groupId>
@@ -399,22 +405,36 @@ Navigate to ide/plugins/
 		frame=ltrb,
 		framesep=5pt,
 		showtabs=true,
-		basicstyle=\tiny,
+		basicstyle=\ttfamily\tiny,
 		keywordstyle=\ttfamily,
 		identifierstyle=\ttfamily\color{blue}\bfseries,
 		commentstyle=\color{Brown},
 		stringstyle=\ttfamily,
 		showstringspaces=ture}
   \begin{lstlisting}
-  mvn archetype:create -DgroupId=org.overture.ide.plugins -DartifactId=org.overture.ide.plugins.umltrans 
-  <packaging>source-plugin</packaging>
+  mvn archetype:create 
+	-DgroupId=org.overture.ide.plugins
+	-DartifactId=org.overture.ide.plugins.umltrans 
   \end{lstlisting}
+
+
+\onslide<2->{ 
+\begin{tikzpicture}
+[
+	overlay,
+	xscale	= 1,	% to scale horizontally everything but the text
+	yscale	= 1,	% to scale vertically everything but the text
+]
+	\node[fill=green!20,text height=0.2ex,text width=28ex, text depth=0.25ex]	at	(2.8,-2.8) (t1){ };
+
+\end{tikzpicture}
+}
 
 \lstset{language=XML,
 		frame=ltrb,
 		framesep=5pt,
 		showtabs=true,
-		basicstyle=\tiny,
+		basicstyle=\ttfamily\tiny,
 		keywordstyle=\ttfamily,
 		identifierstyle=\ttfamily\color{blue}\bfseries,
 		commentstyle=\color{Brown},
@@ -422,18 +442,16 @@ Navigate to ide/plugins/
 		showstringspaces=ture}
 \begin{lstlisting}
 <project>
-  <parent>
-    <groupId>org.overture.ide</groupId>
-    <artifactId>org.overture.ide.generated</artifactId>
-    <version>2.0.0</version>
-  </parent>
+...
   <modelVersion>4.0.0</modelVersion>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.overture.ide.plugins</groupId>
   <artifactId>org.overture.ide.plugins.umltrans</artifactId>
   <name>org.overture.ide.plugins.umltrans</name>
   <version>2.0.0</version>
+
   <packaging>source-plugin</packaging>
+
 </project>
 \end{lstlisting}
 \end{frame}
