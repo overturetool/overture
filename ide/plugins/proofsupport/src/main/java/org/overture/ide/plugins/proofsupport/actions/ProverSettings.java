@@ -24,7 +24,7 @@ public class ProverSettings {
 			
 			
 
-			outputStream.append("\n" +"/Users/UserName/root/opt/vdmpp/bin/vppde");
+			outputStream.append("/Users/UserName/root/opt/vdmpp/bin/vppde");
 			outputStream.append("\n" +"/Users/UserName/root/opt/mosml");
 			outputStream.append("\n" +"/Users/UserName/root/opt/hol");
 
