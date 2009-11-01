@@ -163,7 +163,8 @@ public class VdmRtVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 							File logDir = new File(  config.getWorkingDirectoryPath().toOSString()  + File.separatorChar + "logs" + File.separatorChar + launch.getLaunchConfiguration().getName() );
 							logDir.mkdirs();
 							String logFilename = dateFormat.format(date) + ".logrt";
-							File f = new File(logDir.toURI().toASCIIString() , logFilename);
+							System.out.println(logFilename);
+							File f = new File(logDir , logFilename);
 						    if (!f.exists()){
 						      f.getParentFile().mkdirs();
 						      f.createNewFile();
