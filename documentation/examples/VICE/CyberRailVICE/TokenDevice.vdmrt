@@ -71,7 +71,7 @@ isFinished() == skip;
 --Setup handles----------------------------------
 
  
-public setQ_Env_out : Enviroment ==> ()
+public setQ_Env_out : Environment ==> ()
 setQ_Env_out(env)== ( q_Env_out := env; );
 
 public setQ_APM_out : ActivePlanManager ==> ()

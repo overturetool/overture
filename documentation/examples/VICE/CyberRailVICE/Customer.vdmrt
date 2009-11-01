@@ -1,13 +1,22 @@
 \section{Customer}
 
 \begin{vdm_al}
-class Customer is subclass of Enviroment
+class Customer is subclass of Environment
 
 instance variables
   public static tokenDevices : map nat to TokenDevice := {|->};
 private cyberrail : CyberRail;
 
 operations
+
+public Customer : seq of char ==> Customer
+Customer(fname) ==
+(
+	def mk_ (-,input) = io.freadval[seq of inline](fname) in
+		inlines := input;
+		
+	outfileName := "Results for " ^ fname
+);
 
 public Customer : () ==> Customer
 Customer()==(

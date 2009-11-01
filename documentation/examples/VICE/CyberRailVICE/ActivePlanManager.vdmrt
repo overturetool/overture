@@ -41,7 +41,7 @@ strategyInit() ==
 );
 
 strategyNotify : () ==> ()
-strategyNotify() == is subclass responsibility;
+strategyNotify() == skip; -- is subclass responsibility;
 
 
 strategyEnd : () ==> ()

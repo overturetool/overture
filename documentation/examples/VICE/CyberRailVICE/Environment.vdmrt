@@ -1,4 +1,4 @@
-	\section{Envirioment}
+\section{Envirioment}
 
 \begin{vdm_al}
 class Environment
@@ -9,8 +9,8 @@ public outline = [TransportPlan] * [nat] * nat;
 public inline = [CyberRail`NavigationInput] * [nat] * [nat] * nat;
 
 instance variables
-  private io : IO := new IO();
-  private outfileName : seq of char := "";
+  protected io : IO := new IO();
+  protected outfileName : seq of char := "";
   protected  outlines : seq of outline := [];
   protected  inlines : seq of inline := [];
   protected  busy : bool := true;
@@ -33,8 +33,8 @@ operations
   showResults() ==
   def - = io.fwriteval[seq of outline](outfileName,outlines,<start>) in skip;
 
-  public Enviroment : seq of char ==> Enviroment
-  Enviroment(fname) ==(
+  public Environment : seq of char ==> Environment
+  Environment(fname) ==(
      def mk_ (-,input) = io.freadval[seq of inline](fname) in
    inlines := input;
 	outfileName := "Results for " ^ fname;
