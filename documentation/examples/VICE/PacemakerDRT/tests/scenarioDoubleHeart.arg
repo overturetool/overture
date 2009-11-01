@@ -1,0 +1,3 @@
+mk (50000 ,[mk (<PULSE>,<ATRIA> ,4 ,9000) , mk (<PULSE>,<ATRIA> ,4 ,9500) ,
+mk (<PULSE>,<ATIRA> ,4 ,19000) ,mk (<PULSE>,<ATRIA> ,4 ,19400) ] )
+
