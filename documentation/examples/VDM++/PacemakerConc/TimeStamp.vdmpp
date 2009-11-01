@@ -1,0 +1,87 @@
+\section{TimeStamp class}
+
+
+\begin{vdm_al}
+class TimeStamp is subclass of WaitNotify
+
+values
+
+  public stepLength : nat = 50;
+\end{vdm_al}
+
+\begin{vdm_al}
+instance variables
+
+currentTime  : nat   := 0;
+wakeUpMap    : map nat to nat := {|->};
+\end{vdm_al}
+
+\begin{vdm_al}
+operations
+
+public WaitRelative : nat ==> ()
+WaitRelative(val) ==
+( AddToWakeUpMap(threadid, currentTime + val);
+  WaitNotify`Wait();
+);
+
+\end{vdm_al}
+\begin{vdm_al}
+
+public WaitAbsolute : nat ==> ()
+WaitAbsolute(val) ==
+( AddToWakeUpMap(threadid, val);
+  WaitNotify`Wait();
+);
+\end{vdm_al}
+\begin{vdm_al}
+AddToWakeUpMap : nat * nat ==> ()
+AddToWakeUpMap(tId, val) ==
+  wakeUpMap := wakeUpMap ++ { tId |-> val };
+\end{vdm_al}
+\begin{vdm_al}
+public NotifyThread : nat ==> ()
+NotifyThread(tId) ==
+( wakeUpMap := {tId} <-: wakeUpMap;
+  WaitNotify`NotifyThread(tId)
+);
+\end{vdm_al}
+\begin{vdm_al}
+
+public Notify : () ==> ()
+Notify() ==
+  let tId in set dom wakeUpMap in
+    NotifyThread(tId);
+\end{vdm_al}
+\begin{vdm_al}
+public NotifyAll : () ==> ()
+NotifyAll() ==
+( wakeUpMap := {|->};
+  WaitNotify`NotifyAll()
+);
+\end{vdm_al}
+\begin{vdm_al}
+public NotifyAndIncTime : () ==> ()
+NotifyAndIncTime() ==
+( currentTime := currentTime + stepLength;
+  for all t in set dom (wakeUpMap :> {1,...,currentTime}) do
+    NotifyThread(t)
+);
+\end{vdm_al}
+\begin{vdm_al}
+public GetTime : () ==> nat
+GetTime() ==
+  return currentTime;
+\end{vdm_al}
+\begin{vdm_al}
+sync
+
+mutex(AddToWakeUpMap);
+per Notify => #active(NotifyAll) + #active(NotifyThread) + #active(AddToWakeUpMap) = 0;
+per NotifyAll => #active(Notify) + #active(NotifyThread) + #active(AddToWakeUpMap) = 0;
+per NotifyThread => #active(NotifyAll) + #active(AddToWakeUpMap) = 0;
+per AddToWakeUpMap => #active(NotifyAll) + #active(Notify) + #active(NotifyThread) = 0;
+
+end TimeStamp
+\end{vdm_al}
+
