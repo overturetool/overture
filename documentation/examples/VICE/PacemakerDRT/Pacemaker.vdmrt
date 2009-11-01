@@ -73,8 +73,8 @@ operations
     cpu4.deploy(rateController);
     cpu4.deploy(heartController);
  --   cpu4.setPriority(HeartController`pace,3);
-    cpu4.setPriority(RateController`increaseRate,1);
-    cpu4.setPriority(RateController`decreaseRate,1);
+ --   cpu4.setPriority(RateController`increaseRate,1);
+ --   cpu4.setPriority(RateController`decreaseRate,1);
    );
    
 end Pacemaker

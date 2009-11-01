@@ -51,7 +51,7 @@ quotes corresponding to each mode.
 \begin{vdm_al}
 -- Operation mode
 public 
-Mode = <OFF> | <AOO> | <AAI> | <AOOR> | <AAT> | <DOO>;
+Mode = <OFF> | <AOO> | <AAI> | <AOOR> | <AAT> | <DOO> | <DDD>;
 
 \end{vdm_al}
 

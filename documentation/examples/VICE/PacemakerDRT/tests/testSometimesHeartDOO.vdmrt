@@ -1,8 +1,8 @@
-class Test
+class Test19
 
 operations
 
-public Test : () ==> Test
+public Test : () ==> ()
 Test () == new World("tests/scenarioSometimesHeart.arg",<DOO>).Run()
 ;
-end Test
+end Test19

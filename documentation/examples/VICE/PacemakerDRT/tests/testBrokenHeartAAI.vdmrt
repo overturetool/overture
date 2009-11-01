@@ -1,8 +1,8 @@
-class Test
+class Test4
 
 operations
 
 public Test : () ==> ()
 Test () == new World("tests/scenarioBrokenHeart.arg",<AAI>).Run()
 ;
-end Test
+end Test4

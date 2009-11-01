@@ -1,8 +1,8 @@
-class Test
+class Test2
 
 operations
 
 public Test : () ==> ()
-Test () == new World("tests/scenarioBrokenHeart.arg",<DDD>).Run()
+Test() == new World ("tests/scenarioBrokenHeart.arg",<DDD>).Run()
 ;
-end Test
+end Test2

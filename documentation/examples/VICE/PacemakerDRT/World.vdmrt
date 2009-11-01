@@ -17,7 +17,7 @@ The World constructor its the responsible for connect system and environment.
 \begin{vdm_al}
 operations
 
-public World: seq of char * Mode==> World
+public World: seq of char * GLOBAL`Mode ==> World
 World(filename,mode) == 
   (  -- create an environment
      env := new Environment(filename);
