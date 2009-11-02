@@ -28,6 +28,8 @@ import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.Environment;
+import org.overturetool.vdmj.values.NilValue;
+import org.overturetool.vdmj.values.ValueList;
 
 public class OptionalType extends Type
 {
@@ -222,5 +224,13 @@ public class OptionalType extends Type
 	public String toDisplay()
 	{
 		return "[" + type + "]";
+	}
+
+	@Override
+	public ValueList getAllValues()
+	{
+		ValueList list = type.getAllValues();
+		list.add(new NilValue());
+		return list;
 	}
 }
