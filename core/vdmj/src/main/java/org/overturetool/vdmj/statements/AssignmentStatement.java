@@ -118,11 +118,15 @@ public class AssignmentStatement extends Statement
 		{
 			ObjectValue self = ctxt.getSelf();	// May be a static
 
+			// The showtrace plugin does not like "quotes", nor does it
+			// have a \" type convention, so we substitute for apostrophes.
+			String noquotes = newval.toString().replaceAll("\\\"", "\'");
+
 			if (self == null)
 			{
     			RTLogger.log(
     				"InstVarChange -> instnm: \"" + target.toString() + "\"" +
-    				" val: \"" + newval + "\"" +
+    				" val: \"" + noquotes + "\"" +
     				" objref: nil" +
     				" id: " + Thread.currentThread().getId());
 			}
@@ -130,7 +134,7 @@ public class AssignmentStatement extends Statement
 			{
     			RTLogger.log(
     				"InstVarChange -> instnm: \"" + target.toString() + "\"" +
-    				" val: \"" + newval + "\"" +
+    				" val: \"" + noquotes + "\"" +
     				" objref: " + self.objectReference +
     				" id: " + Thread.currentThread().getId());
 			}
