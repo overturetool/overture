@@ -90,12 +90,12 @@ operations
     let mk_Card(-,cardId,accountId) = curCard,
         transaction = mk_Transaction(date,cardId,amount)        
     in
-      if accounts(accountId).balance – amount >= 0 and 
+      if accounts(accountId).balance - amount >= 0 and 
         DateTotal(date,accounts(accountId).transactions^[transaction])
         <= dailyLimit
       then
         (accounts(accountId).balance := 
-           accounts(accountId).balance – amount;
+           accounts(accountId).balance - amount;
          accounts(accountId).transactions := 
            accounts(accountId).transactions ^ [transaction];
          return true)
