@@ -35,7 +35,7 @@
          id="org.overture.ide.debug.ui.VDMPPVDMJOvertureLaunchShortcut"
          label="Launch VDMJ VDM++"
          modes="run, debug"
-         icon="icons/cview16/vdmsl_file_tsk.gif">
+         icon="icons/cview16/vdmpp_file_tsk.gif">
    <contextualLaunch>
         <enablement>
           <with variable="selection">
@@ -153,14 +153,14 @@
       </visibility>
       <action
         label="Watch"
-        icon="icons/cview16/vdmsl_file_tsk.gif"
+        icon="icons/cview16/vdmpp_file_tsk.gif"
         class="org.eclipse.dltk.internal.debug.ui.actions.ScriptWatchAction"
         menubarPath="additions"
         id="org.overturetool.debug.ui.ScriptWatch">
       </action>
       <action
         label="Inspect"
-        icon="icons/cview16/vdmsl_file_tsk.gif"
+        icon="icons/cview16/vdmpp_file_tsk.gif"
         definitionId="org.eclipse.dltk.debug.ui.commands.ScriptInspect"
         class="org.eclipse.dltk.internal.debug.ui.actions.PopupScriptInspectAction"
         menubarPath="additions"
@@ -168,7 +168,7 @@
       </action>
       <action
         label="Display"
-        icon="icons/cview16/vdmsl_file_tsk.gif"
+        icon="icons/cview16/vdmpp_file_tsk.gif"
         definitionId="org.eclipse.dltk.debug.ui.commands.ScriptDisplay"
         class="org.eclipse.dltk.internal.debug.ui.actions.PopupScriptDisplayAction"
         menubarPath="additions"
@@ -246,7 +246,7 @@
   -->	
  <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
     <launchConfigurationTypeImage
-      icon="icons/cview16/vdmsl_file_tsk.gif"
+      icon="icons/cview16/vdmpp_file_tsk.gif"
       configTypeID="org.overture.ide.vdmpp.debug.core.launchConfigurationTypeVDMJ"
       id="org.overturetool.debug.ui.launchConfigurationTypeImage.overture">
     </launchConfigurationTypeImage>
