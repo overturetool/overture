@@ -186,7 +186,7 @@ public class CPUValue extends ObjectValue
 
 	public long getDuration(long cycles)
 	{
-		return (long)(cycles/cyclesPerSec * 1000);		// millisecs
+		return (long)(cycles/cyclesPerSec + 1);		// Same as VDMTools
 	}
 
 	public void setName(String name)
