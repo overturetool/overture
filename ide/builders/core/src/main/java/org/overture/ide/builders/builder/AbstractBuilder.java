@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Vector;
 
@@ -32,6 +33,7 @@ public abstract class AbstractBuilder {
 			List modelElements);
 
 	public abstract String getNatureId();
+
 	public abstract String getContentTypeId();
 
 	public static IFile findIFile(IProject project, File file) {
@@ -101,7 +103,7 @@ public abstract class AbstractBuilder {
 				project.refreshLocal(IResource.DEPTH_INFINITE, null);
 
 			} catch (CoreException e1) {
-				
+
 				e1.printStackTrace();
 			}
 	}
@@ -120,7 +122,7 @@ public abstract class AbstractBuilder {
 					IResource.DEPTH_INFINITE);
 
 		} catch (CoreException e) {
-			
+
 			e.printStackTrace();
 		}
 
@@ -140,45 +142,48 @@ public abstract class AbstractBuilder {
 	 * @throws CoreException
 	 * @throws IOException
 	 */
-	public static void parseMissingFiles(IProject project, String natureId, String contentTypeId,
-			IProgressMonitor monitor) throws CoreException, IOException {
+	public static void parseMissingFiles(IProject project, String natureId,
+			String contentTypeId, IProgressMonitor monitor)
+			throws CoreException, IOException {
 		if (monitor != null)
 			monitor.subTask("Parsing files");
 		AbstractBuilder.syncProjectResources(project);
-//		for (IResource res : project.members(IContainer.INCLUDE_PHANTOMS
-//				| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS)) {
-//			parseMissingFiles(project, natureId, res);
-//		}
+		// for (IResource res : project.members(IContainer.INCLUDE_PHANTOMS
+		// | IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS)) {
+		// parseMissingFiles(project, natureId, res);
+		// }
 
-	List<IFile> files=	ProjectUtility.getFiles(project, contentTypeId);
-	for (IFile iFile : files) {
-		parseFile(project, natureId, iFile);
-	}
-		
+		List<IFile> files = ProjectUtility.getFiles(project, contentTypeId);
+		for (IFile iFile : files) {
+			parseFile(project, natureId, iFile);
+		}
+
 	}
 
 	/***
 	 * Try to parse a resource, by testing if it is a file with a known content
 	 * type related to the project. Search sub folders.
 	 * 
-	 * @param project the project
-	 * @param natureId the nature used by the builder
-	 * @param resource the resource to parse
+	 * @param project
+	 *            the project
+	 * @param natureId
+	 *            the nature used by the builder
+	 * @param resource
+	 *            the resource to parse
 	 * @throws CoreException
 	 * @throws IOException
 	 */
 	private static void parseMissingFiles(IProject project, String natureId,
 			IResource resource) throws CoreException, IOException {
-		if (resource instanceof IFolder)
-		{
+		if (resource instanceof IFolder) {
 			if (resource instanceof IFolder
 					&& resource.getLocation().lastSegment().startsWith("."))// skip
 				return;
-				// .
-				// folders
-				// like
-				// .svn
-			
+			// .
+			// folders
+			// like
+			// .svn
+
 			for (IResource res : ((IFolder) resource).members(IContainer.INCLUDE_PHANTOMS
 					| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS)) {
 				// System.out.println("Looking at file for parse: "
@@ -186,17 +191,15 @@ public abstract class AbstractBuilder {
 				// System.out.println(project.getContentTypeMatcher().findContentTypeFor(
 				// res.getFullPath().toString()));
 
-				
-					parseMissingFiles(project, natureId, res);
+				parseMissingFiles(project, natureId, res);
 			}
 		}
 		// check if it is a IFile and that there exists a known content type for
 		// this file and the project
 		else if (resource instanceof IFile
 				&& project.getContentTypeMatcher().findContentTypeFor(
-						resource.toString()) != null)
-		{
-			//System.out.println("Parsing file: "+resource);
+						resource.toString()) != null) {
+			// System.out.println("Parsing file: "+resource);
 			parseMissingFiles(project, natureId, (IFile) resource);
 		}
 
@@ -205,29 +208,76 @@ public abstract class AbstractBuilder {
 	private static void parseMissingFiles(IProject project, String natureId,
 			final IFile f) throws CoreException, IOException {
 
-		
-		
 	}
-	
-	public static void parseFile(IProject project, String natureId,final IFile file) throws CoreException, IOException
-	{
+
+	public static void parseFile(IProject project, String natureId,
+			final IFile file) throws CoreException, IOException {
 		Path path = new Path(file.getProject().getFullPath().addTrailingSeparator().toString()
 				+ file.getProjectRelativePath().toString());
 		File fileSystemFile = project.getFile(path.removeFirstSegments(1)).getLocation().toFile();
-		
+
 		RootNode rootNode = AstManager.instance().getRootNode(project, natureId);
-		if (rootNode !=null && rootNode.hasFile(
-						fileSystemFile))
+		if (rootNode != null && rootNode.hasFile(fileSystemFile))
 			return;
 
-		System.out.println("Trying to parse missing file: " + file.getName());
-		InputStream inStream = file.getContents();
-		List<Character> content = new Vector<Character>();
-		int c = -1;
-		while ((c = inStream.read()) != -1)
-			content.add((char) c);
+		List<Character> content = getContent(file);
 
-		IProblemReporter reporter = new IProblemReporter() {
+		IProblemReporter reporter = createProblemReporter(file);
+
+		char[] source = getCharContent(content);
+		
+		try {
+			SourceParserManager.getInstance().getSourceParser(project, natureId).parse(
+					path.toString().toCharArray(), source, reporter);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static char[] getCharContent(List<Character> content) {
+		char[] source = new char[content.size()];
+		for (int i = 0; i < content.size(); i++) {
+			source[i] = content.get(i);
+		}
+		return source;
+	}
+
+	private static List<Character> getContent(IFile file) {
+		System.out.println("Trying to parse missing file: " + file.getName());
+		InputStream inStream;
+		InputStreamReader in = null;
+		List<Character> content = new Vector<Character>();
+		try {
+			inStream = file.getContents();
+			in = new InputStreamReader(inStream, file.getCharset());
+
+			int c = -1;
+			while ((c = in.read()) != -1)
+				content.add((char) c);
+
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (in != null)
+				try {
+					in.close();
+				} catch (IOException e) {
+				}
+		}
+
+		return content;
+
+	}
+
+	private static IProblemReporter createProblemReporter(final IFile file) {
+		return new IProblemReporter() {
 
 			@SuppressWarnings("unchecked")
 			public Object getAdapter(Class adapter) {
@@ -248,20 +298,8 @@ public abstract class AbstractBuilder {
 
 					e.printStackTrace();
 				}
-				
-//				System.out.println("refresh parser problem: " + problem.getID()
-//						+ " " + problem.getMessage());
+
 			}
 		};
-		char[] source = new char[content.size()];
-		for (int i = 0; i < content.size(); i++) {
-			source[i] = content.get(i);
-		}
-		try {
-			SourceParserManager.getInstance().getSourceParser(project, natureId).parse(
-					path.toString().toCharArray(), source, reporter);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 }
