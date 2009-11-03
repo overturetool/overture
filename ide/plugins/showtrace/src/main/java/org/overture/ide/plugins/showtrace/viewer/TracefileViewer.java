@@ -25,7 +25,7 @@ import org.overturetool.traceviewer.parser.TraceParser;
 //            SelectTimeDialog, TracefileVisitor, TracefileParser, TracefileChecker, 
 //            tdCPU
 @SuppressWarnings("unchecked")
-public class TracefileViewer extends ViewPart
+public class TracefileViewer extends ViewPart implements IViewCallback
 {
 
     public TracefileViewer()

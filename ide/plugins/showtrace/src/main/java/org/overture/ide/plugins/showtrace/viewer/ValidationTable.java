@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.*;
 public class ValidationTable
 {
 
-    ValidationTable(Composite theComposite, TracefileViewer theCallback)
+    ValidationTable(Composite theComposite, IViewCallback theCallback)
     {
         theTable = null;
         theViewer = null;
@@ -214,7 +214,7 @@ public class ValidationTable
     }
 
     private Table theTable;
-    private TracefileViewer theViewer;
+    private IViewCallback theViewer;
 //    private static final String FAIL = "  FAIL";
 //    private static final String PASS = "  PASS";
     static final boolean $assertionsDisabled = false; //!org/overturetool/tracefile/viewer/ValidationTable.desiredAssertionStatus();

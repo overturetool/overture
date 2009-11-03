@@ -10,6 +10,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -144,7 +145,9 @@ public class ProjectUtility {
 		return project.getFile(path.removeFirstSegments(1)).getLocation().toFile();
 	}
 	
-	
+	public static File getFile(IWorkspaceRoot wroot, IPath path) {
+		return wroot.getFile(path.removeFirstSegments(1)).getLocation().toFile();
+	}
 
 	public static File getFile(IProject project, IFile file) {
 		Path path = new Path(project.getFullPath().addTrailingSeparator().toString()

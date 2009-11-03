@@ -12,7 +12,9 @@ import org.osgi.framework.BundleContext;
 public class TracefileViewerPlugin extends AbstractUIPlugin
 {
 
-    public TracefileViewerPlugin()
+    protected static final String PLUGIN_ID = "org.overture.ide.plugins.showtrace";
+
+	public TracefileViewerPlugin()
     {
         plugin = this;
     }
