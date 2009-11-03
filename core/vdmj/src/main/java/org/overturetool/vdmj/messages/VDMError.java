@@ -23,12 +23,8 @@
 
 package org.overturetool.vdmj.messages;
 
-import java.util.List;
-import java.util.Vector;
-
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.ContextException;
-
 
 /**
  * A VDM error message.
@@ -36,8 +32,6 @@ import org.overturetool.vdmj.runtime.ContextException;
 
 public class VDMError extends VDMMessage
 {
-	public List<String> details = new Vector<String>();
-
 	public VDMError(int number, String message, LexLocation location)
 	{
 		super(number, message, location);
@@ -51,11 +45,6 @@ public class VDMError extends VDMMessage
 	public VDMError(ContextException ce)
 	{
 		super(ce.number, ce.getMessage(), ce.location);
-	}
-
-	public void add(String det)
-	{
-		details.add(det);
 	}
 
 	@Override

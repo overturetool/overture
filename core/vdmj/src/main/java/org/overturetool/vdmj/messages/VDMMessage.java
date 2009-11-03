@@ -23,6 +23,9 @@
 
 package org.overturetool.vdmj.messages;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.overturetool.vdmj.lex.LexLocation;
 
 /**
@@ -34,6 +37,8 @@ public class VDMMessage
 	public final int number;
 	public final String message;
 	public final LexLocation location;
+
+	protected List<String> details = new Vector<String>();
 
 	public VDMMessage(int number)
 	{
@@ -49,12 +54,15 @@ public class VDMMessage
 		this.location = location;
 	}
 
+	public void add(String det)
+	{
+		details.add(det);
+	}
+
 	@Override
 	public String toString()
 	{
-		String padded = "0000" + number;
-		padded = padded.substring(padded.length() - 4);
-		return padded + ": " + message + " " + location;
+		return String.format("%04d: %s %s", number, message, location);
 	}
 
 	@Override

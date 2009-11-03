@@ -30,6 +30,7 @@ import java.util.Vector;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.messages.VDMError;
+import org.overturetool.vdmj.messages.VDMMessage;
 import org.overturetool.vdmj.messages.VDMWarning;
 
 
@@ -41,7 +42,7 @@ abstract public class TypeChecker
 {
 	private static List<VDMError> errors = new Vector<VDMError>();
 	private static List<VDMWarning> warnings = new Vector<VDMWarning>();
-	private static VDMError lastError = null;
+	private static VDMMessage lastMessage = null;
 	private static final int MAX = 100;
 
 	public TypeChecker()
@@ -53,8 +54,9 @@ abstract public class TypeChecker
 
 	public static void report(int number, String problem, LexLocation location)
 	{
-		lastError = new VDMError(number, problem, location);
-		errors.add(lastError);
+		VDMError error = new VDMError(number, problem, location);
+		errors.add(error);
+		lastMessage = error;
 
 		if (errors.size() >= MAX-1)
 		{
@@ -67,13 +69,14 @@ abstract public class TypeChecker
 	{
 		VDMWarning warning = new VDMWarning(number, problem, location);
 		warnings.add(warning);
+		lastMessage = warning;
 	}
 
 	public static void detail(String tag, Object obj)
 	{
-		if (lastError != null)
+		if (lastMessage != null)
 		{
-			lastError.add(tag + ": " + obj);
+			lastMessage.add(tag + ": " + obj);
 		}
 	}
 

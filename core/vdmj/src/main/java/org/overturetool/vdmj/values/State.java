@@ -72,8 +72,22 @@ public class State implements ValueListener
 				// so that calls to init_sigma can test their arguments without
 				// changing state. See StateInitExpression.
 
+				if (!(definition.initExpression instanceof EqualsExpression))
+				{
+					throw new ValueException(
+						4144, "State init expression cannot be executed", globals);
+				}
+
 				EqualsExpression ee = (EqualsExpression)definition.initExpression;
-				RecordValue iv = (RecordValue)ee.right.eval(globals);
+				Value v = ee.right.eval(globals);
+
+				if (!(v instanceof RecordValue))
+				{
+					throw new ValueException(
+						4144, "State init expression cannot be executed", globals);
+				}
+
+				RecordValue iv = (RecordValue)v;
 
 				for (Field f: definition.fields)
 				{

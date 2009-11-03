@@ -179,7 +179,7 @@ public class StateDefinition extends Definition
 		{
 			if (!checkInit(base, scope))
 			{
-				report(3048, "State init expression cannot be executed");
+				warning(5010, "State init expression cannot be executed");
 				detail("Expected", "p == p = mk_Record(...)");
 			}
 			else
