@@ -432,6 +432,9 @@ public class TracesTreeView extends ViewPart {
 					protected IStatus run(IProgressMonitor monitor) {
 						try {
 							ITracesHelper th = traceHelpers.get(finalProjectName);
+							 
+														projectToUpdate= getProject(finalProjectName);
+							
 							if (finalClassTracesTestCase.size() == 0)
 								runTestProject(th, monitor);
 							else {
@@ -498,6 +501,8 @@ public class TracesTreeView extends ViewPart {
 						ExpandTraces(0);
 						return new Status(IStatus.OK, "org.overturetool.traces", IStatus.OK, "CT Test evaluation finished", null);
 					}
+
+					
 
 				};
 
@@ -1149,6 +1154,19 @@ public class TracesTreeView extends ViewPart {
 		MessageConsole myConsole = new MessageConsole(name, null);
 		conMan.addConsoles(new IConsole[] { myConsole });
 		return myConsole;
+	}
+	
+	private IProject getProject(String finalProjectName) throws CoreException {
+		IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+		IProject[] iprojects = iworkspaceRoot.getProjects();
+		
+		for (final IProject project : iprojects) {
+			
+				if (project.isOpen()
+						&& project.getNature(VdmPpProjectNature.VDM_PP_NATURE) != null && project.getName().equals(finalProjectName))
+					return project;
+		}
+				return null;
 	}
 
 }

@@ -34,5 +34,46 @@
            id="org.overture.ide.ui.view.category"
            name="Overture">
      </category>
-  </extension>
+ </extension>
+  
+  
+  <extension point="org.eclipse.ui.popupMenus">
+   <!-- Enable the menu on projects -->
+      <objectContribution
+            adaptable="true"
+            id="org.overture.ide.ui.projectmenus"
+            objectClass="org.eclipse.core.resources.IProject">
+         	<menu
+               id="org.overture.ide.ui.buildMenu"
+               label="Build Menu"
+               path="buildmenu">
+            <separator
+                  name="groupBuild">
+            </separator>
+         </menu>
+         <action
+               class="org.overture.ide.ui.actions.BuildProjectAction"
+               enablesFor="1"
+               id="org.overture.ide.ui.actions.BuildProjectAction"
+               label="Type check"
+               menubarPath="groupBuild"
+               tooltip="Type check project">
+         </action>
+         <action
+               class="org.overture.ide.ui.actions.CleanProjectAction"
+               enablesFor="1"
+               id="org.overture.ide.ui.actions.CleanProjectAction"
+               label="Clean"
+               menubarPath="groupBuild"
+               tooltip="Clean project">
+         </action>
+      </objectContribution>
+    </extension>
+  
+  
+  
+  
+  
+  
+  
 </plugin>
