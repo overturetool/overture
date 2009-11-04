@@ -100,7 +100,7 @@ THTWAlgo() ==
         HA`ThermNode.SetCorrection(<NONE>);
         if print
         then (World`env.HandleEvent(time, Temp, Humid);
-              printStr("Target values reached");
+              printStr("\nTarget values reached");
               let - = new IO().writeval[nat](time)
               in skip;
              );
@@ -129,7 +129,7 @@ TTWAlgo() ==
         HA`ThermNode.SetCorrection(<NONE>);
         if print
         then (World`env.HandleEvent(time, Temp, Humid);
-              printStr("Target values reached");
+              printStr("\nTarget values reached");
               let - = new IO().writeval[nat](time)
               in skip;
              );
@@ -150,7 +150,7 @@ TTAlgo() ==
   else (HA`ThermNode.SetCorrection(<NONE>);
         if print
         then (World`env.HandleEvent(time, Temp, Humid);
-              printStr("Target values reached");
+              printStr("\nTarget values reached");
               let - = new IO().writeval[nat](time)
               in skip;
              );
@@ -167,7 +167,7 @@ TWAlgo() ==
   else (HA`WinNode.SetCorrection(<CLOSE>);
         if print
         then (World`env.HandleEvent(time, Temp, Humid);
-              printStr("Target values reached");
+              printStr("\nTarget values reached");
               let - = new IO().writeval[nat](time)
               in skip;
              );
@@ -184,7 +184,7 @@ HWAlgo() ==
   else (HA`WinNode.SetCorrection(<CLOSE>);
         if print
         then (World`env.HandleEvent(time, Temp, Humid);
-              printStr("Target values reached");
+              printStr("\nTarget values reached");
               let - = new IO().writeval[nat](time)
               in skip;
              );
