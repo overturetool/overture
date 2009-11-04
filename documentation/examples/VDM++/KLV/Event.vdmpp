@@ -11,7 +11,7 @@ operations
 
   public
   execute : KLV ==> Test`TestResult
-  execute (klv) ==
+  execute (-) ==
     is subclass responsibility;
 
 end Event

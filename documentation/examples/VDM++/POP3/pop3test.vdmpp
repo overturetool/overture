@@ -142,10 +142,10 @@ operations
 
 public POP3TestSender: seq of char * seq of POP3Types`ClientCommand * 
                        MessageChannel ==> POP3TestSender
-POP3TestSender(id, cmds, mc) ==
-( id := id;
-  cmds := cmds;
-  mc := mc
+POP3TestSender(idarg, cmdsarg, mcarg) ==
+( id := idarg;
+  cmds := cmdsarg;
+  mc := mcarg
 );
 
 LogClient: POP3Types`ClientCommand ==> ()
