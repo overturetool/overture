@@ -233,7 +233,9 @@ public class TracesTreeView extends ViewPart {
 						for (IResourceDelta resourceDelta : delta) {
 
 							if (resourceDelta.getResource() instanceof IProject
-									&& ((IProject) resourceDelta.getResource()).isAccessible() && ((IProject) resourceDelta.getResource()).isOpen() && ((IProject) resourceDelta.getResource()).hasNature(VdmPpProjectNature.VDM_PP_NATURE)) {
+									&& ((IProject) resourceDelta.getResource()).isAccessible()
+									&& ((IProject) resourceDelta.getResource()).isOpen()
+									&& ((IProject) resourceDelta.getResource()).hasNature(VdmPpProjectNature.VDM_PP_NATURE)) {
 
 								if (IsFileChange(resourceDelta)
 										|| (resourceDelta.getKind() & IResourceDelta.ADDED) == IResourceDelta.ADDED) {
@@ -432,9 +434,9 @@ public class TracesTreeView extends ViewPart {
 					protected IStatus run(IProgressMonitor monitor) {
 						try {
 							ITracesHelper th = traceHelpers.get(finalProjectName);
-							 
-														projectToUpdate= getProject(finalProjectName);
-							
+
+							projectToUpdate = getProject(finalProjectName);
+
 							if (finalClassTracesTestCase.size() == 0)
 								runTestProject(th, monitor);
 							else {
@@ -501,8 +503,6 @@ public class TracesTreeView extends ViewPart {
 						ExpandTraces(0);
 						return new Status(IStatus.OK, "org.overturetool.traces", IStatus.OK, "CT Test evaluation finished", null);
 					}
-
-					
 
 				};
 
@@ -782,6 +782,9 @@ public class TracesTreeView extends ViewPart {
 	}
 
 	private void UpdateProject(IProject project) {
+		if (viewer == null || viewer.getControl().isDisposed()) {
+			return; //skip if disposed
+		}
 		TreeItem[] aa = viewer.getTree().getItems();
 		boolean insertProject = true;
 		for (TreeItem treeItem : aa) {
@@ -848,6 +851,7 @@ public class TracesTreeView extends ViewPart {
 				try {
 					th.processClassTraces(className, monitor);
 				} catch (Exception e) {
+					e.printStackTrace();
 					ConsolePrint(e.getMessage());
 				}
 
@@ -929,7 +933,7 @@ public class TracesTreeView extends ViewPart {
 					else
 						try {
 							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
-								TracesConstants.TRACES_TEST_ID);
+									TracesConstants.TRACES_TEST_ID);
 						} catch (PartInitException e) {
 
 							e.printStackTrace();
@@ -990,11 +994,11 @@ public class TracesTreeView extends ViewPart {
 		display.asyncExec(new Runnable() {
 
 			public void run() {
-
-				viewer.refresh();
-				viewer.getControl().update();
+				if (viewer != null && !viewer.getControl().isDisposed()) {
+					viewer.refresh();
+					viewer.getControl().update();
+				}
 			}
-
 		});
 	}
 
@@ -1155,18 +1159,19 @@ public class TracesTreeView extends ViewPart {
 		conMan.addConsoles(new IConsole[] { myConsole });
 		return myConsole;
 	}
-	
+
 	private IProject getProject(String finalProjectName) throws CoreException {
 		IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		IProject[] iprojects = iworkspaceRoot.getProjects();
-		
+
 		for (final IProject project : iprojects) {
-			
-				if (project.isOpen()
-						&& project.getNature(VdmPpProjectNature.VDM_PP_NATURE) != null && project.getName().equals(finalProjectName))
-					return project;
+
+			if (project.isOpen()
+					&& project.getNature(VdmPpProjectNature.VDM_PP_NATURE) != null
+					&& project.getName().equals(finalProjectName))
+				return project;
 		}
-				return null;
+		return null;
 	}
 
 }
