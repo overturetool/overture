@@ -47,6 +47,7 @@ public class CPUValue extends ObjectValue
 	private static final long SWAPIN_DURATION = 2;
 	public static int nextCPU = 1;
 	public static List<CPUValue> allCPUs = new Vector<CPUValue>();
+	public static boolean stopping;
 
 	public final int cpuNumber;
 	public final SchedulingPolicy policy;
@@ -62,12 +63,14 @@ public class CPUValue extends ObjectValue
 	{
 		nextCPU = 1;
 		allCPUs.clear();
+		stopping = false;
 	}
 
 	public static void abortAll()
 	{
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
+			stopping = true;
 			AsyncThread.periodicStop();
 
     		for (CPUValue cpu: allCPUs)
@@ -86,6 +89,7 @@ public class CPUValue extends ObjectValue
 	{
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
+			stopping = false;
 			Thread.interrupted();		// Clears interrupted flag
 			AsyncThread.reset();		// Allowed period threads
 			SystemClock.reset();		// Clears runningCPUs, doesn't reset time
@@ -106,6 +110,7 @@ public class CPUValue extends ObjectValue
 
 		runningThread = null;
 		switches = 0;
+		stopping = false;
 	}
 
 	public CPUValue(Type classtype, NameValuePairMap map, ValueList argvals)
@@ -329,17 +334,22 @@ public class CPUValue extends ObjectValue
 		synchronized (this)
 		{
 			runningThread = policy.getThread();
+
+			if (runningThread != current)	// Must be within sync block
+			{
+	    		ObjectValue object = objects.get(current);
+
+	    		RTLogger.log(
+	    			"ThreadSwapOut -> id: " + current.getId() +
+	    			objRefString(object) +
+	    			" cpunm: " + cpuNumber +
+	    			" overhead: " + 0);
+			}
 		}
 
 		if (runningThread != current)
 		{
     		ObjectValue object = objects.get(current);
-
-    		RTLogger.log(
-    			"ThreadSwapOut -> id: " + current.getId() +
-    			objRefString(object) +
-    			" cpunm: " + cpuNumber +
-    			" overhead: " + 0);
 
     		synchronized (this)
 			{
@@ -370,7 +380,7 @@ public class CPUValue extends ObjectValue
 			}
 
     		switches++;
-    		duration(SWAPIN_DURATION);
+    		duration(SWAPIN_DURATION);		// Must be outside sync block
 
     		RTLogger.log(
     			"ThreadSwapIn -> id: " + current.getId() +

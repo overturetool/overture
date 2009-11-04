@@ -30,7 +30,7 @@ import org.overturetool.vdmj.values.OperationValue;
 
 public abstract class MessagePacket
 {
-	protected static long nextId = 1;
+	private static long nextId = 1;
 
 	public final long msgId;
 	public final BUSValue bus;
@@ -43,7 +43,7 @@ public abstract class MessagePacket
 	public MessagePacket(
 		BUSValue bus, CPUValue from, CPUValue to, ObjectValue target, OperationValue operation)
 	{
-		this.msgId = nextId++;
+		this.msgId = getNextId();
 		this.thread = Thread.currentThread();
 		this.bus = bus;
 		this.from = from;
@@ -61,5 +61,10 @@ public abstract class MessagePacket
 		this.to = null;
 		this.target = null;
 		this.operation = null;
+	}
+
+	private static synchronized long getNextId()
+	{
+		return nextId++;
 	}
 }

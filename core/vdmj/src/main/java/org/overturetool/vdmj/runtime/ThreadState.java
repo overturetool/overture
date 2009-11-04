@@ -79,8 +79,14 @@ public class ThreadState
 		return timestep;
 	}
 
-	public void reschedule()
+	public void reschedule()	// Called for VDM_RT at every statement/expression
 	{
+		if (CPUValue.stopping)
+		{
+			// We can't be the main thread, as that is stopping anyway
+			throw new RTException("CPU Stopping");
+		}
+
 		if (!atomic && --timesliceLeft < 0)
 		{
 			timesliceLeft = CPU.reschedule();

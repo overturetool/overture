@@ -71,13 +71,25 @@ public abstract class Type implements Comparable<Type>, Serializable
 	/** A flag to prevent recursive types from failing toString(). */
 	private boolean inToString = false;
 
+	/**
+	 * Note that this is synchronized so that multiple threads calling
+	 * toString will both get the same string, not "...". This causes
+	 * problems with VDM-RT trace logs which are threaded, and use
+	 * this method for operation names.
+	 */
+
 	@Override
-	public String toString()
+	public synchronized String toString()
 	{
 		if (inToString)
+		{
 			return "...";
+		}
 		else
+		{
 			inToString = true;
+		}
+
 		String s = toDisplay();
 		inToString = false;
 		return s;
