@@ -69,7 +69,7 @@
               description="VDM++ editor scope"
               id="org.overture.ide.vdmpp.ui.vdmPpEditorScope"
               name="vdmPpEditorScope"
-              parentId="org.eclipse.dltk.ui.scriptEditorScope">
+              parentId="org.overture.ide.ui.vdmEditorScope">
         </context>
      </extension>
      

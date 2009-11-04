@@ -64,6 +64,8 @@ public class VdmRtEditor  extends ScriptEditor
 		}
 	}
 	
-	
+	protected void initializeKeyBindingScopes() {
+		setKeyBindingScopes(new String[] { "org.overture.ide.vdmrt.ui.vdmRtEditorScope" }); //$NON-NLS-1$
+	}
 
 }

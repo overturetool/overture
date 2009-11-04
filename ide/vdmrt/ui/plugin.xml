@@ -105,7 +105,17 @@
 			toolkitId="org.overture.ide.vdmrt.core.nature">
 			<partition type="__dftl_partition_content_type"/>
 		</scriptCompletionProposalComputer>
-</extension>   
+</extension> 
+
    
+      <!-- vdmRtEditorScope -->
+     <extension point="org.eclipse.ui.contexts">
+        <context
+              description="VDM-RT editor scope"
+              id="org.overture.ide.vdmrt.ui.vdmRtEditorScope"
+              name="vdmRTEditorScope"
+              parentId="org.overture.ide.ui.vdmEditorScope">
+        </context>
+     </extension>
    
 </plugin>

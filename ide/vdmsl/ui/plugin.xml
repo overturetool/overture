@@ -151,4 +151,14 @@
 		</scriptCompletionProposalComputer>
 	</extension>
 
+
+     <!-- vdmSlEditorScope -->
+     <extension point="org.eclipse.ui.contexts">
+        <context
+              description="VDM-SL editor scope"
+              id="org.overture.ide.vdmsl.ui.vdmPpEditorScope"
+              name="vdmSlEditorScope"
+              parentId="org.overture.ide.ui.vdmEditorScope">
+        </context>
+     </extension>
 </plugin>

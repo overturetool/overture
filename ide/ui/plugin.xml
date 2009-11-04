@@ -71,7 +71,15 @@
     </extension>
   
   
-  
+     <!-- vdmPpEditorScope -->
+     <extension point="org.eclipse.ui.contexts">
+        <context
+              description="VDM editor scope"
+              id="org.overture.ide.ui.vdmEditorScope"
+              name="vdmEditorScope"
+              parentId="org.eclipse.dltk.ui.scriptEditorScope">
+        </context>
+     </extension>
   
   
   
