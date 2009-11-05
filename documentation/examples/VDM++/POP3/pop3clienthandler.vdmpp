@@ -175,7 +175,8 @@ MakeMultilineResponse(resps) ==
   then []
   elseif len resps = 1
   then hd resps
-  else hd resps ^ "\n" ^ MakeMultilineResponse(tl resps);
+  else hd resps ^ "\n" ^ MakeMultilineResponse(tl resps)
+measure Len;
 
 MakeLineSeq: seq of char -> seq of seq of char
 MakeLineSeq(text) ==
@@ -183,7 +184,8 @@ MakeLineSeq(text) ==
   then []
   else let mk_(line, rest) = GetLine(text)
        in
-         [line] ^ MakeLineSeq(rest);
+         [line] ^ MakeLineSeq(rest)
+measure Len;
 
 GetLine: seq of char -> (seq of char) * (seq of char)
 GetLine(text) ==
@@ -193,8 +195,12 @@ GetLine(text) ==
   then mk_([], tl text)
   else let mk_(line, rest) = GetLine(tl text)
        in
-         mk_([hd text] ^ line, rest);
+         mk_([hd text] ^ line, rest)
+measure Len;
 
+Len: seq of char | seq of seq of char -> nat
+Len(l) ==
+  len l;
 \end{vdm_al}
 
 \begin{vdm_al}
@@ -203,7 +209,12 @@ sum(s) ==
   if s = {}
   then 0
   else let e in set s in
-       sum(s \ {e}) + e;
+       sum(s \ {e}) + e
+measure Card;
+
+Card: set of nat -> nat
+Card(s) ==
+  card s;
 
 \end{vdm_al}
 
@@ -351,7 +362,12 @@ int2string(i) ==
   then "0"
   elseif i < 0
   then "-"^int2string(-i)
-  else  int2stringR(i);
+  else  int2stringR(i)
+measure Abs;
+
+Abs: int -> nat
+Abs(i) ==
+  abs i;
 
 static int2stringR: nat -> seq of char
 int2stringR(n) ==
@@ -371,7 +387,11 @@ int2stringR(n) ==
          7 -> "7",
          8 -> "8",
          9 -> "9"
-       end; 
+       end
+measure Id;
+
+static Id: nat -> nat
+Id(n) == n; 
 
 
 

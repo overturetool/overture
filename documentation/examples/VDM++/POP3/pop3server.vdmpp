@@ -266,7 +266,12 @@ public sumseq: seq of nat -> nat
 sumseq(s) ==
   if s = []
   then 0
-  else hd s + sumseq(tl s); 
+  else hd s + sumseq(tl s)
+measure Len;
+
+Len: seq of nat -> nat
+Len(l) ==
+  len l; 
 
 \end{vdm_al}
 
