@@ -48,7 +48,7 @@ pre addr not in set used and
     addr in set access;
 
 Alloc21 : ADDR * State -> State
-Alloc21 (addr,mk_State(mem,access,used)) ==
+Alloc21 (addr,mk_State(-,access,used)) ==
   let used' = used union {addr},
 --      mem'  = mem ++ {addr |-> <c0>}
       mem'  = {addr |-> let c:CON in c} 
