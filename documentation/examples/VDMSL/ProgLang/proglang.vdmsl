@@ -414,7 +414,12 @@ contains the updated global variables.
       [] -> denv,
       others -> EvalStmts(tl stmts, EvalStmt(hd stmts, denv))
     end
-  pre stmts <> [] => pre_EvalStmt(hd stmts, denv);
+  pre stmts <> [] => pre_EvalStmt(hd stmts, denv)
+  measure LenStmt;
+  
+  LenStmt: seq of Stmt * DynEnv -> nat
+  LenStmt(l,-) ==
+    len l;
 
   EvalAssignStmt : AssignStmt * DynEnv -> DynEnv
   EvalAssignStmt(mk_AssignStmt(lhs, rhs), denv) ==
@@ -440,6 +445,10 @@ contains the updated global variables.
   pre pre_EvalStmt(repeat, denv) and
       pre_EvalExpr(until, EvalStmt(repeat, denv));
 \end{vdm_al}
+
+Note that it is impossible to write a measure for this function bacause this 
+corresponds to the halting problem.
+
 As indicated above, the dynamic semantics of the for-loop is underspecified.
 The informal description  allows the interpretation of the
 stop-expression to be of type integer or boolean, which leads to two
@@ -507,7 +516,12 @@ made.
            in EvalForLoop(mk_Variable(id), val, stmt, 
                           denv' ++ {id |-> mk_IntVal(denv'(id).val + 1)})
       else denv
-  pre pre_EvalStmt(stmt, denv);
+  pre pre_EvalStmt(stmt, denv)
+  measure LoopParInc;
+  
+  LoopParInc: Variable * Value * Stmt * DynEnv -> nat
+  LoopParInc(mk_Variable(id), val, -, denv) ==
+    val - denv(id).val;
 \end{vdm_al}
 The evaluation of binary expressions is straightforward. An 
 exception is the
