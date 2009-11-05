@@ -157,8 +157,8 @@ LogClient(cmd) ==
     skip;
 
 SendCmd: MessageChannel * POP3Types`ClientCommand ==> ()
-SendCmd(mc, cmd) ==
-( mc.ClientSend(cmd);
+SendCmd(mcarg, cmd) ==
+( mcarg.ClientSend(cmd);
   LogClient(cmd);
 );
 
@@ -180,9 +180,9 @@ finished : bool
 operations
 
 public POP3TestListener: seq of char * MessageChannel ==> POP3TestListener
-POP3TestListener(id, mc) ==
-( id := id;
-  mc := mc;
+POP3TestListener(idarg, mcarg) ==
+( id := idarg;
+  mc := mcarg;
   finished := false;
 );
 

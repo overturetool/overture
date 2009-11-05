@@ -19,8 +19,8 @@ instance variables
 operations
   public
   SetAAH : Button ==> ()
-  SetAAH(aahbutton) ==
-    aahbutton := aahbutton;
+  SetAAH(aahbuttonarg) ==
+    aahbutton := aahbuttonarg;
 
   public
   ReadAAH : () ==> Button
@@ -30,11 +30,11 @@ operations
   public
   SetGrip : Command`Direction * Command`Direction * Command`Direction *
             Command`Direction ==> ()
-  SetGrip(x, pitch, yaw_y, roll_z) ==
-    (x := x;
-     pitch := pitch;
-     yaw_y := yaw_y;
-     roll_z := roll_z);
+  SetGrip(xarg, pitcharg, yaw_yarg, roll_zarg) ==
+    (x := xarg;
+     pitch := pitcharg;
+     yaw_y := yaw_yarg;
+     roll_z := roll_zarg);
 
   public
   SetMode : Mode ==> ()
