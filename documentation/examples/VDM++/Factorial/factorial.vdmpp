@@ -7,8 +7,7 @@ operations
 	factorial(n) ==
 		if n = 0 then return 1
 		else (
-			dcl m : Multiplier;
-			m := new Multiplier();
+			dcl m : Multiplier := new Multiplier();
 			m.calculate(1,n);
 			start(m);
 			result:= m.giveResult();
@@ -19,10 +18,10 @@ end Factorial
 
 class Multiplier
 instance variables
-	i : nat1;
-	j : nat1;
-	k : nat1;
-	result : nat1
+	i : nat1 := 1;
+	j : nat1 := 2;
+	k : nat1 := 1;
+	result : nat1 := 1 
 	
 operations
 	public calculate : nat1 * nat1 ==> ()
