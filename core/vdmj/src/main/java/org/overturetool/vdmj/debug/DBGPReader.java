@@ -36,6 +36,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -193,6 +194,22 @@ public class DBGPReader
     				usage("-e option requires an expression");
     			}
     		}
+    		else if (arg.equals("-c"))
+    		{
+    			if (i.hasNext())
+    			{
+    				if (controller == null)
+    				{
+    					usage("-c must come after <-vdmpp|-vdmsl|-vdmrt>");
+    				}
+
+    				controller.setCharset(validateCharset(i.next()));
+    			}
+    			else
+    			{
+    				usage("-c option requires a charset name");
+    			}
+    		}
     		else if (arg.equals("-log"))
     		{
     			if (i.hasNext())
@@ -302,8 +319,32 @@ public class DBGPReader
 	private static void usage(String string)
 	{
 		System.err.println(string);
-		System.err.println("Usage: -h <host> -p <port> -k <ide key> <-vdmpp|-vdmsl|-vdmrt> -e <expression> [-w] [-log <logfile>] {<filename URLs>}");
+		System.err.println(
+			"Usage: -h <host> -p <port> -k <ide key> <-vdmpp|-vdmsl|-vdmrt>" +
+			" -e <expression> [-w] [-log <logfile>] [-c <charset>]" +
+			" {<filename URLs>}");
 		System.exit(1);
+	}
+
+	private static String validateCharset(String cs)
+	{
+		if (!Charset.isSupported(cs))
+		{
+			System.err.println("Charset " + cs + " is not supported\n");
+			System.err.println("Available charsets:");
+			System.err.println("Default = " + Charset.defaultCharset());
+			Map<String,Charset> available = Charset.availableCharsets();
+
+			for (String name: available.keySet())
+			{
+				System.err.println(name + " " + available.get(name).aliases());
+			}
+
+			System.err.println("");
+			usage("Charset " + cs + " is not supported");
+		}
+
+		return cs;
 	}
 
 	public DBGPReader(

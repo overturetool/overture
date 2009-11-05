@@ -311,6 +311,12 @@ abstract public class VDMJ
 		warnings = w;
 	}
 
+	public void setCharset(String charset)
+	{
+		filecharset = charset;
+		Console.setCharset(charset);
+	}
+
 	protected static void info(String m)
 	{
 		if (!quiet)
