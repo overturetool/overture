@@ -2,7 +2,7 @@ class TestCase
   is subclass of Test
 
 instance variables
-  name : seq of char
+  protected name : seq of char
 
 operations
   public TestCase: seq of char ==> TestCase

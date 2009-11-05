@@ -10,6 +10,9 @@ instance variables
   alph : Alphabet;
 
 operations
+  public ReflectorTest: seq of char ==> ReflectorTest
+  ReflectorTest(nm) == name := nm;
+
   protected SetUp: () ==> ()
   SetUp () == alph := new Alphabet("ABCD");
 

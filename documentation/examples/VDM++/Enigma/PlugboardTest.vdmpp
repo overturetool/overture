@@ -15,6 +15,9 @@ instance variables
   alph : Alphabet
   
 operations
+  public PlugboardTest: seq of char ==> PlugboardTest
+  PlugboardTest(nm) == name := nm;
+
   protected SetUp: () ==> ()
   SetUp () == alph := new Alphabet("ABCD");
 

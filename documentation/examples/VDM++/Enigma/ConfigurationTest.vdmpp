@@ -7,6 +7,9 @@ values
     { 1 |-> 2, 3 |-> 4 }
     
 operations
+  public ConfigurationTest: seq of char ==> ConfigurationTest
+  ConfigurationTest(nm) == name := nm;
+
   protected SetUp: () ==> ()
   SetUp () == config := cfg;
 

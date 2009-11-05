@@ -6,6 +6,9 @@ values
   str : seq of char = "ABCD"
 
 operations
+  public AlphabetTest: seq of char ==> AlphabetTest
+  AlphabetTest(nm) == name := nm;
+
   protected SetUp: () ==> ()
   SetUp () == skip;
 

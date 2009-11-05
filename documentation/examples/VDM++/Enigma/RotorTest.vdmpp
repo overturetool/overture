@@ -13,6 +13,9 @@ instance variables
   alph : Alphabet
 
 operations
+  public RotorTest: seq of char ==> RotorTest
+  RotorTest(nm) == name := nm;
+
   protected SetUp: () ==> ()
   SetUp () == alph := new Alphabet("ABCD");
 
