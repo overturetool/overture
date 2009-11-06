@@ -173,32 +173,6 @@ abstract public class VDMJ
     				usage("-t option requires a charset name");
     			}
     		}
-    		else if (arg.equals("-d"))
-    		{
-    			if (i.hasNext())
-    			{
-    				File dir = new File(i.next());
-
-    				if (!dir.isDirectory())
-    				{
-    					usage("-d argument is not a directory: " + dir);
-    				}
-    				else
-    				{
-    					for (File file: dir.listFiles(filter))
-    					{
-    						if (file.isFile())
-    						{
-    							filenames.add(file);
-    						}
-    					}
-    				}
-    			}
-    			else
-    			{
-    				usage("-d option requires a directory");
-    			}
-    		}
     		else if (arg.equals("-pre"))
     		{
     			Settings.prechecks = false;
@@ -234,7 +208,23 @@ abstract public class VDMJ
     		}
     		else
     		{
-    			filenames.add(new File(arg));
+    			// It's a file or a directory
+    			File dir = new File(arg);
+
+				if (dir.isDirectory())
+				{
+ 					for (File file: dir.listFiles(filter))
+					{
+						if (file.isFile())
+						{
+							filenames.add(file);
+						}
+					}
+				}
+    			else
+    			{
+    				filenames.add(dir);
+    			}
     		}
 		}
 
@@ -305,7 +295,6 @@ abstract public class VDMJ
 		System.err.println("-c <charset>: select a file charset");
 		System.err.println("-t <charset>: select a console charset");
 		System.err.println("-o <filename>: saved type checked specification");
-		System.err.println("-d <directory>: load all files in this directory");
 		System.err.println("-pre: disable precondition checks");
 		System.err.println("-post: disable postcondition checks");
 		System.err.println("-inv: disable type/state invariant checks");
