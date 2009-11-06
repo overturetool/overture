@@ -1,0 +1,36 @@
+class World
+  
+instance variables  
+  
+public static
+  env : [Environment] := nil;
+
+public static 
+  timerRef : TimeStamp := new TimeStamp();    
+
+  
+   
+operations
+
+public 
+  World : () ==> World
+  World() ==
+    ( env := new Environment("C:\\Subversion\\vdmmodels\\msaw\\concurrency\\scenario.txt");
+      env.setAirSpace(MSAW`airspace);
+      MSAW`atc.addObstacle(MSAW`militaryZone);
+      MSAW`atc.addRadar(MSAW`radar1);
+      MSAW`atc.addRadar(MSAW`radar2);
+    );
+  
+public Run : () ==> ()
+Run() ==
+ (
+  start(env);
+  start(MSAW`atc);
+  env.isFinished();
+  MSAW`atc.isFinished();
+  
+  env.showResult()
+ )
+ 
+end World
