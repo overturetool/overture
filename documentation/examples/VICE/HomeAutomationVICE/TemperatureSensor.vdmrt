@@ -39,7 +39,7 @@ IsFinished() ==
   skip;
 
 sync
-
+  mutex(PeriodicOp); -- ADDED
   per IsFinished => finished;
 
 --

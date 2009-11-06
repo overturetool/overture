@@ -248,7 +248,7 @@ Finish() ==
   finished := true;
 
 sync
-
+  mutex(PeriodicOp); -- ADDED
   per IsFinished => finished;
   per printStr => print;
 

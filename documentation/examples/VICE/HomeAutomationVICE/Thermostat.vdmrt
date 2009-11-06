@@ -32,7 +32,7 @@ Thermostat (id, type) ==
 
 private PeriodicOp: () ==> ()
 PeriodicOp() ==
-  cycles(1E9)
+  cycles(1E6)
  (dcl tempCorr: NetworkTypes`correction := GetCorrection();
   if (tempCorr = <INC>)
   then World`env.IncTemp()
@@ -42,7 +42,7 @@ PeriodicOp() ==
 
 async public SetCorrection: NetworkTypes`correction ==> ()
 SetCorrection(cor) ==
-  cycles(1E9)
+  cycles(1E6)
   Corr := cor
 pre (cor = <INC>) or (cor = <DEC>) or (cor = <NONE>);
 
@@ -55,7 +55,7 @@ IsFinished() ==
   skip;
 
 sync
-
+  mutex(PeriodicOp); -- ADDED
   per IsFinished => finished;
   mutex(SetCorrection, GetCorrection);
 

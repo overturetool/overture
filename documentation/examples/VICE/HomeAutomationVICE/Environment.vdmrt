@@ -131,6 +131,7 @@ sync
   mutex(DecHumid);
   mutex(SetHumid);
   mutex(ReadHumid, IncHumid, DecHumid, SetHumid);
+  mutex(CreateSignal);	-- ADDED
   per IsFinished => finished;
 
 --
