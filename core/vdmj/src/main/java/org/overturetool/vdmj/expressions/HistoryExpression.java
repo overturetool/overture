@@ -128,7 +128,6 @@ public class HistoryExpression extends Expression
 	{
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("#");
 		sb.append(hop.toString().toLowerCase());
 		sb.append("(");
 		String sep = "";

@@ -24,6 +24,7 @@
 package org.overturetool.vdmj;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -51,6 +52,21 @@ abstract public class VDMJ
 
 	public static String filecharset = Charset.defaultCharset().name();
 
+	private static class Filter implements FilenameFilter
+	{
+		private String pattern;
+
+		public Filter(String pattern)
+		{
+			this.pattern = pattern;
+		}
+
+		public boolean accept(File dir, String filename)
+		{
+			return filename.matches(pattern);
+		}
+	}
+
 	/**
 	 * The main method. This validates the arguments, then parses and type
 	 * checks the files provided (if any), and finally enters the interpreter
@@ -64,6 +80,7 @@ abstract public class VDMJ
 		List<File> filenames = new Vector<File>();
 		List<String> largs = Arrays.asList(args);
 		VDMJ controller = null;
+		Filter filter = new Filter("*\\.*");
 
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
 		{
@@ -72,14 +89,17 @@ abstract public class VDMJ
     		if (arg.equals("-vdmsl"))
     		{
     			controller = new VDMSL();
+    			filter = new Filter(".+\\.vdm|.+\\.vdmsl");
     		}
     		else if (arg.equals("-vdmpp"))
     		{
     			controller = new VDMPP();
+    			filter = new Filter(".+\\.vpp|.+\\.vdmpp");
     		}
     		else if (arg.equals("-vdmrt"))
     		{
     			controller = new VDMRT();
+    			filter = new Filter(".+\\.vpp|.+\\.vdmrt");
     		}
     		else if (arg.equals("-overture"))
     		{
@@ -151,6 +171,32 @@ abstract public class VDMJ
     			else
     			{
     				usage("-t option requires a charset name");
+    			}
+    		}
+    		else if (arg.equals("-d"))
+    		{
+    			if (i.hasNext())
+    			{
+    				File dir = new File(i.next());
+
+    				if (!dir.isDirectory())
+    				{
+    					usage("-d argument is not a directory: " + dir);
+    				}
+    				else
+    				{
+    					for (File file: dir.listFiles(filter))
+    					{
+    						if (file.isFile())
+    						{
+    							filenames.add(file);
+    						}
+    					}
+    				}
+    			}
+    			else
+    			{
+    				usage("-d option requires a directory");
     			}
     		}
     		else if (arg.equals("-pre"))
@@ -259,6 +305,7 @@ abstract public class VDMJ
 		System.err.println("-c <charset>: select a file charset");
 		System.err.println("-t <charset>: select a console charset");
 		System.err.println("-o <filename>: saved type checked specification");
+		System.err.println("-d <directory>: load all files in this directory");
 		System.err.println("-pre: disable precondition checks");
 		System.err.println("-post: disable postcondition checks");
 		System.err.println("-inv: disable type/state invariant checks");
