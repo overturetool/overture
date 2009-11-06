@@ -24,7 +24,6 @@
 package org.overturetool.vdmj;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -32,9 +31,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.runtime.Interpreter;
-
 
 /**
  * The main class of the VDMJ parser/checker/interpreter.
@@ -52,21 +51,6 @@ abstract public class VDMJ
 
 	public static String filecharset = Charset.defaultCharset().name();
 
-	private static class Filter implements FilenameFilter
-	{
-		private String pattern;
-
-		public Filter(String pattern)
-		{
-			this.pattern = pattern;
-		}
-
-		public boolean accept(File dir, String filename)
-		{
-			return filename.matches(pattern);
-		}
-	}
-
 	/**
 	 * The main method. This validates the arguments, then parses and type
 	 * checks the files provided (if any), and finally enters the interpreter
@@ -80,7 +64,7 @@ abstract public class VDMJ
 		List<File> filenames = new Vector<File>();
 		List<String> largs = Arrays.asList(args);
 		VDMJ controller = null;
-		Filter filter = new Filter("*\\.*");
+		Dialect dialect = Dialect.VDM_SL;
 
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
 		{
@@ -89,21 +73,22 @@ abstract public class VDMJ
     		if (arg.equals("-vdmsl"))
     		{
     			controller = new VDMSL();
-    			filter = new Filter(".+\\.vdm|.+\\.vdmsl");
+    			dialect = Dialect.VDM_SL;
     		}
     		else if (arg.equals("-vdmpp"))
     		{
     			controller = new VDMPP();
-    			filter = new Filter(".+\\.vpp|.+\\.vdmpp");
+    			dialect = Dialect.VDM_PP;
     		}
     		else if (arg.equals("-vdmrt"))
     		{
     			controller = new VDMRT();
-    			filter = new Filter(".+\\.vpp|.+\\.vdmrt");
+    			dialect = Dialect.VDM_RT;
     		}
     		else if (arg.equals("-overture"))
     		{
     			controller = new VDMOV();
+    			dialect = Dialect.VDM_RT;
     		}
     		else if (arg.equals("-w"))
     		{
@@ -213,7 +198,7 @@ abstract public class VDMJ
 
 				if (dir.isDirectory())
 				{
- 					for (File file: dir.listFiles(filter))
+ 					for (File file: dir.listFiles(dialect.getFilter()))
 					{
 						if (file.isFile())
 						{

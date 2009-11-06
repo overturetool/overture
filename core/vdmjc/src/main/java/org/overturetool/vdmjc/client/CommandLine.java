@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
 import org.overturetool.vdmjc.common.Utils;
 
 
@@ -84,11 +85,24 @@ public class CommandLine
 		while (it.hasNext())
 		{
 			String name = it.next();
-			File file = new File(name);
+			File dir = new File(name);
 
-			if (file.exists())
+			if (dir.exists())
 			{
-				files.add(file);
+				if (dir.isDirectory())
+				{
+ 					for (File file: dir.listFiles(dialect.getFilter()))
+					{
+						if (file.isFile())
+						{
+							files.add(file);
+						}
+					}
+				}
+    			else
+    			{
+    				files.add(dir);
+    			}
 			}
 			else
 			{

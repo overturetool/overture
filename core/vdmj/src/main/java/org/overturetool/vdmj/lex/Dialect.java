@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.lex;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.Serializable;
 
 /**
@@ -31,5 +33,41 @@ import java.io.Serializable;
 
 public enum Dialect implements Serializable
 {
-	VDM_SL, VDM_PP, VDM_RT
+	VDM_SL("-vdmsl", ".+\\.vdm|.+\\.vdmsl"),
+	VDM_PP("-vdmpp", ".+\\.vpp|.+\\.vdmpp"),
+	VDM_RT("-vdmrt", ".+\\.vpp|.+\\.vdmrt");
+
+	private final String argstring;
+	private final Filter filter;
+
+	Dialect(String arg, String pattern)
+	{
+		argstring = arg;
+		filter = new Filter(pattern);
+	}
+
+	private static class Filter implements FilenameFilter
+	{
+		private String pattern;
+
+		public Filter(String pattern)
+		{
+			this.pattern = pattern;
+		}
+
+		public boolean accept(File dir, String filename)
+		{
+			return filename.matches(pattern);
+		}
+	}
+
+	public FilenameFilter getFilter()
+	{
+		return filter;
+	}
+
+	public String getArgstring()
+	{
+		return argstring;
+	}
 }

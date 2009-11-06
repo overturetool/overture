@@ -85,7 +85,7 @@ public class ProcessListener extends Thread
 			pargs.add(Integer.toString(listener.getPort()));
 			pargs.add("-k");
 			pargs.add("12345678");
-			pargs.add(dialect.argstring);
+			pargs.add(dialect.getArgstring());
 			pargs.add("-e");
 			pargs.add(expression);
 
