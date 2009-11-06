@@ -1,0 +1,54 @@
+
+class Webserver
+
+  functions
+
+
+    -- execute_script models OS execution of a CGI script generating
+    -- html file at stdout
+    execute_script : File -> File
+    execute_script(f) == is not yet specified;
+
+  instance variables
+    site_map : map URL to Filename := {|->}
+
+  operations
+
+    ExecuteCGI : URL ==> File
+    ExecuteCGI (url) == 
+      def CGI_script = (site_map(url)).get_file()
+      in  return (execute_script(CGI_script))
+    pre url in set dom site_map;
+
+    RetrieveURL : URL ==> File
+    RetrieveURL (url) == 
+      return ((site_map(url)).get_file())
+    pre url in set dom site_map;
+
+    UploadFile : File * URL ==> ()
+    UploadFile  (file, url) == 
+     (url.translate().put_file(file);
+      site_map := site_map ++ {url |-> url.translate()});
+
+    ServerBusy : () ==> File
+    ServerBusy () == 
+     (dcl f:File := new File();
+      f.write("<html><title>Server Busy</title>"^
+              "<body><h3>Server busy</h3> Please try again later</body>"^
+              "</html>");
+      return(f));
+
+    DeleteURL : URL ==> ()
+    DeleteURL (url) ==
+      site_map := {url} <-: site_map;
+
+  sync
+ 
+    per RetrieveURL => #active(RetrieveURL) + #active(ExecuteCGI) < 10;
+    per ExecuteCGI  => #active(RetrieveURL) + #active(ExecuteCGI) < 10;
+    per ServerBusy  => #waiting(RetrieveURL) + #waiting(ExecuteCGI) >= 100;
+    per DeleteURL   => dom site_map <> {}
+
+end Webserver
+
+  
