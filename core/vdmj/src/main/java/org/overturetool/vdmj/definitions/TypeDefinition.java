@@ -130,7 +130,7 @@ public class TypeDefinition extends Definition
 	{
 		if (invdef != null)
 		{
-			invdef.typeCheck(base, scope);
+			invdef.typeCheck(base, NameScope.NAMES);
 		}
 	}
 

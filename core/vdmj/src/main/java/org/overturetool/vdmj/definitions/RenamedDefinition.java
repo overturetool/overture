@@ -45,6 +45,7 @@ public class RenamedDefinition extends Definition
 	{
 		super(def.pass, name.location, name, scope);
 		this.def = def;
+		this.used = def.used;
 	}
 
 	@Override
@@ -98,9 +99,9 @@ public class RenamedDefinition extends Definition
 	@Override
 	public Definition findType(LexNameToken sought)
 	{
-		Definition renamed = findName(sought, NameScope.TYPENAME);
+		Definition renamed = super.findName(sought, NameScope.TYPENAME);
 
-		if (renamed != null)
+		if (renamed != null && def instanceof TypeDefinition)
 		{
 			def.markUsed();
 			return renamed;
