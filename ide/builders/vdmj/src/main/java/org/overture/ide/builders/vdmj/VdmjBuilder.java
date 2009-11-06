@@ -32,14 +32,13 @@ public abstract class VdmjBuilder  extends AbstractBuilder
 			addWarningMarker(project,warning);
 		}
 
-		if (typeCheckStatus == ExitStatus.EXIT_ERRORS)
-		{
+		if (typeCheckStatus == ExitStatus.EXIT_ERRORS) {
 			IStatus typeChecked = new Status(IStatus.ERROR,
 					VdmjBuilderPluginConstants.PLUGIN_ID, 0, "not typechecked",
 					null);
 			return typeChecked;
-		} else
-		{
+		} 
+		else {
 
 			IStatus typeChecked = new Status(IStatus.OK,
 					VdmjBuilderPluginConstants.PLUGIN_ID, 0, "Type Checked",

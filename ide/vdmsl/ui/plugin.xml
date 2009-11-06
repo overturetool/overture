@@ -16,12 +16,23 @@
             icon="icons/cview16/vdmsl_file_tsk.gif"
             id="org.overture.ide.vdmsl.createprojectwizard"
             name="VDM-SL Project"
+            finalPerspective="org.overture.ide.vdmsl.ui.VdmSlPerspective"
+            preferredPerspectives="org.overture.ide.vdmsl.ui.VdmSlPerspective"
             project="true">
       </wizard>
-     
+      <!-- new module wizard -->
+     <wizard
+            category="org.overture.ide.category"
+            class="org.overture.ide.vdmsl.ui.wizards.VdmSlNewModuleWizard"
+            icon="icons/cview16/vdmsl_file_tsk.gif"
+            id="org.overture.ide.vdmsl.ui.wizards.VdmSlNewModuleWizard"
+            name="VDM-SL Module">
+            <description>New VDM-SL class</description>
+      </wizard>
    </extension>
-<extension
-      point="org.eclipse.ui.ide.projectNatureImages">
+
+	<!-- project nature image -->
+	<extension point="org.eclipse.ui.ide.projectNatureImages">
    <image
          icon="icons/ovr16/vdmsl_ovr.gif"
          id="org.overture.ide.vdmsl.ui.nature.image"
@@ -161,4 +172,14 @@
               parentId="org.overture.ide.ui.vdmEditorScope">
         </context>
      </extension>
+
+	<!-- VDM-SL perspective -->     
+    <extension point="org.eclipse.ui.perspectives">
+    <perspective
+          class="org.overture.ide.vdmsl.ui.VdmSlPerspective"
+          icon="icons/cview16/vdmsl_file_tsk.gif"
+          id="org.overture.ide.vdmsl.ui.VdmSlPerspective"
+          name="VDM-SL">
+    </perspective>
+ </extension>
 </plugin>

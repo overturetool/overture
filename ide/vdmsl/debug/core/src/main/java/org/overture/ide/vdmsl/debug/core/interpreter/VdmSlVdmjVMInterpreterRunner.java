@@ -158,6 +158,10 @@ public class VdmSlVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 
 							// 3: dialect
 							arguments[argNumber++] = "-" + VdmSlDebugConstants.VDMSL_VDMJ_DIALECT;
+							
+							// charset
+							arguments[argNumber++] = "-c";
+							arguments[argNumber++] = memberFilesList.get(0).getCharset();
 
 							// 4: expression eg. : new className().operation()
 							String debugOperation = launch.getLaunchConfiguration().getAttribute(VdmSlDebugConstants.VDMSL_DEBUGGING_OPERATION, "");

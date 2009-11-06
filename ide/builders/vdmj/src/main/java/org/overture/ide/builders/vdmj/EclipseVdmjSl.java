@@ -23,24 +23,24 @@ import org.overturetool.vdmj.typechecker.TypeChecker;
 
 /***
  * VDMJ interface used to build VDM-SL models
+ * 
  * @author kela
- *
+ * 
  */
 public class EclipseVdmjSl extends VDMJ implements IEclipseVdmj {
 	public ModuleList modules;
 	private ArrayList<VDMError> parseErrors = new ArrayList<VDMError>();
 	private ArrayList<VDMWarning> parseWarnings = new ArrayList<VDMWarning>();
 	private TypeChecker typeChecker;
-	
+
 	public EclipseVdmjSl(ModuleList m) {
-		modules=m;
+		modules = m;
 		typeChecker = null;
 		parseErrors = new ArrayList<VDMError>();
 		parseWarnings = new ArrayList<VDMWarning>();
 		Settings.dialect = Dialect.VDM_SL;
 	}
-	
-	
+
 	public List<VDMError> getParseErrors() {
 		return parseErrors;
 	}
@@ -57,98 +57,81 @@ public class EclipseVdmjSl extends VDMJ implements IEclipseVdmj {
 		return TypeChecker.getWarnings();
 	}
 
-
-
 	public ExitStatus typeCheck() {
 		int terrs = 0;
-		if(modules==null)
-			return ExitStatus.EXIT_ERRORS; 
-		
+		if (modules == null) {
+			return ExitStatus.EXIT_ERRORS;
+		}
+
 		long before = System.currentTimeMillis();
 
-   		try
-   		{
-   			typeChecker = new ModuleTypeChecker(modules);
-   			typeChecker.typeCheck();
-   		}
-		catch (InternalException e)
-		{
+		try {
+			typeChecker = new ModuleTypeChecker(modules);
+			typeChecker.typeCheck();
+		} catch (InternalException e) {
 			println(e.toString());
-		}
-		catch (Throwable e)
-		{
+		} catch (Throwable e) {
 			println(e.toString());
 			terrs++;
 		}
 
-   		long after = System.currentTimeMillis();
+		long after = System.currentTimeMillis();
 		terrs += TypeChecker.getErrorCount();
 
-		if (terrs > 0)
-		{
-			//TypeChecker.printErrors(Console.out);
+		if (terrs > 0) {
+			// TypeChecker.printErrors(Console.out);
 		}
 
-  		int twarn = TypeChecker.getWarningCount();
+		int twarn = TypeChecker.getWarningCount();
 
-		if (twarn > 0 && warnings)
-		{
-		//	TypeChecker.printWarnings(Console.out);
+		if (twarn > 0 && warnings) {
+			// TypeChecker.printWarnings(Console.out);
 		}
 
-   		int n = modules.notLoaded();
+		int n = modules.notLoaded();
 
-   		if (n > 0)
-   		{
-    		info("Type checked " + plural(n, "module", "s") +
-    			" in " + (double)(after-before)/1000 + " secs. ");
-      		info(terrs == 0 ? "No type errors" :
-      			"Found " + plural(terrs, "type error", "s"));
-      		infoln(twarn == 0 ? "" : " and " +
-      			(warnings ? "" : "suppressed ") + plural(twarn, "warning", "s"));
-   		}
+		if (n > 0) {
+			info("Type checked " + plural(n, "module", "s") + " in "
+					+ (double) (after - before) / 1000 + " secs. ");
+			info(terrs == 0 ? "No type errors" : "Found "
+					+ plural(terrs, "type error", "s"));
+			infoln(twarn == 0 ? "" : " and " + (warnings ? "" : "suppressed ")
+					+ plural(twarn, "warning", "s"));
+		}
 
-		if (outfile != null && terrs == 0)
-		{
-			try
-			{
+		if (outfile != null && terrs == 0) {
+			try {
 				before = System.currentTimeMillis();
-    	        FileOutputStream fos = new FileOutputStream(outfile);
-    	        GZIPOutputStream gos = new GZIPOutputStream(fos);
-    	        ObjectOutputStream oos = new ObjectOutputStream(gos);
+				FileOutputStream fos = new FileOutputStream(outfile);
+				GZIPOutputStream gos = new GZIPOutputStream(fos);
+				ObjectOutputStream oos = new ObjectOutputStream(gos);
 
-    	        oos.writeObject(modules);
-    	        oos.close();
-    	   		after = System.currentTimeMillis();
+				oos.writeObject(modules);
+				oos.close();
+				after = System.currentTimeMillis();
 
-    	   		infoln("Saved " + plural(modules.size(), "module", "s") +
-    	   			" to " + outfile + " in " +
-    	   			(double)(after-before)/1000 + " secs. ");
-			}
-			catch (IOException e)
-			{
+				infoln("Saved " + plural(modules.size(), "module", "s")
+						+ " to " + outfile + " in " + (double) (after - before)
+						/ 1000 + " secs. ");
+			} catch (IOException e) {
 				infoln("Cannot write " + outfile + ": " + e.getMessage());
 				terrs++;
 			}
 		}
 
-		if (pog && terrs == 0)
-		{
+		if (pog && terrs == 0) {
 			ProofObligationList list = modules.getProofObligations();
 
-			if (list.isEmpty())
-			{
+			if (list.isEmpty()) {
 				println("No proof obligations generated");
-			}
-			else
-			{
-    			println("Generated " +
-    				plural(list.size(), "proof obligation", "s") + ":\n");
-    			print(list.toString());
+			} else {
+				println("Generated "
+						+ plural(list.size(), "proof obligation", "s") + ":\n");
+				print(list.toString());
 			}
 		}
 
-   		return terrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
+		return terrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
 	}
 
 	@Override
@@ -163,31 +146,26 @@ public class EclipseVdmjSl extends VDMJ implements IEclipseVdmj {
 		return null;
 	}
 
-
 	@Override
-	public ExitStatus parse(List<File> arg0)
-	{
+	public ExitStatus parse(List<File> arg0) {
 		// TODO Auto-generated method stub
+		System.out.println("Parsing... TODO TOTOTOTOTOTOTOTOTOTOTOTOTOTOTOTOTOT");
 		return null;
 	}
-	protected static void println(String m)
-	{
-		//Console.out.println(m);
-	}
-	
-	protected static void info(String m)
-	{
 
+	protected static void println(String m) {
+		// Console.out.println(m);
 	}
 
-	protected static void infoln(String m)
-	{
+	protected static void info(String m) {
 
 	}
 
-	protected static void print(String m)
-	{
-	
+	protected static void infoln(String m) {
+
+	}
+
+	protected static void print(String m) {
 
 	}
 }

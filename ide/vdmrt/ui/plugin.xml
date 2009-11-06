@@ -16,12 +16,20 @@
             icon="icons/cview16/vdmrt_file_tsk.gif"
             id="org.overture.ide.vdmrt.createprojectwizard"
             name="VDM-RT Project"
+            finalPerspective="org.overture.ide.vdmrt.ui.VdmRtPerspective"
+            preferredPerspectives="org.overture.ide.vdmrt.ui.VdmRtPerspective"
             project="true">
       </wizard>
-    
+      <wizard
+            category="org.overture.ide.category"
+            class="org.overture.ide.vdmrt.ui.wizards.VdmRtNewClassWizard"
+            icon="icons/cview16/vdmrt_file_tsk.gif"
+            id="org.overture.ide.vdmrt.ui.wizards.VdmRtNewClassWizard"
+            name="VDM-RT Class">
+            <description>New VDM-RT class</description>
+      </wizard>
    </extension>
-<extension
-      point="org.eclipse.ui.ide.projectNatureImages">
+<extension point="org.eclipse.ui.ide.projectNatureImages">
    <image
          icon="icons/ovr16/vdmrt_ovr.gif"
          id="org.overture.ide.vdmrt.ui.nature.image"
@@ -43,9 +51,8 @@
       </editor>
    </extension>
 
-<!-- partitioning -->
-<extension
-         point="org.eclipse.core.runtime.preferences">
+	<!-- partitioning -->
+	<extension point="org.eclipse.core.runtime.preferences">
       <initializer
             class="org.overture.ide.vdmrt.ui.internal.editor.VdmRtUIPreferenceInitializer">
       </initializer>
@@ -53,8 +60,7 @@
    
    
      <!-- customize the outline to include fileds etc. -->
-      <extension
-         point="org.eclipse.dltk.core.sourceElementParsers">
+      <extension point="org.eclipse.dltk.core.sourceElementParsers">
       <parser
             class="org.overture.ide.vdmrt.ui.internal.outline.SourceElementParser"
             nature="org.overture.ide.vdmrt.core.nature"
@@ -89,9 +95,7 @@
           id="org.overture.ide.vdmrt.ui.completion.templates.VdmUniversalTemplateContextType"
           name="VDM-RT Template content">
        </contextType>
-      <include
-          file="templates/templates.xml"
-       >
+      		<include file="templates/templates.xml" >
        </include>
 
     </extension>
@@ -105,7 +109,7 @@
 			toolkitId="org.overture.ide.vdmrt.core.nature">
 			<partition type="__dftl_partition_content_type"/>
 		</scriptCompletionProposalComputer>
-</extension> 
+	</extension>
 
    
       <!-- vdmRtEditorScope -->
@@ -118,4 +122,13 @@
         </context>
      </extension>
    
+   <!-- RT-perspective-->
+   <extension point="org.eclipse.ui.perspectives">
+    <perspective
+          class="org.overture.ide.vdmrt.ui.VdmRtPerspective"
+          icon="icons/cview16/vdmrt_file_tsk.gif"
+          id="org.overture.ide.vdmrt.ui.VdmRtPerspective"
+          name="VDM-RT">
+    </perspective>
+ </extension>
 </plugin>

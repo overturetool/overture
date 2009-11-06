@@ -47,7 +47,7 @@ public class AstManager implements IAstManager {
 				+ "(" + nature + ") - " + new Path(new String( fileName)).lastSegment().toString()+" Modules: "+ getNames(modules));
 
 		try {
-			return new DltkAstConverter(fileName, source).parse(modules);
+			return new DltkAstConverter(source).parse(modules);
 		} catch (Exception e) {
 			System.out.println("DLTK AST convertion error");
 			e.printStackTrace();

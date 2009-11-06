@@ -69,6 +69,7 @@
       <plugin id="org.eclipse.core.variables"/>
       <plugin id="org.eclipse.debug.core"/>
       <plugin id="org.eclipse.debug.ui"/>
+      <plugin id="org.eclipse.dltk"/>
       <plugin id="org.eclipse.dltk.console"/>
       <plugin id="org.eclipse.dltk.console.ui"/>
       <plugin id="org.eclipse.dltk.core"/>
@@ -159,9 +160,12 @@
       <plugin id="org.overture.ide.vdmpp.debug.ui"/>
       <plugin id="org.overture.ide.vdmpp.ui"/>
       <plugin id="org.overture.ide.vdmrt.core"/>
-      <plugin id="org.overture.ide.vdmrt.debug" fragment=""/>
+      <plugin id="org.overture.ide.vdmrt.debug.core"/>
+      <plugin id="org.overture.ide.vdmrt.debug.ui"/>
       <plugin id="org.overture.ide.vdmrt.ui"/>
       <plugin id="org.overture.ide.vdmsl.core"/>
+      <plugin id="org.overture.ide.vdmsl.debug.core"/>
+      <plugin id="org.overture.ide.vdmsl.debug.ui"/>
       <plugin id="org.overture.ide.vdmsl.ui"/>
    </plugins>
 

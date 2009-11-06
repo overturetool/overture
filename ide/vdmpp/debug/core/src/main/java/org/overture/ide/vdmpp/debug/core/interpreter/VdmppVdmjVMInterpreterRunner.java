@@ -1,7 +1,11 @@
 package org.overture.ide.vdmpp.debug.core.interpreter;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,7 +148,7 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 							// List<String> memberFilesList =
 							// getAllMemberFilesString(proj.getProject(), exts);
 
-							String[] arguments = new String[memberFilesList.size() + 10];
+							String[] arguments = new String[memberFilesList.size() + 12];
 
 							// 0: host
 							// 1: port
@@ -157,10 +161,14 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 							arguments[argNumber++] = sessionId;
 							arguments[argNumber++] = "-w"; // no warnings
 							//arguments[argNumber++] = "-q"; // no information
+							
 
 							// 3: dialect
 							arguments[argNumber++] = "-"
 									+ VDMPPDebugConstants.VDMPP_VDMJ_DIALECT;
+							
+							arguments[argNumber++] = "-c";
+							arguments[argNumber++] = memberFilesList.get(0).getCharset();
 
 							// 4: expression eg. : new className().operation()
 							String debugOperation = launch.getLaunchConfiguration().getAttribute(

@@ -16,9 +16,18 @@
             icon="icons/cview16/vdmpp_file_tsk.gif"
             id="org.overture.ide.vdmpp.createprojectwizard"
             name="VDM-PP Project"
-            project="true">
+            project="true"
+            preferredPerspectives="org.overture.ide.vdmpp.ui.VdmPpPerspective" 
+            finalPerspective="org.overture.ide.vdmpp.ui.VdmPpPerspective" >
       </wizard>
-    
+      <wizard
+            category="org.overture.ide.category"
+            class="org.overture.ide.vdmpp.ui.wizards.VdmPpNewClassWizard"
+            icon="icons/cview16/vdmpp_file_tsk.gif"
+            id="org.overture.ide.vdmpp.ui.wizards.VdmPpNewClassWizard"
+            name="VDM++ Class">
+            <description>New VDM++ class</description>
+      </wizard>
    </extension>
 <extension
       point="org.eclipse.ui.ide.projectNatureImages">
@@ -119,5 +128,15 @@
 			toolkitId="org.overture.ide.vdmpp.core.nature">
 			<partition type="__dftl_partition_content_type"/>
 		</scriptCompletionProposalComputer>
-</extension>   
+</extension>
+
+	<!-- VDM++ Perspective -->
+ <extension point="org.eclipse.ui.perspectives">
+    <perspective
+          class="org.overture.ide.vdmpp.ui.VdmPpPerspective"
+          icon="icons/cview16/vdmpp_file_tsk.gif"
+          id="org.overture.ide.vdmpp.ui.VdmPpPerspective"
+          name="VDM++">
+    </perspective>
+ </extension>   
 </plugin>

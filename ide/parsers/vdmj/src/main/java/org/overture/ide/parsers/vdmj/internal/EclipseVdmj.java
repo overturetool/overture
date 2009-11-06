@@ -128,7 +128,7 @@ public class EclipseVdmj extends VDMJ // implements IEclipseVdmj
 				parseWarnings.add(warning);
 			}
 		}
-
+		
 		return perrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
 	}
 

@@ -1,13 +1,18 @@
 package org.overture.ide.vdmpp.debug.core.interpreter;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -135,7 +140,7 @@ public class VDMPPVDMJInterpreterRunner extends AbstractInterpreterRunner {
 							
 							ArrayList<String> memberFilesList = getAllMemberFilesString(proj.getProject(), exts);
 							
-							String[] arguments = new String[memberFilesList.size() + 9]; 
+							String[] arguments = new String[memberFilesList.size() + 11]; 
 							
 							// 0: host 
 							// 1: port
@@ -144,11 +149,20 @@ public class VDMPPVDMJInterpreterRunner extends AbstractInterpreterRunner {
 							arguments[argNumber++] = host;
 							arguments[argNumber++] = "-p";
 							arguments[argNumber++] = port;
-							arguments[argNumber++] = "-k";
-							arguments[argNumber++] = sessionId;
+							arguments[argNumber++] = "-k"; // key
+							arguments[argNumber++] = sessionId; 
 							
 							// 3: dialect
 							arguments[argNumber++] = "-" + VDMPPDebugConstants.VDMPP_VDMJ_DIALECT;
+							// charset
+							arguments[argNumber++] = "-c";
+							Charset.defaultCharset().name(); // 
+							File in =  new File(memberFilesList.get(0));
+							InputStreamReader r = new InputStreamReader(new FileInputStream(in));
+							System.out.println(r.getEncoding());
+							arguments[argNumber++] = r.getEncoding();
+							
+							
 							
 							// 4: expression eg. : new className().operation()
 							String debugOperation = launch.getLaunchConfiguration().getAttribute(VDMPPDebugConstants.VDMPP_DEBUGGING_OPERATION, "");
@@ -159,6 +173,7 @@ public class VDMPPVDMJInterpreterRunner extends AbstractInterpreterRunner {
 								"()." + debugOperation;
 							arguments[argNumber++] = "-e";		
 							arguments[argNumber++] = expression;
+							
 							
 							// 5-n: add files to the arguments
 							for (int a = 0; a < memberFilesList.size(); a++) 

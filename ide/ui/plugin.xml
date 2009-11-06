@@ -11,7 +11,6 @@
    
     <!--
 	 	OverturePerspectiveName
-	  -->
 	 <extension point="org.eclipse.ui.perspectives">
     	<perspective
            class="org.overture.ide.ui.VdmDefaultPerspective"
@@ -19,6 +18,7 @@
            id="org.overture.ide.ui.VdmDefaultPerspective"
            name="%VdmDefaultPerspectiveName"/>
  	  </extension>
+	  -->
   
   <!-- preferences -->
   <extension point="org.eclipse.ui.preferencePages">
@@ -80,8 +80,5 @@
               parentId="org.eclipse.dltk.ui.scriptEditorScope">
         </context>
      </extension>
-  
-  
-  
   
 </plugin>

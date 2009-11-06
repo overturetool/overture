@@ -7,7 +7,7 @@ import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.progress.IProgressConstants;
 
 
-public class VdmDefaultPerspective  implements IPerspectiveFactory  {
+public abstract class VdmDefaultPerspective  implements IPerspectiveFactory  {
 
 	public void createInitialLayout(IPageLayout layout) {
 
@@ -45,11 +45,16 @@ public class VdmDefaultPerspective  implements IPerspectiveFactory  {
 		layout.addShowViewShortcut(IPageLayout.ID_TASK_LIST);
 		layout.addShowViewShortcut(IProgressConstants.PROGRESS_VIEW_ID);
 		
-		// new actions - Overturescript project creation wizard org.eclipse.dltk.ruby.internal.ui.wizards.OvertureFileCreationWizard
-//		layout.addNewWizardShortcut(EditorCoreUIConstants.OVERTURE_PROJECT_WIZARD); //$NON-NLS-1$
-//		layout.addNewWizardShortcut(EditorCoreUIConstants.OVERTURE_FILE_CREATION_WIZARD); //$NON-NLS-1$
-//		layout.addNewWizardShortcut(EditorCoreUIConstants.OVERTURE_NEW_FOLDER_WIZARD);//$NON-NLS-1$
-//		layout.addNewWizardShortcut(EditorCoreUIConstants.OVERTURE_NEW_FILE_WIZARD);//$NON-NLS-1$
-//		layout.addNewWizardShortcut(EditorCoreUIConstants.OVERTURE_UNTITLED_TEXT_FILE_WIZARD);//$NON-NLS-1$
+		// General
+		layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.folder");//$NON-NLS-1$
+		layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.file");//$NON-NLS-1$
+		layout.addNewWizardShortcut("org.eclipse.ui.editors.wizards.UntitledTextFileWizard");//$NON-NLS-1$
+
+		addNewWiardShortcuts(layout);
 	}
+	
+	protected abstract void addNewWiardShortcuts(IPageLayout layout);
+	
+	
+	
 }

@@ -8,8 +8,6 @@ import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
-import org.eclipse.dltk.ast.expressions.CallArgumentsList;
-import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.references.ConstantReference;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.overture.ide.ast.util.VdmAstUtil;
@@ -21,57 +19,6 @@ import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.ValueDefinition;
-import org.overturetool.vdmj.expressions.ApplyExpression;
-import org.overturetool.vdmj.expressions.BinaryExpression;
-import org.overturetool.vdmj.expressions.BooleanLiteralExpression;
-import org.overturetool.vdmj.expressions.BreakpointExpression;
-import org.overturetool.vdmj.expressions.CasesExpression;
-import org.overturetool.vdmj.expressions.CharLiteralExpression;
-import org.overturetool.vdmj.expressions.ElseIfExpression;
-import org.overturetool.vdmj.expressions.Exists1Expression;
-import org.overturetool.vdmj.expressions.ExistsExpression;
-import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.expressions.ExpressionList;
-import org.overturetool.vdmj.expressions.FieldExpression;
-import org.overturetool.vdmj.expressions.FieldNumberExpression;
-import org.overturetool.vdmj.expressions.ForAllExpression;
-import org.overturetool.vdmj.expressions.FuncInstantiationExpression;
-import org.overturetool.vdmj.expressions.HistoryExpression;
-import org.overturetool.vdmj.expressions.IfExpression;
-import org.overturetool.vdmj.expressions.IntegerLiteralExpression;
-import org.overturetool.vdmj.expressions.IotaExpression;
-import org.overturetool.vdmj.expressions.IsExpression;
-import org.overturetool.vdmj.expressions.IsOfBaseClassExpression;
-import org.overturetool.vdmj.expressions.IsOfClassExpression;
-import org.overturetool.vdmj.expressions.LambdaExpression;
-import org.overturetool.vdmj.expressions.LetBeStExpression;
-import org.overturetool.vdmj.expressions.LetDefExpression;
-import org.overturetool.vdmj.expressions.MapExpression;
-import org.overturetool.vdmj.expressions.MkBasicExpression;
-import org.overturetool.vdmj.expressions.MkTypeExpression;
-import org.overturetool.vdmj.expressions.MuExpression;
-import org.overturetool.vdmj.expressions.NewExpression;
-import org.overturetool.vdmj.expressions.NilExpression;
-import org.overturetool.vdmj.expressions.NotYetSpecifiedExpression;
-import org.overturetool.vdmj.expressions.PostOpExpression;
-import org.overturetool.vdmj.expressions.PreExpression;
-import org.overturetool.vdmj.expressions.PreOpExpression;
-import org.overturetool.vdmj.expressions.QuoteLiteralExpression;
-import org.overturetool.vdmj.expressions.RealLiteralExpression;
-import org.overturetool.vdmj.expressions.SameBaseClassExpression;
-import org.overturetool.vdmj.expressions.SelfExpression;
-import org.overturetool.vdmj.expressions.SeqExpression;
-import org.overturetool.vdmj.expressions.SetExpression;
-import org.overturetool.vdmj.expressions.StateInitExpression;
-import org.overturetool.vdmj.expressions.StringLiteralExpression;
-import org.overturetool.vdmj.expressions.SubclassResponsibilityExpression;
-import org.overturetool.vdmj.expressions.SubseqExpression;
-import org.overturetool.vdmj.expressions.ThreadIdExpression;
-import org.overturetool.vdmj.expressions.TimeExpression;
-import org.overturetool.vdmj.expressions.TupleExpression;
-import org.overturetool.vdmj.expressions.UnaryExpression;
-import org.overturetool.vdmj.expressions.UndefinedExpression;
-import org.overturetool.vdmj.expressions.VariableExpression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -120,6 +67,7 @@ import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.types.TypeSet;
 import org.overturetool.vdmj.types.UnionType;
 import org.overturetool.vdmj.types.UnresolvedType;
+
 @SuppressWarnings("unchecked")
 public class DltkAstConverter {
 	ModuleDeclaration model;
@@ -129,7 +77,7 @@ public class DltkAstConverter {
 		return converter;
 	}
 	
-	public DltkAstConverter(char[] fileName, char[] source) {
+	public DltkAstConverter(char[] source) {
 		model = new ModuleDeclaration(source.length);
 		converter = new DltkConverter(source);
 	}
@@ -561,93 +509,104 @@ public class DltkAstConverter {
 		moduleDefinition.getStatements().add(method);
 	}
 
-	
-	
-	
-	
-
-
-
-
 	private String ProcessUnresolved(Type definition) {
 
-		if (definition.isFunction()) {
-			FunctionType funcType = definition.getFunction();
-if(funcType==null)
-	return "";
-			TypeList parameters = funcType.parameters;//TODO check for null first
-			Type result = funcType.result;
-
-			StringBuilder resultF = new StringBuilder();
-
-			if (parameters.size() > 0) {
-				Iterator<Type> itTypes = parameters.iterator();
-
-				while (itTypes.hasNext()) {
-					resultF.append(ProcessUnresolved(itTypes.next()));
-					if (itTypes.hasNext())
-						resultF.append(" * ");
-				}
-			} else
-				resultF.append("()");
-
-			resultF.append(" -> ");
-			resultF.append(ProcessUnresolved(result));
-
-			return resultF.toString();
-
+		String defString = definition.toString();
+		if (defString.contains("unresolved "))
+		{
+			defString = defString.replace("(", "");
+			defString = defString.replace(")", "");
+			defString = defString.replace("unresolved ", "");
+			return defString;
+			
 		}
-
-		if (definition.isMap()) {
-			MapType mapType = definition.getMap();
-			Type from = mapType.from;
-			Type to = mapType.to;
-
-			return "map " + ProcessUnresolved(from) + " to "
-					+ ProcessUnresolved(to);
-
-		}
-
-		if (definition.isProduct()) {
-			//System.out.print("Product");
-		}
-
-		if (definition.isRecord()) {
-
-		}
-
-		if (definition.isSeq()) {
-			SeqType seqType = definition.getSeq();
-			Type t = seqType.seqof;
-			return "seq of " + ProcessUnresolved(t);
-		}
-
-		if (definition.isSet()) {
-			SetType setType = definition.getSet();
-			Type t = setType.setof;
-			return "set of " + ProcessUnresolved(t);
-		}
-
-		if (definition.isUnion()) {
-			UnionType type = definition.getUnion();
-			TypeSet defList = type.types;
-
-			Iterator<Type> it = defList.iterator();
-			StringBuilder result = new StringBuilder();
-			while (it.hasNext()) {
-				Type d = it.next();
-				result = result.append(ProcessUnresolved(d));
-				if (it.hasNext())
-					result.append(" | ");
-			}
-
-			return result.toString();
-		}
-
-		if (definition instanceof UnresolvedType) {
-			UnresolvedType uType = (UnresolvedType) definition;
-			return uType.typename.toString();
-		} else
+//		if ( !definition.resolved){
+//			if ( definition instanceof UnresolvedType){
+//				UnresolvedType unresolvedType = (UnresolvedType) definition;
+//				return unresolvedType.typename.toString();
+//			}
+//			else if (definition instanceof UnionType){
+//				UnionTypeVDM unionType = (UnionTypeVDM) definition;
+//				return unionType.toDisplay();
+//			}
+//		}
+//		if (definition.isFunction()) {
+//			FunctionType funcType = definition.getFunction();
+//if(funcType==null)
+//	return "";
+//			TypeList parameters = funcType.parameters;//TODO check for null first
+//			Type result = funcType.result;
+//
+//			StringBuilder resultF = new StringBuilder();
+//
+//			if (parameters.size() > 0) {
+//				Iterator<Type> itTypes = parameters.iterator();
+//
+//				while (itTypes.hasNext()) {
+//					resultF.append(ProcessUnresolved(itTypes.next()));
+//					if (itTypes.hasNext())
+//						resultF.append(" * ");
+//				}
+//			} else
+//				resultF.append("()");
+//
+//			resultF.append(" -> ");
+//			resultF.append(ProcessUnresolved(result));
+//
+//			return resultF.toString();
+//
+//		}
+//
+//		if (definition.isMap()) {
+//			MapType mapType = definition.getMap();
+//			Type from = mapType.from;
+//			Type to = mapType.to;
+//
+//			return "map " + ProcessUnresolved(from) + " to "
+//					+ ProcessUnresolved(to);
+//
+//		}
+//
+//		if (definition.isProduct()) {
+//			//System.out.print("Product");
+//		}
+//
+//		if (definition.isRecord()) {
+//
+//		}
+//
+//		if (definition.isSeq()) {
+//			SeqType seqType = definition.getSeq();
+//			Type t = seqType.seqof;
+//			return "seq of " + ProcessUnresolved(t);
+//		}
+//
+//		if (definition.isSet()) {
+//			SetType setType = definition.getSet();
+//			Type t = setType.setof;
+//			return "set of " + ProcessUnresolved(t);
+//		}
+//
+//		if (definition.isUnion()) {
+//			UnionType type = definition.getUnion();
+//			TypeSet defList = type.types;
+//
+//			Iterator<Type> it = defList.iterator();
+//			StringBuilder result = new StringBuilder();
+//			while (it.hasNext()) {
+//				Type d = it.next();
+//				result = result.append(ProcessUnresolved(d));
+//				if (it.hasNext())
+//					result.append(" | ");
+//			}
+//
+//			return result.toString();
+//		}
+//
+//		if (definition instanceof UnresolvedType) {
+//			UnresolvedType uType = (UnresolvedType) definition;
+//			return uType.typename.toString();
+//		} else
 			return definition.toString();
 	}
 	

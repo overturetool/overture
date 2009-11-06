@@ -145,7 +145,7 @@ public class VdmRtVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 							// List<String> memberFilesList =
 							// getAllMemberFilesString(proj.getProject(), exts);
 
-							String[] arguments = new String[memberFilesList.size() + 11];
+							String[] arguments = new String[memberFilesList.size() + 13];
 
 							// 0: host
 							// 1: port
@@ -179,6 +179,10 @@ public class VdmRtVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 							// 3: dialect
 							arguments[argNumber++] = "-" + VdmRtDebugConstants.VDMRT_VDMJ_DIALECT;
 
+							// charset
+							arguments[argNumber++] = "-c";
+							arguments[argNumber++] = memberFilesList.get(0).getCharset();
+							
 							// 4: expression eg. : new className().operation()
 							String debugOperation = launch.getLaunchConfiguration().getAttribute(VdmRtDebugConstants.VDMRT_DEBUGGING_OPERATION, "");
 							
