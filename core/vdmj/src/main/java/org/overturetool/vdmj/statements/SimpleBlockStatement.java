@@ -24,7 +24,6 @@
 package org.overturetool.vdmj.statements;
 
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Vector;
 
 import org.overturetool.vdmj.expressions.Expression;
@@ -37,6 +36,7 @@ import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeSet;
 import org.overturetool.vdmj.types.UnionType;
+import org.overturetool.vdmj.types.UnknownType;
 import org.overturetool.vdmj.types.VoidReturnType;
 import org.overturetool.vdmj.types.VoidType;
 import org.overturetool.vdmj.values.Value;
@@ -86,12 +86,10 @@ public class SimpleBlockStatement extends Statement
 	public Type typeCheck(Environment env, NameScope scope)
 	{
 		boolean notreached = false;
-		ListIterator<Statement> lis = statements.listIterator();
 		TypeSet rtypes = new TypeSet();
 
-		while (lis.hasNext())
+		for(Statement stmt: statements)
 		{
-			Statement stmt = lis.next();
 			Type st = stmt.typeCheck(env, scope);
 
 			if (notreached)
@@ -100,6 +98,8 @@ public class SimpleBlockStatement extends Statement
 			}
 			else
 			{
+				notreached = true;
+				
     			if (st instanceof UnionType)
     			{
     				UnionType ust = (UnionType)st;
@@ -107,16 +107,23 @@ public class SimpleBlockStatement extends Statement
     				for (Type t: ust.types)
     				{
     					addOne(rtypes, t);
+    					
+    					if (t instanceof VoidType ||
+    						t instanceof UnknownType)
+    					{
+    						notreached = false;
+    					}
     				}
     			}
     			else
     			{
     				addOne(rtypes, st);
-    			}
-
-    			if (!st.isType(VoidType.class))
-    			{
-    				notreached = true;
+    				
+					if (st instanceof VoidType ||
+						st instanceof UnknownType)
+					{
+						notreached = false;
+					}
     			}
 			}
 		}

@@ -79,7 +79,13 @@ public class OptionalType extends Type
 	@Override
 	public boolean equals(Object other)
 	{
-		return type.equals(other);
+		if (other instanceof OptionalType)
+		{
+			OptionalType oo = (OptionalType)other;
+			return type.equals(oo.type);
+		}
+		
+		return false;
 	}
 
 	@Override

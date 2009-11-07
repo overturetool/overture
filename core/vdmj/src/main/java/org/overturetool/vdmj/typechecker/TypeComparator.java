@@ -49,6 +49,8 @@ import org.overturetool.vdmj.types.UndefinedType;
 import org.overturetool.vdmj.types.UnionType;
 import org.overturetool.vdmj.types.UnknownType;
 import org.overturetool.vdmj.types.UnresolvedType;
+import org.overturetool.vdmj.types.VoidReturnType;
+import org.overturetool.vdmj.types.VoidType;
 
 
 /**
@@ -262,6 +264,7 @@ public class TypeComparator
 			return Result.Yes;	// Runtime checked...
 		}
 
+		
 		// Obtain the fundamental type of BracketTypes, NamedTypes and
 		// OptionalTypes.
 
@@ -489,6 +492,28 @@ public class TypeComparator
 				if (cfrom.hasSupertype(cto) || cto.hasSupertype(cfrom))
 				{
 					return Result.Yes;
+				}
+			}
+			else if (from instanceof VoidReturnType)
+			{
+				if (to instanceof VoidType || to instanceof VoidReturnType)
+				{
+					return Result.Yes;
+				}
+				else
+				{
+					return Result.No;
+				}
+			}
+			else if (to instanceof VoidReturnType)
+			{
+				if (from instanceof VoidType || from instanceof VoidReturnType)
+				{
+					return Result.Yes;
+				}
+				else
+				{
+					return Result.No;
 				}
 			}
 			else

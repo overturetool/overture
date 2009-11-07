@@ -42,8 +42,7 @@ public class VoidType extends Type
 			other = ((BracketType)other).type;
 		}
 
-		return (other instanceof VoidType ||
-				other instanceof VoidReturnType);
+		return (other instanceof VoidType);
 	}
 
 	@Override

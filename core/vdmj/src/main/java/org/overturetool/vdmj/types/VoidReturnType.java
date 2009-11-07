@@ -42,13 +42,12 @@ public class VoidReturnType extends Type
 			other = ((BracketType)other).type;
 		}
 
-		return (other instanceof VoidType ||
-				other instanceof VoidReturnType);
+		return (other instanceof VoidReturnType);
 	}
 
 	@Override
 	public String toDisplay()
 	{
-		return "()";
+		return "(return)";
 	}
 }
