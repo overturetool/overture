@@ -84,7 +84,7 @@ public class ForAllStatement extends Statement
 			SetType st = setType.getSet();
 			DefinitionList defs = pattern.getDefinitions(st.setof, NameScope.LOCAL);
 
-			Environment local = new FlatCheckedEnvironment(defs, base);
+			Environment local = new FlatCheckedEnvironment(defs, base, scope);
 			Type rt = statement.typeCheck(local, scope);
 			local.unusedCheck();
 			return rt;

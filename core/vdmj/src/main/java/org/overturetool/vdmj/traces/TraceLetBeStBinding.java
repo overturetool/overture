@@ -77,7 +77,7 @@ public class TraceLetBeStBinding extends TraceDefinition
 	{
 		def = new MultiBindListDefinition(bind.location, bind.getMultipleBindList());
 		def.typeCheck(base, scope);
-		Environment local = new FlatCheckedEnvironment(def, base);
+		Environment local = new FlatCheckedEnvironment(def, base, scope);
 
 		if (stexp != null &&
 			!stexp.typeCheck(local, null, scope).isType(BooleanType.class))

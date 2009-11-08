@@ -76,7 +76,7 @@ public class ForAllExpression extends Expression
 	{
 		Definition def = new MultiBindListDefinition(location, bindList);
 		def.typeCheck(base, scope);
-		Environment local = new FlatCheckedEnvironment(def, base);
+		Environment local = new FlatCheckedEnvironment(def, base, scope);
 
 		if (!predicate.typeCheck(local, null, scope).isType(BooleanType.class))
 		{

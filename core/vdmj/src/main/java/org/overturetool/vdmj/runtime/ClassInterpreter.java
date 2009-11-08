@@ -247,8 +247,8 @@ public class ClassInterpreter extends Interpreter
 	{
 		Expression expr = parseExpression(line, getDefaultName());
 		Environment env = getGlobalEnvironment();
-		Environment created =
-			new FlatCheckedEnvironment(createdDefinitions.asList(), env);
+		Environment created = new FlatCheckedEnvironment(
+			createdDefinitions.asList(), env, NameScope.NAMESANDSTATE);
 
 		typeCheck(expr, created);
 		return execute(expr, dbgp);
@@ -354,8 +354,8 @@ public class ClassInterpreter extends Interpreter
 	{
 		Expression expr = parseExpression(exp, getDefaultName());
 		Environment env = getGlobalEnvironment();
-		Environment created =
-			new FlatCheckedEnvironment(createdDefinitions.asList(), env);
+		Environment created = new FlatCheckedEnvironment(
+			createdDefinitions.asList(), env, NameScope.NAMESANDSTATE);
 
 		Type type = typeCheck(expr, created);
 		Value v = execute(exp, null);

@@ -53,6 +53,7 @@ import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
 import org.overturetool.vdmj.typechecker.TypeComparator;
+import org.overturetool.vdmj.types.BooleanType;
 import org.overturetool.vdmj.types.FunctionType;
 import org.overturetool.vdmj.types.NaturalType;
 import org.overturetool.vdmj.types.ParameterType;
@@ -139,7 +140,7 @@ public class ExplicitFunctionDefinition extends Definition
 		if (precondition != null)
 		{
 			predef = getPreDefinition();
-			predef.used = true;
+			predef.markUsed();
 		}
 		else
 		{
@@ -149,7 +150,7 @@ public class ExplicitFunctionDefinition extends Definition
 		if (postcondition != null)
 		{
 			postdef = getPostDefinition();
-			postdef.used = true;
+			postdef.markUsed();
 		}
 		else
 		{
@@ -239,7 +240,7 @@ public class ExplicitFunctionDefinition extends Definition
 		}
 
 		defs.typeCheck(base, scope);
-		FlatCheckedEnvironment local = new FlatCheckedEnvironment(defs, base);
+		FlatCheckedEnvironment local = new FlatCheckedEnvironment(defs, base, scope);
 		local.setStatic(accessSpecifier);
 		local.setFuncDefinition(this);
 
@@ -250,12 +251,32 @@ public class ExplicitFunctionDefinition extends Definition
 
 		if (predef != null)
 		{
-			predef.typeCheck(base, NameScope.NAMES);
+			Type b = predef.body.typeCheck(local, null, NameScope.NAMES);
+			BooleanType expected = new BooleanType(location);
+			
+			if (!b.isType(BooleanType.class))
+			{
+				report(3018, "Precondition returns unexpected type");
+				detail2("Actual", b, "Expected", expected);
+			}
 		}
 
 		if (postdef != null)
 		{
-			postdef.typeCheck(base, NameScope.NAMES);
+			LexNameToken result = new LexNameToken(name.module, "RESULT", location);
+			Pattern rp = new IdentifierPattern(result);
+			DefinitionList rdefs = rp.getDefinitions(expectedResult, NameScope.NAMES);
+			FlatCheckedEnvironment post =
+				new FlatCheckedEnvironment(rdefs, local, NameScope.NAMES);
+			
+			Type b = postdef.body.typeCheck(post, null, NameScope.NAMES);
+			BooleanType expected = new BooleanType(location);
+			
+			if (!b.isType(BooleanType.class))
+			{
+				report(3018, "Postcondition returns unexpected type");
+				detail2("Actual", b, "Expected", expected);
+			}
 		}
 
 		// This check returns the type of the function body in the case where

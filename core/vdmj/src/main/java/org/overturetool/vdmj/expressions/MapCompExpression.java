@@ -84,7 +84,7 @@ public class MapCompExpression extends MapExpression
 	{
 		Definition def = new MultiBindListDefinition(location, bindings);
 		def.typeCheck(base, scope);
-		Environment local = new FlatCheckedEnvironment(def, base);
+		Environment local = new FlatCheckedEnvironment(def, base, scope);
 
 		if (predicate != null && !predicate.typeCheck(local, null, scope).isType(BooleanType.class))
 		{

@@ -57,7 +57,7 @@ public class BlockStatement extends SimpleBlockStatement
 
 		for (Definition d: assignmentDefs)
 		{
-			local = new FlatCheckedEnvironment(d, local);	// cumulative
+			local = new FlatCheckedEnvironment(d, local, scope);	// cumulative
 			d.implicitDefinitions(local);
 			d.typeCheck(local, scope);
 		}

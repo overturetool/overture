@@ -90,7 +90,7 @@ public class CaseStmtAlternative implements Serializable
 		}
 
 		defs.typeCheck(base, scope);
-		Environment local = new FlatCheckedEnvironment(defs, base);
+		Environment local = new FlatCheckedEnvironment(defs, base, scope);
 		Type r = statement.typeCheck(local, scope);
 		local.unusedCheck();
 		return r;

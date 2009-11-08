@@ -101,7 +101,7 @@ public class ForIndexStatement extends Statement
 		}
 
 		Definition vardef = new LocalDefinition(var.location, var, NameScope.LOCAL, ft);
-		Environment local = new FlatCheckedEnvironment(vardef, env);
+		Environment local = new FlatCheckedEnvironment(vardef, env, scope);
 		Type rt = statement.typeCheck(local, scope);
 		local.unusedCheck();
 		return rt;

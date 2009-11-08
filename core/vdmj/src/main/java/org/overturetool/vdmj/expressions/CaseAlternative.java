@@ -85,7 +85,7 @@ public class CaseAlternative implements Serializable
 		}
 
 		defs.typeCheck(base, scope);
-		Environment local = new FlatCheckedEnvironment(defs, base);
+		Environment local = new FlatCheckedEnvironment(defs, base, scope);
 		Type r = result.typeCheck(local, null, scope);
 		local.unusedCheck();
 		return r;

@@ -68,6 +68,19 @@ public class ImportedDefinition extends Definition
 	}
 
 	@Override
+    public void markUsed()
+	{
+		used = true;
+		def.markUsed();
+	}
+	
+	@Override
+    protected boolean isUsed()
+	{
+		return def.isUsed();
+	}
+
+	@Override
 	public DefinitionList getDefinitions()
 	{
 		return new DefinitionList(def);

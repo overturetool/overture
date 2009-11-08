@@ -93,7 +93,7 @@ public class ForPatternBindStatement extends Statement
 			patternBind.typeCheck(base, scope, seqType.seqof);
 			DefinitionList defs = patternBind.getDefinitions();
 			defs.typeCheck(base, scope);
-			local = new FlatCheckedEnvironment(defs, base);
+			local = new FlatCheckedEnvironment(defs, base, scope);
 		}
 		else
 		{

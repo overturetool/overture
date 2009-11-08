@@ -90,7 +90,7 @@ public class IotaExpression extends Expression
 			rt = tb.type;
 		}
 
-		Environment local = new FlatCheckedEnvironment(def, base);
+		Environment local = new FlatCheckedEnvironment(def, base, scope);
 		predicate.typeCheck(local, null, scope);
 		local.unusedCheck();
 		return rt;

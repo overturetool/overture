@@ -53,6 +53,7 @@ import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
 import org.overturetool.vdmj.typechecker.TypeComparator;
+import org.overturetool.vdmj.types.BooleanType;
 import org.overturetool.vdmj.types.FunctionType;
 import org.overturetool.vdmj.types.NaturalType;
 import org.overturetool.vdmj.types.ParameterType;
@@ -138,7 +139,7 @@ public class ImplicitFunctionDefinition extends Definition
 		if (precondition != null)
 		{
 			predef = getPreDefinition();
-			predef.used = true;
+			predef.markUsed();
 		}
 		else
 		{
@@ -148,7 +149,7 @@ public class ImplicitFunctionDefinition extends Definition
 		if (postcondition != null)
 		{
 			postdef = getPostDefinition();
-			postdef.used = true;
+			postdef.markUsed();
 		}
 		else
 		{
@@ -226,13 +227,12 @@ public class ImplicitFunctionDefinition extends Definition
 
 		defs.addAll(argdefs.asList());
 		defs.typeCheck(base, scope);
+		FlatCheckedEnvironment local = new FlatCheckedEnvironment(defs, base, scope);
+		local.setStatic(accessSpecifier);
+		local.setFuncDefinition(this);
 
 		if (body != null)
 		{
-			FlatCheckedEnvironment local = new FlatCheckedEnvironment(defs, base);
-			local.setStatic(accessSpecifier);
-			local.setFuncDefinition(this);
-
 			if (classDefinition != null && !accessSpecifier.isStatic)
 			{
 				local.add(getSelfDefinition());
@@ -245,23 +245,53 @@ public class ImplicitFunctionDefinition extends Definition
 				report(3029, "Function returns unexpected type");
 				detail2("Actual", actualResult, "Expected", result.type);
 			}
-
-			local.unusedCheck();
 		}
 
 		if (type.narrowerThan(accessSpecifier))
 		{
 			report(3030, "Function type narrows function");
 		}
-
+		
 		if (predef != null)
 		{
-			predef.typeCheck(base, NameScope.NAMES);
+			Type b = predef.body.typeCheck(local, null, NameScope.NAMES);
+			BooleanType expected = new BooleanType(location);
+			
+			if (!b.isType(BooleanType.class))
+			{
+				report(3018, "Precondition returns unexpected type");
+				detail2("Actual", b, "Expected", expected);
+			}
 		}
 
+		// The result variables are in scope for the post condition
+		
 		if (postdef != null)
 		{
-			postdef.typeCheck(base, NameScope.NAMES);
+			Type b = null;
+			
+			if (result != null)
+			{
+	    		DefinitionList postdefs = result.getDefinitions();
+	    		FlatCheckedEnvironment post =
+	    			new FlatCheckedEnvironment(postdefs, local, NameScope.NAMES);
+	    		post.setStatic(accessSpecifier);
+	    		post.setFuncDefinition(this);
+				b = postdef.body.typeCheck(post, null, NameScope.NAMES);
+				post.unusedCheck();
+			}
+			else
+			{
+				b = postdef.body.typeCheck(local, null, NameScope.NAMES);
+			}
+			
+			BooleanType expected = new BooleanType(location);
+			
+			if (!b.isType(BooleanType.class))
+			{
+				report(3018, "Postcondition returns unexpected type");
+				detail2("Actual", b, "Expected", expected);
+			}
 		}
 
 		if (measure == null && recursive)
@@ -317,6 +347,8 @@ public class ImplicitFunctionDefinition extends Definition
 				}
 			}
 		}
+
+		local.unusedCheck();
 	}
 
 	@Override

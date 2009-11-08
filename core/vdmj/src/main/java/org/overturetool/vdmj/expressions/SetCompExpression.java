@@ -83,7 +83,7 @@ public class SetCompExpression extends SetExpression
 	{
 		Definition def = new MultiBindListDefinition(first.location, bindings);
 		def.typeCheck(base, scope);
-		Environment local = new FlatCheckedEnvironment(def, base);
+		Environment local = new FlatCheckedEnvironment(def, base, scope);
 
 		Type etype = first.typeCheck(local, null, scope);
 

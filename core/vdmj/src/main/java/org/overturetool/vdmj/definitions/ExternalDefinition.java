@@ -74,6 +74,19 @@ public class ExternalDefinition extends Definition
 	}
 
 	@Override
+    public void markUsed()
+	{
+		used = true;
+		state.markUsed();
+	}
+	
+	@Override
+    protected boolean isUsed()
+	{
+		return state.isUsed();
+	}
+
+	@Override
 	public DefinitionList getDefinitions()
 	{
 		return new DefinitionList(state);

@@ -79,7 +79,7 @@ public class LetDefExpression extends Expression
 				// Functions' names are in scope in their bodies, whereas
 				// simple variable declarations aren't
 
-				local = new FlatCheckedEnvironment(d, local);	// cumulative
+				local = new FlatCheckedEnvironment(d, local, scope);	// cumulative
 				d.implicitDefinitions(local);
 				d.typeResolve(local);
 
@@ -97,7 +97,7 @@ public class LetDefExpression extends Expression
 				d.implicitDefinitions(local);
 				d.typeResolve(local);
 				d.typeCheck(local, scope);
-				local = new FlatCheckedEnvironment(d, local);	// cumulative
+				local = new FlatCheckedEnvironment(d, local, scope);	// cumulative
 			}
 		}
 

@@ -36,23 +36,26 @@ public class FlatCheckedEnvironment extends FlatEnvironment
 {
 	private boolean isStatic = false;
 
-	public FlatCheckedEnvironment(DefinitionList definitions)
+	public FlatCheckedEnvironment(
+		DefinitionList definitions, NameScope scope)
 	{
 		super(definitions);
-		dupHideCheck(definitions);
+		dupHideCheck(definitions, scope);
 	}
 
-	public FlatCheckedEnvironment(DefinitionList definitions, Environment env)
+	public FlatCheckedEnvironment(
+		DefinitionList definitions, Environment env, NameScope scope)
 	{
 		super(definitions, env);
-		dupHideCheck(definitions);
+		dupHideCheck(definitions, scope);
 		setStatic(env.isStatic());
 	}
 
-	public FlatCheckedEnvironment(Definition one, Environment env)
+	public FlatCheckedEnvironment(
+		Definition one, Environment env, NameScope scope)
 	{
 		super(one, env);
-		dupHideCheck(definitions);
+		dupHideCheck(definitions, scope);
 		setStatic(env.isStatic());
 	}
 

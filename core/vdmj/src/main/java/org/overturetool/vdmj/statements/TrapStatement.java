@@ -96,7 +96,7 @@ public class TrapStatement extends Statement
 		patternBind.typeCheck(base, scope, ptype);
 		DefinitionList defs = patternBind.getDefinitions();
 		defs.typeCheck(base, scope);
-		Environment local = new FlatCheckedEnvironment(defs, base);
+		Environment local = new FlatCheckedEnvironment(defs, base, scope);
 		rtypes.add(with.typeCheck(local, scope));
 
 		return rtypes.getType(location);

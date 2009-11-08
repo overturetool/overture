@@ -61,7 +61,7 @@ abstract public class Environment
 	 * @param list	The list of definitions to check.
 	 */
 
-	protected void dupHideCheck(DefinitionList list)
+	protected void dupHideCheck(DefinitionList list, NameScope scope)
 	{
 		LexNameList allnames = list.getVariableNames();
 
@@ -80,7 +80,7 @@ abstract public class Environment
 
 			if (outer != null)
 			{
-				Definition def = outer.findName(n1, NameScope.NAMESANDSTATE);
+				Definition def = outer.findName(n1, scope);
 
 				if (def != null && def.location != n1.location)
 				{

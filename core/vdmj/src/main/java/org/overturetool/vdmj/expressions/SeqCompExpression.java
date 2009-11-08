@@ -79,7 +79,7 @@ public class SeqCompExpression extends SeqExpression
 			report(3155, "List comprehension must define one numeric bind variable");
 		}
 
-		Environment local = new FlatCheckedEnvironment(def, base);
+		Environment local = new FlatCheckedEnvironment(def, base, scope);
 		Type etype = first.typeCheck(local, null, scope);
 
 		if (predicate != null)

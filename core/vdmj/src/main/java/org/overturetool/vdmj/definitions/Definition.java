@@ -248,6 +248,15 @@ public abstract class Definition implements Serializable
 	{
 		used = true;
 	}
+	
+	/**
+	 * Test the "used" flag.
+	 */
+	
+	protected boolean isUsed()
+	{
+		return used;
+	}
 
 	/**
 	 * Find whether this definition contains a definition of a type name. This
@@ -303,10 +312,10 @@ public abstract class Definition implements Serializable
 
 	public void unusedCheck()
 	{
-		if (!used)
+		if (!isUsed())
 		{
 			warning(5000, "Definition '" + name + "' not used");
-			used = true;	// To avoid multiple warnings
+			markUsed();		// To avoid multiple warnings
 		}
 	}
 

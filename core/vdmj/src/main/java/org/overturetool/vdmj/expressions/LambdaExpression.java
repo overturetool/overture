@@ -93,7 +93,7 @@ public class LambdaExpression extends Expression
 
 		Definition def = new MultiBindListDefinition(location, mbinds);
 		def.typeCheck(base, scope);
-		Environment local = new FlatCheckedEnvironment(def, base);
+		Environment local = new FlatCheckedEnvironment(def, base, scope);
 		Type result = expression.typeCheck(local, null, scope);
 		local.unusedCheck();
 

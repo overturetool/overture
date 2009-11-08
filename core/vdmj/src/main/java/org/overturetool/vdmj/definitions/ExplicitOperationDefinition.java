@@ -50,6 +50,7 @@ import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
 import org.overturetool.vdmj.typechecker.TypeComparator;
+import org.overturetool.vdmj.types.BooleanType;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.Type;
@@ -114,13 +115,13 @@ public class ExplicitOperationDefinition extends Definition
 		if (precondition != null)
 		{
 			predef = getPreDefinition(base);
-			predef.used = true;
+			predef.markUsed();
 		}
 
 		if (postcondition != null)
 		{
 			postdef = getPostDefinition(base);
-			postdef.used = true;
+			postdef.markUsed();
 		}
 	}
 
@@ -158,6 +159,7 @@ public class ExplicitOperationDefinition extends Definition
 	@Override
 	public void typeCheck(Environment base, NameScope scope)
 	{
+		scope = NameScope.NAMESANDSTATE;
 		TypeList ptypes = type.parameters;
 
 		if (parameterPatterns.size() > ptypes.size())
@@ -179,7 +181,7 @@ public class ExplicitOperationDefinition extends Definition
 		paramDefinitions.typeCheck(base, scope);
 
 		FlatCheckedEnvironment local =
-			new FlatCheckedEnvironment(paramDefinitions, base);
+			new FlatCheckedEnvironment(paramDefinitions, base, scope);
 		local.setStatic(accessSpecifier);
 
 		if (base.isVDMPP())
@@ -218,14 +220,32 @@ public class ExplicitOperationDefinition extends Definition
 
 		if (predef != null)
 		{
-			// Base + new state for pre functions
-			predef.typeCheck(base, NameScope.NAMESANDSTATE);
+			Type b = predef.body.typeCheck(local, null, NameScope.NAMESANDSTATE);
+			BooleanType expected = new BooleanType(location);
+			
+			if (!b.isType(BooleanType.class))
+			{
+				report(3018, "Precondition returns unexpected type");
+				detail2("Actual", b, "Expected", expected);
+			}
 		}
 
 		if (postdef != null)
 		{
-			// Base + old/new state for post functions
-			postdef.typeCheck(base, NameScope.NAMESANDANYSTATE);
+			LexNameToken result = new LexNameToken(name.module, "RESULT", location);
+			Pattern rp = new IdentifierPattern(result);
+			DefinitionList rdefs = rp.getDefinitions(type.result, NameScope.NAMESANDANYSTATE);
+			FlatCheckedEnvironment post =
+				new FlatCheckedEnvironment(rdefs, local, NameScope.NAMESANDANYSTATE);
+			
+			Type b = postdef.body.typeCheck(post, null, NameScope.NAMESANDANYSTATE);
+			BooleanType expected = new BooleanType(location);
+			
+			if (!b.isType(BooleanType.class))
+			{
+				report(3018, "Postcondition returns unexpected type");
+				detail2("Actual", b, "Expected", expected);
+			}
 		}
 
 		actualResult = body.typeCheck(local, NameScope.NAMESANDSTATE);

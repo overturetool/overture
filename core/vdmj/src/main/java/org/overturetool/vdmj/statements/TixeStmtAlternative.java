@@ -63,7 +63,7 @@ public class TixeStmtAlternative
 		patternBind.typeCheck(base, scope, ext);
 		DefinitionList defs = patternBind.getDefinitions();
 		defs.typeCheck(base, scope);
-		Environment local = new FlatCheckedEnvironment(defs, base);
+		Environment local = new FlatCheckedEnvironment(defs, base, scope);
 		statement.typeCheck(local, scope);
 		local.unusedCheck();
 	}

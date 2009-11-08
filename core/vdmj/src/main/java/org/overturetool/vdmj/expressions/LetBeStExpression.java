@@ -76,7 +76,7 @@ public class LetBeStExpression extends Expression
 	{
 		def = new MultiBindListDefinition(location, bind.getMultipleBindList());
 		def.typeCheck(base, scope);
-		Environment local = new FlatCheckedEnvironment(def, base);
+		Environment local = new FlatCheckedEnvironment(def, base, scope);
 
 		if (suchThat != null &&
 			!suchThat.typeCheck(local, null, scope).isType(BooleanType.class))

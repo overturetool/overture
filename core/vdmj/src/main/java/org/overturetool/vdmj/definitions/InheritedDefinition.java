@@ -72,6 +72,19 @@ public class InheritedDefinition extends Definition
 	}
 
 	@Override
+    public void markUsed()
+	{
+		used = true;
+		superdef.markUsed();
+	}
+	
+	@Override
+    protected boolean isUsed()
+	{
+		return superdef.isUsed();
+	}
+
+	@Override
 	public DefinitionList getDefinitions()
 	{
 		return superdef.getDefinitions();

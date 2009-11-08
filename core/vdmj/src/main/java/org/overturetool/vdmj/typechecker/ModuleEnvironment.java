@@ -42,7 +42,7 @@ public class ModuleEnvironment extends Environment
 	{
 		super(null);
 		this.module = module;
-		dupHideCheck(module.defs);
+		dupHideCheck(module.defs, NameScope.NAMESANDSTATE);
 	}
 
 	@Override

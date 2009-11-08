@@ -69,7 +69,7 @@ public class Exists1Expression extends Expression
 	{
 		def = new MultiBindListDefinition(bind.location, bind.getMultipleBindList());
 		def.typeCheck(base, scope);
-		Environment local = new FlatCheckedEnvironment(def, base);
+		Environment local = new FlatCheckedEnvironment(def, base, scope);
 
 		if (!predicate.typeCheck(local, null, scope).isType(BooleanType.class))
 		{

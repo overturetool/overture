@@ -53,6 +53,7 @@ import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
 import org.overturetool.vdmj.typechecker.TypeComparator;
+import org.overturetool.vdmj.types.BooleanType;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.PatternListTypePair;
@@ -136,13 +137,13 @@ public class ImplicitOperationDefinition extends Definition
 		if (precondition != null)
 		{
 			predef = getPreDefinition(base);
-			predef.used = true;
+			predef.markUsed();
 		}
 
 		if (postcondition != null)
 		{
 			postdef = getPostDefinition(base);
-			postdef.used = true;
+			postdef.markUsed();
 		}
 	}
 
@@ -185,6 +186,7 @@ public class ImplicitOperationDefinition extends Definition
 	@Override
 	public void typeCheck(Environment base, NameScope scope)
 	{
+		scope = NameScope.NAMESANDSTATE;
 		DefinitionList defs = new DefinitionList();
 		DefinitionSet argdefs = new DefinitionSet();
 
@@ -245,10 +247,10 @@ public class ImplicitOperationDefinition extends Definition
 		}
 
 		defs.typeCheck(base, scope);
+		FlatCheckedEnvironment local = new FlatCheckedEnvironment(defs, base, scope);
 
 		if (body != null)
 		{
-			FlatCheckedEnvironment local = new FlatCheckedEnvironment(defs, base);
 			local.setStatic(accessSpecifier);
 
 			if (classDefinition != null && !accessSpecifier.isStatic)
@@ -294,8 +296,6 @@ public class ImplicitOperationDefinition extends Definition
 				report(3035, "Operation returns unexpected type");
 				detail2("Actual", actualResult, "Expected", type.result);
 			}
-
-			local.unusedCheck();
 		}
 
 		if (accessSpecifier.isAsync && !type.result.isType(VoidType.class))
@@ -310,13 +310,47 @@ public class ImplicitOperationDefinition extends Definition
 
 		if (predef != null)
 		{
-			predef.typeCheck(base, NameScope.NAMESANDSTATE);
+			Type b = predef.body.typeCheck(local, null, NameScope.NAMESANDSTATE);
+			BooleanType expected = new BooleanType(location);
+			
+			if (!b.isType(BooleanType.class))
+			{
+				report(3018, "Precondition returns unexpected type");
+				detail2("Actual", b, "Expected", expected);
+			}
 		}
 
+		// The result variables are in scope for the post condition
+		
 		if (postdef != null)
 		{
-			postdef.typeCheck(base, NameScope.NAMESANDANYSTATE);
+			Type b = null;
+			
+			if (result != null)
+			{
+	    		DefinitionList postdefs = result.getDefinitions();
+	    		FlatCheckedEnvironment post =
+	    			new FlatCheckedEnvironment(postdefs, local, NameScope.NAMESANDANYSTATE);
+	    		post.setStatic(accessSpecifier);
+	    		post.setFuncDefinition(this);
+				b = postdef.body.typeCheck(post, null, NameScope.NAMESANDANYSTATE);
+				post.unusedCheck();
+			}
+			else
+			{
+				b = postdef.body.typeCheck(local, null, NameScope.NAMESANDANYSTATE);
+			}
+			
+			BooleanType expected = new BooleanType(location);
+			
+			if (!b.isType(BooleanType.class))
+			{
+				report(3018, "Postcondition returns unexpected type");
+				detail2("Actual", b, "Expected", expected);
+			}
 		}
+
+		local.unusedCheck();
 	}
 
 	@Override
