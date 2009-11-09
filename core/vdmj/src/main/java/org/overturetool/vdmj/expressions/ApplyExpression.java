@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.expressions;
 
+import org.overturetool.vdmj.Release;
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
@@ -102,10 +104,15 @@ public class ApplyExpression extends Expression
 			return type;
 		}
 
-		if (root instanceof VariableExpression)
+		Definition func = env.getFuncDefinition();
+
+		boolean inFunction =
+			(func instanceof ExplicitFunctionDefinition ||
+			 func instanceof ImplicitFunctionDefinition);
+
+		if (inFunction && root instanceof VariableExpression)
 		{
 			VariableExpression var = (VariableExpression)root;
-			Definition func = env.getFuncDefinition();
 
 			if (func instanceof ExplicitFunctionDefinition)
 			{
@@ -117,7 +124,7 @@ public class ApplyExpression extends Expression
     				def.recursive = true;
     			}
 			}
-			else if (func instanceof ImplicitFunctionDefinition)
+			else
 			{
 				ImplicitFunctionDefinition def = (ImplicitFunctionDefinition)func;
 
@@ -143,7 +150,16 @@ public class ApplyExpression extends Expression
 		{
 			OperationType ot = type.getOperation();
 			ot.typeResolve(env, null);
-			results.add(operationApply(isSimple, ot));
+
+			if (inFunction && Settings.release == Release.VDM_10)
+			{
+				report(3300, "Operation " + ot + " cannot be called from a function");
+				results.add(new UnknownType(location));
+			}
+			else
+			{
+    			results.add(operationApply(isSimple, ot));
+			}
 		}
 
 		if (type.isSeq())
