@@ -47,6 +47,7 @@ import java.util.Vector;
 import java.util.Map.Entry;
 
 import org.overturetool.vdmj.ExitStatus;
+import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.VDMJ;
 import org.overturetool.vdmj.VDMOV;
@@ -210,6 +211,22 @@ public class DBGPReader
     				usage("-c option requires a charset name");
     			}
     		}
+    		else if (arg.equals("-r"))
+    		{
+    			if (i.hasNext())
+    			{
+    				Settings.release = Release.lookup(i.next());
+
+    				if (Settings.release == null)
+    				{
+    					usage("-r option must be " + Release.list());
+    				}
+    			}
+    			else
+    			{
+    				usage("-r option requires a VDM release");
+    			}
+    		}
     		else if (arg.equals("-log"))
     		{
     			if (i.hasNext())
@@ -321,7 +338,7 @@ public class DBGPReader
 		System.err.println(string);
 		System.err.println(
 			"Usage: -h <host> -p <port> -k <ide key> <-vdmpp|-vdmsl|-vdmrt>" +
-			" -e <expression> [-w] [-log <logfile>] [-c <charset>]" +
+			" -e <expression> [-w] [-log <logfile>] [-c <charset>] [-r <release>]" +
 			" {<filename URLs>}");
 		System.exit(1);
 	}

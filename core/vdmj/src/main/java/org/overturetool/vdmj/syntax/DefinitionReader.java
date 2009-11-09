@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Vector;
 import java.util.Arrays;
 
+import org.overturetool.vdmj.Release;
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.AccessSpecifier;
 import org.overturetool.vdmj.definitions.AssignmentDefinition;
 import org.overturetool.vdmj.definitions.ClassInvariantDefinition;
@@ -410,8 +412,16 @@ public class DefinitionReader extends SyntaxReader
 				AccessSpecifier access = readAccessSpecifier(false);
 				Definition def = readFunctionDefinition(NameScope.GLOBAL);
 
-				// Force all functions to be static - NOT YET!!
-				def.setAccessSpecifier(access);	//.getStatic(true));
+				if (Settings.release == Release.VDM_10)
+				{
+					// Force all functions to be static for VDM-10
+					def.setAccessSpecifier(access.getStatic(true));
+				}
+				else
+				{
+					def.setAccessSpecifier(access);
+				}
+
 				list.add(def);
 
 				if (!newSection())

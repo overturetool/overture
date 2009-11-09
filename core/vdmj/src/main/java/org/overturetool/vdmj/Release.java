@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008, 2009 Fujitsu Services Ltd.
+ *	Copyright (c) 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -23,19 +23,47 @@
 
 package org.overturetool.vdmj;
 
-import org.overturetool.vdmj.lex.Dialect;
-
-/**
- * A class to hold global settings accessible throughout.
- */
-
-public class Settings
+public enum Release
 {
-	public static Release release = Release.DEFAULT;
-	public static Dialect dialect = null;
-	public static boolean prechecks = true;
-	public static boolean postchecks = true;
-	public static boolean invchecks = true;
-	public static boolean dynamictypechecks = true;
-	public static boolean usingDBGP = false;
+	CLASSIC("classic"),		// VDM, before Overture changes
+	VDM_10("vdm10");		// VDM-10, with Overture changes
+
+	public static final Release DEFAULT = CLASSIC;
+
+	private String option;
+
+	Release(String option)
+	{
+		this.option = option;
+	}
+
+	public static Release lookup(String release)
+	{
+		for (Release r: values())
+		{
+			if (r.option.equals(release))
+			{
+				return r;
+			}
+		}
+
+		return null;
+	}
+
+	public static String list()
+	{
+		StringBuilder sb = new StringBuilder();
+		String sep = "";
+		sb.append("<");
+
+		for (Release r: values())
+		{
+			sb.append(sep);
+			sb.append(r.option);
+			sep = " | ";
+		}
+
+		sb.append(">");
+		return sb.toString();
+	}
 }

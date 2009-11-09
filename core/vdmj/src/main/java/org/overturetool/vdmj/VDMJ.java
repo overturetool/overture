@@ -158,6 +158,22 @@ abstract public class VDMJ
     				usage("-t option requires a charset name");
     			}
     		}
+    		else if (arg.equals("-r"))
+    		{
+    			if (i.hasNext())
+    			{
+    				Settings.release = Release.lookup(i.next());
+
+    				if (Settings.release == null)
+    				{
+    					usage("-r option must be " + Release.list());
+    				}
+    			}
+    			else
+    			{
+    				usage("-r option requires a VDM release");
+    			}
+    		}
     		else if (arg.equals("-pre"))
     		{
     			Settings.prechecks = false;
@@ -272,6 +288,7 @@ abstract public class VDMJ
 		System.err.println("-vdmpp: parse files as VDM++");
 		System.err.println("-vdmrt: parse files as VICE");
 		System.err.println("-overture: parse files as VICE with Overture");
+		System.err.println("-r <release>: VDM language release");
 		System.err.println("-w: suppress warning messages");
 		System.err.println("-q: suppress information messages");
 		System.err.println("-i: run the interpreter if successfully type checked");
