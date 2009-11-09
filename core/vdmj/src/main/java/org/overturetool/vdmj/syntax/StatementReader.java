@@ -26,11 +26,12 @@ package org.overturetool.vdmj.syntax;
 import java.util.List;
 import java.util.Vector;
 
+import org.overturetool.vdmj.Release;
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.AssignmentDefinition;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.ExpressionList;
-import org.overturetool.vdmj.expressions.ReverseExpression;
 import org.overturetool.vdmj.expressions.UndefinedExpression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
@@ -608,47 +609,24 @@ public class StatementReader extends SyntaxReader
 		checkFor(Token.IN, 2214, "Expecting 'in' after pattern bind");
 
 		// The old syntax used to include a "reverse" keyword as part
-		// of the loop grammar, whereas the new syntax (LB:2791065)
-		// makes the reverse a unary sequence operator. The precedence
-		// changes though ("in reverse a ^ b" is now "in (reverse a) ^ b")
-		// so we parse both ways and give a warning if there is a change
-		// in semantics.
+		// of the loop grammar, whereas the new VDM-10 syntax (LB:2791065)
+		// makes the reverse a unary sequence operator.
 
-		boolean reverse = lastToken().is(Token.REVERSE);
-
-		Expression newexp = null;
-		Expression oldexp = null;
-
-		if (reverse)
+		if (Settings.release == Release.VDM_10)
 		{
-    		try
-    		{
-        		reader.push();
-        		nextToken();
-        		Expression rev = getExpressionReader().readExpression();
-    			oldexp = new ReverseExpression(token, rev);
-    		}
-    		catch (ParserException e)
-    		{
-    			// Old syntax had errors
-    		}
-
-    		reader.pop();
+    		Expression exp = getExpressionReader().readExpression();
+    		checkFor(Token.DO, 2215, "Expecting 'do' before loop statement");
+    		Statement body = getStatementReader().readStatement();
+    		return new ForPatternBindStatement(token, pb, false, exp, body);
 		}
-
-		newexp = getExpressionReader().readExpression();
-
-		if (oldexp != null)		// ie. if we parsed an old reverse
+		else
 		{
-			if (!oldexp.toString().equals(newexp.toString()))
-			{
-				warning(5013, "New reverse syntax affects this statement", token);
-			}
+			boolean reverse = ignore(Token.REVERSE);
+			Expression exp = getExpressionReader().readExpression();
+    		checkFor(Token.DO, 2215, "Expecting 'do' before loop statement");
+    		Statement body = getStatementReader().readStatement();
+    		return new ForPatternBindStatement(token, pb, reverse, exp, body);
 		}
-
-		checkFor(Token.DO, 2215, "Expecting 'do' before loop statement");
-		Statement body = getStatementReader().readStatement();
-		return new ForPatternBindStatement(token, pb, false, newexp, body);
 	}
 
 	private Statement readForIndexStatement(LexLocation token)

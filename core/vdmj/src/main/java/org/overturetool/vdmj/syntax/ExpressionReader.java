@@ -26,6 +26,8 @@ package org.overturetool.vdmj.syntax;
 import java.util.List;
 import java.util.Vector;
 
+import org.overturetool.vdmj.Release;
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.expressions.*;
 import org.overturetool.vdmj.lex.Dialect;
@@ -570,6 +572,11 @@ public class ExpressionReader extends SyntaxReader
 				break;
 
 			case REVERSE:
+				if (Settings.release == Release.CLASSIC)
+				{
+					throwMessage(2291, "'reverse' not available in VDM classic");
+				}
+
 				nextToken();
 				exp = new ReverseExpression(location, readEvaluatorP6Expression());
 				break;

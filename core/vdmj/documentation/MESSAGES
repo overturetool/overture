@@ -363,6 +363,7 @@ as the expected and actual values.
 2279, "Invalid breakpoint hit condition"
 2280, "System class cannot be a subclass"
 2290, "System class can only define instance variables and a constructor"
+2291, "'reverse' not available in VDM classic"
 
 3000, "Expression does not match declared type"
 3001, "Class inherits thread definition from multiple supertypes"
@@ -817,5 +818,5 @@ as the expected and actual values.
 5010, "State init expression cannot be executed"
 5011, -
 5012, "Recursive function has no measure"
-5013, "New reverse syntax affects this statement"
+5013, -
 5014, "Uninitialized BUS ignored" 
