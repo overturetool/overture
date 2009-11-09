@@ -157,6 +157,7 @@ public class VdmSlMainLaunchConfigurationTab extends MainLaunchConfigurationTab 
 		fOperationButton = createPushButton(group,
 				DLTKLaunchConfigurationsMessages.mainTab_projectButton, null);
 		fOperationButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				handleOperationButtonSelected();
 			}
@@ -232,6 +233,7 @@ public class VdmSlMainLaunchConfigurationTab extends MainLaunchConfigurationTab 
 	/*
 	 * @see org.eclipse.dltk.debug.ui.launchConfigurations.ScriptLaunchConfigurationTab#breakOnFirstLinePrefEnabled(org.eclipse.dltk.core.PreferencesLookupDelegate)
 	 */
+	@Override
 	protected boolean breakOnFirstLinePrefEnabled(
 			PreferencesLookupDelegate delegate) {
 		return false;
@@ -241,6 +243,7 @@ public class VdmSlMainLaunchConfigurationTab extends MainLaunchConfigurationTab 
 	/*
 	 * @see org.eclipse.dltk.debug.ui.launchConfigurations.ScriptLaunchConfigurationTab#dbpgLoggingPrefEnabled(org.eclipse.dltk.core.PreferencesLookupDelegate)
 	 */
+	@Override
 	protected boolean dbpgLoggingPrefEnabled(PreferencesLookupDelegate delegate) {
 		return delegate.getBoolean(VdmSlDebugConstants.VDMSL_DEBUG_PLUGIN_ID, DLTKDebugPreferenceConstants.PREF_DBGP_ENABLE_LOGGING);
 	}
@@ -250,6 +253,7 @@ public class VdmSlMainLaunchConfigurationTab extends MainLaunchConfigurationTab 
 	/*
 	 * @see org.eclipse.dltk.debug.ui.launchConfigurations.ScriptLaunchConfigurationTab#getNatureID()
 	 */
+	@Override
 	protected String getNatureID() {
 		return VdmSlProjectNature.VDM_SL_NATURE;
 	}

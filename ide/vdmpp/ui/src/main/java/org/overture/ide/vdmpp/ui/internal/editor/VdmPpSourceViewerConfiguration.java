@@ -68,6 +68,7 @@ public class VdmPpSourceViewerConfiguration extends
 	private AbstractScriptScanner fCommentScanner;
 
 	// This method called from base class.
+	@Override
 	protected void initializeScanners()
 	{
 		// This is our code scanner
@@ -82,6 +83,7 @@ public class VdmPpSourceViewerConfiguration extends
 				IVdmColorConstants.VDM_COMMENT);
 	}
 
+	@Override
 	public IPresentationReconciler getPresentationReconciler(
 			ISourceViewer sourceViewer)
 	{
@@ -104,6 +106,7 @@ public class VdmPpSourceViewerConfiguration extends
 		return reconciler;
 	}
 
+	@Override
 	public void handlePropertyChangeEvent(PropertyChangeEvent event)
 	{
 		if (this.fCodeScanner.affectsBehavior(event))
@@ -116,6 +119,7 @@ public class VdmPpSourceViewerConfiguration extends
 		}
 	}
 
+	@Override
 	public boolean affectsTextPresentation(PropertyChangeEvent event)
 	{
 		return this.fCodeScanner.affectsBehavior(event)

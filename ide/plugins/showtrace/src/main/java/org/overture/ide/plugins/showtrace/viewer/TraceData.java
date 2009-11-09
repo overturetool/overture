@@ -387,7 +387,8 @@ public class TraceData extends tdHistory
         return hasObject(pobjid);
     }
 
-    public void reset()
+    @Override
+	public void reset()
         throws CGException
     {
         HashSet iset_1 = new HashSet();

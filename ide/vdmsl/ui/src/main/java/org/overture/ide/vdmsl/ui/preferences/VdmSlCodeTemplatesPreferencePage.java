@@ -3,13 +3,7 @@ package org.overture.ide.vdmsl.ui.preferences;
 import org.eclipse.dltk.ui.templates.ScriptTemplateAccess;
 import org.eclipse.dltk.ui.templates.ScriptTemplatePreferencePage;
 import org.eclipse.dltk.ui.text.ScriptSourceViewerConfiguration;
-import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.vdmsl.ui.UIPlugin;
 import org.overture.ide.vdmsl.ui.internal.completion.VdmSlTemplateAccess;
@@ -43,6 +37,7 @@ public class VdmSlCodeTemplatesPreferencePage extends ScriptTemplatePreferencePa
 		return UIPlugin.getDefault().getTextTools();
 	}
 	
+	@Override
 	protected void setDocumentParticioner(IDocument document) {
 		getTextTools().setupDocumentPartitioner(document, IVdmSlPartitions.VDMSL_PARTITIONING);
 	}

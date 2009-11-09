@@ -39,6 +39,7 @@ public class OvertureTypeFactory implements IScriptTypeFactory {
 			return new StringScriptType("string");
 		}
 		return new ComplexScriptType(type) {
+			@Override
 			public String formatValue(IScriptValue value) {
 				StringBuffer sb = new StringBuffer();
 				sb.append(value.getRawValue());
@@ -53,6 +54,7 @@ public class OvertureTypeFactory implements IScriptTypeFactory {
 			/**
 			 * @see org.eclipse.dltk.debug.core.model.ComplexScriptType#formatDetails(org.eclipse.dltk.debug.core.model.IScriptValue)
 			 */
+			@Override
 			public String formatDetails(IScriptValue value) {
 				StringBuffer sb = new StringBuffer();
 				sb.append(value.getRawValue());

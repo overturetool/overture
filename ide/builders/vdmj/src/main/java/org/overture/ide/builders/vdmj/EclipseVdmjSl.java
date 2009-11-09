@@ -57,6 +57,7 @@ public class EclipseVdmjSl extends VDMJ implements IEclipseVdmj {
 		return TypeChecker.getWarnings();
 	}
 
+	@Override
 	public ExitStatus typeCheck() {
 		int terrs = 0;
 		if (modules == null) {

@@ -24,6 +24,7 @@ public class SimpleVdmSlSourceViewerConfiguration extends VdmSlSourceViewerConfi
 		fConfigureFormatter = configureFormatter;
 	}
 	
+	@Override
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
 		if (fConfigureFormatter)
 			return super.getContentFormatter(sourceViewer);
@@ -31,11 +32,13 @@ public class SimpleVdmSlSourceViewerConfiguration extends VdmSlSourceViewerConfi
 			return null;
 	}
 
+	@Override
 	public IInformationControlCreator getInformationControlCreator(
 			ISourceViewer sourceViewer) {
 		return null;
 	}
  
+	@Override
 	public IInformationPresenter getInformationPresenter(
 			ISourceViewer sourceViewer) {
 		return null;
@@ -51,34 +54,41 @@ public class SimpleVdmSlSourceViewerConfiguration extends VdmSlSourceViewerConfi
 		return null;
 	}
  
+	@Override
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
 		return null;
 	}
 
+	@Override
 	public IAutoEditStrategy[] getAutoEditStrategies(
 			ISourceViewer sourceViewer, String contentType) {
 		return null;
 	}
  
+	@Override
 	public IAnnotationHover getAnnotationHover(ISourceViewer sourceViewer) {
 		return null;
 	}
  
+	@Override
 	public IAnnotationHover getOverviewRulerAnnotationHover(
 			ISourceViewer sourceViewer) {
 		return null;
 	}
  
+	@Override
 	public int[] getConfiguredTextHoverStateMasks(ISourceViewer sourceViewer,
 			String contentType) {
 		return null;
 	}
  
+	@Override
 	public ITextHover getTextHover(ISourceViewer sourceViewer,
 			String contentType, int stateMask) {
 		return null;
 	}
  
+	@Override
 	public ITextHover getTextHover(ISourceViewer sourceViewer,
 			String contentType) {
 		return null;

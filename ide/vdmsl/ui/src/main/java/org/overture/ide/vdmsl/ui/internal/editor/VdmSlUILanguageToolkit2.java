@@ -5,6 +5,7 @@ import org.overture.ide.vdmsl.ui.VdmSlUILanguageToolkit;
 
 public class VdmSlUILanguageToolkit2 extends VdmSlUILanguageToolkit {
 
+	@Override
 	public ScriptSourceViewerConfiguration createSourceViewerConfiguration() {
 		return new SimpleVdmSlSourceViewerConfiguration(
 				getTextTools().getColorManager(), 

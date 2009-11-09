@@ -11,6 +11,7 @@ import org.overture.ide.vdmpp.ui.UIPlugin;
 public class VdmPpUIPreferenceInitializer extends
 		AbstractPreferenceInitializer {
  
+	@Override
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = UIPlugin.getDefault().getPreferenceStore();
 		EditorsUI.useAnnotationsPreferencePage(store);

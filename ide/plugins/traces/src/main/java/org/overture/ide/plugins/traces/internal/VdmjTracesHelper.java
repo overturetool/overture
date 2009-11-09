@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
-import org.eclipse.core.internal.events.InternalBuilder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;

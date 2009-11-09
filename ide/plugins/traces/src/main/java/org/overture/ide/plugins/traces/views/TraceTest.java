@@ -143,6 +143,7 @@ public class TraceTest extends ViewPart implements ISelectionListener
 			return null;
 		}
 
+		@Override
 		public Image getImage(Object obj)
 		{
 			Data data = (Data) obj;
@@ -195,6 +196,7 @@ public class TraceTest extends ViewPart implements ISelectionListener
 	 * This is a callback that will allow us to create the viewer and initialize
 	 * it.
 	 */
+	@Override
 	public void createPartControl(Composite parent)
 	{
 		viewer = new TableViewer(parent, SWT.FULL_SELECTION | SWT.H_SCROLL
@@ -280,6 +282,7 @@ public class TraceTest extends ViewPart implements ISelectionListener
 	{
 		action1 = new Action()
 		{
+			@Override
 			public void run()
 			{
 				showMessage("Action 1 executed");
@@ -300,6 +303,7 @@ public class TraceTest extends ViewPart implements ISelectionListener
 
 		action2 = new Action()
 		{
+			@Override
 			public void run()
 			{
 				showMessage("Action 2 executed");
@@ -311,6 +315,7 @@ public class TraceTest extends ViewPart implements ISelectionListener
 				ISharedImages.IMG_OBJS_INFO_TSK));
 		doubleClickAction = new Action()
 		{
+			@Override
 			public void run()
 			{
 				ISelection selection = viewer.getSelection();
@@ -343,6 +348,7 @@ public class TraceTest extends ViewPart implements ISelectionListener
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
+	@Override
 	public void setFocus()
 	{
 		viewer.getControl().setFocus();

@@ -24,6 +24,7 @@ public class PoTableView extends ViewPart implements ISelectionListener {
 	 * This is a callback that will allow us to create the viewer and initialize
 	 * it.
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 		viewer = new Text(parent, SWT.MULTI);
 
@@ -32,6 +33,7 @@ public class PoTableView extends ViewPart implements ISelectionListener {
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
+	@Override
 	public void setFocus() {
 		viewer.setFocus();
 	}

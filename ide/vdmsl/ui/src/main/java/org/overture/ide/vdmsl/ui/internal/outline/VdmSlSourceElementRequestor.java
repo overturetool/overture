@@ -28,6 +28,7 @@ public class VdmSlSourceElementRequestor extends SourceElementRequestVisitor {
 		super(requestor);
 	}
 
+	@Override
 	public boolean visit(Statement statement) throws Exception {
 		if (statement instanceof FieldDeclaration) {
 			return addField((FieldDeclaration) statement);
@@ -35,6 +36,7 @@ public class VdmSlSourceElementRequestor extends SourceElementRequestVisitor {
 		return false;// TODO
 	}
 
+	@Override
 	public boolean endvisit(Statement s) throws Exception {
 		if (s instanceof FieldDeclaration) {
 			return endField((FieldDeclaration) s);

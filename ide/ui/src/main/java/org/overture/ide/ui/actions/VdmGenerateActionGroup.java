@@ -7,7 +7,6 @@ import org.eclipse.dltk.ui.actions.GenerateActionGroup;
 import org.eclipse.dltk.ui.actions.IScriptEditorActionDefinitionIds;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.texteditor.TextOperationAction;
 
 public class VdmGenerateActionGroup extends GenerateActionGroup {

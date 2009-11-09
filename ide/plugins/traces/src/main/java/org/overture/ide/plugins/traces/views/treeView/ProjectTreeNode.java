@@ -26,6 +26,7 @@ public 	class ProjectTreeNode implements IAdaptable,ITreeNode {
 		return parent;
 	}
 
+	@Override
 	public String toString() {
 		return getName();
 	}

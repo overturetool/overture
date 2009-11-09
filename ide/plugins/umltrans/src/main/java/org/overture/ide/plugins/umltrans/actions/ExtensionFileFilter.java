@@ -19,7 +19,7 @@ public class ExtensionFileFilter extends FileFilter {
 		} else {
 			this.description = description;
 		}
-		this.extensions = (String[]) extensions.clone();
+		this.extensions = extensions.clone();
 		toLower(this.extensions);
 	}
 
@@ -29,10 +29,12 @@ public class ExtensionFileFilter extends FileFilter {
 		}
 	}
 
+	@Override
 	public String getDescription() {
 		return description;
 	}
 
+	@Override
 	public boolean accept(File file) {
 		if (file.isDirectory()) {
 			return true;

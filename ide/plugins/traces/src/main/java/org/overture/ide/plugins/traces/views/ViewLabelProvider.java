@@ -14,10 +14,12 @@ import org.overturetool.vdmj.traces.Verdict;
 
 public class ViewLabelProvider extends LabelProvider {
 
+	@Override
 	public String getText(Object obj) {
 		return obj.toString();
 	}
 
+	@Override
 	public Image getImage(Object obj) {
 		if (obj instanceof ProjectTreeNode) {
 			String imageKey = IDE.SharedImages.IMG_OBJ_PROJECT;

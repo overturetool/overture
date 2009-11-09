@@ -5,7 +5,6 @@
 
 package org.overture.ide.plugins.showtrace.viewer;
 
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -57,17 +56,20 @@ public class TracefileVisitor extends OmlVisitor
 		 */
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public Object clone()
         {
             return new ConjectureLimit(obstime, thrid, name);
         }
 
-        public String toString()
+        @Override
+		public String toString()
         {
             return (new StringBuilder("mk_TracefileVisitor`ConjectureLimit(")).append(UTIL.toString(obstime)).append(",").append(UTIL.toString(thrid)).append(",").append(UTIL.toString(name)).append(")").toString();
         }
 
-        public boolean equals(Object obj)
+        @Override
+		public boolean equals(Object obj)
         {
             if(!(obj instanceof ConjectureLimit))
                 return false;
@@ -75,7 +77,8 @@ public class TracefileVisitor extends OmlVisitor
             return UTIL.equals(obstime, temp.obstime) && UTIL.equals(thrid, temp.thrid) && UTIL.equals(name, temp.name);
         }
 
-        public int hashCode()
+        @Override
+		public int hashCode()
         {
             return (obstime != null ? obstime.hashCode() : 0) + (thrid != null ? thrid.hashCode() : 0) + (name != null ? name.hashCode() : 0);
         }
@@ -525,8 +528,8 @@ public class TracefileVisitor extends OmlVisitor
                     HashMap m1_96 = (HashMap)max.clone();
                     HashMap m2_97 = var2_89;
                     HashSet com_92 = new HashSet();
-                    com_92.addAll((Collection)m1_96.keySet());
-                    com_92.retainAll((Collection)m2_97.keySet());
+                    com_92.addAll(m1_96.keySet());
+                    com_92.retainAll(m2_97.keySet());
                     boolean all_applies_93 = true;
                     Object d_94;
                     for(Iterator bb_95 = com_92.iterator(); bb_95.hasNext() && all_applies_93; all_applies_93 = m1_96.get(d_94).equals(m2_97.get(d_94)))
@@ -553,8 +556,8 @@ public class TracefileVisitor extends OmlVisitor
                     HashMap m1_118 = (HashMap)min.clone();
                     HashMap m2_119 = var2_111;
                     HashSet com_114 = new HashSet();
-                    com_114.addAll((Collection)m1_118.keySet());
-                    com_114.retainAll((Collection)m2_119.keySet());
+                    com_114.addAll(m1_118.keySet());
+                    com_114.retainAll(m2_119.keySet());
                     boolean all_applies_115 = true;
                     Object d_116;
                     for(Iterator bb_117 = com_114.iterator(); bb_117.hasNext() && all_applies_115; all_applies_115 = m1_118.get(d_116).equals(m2_119.get(d_116)))
@@ -618,7 +621,7 @@ public class TracefileVisitor extends OmlVisitor
             Vector rest_uhist = null;
             Vector unArg_7 = null;
             unArg_7 = data.getTimes();
-            rest_uhist = new Vector((Collection)unArg_7.subList(1, unArg_7.size()));
+            rest_uhist = new Vector(unArg_7.subList(1, unArg_7.size()));
             for(Boolean cont = new Boolean(true); cont.booleanValue();)
             {
                 ov_ucurrenttime = UTIL.NumberToLong(UTIL.clone(event_utime));
@@ -688,7 +691,7 @@ public class TracefileVisitor extends OmlVisitor
                 } else
                 {
                     event_utime = UTIL.NumberToLong(UTIL.clone(UTIL.NumberToLong(rest_uhist.get(0))));
-                    rest_uhist = (Vector)UTIL.ConvertToList(UTIL.clone(new Vector((Collection)rest_uhist.subList(1, rest_uhist.size()))));
+                    rest_uhist = (Vector)UTIL.ConvertToList(UTIL.clone(new Vector(rest_uhist.subList(1, rest_uhist.size()))));
                 }
             }
 
@@ -737,7 +740,7 @@ public class TracefileVisitor extends OmlVisitor
             Vector rest_uhist = null;
             Vector unArg_8 = null;
             unArg_8 = cpu.getTimes();
-            rest_uhist = new Vector((Collection)unArg_8.subList(1, unArg_8.size()));
+            rest_uhist = new Vector(unArg_8.subList(1, unArg_8.size()));
             for(Boolean cont = new Boolean(true); cont.booleanValue();)
             {
                 ov_ucurrenttime = UTIL.NumberToLong(UTIL.clone(event_utime));
@@ -804,7 +807,7 @@ public class TracefileVisitor extends OmlVisitor
                 } else
                 {
                     event_utime = UTIL.NumberToLong(UTIL.clone(UTIL.NumberToLong(rest_uhist.get(0))));
-                    rest_uhist = (Vector)UTIL.ConvertToList(UTIL.clone(new Vector((Collection)rest_uhist.subList(1, rest_uhist.size()))));
+                    rest_uhist = (Vector)UTIL.ConvertToList(UTIL.clone(new Vector(rest_uhist.subList(1, rest_uhist.size()))));
                 }
             }
 
@@ -1201,7 +1204,8 @@ public class TracefileVisitor extends OmlVisitor
         }
     }
 
-    public void visitTraceFile(IOmlTraceFile pitf)
+    @Override
+	public void visitTraceFile(IOmlTraceFile pitf)
         throws CGException
     {
         tdCPU cpu = null;
@@ -1224,7 +1228,8 @@ public class TracefileVisitor extends OmlVisitor
 
     }
 
-    public void visitThreadCreate(IOmlThreadCreate pitc)
+    @Override
+	public void visitThreadCreate(IOmlThreadCreate pitc)
         throws CGException
     {
         Long cpunm = null;
@@ -1320,7 +1325,8 @@ public class TracefileVisitor extends OmlVisitor
         }
     }
 
-    public void visitThreadSwapIn(IOmlThreadSwapIn pitsw)
+    @Override
+	public void visitThreadSwapIn(IOmlThreadSwapIn pitsw)
         throws CGException
     {
         Long thrid = null;
@@ -1454,7 +1460,8 @@ public class TracefileVisitor extends OmlVisitor
         }
     }
 
-    public void visitDelayedThreadSwapIn(IOmlDelayedThreadSwapIn pitsw)
+    @Override
+	public void visitDelayedThreadSwapIn(IOmlDelayedThreadSwapIn pitsw)
         throws CGException
     {
         Long thrid = null;
@@ -1564,7 +1571,8 @@ public class TracefileVisitor extends OmlVisitor
         }
     }
 
-    public void visitThreadSwapOut(IOmlThreadSwapOut pitsw)
+    @Override
+	public void visitThreadSwapOut(IOmlThreadSwapOut pitsw)
         throws CGException
     {
         Long thrid = null;
@@ -1706,7 +1714,8 @@ public class TracefileVisitor extends OmlVisitor
         }
     }
 
-    public void visitThreadKill(IOmlThreadKill pitk)
+    @Override
+	public void visitThreadKill(IOmlThreadKill pitk)
         throws CGException
     {
         Long thrid = null;
@@ -1783,7 +1792,8 @@ public class TracefileVisitor extends OmlVisitor
         thr.popCurrentObject();
     }
 
-    public void visitOpRequest(IOmlOpRequest pior)
+    @Override
+	public void visitOpRequest(IOmlOpRequest pior)
         throws CGException
     {
         Long thrid = null;
@@ -1928,7 +1938,8 @@ public class TracefileVisitor extends OmlVisitor
         }
     }
 
-    public void visitOpActivate(IOmlOpActivate pioa)
+    @Override
+	public void visitOpActivate(IOmlOpActivate pioa)
         throws CGException
     {
         Long thrid = null;
@@ -2096,7 +2107,8 @@ public class TracefileVisitor extends OmlVisitor
         pdest.setY(ov_uypos);
     }
 
-    public void visitOpCompleted(IOmlOpCompleted pioc)
+    @Override
+	public void visitOpCompleted(IOmlOpCompleted pioc)
         throws CGException
     {
         Long thrid = null;
@@ -2231,7 +2243,8 @@ public class TracefileVisitor extends OmlVisitor
         }
     }
 
-    public void visitMessageRequest(IOmlMessageRequest pimr)
+    @Override
+	public void visitMessageRequest(IOmlMessageRequest pimr)
         throws CGException
     {
         Long busid = null;
@@ -2376,7 +2389,8 @@ public class TracefileVisitor extends OmlVisitor
         }
     }
 
-    public void visitReplyRequest(IOmlReplyRequest pirr)
+    @Override
+	public void visitReplyRequest(IOmlReplyRequest pirr)
         throws CGException
     {
         Long busid = null;
@@ -2515,7 +2529,8 @@ public class TracefileVisitor extends OmlVisitor
         }
     }
 
-    public void visitMessageActivate(IOmlMessageActivate pima)
+    @Override
+	public void visitMessageActivate(IOmlMessageActivate pima)
         throws CGException
     {
         tdMessage msg = null;
@@ -2573,7 +2588,8 @@ public class TracefileVisitor extends OmlVisitor
         }
     }
 
-    public void visitMessageCompleted(IOmlMessageCompleted pimc)
+    @Override
+	public void visitMessageCompleted(IOmlMessageCompleted pimc)
         throws CGException
     {
         tdMessage msg = null;
@@ -2744,7 +2760,8 @@ public class TracefileVisitor extends OmlVisitor
         }
     }
 
-    public void visitCPUdecl(IOmlCPUdecl picd)
+    @Override
+	public void visitCPUdecl(IOmlCPUdecl picd)
         throws CGException
     {
         Long id = null;
@@ -2763,7 +2780,8 @@ public class TracefileVisitor extends OmlVisitor
         cpu.connect(par_13);
     }
 
-    public void visitBUSdecl(IOmlBUSdecl pibd)
+    @Override
+	public void visitBUSdecl(IOmlBUSdecl pibd)
         throws CGException
     {
         Long id = null;
@@ -2787,7 +2805,8 @@ public class TracefileVisitor extends OmlVisitor
 
     }
 
-    public void visitDeployObj(IOmlDeployObj pido)
+    @Override
+	public void visitDeployObj(IOmlDeployObj pido)
         throws CGException
     {
         Long objref = null;

@@ -5,6 +5,7 @@ import org.overture.ide.vdmrt.core.VdmRtProjectNature;
 
 public class VdmRtDebugUIPreferenceInitializer extends DLTKDebugUIPluginPreferenceInitializer {
 
+	@Override
 	protected String getNatureId() {
 		return VdmRtProjectNature.VDM_RT_NATURE;
 	}

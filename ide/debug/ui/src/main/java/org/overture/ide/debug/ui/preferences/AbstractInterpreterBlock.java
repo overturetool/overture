@@ -14,6 +14,7 @@ public abstract class AbstractInterpreterBlock extends InterpretersBlock {
 	@Override
 	protected abstract String getCurrentNature();
 	
+	@Override
 	protected IScriptInterpreterDialog createInterpreterDialog(IEnvironment environment, org.eclipse.dltk.launching.IInterpreterInstall standin) 
 	{
 		/**

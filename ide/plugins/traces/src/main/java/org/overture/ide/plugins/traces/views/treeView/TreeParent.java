@@ -14,6 +14,7 @@ public class TreeParent implements IAdaptable,ITreeNode {
 		children = new ArrayList<ITreeNode>();
 	}
 
+	@Override
 	public String toString() {
 		return getName();
 	}

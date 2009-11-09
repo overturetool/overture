@@ -33,6 +33,7 @@ public class TraceTestGroup extends TraceTestTreeNode
 		return "[" + startNumber + "..." + (stopNumber) + "]";
 	}
 
+	@Override
 	public String getName()
 	{
 		return toString();
@@ -43,12 +44,14 @@ public class TraceTestGroup extends TraceTestTreeNode
 	// this.parent = parent;
 	// }
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter)
 	{
 		return null;
 	}
 
+	@Override
 	public void addChild(ITreeNode child)
 	{
 		if (!children.contains(child))
@@ -77,17 +80,20 @@ public class TraceTestGroup extends TraceTestTreeNode
 		// child.SetResult(null);
 	}
 
+	@Override
 	public List<ITreeNode> getChildren()
 	{
 		return children;
 	}
 
+	@Override
 	public boolean hasChildren()
 	{
 		// return children.size() > 0;
 		return stopNumber - startNumber > 0;
 	}
 
+	@Override
 	public boolean hasChild(String name)
 	{
 		for (ITreeNode node : children)
@@ -99,6 +105,7 @@ public class TraceTestGroup extends TraceTestTreeNode
 		return false;
 	}
 
+	@Override
 	public Verdict GetStatus()
 	{
 		if (lastKnownStatus != null)

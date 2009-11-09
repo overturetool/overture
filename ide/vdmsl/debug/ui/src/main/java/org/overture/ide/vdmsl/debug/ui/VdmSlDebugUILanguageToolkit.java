@@ -21,6 +21,7 @@ public class VdmSlDebugUILanguageToolkit extends AbstractDebugUILanguageToolkit 
 		return DebugUIPlugin.getDefault().getPreferenceStore();
 	}
 
+	@Override
 	public String[] getVariablesViewPreferencePages() {
 		return new String[] { DebugUIConstants.VDM_DETAIL_FORMATTER };
 	}

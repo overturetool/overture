@@ -72,6 +72,7 @@ protected static synchronized void removeBuilding(IProject project)
 
 			}
 
+			@SuppressWarnings("deprecation")
 			public void run() throws Exception {
 				while (builder.isAlive()) {
 					Thread.sleep(500);

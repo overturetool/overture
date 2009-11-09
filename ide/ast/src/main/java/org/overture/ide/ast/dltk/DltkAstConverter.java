@@ -59,15 +59,8 @@ import org.overturetool.vdmj.statements.TrapStatement;
 import org.overturetool.vdmj.statements.WhileStatement;
 import org.overturetool.vdmj.traces.TraceVariableStatement;
 import org.overturetool.vdmj.types.FunctionType;
-import org.overturetool.vdmj.types.MapType;
 import org.overturetool.vdmj.types.OperationType;
-import org.overturetool.vdmj.types.SeqType;
-import org.overturetool.vdmj.types.SetType;
 import org.overturetool.vdmj.types.Type;
-import org.overturetool.vdmj.types.TypeList;
-import org.overturetool.vdmj.types.TypeSet;
-import org.overturetool.vdmj.types.UnionType;
-import org.overturetool.vdmj.types.UnresolvedType;
 
 @SuppressWarnings("unchecked")
 public class DltkAstConverter {
@@ -481,9 +474,9 @@ public class DltkAstConverter {
 				method.addArgument(new Argument(argumentName, 0, null, 0));
 			}
 
-			Type definition = functionType.result;
-			SimpleReference resultName = new SimpleReference(0, 0, definition
-					.toString());
+			//Type definition = functionType.result;
+//			SimpleReference resultName = new SimpleReference(0, 0, definition
+//					.toString());
 
 			if (def instanceof ExplicitFunctionDefinition) {
 				ExplicitFunctionDefinition exFunc = (ExplicitFunctionDefinition) def;
@@ -609,16 +602,6 @@ public class DltkAstConverter {
 //			return uType.typename.toString();
 //		} else
 			return definition.toString();
-	}
-	
-	private static int getStartPos(LexLocation loc, SourceLocationConverter converter)
-	{
-		return converter.convert(loc.startLine, loc.startPos) - 1;
-	}
-	
-	private static int getEndPos(LexLocation loc, SourceLocationConverter converter)
-	{
-		return converter.convert(loc.endLine, loc.endPos);
 	}
 
 }

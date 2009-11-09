@@ -59,6 +59,7 @@ public class EclipseVdmjPp extends VDMJ implements IEclipseVdmj {
 
 
 
+	@Override
 	public ExitStatus typeCheck() {
 		int terrs = 0;
 		if(modules==null)

@@ -14,12 +14,10 @@ import org.eclipse.dltk.ui.actions.GenerateActionGroup;
 import org.eclipse.dltk.ui.actions.IScriptEditorActionDefinitionIds;
 import org.eclipse.dltk.ui.text.ScriptTextTools;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
-import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
@@ -28,9 +26,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.IUpdate;
-import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
-import org.eclipse.ui.texteditor.TextOperationAction;
-import org.overture.ide.ui.actions.VdmGenerateActionGroup;
 import org.overture.ide.vdmsl.core.VdmSlLanguageToolkit;
 import org.overture.ide.vdmsl.ui.UIPlugin;
 
@@ -82,6 +77,7 @@ public class VdmSlEditor extends ScriptEditor {
 		}
 	}
 
+	@Override
 	protected void initializeKeyBindingScopes() {
 		setKeyBindingScopes(new String[] { "org.overture.ide.vdmsl.ui.vdmSlEditorScope" }); //$NON-NLS-1$
 	}
@@ -118,6 +114,7 @@ public class VdmSlEditor extends ScriptEditor {
 		/*
 		 * @see org.eclipse.jface.action.IAction#run()
 		 */
+		@Override
 		public void run() {
 
 			final ScriptSourceViewer viewer = (ScriptSourceViewer) getSourceViewer();

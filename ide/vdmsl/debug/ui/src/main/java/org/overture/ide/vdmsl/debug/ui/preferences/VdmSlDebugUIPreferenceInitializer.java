@@ -5,6 +5,7 @@ import org.overture.ide.vdmsl.core.VdmSlProjectNature;
 
 public class VdmSlDebugUIPreferenceInitializer extends DLTKDebugUIPluginPreferenceInitializer {
 
+	@Override
 	protected String getNatureId() {
 		return VdmSlProjectNature.VDM_SL_NATURE;
 	}

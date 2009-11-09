@@ -38,6 +38,7 @@ public class VdmRtCodeTemplatesPreferencePage extends ScriptTemplatePreferencePa
 		return UIPlugin.getDefault().getTextTools();
 	}
 	
+	@Override
 	protected void setDocumentParticioner(IDocument document) {
 		getTextTools().setupDocumentPartitioner(document, IVdmRtPartitions.vdmrt_PARTITIONING);
 	}

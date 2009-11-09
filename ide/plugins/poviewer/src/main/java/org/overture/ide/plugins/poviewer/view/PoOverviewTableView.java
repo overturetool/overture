@@ -114,6 +114,7 @@ public class PoOverviewTableView  extends ViewPart implements ISelectionListener
 	 * This is a callback that will allow us to create the viewer and initialize
 	 * it.
 	 */
+	@Override
 	public void createPartControl(Composite parent)
 	{
 		viewer = new TableViewer(parent, SWT.FULL_SELECTION | SWT.H_SCROLL
@@ -177,6 +178,7 @@ public class PoOverviewTableView  extends ViewPart implements ISelectionListener
 	{
 		doubleClickAction = new Action()
 		{
+			@Override
 			public void run()
 			{
 				ISelection selection = viewer.getSelection();
@@ -218,6 +220,7 @@ public class PoOverviewTableView  extends ViewPart implements ISelectionListener
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
+	@Override
 	public void setFocus()
 	{
 		viewer.getControl().setFocus();

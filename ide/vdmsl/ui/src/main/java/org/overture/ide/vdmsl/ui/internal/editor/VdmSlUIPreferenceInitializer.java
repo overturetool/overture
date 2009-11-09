@@ -10,6 +10,7 @@ import org.overture.ide.vdmsl.ui.UIPlugin;
 public class VdmSlUIPreferenceInitializer extends
 		AbstractPreferenceInitializer {
  
+	@Override
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = UIPlugin.getDefault()
 				.getPreferenceStore();

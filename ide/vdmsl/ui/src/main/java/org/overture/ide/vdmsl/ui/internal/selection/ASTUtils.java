@@ -51,6 +51,7 @@ public class ASTUtils {
 		ASTVisitor visitor = new ASTVisitor() {
 			boolean found = false;
 
+			@Override
 			public boolean visitGeneral(ASTNode node) throws Exception {
 				if (!found) {
 					stack.push(node);
@@ -61,6 +62,7 @@ public class ASTUtils {
 				return super.visitGeneral(node);
 			}
 
+			@Override
 			public void endvisitGeneral(ASTNode node) throws Exception {
 				super.endvisitGeneral(node);
 				if (!found) {
@@ -153,6 +155,7 @@ public class ASTUtils {
 				return realEnd - realStart;
 			}
 
+			@Override
 			public boolean visitGeneral(ASTNode s) throws Exception {
 				int realStart = s.sourceStart();
 				int realEnd = s.sourceEnd();
@@ -213,6 +216,7 @@ public class ASTUtils {
 				return result;
 			}
 
+			@Override
 			public boolean visitGeneral(ASTNode s) throws Exception {
 				if (s.sourceStart() < 0 || s.sourceEnd() < 0)
 					return true;

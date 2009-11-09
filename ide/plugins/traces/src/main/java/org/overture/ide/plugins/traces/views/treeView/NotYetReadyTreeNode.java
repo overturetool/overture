@@ -15,6 +15,7 @@ public class NotYetReadyTreeNode extends TraceTestTreeNode implements IAdaptable
 		
 	}
 
+	@Override
 	public ITreeNode getParent() {
 		return parent;
 	}
@@ -31,16 +32,19 @@ public class NotYetReadyTreeNode extends TraceTestTreeNode implements IAdaptable
 	}
 
 	
+	@Override
 	public String getName() {
 		
 			return toString();
 		
 	}
 
+	@Override
 	public void setParent(ITreeNode parent) {
 		this.parent = parent;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
 		return null;
@@ -50,10 +54,12 @@ public class NotYetReadyTreeNode extends TraceTestTreeNode implements IAdaptable
 
 	
 
+	@Override
 	public boolean hasChildren() {
 		return false;
 	}
 
+	@Override
 	public boolean hasChild(String name) {
 		
 		return false;

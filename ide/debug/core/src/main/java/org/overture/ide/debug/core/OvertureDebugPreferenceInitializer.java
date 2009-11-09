@@ -8,6 +8,7 @@ import org.eclipse.dltk.debug.core.DLTKDebugPreferenceConstants;
 @SuppressWarnings("deprecation")
 public class OvertureDebugPreferenceInitializer extends AbstractPreferenceInitializer {
 
+	@Override
 	public void initializeDefaultPreferences() {
 		Preferences store = DebugCorePlugin.getDefault().getPluginPreferences();
 

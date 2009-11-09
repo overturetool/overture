@@ -28,6 +28,7 @@ public class Data
 		return proofResult.isDischarged();
 	}
 
+	@Override
 	public String toString() {
 		return proofResult.toString();
 	}

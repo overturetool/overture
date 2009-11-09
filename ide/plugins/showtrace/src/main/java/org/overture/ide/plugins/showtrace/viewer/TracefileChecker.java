@@ -154,7 +154,8 @@ public class TracefileChecker extends OmlVisitor
         return rexpr_1;
     }
 
-    public void visitTraceFile(IOmlTraceFile pitf)
+    @Override
+	public void visitTraceFile(IOmlTraceFile pitf)
         throws CGException
     {
         Vector tracefile = null;
@@ -230,7 +231,8 @@ public class TracefileChecker extends OmlVisitor
         }
     }
 
-    public void visitThreadSwapIn(IOmlThreadSwapIn pthr)
+    @Override
+	public void visitThreadSwapIn(IOmlThreadSwapIn pthr)
         throws CGException
     {
         Long tmpVal_3 = null;
@@ -403,7 +405,8 @@ public class TracefileChecker extends OmlVisitor
         return varRes_3;
     }
 
-    public void visitDelayedThreadSwapIn(IOmlDelayedThreadSwapIn pthr)
+    @Override
+	public void visitDelayedThreadSwapIn(IOmlDelayedThreadSwapIn pthr)
         throws CGException
     {
         Long thrid = null;
@@ -450,7 +453,8 @@ public class TracefileChecker extends OmlVisitor
         }
     }
 
-    public void visitThreadSwapOut(IOmlThreadSwapOut pthr)
+    @Override
+	public void visitThreadSwapOut(IOmlThreadSwapOut pthr)
         throws CGException
     {
         Long tmpVal_3 = null;
@@ -498,7 +502,8 @@ public class TracefileChecker extends OmlVisitor
             return isCurrentThreadOnCpu(thrid, cpunm);
     }
 
-    public void visitThreadCreate(IOmlThreadCreate pthr)
+    @Override
+	public void visitThreadCreate(IOmlThreadCreate pthr)
         throws CGException
     {
         Long tmpVal_3 = null;
@@ -663,7 +668,8 @@ public class TracefileChecker extends OmlVisitor
         return varRes_2;
     }
 
-    public void visitThreadKill(IOmlThreadKill pthr)
+    @Override
+	public void visitThreadKill(IOmlThreadKill pthr)
         throws CGException
     {
         Long thrid = null;
@@ -725,7 +731,8 @@ public class TracefileChecker extends OmlVisitor
 
     }
 
-    public void visitOpRequest(IOmlOpRequest por)
+    @Override
+	public void visitOpRequest(IOmlOpRequest por)
         throws CGException
     {
         Long thrid = null;
@@ -792,7 +799,8 @@ public class TracefileChecker extends OmlVisitor
             return new Long(0L);
     }
 
-    public void visitOpActivate(IOmlOpActivate poa)
+    @Override
+	public void visitOpActivate(IOmlOpActivate poa)
         throws CGException
     {
         Long thrid = null;
@@ -870,7 +878,8 @@ public class TracefileChecker extends OmlVisitor
             return new Long(0L);
     }
 
-    public void visitOpCompleted(IOmlOpCompleted poc)
+    @Override
+	public void visitOpCompleted(IOmlOpCompleted poc)
         throws CGException
     {
         Long tmpVal_3 = null;
@@ -983,7 +992,8 @@ public class TracefileChecker extends OmlVisitor
 
     }
 
-    public void visitMessageRequest(IOmlMessageRequest pmr)
+    @Override
+	public void visitMessageRequest(IOmlMessageRequest pmr)
         throws CGException
     {
         Long tmpVal_3 = null;
@@ -1058,7 +1068,8 @@ public class TracefileChecker extends OmlVisitor
         }
     }
 
-    public void visitReplyRequest(IOmlReplyRequest prr)
+    @Override
+	public void visitReplyRequest(IOmlReplyRequest prr)
         throws CGException
     {
         Long tmpVal_3 = null;
@@ -1141,7 +1152,8 @@ public class TracefileChecker extends OmlVisitor
         }
     }
 
-    public void visitMessageActivate(IOmlMessageActivate pma)
+    @Override
+	public void visitMessageActivate(IOmlMessageActivate pma)
         throws CGException
     {
         Long msgid = null;
@@ -1171,7 +1183,8 @@ public class TracefileChecker extends OmlVisitor
         }
     }
 
-    public void visitMessageCompleted(IOmlMessageCompleted pmc)
+    @Override
+	public void visitMessageCompleted(IOmlMessageCompleted pmc)
         throws CGException
     {
         Long msgid = null;
@@ -1201,7 +1214,8 @@ public class TracefileChecker extends OmlVisitor
         }
     }
 
-    public void visitCPUdecl(IOmlCPUdecl picd)
+    @Override
+	public void visitCPUdecl(IOmlCPUdecl picd)
         throws CGException
     {
         Long id = null;
@@ -1296,7 +1310,8 @@ public class TracefileChecker extends OmlVisitor
         }
     }
 
-    public void visitBUSdecl(IOmlBUSdecl pibd)
+    @Override
+	public void visitBUSdecl(IOmlBUSdecl pibd)
         throws CGException
     {
         Long id = null;
@@ -1438,7 +1453,8 @@ public class TracefileChecker extends OmlVisitor
         return res;
     }
 
-    public void visitDeployObj(IOmlDeployObj pido)
+    @Override
+	public void visitDeployObj(IOmlDeployObj pido)
         throws CGException
     {
         Long objref = null;

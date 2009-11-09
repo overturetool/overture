@@ -40,7 +40,8 @@ public class TracefileParser extends TraceParser
         theMarkers = null;
     }
 
-    public void yyerror(String msg)
+    @Override
+	public void yyerror(String msg)
     {
         if(theMarkers != null)
             try

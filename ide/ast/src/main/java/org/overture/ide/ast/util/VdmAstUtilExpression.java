@@ -268,6 +268,7 @@ public class VdmAstUtilExpression {
 
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static Expression addExpression(Expression expression,CallArgumentsList list,
 			SourceLocationConverter converter) {
 

@@ -141,6 +141,7 @@ public abstract class BlockCommentAction extends TextEditorAction {
 		/*
 		 * @see org.eclipse.jface.text.DocumentEvent#getOffset()
 		 */
+		@Override
 		public int getOffset() {
 			return fPosition.getOffset();
 		}
@@ -156,6 +157,7 @@ public abstract class BlockCommentAction extends TextEditorAction {
 		
 	}
 
+	@Override
 	public void run() {
 		if (!isEnabled())
 			return;
@@ -217,9 +219,9 @@ public abstract class BlockCommentAction extends TextEditorAction {
 	 * @param edits a list of <code>Edit</code>s
 	 * @throws BadLocationException if an <code>Edit</code> threw such an exception.
 	 */
-	protected void executeEdits(List edits) throws BadLocationException {
-		for (Iterator it= edits.iterator(); it.hasNext();) {
-			Edit edit= (Edit) it.next();
+	protected void executeEdits(List<Edit> edits) throws BadLocationException {
+		for (Iterator<Edit> it= edits.iterator(); it.hasNext();) {
+			Edit edit= it.next();
 			edit.perform();
 		}
 	}
@@ -246,6 +248,7 @@ public abstract class BlockCommentAction extends TextEditorAction {
 	/*
 	 * @see org.eclipse.ui.texteditor.IUpdate#update()
 	 */
+	@Override
 	public void update() {
 		super.update();
 		

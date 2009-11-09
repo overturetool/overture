@@ -150,21 +150,25 @@ public class TracesXmlStoreReader extends DefaultHandler
 	// Event handlers.
 	// //////////////////////////////////////////////////////////////////
 
+	@Override
 	public void startDocument()
 	{
 		// System.out.println("Start document");
 	}
 
+	@Override
 	public void endDocument()
 	{
 		// System.out.println("End document");
 	}
 
+	@Override
 	public void setDocumentLocator(Locator locator)
 	{
 		this.locator = locator;
 	}
 
+	@Override
 	public void startElement(String uri, String name, String qName,
 			Attributes atts)
 	{
@@ -304,7 +308,7 @@ if(initialParse )
 		{
 			try
 			{
-				return Verdict.valueOf(Verdict.class, verdict);
+				return Enum.valueOf(Verdict.class, verdict);
 			} catch (IllegalArgumentException ex)
 			{
 				return null;
@@ -314,6 +318,7 @@ if(initialParse )
 		return null;
 	}
 
+	@Override
 	public void endElement(String uri, String name, String qName)
 	{
 
@@ -364,6 +369,7 @@ if(initialParse )
 			insertResult = false;
 	}
 
+	@Override
 	public void characters(char ch[], int start, int length)
 	{
 		// System.out.print("Characters:    \"");
@@ -402,16 +408,19 @@ if(initialParse )
 		// System.out.print("\"\n");
 	}
 
+	@Override
 	public void error(SAXParseException e)
 	{
 
 	}
 
+	@Override
 	public void warning(SAXParseException e)
 	{
 
 	}
 
+	@Override
 	public void skippedEntity(String name)
 	{
 

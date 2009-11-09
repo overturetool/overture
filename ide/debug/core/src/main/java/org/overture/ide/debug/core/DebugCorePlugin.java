@@ -39,12 +39,14 @@ public class DebugCorePlugin extends Plugin {
 		fgPlugin = this;
 	}
 	
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);		
 		
 		//getDefault().getLog().log(new Status(Status.INFO, PLUGIN_ID, Status.OK, "TCLDebugPlugin starting...", null));
 	}
 	
+	@Override
 	@SuppressWarnings("deprecation")
 	public void stop(BundleContext context) throws Exception {
 		try {			
