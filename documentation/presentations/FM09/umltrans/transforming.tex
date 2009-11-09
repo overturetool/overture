@@ -1,8 +1,14 @@
 
 %-----------------------------------------------------------------------
-\section{Transforming}
+\section{Overview of development}
 %-----------------------------------------------------------------------
-
+%
+% Outline
+%
+\begin{frame}
+  \frametitle{Outline}
+  \tableofcontents[current]
+\end{frame}
 %-----------------------------------------------------------------------
 \subsection{Transformation model}
 %-----------------------------------------------------------------------
@@ -10,20 +16,20 @@
 % UML Transformation overview
 \frame
 {
-  \frametitle{Transformation from VDM to UML}
+  \frametitle{Transformation between VDM and UML}
 
 \begin{center}
 	\begin{block}<+->{Transformation rules}
-	All transformation rules described in normal text and formally specified in VDM++
+	All transformation rules are described in natural language and formally specified in VDM++
 	\end{block}
 
 	\begin{block}<+->{Formal Specification}
 	The complete transformation in specified in VDM itself and code generated to Java using VDM Tools and includes:
 	\begin{itemize}
 %	\setbeamercovered{transparent=30}
-		\item VDM AST (lines 450)
-		\item UML AST (lines 3556)
-		\item The formal specified transformation (lines 3003)
+		\item VDM AST (3556 lines)
+		\item UML AST (450 lines)
+		\item The formal specified transformation (3003 lines)
 	\end{itemize}
 	\end{block}
 \end{center}
@@ -44,9 +50,9 @@ VDM Tools CG
 \begin{center}
 \begin{figure}
 
-\includegraphics<1->[width=\textwidth]{images/OverviewOverMapping.png}%
-\llap{\includegraphics<2->[width=\textwidth]{images/OverviewOverMappingToVDM4.png}}%
-\llap{\includegraphics<3->[width=\textwidth]{images/OverviewOverMappingToUML5.png}}%
+\includegraphics<1->[width=0.8\textwidth]{images/OverviewOverMapping.png}%
+\llap{\includegraphics<2->[width=0.8\textwidth]{images/OverviewOverMappingToVDM4.png}}%
+\llap{\includegraphics<3->[width=0.8\textwidth]{images/OverviewOverMappingToUML5.png}}%
 \end{figure}
 \end{center}
 }
