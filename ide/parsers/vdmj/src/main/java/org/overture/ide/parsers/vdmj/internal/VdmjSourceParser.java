@@ -10,8 +10,9 @@ import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.overture.ide.ast.AstManager;
-import org.overture.ide.ast.dltk.DltkConverter;
+
 import org.overture.ide.utility.ProjectUtility;
+import org.overture.ide.utility.SourceLocationConverter;
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.messages.VDMError;
@@ -45,7 +46,7 @@ public class VdmjSourceParser extends AbstractSourceParser {
 				path);
 		IProject project = res.getProject();
 
-		DltkConverter converter = new DltkConverter(source);
+		SourceLocationConverter converter = new SourceLocationConverter(source);
 
 		EclipseVdmj eclipseParser = new EclipseVdmj(dialect);
 

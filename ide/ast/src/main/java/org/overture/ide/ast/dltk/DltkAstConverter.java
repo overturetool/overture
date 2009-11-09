@@ -12,6 +12,7 @@ import org.eclipse.dltk.ast.references.ConstantReference;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.overture.ide.ast.util.VdmAstUtil;
 import org.overture.ide.ast.util.VdmAstUtilExpression;
+import org.overture.ide.utility.SourceLocationConverter;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
@@ -71,15 +72,15 @@ import org.overturetool.vdmj.types.UnresolvedType;
 @SuppressWarnings("unchecked")
 public class DltkAstConverter {
 	ModuleDeclaration model;
-	DltkConverter converter;
+	SourceLocationConverter converter;
 
-	public DltkConverter getDltkConverter(){
+	public SourceLocationConverter getDltkConverter(){
 		return converter;
 	}
 	
 	public DltkAstConverter(char[] source) {
 		model = new ModuleDeclaration(source.length);
-		converter = new DltkConverter(source);
+		converter = new SourceLocationConverter(source);
 	}
 
 	public ModuleDeclaration parse(List modules) {
@@ -103,9 +104,9 @@ public class DltkAstConverter {
 
 		LexLocation loc = classDef.name.location;
 		TypeDeclaration classDefinition = new TypeDeclaration(
-				classDef.name.name, converter.convertStart(loc), converter
-						.convertEnd(loc), converter.convertStart(loc),
-				converter.convertEnd(loc));
+				classDef.name.name, converter.getStartPos(loc), converter
+						.getEndPos(loc), converter.getStartPos(loc),
+				converter.getEndPos(loc));
 
 		if (classDef.supernames.size() > 0) {
 
@@ -166,9 +167,9 @@ public class DltkAstConverter {
 		// }
 		LexLocation loc = module.name.location;
 		TypeDeclaration moduleDefinition = new TypeDeclaration(
-				module.name.name, converter.convertStart(loc), converter
-						.convertEnd(loc), converter.convertStart(loc),
-				converter.convertEnd(loc));
+				module.name.name, converter.getStartPos(loc), converter
+						.getEndPos(loc), converter.getStartPos(loc),
+				converter.getEndPos(loc));
 
 		for (Iterator<Definition> i = module.defs.iterator(); i.hasNext();) {
 
@@ -213,9 +214,9 @@ public class DltkAstConverter {
 		LexLocation location = def.location;
 
 		FieldDeclaration field = new FieldDeclaration(def.name.name, converter
-				.convertStart(location), converter.convertEnd(location) - 1,
-				converter.convertStart(location), converter
-						.convertEnd(location) - 1);
+				.getStartPos(location), converter.getEndPos(location) - 1,
+				converter.getStartPos(location), converter
+						.getEndPos(location) - 1);
 		field.setModifier(VdmAstUtil.getModifier(def.accessSpecifier));
 
 		moduleDefinition.getStatements().add(field);
@@ -257,7 +258,7 @@ public class DltkAstConverter {
 						definition.location.startPos,
 						definition.location.endPos, name);
 				methodDeclaration.addArgument(new Argument(argumentName,
-						converter.convertStart(loc), null, 0));
+						converter.getStartPos(loc), null, 0));
 			}
 
 		}
@@ -426,10 +427,10 @@ public class DltkAstConverter {
 				LexLocation location = ltoken.location;
 
 				FieldDeclaration fieldValue = new FieldDeclaration(ltoken.name,
-						converter.convertStart(location), converter
-								.convertEnd(location) - 1, converter
-								.convertStart(location), converter
-								.convertEnd(location) - 1);
+						converter.getStartPos(location), converter
+								.getEndPos(location) - 1, converter
+								.getStartPos(location), converter
+								.getEndPos(location) - 1);
 				// fieldValue.setModifier(TypeDeclaration.AccPrivate);
 				fieldValue.setModifier(VdmAstUtil
 						.getModifier(value.accessSpecifier));
@@ -444,9 +445,9 @@ public class DltkAstConverter {
 
 		LexLocation location = def.location;
 		FieldDeclaration type = new FieldDeclaration(def.name.name, converter
-				.convertStart(location), converter.convertEnd(location) - 1,
-				converter.convertStart(location), converter
-						.convertEnd(location) - 1);
+				.getStartPos(location), converter.getEndPos(location) - 1,
+				converter.getStartPos(location), converter
+						.getEndPos(location) - 1);
 		type.setModifier(TypeDeclaration.D_TYPE_DECL);
 		moduleDefinition.getStatements().add(type);
 
@@ -462,13 +463,13 @@ public class DltkAstConverter {
 
 
 //		System.out.println("Method name:" + def.name.name + " Start: "
-//				+ converter.convertStart(loc) + " End: "
-//				+ converter.convertEnd(loc));
+//				+ converter.getStartPos(loc) + " End: "
+//				+ converter.getEndPos(loc));
 
 
 		MethodDeclaration method = new MethodDeclaration(def.name.name,
-				converter.convertStart(loc), converter.convertEnd(loc),
-				converter.convertStart(loc), converter.convertEnd(loc));
+				converter.getStartPos(loc), converter.getEndPos(loc),
+				converter.getStartPos(loc), converter.getEndPos(loc));
 		method.setModifier(VdmAstUtil.getModifier(def.accessSpecifier));
 		
 		if (def.getType() instanceof FunctionType) {
@@ -610,12 +611,12 @@ public class DltkAstConverter {
 			return definition.toString();
 	}
 	
-	private static int getStartPos(LexLocation loc, DltkConverter converter)
+	private static int getStartPos(LexLocation loc, SourceLocationConverter converter)
 	{
 		return converter.convert(loc.startLine, loc.startPos) - 1;
 	}
 	
-	private static int getEndPos(LexLocation loc, DltkConverter converter)
+	private static int getEndPos(LexLocation loc, SourceLocationConverter converter)
 	{
 		return converter.convert(loc.endLine, loc.endPos);
 	}

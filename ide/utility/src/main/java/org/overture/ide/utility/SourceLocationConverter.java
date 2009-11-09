@@ -1,8 +1,10 @@
-package org.overture.ide.ast.dltk;
+package org.overture.ide.utility;
+
+import java.util.List;
 
 import org.overturetool.vdmj.lex.LexLocation;
 
-public class DltkConverter
+public class SourceLocationConverter
 {
 	String content;
 	CodeModel model;
@@ -15,6 +17,12 @@ public class DltkConverter
 
 		public CodeModel(String code)
 		{
+			init(code);
+		}
+		 
+		
+		
+		private void init(String code){
 			this.codeLines = code.split("\n");
 			int count = this.codeLines.length;
 
@@ -54,19 +62,24 @@ public class DltkConverter
 
 	
 	
-	public DltkConverter(char[] content0)
+	public SourceLocationConverter(char[] content)
 	{
-		this.content = new String(content0);
-		this.model = new CodeModel(content);
+		this.content = new String(content);
+		this.model = new CodeModel(this.content);
+	}
+	
+	public SourceLocationConverter(List<Character> content) {
+		this.content = new String(FileUtility.getCharContent(content));
+		this.model = new CodeModel(this.content);
 	}
 
 	
-	public int convertStart(LexLocation location)
+	public int getStartPos(LexLocation location)
 	{
 		return this.convert(location.startLine, location.startPos -1);
 	}
 	
-	public int convertEnd(LexLocation location)
+	public int getEndPos(LexLocation location)
 	{
 		return this.convert(location.endLine, location.endPos -1);
 	}

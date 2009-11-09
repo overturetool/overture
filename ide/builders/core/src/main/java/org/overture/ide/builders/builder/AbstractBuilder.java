@@ -5,13 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.Vector;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -24,8 +20,9 @@ import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.overture.ide.ast.AstManager;
 import org.overture.ide.ast.RootNode;
-import org.overture.ide.ast.dltk.DltkConverter;
+import org.overture.ide.utility.FileUtility;
 import org.overture.ide.utility.ProjectUtility;
+import org.overture.ide.utility.SourceLocationConverter;
 
 public abstract class AbstractBuilder {
 	@SuppressWarnings("unchecked")
@@ -52,7 +49,7 @@ public abstract class AbstractBuilder {
 			marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
 			StringBuilder content = inputStreamToString(file.getContents());
 			if (content != null) {
-				DltkConverter converter = new DltkConverter(content.toString().toCharArray());
+				SourceLocationConverter converter = new SourceLocationConverter(content.toString().toCharArray());
 				marker.setAttribute(IMarker.CHAR_START, converter.convert(
 						lineNumber, charStart));
 				marker.setAttribute(IMarker.CHAR_END, converter.convert(
@@ -160,55 +157,55 @@ public abstract class AbstractBuilder {
 
 	}
 
-	/***
-	 * Try to parse a resource, by testing if it is a file with a known content
-	 * type related to the project. Search sub folders.
-	 * 
-	 * @param project
-	 *            the project
-	 * @param natureId
-	 *            the nature used by the builder
-	 * @param resource
-	 *            the resource to parse
-	 * @throws CoreException
-	 * @throws IOException
-	 */
-	private static void parseMissingFiles(IProject project, String natureId,
-			IResource resource) throws CoreException, IOException {
-		if (resource instanceof IFolder) {
-			if (resource instanceof IFolder
-					&& resource.getLocation().lastSegment().startsWith("."))// skip
-				return;
-			// .
-			// folders
-			// like
-			// .svn
-
-			for (IResource res : ((IFolder) resource).members(IContainer.INCLUDE_PHANTOMS
-					| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS)) {
-				// System.out.println("Looking at file for parse: "
-				// + res.getName());
-				// System.out.println(project.getContentTypeMatcher().findContentTypeFor(
-				// res.getFullPath().toString()));
-
-				parseMissingFiles(project, natureId, res);
-			}
-		}
-		// check if it is a IFile and that there exists a known content type for
-		// this file and the project
-		else if (resource instanceof IFile
-				&& project.getContentTypeMatcher().findContentTypeFor(
-						resource.toString()) != null) {
-			// System.out.println("Parsing file: "+resource);
-			parseMissingFiles(project, natureId, (IFile) resource);
-		}
-
-	}
-
-	private static void parseMissingFiles(IProject project, String natureId,
-			final IFile f) throws CoreException, IOException {
-
-	}
+//	/***
+//	 * Try to parse a resource, by testing if it is a file with a known content
+//	 * type related to the project. Search sub folders.
+//	 * 
+//	 * @param project
+//	 *            the project
+//	 * @param natureId
+//	 *            the nature used by the builder
+//	 * @param resource
+//	 *            the resource to parse
+//	 * @throws CoreException
+//	 * @throws IOException
+//	 */
+//	private static void parseMissingFiles(IProject project, String natureId,
+//			IResource resource) throws CoreException, IOException {
+//		if (resource instanceof IFolder) {
+//			if (resource instanceof IFolder
+//					&& resource.getLocation().lastSegment().startsWith("."))// skip
+//				return;
+//			// .
+//			// folders
+//			// like
+//			// .svn
+//
+//			for (IResource res : ((IFolder) resource).members(IContainer.INCLUDE_PHANTOMS
+//					| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS)) {
+//				// System.out.println("Looking at file for parse: "
+//				// + res.getName());
+//				// System.out.println(project.getContentTypeMatcher().findContentTypeFor(
+//				// res.getFullPath().toString()));
+//
+//				parseMissingFiles(project, natureId, res);
+//			}
+//		}
+//		// check if it is a IFile and that there exists a known content type for
+//		// this file and the project
+//		else if (resource instanceof IFile
+//				&& project.getContentTypeMatcher().findContentTypeFor(
+//						resource.toString()) != null) {
+//			// System.out.println("Parsing file: "+resource);
+//			parseMissingFiles(project, natureId, (IFile) resource);
+//		}
+//
+//	}
+//
+//	private static void parseMissingFiles(IProject project, String natureId,
+//			final IFile f) throws CoreException, IOException {
+//
+//	}
 
 	public static void parseFile(IProject project, String natureId,
 			final IFile file) throws CoreException, IOException {
@@ -220,11 +217,11 @@ public abstract class AbstractBuilder {
 		if (rootNode != null && rootNode.hasFile(fileSystemFile))
 			return;
 
-		List<Character> content = getContent(file);
+		List<Character> content = FileUtility.getContent(file);
 
 		IProblemReporter reporter = createProblemReporter(file);
 
-		char[] source = getCharContent(content);
+		char[] source =FileUtility.getCharContent(content);
 		
 		try {
 			SourceParserManager.getInstance().getSourceParser(project, natureId).parse(
@@ -234,47 +231,9 @@ public abstract class AbstractBuilder {
 		}
 	}
 
-	private static char[] getCharContent(List<Character> content) {
-		char[] source = new char[content.size()];
-		for (int i = 0; i < content.size(); i++) {
-			source[i] = content.get(i);
-		}
-		return source;
-	}
+	
 
-	private static List<Character> getContent(IFile file) {
-		System.out.println("Trying to parse missing file: " + file.getName());
-		InputStream inStream;
-		InputStreamReader in = null;
-		List<Character> content = new Vector<Character>();
-		try {
-			inStream = file.getContents();
-			in = new InputStreamReader(inStream, file.getCharset());
-
-			int c = -1;
-			while ((c = in.read()) != -1)
-				content.add((char) c);
-
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			if (in != null)
-				try {
-					in.close();
-				} catch (IOException e) {
-				}
-		}
-
-		return content;
-
-	}
+	
 
 	private static IProblemReporter createProblemReporter(final IFile file) {
 		return new IProblemReporter() {

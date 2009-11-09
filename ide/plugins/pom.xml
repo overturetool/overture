@@ -20,5 +20,6 @@
     <module>traces</module>
     <module>idedebughelper</module>
     <module>proofsupport</module>
+    <module>poviewer</module>
   </modules>
 </project>

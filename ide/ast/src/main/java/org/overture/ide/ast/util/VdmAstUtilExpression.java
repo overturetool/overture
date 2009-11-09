@@ -4,7 +4,8 @@ import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.references.VariableReference;
-import org.overture.ide.ast.dltk.DltkConverter;
+
+import org.overture.ide.utility.SourceLocationConverter;
 import org.overturetool.vdmj.expressions.ApplyExpression;
 import org.overturetool.vdmj.expressions.BinaryExpression;
 import org.overturetool.vdmj.expressions.BooleanLiteralExpression;
@@ -62,7 +63,7 @@ import org.overturetool.vdmj.statements.CallStatement;
 public class VdmAstUtilExpression {
 
 	public static void addExpression(Expression expression, MethodDeclaration method,
-			DltkConverter converter) {
+			SourceLocationConverter converter) {
 
 		if (expression instanceof ApplyExpression) {
 			ApplyExpression appExpr = (ApplyExpression) expression;
@@ -268,7 +269,7 @@ public class VdmAstUtilExpression {
 	}
 	
 	public static Expression addExpression(Expression expression,CallArgumentsList list,
-			DltkConverter converter) {
+			SourceLocationConverter converter) {
 
 		if (expression instanceof ApplyExpression) {
 			ApplyExpression appExpr = (ApplyExpression) expression;
@@ -475,7 +476,7 @@ public class VdmAstUtilExpression {
 	}
 	
 	public static CallExpression addCallExpression(CallStatement callStatement,
-			DltkConverter converter) {
+			SourceLocationConverter converter) {
 		String name = callStatement.name.name;
 		int start = getStartPos(callStatement.location, converter);
 		int end = getEndPos(callStatement.location, converter);
@@ -490,7 +491,7 @@ public class VdmAstUtilExpression {
 	}
 
 	public static CallExpression addApplyExpression(
-			ApplyExpression applyExpression, DltkConverter converter) {
+			ApplyExpression applyExpression, SourceLocationConverter converter) {
 		String name = applyExpression.root.toString();
 		int start = getStartPos(applyExpression.root.location, converter);
 		int end = getEndPos(applyExpression.root.location, converter);
@@ -507,7 +508,7 @@ public class VdmAstUtilExpression {
 	}
 
 	private static CallArgumentsList processArgumentList(ExpressionList args,
-			DltkConverter converter) {
+			SourceLocationConverter converter) {
 		int startPos = getStartPos(args.get(0).location, converter);
 		int endPos = getEndPos(args.get(args.size() - 1).location, converter);
 
@@ -520,11 +521,11 @@ public class VdmAstUtilExpression {
 		return argList;
 	}
 	
-	private static int getStartPos(LexLocation loc, DltkConverter converter) {
+	private static int getStartPos(LexLocation loc, SourceLocationConverter converter) {
 		return converter.convert(loc.startLine, loc.startPos) - 1;
 	}
 
-	private static int getEndPos(LexLocation loc, DltkConverter converter) {
+	private static int getEndPos(LexLocation loc, SourceLocationConverter converter) {
 		return converter.convert(loc.endLine, loc.endPos);
 	}
 	

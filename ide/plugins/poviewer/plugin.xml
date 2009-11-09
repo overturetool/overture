@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+
+ <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="org.overture.ide.plugins.poviewer.contribution1"
+            objectClass="org.eclipse.core.resources.IProject">
+            <filter
+         name="projectNature"
+         value="org.overture.ide.vdmpp.core.nature">
+      </filter>
+         <menu
+               
+               id="org.overture.ide.plugins.poviewer.menuMain"
+               label="Proof Obligations"
+               path="additions">
+            <separator
+                  name="groupPOViewer">
+            </separator>
+         </menu>
+         
+          <action
+               class="org.overture.ide.plugins.poviewer.actions.ViewPosAction"
+               id="org.overture.ide.plugins.poviewer.actions.POViewerAction"
+               label="Show PO&apos;s"
+               menubarPath="org.overture.ide.plugins.poviewer.menuMain/groupPOViewer"
+               enablesFor="1"
+               tooltip="Show PO's">
+         </action>
+         
+        
+    
+      </objectContribution>
+   </extension>
+
+
+<extension
+         point="org.eclipse.ui.views">
+     
+      <view
+            name="PO View"
+            category="org.overture.ide.ui.view.category"
+            class="org.overture.ide.plugins.poviewer.view.PoTableView"
+            id="org.overture.ide.plugins.poviewer.views.PoTableView">
+      </view>
+      <view
+            name="PO View"
+            category="org.overture.ide.ui.view.category"
+            class="org.overture.ide.plugins.poviewer.view.PoOverviewTableView"
+            id="org.overture.ide.plugins.poviewer.views.PoOverviewTableView">
+      </view>
+   
+     
+   </extension>
+<extension
+      point="org.eclipse.ui.perspectives">
+   <perspective
+         class="org.overture.ide.plugins.poviewer.ProofObligationPerspectiveFactory"
+         id="org.overture.ide.plugins.poviewer.perspective"
+         name="Proof Obligation">
+   </perspective>
+</extension>
+
+
+</plugin>

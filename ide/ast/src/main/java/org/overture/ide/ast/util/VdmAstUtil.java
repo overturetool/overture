@@ -8,44 +8,12 @@ import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.expressions.NumericLiteral;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
-import org.overture.ide.ast.dltk.DltkConverter;
+import org.overture.ide.utility.SourceLocationConverter;
 import org.overturetool.vdmj.definitions.AccessSpecifier;
 import org.overturetool.vdmj.expressions.ApplyExpression;
 import org.overturetool.vdmj.expressions.BooleanLiteralExpression;
 import org.overturetool.vdmj.expressions.ExpressionList;
 import org.overturetool.vdmj.expressions.IntegerLiteralExpression;
-import org.overturetool.vdmj.expressions.IotaExpression;
-import org.overturetool.vdmj.expressions.IsExpression;
-import org.overturetool.vdmj.expressions.IsOfBaseClassExpression;
-import org.overturetool.vdmj.expressions.IsOfClassExpression;
-import org.overturetool.vdmj.expressions.LambdaExpression;
-import org.overturetool.vdmj.expressions.LetBeStExpression;
-import org.overturetool.vdmj.expressions.LetDefExpression;
-import org.overturetool.vdmj.expressions.MapExpression;
-import org.overturetool.vdmj.expressions.MkBasicExpression;
-import org.overturetool.vdmj.expressions.MkTypeExpression;
-import org.overturetool.vdmj.expressions.MuExpression;
-import org.overturetool.vdmj.expressions.NewExpression;
-import org.overturetool.vdmj.expressions.NilExpression;
-import org.overturetool.vdmj.expressions.NotYetSpecifiedExpression;
-import org.overturetool.vdmj.expressions.PostOpExpression;
-import org.overturetool.vdmj.expressions.PreExpression;
-import org.overturetool.vdmj.expressions.PreOpExpression;
-import org.overturetool.vdmj.expressions.QuoteLiteralExpression;
-import org.overturetool.vdmj.expressions.RealLiteralExpression;
-import org.overturetool.vdmj.expressions.SameBaseClassExpression;
-import org.overturetool.vdmj.expressions.SelfExpression;
-import org.overturetool.vdmj.expressions.SeqExpression;
-import org.overturetool.vdmj.expressions.SetExpression;
-import org.overturetool.vdmj.expressions.StateInitExpression;
-import org.overturetool.vdmj.expressions.StringLiteralExpression;
-import org.overturetool.vdmj.expressions.SubclassResponsibilityExpression;
-import org.overturetool.vdmj.expressions.SubseqExpression;
-import org.overturetool.vdmj.expressions.ThreadIdExpression;
-import org.overturetool.vdmj.expressions.TimeExpression;
-import org.overturetool.vdmj.expressions.TupleExpression;
-import org.overturetool.vdmj.expressions.UnaryExpression;
-import org.overturetool.vdmj.expressions.UndefinedExpression;
 import org.overturetool.vdmj.expressions.VariableExpression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.statements.CallObjectStatement;
@@ -54,7 +22,7 @@ import org.overturetool.vdmj.statements.CallStatement;
 public class VdmAstUtil {
 	
 
-		public static CallExpression createCallExpression(CallStatement callStatement, DltkConverter converter)
+		public static CallExpression createCallExpression(CallStatement callStatement, SourceLocationConverter converter)
 		{
 			String name = callStatement.name.name;
 			int start = getStartPos(callStatement.location, converter);
@@ -71,7 +39,7 @@ public class VdmAstUtil {
 			}
 		}
 		
-		public static CallExpression createCallExpression(ApplyExpression applyExpression, DltkConverter converter)
+		public static CallExpression createCallExpression(ApplyExpression applyExpression, SourceLocationConverter converter)
 		{
 			String name = applyExpression.root.toString();
 			int start = getStartPos(applyExpression.root.location, converter);
@@ -90,13 +58,13 @@ public class VdmAstUtil {
 		}
 		
 		
-		public static VariableReference createVariableReference(String name, LexLocation location, DltkConverter converter){
+		public static VariableReference createVariableReference(String name, LexLocation location, SourceLocationConverter converter){
 			int start = getStartPos(location, converter);
 			int end = getEndPos(location, converter);
 			return new VariableReference(start, end, name);
 		}
 		
-		public static VariableReference createVariableReference(VariableExpression varExp, LexLocation location, DltkConverter converter){
+		public static VariableReference createVariableReference(VariableExpression varExp, LexLocation location, SourceLocationConverter converter){
 			int start = getStartPos(location, converter);
 			int end = getEndPos(location, converter);
 			
@@ -110,7 +78,7 @@ public class VdmAstUtil {
 			}
 		}
 		
-		private static CallArgumentsList processArgumentList(ExpressionList args, DltkConverter converter)
+		private static CallArgumentsList processArgumentList(ExpressionList args, SourceLocationConverter converter)
 		{
 			int startPos = getStartPos(args.get(0).location, converter);
 			int endPos = getEndPos(args.get(args.size()-1).location, converter);
@@ -133,33 +101,33 @@ public class VdmAstUtil {
 		
 		
 
-		public static BooleanLiteral createBooleanLiteral(BooleanLiteralExpression exp, DltkConverter converter) {
+		public static BooleanLiteral createBooleanLiteral(BooleanLiteralExpression exp, SourceLocationConverter converter) {
 			int start = getStartPos(exp.location, converter);
 			int end = getEndPos(exp.location, converter);
 			return new BooleanLiteral(start, end, exp.value.value);
 		}
 
-		public static NumericLiteral createNumericLiteral(IntegerLiteralExpression exp, DltkConverter converter) {
+		public static NumericLiteral createNumericLiteral(IntegerLiteralExpression exp, SourceLocationConverter converter) {
 			int start = getStartPos(exp.location, converter);
 			int end = getEndPos(exp.location, converter);
 			return new NumericLiteral(start, end, exp.value.value);
 		}
 		
-		private static int getStartPos(LexLocation loc, DltkConverter converter)
+		private static int getStartPos(LexLocation loc, SourceLocationConverter converter)
 		{
 			return converter.convert(loc.startLine, loc.startPos) - 1;
 		}
 		
-		private static int getEndPos(LexLocation loc, DltkConverter converter)
+		private static int getEndPos(LexLocation loc, SourceLocationConverter converter)
 		{
 			return converter.convert(loc.endLine, loc.endPos);
 		}
 
-//		public static OvertureIfStatement createIfStatement(IfStatement statement, DltkConverter converter) {
+//		public static OvertureIfStatement createIfStatement(IfStatement statement, SourceLocationConverter converter) {
 //			return null;
 //		}
 
-		public static CallExpression createCallObject(CallObjectStatement statement, DltkConverter converter) {
+		public static CallExpression createCallObject(CallObjectStatement statement, SourceLocationConverter converter) {
 			
 			// receiver
 			String varName = statement.designator.toString();
