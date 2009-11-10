@@ -144,7 +144,7 @@ public class VdmSlVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 							// List<String> memberFilesList =
 							// getAllMemberFilesString(proj.getProject(), exts);
 
-							String[] arguments = new String[memberFilesList.size() + 9];
+							String[] arguments = new String[memberFilesList.size() + 11];
 
 							// 0: host
 							// 1: port

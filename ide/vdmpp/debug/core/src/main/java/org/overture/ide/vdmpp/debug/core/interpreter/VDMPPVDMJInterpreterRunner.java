@@ -209,7 +209,7 @@ public class VDMPPVDMJInterpreterRunner extends AbstractInterpreterRunner {
 									if (classList.size() > 0)
 									{
 										ClassInterpreter classInterpreter = new ClassInterpreter(classList);
-										new DBGPReader(host, Integer.parseInt(port), sessionId, classInterpreter, expression).run(true);
+										//new DBGPReader(host, Integer.parseInt(port), sessionId, classInterpreter, expression).run(true);
 									}
 								}
 								else
