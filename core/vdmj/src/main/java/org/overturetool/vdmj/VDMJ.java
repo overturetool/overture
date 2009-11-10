@@ -349,6 +349,11 @@ abstract public class VDMJ
 		warnings = w;
 	}
 
+	public void setQuiet(boolean q)
+	{
+		quiet = q;
+	}
+
 	public void setCharset(String charset)
 	{
 		filecharset = charset;

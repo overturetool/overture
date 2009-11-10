@@ -129,6 +129,7 @@ public class DBGPReader
 		List<String> largs = Arrays.asList(args);
 		VDMJ controller = null;
 		boolean warnings = true;
+		boolean quiet = false;
 		String logfile = null;
 
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
@@ -254,6 +255,10 @@ public class DBGPReader
     		{
     			warnings = false;
     		}
+    		else if (arg.equals("-q"))
+    		{
+    			quiet = true;
+    		}
     		else if (arg.startsWith("-"))
     		{
     			usage("Unknown option " + arg);
@@ -288,6 +293,7 @@ public class DBGPReader
 		}
 
 		controller.setWarnings(warnings);
+		controller.setQuiet(quiet);
 
 		if (controller.parse(files) == ExitStatus.EXIT_OK)
 		{
@@ -338,7 +344,7 @@ public class DBGPReader
 		System.err.println(string);
 		System.err.println(
 			"Usage: -h <host> -p <port> -k <ide key> <-vdmpp|-vdmsl|-vdmrt>" +
-			" -e <expression> [-w] [-log <logfile>] [-c <charset>] [-r <release>]" +
+			" -e <expression> [-w] [-q] [-log <logfile>] [-c <charset>] [-r <release>]" +
 			" {<filename URLs>}");
 		System.exit(1);
 	}
