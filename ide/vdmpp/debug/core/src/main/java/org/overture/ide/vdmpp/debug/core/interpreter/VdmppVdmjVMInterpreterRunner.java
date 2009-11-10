@@ -43,44 +43,6 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 		super(install);
 	}
 
-	// private static String[] exts = new String[] { "vpp", "tex", "vdm",
-	// "vdmpp", "vdmsl", "vdmrt" };
-
-	/**
-	 * This method returns a list of files under the given directory or its
-	 * subdirectories. The directories themselves are not returned.
-	 * 
-	 * @param dir
-	 *            a directory
-	 * @return list of IResource objects representing the files under the given
-	 *         directory and its subdirectories
-	 */
-//	private static ArrayList<String> getAllMemberFilesString(IContainer dir,
-//			String[] exts) {
-//		ArrayList<String> list = new ArrayList<String>();
-//		IResource[] arr = null;
-//		try {
-//			arr = dir.members();
-//		} catch (CoreException e) {
-//		}
-//
-//		for (int i = 0; arr != null && i < arr.length; i++) {
-//			if (arr[i].getType() == IResource.FOLDER) {
-//				list.addAll(getAllMemberFilesString((IFolder) arr[i], exts));
-//			} else {
-//
-//				for (int j = 0; j < exts.length; j++) {
-//					if (exts[j].equalsIgnoreCase(arr[i].getFileExtension())) {
-//						list.add(arr[i].getLocation().toOSString());
-//						break;
-//					}
-//				}
-//			}
-//		}
-//		return list;
-//	}
-	// TODO remove if this works ok 
-
 	public static void doRunImpl(InterpreterConfig config, ILaunch launch,
 			IOvertureInterpreterRunnerConfig iconfig) throws CoreException {
 
@@ -144,7 +106,7 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 							// List<String> memberFilesList =
 							// getAllMemberFilesString(proj.getProject(), exts);
 
-							String[] arguments = new String[memberFilesList.size() + 12];
+							String[] arguments = new String[memberFilesList.size() + 13];
 
 							// 0: host
 							// 1: port
@@ -156,7 +118,7 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 							arguments[argNumber++] = "-k";
 							arguments[argNumber++] = sessionId;
 							arguments[argNumber++] = "-w"; // no warnings
-							//arguments[argNumber++] = "-q"; // no information
+							arguments[argNumber++] = "-q"; // no information
 							
 
 							// 3: dialect

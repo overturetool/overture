@@ -145,7 +145,7 @@ public class VdmRtVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 							// List<String> memberFilesList =
 							// getAllMemberFilesString(proj.getProject(), exts);
 
-							String[] arguments = new String[memberFilesList.size() + 13];
+							String[] arguments = new String[memberFilesList.size() + 15];
 
 							// 0: host
 							// 1: port
@@ -154,8 +154,10 @@ public class VdmRtVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 							arguments[argNumber++] = host;
 							arguments[argNumber++] = "-p";
 							arguments[argNumber++] = port;
-							arguments[argNumber++] = "-k";
+							arguments[argNumber++] = "-k"; 
 							arguments[argNumber++] = sessionId;
+							arguments[argNumber++] = "-w"; 
+							arguments[argNumber++] = "-q";
 							
 							// log
 							DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
