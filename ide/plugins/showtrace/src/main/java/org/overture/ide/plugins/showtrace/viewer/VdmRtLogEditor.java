@@ -10,8 +10,6 @@ import jp.co.csk.vdm.toolbox.VDM.CGException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.FillLayout;
@@ -80,7 +78,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback {
 		theConjectures = null;
 		theArch = null;
 		theOverview = null;
-		theDetails = new HashSet();
+		theDetails = new HashSet<GenericTabItem>();
 		fileName = null;
 		theTimes = null;
 		currentTime = 0L;
@@ -124,17 +122,17 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback {
 		// fillLocalToolBar(bars.getToolBarManager());
 	}
 
-	private void fillLocalPullDown(IMenuManager manager) {
-		manager.add(fileOpenAction);
-		manager.add(exportDiagramAction);
-	}
-
-	private void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(fileOpenAction);
-		manager.add(exportDiagramAction);
-		manager.add(moveHorizontalAction);
-		manager.add(openValidationAction);
-	}
+//	private void fillLocalPullDown(IMenuManager manager) {
+//		manager.add(fileOpenAction);
+//		manager.add(exportDiagramAction);
+//	}
+//
+//	private void fillLocalToolBar(IToolBarManager manager) {
+//		manager.add(fileOpenAction);
+//		manager.add(exportDiagramAction);
+//		manager.add(moveHorizontalAction);
+//		manager.add(openValidationAction);
+//	}
 
 	private void makeActions() {
 		fileOpenAction = new Action() {
@@ -245,9 +243,9 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback {
 		theOverview.exportJPG((new StringBuilder(String.valueOf(fileName))).append(
 				".overview").toString());
 		GenericTabItem pgti;
-		for (Iterator iter = theDetails.iterator(); iter.hasNext(); pgti.exportJPG((new StringBuilder(String.valueOf(fileName))).append(
+		for (Iterator<GenericTabItem> iter = theDetails.iterator(); iter.hasNext(); pgti.exportJPG((new StringBuilder(String.valueOf(fileName))).append(
 				".").append(pgti.getName()).toString()))
-			pgti = (GenericTabItem) iter.next();
+			pgti = iter.next();
 
 		// showMessage("Diagrams generated!");
 		// } else
@@ -272,8 +270,8 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback {
 	 * long)
 	 */
 	public void panToTime(long time, long thrid) {
-		for (Iterator iter = theTimes.iterator(); iter.hasNext();) {
-			long theTime = ((Long) iter.next()).longValue();
+		for (Iterator<Long> iter = theTimes.iterator(); iter.hasNext();) {
+			long theTime = iter.next().longValue();
 			if (theTime < time)
 				currentTime = theTime;
 		}
@@ -329,6 +327,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void createTabPages() {
 		try {
 			theTimes = theVisitor.getAllTimes();
@@ -337,10 +336,10 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback {
 			exportDiagramAction.setEnabled(true);
 			moveHorizontalAction.setEnabled(true);
 			openValidationAction.setEnabled(true);
-			Vector theCpus = theVisitor.getCpus();
+			Vector<tdCPU> theCpus = theVisitor.getCpus();
 			GenericTabItem theDetail;
-			for (Iterator iter = theCpus.iterator(); iter.hasNext(); theDetails.add(theDetail)) {
-				tdCPU theCpu = (tdCPU) iter.next();
+			for (Iterator<tdCPU> iter = theCpus.iterator(); iter.hasNext(); theDetails.add(theDetail)) {
+				tdCPU theCpu = iter.next();
 				theDetail = new GenericTabItem(theCpu.getName(), folder, theCpu);
 				theVisitor.drawCpu(theDetail, new Long(currentTime));
 			}
@@ -362,9 +361,9 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback {
 			theOverview.disposeFigures();
 			theVisitor.drawOverview(theOverview, new Long(currentTime));
 			GenericTabItem theDetail;
-			for (Iterator iter = theDetails.iterator(); iter.hasNext(); theVisitor.drawCpu(
+			for (Iterator<GenericTabItem> iter = theDetails.iterator(); iter.hasNext(); theVisitor.drawCpu(
 					theDetail, new Long(currentTime))) {
-				theDetail = (GenericTabItem) iter.next();
+				theDetail = iter.next();
 				theDetail.disposeFigures();
 			}
 
@@ -379,10 +378,10 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback {
 		moveHorizontalAction.setEnabled(false);
 		openValidationAction.setEnabled(false);
 		GenericTabItem pgti;
-		for (Iterator iter = theDetails.iterator(); iter.hasNext(); pgti.dispose())
-			pgti = (GenericTabItem) iter.next();
+		for (Iterator<GenericTabItem> iter = theDetails.iterator(); iter.hasNext(); pgti.dispose())
+			pgti = iter.next();
 
-		theDetails = new HashSet();
+		theDetails = new HashSet<GenericTabItem>();
 		theArch.disposeFigures();
 		theOverview.disposeFigures();
 		fileName = null;
@@ -451,9 +450,9 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback {
 	private ValidationTable theConjectures;
 	private GenericTabItem theArch;
 	private GenericTabItem theOverview;
-	private HashSet theDetails;
+	private HashSet<GenericTabItem> theDetails;
 	private String fileName;
-	private Vector theTimes;
+	private Vector<Long> theTimes;
 	private long currentTime;
 	private Action fileOpenAction;
 	private Action exportDiagramAction;
