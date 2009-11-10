@@ -303,7 +303,7 @@ public class DBGPReader
 					}
 
 					Interpreter i = controller.getInterpreter();
-					new DBGPReader(host, port, ideKey, i, expression).run(true);
+					new DBGPReader(host, port, ideKey, i, expression).startup();
 
 					RTLogger.dump(true);
 	    			System.exit(0);
@@ -398,7 +398,7 @@ public class DBGPReader
 		DBGPReader r = new DBGPReader(host, port, ideKey, interpreter, null);
 		r.command = DBGPCommandType.UNKNOWN;
 		r.transaction = "?";
-		r.run(false);			// New threads wait for a "run -i"
+		r.run();			// New threads wait for a "run -i"
 		return r;
 	}
 
@@ -637,13 +637,14 @@ public class DBGPReader
     		.replaceAll("\\\"", "&quot;");
 	}
 
-	public void run(boolean init) throws IOException
+	private void startup() throws IOException
 	{
-		if (init)
-		{
-			interpreter.init(this);
-		}
+		interpreter.init(this);
+		run();
+	}
 
+	private void run() throws IOException
+	{
 		String line = null;
 
 		do
@@ -666,7 +667,7 @@ public class DBGPReader
 			breakpoint = bp;
 			statusResponse(DBGPStatus.BREAK, DBGPReason.OK);
 
-			run(false);
+			run();
 
 			breakContext = null;
 			breakpoint = null;
@@ -1029,7 +1030,7 @@ public class DBGPReader
 			statusReason = DBGPReason.EXCEPTION;
 			errorResponse(DBGPErrorCode.EVALUATION_ERROR, ex.getMessage());
 
-			run(false);
+			run();
 
 			breakContext = null;
 			breakpoint = null;
@@ -1081,7 +1082,6 @@ public class DBGPReader
 		{
 			status = DBGPStatus.RUNNING;
 			statusReason = DBGPReason.OK;
-			interpreter.init(this);
 			theAnswer = interpreter.execute(expression, this);
 			stdout(theAnswer.toString());
 			statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
