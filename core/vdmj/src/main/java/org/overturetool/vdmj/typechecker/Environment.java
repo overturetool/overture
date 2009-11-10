@@ -84,9 +84,21 @@ abstract public class Environment
 
 				if (def != null && def.location != n1.location)
 				{
-					TypeChecker.warning(
-						5008, def.name + " " + def.location + " hidden by " + n1,
-						n1.location);
+					// Reduce clutter for names in the same module/class
+					String message = null;
+
+					if (def.location.file.equals(n1.location.file))
+					{
+						message = def.name + " " + def.location.toShortString() +
+							" hidden by " +	n1.name;
+					}
+					else
+					{
+						message = def.name + " " + def.location +
+							" hidden by " + n1.name;
+					}
+
+					TypeChecker.warning(5008, message, n1.location);
 				}
 			}
 		}

@@ -100,6 +100,18 @@ public class LexLocation implements Serializable
 		}
 	}
 
+	public String toShortString()
+	{
+		if (file.equals("?"))
+		{
+			return "";		// Default LexLocation has no location string
+		}
+		else
+		{
+			return "at " + startLine + ":" + startPos;
+		}
+	}
+
 	@Override
 	public boolean equals(Object other)
 	{
