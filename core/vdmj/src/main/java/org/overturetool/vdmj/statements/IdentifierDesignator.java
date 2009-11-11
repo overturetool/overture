@@ -64,19 +64,19 @@ public class IdentifierDesignator extends StateDesignator
 
 			if (def == null)
 			{
-				report(3247, "Unknown variable " + name + " in assignment");
+				report(3247, "Unknown variable '" + name + "' in assignment");
 				return new UnknownType(location);
 			}
 			else if (!def.isUpdatable())
 			{
-				report(3301, "Variable " + name + " in scope is not updatable");
+				report(3301, "Variable '" + name + "' in scope is not updatable");
 				return new UnknownType(location);
 			}
 			else if (def.classDefinition != null)
 			{
     			if (!ClassDefinition.isAccessible(env, def, true))
     			{
-    				report(3180, "Inaccessible member " + name + " of class " +
+    				report(3180, "Inaccessible member '" + name + "' of class " +
     					def.classDefinition.name.name);
     				return new UnknownType(location);
     			}
@@ -90,12 +90,12 @@ public class IdentifierDesignator extends StateDesignator
 
 			if (def == null)
 			{
-				report(3247, "Unknown state variable " + name + " in assignment");
+				report(3247, "Unknown state variable '" + name + "' in assignment");
 				return new UnknownType(name.location);
 			}
 			else if (!def.isUpdatable())
 			{
-				report(3301, "Variable " + name + " in scope is not updatable");
+				report(3301, "Variable '" + name + "' in scope is not updatable");
 				return new UnknownType(name.location);
 			}
 			else if (def instanceof ExternalDefinition)
@@ -117,6 +117,7 @@ public class IdentifierDesignator extends StateDesignator
 	public Value eval(Context ctxt)
 	{
 		// We lookup the name in a context comprising only state...
-		return ctxt.getUpdateable().lookup(name.getExplicit(true));
+		// return ctxt.getUpdateable().lookup(name.getExplicit(true));
+		return ctxt.lookup(name.getExplicit(true));
 	}
 }

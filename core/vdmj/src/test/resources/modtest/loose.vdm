@@ -206,9 +206,9 @@ operations
 		     | id in set dinter {SelDom(env)| env in set env_s}});
 
   InstallFnDefs: map AS`Name to AS`ExplFnDef ==> ()
-  InstallFnDefs(fn_m) ==
-    fn_m := {nm |-> mk_(fn_m(nm).pat,fn_m(nm).body)
-            | nm in set dom fn_m};
+  InstallFnDefs(fn_m') ==
+    fn_m := {nm |-> mk_(fn_m'(nm).pat, fn_m'(nm).body)
+            | nm in set dom fn_m'};
   InstallCurFn: AS`Name * VAL * set of UniqueId ==> ()
   InstallCurFn(nm,val,patids) ==
    (curfn := [mk_(nm,val)] ^ curfn;

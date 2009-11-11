@@ -231,8 +231,15 @@ public abstract class Definition implements Serializable
 
 	public Definition findName(LexNameToken sought, NameScope scope)
 	{
-		if (nameScope.matches(scope) && name.equals(sought))
+		if (name.equals(sought))
 		{
+			if ((nameScope == NameScope.STATE && !scope.matches(NameScope.STATE)) ||
+				(nameScope == NameScope.OLDSTATE && !scope.matches(NameScope.OLDSTATE)))
+			{
+				sought.report(3302,
+					"State variable '" + sought.name + "' cannot be accessed from this context");
+			}
+
 			markUsed();
 			return this;
 		}

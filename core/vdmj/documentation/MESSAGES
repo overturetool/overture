@@ -665,6 +665,7 @@ as the expected and actual values.
 3299, "Cannot inherit from BUS"
 3300, "Operation <type> cannot be called from a function"
 3301, "Variable <name> in scope is not updatable"
+3302, "Variable <name> cannot be accessed from this context"
 
 4000, "Cannot instantiate abstract class <class>"
 4002, "Expression value is not in set bind"

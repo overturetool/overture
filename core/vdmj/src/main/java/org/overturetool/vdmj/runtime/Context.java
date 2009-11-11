@@ -33,7 +33,6 @@ import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.NameValuePair;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.ObjectValue;
-import org.overturetool.vdmj.values.UpdatableValue;
 import org.overturetool.vdmj.values.Value;
 
 
@@ -114,35 +113,8 @@ public class Context extends HashMap<LexNameToken, Value>
 	}
 
 	/**
-	 * Build a new Context based on the current one, but with only the
-	 * updateable values included (eg. "dcl" definitions and state).
+	 * Make a deep copy of the context, using Value.deepCopy.
 	 */
-
-	public Context getUpdateable()
-	{
-		Context below = null;
-
-		if (outer != null)
-		{
-			below = outer.getUpdateable();
-		}
-
-		Context result = new Context(location, title, below);
-
-		for (LexNameToken var: keySet())
-		{
-			Value v = get(var);
-
-			// Objects' instance variables are updatable...
-
-			if (v instanceof UpdatableValue || v instanceof ObjectValue)
-			{
-				result.put(var, v);
-			}
-		}
-
-		return result;
-	}
 
 	public Context deepCopy()
 	{

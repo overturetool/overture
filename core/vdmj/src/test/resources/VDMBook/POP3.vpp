@@ -1,18 +1,4 @@
-class Test
-operations
-	public run: () ==> ()
-	run() ==
-	(
-		dcl io:IO := new IO(), pop3:POP3Test := new POP3Test();
-		
-		for x = 1 to 1000 do
-		(
-			let - = io.echo("Loop " ^ POP3ClientHandler`int2string(x)) in skip;
-			if not pop3.Test2() then error
-		)
-	)
-end Test
-
+-- NB version
 
 class MessageChannelBuffer
 
@@ -886,10 +872,10 @@ operations
 
 public POP3TestSender: seq of char * seq of POP3Types`ClientCommand * 
                        MessageChannel ==> POP3TestSender
-POP3TestSender(id, cmds, mc) ==
-( id := id;
-  cmds := cmds;
-  mc := mc;
+POP3TestSender(id', cmds', mc') ==
+( id := id';
+  cmds := cmds';
+  mc := mc';
 );
 
 LogClient: POP3Types`ClientCommand ==> ()
@@ -924,9 +910,9 @@ finished : bool;
 operations
 
 public POP3TestListener: seq of char * MessageChannel ==> POP3TestListener
-POP3TestListener(id, mc) ==
-( id := id;
-  mc := mc;
+POP3TestListener(id', mc') ==
+( id := id';
+  mc := mc';
   finished := false;
 );
 

@@ -28,7 +28,6 @@ import java.io.PrintWriter;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.values.UpdatableValue;
 import org.overturetool.vdmj.values.Value;
 
 @SuppressWarnings("serial")
@@ -41,30 +40,6 @@ public class ClassContext extends RootContext
 	{
 		super(location, title, outer);
 		this.classdef = classdef;
-	}
-
-	/**
-	 * Build a new Context based on the current one, but with only the
-	 * updateable values included (eg. "dcl" definitions and state).
-	 */
-
-	@Override
-	public Context getUpdateable()
-	{
-		Context outup = (outer == null) ? null : outer.getUpdateable();
-		Context result = new ClassContext(location, title, outup, classdef);
-
-		for (LexNameToken var: keySet())
-		{
-			Value v = get(var);
-
-			if (v instanceof UpdatableValue)
-			{
-				result.put(var, v);
-			}
-		}
-
-		return result;
 	}
 
 	/**

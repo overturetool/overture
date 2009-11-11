@@ -80,9 +80,14 @@ abstract public class Environment
 
 			if (outer != null)
 			{
-				Definition def = outer.findName(n1, scope);
+				// We search for any scoped name (ie. the first), but then check
+				// the scope matches what we can see. If we pass scope to findName
+				// it throws errors if the name does not match the scope.
 
-				if (def != null && def.location != n1.location)
+				Definition def = outer.findName(n1, NameScope.NAMESANDSTATE);
+
+				if (def != null && def.location != n1.location &&
+					def.nameScope.matches(scope))
 				{
 					// Reduce clutter for names in the same module/class
 					String message = null;

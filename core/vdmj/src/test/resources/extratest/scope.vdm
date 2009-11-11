@@ -45,7 +45,7 @@ post a > S1 and a < S2 and a > V1 and r < 0;
 extimplop(a:int, S1:int) r:int ==			-- S1 local of same name as state
 (
 	dcl D:int := 0;
-	S1 := 0;
+	-- S1 := 0;		-- Used to be OK (VDMTools bug)
 	S3.f1 := S1;
 	S4(S1) := S2;
 	return a + D + V1 + S1 + S2 + S3.f1 + S4(1)

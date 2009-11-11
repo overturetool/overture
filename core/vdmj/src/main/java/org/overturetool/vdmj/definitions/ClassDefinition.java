@@ -458,7 +458,7 @@ public class ClassDefinition extends Definition
 
 			LexNameToken localname = d.name.getModifiedName(name.name);
 
-			if (definitions.findName(localname, NameScope.NAMES) == null)
+			if (definitions.findName(localname, NameScope.NAMESANDSTATE) == null)
 			{
 				InheritedDefinition local = new InheritedDefinition(localname, d);
 				localInheritedDefinitions.add(local);
@@ -514,7 +514,7 @@ public class ClassDefinition extends Definition
 
 				LexNameToken localname = d.name.getModifiedName(name.name);
 
-				if (defs.findName(localname, NameScope.NAMES) == null)
+				if (defs.findName(localname, NameScope.NAMESANDSTATE) == null)
 				{
 					InheritedDefinition local = new InheritedDefinition(localname, d);
 					defs.add(local);

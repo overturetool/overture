@@ -53,6 +53,7 @@ public class VDMTestCase extends TestCase
 		Settings.dialect = Dialect.VDM_PP;
 		ClassList classes = null;
 		int errs = 0;
+		TypeChecker.clearErrors();
 		String parser = System.getProperty("parser");
 
 		if (parser == null || parser.equalsIgnoreCase("vdmj"))
