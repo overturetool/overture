@@ -242,7 +242,7 @@ public class TypeDefinition extends Definition
 		ExplicitFunctionDefinition def = new ExplicitFunctionDefinition(
 			name.getInvName(loc),
 			NameScope.GLOBAL, null, ftype, parameters, invExpression,
-			null, null, true, false, null);
+			null, null, true, null);
 
 		def.setAccessSpecifier(accessSpecifier);	// Same as type's
 		def.classDefinition = classDefinition;

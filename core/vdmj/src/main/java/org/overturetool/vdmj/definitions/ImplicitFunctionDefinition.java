@@ -491,7 +491,7 @@ public class ImplicitFunctionDefinition extends Definition
 		ExplicitFunctionDefinition def = new ExplicitFunctionDefinition(
 			name.getPreName(precondition.location), NameScope.GLOBAL,
 			typeParams, type.getPreType(),
-			getParamPatternList(), precondition, null, null, false, false, null);
+			getParamPatternList(), precondition, null, null, false, null);
 
 		def.setAccessSpecifier(accessSpecifier);
 		def.classDefinition = classDefinition;
@@ -506,7 +506,7 @@ public class ImplicitFunctionDefinition extends Definition
 		ExplicitFunctionDefinition def = new ExplicitFunctionDefinition(
 			name.getPostName(postcondition.location), NameScope.GLOBAL,
 			typeParams, type.getPostType(),
-			parameters, postcondition, null, null, false, false, null);
+			parameters, postcondition, null, null, false, null);
 
 		def.setAccessSpecifier(accessSpecifier);
 		def.classDefinition = classDefinition;

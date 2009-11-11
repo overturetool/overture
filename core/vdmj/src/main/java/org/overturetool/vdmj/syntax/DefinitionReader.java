@@ -684,7 +684,7 @@ public class DefinitionReader extends SyntaxReader
 		return new ExplicitFunctionDefinition(
 			idToName(funcName), scope, typeParams,
 			type, parameters, body, precondition, postcondition,
-			false, true, measure);
+			false, measure);
 	}
 
 	private Definition readImplicitFunctionDefinition(

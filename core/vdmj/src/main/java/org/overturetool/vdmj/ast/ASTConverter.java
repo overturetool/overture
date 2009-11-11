@@ -483,7 +483,7 @@ public class ASTConverter
 				trailer.hasPostExpression() ?
 					convertExpression(trailer.getPostExpression()) : null,
 				false,
-				true, null);
+				null);
 		}
 		else if (shape instanceof IOmlExtendedExplicitFunction)
 		{

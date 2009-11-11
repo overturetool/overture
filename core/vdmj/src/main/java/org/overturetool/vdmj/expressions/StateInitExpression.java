@@ -23,13 +23,17 @@
 
 package org.overturetool.vdmj.expressions;
 
+import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.StateDefinition;
 import org.overturetool.vdmj.patterns.IdentifierPattern;
+import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
+import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.BooleanType;
+import org.overturetool.vdmj.types.RecordType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.values.BooleanValue;
@@ -86,6 +90,38 @@ public class StateInitExpression extends Expression
 	@Override
 	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
 	{
+		Pattern pattern = state.initPattern;
+		Expression exp = state.initExpression;
+		boolean ok = false;
+
+		if (pattern instanceof IdentifierPattern &&
+			exp instanceof EqualsExpression)
+		{
+			DefinitionList defs = pattern.getDefinitions(state.getType(), scope);
+			Environment local = new FlatCheckedEnvironment(defs, env, scope);
+			EqualsExpression ee = (EqualsExpression)exp;
+
+			if (ee.left instanceof VariableExpression)
+			{
+				ee.left.typeCheck(local, null, scope);
+				Type rhs = ee.right.typeCheck(local, null, scope);
+
+				if (rhs.isRecord())
+				{
+					RecordType rt = rhs.getRecord();
+					ok = rt.name.equals(state.name);
+				}
+			}
+
+			local.unusedCheck();
+		}
+
+		if (!ok)
+		{
+			warning(5010, "State init expression cannot be executed");
+			detail("Expected", "p == p = mk_Record(...)");
+		}
+
 		return new BooleanType(location);
 	}
 

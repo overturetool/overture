@@ -514,7 +514,7 @@ public class ImplicitOperationDefinition extends Definition
 		ExplicitFunctionDefinition def = new ExplicitFunctionDefinition(
 			name.getPreName(precondition.location), NameScope.GLOBAL,
 			null, type.getPreType(state, classDefinition, accessSpecifier.isStatic),
-			parameters, preop, null, null, false, false, null);
+			parameters, preop, null, null, false, null);
 
 		// Operation precondition functions are effectively not static as
 		// their expression can directly refer to instance variables, even
@@ -557,7 +557,7 @@ public class ImplicitOperationDefinition extends Definition
 		ExplicitFunctionDefinition def = new ExplicitFunctionDefinition(
 			name.getPostName(postcondition.location), NameScope.GLOBAL,
 			null, type.getPostType(state, classDefinition, accessSpecifier.isStatic),
-			parameters, postop, null, null, false, false, null);
+			parameters, postop, null, null, false, null);
 
 		// Operation postcondition functions are effectively not static as
 		// their expression can directly refer to instance variables, even

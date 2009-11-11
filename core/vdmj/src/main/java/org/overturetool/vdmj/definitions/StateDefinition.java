@@ -29,11 +29,9 @@ import java.util.Vector;
 import org.overturetool.vdmj.expressions.EqualsExpression;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.StateInitExpression;
-import org.overturetool.vdmj.expressions.VariableExpression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.patterns.IdentifierPattern;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.runtime.Context;
@@ -177,38 +175,8 @@ public class StateDefinition extends Definition
 
 		if (initdef != null)
 		{
-			if (!checkInit(base, scope))
-			{
-				warning(5010, "State init expression cannot be executed");
-				detail("Expected", "p == p = mk_Record(...)");
-			}
-			else
-			{
-				initdef.typeCheck(base, scope);
-			}
+			initdef.typeCheck(base, scope);
 		}
-	}
-
-	private boolean checkInit(Environment base, NameScope scope)
-	{
-		if (initPattern instanceof IdentifierPattern &&
-			initExpression instanceof EqualsExpression)
-		{
-			EqualsExpression ee = (EqualsExpression)initExpression;
-
-			if (ee.left instanceof VariableExpression)
-			{
-				Type rhs = ee.right.typeCheck(base, null, scope);
-
-				if (rhs.isRecord())
-				{
-					RecordType rt = rhs.getRecord();
-					return rt.name.equals(name);
-				}
-			}
-		}
-
-		return false;
 	}
 
 	@Override
@@ -349,7 +317,7 @@ public class StateDefinition extends Definition
 
 		ExplicitFunctionDefinition def = new ExplicitFunctionDefinition(
 			name.getInvName(loc), NameScope.GLOBAL,
-			null, ftype, parameters, invExpression, null, null, true, false, null);
+			null, ftype, parameters, invExpression, null, null, true, null);
 
 		ftype.definitions = new DefinitionList(def);
 		return def;
@@ -373,7 +341,7 @@ public class StateDefinition extends Definition
 
 		ExplicitFunctionDefinition def =
 			new ExplicitFunctionDefinition(name.getInitName(loc), NameScope.GLOBAL,
-			null, ftype, parameters, body, null, null, false, false, null);
+			null, ftype, parameters, body, null, null, false, null);
 
 		ftype.definitions = new DefinitionList(def);
 		return def;

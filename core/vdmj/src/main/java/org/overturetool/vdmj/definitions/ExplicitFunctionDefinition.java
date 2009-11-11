@@ -81,7 +81,6 @@ public class ExplicitFunctionDefinition extends Definition
 	public final Expression postcondition;
 	public final Expression body;
 	public final boolean isTypeInvariant;
-	public final boolean checkParamUsage;
 	public final LexIdentifierToken measure;
 	public final boolean isCurried;
 
@@ -99,7 +98,7 @@ public class ExplicitFunctionDefinition extends Definition
 		LexNameList typeParams, FunctionType type,
 		List<PatternList> parameters,
 		Expression body, Expression precondition, Expression postcondition,
-		boolean typeInvariant, boolean checkParamUsage, LexIdentifierToken measure)
+		boolean typeInvariant, LexIdentifierToken measure)
 	{
 		super(Pass.DEFS, name.location, name, scope);
 
@@ -110,7 +109,6 @@ public class ExplicitFunctionDefinition extends Definition
 		this.postcondition = postcondition;
 		this.body = body;
 		this.isTypeInvariant = typeInvariant;
-		this.checkParamUsage = checkParamUsage;
 		this.measure = measure;
 		this.isCurried = parameters.size() > 1;
 
@@ -253,7 +251,7 @@ public class ExplicitFunctionDefinition extends Definition
 		{
 			Type b = predef.body.typeCheck(local, null, NameScope.NAMES);
 			BooleanType expected = new BooleanType(location);
-			
+
 			if (!b.isType(BooleanType.class))
 			{
 				report(3018, "Precondition returns unexpected type");
@@ -268,10 +266,10 @@ public class ExplicitFunctionDefinition extends Definition
 			DefinitionList rdefs = rp.getDefinitions(expectedResult, NameScope.NAMES);
 			FlatCheckedEnvironment post =
 				new FlatCheckedEnvironment(rdefs, local, NameScope.NAMES);
-			
+
 			Type b = postdef.body.typeCheck(post, null, NameScope.NAMES);
 			BooleanType expected = new BooleanType(location);
-			
+
 			if (!b.isType(BooleanType.class))
 			{
 				report(3018, "Postcondition returns unexpected type");
@@ -346,7 +344,7 @@ public class ExplicitFunctionDefinition extends Definition
 			}
 		}
 
-		if (checkParamUsage && !(body instanceof NotYetSpecifiedExpression))
+		if (!(body instanceof NotYetSpecifiedExpression))
 		{
 			local.unusedCheck();
 		}
@@ -571,7 +569,7 @@ public class ExplicitFunctionDefinition extends Definition
 		ExplicitFunctionDefinition def = new ExplicitFunctionDefinition(
 			name.getPreName(precondition.location), NameScope.GLOBAL,
 			typeParams, type.getCurriedPreType(isCurried),
-			paramPatternList, precondition, null, null, false, false, null);
+			paramPatternList, precondition, null, null, false, null);
 
 		def.setAccessSpecifier(accessSpecifier);
 		def.classDefinition = classDefinition;
@@ -603,7 +601,7 @@ public class ExplicitFunctionDefinition extends Definition
 		ExplicitFunctionDefinition def = new ExplicitFunctionDefinition(
 			name.getPostName(postcondition.location), NameScope.GLOBAL,
 			typeParams, type.getCurriedPostType(isCurried),
-			parameters, postcondition, null, null, false, false, null);
+			parameters, postcondition, null, null, false, null);
 
 		def.setAccessSpecifier(accessSpecifier);
 		def.classDefinition = classDefinition;
