@@ -248,11 +248,11 @@ public abstract class Definition implements Serializable
 	{
 		used = true;
 	}
-	
+
 	/**
 	 * Test the "used" flag.
 	 */
-	
+
 	protected boolean isUsed()
 	{
 		return used;
@@ -429,6 +429,16 @@ public abstract class Definition implements Serializable
 	public boolean isRuntime()
 	{
 		return true;	// Most are!
+	}
+
+	/**
+	 * Return true if the definition generates a value which is updatable,
+	 * like a state value, an instance variable, or a dcl declaration.
+	 */
+
+	public boolean isUpdatable()
+	{
+		return false;	// Most aren't!
 	}
 
 	/**

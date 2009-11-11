@@ -128,4 +128,10 @@ public class AssignmentDefinition extends Definition
 	{
 		return "assignable variable";
 	}
+
+	@Override
+	public boolean isUpdatable()
+	{
+		return true;
+	}
 }

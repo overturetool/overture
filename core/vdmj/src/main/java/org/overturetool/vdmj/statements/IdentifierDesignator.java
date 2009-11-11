@@ -23,10 +23,9 @@
 
 package org.overturetool.vdmj.statements;
 
+import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExternalDefinition;
-import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.expressions.VariableExpression;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.typechecker.Environment;
@@ -57,9 +56,33 @@ public class IdentifierDesignator extends StateDesignator
 	{
 		if (env.isVDMPP())
 		{
+			// We generate an explicit name because accessing a variable
+			// by name in VDM++ does not "inherit" values from a superclass.
+
 			LexNameToken exname = name.getExplicit(true);
-			Expression expression = new VariableExpression(exname);
-			return expression.typeCheck(env, null, NameScope.STATE);
+			Definition def = env.findName(exname, NameScope.STATE);
+
+			if (def == null)
+			{
+				report(3247, "Unknown variable " + name + " in assignment");
+				return new UnknownType(location);
+			}
+			else if (!def.isUpdatable())
+			{
+				report(3301, "Variable " + name + " in scope is not updatable");
+				return new UnknownType(location);
+			}
+			else if (def.classDefinition != null)
+			{
+    			if (!ClassDefinition.isAccessible(env, def, true))
+    			{
+    				report(3180, "Inaccessible member " + name + " of class " +
+    					def.classDefinition.name.name);
+    				return new UnknownType(location);
+    			}
+			}
+
+			return def.getType();
 		}
 		else
 		{
@@ -68,6 +91,11 @@ public class IdentifierDesignator extends StateDesignator
 			if (def == null)
 			{
 				report(3247, "Unknown state variable " + name + " in assignment");
+				return new UnknownType(name.location);
+			}
+			else if (!def.isUpdatable())
+			{
+				report(3301, "Variable " + name + " in scope is not updatable");
 				return new UnknownType(name.location);
 			}
 			else if (def instanceof ExternalDefinition)

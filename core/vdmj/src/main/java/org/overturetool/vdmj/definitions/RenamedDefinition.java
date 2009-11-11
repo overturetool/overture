@@ -72,11 +72,17 @@ public class RenamedDefinition extends Definition
 		used = true;
 		def.markUsed();
 	}
-	
+
 	@Override
     protected boolean isUsed()
 	{
 		return def.isUsed();
+	}
+
+	@Override
+	public boolean isUpdatable()
+	{
+		return def.isUpdatable();
 	}
 
 	@Override

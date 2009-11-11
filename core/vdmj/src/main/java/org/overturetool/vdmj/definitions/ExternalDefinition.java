@@ -79,11 +79,17 @@ public class ExternalDefinition extends Definition
 		used = true;
 		state.markUsed();
 	}
-	
+
 	@Override
     protected boolean isUsed()
 	{
 		return state.isUsed();
+	}
+
+	@Override
+	public boolean isUpdatable()
+	{
+		return true;
 	}
 
 	@Override

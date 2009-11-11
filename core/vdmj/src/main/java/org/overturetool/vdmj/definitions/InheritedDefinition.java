@@ -77,11 +77,17 @@ public class InheritedDefinition extends Definition
 		used = true;
 		superdef.markUsed();
 	}
-	
+
 	@Override
     protected boolean isUsed()
 	{
 		return superdef.isUsed();
+	}
+
+	@Override
+	public boolean isUpdatable()
+	{
+		return superdef.isUpdatable();
 	}
 
 	@Override

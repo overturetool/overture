@@ -664,6 +664,7 @@ as the expected and actual values.
 3298, "Cannot inherit from CPU"
 3299, "Cannot inherit from BUS"
 3300, "Operation <type> cannot be called from a function"
+3301, "Variable <name> in scope is not updatable"
 
 4000, "Cannot instantiate abstract class <class>"
 4002, "Expression value is not in set bind"

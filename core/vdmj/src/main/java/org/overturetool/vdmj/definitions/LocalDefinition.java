@@ -108,4 +108,10 @@ public class LocalDefinition extends Definition
 		return type.isType(ParameterType.class) ? false :
 			type.isFunction() || type.isOperation();
 	}
+
+	@Override
+	public boolean isUpdatable()
+	{
+		return nameScope.matches(NameScope.STATE);
+	}
 }
