@@ -6,7 +6,7 @@
    <aboutInfo>
       <image path="/org.overture.ide.platform/icons/ctool128/overture_misc.png"/>
       <text>
-         Overture tool about
+          %aboutText
       </text>
    </aboutInfo>
 

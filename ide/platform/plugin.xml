@@ -16,7 +16,7 @@
        </property>
        <property
              name="aboutText"
-             value="Overture tool about">
+             value="%aboutText">
        </property>
        <property
              name="aboutImage"
