@@ -206,22 +206,19 @@ public class StateDefinition extends Definition
     		}
 		}
 
-		if (scope.matches(NameScope.STATE))
+		if (recordDefinition.findName(sought, scope) != null)
 		{
-			if (recordDefinition.findName(sought, scope) != null)
+			return recordDefinition;
+		}
+
+		for (Definition d: statedefs)
+		{
+			Definition def = d.findName(sought, scope);
+
+			if (def != null)
 			{
-				return recordDefinition;
+				return def;
 			}
-
-    		for (Definition d: statedefs)
-    		{
-    			Definition def = d.findName(sought, scope);
-
-    			if (def != null)
-    			{
-   					return def;
-    			}
-    		}
 		}
 
 		return null;
