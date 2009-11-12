@@ -1,0 +1,59 @@
+\section{The TestResult Class}
+
+The class \vdmstyle{TestResult} maintains a collection
+of references to test cases that have failed. The
+exception handler defined in the operation \vdmstyle{Run}
+of class \vdmstyle{TestCase} calls the operation
+\vdmstyle{AddResult}, which will append the object
+reference of the test case to the tail of the sequence
+\vdmstyle{failures}. The operation \vdmstyle{Show} is used
+to print a list of test cases that have failed or 
+provide a message to indicate that no failures were
+found. Note that the standard I/O library, which is
+supplied with \vdmtools, is used here. \vdmstyle{IO.echo}
+prints a string on the standard output, just like 
+\vdmstyle{System.out.println} in Java. The \emph{def
+statement} is used to suppress the boolean value 
+returned by \vdmstyle{IO.echo}:\sindex{IO standard library}
+
+\begin{vdm_al}
+class TestResult
+
+instance variables
+  failures : seq of TestCase := []
+  
+operations
+  public AddFailure: TestCase ==> ()
+  AddFailure (ptst) == failures := failures ^ [ptst];
+
+  public Print: seq of char ==> ()
+  Print (pstr) ==
+    def - = new IO().echo(pstr ^ "\n") in skip;
+    
+  public Show: () ==> ()
+  Show () ==
+    if failures = [] then
+      Print ("No failures detected")
+    else
+      for failure in failures do
+        Print (failure.GetName() ^ " failed")
+  
+end TestResult
+\end{vdm_al}
+\dindex{TestResult!failures}
+\dindex{TestResult!AddFailure}
+\dindex{TestResult!Print}\dindex{TestResult!Show}
+\sindex{statements!def}\sindex{def statement}
+\sindex{patterns!don't care}\sindex{don't care pattern}
+\sindex{public@\kw{public}}
+\sindex{assignment statement}\sindex{statements!assignment}
+\sindex{operation!signature}\sindex{operation!definition!explicit}
+\sindex{sequence!concatenation}
+\sindex{instance variables}
+\sindex{instance variables!initialisation}
+\sindex{sequence!enumeration}
+\sindex{if-then-else statement}\sindex{statements!if-then-else}
+\sindex{sequence!empty}\sindex{empty sequence}
+\sindex{string!literal}
+\sindex{skip@\kw{skip}}\sindex{statements!skip}
+\sindex{sequence!for loop}\sindex{statements!for loop}

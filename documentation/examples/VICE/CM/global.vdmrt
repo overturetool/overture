@@ -1,0 +1,45 @@
+\begin{vdm_al}
+class GLOBAL
+
+values
+  public SENSOR_APERTURE = 90;
+  public FLARE_APERTURE = 120;
+  public DISPENSER_APERTURE = 30
+
+types
+  -- there are three different types of missiles
+  public MissileType = <MissileA> | <MissileB> | <MissileC>;
+
+  -- there are nine different flare types, three per missile
+  public FlareType =
+    <FlareOneA> | <FlareTwoA> | <DoNothingA> | 
+    <FlareOneB> | <FlareTwoB> | <DoNothingB> | 
+    <FlareOneC> | <FlareTwoC> | <DoNothingC>;
+
+  -- the angle at which the missile is incoming
+  public Angle = nat
+  inv num == num < 360;
+
+public EventId = nat;
+
+public Time = nat
+
+operations
+  public canObserve: Angle * Angle * Angle ==> bool
+  canObserve (pangle, pleft, psize) ==
+    def pright = (pleft + psize) mod 360 in
+      if pright < pleft
+      -- check between [0,pright> and [pleft,360>
+      then return (pangle < pright or pangle >= pleft)
+      -- check between [pleft, pright>
+      else return (pangle >= pleft and pangle < pright);
+       
+  public getAperture: () ==> Angle * Angle
+  getAperture () == is subclass responsibility;
+
+end GLOBAL
+\end{vdm_al}
+
+\begin{rtinfo}[GLOBAL`canObserve]
+{vdm.tc}[GLOBAL]
+\end{rtinfo}

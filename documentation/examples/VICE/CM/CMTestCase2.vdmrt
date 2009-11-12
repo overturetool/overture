@@ -1,0 +1,35 @@
+\begin{vdm_al}
+class CMTestCase2 is subclass of TestCase
+
+operations
+  public CMTestCase2: seq of char ==> CMTestCase2
+  CMTestCase2(nm) == name := nm;
+
+  protected SetUp: () ==> ()
+  SetUp () == skip;
+
+  protected RunTest: () ==> ()
+  RunTest () == 
+    (dcl inlines : seq of Environment`inline :=
+       [ mk_ (1,<MissileA>,45,10000), mk_ (2,<MissileB>,270,11000),
+         mk_ (3,<MissileA>,276,12000),mk_ (4,<MissileC>,266,14000) ];
+    def - = new IO().fwriteval[seq of Environment`inline]
+            ("scenario.txt",inlines,<start>) in 
+    let world = new World() in
+      (world.Run();
+       let reaction = world.env.GetAndPurgeOutlines()
+       in 
+         for all i in set inds inlines do
+           AssertTrue(exists j in set inds reaction &
+                         reaction(j).#1 = i and
+                         reaction(j).#4 + 1000 > reaction(j).#5)));
+
+  protected TearDown: () ==> ()
+  TearDown () == skip
+
+end CMTestCase2
+\end{vdm_al}
+
+\begin{rtinfo}[GLOBAL`CMTestCase2]
+{vdm.tc}[CMTestCase2]
+\end{rtinfo}

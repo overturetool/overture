@@ -1,0 +1,10 @@
+
+\begin{vdm_al}
+class Test
+
+operations
+  public Run: TestResult ==> ()
+  Run (-) == is subclass responsibility
+
+end Test
+\end{vdm_al}
