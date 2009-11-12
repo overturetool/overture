@@ -66,7 +66,7 @@ pre pmt in set dom missilePriority and
 
 async evalQueue: () ==> ()
 evalQueue () ==
-  cycles (1E19) 
+  cycles (1E10) 
   (if len curplan > 0
    then (dcl curtime : Time := time, done : bool := false;
          while not done do
