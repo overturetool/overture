@@ -84,7 +84,7 @@ public class StateInitExpression extends Expression
 	@Override
 	public String toString()
 	{
-		return state.name.name;
+		return "init " + state.initPattern + " == " + state.initExpression;
 	}
 
 	@Override

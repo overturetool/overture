@@ -141,7 +141,28 @@ public class ValueDefinition extends Definition
 		}
 
 		pattern.typeResolve(base);
-		defs = pattern.getDefinitions(type, nameScope);
+		DefinitionList newdefs = pattern.getDefinitions(type, nameScope);
+
+		// The untyped definitions may have had "used" markers, so we copy
+		// those into the new typed definitions, lest we get warnings
+
+		for (Definition d: newdefs)
+		{
+			for (Definition u: defs)
+			{
+				if (u.name.equals(d.name))
+				{
+					if (u.isUsed())
+					{
+						d.markUsed();
+					}
+
+					break;
+				}
+			}
+		}
+
+		defs = newdefs;
 		defs.setAccessibility(accessSpecifier);
 		defs.setClassDefinition(classDefinition);
 		defs.typeCheck(base, scope);
