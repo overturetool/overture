@@ -61,6 +61,10 @@ public class ClassReader extends SyntaxReader
 
     		if (lastToken().isNot(Token.CLASS) && lastToken().isNot(Token.SYSTEM))
     		{
+    			warning(5015,
+    				"LaTeX source should start with %comment, \\document, \\section or \\subsection",
+    				lastToken().location);
+
     			throwMessage(2005,
     				Settings.dialect == Dialect.VDM_RT ?
     					"Expecting list of 'class' or 'system' definitions" :

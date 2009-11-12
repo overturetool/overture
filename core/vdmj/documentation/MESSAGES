@@ -822,4 +822,5 @@ as the expected and actual values.
 5011, -
 5012, "Recursive function has no measure"
 5013, -
-5014, "Uninitialized BUS ignored" 
+5014, "Uninitialized BUS ignored"
+5015, "LaTeX source should start with %comment, \document, \section or \subsection"  
