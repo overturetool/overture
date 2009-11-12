@@ -87,8 +87,12 @@ CM( missileInputs, outputSoFar, lastMissile, curTime) ==
                     lastMissile ++ {magid |-> curMis},
                     curTime + stepLength)
          else CM(tl missileInputs, outputSoFar, 
-                 lastMissile,curTime + stepLength);
+                 lastMissile,curTime + stepLength)
+measure CMLen;
 
+CMLen: MissileInputs * Output * map MagId to [MissileType] * nat -> nat
+CMLen(list,-,-,-) == len list;
+    
 InterruptPlan: nat * Output * Plan * MagId -> Output
 InterruptPlan(curTime,expOutput,plan,magid) ==
   {magid |-> (if magid in set dom expOutput
