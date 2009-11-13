@@ -70,6 +70,11 @@ public class ThreadState
 		this.outctxt = outctxt;
 	}
 
+	public synchronized boolean isStepping()
+	{
+		return stepline != null;
+	}
+
 	public synchronized void setTimestep(long timestep)
 	{
 		this.timestep = timestep;

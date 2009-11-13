@@ -33,16 +33,18 @@ public class MessageRequest extends MessagePacket
 {
 	public final ValueList args;
 	public final Holder<MessageResponse> replyTo;
+	public final boolean breakAtStart;
 
 	public MessageRequest(
 		BUSValue bus, CPUValue from, CPUValue to, ObjectValue target,
 		OperationValue operation,
-		ValueList args, Holder<MessageResponse> replyTo)
+		ValueList args, Holder<MessageResponse> replyTo, boolean breakAtStart)
 	{
 		super(bus, from, to, target, operation);
 
 		this.args = args;
 		this.replyTo = replyTo;
+		this.breakAtStart = breakAtStart;
 	}
 
 	public MessageRequest()
@@ -51,6 +53,7 @@ public class MessageRequest extends MessagePacket
 
 		this.args = null;
 		this.replyTo = null;
+		this.breakAtStart = false;
 	}
 
 	public int getSize()

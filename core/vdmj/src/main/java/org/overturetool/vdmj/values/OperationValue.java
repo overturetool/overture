@@ -509,6 +509,7 @@ public class OperationValue extends Value
 
 		CPUValue from = ctxt.threadState.CPU;
 		CPUValue to = self.getCPU();
+		boolean stepping = ctxt.threadState.isStepping();
 
 		// Async calls have the OpRequest made by the caller using the
 		// "from" CPU, whereas the OpActivate and OpComplete are made
@@ -535,8 +536,8 @@ public class OperationValue extends Value
 
     		if (isAsync)	// Don't wait
     		{
-        		MessageRequest request =
-        			new MessageRequest(bus, from, to, self, this, argValues, null);
+        		MessageRequest request = new MessageRequest(
+        			bus, from, to, self, this, argValues, null, stepping);
 
         		bus.transmit(request);
         		return new VoidValue();
@@ -544,8 +545,8 @@ public class OperationValue extends Value
     		else
     		{
         		Holder<MessageResponse> result = new Holder<MessageResponse>();
-        		MessageRequest request =
-        			new MessageRequest(bus, from, to, self, this, argValues, result);
+        		MessageRequest request = new MessageRequest(
+        			bus, from, to, self, this, argValues, result, stepping);
 
         		bus.transmit(request);
         		MessageResponse reply = result.get(from);
@@ -554,8 +555,8 @@ public class OperationValue extends Value
 		}
 		else	// local, must be async so don't wait
 		{
-    		MessageRequest request =
-    			new MessageRequest(null, from, to, self, this, argValues, null);
+    		MessageRequest request = new MessageRequest(
+    			null, from, to, self, this, argValues, null, stepping);
 
     		new AsyncThread(request).start();
     		return new VoidValue();

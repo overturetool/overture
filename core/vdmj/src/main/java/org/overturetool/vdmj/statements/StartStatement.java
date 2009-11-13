@@ -131,7 +131,7 @@ public class StartStatement extends Statement
 					ObjectValue target = v.objectValue(ctxt);
 					OperationValue op = target.getThreadOperation(ctxt);
 
-					startRT(target, op);
+					startRT(target, op, ctxt.threadState.isStepping());
 				}
 			}
 			else
@@ -139,7 +139,7 @@ public class StartStatement extends Statement
 				ObjectValue target = value.objectValue(ctxt);
 				OperationValue op = target.getThreadOperation(ctxt);
 
-				startRT(target, op);
+				startRT(target, op, ctxt.threadState.isStepping());
 			}
 
 			return new VoidValue();
@@ -152,7 +152,7 @@ public class StartStatement extends Statement
 
 	// Note that RT does not use VDMThreads at all...
 
-	private void startRT(ObjectValue target, OperationValue op)
+	private void startRT(ObjectValue target, OperationValue op, boolean stepping)
 		throws ValueException
 	{
 		if (op.body instanceof PeriodicStatement)
@@ -168,11 +168,14 @@ public class StartStatement extends Statement
 			long delay  = ps.values[2];
 			long offset = ps.values[3];
 
-			new AsyncThread(target, pop, new ValueList(), period, jitter, delay, offset, 0).start();
+			// Note that periodic threads never set the stepping flag
+
+			new AsyncThread(
+				target, pop, new ValueList(), period, jitter, delay, offset, 0, false).start();
 		}
 		else
 		{
-			new AsyncThread(target, op, new ValueList(), 0, 0, 0, 0, 0).start();
+			new AsyncThread(target, op, new ValueList(), 0, 0, 0, 0, 0, stepping).start();
 		}
 	}
 

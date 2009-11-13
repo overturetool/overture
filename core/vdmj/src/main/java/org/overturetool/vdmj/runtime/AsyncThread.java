@@ -28,6 +28,7 @@ import java.util.Random;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.debug.DBGPReason;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
@@ -49,6 +50,8 @@ public class AsyncThread extends Thread
 	public final long expected;
 	public final boolean first;
 
+	private boolean breakAtStart = false;
+
 	private static boolean stopping = false;
 	private static Random PRNG = new Random();
 
@@ -67,15 +70,21 @@ public class AsyncThread extends Thread
 		stopping = false;
 	}
 
+	public void breakAtStart(boolean stop)
+	{
+		breakAtStart = stop;
+	}
+
 	public AsyncThread(MessageRequest request)
 	{
-		this(request.target, request.operation, request.args, 0, 0, 0, 0, 0);
+		this(request.target, request.operation, request.args, 0, 0, 0, 0, 0, request.breakAtStart);
 		this.request = request;
 	}
 
 	public AsyncThread(
 		ObjectValue self, OperationValue operation, ValueList args,
-		long period, long jitter, long delay, long offset, long expected)
+		long period, long jitter, long delay, long offset, long expected,
+		boolean stepping)
 	{
 		setName("Async Thread " + getId());
 
@@ -88,6 +97,7 @@ public class AsyncThread extends Thread
 		this.delay = delay;
 		this.offset = offset;
 		this.request = new MessageRequest();
+		this.breakAtStart = stepping;
 
 		if (period > 0 && expected == 0)
 		{
@@ -161,7 +171,7 @@ public class AsyncThread extends Thread
 
     			new AsyncThread(
     				self, operation, new ValueList(), period, jitter, delay, offset,
-    				nextTime()).start();
+    				nextTime(), false).start();
     		}
 
     		try
@@ -170,6 +180,12 @@ public class AsyncThread extends Thread
         		Context ctxt = new ObjectContext(operation.name.location, "async", global, self);
     			reader = ctxt.threadState.dbgp.newThread(cpu);
     			ctxt.setThreadState(reader, cpu);
+
+    			if (breakAtStart)
+    			{
+    				// Step at the first location you check (start of body)
+    				ctxt.threadState.setBreaks(new LexLocation(), null, null);
+    			}
 
         		Value rv = operation.localEval(args, ctxt, logreq);
        			response = new MessageResponse(rv, request);
@@ -236,7 +252,7 @@ public class AsyncThread extends Thread
 
     			new AsyncThread(
     				self, operation, new ValueList(), period, jitter, delay, offset,
-    				nextTime()).start();
+    				nextTime(), false).start();
     		}
 
     		try
@@ -244,6 +260,12 @@ public class AsyncThread extends Thread
         		RootContext global = ClassInterpreter.getInstance().initialContext;
         		Context ctxt = new ObjectContext(operation.name.location, "async", global, self);
         		ctxt.setThreadState(null, cpu);
+
+    			if (breakAtStart)
+    			{
+    				// Step at the first location you check (start of body)
+    				ctxt.threadState.setBreaks(new LexLocation(), null, null);
+    			}
 
         		Value rv = operation.localEval(args, ctxt, logreq);
        			response = new MessageResponse(rv, request);

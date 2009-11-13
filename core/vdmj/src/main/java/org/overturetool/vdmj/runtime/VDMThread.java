@@ -42,6 +42,7 @@ public class VDMThread extends Thread
 	public final OperationValue operation;
 	public final Context ctxt;
 	public final String title;
+	public final boolean breakAtStart;
 
 	public VDMThread(LexLocation location, ObjectValue object, Context ctxt)
 		throws ValueException
@@ -56,6 +57,7 @@ public class VDMThread extends Thread
 		this.object = object;
 		this.ctxt = new ObjectContext(location, title, ctxt.getGlobal(), object);
 		this.operation = object.getThreadOperation(ctxt);
+		this.breakAtStart = ctxt.threadState.isStepping();
 
 		VDMThreadSet.add(this);
 	}
@@ -84,6 +86,13 @@ public class VDMThread extends Thread
 		try
 		{
 			ctxt.setThreadState(null, operation.getCPU());
+
+			if (breakAtStart)
+			{
+				// Step at the first location you check (start of body)
+				ctxt.threadState.setBreaks(new LexLocation(), null, null);
+			}
+
 			operation.eval(new ValueList(), ctxt);
 		}
 		catch (StopException e)
@@ -117,6 +126,13 @@ public class VDMThread extends Thread
 			CPUValue cpu = operation.getCPU();
 			reader = ctxt.threadState.dbgp.newThread(cpu);
 			ctxt.setThreadState(reader, cpu);
+
+			if (breakAtStart)
+			{
+				// Step at the first location you check (start of body)
+				ctxt.threadState.setBreaks(new LexLocation(), null, null);
+			}
+
 			operation.eval(new ValueList(), ctxt);
 			reader.complete(DBGPReason.OK, null);
 		}
