@@ -28,6 +28,7 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.Environment;
+import org.overturetool.vdmj.typechecker.FlatEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
 import org.overturetool.vdmj.types.BooleanType;
@@ -132,7 +133,9 @@ public class PerSyncDefinition extends Definition
 			opname.report(3045, "Cannot put guard on a constructor");
 		}
 
-		Type rt = guard.typeCheck(base, null, NameScope.NAMESANDSTATE);
+		Environment local = new FlatEnvironment(this, base);
+		local.setFuncDefinition(this);	// Prevent op calls
+		Type rt = guard.typeCheck(local, null, NameScope.NAMESANDSTATE);
 
 		if (!rt.isType(BooleanType.class))
 		{

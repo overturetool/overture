@@ -28,6 +28,7 @@ import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
+import org.overturetool.vdmj.definitions.PerSyncDefinition;
 import org.overturetool.vdmj.pog.FunctionApplyObligation;
 import org.overturetool.vdmj.pog.MapApplyObligation;
 import org.overturetool.vdmj.pog.POContextStack;
@@ -108,7 +109,8 @@ public class ApplyExpression extends Expression
 
 		boolean inFunction =
 			(func instanceof ExplicitFunctionDefinition ||
-			 func instanceof ImplicitFunctionDefinition);
+			 func instanceof ImplicitFunctionDefinition ||
+			 func instanceof PerSyncDefinition);
 
 		if (inFunction && root instanceof VariableExpression)
 		{
@@ -124,7 +126,7 @@ public class ApplyExpression extends Expression
     				def.recursive = true;
     			}
 			}
-			else
+			else if (func instanceof ImplicitFunctionDefinition)
 			{
 				ImplicitFunctionDefinition def = (ImplicitFunctionDefinition)func;
 

@@ -49,8 +49,7 @@ public class AsyncThread extends Thread
 	public final long delay;
 	public final long expected;
 	public final boolean first;
-
-	private boolean breakAtStart = false;
+	public final boolean breakAtStart;
 
 	private static boolean stopping = false;
 	private static Random PRNG = new Random();
@@ -68,11 +67,6 @@ public class AsyncThread extends Thread
 	public static void reset()
 	{
 		stopping = false;
-	}
-
-	public void breakAtStart(boolean stop)
-	{
-		breakAtStart = stop;
 	}
 
 	public AsyncThread(MessageRequest request)
