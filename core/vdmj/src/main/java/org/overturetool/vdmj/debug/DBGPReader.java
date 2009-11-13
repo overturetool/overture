@@ -1065,7 +1065,7 @@ public class DBGPReader
 		{
 			if (breakContext != null)
 			{
-				breakContext.threadState.set(0, null, null);
+				breakContext.threadState.setBreaks(null, null, null);
 				status = DBGPStatus.RUNNING;
 				statusReason = DBGPReason.OK;
 				return false;	// run means continue
@@ -1195,7 +1195,7 @@ public class DBGPReader
 
 		if (breakpoint != null)
 		{
-	   		breakContext.threadState.set(breakpoint.location.startLine, null, null);
+	   		breakContext.threadState.setBreaks(breakpoint.location, null, null);
 		}
 
 		status = DBGPStatus.RUNNING;
@@ -1208,8 +1208,8 @@ public class DBGPReader
 
 		if (breakpoint != null)
 		{
-			breakContext.threadState.set(
-				breakpoint.location.startLine, breakContext.getRoot(), null);
+			breakContext.threadState.setBreaks(
+				breakpoint.location, breakContext.getRoot(), null);
 		}
 
 		status = DBGPStatus.RUNNING;
@@ -1222,8 +1222,8 @@ public class DBGPReader
 
 		if (breakpoint != null)
 		{
-			breakContext.threadState.set(
-				breakpoint.location.startLine, null, breakContext.getRoot().outer);
+			breakContext.threadState.setBreaks(
+				breakpoint.location, null, breakContext.getRoot().outer);
 		}
 
 		status = DBGPStatus.RUNNING;

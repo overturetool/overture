@@ -148,28 +148,28 @@ public class DebuggerReader extends CommandReader
 	@Override
 	protected boolean doStep(String line)
 	{
-   		ctxt.threadState.set(breakpoint.location.startLine, null, null);
+   		ctxt.threadState.setBreaks(breakpoint.location, null, null);
    		return false;
 	}
 
 	@Override
 	protected boolean doNext(String line)
 	{
-		ctxt.threadState.set(breakpoint.location.startLine,	ctxt.getRoot(), null);
+		ctxt.threadState.setBreaks(breakpoint.location,	ctxt.getRoot(), null);
 		return false;
 	}
 
 	@Override
 	protected boolean doOut(String line)
 	{
-		ctxt.threadState.set(breakpoint.location.startLine, null, ctxt.getRoot().outer);
+		ctxt.threadState.setBreaks(breakpoint.location, null, ctxt.getRoot().outer);
 		return false;
 	}
 
 	@Override
 	protected boolean doContinue(String line)
 	{
-		ctxt.threadState.set(0, null, null);
+		ctxt.threadState.setBreaks(null, null, null);
 		Interpreter.resume();
 		return false;
 	}

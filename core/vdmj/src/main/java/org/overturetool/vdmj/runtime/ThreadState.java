@@ -24,6 +24,7 @@
 package org.overturetool.vdmj.runtime;
 
 import org.overturetool.vdmj.debug.DBGPReader;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.values.CPUValue;
 
 /**
@@ -40,7 +41,7 @@ public class ThreadState
 	private boolean atomic = false;		// don't reschedule
 
 	public InterruptAction action;
-	public int stepline;
+	public LexLocation stepline;
 	public RootContext nextctxt;
 	public Context outctxt;
 
@@ -58,11 +59,11 @@ public class ThreadState
 	{
 		this.action = InterruptAction.RUNNING;
 		this.setTimestep(-1);
-		set(0, null, null);
+		setBreaks(null, null, null);
 	}
 
-	public synchronized void set(
-		int stepline, RootContext nextctxt, Context outctxt)
+	public synchronized void setBreaks(
+		LexLocation stepline, RootContext nextctxt, Context outctxt)
 	{
 		this.stepline = stepline;
 		this.nextctxt = nextctxt;

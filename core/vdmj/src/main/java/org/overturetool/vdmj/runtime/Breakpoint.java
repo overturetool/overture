@@ -177,9 +177,9 @@ public class Breakpoint implements Serializable
 			state.reschedule();
 		}
 
-		if (state.stepline > 0)
+		if (state.stepline != null)
 		{
-			if (execl.startLine != state.stepline)
+			if (!execl.equals(state.stepline))
 			{
 				if ((state.nextctxt == null && state.outctxt == null) ||
 					(state.nextctxt != null && !isAboveNext(ctxt.getRoot())) ||
