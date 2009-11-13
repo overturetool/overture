@@ -256,7 +256,18 @@ public class ConnectionThread extends Thread
 	private void processInit(XMLTagNode tagnode) throws IOException
 	{
 		String sid = tagnode.getAttr("thread");
-		id = Integer.parseInt(sid);
+
+		// Either "123" or "123 on <CPU name>" for VDM-RT
+		int space = sid.indexOf(' ');
+
+		if (space == -1)
+		{
+			id = Integer.parseInt(sid);
+		}
+		else
+		{
+			id = Integer.parseInt(sid.substring(0, space));
+		}
 
 		if (principal)
 		{

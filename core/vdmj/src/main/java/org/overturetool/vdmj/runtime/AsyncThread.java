@@ -168,7 +168,7 @@ public class AsyncThread extends Thread
     		{
         		RootContext global = ClassInterpreter.getInstance().initialContext;
         		Context ctxt = new ObjectContext(operation.name.location, "async", global, self);
-    			reader = ctxt.threadState.dbgp.newThread();
+    			reader = ctxt.threadState.dbgp.newThread(cpu);
     			ctxt.setThreadState(reader, cpu);
 
         		Value rv = operation.localEval(args, ctxt, logreq);

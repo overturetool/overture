@@ -27,6 +27,7 @@ import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.debug.DBGPReason;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
 import org.overturetool.vdmj.values.ValueList;
@@ -113,8 +114,9 @@ public class VDMThread extends Thread
 
 		try
 		{
-			reader = ctxt.threadState.dbgp.newThread();
-			ctxt.setThreadState(reader, operation.getCPU());
+			CPUValue cpu = operation.getCPU();
+			reader = ctxt.threadState.dbgp.newThread(cpu);
+			ctxt.setThreadState(reader, cpu);
 			operation.eval(new ValueList(), ctxt);
 			reader.complete(DBGPReason.OK, null);
 		}

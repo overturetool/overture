@@ -100,6 +100,7 @@ public class DBGPReader
 	private final InputStream input;
 	private final OutputStream output;
 	private final Interpreter interpreter;
+	private final CPUValue cpu;
 
 	private int sessionId = 0;
 	private DBGPStatus status = null;
@@ -309,7 +310,7 @@ public class DBGPReader
 					}
 
 					Interpreter i = controller.getInterpreter();
-					new DBGPReader(host, port, ideKey, i, expression).startup();
+					new DBGPReader(host, port, ideKey, i, expression, null).startup();
 
 					RTLogger.dump(true);
 	    			System.exit(0);
@@ -372,7 +373,7 @@ public class DBGPReader
 
 	public DBGPReader(
 		String host, int port, String ideKey,
-		Interpreter interpreter, String expression)
+		Interpreter interpreter, String expression, CPUValue cpu)
 		throws Exception
 	{
 		this.host = host;
@@ -380,6 +381,7 @@ public class DBGPReader
 		this.ideKey = ideKey;
 		this.expression = expression;
 		this.interpreter = interpreter;
+		this.cpu = cpu;
 
 		if (port > 0)
 		{
@@ -399,9 +401,9 @@ public class DBGPReader
 		init();
 	}
 
-	public DBGPReader newThread() throws Exception
+	public DBGPReader newThread(CPUValue cpu2) throws Exception
 	{
-		DBGPReader r = new DBGPReader(host, port, ideKey, interpreter, null);
+		DBGPReader r = new DBGPReader(host, port, ideKey, interpreter, null, cpu2);
 		r.command = DBGPCommandType.UNKNOWN;
 		r.transaction = "?";
 		r.run();			// New threads wait for a "run -i"
@@ -425,6 +427,13 @@ public class DBGPReader
 		sb.append("session=\"" + sessionId + "\" ");
 		sb.append("thread=\"");
 		sb.append(Thread.currentThread().getId());
+
+		if (cpu != null)
+		{
+			sb.append(" on ");
+			sb.append(cpu.name);
+		}
+
 		sb.append("\" ");
 		sb.append("parent=\"");
 		sb.append(features.getProperty("language_name"));
