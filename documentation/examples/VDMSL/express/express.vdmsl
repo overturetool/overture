@@ -213,14 +213,24 @@ module Database
          if ins = [] then
            []
          else
-           [mk_EntityInstanceName(lut(hd ins))] ^ MapInToOut(tl ins, lut);
+           [mk_EntityInstanceName(lut(hd ins))] ^ MapInToOut(tl ins, lut)
+      measure LenPar1;
+      
+      LenPar1: seq of nat * map nat to nat -> nat
+      LenPar1(list,-) ==
+        len list;
 
       Collect : set of seq of nat -> set of nat
       Collect (theSet) ==
         cases theSet:
           {} -> {},
           others -> let e in set theSet in elems e union Collect(theSet\{e})
-        end;
+        end
+      measure SetCard;
+      
+      SetCard: set of seq of nat -> nat
+      SetCard(s) ==
+        card s;
 
       IsA: Record * seq of char -> bool
       IsA(rec,nm) ==
