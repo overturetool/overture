@@ -103,8 +103,6 @@ inv pes == (forall p in set elems pes.vertices(2,...,4) &
 Line:: m: real
        c: real;
 
-Table_Element = nat1 * nat1;
-
 RelOrientation = <PERP> | <FACING> | <AWAY>;
 
 OrientedExs = Exs_types * (RelOrientation | <NONE>)
@@ -168,8 +166,10 @@ state Store of
         exs: inmap Site_label to Exposed_site
         xmax: Metre
         ymax: Metre
-inv mk_Store(pes,exs,xmax,ymax) == dom pes subset dom exs and
-         forall p in set dom pes & is_Storage_building(exs(p).building.type)
+inv mk_Store(pes,exs,xmax,ymax) == 
+      xmax > 0 and ymax > 0 and
+      dom pes subset dom exs and
+      forall p in set dom pes & is_Storage_building(exs(p).building.type)
 init store == store = mk_Store({|->},{|->},Xmax,Ymax)
 end
 
@@ -216,11 +216,18 @@ all_compatible: Object * Magazine -> bool
 all_compatible(o,m) == forall elt in set rng m.elements &
                         compatible(o.cg,elt.object.cg);
 
-sum(s: set of real) r:real
-post
-        if s = {} then r = 0 else
-        let x:real be st x in set s in
-        r = x + sum(s \ {x});
+sum: set of real -> real
+sum(s) ==
+  if s = {} 
+  then 0 
+  else let x:real be st x in set s 
+       in
+         x + sum(s \ {x})
+measure Card;
+
+Card: set of real -> nat
+Card(s) ==
+  card s;
 
 suff_capacity: Object * Magazine -> bool
 suff_capacity(o,m) ==
