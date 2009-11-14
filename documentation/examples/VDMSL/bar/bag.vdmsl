@@ -58,7 +58,12 @@ functions
     cases s :
     []         -> b,
     [e] ^ rest -> AuxSeqToBag(rest, Add(e, b))
-    end;
+    end
+  measure LenPar1;
+  
+  LenPar1 : seq of Elem * Bag -> nat
+  LenPar1(list,-) ==
+    len list;
 
 
   -- Functions Required by Customer
@@ -123,7 +128,12 @@ functions
     then 0
     else let e in set dom b
          in
-         b(e) + Size ({e} <-: b);
+         b(e) + Size ({e} <-: b)
+   measure CardDom;
+   
+   CardDom: Bag -> nat
+   CardDom(b) ==
+     card dom b;
 
   Intersection : Bag * Bag -> Bag
   Intersection (b1, b2) ==

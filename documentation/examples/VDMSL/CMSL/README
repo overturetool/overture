@@ -1,0 +1,6 @@
+The counter measures example was developed by Peter Gorm Larsen in
+2007 in different dialect of VDM. This one is the most abstract version
+using VDM-SL.
+Exe: CounterMeasures(testval1)
+Exe: CounterMeasures(testval2)
+Exe: CounterMeasures(testval3)

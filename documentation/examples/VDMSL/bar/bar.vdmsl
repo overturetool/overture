@@ -1,6 +1,7 @@
 \documentclass[a4paper,dvips]{article}
-\usepackage{vdmsl-2e}
-\usepackage{makeidx}
+%\usepackage{vdmsl-2e}
+\usepackage{overture}
+%\input{makeidx}
 
 \begin{document}
 
@@ -20,12 +21,11 @@ performed in a pub with a cellar and a bar. This specification is
 mainly intended for the purpose of illustrating how bags can be used.
 \end{abstract}
 
-\input{bag.vdm}
+\input{bag.vdmsl}
  
 \section{Modelling of a Bar}
 
 \begin{vdm_al}
-
 module BAR
 
 imports
@@ -117,7 +117,12 @@ functions
                       mk_(BAG`Union(c, can_restock), r), 
                       {s} <-: sb)
       else
-        mk_(c, r);
+        mk_(c, r)
+   measure CardCellar;
+   
+   CardCellar: CellarLevel * Pub * map Supplier to Stock -> nat
+   CardCellar(-,-,sb) ==
+     card dom sb;
 
   -- Sell one drink to a patron
   Drink1 : Drink * Pub -> Pub
@@ -145,7 +150,11 @@ functions
     else 
       let s in set dom supps
       in
-        BAG`Join(supps(s), HighestStock({s} <-: supps));
+        BAG`Join(supps(s), HighestStock({s} <-: supps))
+  measure CardDom;
+  
+  CardDom: map Supplier to Stock -> nat CardDom(m) ==
+    card dom m;
 
   -- How many drinks are there in the pub
   TotalDrinks : Pub -> nat
