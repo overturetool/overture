@@ -23,14 +23,12 @@
 
 package org.overturetool.vdmj.expressions;
 
-import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.StateDefinition;
 import org.overturetool.vdmj.patterns.IdentifierPattern;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
-import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.BooleanType;
 import org.overturetool.vdmj.types.RecordType;
@@ -97,14 +95,12 @@ public class StateInitExpression extends Expression
 		if (pattern instanceof IdentifierPattern &&
 			exp instanceof EqualsExpression)
 		{
-			DefinitionList defs = pattern.getDefinitions(state.getType(), scope);
-			Environment local = new FlatCheckedEnvironment(defs, env, scope);
 			EqualsExpression ee = (EqualsExpression)exp;
 
 			if (ee.left instanceof VariableExpression)
 			{
-				ee.left.typeCheck(local, null, scope);
-				Type rhs = ee.right.typeCheck(local, null, scope);
+				ee.left.typeCheck(env, null, scope);
+				Type rhs = ee.right.typeCheck(env, null, scope);
 
 				if (rhs.isRecord())
 				{
@@ -112,8 +108,10 @@ public class StateInitExpression extends Expression
 					ok = rt.name.equals(state.name);
 				}
 			}
-
-			local.unusedCheck();
+		}
+		else
+		{
+			exp.typeCheck(env, null, scope);
 		}
 
 		if (!ok)

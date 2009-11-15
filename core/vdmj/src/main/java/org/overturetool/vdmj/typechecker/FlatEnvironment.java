@@ -142,4 +142,10 @@ public class FlatEnvironment extends Environment
 
 		return defs;
 	}
+
+	@Override
+    public void markUsed()
+    {
+		definitions.markUsed();
+    }
 }

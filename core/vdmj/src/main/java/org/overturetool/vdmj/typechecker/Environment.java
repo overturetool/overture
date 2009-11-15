@@ -151,6 +151,12 @@ abstract public class Environment
 	/** Find functions and operations of the given basic name. */
 	abstract public DefinitionSet findMatches(LexNameToken name);
 
+	/** Mark all definitions, at this level, used. */
+	public void markUsed()
+	{
+		// Nothing, by default. Implemented in flat environments.
+	}
+
 	/** Add details to a TC error with alternative fn/op name possibilities. */
 	public void listAlternatives(LexNameToken name)
 	{

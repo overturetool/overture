@@ -257,4 +257,12 @@ public class DefinitionList extends Vector<Definition>
 
 		return obligations;
 	}
+
+	public void markUsed()
+    {
+		for (Definition d: this)
+		{
+			d.markUsed();
+		}
+    }
 }
