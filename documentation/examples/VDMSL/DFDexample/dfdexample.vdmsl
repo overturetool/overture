@@ -1093,7 +1093,8 @@ in the construction of a quotation for an operation.
 All quotations are combined in a conjunction.
 
 \begin{vdm_al}
-MakePostForEO: seq1 of ProcId * DFDSig * IntM * IntM -> Expr
+MakePostForEO: seq1 of ProcId * DFDSig * IntM * IntM -> 
+               Expr
 MakePostForEO(piseq,dfdsig,intm,maxm) ==
   let nid= hd piseq in
   let intm'={stid |-> if mk_(stid, <READWRITE>) in set 
@@ -1158,17 +1159,22 @@ DFD with topology $dfdtopo$ can be executed.
 \begin{vdm_al}
 ExecutionOrders: DFDTopo -> set of seq1 of ProcId
 ExecutionOrders(dfdtopo) ==
-  let top={mk_(fid,tid)|mk_(fid,tid) in set rng dfdtopo &
-            (is_DFDId(fid) or is_MSId(fid) or (fid = nil)) and 
-            (is_DFDId(tid) or is_MSId(tid) or (tid = nil))},
+  let top={mk_(fid,tid)
+          |mk_(fid,tid) in set rng dfdtopo &
+           (is_DFDId(fid) or is_MSId(fid) or (fid = nil)) 
+            and 
+           (is_DFDId(tid) or is_MSId(tid) or (tid = nil))},
       top2={mk_(fid,tid)|mk_(fid,tid) in set rng dfdtopo &
             (is_DFDId(fid) or is_MSId(fid)) and 
             (is_DFDId(tid) or is_MSId(tid))} in
-    let piset= dunion {{pi_1,pi_2}|mk_(pi_1,pi_2) in set top}\{nil} in
+    let piset= dunion {{pi_1,pi_2}
+                       |mk_(pi_1,pi_2) in set top}\{nil} 
+    in
       {piseq | piseq in set PossibleSeqs(piset) &
                -- len piseq= card piset and  elems piseq=piset and 
                forall i,j in set inds piseq &
-                  j<i => (piseq(j) not in set TransClosure(piseq(i),top2,{}))};
+                  j<i => (piseq(j) not in set
+                          TransClosure(piseq(i),top2,{}))};
 \end{vdm_al}
 $MakeQuotedApply$ generates the application of the quotation of
 a pre or a post-condition of an operation. Note that the configuration
@@ -1404,10 +1410,10 @@ MakeStmtForEO(piseq,dfdid,dfdsig) ==
       kind = FindKind(dfdsig(nid)) in
    if len piseq=1
    then let mk_(-,out,-)=dfdsig(dfdid) in 
-         let return'=mk_Return(MakeResult(out)) in
+         let ret=mk_Return(MakeResult(out)) in
           if kind=<OPRES>
-          then mk_DefStmt(pat,call,return')
-          else mk_Sequence([call,return'])
+          then mk_DefStmt(pat,call,ret)
+          else mk_Sequence([call,ret])
    else let rest=MakeStmtForEO( tl piseq,dfdid,dfdsig) in
          if kind=<OPRES>
          then mk_DefStmt(pat,call,rest)
@@ -1506,22 +1512,25 @@ QuantNec(out,$st,fids,intm,maxm) ==
 pre forall mk_(s,-) in set elems $st&
        s in set dom intm and s in set dom maxm;
   
-  MakeTypeBindList : set of FlowId -> seq of TypeBind
-  MakeTypeBindList(fids) ==
-   if fids={}
-   then []
-   else let fid in set fids in
-         let first=mk_TypeBind([mk_PatternId(FlowIdVarConf(fid))],
-                                             FlowIdTypeConf(fid)) in
-           [first]^MakeTypeBindList(fids \ {fid})
+MakeTypeBindList : set of FlowId -> seq of TypeBind
+MakeTypeBindList(fids) ==
+ if fids={}
+ then []
+ else let fid in set fids 
+      in
+        let pat = [mk_PatternId(FlowIdVarConf(fid))],
+            first=mk_TypeBind(pat,FlowIdTypeConf(fid)) 
+        in
+          [first]^MakeTypeBindList(fids \ {fid})
   measure CardFId;
   
-  CardFId: set of FlowId -> nat
-  CardFId(s) ==
-    card s;
+CardFId: set of FlowId -> nat
+CardFId(s) ==
+  card s;
   
-  MakePatternIds: (Id | DSId) * nat * nat * (<PRE>|<POST>) -> seq of PatternId
-  MakePatternIds(id, n, max, c) ==
+MakePatternIds: (Id | DSId) * nat * nat * 
+                (<PRE>|<POST>) -> seq of PatternId
+MakePatternIds(id, n, max, c) ==
   if (n = max) and (c = <POST>)
   then [mk_PatternId(StateVarConf(id))]
   else cases n:
@@ -1531,11 +1540,12 @@ pre forall mk_(s,-) in set elems $st&
        others -> MakePatternSeq(StateVarConf(id), n, max)
        end;
   
-  MakePatternSeq: Id * nat * nat -> seq of PatternId
-  MakePatternSeq(id, n, max) ==
+MakePatternSeq: Id * nat * nat -> seq of PatternId
+MakePatternSeq(id, n, max) ==
   if n = max
   then [mk_PatternId(id ^ "'")]
-  else [mk_PatternId(id ^ "'")] ^ MakePatternSeq(id ^ "'", n+1, max)
+  else [mk_PatternId(id ^ "'")] ^ 
+       MakePatternSeq(id ^ "'", n+1, max)
   pre n <= max
   measure TowardsMax;
   
@@ -1549,7 +1559,7 @@ topology which are connected in an equivalence class.
 
 \begin{vdm_al}
 EquivClass: set of (ProcId * ProcId) * set of (MSId|DFDId) ->
-           set of (MSId|DFDId)
+            set of (MSId|DFDId)
 EquivClass(top,ids) ==
    if exists mk_(fid,tid) in set top&
    (fid in set ids and tid not in set ids) or 
@@ -1582,8 +1592,6 @@ component identifiers from a DFD.
 \begin{vdm_al}
 CollectStIds: set of Signature -> set of (StId * Mode)
 CollectStIds(sigs) ==
-  -- let standms= dunion { elems $st|mk_(-,-,$st) in set sigs} in
-  -- {stid|mk_(stid,-) in set standms};
   dunion { elems $st|mk_(-,-,$st) in set sigs};
 \end{vdm_al}
 
@@ -1592,9 +1600,9 @@ are in a given partition that have write access to a given state component.
 This information is used to deal with the intermediate state values.
 
 \begin{vdm_al}
-NoOfWr : set of Signature * StId -> nat 
+NoOfWr: set of Signature * StId -> nat 
 NoOfWr(sigs,stid) ==
-   if sigs={}
+  if sigs={}
   then 0
   else let sig in set sigs in
   let mk_(-,-,$st)=sig in
