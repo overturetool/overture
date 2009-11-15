@@ -1,0 +1,42 @@
+\section{Test of the BAG}
+
+\begin{vdm_al}
+module BAGTEST
+
+imports from BAG all
+
+exports all
+
+definitions
+
+functions 
+
+  TestBagAll: () -> bool
+  TestBagAll() ==
+    let b1 = TestAdd1(),
+        b2 = TestAdd2(),
+        b3 = TestCount1(),
+        b4 = TestCount2()
+    in
+      b1 and b2;
+      
+  TestAdd1: () -> bool
+  TestAdd1() ==
+    BAG`Add(<C>,BAG`baga) = 
+    { <A> |-> 3,<B> |-> 2,<C> |-> 5 };
+    
+  TestAdd2: () -> bool
+  TestAdd2() == 
+    BAG`Add(<D>,BAG`baga) = 
+    { <A> |-> 3,<B> |-> 2,<C> |-> 4,<D> |-> 1 };
+
+  TestCount1: () -> bool
+  TestCount1() ==
+    BAG`Count(<D>,BAG`baga) = 0;
+    
+  TestCount2: () -> bool
+  TestCount2() == 
+    BAG`Count(<D>,BAG`bagb) = 4;
+    
+end BAGTEST
+\end{vdm_al}
