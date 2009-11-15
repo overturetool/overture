@@ -171,7 +171,7 @@ public class LexLocation implements Serializable
 		return hits;
 	}
 
-	public static List<Integer> getMissList(String file)
+	public static List<Integer> getMissList(File file)
 	{
 		List<Integer> misses = new Vector<Integer>();
 
@@ -216,7 +216,7 @@ public class LexLocation implements Serializable
 		return hits;
 	}
 
-	public static List<LexLocation> getMissLocations(String file)
+	public static List<LexLocation> getMissLocations(File file)
 	{
 		List<LexLocation> misses = new Vector<LexLocation>();
 
