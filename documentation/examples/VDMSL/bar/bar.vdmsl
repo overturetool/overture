@@ -201,4 +201,6 @@ values -- introduced for the purposes of testing
 end BAR 
 \end{vdm_al}
 
+\input{bagtest.vdmsl}
+
 \end{document}
