@@ -1,3 +1,4 @@
+%\definecolor{notovered}{rgb}{1,0,0}  %red
 % definition of VDM++, JavaCC, JJTree, JTB, ANTLR and SableCC for listings
 \usepackage{listings}
 \include{customlangdef}
@@ -43,5 +44,6 @@
 
 \usepackage{times}
 
+\newcommand{\notcovered}[1]{\textcolor{red}{#1}}
 \lstnewenvironment{vdm_al}{\lstset{language=VDM++}}
 {}

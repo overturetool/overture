@@ -1,7 +1,6 @@
 \section{Modelling of Bags}
 
 \begin{vdm_al}
-
 module BAG
 
 exports
@@ -27,7 +26,9 @@ functions
 
 values
   baga,bagb: Bag
-  
+\end{vdm_al}
+
+\begin{vdm_al}  
 definitions
 
 types
@@ -51,7 +52,8 @@ functions
     then i
     else j;
 
-  -- Add a sequence of elements, s, to a bag, b, by adding the head of s, 
+  -- Add a sequence of elements, s, to a bag, b, 
+  -- by adding the head of s, 
   -- and making a recursive call
   AuxSeqToBag : seq of Elem * Bag -> Bag
   AuxSeqToBag (s, b) ==
@@ -64,10 +66,12 @@ functions
   LenPar1 : seq of Elem * Bag -> nat
   LenPar1(list,-) ==
     len list;
+\end{vdm_al}
 
-
+\begin{vdm_al}
   -- Functions Required by Customer
-  -- These as described by the user document (Exercise 7)
+  -- These as described by the user document 
+  -- (Exercise 7)
 
   Empty : () -> Bag
   Empty () ==
@@ -92,7 +96,8 @@ functions
     if e in set dom b
     then b(e)
     else 0;
-  -- from given examples, if not in bag then count = 0, not an error
+  -- from given examples, if not in bag then 
+  -- count = 0, not an error
 
   In : Elem * Bag -> bool
   In (e, b) ==
@@ -134,12 +139,15 @@ functions
    CardDom: Bag -> nat
    CardDom(b) ==
      card dom b;
+\end{vdm_al}
 
+\begin{vdm_al}
   Intersection : Bag * Bag -> Bag
   Intersection (b1, b2) ==
     {e |-> Min (Count(e, b1), Count(e, b2)) | 
-        -- Design note: Min(...,...) is > 0 as use inter in next line
-        --   to ensure both Counts are at least 1
+        -- Design note: Min(...,...) is > 0 
+        -- as use inter in next line
+        -- to ensure both Counts are at least 1
      e in set (dom b1 inter dom b2)
     };
 
@@ -150,7 +158,8 @@ functions
 values 
   -- The values requested by the customer for tests
   baga : Bag = { <A> |-> 3, <B> |-> 2, <C> |-> 4};
-  bagb : Bag = { <A> |-> 1, <C> |-> 5, <D> |-> 4, <E> |-> 1}
+  bagb : Bag = { <A> |-> 1, <C> |-> 5, <D> |-> 4, 
+                 <E> |-> 1}
 
 end BAG
 \end{vdm_al}
