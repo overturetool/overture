@@ -1,7 +1,9 @@
 \documentclass[11pt]{article}
 \usepackage{a4}
 \usepackage{makeidx}
-\usepackage{vdmsl-2e}
+%\usepackage{vdmsl-2e}
+\usepackage{color}
+\usepackage{overture}
 \usepackage{termref}
 \usepackage{epsf}
 \usepackage{latexsym}
@@ -83,8 +85,8 @@ also may increase the acceptability of formal methods to these people.
 Our work in this area so far has concentrated on combining {\em Structured
 Analysis (SA)} \cite{Yourdon75,Demarco78,Gane77}
 with the {\em Vienna Development Method (VDM)}
-\cite{Bjorner&82b,Jones90}; we provide a brief introduction to
-\SA, but we refer to text books such as \cite{Jones90} and
+\cite{Bjorner&82b,Jones90a}; we provide a brief introduction to
+\SA, but we refer to text books such as \cite{Jones90a} and
 \cite{Andrews&91} for an introduction to \VDM.
 We think that a well-integrated combination of notations can be achieved
 by using {\em data flow diagrams (DFDs)} -- which we consider to be the main
@@ -149,7 +151,7 @@ is called a {\em data flow diagram (DFD)}. The original version of
 A \DFD\ is a {\em directed graph} consisting of elementary building blocks.
 Each building block has a graphical notation (figure~\ref{figexternalprocess}).
 
-\makefigure{building_blocks}{Elementary building blocks of a DFD}{figexternalprocess}
+%\makefigure{building_blocks}{Elementary building blocks of a DFD}{figexternalprocess}
 
 Through the years several dialects have evolved and extensions
 have been defined (e.g. {\small SSADM}\ \cite{Longworth&86} and {\small SA/RT}\
@@ -271,7 +273,8 @@ interpretation suffices.}
 importing the necessary types and
 operations needed for the data transformers
 (figure~\ref{hierarchy}).
-\makefigure{hierarchy}{Transformation of a hierarchy of DFDs into a VDM module structure (example)}{hierarchy}
+
+%\makefigure{hierarchy}{Transformation of a hierarchy of DFDs into a VDM module structure (example)}{hierarchy}
 
 
 {\em External processes} can be considered as processes `executing' in parallel with
@@ -375,22 +378,26 @@ it should be transformed.}.
 \begin{vdm_al}
 functions
   
-  TransHDFD : HDFD * MSs * (<EXPL>|<IMPL>) ->  set of Module
-  TransHDFD(hdfd,mss,style) ==
+TransHDFD : HDFD * MSs * (<EXPL>|<IMPL>) -> set of Module
+TransHDFD(hdfd,mss,style) ==
   let mainmod=MakeDFDModule(hdfd,mss,style) in
   let mk_(-,-,-,dfdmap,-)=hdfd in
-  let mods= dunion {TransHDFD(dfd,mss,style)|dfd in set  rng dfdmap} in
+  let mods= dunion {TransHDFD(dfd,mss,style)
+                   | dfd in set rng dfdmap} in
   {mainmod} union mods;
 \end{vdm_al}
 For each module the interface and the body (the definitions) of 
 the module must be created.
 
 \begin{vdm_al}
-  MakeDFDModule : HDFD * MSs * (<EXPL>|<IMPL>) -> Module
-  MakeDFDModule(mk_(dfdid,dss,dfdtopo,dfdmap,dfdsig),mss,style) ==
-  let int' = MakeInterface(dfdid,dss,dfdtopo,dfdsig,dfdmap),
-      defs = MakeDefinitions(dfdid,dss,dfdtopo,dfdsig,mss,style) in
-  mk_(ModIdConf(dfdid),int',defs);
+MakeDFDModule : HDFD * MSs * (<EXPL>|<IMPL>) -> Module
+MakeDFDModule(mk_(dfdid,dss,dfdtopo,dfdmap,dfdsig),
+              mss,style) ==
+  let i = MakeInterface(dfdid,dss,dfdtopo,dfdsig,dfdmap),
+      defs = MakeDefinitions(dfdid,dss,dfdtopo,
+                             dfdsig,mss,style) 
+  in
+    mk_(ModIdConf(dfdid),i,defs);
 \end{vdm_al}
 
 \noindent The name of the module (the first component of the
@@ -418,55 +425,62 @@ are described in their own module), and an export part for the
 operation which specifies the functionality of the given DFD.
 
 \begin{vdm_al}
-  MakeInterface : DFDId * DSs * DFDTopo * DFDSig * DFDMap -> Interface
-  MakeInterface(dfdid,dss,dfdtopo,dfdsig,dfdmap) ==
+MakeInterface: DFDId * DSs * DFDTopo * DFDSig * DFDMap -> 
+               Interface
+MakeInterface(dfdid,dss,dfdtopo,dfdsig,dfdmap) ==
   let tmimp = MakeTypeModImp(dss, dom dfdtopo),
       dfdmimps = MakeDFDModImps(dom dfdmap,dfdsig),
       exp = MakeOpExp(dfdid,dfdsig(dfdid)) in
        mk_(({tmimp} union dfdmimps),exp)
-  pre dfdid in set  dom dfdsig;
+  pre dfdid in set dom dfdsig;
   
-  MakeTypeModImp : DSs *  set of FlowId -> Import
-  MakeTypeModImp(dss,fids) ==
-  let tysigs={mk_TypeSig(DSIdConf(dsid))|dsid in set dss} union 
-             {mk_TypeSig(FlowIdTypeConf(fid))|fid in set fids} in
+MakeTypeModImp : DSs * set of FlowId -> Import
+MakeTypeModImp(dss,fids) ==
+  let tysigs= {mk_TypeSig(DSIdConf(dsid))
+              |dsid in set dss} union 
+              {mk_TypeSig(FlowIdTypeConf(fid))
+              |fid in set fids} in
   mk_(TypeModConf(),tysigs);
   
-  MakeDFDModImps :  set of DFDId * DFDSig -> set of Import
-  MakeDFDModImps(dfdids,dfdsig) ==
-  {mk_(ModIdConf(id),{MakeOpSig(id,dfdsig(id))}) | id in set dfdids}
-  pre dfdids subset  dom dfdsig;
+MakeDFDModImps: set of DFDId * DFDSig -> set of Import
+MakeDFDModImps(dfdids,dfdsig) ==
+  {mk_(ModIdConf(id),{MakeOpSig(id,dfdsig(id))}) 
+                     | id in set dfdids}
+pre dfdids subset dom dfdsig;
   
-  MakeOpExp : DFDId * Signature -> Export
-  MakeOpExp(dfdid,sig) ==
+MakeOpExp : DFDId * Signature -> Export
+MakeOpExp(dfdid,sig) ==
   {MakeOpSig(dfdid,sig)};
   
-  MakeOpSig : DFDId * Signature -> OpSig
-  MakeOpSig(dfdid,sig) ==
+MakeOpSig : DFDId * Signature -> OpSig
+MakeOpSig(dfdid,sig) ==
   let opty = MakeOpType(sig),
       opst = MakeOpState(sig) in
   mk_OpSig(OpIdConf(dfdid),opty,opst);
   
-  MakeOpType : Signature -> OpType
-  MakeOpType(mk_(il,ol,-)) ==
+MakeOpType : Signature -> OpType
+MakeOpType(mk_(il,ol,-)) ==
   mk_OpType(MakeType(il),MakeType(ol));
 \end{vdm_al}
 In $MakeType$ it can be seen that multiple flows to or from a data 
 transformer are modelled as product types.
 
 \begin{vdm_al}
-  MakeType :  seq of FlowId -> [Type]
-  MakeType(fidl) ==
-  cases  len fidl:
+MakeType : seq of FlowId -> [Type]
+MakeType(fidl) ==
+  cases len fidl:
     0 -> nil ,
     1 -> FlowIdTypeConf( hd fidl),
-  others -> mk_ProductType([FlowIdTypeConf(fidl(i))|i in set inds fidl])
+  others -> mk_ProductType([ FlowIdTypeConf(fidl(i))
+                           | i in set inds fidl])
   end;
   
-  MakeOpState : Signature ->  seq of Id
-  MakeOpState(mk_(-,-,sl)) ==
-  [let mk_(s,-)=sl(i) in
-  StateVarConf(s)|i in set inds sl];
+MakeOpState : Signature -> seq of Id
+MakeOpState(mk_(-,-,sl)) ==
+  [let mk_(s,-)=sl(i) 
+   in
+     StateVarConf(s)
+  |i in set inds sl];
 \end{vdm_al}
 
 \subsection{The main function for definitions}
@@ -481,9 +495,9 @@ these. Finally the module will always contain a definition of the
 operation which describes the functionality of that DFD.
 
 \begin{vdm_al}
-  MakeDefinitions : DFDId * DSs * DFDTopo * DFDSig * MSs * (<EXPL>|<IMPL>) ->
-                    Definitions
-  MakeDefinitions(dfdid,dss,dfdtopo,dfdsig,mss,style) ==
+MakeDefinitions: DFDId * DSs * DFDTopo * DFDSig * MSs * 
+                 (<EXPL>|<IMPL>) -> Definitions
+MakeDefinitions(dfdid,dss,dfdtopo,dfdsig,mss,style) ==
   let $st = MakeState(dfdid,dss,CollectExtDFs(dfdtopo)),
       msdescs = MakeMSDescs(dfdsig,mss),
       dfdop = MakeDFDOp(dfdid,dfdtopo,dfdsig,style) in
@@ -499,24 +513,29 @@ DFD and each data flow to or from an external process is transformed
 into a state component of the state definition.
 
 \begin{vdm_al}
-  MakeState : DFDId * DSs *  set of FlowId -> [StateDef]
-  MakeState(dfdid,dss,fids) ==
-   if dss={} and fids={}
+MakeState : DFDId * DSs * set of FlowId -> [StateDef]
+MakeState(dfdid,dss,fids) ==
+  if dss={} and fids={}
   then nil 
-  else let fl=MakeFieldList(dss union fids) in
-  mk_StateDef(StateIdConf(dfdid),fl)
-  ;
+  else let fl=MakeFieldList(dss union fids)
+       in
+         mk_StateDef(StateIdConf(dfdid),fl);
   
-  MakeFieldList :  set of StId ->  seq of Field
-  MakeFieldList(ids) ==
-   if ids={}
+MakeFieldList : set of StId -> seq of Field
+MakeFieldList(ids) ==
+  if ids={}
   then []
-  else let id in set ids in
-  [MakeField(id)]^MakeFieldList(ids \ {id})
-  ;
+  else let id in set ids 
+       in
+         [MakeField(id)]^MakeFieldList(ids \ {id})
+  measure Card;
+
+Card: set of StId -> nat
+Card(s) ==
+  card s;
   
-  MakeField : StId -> Field
-  MakeField(id) ==
+MakeField : StId -> Field
+MakeField(id) ==
   mk_Field(StateVarConf(id),StateTypeConf(id));
 \end{vdm_al}
 
@@ -531,33 +550,35 @@ mini-specification, a simple implicitly defined operation
 is generated. Since the user has supplied only the type
 information for the data transformer (by means of the data flow
 types) the generated definition will have the right type with
-$\True$ as a post-condition.
+\textbf{\ttfamily true} as a post-condition.
 
 \begin{vdm_al}
-  MakeMSDescs : DFDSig * MSs ->  set of Definition
-  MakeMSDescs(dfdsig,mss) ==
-   if forall id in set  dom dfdsig&
-   is_DFDId(id)
+MakeMSDescs : DFDSig * MSs -> set of Definition
+MakeMSDescs(dfdsig,mss) ==
+  if forall id in set dom dfdsig& is_DFDId(id)
   then {}
-  else let id in set  dom dfdsig be st is_MSId(id) in
-  let def'= if id in set  dom mss
-            then mss(id)
-            else MakeOp(id,dfdsig(id))
-   in
-  {def'} union MakeMSDescs({id} <-: dfdsig,mss)
-  ;
+  else let id in set dom dfdsig be st is_MSId(id) 
+       in
+         let def'= if id in set dom mss
+                   then mss(id)
+                   else MakeOp(id,dfdsig(id))
+         in
+           {def'} union MakeMSDescs({id} <-: dfdsig,mss);
   
-  MakeOp : MSId *  (seq of FlowId *  seq of FlowId * State) -> ImplOp
-  MakeOp(msid,mk_($in,out,$st)) ==
+MakeOp: MSId *  (seq of FlowId * seq of FlowId * State) 
+        -> ImplOp
+MakeOp(msid,mk_($in,out,$st)) ==
   let partpl = MakeInpPar($in),
       residtp = MakeOutPair(out),
       $ext = MakeExt($st),
-      body = mk_ImplOpBody(nil , mk_BoolLit(true)) in
-  mk_ImplOp(OpIdConf(msid),partpl,residtp,$ext,body);
+      body = mk_ImplOpBody(nil, mk_BoolLit(true)) 
+  in
+    mk_ImplOp(OpIdConf(msid),partpl,residtp,$ext,body);
   
-  MakeInpPar :  seq of FlowId ->  seq of ParType
-  MakeInpPar(fidl) ==
-  [mk_ParType(mk_PatternId(FlowIdVarConf(fidl(i))),FlowIdTypeConf(fidl(i)))
+MakeInpPar : seq of FlowId -> seq of ParType
+MakeInpPar(fidl) ==
+  [mk_ParType(mk_PatternId(FlowIdVarConf(fidl(i))),
+                           FlowIdTypeConf(fidl(i)))
   | i in set inds fidl];
 \end{vdm_al}
 
@@ -567,23 +588,24 @@ necessary to ``invent" a new identifier to denote the result of the
 data transformer ($ResultIdConf$).
 
 \begin{vdm_al}
-  MakeOutPair :  seq of FlowId -> [IdType]
-  MakeOutPair(fidl) ==
-  cases  len fidl:
+MakeOutPair : seq of FlowId -> [IdType]
+MakeOutPair(fidl) ==
+  cases len fidl:
     0 -> nil ,
-    1 -> mk_IdType(FlowIdVarConf( hd fidl),FlowIdTypeConf( hd fidl)),
-  others -> let t=mk_ProductType([FlowIdTypeConf(fidl(i))|i in set inds fidl]) 
+    1 -> mk_IdType(FlowIdVarConf( hd fidl),
+                   FlowIdTypeConf( hd fidl)),
+  others -> let t=mk_ProductType([FlowIdTypeConf(fidl(i))
+                                 |i in set inds fidl]) 
             in
               mk_IdType(ResultIdConf(),t)
-  end
-  ;
+  end;
   
-  MakeExt : State ->  seq of ExtVarInf
-  MakeExt($st) ==
+MakeExt : State -> seq of ExtVarInf
+MakeExt($st) ==
   [MakeExtVar($st(i))|i in set inds $st];
   
-  MakeExtVar : (StId * Mode) -> ExtVarInf
-  MakeExtVar(mk_(id,mode)) ==
+MakeExtVar : (StId * Mode) -> ExtVarInf
+MakeExtVar(mk_(id,mode)) ==
   mk_ExtVarInf(mode,VarConf(id),TypeConf(id));
 \end{vdm_al}
 
@@ -616,7 +638,7 @@ DFD as a whole.
 \subsubsection*{Example 1}
 
 Consider the \DFD\ in figure~\ref{example1}.
-\makefigure{example1}{DFD for example 1}{example1}
+%\makefigure{example1}{DFD for example 1}{example1}
 It is a simple
 \DFD\ consisting of two data transformers $P$ and $Q$,
 each having one input data flow ($a$ and $b$ respectively) and one
@@ -627,24 +649,34 @@ obvious that $P$ must be executed before $Q$ can be executed. This
 dependency between $P$ and $Q$ also can be found in the pre- and post-condition
 of the composite \DFD:
 
-\begin{vdm}
-\begin{op}[i]{PQ}
-\parms{a: A}[c: C]
-\begin{precond}
-\exists{b : B}\\
-    {pre-P(a) \And\\
-     post-P(a, b) \And \\
-     pre-Q(b)}
-\end{precond}
-\begin{postcond}
-\exists{b : B}\\
-    {pre-P(a) \And
-     post-P(a, b) \And \\
-     pre-Q(b) \And
-     post-Q(b, c)}
-\end{postcond}
-\end{op}
-\end{vdm}
+%\begin{vdm}
+%\begin{op}[i]{PQ}
+%\parms{a: A}[c: C]
+%\begin{precond}
+%\exists{b : B}\\
+%    {pre-P(a) \And\\
+%     post-P(a, b) \And \\
+%     pre-Q(b)}
+%\end{precond}
+%\begin{postcond}
+%\exists{b : B}\\
+%    {pre-P(a) \And
+%     post-P(a, b) \And \\
+%     pre-Q(b) \And
+%     post-Q(b, c)}
+%\end{postcond}
+%\end{op}
+%\end{vdm}
+\begin{lstlisting}
+PQ(a: A) c : C
+pre exists b : B & pre_P(a) and 
+                   post_P(a,b) and 
+                   pre_Q(b)
+post exists b : B & pre_P(a) and 
+                    post_P(a,b) and 
+                    pre_Q(b) and
+                    post_Q(b,c)
+\end{lstlisting}
 
 It is necessary to quote the post-condition\footnote{%
 `Quoting' pre- and post-conditions of (implicitly defined) functions and
@@ -682,30 +714,43 @@ This \DFD\ is given in figure~\ref{example2}.
 The data store $ds$ is -- as has been mentioned -- interpreted as a state
 component.
 
-\makefigure{example2}{DFD for example 2}{example2}
+%\makefigure{example2}{DFD for example 2}{example2}
 
 This composite \DFD\ can be specified by the following implicit
 definition:
 
-\begin{vdm}
-\begin{op}[i]{PQ_{DS}}
-\parms{a: A}[c: C]
-\ext{\Wr ds: DS\\}
-\begin{precond}
-\exists{b : B, ds' : DS}\\
-    {pre-P(a, ds) \And\\
-     post-P(a, ds, b, ds') \And \\
-     pre-Q(b, ds')}
-\end{precond}
-\begin{postcond}
-\exists{b : B, ds' : DS}\\
-    {pre-P(a, ~{ds}) \And
-     post-P(a, ~{ds}, b, ds') \And \\
-     pre-Q(b, ds') \And
-     post-Q(b, ds', c, ds)}
-\end{postcond}
-\end{op}
-\end{vdm}
+%\begin{vdm}
+%\begin{op}[i]{PQ_{DS}}
+%\parms{a: A}[c: C]
+%\ext{\Wr ds: DS\\}
+%\begin{precond}
+%\exists{b : B, ds' : DS}\\
+%    {pre-P(a, ds) \And\\
+%     post-P(a, ds, b, ds') \And \\
+%     pre-Q(b, ds')}
+%\end{precond}
+%\begin{postcond}
+%\exists{b : B, ds' : DS}\\
+%    {pre-P(a, ~{ds}) \And
+%     post-P(a, ~{ds}, b, ds') \And \\
+%     pre-Q(b, ds') \And
+%     post-Q(b, ds', c, ds)}
+%\end{postcond}
+%\end{op}
+%\end{vdm}
+\begin{lstlisting}
+PQ_DS(a: A) c : C
+wr ds : DS
+pre exists b : B, ds' : DS & 
+      pre_P(a, ds) and 
+      post_P(a,ds,b,ds') and 
+      pre_Q(b,ds')
+post exists b : B, ds' : DS & 
+        pre_P(a,ds~) and 
+        post_P(a,ds~,b.ds') and 
+        pre_Q(b,ds') and
+        post_Q(b,ds',c,ds)
+\end{lstlisting}
 
 It is necessary to introduce an intermediate
 state component, $ds'$, which holds the value of $ds$ in between execution of the different data
@@ -729,7 +774,7 @@ The \DFD\ from example~2 is now expanded by adding an extra data
 transformer, $R$, which also modifies data store $ds$, but
 otherwise is not connected to the two other data transformers ($P$ and
 $Q$). The \DFD\ is given in figure~\ref{example3}.
-\makefigure{example3}{DFD for example 3}{example3}
+%\makefigure{example3}{DFD for example 3}{example3}
 
 Although the \DFD\ at first sight still looks rather simple, it turns
 out that the \VDM\ specification for the \DFD\ is quite complicated. The \DFD\
@@ -751,37 +796,64 @@ generated \VDM\ specification.
 
 The following implicit definition of the composite \DFD\ can be generated:
 
-\begin{vdm}
-\begin{op}[i]{PQR_{DS}}
-\parms{a: A, d: D}[r: C \X E]
-\ext{\Wr ds : DS\\}
-\begin{precond}
-\exists{b : B, c : C, e : E, ds', ds'' : DS}\\ {%
-\lineup[c]{(}{pre-R(d, ds) \And post-R(d, ds, e, ds') \And \\
- pre-P(a, ds') \And post-P(a, ds', b, ds'') \And pre-Q(b, ds''))} \Or\\
-\lineup[c]{(}{pre-P(a, ds) \And post-P(a, ds, b, ds') \And \\
- pre-R(d, ds') \And post-R(d, ds', e, ds'') \And pre-Q(b, ds''))} \Or\\
-\lineup[c]{(}{pre-P(a, ds) \And post-P(a, ds, b, ds') \And \\
- pre-Q(b, ds') \And post-Q(b, ds', c, ds'') \And pre-R(d, ds''))}}
-\end{precond}
-\begin{postcond}
-\Let (c, e) = r
-\Lin\\
-\exists{b:B, ds', ds'' : DS}\\
-{\lineup[c]{(}{pre-R(d, ~{ds}) \And post-R(d, ~{ds}, e, ds') \And
-               pre-P(a, ds') \And \\ post-P(a, ds', b, ds'') \And
-	       pre-Q(b, ds'') \And post-Q(b, ds'', c, ds))} \Or\\
-\lineup[c]{(}{pre-P(a, ~{ds}) \And post-P(a, ~{ds}, b, ds') \And
-              pre-R(d, ds') \And \\ post-R(d, ds', e, ds'') \And
-	      pre-Q(b, ds'') \And post-Q(b, ds'', c, ds))} \Or\\
-\lineup[c]{(}{pre-P(a, ~{ds}) \And post-P(a, ~{ds}, b, ds') \And
-              pre-Q(b, ds') \And \\ post-Q(b, ds', c, ds'') \And
-	      pre-R(d, ds'') \And post-R(d, ds'', e, ds))}}
-\end{postcond}
-\end{op}
-\end{vdm}
+%\begin{vdm}
+%\begin{op}[i]{PQR_{DS}}
+%\parms{a: A, d: D}[r: C \X E]
+%\ext{\Wr ds : DS\\}
+%\begin{precond}
+%\exists{b : B, c : C, e : E, ds', ds'' : DS}\\ {%
+%\lineup[c]{(}{pre-R(d, ds) \And post-R(d, ds, e, ds') \And \\
+% pre-P(a, ds') \And post-P(a, ds', b, ds'') \And pre-Q(b, ds''))} \Or\\
+%\lineup[c]{(}{pre-P(a, ds) \And post-P(a, ds, b, ds') \And \\
+% pre-R(d, ds') \And post-R(d, ds', e, ds'') \And pre-Q(b, ds''))} \Or\\
+%\lineup[c]{(}{pre-P(a, ds) \And post-P(a, ds, b, ds') \And \\
+% pre-Q(b, ds') \And post-Q(b, ds', c, ds'') \And pre-R(d, ds''))}}
+%\end{precond}
+%\begin{postcond}
+%\Let (c, e) = r
+%\Lin\\
+%\exists{b:B, ds', ds'' : DS}\\
+%{\lineup[c]{(}{pre-R(d, ~{ds}) \And post-R(d, ~{ds}, e, ds') \And
+%               pre-P(a, ds') \And \\ post-P(a, ds', b, ds'') \And
+%	       pre-Q(b, ds'') \And post-Q(b, ds'', c, ds))} \Or\\
+%\lineup[c]{(}{pre-P(a, ~{ds}) \And post-P(a, ~{ds}, b, ds') \And
+%              pre-R(d, ds') \And \\ post-R(d, ds', e, ds'') \And
+%	      pre-Q(b, ds'') \And post-Q(b, ds'', c, ds))} \Or\\
+%\lineup[c]{(}{pre-P(a, ~{ds}) \And post-P(a, ~{ds}, b, ds') \And
+%              pre-Q(b, ds') \And \\ post-Q(b, ds', c, ds'') \And
+%	      pre-R(d, ds'') \And post-R(d, ds'', e, ds))}}
+%\end{postcond}
+%\end{op}
+%\end{vdm}
+\begin{lstlisting}
+PQR_DS(a : A, d : D) r : C * E
+wr ds : DS
+pre exists b : B, c : C, e : E, ds', ds'' : DS &
+       (pre_R(d, ds) and post_R(d, ds, e, ds') and
+        pre_P(a, ds') and post_P(a, ds', b, ds'') and 
+        pre_Q(b, ds'')) or
+       (pre_P(a, ds) and post_P(a, ds, b, ds') and
+        pre_R(d, ds') and post_R(d, ds', e, ds'') and 
+        pre_Q(b, ds'')) or
+       (pre_P(a, ds) and post_P(a, ds, b, ds') and
+        pre_Q(b, ds') and post_Q(b, ds', c, ds'') and 
+        pre_R(d, ds''))
+post let (c, e) = r
+     in
+       exists b:B, ds', ds'' : DS &
+         (pre_R(d, ds~) and post_R(d, ds~, e, ds') and
+          pre_P(a, ds') and post_P(a, ds', b, ds'') and
+          pre_Q(b, ds'') and post_Q(b, ds'', c, ds)) or
+         (pre_P(a, ds~) and post_P(a, ds~, b, ds') and
+          pre_R(d, ds') and post_R(d, ds', e, ds'') and
+          pre_Q(b, ds'') and post_Q(b, ds'', c, ds)) or
+         (pre_P(a, ds~) and post_P(a, ds~, b, ds') and
+          pre_Q(b, ds') and post_Q(b, ds', c, ds'') and
+          pre_R(d, ds'') and post_R(d, ds'', e, ds))
+\end{lstlisting}
+
 The post-condition shows that there are three possible
-execution orders: $\seq{P, Q, R}$, $\seq{P, R, Q}$ and $\seq{R, P, Q}$.
+execution orders: $[P, Q, R]$, $[P, R, Q]$ and $[R, P, Q]$.
 The pre- and post-conditions defined above ensure that at least one
 possible execution order can be used. 
 $r$ is a new name, introduced to denote the output as a whole.
@@ -794,26 +866,26 @@ functions illustrate how the problematic issues from the three
 examples above are dealt with.
 
 \begin{vdm_al}
-  MakeDFDOp : DFDId * DFDTopo * DFDSig * (<EXPL>|<IMPL>) -> OpDef
-  MakeDFDOp(dfdid,dfdtopo,dfdsig,style) ==
-   if style=<EXPL>
+MakeDFDOp: DFDId * DFDTopo * DFDSig * (<EXPL>|<IMPL>) -> 
+           OpDef
+MakeDFDOp(dfdid,dfdtopo,dfdsig,style) ==
+  if style=<EXPL>
   then MakeDFDExplOp(dfdid,dfdtopo,dfdsig)
   else MakeDFDImplOp(dfdid,dfdtopo,dfdsig)
-  
-   pre  if style=<EXPL>
-        then pre_MakeDFDExplOp(dfdid,dfdtopo,dfdsig)
-        else pre_MakeDFDImplOp(dfdid,dfdtopo,dfdsig);
+pre if style=<EXPL>
+    then pre_MakeDFDExplOp(dfdid,dfdtopo,dfdsig)
+    else pre_MakeDFDImplOp(dfdid,dfdtopo,dfdsig);
 
-  MakeDFDImplOp : DFDId * DFDTopo * DFDSig -> ImplOp
-  MakeDFDImplOp(dfdid,dfdtopo,dfdsig) ==
+MakeDFDImplOp : DFDId * DFDTopo * DFDSig -> ImplOp
+MakeDFDImplOp(dfdid,dfdtopo,dfdsig) ==
   let mk_($in,out,$st)=dfdsig(dfdid) in
   let partpl = MakeInpPar($in),
       residtp = MakeOutPair(out),
       $ext = MakeExt($st),
       body = MakeImplOpBody(dfdid,dfdtopo,dfdsig) in
   mk_ImplOp(OpIdConf(dfdid),partpl,residtp,$ext,body)
-  pre dfdid in set  dom dfdsig and 
-      pre_MakeImplOpBody(dfdid,dfdtopo,dfdsig);
+pre dfdid in set dom dfdsig and 
+    pre_MakeImplOpBody(dfdid,dfdtopo,dfdsig);
 \end{vdm_al}
 
 The function $MakeImplOpBody$ is used to generate both the pre-condition
@@ -836,19 +908,25 @@ having write access (and thus potentially introduce an
 intermediate state value) to that state component.
 
 \begin{vdm_al}
-  MakeImplOpBody : DFDId * DFDTopo * DFDSig -> ImplOpBody
-  MakeImplOpBody(dfdid,dfdtopo,dfdsig) ==
-  let intm = {stid |-> 0|mk_(stid,-) in set CollectStIds( rng dfdsig)},
-      maxm = {stid |-> Reduce(NoOfWr( rng dfdsig,stid))
-             |mk_(stid, -) in set CollectStIds(rng dfdsig)} in
-  let $pre  = MakePreExpr(dfdid,dfdtopo,dfdsig,intm,maxm),
-      $post = MakePostExpr(dfdid,dfdtopo,dfdsig,intm,maxm) in
-  mk_ImplOpBody($pre,$post)
-  pre let intm = {stid |-> 0|mk_(stid,-) in set CollectStIds( rng dfdsig)},
-          maxm = {stid |-> Reduce(NoOfWr( rng dfdsig,stid))
-                 |mk_(stid,-) in set CollectStIds( rng dfdsig)} in
-       pre_MakePreExpr(dfdid,dfdtopo,dfdsig,intm,maxm) and 
-       pre_MakePostExpr(dfdid,dfdtopo,dfdsig,intm,maxm)
+MakeImplOpBody : DFDId * DFDTopo * DFDSig -> ImplOpBody
+MakeImplOpBody(dfdid,dfdtopo,dfdsig) ==
+  let intm = {stid |-> 0|mk_(stid,-) in set 
+                         CollectStIds(rng dfdsig)},
+      maxm = {stid |-> Reduce(NoOfWr(rng dfdsig,stid))
+             | mk_(stid, -) in set 
+               CollectStIds(rng dfdsig)},
+      $pre  = MakePreExpr(dfdid,dfdtopo,dfdsig,intm,maxm),
+      $post = MakePostExpr(dfdid,dfdtopo,dfdsig,intm,maxm) 
+  in
+    mk_ImplOpBody($pre,$post)
+pre let intm = {stid |-> 0|mk_(stid,-) in set 
+                           CollectStIds(rng dfdsig)},
+        maxm = {stid |-> Reduce(NoOfWr(rng dfdsig,stid))
+               | mk_(stid,-) in set 
+                 CollectStIds(rng dfdsig)} 
+    in
+      pre_MakePreExpr(dfdid,dfdtopo,dfdsig,intm,maxm) and 
+      pre_MakePostExpr(dfdid,dfdtopo,dfdsig,intm,maxm)
 \end{vdm_al}
 
 The $IntM$ domain is an auxiliary domain which is used in the formal
@@ -856,7 +934,7 @@ transformation from SA to VDM. It is used to provide information
 about intermediate state values.
 
 \begin{vdm_al}
-  types
+types
   IntM = map StId to nat
 \end{vdm_al}
 
@@ -869,17 +947,21 @@ by calling $QuantNec$, and depending on that, create either a existential
 quantified expression, or just the predicate part of such an expression.
 
 \begin{vdm_al}
-  functions
+functions
   
-  MakePreExpr : DFDId * DFDTopo * DFDSig * IntM * IntM -> Expr
-  MakePreExpr(dfdid,dfdtopo,dfdsig,intm,maxm) ==
+MakePreExpr: DFDId * DFDTopo * DFDSig * IntM * IntM -> 
+             Expr
+MakePreExpr(dfdid,dfdtopo,dfdsig,intm,maxm) ==
   let mk_(-,out,$st)=dfdsig(dfdid) in
   let fids = NeedsQuant(dfdtopo,dfdsig,{},{}),
   pred = MakePrePred(dfdtopo,dfdsig,intm,maxm) in
     if QuantNec(out,$st,fids,intm,maxm)
-    then mk_ExistsExpr(MakeExistsBind(fids,$st,intm,maxm,<PRE>),pred)
+    then let bind = MakeExistsBind(fids,$st,intm,
+                                   maxm,<PRE>)
+         in
+           mk_ExistsExpr(bind,pred)
     else pred
-  pre dfdid in set  dom dfdsig;
+  pre dfdid in set dom dfdsig;
 \end{vdm_al}
 
 The function $MakePrePred$ is used to create the `body' of the pre-condition
@@ -892,10 +974,11 @@ been executed.
 Finally, all such predicates or combined in a disjunction.
 
 \begin{vdm_al}
-  MakePrePred : DFDTopo * DFDSig * IntM * IntM -> Expr
-  MakePrePred(dfdtopo,dfdsig,intm,maxm) ==
+MakePrePred : DFDTopo * DFDSig * IntM * IntM -> Expr
+MakePrePred(dfdtopo,dfdsig,intm,maxm) ==
   let eos=ExecutionOrders(dfdtopo) in
-  DBinOp(<OR>,{MakePreForEO(piseq,dfdsig,intm,maxm)|piseq in set eos});
+  DBinOp(<OR>,{MakePreForEO(piseq,dfdsig,intm,maxm)
+              |piseq in set eos});
 \end{vdm_al}
 
 The function $MakePreForEO$ generates a pre-expression for a specific
@@ -910,20 +993,27 @@ in the construction of a quotation for an operation.
 All quotations are combined in a conjunction.
 
 \begin{vdm_al}
-  MakePreForEO :  seq1 of ProcId * DFDSig * IntM * IntM -> Expr
-  MakePreForEO(piseq,dfdsig,intm,maxm) ==
+MakePreForEO: seq1 of ProcId * DFDSig * IntM * IntM ->
+              Expr
+MakePreForEO(piseq,dfdsig,intm,maxm) ==
   let nid= hd piseq in
   let intm'={stid |-> if mk_(stid, <READWRITE>) in set 
                          CollectStIds({dfdsig(nid)})
                       then intm(stid) + 1
                       else intm(stid)
-            | stid in set  dom intm} in
-  let $pre = MakeQuotedApply(nid,dfdsig(nid),intm',maxm,<PRE>,<PRE>),
-      $post = MakeQuotedApply(nid,dfdsig(nid),intm',maxm,<PRE>,<POST>) in
-   if  len piseq=1
+            | stid in set dom intm} in
+  let $pre = MakeQuotedApply(nid,dfdsig(nid),intm',maxm,
+                             <PRE>,<PRE>),
+      $post = MakeQuotedApply(nid,dfdsig(nid),intm',maxm,
+                              <PRE>,<POST>) 
+  in
+   if len piseq=1
    then $pre
-   else let pred=mk_BinaryExpr($pre,<AND>,$post) in
-     mk_BinaryExpr(pred,<AND>,MakePreForEO( tl piseq,dfdsig,intm',maxm));
+   else let pred=mk_BinaryExpr($pre,<AND>,$post) 
+        in
+          mk_BinaryExpr(pred,<AND>,
+                        MakePreForEO(tl piseq,dfdsig,
+                                     intm',maxm));
 \end{vdm_al}
 
 $MakePostExpr$ is used to generate the post-condition of an implicit operation.
@@ -934,18 +1024,22 @@ whether such a let-expression should be generated.
 Then, the body of the post-expression is generated by calling $MakeInExpr$.
 
 \begin{vdm_al}
-  MakePostExpr : DFDId * DFDTopo * DFDSig * IntM * IntM -> Expr
-  MakePostExpr(dfdid,dfdtopo,dfdsig,intm,maxm) ==
-  let mk_(-,out,$st)=dfdsig(dfdid) in
-  let fids = NeedsQuant(dfdtopo,dfdsig, elems out,{}) in
-  let body = MakeInExpr(out,$st,fids,dfdtopo,dfdsig,intm,maxm) in
-   if  len out<= 1
-  then body
-  else mk_LetExpr(MakePattern(out),ResultIdConf(),body)
-  
-  pre let mk_(-,out,$st)=dfdsig(dfdid) in
-  let fids = NeedsQuant(dfdtopo,dfdsig, elems out,{}) in
-  pre_MakeInExpr(out,$st,fids,dfdtopo,dfdsig,intm,maxm);
+MakePostExpr: DFDId * DFDTopo * DFDSig * IntM * IntM -> 
+              Expr
+MakePostExpr(dfdid,dfdtopo,dfdsig,intm,maxm) ==
+  let mk_(-,out,$st)=dfdsig(dfdid),
+      fids = NeedsQuant(dfdtopo,dfdsig, elems out,{}),
+      body = MakeInExpr(out,$st,fids,dfdtopo,dfdsig,
+                        intm,maxm) 
+  in
+    if len out<= 1
+    then body
+    else mk_LetExpr(MakePattern(out),ResultIdConf(),body)
+pre let mk_(-,out,$st)=dfdsig(dfdid),
+        fids = NeedsQuant(dfdtopo,dfdsig, elems out,{}) 
+    in
+      pre_MakeInExpr(out,$st,fids,dfdtopo,dfdsig,
+                     intm,maxm);
 \end{vdm_al}
 
 The function $MakeInExpr$ operates in much the same way as $MakePreExpr$ does
@@ -955,15 +1049,18 @@ quantified expression is generated. The remainder of the post-condition is
 generated by calling $MakePostPred$.
 
 \begin{vdm_al}
-  MakeInExpr :  seq of FlowId * State *  set of FlowId * DFDTopo *
-                DFDSig * IntM * IntM -> Expr
-  MakeInExpr(out,$st,fids,dfdtopo,dfdsig,intm,maxm) ==
-  let pred=MakePostPred(dfdtopo,dfdsig,intm,maxm) in
-   if QuantNec(out,$st,fids,intm,maxm)
-  then mk_ExistsExpr(MakeExistsBind(fids,$st,intm,maxm,<POST>),pred)
-  else pred
-  
-  pre pre_MakeExistsBind(fids,$st,intm,maxm,<POST>);
+MakeInExpr: seq of FlowId * State * set of FlowId * 
+            DFDTopo * DFDSig * IntM * IntM -> Expr
+MakeInExpr(out,$st,fids,dfdtopo,dfdsig,intm,maxm) ==
+  let pred=MakePostPred(dfdtopo,dfdsig,intm,maxm) 
+  in
+    if QuantNec(out,$st,fids,intm,maxm)
+    then let bind = MakeExistsBind(fids,$st,intm,maxm,
+                                   <POST>)
+         in
+           mk_ExistsExpr(bind,pred)
+    else pred
+pre pre_MakeExistsBind(fids,$st,intm,maxm,<POST>);
 \end{vdm_al}
 
 The function $MakePostPred$ is used to create the `body' of the post-condition
@@ -976,10 +1073,12 @@ in this way specifying that the implementor can choose either one of the
 execution orders to implement the DFD.
 
 \begin{vdm_al}
-  MakePostPred : DFDTopo * DFDSig * IntM * IntM -> Expr
-  MakePostPred(dfdtopo,dfdsig,intm,maxm) ==
-  let eos=ExecutionOrders(dfdtopo) in
-  DBinOp(<OR>,{MakePostForEO(piseq,dfdsig,intm,maxm)|piseq in set eos});
+MakePostPred : DFDTopo * DFDSig * IntM * IntM -> Expr
+MakePostPred(dfdtopo,dfdsig,intm,maxm) ==
+  let eos=ExecutionOrders(dfdtopo) 
+  in
+    DBinOp(<OR>,{MakePostForEO(piseq,dfdsig,intm,maxm)
+                |piseq in set eos});
 \end{vdm_al}
 
 The function $MakePostForEO$ generates a post-expression for a specific
@@ -994,25 +1093,30 @@ in the construction of a quotation for an operation.
 All quotations are combined in a conjunction.
 
 \begin{vdm_al}
-  MakePostForEO :  seq1 of ProcId * DFDSig * IntM * IntM -> Expr
-  MakePostForEO(piseq,dfdsig,intm,maxm) ==
+MakePostForEO: seq1 of ProcId * DFDSig * IntM * IntM -> Expr
+MakePostForEO(piseq,dfdsig,intm,maxm) ==
   let nid= hd piseq in
   let intm'={stid |-> if mk_(stid, <READWRITE>) in set 
                          CollectStIds({dfdsig(nid)})
                       then intm(stid) + 1
                       else intm(stid)
-            | stid in set  dom intm} in
-  let $pre = MakeQuotedApply(nid,dfdsig(nid),intm',maxm,<POST>, <PRE>),
-      $post = MakeQuotedApply(nid,dfdsig(nid),intm',maxm,<POST>,<POST>) in
-   if  len piseq=1
+            | stid in set dom intm} in
+  let $pre = MakeQuotedApply(nid,dfdsig(nid),intm',maxm,
+                             <POST>, <PRE>),
+      $post = MakeQuotedApply(nid,dfdsig(nid),intm',maxm,
+                              <POST>,<POST>) in
+   if len piseq=1
   then mk_BinaryExpr($pre,<AND>,$post)
   else let pred=mk_BinaryExpr($pre,<AND>,$post) in
-  mk_BinaryExpr(pred,<AND>,MakePostForEO( tl piseq,dfdsig,intm',maxm))
-  
-  pre let nid= hd piseq in
-      nid in set  dom dfdsig and 
-      pre_MakeQuotedApply(nid,dfdsig(nid),intm,maxm,<POST>,<PRE>) and 
-      pre_MakeQuotedApply(nid,dfdsig(nid),intm,maxm,<POST>,<POST>);
+  mk_BinaryExpr(pred,<AND>,MakePostForEO(tl piseq,dfdsig,
+                                         intm',maxm))
+pre let nid= hd piseq 
+    in
+      nid in set dom dfdsig and 
+      pre_MakeQuotedApply(nid,dfdsig(nid),intm,maxm,
+                          <POST>,<PRE>) and 
+      pre_MakeQuotedApply(nid,dfdsig(nid),intm,maxm,
+                          <POST>,<POST>);
 \end{vdm_al}
 
 The function $MakeExistsBind$ is used by both $MakePreExpr$ and
@@ -1029,17 +1133,20 @@ its type) are created in which the intermediate state values
 with these two lists is returned.
 
 \begin{vdm_al}
-  MakeExistsBind :  set of FlowId * State * IntM * IntM * (<PRE>|<POST>)
-                    -> MultTypeBind
-  MakeExistsBind(fs,$st,intm,maxm,c) ==
+MakeExistsBind: set of FlowId * State * IntM * IntM * 
+               (<PRE>|<POST>) -> MultTypeBind
+MakeExistsBind(fs,$st,intm,maxm,c) ==
   let outl = MakeTypeBindList(fs),
-  stl = [let mk_(s,-)=$st(i) in
-         mk_TypeBind(MakePatternIds(s,intm(s)+1,maxm(s),c),
-                     StateTypeConf(s))
-        |i in set inds $st & let mk_(-,m)=$st(i) in m=<READWRITE>] in
-  mk_MultTypeBind(outl^stl)
-  pre forall mk_(s,<READWRITE>) in set  elems $st&
-   s in set  dom intm and s in set  dom maxm;
+      stl = [let mk_(s,-)=$st(i),
+                 p = MakePatternIds(s,intm(s)+1,maxm(s),c)
+             in
+               mk_TypeBind(p,StateTypeConf(s))
+            |i in set inds $st 
+            & let mk_(-,m)=$st(i) in m=<READWRITE>]
+  in
+    mk_MultTypeBind(outl^stl)
+pre forall mk_(s,<READWRITE>) in set elems $st&
+        s in set dom intm and s in set dom maxm;
 \end{vdm_al}
 
 The function $ExecutionOrders$ generates a set of `possible
@@ -1049,12 +1156,12 @@ an execution order is a valid order in which the data transformers in a
 DFD with topology $dfdtopo$ can be executed.
 
 \begin{vdm_al}
-  ExecutionOrders : DFDTopo ->  set of  seq1 of ProcId
-  ExecutionOrders(dfdtopo) ==
-  let top={mk_(fid,tid)|mk_(fid,tid) in set  rng dfdtopo &
+ExecutionOrders: DFDTopo -> set of seq1 of ProcId
+ExecutionOrders(dfdtopo) ==
+  let top={mk_(fid,tid)|mk_(fid,tid) in set rng dfdtopo &
             (is_DFDId(fid) or is_MSId(fid) or (fid = nil)) and 
             (is_DFDId(tid) or is_MSId(tid) or (tid = nil))},
-      top2={mk_(fid,tid)|mk_(fid,tid) in set  rng dfdtopo &
+      top2={mk_(fid,tid)|mk_(fid,tid) in set rng dfdtopo &
             (is_DFDId(fid) or is_MSId(fid)) and 
             (is_DFDId(tid) or is_MSId(tid))} in
     let piset= dunion {{pi_1,pi_2}|mk_(pi_1,pi_2) in set top}\{nil} in
@@ -1069,9 +1176,9 @@ function $StateVarIntConf$ is given information about where it is
 quoted from. The necessity for this was shown in example~2.
 
 \begin{vdm_al}
-  MakeQuotedApply : (DFDId|MSId) * Signature * IntM * IntM * (<PRE>|<POST>) *
-                    (<PRE>|<POST>) -> Apply
-  MakeQuotedApply(id,mk_($in,out,$st),intm,maxm,c,c2) ==
+MakeQuotedApply: (DFDId|MSId) * Signature * IntM * IntM * 
+                 (<PRE>|<POST>) * (<PRE>|<POST>) -> Apply
+MakeQuotedApply(id,mk_($in,out,$st),intm,maxm,c,c2) ==
   let inarg = [FlowIdVarConf($in(i))|i in set inds $in],
       oldstarg = [let mk_(s,m)=$st(i) in
                     if m=<READ>
@@ -1086,9 +1193,10 @@ quoted from. The necessity for this was shown in example~2.
    if c2=<PRE>
   then mk_Apply("pre_"^OpIdConf(id),inarg^oldstarg)
   else mk_Apply("post_"^OpIdConf(id),inarg^oldstarg^outarg^starg)
-  
-  pre forall mk_(s,m) in set  elems $st&
-   s in set  dom intm and s in set  dom maxm and m=<READWRITE> => intm(s)>0;
+pre forall mk_(s,m) in set elems $st&
+        s in set dom intm and
+        s in set dom maxm and 
+        m=<READWRITE> => intm(s)>0;
 \end{vdm_al}
 
 \subsection{Functions for composing data transformers explicitly}
@@ -1117,17 +1225,26 @@ the \DFDs\ from the first three examples can be described explicitly.
 The first \DFD\ from figure~\ref{example1} can be specified by the following explicit
 operation definition:
 
-\begin{vdm}
-\begin{op}[e]{PQ}
-\signature{A \Oto C}
-\parms{a}
-\Def b = P(a)
-\Din
-\Def c = Q(b)
-\Din
-\return{c}
-\end{op}
-\end{vdm}
+%\begin{vdm}
+%\begin{op}[e]{PQ}
+%\signature{A \Oto C}
+%\parms{a}
+%\Def b = P(a)
+%\Din
+%\Def c = Q(b)
+%\Din
+%\return{c}
+%\end{op}
+%\end{vdm}
+\begin{lstlisting}
+PQ: A ==> C
+PQ(a) ==
+  def b = P(a)
+  in
+    def c = Q(b)
+    in
+      return c
+\end{lstlisting}
 \noindent
 
 Def-statements\footnote{A def-statement corresponds to a let-statement
@@ -1138,17 +1255,26 @@ are used to introduce the (intermediate) data flows.
 For the \DFD\ in figure~\ref{example2} the following explicit operation can be
 generated: 
 
-\begin{vdm}
-\begin{op}[e]{PQ_{DS}}
-\signature{A \Oto C}
-\parms{a}
-\Def b = P(a)
-\Din
-\Def c = Q(b)
-\Din
-\return{c}
-\end{op}
-\end{vdm}
+%\begin{vdm}
+%\begin{op}[e]{PQ_{DS}}
+%\signature{A \Oto C}
+%\parms{a}
+%\Def b = P(a)
+%\Din
+%\Def c = Q(b)
+%\Din
+%\return{c}
+%\end{op}
+%\end{vdm}
+\begin{lstlisting}
+PQ_DS: A ==> C
+PQ_DS(a) ==
+  def b = P(a)
+  in
+    def c = Q(b)
+    in
+      return c
+\end{lstlisting}
 \noindent 
 This operation is equivalent to the one generated for the \DFD\
 in example~\ref{example1}, because
@@ -1159,38 +1285,65 @@ to procedures in imperative programming languages accessing global variables.
 
 The following explicit operation can be generated for the \DFD\ in figure~\ref{example3}:
 
-\begin{vdm}
-\begin{op}[e]{PQR_{DS}}
-\signature{A \X D \Oto C \X E}
-\parms{a, d}
-\begin{nondetstmt}
-\lineup[c]{(}
-{\Def b = P(a)
-\Din
-\Def c = Q(b)
-\Din
-\Def e = R(d)
-\Din
-\return{mk-(c, e)}),}\\
-\lineup[c]{(}
-{\Def e = R(d)
-\Din
-\Def b = P(a)
-\Din
-\Def c = Q(b)
-\Din
-\return{mk-(c, e)}),}\\
-\lineup[c]{(}
-{\Def b = P(a)
-\Din
-\Def e = R(d)
-\Din
-\Def c = Q(b)
-\Din
-\return{mk-(c, e)})}
-\end{nondetstmt}
-\end{op}
-\end{vdm}
+\begin{lstlisting}
+PQR_DS: A * D ==> C * E
+PQR_DS(a,d) ==
+ ||
+ ((def b = P(a)
+   in
+     def c = Q(b)
+     in
+       def e = R(d)
+       in
+         return mk_(c,e)),
+  (def e = R(d)
+   in
+     def b = P(a)
+     in
+       def c = Q(b)
+       in
+         return mk_(c,e)), 
+  (def b = P(a)
+   in
+     def e = R(d)
+     in
+       def c = Q(b)
+       in
+         return mk_(c,e))
+  )
+\end{lstlisting}
+%\begin{vdm}
+%\begin{op}[e]{PQR_{DS}}
+%\signature{A \X D \Oto C \X E}
+%\parms{a, d}
+%\begin{nondetstmt}
+%\lineup[c]{(}
+%{\Def b = P(a)
+%\Din
+%\Def c = Q(b)
+%\Din
+%\Def e = R(d)
+%\Din
+%\return{mk-(c, e)}),}\\
+%\lineup[c]{(}
+%{\Def e = R(d)
+%\Din
+%\Def b = P(a)
+%\Din
+%\Def c = Q(b)
+%\Din
+%\return{mk-(c, e)}),}\\
+%\lineup[c]{(}
+%{\Def b = P(a)
+%\Din
+%\Def e = R(d)
+%\Din
+%\Def c = Q(b)
+%\Din
+%\return{mk-(c, e)})}
+%\end{nondetstmt}
+%\end{op}
+%\end{vdm}
 \noindent
 The three different execution orders
 are incorporated in a
@@ -1208,8 +1361,8 @@ has been used for the implicit style. Here we also have a number of
 possible execution orders that must be taken into account.
 
 \begin{vdm_al}
-  MakeDFDExplOp : DFDId * DFDTopo * DFDSig -> ExplOp
-  MakeDFDExplOp(dfdid,dfdtopo,dfdsig) ==
+MakeDFDExplOp : DFDId * DFDTopo * DFDSig -> ExplOp
+MakeDFDExplOp(dfdid,dfdtopo,dfdsig) ==
   let mk_($in,-,-) = dfdsig(dfdid),
       eos = ExecutionOrders(dfdtopo),
       intm = {stid |-> 0|mk_(stid,-) in set CollectStIds( rng dfdsig)},
@@ -1221,13 +1374,13 @@ possible execution orders that must be taken into account.
       $pre  = MakePreExpr(dfdid,dfdtopo,dfdsig,intm,maxm) in
   let body = MakeNonDetStmt(bodys) in
       mk_ExplOp(OpIdConf(dfdid),optype,parms,body,$pre)
-  pre dfdid in set  dom dfdsig and 
-      let intm = {stid |-> 0|mk_(stid,-) in set CollectStIds( rng dfdsig)},
-          maxm = {stid |-> Reduce(NoOfWr( rng dfdsig,stid))
-                 |mk_(stid,-) in set CollectStIds( rng dfdsig)} in
-        pre_MakePreExpr(dfdid,dfdtopo,dfdsig,intm,maxm) and 
-        forall piseq in set ExecutionOrders(dfdtopo)&
-          pre_MakeStmtForEO(piseq,dfdid,dfdsig);
+pre dfdid in set dom dfdsig and 
+    let intm = {stid |-> 0|mk_(stid,-) in set CollectStIds(rng dfdsig)},
+        maxm = {stid |-> Reduce(NoOfWr( rng dfdsig,stid))
+               |mk_(stid,-) in set CollectStIds( rng dfdsig)} in
+      pre_MakePreExpr(dfdid,dfdtopo,dfdsig,intm,maxm) and 
+      forall piseq in set ExecutionOrders(dfdtopo)&
+         pre_MakeStmtForEO(piseq,dfdid,dfdsig);
 \end{vdm_al}
 
 The function $MakeExplOpBody$ is defined recursively. In each
@@ -1244,12 +1397,12 @@ is used in a define statement. Otherwise it is a call statement
 which must be included as a part of a sequence of statements.
 
 \begin{vdm_al}
-  MakeStmtForEO :  seq1 of ProcId * DFDId * DFDSig -> Stmt
-  MakeStmtForEO(piseq,dfdid,dfdsig) ==
+MakeStmtForEO: seq1 of ProcId * DFDId * DFDSig -> Stmt
+MakeStmtForEO(piseq,dfdid,dfdsig) ==
   let nid= hd piseq in
   let mk_(call,pat) = MakeCallAndPat(nid,dfdsig(nid)),
       kind = FindKind(dfdsig(nid)) in
-   if  len piseq=1
+   if len piseq=1
    then let mk_(-,out,-)=dfdsig(dfdid) in 
          let return'=mk_Return(MakeResult(out)) in
           if kind=<OPRES>
@@ -1262,47 +1415,36 @@ which must be included as a part of a sequence of statements.
               then let mk_Sequence(sl)=rest in
                     mk_Sequence([call]^sl)
               else mk_Sequence([call,rest])
-  pre  hd piseq in set  dom dfdsig;
+pre hd piseq in set dom dfdsig;
   
-  MakeCallAndPat : (DFDId|MSId) * Signature -> Call * [Pattern]
-  MakeCallAndPat(id,mk_($in,out,-)) ==
+MakeCallAndPat : (DFDId|MSId) * Signature -> Call * [Pattern]
+MakeCallAndPat(id,mk_($in,out,-)) ==
   let inarg = [FlowIdVarConf($in(i))|i in set inds $in],
       outarg = [FlowIdVarConf(out(i))|i in set inds out] in
   mk_(mk_Call(OpIdConf(id),inarg),MakePattern(outarg));
   
-  FindKind : Signature -> <OPRES>|<OPCALL>
-  FindKind(sig) ==
+FindKind : Signature -> <OPRES>|<OPCALL>
+FindKind(sig) ==
   cases sig:
     mk_(-,[],-) -> <OPCALL>,
     others -> <OPRES>
   end;
   
-  MakePattern :  seq of Id -> [Pattern]
-  MakePattern(idl) ==
-  cases  len idl:
+MakePattern : seq of Id -> [Pattern]
+MakePattern(idl) ==
+  cases len idl:
     0 -> nil ,
     1 -> mk_PatternId( hd idl),
-  others -> mk_TuplePattern([mk_PatternId(idl(i)) | i in set inds idl])
+  others -> mk_TuplePattern([mk_PatternId(idl(i)) 
+                            | i in set inds idl])
   end;
   
-  --MakeAssDef :  seq of Id ->  set of AssDef
-  --MakeAssDef(idl) ==
-  --{mk_AssDef(FlowIdVarConf(id),FlowIdTypeConf(id))|id in set  elems idl};
-  
-  MakeResult :  seq1 of Id -> Expr
-  MakeResult(idl) ==
-   if  len idl=1
+MakeResult : seq1 of Id -> Expr
+MakeResult(idl) ==
+  if len idl=1
   then FlowIdVarConf( hd idl)
-  else mk_TupleConstructor([FlowIdVarConf(idl(i))|i in set inds idl])
-  ;
-  
-  --SplitResult : Signature * Expr -> Expr
-  --SplitResult(mk_(-,out,-),expr) ==
-  -- if  len out<= 1
-  --then expr
-  --else let outarg=[FlowIdVarConf(out(i))|i in set inds out] in
-  --mk_LetExpr(MakePattern(outarg),ResultIdConf(),expr)
-  --;
+  else mk_TupleConstructor([FlowIdVarConf(idl(i))
+                           |i in set inds idl]);
 \end{vdm_al}
 
 \subsection{General Auxiliary Functions}
@@ -1311,62 +1453,74 @@ The function $DBinOp$ generates an expression by distributing a binary operator
 over a set of expressions.
 
 \begin{vdm_al}
-  DBinOp : BinaryOp *  set of Expr -> Expr
-  DBinOp(op,es) ==
+DBinOp : BinaryOp * set of Expr -> Expr
+DBinOp(op,es) ==
   let e in set es in
    if  card es=1
-  then e
-  else mk_BinaryExpr(e,op,DBinOp(op, es \ {e}))
-  
-  pre es<>{};
+   then e
+   else mk_BinaryExpr(e,op,DBinOp(op, es \ {e}))
+pre es<>{};
 \end{vdm_al}
 
 The function $CollectExtDFs$ is intended to collect the external data
 flow identifiers from the topology of a DFD.
 
 \begin{vdm_al}
-  CollectExtDFs : DFDTopo ->  set of FlowId
-  CollectExtDFs(dfdtopo) ==
-  {fid|fid in set  dom dfdtopo & let mk_(pid_1,pid_2)=dfdtopo(fid) in
-  is_EPId(pid_1) or is_EPId(pid_2)};
+CollectExtDFs : DFDTopo -> set of FlowId
+CollectExtDFs(dfdtopo) ==
+  {fid|fid in set dom dfdtopo 
+      & let mk_(pid_1,pid_2)=dfdtopo(fid) in
+           is_EPId(pid_1) or is_EPId(pid_2)};
   
-  NeedsQuant : DFDTopo * DFDSig *  set of FlowId *  set of ProcId ->  set of FlowId
-  NeedsQuant(dfdtopo,dfdsig,notneeded,pids) ==
-  let top={mk_(fid,tid)|mk_(fid,tid) in set  rng dfdtopo &
+NeedsQuant: DFDTopo * DFDSig * set of FlowId * 
+           set of ProcId -> set of FlowId
+NeedsQuant(dfdtopo,dfdsig,notneeded,pids) ==
+  let top={mk_(fid,tid)|mk_(fid,tid) in set rng dfdtopo &
            (is_DFDId(fid) or is_MSId(fid)) and 
-           (is_DFDId(tid) or is_MSId(tid))} in
+           (is_DFDId(tid) or is_MSId(tid))} 
+  in
    if  dom dfdsig=pids
    then {}
-   else let pid in set  dom dfdsig \ pids in
-        if TransClosure(pid,top,{})={} and EquivClass(top,{pid})= dom dfdsig
-        then NeedsQuant(dfdtopo,dfdsig,notneeded,pids union {pid})
+   else let pid in set dom dfdsig \ pids in
+        if TransClosure(pid,top,{})={} and 
+           EquivClass(top,{pid})= dom dfdsig
+        then NeedsQuant(dfdtopo,dfdsig,notneeded,
+                        pids union {pid})
         else let mk_(-,out,-)=dfdsig(pid) in
-              NeedsQuant(dfdtopo,dfdsig,notneeded,pids union {pid}) union 
-              elems out \ notneeded;
+              NeedsQuant(dfdtopo,dfdsig,notneeded,
+                         pids union {pid}) union 
+                         elems out \ notneeded;
 \end{vdm_al}
 The function $QuantNec$ is responsible for determining whether it is
 necessary to use an existential quantification at a given place in a
 post-condition.
 
 \begin{vdm_al}
-  QuantNec :  seq of FlowId * State *  set of FlowId * IntM * IntM -> bool 
-  QuantNec(out,$st,fids,intm,maxm) ==
+QuantNec: seq of FlowId * State * set of FlowId * 
+           IntM * IntM -> bool 
+QuantNec(out,$st,fids,intm,maxm) ==
   fids <> {} or
-  -- (exists id in set  elems out&  id in set fids) or 
-  (exists mk_(s,m) in set  elems $st& m=<READWRITE> and intm(s)<maxm(s))
-  pre forall mk_(s,-) in set  elems $st&
-   s in set  dom intm and s in set  dom maxm;
+  -- (exists id in set elems out&  id in set fids) or 
+  (exists mk_(s,m) in set elems $st&
+       m=<READWRITE> and intm(s)<maxm(s))
+pre forall mk_(s,-) in set elems $st&
+       s in set dom intm and s in set dom maxm;
   
-  MakeTypeBindList :  set of FlowId ->  seq of TypeBind
+  MakeTypeBindList : set of FlowId -> seq of TypeBind
   MakeTypeBindList(fids) ==
    if fids={}
    then []
    else let fid in set fids in
          let first=mk_TypeBind([mk_PatternId(FlowIdVarConf(fid))],
                                              FlowIdTypeConf(fid)) in
-           [first]^MakeTypeBindList(fids \ {fid});
+           [first]^MakeTypeBindList(fids \ {fid})
+  measure CardFId;
   
-  MakePatternIds: (Id | DSId) * nat  * nat  * (<PRE>|<POST>) -> seq of PatternId
+  CardFId: set of FlowId -> nat
+  CardFId(s) ==
+    card s;
+  
+  MakePatternIds: (Id | DSId) * nat * nat * (<PRE>|<POST>) -> seq of PatternId
   MakePatternIds(id, n, max, c) ==
   if (n = max) and (c = <POST>)
   then [mk_PatternId(StateVarConf(id))]
@@ -1381,16 +1535,22 @@ post-condition.
   MakePatternSeq(id, n, max) ==
   if n = max
   then [mk_PatternId(id ^ "'")]
-  else [mk_PatternId(id ^ "'")] ^ MakePatternSeq(id ^ "'", n+1, max);
+  else [mk_PatternId(id ^ "'")] ^ MakePatternSeq(id ^ "'", n+1, max)
+  pre n <= max
+  measure TowardsMax;
+  
+  TowardsMax: Id * nat * nat -> nat
+  TowardsMax(-,n,max) ==
+    max - n;
 \end{vdm_al}
 
 The function $EquivClass$ collects all data transformers from a
 topology which are connected in an equivalence class.
 
 \begin{vdm_al}
-  EquivClass :  set of (ProcId * ProcId) *  set of (MSId|DFDId) ->
-                set of (MSId|DFDId)
-  EquivClass(top,ids) ==
+EquivClass: set of (ProcId * ProcId) * set of (MSId|DFDId) ->
+           set of (MSId|DFDId)
+EquivClass(top,ids) ==
    if exists mk_(fid,tid) in set top&
    (fid in set ids and tid not in set ids) or 
    (tid in set ids and fid not in set ids)
@@ -1407,22 +1567,21 @@ generate a non-deterministic statement from them if there is more than
 one partition.
 
 \begin{vdm_al}
-  MakeNonDetStmt :  set of Stmt -> Stmt
-  MakeNonDetStmt(stmts) ==
+MakeNonDetStmt : set of Stmt -> Stmt
+MakeNonDetStmt(stmts) ==
   cases  card stmts:
     1 -> let {s}=stmts in s,
   others -> mk_NonDetStmt(stmts)
   end
-  
-  pre  card stmts<>0;
+pre  card stmts<>0;
 \end{vdm_al}
 
 The function $CollectStIds$ collects all state
 component identifiers from a DFD.
 
 \begin{vdm_al}
-  CollectStIds :  set of Signature ->  set of (StId * Mode)
-  CollectStIds(sigs) ==
+CollectStIds: set of Signature -> set of (StId * Mode)
+CollectStIds(sigs) ==
   -- let standms= dunion { elems $st|mk_(-,-,$st) in set sigs} in
   -- {stid|mk_(stid,-) in set standms};
   dunion { elems $st|mk_(-,-,$st) in set sigs};
@@ -1433,18 +1592,18 @@ are in a given partition that have write access to a given state component.
 This information is used to deal with the intermediate state values.
 
 \begin{vdm_al}
-  NoOfWr :  set of Signature * StId -> nat 
-  NoOfWr(sigs,stid) ==
+NoOfWr : set of Signature * StId -> nat 
+NoOfWr(sigs,stid) ==
    if sigs={}
   then 0
   else let sig in set sigs in
   let mk_(-,-,$st)=sig in
-   if mk_(stid,<READWRITE>) in set  elems $st
+   if mk_(stid,<READWRITE>) in set elems $st
    then 1+NoOfWr(sigs \ {sig},stid)
    else NoOfWr(sigs \ {sig},stid);
   
-  Reduce: nat -> nat
-  Reduce(n) ==
+Reduce: nat -> nat
+Reduce(n) ==
   if (n = 0) or (n = 1)
   then n
   else n - 1;
@@ -1453,20 +1612,20 @@ This information is used to deal with the intermediate state values.
 \subsection{Configuration functions}
 
 \begin{vdm_al}
-  ModIdConf : DFDId -> Id
-  ModIdConf(mk_DFDId(id)) ==
+ModIdConf : DFDId -> Id
+ModIdConf(mk_DFDId(id)) ==
   id^"Module";
   
-  StateIdConf : DFDId -> Id
-  StateIdConf(mk_DFDId(id)) ==
+StateIdConf : DFDId -> Id
+StateIdConf(mk_DFDId(id)) ==
   id^"State";
   
-  DSIdConf : DSId -> Id
-  DSIdConf(mk_DSId(id)) ==
+DSIdConf : DSId -> Id
+DSIdConf(mk_DSId(id)) ==
   id;
   
-  OpIdConf : MSId | DFDId | Id -> Id
-  OpIdConf(id) ==
+OpIdConf : MSId | DFDId | Id -> Id
+OpIdConf(id) ==
   cases id:
     mk_MSId(id'),
     mk_DFDId(id') -> id',
@@ -1482,8 +1641,8 @@ the state before calling the operation, while that is denoted by $~v$
 in a post-condition).
 
 \begin{vdm_al}
-  StateVarIntConf : (Id | DSId) * nat  * nat  * (<PRE>|<POST>) -> Id
-  StateVarIntConf(id,n,max,c) ==
+StateVarIntConf: (Id | DSId) * nat * nat * (<PRE>|<POST>) -> Id
+StateVarIntConf(id,n,max,c) ==
   if (max=n) and (c=<POST>)
   then StateVarConf(id)
   else cases n:
@@ -1494,48 +1653,48 @@ in a post-condition).
        others -> StateVarIntConf(id,n - 1,max,c)^"'"
        end;
   
-  VarConf : StId -> Id
-  VarConf(id) ==
+VarConf : StId -> Id
+VarConf(id) ==
   if is_DSId(id)
   then StateVarConf(id)
   else FlowIdVarConf(id);
   
-  TypeConf : DSId|FlowId -> Id
-  TypeConf(id) ==
+TypeConf : DSId|FlowId -> Id
+TypeConf(id) ==
   if is_DSId(id)
   then StateTypeConf(id)
   else FlowIdTypeConf(id);
   
-  FlowIdVarConf : Id -> Id
-  FlowIdVarConf(id) ==
+FlowIdVarConf : Id -> Id
+FlowIdVarConf(id) ==
   ToLower(id);
   
-  FlowIdTypeConf : Id -> Id
-  FlowIdTypeConf(id) ==
+FlowIdTypeConf : Id -> Id
+FlowIdTypeConf(id) ==
   ToUpper(id);
   
-  StateTypeConf : Id | DSId -> Id
-  StateTypeConf(id) ==
+StateTypeConf : Id | DSId -> Id
+StateTypeConf(id) ==
   ToUpper(id);
   
-  StateVarConf : Id | DSId -> Id
-  StateVarConf(id) ==
+StateVarConf : Id | DSId -> Id
+StateVarConf(id) ==
   ToLower(id);
   
-  StateOldVarConf : Id | DSId -> Id
-  StateOldVarConf(id) ==
+StateOldVarConf : Id | DSId -> Id
+StateOldVarConf(id) ==
   ToLower(id)^"old";
   
-  TypeModConf : () -> Id
-  TypeModConf() ==
+TypeModConf : () -> Id
+TypeModConf() ==
   "TypeModule";
   
-  ResultIdConf : () -> Id
-  ResultIdConf() ==
+ResultIdConf : () -> Id
+ResultIdConf() ==
   "r";
   
-  PossibleSeqs: set of ProcId -> set of seq of ProcId
-  PossibleSeqs(pids) ==
+PossibleSeqs: set of ProcId -> set of seq of ProcId
+PossibleSeqs(pids) ==
   if pids = {}
   then {}
   else if card pids = 1
@@ -1544,14 +1703,21 @@ in a post-condition).
             in
               let rest = PossibleSeqs(pids \ {pid})
               in
-                dunion {InsertPId(pid, seq') | seq' in set rest};
+                dunion {InsertPId(pid, seq') 
+                       | seq' in set rest}
+measure CardPSet;
+
+CardPSet: set of ProcId -> nat
+CardPSet(s) ==
+  card s;
   
-  InsertPId: ProcId * seq of ProcId -> set of seq of ProcId
-  InsertPId(pid, seq') ==
-  {seq'(1,...,i) ^ [pid] ^ seq'(i+1,...,len(seq')) | i in set {0,...,len(seq')}};
+InsertPId: ProcId * seq of ProcId -> set of seq of ProcId
+InsertPId(pid, seq') ==
+  {seq'(1,...,i) ^ [pid] ^ seq'(i+1,...,len(seq')) 
+  | i in set {0,...,len(seq')}};
   
-  ToLower: Id | DSId | DFDId | EPId | MSId -> Id
-  ToLower(id) ==
+ToLower: Id | DSId | DFDId | EPId | MSId -> Id
+ToLower(id) ==
   let realid = cases id:
                  mk_DSId(id'),
                  mk_DFDId(id'),
@@ -1566,8 +1732,8 @@ The auxiliary functions ($ToLower$ and $ToUpper$) are to change
 all letters to lower-case and upper-case letters respectively. 
 
 \begin{vdm_al}
-  LowerChar: char -> char
-  LowerChar(c) ==
+LowerChar: char -> char
+LowerChar(c) ==
   cases c:
   'A' -> 'a',
   'B' -> 'b',
@@ -1599,8 +1765,8 @@ all letters to lower-case and upper-case letters respectively.
   end;
   
   
-  ToUpper: Id | DSId | DFDId | EPId | MSId -> Id
-  ToUpper(id) ==
+ToUpper: Id | DSId | DFDId | EPId | MSId -> Id
+ToUpper(id) ==
   let realid = cases id:
                  mk_DSId(id'),
                  mk_DFDId(id'),
@@ -1611,8 +1777,8 @@ all letters to lower-case and upper-case letters respectively.
   in
     [UpperChar(realid(i)) | i in set inds realid];
   
-  UpperChar: char -> char
-  UpperChar(c) ==
+UpperChar: char -> char
+UpperChar(c) ==
   cases c:
   'a' -> 'A',
   'b' -> 'B',
@@ -1756,7 +1922,7 @@ mappings only occurs when \DFDs\ are used as a design notation, but not
 when they are used as an (abstract) specification notation. Therefore, 
 this restriction cannot be considered very important in our situation.
 \newpage
-\bibliographystyle{newalpha}
+\bibliographystyle{nnewalpha}
 \bibliography{dan}
 
 \appendix
@@ -1775,9 +1941,9 @@ its topology.
 \begin{vdm_al}
 types
   
-  SA = HDFD * DD * MSs
-  inv mk_(hdfd,dd,-) == 
-    FlowTypeDefined(hdfd,dd) and TopLevelSigOK(hdfd);
+SA = HDFD * DD * MSs
+inv mk_(hdfd,dd,-) == 
+  FlowTypeDefined(hdfd,dd) and TopLevelSigOK(hdfd);
 \end{vdm_al}
 
 The hierarchy of data flow diagrams is defined recursively. Each
@@ -1793,14 +1959,14 @@ and the data stores, and that all the DFDs which are further
 decomposed are described.
 
 \begin{vdm_al}
-  HDFD = DFDId * DSs * DFDTopo * DFDMap * DFDSig;
+HDFD = DFDId * DSs * DFDTopo * DFDMap * DFDSig;
 --  inv mk_(id,dss,dfdtop,dfdmap,dfdsig) == 
 --    DFDSigConsistent(id,dfdtop,dss,dfdmap,dfdsig) and 
 --    LowerLevelUsed(dfdtop,dfdmap);
   
-  DSs =  set of DSId;
+DSs = set of DSId;
   
-  DSId :: seq of char;
+DSId :: seq of char;
 \end{vdm_al}
 
 The topology of a DFD is a collection of uniquely identified data
@@ -1810,27 +1976,27 @@ data transformer. The data transformers can either be further decomposed
 ($EPId$) is identified by its name.
 At lower level DFDs where the data flow goes to (or comes
 from) another data transformer which is outside the DFD the name is
-omitted (the value $\Nil$ is used).
+omitted (the value {\textbf{\ttfamily nil}} is used).
 
 The invariant requires that the topology of the
 internal connections is acyclic.
 
 \begin{vdm_al}
-  DFDTopo = map FlowId to ([ProcId] * [ProcId])
-  inv dfdtopo == 
-     let top={mk_(fid,tid)|mk_(fid,tid) in set rng dfdtopo &
-                           (is_DFDId(fid) or is_MSId(fid)) and
-                           (is_DFDId(tid) or is_MSId(tid))} in
-       NotRecursive(top) and
-     forall flowid in set  dom dfdtopo & FlowConnectOK(dfdtopo(flowid));
+DFDTopo = map FlowId to ([ProcId] * [ProcId])
+inv dfdtopo == 
+  let top={mk_(fid,tid)|mk_(fid,tid) in set rng dfdtopo &
+                        (is_DFDId(fid) or is_MSId(fid)) and
+                        (is_DFDId(tid) or is_MSId(tid))} in
+    NotRecursive(top) and
+  forall flowid in set dom dfdtopo & FlowConnectOK(dfdtopo(flowid));
   
-  FlowId = seq of char;
+FlowId = seq of char;
   
-  ProcId = DFDId|MSId|EPId;
+ProcId = DFDId|MSId|EPId;
   
-  DFDMap = map DFDId to HDFD;
+DFDMap = map DFDId to HDFD;
   
-  DFDSig = map (DFDId|MSId) to Signature;
+DFDSig = map (DFDId|MSId) to Signature;
 \end{vdm_al}
 
 A signature for a description of a data transformer consists of
@@ -1839,14 +2005,15 @@ have any connection to a state component which it is changing, it must produce
 some output value instead.
 
 \begin{vdm_al}
-  Signature = Input * Output * State
-  inv mk_(-,out,sta) == 
-    (sta=[]) => (out<>[]) and 
-    (out=[]) => (exists mk_(-,m) in set elems sta & m=<READWRITE>);
+Signature = Input * Output * State
+inv mk_(-,out,sta) == 
+  (sta=[]) => (out<>[]) and 
+  (out=[]) => (exists mk_(-,m) in set elems sta & 
+                 m=<READWRITE>);
   
-  Input =  seq of FlowId;
+Input = seq of FlowId;
   
-  Output =  seq of FlowId;
+Output = seq of FlowId;
 \end{vdm_al}
 
 The {\em State} part of a signature is a sequence of pairs of state
@@ -1855,27 +2022,23 @@ data flows between the system and the external
 processes) and the modes in which they are accessed.
 
 \begin{vdm_al}
-  State =  seq of (StId * Mode);
+State = seq of (StId * Mode);
   
-  StId = DSId|FlowId;
+StId = DSId|FlowId;
   
-  Mode = <READ>|<READWRITE>;
+Mode = <READ>|<READWRITE>;
   
-  DD = map Id to Type;
+DD = map Id to Type;
   
-  MSs = map MSId to MS;
+MSs = map MSId to MS;
   
-  MS = OpDef;
+MS = OpDef;
   
-  DFDId :: seq of char;
+DFDId :: seq of char;
   
-  EPId :: seq of char;
+EPId :: seq of char;
   
-  MSId :: seq of char
-  
-  -- InputId = seq of char;
-  
-  -- OutputId = seq of char;
+MSId :: seq of char
 \end{vdm_al}
 
 \subsubsection*{Auxiliary Functions for Invariants}
@@ -1886,9 +2049,10 @@ All data flows must have a type defined in the data dictionary
 \begin{vdm_al}
 functions
   
-  FlowTypeDefined : HDFD * DD -> bool 
-  FlowTypeDefined(mk_(-,-,dfdtop,-,-),dd) ==
-    forall fid in set  dom dfdtop & FlowIdTypeConf(fid) in set  dom dd;
+FlowTypeDefined : HDFD * DD -> bool 
+FlowTypeDefined(mk_(-,-,dfdtop,-,-),dd) ==
+  forall fid in set dom dfdtop & 
+     FlowIdTypeConf(fid) in set dom dd;
 \end{vdm_al}
 
 The data flows between the external processes and
@@ -1901,15 +2065,15 @@ write components, depending upon whether they are ingoing or outgoing data
 flows.
 
 \begin{vdm_al}
-  TopLevelSigOK : HDFD -> bool 
-  TopLevelSigOK(mk_(sysid,-,dfdtop,-,dfdsig)) ==
-    sysid in set dom dfdsig and
-    let mk_($in,out,$st)=dfdsig(sysid) in
-    $in=[] and out=[] and
-    forall flowid in set  dom dfdtop&
-      let mk_(fid,tid)=dfdtop(flowid) in
-        (is_EPId(fid) => mk_(flowid,<READ>) in set  elems $st) and 
-        (is_EPId(tid) => mk_(flowid,<READWRITE>) in set  elems $st);
+TopLevelSigOK: HDFD -> bool 
+TopLevelSigOK(mk_(sysid,-,dfdtop,-,dfdsig)) ==
+  sysid in set dom dfdsig and
+  let mk_($in,out,$st)=dfdsig(sysid) in
+  $in=[] and out=[] and
+  forall flowid in set dom dfdtop&
+    let mk_(fid,tid)=dfdtop(flowid) in
+      (is_EPId(fid) => mk_(flowid,<READ>) in set elems $st) and 
+      (is_EPId(tid) => mk_(flowid,<READWRITE>) in set elems $st);
 \end{vdm_al}
 
 In order for the signature mapping to be consistent it is necessary
@@ -1921,88 +2085,95 @@ transformers used in the DFD (checked by $DFDSigConsistent$ and its
 auxiliary functions).
 
 \begin{vdm_al}
-  DFDSigConsistent : DFDId * DFDTopo * DSs * DFDMap * DFDSig -> bool 
-  DFDSigConsistent(id,dfdtop,dss,dfdmap,dfdsig) ==
-    DSConnected(dss,dfdsig) and 
-    SigsAllRight(dfdtop,dfdsig) and 
-    IdsInSigsAvail(dss,dfdtop, rng dfdsig) and 
-    SigsForAllUsedIds(id, rng dfdtop,dfdmap,dfdsig);
+DFDSigConsistent: DFDId * DFDTopo * DSs * DFDMap * DFDSig -> bool 
+DFDSigConsistent(id,dfdtop,dss,dfdmap,dfdsig) ==
+  DSConnected(dss,dfdsig) and 
+  SigsAllRight(dfdtop,dfdsig) and 
+  IdsInSigsAvail(dss,dfdtop, rng dfdsig) and 
+  SigsForAllUsedIds(id, rng dfdtop,dfdmap,dfdsig);
   
-  DSConnected : DSs * DFDSig -> bool 
-  DSConnected(dss,dfdsig) ==
+DSConnected : DSs * DFDSig -> bool 
+DSConnected(dss,dfdsig) ==
   forall dsid in set dss&
-   exists mk_(-,-,$st) in set  rng dfdsig&
+   exists mk_(-,-,$st) in set rng dfdsig&
    exists i in set inds $st&
    let mk_(id,-)=$st(i) in
     dsid=id;
   
-  SigsAllRight : DFDTopo * DFDSig -> bool 
-  SigsAllRight(dfdtop,dfdsig) ==
-  forall flowid in set  dom dfdtop &
+SigsAllRight : DFDTopo * DFDSig -> bool 
+SigsAllRight(dfdtop,dfdsig) ==
+  forall flowid in set dom dfdtop &
    cases dfdtop(flowid):
     mk_(id,mk_EPId(-)) -> let mk_(-,-,$st)=dfdsig(id) in
-                            mk_(flowid,<READWRITE>) in set  elems $st,
+                            mk_(flowid,<READWRITE>) in set elems $st,
     mk_(mk_EPId(-),id) -> let mk_(-,-,$st)=dfdsig(id) in
-                            mk_(flowid,<READ>) in set  elems $st,
+                            mk_(flowid,<READ>) in set elems $st,
     mk_(nil, id)       -> let mk_($in,-,-) = dfdsig(id) in
                             flowid in set elems $in,
     mk_(id, nil) -> let mk_(-,out,-) = dfdsig(id) in
                       flowid in set elems out,
     mk_(fid,tid) -> let mk_(-,out,-) = dfdsig(fid),
                         mk_($in,-,-) = dfdsig(tid) in
-                      (flowid in set  elems out) and 
-                      (flowid in set  elems $in)
+                      (flowid in set elems out) and 
+                      (flowid in set elems $in)
    end;
   
-  IdsInSigsAvail : DSs * DFDTopo *  set of Signature -> bool 
-  IdsInSigsAvail(dss,dfdtop,sigs) ==
+IdsInSigsAvail : DSs * DFDTopo * set of Signature -> bool 
+IdsInSigsAvail(dss,dfdtop,sigs) ==
   let fids=CollectExtDFs(dfdtop) in
   forall mk_($in,out,$st) in set sigs&
-    elems $in subset  dom dfdtop and  
-    elems out subset  dom dfdtop and  
+    elems $in subset dom dfdtop and  
+    elems out subset dom dfdtop and  
     elems $st subset {mk_(id,m)|id in set dss union fids, 
                                 m in set {<READ>,<READWRITE>}};
   
-  LowerLevelUsed : DFDTopo * DFDMap -> bool 
-  LowerLevelUsed(dfdtop,dfdmap) ==
+LowerLevelUsed : DFDTopo * DFDMap -> bool 
+LowerLevelUsed(dfdtop,dfdmap) ==
   let ids =  dom dfdmap in
-  forall mk_(fid,tid) in set  rng dfdtop &
+  forall mk_(fid,tid) in set rng dfdtop &
    (is_DFDId(fid) => fid in set ids) and 
    (is_DFDId(tid) => tid in set ids);
   
-  SigsForAllUsedIds : DFDId *  set of ([ProcId] * [ProcId]) * DFDMap *
-                      DFDSig -> bool 
-  SigsForAllUsedIds(id,top,dfdmap,dfdsig) ==
-  (forall dfdid in set  dom dfdmap&
+SigsForAllUsedIds: DFDId * set of ([ProcId] * [ProcId]) * DFDMap *
+                   DFDSig -> bool 
+SigsForAllUsedIds(id,top,dfdmap,dfdsig) ==
+ (forall dfdid in set dom dfdmap&
    let mk_(-,-,-,-,dfdsig')=dfdmap(dfdid) in
      dfdsig'(dfdid)=dfdsig(dfdid)) and
      let sigs= dom dfdsig in
        id in set sigs and -- dfds subset sigs and 
        forall mk_(fid,tid) in set top&
-         ((is_MSId(fid) or is_DFDId(fid)) => (fid in set sigs)) and 
-         ((is_MSId(tid) or is_DFDId(tid)) => (tid in set sigs));
+         ((is_MSId(fid) or is_DFDId(fid)) => 
+          (fid in set sigs)) and 
+         ((is_MSId(tid) or is_DFDId(tid)) => 
+          (tid in set sigs));
   
-  FlowConnectOK : ([ProcId] * [ProcId]) -> bool 
-  FlowConnectOK(mk_(fid,tid)) ==
-    ((is_EPId(fid) or fid=nil ) => (is_DFDId(tid) or is_MSId(tid))) and 
-    ((is_EPId(tid) or tid=nil ) => (is_DFDId(fid) or is_MSId(fid)));
+FlowConnectOK : ([ProcId] * [ProcId]) -> bool 
+FlowConnectOK(mk_(fid,tid)) ==
+  ((is_EPId(fid) or fid=nil ) => 
+   (is_DFDId(tid) or is_MSId(tid))) and 
+  ((is_EPId(tid) or tid=nil ) => 
+   (is_DFDId(fid) or is_MSId(fid)));
   
-  NotRecursive :  set of ((DFDId|MSId) * (DFDId|MSId)) -> bool 
-  NotRecursive(top) ==
-    forall mk_(f,-) in set top&
+NotRecursive : set of ((DFDId|MSId) * (DFDId|MSId)) -> bool 
+NotRecursive(top) ==
+  forall mk_(f,-) in set top&
      (f not in set TransClosure(f,top,{}));
   
-  TransClosure : (DFDId|MSId) *  set of ((DFDId|MSId) * (DFDId|MSId)) *
-                 set of (DFDId|MSId) ->  set of (DFDId|MSId)
-  TransClosure(pid,top,$set) ==
+TransClosure: (DFDId|MSId) * set of ((DFDId|MSId) * 
+                                     (DFDId|MSId)) *
+               set of (DFDId|MSId) -> set of (DFDId|MSId)
+TransClosure(pid,top,$set) ==
    if exists mk_(fromid,toid) in set top&
-      ((fromid=pid) or (fromid in set $set)) and (toid not in set $set)
+      ((fromid=pid) or (fromid in set $set)) and 
+      (toid not in set $set)
    then let mk_(fromid,toid) in set top be st
            ((fromid=pid) or (fromid in set $set)) and 
            (toid not in set $set)
         in TransClosure(pid,top,$set union {toid})
    else $set
 \end{vdm_al}
+
 \newpage
 \section{The Abstract Syntax for VDM-SL}
 
@@ -2021,167 +2192,161 @@ below are annotated because this is done elsewhere already.
 \begin{vdm_al}
 types
 
-  Document =  set of Module;
+Document = set of Module;
   
-  Module = ModuleId * Interface * Definitions;
+Module = ModuleId * Interface * Definitions;
+ 
+ModuleId = seq of char;
   
-  ModuleId = seq of char;
+Interface = Imports * Export;
   
-  Interface = Imports * Export;
+Imports = set of Import;
   
-  Imports =  set of Import;
+Import = ModuleId * ModuleSig;
   
-  Import = ModuleId * ModuleSig;
+Export = ModuleSig;
   
-  Export = ModuleSig;
+ModuleSig = set of Sig;
   
-  ModuleSig =  set of Sig;
+Sig = TypeSig|OpSig;
   
-  Sig = TypeSig|OpSig;
+TypeSig :: TypeId;
   
-  TypeSig :: TypeId;
+TypeId = seq of char;
   
-  TypeId = seq of char;
-  
-  OpSig :: id: Id 
-           optype : OpType 
-           stids : seq of Id;
+OpSig :: id: Id 
+         optype : OpType 
+         stids : seq of Id;
 \end{vdm_al}
 
 \subsection{Abstract Syntax for the Flat Language}
 
 \begin{vdm_al}
-  Definitions =  set of Definition;
+Definitions = set of Definition;
   
-  Definition = StateDef|OpDef --|... 
-  ;
+Definition = StateDef|OpDef; --|... 
   
-  StateDef :: id:Id
-              fields: seq of Field;
+StateDef :: id:Id
+            fields: seq of Field;
   
-  Field :: sel:[Id]
+Field :: sel:[Id]
+         type:Type;
+  
+OpDef = ExplOp|ImplOp;
+  
+ExplOp :: id:Id
+          optype:OpType
+          parms: seq of Pattern
+          body:Stmt
+          $pre:Expr;
+  
+ImplOp :: id:Id
+          partp: seq of ParType
+          residtp:[IdType]
+          $ext: seq of ExtVarInf
+          body:ImplOpBody;
+  
+ImplOpBody :: $pre:[Expr]
+              $post:Expr;
+  
+ParType :: pat:Pattern
            type:Type;
   
-  OpDef = ExplOp|ImplOp;
+IdType :: id:Id
+          type:Type;
   
-  ExplOp :: id:Id
-            optype:OpType
-            parms: seq of Pattern
-            body:Stmt
-            $pre:Expr;
-  
-  ImplOp :: id:Id
-            partp: seq of ParType
-            residtp:[IdType]
-            $ext: seq of ExtVarInf
-            body:ImplOpBody;
-  
-  ImplOpBody :: $pre:[Expr]
-                $post:Expr;
-  
-  ParType :: pat:Pattern
+ExtVarInf :: mode:ReadWriteMode
+             id:Id
              type:Type;
   
-  IdType :: id:Id
-            type:Type;
+ReadWriteMode = <READ>|<READWRITE>;
   
-  ExtVarInf :: mode:ReadWriteMode
-               id:Id
-               type:Type;
+OpType :: dom':[Type]
+          rng':[Type];
   
-  ReadWriteMode = <READ>|<READWRITE>;
+Type = ProductType |MapType|SetType|SeqType | TypeId | BasicType |
+       EnumType | OptionalType | UnionType; --|... 
   
-  OpType :: dom':[Type]
-            rng':[Type];
+ProductType :: product: seq1 of Type;
   
-  Type = ProductType |MapType|SetType|SeqType | TypeId | BasicType |
-         EnumType | OptionalType | UnionType --|... 
-  ;
+MapType :: d: Type
+           r: Type;
   
-  ProductType :: product: seq1 of Type;
+SetType :: Type;
   
-  MapType :: d: Type
-             r: Type;
+SeqType :: Type;
   
-  SetType :: Type;
+BasicType = <TOKEN> | <CHAR> | <BOOL>;
   
-  SeqType :: Type;
+EnumType :: seq of char;
   
-  BasicType = <TOKEN> | <CHAR> | <BOOL>;
+OptionalType :: Type;
   
-  EnumType :: seq of char;
+UnionType :: set of Type;
+
+Stmt = DclStmt|DefStmt|NonDetStmt|Call|Sequence|Return|<IDENT>; -- |... 
   
-  OptionalType :: Type;
+DclStmt :: dcls: set of AssDef
+           body:Stmt;
   
-  UnionType :: set of Type;
-  Stmt = DclStmt|DefStmt|NonDetStmt|Call|Sequence|Return|<IDENT> -- |... 
-  ;
+AssDef :: var:Id
+          tp:Type;
   
-  DclStmt :: dcls: set of AssDef
-             body:Stmt;
+DefStmt :: lhs:Pattern
+           rhs:Expr|Call
+           $in:Stmt;
   
-  AssDef :: var:Id
+NonDetStmt :: stmts: set of Stmt;
+  
+Call :: oprt:Id
+        args: seq of Expr;
+  
+Sequence :: stmts: seq1 of Stmt;
+  
+Return :: val:[Expr];
+  
+Expr = LetExpr|IfExpr|QuantExpr|BinaryExpr|TupleConstructor|
+       Apply|Id|BoolLit; --| ... 
+  
+LetExpr :: lhs:Pattern
+           rhs:Expr
+           $in:Expr;
+  
+IfExpr :: test : Expr
+          con  : Expr
+          alt  : Expr;
+  
+QuantExpr = ExistsExpr; --| ... 
+  
+ExistsExpr :: bind: MultTypeBind
+              pred:Expr;
+  
+BinaryExpr :: left:Expr
+              op:BinaryOp
+              right:Expr;
+  
+BinaryOp = <AND> | <OR> | <EQUAL> | <MEMB>; --| ... 
+
+  
+TupleConstructor :: fields: seq1 of Expr;
+  
+Apply :: name:Expr
+         arg: seq of Expr;
+  
+BoolLit:: bool;
+  
+MultTypeBind :: mtb: seq1 of TypeBind;
+  
+TypeBind :: pats:seq of Pattern
             tp:Type;
   
-  DefStmt :: lhs:Pattern
-             rhs:Expr|Call
-             $in:Stmt;
+Pattern = PatternId|TuplePattern; --| ... 
   
-  NonDetStmt :: stmts: set of Stmt;
+PatternId :: name:[Id];
   
-  Call :: oprt:Id
-          args: seq of Expr;
+TuplePattern :: fields: seq1 of Pattern;
   
-  Sequence :: stmts: seq1 of Stmt;
-  
-  Return :: val:[Expr];
-  
-  Expr = LetExpr|IfExpr|QuantExpr|BinaryExpr|TupleConstructor|
-         Apply|Id|BoolLit --| ... 
-  ;
-  
-  LetExpr :: lhs:Pattern
-             rhs:Expr
-             $in:Expr;
-  
-  IfExpr :: test : Expr
-            con  : Expr
-            alt  : Expr;
-  
-  QuantExpr = ExistsExpr --| ... 
-  ;
-  
-  ExistsExpr :: bind: MultTypeBind
-  --ExistsExpr :: bind: seq1 of MultTypeBind
-                pred:Expr;
-  
-  BinaryExpr :: left:Expr
-                op:BinaryOp
-                right:Expr;
-  
-  BinaryOp = <AND> | <OR> | <EQUAL> | <MEMB> --| ... 
-  ;
-  
-  TupleConstructor :: fields: seq1 of Expr;
-  
-  Apply :: name:Expr
-           arg: seq of Expr;
-  
-  BoolLit:: bool;
-  
-  MultTypeBind :: mtb: seq1 of TypeBind;
-  
-  TypeBind :: pats:seq of Pattern
-              tp:Type;
-  
-  Pattern = PatternId|TuplePattern --| ... 
-  ;
-  
-  PatternId :: name:[Id];
-  
-  TuplePattern :: fields: seq1 of Pattern;
-  
-  Id = seq of char
+Id = seq of char
 \end{vdm_al}
 
 \newpage

@@ -1,0 +1,65 @@
+\typeout{Terminology and References Environments. DiProGS 1987}
+
+%************************************************************************
+%									*
+%	Bibliography and Terminology supporting commands		*
+%									*
+%************************************************************************
+
+\newcommand{\bthisbibliography}[1]
+  {\section{References}
+   \begin {list} {}
+     {\settowidth {\labelwidth} {[#1]XX}
+      \setlength {\leftmargin} {\labelwidth}
+      \addtolength{\leftmargin} {\labelsep}
+      \setlength {\parsep} {1ex}
+      \setlength {\itemsep} {2ex}
+     }
+  }
+\newcommand{\ethisbibliography}{\end{list}}
+
+\newcommand{\bthisterminology}[1]
+  {\section{Terminology}
+   \begin {list} {}
+     {\settowidth {\labelwidth} {[#1]XX}
+      \setlength {\leftmargin} {\labelwidth}
+      \addtolength{\leftmargin} {\labelsep}
+      \setlength {\itemsep} {2ex}
+     }
+  }
+\newcommand{\ethisterminology}{\end{list}}
+
+
+\newcommand{\writeterm}[1]
+%  {\raisebox{-.6ex}{{\footnotesize$\tau$}}{\bf #1}}
+  {\raisebox{.7ex}{{\footnotesize$\tau$}}%
+   \makebox[-.2ex]{}%
+   {\it #1}}
+
+\newcommand{\termitem}[4]
+  {\item[{\writeterm{#1}\hfill}]\hfill\\}
+
+\newcommand{\termitemabbr}[4]
+  {\item[{\writeterm{#1}\ \ \ (\writeterm{#2})\hfill}]\hfill\\}
+
+\newcommand{\refitem}[2]
+  {\bibitem[#1]{#2}}
+
+%************************************************************************
+%									*
+%	Commands to refer to the terminology and bibliography. 		*
+%									*
+%************************************************************************
+
+%\newcommand{\cite}[1]  	... defined in LaTeX
+
+%\newcommand{\nocite}[1]   	... defined in LaTeX
+
+% Commented out by PGL 9/4/90
+% 
+% \newcommand{\term}[2]
+%   {\nocite{#1}\writeterm{#2}}
+% 
+% \newcommand{\noterm}[1]
+%   {\nocite{#1}}
+
