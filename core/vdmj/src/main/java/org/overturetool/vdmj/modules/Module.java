@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.modules;
 
+import java.io.File;
 import java.io.Serializable;
 
 import org.overturetool.vdmj.definitions.Definition;
@@ -244,25 +245,61 @@ public class Module implements Serializable
 	/**
 	 * Find the first {@link Statement} in the module that starts on a given line.
 	 *
+	 * @param file The file to search for.
 	 * @param lineno The line number to search for.
 	 * @return	The first {@link Statement} on that line, or null.
 	 */
 
-	public Statement findStatement(int lineno)
+	public Statement findStatement(File file, int lineno)
 	{
-		return defs.findStatement(lineno);
+		// The DEFAULT module can include definitions from many files,
+		// so we have to consider each definition's file before searching
+		// within that for the statement.
+
+		for (Definition d: defs)
+		{
+			if (d.location.file.equals(file))
+			{
+				Statement stmt = d.findStatement(lineno);
+
+				if (stmt != null)
+				{
+					return stmt;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	/**
 	 * Find the first {@link Expression} in the module that starts on a given line.
 	 *
+	 * @param file The file to search for.
 	 * @param lineno The line number to search for.
 	 * @return	The first {@link Expression} on that line, or null.
 	 */
 
-	public Expression findExpression(int lineno)
+	public Expression findExpression(File file, int lineno)
 	{
-		return defs.findExpression(lineno);
+		// The DEFAULT module can include definitions from many files,
+		// so we have to consider each definition's file before searching
+		// within that for the expression.
+
+		for (Definition d: defs)
+		{
+			if (d.location.file.equals(file))
+			{
+				Expression exp = d.findExpression(lineno);
+
+				if (exp != null)
+				{
+					return exp;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	@Override

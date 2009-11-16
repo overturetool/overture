@@ -88,7 +88,7 @@ public class ModuleList extends Vector<Module>
 	{
 		for (Module m: this)
 		{
-			Statement stmt = m.findStatement(lineno);
+			Statement stmt = m.findStatement(file, lineno);
 
 			if (stmt != null)
 			{
@@ -103,7 +103,7 @@ public class ModuleList extends Vector<Module>
 	{
 		for (Module m: this)
 		{
-			Expression exp = m.findExpression(lineno);
+			Expression exp = m.findExpression(file, lineno);
 
 			if (exp != null)
 			{
