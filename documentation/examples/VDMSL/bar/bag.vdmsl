@@ -6,7 +6,7 @@ module BAG
 exports
 
 types
-  Bag;
+  struct Bag;
   struct Elem
 
 functions

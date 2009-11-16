@@ -28,7 +28,7 @@ mainly intended for the purpose of illustrating how bags can be used.
 
 \begin{vdm_al}
 module BAR
-
+exports all
 imports
 
 from BAG
