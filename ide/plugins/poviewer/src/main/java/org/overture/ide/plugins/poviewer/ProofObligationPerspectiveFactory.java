@@ -36,7 +36,7 @@ public class ProofObligationPerspectiveFactory implements IPerspectiveFactory {
 			factory.createFolder(
 				"Right", //NON-NLS-1
 				IPageLayout.RIGHT,
-				0.72f,
+				0.65f,
 				factory.getEditorArea());
 		
 		right.addView(PoviewerPluginConstants.PoOverviewTableViewId); //NON-NLS-1

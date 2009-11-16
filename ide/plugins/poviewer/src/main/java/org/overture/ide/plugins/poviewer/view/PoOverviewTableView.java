@@ -80,6 +80,9 @@ public class PoOverviewTableView  extends ViewPart implements ISelectionListener
 			case 0:
 				columnText = data.name;
 				break;
+			case 1:
+				columnText = data.kind.toString();
+				break;
 			default:
 				columnText = "not set";
 			}
@@ -121,9 +124,9 @@ public class PoOverviewTableView  extends ViewPart implements ISelectionListener
 				| SWT.V_SCROLL);
 		// test setup columns...
 		TableLayout layout = new TableLayout();
-		layout.addColumnData(new ColumnWeightData(100, 50, true));
-//		layout.addColumnData(new ColumnWeightData(50, 100, true));
-		layout.addColumnData(new ColumnWeightData(25, 25, true));
+		layout.addColumnData(new ColumnWeightData(100, 75, false));
+		layout.addColumnData(new ColumnWeightData(60, 35, false));
+		layout.addColumnData(new ColumnWeightData(25, 25, false));
 		viewer.getTable().setLayout(layout);
 		viewer.getTable().setLinesVisible(true);
 		viewer.getTable().setHeaderVisible(true);
@@ -134,9 +137,9 @@ public class PoOverviewTableView  extends ViewPart implements ISelectionListener
 		column.setText("PO Name");
 		column.setToolTipText("PO Name");
 
-//		TableColumn column2 = new TableColumn(viewer.getTable(), SWT.LEFT);
-//		column2.setText("Value");
-//		column2.setToolTipText("Show Value");
+		TableColumn column2 = new TableColumn(viewer.getTable(), SWT.LEFT);
+		column2.setText("Type");
+		column2.setToolTipText("Show Type");
 
 		TableColumn column3 = new TableColumn(viewer.getTable(), SWT.LEFT);
 		column3.setText("Status");

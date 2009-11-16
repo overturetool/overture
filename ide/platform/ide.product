@@ -6,7 +6,7 @@
    <aboutInfo>
       <image path="/org.overture.ide.platform/icons/ctool128/overture_misc.png"/>
       <text>
-          %aboutText
+         %aboutText
       </text>
    </aboutInfo>
 
@@ -152,6 +152,7 @@
       <plugin id="org.overture.ide.parsers.vdmj"/>
       <plugin id="org.overture.ide.platform"/>
       <plugin id="org.overture.ide.plugins.idedebughelper"/>
+      <plugin id="org.overture.ide.plugins.poviewer"/>
       <plugin id="org.overture.ide.plugins.proofsupport"/>
       <plugin id="org.overture.ide.plugins.showtrace"/>
       <plugin id="org.overture.ide.plugins.traces"/>
