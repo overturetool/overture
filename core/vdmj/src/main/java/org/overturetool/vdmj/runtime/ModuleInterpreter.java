@@ -196,7 +196,6 @@ public class ModuleInterpreter extends Interpreter
 
 		if (TypeChecker.getErrorCount() > 0)
 		{
-			// TypeChecker.printErrors(Console.out);
 			throw new VDMErrorsException(TypeChecker.getErrors());
 		}
 
@@ -212,7 +211,6 @@ public class ModuleInterpreter extends Interpreter
 
 		if (TypeChecker.getErrorCount() > 0)
 		{
-			// TypeChecker.printErrors(Console.out);
 			throw new VDMErrorsException(TypeChecker.getErrors());
 		}
 
@@ -243,9 +241,9 @@ public class ModuleInterpreter extends Interpreter
 			// We don't care... we just needed to type check it.
 		}
 
-		Context sctxt = defaultModule.getStateContext();
-		mainContext = new StateContext(
-			defaultModule.name.location, "interpreter", initialContext, sctxt);
+		mainContext = new StateContext(defaultModule.name.location,
+							"module scope",	null, defaultModule.getStateContext());
+		mainContext.putAll(initialContext);
 		mainContext.setThreadState(dbgp, null);
 		clearBreakpointHits();
 

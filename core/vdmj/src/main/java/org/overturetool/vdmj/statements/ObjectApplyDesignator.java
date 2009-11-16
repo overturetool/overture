@@ -163,7 +163,6 @@ public class ObjectApplyDesignator extends ObjectDesignator
 				FunctionValue fv = v.functionValue(ctxt);
 				return fv.eval(location, argvals, ctxt);
 			}
-
 			else if (v instanceof OperationValue)
 			{
 				ValueList argvals = new ValueList();
@@ -174,7 +173,7 @@ public class ObjectApplyDesignator extends ObjectDesignator
 				}
 
 				OperationValue ov = v.operationValue(ctxt);
-				return ov.eval(argvals, ctxt);
+				return ov.eval(location, argvals, ctxt);
 			}
 			else
 			{

@@ -276,7 +276,7 @@ public class CallObjectStatement extends Statement
     				argValues.add(arg.eval(ctxt));
     			}
 
-    			return op.eval(argValues, ctxt);
+    			return op.eval(location, argValues, ctxt);
 			}
 			else
 			{

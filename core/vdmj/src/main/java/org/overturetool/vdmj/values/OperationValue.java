@@ -37,6 +37,7 @@ import org.overturetool.vdmj.expressions.AndExpression;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexKeywordToken;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.messages.Console;
@@ -191,7 +192,8 @@ public class OperationValue extends Value
 		}
 	}
 
-	public Value eval(ValueList argValues, Context ctxt) throws ValueException
+	public Value eval(LexLocation from, ValueList argValues, Context ctxt)
+		throws ValueException
 	{
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
@@ -201,16 +203,17 @@ public class OperationValue extends Value
 			}
 			else
 			{
-				return localEval(argValues, ctxt, true);
+				return localEval(from, argValues, ctxt, true);
 			}
 		}
 		else
 		{
-			return localEval(argValues, ctxt, true);
+			return localEval(from, argValues, ctxt, true);
 		}
 	}
 
-	public Value localEval(ValueList argValues, Context ctxt, boolean logreq)
+	public Value localEval(
+		LexLocation from, ValueList argValues, Context ctxt, boolean logreq)
 		throws ValueException
 	{
 		if (body == null)
@@ -228,19 +231,19 @@ public class OperationValue extends Value
 
 		if (self != null)
 		{
-			argContext = new ObjectContext(name.location, name.name
+			argContext = new ObjectContext(from, name.name
 				+ Utils.listToString("(", paramPatterns, ", ", ")"), ctxt,
 				self);
 		}
 		else if (classdef != null)
 		{
-			argContext = new ClassContext(name.location, name.name
+			argContext = new ClassContext(from, name.name
 				+ Utils.listToString("(", paramPatterns, ", ", ")"), ctxt,
 				classdef);
 		}
 		else
 		{
-			argContext = new StateContext(name.location, name.name
+			argContext = new StateContext(from, name.name
 				+ Utils.listToString("(", paramPatterns, ", ", ")"), ctxt,
 				stateContext);
 		}

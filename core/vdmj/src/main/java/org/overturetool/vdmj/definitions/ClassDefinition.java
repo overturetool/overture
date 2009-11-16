@@ -1241,7 +1241,7 @@ public class ClassDefinition extends Definition
     		ObjectContext ctorCtxt = new ObjectContext(
     				location, name.name + " constructor", ctxt, object);
 
-       		ov.eval(argvals, ctorCtxt);
+       		ov.eval(ov.name.location, argvals, ctorCtxt);
 		}
 
 		return object;

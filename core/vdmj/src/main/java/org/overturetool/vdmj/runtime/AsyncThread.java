@@ -171,7 +171,8 @@ public class AsyncThread extends Thread
     		try
     		{
         		RootContext global = ClassInterpreter.getInstance().initialContext;
-        		Context ctxt = new ObjectContext(operation.name.location, "async", global, self);
+        		LexLocation from = self.type.classdef.location;
+        		Context ctxt = new ObjectContext(from, "async", global, self);
     			reader = ctxt.threadState.dbgp.newThread(cpu);
     			ctxt.setThreadState(reader, cpu);
 
@@ -181,7 +182,7 @@ public class AsyncThread extends Thread
     				ctxt.threadState.setBreaks(new LexLocation(), null, null);
     			}
 
-        		Value rv = operation.localEval(args, ctxt, logreq);
+        		Value rv = operation.localEval(operation.name.location, args, ctxt, logreq);
        			response = new MessageResponse(rv, request);
     		}
     		catch (ValueException e)
@@ -252,7 +253,8 @@ public class AsyncThread extends Thread
     		try
     		{
         		RootContext global = ClassInterpreter.getInstance().initialContext;
-        		Context ctxt = new ObjectContext(operation.name.location, "async", global, self);
+        		LexLocation from = self.type.classdef.location;
+        		Context ctxt = new ObjectContext(from, "async", global, self);
         		ctxt.setThreadState(null, cpu);
 
     			if (breakAtStart)
@@ -261,7 +263,7 @@ public class AsyncThread extends Thread
     				ctxt.threadState.setBreaks(new LexLocation(), null, null);
     			}
 
-        		Value rv = operation.localEval(args, ctxt, logreq);
+        		Value rv = operation.localEval(operation.name.location, args, ctxt, logreq);
        			response = new MessageResponse(rv, request);
     		}
     		catch (ValueException e)

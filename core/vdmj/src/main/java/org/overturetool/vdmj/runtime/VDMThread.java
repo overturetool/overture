@@ -93,7 +93,7 @@ public class VDMThread extends Thread
 				ctxt.threadState.setBreaks(new LexLocation(), null, null);
 			}
 
-			operation.eval(new ValueList(), ctxt);
+			operation.eval(ctxt.location, new ValueList(), ctxt);
 		}
 		catch (StopException e)
 		{
@@ -133,7 +133,7 @@ public class VDMThread extends Thread
 				ctxt.threadState.setBreaks(new LexLocation(), null, null);
 			}
 
-			operation.eval(new ValueList(), ctxt);
+			operation.eval(ctxt.location, new ValueList(), ctxt);
 			reader.complete(DBGPReason.OK, null);
 		}
 		catch (ContextException e)

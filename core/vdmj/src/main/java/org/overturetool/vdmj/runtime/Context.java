@@ -328,9 +328,7 @@ public class Context extends HashMap<LexNameToken, Value>
 
 	public Context getFrame(int depth)
 	{
-		return depth == 0 ? this :
-				outer == null ? this :
-					outer.getFrame(depth);
+		return outer == null ? this : outer.getFrame(depth);
 	}
 
 	public ObjectValue getSelf()

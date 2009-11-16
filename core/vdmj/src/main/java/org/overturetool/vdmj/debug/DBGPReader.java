@@ -720,7 +720,14 @@ public class DBGPReader
 		}
 		catch (IOException e)
 		{
-			errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
+			try
+			{
+				errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
+			}
+			catch (Throwable th)
+			{
+				// Probably a shutdown race...
+			}
 		}
 		finally
 		{
@@ -1234,7 +1241,7 @@ public class DBGPReader
 	{
 		checkArgs(c, 1, false);
 
-		statusResponse(DBGPStatus.STOPPING, DBGPReason.OK);
+		statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
 		VDMThreadSet.abortAll();
 		CPUValue.abortAll();
 		TransactionValue.commitAll();
@@ -1520,21 +1527,25 @@ public class DBGPReader
 		}
 		else if (depth > 0)
 		{
-			RootContext ctxt = breakContext.getFrame(depth).getRoot();
+			Context ctxt = breakContext.getFrame(depth);
 			response(null, stackResponse(ctxt.location, depth));
 		}
 		else
 		{
+			// The location of a context is where it was called from, so
+			// to build the stack locations, we take the location of the
+			// level above, and the first level is the BP's location...
+
 			StringBuilder sb = new StringBuilder();
-			Context ctxt = breakContext;
+			sb.append(stackResponse(breakpoint.location, 0));
 
 			int d = 0;
-			sb.append(stackResponse(breakpoint.location, d++));
+			Context ctxt = breakContext.getFrame(d++);
 
 			while (d < actualDepth)
 			{
-				ctxt = breakContext.getFrame(d);
-				sb.append(stackResponse(ctxt.location, d++));
+				sb.append(stackResponse(ctxt.location, d));
+				ctxt = breakContext.getFrame(d++);
 			}
 
 			response(null, sb);

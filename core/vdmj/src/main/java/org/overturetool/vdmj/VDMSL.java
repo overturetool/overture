@@ -35,6 +35,7 @@ import java.util.zip.GZIPOutputStream;
 
 import org.overturetool.vdmj.commands.CommandReader;
 import org.overturetool.vdmj.commands.ModuleCommandReader;
+import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
@@ -189,6 +190,14 @@ public class VDMSL extends VDMJ
 				list.clear();
 				list.addAll(named);
 				list.add(def);
+
+				for (Definition d: def.defs)
+				{
+					if (!d.isTypeDefinition())
+					{
+						d.markUsed();	// Mark top-level items as used
+					}
+				}
 			}
 		}
 

@@ -334,7 +334,7 @@ public class ApplyExpression extends Expression
         		}
 
          		OperationValue ov = object.operationValue(ctxt);
-           		return ov.eval(argvals, ctxt);
+           		return ov.eval(location, argvals, ctxt);
     		}
 			else if (object instanceof SeqValue)
     		{

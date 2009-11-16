@@ -172,7 +172,7 @@ public class PeriodicStatement extends Statement
 			while (true)
 			{
 				long start = System.currentTimeMillis();
-				op.eval(new ValueList(), ctxt);
+				op.eval(location, new ValueList(), ctxt);
 				long duration = System.currentTimeMillis() - start;
 
 				try

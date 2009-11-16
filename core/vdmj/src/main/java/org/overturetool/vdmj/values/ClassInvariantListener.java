@@ -48,7 +48,7 @@ public class ClassInvariantListener implements ValueListener, Serializable
 		{
     		try
     		{
-    			if (!invopvalue.eval(new ValueList(), ctxt).boolValue(ctxt))
+    			if (!invopvalue.eval(location, new ValueList(), ctxt).boolValue(ctxt))
     			{
     				throw new ContextException(
     					4130, "Instance invariant violated: " + invopvalue.name, location, ctxt);
