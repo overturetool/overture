@@ -78,7 +78,6 @@ import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.runtime.ModuleInterpreter;
 import org.overturetool.vdmj.runtime.ObjectContext;
-import org.overturetool.vdmj.runtime.RootContext;
 import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.runtime.VDMThreadSet;
@@ -1574,16 +1573,27 @@ public class DBGPReader
 	private NameValuePairMap getContextValues(DBGPContextType context, int depth)
 	{
 		NameValuePairMap vars = new NameValuePairMap();
-		Context frame = breakContext.getFrame(depth);
 
 		switch (context)
 		{
 			case LOCAL:
-				vars.putAll(frame.getFreeVariables());
+				if (depth == 0)
+				{
+					vars.putAll(breakContext.getFreeVariables());
+				}
+				else
+				{
+					Context frame = breakContext.getFrame(depth - 1).outer;
+
+					if (frame != null)
+					{
+						vars.putAll(frame.getFreeVariables());
+					}
+				}
 				break;
 
 			case CLASS:
-				RootContext root = frame.getRoot();
+				Context root = breakContext.getFrame(depth);
 
 				if (root instanceof ObjectContext)
 				{
@@ -1595,10 +1605,14 @@ public class DBGPReader
 					ClassContext cctxt = (ClassContext)root;
 					vars.putAll(cctxt);
 				}
-				else
+				else if (root instanceof StateContext)
 				{
 					StateContext sctxt = (StateContext)root;
-					vars.putAll(sctxt.stateCtxt);
+
+					if (sctxt.stateCtxt != null)
+					{
+						vars.putAll(sctxt.stateCtxt);
+					}
 				}
 				break;
 
