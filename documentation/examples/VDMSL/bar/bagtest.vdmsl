@@ -95,7 +95,7 @@ functions
 
   TestRemove3: () -> bool
   TestRemove3() ==
-    not BAG`pre_Remove(<D>,BAG`baga);
+    BAG`Remove(<D>,BAG`baga) = BAG`baga;
     
   TestSeqToBag: () -> bool
   TestSeqToBag() ==
