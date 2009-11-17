@@ -1,0 +1,34 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    
+    <groupId>org.overturetool.tools</groupId>
+    <artifactId>tools</artifactId>
+    <version>2.0.0</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.overturetool.tools</groupId>
+  <artifactId>packworkspace</artifactId>
+  <version>2.0.0</version>
+  <name>Overture Examples Workspace packer</name>
+  <build>
+  	<plugins>
+  		  <plugin>
+        <!-- NOTE: We don't need a groupId specification because the group is
+             org.apache.maven.plugins ...which is assumed by default.
+         -->
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+           <archive>
+            <manifest>
+              <mainClass>org.overturetool.tools.packworkspace.Main</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+        </plugin>
+  	</plugins>
+  </build>
+ 
+</project>
