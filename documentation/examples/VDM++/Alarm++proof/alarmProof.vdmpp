@@ -48,7 +48,7 @@ functions
   post r in set plant.schedule(peri) and
     a.quali in set r.quali;
 
-  QualificationOK: set of Expert * Qualification -> bool
+static  QualificationOK: set of Expert * Qualification -> bool
   QualificationOK(exs,reqquali) ==
     exists ex in set exs & reqquali in set ex.quali;
 

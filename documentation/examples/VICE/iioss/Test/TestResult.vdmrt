@@ -1,0 +1,40 @@
+\begin{vdm_al}
+--The class \vdmstyle{TestResult} maintains a collection
+--of references to test cases that have failed. The
+--exception handler defined in the operation \vdmstyle{Run}
+--of class \vdmstyle{TestCase} calls the operation
+--\vdmstyle{AddResult}, which will append the object
+--reference of the test case to the tail of the sequence
+--\vdmstyle{failures}. The operation \vdmstyle{Show} is used
+--to print a list of test cases that have failed or
+--provide a message to indicate that no failures were
+--found. Note that the standard I/O library, which is
+--supplied with \vdmtools, is used here. \vdmstyle{IO.echo}
+--prints a string on the standard output, just like 
+--\vdmstyle{System.out.println} in Java. The \emph{def
+--statement} is used to suppress the boolean value 
+--returned by \vdmstyle{IO.echo}:\sindex{IO standard library}
+
+class TestResult
+
+instance variables
+  failures : seq of TestCase := []
+  
+operations
+	public AddFailure: TestCase ==> ()
+	AddFailure (ptst) == failures := failures ^ [ptst];
+
+	public Print: seq of char ==> ()
+	Print (pstr) ==
+		def - = new IO().echo(pstr ^ "\n") in skip;
+    
+	public Show: () ==> ()
+	Show () ==
+	    if failures = [] then
+	      Print ("No failures detected")
+	    else
+	      for failure in failures do
+	        Print (failure.GetName() ^ " failed")
+  
+end TestResult
+\end{vdm_al}
