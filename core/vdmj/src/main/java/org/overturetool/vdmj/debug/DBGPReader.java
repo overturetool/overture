@@ -1144,10 +1144,6 @@ public class DBGPReader
 			StringBuilder hdr = new StringBuilder("success=\"1\"");
 			response(hdr, property);
 		}
-		catch (ContextException e)
-		{
-			dyingThread(e);
-		}
 		catch (Exception e)
 		{
 			errorResponse(DBGPErrorCode.EVALUATION_ERROR, e.getMessage());
