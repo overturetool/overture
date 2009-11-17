@@ -297,21 +297,25 @@ public class SubTypeObligation extends ProofObligation
 				{
 					RecordType rt = (RecordType)etype;
 					MkTypeExpression mk = (MkTypeExpression)exp;
-					Iterator<Field> fit = rt.fields.iterator();
-					Iterator<Type> ait = mk.argTypes.iterator();
 
-					for (Expression e: mk.args)
+					if (rt.fields.size() == mk.args.size())
 					{
-						String s = oneType(true, e, fit.next().type, ait.next());
+    					Iterator<Field> fit = rt.fields.iterator();
+    					Iterator<Type> ait = mk.argTypes.iterator();
 
-						if (s.length() > 0)
-						{
-							sb.append(prefix);
-							sb.append("(");
-							sb.append(s);
-							sb.append(")");
-							prefix = "\nand ";
-						}
+    					for (Expression e: mk.args)
+    					{
+    						String s = oneType(true, e, fit.next().type, ait.next());
+
+    						if (s.length() > 0)
+    						{
+    							sb.append(prefix);
+    							sb.append("(");
+    							sb.append(s);
+    							sb.append(")");
+    							prefix = "\nand ";
+    						}
+    					}
 					}
 				}
 				else
