@@ -248,11 +248,7 @@ Step() ==
 );   
  
 thread
-  --(for all r in set radars do
-  --   start(r);
-  -- while true do
-  --  Step();    
-  --)
+
 periodic (1600,0,0,0) (Step)
 
 sync 
