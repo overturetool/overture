@@ -1,0 +1,24 @@
+%
+% $Id: MMIUpdateScreenTMC.vpp,v 1.2 2006/01/05 13:41:22 mave Exp $
+%
+
+\begin{vdm_al}
+class MMIUpdateScreenTMC is subclass of BasicTask
+
+operations
+  public MMIUpdateScreenTMC: EventDispatcher ==> MMIUpdateScreenTMC
+  MMIUpdateScreenTMC (pde) == BasicTask("UpdateScreenTMC",pde);
+
+  -- we do not specify *what* the operation does
+  -- we only specify its execution time
+  public UpdateScreen: () ==> ()
+  UpdateScreen () == duration (500) skip;
+
+  protected handleEvent: Event ==> ()
+  handleEvent (pe) ==
+    ( UpdateScreen();
+	-- scenario finished. signal response back to the environment
+      raiseInterrupt("TransmitTMC", pe.getEvent()) )
+
+end MMIUpdateScreenTMC
+\end{vdm_al}

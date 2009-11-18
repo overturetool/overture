@@ -1,0 +1,13 @@
+%
+% $Id: NetworkEvent.vpp,v 1.2 2006/01/04 14:10:05 mave Exp $
+%
+
+\begin{vdm_al}
+class NetworkEvent is subclass of Event
+
+operations
+  public NetworkEvent: nat ==> NetworkEvent
+  NetworkEvent (pne) == Event(pne)
+
+end NetworkEvent
+\end{vdm_al}

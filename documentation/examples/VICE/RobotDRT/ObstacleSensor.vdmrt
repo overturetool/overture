@@ -1,0 +1,47 @@
+class ObstacleSensor
+types
+public SensorDirection = <North> | <South> | <East> | <West>;
+ 
+instance variables
+sDirection : SensorDirection;
+ 
+operations
+ public ObstacleSensor : SensorDirection ==> ObstacleSensor
+ ObstacleSensor(direction) ==
+   sDirection:= direction;
+ 
+ public GetPointAvalibility : Grid`Point ==> Grid`PointAvalibility
+ GetPointAvalibility (p) ==
+   if World`env.GetPointAvalibility(p) = <Occupied> then
+     return <Occupied>
+   else
+     return <Free>
+ pre World`env.completeGrid.IsValidGridPoint(p);
+ 
+  public GetDirection : () ==> SensorDirection
+ GetDirection() == return sDirection;
+ 
+end ObstacleSensor
+
+
+
+class ObstacleSensorTest is subclass of TestCase
+values
+ 
+operations
+ protected SetUp: () ==> ()
+ SetUp () == skip;
+ 
+ protected RunTest: () ==> ()
+ RunTest () ==
+    (
+     dcl tc : ObstacleSensor:= new ObstacleSensor(<North>);
+      AssertTrue(tc.GetDirection() = <North>);
+ 
+   );
+    
+  
+  protected TearDown: () ==> ()
+ TearDown () == skip
+ 
+end ObstacleSensorTest
