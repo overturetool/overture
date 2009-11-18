@@ -8,11 +8,11 @@ public Route= seq of Grid`Point;
 instance variables
  private routes : seq of Route := [];
  public static obsSensors : set of ObstacleSensor := {};
- private batCap : int;
+ private batCap : int := 1;
  private dest: Grid`Point;
  private  workingGrid : Grid;
  busy : bool := true;
- inv GetBatUsage()*2 <= batCap and batCap > 1
+ inv batCap > 1 and len routes > 0 => GetBatUsage()*2 <= batCap;
  
 operations
  
@@ -37,7 +37,8 @@ operations
  
  private GetBatUsage: () ==> nat
  GetBatUsage() ==
-    return len routes(len routes);
+    return len routes(len routes)
+ pre len routes > 0;
  
  private GetPos : () ==> Grid`Point
  GetPos() ==
