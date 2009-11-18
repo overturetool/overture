@@ -154,6 +154,10 @@ public class NotYetSpecifiedExpression extends Expression
 			{
 				throw new ContextException(e, location);
 			}
+			catch (ContextException e)
+			{
+				throw e;
+			}
 			catch (Exception e)
 			{
 				throw new ContextException(4134, e.getMessage(), ctxt.location, ctxt);

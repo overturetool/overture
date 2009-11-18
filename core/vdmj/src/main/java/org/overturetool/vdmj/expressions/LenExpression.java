@@ -25,6 +25,7 @@ package org.overturetool.vdmj.expressions;
 
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -74,6 +75,10 @@ public class LenExpression extends UnaryExpression
         catch (ValueException e)
         {
         	return abort(e);
+        }
+        catch (ContextException e)
+        {
+        	throw e;	// To avoid case below
         }
 		catch (Exception e)
 		{
