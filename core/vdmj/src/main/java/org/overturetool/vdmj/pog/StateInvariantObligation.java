@@ -23,9 +23,12 @@
 
 package org.overturetool.vdmj.pog;
 
+import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassInvariantDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
+import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
 import org.overturetool.vdmj.definitions.StateDefinition;
 import org.overturetool.vdmj.statements.AssignmentStatement;
@@ -42,16 +45,7 @@ public class StateInvariantObligation extends ProofObligation
 
 		if (ass.classDefinition != null)
 		{
-    		DefinitionList invdefs = ass.classDefinition.getInvDefs();
-    		String sep = "";
-
-    		for (Definition d: invdefs)
-    		{
-    			ClassInvariantDefinition cid = (ClassInvariantDefinition)d;
-    			sb.append(sep);
-    			sb.append(cid.expression);
-    			sep = " and ";
-    		}
+			sb.append(invDefs(ass.classDefinition));
 		}
 		else	// must be because we have a module state invariant
 		{
@@ -77,8 +71,43 @@ public class StateInvariantObligation extends ProofObligation
 		sb.append("-- After ");
 		sb.append(def);
 		sb.append("\n");
+		sb.append(invDefs(def.classDefinition));
 
-		DefinitionList invdefs = def.classDefinition.getInvDefs();
+    	value = ctxt.getObligation(sb.toString());
+	}
+
+	public StateInvariantObligation(
+		ExplicitOperationDefinition def,
+		POContextStack ctxt)
+	{
+		super(def.location, POType.STATE_INVARIANT, ctxt);
+		StringBuilder sb = new StringBuilder();
+		sb.append("-- After ");
+		sb.append(def.name);
+		sb.append(" constructor body\n");
+		sb.append(invDefs(def.classDefinition));
+
+    	value = ctxt.getObligation(sb.toString());
+	}
+
+	public StateInvariantObligation(
+		ImplicitOperationDefinition def,
+		POContextStack ctxt)
+	{
+		super(def.location, POType.STATE_INVARIANT, ctxt);
+		StringBuilder sb = new StringBuilder();
+		sb.append("-- After ");
+		sb.append(def.name);
+		sb.append(" constructor body\n");
+		sb.append(invDefs(def.classDefinition));
+
+    	value = ctxt.getObligation(sb.toString());
+	}
+
+	private String invDefs(ClassDefinition def)
+	{
+		StringBuilder sb = new StringBuilder();
+		DefinitionList invdefs = def.getInvDefs();
 		String sep = "";
 
 		for (Definition d: invdefs)
@@ -89,6 +118,6 @@ public class StateInvariantObligation extends ProofObligation
 			sep = " and ";
 		}
 
-    	value = ctxt.getObligation(sb.toString());
+    	return sb.toString();
 	}
 }

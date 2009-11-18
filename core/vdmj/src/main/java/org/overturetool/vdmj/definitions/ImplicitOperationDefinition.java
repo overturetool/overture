@@ -41,6 +41,7 @@ import org.overturetool.vdmj.pog.OperationPostConditionObligation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ParameterPatternObligation;
 import org.overturetool.vdmj.pog.ProofObligationList;
+import org.overturetool.vdmj.pog.StateInvariantObligation;
 import org.overturetool.vdmj.pog.SubTypeObligation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.statements.ErrorCase;
@@ -602,6 +603,11 @@ public class ImplicitOperationDefinition extends Definition
 		if (body != null)
 		{
 			obligations.addAll(body.getProofObligations(ctxt));
+
+			if (isConstructor)
+			{
+				obligations.add(new StateInvariantObligation(this, ctxt));
+			}
 
 			if (!TypeComparator.isSubType(actualResult, type.result))
 			{
