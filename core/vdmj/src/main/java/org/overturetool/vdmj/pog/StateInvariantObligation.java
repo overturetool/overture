@@ -29,7 +29,6 @@ import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
-import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
 import org.overturetool.vdmj.definitions.StateDefinition;
 import org.overturetool.vdmj.statements.AssignmentStatement;
 
@@ -63,14 +62,12 @@ public class StateInvariantObligation extends ProofObligation
 	}
 
 	public StateInvariantObligation(
-		InstanceVariableDefinition def,
+		ClassInvariantDefinition def,
 		POContextStack ctxt)
 	{
 		super(def.location, POType.STATE_INVARIANT, ctxt);
 		StringBuilder sb = new StringBuilder();
-		sb.append("-- After ");
-		sb.append(def);
-		sb.append("\n");
+		sb.append("-- After instance variable initializers\n");
 		sb.append(invDefs(def.classDefinition));
 
     	value = ctxt.getObligation(sb.toString());

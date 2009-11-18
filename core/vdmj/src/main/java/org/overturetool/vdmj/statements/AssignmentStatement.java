@@ -181,6 +181,7 @@ public class AssignmentStatement extends Statement
 			obligations.add(new StateInvariantObligation(this, ctxt));
 		}
 
+		obligations.addAll(target.getProofObligations(ctxt));
 		obligations.addAll(exp.getProofObligations(ctxt));
 
 		if (!TypeComparator.isSubType(expType, targetType))

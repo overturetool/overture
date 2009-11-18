@@ -685,7 +685,7 @@ as the expected and actual values.
 4016, "Duplicate map keys have different values: <domain>"
 4017, "Duplicate map keys have different values: <domain>"
 4018, "Maplet cannot be evaluated"
-4019, "Sequence does not contain key: <index>"
+4019, "Sequence cannot extend to key: <index>"
 4020, "State value is neither a <type> nor a <type>"
 4021, "Duplicate map keys have different values: <key>"
 4022, "mk_ type argument is not <type>"

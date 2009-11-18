@@ -55,7 +55,7 @@ public class PogTest extends TestCase
 	private String[] expected =
 	{
 		"forall m1, m2 in set {{1 |-> 2}, {2 |-> 3}} &\n  forall d3 in set dom m1, d4 in set dom m2 &\n    d3 = d4 => m1(d3) = m2(d4)\n",
-		// "-- After iv:int := 123\n(iv < 10)\n",
+		"-- After instance variable initializers\n(iv < 10)\n",
 		"forall arg1:(int * int), arg2:seq of (int) &\n  (exists mk_(i, j):(int * int) & arg1 = mk_(i, j)) and\n  (exists [k]:seq of (int) & arg2 = [k])\n",
 		"(forall mk_(i, j):(int * int), [k]:seq of (int) &\n  i in set dom m)\n",
 		"forall arg1:(int * int) &\n  (exists mk_(i, j):(int * int) & arg1 = mk_(i, j))\n",
@@ -160,6 +160,13 @@ public class PogTest extends TestCase
 		assertEquals("Type check errors", 0, TypeChecker.getErrorCount());
 
 		ProofObligationList polist = classes.getProofObligations();
+
+		// Copy this output to re-generate the expected from the actuals...
+		for (ProofObligation po: polist)
+		{
+			Console.out.println("\"" + po.value.replaceAll("\n", "\\\\n") + "\",");
+		}
+
 		assertEquals("POs generated", expected.length, polist.size());
 		int i = 0;
 
@@ -174,9 +181,6 @@ public class PogTest extends TestCase
 
 			assertEquals("PO #" + (i+1), expected[i], po.value);
 			i++;
-
-//			Comment this in to re-generate the expected from the actuals...
-//			Console.out.println("\"" + po.value.replaceAll("\n", "\\\\n") + "\",");
 		}
 	}
 }

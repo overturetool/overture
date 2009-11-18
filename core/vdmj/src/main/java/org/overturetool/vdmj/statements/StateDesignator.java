@@ -26,6 +26,8 @@ package org.overturetool.vdmj.statements;
 import java.io.Serializable;
 
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.pog.POContextStack;
+import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ValueException;
@@ -55,6 +57,12 @@ public abstract class StateDesignator implements Serializable
 	abstract public Type typeCheck(Environment env);
 
 	abstract public Value eval(Context ctxt);
+
+	public ProofObligationList getProofObligations(
+		@SuppressWarnings("unused") POContextStack ctxt)
+	{
+		return new ProofObligationList();
+	}
 
 	public void abort(int number, String msg, Context ctxt)
 	{

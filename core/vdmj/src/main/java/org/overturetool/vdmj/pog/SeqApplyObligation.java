@@ -24,6 +24,7 @@
 package org.overturetool.vdmj.pog;
 
 import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.statements.StateDesignator;
 
 public class SeqApplyObligation extends ProofObligation
 {
@@ -31,5 +32,13 @@ public class SeqApplyObligation extends ProofObligation
 	{
 		super(root.location, POType.SEQ_APPLY, ctxt);
 		value = ctxt.getObligation(arg + " in set inds " + root);
+	}
+
+	public SeqApplyObligation(StateDesignator root,
+		Expression arg, POContextStack ctxt)
+	{
+		super(root.location, POType.SEQ_APPLY, ctxt);
+		value = ctxt.getObligation(
+			arg + " > 0 and " + arg + " <= len (" + root + ") + 1");
 	}
 }

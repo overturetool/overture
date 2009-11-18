@@ -26,6 +26,9 @@ package org.overturetool.vdmj.definitions;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.pog.POContextStack;
+import org.overturetool.vdmj.pog.ProofObligationList;
+import org.overturetool.vdmj.pog.StateInvariantObligation;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
@@ -62,7 +65,7 @@ public class ClassInvariantDefinition extends Definition
 	@Override
 	public LexNameList getVariableNames()
 	{
-		return new LexNameList();
+		return new LexNameList(name);
 	}
 
 	@Override
@@ -86,6 +89,14 @@ public class ClassInvariantDefinition extends Definition
 		{
 			report(3013, "Class invariant is not a boolean expression");
 		}
+	}
+
+	@Override
+	public ProofObligationList getProofObligations(POContextStack ctxt)
+	{
+		ProofObligationList list = new ProofObligationList();
+		list.add(new StateInvariantObligation(this, ctxt));
+		return list;
 	}
 
 	@Override

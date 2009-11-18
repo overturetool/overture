@@ -24,6 +24,9 @@
 package org.overturetool.vdmj.statements;
 
 import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.pog.POContextStack;
+import org.overturetool.vdmj.pog.ProofObligationList;
+import org.overturetool.vdmj.pog.SeqApplyObligation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
@@ -141,7 +144,17 @@ public class MapSeqDesignator extends StateDesignator
 
 				if (!seq.inbounds(i))
 				{
-					exp.abort(4019, "Sequence does not contain key: " + index, ctxt);
+					if (i == seq.size())
+					{
+						// Assignment to an index one greater than the length
+						// creates the value in order to have it updated.
+
+						seq.add(UpdatableValue.factory(null));
+					}
+					else
+					{
+						exp.abort(4019, "Sequence cannot extend to key: " + index, ctxt);
+					}
 				}
 
 				result = seq.get(i);
@@ -157,5 +170,18 @@ public class MapSeqDesignator extends StateDesignator
 		}
 
 		return result;
+	}
+
+	@Override
+	public ProofObligationList getProofObligations(POContextStack ctxt)
+	{
+		ProofObligationList list = new ProofObligationList();
+
+		if (seqType != null)
+		{
+			list.add(new SeqApplyObligation(mapseq, exp, ctxt));
+		}
+
+		return list;
 	}
 }
