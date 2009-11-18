@@ -134,7 +134,7 @@ public class PerSyncDefinition extends Definition
 		}
 
 		Environment local = new FlatEnvironment(this, base);
-		local.setFuncDefinition(this);	// Prevent op calls
+		local.setEnclosingDefinition(this);	// Prevent op calls
 		Type rt = guard.typeCheck(local, null, NameScope.NAMESANDSTATE);
 
 		if (!rt.isType(BooleanType.class))

@@ -28,7 +28,6 @@ import org.overturetool.vdmj.expressions.UndefinedExpression;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
-import org.overturetool.vdmj.pog.StateInvariantObligation;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.PrivateClassEnvironment;
@@ -110,7 +109,7 @@ public class InstanceVariableDefinition extends AssignmentDefinition
 
 		if (classDefinition != null && classDefinition.invariant != null)
 		{
-			obligations.add(new StateInvariantObligation(this, ctxt));
+			// obligations.add(new StateInvariantObligation(this, ctxt));
 		}
 
 		return obligations;

@@ -183,6 +183,7 @@ public class ExplicitOperationDefinition extends Definition
 		FlatCheckedEnvironment local =
 			new FlatCheckedEnvironment(paramDefinitions, base, scope);
 		local.setStatic(accessSpecifier);
+		local.setEnclosingDefinition(this);
 
 		if (base.isVDMPP())
 		{
@@ -222,7 +223,7 @@ public class ExplicitOperationDefinition extends Definition
 		{
 			Type b = predef.body.typeCheck(local, null, NameScope.NAMESANDSTATE);
 			BooleanType expected = new BooleanType(location);
-			
+
 			if (!b.isType(BooleanType.class))
 			{
 				report(3018, "Precondition returns unexpected type");
@@ -237,10 +238,10 @@ public class ExplicitOperationDefinition extends Definition
 			DefinitionList rdefs = rp.getDefinitions(type.result, NameScope.NAMESANDANYSTATE);
 			FlatCheckedEnvironment post =
 				new FlatCheckedEnvironment(rdefs, local, NameScope.NAMESANDANYSTATE);
-			
+
 			Type b = postdef.body.typeCheck(post, null, NameScope.NAMESANDANYSTATE);
 			BooleanType expected = new BooleanType(location);
-			
+
 			if (!b.isType(BooleanType.class))
 			{
 				report(3018, "Postcondition returns unexpected type");

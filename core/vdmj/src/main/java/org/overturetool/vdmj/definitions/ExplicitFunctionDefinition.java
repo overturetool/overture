@@ -240,7 +240,7 @@ public class ExplicitFunctionDefinition extends Definition
 		defs.typeCheck(base, scope);
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(defs, base, scope);
 		local.setStatic(accessSpecifier);
-		local.setFuncDefinition(this);
+		local.setEnclosingDefinition(this);
 
 		if (base.isVDMPP() && !accessSpecifier.isStatic)
 		{

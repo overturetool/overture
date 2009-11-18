@@ -229,7 +229,7 @@ public class ImplicitFunctionDefinition extends Definition
 		defs.typeCheck(base, scope);
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(defs, base, scope);
 		local.setStatic(accessSpecifier);
-		local.setFuncDefinition(this);
+		local.setEnclosingDefinition(this);
 
 		if (body != null)
 		{
@@ -276,7 +276,7 @@ public class ImplicitFunctionDefinition extends Definition
 	    		FlatCheckedEnvironment post =
 	    			new FlatCheckedEnvironment(postdefs, local, NameScope.NAMES);
 	    		post.setStatic(accessSpecifier);
-	    		post.setFuncDefinition(this);
+	    		post.setEnclosingDefinition(this);
 				b = postdef.body.typeCheck(post, null, NameScope.NAMES);
 				post.unusedCheck();
 			}

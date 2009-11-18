@@ -55,7 +55,7 @@ public class PogTest extends TestCase
 	private String[] expected =
 	{
 		"forall m1, m2 in set {{1 |-> 2}, {2 |-> 3}} &\n  forall d3 in set dom m1, d4 in set dom m2 &\n    d3 = d4 => m1(d3) = m2(d4)\n",
-		"-- After iv:int := 123\n(iv < 10)\n",
+		// "-- After iv:int := 123\n(iv < 10)\n",
 		"forall arg1:(int * int), arg2:seq of (int) &\n  (exists mk_(i, j):(int * int) & arg1 = mk_(i, j)) and\n  (exists [k]:seq of (int) & arg2 = [k])\n",
 		"(forall mk_(i, j):(int * int), [k]:seq of (int) &\n  i in set dom m)\n",
 		"forall arg1:(int * int) &\n  (exists mk_(i, j):(int * int) & arg1 = mk_(i, j))\n",

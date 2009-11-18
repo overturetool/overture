@@ -40,8 +40,8 @@ abstract public class Environment
 	/** The environment chain. */
 	protected final Environment outer;
 
-	/** The function in scope at this point, or null. */
-	protected Definition funcDefinition = null;
+	/** The enclosing func/op definition at this point, or null. */
+	private Definition enclosingDefinition = null;
 
 	/**
 	 * Create an environment linking to the given outer chain.
@@ -109,19 +109,19 @@ abstract public class Environment
 		}
 	}
 
-	public Definition getFuncDefinition()
+	public Definition getEnclosingDefinition()
 	{
-		if (funcDefinition != null)
+		if (enclosingDefinition != null)
 		{
-			return funcDefinition;
+			return enclosingDefinition;
 		}
 
-		return outer == null ? null : outer.getFuncDefinition();
+		return outer == null ? null : outer.getEnclosingDefinition();
 	}
 
-	public void setFuncDefinition(Definition def)
+	public void setEnclosingDefinition(Definition def)
 	{
-		funcDefinition = def;
+		enclosingDefinition = def;
 	}
 
 	/** Find a name in the environment of the given scope. */

@@ -105,7 +105,7 @@ public class ApplyExpression extends Expression
 			return type;
 		}
 
-		Definition func = env.getFuncDefinition();
+		Definition func = env.getEnclosingDefinition();
 
 		boolean inFunction =
 			(func instanceof ExplicitFunctionDefinition ||

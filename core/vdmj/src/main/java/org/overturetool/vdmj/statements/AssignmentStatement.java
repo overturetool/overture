@@ -25,6 +25,9 @@ package org.overturetool.vdmj.statements;
 
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
+import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.StateDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
@@ -57,6 +60,7 @@ public class AssignmentStatement extends Statement
 	public Type expType;
 	public ClassDefinition classDefinition = null;
 	public StateDefinition stateDefinition = null;
+	public boolean inConstructor = false;
 
 	public AssignmentStatement(
 		LexLocation location, StateDesignator target, Expression exp)
@@ -86,6 +90,22 @@ public class AssignmentStatement extends Statement
 
 		classDefinition = env.findClassDefinition();
 		stateDefinition = env.findStateDefinition();
+
+		Definition encl = env.getEnclosingDefinition();
+
+		if (encl != null)
+		{
+			if (encl instanceof ExplicitOperationDefinition)
+			{
+				ExplicitOperationDefinition op = (ExplicitOperationDefinition)encl;
+				inConstructor = op.isConstructor;
+			}
+			else if (encl instanceof ImplicitOperationDefinition)
+			{
+				ImplicitOperationDefinition op = (ImplicitOperationDefinition)encl;
+				inConstructor = op.isConstructor;
+			}
+		}
 
 		return new VoidType(location);
 	}
@@ -154,7 +174,8 @@ public class AssignmentStatement extends Statement
 	{
 		ProofObligationList obligations = new ProofObligationList();
 
-		if ((classDefinition != null && classDefinition.invariant != null) ||
+		if (!inConstructor &&
+			(classDefinition != null && classDefinition.invariant != null) ||
 			(stateDefinition != null && stateDefinition.invExpression != null))
 		{
 			obligations.add(new StateInvariantObligation(this, ctxt));

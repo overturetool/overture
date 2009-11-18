@@ -248,11 +248,11 @@ public class ImplicitOperationDefinition extends Definition
 
 		defs.typeCheck(base, scope);
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(defs, base, scope);
+		local.setStatic(accessSpecifier);
+		local.setEnclosingDefinition(this);
 
 		if (body != null)
 		{
-			local.setStatic(accessSpecifier);
-
 			if (classDefinition != null && !accessSpecifier.isStatic)
 			{
 				local.add(getSelfDefinition());
@@ -312,7 +312,7 @@ public class ImplicitOperationDefinition extends Definition
 		{
 			Type b = predef.body.typeCheck(local, null, NameScope.NAMESANDSTATE);
 			BooleanType expected = new BooleanType(location);
-			
+
 			if (!b.isType(BooleanType.class))
 			{
 				report(3018, "Precondition returns unexpected type");
@@ -321,18 +321,17 @@ public class ImplicitOperationDefinition extends Definition
 		}
 
 		// The result variables are in scope for the post condition
-		
+
 		if (postdef != null)
 		{
 			Type b = null;
-			
+
 			if (result != null)
 			{
 	    		DefinitionList postdefs = result.getDefinitions();
 	    		FlatCheckedEnvironment post =
 	    			new FlatCheckedEnvironment(postdefs, local, NameScope.NAMESANDANYSTATE);
 	    		post.setStatic(accessSpecifier);
-	    		post.setFuncDefinition(this);
 				b = postdef.body.typeCheck(post, null, NameScope.NAMESANDANYSTATE);
 				post.unusedCheck();
 			}
@@ -340,9 +339,9 @@ public class ImplicitOperationDefinition extends Definition
 			{
 				b = postdef.body.typeCheck(local, null, NameScope.NAMESANDANYSTATE);
 			}
-			
+
 			BooleanType expected = new BooleanType(location);
-			
+
 			if (!b.isType(BooleanType.class))
 			{
 				report(3018, "Postcondition returns unexpected type");
