@@ -135,7 +135,9 @@ public class VdmSlVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 //									+ launch.getLaunchConfiguration().getAttribute(
 //											VdmSlDebugConstants.VDMSL_DEBUGGING_MODULE,
 //											"") + "()." + debugOperation;
-							String expression = debugOperation;
+							String expression = 
+								launch.getLaunchConfiguration().getAttribute( VdmSlDebugConstants.VDMSL_DEBUGGING_MODULE, "")
+								+ "`" + debugOperation;
 							arguments[argNumber++] = "-e";
 							arguments[argNumber++] = expression;
 
