@@ -25,6 +25,7 @@ package org.overturetool.vdmj.statements;
 
 import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ValueException;
@@ -101,6 +102,14 @@ public class NotYetSpecifiedStatement extends Statement
         		{
         		    return MATH.srand2(ctxt);
         		}
+        		else if (ctxt.title.equals("print(arg)"))
+        		{
+        			return IO.print(ctxt);
+        		}
+        		else if (ctxt.title.equals("printf(format, args)"))
+        		{
+        			return IO.printf(ctxt);
+        		}
 			}
 			catch (ValueException e)
 			{
@@ -108,7 +117,8 @@ public class NotYetSpecifiedStatement extends Statement
 			}
 			catch (Exception e)
 			{
-				throw new ContextException(4134, e.getMessage(), ctxt.location, ctxt);
+				throw new InternalException(34,
+					"Native library error: " + e.getMessage());
 			}
 		}
 

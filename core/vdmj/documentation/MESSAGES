@@ -48,7 +48,7 @@ as the expected and actual values.
 0031, "Expected object state designator type"
 0032, "Expected object state designator type"
 0033, "Expected state designator type"
-0034, -
+0034, "Native library error"
 0035, "Expression type unsupported: <type>"
 0036, "Unexpected pattern/bind type"
 0037, "Unexpected pattern/bind type"

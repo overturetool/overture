@@ -35,6 +35,7 @@ import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.Interpreter;
+import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.FlatEnvironment;
@@ -46,6 +47,7 @@ import org.overturetool.vdmj.values.SeqValue;
 import org.overturetool.vdmj.values.TupleValue;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.ValueList;
+import org.overturetool.vdmj.values.VoidValue;
 
 /**
  * This class contains the code for native IO operations.
@@ -213,5 +215,25 @@ public class IO
 		{
 			return "?";
 		}
+	}
+
+	public static Value print(Context ctxt)
+	{
+		Value v = ctxt.lookup(new LexNameToken("IO", "arg", null));
+		System.out.printf("%s", v);
+		return new VoidValue();
+	}
+
+	public static Value printf(Context ctxt)
+		throws ValueException
+	{
+		Value fv = ctxt.lookup(new LexNameToken("IO", "format", null));
+		String format = stringOf(fv);
+
+		Value vs = ctxt.lookup(new LexNameToken("IO", "args", null));
+		ValueList values = vs.seqValue(ctxt);
+
+		System.out.printf(format, values.toArray());
+		return new VoidValue();
 	}
 }

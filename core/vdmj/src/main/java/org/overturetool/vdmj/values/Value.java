@@ -24,6 +24,9 @@
 package org.overturetool.vdmj.values;
 
 import java.io.Serializable;
+import java.util.Formattable;
+import java.util.FormattableFlags;
+import java.util.Formatter;
 
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -41,12 +44,49 @@ import org.overturetool.vdmj.types.UnknownType;
  * The parent of all runtime values.
  */
 
-abstract public class Value implements Comparable<Value>, Serializable
+abstract public class Value implements Comparable<Value>, Serializable, Formattable
 {
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	abstract public String toString();
+
+	// This is overridden in the few classes that need to change formatting
+	public void formatTo(Formatter formatter, int flags, int width, int precision)
+	{
+		formatTo(this.toString(), formatter, flags, width, precision);
+	}
+
+	protected void formatTo(String value, Formatter formatter, int flags, int width, int precision)
+	{
+		StringBuilder sb = new StringBuilder("%");
+
+		switch (flags)
+		{
+			case FormattableFlags.LEFT_JUSTIFY:
+				sb.append('-');
+				break;
+
+			case FormattableFlags.ALTERNATE:
+				sb.append('#');
+				break;
+		}
+
+		if (width > 0)
+		{
+			sb.append(width);
+		}
+
+		if (precision > 0)
+		{
+			sb.append('.');
+			sb.append(precision);
+		}
+
+		sb.append('s');
+
+		formatter.format(sb.toString(), value);
+	}
 
 	@Override
 	abstract public boolean equals(Object other);

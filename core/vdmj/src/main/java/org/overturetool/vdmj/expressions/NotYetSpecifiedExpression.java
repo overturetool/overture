@@ -24,6 +24,7 @@
 package org.overturetool.vdmj.expressions;
 
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ValueException;
@@ -160,7 +161,8 @@ public class NotYetSpecifiedExpression extends Expression
 			}
 			catch (Exception e)
 			{
-				throw new ContextException(4134, e.getMessage(), ctxt.location, ctxt);
+				throw new InternalException(34,
+					"Native library error: " + e.getMessage());
 			}
 		}
 

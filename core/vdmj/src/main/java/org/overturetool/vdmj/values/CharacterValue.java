@@ -23,6 +23,9 @@
 
 package org.overturetool.vdmj.values;
 
+import java.util.FormattableFlags;
+import java.util.Formatter;
+
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.types.CharacterType;
@@ -72,6 +75,23 @@ public class CharacterValue extends Value
 		{
 			return "'" + unicode + "'";
 		}
+	}
+
+	@Override
+	public void formatTo(Formatter formatter, int flags, int width, int precision)
+	{
+		String s = null;
+
+		if ((flags & FormattableFlags.ALTERNATE) > 0)
+		{
+			s = toString();
+		}
+		else
+		{
+			s = "" + unicode;
+		}
+
+		formatTo(s, formatter, flags, width, precision);
 	}
 
 	@Override

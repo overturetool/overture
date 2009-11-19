@@ -23,6 +23,9 @@
 
 package org.overturetool.vdmj.values;
 
+import java.util.FormattableFlags;
+import java.util.Formatter;
+
 import org.overturetool.vdmj.lex.LexStringToken;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
@@ -77,7 +80,20 @@ public class SeqValue extends Value
 			return s.substring(1, s.length()-1);
 		}
 
-		return super.stringValue(ctxt);
+		return s;
+	}
+
+	@Override
+	public void formatTo(Formatter formatter, int flags, int width, int precision)
+	{
+		String s = values.toString();
+
+		if ((flags & FormattableFlags.ALTERNATE) == 0 && s.charAt(0) == '"')
+		{
+			s = s.substring(1, s.length()-1);
+		}
+
+		formatTo(s, formatter, flags, width, precision);
 	}
 
 	@Override
