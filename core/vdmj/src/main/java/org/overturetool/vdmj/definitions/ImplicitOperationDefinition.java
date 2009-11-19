@@ -604,12 +604,15 @@ public class ImplicitOperationDefinition extends Definition
 		{
 			obligations.addAll(body.getProofObligations(ctxt));
 
-			if (isConstructor)
+			if (isConstructor &&
+				classDefinition != null &&
+				classDefinition.invariant != null)
 			{
 				obligations.add(new StateInvariantObligation(this, ctxt));
 			}
 
-			if (!TypeComparator.isSubType(actualResult, type.result))
+			if (!isConstructor &&
+				!TypeComparator.isSubType(actualResult, type.result))
 			{
 				obligations.add(
 					new SubTypeObligation(this, actualResult, ctxt));
