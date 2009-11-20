@@ -20,7 +20,7 @@ operations
 
 public GetAge : int ==> int
 GetAge(year) == CalculateAge(year,yearOfBirth)
-pre pre_CalculateYear(year,yearOfBirth);
+pre pre_CalculateYear(year,yearOfBirth,self);
 
 functions
 
