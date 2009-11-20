@@ -1,0 +1,3 @@
+class Female is subclass of Person
+
+end Female
