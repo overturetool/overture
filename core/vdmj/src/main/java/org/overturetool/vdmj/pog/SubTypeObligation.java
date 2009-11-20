@@ -64,7 +64,6 @@ import org.overturetool.vdmj.types.NamedType;
 import org.overturetool.vdmj.types.NaturalOneType;
 import org.overturetool.vdmj.types.NaturalType;
 import org.overturetool.vdmj.types.NumericType;
-import org.overturetool.vdmj.types.OptionalType;
 import org.overturetool.vdmj.types.PatternListTypePair;
 import org.overturetool.vdmj.types.ProductType;
 import org.overturetool.vdmj.types.RecordType;
@@ -201,23 +200,10 @@ public class SubTypeObligation extends ProofObligation
 
 		StringBuilder sb = new StringBuilder();
 		String prefix = "";
-		boolean resolved = false;
 
-		while (!resolved)
+		while (etype instanceof BracketType)
 		{
-    		if (etype instanceof BracketType)
-    		{
-    			etype = ((BracketType)etype).type;
-    			continue;
-    		}
-
-    		if (etype instanceof OptionalType)
-    		{
-    			etype = ((OptionalType)etype).type;
-    			continue;
-    		}
-
-    		resolved = true;
+			etype = ((BracketType)etype).type;
 		}
 
 		if (etype instanceof UnionType)

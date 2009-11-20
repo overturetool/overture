@@ -264,7 +264,7 @@ public class TypeComparator
 			return Result.Yes;	// Runtime checked...
 		}
 
-		
+
 		// Obtain the fundamental type of BracketTypes, NamedTypes and
 		// OptionalTypes.
 
@@ -722,29 +722,41 @@ public class TypeComparator
         		}
     		}
 
-    		if (sub instanceof OptionalType)
+    		if (sub instanceof OptionalType && sup instanceof OptionalType)
     		{
-    			if (!(sup instanceof OptionalType))
-    			{
-    				return Result.No;
-    			}
-
-    			sub = ((OptionalType)sub).type;
+       			sub = ((OptionalType)sub).type;
+       			sup = ((OptionalType)sup).type;
     			continue;
     		}
 
-    		if (sup instanceof OptionalType)
-    		{
-    			if (!(sub instanceof OptionalType))
-    			{
-    				return Result.No;
-    			}
-
-    			sup = ((OptionalType)sup).type;
-    			continue;
-    		}
+//    		if (sub instanceof OptionalType)
+//    		{
+//    			if (!(sup instanceof OptionalType))
+//    			{
+//    				return Result.No;
+//    			}
+//
+//    			sub = ((OptionalType)sub).type;
+//    			continue;
+//    		}
+//
+//    		if (sup instanceof OptionalType)
+//    		{
+//    			if (!(sub instanceof OptionalType))
+//    			{
+//    				return Result.No;
+//    			}
+//
+//    			sup = ((OptionalType)sup).type;
+//    			continue;
+//    		}
 
     		resolved = true;
+		}
+
+		if (sub instanceof UnknownType || sup instanceof UnknownType)
+		{
+			return Result.Yes;		// Hmmm... too many errors otherwise
 		}
 
 		if (sub == sup)
@@ -790,6 +802,14 @@ public class TypeComparator
 				// Only subtypes if they are identical.
 
 				return sub.equals(sup) ? Result.Yes : Result.No;
+			}
+			else if (sup instanceof OptionalType)
+    		{
+				// Supertype includes a nil value, and the subtype is not
+				// optional (stripped above), so we test the optional's type.
+
+				OptionalType op = (OptionalType)sup;
+				return subtest(op.type, sub);
 			}
 			else if (sub instanceof NumericType)
 			{
