@@ -153,6 +153,22 @@ public abstract class Type implements Comparable<Type>, Serializable
 	}
 
 	/**
+	 * Remove layers of BracketTypes.
+	 */
+
+	public Type deBracket()
+	{
+		Type r = this;
+
+		while (r instanceof BracketType)
+		{
+			r = ((BracketType)r).type;
+		}
+
+		return r;
+	}
+
+	/**
 	 * Check a type to see whether its contained ParameterTypes are defined. The
 	 * list of names passed are the names of the defined type parameters in the
 	 * context where this type is used, so it (or its subtypes) can only include

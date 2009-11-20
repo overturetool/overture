@@ -645,11 +645,6 @@ public class TypeComparator
 			return Result.Yes;	// Hmmm... too many errors otherwise
 		}
 
-		if (sub instanceof UndefinedType || sup instanceof UndefinedType)
-		{
-			return Result.Yes;	// Not defined "yet"...?
-		}
-
 		if (sub instanceof ParameterType || sup instanceof ParameterType)
 		{
 			return Result.Yes;	// Runtime checked...
@@ -728,28 +723,6 @@ public class TypeComparator
        			sup = ((OptionalType)sup).type;
     			continue;
     		}
-
-//    		if (sub instanceof OptionalType)
-//    		{
-//    			if (!(sup instanceof OptionalType))
-//    			{
-//    				return Result.No;
-//    			}
-//
-//    			sub = ((OptionalType)sub).type;
-//    			continue;
-//    		}
-//
-//    		if (sup instanceof OptionalType)
-//    		{
-//    			if (!(sub instanceof OptionalType))
-//    			{
-//    				return Result.No;
-//    			}
-//
-//    			sup = ((OptionalType)sup).type;
-//    			continue;
-//    		}
 
     		resolved = true;
 		}

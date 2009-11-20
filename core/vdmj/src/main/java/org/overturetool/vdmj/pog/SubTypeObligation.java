@@ -201,10 +201,7 @@ public class SubTypeObligation extends ProofObligation
 		StringBuilder sb = new StringBuilder();
 		String prefix = "";
 
-		while (etype instanceof BracketType)
-		{
-			etype = ((BracketType)etype).type;
-		}
+		etype = etype.deBracket();
 
 		if (etype instanceof UnionType)
 		{
