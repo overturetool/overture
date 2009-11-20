@@ -1,4 +1,4 @@
-\documentclass[a4paper,dvips]{article}
+\documentclass[a4paper]{article}
 \input{overture}
 
 \begin{document}
@@ -135,7 +135,7 @@ functions
    CardCellar: CellarLevel * Pub * 
                map Supplier to Stock -> nat
    CardCellar(-,-,sb) ==
-     card dom sb;
+     ?\notcovered{card dom sb}£;
 
   -- Sell one drink to a patron
   Drink1 : Drink * Pub -> Pub
