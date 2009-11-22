@@ -25,7 +25,9 @@ package org.overturetool.vdmj.lex;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -201,33 +203,51 @@ public class LexLocation implements Serializable
 		return lines;
 	}
 
-	public static List<LexLocation> getHitLocations(File file)
+	public static Map<Integer, List<LexLocation>> getHitLocations(File file)
 	{
-		List<LexLocation> hits = new Vector<LexLocation>();
+		Map<Integer, List<LexLocation>> map =
+				new HashMap<Integer, List<LexLocation>>();
 
 		for (LexLocation l: allLocations)
 		{
 			if (l.executable && l.hits > 0 && l.file.equals(file))
 			{
-				hits.add(l);
+				List<LexLocation> list = map.get(l.startLine);
+				
+				if (list == null)
+				{
+					list = new Vector<LexLocation>();
+					map.put(l.startLine, list);
+				}
+
+				list.add(l);
 			}
 		}
 
-		return hits;
+		return map;
 	}
 
-	public static List<LexLocation> getMissLocations(File file)
+	public static Map<Integer, List<LexLocation>> getMissLocations(File file)
 	{
-		List<LexLocation> misses = new Vector<LexLocation>();
+		Map<Integer, List<LexLocation>> map =
+				new HashMap<Integer, List<LexLocation>>();
 
 		for (LexLocation l: allLocations)
 		{
 			if (l.executable && l.hits == 0 && l.file.equals(file))
 			{
-				misses.add(l);
+				List<LexLocation> list = map.get(l.startLine);
+				
+				if (list == null)
+				{
+					list = new Vector<LexLocation>();
+					map.put(l.startLine, list);
+				}
+
+				list.add(l);
 			}
 		}
 
-		return misses;
+		return map;
 	}
 }

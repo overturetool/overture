@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.overturetool.vdmj.VDMJ;
@@ -133,5 +134,83 @@ public class SourceFile
 
 		out.println("\nCoverage = " +
 			(srccount == 0 ? 0 : (100 * hitcount / srccount)) + "%");
+	}
+	
+	public void printLatexCoverage(PrintWriter out)
+	{
+		Map<Integer, List<LexLocation>> hits =
+					LexLocation.getMissLocations(filename);
+		
+		for (int lnum = 1; lnum <= lines.size(); lnum++)
+		{
+			String line = detab(lines.get(lnum - 1));
+			List<LexLocation> list = hits.get(lnum);
+			out.println(markup(line, list));
+		}
+	}
+	
+	private String markup(String line, List<LexLocation> list)
+    {
+		if (list == null)
+		{
+			return line;
+		}
+		else
+		{
+			StringBuilder sb = new StringBuilder();
+			int p = 0;
+			
+			for (LexLocation m: list)
+			{
+				int start = m.startPos - 1, end = m.endPos - 1;
+				sb.append(line.substring(p, start));
+				sb.append("?\\notcovered{");
+				sb.append(line.substring(start, end));
+				sb.append("}£");
+				
+				p = end;
+			}
+			
+			sb.append(line.substring(p));
+			return sb.toString();
+		}
+    }
+
+	private static final int TABSTOP = 4;
+	
+	private static String detab(String s)
+	{
+		StringBuilder sb = new StringBuilder();
+		int p = 0;
+		
+		for (int i=0; i<s.length(); i++)
+		{
+			char c = s.charAt(i);
+			
+			if (c == '\t')
+			{
+				int n = TABSTOP - p % TABSTOP;
+				
+				for (int x=0; x < n; x++)
+				{
+					sb.append(' ');
+				}
+				
+				p += n;
+			}
+			else
+			{
+				sb.append(c);
+				p++;
+			}
+		}
+		
+		return sb.toString();
+	}
+	
+	public static void main(String[] args)
+	{
+		System.out.println(args[0]);
+		System.out.println(detab(args[0]));
 	}
 }
