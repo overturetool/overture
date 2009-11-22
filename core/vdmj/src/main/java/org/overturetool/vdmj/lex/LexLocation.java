@@ -226,6 +226,29 @@ public class LexLocation implements Serializable
 
 		return map;
 	}
+	
+	public static float getHitPercent(File file)
+	{
+		int hits = 0;
+		int misses = 0;
+		
+		for (LexLocation l: allLocations)
+		{
+			if (l.file.equals(file) && l.executable)
+			{
+				if (l.hits > 0)
+    			{
+    				hits++;
+    			}
+    			else
+    			{
+    				misses++;
+    			}
+			}
+		}
+
+		return (float)((1000 * hits)/(hits + misses))/10;
+	}
 
 	public static Map<Integer, List<LexLocation>> getMissLocations(File file)
 	{

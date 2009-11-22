@@ -790,7 +790,7 @@ public class StatementReader extends SyntaxReader
 		LexIdentifierToken name = readIdToken("Expecting variable identifier");
 		checkFor(Token.COLON, 2228, "Expecting name:type in declaration");
 		Type type = getTypeReader().readType();
-		Expression exp = new UndefinedExpression(name.location);
+		Expression exp = null;
 
 		if (lastToken().is(Token.ASSIGN))
 		{
@@ -800,6 +800,10 @@ public class StatementReader extends SyntaxReader
 		else if (lastToken().is(Token.EQUALSEQUALS) || lastToken().is(Token.EQUALS))
 		{
 			throwMessage(2069, "Expecting <identifier>:<type> := <expression>");
+		}
+		else
+		{
+			exp = new UndefinedExpression(name.location);
 		}
 
 		return new AssignmentDefinition(idToName(name), type, exp);

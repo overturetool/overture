@@ -35,6 +35,7 @@ import java.util.Vector;
 
 import org.overturetool.vdmj.VDMJ;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexTokenReader;
 
 /**
  * A class to hold a source file for source debug output.
@@ -143,10 +144,12 @@ public class SourceFile
 		
 		for (int lnum = 1; lnum <= lines.size(); lnum++)
 		{
-			String line = detab(lines.get(lnum - 1));
+			String line = detab(lines.get(lnum - 1), LexTokenReader.TABSTOP);
 			List<LexLocation> list = hits.get(lnum);
 			out.println(markup(line, list));
 		}
+		
+		out.println("Coverage = " + LexLocation.getHitPercent(filename) + "%");
 	}
 	
 	private String markup(String line, List<LexLocation> list)
@@ -162,7 +165,8 @@ public class SourceFile
 			
 			for (LexLocation m: list)
 			{
-				int start = m.startPos - 1, end = m.endPos - 1;
+				int start = m.startPos - 1;
+				int end = m.startLine == m.endLine ? m.endPos - 1 : line.length();
 				sb.append(line.substring(p, start));
 				sb.append("?\\notcovered{");
 				sb.append(line.substring(start, end));
@@ -176,9 +180,7 @@ public class SourceFile
 		}
     }
 
-	private static final int TABSTOP = 4;
-	
-	private static String detab(String s)
+	private static String detab(String s, int tabstop)
 	{
 		StringBuilder sb = new StringBuilder();
 		int p = 0;
@@ -189,7 +191,7 @@ public class SourceFile
 			
 			if (c == '\t')
 			{
-				int n = TABSTOP - p % TABSTOP;
+				int n = tabstop - p % tabstop;
 				
 				for (int x=0; x < n; x++)
 				{
@@ -206,11 +208,5 @@ public class SourceFile
 		}
 		
 		return sb.toString();
-	}
-	
-	public static void main(String[] args)
-	{
-		System.out.println(args[0]);
-		System.out.println(detab(args[0]));
 	}
 }
