@@ -24,7 +24,7 @@ values
   e7:Expert = mk_Expert(eid7,{<Elec>,<Mech>});
   e8:Expert = mk_Expert(eid8,{<Mech>,<Bio>});
 
-  sch:map Period to set of Expert
+  s: map Period to set of Expert
      = {p1 |-> {e7,e5,e1},
         p2 |-> {e6},
         p3 |-> {e1,e3,e8},
@@ -34,4 +34,4 @@ values
   a2:Alarm = mk_Alarm("Tank overflow",<Mech>);
   a3:Alarm = mk_Alarm("CO2 detected",<Chem>);
 
-  plant: Plant = mk_Plant(sch,{a1,a2,a3})
+  pl: Plant = mk_Plant(s,{a1,a2,a3})

@@ -1,0 +1,14 @@
+class IASTVisitor
+	instance variables 
+
+	types 
+
+	values 
+
+	operations 
+
+	functions 
+
+	traces 
+
+end IASTVisitor

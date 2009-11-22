@@ -1,0 +1,14 @@
+class PlainTextContextInfo is subclass of IContextInfo
+	instance variables 
+
+	types 
+
+	values 
+
+	operations 
+
+	functions 
+
+	traces 
+
+end PlainTextContextInfo

@@ -1,0 +1,15 @@
+class ASTExpression is subclass of ASTNode
+
+	instance variables 
+
+	types 
+
+	values 
+
+	operations 
+
+	functions 
+
+	traces 
+
+end ASTExpression

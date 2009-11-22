@@ -1,0 +1,9 @@
+class ASTNode
+
+instance variables
+
+  ci : IContextInfo;
+  
+operations 
+
+end ASTNode

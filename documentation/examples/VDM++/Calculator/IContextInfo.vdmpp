@@ -1,0 +1,14 @@
+class IContextInfo
+	instance variables 
+
+	types 
+
+	values 
+
+	operations 
+
+	functions 
+
+	traces 
+
+end IContextInfo
