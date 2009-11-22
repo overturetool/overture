@@ -2,7 +2,9 @@
 <?eclipse version="3.2"?>
 <plugin>
 
-
+<!-- *
+* Enable project menu for show proofobligations on a pp project
+*-->
  <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
@@ -24,9 +26,9 @@
          </menu>
          
           <action
-               class="org.overture.ide.plugins.poviewer.actions.ViewPosAction"
+               class="org.overture.ide.plugins.poviewer.actions.ViewPosActionPp"
                id="org.overture.ide.plugins.poviewer.actions.POViewerAction"
-               label="Show PO&apos;s"
+               label="Generate Proof Obligations"
                menubarPath="org.overture.ide.plugins.poviewer.menuMain/groupPOViewer"
                enablesFor="1"
                tooltip="Show PO's">
@@ -36,7 +38,74 @@
     
       </objectContribution>
    </extension>
-
+   
+   
+   <!-- *
+* Enable project menu for show proofobligations on a rt project 
+*-->
+ <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="org.overture.ide.plugins.poviewer.contribution1"
+            objectClass="org.eclipse.core.resources.IProject">
+            <filter
+         name="projectNature"
+         value="org.overture.ide.vdmrt.core.nature">
+      </filter>
+         <menu
+               
+               id="org.overture.ide.plugins.poviewer.menuMain"
+               label="Proof Obligations"
+               path="additions">
+            <separator
+                  name="groupPOViewer">
+            </separator>
+         </menu>
+         
+          <action
+               class="org.overture.ide.plugins.poviewer.actions.ViewPosActionRt"
+               id="org.overture.ide.plugins.poviewer.actions.POViewerAction"
+               label="Generate Proof Obligations"
+               menubarPath="org.overture.ide.plugins.poviewer.menuMain/groupPOViewer"
+               enablesFor="1"
+               tooltip="Show PO's">
+         </action>
+      </objectContribution>
+   </extension>
+   <!-- *
+* Enable project menu for show proofobligations on a sl
+*-->
+ <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="org.overture.ide.plugins.poviewer.contribution1"
+            objectClass="org.eclipse.core.resources.IProject">
+            <filter
+         name="projectNature"
+         value="org.overture.ide.vdmsl.core.nature">
+      </filter>
+         <menu
+               
+               id="org.overture.ide.plugins.poviewer.menuMain"
+               label="Proof Obligations"
+               path="additions">
+            <separator
+                  name="groupPOViewer">
+            </separator>
+         </menu>
+         
+          <action
+               class="org.overture.ide.plugins.poviewer.actions.ViewPosActionSl"
+               id="org.overture.ide.plugins.poviewer.actions.POViewerAction"
+               label="Generate Proof Obligations"
+               menubarPath="org.overture.ide.plugins.poviewer.menuMain/groupPOViewer"
+               enablesFor="1"
+               tooltip="Show PO's">
+         </action>
+      </objectContribution>
+   </extension>
 
 <extension
          point="org.eclipse.ui.views">

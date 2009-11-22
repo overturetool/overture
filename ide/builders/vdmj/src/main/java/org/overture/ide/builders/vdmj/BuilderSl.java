@@ -6,32 +6,44 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.overture.ide.vdmsl.core.VdmSlCorePluginConstants;
 import org.overture.ide.vdmsl.core.VdmSlProjectNature;
+import org.overturetool.vdmj.ExitStatus;
+import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
+import org.overturetool.vdmj.typechecker.ModuleTypeChecker;
+import org.overturetool.vdmj.typechecker.TypeChecker;
 
 /***
  * VDM SL builder
  * 
- * @author kela
- *<extension<br>
- *        point="org.overture.ide.builder"><br>
- *     <builder<br>
- *           class="org.overture.ide.builders.vdmj.BuilderSl"><br>
- *     </builder><br>
- *  </extension><br>
+ * @author kela <extension<br>
+ *         point="org.overture.ide.builder"><br>
+ *         <builder<br>
+ *         class="org.overture.ide.builders.vdmj.BuilderSl"><br>
+ *         </builder><br>
+ *         </extension><br>
  */
 public class BuilderSl extends VdmjBuilder {
+	protected ModuleList modules = new ModuleList();
+
+	public BuilderSl() {
+		Settings.dialect = Dialect.VDM_PP;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public IStatus buileModelElements(IProject project, List modelElements) {
-		ModuleList modules = new ModuleList();
+		modules.clear();
 
 		for (Object classDefinition : modelElements) {
 			if (classDefinition instanceof Module)
 				modules.add((Module) classDefinition);
 		}
-		IEclipseVdmj eclipseType = new EclipseVdmjSl(modules);
-		return buileModelElements(project, eclipseType);
+
+		return buileModelElements(project);
 	}
 
 	@Override
@@ -42,6 +54,70 @@ public class BuilderSl extends VdmjBuilder {
 	@Override
 	public String getContentTypeId() {
 		return VdmSlCorePluginConstants.CONTENT_TYPE;
+	}
+
+	/**
+	 * @see org.overturetool.vdmj.VDMJ#typeCheck()
+	 */
+
+	@Override
+	public ExitStatus typeCheck() {
+		int terrs = 0;
+		try {
+			combineDefaults(modules);
+			TypeChecker typeChecker = new ModuleTypeChecker(modules);
+			typeChecker.typeCheck();
+		} catch (InternalException e) {
+			processInternalError(e);
+		} catch (Throwable e) {
+			processInternalError(e);
+			terrs++;
+		}
+
+		terrs += TypeChecker.getErrorCount();
+
+		if (terrs > 0) {
+			processErrors(TypeChecker.getErrors());
+		}
+
+		int twarn = TypeChecker.getWarningCount();
+
+		if (twarn > 0) {
+			processWarnings(TypeChecker.getWarnings());
+		}
+
+		return terrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
+	}
+
+	protected int combineDefaults(ModuleList list) {
+		int rv = 0;
+
+		if (!list.isEmpty()) {
+			Module def = new Module();
+			ModuleList named = new ModuleList();
+
+			for (Module m : list) {
+				if (m.name.name.equals("DEFAULT")) {
+					def.defs.addAll(m.defs);
+				} else {
+					named.add(m);
+				}
+			}
+
+			if (!def.defs.isEmpty()) {
+				list.clear();
+				list.addAll(named);
+				list.add(def);
+
+				for (Definition d : def.defs) {
+					if (!d.isTypeDefinition()) {
+						d.markUsed(); // Mark top-level items as used
+					}
+				}
+			}
+		}
+
+		return rv;
 	}
 
 }

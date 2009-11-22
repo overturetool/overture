@@ -1,38 +1,25 @@
 package org.overture.ide.builders.vdmj;
 
-import java.util.List;
+import org.overture.ide.vdmrt.core.VdmRtCorePluginConstants;
+import org.overture.ide.vdmrt.core.VdmRtProjectNature;
+import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.lex.Dialect;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IStatus;
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.ClassList;
-import org.overture.ide.vdmrt.core.*;
 /***
  * VDM RT builder
  * 
- * @author kela
- *<extension<br>
- *        point="org.overture.ide.builder"><br>
- *     <builder<br>
- *           class="org.overture.ide.builders.vdmj.BuilderRt"><br>
- *     </builder><br>
- *  </extension><br>
+ * @author kela <extension<br>
+ *         point="org.overture.ide.builder"><br>
+ *         <builder<br>
+ *         class="org.overture.ide.builders.vdmj.BuilderRt"><br>
+ *         </builder><br>
+ *         </extension><br>
  */
-public class BuilderRt extends VdmjBuilder {
-	@SuppressWarnings("unchecked")
-	@Override
-	public IStatus buileModelElements(IProject project, List modelElements) {
-		ClassList modules = new ClassList();
+public class BuilderRt extends BuilderPp {
 
-		for (Object classDefinition : modelElements) {
-			if (classDefinition instanceof ClassDefinition)
-			{
-				modules.add((ClassDefinition) classDefinition);
-			}
-		}
-		
-		IEclipseVdmj eclipseType = new EclipseVdmjRt(modules);
-		return buileModelElements(project, eclipseType);
+	public BuilderRt() {
+		super();
+		Settings.dialect = Dialect.VDM_RT;
 	}
 
 	@Override

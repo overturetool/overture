@@ -8,7 +8,7 @@ import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.modules.Module;
 
 public class RootNode {
-	private boolean checked;
+	private boolean checked=false;
 	private Date checkedTime;
 	@SuppressWarnings("unchecked")
 	private List rootElementList;
@@ -50,7 +50,7 @@ public class RootNode {
 	 */
 	@SuppressWarnings("unchecked")
 	public void update(List modules) {
-
+this.setChecked(false);
 		if (this.rootElementList.size() != 0)
 			for (Object module : modules) {
 				if (module instanceof ClassDefinition)
@@ -72,7 +72,7 @@ public class RootNode {
 	private void update(Module module) {
 		Module existingModule = null;
 		for (Object m : this.rootElementList) {
-			if (m instanceof Module && ((Module) m).name.equals(module.name))
+			if (m instanceof Module && ((Module) m).name.equals(module.name) && ((Module) m).name.location.file.getName().equals(module.name.location.file.getName()))
 				existingModule = (Module) m;
 		}
 

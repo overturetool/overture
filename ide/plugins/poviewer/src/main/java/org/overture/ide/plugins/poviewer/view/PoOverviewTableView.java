@@ -124,7 +124,7 @@ public class PoOverviewTableView  extends ViewPart implements ISelectionListener
 				| SWT.V_SCROLL);
 		// test setup columns...
 		TableLayout layout = new TableLayout();
-		layout.addColumnData(new ColumnWeightData(100, 75, false));
+		layout.addColumnData(new ColumnWeightData(100, 40, true));
 		layout.addColumnData(new ColumnWeightData(60, 35, false));
 		layout.addColumnData(new ColumnWeightData(25, 25, false));
 		viewer.getTable().setLayout(layout);

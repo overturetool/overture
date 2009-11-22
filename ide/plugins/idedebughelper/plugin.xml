@@ -15,7 +15,7 @@
       </filter>
          <menu
                id="org.overture.ide.idedebughelper.menuMain"
-               label="Overture IDE Debug Helper"
+               label="Overture Utility"
                path="additions">
             <separator
                   name="groupIdedebughelper">
@@ -42,10 +42,10 @@
          name="projectNature"
          value="org.overture.ide.vdmpp.core.nature">
       </filter>
-         <menu
-              
+        
+ <menu
                id="org.overture.ide.idedebughelper.menuMain"
-               label="Overture IDE Debug Helper"
+               label="Overture Utility"
                path="additions">
             <separator
                   name="groupIdedebughelper">
@@ -74,16 +74,15 @@
          name="projectNature"
          value="org.overture.ide.vdmrt.core.nature">
       </filter>
-         <menu
-              
+        
+ <menu
                id="org.overture.ide.idedebughelper.menuMain"
-               label="Overture IDE Debug Helper"
+               label="Overture Utility"
                path="additions">
             <separator
                   name="groupIdedebughelper">
             </separator>
-         </menu>
-         
+         </menu>       
           <action
                class="org.overture.ide.plugins.idedebughelper.actions.AssociateFilesWithNatureAction"
               
@@ -92,6 +91,38 @@
                menubarPath="org.overture.ide.idedebughelper.menuMain/groupIdedebughelper"
                enablesFor="1"
                tooltip="Associate all files in the project with the nature">
+         </action>
+         
+       
+      </objectContribution>
+      
+      
+      <!-- Enable convert from PP to RT-->
+       <objectContribution
+            adaptable="true"
+            id="org.overture.ide.idedebughelper.contribution1"
+            objectClass="org.eclipse.core.resources.IProject">
+            <filter
+         name="projectNature"
+         value="org.overture.ide.vdmpp.core.nature">
+      </filter>
+ <menu
+               id="org.overture.ide.idedebughelper.menuMain"
+               label="Overture Utility"
+               path="additions">
+            <separator
+                  name="groupIdedebughelper">
+            </separator>
+         </menu>       
+         
+          <action
+               class="org.overture.ide.plugins.idedebughelper.actions.ConvertVdmppToVdmRtAction"
+              
+               id="org.overture.ide.idedebughelper.actions.ConvertVdmppToVdmRtAction"
+               label="Create Real Time project"
+               menubarPath="org.overture.ide.idedebughelper.menuMain/groupIdedebughelper"
+               enablesFor="1"
+               tooltip="Create a RealTime project from selected VDM++ project">
          </action>
          
        

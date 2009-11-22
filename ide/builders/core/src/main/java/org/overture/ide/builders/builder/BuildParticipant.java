@@ -18,20 +18,20 @@ import org.overture.ide.builders.core.VdmSlBuilderCorePluginConstants;
 public class BuildParticipant implements IScriptBuilder {
 	// This must be the ID from your extension point
 	public static final String BUILDER_ID = "org.overture.ide.builder";
-private static Vector<IProject> buildingProjects = new Vector<IProject>();
-protected static synchronized boolean isBuilding(IProject project)
-{
-	return buildingProjects.contains(project);
-}
-protected static synchronized void setBuilding(IProject project)
-{
-	 buildingProjects.add(project);
-}
-protected static synchronized void removeBuilding(IProject project)
-{
-	if(buildingProjects.contains(project))
-	 buildingProjects.remove(project);
-}
+	private static Vector<IProject> buildingProjects = new Vector<IProject>();
+
+	protected static synchronized boolean isBuilding(IProject project) {
+		return buildingProjects.contains(project);
+	}
+
+	protected static synchronized void setBuilding(IProject project) {
+		buildingProjects.add(project);
+	}
+
+	protected static synchronized void removeBuilding(IProject project) {
+		if (buildingProjects.contains(project))
+			buildingProjects.remove(project);
+	}
 
 	public BuildParticipant() {
 
@@ -41,27 +41,39 @@ protected static synchronized void removeBuilding(IProject project)
 	public IStatus buildModelElements(IScriptProject project, List elements,
 			final IProgressMonitor monitor, int status) {
 		System.out.println("buildModelElements");
-		
 
 		final IProject currentProject = project.getProject();
-		
-		if(isBuilding(currentProject))
-			{
-			monitor.subTask("Waiting for other build: "+ currentProject.getName());
-			while(isBuilding(currentProject))
+
+		if (isBuilding(currentProject)) {
+			monitor.subTask("Waiting for other build: "
+					+ currentProject.getName());
+			while (isBuilding(currentProject))
 				try {
 					Thread.sleep(1000);
-				} catch (InterruptedException e) {}
-				monitor.done();
-				return new Status(IStatus.INFO,BUILDER_ID,"Build cancelled since another builder already was running.");
-			}
-		
+				} catch (InterruptedException e) {
+				}
+			monitor.done();
+			return new Status(IStatus.INFO, BUILDER_ID,
+					"Build cancelled since another builder already was running.");
+		}
+
 		setBuilding(currentProject);
 		AbstractBuilder.clearProblemMarkers(currentProject);
 
+		AstManager.instance().clean(project.getProject());// IMPORTANT we do not
+															// have an
+															// incremental
+															// builder so a full
+															// parse/ build is
+															// required,
+															// therefore remove
+															// any AST nodes in
+															// store.
+
 		final List<IStatus> statusList = new Vector<IStatus>();
 
-		final SafeBuilder builder = new SafeBuilder(currentProject, statusList, monitor);
+		final SafeBuilder builder = new SafeBuilder(currentProject, statusList,
+				monitor);
 
 		builder.start();
 
@@ -93,7 +105,9 @@ protected static synchronized void removeBuilding(IProject project)
 			// just return the first status
 			return statusList.get(0);
 		} else
-			return new Status(IStatus.WARNING, VdmSlBuilderCorePluginConstants.PLUGIN_ID, "No builder returned any result");
+			return new Status(IStatus.WARNING,
+					VdmSlBuilderCorePluginConstants.PLUGIN_ID,
+					"No builder returned any result");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -116,7 +130,7 @@ protected static synchronized void removeBuilding(IProject project)
 
 	public void endBuild(IScriptProject project, IProgressMonitor monitor) {
 		System.out.println("endBuild");
-removeBuilding(project.getProject());
+		removeBuilding(project.getProject());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -131,10 +145,8 @@ removeBuilding(project.getProject());
 	public void initialize(IScriptProject project) {
 
 		System.out.println("initialize");
-		
 
 		AbstractBuilder.syncProjectResources(project.getProject());
-		
 
 	}
 

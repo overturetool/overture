@@ -1,6 +1,12 @@
 package org.overture.ide.plugins.poviewer.actions;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
@@ -15,12 +21,9 @@ import org.overture.ide.ast.AstManager;
 import org.overture.ide.ast.RootNode;
 import org.overture.ide.plugins.poviewer.PoviewerPluginConstants;
 import org.overture.ide.plugins.poviewer.view.PoOverviewTableView;
-import org.overture.ide.vdmpp.core.VdmPpProjectNature;
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.pog.ProofObligationList;
 
-public class ViewPosAction implements IObjectActionDelegate {
+public abstract class ViewPosAction implements IObjectActionDelegate {
 
 	private Shell shell;
 	private IWorkbenchPart targetPart;
@@ -58,10 +61,7 @@ public class ViewPosAction implements IObjectActionDelegate {
 				return;
 			}
 
-			RootNode root = AstManager.instance().getRootNode(selectedProject,
-					VdmPpProjectNature.VDM_PP_NATURE);
-			if (root != null && root.isChecked())
-				viewPos(selectedProject, root);
+			viewPos(selectedProject);
 
 		} catch (Exception ex) {
 			System.err.println(ex.getMessage() + ex.getStackTrace());
@@ -70,40 +70,65 @@ public class ViewPosAction implements IObjectActionDelegate {
 
 	}
 
-	private void viewPos(IProject project, RootNode root)
-			throws PartInitException {
-		ClassList cl = new ClassList();
-		for (Object definition : root.getRootElementList()) {
-			if (definition instanceof ClassDefinition)
-				cl.add((ClassDefinition) definition);
-		}
+	protected abstract String getNature();
 
-		ProofObligationList pos = cl.getProofObligations();
+	private void viewPos(final IProject project) throws PartInitException {
 
-		IViewPart v = targetPart.getSite().getPage().showView(
-				PoviewerPluginConstants.PoOverviewTableViewId);
+		final Job showJob = new Job("Showing PO's") {
 
-		if (v instanceof PoOverviewTableView) {
-			((PoOverviewTableView) v).setDataList(project, pos);
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				monitor.worked(IProgressMonitor.UNKNOWN);
 
-		}
-		
-		openPoviewPerspective();
+				RootNode root = AstManager.instance().getRootNode(project,
+						getNature());
+				if (root == null || !root.isChecked()) {
+					IStatus res = buildProject(project, monitor, root);
+					if (!res.isOK())
+						return res;
+
+					root = AstManager.instance().getRootNode(project,
+							getNature());
+				}
+
+				try {
+					if (root == null || (root != null && !root.isChecked()))
+						throw new Exception(
+								"Project is not build correctly, build error");
+
+					final ProofObligationList pos = getProofObligations(root);
+
+					showPOs(project, pos);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					return new Status(IStatus.ERROR,
+							"org.overture.ide.plugins.poviewer",
+							"Error showing PO's", e);
+				}
+				return new Status(IStatus.OK,
+						"org.overture.ide.plugins.poviewer", "Ok");
+			}
+
+	
+		};
+		showJob.schedule();
 
 	}
 
 	private void openPoviewPerspective() {
 		try {
-//		IWorkbenchPage p=	targetPart.getSite().getWorkbenchWindow().o.getSite().getWorkbenchWindow().openPage(PoviewerPluginConstants.ProofObligationPerspectiveId,null);
-//p.activate(targetPart);
-PlatformUI.getWorkbench().showPerspective(PoviewerPluginConstants.ProofObligationPerspectiveId, targetPart.getSite().getWorkbenchWindow());
+			// IWorkbenchPage p=
+			// targetPart.getSite().getWorkbenchWindow().o.getSite().getWorkbenchWindow().openPage(PoviewerPluginConstants.ProofObligationPerspectiveId,null);
+			// p.activate(targetPart);
+			PlatformUI.getWorkbench().showPerspective(
+					PoviewerPluginConstants.ProofObligationPerspectiveId,
+					targetPart.getSite().getWorkbenchWindow());
 		} catch (WorkbenchException e) {
-			
+
 			e.printStackTrace();
 		}
 	}
-	
-	
 
 	/**
 	 * @see IActionDelegate#selectionChanged(IAction, ISelection)
@@ -111,4 +136,49 @@ PlatformUI.getWorkbench().showPerspective(PoviewerPluginConstants.ProofObligatio
 	public void selectionChanged(IAction action, ISelection selection) {
 	}
 
+	private IStatus buildProject(final IProject project,
+			IProgressMonitor monitor, RootNode root) {
+		if (root == null || !root.isChecked())
+			try {
+				project.build(IncrementalProjectBuilder.FULL_BUILD, monitor);
+			} catch (CoreException e1) {
+				e1.printStackTrace();
+				return new Status(IStatus.ERROR,
+						"org.overture.ide.plugins.poviewer", "Error building",
+						e1);
+			}
+		return new Status(IStatus.OK, PoviewerPluginConstants.PoViewerId,
+				"Build successfull");
+	}
+	protected abstract ProofObligationList getProofObligations(RootNode root) ;
+
+	private void showPOs(final IProject project,
+			final ProofObligationList pos) {
+		targetPart.getSite().getPage().getWorkbenchWindow()
+				.getShell().getDisplay().asyncExec(new Runnable() {
+
+					public void run() {
+						IViewPart v;
+						try {
+							v = targetPart
+									.getSite()
+									.getPage()
+									.showView(
+											PoviewerPluginConstants.PoOverviewTableViewId);
+							if (v instanceof PoOverviewTableView) {
+								((PoOverviewTableView) v)
+										.setDataList(project, pos);
+
+							}
+
+							openPoviewPerspective();
+						} catch (PartInitException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+					}
+
+				});
+	}
 }

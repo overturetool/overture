@@ -1,5 +1,8 @@
 package org.overture.ide.builders.vdmj;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -12,22 +15,24 @@ import org.overturetool.vdmj.messages.VDMWarning;
 
 public abstract class VdmjBuilder  extends AbstractBuilder
 {
+	private List<VDMError> errors = new ArrayList<VDMError>();
+	private List<VDMWarning> warnings = new ArrayList<VDMWarning>();
 	private final int adjustPosition = 1;
 	
-	protected IStatus buileModelElements(IProject project, IEclipseVdmj eclipseType)
+	protected IStatus buileModelElements(IProject project)
 	{
 		
 		ExitStatus typeCheckStatus = null;
 		
-		typeCheckStatus = eclipseType.typeCheck();
+		typeCheckStatus = typeCheck();
 		if (typeCheckStatus == ExitStatus.EXIT_ERRORS)
 		{
-			for (VDMError error : eclipseType.getTypeErrors())
+			for (VDMError error : errors)
 			{
 				addErrorMarker(project,error);
 			}
 		}
-		for (VDMWarning warning : eclipseType.getTypeWarnings())
+		for (VDMWarning warning : warnings)
 		{
 			addWarningMarker(project,warning);
 		}
@@ -84,4 +89,30 @@ public abstract class VdmjBuilder  extends AbstractBuilder
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * Handle Errors
+	 * 
+	 * @param list
+	 *            encountered during a parse or type check
+	 */
+	protected void processErrors(List<VDMError> errors) {
+		this.errors.addAll(errors);
+	};
+
+	/**
+	 * Handle Warnings
+	 * 
+	 * @param errors
+	 *            encountered during a parse or type check
+	 */
+	protected void processWarnings(List<VDMWarning> warnings) {
+		this.warnings.addAll(warnings);
+	};
+	
+	protected void processInternalError(Throwable e) {
+		System.out.println(e.toString());
+	};
+
+	public abstract ExitStatus typeCheck();
 }
