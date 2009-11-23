@@ -54,7 +54,6 @@ import org.overturetool.vdmj.patterns.TuplePattern;
 import org.overturetool.vdmj.typechecker.TypeComparator;
 import org.overturetool.vdmj.types.BasicType;
 import org.overturetool.vdmj.types.BooleanType;
-import org.overturetool.vdmj.types.BracketType;
 import org.overturetool.vdmj.types.CharacterType;
 import org.overturetool.vdmj.types.Field;
 import org.overturetool.vdmj.types.IntegerType;

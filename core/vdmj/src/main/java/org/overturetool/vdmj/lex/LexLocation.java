@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Vector;
 
@@ -40,6 +41,11 @@ public class LexLocation implements Serializable
 
 	/** A collection of all LexLocation objects. */
 	private static List<LexLocation> allLocations = new Vector<LexLocation>();
+
+	/** A map of f/op/class names to their lexical span, for coverage. */
+	private static Map<LexNameToken, LexLocation> nameSpans =
+		new HashMap<LexNameToken, LexLocation>();
+
 	/** True if the location is executable. */
 	private boolean executable = false;
 
@@ -135,6 +141,16 @@ public class LexLocation implements Serializable
 		return file.hashCode() + module.hashCode() + startLine;
 	}
 
+	public boolean within(LexLocation span)
+	{
+		return
+			(startLine > span.startLine ||
+				(startLine == span.startLine && startPos >= span.startPos)) &&
+			(startLine <= span.endLine ||
+				(startLine == span.endLine && startPos < span.endPos)) &&
+			file.equals(span.file);
+	}
+
 	public void executable(boolean exe)
 	{
 		executable = exe;
@@ -156,6 +172,106 @@ public class LexLocation implements Serializable
 	public static void resetLocations()
 	{
 		allLocations = new Vector<LexLocation>();
+		nameSpans =	new HashMap<LexNameToken, LexLocation>();
+	}
+
+	public static void clearAfter(File file, int linecount, int charpos)
+	{
+		// Called from the LexTokenReader's pop method, to remove any
+		// locations "popped". We assume any pushes are on the end of
+		// the vector.
+
+		ListIterator<LexLocation> it =
+			allLocations.listIterator(allLocations.size());
+
+		while (it.hasPrevious())
+		{
+			LexLocation l = it.previous();
+
+			if (!l.file.equals(file) ||
+				l.startLine < linecount ||
+				l.startPos < charpos)
+			{
+				break;
+			}
+			else
+			{
+				it.remove();
+			}
+		}
+	}
+
+	public static void addSpan(LexNameToken name, LexToken upto)
+	{
+		LexLocation span = new LexLocation(
+			name.location.file,
+			name.location.module,
+			name.location.startLine,
+			name.location.startPos,
+			upto.location.endLine,
+			upto.location.endPos);
+
+		nameSpans.put(name, span);
+	}
+
+	public static LexNameList getSpanNames(File filename)
+	{
+		LexNameList list = new LexNameList();
+
+		for (LexNameToken name: nameSpans.keySet())
+		{
+			LexLocation span = nameSpans.get(name);
+
+			if (span.file.equals(filename))
+			{
+				list.add(name);
+			}
+		}
+
+		return list;
+	}
+
+	public static float getSpanPercent(LexNameToken name)
+	{
+		int hits = 0;
+		int misses = 0;
+		LexLocation span = nameSpans.get(name);
+
+		for (LexLocation l: allLocations)
+		{
+			if (l.executable && l.within(span))
+			{
+				if (l.hits > 0)
+    			{
+    				hits++;
+    			}
+    			else
+    			{
+    				misses++;
+    			}
+			}
+		}
+
+		int sum = hits + misses;
+		return sum == 0 ? 0 : (float)(1000 * hits)/sum/10;		// NN.N%
+	}
+
+	public static long getSpanCalls(LexNameToken name)
+	{
+		// The assumption is that the first executable location in
+		// the span for the name is hit as many time as the span is called.
+
+		LexLocation span = nameSpans.get(name);
+
+		for (LexLocation l: allLocations)
+		{
+			if (l.executable && l.within(span))
+			{
+				return l.hits;
+			}
+		}
+
+		return 0;
 	}
 
 	public static List<Integer> getHitList(File file)
@@ -213,7 +329,7 @@ public class LexLocation implements Serializable
 			if (l.executable && l.hits > 0 && l.file.equals(file))
 			{
 				List<LexLocation> list = map.get(l.startLine);
-				
+
 				if (list == null)
 				{
 					list = new Vector<LexLocation>();
@@ -226,12 +342,12 @@ public class LexLocation implements Serializable
 
 		return map;
 	}
-	
+
 	public static float getHitPercent(File file)
 	{
 		int hits = 0;
 		int misses = 0;
-		
+
 		for (LexLocation l: allLocations)
 		{
 			if (l.file.equals(file) && l.executable)
@@ -247,7 +363,8 @@ public class LexLocation implements Serializable
 			}
 		}
 
-		return (float)((1000 * hits)/(hits + misses))/10;
+		int sum = hits + misses;
+		return sum == 0 ? 0 : (float)(1000 * hits)/sum/10;		// NN.N%
 	}
 
 	public static Map<Integer, List<LexLocation>> getMissLocations(File file)
@@ -260,7 +377,7 @@ public class LexLocation implements Serializable
 			if (l.executable && l.hits == 0 && l.file.equals(file))
 			{
 				List<LexLocation> list = map.get(l.startLine);
-				
+
 				if (list == null)
 				{
 					list = new Vector<LexLocation>();

@@ -608,6 +608,7 @@ public class DefinitionReader extends SyntaxReader
 			throwMessage(2017, "Expecting ':' or '(' after name in function definition");
 		}
 
+		LexLocation.addSpan(idToName(funcName), lastToken());
 		return def;
 	}
 
@@ -890,6 +891,7 @@ public class DefinitionReader extends SyntaxReader
 			throwMessage(2021, "Expecting ':' or '(' after name in operation definition");
 		}
 
+		LexLocation.addSpan(idToName(funcName), lastToken());
 		return def;
 	}
 

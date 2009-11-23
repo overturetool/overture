@@ -31,6 +31,7 @@ import org.overturetool.vdmj.definitions.SystemDefinition;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
@@ -136,6 +137,7 @@ public class ClassReader extends SyntaxReader
 				throwMessage(2007, "Expecting 'end " + classId.name + "'");
 			}
 
+			LexLocation.addSpan(className, lastToken());
 			return new ClassDefinition(className, superclasses, members);
 		}
 		else

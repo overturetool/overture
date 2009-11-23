@@ -231,6 +231,10 @@ public class ProcessCommandLine extends CommandLine
 	            {
 	            	carryOn = processCoverage(line);
 	            }
+	            else if (line.startsWith("latex"))
+	            {
+	            	carryOn = processLatex(line);
+	            }
 	            else if (line.equals("run") ||
 	            		 line.equals("continue") ||
 	            		 line.equals("c"))
@@ -308,6 +312,7 @@ public class ProcessCommandLine extends CommandLine
     		println("  run");
     		println("  p[rint] <expression>");
     		println("  coverage [<files>]");
+    		println("  latex [<files>]");
     		println("  pog [fn/op]");
     		println("  files");
     		println("  classes");
@@ -573,6 +578,43 @@ public class ProcessCommandLine extends CommandLine
 			for (File file: files)
 			{
 				currentThread.xcmd_overture_coverage(file);
+			}
+		}
+		catch (Exception e)
+		{
+			println("Problem locating files");
+		}
+
+		return true;
+	}
+
+	private boolean processLatex(String line)
+	{
+   		if (currentThread.getStatus() == DBGPStatus.RUNNING)
+   		{
+   			println("Thread is running...");
+   			return true;
+   		}
+
+   		try
+		{
+			List<File> files = getFiles(line);
+
+			if (files.isEmpty())
+			{
+				files = loadedFiles;
+			}
+
+			for (File file: files)
+			{
+				if (line.startsWith("latexdoc"))
+				{
+					currentThread.xcmd_overture_latexdoc(file);
+				}
+				else
+				{
+					currentThread.xcmd_overture_latex(file);
+				}
 			}
 		}
 		catch (Exception e)

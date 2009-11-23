@@ -111,7 +111,7 @@ public class LexTokenReader extends BacktrackInputReader
 
 	/** An end of file symbol. */
 	private static final char EOF = (char)-1;
-	
+
 	/** The assumed tab stop, for calculating positions. */
 	public static final int TABSTOP = 4;
 
@@ -161,7 +161,7 @@ public class LexTokenReader extends BacktrackInputReader
 		this.dialect = dialect;
 		init();
 	}
-	
+
 	/**
 	 * Create a LexTokenReader to read content which originates from a file
 	 *  which is not yet saved and enable the source of the file to be set.
@@ -269,6 +269,7 @@ public class LexTokenReader extends BacktrackInputReader
 	{
 		super.pop();
 		stack.pop().set();
+		LexLocation.clearAfter(file, linecount, charpos);
 	}
 
 	/**

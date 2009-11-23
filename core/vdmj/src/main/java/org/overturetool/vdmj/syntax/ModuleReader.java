@@ -30,6 +30,7 @@ import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexStringToken;
@@ -180,6 +181,7 @@ public class ModuleReader extends SyntaxReader
 			throwMessage(2049, "Expecting 'end " + name.name + "'");
 		}
 
+		LexLocation.addSpan(idToName(name), lastToken());
 		return new Module(name, imports, exports, defs);
 	}
 

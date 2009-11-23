@@ -27,8 +27,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
@@ -237,6 +237,14 @@ abstract public class CommandReader
 				else if(line.startsWith("coverage"))
 				{
 					carryOn = doCoverage(line);
+				}
+				else if(line.startsWith("latexdoc"))
+				{
+					carryOn = doLatex(line, true);
+				}
+				else if(line.startsWith("latex"))
+				{
+					carryOn = doLatex(line, false);
 				}
 				else if(line.startsWith("remove"))
 				{
@@ -599,7 +607,74 @@ abstract public class CommandReader
 				source.printCoverage(Console.out);
 			}
 		}
-		catch (IOException e)
+		catch (Exception e)
+		{
+			println("coverage: " + e.getMessage());
+		}
+
+		return true;
+	}
+
+	protected boolean doLatex(String line, boolean headers)
+	{
+		try
+		{
+			Set<File> loaded = interpreter.getSourceFiles();
+
+			if (line.equals("latex") || line.equals("latexdoc"))
+			{
+				for (File file: interpreter.getSourceFiles())
+				{
+					doLatex(file, headers);
+				}
+
+				return true;
+			}
+
+			String[] parts = line.split("\\s+");
+
+			for (int p = 1; p < parts.length; p++)
+			{
+				File f = new File(parts[p]);
+
+    			if (loaded.contains(f))
+    			{
+    				doLatex(f, headers);
+    			}
+    			else
+    			{
+    				println(f + " is not loaded - try 'files'");
+    			}
+			}
+		}
+		catch (Exception e)
+		{
+			println("Usage: coverage clear|<filenames>");
+		}
+
+		return true;
+	}
+
+	private boolean doLatex(File file, boolean headers)
+	{
+		try
+		{
+			SourceFile source = interpreter.getSourceFile(file);
+
+			if (source == null)
+			{
+				println(file + ": file not found");
+			}
+			else
+			{
+				File tex = new File(source.filename.getPath() + ".tex");
+				PrintWriter pw = new PrintWriter(tex);
+				source.printLatexCoverage(pw, headers);
+				pw.close();
+				println("Latex coverage written to " + tex);
+			}
+		}
+		catch (Exception e)
 		{
 			println("coverage: " + e.getMessage());
 		}
@@ -876,6 +951,7 @@ abstract public class CommandReader
 		println("remove <breakpoint#> - remove a trace/breakpoint");
 		println("list - list breakpoints");
 		println("coverage [clear | <files>] - display/clear line coverage");
+		println("latex [<files>] - generate LaTeX line coverage files");
 		println("files - list files in the current specification");
 		println("reload - reload the current specification files");
 		println("load <files> - replace current loaded specification files");

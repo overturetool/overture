@@ -207,6 +207,7 @@ public class VariableExpression extends Expression
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);
+		location.hit();
 		return ctxt.lookup(name);
 	}
 

@@ -35,6 +35,7 @@ import java.util.Vector;
 
 import org.overturetool.vdmj.VDMJ;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 
 /**
@@ -49,7 +50,7 @@ public class SourceFile
 	public SourceFile(File filename) throws IOException
 	{
 		this.filename = filename;
-		
+
 		BufferedReader br = new BufferedReader(
 			new InputStreamReader(
 				new FileInputStream(filename), VDMJ.filecharset));
@@ -136,22 +137,60 @@ public class SourceFile
 		out.println("\nCoverage = " +
 			(srccount == 0 ? 0 : (100 * hitcount / srccount)) + "%");
 	}
-	
-	public void printLatexCoverage(PrintWriter out)
+
+	public void printLatexCoverage(PrintWriter out, boolean headers)
 	{
 		Map<Integer, List<LexLocation>> hits =
 					LexLocation.getMissLocations(filename);
-		
+
+		if (headers)
+		{
+    		out.println("\\documentclass[a4paper]{article}");
+    		out.println("\\input{overture}");
+    		out.println("\\begin{document}");
+		}
+
 		for (int lnum = 1; lnum <= lines.size(); lnum++)
 		{
 			String line = detab(lines.get(lnum - 1), LexTokenReader.TABSTOP);
 			List<LexLocation> list = hits.get(lnum);
 			out.println(markup(line, list));
 		}
-		
-		out.println("Coverage = " + LexLocation.getHitPercent(filename) + "%");
+
+		out.println("\\newline");
+		out.println("\\begin{tabular}{|l|r|r|}");
+		out.println("\\hline");
+		out.println("Function, operation, class/module & Coverage & Calls \\\\");
+		out.println("\\hline");
+		out.println("\\hline");
+
+		long total = 0;
+
+		for (LexNameToken name: LexLocation.getSpanNames(filename))
+		{
+			long calls = LexLocation.getSpanCalls(name);
+			total += calls;
+
+			out.println(name.getExplicit(true) + " & " +
+				LexLocation.getSpanPercent(name) + "\\% & " +
+				calls + " \\\\");
+			out.println("\\hline");
+		}
+
+		out.println("\\hline");
+		out.println(filename.getName() +
+			" & " + LexLocation.getHitPercent(filename) +
+			"\\% & " + total + " \\\\");
+
+		out.println("\\hline");
+		out.println("\\end{tabular}");
+
+		if (headers)
+		{
+			out.println("\\end{document}");
+		}
 	}
-	
+
 	private String markup(String line, List<LexLocation> list)
     {
 		if (list == null)
@@ -162,19 +201,23 @@ public class SourceFile
 		{
 			StringBuilder sb = new StringBuilder();
 			int p = 0;
-			
+
 			for (LexLocation m: list)
 			{
 				int start = m.startPos - 1;
 				int end = m.startLine == m.endLine ? m.endPos - 1 : line.length();
-				sb.append(line.substring(p, start));
-				sb.append("?\\notcovered{");
-				sb.append(line.substring(start, end));
-				sb.append("}£");
-				
-				p = end;
+
+				if (start >= p)		// Backtracker produces duplicate tokens
+				{
+    				sb.append(line.substring(p, start));
+    				sb.append("?\\notcovered{");
+    				sb.append(line.substring(start, end));
+    				sb.append("}\u00A3");	// That's a pound sign!
+
+    				p = end;
+				}
 			}
-			
+
 			sb.append(line.substring(p));
 			return sb.toString();
 		}
@@ -184,20 +227,20 @@ public class SourceFile
 	{
 		StringBuilder sb = new StringBuilder();
 		int p = 0;
-		
+
 		for (int i=0; i<s.length(); i++)
 		{
 			char c = s.charAt(i);
-			
+
 			if (c == '\t')
 			{
 				int n = tabstop - p % tabstop;
-				
+
 				for (int x=0; x < n; x++)
 				{
 					sb.append(' ');
 				}
-				
+
 				p += n;
 			}
 			else
@@ -206,7 +249,7 @@ public class SourceFile
 				p++;
 			}
 		}
-		
+
 		return sb.toString();
 	}
 }

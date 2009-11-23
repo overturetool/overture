@@ -1873,6 +1873,10 @@ public class DBGPReader
 		{
 			processCoverage(c);
 		}
+		else if (option.value.startsWith("latex"))
+		{
+			processLatex(c);
+		}
 		else if (option.value.equals("pog"))
 		{
 			processPOG(c);
@@ -2182,6 +2186,32 @@ public class DBGPReader
 			cdataResponse(out.toString());
 		}
 	}
+
+	private void processLatex(DBGPCommand c)
+		throws DBGPException, IOException, URISyntaxException
+    {
+    	if (status == DBGPStatus.BREAK)
+    	{
+    		throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+    	}
+
+    	File file = new File(new URI(c.data));
+    	SourceFile source = interpreter.getSourceFile(file);
+    	boolean headers = (c.getOption(DBGPOptionType.C).value.equals("latexdoc"));
+
+    	if (source == null)
+    	{
+    		cdataResponse(file + ": file not found");
+    	}
+    	else
+    	{
+			File tex = new File(source.filename.getPath() + ".tex");
+			PrintWriter pw = new PrintWriter(tex);
+			source.printLatexCoverage(pw, headers);
+			pw.close();
+			cdataResponse("Latex coverage written to " + tex);
+    	}
+    }
 
 	private void processCurrentLine(DBGPCommand c) throws DBGPException, IOException
 	{
