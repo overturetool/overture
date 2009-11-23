@@ -211,7 +211,7 @@ public class SourceFile
 				{
     				sb.append(line.substring(p, start));
     				sb.append("?\\notcovered{");
-    				sb.append(line.substring(start, end));
+    				sb.append(underscoreQuote(line.substring(start, end)));
     				sb.append("}\u00A3");	// That's a pound sign!
 
     				p = end;
@@ -222,6 +222,14 @@ public class SourceFile
 			return sb.toString();
 		}
     }
+
+	private String underscoreQuote(String s)
+	{
+		return s.
+			replaceAll("_", "\\\\_").
+			replaceAll("\\{", "\\\\{").
+			replaceAll("\\}", "\\\\}");
+	}
 
 	private static String detab(String s, int tabstop)
 	{

@@ -155,6 +155,7 @@ public class MapCompExpression extends MapExpression
 				{
 					Value dom = mapfirst.left.eval(evalContext);
 					Value rng = mapfirst.right.eval(evalContext);
+					mapfirst.location.hit();
 
 					Value old = map.put(dom, rng);
 

@@ -114,6 +114,7 @@ public class MapEnumExpression extends MapExpression
 		{
 			Value l = e.left.eval(ctxt);
 			Value r = e.right.eval(ctxt);
+			e.location.hit();
 			Value old = map.put(l, r);
 
 			if (old != null && !old.equals(r))

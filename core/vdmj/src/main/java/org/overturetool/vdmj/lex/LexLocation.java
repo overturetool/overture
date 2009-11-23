@@ -253,7 +253,7 @@ public class LexLocation implements Serializable
 		}
 
 		int sum = hits + misses;
-		return sum == 0 ? 0 : (float)(1000 * hits)/sum/10;		// NN.N%
+		return sum == 0 ? 0 : (float)((1000 * hits)/sum/10);		// NN.N%
 	}
 
 	public static long getSpanCalls(LexNameToken name)
@@ -364,7 +364,7 @@ public class LexLocation implements Serializable
 		}
 
 		int sum = hits + misses;
-		return sum == 0 ? 0 : (float)(1000 * hits)/sum/10;		// NN.N%
+		return sum == 0 ? 0 : (float)((1000 * hits)/sum/10);		// NN.N%
 	}
 
 	public static Map<Integer, List<LexLocation>> getMissLocations(File file)
