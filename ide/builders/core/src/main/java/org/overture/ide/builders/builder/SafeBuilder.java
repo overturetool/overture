@@ -40,7 +40,6 @@ public class SafeBuilder extends Thread {
 
 						}
 
-						@SuppressWarnings("unchecked")
 						public void run() throws Exception {
 							AbstractBuilder builder = (AbstractBuilder) o;
 
@@ -48,16 +47,16 @@ public class SafeBuilder extends Thread {
 
 								AbstractBuilder.parseMissingFiles(currentProject,builder.getNatureId(),builder.getContentTypeId(),monitor);
 
-								final List ast = (List) AstManager.instance().getAstList(
+								final RootNode rootNode=  AstManager.instance().getRootNode(
 										currentProject, builder.getNatureId());
 
 								monitor.subTask("Type checking");
 								statusList.add(builder.buileModelElements(
-										currentProject, ast));
+										currentProject, rootNode));
 								//  mark ast root as type checked
-								RootNode root =AstManager.instance().getRootNode(currentProject, builder.getNatureId());
-								if(root!=null)
-									root.setChecked(statusList.get(statusList.size()-1).getCode()< IStatus.ERROR);
+								
+								if(rootNode!=null)
+									rootNode.setChecked(statusList.get(statusList.size()-1).getCode()< IStatus.ERROR);
 							}
 						}
 

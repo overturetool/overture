@@ -25,9 +25,8 @@ import org.overture.ide.utility.ProjectUtility;
 import org.overture.ide.utility.SourceLocationConverter;
 
 public abstract class AbstractBuilder {
-	@SuppressWarnings("unchecked")
 	public abstract IStatus buileModelElements(IProject project,
-			List modelElements);
+			RootNode rooList);
 
 	public abstract String getNatureId();
 
@@ -145,11 +144,7 @@ public abstract class AbstractBuilder {
 		if (monitor != null)
 			monitor.subTask("Parsing files");
 		AbstractBuilder.syncProjectResources(project);
-		// for (IResource res : project.members(IContainer.INCLUDE_PHANTOMS
-		// | IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS)) {
-		// parseMissingFiles(project, natureId, res);
-		// }
-
+	
 		List<IFile> files = ProjectUtility.getFiles(project, contentTypeId);
 		for (IFile iFile : files) {
 			parseFile(project, natureId, iFile);
@@ -157,55 +152,6 @@ public abstract class AbstractBuilder {
 
 	}
 
-//	/***
-//	 * Try to parse a resource, by testing if it is a file with a known content
-//	 * type related to the project. Search sub folders.
-//	 * 
-//	 * @param project
-//	 *            the project
-//	 * @param natureId
-//	 *            the nature used by the builder
-//	 * @param resource
-//	 *            the resource to parse
-//	 * @throws CoreException
-//	 * @throws IOException
-//	 */
-//	private static void parseMissingFiles(IProject project, String natureId,
-//			IResource resource) throws CoreException, IOException {
-//		if (resource instanceof IFolder) {
-//			if (resource instanceof IFolder
-//					&& resource.getLocation().lastSegment().startsWith("."))// skip
-//				return;
-//			// .
-//			// folders
-//			// like
-//			// .svn
-//
-//			for (IResource res : ((IFolder) resource).members(IContainer.INCLUDE_PHANTOMS
-//					| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS)) {
-//				// System.out.println("Looking at file for parse: "
-//				// + res.getName());
-//				// System.out.println(project.getContentTypeMatcher().findContentTypeFor(
-//				// res.getFullPath().toString()));
-//
-//				parseMissingFiles(project, natureId, res);
-//			}
-//		}
-//		// check if it is a IFile and that there exists a known content type for
-//		// this file and the project
-//		else if (resource instanceof IFile
-//				&& project.getContentTypeMatcher().findContentTypeFor(
-//						resource.toString()) != null) {
-//			// System.out.println("Parsing file: "+resource);
-//			parseMissingFiles(project, natureId, (IFile) resource);
-//		}
-//
-//	}
-//
-//	private static void parseMissingFiles(IProject project, String natureId,
-//			final IFile f) throws CoreException, IOException {
-//
-//	}
 
 	public static void parseFile(IProject project, String natureId,
 			final IFile file) throws CoreException, IOException {

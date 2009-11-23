@@ -6,13 +6,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -35,53 +34,52 @@ import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.overture.ide.ast.AstManager;
 import org.overture.ide.ast.IAstManager;
 import org.overture.ide.ast.RootNode;
-import org.overture.ide.builders.vdmj.BuilderPp;
 import org.overture.ide.debug.launching.ClasspathUtils;
 import org.overture.ide.debug.launching.IOvertureInterpreterRunnerConfig;
+import org.overture.ide.utility.ProjectUtility;
+import org.overture.ide.vdmpp.core.VdmPpCorePluginConstants;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
 import org.overture.ide.vdmpp.debug.core.VDMPPDebugConstants;
-import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
-import org.overturetool.vdmj.runtime.ClassInterpreter;
 
 //TODO test if this is a specific runner or a common runner for both VDMTools and VDMJ
 public class VDMPPVDMJInterpreterRunner extends AbstractInterpreterRunner {
 
 	// TODO get source files in an other way or move to util
-	private static String[] exts = new String[] { "vpp", "tex", "vdm", "vdmpp", "vdmsl", "vdmrt" };
-	/**
-	 * This method returns a list of files under the given directory or its
-	 * subdirectories. The directories themselves are not returned.
-	 * 
-	 * @param dir
-	 *            a directory
-	 * @return list of IResource objects representing the files under the given
-	 *         directory and its subdirectories
-	 */
-	private static ArrayList<String> getAllMemberFilesString(IContainer dir, String[] exts) {
-		ArrayList<String> list = new ArrayList<String>();
-		IResource[] arr = null;
-		try {
-			arr = dir.members();
-		} catch (CoreException e) {
-		}
-
-		for (int i = 0; arr != null && i < arr.length; i++) {
-			if (arr[i].getType() == IResource.FOLDER) {
-				list.addAll(getAllMemberFilesString((IFolder) arr[i], exts));
-			} else {
-
-				for (int j = 0; j < exts.length; j++) {
-					if (exts[j].equalsIgnoreCase(arr[i].getFileExtension())) {
-						list.add(arr[i].getLocation().toOSString());
-						break;
-					}
-				}
-			}
-		}
-		return list;
-	}
+	//private static String[] exts = new String[] { "vpp", "tex", "vdm", "vdmpp", "vdmsl", "vdmrt" };
+//	/**
+//	 * This method returns a list of files under the given directory or its
+//	 * subdirectories. The directories themselves are not returned.
+//	 * 
+//	 * @param dir
+//	 *            a directory
+//	 * @return list of IResource objects representing the files under the given
+//	 *         directory and its subdirectories
+//	 */
+//	private static ArrayList<String> getAllMemberFilesString(IContainer dir, String[] exts) {
+//		ArrayList<String> list = new ArrayList<String>();
+//		IResource[] arr = null;
+//		try {
+//			arr = dir.members();
+//		} catch (CoreException e) {
+//		}
+//
+//		for (int i = 0; arr != null && i < arr.length; i++) {
+//			if (arr[i].getType() == IResource.FOLDER) {
+//				list.addAll(getAllMemberFilesString((IFolder) arr[i], exts));
+//			} else {
+//
+//				for (int j = 0; j < exts.length; j++) {
+//					if (exts[j].equalsIgnoreCase(arr[i].getFileExtension())) {
+//						list.add(arr[i].getLocation().toOSString());
+//						break;
+//					}
+//				}
+//			}
+//		}
+//		return list;
+//	}
 	
 	public VDMPPVDMJInterpreterRunner(IInterpreterInstall install) {
 		super(install);
@@ -136,8 +134,14 @@ public class VDMPPVDMJInterpreterRunner extends AbstractInterpreterRunner {
 							
 							int argNumber = 0;
 							
-							ArrayList<String> memberFilesList = getAllMemberFilesString(proj.getProject(), exts);
+							List<String> memberFilesList = new Vector<String>();//getAllMemberFilesString(proj.getProject(), exts);
+						List<IFile> files = 	ProjectUtility.getFiles(proj.getProject(), VdmPpCorePluginConstants.CONTENT_TYPE);
 							
+						for (IFile iFile : files) {
+							memberFilesList.add(ProjectUtility.getFile(proj.getProject(), iFile).getAbsolutePath());
+						}
+						
+						
 							String[] arguments = new String[memberFilesList.size() + 11]; 
 							
 							// 0: host 
@@ -190,9 +194,11 @@ public class VDMPPVDMJInterpreterRunner extends AbstractInterpreterRunner {
 							try {
 								IAstManager astManager = AstManager.instance();
 								
-								BuilderPp builder = new BuilderPp();
-								final List ast = (List) astManager.getAstList(proj.getProject(), VdmPpProjectNature.VDM_PP_NATURE);
-								builder.buileModelElements(proj.getProject(),ast);
+//								BuilderPp builder = new BuilderPp();
+//								final List ast = (List) astManager.getAstList(proj.getProject(), VdmPpProjectNature.VDM_PP_NATURE);
+//								builder.buileModelElements(proj.getProject(),ast);
+								proj.getProject().build(IncrementalProjectBuilder.FULL_BUILD, null);
+								
 								RootNode rootNode = astManager.getRootNode(proj.getProject(), VdmPpProjectNature.VDM_PP_NATURE);
 								if (rootNode.isChecked()){
 									ClassList classList = new ClassList();
@@ -208,7 +214,7 @@ public class VDMPPVDMJInterpreterRunner extends AbstractInterpreterRunner {
 									
 									if (classList.size() > 0)
 									{
-										ClassInterpreter classInterpreter = new ClassInterpreter(classList);
+										//ClassInterpreter classInterpreter = new ClassInterpreter(classList);
 										//new DBGPReader(host, Integer.parseInt(port), sessionId, classInterpreter, expression).run(true);
 									}
 								}

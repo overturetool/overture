@@ -88,13 +88,13 @@ public class AstManager implements IAstManager {
 		return s;
 	}
 	
-	public Object getAstList(IProject project, String nature) {
-		Map<String, RootNode> natureAst = asts.get(project);
-		if (natureAst != null && natureAst.containsKey(nature))
-			return natureAst.get(nature).getRootElementList();
-		else
-			return null;
-	}
+//	public Object getAstList(IProject project, String nature) {
+//		Map<String, RootNode> natureAst = asts.get(project);
+//		if (natureAst != null && natureAst.containsKey(nature))
+//			return natureAst.get(nature).getRootElementList();
+//		else
+//			return null;
+//	}
 
 	public RootNode getRootNode(IProject project, String nature) {
 		Map<String, RootNode> natureAst = asts.get(project);

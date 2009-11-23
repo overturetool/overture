@@ -5,7 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.modules.Module;
+import org.overturetool.vdmj.modules.ModuleList;
 
 public class RootNode {
 	private boolean checked=false;
@@ -119,5 +121,30 @@ this.setChecked(false);
 				
 		}
 		return false;
+	}
+	
+	public ModuleList getModuleList() throws NotAllowedException
+	{
+		ModuleList modules = new ModuleList();
+		for (Object definition : rootElementList) {
+			if (definition instanceof Module)
+				modules.add((Module) definition);
+			else
+				throw new NotAllowedException("Other definition than Module is found: "+ definition.getClass().getName());
+		}
+		return modules;
+	}
+	
+	
+	public ClassList getClassList() throws NotAllowedException
+	{
+		ClassList classes = new ClassList();
+		for (Object definition : rootElementList) {
+			if (definition instanceof ClassDefinition)
+				classes.add((ClassDefinition) definition);
+			else
+				throw new NotAllowedException("Other definition than ClassDefinition is found: "+ definition.getClass().getName());
+		}
+		return classes;
 	}
 }

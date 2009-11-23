@@ -1,14 +1,13 @@
 package org.overture.ide.builders.vdmj;
 
-import java.util.List;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
+import org.overture.ide.ast.NotAllowedException;
+import org.overture.ide.ast.RootNode;
 import org.overture.ide.vdmpp.core.VdmPpCorePluginConstants;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.messages.InternalException;
@@ -32,14 +31,14 @@ public class BuilderPp extends VdmjBuilder {
 		Settings.dialect = Dialect.VDM_PP;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public IStatus buileModelElements(IProject project, List modelElements) {
+	public IStatus buileModelElements(IProject project, RootNode rootNode) {
 
-		classes.clear();
-		for (Object classDefinition : modelElements) {
-			if (classDefinition instanceof ClassDefinition)
-				classes.add((ClassDefinition) classDefinition);
+		try {
+			classes = rootNode.getClassList();
+		} catch (NotAllowedException e) {
+			
+			e.printStackTrace();
 		}
 
 		return buileModelElements(project);
