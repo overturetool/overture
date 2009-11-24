@@ -221,7 +221,7 @@ public class SourceFile
 				{
     				sb.append(line.substring(p, start));
     				sb.append("?\\notcovered{");
-    				sb.append(underscoreQuote(line.substring(start, end)));
+    				sb.append(latexQuote(line.substring(start, end)));
     				sb.append("}\u00A3");	// That's a pound sign!
 
     				p = end;
@@ -233,12 +233,20 @@ public class SourceFile
 		}
     }
 
-	private String underscoreQuote(String s)
+	private String latexQuote(String s)
 	{
+		// Latex specials: \# \$ \% \^{} \& \_ \{ \} \~{}
+
 		return s.
-			replaceAll("_", "\\\\_").
-			replaceAll("\\{", "\\\\{").
-			replaceAll("\\}", "\\\\}");
+			replace("#", "\\#").
+			replace("$", "\\$").
+			replace("%", "\\%").
+			replace("&", "\\&").
+			replace("_", "\\_").
+			replace("{", "\\{").
+			replace("}", "\\}").
+			replace("^", "\\^{}").
+			replace("~", "\\~{}");
 	}
 
 	private static String detab(String s, int tabstop)

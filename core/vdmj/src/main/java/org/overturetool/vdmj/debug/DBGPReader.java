@@ -645,10 +645,10 @@ public class DBGPReader
 	private static String quote(String in)
 	{
 		return in
-    		.replaceAll("&", "&amp;")
-    		.replaceAll("<", "&lt;")
-    		.replaceAll(">", "&gt;")
-    		.replaceAll("\\\"", "&quot;");
+    		.replace("&", "&amp;")
+    		.replace("<", "&lt;")
+    		.replace(">", "&gt;")
+    		.replace("\"", "&quot;");
 	}
 
 	private void startup() throws IOException
