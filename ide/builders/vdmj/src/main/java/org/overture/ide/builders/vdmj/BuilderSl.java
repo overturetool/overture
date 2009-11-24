@@ -61,16 +61,8 @@ public class BuilderSl extends VdmjBuilder {
 	@Override
 	public ExitStatus typeCheck() {
 		int terrs = 0;
-		try {
-			combineDefaults(modules);
-			TypeChecker typeChecker = new ModuleTypeChecker(modules);
-			typeChecker.typeCheck();
-		} catch (InternalException e) {
-			processInternalError(e);
-		} catch (Throwable e) {
-			processInternalError(e);
-			terrs++;
-		}
+		
+		modules.combineDefaults();
 
 		terrs += TypeChecker.getErrorCount();
 
@@ -85,37 +77,6 @@ public class BuilderSl extends VdmjBuilder {
 		}
 
 		return terrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
-	}
-
-	protected int combineDefaults(ModuleList list) {
-		int rv = 0;
-
-		if (!list.isEmpty()) {
-			Module def = new Module();
-			ModuleList named = new ModuleList();
-
-			for (Module m : list) {
-				if (m.name.name.equals("DEFAULT")) {
-					def.defs.addAll(m.defs);
-				} else {
-					named.add(m);
-				}
-			}
-
-			if (!def.defs.isEmpty()) {
-				list.clear();
-				list.addAll(named);
-				list.add(def);
-
-				for (Definition d : def.defs) {
-					if (!d.isTypeDefinition()) {
-						d.markUsed(); // Mark top-level items as used
-					}
-				}
-			}
-		}
-
-		return rv;
 	}
 
 }

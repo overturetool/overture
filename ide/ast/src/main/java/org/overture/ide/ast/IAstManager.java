@@ -78,4 +78,17 @@ public interface IAstManager
 	 * @param project the project which should be cleaned
 	 */
 	void clean(IProject project);
+	
+	/**
+	 * Returns all known projects of the Manager
+	 * @return a list of known projects which might have zero or more natures mapped
+	 */
+	public List<IProject> getProjects();
+	
+	/**
+	 * Returns all known natures of the manager from the selected project
+	 * @param project the project to look up
+	 * @return a list of known natures
+	 */
+	public List<String> getNatures(IProject project);
 }

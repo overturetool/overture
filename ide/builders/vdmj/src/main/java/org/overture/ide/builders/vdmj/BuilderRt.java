@@ -2,8 +2,12 @@ package org.overture.ide.builders.vdmj;
 
 import org.overture.ide.vdmrt.core.VdmRtCorePluginConstants;
 import org.overture.ide.vdmrt.core.VdmRtProjectNature;
+import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.definitions.BUSClassDefinition;
+import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.messages.InternalException;
 
 /***
  * VDM RT builder
@@ -30,6 +34,22 @@ public class BuilderRt extends BuilderPp {
 	@Override
 	public String getContentTypeId() {
 		return VdmRtCorePluginConstants.CONTENT_TYPE;
+	}
+	
+	@Override
+	public ExitStatus typeCheck()
+	{
+		try
+		{
+			classes.add(new CPUClassDefinition());
+  			classes.add(new BUSClassDefinition());
+		}
+		catch (Exception e)
+		{
+			throw new InternalException(11, "CPU or BUS creation failure");
+		}
+
+		return super.typeCheck();
 	}
 
 }
