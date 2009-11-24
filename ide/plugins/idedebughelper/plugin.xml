@@ -127,6 +127,36 @@
          
        
       </objectContribution>
+      
+      
+      
+        <!-- Enable AST profiling-->
+       <objectContribution
+            adaptable="true"
+            id="org.overture.ide.idedebughelper.contribution1"
+            objectClass="org.eclipse.core.resources.IProject">
+           
+ <menu
+               id="org.overture.ide.idedebughelper.menuMain"
+               label="Overture Utility"
+               path="additions">
+            <separator
+                  name="groupIdedebughelper">
+            </separator>
+         </menu>       
+         
+          <action
+               class="org.overture.ide.plugins.idedebughelper.actions.AstProfilerAction"
+              
+               id="org.overture.ide.idedebughelper.actions.AstProfilerAction"
+               label="Profile Overture AST Manager"
+               menubarPath="org.overture.ide.idedebughelper.menuMain/groupIdedebughelper"
+               enablesFor="1"
+               tooltip="Profile the Overture AST's stored in the AST MAnager">
+         </action>
+         
+       
+      </objectContribution>
    </extension> 
 
 
