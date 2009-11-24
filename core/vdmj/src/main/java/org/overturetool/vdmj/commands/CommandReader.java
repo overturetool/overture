@@ -649,7 +649,7 @@ abstract public class CommandReader
 		}
 		catch (Exception e)
 		{
-			println("Usage: coverage clear|<filenames>");
+			println("Usage: latex|latexdoc <filenames>");
 		}
 
 		return true;
@@ -676,7 +676,7 @@ abstract public class CommandReader
 		}
 		catch (Exception e)
 		{
-			println("coverage: " + e.getMessage());
+			println("latex: " + e.getMessage());
 		}
 
 		return true;
@@ -951,7 +951,7 @@ abstract public class CommandReader
 		println("remove <breakpoint#> - remove a trace/breakpoint");
 		println("list - list breakpoints");
 		println("coverage [clear | <files>] - display/clear line coverage");
-		println("latex [<files>] - generate LaTeX line coverage files");
+		println("latex|latexdoc [<files>] - generate LaTeX line coverage files");
 		println("files - list files in the current specification");
 		println("reload - reload the current specification files");
 		println("load <files> - replace current loaded specification files");

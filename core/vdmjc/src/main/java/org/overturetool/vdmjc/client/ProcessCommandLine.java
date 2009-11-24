@@ -312,7 +312,7 @@ public class ProcessCommandLine extends CommandLine
     		println("  run");
     		println("  p[rint] <expression>");
     		println("  coverage [<files>]");
-    		println("  latex [<files>]");
+    		println("  latex|latexdoc [<files>]");
     		println("  pog [fn/op]");
     		println("  files");
     		println("  classes");
@@ -605,15 +605,17 @@ public class ProcessCommandLine extends CommandLine
 				files = loadedFiles;
 			}
 
+			File cwd = new File(".");
+
 			for (File file: files)
 			{
 				if (line.startsWith("latexdoc"))
 				{
-					currentThread.xcmd_overture_latexdoc(file);
+					currentThread.xcmd_overture_latexdoc(cwd, file);
 				}
 				else
 				{
-					currentThread.xcmd_overture_latex(file);
+					currentThread.xcmd_overture_latex(cwd, file);
 				}
 			}
 		}

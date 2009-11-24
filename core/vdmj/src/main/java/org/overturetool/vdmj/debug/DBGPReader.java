@@ -2195,7 +2195,10 @@ public class DBGPReader
     		throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
     	}
 
-    	File file = new File(new URI(c.data));
+		int i = c.data.indexOf(' ');
+		File dir = new File(new URI(c.data.substring(0, i)));
+		File file = new File(new URI(c.data.substring(i + 1)));
+
     	SourceFile source = interpreter.getSourceFile(file);
     	boolean headers = (c.getOption(DBGPOptionType.C).value.equals("latexdoc"));
 
@@ -2205,7 +2208,7 @@ public class DBGPReader
     	}
     	else
     	{
-			File tex = new File(source.filename.getPath() + ".tex");
+			File tex = new File(dir.getPath() + File.separator + file.getName() + ".tex");
 			PrintWriter pw = new PrintWriter(tex);
 			source.printLatexCoverage(pw, headers);
 			pw.close();

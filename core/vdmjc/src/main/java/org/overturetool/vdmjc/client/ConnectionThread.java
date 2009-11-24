@@ -594,14 +594,14 @@ public class ConnectionThread extends Thread
 		xcmd_overture_cmd("coverage", file.toURI().toString());
 	}
 
-	public void xcmd_overture_latex(File file) throws IOException
+	public void xcmd_overture_latex(File dir, File file) throws IOException
 	{
-		xcmd_overture_cmd("latex", file.toURI().toString());
+		xcmd_overture_cmd("latex", dir.toURI() + " " + file.toURI());
 	}
 
-	public void xcmd_overture_latexdoc(File file) throws IOException
+	public void xcmd_overture_latexdoc(File dir, File file) throws IOException
 	{
-		xcmd_overture_cmd("latexdoc", file.toURI().toString());
+		xcmd_overture_cmd("latexdoc", dir.toURI() + " " + file.toURI());
 	}
 
 	public void xcmd_overture_pog(String name) throws IOException

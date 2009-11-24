@@ -150,14 +150,24 @@ public class SourceFile
     		out.println("\\begin{document}");
 		}
 
+		boolean endDocFound = false;
+
 		for (int lnum = 1; lnum <= lines.size(); lnum++)
 		{
-			String line = detab(lines.get(lnum - 1), LexTokenReader.TABSTOP);
+			String line = lines.get(lnum - 1);
+
+			if (line.contains("\\end{document}"))
+			{
+				endDocFound = true;
+				break;
+			}
+
+			String spaced = detab(line, LexTokenReader.TABSTOP);
 			List<LexLocation> list = hits.get(lnum);
-			out.println(markup(line, list));
+			out.println(markup(spaced, list));
 		}
 
-		out.println("\\newline");
+		out.println("\\bigskip");
 		out.println("\\begin{tabular}{|l|r|r|}");
 		out.println("\\hline");
 		out.println("Function, operation, class/module & Coverage & Calls \\\\");
@@ -185,7 +195,7 @@ public class SourceFile
 		out.println("\\hline");
 		out.println("\\end{tabular}");
 
-		if (headers)
+		if (headers || endDocFound)
 		{
 			out.println("\\end{document}");
 		}
