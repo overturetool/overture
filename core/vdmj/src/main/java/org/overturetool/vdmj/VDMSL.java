@@ -35,13 +35,11 @@ import java.util.zip.GZIPOutputStream;
 
 import org.overturetool.vdmj.commands.CommandReader;
 import org.overturetool.vdmj.commands.ModuleCommandReader;
-import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.InternalException;
-import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.ContextException;
@@ -148,8 +146,8 @@ public class VDMSL extends VDMJ
 			}
    		}
 
+   		perrs += modules.combineDefaults();
    		int n = modules.notLoaded();
-   		perrs += combineDefaults(modules);
 
    		if (n > 0)
    		{
@@ -162,46 +160,6 @@ public class VDMSL extends VDMJ
    		}
 
    		return perrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
-	}
-
-	private int combineDefaults(ModuleList list)
-	{
-		int rv = 0;
-
-		if (!list.isEmpty())
-		{
-			Module def = new Module();
-			ModuleList named = new ModuleList();
-
-			for (Module m: list)
-			{
-				if (m.name.name.equals("DEFAULT"))
-				{
-					def.defs.addAll(m.defs);
-				}
-				else
-				{
-					named.add(m);
-				}
-			}
-
-			if (!def.defs.isEmpty())
-			{
-				list.clear();
-				list.addAll(named);
-				list.add(def);
-
-				for (Definition d: def.defs)
-				{
-					if (!d.isTypeDefinition())
-					{
-						d.markUsed();	// Mark top-level items as used
-					}
-				}
-			}
-		}
-
-		return rv;
 	}
 
 	/**

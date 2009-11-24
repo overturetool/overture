@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.overturetool.vdmj.debug.DBGPReader;
+import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -187,5 +188,45 @@ public class ModuleList extends Vector<Module>
 		}
 
 		return count;
+	}
+
+	public int combineDefaults()
+	{
+		int rv = 0;
+
+		if (!isEmpty())
+		{
+			Module def = new Module();
+			ModuleList named = new ModuleList();
+
+			for (Module m: this)
+			{
+				if (m.name.name.equals("DEFAULT"))
+				{
+					def.defs.addAll(m.defs);
+				}
+				else
+				{
+					named.add(m);
+				}
+			}
+
+			if (!def.defs.isEmpty())
+			{
+				clear();
+				addAll(named);
+				add(def);
+
+				for (Definition d: def.defs)
+				{
+					if (!d.isTypeDefinition())
+					{
+						d.markUsed();	// Mark top-level items as used
+					}
+				}
+			}
+		}
+
+		return rv;
 	}
 }
