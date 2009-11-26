@@ -220,9 +220,9 @@ public class SourceFile
 				if (start >= p)		// Backtracker produces duplicate tokens
 				{
     				sb.append(line.substring(p, start));
-    				sb.append("?\\notcovered{");
+    				sb.append("!\\notcovered{");
     				sb.append(latexQuote(line.substring(start, end)));
-    				sb.append("}\u00A3");	// That's a pound sign!
+    				sb.append("}!");	//\u00A3");
 
     				p = end;
 				}
