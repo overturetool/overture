@@ -78,11 +78,9 @@ public class ModuleReader extends SyntaxReader
 
 		try
 		{
-    		while (lastToken().isNot(Token.EOF))
+    		while (lastToken().isNot(Token.EOF) && lastToken().isNot(Token.END))
     		{
-    			LexToken token = lastToken();
-
-    			switch (token.type)
+    			switch (lastToken().type)
     			{
     				case MODULE:
     					modules.add(readModule());
@@ -93,7 +91,7 @@ public class ModuleReader extends SyntaxReader
     					break;
 
     				case IDENTIFIER:
-    					LexIdentifierToken id = (LexIdentifierToken)token;
+    					LexIdentifierToken id = lastIdToken();
 
     					if (id.name.equals("class"))
     					{
