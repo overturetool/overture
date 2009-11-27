@@ -298,6 +298,12 @@ public class FuncInstantiationExpression extends Expression
 	}
 
 	@Override
+	public String getPreName()
+	{
+		return function.getPreName();
+	}
+
+	@Override
 	public String kind()
 	{
 		return "instantiation";
