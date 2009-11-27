@@ -80,7 +80,12 @@ ConvertPropertyType(t,owner) ==
     then new UmlClassNameType(owner)
     else ty;
 
-
+public static 
+GenFnType: seq of IOmlPatternTypePair *
+           seq of IOmlIdentifierTypePair -> 
+           IOmlPartialFunctionType
+GenFnType(pattype_l,restype_l) ==
+  is not yet specified;
 
 --public convertBracketedType : OmlBracketedType ==> JmlType
 --convertBracketedType(t) ==

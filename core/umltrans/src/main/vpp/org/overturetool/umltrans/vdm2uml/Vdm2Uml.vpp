@@ -460,7 +460,7 @@ BuildOperation(op,-) ==
     name         = shape.getIdentifier(),
     visibility   = ConvertScopeToVisibility(scope),
     multiplicity = new UmlMultiplicityElement(false, false, 1, 1),
-    type         = Vdm2UmlType`ConvertType(shape.getType()),
+    type         = nil, -- Handled differently right now Vdm2UmlType`ConvertType(shape.getType()),
     pars         = buildParameters(shape.getParameterList(),shape.getType())
   in return new UmlOperation(name, 
                             visibility, 
@@ -549,26 +549,53 @@ BuildFunction(op,-) ==
   let
     access       = op.getAccess(),
     scope        = access.getScope(),
-    shape : IOmlExplicitFunction = op.getShape(),
+    shapegeneric = op.getShape(),
     isStatic     = access.getStaticAccess(),
-    name         = shape.getIdentifier(),
     visibility   = ConvertScopeToVisibility(scope),
-    multiplicity = new UmlMultiplicityElement(false, false, 1, 1),
-    type         = Vdm2UmlType`ConvertType(shape.getType()),
-    pnames :  [IOmlParameter]       = if len shape.getParameterList() = 0 
-                                      then nil 
-                                      else let p in set elems shape.getParameterList() 
-                                           in p,
-    pars         = buildParameters(if pnames<>nil 
-                                   then pnames.getPatternList() 
-                                   else [],shape.getType())
-  in return new UmlOperation(name, 
-                            visibility, 
-                            multiplicity, 
-                            true,
-                            type, 
-                            isStatic,
-                            new UmlParameters(pars)); 
+    multiplicity = new UmlMultiplicityElement(false, false, 1, 1)
+  in
+    if isofclass(IOmlExplicitFunction,shapegeneric)
+    then let shape : IOmlExplicitFunction = shapegeneric,
+             name = shape.getIdentifier(),
+             type = Vdm2UmlType`ConvertType(shape.getType()),
+             pnames : [IOmlParameter] = if len shape.getParameterList() = 0 
+                                        then nil 
+                                        else hd shape.getParameterList(),
+                                        -- TODO Take higher order functions into account
+             pars = buildParameters(if pnames<>nil 
+                                    then pnames.getPatternList() 
+                                    else [],shape.getType())
+         in return new UmlOperation(name, 
+                                    visibility, 
+                                    multiplicity, 
+                                    true,
+                                    type, 
+                                    isStatic,
+                                    new UmlParameters(pars))
+    elseif isofclass(IOmlImplicitFunction,shapegeneric)
+    then let shape : IOmlImplicitFunction = shapegeneric,
+             name = shape.getIdentifier(),
+             pattype_l = shape.getPatternTypePairList(),
+             restype_l = shape.getIdentifierTypePairList(),
+             fntype = Vdm2UmlType`GenFnType(pattype_l,restype_l),
+             type = Vdm2UmlType`ConvertType(fntype),
+             pnames : [IOmlParameter] = --TODO def properly
+                                        --if len shape.getParameterList() = 0 
+                                        --then 
+                                        nil, 
+                                        --else let p in set elems shape.getParameterList() 
+                                        --     in p,
+             pars = buildParameters(if pnames<>nil 
+                                    then pnames.getPatternList() 
+                                    else [],fntype)
+         in return new UmlOperation(name, 
+                                    visibility, 
+                                    multiplicity, 
+                                    true,
+                                    type, 
+                                    isStatic,
+                                    new UmlParameters(pars))
+     else skip; --TODO take care of the rest 
 -----------------------------------------------------
 -- Association 
 -----------------------------------------------------
