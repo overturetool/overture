@@ -1,0 +1,27 @@
+class ClassStatus
+
+operations
+
+public ClassStatus : seq of char * seq of char * nat * nat ==> ClassStatus
+ClassStatus(n,i,s,e)==
+(
+name := n;
+id := i;
+startTime := s;
+endTime := e;
+
+);
+
+public setId : seq of char ==> ()
+setId(i) == id := i;
+
+public setEndTime : nat ==> ()
+setEndTime(t) == endTime := t;
+
+instance variables
+ public name : seq of char := "";
+ public id : seq of char := "";
+public  startTime : nat := 0;
+public  endTime : nat := 0;
+
+end ClassStatus
