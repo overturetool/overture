@@ -8,6 +8,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.overture.ide.ast.AstManager;
+import org.overture.ide.ast.IAstManager;
+import org.overture.ide.ast.RootNode;
 import org.overture.ide.builders.builder.AbstractBuilder;
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.messages.VDMError;
@@ -20,7 +23,7 @@ public abstract class VdmjBuilder  extends AbstractBuilder
 	private final int adjustPosition = 1;
 	
 	protected IStatus buileModelElements(IProject project)
-	{
+	{	
 		
 		ExitStatus typeCheckStatus = null;
 		

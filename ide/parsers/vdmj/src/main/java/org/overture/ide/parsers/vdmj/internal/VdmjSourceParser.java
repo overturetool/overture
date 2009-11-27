@@ -14,6 +14,8 @@ import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.overture.ide.ast.AstManager;
+import org.overture.ide.ast.IAstManager;
+import org.overture.ide.ast.RootNode;
 import org.overture.ide.utility.ProjectUtility;
 import org.overture.ide.utility.SourceLocationConverter;
 import org.overturetool.vdmj.ExitStatus;
@@ -45,8 +47,7 @@ public abstract class VdmjSourceParser extends AbstractSourceParser {
 		// find project
 		Path path = new Path(fileNameString);
 
-		IResource res = ResourcesPlugin.getWorkspace().getRoot().findMember(
-				path);
+		IResource res = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
 		IProject project = res.getProject();
 
 		SourceLocationConverter converter = new SourceLocationConverter(source);
@@ -55,8 +56,7 @@ public abstract class VdmjSourceParser extends AbstractSourceParser {
 		warnings.clear();
 		
 		
-		ExitStatus status = parse(new String(source), ProjectUtility.getFile(
-				project, path));// project.getFile(path.removeFirstSegments(1)).getLocation().toFile()//parse(new
+		ExitStatus status = parse(new String(source), ProjectUtility.getFile(project, path));// project.getFile(path.removeFirstSegments(1)).getLocation().toFile()//parse(new
 		// String(source));
 
 		if (reporter != null) {
@@ -92,9 +92,19 @@ public abstract class VdmjSourceParser extends AbstractSourceParser {
 		// project,
 		// VdmSlProjectNature.VDM_SL_NATURE,
 		// eclipseParser.getModules());
-		return AstManager.instance().addAstModuleDeclaration(project, nature,
-				fileName, source, getModelElements());
-
+	
+		IAstManager astManager = AstManager.instance();
+		ModuleDeclaration moduleDeclaration = astManager.addAstModuleDeclaration(project, nature, fileName, source, getModelElements());
+		RootNode rootNode = astManager.getRootNode(project, nature);
+		if (rootNode != null) {
+			if (status == ExitStatus.EXIT_ERRORS){			
+				rootNode.setParseCorrect(false);
+			}
+			else {
+				rootNode.setParseCorrect(true);
+			}
+		}
+		return moduleDeclaration; 
 	}
 
 	// public abstract ExitStatus typeCheck();

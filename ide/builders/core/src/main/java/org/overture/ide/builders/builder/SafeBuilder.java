@@ -47,16 +47,17 @@ public class SafeBuilder extends Thread {
 
 								AbstractBuilder.parseMissingFiles(currentProject,builder.getNatureId(),builder.getContentTypeId(),monitor);
 
-								final RootNode rootNode=  AstManager.instance().getRootNode(
-										currentProject, builder.getNatureId());
-
-								monitor.subTask("Type checking");
-								statusList.add(builder.buileModelElements(
-										currentProject, rootNode));
-								//  mark ast root as type checked
-								
-								if(rootNode!=null)
-									rootNode.setChecked(statusList.get(statusList.size()-1).getCode()< IStatus.ERROR);
+								final RootNode rootNode =  AstManager.instance().getRootNode(currentProject, builder.getNatureId());
+								// if the project don't have parse errors
+								if (rootNode.isParseCorrect()){									
+									monitor.subTask("Type checking");
+									statusList.add(builder.buileModelElements(currentProject, rootNode));
+									//  mark ast root as type checked
+									
+									if(rootNode!=null) {
+										rootNode.setChecked(statusList.get(statusList.size()-1).getCode()< IStatus.ERROR);
+									}
+								}
 							}
 						}
 

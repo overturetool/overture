@@ -10,7 +10,8 @@ import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
 
 public class RootNode {
-	private boolean checked=false;
+	private boolean checked = false;
+	private boolean isParseCorrect = false;
 	private Date checkedTime;
 	@SuppressWarnings("unchecked")
 	private List rootElementList;
@@ -47,12 +48,15 @@ public class RootNode {
 	}
 
 	/***
-	 * Updates the local definition list with a new list of Definitions if any definition exists the old definitions are replaced
-	 * @param module the new definition
+	 * Updates the local definition list with a new list of Definitions if any
+	 * definition exists the old definitions are replaced
+	 * 
+	 * @param module
+	 *            the new definition
 	 */
 	@SuppressWarnings("unchecked")
 	public void update(List modules) {
-this.setChecked(false);
+		this.setChecked(false);
 		if (this.rootElementList.size() != 0)
 			for (Object module : modules) {
 				if (module instanceof ClassDefinition)
@@ -67,14 +71,20 @@ this.setChecked(false);
 	}
 
 	/***
-	 * Updates the local list with a new Definition if it already exists the old one is replaced
-	 * @param module the new definition
+	 * Updates the local list with a new Definition if it already exists the old
+	 * one is replaced
+	 * 
+	 * @param module
+	 *            the new definition
 	 */
 	@SuppressWarnings("unchecked")
 	private void update(Module module) {
 		Module existingModule = null;
 		for (Object m : this.rootElementList) {
-			if (m instanceof Module && ((Module) m).name.equals(module.name) && ((Module) m).name.location.file.getName().equals(module.name.location.file.getName()))
+			if (m instanceof Module
+					&& ((Module) m).name.equals(module.name)
+					&& ((Module) m).name.location.file.getName().equals(
+							module.name.location.file.getName()))
 				existingModule = (Module) m;
 		}
 
@@ -83,12 +93,14 @@ this.setChecked(false);
 
 		this.rootElementList.add(module);
 
-
 	}
 
 	/***
-	 * Updates the local list with a new Definition if it already exists the old one is replaced
-	 * @param module the new definition
+	 * Updates the local list with a new Definition if it already exists the old
+	 * one is replaced
+	 * 
+	 * @param module
+	 *            the new definition
 	 */
 	@SuppressWarnings("unchecked")
 	private void update(ClassDefinition module) {
@@ -108,43 +120,56 @@ this.setChecked(false);
 
 	/***
 	 * Check if any definition in the list has the file as source location
-	 * @param file The file which should be tested against all definitions in the list
+	 * 
+	 * @param file
+	 *            The file which should be tested against all definitions in the
+	 *            list
 	 * @return true if the file has a definition in the list
 	 */
 	public boolean hasFile(File file) {
-		for(Object o : rootElementList)
-		{
-			if(o instanceof Module && ((Module)o).name.location.file.equals(file))
+		for (Object o : rootElementList) {
+			if (o instanceof Module
+					&& ((Module) o).name.location.file.equals(file))
 				return true;
-			else if(o instanceof ClassDefinition && ((ClassDefinition)o).name.location.file.equals(file))
+			else if (o instanceof ClassDefinition
+					&& ((ClassDefinition) o).name.location.file.equals(file))
 				return true;
-				
+
 		}
 		return false;
 	}
-	
-	public ModuleList getModuleList() throws NotAllowedException
-	{
+
+	public ModuleList getModuleList() throws NotAllowedException {
 		ModuleList modules = new ModuleList();
 		for (Object definition : rootElementList) {
 			if (definition instanceof Module)
 				modules.add((Module) definition);
 			else
-				throw new NotAllowedException("Other definition than Module is found: "+ definition.getClass().getName());
+				throw new NotAllowedException(
+						"Other definition than Module is found: "
+								+ definition.getClass().getName());
 		}
 		return modules;
 	}
-	
-	
-	public ClassList getClassList() throws NotAllowedException
-	{
+
+	public ClassList getClassList() throws NotAllowedException {
 		ClassList classes = new ClassList();
 		for (Object definition : rootElementList) {
 			if (definition instanceof ClassDefinition)
 				classes.add((ClassDefinition) definition);
 			else
-				throw new NotAllowedException("Other definition than ClassDefinition is found: "+ definition.getClass().getName());
+				throw new NotAllowedException(
+						"Other definition than ClassDefinition is found: "
+								+ definition.getClass().getName());
 		}
 		return classes;
+	}
+
+	public void setParseCorrect(boolean isParseCorrect) {
+		this.isParseCorrect = isParseCorrect;
+	}
+
+	public boolean isParseCorrect() {
+		return isParseCorrect;
 	}
 }

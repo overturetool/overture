@@ -56,8 +56,7 @@ public class AstManager implements IAstManager {
 	}
 
 	@SuppressWarnings("unchecked")
-	public synchronized void updateAst(IProject project, String nature,
-			List modules) {
+	public synchronized void updateAst(IProject project, String nature, List modules) {
 		Map<String, RootNode> natureAst = asts.get(project);
 		if (natureAst != null) {
 			RootNode root = natureAst.get(nature);
