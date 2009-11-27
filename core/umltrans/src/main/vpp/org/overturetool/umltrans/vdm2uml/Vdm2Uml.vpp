@@ -40,14 +40,18 @@ Init(specs) ==
 );
 
 public AddFilterClass : String ==> ()
-AddFilterClass(className) == classFilter := classFilter ^ className;
+AddFilterClass(className) == 
+  classFilter := classFilter ^ [className];
 
 -- Create the main UML model from a OML specification
 public BuildUml : IOmlSpecifications ==> UmlModel
 BuildUml(specs) == 
   let classes = specs.getClassList(),
 	  uml_classes = [ BuildClass(classes(i)) 
-	                | i in set inds classes & classes(i).getIdentifier() not in set elems classFilter] ^ StdLib`SetToSeq[IUmlClass]( nestedClasses)
+	                | i in set inds classes 
+	                & classes(i).getIdentifier() not in set 
+	                  elems classFilter] 
+	                ^ StdLib`SetToSeq[IUmlClass]( nestedClasses)
   in return new UmlModel("Root",elems uml_classes);
 
 -- Convert a OML class to a UML class
@@ -75,8 +79,8 @@ BuildClass(c) ==
       isAbstract = HasSubclassResponsibilityDefinition(body),
       supers     = GetSuperClasses(inh),
       visibility = 
-        new UmlVisibilityKind(UmlVisibilityKindQuotes`IQPUBLIC),
-      templateParameters = GetGenericTypes(c.getGenericTypes())	    
+        new UmlVisibilityKind(UmlVisibilityKindQuotes`IQPUBLIC)
+--      templateParameters = GetGenericTypes(c.getGenericTypes())	    
   in 
     return new UmlClass(name,
                         dBlockSet, 
@@ -85,21 +89,22 @@ BuildClass(c) ==
                         visibility,
                         isStatic,
                         isActive,
-                        templateParameters);
+                        nil);
+                        -- was previously templateParameters);
 );                       
 -- Get template signature from OML types
 --  Finds the template parameters                        
-public GetGenericTypes : seq of IOmlType ==> [IUmlTemplateSignature]
-GetGenericTypes(genericTypes) ==
-  if len genericTypes > 0 
-  then return
-	new UmlTemplateSignature(
-	{ 
-     let tn : IOmlTypeName = t in 
-      new UmlTemplateParameter(tn.getName().getIdentifier()) 
-     | t in set elems genericTypes
-     }) 
-  else return nil;
+--public GetGenericTypes : seq of IOmlType ==> [IUmlTemplateSignature]
+--GetGenericTypes(genericTypes) ==
+--  if len genericTypes > 0 
+--  then return
+--	new UmlTemplateSignature(
+--	{ 
+--     let tn : IOmlTypeName = t 
+--     in 
+--       new UmlTemplateParameter(tn.getName().getIdentifier()) 
+--    | t in set elems genericTypes}) 
+--  else return nil;
   
 -- Get super classes from a OML inheritance class.
 -- Returns nil if no super classes are found
@@ -119,14 +124,16 @@ GetSuperClasses(inh) ==
 public HasSubclassResponsibilityDefinition : seq of IOmlDefinitionBlock ==> bool
 HasSubclassResponsibilityDefinition(dBlock) == 
   let opList = conc [ let op : IOmlOperationDefinitions = dBlock(i) 
-                in op.getOperationList() | 
-                  i in set inds dBlock & isofclass(IOmlOperationDefinitions,dBlock(i))],
-                    hasIsSubClassResp = 
-                      {let  explicitOp : IOmlExplicitOperation = opList(i).getShape()
-                       in explicitOp.getBody().getSubclassResponsibility() | 
-                       i in set inds opList & isofclass(IOmlExplicitOperation,opList(i).getShape()) }
+                      in op.getOperationList() 
+                    | i in set inds dBlock 
+                    & isofclass(IOmlOperationDefinitions,dBlock(i))],
+      hasIsSubClassResp = 
+                      {let explicitOp : IOmlExplicitOperation = opList(i).getShape()
+                       in explicitOp.getBody().getSubclassResponsibility() 
+                      | i in set inds opList 
+                      & isofclass(IOmlExplicitOperation,opList(i).getShape()) }
   in 
-   return exists e in set hasIsSubClassResp & e=true; 
+   return true in set hasIsSubClassResp; 
 
 -- Proxy operation. Used to explicit set the type before redirecting operation call
 -- This is introduced because of VDM Java gen limitation of type cast in Java
@@ -134,15 +141,20 @@ private BuildDefB : IOmlDefinitionBlock * String ==> [IUmlDefinitionBlock]
 BuildDefB(block,owner) ==
   cases(true):
     (isofclass(IOmlInstanceVariableDefinitions,block))-> 
-      let tmp : IOmlInstanceVariableDefinitions = block in BuildDefBlock(tmp,owner),
+      let tmp : IOmlInstanceVariableDefinitions = block 
+      in BuildDefBlock(tmp,owner),
     (isofclass(IOmlValueDefinitions,block))-> 
-      let tmp : IOmlValueDefinitions = block in BuildDefBlock(tmp,owner),
+      let tmp : IOmlValueDefinitions = block 
+      in BuildDefBlock(tmp,owner),
     (isofclass(IOmlTypeDefinitions,block))-> 
-      let tmp : IOmlTypeDefinitions = block in BuildDefBlock(tmp,owner),
+      let tmp : IOmlTypeDefinitions = block 
+      in BuildDefBlock(tmp,owner),
     (isofclass(IOmlOperationDefinitions,block))-> 
-      let tmp : IOmlOperationDefinitions = block in BuildDefBlock(tmp,owner),
+      let tmp : IOmlOperationDefinitions = block 
+      in BuildDefBlock(tmp,owner),
     (isofclass(IOmlFunctionDefinitions,block))-> 
-      let tmp : IOmlFunctionDefinitions = block in BuildDefBlock(tmp,owner),
+      let tmp : IOmlFunctionDefinitions = block 
+      in BuildDefBlock(tmp,owner),
     
     --(isofclass(IOmlTraceDefinitions,block))-> 
     --let tmp : IOmlTraceDefinitions = block in BuildDefBlock(tmp,owner),
@@ -200,11 +212,9 @@ BuildVariable(var,owner) ==
                                                 isStatic,
                                                 owner,
                                                 qualifier);
-   
     if not IsSimpleType(omlType) 
     then 
-    (
-       CreateAssociationFromProperty(property,omlType);       
+    (  CreateAssociationFromProperty(property,omlType);       
        return nil
      )
     else
@@ -221,10 +231,12 @@ GetDefaultValue(expression) ==
        in 
          cases true:
            (isofclass(IOmlTextLiteral,se.getLiteral())) -> 
-             (let tx : IOmlTextLiteral =se.getLiteral() in 
+             (let tx : IOmlTextLiteral =se.getLiteral() 
+              in 
                return new UmlLiteralString(tx.getVal())),
            (isofclass(IOmlNumericLiteral,se.getLiteral())) -> 
-             (let tx : IOmlNumericLiteral =se.getLiteral() in 
+             (let tx : IOmlNumericLiteral =se.getLiteral()
+              in 
                return new UmlLiteralInteger(tx.getVal())),
            others -> return nil
          end),
@@ -268,9 +280,9 @@ BuildDefBlock(v,owner) ==
 public BuildValue : IOmlValueDefinition * String ==> [IUmlProperty]
 BuildValue(var,owner) == 
   let
-    access       = var.getAccess(),
-    scope        = access.getScope(),
-    shape        = var.getShape()
+    access = var.getAccess(),
+    scope  = access.getScope(),
+    shape  = var.getShape()
   in
   (
     if not shape.hasType() then
@@ -280,9 +292,13 @@ BuildValue(var,owner) ==
     )
     else
     (
+    let pat = shape.getPattern()
+    in
+    if isofclass(IOmlPatternIdentifier,pat)
+    then  
     let
       isStatic     = access.getStaticAccess(),
-      patternIdent : IOmlPatternIdentifier = shape.getPattern(),
+      patternIdent : IOmlPatternIdentifier = pat,
       name         = patternIdent.getIdentifier(),
       visibility   = ConvertScopeToVisibility(scope),
       multiplicity = Vdm2UmlType`ExtractMultiplicity(shape.getType()),
@@ -315,8 +331,10 @@ BuildValue(var,owner) ==
     )
     else
       return property;
-  );
-  ); 
+  )
+  else (-- TODO report warning that value defs without pattern identifiers are not supported
+        return nil) 
+  )
   );                            
 
 -----------------------------------------------------
@@ -337,7 +355,8 @@ BuildType(var,access) ==
 ( 
   if isofclass(IOmlUnionType,var.getType()) then
   (
-    nestedClasses := nestedClasses union {BuildClassFromType(var,access.getScope())};
+    nestedClasses := nestedClasses union 
+    {BuildClassFromType(var,access.getScope())};
     return new UmlClassNameType(var.getIdentifier()); -- return a class ref to the new nested class.
   );
   if isofclass(IOmlSeq0Type,var.getType()) then
@@ -392,11 +411,11 @@ BuildTypeDefinitionBlocks(ownerName,t) ==
 BuildValueFromQuoteType : String * IOmlQuoteType ==> IUmlProperty
 BuildValueFromQuoteType(ownerName,q) ==
 let
-      isStatic : bool    = true,
+      isStatic : bool = true,
       name     : seq of char    = q.getQuoteLiteral().getVal(),
       visibility : IUmlVisibilityKind  = new UmlVisibilityKind(UmlVisibilityKindQuotes`IQPUBLIC),
       multiplicity : IUmlMultiplicityElement= new UmlMultiplicityElement(true, false, 0, nil),--new UmlMultiplicityElement(isOrdered, isUnique, lower, upper);
-      type : IUmlType        = new UmlIntegerType(),--Vdm2UmlType`ConvertType(shape.getType()),
+      type : IUmlType = new UmlIntegerType(),--Vdm2UmlType`ConvertType(shape.getType()),
       isReadOnly   = true,
       default  : [IUmlValueSpecification]    = nil,
       isComposite  = IsSimpleType(q),
@@ -457,17 +476,20 @@ BuildOperation(op,-) ==
 -- of parameters afterwards
 private buildParameters : seq of IOmlPattern * IOmlType ==> seq of IUmlParameter
 buildParameters(parms, type) ==
-let names = [let p : IOmlPatternIdentifier = parms(i) in p.getIdentifier() 
+let names = [let p : IOmlPatternIdentifier = parms(i) 
+             in p.getIdentifier() 
             | i in set inds parms
             & isofclass(IOmlPatternIdentifier,parms(i))],
     tps   = buildParameterTypes(type),
-    ret : [IUmlParameter]  = let t = if isofclass(IOmlOperationType,type) 
-                    then let tmp : IOmlOperationType  = type in tmp
-                    else
-                    ( if isofclass(IOmlPartialFunctionType,type) then 
-                      let tmp : IOmlPartialFunctionType  = type in tmp
-                      else nil)
-            in new UmlParameter("return", 
+    ret : [IUmlParameter]  = 
+          let t = if isofclass(IOmlOperationType,type) 
+                  then let tmp : IOmlOperationType  = type in tmp
+                  elseif isofclass(IOmlPartialFunctionType,type) 
+                  then let tmp : IOmlPartialFunctionType  = type in tmp
+                  elseif isofclass(IOmlTotalFunctionType,type) 
+                  then let tmp : IOmlTotalFunctionType  = type in tmp
+                  else nil
+          in new UmlParameter("return", 
                              let tmpType: IUmlType = Vdm2UmlType`ConvertType(t.getRngType()) in tmpType
                              ,
                              Vdm2UmlType`ExtractMultiplicity(t.getRngType()) ,
@@ -482,16 +504,12 @@ let names = [let p : IOmlPatternIdentifier = parms(i) in p.getIdentifier()
                              )
             | i in set inds names ]
 in
-   if ret <> nil then 
-   return ps ^ [ret]
-    else
-    ( 
-    log.mappingNotSupported(parms,type);
-  return  ps;
+   if ret <> nil 
+   then return ps ^ [ret]
+   else (log.mappingNotSupported(parms,type);
+         return ps;
+        );
     
-    );
-    
-
 -- Converts a IOmlType used in parameters to a sequence of IOmlTypes
 -- Which is consistent with the parameters
 private buildParameterTypes : IOmlType ==> seq of IOmlType
@@ -499,16 +517,16 @@ buildParameterTypes(t) ==
 cases true:
 	(isofclass(IOmlProductType,t))		-> 
 	let type : IOmlProductType = t
-            in 
+    in 
 	  return buildParameterTypes(type.getLhsType()) ^
 	         buildParameterTypes(type.getRhsType()), 
 	(isofclass(IOmlOperationType,t))		->  
 	let type : IOmlOperationType = t
-            in
+    in
 	  return buildParameterTypes(type.getDomType()),
 	(isofclass(IOmlPartialFunctionType,t))		->  
 	let type : IOmlPartialFunctionType = t
-            in
+    in
 	  return buildParameterTypes(type.getDomType()),
 others -> return [t]
 end;
@@ -566,17 +584,16 @@ IsSimpleType(t) ==
     (isofclass(IOmlUnionType,t)) -> false,
     (isofclass(IOmlSetType,t)) -> 
       let t1: IOmlSetType = t 
-        in IsSimpleType(t1.getType()),
+      in IsSimpleType(t1.getType()),
 	(isofclass(IOmlSeq0Type,t)) -> 
 	  let t1: IOmlSeq0Type = t 
-	    in IsSimpleType(t1.getType()),
+	  in IsSimpleType(t1.getType()),
 	(isofclass(IOmlSeq1Type,t)) -> 
 	  let t1: IOmlSeq1Type = t 
-	    in IsSimpleType(t1.getType()),
+	  in IsSimpleType(t1.getType()),
 	(isofclass(IOmlOptionalType,t)) -> 
 	  let t1 : IOmlOptionalType = t 
-	    in IsSimpleType(t1.getType()),
-	    
+	  in IsSimpleType(t1.getType()),  
     others -> true
   end;
   
@@ -645,10 +662,10 @@ let name : String = property.getName() ,
 public CreateAssociationFromPropertyUnionType : IUmlProperty * IOmlType ==> ()
 CreateAssociationFromPropertyUnionType(property,omlType) == 
 let name : String = property.getName(), 
-    prop : UmlProperty = property,
+    prop : UmlProperty = cloneProp(property),
     props : set of IUmlProperty = dunion {CreateEndProperty(p,name)
-                                              | p in set {omlType} 
-                                              & isofclass(IOmlUnionType,p)}
+                                         | p in set {omlType} 
+                                         & isofclass(IOmlUnionType,p)}
   in
   (
       prop.setName("");
@@ -664,6 +681,22 @@ let name : String = property.getName(),
        );
     );
 
+cloneProp: IUmlProperty ==> UmlProperty
+cloneProp(property) ==
+let p1 = property.getName(),
+    p2 = property.getVisibility(),
+    p3 = property.getMultiplicity(),
+    p4 = property.getType(),
+    p5 = property.getIsReadOnly()
+    p6 = property.getDefault(),
+    p7 = property.getIsComposite(),
+    p8 = property.getIsDerived(),
+    p9 = property.getIsStatic(),
+    p10= property.getOwnerClass(),
+    p11= property.getQualifier()
+in
+  return new UmlProperty(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11);
+  
 -- Create Association ends from a OML type
 --  Ends constructed from Product and Union type and the anonymus end at the 
 --   property owner end of a assocation

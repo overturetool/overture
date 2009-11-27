@@ -390,7 +390,6 @@ pre card props > 0;
 -- extract union type from association
 public ExtractUnionAssociation :  set of IUmlProperty ==> ()
 ExtractUnionAssociation(props) ==
-(
   let ownerEndSet    = {p | p in set props & len p.getName() =0},
       propSeq        = Util`SetToSeq[IUmlProperty](props),
       pOwnerEnd      = hd Util`SetToSeq[IUmlProperty](ownerEndSet),
@@ -404,9 +403,7 @@ ExtractUnionAssociation(props) ==
       rhs : IOmlType = hd Util`SetToSeq[IOmlType]( (elems endTypes) \ {lhs}), 
       type = new OmlUnionType(lhs,rhs) --need to be recusive to make UnionType(lhs,UnionType(lhs1,...))
   in
-    AddInstanceVarToClass(clName,CreateInstanceVar(hd pTypeEnd,type));
- 
-)
+    AddInstanceVarToClass(clName,CreateInstanceVar(hd pTypeEnd,type))
 pre card props > 0;
 -- extract product type from association
 public ExtractProductAssociation : set of IUmlProperty ==> ()

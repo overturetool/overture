@@ -88,8 +88,9 @@ pre exists tmp in set elems "1234567890" & tmp = c;
 -------------------------------------
 public static SetToSeq[@Elem]: set of @Elem -> seq of @Elem
 SetToSeq(s) ==
-  if s = {} then []
-    else let x in set s in SetToSeq[@Elem](s\{x})^[x];
+  if s = {} 
+  then []
+  else let x in set s in SetToSeq[@Elem](s\{x})^[x];
     
     
 -------------------------------------

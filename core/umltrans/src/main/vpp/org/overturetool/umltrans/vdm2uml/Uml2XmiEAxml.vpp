@@ -644,7 +644,9 @@ AddNestedClassifiers(ownerId,nc) ==
 	  doc.StartA("visibility","public");
 	  doc.StartA(ID_TAG,ncId);
 	  doc.StartA("supplier",ownerId);
-	  doc.StartA("client",classes(ct.getName()));
+	  if ct.getName() in set dom classes
+	  then doc.StartA("client",classes(ct.getName()))
+	  else skip; --TODO Report warning 
 	  doc.StopE("packagedElement");
 	  dependencies := dependencies ++ {ncId |-> mk_(ownerId,classes(ct.getName()))};
 	)else
