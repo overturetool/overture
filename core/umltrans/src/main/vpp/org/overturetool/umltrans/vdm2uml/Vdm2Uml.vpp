@@ -344,35 +344,42 @@ BuildValue(var,owner) ==
 public BuildDefBlock : IOmlTypeDefinitions * String ==> IUmlNestedClassifiers
 BuildDefBlock(td,-) == 
   let q = td.getTypeList(),
-      tps = [ BuildType(q(i).getShape(),q(i).getAccess()) 
+      tps = [ BuildSimpleType(q(i).getShape(),q(i).getAccess()) 
             | i in set inds q 
-            & isofclass(IOmlSimpleType,q(i).getShape()) ]
+            & isofclass(IOmlSimpleType,q(i).getShape()) ],
+      tps2= [ BuildComplexType(q(i).getShape(),q(i).getAccess()) 
+            | i in set inds q 
+            & isofclass(IOmlComplexType,q(i).getShape()) ]
   in return new UmlNestedClassifiers(elems tps);
 
 -- Convert simple type to UML type
-public BuildType : IOmlSimpleType * IOmlAccessDefinition ==> IUmlType
-BuildType(var,access) ==
-( 
-  if isofclass(IOmlUnionType,var.getType()) then
+public BuildSimpleType : IOmlSimpleType * IOmlAccessDefinition ==> IUmlType
+BuildSimpleType(var,access) ==
+--( 
+--  if isofclass(IOmlUnionType,var.getType()) then
   (
     nestedClasses := nestedClasses union 
     {BuildClassFromType(var,access.getScope())};
     return new UmlClassNameType(var.getIdentifier()); -- return a class ref to the new nested class.
   );
-  if isofclass(IOmlSeq0Type,var.getType()) then
+--  if isofclass(IOmlSeq0Type,var.getType()) then
+--  (
+--    let seqT : IOmlSeq0Type = var.getType()
+--    in
+--      if isofclass(IOmlCharType,seqT.getType()) then
+--      (
+--         nestedClasses := nestedClasses union {BuildClassFromType(var,access.getScope())};
+--         return new UmlClassNameType(var.getIdentifier()); -- return a class ref to the new nested class.
+--      );
+--   );
+
+public BuildComplexType : IOmlSimpleType * IOmlAccessDefinition ==> IUmlType
+BuildComplexType(var,access) ==
   (
-    let seqT : IOmlSeq0Type = var.getType()
-    in
-      if isofclass(IOmlCharType,seqT.getType()) then
-      (
-         nestedClasses := nestedClasses union {BuildClassFromType(var,access.getScope())};
-         return new UmlClassNameType(var.getIdentifier()); -- return a class ref to the new nested class.
-      );
-   );
-
-
-  return Vdm2UmlType`ConvertType(var.getType()); 
-);
+    nestedClasses := nestedClasses union 
+    {BuildClassFromType(var,access.getScope())};
+    return new UmlClassNameType(var.getIdentifier()); -- return a class ref to the new nested class.
+  );
 
 private BuildClassFromType : IOmlSimpleType * IOmlScope ==> IUmlClass
 BuildClassFromType(t,scope) ==
@@ -460,7 +467,7 @@ BuildOperation(op,-) ==
     name         = shape.getIdentifier(),
     visibility   = ConvertScopeToVisibility(scope),
     multiplicity = new UmlMultiplicityElement(false, false, 1, 1),
-    type         = nil, -- Handled differently right now Vdm2UmlType`ConvertType(shape.getType()),
+    type : [IUmlType] = nil, -- Handled differently right now Vdm2UmlType`ConvertType(shape.getType()),
     pars         = buildParameters(shape.getParameterList(),shape.getType())
   in return new UmlOperation(name, 
                             visibility, 
@@ -474,10 +481,21 @@ BuildOperation(op,-) ==
 -- Converts a sequence of IOmlPattern and the coresponding IOmlType to
 -- UmlParameters. It exstracts the return first and then the rest
 -- of parameters afterwards
+private buildParameters : seq of OmlPatternTypePair *
+                          seq of OmlIdentifierTypePair ==> 
+                          seq of IUmlParameter
+buildParameters(parms, restp) ==
+  return []; --is not yet specified;
+  
+-- Converts a sequence of IOmlPattern and the coresponding IOmlType to
+-- UmlParameters. It exstracts the return first and then the rest
+-- of parameters afterwards
 private buildParameters : seq of IOmlPattern * IOmlType ==> seq of IUmlParameter
 buildParameters(parms, type) ==
-let names = [let p : IOmlPatternIdentifier = parms(i) 
-             in p.getIdentifier() 
+let names = [if isofclass(IOmlPatternIdentifier, parms(i))
+             then let p : IOmlPatternIdentifier = parms(i) 
+                  in p.getIdentifier()
+             else "-" 
             | i in set inds parms
             & isofclass(IOmlPatternIdentifier,parms(i))],
     tps   = buildParameterTypes(type),
@@ -526,6 +544,10 @@ cases true:
 	  return buildParameterTypes(type.getDomType()),
 	(isofclass(IOmlPartialFunctionType,t))		->  
 	let type : IOmlPartialFunctionType = t
+    in
+	  return buildParameterTypes(type.getDomType()),
+	(isofclass(IOmlTotalFunctionType,t))		->  
+	let type : IOmlTotalFunctionType = t
     in
 	  return buildParameterTypes(type.getDomType()),
 others -> return [t]
@@ -577,17 +599,15 @@ BuildFunction(op,-) ==
              name = shape.getIdentifier(),
              pattype_l = shape.getPatternTypePairList(),
              restype_l = shape.getIdentifierTypePairList(),
-             fntype = Vdm2UmlType`GenFnType(pattype_l,restype_l),
-             type = Vdm2UmlType`ConvertType(fntype),
+             fntype = nil, -- TODO Vdm2UmlType`GenFnType(pattype_l,restype_l),
+             type = nil, -- TODO Vdm2UmlType`ConvertType(fntype),
              pnames : [IOmlParameter] = --TODO def properly
                                         --if len shape.getParameterList() = 0 
                                         --then 
                                         nil, 
                                         --else let p in set elems shape.getParameterList() 
                                         --     in p,
-             pars = buildParameters(if pnames<>nil 
-                                    then pnames.getPatternList() 
-                                    else [],fntype)
+             pars = buildParameters(pattype_l,restype_l) 
          in return new UmlOperation(name, 
                                     visibility, 
                                     multiplicity, 
@@ -714,7 +734,7 @@ let p1 = property.getName(),
     p2 = property.getVisibility(),
     p3 = property.getMultiplicity(),
     p4 = property.getType(),
-    p5 = property.getIsReadOnly()
+    p5 = property.getIsReadOnly(),
     p6 = property.getDefault(),
     p7 = property.getIsComposite(),
     p8 = property.getIsDerived(),
