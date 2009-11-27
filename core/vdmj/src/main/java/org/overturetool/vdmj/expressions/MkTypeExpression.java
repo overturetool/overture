@@ -175,7 +175,8 @@ public class MkTypeExpression extends Expression
 		{
 			Type atype = it.next();
 
-			if (!TypeComparator.isSubType(atype, f.type))
+			if (!TypeComparator.isSubType(
+				ctxt.checkType(args.get(i), atype), f.type))
 			{
 				list.add(new SubTypeObligation(args.get(i), f.type, atype, ctxt));
 			}

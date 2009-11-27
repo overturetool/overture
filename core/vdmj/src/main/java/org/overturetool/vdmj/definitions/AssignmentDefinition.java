@@ -114,7 +114,7 @@ public class AssignmentDefinition extends Definition
 		ProofObligationList obligations = new ProofObligationList();
 		obligations.addAll(expression.getProofObligations(ctxt));
 
-		if (!TypeComparator.isSubType(expType, type))
+		if (!TypeComparator.isSubType(ctxt.checkType(expression, expType), type))
 		{
 			obligations.add(
 				new SubTypeObligation(expression, type, expType, ctxt));

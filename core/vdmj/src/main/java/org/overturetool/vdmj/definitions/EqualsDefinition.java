@@ -281,7 +281,8 @@ public class EqualsDefinition extends Definition
 				{
 	    			Type compatible = set.getType(location);
 
-	    			if (!TypeComparator.isSubType(expType, compatible))
+	    			if (!TypeComparator.isSubType(
+	    				ctxt.checkType(test, expType), compatible))
 	    			{
 	    				list.add(new ValueBindingObligation(this, ctxt));
 	    				list.add(new SubTypeObligation(test, compatible, expType, ctxt));
@@ -291,7 +292,7 @@ public class EqualsDefinition extends Definition
 		}
 		else if (typebind != null)
 		{
-			if (!TypeComparator.isSubType(expType, defType))
+			if (!TypeComparator.isSubType(ctxt.checkType(test, expType), defType))
 			{
 				list.add(new SubTypeObligation(test, defType, expType, ctxt));
 			}

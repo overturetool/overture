@@ -72,10 +72,7 @@ public class IsExpression extends Expression
 	@Override
 	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
 	{
-		if (test != null)
-		{
-			test.typeCheck(env, null, scope);
-		}
+		test.typeCheck(env, null, scope);
 
 		if (basictype != null)
 		{
@@ -148,14 +145,16 @@ public class IsExpression extends Expression
 	@Override
 	public ProofObligationList getProofObligations(POContextStack ctxt)
 	{
-		if (test != null)
+		if (typedef != null)
 		{
-			return test.getProofObligations(ctxt);
+			ctxt.noteType(test, typedef.getType());
 		}
-		else
+		else if (basictype != null)
 		{
-			return new ProofObligationList();
+			ctxt.noteType(test, basictype);
 		}
+
+		return test.getProofObligations(ctxt);
 	}
 
 	@Override

@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.expressions;
 
+import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.pog.POContextStack;
@@ -32,6 +34,7 @@ import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.BooleanType;
+import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.values.BooleanValue;
@@ -43,6 +46,8 @@ public class IsOfClassExpression extends Expression
 	private static final long serialVersionUID = 1L;
 	public final LexNameToken classname;
 	public final Expression exp;
+
+	private ClassType classType;
 
 	public IsOfClassExpression(
 		LexLocation start, LexNameToken classname, Expression exp)
@@ -106,6 +111,7 @@ public class IsOfClassExpression extends Expression
 	@Override
 	public ProofObligationList getProofObligations(POContextStack ctxt)
 	{
+		ctxt.noteType(exp, classType);
 		return exp.getProofObligations(ctxt);
 	}
 
@@ -124,9 +130,15 @@ public class IsOfClassExpression extends Expression
 	@Override
 	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
 	{
-		if (env.findType(classname) == null)
+		Definition cls = env.findType(classname);
+
+		if (cls == null || !(cls instanceof ClassDefinition))
 		{
 			report(3115, "Undefined class type: " + classname.name);
+		}
+		else
+		{
+			classType = (ClassType)cls.getType();
 		}
 
 		Type rt = exp.typeCheck(env, null, scope);

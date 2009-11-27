@@ -88,6 +88,26 @@ public abstract class Expression implements Serializable
 	@Override
 	public abstract String toString();
 
+	@Override
+	public boolean equals(Object other)
+	{
+		if (other instanceof Expression)
+		{
+			Expression oe = (Expression)other;
+			return toString().equals(oe.toString());	// For now...
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return toString().hashCode();
+	}
+
 	/**
 	 * A short descriptive string for the expression. An example would
 	 * be "forall" or "map comprehension".

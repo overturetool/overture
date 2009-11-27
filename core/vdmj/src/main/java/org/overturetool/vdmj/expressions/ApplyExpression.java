@@ -368,7 +368,7 @@ public class ApplyExpression extends Expression
 		{
 			MapType m = type.getMap();
 			obligations.add(new MapApplyObligation(root, args.get(0), ctxt));
-			Type atype = argtypes.get(0);
+			Type atype = ctxt.checkType(args.get(0), argtypes.get(0));
 
 			if (!TypeComparator.isSubType(atype, m.from))
 			{
@@ -390,6 +390,7 @@ public class ApplyExpression extends Expression
 
 			for (Type at: argtypes)
 			{
+				at = ctxt.checkType(args.get(i), at);
 				Type pt = f.parameters.get(i);
 
 				if (!TypeComparator.isSubType(at, pt))

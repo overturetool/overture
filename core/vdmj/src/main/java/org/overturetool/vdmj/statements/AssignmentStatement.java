@@ -184,7 +184,7 @@ public class AssignmentStatement extends Statement
 		obligations.addAll(target.getProofObligations(ctxt));
 		obligations.addAll(exp.getProofObligations(ctxt));
 
-		if (!TypeComparator.isSubType(expType, targetType))
+		if (!TypeComparator.isSubType(ctxt.checkType(exp, expType), targetType))
 		{
 			obligations.add(
 				new SubTypeObligation(exp, targetType, expType, ctxt));

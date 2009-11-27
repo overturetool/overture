@@ -283,7 +283,7 @@ public class ValueDefinition extends Definition
 			}
 		}
 
-		if (!TypeComparator.isSubType(expType, type))
+		if (!TypeComparator.isSubType(ctxt.checkType(exp, expType), type))
 		{
 			list.add(new SubTypeObligation(exp, type, expType, ctxt));
 		}
