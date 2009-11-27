@@ -373,7 +373,7 @@ BuildSimpleType(var,access) ==
 --      );
 --   );
 
-public BuildComplexType : IOmlSimpleType * IOmlAccessDefinition ==> IUmlType
+public BuildComplexType : IOmlComplexType * IOmlAccessDefinition ==> IUmlType
 BuildComplexType(var,access) ==
   (
     nestedClasses := nestedClasses union 
@@ -385,6 +385,19 @@ private BuildClassFromType : IOmlSimpleType * IOmlScope ==> IUmlClass
 BuildClassFromType(t,scope) ==
   let name : String                            = t.getIdentifier(),
       classBody  : set of IUmlDefinitionBlock  = {BuildTypeDefinitionBlocks(name,t.getType())},
+      isAbstract : bool                        = false,
+      superClass : seq of IUmlClassNameType    = [],
+      visibility : IUmlVisibilityKind          = ConvertScopeToVisibility(scope),
+      isStatic   : bool                        = false,
+      isActive   : bool                        = false,
+      templatesignature : [IUmlTemplateSignature] = nil
+  in
+    return new UmlClass(name,classBody,isAbstract,superClass,visibility,isStatic,isActive,templatesignature);
+    
+private BuildClassFromType : IOmlComplexType * IOmlScope ==> IUmlClass
+BuildClassFromType(t,scope) ==
+  let name : String                            = t.getIdentifier(),
+      classBody  : set of IUmlDefinitionBlock  = {},
       isAbstract : bool                        = false,
       superClass : seq of IUmlClassNameType    = [],
       visibility : IUmlVisibilityKind          = ConvertScopeToVisibility(scope),
@@ -481,12 +494,43 @@ BuildOperation(op,-) ==
 -- Converts a sequence of IOmlPattern and the coresponding IOmlType to
 -- UmlParameters. It exstracts the return first and then the rest
 -- of parameters afterwards
-private buildParameters : seq of OmlPatternTypePair *
-                          seq of OmlIdentifierTypePair ==> 
-                          seq of IUmlParameter
-buildParameters(parms, restp) ==
-  return []; --is not yet specified;
+private buildParameters : seq of OmlPatternTypePair ==> 
+                          seq of UmlParameter
+buildParameters(parms) ==
+  return conc 
+         [ let ptpair = parms(i),
+               pl = ptpair.getPatternList(),
+               tp = ptpair.getType()
+           in
+            [new UmlParameter(
+             if isofclass(IOmlPatternIdentifier,pl(j))
+             then let p : IOmlPatternIdentifier = pl(i) 
+                  in p.getIdentifier()
+             else "-",
+             Vdm2UmlType`ConvertType(tp),
+             Vdm2UmlType`ExtractMultiplicity(tp),
+             "",
+             new UmlParameterDirectionKind(UmlParameterDirectionKindQuotes`IQIN)
+                       )
+            | j in set inds pl]
+         | i in set inds parms];
   
+private buildParameters : seq of OmlIdentifierTypePair ==> 
+                          seq of UmlParameter
+buildParameters(restp) ==
+  return [ let ptpair = restp(i),
+               id = ptpair.getIdentifier(),
+               tp = ptpair.getType()
+           in
+             new UmlParameter(
+             id,
+             Vdm2UmlType`ConvertType(tp),
+             Vdm2UmlType`ExtractMultiplicity(tp),
+             "",
+             new UmlParameterDirectionKind(UmlParameterDirectionKindQuotes`IQIN)
+                       )
+         | i in set inds restp];
+
 -- Converts a sequence of IOmlPattern and the coresponding IOmlType to
 -- UmlParameters. It exstracts the return first and then the rest
 -- of parameters afterwards
@@ -607,14 +651,15 @@ BuildFunction(op,-) ==
                                         nil, 
                                         --else let p in set elems shape.getParameterList() 
                                         --     in p,
-             pars = buildParameters(pattype_l,restype_l) 
+             pars = buildParameters(pattype_l),
+             res = buildParameters(restype_l)
          in return new UmlOperation(name, 
                                     visibility, 
                                     multiplicity, 
                                     true,
                                     type, 
                                     isStatic,
-                                    new UmlParameters(pars))
+                                    new UmlParameters(pars^res))
      else skip; --TODO take care of the rest 
 -----------------------------------------------------
 -- Association 
