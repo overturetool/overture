@@ -650,6 +650,11 @@ public class TypeComparator
 			return Result.Yes;	// Runtime checked...
 		}
 
+		if (sub instanceof UndefinedType || sup instanceof UndefinedType)
+		{
+			return Result.Yes;	// Usually uninitialized variables etc.
+		}
+
 		// If the types are not equal, and one or other has an invariant,
 		// then they are NOT subtypes (or rather, we can't be sure).
 
