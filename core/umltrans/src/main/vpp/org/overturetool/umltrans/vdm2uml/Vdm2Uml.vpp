@@ -515,9 +515,9 @@ buildParameters(parms) ==
             | j in set inds pl]
          | i in set inds parms];
   
-private buildParameters : seq of OmlIdentifierTypePair ==> 
+private buildFnResult : seq of OmlIdentifierTypePair ==> 
                           seq of UmlParameter
-buildParameters(restp) ==
+buildFnResult(restp) ==
   return [ let ptpair = restp(i),
                id = ptpair.getIdentifier(),
                tp = ptpair.getType()
@@ -652,7 +652,7 @@ BuildFunction(op,-) ==
                                         --else let p in set elems shape.getParameterList() 
                                         --     in p,
              pars = buildParameters(pattype_l),
-             res = buildParameters(restype_l)
+             res = buildFnResult(restype_l)
          in return new UmlOperation(name, 
                                     visibility, 
                                     multiplicity, 
