@@ -28,6 +28,7 @@ import org.apache.maven.plugin.MojoFailureException;
 
 /**
  * Says "Hi" to the user.
+ * 
  * @aggregator
  * @requiresProject
  * @requiresDependencyResolution test scopes
@@ -45,65 +46,68 @@ public abstract class VdmBaseMojo extends AbstractMojo {
 	 * @readonly
 	 */
 	protected org.apache.maven.project.MavenProject project;
-	
-	 /**
-     * My excludePackages.
-     *
-     * @parameter
-     */
-    protected List<String> excludePackages;
-    
-    /**
-     * My excludePackages.
-     *
-     * @parameter
-     */
-    protected List<String> excludeClasses;
-    
-    /**
-     * My excludePackages.
-     *
-     * @parameter
-     */
-    protected List<String> importPackages;
-    
-    /**
-     * default-value="${project.reporting.outputDirectory}"
-     * @parameter 
-     */
-    private File projectOutputDirectory;
 
-    protected String getProjectOutputDirectory()
-    {
-    	if(projectOutputDirectory==null || projectOutputDirectory.length()==0)
-    	{
-    		File output = new File (project.getFile().getParentFile(),"target");
-    		if(!output.exists())
-    			output.mkdirs();
-    		
-    			return output.getAbsolutePath();
-    		
-    	}else
-        return projectOutputDirectory.getAbsolutePath();
-    }
+	/**
+	 * My excludePackages.
+	 * 
+	 * @parameter
+	 */
+	protected List<String> excludePackages;
+
+	/**
+	 * My excludePackages.
+	 * 
+	 * @parameter
+	 */
+	protected List<String> excludeClasses;
+
+	/**
+	 * My excludePackages.
+	 * 
+	 * @parameter
+	 */
+	protected List<String> importPackages;
+
+	/**
+	 * default-value="${project.reporting.outputDirectory}"
+	 * 
+	 * @parameter
+	 */
+	private File projectOutputDirectory;
+
+	protected String getProjectOutputDirectory() {
+		if (projectOutputDirectory == null
+				|| projectOutputDirectory.length() == 0) {
+			File output = new File(project.getFile().getParentFile(), "target");
+			if (!output.exists())
+				output.mkdirs();
+
+			return output.getAbsolutePath();
+
+		} else
+			return projectOutputDirectory.getAbsolutePath();
+	}
 
 	protected ArrayList<File> dependedVppLocations = new ArrayList<File>();
 
 	@SuppressWarnings("unchecked")
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		try {
-			getLog().info("VDM Tools cmd path located at:"
-					+ vdmToolsCmd.getAbsolutePath());
+			getLog().info(
+					"VDM Tools cmd path located at:"
+							+ vdmToolsCmd.getAbsolutePath());
 
 		} catch (Exception e) {
-			getLog().error("VDM Tools cmd path not located. Check your settings file \"user.vdmtoolscmdpath\" not found in active profile");
+			getLog()
+					.error(
+							"VDM Tools cmd path not located. Check your settings file \"user.vdmtoolscmdpath\" not found in active profile");
 		}
 
-//		Artifact artifact = project.getArtifact();
+		// Artifact artifact = project.getArtifact();
 
-//		String id = artifact.getArtifactId();
-//		String group = artifact.getGroupId();
-getLog().info("Depended artifacts: ");
+		// String id = artifact.getArtifactId();
+		// String group = artifact.getGroupId();
+		getLog().info("Depended artifacts: ");
 		Iterator ite = project.getDependencyArtifacts().iterator();
 		while (ite.hasNext()) {
 			Object ooo = ite.next();
@@ -111,29 +115,37 @@ getLog().info("Depended artifacts: ");
 			if (ooo instanceof Artifact) {
 				Artifact a = (Artifact) ooo;
 
-//				String did = a.getArtifactId();
-//				String dgroup = a.getGroupId();
+				// String did = a.getArtifactId();
+				// String dgroup = a.getGroupId();
 				File df = a.getFile();
-//				String fileName = "";
-//				if (df != null)
-//					fileName = df.getAbsolutePath();
+				// String fileName = "";
+				// if (df != null)
+				// fileName = df.getAbsolutePath();
 
 				// getLog().info("Dependency: Group:" + dgroup + " Id: "+ did +
 				// " File: " + fileName);
 
-				if (!addProjectBaseToList(df,true) &&a.getScope().equals("compile")) {// && dgroup.equals(group)
-					
+				if (!addProjectBaseToList(df, true)
+						&& a.getScope().equals("compile")) {// &&
+															// dgroup.equals(group)
+
 					// else
 					// getLog().info("No vpp dependency found in: "+
 					// vppLocation.getAbsolutePath());
-				
-					//we have a version of the depended artifact form the repository. Try to guess the source location
-					File guessLocation = new File(project.getBasedir().getParentFile(),a.getArtifactId());
-					if(!addProjectBaseToList(guessLocation,false))
-					{
-						String artifact = a.getGroupId()+":"+ a.getArtifactId()+ " "+a.getVersion();
-						getLog().error("Could not resolve source location for: "+artifact);
-						throw new MojoFailureException("Unable to resolve source location for: "+artifact);
+
+					// we have a version of the depended artifact form the
+					// repository. Try to guess the source location
+					File guessLocation = new File(project.getBasedir()
+							.getParentFile(), a.getArtifactId());
+					if (!addProjectBaseToList(guessLocation, false)) {
+						String artifact = a.getGroupId() + ":"
+								+ a.getArtifactId() + " " + a.getVersion();
+						getLog().warn(
+								"Could not resolve source location for: "
+										+ artifact);
+//						throw new MojoFailureException(
+//								"Unable to resolve source location for: "
+//										+ artifact);
 					}
 				}
 			}
@@ -141,17 +153,18 @@ getLog().info("Depended artifacts: ");
 
 	}
 
-	private boolean addProjectBaseToList(File df,boolean isPomFile) {
-		if(df==null || !df.exists())
+	private boolean addProjectBaseToList(File df, boolean isPomFile) {
+		if (df == null || !df.exists())
 			return false;
-		File dependedProjectRoot =null;
-		if(!isPomFile)
-			dependedProjectRoot=df; //df.getParentFile().getParentFile();
+		File dependedProjectRoot = null;
+		if (!isPomFile)
+			dependedProjectRoot = df; // df.getParentFile().getParentFile();
 		else
-			dependedProjectRoot=df.getParentFile();
-		//File vppLocation = new File(dependedProjectRoot.getAbsolutePath());// +
-																			// "/src/main".replace('/',
-																			// File.separatorChar)
+			dependedProjectRoot = df.getParentFile();
+		// File vppLocation = new File(dependedProjectRoot.getAbsolutePath());//
+		// +
+		// "/src/main".replace('/',
+		// File.separatorChar)
 		if (dependedProjectRoot.exists()) {
 			// getLog().info( "Vpp dependency found: " +
 			// vppLocation.getAbsolutePath());

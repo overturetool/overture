@@ -21,6 +21,8 @@ Usage
 *----------+------------------------------+
 | eclipse  | Create a eclipse project file with the linked source of the project. The DLTK script builder is added as builder and the nature is set to VDM-PP. The file is output in the target directory. .project |
 *----------+------------------------------+
+| keep     | Print a list of all places in the generated source where a KEEP=YES have been specified |
+*----------+------------------------------+
    
 * Commands
 

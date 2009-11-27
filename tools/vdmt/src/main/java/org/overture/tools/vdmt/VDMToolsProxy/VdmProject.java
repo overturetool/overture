@@ -214,7 +214,7 @@ public class VdmProject {
 			List<String> excludeClasses, List<String> importPackages)
 			throws MojoFailureException, MojoExecutionException {
 		long before = System.currentTimeMillis();
-		
+
 		if (excludePackages == null)
 			excludePackages = new ArrayList<String>();
 
@@ -237,17 +237,18 @@ public class VdmProject {
 						continue;
 
 					classes.add(className);
-					
+
 					File javaFile = getJavaFile(file);
-					
-					if(!javaFile.exists() ){
-						javaFile=getValidJavaFileName(javaFile,className);
+
+					if (!javaFile.exists()) {
+						javaFile = getValidJavaFileName(javaFile, className);
 					}
-					
-//					LexTokenReader ltr = new LexTokenReader(file,Dialect.VDM_PP);
-//					ClassReader reader = new ClassReader(ltr);
-//				ClassList clList=	reader.readClasses();
-					
+
+					// LexTokenReader ltr = new
+					// LexTokenReader(file,Dialect.VDM_PP);
+					// ClassReader reader = new ClassReader(ltr);
+					// ClassList clList= reader.readClasses();
+
 					classToJavaFile.put(className, javaFile);
 					javaFiles.add(javaFile);
 					String packageName = Util.GetPackage(baseDir, file);
@@ -288,34 +289,32 @@ public class VdmProject {
 		updateImports(excludePackages, packages, javaFiles);
 
 		updateErrorUndefined(javaFiles);
-		
+
 		updateSuppressWarnings(javaFiles);
-		
-		
+
 		long after = System.currentTimeMillis();
 
-	
-
-		printSuccess("VDM Code generation finished in "+(double) (after - before) / 1000 + " secs. ");
+		printSuccess("VDM Code generation finished in "
+				+ (double) (after - before) / 1000 + " secs. ");
 	}
 
-	private File getValidJavaFileName(File javaFile,String className) {
-		
-		
-		if(javaFile.getName().substring(0,javaFile.getName().length()-4).equals(className))
+	private File getValidJavaFileName(File javaFile, String className) {
+
+		if (javaFile.getName().substring(0, javaFile.getName().length() - 4)
+				.equals(className))
 			return javaFile;
 		else
-			return new File(javaFile.getParentFile(),className+".java");
+			return new File(javaFile.getParentFile(), className + ".java");
 	}
 
 	private File getJavaFile(File vppFile) {
 		// set the corresponding Java file
-		String tmp = Util.GetPackageAsPathPart(baseDir
-				.getAbsolutePath(), vppFile.getAbsolutePath());
+		String tmp = Util.GetPackageAsPathPart(baseDir.getAbsolutePath(),
+				vppFile.getAbsolutePath());
 		String tmp2 = tmp.replace("/src/main/vpp".replace('/',
 				File.separatorChar), SRC_MAIN_JAVA.replace('/',
 				File.separatorChar));
-		return new File( baseDir.getAbsolutePath()
+		return new File(baseDir.getAbsolutePath()
 				+ tmp2.replace(".vpp", ".java"));
 	}
 
@@ -351,15 +350,14 @@ public class VdmProject {
 		}
 		setImports(packages, javaFiles);
 	}
-	
+
 	private void updateSuppressWarnings(List<File> javaFiles) {
 		List<String> warnigs = new ArrayList<String>();
 		warnigs.add("all");
 		warnigs.add("unchecked");
 		warnigs.add("unused");
-		
-		log
-				.info("Updating Suppress warnings");
+
+		log.info("Updating Suppress warnings");
 		for (File file : javaFiles) {
 
 			if (file.exists())
@@ -490,9 +488,8 @@ public class VdmProject {
 					+ filePath.replace('\\', '/'));
 		}
 
-		
-
-		createProjectFile(getJavaLocation(baseDir).getAbsolutePath(),projectName, sb,".prj");
+		createProjectFile(getJavaLocation(baseDir).getAbsolutePath(),
+				projectName, sb, ".prj");
 
 		createProjectOptionsFile(projectName);
 		printSuccess("VDM Tools project created");
@@ -531,11 +528,11 @@ public class VdmProject {
 		}
 	}
 
-	private File createProjectFile( String outputDirPath,String projectName, StringBuilder sb,String extension)
-			throws MojoExecutionException {
+	private File createProjectFile(String outputDirPath, String projectName,
+			StringBuilder sb, String extension) throws MojoExecutionException {
 		// Write project file
-		File projectFile = new File(outputDirPath
-				+ File.separatorChar + projectName + extension);
+		File projectFile = new File(outputDirPath + File.separatorChar
+				+ projectName + extension);
 
 		FileWriter outputFileReader;
 		try {
@@ -581,56 +578,83 @@ public class VdmProject {
 	}
 
 	final String overtureProjectFile = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-			+ "<projectDescription>\n" + "<name>PROJECT_NAME</name>\n" +
-			"	<comment></comment>\n" +
-			"	<projects>\n" +
-			"	</projects>\n" +
-			"	<buildSpec>\n" +
-			"		<buildCommand>\n" +
-			"			<name>org.eclipse.dltk.core.scriptbuilder</name>\n" +
-			"			<arguments>\n" +
-			"			</arguments>\n" +
-			"		</buildCommand>\n" +
-			"	</buildSpec>\n" +
-			"	<natures>\n" +
-			"		<nature>org.overture.ide.vdmpp.core.nature</nature>\n" +
-			"	</natures>\n" + "LINKED_SOURCE" + "</projectDescription>";
-	
-	final String overtureLinkedSourceFolder = "	<linkedResources>\n"+
-"LINK"+
-"	</linkedResources>\n";
-final String overtureSourceLink =		"		<link>\n"+
-"		<name>NAME</name>\n"+
-"		<type>2</type>\n"+
-"		<location>PATH</location>\n"+
-"		</link>\n";
-	public void createOvertureProject(String projectName,  String outputDirPath) throws MojoExecutionException {
+			+ "<projectDescription>\n"
+			+ "<name>PROJECT_NAME</name>\n"
+			+ "	<comment></comment>\n"
+			+ "	<projects>\n"
+			+ "	</projects>\n"
+			+ "	<buildSpec>\n"
+			+ "		<buildCommand>\n"
+			+ "			<name>org.eclipse.dltk.core.scriptbuilder</name>\n"
+			+ "			<arguments>\n"
+			+ "			</arguments>\n"
+			+ "		</buildCommand>\n"
+			+ "	</buildSpec>\n"
+			+ "	<natures>\n"
+			+ "		<nature>org.overture.ide.vdmpp.core.nature</nature>\n"
+			+ "	</natures>\n" + "LINKED_SOURCE" + "</projectDescription>";
+
+	final String overtureLinkedSourceFolder = "	<linkedResources>\n" + "LINK"
+			+ "	</linkedResources>\n";
+	final String overtureSourceLink = "		<link>\n" + "		<name>NAME</name>\n"
+			+ "		<type>2</type>\n" + "		<location>PATH</location>\n"
+			+ "		</link>\n";
+
+	public void createOvertureProject(String projectName, String outputDirPath)
+			throws MojoExecutionException {
 		StringBuilder sb = new StringBuilder();
 		List<String> linkedLocations = new Vector<String>();
-log.info("Creating overture project file");
+		log.info("Creating overture project file");
 		for (File file : files) {
 			File f = file.getParentFile();
-			while(f!=null && f.isDirectory()&&f.getParent()!=null && !f.getName().equals("vpp"))
-			{
-				f=f.getParentFile();
-//				log.info(f.getAbsolutePath());
+			while (f != null && f.isDirectory() && f.getParent() != null
+					&& !f.getName().equals("vpp")) {
+				f = f.getParentFile();
+				// log.info(f.getAbsolutePath());
 			}
-			
-			if(f!=null && !linkedLocations.contains(f.getAbsolutePath()))
-			{
+
+			if (f != null && !linkedLocations.contains(f.getAbsolutePath())) {
 				linkedLocations.add(f.getAbsolutePath());
-				sb.append(overtureSourceLink.replace("NAME", f.getName()+linkedLocations.size()).replace("PATH", f.getAbsolutePath().replace('\\', '/')));
+				sb.append(overtureSourceLink.replace("NAME",
+						f.getName() + linkedLocations.size()).replace("PATH",
+						f.getAbsolutePath().replace('\\', '/')));
 			}
 		}
 
 		StringBuilder data = new StringBuilder();
-		data.append(overtureProjectFile.replace("PROJECT_NAME", projectName).replace("LINKED_SOURCE",overtureLinkedSourceFolder.replace("LINK", sb.toString())));
-		
-		createProjectFile(outputDirPath,".project", data,"");
+		data.append(overtureProjectFile.replace("PROJECT_NAME", projectName)
+				.replace(
+						"LINKED_SOURCE",
+						overtureLinkedSourceFolder.replace("LINK", sb
+								.toString())));
 
-		
+		createProjectFile(outputDirPath, ".project", data, "");
+
 		printSuccess("Overture project created");
-		
 
 	}
+	
+	public void showCodeGenerationKeepWarnings(){
+		System.out.println();
+		System.out.println("======================= KEEP CHECK =======================");
+		
+		for(File file :Util.GetFiles( getJavaFile(baseDir),".java"))
+		{
+			VdmJavaFile f = new VdmJavaFile(file);
+			List<String> warnings = f.getCodeGenerationKeepers();
+			if(warnings.size()>0){
+				
+				System.out.println("File = " + file.getName());
+				System.out.println();
+				for (String string : warnings) {
+					System.out.println(string);
+				}
+				System.out.println("----------------------------------------------------------");
+			}
+		}
+		System.out.println();
+		printSuccess("Overture keep check");
+	}
+	
+	
 }

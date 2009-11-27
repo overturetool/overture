@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class VdmJavaFile {
 	final String IMPORT_TAG_START = "// ***** VDMTOOLS START Name=imports";
@@ -180,6 +181,54 @@ public class VdmJavaFile {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+	}
+
+	public List<String> getCodeGenerationKeepers() {
+		List<String> keeps = new Vector<String>();
+		try {
+			FileReader inputFileReader = new FileReader(file);
+
+			// Create Buffered/PrintWriter Objects
+			BufferedReader inputStream = new BufferedReader(inputFileReader);
+
+			String inLine = null;
+			boolean searchForEnd = false;
+			int lineNumber = 0;
+
+			int foundKeepAtLine = 0;
+			String name = "";
+			while ((inLine = inputStream.readLine()) != null) {
+				lineNumber++;
+				String trimLine = inLine.trim();
+				// ***** VDMTOOLS START Name=vdmComp KEEP=NO
+				if (trimLine.startsWith("// ***** VDMTOOLS START")
+						&& trimLine.endsWith("KEEP=YES")) {
+					foundKeepAtLine = lineNumber;
+
+					int index = trimLine.indexOf("Name=") + 5;
+					if (index >= 0 && trimLine.length() > index)
+						name = trimLine.substring(index);
+
+					index = name.lastIndexOf(' ');
+					if (index >= 0 && trimLine.length() > index)
+						name = name.substring(0, index);
+					searchForEnd = true;
+				} else if (searchForEnd
+						&& trimLine.startsWith("// ***** VDMTOOLS END")) {
+					// ***** VDMTOOLS END Name=imports
+					searchForEnd = false;
+					keeps.add(foundKeepAtLine + " - " + lineNumber + " Name = "
+							+ name);
+				}
+
+			}
+			inputStream.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return keeps;
 
 	}
 }
