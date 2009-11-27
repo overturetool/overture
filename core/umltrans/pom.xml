@@ -17,6 +17,7 @@
           <testFailureIgnore>true</testFailureIgnore>
           <includes>
             <include>**/*Test.java</include>
+<include>**/*TestSuite.java</include>
             <include>**/*Test?.java</include>
           </includes>
         </configuration>

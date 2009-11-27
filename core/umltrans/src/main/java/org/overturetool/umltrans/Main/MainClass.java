@@ -69,7 +69,7 @@ public class MainClass {
 			System.err.println();
 			parser.printUsage(System.err);
 			
-			throw new CmdLineException("");
+			throw new CmdLineException("Error in: "+ args);
 		}
 	}
 
@@ -116,18 +116,20 @@ public class MainClass {
 
 	/**
 	 * @param args
+	 * @throws Exception 
 	 * @throws IOException
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		try {
 
 			MainClass apsMain = new MainClass();
 			apsMain.parseArguments(args);
 			apsMain.run();
 
-		} catch (CmdLineException e) {
+		} catch (CmdLineException e) {throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw e;
 		}
 
 	}

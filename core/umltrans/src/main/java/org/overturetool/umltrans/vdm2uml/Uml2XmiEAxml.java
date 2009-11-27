@@ -1599,7 +1599,10 @@ public class Uml2XmiEAxml extends Uml2Xmi {
           String tmppar_31 = null;
           tmppar_31 = ct.getName();
           par_29 = UTIL.ConvertToString(classes.get(tmppar_31));
+          if(par_29==null)
           doc.StartA(new String("client"), par_29);
+          else
+        	  System.out.println("Client attribute skipped: "+ ct.getName());
           doc.StopE(new String("packagedElement"));
           Tuple mr_36 = new Tuple(2);
           mr_36 = new Tuple(2);
