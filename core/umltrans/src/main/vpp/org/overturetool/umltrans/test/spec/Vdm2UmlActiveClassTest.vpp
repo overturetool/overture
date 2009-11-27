@@ -33,7 +33,7 @@ public Vdm2UmlActiveClassTest: () ==> Vdm2UmlActiveClassTest
       
        let i in set inds testSpec.getClassList() in
        let cl = testSpec.getClassList()(i) in 
-      (   umlClass := vu.build_Class(cl);
+      (   umlClass := vu.BuildClass(cl);
       
       assertTrue(umlClass.getName() = cl.getIdentifier());
       )

@@ -16,8 +16,8 @@ classFilter : seq of String := [];
 nestedClasses : set of IUmlClass := {};
 operations
 
-public getLog : () ==> StatusLog
-getLog() == return log;
+public GetLog : () ==> StatusLog
+GetLog() == return log;
 ------------------------------------------------
 ------------------------------------------------
 --                 Mapper
@@ -26,10 +26,10 @@ getLog() == return log;
 ------------------------------------------------
 ------------------------------------------------
 -- Convert a OmlSpecification to a UML Model
-public init : IOmlSpecifications ==> IUmlModel
-init(specs) ==
+public Init : IOmlSpecifications ==> IUmlModel
+Init(specs) ==
 (
-  let model = build_uml(specs)
+  let model = BuildUml(specs)
   in 
   (
     model.setDefinitions(model.getDefinitions()  
@@ -39,21 +39,21 @@ init(specs) ==
   );
 );
 
-public addFilterClass : String ==> ()
-addFilterClass(className) == classFilter := classFilter ^ className;
+public AddFilterClass : String ==> ()
+AddFilterClass(className) == classFilter := classFilter ^ className;
 
 -- Create the main UML model from a OML specification
-public build_uml : IOmlSpecifications ==> UmlModel
-build_uml(specs) == 
+public BuildUml : IOmlSpecifications ==> UmlModel
+BuildUml(specs) == 
   let classes = specs.getClassList(),
-	  uml_classes = [ build_Class(classes(i)) 
+	  uml_classes = [ BuildClass(classes(i)) 
 	                | i in set inds classes & classes(i).getIdentifier() not in set elems classFilter] ^ StdLib`SetToSeq[IUmlClass]( nestedClasses)
   in return new UmlModel("Root",elems uml_classes);
 
 -- Convert a OML class to a UML class
 -- This includes the creation of properties and associations				
-public build_Class : IOmlClass ==> IUmlClass
-build_Class(c) ==
+public BuildClass : IOmlClass ==> IUmlClass
+BuildClass(c) ==
 (
   log.addNewClassInfo(c.getIdentifier());
   let name       = c.getIdentifier(),
@@ -68,15 +68,15 @@ build_Class(c) ==
                         > 0,
       dBlock     = [ let dbs : IOmlDefinitionBlock = body(i) 
                      in 
-                       build_def_b(dbs,name) 
+                       BuildDefB(dbs,name) 
                    | i in set inds body
                    & not isofclass(IOmlTraceDefinitions,body(i))],         
       dBlockSet  = { d | d in set elems dBlock & d <> nil},
-      isAbstract = hasSubclassResponsibilityDefinition(body),
-      supers     = getSuperClasses(inh),
+      isAbstract = HasSubclassResponsibilityDefinition(body),
+      supers     = GetSuperClasses(inh),
       visibility = 
         new UmlVisibilityKind(UmlVisibilityKindQuotes`IQPUBLIC),
-      templateParameters = getGenericTypes(c.getGenericTypes())	    
+      templateParameters = GetGenericTypes(c.getGenericTypes())	    
   in 
     return new UmlClass(name,
                         dBlockSet, 
@@ -89,8 +89,8 @@ build_Class(c) ==
 );                       
 -- Get template signature from OML types
 --  Finds the template parameters                        
-public getGenericTypes : seq of IOmlType ==> [IUmlTemplateSignature]
-getGenericTypes(genericTypes) ==
+public GetGenericTypes : seq of IOmlType ==> [IUmlTemplateSignature]
+GetGenericTypes(genericTypes) ==
   if len genericTypes > 0 
   then return
 	new UmlTemplateSignature(
@@ -103,8 +103,8 @@ getGenericTypes(genericTypes) ==
   
 -- Get super classes from a OML inheritance class.
 -- Returns nil if no super classes are found
-public getSuperClasses : [IOmlInheritanceClause] ==> seq of IUmlClassNameType
-getSuperClasses(inh) == 
+public GetSuperClasses : [IOmlInheritanceClause] ==> seq of IUmlClassNameType
+GetSuperClasses(inh) == 
   if inh = nil then 
     return [] 
   else
@@ -116,8 +116,8 @@ getSuperClasses(inh) ==
 -- Test if a OML Class is abstract in UML
 -- Checks for a is sub class responsibility operation
 -- True if found
-public hasSubclassResponsibilityDefinition : seq of IOmlDefinitionBlock ==> bool
-hasSubclassResponsibilityDefinition(dBlock) == 
+public HasSubclassResponsibilityDefinition : seq of IOmlDefinitionBlock ==> bool
+HasSubclassResponsibilityDefinition(dBlock) == 
   let opList = conc [ let op : IOmlOperationDefinitions = dBlock(i) 
                 in op.getOperationList() | 
                   i in set inds dBlock & isofclass(IOmlOperationDefinitions,dBlock(i))],
@@ -130,22 +130,22 @@ hasSubclassResponsibilityDefinition(dBlock) ==
 
 -- Proxy operation. Used to explicit set the type before redirecting operation call
 -- This is introduced because of VDM Java gen limitation of type cast in Java
-private build_def_b : IOmlDefinitionBlock * String ==> [IUmlDefinitionBlock]
-build_def_b(block,owner) ==
+private BuildDefB : IOmlDefinitionBlock * String ==> [IUmlDefinitionBlock]
+BuildDefB(block,owner) ==
   cases(true):
     (isofclass(IOmlInstanceVariableDefinitions,block))-> 
-      let tmp : IOmlInstanceVariableDefinitions = block in build_def_block(tmp,owner),
+      let tmp : IOmlInstanceVariableDefinitions = block in BuildDefBlock(tmp,owner),
     (isofclass(IOmlValueDefinitions,block))-> 
-      let tmp : IOmlValueDefinitions = block in build_def_block(tmp,owner),
+      let tmp : IOmlValueDefinitions = block in BuildDefBlock(tmp,owner),
     (isofclass(IOmlTypeDefinitions,block))-> 
-      let tmp : IOmlTypeDefinitions = block in build_def_block(tmp,owner),
+      let tmp : IOmlTypeDefinitions = block in BuildDefBlock(tmp,owner),
     (isofclass(IOmlOperationDefinitions,block))-> 
-      let tmp : IOmlOperationDefinitions = block in build_def_block(tmp,owner),
+      let tmp : IOmlOperationDefinitions = block in BuildDefBlock(tmp,owner),
     (isofclass(IOmlFunctionDefinitions,block))-> 
-      let tmp : IOmlFunctionDefinitions = block in build_def_block(tmp,owner),
+      let tmp : IOmlFunctionDefinitions = block in BuildDefBlock(tmp,owner),
     
     --(isofclass(IOmlTraceDefinitions,block))-> 
-    --let tmp : IOmlTraceDefinitions = block in build_def_block(tmp,owner),
+    --let tmp : IOmlTraceDefinitions = block in BuildDefBlock(tmp,owner),
     others -> return nil
   end;
     
@@ -154,11 +154,11 @@ build_def_b(block,owner) ==
 -- Instance variables -------------------------------
 -----------------------------------------------------
 -- Create properties from OML instanca variables
-public build_def_block : IOmlInstanceVariableDefinitions * String ==> 
+public BuildDefBlock : IOmlInstanceVariableDefinitions * String ==> 
   IUmlOwnedProperties
-build_def_block(v,owner) == 
+BuildDefBlock(v,owner) == 
   let q = v.getVariablesList(),
-      props = [ buildVariable(q(i),owner) 
+      props = [ BuildVariable(q(i),owner) 
               | i in set inds q 
               & isofclass(IOmlInstanceVariable,q(i)) ]
   in
@@ -168,25 +168,25 @@ build_def_block(v,owner) ==
 -- Create a UML property from a OML instance variable definition
 -- If the instance variable isent mapped to a UML property nil is returned
 --  This is the case if the property should be represented as an Association
-public buildVariable : IOmlInstanceVariable * String ==> [IUmlProperty]
-buildVariable(var,owner) == 
+public BuildVariable : IOmlInstanceVariable * String ==> [IUmlProperty]
+BuildVariable(var,owner) == 
   let
     access       = var.getAccess(),
     scope        = access.getScope(),
     assign       = var.getAssignmentDefinition(),
     isStatic     = access.getStaticAccess(),
     name         = assign.getIdentifier(),
-    visibility   = convertScopeToVisibility(scope),
+    visibility   = ConvertScopeToVisibility(scope),
     omlType      = assign.getType(),
-    multiplicity = Vdm2UmlType`extractMultiplicity(omlType),
-    type         = Vdm2UmlType`convertPropertyType(omlType,owner),
+    multiplicity = Vdm2UmlType`ExtractMultiplicity(omlType),
+    type         = Vdm2UmlType`ConvertPropertyType(omlType,owner),
     isReadOnly   = false,
     default      = if assign.hasExpression() 
-                   then getDefaultValue(assign.getExpression()) 
+                   then GetDefaultValue(assign.getExpression()) 
                    else nil, 
-    isComposite  = isSimpleType(omlType),
+    isComposite  = IsSimpleType(omlType),
     isDerived    = false,
-    qualifier : [IUmlType] = Vdm2UmlType`getQualifier(omlType)
+    qualifier : [IUmlType] = Vdm2UmlType`GetQualifier(omlType)
   in 
   (
     dcl property : IUmlProperty := new UmlProperty(name, 
@@ -201,7 +201,7 @@ buildVariable(var,owner) ==
                                                 owner,
                                                 qualifier);
    
-    if not isSimpleType(omlType) 
+    if not IsSimpleType(omlType) 
     then 
     (
        CreateAssociationFromProperty(property,omlType);       
@@ -213,8 +213,8 @@ buildVariable(var,owner) ==
  
 -- If a default value is defined for a instance variable it is returned
 --  as a string else nil
-public getDefaultValue : IOmlExpression ==> [IUmlValueSpecification]
-getDefaultValue(expression) ==
+public GetDefaultValue : IOmlExpression ==> [IUmlValueSpecification]
+GetDefaultValue(expression) ==
   cases true:
     (isofclass(IOmlSymbolicLiteralExpression,expression)) -> 
       (let se: IOmlSymbolicLiteralExpression =expression  
@@ -233,8 +233,8 @@ getDefaultValue(expression) ==
   
 functions
 -- Convert OML visibility to UML visibility
-public convertScopeToVisibility : IOmlScope -> IUmlVisibilityKind
-convertScopeToVisibility(sc) ==
+public ConvertScopeToVisibility : IOmlScope -> IUmlVisibilityKind
+ConvertScopeToVisibility(sc) ==
   let val : nat =sc.getValue() in
   cases val: 
     (OmlScopeQuotes`IQPUBLIC) -> 
@@ -252,10 +252,10 @@ operations
 -- Values 
 -----------------------------------------------------
 -- Create UML properties from a value definition
-public build_def_block : IOmlValueDefinitions * String ==> IUmlOwnedProperties
-build_def_block(v,owner) == 
+public BuildDefBlock : IOmlValueDefinitions * String ==> IUmlOwnedProperties
+BuildDefBlock(v,owner) == 
   let q = v.getValueList(),
-      props = [ buildValue(q(i),owner) | 
+      props = [ BuildValue(q(i),owner) | 
      		 i in set inds q ],
       propsNoNil = {p | p in set elems props 
                       & p <> nil}
@@ -265,8 +265,8 @@ build_def_block(v,owner) ==
 -- Create a UML property from a Value definition
 -- If the value isent presented as a UML property nil is returned
 --   Would be the case if mapped as an Assocition
-public buildValue : IOmlValueDefinition * String ==> [IUmlProperty]
-buildValue(var,owner) == 
+public BuildValue : IOmlValueDefinition * String ==> [IUmlProperty]
+BuildValue(var,owner) == 
   let
     access       = var.getAccess(),
     scope        = access.getScope(),
@@ -284,14 +284,14 @@ buildValue(var,owner) ==
       isStatic     = access.getStaticAccess(),
       patternIdent : IOmlPatternIdentifier = shape.getPattern(),
       name         = patternIdent.getIdentifier(),
-      visibility   = convertScopeToVisibility(scope),
-      multiplicity = Vdm2UmlType`extractMultiplicity(shape.getType()),
-      type         = Vdm2UmlType`convertType(shape.getType()),
+      visibility   = ConvertScopeToVisibility(scope),
+      multiplicity = Vdm2UmlType`ExtractMultiplicity(shape.getType()),
+      type         = Vdm2UmlType`ConvertType(shape.getType()),
       isReadOnly   = true,
-      default      = getDefaultValue(shape.getExpression()),
-      isComposite  = isSimpleType(shape.getType()),
+      default      = GetDefaultValue(shape.getExpression()),
+      isComposite  = IsSimpleType(shape.getType()),
       isDerived    = false,
-      qualifier : [IUmlType] = Vdm2UmlType`getQualifier(shape.getType()),
+      qualifier : [IUmlType] = Vdm2UmlType`GetQualifier(shape.getType()),
       omlType      = shape.getType()
   in 
   (
@@ -307,7 +307,7 @@ buildValue(var,owner) ==
                                                 owner,
                                                 qualifier);
    
-    if not isSimpleType(omlType) 
+    if not IsSimpleType(omlType) 
     then 
     ( 
       CreateAssociationFromProperty(property,omlType);
@@ -323,21 +323,21 @@ buildValue(var,owner) ==
 -- Types 
 -----------------------------------------------------
 -- Convert OML type definitions to a UML owned type
-public build_def_block : IOmlTypeDefinitions * String ==> IUmlNestedClassifiers
-build_def_block(td,-) == 
+public BuildDefBlock : IOmlTypeDefinitions * String ==> IUmlNestedClassifiers
+BuildDefBlock(td,-) == 
   let q = td.getTypeList(),
-      tps = [ buildType(q(i).getShape(),q(i).getAccess()) 
+      tps = [ BuildType(q(i).getShape(),q(i).getAccess()) 
             | i in set inds q 
             & isofclass(IOmlSimpleType,q(i).getShape()) ]
   in return new UmlNestedClassifiers(elems tps);
 
 -- Convert simple type to UML type
-public buildType : IOmlSimpleType * IOmlAccessDefinition ==> IUmlType
-buildType(var,access) ==
+public BuildType : IOmlSimpleType * IOmlAccessDefinition ==> IUmlType
+BuildType(var,access) ==
 ( 
   if isofclass(IOmlUnionType,var.getType()) then
   (
-    nestedClasses := nestedClasses union {buildClassFromType(var,access.getScope())};
+    nestedClasses := nestedClasses union {BuildClassFromType(var,access.getScope())};
     return new UmlClassNameType(var.getIdentifier()); -- return a class ref to the new nested class.
   );
   if isofclass(IOmlSeq0Type,var.getType()) then
@@ -346,60 +346,60 @@ buildType(var,access) ==
     in
       if isofclass(IOmlCharType,seqT.getType()) then
       (
-         nestedClasses := nestedClasses union {buildClassFromType(var,access.getScope())};
+         nestedClasses := nestedClasses union {BuildClassFromType(var,access.getScope())};
          return new UmlClassNameType(var.getIdentifier()); -- return a class ref to the new nested class.
       );
    );
 
 
-  return Vdm2UmlType`convertType(var.getType()); 
+  return Vdm2UmlType`ConvertType(var.getType()); 
 );
 
-private buildClassFromType : IOmlSimpleType * IOmlScope ==> IUmlClass
-buildClassFromType(t,scope) ==
+private BuildClassFromType : IOmlSimpleType * IOmlScope ==> IUmlClass
+BuildClassFromType(t,scope) ==
   let name : String                            = t.getIdentifier(),
-      classBody  : set of IUmlDefinitionBlock  = {buildTypeDefinitionBlocks(name,t.getType())},
+      classBody  : set of IUmlDefinitionBlock  = {BuildTypeDefinitionBlocks(name,t.getType())},
       isAbstract : bool                        = false,
       superClass : seq of IUmlClassNameType    = [],
-      visibility : IUmlVisibilityKind          = convertScopeToVisibility(scope),
+      visibility : IUmlVisibilityKind          = ConvertScopeToVisibility(scope),
       isStatic   : bool                        = false,
       isActive   : bool                        = false,
       templatesignature : [IUmlTemplateSignature] = nil
   in
     return new UmlClass(name,classBody,isAbstract,superClass,visibility,isStatic,isActive,templatesignature);
     
-private buildTypeDefinitionBlocks : String * IOmlType ==> IUmlDefinitionBlock
-buildTypeDefinitionBlocks(ownerName,t) ==
+private BuildTypeDefinitionBlocks : String * IOmlType ==> IUmlDefinitionBlock
+BuildTypeDefinitionBlocks(ownerName,t) ==
 (
   if isofclass(IOmlUnionType,t) then
     let ut : IOmlUnionType = t
     in
-      let lhs : IUmlOwnedProperties = buildTypeDefinitionBlocks(ownerName,ut.getLhsType()),
-          rhs : IUmlOwnedProperties = buildTypeDefinitionBlocks(ownerName,ut.getRhsType())
+      let lhs : IUmlOwnedProperties = BuildTypeDefinitionBlocks(ownerName,ut.getLhsType()),
+          rhs : IUmlOwnedProperties = BuildTypeDefinitionBlocks(ownerName,ut.getRhsType())
       in
         return new UmlOwnedProperties( lhs.getPropetityList()union rhs.getPropetityList());
         
   if isofclass(IOmlQuoteType,t) then
     let qt : IOmlQuoteType = t
     in
-      let props : set of IUmlProperty = { buildValueFromQuoteType(ownerName,qt) }
+      let props : set of IUmlProperty = { BuildValueFromQuoteType(ownerName,qt) }
       in
         return new UmlOwnedProperties(props);
         
  return new UmlOwnedProperties({});
 );
 
-buildValueFromQuoteType : String * IOmlQuoteType ==> IUmlProperty
-buildValueFromQuoteType(ownerName,q) ==
+BuildValueFromQuoteType : String * IOmlQuoteType ==> IUmlProperty
+BuildValueFromQuoteType(ownerName,q) ==
 let
       isStatic : bool    = true,
       name     : seq of char    = q.getQuoteLiteral().getVal(),
       visibility : IUmlVisibilityKind  = new UmlVisibilityKind(UmlVisibilityKindQuotes`IQPUBLIC),
       multiplicity : IUmlMultiplicityElement= new UmlMultiplicityElement(true, false, 0, nil),--new UmlMultiplicityElement(isOrdered, isUnique, lower, upper);
-      type : IUmlType        = new UmlIntegerType(),--Vdm2UmlType`convertType(shape.getType()),
+      type : IUmlType        = new UmlIntegerType(),--Vdm2UmlType`ConvertType(shape.getType()),
       isReadOnly   = true,
       default  : [IUmlValueSpecification]    = nil,
-      isComposite  = isSimpleType(q),
+      isComposite  = IsSimpleType(q),
       isDerived    = false,
       qualifier : [IUmlType] = nil--Vdm2UmlType`getQualifier(shape.getType()),
       
@@ -420,18 +420,18 @@ let
 -- Operations 
 -----------------------------------------------------
 -- Convert OML operations to UML owwned operations
-public build_def_block : IOmlOperationDefinitions * String ==> IUmlOwnedOperations
-build_def_block(opDef,owner) == 
+public BuildDefBlock : IOmlOperationDefinitions * String ==> IUmlOwnedOperations
+BuildDefBlock(opDef,owner) == 
   let ops: seq of IOmlOperationDefinition = opDef.getOperationList() 
   in 
     return 
-      new UmlOwnedOperations({buildOperation(ops(i),owner) 
+      new UmlOwnedOperations({BuildOperation(ops(i),owner) 
                              | i in set inds ops});
   
 -- Convert a OML operation definition to a UML definition
 -- All parameters are ignored - Project time limitation
-public buildOperation : IOmlOperationDefinition * String ==> IUmlOperation
-buildOperation(op,-) ==
+public BuildOperation : IOmlOperationDefinition * String ==> IUmlOperation
+BuildOperation(op,-) ==
   let
     access       = op.getAccess(),
     scope        = access.getScope(),
@@ -439,9 +439,9 @@ buildOperation(op,-) ==
     
     isStatic     = access.getStaticAccess(),
     name         = shape.getIdentifier(),
-    visibility   = convertScopeToVisibility(scope),
+    visibility   = ConvertScopeToVisibility(scope),
     multiplicity = new UmlMultiplicityElement(false, false, 1, 1),
-    type         = Vdm2UmlType`convertType(shape.getType()),
+    type         = Vdm2UmlType`ConvertType(shape.getType()),
     pars         = buildParameters(shape.getParameterList(),shape.getType())
   in return new UmlOperation(name, 
                             visibility, 
@@ -468,15 +468,15 @@ let names = [let p : IOmlPatternIdentifier = parms(i) in p.getIdentifier()
                       let tmp : IOmlPartialFunctionType  = type in tmp
                       else nil)
             in new UmlParameter("return", 
-                             let tmpType: IUmlType = Vdm2UmlType`convertType(t.getRngType()) in tmpType
+                             let tmpType: IUmlType = Vdm2UmlType`ConvertType(t.getRngType()) in tmpType
                              ,
-                             Vdm2UmlType`extractMultiplicity(t.getRngType()) ,
+                             Vdm2UmlType`ExtractMultiplicity(t.getRngType()) ,
                              "",
                              new UmlParameterDirectionKind(UmlParameterDirectionKindQuotes`IQRETURN)
                              ),
     ps    = [new UmlParameter(names(i), 
-                             Vdm2UmlType`convertType(tps(i)),
-                             Vdm2UmlType`extractMultiplicity(tps(i)),
+                             Vdm2UmlType`ConvertType(tps(i)),
+                             Vdm2UmlType`ExtractMultiplicity(tps(i)),
                              "",
                              new UmlParameterDirectionKind(UmlParameterDirectionKindQuotes`IQIN)
                              )
@@ -518,25 +518,25 @@ end;
 -- Functions 
 -----------------------------------------------------
 -- Convert OML functions to UML owhed operations
-public build_def_block : IOmlFunctionDefinitions * String ==> IUmlOwnedOperations
-build_def_block(opDef,owner) == 
+public BuildDefBlock : IOmlFunctionDefinitions * String ==> IUmlOwnedOperations
+BuildDefBlock(opDef,owner) == 
   let ops: seq of IOmlFunctionDefinition = opDef.getFunctionList() 
-  in return new UmlOwnedOperations({buildFunction(ops(i),owner) 
+  in return new UmlOwnedOperations({BuildFunction(ops(i),owner) 
                                    | i in set inds ops});
   
 -- Convert a OML functions definition to a UML definition
 -- All parameters are ignored - Project time limitation
-public buildFunction : IOmlFunctionDefinition * String ==> IUmlOperation
-buildFunction(op,-) ==
+public BuildFunction : IOmlFunctionDefinition * String ==> IUmlOperation
+BuildFunction(op,-) ==
   let
     access       = op.getAccess(),
     scope        = access.getScope(),
     shape : IOmlExplicitFunction = op.getShape(),
     isStatic     = access.getStaticAccess(),
     name         = shape.getIdentifier(),
-    visibility   = convertScopeToVisibility(scope),
+    visibility   = ConvertScopeToVisibility(scope),
     multiplicity = new UmlMultiplicityElement(false, false, 1, 1),
-    type         = Vdm2UmlType`convertType(shape.getType()),
+    type         = Vdm2UmlType`ConvertType(shape.getType()),
     pnames :  [IOmlParameter]       = if len shape.getParameterList() = 0 
                                       then nil 
                                       else let p in set elems shape.getParameterList() 
@@ -556,8 +556,8 @@ buildFunction(op,-) ==
 -----------------------------------------------------
 functions
 -- Check if a OML type is mapped to a UML simple type                  
-public isSimpleType : IOmlType -> bool
-isSimpleType(t) ==
+public IsSimpleType : IOmlType -> bool
+IsSimpleType(t) ==
   cases true:
     (isofclass(IOmlInjectiveMapType,t)),
     (isofclass(IOmlGeneralMapType,t)),
@@ -566,16 +566,16 @@ isSimpleType(t) ==
     (isofclass(IOmlUnionType,t)) -> false,
     (isofclass(IOmlSetType,t)) -> 
       let t1: IOmlSetType = t 
-        in isSimpleType(t1.getType()),
+        in IsSimpleType(t1.getType()),
 	(isofclass(IOmlSeq0Type,t)) -> 
 	  let t1: IOmlSeq0Type = t 
-	    in isSimpleType(t1.getType()),
+	    in IsSimpleType(t1.getType()),
 	(isofclass(IOmlSeq1Type,t)) -> 
 	  let t1: IOmlSeq1Type = t 
-	    in isSimpleType(t1.getType()),
+	    in IsSimpleType(t1.getType()),
 	(isofclass(IOmlOptionalType,t)) -> 
 	  let t1 : IOmlOptionalType = t 
-	    in isSimpleType(t1.getType()),
+	    in IsSimpleType(t1.getType()),
 	    
     others -> true
   end;
@@ -687,29 +687,29 @@ CreateEndProperty(t,name) ==
   else
     return {new UmlProperty(name,
                 new UmlVisibilityKind(UmlVisibilityKindQuotes`IQPRIVATE),
-                Vdm2UmlType`extractMultiplicity(t),
-                Vdm2UmlType`convertType(t),
+                Vdm2UmlType`ExtractMultiplicity(t),
+                Vdm2UmlType`ConvertType(t),
                 nil,
                 nil,
                 false,
                 nil,
                 nil,
                 "Implementation prosponed",
-                Vdm2UmlType`getQualifier(t))};
+                Vdm2UmlType`GetQualifier(t))};
 
 );
 
 -----------------------------------------------------
 -- Other constructs 
 -----------------------------------------------------
---public build_def_block : IOmlSynchronizationDefinitions * String ==> IUmlOtherDefinitions
---build_def_block(-,-) == return new UmlOtherDefinitions();
+--public BuildDefBlock : IOmlSynchronizationDefinitions * String ==> IUmlOtherDefinitions
+--BuildDefBlock(-,-) == return new UmlOtherDefinitions();
 
---public build_def_block : IOmlThreadDefinition * String ==> IUmlOtherDefinitions
---build_def_block(-,-) == return new UmlOtherDefinitions();
+--public BuildDefBlock : IOmlThreadDefinition * String ==> IUmlOtherDefinitions
+--BuildDefBlock(-,-) == return new UmlOtherDefinitions();
 
---public build_def_block : IOmlTraceDefinitions * String ==> IUmlOtherDefinitions
---build_def_block(-,-) == return new UmlOtherDefinitions();
+--public BuildDefBlock : IOmlTraceDefinitions * String ==> IUmlOtherDefinitions
+--BuildDefBlock(-,-) == return new UmlOtherDefinitions();
 
 
 ---------------------------------------------------------

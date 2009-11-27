@@ -19,8 +19,8 @@ end Uml2Xmi
 \begin{vdm_al}
 class XmlDoc is subclass of XmlDocument
 operations
-  public addE: XmlEntity ==> ()
-  addE (pent) == addEntity(pent); 
+  public AddE: XmlEntity ==> ()
+  AddE (pent) == addEntity(pent); 
   
   public StartE: seq of char ==> ()
   StartE (pname) == let - = StartEntity (pname) in skip;

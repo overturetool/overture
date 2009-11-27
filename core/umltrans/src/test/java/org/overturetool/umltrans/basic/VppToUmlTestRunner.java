@@ -8,6 +8,7 @@ import junit.framework.Assert;
 
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.overturetool.umltrans.Main.CmdLineProcesser;
+import org.overturetool.umltrans.Main.MainClass;
 
 public class VppToUmlTestRunner
 {
@@ -122,8 +123,8 @@ public class VppToUmlTestRunner
 				inputFolder,
 				expectedOutputFile);
 		// startTimer();
-		new CmdLineProcesser().processCommand(new String[] { "-uml", "true",
-				"-ofile", output, input });
+		MainClass.main(new String[] { "-uml",
+				"-output", output, input });
 
 //		Assert.assertTrue(
 //				"Expected output does not match: " + getMethodName(3),

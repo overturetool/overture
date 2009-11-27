@@ -10,6 +10,7 @@ import junit.framework.TestCase;
 
 import org.overturetool.umltrans.Main.CmdLineProcesser;
 import org.overturetool.umltrans.Main.FileCompare;
+import org.overturetool.umltrans.Main.MainClass;
 
 public class UmlToVppTestRunner
 {
@@ -125,8 +126,8 @@ public class UmlToVppTestRunner
 		File outputFolder = new File(getPath(folder, tmpName));
 		outputFolder.mkdirs();
 
-		new CmdLineProcesser().processCommand(new String[] { "-vpp", "true",
-				"-o", outputFolder.getAbsolutePath(), input });
+		 MainClass.main(new String[] { "-vpp",
+				"-output", outputFolder.getAbsolutePath(), input });
 
 		compareResults(expectedOutputDir, outputFolder);
 		

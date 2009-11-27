@@ -37,8 +37,8 @@ public class Translator
 		Uml2XmiEAxml xmi = new Uml2XmiEAxml();
 		xmi.Save(
 				xmiDocumentFileName,
-				w.init(op.astDocument.getSpecifications()),
-				w.getLog());
+				w.Init(op.astDocument.getSpecifications()),
+				w.GetLog());
 		
 		return xmiDocumentFileName;
 	}
@@ -95,6 +95,6 @@ public class Translator
 		if (!outputPath.endsWith(new Character(File.separatorChar).toString()))
 			outputPath += File.separatorChar;
 		
-		vpp.Save(outputPath, u.init(xmlUmlModel.result),log);
+		vpp.Save(outputPath, u.Init(xmlUmlModel.result),log);
 	}
 }

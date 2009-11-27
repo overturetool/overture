@@ -51,7 +51,7 @@ public Uml2VdmTracesTest: () ==> Uml2VdmTracesTest
       in
       (
         xmlUmlModel.VisitXmlDocument(doc);
-        vpp.Save(fName,u.init(xmlUmlModel.result),new StatusLog());
+        vpp.Save(fName,u.Init(xmlUmlModel.result),new StatusLog());
      );
 
 end Uml2VdmTracesTest 

@@ -27,7 +27,7 @@ public Vdm2UmlTest: () ==> Vdm2UmlTest
       dcl vu : Vdm2Uml := new Vdm2Uml();
             --abstract class
       testSpec := new TestData().ClassTypesUnion.getSpecifications();
-      assertTrue(card(vu.init(testSpec).getDefinitions())>0);
+      assertTrue(card(vu.Init(testSpec).getDefinitions())>0);
       
 --      
 --      --abstract class

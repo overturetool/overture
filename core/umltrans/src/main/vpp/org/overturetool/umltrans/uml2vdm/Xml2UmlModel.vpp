@@ -69,79 +69,79 @@ VisitXmlDocument (doc) ==
                               
   dcl extention : XmlEntity := hd [firstPackageAndRoot(i) 
                                   | i in set inds firstPackageAndRoot 
-                                  & hasAttributeValue(firstPackageAndRoot(i),"extender","Enterprise Architect") 
-                                  and hasAttributeValue(firstPackageAndRoot(i),"extenderID","6.5") ];
+                                  & HasAttributeValue(firstPackageAndRoot(i),"extender","Enterprise Architect") 
+                                  and HasAttributeValue(firstPackageAndRoot(i),"extenderID","6.5") ];
                                     
   dcl package : XmlEntity := hd [model.entities.entities(i) 
                                 | i in set inds model.entities.entities 
-                                & isAttributeType(model.entities.entities(i),"uml:Package")];
+                                & IsAttributeType(model.entities.entities(i),"uml:Package")];
   
   let pes = package.entities.entities
   in
   (
-    classesTypeMap := classesTypeMap ++ {getAttribute(pes(i),"xmi:id").val |-> getNameAttribute(pes(i)) | i in set inds pes & 
-                   isAttributeType(pes(i),"uml:Class") };
+    classesTypeMap := classesTypeMap ++ {GetAttribute(pes(i),"xmi:id").val |-> GetNameAttribute(pes(i)) | i in set inds pes & 
+                   IsAttributeType(pes(i),"uml:Class") };
     
-    classes := classes union {exstractClass(pes(i)) | i in set inds pes & 
-                   isAttributeType(pes(i),"uml:Class") and
-                   (getNameAttribute(pes(i)) not in set primiticeTypes)};
+    classes := classes union {ExstractClass(pes(i)) | i in set inds pes & 
+                   IsAttributeType(pes(i),"uml:Class") and
+                   (GetNameAttribute(pes(i)) not in set primiticeTypes)};
                    
     let connectors : set of XmlEntity =
                               dunion 
                               { elems e.entities.entities 
                               | e in set elems extention.entities.entities 
                               & e.name = "connectors" }
-                              --getElement(pes(i),"connectors") | i in set inds pes & 
-                              --hasAttributeValue(pes(i),"extender","Enterprise Architect") and
-                              --hasAttributeValue(pes(i),"extenderID","6.5") and 
-                              --getElement(pes(i),"connectors") <> nil}
+                              --GetElement(pes(i),"connectors") | i in set inds pes & 
+                              --HasAttributeValue(pes(i),"extender","Enterprise Architect") and
+                              --HasAttributeValue(pes(i),"extenderID","6.5") and 
+                              --GetElement(pes(i),"connectors") <> nil}
                               in 
                               for all v in set connectors
                               do
-                                build_AssociationQualifier(v);
+                                BuildAssociationQualifier(v);
                    
     associations := associations union 
-                    {build_Association(pes(i)) 
+                    {BuildAssociation(pes(i)) 
                     | i in set inds pes 
-                    & isAttributeType(pes(i),"uml:Association") or
-                      isAttributeType(pes(i),"uml:Connector")};
+                    & IsAttributeType(pes(i),"uml:Association") or
+                      IsAttributeType(pes(i),"uml:Connector")};
                    
-    constraints := constraints union {build_Constraint(pes(i)) | i in set inds pes & 
-                   isAttributeType(pes(i),"uml:Constraint")};
+    constraints := constraints union {BuildConstraint(pes(i)) | i in set inds pes & 
+                   IsAttributeType(pes(i),"uml:Constraint")};
     -- requires operatios to be populated first               
-    idToClallEventMap := buildCallEventMap({(pes(i)) | i in set inds pes & 
-                   isAttributeType(pes(i),"uml:CallEvent")});
+    idToClallEventMap := BuildCallEventMap({(pes(i)) | i in set inds pes & 
+                   IsAttributeType(pes(i),"uml:CallEvent")});
                    
-    collaborations := collaborations union {build_Collobration(pes(i)) | i in set inds pes & 
-                   isAttributeType(pes(i),"uml:Collaboration")};
+    collaborations := collaborations union {BuildCollobration(pes(i)) | i in set inds pes & 
+                   IsAttributeType(pes(i),"uml:Collaboration")};
   );
     
-  result := new UmlModel(getNameAttribute(package),
+  result := new UmlModel(GetNameAttribute(package),
                          classes union associations union constraints union collaborations);
 
 );
 -- Exstract UML class from XML element
-private exstractClass : XmlEntity ==> IUmlClass
-exstractClass(e) ==
-  let name       : seq of char  = getNameAttribute(e),
+private ExstractClass : XmlEntity ==> IUmlClass
+ExstractClass(e) ==
+  let name       : seq of char  = GetNameAttribute(e),
       
-      dBlocks    : (set of IUmlDefinitionBlock) =build_defBlock(e,name),
-      abstract   : bool = if hasAttribute(e,"isAbstract") then StdLib`StringToBool(getAttribute(e,"isAbstract").val) else false,
+      dBlocks    : (set of IUmlDefinitionBlock) =BuildDefBlock(e,name),
+      abstract   : bool = if HasAttribute(e,"isAbstract") then StdLib`StringToBool(GetAttribute(e,"isAbstract").val) else false,
       supers     : seq of IUmlClassNameType = let eg = e.entities.entities in
-        [exstractGeneralization(eg(i)) 
+        [ExstractGeneralization(eg(i)) 
          | i in set inds eg  
-         & isAttributeType(eg(i),"uml:Generalization")],
+         & IsAttributeType(eg(i),"uml:Generalization")],
       visibility : (IUmlVisibilityKind) = 
         new UmlVisibilityKind(UmlVisibilityKindQuotes`IQPUBLIC), -- dont care VDM has only public
       isStatic   : (bool) = false,
-      active     : (bool) = if hasAttribute(e,"isActive") 
-                            then let a = getAttribute(e,"isActive") in 
+      active     : (bool) = if HasAttribute(e,"isActive") 
+                            then let a = GetAttribute(e,"isActive") in 
                                    if a <> nil 
                                    then StdLib`StringToBool(a.val) 
                                    else false
                             else false,
       template   : [IUmlTemplateSignature] = nil,
-      id         : String = getAttribute(e,"xmi:id").val,
+      id         : String = GetAttribute(e,"xmi:id").val,
       cls        : IUmlClass = 
        new UmlClass(name,
                  dBlocks,
@@ -157,49 +157,49 @@ exstractClass(e) ==
     log.addNewClassInfo(name,id);
     return cls;
   )    
-pre isAttributeType(e,"uml:Class");
+pre IsAttributeType(e,"uml:Class");
 
 -- Create super class references
-private exstractGeneralization : XmlEntity ==> IUmlClassNameType
-exstractGeneralization(e) ==
-  let super = getAttribute(e,"general").val
+private ExstractGeneralization : XmlEntity ==> IUmlClassNameType
+ExstractGeneralization(e) ==
+  let super = GetAttribute(e,"general").val
   --look up the class id in the class it to class map
   in return new UmlClassNameType(classesTypeMap(super))
-pre isAttributeType(e,"uml:Generalization");
+pre IsAttributeType(e,"uml:Generalization");
 
 -- Create property definitions form XML property element
 -- Attribute type is property
-private build_defBlock : XmlEntity * String ==> (set of IUmlDefinitionBlock)
-build_defBlock(e,name) ==
+private BuildDefBlock : XmlEntity * String ==> (set of IUmlDefinitionBlock)
+BuildDefBlock(e,name) ==
   let eList = e.entities.entities, 
-      props = { build_Property(eList(i),name,nil)| 
-            i in set inds eList & isAttributeType(eList(i),"uml:Property")},
-      ops   = { build_Operation(p)| 
-            p in set elems eList & isAttributeType(p,"uml:Operation") or p.name = "ownedOperation"}
+      props = { BuildProperty(eList(i),name,nil)| 
+            i in set inds eList & IsAttributeType(eList(i),"uml:Property")},
+      ops   = { BuildOperation(p)| 
+            p in set elems eList & IsAttributeType(p,"uml:Operation") or p.name = "ownedOperation"}
   in
     return {new UmlOwnedProperties(props)} union {new UmlOwnedOperations(ops)};
            
 -- Create property from property element
-private build_Property : XmlEntity * String * [String] ==> IUmlProperty
-build_Property(e,ownerClass,associationId) ==
-  let name         : seq of char = if hasAttribute(e,"name")
-                                   then getNameAttribute(e)
+private BuildProperty : XmlEntity * String * [String] ==> IUmlProperty
+BuildProperty(e,ownerClass,associationId) ==
+  let name         : seq of char = if HasAttribute(e,"name")
+                                   then GetNameAttribute(e)
                                    else "",
-      visibility   : (IUmlVisibilityKind) = if hasAttribute(e,"visibility") 
-                                            then GetVisibility(getAttribute(e,"visibility")) 
+      visibility   : (IUmlVisibilityKind) = if HasAttribute(e,"visibility") 
+                                            then GetVisibility(GetAttribute(e,"visibility")) 
                                             else
                                               new UmlVisibilityKind(UmlVisibilityKindQuotes`IQPRIVATE), 
-      multiplicity : [IUmlMultiplicityElement] = getMultiplicity(e),
-      typeId : String = getTypeId(e),
-      type         : (IUmlType) = findType(typeId),-- | i in set inds e.entities.entities & e.entities.entities(i).name = "type"}),
-      isReadOnly   : [bool] = if hasAttribute(e,"isReadOnly") 
-                                            then StdLib`StringToBool(getAttribute(e,"isReadOnly").val) 
+      multiplicity : [IUmlMultiplicityElement] = GetMultiplicity(e),
+      typeId : String = GetTypeId(e),
+      type         : (IUmlType) = FindType(typeId),-- | i in set inds e.entities.entities & e.entities.entities(i).name = "type"}),
+      isReadOnly   : [bool] = if HasAttribute(e,"isReadOnly") 
+                                            then StdLib`StringToBool(GetAttribute(e,"isReadOnly").val) 
                                             else false,
       default      : [IUmlValueSpecification] = let dValue = { el 
                                                              | el in set elems e.entities.entities 
                                                              & el.name = "defaultValue"} 
                                                 in if card dValue > 0
-                                                   then getDefaultValue(let d in set dValue in d)
+                                                   then GetDefaultValue(let d in set dValue in d)
                                                    else nil,
       isComposite  : (bool) = false,
       isDerived    : [bool] = false,
@@ -210,7 +210,7 @@ build_Property(e,ownerClass,associationId) ==
                                      and associationToQualifier(associationId).classId = typeId
                                   then 
                                     let qInfo = associationToQualifier(associationId)
-                                    in findType(qInfo.qualifier)
+                                    in FindType(qInfo.qualifier)
                                   else 
                                     nil 
   in
@@ -225,16 +225,16 @@ build_Property(e,ownerClass,associationId) ==
                     isStatic,
                     ownerClass,
                     qualifier)
-pre isAttributeType(e,"uml:Property");
+pre IsAttributeType(e,"uml:Property");
 
 -- Get default value. Initial value
-private getDefaultValue : XmlEntity ==> [IUmlValueSpecification]
-getDefaultValue(e) ==
+private GetDefaultValue : XmlEntity ==> [IUmlValueSpecification]
+GetDefaultValue(e) ==
 let --eList = e.entities.entities,
-  --tmp  = --{getAttribute(el,"value").val | el in set elems eList & el.name = "defaultValue"},
-  val  = getAttribute(e,"value").val,--let t in set tmp in t,
-  --tmp1 = {getAttribute(el,"xmi:type").val | el in set elems eList & el.name = "defaultValue"},
-  typ  = getAttribute(e,"xmi:type").val --let t in set tmp1 in t
+  --tmp  = --{GetAttribute(el,"value").val | el in set elems eList & el.name = "defaultValue"},
+  val  = GetAttribute(e,"value").val,--let t in set tmp in t,
+  --tmp1 = {GetAttribute(el,"xmi:type").val | el in set elems eList & el.name = "defaultValue"},
+  typ  = GetAttribute(e,"xmi:type").val --let t in set tmp1 in t
 in
   return cases typ:
    ("uml:LiteralString") -> new UmlLiteralString(val),
@@ -244,11 +244,11 @@ in
 pre e.name ="defaultValue";
   
 -- Get multiplicity
-private getMultiplicity : XmlEntity ==> [IUmlMultiplicityElement]
-getMultiplicity(e) ==
+private GetMultiplicity : XmlEntity ==> [IUmlMultiplicityElement]
+GetMultiplicity(e) ==
 let eList = e.entities.entities,
-    lowerSet =  {getAttribute(el,"value").val | el in set elems eList & el.name = "lowerValue" and hasAttribute(el,"value")},
-    upperSet =  {getAttribute(el,"value").val | el in set elems eList & el.name = "upperValue" and hasAttribute(el,"value")}
+    lowerSet =  {GetAttribute(el,"value").val | el in set elems eList & el.name = "lowerValue" and HasAttribute(el,"value")},
+    upperSet =  {GetAttribute(el,"value").val | el in set elems eList & el.name = "upperValue" and HasAttribute(el,"value")}
 in
   if card upperSet = 0 and card lowerSet = 0 then
     return nil
@@ -261,15 +261,15 @@ in
 
 
 -- Create operation from xml element element
-private build_Operation : XmlEntity ==> IUmlOperation
-build_Operation(e) ==
-  let name         : seq of char = getNameAttribute(e),
-      visibility   : (IUmlVisibilityKind) = GetVisibility(getAttribute(e,"visibility")), 
+private BuildOperation : XmlEntity ==> IUmlOperation
+BuildOperation(e) ==
+  let name         : seq of char = GetNameAttribute(e),
+      visibility   : (IUmlVisibilityKind) = GetVisibility(GetAttribute(e,"visibility")), 
       multiplicity : IUmlMultiplicityElement = new UmlMultiplicityElement(false,false,0,0), --FIXME this is added since the static model isend implemented with this yet
-      isQuery      : bool = if hasAttribute(e,"isQuery") then StdLib`StringToBool(getAttribute(e,"isQuery").val) else false,
+      isQuery      : bool = if HasAttribute(e,"isQuery") then StdLib`StringToBool(GetAttribute(e,"isQuery").val) else false,
       type         : [IUmlType] = nil,
-      isStatic     : bool = if hasAttribute(e,"isStatic") then StdLib`StringToBool(getAttribute(e,"isStatic").val) else false,
-      id           : String = getAttribute(e,"xmi:id").val,
+      isStatic     : bool = if HasAttribute(e,"isStatic") then StdLib`StringToBool(GetAttribute(e,"isStatic").val) else false,
+      id           : String = GetAttribute(e,"xmi:id").val,
       params = CreateOperstionParameters(e),
       parameters = if params = nil then nil else new UmlParameters(params),
       operation    : IUmlOperation = new UmlOperation(name,
@@ -284,23 +284,23 @@ build_Operation(e) ==
     idToOperationMap := idToOperationMap ++ {id |-> operation};
       return operation;
   )
-pre isAttributeType(e,"uml:Operation");
+pre IsAttributeType(e,"uml:Operation");
 
 -- Create operation parameter to XML model
 protected CreateOperstionParameters : XmlEntity ==> [seq of IUmlParameter]
 CreateOperstionParameters(e) ==
   let elist = e.entities.entities,
-      parms = [new UmlParameter(getNameAttribute(elist(i)),
-                             lookUpType(elist(i)),-- getAttribute(p,"xmi:type").val
+      parms = [new UmlParameter(GetNameAttribute(elist(i)),
+                             LookUpType(elist(i)),-- GetAttribute(p,"xmi:type").val
                              new UmlMultiplicityElement(false,false,1,1),
                              "",
                              ConvertParameterDirectionKind(
-                               getAttribute(elist(i),"direction").val))
+                               GetAttribute(elist(i),"direction").val))
            | i in set inds elist 
            & elist(i).name = "ownedParameter"]
   in 
     return if len parms = 0 then nil else parms
-pre isAttributeType(e,"uml:Operation");
+pre IsAttributeType(e,"uml:Operation");
 
 functions
 -- Convert parameter direction kind to AST type
@@ -318,92 +318,92 @@ cases val:
 end;
 
 -- Create constraint from constraint elements
-private build_Constraint : XmlEntity -> IUmlConstraint
-build_Constraint(e) ==
+private BuildConstraint : XmlEntity -> IUmlConstraint
+BuildConstraint(e) ==
   let elist = e.entities.entities,
-      ids = { getAttribute(p,"xmi:idref").val | p in set elems elist & hasAttribute(p,"xmi:idref")},
+      ids = { GetAttribute(p,"xmi:idref").val | p in set elems elist & HasAttribute(p,"xmi:idref")},
       specification : String = hd Util`SetToSeq[seq of char]({p.data.data | p in set elems elist & p.name = "body"})
   in
     new UmlConstraint(ids,new UmlLiteralString(specification))
-pre isAttributeType(e,"uml:Constraint");
+pre IsAttributeType(e,"uml:Constraint");
 
 operations
 -- Create association from association element
-private build_Association : XmlEntity ==> IUmlAssociation
-build_Association(e) ==
+private BuildAssociation : XmlEntity ==> IUmlAssociation
+BuildAssociation(e) ==
   let elist = e.entities.entities,
-      associationId : [String] = if hasAttribute(e,"xmi:id") then getAttribute(e,"xmi:id").val else nil, 
-      props = {elist(i) | i in set inds elist & isAttributeType(elist(i),"uml:Property")},
+      associationId : [String] = if HasAttribute(e,"xmi:id") then GetAttribute(e,"xmi:id").val else nil, 
+      props = {elist(i) | i in set inds elist & IsAttributeType(elist(i),"uml:Property")},
       ownedNavivableEnds : (set of IUmlProperty) = 
-                           { build_Property(p,"",associationId) 
-                           | p in set props & not hasAttribute(p,"name") or
-                                              hasAttributeValue(p,"name","")},
+                           { BuildProperty(p,"",associationId) 
+                           | p in set props & not HasAttribute(p,"name") or
+                                              HasAttributeValue(p,"name","")},
       one = Util`SetToSeq[IUmlProperty](ownedNavivableEnds),
       ownerClassType = hd [ one(i).getType() | i in set inds one],
       ownerClass = let ct : IUmlClassNameType = ownerClassType in ct.getName(),
       ownedEnds : (set of IUmlProperty) = 
-                  {build_Property(p,ownerClass,associationId) 
+                  {BuildProperty(p,ownerClass,associationId) 
                   | p in set props 
-                  & hasAttribute(p,"name") and 
-                    len getAttribute(p,"name").val>0},
-      name : seq of char = if hasAttribute(e,"name")
-                           then getNameAttribute(e)
+                  & HasAttribute(p,"name") and 
+                    len GetAttribute(p,"name").val>0},
+      name : seq of char = if HasAttribute(e,"name")
+                           then GetNameAttribute(e)
                            else "",
-      id : String = getAttribute(e,"xmi:id").val
+      id : String = GetAttribute(e,"xmi:id").val
   in
     return new UmlAssociation(ownedEnds,ownedNavivableEnds,name,id)
-pre isAttributeType(e,"uml:Association");
+pre IsAttributeType(e,"uml:Association");
 
 --build qualifier info
-private build_AssociationQualifier : XmlEntity ==> ()
-build_AssociationQualifier(e) ==
+private BuildAssociationQualifier : XmlEntity ==> ()
+BuildAssociationQualifier(e) ==
   let list = [ e.entities.entities(i) 
              | i in set inds e.entities.entities 
              & e.entities.entities(i).name = "source" 
              or e.entities.entities(i).name = "target"],
       qualifiers : set of [QualifierInfo] =
-        {getQualifierInfo(sOrT) | sOrT in set elems list}
+        {GetQualifierInfo(sOrT) | sOrT in set elems list}
       --  , 
      -- qualifiersTarget : set of [QualifierInfo] =
-       -- {getQualifierInfo(getElement(list(i),"target")) 
+       -- {GetQualifierInfo(GetElement(list(i),"target")) 
          --                                   | i in set inds list 
-           --                                 & getElement(list(i),"target") <> nil
+           --                                 & GetElement(list(i),"target") <> nil
              --                               }                                             
   in
   (
     associationToQualifier := associationToQualifier 
                                  munion
-                                 { let id : String = getAttribute(e,"xmi:idref").val in id 
+                                 { let id : String = GetAttribute(e,"xmi:idref").val in id 
                                    |-> q
                                  | q in set qualifiers & q <> nil
                                  };
  --   associationToQualifier := associationToQualifier 
- --                                munion {let id : String = getAttribute(e,"xmi:idref").val in id 
+ --                                munion {let id : String = GetAttribute(e,"xmi:idref").val in id 
    --                                     |-> let a in set 
---                                            {getQualifierInfo(getElement(list(i),"source")) 
+--                                            {GetQualifierInfo(GetElement(list(i),"source")) 
 --                                            | i in set inds list 
---                                            & getElement(list(i),"source") <> nil
+--                                            & GetElement(list(i),"source") <> nil
 --                                            } 
 --                                            in a};
 --    associationToQualifier := associationToQualifier 
---                                 munion {let id : String = getAttribute(e,"xmi:idref").val in id 
+--                                 munion {let id : String = GetAttribute(e,"xmi:idref").val in id 
 --                                        |-> let a in set 
---                                            {getQualifierInfo(getElement(list(i),"target")) 
+--                                            {GetQualifierInfo(GetElement(list(i),"target")) 
 --                                            | i in set inds list 
---                                            & getElement(list(i),"target") <> nil
+--                                            & GetElement(list(i),"target") <> nil
 --                                            } 
 --                                            in a};   
   
   
   );
  
-private getQualifierInfo : XmlEntity ==> [QualifierInfo]
-getQualifierInfo(e) == 
-  let ec  = getElement(e,"constraints")
+private GetQualifierInfo : XmlEntity ==> [QualifierInfo]
+GetQualifierInfo(e) == 
+  let ec  = GetElement(e,"constraints")
   in
     if ec <> nil then
-      let a   : [String] = if hasAttribute(ec,"qualifier") then getAttribute(ec,"qualifier").val else nil,
-          id  : [String] = if hasAttribute(e,"xmi:idref") then getAttribute(e,"xmi:idref").val else nil
+      let a   : [String] = if HasAttribute(ec,"qualifier") then GetAttribute(ec,"qualifier").val else nil,
+          id  : [String] = if HasAttribute(e,"xmi:idref") then GetAttribute(e,"xmi:idref").val else nil
       in
       (
         if a <> nil then 
@@ -415,32 +415,32 @@ getQualifierInfo(e) ==
       return nil;
 
 -- Get UmlType from  XML type name
-private lookUpType : XmlEntity ==> IUmlType
-lookUpType(e) ==
-  return findType(getTypeId(e));
+private LookUpType : XmlEntity ==> IUmlType
+LookUpType(e) ==
+  return FindType(GetTypeId(e));
 
-private getTypeId : XmlEntity ==> String
-getTypeId(e) ==
+private GetTypeId : XmlEntity ==> String
+GetTypeId(e) ==
   let elist = e.entities.entities,
-  typeOption1 = if hasAttribute(e,"type") 
-                then {getAttribute(e,"type").val} 
-                else { getAttribute(elist(i),"xmi:idref").val  | i in set inds elist & elist(i).name = "type"}--,
+  typeOption1 = if HasAttribute(e,"type") 
+                then {GetAttribute(e,"type").val} 
+                else { GetAttribute(elist(i),"xmi:idref").val  | i in set inds elist & elist(i).name = "type"}--,
   --typeOption2 =  union
-   --    {a.val | a in set {getAttribute(e,"type")} & a <> nil}
+   --    {a.val | a in set {GetAttribute(e,"type")} & a <> nil}
   in 
     let id in set typeOption1-- union typeOption2 
       in
         return id;
 
 
-private findType : String ==> IUmlType
-findType(name) ==
+private FindType : String ==> IUmlType
+FindType(name) ==
       let typeName = if name in set dom classesTypeMap 
                      then classesTypeMap(name) 
                      else nil 
       in
         cases typeName:
-        (nil) -> (log.warn("Issuing unknown type: "^name);return new UmlClassNameType(removeEaPrefix(name))),
+        (nil) -> (log.warn("Issuing unknown type: "^name);return new UmlClassNameType(RemoveEaPrefix(name))),
         -- (nil)-> return new UmlIntegerType(),
          ("String")-> return new UmlStringType(),
          ("int")-> return new UmlIntegerType(),
@@ -452,7 +452,7 @@ findType(name) ==
         
 --private tryFindType : String ==> IUmlType
 --tryFindType(id) ==
---  let t : IUmlType = findType(id),
+--  let t : IUmlType = FindType(id),
 --      typeNameOnFailure : String = t
 --  in
 --     cases true:
@@ -469,46 +469,46 @@ findType(name) ==
 public VisitXmlEntity: XmlEntity ==> ()
 VisitXmlEntity (e) == 
 ( 
-  classes := classes union {exstractClass(entity) | entity in set {e} & 
-                   isAttributeType(entity,"uml:Class") and
-                   (getNameAttribute(entity) not in set primiticeTypes)};
+  classes := classes union {ExstractClass(entity) | entity in set {e} & 
+                   IsAttributeType(entity,"uml:Class") and
+                   (GetNameAttribute(entity) not in set primiticeTypes)};
                    
-  associations := associations union {build_Association(entity) | entity in set {e} & 
-                   isAttributeType(entity,"uml:Association")};
+  associations := associations union {BuildAssociation(entity) | entity in set {e} & 
+                   IsAttributeType(entity,"uml:Association")};
 
 );
 
 functions
 -- Test if a element has an attribute with a specific name
-private hasAttribute : XmlEntity * String -> bool
-hasAttribute(e,name) ==
+private HasAttribute : XmlEntity * String -> bool
+HasAttribute(e,name) ==
   let list = e.attributes.attributes
   in
    exists i in set inds list & list(i).name=name;
 
 -- Test if a element has a specific element with a specific name and type
-private hasAttributeValue : XmlEntity * String * String -> bool
-hasAttributeValue(e,name,val) ==
+private HasAttributeValue : XmlEntity * String * String -> bool
+HasAttributeValue(e,name,val) ==
   let list = e.attributes.attributes
   in
    exists i in set inds list & list(i).name=name and list(i).val = val;
  
 -- Test if a element has a specific type
 --  By looking up the type attribute
-private isAttributeType : XmlEntity * String -> bool
-isAttributeType(e,val) == 
-  hasAttributeValue(e,"xmi:type",val);
+private IsAttributeType : XmlEntity * String -> bool
+IsAttributeType(e,val) == 
+  HasAttributeValue(e,"xmi:type",val);
 
 -- Get the UML type attribute value or the name of the element if no such attribute exists
-private getElementType : XmlEntity -> String
-getElementType(e) == 
-  if getAttribute(e,"xmi:type") <> nil 
-  then getAttribute(e,"xmi:type").val
+private GetElementType : XmlEntity -> String
+GetElementType(e) == 
+  if GetAttribute(e,"xmi:type") <> nil 
+  then GetAttribute(e,"xmi:type").val
   else e.name;
 
 -- Get XML element from name. If unknown return nil
-private getElement : XmlEntity * String -> [XmlEntity]
-getElement(e,name) ==
+private GetElement : XmlEntity * String -> [XmlEntity]
+GetElement(e,name) ==
   let list = e.entities.entities,
       allList = [ list(i) | i in set inds list & list(i).name=name ]
   in 
@@ -518,8 +518,8 @@ getElement(e,name) ==
       nil;
 
 -- Get XML attribute from name. If unknown return nil
-private getAttribute : XmlEntity * String -> [XmlAttribute]
-getAttribute(e,name) ==
+private GetAttribute : XmlEntity * String -> [XmlAttribute]
+GetAttribute(e,name) ==
   let list = e.attributes.attributes,
       attList = [ list(i) | i in set inds list & list(i).name=name ]
   in 
@@ -549,42 +549,42 @@ operations
 ------------------------------------------------ 
     
 -- Create a Collaboration from a XML node
-private build_Collobration : XmlEntity ==> IUmlCollaboration
-build_Collobration(e) ==
+private BuildCollobration : XmlEntity ==> IUmlCollaboration
+BuildCollobration(e) ==
   let elist = e.entities.entities,
-      interactions = { build_Interaction(p) | p in set elems elist & isAttributeType(p,"uml:Interaction")}
+      interactions = { BuildInteraction(p) | p in set elems elist & IsAttributeType(p,"uml:Interaction")}
   in
     return new UmlCollaboration(interactions)
-pre isAttributeType(e,"uml:Collaboration");
+pre IsAttributeType(e,"uml:Collaboration");
 
 -- Create a Collaboration from a XML node
-private build_Interaction : XmlEntity ==> IUmlInteraction
-build_Interaction(e) ==
+private BuildInteraction : XmlEntity ==> IUmlInteraction
+BuildInteraction(e) ==
   let elist = e.entities.entities,
-      props : map String to IUmlProperty = { getAttribute(p,"xmi:id").val |-> build_Property(p,"",nil) | p in set elems elist & isAttributeType(p,"uml:Property")}
+      props : map String to IUmlProperty = { GetAttribute(p,"xmi:id").val |-> BuildProperty(p,"",nil) | p in set elems elist & IsAttributeType(p,"uml:Property")}
   in
   (
       
-      lifeLineMap := lifeLineMap ++ {getAttribute(p,"xmi:id").val |-> 
-                                       new UmlLifeLine(getNameAttribute(p),
-                                           props(getAttribute(p,"represents").val).getType()) 
+      lifeLineMap := lifeLineMap ++ {GetAttribute(p,"xmi:id").val |-> 
+                                       new UmlLifeLine(GetNameAttribute(p),
+                                           props(GetAttribute(p,"represents").val).getType()) 
                                      | p in set elems elist 
                                      & p.name = "lifeline"};
 
       let
-      name : seq of char = getNameAttribute(e),
+      name : seq of char = GetNameAttribute(e),
       lifeLines : set of IUmlLifeLine = rng lifeLineMap,
       mosfragments : set of IUmlInteractionFragment = 
-        {build_Fragment(f) | f in set elems elist 
-                           & isAttributeType(f,"uml:MessageOccurrenceSpecification")},
+        {BuildFragment(f) | f in set elems elist 
+                           & IsAttributeType(f,"uml:MessageOccurrenceSpecification")},
       besfragments : set of IUmlInteractionFragment = 
-        {build_Fragment(f) | f in set elems elist 
-                           & isAttributeType(f,"uml:BehaviorExecutionSpecification")},
+        {BuildFragment(f) | f in set elems elist 
+                           & IsAttributeType(f,"uml:BehaviorExecutionSpecification")},
       combifragments : set of IUmlInteractionFragment = 
-        {build_Fragment(f) | f in set elems elist 
-                           & isAttributeType(f,"uml:CombinedFragment")},
+        {BuildFragment(f) | f in set elems elist 
+                           & IsAttributeType(f,"uml:CombinedFragment")},
       messages : seq of IUmlMessage = 
-        [build_Message(elist(i)) | i in set inds elist 
+        [BuildMessage(elist(i)) | i in set inds elist 
                                  & elist(i).name = "message"]--,
      -- mm =dunion {{let moss : UmlMos = mos in mk_( moss,m) | mos in set mosfragments & isofclass(UmlMos,mos) and mos in set {m.getSendEvent(), m.getSendReceive()}} | m in set elems messages}
       
@@ -596,18 +596,18 @@ build_Interaction(e) ==
                                   messages)
      --                             )
   )
-pre isAttributeType(e,"uml:Interaction");
+pre IsAttributeType(e,"uml:Interaction");
 
 
 
 -- Create a Collaboration from a XML node
-private build_Message : XmlEntity ==> IUmlMessage
-build_Message(e) ==
-  let --name = getAttribute(e,"name").val,
+private BuildMessage : XmlEntity ==> IUmlMessage
+BuildMessage(e) ==
+  let --name = GetAttribute(e,"name").val,
       messageKind : IUmlMessageKind = new UmlMessageKind(UmlMessageKindQuotes`IQCOMPLETE),
       messageSort : IUmlMessageSort = new UmlMessageSort(UmlMessageSortQuotes`IQSYNCHCALL),
-      mosSend : IUmlMos = mosMap(getAttribute(e,"sendEvent").val),
-      mosRecive : IUmlMos = mosMap(getAttribute(e,"receiveEvent").val), 
+      mosSend : IUmlMos = mosMap(GetAttribute(e,"sendEvent").val),
+      mosRecive : IUmlMos = mosMap(GetAttribute(e,"receiveEvent").val), 
       args : (seq of IUmlValueSpecification)= [],
       name : String = mosRecive.getEvent().getOperation().getName()
   in
@@ -622,29 +622,29 @@ pre e.name ="message";
 
 -- Delegating the creation of a fragment to the responsible operation
 --  only needed because limitation in Java Code Gen
-private build_Fragment : XmlEntity ==> IUmlInteractionFragment
-build_Fragment(e) ==
-  cases getElementType(e):
+private BuildFragment : XmlEntity ==> IUmlInteractionFragment
+BuildFragment(e) ==
+  cases GetElementType(e):
     ("uml:MessageOccurrenceSpecification") ->
-      return build_Mos(e),
+      return BuildMos(e),
     ("uml:BehaviorExecutionSpecification") ->
-      return build_Bes(e),
+      return BuildBes(e),
     ("uml:CombinedFragment") -> 
-      return build_Combi(e),
+      return BuildCombi(e),
     others -> error
   end
-pre isAttributeType(e,"uml:MessageOccurrenceSpecification") or
-    isAttributeType(e,"uml:BehaviorExecutionSpecification") or
-    isAttributeType(e,"uml:CombinedFragment");
+pre IsAttributeType(e,"uml:MessageOccurrenceSpecification") or
+    IsAttributeType(e,"uml:BehaviorExecutionSpecification") or
+    IsAttributeType(e,"uml:CombinedFragment");
 
 -- Create MOS from XmlElement
-private build_Mos : XmlEntity ==> IUmlMos
-build_Mos(e) ==
-  let name = getNameAttribute(e),
+private BuildMos : XmlEntity ==> IUmlMos
+BuildMos(e) ==
+  let name = GetNameAttribute(e),
       message : [IUmlMessage] = nil,
       lifeLines : IUmlLifeLine = let l in set {lifeLineMap(c) | c in set elems GetCovered(e)} in l,
-      id = getAttribute(e,"xmi:id").val,
-      event :IUmlCallEvent = idToClallEventMap(getAttribute(e,"event").val),
+      id = GetAttribute(e,"xmi:id").val,
+      event :IUmlCallEvent = idToClallEventMap(GetAttribute(e,"event").val),
       mos = new UmlMos(name,
                        message,
                        lifeLines,
@@ -654,16 +654,16 @@ build_Mos(e) ==
     mosMap := mosMap ++ {id |-> mos};
     return mos
   )
-pre isAttributeType(e,"uml:MessageOccurrenceSpecification");
+pre IsAttributeType(e,"uml:MessageOccurrenceSpecification");
 
 -- Create BES from XmlElement
-private build_Bes : XmlEntity ==> IUmlBes
-build_Bes(e) ==
-  let name               = getNameAttribute(e),
-      startOc : IUmlMos  = mosMap(getAttribute(e,"start").val),
-      finishOc : IUmlMos = mosMap(getAttribute(e,"finish").val),
+private BuildBes : XmlEntity ==> IUmlBes
+BuildBes(e) ==
+  let name               = GetNameAttribute(e),
+      startOc : IUmlMos  = mosMap(GetAttribute(e,"start").val),
+      finishOc : IUmlMos = mosMap(GetAttribute(e,"finish").val),
       covered : set of IUmlLifeLine = {lifeLineMap(c) | c in set elems GetCovered(e)},
-      id = getAttribute(e,"xmi:id").val,
+      id = GetAttribute(e,"xmi:id").val,
       bes = new UmlBes(name,
                        startOc,
                        finishOc,
@@ -673,17 +673,17 @@ build_Bes(e) ==
     besMap := besMap ++ {id |-> bes};
     return bes
   )
-pre isAttributeType(e,"uml:BehaviorExecutionSpecification");
+pre IsAttributeType(e,"uml:BehaviorExecutionSpecification");
 
 -- Create CombinedFragment from XmlElement
-private build_Combi : XmlEntity ==> IUmlCombinedFragment
-build_Combi(e) ==
+private BuildCombi : XmlEntity ==> IUmlCombinedFragment
+BuildCombi(e) ==
   let elist = e.entities.entities,
-      name               = getNameAttribute(e),
-      interactionOperatorKind : IUmlInteractionOperatorKind = GetIntOperationKind(getAttribute(e,"interactionOperator").val),
-      operands : seq of IUmlInteractionOperand = [build_Operand(elist(i)) | i in set inds elist & elist(i).name ="operand"  ],
+      name               = GetNameAttribute(e),
+      interactionOperatorKind : IUmlInteractionOperatorKind = GetIntOperationKind(GetAttribute(e,"interactionOperator").val),
+      operands : seq of IUmlInteractionOperand = [BuildOperand(elist(i)) | i in set inds elist & elist(i).name ="operand"  ],
       covered : set of IUmlLifeLine = {lifeLineMap(c) | c in set elems GetCovered(e)},
-      id = getAttribute(e,"xmi:id").val,
+      id = GetAttribute(e,"xmi:id").val,
       combi = new UmlCombinedFragment(name,
                                     interactionOperatorKind,
                                     operands,
@@ -693,7 +693,7 @@ build_Combi(e) ==
     combiMap := combiMap ++ {id |-> combi};
     return combi
   )
-pre isAttributeType(e,"uml:CombinedFragment");
+pre IsAttributeType(e,"uml:CombinedFragment");
 functions
 -- Get interaction kind from a string
 private GetIntOperationKind : String -> IUmlInteractionOperatorKind
@@ -706,14 +706,14 @@ pre text = "alt" or text = "loop";
 
 operations
 -- Create Operand from XmlElement
-private build_Operand : XmlEntity ==> IUmlInteractionOperand
-build_Operand(e) ==
+private BuildOperand : XmlEntity ==> IUmlInteractionOperand
+BuildOperand(e) ==
   let elist = e.entities.entities,
       name : seq of char              = "",
       fragments :  seq of IUmlInteractionFragment = [],
       covered : set of IUmlMos = {mosMap(c) | c in set elems StdLib`Split( conc
                                    [GetCoveredExtension(elist(i)) | i in set inds elist 
-                                                           & hasAttributeValue(elist(i),"extender","umltrans")],' ') },
+                                                           & HasAttributeValue(elist(i),"extender","umltrans")],' ') },
       guard : [IUmlInteractionConstraint] = if exists gu in set elems elist & gu.name ="guard" 
                                             then GetGuard(let g in set {p | p in set elems elist & p.name ="guard"} in g) 
                                             else nil
@@ -726,8 +726,8 @@ build_Operand(e) ==
 pre e.name = "operand";
 
 -- remove EA prefix from name overridden in Java
-public removeEaPrefix : String ==> String
-removeEaPrefix(name) == 
+public RemoveEaPrefix : String ==> String
+RemoveEaPrefix(name) == 
   return 
   cases name:
      "EAJava_" ^ nm, 
@@ -745,8 +745,8 @@ removeEaPrefix(name) ==
 
 
 -- gets the name attribyte but removes EA prefixes first
-public getNameAttribute : XmlEntity ==> String
-getNameAttribute(e) == return removeEaPrefix(getAttribute(e,"name").val)
+public GetNameAttribute : XmlEntity ==> String
+GetNameAttribute(e) == return RemoveEaPrefix(GetAttribute(e,"name").val)
 
 functions
 -- Get covered extension. Exstracts covered string
@@ -755,25 +755,25 @@ GetCoveredExtension(e) ==
   let elist = e.entities.entities in
       let p in set {co.data.data | co in set elems elist & co.name ="covered"}
       in p
-pre hasAttributeValue(e,"extender","umltrans") and 
+pre HasAttributeValue(e,"extender","umltrans") and 
     exists el in set elems e.entities.entities & el.data <> nil and el.name = "covered";
 
 -- Get covered seq of ids
 private GetCovered : XmlEntity -> seq of String
 GetCovered(e)==
-let text : String = getAttribute(e,"covered").val
+let text : String = GetAttribute(e,"covered").val
   in
     StdLib`Split(text,' ')
-pre hasAttribute(e,"covered");
+pre HasAttribute(e,"covered");
 
 -- Get guard from entity
 private GetGuard : XmlEntity -> IUmlInteractionConstraint
 GetGuard(e)==
 let elist = e.entities.entities,
-    minint = let tmp in set {getGuardConstraintValue(p) 
+    minint = let tmp in set {GetGuardConstraintValue(p) 
                              | p in set elems elist 
                              & p.name = "minint"} in tmp, 
-    maxint = let tmp in set {getGuardConstraintValue(p) 
+    maxint = let tmp in set {GetGuardConstraintValue(p) 
                              | p in set elems elist 
                              & p.name = "maxint"} in tmp
   in
@@ -781,21 +781,21 @@ let elist = e.entities.entities,
 pre e.name="guard";
 
 -- Get value of constraint on a guard
-private getGuardConstraintValue : XmlEntity -> [IUmlValueSpecification]
-getGuardConstraintValue(e) ==
-  if hasAttribute(e,"value") and isAttributeType(e,"uml:LiteralInteger") 
-  then new UmlLiteralInteger(StdLib`StringToInt(getAttribute(e,"value").val))
+private GetGuardConstraintValue : XmlEntity -> [IUmlValueSpecification]
+GetGuardConstraintValue(e) ==
+  if HasAttribute(e,"value") and IsAttributeType(e,"uml:LiteralInteger") 
+  then new UmlLiteralInteger(StdLib`StringToInt(GetAttribute(e,"value").val))
   else nil; 
 
 operations
 -- Build id to callEvent map
-private buildCallEventMap : set of XmlEntity ==> map String to IUmlCallEvent
-buildCallEventMap(elist) ==
-  let m = { getAttribute(e,"xmi:id").val |-> new UmlCallEvent(idToOperationMap(getAttribute(e,"operation").val)) |  
+private BuildCallEventMap : set of XmlEntity ==> map String to IUmlCallEvent
+BuildCallEventMap(elist) ==
+  let m = { GetAttribute(e,"xmi:id").val |-> new UmlCallEvent(idToOperationMap(GetAttribute(e,"operation").val)) |  
             e in set elist}
   in
     return m
-pre forall e in set elist & isAttributeType(e,"uml:CallEvent");
+pre forall e in set elist & IsAttributeType(e,"uml:CallEvent");
 
 
 --private GetClassFromId : String ==> [IUmlClass]
@@ -811,8 +811,8 @@ VisitXmlAttribute (-) == skip;
 public VisitXmlData: XmlData ==> ()
 VisitXmlData (-) == skip;
   
-public setEncoding : seq of char ==>()
-setEncoding(encodingType) == skip;
+public SetEncoding : seq of char ==>()
+SetEncoding(-) == skip;
   
 end Xml2UmlModel
 \end{vdm_al}

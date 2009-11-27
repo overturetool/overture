@@ -28,8 +28,8 @@ operations
 ------------------------------------------------
 ------------------------------------------------
 -- Convert UML model to OmlDocument
-public init : IUmlModel ==> IOmlDocument
-init(model) ==
+public Init : IUmlModel ==> IOmlDocument
+Init(model) ==
   let 
       associations = { a | a in set model.getDefinitions() 
                          & isofclass(IUmlAssociation,a)},
@@ -37,13 +37,13 @@ init(model) ==
                          & isofclass(IUmlConstraint,a)}
   in 
   (
-    extractInstanceVarsFromAssociations(associations,constraints);
+    ExtractInstanceVarsFromAssociations(associations,constraints);
     return new OmlDocument(model.getName(),
-      new OmlSpecifications(filterIlligalClassNames(build_classes(model))),[]);
+      new OmlSpecifications(FilterIlligalClassNames(BuildClasses(model))),[]);
   );
   
-private filterIlligalClassNames : seq of IOmlClass ==> seq of IOmlClass
-filterIlligalClassNames(classes) == 
+private FilterIlligalClassNames : seq of IOmlClass ==> seq of IOmlClass
+FilterIlligalClassNames(classes) == 
   return [classes(i) 
          | i in set inds classes 
          & '$' not in set elems classes(i).getIdentifier() 
@@ -52,9 +52,9 @@ filterIlligalClassNames(classes) ==
 -- Build Oml Classes from the Uml model.
 --  This needs the constraints and associations to be 
 --   pre parsed before this is called
-public build_classes : IUmlModel ==> seq of IOmlClass
-build_classes(model) ==
-  let traceDefMap : map String to IOmlTraceDefinitions = build_traces(model),
+public BuildClasses : IUmlModel ==> seq of IOmlClass
+BuildClasses(model) ==
+  let traceDefMap : map String to IOmlTraceDefinitions = BuildTraces(model),
       classes: set of IUmlClass = {c | c in set model.getDefinitions() 
                                      & isofclass(IUmlClass,c)}
       
@@ -63,21 +63,21 @@ build_classes(model) ==
                                         if cName in set dom traceDefMap 
                                         then traceDefMap(cName) 
                                         else nil 
-                                      in build_class(c,traceDef)| c in set classes}); 
+                                      in BuildClass(c,traceDef)| c in set classes}); 
 
 -- Build Oml class from Uml class
-public build_class : IUmlClass * [IOmlTraceDefinitions] ==> IOmlClass
-build_class(c,traceDef) ==
+public BuildClass : IUmlClass * [IOmlTraceDefinitions] ==> IOmlClass
+BuildClass(c,traceDef) ==
   let name : seq of char = c.getName(),
       supers = c.getSuperClass(),
       inheritanceClause : [OmlInheritanceClause] = 
         if len supers > 0 
         then new OmlInheritanceClause( [ supers(i).getName() |i in set inds supers]) 
         else nil,
-      body : set of IOmlDefinitionBlock = dunion { build_defs(d) | d in set c.getClassBody() },
+      body : set of IOmlDefinitionBlock = dunion { BuildDefs(d) | d in set c.getClassBody() },
       bodyWithTrace : set of IOmlDefinitionBlock = if traceDef <> nil then body union {traceDef} else body, 
       systemSpec : bool = false,
-      instVars : seq of IOmlInstanceVariableShape =  getAssociationInstanceVars(name),
+      instVars : seq of IOmlInstanceVariableShape =  GetAssociationInstanceVars(name),
       bodyLst = if len instVars > 0 
                 then bodyWithTrace union {new OmlInstanceVariableDefinitions(instVars)} 
                 else bodyWithTrace
@@ -90,18 +90,18 @@ build_class(c,traceDef) ==
   
 -- Build definitions from Uml definition block
 --  Here both values and instance variables are extracted
-public build_defs : IUmlDefinitionBlock ==> set of IOmlDefinitionBlock
-build_defs(db) ==
+public BuildDefs : IUmlDefinitionBlock ==> set of IOmlDefinitionBlock
+BuildDefs(db) ==
   cases true:
    (isofclass(IUmlOwnedProperties,db)) -> 
      let tmp : IUmlOwnedProperties = db 
      in 
-       return {build_defValues(tmp)} union 
-              {build_defInstanceVariables(tmp)},
+       return {BuildDefValues(tmp)} union 
+              {BuildDefInstanceVariables(tmp)},
    (isofclass(IUmlOwnedOperations,db)) -> 
      let tmp : IUmlOwnedOperations = db 
      in 
-       return build_defOperations(tmp), 
+       return BuildDefOperations(tmp), 
              
               
               
@@ -112,18 +112,18 @@ build_defs(db) ==
 -- Values 
 -----------------------------------------------------
 -- Build value definitions from Uml properties
-public build_defValues : IUmlOwnedProperties ==> IOmlDefinitionBlock
-build_defValues(block) ==
+public BuildDefValues : IUmlOwnedProperties ==> IOmlDefinitionBlock
+BuildDefValues(block) ==
   let props = block.getPropetityList(),
       valueProps = {p | p in set props 
                       & p.hasIsReadOnly() and p.getIsReadOnly() = true},
-      val = {build_value(v) | v in set valueProps}
+      val = {BuildValue(v) | v in set valueProps}
   in
     return new OmlValueDefinitions(Util`SetToSeq[IOmlValueDefinition](val));
     
 -- Build value definition from a Uml property
-public build_value : IUmlProperty ==> IOmlValueDefinition
-build_value(prop) ==
+public BuildValue : IUmlProperty ==> IOmlValueDefinition
+BuildValue(prop) ==
   let asyncAccess = false,
       statAccess  = prop.getIsStatic(),
       scope       = ConvertVisibility(prop.getVisibility()),
@@ -132,7 +132,7 @@ build_value(prop) ==
       multiplicity= if prop.hasMultiplicity() then prop.getMultiplicity() else nil,
       type        = ConvertType(prop.getType(),multiplicity),
       expression : IOmlExpression =  
-        getDefaultExpression(prop.getDefault(),type),
+        GetDefaultExpression(prop.getDefault(),type),
       valueShape  = new OmlValueShape(pattern, type, expression)
    in
      return new OmlValueDefinition(access, valueShape)
@@ -142,20 +142,20 @@ pre prop.hasDefault();
 -- Instance variables
 -----------------------------------------------------
 -- Build instance variable definition form Uml property
-public build_defInstanceVariables : IUmlOwnedProperties ==> IOmlDefinitionBlock
-build_defInstanceVariables(block) ==
+public BuildDefInstanceVariables : IUmlOwnedProperties ==> IOmlDefinitionBlock
+BuildDefInstanceVariables(block) ==
   let props = block.getPropetityList(),
       valueProps = {p | p in set props 
                       & p.hasIsReadOnly() and 
                         p.getIsReadOnly() = false},
-      val = {build_instanceVariable(v) | v in set valueProps},
+      val = {BuildInstanceVariable(v) | v in set valueProps},
       seqVal = Util`SetToSeq[IOmlInstanceVariable](val)
   in
     return new OmlInstanceVariableDefinitions(seqVal);
     
 -- Create instance variable from Uml property
-public build_instanceVariable : IUmlProperty ==> IOmlInstanceVariable
-build_instanceVariable(prop) ==
+public BuildInstanceVariable : IUmlProperty ==> IOmlInstanceVariable
+BuildInstanceVariable(prop) ==
   let asyncAccess = false,
       statAccess  = prop.getIsStatic(),
       scope       = ConvertVisibility(prop.getVisibility()),
@@ -164,7 +164,7 @@ build_instanceVariable(prop) ==
       type        = ConvertType(prop.getType(),multiplicity),
       expression : [IOmlExpression] =  
         if prop.hasDefault() 
-        then getDefaultExpression(prop.getDefault(),type) 
+        then GetDefaultExpression(prop.getDefault(),type) 
         else nil,
       assignmentDef = 
         new OmlAssignmentDefinition(prop.getName(),type,expression)
@@ -175,12 +175,12 @@ build_instanceVariable(prop) ==
 -- Operation
 -----------------------------------------------------
 -- Build operation definition form Uml property
-public build_defOperations : IUmlOwnedOperations ==> set of IOmlDefinitionBlock
-build_defOperations(block) ==
+public BuildDefOperations : IUmlOwnedOperations ==> set of IOmlDefinitionBlock
+BuildDefOperations(block) ==
   let props = block.getOperationList(),
       valOps = {p | p in set props },
-      valOperations = {build_Operation(v) | v in set valOps & not v.getIsQuery()},
-      valFunctions = {build_Function(v) | v in set valOps & v.getIsQuery()},
+      valOperations = {BuildOperation(v) | v in set valOps & not v.getIsQuery()},
+      valFunctions = {BuildFunction(v) | v in set valOps & v.getIsQuery()},
       seqValOperations = Util`SetToSeq[IOmlOperationDefinition](valOperations),
       seqValFunctions = Util`SetToSeq[IOmlFunctionDefinition](valFunctions),
       retOps = if len seqValOperations > 0 
@@ -194,14 +194,14 @@ build_defOperations(block) ==
       retOps union retFunc;
     
 -- Create operation from Uml property
-public build_Operation : IUmlOperation ==> IOmlOperationDefinition
-build_Operation(prop) ==
+public BuildOperation : IUmlOperation ==> IOmlOperationDefinition
+BuildOperation(prop) ==
   let asyncAccess = false,
       statAccess  = prop.getIsStatic(),
       scope       = ConvertVisibility(prop.getVisibility()),
       access      = new OmlAccessDefinition(asyncAccess,statAccess, scope),
       mk_(parms,
-          type)   = buildParameters(if prop.hasOwnedParameters() then prop.getOwnedParameters().getParameterList() else [],
+          type)   = BuildParameters(if prop.hasOwnedParameters() then prop.getOwnedParameters().getParameterList() else [],
                                     prop.getIsQuery()), --new OmlOperationType(new OmlEmptyType(),new OmlEmptyType()),--if prop.hasType() then ConvertType(prop.getType()) else ,
       name : 
        seq of char= prop.getName(),
@@ -213,8 +213,8 @@ build_Operation(prop) ==
   
 -- Convert a sequence of IUmlParamter to a seq of IOmlPattern and the coresponding
 -- IOmlType for a function or operation   
-private buildParameters : seq of IUmlParameter * bool ==> seq of IOmlPattern * IOmlType
-buildParameters(parms,buildFunction) ==
+private BuildParameters : seq of IUmlParameter * bool ==> seq of IOmlPattern * IOmlType
+BuildParameters(parms,buildFunction) ==
   if parms = [] 
   then if buildFunction
        then return mk_([],new OmlPartialFunctionType(new OmlEmptyType(),
@@ -222,26 +222,26 @@ buildParameters(parms,buildFunction) ==
        else return mk_([],new OmlOperationType(new OmlEmptyType(),
                                                new OmlEmptyType()))
   else
-    let type     = buildParameterType(parms,buildFunction),
+    let type     = BuildParameterType(parms,buildFunction),
         patterns = [ new OmlPatternIdentifier(parms(i).getName()) 
                    | i in set inds parms
                    & parms(i).getDirection().getValue() <> UmlParameterDirectionKindQuotes`IQRETURN]
 in 
-  return mk_(flip(patterns),type);
+  return mk_(Flip(patterns),type);
 
 -- Flip pattern order, could be changed to function poly
-public flip : seq of IOmlPatternIdentifier ==> seq of IOmlPatternIdentifier
-flip(list) == 
+public Flip : seq of IOmlPatternIdentifier ==> seq of IOmlPatternIdentifier
+Flip(list) == 
   if len list = 1
   then return [hd list]
   else if len list = 0
   then return []
-  else return flip(tl list) ^ [hd list];
+  else return Flip(tl list) ^ [hd list];
 
 -- Convert IUmlParameters for a function ot operation to a IOmlType
 -- First the return type is converted and then the rest of parameters
-private buildParameterType : seq of IUmlParameter * bool ==> IOmlType
-buildParameterType(tps,buildFunction) ==
+private BuildParameterType : seq of IUmlParameter * bool ==> IOmlType
+BuildParameterType(tps,buildFunction) ==
 let mult      = new UmlMultiplicityElement(false,false,1,1),
     retType   = let tmp in set { t 
                              | t in set elems tps 
@@ -276,14 +276,14 @@ ConvertTypes(tps) ==
 --  Functions
 ------------------------------------------------------
 -- Create operation from Uml property
-public build_Function : IUmlOperation ==> IOmlFunctionDefinition
-build_Function(prop) ==
+public BuildFunction : IUmlOperation ==> IOmlFunctionDefinition
+BuildFunction(prop) ==
   let asyncAccess = false,
       statAccess  = prop.getIsStatic(),
       scope       = ConvertVisibility(prop.getVisibility()),
       access      = new OmlAccessDefinition(asyncAccess,statAccess, scope),
       mk_(parms,
-          type)   = buildParameters(if prop.hasOwnedParameters() then prop.getOwnedParameters().getParameterList() else [],
+          type)   = BuildParameters(if prop.hasOwnedParameters() then prop.getOwnedParameters().getParameterList() else [],
                                     prop.getIsQuery()), --new OmlOperationType(new OmlEmptyType(),new OmlEmptyType()),--if prop.hasType() then ConvertType(prop.getType()) else ,
       name : 
        seq of char= prop.getName(),
@@ -307,31 +307,31 @@ build_Function(prop) ==
 --                                      then nil 
 --                                      else let p in set elems shape.getParameterList() 
 --                                           in p,
---    pars         = buildParameters(if pnames<>nil 
+--    pars         = BuildParameters(if pnames<>nil 
 --                                   then pnames.getPatternList() 
 --                                   else [],shape.getType())  
 ------------------------------------------------------
 --  Associations
 ------------------------------------------------------
 -- extract instance variables form associations
-public extractInstanceVarsFromAssociations : set of IUmlAssociation * set of IUmlConstraint ==> ()
-extractInstanceVarsFromAssociations(associations,constraints) ==
+public ExtractInstanceVarsFromAssociations : set of IUmlAssociation * set of IUmlConstraint ==> ()
+ExtractInstanceVarsFromAssociations(associations,constraints) ==
   let normalBiAss = --Binary associations (Normal instance, values)
         {a | a in set associations 
-           & not hasXorConstraint(constraints,a.getId()) and 
+           & not HasXorConstraint(constraints,a.getId()) and 
            (card a.getOwnedEnds() + card a.getOwnedNavigableEnds()) = 2},
       product = -- N-ary association to single product type
         {a | a in set associations 
-           & not hasXorConstraint(constraints,a.getId()) and 
+           & not HasXorConstraint(constraints,a.getId()) and 
            (card a.getOwnedEnds() + card a.getOwnedNavigableEnds()) > 2},
       xor =  -- Xor constraint association to union type
         {a | a in set associations 
-           & hasXorConstraint(constraints,a.getId()) and 
+           & HasXorConstraint(constraints,a.getId()) and 
            (card a.getOwnedEnds() + card a.getOwnedNavigableEnds()) >= 2}
   in
   (
      for all a in set normalBiAss do
-       extractBinaryAssociation(a.getOwnedEnds() 
+       ExtractBinaryAssociation(a.getOwnedEnds() 
                                 union 
                                 a.getOwnedNavigableEnds());
      
@@ -343,17 +343,17 @@ extractInstanceVarsFromAssociations(associations,constraints) ==
                                        | c in set constraints}  
       in 
         for all a in set xorEndss do
-          extractUnionAssociation(a);
+          ExtractUnionAssociation(a);
                                 
      for all a in set product do
-       extractProductAssociation(a.getOwnedEnds() 
+       ExtractProductAssociation(a.getOwnedEnds() 
                                  union 
                                  a.getOwnedNavigableEnds());
   );
 
 -- Test of an association has a constraint
-public hasXorConstraint : set of IUmlConstraint * String ==> bool
-hasXorConstraint(constraints,associationId) ==
+public HasXorConstraint : set of IUmlConstraint * String ==> bool
+HasXorConstraint(constraints,associationId) ==
   return exists c in set constraints 
     & if isofclass(IUmlLiteralString,c.getSpecification()) 
       then let spec : IUmlLiteralString = c.getSpecification() in
@@ -362,8 +362,8 @@ hasXorConstraint(constraints,associationId) ==
          & ce = associationId);
 
 -- extract property from binary association
-public extractBinaryAssociation : set of IUmlProperty ==> ()
-extractBinaryAssociation(props) ==
+public ExtractBinaryAssociation : set of IUmlProperty ==> ()
+ExtractBinaryAssociation(props) ==
 (
   let propSeq = Util`SetToSeq[IUmlProperty](props),
       pOwnerEnd = hd [propSeq(i) | i in set inds propSeq 
@@ -388,8 +388,8 @@ extractBinaryAssociation(props) ==
 pre card props > 0;
 
 -- extract union type from association
-public extractUnionAssociation :  set of IUmlProperty ==> ()
-extractUnionAssociation(props) ==
+public ExtractUnionAssociation :  set of IUmlProperty ==> ()
+ExtractUnionAssociation(props) ==
 (
   let ownerEndSet    = {p | p in set props & len p.getName() =0},
       propSeq        = Util`SetToSeq[IUmlProperty](props),
@@ -409,8 +409,8 @@ extractUnionAssociation(props) ==
 )
 pre card props > 0;
 -- extract product type from association
-public extractProductAssociation : set of IUmlProperty ==> ()
-extractProductAssociation(props) ==
+public ExtractProductAssociation : set of IUmlProperty ==> ()
+ExtractProductAssociation(props) ==
 (
   let ownerEndSet   = {p | p in set props & len p.getName() =0},
       propSeq       = Util`SetToSeq[IUmlProperty](props),
@@ -452,7 +452,7 @@ CreateInstanceVar(prop,type) ==
       type1        = ConvertType(prop.getType(),multiplicity),
       expression : [IOmlExpression] =  
         if prop.hasDefault() 
-        then getDefaultExpression(prop.getDefault(),type1) 
+        then GetDefaultExpression(prop.getDefault(),type1) 
         else nil,
       assignmentDef = new OmlAssignmentDefinition(prop.getName(),type,expression)
   in
@@ -461,21 +461,21 @@ CreateInstanceVar(prop,type) ==
 -- Add instance variable to the owning class
 private AddInstanceVarToClass : String * IOmlInstanceVariable ==> ()
 AddInstanceVarToClass(clName,instanceVar) ==
-  let existingSet = getAssociationInstanceVars(clName),
+  let existingSet = GetAssociationInstanceVars(clName),
       addedSet = if len existingSet > 0 then existingSet ^ [instanceVar] else [instanceVar]
   in
     classInstanceVars := classInstanceVars ++ { clName |-> addedSet};
 
 -- Get instance variabled for a specific class extracted from associations
-public getAssociationInstanceVars : String ==> seq of IOmlInstanceVariableShape 
-getAssociationInstanceVars(clName) == 
+public GetAssociationInstanceVars : String ==> seq of IOmlInstanceVariableShape 
+GetAssociationInstanceVars(clName) == 
   if clName in set dom classInstanceVars then 
     return classInstanceVars(clName)
   else
     return []; 
 -- Get default expression from Uml default value and type 
-public getDefaultExpression : [IUmlValueSpecification] * IOmlType ==> [IOmlExpression]
-getDefaultExpression(defaultValue,t) ==
+public GetDefaultExpression : [IUmlValueSpecification] * IOmlType ==> [IOmlExpression]
+GetDefaultExpression(defaultValue,t) ==
  if defaultValue = nil then 
    return nil
  else
@@ -496,7 +496,7 @@ getDefaultExpression(defaultValue,t) ==
       let tmp : String = val in
         return new OmlSymbolicLiteralExpression(new OmlTextLiteral(tmp)),
       (isofclass(IOmlSeq0Type,t))    -> 
-        return getDefaultExpression(defaultValue,let tmp : IOmlSeq0Type = t in tmp.getType()),
+        return GetDefaultExpression(defaultValue,let tmp : IOmlSeq0Type = t in tmp.getType()),
      -- (isofclass(IUmlSetValueType,t))    -> 
      --   return new OmlSymbolicLiteralExpression(new OmlTextLiteral(defaultValue)),
       others -> return nil
@@ -555,23 +555,23 @@ ApplyMultiplicity(t, mul) == -- NOT COMPLETED
 ------------------------------------------------------   
 functions
 -- Build traces from interaction
-private build_traces : IUmlModel -> map String to IOmlTraceDefinitions
-build_traces(model) ==
+private BuildTraces : IUmlModel -> map String to IOmlTraceDefinitions
+BuildTraces(model) ==
  let collOwnedBehavior = dunion{let tmp : IUmlCollaboration = 
    coll in tmp.getOwnedBehavior() | coll in set model.getDefinitions() 
                                   & isofclass(IUmlCollaboration,coll)}
  in
-   merge{build_trace(interaction) | interaction in set collOwnedBehavior};
+   merge{BuildTrace(interaction) | interaction in set collOwnedBehavior};
     
 -- build a trace definition from a SD by using the name of the SD as the name of
 --   the trace 
-private build_trace : IUmlInteraction -> map String to IOmlTraceDefinitions
-build_trace(interaction)==
+private BuildTrace : IUmlInteraction -> map String to IOmlTraceDefinitions
+BuildTrace(interaction)==
   let name = interaction.getName(),
       messages : seq of IUmlMessage = interaction.getMessages()
   in
     let defs : IOmlTraceDefinition = 
-      getTraceDefinition(messages, interaction.getFragments(),nil) 
+      GetTraceDefinition(messages, interaction.getFragments(),nil) 
     in
       let ownerClass in set {m.getSendEvent().getCovered().getRepresents() 
                             | m in set elems messages} 
@@ -582,16 +582,16 @@ build_trace(interaction)==
 -- Get definitions loops through the messages of the SD. It keeps looping until non of the messages
 --  are back. It handles one message at the time and groups the according to the fragments they are
 --  contained in by the interaction operand
-getTraceDefinition : seq of IUmlMessage * 
+GetTraceDefinition : seq of IUmlMessage * 
                      set of IUmlInteractionFragment * 
                      [IUmlInteractionOperand] -> [IOmlTraceDefinition]
-getTraceDefinition(msgs,fg,io) ==
+GetTraceDefinition(msgs,fg,io) ==
   if len msgs > 0 then
   ( 
     let m    = hd msgs,
         rest = if len msgs > 1 then tl msgs else [],
         cfg  = { f | f in set fg & isofclass(IUmlCombinedFragment,f) },
-        op   = getOperand(m,cfg)
+        op   = GetOperand(m,cfg)
     in
     (
       --No current CF is select by a IO
@@ -599,31 +599,31 @@ getTraceDefinition(msgs,fg,io) ==
       then
         -- no operand => no CF
         let mappDef : IOmlTraceDefinition = 
-              new OmlTraceDefinitionItem([],getMethodApply(m),nil),
-            restDef : IOmlTraceDefinition = getTraceDefinition(rest,cfg,op),
+              new OmlTraceDefinitionItem([],GetMethodApply(m),nil),
+            restDef : IOmlTraceDefinition = GetTraceDefinition(rest,cfg,op),
             defs : seq of IOmlTraceDefinition = [mappDef,restDef] 
         in
           let ret : IOmlTraceDefinition = new OmlTraceSequenceDefinition(defs) 
           in 
              ret
       else
-        if op <> nil and getCfIoKind(fg,op).getValue() = 
+        if op <> nil and GetCfIoKind(fg,op).getValue() = 
             UmlInteractionOperatorKindQuotes`IQLOOP 
         then
           -- CF = Loop
-          let loopDef : IOmlTraceDefinition    = getLoopDef(m,op),
-              restDef : [IOmlTraceDefinition]  = getTraceDefinition(rest,cfg,op),
+          let loopDef : IOmlTraceDefinition    = GetLoopDef(m,op),
+              restDef : [IOmlTraceDefinition]  = GetTraceDefinition(rest,cfg,op),
               defs : seq of IOmlTraceDefinition = if restDef <> nil 
                                                  then [loopDef,restDef]
                                                  else [loopDef],
               ret : IOmlTraceDefinition = new OmlTraceSequenceDefinition(defs) in ret
         else 
           -- CF = ALT
-          if op <> nil and getCfIoKind(fg,op).getValue() = 
+          if op <> nil and GetCfIoKind(fg,op).getValue() = 
               UmlInteractionOperatorKindQuotes`IQALT 
           then
-            let altDef : IOmlTraceDefinition   = getAltDef(rest,m,cfg,op),
-                restDef: [IOmlTraceDefinition] = getTraceDefinition(rest,cfg,op),
+            let altDef : IOmlTraceDefinition   = GetAltDef(rest,m,cfg,op),
+                restDef: [IOmlTraceDefinition] = GetTraceDefinition(rest,cfg,op),
                 defs : seq of IOmlTraceDefinition = if restDef <> nil 
                                                    then [altDef,restDef]
                                                    else [altDef],
@@ -638,18 +638,18 @@ getTraceDefinition(msgs,fg,io) ==
 -- Get loop definition converts a combined fragment into a Trace definition item
 --  where the repeat pattern is set according to the contraint of the interaction 
 --  operand inside the loop where the messages that is used as test is located
-private getLoopDef : IUmlMessage * [IUmlInteractionOperand] -> IOmlTraceDefinition
-getLoopDef(m,io) ==
+private GetLoopDef : IUmlMessage * [IUmlInteractionOperand] -> IOmlTraceDefinition
+GetLoopDef(m,io) ==
     new OmlTraceDefinitionItem([],
-                               getMethodApply(m),
-                               getRpEx(io));
+                               GetMethodApply(m),
+                               GetRpEx(io));
                                
 
 -- Get repeat pattern from an interaction operand
 --  the operand is associated with a message the there by the link to
 --  the trace repeat pattern with a test of the message  
-private getRpEx : [IUmlInteractionOperand] -> [IOmlTraceRepeatPattern]
-getRpEx(iOperand) ==
+private GetRpEx : [IUmlInteractionOperand] -> [IOmlTraceRepeatPattern]
+GetRpEx(iOperand) ==
  if iOperand = nil 
  then 
     nil
@@ -685,12 +685,12 @@ getRpEx(iOperand) ==
        
 -- Get alt definition converts a CF kind of alt into a Choice Definition
 --  Adding the message that is loceted inside it by the interaction operands
-private getAltDef : seq of IUmlMessage * IUmlMessage * 
+private GetAltDef : seq of IUmlMessage * IUmlMessage * 
                     set of IUmlCombinedFragment * [IUmlInteractionOperand]
                      -> IOmlTraceDefinition
-getAltDef(msgs,m,fg,io) ==
-  let mapp = getMethodApply(m),
-      rest = getTraceDefinition(msgs,fg,io),
+GetAltDef(msgs,m,fg,io) ==
+  let mapp = GetMethodApply(m),
+      rest = GetTraceDefinition(msgs,fg,io),
       defs = if rest <> nil 
              then [new OmlTraceDefinitionItem([],mapp,nil),rest] 
              else [new OmlTraceDefinitionItem([],mapp,nil)]
@@ -699,8 +699,8 @@ getAltDef(msgs,m,fg,io) ==
 
    
 -- Get Method Apply from a Message
-private getMethodApply : IUmlMessage -> IOmlTraceMethodApply
-getMethodApply(message) ==
+private GetMethodApply : IUmlMessage -> IOmlTraceMethodApply
+GetMethodApply(message) ==
   let methodName   : String = 
         message.getSendReceive().getEvent().getOperation().getName(),
       variableName : String = 
@@ -711,8 +711,8 @@ getMethodApply(message) ==
 
 -- Get Interaction Operand where a message is placed if the message is places in a IO
 --  else return nil
-private getOperand : IUmlMessage * set of IUmlCombinedFragment -> [IUmlInteractionOperand] 
-getOperand(m,fragments) ==
+private GetOperand : IUmlMessage * set of IUmlCombinedFragment -> [IUmlInteractionOperand] 
+GetOperand(m,fragments) ==
   let ops = { io | io in set elems conc 
                   Util`SetToSeq[seq of IUmlInteractionOperand]( 
                     {f.getOperand() | f in set  fragments 
@@ -727,8 +727,8 @@ getOperand(m,fragments) ==
     
 
 -- Get Combined fragment kind from a set of CF and a InteractionOperand
-private getCfIoKind : set of IUmlCombinedFragment * IUmlInteractionOperand -> IUmlInteractionOperatorKind
-getCfIoKind(fms,io) ==
+private GetCfIoKind : set of IUmlCombinedFragment * IUmlInteractionOperand -> IUmlInteractionOperatorKind
+GetCfIoKind(fms,io) ==
   let cf 
     in set {f | f in set  fms  
               & isofclass(IUmlCombinedFragment,f) 

@@ -47,7 +47,7 @@ Save(fileName, model,inLog) ==
   Util`CreateFile(fileName);
   CreateXmlFile(model);
   
-  xmlVisitor.setEncoding("UTF-8");
+  xmlVisitor.SetEncoding("UTF-8");
   xmlVisitor.VisitXmlDocument(doc);
   --Util`SaveBuf(fileName);
   Util`CloseFile();
@@ -638,15 +638,15 @@ AddNestedClassifiers(ownerId,nc) ==
     let ct : IUmlClassNameType = a
     in
     (
-      dcl id : String := GetNextId();
+      dcl ncId : String := GetNextId();
       doc.StartE("packagedElement");
 	  doc.StartA("xmi:type","uml:Dependency");
 	  doc.StartA("visibility","public");
-	  doc.StartA(ID_TAG,id);
+	  doc.StartA(ID_TAG,ncId);
 	  doc.StartA("supplier",ownerId);
 	  doc.StartA("client",classes(ct.getName()));
 	  doc.StopE("packagedElement");
-	  dependencies := dependencies ++ {id |-> mk_(ownerId,classes(ct.getName()))};
+	  dependencies := dependencies ++ {ncId |-> mk_(ownerId,classes(ct.getName()))};
 	)else
 	(
 	  log.info("Cannot handle nested type")
