@@ -27,6 +27,7 @@ import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
+import org.overturetool.vdmj.pog.POScopeContext;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.typechecker.Environment;
@@ -116,7 +117,11 @@ public class BlockStatement extends SimpleBlockStatement
 	public ProofObligationList getProofObligations(POContextStack ctxt)
 	{
 		ProofObligationList obligations = assignmentDefs.getProofObligations(ctxt);
+
+		ctxt.push(new POScopeContext());
 		obligations.addAll(super.getProofObligations(ctxt));
+		ctxt.pop();
+
 		return obligations;
 	}
 }

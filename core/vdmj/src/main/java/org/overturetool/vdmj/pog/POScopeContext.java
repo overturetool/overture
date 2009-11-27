@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *	Copyright (c) 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -23,34 +23,17 @@
 
 package org.overturetool.vdmj.pog;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.types.Type;
-
-abstract public class POContext
+public class POScopeContext extends POContext
 {
-	abstract public String getContext();
-	private Map<Expression, Type> knownTypes = new HashMap<Expression, Type>();
-
-	public String getName()
+	@Override
+	public String getContext()
 	{
-		return "";		// Overridden in PONameContext
+		return "";
 	}
 
+	@Override
 	public boolean isScopeBoundary()
 	{
-		return false;
-	}
-
-	public void noteType(Expression exp, Type type)
-	{
-		knownTypes.put(exp, type);
-	}
-
-	public Type checkType(Expression exp)
-	{
-		return knownTypes.get(exp);
+		return true;
 	}
 }

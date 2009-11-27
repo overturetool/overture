@@ -98,6 +98,12 @@ public class POForAllContext extends POContext
 	}
 
 	@Override
+	public boolean isScopeBoundary()
+	{
+		return true;
+	}
+
+	@Override
 	public String getContext()
 	{
 		StringBuilder sb = new StringBuilder();

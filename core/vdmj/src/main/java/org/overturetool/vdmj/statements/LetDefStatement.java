@@ -31,6 +31,7 @@ import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.pog.POContextStack;
+import org.overturetool.vdmj.pog.POScopeContext;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.typechecker.Environment;
@@ -173,7 +174,11 @@ public class LetDefStatement extends Statement
 	public ProofObligationList getProofObligations(POContextStack ctxt)
 	{
 		ProofObligationList obligations = localDefs.getProofObligations(ctxt);
+
+		ctxt.push(new POScopeContext());
 		obligations.addAll(statement.getProofObligations(ctxt));
+		ctxt.pop();
+
 		return obligations;
 	}
 }

@@ -23,8 +23,7 @@
 
 package org.overturetool.vdmj.pog;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ListIterator;
 import java.util.Stack;
 
 import org.overturetool.vdmj.expressions.Expression;
@@ -33,8 +32,6 @@ import org.overturetool.vdmj.types.Type;
 @SuppressWarnings("serial")
 public class POContextStack extends Stack<POContext>
 {
-	private Map<Expression, Type> knownTypes = new HashMap<Expression, Type>();
-
 	public String getName()
 	{
 		StringBuilder result = new StringBuilder();
@@ -103,12 +100,30 @@ public class POContextStack extends Stack<POContext>
 
 	public void noteType(Expression exp, Type type)
 	{
-		knownTypes.put(exp, type);
+		this.peek().noteType(exp, type);
 	}
 
 	public Type checkType(Expression exp, Type expected)
 	{
-		Type known = knownTypes.get(exp);
-		return known == null ? expected : known;
+		ListIterator<POContext> p = this.listIterator(size());
+
+		while (p.hasPrevious())
+		{
+			POContext c = p.previous();
+
+			if (c.isScopeBoundary())
+			{
+				break;		// Change of name scope for expressions.
+			}
+
+			Type t = c.checkType(exp);
+
+			if (t != null)
+			{
+				return t;
+			}
+		}
+
+		return expected;
 	}
 }
