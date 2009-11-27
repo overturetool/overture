@@ -37,7 +37,6 @@ import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.patterns.IdentifierPattern;
-import org.overturetool.vdmj.patterns.IgnorePattern;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.pog.ParameterPatternObligation;
@@ -344,7 +343,8 @@ public class ExplicitFunctionDefinition extends Definition
 			}
 		}
 
-		if (!(body instanceof NotYetSpecifiedExpression))
+		if (!(body instanceof NotYetSpecifiedExpression) &&
+			!(body instanceof SubclassResponsibilityExpression))
 		{
 			local.unusedCheck();
 		}
@@ -612,22 +612,17 @@ public class ExplicitFunctionDefinition extends Definition
 	public ProofObligationList getProofObligations(POContextStack ctxt)
 	{
 		ProofObligationList obligations = new ProofObligationList();
-		boolean patterns = false;
+		LexNameList pids = new LexNameList();
 
 		for (PatternList pl: paramPatternList)
 		{
 			for (Pattern p: pl)
 			{
-				if (!(p instanceof IdentifierPattern) &&
-					!(p instanceof IgnorePattern))
-				{
-					patterns = true;
-					break;
-				}
+				pids.addAll(p.getVariableNames());
 			}
 		}
 
-		if (patterns)
+		if (pids.hasDuplicates())
 		{
 			obligations.add(new ParameterPatternObligation(this, ctxt));
 		}

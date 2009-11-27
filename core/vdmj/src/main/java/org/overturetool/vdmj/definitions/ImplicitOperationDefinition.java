@@ -32,7 +32,6 @@ import org.overturetool.vdmj.expressions.PreOpExpression;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.patterns.IdentifierPattern;
-import org.overturetool.vdmj.patterns.IgnorePattern;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.pog.POOperationDefinitionContext;
@@ -46,6 +45,7 @@ import org.overturetool.vdmj.pog.SubTypeObligation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.statements.ErrorCase;
 import org.overturetool.vdmj.statements.ExternalClause;
+import org.overturetool.vdmj.statements.NotYetSpecifiedStatement;
 import org.overturetool.vdmj.statements.SpecificationStatement;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.statements.SubclassResponsibilityStatement;
@@ -350,7 +350,11 @@ public class ImplicitOperationDefinition extends Definition
 			}
 		}
 
-		local.unusedCheck();
+		if (!(body instanceof NotYetSpecifiedStatement) &&
+			!(body instanceof SubclassResponsibilityStatement))
+		{
+			local.unusedCheck();
+		}
 	}
 
 	@Override
@@ -572,19 +576,14 @@ public class ImplicitOperationDefinition extends Definition
 	public ProofObligationList getProofObligations(POContextStack ctxt)
 	{
 		ProofObligationList obligations = new ProofObligationList();
-		boolean patterns = false;
+		LexNameList pids = new LexNameList();
 
 		for (Pattern p: getParamPatternList())
 		{
-			if (!(p instanceof IdentifierPattern) &&
-				!(p instanceof IgnorePattern))
-			{
-				patterns = true;
-				break;
-			}
+			pids.addAll(p.getVariableNames());
 		}
 
-		if (patterns)
+		if (pids.hasDuplicates())
 		{
 			obligations.add(new ParameterPatternObligation(this, ctxt));
 		}

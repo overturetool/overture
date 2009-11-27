@@ -35,8 +35,6 @@ import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.patterns.IdentifierPattern;
-import org.overturetool.vdmj.patterns.IgnorePattern;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.pog.SatisfiabilityObligation;
@@ -251,12 +249,12 @@ public class ImplicitFunctionDefinition extends Definition
 		{
 			report(3030, "Function type narrows function");
 		}
-		
+
 		if (predef != null)
 		{
 			Type b = predef.body.typeCheck(local, null, NameScope.NAMES);
 			BooleanType expected = new BooleanType(location);
-			
+
 			if (!b.isType(BooleanType.class))
 			{
 				report(3018, "Precondition returns unexpected type");
@@ -265,11 +263,11 @@ public class ImplicitFunctionDefinition extends Definition
 		}
 
 		// The result variables are in scope for the post condition
-		
+
 		if (postdef != null)
 		{
 			Type b = null;
-			
+
 			if (result != null)
 			{
 	    		DefinitionList postdefs = result.getDefinitions();
@@ -284,9 +282,9 @@ public class ImplicitFunctionDefinition extends Definition
 			{
 				b = postdef.body.typeCheck(local, null, NameScope.NAMES);
 			}
-			
+
 			BooleanType expected = new BooleanType(location);
-			
+
 			if (!b.isType(BooleanType.class))
 			{
 				report(3018, "Postcondition returns unexpected type");
@@ -348,7 +346,11 @@ public class ImplicitFunctionDefinition extends Definition
 			}
 		}
 
-		local.unusedCheck();
+		if (!(body instanceof NotYetSpecifiedExpression) &&
+			!(body instanceof SubclassResponsibilityExpression))
+		{
+			local.unusedCheck();
+		}
 	}
 
 	@Override
@@ -517,22 +519,17 @@ public class ImplicitFunctionDefinition extends Definition
 	public ProofObligationList getProofObligations(POContextStack ctxt)
 	{
 		ProofObligationList obligations = new ProofObligationList();
-		boolean patterns = false;
+		LexNameList pids = new LexNameList();
 
 		for (PatternListTypePair pltp: parameterPatterns)
 		{
 			for (Pattern p: pltp.patterns)
 			{
-				if (!(p instanceof IdentifierPattern) &&
-					!(p instanceof IgnorePattern))
-				{
-					patterns = true;
-					break;
-				}
+				pids.addAll(p.getVariableNames());
 			}
 		}
 
-		if (patterns)
+		if (pids.hasDuplicates())
 		{
 			obligations.add(new ParameterPatternObligation(this, ctxt));
 		}

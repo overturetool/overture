@@ -33,7 +33,6 @@ import org.overturetool.vdmj.expressions.PreOpExpression;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.patterns.IdentifierPattern;
-import org.overturetool.vdmj.patterns.IgnorePattern;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.pog.ParameterPatternObligation;
@@ -270,7 +269,8 @@ public class ExplicitOperationDefinition extends Definition
 			report(3028, "Operation type narrows operation");
 		}
 
-		if (!(body instanceof NotYetSpecifiedStatement))
+		if (!(body instanceof NotYetSpecifiedStatement) &&
+			!(body instanceof SubclassResponsibilityStatement))
 		{
 			local.unusedCheck();
 		}
@@ -487,19 +487,14 @@ public class ExplicitOperationDefinition extends Definition
 	public ProofObligationList getProofObligations(POContextStack ctxt)
 	{
 		ProofObligationList obligations = new ProofObligationList();
-		boolean patterns = false;
+		LexNameList pids = new LexNameList();
 
 		for (Pattern p: parameterPatterns)
 		{
-			if (!(p instanceof IdentifierPattern) &&
-				!(p instanceof IgnorePattern))
-			{
-				patterns = true;
-				break;
-			}
+			pids.addAll(p.getVariableNames());
 		}
 
-		if (patterns)
+		if (pids.hasDuplicates())
 		{
 			obligations.add(new ParameterPatternObligation(this, ctxt));
 		}
