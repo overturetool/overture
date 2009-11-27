@@ -41,7 +41,7 @@ traces
                           (plant.AddExpertToSchedule(p,myex);
                            plant.AddExpertToSchedule(p,myex2);
                            plant.RemoveExpertFromSchedule(p,myex);
-                           plant.RemoveExpertFromSchedule(p,myex2));
+                           plant.RemoveExpertFromSchedule(p,myex2))
                            
                        
 end Test2
