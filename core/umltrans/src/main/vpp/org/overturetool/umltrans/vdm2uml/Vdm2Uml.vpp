@@ -1,6 +1,3 @@
- 
-
-
 \begin{vdm_al}
 
 class Vdm2Uml
@@ -110,12 +107,11 @@ BuildClass(c) ==
 -- Returns nil if no super classes are found
 public GetSuperClasses : [IOmlInheritanceClause] ==> seq of IUmlClassNameType
 GetSuperClasses(inh) == 
-  if inh = nil then 
-    return [] 
-  else
-    let list = inh.getIdentifierList()
-      in 
-        return [new UmlClassNameType(list(i)) | i in set inds list];
+  if inh = nil 
+  then return [] 
+  else let list = inh.getIdentifierList()
+       in 
+         return [new UmlClassNameType(list(i)) | i in set inds list];
 
 
 -- Test if a OML Class is abstract in UML
@@ -131,9 +127,15 @@ HasSubclassResponsibilityDefinition(dBlock) ==
                       {let explicitOp : IOmlExplicitOperation = opList(i).getShape()
                        in explicitOp.getBody().getSubclassResponsibility() 
                       | i in set inds opList 
-                      & isofclass(IOmlExplicitOperation,opList(i).getShape()) }
+                      & isofclass(IOmlExplicitOperation,opList(i).getShape()) },
+      hasIsSubClassResp2 = 
+                      {let explicitOp : IOmlExtendedExplicitOperation 
+                                      = opList(i).getShape()
+                       in explicitOp.getBody().getSubclassResponsibility() 
+                      | i in set inds opList 
+                      & isofclass(IOmlExtendedExplicitOperation,opList(i).getShape()) }
   in 
-   return true in set hasIsSubClassResp; 
+   return true in set hasIsSubClassResp union hasIsSubClassResp2; 
 
 -- Proxy operation. Used to explicit set the type before redirecting operation call
 -- This is introduced because of VDM Java gen limitation of type cast in Java
@@ -200,8 +202,7 @@ BuildVariable(var,owner) ==
     isDerived    = false,
     qualifier : [IUmlType] = Vdm2UmlType`GetQualifier(omlType)
   in 
-  (
-    dcl property : IUmlProperty := new UmlProperty(name, 
+  (dcl property : IUmlProperty := new UmlProperty(name, 
                                                 visibility, 
                                                 multiplicity, 
                                                 type, 
@@ -213,12 +214,10 @@ BuildVariable(var,owner) ==
                                                 owner,
                                                 qualifier);
     if not IsSimpleType(omlType) 
-    then 
-    (  CreateAssociationFromProperty(property,omlType);       
-       return nil
-     )
-    else
-      return property;
+    then (CreateAssociationFromProperty(property,omlType);       
+          return nil
+         )
+    else return property;
   ); 
  
 -- If a default value is defined for a instance variable it is returned
@@ -471,24 +470,71 @@ BuildDefBlock(opDef,owner) ==
 -- All parameters are ignored - Project time limitation
 public BuildOperation : IOmlOperationDefinition * String ==> IUmlOperation
 BuildOperation(op,-) ==
-  let
-    access       = op.getAccess(),
-    scope        = access.getScope(),
-    shape : IOmlExplicitOperation = op.getShape(),
-    
-    isStatic     = access.getStaticAccess(),
-    name         = shape.getIdentifier(),
-    visibility   = ConvertScopeToVisibility(scope),
-    multiplicity = new UmlMultiplicityElement(false, false, 1, 1),
-    type : [IUmlType] = nil, -- Handled differently right now Vdm2UmlType`ConvertType(shape.getType()),
-    pars         = buildParameters(shape.getParameterList(),shape.getType())
-  in return new UmlOperation(name, 
+  let access = op.getAccess(),
+      scope = access.getScope(),
+      isStatic = access.getStaticAccess(),
+      shapegeneric = op.getShape(),
+      visibility = ConvertScopeToVisibility(scope),
+      multiplicity = new UmlMultiplicityElement(false, false, 1, 1),
+      type : [IUmlType] = nil
+  in -- Handled differently right now Vdm2UmlType`ConvertType(shape.getType()),
+    if isofclass(IOmlExplicitOperation,shapegeneric)
+    then let shape : IOmlExplicitOperation = shapegeneric,
+             name = shape.getIdentifier(),
+             pars = buildParameters(shape.getParameterList(),shape.getType())
+         in 
+           return new UmlOperation(name, 
                             visibility, 
                             multiplicity, 
                             false,
                             type, 
                             isStatic,
                             new UmlParameters(pars)
+                            )
+    elseif isofclass(IOmlExtendedExplicitOperation,shapegeneric)
+    then let shape : IOmlExtendedExplicitOperation = shapegeneric,
+             name = shape.getIdentifier(),
+             pattype_l = shape.getPatternTypePairList(),
+             restype_l = shape.getIdentifierTypePairList(),
+             type = nil, -- TODO Vdm2UmlType`ConvertType(fntype),
+             pnames : [IOmlParameter] = --TODO def properly
+                                        --if len shape.getParameterList() = 0 
+                                        --then 
+                                        nil, 
+                                        --else let p in set elems shape.getParameterList() 
+                                        --     in p,
+             pars = buildParameters(pattype_l),
+             res = buildFnResult(restype_l)
+         in 
+           return new UmlOperation(name, 
+                            visibility, 
+                            multiplicity, 
+                            false,
+                            type, 
+                            isStatic,
+                            new UmlParameters(pars^res)
+                            )
+    else let shape : IOmlImplicitOperation = shapegeneric,
+             name = shape.getIdentifier(),
+             pattype_l = shape.getPatternTypePairList(),
+             restype_l = shape.getIdentifierTypePairList(),
+             type = nil, -- TODO Vdm2UmlType`ConvertType(fntype),
+             pnames : [IOmlParameter] = --TODO def properly
+                                        --if len shape.getParameterList() = 0 
+                                        --then 
+                                        nil, 
+                                        --else let p in set elems shape.getParameterList() 
+                                        --     in p,
+             pars = buildParameters(pattype_l),
+             res = buildFnResult(restype_l)
+         in 
+           return new UmlOperation(name, 
+                            visibility, 
+                            multiplicity, 
+                            false,
+                            type, 
+                            isStatic,
+                            new UmlParameters(pars^res)
                             ); 
 
 -- Converts a sequence of IOmlPattern and the coresponding IOmlType to
@@ -660,8 +706,48 @@ BuildFunction(op,-) ==
                                     type, 
                                     isStatic,
                                     new UmlParameters(pars^res))
-     else  --TODO take care of the rest 
-       return new UmlOperation();
+    elseif isofclass(IOmlExtendedExplicitFunction,shapegeneric)
+    then let shape : IOmlExtendedExplicitFunction = shapegeneric,
+             name = shape.getIdentifier(),
+             pattype_l = shape.getPatternTypePairList(),
+             restype_l = shape.getIdentifierTypePairList(),
+             fntype = nil, -- TODO Vdm2UmlType`GenFnType(pattype_l,restype_l),
+             type = nil, -- TODO Vdm2UmlType`ConvertType(fntype),
+             pnames : [IOmlParameter] = --TODO def properly
+                                        --if len shape.getParameterList() = 0 
+                                        --then 
+                                        nil, 
+                                        --else let p in set elems shape.getParameterList() 
+                                        --     in p,
+             pars = buildParameters(pattype_l),
+             res = buildFnResult(restype_l)
+         in return new UmlOperation(name, 
+                                    visibility, 
+                                    multiplicity, 
+                                    true,
+                                    type, 
+                                    isStatic,
+                                    new UmlParameters(pars^res))
+     else -- This part shall be removed if we remove the TypelessExplicitFunction
+          let shape : IOmlTypelessExplicitFunction = shapegeneric,
+             name = shape.getIdentifier(),
+             fntype = nil, -- TODO Vdm2UmlType`GenFnType(pattype_l,restype_l),
+             type = nil, -- TODO Vdm2UmlType`ConvertType(fntype),
+             pnames : [IOmlParameter] = --TODO def properly
+                                        --if len shape.getParameterList() = 0 
+                                        --then 
+                                        nil, 
+                                        --else let p in set elems shape.getParameterList() 
+                                        --     in p,
+             pars = []
+         in return new UmlOperation(name, 
+                                    visibility, 
+                                    multiplicity, 
+                                    true,
+                                    type, 
+                                    isStatic,
+                                    new UmlParameters(pars)); 
+
 -----------------------------------------------------
 -- Association 
 -----------------------------------------------------
@@ -740,10 +826,10 @@ CreateAssociationFromPropertyGeneral(property,-) ==
 public CreateAssociationFromPropertyProductType : IUmlProperty * IOmlType ==> ()
 CreateAssociationFromPropertyProductType(property,omlType) == 
 let name : String = property.getName() , 
-    prop : UmlProperty = property,
+    prop : UmlProperty = cloneProp(property),
     props : set of IUmlProperty = dunion {CreateEndProperty(p,name)
-                                              | p in set {omlType} 
-                                              & isofclass(IOmlProductType,p)}
+                                         | p in set {omlType} 
+                                         & isofclass(IOmlProductType,p)}
   in
   (
     prop.setName("");
@@ -751,6 +837,7 @@ let name : String = property.getName() ,
       associations := associations union 
         {new UmlAssociation(props,  {prop},nil,GetNextId())};
      ); 
+     
 -- Create a UML association from a UML property where the OML type is a union type
 public CreateAssociationFromPropertyUnionType : IUmlProperty * IOmlType ==> ()
 CreateAssociationFromPropertyUnionType(property,omlType) == 
