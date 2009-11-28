@@ -435,13 +435,14 @@ AddOperstionParameters(pars) ==
 (
 	for all i in set inds pars
 	do
-	(
-	  doc.StartE("ownedParameter");
-	  doc.StartA("name",pars(i).getName());
-	  doc.StartA("direction",ConvertParameterDirectionKind(pars(i).getDirection()));
-	  doc.StartA(ID_TAG,GetNextId());
-	  doc.StartA("type",GetTypeId(pars(i).getType()));
-	  doc.StopE("ownedParameter");
+	( if not isofclass(IUmlVoidType,pars(i).getType())
+	  then (doc.StartE("ownedParameter");
+	        doc.StartA("name",pars(i).getName());
+	        doc.StartA("direction",ConvertParameterDirectionKind(pars(i).getDirection()));
+	        doc.StartA(ID_TAG,GetNextId());
+	        doc.StartA("type",GetTypeId(pars(i).getType()));
+	        doc.StopE("ownedParameter");
+	       );
 	  
 	);
 );
@@ -644,11 +645,15 @@ AddNestedClassifiers(ownerId,nc) ==
 	  doc.StartA("visibility","public");
 	  doc.StartA(ID_TAG,ncId);
 	  doc.StartA("supplier",ownerId);
-	  if ct.getName() in set dom classes
-	  then doc.StartA("client",classes(ct.getName()))
-	  else skip; --TODO Report warning 
+	  let name = ct.getName()
+	  in
+	    if name in set dom classes
+	    then( doc.StartA("client",classes(name));
+	          dependencies := dependencies ++ {ncId |-> mk_(ownerId,classes(name))};
+	        )
+	    else skip; --TODO Report warning 
 	  doc.StopE("packagedElement");
-	  dependencies := dependencies ++ {ncId |-> mk_(ownerId,classes(ct.getName()))};
+	  
 	)else
 	(
 	  log.info("Cannot handle nested type")

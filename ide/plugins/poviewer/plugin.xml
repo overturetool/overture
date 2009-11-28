@@ -5,6 +5,8 @@
 <!-- *
 * Enable project menu for show proofobligations on a pp project
 *-->
+
+<!-- On project -->
  <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
@@ -38,11 +40,46 @@
     
       </objectContribution>
    </extension>
-   
-   
+
+<!-- On File -->   
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="org.overture.ide.plugins.poviewer.contribution1"
+            objectClass="org.eclipse.core.resources.IFile">
+            <filter
+         name="projectNature"
+         value="org.overture.ide.vdmpp.core.nature">
+      </filter>
+         <menu
+               
+               id="org.overture.ide.plugins.poviewer.menuMain"
+               label="Proof Obligations"
+               path="additions">
+            <separator
+                  name="groupPOViewer">
+            </separator>
+         </menu>
+         
+          <action
+               class="org.overture.ide.plugins.poviewer.actions.ViewPosActionPp"
+               id="org.overture.ide.plugins.poviewer.actions.POViewerAction"
+               label="Generate Proof Obligations"
+               menubarPath="org.overture.ide.plugins.poviewer.menuMain/groupPOViewer"
+               enablesFor="1"
+               tooltip="Show PO's">
+         </action>
+         
+        
+    
+      </objectContribution>
+   </extension>
    <!-- *
 * Enable project menu for show proofobligations on a rt project 
 *-->
+<!-- On project -->
+
  <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
@@ -73,15 +110,81 @@
          </action>
       </objectContribution>
    </extension>
+<!-- On file -->
+ <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="org.overture.ide.plugins.poviewer.contribution1"
+            objectClass="org.eclipse.core.resources.IFile">
+            <filter
+         name="projectNature"
+         value="org.overture.ide.vdmrt.core.nature">
+      </filter>
+         <menu
+               
+               id="org.overture.ide.plugins.poviewer.menuMain"
+               label="Proof Obligations"
+               path="additions">
+            <separator
+                  name="groupPOViewer">
+            </separator>
+         </menu>
+         
+          <action
+               class="org.overture.ide.plugins.poviewer.actions.ViewPosActionRt"
+               id="org.overture.ide.plugins.poviewer.actions.POViewerAction"
+               label="Generate Proof Obligations"
+               menubarPath="org.overture.ide.plugins.poviewer.menuMain/groupPOViewer"
+               enablesFor="1"
+               tooltip="Show PO's">
+         </action>
+      </objectContribution>
+   </extension>
+
+
+
    <!-- *
 * Enable project menu for show proofobligations on a sl
 *-->
+<!-- On project -->
  <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="true"
             id="org.overture.ide.plugins.poviewer.contribution1"
             objectClass="org.eclipse.core.resources.IProject">
+            <filter
+         name="projectNature"
+         value="org.overture.ide.vdmsl.core.nature">
+      </filter>
+         <menu
+               
+               id="org.overture.ide.plugins.poviewer.menuMain"
+               label="Proof Obligations"
+               path="additions">
+            <separator
+                  name="groupPOViewer">
+            </separator>
+         </menu>
+         
+          <action
+               class="org.overture.ide.plugins.poviewer.actions.ViewPosActionSl"
+               id="org.overture.ide.plugins.poviewer.actions.POViewerAction"
+               label="Generate Proof Obligations"
+               menubarPath="org.overture.ide.plugins.poviewer.menuMain/groupPOViewer"
+               enablesFor="1"
+               tooltip="Show PO's">
+         </action>
+      </objectContribution>
+   </extension>
+   <!-- On file -->
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="org.overture.ide.plugins.poviewer.contribution1"
+            objectClass="org.eclipse.core.resources.IFile">
             <filter
          name="projectNature"
          value="org.overture.ide.vdmsl.core.nature">

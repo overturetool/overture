@@ -16,20 +16,28 @@ public class Main {
 
 	/**
 	 * @param args
+	 * @throws IOException
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 
 		if (args.length == 0 || !new File(args[0]).exists()) {
 			System.out
 					.println("Please supply a vaild path to the examples root.");
-			System.out.println("	e.g. C:\\overture\\overturesvn\\documentation\\examples");
+			System.out
+					.println("	e.g. C:\\overture\\overturesvn\\documentation\\examples");
 			return;
 		}
 		File inputRootFolder = new File(args[0]);
 
 		File tmpFolder = new File("examples");
-		if (tmpFolder.exists())
-			delete(tmpFolder);
+		if (tmpFolder.exists()) {
+			System.out
+					.println("The folder \""
+							+ tmpFolder.getName()
+							+ "\" already exists, it is used as the temp folder for packing and added to be deleted. Delete ok. ( y / n):");
+			if (System.in.read() == (int) 'y')
+				delete(tmpFolder);
+		}
 		tmpFolder.mkdir();
 
 		for (File inputFolder : inputRootFolder.listFiles()) {
@@ -89,7 +97,8 @@ public class Main {
 			File newExample = new File(tmpFolder, projectName);
 			newExample.mkdir();
 
-			System.out.println("DIALIGHT: "+ nature+ " CREATING: "+ projectName);
+			System.out.println("DIALIGHT: " + nature + " CREATING: "
+					+ projectName);
 			createProjectFile(newExample, nature, projectName);
 			copyFiles(exampleFolder, newExample, nature);
 
@@ -183,7 +192,7 @@ public class Main {
 			}
 			in.close();
 			out.close();
-			//System.out.println("File copied: "+ f1.getName());
+			// System.out.println("File copied: "+ f1.getName());
 		} catch (FileNotFoundException ex) {
 			System.out
 					.println(ex.getMessage() + " in the specified directory.");

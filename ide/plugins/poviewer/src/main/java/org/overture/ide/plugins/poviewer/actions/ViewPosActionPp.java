@@ -12,13 +12,17 @@ public class ViewPosActionPp extends ViewPosAction {
 	protected String getNature() {
 		return VdmPpProjectNature.VDM_PP_NATURE;
 	}
-	
+
 	@Override
 	protected ProofObligationList getProofObligations(RootNode root) {
 		ClassList cl = new ClassList();
 		for (Object definition : root.getRootElementList()) {
-			if (definition instanceof ClassDefinition)
-				cl.add((ClassDefinition) definition);
+			if (definition instanceof ClassDefinition) {
+				if (skipElement(((ClassDefinition) definition).location.file))
+					continue;
+				else
+					cl.add((ClassDefinition) definition);
+			}
 		}
 
 		final ProofObligationList pos = cl.getProofObligations();

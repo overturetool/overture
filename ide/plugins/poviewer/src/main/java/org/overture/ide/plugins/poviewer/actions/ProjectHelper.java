@@ -64,9 +64,44 @@ public class ProjectHelper
 				IStructuredSelection selection = (IStructuredSelection) objectPluginAction.getSelection();
 				if (selection.getFirstElement() instanceof IProject)
 					selectedProject = (IProject) selection.getFirstElement();
+				else if(selection.getFirstElement() instanceof IFile)
+				{
+					IFile file = (IFile) selection.getFirstElement();
+				selectedProject=	file.getProject();
+					//System.out.println(selection.getFirstElement());
+				}
 			}
 		}
 		return selectedProject;
+	}
+	
+	public static IFile getSelectedFile(IAction action)
+	{
+		IFile selectedFile = null;
+		if (action instanceof ObjectPluginAction)
+		{
+			ObjectPluginAction objectPluginAction = (ObjectPluginAction) action;
+//			if (objectPluginAction.getSelection() instanceof ITreeSelection)
+//			{
+//				ITreeSelection selection = (ITreeSelection) objectPluginAction.getSelection();
+//				if (selection.getPaths().length > 0)
+//					selectedProject = (IProject) selection.getPaths()[0].getFirstSegment();
+//			} else 
+				if (objectPluginAction.getSelection() instanceof IStructuredSelection)
+			{
+				IStructuredSelection selection = (IStructuredSelection) objectPluginAction.getSelection();
+//				if (selection.getFirstElement() instanceof IProject)
+//					selectedProject = (IProject) selection.getFirstElement();
+				//else
+					if(selection.getFirstElement() instanceof IFile)
+				{
+				selectedFile = (IFile) selection.getFirstElement();
+//				selectedProject=	file.getProject();
+					//System.out.println(selection.getFirstElement());
+				}
+			}
+		}
+		return selectedFile;
 	}
 
 

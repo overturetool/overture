@@ -13,6 +13,7 @@ import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
+import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.typechecker.ModuleTypeChecker;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 
@@ -62,8 +63,28 @@ public class BuilderSl extends VdmjBuilder {
 	public ExitStatus typeCheck() {
 		int terrs = 0;
 		
+		
+		
+		
 		modules.combineDefaults();
 
+		try
+   		{
+   			TypeChecker typeChecker = new ModuleTypeChecker(modules);
+   			typeChecker.typeCheck();
+   		}
+		catch (InternalException e)
+		{
+			processInternalError(e);
+		}
+		catch (Throwable e)
+		{
+			processInternalError(e);
+			terrs++;
+		}
+
+   	
+		
 		terrs += TypeChecker.getErrorCount();
 
 		if (terrs > 0) {
@@ -75,6 +96,7 @@ public class BuilderSl extends VdmjBuilder {
 		if (twarn > 0) {
 			processWarnings(TypeChecker.getWarnings());
 		}
+	
 
 		return terrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
 	}

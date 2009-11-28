@@ -73,8 +73,10 @@ import org.overture.ide.plugins.traces.views.treeView.ProjectTreeNode;
 import org.overture.ide.plugins.traces.views.treeView.TraceTestGroup;
 import org.overture.ide.plugins.traces.views.treeView.TraceTestTreeNode;
 import org.overture.ide.plugins.traces.views.treeView.TraceTreeNode;
+import org.overture.ide.utility.FileUtility;
 import org.overture.ide.utility.ProjectUtility;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
+import org.overture.ide.vdmrt.core.VdmRtProjectNature;
 import org.overturetool.traces.utility.ITracesHelper;
 import org.overturetool.traces.utility.TraceHelperNotInitializedException;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
@@ -137,8 +139,7 @@ public class TracesTreeView extends ViewPart {
 
 		try {
 
-			if (project.isOpen()
-					&& project.hasNature(VdmPpProjectNature.VDM_PP_NATURE)) {
+			if (isValidProject(project)) {
 				if (traceHelpers.get(project.getName()) != null)
 					traceHelpers.remove(project.getName());
 
@@ -163,6 +164,16 @@ public class TracesTreeView extends ViewPart {
 		// initCtJob.schedule();
 
 	}
+	
+	public static boolean  isValidProject(IProject project) 
+	{
+		try {
+			return project.isOpen() && project.isAccessible() && (project.hasNature(VdmPpProjectNature.VDM_PP_NATURE)|| project.hasNature(VdmRtProjectNature.VDM_RT_NATURE));
+		} catch (CoreException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	private void SetTraceHelpers() {
 		IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
@@ -172,9 +183,7 @@ public class TracesTreeView extends ViewPart {
 
 		for (int j = 0; j < iprojects.length; j++) {
 			try {
-				if (iprojects[j].isAccessible()
-						&& iprojects[j].isOpen()
-						&& iprojects[j].hasNature(VdmPpProjectNature.VDM_PP_NATURE))
+				if (isValidProject(iprojects[j]))
 					SetTraceHelper(iprojects[j]);
 			} catch (Exception e1) {
 				System.out.println("Exception: " + e1.getMessage());
@@ -233,9 +242,7 @@ public class TracesTreeView extends ViewPart {
 						for (IResourceDelta resourceDelta : delta) {
 
 							if (resourceDelta.getResource() instanceof IProject
-									&& ((IProject) resourceDelta.getResource()).isAccessible()
-									&& ((IProject) resourceDelta.getResource()).isOpen()
-									&& ((IProject) resourceDelta.getResource()).hasNature(VdmPpProjectNature.VDM_PP_NATURE)) {
+									&& isValidProject(((IProject) resourceDelta.getResource()))) {
 
 								if (IsFileChange(resourceDelta)
 										|| (resourceDelta.getKind() & IResourceDelta.ADDED) == IResourceDelta.ADDED) {
@@ -457,7 +464,7 @@ public class TracesTreeView extends ViewPart {
 										for (IProject project2 : iprojects) {
 											if (project2.getName().equals(
 													finalProjectName)) {
-												addMarker(
+												FileUtility.addMarker(
 														ProjectUtility.findIFile(
 																project2,
 																e.location.file),
@@ -478,7 +485,7 @@ public class TracesTreeView extends ViewPart {
 										for (IProject project2 : iprojects) {
 											if (project2.getName().equals(
 													finalProjectName)) {
-												addMarker(
+												FileUtility.addMarker(
 														ProjectUtility.findIFile(
 																project2,
 																th.GetFile(className)),
@@ -529,8 +536,7 @@ public class TracesTreeView extends ViewPart {
 						int totalCount = 0;
 						for (final IProject project : iprojects) {
 							try {
-								if (project.isOpen()
-										&& project.getNature(VdmPpProjectNature.VDM_PP_NATURE) != null) {
+								if (isValidProject(project)) {
 									ITracesHelper th = traceHelpers.get(project.getName());
 									if (th != null)
 										for (String className : th.GetClassNamesWithTraces()) {
@@ -539,9 +545,6 @@ public class TracesTreeView extends ViewPart {
 
 										}
 								}
-							} catch (CoreException e) {
-
-								e.printStackTrace();
 							} catch (Exception e) {
 
 								e.printStackTrace();
@@ -553,8 +556,7 @@ public class TracesTreeView extends ViewPart {
 							if (monitor.isCanceled())
 								break;
 							try {
-								if (project.isOpen()
-										&& project.getNature(VdmPpProjectNature.VDM_PP_NATURE) != null) {
+								if (isValidProject(project)) {
 									ITracesHelper th = traceHelpers.get(project.getName());
 									for (String className : th.GetClassNamesWithTraces()) {
 										if (monitor.isCanceled())
@@ -903,10 +905,13 @@ public class TracesTreeView extends ViewPart {
 					ITracesHelper helper = traceHelpers.get(projectName);
 
 					try {
-						gotoLine(ProjectUtility.findIFile(iproject,
-								helper.GetFile(tn.getParent().getName())),
-								tn.GetTraceDefinition().location.startLine,
-								tn.getName());
+//						gotoLine(,
+//								tn.GetTraceDefinition().location.startLine,
+//								tn.getName());
+						IFile file = ProjectUtility.findIFile(iproject,
+								helper.GetFile(tn.getParent().getName()));
+						
+						FileUtility.gotoLocation(file, tn.GetTraceDefinition().location, tn.getName());
 					} catch (IOException e) {
 						ConsolePrint("File not found: " + e.getMessage());
 						e.printStackTrace();
@@ -1020,65 +1025,66 @@ public class TracesTreeView extends ViewPart {
 
 	// private static final String MARKER_TYPE = "org.overturetool.traces";
 
-	private void addMarker(IFile file, String message, int lineNumber,
-			int severity) {
-		try {
-			if (file == null)
-				return;
-			lineNumber -= 1;
-			IMarker[] markers = file.findMarkers(IMarker.PROBLEM, false,
-					IResource.DEPTH_INFINITE);
-			for (IMarker marker : markers) {
-				if (marker.getAttribute(IMarker.MESSAGE).equals(message)
-						&& marker.getAttribute(IMarker.SEVERITY).equals(
-								severity)
-						&& marker.getAttribute(IMarker.LINE_NUMBER).equals(
-								lineNumber))
-					return;
+//	private void addMarker(IFile file, String message, int lineNumber,
+//			int severity) {
+//		try {
+//			if (file == null)
+//				return;
+//			lineNumber -= 1;
+//			IMarker[] markers = file.findMarkers(IMarker.PROBLEM, false,
+//					IResource.DEPTH_INFINITE);
+//			for (IMarker marker : markers) {
+//				if (marker.getAttribute(IMarker.MESSAGE).equals(message)
+//						&& marker.getAttribute(IMarker.SEVERITY).equals(
+//								severity)
+//						&& marker.getAttribute(IMarker.LINE_NUMBER).equals(
+//								lineNumber))
+//					return;
+//
+//			}
+//			IMarker marker = file.createMarker(IMarker.PROBLEM);
+//			marker.setAttribute(IMarker.MESSAGE, message);
+//			marker.setAttribute(IMarker.SEVERITY, severity);
+//			marker.setAttribute(IMarker.SOURCE_ID, "org.overturetool.traces");
+//			if (lineNumber == -1) {
+//				lineNumber = 1;
+//			}
+//			marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
+//		} catch (CoreException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
-			}
-			IMarker marker = file.createMarker(IMarker.PROBLEM);
-			marker.setAttribute(IMarker.MESSAGE, message);
-			marker.setAttribute(IMarker.SEVERITY, severity);
-			marker.setAttribute(IMarker.SOURCE_ID, "org.overturetool.traces");
-			if (lineNumber == -1) {
-				lineNumber = 1;
-			}
-			marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void gotoLine(IFile file, int lineNumber, String message) {
-		try {
-			// IWorkspaceRoot iworkspaceRoot =
-			// ResourcesPlugin.getWorkspace().getRoot();
-			// IProject[] iprojects = iworkspaceRoot.getProjects();
-
-			IWorkbench wb = PlatformUI.getWorkbench();
-			IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
-			// String id =
-			// win.getWorkbench().getEditorRegistry().getEditors(file.getName())[0].getId();
-			IEditorPart editor = IDE.openEditor(win.getActivePage(), file, true);
-
-			IMarker marker = file.createMarker(IMarker.MARKER);
-			marker.setAttribute(IMarker.MESSAGE, message);
-			marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
-			if (lineNumber == -1) {
-				lineNumber = 1;
-			}
-			marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
-
-			IDE.gotoMarker(editor, marker);
-
-			marker.delete();
-
-		} catch (CoreException e) {
-
-			e.printStackTrace();
-		}
-	}
+//	private void gotoLine(IFile file, int lineNumber, String message) {
+//		
+//		try {
+//			// IWorkspaceRoot iworkspaceRoot =
+//			// ResourcesPlugin.getWorkspace().getRoot();
+//			// IProject[] iprojects = iworkspaceRoot.getProjects();
+//
+//			IWorkbench wb = PlatformUI.getWorkbench();
+//			IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
+//			// String id =
+//			// win.getWorkbench().getEditorRegistry().getEditors(file.getName())[0].getId();
+//			IEditorPart editor = IDE.openEditor(win.getActivePage(), file, true);
+//
+//			IMarker marker = file.createMarker(IMarker.MARKER);
+//			marker.setAttribute(IMarker.MESSAGE, message);
+//			marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
+//			if (lineNumber == -1) {
+//				lineNumber = 1;
+//			}
+//			marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
+//
+//			IDE.gotoMarker(editor, marker);
+//
+//			marker.delete();
+//
+//		} catch (CoreException e) {
+//
+//			e.printStackTrace();
+//		}
+//	}
 
 	private ViewerFilter okFilter = new ViewerFilter() {
 

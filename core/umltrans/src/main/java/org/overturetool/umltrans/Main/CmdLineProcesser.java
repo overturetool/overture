@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Vector;
 
@@ -110,7 +111,7 @@ public class CmdLineProcesser // extends CmdLineHelper
 	}
 
 	public static void toUml(File outputFile, List<File> files)
-			throws FileNotFoundException, CGException, IOException {
+			throws FileNotFoundException, CGException, IOException, ParseException {
 
 		List<File> selectedFiles = new Vector<File>();
 		for (int i = 0; i < files.size(); i++) {

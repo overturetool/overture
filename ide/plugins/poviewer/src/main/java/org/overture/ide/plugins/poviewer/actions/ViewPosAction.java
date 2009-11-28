@@ -1,5 +1,8 @@
 package org.overture.ide.plugins.poviewer.actions;
 
+import java.io.File;
+
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
@@ -21,12 +24,14 @@ import org.overture.ide.ast.AstManager;
 import org.overture.ide.ast.RootNode;
 import org.overture.ide.plugins.poviewer.PoviewerPluginConstants;
 import org.overture.ide.plugins.poviewer.view.PoOverviewTableView;
+import org.overture.ide.utility.ProjectUtility;
 import org.overturetool.vdmj.pog.ProofObligationList;
 
 public abstract class ViewPosAction implements IObjectActionDelegate {
 
 	private Shell shell;
 	private IWorkbenchPart targetPart;
+	private File selectedFile = null;
 
 	/**
 	 * Constructor for Action1.
@@ -61,12 +66,25 @@ public abstract class ViewPosAction implements IObjectActionDelegate {
 				return;
 			}
 
+			IFile tmpFile = ProjectHelper.getSelectedFile(action);
+			if (tmpFile != null) {
+				selectedFile = ProjectUtility.getFile(selectedProject, tmpFile);
+			}
+
 			viewPos(selectedProject);
 
 		} catch (Exception ex) {
 			System.err.println(ex.getMessage() + ex.getStackTrace());
 			ConsoleWriter.ConsolePrint(s, ex);
 		}
+
+	}
+
+	
+
+	public boolean skipElement(File file) {
+		return (selectedFile != null && !selectedFile.getName().equals(
+				(file.getName())));
 
 	}
 
@@ -110,7 +128,6 @@ public abstract class ViewPosAction implements IObjectActionDelegate {
 						"org.overture.ide.plugins.poviewer", "Ok");
 			}
 
-	
 		};
 		showJob.schedule();
 
@@ -150,12 +167,12 @@ public abstract class ViewPosAction implements IObjectActionDelegate {
 		return new Status(IStatus.OK, PoviewerPluginConstants.PoViewerId,
 				"Build successfull");
 	}
-	protected abstract ProofObligationList getProofObligations(RootNode root) ;
 
-	private void showPOs(final IProject project,
-			final ProofObligationList pos) {
-		targetPart.getSite().getPage().getWorkbenchWindow()
-				.getShell().getDisplay().asyncExec(new Runnable() {
+	protected abstract ProofObligationList getProofObligations(RootNode root);
+
+	private void showPOs(final IProject project, final ProofObligationList pos) {
+		targetPart.getSite().getPage().getWorkbenchWindow().getShell()
+				.getDisplay().asyncExec(new Runnable() {
 
 					public void run() {
 						IViewPart v;
@@ -166,8 +183,8 @@ public abstract class ViewPosAction implements IObjectActionDelegate {
 									.showView(
 											PoviewerPluginConstants.PoOverviewTableViewId);
 							if (v instanceof PoOverviewTableView) {
-								((PoOverviewTableView) v)
-										.setDataList(project, pos);
+								((PoOverviewTableView) v).setDataList(project,
+										pos);
 
 							}
 

@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 import org.overturetool.traces.utility.CmdTrace;
 import org.overturetool.traces.utility.TraceXmlWrapper;
 import org.overturetool.traces.vdmj.TraceInterpreter;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.types.ParameterType;
 
@@ -127,7 +128,7 @@ public class MainClass
 			TraceXmlWrapper txw = new TraceXmlWrapper(outputPath
 					+ File.separatorChar + cls.get(0) + ".xml");
 
-			ti.processTraces(specFiles, cls.get(0), txw);
+			ti.processTraces(specFiles, cls.get(0), txw,true,Dialect.VDM_PP);
 			txw.Stop();
 		}catch(ClassNotFoundException e)
 		{

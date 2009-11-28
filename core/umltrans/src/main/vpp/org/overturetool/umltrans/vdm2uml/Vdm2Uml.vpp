@@ -350,7 +350,7 @@ BuildDefBlock(td,-) ==
       tps2= [ BuildComplexType(q(i).getShape(),q(i).getAccess()) 
             | i in set inds q 
             & isofclass(IOmlComplexType,q(i).getShape()) ]
-  in return new UmlNestedClassifiers(elems tps);
+  in return new UmlNestedClassifiers(elems tps union elems tps2);
 
 -- Convert simple type to UML type
 public BuildSimpleType : IOmlSimpleType * IOmlAccessDefinition ==> IUmlType
@@ -504,7 +504,7 @@ buildParameters(parms) ==
            in
             [new UmlParameter(
              if isofclass(IOmlPatternIdentifier,pl(j))
-             then let p : IOmlPatternIdentifier = pl(i) 
+             then let p : IOmlPatternIdentifier = pl(j) 
                   in p.getIdentifier()
              else "-",
              Vdm2UmlType`ConvertType(tp),
@@ -644,7 +644,7 @@ BuildFunction(op,-) ==
              pattype_l = shape.getPatternTypePairList(),
              restype_l = shape.getIdentifierTypePairList(),
              fntype = nil, -- TODO Vdm2UmlType`GenFnType(pattype_l,restype_l),
-             type = nil, -- TODO Vdm2UmlType`ConvertType(fntype),
+             type : [IUmlType] = nil, -- TODO Vdm2UmlType`ConvertType(fntype),
              pnames : [IOmlParameter] = --TODO def properly
                                         --if len shape.getParameterList() = 0 
                                         --then 
@@ -660,7 +660,8 @@ BuildFunction(op,-) ==
                                     type, 
                                     isStatic,
                                     new UmlParameters(pars^res))
-     else skip; --TODO take care of the rest 
+     else  --TODO take care of the rest 
+       return new UmlOperation();
 -----------------------------------------------------
 -- Association 
 -----------------------------------------------------

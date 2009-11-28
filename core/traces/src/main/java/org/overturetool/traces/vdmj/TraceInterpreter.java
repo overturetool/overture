@@ -38,14 +38,14 @@ public class TraceInterpreter {
 	ClassInterpreter ci;
 
 	public void processTraces(List<File> specFiles, String className,
-			TraceXmlWrapper storage) throws Exception {
+			TraceXmlWrapper storage, boolean runTypeCheck,Dialect dialect) throws Exception {
 
 		ClassList classes = new ClassList();
 		int parsErrors = 0;
 		for (File file : specFiles) {
 			LexTokenReader ltr;
 
-			ltr = new LexTokenReader(file, Dialect.VDM_PP);
+			ltr = new LexTokenReader(file, dialect);
 
 			ClassReader mr = new ClassReader(ltr);
 			parsErrors += mr.getErrorCount();
@@ -58,17 +58,19 @@ public class TraceInterpreter {
 		}
 
 		if (parsErrors == 0) {
-			processTraces(classes, className, storage);
+			processTraces(classes, className, storage,runTypeCheck,dialect);
 		}
 	}
 
 	public void processTraces(ClassList classes, String className,
-			TraceXmlWrapper storage) throws Exception {
+			TraceXmlWrapper storage, boolean runTypeCheck,Dialect dialect) throws Exception {
 		try {
 			TypeChecker tc = new ClassTypeChecker(classes);
-			typeCheckStarted();
-			tc.typeCheck();
-			classes.setLoaded(); // do not type check this classes again
+			if(runTypeCheck){
+				typeCheckStarted();
+				tc.typeCheck();
+				classes.setLoaded(); // do not type check this classes again
+			}
 			if (TypeChecker.getErrorCount() == 0) {
 				ci = new ClassInterpreter(classes);
 
@@ -81,6 +83,7 @@ public class TraceInterpreter {
 			org.overturetool.vdmj.Settings.prechecks = true;
 			org.overturetool.vdmj.Settings.postchecks = true;
 			org.overturetool.vdmj.Settings.dynamictypechecks = true;
+			org.overturetool.vdmj.Settings.dialect=dialect;
 			ci.init(null);
 
 			ClassDefinition classdef = ci.findClass(className);

@@ -1,9 +1,13 @@
 package org.overturetool.umltrans.Main;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.text.ParseException;
 import java.util.List;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
@@ -26,12 +30,23 @@ public class Translator
 		StatusLog.out = outputWriter;
 	}
 	public static String TranslateVdmToUml(String specData, String outputFile)
-			throws CGException
+			throws CGException, ParseException, IOException
 	{
 		String xmiDocumentFileName = outputFile;// files[0].substring(0,
 		
 		OvertureParser op = new OvertureParser(specData);
 		op.parseDocument();
+		if(op.errors>0)
+		{
+			
+			FileWriter outputFileReader = new FileWriter(outputFile);
+
+			BufferedWriter outputStream = new BufferedWriter(outputFileReader);
+			
+			outputStream.write(specData);
+			outputStream.close();
+			throw new ParseException("Parse errors encountered during parse of vdm file: "+ outputFile, 0);//\n"+ specData
+		}
 
 			Vdm2Uml w = new Vdm2Uml();
 		Uml2XmiEAxml xmi = new Uml2XmiEAxml();
@@ -45,7 +60,7 @@ public class Translator
 
 	public static String TransLateTexVdmToUml(List<File> files,
 			File outputFile) throws FileNotFoundException, CGException,
-			IOException
+			IOException, ParseException
 	{
 			StringBuilder sb = new StringBuilder();
 		for (File file : files)

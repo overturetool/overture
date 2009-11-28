@@ -19,9 +19,7 @@
             id="org.overture.ide.vdmpp.content-type"
             name="VDM-PP Content type"
             priority="high">
-      </content-type>
-         
-         
+      </content-type>     
    </extension>
    <extension
          point="org.eclipse.dltk.core.language">
