@@ -1,6 +1,3 @@
-
-
-
 \begin{vdm_al}
 -----------------------------------------------
 -- File: Uml2Vdm
@@ -393,18 +390,24 @@ ExtractUnionAssociation(props) ==
   let ownerEndSet    = {p | p in set props & len p.getName() =0},
       propSeq        = Util`SetToSeq[IUmlProperty](props),
       pOwnerEnd      = hd Util`SetToSeq[IUmlProperty](ownerEndSet),
-      pTypeEnd       =  [propSeq(i) | i in set inds propSeq 
-                              & len propSeq(i).getName() > 0],
-      clName         = let t : IUmlClassNameType =pOwnerEnd.getType() 
-        in t.getName(), endTypes : seq of IOmlType = 
-          Util`SetToSeq[IOmlType]({ConvertType(p.getType(), if p.hasMultiplicity() then p.getMultiplicity() else nil) 
-                                   | p in set elems pTypeEnd}),
+      pTypeEnd       =  [propSeq(i) 
+                        | i in set inds propSeq 
+                        & len propSeq(i).getName() > 0],
+      clName = let t : IUmlClassNameType =pOwnerEnd.getType() 
+               in t.getName(), 
+      endTypes : seq of IOmlType = 
+          Util`SetToSeq[IOmlType]({ConvertType(p.getType(), 
+                                   if p.hasMultiplicity() 
+                                   then p.getMultiplicity() 
+                                   else nil) 
+                                  | p in set elems pTypeEnd}),
       lhs : IOmlType = hd endTypes,
       rhs : IOmlType = hd Util`SetToSeq[IOmlType]( (elems endTypes) \ {lhs}), 
       type = new OmlUnionType(lhs,rhs) --need to be recusive to make UnionType(lhs,UnionType(lhs1,...))
   in
     AddInstanceVarToClass(clName,CreateInstanceVar(hd pTypeEnd,type))
 pre card props > 0;
+
 -- extract product type from association
 public ExtractProductAssociation : set of IUmlProperty ==> ()
 ExtractProductAssociation(props) ==
@@ -459,17 +462,19 @@ CreateInstanceVar(prop,type) ==
 private AddInstanceVarToClass : String * IOmlInstanceVariable ==> ()
 AddInstanceVarToClass(clName,instanceVar) ==
   let existingSet = GetAssociationInstanceVars(clName),
-      addedSet = if len existingSet > 0 then existingSet ^ [instanceVar] else [instanceVar]
+      addedSet = if len existingSet > 0 
+                 then existingSet ^ [instanceVar] 
+                 else [instanceVar]
   in
     classInstanceVars := classInstanceVars ++ { clName |-> addedSet};
 
 -- Get instance variabled for a specific class extracted from associations
-public GetAssociationInstanceVars : String ==> seq of IOmlInstanceVariableShape 
+public GetAssociationInstanceVars : String ==> seq of IOmlInstanceVariable 
 GetAssociationInstanceVars(clName) == 
-  if clName in set dom classInstanceVars then 
-    return classInstanceVars(clName)
-  else
-    return []; 
+  if clName in set dom classInstanceVars 
+  then return classInstanceVars(clName)
+  else return [];
+   
 -- Get default expression from Uml default value and type 
 public GetDefaultExpression : [IUmlValueSpecification] * IOmlType ==> [IOmlExpression]
 GetDefaultExpression(defaultValue,t) ==
@@ -537,22 +542,22 @@ public ConvertVisibility : IUmlVisibilityKind ==> IOmlScope
   end;
  
 -- add multiplici exstracted information to type. eg chat with upper* is a set of char
-private ApplyMultiplicity : IOmlType * [IUmlMultiplicityElement] ==> IOmlType
+ApplyMultiplicity : IOmlType * [IUmlMultiplicityElement] ==> IOmlType
 ApplyMultiplicity(t, mul) == -- NOT COMPLETED
- if mul = nil then
-  return t
- else
-   if mul.getLower() = 0 and not mul.hasUpper() then
-     return new OmlSeq0Type(t)
-   else if mul.getLower() = 1 and not mul.hasUpper() then
-     return new OmlSeq1Type(t)     
-   else return t;  
+  if mul = nil 
+  then return t
+  elseif mul.getLower() = 0 and not mul.hasUpper() 
+  then return new OmlSeq0Type(t)
+  elseif mul.getLower() = 1 and not mul.hasUpper() 
+  then return new OmlSeq1Type(t)     
+  else return t;  
+
 ------------------------------------------------------
 --  Traces
 ------------------------------------------------------   
 functions
 -- Build traces from interaction
-private BuildTraces : IUmlModel -> map String to IOmlTraceDefinitions
+BuildTraces : IUmlModel -> map String to IOmlTraceDefinitions
 BuildTraces(model) ==
  let collOwnedBehavior = dunion{let tmp : IUmlCollaboration = 
    coll in tmp.getOwnedBehavior() | coll in set model.getDefinitions() 
@@ -583,54 +588,62 @@ GetTraceDefinition : seq of IUmlMessage *
                      set of IUmlInteractionFragment * 
                      [IUmlInteractionOperand] -> [IOmlTraceDefinition]
 GetTraceDefinition(msgs,fg,io) ==
-  if len msgs > 0 then
-  ( 
-    let m    = hd msgs,
-        rest = if len msgs > 1 then tl msgs else [],
-        cfg  = { f | f in set fg & isofclass(IUmlCombinedFragment,f) },
-        op   = GetOperand(m,cfg)
-    in
-    (
-      --No current CF is select by a IO
-      if (io = nil and op = nil) or (io = op )  
-      then
-        -- no operand => no CF
-        let mappDef : IOmlTraceDefinition = 
-              new OmlTraceDefinitionItem([],GetMethodApply(m),nil),
-            restDef : IOmlTraceDefinition = GetTraceDefinition(rest,cfg,op),
-            defs : seq of IOmlTraceDefinition = [mappDef,restDef] 
-        in
-          let ret : IOmlTraceDefinition = new OmlTraceSequenceDefinition(defs) 
-          in 
-             ret
-      else
-        if op <> nil and GetCfIoKind(fg,op).getValue() = 
-            UmlInteractionOperatorKindQuotes`IQLOOP 
-        then
-          -- CF = Loop
-          let loopDef : IOmlTraceDefinition    = GetLoopDef(m,op),
-              restDef : [IOmlTraceDefinition]  = GetTraceDefinition(rest,cfg,op),
-              defs : seq of IOmlTraceDefinition = if restDef <> nil 
-                                                 then [loopDef,restDef]
-                                                 else [loopDef],
-              ret : IOmlTraceDefinition = new OmlTraceSequenceDefinition(defs) in ret
-        else 
-          -- CF = ALT
-          if op <> nil and GetCfIoKind(fg,op).getValue() = 
-              UmlInteractionOperatorKindQuotes`IQALT 
-          then
-            let altDef : IOmlTraceDefinition   = GetAltDef(rest,m,cfg,op),
-                restDef: [IOmlTraceDefinition] = GetTraceDefinition(rest,cfg,op),
-                defs : seq of IOmlTraceDefinition = if restDef <> nil 
-                                                   then [altDef,restDef]
-                                                   else [altDef],
-                ret : IOmlTraceDefinition = new OmlTraceSequenceDefinition(defs) in ret
-          else 
-            let ret : IOmlTraceDefinition = new OmlTraceSequenceDefinition() in ret
-     )
-  )
-  else 
-     nil;
+  if len msgs > 0 
+  then let m = hd msgs,
+           rest = if len msgs > 1 then tl msgs else [],
+           cfg = { f | f in set fg 
+                     & isofclass(IUmlCombinedFragment,f) },
+           op = GetOperand(m,cfg)
+       in
+         --No current CF is select by a IO
+         if (io = nil and op = nil) or (io = op )  
+         then -- no operand => no CF
+              let mappDef : IOmlTraceDefinition  
+                          = new OmlTraceDefinitionItem
+                                   ([],GetMethodApply(m),nil),
+                  restDef : IOmlTraceDefinition 
+                          = GetTraceDefinition(rest,cfg,op),
+                  defs : seq of IOmlTraceDefinition 
+                       = [mappDef,restDef] 
+              in
+                let ret : IOmlTraceDefinition 
+                        = new OmlTraceSequenceDefinition(defs) 
+                in 
+                  ret
+          elseif op <> nil and 
+                 GetCfIoKind(fg,op).getValue() = 
+                 UmlInteractionOperatorKindQuotes`IQLOOP 
+          then -- CF = Loop
+               let loopDef : IOmlTraceDefinition
+                           = GetLoopDef(m,op),
+                   restDef : [IOmlTraceDefinition]
+                           = GetTraceDefinition(rest,cfg,op),
+                   defs : seq of IOmlTraceDefinition 
+                        = if restDef <> nil 
+                          then [loopDef,restDef]
+                          else [loopDef],
+                   ret : IOmlTraceDefinition 
+                       = new OmlTraceSequenceDefinition(defs) 
+               in ret
+          elseif -- CF = ALT
+                 op <> nil and 
+                 GetCfIoKind(fg,op).getValue() = 
+                 UmlInteractionOperatorKindQuotes`IQALT 
+          then let altDef : IOmlTraceDefinition   
+                          = GetAltDef(rest,m,cfg,op),
+                   restDef: [IOmlTraceDefinition] 
+                          = GetTraceDefinition(rest,cfg,op),
+                   defs : seq of IOmlTraceDefinition 
+                        = if restDef <> nil 
+                          then [altDef,restDef]
+                          else [altDef],
+                   ret : IOmlTraceDefinition 
+                       = new OmlTraceSequenceDefinition(defs)
+               in ret
+          else let ret : IOmlTraceDefinition 
+                       = new OmlTraceSequenceDefinition() 
+               in ret
+  else nil;
 
 -- Get loop definition converts a combined fragment into a Trace definition item
 --  where the repeat pattern is set according to the contraint of the interaction 
@@ -645,39 +658,41 @@ GetLoopDef(m,io) ==
 -- Get repeat pattern from an interaction operand
 --  the operand is associated with a message the there by the link to
 --  the trace repeat pattern with a test of the message  
-private GetRpEx : [IUmlInteractionOperand] -> [IOmlTraceRepeatPattern]
+GetRpEx : [IUmlInteractionOperand] -> [IOmlTraceRepeatPattern]
 GetRpEx(iOperand) ==
- if iOperand = nil 
- then 
-    nil
- else 
-   if iOperand.hasGuard() then
-     let guard = iOperand.getGuard(),
-         min = if guard.hasMinint() 
-               then let tmp : IUmlLiteralInteger = 
-                 guard.getMinint() in tmp.getValue() 
-               else nil,
-         max = if guard.hasMaxint() 
-               then let tmp : IUmlLiteralInteger = 
-                 guard.getMaxint() in tmp.getValue() 
-               else nil
-     in -- problem with Java code gen. First check nil, java breaks the check if this is false
-     if  min <> nil and min = 0 and max = nil then --min = 0 and max = nil then 
-        new OmlTraceZeroOrMore()
-     else 
-       if min <> nil and min = 1 and max = nil then--min = 1 and max = nil then 
-          new OmlTraceOneOrMore()
-       else if min <> nil and max <> nil and min = 0 and max = 1 then --min = 0 and max = 1 then 
-          new OmlTraceZeroOrOne()
-       else if min <> nil then
-         let minL = new OmlNumericLiteral(min),
-             maxL = if max <> nil then new OmlNumericLiteral(max) else nil
-         in
-            new OmlTraceRange(minL,maxL )
-       else
-         nil
-    else
-      nil;
+  if iOperand = nil 
+  then nil
+  elseif iOperand.hasGuard() 
+  then let guard = iOperand.getGuard(),
+           min = if guard.hasMinint() 
+                 then let tmp : IUmlLiteralInteger 
+                              = guard.getMinint() 
+                      in tmp.getValue() 
+                 else nil,
+           max = if guard.hasMaxint() 
+                 then let tmp : IUmlLiteralInteger 
+                              = guard.getMaxint() 
+                      in tmp.getValue() 
+                 else nil
+       in -- problem with Java code gen. First check nil, java breaks the check if this is false
+         if min <> nil and min = 0 and max = nil 
+         then --min = 0 and max = nil then 
+              new OmlTraceZeroOrMore()
+         elseif min <> nil and min = 1 and max = nil 
+         then--min = 1 and max = nil then 
+              new OmlTraceOneOrMore()
+         elseif min <> nil and max <> nil and min = 0 and max = 1 
+         then --min = 0 and max = 1 then 
+              new OmlTraceZeroOrOne()
+         elseif min <> nil 
+         then let minL = new OmlNumericLiteral(min),
+                  maxL = if max <> nil 
+                         then new OmlNumericLiteral(max) 
+                         else nil
+              in
+                new OmlTraceRange(minL,maxL )
+         else nil
+  else nil;
          
        
 -- Get alt definition converts a CF kind of alt into a Choice Definition
@@ -717,25 +732,24 @@ GetOperand(m,fragments) ==
                  & exists mos in set io.getCovered() 
                  & mos = m.getSendEvent()} 
   in 
-    if card ops > 0 then
-      let p in set ops in  p
-    else
-       nil;
+    if card ops > 0 
+    then let p in set ops in  p
+    else nil;
     
 
 -- Get Combined fragment kind from a set of CF and a InteractionOperand
 private GetCfIoKind : set of IUmlCombinedFragment * IUmlInteractionOperand -> IUmlInteractionOperatorKind
 GetCfIoKind(fms,io) ==
   let cf 
-    in set {f | f in set  fms  
+    in set {f | f in set fms  
               & isofclass(IUmlCombinedFragment,f) 
                 and 
-                exists iop in set elems f.getOperand() & iop = io} 
+                io in set elems f.getOperand()} 
       in 
-         cf.getInteractionOperator();
-
-
-
+         cf.getInteractionOperator()
+pre exists f in set fms & isofclass(IUmlCombinedFragment,f) 
+                          and 
+                          io in set elems f.getOperand();
 
 end Uml2Vdm
 \end{vdm_al}
