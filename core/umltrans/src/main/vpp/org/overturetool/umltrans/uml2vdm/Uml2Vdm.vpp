@@ -56,11 +56,13 @@ BuildClasses(model) ==
                                      & isofclass(IUmlClass,c)}
       
   in 
-    return Util`SetToSeq[IOmlClass]( {let cName = c.getName(),traceDef = 
+    return Util`SetToSeq[IOmlClass]( {let cName = c.getName(),
+                                          traceDef = 
                                         if cName in set dom traceDefMap 
                                         then traceDefMap(cName) 
                                         else nil 
-                                      in BuildClass(c,traceDef)| c in set classes}); 
+                                      in BuildClass(c,traceDef)
+                                     | c in set classes}); 
 
 -- Build Oml class from Uml class
 public BuildClass : IUmlClass * [IOmlTraceDefinitions] ==> IOmlClass
@@ -69,10 +71,14 @@ BuildClass(c,traceDef) ==
       supers = c.getSuperClass(),
       inheritanceClause : [OmlInheritanceClause] = 
         if len supers > 0 
-        then new OmlInheritanceClause( [ supers(i).getName() |i in set inds supers]) 
+        then new OmlInheritanceClause([ supers(i).getName() 
+                                      |i in set inds supers]) 
         else nil,
-      body : set of IOmlDefinitionBlock = dunion { BuildDefs(d) | d in set c.getClassBody() },
-      bodyWithTrace : set of IOmlDefinitionBlock = if traceDef <> nil then body union {traceDef} else body, 
+      body : set of IOmlDefinitionBlock = dunion { BuildDefs(d) 
+                                                 | d in set c.getClassBody() },
+      bodyWithTrace : set of IOmlDefinitionBlock = if traceDef <> nil 
+                                                   then body union {traceDef} 
+                                                   else body, 
       systemSpec : bool = false,
       instVars : seq of IOmlInstanceVariableShape =  GetAssociationInstanceVars(name),
       bodyLst = if len instVars > 0 
@@ -157,7 +163,9 @@ BuildInstanceVariable(prop) ==
       statAccess  = prop.getIsStatic(),
       scope       = ConvertVisibility(prop.getVisibility()),
       access      = new OmlAccessDefinition(asyncAccess,statAccess, scope),
-      multiplicity= if prop.hasMultiplicity() then prop.getMultiplicity() else nil,
+      multiplicity= if prop.hasMultiplicity() 
+                    then prop.getMultiplicity() 
+                    else nil,
       type        = ConvertType(prop.getType(),multiplicity),
       expression : [IOmlExpression] =  
         if prop.hasDefault() 
@@ -226,14 +234,23 @@ BuildParameters(parms,buildFunction) ==
 in 
   return mk_(Flip(patterns),type);
 
+functions
+
 -- Flip pattern order, could be changed to function poly
-public Flip : seq of IOmlPatternIdentifier ==> seq of IOmlPatternIdentifier
+public Flip : seq of IOmlPatternIdentifier -> seq of IOmlPatternIdentifier
 Flip(list) == 
   if len list = 1
-  then return [hd list]
-  else if len list = 0
-  then return []
-  else return Flip(tl list) ^ [hd list];
+  then [hd list]
+  elseif list = []
+  then []
+  else Flip(tl list) ^ [hd list]
+measure LenPL;
+
+LenPL: seq of IOmlPatternIdentifier -> nat
+LenPL(list) ==
+  len list;
+
+operations 
 
 -- Convert IUmlParameters for a function ot operation to a IOmlType
 -- First the return type is converted and then the rest of parameters
@@ -280,7 +297,9 @@ BuildFunction(prop) ==
       scope       = ConvertVisibility(prop.getVisibility()),
       access      = new OmlAccessDefinition(asyncAccess,statAccess, scope),
       mk_(parms,
-          type)   = BuildParameters(if prop.hasOwnedParameters() then prop.getOwnedParameters().getParameterList() else [],
+          type)   = BuildParameters(if prop.hasOwnedParameters() 
+                                    then prop.getOwnedParameters().getParameterList() 
+                                    else [],
                                     prop.getIsQuery()), --new OmlOperationType(new OmlEmptyType(),new OmlEmptyType()),--if prop.hasType() then ConvertType(prop.getType()) else ,
       name : 
        seq of char= prop.getName(),
@@ -366,13 +385,15 @@ ExtractBinaryAssociation(props) ==
       pOwnerEnd = hd [propSeq(i) | i in set inds propSeq 
                                  & len propSeq(i).getName() =0],
       pTypeEnd  = hd [propSeq(i) | i in set inds propSeq 
-                                & len propSeq(i).getName() > 0],
+                                 & len propSeq(i).getName() > 0],
       clName    = let t : IUmlClassNameType = pOwnerEnd.getType() in
         t.getName(),
-      multiplicity= if pTypeEnd.hasMultiplicity() then pTypeEnd.getMultiplicity() else nil,
+      multiplicity= if pTypeEnd.hasMultiplicity() 
+                    then pTypeEnd.getMultiplicity() 
+                    else nil,
       qualifiers = {p.getQualifier() | p in set props & p.hasQualifier()},
        
-      tmpType        = ConvertType(pTypeEnd.getType(),multiplicity),
+      tmpType = ConvertType(pTypeEnd.getType(),multiplicity),
       type       = if card qualifiers = 0 
                    then tmpType
                    else let a in set qualifiers in new OmlGeneralMapType(ConvertType(a,nil),tmpType)
@@ -411,22 +432,21 @@ pre card props > 0;
 -- extract product type from association
 public ExtractProductAssociation : set of IUmlProperty ==> ()
 ExtractProductAssociation(props) ==
-(
   let ownerEndSet   = {p | p in set props & len p.getName() =0},
       propSeq       = Util`SetToSeq[IUmlProperty](props),
       pOwnerEnd     = hd Util`SetToSeq[IUmlProperty](ownerEndSet),
-      pTypeEnd      =  [propSeq(i) | i in set inds propSeq 
-                              & len propSeq(i).getName() > 0],
+      pTypeEnd      =  [propSeq(i) 
+                       | i in set inds propSeq 
+                       & len propSeq(i).getName() > 0],
       clName        = let t : IUmlClassNameType = pOwnerEnd.getType() 
                       in t.getName(),
       endTypes : seq of IUmlType = Util`SetToSeq[IUmlType]({p.getType() 
                                            | p in set elems pTypeEnd}),
       type : IOmlType = CreateProductType(endTypes)
   in
-    AddInstanceVarToClass(clName,CreateInstanceVar(hd pTypeEnd,type));
-  
-)
+    AddInstanceVarToClass(clName,CreateInstanceVar(hd pTypeEnd,type))
 pre card props > 0;
+
 functions
 -- Create product type from Uml type
 private CreateProductType : seq of IUmlType -> IOmlType
@@ -492,13 +512,17 @@ GetDefaultExpression(defaultValue,t) ==
       let tmp : String = val in
         return new OmlNewExpression(new OmlName(nil,tmp),[],[]),
       (isofclass(IOmlIntType,t))   -> 
-      let tmp : nat = val in
+      let tmp : nat = val 
+      in
         return new OmlSymbolicLiteralExpression(new OmlNumericLiteral(tmp)),
       (isofclass(IOmlCharType,t))    -> 
-      let tmp : String = val in
+      let tmp : String = val 
+      in
         return new OmlSymbolicLiteralExpression(new OmlTextLiteral(tmp)),
       (isofclass(IOmlSeq0Type,t))    -> 
-        return GetDefaultExpression(defaultValue,let tmp : IOmlSeq0Type = t in tmp.getType()),
+        return GetDefaultExpression(defaultValue,
+                                    let tmp : IOmlSeq0Type = t 
+                                    in tmp.getType()),
      -- (isofclass(IUmlSetValueType,t))    -> 
      --   return new OmlSymbolicLiteralExpression(new OmlTextLiteral(defaultValue)),
       others -> return nil
@@ -527,9 +551,11 @@ public ConvertVisibility : IUmlVisibilityKind ==> IOmlScope
  ConvertType(t,mul) == 
    cases true:
      (isofclass(IUmlClassNameType,t)) 	-> 
-       return ApplyMultiplicity( new OmlTypeName(let tmp : IUmlClassNameType = t 
-                              in new OmlName(nil,tmp.getName()))
-                              ,mul),
+       let tmp : IUmlClassNameType = t 
+       in 
+         return ApplyMultiplicity(new OmlTypeName(
+                                     new OmlName(nil,tmp.getName())),
+                                  mul),
      (isofclass(IUmlCharType,t)) 		-> return ApplyMultiplicity(new OmlCharType(),mul),
      (isofclass(IUmlStringType,t)) 		-> return new OmlSeq0Type(new OmlCharType()),
      (isofclass(IUmlIntegerType,t)) 	-> return ApplyMultiplicity(new OmlIntType(),mul),
@@ -559,11 +585,13 @@ functions
 -- Build traces from interaction
 BuildTraces : IUmlModel -> map String to IOmlTraceDefinitions
 BuildTraces(model) ==
- let collOwnedBehavior = dunion{let tmp : IUmlCollaboration = 
-   coll in tmp.getOwnedBehavior() | coll in set model.getDefinitions() 
-                                  & isofclass(IUmlCollaboration,coll)}
+ let collOwnedBehavior = dunion{let tmp : IUmlCollaboration = coll 
+                                in tmp.getOwnedBehavior() 
+                               | coll in set model.getDefinitions() 
+                               & isofclass(IUmlCollaboration,coll)}
  in
-   merge{BuildTrace(interaction) | interaction in set collOwnedBehavior};
+   merge{BuildTrace(interaction) 
+        | interaction in set collOwnedBehavior};
     
 -- build a trace definition from a SD by using the name of the SD as the name of
 --   the trace 
@@ -578,8 +606,10 @@ BuildTrace(interaction)==
       let ownerClass in set {m.getSendEvent().getCovered().getRepresents() 
                             | m in set elems messages} 
       in 
-         {let owr : IUmlClassNameType =ownerClass in owr.getName() 
-                |-> new OmlTraceDefinitions([new OmlNamedTrace([name],defs)])};
+         {let owr : IUmlClassNameType =ownerClass 
+          in owr.getName() 
+          |-> 
+          new OmlTraceDefinitions([new OmlNamedTrace([name],defs)])};
 
 -- Get definitions loops through the messages of the SD. It keeps looping until non of the messages
 --  are back. It handles one message at the time and groups the according to the fragments they are

@@ -1,0 +1,8 @@
+class ExtExplOpSubclassResp
+
+operations
+
+Op(n : nat) ==
+  is subclass responsibility
+
+end ExtExplOpSubclassResp
