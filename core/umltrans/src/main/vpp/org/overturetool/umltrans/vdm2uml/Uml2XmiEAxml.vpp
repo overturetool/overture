@@ -71,6 +71,7 @@ CreateXmlFile(m) ==
   
   doc.StartE("uml:Model");
   doc.StartA("name",m.getName());
+  doc.StartA("xmi:type","uml:Model");
   doc.StartA(ID_TAG,GetNextId());
   
   doc.StartE(oe);

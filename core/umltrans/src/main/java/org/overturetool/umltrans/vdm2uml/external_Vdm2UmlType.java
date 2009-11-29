@@ -45,7 +45,8 @@ public class external_Vdm2UmlType {
 
 
 // ***** VDMTOOLS START Name=impl_GenFnType#2|Vector|Vector KEEP=NO
-  public IOmlPartialFunctionType impl_GenFnType (final Vector pattype_ul, final Vector restype_ul) throws CGException {
+  @SuppressWarnings("unchecked")
+public IOmlPartialFunctionType impl_GenFnType (final Vector pattype_ul, final Vector restype_ul) throws CGException {
 
     UTIL.RunTime("Run-Time Error:Implicit Function GenFnType has been called");
     return null;//new IOmlPartialFunctionType();
