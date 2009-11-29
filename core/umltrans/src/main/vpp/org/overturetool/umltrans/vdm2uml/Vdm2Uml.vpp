@@ -496,13 +496,6 @@ BuildOperation(op,-) ==
              name = shape.getIdentifier(),
              pattype_l = shape.getPatternTypePairList(),
              restype_l = shape.getIdentifierTypePairList(),
-             type : [IUmlType] = nil, -- TODO Vdm2UmlType`ConvertType(fntype),
-             pnames : [IOmlParameter] = --TODO def properly
-                                        --if len shape.getParameterList() = 0 
-                                        --then 
-                                        nil, 
-                                        --else let p in set elems shape.getParameterList() 
-                                        --     in p,
              pars = buildParameters(pattype_l),
              res = buildFnResult(restype_l)
          in 
@@ -518,13 +511,6 @@ BuildOperation(op,-) ==
              name = shape.getIdentifier(),
              pattype_l = shape.getPatternTypePairList(),
              restype_l = shape.getIdentifierTypePairList(),
-             type : [IUmlType]  = nil, -- TODO Vdm2UmlType`ConvertType(fntype),
-             pnames : [IOmlParameter] = --TODO def properly
-                                        --if len shape.getParameterList() = 0 
-                                        --then 
-                                        nil, 
-                                        --else let p in set elems shape.getParameterList() 
-                                        --     in p,
              pars = buildParameters(pattype_l),
              res = buildFnResult(restype_l)
          in 
@@ -689,14 +675,7 @@ BuildFunction(op,-) ==
              name = shape.getIdentifier(),
              pattype_l = shape.getPatternTypePairList(),
              restype_l = shape.getIdentifierTypePairList(),
-             fntype = nil, -- TODO Vdm2UmlType`GenFnType(pattype_l,restype_l),
              type : [IUmlType] = nil, -- TODO Vdm2UmlType`ConvertType(fntype),
-             pnames : [IOmlParameter] = --TODO def properly
-                                        --if len shape.getParameterList() = 0 
-                                        --then 
-                                        nil, 
-                                        --else let p in set elems shape.getParameterList() 
-                                        --     in p,
              pars = buildParameters(pattype_l),
              res = buildFnResult(restype_l)
          in return new UmlOperation(name, 
@@ -711,14 +690,7 @@ BuildFunction(op,-) ==
              name = shape.getIdentifier(),
              pattype_l = shape.getPatternTypePairList(),
              restype_l = shape.getIdentifierTypePairList(),
-             fntype : [IUmlType]  = nil, -- TODO Vdm2UmlType`GenFnType(pattype_l,restype_l),
              type : [IUmlType]  = nil, -- TODO Vdm2UmlType`ConvertType(fntype),
-             pnames : [IOmlParameter] = --TODO def properly
-                                        --if len shape.getParameterList() = 0 
-                                        --then 
-                                        nil, 
-                                        --else let p in set elems shape.getParameterList() 
-                                        --     in p,
              pars = buildParameters(pattype_l),
              res = buildFnResult(restype_l)
          in return new UmlOperation(name, 
@@ -731,14 +703,7 @@ BuildFunction(op,-) ==
      else -- This part shall be removed if we remove the TypelessExplicitFunction
           let shape : IOmlTypelessExplicitFunction = shapegeneric,
              name = shape.getIdentifier(),
-             fntype : [IUmlType]  = nil, -- TODO Vdm2UmlType`GenFnType(pattype_l,restype_l),
              type : [IUmlType]  = nil, -- TODO Vdm2UmlType`ConvertType(fntype),
-             pnames : [IOmlParameter] = --TODO def properly
-                                        --if len shape.getParameterList() = 0 
-                                        --then 
-                                        nil, 
-                                        --else let p in set elems shape.getParameterList() 
-                                        --     in p,
              pars = []
          in return new UmlOperation(name, 
                                     visibility, 
@@ -775,7 +740,7 @@ IsSimpleType(t) ==
 	  in IsSimpleType(t1.getType()),  
     others -> true
   end;
-  
+ 
 -- Get a simple type name
 private GetSimpleTypeName : IUmlType -> String
 GetSimpleTypeName(t) ==
