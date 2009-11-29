@@ -2639,7 +2639,7 @@ public class Xml2UmlModel extends XmlVisitor {
           else {
 
             UTIL.RunTime("Run-Time Error:Can not evaluate an error statement");
-throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); //             return new IUmlInteractionFragment();
+throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); //             return new IUmlInteractionFragment();
           }
         }
       }

@@ -496,7 +496,7 @@ BuildOperation(op,-) ==
              name = shape.getIdentifier(),
              pattype_l = shape.getPatternTypePairList(),
              restype_l = shape.getIdentifierTypePairList(),
-             type = nil, -- TODO Vdm2UmlType`ConvertType(fntype),
+             type : [IUmlType] = nil, -- TODO Vdm2UmlType`ConvertType(fntype),
              pnames : [IOmlParameter] = --TODO def properly
                                         --if len shape.getParameterList() = 0 
                                         --then 
@@ -518,7 +518,7 @@ BuildOperation(op,-) ==
              name = shape.getIdentifier(),
              pattype_l = shape.getPatternTypePairList(),
              restype_l = shape.getIdentifierTypePairList(),
-             type = nil, -- TODO Vdm2UmlType`ConvertType(fntype),
+             type : [IUmlType]  = nil, -- TODO Vdm2UmlType`ConvertType(fntype),
              pnames : [IOmlParameter] = --TODO def properly
                                         --if len shape.getParameterList() = 0 
                                         --then 
@@ -711,8 +711,8 @@ BuildFunction(op,-) ==
              name = shape.getIdentifier(),
              pattype_l = shape.getPatternTypePairList(),
              restype_l = shape.getIdentifierTypePairList(),
-             fntype = nil, -- TODO Vdm2UmlType`GenFnType(pattype_l,restype_l),
-             type = nil, -- TODO Vdm2UmlType`ConvertType(fntype),
+             fntype : [IUmlType]  = nil, -- TODO Vdm2UmlType`GenFnType(pattype_l,restype_l),
+             type : [IUmlType]  = nil, -- TODO Vdm2UmlType`ConvertType(fntype),
              pnames : [IOmlParameter] = --TODO def properly
                                         --if len shape.getParameterList() = 0 
                                         --then 
@@ -731,8 +731,8 @@ BuildFunction(op,-) ==
      else -- This part shall be removed if we remove the TypelessExplicitFunction
           let shape : IOmlTypelessExplicitFunction = shapegeneric,
              name = shape.getIdentifier(),
-             fntype = nil, -- TODO Vdm2UmlType`GenFnType(pattype_l,restype_l),
-             type = nil, -- TODO Vdm2UmlType`ConvertType(fntype),
+             fntype : [IUmlType]  = nil, -- TODO Vdm2UmlType`GenFnType(pattype_l,restype_l),
+             type : [IUmlType]  = nil, -- TODO Vdm2UmlType`ConvertType(fntype),
              pnames : [IOmlParameter] = --TODO def properly
                                         --if len shape.getParameterList() = 0 
                                         --then 

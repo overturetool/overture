@@ -369,7 +369,7 @@ public class UmlVisitor extends IUmlVisitor {
                                                                                         else {
 
                                                                                           UTIL.RunTime("Run-Time Error:Can not evaluate an error statement");
-throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); //                                                                                           return;
+throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); //                                                                                           return;
                                                                                         }
                                                                                       }
                                                                                     }
@@ -451,7 +451,7 @@ throw new CGException(); // throw new CGException(); // throw new CGException();
                 else {
 
                   UTIL.RunTime("Run-Time Error:Can not evaluate an error statement");
-throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); //                   return;
+throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); //                   return;
                 }
               }
             }
@@ -472,7 +472,7 @@ throw new CGException(); // throw new CGException(); // throw new CGException();
       else {
 
         UTIL.RunTime("Run-Time Error:Can not evaluate an error statement");
-throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); //         return;
+throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); //         return;
       }
   }
 // ***** VDMTOOLS END Name=visitValueSpecification#1|IUmlValueSpecification
@@ -496,7 +496,7 @@ throw new CGException(); // throw new CGException(); // throw new CGException();
         else {
 
           UTIL.RunTime("Run-Time Error:Can not evaluate an error statement");
-throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); //           return;
+throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); //           return;
         }
       }
   }
@@ -524,7 +524,7 @@ throw new CGException(); // throw new CGException(); // throw new CGException();
           else {
 
             UTIL.RunTime("Run-Time Error:Can not evaluate an error statement");
-throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); //             return;
+throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); //             return;
           }
         }
       }
@@ -553,7 +553,7 @@ throw new CGException(); // throw new CGException(); // throw new CGException();
           else {
 
             UTIL.RunTime("Run-Time Error:Can not evaluate an error statement");
-throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); //             return;
+throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); // throw new CGException(); //             return;
           }
         }
       }

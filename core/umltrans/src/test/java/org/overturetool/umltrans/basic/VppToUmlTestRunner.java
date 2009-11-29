@@ -7,7 +7,6 @@ import java.io.FileReader;
 import junit.framework.Assert;
 
 import org.custommonkey.xmlunit.XMLTestCase;
-import org.overturetool.umltrans.Main.CmdLineProcesser;
 import org.overturetool.umltrans.Main.MainClass;
 
 public class VppToUmlTestRunner
