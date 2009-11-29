@@ -48,6 +48,45 @@ public class ToUmlTest extends TestCase
 		Assert.assertEquals(true,
 				new ToUmlTestHelper("types","string").run());
 	}
+
+	//fndefs
+	public void testExtExplFnClass() throws Exception
+	{
+		Assert.assertEquals(true,
+				new ToUmlTestHelper("fndefs","ExtExplFn").run());
+	}
+
+	public void testImplFnClass() throws Exception
+	{
+		Assert.assertEquals(true,
+				new ToUmlTestHelper("fndefs","ImplFn").run());
+	}
+
+	//opdefs
+	public void testExtExplOpClass() throws Exception
+	{
+		Assert.assertEquals(true,
+				new ToUmlTestHelper("opdefs","ExtExplOp").run());
+	}
+
+	public void testImplOpClass() throws Exception
+	{
+		Assert.assertEquals(true,
+				new ToUmlTestHelper("opdefs","ImplOp").run());
+	}
+
+	//subclassresponsibility
+	public void testExplOpSubClassRespClass() throws Exception
+	{
+		Assert.assertEquals(true,
+				new ToUmlTestHelper("subclassresponsibility","ExplOpSubClassResp").run());
+	}
+
+	public void testExtExplOpSubClassRespClass() throws Exception
+	{
+		Assert.assertEquals(true,
+				new ToUmlTestHelper("subclassresponsibility","ExtExplOpSubClassResp").run());
+	}
 	
 	// other
 	public void testsimpleClass() throws Exception
