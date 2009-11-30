@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Vector;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
-import junit.framework.Assert;
+//import junit.framework.Assert;
 
 import org.overturetool.api.xml.XmlDocument;
 import org.overturetool.parser.imp.OvertureParser;
@@ -230,8 +230,8 @@ public class CmdLineProcesser
 				+ " Ok: " + testsResults.size() + " Fail: "
 				+ testsResultsFail.size() + " Fail parse: "
 				+ testsResultsFailParse.size());
-		Assert.assertEquals(0, testsResultsFail.size()
-				+ testsResultsFailParse.size());
+		//Assert.assertEquals(0, testsResultsFail.size()
+		//		+ testsResultsFailParse.size());
 	}
 
 	private static void printList(List<String> list, String status)
