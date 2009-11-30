@@ -29,7 +29,6 @@ import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.statements.CallObjectStatement;
 import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.syntax.ParserException;
@@ -46,11 +45,13 @@ public class TraceApplyExpression extends TraceCoreDefinition
 {
     private static final long serialVersionUID = 1L;
 	public final CallObjectStatement statement;
+	public final String currentModule;
 
-	public TraceApplyExpression(CallObjectStatement statement)
+	public TraceApplyExpression(CallObjectStatement statement, String currentModule)
 	{
 		super(statement.location);
 		this.statement = statement;
+		this.currentModule = currentModule;
 	}
 
 	@Override
@@ -83,6 +84,7 @@ public class TraceApplyExpression extends TraceCoreDefinition
     			String value = v.toString();
     			LexTokenReader ltr = new LexTokenReader(value, Dialect.VDM_PP);
     			ExpressionReader er = new ExpressionReader(ltr);
+    			er.setCurrentModule(currentModule);
 
     			try
     			{
@@ -90,13 +92,11 @@ public class TraceApplyExpression extends TraceCoreDefinition
     			}
     			catch (ParserException e)
     			{
-    				throw new ContextException(
-    					e.number, e.getMessage(), e.location, ctxt);
+    				newargs.add(arg);		// Give up!
     			}
     			catch (LexException e)
     			{
-    				throw new ContextException(
-    					e.number, e.getMessage(), e.location, ctxt);
+    				newargs.add(arg);		// Give up!
     			}
 			}
 		}

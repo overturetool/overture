@@ -81,7 +81,6 @@ public class NamedTraceDefinition extends Definition
 	@Override
 	public Definition findName(LexNameToken sought, NameScope scope)
 	{
-		// return (sought.equals(name) || sought.equals(name2) ? this : null);
 		if (super.findName(sought, scope) != null)
 		{
 			return this;

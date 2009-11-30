@@ -1534,7 +1534,8 @@ public class DefinitionReader extends SyntaxReader
 						"Expecting 'id.id(args)' or '(trace definitions)'", token);
 				}
 
-				return new TraceApplyExpression((CallObjectStatement)stmt);
+				return new TraceApplyExpression(
+					(CallObjectStatement)stmt, getCurrentModule());
 
 			case BRA:
 				nextToken();
