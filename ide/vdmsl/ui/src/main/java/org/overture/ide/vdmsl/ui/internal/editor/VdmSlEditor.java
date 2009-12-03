@@ -45,6 +45,7 @@ public class VdmSlEditor extends ScriptEditor {
 	protected void initializeEditor() {
 		super.initializeEditor();
 		setEditorContextMenuId(VdmslEditorConstants.EDITOR_CONTEXT);
+		setRulerContextMenuId(VdmslEditorConstants.RULER_CONTEXT);
 
 	}
 

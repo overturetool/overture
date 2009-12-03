@@ -26,6 +26,7 @@ public class VdmRtEditor  extends ScriptEditor
 	{
 		super.initializeEditor();
 		setEditorContextMenuId(VdmRtEditorConstants.EDITOR_CONTEXT);
+		setEditorContextMenuId(VdmRtEditorConstants.RULER_CONTEXT);
 
 	}
 

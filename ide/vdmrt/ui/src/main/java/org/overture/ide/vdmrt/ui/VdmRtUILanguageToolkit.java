@@ -12,6 +12,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.overture.ide.vdmrt.core.VdmRtLanguageToolkit;
 
+import org.overture.ide.vdmrt.ui.internal.editor.IVdmRtPartitions;
 import org.overture.ide.vdmrt.ui.internal.editor.VdmRtEditorConstants;;
 //public class vdmrtUILanguageToolkit extends AbstractDLTKUILanguageToolkit
 //{
@@ -105,14 +106,12 @@ public class VdmRtUILanguageToolkit implements IDLTKUILanguageToolkit {
 
 	public String getPartitioningId()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return IVdmRtPartitions.vdmrt_PARTITIONING;
 	}
 
 	public ScriptTextTools getTextTools()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return UIPlugin.getDefault().getTextTools();
 	}
     
 }

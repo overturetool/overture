@@ -59,7 +59,7 @@ end ${moduleName}</template>
 		
 	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.completion.templates.VdmUniversalTemplateContextType"
 		deleted="false" description="Explicit function" enabled="true"
-		name="functionExplicit" id="functionExplicit">${accessSpecifier}
+		name="functionExplicit" id="functionExplicit">
 		${functionName} :  ${parameterTypes} -&gt; ${resultType}
 		${functionName} (${parameterNames}) == ${expression}
 		pre ${preCondition}
@@ -89,7 +89,7 @@ end ${moduleName}</template>
 		
 	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.completion.templates.VdmUniversalTemplateContextType"
 		deleted="false" description="Explicit Operation" enabled="true"
-		name="operationExplicit" id="operationExplicit">${accessSpecifier}
+		name="operationExplicit" id="operationExplicit">
 		${operationName} : ${parameterTypes} ==&gt; ${resultType}
 		${operationName} (${parameterNames}) == ${statements}
 		pre ${preCondition}

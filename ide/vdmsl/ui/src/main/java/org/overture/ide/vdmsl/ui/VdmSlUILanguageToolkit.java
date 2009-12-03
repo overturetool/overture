@@ -10,6 +10,7 @@ import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.overture.ide.vdmsl.core.VdmSlLanguageToolkit;
+import org.overture.ide.vdmsl.ui.internal.editor.IVdmSlPartitions;
 import org.overture.ide.vdmsl.ui.internal.editor.VdmslEditorConstants;
 //public class VdmSlUILanguageToolkit extends AbstractDLTKUILanguageToolkit
 //{
@@ -103,14 +104,12 @@ public class VdmSlUILanguageToolkit implements IDLTKUILanguageToolkit {
 
 	public String getPartitioningId()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return IVdmSlPartitions.VDMSL_PARTITIONING;
 	}
 
 	public ScriptTextTools getTextTools()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return UIPlugin.getDefault().getTextTools();
 	}
     
 }

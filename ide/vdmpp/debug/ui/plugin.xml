@@ -62,7 +62,7 @@
       <launchMode
             description="Run VDM++ specification"
             mode="run"
-            perspective="org.overture.ide.ui.VdmDefaultPerspective">
+            perspective="org.overture.ide.vdmpp.ui.VdmPpPerspective">
       </launchMode>
       <launchMode
             description="Debug VDM++ Model"
