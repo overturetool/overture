@@ -35,13 +35,17 @@ import org.overturetool.vdmj.values.ObjectValue;
 @SuppressWarnings("serial")
 public abstract class RootContext extends Context
 {
-	public RootContext(LexLocation location, String title, Context outer)
+	protected final Context freeVariables;
+
+	public RootContext(
+		LexLocation location, String title, Context freeVariables, Context outer)
 	{
 		super(location, title, outer);
+		this.freeVariables = freeVariables;
 	}
 
 	@Override
-	public Context getFreeVariables()
+	public Context getVisibleVariables()
 	{
 		Context free = new Context(location, title, null);
 		free.putAll(this);

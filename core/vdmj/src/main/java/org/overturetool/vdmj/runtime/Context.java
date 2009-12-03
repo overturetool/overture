@@ -203,13 +203,13 @@ public class Context extends HashMap<LexNameToken, Value>
 	 * @return	A new Context with all visible names.
 	 */
 
-	public Context getFreeVariables()
+	public Context getVisibleVariables()
 	{
 		Context all = new Context(location, title, null);
 
 		if (outer != null)
 		{
-			all.putAll(outer.getFreeVariables());
+			all.putAll(outer.getVisibleVariables());
 		}
 
 		all.putAll(this);	// Overriding anything below here

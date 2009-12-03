@@ -246,27 +246,30 @@ public class FunctionValue extends Value
 		if (self != null)
 		{
 			evalContext = new ObjectContext(from,
-				name + Utils.listToString("(", paramPatterns, ", ", ")"), ctxt, self);
+				name + Utils.listToString("(", paramPatterns, ", ", ")"),
+				freeVariables, ctxt, self);
 		}
 		else if (classdef != null)
 		{
 			evalContext = new ClassContext(from,
-				name + Utils.listToString("(", paramPatterns, ", ", ")"), ctxt, classdef);
+				name + Utils.listToString("(", paramPatterns, ", ", ")"),
+				freeVariables, ctxt, classdef);
 		}
 		else
 		{
 			evalContext = new StateContext(from,
-				name + Utils.listToString("(", paramPatterns, ", ", ")"), ctxt, sctxt);
+				name + Utils.listToString("(", paramPatterns, ", ", ")"),
+				freeVariables, ctxt, sctxt);
 		}
 
-		if (freeVariables != null)
-		{
-			// Add previous parameter values, if any, for curried functions
-			// This also adds the visible context saved when you created
-			// lambda-like functions, which may reference these values.
-
-			evalContext.putAll(freeVariables);
-		}
+//		if (freeVariables != null)
+//		{
+//			// Add previous parameter values, if any, for curried functions
+//			// This also adds the visible context saved when you created
+//			// lambda-like functions, which may reference these values.
+//
+//			evalContext.putAll(freeVariables);
+//		}
 
 		if (typeValues != null)
 		{

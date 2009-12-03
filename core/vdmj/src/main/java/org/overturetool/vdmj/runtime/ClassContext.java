@@ -36,10 +36,17 @@ public class ClassContext extends RootContext
 	public final ClassDefinition classdef;
 
 	public ClassContext(LexLocation location,
+		String title, Context freeVariables, Context outer,
+		ClassDefinition classdef)
+	{
+		super(location, title, freeVariables, outer);
+		this.classdef = classdef;
+	}
+
+	public ClassContext(LexLocation location,
 		String title, Context outer, ClassDefinition classdef)
 	{
-		super(location, title, outer);
-		this.classdef = classdef;
+		this(location, title, null, outer, classdef);
 	}
 
 	/**
@@ -62,6 +69,16 @@ public class ClassContext extends RootContext
 		if (v != null)
 		{
 			return v;
+		}
+
+		if (freeVariables != null)
+		{
+			v = freeVariables.get(name);
+
+			if (v != null)
+			{
+				return v;
+			}
 		}
 
 		v = classdef.getStatic(name);

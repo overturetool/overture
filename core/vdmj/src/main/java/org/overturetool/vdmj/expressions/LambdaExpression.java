@@ -109,7 +109,7 @@ public class LambdaExpression extends Expression
 		// Free variables are everything currently visible from this
 		// context (but without the context chain).
 
-		Context free = ctxt.getFreeVariables();
+		Context free = ctxt.getVisibleVariables();
 
 		return new FunctionValue(location, "lambda", type,
 			paramPatterns, expression, free);

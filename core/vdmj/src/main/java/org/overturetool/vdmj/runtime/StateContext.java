@@ -48,10 +48,17 @@ public class StateContext extends RootContext
 	 * @param sctxt Any state context.
 	 */
 
-	public StateContext(LexLocation location, String title, Context outer, Context sctxt)
+	public StateContext(LexLocation location, String title,
+		Context freeVariables, Context outer, Context sctxt)
 	{
-		super(location, title, outer);
+		super(location, title, freeVariables, outer);
 		this.stateCtxt = sctxt;
+	}
+
+	public StateContext(LexLocation location, String title,
+		Context outer, Context sctxt)
+	{
+		this(location, title, null, outer, sctxt);
 	}
 
 	/**
@@ -62,7 +69,7 @@ public class StateContext extends RootContext
 
 	public StateContext(LexLocation location, String title)
 	{
-		super(location, title, null);
+		super(location, title, null, null);
 		this.stateCtxt = null;
 	}
 
@@ -78,6 +85,21 @@ public class StateContext extends RootContext
 	public Value check(LexNameToken name)
 	{
 		Value v = get(name);
+
+		if (v != null)
+		{
+			return v;
+		}
+
+		if (freeVariables != null)
+		{
+			v = freeVariables.get(name);
+
+			if (v != null)
+			{
+				return v;
+			}
+		}
 
 		// A RootContext stops the name search from continuing down the
 		// context chain. It first checks any state context, then goes

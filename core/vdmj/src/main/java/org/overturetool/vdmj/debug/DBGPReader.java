@@ -1562,9 +1562,10 @@ public class DBGPReader
 		}
 
 		StringBuilder names = new StringBuilder();
+		String dialect = Settings.dialect == Dialect.VDM_SL ? "Module" : "Class";
 
 		names.append("<context name=\"Local\" id=\"0\"/>");
-		names.append("<context name=\"Class\" id=\"1\"/>");
+		names.append("<context name=\"" + dialect + "\" id=\"1\"/>");
 		names.append("<context name=\"Global\" id=\"2\"/>");
 
 		response(null, names);
@@ -1579,7 +1580,7 @@ public class DBGPReader
 			case LOCAL:
 				if (depth == 0)
 				{
-					vars.putAll(breakContext.getFreeVariables());
+					vars.putAll(breakContext.getVisibleVariables());
 				}
 				else
 				{
@@ -1587,7 +1588,7 @@ public class DBGPReader
 
 					if (frame != null)
 					{
-						vars.putAll(frame.getFreeVariables());
+						vars.putAll(frame.getVisibleVariables());
 					}
 				}
 				break;

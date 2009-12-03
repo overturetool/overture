@@ -49,10 +49,17 @@ public class ObjectContext extends RootContext
 	 */
 
 	public ObjectContext(
+		LexLocation location, String title, Context freeVariables,
+		Context outer, ObjectValue self)
+	{
+		super(location, title, freeVariables, outer);
+		this.self = self;
+	}
+
+	public ObjectContext(
 		LexLocation location, String title, Context outer, ObjectValue self)
 	{
-		super(location, title, outer);
-		this.self = self;
+		this(location, title, null, outer, self);
 	}
 
 	@Override
@@ -66,7 +73,7 @@ public class ObjectContext extends RootContext
 		}
 
 		Context result =
-			new ObjectContext(location, title, below, self.deepCopy());
+			new ObjectContext(location, title, freeVariables, below, self.deepCopy());
 
 		for (LexNameToken var: keySet())
 		{
@@ -97,6 +104,16 @@ public class ObjectContext extends RootContext
 		if (v != null)
 		{
 			return v;
+		}
+
+		if (freeVariables != null)
+		{
+			v = freeVariables.get(name);
+
+			if (v != null)
+			{
+				return v;
+			}
 		}
 
 		v = self.get(name, name.explicit);

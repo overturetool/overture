@@ -416,7 +416,7 @@ public class ImplicitFunctionDefinition extends Definition
 	public NameValuePairList getNamedValues(Context ctxt)
 	{
 		NameValuePairList nvl = new NameValuePairList();
-		Context free = ctxt.getFreeVariables();
+		Context free = ctxt.getVisibleVariables();
 
 		FunctionValue prefunc =
 			(predef == null) ? null : new FunctionValue(predef, null, null, free);
