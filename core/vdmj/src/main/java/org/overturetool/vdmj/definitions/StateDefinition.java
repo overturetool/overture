@@ -34,6 +34,8 @@ import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
+import org.overturetool.vdmj.pog.POContextStack;
+import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.typechecker.Environment;
@@ -296,6 +298,19 @@ public class StateDefinition extends Definition
 	public State getState()
 	{
 		return moduleState;
+	}
+
+	@Override
+	public ProofObligationList getProofObligations(POContextStack ctxt)
+	{
+		ProofObligationList list = new ProofObligationList();
+
+		if (invdef != null)
+		{
+			list.addAll(invdef.getProofObligations(ctxt));
+		}
+
+		return list;
 	}
 
 	private ExplicitFunctionDefinition getInvDefinition()
