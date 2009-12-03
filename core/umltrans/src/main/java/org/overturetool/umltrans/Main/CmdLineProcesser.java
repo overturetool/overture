@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Vector;
@@ -27,6 +28,10 @@ import org.overturetool.umltrans.xml.XmlParser;
 
 public class CmdLineProcesser
 {
+	public static void setOutput(PrintWriter outputWriter)
+	{
+		StatusLog.out = outputWriter;
+	}
 	public static void removeTex(File outputDirectory, List<File> files)
 			throws IOException
 	{

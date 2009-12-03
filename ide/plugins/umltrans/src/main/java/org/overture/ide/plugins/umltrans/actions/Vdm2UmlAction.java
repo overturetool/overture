@@ -21,7 +21,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.overture.ide.utility.ProjectUtility;
-import org.overturetool.umltrans.Main.Translator;
+import org.overturetool.umltrans.Main.CmdLineProcesser;
+
 
 public class Vdm2UmlAction implements IObjectActionDelegate
 {
@@ -109,8 +110,8 @@ public class Vdm2UmlAction implements IObjectActionDelegate
 				monitor.worked(IProgressMonitor.UNKNOWN);
 				try
 				{
-					Translator.setOutput(new ConsoleWriter(shell));
-					Translator.TransLateTexVdmToUml(filesPathes, outFile);
+					CmdLineProcesser.setOutput(new ConsoleWriter(shell));
+					CmdLineProcesser.toUml( outFile,filesPathes);
 				} catch (FileNotFoundException e)
 				{
 					ConsoleWriter.ConsolePrint(shell, e);

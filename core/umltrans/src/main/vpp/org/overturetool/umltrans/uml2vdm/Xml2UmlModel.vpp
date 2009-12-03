@@ -254,7 +254,7 @@ in
     return nil
   else
     let lower : nat = if card lowerSet = 0 then 0 else let p in set lowerSet in StdLib`StringToInt(p),
-        upVal : nat = let p in set upperSet in StdLib`StringToInt(p),
+        upVal : nat = let p in set upperSet in if p = "*" then -1 else StdLib`StringToInt(p),
         upper : [nat] = if card upperSet = 0 or upVal < 0 then nil else upVal
     in
       return new UmlMultiplicityElement(false,false,lower,upper);
@@ -726,6 +726,7 @@ BuildOperand(e) ==
 pre e.name = "operand";
 
 -- remove EA prefix from name overridden in Java
+-- TODO IMPORTANT not supported by CG
 public RemoveEaPrefix : String ==> String
 RemoveEaPrefix(name) == 
   return 
