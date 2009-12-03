@@ -50,7 +50,6 @@ import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.VDMJ;
-import org.overturetool.vdmj.VDMOV;
 import org.overturetool.vdmj.VDMPP;
 import org.overturetool.vdmj.VDMRT;
 import org.overturetool.vdmj.VDMSL;
@@ -147,10 +146,6 @@ public class DBGPReader
     		else if (arg.equals("-vdmrt"))
     		{
     			controller = new VDMRT();
-    		}
-    		else if (arg.equals("-overture"))
-    		{
-    			controller = new VDMOV();
     		}
     		else if (arg.equals("-h"))
     		{

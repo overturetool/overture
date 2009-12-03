@@ -85,11 +85,6 @@ abstract public class VDMJ
     			controller = new VDMRT();
     			dialect = Dialect.VDM_RT;
     		}
-    		else if (arg.equals("-overture"))
-    		{
-    			controller = new VDMOV();
-    			dialect = Dialect.VDM_RT;
-    		}
     		else if (arg.equals("-w"))
     		{
     			warnings = false;
@@ -231,7 +226,7 @@ abstract public class VDMJ
 
 		if (controller == null)
 		{
-			usage("You must specify either -vdmsl, -vdmpp, -vdmrt or -overture");
+			usage("You must specify either -vdmsl, -vdmpp or -vdmrt");
 		}
 
 		if (logfile != null && !(controller instanceof VDMRT))
@@ -287,7 +282,6 @@ abstract public class VDMJ
 		System.err.println("-vdmsl: parse files as VDM-SL");
 		System.err.println("-vdmpp: parse files as VDM++");
 		System.err.println("-vdmrt: parse files as VICE");
-		System.err.println("-overture: parse files as VICE with Overture");
 		System.err.println("-r <release>: VDM language release");
 		System.err.println("-w: suppress warning messages");
 		System.err.println("-q: suppress information messages");

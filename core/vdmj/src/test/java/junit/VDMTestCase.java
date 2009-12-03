@@ -32,7 +32,6 @@ import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.syntax.ClassReader;
-import org.overturetool.vdmj.syntax.OvertureReader;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 
 import junit.framework.TestCase;
@@ -54,31 +53,14 @@ public class VDMTestCase extends TestCase
 		ClassList classes = null;
 		int errs = 0;
 		TypeChecker.clearErrors();
-		String parser = System.getProperty("parser");
 
-		if (parser == null || parser.equalsIgnoreCase("vdmj"))
-		{
-    		LexTokenReader ltr = new LexTokenReader(new File(vpppath), Dialect.VDM_PP, charset);
-    		ClassReader cr = new ClassReader(ltr);
-    		classes = cr.readClasses();
-    		cr.close();
-    		errs = cr.getErrorCount();
-    		cr.printErrors(Console.out);
-    		cr.printWarnings(Console.out);
-		}
-		else if (parser.equalsIgnoreCase("overture"))
-		{
-			OvertureReader or = new OvertureReader(new File(vpppath), charset);
-			classes = or.readClasses();
-			or.close();
-			errs = or.getErrorCount();
-			or.printErrors(Console.out);
-			or.printWarnings(Console.out);
-		}
-		else
-		{
-			fail("-D parser property must be 'overture' or 'vdmj', not " + parser);
-		}
+		LexTokenReader ltr = new LexTokenReader(new File(vpppath), Dialect.VDM_PP, charset);
+		ClassReader cr = new ClassReader(ltr);
+		classes = cr.readClasses();
+		cr.close();
+		errs = cr.getErrorCount();
+		cr.printErrors(Console.out);
+		cr.printWarnings(Console.out);
 
 		assertEquals("Syntax errors", 0, errs);
 		TypeChecker.printErrors(Console.out);

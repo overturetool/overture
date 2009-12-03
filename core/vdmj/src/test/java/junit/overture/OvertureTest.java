@@ -45,7 +45,6 @@ import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.runtime.VDMThreadSet;
 import org.overturetool.vdmj.statements.TraceStatement;
 import org.overturetool.vdmj.syntax.ClassReader;
-import org.overturetool.vdmj.syntax.OvertureReader;
 import org.overturetool.vdmj.typechecker.ClassTypeChecker;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 import org.overturetool.vdmj.util.Utils;
@@ -400,29 +399,13 @@ abstract public class OvertureTest extends TestCase
 		throws Exception
 	{
 		ClassList classes = null;
-		String parser = System.getProperty("parser");
 
-		if (parser == null || parser.equalsIgnoreCase("vdmj"))
-		{
-    		LexTokenReader ltr = new LexTokenReader(new File(vppName), Dialect.VDM_RT);
-    		ClassReader cr = new ClassReader(ltr);
-    		classes = cr.readClasses();
-    		cr.close();
-    		messages.addAll(cr.getErrors());
-    		messages.addAll(cr.getWarnings());
-		}
-		else if (parser.equalsIgnoreCase("overture"))
-		{
-			OvertureReader or = new OvertureReader(new File(vppName));
-			classes = or.readClasses();
-			or.close();
-    		messages.addAll(or.getErrors());
-    		messages.addAll(or.getWarnings());
-		}
-		else
-		{
-			fail("-D parser property must be 'overture' or 'vdmj', not " + parser);
-		}
+		LexTokenReader ltr = new LexTokenReader(new File(vppName), Dialect.VDM_RT);
+		ClassReader cr = new ClassReader(ltr);
+		classes = cr.readClasses();
+		cr.close();
+		messages.addAll(cr.getErrors());
+		messages.addAll(cr.getWarnings());
 
 		return classes;
 	}
