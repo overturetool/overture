@@ -207,7 +207,7 @@ public class VdmSlMainLaunchConfigurationTab extends MainLaunchConfigurationTab 
 		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(
 				getShell(), new WorkbenchLabelProvider(),
 				new WorkbenchContentProvider());
-		dialog.setTitle("Class and operation/function selection");
+		dialog.setTitle("Module and operation/function selection");
 		dialog.setMessage(DLTKLaunchConfigurationsMessages.mainTab_searchButton_message);
 		IScriptProject proj = getProject();
 		if (proj == null)
