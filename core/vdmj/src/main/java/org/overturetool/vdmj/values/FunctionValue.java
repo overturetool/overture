@@ -262,15 +262,6 @@ public class FunctionValue extends Value
 				freeVariables, ctxt, sctxt);
 		}
 
-//		if (freeVariables != null)
-//		{
-//			// Add previous parameter values, if any, for curried functions
-//			// This also adds the visible context saved when you created
-//			// lambda-like functions, which may reference these values.
-//
-//			evalContext.putAll(freeVariables);
-//		}
-
 		if (typeValues != null)
 		{
 			// Add any @T type values, for recursive polymorphic functions

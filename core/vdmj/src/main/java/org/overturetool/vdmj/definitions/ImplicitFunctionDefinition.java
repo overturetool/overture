@@ -428,8 +428,9 @@ public class ImplicitFunctionDefinition extends Definition
 		// when the function is invoked. The value is needed to implement
 		// the pre_() expression for implicit functions.
 
-		nvl.add(new NameValuePair(name,
-				new FunctionValue(this, prefunc, postfunc, free)));
+		FunctionValue func = new FunctionValue(this, prefunc, postfunc, free);
+		func.isStatic = accessSpecifier.isStatic;
+		nvl.add(new NameValuePair(name, func));
 
 		if (predef != null)
 		{

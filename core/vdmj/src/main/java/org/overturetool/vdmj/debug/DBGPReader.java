@@ -1593,7 +1593,7 @@ public class DBGPReader
 				}
 				break;
 
-			case CLASS:
+			case CLASS:		// Includes modules
 				Context root = breakContext.getFrame(depth);
 
 				if (root instanceof ObjectContext)
@@ -1604,7 +1604,7 @@ public class DBGPReader
 				else if (root instanceof ClassContext)
 				{
 					ClassContext cctxt = (ClassContext)root;
-					vars.putAll(cctxt);
+					vars.putAll(cctxt.classdef.getStatics());
 				}
 				else if (root instanceof StateContext)
 				{

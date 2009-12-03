@@ -513,8 +513,9 @@ public class ExplicitFunctionDefinition extends Definition
 		FunctionValue postfunc =
 			(postdef == null) ? null : new FunctionValue(postdef, null, null, free);
 
-		nvl.add(new NameValuePair(
-			name, new FunctionValue(this, prefunc, postfunc, free)));
+		FunctionValue func = new FunctionValue(this, prefunc, postfunc, free);
+		func.isStatic = accessSpecifier.isStatic;
+		nvl.add(new NameValuePair(name, func));
 
 		if (predef != null)
 		{

@@ -1064,6 +1064,14 @@ public class ClassDefinition extends Definition
 		return v;
 	}
 
+	public Context getStatics()
+	{
+		Context ctxt = new Context(location, "Statics", null);
+		ctxt.putAll(publicStaticValues);
+		ctxt.putAll(privateStaticValues);
+		return ctxt;
+	}
+
 	/**
 	 * Create a new ObjectValue instance of this class. If non-null, the
 	 * constructor definition and argument values passed are used, otherwise
