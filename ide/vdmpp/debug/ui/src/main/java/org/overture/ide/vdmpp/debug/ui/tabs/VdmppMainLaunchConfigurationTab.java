@@ -221,7 +221,7 @@ public class VdmppMainLaunchConfigurationTab extends MainLaunchConfigurationTab 
 		dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
 		if (dialog.open() == IDialogConstants.OK_ID) {
 			SourceMethod method = (SourceMethod) dialog.getFirstResult();
-			String className = method.getParent().getElementName();
+			String className = method.getParent().getElementName() + "()";
 			String operationName = method.getElementName() + "()";
 			// check extension
 			fClassText.setText(className);

@@ -191,7 +191,7 @@ public class VdmRtVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 							String expression = "new "
 									+ launch.getLaunchConfiguration().getAttribute(
 											VdmRtDebugConstants.VDMRT_DEBUGGING_CLASS,
-											"") + "()." + debugOperation;
+											"") + "." + debugOperation;
 							//String expression = debugOperation;
 							arguments[argNumber++] = "-e";
 							arguments[argNumber++] = expression;

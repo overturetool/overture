@@ -62,7 +62,7 @@
       <launchMode
             description="Run VDM++ specification"
             mode="run"
-            perspective="org.overture.ide.ui.VdmDefaultPerspective">
+            perspective="org.overture.ide.vdmsl.ui.VdmSlPerspective">
       </launchMode>
       <launchMode
             description="Debug VDM++ Model"
@@ -74,8 +74,8 @@
 
 
 <!-- popupmenus 
-       right clicking in the editor use #VdmPpEditorContext
-       right clicking in the ruler use  #VdmPpRulerContext
+       right clicking in the editor use #VdmSlEditorContext
+       right clicking in the ruler use  #VdmSlRulerContext
 
 	This adds the following popup menus in the ruler:
 	   Toggle Breakpoint
@@ -118,7 +118,7 @@
       <!-- Enable/Disable Breakpoint in the ruler -->
       <action
         label="Enable/Disable breakpoint"
-        id="org.overturetool.ui.actions.RulerEnableDisableBreakpointActionDelegate"
+        id="org.overture.ide.vdmsl.debug.ui.actions.RulerEnableDisableBreakpointActionDelegate"
         class="org.eclipse.debug.ui.actions.RulerEnableDisableBreakpointActionDelegate"
         menubarPath="debug">
       </action>
@@ -134,7 +134,7 @@
       <action
         label="Breakpoint properties..."
         class="org.eclipse.dltk.debug.ui.actions.ScriptBreakpointPropertiesRulerActionDelegate"
-        id="org.overture.ide.vdmsl..debug.ui.ScriptBreakpointPropertiesRulerActionDelegate"
+        id="org.overture.ide.vdmsl.debug.ui.ScriptBreakpointPropertiesRulerActionDelegate"
         menubarPath="group.properties" />
     </viewerContribution>
     

@@ -136,7 +136,7 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 							String expression = "new "
 									+ launch.getLaunchConfiguration().getAttribute(
 											VDMPPDebugConstants.VDMPP_DEBUGGING_CLASS,
-											"") + "()." + debugOperation;
+											"") + "." + debugOperation;
 							arguments[argNumber++] = "-e";
 							arguments[argNumber++] = expression;
 
