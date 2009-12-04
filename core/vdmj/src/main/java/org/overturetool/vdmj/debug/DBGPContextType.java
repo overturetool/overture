@@ -26,8 +26,8 @@ package org.overturetool.vdmj.debug;
 public enum DBGPContextType
 {
 	LOCAL("local", 0),
-	CLASS("class", 1),
-	GLOBAL("global", 2);
+	CLASS("class", 2),
+	GLOBAL("global", 1);
 
 	public String value;
 	public int code;
