@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *	Copyright (c) 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -23,39 +23,20 @@
 
 package org.overturetool.vdmj.pog;
 
-import java.util.Vector;
-
-@SuppressWarnings("serial")
-public class ProofObligationList extends Vector<ProofObligation>
+public enum POStatus
 {
-	// Convenience class to hold lists of POs.
+	UNPROVED("Unproved"), PROVED("Proved"), TRIVIAL("Trivial");
+
+	private String text;
+
+	POStatus(String text)
+	{
+		this.text = text;
+	}
 
 	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder();
-		int n = 1;
-
-		for (ProofObligation po: this)
-		{
-			sb.append("Proof Obligation ");
-			sb.append(n++);
-			sb.append(": (");
-			sb.append(po.status);
-			sb.append(")\n");
-			sb.append(po);
-			sb.append("\n");
-		}
-
-		return sb.toString();
+		return text;
 	}
-
-	public void trivialCheck()
-	{
-		for (ProofObligation po: this)
-		{
-			po.trivialCheck();
-		}
-	}
-
 }

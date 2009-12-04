@@ -31,6 +31,7 @@ abstract public class ProofObligation
 	public final POType kind;
 	public final String name;
 	public String value;
+	public POStatus status;
 
 	private int var = 1;
 
@@ -39,6 +40,7 @@ abstract public class ProofObligation
 		this.location = location;
 		this.kind = kind;
 		this.name = ctxt.getName();
+		this.status = POStatus.UNPROVED;
 	}
 
 	public String getValue()
@@ -55,5 +57,23 @@ abstract public class ProofObligation
 	protected String getVar(String root)
 	{
 		return root + var++;
+	}
+
+	private String[] trivialPatterns =
+	{
+		"^\\(forall [^&]+ &\\n  \\(forall (\\w+) in set ([^&]*) &\\n    \\1 in set \\2\\)\\)\\n$",
+		"^\\(forall [^&]+ &\\n  \\(forall (\\w+) in set \\(inds ([^&]*)\\) &\\n    \\1 in set inds \\2\\)\\)\\n$"
+	};
+
+	public void trivialCheck()
+	{
+		for (String trivial: trivialPatterns)
+		{
+			if (value.matches(trivial))
+			{
+				status = POStatus.TRIVIAL;
+				break;
+			}
+		}
 	}
 }

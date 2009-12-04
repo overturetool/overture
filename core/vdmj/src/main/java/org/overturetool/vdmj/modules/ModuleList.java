@@ -167,6 +167,7 @@ public class ModuleList extends Vector<Module>
 			obligations.addAll(m.getProofObligations());
 		}
 
+		obligations.trivialCheck();
 		return obligations;
 	}
 

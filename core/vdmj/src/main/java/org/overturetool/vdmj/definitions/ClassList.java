@@ -350,6 +350,7 @@ public class ClassList extends Vector<ClassDefinition>
 			obligations.addAll(c.getProofObligations(new POContextStack()));
 		}
 
+		obligations.trivialCheck();
 		return obligations;
 	}
 }
