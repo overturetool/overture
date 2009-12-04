@@ -11,8 +11,7 @@ operations
 
 public Save : String * IOmlDocument * StatusLog ==> ()
 Save(fileName,doc,log) ==
-(
- 
+( 
  let classes : seq of IOmlClass = doc.getSpecifications().getClassList() 
  in
   for all cl in set elems classes

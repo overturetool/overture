@@ -134,8 +134,11 @@ BuildValue(prop) ==
       pattern     = new OmlPatternIdentifier(prop.getName()),
       multiplicity= if prop.hasMultiplicity() then prop.getMultiplicity() else nil,
       type        = ConvertType(prop.getType(),multiplicity),
-      expression : IOmlExpression =  
-        GetDefaultExpression(prop.getDefault(),type),
+      expr = GetDefaultExpression(prop.getDefault(),type),
+      expression : IOmlExpression =  if expr = nil
+                                     then new OmlUndefinedExpression()
+                                     -- TODO Warning + extend with more exprs
+                                     else expr,
       valueShape  = new OmlValueShape(pattern, type, expression)
    in
      return new OmlValueDefinition(access, valueShape)
