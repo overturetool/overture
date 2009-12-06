@@ -51,7 +51,7 @@ The environment constructor reads the test file which name is provided in the va
 
 -- Constructor
 public 
-Environment : seq of char ==> Environment
+Environment : seq1 of char ==> Environment
 Environment (fname) ==
   def mk_(-,mk_(timeval,input)) = io.freadval[InputTP](fname) 
   in (inplines := input;

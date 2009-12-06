@@ -1,92 +1,195 @@
-\documentclass[11pt,a4paper,english,makeidx]{report}
-\usepackage{mathptmx}
-\usepackage{styles/termrefr}
-\renewcommand{\ttdefault}{mathptmx}
-\usepackage[T1]{fontenc}
-\usepackage[latin9]{inputenc}
-\setcounter{secnumdepth}{3}
-\setcounter{tocdepth}{3}
-\usepackage{url}
-\usepackage{graphicx}
-\usepackage{latexsym}
-\usepackage{mathptmx}
-\usepackage{url}
-\usepackage{graphics}
-\usepackage{mathptmx}
-\renewcommand{\ttdefault}{mathptmx}
-\usepackage[T1]{fontenc}
-\usepackage[latin9]{inputenc}
-\setcounter{secnumdepth}{3}
-\setcounter{tocdepth}{3}
-\usepackage{url}
-\usepackage{graphicx}
-\usepackage{babel}
+\documentclass{overturerep}
+%**********************************************************
+%
+% Bibliography support
+%
+%**********************************************************
+%\def\@reportno{YY--NN}		% default report no.
+%\def\reportno#1{\gdef\@reportno{#1}}
 
-%
-%
-\makeatletter
-\def\maketitle{%
-  \null
-  \thispagestyle{empty}%
-  \vfill
-  \begin{center}\leavevmode
-    \normalfont
-    {\LARGE \@title\par}%
-    \vskip 1cm
-    {\Large \@author\par}%
-    \vskip 1cm
-    {\Large \@date\par}%
-  \end{center}%
-  \vfill
-  \null
-  \cleardoublepage
+\newcommand{\bthisbibliography}[1]{\section*{References}%
+   \begin {list} {}%
+     {\settowidth {\labelwidth} {[#1]XX}%
+      \setlength {\leftmargin} {\labelwidth}%
+      \addtolength{\leftmargin} {\labelsep}%
+      \setlength {\parsep} {1ex}%
+      \setlength {\itemsep} {2ex}%
+     }
   }
-\makeatother
-\title{User Guide for the Overture Plug-in for Eclipse}
-\author{David Holst M\o ller and Christian Thillemann}
-\date{2009}
+\newcommand{\ethisbibliography}{\end{list}}
+\newcommand{\refitem}[2]
+  {\bibitem[#1]{#2}}
 
+\newcommand{\back}{$\setminus$}
+\newcommand{\RuleTarget}[1]{\hypertarget{rule:#1}{}}
+\newcommand{\Ruledef}[2]
+{
+  \RuleTarget{#1}\Rule{#1}{#2}%
+  }
+\newcommand{\Ruleref}[1]{
+  \hyperlink{rule:#1}{#1}}
+\newcommand{\Lit}[1]{`{\tt #1}\Quote}
+\newcommand{\Rule}[2]{
+  \begin{quote}\begin{tabbing}
+    #1\index{#1}\ \ \= = \ \ \= #2  ; %    Adds production rule to index
+    
+  \end{tabbing}\end{quote}
+  }
+\newcommand{\SeqPt}[1]{\{\ #1\ \}}
+\newcommand{\lfeed}{\\ \> \>}
+\newcommand{\dsepl}{\ $|$\ }
+\newcommand{\dsep}{\\ \> $|$ \>}
+\newcommand{\Lop}[1]{`{\sf #1}\Quote}
+\newcommand{\blankline}{\vspace{\baselineskip}}
+\newcommand{\Brack}[1]{(\ #1\ )}
+\newcommand{\nmk}{\footnotemark}
+\newcommand{\ntext}[1]{\footnotetext{{\bf Note: } #1}}
+\newlength{\kwlen}
+\newcommand{\Keyw}[1]{\settowidth{\kwlen}{\tt #1}\makebox[\kwlen][l]{\sf
+    #1}}
+\newcommand{\keyw}[1]{{\sf #1}}
+\newcommand{\id}[1]{{\tt #1}}
+\newcommand{\metaiv}[1]{\begin{alltt}\input{#1}\end{alltt}}
+
+\newcommand{\OptPt}[1]{[\ #1\ ]}
+\newcommand{\MAP}[2]{\kw{map }#1\kw{ to }#2}
+\newcommand{\INMAP}[2]{\kw{inmap }#1\kw{ to }#2}
+\newcommand{\SEQ}[1]{\kw{seq of }#1}
+\newcommand{\NSEQ}[1]{\kw{seq1 of }#1}
+\newcommand{\SET}[1]{\kw{set of }#1}
+\newcommand{\PROD}[2]{#1 * #2}
+\newcommand{\TO}[2]{$#1 \To #2$}
+\newcommand{\FUN}[2]{#1 \To #2}
+\newcommand{\PUBLIC}{\ifthenelse{\boolean{VDMpp}}{public\mbox{}}{\mbox{}}}
+\newcommand{\PRIVATE}{\ifthenelse{\boolean{VDMpp}}{private}{\mbox{}}}
+\newcommand{\PROTECTED}{\ifthenelse{\boolean{VDMpp}}{protected}{\mbox{}}}
+
+\usepackage{graphicx, color}
+
+% definition of VDM++, JavaCC, JJTree, JTB, ANTLR and SableCC for listings
+\newcommand{\NL}{\mbox{}\\ \vspace*{-5mm}}
+\usepackage{listings}
+\newcommand{\url}[1]{\texttt{#1}}
+\usepackage{vdmsl-2e}
+\usepackage{hyperref}
+
+\usepackage{times}
+\usepackage{color}
+\include{customlangdef}
+% define the layout for listings
+\lstdefinestyle{tool}{basicstyle=\ttfamily,
+                         frame=trBL, 
+			 showstringspaces=false, 
+			 frameround=ffff, 
+			 framexleftmargin=0mm, 
+			 framexrightmargin=0mm}
+\lstdefinestyle{mystyle}{basicstyle=\footnotesize\ttfamily,
+                         frame=trBL, 
+%                         numbers=left, 
+%			 gobble=0, 
+%			 basewidth=0.51em,
+                         showstringspaces=false, 
+%			 linewidth=\textwidth, 
+			 frameround=fttt, 
+			 aboveskip=2mm,
+			 belowskip=2mm,
+			 framexleftmargin=0mm, 
+			 framexrightmargin=0mm}
+%\lstdefinestyle{mystyle}{basicstyle=\sffamily\small,
+%			 frame=tb,
+%                         numbers=left,
+%			 gobble=0,
+%			 showstringspaces=false,
+%			 linewidth=345pt,
+%			 frameround=ffff,
+%			 framexleftmargin=8mm,
+%			 framexrightmargin=8mm,
+%			 framextopmargin=1mm,
+%			 framexbottommargin=1mm,
+%			 aboveskip=7mm,
+%			 belowskip=5mm,
+%			 xleftmargin=10mm,}
+
+\lstset{style=mystyle}
+\lstset{language=VDM++}
+%\lstset{alsolanguage=Java}
+% The command below enables you to escape into normal LaTeX mode inside your 
+% VDM chunks by starting with a `!´ character and ending with a `£´
+\lstset{escapeinside=!£}
+
+%This file has been converted to use LaTeX2e
+%\documentstyle[overture]{article}
+%
+% any "\include{...}" statements go here
+%
+\include{ifad}
+\include{graphics}
+\usepackage{cite}
+\usepackage{alltt}
+%\usepackage{fancyhdr}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.9}
+
+\title{User Manual for the Overture Combinatorial Testing Plug-in}
 
 
 \begin{document}
+\title{User Guide for the Overture VDM Tool Support}
+\author{Peter Gorm Larsen, Kenneth Lausdahl, Augusto Reibero and Sune Wolff \\ 
+Engineering College of Aarhus\\
+Dalgas Avenue 2, DK-8000 \AA{}rhus C, Denmark}
+\reportno{TR-2009-02}     
+
 \maketitle
 
+\tableofcontents
 
-\section*{Versions:}
+\begin{abstract}
+Bla bla
+\end{abstract}
 
 
 
-\begin{tabular}{|c|c|c|}
-\hline 
-date & Version & Comment\tabularnewline
-\hline
-\hline 
-03.06.2009 & 0.0.1 & First version of the user guide. Overture
-IDE\tabularnewline
-\hline
-\end{tabular}
+%\begin{document}
+%\maketitle
+
+
+%\section*{Versions:}
+
+
+
+%\begin{tabular}{|c|c|c|}
+%\hline 
+%date & Version & Comment\tabularnewline
+%\hline
+%\hline 
+%03.06.2009 & 0.0.1 & First version of the user guide. Overture
+%IDE\tabularnewline
+%\hline
+%\end{tabular}
 
 % Figures and Tables
-\newtheorem{fig}{Figure}\newtheorem{tab}{Table}
+%\newtheorem{fig}{Figure}\newtheorem{tab}{Table}
 
 % Counter commands
-\setcounter{page}{1} \setcounter{chapter}{0} \setcounter{secnumdepth}{4}
-\setcounter{tocdepth}{3}
+%\setcounter{page}{1} \setcounter{chapter}{0} \setcounter{secnumdepth}{4}
+%\setcounter{tocdepth}{3}
 
 % Page Headings
 % Chapter headings are in chapter files
-\pagestyle{myheadings}
+%\pagestyle{myheadings}
 
 
 % TOC
-\pagenumbering{roman}
-\pagestyle{headings}
-\tableofcontents
+%\pagenumbering{roman}
+%\pagestyle{headings}
+%\tableofcontents
 
-\pagebreak
+%\pagebreak
 % MAIN FILESs 
 
-\pagenumbering{arabic}
+%\pagenumbering{arabic}
 \input{UserGuide.tex}
 
 \bibliographystyle{nnewalpha}

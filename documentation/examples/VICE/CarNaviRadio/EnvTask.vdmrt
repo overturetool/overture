@@ -71,6 +71,7 @@ operations
             else (if max < dt then max := dt);
             diff := diff + dt );
       return mk_(min, max, diff / card dom s2e) )
+pre card dom s2e > 0
 
 sync
   -- getNum is mutually exclusive to ensure unique values
