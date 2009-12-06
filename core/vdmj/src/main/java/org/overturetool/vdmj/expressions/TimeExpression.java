@@ -28,10 +28,10 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.SystemClock;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
-import org.overturetool.vdmj.types.IntegerType;
+import org.overturetool.vdmj.types.NaturalOneType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
-import org.overturetool.vdmj.values.IntegerValue;
+import org.overturetool.vdmj.values.NaturalOneValue;
 import org.overturetool.vdmj.values.Value;
 
 public class TimeExpression extends Expression
@@ -46,7 +46,14 @@ public class TimeExpression extends Expression
 	@Override
 	public Value eval(Context ctxt)
 	{
-		return new IntegerValue(SystemClock.getWallTime());
+		try
+        {
+	        return new NaturalOneValue(SystemClock.getWallTime());
+        }
+        catch (Exception e)
+        {
+        	return abort(4145, "Time: " + e.getMessage(), ctxt);
+        }
 	}
 
 	@Override
@@ -64,6 +71,6 @@ public class TimeExpression extends Expression
 	@Override
 	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
 	{
-		return new IntegerType(location);
+		return new NaturalOneType(location);
 	}
 }

@@ -807,6 +807,7 @@ as the expected and actual values.
 4142, "Value already updated by thread <n>"
 4143, "No such test number: <n>"
 4144, "State init expression cannot be executed"
+4145, "Time: <n> is not a nat1"
 
 5000, "Definition <name> not used"
 5001, "Instance variable is not initialized: <name>"
