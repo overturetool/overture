@@ -32,6 +32,7 @@ import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeComparator;
+import org.overturetool.vdmj.types.InvariantType;
 import org.overturetool.vdmj.types.Type;
 
 public class ImportedType extends Import
@@ -93,7 +94,7 @@ public class ImportedType extends Import
 	{
 		if (def != null && from != null)
 		{
-			def.type = def.type.typeResolve(env, null);
+			def.type = (InvariantType)def.type.typeResolve(env, null);
 			Definition expdef = from.exportdefs.findType(name);
 
 			if (expdef != null)

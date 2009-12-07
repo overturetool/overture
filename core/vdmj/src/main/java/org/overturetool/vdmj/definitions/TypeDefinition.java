@@ -59,7 +59,7 @@ import org.overturetool.vdmj.values.NameValuePairList;
 public class TypeDefinition extends Definition
 {
 	private static final long serialVersionUID = 1L;
-	public Type type;
+	public InvariantType type;
 	public final Pattern invPattern;
 	public final Expression invExpression;
 	public ExplicitFunctionDefinition invdef;
@@ -91,7 +91,7 @@ public class TypeDefinition extends Definition
 		{
     		invdef = getInvDefinition();
     		invdef.setAccessSpecifier(accessSpecifier);
-    		((InvariantType)type).setInvariant(invdef);
+    		type.setInvariant(invdef);
 		}
 		else
 		{
@@ -105,7 +105,7 @@ public class TypeDefinition extends Definition
 		try
 		{
 			infinite = false;
-			type = type.typeResolve(base, this);
+			type = (InvariantType)type.typeResolve(base, this);
 
 			if (infinite)
 			{
@@ -137,14 +137,7 @@ public class TypeDefinition extends Definition
 	@Override
 	public Type getType()
 	{
-		if (type instanceof NamedType)
-		{
-			return type;
-		}
-		else
-		{
-			return new NamedType(name, type);
-		}
+		return type;
 	}
 
 	@Override
@@ -235,7 +228,19 @@ public class TypeDefinition extends Definition
 		parameters.add(params);
 
 		TypeList ptypes = new TypeList();
-		ptypes.add(new UnresolvedType(name));
+
+		if (type instanceof RecordType)
+		{
+			// Records are inv_R: R +> bool
+			ptypes.add(new UnresolvedType(name));
+		}
+		else
+		{
+			// Named types are inv_T: x +> bool, for T = x
+			NamedType nt = (NamedType)type;
+			ptypes.add(nt.type);
+		}
+
 		FunctionType ftype =
 			new FunctionType(loc, false, ptypes, new BooleanType(loc));
 
