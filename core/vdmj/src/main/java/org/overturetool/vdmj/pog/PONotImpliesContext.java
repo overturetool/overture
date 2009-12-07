@@ -41,7 +41,7 @@ public class PONotImpliesContext extends POContext
 
 		sb.append("not ");
 		sb.append(exp);
-		sb.append(" => ");
+		sb.append(" =>");
 
 		return sb.toString();
 	}

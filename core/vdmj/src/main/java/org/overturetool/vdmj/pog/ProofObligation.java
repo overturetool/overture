@@ -61,8 +61,9 @@ abstract public class ProofObligation
 
 	private String[] trivialPatterns =
 	{
-		"^\\(forall [^&]+ &\\n  \\(forall (\\w+) in set \\(inds ([^&]*)\\) &\\n    \\1 in set inds \\2\\)\\)\\n$",
-		"^\\(forall [^&]+ &\\n  \\(\\((\\w+) in set \\(dom ([^&]*)\\)\\) =>\\n    \\1 in set dom \\2\\)\\)\\n$"
+		"^( *\\(+forall [^\\n]+\\n)*? *\\(forall (\\w+) in set \\(([^&]+)\\) &(.+?)?\\n *\\2 in set \\3\\)+\\n$",
+		"^( *\\(+forall [^\\n]+\\n?)*? *\\(+(\\w+) in set \\(([^&]+)\\)+ =>\\n *\\2 in set \\3\\)+\\n$",
+		"^( *\\(+forall [^\\n]+\\n)*? *\\(+not \\((.+?) \\= (.+?)\\) =>\\n *\\2 \\<\\> \\3\\)+\\n$"
 	};
 
 	public void trivialCheck()

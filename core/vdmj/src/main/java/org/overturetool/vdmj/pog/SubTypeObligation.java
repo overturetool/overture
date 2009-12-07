@@ -72,6 +72,7 @@ import org.overturetool.vdmj.types.SetType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeSet;
 import org.overturetool.vdmj.types.UnionType;
+import org.overturetool.vdmj.util.Utils;
 
 public class SubTypeObligation extends ProofObligation
 {
@@ -245,7 +246,17 @@ public class SubTypeObligation extends ProofObligation
 			{
     			sb.append(et.invdef.name.name);
     			sb.append("(");
-    			sb.append(exp);
+
+				if (exp instanceof MkTypeExpression)
+				{
+					MkTypeExpression mk = (MkTypeExpression)exp;
+					sb.append(Utils.listToString(mk.args));
+				}
+				else
+				{
+					sb.append(exp);
+				}
+
     			sb.append(")");
     			prefix = " and ";
 			}

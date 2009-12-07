@@ -195,6 +195,7 @@ public class ExplicitOperationDefinition extends Definition
 			if (name.name.equals(classDefinition.name.name))
 			{
 				isConstructor = true;
+				classDefinition.hasConstructors = true;
 
 				if (accessSpecifier.isAsync)
 				{

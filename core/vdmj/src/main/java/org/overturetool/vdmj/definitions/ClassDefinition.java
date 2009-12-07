@@ -114,6 +114,8 @@ public class ClassDefinition extends Definition
 	public ClassInvariantListener invlistener = null;
 	/** True if the class defines any abstract operations or functions. */
 	public boolean isAbstract = false;
+	/** True if the class has any constructors at all. */
+	public boolean hasConstructors = false;
 
 	/**
 	 * Create a class definition with the given name, list of superclass names,

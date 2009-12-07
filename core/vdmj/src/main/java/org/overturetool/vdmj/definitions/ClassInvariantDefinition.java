@@ -95,7 +95,12 @@ public class ClassInvariantDefinition extends Definition
 	public ProofObligationList getProofObligations(POContextStack ctxt)
 	{
 		ProofObligationList list = new ProofObligationList();
-		list.add(new StateInvariantObligation(this, ctxt));
+
+		if (!classDefinition.hasConstructors)
+		{
+			list.add(new StateInvariantObligation(this, ctxt));
+		}
+
 		return list;
 	}
 
