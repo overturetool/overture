@@ -163,8 +163,8 @@ MakeScanListing: set of POP3Server`MessageInfo -> seq of char
 MakeScanListing(msgs) ==
   let msgSeq = set2seq[POP3Server`MessageInfo](msgs) in
   MakeMultilineResponse([int2string(msgSeq(i).index) ^ " " ^ 
-                         int2string(msgSeq(i).size) | i in set
-			 inds msgSeq]);
+                         int2string(msgSeq(i).size) 
+                        | i in set inds msgSeq]);
 
 \end{vdm_al}
 
