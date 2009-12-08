@@ -214,13 +214,13 @@
          point="org.eclipse.ui.views">
      
       <view
-            name="PO View"
+            name="Proof Obligation View"
             category="org.overture.ide.ui.view.category"
             class="org.overture.ide.plugins.poviewer.view.PoTableView"
             id="org.overture.ide.plugins.poviewer.views.PoTableView">
       </view>
       <view
-            name="PO View"
+            name="Proof Obligation Explorer"
             category="org.overture.ide.ui.view.category"
             class="org.overture.ide.plugins.poviewer.view.PoOverviewTableView"
             id="org.overture.ide.plugins.poviewer.views.PoOverviewTableView">

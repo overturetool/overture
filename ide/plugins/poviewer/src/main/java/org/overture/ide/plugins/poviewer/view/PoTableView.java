@@ -42,7 +42,7 @@ public class PoTableView extends ViewPart implements ISelectionListener {
 		display.asyncExec(new Runnable() {
 
 			public void run() {
-				viewer.setText(data.getValue().replace("&", "\n&"));
+				viewer.setText(data.getValue());
 			}
 
 		});

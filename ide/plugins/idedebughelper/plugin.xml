@@ -157,6 +157,40 @@
          
        
       </objectContribution>
+      
+      <!-- Print latex -->
+        <objectContribution
+            adaptable="true"
+            id="org.overture.ide.idedebughelper.contribution1"
+            objectClass="org.eclipse.core.resources.IProject">
+            <filter
+         name="projectNature"
+         value="org.overture.ide.vdmpp.core.nature">
+      </filter>
+        
+ <menu
+               id="org.overture.ide.idedebughelper.menuMain"
+               label="Overture Utility"
+               path="additions">
+            <separator
+                  name="groupIdedebughelper">
+            </separator>
+         </menu>
+         
+          <action
+               class="org.overture.ide.plugins.idedebughelper.actions.LatexAction"
+              
+               id="org.overture.ide.idedebughelper.actions.LatexActionPp"
+               label="Latex"
+               menubarPath="org.overture.ide.idedebughelper.menuMain/groupIdedebughelper"
+               enablesFor="1"
+               tooltip="Latex">
+         </action>
+         
+       
+      </objectContribution>
+      
+      
    </extension> 
 
 

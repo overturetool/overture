@@ -92,7 +92,7 @@ public abstract class ViewPosAction implements IObjectActionDelegate {
 
 	private void viewPos(final IProject project) throws PartInitException {
 
-		final Job showJob = new Job("Showing PO's") {
+		final Job showJob = new Job("Generating Proof Obligations") {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {

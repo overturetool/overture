@@ -183,8 +183,8 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 		viewer.setSorter(null);
 
 		TableColumn column01 = new TableColumn(viewer.getTable(), SWT.LEFT);
-		column01.setText("No");
-		column01.setToolTipText("No");
+		column01.setText("Count");
+		column01.setToolTipText("Count");
 
 		TableColumn column = new TableColumn(viewer.getTable(), SWT.LEFT);
 		column.setText("PO Name");
@@ -292,6 +292,7 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 																					// reset
 																					// the
 				// numbering
+				viewer.refresh();
 			}
 
 		};
