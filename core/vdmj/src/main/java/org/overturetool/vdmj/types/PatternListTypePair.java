@@ -70,6 +70,7 @@ public class PatternListTypePair implements Serializable
 	public void typeResolve(Environment base)
 	{
 		patterns.typeResolve(base);
+		type = type.typeResolve(base, null);
 	}
 
 	@Override

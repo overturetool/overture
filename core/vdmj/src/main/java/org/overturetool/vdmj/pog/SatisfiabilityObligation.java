@@ -31,9 +31,12 @@ import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.StateDefinition;
 import org.overturetool.vdmj.types.PatternListTypePair;
+import org.overturetool.vdmj.types.PatternTypePair;
 
 public class SatisfiabilityObligation extends ProofObligation
 {
+	private String separator = "";
+
 	public SatisfiabilityObligation(ImplicitFunctionDefinition func,
 		POContextStack ctxt)
 	{
@@ -44,6 +47,7 @@ public class SatisfiabilityObligation extends ProofObligation
 		{
     		sb.append(func.predef.name.name);
     		sb.append("(");
+			separator = "";
     		appendParamPatterns(sb, func.parameterPatterns);
     		sb.append(")");
     		sb.append(" => ");
@@ -54,8 +58,9 @@ public class SatisfiabilityObligation extends ProofObligation
 		sb.append(" & ");
 		sb.append(func.postdef.name.name);
 		sb.append("(");
+		separator = "";
 		appendParamPatterns(sb, func.parameterPatterns);
-		sb.append(", ");
+		sb.append(separator);
 		sb.append(func.result.pattern);
 		sb.append(")");
 
@@ -72,26 +77,52 @@ public class SatisfiabilityObligation extends ProofObligation
 		{
     		sb.append(op.predef.name.name);
     		sb.append("(");
+    		separator = "";
     		appendParamPatterns(sb, op.parameterPatterns);
     		appendStatePatterns(sb, stateDefinition, true, false);
     		sb.append(")");
     		sb.append(" =>\n");
 		}
 
-		sb.append("exists ");
-		sb.append(op.result);
-		appendStatePatterns(sb, stateDefinition, false, true);
-		sb.append(" & ");
+		if (stateDefinition != null)
+		{
+			sb.append("exists ");
+    		separator = "";
+			appendResult(sb, op.result);
+			appendStatePatterns(sb, stateDefinition, false, true);
+			sb.append(" & ");
+		}
+
 		sb.append(op.postdef.name.name);
 		sb.append("(");
+		separator = "";
 		appendParamPatterns(sb, op.parameterPatterns);
-		sb.append(", ");
-		sb.append(op.result.pattern);
+		appendResultPattern(sb, op.result);
 		appendStatePatterns(sb, stateDefinition, true, false);
 		appendStatePatterns(sb, stateDefinition, false, false);
 		sb.append(")");
 
 		value = ctxt.getObligation(sb.toString());
+	}
+
+	private void appendResult(StringBuilder sb, PatternTypePair ptp)
+	{
+		if (ptp != null)
+		{
+			sb.append(separator);
+			sb.append(ptp);
+			separator = ", ";
+		}
+	}
+
+	private void appendResultPattern(StringBuilder sb, PatternTypePair ptp)
+	{
+		if (ptp != null)
+		{
+			sb.append(separator);
+			sb.append(ptp.pattern);
+			separator = ", ";
+		}
 	}
 
 	private void appendStatePatterns(
@@ -105,11 +136,13 @@ public class SatisfiabilityObligation extends ProofObligation
 		{
 			if (old)
 			{
-				sb.append(", oldstate");
+				sb.append(separator);
+				sb.append("oldstate");
 			}
 			else
 			{
-				sb.append(", newstate");
+				sb.append(separator);
+				sb.append("newstate");
 			}
 
 			if (typed)
@@ -123,11 +156,13 @@ public class SatisfiabilityObligation extends ProofObligation
 		{
 			if (old)
 			{
-				sb.append(", oldself");
+				sb.append(separator);
+				sb.append("oldself");
 			}
 			else
 			{
-				sb.append(", newself");
+				sb.append(separator);
+				sb.append("newself");
 			}
 
 			if (typed)
@@ -137,18 +172,18 @@ public class SatisfiabilityObligation extends ProofObligation
 				sb.append(def.name.name);
 			}
 		}
+
+		separator = ", ";
 	}
 
 	private void appendParamPatterns(
 		StringBuilder sb, List<PatternListTypePair> params)
 	{
-		String sep = "";
-
 		for (PatternListTypePair pltp: params)
 		{
-			sb.append(sep);
+			sb.append(separator);
 			sb.append(pltp.patterns.getMatchingExpressionList());
-			sep = ", ";
+			separator = ", ";
 		}
 	}
 }
