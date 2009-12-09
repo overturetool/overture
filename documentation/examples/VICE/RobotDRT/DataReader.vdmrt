@@ -7,7 +7,7 @@ operations
  
  public Read : () ==> ()
  Read() ==
-         return;
+   skip;
  
 end DataReader
 

@@ -24,6 +24,9 @@ env		: Environment;
 --
 operations
 
+public TestSurroundings: seq of char ==> TestSurroundings
+	TestSurroundings(nm) == name := nm;
+
 protected SetUp: () ==> ()
 	SetUp() ==
 env := new Environment();

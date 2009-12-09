@@ -30,6 +30,9 @@ therm		: Thermostat;
 --
 operations
 
+public TestHostController: seq of char ==> TestHostController
+	TestHostController(nm) == name := nm;
+
 protected SetUp: () ==> ()
 	SetUp() ==
 	(--env := new Environment();

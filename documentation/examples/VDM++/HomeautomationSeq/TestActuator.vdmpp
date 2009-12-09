@@ -25,6 +25,9 @@ therm		: Thermostat;
 --
 operations
 
+public TestActuator: seq of char ==> TestActuator
+	TestActuator(nm) == name := nm;
+
 protected SetUp: () ==> ()
 	SetUp() ==
 	(win := new Window(3, <WINDOW>);

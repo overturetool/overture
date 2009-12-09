@@ -17,7 +17,7 @@ class TestCase is subclass of Test
 --
 instance variables
 
-name : seq of char
+protected name : seq of char
 
 --
 -- Operations definition section

@@ -25,6 +25,9 @@ humidSensor	: HumidSensor;
 --
 operations
 
+public TestSensor: seq of char ==> TestSensor
+	TestSensor(nm) == name := nm;
+
 protected SetUp: () ==> ()
 	SetUp() ==
 	(tempSensor := new TemperatureSensor(1, <TEMPSENSOR>, 0);
