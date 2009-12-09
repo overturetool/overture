@@ -23,7 +23,7 @@
 	
 	sync
 	
-	thread
+	--thread
 	
 	traces
 

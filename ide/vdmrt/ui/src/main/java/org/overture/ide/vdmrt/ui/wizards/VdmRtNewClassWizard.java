@@ -41,7 +41,7 @@ return new NewSourceModulePage() {
 						+ "\toperations\n\n"
 						+ "\tfunctions\n\n"
 						+ "\tsync\n\n"
-						+ "\tthread\n\n"
+						+ "\t--thread\n\n"
 						+ "\ttraces\n\n"
 						+ "end " + className;
 			}
