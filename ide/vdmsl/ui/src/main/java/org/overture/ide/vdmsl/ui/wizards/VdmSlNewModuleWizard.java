@@ -35,7 +35,7 @@ public class VdmSlNewModuleWizard extends NewSourceModuleWizard {
 			protected String getFileContent() {
 				String moduleName = getFileText();
 				return "module " + moduleName + "\n"
-				+ "export all\n"
+				+ "exports all\n"
 				+ "definitions \n\n"
 				+ "\tstate StateName of\n \n\n"
 				+ "\tend \n\n"

@@ -11,7 +11,7 @@
 	
 	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.completion.templates.VdmUniversalTemplateContextType"
 		deleted="false" description="Module pattern" enabled="true" name="modulePattern" id="modulePattern">module ${moduleName}
-	export all
+	exports all
 	definitions
 	
 	state ${stateName} of
