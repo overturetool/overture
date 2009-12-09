@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *	Copyright (c) 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -23,47 +23,29 @@
 
 package org.overturetool.vdmj.pog;
 
-import java.util.Vector;
-
-@SuppressWarnings("serial")
-public class ProofObligationList extends Vector<ProofObligation>
+public enum POTrivialProof
 {
-	// Convenience class to hold lists of POs.
+	FORALL_IN_SET("^( *\\(+forall [^\\n]+\\n)*? *\\(forall (\\w+) in set \\(([^&]+)\\) &(.+?)?\\n *\\2 in set \\3\\)+\\n$", "forall x in set s & x in set s"),
+	IMPLICATION("^( *\\(+forall [^\\n]+\\n?)*? *\\(+(\\w+) in set \\(([^&]+)\\)+ =>\\n *\\2 in set \\3\\)+\\n$", "x in set s => x in set s"),
+	NOT_EQUALITY("^( *\\(+forall [^\\n]+\\n)*? *\\(+not \\((.+?) \\= (.+?)\\) =>\\n *\\2 \\<\\> \\3\\)+\\n$", "not x = y => x <> y");
+
+	private String pattern;
+	public String name;
+
+	POTrivialProof(String pattern, String name)
+	{
+		this.pattern = pattern;
+		this.name = name;
+	}
+
+	public boolean proves(String PO)
+	{
+		return PO.matches(pattern);
+	}
 
 	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder();
-		int n = 1;
-
-		for (ProofObligation po: this)
-		{
-			sb.append("Proof Obligation ");
-			sb.append(n++);
-			sb.append(": (");
-			sb.append(po.status);
-
-			if (po.status == POStatus.TRIVIAL)
-			{
-				sb.append(" by <");
-				sb.append(po.proof);
-				sb.append(">");
-			}
-
-			sb.append(")\n");
-			sb.append(po);
-			sb.append("\n");
-		}
-
-		return sb.toString();
+		return name;
 	}
-
-	public void trivialCheck()
-	{
-		for (ProofObligation po: this)
-		{
-			po.trivialCheck();
-		}
-	}
-
 }

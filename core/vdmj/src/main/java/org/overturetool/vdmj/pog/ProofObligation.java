@@ -32,6 +32,7 @@ abstract public class ProofObligation
 	public final String name;
 	public String value;
 	public POStatus status;
+	public POTrivialProof proof;
 
 	private int var = 1;
 
@@ -41,6 +42,7 @@ abstract public class ProofObligation
 		this.kind = kind;
 		this.name = ctxt.getName();
 		this.status = POStatus.UNPROVED;
+		this.proof = null;
 	}
 
 	public String getValue()
@@ -59,20 +61,14 @@ abstract public class ProofObligation
 		return root + var++;
 	}
 
-	private String[] trivialPatterns =
-	{
-		"^( *\\(+forall [^\\n]+\\n)*? *\\(forall (\\w+) in set \\(([^&]+)\\) &(.+?)?\\n *\\2 in set \\3\\)+\\n$",
-		"^( *\\(+forall [^\\n]+\\n?)*? *\\(+(\\w+) in set \\(([^&]+)\\)+ =>\\n *\\2 in set \\3\\)+\\n$",
-		"^( *\\(+forall [^\\n]+\\n)*? *\\(+not \\((.+?) \\= (.+?)\\) =>\\n *\\2 \\<\\> \\3\\)+\\n$"
-	};
-
 	public void trivialCheck()
 	{
-		for (String trivial: trivialPatterns)
+		for (POTrivialProof p: POTrivialProof.values())
 		{
-			if (value.matches(trivial))
+			if (p.proves(value))
 			{
 				status = POStatus.TRIVIAL;
+				proof = p;
 				break;
 			}
 		}
