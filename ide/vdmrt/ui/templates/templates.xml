@@ -11,15 +11,21 @@
 	
 	<template autoinsert="true" context="org.overture.ide.vdmrt.ui.completion.templates.VdmUniversalTemplateContextType"
 		deleted="false" description="Class pattern" enabled="true" name="classPattern" id="classPattern">class ${className}
-	instance variables
-
 	types
 
 	values
+	
+	instance variables
 
 	operations
 
 	functions
+	
+	sync
+	
+	thread
+	
+	traces
 
 end ${className}</template>
 	

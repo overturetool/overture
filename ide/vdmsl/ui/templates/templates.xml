@@ -10,8 +10,12 @@
 		end</template>
 	
 	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.completion.templates.VdmUniversalTemplateContextType"
-		deleted="false" description="Class pattern" enabled="true" name="modulePattern" id="modulePattern">module ${moduleName}
-	instance variables
+		deleted="false" description="Module pattern" enabled="true" name="modulePattern" id="modulePattern">module ${moduleName}
+	export all
+	definitions
+	
+	state ${stateName} of
+	end
 
 	types
 

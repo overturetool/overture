@@ -34,13 +34,15 @@ public class VdmSlNewModuleWizard extends NewSourceModuleWizard {
 			@Override
 			protected String getFileContent() {
 				String moduleName = getFileText();
-				return "module " + moduleName + "\n\n"
+				return "module " + moduleName + "\n"
+				+ "export all\n"
+				+ "definitions \n\n"
 				+ "\tstate StateName of\n \n\n"
 				+ "\tend \n\n"
 				+ "\ttypes \n\n"
 				+ "\tvalues \n\n"
-				+ "\toperations \n\n"
 				+ "\tfunctions \n\n"
+				+ "\toperations \n\n"
 				+ "end " + moduleName;
 			}
 		};

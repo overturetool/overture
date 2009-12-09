@@ -37,13 +37,15 @@ public class VdmPpNewClassWizard extends NewSourceModuleWizard {
 			protected String getFileContent() {
 				String className = getFileText();
 				return "class " + className + "\n"
-						+ "\tinstance variables \n\n"
-						+ "\ttypes \n\n"
-						+ "\tvalues \n\n"
-						+ "\toperations \n\n"
-						+ "\tfunctions \n\n"
-						+ "\ttraces \n\n"
-						+ "end " + className;
+				+ "\ttypes\n\n"
+				+ "\tvalues\n\n"
+				+ "\tinstance variables\n\n"
+				+ "\toperations\n\n"
+				+ "\tfunctions\n\n"
+				+ "\tsync\n\n"
+				+ "\tthread\n\n"
+				+ "\ttraces\n\n"
+				+ "end " + className;
 			}
 		};
 	}
