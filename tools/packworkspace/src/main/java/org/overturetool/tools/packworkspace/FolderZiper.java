@@ -40,6 +40,7 @@ public class FolderZiper {
 		try {
 			zip.flush();
 			zip.close();
+			fileWriter.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

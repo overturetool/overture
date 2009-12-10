@@ -68,6 +68,7 @@ public class VdmppVdmjVMInterpreterRunner extends AbstractInterpreterRunner {
 		IVMInstall vmInstall = myJavaProject.exists() ? JavaRuntime.getVMInstall(myJavaProject)
 				: JavaRuntime.getDefaultVMInstall();
 		if (vmInstall != null) {
+			vmInstall.setVMArguments(new String[]{"-Xmx1024M"});
 			IVMRunner vmRunner = vmInstall.getVMRunner(ILaunchManager.DEBUG_MODE);
 			if (vmRunner != null) {
 				{

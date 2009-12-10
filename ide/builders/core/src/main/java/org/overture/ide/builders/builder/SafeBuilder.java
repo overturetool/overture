@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.overture.ide.ast.AstManager;
 import org.overture.ide.ast.RootNode;
+import org.overture.ide.utility.VdmProject;
 
 public class SafeBuilder extends Thread {
 
@@ -51,7 +52,7 @@ public class SafeBuilder extends Thread {
 								// if the project don't have parse errors
 								if (rootNode.isParseCorrect()){									
 									monitor.subTask("Type checking");
-									statusList.add(builder.buileModelElements(currentProject, rootNode));
+									statusList.add(builder.buileModelElements(new VdmProject(currentProject), rootNode));
 									//  mark ast root as type checked
 									
 									if(rootNode!=null) {

@@ -37,28 +37,48 @@ public class Main {
 							+ "\" already exists, it is used as the temp folder for packing and added to be deleted. Delete ok. ( y / n):");
 			if (System.in.read() == (int) 'y')
 				delete(tmpFolder);
+			else
+				return;
 		}
-		tmpFolder.mkdir();
+		
 
 		for (File inputFolder : inputRootFolder.listFiles()) {
+			
 			packExamples(tmpFolder, inputFolder);
+			
+			
 		}
 
 		// new Zip().Zip(tmpFolder, new File("examples.zip"));
-		FolderZiper.zipFolder(tmpFolder.getName(), "examples.zip");
-		delete(tmpFolder);
+		if(tmpFolder.exists())
+			delete(tmpFolder);
 	}
 
 	private static void packExamples(File tmpFolder, File inputFolder) {
 		Natures nature = findNature(inputFolder);
 
 		if (nature != null)
+		{
+			//if(tmpFolder.exists())
+			while(tmpFolder.exists())
+				delete(tmpFolder);
+			tmpFolder.mkdir();
+			String name =  "examples"+nature+".zip";
+			System.out.println("PACKING: "+name);
 			for (File exampleFolder : inputFolder.listFiles()) {
 				if (exampleFolder.getName().equals(".svn"))
 					continue;
 
-				packExamples(tmpFolder, exampleFolder, nature);
+				
+				
+				packExample(tmpFolder, exampleFolder, nature);
+				
+				
 			}
+			FolderZiper.zipFolder(tmpFolder.getName(),name);
+			while(tmpFolder.exists())
+				delete(tmpFolder);
+		}
 	}
 
 	private static Natures findNature(File inputFolder) {
@@ -76,19 +96,21 @@ public class Main {
 	}
 
 	private static void delete(File tmpFolder) {
-		if (tmpFolder != null && tmpFolder.exists())
+		if (tmpFolder != null && tmpFolder.exists() )
+		{
 			if (tmpFolder.isFile())
 				tmpFolder.delete();
-			else {
+			else 
+			{
 				for (File file : tmpFolder.listFiles()) {
 					delete(file);
 				}
 				tmpFolder.delete();
 			}
-
+		}
 	}
 
-	private static void packExamples(File tmpFolder, File exampleFolder,
+	private static void packExample(File tmpFolder, File exampleFolder,
 			Natures nature) {
 		if (exampleFolder.exists() && exampleFolder != null
 				&& exampleFolder.list() != null
@@ -164,7 +186,9 @@ public class Main {
 			outputStream.write(OvertureProject.EclipseProject.replace(
 					OvertureProject.NATURE_SPACEHOLDER, projectNature).replace(
 					OvertureProject.NAME_PLACEHOLDER, projectName));
+			outputStream.flush();
 			outputStream.close();
+			outputFileReader.close();
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -190,8 +214,10 @@ public class Main {
 			while ((len = in.read(buf)) > 0) {
 				out.write(buf, 0, len);
 			}
+			out.flush();
 			in.close();
 			out.close();
+			
 			// System.out.println("File copied: "+ f1.getName());
 		} catch (FileNotFoundException ex) {
 			System.out

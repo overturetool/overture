@@ -18,7 +18,8 @@ Require-Bundle: org.overture.ide.generated.vdmj;bundle-version="1.0.0",
  org.overture.ide.builders.core;bundle-version="1.0.0",
  org.overture.ide.vdmpp.core;bundle-version="1.0.0",
  org.overture.ide.vdmrt.core;bundle-version="1.0.0",
- org.overture.ide.vdmsl.core;bundle-version="1.0.0"
+ org.overture.ide.vdmsl.core;bundle-version="1.0.0",
+ org.overture.ide.utility;bundle-version="1.0.0"
 Export-Package: org.overture.ide.builders.vdmj
 Bundle-Activator: org.overture.ide.builders.vdmj.VdmjBuilderPlugin
 

@@ -80,5 +80,15 @@
               parentId="org.eclipse.dltk.ui.scriptEditorScope">
         </context>
      </extension>
+     <extension
+           point="org.eclipse.ui.propertyPages">
+        <page
+              class="org.overture.ide.ui.property.VdmLanguagePropertyPage1"
+              icon="icons/cview16/overture_nav.gif"
+              id="org.overture.ide.ui.property.vdmlanguage"
+              name="VDM Settings">
+                     
+        </page>
+     </extension>
   
 </plugin>

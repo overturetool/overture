@@ -13,12 +13,12 @@ allows processing of the file already while reading, the latter reads the file
 entirely and provides a simple object-oriented interface to the completely
 parsed XML document. Both interfaces are described in this document.
 
-\begin{figure}[!htb]
-\begin{centering}
-\includegraphics[width=.8\columnwidth]{cldiagram.eps}
-\caption{UML class diagram of the VDM++ XML API}
-\end{centering}
-\end{figure}
+%\begin{figure}[!htb]
+%\begin{centering}
+%\includegraphics[width=.8\columnwidth]{cldiagram.eps}
+%\caption{UML class diagram of the VDM++ XML API}
+%\end{centering}
+%\end{figure}
 
 \section{The event-based XML interface}
 
@@ -379,26 +379,26 @@ end XmlFactory
 The simplest application using the VDM++ XML API described in this
 document is represented by the following piece of Java code.
 
-\begin{verbatimtab}[4]
-import nl.marcelverhoef.vdm.xml.*;
-import dk.ifad.toolbox.VDM.*;
+%\begin{verbatimtab}[4]
+%import nl.marcelverhoef.vdm.xml.*;
+%import dk.ifad.toolbox.VDM.*;
 
-public class VdmXmlTest {
-	public static void main(String[] args) {
-		System.out.println("Start VdmXmlTest");
-		try {
-			System.out.println("Parsing file");
-			XmlDocument pDoc = XmlFactory.readFromFile("testin.xml");
-			System.out.println("Generating output");
-			XmlFactory.writeToFile("testout.xml",pDoc);
-		}
-		catch (CGException cge) {
-			System.out.println(cge.getMessage());
-		}
-		System.out.println("VdmXmlTest completed");
-	}
-}
-\end{verbatimtab}
+%public class VdmXmlTest {
+%	public static void main(String[] args) {
+%		System.out.println("Start VdmXmlTest");
+%		try {
+%			System.out.println("Parsing file");
+%			XmlDocument pDoc = XmlFactory.readFromFile("testin.xml");
+%			System.out.println("Generating output");
+%			XmlFactory.writeToFile("testout.xml",pDoc);
+%		}
+%		catch (CGException cge) {
+%			System.out.println(cge.getMessage());
+%		}
+%		System.out.println("VdmXmlTest completed");
+%	}
+%}
+%\end{verbatimtab}
 
 \subsection{class \texttt{XmlVisitor}}
 
