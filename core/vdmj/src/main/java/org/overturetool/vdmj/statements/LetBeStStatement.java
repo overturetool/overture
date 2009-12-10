@@ -111,8 +111,12 @@ public class LetBeStStatement extends Statement
 	@Override
 	public Expression findExpression(int lineno)
 	{
-		Expression found = suchThat.findExpression(lineno);
-		if (found != null) return found;
+		if (suchThat != null)
+		{
+			Expression found = suchThat.findExpression(lineno);
+			if (found != null) return found;
+		}
+
 		return statement.findExpression(lineno);
 	}
 
