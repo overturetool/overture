@@ -95,8 +95,11 @@ public class LetBeStExpression extends Expression
 		Expression found = super.findExpression(lineno);
 		if (found != null) return found;
 
-		found = suchThat.findExpression(lineno);
-		if (found != null) return found;
+		if (suchThat != null)
+		{
+			found = suchThat.findExpression(lineno);
+			if (found != null) return found;
+		}
 
 		return value.findExpression(lineno);
 	}
