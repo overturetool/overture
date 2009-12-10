@@ -70,35 +70,41 @@ public class NotYetSpecifiedExpression extends Expression
 	{
 		breakpoint.check(location, ctxt);
 
-		if (ctxt.title.equals("writeval(val)"))
+		if (location.module.equals("IO"))
 		{
-			return IO.writeval(ctxt);
+    		if (ctxt.title.equals("writeval(val)"))
+    		{
+    			return IO.writeval(ctxt);
+    		}
+    		else if (ctxt.title.equals("fwriteval(filename, val, fdir)"))
+    		{
+    			return IO.fwriteval(ctxt);
+    		}
+    		else if (ctxt.title.equals("freadval(f)"))
+    		{
+    			return IO.freadval(ctxt);
+    		}
 		}
-		else if (ctxt.title.equals("fwriteval(filename, val, fdir)"))
+		else if (location.module.equals("VDMUtil"))
 		{
-			return IO.fwriteval(ctxt);
+    		if (ctxt.title.equals("set2seq(x)"))
+    		{
+    			return VDMUtil.set2seq(ctxt);
+    		}
+    		else if (ctxt.title.equals("get_file_pos()"))
+    		{
+    			return VDMUtil.get_file_pos(ctxt);
+    		}
+    		else if (ctxt.title.equals("val2seq_of_char(x)"))
+    		{
+    			return VDMUtil.val2seq_of_char(ctxt);
+    		}
+    		else if (ctxt.title.equals("seq_of_char2val(s)"))
+    		{
+    			return VDMUtil.seq_of_char2val(ctxt);
+    		}
 		}
-		else if (ctxt.title.equals("freadval(f)"))
-		{
-			return IO.freadval(ctxt);
-		}
-		else if (ctxt.title.equals("set2seq(x)"))
-		{
-			return VDMUtil.set2seq(ctxt);
-		}
-		else if (ctxt.title.equals("get_file_pos()"))
-		{
-			return VDMUtil.get_file_pos(ctxt);
-		}
-		else if (ctxt.title.equals("val2seq_of_char(x)"))
-		{
-			return VDMUtil.val2seq_of_char(ctxt);
-		}
-		else if (ctxt.title.equals("seq_of_char2val(s)"))
-		{
-			return VDMUtil.seq_of_char2val(ctxt);
-		}
-		else
+		else if (location.module.equals("MATH"))
 		{
 			try
 			{

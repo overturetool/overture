@@ -70,27 +70,53 @@ public class NotYetSpecifiedStatement extends Statement
 	{
 		breakpoint.check(location, ctxt);
 
-		if (ctxt.title.equals("deploy(obj)"))
+		if (location.module.equals("CPU"))
 		{
-			return CPUClassDefinition.deploy(ctxt);
+    		if (ctxt.title.equals("deploy(obj)"))
+    		{
+    			return CPUClassDefinition.deploy(ctxt);
+    		}
+    		else if (ctxt.title.equals("deploy(obj, name)"))
+    		{
+    			return CPUClassDefinition.deploy(ctxt);
+    		}
+    		else if (ctxt.title.equals("setPriority(opname, priority)"))
+    		{
+    			return CPUClassDefinition.setPriority(ctxt);
+    		}
 		}
-		else if (ctxt.title.equals("deploy(obj, name)"))
+		else if (location.module.equals("IO"))
 		{
-			return CPUClassDefinition.deploy(ctxt);
+    		if (ctxt.title.equals("fecho(filename, text, fdir)"))
+    		{
+    			return IO.fecho(ctxt);
+    		}
+    		else if (ctxt.title.equals("ferror()"))
+    		{
+    			return IO.ferror();
+    		}
+    		else if (ctxt.title.equals("print(arg)"))
+    		{
+    			return IO.print(ctxt);
+    		}
+    		else if (ctxt.title.equals("printf(format, args)"))
+    		{
+    			try
+    			{
+    				return IO.printf(ctxt);
+    			}
+    			catch (ValueException e)
+    			{
+    				throw new ContextException(e, location);
+    			}
+    			catch (Exception e)
+    			{
+    				throw new InternalException(34,
+    					"Native library error: " + e.getMessage());
+    			}
+    		}
 		}
-		else if (ctxt.title.equals("setPriority(opname, priority)"))
-		{
-			return CPUClassDefinition.setPriority(ctxt);
-		}
-		else if (ctxt.title.equals("fecho(filename, text, fdir)"))
-		{
-			return IO.fecho(ctxt);
-		}
-		else if (ctxt.title.equals("ferror()"))
-		{
-			return IO.ferror();
-		}
-		else
+		else if (location.module.equals("MATH"))
 		{
 			try
 			{
@@ -101,14 +127,6 @@ public class NotYetSpecifiedStatement extends Statement
         		else if (ctxt.title.equals("srand2(a)"))
         		{
         		    return MATH.srand2(ctxt);
-        		}
-        		else if (ctxt.title.equals("print(arg)"))
-        		{
-        			return IO.print(ctxt);
-        		}
-        		else if (ctxt.title.equals("printf(format, args)"))
-        		{
-        			return IO.printf(ctxt);
         		}
 			}
 			catch (ValueException e)
