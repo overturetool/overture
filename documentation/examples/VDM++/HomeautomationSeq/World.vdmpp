@@ -12,35 +12,15 @@
 --
 class World
 
---
--- instance variables
---
 instance variables
 
-public static env		: Environment := new Environment();
-
---
--- Types definition section
---
-types   
-
---
--- Operations definition section
---
+static public env : Environment := new Environment();
+  
 operations
 
 public Run: () ==> ()
 	Run() ==
 		is not yet specified;
 
---
--- Functions definition section
---
-functions
-
---
--- Values definition section
---
-values
 
 end World
