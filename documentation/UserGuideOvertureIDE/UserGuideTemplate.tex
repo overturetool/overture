@@ -64,6 +64,8 @@
 \newcommand{\PRIVATE}{\ifthenelse{\boolean{VDMpp}}{private}{\mbox{}}}
 \newcommand{\PROTECTED}{\ifthenelse{\boolean{VDMpp}}{protected}{\mbox{}}}
 
+\usepackage{makeidx}
+
 \usepackage{graphicx, color}
 
 % definition of VDM++, JavaCC, JJTree, JTB, ANTLR and SableCC for listings
@@ -131,14 +133,14 @@
 \renewcommand{\textfraction}{0.05}
 \renewcommand{\floatpagefraction}{0.9}
 
-\title{User Manual for the Overture Combinatorial Testing Plug-in}
-
-
 \begin{document}
 \title{User Guide for the Overture VDM Tool Support}
 \author{Peter Gorm Larsen, Kenneth Lausdahl, Augusto Reibero and Sune Wolff \\ 
 Engineering College of Aarhus\\
-Dalgas Avenue 2, DK-8000 \AA{}rhus C, Denmark}
+Dalgas Avenue 2, DK-8000 \AA{}rhus C, Denmark\\
+Nick Battle\\
+Fujutsu Services}
+
 \reportno{TR-2009-02}     
 
 \maketitle
@@ -146,7 +148,19 @@ Dalgas Avenue 2, DK-8000 \AA{}rhus C, Denmark}
 \tableofcontents
 
 \begin{abstract}
-Bla bla
+This document is a user manual for the Overture Integrated Development
+Environment (IDE) open source tool for
+VDM. It can serve as a reference for anybody wishing to make use of
+this tool with one of the VDM dialects (VDM-SL, VDM++ and VDM-RT).
+This tool support is build of top of the Eclipse platform. The
+objective of the Overture open source initiative is to enable a
+platform that both can be used for experimentation of new subsets or
+supersets of VDM dialects as well as new features analysing such VDM
+models in different ways. The tool is entirely open source so anybody
+can join the development team and influenece the future
+developments. The long term target is also to ensure that stable
+versions of the tool suite can be used for large scale industrial
+applications of the VDM technology.
 \end{abstract}
 
 
@@ -194,6 +208,9 @@ Bla bla
 
 \bibliographystyle{nnewalpha}
 
-\bibliography{bib/UserGuide}
+\bibliography{bib/UserGuide,dan}
 
+\section{Index}\label{sec:index}
+
+\printindex
 \end{document}
