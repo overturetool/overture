@@ -4,7 +4,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.overture.ide.ast.NotAllowedException;
 import org.overture.ide.ast.RootNode;
-import org.overture.ide.utility.VdmProject;
+import org.overture.ide.utility.IVdmProject;
 import org.overture.ide.vdmpp.core.VdmPpCorePluginConstants;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
 import org.overturetool.vdmj.ExitStatus;
@@ -33,10 +33,14 @@ public class BuilderPp extends VdmjBuilder {
 	}
 
 	@Override
-	public IStatus buileModelElements(VdmProject project, RootNode rootNode) {
+	public IStatus buileModelElements(IVdmProject project, RootNode rootNode) {
 		try
 		{
 			Settings.release = project.getLanguageVersion();
+			Settings.dynamictypechecks = project.hasDynamictypechecks();
+			Settings.invchecks = project.hasInvchecks();
+			Settings.postchecks = project.hasPostchecks();
+			Settings.prechecks = project.hasPrechecks();
 		} catch (CoreException e1)
 		{
 			e1.printStackTrace();

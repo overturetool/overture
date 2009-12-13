@@ -18,6 +18,7 @@ import org.overture.ide.ast.IAstManager;
 import org.overture.ide.ast.RootNode;
 import org.overture.ide.utility.ProjectUtility;
 import org.overture.ide.utility.SourceLocationConverter;
+import org.overture.ide.utility.VdmProject;
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
@@ -73,7 +74,7 @@ public abstract class VdmjSourceParser extends AbstractSourceParser {
 					reporter.reportProblem(defaultProblem);
 				}
 			}
-			if (warnings.size() > 0) {
+			if (warnings.size() > 0 && !new VdmProject(project).hasSuppressWarnings()) {
 				for (VDMWarning warning : warnings) {
 					DefaultProblem defaultProblem = new DefaultProblem(
 							fileNameString, warning.message, warning.number,

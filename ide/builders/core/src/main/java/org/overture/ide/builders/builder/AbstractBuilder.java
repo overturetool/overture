@@ -21,12 +21,12 @@ import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.overture.ide.ast.AstManager;
 import org.overture.ide.ast.RootNode;
 import org.overture.ide.utility.FileUtility;
+import org.overture.ide.utility.IVdmProject;
 import org.overture.ide.utility.ProjectUtility;
 import org.overture.ide.utility.SourceLocationConverter;
-import org.overture.ide.utility.VdmProject;
 
 public abstract class AbstractBuilder {
-	public abstract IStatus buileModelElements(VdmProject project,
+	public abstract IStatus buileModelElements(IVdmProject project,
 			RootNode rooList);
 
 	public abstract String getNatureId();

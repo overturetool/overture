@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.overture.ide.builders.builder.AbstractBuilder;
+import org.overture.ide.utility.VdmProject;
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
@@ -32,6 +33,7 @@ public abstract class VdmjBuilder  extends AbstractBuilder
 				addErrorMarker(project,error);
 			}
 		}
+		if(!new VdmProject(project).hasSuppressWarnings())
 		for (VDMWarning warning : warnings)
 		{
 			addWarningMarker(project,warning);
