@@ -26,10 +26,18 @@ package org.overturetool.vdmj.pog;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligation;
+import org.overturetool.vdmj.statements.StateDesignator;
 
 public class MapApplyObligation extends ProofObligation
 {
 	public MapApplyObligation(Expression root, Expression arg, POContextStack ctxt)
+	{
+		super(root.location, POType.MAP_APPLY, ctxt);
+		value = ctxt.getObligation(arg + " in set dom " + root);
+	}
+
+	public MapApplyObligation(StateDesignator root,
+		Expression arg, POContextStack ctxt)
 	{
 		super(root.location, POType.MAP_APPLY, ctxt);
 		value = ctxt.getObligation(arg + " in set dom " + root);

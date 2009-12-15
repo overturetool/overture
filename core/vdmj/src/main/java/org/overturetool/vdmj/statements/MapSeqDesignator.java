@@ -25,6 +25,7 @@ package org.overturetool.vdmj.statements;
 
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.pog.MapApplyObligation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.pog.SeqApplyObligation;
@@ -181,6 +182,10 @@ public class MapSeqDesignator extends StateDesignator
 		if (seqType != null)
 		{
 			list.add(new SeqApplyObligation(mapseq, exp, ctxt));
+		}
+		else if (mapType != null)
+		{
+			list.add(new MapApplyObligation(mapseq, exp, ctxt));
 		}
 
 		return list;
