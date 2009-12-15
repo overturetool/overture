@@ -57,7 +57,11 @@ public abstract class StateDesignator implements Serializable
 
 	abstract public Type typeCheck(Environment env);
 
-	abstract public Definition targetDefinition(Environment env);
+	public Definition targetDefinition(
+		@SuppressWarnings("unused") Environment env)
+	{
+		return null;
+	}
 
 	abstract public Value eval(Context ctxt);
 
