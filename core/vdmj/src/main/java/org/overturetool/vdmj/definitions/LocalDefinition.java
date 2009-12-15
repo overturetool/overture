@@ -99,14 +99,13 @@ public class LocalDefinition extends Definition
 	}
 
 	@Override
-	public boolean isFunctionOrOperation()
+	public boolean isFunction()
 	{
 		// This is only true for local definitions of member functions or
 		// operations, not local definitions that happen to be function values.
 		// So we exclude parameter types.
 
-		return type.isType(ParameterType.class) ? false :
-			type.isFunction() || type.isOperation();
+		return type.isType(ParameterType.class) ? false : type.isFunction();
 	}
 
 	@Override

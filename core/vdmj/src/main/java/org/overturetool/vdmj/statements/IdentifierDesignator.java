@@ -120,4 +120,10 @@ public class IdentifierDesignator extends StateDesignator
 		// return ctxt.getUpdateable().lookup(name.getExplicit(true));
 		return ctxt.lookup(name.getExplicit(true));
 	}
+
+	@Override
+	public Definition targetDefinition(Environment env)
+	{
+		return env.findName(name, NameScope.STATE);
+	}
 }

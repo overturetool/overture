@@ -400,8 +400,8 @@ public class ClassDefinition extends Definition
 					def1.name.name.equals(def2.name.name) &&
 					!done.contains(def1.name.name))
 				{
-					if (def1.isFunctionOrOperation() && def2.isFunctionOrOperation() &&
-						def1.getClass() == def2.getClass())		// Both fns or ops
+					if ((def1.isFunction() && def2.isFunction()) ||
+						(def1.isOperation() && def2.isOperation()))
 					{
     					Type to = def1.getType();
     					Type from = def2.getType();
@@ -1378,5 +1378,10 @@ public class ClassDefinition extends Definition
 	public boolean isTypeDefinition()
 	{
 		return true;
+	}
+
+	public void initializedCheck()
+	{
+		definitions.initializedCheck();
 	}
 }

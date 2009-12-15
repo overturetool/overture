@@ -265,4 +265,16 @@ public class DefinitionList extends Vector<Definition>
 			d.markUsed();
 		}
     }
+
+	public void initializedCheck()
+	{
+		for (Definition d: this)
+		{
+			if (d instanceof InstanceVariableDefinition)
+			{
+				InstanceVariableDefinition ivd = (InstanceVariableDefinition)d;
+				ivd.initializedCheck();
+			}
+		}
+ 	}
 }

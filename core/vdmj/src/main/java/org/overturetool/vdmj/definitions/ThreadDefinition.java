@@ -87,7 +87,7 @@ public class ThreadDefinition extends Definition
 	}
 
 	@Override
-	public boolean isFunctionOrOperation()
+	public boolean isOperation()
 	{
 		return true;	// Because we define an operation called "thread"
 	}

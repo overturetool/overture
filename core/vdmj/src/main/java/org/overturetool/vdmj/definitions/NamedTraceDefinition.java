@@ -95,7 +95,7 @@ public class NamedTraceDefinition extends Definition
 	}
 
 	@Override
-	public boolean isFunctionOrOperation()
+	public boolean isOperation()
 	{
 		return true;
 	}

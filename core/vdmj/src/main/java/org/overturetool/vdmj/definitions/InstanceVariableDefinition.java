@@ -40,12 +40,14 @@ public class InstanceVariableDefinition extends AssignmentDefinition
 {
 	private static final long serialVersionUID = 1L;
 	public final LexNameToken oldname;
+	public boolean initialized;
 
 	public InstanceVariableDefinition(
 		LexNameToken name, Type type, Expression expression)
 	{
 		super(name, type, expression);
 		oldname = name.getOldName();
+		initialized = !(expression instanceof UndefinedExpression);
 	}
 
 	@Override
@@ -77,10 +79,6 @@ public class InstanceVariableDefinition extends AssignmentDefinition
 			{
 				report(3037, "Static instance variable is not initialized: " + name);
 			}
-			else
-			{
-				warning(5001, "Instance variable is not initialized: " + name);
-			}
 		}
 
 		// Initializers can reference class members, so create a new env.
@@ -89,6 +87,14 @@ public class InstanceVariableDefinition extends AssignmentDefinition
 
 		Environment cenv = new PrivateClassEnvironment(classDefinition, base);
 		super.typeCheck(cenv, NameScope.NAMESANDSTATE);
+	}
+
+	public void initializedCheck()
+	{
+		if (!initialized && !accessSpecifier.isStatic)
+		{
+			warning(5001, "Instance variable '" + name + "' is not initialized");
+		}
 	}
 
 	@Override

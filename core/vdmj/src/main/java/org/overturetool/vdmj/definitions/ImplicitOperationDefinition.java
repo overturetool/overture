@@ -31,6 +31,7 @@ import org.overturetool.vdmj.expressions.PostOpExpression;
 import org.overturetool.vdmj.expressions.PreOpExpression;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.patterns.IdentifierPattern;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
@@ -241,6 +242,17 @@ public class ImplicitOperationDefinition extends Definition
         				else
         				{
             				defs.add(new ExternalDefinition(sdef, clause.mode));
+
+            				// VDM++ "ext wr" clauses in a constructor effectively
+            				// initialize the instance variable concerned.
+
+            				if (clause.mode.is(Token.WRITE) &&
+            					sdef instanceof InstanceVariableDefinition &&
+            					name.name.equals(classDefinition.name.name))
+            				{
+            					InstanceVariableDefinition iv = (InstanceVariableDefinition)sdef;
+            					iv.initialized = true;
+            				}
         				}
     				}
     			}
@@ -639,7 +651,7 @@ public class ImplicitOperationDefinition extends Definition
 	}
 
 	@Override
-	public boolean isFunctionOrOperation()
+	public boolean isOperation()
 	{
 		return true;
 	}

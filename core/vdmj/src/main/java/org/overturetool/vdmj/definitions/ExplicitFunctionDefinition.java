@@ -667,7 +667,7 @@ public class ExplicitFunctionDefinition extends Definition
 	}
 
 	@Override
-	public boolean isFunctionOrOperation()
+	public boolean isFunction()
 	{
 		return true;
 	}

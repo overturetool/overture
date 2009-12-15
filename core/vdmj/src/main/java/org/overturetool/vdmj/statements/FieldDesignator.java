@@ -153,4 +153,10 @@ public class FieldDesignator extends StateDesignator
 
 		return result;
 	}
+
+	@Override
+	public Definition targetDefinition(Environment env)
+	{
+		return object.targetDefinition(env);
+	}
 }

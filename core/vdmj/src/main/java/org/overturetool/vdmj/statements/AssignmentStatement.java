@@ -28,6 +28,7 @@ import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
+import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
 import org.overturetool.vdmj.definitions.StateDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
@@ -104,6 +105,19 @@ public class AssignmentStatement extends Statement
 			{
 				ImplicitOperationDefinition op = (ImplicitOperationDefinition)encl;
 				inConstructor = op.isConstructor;
+			}
+		}
+
+		if (inConstructor)
+		{
+			// Mark assignment target as initialized (so no warnings)
+
+			Definition state = target.targetDefinition(env);
+
+			if (state instanceof InstanceVariableDefinition)
+			{
+				InstanceVariableDefinition iv = (InstanceVariableDefinition)state;
+				iv.initialized = true;
 			}
 		}
 

@@ -25,6 +25,7 @@ package org.overturetool.vdmj.statements;
 
 import java.io.Serializable;
 
+import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -55,6 +56,8 @@ public abstract class StateDesignator implements Serializable
 	abstract public String toString();
 
 	abstract public Type typeCheck(Environment env);
+
+	abstract public Definition targetDefinition(Environment env);
 
 	abstract public Value eval(Context ctxt);
 

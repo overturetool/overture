@@ -145,6 +145,7 @@ public class ClassTypeChecker extends TypeChecker
 		{
 			if (!c.typechecked)
 			{
+				c.initializedCheck();
 				c.unusedCheck();
 			}
 		}

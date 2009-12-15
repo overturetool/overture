@@ -588,7 +588,7 @@ public class ImplicitFunctionDefinition extends Definition
 	}
 
 	@Override
-	public boolean isFunctionOrOperation()
+	public boolean isFunction()
 	{
 		return true;
 	}

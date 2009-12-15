@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.statements;
 
+import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -183,5 +184,11 @@ public class MapSeqDesignator extends StateDesignator
 		}
 
 		return list;
+	}
+
+	@Override
+	public Definition targetDefinition(Environment env)
+	{
+		return mapseq.targetDefinition(env);
 	}
 }

@@ -389,6 +389,16 @@ public abstract class Definition implements Serializable
 
 	public boolean isFunctionOrOperation()
 	{
+		return isFunction() || isOperation();
+	}
+
+	public boolean isFunction()
+	{
+		return false;
+	}
+
+	public boolean isOperation()
+	{
 		return false;
 	}
 
