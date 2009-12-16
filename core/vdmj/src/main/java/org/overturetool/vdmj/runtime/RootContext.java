@@ -47,9 +47,15 @@ public abstract class RootContext extends Context
 	@Override
 	public Context getVisibleVariables()
 	{
-		Context free = new Context(location, title, null);
-		free.putAll(this);
-		return free;
+		Context visible = new Context(location, title, null);
+		visible.putAll(this);
+
+		if (freeVariables != null)
+		{
+			visible.putAll(freeVariables);
+		}
+
+		return visible;
 	}
 
 	@Override

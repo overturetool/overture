@@ -375,6 +375,11 @@ public class FunctionValue extends Value
 					newpost = postcondition.curry(evalContext);
 				}
 
+				if (freeVariables != null)
+				{
+					evalContext.putAll(freeVariables);
+				}
+
     			Value rv = new FunctionValue(location, "curried",
     				(FunctionType)type.result,
     				paramPatternList.subList(1, paramPatternList.size()),

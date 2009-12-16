@@ -205,15 +205,15 @@ public class Context extends HashMap<LexNameToken, Value>
 
 	public Context getVisibleVariables()
 	{
-		Context all = new Context(location, title, null);
+		Context visible = new Context(location, title, null);
 
 		if (outer != null)
 		{
-			all.putAll(outer.getVisibleVariables());
+			visible.putAll(outer.getVisibleVariables());
 		}
 
-		all.putAll(this);	// Overriding anything below here
-		return all;
+		visible.putAll(this);	// Overriding anything below here
+		return visible;
 	}
 
 	/**
