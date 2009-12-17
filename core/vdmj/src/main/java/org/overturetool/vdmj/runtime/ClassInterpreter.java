@@ -268,11 +268,8 @@ public class ClassInterpreter extends Interpreter
 	public Value evaluate(String line, Context ctxt) throws Exception
 	{
 		Expression expr = parseExpression(line, getDefaultName());
-		LexNameToken classname =
-			new LexNameToken("CLASS", ctxt.location.module, ctxt.location);
-		ClassDefinition me = (ClassDefinition)classes.findType(classname);
 		PublicClassEnvironment globals = new PublicClassEnvironment(classes);
-		Environment env = new PrivateClassEnvironment(me, globals);
+		Environment env = new PrivateClassEnvironment(defaultClass, globals);
 
 		try
 		{

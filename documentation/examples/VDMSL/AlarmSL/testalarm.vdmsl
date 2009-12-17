@@ -35,3 +35,10 @@ values
   a3:Alarm = mk_Alarm("CO2 detected",<Chem>);
 
   pl: Plant = mk_Plant(s,{a1,a2,a3})
+  
+operations
+
+Run: Expert ==> set of Period
+	Run(e) == return ExpertIsOnDuty(e, pl);
+
+  

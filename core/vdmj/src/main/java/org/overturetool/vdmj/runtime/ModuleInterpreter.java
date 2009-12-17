@@ -264,10 +264,7 @@ public class ModuleInterpreter extends Interpreter
 	public Value evaluate(String line, Context ctxt) throws Exception
 	{
 		Expression expr = parseExpression(line, getDefaultName());
-		LexIdentifierToken name =
-			new LexIdentifierToken(ctxt.location.module, false, ctxt.location);
-		Module me = modules.findModule(name);
-		Environment env = new ModuleEnvironment(me);
+		Environment env = new ModuleEnvironment(defaultModule);
 
 		try
 		{
