@@ -25,7 +25,7 @@ package org.overturetool.vdmj.pog;
 
 import org.overturetool.vdmj.lex.LexLocation;
 
-abstract public class ProofObligation
+abstract public class ProofObligation implements Comparable<ProofObligation>
 {
 	public final LexLocation location;
 	public final POType kind;
@@ -45,6 +45,7 @@ abstract public class ProofObligation
 		this.name = ctxt.getName();
 		this.status = POStatus.UNPROVED;
 		this.proof = null;
+		this.number = 0;
 	}
 
 	public String getValue()
@@ -74,5 +75,10 @@ abstract public class ProofObligation
 				break;
 			}
 		}
+	}
+
+	public int compareTo(ProofObligation other)
+	{
+		return number - other.number;
 	}
 }
