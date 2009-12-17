@@ -356,6 +356,7 @@ public abstract class Type implements Comparable<Type>, Serializable
 
 	public int compareTo(Type o)
 	{
+		// This is used by the TreeSet to do inserts, not equals!!
 		return toString().compareTo(o.toString());
 	}
 

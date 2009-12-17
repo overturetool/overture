@@ -162,8 +162,24 @@ public class RecordType extends InvariantType
 	}
 
 	@Override
+	public int compareTo(Type other)
+	{
+		if (other instanceof RecordType)
+		{
+			RecordType rt = (RecordType)other;
+    		String n1 = name.getExplicit(true).toString();
+    		String n2 = rt.name.getExplicit(true).toString();
+    		return n1.compareTo(n2);
+		}
+		else
+		{
+			return super.compareTo(other);
+		}
+	}
+
+	@Override
 	public int hashCode()
 	{
-		return name.hashCode() + fields.hashCode();
+		return name.hashCode();
 	}
 }

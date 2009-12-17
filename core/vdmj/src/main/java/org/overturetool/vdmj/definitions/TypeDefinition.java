@@ -90,7 +90,6 @@ public class TypeDefinition extends Definition
 		if (invPattern != null)
 		{
     		invdef = getInvDefinition();
-    		invdef.setAccessSpecifier(accessSpecifier);
     		type.setInvariant(invdef);
 		}
 		else

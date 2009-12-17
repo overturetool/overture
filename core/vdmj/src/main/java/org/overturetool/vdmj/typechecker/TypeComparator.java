@@ -23,13 +23,10 @@
 
 package org.overturetool.vdmj.typechecker;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.vdmj.types.BracketType;
 import org.overturetool.vdmj.types.ClassType;
-import org.overturetool.vdmj.types.Field;
 import org.overturetool.vdmj.types.FunctionType;
 import org.overturetool.vdmj.types.MapType;
 import org.overturetool.vdmj.types.NamedType;
@@ -451,29 +448,10 @@ public class TypeComparator
 					return Result.No;
 				}
 
-				List<Field> fa = ((RecordType)to).fields;
-				List<Field> fb = ((RecordType)from).fields;
+				RecordType rf = (RecordType)from;
+				RecordType rt = (RecordType)to;
 
-				if (fa.size() != fb.size())
-				{
-					return Result.No;
-				}
-				else
-				{
-					Iterator<Field> aiter = fa.iterator();
-					Iterator<Field> biter = fb.iterator();
-
-					while (aiter.hasNext())
-					{
-						if (searchCompatible(
-							aiter.next().type, biter.next().type, paramOnly) == Result.No)
-						{
-							return Result.No;
-						}
-					}
-				}
-
-				return Result.Yes;
+				return rf.equals(rt) ? Result.Yes : Result.No;
 			}
 			else if (to instanceof ClassType)
 			{
@@ -873,39 +851,7 @@ public class TypeComparator
 				RecordType subr = (RecordType)sub;
 				RecordType supr = (RecordType)sup;
 
-				if (subr.equals(supr))
-				{
-					return Result.Yes;
-				}
-
-				if (subr.invdef != null || supr.invdef != null)
-				{
-					return Result.No;
-				}
-
-				List<Field> subf = subr.fields;
-				List<Field> supf = supr.fields;
-
-				if (subf.size() != supf.size())
-				{
-					return Result.No;
-				}
-				else
-				{
-					Iterator<Field> subi = subf.iterator();
-					Iterator<Field> supi = supf.iterator();
-
-					while (subi.hasNext())
-					{
-						if (searchSubType(
-							subi.next().type, supi.next().type) == Result.No)
-						{
-							return Result.No;
-						}
-					}
-				}
-
-				return Result.Yes;
+				return subr.equals(supr) ? Result.Yes : Result.No;
 			}
 			else if (sub instanceof ClassType)
 			{

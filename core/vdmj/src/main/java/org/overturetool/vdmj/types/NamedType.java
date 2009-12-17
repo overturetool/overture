@@ -229,6 +229,22 @@ public class NamedType extends InvariantType
 	}
 
 	@Override
+	public int compareTo(Type other)
+	{
+		if (other instanceof NamedType)
+		{
+			NamedType nt = (NamedType)other;
+    		String n1 = typename.getExplicit(true).toString();
+    		String n2 = nt.typename.getExplicit(true).toString();
+    		return n1.compareTo(n2);
+		}
+		else
+		{
+			return super.compareTo(other);
+		}
+	}
+
+	@Override
 	public int hashCode()
 	{
 		return typename.hashCode();
