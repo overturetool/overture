@@ -1,5 +1,5 @@
 \begin{vdm_al}
-class Test2
+class Test1
 
 instance variables
 
@@ -28,5 +28,5 @@ Run() ==
   in 
     return mk_(periods,expert);
 
-end Test2
+end Test1
 \end{vdm_al}
