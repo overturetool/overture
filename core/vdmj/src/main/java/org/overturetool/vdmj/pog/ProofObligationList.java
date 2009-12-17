@@ -34,12 +34,12 @@ public class ProofObligationList extends Vector<ProofObligation>
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		int n = 1;
+		renumber();
 
 		for (ProofObligation po: this)
 		{
 			sb.append("Proof Obligation ");
-			sb.append(n++);
+			sb.append(po.number);
 			sb.append(": (");
 			sb.append(po.status);
 
@@ -66,4 +66,13 @@ public class ProofObligationList extends Vector<ProofObligation>
 		}
 	}
 
+	public void renumber()
+	{
+		int n = 1;
+
+		for (ProofObligation po: this)
+		{
+			po.number = n++;
+		}
+	}
 }

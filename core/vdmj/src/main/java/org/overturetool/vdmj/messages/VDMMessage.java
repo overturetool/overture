@@ -65,6 +65,23 @@ public class VDMMessage
 		return String.format("%04d: %s %s", number, message, location);
 	}
 
+	// This one is used by the GUI to generate strings for the problem
+	// view, with details but without the file location and number.
+
+	public String toProblemString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(message);
+
+		for (String d: details)
+		{
+			sb.append("\n");
+			sb.append(d);
+		}
+
+		return sb.toString();
+	}
+
 	@Override
 	public boolean equals(Object other)
 	{

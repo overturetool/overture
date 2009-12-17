@@ -30,6 +30,8 @@ abstract public class ProofObligation
 	public final LexLocation location;
 	public final POType kind;
 	public final String name;
+
+	public int number;
 	public String value;
 	public POStatus status;
 	public POTrivialProof proof;
