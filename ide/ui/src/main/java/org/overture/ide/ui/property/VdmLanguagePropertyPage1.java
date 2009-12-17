@@ -118,17 +118,7 @@ public class VdmLanguagePropertyPage1 extends PropertyPage implements
 		    layout.numColumns = 1;
 		    typeGroup.setLayout(layout);
 		   
-		    checkBoxInvChecks = new Button(typeGroup, SWT.CHECK);
-		    checkBoxInvChecks.setText("Invarian checks");
-		    checkBoxInvChecks.setSelection(project.hasInvchecks());
-		    
-		    checkBoxUsePreChecks = new Button(typeGroup, SWT.CHECK);
-		    checkBoxUsePreChecks.setText("Pre condition checks");
-		    checkBoxUsePreChecks.setSelection(project.hasPrechecks());
-		    
-		    checkBoxUsePostChecks = new Button(typeGroup, SWT.CHECK);
-		    checkBoxUsePostChecks.setText("Post condition checks");
-		    checkBoxUsePostChecks.setSelection(project.hasPostchecks());
+		   
 		    
 		    checkBoxSuppressWarnings = new Button(typeGroup, SWT.CHECK);
 		    checkBoxSuppressWarnings.setText("Suppress all warnings");
@@ -147,6 +137,18 @@ public class VdmLanguagePropertyPage1 extends PropertyPage implements
 		    checkBoxDynamicTypeChecks = new Button(interperterGroup, SWT.CHECK);
 		    checkBoxDynamicTypeChecks.setText("Dynamic type checks");
 		    checkBoxDynamicTypeChecks.setSelection(project.hasDynamictypechecks());
+		    
+		    checkBoxInvChecks = new Button(interperterGroup, SWT.CHECK);
+		    checkBoxInvChecks.setText("Invariants checks");
+		    checkBoxInvChecks.setSelection(project.hasInvchecks());
+		    
+		    checkBoxUsePreChecks = new Button(interperterGroup, SWT.CHECK);
+		    checkBoxUsePreChecks.setText("Pre condition checks");
+		    checkBoxUsePreChecks.setSelection(project.hasPrechecks());
+		    
+		    checkBoxUsePostChecks = new Button(interperterGroup, SWT.CHECK);
+		    checkBoxUsePostChecks.setText("Post condition checks");
+		    checkBoxUsePostChecks.setSelection(project.hasPostchecks());
 		    
 		  
 		   	    

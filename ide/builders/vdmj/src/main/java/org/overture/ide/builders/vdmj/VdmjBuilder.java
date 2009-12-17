@@ -59,9 +59,10 @@ public abstract class VdmjBuilder  extends AbstractBuilder
 	{
 		try
 		{
+			
 			AbstractBuilder.addMarker(
 					findIFile(project,error.location.file),
-					error.message,
+					error.toProblemString(),
 					error.location.startLine,
 					IMarker.SEVERITY_ERROR,
 					error.location.startPos - adjustPosition,
@@ -80,7 +81,7 @@ public abstract class VdmjBuilder  extends AbstractBuilder
 		{
 			AbstractBuilder.addMarker(
 					findIFile(project,error.location.file),
-					error.message,
+					error.toProblemString(),
 					error.location.startLine,
 					IMarker.SEVERITY_WARNING,
 					error.location.startPos - adjustPosition,

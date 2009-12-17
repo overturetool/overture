@@ -104,7 +104,7 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 			{
 			case 0:
 				count++;
-				columnText = count.toString();
+				columnText =new Integer(data.number).toString();// count.toString();
 				break;
 			case 1:
 				if (!data.location.module.equals("DEFAULT"))
@@ -183,8 +183,8 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 		viewer.setSorter(null);
 
 		TableColumn column01 = new TableColumn(viewer.getTable(), SWT.LEFT);
-		column01.setText("Count");
-		column01.setToolTipText("Count");
+		column01.setText("No.");
+		column01.setToolTipText("No.");
 
 		TableColumn column = new TableColumn(viewer.getTable(), SWT.LEFT);
 		column.setText("PO Name");
