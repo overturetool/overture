@@ -31,7 +31,6 @@ import org.overturetool.vdmj.types.BracketType;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Field;
 import org.overturetool.vdmj.types.FunctionType;
-import org.overturetool.vdmj.types.InvariantType;
 import org.overturetool.vdmj.types.MapType;
 import org.overturetool.vdmj.types.NamedType;
 import org.overturetool.vdmj.types.NumericType;
@@ -655,32 +654,6 @@ public class TypeComparator
 			return Result.Yes;	// Usually uninitialized variables etc.
 		}
 
-		// If the types are not equal, and one or other has an invariant,
-		// then they are NOT subtypes (or rather, we can't be sure).
-
-		if (!sub.equals(sup))
-		{
-    		if (sub instanceof InvariantType)
-    		{
-    			InvariantType inv = (InvariantType)sub;
-
-    			if (inv.invdef != null)
-    			{
-    				return Result.No;
-    			}
-    		}
-
-    		if (sup instanceof InvariantType)
-    		{
-    			InvariantType inv = (InvariantType)sup;
-
-    			if (inv.invdef != null)
-    			{
-    				return Result.No;
-    			}
-    		}
-		}
-
 		// Obtain the fundamental type of BracketTypes, NamedTypes and
 		// OptionalTypes.
 
@@ -776,10 +749,8 @@ public class TypeComparator
 			}
 			else if (sub instanceof NamedType)
     		{
-				// Must have an invariant, otherwise would have been resolved.
-				// Only subtypes if they are identical.
-
-				return sub.equals(sup) ? Result.Yes : Result.No;
+				NamedType subn = (NamedType)sub;
+				return searchSubType(subn.type, sup);
 			}
 			else if (sup instanceof OptionalType)
     		{
@@ -787,7 +758,7 @@ public class TypeComparator
 				// optional (stripped above), so we test the optional's type.
 
 				OptionalType op = (OptionalType)sup;
-				return subtest(op.type, sub);
+				return searchSubType(op.type, sub);
 			}
 			else if (sub instanceof NumericType)
 			{
@@ -899,8 +870,21 @@ public class TypeComparator
 					return Result.No;
 				}
 
-				List<Field> subf = ((RecordType)sub).fields;
-				List<Field> supf = ((RecordType)sup).fields;
+				RecordType subr = (RecordType)sub;
+				RecordType supr = (RecordType)sup;
+
+				if (subr.equals(supr))
+				{
+					return Result.Yes;
+				}
+
+				if (subr.invdef != null || supr.invdef != null)
+				{
+					return Result.No;
+				}
+
+				List<Field> subf = subr.fields;
+				List<Field> supf = supr.fields;
 
 				if (subf.size() != supf.size())
 				{

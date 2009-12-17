@@ -152,13 +152,13 @@ public class RecordType extends InvariantType
 			other = ((BracketType)other).type;
 		}
 
-		if (!(other instanceof RecordType))
+		if (other instanceof RecordType)
 		{
-			return false;
+			RecordType rother = (RecordType)other;
+			return name.equals(rother.name);	// NB. identical
 		}
 
-		RecordType cother = (RecordType)other;
-		return (name.equals(cother.name) && fields.equals(cother.fields));
+		return false;
 	}
 
 	@Override

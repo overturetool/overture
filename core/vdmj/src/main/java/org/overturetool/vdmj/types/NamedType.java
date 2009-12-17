@@ -225,8 +225,7 @@ public class NamedType extends InvariantType
 			return typename.equals(nother.typename);
 		}
 
-		// Note, if we have an invariant, we can't say they're equal.
-		return invdef == null && type.equals(other);
+		return false;
 	}
 
 	@Override
