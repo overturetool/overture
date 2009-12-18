@@ -25,6 +25,8 @@ package org.overturetool.vdmj.modules;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Vector;
 
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
@@ -57,6 +59,8 @@ public class Module implements Serializable
 	public final ModuleExports exports;
 	/** A list of definitions created in the module. */
 	public final DefinitionList defs;
+	/** A list of source file names for the module. */
+	public final List<File> files;
 
 	/** Those definitions which are exported. */
 	public DefinitionList exportdefs;
@@ -64,8 +68,6 @@ public class Module implements Serializable
 	public DefinitionList importdefs;
 	/** True if the module was loaded from an object file. */
 	public boolean typechecked = false;
-	/** The default module number for flat definitions. */
-	public static int defNumber = 1;
 
 	/**
 	 * Create a module from the given name and definitions.
@@ -80,6 +82,9 @@ public class Module implements Serializable
 		this.imports = imports;
 		this.exports = exports;
 		this.defs = defs;
+		this.files = new Vector<File>();
+
+		files.add(name.location.file);
 
 		exportdefs = new DefinitionList();	// By default, export nothing
 		importdefs = new DefinitionList();	// and import nothing
@@ -89,7 +94,7 @@ public class Module implements Serializable
 	 * Create a module with a default name from the given definitions.
 	 */
 
-	public Module(DefinitionList defs)
+	public Module(File file, DefinitionList defs)
 	{
 		if (defs.isEmpty())
 		{
@@ -98,24 +103,29 @@ public class Module implements Serializable
 		else
 		{
     		this.name = defaultName(defs.get(0).location);
-    		defNumber++;
  		}
 
 		this.imports = null;
 		this.exports = null;
 		this.defs = defs;
+		this.files = new Vector<File>();
+
+		if (file != null)
+		{
+			files.add(file);
+		}
 
 		exportdefs = new DefinitionList();	// Export nothing
 		importdefs = new DefinitionList();	// and import nothing
 	}
 
 	/**
-	 * Create a module called DEFAULT with no definitions.
+	 * Create a module called DEFAULT with no file and no definitions.
 	 */
 
 	public Module()
 	{
-		this(new DefinitionList());
+		this(null, new DefinitionList());
 	}
 
 	/**

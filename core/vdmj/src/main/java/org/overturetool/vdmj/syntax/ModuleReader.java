@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.syntax;
 
+import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
@@ -116,9 +117,10 @@ public class ModuleReader extends SyntaxReader
 
 	private Module readFlatModule() throws ParserException, LexException
 	{
-		setCurrentModule(Module.defaultName(lastToken().location).name);
+		File file = lastToken().location.file;
+		setCurrentModule("DEFAULT");
 		DefinitionList definitions = getDefinitionReader().readDefinitions();
-		return new Module(definitions);
+		return new Module(file, definitions);
 	}
 
 	private Module readModule() throws ParserException, LexException

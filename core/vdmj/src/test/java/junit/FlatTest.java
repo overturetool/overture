@@ -57,9 +57,9 @@ public class FlatTest extends TestCase
 		Console.out.println("Processing " + resource + "...");
 
 		URL rurl = getClass().getResource("/flattest/" + resource);
-		String file = rurl.getPath();
+		File file = new File(rurl.getPath());
 
-		LexTokenReader ltr = new LexTokenReader(new File(file), Dialect.VDM_SL);
+		LexTokenReader ltr = new LexTokenReader(file, Dialect.VDM_SL);
 		DefinitionReader dr = new DefinitionReader(ltr);
 		DefinitionList definitions = new DefinitionList();
 
@@ -74,7 +74,7 @@ public class FlatTest extends TestCase
 
 		// TypeChecker typeChecker = new FlatTypeChecker(definitions, false);
 		ModuleList modules = new ModuleList();
-		modules.add(new Module(definitions));
+		modules.add(new Module(file, definitions));
 		TypeChecker typeChecker = new ModuleTypeChecker(modules);
 
 		before = System.currentTimeMillis();

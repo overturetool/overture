@@ -66,7 +66,7 @@ public class ModuleList extends Vector<Module>
 
 		for (Module def: this)
 		{
-			files.add(def.name.location.file);
+			files.addAll(def.files);
 		}
 
 		return files;
@@ -205,6 +205,7 @@ public class ModuleList extends Vector<Module>
 				if (m.name.name.equals("DEFAULT"))
 				{
 					def.defs.addAll(m.defs);
+					def.files.add(m.name.location.file);
 				}
 				else
 				{
