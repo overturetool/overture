@@ -132,14 +132,17 @@
 \renewcommand{\topfraction}{0.9}
 \renewcommand{\textfraction}{0.05}
 \renewcommand{\floatpagefraction}{0.9}
+\makeindex
 
 \begin{document}
 \title{User Guide for the Overture VDM Tool Support}
 \author{Peter Gorm Larsen, Kenneth Lausdahl, Augusto Reibero and Sune Wolff \\ 
 Engineering College of Aarhus\\
-Dalgas Avenue 2, DK-8000 \AA{}rhus C, Denmark\\
+Dalgas Avenue 2, DK-8000 \AA{}rhus C, Denmark\\[3mm]
 Nick Battle\\
-Fujutsu Services}
+Fujitsu Services\\
+Lovelace Road, Bracknell, \\
+Berkshire. RG12 8SN, UK}
 
 \reportno{TR-2009-02}     
 
@@ -165,52 +168,20 @@ applications of the VDM technology.
 
 
 
-%\begin{document}
-%\maketitle
 
-
-%\section*{Versions:}
-
-
-
-%\begin{tabular}{|c|c|c|}
-%\hline 
-%date & Version & Comment\tabularnewline
-%\hline
-%\hline 
-%03.06.2009 & 0.0.1 & First version of the user guide. Overture
-%IDE\tabularnewline
-%\hline
-%\end{tabular}
-
-% Figures and Tables
-%\newtheorem{fig}{Figure}\newtheorem{tab}{Table}
-
-% Counter commands
-%\setcounter{page}{1} \setcounter{chapter}{0} \setcounter{secnumdepth}{4}
-%\setcounter{tocdepth}{3}
-
-% Page Headings
-% Chapter headings are in chapter files
-%\pagestyle{myheadings}
-
-
-% TOC
-%\pagenumbering{roman}
-%\pagestyle{headings}
-%\tableofcontents
-
-%\pagebreak
-% MAIN FILESs 
-
-%\pagenumbering{arabic}
 \input{UserGuide.tex}
 
+\appendix
+
+\newpage
 \bibliographystyle{nnewalpha}
 
 \bibliography{bib/UserGuide,dan}
+\addcontentsline{toc}{section}{\protect\numberline{}{References}}
 
-\section{Index}\label{sec:index}
+\newpage
+\printindex\label{sec:index}
+\addcontentsline{toc}{section}{\protect\numberline{}{Index}}
 
-\printindex
+
 \end{document}
