@@ -21,6 +21,10 @@ AllLabDesc(g,id) ==
   dunion {LabDescendents(g,c,{})| c in set rng g(id)}
 pre id in set dom g;
 
+measureLabGraphReached : LabGraph * Id * set of Id -> nat
+measureLabGraphReached(g,-,reached) ==
+  card dom g - card reached;
+
 LabDescendents: LabGraph * NodeId * set of NodeId -> set of NodeId
 LabDescendents(g,id,reached) ==
   if id in set reached
@@ -28,7 +32,11 @@ LabDescendents(g,id,reached) ==
   else {id} union
        dunion {LabDescendents(g,c,reached union {id}) 
               | c in set rng g(id)}
-pre id in set dom g;
+pre id in set dom g
+measure measureLabGraphReached;
+
+
+
 
 UniqueArcIds: map NodeId to (map ArcId to NodeId) -> bool
 UniqueArcIds(g) ==
