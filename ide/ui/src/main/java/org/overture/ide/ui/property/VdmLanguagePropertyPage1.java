@@ -9,6 +9,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -46,13 +47,17 @@ public class VdmLanguagePropertyPage1 extends PropertyPage implements
 	protected Control createContents(Composite parent)
 	{
 		Composite myComposite = new Composite(parent, SWT.NONE);
-		GridLayout mylayout = new GridLayout();
-		mylayout.marginHeight = 1;
-		mylayout.marginWidth = 1;
-		mylayout.verticalSpacing=10;
-	//	mylayout.numColumns=1;
-		myComposite.setLayout(mylayout);
+//		GridLayout mylayout = new GridLayout();
+//		mylayout.marginHeight = 1;
+//		mylayout.marginWidth = 1;
+//		mylayout.verticalSpacing=10;
+//	//	mylayout.numColumns=1;
 		
+		
+		FillLayout layout = new FillLayout();
+		   // layout.numColumns = 1;
+		    layout.type = SWT.VERTICAL;
+		    myComposite.setLayout(layout);
 
 		ISelection selection = WorkbenchPlugin.getDefault()
 				.getWorkbench()
@@ -121,7 +126,7 @@ public class VdmLanguagePropertyPage1 extends PropertyPage implements
 		   
 		    
 		    checkBoxSuppressWarnings = new Button(typeGroup, SWT.CHECK);
-		    checkBoxSuppressWarnings.setText("Suppress all warnings");
+		    checkBoxSuppressWarnings.setText("Suppress warnings");
 		    checkBoxSuppressWarnings.setSelection(project.hasSuppressWarnings());
 		    
 		   	    

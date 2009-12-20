@@ -45,7 +45,7 @@
             class="org.overture.ide.vdmpp.ui.internal.editor.VdmPpEditor"
             contributorClass="org.eclipse.dltk.internal.ui.editor.SourceModuleEditorActionContributor"
             default="false"
-            icon="icons/cview16/vdmpp_file_tsk.gif"
+            icon="icons/cview16/vdmpp_file_tsk.png"
             id="org.overture.ide.vdmpp.ui.internal.editor.VdmPpEditor"
             name="VDM PP Editor">
          <contentTypeBinding contentTypeId="org.overture.ide.vdmpp.content-type"/>
@@ -134,7 +134,7 @@
  <extension point="org.eclipse.ui.perspectives">
     <perspective
           class="org.overture.ide.vdmpp.ui.VdmPpPerspective"
-          icon="icons/cview16/vdmpp_file_tsk.gif"
+          icon="icons/cview16/vdmpp_file_tsk.png"
           id="org.overture.ide.vdmpp.ui.VdmPpPerspective"
           name="VDM++">
     </perspective>

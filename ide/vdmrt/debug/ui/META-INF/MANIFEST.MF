@@ -24,4 +24,6 @@ Require-Bundle: org.eclipse.dltk;bundle-version="1.0.0",
  org.overture.ide.debug.launching;bundle-version="1.0.0",
  org.overture.ide.vdmrt.ui;bundle-version="1.0.0",
  org.overture.ide.vdmrt.debug.core;bundle-version="1.0.0",
- org.overture.ide.vdmrt.core;bundle-version="1.0.0"
+ org.overture.ide.vdmrt.core;bundle-version="1.0.0",
+ org.overture.ide.utility;bundle-version="1.0.0",
+ org.overture.ide.debug.core;bundle-version="1.0.0"

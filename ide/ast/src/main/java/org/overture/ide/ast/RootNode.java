@@ -164,7 +164,25 @@ public class RootNode {
 		}
 		return classes;
 	}
+	
+	public boolean hasClassList()
+	{
+		for (Object definition : rootElementList) {
+			if (definition instanceof ClassDefinition)
+				return true;
+		}
+		return false;
+	}
 
+	public boolean hasModuleList()
+	{
+		for (Object definition : rootElementList) {
+			if (definition instanceof Module)
+				return true;
+		}
+		return false;
+	}
+	
 	public void setParseCorrect(boolean isParseCorrect) {
 		this.isParseCorrect = isParseCorrect;
 	}

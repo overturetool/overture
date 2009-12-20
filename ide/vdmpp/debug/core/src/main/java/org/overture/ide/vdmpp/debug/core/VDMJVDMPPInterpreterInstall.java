@@ -13,23 +13,5 @@ public class VDMJVDMPPInterpreterInstall extends AbstractInterpreterInstall {
 	public String getNatureId() {
 		return VdmPpProjectNature.VDM_PP_NATURE;
 	}
-	
-	//TODO test if the method getInterpreterRunner is needed
-//	@Override
-//	public IInterpreterRunner getInterpreterRunner(String mode) {
-//		IInterpreterRunner runner = super.getInterpreterRunner(mode);
-//		if (runner != null) {
-//			return (IConfigurableRunner)runner;
-//			//return new VDMPPInterpreterRunner(this);
-//		}
-//
-//		if (mode.equals(ILaunchManager.RUN_MODE)) {
-//			return new VDMPPInterpreterRunner(this);
-//		}
-//		/*
-//		 * else if (mode.equals(ILaunchManager.DEBUG_MODE)) { return new
-//		 * OvertureInterpreterDebugger(this); }
-//		 */
-//		return null;
-//	}
+
 }

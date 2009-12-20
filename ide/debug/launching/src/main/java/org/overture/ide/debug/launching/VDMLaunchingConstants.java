@@ -2,6 +2,7 @@ package org.overture.ide.debug.launching;
 
 public interface VDMLaunchingConstants {
 	
+	public final String PLUGIN_ID="org.overture.ide.debug.launching";
 	/*******************
 	 **  VDM++
 	 *******************/

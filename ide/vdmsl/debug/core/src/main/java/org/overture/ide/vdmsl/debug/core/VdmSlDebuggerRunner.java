@@ -13,6 +13,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.overture.ide.debug.launching.ClasspathUtils;
 import org.overture.ide.debug.launching.IOvertureInterpreterRunnerConfig;
+import org.overture.ide.vdmsl.core.VdmSlCorePluginConstants;
 import org.overture.ide.vdmsl.debug.core.interpreter.VdmSlVdmjVMInterpreterRunner;
 
 public class VdmSlDebuggerRunner extends DebuggingEngineRunner {
@@ -72,8 +73,13 @@ public class VdmSlDebuggerRunner extends DebuggingEngineRunner {
 		try {
 			//TODO ( VDMTools / VDMJ) ??? set config?
 			setVDMJRunnerConfig();
-			//VDMPPVDMJInterpreterRunner.doRunImpl(config, launch, this.runnerconfig);
-			VdmSlVdmjVMInterpreterRunner.doRunImpl(config, launch, this.runnerconfig);
+						
+			new VdmSlVdmjVMInterpreterRunner().doRunImpl(config,
+					launch,
+					this.runnerconfig,
+					VdmSlCorePluginConstants.CONTENT_TYPE,
+					VdmSlDebugConstants.VDMSL_VDMJ_DIALECT);
+			
 			waitDebuggerConnected(launch, acceptor);
 		} catch (CoreException e) {
 			e.printStackTrace();

@@ -8,6 +8,7 @@ import java.util.Vector;
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -383,6 +384,12 @@ public class VdmProject implements IVdmProject
 			IProgressMonitor monitor = null;
 			project.setDescription(description, monitor);
 		}
+	}
+	
+	
+	public void typeCheck() throws CoreException
+	{
+		getProject().build(IncrementalProjectBuilder.FULL_BUILD , null);
 	}
 
 }

@@ -46,7 +46,7 @@ public class VdmppTabGroup extends AbstractLaunchConfigurationTabGroup {
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
 		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[] {
 				new VdmppMainLaunchConfigurationTab(mode),
-				new VDMPPInterpreterTab(null)
+				//new VDMPPInterpreterTab(null)
 				//new OvertureArgumentsTab(),
 				//new OvertureInterpreterTab(),
 				//new EnvironmentTab(),
