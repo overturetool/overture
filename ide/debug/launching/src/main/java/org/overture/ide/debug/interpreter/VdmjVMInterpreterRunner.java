@@ -37,7 +37,9 @@ import org.overture.ide.debug.launching.ClasspathUtils;
 import org.overture.ide.debug.launching.IOvertureInterpreterRunnerConfig;
 import org.overture.ide.debug.launching.VDMLaunchingConstants;
 import org.overture.ide.utility.ProjectUtility;
-
+/*
+ * The VM created respects VM arguments given like -org.overture.ide.debug.memory Xmx1024M
+ */
 public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 {
 
@@ -229,6 +231,8 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 
 	private String buildLaunchExpression(ILaunch launch) throws CoreException
 	{
+	String d =launch.getAttribute(	DebugCoreConstants.DEBUGGING_VM_MEMORY_OPTION);
+		
 		String debugOperation = launch.getLaunchConfiguration()
 				.getAttribute(DebugCoreConstants.DEBUGGING_OPERATION, "");
 
@@ -256,7 +260,7 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 	private static String getDebugVmMemoryOption()
 	{
 		String memoryOption = null;
-		String eclipseCommands = System.getProperty("eclipse.commands");
+		String eclipseCommands = System.getProperties().getProperty("eclipse.commands");
 		if (eclipseCommands != null)
 		{
 			StringTokenizer st = new StringTokenizer(eclipseCommands);

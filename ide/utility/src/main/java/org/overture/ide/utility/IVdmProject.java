@@ -59,5 +59,7 @@ public interface IVdmProject
 
 	public abstract void setSuppressWarnings(Boolean value)
 			throws CoreException;
+	
+	public abstract void typeCheck() throws CoreException;
 
 }

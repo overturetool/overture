@@ -11,4 +11,5 @@ public interface DebugCoreConstants {
 	final String DEBUGGING_MODULE = "vdmDebuggingModule";
 	final String DEBUGGING_OPERATION = "vdmDebuggingMethod";
 	final String DEBUGGING_CREATE_COVERAGE = "create_coverage";
+	final String DEBUGGING_VM_MEMORY_OPTION = "vdmDebuggingMemoryOption";
 }

@@ -32,6 +32,8 @@ public class DisplayImageCreator
 		} else if (element instanceof Definition)
 		{
 			Definition def = (Definition) element;
+			if(def.classDefinition==null)
+				return DLTKPluginImages.get(DLTKPluginImages.IMG_METHOD_PUBLIC);//VDM-SL
 			switch (def.accessSpecifier.access)
 			{
 			case PRIVATE:

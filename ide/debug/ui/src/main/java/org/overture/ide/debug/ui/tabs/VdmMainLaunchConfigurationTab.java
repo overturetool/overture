@@ -36,6 +36,7 @@ import org.overture.ide.ast.AstManager;
 import org.overture.ide.ast.RootNode;
 import org.overture.ide.debug.core.DebugCoreConstants;
 import org.overture.ide.debug.ui.DebugUIConstants;
+import org.overture.ide.ui.outline.DisplayNameCreator;
 import org.overture.ide.ui.outline.ExecutableFilter;
 import org.overture.ide.ui.outline.VdmOutlineLabelProvider;
 import org.overture.ide.ui.outline.VdmOutlineTreeContentProvider;
@@ -45,7 +46,7 @@ import org.overturetool.vdmj.definitions.Definition;
 /**
  * Main launch configuration tab for overture scripts
  */
-public abstract class VdmMainLaunchConfigurationTab extends
+public abstract class VdmMainLaunchConfigurationTab extends 
 		MainLaunchConfigurationTab
 {
 
@@ -60,7 +61,12 @@ public abstract class VdmMainLaunchConfigurationTab extends
 	private Button checkBoxgenerateLatexCoverage = null;
 	private Button fdebugInConsole;
 	private WidgetListener fListener = new WidgetListener();
+private String vmOption = "";
 
+public void setVmOptions(String option)
+{
+	this.vmOption = option;
+}
 	// private String moduleDefinitionPath;
 
 	class WidgetListener implements ModifyListener, SelectionListener
@@ -257,19 +263,15 @@ public abstract class VdmMainLaunchConfigurationTab extends
 		{
 			Definition method = (Definition) dialog.getFirstResult();
 			if (method.classDefinition != null)
-			{
 				fModuleNameText.setText(method.classDefinition.name.name + "()");
-				// moduleDefinitionPath =
-				// method.classDefinition.location.file.getName();
-			} else
-				fModuleNameText.setText("DEFAULT");
-			
-			fOperationText.setText(method.name.name + "()");
+			else if (method.location != null && method.location.module != null)
+				fModuleNameText.setText(method.location.module);
+			else
+				fModuleNameText.setText("DEFAULT");// undetermined module
 
-			// check extension
-			// fModuleNameText.setText(className);
-			// fOperationText.setText(operationName);
-			// proj.getScriptProject().getScriptFolders()
+			//fOperationText.setText(method.name.name + "()");
+			fOperationText.setText(DisplayNameCreator.getDisplayName( method));
+			
 		}
 	}
 
@@ -297,9 +299,9 @@ public abstract class VdmMainLaunchConfigurationTab extends
 	@Override
 	protected boolean dbpgLoggingPrefEnabled(PreferencesLookupDelegate delegate)
 	{
-		 return delegate.getBoolean(DebugUIConstants.PLUGIN_ID,
-		 DLTKDebugPreferenceConstants.PREF_DBGP_ENABLE_LOGGING);
-		//return true;
+		return delegate.getBoolean(DebugUIConstants.PLUGIN_ID,
+				DLTKDebugPreferenceConstants.PREF_DBGP_ENABLE_LOGGING);
+		// return true;
 	}
 
 	/*
@@ -323,6 +325,9 @@ public abstract class VdmMainLaunchConfigurationTab extends
 		config.setAttribute(DebugCoreConstants.DEBUGGING_OPERATION,
 				fOperationText.getText());
 
+		if(vmOption!=null &&vmOption.trim().length()>0 )
+			config.setAttribute(DebugCoreConstants.DEBUGGING_VM_MEMORY_OPTION, vmOption.trim());
+		
 		// config.setAttribute(ScriptLaunchConfigurationConstants.ATTR_MAIN_SCRIPT_NAME,
 		// moduleDefinitionPath);
 		config.setAttribute(ScriptLaunchConfigurationConstants.ATTR_MAIN_SCRIPT_NAME,
@@ -333,8 +338,13 @@ public abstract class VdmMainLaunchConfigurationTab extends
 				true);
 		config.setAttribute(DebugCoreConstants.DEBUGGING_CREATE_COVERAGE,
 				checkBoxgenerateLatexCoverage.getSelection());
+
+		config.setAttribute(DLTKDebugPreferenceConstants.PREF_DBGP_CONNECTION_TIMEOUT,
+				5000);
 		
-super.doPerformApply(config);
+		
+		
+		super.doPerformApply(config);
 	}
 
 	@Override
@@ -346,12 +356,14 @@ super.doPerformApply(config);
 					""));
 			fOperationText.setText(config.getAttribute(DebugCoreConstants.DEBUGGING_OPERATION,
 					""));
+			
+			vmOption=	config.getAttribute(DebugCoreConstants.DEBUGGING_VM_MEMORY_OPTION,"");
 
 		} catch (CoreException e)
 		{
 			e.printStackTrace();
 		}
-		///super.updateMainModuleFromConfig(config);
+		// /super.updateMainModuleFromConfig(config);
 
 	}
 

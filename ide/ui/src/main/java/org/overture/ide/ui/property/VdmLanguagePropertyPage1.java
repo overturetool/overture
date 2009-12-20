@@ -199,7 +199,7 @@ public class VdmLanguagePropertyPage1 extends PropertyPage implements
 		project.setPrechecks(checkBoxUsePreChecks.getSelection());
 		project.setSuppressWarnings(checkBoxSuppressWarnings.getSelection());
 		
-		
+		project.typeCheck();
 		} catch (CoreException e)
 	{
 		// TODO Auto-generated catch block
