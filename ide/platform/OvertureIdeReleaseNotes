@@ -1,0 +1,8 @@
+Overture IDE release notes:
+
+Version 0.1.1
+20 Decembers 2009: 	A new launch configuration tab and underlying handling of launching improved. The file selection has been removed.
+					Build options for VDMJ now completely available in properties of each project.
+					New option for increasing the Memory limit of the JVM used for debug available as shown below. (overture.ini):
+					 -org.overture.ide.debug.memory
+					 Xmx1024M
