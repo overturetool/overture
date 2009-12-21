@@ -25,7 +25,7 @@ public class ExecutableFilter extends ViewerFilter
 				)
 				
 				
-				|| (parentElement instanceof Module &&  element instanceof ExplicitFunctionDefinition	);
+				|| (parentElement instanceof Module &&  (element instanceof ExplicitFunctionDefinition||element instanceof ExplicitOperationDefinition)	);
 
 	}
 

@@ -3,6 +3,7 @@ package org.overture.ide.vdmpp.ui.internal.outline;
 
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
 import org.eclipse.dltk.core.AbstractSourceElementParser;
+import org.overture.ide.ui.dltk.outline.VdmSourceElementRequestor;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
 
 public class SourceElementParser extends AbstractSourceElementParser
@@ -18,7 +19,7 @@ public class SourceElementParser extends AbstractSourceElementParser
 	@Override
 	protected SourceElementRequestVisitor createVisitor()
 	{
-		return new VdmPpSourceElementRequestor(getRequestor());
+		return new VdmSourceElementRequestor(getRequestor());
 	}
 	
 	

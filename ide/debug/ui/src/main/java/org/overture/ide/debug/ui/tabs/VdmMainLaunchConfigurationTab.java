@@ -42,6 +42,7 @@ import org.overture.ide.ui.outline.VdmOutlineLabelProvider;
 import org.overture.ide.ui.outline.VdmOutlineTreeContentProvider;
 import org.overture.ide.utility.VdmProject;
 import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 
 /**
  * Main launch configuration tab for overture scripts
@@ -144,7 +145,7 @@ public void setVmOptions(String option)
 		label.setLayoutData(gd);
 
 		fModuleNameText = new Text(group, SWT.SINGLE | SWT.BORDER
-				| SWT.READ_ONLY);
+				);
 
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		fModuleNameText.setLayoutData(gd);
@@ -183,7 +184,7 @@ public void setVmOptions(String option)
 	@Override
 	protected String getScriptName()
 	{
-		return " ";
+		return "IGNORE_SCRIPT";
 	}
 
 	@Override
@@ -263,7 +264,18 @@ public void setVmOptions(String option)
 		{
 			Definition method = (Definition) dialog.getFirstResult();
 			if (method.classDefinition != null)
-				fModuleNameText.setText(method.classDefinition.name.name + "()");
+			{
+				boolean foundConstructor = false;
+				for(Definition def : method.classDefinition.definitions)
+				{
+					if(def instanceof ExplicitOperationDefinition && ((ExplicitOperationDefinition)def).isConstructor)
+					{
+						foundConstructor = true;
+						fModuleNameText.setText(DisplayNameCreator.getDisplayName(def));
+					}
+				}if(!foundConstructor)
+				fModuleNameText.setText(DisplayNameCreator.getDisplayName(method.classDefinition)+"()");
+			}
 			else if (method.location != null && method.location.module != null)
 				fModuleNameText.setText(method.location.module);
 			else
@@ -330,8 +342,8 @@ public void setVmOptions(String option)
 		
 		// config.setAttribute(ScriptLaunchConfigurationConstants.ATTR_MAIN_SCRIPT_NAME,
 		// moduleDefinitionPath);
-		config.setAttribute(ScriptLaunchConfigurationConstants.ATTR_MAIN_SCRIPT_NAME,
-				"");
+//		config.setAttribute(ScriptLaunchConfigurationConstants.ATTR_MAIN_SCRIPT_NAME,
+//				"");
 		config.setAttribute(DLTKDebugPreferenceConstants.PREF_DBGP_BREAK_ON_FIRST_LINE,
 				false);
 		config.setAttribute(DLTKDebugPreferenceConstants.PREF_DBGP_ENABLE_LOGGING,

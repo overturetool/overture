@@ -10,6 +10,7 @@ import java.util.StringTokenizer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
@@ -21,6 +22,9 @@ import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.console.ScriptConsoleServer;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.core.environment.IFileHandle;
+import org.eclipse.dltk.internal.launching.InterpreterMessages;
 import org.eclipse.dltk.launching.AbstractInterpreterRunner;
 import org.eclipse.dltk.launching.AbstractScriptLaunchConfigurationDelegate;
 import org.eclipse.dltk.launching.IInterpreterInstall;
@@ -32,6 +36,7 @@ import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMRunner;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
+import org.eclipse.osgi.util.NLS;
 import org.overture.ide.debug.core.DebugCoreConstants;
 import org.overture.ide.debug.launching.ClasspathUtils;
 import org.overture.ide.debug.launching.IOvertureInterpreterRunnerConfig;
@@ -49,6 +54,36 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 
 	public VdmjVMInterpreterRunner() {
 		super(null);
+	}
+	@Override
+	protected void checkConfig(InterpreterConfig config,
+			IEnvironment environment) throws CoreException
+	{
+		
+			IPath workingDirectoryPath = config.getWorkingDirectoryPath();
+			IFileHandle dir = environment.getFile(workingDirectoryPath);
+			if (!dir.exists()) {
+				abort(
+						NLS
+								.bind(
+										InterpreterMessages.errDebuggingEngineWorkingDirectoryDoesntExist,
+										dir.toString()), null);
+			}
+//			if (config.getScriptFilePath() == null) {
+//				return;
+//			}
+//			if (!config.isNoFile()) {
+//				final IFileHandle script = environment.getFile(config
+//						.getScriptFilePath());
+//				if (!script.exists()) {
+//					abort(
+//							NLS
+//									.bind(
+//											InterpreterMessages.errDebuggingEngineScriptFileDoesntExist,
+//											script.toString()), null);
+//				}
+//			}
+		
 	}
 
 	static String debugVmMemoryOption = null;

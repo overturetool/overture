@@ -1,4 +1,4 @@
-package org.overture.ide.vdmpp.ui.internal.outline;
+package org.overture.ide.ui.dltk.outline;
 
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.statements.Statement;
@@ -22,8 +22,8 @@ import org.eclipse.dltk.compiler.ISourceElementRequestor.FieldInfo;
  *         </extension><br>
  * 
  */
-public class VdmPpSourceElementRequestor extends SourceElementRequestVisitor {
-	public VdmPpSourceElementRequestor(ISourceElementRequestor requestor) {
+public class VdmSourceElementRequestor extends SourceElementRequestVisitor {
+	public VdmSourceElementRequestor(ISourceElementRequestor requestor) {
 		super(requestor);
 	}
 
