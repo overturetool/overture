@@ -184,7 +184,7 @@ public void setVmOptions(String option)
 	@Override
 	protected String getScriptName()
 	{
-		return "IGNORE_SCRIPT";
+		return ".project";//Cant disable file check so we select a file which always will be there
 	}
 
 	@Override
