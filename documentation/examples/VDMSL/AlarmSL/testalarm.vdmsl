@@ -39,6 +39,6 @@ values
 operations
 
 Run: Expert ==> set of Period
-	Run(e) == return ExpertIsOnDuty(e, pl);
+Run(e) == return ExpertIsOnDuty(e, pl);
 
   
