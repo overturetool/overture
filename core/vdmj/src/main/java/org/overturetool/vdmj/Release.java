@@ -32,7 +32,7 @@ public enum Release
 
 	private String option;
 
-	Release(String option)
+	private Release(String option)
 	{
 		this.option = option;
 	}
