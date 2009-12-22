@@ -30,6 +30,7 @@ import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.pog.SubTypeObligation;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
@@ -67,9 +68,23 @@ public class AssignmentDefinition extends Definition
 	@Override
 	public NameValuePairList getNamedValues(Context ctxt)
 	{
-		Value v = expression.eval(ctxt);
-		return new NameValuePairList(new NameValuePair(name, v.getUpdatable(null)));
-	}
+        try
+        {
+	        Value v = expression.eval(ctxt);
+	        
+	        if (!v.isUndefined())
+	        {
+	        	v = v.convertTo(type, ctxt);
+	        }
+	        
+			return new NameValuePairList(new NameValuePair(name, v.getUpdatable(null)));
+        }
+        catch (ValueException e)
+        {
+        	abort(e);
+        	return null;
+        }
+ 	}
 
 	@Override
 	public DefinitionList getDefinitions()
