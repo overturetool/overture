@@ -36,6 +36,12 @@ public enum Release
 	{
 		this.option = option;
 	}
+	
+	@Override
+    public String toString()
+	{
+		return option;
+	}
 
 	public static Release lookup(String release)
 	{
