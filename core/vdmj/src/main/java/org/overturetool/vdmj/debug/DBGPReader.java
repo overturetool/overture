@@ -526,7 +526,10 @@ public class DBGPReader
 		}
 		catch (IOException e)
 		{
-			throw new InternalException(29, "DBGP: " + reason);
+			if (!e.getMessage().equals("Broken pipe"))
+			{
+				throw new InternalException(29, "DBGP: " + reason);
+			}
 		}
 	}
 
