@@ -674,6 +674,18 @@ then select the \emph{Proof Obligations} $\rightarrow$ \emph{Generate Proof
 \end{center}
 \end{figure}
 
+Note that in the \emph{Proof Obligation Explorer} view each proof
+obligation have a number of components:
+\begin{itemize}
+\item A unique number in the list shown;
+\item The name of the definition in which the proof obligation is
+  generated from;
+\item The proof obligation category (type) and finally
+\item A status field indicating whether the proof obligation is
+  trivially correct or would have to be proved by a normal proof
+  engine.
+\end{itemize}
+
 \section{Combinatorial Testing}\label{sec:testing}
 
 In order to automate parts of the testing process a notion of
@@ -846,7 +858,7 @@ UML is done using the XML formal called XMI\index{XMI}. At the moment
 only the UML tool Enterprise Architect\index{Exterprise Architect} is
 supported. 
 
-Mapping back and firth between a VDM++ model and a UML model is in
+Mapping back and forth between a VDM++ model and a UML model is in
 practice done from the \emph{Explorer} view where right-clicking on
 the project will result in a menu popping up. In this menu there is an
 entry for \emph{UML transformation}\index{UML transformation}. If this
@@ -854,6 +866,10 @@ is selected it is either possible to \emph{Import XMI}\index{import
   XMI} if one wish to import UML definitions from UML or to
 \emph{Export XMI}\index{Export XMI} if one wish to go from VDM++ to
 UML.
+
+At the class diagram at the UML level additional classes will be
+generated for standard VDM++ basic types. When such UML models are
+mapped back to VDM++ such additional classes are ignored. 
 
 \section{Moving from VDM++ to VDM-RT}\label{sec:ToVDMRT}
 
