@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+-- Module   digraph
+-- Author:  Janusz Laski
+--
+-- Purpose: Define functions for manipulating graphs 
+-----------------------------------------------------------------
+
+-- Version 1.0.0  (December 6, 2004)
+
+module digraph 
+
+imports
+
+from flowgraph_types all,
+
+from relations all
+ 
+exports all
+
+definitions
+
+types 
+
+Node =  flowgraph_types`Node;
+
+Flowgraph = flowgraph_types`Flowgraph;
+
+functions
+
+succ: Flowgraph * Node  -> set of Node
+succ(G,n) == 
+  {k| k in set G.N & mk_(n,k) in set G.A};
+
+pred: Flowgraph * Node  -> set of Node
+pred(G,n) == 
+  {k| k in set G.N & mk_(k,n) in set G.A};
+
+existspath: Flowgraph * Node * Node -> bool
+existspath(MFG,n1,n2) == 
+  mk_(n1,n2) in set relations`Transitive_cl(MFG.A);
+
+end digraph

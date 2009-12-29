@@ -351,8 +351,24 @@ convenient feature is a toolbar of shortcuts to switch between
 different perspectives that appears on the right side of the screen;
 these vary dynamically according to context and history.
 
-\subsection{Additional Eclipse Features Applicabæe in Overture}
+\subsection{Additional Eclipse Features Applicable in Overture}
 
+If one would like to use additional file types to be associated with a
+particular VDM editor instead of the standard {\ttfamily vdmsl},
+{\ttfamily vdmpp} and {\ttfamily vdmrt} file types this is possible in
+Overture. This is done using the \emph{Window} $\rightarrow$
+\emph{Preferences} menu point. Here one can start typing {\ttfamily
+  contents types} and then one will get a menu similar to
+Figure~\ref{fig:ContentsTypes}. Here one can press the {\ttfamily Add}
+button for the appropriate contents type that one wishes to add
+additional types of file extensions.\index{file extension}
+
+\begin{figure}[!htb]
+\begin{center}
+\includegraphics[width=0.6\textwidth]{screenDumps/contentstypes}
+\caption{Adding Additional Contents Types\label{fig:ContentsTypes}}
+\end{center}
+\end{figure}
 
 \section{Managing Overture Projects}\label{sec:projects}
 
@@ -590,13 +606,32 @@ based on an expression defined by the user.
 
 \section{Collecting Test Coverage Information}\label{sec:testcoverage}
 
-Include \ttfamily{overture.tex} which among other things makes use of
-the \ttfamily{times.cls} and \ttfamily{listings.cls} style
-classes. This emables the use of the standard \ttfamily{lstlisting}
-environment for type setting source text and display it in a tele-type
-proportional font where all keyword are typeset in a bold font. 
+When a VDM model is being interpreted it is possible to automatically
+collect test coverage information. 
+Test coverage measurement helps you to see
+how well a given test suite\index{Test Coverage!Test suite} covers the
+VDM model. This is done by collecting information in a special
+test coverage file about which statements and expressions are
+evaluated during the execution of the test suite.
 
 \section{Pretty Printing to \LaTeX}\label{sec:prettyprint}
+
+Include {\ttfamily overture.tex} which among other things makes use of
+the {\ttfamily times.cls} and {\ttfamily listings.cls} style
+classes. This emables the use of the standard {\ttfamily lstlisting}
+environment for type setting source text and display it in a tele-type
+proportional font where all VDM keyword are typeset in a bold
+font. Per default the listings will be inserted into boxes but it is
+easy to adjust (using the parameters to the {\ttfamily lstlisting}
+environment) if no boxes are desired.
+
+It is possible to use literate programming/specification
+\cite{Johnson96} just as inside VDMTools. Then one needs to use the
+\LaTeX\ text processing system with plain VDM models mixed with
+textual documentation.  The 
+VDM model parts must be enclosed within ``\verb+\begin{vdm_al}+''
+and ``\verb+\end{vdm_al}+''. The text-parts outside the specification
+blocks are ignored by the parser (but used by the pretty-printer).
 
 \section{Managing Proof Obligations}\label{sec:POmanagement}
 
@@ -1357,6 +1392,11 @@ to the SourceForge bug reporting utility
 \newpage
 \section{Lexical Errors}\label{app:lexerr}
 
+When a VDM model is parsed the first phase is to gather the single
+characters into tokens that can be used in the further
+processing. This is called a lexical analysis and errors in this area
+can occur as:
+
 \begin{description}
 \item[1000:] \texttt{Malformed quoted character}
 \item[1001:] \texttt{Invalid char <ch> in base <n> number}
@@ -1375,6 +1415,10 @@ to the SourceForge bug reporting utility
 \newpage
 \section{Syntatic Errors}\label{app:synerr}
 
+If the syntax of the file you have provided does not live up to the
+syntax rules for the VDM dialect you wish to use syntax errors will be
+reported. These can be listed as:
+
 \begin{description}
 \item[2000:] \texttt{Expecting 'in set' after pattern in set binding}
 \item[2001:] \texttt{Expecting 'in set' in set bind}
@@ -1390,7 +1434,8 @@ to the SourceForge bug reporting utility
 \item[2011:] \texttt{Only one thread clause permitted per class}
 \item[2012:] \texttt{Can't have a sync clause in VDM-SL}
 \item[2013:] \texttt{Expected 'operations', 'state', 'functions', 'types' or 'values'}
-\item[2014:] \texttt{Recursive type declaration}
+\item[2014:] \texttt{Recursive type declaration}. This is reported in
+  type definitions such as \texttt{T = T}.
 \item[2015:] \texttt{Expecting =<type> or ::<field list>}
 \item[2016:] \texttt{Function name cannot start with 'mk\_'}
 \item[2017:] \texttt{Expecting ':' or '(' after name in function definition}
@@ -1663,6 +1708,10 @@ to the SourceForge bug reporting utility
 
 \newpage
 \section{Type Errors and Warnings}\label{app:typeerr}
+
+In case the syntax rules are satisfied it is possible to get type
+errors from an additional type checking. The errors here can be listed
+as:
 
 \begin{description}
 \item[3000:] \texttt{Expression does not match declared type}
@@ -1994,6 +2043,10 @@ Warnings from the type checker include:
 \newpage
 \section{Run-Time Errors}\label{app:typeerr}
 
+When using the interpreter/debugger it is possible to get run-time
+errors indicating that a problem with the VDM model analysed have been
+detected. This includes the following kinds of errors:
+
 \begin{description}
 \item[4000:] \texttt{Cannot instantiate abstract class <class>}
 \item[4002:] \texttt{Expression value is not in set bind}
@@ -2155,34 +2208,68 @@ circumstances under which the PO category can be expected.
 \item[sequence apply:] Whenever a sequence application is used it needs to be
   ensured that the argument is indeed in the indices of the sequence.
 \item[post condition:]
-\item[function satisfiability:]
+\item[function satisfiability:] For all implicit function definitions
+  this proof obligation will be generated to ensure that it will be
+  possible to find a result satisfying the post-condition for all
+  arguments of the function input types satisfying the pre-conditions.
 \item[function parameter patterns:]
-\item[let be st existence:]
-\item[unique existence binding:]
-\item[function iteration:]
+\item[let be st existence:] Whenever a let-be-such-that
+  expression/statement is used it needs to be guranteed that the set
+  to selecte from is non-empty.
+\item[unique existence binding:] The {\bf\ttfamily iota} expression
+  requires a unique binding to be present and that is guranteed by
+  proof obligations from this category.
+\item[function iteration:] 
 \item[map iteration:]
 \item[function compose:]
 \item[map compose:]
-\item[non-empty set:]
-\item[non-empty sequence:]
-\item[non-zero:]
-\item[finite map:]
-\item[finite set:]
+\item[non-empty set:] This kind of proof obligations are used whenever
+  non-empty sets are required.
+\item[non-empty sequence:] This kind of proof obligations are used whenever
+  non-empty sequences are required.
+\item[non-zero:] This kind of proof obligations are used whenever zero
+  cannot be used (e.g.\ in division).
+\item[finite map:] If a type binding to a type that potentially have
+  infinitely many elements is used inside a map comprehension this
+  proof obligation will be generated because all mappings in VDM are finite.
+\item[finite set:] If a type binding to a type that potentially have
+  infinitely many elements is used inside a set comprehension this
+  proof obligation will be generated because all sets in VDM are finite.
 \item[map compatible:]
 \item[map sequence compatible:]
 \item[map set compatible:]
 \item[sequence modification:]
-\item[tuple selection:]
-\item[value binding:]
-\item[subtype:]
-\item[cases exhaustive:]
-\item[type invariant:]
-\item[recursive function:]
-\item[state invariant:]
-\item[while loop termination:]
+\item[tuple selection:] This proof obligation category is used
+  whenever a tuple selection expression is used and it must be
+  guranteed that the length of the tuple at least is as long as the
+  selector used.
+\item[value binding:] 
+\item[subtype:] This proof obligation category is used whenever it is
+  not possible to statically detect that the given expression indeed
+  falls into the subtype required in the actual use of it.
+\item[cases exhaustive:] If a cases expression does not have an
+  {\bf\ttfamily others} clause it is necessary to ensure that the
+  different case alternatives are exhaustive over the type of the
+  expression used in the case choice.
+\item[type invariant:] Proof obligations from this category are used
+  to ensure that invariants for elements of a particular type are satisfied.
+\item[recursive function:] This proof obligation makes use of the
+  {\bf\ttfamily measure} construct to ensure that a recursive function
+  will terminate. 
+\item[state invariant:] If a state (including instance variables in
+  VDM++) have an invariant this proof obligation will be generated
+  whenever assignment is made to a part of the state all the places
+  where the invariant shall be satisfied.
+\item[while loop termination:] This kind of proof obligation is a
+  reminder to ensure that a while loop is terminating. However, for
+  embedded systems that is typically not desirable and thus in those
+  cases there is no need to satisfy this proof obligation.
 \item[operation post condition:]
 \item[operation parameter patterns:]
-\item[operation satifiability:] 
+\item[operation satifiability:] For all implicit operation definitions
+  this proof obligation will be generated to ensure that it will be
+  possible to find a result satisfying the post-condition for all
+  arguments of the operation input types satisfying the pre-conditions. 
 \end{description}
 
 \newpage

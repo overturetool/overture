@@ -1,0 +1,46 @@
+module flowgraph_types
+
+exports all
+
+definitions
+
+types
+
+Node = nat1;
+
+Nodes = set of Node; -- any subset of Node
+
+-- sets of form {1,...,K}, for arbitrary K
+GraphNodes = set of Node
+inv N == 
+  N = {1,..., card N}; 
+
+Arc = Node * Node;
+-- family of binary relations on Node
+BinRel = set of Arc; 
+
+Variable = token;
+Vars = set of Variable;
+Varmap = seq of Vars;
+
+Flowgraph:: 
+  N: GraphNodes
+  A: BinRel
+  S: Node -- start
+  E: Node -- exit
+  U: Varmap -- U(i) =  of variables used in node i
+  D: Varmap -- D(i) = set of variables defined in i
+inv mk_Flowgraph(N,A,S,E,U,D) == 
+ (card N >1) and (S in set N) and (E in set N)
+ and  -- arcs in A come from N * N
+ (forall mk_(x,y) in set A & x in set N and y in set N)
+ and len U = card N and len D = card N;
+
+-- STATE DEFINITION
+state ST of 
+  G: Flowgraph
+init x == 
+  x = mk_ST(mk_Flowgraph({1,2},{},1,2,[{},{}],[{},{}])) 
+end
+
+end flowgraph_types

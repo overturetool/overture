@@ -1,0 +1,164 @@
+------------------------------------------------------------------
+-- Module   relations
+-- Author:  Janusz Laski
+--
+-- Purpose: Define functions for manipulating graph relations
+-----------------------------------------------------------------
+
+-- Version 1.0.0  (December 6, 2004)
+module relations
+
+exports all
+
+definitions
+
+types
+
+Node=nat1;
+     
+BinRel = set of (nat1 * nat1);
+
+     
+values
+
+A1: BinRel={mk_(1,2), mk_(2,3), mk_(3,4)};
+A2: BinRel=A1 union {mk_(4,5), mk_(4, 1), mk_(5, 6), mk_(6, 7), mk_(7, 8), mk_(8, 9), mk_(9, 10)};
+A3: BinRel={mk_(1,2), mk_(2,3), mk_(2,4), mk_(3,5), mk_(4,5), mk_(5,6)};
+A4: BinRel={mk_(1,2), mk_(2,3), mk_(2,4), mk_(3,5), mk_(4,6), mk_(6,5), mk_(5,7)};
+
+functions
+
+-- TESTING PROPERTIES OF RELATIONS
+
+IsReflexive:BinRel-> bool
+IsReflexive(R)==
+  forall x in set field(R) &
+         mk_(x,x) in set R; 
+                 
+IsSymmetrical:BinRel-> bool
+IsSymmetrical(R)==
+  forall x,y in set field(R) &
+        ((mk_(x,y) in set R) => (mk_(y,x) in set R)); 
+
+IsTransitive:BinRel-> bool
+IsTransitive(R)==
+  forall x,y,z in set field(R) &
+        (((mk_(x,y) in set R) and (mk_(y,z) in set R))
+        => (mk_(x,z) in set R)); 
+
+IsEquivalence:BinRel-> bool
+IsEquivalence(R)==
+  IsReflexive(R) and 
+  IsSymmetrical(R) and 
+  IsTransitive(R); 
+
+-- OPERATIONS ON RELATIONS
+
+domain:BinRel -> set of nat1
+domain(R) == 
+  { x | mk_(x,-) in set R};
+     
+-- can't be interpreted 'cause of type binds
+domain1:BinRel -> set of nat1
+domain1(R) == 
+  {x|x:nat1 & exists y:nat1 & mk_(x,y) in set R};
+
+range:BinRel -> set of nat1
+range(R) == 
+  { y | mk_(-,y) in set R};
+
+field:BinRel -> set of nat1
+field(R) == 
+  domain(R) union range(R);
+
+inverse_rel:BinRel -> BinRel
+inverse_rel(R) == 
+  {mk_(y,x)|mk_(x,y) in set R};
+-- or x in set domain(R),y in set range(R) & mk_(x,y) in set R};
+
+-- Returns the identity relation of R  
+id_rel: BinRel -> BinRel
+id_rel(R) == 
+  {mk_(x,x)| x in set field(R)};
+
+Composition:BinRel * BinRel -> BinRel
+Composition(R,Q) == 
+  {mk_(a,c)|mk_(a,b1) in set R,
+            mk_(b2,c) in set Q 
+           & b1=b2};
+
+-- raises relation R to the xth power
+power_of:BinRel * nat1 -> BinRel    
+power_of(R,x) == 
+  if (x = 1) 
+  then R
+  else Composition(R, power_of(R, x-1))
+pre x>0;
+ 
+-- Returns  the kth power of R.  
+Power_rel: BinRel * nat -> BinRel
+Power_rel(R,k) == 
+  if k=0 
+  then id_rel(R)
+  elseif k=1 
+  then R
+  else Composition(R,Power_rel(R, k-1));
+
+-- CLOSURES
+
+-- Param1: a family of binary relations on nat1
+-- Returns the reflexive closure of Param1.  
+Reflexive_cl: BinRel -> BinRel
+Reflexive_cl(R) == 
+  R union id_rel(R);
+ 
+-- Param1: a family of binary relations on nat1
+-- Returns the symmetric closure of Param1.  
+Symmetric_cl: BinRel -> BinRel
+Symmetric_cl(R) == 
+  R union inverse_rel(R);
+
+-- Param1: a family of binary relations on nat1
+-- Returns the transitive closure of Param1.  
+Transitive_cl: BinRel -> BinRel
+Transitive_cl(R) == 
+  dunion {Power_rel(R,k) | k in set {1,...,card field(R)}};
+
+-- Param1: a family of binary relations on nat1
+-- Returns the transitive reflexive closure of Param1.  
+TransitiveRefl_cl: BinRel -> BinRel
+TransitiveRefl_cl(R) == 
+  dunion{Power_rel(R,k) | k in set {0,...,card field(R)}};
+
+PowerList: BinRel -> seq of BinRel
+PowerList(R)==
+  BuildList(R, card field(R))
+pre R <> {};
+
+-- BuildList(R,n) == sequence of powers of relation R, of maximal length n, i.e. 
+--  [Power-rel(R,1),...,Power-rel(R,n)], n=card field(R).
+-- Thus RESULT(i)=Power-rel(R,i).
+-- The function is optimized,  avoids deriving each power from scratch
+-- For acyclic R, only nonempty powers of R are computed
+BuildList: BinRel * nat1 -> seq of BinRel
+BuildList(R,n) == 
+  if n=1 
+  then [R]
+  else let M= BuildList(R,n-1), 
+           C=Composition(M(len M),R)
+       in
+         if C={}  --  no new paths 
+         then M 
+         else M ^ [C]
+pre R<>{};
+
+test_PowerList: BinRel -> bool
+test_PowerList(R)== 
+  let L = PowerList(R), 
+      n= card field(R)
+  in 
+    (forall i in set inds L & L(i)=Power_rel(R,i))
+     and (len L<n => Power_rel(R, len L +1) ={})
+pre pre_PowerList(R);
+
+end relations
