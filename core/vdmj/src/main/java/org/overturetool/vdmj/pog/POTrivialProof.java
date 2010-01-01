@@ -25,9 +25,9 @@ package org.overturetool.vdmj.pog;
 
 public enum POTrivialProof
 {
-	FORALL_IN_SET("^( *\\(+forall [^\\n]+\\n)*? *\\(forall (\\w+) in set \\(([^&]+)\\) &(.+?)?\\n *\\2 in set \\3\\)+\\n$", "forall x in set s & x in set s"),
-	IMPLICATION("^( *\\(+forall [^\\n]+\\n?)*? *\\(+(\\w+) in set \\(([^&]+)\\)+ =>\\n *\\2 in set \\3\\)+\\n$", "x in set s => x in set s"),
-	NOT_EQUALITY("^( *\\(+forall [^\\n]+\\n)*? *\\(+not \\((.+?) \\= (.+?)\\) =>\\n *\\2 \\<\\> \\3\\)+\\n$", "not x = y => x <> y");
+	FORALL_IN_SET("^( *\\(+(forall|let)[^\\n]+\\n)*? *\\(forall (\\w+) in set \\(([^&]+)\\) &(.+?)?\\n *\\3 in set \\4\\)+\\n$", "forall x in set s & x in set s"),
+	IMPLICATION("^( *\\(+(forall|let)[^\\n]+\\n?)*? *\\(+(\\w+) in set \\(([^&]+)\\)+ =>\\n *\\3 in set \\4\\)+\\n$", "x in set s => x in set s"),
+	NOT_EQUALITY("^( *\\(+(forall|let)[^\\n]+\\n)*? *\\(+not \\((.+?) \\= (.+?)\\) =>\\n *\\3 \\<\\> \\4\\)+\\n$", "not x = y => x <> y");
 
 	private String pattern;
 	public String name;
