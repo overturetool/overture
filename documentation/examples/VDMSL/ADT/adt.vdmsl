@@ -232,7 +232,6 @@ This invariant states that the sequence of locations must contain {\tt Heaps\_Si
 functions
      
 Heaps_InitSequence: nat1 -> seq of Heaps_Location
-
 Heaps_InitSequence(length) == 
      if length > 1 then
           [mk_Heaps_Location(nil, false)]
@@ -2267,30 +2266,3 @@ TestTrees() ==
 );
 
 \end{vdm_al}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
