@@ -967,39 +967,56 @@ tool, so the minimum command line invocation is as follows:
 $ !\textbf{java -jar vdmj-2.0.0.jar}£
 VDMJ: You must specify either -vdmsl, -vdmpp or -vdmrt
 Usage: VDMJ <-vdmsl | -vdmpp | -vdmrt > [<options>] [<files>]
--vdmsl: parse files as VDM-SL
--vdmpp: parse files as VDM++
--vdmrt: parse files as VICE
--w: suppress warning messages
--q: suppress information messages
--i: run the interpreter if successfully type checked
--p: generate proof obligations and stop
--e <exp>: evaluate <exp> and stop
--c <charset>: select a file charset
--t <charset>: select a console charset
--o <filename>: saved type checked specification
--pre: disable precondition checks
--post: disable postcondition checks
--inv: disable type/state invariant checks
--dtc: disable all dynamic type checking
--log: enable real-time event logging
 \end{lstlisting}
 \lstset{style=mystyle}
 \lstset{language=VDM++}
 
-Notice that the error indicates that the tool must be invoked with either the \texttt{-vdmsl}, \texttt{-vdmpp} or \texttt{-vdmrt}
-option to indicate the VDM dialect and parser required.
+So the first parameter indicates the VDM dialect used and then
+different options can be used at the top level. These are:
 
-Normally, a specification will be loaded by identifying all of the VDM source files to include. At least
+\begin{description}
+\item[\texttt{-w}:] This will suppress all warning messages.
+\item[\texttt{-q}:] This will suppress all information messages.
+\item[\texttt{-i}:] This will initiate the interpreter if the VDM
+  model is successfully type checked, otherwise the errors discovered
+  will be listed.
+\item[\texttt{-p}:] This will generate all proof obligations for the
+  VDM model provided if the model is synatx and type correct and then 
+  stop the process.
+\item[\texttt{-e <exp>}:] This will evaluate the \texttt{<exp>} print
+  the result and stop the process.
+\item[\texttt{-c <charset>}:] This will select a file character set. This is to
+allow a specification written in languages other than the default for your system to be used (see
+section~\ref{sec:international}). 
+\item[\texttt{-t <charset>}:] This will select a console character set.
+\item[\texttt{-o <filename>}:] This will save the internal
+  presentation inside
+  \texttt{vdmj} after sucessful syntax and type checking. Such files are
+effectively libraries, and can be can be re-loaded without the
+parsing/checking overhead. If files are sufficiently large this may be faster.
+\item[\texttt{-pre}:] This will disable all pre-condition checks.
+\item[\texttt{-post}:] This will disable all post-condition checks.
+\item[\texttt{-inv}:] This will disable type/state invariant checks.
+\item[\texttt{-dtc}:] this will disable all dynamic type checking.
+\item[\texttt{-log}:] This will enable real-time event logging. These
+  are useful with the Overture Eclipse GUI, which has a plugin to
+  display timing diagrams (see Section~\ref{sec:showlog}).
+\end{description}
+
+%Notice that the error indicates that the tool must be invoked with either the \texttt{-vdmsl}, \texttt{-vdmpp} or \texttt{-vdmrt}
+%option to indicate the VDM dialect and parser required.
+
+Normally, a VDM model will be loaded by identifying all of the VDM source files to include. At least
 one source file must be specified unless the -i option is used, in which case the interpreter can be
 started with no specification.
 
 If no \texttt{-i} option is given, the tool will parse and type check
-the specification files only, giving any errors and warnings on
-standard output, then stop. Warnings can be suppressed with the \texttt{-w}
-option. The \texttt{-q} option can be used to suppress the various
-information messages printed (this does not include errors and
-warnings).
+the VDM model files only, giving any errors and warnings on
+standard output, then stop. 
+%Warnings can be suppressed with the \texttt{-w}
+%option. The \texttt{-q} option can be used to suppress the various
+%information messages printed (this does not include errors and
+%warnings).
 
 The \texttt{-p} option will run the proof obligation generator and
 then stop, assuming the specification has no type checking errors.
@@ -1007,130 +1024,126 @@ For batch execution, the \texttt{-e} option can be used to identify a
 single expression to evaluate in the context of the loaded
 specification, assuming the specification has no type checking errors.
 
-The \texttt{-c} and \texttt{-t} options allow the file and console character sets to be defined, respectively. This is to
-allow a specification written in languages other than the default for your system to be used (see
-section 3).
+%The \texttt{-c} and \texttt{-t} options allow the file and console character sets to be defined, respectively. 
 
-The \texttt{-o} option allows a parsed and type checked specification to be saved to a file. Such files are
-effectively libraries, and can be can be re-loaded without the parsing/checking overhead.
-The \texttt{-pre}, \texttt{-post}, \texttt{-inv} and \texttt{-dtc} options can be used to disable precondition, postcondition, invariant and
-dynamic type checking, respectively. By default, all these checks are performed.
-The \texttt{-log} option is for use with \texttt{-vdmrt}, and causes real-time events from the model to be written to the
-file name given. These are useful with the Overture Eclipse GUI, which has a plugin to display timing
-diagrams [8].
+%The \texttt{-o} option allows a parsed and type checked specification to be saved to a file.
+%The \texttt{-pre}, \texttt{-post}, \texttt{-inv} and \texttt{-dtc} options can be used to disable precondition, postcondition, invariant and
+%dynamic type checking, respectively. By default, all these checks are performed.
+%The \texttt{-log} option is for use with \texttt{-vdmrt}, and causes real-time events from the model to be written to the
+%file name given. 
 
-If flat.vdmsl contains a simple VDM-SL specification of the factorial
-function, called ``\texttt{fac}'', the following
-illustrate ways to test the specification, with user input shown in bold:
+%If flat.vdmsl contains a simple VDM-SL specification of the factorial
+%function, called ``\texttt{fac}'', the following
+%illustrate ways to test the specification, with user input shown in bold:
 
-\begin{lstlisting}
-functions
-fac: int -> int
-fac(a) == if a < 2 then 1 else a * fac(a-1)
-pre a > 0
-\end{lstlisting}
+%\begin{lstlisting}
+%functions
+%fac: int -> int
+%fac(a) == if a < 2 then 1 else a * fac(a-1)
+%pre a > 0
+%\end{lstlisting}
 \lstset{style=tool,language=}
 
-\begin{lstlisting}
-$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl flat.vdmsl}£
-Parsed 1 module in 0.202 secs. No syntax errors
-Warning 5012: Recursive function has no measure in (flat.vdmsl) at 
-line 3:1
-Type checked 1 module in 0.016 secs. No type errors and 1 warning
-\end{lstlisting}
+%\begin{lstlisting}
+%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl flat.vdmsl}£
+%Parsed 1 module in 0.202 secs. No syntax errors
+%Warning 5012: Recursive function has no measure in (flat.vdmsl) at 
+%line 3:1
+%Type checked 1 module in 0.016 secs. No type errors and 1 warning
+%\end{lstlisting}
 
-\begin{lstlisting}
-$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -q -w flat.vdmsl}£
-<quiet!>
-\end{lstlisting}
+%\begin{lstlisting}
+%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -q -w flat.vdmsl}£
+%<quiet!>
+%\end{lstlisting}
 
-\begin{lstlisting}
-$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -w -e "fac(10)" flat.vdmsl}£
-Parsed 1 module in 0.28 secs. No syntax errors
-Type checked 1 module in 0.031 secs. No type errors, 
-suppressed 1 warning
-Initialized 1 module in 0.031 secs.
-3628800
-Bye
-\end{lstlisting}
+%\begin{lstlisting}
+%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -w -e "fac(10)" flat.vdmsl}£
+%Parsed 1 module in 0.28 secs. No syntax errors
+%Type checked 1 module in 0.031 secs. No type errors, 
+%suppressed 1 warning
+%Initialized 1 module in 0.031 secs.
+%3628800
+%Bye
+%\end{lstlisting}
 
-\begin{lstlisting}
-$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -e "fac(10)" -q -w flat.vdmsl}£
-3628800
-\end{lstlisting}
+%\begin{lstlisting}
+%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -e "fac(10)" -q -w flat.vdmsl}£
+%3628800
+%\end{lstlisting}
 
-\begin{lstlisting}
-$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -i -w flat.vdmsl}£
-Parsed 1 module in 0.202 secs. No syntax errors
-Type checked 1 module in 0.016 secs. No type errors, 
-suppressed 1 warning
-Initialized 1 module in 0.031 secs.
-Interpreter started
-> !\textbf{print fac(10)}£
-= 3628800
-Executed in 0.0 secs.
-> !\textbf{quit}£
-Bye
-\end{lstlisting}
+%\begin{lstlisting}
+%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -i -w flat.vdmsl}£
+%Parsed 1 module in 0.202 secs. No syntax errors
+%Type checked 1 module in 0.016 secs. No type errors, 
+%suppressed 1 warning
+%Initialized 1 module in 0.031 secs.
+%Interpreter started
+%> !\textbf{print fac(10)}£
+%= 3628800
+%Executed in 0.0 secs.
+%> !\textbf{quit}£
+%Bye
+%\end{lstlisting}
 
-\begin{lstlisting}
-$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -p -w flat.vdmsl}£
-Parsed 1 module in 0.218 secs. No syntax errors
-Type checked 1 module in 0.015 secs. No type errors, 
-suppressed 1 warning
-Generated 1 proof obligation:
-Proof Obligation 1:
-fac: function apply obligation in 'DEFAULT1' (flat.vdmsl) at 
-line 4:38
-(forall a:int & (a > 0) =>
-(not (a < 2) =>
-pre_f((a - 1))))
-\end{lstlisting}
+%\begin{lstlisting}
+%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -p -w flat.vdmsl}£
+%Parsed 1 module in 0.218 secs. No syntax errors
+%Type checked 1 module in 0.015 secs. No type errors, 
+%suppressed 1 warning
+%Generated 1 proof obligation:
+%Proof Obligation 1:
+%fac: function apply obligation in 'DEFAULT1' (flat.vdmsl) at 
+%line 4:38
+%(forall a:int & (a > 0) =>
+%(not (a < 2) =>
+%pre_f((a - 1))))
+%\end{lstlisting}
 
-\begin{lstlisting}
-$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -w -e "fac(0)" -w flat.vdmsl}£
-Parsed 1 module in 0.203 secs. No syntax errors
-Type checked 1 module in 0.015 secs. No type errors, 
-suppressed 1 warning
-Initialized 1 module in 0.016 secs.
-Execution: Error 4055: Precondition failure: pre_f in (flat.vdmsl) 
-at line 5:11
-   a = 0
-   fac = (int -> int)
-   pre_fac = (int +> bool)
-In root context of fac(a) in 'DEFAULT1' (console) at line 1:1
-In root context of interpreter in 'DEFAULT1' (flat.vdmsl) at 
-line 3:1
-In root context of global environment
-Bye
-\end{lstlisting}
+%\begin{lstlisting}
+%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -w -e "fac(0)" -w flat.vdmsl}£
+%Parsed 1 module in 0.203 secs. No syntax errors
+%Type checked 1 module in 0.015 secs. No type errors, 
+%suppressed 1 warning
+%Initialized 1 module in 0.016 secs.
+%Execution: Error 4055: Precondition failure: pre_f in (flat.vdmsl) 
+%at line 5:11
+%   a = 0
+%   fac = (int -> int)
+%   pre_fac = (int +> bool)
+%In root context of fac(a) in 'DEFAULT1' (console) at line 1:1
+%In root context of interpreter in 'DEFAULT1' (flat.vdmsl) at 
+%line 3:1
+%In root context of global environment
+%Bye
+%\end{lstlisting}
 
-\begin{lstlisting}
-$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -w -pre -e "fac(0)" 
--w flat.vdmsl}£
-Parsed 1 module in 0.218 secs. No syntax errors
-Type checked 1 module in 0.016 secs. No type errors, 
-suppressed 1 warning
-Initialized 1 module in 0.015 secs.
-1
-Bye
-\end{lstlisting}
+%\begin{lstlisting}
+%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -w -pre -e "fac(0)" 
+%-w flat.vdmsl}£
+%Parsed 1 module in 0.218 secs. No syntax errors
+%Type checked 1 module in 0.016 secs. No type errors, 
+%suppressed 1 warning
+%Initialized 1 module in 0.015 secs.
+%1
+%Bye
+%\end{lstlisting}
 
-\begin{lstlisting}
-$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -w -o flat.lib flat.vdmsl}£
-Parsed 1 module in 0.203 secs. No syntax errors
-Type checked 1 module in 0.016 secs. No type errors, 
-suppressed 1 warning
-Saved 1 module to flat.lib in 0.093 secs.
-\end{lstlisting}
+%\begin{lstlisting}
+%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -w -o flat.lib flat.vdmsl}£
+%Parsed 1 module in 0.203 secs. No syntax errors
+%Type checked 1 module in 0.016 secs. No type errors, 
+%suppressed 1 warning
+%Saved 1 module to flat.lib in 0.093 secs.
+%\end{lstlisting}
 
-\begin{lstlisting}
-$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl flat.lib -e "fac(10)"}£
-Loaded 1 module from flat.lib in 0.187 secs
-Initialized 1 module in 0.0 secs.
-3628800
-Bye
-\end{lstlisting}
+%\begin{lstlisting}
+%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl flat.lib -e "fac(10)"}£
+%Loaded 1 module from flat.lib in 0.187 secs
+%Initialized 1 module in 0.0 secs.
+%3628800
+%Bye
+%\end{lstlisting}
 
 \subsection{Parsing, Type Checking, and Proof Obligations}
 
@@ -1142,8 +1155,9 @@ obligations cannot be generated (though warnings are allowed).
 
 All warnings and error messages are printed on standard output, even
 with the \texttt{-q} option.  A source file may contain VDM embedded
-in a LaTeX file; the markup is ignored by the parser, though reported
-line numbers will be correct.
+in a LaTeX file using \verb|vdm_al| environments (see
+Section~\ref{sec:prettyprint}); the markup is ignored by the parser,
+though reported line numbers will be correct.
 
 The Java program will return with an exit code of zero if the
 specification is clean (ignoring warnings).  Parser or type checking
@@ -1155,9 +1169,10 @@ always exit with a code of zero.
 Assuming a specification does not contain any parse or type checking errors, the interpreter can be
 started by using the \texttt{-i} command line option.
 The interpreter is an interactive command line tool that allows expressions to be evaluated in the
-context of the specification loaded. The interpreter prompt is ``\texttt{>}''. The following illustrates some of the
-interactive interpreter commands (explanation below. The shmem source
-model is in Appendix A):
+context of the specification loaded. One of the standard projects that
+can be obtained as a part of the Overture distribution such as the
+\texttt{shmem.vdmsl} example project. The interpreter could for
+example be started as:
 
 \begin{lstlisting}
 $ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -i shmem.vdmsl}£
@@ -1166,166 +1181,261 @@ Type checked in 0.047 secs. No type errors
 Interpreter started
 \end{lstlisting}
 
-\begin{lstlisting}
-> !\textbf{help}£
-modules - list the loaded module names
-default <module> - set the default module name
-state - show the default module state
-print <expression> - evaluate expression
-assert <file> - run assertions from a file
-init - re-initialize the global environment
-env - list the global symbols in the default environment
-pog - generate a list of proof obligations
-break [<file>:]<line#> [<condition>] - create a breakpoint
-break <function/operation> [<condition>] - create a breakpoint
-trace [<file>:]<line#> [<exp>] - create a tracepoint
-trace <function/operation> [<exp>] - create a tracepoint
-remove <breakpoint#> - remove a trace/breakpoint
-list - list breakpoints
-coverage [<file>|clear] - display/clear file line coverage
-latex|latexdoc [<files>] - generate LaTeX line coverage files
-files - list files in the current specification
-reload - reload the current specification files
-load <files> - replace current loaded specification files
-quit - leave the interpreter
-\end{lstlisting}
+The interpreter prompt is ``\texttt{>}''. The 
+interactive interpreter commands are: 
+% (explanation below. The shmem source
+%model is in Appendix A):
 
-\begin{lstlisting}
-> !\textbf{modules}£
-M (default)
-\end{lstlisting}
+\begin{description}
+\item[\texttt{modules}:] This command list the loaded module names in
+  a VDM-SL setting. In case of a flat VDM-SL model the name
+  \texttt{DEFAULT} is used. The default module will be indicated in
+  the list displayed.
+\item[\texttt{classes}:] This command list the loaded class names in
+  both a VDM++ and a VDM-RT setting. The default class will be indicated in
+  the list displayed.
+\item[\texttt{default <module/class>}:] This command set the default
+  module/class name as the prime scope for which the lookup of
+  identifiers appear (i.e.\ names in the default module
+do not need to be qualified (so you can say ``\texttt{print xyz}'' rather than
+``\texttt{print M`xyz}'')).
+\item[\texttt{create <id> := <exp>}:] This command is only available
+  for the VDM++ and VDM-RT dialects. It creates a named variable that
+  can be used subsequently in the interpreter. It is mostly used for
+  keeping track of global instances of classes.
+\item[\texttt{log [<file> | off]}:] This command can only be used in
+  VDM-RT models and it will log events to the file indicated. By
+  default, event logging is turned off. But logging can be enabled to
+  the console by using log with no arguments, or to a file using log
+  <filename>. Logging can subsequently be turned off again by using
+  log off. The events logged include requests, activations and
+  completions of all functions and operations as well as all creation
+  of instances of classes, creation of CPUs and BUSses and deployment
+  to specific CPUs and finally swapping in an out of threads.
+\item[\texttt{state}:] This command can only be used for the VDM-SL
+  dialect and it shows the default module
+  state. The value of the state can be changed by operations called.
+\item[\texttt{print <expression>}:] This command evaluate the
+  expression provided in the current context.
+\item[\texttt{assert <file>}:] This command run assertions from the
+  file provided. The assertions in the file must all be Boolean
+  expressions, one per line. Then this command execute each of them in
+  turn, raising an error for any assertion which is false. 
+\item[\texttt{init}:] This command re-initialize the global
+  environment. Thus all state components will be initialised to their
+  initial value again.
+\item[\texttt{env}:] This command list the value of all global symbols
+  in the default environment. This will show the signatures for all
+  functions and operations as well as the values assigned to
+  identifiers from value definitions and state definitions (in VDM++
+  terminology instance variables). Note that it includes invariant,
+  initialization and pre/postcondition functions. In the VDM++ and
+  VDM-RT dialects the identifiers created using the \texttt{create}
+  command will also be included.
+\item[\texttt{pog}:] This command generate a list of all proof
+  obligations for the VDM model that is included.
+\item[\texttt{break [<file>:]<line\#> [<condition>]}:] This command
+  create a breakpoint at a specific file and line and optionally make
+  it a conditional breakpoint. 
+\item[\texttt{break <function/operation> [<condition>]}:] This command
+  create a breakpoint in a function or an operation and optionally make
+  it a conditional breakpoint. 
+\item[\texttt{trace [<file>:]<line\#> [<exp>]}:] This command create a
+  tracepoint \fbox{PGL: what is a tracepoint?}
+\item[\texttt{trace <function/operation> [<exp>]}:] This command
+  create a tracepoint. 
+\item[\texttt{remove <breakpoint\#>}:] This command remove a
+  trace/breakpoint. 
+\item[\texttt{list}:] this command provide a list of all breakpoints.
+\item[\texttt{coverage [<file>|clear]}:] This command display/clear
+  file line test coverage. The coverage command displays the source
+  code of the loaded VDM model (by default, all source files are
+  listed), with ``+'' and ``-'' signs in the left hand column indicating
+  lines which have been executed or not, respectively. Finally, the
+  percentage coverage of the source file is displayed.
+\item[\texttt{latex|latexdoc [<files>]}:] This command generate LaTeX
+  line coverage files. These write \LaTeX\ files with parts of the
+  specification highlighted where they have not been executed. The
+  \LaTeX\ output also contains a table of percentage cover by
+  module/class and the number of times functions and operations were
+  hit during the execution. The \texttt{latexdoc} command is the same,
+  except that output files are wrapped in LaTeX document headers. The
+  output files are written to the same directory as source files, one
+  per source file, with the extension \texttt{.tex}. Coverage
+  information is reset when a specification is loaded, or when the
+  command coverage clear is executed, otherwise coverage is
+  cumulative. If several files are loaded, the coverage for just one
+  source file can be listed with \texttt{coverage <file>} or
+  \texttt{latex <file>}. 
+\item[\texttt{files}:] This command list all files in the current VDM
+  model. 
+\item[\texttt{reload}:] This command will re-parse and type check the
+  VDM model files currently loaded. Note that if there are any errors
+  in the parse or type check of the files, the interpreter will exit
+  after reload.
+\item[\texttt{load <files>}:] This command replace current loaded VDM
+  model files. Note that if there are any errors in the parse or type
+  check of the files, the interpreter will exit after load.
+\item[\texttt{quit}:] This command leave the interpreter.
+\end{description}
 
-\begin{lstlisting}
-> !\textbf{state}£
-M`Q4 = [mk_M(<FREE>, 0, 9999)]
-M`rseed = 87654321
-M`Memory = mk_Memory(87654321, [mk_M(<FREE>, 0, 9999)],
-                               [mk_M(<FREE>, 0, 9999)])
-M`Q3 = [mk_M(<FREE>, 0, 9999)]
-\end{lstlisting}
+%\begin{lstlisting}
+%> !\textbf{modules}£
+%M (default)
+%\end{lstlisting}
 
-\begin{lstlisting}
-> !\textbf{print rand(100)}£
-= 71
-Executed in 0.0 secs.
-\end{lstlisting}
+%\begin{lstlisting}
+%> !\textbf{state}£
+%M`Q4 = [mk_M(<FREE>, 0, 9999)]
+%M`rseed = 87654321
+%M`Memory = mk_Memory(87654321, [mk_M(<FREE>, 0, 9999)],
+%                               [mk_M(<FREE>, 0, 9999)])
+%M`Q3 = [mk_M(<FREE>, 0, 9999)]
+%\end{lstlisting}
 
-\begin{lstlisting}
-> !\textbf{print rand(100)}£
-= 44
-Executed in 0.0 secs.
-\end{lstlisting}
+%\begin{lstlisting}
+%> !\textbf{print rand(100)}£
+%= 71
+%Executed in 0.0 secs.
+%\end{lstlisting}
 
-\begin{lstlisting}
-> !\textbf{state}£
-M`Q4 = [mk_M(<FREE>, 0, 9999)]
-M`rseed = 566044643
-M`Memory = mk_Memory(566044643, [mk_M(<FREE>, 0, 9999)], 
-                                [mk_M(<FREE>, 0, 9999)])
-M`Q3 = [mk_M(<FREE>, 0, 9999)]
-\end{lstlisting}
+%\begin{lstlisting}
+%> !\textbf{print rand(100)}£
+%= 44
+%Executed in 0.0 secs.
+%\end{lstlisting}
 
-\begin{lstlisting}
-> !\textbf{init}£
-Global context initialized
-\end{lstlisting}
+%\begin{lstlisting}
+%> !\textbf{state}£
+%M`Q4 = [mk_M(<FREE>, 0, 9999)]
+%M`rseed = 566044643
+%M`Memory = mk_Memory(566044643, [mk_M(<FREE>, 0, 9999)], 
+%                                [mk_M(<FREE>, 0, 9999)])
+%M`Q3 = [mk_M(<FREE>, 0, 9999)]
+%\end{lstlisting}
 
-\begin{lstlisting}
-> !\textbf{state}£
-M`Q4 = [mk_M(<FREE>, 0, 9999)]
-M`rseed = 87654321
-M`Memory = mk_Memory(87654321, [mk_M(<FREE>, 0, 9999)],
-                               [mk_M(<FREE>, 0, 9999)])
-M`Q3 = [mk_M(<FREE>, 0, 9999)]
-\end{lstlisting}
+%\begin{lstlisting}
+%> !\textbf{init}£
+%Global context initialized
+%\end{lstlisting}
 
-\begin{lstlisting}
-> !\textbf{print rand(100)}£
-= 71
-Executed in 0.0 secs.
-\end{lstlisting}
+%\begin{lstlisting}
+%> !\textbf{state}£
+%M`Q4 = [mk_M(<FREE>, 0, 9999)]
+%M`rseed = 87654321
+%M`Memory = mk_Memory(87654321, [mk_M(<FREE>, 0, 9999)],
+%                               [mk_M(<FREE>, 0, 9999)])
+%M`Q3 = [mk_M(<FREE>, 0, 9999)]
+%\end{lstlisting}
 
-\begin{lstlisting}
-> !\textbf{print rand(100)}£
-= 44
-Executed in 0.0 secs.
-\end{lstlisting}
+%\begin{lstlisting}
+%> !\textbf{print rand(100)}£
+%= 71
+%Executed in 0.0 secs.
+%\end{lstlisting}
 
-\begin{lstlisting}
-> !\textbf{env}£
-M`fragments = (M`Quadrant -> nat)
-M`combine = (M`Quadrant -> M`Quadrant)
-M`tryBest = (nat ==> nat)
-M`seed = (nat1 ==> ())
-M`reset = (() ==> ())
-M`bestfit = (nat1 * M`Quadrant -> nat1)
-M`add = (nat1 * nat1 * M`Quadrant -> M`Quadrant)
-M`firstFit = (nat1 ==> bool)
-M`rand = (nat1 ==> nat1)
-M`tryFirst = (nat ==> nat)
-M`main = (nat1 * nat1 ==> seq of (<SAME> | <BEST> | <FIRST>))
-M`MAXMEM = 10000
-M`delete = (M`M * M`Quadrant -> M`Quadrant)
-M`inv_M = (M`M +> bool)
-M`CHUNK = 100
-M`bestFit = (nat1 ==> bool)
-M`least = (nat1 * nat1 -> nat1)
-M`fits = (nat1 * M`Quadrant -> nat1)
-M`init_Memory = (M`Memory +> bool)
-M`pre_add = (nat1 * nat1 * M`Quadrant +> bool)
-\end{lstlisting}
+%\begin{lstlisting}
+%> !\textbf{print rand(100)}£
+%= 44
+%Executed in 0.0 secs.
+%\end{lstlisting}
 
-\begin{lstlisting}
-> !\textbf{pog}£
-Generated 36 proof obligations:
-Proof Obligation 1:
-M`fits: cases exhaustive obligation in 'M' (shmem.vdm) at 
-line 40:5
-(forall size:nat1, Q:Quadrant &
-Q = [] or Q = [h] ^ tail)
-...
-Proof Obligation 35:
-M`tryBest: sequence apply obligation in 'M' (shmem.vdm) at 
-line 176:27
-rand((len Q4)) in set inds Q4
-Proof Obligation 36:
-M`tryBest: subtype obligation in 'M' (shmem.vdm) at line 166:1
-RESULT >= 0
-\end{lstlisting}
+%\begin{lstlisting}
+%> !\textbf{env}£
+%M`fragments = (M`Quadrant -> nat)
+%M`combine = (M`Quadrant -> M`Quadrant)
+%M`tryBest = (nat ==> nat)
+%M`seed = (nat1 ==> ())
+%M`reset = (() ==> ())
+%M`bestfit = (nat1 * M`Quadrant -> nat1)
+%M`add = (nat1 * nat1 * M`Quadrant -> M`Quadrant)
+%M`firstFit = (nat1 ==> bool)
+%M`rand = (nat1 ==> nat1)
+%M`tryFirst = (nat ==> nat)
+%M`main = (nat1 * nat1 ==> seq of (<SAME> | <BEST> | <FIRST>))
+%M`MAXMEM = 10000
+%M`delete = (M`M * M`Quadrant -> M`Quadrant)
+%M`inv_M = (M`M +> bool)
+%M`CHUNK = 100
+%M`bestFit = (nat1 ==> bool)
+%M`least = (nat1 * nat1 -> nat1)
+%M`fits = (nat1 * M`Quadrant -> nat1)
+%M`init_Memory = (M`Memory +> bool)
+%M`pre_add = (nat1 * nat1 * M`Quadrant +> bool)
+%\end{lstlisting}
 
-This example shows a VDM-SL specification called \texttt{shmem.vdmsl} being
-loaded. The help command lists the interpreter commands
-available. Note that several of them regard the setting of
-breakpoints, which is covered in the next section.
+%\begin{lstlisting}
+%> !\textbf{pog}£
+%Generated 36 proof obligations:
+%Proof Obligation 1:
+%M`fits: cases exhaustive obligation in 'M' (shmem.vdm) at 
+%line 40:5
+%(forall size:nat1, Q:Quadrant &
+%Q = [] or Q = [h] ^ tail)
+%...
+%Proof Obligation 35:
+%M`tryBest: sequence apply obligation in 'M' (shmem.vdm) at 
+%line 176:27
+%rand((len Q4)) in set inds Q4
+%Proof Obligation 36:
+%M`tryBest: subtype obligation in 'M' (shmem.vdm) at line 166:1
+%RESULT >= 0
+%\end{lstlisting}
 
-The modules command lists the names of the modules loaded from the
-specification. In this example there is only one, called ``M''. One of
-the modules is identified as the default; names in the default module
-do not need to be qualified (so you can say print xyz rather than
-print M`xyz). The default module can be changed with the default
-command.
+%This example shows a VDM-SL specification called \texttt{shmem.vdmsl} being
+%loaded. The help command lists the interpreter commands
+%available. Note that several of them regard the setting of
+%breakpoints, which is covered in the next section.
 
-The state command lists the content of the default module's
-state. This can be changed by operations, as can be seen by the two
-calls to rand which change the rseed value in the state (a
-pseudo-random number generator). The {\ttfamily{\bf init}} command will re-initialize
-the state to its original value, illustrated by the fact that two
-subsequent calls to rand return the same results as the first two did.
+%The modules command lists the names of the modules loaded from the
+%specification. In this example there is only one, called ``M''. One of
+%the modules is identified as the default; names in the default module
+%do not need to be qualified (so you can say print xyz rather than
+%print M`xyz). The default module can be changed with the default
+%command.
 
-The {\ttfamily{\bf print}}\index{print} command can be used to
-evaluate any expression.  The {\ttfamily{\bf env}}\index{env} command
-lists all the values in the global environment of the default
-module. This shows the functions, operations and constant values
-defined in the module. Note that it includes invariant, initialization
-and pre/postcondition functions.  The {\ttfamily{\bf pog}} command (proof obligation
-generator) generates a list of proof obligations for the
-specification.
+%The state command lists the content of the default module's
+%state. This can be changed by operations, as can be seen by the two
+%calls to rand which change the rseed value in the state (a
+%pseudo-random number generator). The {\ttfamily{\bf init}} command will re-initialize
+%the state to its original value, illustrated by the fact that two
+%subsequent calls to rand return the same results as the first two did.
 
-The assert command\index{assert} (illustrated below) can take a list of assertions
-from a file, and execute each of them in turn, raising an error for
-any assertion which is false. The assertions in the file must be
-simple boolean expressions, one per line:
+%The {\ttfamily{\bf print}}\index{print} command can be used to
+%evaluate any expression.  The {\ttfamily{\bf env}}\index{env} command
+%lists all the values in the global environment of the default
+%module. This shows the functions, operations and constant values
+%defined in the module. Note that it includes invariant, initialization
+%and pre/postcondition functions.  The {\ttfamily{\bf pog}} command (proof obligation
+%generator) generates a list of proof obligations for the
+%specification.
 
+%The assert command\index{assert} (illustrated below) can take a list of assertions
+%from a file, and execute each of them in turn, raising an error for
+%any assertion which is false. The assertions in the file must be
+%simple boolean expressions, one per line:
+
+When the interpretation of a VDM model is stopped because of a
+breakpoint there are additional commands that can be used. These are:
+
+\begin{description}
+\item[\texttt{step}:] This command step until the
+  expression/statement on a new line.
+\item[\texttt{next}:] This command step over function or operation
+  calls and go to the next line with an expression/statement.
+\item[\texttt{out}:] this command run to the return of the current
+  function or operation. 
+\item[\texttt{continue}:] this command resume execution and continues
+  until the next breakpoint or completion of the thread that is being
+  debugged. 
+\item[\texttt{stack}:] this command displays the current stack frame
+  context (i.e.\ the call stack).
+\item[\texttt{up}:] This command moves the stack frame context up one frame.
+\item[\texttt{down}:] This command moves the stack frame context down one frame.
+\item[\texttt{source}:] This command lists VDM source around the
+  current breakpoint. 
+\item[\texttt{stop}:] This command terminate the execution immediately.
+\end{description}
 
 \appendix
 
