@@ -51,10 +51,6 @@ functions
 static  QualificationOK: set of Expert * Qualification -> bool
   QualificationOK(exs,reqquali) ==
     exists ex in set exs & reqquali in set ex.quali;
-
-Higher: (int * int) -> (int * bool) -> int
-Higher(mk_(a,b))(mk_(c,t)) ==
-  a+ b + if t then c else 0;
   
 end alarm
 
