@@ -1006,8 +1006,8 @@ be seen in Figure~\ref{fig:userguide:ExecutionCPU}.\index{single CPU overview}
 
 \section{A Command-Line Interface to VDMJ}\label{sec:commandline}
 
-A central part of the Overture tool is gathered in a java application
-called VDMJ that enables a command-line interface that may be valuable
+A central part of the Overture tool is a Java application
+called VDMJ that provides a command-line interface that may be valuable
 for users outside the Eclipse interface of Overture.
 
 \subsection{Starting VDMJ}
@@ -1020,39 +1020,40 @@ tool, so the minimum command line invocation is as follows:
 \begin{lstlisting}
 $ !\textbf{java -jar vdmj-2.0.0.jar}£
 VDMJ: You must specify either -vdmsl, -vdmpp or -vdmrt
-Usage: VDMJ <-vdmsl | -vdmpp | -vdmrt > [<options>] [<files>]
+Usage: VDMJ <-vdmsl | -vdmpp | -vdmrt> [<options>] [<files>]
 \end{lstlisting}
 \lstset{style=mystyle}
 \lstset{language=VDM++}
 
 So the first parameter indicates the VDM dialect used and then
-different options can be used at the top level. These are:
+various extra options can be used. These are:
 
 \begin{description}
 \item[\texttt{-w}:] This will suppress all warning messages.
-\item[\texttt{-q}:] This will suppress all information messages.
-\item[\texttt{-i}:] This will initiate the interpreter if the VDM
-  model is successfully type checked, otherwise the errors discovered
+\item[\texttt{-q}:] This will suppress all information messages, such as
+ the number of source files processed etc.
+\item[\texttt{-i}:] This will start the interpreter if the VDM
+  model is successfully parsed and type checked, otherwise the errors discovered
   will be listed.
 \item[\texttt{-p}:] This will generate all proof obligations for the
-  VDM model provided if the model is synatx and type correct and then 
-  stop the process.
+  VDM model (if it is syntax and type correct) and then 
+  stop.
 \item[\texttt{-e <exp>}:] This will evaluate the \texttt{<exp>} print
-  the result and stop the process.
+  the result and stop.
 \item[\texttt{-c <charset>}:] This will select a file character set. This is to
-allow a specification written in languages other than the default for your system to be used (see
-section~\ref{sec:international}). 
-\item[\texttt{-t <charset>}:] This will select a console character set.
+allow a specification written in languages other than the default for your system
+to be used (see section~\ref{sec:international}). 
+\item[\texttt{-t <charset>}:] This will select a console character set. The output
+terminal can use a different character set to the specification files.
 \item[\texttt{-o <filename>}:] This will save the internal
-  presentation inside
-  \texttt{vdmj} after sucessful syntax and type checking. Such files are
+  representation of a parsed and type checked specification. Such files are
 effectively libraries, and can be can be re-loaded without the
-parsing/checking overhead. If files are sufficiently large this may be faster.
+parsing/checking overhead. If files are sufficiently large, this may be faster.
 \item[\texttt{-pre}:] This will disable all pre-condition checks.
 \item[\texttt{-post}:] This will disable all post-condition checks.
 \item[\texttt{-inv}:] This will disable type/state invariant checks.
 \item[\texttt{-dtc}:] this will disable all dynamic type checking.
-\item[\texttt{-log}:] This will enable real-time event logging. These
+\item[\texttt{-log}:] This will enable VDM-RT real-time event logging. These
   are useful with the Overture Eclipse GUI, which has a plugin to
   display timing diagrams (see Section~\ref{sec:showlog}).
 \end{description}
@@ -1062,10 +1063,12 @@ parsing/checking overhead. If files are sufficiently large this may be faster.
 
 Normally, a VDM model will be loaded by identifying all of the VDM source files to include. At least
 one source file must be specified unless the -i option is used, in which case the interpreter can be
-started with no specification.
+started with no specification. If a directory is specified rather than a file, then VDMJ will load
+all files in that directory with a suffix that matches the dialect (eg. *.vdmpp files for VDM++).
+Files and directory arguments can be mixed.
 
-If no \texttt{-i} option is given, the tool will parse and type check
-the VDM model files only, giving any errors and warnings on
+If no \texttt{-i} option is given, the tool will only parse and type check
+the VDM model files, giving any errors and warnings on
 standard output, then stop. 
 %Warnings can be suppressed with the \texttt{-w}
 %option. The \texttt{-q} option can be used to suppress the various
@@ -1074,6 +1077,7 @@ standard output, then stop.
 
 The \texttt{-p} option will run the proof obligation generator and
 then stop, assuming the specification has no type checking errors.
+
 For batch execution, the \texttt{-e} option can be used to identify a
 single expression to evaluate in the context of the loaded
 specification, assuming the specification has no type checking errors.
@@ -1213,7 +1217,7 @@ in a LaTeX file using \verb|vdm_al| environments (see
 Section~\ref{sec:prettyprint}); the markup is ignored by the parser,
 though reported line numbers will be correct.
 
-The Java program will return with an exit code of zero if the
+The Java process will return with an exit code of zero if the
 specification is clean (ignoring warnings).  Parser or type checking
 errors result in an exit code of 1. The interpreter and PO generator
 always exit with a code of zero.
@@ -1223,10 +1227,9 @@ always exit with a code of zero.
 Assuming a specification does not contain any parse or type checking errors, the interpreter can be
 started by using the \texttt{-i} command line option.
 The interpreter is an interactive command line tool that allows expressions to be evaluated in the
-context of the specification loaded. One of the standard projects that
-can be obtained as a part of the Overture distribution such as the
-\texttt{shmem.vdmsl} example project. The interpreter could for
-example be started as:
+context of the specification loaded. For example, to load and interpret a
+VDM-SL specification from a single file called \texttt{shmem.vdmsl},
+the following options would be used:
 
 \begin{lstlisting}
 $ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -i shmem.vdmsl}£
@@ -1236,117 +1239,115 @@ Interpreter started
 \end{lstlisting}
 
 The interpreter prompt is ``\texttt{>}''. The 
-interactive interpreter commands are (those commands that have
-abbreviated versions are provided in brackets afterwards): 
+interactive interpreter commands are as follows (abbreviated forms are
+permitted for some, shown in square brackets): 
 % (explanation below. The shmem source
 %model is in Appendix A):
 
 \begin{description}
-\item[\texttt{modules}:] This command list the loaded module names in
-  a VDM-SL setting. In case of a flat VDM-SL model the name
+\item[\texttt{modules}:] This command lists the loaded module names in
+  a VDM-SL specification. In case of a flat VDM-SL model the name
   \texttt{DEFAULT} is used. The default module will be indicated in
   the list displayed.\index{modules}\index{command!modules}
-\item[\texttt{classes}:] This command list the loaded class names in
-  both a VDM++ and a VDM-RT setting. The default class will be indicated in
+\item[\texttt{classes}:] This command lists the loaded class names in
+  both VDM++ and VDM-RT specifications. The default class will be indicated in
   the list displayed.\index{classes}\index{command!classes}
-\item[\texttt{default <module/class>}:] This command set the default
+\item[\texttt{default <module/class>}:] This command sets the default
   module/class name as the prime scope for which the lookup of
   identifiers appear (i.e.\ names in the default module
-do not need to be qualified (so you can say ``\texttt{print xyz}'' rather than
-``\texttt{print M`xyz}'')).\index{default}\index{command!default}
+do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
+``\texttt{print M`xyz}'').\index{default}\index{command!default}
 \item[\texttt{create <id> := <exp>}:] This command is only available
-  for the VDM++ and VDM-RT dialects. It creates a named variable that
+  for the VDM++ and VDM-RT dialects. It creates a global variable that
   can be used subsequently in the interpreter. It is mostly used for
-  keeping track of global instances of
-  classes.\index{create}\index{command!create} 
+  creating global instances of classes.\index{create}\index{command!create} 
 \item[\texttt{log [<file> | off]}:] This command can only be used in
-  VDM-RT models and it will log events to the file indicated. By
-  default, event logging is turned off. But logging can be enabled to
-  the console by using log with no arguments, or to a file using log
-  <filename>. Logging can subsequently be turned off again by using
-  log off. The events logged include requests, activations and
-  completions of all functions and operations as well as all creation
-  of instances of classes, creation of CPUs and BUSses and deployment
-  to specific CPUs and finally swapping in an out of
-  threads.\index{log}\index{command!log}  
-\item[\texttt{threads}:] This command can only be used for the VDM+p+
-  and VDM-RT dialects and it lists the active threads with status
+  VDM-RT models. It starts to log real-time events to the file indicated. By
+  default, event logging is turned off, but logging can be enabled to
+  the console by using log with no arguments, or to a file using \\texttt{log
+  <filename>}. Logging can subsequently be turned off again by using
+  \\texttt{log off}. The events logged include requests, activations and
+  completions of all functions and operations, as well as all creation
+  of instances of classes, creation of CPUs and BUSses, deployment of objects
+  to specific CPUs and the swapping in an out of threads.\index{log}\index{command!log}  
+\item[\texttt{threads}:] This command can only be used for the VDM++
+  and VDM-RT dialects. It lists the active threads with status
   information for each thread.\index{threads}\index{command!threads} 
 \item[\texttt{state}:] This command can only be used for the VDM-SL
-  dialect and it shows the default
-  module state.\index{state}\index{command!state}  
+  dialect and shows the default module state.\index{state}\index{command!state}  
   The value of the state can be changed by operations called.
-\item[\texttt{print <expression> (p)}:] This command evaluate the
+\item[\texttt{[p]rint <expression>}:] This command evaluates the
   expression provided in the current
-  context.\index{print}\index{command!print} Note that in case traces
-  are defined in the VDM model using the syntax from
+  context.\index{print}\index{command!print} Note that if combinatorial traces
+  are defined in the model using the syntax from
   Section~\ref{sec:syntax} then the \texttt{print} command can also be
-  used for such a trace name. This will carry out the combinatorial
-  testing expanding all the regular expressions and execute all of
-  these. \index{combinatorial testing}   
-\item[\texttt{assert <file>}:] This command run assertions from the
-  file provided. The assertions in the file must all be Boolean
-  expressions, one per line. Then this command execute each of them in
-  turn, raising an error for any assertion which is
-  false.\index{assert}\index{command!assert}  
-\item[\texttt{init}:] This command re-initialize the global
+  used to evaluate a named trace. This will carry out the combinatorial
+  test by expanding all the regular expressions and executing the resulting
+  operation sequences. \index{combinatorial testing}   
+\item[\texttt{assert <file>}:] This command runs assertions from the
+  file provided. The assertions in the file must be Boolean
+  expressions, one per line. This command evaluates each assertion in
+  turn, raising an error for any which is false.\index{assert}\index{command!assert}  
+\item[\texttt{init}:] This command re-initializes the global
   environment. Thus all state components will be initialised to their
-  initial value again.\index{init}\index{command!init} 
-\item[\texttt{env}:] This command list the value of all global symbols
+  initial value again, created variables are lost and code coverage
+  is reset.\index{init}\index{command!init} 
+\item[\texttt{env}:] This command lists the value of all global symbols
   in the default environment. This will show the signatures for all
   functions and operations as well as the values assigned to
-  identifiers from value definitions and state definitions (in VDM++
-  terminology instance variables). Note that it includes invariant,
+  identifiers from value definitions and global state definitions (in VDM++
+  terminology, public static instance variables). Note that this includes invariant,
   initialization and pre/postcondition functions. In the VDM++ and
   VDM-RT dialects the identifiers created using the \texttt{create}
   command will also be included.\index{env}\index{command!env} 
-\item[\texttt{pog}:] This command generate a list of all proof
+\item[\texttt{pog}:] This command generates a list of all proof
   obligations for the VDM model that is
-  included.\index{pog}\index{command!pog}  
+  loaded.\index{pog}\index{command!pog}  
 \item[\texttt{break [<file>:]<line\#> [<condition>]}:] This command
-  create a breakpoint at a specific file and line and optionally make
+  create a breakpoint at a specific file and line and optionally makes
   it a conditional breakpoint.\index{break}\index{command!break}  
 \item[\texttt{break <function/operation> [<condition>]}:] This command
-  create a breakpoint in a function or an operation and optionally make
-  it a conditional breakpoint. 
-\item[\texttt{trace [<file>:]<line\#> [<exp>]}:] This command create a
+  creates a breakpoint at the start of a function or an operation and
+  optionally makes it a conditional breakpoint. 
+\item[\texttt{trace [<file>:]<line\#> [<exp>]}:] This command creates a
   tracepoint for a specific line inside one of the source files. A
   tracepoint is similar to a breakpoint but with an implcit continue
-  after it, so essentially this creates a trace of the values produced
-  at a specific point in the console. \index{trace}\index{command!trace} 
+  after it. This creates a trace of the expression given
+  whenever the tracepoint is reached. \index{trace}\index{command!trace} 
 \item[\texttt{trace <function/operation> [<exp>]}:] This command
-  create a tracepoint. See \texttt{trace} above for an explanation of
-  a trace point.
-\item[\texttt{remove <breakpoint\#>}:] This command remove a
-  trace/breakpoint referring to its number (can be seen by the
+  create a tracepoint at the start of a function or operation.
+  See \texttt{trace} above for an explanation of tracepoints.
+\item[\texttt{remove <breakpoint\#>}:] This command removes a
+  trace/breakpoint by referring to its number (given by the
   \texttt{list} command). \index{remove}\index{command!remove} 
-\item[\texttt{list}:] This command provide a list of all breakpoints
-  in the order in which they have been
-  created.\index{list}\index{command!list}  
-\item[\texttt{coverage [<file>|clear]}:] This command display/clear
+\item[\texttt{list}:] This command provides a list of all current
+  trace/breakpoints by number.\index{list}\index{command!list}  
+\item[\texttt{coverage [<file>|clear]}:] This command displays/clears
   file line test coverage. The coverage command displays the source
   code of the loaded VDM model (by default, all source files are
   listed), with ``+'' and ``-'' signs in the left hand column indicating
   lines which have been executed or not, respectively. Finally, the
-  percentage coverage of the source file is
+  percentage coverage of each source file is
   displayed.\index{coverage}\index{command!coverage}  
-\item[\texttt{latex|latexdoc [<files>]}:] This command generate LaTeX
-  line coverage files. These write \LaTeX\ files with parts of the
+\item[\texttt{latex|latexdoc [<files>]}:] This command generates LaTeX
+  line coverage files. These are \LaTeX\ versions of the source files
+  with parts of the
   specification highlighted where they have not been executed. The
   \LaTeX\ output also contains a table of percentage cover by
   module/class and the number of times functions and operations were
   hit during the execution. The \texttt{latexdoc} command is the same,
   except that output files are wrapped in LaTeX document headers. The
-  output files are written to the same directory as source files, one
+  output files are written to the same directory as the source files, one
   per source file, with the extension \texttt{.tex}. Coverage
-  information is reset when a specification is loaded, or when the
-  command coverage clear is executed, otherwise coverage is
+  information is reset when a specification is loaded, when an \texttt{init}
+  command is given, or when the
+  command \\texttt{coverage clear} is executed, otherwise coverage is
   cumulative. If several files are loaded, the coverage for just one
   source file can be listed with \texttt{coverage <file>} or
   \texttt{latex <file>}. \index{latex}\index{command!latex} 
   \index{latexdoc}\index{command!latexdoc} 
-\item[\texttt{files}:] This command list all source files in the current VDM
-  model. \index{files}\index{command!files} 
+\item[\texttt{files}:] This command list all source files loaded.
+  \index{files}\index{command!files} 
 \item[\texttt{reload}:] This command will re-parse and type check the
   VDM model files currently loaded. Note that if there are any errors
   in the parse or type check of the files, the interpreter will exit
@@ -1355,7 +1356,7 @@ do not need to be qualified (so you can say ``\texttt{print xyz}'' rather than
   model files. Note that if there are any errors in the parse or type
   check of the files, the interpreter will exit after
   load.\index{load}\index{command!load}  
-\item[\texttt{quit (q)}:] This command leave the
+\item[\texttt{[q]uit}:] This command leave the
   interpreter.\index{quit}\index{command!quit}  
 \end{description}
 
@@ -1495,24 +1496,23 @@ do not need to be qualified (so you can say ``\texttt{print xyz}'' rather than
 %any assertion which is false. The assertions in the file must be
 %simple boolean expressions, one per line:
 
-When the interpretation of a VDM model is stopped because of a
-breakpoint there are additional commands that can be used. These are:
+When the interpretation of a VDM model is stopped at a
+breakpoint, there are additional commands that can be used. These are:
 
 \begin{description}
-\item[\texttt{step}:] This command step until the
-  expression/statement on a new line.\index{step}\index{command!step} 
-\item[\texttt{next (n)}:] This command step over function or operation
-  calls and go to the next line with an
-  expression/statement.\index{next}\index{command!next}  
-\item[\texttt{out}:] This command run to the return of the current
+\item[\texttt{[s]tep}:] This command steps forward until the
+  current expression/statement is on a new line.\index{step}\index{command!step} 
+\item[\texttt{[n]ext}:] This command is similar to \\texttt{step} except
+ function and operation calls are stepped over.\index{next}\index{command!next}  
+\item[\texttt{[o]ut}:] This command runs to the return of the current
   function or operation. \index{out}\index{command!out} 
-\item[\texttt{continue (c)}:] This command resume execution and continues
+\item[\texttt{[c]ontinue}:] This command resumes execution and continues
   until the next breakpoint or completion of the thread that is being
-  debugged. \index{continue}\index{command!continue} 
+  debugged.\index{continue}\index{command!continue} 
 \item[\texttt{stack}:] This command displays the current stack frame
   context (i.e.\ the call stack).\index{stack}\index{command!stack} 
 \item[\texttt{up}:] This command moves the stack frame context up one
-  frame.\index{up}\index{command!up}  
+  frame to allow variables to be seen.\index{up}\index{command!up}  
 \item[\texttt{down}:] This command moves the stack frame context down
   one frame.\index{down}\index{command!down}  
 \item[\texttt{source}:] This command lists VDM source around the
@@ -1532,17 +1532,16 @@ breakpoint there are additional commands that can be used. These are:
 \newpage
 \section{Internal Errors}\label{app:internalerrors}
 
-This appendix provide a list of the internal errors used in Overture
-and an explanantion for each of them the circumstances under which the
-internal error can be expected. However, most of these errors should
+This appendix provides a list of the internal errors used in Overture
+and an explanantion, for each of them, the circumstances under which the
+internal error can be expected. Most of these errors should
 never be seen by an ordinary user, so if they appear please report it
 to the SourceForge bug reporting utility
 (\url{https://sourceforge.net/tracker/?group_id=141350&atid=749152}). 
 
 \begin{description}
 \item[0000:] File IO errors, e.g.\ \texttt{File not found}. This
-  typically occur if the file to be read from a specific directory is
-  no longer present there.
+  typically occurs if a specification file is no longer present.
 \item[0001:] \texttt{Mark/reset not supported - use push/pop}
 \item[0002:] \texttt{Cannot change type qualifier: <name><qualifiers> to <qualifiers>}
 \item[0003:] \texttt{PatternBind passed <class name>}
@@ -1606,10 +1605,10 @@ to the SourceForge bug reporting utility
 \newpage
 \section{Lexical Errors}\label{app:lexerr}
 
-When a VDM model is parsed the first phase is to gather the single
+When a VDM model is parsed, the first phase is to gather the single
 characters into tokens that can be used in the further
 processing. This is called a lexical analysis and errors in this area
-can occur as:
+can be as follows:
 
 \begin{description}
 \item[1000:] \texttt{Malformed quoted character}
@@ -1621,7 +1620,7 @@ can occur as:
 \item[1006:] \texttt{Expecting close quote after character}
 \item[1007:] \texttt{Unexpected tag after '\#'}
 \item[1008:] \texttt{Malformed module`name}
-\item[1009:] \texttt{Unexpected character 'c'}
+\item[1009:] \texttt{Unexpected character '<c>'}
 \item[1010:] \texttt{Expecting <digits>[.<digits>][e<+-><digits>]}
 \item[1011:] \texttt{Unterminated block comment}
 \end{description}
@@ -1630,8 +1629,8 @@ can occur as:
 \section{Syntatic Errors}\label{app:synerr}
 
 If the syntax of the file you have provided does not live up to the
-syntax rules for the VDM dialect you wish to use syntax errors will be
-reported. These can be listed as:
+syntax rules for the VDM dialect you wish to use, syntax errors will be
+reported. These can be as follows:
 
 \begin{description}
 \item[2000:] \texttt{Expecting 'in set' after pattern in set binding}
@@ -1923,9 +1922,9 @@ reported. These can be listed as:
 \newpage
 \section{Type Errors and Warnings}\label{app:typeerr}
 
-In case the syntax rules are satisfied it is possible to get type
-errors from an additional type checking. The errors here can be listed
-as:
+If the syntax rules are satisfied, it is still possible to get type
+errors from additional type checking. The errors here can be as
+follows:
 
 \begin{description}
 \item[3000:] \texttt{Expression does not match declared type}
