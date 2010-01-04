@@ -26,7 +26,6 @@ package org.overturetool.vdmj.types;
 import org.overturetool.vdmj.definitions.AccessSpecifier;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
@@ -112,13 +111,6 @@ public class MapType extends Type
 	{
 		return new MapType(location,
 			from.polymorph(pname, actualType), to.polymorph(pname, actualType));
-	}
-
-	@Override
-	public void typeParamCheck(LexNameList typeParams)
-	{
-		from.typeParamCheck(typeParams);
-		to.typeParamCheck(typeParams);
 	}
 
 	@Override

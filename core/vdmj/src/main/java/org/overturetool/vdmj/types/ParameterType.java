@@ -29,7 +29,6 @@ import org.overturetool.vdmj.definitions.AccessSpecifier;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
-import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -204,15 +203,6 @@ public class ParameterType extends Type
 	public Type polymorph(LexNameToken pname, Type actualType)
 	{
 		return (name.equals(pname)) ? actualType : this;
-	}
-
-	@Override
-	public void typeParamCheck(LexNameList typeParams)
-	{
-//		if (!typeParams.contains(name))
-//		{
-//			report(3433, "Parameter type @" + name + " not defined");
-//		}
 	}
 
 	@Override

@@ -26,7 +26,6 @@ package org.overturetool.vdmj.types;
 import org.overturetool.vdmj.definitions.AccessSpecifier;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
@@ -98,12 +97,6 @@ public class SeqType extends Type
 	public Type polymorph(LexNameToken pname, Type actualType)
 	{
 		return new SeqType(location, seqof.polymorph(pname, actualType));
-	}
-
-	@Override
-	public void typeParamCheck(LexNameList typeParams)
-	{
-		seqof.typeParamCheck(typeParams);
 	}
 
 	@Override

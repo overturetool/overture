@@ -230,7 +230,6 @@ public class ImplicitFunctionDefinition extends Definition
 
 		if (typeParams != null)
 		{
-			type.typeParamCheck(typeParams);
 			defs.addAll(getTypeParamDefinitions());
 		}
 

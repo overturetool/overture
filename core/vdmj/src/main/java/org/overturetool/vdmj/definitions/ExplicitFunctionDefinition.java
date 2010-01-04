@@ -241,7 +241,6 @@ public class ExplicitFunctionDefinition extends Definition
 
 		if (typeParams != null)
 		{
-			type.typeParamCheck(typeParams);
 			defs.addAll(getTypeParamDefinitions());
 		}
 

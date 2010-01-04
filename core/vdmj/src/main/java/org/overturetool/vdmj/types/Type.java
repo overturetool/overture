@@ -30,7 +30,6 @@ import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.runtime.Context;
@@ -166,20 +165,6 @@ public abstract class Type implements Comparable<Type>, Serializable
 		}
 
 		return r;
-	}
-
-	/**
-	 * Check a type to see whether its contained ParameterTypes are defined. The
-	 * list of names passed are the names of the defined type parameters in the
-	 * context where this type is used, so it (or its subtypes) can only include
-	 * ParameterTypes with names in this list.
-	 *
-	 * @param typeParams The names of acceptable parameter types.
-	 */
-
-	public void typeParamCheck(LexNameList typeParams)
-	{
-		return; // Overridden by ParameterType and types that contain types.
 	}
 
 	public boolean narrowerThan(AccessSpecifier accessSpecifier)

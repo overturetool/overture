@@ -760,15 +760,6 @@ public class UnionType extends Type
 	}
 
 	@Override
-	public void typeParamCheck(LexNameList typeParams)
-	{
-		for (Type type: types)
-		{
-			type.typeParamCheck(typeParams);
-		}
-	}
-
-	@Override
 	public String toDisplay()
 	{
 		if (types.size() == 1)
@@ -785,7 +776,7 @@ public class UnionType extends Type
 	public ValueList getAllValues()
 	{
 		ValueList v = new ValueList();
-		
+
 		for (Type type: types)
 		{
 			v.addAll(type.getAllValues());

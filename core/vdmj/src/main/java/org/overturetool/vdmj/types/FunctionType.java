@@ -26,7 +26,6 @@ package org.overturetool.vdmj.types;
 import org.overturetool.vdmj.definitions.AccessSpecifier;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
@@ -197,17 +196,6 @@ public class FunctionType extends Type
 			new FunctionType(location, partial, polyparams, polyresult);
 		type.definitions = definitions;
 		return type;
-	}
-
-	@Override
-	public void typeParamCheck(LexNameList typeParams)
-	{
-		for (Type t: parameters)
-		{
-			t.typeParamCheck(typeParams);
-		}
-
-		result.typeParamCheck(typeParams);
 	}
 
 	@Override
