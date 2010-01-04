@@ -336,6 +336,12 @@ public class ImplicitFunctionDefinition extends Definition
 			{
 				FunctionType mtype = (FunctionType)mdef.getType();
 
+				if (!TypeComparator.compatible(mtype.parameters, type.parameters))
+				{
+					measure.report(3303, "Measure parameters different to function");
+					detail2(measure.name, mtype.parameters, name.name, type.parameters);
+				}
+
 				if (!(mtype.result instanceof NaturalType))
 				{
 					if (mtype.result.isProduct())
