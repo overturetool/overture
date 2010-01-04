@@ -608,8 +608,7 @@ public class ModuleReader extends SyntaxReader
 	{
 		LexNameToken name =	readNameToken("Expecting imported function name");
 		LexNameToken defname = getDefName(from, name);
-
-		ignoreTypeParams();
+		LexNameList typeParams = getDefinitionReader().readTypeParams();
 
 		Type type = null;
 
@@ -633,7 +632,7 @@ public class ModuleReader extends SyntaxReader
 		}
 
 		ignore(Token.SEMICOLON);
-		return new ImportedFunction(defname, type, renamed);
+		return new ImportedFunction(defname, type, typeParams, renamed);
 	}
 
 	private List<Import> readImportedOperations(LexIdentifierToken from)

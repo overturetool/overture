@@ -155,10 +155,36 @@ public class ImplicitFunctionDefinition extends Definition
 		}
 	}
 
+	private DefinitionList getTypeParamDefinitions()
+	{
+		DefinitionList defs = new DefinitionList();
+
+		for (LexNameToken pname: typeParams)
+		{
+			Definition p = new LocalDefinition(
+				pname.location, pname, NameScope.NAMES, new ParameterType(pname));
+
+			p.markUsed();
+			defs.add(p);
+		}
+
+		return defs;
+	}
+
 	@Override
 	public void typeResolve(Environment base)
 	{
-		type = type.typeResolve(base, null);
+		if (typeParams != null)
+		{
+			FlatCheckedEnvironment params =	new FlatCheckedEnvironment(
+				getTypeParamDefinitions(), base, NameScope.NAMES);
+
+			type = type.typeResolve(params, null);
+		}
+		else
+		{
+			type = type.typeResolve(base, null);
+		}
 
 		if (result != null)
 		{
@@ -205,15 +231,7 @@ public class ImplicitFunctionDefinition extends Definition
 		if (typeParams != null)
 		{
 			type.typeParamCheck(typeParams);
-
-			for (LexNameToken pname: typeParams)
-			{
-				Definition p = new LocalDefinition(
-					pname.location, pname, scope, new ParameterType(pname));
-
-				p.markUsed();
-				defs.add(p);
-			}
+			defs.addAll(getTypeParamDefinitions());
 		}
 
 		DefinitionSet argdefs = new DefinitionSet();
@@ -224,10 +242,11 @@ public class ImplicitFunctionDefinition extends Definition
 		}
 
 		defs.addAll(argdefs.asList());
-		defs.typeCheck(base, scope);
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(defs, base, scope);
 		local.setStatic(accessSpecifier);
 		local.setEnclosingDefinition(this);
+
+		defs.typeCheck(local, scope);
 
 		if (body != null)
 		{

@@ -27,8 +27,12 @@ import java.util.Vector;
 
 import org.overturetool.vdmj.definitions.AccessSpecifier;
 import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.typechecker.Environment;
+import org.overturetool.vdmj.typechecker.NameScope;
 
 
 public class ParameterType extends Type
@@ -40,6 +44,21 @@ public class ParameterType extends Type
 	{
 		super(name.location);
 		this.name = name;
+	}
+
+	@Override
+	public Type typeResolve(Environment env, TypeDefinition root)
+	{
+		if (resolved) return this; else resolved = true;
+
+		Definition p = env.findName(name, NameScope.NAMES);
+
+		if (p == null || !(p.getType() instanceof ParameterType))
+		{
+			report(3433, "Parameter type @" + name + " not defined");
+		}
+
+		return this;
 	}
 
 	@Override
@@ -190,10 +209,10 @@ public class ParameterType extends Type
 	@Override
 	public void typeParamCheck(LexNameList typeParams)
 	{
-		if (!typeParams.contains(name))
-		{
-			report(3433, "Parameter type @" + name + " not defined");
-		}
+//		if (!typeParams.contains(name))
+//		{
+//			report(3433, "Parameter type @" + name + " not defined");
+//		}
 	}
 
 	@Override

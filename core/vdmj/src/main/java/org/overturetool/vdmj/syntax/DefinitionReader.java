@@ -564,17 +564,8 @@ public class DefinitionReader extends SyntaxReader
 		return list;
 	}
 
-	private Definition readFunctionDefinition(NameScope scope)
-		throws ParserException, LexException
+	public LexNameList readTypeParams() throws LexException, ParserException
 	{
-		Definition def = null;
-		LexIdentifierToken funcName = readIdToken("Expecting new function identifier");
-
-		if (funcName.name.startsWith("mk_"))
-		{
-			throwMessage(2016, "Function name cannot start with 'mk_'");
-		}
-
 		LexNameList typeParams = null;
 
 		if (lastToken().is(Token.SEQ_OPEN))
@@ -594,6 +585,22 @@ public class DefinitionReader extends SyntaxReader
 
 			checkFor(Token.SEQ_CLOSE, 2090, "Expecting ']' after type parameters");
 		}
+
+		return typeParams;
+	}
+
+	private Definition readFunctionDefinition(NameScope scope)
+		throws ParserException, LexException
+	{
+		Definition def = null;
+		LexIdentifierToken funcName = readIdToken("Expecting new function identifier");
+
+		if (funcName.name.startsWith("mk_"))
+		{
+			throwMessage(2016, "Function name cannot start with 'mk_'");
+		}
+
+		LexNameList typeParams = readTypeParams();
 
 		if (lastToken().is(Token.COLON))
 		{
