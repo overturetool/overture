@@ -42,6 +42,7 @@ import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.PatternMatchException;
 import org.overturetool.vdmj.runtime.RootContext;
 import org.overturetool.vdmj.runtime.StateContext;
+import org.overturetool.vdmj.runtime.VDMThreadSet;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.types.FunctionType;
 import org.overturetool.vdmj.types.PatternListTypePair;
@@ -235,6 +236,8 @@ public class FunctionValue extends Value
 	public Value eval(
 		LexLocation from, ValueList argValues, Context ctxt, Context sctxt) throws ValueException
 	{
+		VDMThreadSet.stopIfDebugged(from, ctxt);
+
 		if (body == null)
 		{
 			abort(4051, "Cannot apply implicit function: " + name, ctxt);

@@ -195,6 +195,8 @@ public class OperationValue extends Value
 	public Value eval(LexLocation from, ValueList argValues, Context ctxt)
 		throws ValueException
 	{
+		VDMThreadSet.stopIfDebugged(from, ctxt);
+
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
 			if (!isStatic && (ctxt.threadState.CPU != self.getCPU() || isAsync))

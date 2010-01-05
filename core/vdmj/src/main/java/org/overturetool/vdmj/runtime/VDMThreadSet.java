@@ -26,6 +26,11 @@ package org.overturetool.vdmj.runtime;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.lex.LexException;
+import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.syntax.ParserException;
+
 /**
  * A class containing all active VDM threads.
  */
@@ -121,6 +126,27 @@ public class VDMThreadSet
 	public static synchronized boolean isDebugStopped()
 	{
 		return debugStopped > 0;
+	}
+
+	public static void stopIfDebugged(
+		LexLocation location, Context ctxt)
+	{
+		if (debugStopped > 0 && Settings.usingDBGP)
+		{
+			try
+			{
+				Breakpoint bp = new Stoppoint(location, 0, null);
+				ctxt.threadState.dbgp.stopped(ctxt, bp);
+			}
+			catch (ParserException e)
+			{
+				// Can't happen - no BP condition
+			}
+			catch (LexException e)
+			{
+				// Can't happen - no BP condition
+			}
+		}
 	}
 
 	public static synchronized void incDebugStopped()
