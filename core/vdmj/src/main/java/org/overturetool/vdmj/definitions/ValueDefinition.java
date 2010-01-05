@@ -136,7 +136,7 @@ public class ValueDefinition extends Definition
 
     		if (typedef.accessSpecifier.narrowerThan(accessSpecifier))
     		{
-    			report(3052, "Type narrows definition's scope");
+    			report(3052, "Value type visibility less than value definition");
     		}
 		}
 

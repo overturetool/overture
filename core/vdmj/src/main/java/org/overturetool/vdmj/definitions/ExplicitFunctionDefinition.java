@@ -307,7 +307,7 @@ public class ExplicitFunctionDefinition extends Definition
 
 		if (type.narrowerThan(accessSpecifier))
 		{
-			report(3019, "Function type narrows function");
+			report(3019, "Function parameter visibility less than function definition");
 		}
 
 		if (measure == null && recursive)

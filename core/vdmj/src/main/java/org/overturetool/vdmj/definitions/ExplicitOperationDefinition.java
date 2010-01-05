@@ -267,7 +267,7 @@ public class ExplicitOperationDefinition extends Definition
 
 		if (type.narrowerThan(accessSpecifier))
 		{
-			report(3028, "Operation type narrows operation");
+			report(3028, "Operation parameter visibility less than operation definition");
 		}
 
 		if (!(body instanceof NotYetSpecifiedStatement) &&

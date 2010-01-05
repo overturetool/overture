@@ -313,7 +313,7 @@ public class ClassDefinition extends Definition
 				}
 				else if (override.accessSpecifier.narrowerThan(indef.accessSpecifier))
 				{
-					override.report(3006, "Overriding definition narrows scope");
+					override.report(3006, "Overriding definition reduces visibility");
 					override.detail2("This", override.name, "Super", indef.name);
 				}
 				else

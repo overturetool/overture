@@ -265,7 +265,7 @@ public class ImplicitFunctionDefinition extends Definition
 
 		if (type.narrowerThan(accessSpecifier))
 		{
-			report(3030, "Function type narrows function");
+			report(3030, "Function parameter visibility less than function definition");
 		}
 
 		if (predef != null)

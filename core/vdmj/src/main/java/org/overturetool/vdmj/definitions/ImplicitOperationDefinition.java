@@ -319,7 +319,7 @@ public class ImplicitOperationDefinition extends Definition
 
 		if (type.narrowerThan(accessSpecifier))
 		{
-			report(3036, "Operation type narrows operation");
+			report(3036, "Operation parameter visibility less than operation definition");
 		}
 
 		if (predef != null)
