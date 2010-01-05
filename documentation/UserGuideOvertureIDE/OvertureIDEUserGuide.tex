@@ -1933,7 +1933,10 @@ follows:
 \item[3003:] \texttt{Undefined superclass: <supername>}
 \item[3004:] \texttt{Superclass name is not a class: <supername>}
 \item[3005:] \texttt{Overriding a superclass member of a different kind: <member>}
-\item[3006:] \texttt{Overriding definition narrows scope}
+\item[3006:] \texttt{Overriding definition reduces visibility} This
+  error message typically are caused by using a more restrictive
+  access modifier (or none which is interpreted as private) at this
+  place compared to for example an inherited definition.
 \item[3007:] \texttt{Overriding member incompatible type: <member>}
 \item[3008:] \texttt{Overloaded members indistinguishable: <member>}
 \item[3009:] \texttt{Circular class hierarchy detected: <class>}
@@ -1946,7 +1949,11 @@ follows:
 \item[3016:] \texttt{Expression is not compatible with set bind}
 \item[3017:] \texttt{Duplicate definitions for <name>}
 \item[3018:] \texttt{Function returns unexpected type}
-\item[3019:] \texttt{Function type narrows function}
+\item[3019:] \texttt{Function parameter visibility less than function
+  definition} This
+  error message typically are caused by using a more restrictive
+  access modifier (or none which is interpreted as private) at this
+  place compared to for example an inherited definition.
 \item[3020:] \texttt{Too many parameter patterns}
 \item[3021:] \texttt{Too few parameter patterns}
 \item[3022:] \texttt{Too many curried parameters}
@@ -1955,15 +1962,27 @@ follows:
 \item[3025:] \texttt{Constructor operation must have return type <class>}
 \item[3026:] \texttt{Constructor operation must have return type <class>}
 \item[3027:] \texttt{Operation returns unexpected type}
-\item[3028:] \texttt{Operation type narrows operation}
+\item[3028:] \texttt{Operation parameter visibility less than
+  operation definition}  This
+  error message typically are caused by using a more restrictive
+  access modifier (or none which is interpreted as private) at this
+  place compared to for example an inherited definition.
 \item[3029:] \texttt{Function returns unexpected type}
-\item[3030:] \texttt{Function type narrows function}
+\item[3030:] \texttt{Function parameter visibility less than function
+  definition} This
+  error message typically are caused by using a more restrictive
+  access modifier (or none which is interpreted as private) at this
+  place compared to for example an inherited definition.
 \item[3031:] \texttt{Unknown state variable <name>}
 \item[3032:] \texttt{State variable <name> is not this type}
-3033, -
-3034, -
+%3033, -
+%3034, -
 \item[3035:] \texttt{Operation returns unexpected type}
-\item[3036:] \texttt{Operation type narrows operation}
+\item[3036:] \texttt{Operation parameter visibility less than
+  operation definition} This
+  error message typically are caused by using a more restrictive
+  access modifier (or none which is interpreted as private) at this
+  place compared to for example an inherited definition.
 \item[3037:] \texttt{Static instance variable is not initialized: <name>}
 \item[3038:] \texttt{<name> is not an explicit operation}
 \item[3039:] \texttt{<name> is not in scope}
@@ -1975,11 +1994,14 @@ follows:
 \item[3045:] \texttt{Cannot put guard on a constructor}
 \item[3046:] \texttt{Guard is not a boolean expression}
 \item[3047:] \texttt{Only one state definition allowed per module}
-3048, -
+%3048, -
 \item[3049:] \texttt{Thread statement/operation must not return a value}
 \item[3050:] \texttt{Type <name> is infinite}
 \item[3051:] \texttt{Expression does not match declared type}
-\item[3052:] \texttt{Type narrows definition's scope}
+\item[3052:] \texttt{Value type visibility less than value definition} This
+  error message typically are caused by using a more restrictive
+  access modifier (or none which is interpreted as private) at this
+  place compared to for example an inherited definition.
 \item[3053:] \texttt{Argument of 'abs' is not numeric}
 \item[3054:] \texttt{Type <name> cannot be applied}
 \item[3055:] \texttt{Sequence selector must have one argument}
