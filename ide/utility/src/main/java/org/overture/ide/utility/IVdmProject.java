@@ -37,6 +37,8 @@ public interface IVdmProject
 	 * @see org.overture.ide.utility.IVdmProject#getLanguageVersion()
 	 */
 	public abstract Release getLanguageVersion() throws CoreException;
+	
+	public abstract String getLanguageVersionName() throws CoreException;
 
 	public abstract boolean hasDynamictypechecks();
 

@@ -39,11 +39,42 @@ public class FileUtility {
 			IMarker marker = file.createMarker(IMarker.PROBLEM);
 			marker.setAttribute(IMarker.MESSAGE, message);
 			marker.setAttribute(IMarker.SEVERITY, severity);
-			marker.setAttribute(IMarker.SOURCE_ID, "org.overturetool.traces");
+			marker.setAttribute(IMarker.SOURCE_ID, "org.overture.ide");
 			if (lineNumber == -1) {
 				lineNumber = 1;
 			}
 			marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void addMarker(IFile file, String message, int lineNumber,int columnNumber,
+			int severity) {
+		try {
+			if (file == null)
+				return;
+			lineNumber -= 1;
+			IMarker[] markers = file.findMarkers(IMarker.PROBLEM, false,
+					IResource.DEPTH_INFINITE);
+			for (IMarker marker : markers) {
+				if (marker.getAttribute(IMarker.MESSAGE).equals(message)
+						&& marker.getAttribute(IMarker.SEVERITY).equals(
+								severity)
+						&& marker.getAttribute(IMarker.LINE_NUMBER).equals(
+								lineNumber))
+					return;
+
+			}
+			IMarker marker = file.createMarker(IMarker.PROBLEM);
+			marker.setAttribute(IMarker.MESSAGE, message);
+			marker.setAttribute(IMarker.SEVERITY, severity);
+			marker.setAttribute(IMarker.SOURCE_ID, "org.overture.ide");
+			
+
+			SourceLocationConverter converter = new SourceLocationConverter(getContent(file));
+			marker.setAttribute(IMarker.CHAR_START,converter.getStartPos( lineNumber,columnNumber));
+			marker.setAttribute(IMarker.CHAR_END,converter.getEndPos(lineNumber,columnNumber));
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}

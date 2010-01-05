@@ -157,6 +157,11 @@ public class VdmProject implements IVdmProject
 		}
 		return Release.DEFAULT;
 	}
+	
+	public String getLanguageVersionName() throws CoreException
+	{
+		return getLanguageVersion().toString();
+	}
 
 	/* (non-Javadoc)
 	 * @see org.overture.ide.utility.IVdmProject1#hasDynamictypechecks()

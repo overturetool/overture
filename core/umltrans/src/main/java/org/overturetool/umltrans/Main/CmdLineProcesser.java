@@ -8,15 +8,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.ParseException;
+
 import java.util.List;
 import java.util.Vector;
 
-import jp.co.csk.vdm.toolbox.VDM.CGException;
-//import junit.framework.Assert;
+import jp.co.csk.vdm.toolbox.VDM.CGException; //import junit.framework.Assert;
 
 import org.overturetool.api.xml.XmlDocument;
 import org.overturetool.parser.imp.OvertureParser;
+import org.overturetool.parser.imp.ParserError;
 import org.overturetool.tex.ClassExstractorFromTexFiles;
 import org.overturetool.umltrans.StatusLog;
 import org.overturetool.umltrans.uml2vdm.Oml2Vpp;
@@ -32,6 +32,7 @@ public class CmdLineProcesser
 	{
 		StatusLog.out = outputWriter;
 	}
+
 	public static void removeTex(File outputDirectory, List<File> files)
 			throws IOException
 	{
@@ -80,10 +81,23 @@ public class CmdLineProcesser
 
 		// Translator.TransLateTexVdmToUml(selectedFiles, outputFile);
 		StringBuilder sb = new StringBuilder();
-		for (File file : files)
+		List<Integer> fileLineOffset = new Vector<Integer>();
+
+		for (File file : selectedFiles)
 		{
-			sb.append("\n"
-					+ ClassExstractorFromTexFiles.exstractAsString(file.getAbsolutePath()));
+
+			String data = "\n"
+					+ ClassExstractorFromTexFiles.exstractAsString(file.getAbsolutePath());
+
+			int lineCount = data.split("\n").length;
+
+			if (fileLineOffset.size() > 0)
+				fileLineOffset.add(fileLineOffset.get(fileLineOffset.size() - 1)
+						+ lineCount);
+			else
+				fileLineOffset.add(lineCount);
+
+			sb.append(data);
 		}
 
 		// return Translator.TranslateVdmToUml(sb.toString(),
@@ -94,6 +108,20 @@ public class CmdLineProcesser
 		op.parseDocument();
 		if (op.errors > 0)
 		{
+			for (ParserError error : op.parseErrors)
+			{
+				for (int j = 0; j < fileLineOffset.size(); j++)
+				{
+					Integer line = fileLineOffset.get(j);
+					if (error.line <= line)
+					{
+						if (j != 0)
+							error.line -= fileLineOffset.get(j - 1);
+						error.file = selectedFiles.get(j);
+						break;
+					}
+				}
+			}
 
 			FileWriter outputFileReader = new FileWriter(outputFile);
 
@@ -101,9 +129,10 @@ public class CmdLineProcesser
 
 			outputStream.write(specData);
 			outputStream.close();
-			throw new ParseException("Parse errors encountered during parse of vdm file: "
-					+ outputFile,
-					0);// \n"+ specData
+			throw new ParseException("Parse errors encountered during parse of vdm file: ",
+					op.parseErrors);
+			// + outputFile,
+			// 0);// \n"+ specData
 		}
 
 		Vdm2Uml w = new Vdm2Uml();
@@ -235,8 +264,8 @@ public class CmdLineProcesser
 				+ " Ok: " + testsResults.size() + " Fail: "
 				+ testsResultsFail.size() + " Fail parse: "
 				+ testsResultsFailParse.size());
-		//Assert.assertEquals(0, testsResultsFail.size()
-		//		+ testsResultsFailParse.size());
+		// Assert.assertEquals(0, testsResultsFail.size()
+		// + testsResultsFailParse.size());
 	}
 
 	private static void printList(List<String> list, String status)

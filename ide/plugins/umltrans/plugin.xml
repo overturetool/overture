@@ -2,7 +2,7 @@
 <?eclipse version="3.2"?>
 <plugin>
 
-
+<!--VDM-PP -->
  <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
@@ -54,7 +54,57 @@
       </objectContribution>
    </extension>
 
-
+<!--VDM-RT -->
+ <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="org.overture.ide.umltrans.contribution1"
+            objectClass="org.eclipse.core.resources.IProject">
+            <filter
+         name="projectNature"
+         value="org.overture.ide.vdmrt.core.nature">
+      </filter>
+         <menu
+               icon="icons/uml.png"
+               id="org.overture.ide.umltrans.menuMain"
+               label="UML Transformation"
+               path="additions">
+            <separator
+                  name="groupUml">
+            </separator>
+         </menu>
+         
+          <action
+               class="org.overture.ide.plugins.umltrans.actions.Vdm2UmlAction"
+               icon="icons/ea.png"
+               id="org.overture.ide.umltrans.actions.Vdm2UmlAction"
+               label="Export XMI"
+               menubarPath="org.overture.ide.umltrans.menuMain/groupUml"
+               enablesFor="1"
+               tooltip="Generate UML XMI from VDM files">
+         </action>
+         
+          <action
+               class="org.overture.ide.plugins.umltrans.actions.Uml2VdmAction"
+               icon="icons/vdm.png"
+               id="org.overture.ide.umltrans.actions.Uml2VdmAction"
+               label="Import XMI"
+               menubarPath="org.overture.ide.umltrans.menuMain/groupUml"
+               enablesFor="1"
+               tooltip="Generate VDM files from a UML model">
+         </action>
+      <!--   <action
+               class="org.overture.ide.plugins.umltrans.actions.TexToVppAction"
+               icon="icons/filter16.png"
+               id="org.overture.ide.umltrans.actions.TexToVppAction"
+               label="Remove LaTex from VDM file"
+               menubarPath="org.overture.ide.umltrans.menuMain/groupUml"
+               enablesFor="1"
+               tooltip="Convert VDM TEX files to VDM VPP files">
+         </action>-->
+      </objectContribution>
+   </extension>
 
 
 

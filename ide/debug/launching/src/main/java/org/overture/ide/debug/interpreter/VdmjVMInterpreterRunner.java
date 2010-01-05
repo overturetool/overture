@@ -42,6 +42,8 @@ import org.overture.ide.debug.launching.ClasspathUtils;
 import org.overture.ide.debug.launching.IOvertureInterpreterRunnerConfig;
 import org.overture.ide.debug.launching.VDMLaunchingConstants;
 import org.overture.ide.utility.ProjectUtility;
+import org.overture.ide.utility.VdmProject;
+
 /*
  * The VM created respects VM arguments given like -org.overture.ide.debug.memory Xmx1024M
  */
@@ -55,35 +57,35 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 	public VdmjVMInterpreterRunner() {
 		super(null);
 	}
+
 	@Override
 	protected void checkConfig(InterpreterConfig config,
 			IEnvironment environment) throws CoreException
 	{
-		
-			IPath workingDirectoryPath = config.getWorkingDirectoryPath();
-			IFileHandle dir = environment.getFile(workingDirectoryPath);
-			if (!dir.exists()) {
-				abort(
-						NLS
-								.bind(
-										InterpreterMessages.errDebuggingEngineWorkingDirectoryDoesntExist,
-										dir.toString()), null);
-			}
-//			if (config.getScriptFilePath() == null) {
-//				return;
-//			}
-//			if (!config.isNoFile()) {
-//				final IFileHandle script = environment.getFile(config
-//						.getScriptFilePath());
-//				if (!script.exists()) {
-//					abort(
-//							NLS
-//									.bind(
-//											InterpreterMessages.errDebuggingEngineScriptFileDoesntExist,
-//											script.toString()), null);
-//				}
-//			}
-		
+
+		IPath workingDirectoryPath = config.getWorkingDirectoryPath();
+		IFileHandle dir = environment.getFile(workingDirectoryPath);
+		if (!dir.exists())
+		{
+			abort(NLS.bind(InterpreterMessages.errDebuggingEngineWorkingDirectoryDoesntExist,
+					dir.toString()),
+					null);
+		}
+		// if (config.getScriptFilePath() == null) {
+		// return;
+		// }
+		// if (!config.isNoFile()) {
+		// final IFileHandle script = environment.getFile(config
+		// .getScriptFilePath());
+		// if (!script.exists()) {
+		// abort(
+		// NLS
+		// .bind(
+		// InterpreterMessages.errDebuggingEngineScriptFileDoesntExist,
+		// script.toString()), null);
+		// }
+		// }
+
 	}
 
 	static String debugVmMemoryOption = null;
@@ -95,11 +97,42 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 	{
 
 		IScriptProject proj = AbstractScriptLaunchConfigurationDelegate.getScriptProject(launch.getLaunchConfiguration());
+
+		if (launch.getLaunchConfiguration()
+				.getAttribute(DebugCoreConstants.DEBUGGING_REMOTE_DEBUG, false))
+		{
+
+			List<String> arguments = createArguments(config,
+					launch,
+					contentType,
+					vdmjDialect,
+					proj.getProject());
+			StringBuilder sb = new StringBuilder();
+			for (String s : arguments)
+				sb.append(" " + s);
+			System.out.println("Connect remote debugger\nUse session key specified in recomented\nArguments: " + sb.toString());
+		} else
+
+			launchDebugVm(config,
+					launch,
+					iconfig,
+					contentType,
+					vdmjDialect,
+					proj);
+
+	}
+
+	private void launchDebugVm(InterpreterConfig config, ILaunch launch,
+			IOvertureInterpreterRunnerConfig iconfig, String contentType,
+			String vdmjDialect, IScriptProject proj) throws CoreException
+	{
 		IJavaProject myJavaProject = JavaCore.create(proj.getProject());
 		IVMInstall vmInstall = myJavaProject.exists() ? JavaRuntime.getVMInstall(myJavaProject)
 				: JavaRuntime.getDefaultVMInstall();
 		if (vmInstall == null)
-			throw new CoreException(new Status(IStatus.ERROR, "", "Could not initialize VM for debug"));
+			throw new CoreException(new Status(IStatus.ERROR,
+					"",
+					"Could not initialize VM for debug"));
 
 		if (debugVmMemoryOption == null)
 			debugVmMemoryOption = getDebugVmMemoryOption();
@@ -128,46 +161,11 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 				// "Script File name is not specified..."));
 				// }
 
-				// ********************
-				// Create arguments:
-				// Missing mandatory arguments
-				// Usage: -h <host> -p <port> -k <ide key>
-				// <-vdmpp|-vdmsl|-vdmrt> -e <expression> {<filename
-				// URLs>}
-				// VDMJ use these arguments:
-				// 0: host
-				// 1: port
-				// 2: ideKey
-				// 3: Dialect
-				// 4: expression
-				// 5..nFiles: files
-
-				List<String> arguments = new ArrayList<String>();
-
-				arguments.addAll(getConnectionArguments(config));
-				arguments.add("-w"); // no warnings
-				arguments.add("-q"); // no information
-
-				// 3: dialect
-				arguments.add("-" + vdmjDialect);
-
-				Collection<? extends String> optionalArguments = getOptionalArguments(project,
-						config,
-						launch);
-				if (optionalArguments != null)
-					arguments.addAll(optionalArguments);
-
-				arguments.add("-c");
-				arguments.add(getCharSet(project, contentType));
-
-				// 4: expression
-
-				arguments.add("-e");
-				arguments.add(buildLaunchExpression(launch));
-
-				// 5-n: add files to the arguments
-
-				arguments.addAll(getFiles(project, contentType));
+				List<String> arguments = createArguments(config,
+						launch,
+						contentType,
+						vdmjDialect,
+						project);
 
 				String args[] = new String[arguments.size()];
 				arguments.toArray(args);
@@ -200,7 +198,56 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 				e.printStackTrace();
 			}
 		}
+	}
 
+	private List<String> createArguments(InterpreterConfig config,
+			ILaunch launch, String contentType, String vdmjDialect,
+			IProject project) throws CoreException
+	{
+		// ********************
+		// Create arguments:
+		// Missing mandatory arguments
+		// Usage: -h <host> -p <port> -k <ide key>
+		// <-vdmpp|-vdmsl|-vdmrt> -e <expression> {<filename
+		// URLs>}
+		// VDMJ use these arguments:
+		// 0: host
+		// 1: port
+		// 2: ideKey
+		// 3: Dialect
+		// 4: expression
+		// 5..nFiles: files
+
+		List<String> arguments = new ArrayList<String>();
+
+		arguments.addAll(getConnectionArguments(config));
+		arguments.add("-w"); // no warnings
+		arguments.add("-q"); // no information
+
+		// 3: dialect
+		arguments.add("-" + vdmjDialect);
+
+		arguments.add("-r");
+		arguments.add(new VdmProject(project).getLanguageVersionName());
+
+		Collection<? extends String> optionalArguments = getOptionalArguments(project,
+				config,
+				launch);
+		if (optionalArguments != null)
+			arguments.addAll(optionalArguments);
+
+		arguments.add("-c");
+		arguments.add(getCharSet(project, contentType));
+
+		// 4: expression
+
+		arguments.add("-e");
+		arguments.add(buildLaunchExpression(launch));
+
+		// 5-n: add files to the arguments
+
+		arguments.addAll(getFiles(project, contentType));
+		return arguments;
 	}
 
 	private String getCharSet(IProject project, String contentType)
@@ -266,8 +313,11 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 
 	private String buildLaunchExpression(ILaunch launch) throws CoreException
 	{
-	String d =launch.getAttribute(	DebugCoreConstants.DEBUGGING_VM_MEMORY_OPTION);
-		
+//		 String d =launch.getAttribute(
+//		 DebugCoreConstants.DEBUGGING_VM_MEMORY_OPTION);
+//		 
+//		 Object ss = launch.getAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES);
+
 		String debugOperation = launch.getLaunchConfiguration()
 				.getAttribute(DebugCoreConstants.DEBUGGING_OPERATION, "");
 
@@ -278,7 +328,8 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 					VDMLaunchingConstants.PLUGIN_ID,
 					"Entry class not set in launch configuration"));
 
-		return buildLaunchExpression(module, debugOperation);
+		return buildLaunchExpression(module, debugOperation).replace("\"",
+				"\\\"");
 	}
 
 	protected String buildLaunchExpression(String module, String debugOperation)
@@ -295,7 +346,8 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 	private static String getDebugVmMemoryOption()
 	{
 		String memoryOption = null;
-		String eclipseCommands = System.getProperties().getProperty("eclipse.commands");
+		String eclipseCommands = System.getProperties()
+				.getProperty("eclipse.commands");
 		if (eclipseCommands != null)
 		{
 			StringTokenizer st = new StringTokenizer(eclipseCommands);

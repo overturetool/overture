@@ -9,6 +9,7 @@ import java.util.Vector;
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -18,10 +19,19 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.overture.ide.utility.FileUtility;
 import org.overture.ide.utility.ProjectUtility;
+import org.overture.ide.utility.VdmProject;
+import org.overture.ide.vdmpp.core.VdmPpCorePluginConstants;
+import org.overture.ide.vdmpp.core.VdmPpProjectNature;
+import org.overture.ide.vdmrt.core.VdmRtCorePluginConstants;
+import org.overture.ide.vdmrt.core.VdmRtProjectNature;
+import org.overturetool.parser.imp.ParserError;
 import org.overturetool.umltrans.Main.CmdLineProcesser;
+import org.overturetool.umltrans.Main.ParseException;
 
 
 public class Vdm2UmlAction implements IObjectActionDelegate
@@ -66,7 +76,15 @@ public class Vdm2UmlAction implements IObjectActionDelegate
 		try
 		{
 
-			List<IFile> files = ProjectUtility.getFiles(selectedProject);
+			
+			
+			List<IFile> files = new Vector<IFile>();// = ProjectUtility.getFiles(selectedProject);
+			
+			if (selectedProject.hasNature(VdmPpProjectNature.VDM_PP_NATURE))
+				files= ProjectUtility.getFiles(selectedProject, VdmPpCorePluginConstants.CONTENT_TYPE);
+			
+			if (selectedProject.hasNature(VdmRtProjectNature.VDM_RT_NATURE))
+				files= ProjectUtility.getFiles(selectedProject, VdmRtCorePluginConstants.CONTENT_TYPE);
 			
 			List<File> filesPathes = new Vector<File>();
 			for (IFile file : files)
@@ -118,7 +136,21 @@ public class Vdm2UmlAction implements IObjectActionDelegate
 					e.printStackTrace();
 					return new Status(IStatus.ERROR, "org.overture.ide.umltrans",
 							 "Translation error in file", e);
-				} catch (CGException e)
+				}catch(ParseException e)
+				{
+					for (ParserError error : e.getErrors())
+					{
+						try{
+						FileUtility.addMarker(ProjectUtility.findIFile(selectedProject, error.file), error.message, error.line,error.col, IMarker.SEVERITY_ERROR);
+						}catch(Exception ex)
+						{
+							
+						}
+					}
+					
+					e.printStackTrace();
+				}
+				catch (CGException e)
 				{
 					ConsoleWriter.ConsolePrint(shell, e);
 					e.printStackTrace();

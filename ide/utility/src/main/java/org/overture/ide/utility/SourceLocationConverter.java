@@ -85,6 +85,16 @@ public class SourceLocationConverter
 	}
 	
 	
+	public int getStartPos(int line, int col)
+	{
+		return this.convert(line, col);
+	}
+	
+	public int getEndPos(int line, int col)
+	{
+		return this.convert(line, col);
+	}
+	
 	
 	public int convert(int line, int offset)
 	{

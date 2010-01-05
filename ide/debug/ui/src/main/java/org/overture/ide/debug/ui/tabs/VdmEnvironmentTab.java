@@ -1,16 +1,13 @@
 package org.overture.ide.debug.ui.tabs;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.internal.ui.launchConfigurations.EnvironmentVariable;
-import org.eclipse.debug.ui.CommonTab;
 import org.eclipse.debug.ui.EnvironmentTab;
 import org.eclipse.swt.widgets.TableItem;
 import org.overture.ide.debug.core.DebugCoreConstants;
 
+@SuppressWarnings("restriction")
 public class VdmEnvironmentTab extends EnvironmentTab
 {
 	VdmMainLaunchConfigurationTab launchTab;
@@ -30,16 +27,17 @@ protected void setAttribute(String attribute,
 public void performApply(ILaunchConfigurationWorkingCopy configuration)
 {
 	TableItem[] items = environmentTable.getTable().getItems();
-	Map map = new HashMap(items.length);
+//	Map map = new HashMap(items.length);
 	for (int i = 0; i < items.length; i++)
 	{
 		EnvironmentVariable var = (EnvironmentVariable) items[i].getData();
-		map.put(var.getName(), var.getValue());
+//		map.put(var.getName(), var.getValue());
 		
 		if(var.getName().equals("VM_MEMORY")&& var.getValue().length()>0)
 		{
 			launchTab.setVmOptions(var.getValue());
 			configuration.setAttribute(DebugCoreConstants.DEBUGGING_VM_MEMORY_OPTION, var.getValue());
+			
 		}
 	} 
 	super.performApply(configuration);

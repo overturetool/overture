@@ -134,7 +134,7 @@ public class VdmLanguagePropertyPage1 extends PropertyPage implements
 	  
 	  void createInterperterGroupCheckGroup(Composite controlGroup) {
 		  interperterGroup = new Group(controlGroup, SWT.NONE);
-		  interperterGroup.setText("Interperting");
+		  interperterGroup.setText("Interpreting");
 		    GridLayout layout = new GridLayout();
 		    layout.numColumns = 1;
 		    interperterGroup.setLayout(layout);

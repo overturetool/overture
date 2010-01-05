@@ -10478,6 +10478,7 @@ private OvertureScanner theScanner = null;
 // maintain a counter for all errors
 // note: MUST be incremented by yyerror (when overloaded)
 public int errors = 0;
+public List<ParserError> parseErrors = new Vector<ParserError>();
 
 // the abstract syntax element
 public OmlDocument astDocument = null;
@@ -10707,6 +10708,8 @@ protected void yyerror (String err)
 	    		// add position info iff the scanner found a lexem
 	    	    msg += " at (" + getLine() + ", " + getColumn() + ")";
 	    		msg += " after reading token \"" + currentToken.getText() + "\"";
+	    		
+	    		parseErrors.add(new ParserError(err+" after reading token \"" + currentToken.getText() + "\"", getLine(), getColumn()));
 	    	}
 	    }
 		System.out.println(msg);

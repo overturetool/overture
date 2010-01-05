@@ -14,7 +14,9 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.4.2",
  org.eclipse.ui.console;bundle-version="3.3.1",
  org.eclipse.ui.ide;bundle-version="3.4.2",
  org.overture.ide.generated.umltrans;bundle-version="1.0.0",
- org.overture.ide.utility;bundle-version="1.0.0"
+ org.overture.ide.utility;bundle-version="1.0.0",
+ org.overture.ide.vdmpp.core;bundle-version="1.0.0",
+ org.overture.ide.vdmrt.core;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Activator: org.overture.ide.plugins.umltrans.Activator
 

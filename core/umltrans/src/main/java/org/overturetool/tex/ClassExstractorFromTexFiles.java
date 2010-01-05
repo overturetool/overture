@@ -15,22 +15,28 @@ import java.util.Vector;
 public class ClassExstractorFromTexFiles
 {
 	private static final String CLASS_START = "class ";// "\\begin{vdm_al}";
+	private static final String SYSTEM_START = "system ";
 	private static final String CLASS_END = "end ";// "\\end{vdm_al}";
 
 	private static final String VDM_START = "\\begin{vdm_al}";
 	private static final String VDM_END = "\\end{vdm_al}";
 
 	/**
-	 * Creates a temporary file where all latex tags have been removed. Line numbers are preserved by insertion of empty lines
-	 * @param files The files where LaTex should be removed from 
-	 * @param outputDirrectory The directory to put the temporary files
-	 * @return A list of Files where the LaTex text have been removed from 
-	 * @throws IOException If any file error occures
+	 * Creates a temporary file where all latex tags have been removed. Line
+	 * numbers are preserved by insertion of empty lines
+	 * 
+	 * @param files
+	 *            The files where LaTex should be removed from
+	 * @param outputDirrectory
+	 *            The directory to put the temporary files
+	 * @return A list of Files where the LaTex text have been removed from
+	 * @throws IOException
+	 *             If any file error occures
 	 */
 	public static List<File> exstract(List<File> files, File outputDirrectory)
 			throws IOException
 	{
-		if (outputDirrectory==null )
+		if (outputDirrectory == null)
 			return null;
 
 		if (!outputDirrectory.exists())
@@ -62,10 +68,20 @@ public class ClassExstractorFromTexFiles
 			Boolean texTagsFound = false;
 			while ((inLine = inputStream.readLine()) != null)
 			{
-				if (inLine.trim().startsWith(CLASS_START))
+				if (inLine.trim().startsWith(CLASS_START)
+						|| inLine.trim().startsWith(SYSTEM_START))
 				{
-					String classString = inLine.trim().substring(
-							CLASS_START.length()).trim();
+					String classString = "";
+
+					if (inLine.trim().startsWith(CLASS_START))
+						classString = inLine.trim()
+								.substring(CLASS_START.length())
+								.trim();
+					else //if (inLine.trim().startsWith(SYSTEM_START))
+						classString = inLine.trim()
+								.substring(SYSTEM_START.length())
+								.trim();
+
 					int indexOfInh = classString.indexOf(':');
 					int indexOfSpace = classString.indexOf(' ');
 					if (indexOfInh >= 0 || indexOfSpace >= 0)
@@ -74,8 +90,7 @@ public class ClassExstractorFromTexFiles
 						if (indexOfInh >= 0)
 							currentClass = classString.substring(0, indexOfInh);
 						else
-							currentClass = classString.substring(
-									0,
+							currentClass = classString.substring(0,
 									indexOfSpace);
 
 					} else
@@ -135,10 +150,19 @@ public class ClassExstractorFromTexFiles
 		Boolean texTagsFound = false;
 		while ((inLine = inputStream.readLine()) != null)
 		{
-			if (inLine.trim().startsWith(CLASS_START))
+			if (inLine.trim().startsWith(CLASS_START)
+					|| inLine.trim().startsWith(SYSTEM_START))
 			{
-				String classString = inLine.trim().substring(
-						CLASS_START.length()).trim();
+				String classString = "";
+
+				if (inLine.trim().startsWith(CLASS_START))
+					classString = inLine.trim()
+							.substring(CLASS_START.length())
+							.trim();
+				else //if (inLine.trim().startsWith(SYSTEM_START))
+					classString = inLine.trim()
+							.substring(SYSTEM_START.length())
+							.trim();
 				int indexOfInh = classString.indexOf(':');
 				int indexOfSpace = classString.indexOf(' ');
 				if (indexOfInh >= 0 || indexOfSpace >= 0)

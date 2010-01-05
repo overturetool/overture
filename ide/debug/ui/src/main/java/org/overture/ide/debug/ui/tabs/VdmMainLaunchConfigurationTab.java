@@ -15,7 +15,6 @@ import org.eclipse.dltk.core.PreferencesLookupDelegate;
 import org.eclipse.dltk.debug.core.DLTKDebugPreferenceConstants;
 import org.eclipse.dltk.debug.ui.launchConfigurations.MainLaunchConfigurationTab;
 import org.eclipse.dltk.debug.ui.messages.DLTKLaunchConfigurationsMessages;
-import org.eclipse.dltk.launching.ScriptLaunchConfigurationConstants;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -59,7 +58,8 @@ public abstract class VdmMainLaunchConfigurationTab extends
 	private Button fOperationButton;
 	private Text fModuleNameText;
 	private Text fOperationText;
-	private Button checkBoxgenerateLatexCoverage = null;
+	private Button checkBoxGenerateLatexCoverage = null;
+	private Button checkBoxRemoteDebug = null;
 	private Button fdebugInConsole;
 	private WidgetListener fListener = new WidgetListener();
 private String vmOption = "";
@@ -206,9 +206,17 @@ public void setVmOptions(String option)
 		// OvertureDebugConstants.DEBUG_FROM_CONSOLE);
 		// fdebugInConsole.addSelectionListener(fListener);
 
-		checkBoxgenerateLatexCoverage = new Button(group, SWT.CHECK);
-		checkBoxgenerateLatexCoverage.setText("Generate Latex coverage");
-		checkBoxgenerateLatexCoverage.setSelection(false);
+		checkBoxGenerateLatexCoverage = new Button(group, SWT.CHECK);
+		checkBoxGenerateLatexCoverage.setText("Generate Latex coverage");
+		checkBoxGenerateLatexCoverage.setSelection(false);
+		checkBoxGenerateLatexCoverage.addSelectionListener(getWidgetListener());
+		
+		checkBoxRemoteDebug = new Button(group, SWT.CHECK);
+		checkBoxRemoteDebug.setText("Remote debug");
+		checkBoxRemoteDebug.setSelection(false);
+		checkBoxRemoteDebug.addSelectionListener(getWidgetListener());
+		
+		
 	}
 
 	/**
@@ -349,7 +357,10 @@ public void setVmOptions(String option)
 		config.setAttribute(DLTKDebugPreferenceConstants.PREF_DBGP_ENABLE_LOGGING,
 				true);
 		config.setAttribute(DebugCoreConstants.DEBUGGING_CREATE_COVERAGE,
-				checkBoxgenerateLatexCoverage.getSelection());
+				checkBoxGenerateLatexCoverage.getSelection());
+		
+		config.setAttribute(DebugCoreConstants.DEBUGGING_REMOTE_DEBUG,
+				checkBoxRemoteDebug.getSelection());
 
 		config.setAttribute(DLTKDebugPreferenceConstants.PREF_DBGP_CONNECTION_TIMEOUT,
 				5000);
@@ -368,6 +379,10 @@ public void setVmOptions(String option)
 					""));
 			fOperationText.setText(config.getAttribute(DebugCoreConstants.DEBUGGING_OPERATION,
 					""));
+			
+			checkBoxRemoteDebug.setSelection(config.getAttribute(DebugCoreConstants.DEBUGGING_REMOTE_DEBUG, false));
+			
+			checkBoxGenerateLatexCoverage.setSelection(config.getAttribute(DebugCoreConstants.DEBUGGING_CREATE_COVERAGE, false));
 			
 			vmOption=	config.getAttribute(DebugCoreConstants.DEBUGGING_VM_MEMORY_OPTION,"");
 
