@@ -67,6 +67,7 @@ as the expected and actual values.
 0050, "Unexpected pattern type"
 0051, "Unexpected scope value"
 0052, "Cannot set default name at breakpoint"
+0053, "Unknown trace reduction type"
 
 1000, "Malformed quoted character"
 1001, "Invalid char <ch> in base <n> number"

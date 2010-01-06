@@ -36,6 +36,7 @@ import org.overturetool.vdmj.statements.TraceStatement;
 import org.overturetool.vdmj.traces.SequenceTraceNode;
 import org.overturetool.vdmj.traces.TestSequence;
 import org.overturetool.vdmj.traces.TraceDefinitionTerm;
+import org.overturetool.vdmj.traces.TraceReductionType;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
@@ -180,6 +181,12 @@ public class NamedTraceDefinition extends Definition
 
 	public TestSequence getTests(Context ctxt)
 	{
+		return getTests(ctxt, 1.0F, TraceReductionType.NONE);
+	}
+	
+	public TestSequence getTests(
+		Context ctxt, float subset, TraceReductionType reduction)
+	{
 		SequenceTraceNode traces = new SequenceTraceNode();
 
 		for (TraceDefinitionTerm term: terms)
@@ -188,6 +195,12 @@ public class NamedTraceDefinition extends Definition
 		}
 
 		TestSequence tests = traces.getTests();
+		
+		if (subset < 1.0)
+		{
+			tests.reduce(subset, reduction);
+		}
+		
 		tests.typeCheck(classDefinition);
 		return tests;
 	}

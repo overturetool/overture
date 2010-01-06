@@ -25,9 +25,11 @@ package org.overturetool.vdmj.traces;
 
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Random;
 import java.util.Vector;
 
 import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.statements.Statement;
@@ -94,4 +96,48 @@ public class TestSequence extends Vector<CallSequence>
     		}
 		}
 	}
+
+	public void reduce(float subset, TraceReductionType reduction)
+    {
+		switch (reduction)
+		{
+			case NONE:
+				break;
+				
+			case RANDOM:
+				randomReduction(subset);
+				break;
+				
+			case SHAPES:
+				shapesReduction(subset);
+				break;
+				
+			default:
+				throw new InternalException(53, "Unknown trace reduction");
+		}
+    }
+
+	private void shapesReduction(float subset)
+    {
+		// TBS
+    }
+
+	private void randomReduction(float subset)
+    {
+		int s = size();
+		long n = Math.round(Math.ceil(s * subset));
+		Random prng = new Random();
+		
+		if (n < s)
+		{
+			long delta = s - n;
+			
+			for (long i=0; i<delta; i++)
+			{
+				int x = prng.nextInt(s);
+				this.remove(x);
+				s--;
+			}
+		}
+    }
 }
