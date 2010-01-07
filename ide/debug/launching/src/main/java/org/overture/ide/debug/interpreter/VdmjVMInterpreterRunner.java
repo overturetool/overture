@@ -1,6 +1,7 @@
 package org.overture.ide.debug.interpreter;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,6 +44,8 @@ import org.overture.ide.debug.launching.IOvertureInterpreterRunnerConfig;
 import org.overture.ide.debug.launching.VDMLaunchingConstants;
 import org.overture.ide.utility.ProjectUtility;
 import org.overture.ide.utility.VdmProject;
+import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.util.Base64;
 
 /*
  * The VM created respects VM arguments given like -org.overture.ide.debug.memory Xmx1024M
@@ -236,18 +239,39 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 		if (optionalArguments != null)
 			arguments.addAll(optionalArguments);
 
+		String charset = getCharSet(project, contentType);
 		arguments.add("-c");
-		arguments.add(getCharSet(project, contentType));
+		arguments.add(charset);
 
+//		arguments.add("-t");
+//		arguments.add(Console.charset);
 		// 4: expression
 
-		arguments.add("-e");
-		arguments.add(buildLaunchExpression(launch));
+		arguments.add("-e64");
+		arguments.add(buildEncodedLaunchExpression(launch,charset));
 
 		// 5-n: add files to the arguments
 
 		arguments.addAll(getFiles(project, contentType));
 		return arguments;
+	}
+	
+	private String buildEncodedLaunchExpression(
+		ILaunch launch,String charset){
+		
+		try
+		{
+			return Base64.encode(buildLaunchExpression(launch).getBytes(charset)).toString();
+		} catch (UnsupportedEncodingException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CoreException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "";
 	}
 
 	private String getCharSet(IProject project, String contentType)

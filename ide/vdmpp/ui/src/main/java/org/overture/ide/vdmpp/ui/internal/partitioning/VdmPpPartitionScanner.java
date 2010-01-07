@@ -28,6 +28,7 @@ public class VdmPpPartitionScanner extends RuleBasedPartitionScanner {
 		rules.add(new MultiLineRule("\"", "\"", string, '\\'));
 		rules.add(new MultiLineRule("/**", "*/", doc)); //$NON-NLS-1$ //$NON-NLS-2$
 		rules.add(new MultiLineRule("/*", "*/", comment)); //$NON-NLS-1$ //$NON-NLS-2$
+		rules.add(new MultiLineRule("\\end{vdm_al}", "\\begin{vdm_al}", comment)); //$NON-NLS-1$ //$NON-NLS-2$
 
 		//	rules.add(new EndOfLineRule("//", comment)); //$NON-NLS-1$		
 		// Add rule for character constants.

@@ -7,6 +7,7 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.parser.AbstractSourceParser;
@@ -56,8 +57,19 @@ public abstract class VdmjSourceParser extends AbstractSourceParser {
 		errors.clear();
 		warnings.clear();
 		
+		File file = ProjectUtility.getFile(project, path);
 		
-		ExitStatus status = parse(new String(source), ProjectUtility.getFile(project, path));// project.getFile(path.removeFirstSegments(1)).getLocation().toFile()//parse(new
+		String charset="";
+		try
+		{
+			charset = ProjectUtility.findIFile(project, file).getCharset();
+		} catch (CoreException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		ExitStatus status = parse(new String(source), file,charset);// project.getFile(path.removeFirstSegments(1)).getLocation().toFile()//parse(new
 		// String(source));
 
 		if (reporter != null) {
@@ -122,7 +134,7 @@ public abstract class VdmjSourceParser extends AbstractSourceParser {
 	 * @return The number of syntax errors.
 	 */
 
-	public abstract ExitStatus parse(String content, File file);
+	public abstract ExitStatus parse(String content, File file,String charset);
 
 	/**
 	 * Handle Errors

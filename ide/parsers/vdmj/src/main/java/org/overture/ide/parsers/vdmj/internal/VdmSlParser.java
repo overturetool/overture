@@ -31,7 +31,7 @@ public class VdmSlParser extends VdmjSourceParser {
 	 * @see org.overturetool.vdmj.VDMJ#parse(String,File)
 	 */
 	@Override
-	public ExitStatus parse(String content, File file) 
+	public ExitStatus parse(String content, File file,String charset) 
 	{
 		modules .clear();
 		LexLocation.resetLocations();
@@ -45,7 +45,7 @@ public class VdmSlParser extends VdmjSourceParser {
    			
    					
     				LexTokenReader ltr =
-    					new LexTokenReader(content, Settings.dialect,file);
+    					new LexTokenReader(content, Settings.dialect,file,charset);
         			reader = new ModuleReader(ltr);
         			modules.addAll(reader.readModules());
         	   		
