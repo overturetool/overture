@@ -130,6 +130,7 @@ public class DBGPReader
 		boolean warnings = true;
 		boolean quiet = false;
 		String logfile = null;
+		boolean expBase64 = false;
 
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
 		{
@@ -189,6 +190,18 @@ public class DBGPReader
     			else
     			{
     				usage("-e option requires an expression");
+    			}
+    		}
+    		else if (arg.equals("-e64"))
+    		{
+    			if (i.hasNext())
+    			{
+    				expression = i.next();
+    				expBase64 = true;
+    			}
+    			else
+    			{
+    				usage("-e64 option requires an expression");
     			}
     		}
     		else if (arg.equals("-c"))
@@ -285,6 +298,19 @@ public class DBGPReader
 		if (Settings.dialect != Dialect.VDM_RT && logfile != null)
 		{
 			usage("-log can only be used with -vdmrt");
+		}
+
+		if (expBase64)
+		{
+			try
+			{
+				byte[] bytes = Base64.decode(expression);
+				expression = new String(bytes, VDMJ.filecharset);
+			}
+			catch (Exception e)
+			{
+				usage("Malformed -e64 base64 expression");
+			}
 		}
 
 		controller.setWarnings(warnings);
