@@ -492,10 +492,7 @@ abstract public class Interpreter
 		}
 	}
 
-	abstract public Expression parseExpression(String line, String module)
-		throws Exception;
-
-	abstract public Statement parseStatement(String line, String module)
+	abstract protected Expression parseExpression(String line, String module)
 		throws Exception;
 
 	abstract public Type typeCheck(Expression expr, Environment env)

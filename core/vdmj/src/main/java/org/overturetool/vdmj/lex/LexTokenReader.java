@@ -163,34 +163,58 @@ public class LexTokenReader extends BacktrackInputReader
 	}
 
 	/**
+	 * Create a LexTokenReader for the string and charset passed.
+	 *
+	 * @param expression The string (expression) to parse.
+	 * @param dialect Parse VDM++ or VDM-SL tokens.
+	 * @param charset The charset to use.
+	 * @throws UnsupportedEncodingException
+	 */
+
+	public LexTokenReader(String expression, Dialect dialect, String charset)
+	{
+		super(expression, charset);
+		this.file = new File("console");
+		this.dialect = dialect;
+		init();
+	}
+
+	/**
 	 * Create a LexTokenReader to read content which originates from a file
-	 *  which is not yet saved and enable the source of the file to be set.
-	 * This is used in the IDE to provide while typing outline and parse error info.
+	 * which is not yet saved and enable the source of the file to be set.
+	 * This is used in the IDE to provide while typing outline and parse error
+	 * info.
+	 *
 	 * @param the content to parse.
 	 * @param dialect Parse VDM++ or VDM-SL tokens.
 	 * @param the file from which the content originates
 	 * @throws UnsupportedEncodingException
 	 */
-	public LexTokenReader(String content, Dialect dialect,File file)
+
+	public LexTokenReader(String content, Dialect dialect, File file)
 	{
 		super(content);
 		this.file = file;
 		this.dialect = dialect;
 		init();
 	}
+
 	/**
 	 * Create a LexTokenReader to read content which originates from a file
-	 *  which is not yet saved and enable the source of the file to be set.
-	 * This is used in the IDE to provide while typing outline and parse error info.
+	 * which is not yet saved and enable the source of the file to be set.
+	 * This is used in the IDE to provide while typing outline and parse error
+	 * info.
+	 *
 	 * @param the content to parse.
 	 * @param dialect Parse VDM++ or VDM-SL tokens.
 	 * @param the file from which the content originates
 	 * @param charset The charset for the file.
 	 * @throws UnsupportedEncodingException
 	 */
-	public LexTokenReader(String content, Dialect dialect,File file, String charset)
+
+	public LexTokenReader(String content, Dialect dialect, File file, String charset)
 	{
-		super(file, charset);
+		super(content, charset);
 		this.file = file;
 		this.dialect = dialect;
 		init();

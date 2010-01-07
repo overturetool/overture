@@ -34,6 +34,7 @@ import java.util.Vector;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.runtime.Interpreter;
+import org.overturetool.vdmj.util.Base64;
 
 /**
  * The main class of the VDMJ parser/checker/interpreter.
@@ -65,6 +66,7 @@ abstract public class VDMJ
 		List<String> largs = Arrays.asList(args);
 		VDMJ controller = null;
 		Dialect dialect = Dialect.VDM_SL;
+		boolean isBase64 = false;
 
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
 		{
@@ -113,6 +115,21 @@ abstract public class VDMJ
     			else
     			{
     				usage("-e option requires an expression");
+    			}
+    		}
+    		else if (arg.equals("-e64"))
+    		{
+    			interpret = true;
+    			pog = false;
+
+    			if (i.hasNext())
+    			{
+    				script = i.next();
+    				isBase64 = true;
+    			}
+    			else
+    			{
+    				usage("-e64 option requires an expression");
     			}
     		}
     		else if (arg.equals("-o"))
@@ -232,6 +249,19 @@ abstract public class VDMJ
 		if (logfile != null && !(controller instanceof VDMRT))
 		{
 			usage("The -log option can only be used with -vdmrt");
+		}
+
+		if (isBase64)
+		{
+			try
+			{
+				byte[] bytes = Base64.decode(script);
+				script = new String(bytes, VDMJ.filecharset);
+			}
+			catch (Exception e)
+			{
+				usage("Malformed -e64 base64 expression");
+			}
 		}
 
 		ExitStatus status = null;

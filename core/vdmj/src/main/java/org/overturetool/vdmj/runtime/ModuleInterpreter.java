@@ -31,13 +31,13 @@ import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
+import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ExpressionReader;
-import org.overturetool.vdmj.syntax.StatementReader;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.ModuleEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -170,21 +170,12 @@ public class ModuleInterpreter extends Interpreter
 	}
 
 	@Override
-	public Expression parseExpression(String line, String module) throws Exception
+	protected Expression parseExpression(String line, String module) throws Exception
 	{
-		LexTokenReader ltr = new LexTokenReader(line, Dialect.VDM_SL);
+		LexTokenReader ltr = new LexTokenReader(line, Dialect.VDM_SL, Console.charset);
 		ExpressionReader reader = new ExpressionReader(ltr);
 		reader.setCurrentModule(getDefaultName());
 		return reader.readExpression();
-	}
-
-	@Override
-	public Statement parseStatement(String line, String module) throws Exception
-	{
-		LexTokenReader ltr = new LexTokenReader(line, Dialect.VDM_SL);
-		StatementReader sr = new StatementReader(ltr);
-		sr.setCurrentModule(getDefaultName());
-		return sr.readStatement();
 	}
 
 	@Override

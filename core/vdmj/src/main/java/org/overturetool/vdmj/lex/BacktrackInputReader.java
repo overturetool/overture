@@ -94,17 +94,17 @@ public class BacktrackInputReader extends Reader
 	 * @param expression
 	 */
 
-	public BacktrackInputReader(String expression)
+	public BacktrackInputReader(String expression, String charset)
 	{
     	try
         {
     		data = new char[expression.length() + 1];
 
 	        ByteArrayInputStream is =
-	        	new ByteArrayInputStream(expression.getBytes());
+	        	new ByteArrayInputStream(expression.getBytes(charset));
 
 	        InputStreamReader isr =
-	        	new LatexStreamReader(is, Charset.defaultCharset().name());
+	        	new LatexStreamReader(is, charset);
 
 	        max = isr.read(data);
 	        pos = 0;
@@ -119,6 +119,17 @@ public class BacktrackInputReader extends Reader
 
 		// data = expression.toCharArray();
 		// max = expression.length();
+	}
+
+	/**
+	 * Create an object to read the string passed with the default charset.
+	 *
+	 * @param file	The filename to open
+	 */
+
+	public BacktrackInputReader(String expression)
+	{
+		this(expression, Charset.defaultCharset().name());
 	}
 
 	/**

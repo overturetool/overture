@@ -40,11 +40,11 @@ import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
+import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ExpressionReader;
-import org.overturetool.vdmj.syntax.StatementReader;
 import org.overturetool.vdmj.traces.CallSequence;
 import org.overturetool.vdmj.traces.TraceVariableStatement;
 import org.overturetool.vdmj.traces.Verdict;
@@ -162,23 +162,13 @@ public class ClassInterpreter extends Interpreter
 	}
 
 	@Override
-	public Expression parseExpression(String line, String module)
+	protected Expression parseExpression(String line, String module)
 		throws Exception
 	{
-		LexTokenReader ltr = new LexTokenReader(line, Settings.dialect);
+		LexTokenReader ltr = new LexTokenReader(line, Settings.dialect, Console.charset);
 		ExpressionReader reader = new ExpressionReader(ltr);
 		reader.setCurrentModule(module);
 		return reader.readExpression();
-	}
-
-	@Override
-	public Statement parseStatement(String line, String module)
-		throws Exception
-	{
-		LexTokenReader ltr = new LexTokenReader(line, Settings.dialect);
-		StatementReader sr = new StatementReader(ltr);
-		sr.setCurrentModule(module);
-		return sr.readStatement();
 	}
 
 	@Override

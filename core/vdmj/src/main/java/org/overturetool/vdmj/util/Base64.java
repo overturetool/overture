@@ -23,6 +23,12 @@
 
 package org.overturetool.vdmj.util;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * A class to manage base64 encoding and decoding.
  */
@@ -231,18 +237,54 @@ public class Base64
 
 	public static void main(String[] args) throws Exception
 	{
-		if (args.length != 2 ||
-			!(args[0].equals("encode") || args[0].equals("decode")))
+		BufferedReader bir = new BufferedReader(new InputStreamReader(System.in));
+		String charset = Charset.defaultCharset().name();
+		System.out.println("Default charset = " + charset);
+		Pattern pattern = Pattern.compile("(\\w+)\\s*?(.*)?$");
+
+		while (true)
 		{
-			System.err.println("Base64 [encode|decode] <string>");
+			System.out.print("> ");
+			String line = bir.readLine();
+			Matcher m = pattern.matcher(line);
+
+			if (!m.matches())
+			{
+    			System.out.println("[encode|decode] <string>");
+    			System.out.println("charset <name>");
+    			System.out.println("quit");
+    			continue;
+			}
+
+			String cmd = m.group(1);
+			String data = m.groupCount() == 2 ? m.group(2) : "";
+
+    		if (cmd.equals("decode"))
+    		{
+    			try
+				{
+					System.out.println(new String(decode(data)));
+				}
+				catch (Exception e)
+				{
+					System.out.println("Oops! " + e.getMessage());
+				}
+    		}
+    		else if (cmd.equals("encode"))
+    		{
+    			System.out.println(encode(data.getBytes(charset)));
+    		}
+    		else if (cmd.equals("charset"))
+    		{
+    			charset = data;
+    			System.out.println("Charset now " + charset);
+    		}
+    		else if (cmd.equals("quit"))
+    		{
+    			break;
+    		}
 		}
-		else if (args[0].equals("decode"))
-		{
-			System.out.println(new String(decode(args[1])));
-		}
-		else
-		{
-			System.out.println(encode(args[1].getBytes()));
-		}
+
+		bir.close();
 	}
 }
