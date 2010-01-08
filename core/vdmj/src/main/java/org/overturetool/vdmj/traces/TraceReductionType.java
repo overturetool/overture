@@ -25,5 +25,5 @@ package org.overturetool.vdmj.traces;
 
 public enum TraceReductionType
 {
-	NONE, RANDOM, SHAPES
+	NONE, RANDOM, SHAPES_NOVARS, SHAPES_VARNAMES, SHAPES_VARVALUES
 }

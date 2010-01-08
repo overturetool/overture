@@ -23,8 +23,10 @@
 
 package org.overturetool.vdmj.traces;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Random;
 import java.util.Vector;
 
@@ -105,47 +107,96 @@ public class TestSequence extends Vector<CallSequence>
 		}
 	}
 
-	public void reduce(float subset, TraceReductionType reduction)
+	public void reduce(float subset, TraceReductionType type, long seed)
     {
-		switch (reduction)
-		{
-			case NONE:
-				break;
-
-			case RANDOM:
-				randomReduction(subset);
-				break;
-
-			case SHAPES:
-				shapesReduction(subset);
-				break;
-
-			default:
-				throw new InternalException(53, "Unknown trace reduction");
-		}
-    }
-
-	private void shapesReduction(float subset)
-    {
-		// TBS
-    }
-
-	private void randomReduction(float subset)
-    {
+		Random prng = new Random(seed);
 		int s = size();
 		long n = Math.round(Math.ceil(s * subset));
-		Random prng = new Random();
 
 		if (n < s)
 		{
 			long delta = s - n;
 
-			for (long i=0; i<delta; i++)
+    		switch (type)
+    		{
+    			case NONE:
+    				break;
+
+    			case RANDOM:
+    				randomReduction(delta, prng);
+    				break;
+
+    			case SHAPES_NOVARS:
+    			case SHAPES_VARNAMES:
+    			case SHAPES_VARVALUES:
+    				shapesReduction(delta, type, prng);
+    				break;
+
+    			default:
+    				throw new InternalException(53, "Unknown trace reduction");
+    		}
+		}
+    }
+
+	private void shapesReduction(long delta, TraceReductionType type, Random prng)
+    {
+		Map<String, TestSequence> map = new HashMap<String, TestSequence>();
+
+		for (CallSequence cs: this)
+		{
+			String shape = cs.toShape(type);
+			TestSequence subset = map.get(shape);
+
+			if (subset == null)
 			{
-				int x = prng.nextInt(s);
-				this.remove(x);
-				s--;
+				subset = new TestSequence();
 			}
+
+			subset.add(cs);
+			map.put(shape, subset);
+		}
+
+		String[] shapes = map.keySet().toArray(new String[0]);
+
+		if (size() - delta < shapes.length)
+		{
+			// We must keep one test for each shape
+			delta = size() - shapes.length;
+		}
+
+		for (long i=0; i<delta; i++)
+		{
+			int x = prng.nextInt(shapes.length);
+			TestSequence tests = map.get(shapes[x]);
+			int s = tests.size();
+
+			if (s < 2)
+			{
+				i++;	// Find another group
+			}
+			else
+			{
+				tests.remove(prng.nextInt(s));
+			}
+		}
+
+		clear();
+
+		for (String shape: map.keySet())
+		{
+			addAll(map.get(shape));
+		}
+    }
+
+	private void randomReduction(long delta, Random prng)
+    {
+		int s = size();
+
+		for (long i=0; i<delta; i++)
+		{
+			int x = prng.nextInt(s);
+			this.remove(x);
+			s--;
 		}
     }
 }

@@ -196,11 +196,12 @@ public class NamedTraceDefinition extends Definition
 
 	public TestSequence getTests(Context ctxt)
 	{
-		return getTests(ctxt, 1.0F, TraceReductionType.NONE);
+		return getTests(
+			ctxt, 1.0F, TraceReductionType.NONE, System.currentTimeMillis());
 	}
 
 	public TestSequence getTests(
-		Context ctxt, float subset, TraceReductionType reduction)
+		Context ctxt, float subset, TraceReductionType type, long seed)
 	{
 		SequenceTraceNode traces = new SequenceTraceNode();
 
@@ -213,7 +214,7 @@ public class NamedTraceDefinition extends Definition
 
 		if (subset < 1.0)
 		{
-			tests.reduce(subset, reduction);
+			tests.reduce(subset, type, seed);
 		}
 
 		tests.typeCheck(classDefinition);

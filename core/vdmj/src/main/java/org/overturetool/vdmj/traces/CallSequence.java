@@ -25,6 +25,7 @@ package org.overturetool.vdmj.traces;
 
 import java.util.Vector;
 
+import org.overturetool.vdmj.statements.CallObjectStatement;
 import org.overturetool.vdmj.statements.CallStatement;
 import org.overturetool.vdmj.statements.Statement;
 
@@ -52,7 +53,7 @@ public class CallSequence extends Vector<Statement>
 		return sb.toString();
 	}
 
-	public String toShape()
+	public String toShape(TraceReductionType type)
 	{
 		StringBuilder sb = new StringBuilder();
 		String sep = "";
@@ -61,17 +62,40 @@ public class CallSequence extends Vector<Statement>
 		{
     		if (stmt instanceof TraceVariableStatement)
     		{
-       			sb.append(sep);
-       			sb.append(stmt.toString());
-       			sep = "; ";
+    			TraceVariableStatement tvs = (TraceVariableStatement)stmt;
+
+       			switch (type)
+    			{
+       				case SHAPES_NOVARS:
+       					break;
+
+       				case SHAPES_VARNAMES:
+       	       			sb.append(sep);
+       					sb.append(tvs.var.name);
+       	       			sep = "; ";
+       					break;
+
+       				case SHAPES_VARVALUES:
+       	       			sb.append(sep);
+       					sb.append(tvs.toString());
+       	       			sep = "; ";
+       					break;
+    			}
      		}
     		else if (stmt instanceof CallStatement)
     		{
     			CallStatement cs = (CallStatement)stmt;
        			sb.append(sep);
-       			sb.append(cs.name.toString());
+       			sb.append(cs.name.name);
        			sep = "; ";
      		}
+    		else if (stmt instanceof CallObjectStatement)
+    		{
+    			CallObjectStatement cs = (CallObjectStatement)stmt;
+       			sb.append(sep);
+       			sb.append(cs.fieldname);
+       			sep = "; ";
+    		}
 		}
 
 		return sb.toString();
