@@ -349,7 +349,7 @@ as the expected and actual values.
 2264, "Expecting ':' after trace name"
 2265, "Expecting '{n1, n2}' after trace definition"
 2266, "Expecting '{n}' or '{n1, n2}' after trace definition"
-2267, "Expecting 'id.id(args)' or '(trace definitions)'"
+2267, "Expecting 'obj.op(args)' or 'op(args)'"
 2268, "Expecting 'id.id(args)'"
 2269, "Expecting '(trace definitions)'"
 2270, "Only value definitions allowed in traces"
@@ -359,7 +359,7 @@ as the expected and actual values.
 2274, "Expecting 'cycles'"
 2275, "Expecting 'cycles('"
 2276, "Expecting ')' after cycles"
-2277, -
+2277, "Can't have state in VDM++"
 2278, "Async only permitted for operations"
 2279, "Invalid breakpoint hit condition"
 2280, "System class cannot be a subclass"

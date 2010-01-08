@@ -69,6 +69,7 @@ import org.overturetool.vdmj.patterns.SetBind;
 import org.overturetool.vdmj.patterns.TuplePattern;
 import org.overturetool.vdmj.patterns.TypeBind;
 import org.overturetool.vdmj.statements.CallObjectStatement;
+import org.overturetool.vdmj.statements.CallStatement;
 import org.overturetool.vdmj.statements.ErrorCase;
 import org.overturetool.vdmj.statements.ExternalClause;
 import org.overturetool.vdmj.statements.SpecificationStatement;
@@ -154,6 +155,11 @@ public class DefinitionReader extends SyntaxReader
         			break;
 
 				case STATE:
+					if (dialect != Dialect.VDM_SL)
+					{
+						throwMessage(2277, "Can't have state in VDM++");
+					}
+
 					try
     				{
     					nextToken();
@@ -180,10 +186,21 @@ public class DefinitionReader extends SyntaxReader
 					break;
 
 				case INSTANCE:
+					if (dialect == Dialect.VDM_SL)
+					{
+						throwMessage(2009, "Can't have instance variables in VDM-SL");
+					}
+
 					list.addAll(readInstanceVariables());
 					break;
 
 				case TRACES:
+					if (dialect == Dialect.VDM_SL &&
+						Settings.release != Release.VDM_10)
+					{
+						throwMessage(2262, "Can't have traces in VDM-SL classic");
+					}
+
 					list.addAll(readTraces());
 					break;
 
@@ -220,6 +237,11 @@ public class DefinitionReader extends SyntaxReader
 					break;
 
 				case SYNC:
+					if (dialect == Dialect.VDM_SL)
+					{
+						throwMessage(2012, "Can't have a sync clause in VDM-SL");
+					}
+
 					list.addAll(readSyncs());
 					break;
 
@@ -470,11 +492,6 @@ public class DefinitionReader extends SyntaxReader
 
 	public DefinitionList readInstanceVariables() throws LexException, ParserException
 	{
-		if (dialect == Dialect.VDM_SL)
-		{
-			throwMessage(2009, "Can't have instance variables in VDM-SL");
-		}
-
 		checkFor(Token.INSTANCE, 2083, "Expected 'instance variables'");
 		checkFor(Token.VARIABLES, 2083, "Expecting 'instance variables'");
 		DefinitionList list = new DefinitionList();
@@ -503,11 +520,6 @@ public class DefinitionReader extends SyntaxReader
 
 	private DefinitionList readTraces() throws LexException, ParserException
 	{
-		if (dialect == Dialect.VDM_SL)
-		{
-			throwMessage(2262, "Can't have traces in VDM-SL");
-		}
-
 		checkFor(Token.TRACES, 2013, "Expected 'traces'");
 		DefinitionList list = new DefinitionList();
 
@@ -534,11 +546,6 @@ public class DefinitionReader extends SyntaxReader
 
 	private DefinitionList readSyncs() throws LexException, ParserException
 	{
-		if (dialect == Dialect.VDM_SL)
-		{
-			throwMessage(2012, "Can't have a sync clause in VDM-SL");
-		}
-
 		checkFor(Token.SYNC, 2013, "Expected 'sync'");
 		DefinitionList list = new DefinitionList();
 
@@ -1532,17 +1539,18 @@ public class DefinitionReader extends SyntaxReader
 		switch (token.type)
 		{
 			case IDENTIFIER:
+			case NAME:
 				StatementReader sr = getStatementReader();
 				Statement stmt = sr.readStatement();
 
-				if (!(stmt instanceof CallObjectStatement))
+				if (!(stmt instanceof CallStatement) &&
+					!(stmt instanceof CallObjectStatement))
 				{
 					throwMessage(2267,
-						"Expecting 'id.id(args)' or '(trace definitions)'", token);
+						"Expecting 'obj.op(args)' or 'op(args)'", token);
 				}
 
-				return new TraceApplyExpression(
-					(CallObjectStatement)stmt, getCurrentModule());
+				return new TraceApplyExpression(stmt, getCurrentModule());
 
 			case BRA:
 				nextToken();
@@ -1551,7 +1559,7 @@ public class DefinitionReader extends SyntaxReader
 				return new TraceBracketedExpression(token.location, list);
 
 			default:
-				throwMessage(2267, "Expecting 'id.id(args)' or '(trace definitions)'");
+				throwMessage(2267, "Expecting 'obj.op(args)' or 'op(args)'", token);
 				return null;
 		}
 	}

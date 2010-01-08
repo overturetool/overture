@@ -23,15 +23,15 @@
 
 package org.overturetool.vdmj.traces;
 
-import org.overturetool.vdmj.statements.CallObjectStatement;
+import org.overturetool.vdmj.statements.Statement;
 
 public class StatementTraceNode extends TraceNode
 {
-	public final CallObjectStatement statement;
+	public final Statement statement;
 
-	public StatementTraceNode(CallObjectStatement statement)
+	public StatementTraceNode(Statement newStatement)
 	{
-		this.statement = statement;
+		this.statement = newStatement;
 	}
 
 	@Override

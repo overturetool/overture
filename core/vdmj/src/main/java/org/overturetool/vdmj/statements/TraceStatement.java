@@ -29,7 +29,6 @@ import java.util.List;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.Interpreter;
@@ -67,7 +66,7 @@ public class TraceStatement extends Statement
 	public Value eval(Context ctxt)
 	{
 		TestSequence tests = tracedef.getTests(ctxt);
-		ClassInterpreter ci = (ClassInterpreter)Interpreter.getInstance();
+		Interpreter interpreter = Interpreter.getInstance();
 		Value argval = ctxt.check(arg);
 
 		if (argval == null)
@@ -87,8 +86,8 @@ public class TraceStatement extends Statement
     			}
     			else
     			{
-        			ci.init(null);	// Initialize completely between every run...
-        			List<Object> result = ci.runtrace(tracedef.classDefinition, test);
+        			interpreter.init(null);	// Initialize completely between every run...
+        			List<Object> result = interpreter.runtrace(tracedef.classDefinition, test);
         			tests.filter(result, test, n);
 
         			writer.println("Test " + n + " = " + clean);
@@ -128,8 +127,8 @@ public class TraceStatement extends Statement
 			}
 			else
 			{
-    			ci.init(null);	// Initialize completely between every run...
-    			List<Object> result = ci.runtrace(tracedef.classDefinition, test);
+    			interpreter.init(null);	// Initialize completely between every run...
+    			List<Object> result = interpreter.runtrace(tracedef.classDefinition, test);
 
     			writer.println("Test " + n + " = " + clean);
     			writer.println("Result = " + result);

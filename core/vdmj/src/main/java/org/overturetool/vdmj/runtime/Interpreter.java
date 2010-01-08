@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -43,6 +44,7 @@ import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ParserException;
+import org.overturetool.vdmj.traces.CallSequence;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.values.CPUValue;
@@ -512,4 +514,6 @@ abstract public class Interpreter
 		assert false : "findModule cannot be called for classes";
 		return null;
 	}
+
+	abstract public List<Object> runtrace(ClassDefinition def, CallSequence statements);
 }

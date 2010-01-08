@@ -62,13 +62,13 @@ public class CallStatement extends Statement
 	@Override
 	public String toString()
 	{
-		return "call " + name + "(" + Utils.listToString(args) + ")";
+		return name + "(" + Utils.listToString(args) + ")";
 	}
 
 	@Override
 	public String kind()
 	{
-		return "call";
+		return "op call";
 	}
 
 	@Override

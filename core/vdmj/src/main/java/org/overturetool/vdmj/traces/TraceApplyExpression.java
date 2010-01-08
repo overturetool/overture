@@ -23,13 +23,15 @@
 
 package org.overturetool.vdmj.traces;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.ExpressionList;
-import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.statements.CallObjectStatement;
+import org.overturetool.vdmj.statements.CallStatement;
+import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.typechecker.Environment;
@@ -44,34 +46,46 @@ import org.overturetool.vdmj.values.Value;
 public class TraceApplyExpression extends TraceCoreDefinition
 {
     private static final long serialVersionUID = 1L;
-	public final CallObjectStatement statement;
+	public final Statement callStatement;
 	public final String currentModule;
 
-	public TraceApplyExpression(CallObjectStatement statement, String currentModule)
+	public TraceApplyExpression(Statement stmt, String currentModule)
 	{
-		super(statement.location);
-		this.statement = statement;
+		super(stmt.location);
+		this.callStatement = stmt;
 		this.currentModule = currentModule;
 	}
 
 	@Override
 	public String toString()
 	{
-		return statement.toString();
+		return callStatement.toString();
 	}
 
 	@Override
 	public void typeCheck(Environment env, NameScope scope)
 	{
-		statement.typeCheck(env, scope);
+		callStatement.typeCheck(env, scope);
 	}
 
 	@Override
 	public TraceNode expand(Context ctxt)
 	{
 		ExpressionList newargs = new ExpressionList();
+		ExpressionList args = null;
 
-		for (Expression arg: statement.args)
+		if (callStatement instanceof CallStatement)
+		{
+			CallStatement stmt = (CallStatement)callStatement;
+			args = stmt.args;
+		}
+		else
+		{
+			CallObjectStatement stmt = (CallObjectStatement)callStatement;
+			args = stmt.args;
+		}
+
+		for (Expression arg: args)
 		{
 			Value v = arg.eval(ctxt).deref();
 
@@ -82,7 +96,7 @@ public class TraceApplyExpression extends TraceCoreDefinition
 			else
 			{
     			String value = v.toString();
-    			LexTokenReader ltr = new LexTokenReader(value, Dialect.VDM_PP);
+    			LexTokenReader ltr = new LexTokenReader(value, Settings.dialect);
     			ExpressionReader er = new ExpressionReader(ltr);
     			er.setCurrentModule(currentModule);
 
@@ -101,10 +115,20 @@ public class TraceApplyExpression extends TraceCoreDefinition
 			}
 		}
 
-		CallObjectStatement cos = new CallObjectStatement(
-			statement.designator, statement.classname, statement.fieldname,
-			newargs);
+		Statement newStatement = null;
 
-		return new StatementTraceNode(cos);
+		if (callStatement instanceof CallStatement)
+		{
+			CallStatement stmt = (CallStatement)callStatement;
+			newStatement = new CallStatement(stmt.name, newargs);
+		}
+		else
+		{
+			CallObjectStatement stmt = (CallObjectStatement)callStatement;
+			newStatement = new CallObjectStatement(
+				stmt.designator, stmt.classname, stmt.fieldname, newargs);
+		}
+
+		return new StatementTraceNode(newStatement);
 	}
 }

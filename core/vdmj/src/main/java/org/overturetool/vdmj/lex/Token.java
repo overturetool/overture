@@ -212,7 +212,7 @@ public enum Token implements Serializable
 	OPERATIONS("operations", "operations", VDM_SL, VDM_PP, VDM_RT),
 	THREAD("thread", "thread", VDM_PP, VDM_RT),
 	SYNC("sync", "sync", VDM_PP, VDM_RT),
-	TRACES("traces", "traces", VDM_PP, VDM_RT),
+	TRACES("traces", "traces", VDM_SL, VDM_PP, VDM_RT),
 	INSTANCE("instance", "instance", VDM_PP, VDM_RT),
 	VARIABLES("variables", "variables", VDM_PP, VDM_RT),
 

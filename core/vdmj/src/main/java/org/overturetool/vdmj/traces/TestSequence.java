@@ -74,11 +74,19 @@ public class TestSequence extends Vector<CallSequence>
 
 	public void typeCheck(ClassDefinition classdef)
 	{
-		ClassInterpreter ci = (ClassInterpreter)Interpreter.getInstance();
+		Interpreter interpreter = Interpreter.getInstance();
+		Environment env = null;
 
-		Environment env = new FlatEnvironment(
-			classdef.getSelfDefinition(),
-			new PrivateClassEnvironment(classdef, ci.getGlobalEnvironment()));
+		if (interpreter instanceof ClassInterpreter)
+		{
+			 env = new FlatEnvironment(
+				classdef.getSelfDefinition(),
+				new PrivateClassEnvironment(classdef, interpreter.getGlobalEnvironment()));
+		}
+		else
+		{
+			 env = interpreter.getGlobalEnvironment();
+		}
 
 		for (CallSequence test: this)
 		{
@@ -86,7 +94,7 @@ public class TestSequence extends Vector<CallSequence>
     		{
 				try
 				{
-					ci.typeCheck(statement, env);
+					interpreter.typeCheck(statement, env);
 				}
 				catch (Exception e)
 				{
@@ -103,15 +111,15 @@ public class TestSequence extends Vector<CallSequence>
 		{
 			case NONE:
 				break;
-				
+
 			case RANDOM:
 				randomReduction(subset);
 				break;
-				
+
 			case SHAPES:
 				shapesReduction(subset);
 				break;
-				
+
 			default:
 				throw new InternalException(53, "Unknown trace reduction");
 		}
@@ -127,11 +135,11 @@ public class TestSequence extends Vector<CallSequence>
 		int s = size();
 		long n = Math.round(Math.ceil(s * subset));
 		Random prng = new Random();
-		
+
 		if (n < s)
 		{
 			long delta = s - n;
-			
+
 			for (long i=0; i<delta; i++)
 			{
 				int x = prng.nextInt(s);

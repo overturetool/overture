@@ -25,6 +25,8 @@ package org.overturetool.vdmj.definitions;
 
 import java.util.List;
 
+import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -135,9 +137,8 @@ public class NamedTraceDefinition extends Definition
 
 	private ExplicitOperationDefinition getOneTestDefinition()
 	{
-		LexNameToken oneName = name.copy();
 		TypeList ptypes = new TypeList(new NaturalOneType(location));
-		oneName.setTypeQualifier(ptypes);
+		LexNameToken oneName = getOneName(ptypes);
 		PatternList params = new PatternList();
 
 		// Note the _test_ parameter name is illegal in VDM to avoid name
@@ -154,6 +155,20 @@ public class NamedTraceDefinition extends Definition
 		def.setAccessSpecifier(accessSpecifier);
 		def.classDefinition = classDefinition;
 		return def;
+	}
+
+	private LexNameToken getOneName(TypeList ptypes)
+	{
+		if (Settings.dialect != Dialect.VDM_SL)
+		{
+			LexNameToken oneName = name.copy();
+			oneName.setTypeQualifier(ptypes);
+			return oneName;
+		}
+		else
+		{
+			return new LexNameToken(name.module, name.name + "_", name.location);
+		}
 	}
 
 	@Override
@@ -183,7 +198,7 @@ public class NamedTraceDefinition extends Definition
 	{
 		return getTests(ctxt, 1.0F, TraceReductionType.NONE);
 	}
-	
+
 	public TestSequence getTests(
 		Context ctxt, float subset, TraceReductionType reduction)
 	{
@@ -195,12 +210,12 @@ public class NamedTraceDefinition extends Definition
 		}
 
 		TestSequence tests = traces.getTests();
-		
+
 		if (subset < 1.0)
 		{
 			tests.reduce(subset, reduction);
 		}
-		
+
 		tests.typeCheck(classDefinition);
 		return tests;
 	}

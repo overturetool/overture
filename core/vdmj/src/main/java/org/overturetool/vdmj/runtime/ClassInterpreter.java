@@ -360,6 +360,7 @@ public class ClassInterpreter extends Interpreter
 		return classes.getProofObligations();
 	}
 
+	@Override
 	public List<Object> runtrace(ClassDefinition classdef, CallSequence statements)
 	{
 		List<Object> list = new Vector<Object>();
