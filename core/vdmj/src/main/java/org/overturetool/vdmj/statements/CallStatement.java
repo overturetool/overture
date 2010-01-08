@@ -62,7 +62,7 @@ public class CallStatement extends Statement
 	@Override
 	public String toString()
 	{
-		return name + "(" + Utils.listToString(args) + ")";
+		return name.name + "(" + Utils.listToString(args) + ")";
 	}
 
 	@Override
