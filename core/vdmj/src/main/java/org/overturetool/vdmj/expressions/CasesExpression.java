@@ -26,6 +26,7 @@ package org.overturetool.vdmj.expressions;
 import java.util.List;
 
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.patterns.IgnorePattern;
 import org.overturetool.vdmj.pog.CasesExhaustiveObligation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -127,9 +128,20 @@ public class CasesExpression extends Expression
 	{
 		ProofObligationList obligations = new ProofObligationList();
 
+		int count = 0;
+		boolean hasIgnore = false;
+
 		for (CaseAlternative alt: cases)
 		{
-			obligations.addAll(alt.getProofObligations(ctxt, expType));
+			if (!(alt.pattern instanceof IgnorePattern))
+			{
+				obligations.addAll(alt.getProofObligations(ctxt, expType));
+				count++;
+			}
+			else
+			{
+				hasIgnore = true;
+			}
 		}
 
 		if (others != null)
@@ -137,12 +149,12 @@ public class CasesExpression extends Expression
 			obligations.addAll(others.getProofObligations(ctxt));
 		}
 
-		for (int i=0; i<cases.size(); i++)
+		for (int i=0; i<count; i++)
 		{
 			ctxt.pop();
 		}
 
-		if (others == null)
+		if (others == null && !hasIgnore)
 		{
 			obligations.add(new CasesExhaustiveObligation(this, ctxt));
 		}

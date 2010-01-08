@@ -28,6 +28,7 @@ import org.overturetool.vdmj.lex.LexCharacterToken;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexIntegerToken;
+import org.overturetool.vdmj.lex.LexKeywordToken;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexQuoteToken;
 import org.overturetool.vdmj.lex.LexRealToken;
@@ -42,6 +43,7 @@ import org.overturetool.vdmj.patterns.ExpressionPattern;
 import org.overturetool.vdmj.patterns.IdentifierPattern;
 import org.overturetool.vdmj.patterns.IgnorePattern;
 import org.overturetool.vdmj.patterns.IntegerPattern;
+import org.overturetool.vdmj.patterns.NilPattern;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.patterns.QuotePattern;
@@ -120,6 +122,10 @@ public class PatternReader extends SyntaxReader
 			case TRUE:
 			case FALSE:
 				pattern = new BooleanPattern((LexBooleanToken)token);
+				break;
+
+			case NIL:
+				pattern = new NilPattern((LexKeywordToken)token);
 				break;
 
 			case BRA:
@@ -216,7 +222,6 @@ public class PatternReader extends SyntaxReader
 				break;
 
 			case MINUS:
-			case NIL:
 				pattern = new IgnorePattern(token.location);
 				break;
 
