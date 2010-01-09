@@ -19,6 +19,9 @@
             finalPerspective="org.overture.ide.vdmrt.ui.VdmRtPerspective"
             preferredPerspectives="org.overture.ide.vdmrt.ui.VdmRtPerspective"
             project="true">
+         <description>
+            Create new VDM-RT project
+         </description>
       </wizard>
       <wizard
             category="org.overture.ide.category"

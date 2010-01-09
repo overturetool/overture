@@ -19,14 +19,23 @@
             project="true"
             preferredPerspectives="org.overture.ide.vdmpp.ui.VdmPpPerspective" 
             finalPerspective="org.overture.ide.vdmpp.ui.VdmPpPerspective" >
+         <description>
+            Create new VDM-PP project
+         </description>
       </wizard>
       <wizard
             category="org.overture.ide.category"
             class="org.overture.ide.vdmpp.ui.wizards.VdmPpNewClassWizard"
+            finalPerspective="org.overture.ide.vdmpp.ui.VdmPpPerspective"
             icon="icons/cview16/vdmpp_file_tsk.png"
             id="org.overture.ide.vdmpp.ui.wizards.VdmPpNewClassWizard"
-            name="VDM++ Class">
+            name="VDM++ Class"
+            preferredPerspectives="org.overture.ide.vdmpp.ui.VdmPpPerspective"
+            project="false">
             <description>New VDM++ class</description>
+            <selection
+                  class="org.eclipse.core.resources.IFile">
+            </selection>
       </wizard>
    </extension>
 <extension

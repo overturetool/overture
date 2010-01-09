@@ -1,5 +1,9 @@
 Overture IDE release notes:
 
+Version 0.1.3
+07 January 2010:	Fixed: Problem with debug of specification files in different encoding. Where the debugger could not be started do to
+					 none standard chars in class/module and operation/function.
+					Fixed: Problem with encoding in console when debugging files of none standard encoding.
 Version 0.1.2
 22 December 2009:	Fixed: Debug Main Script file not found.
 					Updated VDM-RT outline with instance variables and values.

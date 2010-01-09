@@ -152,7 +152,7 @@ public class VdmProject implements IVdmProject
 		{
 			Object languageVersion = getBuilderArguemnt(LANGUAGE_VERSION_ARGUMENT_KEY);
 			if (languageVersion != null)
-				return Release.valueOf(languageVersion.toString());
+				return Release.lookup(languageVersion.toString());
 
 		}
 		return Release.DEFAULT;

@@ -90,6 +90,8 @@ public class ConsoleWriter extends PrintWriter
 		conMan.addConsoles(new IConsole[] { myConsole });
 		return myConsole;
 	}
+	
+
 
 	public  void ConsolePrint(final Shell shell, final Exception exception)
 	{

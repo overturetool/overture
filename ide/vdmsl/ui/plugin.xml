@@ -19,6 +19,9 @@
             finalPerspective="org.overture.ide.vdmsl.ui.VdmSlPerspective"
             preferredPerspectives="org.overture.ide.vdmsl.ui.VdmSlPerspective"
             project="true">
+         <description>
+            Create new VDM-SL
+         </description>
       </wizard>
       <!-- new module wizard -->
      <wizard

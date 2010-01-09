@@ -191,7 +191,7 @@ public class VdmLanguagePropertyPage1 extends PropertyPage implements
 	{
 	try
 	{
-		project.setBuilder(Release.valueOf(comboBoxLanguageVersion.getText()));
+		project.setBuilder(Release.lookup(comboBoxLanguageVersion.getText()));
 		
 		project.setDynamictypechecks(checkBoxDynamicTypeChecks.getSelection());
 		project.setInvchecks(checkBoxInvChecks.getSelection());

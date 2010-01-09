@@ -41,9 +41,6 @@ public class VdmSlParser extends VdmjSourceParser {
 
    			try
    			{
-   				
-   			
-   					
     				LexTokenReader ltr =
     					new LexTokenReader(content, Settings.dialect,file,charset);
         			reader = new ModuleReader(ltr);

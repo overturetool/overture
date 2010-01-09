@@ -21,6 +21,7 @@ import org.overture.ide.utility.ProjectUtility;
 import org.overture.ide.utility.SourceLocationConverter;
 import org.overture.ide.utility.VdmProject;
 import org.overturetool.vdmj.ExitStatus;
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 
@@ -65,10 +66,16 @@ public abstract class VdmjSourceParser extends AbstractSourceParser {
 			charset = ProjectUtility.findIFile(project, file).getCharset();
 		} catch (CoreException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+		try
+		{
+			Settings.release = new VdmProject(project).getLanguageVersion();
+		} catch (CoreException e)
+		{
+			e.printStackTrace();
+		}
 		ExitStatus status = parse(new String(source), file,charset);// project.getFile(path.removeFirstSegments(1)).getLocation().toFile()//parse(new
 		// String(source));
 
