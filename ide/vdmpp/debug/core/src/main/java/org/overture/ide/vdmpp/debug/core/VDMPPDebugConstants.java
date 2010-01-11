@@ -17,5 +17,5 @@ public interface VDMPPDebugConstants {
 	final String VDMPP_VDMJ_InterpreterType = "VDMJ_Interpreter_VDMPP";
 	final String VDMPP_VDMJ_InterpreterName = "VDMJ Interpreter for VDM++";
 	final String VDMPP_VDMJ_DIALECT = "vdmpp";
-	final String VDMPP_DEBUG_MODEL = "org.overture.ide.vdmpp.debug.ui.VDMPPDEbugModelPresentation";
+	final String VDMPP_DEBUG_MODEL = "org.overture.ide.vdmpp.debug.ui.VDMPPDebugModelPresentation";
 }

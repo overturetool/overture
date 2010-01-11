@@ -53,7 +53,7 @@
    <!-- the script debug model --> 
    <extension point="org.eclipse.dltk.debug.scriptDebugModel">
       <debugModel
-            debugModelId="org.overture.ide.debug.ui.vdmpp.VDMPPDEbugModelPresentation"
+            debugModelId="org.overture.ide.debug.ui.vdmpp.VDMPPDebugModelPresentation"
             debugToolkit="org.overture.ide.debug.core.OvertureDebugToolkit"
             natureId="org.overture.ide.vdmpp.core.nature"
             typeFactory="org.overture.ide.debug.core.OvertureTypeFactory">

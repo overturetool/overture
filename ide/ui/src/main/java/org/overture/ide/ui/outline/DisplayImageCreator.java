@@ -2,9 +2,9 @@ package org.overture.ide.ui.outline;
 
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.swt.graphics.Image;
-import org.omg.CORBA.OBJ_ADAPTER;
-import org.overturetool.vdmj.definitions.*;
-import org.overturetool.vdmj.lex.Token;
+import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.definitions.ValueDefinition;
 import org.overturetool.vdmj.modules.Module;
 
 public class DisplayImageCreator

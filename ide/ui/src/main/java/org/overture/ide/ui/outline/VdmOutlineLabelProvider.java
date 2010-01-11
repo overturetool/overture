@@ -1,13 +1,8 @@
 package org.overture.ide.ui.outline;
 
-import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.Definition;
 
 public class VdmOutlineLabelProvider implements ILabelProvider
 {
