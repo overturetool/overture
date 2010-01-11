@@ -207,8 +207,9 @@ test_PowerList: BinRel -> bool
 -- tests PowerList using a simpler albeit  inefficient 
 -- Power_Rel as an automatic  test oracle, to avoid manual test evaluation
 test_PowerList(R)== 
-  let L = PowerList(R), n = card field(R)
-     in 
+  let L = PowerList(R), 
+      n = card field(R)
+  in 
   (forall i in set inds L & L(i)=Power_rel(R,i))
      and len L<n => Power_rel(R, len L +1) ={};
 -- For "normal" applications pre_PowerList(R) <=> R<>{} should be observed.

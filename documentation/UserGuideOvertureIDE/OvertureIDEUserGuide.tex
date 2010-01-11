@@ -136,7 +136,7 @@
 
 \begin{document}
 \title{User Guide for the Overture VDM Tool Support}
-\author{Peter Gorm Larsen, Kenneth Lausdahl, Augusto Reibero and Sune Wolff \\ 
+\author{Peter Gorm Larsen, Kenneth Lausdahl, Augusto Ribeiro and Sune Wolff \\ 
 Engineering College of Aarhus\\
 Dalgas Avenue 2, DK-8000 \AA{}rhus C, Denmark\\[3mm]
 Nick Battle\\
@@ -351,11 +351,11 @@ is a button to optionally sort what is
 displayed in the outline view, for instance it is possible to hide variables.
 
 
-\begin{figure}[!h]
+\begin{figure}[!htb]
 \begin{center}
+  \includegraphics[width=2.5in]{figures/OutlineView}
   \caption[labelInTOC]{The Outline View}
   \label{fig:userguide:OutlineView}
-  \includegraphics[width=2.5in]{figures/OutlineView}
 \end{center}
 \end{figure}
 
@@ -376,6 +376,22 @@ these vary dynamically according to context and history.
 \subsection{Additional Eclipse Features Applicable in Overture}
 
 \subsubsection{Opening and Closing Projects}
+
+In order not to take up too much space and computing power it may be
+advantageously to close projects that are not used currently. That can
+be done by right clicking such projects and then selecting the
+\emph{Close Project} entry in the menu as shown in
+Figure~\ref{fig:closeproject}. For such closed projects it is possible
+to open them again in the same fashion using the \emph{Open project}
+entry in the menu.
+ 
+\begin{figure}[!htb]
+\begin{center}
+  \includegraphics[width=2in]{screenDumps/closeproject}
+  \caption[labelInTOC]{Closing a Project}
+  \label{fig:closeproject}
+\end{center}
+\end{figure}
 
 \subsubsection{Adding Additional VDM File Extensions}
 
@@ -489,7 +505,7 @@ set for each VDM project are:
 
 \begin{figure}[!hbt]
 \begin{center}
-  \includegraphics[scale=0.8]{screendumps/projectsettings}
+  \includegraphics[width=\textwidth]{screendumps/projectsettings}
   \caption[Overture Project Settings]{Overture Project Settings}
   \label{fig:VDMSettings}
 \end{center}
@@ -750,7 +766,7 @@ based on an expression defined by the user.
 
 \begin{figure}[htp]
 \begin{center}
-  \includegraphics[width=\textwidth]{figures/Breakpointconditional}
+  \includegraphics[width=.6\textwidth]{figures/Breakpointconditional}
   \caption{Conditional breakpoint options}
   \label{fig:userguide:BreakpointConditional}
 \end{center}
@@ -823,7 +839,7 @@ then select the \emph{Proof Obligations} $\rightarrow$ \emph{Generate Proof
 
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[width=4.5in]{figures/POview}
+\includegraphics[width=\textwidth]{figures/POview}
 \caption{The Proof Obligation perspective\label{fig:POview}}
 \end{center}
 \end{figure}
@@ -979,7 +995,7 @@ The different kinds of repeat patterns have the following meanings:
 If one have used the {\bf\ttfamily traces} syntax described above it
 is possible to go to the \emph{Combinatorial testing}
 perspective\index{combinatorial testing}. An example of using that
-perspective can be seen in Figure~\ref{fig:stracesalarm}.
+perspective can be seen in Figure~\ref{fig:tracesalarm}.
 
 Different icons are used to illustrate the verdict in a test
 case. These are:
