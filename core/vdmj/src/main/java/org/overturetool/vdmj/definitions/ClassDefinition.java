@@ -986,19 +986,47 @@ public class ClassDefinition extends Definition
 			sdef.setStaticValues(initCtxt);
 		}
 
-		setStaticValues(definitions, initCtxt);
-		setStaticValues(localInheritedDefinitions, initCtxt);
+		setStaticValues(definitions, initCtxt, false);
+		setStaticValues(localInheritedDefinitions, initCtxt, true);
 	}
 
-	private void setStaticValues(DefinitionList defs, Context initCtxt)
+	private void setStaticValues(
+		DefinitionList defs, Context initCtxt, boolean inherit)
 	{
 		for (Definition d: defs)
 		{
+			NameValuePairList nvl = null;
+
+			if (inherit)
+			{
+				InheritedDefinition id = (InheritedDefinition)d;
+				LexNameList names = d.getVariableNames();
+				nvl = new NameValuePairList();
+
+				for (LexNameToken vname: names)
+				{
+					LexNameToken iname = vname.getModifiedName(id.superdef.name.module);
+					Value v = initCtxt.get(iname);
+					nvl.add(vname, v);
+				}
+			}
+			else
+			{
+				if (d.isValueDefinition())
+				{
+					nvl = d.getNamedValues(initCtxt);
+				}
+				else if (d.isStatic() && d.isInstanceVariable())
+				{
+					nvl = d.getNamedValues(initCtxt).getUpdatable(invlistener);
+				}
+			}
+
 			if (d.isValueDefinition())
 			{
 				// Values are implicitly static, but NOT updatable
 
-				NameValuePairList nvl = d.getNamedValues(initCtxt);
+				// NameValuePairList nvl = d.getNamedValues(initCtxt);
 
 				switch (d.accessSpecifier.access)
 				{
@@ -1018,8 +1046,7 @@ public class ClassDefinition extends Definition
 			{
 				// Static instance variables are updatable
 
-				NameValuePairList nvl =
-					d.getNamedValues(initCtxt).getUpdatable(invlistener);
+				// nvl = d.getNamedValues(initCtxt).getUpdatable(invlistener);
 
 				switch (d.accessSpecifier.access)
 				{

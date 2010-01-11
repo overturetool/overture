@@ -101,6 +101,14 @@ public class InheritedDefinition extends Definition
 	{
 		LexNameList names = new LexNameList();
 
+		if (superdef instanceof UntypedDefinition)
+		{
+			if (classDefinition != null)
+			{
+				superdef = classDefinition.findName(superdef.name, nameScope);
+			}
+		}
+
 		for (LexNameToken vn: superdef.getVariableNames())
 		{
 			names.add(vn.getModifiedName(name.module));
