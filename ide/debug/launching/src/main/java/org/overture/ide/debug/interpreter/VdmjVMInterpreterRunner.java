@@ -352,8 +352,11 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 					VDMLaunchingConstants.PLUGIN_ID,
 					"Entry class not set in launch configuration"));
 
-		return buildLaunchExpression(module, debugOperation).replace("\"",
-				"\\\"");
+		String expression = buildLaunchExpression(module, debugOperation);
+		if(System.getProperty("os.name").toLowerCase().contains("windows"))
+				return expression.replace("\"","\\\"");
+		else
+			return expression;
 	}
 
 	protected String buildLaunchExpression(String module, String debugOperation)
