@@ -30,6 +30,8 @@ import org.overture.ide.vdmpp.core.VdmPpCorePluginConstants;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
 import org.overture.ide.vdmrt.core.VdmRtCorePluginConstants;
 import org.overture.ide.vdmrt.core.VdmRtProjectNature;
+import org.overture.ide.vdmsl.core.VdmSlCorePluginConstants;
+import org.overture.ide.vdmsl.core.VdmSlProjectNature;
 import org.overturetool.traces.utility.ITracesHelper;
 import org.overturetool.traces.utility.TraceHelperNotInitializedException;
 import org.overturetool.traces.utility.TraceTestResult;
@@ -40,6 +42,8 @@ import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.modules.Module;
+import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.xml.sax.SAXException;
 
@@ -69,6 +73,11 @@ public class VdmjTracesHelper implements ITracesHelper {
 			 nature = VdmRtProjectNature.VDM_RT_NATURE;
 			 contentTypeId = VdmRtCorePluginConstants.CONTENT_TYPE;
 			 dialect= Dialect.VDM_RT;
+		}else if(project.hasNature(VdmSlProjectNature.VDM_SL_NATURE))
+		{
+			 nature = VdmSlProjectNature.VDM_SL_NATURE;
+			 contentTypeId = VdmSlCorePluginConstants.CONTENT_TYPE;
+			 dialect= Dialect.VDM_SL;
 		}
 		
 		this.projectDir = new File(project.getLocation().toFile(), TRACE_STORE_DIR_NAME);
@@ -95,12 +104,32 @@ public class VdmjTracesHelper implements ITracesHelper {
 		RootNode root = AstManager.instance().getRootNode(project, nature);
 		return root.getClassList();
 	}
+	
+	private ModuleList getModules() throws NotAllowedException {
+		RootNode root = AstManager.instance().getRootNode(project, nature);
+		return root.getModuleList();
+	}	
 
 	public List<String> GetClassNamesWithTraces() throws IOException {
 
 		List<String> classNames = new ArrayList<String>();
 
 		try {
+			if(dialect == Dialect.VDM_SL)
+			{
+				for (Module classdef : getModules()) {
+					for (Object string : classdef.defs) {
+						if (string instanceof NamedTraceDefinition) {
+
+							classNames.add(classdef.name.name);
+							break;
+						}
+					}
+				}
+				
+			}
+		else
+			{
 			for (ClassDefinition classdef : getClasses()) {
 				for (Object string : classdef.definitions) {
 					if (string instanceof NamedTraceDefinition) {
@@ -109,7 +138,8 @@ public class VdmjTracesHelper implements ITracesHelper {
 						break;
 					}
 				}
-			}
+			}}
+			
 		} catch (NotAllowedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -121,11 +151,22 @@ public class VdmjTracesHelper implements ITracesHelper {
 	public File GetFile(String className)
 			throws TraceHelperNotInitializedException, ClassNotFoundException {
 		CheckInitialization();
+		
+		if(dialect == Dialect.VDM_SL)
+		{
+			Module module = findModule(className);
+			if (module == null)
+				throw new ClassNotFoundException("Module: "+className);
+
+			return module.files.get(0);
+		}else
+		{
 		ClassDefinition classdef = findClass(className);
 		if (classdef == null)
 			throw new ClassNotFoundException(className);
 
 		return classdef.location.file;
+		}
 	}
 
 	public TraceTestResult GetResult(String className, String trace, Integer num)
@@ -172,8 +213,10 @@ public class VdmjTracesHelper implements ITracesHelper {
 		
 		buildProjectIfRequired();
 		
-		interpeter.processTraces(getClasses(), className, storage,false,dialect);
-
+		if(dialect== Dialect.VDM_SL)
+		interpeter.processTrace(getModules(), className, false,storage);
+		else
+			interpeter.processTrace(getClasses(), className, false,storage);
 	}
 	
 	
@@ -201,6 +244,23 @@ public class VdmjTracesHelper implements ITracesHelper {
 		CheckInitialization();
 		List<NamedTraceDefinition> traces = new Vector<NamedTraceDefinition>();
 
+		
+		if(dialect == Dialect.VDM_SL)
+		{
+			Module moduledef = findModule(className);
+			if (moduledef == null)
+				throw new ClassNotFoundException(className);
+			for (Object string : moduledef.defs) {
+				if (string instanceof NamedTraceDefinition) {
+					NamedTraceDefinition mtd = (NamedTraceDefinition) string;
+					traces.add(mtd);
+				}
+			}
+		}else{
+			
+		
+		
+		
 		ClassDefinition classdef = findClass(className);
 		if (classdef == null)
 			throw new ClassNotFoundException(className);
@@ -210,7 +270,7 @@ public class VdmjTracesHelper implements ITracesHelper {
 				traces.add(mtd);
 			}
 		}
-
+		}
 		// Look for result file
 		File classTraceXmlFile = new File(projectDir.getAbsolutePath()
 				+ File.separatorChar + className + ".xml");
@@ -235,6 +295,20 @@ public class VdmjTracesHelper implements ITracesHelper {
 			for(ClassDefinition cl : getClasses())
 			{
 				if(cl.name.name.equals(className))
+					return cl;
+			}
+		} catch (NotAllowedException e) {
+			
+		}
+		return null;
+	}
+	
+	private Module findModule(String moduleName){
+		
+		try {
+			for(Module cl : getModules())
+			{
+				if(cl.name.name.equals(moduleName))
 					return cl;
 			}
 		} catch (NotAllowedException e) {
@@ -310,8 +384,12 @@ public class VdmjTracesHelper implements ITracesHelper {
 	private void CheckInitialization()
 			throws TraceHelperNotInitializedException {
 		try {
-			if (getClasses() == null && getClasses().size()>0)
-				throw new TraceHelperNotInitializedException(projectName);
+			if(dialect== Dialect.VDM_SL && getModules()!=null && getModules().size()>0)
+				return;
+			else if (getClasses() != null && getClasses().size()>0)
+				return;
+			
+			throw new TraceHelperNotInitializedException(projectName);
 		} catch (NotAllowedException e) {
 			throw new TraceHelperNotInitializedException(projectName);
 		}

@@ -17,7 +17,7 @@ public class VdmSlKeywords implements IVdmKeywords
 			"pre", "psubset", "rat", "rd", "real", "rem", "renamed", "return",
 			"reverse", "rng", "seq", "seq1", "set", "skip", "specified", "st",
 			"state", "struct", "subset", "then", "tixe", "tl", "to", "token",
-			"trap", "true", "types", "undefined", "union", "uselib", "values",
+			"trap", "traces","true", "types", "undefined", "union", "uselib", "values",
 			"while", "with", "wr", "yet", "RESULT" };
 
 	public static final String[] multipleKeywords = { "is not yet specified",

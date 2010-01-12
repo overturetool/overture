@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 import org.overturetool.traces.utility.CmdTrace;
 import org.overturetool.traces.utility.TraceXmlWrapper;
 import org.overturetool.traces.vdmj.TraceInterpreter;
+import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.types.ParameterType;
@@ -20,7 +21,7 @@ public class MainClass
 {
 	private static String[] paramterTypes = new String[] { "-outputPath", "-c",
 			"-max", "-toolbox", "-VDMToolsPath", "-help", "-vdmjOnly",
-			"-projectRoot","-wait" };
+			"-projectRoot", "-wait" ,"-d","-r"};
 
 	/**
 	 * @param args
@@ -39,8 +40,8 @@ public class MainClass
 		Object[] tmp = ExstractParameters(args);
 		Hashtable<String, String> par = (Hashtable<String, String>) tmp[0];
 		String[] files = (String[]) tmp[1];
-		
-		if(par.containsKey("-wait"))
+
+		if (par.containsKey("-wait"))
 			Thread.sleep(Integer.parseInt(par.get("-wait")));
 
 		if (args.length == 0 || args[0].replace("--", "-").startsWith("-help")
@@ -56,23 +57,36 @@ public class MainClass
 				&& par.containsKey("-vdmjOnly") && par.containsKey("-c")
 				&& par.containsKey("-max"))
 		{
+			Dialect dialect = Dialect.VDM_PP;
+
+if(par.containsKey("-d"))
+{
+	if(par.get("-d").toLowerCase().equals("vdmsl"))
+		dialect = Dialect.VDM_SL;
+	else if(par.get("-d").toLowerCase().equals("vdmpp"))
+		dialect = Dialect.VDM_PP;
+	else if(par.get("-d").toLowerCase().equals("vdmpp"))
+		dialect = Dialect.VDM_PP;
+}
+			
+			Release release = Release.DEFAULT;
+			if(par.containsKey("-r"))
+				release = Release.lookup(par.get("-r"));
 			String projectRoot = null;
 			if (par.containsKey("-projectRoot"))
 				projectRoot = par.get("-projectRoot");
 
-			RunVdmjOnly(
-					par.get("-outputPath"),
+			RunVdmjOnly(par.get("-outputPath"),
 					par.get("-c"),
 					par.get("-max"),
 					files,
-					projectRoot);
+					projectRoot,dialect,release);
 			return;
 
 		} else if (par.containsKey("-outputPath") && par.containsKey("-c")
 				&& par.containsKey("-max") && par.containsKey("-toolbox"))
 		{
-			RunCmd(
-					par.get("-outputPath"),
+			RunCmd(par.get("-outputPath"),
 					par.get("-c"),
 					par.get("-max"),
 					files,
@@ -89,7 +103,7 @@ public class MainClass
 	}
 
 	private static void RunVdmjOnly(String outputPath, String classes,
-			String maxString, String[] files, String projectRoot)
+			String maxString, String[] files, String projectRoot, Dialect dialect, Release release)
 	{
 		// TODO Auto-generated method stub
 		Integer max = Integer.parseInt(maxString);
@@ -117,7 +131,7 @@ public class MainClass
 			if (projectRootFile.exists())
 				for (File file : GetFiles(projectRootFile))
 				{
-					if (file.getName().endsWith(".vpp"))
+					if (isSpecFile(file))
 						specFiles.add(file);
 				}
 		}
@@ -128,18 +142,33 @@ public class MainClass
 			TraceXmlWrapper txw = new TraceXmlWrapper(outputPath
 					+ File.separatorChar + cls.get(0) + ".xml");
 
-			ti.processTraces(specFiles, cls.get(0), txw,true,Dialect.VDM_PP);
+			ti.processTraces(specFiles,
+					cls.get(0),
+					txw,
+					true,
+					dialect,
+					release);
 			txw.Stop();
-		}catch(ClassNotFoundException e)
+		} catch (ClassNotFoundException e)
 		{
-			
-		}catch(ContextException e){}
-		catch (Exception e)
+
+		} catch (ContextException e)
+		{
+		} catch (Exception e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
+	}
+
+	private static boolean isSpecFile(File file)
+	{
+		return file.getName().endsWith(".vpp")
+				|| file.getName().endsWith(".vdmpp")
+				|| file.getName().endsWith(".vdmrt")
+				|| file.getName().endsWith(".vdm")
+				|| file.getName().endsWith(".vdmsl");
 	}
 
 	private static ArrayList<File> GetFiles(File file)
@@ -219,6 +248,8 @@ public class MainClass
 		System.out.println("OPTIONS for command line usage:");
 		System.out.println(" -outputPath Path to a folder where results will be stored.");
 		System.out.println(" -c          Class names to be concidered {,classname}.");
+		System.out.println(" -r          Release version of vdm e.g. vdm10, classic");
+		System.out.println(" -d          Dialect e.g. vdmsl, vdmpp, vdmrt");
 		System.out.println(" -max        Maximum used in expansion of statements.");
 		System.out.println(" -toolbox    The type of toolbox which should be used.[VDMTools | VDMJ]");
 		System.out.println("     VDMTools: Requires VDMTools to be installed and an additional option");
