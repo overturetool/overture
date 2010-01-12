@@ -1,0 +1,17 @@
+class CTTool is subclass of Tool
+
+operations
+
+public AddDist: Disturbance`DistAST ==> ()
+AddDist(-) ==
+  is not yet specified;
+ 
+public TakeStep: DESTECS`Time ==> DESTECS`Time * [DESTECS`Event]
+TakeStep(-) ==
+  is not yet specified;
+  
+public InitCTModel: () ==> ()
+InitCTModel() ==
+  is not yet specified;
+  
+end CTTool

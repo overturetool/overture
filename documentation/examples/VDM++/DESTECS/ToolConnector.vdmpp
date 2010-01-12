@@ -1,0 +1,26 @@
+class ToolConnector is subclass of Tool
+	types
+
+	values
+
+	instance variables
+
+	operations
+
+public ParseFiles: DESTECS`Files ==> bool
+ParseFiles(-) ==
+  is not yet specified;
+
+public AddDist: Disturbance`DistAST ==> ()
+AddDist(-) ==
+  is not yet specified;
+
+public FromDT2CT: () ==> ()
+FromDT2CT() ==
+  is not yet specified;
+
+public FromCT2DT: () ==> ()
+FromCT2DT() ==
+  is not yet specified;
+
+end ToolConnector

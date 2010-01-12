@@ -1,0 +1,22 @@
+class B20SimTool is subclass of CTTool
+	types
+
+	values
+
+	instance variables
+
+	operations
+
+public ParseFiles: DESTECS`Files ==> bool
+ParseFiles(-) ==
+  is not yet specified;
+
+	functions
+
+	sync
+
+	--thread
+
+	traces
+
+end B20SimTool

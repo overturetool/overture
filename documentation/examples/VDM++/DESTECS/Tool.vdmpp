@@ -1,0 +1,20 @@
+class Tool
+	types
+
+public RTError = token;
+
+	values
+
+	instance variables
+
+	operations
+
+public ParseFiles: DESTECS`Files ==> bool
+ParseFiles(-) ==
+  is subclass responsibility;
+
+public AddDist: Disturbance`DistAST ==> ()
+AddDist(-) ==
+  is subclass responsibility;
+
+end Tool
