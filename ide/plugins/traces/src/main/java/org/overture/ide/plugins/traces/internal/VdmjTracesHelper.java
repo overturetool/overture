@@ -8,13 +8,9 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
@@ -26,6 +22,8 @@ import org.overture.ide.ast.RootNode;
 import org.overture.ide.builders.builder.AbstractBuilder;
 import org.overture.ide.plugins.traces.TracesXmlStoreReader;
 import org.overture.ide.plugins.traces.TracesXmlStoreReader.TraceStatusXml;
+import org.overture.ide.utility.IVdmProject;
+import org.overture.ide.utility.VdmProject;
 import org.overture.ide.vdmpp.core.VdmPpCorePluginConstants;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
 import org.overture.ide.vdmrt.core.VdmRtCorePluginConstants;
@@ -44,7 +42,6 @@ import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
-import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.xml.sax.SAXException;
 
 public class VdmjTracesHelper implements ITracesHelper {
@@ -53,7 +50,7 @@ public class VdmjTracesHelper implements ITracesHelper {
 	//ClassInterpreter ci;
 	String projectName;
 	final String TRACE_STORE_DIR_NAME = ".traces";
-	IProject project;
+	IVdmProject project;
 	String nature = VdmPpProjectNature.VDM_PP_NATURE;
 	HashMap<String, TracesXmlStoreReader> classTraceReaders = new HashMap<String, TracesXmlStoreReader>();
 	File projectDir;
@@ -61,7 +58,7 @@ public class VdmjTracesHelper implements ITracesHelper {
 	String contentTypeId = VdmPpCorePluginConstants.CONTENT_TYPE;
 
 	public VdmjTracesHelper(IProject project, int max) throws Exception {
-		this.project = project;
+		this.project = new VdmProject(project);
 		
 		if(project.hasNature(VdmPpProjectNature.VDM_PP_NATURE))
 		{
@@ -101,12 +98,12 @@ public class VdmjTracesHelper implements ITracesHelper {
 	}
 
 	private ClassList getClasses() throws NotAllowedException {
-		RootNode root = AstManager.instance().getRootNode(project, nature);
+		RootNode root = AstManager.instance().getRootNode(project.getProject(), nature);
 		return root.getClassList();
 	}
 	
 	private ModuleList getModules() throws NotAllowedException {
-		RootNode root = AstManager.instance().getRootNode(project, nature);
+		RootNode root = AstManager.instance().getRootNode(project.getProject(), nature);
 		return root.getModuleList();
 	}	
 
@@ -214,22 +211,22 @@ public class VdmjTracesHelper implements ITracesHelper {
 		buildProjectIfRequired();
 		
 		if(dialect== Dialect.VDM_SL)
-		interpeter.processTrace(getModules(), className, false,storage);
+		interpeter.processTrace(getModules(), className, false,storage,dialect,project.getLanguageVersion());
 		else
-			interpeter.processTrace(getClasses(), className, false,storage);
+			interpeter.processTrace(getClasses(), className, false,storage,dialect,project.getLanguageVersion());
 	}
 	
 	
 	void buildProjectIfRequired()
 	{
-		RootNode root = AstManager.instance().getRootNode(project, nature);
+		RootNode root = AstManager.instance().getRootNode(project.getProject(), nature);
 		if(root!=null && root.isChecked())
 			return;
 		else
 			try {
 				IProgressMonitor progressMonitor = null;
 
-				project.build(IncrementalProjectBuilder.FULL_BUILD,progressMonitor);
+				project.getProject().build(IncrementalProjectBuilder.FULL_BUILD,progressMonitor);
 			} catch (CoreException e) {
 				System.out.println("Error forcing build from traces");
 				e.printStackTrace();

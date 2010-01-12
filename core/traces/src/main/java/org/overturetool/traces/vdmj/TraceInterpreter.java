@@ -5,18 +5,15 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
-import java.util.ListIterator;
 
 import org.overturetool.traces.utility.TraceXmlWrapper;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.commands.ModuleCommandReader;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
@@ -26,7 +23,6 @@ import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.runtime.ModuleInterpreter;
 import org.overturetool.vdmj.runtime.ObjectContext;
-import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.syntax.ClassReader;
 import org.overturetool.vdmj.syntax.ModuleReader;
@@ -34,12 +30,7 @@ import org.overturetool.vdmj.traces.CallSequence;
 import org.overturetool.vdmj.traces.TestSequence;
 import org.overturetool.vdmj.traces.Verdict;
 import org.overturetool.vdmj.typechecker.ClassTypeChecker;
-import org.overturetool.vdmj.typechecker.Environment;
-import org.overturetool.vdmj.typechecker.FlatEnvironment;
-import org.overturetool.vdmj.typechecker.ModuleEnvironment;
 import org.overturetool.vdmj.typechecker.ModuleTypeChecker;
-import org.overturetool.vdmj.typechecker.PrivateClassEnvironment;
-import org.overturetool.vdmj.typechecker.PublicClassEnvironment;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 import org.overturetool.vdmj.values.ObjectValue;
 
@@ -57,28 +48,24 @@ public class TraceInterpreter
 			Release languageVersion) throws Exception
 	{
 
-		Settings.prechecks = true;
-		Settings.postchecks = true;
-		Settings.dynamictypechecks = true;
-		Settings.dialect = dialect;
-		Settings.release = languageVersion;
+		
 
 		if (dialect == Dialect.VDM_PP || dialect == Dialect.VDM_RT)
 			processTracesClasses(specFiles,
 					className,
 					storage,
 					runTypeCheck,
-					dialect);
+					dialect,languageVersion);
 		else if (dialect == Dialect.VDM_SL)
 			processTracesModules(specFiles,
 					className,
 					storage,
 					runTypeCheck,
-					dialect);
+					dialect,languageVersion);
 	}
 
 	private void processTracesClasses(List<File> specFiles, String className,
-			TraceXmlWrapper storage, boolean runTypeCheck, Dialect dialect)
+			TraceXmlWrapper storage, boolean runTypeCheck, Dialect dialect, Release languageVersion)
 			throws Exception
 	{
 		ClassList classes = new ClassList();
@@ -106,11 +93,13 @@ public class TraceInterpreter
 
 			
 
-			processTrace(classes,className,runTypeCheck,storage);
+			processTrace(classes,className,runTypeCheck,storage,dialect,languageVersion);
 		}
 	}
-	public void processTrace(ClassList classList,String className, boolean runTypeCheck, TraceXmlWrapper storage) throws Exception
+	public void processTrace(ClassList classList,String className, boolean runTypeCheck, TraceXmlWrapper storage, Dialect dialect, Release languageVersion) throws Exception
 	{
+		Settings.dialect = dialect;
+		Settings.release = languageVersion;
 		if(runTypeCheck)
 		{
 			TypeChecker tc = new ClassTypeChecker(classList);
@@ -147,7 +136,7 @@ public class TraceInterpreter
 	
 	
 	private void processTracesModules(List<File> specFiles, String moduleName,
-			TraceXmlWrapper storage, boolean runTypeCheck, Dialect dialect)
+			TraceXmlWrapper storage, boolean runTypeCheck, Dialect dialect, Release languageVersion)
 			throws Exception
 	{
 		ModuleList modules = new ModuleList();
@@ -172,13 +161,15 @@ public class TraceInterpreter
 		if (parsErrors == 0)
 		{
 		
-			processTrace(modules,moduleName,runTypeCheck,storage);
+			processTrace(modules,moduleName,runTypeCheck,storage,dialect,languageVersion);
 		}
 	}
 	
 	
-	public void processTrace(ModuleList moduleList,String moduleName, boolean runTypeCheck, TraceXmlWrapper storage) throws Exception
+	public void processTrace(ModuleList moduleList,String moduleName, boolean runTypeCheck, TraceXmlWrapper storage, Dialect dialect, Release languageVersion) throws Exception
 	{
+		Settings.dialect = dialect;
+		Settings.release = languageVersion;
 		if(runTypeCheck)
 		{
 			TypeChecker tc = new ModuleTypeChecker(moduleList);
@@ -218,6 +209,9 @@ public class TraceInterpreter
 	{
 		try
 		{
+			Settings.prechecks = true;
+			Settings.postchecks = true;
+			Settings.dynamictypechecks = true;
 			
 
 			if (storage != null)
