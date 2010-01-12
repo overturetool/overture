@@ -714,15 +714,23 @@ public class DefinitionReader extends SyntaxReader
 		TypeReader tr = getTypeReader();
 		List<PatternListTypePair> parameterPatterns = new Vector<PatternListTypePair>();
 
-		while (lastToken().isNot(Token.KET))
+		if (lastToken().isNot(Token.KET))
 		{
 			PatternList pl = pr.readPatternList();
 			checkFor(Token.COLON, 2093, "Missing colon after pattern/type parameter");
 			parameterPatterns.add(new PatternListTypePair(pl, tr.readType()));
-			ignore(Token.COMMA);
+
+			while (ignore(Token.COMMA))
+			{
+				pl = pr.readPatternList();
+				checkFor(Token.COLON, 2093, "Missing colon after pattern/type parameter");
+				parameterPatterns.add(new PatternListTypePair(pl, tr.readType()));
+			}
 		}
 
-		LexToken firstResult = nextToken();
+    	checkFor(Token.KET, 2124, "Expecting ')' after parameters");
+
+		LexToken firstResult = lastToken();
    		PatternList resultNames = new PatternList();
    		TypeList resultTypes = new TypeList();
 
@@ -977,15 +985,23 @@ public class DefinitionReader extends SyntaxReader
 		TypeReader tr = getTypeReader();
 		List<PatternListTypePair> parameterPatterns = new Vector<PatternListTypePair>();
 
-		while (lastToken().isNot(Token.KET))
+		if (lastToken().isNot(Token.KET))
 		{
 			PatternList pl = pr.readPatternList();
 			checkFor(Token.COLON, 2103, "Missing colon after pattern/type parameter");
 			parameterPatterns.add(new PatternListTypePair(pl, tr.readType()));
-			ignore(Token.COMMA);
+
+			while (ignore(Token.COMMA))
+			{
+				pl = pr.readPatternList();
+				checkFor(Token.COLON, 2103, "Missing colon after pattern/type parameter");
+				parameterPatterns.add(new PatternListTypePair(pl, tr.readType()));
+			}
 		}
 
-		LexToken firstResult = nextToken();
+    	checkFor(Token.KET, 2124, "Expecting ')' after args");
+
+		LexToken firstResult = lastToken();
    		PatternTypePair resultPattern = null;
 
 		if (firstResult.is(Token.IDENTIFIER))
@@ -1492,9 +1508,18 @@ public class DefinitionReader extends SyntaxReader
 		List<ValueDefinition> localDefs = new Vector<ValueDefinition>();
 		LexToken start = lastToken();
 
-		while (lastToken().isNot(Token.IN))
+		Definition def = readLocalDefinition(NameScope.LOCAL);
+
+		if (!(def instanceof ValueDefinition))
 		{
-			Definition def = readLocalDefinition(NameScope.LOCAL);
+			throwMessage(2270, "Only value definitions allowed in traces");
+		}
+
+		localDefs.add((ValueDefinition)def);
+
+		while (ignore(Token.COMMA))
+		{
+			def = readLocalDefinition(NameScope.LOCAL);
 
 			if (!(def instanceof ValueDefinition))
 			{
@@ -1502,7 +1527,6 @@ public class DefinitionReader extends SyntaxReader
 			}
 
 			localDefs.add((ValueDefinition)def);
-			ignore(Token.COMMA);
 		}
 
 		checkFor(Token.IN, 2231, "Expecting 'in' after local definitions");

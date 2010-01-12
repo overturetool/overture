@@ -359,7 +359,7 @@ public class StatementReader extends SyntaxReader
 		List<AssignmentStatement> assignments = new Vector<AssignmentStatement>();
 
 		assignments.add(readAssignmentStatement(lastToken().location));
-		ignore(Token.SEMICOLON);
+		ignore(Token.SEMICOLON);	// Every statement has an ignorable semicolon
 
 		while (lastToken().isNot(Token.KET))
 		{
@@ -394,13 +394,17 @@ public class StatementReader extends SyntaxReader
 		ExpressionList args = new ExpressionList();
 		ExpressionReader er = getExpressionReader();
 
-		while (lastToken().isNot(Token.KET))
+		if (lastToken().isNot(Token.KET))
 		{
 			args.add(er.readExpression());
-			ignore(Token.COMMA);
+
+			while (ignore(Token.COMMA))
+			{
+				args.add(er.readExpression());
+			}
 		}
 
-		nextToken();
+    	checkFor(Token.KET, 2124, "Expecting ')' after args");
 
 		return new CallStatement(name, args);
 	}
@@ -482,13 +486,17 @@ public class StatementReader extends SyntaxReader
 			    	ExpressionReader er = getExpressionReader();
 			    	ExpressionList args = new ExpressionList();
 
-			    	while (lastToken().isNot(Token.KET))
+			    	if (lastToken().isNot(Token.KET))
 			    	{
 			    		args.add(er.readExpression());
-			    		ignore(Token.COMMA);
+
+			    		while (ignore(Token.COMMA))
+			    		{
+			    			args.add(er.readExpression());
+			    		}
 			    	}
 
-			    	nextToken();
+			    	checkFor(Token.KET, 2124, "Expecting ')' after args");
 					des = new ObjectApplyDesignator(des, args);
 					break;
 
@@ -524,13 +532,17 @@ public class StatementReader extends SyntaxReader
 		    	ExpressionList args = new ExpressionList();
 		    	ExpressionReader er = getExpressionReader();
 
-		    	while (lastToken().isNot(Token.KET))
+		    	if (lastToken().isNot(Token.KET))
 		    	{
 		    		args.add(er.readExpression());
-		    		ignore(Token.COMMA);
+
+		    		while (ignore(Token.COMMA))
+		    		{
+		    			args.add(er.readExpression());
+		    		}
 		    	}
 
-		    	nextToken();
+		    	checkFor(Token.KET, 2124, "Expecting ')' after constructor args");
 				return new ObjectNewDesignator(name, args);
 
 			default:
@@ -869,11 +881,11 @@ public class StatementReader extends SyntaxReader
 	{
 		DefinitionReader dr = getDefinitionReader();
 		DefinitionList localDefs = new DefinitionList();
+		localDefs.add(dr.readLocalDefinition(NameScope.LOCAL));
 
-		while (lastToken().isNot(Token.IN))
+		while (ignore(Token.COMMA))
 		{
 			localDefs.add(dr.readLocalDefinition(NameScope.LOCAL));
-			ignore(Token.COMMA);
 		}
 
 		checkFor(Token.IN, 2231, "Expecting 'in' after local definitions");
@@ -951,11 +963,11 @@ public class StatementReader extends SyntaxReader
 		checkFor(Token.DEF, 2239, "Expecting 'def'");
 		DefinitionReader dr = getDefinitionReader();
 		DefinitionList equalsDefs = new DefinitionList();
+		equalsDefs.add(dr.readEqualsDefinition());
 
-		while (lastToken().isNot(Token.IN))
+		while (ignore(Token.SEMICOLON))
 		{
 			equalsDefs.add(dr.readEqualsDefinition());
-			ignore(Token.SEMICOLON);
 		}
 
 		checkFor(Token.IN, 2240, "Expecting 'in' after equals definitions");

@@ -991,10 +991,14 @@ public class ExpressionReader extends SyntaxReader
 	{
 		ExpressionList args = new ExpressionList();
 
-		while (lastToken().isNot(Token.KET))
+		if (lastToken().isNot(Token.KET))	// NB. mk_T() is legal
 		{
 			args.add(readExpression());
-			ignore(Token.COMMA);
+
+			while (ignore(Token.COMMA))
+			{
+				args.add(readExpression());
+			}
 		}
 
 		checkFor(Token.KET, 2131, "Expecting ')' after mk_ tuple");
@@ -1482,10 +1486,11 @@ public class ExpressionReader extends SyntaxReader
 		DefinitionReader dr = getDefinitionReader();
 		DefinitionList localDefs = new DefinitionList();
 
-		while (lastToken().isNot(Token.IN))
+		localDefs.add(dr.readLocalDefinition(NameScope.LOCAL));
+
+		while (ignore(Token.COMMA))
 		{
 			localDefs.add(dr.readLocalDefinition(NameScope.LOCAL));
-			ignore(Token.COMMA);
 		}
 
 		checkFor(Token.IN, 2150, "Expecting 'in' after local definitions");
@@ -1578,13 +1583,17 @@ public class ExpressionReader extends SyntaxReader
     	ExpressionList args = new ExpressionList();
     	ExpressionReader er = getExpressionReader();
 
-    	while (lastToken().isNot(Token.KET))
+    	if (lastToken().isNot(Token.KET))
     	{
     		args.add(er.readExpression());
-    		ignore(Token.COMMA);
+
+    		while (ignore(Token.COMMA))
+    		{
+        		args.add(er.readExpression());
+    		}
     	}
 
-    	nextToken();
+    	checkFor(Token.KET, 2124, "Expecting ')' after constructor args");
     	return new NewExpression(start, name, args);
     }
 
