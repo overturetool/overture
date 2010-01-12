@@ -10,7 +10,7 @@ public TakeStep: DESTECS`Time ==> DESTECS`Time * [DESTECS`Event]
 TakeStep(-) ==
   is not yet specified;
   
-public InitCTModel: () ==> ()
+public InitCTModel: () ==> bool
 InitCTModel() ==
   is not yet specified;
   

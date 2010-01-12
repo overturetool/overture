@@ -54,7 +54,7 @@ Simulate(expr,step,terminate) ==
   let deinitok = deTool.InitDEModel(),
       ctinitok = ctTool.InitCTModel()
   in
-    if deinitok 
+    if deinitok and ctinitok
     then while evalok and TermNotReached(terminate) do
            let mk_(newt,ev) = ctTool.TakeStep(step)
            in
