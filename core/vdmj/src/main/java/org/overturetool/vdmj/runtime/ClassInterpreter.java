@@ -53,7 +53,6 @@ import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.PrivateClassEnvironment;
 import org.overturetool.vdmj.typechecker.PublicClassEnvironment;
-import org.overturetool.vdmj.typechecker.TypeChecker;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.util.Utils;
 import org.overturetool.vdmj.values.BUSValue;
@@ -169,38 +168,6 @@ public class ClassInterpreter extends Interpreter
 		ExpressionReader reader = new ExpressionReader(ltr);
 		reader.setCurrentModule(module);
 		return reader.readExpression();
-	}
-
-	@Override
-	public Type typeCheck(Expression expr, Environment env)
-		throws Exception
-	{
-		TypeChecker.clearErrors();
-		Type type = expr.typeCheck(env, null, NameScope.NAMESANDSTATE);
-
-		if (TypeChecker.getErrorCount() > 0)
-		{
-			// TypeChecker.printErrors(Console.out);
-			throw new VDMErrorsException(TypeChecker.getErrors());
-		}
-
-		return type;
-	}
-
-	@Override
-	public Type typeCheck(Statement stmt, Environment env)
-		throws Exception
-	{
-		TypeChecker.clearErrors();
-		Type type = stmt.typeCheck(env, NameScope.NAMESANDSTATE);
-
-		if (TypeChecker.getErrorCount() > 0)
-		{
-			// TypeChecker.printErrors(Console.out);
-			throw new VDMErrorsException(TypeChecker.getErrors());
-		}
-
-		return type;
 	}
 
 	private Value execute(Expression expr, DBGPReader dbgp)

@@ -46,9 +46,6 @@ import org.overturetool.vdmj.traces.TraceVariableStatement;
 import org.overturetool.vdmj.traces.Verdict;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.ModuleEnvironment;
-import org.overturetool.vdmj.typechecker.NameScope;
-import org.overturetool.vdmj.typechecker.TypeChecker;
-import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.values.Value;
 
 /**
@@ -184,36 +181,6 @@ public class ModuleInterpreter extends Interpreter
 		return reader.readExpression();
 	}
 
-	@Override
-	public Type typeCheck(Expression expr, Environment env)
-		throws Exception
-	{
-		TypeChecker.clearErrors();
-		Type type = expr.typeCheck(env, null, NameScope.NAMESANDSTATE);
-
-		if (TypeChecker.getErrorCount() > 0)
-		{
-			throw new VDMErrorsException(TypeChecker.getErrors());
-		}
-
-		return type;
-	}
-
-	@Override
-	public Type typeCheck(Statement stmt, Environment env)
-		throws Exception
-	{
-		TypeChecker.clearErrors();
-		Type type = stmt.typeCheck(env, NameScope.NAMESANDSTATE);
-
-		if (TypeChecker.getErrorCount() > 0)
-		{
-			throw new VDMErrorsException(TypeChecker.getErrors());
-		}
-
-		return type;
-	}
-
 	/**
 	 * Parse the line passed, type check it and evaluate it as an expression
 	 * in the initial module context (with default module's state).
@@ -228,15 +195,7 @@ public class ModuleInterpreter extends Interpreter
 	{
 		Expression expr = parseExpression(line, getDefaultName());
 		Environment env = getGlobalEnvironment();
-
-		try
-		{
-			typeCheck(expr, env);
-		}
-		catch (VDMErrorsException e)
-		{
-			// We don't care... we just needed to type check it.
-		}
+		typeCheck(expr, env);
 
 		mainContext = new StateContext(defaultModule.name.location,
 							"module scope",	null, defaultModule.getStateContext());

@@ -40,12 +40,15 @@ import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.traces.CallSequence;
 import org.overturetool.vdmj.typechecker.Environment;
+import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.typechecker.TypeChecker;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.TransactionValue;
@@ -497,11 +500,39 @@ abstract public class Interpreter
 	abstract protected Expression parseExpression(String line, String module)
 		throws Exception;
 
-	abstract public Type typeCheck(Expression expr, Environment env)
-		throws Exception;
+	public Type typeCheck(Expression expr, Environment env)
+		throws Exception
+	{
+		TypeChecker.clearErrors();
+		Type type = expr.typeCheck(env, null, NameScope.NAMESANDSTATE);
 
-	abstract public Type typeCheck(Statement stmt, Environment env)
-		throws Exception;
+		if (TypeChecker.getErrorCount() > 0)
+		{
+			throw new VDMErrorsException(TypeChecker.getErrors());
+		}
+
+		return type;
+	}
+
+	public Type typeCheck(Statement stmt, Environment env)
+		throws Exception
+	{
+		TypeChecker.clearErrors();
+		Type type = stmt.typeCheck(env, NameScope.NAMESANDSTATE);
+
+		if (TypeChecker.getErrorCount() > 0)
+		{
+			throw new VDMErrorsException(TypeChecker.getErrors());
+		}
+
+		return type;
+	}
+
+	public Type typeCheck(String line) throws Exception
+	{
+		Expression expr = parseExpression(line, getDefaultName());
+		return typeCheck(expr, getGlobalEnvironment());
+	}
 
 	public ClassDefinition findClass(@SuppressWarnings("unused") String classname)
 	{
