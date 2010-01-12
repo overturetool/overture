@@ -36,6 +36,7 @@ import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
 import org.overturetool.vdmj.typechecker.TypeComparator;
 import org.overturetool.vdmj.types.Type;
+import org.overturetool.vdmj.types.VoidType;
 import org.overturetool.vdmj.values.NameValuePair;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.Value;
@@ -71,12 +72,12 @@ public class AssignmentDefinition extends Definition
         try
         {
 	        Value v = expression.eval(ctxt);
-	        
+
 	        if (!v.isUndefined())
 	        {
 	        	v = v.convertTo(type, ctxt);
 	        }
-	        
+
 			return new NameValuePairList(new NameValuePair(name, v.getUpdatable(null)));
         }
         catch (ValueException e)
@@ -115,6 +116,11 @@ public class AssignmentDefinition extends Definition
 	{
 		expType = expression.typeCheck(base, null, scope);
 		type = type.typeResolve(base, null);
+
+		if (expType instanceof VoidType)
+		{
+			expression.report(3048, "Expression does not return a value");
+		}
 
 		if (!TypeComparator.compatible(type, expType))
 		{

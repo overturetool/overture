@@ -46,6 +46,7 @@ import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeSet;
 import org.overturetool.vdmj.types.UnionType;
 import org.overturetool.vdmj.types.UnknownType;
+import org.overturetool.vdmj.types.VoidType;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.Value;
 
@@ -114,7 +115,11 @@ public class ValueDefinition extends Definition
 	{
 		expType = exp.typeCheck(base, null, scope);
 
-		if (type != null)
+		if (expType instanceof VoidType)
+		{
+			exp.report(3048, "Expression does not return a value");
+		}
+		else if (type != null)
 		{
 			type = type.typeResolve(base, null);
 

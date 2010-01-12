@@ -414,7 +414,7 @@ as the expected and actual values.
 3045, "Cannot put guard on a constructor"
 3046, "Guard is not a boolean expression"
 3047, "Only one state definition allowed per module"
-3048, -
+3048, "Expression does not return a value"
 3049, "Thread statement/operation must not return a value"
 3050, "Type <name> is infinite"
 3051, "Expression does not match declared type"
