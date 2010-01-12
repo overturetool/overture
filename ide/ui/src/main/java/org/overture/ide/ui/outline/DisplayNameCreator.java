@@ -8,10 +8,11 @@ import org.overturetool.vdmj.definitions.LocalDefinition;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.patterns.IdentifierPattern;
 import org.overturetool.vdmj.patterns.IgnorePattern;
+import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
+import org.overturetool.vdmj.patterns.RecordPattern;
 
-public class DisplayNameCreator
-{
+public class DisplayNameCreator {
 
 	public static String getDisplayName(Object element)
 	{
@@ -57,19 +58,15 @@ public class DisplayNameCreator
 						if (def.paramPatternList.get(i) instanceof PatternList)
 						{
 							PatternList patternList = def.paramPatternList.get(i);
+
 							for (int j = 0; j < patternList.size(); j++)
 							{
+								Pattern pattern=patternList.get(j); 
 								sb.append(def.type.parameters.get(j)
 										.toString()
 										.replace("unresolved ", "")
 										+ " ");
-
-								if (patternList.get(j) instanceof IdentifierPattern)
-									sb.append(((IdentifierPattern) patternList.get(j)).name);
-								else if (patternList.get(j) instanceof IgnorePattern)
-									sb.append("-");
-								else
-									sb.append("TYPE_UNRESOLVED");
+								sb.append(	print(pattern));
 								if (j + 1 < patternList.size())
 									sb.append(", ");
 							}
@@ -86,6 +83,28 @@ public class DisplayNameCreator
 			e.printStackTrace();
 			return "UNRESOLVED_NAME";
 		}
+		
+		
 	}
+	public static String print(Pattern pattern)
+		{
+			
+			StringBuilder sb = new StringBuilder();	
 
+				if (pattern instanceof IdentifierPattern)
+					sb.append(((IdentifierPattern) pattern).name);
+				else if (pattern instanceof RecordPattern)
+				{
+					RecordPattern recordPattern =(RecordPattern) pattern; 
+					sb.append((recordPattern).typename);
+					
+					
+				}
+				else if (pattern instanceof IgnorePattern)
+					sb.append("-");
+				else
+					sb.append("TYPE_UNRESOLVED");
+			
+			return sb.toString();
+		}
 }
