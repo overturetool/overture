@@ -34,7 +34,6 @@ import org.overturetool.vdmj.runtime.BUSPolicy;
 import org.overturetool.vdmj.runtime.ControlQueue;
 import org.overturetool.vdmj.runtime.MessageRequest;
 import org.overturetool.vdmj.runtime.MessageResponse;
-import org.overturetool.vdmj.runtime.RunState;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Type;
 
@@ -170,8 +169,6 @@ public class BUSValue extends ObjectValue
 			"MessageCompleted -> msgid: " + response.msgId);
 
 		response.replyTo.set(response);
-		response.to.setState(response.caller, RunState.RUNNABLE);
-		response.to.wakeUp();
 
 		cq.leave();
 	}
