@@ -23,7 +23,10 @@
 
 package org.overturetool.vdmj.lex;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -307,12 +310,14 @@ public class LexLocation implements Serializable
 	public static List<Integer> getSourceList(File file)
 	{
 		List<Integer> lines = new Vector<Integer>();
+		int last = 0;
 
 		for (LexLocation l: allLocations)
 		{
-			if (l.executable && l.file.equals(file))
+			if (l.executable && l.startLine != last && l.file.equals(file))
 			{
 				lines.add(l.startLine);
+				last = l.startLine;
 			}
 		}
 
@@ -389,5 +394,59 @@ public class LexLocation implements Serializable
 		}
 
 		return map;
+	}
+
+	public static List<LexLocation> getSourceLocations(File file)
+	{
+		List<LexLocation> locations = new Vector<LexLocation>();
+
+		for (LexLocation l: allLocations)
+		{
+			if (l.executable && l.file.equals(file))
+			{
+				locations.add(l);
+			}
+		}
+
+		return locations;
+	}
+
+	public static void mergeHits(File source, File coverage) throws IOException
+	{
+		List<LexLocation> locations = getSourceLocations(source);
+		BufferedReader br = new BufferedReader(new FileReader(coverage));
+		String line = br.readLine();
+
+		while (line != null)
+		{
+			if (line.charAt(0) == '+')
+			{
+				// Hit lines are "+line from-to=hits"
+
+				int s1 = line.indexOf(' ');
+				int s2 = line.indexOf('-');
+				int s3 = line.indexOf('=');
+
+				int lnum = Integer.parseInt(line.substring(1, s1));
+				int from = Integer.parseInt(line.substring(s1+1, s2));
+				int to   = Integer.parseInt(line.substring(s2+1, s3));
+				int hits = Integer.parseInt(line.substring(s3+1));
+
+				for (LexLocation l: locations)	// Only executable locations
+				{
+					if (l.startLine == lnum &&
+						l.startPos == from &&
+						l.endPos == to)
+					{
+						l.hits += hits;
+						break;
+					}
+				}
+			}
+
+			line = br.readLine();
+		}
+
+		br.close();
 	}
 }

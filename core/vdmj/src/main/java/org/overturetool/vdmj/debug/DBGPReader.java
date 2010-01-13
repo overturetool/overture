@@ -131,6 +131,7 @@ public class DBGPReader
 		boolean quiet = false;
 		String logfile = null;
 		boolean expBase64 = false;
+		File coverage = null;
 
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
 		{
@@ -252,7 +253,6 @@ public class DBGPReader
         			{
         				usage(e.getMessage() + ": " + arg);
         			}
-
     			}
     			else
     			{
@@ -266,6 +266,33 @@ public class DBGPReader
     		else if (arg.equals("-q"))
     		{
     			quiet = true;
+    		}
+    		else if (arg.equals("-coverage"))
+    		{
+    			if (i.hasNext())
+    			{
+        			try
+        			{
+        				coverage = new File(new URI(i.next()));
+
+        				if (!coverage.isDirectory())
+        				{
+        					usage("Coverage location is not a directory");
+        				}
+        			}
+        			catch (URISyntaxException e)
+        			{
+        				usage(e.getMessage() + ": " + arg);
+        			}
+        			catch (IllegalArgumentException e)
+        			{
+        				usage(e.getMessage() + ": " + arg);
+        			}
+    			}
+    			else
+    			{
+    				usage("-coverage option requires a directory name");
+    			}
     		}
     		else if (arg.startsWith("-"))
     		{
@@ -331,6 +358,11 @@ public class DBGPReader
 
 					Interpreter i = controller.getInterpreter();
 					new DBGPReader(host, port, ideKey, i, expression, null).startup();
+
+					if (coverage != null)
+					{
+						writeCoverage(i, coverage);
+					}
 
 					RTLogger.dump(true);
 	    			System.exit(0);
@@ -2326,5 +2358,19 @@ public class DBGPReader
 	private String plural(int n, String s, String pl)
 	{
 		return n + " " + (n != 1 ? s + pl : s);
+	}
+
+	private static void writeCoverage(Interpreter interpreter, File coverage)
+		throws IOException
+	{
+		for (File f: interpreter.getSourceFiles())
+		{
+			SourceFile source = interpreter.getSourceFile(f);
+
+			File data = new File(coverage.getPath() + File.separator + f.getName() + ".cov");
+			PrintWriter pw = new PrintWriter(data);
+			source.writeCoverage(pw);
+			pw.close();
+		}
 	}
 }
