@@ -278,7 +278,7 @@
   <extension point="org.eclipse.debug.ui.debugModelPresentations">
     <debugModelPresentation
       class="org.overture.ide.vdmpp.debug.ui.VDMPPDebugModelPresentation"
-      id="org.overture.ide.debug.ui.vdmpp.VDMPPDebugModelPresentation" />
+      id="org.overture.ide.vdmpp.debug.ui.VDMPPDebugModelPresentation" />
   </extension>
   
   
@@ -289,7 +289,7 @@
   -->
   <extension point="org.eclipse.debug.core.watchExpressionDelegates">
     <watchExpressionDelegate
-      debugModel="org.overture.ide.debug.ui.vdmpp.VDMPPDebugModelPresentation"
+      debugModel="org.overture.ide.vdmpp.debug.ui.VDMPPDebugModelPresentation"
       delegateClass="org.eclipse.dltk.internal.debug.core.model.ScriptWatchExpressionDelegate">
     </watchExpressionDelegate>
   </extension>
@@ -304,7 +304,7 @@
   <extension point="org.eclipse.debug.ui.debugModelContextBindings">
     <modelContextBinding
       contextId="org.eclipse.dltk.debug.ui.debugging"
-      debugModelId="org.overture.ide.debug.ui.vdmpp.VDMPPDebugModelPresentation" />
+      debugModelId="org.overture.ide.vdmpp.debug.ui.VDMPPDebugModelPresentation" />
   </extension>
   
   

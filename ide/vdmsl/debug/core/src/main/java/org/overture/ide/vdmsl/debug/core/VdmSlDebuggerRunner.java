@@ -66,6 +66,7 @@ public class VdmSlDebuggerRunner extends DebuggingEngineRunner {
 	
 	@Override
 	public void run(InterpreterConfig config, ILaunch launch, IProgressMonitor monitor) throws CoreException {
+		PreferencesLookupDelegate asdf = createPreferencesLookupDelegate(launch);
 		initializeLaunch(launch, config,createPreferencesLookupDelegate(launch));
 //		IScriptProject proj = AbstractScriptLaunchConfigurationDelegate.getScriptProject(launch.getLaunchConfiguration());
 		final ScriptDebugTarget target = (ScriptDebugTarget) launch.getDebugTarget();

@@ -1,7 +1,8 @@
 package org.overture.ide.vdmpp.debug.core;
 
 public interface VDMPPDebugConstants {
-
+	final String DEBUG_CORE_PLUGIN = "org.overture.ide.debug.core";
+	
 	final String PLUGIN_ID = "org.overture.ide.vdmpp.debug.core";
 	// VDM++
 	final String VDMPP_DEBUGGING_ENGINE_ID_KEY = "vdmpp_debugging_engine_id";
@@ -18,4 +19,5 @@ public interface VDMPPDebugConstants {
 	final String VDMPP_VDMJ_InterpreterName = "VDMJ Interpreter for VDM++";
 	final String VDMPP_VDMJ_DIALECT = "vdmpp";
 	final String VDMPP_DEBUG_MODEL = "org.overture.ide.vdmpp.debug.ui.VDMPPDebugModelPresentation";
+	
 }

@@ -52,7 +52,7 @@ public class VDMPPDebuggerRunner extends DebuggingEngineRunner
 	@Override
 	protected String getDebugPreferenceQualifier()
 	{
-		return VDMPPDebugConstants.PLUGIN_ID;
+		return VDMPPDebugConstants.DEBUG_CORE_PLUGIN;
 	}
 
 	@Override
