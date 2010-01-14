@@ -27,6 +27,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -570,6 +571,18 @@ abstract public class CommandReader
 				return true;
 			}
 
+			if (parts.length == 3 && parts[1].equals("write"))
+			{
+				writeCoverage(new File(parts[2]));
+				return true;
+			}
+
+			if (parts.length == 3 && parts[1].equals("merge"))
+			{
+				mergeCoverage(new File(parts[2]));
+				return true;
+			}
+
 			for (int p = 1; p < parts.length; p++)
 			{
 				File f = new File(parts[p]);
@@ -586,7 +599,7 @@ abstract public class CommandReader
 		}
 		catch (Exception e)
 		{
-			println("Usage: coverage clear|<filenames>");
+			println("Usage: coverage clear|write <dir>|merge <dir>|<filenames>");
 		}
 
 		return true;
@@ -950,7 +963,7 @@ abstract public class CommandReader
 		println("trace <function/operation> [<exp>] - create a tracepoint");
 		println("remove <breakpoint#> - remove a trace/breakpoint");
 		println("list - list breakpoints");
-		println("coverage [clear | <files>] - display/clear line coverage");
+		println("coverage clear|write <dir>|merge <dir>|<filenames> - handle line coverage");
 		println("latex|latexdoc [<files>] - generate LaTeX line coverage files");
 		println("files - list files in the current specification");
 		println("reload - reload the current specification files");
@@ -1186,4 +1199,30 @@ abstract public class CommandReader
 	{
 		return n + " " + (n != 1 ? s + pl : s);
 	}
+
+	private void writeCoverage(File dir)
+		throws IOException
+    {
+    	for (File f: interpreter.getSourceFiles())
+    	{
+    		SourceFile source = interpreter.getSourceFile(f);
+
+    		File cov = new File(dir.getPath() + File.separator + f.getName() + ".cov");
+    		PrintWriter pw = new PrintWriter(cov);
+    		source.writeCoverage(pw);
+    		pw.close();
+    		println("Written coverage for " + f);
+    	}
+    }
+
+	private void mergeCoverage(File dir)
+		throws IOException
+    {
+    	for (File f: interpreter.getSourceFiles())
+    	{
+    		File cov = new File(dir.getPath() + File.separator + f.getName() + ".cov");
+    		LexLocation.mergeHits(f, cov);
+    		println("Merged coverage for " + f);
+    	}
+    }
 }
