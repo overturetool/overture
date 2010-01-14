@@ -191,6 +191,39 @@
       </objectContribution>
       
       
+       <!-- Print latex coverage-->
+        <objectContribution
+            adaptable="true"
+            id="org.overture.ide.idedebughelper.contribution1"
+            objectClass="org.eclipse.core.resources.IProject">
+            <filter
+         name="projectNature"
+         value="org.overture.ide.vdmpp.core.nature">
+      </filter>
+        
+ <menu
+               id="org.overture.ide.idedebughelper.menuMain"
+               label="Overture Utility"
+               path="additions">
+            <separator
+                  name="groupIdedebughelper">
+            </separator>
+         </menu>
+         
+          <action
+                class="org.overture.ide.plugins.idedebughelper.actions.LatexCoverageAction"
+                enablesFor="1"
+                icon="icons/ctool16/miktex_tsk.png"
+                id="org.overture.ide.idedebughelper.actions.LatexCoverageActionPp"
+                label="Latex Coverage"
+                menubarPath="org.overture.ide.idedebughelper.menuMain/groupIdedebughelper"
+                tooltip="Latex Coverage">
+         </action>
+         
+       
+      </objectContribution>
+      
+      
    </extension> 
 
 

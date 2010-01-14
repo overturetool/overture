@@ -1,10 +1,13 @@
 package org.overture.ide.vdmpp.debug.core;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.PreferencesLookupDelegate;
 import org.eclipse.dltk.internal.debug.core.model.ScriptDebugTarget;
+import org.eclipse.dltk.launching.AbstractScriptLaunchConfigurationDelegate;
 import org.eclipse.dltk.launching.DebugSessionAcceptor;
 import org.eclipse.dltk.launching.DebuggingEngineRunner;
 import org.eclipse.dltk.launching.IInterpreterInstall;
@@ -114,6 +117,8 @@ public class VDMPPDebuggerRunner extends DebuggingEngineRunner
 
 		waitDebuggerConnected(launch, acceptor);
 
+		IScriptProject proj = AbstractScriptLaunchConfigurationDelegate.getScriptProject(launch.getLaunchConfiguration());
+		proj.getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
 	}
 
 	public void setVDMJRunnerConfig()

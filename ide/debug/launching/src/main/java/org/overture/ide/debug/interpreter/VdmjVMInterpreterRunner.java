@@ -1,10 +1,14 @@
 package org.overture.ide.debug.interpreter;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -249,7 +253,19 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 
 		arguments.add("-e64");
 		arguments.add(buildEncodedLaunchExpression(launch,charset));
-
+		
+		if(launch.getLaunchConfiguration()
+		.getAttribute(DebugCoreConstants.DEBUGGING_CREATE_COVERAGE, false))
+		{
+			DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+		File logDir = new File(getOutputFolder(config), "coverage"+File.separatorChar+dateFormat.format(new Date()));
+		logDir.mkdirs();
+		
+		arguments.add("-coverage");
+		arguments.add("file:"+logDir.getAbsolutePath());
+		
+		}
+		
 		// 5-n: add files to the arguments
 
 		arguments.addAll(getFiles(project, contentType));
@@ -460,5 +476,13 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 		}
 
 		return newCmdLine;
+	}
+	
+	protected File getOutputFolder( InterpreterConfig config)
+	{
+		File logDir = new File(config.getWorkingDirectoryPath().toOSString()
+				+ File.separatorChar + "logs" );
+		logDir.mkdirs();
+		return logDir;
 	}
 }

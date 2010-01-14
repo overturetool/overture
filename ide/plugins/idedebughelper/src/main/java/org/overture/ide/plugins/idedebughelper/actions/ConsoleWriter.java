@@ -37,6 +37,7 @@ public class ConsoleWriter extends PrintWriter
 				try
 				{
 					MessageConsole myConsole = findConsole("TracesConsole");
+					myConsole.activate();
 					MessageConsoleStream out = myConsole.newMessageStream();
 					out.println(message);
 				} catch (Exception e)
