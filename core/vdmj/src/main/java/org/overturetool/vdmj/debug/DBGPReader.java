@@ -94,9 +94,9 @@ public class DBGPReader
 	private final int port;
 	private final String ideKey;
 	private final String expression;
-	private final Socket socket;
-	private final InputStream input;
-	private final OutputStream output;
+	private Socket socket;
+	private InputStream input;
+	private OutputStream output;
 	private final Interpreter interpreter;
 	private final CPUValue cpu;
 
@@ -112,6 +112,7 @@ public class DBGPReader
 	private Breakpoint breakpoint = null;
 	private Value theAnswer = null;
 	private boolean breaksSuspended = false;
+	private boolean connected = false;
 
 	private static final int SOURCE_LINES = 5;
 
@@ -434,23 +435,6 @@ public class DBGPReader
 		this.expression = expression;
 		this.interpreter = interpreter;
 		this.cpu = cpu;
-
-		if (port > 0)
-		{
-			InetAddress server = InetAddress.getByName(host);
-			socket = new Socket(server, port);
-			input = socket.getInputStream();
-			output = socket.getOutputStream();
-		}
-		else
-		{
-			socket = null;
-			input = System.in;
-			output = System.out;
-			separator = ' ';
-		}
-
-		init();
 	}
 
 	public DBGPReader newThread(CPUValue cpu2) throws Exception
@@ -458,8 +442,38 @@ public class DBGPReader
 		DBGPReader r = new DBGPReader(host, port, ideKey, interpreter, null, cpu2);
 		r.command = DBGPCommandType.UNKNOWN;
 		r.transaction = "?";
-		r.run();			// New threads wait for a "run -i"
 		return r;
+	}
+
+	private void connect() throws IOException
+	{
+		if (!connected)
+		{
+			if (port > 0)
+			{
+				InetAddress server = InetAddress.getByName(host);
+				socket = new Socket(server, port);
+				input = socket.getInputStream();
+				output = socket.getOutputStream();
+			}
+			else
+			{
+				socket = null;
+				input = System.in;
+				output = System.out;
+				separator = ' ';
+			}
+
+			connected = true;
+			init();
+			run();			// New threads wait for a "run -i"
+		}
+	}
+
+	private void startup() throws IOException
+	{
+		interpreter.init(this);
+		connect();
 	}
 
 	private void init() throws IOException
@@ -707,12 +721,6 @@ public class DBGPReader
     		.replace("\"", "&quot;");
 	}
 
-	private void startup() throws IOException
-	{
-		interpreter.init(this);
-		run();
-	}
-
 	private void run() throws IOException
 	{
 		String line = null;
@@ -733,6 +741,8 @@ public class DBGPReader
 
 		try
 		{
+			connect();
+
 			breakContext = ctxt;
 			breakpoint = bp;
 			statusResponse(DBGPStatus.BREAK, DBGPReason.OK);
@@ -752,6 +762,7 @@ public class DBGPReader
 	{
     	try
     	{
+    		connect();
     		cdataResponse(display);
     	}
     	catch (Exception e)
@@ -764,13 +775,22 @@ public class DBGPReader
 	{
 		try
 		{
-			if (reason == DBGPReason.EXCEPTION && ctxt != null)
+			if (reason == DBGPReason.OK && !connected)
 			{
-				dyingThread(ctxt);
+				// We never connected and there's no problem so just complete...
 			}
 			else
 			{
-				statusResponse(DBGPStatus.STOPPED, reason);
+				connect();
+
+				if (reason == DBGPReason.EXCEPTION && ctxt != null)
+    			{
+    				dyingThread(ctxt);
+    			}
+    			else
+    			{
+    				statusResponse(DBGPStatus.STOPPED, reason);
+    			}
 			}
 		}
 		catch (IOException e)
