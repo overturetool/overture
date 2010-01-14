@@ -300,7 +300,7 @@ public class CPUValue extends ObjectValue
 
 		do
     	{
-    		SystemClock.timeStep(cpuNumber, step);
+    		SystemClock.timeStep(step);
     		step = end - SystemClock.getWallTime();
     	}
 		while (step > 0);

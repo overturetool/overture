@@ -59,8 +59,7 @@ public class SystemClock
 		return wallTime;
 	}
 
-	@SuppressWarnings("unused")
-	public static synchronized void timeStep(int cpu, long step)
+	public static synchronized void timeStep(long step)
 	{
 		if (step < 0)
 		{
