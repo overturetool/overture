@@ -40,6 +40,7 @@ import org.overturetool.vdmj.traces.TestSequence;
 import org.overturetool.vdmj.traces.TraceDefinitionTerm;
 import org.overturetool.vdmj.traces.TraceReductionType;
 import org.overturetool.vdmj.typechecker.Environment;
+import org.overturetool.vdmj.typechecker.FlatEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
 import org.overturetool.vdmj.types.NaturalOneType;
@@ -186,6 +187,11 @@ public class NamedTraceDefinition extends Definition
 	@Override
 	public void typeCheck(Environment base, NameScope scope)
 	{
+		if (base.isVDMPP())
+		{
+			base = new FlatEnvironment(getSelfDefinition(), base);
+		}
+
 		for (TraceDefinitionTerm term: terms)
 		{
 			term.typeCheck(base, NameScope.NAMESANDSTATE);

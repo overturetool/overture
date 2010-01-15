@@ -1564,6 +1564,7 @@ public class DefinitionReader extends SyntaxReader
 		{
 			case IDENTIFIER:
 			case NAME:
+			case SELF:
 				StatementReader sr = getStatementReader();
 				Statement stmt = sr.readStatement();
 
