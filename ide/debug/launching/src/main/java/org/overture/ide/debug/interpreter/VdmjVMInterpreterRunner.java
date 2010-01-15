@@ -262,7 +262,11 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 		logDir.mkdirs();
 		
 		arguments.add("-coverage");
-		arguments.add("file:"+logDir.getAbsolutePath());
+		
+		String coveragePath = logDir.getAbsolutePath().replace('\\', '/');
+		if(isWindowsPlatform())
+			coveragePath="/"+ coveragePath;
+		arguments.add("file:"+coveragePath);
 		
 		}
 		
@@ -369,10 +373,15 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 					"Entry class not set in launch configuration"));
 
 		String expression = buildLaunchExpression(module, debugOperation);
-		if(System.getProperty("os.name").toLowerCase().contains("windows"))
+		if(isWindowsPlatform())
 				return expression.replace("\"","\\\"");
 		else
 			return expression;
+	}
+	
+	public static boolean isWindowsPlatform()
+	{
+		return System.getProperty("os.name").toLowerCase().contains("windows");
 	}
 
 	protected String buildLaunchExpression(String module, String debugOperation)

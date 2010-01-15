@@ -189,7 +189,7 @@ final static String VDM_MODEL_ENV_BEGIN ="\\begin{vdm_al}";
 final static String VDM_MODEL_ENV_END ="\\end{vdm_al}";
 	private void makeLatex(final IProject selectedProject, final String contentTypeId, final String natureId)
 	{
-		final Job expandJob = new Job("Renaming") {
+		final Job expandJob = new Job("Builder coverage tex files.") {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor)
@@ -243,6 +243,7 @@ final static String VDM_MODEL_ENV_END ="\\end{vdm_al}";
 					ClassList classlist = AstManager.instance().getRootNode(selectedProject,natureId).getClassList();
 					
 					List<File> outputFiles = getFileChildern(new File(projectRoot,"logs"));
+					LexLocation.clearLocations();
 					for (ClassDefinition classDefinition : classlist) {
 						boolean insertTex = true;
 						File texFile = new File(outputFolderForGeneratedModelFiles,classDefinition.location.file.getName() +".tex");
@@ -314,7 +315,7 @@ final static String VDM_MODEL_ENV_END ="\\end{vdm_al}";
 //				while ((line = inputerr.readLine()) != null) {
 //					cw.println(line);
 //				}
-p.waitFor();
+//p.waitFor();
 					
 					selectedProject.refreshLocal(IResource.DEPTH_INFINITE, null);
 
