@@ -4,7 +4,8 @@
 \begin{description}
 \item \keyw{if} \textit{predicate} \keyw{then} Expression \keyw{else} Expression
 
-\item \keyw{exists} p \keyw{in set} setOfP \keyw{\&} p {\tt =} value
+\item \keyw{exists} p \keyw{in set} setOfP \keyw{\&} predicate(p)
+\item \keyw{forall} p \keyw{in set} setOfP \keyw{\&} predicate(p)
 
 \item \keyw{cases} expression:\\
       (pattern list 1){\tt ->} Expression 1,\\

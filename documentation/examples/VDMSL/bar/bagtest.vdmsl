@@ -30,7 +30,7 @@ functions
         b15 = TestSize(),
         b16 = TestSubBag1(),
         b17 = TestSubBag2(),
-        b18 = TestUnion(),
+        b18 = TestUnion()
     in
       b1 and b2 and b3 and b4 and b5 and b6 and
       b7 and b8 and b9 and b10 and b11 and b12

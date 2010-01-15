@@ -50,7 +50,7 @@ operations
  private SetData : seq of inDataType ==> Grid
  SetData(data) ==
  (
-   def g = new Grid(mk_Grid`Point(0,0),mk_Grid`Point(100,100));
+   def g = new Grid(mk_Grid`Point(0,0),mk_Grid`Point(100,100))
    in
    (
    startingPoint := mk_Grid`Point(data(startIndex).#1, data(startIndex).#2);

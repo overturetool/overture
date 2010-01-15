@@ -32,6 +32,9 @@ thread
 while true do
   skip;
 
+traces
+  Mytrace: regular expression using operation calls
+
 end Person
 
 
