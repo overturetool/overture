@@ -4,9 +4,6 @@
 \begin{description}
 \item \keyw{if} \textit{predicate} \keyw{then} Expression \keyw{else} Expression
 
-\item \keyw{exists} p \keyw{in set} setOfP \keyw{\&} predicate(p)
-\item \keyw{forall} p \keyw{in set} setOfP \keyw{\&} predicate(p)
-
 \item \keyw{cases} expression:\\
       (pattern list 1){\tt ->} Expression 1,\\
       (pattern list 2),\\
@@ -19,7 +16,9 @@
 
 \item \keyw{dcl} variable \textit{\keyw{:} type} \keyw{:=} Variable creation \keyw{;}
 
-\item \keyw{let} variable \textit{\keyw{:} type} \keyw{=} Variable creation \keyw{in Expression}
+\item \keyw{let} variable \textit{\keyw{:} type} \keyw{=} Variable creation \keyw{in} Expression
+
+\item \keyw{let} variable \keyw{in set} setOfValues \keyw{be st} pred(variable) \keyw{in} Expression
 \end{description}
 
 

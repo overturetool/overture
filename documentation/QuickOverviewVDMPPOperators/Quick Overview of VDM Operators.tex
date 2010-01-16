@@ -138,6 +138,42 @@
 
 \vdmSpec{ClassExample.vpp}{Class Example}{VDM:ClassExample}
 \end{minipage}
+
+\subsection{Comprehensions (Structure to Structure)}
+
+\begin{minipage}[c]{1\linewidth}
+
+\begin{lstlisting}
+{elem(var) | var in set setexpr & pred(var)}
+
+[elem(i) | i in set numsetexpr & pred(i)]
+
+{dexpr(var) |-> rexpr(var) | var in set setexpr & pred(var)} 
+\end{lstlisting}
+
+\subsection{From Structure to Single Value}
+
+\begin{lstlisting}
+SumSet: set of nat -> nat
+SumSet(s) ==
+  if s = {}
+  then 0
+  else let e in set s
+       in
+         e + Sum(s\{e})
+\end{lstlisting}
+
+\subsection{From Structure to single Boolean}
+
+\begin{lstlisting}
+forall p in set setOfP & pred(p)
+
+exists p in set setOfP & pred(p)
+
+exists1 p in set setOfP & pred(p)
+\end{lstlisting}
+
+\end{minipage}
 \scriptsize
 
 %Copyright \copyright\ 2008 Overture
