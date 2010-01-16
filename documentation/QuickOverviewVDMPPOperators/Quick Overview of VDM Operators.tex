@@ -144,11 +144,26 @@
 \begin{minipage}[c]{1\linewidth}
 
 \begin{lstlisting}
-{elem(var) | var in set setexpr & pred(var)}
+{element(var) | var in set setexpr & pred(var)}
 
-[elem(i) | i in set numsetexpr & pred(i)]
+[element(i) | i in set numsetexpr & pred(i)]
+
+!\textrm{Typically:}£
+
+[element(list(i)) | i in set inds list & pred(list(i))]
 
 {dexpr(var) |-> rexpr(var) | var in set setexpr & pred(var)} 
+\end{lstlisting}
+
+\subsection{From Structure to Arbitrary Value}
+
+\begin{lstlisting}
+Select: set of nat -> nat
+Select(s) ==
+  let e in set s
+  in
+    e
+pre s <> {}
 \end{lstlisting}
 
 \subsection{From Structure to Single Value}
