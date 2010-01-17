@@ -1,0 +1,329 @@
+\documentclass{overturerep}
+\usepackage{url}
+\usepackage{graphics}
+\usepackage{times}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{latexsym}
+\usepackage{longtable} % ,multirow}
+
+\newcommand{\vdmtools}{VDMTools}
+\newcommand{\vdmstyle}[1]{\texttt{#1}}
+\newcounter{exerciseno}
+
+%\newcommand{\Exercise}[1]{%
+%    \textbf{Exercise \thechapter.\theexerciseno}
+%   \refstepcounter{exerciseno} #1 $\Box$\\ }%}
+%\newcommand{\initexercise}{\setcounter{exerciseno}{0}}
+%\newcounter{exerciseno}
+
+\newcommand\thebookexercise{\thechapter.\arabic{exerciseno}}
+\newenvironment{myexercise}{\par
+  \refstepcounter{exerciseno}%
+  \indent\textbf{Exercise\ \thebookexercise}\enskip}{$\Box$\\
+}
+\newenvironment{myhardexercise}{\par
+  \refstepcounter{exerciseno}%
+  \indent\textbf{Exercise\ \thebookexercise $\star$}\enskip}{$\Box$\\
+}
+\newcommand{\initexercise}{\setcounter{exerciseno}{0}}
+\newenvironment{mysolution}{
+} %% This will be replaced by a perl script extracting the solutions
+  %% and inserting them automatically into the solutions chapter.
+ 
+%\newcommand{\insertcommentedvdm*}[2]{}
+  %% This macro is identified by perl script which will move the
+  %% parameter to the solutions chapter.
+% definition of VDM++, JavaCC, JJTree, JTB, ANTLR and SableCC for listings
+\include{customlangdef}
+% define the layout for listings
+\lstdefinestyle{tool}{basicstyle=\ttfamily,
+                         frame=trBL, 
+			 showstringspaces=false, 
+			 frameround=ffff, 
+			 framexleftmargin=0mm, 
+			 framexrightmargin=0mm}
+\lstdefinestyle{mystyle}{basicstyle=\ttfamily,
+                         frame=trBL, 
+%                         numbers=left, 
+%			 gobble=0, 
+			 showstringspaces=false, 
+%			 linewidth=\textwidth, 
+			 frameround=fttt, 
+			 aboveskip=5mm,
+			 belowskip=5mm,
+			 framexleftmargin=0mm, 
+			 framexrightmargin=0mm}
+%\lstdefinestyle{mystyle}{basicstyle=\sffamily\small,
+%			 frame=tb,
+%                         numbers=left,
+%			 gobble=0,
+%			 showstringspaces=false,
+%			 linewidth=345pt,
+%			 frameround=ffff,
+%			 framexleftmargin=8mm,
+%			 framexrightmargin=8mm,
+%			 framextopmargin=1mm,
+%			 framexbottommargin=1mm,
+%			 aboveskip=7mm,
+%			 belowskip=5mm,
+%			 xleftmargin=10mm,}
+
+\lstset{style=mystyle}
+\lstset{language=VDM++}
+\lstset{alsolanguage=Java}
+% The command below enables you to escape into normal LaTeX mode inside your 
+% VDM chunks by starting with a `?´ character and ending with a `£´
+\lstset{escapeinside=?£}
+
+
+%%%%%%%%%%%%%%%%%% Commands for bibtex %%%%%%%%%%%%%%%%%%%%%%%
+%************************************************************************
+%                                                                       *
+%       Bibliography and Terminology supporting commands                *
+%                                                                       *
+%************************************************************************
+
+\newcommand{\bthisbibliography}[1]{\chapter*{References}%
+   \begin {list} {}%
+     {\settowidth {\labelwidth} {[#1]XX}%
+      \setlength {\leftmargin} {\labelwidth}%
+      \addtolength{\leftmargin} {\labelsep}%
+      \setlength {\parsep} {1ex}%
+      \setlength {\itemsep} {2ex}%
+     }
+  }
+\newcommand{\ethisbibliography}{\end{list}}
+\newcommand{\refitem}[2]
+  {\bibitem[#1]{#2}}
+
+%\newcommand{\Exercise}[1]{%
+%    \textbf{Exercise \thechapter.\theexerciseno}
+%   \refstepcounter{exerciseno} #1 $\Box$\\ }%}
+%\newcommand{\initexercise}{\setcounter{exerciseno}{0}}
+
+\newcommand{\experience}[1]{%
+\begin{center}
+\fbox{
+\begin{minipage}[t]{.8\textwidth}
+#1
+\end{minipage}}
+\end{center}}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[LO]{\leftmark}
+\fancyhead[RE]{Tutorial to Overture/VDM-RT}
+\fancyhead[RO,LE]{\resizebox{0.05\textwidth}{!}{\includegraphics{OMLlogoattempt.jpg}}}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+ 
+\title{Tutorial to Overture/VDM-RT}
+\author{Peter Gorm Larsen\\
+        %\and
+        John Fitzgerald \\
+        %\and
+        Sune Wolff\\
+        %\and
+        Nick Battle\\
+        Kenneth Lausdahl\\
+        Augusto Ribeiro\\
+        Kenneth Pierce}
+
+\date{January 2010}
+
+%\frontmatter
+\reportno{TR-2010-01}     
+
+\pagenumbering{roman}
+\maketitle
+%\addtocounter{page}{2}
+\tableofcontents
+\newpage
+% \include{foreword/foreword}
+
+%\cleardoublepage
+%\mainmatter
+%\lhead{\nouppercase{\rightmark}}
+%\rhead{\nouppercase{\leftmark}}
+
+
+%\pagestyle{fancy}
+%\fancyhead{}
+%\fancyhead[LO]{\leftmark}
+%\fancyhead[RE]{Validated Designs for Object-oriented Systems}
+%\fancyhead[RO,LE]{\thepage}
+%\fancyfoot{}
+%%\fancyfoot[LE,RO]{\thepage}
+
+\pagenumbering{arabic} 
+\setcounter{page}{1}
+\addtocounter{chapter}{2}
+
+\include{toolintroovertureRT}
+
+%\backmatter
+\appendix
+
+\bibliographystyle{newalpha}
+
+\bibliography{book}
+
+\input{navigationexample}
+
+\end{document}
+
+\usepackage{array}
+\usepackage{color}
+\usepackage{colortbl}
+\usepackage{alltt}
+\usepackage{verbatim}
+
+\usepackage{epsfig} 
+\usepackage{myindex} %%% % see page 367 in the Latex Companion
+%\usepackage{subfigure}
+\usepackage{longtable}
+\newcommand{\vdmtoolsold}{\textbf{VDMTools}$^{\mbox{\small\textbf{{\textregistered}}}}$}
+
+\setlength{\textwidth}{12cm}
+
+
+% \pagestyle{fancy}
+
+%\fancyhead{}
+%\fancyhead[LO]{\leftmark}
+%\fancyhead[RE]{Validated Designs for Object-oriented Systems}
+%\fancyhead[RO,LE]{\thepage}
+%\fancyfoot{}
+%%\fancyfoot[LE,RO]{\thepage}
+
+\newcounter{guideno}
+\setcounter{guideno}{1}
+\newcommand{\guideline}[1]{\vspace*{2mm}%
+\noindent\fbox{\parbox{.98\textwidth}{{\bf Guideline \theguideno:} #1\addtocounter{guideno}{1}}}\vspace*{2mm}}
+\newcounter{ruleno}
+\setcounter{ruleno}{1}
+\newcommand{\maprule}[1]{\vspace*{2mm}%
+\noindent\fbox{\parbox{.98\textwidth}{{\bf Mapping Rule \theruleno:} #1\addtocounter{ruleno}{1}}}\vspace*{2mm}}
+\usepackage{psboxit}
+
+\PScommands
+
+\newcommand{\graybox}[1]{\psboxit{ box .75 setgray
+fill}{\spbox{#1}}}
+%\newcommand{\gbx}[1]{\psboxit{ box .75 setgray fill}{\spbox{#1}}}
+\newcommand{\gbx}[1]{\psboxit{ box .75 setgray fill}{\spbox{\begin{alltt}#1\end{alltt}
+\begin{minipage}{1cm} \vspace{12pt}\end{minipage}}}}
+
+\newcolumntype{G}{>{\columncolor[gray]{0.8}}p{.96\columnwidth}}
+\newenvironment{VDMgray}%
+%{\begin{lstlisting}}%
+%{\end{lstlisting}}
+{\small\begin{alltt}\begin{tabular}{G}}%
+{\end{tabular}\end{alltt}\normalsize} 
+
+\usepackage{multicol}
+
+
+\newcommand{\askcust}{\marginpar XXX}
+\newcommand{\bookurl}[1]{\texttt{http://www.vdmbook.com/#1}}
+\newcommand{\bookurlshort}{\texttt{http://www.vdmbook.com}}
+
+\setcounter{topnumber}{3}
+\def\topfraction{1.0}
+\setcounter{bottomnumber}{3}
+\def\bottomfraction{1.0}
+\setcounter{totalnumber}{3}
+\def\textfraction{.1}
+\renewcommand{\floatpagefraction}{0.8}
+
+\definecolor{covered}{rgb}{0,0,0}      %black
+%\definecolor{not_covered}{gray}{0.5}   %gray for previewing
+%\definecolor{not_covered}{gray}{0.6}   %gray for printing
+\definecolor{notcovered}{rgb}{1,0,0}  %red
+
+\newcommand{\AAA}{\"{a}}
+\newcommand{\OOO}{\"{o}}
+\newcommand{\UUU}{\"{u}}
+ 
+\setcounter{topnumber}{3}
+\def\topfraction{1.0}
+\setcounter{bottomnumber}{3}
+\def\bottomfraction{1.0}
+\setcounter{totalnumber}{3}
+\def\textfraction{.1}
+
+\setcounter{tocdepth}{1}
+%%%%%%%%%%% commands for BNF rules %%%%%%%%%%%%%%%%%%
+
+\def\Quote{{\mathcode`\'='047 '}}
+\newcommand{\Lit}[1]{`{\tt #1}\Quote}
+\newcommand{\Rule}[2]{
+  \begin{quote}\begin{tabbing}
+    #1\index{#1}\ \ \= = \ \ \= #2  ; %    Adds production rule to index
+    
+  \end{tabbing}\end{quote}
+  }
+\newcommand{\SETDIFF}{\texttt{\char'134}}
+\newcommand{\SeqPt}[1]{\{\ #1\ \}}
+\newcommand{\lfeed}{\\ \> \>}
+\newcommand{\OptPt}[1]{[\ #1\ ]}
+\newcommand{\dsepl}{\ $|$\ }
+\newcommand{\dsep}{\\ \> $|$ \>}
+\newcommand{\Lop}[1]{`{\sf #1}\Quote}
+\newcommand{\blankline}{\vspace{\baselineskip}}
+\newcommand{\Brack}[1]{(\ #1\ )}
+\newcommand{\nmk}{\footnotemark}
+\newcommand{\ntext}[1]{\footnotetext{{\bf Note: } #1}}
+\newlength{\mykwlen}
+\newcommand{\Keyw}[1]{\settowidth{\mykwlen}{\tt #1}\makebox[\mykwlen][l]{\sf
+    #1}}
+\newcommand{\keyw}[1]{{\tt #1}}
+\newcommand{\kw}[1]{{\tt #1}}
+		   \newcommand{\tool}[1]{{\sf #1}}
+\newcommand{\id}[1]{{\tt #1}}
+\newcommand{\metaiv}[1]{\begin{alltt}\input{#1}\end{alltt}}
+\newcommand{\MAP}[2]{\kw{map\ }#1\kw{\ to\ }#2}
+\newcommand{\INMAP}[2]{\kw{inmap\ }#1\kw{\ to\ }#2}
+\newcommand{\SEQ}[1]{\kw{seq\ of\ }#1}
+\newcommand{\NSEQ}[1]{\kw{seq1\ of\ }#1}
+\newcommand{\SET}[1]{\kw{set\ of\ }#1}
+\newcommand{\PROD}[2]{#1 * #2}
+\newcommand{\TO}[2]{#1 $\rightarrow$ #2}
+\newlength{\maxwidth}
+\newcommand{\overlayl}[2]
+  {{\settowidth{\maxwidth}{\shortstack{#1\\#2}}%
+    \@mdboxl{0em}{#1}%
+    \@mdboxl{\maxwidth}{#2}%
+  }}
+
+%\newcommand{\PTO}[2]{#1 \mbox{\shortstack{\footnotesize$\sim$}\\$\rightarrow$}} #2}%
+\newcommand{\partialarrow}{$\buildrel \sim\over\rightarrow$}
+\newcommand{\PTO}[2]{#1 $\buildrel \sim\over\rightarrow$ #2}%
+\newcommand{\FUN}[2]{#1 \To #2}
+%%%%%%%%%% headings %%%%%%%%%%%%%%%
+\def\oddhead{\thechapter}
+\def\evenhead{\thetitle}
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[LO]{\leftmark}
+\fancyhead[RE]{Validated Designs for Object-oriented Systems}
+\fancyhead[RO,LE]{\thepage}
+\fancyfoot{}
+%\fancyfoot[LE,RO]{\thepage}
+   \markboth{References}{References}
+   \addcontentsline{toc}{chapter}{\protect\numberline{}{References}}
+   \small
+   \begin{list}{}
+     {\settowidth{\labelwidth}{[#1]XX}
+      \setlength{\leftmargin}{\labelwidth}
+      \addtolength{\leftmargin}{\labelsep}
+      \setlength{\parsep}{1ex}
+      \setlength{\itemsep}{2ex}
+     }
+
