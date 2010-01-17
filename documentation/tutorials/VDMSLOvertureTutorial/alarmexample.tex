@@ -1,0 +1,164 @@
+\appendix
+
+\chapter{A Chemical Plant Example}\label{app:alarm}
+
+This appendix presents the requirements for a simple alarm system for a
+chemical plant. It forms a running example that serves to illustrate
+the process described earlier and to introduce elements of the VDM++
+modelling language. Although the modelling process is described here
+as though it were a single-pass activity, a real development would
+usually be iterative. 
+
+
+\section{An informal description}
+
+
+
+The example is inspired by a subcomponent of a large
+alarm system developed by IFAD A/S and introduced in 
+\cite{Fitzgerald&98b}. 
+Chapter~\ref{cha:toolbox} provides an interactive and hands-on tour of
+the tools available for supporting the development of the model.
+
+Imagine that you are developing a system that manages the calling out
+of experts to deal with operational faults discovered in a chemical
+plant.  The plant is equipped with sensors that are able to raise
+alarms in response to conditions in the plant.  When an alarm is
+raised, an expert must be called to the scene.  Experts have different
+qualifications for coping with different kinds of alarms. It has been
+decided to produce a model to ensure that the rules
+concerning the duty schedule and the calling out of experts are
+correctly understood and implemented. The individual requirements are
+labelled R1, R8 for further reference:
+
+\begin{reqs}
+\item A computer-based system is to be developed to manage the alarms 
+of this plant.
+\item Four kinds of qualifications are needed to cope with the alarms: 
+ electrical, mechanical, biological, and chemical.
+\item There must be experts on duty during all periods allocated in 
+the system.
+\item Each expert can have a list of qualifications.
+\item Each alarm reported to the system has a qualification associated 
+with it along with a description of the alarm that can be understood 
+by the expert.
+\item Whenever an alarm is received by the system an expert with the 
+right qualification should be found so that he or she can be 
+paged.
+\item The experts should be able to use the system database to check 
+when they will be on duty.
+\item It must be possible to assess the number of experts on duty.
+\end{reqs}
+
+In the next section the development of a model of an alarm
+system to meet these requirements is initiated. The purpose of the model is to
+clarify the rules governing the duty roster and calling out of experts
+to deal with alarms.
+
+\section{A VDM-SL model of the Alarm example}
+
+This section presents the full VDM-SL model
+of the alarm example. However, it does so without any explanatory
+text. That is placed in the VDM-SL book so if you are a newcommer to
+VDM-SL please read that there.
+
+\begin{lstlisting}
+types
+
+  Plant :: schedule : Schedule
+           alarms   : set of Alarm
+  inv mk_Plant(schedule,alarms) ==
+        forall a in set alarms &
+	   forall peri in set dom schedule &
+	     QualificationOK(schedule(peri),a.quali);
+	     
+  Schedule = map Period to set of Expert
+inv sch ==
+   forall exs in set rng sch &
+          exs <> {} and
+          forall ex1, ex2 in set exs &
+                 ex1 <> ex2 => ex1.expertid <> ex2.expertid;
+
+  Period = token;
+
+  Expert :: expertid : ExpertId
+            quali    : set of Qualification
+  inv ex == ex.quali <> {};
+
+  ExpertId = token;
+
+  Qualification = <Elec> | <Mech> | <Bio> | <Chem>;
+	   
+  Alarm :: alarmtext : seq of char
+           quali     : Qualification
+\end{lstlisting}
+
+The functionality can be defined as follows.
+
+\begin{lstlisting}
+functions
+
+  NumberOfExperts: Period * Plant -> nat
+  NumberOfExperts(peri,plant) ==
+    card plant.schedule(peri)
+  pre peri in set dom plant.schedule;
+
+  ExpertIsOnDuty: Expert * Plant -> set of Period
+  ExpertIsOnDuty(ex,mk_Plant(sch,-)) ==
+    {peri| peri in set dom sch & ex in set sch(peri)};
+
+  ExpertToPage(a:Alarm,peri:Period,plant:Plant) r: Expert
+  pre peri in set dom plant.schedule and
+      a in set plant.alarms
+  post r in set plant.schedule(peri) and
+       a.quali in set r.quali;
+
+  QualificationOK: set of Expert * Qualification -> bool
+  QualificationOK(exs,reqquali) ==
+    exists ex in set exs & reqquali in set ex.quali
+
+functions
+
+ChangeExpert: Plant * Expert * Expert * Period -> Plant
+ChangeExpert(mk_Plant(plan,alarms),ex1,ex2,peri) ==
+  mk_Plant(plan ++ {peri |-> plan(peri)\{ex1} union {ex2}},
+           alarms)
+
+values
+ 
+  p1:Period = mk_token("Monday day");
+  p2:Period = mk_token("Monday night");
+  p3:Period = mk_token("Tuesday day");
+  p4:Period = mk_token("Tuesday night");
+  p5:Period = mk_token("Wednesday day");
+
+  eid1:ExpertId = mk_token(134);
+  eid2:ExpertId = mk_token(145);
+  eid3:ExpertId = mk_token(154);
+  eid4:ExpertId = mk_token(165);
+  eid5:ExpertId = mk_token(169);
+  eid6:ExpertId = mk_token(174);
+  eid7:ExpertId = mk_token(181);
+  eid8:ExpertId = mk_token(190);
+  
+  e1:Expert = mk_Expert(eid1,{<Elec>});
+  e2:Expert = mk_Expert(eid2,{<Mech>,<Chem>});
+  e3:Expert = mk_Expert(eid3,{<Bio>,<Chem>,<Elec>});
+  e4:Expert = mk_Expert(eid4,{<Bio>});
+  e5:Expert = mk_Expert(eid5,{<Chem>,<Bio>});
+  e6:Expert = mk_Expert(eid6,{<Elec>,<Chem>,<Bio>,<Mech>});
+  e7:Expert = mk_Expert(eid7,{<Elec>,<Mech>});
+  e8:Expert = mk_Expert(eid8,{<Mech>,<Bio>});
+
+  s: map Period to set of Expert
+     = {p1 |-> {e7,e5,e1},
+        p2 |-> {e6},
+        p3 |-> {e1,e3,e8},
+        p4 |-> {e6}};
+
+  a1:Alarm = mk_Alarm("Power supply missing",<Elec>);
+  a2:Alarm = mk_Alarm("Tank overflow",<Mech>);
+  a3:Alarm = mk_Alarm("CO2 detected",<Chem>);
+
+  pl: Plant = mk_Plant(s,{a1,a2,a3})
+\end{lstlisting}  
