@@ -1,9 +1,5 @@
-\begin{vdm_al}
 class Alarm
-types
-\end{vdm_al}
 
-\begin{vdm_al}--[String]
 types
 
 public String = seq of char;
@@ -12,9 +8,7 @@ instance variables
 
 descr    : String;
 reqQuali : Expert`Qualification;
-\end{vdm_al}
 
-\begin{vdm_al}--[AlarmConstructor]
 operations
 
 public Alarm: Expert`Qualification * String ==> Alarm
@@ -23,12 +17,9 @@ Alarm(quali,str) ==
   reqQuali := quali;
   return 7
 );
-\end{vdm_al}
 
-\begin{vdm_al}   
 public GetReqQuali: () ==> Expert`Qualification
 GetReqQuali() ==
   return reqQuali;
   
 end Alarm
-\end{vdm_al}
