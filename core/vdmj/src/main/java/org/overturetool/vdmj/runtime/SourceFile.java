@@ -46,6 +46,7 @@ public class SourceFile
 {
 	public final File filename;
 	public List<String> lines = new Vector<String>();
+	public final boolean hasVdm_al;
 
 	public SourceFile(File filename) throws IOException
 	{
@@ -56,13 +57,20 @@ public class SourceFile
 				new FileInputStream(filename), VDMJ.filecharset));
 
 		String line = br.readLine();
+		boolean vdm_al = false;
 
 		while (line != null)
 		{
+			if (line.startsWith("\\begin{vdm_al}"))
+			{
+				vdm_al = true;
+			}
+
 			lines.add(line);
 			line = br.readLine();
 		}
 
+		hasVdm_al = vdm_al;
 		br.close();
 	}
 
@@ -150,6 +158,11 @@ public class SourceFile
     		out.println("\\begin{document}");
 		}
 
+		if (!hasVdm_al)
+		{
+			out.println("\\begin{vdm_al}");
+		}
+
 		boolean endDocFound = false;
 
 		for (int lnum = 1; lnum <= lines.size(); lnum++)
@@ -165,6 +178,11 @@ public class SourceFile
 			String spaced = detab(line, LexTokenReader.TABSTOP);
 			List<LexLocation> list = hits.get(lnum);
 			out.println(markup(spaced, list));
+		}
+
+		if (!hasVdm_al)
+		{
+			out.println("\\end{vdm_al}");
 		}
 
 		out.println("\\bigskip");

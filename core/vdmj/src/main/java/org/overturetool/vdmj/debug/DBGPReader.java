@@ -416,7 +416,8 @@ public class DBGPReader
 		System.err.println(string);
 		System.err.println(
 			"Usage: -h <host> -p <port> -k <ide key> <-vdmpp|-vdmsl|-vdmrt>" +
-			" -e <expression> [-w] [-q] [-log <logfile>] [-c <charset>] [-r <release>]" +
+			" -e <expression> | -e64 <base64 expression>" +
+			" [-w] [-q] [-log <logfile>] [-c <charset>] [-r <release>]" +
 			" [-coverage <dir>] [-default <name>]" +
 			" {<filename URLs>}");
 		System.exit(1);
@@ -617,7 +618,8 @@ public class DBGPReader
 		}
 		catch (IOException e)
 		{
-			if (!e.getMessage().equals("Broken pipe"))
+			if (!e.getMessage().equals("Broken pipe") &&
+				!e.getMessage().equals("socket write error"))
 			{
 				throw new InternalException(29, "DBGP: " + reason);
 			}
