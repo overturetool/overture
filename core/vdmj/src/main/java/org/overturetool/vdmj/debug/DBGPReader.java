@@ -133,6 +133,7 @@ public class DBGPReader
 		String logfile = null;
 		boolean expBase64 = false;
 		File coverage = null;
+		String defaultName = null;
 
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
 		{
@@ -295,6 +296,17 @@ public class DBGPReader
     				usage("-coverage option requires a directory name");
     			}
     		}
+    		else if (arg.equals("-default"))
+    		{
+    			if (i.hasNext())
+    			{
+       				defaultName = i.next();
+    			}
+    			else
+    			{
+    				usage("-default option requires a name");
+    			}
+    		}
     		else if (arg.startsWith("-"))
     		{
     			usage("Unknown option " + arg);
@@ -358,6 +370,12 @@ public class DBGPReader
 					}
 
 					Interpreter i = controller.getInterpreter();
+
+					if (defaultName != null)
+					{
+						i.setDefaultName(defaultName);
+					}
+
 					new DBGPReader(host, port, ideKey, i, expression, null).startup();
 
 					if (coverage != null)
@@ -399,6 +417,7 @@ public class DBGPReader
 		System.err.println(
 			"Usage: -h <host> -p <port> -k <ide key> <-vdmpp|-vdmsl|-vdmrt>" +
 			" -e <expression> [-w] [-q] [-log <logfile>] [-c <charset>] [-r <release>]" +
+			" [-coverage <dir>] [-default <name>]" +
 			" {<filename URLs>}");
 		System.exit(1);
 	}
