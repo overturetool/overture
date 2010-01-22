@@ -28,6 +28,7 @@ import org.overturetool.vdmj.syntax.ClassReader;
 import org.overturetool.vdmj.syntax.ModuleReader;
 import org.overturetool.vdmj.traces.CallSequence;
 import org.overturetool.vdmj.traces.TestSequence;
+import org.overturetool.vdmj.traces.TraceReductionType;
 import org.overturetool.vdmj.traces.Verdict;
 import org.overturetool.vdmj.typechecker.ClassTypeChecker;
 import org.overturetool.vdmj.typechecker.ModuleTypeChecker;
@@ -42,6 +43,15 @@ public class TraceInterpreter
 	protected String activeTrace;
 
 	Interpreter interpreter;
+	
+	boolean reduce= false;
+	float subset;
+	long seed=0;
+	TraceReductionType traceReductionType = TraceReductionType.NONE;
+	
+	
+	
+	
 
 	public void processTraces(List<File> specFiles, String className,
 			TraceXmlWrapper storage, boolean runTypeCheck, Dialect dialect,
@@ -95,6 +105,16 @@ public class TraceInterpreter
 
 			processTrace(classes,className,runTypeCheck,storage,dialect,languageVersion);
 		}
+	}
+	public void processTrace(ClassList classList,String className, boolean runTypeCheck, TraceXmlWrapper storage, Dialect dialect, Release languageVersion,float subset, TraceReductionType traceReductionType,long seed) throws Exception
+	{
+		this.reduce = true;
+		this.seed = seed;
+		this.traceReductionType = traceReductionType;
+		this.subset = subset;
+		
+		processTrace(classList,className,runTypeCheck,storage,dialect,languageVersion);
+		this.reduce = false;
 	}
 	public void processTrace(ClassList classList,String className, boolean runTypeCheck, TraceXmlWrapper storage, Dialect dialect, Release languageVersion) throws Exception
 	{
@@ -165,6 +185,15 @@ public class TraceInterpreter
 		}
 	}
 	
+	public void processTrace(ModuleList moduleList,String moduleName, boolean runTypeCheck, TraceXmlWrapper storage, Dialect dialect, Release languageVersion,float subset, TraceReductionType traceReductionType,long seed) throws Exception
+	{
+		this.reduce = true;
+		this.seed = seed;
+		this.traceReductionType = traceReductionType;
+		this.subset = subset;
+		processTrace( moduleList, moduleName,  runTypeCheck,  storage,  dialect,  languageVersion);
+		this.reduce = false;
+	}
 	
 	public void processTrace(ModuleList moduleList,String moduleName, boolean runTypeCheck, TraceXmlWrapper storage, Dialect dialect, Release languageVersion) throws Exception
 	{
@@ -299,7 +328,11 @@ public class TraceInterpreter
 			Object traceDefinition, Context ctxt)
 	{
 		NamedTraceDefinition mtd = (NamedTraceDefinition) traceDefinition;
-		TestSequence tests = mtd.getTests(ctxt);
+		TestSequence tests = null;
+		if(reduce)
+			tests=	mtd.getTests(ctxt,subset,traceReductionType,seed);
+		else
+			tests=mtd.getTests(ctxt);
 
 		processingTrace(className, mtd.name.name, tests.size());
 		if (storage != null)
