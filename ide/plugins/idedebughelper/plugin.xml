@@ -158,7 +158,7 @@
        
       </objectContribution>
       
-      <!-- Print latex -->
+      <!-- Print latex ->
         <objectContribution
             adaptable="true"
             id="org.overture.ide.idedebughelper.contribution1"
@@ -191,7 +191,7 @@
       </objectContribution>
       
       
-       <!-- Print latex coverage-->
+       - Print latex coverage
         <objectContribution
             adaptable="true"
             id="org.overture.ide.idedebughelper.contribution1"
@@ -222,6 +222,7 @@
          
        
       </objectContribution>
+      -->
       
       
    </extension> 

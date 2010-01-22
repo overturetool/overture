@@ -34,6 +34,14 @@ public class ConsoleWriter extends PrintWriter
 		
 	}
 	
+	public ConsoleWriter(Shell shell)
+	{
+		super(System.out);
+		if(ConsoleWriter.shell==null)
+	ConsoleWriter.shell = shell;	
+	}
+	
+	
 	public ConsoleWriter(String consoleName)
 	{
 		super(System.out);
@@ -47,7 +55,7 @@ public class ConsoleWriter extends PrintWriter
 		if(s==null)
 			System.out.println(x);
 		else
-			ConsolePrint(s, x);
+			print( x);
 	}
 	
 	public void Show()
@@ -56,7 +64,8 @@ public class ConsoleWriter extends PrintWriter
 		myConsole.activate();
 	}
 	
-	public  void ConsolePrint(final Shell shell, final String message)
+	
+	public  void print(final String message)
 	{
 		getShell().getDisplay().asyncExec(new Runnable()
 		{
@@ -93,9 +102,9 @@ public class ConsoleWriter extends PrintWriter
 	
 
 
-	public  void ConsolePrint(final Shell shell, final Exception exception)
+	public  void print( final Exception exception)
 	{
-		ConsolePrint(shell, getExceptionStackTraceAsString(exception));
+		print(getExceptionStackTraceAsString(exception).toString());
 	}
 
 	public static String getExceptionStackTraceAsString(Exception exception)

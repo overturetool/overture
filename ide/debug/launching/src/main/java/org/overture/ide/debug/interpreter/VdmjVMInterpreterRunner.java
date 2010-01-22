@@ -254,6 +254,9 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 		arguments.add("-e64");
 		arguments.add(buildEncodedLaunchExpression(launch,charset));
 		
+		arguments.add("-default64");
+		arguments.add(buildDefaultLaunchExpression(launch,charset));//,charset
+		
 		if(launch.getLaunchConfiguration()
 		.getAttribute(DebugCoreConstants.DEBUGGING_CREATE_COVERAGE, false))
 		{
@@ -379,6 +382,26 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 			return expression;
 	}
 	
+	private String buildDefaultLaunchExpression(ILaunch launch, String charset) throws CoreException
+	{
+		String module = launch.getLaunchConfiguration()
+				.getAttribute(DebugCoreConstants.DEBUGGING_MODULE, "");
+		if (module.length() == 0)
+			throw new CoreException(new Status(IStatus.ERROR,
+					VDMLaunchingConstants.PLUGIN_ID,
+					"Entry class not set in launch configuration"));
+
+		if(module.contains("("))//if this is a class get only the class name
+			module=module.substring(0,module.indexOf('('));
+		
+		try {
+			return Base64.encode(module.getBytes(charset)).toString();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+	
 	public static boolean isWindowsPlatform()
 	{
 		return System.getProperty("os.name").toLowerCase().contains("windows");
@@ -490,7 +513,7 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 	protected File getOutputFolder( InterpreterConfig config)
 	{
 		File logDir = new File(config.getWorkingDirectoryPath().toOSString()
-				+ File.separatorChar + "logs" );
+				+ File.separatorChar + "generated" );
 		logDir.mkdirs();
 		return logDir;
 	}

@@ -24,7 +24,7 @@ public class VdmRtVdmjVMInterpreterRunner extends VdmjVMInterpreterRunner
 		List<String> arguments = new ArrayList<String>();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 		Date date = new Date();
-		File logDir = new File(getOutputFolder(config), launch.getLaunchConfiguration().getName());
+		File logDir = new File(new File(getOutputFolder(config),"logs"), launch.getLaunchConfiguration().getName());
 		logDir.mkdirs();
 		String logFilename = dateFormat.format(date) + ".logrt";
 		System.out.println(logFilename);

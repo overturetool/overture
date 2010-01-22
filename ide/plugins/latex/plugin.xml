@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+
+ <extension
+         point="org.eclipse.ui.popupMenus">
+      
+      <!-- Print latex -->
+        <objectContribution
+            adaptable="true"
+            id="org.overture.ide.latex.contribution1"
+            objectClass="org.eclipse.core.resources.IProject">
+            <filter
+         name="projectNature"
+         value="org.overture.ide.vdmpp.core.nature">
+      </filter>
+        
+ <menu
+               id="org.overture.ide.latex.menuMain"
+               label="Latex"
+               path="additions">
+            <separator
+                  name="groupLatex">
+            </separator>
+         </menu>
+         
+          <action
+                class="org.overture.ide.plugins.latex.actions.LatexAction"
+                enablesFor="1"
+                icon="icons/ctool16/miktex_tsk.png"
+                id="org.overture.ide.latex.actions.LatexActionPp"
+                label="Latex"
+                menubarPath="org.overture.ide.latex.menuMain/groupLatex"
+                tooltip="Latex">
+         </action>
+         
+       
+      </objectContribution>
+      
+      
+       <!-- Print latex coverage-->
+        <objectContribution
+            adaptable="true"
+            id="org.overture.ide.latex.contribution1"
+            objectClass="org.eclipse.core.resources.IProject">
+            <filter
+         name="projectNature"
+         value="org.overture.ide.vdmpp.core.nature">
+      </filter>
+        
+ <menu
+               id="org.overture.ide.latex.menuMain"
+               label="Latex"
+               path="additions">
+            <separator
+                  name="groupLatex">
+            </separator>
+         </menu>
+         
+          <action
+                class="org.overture.ide.plugins.latex.actions.LatexCoverageAction"
+                enablesFor="1"
+                icon="icons/ctool16/miktex_tsk.png"
+                id="org.overture.ide.latex.actions.LatexCoverageActionPp"
+                label="Latex Coverage"
+                menubarPath="org.overture.ide.latex.menuMain/groupLatex"
+                tooltip="Latex Coverage">
+         </action>
+         
+       
+      </objectContribution>
+      
+       <!-- Print latex coverage-->
+        <objectContribution
+            adaptable="true"
+            id="org.overture.ide.latex.contribution1"
+            objectClass="org.eclipse.core.resources.IProject">
+            <filter
+         name="projectNature"
+         value="org.overture.ide.vdmrt.core.nature">
+      </filter>
+        
+ <menu
+               id="org.overture.ide.latex.menuMain"
+               label="Latex"
+               path="additions">
+            <separator
+                  name="groupLatex">
+            </separator>
+         </menu>
+         
+          <action
+                class="org.overture.ide.plugins.latex.actions.LatexCoverageAction"
+                enablesFor="1"
+                icon="icons/ctool16/miktex_tsk.png"
+                id="org.overture.ide.latex.actions.LatexCoverageActionRt"
+                label="Latex Coverage"
+                menubarPath="org.overture.ide.latex.menuMain/groupLatex"
+                tooltip="Latex Coverage">
+         </action>
+         
+       
+      </objectContribution>
+      
+      
+        <!-- Print latex coverage-->
+        <objectContribution
+            adaptable="true"
+            id="org.overture.ide.latex.contribution1"
+            objectClass="org.eclipse.core.resources.IProject">
+            <filter
+         name="projectNature"
+         value="org.overture.ide.vdmsl.core.nature">
+      </filter>
+        
+ <menu
+               id="org.overture.ide.latex.menuMain"
+               label="Latex"
+               path="additions">
+            <separator
+                  name="groupLatex">
+            </separator>
+         </menu>
+         
+          <action
+                class="org.overture.ide.plugins.latex.actions.LatexCoverageAction"
+                enablesFor="1"
+                icon="icons/ctool16/miktex_tsk.png"
+                id="org.overture.ide.latex.actions.LatexCoverageActionSl"
+                label="Latex Coverage"
+                menubarPath="org.overture.ide.latex.menuMain/groupLatex"
+                tooltip="Latex Coverage">
+         </action>
+         
+       
+      </objectContribution>
+      
+      
+   </extension> 
+
+
+
+
+
+</plugin>
