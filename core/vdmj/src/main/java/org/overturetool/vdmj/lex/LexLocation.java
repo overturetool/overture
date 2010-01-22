@@ -97,7 +97,7 @@ public class LexLocation implements Serializable
 	@Override
 	public String toString()
 	{
-		if (file.equals("?"))
+		if (file.getPath().equals("?"))
 		{
 			return "";		// Default LexLocation has no location string
 		}
@@ -113,7 +113,7 @@ public class LexLocation implements Serializable
 
 	public String toShortString()
 	{
-		if (file.equals("?"))
+		if (file.getPath().equals("?"))
 		{
 			return "";		// Default LexLocation has no location string
 		}
