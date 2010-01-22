@@ -188,7 +188,7 @@ public class SourceFile
 		out.println("\\bigskip");
 		out.println("\\begin{tabular}{|l|r|r|}");
 		out.println("\\hline");
-		out.println("Function, operation, class/module & Coverage & Calls \\\\");
+		out.println("Function or operation & Coverage & Calls \\\\");
 		out.println("\\hline");
 		out.println("\\hline");
 
