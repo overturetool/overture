@@ -216,7 +216,6 @@ public class SystemDefinition extends ClassDefinition
 	@Override
 	public ObjectValue newInstance(
 		Definition ctorDefinition, ValueList argvals, Context ctxt)
-		throws ValueException
 	{
 		abort(4135, "Cannot instantiate system class " + name, ctxt);
 		return null;

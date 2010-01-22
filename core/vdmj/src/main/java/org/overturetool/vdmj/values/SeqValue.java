@@ -71,7 +71,7 @@ public class SeqValue extends Value
 	}
 
 	@Override
-	public String stringValue(Context ctxt) throws ValueException
+	public String stringValue(Context ctxt)
 	{
 		String s = values.toString();
 

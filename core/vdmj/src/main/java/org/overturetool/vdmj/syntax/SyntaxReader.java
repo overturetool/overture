@@ -23,7 +23,6 @@
 
 package org.overturetool.vdmj.syntax;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
@@ -392,7 +391,7 @@ public abstract class SyntaxReader
 		return classReader;
 	}
 
-	public void close() throws IOException
+	public void close()
 	{
 		reader.close();
 	}

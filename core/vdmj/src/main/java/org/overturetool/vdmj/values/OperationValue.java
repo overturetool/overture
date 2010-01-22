@@ -611,7 +611,7 @@ public class OperationValue extends Value
 	}
 
 	@Override
-	public OperationValue operationValue(Context ctxt) throws ValueException
+	public OperationValue operationValue(Context ctxt)
 	{
 		return this;
 	}

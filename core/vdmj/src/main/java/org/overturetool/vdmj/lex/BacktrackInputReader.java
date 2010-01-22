@@ -178,7 +178,7 @@ public class BacktrackInputReader extends Reader
 	 */
 
 	@Override
-	public int read(char[] cbuf, int off, int len) throws IOException
+	public int read(char[] cbuf, int off, int len)
 	{
 		int n = 0;
 
@@ -195,7 +195,7 @@ public class BacktrackInputReader extends Reader
 	 */
 
 	@Override
-	public void close() throws IOException
+	public void close()
 	{
 		return;		// Stream was closed at the start anyway.
 	}

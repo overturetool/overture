@@ -68,7 +68,7 @@ public class ProcessCommandLine extends CommandLine
 	}
 
 	@Override
-	protected String getPrompt() throws IOException
+	protected String getPrompt()
 	{
 		if (process.hasEnded())
 		{

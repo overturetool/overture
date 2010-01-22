@@ -31,7 +31,6 @@ import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
-import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.syntax.DefinitionReader;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.values.BUSValue;
@@ -86,7 +85,6 @@ public class BUSClassDefinition extends ClassDefinition
 	@Override
 	public ObjectValue newInstance(
 		Definition ctorDefinition, ValueList argvals, Context ctxt)
-		throws ValueException
 	{
 		NameValuePairList nvpl = definitions.getNamedValues(ctxt);
 		NameValuePairMap map = new NameValuePairMap();
