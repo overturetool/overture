@@ -296,7 +296,7 @@ public class DBGPReader
     				usage("-coverage option requires a directory name");
     			}
     		}
-    		else if (arg.equals("-default"))
+    		else if (arg.equals("-default64"))
     		{
     			if (i.hasNext())
     			{
@@ -304,7 +304,7 @@ public class DBGPReader
     			}
     			else
     			{
-    				usage("-default option requires a name");
+    				usage("-default64 option requires a name");
     			}
     		}
     		else if (arg.startsWith("-"))
@@ -350,6 +350,19 @@ public class DBGPReader
 			catch (Exception e)
 			{
 				usage("Malformed -e64 base64 expression");
+			}
+		}
+
+		if (defaultName != null)
+		{
+			try
+			{
+				byte[] bytes = Base64.decode(defaultName);
+				defaultName = new String(bytes, VDMJ.filecharset);
+			}
+			catch (Exception e)
+			{
+				usage("Malformed -default64 base64 name");
 			}
 		}
 
@@ -417,9 +430,10 @@ public class DBGPReader
 		System.err.println(
 			"Usage: -h <host> -p <port> -k <ide key> <-vdmpp|-vdmsl|-vdmrt>" +
 			" -e <expression> | -e64 <base64 expression>" +
-			" [-w] [-q] [-log <logfile>] [-c <charset>] [-r <release>]" +
-			" [-coverage <dir>] [-default <name>]" +
+			" [-w] [-q] [-log <logfile URL>] [-c <charset>] [-r <release>]" +
+			" [-coverage <dir URL>] [-default64 <base64 name>]" +
 			" {<filename URLs>}");
+
 		System.exit(1);
 	}
 

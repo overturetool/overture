@@ -307,21 +307,5 @@ public class SourceFile
         			" " + l.startPos + "-" + l.endPos + "=" + l.hits);
         	}
         }
-
-        long total = 0;
-
-        for (LexNameToken name: LexLocation.getSpanNames(filename))
-        {
-        	long calls = LexLocation.getSpanCalls(name);
-        	total += calls;
-
-        	out.println(
-        		name.getExplicit(true) + ", " +
-        		LexLocation.getSpanPercent(name) + ", " + calls);
-        }
-
-        out.println(filename.getName() +
-        	", " + LexLocation.getHitPercent(filename) +
-        	", " + total);
 	}
 }
