@@ -155,6 +155,7 @@
       <plugin id="org.overture.ide.parsers.vdmj"/>
       <plugin id="org.overture.ide.platform"/>
       <plugin id="org.overture.ide.plugins.idedebughelper"/>
+      <plugin id="org.overture.ide.plugins.latex"/>
       <plugin id="org.overture.ide.plugins.poviewer"/>
       <plugin id="org.overture.ide.plugins.proofsupport"/>
       <plugin id="org.overture.ide.plugins.showtrace"/>

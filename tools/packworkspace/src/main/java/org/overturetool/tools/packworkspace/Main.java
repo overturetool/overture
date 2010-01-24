@@ -14,6 +14,9 @@ import org.overturetool.tools.packworkspace.OvertureProject.Natures;
 
 public class Main {
 
+	static boolean packSl;
+	static boolean packPp;
+	static boolean packRt;
 	/**
 	 * @param args
 	 * @throws IOException
@@ -29,6 +32,30 @@ public class Main {
 		}
 		File inputRootFolder = new File(args[0]);
 
+		if(args.length>1)
+		{
+		switch (args[1].toLowerCase().toCharArray()[0])
+		{
+		case 's':
+			packSl=true;
+			break;
+		case 'p':
+			packPp=true;
+			break;
+		case 'r':
+			packRt=true;
+			break;
+
+		default:
+			packPp=true;
+			break;
+		}}else
+		{
+			 packSl=true;
+			  packPp=true;
+			  packRt=true;
+		}
+		
 		File tmpFolder = new File("examples");
 		if (tmpFolder.exists()) {
 			System.out
@@ -52,6 +79,8 @@ public class Main {
 		// new Zip().Zip(tmpFolder, new File("examples.zip"));
 		if(tmpFolder.exists())
 			delete(tmpFolder);
+		
+		System.out.println("Done.");
 	}
 
 	private static void packExamples(File tmpFolder, File inputFolder) {
@@ -63,7 +92,7 @@ public class Main {
 			while(tmpFolder.exists())
 				delete(tmpFolder);
 			tmpFolder.mkdir();
-			String name =  "examples"+nature+".zip";
+			String name =  "examples"+nature.toString().toUpperCase()+".zip";
 			System.out.println("PACKING: "+name);
 			for (File exampleFolder : inputFolder.listFiles()) {
 				if (exampleFolder.getName().equals(".svn"))
@@ -76,6 +105,7 @@ public class Main {
 				
 			}
 			FolderZiper.zipFolder(tmpFolder.getName(),name);
+			System.out.println("Folder zipped: "+name);
 			while(tmpFolder.exists())
 				delete(tmpFolder);
 		}
@@ -83,22 +113,22 @@ public class Main {
 
 	private static Natures findNature(File inputFolder) {
 		String name = inputFolder.getName().toLowerCase();
-		if (name.endsWith(Natures.Pp.toString().toLowerCase())
-				|| name.contains("++"))
+		if (packPp&& (name.endsWith(Natures.Pp.toString().toLowerCase())
+				|| name.contains("++")))
 			return Natures.Pp;
-		if (name.endsWith(Natures.Rt.toString().toLowerCase())
-				|| name.contains("VICE".toLowerCase()))
+		if (packRt&& (name.endsWith(Natures.Rt.toString().toLowerCase())
+				|| name.contains("VICE".toLowerCase())))
 			return Natures.Rt;
-		else if (name.endsWith(Natures.Sl.toString().toLowerCase()))
+		else if (packSl&& name.endsWith(Natures.Sl.toString().toLowerCase()))
 			return Natures.Sl;
 		else
 			return null;
 	}
 
 	private static void delete(File tmpFolder) {
-		if (tmpFolder != null && tmpFolder.exists() )
-		{
-			if (tmpFolder.isFile())
+		System.out.println("Trying to delete: "+tmpFolder);
+		try{
+			if (tmpFolder!=null&& tmpFolder.isFile())
 				tmpFolder.delete();
 			else 
 			{
@@ -107,7 +137,30 @@ public class Main {
 				}
 				tmpFolder.delete();
 			}
+		}catch(Exception e)
+		{
+			
 		}
+//		if (tmpFolder != null && tmpFolder.exists() )
+//		{
+//			if (tmpFolder.isFile())
+//				tmpFolder.delete();
+//			else 
+//			{
+//				for (File file : tmpFolder.listFiles()) {
+//					delete(file);
+//				}
+//				tmpFolder.delete();
+//			}
+//		}
+//		try
+//		{
+//			Thread.sleep(50);
+//		} catch (InterruptedException e)
+//		{
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
 	private static void packExample(File tmpFolder, File exampleFolder,
@@ -115,7 +168,7 @@ public class Main {
 		if (exampleFolder.exists() && exampleFolder != null
 				&& exampleFolder.list() != null
 				&& exampleFolder.list().length > 0) {
-			String projectName = exampleFolder.getName() + nature;
+			String projectName = exampleFolder.getName() + nature.toString().toUpperCase();
 			File newExample = new File(tmpFolder, projectName);
 			newExample.mkdir();
 
@@ -139,7 +192,7 @@ public class Main {
 				String fileName = new File(newExample, file.getName())
 						.getAbsolutePath();
 
-				if (file.getName().endsWith("vpp"))
+				if (file.getName().endsWith("vpp")||file.getName().endsWith("vdm"))
 					fileName = createNewFileName(newExample, file, nature);
 				copyfile(file.getAbsolutePath(), fileName);
 			} else {
