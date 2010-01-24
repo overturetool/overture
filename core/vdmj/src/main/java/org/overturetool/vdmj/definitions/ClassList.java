@@ -105,7 +105,7 @@ public class ClassList extends Vector<ClassDefinition>
 
 		for (ClassDefinition def: this)
 		{
-			if (!(def instanceof CPUClassDefinition &&
+			if (!(def instanceof CPUClassDefinition ||
 				  def instanceof BUSClassDefinition))
 			{
 				files.add(def.location.file);
