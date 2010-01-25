@@ -133,15 +133,14 @@ public class CasesExpression extends Expression
 
 		for (CaseAlternative alt: cases)
 		{
-			if (!(alt.pattern instanceof IgnorePattern))
-			{
-				obligations.addAll(alt.getProofObligations(ctxt, expType));
-				count++;
-			}
-			else
+			if (alt.pattern instanceof IgnorePattern)
 			{
 				hasIgnore = true;
 			}
+
+			// PONotCaseContext pushed by the CaseAlternative...
+			obligations.addAll(alt.getProofObligations(ctxt, expType));
+			count++;
 		}
 
 		if (others != null)
