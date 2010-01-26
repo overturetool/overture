@@ -25,7 +25,6 @@ mainly intended for the purpose of illustrating how bags can be used.
 
 \begin{vdm_al}
 module BAR
-exports all
 imports
 
 from BAG
@@ -52,6 +51,8 @@ functions
 values
   baga:BAG`Bag;
   bagb: BAG`Bag
+
+exports all
 \end{vdm_al}
 
 \begin{vdm_al}
