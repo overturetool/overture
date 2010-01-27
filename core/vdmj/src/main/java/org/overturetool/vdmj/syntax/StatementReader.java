@@ -963,11 +963,11 @@ public class StatementReader extends SyntaxReader
 		checkFor(Token.DEF, 2239, "Expecting 'def'");
 		DefinitionReader dr = getDefinitionReader();
 		DefinitionList equalsDefs = new DefinitionList();
-		equalsDefs.add(dr.readEqualsDefinition());
 
-		while (ignore(Token.SEMICOLON))
+		while (lastToken().isNot(Token.IN))
 		{
 			equalsDefs.add(dr.readEqualsDefinition());
+			ignore(Token.SEMICOLON);
 		}
 
 		checkFor(Token.IN, 2240, "Expecting 'in' after equals definitions");
