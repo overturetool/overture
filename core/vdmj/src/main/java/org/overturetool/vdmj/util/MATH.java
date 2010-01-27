@@ -96,7 +96,7 @@ public class MATH
 		Value arg = ctxt.lookup(new LexNameToken("MATH", "a", null));
 		long lv = arg.intValue(ctxt);
 
-		if (seed == 0)
+		if (seed == 0 || seed == -1)
 		{
 			return new IntegerValue(lv);
 		}
