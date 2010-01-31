@@ -1,0 +1,396 @@
+\documentclass{overturerep}
+\usepackage{url}
+\usepackage{graphics}
+\usepackage{times}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{latexsym}
+\usepackage{longtable} % ,multirow}
+
+\newcommand{\vdmtools}{VDMTools}
+\newcommand{\vdmstyle}[1]{\texttt{#1}}
+\newcounter{exerciseno}
+
+%\newcommand{\Exercise}[1]{%
+%    \textbf{Exercise \thechapter.\theexerciseno}
+%   \refstepcounter{exerciseno} #1 $\Box$\\ }%}
+%\newcommand{\initexercise}{\setcounter{exerciseno}{0}}
+%\newcounter{exerciseno}
+
+\newcommand\thebookexercise{\thechapter.\arabic{exerciseno}}
+\newenvironment{myexercise}{\par
+  \refstepcounter{exerciseno}%
+  \indent\textbf{Exercise\ \thebookexercise}\enskip}{$\Box$\\
+}
+\newenvironment{myhardexercise}{\par
+  \refstepcounter{exerciseno}%
+  \indent\textbf{Exercise\ \thebookexercise $\star$}\enskip}{$\Box$\\
+}
+\newcommand{\initexercise}{\setcounter{exerciseno}{0}}
+\newenvironment{mysolution}{
+} %% This will be replaced by a perl script extracting the solutions
+  %% and inserting them automatically into the solutions chapter.
+ 
+%\newcommand{\insertcommentedvdm*}[2]{}
+  %% This macro is identified by perl script which will move the
+  %% parameter to the solutions chapter.
+% definition of VDM++, JavaCC, JJTree, JTB, ANTLR and SableCC for listings
+\include{customlangdef}
+% define the layout for listings
+\lstdefinestyle{tool}{basicstyle=\ttfamily,
+                         frame=trBL, 
+			 showstringspaces=false, 
+			 frameround=ffff, 
+			 framexleftmargin=0mm, 
+			 framexrightmargin=0mm}
+\lstdefinestyle{mystyle}{basicstyle=\ttfamily,
+                         frame=trBL, 
+%                         numbers=left, 
+%			 gobble=0, 
+			 showstringspaces=false, 
+%			 linewidth=\textwidth, 
+			 frameround=fttt, 
+			 aboveskip=5mm,
+			 belowskip=5mm,
+			 framexleftmargin=0mm, 
+			 framexrightmargin=0mm}
+%\lstdefinestyle{mystyle}{basicstyle=\sffamily\small,
+%			 frame=tb,
+%                         numbers=left,
+%			 gobble=0,
+%			 showstringspaces=false,
+%			 linewidth=345pt,
+%			 frameround=ffff,
+%			 framexleftmargin=8mm,
+%			 framexrightmargin=8mm,
+%			 framextopmargin=1mm,
+%			 framexbottommargin=1mm,
+%			 aboveskip=7mm,
+%			 belowskip=5mm,
+%			 xleftmargin=10mm,}
+
+\lstset{style=mystyle}
+\lstset{language=VDM++}
+\lstset{alsolanguage=Java}
+% The command below enables you to escape into normal LaTeX mode inside your 
+% VDM chunks by starting with a `?Å¥ character and ending with a `Å£Å¥
+%\lstset{escapeinside=?Å£}
+
+\newcommand{\kw}[1]{{\tt #1}}
+
+%%%%%%%%%%%%%%%%%% Commands for bibtex %%%%%%%%%%%%%%%%%%%%%%%
+%************************************************************************
+%                                                                       *
+%       Bibliography and Terminology supporting commands                *
+%                                                                       *
+%************************************************************************
+
+\newcommand{\bthisbibliography}[1]{\chapter*{References}%
+   \begin {list} {}%
+     {\settowidth {\labelwidth} {[#1]XX}%
+      \setlength {\leftmargin} {\labelwidth}%
+      \addtolength{\leftmargin} {\labelsep}%
+      \setlength {\parsep} {1ex}%
+      \setlength {\itemsep} {2ex}%
+     }
+  }
+\newcommand{\ethisbibliography}{\end{list}}
+\newcommand{\refitem}[2]
+  {\bibitem[#1]{#2}}
+
+% Requirements environment
+\newenvironment{reqs}{%
+\begin{enumerate}
+%\renewcommand{\labelenumi}{\textbf{R\theenumi}}
+\renewcommand{\theenumi}{\textbf{R\arabic{enumi}}}
+}{%
+\end{enumerate}}
+
+%\newcommand{\Exercise}[1]{%
+%    \textbf{Exercise \thechapter.\theexerciseno}
+%   \refstepcounter{exerciseno} #1 $\Box$\\ }%}
+%\newcommand{\initexercise}{\setcounter{exerciseno}{0}}
+
+\newcommand{\experience}[1]{%
+\begin{center}
+\fbox{
+\begin{minipage}[t]{.8\textwidth}
+#1
+\end{minipage}}
+\end{center}}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[LO]{\leftmark}
+\fancyhead[RE]{Tutorial to Overture/VDM-RT}
+\fancyhead[RO,LE]{\resizebox{0.05\textwidth}{!}{\includegraphics{OMLlogoattempt.jpg}}}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+ 
+\title{2010 Release Planning for Overture and DESTECS}
+\author{Peter Gorm Larsen\\
+        %\and
+        Kenneth Lausdahl\\
+        Augusto Ribeiro}
+
+\date{February 2010}
+
+%\frontmatter
+\reportno{TR-2010-04}     
+
+\pagenumbering{roman}
+\maketitle
+%\addtocounter{page}{2}
+\tableofcontents
+\newpage
+% \include{foreword/foreword}
+
+%\cleardoublepage
+%\mainmatter
+%\lhead{\nouppercase{\rightmark}}
+%\rhead{\nouppercase{\leftmark}}
+
+
+%\pagestyle{fancy}
+%\fancyhead{}
+%\fancyhead[LO]{\leftmark}
+%\fancyhead[RE]{Validated Designs for Object-oriented Systems}
+%\fancyhead[RO,LE]{\thepage}
+%\fancyfoot{}
+%%\fancyfoot[LE,RO]{\thepage}
+
+\pagenumbering{arabic} 
+\setcounter{page}{1}
+\addtocounter{chapter}{2}
+
+\section{Introduction}
+
+This document is intended to provide an overview of the release
+planning for the open source project called Overture as well as the
+European research project DESTECS. Efforts will be made to ensure that
+stable releases of both the executables for Overture and DESTECS in a
+systematic fashion. It is recommended that official public releases of
+these executables are synchronised with each other. 
+
+Official major public releases will be made yearly and will be made
+available through the Overture and DESTECS official websites
+respectively.  One month before the major release, a Release Candidate
+will be made for the purpose of testing and locate bugs. In the
+meantime, snapshot builds will be provided via SourceForge. In this
+period only bug fixes needed for the features planning in that release
+will be checked in. Minor official public releases will be released
+approximately once every three months and for each of these two weeks
+of release candidate periods will be used. A full release procedure
+will be followed for each of the public releases such that the users
+can expect all public releases to be stable.  In between these public
+releases ad-hoc releases will be produced on a needs basis but it is
+suggested that at least a weekly build that contains the latest source
+code will be put in system. For such ad-hoc releases the
+documenatation cannot be guranteed to be updated and it will not be
+tested at the same level of detail as for official releases so no
+gurantee is provided for all ad-hoc releases. All the builds will
+consist of stand alone branded version for the Windows, Mac and Linux
+platforms.
+
+This document start off with providing an overview of the release
+numbering scheme in Section~\ref{sec:numbering}. This is followed by
+Section~\ref{sec:Overture2010} which provides the current plan for the
+releases of Overture executables during 2010. Finally
+Section~\ref{sec:DESTECS2010} provides the current plan for the
+additional features released in the DESTECS executable releases in
+2010. Later on the document will be updated with plans for subsequent
+years. 
+
+\section{Release Build Numbering}\label{sec:numbering}
+
+The Overture and DESTECS executable build numbering will be made with
+the following format:
+\begin{center}
+\fbox{\textbf{X.Y.Z}}
+\end{center}
+
+The \textbf{X} indicates which is the major public release version of
+the tool. During the DESTECS project there will be three major
+releases of the DESTECS Tool (month 12, 24 and 36, i.e.\ December
+2010, 2011 and 2012 respectively). It is suggested that these builds
+are numbered 1.0.0, 2.0.0 and 3.0.0 respectively.
+
+An increase of \textbf{Y} indicates a minor public release including
+significant update since last version, for example, a new feature
+which have been through a proper release procedure. Thus the users can
+expect it to be in a stable state.
+
+An increase of  \textbf{Z} indicates an ad-hoc release with minor
+update since the last version, for example, bug fixes. No gurantee for
+stability is provided for these ad-hoc releases because they have not
+been going through the release procedure used for public releases.
+
+\section{Contents of Overture releases in 2010}\label{sec:Overture2010}
+
+This section presents a plan for the contents of the 2010 releases of
+the Overture executable.
+
+\begin{description}
+\item[Release 0.2.0 (March 2010):] The aim for this release is to
+  include the following features:  
+\begin{itemize}
+\item Complete the new ASTGen utility and add all sources for it to
+  the tools utility in the Overture SF SVN. \fbox{NickBattle}
+\item Change to the AST generated from the new version of ASTGen all
+  over the Overture sources. \fbox{NickBattle,KennethLausdahl}
+\item The combinatorial testing feature will be updated in the IDE
+  with the features for reducing the size of the test suites in
+  intelligent ways made available in VDMJ for all VDM
+  dialects. \fbox{KennethLausdahl}
+\item In the edit perspective automatic type checking will only be
+  performed in case the syntax is correct for all definitions such
+  that type errors does not get mixed with syntax errors. \fbox{??}
+\item When the Overture tool is first started up and the user kills
+  the welcome window the VDM++ edit perspective will be started
+  automatically. \fbox{??}
+\item When creating a new debug configuration it shall be named after
+  the name of the project (and not just ``New
+  configuration''). \fbox{??} 
+\item Making sure that the run and debug buttons in the IDE work
+  appropriately and does not crash whenever the user tries to start
+  them. Ideally these should simply change to the debug perspective if
+  no debug configuration is present and be ready to type an expression
+  into a quick console where simple expressions can be typed and
+  executed (and up and down in the list of commands given is
+  supported). \fbox{??} 
+\item Syntax and type check the arguments used in the debug
+  configuration. \fbox{??}
+\item Remove all communication exceptions from VDMJ which causes the
+  console to change. \fbox{NickBattle}
+\item Solve the existing problem with the debugger in the IDE whenever
+  an invariant for instance invariants are
+  broken. \fbox{KennethLaudahl,NickBattle} 
+\item Documentation of the Overture IDE in order to enable more
+  developers to make updates for the IDE and for the DESTECS
+  development to follow similar principles. This shall document the
+  implementation of the editor, the parser, the builder, the outline
+  and the AST access. \fbox{AugustoRibeiro}
+\item Specify the top level scheduling strategy for the interpreter
+  dealing with multiple threads in VDM++ and VDM-RT (to subsequently
+  be implemented in the interpreter).
+  \fbox{KennethLausdahl,++} 
+\item Make the pretty printer with test coverage usable for all VDM
+  dialects. \fbox{KennethLausdahl}
+\end{itemize}
+
+\item[Release 0.3.0 (June 2010):] The aim for this release is to
+  include the following features:  
+\begin{itemize}
+\item A button for moving a test case from the combinatorial testing
+  perspective into the debugger such that it will stop at the right
+  place for the run-time error reported for the test case
+  selected. \fbox{KennethLausdahl} 
+\item Stop all threads when a breakpoint or a run-time error has
+  occured in one of the threads. \fbox{NickBattle,++} 
+\item In the debug perspective it shall be possible to look into the
+  contents of objects in the variables view. \fbox{??}
+\item Include all definitions in the Outline view for all VDM
+  dialects. \fbox{AugustoRibeiro}
+\item When creating new projects in the IDE include the possibility
+  for including standard libraries (i.e.\ IO and Math) in the
+  project. These are then to be included in a special ``lib''
+  directory and proof obligations for these are ignorred. \fbox{??}
+\item Add DL classes and modules to Overture where the user shall
+  place corresponding jar files in the lib directory of the
+  project. \fbox{KennethLaudahl,NickBattle} 
+\end{itemize}
+
+\item[Release 0.4.0 (September 2010):] The aim for this release is to
+  include the following features:   
+\begin{itemize}
+\item First stable bi-directional connection from Overture/VDM++
+  to/from JML. \fbox{CarlosVilhena}
+\item New version of the interpreter for scheduling of multiple
+  threads in VDM++ and VDM-RT prepared for co-simulkation also able to
+  break after a fixed amount of time. \fbox{KennthLausdahl,++}
+\item User documentation in pdf available as a part of the Overture
+  executable so the user can search on-line in these sources
+  (including a VDM-10 language manual). \fbox{PeterGormLarsen,++}
+\end{itemize}
+
+\item[Release 1.0.0 (December 2010):] The aim for this release is to
+  include the following features:   
+\begin{itemize}
+\item Quick fix incorporated in the editor view of the IDE for all VDM
+  dialects. \fbox{??}
+\item Goto definition in the edit view of the IDE across all files in
+  a project for all VDM dialects. \fbox{??}
+\item First stable release of proof support feature for proving a
+  subset of the POs generated. \fbox{NickBattle}
+\item Support in the Proof Obligation Explorer view for new icons
+  indicating whether the user have proved a PO or have manually
+  inspected it and approved it. This also means that the icon with the
+  red cross shall only be used for those where proof have failed and a
+  less intemidating iconj shall be used for the POs that one have not
+  yet dealt with. \fbox{??}
+\item First version of refactoring support for all VDM
+  dialects. \fbox{??}
+\item Include VDMDoc (inspired by JavaDoc) for all VDM dialects. \fbox{??}
+\item Stable version of the UML mapper enabling proper round-trip
+  engineering between VDM and UML class diagrams and enable generation
+  of traces from a subset of UML sequence
+  diagrams. \fbox{KennethLausdahl,PeterGormLarsen} 
+\item First release of code generator from VDM to a programming
+  language. \fbox{MarcelVerhoef}
+\item Increased \LaTeX\ support in the editor such that parts outside
+  the \texttt{vdm\_al} environments are highlighed as TeXClipse would
+  do it. \fbox{??}
+\end{itemize}
+\end{description}
+
+\section{Contents of DESTECS releases in 2010}\label{sec:DESTECS2010}
+
+This section presents a plan for the contents of the 2010 releases of
+the DESTECS executable.
+
+\begin{description}
+\item[Release 0.1.0 (March 2010):] The aim for this release is to
+  include the following features:  
+\begin{itemize}
+\item Stand-alone DESTECS executable with the DESTECS icon
+  \fbox{KennethLausdahl} 
+\item Develop wizard for creating a new DESTECS project. This shall
+  create 3 different directories in the project for ``Discrete
+  Event'', ``Continuous Time'' and ``Fault Modelling''
+  respectively. \fbox{??} 
+\item Ability to invoke the 20-sim editor for 20-sim models in a
+  DESTECS project. \fbox{ControlLabs}
+\end{itemize}
+
+\item[Release 0.2.0 (June 2010):] The aim for this release is to
+  include the following features:  
+\begin{itemize}
+\item TBD
+\end{itemize}
+
+\item[Release 0.3.0 (September 2010):] The aim for this release is to
+  include the following features:   
+\begin{itemize}
+\item TBD
+\end{itemize}
+
+\item[Release 1.0.0 (December 2010):] The aim for this release is to
+  include the following features:   
+\begin{itemize}
+\item Co-simulation between Overture VDM models and 20-sim models is
+  fully enabled. \fbox{KennethLausdahl,++}
+\item Synchronising the log viewer from Overture with the plot of
+  variables from 20-sim in an Eclipse setting. \fbox{ControlLabs,++}
+\end{itemize}
+\end{description}
+
+
+\bibliographystyle{newalpha}
+
+\bibliography{dan}
+
+\end{document}
