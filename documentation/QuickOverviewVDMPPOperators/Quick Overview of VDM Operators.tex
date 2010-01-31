@@ -133,11 +133,29 @@
 \end{center}
 \input{QuickOverviewVDM}
 
-\section{Class Example}
-\begin{minipage}[c]{1\linewidth}
+\newpage
+\section{Examples}
 
-\vdmSpec{ClassExample.vpp}{Class Example}{VDM:ClassExample}
-\end{minipage}
+\subsection{General}
+\begin{description}
+\item \keyw{if} \textit{predicate} \keyw{then} Expression \keyw{else} Expression
+
+\item \keyw{cases} expression:\\
+      (pattern list 1){\tt ->} Expression 1,\\
+      (pattern list 2),\\
+      (pattern list 3){\tt ->} Expression 2,\\
+       \keyw{others {\tt ->}} Expression 3\\
+   \noindent end;
+
+\item \keyw{for all} value \keyw{in set} setOfValues\\
+      \keyw{do} Expression
+
+\item \keyw{dcl} variable \textit{\keyw{:} type} \keyw{:=} Variable creation \keyw{;}
+
+\item \keyw{let} variable \textit{\keyw{:} type} \keyw{=} Variable creation \keyw{in} Expression
+
+\item \keyw{let} variable \keyw{in set} setOfValues \keyw{be st} pred(variable) \keyw{in} Expression
+\end{description}
 
 \subsection{Comprehensions (Structure to Structure)}
 
@@ -188,7 +206,20 @@ exists p in set setOfP & pred(p)
 exists1 p in set setOfP & pred(p)
 \end{lstlisting}
 
+
+
+
+
+
+
 \end{minipage}
+
+
+\begin{minipage}[c]{1\linewidth}
+\vdmSpec{ClassExample.vpp}{Class Example}{VDM:ClassExample}
+\end{minipage}
+\vfill
+
 \scriptsize
 
 %Copyright \copyright\ 2008 Overture
