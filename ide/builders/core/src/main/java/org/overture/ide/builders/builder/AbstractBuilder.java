@@ -20,6 +20,7 @@ import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.overture.ide.ast.AstManager;
 import org.overture.ide.ast.RootNode;
+import org.overture.ide.builders.core.VdmBuilderCorePlugin;
 import org.overture.ide.utility.FileUtility;
 import org.overture.ide.utility.IVdmProject;
 import org.overture.ide.utility.ProjectUtility;
@@ -55,7 +56,7 @@ public abstract class AbstractBuilder {
 				marker.setAttribute(IMarker.CHAR_END, converter.convert(
 						lineNumber, charEnd));
 			}
-		} else
+		} else if(VdmBuilderCorePlugin.DEBUG)
 			System.out.println("Cannot set marker in missing file: " + file);
 	}
 

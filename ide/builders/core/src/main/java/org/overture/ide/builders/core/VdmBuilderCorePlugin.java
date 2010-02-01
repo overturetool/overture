@@ -9,19 +9,19 @@ import org.osgi.framework.BundleContext;
 
 
 
-public class VdmSlBuilderCorePlugin extends Plugin
+public class VdmBuilderCorePlugin extends Plugin
 {
-
+public static boolean DEBUG = true;
 	// The plug-in ID
-	public static final String PLUGIN_ID = VdmSlBuilderCorePluginConstants.PLUGIN_ID;
+	public static final String PLUGIN_ID = VdmBuilderCorePluginConstants.PLUGIN_ID;
 
 	// The shared instance
-	private static VdmSlBuilderCorePlugin plugin;
+	private static VdmBuilderCorePlugin plugin;
 	
 	/**
 	 * The constructor
 	 */
-	public VdmSlBuilderCorePlugin() {
+	public VdmBuilderCorePlugin() {
 	}
 
 	/*
@@ -49,7 +49,7 @@ public class VdmSlBuilderCorePlugin extends Plugin
 	 *
 	 * @return the shared instance
 	 */
-	public static VdmSlBuilderCorePlugin getDefault() {
+	public static VdmBuilderCorePlugin getDefault() {
 		return plugin;
 	}
 

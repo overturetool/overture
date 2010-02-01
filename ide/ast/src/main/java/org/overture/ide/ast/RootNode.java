@@ -2,6 +2,7 @@ package org.overture.ide.ast;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.List;
 
 import org.overturetool.vdmj.definitions.ClassDefinition;
@@ -9,9 +10,11 @@ import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
 
-public class RootNode {
+public class RootNode
+{
 	private boolean checked = false;
-	private boolean isParseCorrect = false;
+	private Hashtable<String, Boolean> parseCurrectTable = new Hashtable<String, Boolean>();
+
 	private Date checkedTime;
 	@SuppressWarnings("unchecked")
 	private List rootElementList;
@@ -22,28 +25,34 @@ public class RootNode {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void setRootElementList(List rootElementList) {
+	public void setRootElementList(List rootElementList)
+	{
 		this.rootElementList = rootElementList;
 	}
 
 	@SuppressWarnings("unchecked")
-	public List getRootElementList() {
+	public List getRootElementList()
+	{
 		return rootElementList;
 	}
 
-	public void setCheckedTime(Date checkedTime) {
+	public void setCheckedTime(Date checkedTime)
+	{
 		this.checkedTime = checkedTime;
 	}
 
-	public Date getCheckedTime() {
+	public Date getCheckedTime()
+	{
 		return checkedTime;
 	}
 
-	public void setChecked(boolean checked) {
+	public void setChecked(boolean checked)
+	{
 		this.checked = checked;
 	}
 
-	public boolean isChecked() {
+	public boolean isChecked()
+	{
 		return checked;
 	}
 
@@ -55,16 +64,19 @@ public class RootNode {
 	 *            the new definition
 	 */
 	@SuppressWarnings("unchecked")
-	public void update(List modules) {
+	public void update(List modules)
+	{
 		this.setChecked(false);
 		if (this.rootElementList.size() != 0)
-			for (Object module : modules) {
+			for (Object module : modules)
+			{
 				if (module instanceof ClassDefinition)
 					update((ClassDefinition) module);
 				else if (module instanceof Module)
 					update((Module) module);
 			}
-		else {
+		else
+		{
 			this.rootElementList.addAll(modules);
 		}
 
@@ -78,13 +90,15 @@ public class RootNode {
 	 *            the new definition
 	 */
 	@SuppressWarnings("unchecked")
-	private void update(Module module) {
+	private void update(Module module)
+	{
 		Module existingModule = null;
-		for (Object m : this.rootElementList) {
+		for (Object m : this.rootElementList)
+		{
 			if (m instanceof Module
 					&& ((Module) m).name.equals(module.name)
-					&& ((Module) m).name.location.file.getName().equals(
-							module.name.location.file.getName()))
+					&& ((Module) m).name.location.file.getName()
+							.equals(module.name.location.file.getName()))
 				existingModule = (Module) m;
 		}
 
@@ -103,9 +117,11 @@ public class RootNode {
 	 *            the new definition
 	 */
 	@SuppressWarnings("unchecked")
-	private void update(ClassDefinition module) {
+	private void update(ClassDefinition module)
+	{
 		ClassDefinition existingModule = null;
-		for (Object m : this.rootElementList) {
+		for (Object m : this.rootElementList)
+		{
 			if (m instanceof ClassDefinition
 					&& ((ClassDefinition) m).name.equals(module.name))
 				existingModule = (ClassDefinition) m;
@@ -126,8 +142,10 @@ public class RootNode {
 	 *            list
 	 * @return true if the file has a definition in the list
 	 */
-	public boolean hasFile(File file) {
-		for (Object o : rootElementList) {
+	public boolean hasFile(File file)
+	{
+		for (Object o : rootElementList)
+		{
 			if (o instanceof Module
 					&& ((Module) o).name.location.file.equals(file))
 				return true;
@@ -139,35 +157,38 @@ public class RootNode {
 		return false;
 	}
 
-	public ModuleList getModuleList() throws NotAllowedException {
+	public ModuleList getModuleList() throws NotAllowedException
+	{
 		ModuleList modules = new ModuleList();
-		for (Object definition : rootElementList) {
+		for (Object definition : rootElementList)
+		{
 			if (definition instanceof Module)
 				modules.add((Module) definition);
 			else
-				throw new NotAllowedException(
-						"Other definition than Module is found: "
-								+ definition.getClass().getName());
+				throw new NotAllowedException("Other definition than Module is found: "
+						+ definition.getClass().getName());
 		}
 		return modules;
 	}
 
-	public ClassList getClassList() throws NotAllowedException {
+	public ClassList getClassList() throws NotAllowedException
+	{
 		ClassList classes = new ClassList();
-		for (Object definition : rootElementList) {
+		for (Object definition : rootElementList)
+		{
 			if (definition instanceof ClassDefinition)
 				classes.add((ClassDefinition) definition);
 			else
-				throw new NotAllowedException(
-						"Other definition than ClassDefinition is found: "
-								+ definition.getClass().getName());
+				throw new NotAllowedException("Other definition than ClassDefinition is found: "
+						+ definition.getClass().getName());
 		}
 		return classes;
 	}
-	
+
 	public boolean hasClassList()
 	{
-		for (Object definition : rootElementList) {
+		for (Object definition : rootElementList)
+		{
 			if (definition instanceof ClassDefinition)
 				return true;
 		}
@@ -176,18 +197,27 @@ public class RootNode {
 
 	public boolean hasModuleList()
 	{
-		for (Object definition : rootElementList) {
+		for (Object definition : rootElementList)
+		{
 			if (definition instanceof Module)
 				return true;
 		}
 		return false;
 	}
-	
-	public void setParseCorrect(boolean isParseCorrect) {
-		this.isParseCorrect = isParseCorrect;
+
+	public void setParseCorrect(String file, Boolean isParseCorrect)
+	{
+		if (parseCurrectTable.containsKey(file))
+			parseCurrectTable.remove(file);
+
+		parseCurrectTable.put(file, isParseCorrect);
 	}
 
-	public boolean isParseCorrect() {
-		return isParseCorrect;
+	public boolean isParseCorrect()
+	{
+		for (Boolean isCurrect : parseCurrectTable.values())
+			if (!isCurrect)
+				return false;
+		return true;
 	}
 }

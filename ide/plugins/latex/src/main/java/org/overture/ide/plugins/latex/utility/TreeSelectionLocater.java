@@ -7,7 +7,8 @@ import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.ui.internal.ObjectPluginAction;
 
 @SuppressWarnings("restriction")
-public class TreeSelectionLocater {
+public class TreeSelectionLocater
+{
 	public static IProject getSelectedProject(IAction action,
 			IProject selectedProject)
 	{

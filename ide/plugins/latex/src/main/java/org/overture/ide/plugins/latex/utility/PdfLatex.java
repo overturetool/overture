@@ -8,7 +8,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.overture.ide.utility.ConsoleWriter;
 
-public class PdfLatex extends Thread {
+public class PdfLatex extends Thread
+{
 
 	private String documentName;
 	private IProject project;
@@ -16,42 +17,50 @@ public class PdfLatex extends Thread {
 
 	private Process process;
 	public boolean isFinished = false;
-	
+
 	public PdfLatex(IProject project, File outputFolder, String documentName) {
 		this.documentName = documentName;
 		this.outputFolder = outputFolder;
 		this.project = project;
 	}
-	
+
 	public void kill()
 	{
-		try{
+		try
+		{
 			process.destroy();
-		}catch(Exception e)
-		{}
+		} catch (Exception e)
+		{
+		}
 	}
 
 	@Override
-	public void run() {
+	public void run()
+	{
 
 		ConsoleWriter cw = new ConsoleWriter("PDF LATEX");
-		try {
-			 process = Runtime.getRuntime().exec("pdflatex " + documentName,
-					null, outputFolder);
+		try
+		{
+			process = Runtime.getRuntime().exec("pdflatex " + documentName,
+					null,
+					outputFolder);
 			new ProcessConsolePrinter(cw, process.getInputStream()).start();
 			new ProcessConsolePrinter(cw, process.getErrorStream()).start();
 
 			process.waitFor();
 			if (project != null)
 				project.refreshLocal(IResource.DEPTH_INFINITE, null);
-			isFinished= true;
-		} catch (IOException e) {
+			isFinished = true;
+		} catch (IOException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (CoreException e) {
+		} catch (CoreException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (InterruptedException e) {
+		} catch (InterruptedException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

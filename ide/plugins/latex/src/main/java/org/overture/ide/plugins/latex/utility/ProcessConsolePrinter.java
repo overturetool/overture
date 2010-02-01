@@ -9,23 +9,26 @@ import org.overture.ide.utility.ConsoleWriter;
 
 public class ProcessConsolePrinter extends Thread
 {
-	ConsoleWriter cw =null;
+	ConsoleWriter cw = null;
 	InputStream stream = null;
+
 	public ProcessConsolePrinter(ConsoleWriter cw, InputStream inputStream) {
 		this.cw = cw;
 		this.stream = inputStream;
 	}
+
 	@Override
 	public void run()
 	{
-		
-		String line=null;
+
+		String line = null;
 		BufferedReader input = new BufferedReader(new InputStreamReader(stream));
 		try
 		{
-			while ((line = input.readLine()) != null) {
-				if(cw!=null)
-				cw.println(line);
+			while ((line = input.readLine()) != null)
+			{
+				if (cw != null)
+					cw.println(line);
 				else
 					System.out.println(line);
 			}

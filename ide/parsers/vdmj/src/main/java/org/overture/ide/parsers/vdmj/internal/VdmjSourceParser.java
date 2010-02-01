@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -64,6 +65,8 @@ public abstract class VdmjSourceParser extends AbstractSourceParser {
 		try
 		{
 			charset = ProjectUtility.findIFile(project, file).getCharset();
+			
+			ProjectUtility.findIFile(project, file).deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
 		} catch (CoreException e)
 		{
 			e.printStackTrace();
@@ -78,10 +81,19 @@ public abstract class VdmjSourceParser extends AbstractSourceParser {
 		}
 		ExitStatus status = parse(new String(source), file,charset);// project.getFile(path.removeFirstSegments(1)).getLocation().toFile()//parse(new
 		// String(source));
+		
+		
+		
+		
 
 		if (reporter != null) {
 			if (status == ExitStatus.EXIT_ERRORS) {
+				int previousErrorNumber = -1;
 				for (VDMError error : errors) {
+					if(previousErrorNumber== error.number)//this check is done to avoid error fall through
+						continue;
+					else
+						previousErrorNumber = error.number;
 					DefaultProblem defaultProblem = new DefaultProblem(
 							fileNameString, error.message, error.number,
 							new String[] {}, ProblemSeverities.Error, converter
@@ -118,10 +130,10 @@ public abstract class VdmjSourceParser extends AbstractSourceParser {
 		RootNode rootNode = astManager.getRootNode(project, nature);
 		if (rootNode != null) {
 			if (status == ExitStatus.EXIT_ERRORS){			
-				rootNode.setParseCorrect(false);
+				rootNode.setParseCorrect(file.getAbsolutePath(),false);
 			}
 			else {
-				rootNode.setParseCorrect(true);
+				rootNode.setParseCorrect(file.getAbsolutePath(),true);
 			}
 		}
 		return moduleDeclaration; 

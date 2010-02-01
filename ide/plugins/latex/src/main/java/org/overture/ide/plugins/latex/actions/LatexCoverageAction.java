@@ -83,22 +83,27 @@ public class LatexCoverageAction implements IObjectActionDelegate
 					selectedProject);
 			if (selectedProject == null)
 			{
-				console.print(
-						"Could not find selected project");
+				console.print("Could not find selected project");
 				return;
 			}
 
 			if (selectedProject.hasNature(VdmPpProjectNature.VDM_PP_NATURE))
-				makeLatex(selectedProject, VdmPpCorePluginConstants.CONTENT_TYPE,VdmPpProjectNature.VDM_PP_NATURE);
+				makeLatex(selectedProject,
+						VdmPpCorePluginConstants.CONTENT_TYPE,
+						VdmPpProjectNature.VDM_PP_NATURE);
 			if (selectedProject.hasNature(VdmSlProjectNature.VDM_SL_NATURE))
-				makeLatex(selectedProject, VdmSlCorePluginConstants.CONTENT_TYPE,VdmSlProjectNature.VDM_SL_NATURE);
+				makeLatex(selectedProject,
+						VdmSlCorePluginConstants.CONTENT_TYPE,
+						VdmSlProjectNature.VDM_SL_NATURE);
 			if (selectedProject.hasNature(VdmRtProjectNature.VDM_RT_NATURE))
-				makeLatex(selectedProject, VdmRtCorePluginConstants.CONTENT_TYPE,VdmRtProjectNature.VDM_RT_NATURE);
+				makeLatex(selectedProject,
+						VdmRtCorePluginConstants.CONTENT_TYPE,
+						VdmRtProjectNature.VDM_RT_NATURE);
 
 		} catch (Exception ex)
 		{
 			System.err.println(ex.getMessage() + ex.getStackTrace());
-			console.print( ex);
+			console.print(ex);
 		}
 
 	}
@@ -150,10 +155,12 @@ public class LatexCoverageAction implements IObjectActionDelegate
 		}
 		return sb.toString();
 	}
-	
-	final static String VDM_MODEL_ENV_BEGIN ="\\begin{vdm_al}";
-final static String VDM_MODEL_ENV_END ="\\end{vdm_al}";
-	private void makeLatex(final IProject selectedProject, final String contentTypeId, final String natureId)
+
+	final static String VDM_MODEL_ENV_BEGIN = "\\begin{vdm_al}";
+	final static String VDM_MODEL_ENV_END = "\\end{vdm_al}";
+
+	private void makeLatex(final IProject selectedProject,
+			final String contentTypeId, final String natureId)
 	{
 		final Job expandJob = new Job("Builder coverage tex files.") {
 
@@ -167,47 +174,58 @@ final static String VDM_MODEL_ENV_END ="\\end{vdm_al}";
 					File projectRoot = selectedProject.getLocation().toFile();
 					LatexBuilder latexBuilder = new LatexBuilder();
 					latexBuilder.prepare(selectedProject);
-					
+
 					File outputFolder = LatexBuilder.makeOutputFolder(selectedProject);
-					
-					File outputFolderForGeneratedModelFiles = new File(outputFolder,"generated");
-					if(!outputFolderForGeneratedModelFiles.exists())
+
+					File outputFolderForGeneratedModelFiles = new File(outputFolder,
+							"generated");
+					if (!outputFolderForGeneratedModelFiles.exists())
 						outputFolderForGeneratedModelFiles.mkdirs();
-					
-					RootNode root = AstManager.instance().getRootNode(selectedProject,natureId);
-					if(root==null || !root.isChecked())
+
+					RootNode root = AstManager.instance()
+							.getRootNode(selectedProject, natureId);
+					if (root == null || !root.isChecked())
 					{
-						selectedProject.build(IncrementalProjectBuilder.FULL_BUILD, monitor);
+						selectedProject.build(IncrementalProjectBuilder.FULL_BUILD,
+								monitor);
 						return new Status(IStatus.OK,
 								Activator.PLUGIN_ID,
 								IStatus.CANCEL,
 								"Project not type checked",
 								null);
 					}
-					if(root!=null && root.isChecked())
+					if (root != null && root.isChecked())
 					{
-						if(root.hasClassList())
+						if (root.hasClassList())
 						{
-							ClassList classlist = AstManager.instance().getRootNode(selectedProject,natureId).getClassList();
-							
-							List<File> outputFiles = getFileChildern(new File(projectRoot,"generated"));
+							ClassList classlist = AstManager.instance()
+									.getRootNode(selectedProject, natureId)
+									.getClassList();
+
+							List<File> outputFiles = getFileChildern(new File(projectRoot,
+									"generated"));
 							LexLocation.clearLocations();
-							for (ClassDefinition classDefinition : classlist) {
-								File texFile = new File(outputFolderForGeneratedModelFiles,classDefinition.location.file.getName() +".tex");
-								if(texFile.exists())
+							for (ClassDefinition classDefinition : classlist)
+							{
+								File texFile = new File(outputFolderForGeneratedModelFiles,
+										classDefinition.location.file.getName()
+												+ ".tex");
+								if (texFile.exists())
 									texFile.delete();
-								
-								for (int i = 0; i < outputFiles.size(); i++) {
+
+								for (int i = 0; i < outputFiles.size(); i++)
+								{
 									File file = outputFiles.get(i);
-										if(file.getName().endsWith(".cov")&& (classDefinition.location.file.getName()).equals(getFileName(file)))
-										{
-											LexLocation.mergeHits(classDefinition.location.file, file);
-											outputFiles.remove(i);
-											
-											
-											latexBuilder.addInclude(texFile.getAbsolutePath());
-										}
-									
+									if (file.getName().endsWith(".cov")
+											&& (classDefinition.location.file.getName()).equals(getFileName(file)))
+									{
+										LexLocation.mergeHits(classDefinition.location.file,
+												file);
+										outputFiles.remove(i);
+
+										latexBuilder.addInclude(texFile.getAbsolutePath());
+									}
+
 								}
 								SourceFile f = new SourceFile(classDefinition.location.file);
 								PrintWriter pw = new PrintWriter(texFile);
@@ -215,34 +233,40 @@ final static String VDM_MODEL_ENV_END ="\\end{vdm_al}";
 								ConsoleWriter cw = new ConsoleWriter(shell);
 								f.printCoverage(cw);
 								pw.close();
-						
+
 							}
-						}else
-							if(root.hasModuleList())
+						} else if (root.hasModuleList())
+						{
+							ModuleList modulelist = AstManager.instance()
+									.getRootNode(selectedProject, natureId)
+									.getModuleList();
+
+							List<File> outputFiles = getFileChildern(new File(projectRoot,
+									"generated"));
+							LexLocation.clearLocations();
+							for (Module classDefinition : modulelist)
 							{
-								ModuleList modulelist = AstManager.instance().getRootNode(selectedProject,natureId).getModuleList();
-								
-								List<File> outputFiles = getFileChildern(new File(projectRoot,"generated"));
-								LexLocation.clearLocations();
-								for (Module classDefinition : modulelist) {
-									for(File moduleFile : classDefinition.files)
-									{
-									
-									File texFile = new File(outputFolderForGeneratedModelFiles,moduleFile.getName() +".tex");
-									if(texFile.exists())
+								for (File moduleFile : classDefinition.files)
+								{
+
+									File texFile = new File(outputFolderForGeneratedModelFiles,
+											moduleFile.getName() + ".tex");
+									if (texFile.exists())
 										texFile.delete();
-									
-									for (int i = 0; i < outputFiles.size(); i++) {
+
+									for (int i = 0; i < outputFiles.size(); i++)
+									{
 										File file = outputFiles.get(i);
-											if(file.getName().endsWith(".cov")&& (moduleFile.getName()).equals(getFileName(file)))
-											{
-												LexLocation.mergeHits(moduleFile, file);
-												outputFiles.remove(i);
-												
-												
-												latexBuilder.addInclude(texFile.getAbsolutePath());
-											}
-										
+										if (file.getName().endsWith(".cov")
+												&& (moduleFile.getName()).equals(getFileName(file)))
+										{
+											LexLocation.mergeHits(moduleFile,
+													file);
+											outputFiles.remove(i);
+
+											latexBuilder.addInclude(texFile.getAbsolutePath());
+										}
+
 									}
 									SourceFile f = new SourceFile(moduleFile);
 									PrintWriter pw = new PrintWriter(texFile);
@@ -250,24 +274,27 @@ final static String VDM_MODEL_ENV_END ="\\end{vdm_al}";
 									ConsoleWriter cw = new ConsoleWriter(shell);
 									f.printCoverage(cw);
 									pw.close();
-									}
 								}
 							}
+						}
 					}
-										
-				String documentFileName = selectedProject.getName()+".tex";
-				
-				latexBuilder.saveDocument(projectRoot, documentFileName);
-			
-					PdfLatex pdflatex = new PdfLatex(selectedProject, outputFolder, documentFileName);
+
+					String documentFileName = selectedProject.getName()
+							+ ".tex";
+
+					latexBuilder.saveDocument(projectRoot, documentFileName);
+
+					PdfLatex pdflatex = new PdfLatex(selectedProject,
+							outputFolder,
+							documentFileName);
 					pdflatex.start();
-					
-					while(!monitor.isCanceled() && !pdflatex.isFinished)
+
+					while (!monitor.isCanceled() && !pdflatex.isFinished)
 						Thread.sleep(500);
-					
-					if(monitor.isCanceled())
-						pdflatex.kill();				 
-				
+
+					if (monitor.isCanceled())
+						pdflatex.kill();
+
 					selectedProject.refreshLocal(IResource.DEPTH_INFINITE, null);
 
 				} catch (Exception e)
@@ -291,38 +318,37 @@ final static String VDM_MODEL_ENV_END ="\\end{vdm_al}";
 
 			}
 
-			
-
 		};
 		expandJob.setPriority(Job.INTERACTIVE);
 		expandJob.schedule(0);
 
 	}
-	
-	public static String getFileName(File file) {
+
+	public static String getFileName(File file)
+	{
 		int index = file.getName().lastIndexOf('.');
 		return file.getName().substring(0, index);
-		
+
 	}
-	
+
 	private static List<File> getFileChildern(File file)
 	{
 		List<File> list = new Vector<File>();
-		
-		if(file.isFile())
+
+		if (file.isFile())
 		{
 			list.add(file);
 			return list;
 		}
-		
-		if(file!=null &&file.listFiles()!=null)
-		for (File file2 : file.listFiles()) {
-			list.addAll(getFileChildern(file2));
-		}
-		
+
+		if (file != null && file.listFiles() != null)
+			for (File file2 : file.listFiles())
+			{
+				list.addAll(getFileChildern(file2));
+			}
+
 		return list;
-		
-		
+
 	}
 
 	/**
@@ -332,10 +358,11 @@ final static String VDM_MODEL_ENV_END ="\\end{vdm_al}";
 	{
 	}
 
-	private void writeFile(File outputFolder, String fileName,String content)
+	private void writeFile(File outputFolder, String fileName, String content)
 			throws IOException
 	{
-		FileWriter outputFileReader = new FileWriter(new File(outputFolder,fileName));
+		FileWriter outputFileReader = new FileWriter(new File(outputFolder,
+				fileName));
 		BufferedWriter outputStream = new BufferedWriter(outputFileReader);
 		outputStream.write(content);
 		outputStream.close();
