@@ -165,9 +165,8 @@
 
 \pagenumbering{arabic} 
 \setcounter{page}{1}
-\addtocounter{chapter}{2}
 
-\section{Introduction}
+\chapter{Introduction}
 
 This document is intended to provide an overview of the release
 planning for the open source project called Overture as well as the
@@ -205,7 +204,7 @@ additional features released in the DESTECS executable releases in
 2010. Later on the document will be updated with plans for subsequent
 years. 
 
-\section{Release Build Numbering}\label{sec:numbering}
+\chapter{Release Build Numbering}\label{sec:numbering}
 
 The Overture and DESTECS executable build numbering will be made with
 the following format:
@@ -229,7 +228,7 @@ update since the last version, for example, bug fixes. No gurantee for
 stability is provided for these ad-hoc releases because they have not
 been going through the release procedure used for public releases.
 
-\section{Contents of Overture releases in 2010}\label{sec:Overture2010}
+\chapter{Contents of Overture releases in 2010}\label{sec:Overture2010}
 
 This section presents a plan for the contents of the 2010 releases of
 the Overture executable.
@@ -237,38 +236,33 @@ the Overture executable.
 \begin{description}
 \item[Release 0.2.0 (March 2010):] The aim for this release is to
   include the following features:  
-\begin{itemize}
+\begin{enumerate}
+\item Analyse whether we can go for a debugger without
+  DLTK. \fbox{AugustoRibeiro} 
+\item Follow standard way to use pictures in Eclipse and document this
+  for all developers. \fbox{AugustoRibeiro}
 \item Complete the new ASTGen utility and add all sources for it to
   the tools utility in the Overture SF SVN. \fbox{NickBattle}
 \item Change to the AST generated from the new version of ASTGen all
-  over the Overture sources. \fbox{NickBattle,KennethLausdahl}
+  over the Overture sources (i.e.\ this will affect the development of
+  UML, JML and POtrans components). \fbox{NickBattle,KennethLausdahl}
 \item The combinatorial testing feature will be updated in the IDE
   with the features for reducing the size of the test suites in
   intelligent ways made available in VDMJ for all VDM
   dialects. \fbox{KennethLausdahl}
 \item In the edit perspective automatic type checking will only be
   performed in case the syntax is correct for all definitions such
-  that type errors does not get mixed with syntax errors. \fbox{??}
+  that type errors does not get mixed with syntax
+  errors. \fbox{KennethLausdahl} 
 \item When the Overture tool is first started up and the user kills
   the welcome window the VDM++ edit perspective will be started
-  automatically. \fbox{??}
-\item When creating a new debug configuration it shall be named after
-  the name of the project (and not just ``New
-  configuration''). \fbox{??} 
-\item Making sure that the run and debug buttons in the IDE work
-  appropriately and does not crash whenever the user tries to start
-  them. Ideally these should simply change to the debug perspective if
-  no debug configuration is present and be ready to type an expression
-  into a quick console where simple expressions can be typed and
-  executed (and up and down in the list of commands given is
-  supported). \fbox{??} 
+  automatically. \fbox{AugustoRibeiro}
 \item Syntax and type check the arguments used in the debug
-  configuration. \fbox{??}
+  configuration. \fbox{KennethLausdahl}
 \item Remove all communication exceptions from VDMJ which causes the
-  console to change. \fbox{NickBattle}
-\item Solve the existing problem with the debugger in the IDE whenever
-  an invariant for instance invariants are
-  broken. \fbox{KennethLaudahl,NickBattle} 
+  console to change (e.g.\ the existing problem with the debugger in
+  the IDE whenever an invariant for instance invariants are
+  broken). \fbox{NickBattle,KennethLausdahl}
 \item Documentation of the Overture IDE in order to enable more
   developers to make updates for the IDE and for the DESTECS
   development to follow similar principles. This shall document the
@@ -276,19 +270,31 @@ the Overture executable.
   and the AST access. \fbox{AugustoRibeiro}
 \item Specify the top level scheduling strategy for the interpreter
   dealing with multiple threads in VDM++ and VDM-RT (to subsequently
-  be implemented in the interpreter).
-  \fbox{KennethLausdahl,++} 
+  be implemented in the interpreter).\\
+  \hfill \fbox{KennethLausdahl,++} 
 \item Make the pretty printer with test coverage usable for all VDM
-  dialects. \fbox{KennethLausdahl}
-\end{itemize}
+  dialects. \fbox{KennethLausdahl,NickBattle}
+\item Changing ``script explorer'' to ``VDM
+  explorer''. \fbox{AugustoRibeiro} 
+\end{enumerate}
 
 \item[Release 0.3.0 (June 2010):] The aim for this release is to
   include the following features:  
-\begin{itemize}
+\begin{enumerate}
+\item When creating a new debug configuration it shall be named after
+  the name of the project (and not just ``New
+  configuration''). \fbox{AugustoRibeiro} 
+\item Making sure that the run and debug buttons in the IDE work
+  appropriately and does not crash whenever the user tries to start
+  them. Ideally these should simply change to the debug perspective if
+  no debug configuration is present and be ready to type an expression
+  into a quick console where simple expressions can be typed and
+  executed (and up and down in the list of commands given is
+  supported). \fbox{AugustoRibeiro} 
 \item A button for moving a test case from the combinatorial testing
   perspective into the debugger such that it will stop at the right
   place for the run-time error reported for the test case
-  selected. \fbox{KennethLausdahl} 
+  selected. \fbox{KennethLausdahl,ChristianThillerman} 
 \item Stop all threads when a breakpoint or a run-time error has
   occured in one of the threads. \fbox{NickBattle,++} 
 \item In the debug perspective it shall be possible to look into the
@@ -298,32 +304,39 @@ the Overture executable.
 \item When creating new projects in the IDE include the possibility
   for including standard libraries (i.e.\ IO and Math) in the
   project. These are then to be included in a special ``lib''
-  directory and proof obligations for these are ignorred. \fbox{??}
-\item Add DL classes and modules to Overture where the user shall
-  place corresponding jar files in the lib directory of the
-  project. \fbox{KennethLaudahl,NickBattle} 
-\end{itemize}
+  directory. \fbox{??}
+\item Make sure that proof obligations for standard libraries are
+  ignorred. \fbox{??} 
+\item Add static DL classes and modules to Overture where the user
+  shall place corresponding jar files in the lib directory of the
+  project implementing ``is not yet specified'' functions and
+  operations . \fbox{KennethLaudahl,NickBattle}
+\item Investigate whether dynamic an external jar files can be
+  incorporated also. \fbox{KennethLausdahl,NickBattle}
+\end{enumerate}
 
 \item[Release 0.4.0 (September 2010):] The aim for this release is to
   include the following features:   
-\begin{itemize}
+\begin{enumerate}
 \item First stable bi-directional connection from Overture/VDM++
   to/from JML. \fbox{CarlosVilhena}
 \item New version of the interpreter for scheduling of multiple
   threads in VDM++ and VDM-RT prepared for co-simulkation also able to
-  break after a fixed amount of time. \fbox{KennthLausdahl,++}
+  break after a fixed amount of time. \fbox{KennethLausdahl,++}
 \item User documentation in pdf available as a part of the Overture
   executable so the user can search on-line in these sources
   (including a VDM-10 language manual). \fbox{PeterGormLarsen,++}
-\end{itemize}
+\end{enumerate}
 
 \item[Release 1.0.0 (December 2010):] The aim for this release is to
   include the following features:   
-\begin{itemize}
+\begin{enumerate}
 \item Quick fix incorporated in the editor view of the IDE for all VDM
   dialects. \fbox{??}
 \item Goto definition in the edit view of the IDE across all files in
   a project for all VDM dialects. \fbox{??}
+\item First version of refactoring support for all VDM
+  dialects. \fbox{??}
 \item First stable release of proof support feature for proving a
   subset of the POs generated. \fbox{NickBattle}
 \item Support in the Proof Obligation Explorer view for new icons
@@ -332,8 +345,6 @@ the Overture executable.
   red cross shall only be used for those where proof have failed and a
   less intemidating iconj shall be used for the POs that one have not
   yet dealt with. \fbox{??}
-\item First version of refactoring support for all VDM
-  dialects. \fbox{??}
 \item Include VDMDoc (inspired by JavaDoc) for all VDM dialects. \fbox{??}
 \item Stable version of the UML mapper enabling proper round-trip
   engineering between VDM and UML class diagrams and enable generation
@@ -344,10 +355,10 @@ the Overture executable.
 \item Increased \LaTeX\ support in the editor such that parts outside
   the \texttt{vdm\_al} environments are highlighed as TeXClipse would
   do it. \fbox{??}
-\end{itemize}
+\end{enumerate}
 \end{description}
 
-\section{Contents of DESTECS releases in 2010}\label{sec:DESTECS2010}
+\chapter{Contents of DESTECS releases in 2010}\label{sec:DESTECS2010}
 
 This section presents a plan for the contents of the 2010 releases of
 the DESTECS executable.
@@ -355,7 +366,9 @@ the DESTECS executable.
 \begin{description}
 \item[Release 0.1.0 (March 2010):] The aim for this release is to
   include the following features:  
-\begin{itemize}
+\begin{enumerate}
+\item Develop development environment for DESTECS enabling different
+  plug-ins to be added and docuenting this. \fbox{KennethLausdahl}
 \item Stand-alone DESTECS executable with the DESTECS icon
   \fbox{KennethLausdahl} 
 \item Develop wizard for creating a new DESTECS project. This shall
@@ -364,28 +377,28 @@ the DESTECS executable.
   respectively. \fbox{??} 
 \item Ability to invoke the 20-sim editor for 20-sim models in a
   DESTECS project. \fbox{ControlLabs}
-\end{itemize}
+\end{enumerate}
 
 \item[Release 0.2.0 (June 2010):] The aim for this release is to
   include the following features:  
-\begin{itemize}
+\begin{enumerate}
 \item TBD
-\end{itemize}
+\end{enumerate}
 
 \item[Release 0.3.0 (September 2010):] The aim for this release is to
   include the following features:   
-\begin{itemize}
+\begin{enumerate}
 \item TBD
-\end{itemize}
+\end{enumerate}
 
 \item[Release 1.0.0 (December 2010):] The aim for this release is to
   include the following features:   
-\begin{itemize}
+\begin{enumerate}
 \item Co-simulation between Overture VDM models and 20-sim models is
   fully enabled. \fbox{KennethLausdahl,++}
 \item Synchronising the log viewer from Overture with the plot of
   variables from 20-sim in an Eclipse setting. \fbox{ControlLabs,++}
-\end{itemize}
+\end{enumerate}
 \end{description}
 
 
