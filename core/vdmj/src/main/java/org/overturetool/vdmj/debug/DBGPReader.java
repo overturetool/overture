@@ -630,17 +630,14 @@ public class DBGPReader
 			sb.append("</message></error>");
 
 			response(null, sb);
-		}catch(SocketException e)
+		}
+		catch (SocketException e)
 		{
-			//do not report this since the socket connection is down.
+			// Do not report these since the socket connection is down.
 		}
 		catch (IOException e)
 		{
-			if (!e.getMessage().equals("Broken pipe") &&
-				!e.getMessage().equals("socket write error"))
-			{
-				throw new InternalException(29, "DBGP: " + reason);
-			}
+			throw new InternalException(29, "DBGP: " + reason);
 		}
 	}
 
