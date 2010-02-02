@@ -1,10 +1,6 @@
 package org.overture.ide.plugins.latex.actions;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -14,6 +10,7 @@ import java.util.Vector;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -34,6 +31,7 @@ import org.overture.ide.plugins.latex.utility.LatexBuilder;
 import org.overture.ide.plugins.latex.utility.PdfLatex;
 import org.overture.ide.plugins.latex.utility.TreeSelectionLocater;
 import org.overture.ide.utility.ConsoleWriter;
+import org.overture.ide.utility.ProjectUtility;
 import org.overture.ide.vdmpp.core.VdmPpCorePluginConstants;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
 import org.overture.ide.vdmrt.core.VdmRtCorePluginConstants;
@@ -42,10 +40,14 @@ import org.overture.ide.vdmsl.core.VdmSlCorePluginConstants;
 import org.overture.ide.vdmsl.core.VdmSlProjectNature;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.runtime.SourceFile;
+import org.overturetool.vdmj.syntax.ClassReader;
+import org.overturetool.vdmj.syntax.ModuleReader;
 
 @SuppressWarnings("restriction")
 public class LatexCoverageAction implements IObjectActionDelegate
@@ -139,23 +141,6 @@ public class LatexCoverageAction implements IObjectActionDelegate
 
 	}
 
-	private String readFile(String relativePath) throws IOException
-	{
-		URL tmp = getResource(Activator.PLUGIN_ID, relativePath);
-
-		InputStreamReader reader = new InputStreamReader(tmp.openStream());
-		// Create Buffered/PrintWriter Objects
-		// BufferedReader inputStream = new BufferedReader(bin);
-		StringBuilder sb = new StringBuilder();
-
-		int inLine;
-		while ((inLine = reader.read()) != -1)
-		{
-			sb.append((char) inLine);
-		}
-		return sb.toString();
-	}
-
 	final static String VDM_MODEL_ENV_BEGIN = "\\begin{vdm_al}";
 	final static String VDM_MODEL_ENV_END = "\\end{vdm_al}";
 
@@ -202,11 +187,16 @@ public class LatexCoverageAction implements IObjectActionDelegate
 									.getRootNode(selectedProject, natureId)
 									.getClassList();
 
+							LexLocation.resetLocations();
+							ClassList classes = parseClasses(selectedProject, classlist);
+							
 							List<File> outputFiles = getFileChildern(new File(projectRoot,
 									"generated"));
 							LexLocation.clearLocations();
-							for (ClassDefinition classDefinition : classlist)
+							for (ClassDefinition classDefinition : classes)
 							{
+								System.out.println("Looking at file: "
+										+ classDefinition.location.file.getName());
 								File texFile = new File(outputFolderForGeneratedModelFiles,
 										classDefinition.location.file.getName()
 												+ ".tex");
@@ -216,12 +206,15 @@ public class LatexCoverageAction implements IObjectActionDelegate
 								for (int i = 0; i < outputFiles.size(); i++)
 								{
 									File file = outputFiles.get(i);
+									System.out.println("Compair with file: "
+											+ file.getName());
 									if (file.getName().endsWith(".cov")
 											&& (classDefinition.location.file.getName()).equals(getFileName(file)))
 									{
+										System.out.println("Match");
 										LexLocation.mergeHits(classDefinition.location.file,
 												file);
-										outputFiles.remove(i);
+										// outputFiles.remove(i);
 
 										latexBuilder.addInclude(texFile.getAbsolutePath());
 									}
@@ -243,8 +236,12 @@ public class LatexCoverageAction implements IObjectActionDelegate
 
 							List<File> outputFiles = getFileChildern(new File(projectRoot,
 									"generated"));
-							LexLocation.clearLocations();
-							for (Module classDefinition : modulelist)
+							LexLocation.resetLocations();
+							ModuleList modules = parseModules(selectedProject, modulelist);
+													LexLocation.clearLocations();
+							
+							
+							for (Module classDefinition : modules)
 							{
 								for (File moduleFile : classDefinition.files)
 								{
@@ -358,14 +355,62 @@ public class LatexCoverageAction implements IObjectActionDelegate
 	{
 	}
 
-	private void writeFile(File outputFolder, String fileName, String content)
-			throws IOException
+	private ClassList parseClasses(final IProject selectedProject,
+			ClassList classlist)
 	{
-		FileWriter outputFileReader = new FileWriter(new File(outputFolder,
-				fileName));
-		BufferedWriter outputStream = new BufferedWriter(outputFileReader);
-		outputStream.write(content);
-		outputStream.close();
+		ClassReader reader;
+		ClassList classes = new ClassList();
+		for (ClassDefinition cd : classlist)
+		{
+			String charset = "";
+			try
+			{
+				charset = ProjectUtility.findIFile(selectedProject,
+						cd.location.file).getCharset();
+
+			} catch (CoreException e)
+			{
+				e.printStackTrace();
+			}
+
+			LexTokenReader ltr = new LexTokenReader(cd.location.file,
+					Dialect.VDM_RT,
+					charset);
+			reader = new ClassReader(ltr);
+
+			classes.addAll(reader.readClasses());
+		}
+		return classes;
+	}
+	private ModuleList parseModules(final IProject selectedProject,
+			ModuleList modulelist)
+	{
+		ModuleReader reader;
+		ModuleList modules = new ModuleList();
+		for (Module m : modulelist)
+		{
+			String charset = "";
+			try
+			{
+				charset = ProjectUtility.findIFile(selectedProject,
+						m.files.get(0)).getCharset();
+
+			} catch (CoreException e)
+			{
+				e.printStackTrace();
+			}
+
+			for(File f : m.files)
+			{
+			LexTokenReader ltr = new LexTokenReader(f,
+					Dialect.VDM_SL,
+					charset);
+			reader = new ModuleReader(ltr);
+
+			modules.addAll(reader.readModules());
+			}
+		}
+		return modules;
 	}
 
 }
