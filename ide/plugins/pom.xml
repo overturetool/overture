@@ -23,6 +23,8 @@
     <module>poviewer</module>
     <module>latex</module>
     <module>quickinterpreter</module>
+    <module>coverageeditor</module>
+
 
   </modules>
 </project>

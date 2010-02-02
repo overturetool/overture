@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.overture.ide.plugins.coverageeditor.editor.CoverageEditor"
+            default="false"
+            extensions="*.cov"
+            icon="icons/cview32/cov_file_tsk.png"
+            id="org.overture.ide.plugins.coverageeditor.editor"
+            name="VDM Coverage Editor">
+         <contentTypeBinding
+               contentTypeId="org.overture.ide.plugins.coverageeditor.content-type">
+         </contentTypeBinding>
+      </editor>
+   </extension>
+
+
+ <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.text"
+            file-extensions="cov"
+            id="org.overture.ide.plugins.coverageeditor.content-type"
+            name="VDM Coverage Content type"
+            priority="normal">
+      </content-type>     
+   </extension>
+
+
+
+
+</plugin>

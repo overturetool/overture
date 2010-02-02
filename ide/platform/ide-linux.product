@@ -151,6 +151,7 @@
       <plugin id="org.overture.ide.generated.vdmj"/>
       <plugin id="org.overture.ide.parsers.vdmj"/>
       <plugin id="org.overture.ide.platform"/>
+      <plugin id="org.overture.ide.plugins.coverageeditor"/>
       <plugin id="org.overture.ide.plugins.idedebughelper"/>
       <plugin id="org.overture.ide.plugins.latex"/>
       <plugin id="org.overture.ide.plugins.poviewer"/>

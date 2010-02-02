@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
+import org.overturetool.vdmj.traces.TraceReductionType;
 import org.xml.sax.SAXException;
 
 public interface ITracesHelper
@@ -36,6 +37,10 @@ public interface ITracesHelper
 
 	public abstract void processClassTraces(String className, Object monitor)
 			throws ClassNotFoundException, TraceHelperNotInitializedException,IOException,Exception;
+	
+	public abstract void processClassTraces(String className,float subset, TraceReductionType traceReductionType,long seed, Object monitor)
+	throws ClassNotFoundException, TraceHelperNotInitializedException,IOException,Exception;
+	
 
 	public abstract TraceTestStatus GetStatus(String className, String trace,
 			Integer num) throws SAXException, IOException,
