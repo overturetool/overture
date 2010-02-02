@@ -42,6 +42,7 @@ import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
+import org.overturetool.vdmj.traces.TraceReductionType;
 import org.xml.sax.SAXException;
 
 public class VdmjTracesHelper implements ITracesHelper {
@@ -139,7 +140,8 @@ public class VdmjTracesHelper implements ITracesHelper {
 			
 		} catch (NotAllowedException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			return classNames;
 		}
 
 		return classNames;
@@ -214,6 +216,30 @@ public class VdmjTracesHelper implements ITracesHelper {
 		interpeter.processTrace(getModules(), className, false,storage,dialect,project.getLanguageVersion());
 		else
 			interpeter.processTrace(getClasses(), className, false,storage,dialect,project.getLanguageVersion());
+	}
+	
+	public void processClassTraces(String className, float subset,
+			TraceReductionType traceReductionType, long seed, Object monitor)
+			throws ClassNotFoundException, TraceHelperNotInitializedException,
+			IOException, Exception
+	{
+		TraceInterpreter interpeter = null;
+		if (monitor instanceof IProgressMonitor)
+			interpeter = new ObservableTraceInterpeter((IProgressMonitor) monitor, this);
+		else
+			interpeter = new TraceInterpreter();
+
+		TraceXmlWrapper storage = new TraceXmlWrapper(projectDir.getAbsolutePath()
+				+ File.separatorChar + className + ".xml");
+
+		
+		buildProjectIfRequired();
+		
+		if(dialect== Dialect.VDM_SL)
+		interpeter.processTrace(getModules(), className, false,storage,dialect,project.getLanguageVersion(),subset,traceReductionType,seed);
+		else
+			interpeter.processTrace(getClasses(), className, false,storage,dialect,project.getLanguageVersion(),subset,traceReductionType,seed);
+		
 	}
 	
 	
@@ -395,5 +421,7 @@ public class VdmjTracesHelper implements ITracesHelper {
 	public String GetProjectName() {
 		return projectName;
 	}
+
+
 
 }

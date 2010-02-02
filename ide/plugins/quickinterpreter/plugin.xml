@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="org.overture.ide.plugins.quickinterpreter.view.VdmQuickInterpreter"
+            id="org.overture.ide.plugins.quickinterpreter.viewinterpreter"
+            name="VDM Quick Interpreter"
+            restorable="true">
+      </view>
+   </extension>
+
+
+
+
+
+
+
+</plugin>

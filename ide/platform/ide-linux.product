@@ -155,6 +155,7 @@
       <plugin id="org.overture.ide.plugins.latex"/>
       <plugin id="org.overture.ide.plugins.poviewer"/>
       <plugin id="org.overture.ide.plugins.proofsupport"/>
+      <plugin id="org.overture.ide.plugins.quickinterpreter"/>
       <plugin id="org.overture.ide.plugins.showtrace"/>
       <plugin id="org.overture.ide.plugins.traces"/>
       <plugin id="org.overture.ide.plugins.umltrans"/>

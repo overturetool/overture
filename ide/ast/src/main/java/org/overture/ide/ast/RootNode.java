@@ -25,33 +25,33 @@ public class RootNode
 	}
 
 	@SuppressWarnings("unchecked")
-	public void setRootElementList(List rootElementList)
+	public synchronized void setRootElementList(List rootElementList)
 	{
 		this.rootElementList = rootElementList;
 	}
 
 	@SuppressWarnings("unchecked")
-	public List getRootElementList()
+	public synchronized List getRootElementList()
 	{
 		return rootElementList;
 	}
 
-	public void setCheckedTime(Date checkedTime)
+	public synchronized void setCheckedTime(Date checkedTime)
 	{
 		this.checkedTime = checkedTime;
 	}
 
-	public Date getCheckedTime()
+	public synchronized Date getCheckedTime()
 	{
 		return checkedTime;
 	}
 
-	public void setChecked(boolean checked)
+	public synchronized void setChecked(boolean checked)
 	{
 		this.checked = checked;
 	}
 
-	public boolean isChecked()
+	public synchronized boolean isChecked()
 	{
 		return checked;
 	}
@@ -64,7 +64,7 @@ public class RootNode
 	 *            the new definition
 	 */
 	@SuppressWarnings("unchecked")
-	public void update(List modules)
+	public synchronized void update(List modules)
 	{
 		this.setChecked(false);
 		if (this.rootElementList.size() != 0)
@@ -142,7 +142,7 @@ public class RootNode
 	 *            list
 	 * @return true if the file has a definition in the list
 	 */
-	public boolean hasFile(File file)
+	public synchronized boolean hasFile(File file)
 	{
 		for (Object o : rootElementList)
 		{
@@ -157,7 +157,7 @@ public class RootNode
 		return false;
 	}
 
-	public ModuleList getModuleList() throws NotAllowedException
+	public synchronized ModuleList getModuleList() throws NotAllowedException
 	{
 		ModuleList modules = new ModuleList();
 		for (Object definition : rootElementList)
@@ -171,7 +171,7 @@ public class RootNode
 		return modules;
 	}
 
-	public ClassList getClassList() throws NotAllowedException
+	public synchronized ClassList getClassList() throws NotAllowedException
 	{
 		ClassList classes = new ClassList();
 		for (Object definition : rootElementList)
@@ -185,7 +185,7 @@ public class RootNode
 		return classes;
 	}
 
-	public boolean hasClassList()
+	public synchronized boolean hasClassList()
 	{
 		for (Object definition : rootElementList)
 		{
@@ -195,7 +195,7 @@ public class RootNode
 		return false;
 	}
 
-	public boolean hasModuleList()
+	public synchronized boolean hasModuleList()
 	{
 		for (Object definition : rootElementList)
 		{
@@ -205,7 +205,7 @@ public class RootNode
 		return false;
 	}
 
-	public void setParseCorrect(String file, Boolean isParseCorrect)
+	public synchronized void setParseCorrect(String file, Boolean isParseCorrect)
 	{
 		if (parseCurrectTable.containsKey(file))
 			parseCurrectTable.remove(file);
@@ -213,7 +213,7 @@ public class RootNode
 		parseCurrectTable.put(file, isParseCorrect);
 	}
 
-	public boolean isParseCorrect()
+	public synchronized boolean isParseCorrect()
 	{
 		for (Boolean isCurrect : parseCurrectTable.values())
 			if (!isCurrect)

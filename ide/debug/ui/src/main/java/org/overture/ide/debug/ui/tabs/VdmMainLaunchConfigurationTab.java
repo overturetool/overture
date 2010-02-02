@@ -42,6 +42,12 @@ import org.overture.ide.ui.outline.VdmOutlineTreeContentProvider;
 import org.overture.ide.utility.VdmProject;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
+import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.lex.LexException;
+import org.overturetool.vdmj.lex.LexTokenReader;
+import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.syntax.ExpressionReader;
+import org.overturetool.vdmj.syntax.ParserException;
 
 /**
  * Main launch configuration tab for overture scripts
@@ -98,12 +104,44 @@ public void setVmOptions(String option)
 
 	private boolean validateOperation()
 	{
+		
+		LexTokenReader ltr = new LexTokenReader(fOperationText.getText(), Dialect.VDM_PP, Console.charset);
+		ExpressionReader reader = new ExpressionReader(ltr);
+		//reader.setCurrentModule(module);
+		try
+		{
+			reader.readExpression();
+		} catch (ParserException e)
+		{
+			this.setErrorMessage("Operation: "+e.number +" "+ e.getMessage());
+			return false;
+		} catch (LexException e)
+		{
+			this.setErrorMessage("Operation: "+e.number +" "+ e.getMessage());
+			return false;
+		}
+		
 		return !(fOperationText == null || fOperationText.getText().length() == 0);
 
 	}
 
 	private boolean validateClass()
 	{
+		LexTokenReader ltr = new LexTokenReader(fModuleNameText.getText(), Dialect.VDM_PP, Console.charset);
+		ExpressionReader reader = new ExpressionReader(ltr);
+		//reader.setCurrentModule(module);
+		try
+		{
+			reader.readExpression();
+		} catch (ParserException e)
+		{
+			this.setErrorMessage(getModuleLabelName()+ ": "+e.number +" "+ e.getMessage());
+			return false;
+		} catch (LexException e)
+		{
+			this.setErrorMessage(getModuleLabelName()+": "+e.number +" "+ e.getMessage());
+			return false;
+		}
 		return !(fModuleNameText == null || fModuleNameText.getText().length() == 0);
 
 	}

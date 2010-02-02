@@ -257,6 +257,8 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 		arguments.add("-default64");
 		arguments.add(buildDefaultLaunchExpression(launch,charset));//,charset
 		
+	
+		
 		if(launch.getLaunchConfiguration()
 		.getAttribute(DebugCoreConstants.DEBUGGING_CREATE_COVERAGE, false))
 		{
@@ -273,6 +275,19 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 		
 		}
 		
+		
+		//test
+		File externalFolder = new File(config.getWorkingDirectoryPath().toOSString()
+				+ File.separatorChar + "lib" );
+	if(externalFolder.exists())
+	{
+		arguments.add("-external");
+		String externalPath = externalFolder.getAbsolutePath().replace('\\', '/');
+		if(isWindowsPlatform())
+			externalPath="/"+ externalPath;
+		arguments.add("file:"+externalPath);
+	}	
+		//end test
 		// 5-n: add files to the arguments
 
 		arguments.addAll(getFiles(project, contentType));

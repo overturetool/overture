@@ -9,9 +9,7 @@ import java.util.Vector;
 import java.util.concurrent.CancellationException;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
@@ -48,9 +46,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPageLayout;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -62,7 +58,6 @@ import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
-import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 import org.overture.ide.plugins.traces.OvertureTracesPlugin;
@@ -77,7 +72,6 @@ import org.overture.ide.plugins.traces.views.treeView.TraceTestTreeNode;
 import org.overture.ide.plugins.traces.views.treeView.TraceTreeNode;
 import org.overture.ide.utility.FileUtility;
 import org.overture.ide.utility.ProjectUtility;
-import org.overture.ide.utility.VdmProject;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
 import org.overture.ide.vdmrt.core.VdmRtProjectNature;
 import org.overture.ide.vdmsl.core.VdmSlProjectNature;
@@ -479,6 +473,25 @@ public class TracesTreeView extends ViewPart
 			public void run()
 			{
 
+						
+						    Shell dialog = new Shell(display,SWT.DIALOG_TRIM);
+						    dialog.setText("Select filtering options");
+						    dialog.setSize(200, 200);
+
+						    final TraceOptionsDialog d=    new TraceOptionsDialog(dialog,SWT.DIALOG_TRIM);
+						    d.pack();
+						    dialog.pack();
+						    dialog.open();
+						    while (!dialog.isDisposed() ) {
+						    	if(TraceOptionsDialog.isCanceled)
+							    	  return;
+						    	if (!display.readAndDispatch())
+						        display.sleep();
+						      
+						    }
+						  
+
+
 				ISelection selection = viewer.getSelection();
 				final Object obj = ((IStructuredSelection) selection).getFirstElement();
 
@@ -527,7 +540,7 @@ public class TracesTreeView extends ViewPart
 									try
 									{
 										th.processClassTraces(className,
-												monitor);
+												d.getSubset(),d.getTraceReductionType(),d.getSeed(),monitor);
 									} catch (CancellationException e)
 									{
 										ConsolePrint(e.getMessage());

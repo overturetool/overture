@@ -22,5 +22,7 @@
     <module>proofsupport</module>
     <module>poviewer</module>
     <module>latex</module>
+    <module>quickinterpreter</module>
+
   </modules>
 </project>

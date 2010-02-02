@@ -7,9 +7,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.wizards.GenericDLTKProjectWizard;
 import org.eclipse.dltk.ui.wizards.ProjectWizardFirstPage;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.ui.IWorkbench;
 
 public class CreateVdmProjectWizard extends GenericDLTKProjectWizard
 {
