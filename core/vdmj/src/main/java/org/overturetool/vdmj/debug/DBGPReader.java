@@ -34,6 +34,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
@@ -629,6 +630,9 @@ public class DBGPReader
 			sb.append("</message></error>");
 
 			response(null, sb);
+		}catch(SocketException e)
+		{
+			//do not report this since the socket connection is down.
 		}
 		catch (IOException e)
 		{
