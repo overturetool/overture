@@ -1,0 +1,28 @@
+\documentclass[a4paper,dvips]{article}
+\input{overture}
+
+\begin{document}
+
+\title{Specifying the operations performed in a Pub}
+\author{Kevin Blackburn\\ ICL Enterprise Engineering}
+\date{March 1995}
+\maketitle
+
+\begin{abstract}
+This note was produced a VDM-SL course presented by Peter Gorm Larsen
+to ICL Enterprise Engineering. The modelling of bags was one of the
+exercises the attendees (including myself) was confronted with during
+the course. Because I have a background in the Z specification
+language I finished this exercise before the other attendees. Thus I
+was asked to use the definitions of the bags to model the operations
+performed in a pub with a cellar and a bar. This specification is
+mainly intended for the purpose of illustrating how bags can be used.
+\end{abstract}
+
+\input{bag.vdmsl}
+ 
+\input{bar.vdmsl}
+
+\input{bagtest.vdmsl}
+
+\end{document}
