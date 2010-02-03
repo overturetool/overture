@@ -2,9 +2,6 @@ package org.overture.ide.builders.builder;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -16,15 +13,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.ast.parser.SourceParserManager;
-import org.eclipse.dltk.compiler.problem.IProblem;
-import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.overture.ide.ast.AstManager;
 import org.overture.ide.ast.RootNode;
-import org.overture.ide.builders.core.VdmBuilderCorePlugin;
 import org.overture.ide.utility.FileUtility;
 import org.overture.ide.utility.IVdmProject;
 import org.overture.ide.utility.ProjectUtility;
-import org.overture.ide.utility.SourceLocationConverter;
 
 public abstract class AbstractBuilder {
 	public abstract IStatus buileModelElements(IVdmProject project,
@@ -36,56 +29,6 @@ public abstract class AbstractBuilder {
 
 	public static IFile findIFile(IProject project, File file) {
 		return ProjectUtility.findIFile(project, file);
-	}
-
-	protected static void addMarker(IFile file, String message, int lineNumber,
-			int severity, int charStart, int charEnd) throws CoreException {
-		if (file != null) {
-			IMarker marker = file.createMarker(IMarker.PROBLEM);
-			marker.setAttribute(IMarker.MESSAGE, message);
-			marker.setAttribute(IMarker.SEVERITY, severity);
-			if (lineNumber == -1) {
-				lineNumber = 1;
-			}
-			marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
-			StringBuilder content = inputStreamToString(file.getContents());
-			if (content != null) {
-				SourceLocationConverter converter = new SourceLocationConverter(content.toString().toCharArray());
-				marker.setAttribute(IMarker.CHAR_START, converter.convert(
-						lineNumber, charStart));
-				marker.setAttribute(IMarker.CHAR_END, converter.convert(
-						lineNumber, charEnd));
-			}
-		} else if(VdmBuilderCorePlugin.DEBUG)
-			System.out.println("Cannot set marker in missing file: " + file);
-	}
-
-	private static StringBuilder inputStreamToString(InputStream is) {
-		StringBuilder out = new StringBuilder();
-		Reader in = null;
-		try {
-			final char[] buffer = new char[0x10000];
-
-			in = new InputStreamReader(is, "UTF-8");
-			int read;
-			do {
-				read = in.read(buffer, 0, buffer.length);
-				if (read > 0) {
-					out.append(buffer, 0, read);
-				}
-			} while (read >= 0);
-			return out;
-		} catch (Exception e) {
-			return null;
-		} finally {
-			if (in != null)
-				try {
-					in.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-		}
 	}
 
 	/***
@@ -167,46 +110,15 @@ public abstract class AbstractBuilder {
 
 		List<Character> content = FileUtility.getContent(file);
 
-		IProblemReporter reporter = createProblemReporter(file);
-
+		
 		char[] source =FileUtility.getCharContent(content);
 		
 		try {
 			SourceParserManager.getInstance().getSourceParser(project, natureId).parse(
-					path.toString().toCharArray(), source, reporter);
+					path.toString().toCharArray(), source, null);//We can parse null as reporter since the VDMJ parser does not use it.
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	
-
-	
-
-	private static IProblemReporter createProblemReporter(final IFile file) {
-		return new IProblemReporter() {
-
-			@SuppressWarnings("unchecked")
-			public Object getAdapter(Class adapter) {
-
-				return null;
-			}
-
-			public void reportProblem(IProblem problem) {
-				int severity = IMarker.SEVERITY_ERROR;
-				if (problem.isWarning())
-					severity = IMarker.SEVERITY_WARNING;
-
-				try {
-					addMarker(file, problem.getMessage(),
-							problem.getSourceLineNumber(), severity,
-							problem.getSourceStart(), problem.getSourceEnd());
-				} catch (CoreException e) {
-
-					e.printStackTrace();
-				}
-
-			}
-		};
-	}
 }

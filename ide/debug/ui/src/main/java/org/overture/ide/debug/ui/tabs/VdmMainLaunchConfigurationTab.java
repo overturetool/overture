@@ -52,7 +52,7 @@ import org.overturetool.vdmj.syntax.ParserException;
 /**
  * Main launch configuration tab for overture scripts
  */
-public abstract class VdmMainLaunchConfigurationTab extends 
+public abstract class VdmMainLaunchConfigurationTab extends
 		MainLaunchConfigurationTab
 {
 
@@ -68,12 +68,13 @@ public abstract class VdmMainLaunchConfigurationTab extends
 	private Button checkBoxRemoteDebug = null;
 	private Button fdebugInConsole;
 	private WidgetListener fListener = new WidgetListener();
-private String vmOption = "";
+	private String vmOption = "";
 
-public void setVmOptions(String option)
-{
-	this.vmOption = option;
-}
+	public void setVmOptions(String option)
+	{
+		this.vmOption = option;
+	}
+
 	// private String moduleDefinitionPath;
 
 	class WidgetListener implements ModifyListener, SelectionListener
@@ -104,42 +105,59 @@ public void setVmOptions(String option)
 
 	private boolean validateOperation()
 	{
-		
-		LexTokenReader ltr = new LexTokenReader(fOperationText.getText(), Dialect.VDM_PP, Console.charset);
+		if((fOperationText == null || fOperationText.getText().length() == 0))
+		{
+			setErrorMessage("No operation specified");
+			return false;
+		}
+		LexTokenReader ltr = new LexTokenReader(fOperationText.getText(),
+				Dialect.VDM_PP,
+				Console.charset);
 		ExpressionReader reader = new ExpressionReader(ltr);
-		//reader.setCurrentModule(module);
+		// reader.setCurrentModule(module);
 		try
 		{
 			reader.readExpression();
 		} catch (ParserException e)
 		{
-			this.setErrorMessage("Operation: "+e.number +" "+ e.getMessage());
+			this.setErrorMessage("Operation: " + e.number + " "
+					+ e.getMessage());
 			return false;
 		} catch (LexException e)
 		{
-			this.setErrorMessage("Operation: "+e.number +" "+ e.getMessage());
+			this.setErrorMessage("Operation: " + e.number + " "
+					+ e.getMessage());
 			return false;
 		}
-		
+
 		return !(fOperationText == null || fOperationText.getText().length() == 0);
 
 	}
 
 	private boolean validateClass()
 	{
-		LexTokenReader ltr = new LexTokenReader(fModuleNameText.getText(), Dialect.VDM_PP, Console.charset);
+		if((fModuleNameText == null || fModuleNameText.getText().length() == 0))
+		{
+			setErrorMessage("No "+ getModuleLabelName()+" specified");
+			return false;
+		}
+		LexTokenReader ltr = new LexTokenReader(fModuleNameText.getText(),
+				Dialect.VDM_PP,
+				Console.charset);
 		ExpressionReader reader = new ExpressionReader(ltr);
-		//reader.setCurrentModule(module);
+		// reader.setCurrentModule(module);
 		try
 		{
 			reader.readExpression();
 		} catch (ParserException e)
 		{
-			this.setErrorMessage(getModuleLabelName()+ ": "+e.number +" "+ e.getMessage());
+			this.setErrorMessage(getModuleLabelName() + ": " + e.number + " "
+					+ e.getMessage());
 			return false;
 		} catch (LexException e)
 		{
-			this.setErrorMessage(getModuleLabelName()+": "+e.number +" "+ e.getMessage());
+			this.setErrorMessage(getModuleLabelName() + ": " + e.number + " "
+					+ e.getMessage());
 			return false;
 		}
 		return !(fModuleNameText == null || fModuleNameText.getText().length() == 0);
@@ -182,8 +200,7 @@ public void setVmOptions(String option)
 		gd = new GridData(GridData.BEGINNING);
 		label.setLayoutData(gd);
 
-		fModuleNameText = new Text(group, SWT.SINGLE | SWT.BORDER
-				);
+		fModuleNameText = new Text(group, SWT.SINGLE | SWT.BORDER);
 
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		fModuleNameText.setLayoutData(gd);
@@ -222,7 +239,8 @@ public void setVmOptions(String option)
 	@Override
 	protected String getScriptName()
 	{
-		return ".project";//Cant disable file check so we select a file which always will be there
+		return ".project";// Cant disable file check so we select a file which
+							// always will be there
 	}
 
 	@Override
@@ -248,13 +266,12 @@ public void setVmOptions(String option)
 		checkBoxGenerateLatexCoverage.setText("Generate Latex coverage");
 		checkBoxGenerateLatexCoverage.setSelection(false);
 		checkBoxGenerateLatexCoverage.addSelectionListener(getWidgetListener());
-		
+
 		checkBoxRemoteDebug = new Button(group, SWT.CHECK);
 		checkBoxRemoteDebug.setText("Remote debug");
 		checkBoxRemoteDebug.setSelection(false);
 		checkBoxRemoteDebug.addSelectionListener(getWidgetListener());
-		
-		
+
 	}
 
 	/**
@@ -312,24 +329,27 @@ public void setVmOptions(String option)
 			if (method.classDefinition != null)
 			{
 				boolean foundConstructor = false;
-				for(Definition def : method.classDefinition.definitions)
+				for (Definition def : method.classDefinition.definitions)
 				{
-					if(def instanceof ExplicitOperationDefinition && ((ExplicitOperationDefinition)def).isConstructor)
+					if (def instanceof ExplicitOperationDefinition
+							&& ((ExplicitOperationDefinition) def).isConstructor)
 					{
 						foundConstructor = true;
 						fModuleNameText.setText(DisplayNameCreator.getDisplayName(def));
 					}
-				}if(!foundConstructor)
-				fModuleNameText.setText(DisplayNameCreator.getDisplayName(method.classDefinition)+"()");
-			}
-			else if (method.location != null && method.location.module != null)
+				}
+				if (!foundConstructor)
+					fModuleNameText.setText(DisplayNameCreator.getDisplayName(method.classDefinition)
+							+ "()");
+			} else if (method.location != null
+					&& method.location.module != null)
 				fModuleNameText.setText(method.location.module);
 			else
 				fModuleNameText.setText("DEFAULT");// undetermined module
 
-			//fOperationText.setText(method.name.name + "()");
-			fOperationText.setText(DisplayNameCreator.getDisplayName( method));
-			
+			// fOperationText.setText(method.name.name + "()");
+			fOperationText.setText(DisplayNameCreator.getDisplayName(method));
+
 		}
 	}
 
@@ -383,28 +403,27 @@ public void setVmOptions(String option)
 		config.setAttribute(DebugCoreConstants.DEBUGGING_OPERATION,
 				fOperationText.getText());
 
-		if(vmOption!=null &&vmOption.trim().length()>0 )
-			config.setAttribute(DebugCoreConstants.DEBUGGING_VM_MEMORY_OPTION, vmOption.trim());
-		
+		if (vmOption != null && vmOption.trim().length() > 0)
+			config.setAttribute(DebugCoreConstants.DEBUGGING_VM_MEMORY_OPTION,
+					vmOption.trim());
+
 		// config.setAttribute(ScriptLaunchConfigurationConstants.ATTR_MAIN_SCRIPT_NAME,
 		// moduleDefinitionPath);
-//		config.setAttribute(ScriptLaunchConfigurationConstants.ATTR_MAIN_SCRIPT_NAME,
-//				"");
+		// config.setAttribute(ScriptLaunchConfigurationConstants.ATTR_MAIN_SCRIPT_NAME,
+		// "");
 		config.setAttribute(DLTKDebugPreferenceConstants.PREF_DBGP_BREAK_ON_FIRST_LINE,
 				false);
 		config.setAttribute(DLTKDebugPreferenceConstants.PREF_DBGP_ENABLE_LOGGING,
 				true);
 		config.setAttribute(DebugCoreConstants.DEBUGGING_CREATE_COVERAGE,
 				checkBoxGenerateLatexCoverage.getSelection());
-		
+
 		config.setAttribute(DebugCoreConstants.DEBUGGING_REMOTE_DEBUG,
 				checkBoxRemoteDebug.getSelection());
 
 		config.setAttribute(DLTKDebugPreferenceConstants.PREF_DBGP_CONNECTION_TIMEOUT,
 				5000);
-		
-		
-		
+
 		super.doPerformApply(config);
 	}
 
@@ -417,12 +436,15 @@ public void setVmOptions(String option)
 					""));
 			fOperationText.setText(config.getAttribute(DebugCoreConstants.DEBUGGING_OPERATION,
 					""));
-			
-			checkBoxRemoteDebug.setSelection(config.getAttribute(DebugCoreConstants.DEBUGGING_REMOTE_DEBUG, false));
-			
-			checkBoxGenerateLatexCoverage.setSelection(config.getAttribute(DebugCoreConstants.DEBUGGING_CREATE_COVERAGE, false));
-			
-			vmOption=	config.getAttribute(DebugCoreConstants.DEBUGGING_VM_MEMORY_OPTION,"");
+
+			checkBoxRemoteDebug.setSelection(config.getAttribute(DebugCoreConstants.DEBUGGING_REMOTE_DEBUG,
+					false));
+
+			checkBoxGenerateLatexCoverage.setSelection(config.getAttribute(DebugCoreConstants.DEBUGGING_CREATE_COVERAGE,
+					false));
+
+			vmOption = config.getAttribute(DebugCoreConstants.DEBUGGING_VM_MEMORY_OPTION,
+					"");
 
 		} catch (CoreException e)
 		{

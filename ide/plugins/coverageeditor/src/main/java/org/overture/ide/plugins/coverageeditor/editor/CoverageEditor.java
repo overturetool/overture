@@ -29,30 +29,36 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
+import org.overture.ide.utility.SourceLocationConverter;
+import org.overturetool.vdmj.definitions.ClassList;
+import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexTokenReader;
+import org.overturetool.vdmj.syntax.ClassReader;
 
 @SuppressWarnings("restriction")
 public class CoverageEditor extends EditorPart
 {
 
 	private File selectedFile;
+	private File sourceFile;
+	private String charset;
 	private String content;
 	private IProject project;
 
 	public CoverageEditor() {
-		
+
 	}
 
 	@Override
 	public void doSave(IProgressMonitor monitor)
 	{
-		
 
 	}
 
 	@Override
 	public void doSaveAs()
 	{
-		
 
 	}
 
@@ -86,10 +92,14 @@ public class CoverageEditor extends EditorPart
 
 			String fileName = selectedFile.getName().substring(0,
 					selectedFile.getName().lastIndexOf('.'));
+			setTitle(fileName);
 
 			IResource res = project.findMember(fileName);
 			if (res instanceof org.eclipse.core.internal.resources.File)
 			{
+				org.eclipse.core.internal.resources.File f = ((org.eclipse.core.internal.resources.File) res);
+				charset = f.getCharset();
+				sourceFile = f.getLocation().toFile();
 				content = readFile(((org.eclipse.core.internal.resources.File) res).getContents());
 			}
 
@@ -124,23 +134,34 @@ public class CoverageEditor extends EditorPart
 		Display display = c.getDisplay();
 
 		Font fontNormal = new Font(display, "Courier New", 10, SWT.NORMAL);
-//		Font font2 = new Font(display, "MS Mincho", 20, SWT.ITALIC);
-//		Font font3 = new Font(display, "Arabic Transparent", 18, SWT.NORMAL);
+		// Font font2 = new Font(display, "MS Mincho", 20, SWT.ITALIC);
+		// Font font3 = new Font(display, "Arabic Transparent", 18, SWT.NORMAL);
 
-		
 		Color green = display.getSystemColor(SWT.COLOR_GREEN);
-//		Color red = display.getSystemColor(SWT.COLOR_RED);
-//		Color black = display.getSystemColor(SWT.COLOR_BLACK);
-
+		Color red = display.getSystemColor(SWT.COLOR_RED);
+		Color black = display.getSystemColor(SWT.COLOR_BLACK);
+		// Color white = display.getSystemColor(SWT.COLOR_WHITE);
 		final TextLayout layout = new TextLayout(display);
 		layout.setFont(fontNormal);
 
-//		TextStyle styleNormal = new TextStyle(fontNormal, black, null);
-		TextStyle styleCovered = new TextStyle(fontNormal, green, null);
-//		TextStyle styleNotcovered = new TextStyle(fontNormal, red, null);
+		// TextStyle styleNormal = new TextStyle(fontNormal, black, null);
+		TextStyle styleCovered = new TextStyle(fontNormal, black, green);
+		TextStyle styleNotcovered = new TextStyle(fontNormal, black, red);
 
 		layout.setText(content);
-		
+
+		ClassReader reader;
+		ClassList classes = new ClassList();
+		LexLocation.resetLocations();
+		LexLocation.clearLocations();
+		LexTokenReader ltr = new LexTokenReader(content,
+				Dialect.VDM_RT,
+				sourceFile,
+				charset);
+		reader = new ClassReader(ltr);
+
+		classes.addAll(reader.readClasses());
+		SourceLocationConverter converter = new SourceLocationConverter(content.toCharArray());
 
 		BufferedReader br;
 		try
@@ -162,30 +183,50 @@ public class CoverageEditor extends EditorPart
 					int lnum = Integer.parseInt(line.substring(1, s1));
 					int from = Integer.parseInt(line.substring(s1 + 1, s2));
 					int to = Integer.parseInt(line.substring(s2 + 1, s3));
-					//int hits = Integer.parseInt(line.substring(s3 + 1));
+					int hits = Integer.parseInt(line.substring(s3 + 1));
 
-					int start = getPos(lnum, from);
-					int end = getPos(lnum, to);
-					if (start < content.length() && start < end
-							&& end < content.length())
-						layout.setStyle(styleCovered, start, end);
-					// for (LexLocation l: locations) // Only executable
-					// locations
-					// {
-					// if (l.startLine == lnum &&
-					// l.startPos == from &&
-					// l.endPos == to)
-					// {
-					// l.hits += hits;
-					// break;
-					// }
-					// }
+					for (LexLocation l : LexLocation.getSourceLocations(sourceFile)) // Only
+					// executable
+					{
+						if (l.startLine == lnum && l.startPos == from
+								&& l.endPos == to)
+						{
+							l.hits += hits;
+
+							int start = converter.getStartPos(l);
+							int end = converter.getEndPos(l);
+							if (start < content.length() && start < end
+									&& end < content.length())
+								layout.setStyle(styleCovered, start, end);
+
+							break;
+						}
+					}
 				}
 
 				line = br.readLine();
 			}
 
 			br.close();
+
+			for (LexLocation l : LexLocation.getSourceLocations(sourceFile)) // Only
+			// executable
+			{
+				if (l.hits == 0)
+				{
+					// int start = getPos(l.startLine, l.startPos);
+					// int end = getPos(l.endLine, l.endPos);
+					// if (start < content.length() && start < end
+					// && end < content.length())
+					// layout.setStyle(styleNotcovered, start, end);
+					int start = converter.getStartPos(l);
+					int end = converter.getEndPos(l);
+					if (start < content.length() && start < end
+							&& end < content.length())
+						layout.setStyle(styleNotcovered, start, end);
+				}
+
+			}
 
 		} catch (FileNotFoundException e)
 		{
@@ -210,18 +251,6 @@ public class CoverageEditor extends EditorPart
 	@Override
 	public void setFocus()
 	{
-	}
-
-	private int getPos(int line, int col)
-	{
-		String[] sourceLines = content.split("\n");
-		int pos = 1;
-		for (int i = 0; i < line && i < sourceLines.length; i++)
-		{
-			pos += sourceLines[i].length();
-		}
-		pos += col;
-		return pos;
 	}
 
 	public static String readFile(File file) throws IOException

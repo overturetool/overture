@@ -13,7 +13,7 @@ public class VdmjParserPlugin extends Plugin
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = VdmjParserPluginConstants.PLUGIN_ID;
-
+public static final boolean DEBUG =false;
 	// The shared instance
 	private static VdmjParserPlugin plugin;
 	

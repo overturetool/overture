@@ -48,7 +48,6 @@ import org.overture.ide.debug.launching.IOvertureInterpreterRunnerConfig;
 import org.overture.ide.debug.launching.VDMLaunchingConstants;
 import org.overture.ide.utility.ProjectUtility;
 import org.overture.ide.utility.VdmProject;
-import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.util.Base64;
 
 /*
@@ -97,7 +96,6 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 
 	static String debugVmMemoryOption = null;
 
-	@SuppressWarnings("deprecation")
 	public void doRunImpl(InterpreterConfig config, ILaunch launch,
 			IOvertureInterpreterRunnerConfig iconfig, String contentType,
 			String vdmjDialect) throws CoreException
@@ -129,6 +127,7 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private void launchDebugVm(InterpreterConfig config, ILaunch launch,
 			IOvertureInterpreterRunnerConfig iconfig, String contentType,
 			String vdmjDialect, IScriptProject proj) throws CoreException

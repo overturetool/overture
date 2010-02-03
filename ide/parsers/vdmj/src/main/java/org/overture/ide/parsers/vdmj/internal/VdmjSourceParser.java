@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -12,15 +13,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.parser.AbstractSourceParser;
-import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
-import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.overture.ide.ast.AstManager;
 import org.overture.ide.ast.IAstManager;
 import org.overture.ide.ast.RootNode;
+import org.overture.ide.utility.FileUtility;
 import org.overture.ide.utility.ProjectUtility;
-import org.overture.ide.utility.SourceLocationConverter;
 import org.overture.ide.utility.VdmProject;
+import org.overture.ide.vdmpp.core.VdmPpCorePlugin;
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.messages.VDMError;
@@ -32,13 +32,12 @@ import org.overturetool.vdmj.messages.VDMWarning;
  * @author kela
  * 
  */
-public abstract class VdmjSourceParser extends AbstractSourceParser {
+public abstract class VdmjSourceParser extends AbstractSourceParser
+{
 
 	String nature;
 	private List<VDMError> errors = new ArrayList<VDMError>();
 	private List<VDMWarning> warnings = new ArrayList<VDMWarning>();
-
-	
 
 	public VdmjSourceParser(String nature) {
 
@@ -46,32 +45,36 @@ public abstract class VdmjSourceParser extends AbstractSourceParser {
 	}
 
 	public ModuleDeclaration parse(char[] fileName, char[] source,
-			IProblemReporter reporter) {
+			IProblemReporter reporter)
+	{
 		String fileNameString = new String(fileName);
 		// find project
 		Path path = new Path(fileNameString);
 
-		IResource res = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+		IResource res = ResourcesPlugin.getWorkspace()
+				.getRoot()
+				.findMember(path);
 		IProject project = res.getProject();
-
-		SourceLocationConverter converter = new SourceLocationConverter(source);
 
 		errors.clear();
 		warnings.clear();
-		
+
 		File file = ProjectUtility.getFile(project, path);
-		
-		String charset="";
+		IFile ifile = null;
+		String charset = "";
 		try
 		{
-			charset = ProjectUtility.findIFile(project, file).getCharset();
-			
-			ProjectUtility.findIFile(project, file).deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+			ifile = ProjectUtility.findIFile(project, file);
+			charset = ifile.getCharset();
+
+			// ProjectUtility.findIFile(project,
+			// file).deleteMarkers(IMarker.PROBLEM, true,
+			// IResource.DEPTH_INFINITE);
 		} catch (CoreException e)
 		{
 			e.printStackTrace();
 		}
-		
+
 		try
 		{
 			Settings.release = new VdmProject(project).getLanguageVersion();
@@ -79,43 +82,41 @@ public abstract class VdmjSourceParser extends AbstractSourceParser {
 		{
 			e.printStackTrace();
 		}
-		ExitStatus status = parse(new String(source), file,charset);// project.getFile(path.removeFirstSegments(1)).getLocation().toFile()//parse(new
+		ExitStatus status = parse(new String(source), file, charset);// project.getFile(path.removeFirstSegments(1)).getLocation().toFile()//parse(new
 		// String(source));
-		
-		
-		
-		
 
-		if (reporter != null) {
-			if (status == ExitStatus.EXIT_ERRORS) {
+		if (ifile != null)
+		{
+			if (status == ExitStatus.EXIT_ERRORS)
+			{
+				deleteMarkers(ifile);
 				int previousErrorNumber = -1;
-				for (VDMError error : errors) {
-					if(previousErrorNumber== error.number)//this check is done to avoid error fall through
+				for (VDMError error : errors)
+				{
+					if (previousErrorNumber == error.number)// this check is
+															// done to avoid
+															// error fall
+															// through
 						continue;
 					else
 						previousErrorNumber = error.number;
-					DefaultProblem defaultProblem = new DefaultProblem(
-							fileNameString, error.message, error.number,
-							new String[] {}, ProblemSeverities.Error, converter
-									.convert(error.location.startLine,
-											error.location.startPos - 1),
-							converter.convert(error.location.endLine,
-									error.location.endPos - 1),
-							error.location.startLine);
-					reporter.reportProblem(defaultProblem);
+					FileUtility.addMarker(ifile,
+							error.message,
+							error.location,
+							IMarker.SEVERITY_ERROR,
+							VdmPpCorePlugin.PLUGIN_ID);
 				}
 			}
-			if (warnings.size() > 0 && !new VdmProject(project).hasSuppressWarnings()) {
-				for (VDMWarning warning : warnings) {
-					DefaultProblem defaultProblem = new DefaultProblem(
-							fileNameString, warning.message, warning.number,
-							new String[] {}, ProblemSeverities.Warning,
-							converter.convert(warning.location.startLine,
-									warning.location.startPos - 1), converter
-									.convert(warning.location.endLine,
-											warning.location.endPos - 1),
-							warning.location.startLine);
-					reporter.reportProblem(defaultProblem);
+			if (warnings.size() > 0
+					&& !new VdmProject(project).hasSuppressWarnings())
+			{
+				for (VDMWarning warning : warnings)
+				{
+					FileUtility.addMarker(ifile,
+							warning.message,
+							warning.location,
+							IMarker.SEVERITY_WARNING,
+							VdmPpCorePlugin.PLUGIN_ID);
 				}
 			}
 		}
@@ -124,19 +125,40 @@ public abstract class VdmjSourceParser extends AbstractSourceParser {
 		// project,
 		// VdmSlProjectNature.VDM_SL_NATURE,
 		// eclipseParser.getModules());
-	
+
 		IAstManager astManager = AstManager.instance();
-		ModuleDeclaration moduleDeclaration = astManager.addAstModuleDeclaration(project, nature, fileName, source, getModelElements());
+		ModuleDeclaration moduleDeclaration = astManager.addAstModuleDeclaration(project,
+				nature,
+				fileName,
+				source,
+				getModelElements());
 		RootNode rootNode = astManager.getRootNode(project, nature);
-		if (rootNode != null) {
-			if (status == ExitStatus.EXIT_ERRORS){			
-				rootNode.setParseCorrect(file.getAbsolutePath(),false);
-			}
-			else {
-				rootNode.setParseCorrect(file.getAbsolutePath(),true);
+		if (rootNode != null)
+		{
+			if (status == ExitStatus.EXIT_ERRORS)
+			{
+				rootNode.setParseCorrect(file.getAbsolutePath(), false);
+			} else
+			{
+				rootNode.setParseCorrect(file.getAbsolutePath(), true);
 			}
 		}
-		return moduleDeclaration; 
+		return moduleDeclaration;
+	}
+
+	/**
+	 * Deletes all problem markers in the file
+	 * @param ifile
+	 */
+	private void deleteMarkers(IFile ifile)
+	{
+		try
+		{
+			ifile.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+		} catch (CoreException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	// public abstract ExitStatus typeCheck();
@@ -153,7 +175,7 @@ public abstract class VdmjSourceParser extends AbstractSourceParser {
 	 * @return The number of syntax errors.
 	 */
 
-	public abstract ExitStatus parse(String content, File file,String charset);
+	public abstract ExitStatus parse(String content, File file, String charset);
 
 	/**
 	 * Handle Errors
@@ -161,7 +183,8 @@ public abstract class VdmjSourceParser extends AbstractSourceParser {
 	 * @param list
 	 *            encountered during a parse or type check
 	 */
-	protected void processErrors(List<VDMError> errors) {
+	protected void processErrors(List<VDMError> errors)
+	{
 		this.errors.addAll(errors);
 	};
 
@@ -171,11 +194,13 @@ public abstract class VdmjSourceParser extends AbstractSourceParser {
 	 * @param errors
 	 *            encountered during a parse or type check
 	 */
-	protected void processWarnings(List<VDMWarning> warnings) {
+	protected void processWarnings(List<VDMWarning> warnings)
+	{
 		this.warnings.addAll(warnings);
 	};
-	
-	protected void processInternalError(Throwable e) {
+
+	protected void processInternalError(Throwable e)
+	{
 		System.out.println(e.toString());
 	};
 

@@ -14,6 +14,7 @@ import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
+import org.overturetool.vdmj.syntax.ParserException;
 
 public class VdmQuickInterpreter extends ViewPart
 {
@@ -131,7 +132,12 @@ public class VdmQuickInterpreter extends ViewPart
 			// textAreaResult.append("Executed in " +
 			// (double)(after-before)/1000 + " secs. ");
 
-		} catch (Exception e)
+		}catch(ParserException e)
+		{
+			textAreaResult.append(" = "+ e.toString());
+			init();
+		}
+		catch (Exception e)
 		{
 			textAreaResult.append(" = Fatal error");
 			init();

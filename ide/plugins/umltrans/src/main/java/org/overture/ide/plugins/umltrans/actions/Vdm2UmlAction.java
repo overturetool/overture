@@ -141,7 +141,8 @@ public class Vdm2UmlAction implements IObjectActionDelegate
 					for (ParserError error : e.getErrors())
 					{
 						try{
-						FileUtility.addMarker(ProjectUtility.findIFile(selectedProject, error.file), error.message, error.line,error.col, IMarker.SEVERITY_ERROR);
+							System.out.println(error.toString());
+						//FileUtility.addMarker(ProjectUtility.findIFile(selectedProject, error.file), error.message, error.line,error.col, IMarker.SEVERITY_ERROR);
 						}catch(Exception ex)
 						{
 							

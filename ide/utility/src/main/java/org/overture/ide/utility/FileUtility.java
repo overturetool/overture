@@ -79,6 +79,49 @@ public class FileUtility {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Add markers to ifile. This is used to mark a problem by e.g. builder and parser.
+	 * 
+	 * Important: If a marker already exists at the specified location with the same message
+	 * @param file The IFile which is the source where the marker should be set
+	 * @param message The message of the marker
+	 * @param location The lex location where the marker should be set
+	 * @param severity The severity, e.g: IMarker.SEVERITY_ERROR or IMarker.SEVERITY_ERROR
+	 * @param sourceId The source if of the plugin calling this function. The PLUGIN id.
+	 */
+	public static void addMarker(IFile file, String message, LexLocation location,
+			int severity,String sourceId) {
+		try {
+			if (file == null)
+				return;
+			SourceLocationConverter converter = new SourceLocationConverter(getContent(file));
+			int lineNumber = converter.getStartPos( location);
+			//lineNumber -= 1;
+			IMarker[] markers = file.findMarkers(IMarker.PROBLEM, false,
+					IResource.DEPTH_INFINITE);
+			for (IMarker marker : markers) {
+				if (marker.getAttribute(IMarker.MESSAGE).equals(message)
+						&& marker.getAttribute(IMarker.SEVERITY).equals(
+								severity)
+						&& marker.getAttribute(IMarker.LINE_NUMBER).equals(
+								lineNumber))
+					return;
+
+			}
+			IMarker marker = file.createMarker(IMarker.PROBLEM);
+			marker.setAttribute(IMarker.MESSAGE, message);
+			marker.setAttribute(IMarker.SEVERITY, severity);
+			marker.setAttribute(IMarker.SOURCE_ID, sourceId);
+			
+
+			
+			marker.setAttribute(IMarker.CHAR_START,converter.getStartPos( location));
+			marker.setAttribute(IMarker.CHAR_END,converter.getEndPos(location));
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public static void gotoLocation(IFile file, LexLocation location,
 			String message) {

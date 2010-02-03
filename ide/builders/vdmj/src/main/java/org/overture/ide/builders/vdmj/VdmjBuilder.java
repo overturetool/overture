@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.overture.ide.builders.builder.AbstractBuilder;
+import org.overture.ide.utility.FileUtility;
 import org.overture.ide.utility.VdmProject;
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.messages.VDMError;
@@ -18,8 +18,6 @@ public abstract class VdmjBuilder  extends AbstractBuilder
 {
 	private List<VDMError> errors = new ArrayList<VDMError>();
 	private List<VDMWarning> warnings = new ArrayList<VDMWarning>();
-	private final int adjustPosition = 1;
-	
 	protected IStatus buileModelElements(IProject project)
 	{	
 		
@@ -57,40 +55,13 @@ public abstract class VdmjBuilder  extends AbstractBuilder
 
 	private void addErrorMarker(IProject project,VDMError error)
 	{
-		try
-		{
-			
-			AbstractBuilder.addMarker(
-					findIFile(project,error.location.file),
-					error.toProblemString(),
-					error.location.startLine,
-					IMarker.SEVERITY_ERROR,
-					error.location.startPos - adjustPosition,
-					error.location.endPos - adjustPosition);
-		} catch (CoreException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		FileUtility.addMarker(findIFile(project,error.location.file), error.message, error.location, IMarker.SEVERITY_ERROR,VdmjBuilderPlugin.PLUGIN_ID);
 	}
 
 
 	private void addWarningMarker(IProject project,VDMWarning error)
 	{
-		try
-		{
-			AbstractBuilder.addMarker(
-					findIFile(project,error.location.file),
-					error.toProblemString(),
-					error.location.startLine,
-					IMarker.SEVERITY_WARNING,
-					error.location.startPos - adjustPosition,
-					error.location.endPos - adjustPosition);
-		} catch (CoreException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		FileUtility.addMarker(findIFile(project,error.location.file), error.message, error.location, IMarker.SEVERITY_ERROR,VdmjBuilderPlugin.PLUGIN_ID);
 	}
 
 	/**

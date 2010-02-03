@@ -4,7 +4,9 @@
    <extension
          point="org.eclipse.ui.views">
       <view
+            category="org.overture.ide.ui.view.category"
             class="org.overture.ide.plugins.quickinterpreter.view.VdmQuickInterpreter"
+            icon="icons/cview16/qint_tsk.png"
             id="org.overture.ide.plugins.quickinterpreter.viewinterpreter"
             name="VDM Quick Interpreter"
             restorable="true">
