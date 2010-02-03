@@ -1,5 +1,0 @@
-\begin{vdm_al}
-class FileWriter
--- do not code generate (is a Java standard class)
-end FileWriter
-\end{vdm_al}

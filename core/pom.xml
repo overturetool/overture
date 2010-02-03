@@ -16,10 +16,9 @@
     <module>proofsupport</module>
     <module>stdlib</module>
     <module>ast</module>
-    <module>astgenerator</module>
+    <module>astgen</module>
     <module>vdmunit</module>
     <module>parser</module>
-
     <module>potrans</module>
     <module>umltrans</module>
     <module>vdmtools</module>
@@ -28,7 +27,6 @@
     <module>vdmjc</module>
     <module>showtrace</module>
     <module>xmljunit</module>
-
   </modules>
   <dependencies>
     <dependency>
