@@ -26,6 +26,29 @@
 					</importPackages>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.overturetool.tools</groupId>
+				<artifactId>astg</artifactId>
+				<executions>
+					<execution>
+						<id>java</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>java</goal>
+							<goal>vdm</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<ast>
+						vdm.ast
+					</ast>
+					<names>
+						 <param>VDM</param>
+					</names>
+					
+				</configuration>
+			</plugin>
   	</plugins>
   </build>
   <dependencies>
