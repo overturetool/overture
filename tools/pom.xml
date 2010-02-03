@@ -18,7 +18,7 @@
 
   <modules>
     <module>vdmt</module>
-    <module>astgen</module>
+    <module>astg</module>
     <module>maven-pst</module>
     <module>packworkspace</module>
 
