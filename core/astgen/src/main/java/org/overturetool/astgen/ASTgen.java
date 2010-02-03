@@ -135,6 +135,23 @@ public class ASTgen
 			usage();
 		}
 
+		int errs = generate(language, kind, directory, grammars, names);
+
+		System.out.println(errs > 0 ? "Errors occurred" : "OK");
+	}
+
+	/**
+	 * Generates the source from one or more AST classes
+	 * @param language java or vdm
+	 * @param kind INTF for interfaces/abstracts or IMPL for implementation
+	 * @param directory -out
+	 * @param grammars files
+	 * @param names -class
+	 * @return 0 if ok
+	 */
+	public static int generate(String language, Kind kind, File directory,
+			List<File> grammars, List<String> names)
+	{
 		parse(grammars);
 		AbstractTreeList trees = check(names, kind);
 
@@ -148,8 +165,7 @@ public class ASTgen
 		}
 
 		int errs = processTrees(language, directory, trees);
-
-		System.out.println(errs > 0 ? "Errors occurred" : "OK");
+		return errs;
 	}
 
 	private static void usage()
