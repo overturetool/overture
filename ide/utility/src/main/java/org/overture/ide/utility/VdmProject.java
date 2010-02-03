@@ -17,7 +17,7 @@ import org.overturetool.vdmj.Release;
 
 public class VdmProject implements IVdmProject
 {
-	private final String BUILDER_ID = "org.eclipse.dltk.core.scriptbuilder";
+	public static final String BUILDER_ID = "org.eclipse.dltk.core.scriptbuilder";
 	private final String LANGUAGE_VERSION_ARGUMENT_KEY = "VDM_LANGUAGE_VERSION";
 	private final String DYNAMIC_TYPE_CHECKS_ARGUMENT_KEY = "VDM_DYNAMIC_TYPE_CHECKS";
 	private final String INV_CHECKS_ARGUMENT_KEY = "INV_CHECKS";
@@ -374,7 +374,7 @@ public class VdmProject implements IVdmProject
 		return newProject;
 	}
 
-	private static void addNature(IProject project, String nature)
+	public static void addNature(IProject project, String nature)
 			throws CoreException
 	{
 		if (!project.hasNature(nature))
