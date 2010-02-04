@@ -32,6 +32,7 @@ import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.types.Field;
 import org.overturetool.vdmj.types.NamedType;
 import org.overturetool.vdmj.types.RecordType;
 import org.overturetool.vdmj.types.Type;
@@ -164,7 +165,15 @@ public class AbstractTree
 
 			if (d != null)
 			{
-				return (RecordType)d.type;
+				if (d.type instanceof RecordType)
+				{
+					return (RecordType)d.type;
+				}
+				else
+				{
+					NamedType nt = (NamedType)d.type;
+					return new RecordType(nt.typename, new Vector<Field>());
+				}
 			}
 		}
 
