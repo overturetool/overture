@@ -17,7 +17,7 @@ import org.overturetool.vdmj.lex.Dialect;
 
 public class CreateVdmProjectWizard extends BasicNewProjectResourceWizard
 {
-	//private IConfigurationElement fConfigElement;
+	// private IConfigurationElement fConfigElement;
 	private String nature;
 
 	public CreateVdmProjectWizard() {
@@ -41,7 +41,7 @@ public class CreateVdmProjectWizard extends BasicNewProjectResourceWizard
 	public void setInitializationData(IConfigurationElement cfig,
 			String propertyName, Object data)
 	{
-		//fConfigElement = cfig;
+		// fConfigElement = cfig;
 		if (data instanceof String)
 		{
 			this.nature = (String) data;
@@ -80,50 +80,72 @@ public class CreateVdmProjectWizard extends BasicNewProjectResourceWizard
 						boolean useUtil = ((LibraryIncludePage) page).getLibrarySelection()
 								.isUtilSelected();
 
-						File projectRoot = prj.getLocation().toFile();
-						File libFolder = new File(projectRoot, "lib");
-						if (!libFolder.exists())
-							libFolder.mkdirs();
+						if (useIo || useMath || useUtil)
+						{
+							File projectRoot = prj.getLocation().toFile();
+							File libFolder = new File(projectRoot, "lib");
+							if (!libFolder.exists())
+								libFolder.mkdirs();
 
-						String extension = "pp";
-						
-						Dialect dialect = Dialect.VDM_PP;
-						if(nature.contains(Dialect.VDM_PP.name().replace("_", "").toLowerCase()))
-							dialect = Dialect.VDM_PP;
-						else if(nature.contains(Dialect.VDM_RT.name().replace("_", "").toLowerCase()))
-							dialect = Dialect.VDM_RT;
-						else if(nature.contains(Dialect.VDM_SL.name().replace("_", "").toLowerCase()))
-							dialect = Dialect.VDM_SL;
-						
-						extension = dialect.name().replace("_", "").toLowerCase();
-						try
-						{
-							if (useIo)
-								if(dialect==Dialect.VDM_SL)
-									copyFile(libFolder, "includes/lib/sl/IO.vdmsl", "IO."+extension);
-								else
-									copyFile(libFolder, "includes/lib/pp/IO.vdmpp", "IO."+extension);
-							
-							if (useMath)
-								if(dialect==Dialect.VDM_SL)
-									copyFile(libFolder, "includes/lib/sl/MATH.vdmsl", "MATH."+extension);
-								else
-									copyFile(libFolder, "includes/lib/pp/MATH.vdmpp", "MATH."+extension);
-							
-							if (useUtil)
-								if(dialect==Dialect.VDM_SL)
-									copyFile(libFolder, "includes/lib/sl/VDMUtil.vdmsl", "VDMUtil."+extension);
-								else
-									copyFile(libFolder, "includes/lib/pp/VDMUtil.vdmpp", "VDMUtil."+extension);
-								
-							
-						} catch (IOException e)
-						{
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							String extension = "pp";
+
+							Dialect dialect = Dialect.VDM_PP;
+							if (nature.contains(Dialect.VDM_PP.name()
+									.replace("_", "")
+									.toLowerCase()))
+								dialect = Dialect.VDM_PP;
+							else if (nature.contains(Dialect.VDM_RT.name()
+									.replace("_", "")
+									.toLowerCase()))
+								dialect = Dialect.VDM_RT;
+							else if (nature.contains(Dialect.VDM_SL.name()
+									.replace("_", "")
+									.toLowerCase()))
+								dialect = Dialect.VDM_SL;
+
+							extension = dialect.name()
+									.replace("_", "")
+									.toLowerCase();
+							try
+							{
+								if (useIo)
+									if (dialect == Dialect.VDM_SL)
+										copyFile(libFolder,
+												"includes/lib/sl/IO.vdmsl",
+												"IO." + extension);
+									else
+										copyFile(libFolder,
+												"includes/lib/pp/IO.vdmpp",
+												"IO." + extension);
+
+								if (useMath)
+									if (dialect == Dialect.VDM_SL)
+										copyFile(libFolder,
+												"includes/lib/sl/MATH.vdmsl",
+												"MATH." + extension);
+									else
+										copyFile(libFolder,
+												"includes/lib/pp/MATH.vdmpp",
+												"MATH." + extension);
+
+								if (useUtil)
+									if (dialect == Dialect.VDM_SL)
+										copyFile(libFolder,
+												"includes/lib/sl/VDMUtil.vdmsl",
+												"VDMUtil." + extension);
+									else
+										copyFile(libFolder,
+												"includes/lib/pp/VDMUtil.vdmpp",
+												"VDMUtil." + extension);
+
+							} catch (IOException e)
+							{
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
+							prj.refreshLocal(IResource.DEPTH_INFINITE, null);
 						}
-
-						prj.refreshLocal(IResource.DEPTH_INFINITE, null);
 					}
 				}
 
@@ -138,8 +160,8 @@ public class CreateVdmProjectWizard extends BasicNewProjectResourceWizard
 		return ok;
 	}
 
-	private static void  copyFile(File libFolder, String sourceLocation, String newName)
-			throws IOException
+	private static void copyFile(File libFolder, String sourceLocation,
+			String newName) throws IOException
 	{
 		String io = PluginFolderInclude.readFile(VdmUIPlugin.PLUGIN_ID,
 				sourceLocation);

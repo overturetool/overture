@@ -276,16 +276,16 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 		
 		
 		//test
-		File externalFolder = new File(config.getWorkingDirectoryPath().toOSString()
-				+ File.separatorChar + "lib" );
-	if(externalFolder.exists())
-	{
-		arguments.add("-external");
-		String externalPath = externalFolder.getAbsolutePath().replace('\\', '/');
-		if(isWindowsPlatform())
-			externalPath="/"+ externalPath;
-		arguments.add("file:"+externalPath);
-	}	
+//		File externalFolder = new File(config.getWorkingDirectoryPath().toOSString()
+//				+ File.separatorChar + "lib" );
+//	if(externalFolder.exists())
+//	{
+//		arguments.add("-external");
+//		String externalPath = externalFolder.getAbsolutePath().replace('\\', '/');
+//		if(isWindowsPlatform())
+//			externalPath="/"+ externalPath;
+//		arguments.add("file:"+externalPath);
+//	}	
 		//end test
 		// 5-n: add files to the arguments
 

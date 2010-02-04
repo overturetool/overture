@@ -18,7 +18,7 @@
          value="org.overture.ide.vdmpp.core.nature">
       </filter>
          <menu
-               
+               icon="icons/cview16/po_tsk.png"
                id="org.overture.ide.plugins.poviewer.menuMain"
                label="Proof Obligations"
                path="additions">
@@ -28,12 +28,13 @@
          </menu>
          
           <action
-               class="org.overture.ide.plugins.poviewer.actions.ViewPosActionPp"
-               id="org.overture.ide.plugins.poviewer.actions.POViewerAction"
-               label="Generate Proof Obligations"
-               menubarPath="org.overture.ide.plugins.poviewer.menuMain/groupPOViewer"
-               enablesFor="1"
-               tooltip="Show PO's">
+                class="org.overture.ide.plugins.poviewer.actions.ViewPosActionPp"
+                enablesFor="1"
+                icon="icons/cview16/po_tsk.png"
+                id="org.overture.ide.plugins.poviewer.actions.POViewerAction"
+                label="Generate Proof Obligations"
+                menubarPath="org.overture.ide.plugins.poviewer.menuMain/groupPOViewer"
+                tooltip="Show PO&apos;s">
          </action>
          
         
@@ -53,7 +54,7 @@
          value="org.overture.ide.vdmpp.core.nature">
       </filter>
          <menu
-               
+               icon="icons/cview16/po_tsk.png"
                id="org.overture.ide.plugins.poviewer.menuMain"
                label="Proof Obligations"
                path="additions">
@@ -63,12 +64,13 @@
          </menu>
          
           <action
-               class="org.overture.ide.plugins.poviewer.actions.ViewPosActionPp"
-               id="org.overture.ide.plugins.poviewer.actions.POViewerAction"
-               label="Generate Proof Obligations"
-               menubarPath="org.overture.ide.plugins.poviewer.menuMain/groupPOViewer"
-               enablesFor="1"
-               tooltip="Show PO's">
+                class="org.overture.ide.plugins.poviewer.actions.ViewPosActionPp"
+                enablesFor="1"
+                icon="icons/cview16/po_tsk.png"
+                id="org.overture.ide.plugins.poviewer.actions.POViewerAction"
+                label="Generate Proof Obligations"
+                menubarPath="org.overture.ide.plugins.poviewer.menuMain/groupPOViewer"
+                tooltip="Show PO&apos;s">
          </action>
          
         
@@ -91,7 +93,7 @@
          value="org.overture.ide.vdmrt.core.nature">
       </filter>
          <menu
-               
+               icon="icons/cview16/po_tsk.png"
                id="org.overture.ide.plugins.poviewer.menuMain"
                label="Proof Obligations"
                path="additions">
@@ -101,12 +103,13 @@
          </menu>
          
           <action
-               class="org.overture.ide.plugins.poviewer.actions.ViewPosActionRt"
-               id="org.overture.ide.plugins.poviewer.actions.POViewerAction"
-               label="Generate Proof Obligations"
-               menubarPath="org.overture.ide.plugins.poviewer.menuMain/groupPOViewer"
-               enablesFor="1"
-               tooltip="Show PO's">
+                class="org.overture.ide.plugins.poviewer.actions.ViewPosActionRt"
+                enablesFor="1"
+                icon="icons/cview16/po_tsk.png"
+                id="org.overture.ide.plugins.poviewer.actions.POViewerAction"
+                label="Generate Proof Obligations"
+                menubarPath="org.overture.ide.plugins.poviewer.menuMain/groupPOViewer"
+                tooltip="Show PO&apos;s">
          </action>
       </objectContribution>
    </extension>
@@ -122,7 +125,7 @@
          value="org.overture.ide.vdmrt.core.nature">
       </filter>
          <menu
-               
+               icon="icons/cview16/po_tsk.png"
                id="org.overture.ide.plugins.poviewer.menuMain"
                label="Proof Obligations"
                path="additions">
@@ -132,12 +135,13 @@
          </menu>
          
           <action
-               class="org.overture.ide.plugins.poviewer.actions.ViewPosActionRt"
-               id="org.overture.ide.plugins.poviewer.actions.POViewerAction"
-               label="Generate Proof Obligations"
-               menubarPath="org.overture.ide.plugins.poviewer.menuMain/groupPOViewer"
-               enablesFor="1"
-               tooltip="Show PO's">
+                class="org.overture.ide.plugins.poviewer.actions.ViewPosActionRt"
+                enablesFor="1"
+                icon="icons/cview16/po_tsk.png"
+                id="org.overture.ide.plugins.poviewer.actions.POViewerAction"
+                label="Generate Proof Obligations"
+                menubarPath="org.overture.ide.plugins.poviewer.menuMain/groupPOViewer"
+                tooltip="Show PO&apos;s">
          </action>
       </objectContribution>
    </extension>
@@ -159,7 +163,7 @@
          value="org.overture.ide.vdmsl.core.nature">
       </filter>
          <menu
-               
+               icon="icons/cview16/po_tsk.png"
                id="org.overture.ide.plugins.poviewer.menuMain"
                label="Proof Obligations"
                path="additions">
@@ -169,12 +173,13 @@
          </menu>
          
           <action
-               class="org.overture.ide.plugins.poviewer.actions.ViewPosActionSl"
-               id="org.overture.ide.plugins.poviewer.actions.POViewerAction"
-               label="Generate Proof Obligations"
-               menubarPath="org.overture.ide.plugins.poviewer.menuMain/groupPOViewer"
-               enablesFor="1"
-               tooltip="Show PO's">
+                class="org.overture.ide.plugins.poviewer.actions.ViewPosActionSl"
+                enablesFor="1"
+                icon="icons/cview16/po_tsk.png"
+                id="org.overture.ide.plugins.poviewer.actions.POViewerAction"
+                label="Generate Proof Obligations"
+                menubarPath="org.overture.ide.plugins.poviewer.menuMain/groupPOViewer"
+                tooltip="Show PO&apos;s">
          </action>
       </objectContribution>
    </extension>
@@ -190,7 +195,7 @@
          value="org.overture.ide.vdmsl.core.nature">
       </filter>
          <menu
-               
+               icon="icons/cview16/po_tsk.png"
                id="org.overture.ide.plugins.poviewer.menuMain"
                label="Proof Obligations"
                path="additions">
@@ -200,12 +205,13 @@
          </menu>
          
           <action
-               class="org.overture.ide.plugins.poviewer.actions.ViewPosActionSl"
-               id="org.overture.ide.plugins.poviewer.actions.POViewerAction"
-               label="Generate Proof Obligations"
-               menubarPath="org.overture.ide.plugins.poviewer.menuMain/groupPOViewer"
-               enablesFor="1"
-               tooltip="Show PO's">
+                class="org.overture.ide.plugins.poviewer.actions.ViewPosActionSl"
+                enablesFor="1"
+                icon="icons/cview16/po_tsk.png"
+                id="org.overture.ide.plugins.poviewer.actions.POViewerAction"
+                label="Generate Proof Obligations"
+                menubarPath="org.overture.ide.plugins.poviewer.menuMain/groupPOViewer"
+                tooltip="Show PO&apos;s">
          </action>
       </objectContribution>
    </extension>
@@ -214,16 +220,18 @@
          point="org.eclipse.ui.views">
      
       <view
-            name="Proof Obligation View"
             category="org.overture.ide.ui.view.category"
             class="org.overture.ide.plugins.poviewer.view.PoTableView"
-            id="org.overture.ide.plugins.poviewer.views.PoTableView">
+            icon="icons/cview16/po_tsk.png"
+            id="org.overture.ide.plugins.poviewer.views.PoTableView"
+            name="Proof Obligation View">
       </view>
       <view
-            name="Proof Obligation Explorer"
             category="org.overture.ide.ui.view.category"
             class="org.overture.ide.plugins.poviewer.view.PoOverviewTableView"
-            id="org.overture.ide.plugins.poviewer.views.PoOverviewTableView">
+            icon="icons/cview16/po_tsk.png"
+            id="org.overture.ide.plugins.poviewer.views.PoOverviewTableView"
+            name="Proof Obligation Explorer">
       </view>
    
      
@@ -232,6 +240,7 @@
       point="org.eclipse.ui.perspectives">
    <perspective
          class="org.overture.ide.plugins.poviewer.ProofObligationPerspectiveFactory"
+         icon="icons/cview16/po_tsk.png"
          id="org.overture.ide.plugins.poviewer.perspective"
          name="Proof Obligation">
    </perspective>

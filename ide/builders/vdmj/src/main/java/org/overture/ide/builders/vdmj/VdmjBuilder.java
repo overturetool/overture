@@ -61,7 +61,7 @@ public abstract class VdmjBuilder  extends AbstractBuilder
 
 	private void addWarningMarker(IProject project,VDMWarning error)
 	{
-		FileUtility.addMarker(findIFile(project,error.location.file), error.message, error.location, IMarker.SEVERITY_ERROR,VdmjBuilderPlugin.PLUGIN_ID);
+		FileUtility.addMarker(findIFile(project,error.location.file), error.message, error.location, IMarker.SEVERITY_WARNING,VdmjBuilderPlugin.PLUGIN_ID);
 	}
 
 	/**

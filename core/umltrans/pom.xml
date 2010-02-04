@@ -52,7 +52,7 @@
         </configuration>
       </plugin>
 
-      <plugin>
+      <!-- plugin>
         <groupId>org.overturetool.tools</groupId>
         <artifactId>astgen</artifactId>
         <configuration>
@@ -63,7 +63,7 @@
 
           </top>
         </configuration>
-      </plugin>
+      </plugin-->
       
       
        <plugin>
