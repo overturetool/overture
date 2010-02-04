@@ -41,7 +41,7 @@ import org.overturetool.vdmj.types.Type;
 public class UpdatableValue extends ReferenceValue
 {
 	private static final long serialVersionUID = 1L;
-	protected final ValueListener listener;
+	public final ValueListener listener;
 
 	public static UpdatableValue factory(Value value, ValueListener listener)
 	{

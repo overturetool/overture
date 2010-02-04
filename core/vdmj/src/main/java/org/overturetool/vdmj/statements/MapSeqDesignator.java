@@ -129,12 +129,13 @@ public class MapSeqDesignator extends StateDesignator
 				ValueMap map = root.mapValue(ctxt);
 				result = map.get(index);
 
-				if (result == null)
+				if (result == null && root instanceof UpdatableValue)
 				{
 					// Assignment to a non-existent map key creates the value
 					// in order to have it updated.
 
-					result = UpdatableValue.factory(null);
+					UpdatableValue ur = (UpdatableValue)root;
+					result = UpdatableValue.factory(ur.listener);
 					map.put(index, result);
 				}
 			}
@@ -150,7 +151,8 @@ public class MapSeqDesignator extends StateDesignator
 						// Assignment to an index one greater than the length
 						// creates the value in order to have it updated.
 
-						seq.add(UpdatableValue.factory(null));
+						UpdatableValue ur = (UpdatableValue)root;
+						seq.add(UpdatableValue.factory(ur.listener));
 					}
 					else
 					{

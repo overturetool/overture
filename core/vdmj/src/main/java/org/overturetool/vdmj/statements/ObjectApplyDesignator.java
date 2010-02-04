@@ -122,7 +122,8 @@ public class ObjectApplyDesignator extends ObjectDesignator
 	{
 		try
 		{
-			Value v = object.eval(ctxt).deref();
+			Value uv = object.eval(ctxt);
+			Value v = uv.deref();
 
 			if (v instanceof MapValue)
 			{
@@ -130,9 +131,11 @@ public class ObjectApplyDesignator extends ObjectDesignator
 				Value a = args.get(0).eval(ctxt);
 				Value rv = mv.get(a);
 
-				if (rv == null)		// Not already in map
+				if (rv == null && uv instanceof UpdatableValue)
 				{
-					rv = UpdatableValue.factory(null);
+					// Not already in map - get listener from root object
+					UpdatableValue ur = (UpdatableValue)uv;
+					rv = UpdatableValue.factory(ur.listener);
 					mv.put(a, rv);
 				}
 
