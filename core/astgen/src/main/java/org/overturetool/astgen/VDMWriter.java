@@ -40,6 +40,7 @@ import org.overturetool.vdmj.types.OptionalType;
 import org.overturetool.vdmj.types.RealType;
 import org.overturetool.vdmj.types.RecordType;
 import org.overturetool.vdmj.types.SeqType;
+import org.overturetool.vdmj.types.SetType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeSet;
 
@@ -161,6 +162,11 @@ abstract public class VDMWriter extends LanguageWriter
 			{
 				return "seq of " + getVdmType(st.seqof, withOptional);
 			}
+		}
+		else if (type instanceof SetType)
+		{
+			SetType st = (SetType)type;
+			return "set of " + getVdmType(st.setof, withOptional);
 		}
 		else if (type instanceof BooleanType)
 		{

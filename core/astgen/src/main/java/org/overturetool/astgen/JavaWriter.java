@@ -42,6 +42,7 @@ import org.overturetool.vdmj.types.OptionalType;
 import org.overturetool.vdmj.types.RealType;
 import org.overturetool.vdmj.types.RecordType;
 import org.overturetool.vdmj.types.SeqType;
+import org.overturetool.vdmj.types.SetType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeSet;
 
@@ -128,16 +129,23 @@ abstract public class JavaWriter extends LanguageWriter
 			OptionalType ot = (OptionalType)type;
 			importsFor(ot.type, imports, ast);
 		}
-		else if (type.isSeq())
+		else if (type instanceof SeqType)
 		{
-			SeqType st = type.getSeq();
+			SeqType st = (SeqType)type;
 
 			if (!(st.seqof instanceof CharacterType))
 			{
-				imports.add("java.util.List");
+				imports.add("java.util.Vector");
 			}
 
 			importsFor(st.seqof, imports, ast);
+		}
+		else if (type instanceof SetType)
+		{
+			SetType st = (SetType)type;
+
+			imports.add("java.util.HashSet");
+			importsFor(st.setof, imports, ast);
 		}
 		else if (tree.kind != Kind.INTF && type instanceof InvariantType)
 		{
@@ -155,9 +163,9 @@ abstract public class JavaWriter extends LanguageWriter
 			OptionalType ot = (OptionalType)type;
 			return javaType(ot.type);
 		}
-		else if (type.isSeq())
+		else if (type instanceof SeqType)
 		{
-			SeqType st = type.getSeq();
+			SeqType st = (SeqType)type;
 
 			if (st.seqof instanceof CharacterType)
 			{
@@ -165,8 +173,15 @@ abstract public class JavaWriter extends LanguageWriter
 			}
 			else
 			{
-				return "List<" + javaType(st.seqof) + ">";
+				// HACK for VDMTools - should be List<T>
+				return "Vector<" + javaType(st.seqof) + ">";
 			}
+		}
+		else if (type instanceof SetType)
+		{
+			SetType st = (SetType)type;
+			// HACK for VDMTools - should be Set<T>
+			return "HashSet<" + javaType(st.setof) + ">";
 		}
 		else if (type instanceof BooleanType)
 		{
