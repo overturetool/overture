@@ -9,10 +9,10 @@ instance variables
 operations
 
 public FO : FOId * Coordinates * Altitude ==> FO
-FO(id,coord,alt) == 
- (id := id;
-  coord := coord;
-  alt := alt;
+FO(idarg,coordarg,altarg) == 
+ (id := idarg;
+  coord := coordarg;
+  alt := altarg;
  );
     
 public getId : () ==> FOId

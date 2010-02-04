@@ -142,3 +142,10 @@ functions
   Len(list) ==
     len list;
 
+traces
+
+TestCash: (let c in set {mk_Card(1,1,1), mk_Card(2,2,2)}
+           in
+            (Insertcard(c);
+             Validate(1111);
+             ReportIlligalCard(c)){1,5}
