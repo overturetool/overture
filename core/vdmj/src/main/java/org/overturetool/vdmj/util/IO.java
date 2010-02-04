@@ -103,7 +103,12 @@ public class IO
 		try
 		{
 			Value fval = ctxt.lookup(new LexNameToken("IO", "f", null));
-			File file = new File(stringOf(fval));
+			File file = new File(stringOf(fval).replace('/', File.separatorChar));
+			
+			File workingDirectory = new File(".");
+			if(file.getAbsolutePath().contains(new Character(File.separatorChar).toString()))
+				file = new File(workingDirectory.getParentFile(),file.getAbsolutePath());
+			System.out.println(file.getAbsolutePath());
 
 			LexTokenReader ltr = new LexTokenReader(file, Dialect.VDM_PP);
 			ExpressionReader reader = new ExpressionReader(ltr);
