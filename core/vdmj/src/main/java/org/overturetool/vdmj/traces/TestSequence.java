@@ -172,7 +172,7 @@ public class TestSequence extends Vector<CallSequence>
 
 			if (s < 2)
 			{
-				i++;	// Find another group
+				i--;	// Find another group
 			}
 			else
 			{
