@@ -166,7 +166,7 @@
 
 [element(i) | i in set numsetexpr & pred(i)]
 
-!\textrm{Typically:}£
+!\textrm{Typically:}ï¿½
 
 [element(list(i)) | i in set inds list & pred(list(i))]
 
@@ -193,7 +193,7 @@ SumSet(s) ==
   then 0
   else let e in set s
        in
-         e + Sum(s\{e})
+         e + SumSet(s\{e})
 \end{lstlisting}
 
 \subsection{From Structure to single Boolean}
