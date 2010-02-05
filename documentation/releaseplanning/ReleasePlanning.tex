@@ -130,7 +130,7 @@
 \pagestyle{fancy}
 \fancyhead{}
 \fancyhead[LO]{\leftmark}
-\fancyhead[RE]{Tutorial to Overture/VDM-RT}
+\fancyhead[RE]{Release plan Overture/DESTECS}
 \fancyhead[RO,LE]{\resizebox{0.05\textwidth}{!}{\includegraphics{OMLlogoattempt.jpg}}}
 \fancyfoot[C]{\thepage}
 
@@ -390,6 +390,56 @@ the Overture executable.
 \item Increased \LaTeX\ support in the editor such that parts outside
   the \texttt{vdm\_al} environments are highlighed as TeXClipse would
   do it. \developer{??}
+\end{enumerate}
+\end{description}
+
+\begin{description}
+\item[Release X (?):] The aim for this release is to
+  include the following features:  
+\begin{enumerate}
+\item VDM Tools
+	\begin{enumerate}
+		\item Start VDM Tools command line prompt from a Overture project. Where the prompt is a console inside Eclipse.
+		
+		\item Create a VDM Tools project file from a Overture project and launch the VDM Tools GUI.
+		
+		\item Create a number of buttons for VDM Tools code generation through the VDM Tools comman dline interface, with output in the console.
+		
+		\item Make a VDM Tools corba DBGPReader to enable a VDM Tools debugger to connect to the Overture IDE and use the basic debug facility.
+		\item Preferences for VDM Tools
+	\end{enumerate}
+
+\item Make Java code generator
+
+\item Make C code generator
+
+\item Make C++ code generator
+
+\item Make VDM Doc parser
+
+\item Make VDM ast pretty printer for math syntax
+
+\item Make VDM source format
+
+\item Coverage Editor
+
+\item DLTK replacement
+
+	\begin{enumerate}
+		\item Recreate Debugger. New debug protocol separation from VDMJC. Launch, Debug runner, 
+		\item Recreate the parser
+		\item Recreate the builder
+		\item Recreate the Editor
+		\item Recreate the outline
+		\item Recreate the package explorer
+	\end{enumerate}
+
+\item Ant scripts to build a product
+\item Tests of the plug-ins
+\item Test program which can parse/type/interpret all examples and compare results with expected.
+\item Extract VDM is not specified classes from Java implementation of external interpreter modules.
+\item Make a VDM model of Multi-core CPU distribution/scheduling.
+
 \end{enumerate}
 \end{description}
 
