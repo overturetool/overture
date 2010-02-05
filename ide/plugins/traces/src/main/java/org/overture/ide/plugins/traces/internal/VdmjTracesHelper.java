@@ -50,7 +50,7 @@ public class VdmjTracesHelper implements ITracesHelper {
 	// ClassList classes;
 	//ClassInterpreter ci;
 	String projectName;
-	final String TRACE_STORE_DIR_NAME = ".traces";
+	final String TRACE_STORE_DIR_NAME = "generated/traces";
 	IVdmProject project;
 	String nature = VdmPpProjectNature.VDM_PP_NATURE;
 	HashMap<String, TracesXmlStoreReader> classTraceReaders = new HashMap<String, TracesXmlStoreReader>();
@@ -78,7 +78,7 @@ public class VdmjTracesHelper implements ITracesHelper {
 			 dialect= Dialect.VDM_SL;
 		}
 		
-		this.projectDir = new File(project.getLocation().toFile(), TRACE_STORE_DIR_NAME);
+		this.projectDir = new File(project.getLocation().toFile(), TRACE_STORE_DIR_NAME.replace('/', File.separatorChar));
 		if (!this.projectDir.exists())
 			this.projectDir.mkdirs();
 

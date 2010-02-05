@@ -5,9 +5,20 @@
 <artifactId>core</artifactId>
 <version>2.0.0</version>
 </parent>
-<groupId>org.overturetool</groupId>
+<groupId>org.overturetool.core</groupId>
 <artifactId>stdlib</artifactId>
-<version>2.0.0</version>
+<version>2.0.1</version>
 <packaging>jar</packaging>
-<name>The VDM++ Standard Library</name>
+<name>The Overture Standard Library for CG code</name>
+
+
+<dependencies>
+	<dependency>
+		<groupId>org.overturetool.core.vdmtools</groupId>
+		<artifactId>cglib</artifactId>
+		<version>2.0.0</version>
+	</dependency>
+
+</dependencies>
+
 </project>

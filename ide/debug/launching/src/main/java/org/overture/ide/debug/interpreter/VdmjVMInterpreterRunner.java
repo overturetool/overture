@@ -390,9 +390,9 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 					"Entry class not set in launch configuration"));
 
 		String expression = buildLaunchExpression(module, debugOperation);
-		if(isWindowsPlatform())
-				return expression.replace("\"","\\\"");
-		else
+//		if(isWindowsPlatform())
+//				return expression.replace("\"","\\\"");
+//		else
 			return expression;
 	}
 	

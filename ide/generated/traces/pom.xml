@@ -14,16 +14,16 @@
   <name>
     org.overture.ide.generated.traces
   </name>
-  <version>2.0.0</version>
+  <version>2.0.1</version>
 
   <packaging>binary-plugin</packaging>
 
   <dependencies>
 
     <dependency>
-      <groupId>org.overturetool</groupId>
+      <groupId>org.overturetool.core</groupId>
       <artifactId>traces</artifactId>
-      <version>2.0.0</version>
+      <version>2.0.1</version>
     </dependency>
 
   </dependencies>
