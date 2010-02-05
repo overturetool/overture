@@ -248,21 +248,18 @@ public class FunctionValue extends Value
 
 		if (self != null)
 		{
-			evalContext = new ObjectContext(from,
-				name + Utils.listToString("(", paramPatterns, ", ", ")"),
-				freeVariables, ctxt, self);
+			evalContext = new ObjectContext(
+				from, toTitle(), freeVariables, ctxt, self);
 		}
 		else if (classdef != null)
 		{
-			evalContext = new ClassContext(from,
-				name + Utils.listToString("(", paramPatterns, ", ", ")"),
-				freeVariables, ctxt, classdef);
+			evalContext = new ClassContext(
+				from, toTitle(), freeVariables, ctxt, classdef);
 		}
 		else
 		{
-			evalContext = new StateContext(from,
-				name + Utils.listToString("(", paramPatterns, ", ", ")"),
-				freeVariables, ctxt, sctxt);
+			evalContext = new StateContext(
+				from, toTitle(), freeVariables, ctxt, sctxt);
 		}
 
 		if (typeValues != null)
@@ -460,5 +457,11 @@ public class FunctionValue extends Value
 		return new FunctionValue(location, name, type,
 			paramPatternList, body, precondition, postcondition,
 			freeVariables, checkInvariants);
+	}
+
+	public String toTitle()
+	{
+		PatternList paramPatterns = paramPatternList.get(0);
+		return name + Utils.listToString("(", paramPatterns, ", ", ")");
 	}
 }

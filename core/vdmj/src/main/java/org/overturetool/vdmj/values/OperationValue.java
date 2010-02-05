@@ -233,21 +233,15 @@ public class OperationValue extends Value
 
 		if (self != null)
 		{
-			argContext = new ObjectContext(from, name.name
-				+ Utils.listToString("(", paramPatterns, ", ", ")"), ctxt,
-				self);
+			argContext = new ObjectContext(from, toTitle(), ctxt, self);
 		}
 		else if (classdef != null)
 		{
-			argContext = new ClassContext(from, name.name
-				+ Utils.listToString("(", paramPatterns, ", ", ")"), ctxt,
-				classdef);
+			argContext = new ClassContext(from, toTitle(), ctxt, classdef);
 		}
 		else
 		{
-			argContext = new StateContext(from, name.name
-				+ Utils.listToString("(", paramPatterns, ", ", ")"), ctxt,
-				stateContext);
+			argContext = new StateContext(from, toTitle(), ctxt, stateContext);
 		}
 
 		req(logreq);
@@ -722,5 +716,10 @@ public class OperationValue extends Value
 	public synchronized CPUValue getCPU()
 	{
 		return self == null ? CPUClassDefinition.virtualCPU : self.getCPU();
+	}
+
+	public String toTitle()
+	{
+		return name.name + Utils.listToString("(", paramPatterns, ", ", ")");
 	}
 }

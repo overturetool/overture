@@ -36,6 +36,7 @@ import org.overturetool.vdmj.types.UnknownType;
 import org.overturetool.vdmj.util.IO;
 import org.overturetool.vdmj.util.MATH;
 import org.overturetool.vdmj.util.VDMUtil;
+import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.Value;
 
 public class NotYetSpecifiedExpression extends Expression
@@ -69,6 +70,16 @@ public class NotYetSpecifiedExpression extends Expression
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);
+
+		ObjectValue self = ctxt.getSelf();
+
+		if (self != null)
+		{
+			if (self.hasDelegate())
+			{
+				return self.invokeDelegate(ctxt);
+			}
+		}
 
 		if (location.module.equals("IO"))
 		{

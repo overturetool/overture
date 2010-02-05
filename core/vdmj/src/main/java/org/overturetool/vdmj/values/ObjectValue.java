@@ -27,12 +27,20 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.overturetool.vdmj.definitions.CPUClassDefinition;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.InternalException;
+import org.overturetool.vdmj.patterns.IdentifierPattern;
+import org.overturetool.vdmj.patterns.Pattern;
+import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.types.ClassType;
@@ -53,6 +61,12 @@ public class ObjectValue extends Value
 	public final List<ObjectValue> superobjects;
 
 	private CPUValue CPU = null;
+
+	private static boolean delegateChecked = false;
+	private static Class<?> delegateClass = null;
+	private Object delegateObject = null;
+	private static Map<String, Method> delegateMethods = null;
+	private static Map<String, LexNameList> delegateArgs = null;
 
 	public ObjectValue(ClassType type,
 		NameValuePairMap members, List<ObjectValue> superobjects)
@@ -423,5 +437,164 @@ public class ObjectValue extends Value
 	public synchronized CPUValue getCPU()
 	{
 		return CPU == null ? CPUClassDefinition.virtualCPU : CPU;
+	}
+
+	public boolean hasDelegate()
+	{
+		if (!delegateChecked)
+		{
+			delegateChecked = true;
+
+			try
+			{
+				String classname = type.name.name.replace('_', '.');
+				delegateClass = ClassLoader.getSystemClassLoader().loadClass(classname);
+				delegateMethods = new HashMap<String, Method>();
+				delegateArgs = new HashMap<String, LexNameList>();
+			}
+			catch (ClassNotFoundException e)
+			{
+				return false;	// Fine
+			}
+		}
+
+		if (delegateClass != null && delegateObject == null)
+		{
+			try
+			{
+				delegateObject = delegateClass.newInstance();
+			}
+			catch (InstantiationException e)
+			{
+				throw new InternalException(54,
+					"Cannot instantiate native object: " + e.getMessage());
+			}
+			catch (IllegalAccessException e)
+			{
+				throw new InternalException(55,
+					"Cannot access native object: " + e.getMessage());
+			}
+		}
+
+		return delegateObject != null;
+	}
+
+	public Value invokeDelegate(Context ctxt)
+	{
+		Method m = delegateMethods.get(ctxt.title);
+
+		if (m == null)
+		{
+			PatternList plist = null;
+			String name = null;
+
+			for (NameValuePair nvp: members.asList())
+			{
+				Value deref = nvp.value.deref();
+
+	 			if (deref instanceof OperationValue)
+	 			{
+	 				OperationValue ov = (OperationValue)deref;
+
+	 				if (ov.toTitle().equals(ctxt.title))
+	 				{
+	 					plist = ov.paramPatterns;
+	 					name = ov.name.name;
+	 					break;
+	 				}
+	 			}
+	 			else if (deref instanceof FunctionValue)
+	 			{
+	 				FunctionValue fv = (FunctionValue)deref;
+
+	 				if (fv.toTitle().equals(ctxt.title))
+	 				{
+	 					plist = fv.paramPatternList.get(0);
+	 					name = fv.name;
+	 					break;
+	 				}
+	 			}
+			}
+
+			LexNameList anames = new LexNameList();
+			List<Class<?>> ptypes = new Vector<Class<?>>();
+
+			if (plist != null)
+			{
+				for (Pattern p: plist)
+				{
+					if (p instanceof IdentifierPattern)
+					{
+						IdentifierPattern ip = (IdentifierPattern)p;
+						anames.add(ip.name);
+						ptypes.add(Value.class);
+					}
+					else
+					{
+						throw new InternalException(56,
+							"Native method cannot use pattern arguments: " + ctxt.title);
+					}
+				}
+
+				delegateArgs.put(ctxt.title, anames);
+			}
+			else
+			{
+				throw new InternalException(57, "Native member not found: " + ctxt.title);
+			}
+
+			try
+			{
+				Class<?>[] array = new Class<?>[0];
+				m = delegateClass.getMethod(name, ptypes.toArray(array));
+
+				if (!m.getReturnType().equals(Value.class))
+				{
+					throw new InternalException(58,
+						"Native method does not return Value: " + m);
+				}
+			}
+			catch (SecurityException e)
+			{
+				throw new InternalException(60,
+					"Cannot access native method: " + e.getMessage());
+			}
+			catch (NoSuchMethodException e)
+			{
+				throw new InternalException(61,
+					"Cannot find native method: " + e.getMessage());
+			}
+
+			delegateMethods.put(ctxt.title, m);
+		}
+
+		LexNameList anames = delegateArgs.get(ctxt.title);
+		Object[] avals = new Object[anames.size()];
+		int a = 0;
+
+		for (LexNameToken arg: anames)
+		{
+			avals[a++] = ctxt.get(arg);
+		}
+
+		try
+		{
+			return (Value)m.invoke(delegateObject, avals);
+		}
+		catch (IllegalArgumentException e)
+		{
+			throw new InternalException(62,
+				"Cannot invoke native method: " + e.getMessage());
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new InternalException(62,
+				"Cannot invoke native method: " + e.getMessage());
+		}
+		catch (InvocationTargetException e)
+		{
+			throw new InternalException(59,
+				"Failed in native method: " + e.getTargetException().getMessage());
+		}
 	}
 }

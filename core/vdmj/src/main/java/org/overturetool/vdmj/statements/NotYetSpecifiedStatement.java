@@ -35,6 +35,7 @@ import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.UnknownType;
 import org.overturetool.vdmj.util.IO;
 import org.overturetool.vdmj.util.MATH;
+import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.Value;
 
 
@@ -69,6 +70,16 @@ public class NotYetSpecifiedStatement extends Statement
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);
+
+		ObjectValue self = ctxt.getSelf();
+
+		if (self != null)
+		{
+			if (self.hasDelegate())
+			{
+				return self.invokeDelegate(ctxt);
+			}
+		}
 
 		if (location.module.equals("CPU"))
 		{
