@@ -1,0 +1,31 @@
+\section{The Test Module}
+
+\begin{vdm_al}
+module Test
+
+imports 
+from AST all,
+from STATSEM all,
+from DYNSEM all
+ 
+exports all
+definitions 
+
+values 
+
+  binexpr: AST`Expr = 
+           mk_AST`BinaryExpr(mk_AST`IntVal(4),
+                             <Add>,
+                             mk_AST`IntVal(5))
+functions
+
+RunTypeCheck: () -> bool * [AST`Type]
+RunTypeCheck() ==
+  STATSEM`wf_Expr(binexpr,{|->});
+  
+RunEval: () -> AST`Value
+RunEval() ==
+  DYNSEM`EvalExpr(binexpr,{|->})
+  
+end Test
+\end{vdm_al}
