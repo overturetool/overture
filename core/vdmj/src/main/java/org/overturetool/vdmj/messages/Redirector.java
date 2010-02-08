@@ -53,4 +53,12 @@ abstract public class Redirector extends PrintWriter
 		print(line + "\n");
 		flush();
 	}
+
+	@Override
+	public PrintWriter printf(String format, Object ... args)
+	{
+		print(String.format(format, args));
+		flush();
+		return this;
+	}
 }
