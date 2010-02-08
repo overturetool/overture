@@ -104,7 +104,7 @@ public class IO
 		{
 			Value fval = ctxt.lookup(new LexNameToken("IO", "f", null));
 			File file = new File(stringOf(fval).replace('/', File.separatorChar));
-			
+
 			File workingDirectory = new File(".");
 			if(file.getAbsolutePath().contains(new Character(File.separatorChar).toString()))
 				file = new File(workingDirectory.getParentFile(),file.getAbsolutePath());
@@ -225,7 +225,7 @@ public class IO
 	public static Value print(Context ctxt)
 	{
 		Value v = ctxt.lookup(new LexNameToken("IO", "arg", null));
-		System.out.printf("%s", v);
+		Console.out.printf("%s", v);
 		return new VoidValue();
 	}
 
@@ -238,7 +238,7 @@ public class IO
 		Value vs = ctxt.lookup(new LexNameToken("IO", "args", null));
 		ValueList values = vs.seqValue(ctxt);
 
-		System.out.printf(format, values.toArray());
+		Console.out.printf(format, values.toArray());
 		return new VoidValue();
 	}
 }

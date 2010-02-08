@@ -109,6 +109,7 @@ public class HistoryExpression extends Expression
     			}
     		}
 
+    		location.hit();
     		return new IntegerValue(result);
 		}
 		catch (ValueException e)
