@@ -226,6 +226,7 @@ public class IO
 	{
 		Value v = ctxt.lookup(new LexNameToken("IO", "arg", null));
 		Console.out.printf("%s", v);
+		Console.out.flush();
 		return new VoidValue();
 	}
 
@@ -239,6 +240,7 @@ public class IO
 		ValueList values = vs.seqValue(ctxt);
 
 		Console.out.printf(format, values.toArray());
+		Console.out.flush();
 		return new VoidValue();
 	}
 }
