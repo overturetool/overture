@@ -97,6 +97,11 @@ The following operations and functions provide auxiliary functionality of variou
     cards := cards munion {cId |-> ch}
   pre cId not in set dom cards;
 
+  public RemoveCard : Card`CardId ==> ()
+  RemoveCard(cId) ==
+    cards := {cId} <-: cards
+  pre cId in set dom cards;
+
 functions
   TransactionsInvariant: seq of Transaction +> bool
   TransactionsInvariant(ts) ==
@@ -120,8 +125,5 @@ The transactions invariant first computes all dates in the sequence of transacti
 end Account
 \end{vdm_al}
 
-The table below presents test coverage information for the Account class.
-
-Account
 
 

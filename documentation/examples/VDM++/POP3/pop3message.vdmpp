@@ -1,3 +1,5 @@
+\section{The POP3Message Class}
+
 \begin{vdm_al}
 class POP3Message
 

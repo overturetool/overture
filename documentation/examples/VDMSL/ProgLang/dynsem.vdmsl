@@ -123,7 +123,7 @@ contains the updated global variables.
   pre pre_EvalStmt(repeat, denv) and
       pre_EvalExpr(until, EvalStmt(repeat, denv));
 \end{vdm_al}
-
+ 
 Note that it is impossible to write a measure for this function bacause this 
 corresponds to the halting problem.
 

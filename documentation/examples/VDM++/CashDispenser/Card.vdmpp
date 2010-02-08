@@ -1,6 +1,8 @@
 \section{The Class Card}
 
-This class models physical cards. Each card has a code, a card id and an account id stored on it. The class provides operations to create a card and to read information stored on a card.
+This class models physical cards. Each card has a code, a card id and
+an account id stored on it. The class provides operations to create a
+card and to read information stored on a card.
 
 \begin{vdm_al}
 class Card
@@ -37,7 +39,5 @@ operations
 end Card
 \end{vdm_al}
 
-The table below presents test coverage information for the Card class.
 
-Card
 

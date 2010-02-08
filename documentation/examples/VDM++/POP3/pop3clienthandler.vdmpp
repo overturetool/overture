@@ -6,14 +6,14 @@ class POP3ClientHandler
 types
 \end{vdm_al}
 
-\begin{vdm_al}--[States]
+\begin{vdm_al}
 types
 
 ServerState = <Authorization> | <Transaction> | <Update>;
 
 \end{vdm_al}
 
-\begin{vdm_al}--[Values1]
+\begin{vdm_al}
 values
 
 unknownMessageMsg: seq of char = "No such message";
@@ -31,7 +31,7 @@ quitMsg          : seq of char = "Quitting POP3 Server";
 submitPasswordMsg: seq of char = "Enter password";
 \end{vdm_al}
 
-\begin{vdm_al}--[Instvars1]
+\begin{vdm_al}
 instance variables
   ss    : ServerState;
   parent: POP3Server;
@@ -45,7 +45,7 @@ instance variables
 
 \end{vdm_al}
 
-\begin{vdm_al}--[POP3ClientHandler]
+\begin{vdm_al}
 operations
 
 public POP3ClientHandler: POP3Server * MessageChannel ==> POP3ClientHandler
@@ -64,7 +64,7 @@ POP3ClientHandler(nparent, nch) ==
 ReceiveCommand: POP3Types`ClientCommand 
                 ==> POP3Types`ServerResponse
 ReceiveCommand(c) ==
-  let response = --ignore
+  let response = 
     cases c:
       mk_POP3Types`QUIT()    -> ReceiveQUIT(c), 
       mk_POP3Types`STAT()    -> ReceiveSTAT(c), 
@@ -78,12 +78,12 @@ ReceiveCommand(c) ==
       mk_POP3Types`USER(-)   -> ReceiveUSER(c), 
       mk_POP3Types`PASS(-)   -> ReceivePASS(c)
     end
-  in                           --ignore
-  ( if is_POP3Types`USER(c)    --ignore
-    then lastWasUser := true   --ignore
-    else lastWasUser := false; --ignore
-    return response            --ignore
-  );                           --ignore
+  in                           
+  ( if is_POP3Types`USER(c)    
+    then lastWasUser := true   
+    else lastWasUser := false; 
+    return response            
+  );                          
 
 \end{vdm_al}
 
@@ -218,7 +218,7 @@ Card(s) ==
 
 \end{vdm_al}
 
-\begin{vdm_al}--[ReceiveRETR]
+\begin{vdm_al}
 operations
 
 ReceiveRETR: POP3Types`RETR ==> POP3Types`ServerResponse
@@ -275,9 +275,10 @@ ReceiveRSET: POP3Types`RSET ==> POP3Types`ServerResponse
 ReceiveRSET(-) ==
   if ss = <Transaction>
   then ( parent.ResetDeletedMessages(user);
-         return mk_POP3Types`OkResponse("maildrop has " ^ 
-                                        int2string(parent.GetNumberOfMessages(user))^
-                                        " messages")
+         return mk_POP3Types`OkResponse(
+                   "maildrop has " ^ 
+                   int2string(parent.GetNumberOfMessages(user))^
+                   " messages")
        )
   else return mk_POP3Types`ErrResponse(negativeStatusMsg);
 
@@ -293,8 +294,10 @@ ReceiveTOP(top) ==
                 body = parent.GetMsgBody(user, top.messageNumber),
                 lines = MakeLineSeq(body)
             in
-              return mk_POP3Types`OkResponse(header ^"\n"^
-                                             MakeMultilineResponse(lines(1,...,top.numLines)))
+              return mk_POP3Types`OkResponse(
+                        header ^"\n"^
+                        MakeMultilineResponse(lines(1,...,
+                                              top.numLines)))
        else return mk_POP3Types`ErrResponse(unknownMessageMsg)
   else return mk_POP3Types`ErrResponse(negativeStatusMsg);
 \end{vdm_al}
@@ -312,7 +315,7 @@ ReceiveUIDL(uidl) ==
          -- allow viewing of a specific message's uidl if the message
          -- is marked as deleted
        then return mk_POP3Types`OkResponse(parent.GetUidl(user, 
-                                                            uidl.messageNumber))
+                                                          uidl.messageNumber))
        else return mk_POP3Types`ErrResponse(unknownMessageMsg)
   else return mk_POP3Types`ErrResponse(negativeStatusMsg);
 
@@ -345,13 +348,6 @@ ReceivePASS(pass) ==
        )
   else return mk_POP3Types`ErrResponse(negativeStatusMsg);
 \end{vdm_al}
-
-%\begin{vdm_al}
-%--ReceiveAPOP : POP3Types`APOP ==> POP3Types`ServerResponse
-%--ReceiveAPOP(-) ==
-%--  is not yet specified;
-%
-%\end{vdm_al}
 
 \begin{vdm_al}
 functions
@@ -397,7 +393,7 @@ Id(n) == n;
 
 \end{vdm_al}
 
-\begin{vdm_al}--[ClientHandlerThread]
+\begin{vdm_al}
 thread
 ( dcl cmd: POP3Types`ClientCommand;
   id := threadid;

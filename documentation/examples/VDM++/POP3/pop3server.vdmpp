@@ -11,12 +11,12 @@ public MessageInfo :: index : nat
                       size  : nat;
 \end{vdm_al}
 
-\begin{vdm_al}--[connChannel]
+\begin{vdm_al}
 instance variables
   connChannel: MessageChannelBuffer;
 \end{vdm_al}
 
-\begin{vdm_al}--[ServerInstvars]
+\begin{vdm_al}
 instance variables
   maildrop      : MailDrop;
   passwords     : map POP3Types`UserName to 
@@ -24,7 +24,9 @@ instance variables
   locks         : map ClientHandlerId to 
                   POP3Types`UserName;
   serverStarted : bool := false;
-
+inv dom passwords = dom maildrop and
+    rng locks subset dom maildrop;
+ 
 types
 
 public MailDrop = map POP3Types`UserName to MailBox;
@@ -57,7 +59,7 @@ IsLocked(user) ==
 
 \end{vdm_al}
 
-\begin{vdm_al}--[MailDropAccess1]
+\begin{vdm_al}
 operations
 
 SetUserMessages: POP3Types`UserName * seq of POP3Message 
@@ -66,13 +68,13 @@ SetUserMessages(user, newMsgs) ==
   maildrop(user) := mu(maildrop(user), msgs |-> newMsgs);
 \end{vdm_al}
 
-\begin{vdm_al}--[MailDropAccess2]
+\begin{vdm_al}
 GetUserMail: POP3Types`UserName ==> MailBox
 GetUserMail(user) ==
   return maildrop(user);
 \end{vdm_al}
 
-\begin{vdm_al}--[MailDropSync]
+\begin{vdm_al}
 sync
   mutex(SetUserMessages);
   mutex(SetUserMessages, GetUserMail)
@@ -103,7 +105,8 @@ RemoveDeletedMessages(user) ==
 public AcquireLock: ClientHandlerId * POP3Types`UserName ==> ()
 AcquireLock (clId, user) ==
   locks := locks ++ { clId |-> user}
-pre clId not in set dom locks;
+pre clId not in set dom locks and
+    user in set dom maildrop;
 
 \end{vdm_al}
 
@@ -116,7 +119,7 @@ pre clId in set dom locks;
 
 \end{vdm_al}
 
-\begin{vdm_al}--[CreateClientHandler]
+\begin{vdm_al}
 CreateClientHandler: MessageChannel ==> ()
 CreateClientHandler(mc) ==
   start(new POP3ClientHandler(self, mc));
@@ -124,8 +127,6 @@ CreateClientHandler(mc) ==
 \end{vdm_al}
 
 \begin{vdm_al}
-operations
-
 public IsMessageNumber: POP3Types`UserName * nat ==> bool
 IsMessageNumber(user, index) ==
   let mb = GetUserMessages(user) 
@@ -183,7 +184,7 @@ public ResetDeletedMessages: POP3Types`UserName ==> ()
 ResetDeletedMessages(user) ==
   let oldMsgs = GetUserMessages(user),
       newMsgs = [ oldMsgs(i).Undelete() 
-                  | i in set inds oldMsgs ]
+                | i in set inds oldMsgs ]
   in
     SetUserMessages(user, newMsgs)
 pre user in set dom maildrop;
@@ -275,7 +276,7 @@ Len(l) ==
 
 \end{vdm_al}
 
-\begin{vdm_al}--[ServerThread]
+\begin{vdm_al}
 thread
 
 while true do

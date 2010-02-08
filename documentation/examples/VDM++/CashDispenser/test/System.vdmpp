@@ -91,7 +91,12 @@ traces
         in
           let p in set {123456,123457,123458,123459,123460,123461,123462}
           in
-            ((t1.InsertCard(c); t2.InsertCard(c);t1.Validate(p);t1.MakeWithdrawal(1000);
-             t2.MakeWithdrawal(1000))|(t1.Validate(p);t1.MakeWithdrawal(3000)) )
+            ((t1.InsertCard(c); 
+              t2.InsertCard(c);
+              t1.Validate(p);
+              t1.MakeWithdrawal(1000);
+              t2.MakeWithdrawal(1000))|
+             (t1.Validate(p);
+              t1.MakeWithdrawal(3000)) )
 end System
 \end{vdm_al}

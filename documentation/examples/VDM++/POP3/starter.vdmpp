@@ -1,3 +1,6 @@
+\section{The Starter Class}
+
+\begin{vdm_al}
 class Starter
 
 operations
@@ -5,3 +8,4 @@ public Start : POP3Server ==> ()
 Start(server) == start(server);
 
 end Starter
+\end{vdm_al}

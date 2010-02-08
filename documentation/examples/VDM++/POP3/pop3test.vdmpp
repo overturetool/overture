@@ -17,11 +17,21 @@ passwords : seq of POP3Types`Password =
     "lecram"];
 
 headers : seq of seq of char = 
-  ["From paul@mail.domain\nSubject Subject 1 \nDate Fri, 19 Oct 2001 10:52:58 -0500",
-   "From peter@mail.domain\nSubject Subject 2 \nDate Sat, 20 Oct 2001 10:52:58 -0500",
-   "From nico@mail.domain\nSubject Subject 3 \nDate Sun, 21 Oct 2001 10:52:58 -0500",
-   "From john@mail.domain\nSubject Subject 4 \nDate Mon, 22 Oct 2001 10:52:58 -0500",
-   "From marcel@mail.domain\nSubject Subject 5 \nDate Tues, 23 Oct 2001 10:52:58 -0500"];
+  ["From paul@mail.domain\n" ^
+   "Subject Subject 1 \n"^
+   "Date Fri, 19 Oct 2001 10:52:58 -0500",
+   "From peter@mail.domain\n" ^
+   "Subject Subject 2 \n"^
+   "Date Sat, 20 Oct 2001 10:52:58 -0500",
+   "From nico@mail.domain\n" ^
+   "Subject Subject 3 \n"^
+   "Date Sun, 21 Oct 2001 10:52:58 -0500",
+   "From john@mail.domain\n" ^
+   "Subject Subject 4 \n"^
+   "Date Mon, 22 Oct 2001 10:52:58 -0500",
+   "From marcel@mail.domain\n" ^
+   "Subject Subject 5 \n"^
+   "Date Tues, 23 Oct 2001 10:52:58 -0500"];
 
 bodies : seq of seq of char = 
   ["Greetings from Paul",

@@ -12,6 +12,9 @@ instance variables
   accounts      : map Account`AccountId to Account := {|->};
   numberOfTries : map Card`CardId to nat := {|->};
   illegalCards  : set of Card`CardId := {};
+inv dom numberOfTries union illegalCards subset 
+    dunion {acc.GetCardIds() | acc in set rng accounts};
+
   letterbox     : Letterbox;
   clock         : Clock;
 \end{vdm_al}
@@ -95,9 +98,11 @@ The two operations below are used to update the central resource.
 \begin{vdm_al}
   public AddAccount : Account`AccountId * Account ==> ()
   AddAccount(accId,acc) ==
-    (numberOfTries := numberOfTries ++
+    atomic
+    (accounts := accounts ++ {accId |-> acc};
+     numberOfTries := numberOfTries ++
                       {cId |-> 0 | cId in set acc.GetCardIds()};
-     accounts := accounts ++ {accId |-> acc})
+     )
   pre accId not in set dom accounts;
 
   public AddIllegalCard : Card`CardId ==> ()
@@ -107,7 +112,5 @@ The two operations below are used to update the central resource.
 end CentralResource
 \end{vdm_al}
 
-The table below presents test coverage information for the CentralResource class.
 
-CentralResource
 

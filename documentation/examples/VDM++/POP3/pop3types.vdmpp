@@ -5,7 +5,7 @@ class POP3Types
 types
 \end{vdm_al}
 
-\begin{vdm_al}--[ClientCommand]
+\begin{vdm_al}
 types
 
 public ClientCommand = StandardClientCommand | 
@@ -32,7 +32,7 @@ public LIST :: messageNumber : [nat];
 
 \end{vdm_al}
 
-\begin{vdm_al}--[RETR]
+\begin{vdm_al}
 public RETR :: messageNumber : nat;
 \end{vdm_al}
 
@@ -84,7 +84,7 @@ public Password = seq of char;
 
 \end{vdm_al}
 
-\begin{vdm_al}--[ServerResponse]
+\begin{vdm_al}
 public ServerResponse = OkResponse | ErrResponse;
 public OkResponse ::  data : seq of char;
 public ErrResponse :: data : seq of char;
