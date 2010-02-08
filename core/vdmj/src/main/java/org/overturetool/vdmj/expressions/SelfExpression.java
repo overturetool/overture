@@ -48,6 +48,7 @@ public class SelfExpression extends Expression
 	@Override
 	public Value eval(Context ctxt)
 	{
+		location.hit();
 		return ctxt.lookup(name);
 	}
 

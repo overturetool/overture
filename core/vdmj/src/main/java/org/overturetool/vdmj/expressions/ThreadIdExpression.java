@@ -45,7 +45,7 @@ public class ThreadIdExpression extends Expression
 	@Override
 	public Value eval(Context ctxt)
 	{
-		// long tid = Thread.currentThread().getId();
+		location.hit();
 		return new IntegerValue(ctxt.threadState.threadId);
 	}
 
