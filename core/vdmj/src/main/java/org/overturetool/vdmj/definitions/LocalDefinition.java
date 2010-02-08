@@ -44,6 +44,7 @@ public class LocalDefinition extends Definition
 {
 	private static final long serialVersionUID = 1L;
 	public Type type;
+	private boolean valueDefinition = false;
 
 	public LocalDefinition(LexLocation location,
 		LexNameToken name, NameScope scope, Type type)
@@ -112,5 +113,16 @@ public class LocalDefinition extends Definition
 	public boolean isUpdatable()
 	{
 		return nameScope.matches(NameScope.STATE);
+	}
+
+	public void setValueDefinition()
+	{
+		valueDefinition  = true;
+	}
+
+	@Override
+	public boolean isValueDefinition()
+	{
+		return valueDefinition;
 	}
 }

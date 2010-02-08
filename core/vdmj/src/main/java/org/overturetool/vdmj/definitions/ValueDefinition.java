@@ -149,7 +149,9 @@ public class ValueDefinition extends Definition
 		DefinitionList newdefs = pattern.getDefinitions(type, nameScope);
 
 		// The untyped definitions may have had "used" markers, so we copy
-		// those into the new typed definitions, lest we get warnings
+		// those into the new typed definitions, lest we get warnings. We
+		// also mark the local definitions as "ValueDefintions" (proxies),
+		// so that classes can be constructed correctly (values are statics).
 
 		for (Definition d: newdefs)
 		{
@@ -165,6 +167,9 @@ public class ValueDefinition extends Definition
 					break;
 				}
 			}
+
+			LocalDefinition ld = (LocalDefinition)d;
+			ld.setValueDefinition();
 		}
 
 		defs = newdefs;

@@ -1026,8 +1026,6 @@ public class ClassDefinition extends Definition
 			{
 				// Values are implicitly static, but NOT updatable
 
-				// NameValuePairList nvl = d.getNamedValues(initCtxt);
-
 				switch (d.accessSpecifier.access)
 				{
 					case PRIVATE:
@@ -1045,8 +1043,6 @@ public class ClassDefinition extends Definition
 			else if (d.isStatic() && d.isInstanceVariable())
 			{
 				// Static instance variables are updatable
-
-				// nvl = d.getNamedValues(initCtxt).getUpdatable(invlistener);
 
 				switch (d.accessSpecifier.access)
 				{
