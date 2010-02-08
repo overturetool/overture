@@ -1216,7 +1216,7 @@ public class DBGPReader
 			status = DBGPStatus.RUNNING;
 			statusReason = DBGPReason.OK;
 			theAnswer = interpreter.execute(expression, this);
-			stdout(theAnswer.toString());
+			stdout("\nResult: "+theAnswer.toString());
 			statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
 		}
 		catch (ContextException e)
