@@ -29,7 +29,7 @@ import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.typechecker.TypeComparator;
 import org.overturetool.vdmj.types.TypeList;
 
-public class LexNameToken extends LexToken implements Serializable
+public class LexNameToken extends LexToken implements Serializable, Comparable<LexNameToken>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -227,5 +227,10 @@ public class LexNameToken extends LexToken implements Serializable
 		LexNameToken c = new LexNameToken(module, name, location, old, explicit);
 		c.setTypeQualifier(typeQualifier);
 		return c;
+	}
+
+	public int compareTo(LexNameToken o)
+	{
+		return toString().compareTo(o.toString());
 	}
 }
