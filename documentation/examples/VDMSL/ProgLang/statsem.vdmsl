@@ -157,7 +157,7 @@ wf_Expr(ex, senv) ==
     (is_AST`IntVal(ex))     -> mk_(true, <IntType>),
     (is_AST`Variable(ex))   -> wf_Variable(ex, senv),
     (is_AST`BinaryExpr(ex)) -> wf_BinaryExpr(ex, senv),
-    others              -> mk_(false, <IntType>)
+    others                  -> mk_(false, <IntType>)
   end;
 
 wf_Variable : AST`Variable * StatEnv -> bool * [AST`Type]

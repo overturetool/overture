@@ -1060,7 +1060,7 @@ Initially a tree is empty.  Hence, this intialized tree is an empty set whose cu
 \\
 \begin{vdm_al}
 
-STrees_IsRoot: STrees_Tree * STrees_Node -> bool
+STrees_IsRoot: set of STrees_Node * STrees_Node -> bool
 STrees_IsRoot(tree, mk_STrees_Node(dr, pr)) == 
      not STrees_IsChild(tree, mk_STrees_Node(dr, pr))
 pre mk_STrees_Node(dr, pr) in set tree;
@@ -1074,13 +1074,13 @@ STrees_IsParent(tree, node) ==
      exists child in set tree & STrees_IsParentOf(tree, node, child)
 pre node in set tree;
 
-STrees_IsChild: STrees_Tree * STrees_Node -> bool
+STrees_IsChild: set of STrees_Node * STrees_Node -> bool
 STrees_IsChild(tree, node) == 
      (exists parent in set tree & STrees_IsParentOf(tree, parent, node))
      and (exists1 parent in set tree & STrees_IsParentOf(tree, parent, node))
 pre node in set tree;
 
-STrees_IsUnique: STrees_Tree * STrees_Node -> bool
+STrees_IsUnique: set of STrees_Node * STrees_Node -> bool
 STrees_IsUnique(tree, mk_STrees_Node(data, position)) ==
      (mk_STrees_Node(data, position) in set tree) and
      (exists1 node in set tree & node.position = position);
@@ -1089,20 +1089,20 @@ STrees_IsUnique(tree, mk_STrees_Node(data, position)) ==
 \\
 \begin{vdm_al}
 
-STrees_IsParentOf: STrees_Tree * STrees_Node * STrees_Node -> bool
+STrees_IsParentOf: set of STrees_Node * STrees_Node * STrees_Node -> bool
 STrees_IsParentOf(tree, node1, node2) == 
      STrees_IsRightChildOf(tree, node2, node1) 
           or STrees_IsLeftChildOf(tree, node2, node1)
 pre node1 in set tree and node2 in set tree; 
 
-STrees_IsRightChildOf: STrees_Tree * STrees_Node * STrees_Node -> bool
+STrees_IsRightChildOf: set of STrees_Node * STrees_Node * STrees_Node -> bool
 STrees_IsRightChildOf(tree, node1, node2) ==
      let mk_STrees_Node(-, position1) = node1 in
      let mk_STrees_Node(-, position2) = node2 in
           (position1 = 2*position2 + 1)
 pre node1 in set tree and node2 in set tree;
 
-STrees_IsLeftChildOf: STrees_Tree * STrees_Node * STrees_Node -> bool
+STrees_IsLeftChildOf: set of STrees_Node * STrees_Node * STrees_Node -> bool
 STrees_IsLeftChildOf(tree, node1, node2) ==
      let mk_STrees_Node(-, position1) = node1 in
      let mk_STrees_Node(-, position2) = node2 in
