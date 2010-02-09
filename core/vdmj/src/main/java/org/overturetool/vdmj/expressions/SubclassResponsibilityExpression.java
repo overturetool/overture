@@ -39,6 +39,7 @@ public class SubclassResponsibilityExpression extends Expression
 	public SubclassResponsibilityExpression(LexLocation location)
 	{
 		super(location);
+		location.hit();		// ie. ignore coverage for these
 	}
 
 	@Override

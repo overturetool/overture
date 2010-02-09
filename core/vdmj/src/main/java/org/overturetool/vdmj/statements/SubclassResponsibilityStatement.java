@@ -38,6 +38,7 @@ public class SubclassResponsibilityStatement extends Statement
 	public SubclassResponsibilityStatement(LexLocation location)
 	{
 		super(location);
+		location.hit();		// ie. ignore coverage for these
 	}
 
 	@Override
