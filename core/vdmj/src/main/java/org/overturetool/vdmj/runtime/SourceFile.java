@@ -170,8 +170,8 @@ public class SourceFile
 		}
 
 		boolean endDocFound = false;
-		boolean inVdmAlModelTag= false;
-		
+		boolean inVdmAlModelTag = false;
+
 		for (int lnum = 1; lnum <= lines.size(); lnum++)
 		{
 			String line = lines.get(lnum - 1);
@@ -181,19 +181,25 @@ public class SourceFile
 				endDocFound = true;
 				break;
 			}
-			if(line.contains("\\begin{vdm_al}"))
-				inVdmAlModelTag=true;
-			 
-			
-			if(hasVdm_al && modelOnly && !inVdmAlModelTag)
+
+			if (line.contains("\\begin{vdm_al}"))
+			{
+				inVdmAlModelTag = true;
+			}
+
+			if (hasVdm_al && modelOnly && !inVdmAlModelTag)
+			{
 				continue;
-			
+			}
+
 			String spaced = detab(line, LexTokenReader.TABSTOP);
 			List<LexLocation> list = hits.get(lnum);
 			out.println(markup(spaced, list));
-			
-			if(line.contains("\\end{vdm_al}"))
-				inVdmAlModelTag=false;
+
+			if (line.contains("\\end{vdm_al}"))
+			{
+				inVdmAlModelTag = false;
+			}
 		}
 
 		if (!hasVdm_al)
@@ -202,7 +208,7 @@ public class SourceFile
 		}
 
 		out.println("\\bigskip");
-		out.println("\\begin{tabular}{|l|r|r|}");
+		out.println("\\begin{longtable}{|l|r|r|}");
 		out.println("\\hline");
 		out.println("Function or operation & Coverage & Calls \\\\");
 		out.println("\\hline");
@@ -230,7 +236,7 @@ public class SourceFile
 			"\\% & " + total + " \\\\");
 
 		out.println("\\hline");
-		out.println("\\end{tabular}");
+		out.println("\\end{longtable}");
 
 		if (headers || endDocFound)
 		{
