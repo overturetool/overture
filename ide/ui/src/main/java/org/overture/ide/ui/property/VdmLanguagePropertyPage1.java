@@ -189,22 +189,22 @@ public class VdmLanguagePropertyPage1 extends PropertyPage implements
 	@Override
 	public boolean performOk()
 	{
-	try
-	{
-		project.setBuilder(Release.lookup(comboBoxLanguageVersion.getText()));
-		
-		project.setDynamictypechecks(checkBoxDynamicTypeChecks.getSelection());
-		project.setInvchecks(checkBoxInvChecks.getSelection());
-		project.setPostchecks(checkBoxUsePostChecks.getSelection());
-		project.setPrechecks(checkBoxUsePreChecks.getSelection());
-		project.setSuppressWarnings(checkBoxSuppressWarnings.getSelection());
-		
-		project.typeCheck();
+		try
+		{
+			project.setBuilder(Release.lookup(comboBoxLanguageVersion.getText()));
+
+			project.setDynamictypechecks(checkBoxDynamicTypeChecks.getSelection());
+			project.setInvchecks(checkBoxInvChecks.getSelection());
+			project.setPostchecks(checkBoxUsePostChecks.getSelection());
+			project.setPrechecks(checkBoxUsePreChecks.getSelection());
+			project.setSuppressWarnings(checkBoxSuppressWarnings.getSelection());
+
+			project.typeCheck();
 		} catch (CoreException e)
-	{
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return super.performOk();
 	}
 }

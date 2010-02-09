@@ -277,24 +277,28 @@ public class VdmProject implements IVdmProject
 	private Object getBuilderArguemnt(String argumentKey) throws CoreException
 	{
 		if (hasBuilder())
-		{
-			Vector<ICommand> buildCommands = new Vector<ICommand>();
-			IProjectDescription description = project.getDescription();
-			for (ICommand command : description.getBuildSpec())
-			{
-				buildCommands.add(command);
-				if (command.getBuilderName().equals(BUILDER_ID))
-				{
-					if (command.getArguments().containsKey(argumentKey))
-					{
-						Object argumentValue = command.getArguments()
-								.get(argumentKey);
-						if (argumentValue != null)
-							return argumentValue;
-					}
-				}
+			return getBuilderArgument(project, BUILDER_ID, argumentKey);
 
+		return null;
+	}
+	public static Object getBuilderArgument(IProject project,String builderId ,String argumentKey) throws CoreException
+	{
+		Vector<ICommand> buildCommands = new Vector<ICommand>();
+		IProjectDescription description = project.getDescription();
+		for (ICommand command : description.getBuildSpec())
+		{
+			buildCommands.add(command);
+			if (command.getBuilderName().equals(builderId))
+			{
+				if (command.getArguments().containsKey(argumentKey))
+				{
+					Object argumentValue = command.getArguments()
+							.get(argumentKey);
+					if (argumentValue != null)
+						return argumentValue;
+				}
 			}
+
 		}
 		return null;
 	}

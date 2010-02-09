@@ -137,7 +137,27 @@
       </objectContribution>
       
       
-   </extension> 
+   </extension>
+ <extension
+       point="org.eclipse.ui.propertyPages">
+    <page
+          category="org.overture.ide.ui.property.vdmlanguage"
+          class="org.overture.ide.plugins.latex.properties.WorkbenchPropertyPage1"
+          icon="icons/ctool16/miktex_tsk.png"
+          id="org.overture.ide.plugins.latex.page1"
+          name="Latex">
+    </page>
+ </extension>
+ <extension
+       id="org.overture.ide.plugins.latex.builder"
+       name="Pdf Latex Builder"
+       point="org.eclipse.core.resources.builders">
+    <builder
+          callOnEmptyDelta="false"
+          hasNature="false"
+          isConfigurable="false">
+    </builder>
+ </extension> 
 
 
 

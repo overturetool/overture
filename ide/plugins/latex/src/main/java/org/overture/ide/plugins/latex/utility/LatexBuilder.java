@@ -20,6 +20,8 @@ import org.overturetool.vdmj.lex.Dialect;
 @SuppressWarnings("restriction")
 public class LatexBuilder
 {
+	
+	
 	final static String OUTPUT_FOLDER_NAME = "latex";
 	final String PROJECT_INCLUDE_MODEL_FILES = "%PROJECT_INCLUDE_MODEL_FILES";
 	final String TITLE = "%TITLE";

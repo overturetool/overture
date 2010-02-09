@@ -30,6 +30,7 @@ import org.overture.ide.ast.AstManager;
 import org.overture.ide.ast.RootNode;
 import org.overture.ide.plugins.latex.Activator;
 import org.overture.ide.plugins.latex.utility.LatexBuilder;
+import org.overture.ide.plugins.latex.utility.LatexProject;
 import org.overture.ide.plugins.latex.utility.PdfLatex;
 import org.overture.ide.plugins.latex.utility.TreeSelectionLocater;
 import org.overture.ide.utility.ConsoleWriter;
@@ -183,7 +184,7 @@ public class LatexCoverageAction implements IObjectActionDelegate
 						vdmProject.typeCheck(monitor);
 						VdmProject.waitForBuidCompletion();
 						root = AstManager.instance()
-						.getRootNode(selectedProject, natureId);
+								.getRootNode(selectedProject, natureId);
 					}
 					if (root != null && root.isChecked())
 					{
@@ -193,13 +194,13 @@ public class LatexCoverageAction implements IObjectActionDelegate
 							ClassList classlist = AstManager.instance()
 									.getRootNode(selectedProject, natureId)
 									.getClassList();
-							
+
 							ClassList classes = parseClasses(selectedProject,
 									classlist);
 
 							List<File> outputFiles = getFileChildern(new File(projectRoot,
 									"generated"));
-							
+
 							for (ClassDefinition classDefinition : classes)
 							{
 								createCoverage(latexBuilder,
@@ -216,10 +217,10 @@ public class LatexCoverageAction implements IObjectActionDelegate
 
 							List<File> outputFiles = getFileChildern(new File(projectRoot,
 									"generated"));
-							
+
 							ModuleList modules = parseModules(selectedProject,
 									modulelist);
-							
+
 							for (Module classDefinition : modules)
 							{
 								for (File moduleFile : classDefinition.files)
@@ -237,31 +238,20 @@ public class LatexCoverageAction implements IObjectActionDelegate
 							+ ".tex";
 
 					latexBuilder.saveDocument(projectRoot, documentFileName);
-
-					PdfLatex pdflatex = new PdfLatex(selectedProject,
-							outputFolder,
-							documentFileName);
-					pdflatex.start();
-
-					while (!monitor.isCanceled() && !pdflatex.isFinished)
-						Thread.sleep(500);
-
-					if (monitor.isCanceled())
-						pdflatex.kill();
-
-					PdfLatex pdflatex2 = new PdfLatex(selectedProject,
-							outputFolder,
-							documentFileName);
-					pdflatex2.start();
-
-					while (!monitor.isCanceled() && !pdflatex2.isFinished)
-						Thread.sleep(500);
-
-					if (monitor.isCanceled())
-						pdflatex2.kill();
-
-					selectedProject.refreshLocal(IResource.DEPTH_INFINITE, null);
-
+					if (!new LatexProject(selectedProject).hasDocument())
+						buildPdf(selectedProject,
+								monitor,
+								outputFolder,
+								documentFileName);
+					else
+					{
+						documentFileName =new LatexProject(selectedProject).getMainDocument(); 
+						outputFolder = new File(documentFileName);
+						buildPdf(selectedProject,
+								monitor,
+								outputFolder,
+								documentFileName);
+					}
 				} catch (Exception e)
 				{
 
@@ -283,31 +273,58 @@ public class LatexCoverageAction implements IObjectActionDelegate
 
 			}
 
+			private void buildPdf(final IProject selectedProject,
+					IProgressMonitor monitor, File outputFolder,
+					String documentFileName) throws InterruptedException,
+					CoreException
+			{
+				PdfLatex pdflatex = new PdfLatex(selectedProject,
+						outputFolder,
+						documentFileName);
+				pdflatex.start();
+
+				while (!monitor.isCanceled() && !pdflatex.isFinished)
+					Thread.sleep(500);
+
+				if (monitor.isCanceled())
+					pdflatex.kill();
+
+				PdfLatex pdflatex2 = new PdfLatex(selectedProject,
+						outputFolder,
+						documentFileName);
+				pdflatex2.start();
+
+				while (!monitor.isCanceled() && !pdflatex2.isFinished)
+					Thread.sleep(500);
+
+				if (monitor.isCanceled())
+					pdflatex2.kill();
+
+				selectedProject.refreshLocal(IResource.DEPTH_INFINITE, null);
+			}
+
 			private void createCoverage(LatexBuilder latexBuilder,
 					File outputFolderForGeneratedModelFiles,
 					List<File> outputFiles, File moduleFile)
 					throws IOException, FileNotFoundException
 			{
-				if(isStandardLibarary(moduleFile))
+				if (isStandardLibarary(moduleFile))
 					return;
 				File texFile = new File(outputFolderForGeneratedModelFiles,
-						moduleFile.getName()
-								.replace(" ", "")
-								+ ".tex");
+						moduleFile.getName().replace(" ", "") + ".tex");
 				if (texFile.exists())
 					texFile.delete();
 
 				for (int i = 0; i < outputFiles.size(); i++)
 				{
 					File file = outputFiles.get(i);
-//					System.out.println("Compare with file: "
-//							+ file.getName());
+					// System.out.println("Compare with file: "
+					// + file.getName());
 					if (file.getName().toLowerCase().endsWith(".cov")
 							&& (moduleFile.getName()).equals(getFileName(file)))
 					{
 						System.out.println("Match");
-						LexLocation.mergeHits(moduleFile,
-								file);
+						LexLocation.mergeHits(moduleFile, file);
 						outputFiles.remove(i);
 
 					}
@@ -324,11 +341,18 @@ public class LatexCoverageAction implements IObjectActionDelegate
 
 			private boolean isStandardLibarary(File moduleFile)
 			{
-				String name = moduleFile.getAbsolutePath().toLowerCase().replace('\\', '/');
-				return (name.endsWith("/lib/io.vdmpp")||name.endsWith("/lib/io.vdmrt")||name.endsWith("/lib/io.vdmsl")||
-						name.endsWith("/lib/math.vdmpp")||name.endsWith("/lib/math.vdmrt")||name.endsWith("/lib/math.vdmsl")||
-						name.endsWith("/lib/vdmutil.vdmpp")|| name.endsWith("/lib/vdmutil.vdmrt")|| name.endsWith("/lib/vdmutil.vdmsl"));
-				
+				String name = moduleFile.getAbsolutePath()
+						.toLowerCase()
+						.replace('\\', '/');
+				return (name.endsWith("/lib/io.vdmpp")
+						|| name.endsWith("/lib/io.vdmrt")
+						|| name.endsWith("/lib/io.vdmsl")
+						|| name.endsWith("/lib/math.vdmpp")
+						|| name.endsWith("/lib/math.vdmrt")
+						|| name.endsWith("/lib/math.vdmsl")
+						|| name.endsWith("/lib/vdmutil.vdmpp")
+						|| name.endsWith("/lib/vdmutil.vdmrt") || name.endsWith("/lib/vdmutil.vdmsl"));
+
 			}
 
 		};
@@ -341,12 +365,10 @@ public class LatexCoverageAction implements IObjectActionDelegate
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		expandJob.schedule(0);
 
 	}
-
-	
 
 	public static String getFileName(File file)
 	{
