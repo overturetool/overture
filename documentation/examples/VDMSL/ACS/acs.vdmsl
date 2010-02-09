@@ -326,7 +326,8 @@ qd(pes,exs) ==
                 <INFINITY>
         end;
 
-nearest_storage_building(pes:Pot_explosion_site,exs: set of Exposed_site)e:Exposed_site
+nearest_storage_building(pes:Pot_explosion_site,
+                         exs: set of Exposed_site)e:Exposed_site
 pre exists ex in set exs & is_Storage_building(ex.building.type)
 post e in set exs and
      is_Storage_building(e.building.type) and
@@ -334,7 +335,8 @@ post e in set exs and
         is_Storage_building(ex.building.type) =>
           shortest_dist(pes,e) <= shortest_dist(pes,ex);
 
-nearest_inhabited_building(pes:Pot_explosion_site,exs: set of Exposed_site)e:Exposed_site
+nearest_inhabited_building(pes:Pot_explosion_site,
+                           exs: set of Exposed_site)e:Exposed_site
 pre exists ex in set exs & ex.building.type.kind = <INHABITEDBUILDING>
 post e in set exs and
      e.building.type.kind = <INHABITEDBUILDING> and
@@ -342,7 +344,8 @@ post e in set exs and
         ex.building.type.kind = <INHABITEDBUILDING> =>
           shortest_dist(pes,e) <= shortest_dist(pes,ex);
 
-nearest_traffic_route(pes:Pot_explosion_site,exs: set of Exposed_site)e:Exposed_site
+nearest_traffic_route(pes:Pot_explosion_site,
+                      exs: set of Exposed_site)e:Exposed_site
 pre exists ex in set exs & ex.building.type.kind = <TRAFFICROUTE>
 post e in set exs and
      e.building.type.kind = <TRAFFICROUTE> and
@@ -350,7 +353,8 @@ post e in set exs and
         ex.building.type.kind = <TRAFFICROUTE> =>
           shortest_dist(pes,e) <= shortest_dist(pes,ex);
 
-nearest_process_building(pes:Pot_explosion_site,exs: set of Exposed_site)e:Exposed_site
+nearest_process_building(pes:Pot_explosion_site,
+                         exs: set of Exposed_site)e:Exposed_site
 pre exists ex in set exs & is_Process_building(ex.building.type)
 post e in set exs and
      is_Process_building(e.building.type) and

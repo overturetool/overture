@@ -1008,7 +1008,8 @@ inv tree ==
      (forall node in set tree & 
           not STrees_IsRoot(tree, node) <=> STrees_IsChild(tree, node)
           and STrees_IsUnique(tree, node)) 
-     and (tree <> {} <=> exists1 node in set tree & STrees_IsRoot(tree, node));
+     and (tree <> {} <=> exists1 node in set tree & 
+                                 STrees_IsRoot(tree, node));
 \end{vdm_al}
 {\tt STrees\_Tree} is the actual binary tree.  It is a set of nodes.  The invariant means that each node is either a child or the root but not both.  The only node not a child is the root; all other nodes must have a parent.   In addition, each node is unique with respect to position; that is, at most one node can occupy a single position.  Finally, if the tree is empty then there is no root; however, if it is not empty, then there is exactly one root.  Note that if the root's position is 1, then the second part of the invariant is unnecessary; however, if the tree is a subtree then the root's position is greater than 1 and, hence, it is possible for there to be multiple roots or no roots at all.  In that case, the second part of the invariant is necessary.    
 \\
@@ -1197,10 +1198,9 @@ pre not STrees_IsRoot(tree, current);
 
 STrees_MoveToAnscestor: STrees_Info * nat1 -> STrees_Info 
 STrees_MoveToAnscestor(treeinfo, pathlength) ==
-     if pathlength > 1 then
-          STrees_MoveToAnscestor(STrees_MoveToParent(treeinfo), pathlength - 1)
-     else 
-          STrees_MoveToParent(treeinfo)
+  if pathlength > 1 
+  then STrees_MoveToAnscestor(STrees_MoveToParent(treeinfo), pathlength - 1)
+  else STrees_MoveToParent(treeinfo)
 pre pre_STrees_MoveToParent(treeinfo);
 
 \end{vdm_al}
@@ -1210,28 +1210,30 @@ pre pre_STrees_MoveToParent(treeinfo);
 
 STrees_Root: STrees_Tree -> STrees_Node
 STrees_Root(tree) ==
-     iota root in set tree & STrees_IsRoot(tree, root)
+  iota root in set tree & STrees_IsRoot(tree, root)
 pre tree <> {};
 
 STrees_Parent: STrees_Tree * STrees_Node -> STrees_Node
 STrees_Parent(tree, node) == 
-     iota parent in set tree 
-          & STrees_IsParentOf(tree, parent, node)
+  iota parent in set tree 
+       & STrees_IsParentOf(tree, parent, node)
 pre node in set tree and not STrees_IsRoot(tree, node);
 
 STrees_LeftChild: STrees_Tree * STrees_Node -> STrees_Node
 STrees_LeftChild(tree, parent) ==
-     iota leftchild in set tree & STrees_IsLeftChildOf(tree, leftchild, parent)
+  iota leftchild in set tree & 
+       STrees_IsLeftChildOf(tree, leftchild, parent)
 pre parent in set tree and STrees_HasLeftChild(tree, parent);
 
 STrees_RightChild: STrees_Tree * STrees_Node -> STrees_Node
 STrees_RightChild(tree, parent) ==
-     iota rightchild in set tree & STrees_IsRightChildOf(tree, rightchild, parent)
+  iota rightchild in set tree & 
+       STrees_IsRightChildOf(tree, rightchild, parent)
 pre parent in set tree and STrees_HasRightChild(tree, parent); 
 
 STrees_GetNode: STrees_Tree * nat1 -> STrees_Node
 STrees_GetNode(tree, position) ==
-     iota node in set tree & node.position = position
+  iota node in set tree & node.position = position
 pre exists node in set tree & node.position = position; 
 \end{vdm_al}
 {\tt STrees\_GetNode} returns the node at position {\tt position} in the tree.
@@ -1322,24 +1324,32 @@ pre node in set tree and STrees_HasLeftChild(tree, node);
 
 STrees_Delete: STrees_Info -> STrees_Info
 STrees_Delete(mk_STrees_Info(tree, current)) ==
-     let old = STrees_Subtree(tree, current) in
-     if STrees_HasRightChild(tree, current) and STrees_HasLeftChild(tree, current) then 
-          let leftchild = STrees_LeftChild(tree, current),
-               rightchild = STrees_RightChild(tree, current) in
-          let left = STrees_Subtree(old, leftchild) in 
-               let mk_STrees_Node(-, position) = STrees_InOrderPredecessor(old, current) in 
-               let newright = STrees_MoveSubtree(old, rightchild, 2*position + 1) in 
-               let newleft = left union newright in
-          let new = STrees_MoveSubtree(newleft, STrees_Root(newleft), current.position) in  
-               mk_STrees_Info((tree \ old) union new, STrees_Root(new))
-     elseif STrees_HasLeftChild(tree, current) then 
-          let leftchild = STrees_LeftChild(tree, current) in
-          let new = STrees_MoveSubtree(old, leftchild, current.position) in
-                    mk_STrees_Info((tree \ old) union new, STrees_Root(new)) 
-     elseif STrees_HasRightChild(tree, current) then
-          let rightchild = STrees_RightChild(tree, current) in
-          let new = STrees_MoveSubtree(old, rightchild, current.position) in
-               mk_STrees_Info((tree \ old) union new, STrees_Root(new))
+  let old = STrees_Subtree(tree, current) 
+  in
+   if STrees_HasRightChild(tree, current) and 
+      STrees_HasLeftChild(tree, current) 
+   then let leftchild = STrees_LeftChild(tree, current),
+            rightchild = STrees_RightChild(tree, current),
+            left = STrees_Subtree(old, leftchild), 
+            mk_STrees_Node(-, position) = 
+                STrees_InOrderPredecessor(old, current), 
+            newright = STrees_MoveSubtree(old, rightchild, 
+                                          2*position + 1), 
+            newleft = left union newright,
+            new = STrees_MoveSubtree(newleft, STrees_Root(newleft), 
+                                     current.position) 
+        in
+          mk_STrees_Info((tree \ old) union new, STrees_Root(new))
+   elseif STrees_HasLeftChild(tree, current) 
+   then let leftchild = STrees_LeftChild(tree, current),
+            new = STrees_MoveSubtree(old, leftchild, current.position) 
+        in
+          mk_STrees_Info((tree \ old) union new, STrees_Root(new)) 
+   elseif STrees_HasRightChild(tree, current) 
+   then let rightchild = STrees_RightChild(tree, current),
+            new = STrees_MoveSubtree(old, rightchild, current.position)
+        in
+          mk_STrees_Info((tree \ old) union new, STrees_Root(new))
 
      else 
           mk_STrees_Info(tree \ {current}, STrees_Parent(tree, current))
@@ -1365,7 +1375,8 @@ STrees_MoveSubtree:  STrees_Tree * STrees_Node * nat1 -> STrees_Tree
 STrees_MoveSubtree(tree, subtreeRoot, newRootPos) ==
      let subtree = STrees_Subtree(tree, subtreeRoot), 
                mk_STrees_Node(-, oldRootPos) = subtreeRoot in
-          {STrees_MoveNode(tree, node, oldRootPos, newRootPos) | node in set subtree} 
+          {STrees_MoveNode(tree, node, oldRootPos, newRootPos) 
+          | node in set subtree} 
 pre subtreeRoot in set tree;
 \end{vdm_al}
 {\tt STrees\_MoveSubtree} moves the subtree found in {\tt tree} whose root is {\tt subtreeRoot}.  The subtree is moved so that the new position of its root is {\tt newRootPos}.  \\
@@ -1498,14 +1509,14 @@ The argument `1' in the call to {\tt Trees\_SubtreeToSet} at the beginning of {\
 
 Trees_SubtreeToSet: Heaps_Heap * Nodes_NodePtr * nat1 -> set of STrees_Node
 Trees_SubtreeToSet(heap, subtree, position) ==
-     if subtree <> NIL then
-          {STrees_MkNode(Nodes_GetData(Heaps_Retrieve(heap, subtree)), position)}
-          union Trees_SubtreeToSet(heap, 
-          	Nodes_GetLeft(
+  if subtree <> NIL 
+  then {STrees_MkNode(Nodes_GetData(Heaps_Retrieve(heap, subtree)), position)}
+       union Trees_SubtreeToSet(heap, 
+       Nodes_GetLeft(
 			Heaps_Retrieve(heap, subtree)), 2*position)
-          union Trees_SubtreeToSet(heap, 
+       union Trees_SubtreeToSet(heap, 
                Nodes_GetRight(
-			Heaps_Retrieve(heap, subtree)), 2*position + 1)
+		          Heaps_Retrieve(heap, subtree)), 2*position + 1)
      else {};
 \end{vdm_al}
 {\tt Trees\_SubtreeToSet} creates a set of nodes from the input subtree.  It does this recursively first by adding the subtree root to the set and then by adding the left and right subtrees to the set.  The input value {\tt position} refers to the position of the subtree root.  Thus the positions of its children are $2position$ and $2position + 1$ respectively. 
@@ -1551,51 +1562,47 @@ Trees_Init() == mk_Trees_Tree(NIL, NIL);
 operations
 Trees_Insert: Trees_Tree * Trees_Data * Trees_Direction ==> Trees_Tree
 Trees_Insert(tree, data, direction) ==
-(
-     cases direction: 
-          <ToRoot>  -> return  Trees_InsertRoot(data), 
-          <ToLeft>  -> return  Trees_InsertLeft(tree, data),
-          <ToRight> -> return  Trees_InsertRight(tree, data)
-     end
-)
+ cases direction: 
+   <ToRoot>  -> return  Trees_InsertRoot(data), 
+   <ToLeft>  -> return  Trees_InsertLeft(tree, data),
+   <ToRight> -> return  Trees_InsertRight(tree, data)
+end
 pre Heaps_Available(heap) and
-     let mk_Trees_Tree(treePtr, current) = tree in 
-          (direction = <ToRoot> => treePtr = NIL) and
-          (direction = <ToRight> => not Trees_HasRightChild(heap, current)) and
-          (direction = <ToLeft> => not Trees_HasLeftChild(heap, current))
+    let mk_Trees_Tree(treePtr, current) = tree 
+    in 
+      (direction = <ToRoot> => treePtr = NIL) and
+      (direction = <ToRight> => not Trees_HasRightChild(heap, current)) and
+      (direction = <ToLeft> => not Trees_HasLeftChild(heap, current))
 post Heaps_AmountUsed(heap~) + 1 = Heaps_AmountUsed(heap) and 
      let old = Trees_Set(heap~, tree) in
      	STrees_Insert(old, data, direction) = Trees_Set(heap, RESULT);
 
 Trees_InsertRoot: Trees_Data ==> Trees_Tree
 Trees_InsertRoot(data) ==
-(
-     dcl newTreePtr: Nodes_NodePtr := NEW(Nodes_MkBinaryTree(data, NIL, NIL, NIL)); 
-     return mk_Trees_Tree(newTreePtr, newTreePtr);
+(dcl newTreePtr: Nodes_NodePtr := NEW(Nodes_MkBinaryTree(data, NIL, NIL, NIL)); 
+ return mk_Trees_Tree(newTreePtr, newTreePtr);
 );
 
 Trees_InsertLeft: Trees_Tree * Trees_Data ==> Trees_Tree
 Trees_InsertLeft(mk_Trees_Tree(treePtr, current), data) ==
-(
-     dcl new: Nodes_NodePtr := NEW(Nodes_MkBinaryTree(data, NIL, NIL, current)); 
-     SET_LEFT(current, new);
-     return mk_Trees_Tree(treePtr, new);
+(dcl new: Nodes_NodePtr := NEW(Nodes_MkBinaryTree(data, NIL, NIL, current)); 
+ SET_LEFT(current, new);
+ return mk_Trees_Tree(treePtr, new);
 );
 
 Trees_InsertRight: Trees_Tree * Trees_Data ==> Trees_Tree
 Trees_InsertRight(mk_Trees_Tree(treePtr, current), data) ==
-(
-     dcl new: Nodes_NodePtr := NEW(Nodes_MkBinaryTree(data, NIL, NIL, current));
-     SET_RIGHT(current, new);
-     return mk_Trees_Tree(treePtr, new);
+(dcl new: Nodes_NodePtr := NEW(Nodes_MkBinaryTree(data, NIL, NIL, current));
+ SET_RIGHT(current, new);
+ return mk_Trees_Tree(treePtr, new);
 );
 
 Trees_InOrderPredecessor: Nodes_NodePtr ==> Nodes_NodePtr
 Trees_InOrderPredecessor(ptr) ==
-(    dcl pred: Nodes_NodePtr := LEFT(ptr);
-     while Trees_HasRightChild(heap, pred) do
-          pred := RIGHT(pred);
-     return pred;   
+(dcl pred: Nodes_NodePtr := LEFT(ptr);
+ while Trees_HasRightChild(heap, pred) do
+    pred := RIGHT(pred);
+ return pred;   
 )
 pre Trees_HasLeftChild(heap, ptr);
 
@@ -2127,7 +2134,8 @@ TestSTrees() ==
 
      stree := STrees_SetCurrentNode(stree, STrees_MkNode('z', 13));
 
-     if STrees_MkNode('z', 13) <> STrees_GetCurrentNode(stree) then return false;
+     if STrees_MkNode('z', 13) <> STrees_GetCurrentNode(stree) 
+     then return false;
 
      stree := STrees_StoreCurrentData(stree, 'Z');
      if 'Z' <> STrees_GetCurrentData(stree) then return false;
