@@ -101,11 +101,11 @@ public class FileUtility {
 			IMarker[] markers = file.findMarkers(IMarker.PROBLEM, false,
 					IResource.DEPTH_INFINITE);
 			for (IMarker marker : markers) {
-				if (marker.getAttribute(IMarker.MESSAGE).equals(message)
-						&& marker.getAttribute(IMarker.SEVERITY).equals(
-								severity)
-						&& marker.getAttribute(IMarker.LINE_NUMBER).equals(
-								lineNumber))
+				if ((marker.getAttribute(IMarker.MESSAGE)!=null &&marker.getAttribute(IMarker.MESSAGE).equals(message)
+						)&&( marker.getAttribute(IMarker.SEVERITY)!=null && marker.getAttribute(IMarker.SEVERITY).equals(
+								severity))
+						&& (marker.getAttribute(IMarker.LINE_NUMBER)!=null && marker.getAttribute(IMarker.LINE_NUMBER).equals(
+								lineNumber)))
 					return;
 
 			}

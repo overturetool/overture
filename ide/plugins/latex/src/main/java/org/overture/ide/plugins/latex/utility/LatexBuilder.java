@@ -15,21 +15,37 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.internal.util.BundleUtility;
 import org.osgi.framework.Bundle;
 import org.overture.ide.plugins.latex.Activator;
+import org.overturetool.vdmj.lex.Dialect;
 
 @SuppressWarnings("restriction")
 public class LatexBuilder
 {
 	final static String OUTPUT_FOLDER_NAME = "latex";
 	final String PROJECT_INCLUDE_MODEL_FILES = "%PROJECT_INCLUDE_MODEL_FILES";
+	final String TITLE = "%TITLE";
 	File outputFolder = null;
 	List<String> includes = new Vector<String>();
 
-	public void prepare(IProject project) throws IOException
+	public void prepare(IProject project, Dialect dialect) throws IOException
 	{
 		outputFolder = makeOutputFolder(project);
+		String languageStyleFolder = "";
+		switch (dialect)
+		{
+		case VDM_PP:
+			languageStyleFolder = "pp";
+			break;
+		case VDM_RT:
+			languageStyleFolder = "rt";
+			break;
+		case VDM_SL:
+			languageStyleFolder = "sl";
+			break;
+
+		}
 
 		String overturesty = readFile("latex/overture.sty");
-		String overturelanguagedef = readFile("latex/overturelanguagedef.sty");
+		String overturelanguagedef = readFile("latex/"+languageStyleFolder+"/overturelanguagedef.sty");
 
 		writeFile(outputFolder, "overture.sty", overturesty);
 		writeFile(outputFolder, "overturelanguagedef.sty", overturelanguagedef);
@@ -42,9 +58,10 @@ public class LatexBuilder
 		String documentFileName = name;// + ".tex";
 		File latexRoot = makeOutputFolder(projectRoot);
 		StringBuilder sb = new StringBuilder();
-		sb.append("\n\\section{"
+		String title = "Coverage Report: "
 				+ projectRoot.getName().replace('\\', '/').substring(0,
-						projectRoot.getName().length()) + "}");
+						projectRoot.getName().length());
+
 		for (String path : includes)
 		{
 
@@ -54,7 +71,7 @@ public class LatexBuilder
 			String tmp = includeName.replace('\\', '/');
 			includeName = tmp.substring(tmp.lastIndexOf('/') + 1);
 
-			sb.append("\n" + "\\subsection{" + includeName + "}");
+			sb.append("\n" + "\\section{" + includeName + "}");
 
 			if (path.contains(latexRoot.getAbsolutePath()))
 			{
@@ -69,7 +86,8 @@ public class LatexBuilder
 				sb.append("\n" + "\\input{" + path.replace('\\', '/') + "}");
 
 		}
-		document = document.replace(PROJECT_INCLUDE_MODEL_FILES, sb.toString());
+		document = document.replace(TITLE, title)
+				.replace(PROJECT_INCLUDE_MODEL_FILES, sb.toString());
 
 		writeFile(outputFolder, documentFileName, document);
 	}

@@ -29,7 +29,7 @@ public class OvertureTracesPlugin extends AbstractUIPlugin {
 	
 	public static final String IMG_RUN_SAVE = "icons/clcl16/save_menu.png"; 
     public static final String IMG_RUN_ALL_TRACES = "icons/clcl16/run_all_menu.png"; //$NON-NLS-1$
-    public static final String IMG_RUN_SELECTED_TRACE = "icons/clcl16/run_selected_menu.png"; //$NON-NLS-1$
+    public static final String IMG_RUN_SELECTED_TRACE = "icons/clcl16/run_s_menu.png"; //$NON-NLS-1$
 
     public static final String IMG_TRACE_TEST_CASE_SUCCES = "icons/cview16/succes_obj.png"; //$NON-NLS-1$
     public static final String IMG_TRACE_TEST_CASE_FAIL = "icons/cview16/faild_obj.png"; //$NON-NLS-1$

@@ -94,7 +94,7 @@ public class CoverageEditor extends EditorPart
 					selectedFile.getName().lastIndexOf('.'));
 			setTitle(fileName);
 
-			IResource res = project.findMember(fileName);
+			IResource res = findMember(project, fileName);//project.findMember(fileName);
 			if (res instanceof org.eclipse.core.internal.resources.File)
 			{
 				org.eclipse.core.internal.resources.File f = ((org.eclipse.core.internal.resources.File) res);
@@ -113,6 +113,22 @@ public class CoverageEditor extends EditorPart
 			e.printStackTrace();
 		}
 
+	}
+	
+	public static IResource findMember(IResource resource, String memberName) throws CoreException
+	{
+		
+		if(resource!=null && resource.getName().equals(memberName))
+			return resource;
+		else if(!(resource instanceof org.eclipse.core.internal.resources.File)){
+			IResource[] members = ((IContainer)resource).members();
+			for (int i = 0; i < members.length; i++) {
+				IResource tmp= findMember(members[i], memberName);
+				if(tmp!=null)
+					return tmp;
+			}
+		}
+		return null;
 	}
 
 	@Override

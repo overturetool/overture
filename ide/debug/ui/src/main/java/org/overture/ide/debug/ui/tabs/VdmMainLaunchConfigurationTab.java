@@ -317,6 +317,7 @@ public abstract class VdmMainLaunchConfigurationTab extends
 		if (node == null)
 		{
 			new VdmProject(getProject().getProject()).typeCheck();
+			VdmProject.waitForBuidCompletion();
 			node = AstManager.instance().getRootNode(getProject().getProject(),
 					getNatureID());
 		}

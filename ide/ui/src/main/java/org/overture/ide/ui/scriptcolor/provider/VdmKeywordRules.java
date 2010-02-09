@@ -88,6 +88,10 @@ private  IVdmKeywords keywords=null;
 		// reservedWords
 		String[] reservedWords = keywords.getReservedwords();
 		setWordDetection(keyword, wordRule, reservedWords);
+		
+		// reservedWords
+		String[] historyCounters = keywords.getHistoryCounters();
+		setWordDetection(keyword, wordRule, historyCounters);
 		return keywordReturn;
 	}
 

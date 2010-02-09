@@ -150,6 +150,10 @@ public class SourceFile
 
 	public void printLatexCoverage(PrintWriter out, boolean headers)
 	{
+		printLatexCoverage(out,headers,false);
+	}
+	public void printLatexCoverage(PrintWriter out, boolean headers,boolean modelOnly)
+	{
 		Map<Integer, List<LexLocation>> hits =
 					LexLocation.getMissLocations(filename);
 
@@ -166,7 +170,8 @@ public class SourceFile
 		}
 
 		boolean endDocFound = false;
-
+		boolean inVdmAlModelTag= false;
+		
 		for (int lnum = 1; lnum <= lines.size(); lnum++)
 		{
 			String line = lines.get(lnum - 1);
@@ -176,10 +181,19 @@ public class SourceFile
 				endDocFound = true;
 				break;
 			}
-
+			if(line.contains("\\begin{vdm_al}"))
+				inVdmAlModelTag=true;
+			 
+			
+			if(hasVdm_al && modelOnly && !inVdmAlModelTag)
+				continue;
+			
 			String spaced = detab(line, LexTokenReader.TABSTOP);
 			List<LexLocation> list = hits.get(lnum);
 			out.println(markup(spaced, list));
+			
+			if(line.contains("\\end{vdm_al}"))
+				inVdmAlModelTag=false;
 		}
 
 		if (!hasVdm_al)
@@ -258,9 +272,10 @@ public class SourceFile
 
 	private String latexQuote(String s)
 	{
-		// Latex specials: \# \$ \% \^{} \& \_ \{ \} \~{}
+		// Latex specials: \# \$ \% \^{} \& \_ \{ \} \~{} \\
 
 		return s.
+			replace("\\", "\\textbackslash ").
 			replace("#", "\\#").
 			replace("$", "\\$").
 			replace("%", "\\%").
@@ -268,8 +283,8 @@ public class SourceFile
 			replace("_", "\\_").
 			replace("{", "\\{").
 			replace("}", "\\}").
-			replace("^", "\\^{}").
-			replace("~", "\\~{}");
+			replace("~", "\\~").
+			replaceAll("\\^{1}", "\\\\^{}");
 	}
 
 	private static String detab(String s, int tabstop)

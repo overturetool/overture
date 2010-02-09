@@ -103,4 +103,9 @@ public class VdmRtKeywords implements IVdmKeywords
 			return unaryoperators;
 		}
 
+		public String[] getHistoryCounters()
+		{
+			return historyCounters;
+		}
+
 }

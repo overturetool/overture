@@ -94,4 +94,9 @@ public class VdmPpKeywords implements IVdmKeywords
 			return unaryoperators;
 		}
 
+		public String[] getHistoryCounters()
+		{
+			return historyCounters;
+		}
+
 }

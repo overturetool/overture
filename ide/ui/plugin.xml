@@ -67,11 +67,7 @@
                menubarPath="groupBuild"
                tooltip="Clean project">
          </action>
-         <action
-               class="org.overture.ide.ui.actions.VdmjConsole"
-               id="org.overture.ide.ui.actions.VdmjConsole"
-               label="Start in VDMJ Console">
-         </action>
+       
       </objectContribution>
     </extension>
   

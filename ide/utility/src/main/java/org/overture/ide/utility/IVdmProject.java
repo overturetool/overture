@@ -2,6 +2,7 @@ package org.overture.ide.utility;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.overturetool.vdmj.Release;
 
 public interface IVdmProject
@@ -63,5 +64,6 @@ public interface IVdmProject
 			throws CoreException;
 	
 	public abstract void typeCheck() throws CoreException;
+	public abstract void typeCheck(IProgressMonitor monitor) throws CoreException;
 
 }

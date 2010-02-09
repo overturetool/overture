@@ -7,7 +7,7 @@
          point="org.eclipse.ui.popupMenus">
       
       <!-- Print latex -->
-        <objectContribution
+        <!--objectContribution
             adaptable="true"
             id="org.overture.ide.latex.contribution1"
             objectClass="org.eclipse.core.resources.IProject">
@@ -36,7 +36,7 @@
          </action>
          
        
-      </objectContribution>
+      </objectContribution-->
       
       
        <!-- Print latex coverage-->

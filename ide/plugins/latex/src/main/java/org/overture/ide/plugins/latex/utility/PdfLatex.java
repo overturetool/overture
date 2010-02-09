@@ -39,6 +39,7 @@ public class PdfLatex extends Thread
 	{
 
 		ConsoleWriter cw = new ConsoleWriter("PDF LATEX");
+		cw.Show();
 		try
 		{
 			process = Runtime.getRuntime().exec("pdflatex " + documentName,

@@ -16,6 +16,8 @@ public interface IVdmKeywords {
 	 
 	  
 	  public  String[] getUnaryoperators();
+	  
+	  public String[] getHistoryCounters();
 
 }
 

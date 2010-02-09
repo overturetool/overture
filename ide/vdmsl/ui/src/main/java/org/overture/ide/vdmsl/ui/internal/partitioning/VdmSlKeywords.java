@@ -68,4 +68,9 @@ public class VdmSlKeywords implements IVdmKeywords
 		return unaryoperators;
 	}
 
+	public String[] getHistoryCounters()
+	{
+		return new String[0];
+	}
+
 }

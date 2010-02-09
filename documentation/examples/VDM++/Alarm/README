@@ -8,3 +8,16 @@ the rules governing the duty roster and calling out of experts to deal
 with alarms. A comparable model of this example also exists in VDM-SL.
 
 Exe: new Test1().Run()
+
+#******************************************************
+#  AUTOMATED TEST SETTINGS
+#------------------------------------------------------
+#LANGUAGE_VERSION=vdm10
+#INV_CHECKS=true
+#POST_CHECKS=true
+#PRE_CHECKS=true
+#DYNAMIC_TYPE_CHECKS=true
+#SUPPRESS_WARNINGS=false
+#ENTRY_POINT=new Test1().Run()
+#EXPECTED_RESULT=NO_ERROR_INTERPRETER
+#******************************************************

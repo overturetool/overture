@@ -1,10 +1,13 @@
 package org.overture.ide.builders.builder;
 
+import java.io.File;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
@@ -69,17 +72,7 @@ public class BuildParticipant implements IScriptBuilder
 		}
 
 		setBuilding(currentProject);
-		AbstractBuilder.clearProblemMarkers(currentProject);
-
-		AstManager.instance().clean(project.getProject());// IMPORTANT we do not
-		// have an
-		// incremental
-		// builder so a full
-		// parse/ build is
-		// required,
-		// therefore remove
-		// any AST nodes in
-		// store.
+		clean(project,monitor);
 
 		final List<IStatus> statusList = new Vector<IStatus>();
 
@@ -143,9 +136,57 @@ public class BuildParticipant implements IScriptBuilder
 			System.out.println("clean");
 		monitor.beginTask("Cleaning project: " + project.getProject().getName(),
 				IProgressMonitor.UNKNOWN);
-		AstManager.instance().clean(project.getProject());
+		//AstManager.instance().clean(project.getProject());
+
+		AbstractBuilder.clearProblemMarkers(project.getProject());
+
+		AstManager.instance().clean(project.getProject());// IMPORTANT we do not
+		// have an
+		// incremental
+		// builder so a full
+		// parse/ build is
+		// required,
+		// therefore remove
+		// any AST nodes in
+		// store.
+		try
+		{
+			IResource res = project.getProject().findMember("generated");
+
+			ResourcesPlugin.getWorkspace().delete(new IResource[] { res },
+					true,
+					monitor);
+			
+		} catch (Exception e)
+		{
+			// we can do any thing about it
+		}
 		monitor.done();
 
+	}
+
+	/**
+	 * Deletes all files and sub directories under dir. If a deletion fails, the
+	 * method stops attempting to delete and returns false. Returns true if all
+	 * deletions were successful.
+	 */
+	public static boolean deleteDir(File dir)
+	{
+		if (dir.isDirectory())
+		{
+			String[] children = dir.list();
+			for (int i = 0; i < children.length; i++)
+			{
+				boolean success = deleteDir(new File(dir, children[i]));
+				if (!success)
+				{
+					return false;
+				}
+			}
+		}
+
+		// The directory is now empty so delete it
+		return dir.delete();
 	}
 
 	public void endBuild(IScriptProject project, IProgressMonitor monitor)

@@ -13,6 +13,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.overturetool.vdmj.Release;
 
 public class VdmProject implements IVdmProject
@@ -395,6 +396,38 @@ public class VdmProject implements IVdmProject
 	public void typeCheck() throws CoreException
 	{
 		getProject().build(IncrementalProjectBuilder.FULL_BUILD , null);
+	}
+	
+	public void typeCheck(IProgressMonitor monitor) throws CoreException
+	{
+		getProject().build(IncrementalProjectBuilder.FULL_BUILD , monitor);
+	}
+	
+	public static void waitForBuidCompletion()
+	{
+		while (true)
+		{
+			Job[] jobs = Job.getJobManager().find(null);
+			boolean builderFound = false;
+			for (Job job : jobs)
+			{
+				if (job.getName().contains("org.overture.ide.builders.vdmj"))
+					builderFound = true;
+
+			}
+			if (!builderFound)
+				return;
+			else
+			{
+				try
+				{
+					Thread.sleep(200);
+				} catch (InterruptedException e)
+				{
+				
+				}
+			}
+		}
 	}
 
 }

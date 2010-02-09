@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -153,6 +154,26 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 			try
 			{
 				String[] newClassPath = getClassPath(myJavaProject);
+				
+				//test
+				File externalFolder = new File(config.getWorkingDirectoryPath().toOSString()
+						+ File.separatorChar + "lib" );
+			if(externalFolder.exists())
+			{
+				List<String> cp = new Vector<String>();
+				for (String string : newClassPath)
+				{
+					if(string.toLowerCase().endsWith(".jar"))
+					cp.add(string);
+				}
+				for (File f : externalFolder.listFiles())
+				{
+					if(f.getName().toLowerCase().endsWith(".jar"))
+						cp.add(f.getAbsolutePath());
+				}
+				
+			newClassPath = cp.toArray(newClassPath);
+			}
 
 				VMRunnerConfiguration vmConfig = new VMRunnerConfiguration(iconfig.getRunnerClassName(config,
 						launch,

@@ -1,6 +1,8 @@
 package org.overture.ide.plugins.latex.actions;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,7 +33,9 @@ import org.overture.ide.plugins.latex.utility.LatexBuilder;
 import org.overture.ide.plugins.latex.utility.PdfLatex;
 import org.overture.ide.plugins.latex.utility.TreeSelectionLocater;
 import org.overture.ide.utility.ConsoleWriter;
+import org.overture.ide.utility.IVdmProject;
 import org.overture.ide.utility.ProjectUtility;
+import org.overture.ide.utility.VdmProject;
 import org.overture.ide.vdmpp.core.VdmPpCorePluginConstants;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
 import org.overture.ide.vdmrt.core.VdmRtCorePluginConstants;
@@ -92,15 +96,18 @@ public class LatexCoverageAction implements IObjectActionDelegate
 			if (selectedProject.hasNature(VdmPpProjectNature.VDM_PP_NATURE))
 				makeLatex(selectedProject,
 						VdmPpCorePluginConstants.CONTENT_TYPE,
-						VdmPpProjectNature.VDM_PP_NATURE);
+						VdmPpProjectNature.VDM_PP_NATURE,
+						Dialect.VDM_PP);
 			if (selectedProject.hasNature(VdmSlProjectNature.VDM_SL_NATURE))
 				makeLatex(selectedProject,
 						VdmSlCorePluginConstants.CONTENT_TYPE,
-						VdmSlProjectNature.VDM_SL_NATURE);
+						VdmSlProjectNature.VDM_SL_NATURE,
+						Dialect.VDM_SL);
 			if (selectedProject.hasNature(VdmRtProjectNature.VDM_RT_NATURE))
 				makeLatex(selectedProject,
 						VdmRtCorePluginConstants.CONTENT_TYPE,
-						VdmRtProjectNature.VDM_RT_NATURE);
+						VdmRtProjectNature.VDM_RT_NATURE,
+						Dialect.VDM_RT);
 
 		} catch (Exception ex)
 		{
@@ -145,7 +152,8 @@ public class LatexCoverageAction implements IObjectActionDelegate
 	final static String VDM_MODEL_ENV_END = "\\end{vdm_al}";
 
 	private void makeLatex(final IProject selectedProject,
-			final String contentTypeId, final String natureId)
+			final String contentTypeId, final String natureId,
+			final Dialect dialect)
 	{
 		final Job expandJob = new Job("Builder coverage tex files.") {
 
@@ -158,12 +166,12 @@ public class LatexCoverageAction implements IObjectActionDelegate
 				{
 					File projectRoot = selectedProject.getLocation().toFile();
 					LatexBuilder latexBuilder = new LatexBuilder();
-					latexBuilder.prepare(selectedProject);
+					latexBuilder.prepare(selectedProject, dialect);
 
 					File outputFolder = LatexBuilder.makeOutputFolder(selectedProject);
 
 					File outputFolderForGeneratedModelFiles = new File(outputFolder,
-							"generated");
+							"specification");
 					if (!outputFolderForGeneratedModelFiles.exists())
 						outputFolderForGeneratedModelFiles.mkdirs();
 
@@ -171,61 +179,33 @@ public class LatexCoverageAction implements IObjectActionDelegate
 							.getRootNode(selectedProject, natureId);
 					if (root == null || !root.isChecked())
 					{
-						selectedProject.build(IncrementalProjectBuilder.FULL_BUILD,
-								monitor);
-						return new Status(IStatus.OK,
-								Activator.PLUGIN_ID,
-								IStatus.CANCEL,
-								"Project not type checked",
-								null);
+						IVdmProject vdmProject = new VdmProject(selectedProject);
+						vdmProject.typeCheck(monitor);
+						VdmProject.waitForBuidCompletion();
+						root = AstManager.instance()
+						.getRootNode(selectedProject, natureId);
 					}
 					if (root != null && root.isChecked())
 					{
+						LexLocation.resetLocations();
 						if (root.hasClassList())
 						{
 							ClassList classlist = AstManager.instance()
 									.getRootNode(selectedProject, natureId)
 									.getClassList();
-
-							LexLocation.resetLocations();
-							ClassList classes = parseClasses(selectedProject, classlist);
 							
+							ClassList classes = parseClasses(selectedProject,
+									classlist);
+
 							List<File> outputFiles = getFileChildern(new File(projectRoot,
 									"generated"));
-							LexLocation.clearLocations();
+							
 							for (ClassDefinition classDefinition : classes)
 							{
-								System.out.println("Looking at file: "
-										+ classDefinition.location.file.getName());
-								File texFile = new File(outputFolderForGeneratedModelFiles,
-										classDefinition.location.file.getName()
-												+ ".tex");
-								if (texFile.exists())
-									texFile.delete();
-
-								for (int i = 0; i < outputFiles.size(); i++)
-								{
-									File file = outputFiles.get(i);
-									System.out.println("Compair with file: "
-											+ file.getName());
-									if (file.getName().endsWith(".cov")
-											&& (classDefinition.location.file.getName()).equals(getFileName(file)))
-									{
-										System.out.println("Match");
-										LexLocation.mergeHits(classDefinition.location.file,
-												file);
-										// outputFiles.remove(i);
-
-										latexBuilder.addInclude(texFile.getAbsolutePath());
-									}
-
-								}
-								SourceFile f = new SourceFile(classDefinition.location.file);
-								PrintWriter pw = new PrintWriter(texFile);
-								f.printLatexCoverage(pw, false);
-								ConsoleWriter cw = new ConsoleWriter(shell);
-								f.printCoverage(cw);
-								pw.close();
+								createCoverage(latexBuilder,
+										outputFolderForGeneratedModelFiles,
+										outputFiles,
+										classDefinition.location.file);
 
 							}
 						} else if (root.hasModuleList())
@@ -236,41 +216,18 @@ public class LatexCoverageAction implements IObjectActionDelegate
 
 							List<File> outputFiles = getFileChildern(new File(projectRoot,
 									"generated"));
-							LexLocation.resetLocations();
-							ModuleList modules = parseModules(selectedProject, modulelist);
-													LexLocation.clearLocations();
 							
+							ModuleList modules = parseModules(selectedProject,
+									modulelist);
 							
 							for (Module classDefinition : modules)
 							{
 								for (File moduleFile : classDefinition.files)
 								{
-
-									File texFile = new File(outputFolderForGeneratedModelFiles,
-											moduleFile.getName() + ".tex");
-									if (texFile.exists())
-										texFile.delete();
-
-									for (int i = 0; i < outputFiles.size(); i++)
-									{
-										File file = outputFiles.get(i);
-										if (file.getName().endsWith(".cov")
-												&& (moduleFile.getName()).equals(getFileName(file)))
-										{
-											LexLocation.mergeHits(moduleFile,
-													file);
-											outputFiles.remove(i);
-
-											latexBuilder.addInclude(texFile.getAbsolutePath());
-										}
-
-									}
-									SourceFile f = new SourceFile(moduleFile);
-									PrintWriter pw = new PrintWriter(texFile);
-									f.printLatexCoverage(pw, false);
-									ConsoleWriter cw = new ConsoleWriter(shell);
-									f.printCoverage(cw);
-									pw.close();
+									createCoverage(latexBuilder,
+											outputFolderForGeneratedModelFiles,
+											outputFiles,
+											moduleFile);
 								}
 							}
 						}
@@ -291,6 +248,17 @@ public class LatexCoverageAction implements IObjectActionDelegate
 
 					if (monitor.isCanceled())
 						pdflatex.kill();
+
+					PdfLatex pdflatex2 = new PdfLatex(selectedProject,
+							outputFolder,
+							documentFileName);
+					pdflatex2.start();
+
+					while (!monitor.isCanceled() && !pdflatex2.isFinished)
+						Thread.sleep(500);
+
+					if (monitor.isCanceled())
+						pdflatex2.kill();
 
 					selectedProject.refreshLocal(IResource.DEPTH_INFINITE, null);
 
@@ -315,11 +283,70 @@ public class LatexCoverageAction implements IObjectActionDelegate
 
 			}
 
+			private void createCoverage(LatexBuilder latexBuilder,
+					File outputFolderForGeneratedModelFiles,
+					List<File> outputFiles, File moduleFile)
+					throws IOException, FileNotFoundException
+			{
+				if(isStandardLibarary(moduleFile))
+					return;
+				File texFile = new File(outputFolderForGeneratedModelFiles,
+						moduleFile.getName()
+								.replace(" ", "")
+								+ ".tex");
+				if (texFile.exists())
+					texFile.delete();
+
+				for (int i = 0; i < outputFiles.size(); i++)
+				{
+					File file = outputFiles.get(i);
+//					System.out.println("Compare with file: "
+//							+ file.getName());
+					if (file.getName().toLowerCase().endsWith(".cov")
+							&& (moduleFile.getName()).equals(getFileName(file)))
+					{
+						System.out.println("Match");
+						LexLocation.mergeHits(moduleFile,
+								file);
+						outputFiles.remove(i);
+
+					}
+
+				}
+				latexBuilder.addInclude(texFile.getAbsolutePath());
+				SourceFile f = new SourceFile(moduleFile);
+				PrintWriter pw = new PrintWriter(texFile);
+				f.printLatexCoverage(pw, false, true);
+				ConsoleWriter cw = new ConsoleWriter(shell);
+				f.printCoverage(cw);
+				pw.close();
+			}
+
+			private boolean isStandardLibarary(File moduleFile)
+			{
+				String name = moduleFile.getAbsolutePath().toLowerCase().replace('\\', '/');
+				return (name.endsWith("/lib/io.vdmpp")||name.endsWith("/lib/io.vdmrt")||name.endsWith("/lib/io.vdmsl")||
+						name.endsWith("/lib/math.vdmpp")||name.endsWith("/lib/math.vdmrt")||name.endsWith("/lib/math.vdmsl")||
+						name.endsWith("/lib/vdmutil.vdmpp")|| name.endsWith("/lib/vdmutil.vdmrt")|| name.endsWith("/lib/vdmutil.vdmsl"));
+				
+			}
+
 		};
 		expandJob.setPriority(Job.INTERACTIVE);
+		try
+		{
+			selectedProject.build(IncrementalProjectBuilder.FULL_BUILD, null);
+		} catch (CoreException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		expandJob.schedule(0);
 
 	}
+
+	
 
 	public static String getFileName(File file)
 	{
@@ -382,6 +409,7 @@ public class LatexCoverageAction implements IObjectActionDelegate
 		}
 		return classes;
 	}
+
 	private ModuleList parseModules(final IProject selectedProject,
 			ModuleList modulelist)
 	{
@@ -400,14 +428,14 @@ public class LatexCoverageAction implements IObjectActionDelegate
 				e.printStackTrace();
 			}
 
-			for(File f : m.files)
+			for (File f : m.files)
 			{
-			LexTokenReader ltr = new LexTokenReader(f,
-					Dialect.VDM_SL,
-					charset);
-			reader = new ModuleReader(ltr);
+				LexTokenReader ltr = new LexTokenReader(f,
+						Dialect.VDM_SL,
+						charset);
+				reader = new ModuleReader(ltr);
 
-			modules.addAll(reader.readModules());
+				modules.addAll(reader.readModules());
 			}
 		}
 		return modules;

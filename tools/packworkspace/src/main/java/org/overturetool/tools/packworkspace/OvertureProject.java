@@ -3,6 +3,7 @@ package org.overturetool.tools.packworkspace;
 public interface OvertureProject {
 	public final String NATURE_SPACEHOLDER ="NATURE_ID";
 	public final String NAME_PLACEHOLDER="NAME_ID";
+	public final String ARGUMENTS_PLACEHOLDER="ARGUMENTS_PLACEHOLDER";
 	public final String EclipseProject = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 			+ "<projectDescription>\n"
 			+ "	<name>"+NAME_PLACEHOLDER+"</name>\n"
@@ -12,7 +13,7 @@ public interface OvertureProject {
 			+ "	<buildSpec>\n"
 			+ "		<buildCommand>\n"
 			+ "			<name>org.eclipse.dltk.core.scriptbuilder</name>\n"
-			+ "			<arguments>\n"
+			+ "			<arguments>\nARGUMENTS_PLACEHOLDER\n"
 			+ "			</arguments>\n"
 			+ "		</buildCommand>\n"
 			+ "	</buildSpec>\n"
