@@ -25,9 +25,5 @@ public interface OvertureProject {
 	public final String VDMSL_NATURE ="org.overture.ide.vdmsl.core.nature";
 	public final String VDMRT_NATURE ="org.overture.ide.vdmrt.core.nature";
 	
-	public enum Natures{
-		Pp,
-		Sl,
-		Rt
-	}
+	
 }
