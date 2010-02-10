@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.util;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -46,8 +47,9 @@ import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.values.Value;
 
-public class Delegate
+public class Delegate implements Serializable
 {
+	private static final long serialVersionUID = 1L;
 	private final String name;
 	private final DefinitionList definitions;
 
