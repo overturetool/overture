@@ -29,7 +29,6 @@ types
   Cardholder :: name : Name;
 
   AccountId = nat;
-  Address = seq of char;
   Name = seq of char;
   CardId = nat;
   Code = nat;
@@ -144,8 +143,8 @@ functions
 
 traces
 
-TestCash: (let c in set {mk_Card(1,1,1), mk_Card(2,2,2)}
-           in
-            (Insertcard(c);
+TestCash: let c in set {mk_Card(1,1,1), mk_Card(2,2,2)}
+          in
+            (InsertCard(c);
              Validate(1111);
              ReportIllegalCard(c)){1,5};
