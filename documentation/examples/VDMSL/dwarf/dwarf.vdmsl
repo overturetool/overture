@@ -164,4 +164,4 @@ traces
 
   SeqTest: (let com : LogCom
             in
-              NormalTrans(com)){5}
+              NormalTrans(com)){5};
