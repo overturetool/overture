@@ -40,7 +40,7 @@ functions
 
 types
 
-  Trace = seq of set of LampId;
+  Trace = seq of set of LampId
 
 state Dwarf of
     trace : Trace
