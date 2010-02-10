@@ -27,13 +27,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.vdmj.definitions.CPUClassDefinition;
-import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.runtime.Context;
@@ -57,7 +54,6 @@ public class ObjectValue extends Value
 
 	private CPUValue CPU = null;
 
-	private boolean delegateChecked = false;
 	private Object delegateObject = null;
 
 	public ObjectValue(ClassType type,
@@ -433,62 +429,21 @@ public class ObjectValue extends Value
 
 	public boolean hasDelegate()
 	{
-		if (!delegateChecked)
+		if (type.classdef.hasDelegate())
 		{
-			delegateChecked = true;
+			if (delegateObject == null)
+			{
+				delegateObject = type.classdef.newInstance();
+			}
 
-    		if (type.classdef.hasDelegate())
-    		{
-    			try
-    			{
-    				delegateObject = type.classdef.newDelegate();
-    			}
-    			catch (InstantiationException e)
-    			{
-    				throw new InternalException(54,
-    					"Cannot instantiate native object: " + e.getMessage());
-    			}
-    			catch (IllegalAccessException e)
-    			{
-    				throw new InternalException(55,
-    					"Cannot access native object: " + e.getMessage());
-    			}
-    		}
+			return true;
 		}
 
-		return delegateObject != null;
+		return false;
 	}
 
 	public Value invokeDelegate(Context ctxt)
 	{
-		Method m = type.classdef.getDelegateMethod(ctxt.title);
-		LexNameList anames = type.classdef.delegateArgs.get(ctxt.title);
-		Object[] avals = new Object[anames.size()];
-		int a = 0;
-
-		for (LexNameToken arg: anames)
-		{
-			avals[a++] = ctxt.get(arg);
-		}
-
-		try
-		{
-			return (Value)m.invoke(delegateObject, avals);
-		}
-		catch (IllegalArgumentException e)
-		{
-			throw new InternalException(62,
-				"Cannot invoke native method: " + e.getMessage());
-		}
-		catch (IllegalAccessException e)
-		{
-			throw new InternalException(62,
-				"Cannot invoke native method: " + e.getMessage());
-		}
-		catch (InvocationTargetException e)
-		{
-			throw new InternalException(59,
-				"Failed in native method: " + e.getTargetException().getMessage());
-		}
+		return type.classdef.invokeDelegate(delegateObject, ctxt);
 	}
 }

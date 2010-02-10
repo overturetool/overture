@@ -77,6 +77,8 @@ as the expected and actual values.
 0060, "Cannot access native method: <reason>"
 0061, "Cannot find native method: <reason>"
 0062, "Cannot invoke native method: <reason>"
+0063, "No delegate class found: <name>"
+0064, "Native method should be static: <name>"
 
 1000, "Malformed quoted character"
 1001, "Invalid char <ch> in base <n> number"

@@ -23,11 +23,18 @@
 
 package org.overturetool.vdmj.statements;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.CPUClassDefinition;
+import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.messages.InternalException;
+import org.overturetool.vdmj.modules.Module;
+import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
+import org.overturetool.vdmj.runtime.Interpreter;
+import org.overturetool.vdmj.runtime.ModuleInterpreter;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -72,14 +79,43 @@ public class NotYetSpecifiedStatement extends Statement
 	{
 		breakpoint.check(location, ctxt);
 
-		ObjectValue self = ctxt.getSelf();
-
-		if (self != null)
+		if (Settings.dialect == Dialect.VDM_SL)
 		{
-			if (self.hasDelegate())
+			ModuleInterpreter i = (ModuleInterpreter)Interpreter.getInstance();
+			Module module = i.findModule(location.module);
+
+			if (module != null)
 			{
-				return self.invokeDelegate(ctxt);
+				if (module.hasDelegate())
+				{
+					return module.invokeDelegate(ctxt);
+				}
 			}
+		}
+		else
+		{
+    		ObjectValue self = ctxt.getSelf();
+
+    		if (self == null)
+    		{
+    			ClassInterpreter i = (ClassInterpreter)Interpreter.getInstance();
+    			ClassDefinition cls = i.findClass(location.module);
+
+    			if (cls != null)
+    			{
+    				if (cls.hasDelegate())
+    				{
+    					return cls.invokeDelegate(ctxt);
+    				}
+    			}
+    		}
+    		else
+    		{
+    			if (self.hasDelegate())
+    			{
+    				return self.invokeDelegate(ctxt);
+    			}
+    		}
 		}
 
 		if (location.module.equals("CPU"))

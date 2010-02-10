@@ -42,6 +42,8 @@ import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.typechecker.ModuleEnvironment;
+import org.overturetool.vdmj.util.Delegate;
+import org.overturetool.vdmj.values.Value;
 
 /**
  * A class holding all the details for one module.
@@ -69,6 +71,11 @@ public class Module implements Serializable
 	/** True if the module was loaded from an object file. */
 	public boolean typechecked = false;
 
+	/** A delegate Java class, if one exists. */
+	private Delegate delegate = null;
+	/** A delegate Java object, if one exists. */
+	private Object delegateObject = null;
+
 	/**
 	 * Create a module from the given name and definitions.
 	 */
@@ -88,6 +95,8 @@ public class Module implements Serializable
 
 		exportdefs = new DefinitionList();	// By default, export nothing
 		importdefs = new DefinitionList();	// and import nothing
+
+		this.delegate = new Delegate(name.name, defs);
 	}
 
 	/**
@@ -117,6 +126,8 @@ public class Module implements Serializable
 
 		exportdefs = new DefinitionList();	// Export nothing
 		importdefs = new DefinitionList();	// and import nothing
+
+		this.delegate = new Delegate(name.name, defs);
 	}
 
 	/**
@@ -352,5 +363,25 @@ public class Module implements Serializable
 	public ProofObligationList getProofObligations()
 	{
 		return defs.getProofObligations(new POContextStack());
+	}
+
+	public boolean hasDelegate()
+	{
+		if (delegate.hasDelegate())
+		{
+			if (delegateObject == null)
+			{
+				delegateObject = delegate.newInstance();
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	public Value invokeDelegate(Context ctxt)
+	{
+		return delegate.invokeDelegate(delegateObject, ctxt);
 	}
 }

@@ -23,7 +23,6 @@
 
 package org.overturetool.vdmj.definitions;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,10 +35,7 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.Token;
-import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.messages.RTLogger;
-import org.overturetool.vdmj.patterns.IdentifierPattern;
-import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -59,6 +55,7 @@ import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
+import org.overturetool.vdmj.util.Delegate;
 import org.overturetool.vdmj.values.ClassInvariantListener;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.NameValuePairMap;
@@ -121,14 +118,8 @@ public class ClassDefinition extends Definition
 	/** True if the class has any constructors at all. */
 	public boolean hasConstructors = false;
 
-	/** True, if we've checked whether a native delegate class exists. */
-	private boolean delegateChecked = false;
-	/** The delegate class, if it exists. */
-	private Class<?> delegateClass = null;
-	/** A map of Context titles to Methods for the delegate, if it exists. */
-	public Map<String, Method> delegateMethods = null;
-	/** A map of Context titles to argument names for the delegate, if it exists. */
-	public Map<String, LexNameList> delegateArgs = null;
+	/** A delegate Java object for any native methods. */
+	private Delegate delegate = null;
 
 	/**
 	 * Create a class definition with the given name, list of superclass names,
@@ -157,6 +148,8 @@ public class ClassDefinition extends Definition
 		// Classes are all effectively public types
 		this.setAccessSpecifier(new AccessSpecifier(false, false, Token.PUBLIC));
 		this.definitions.setClassDefinition(this);
+
+		this.delegate = new Delegate(name.name, definitions);
 	}
 
 	/**
@@ -1423,130 +1416,21 @@ public class ClassDefinition extends Definition
 
 	public boolean hasDelegate()
 	{
-		if (!delegateChecked)
-		{
-			delegateChecked = true;
-
-			try
-			{
-				String classname = name.name.replace('_', '.');
-				delegateClass = ClassLoader.getSystemClassLoader().loadClass(classname);
-				delegateMethods = new HashMap<String, Method>();
-				delegateArgs = new HashMap<String, LexNameList>();
-			}
-			catch (ClassNotFoundException e)
-			{
-				// Fine
-			}
-		}
-
-		return (delegateClass != null);
+		return delegate.hasDelegate();
 	}
 
-	public Object newDelegate()
-		throws InstantiationException, IllegalAccessException
+	public Object newInstance()
 	{
-		return delegateClass.newInstance();
+		return delegate.newInstance();
 	}
 
-	public Method getDelegateMethod(String title)
+	public Value invokeDelegate(Object delegateObject, Context ctxt)
 	{
-		Method m = delegateMethods.get(title);
+		return delegate.invokeDelegate(delegateObject, ctxt);
+	}
 
-		if (m == null)
-		{
-			PatternList plist = null;
-			String mname = title.substring(0, title.indexOf('('));
-
-			for (Definition d: definitions)
-			{
-				if (d.name.name.equals(mname))
-				{
-    	 			if (d.isOperation())
-    	 			{
-    	 				if (d instanceof ExplicitOperationDefinition)
-    	 				{
-    	 					ExplicitOperationDefinition e = (ExplicitOperationDefinition)d;
-    	 					plist = e.parameterPatterns;
-    	 				}
-    	 				else
-    	 				{
-    	 					ImplicitOperationDefinition e = (ImplicitOperationDefinition)d;
-    	 					plist = e.getParamPatternList();
-    	 				}
-
-    	 				break;
-    	 			}
-    	 			else if (d.isFunction())
-    	 			{
-    	 				if (d instanceof ExplicitFunctionDefinition)
-    	 				{
-    	 					ExplicitFunctionDefinition e = (ExplicitFunctionDefinition)d;
-    	 					plist = e.paramPatternList.get(0);
-    	 				}
-    	 				else
-    	 				{
-    	 					ImplicitFunctionDefinition e = (ImplicitFunctionDefinition)d;
-    	 					plist = e.getParamPatternList().get(0);
-    	 				}
-
-    	 				break;
-    	 			}
-				}
-			}
-
-			LexNameList anames = new LexNameList();
-			List<Class<?>> ptypes = new Vector<Class<?>>();
-
-			if (plist != null)
-			{
-				for (Pattern p: plist)
-				{
-					if (p instanceof IdentifierPattern)
-					{
-						IdentifierPattern ip = (IdentifierPattern)p;
-						anames.add(ip.name);
-						ptypes.add(Value.class);
-					}
-					else
-					{
-						throw new InternalException(56,
-							"Native method cannot use pattern arguments: " + title);
-					}
-				}
-
-				delegateArgs.put(title, anames);
-			}
-			else
-			{
-				throw new InternalException(57, "Native member not found: " + title);
-			}
-
-			try
-			{
-				Class<?>[] array = new Class<?>[0];
-				m = delegateClass.getMethod(mname, ptypes.toArray(array));
-
-				if (!m.getReturnType().equals(Value.class))
-				{
-					throw new InternalException(58,
-						"Native method does not return Value: " + m);
-				}
-			}
-			catch (SecurityException e)
-			{
-				throw new InternalException(60,
-					"Cannot access native method: " + e.getMessage());
-			}
-			catch (NoSuchMethodException e)
-			{
-				throw new InternalException(61,
-					"Cannot find native method: " + e.getMessage());
-			}
-
-			delegateMethods.put(title, m);
-		}
-
-		return m;
+	public Value invokeDelegate(Context ctxt)
+	{
+		return delegate.invokeDelegate(null, ctxt);
 	}
 }
