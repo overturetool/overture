@@ -24,16 +24,16 @@ getCoordinates() ==
   return coord;
 
 public setCoordinates : Coordinates ==> ()
-setCoordinates(coord) ==
-  coord := coord;
+setCoordinates(coordarg) ==
+  coord := coordarg;
   
 public getAltitude : () ==> Altitude
 getAltitude() ==
   return alt;
     
 public setAltitude : Altitude ==> ()
-setAltitude(alt) ==
-  alt := alt;
+setAltitude(altarg) ==
+  alt := altarg;
  
 public getPosition : () ==> Position
 getPosition() == 

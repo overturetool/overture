@@ -58,7 +58,7 @@ Time = nat;
 
 SenseTimeline = seq of (Sense * [AccelerometerData] * Time)
 inv stl == let l = [stl(i).#2 | i in set inds stl & stl(i).#2 <> nil]
-           in l(1) = HIGH and forall i in set inds l : l(i) < MED => l(i-1) > MED;
+           in l(1) = HIGH and forall i in set inds l & l(i) < MED => l(i-1) > MED;
 
 AccelerometerData = nat
 inv n == n < 3;
@@ -131,7 +131,10 @@ HeartController (mk_(-,acc,time)) ==
                              
 values 
 
-MED : AccelerometerData = 3;
+MED  : AccelerometerData = 3;
+LOW  : AccelerometerData = 0;
+MED  : AccelerometerData = 1;
+HIGH : AccelerometerData = 2;
 
 sensedData : seq of (Sense * [AccelerometerData] * Time) = 
 [mk_(<NONE>,nil,i) | i in set {1,...,120}]^

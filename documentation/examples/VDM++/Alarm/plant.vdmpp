@@ -1,4 +1,4 @@
-\begin{vdm_al}--[PlantWithInv]
+\begin{vdm_al}
 class Plant
 
 instance variables
@@ -19,13 +19,13 @@ PlantInv(as,sch) ==
          a.GetReqQuali() in set expert.GetQuali());
 \end{vdm_al}
 
-\begin{vdm_al}--[Period]
+\begin{vdm_al}
 types
 
 public Period = token;
 \end{vdm_al}
   
-\begin{vdm_al}--[ExpertToPage]
+\begin{vdm_al}
 operations
 
 public ExpertToPage: Alarm * Period ==> Expert
@@ -42,21 +42,21 @@ post let expert = RESULT
        a.GetReqQuali() in set expert.GetQuali();
 \end{vdm_al}
 	 
-\begin{vdm_al}--[NumberOfExperts]
+\begin{vdm_al}
 public NumberOfExperts: Period ==> nat
 NumberOfExperts(p) ==
   return card schedule(p)
 pre p in set dom schedule;
 \end{vdm_al}
 
-\begin{vdm_al}--[ExpertIsOnDuty]
+\begin{vdm_al}
 public ExpertIsOnDuty: Expert ==> set of Period
 ExpertIsOnDuty(ex) ==
   return {p | p in set dom schedule & 
               ex in set schedule(p)};
 \end{vdm_al}
 
-\begin{vdm_al}--[PlantConstructor]
+\begin{vdm_al}
 public Plant: set of Alarm * 
               map Period to set of Expert ==> Plant
 Plant(als,sch) ==
