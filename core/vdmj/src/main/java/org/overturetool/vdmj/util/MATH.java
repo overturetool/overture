@@ -96,13 +96,17 @@ public class MATH
 		Value arg = ctxt.lookup(new LexNameToken("MATH", "a", null));
 		long lv = arg.intValue(ctxt);
 
-		if (seed == 0 || seed == -1)
+		if (seed == -1)
 		{
 			return new IntegerValue(lv);
 		}
+		else if (lv == 0)
+		{
+			return new IntegerValue(0);
+		}
 		else
 		{
-			return new IntegerValue(random.nextLong() % lv);
+			return new IntegerValue(Math.abs(random.nextLong() % lv));
 		}
 	}
 
