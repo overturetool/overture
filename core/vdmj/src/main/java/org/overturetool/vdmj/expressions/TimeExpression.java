@@ -46,6 +46,8 @@ public class TimeExpression extends Expression
 	@Override
 	public Value eval(Context ctxt)
 	{
+		location.hit();
+
 		try
         {
 	        return new NaturalOneValue(SystemClock.getWallTime());

@@ -164,6 +164,8 @@ public class PeriodicStatement extends Statement
 	@Override
 	public Value eval(Context ctxt)
 	{
+		location.hit();
+
 		try
 		{
 			OperationValue op = ctxt.lookup(opname).operationValue(ctxt);

@@ -52,6 +52,8 @@ public class CyclesStatement extends Statement
 	@Override
 	public Value eval(Context ctxt)
 	{
+		location.hit();
+
 		if (ctxt.threadState.getTimestep() > 0)
 		{
 			// Already in a timed step, so ignore nesting
