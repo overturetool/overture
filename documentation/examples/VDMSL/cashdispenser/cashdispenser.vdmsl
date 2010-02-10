@@ -147,4 +147,4 @@ TestCash: let c in set {mk_Card(1,1,1), mk_Card(2,2,2)}
           in
             (InsertCard(c);
              Validate(1111);
-             ReportIllegalCard(c)){1,5};
+             ReportIllegalCard(c.cardId)){1,5};
