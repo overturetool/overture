@@ -175,7 +175,7 @@ public class CallStatement extends Statement
 
 				if (!TypeComparator.compatible(ptype, atype))
 				{
-					atype.report(3217, "Unexpected type for argument " + i);
+					report(3217, "Unexpected type for argument " + i);
 					detail2("Expected", ptype, "Actual", atype);
 				}
 			}
