@@ -36,10 +36,10 @@ public class RootNode
 		return rootElementList;
 	}
 
-	public synchronized void setCheckedTime(Date checkedTime)
-	{
-		this.checkedTime = checkedTime;
-	}
+//	public synchronized void setCheckedTime(Date checkedTime)
+//	{
+//		this.checkedTime = checkedTime;
+//	}
 
 	public synchronized Date getCheckedTime()
 	{
@@ -49,6 +49,7 @@ public class RootNode
 	public synchronized void setChecked(boolean checked)
 	{
 		this.checked = checked;
+		this.checkedTime =new Date();
 	}
 
 	public synchronized boolean isChecked()
@@ -211,6 +212,7 @@ public class RootNode
 			parseCurrectTable.remove(file);
 
 		parseCurrectTable.put(file, isParseCorrect);
+		checked=false;
 	}
 
 	public synchronized boolean isParseCorrect()

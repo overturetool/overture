@@ -251,7 +251,7 @@ public class LatexCoverageAction implements IObjectActionDelegate
 					else
 					{
 						documentFileName = new LatexProject(selectedProject).getMainDocument();
-						outputFolder = new File(documentFileName);
+						outputFolder = LatexBuilder.makeOutputFolder(selectedProject);
 						buildPdf(selectedProject,
 								monitor,
 								outputFolder,

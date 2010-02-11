@@ -419,7 +419,7 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 				String entryName = jarEntry.getName();
 				if (entryName.endsWith(".class")) {
 					String packageName = getPackageForName(entryName);
-					if (!packageList.contains(packageName)) {
+					if (packageName.trim().length()>0 && !packageList.contains(packageName)) {
 						// check for do not export package
 						boolean excludePackage = false;
 						excludePackage = isPackageInList(doNotExportPackagePrefixes,packageName);
@@ -464,7 +464,7 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 				String entryName = jarEntry.getName();
 				if (entryName.endsWith(".class")) {
 					String packageName = getPackageForName(entryName);
-					if (!packageList.contains(packageName)) {
+					if (packageName.trim().length()>0 && !packageList.contains(packageName)) {
 						// check for do not export package
 						boolean excludePackage = false;
 						excludePackage = isPackageInList(importInsteadOfExportPackagePrefixes,packageName);
@@ -516,6 +516,8 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 	 * @return the package name for the entry.
 	 */
 	private String getPackageForName(String entryName) {
+		if(!entryName.contains("/"))
+			return "";//default package
 		entryName = entryName.substring(0, entryName.lastIndexOf('/'));
 		String packageName = entryName.replace('/', '.');
 		return packageName;

@@ -57,21 +57,22 @@ public class TraceInterpreter
 			TraceXmlWrapper storage, boolean runTypeCheck, Dialect dialect,
 			Release languageVersion) throws Exception
 	{
-
-		
-
 		if (dialect == Dialect.VDM_PP || dialect == Dialect.VDM_RT)
+		{
 			processTracesClasses(specFiles,
 					className,
 					storage,
 					runTypeCheck,
 					dialect,languageVersion);
+		}
 		else if (dialect == Dialect.VDM_SL)
+		{
 			processTracesModules(specFiles,
 					className,
 					storage,
 					runTypeCheck,
 					dialect,languageVersion);
+		}
 	}
 
 	private void processTracesClasses(List<File> specFiles, String className,
@@ -99,11 +100,7 @@ public class TraceInterpreter
 
 		if (parsErrors == 0)
 		{
-			
-
-			
-
-			processTrace(classes,className,runTypeCheck,storage,dialect,languageVersion);
+		processTrace(classes,className,runTypeCheck,storage,dialect,languageVersion);
 		}
 	}
 	public void processTrace(ClassList classList,String className, boolean runTypeCheck, TraceXmlWrapper storage, Dialect dialect, Release languageVersion,float subset, TraceReductionType traceReductionType,long seed) throws Exception
@@ -180,7 +177,6 @@ public class TraceInterpreter
 
 		if (parsErrors == 0)
 		{
-		
 			processTrace(modules,moduleName,runTypeCheck,storage,dialect,languageVersion);
 		}
 	}
@@ -260,6 +256,7 @@ public class TraceInterpreter
 			{
 				if (definition instanceof NamedTraceDefinition)
 				{
+					
 					Context ctxt = createContext(classDef);
 
 					evaluateTests(className, storage, definition, ctxt);
@@ -269,7 +266,7 @@ public class TraceInterpreter
 			completed();
 		} catch (ContextException e)
 		{
-
+e.printStackTrace();
 			error(e.getMessage());
 			throw e;
 		} catch (Exception e)
@@ -286,7 +283,7 @@ public class TraceInterpreter
 	private Context createContext(Object classdef) throws Exception
 	{
 		ObjectValue object = null;
-
+		interpreter.init(null);//need to init else newInstance can 
 		try
 		{
 			if (classdef instanceof ClassDefinition)

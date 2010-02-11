@@ -42,7 +42,9 @@ public class PdfLatex extends Thread
 		cw.Show();
 		try
 		{
-			process = Runtime.getRuntime().exec("pdflatex " + documentName,
+			String argument = "pdflatex " + documentName;
+			cw.println("Starting: "+argument+"\nIn: "+outputFolder.getAbsolutePath());
+			process = Runtime.getRuntime().exec(argument,
 					null,
 					outputFolder);
 			new ProcessConsolePrinter(cw, process.getInputStream()).start();

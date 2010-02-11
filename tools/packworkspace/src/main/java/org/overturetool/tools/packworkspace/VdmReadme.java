@@ -198,8 +198,8 @@ public class VdmReadme
 	public void createReadme(File newReadMeFile)
 	{
 		
-		if(newReadMeFile.exists())
-			return;
+//		if(newReadMeFile.exists())
+//			return;
 		
 		FileWriter outputFileReader;
 		try

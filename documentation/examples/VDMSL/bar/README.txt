@@ -18,6 +18,6 @@ Exe: TESTBAG TestBagAll
 #PRE_CHECKS=true
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
-#ENTRY_POINT=TESTBAG`TestBagAll()
+#ENTRY_POINT=BAGTEST`TestBagAll()
 #EXPECTED_RESULT=NO_ERROR_INTERPRETER
 #******************************************************

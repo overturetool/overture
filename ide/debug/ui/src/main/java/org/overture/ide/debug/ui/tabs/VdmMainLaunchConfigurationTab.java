@@ -101,6 +101,14 @@ public abstract class VdmMainLaunchConfigurationTab extends
 	@Override
 	protected boolean validate()
 	{
+		try
+		{
+			Console.charset = getProject().getProject().getDefaultCharset();
+		} catch (CoreException e)
+		{
+			e.printStackTrace();
+		}
+		
 		boolean syntaxCorrect = validateClass() && validateOperation();
 		if(!syntaxCorrect)
 			return syntaxCorrect;
@@ -110,6 +118,12 @@ public abstract class VdmMainLaunchConfigurationTab extends
 	}
 	
 	protected abstract boolean validateTypes(String module, String operation);
+	
+//	private String getCharset()
+//	{
+//		getProject().getProject().getDefaultCharset()
+//		
+//	}
 
 	private boolean validateOperation()
 	{
@@ -118,9 +132,11 @@ public abstract class VdmMainLaunchConfigurationTab extends
 			setErrorMessage("No operation specified");
 			return false;
 		}
-		LexTokenReader ltr = new LexTokenReader(fOperationText.getText(),
-				Dialect.VDM_PP,
+		LexTokenReader ltr;
+		ltr = new LexTokenReader(fOperationText.getText(),
+				Dialect.VDM_RT,
 				Console.charset);
+
 		ExpressionReader reader = new ExpressionReader(ltr);
 		// reader.setCurrentModule(module);
 		try
@@ -149,27 +165,28 @@ public abstract class VdmMainLaunchConfigurationTab extends
 			setErrorMessage("No " + getModuleLabelName() + " specified");
 			return false;
 		}
-		LexTokenReader ltr = new LexTokenReader(fModuleNameText.getText(),
+		LexTokenReader ltr;
+		ltr = new LexTokenReader(fModuleNameText.getText(),
 				Dialect.VDM_PP,
 				Console.charset);
-		ExpressionReader reader = new ExpressionReader(ltr);
-		// reader.setCurrentModule(module);
-		try
-		{
-			reader.readExpression();
-		} catch (ParserException e)
-		{
-			this.setErrorMessage(getModuleLabelName() + ": " + e.number + " "
-					+ e.getMessage());
-			return false;
-		} catch (LexException e)
-		{
-			this.setErrorMessage(getModuleLabelName() + ": " + e.number + " "
-					+ e.getMessage());
-			return false;
-		}
-		return !(fModuleNameText == null || fModuleNameText.getText().length() == 0);
 
+ExpressionReader reader = new ExpressionReader(ltr);
+// reader.setCurrentModule(module);
+try
+{
+		reader.readExpression();
+} catch (ParserException e)
+{
+		this.setErrorMessage(getModuleLabelName() + ": " + e.number + " "
+				+ e.getMessage());
+		return false;
+} catch (LexException e)
+{
+		this.setErrorMessage(getModuleLabelName() + ": " + e.number + " "
+				+ e.getMessage());
+		return false;
+}
+return !(fModuleNameText == null || fModuleNameText.getText().length() == 0);
 	}
 
 	@Override

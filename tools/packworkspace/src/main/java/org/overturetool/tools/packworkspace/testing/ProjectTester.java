@@ -13,6 +13,7 @@ import org.overturetool.vdmj.VDMJ;
 import org.overturetool.vdmj.VDMPP;
 import org.overturetool.vdmj.VDMRT;
 import org.overturetool.vdmj.VDMSL;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.StderrRedirector;
 import org.overturetool.vdmj.messages.StdoutRedirector;
@@ -81,8 +82,9 @@ public class ProjectTester
 			setConsole(project.getSettings().getName(), Phase.TypeCheck);
 			statusTypeCheck = controller.typeCheck();
 
-			if (project.getSettings().getEntryPoint() != null
-					&& project.getSettings().getEntryPoint().length() > 0)
+			String entryPoint = project.getSettings().getEntryPoint();
+			if (entryPoint != null
+					&& entryPoint.length() > 0 && statusTypeCheck==ExitStatus.EXIT_OK)
 			{
 				try
 				{
@@ -91,8 +93,9 @@ public class ProjectTester
 							Phase.Interpretation);
 					Interpreter i = controller.getInterpreter();
 					i.init(null);
-					Value value = i.evaluate(project.getSettings()
-							.getEntryPoint(), i.initialContext);
+					if(project.getDialect()==Dialect.VDM_SL)
+						i.setDefaultName(entryPoint.substring(0,entryPoint.indexOf('`')));
+					Value value = i.execute(entryPoint, null);
 					Console.out.println(value);
 					statusInterpreter = ExitStatus.EXIT_OK;
 				} catch (Exception e)
