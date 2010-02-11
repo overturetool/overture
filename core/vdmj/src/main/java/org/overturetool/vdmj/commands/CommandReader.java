@@ -348,11 +348,17 @@ abstract public class CommandReader
 		}
 		catch (RTException e)
 		{
-			println("Stopped: " + Interpreter.stoppedException.getMessage());
-			Breakpoint bp = new Breakpoint(Interpreter.stoppedLocation);
-			Context cx = Interpreter.stoppedContext;
-			Interpreter.stopped();
-			new DebuggerReader(interpreter, bp, cx).run();
+			while (VDMThreadSet.isDebugStopped())
+			{
+				try
+				{
+					Thread.sleep(1000);
+				}
+				catch (InterruptedException x)
+				{
+					// ZZZzzz...
+				}
+			}
 		}
 		catch (DebuggerException e)
 		{
