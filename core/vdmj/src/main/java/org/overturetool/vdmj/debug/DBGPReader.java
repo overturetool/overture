@@ -626,7 +626,7 @@ public class DBGPReader
 			sb.append("<error code=\"");
 			sb.append(errorCode.value);
 			sb.append("\" apperr=\"\"><message>");
-			sb.append(reason);
+			sb.append(quote(reason));
 			sb.append("</message></error>");
 
 			response(null, sb);
