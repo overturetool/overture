@@ -28,20 +28,15 @@ import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.runtime.ModuleInterpreter;
-import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.UnknownType;
-import org.overturetool.vdmj.util.IO;
-import org.overturetool.vdmj.util.MATH;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.Value;
 
@@ -132,60 +127,6 @@ public class NotYetSpecifiedStatement extends Statement
     		{
     			return CPUClassDefinition.setPriority(ctxt);
     		}
-		}
-		else if (location.module.equals("IO"))
-		{
-    		if (ctxt.title.equals("fecho(filename, text, fdir)"))
-    		{
-    			return IO.fecho(ctxt);
-    		}
-    		else if (ctxt.title.equals("ferror()"))
-    		{
-    			return IO.ferror();
-    		}
-    		else if (ctxt.title.equals("print(arg)"))
-    		{
-    			return IO.print(ctxt);
-    		}
-    		else if (ctxt.title.equals("printf(format, args)"))
-    		{
-    			try
-    			{
-    				return IO.printf(ctxt);
-    			}
-    			catch (ValueException e)
-    			{
-    				throw new ContextException(e, location);
-    			}
-    			catch (Exception e)
-    			{
-    				throw new InternalException(34,
-    					"Native library error: " + e.getMessage());
-    			}
-    		}
-		}
-		else if (location.module.equals("MATH"))
-		{
-			try
-			{
-        		if (ctxt.title.equals("rand(a)"))
-        		{
-        		    return MATH.rand(ctxt);
-        		}
-        		else if (ctxt.title.equals("srand2(a)"))
-        		{
-        		    return MATH.srand2(ctxt);
-        		}
-			}
-			catch (ValueException e)
-			{
-				throw new ContextException(e, location);
-			}
-			catch (Exception e)
-			{
-				throw new InternalException(34,
-					"Native library error: " + e.getMessage());
-			}
 		}
 
 		return abort(4041, "'is not yet specified' statement reached", ctxt);

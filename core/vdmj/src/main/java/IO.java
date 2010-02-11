@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *	Copyright (C) 2008, 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,25 +21,20 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.util;
+// This must be in the default package to work with VDMJ's native delegation.
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.syntax.ExpressionReader;
-import org.overturetool.vdmj.typechecker.Environment;
-import org.overturetool.vdmj.typechecker.FlatEnvironment;
-import org.overturetool.vdmj.typechecker.PrivateClassEnvironment;
 import org.overturetool.vdmj.values.BooleanValue;
 import org.overturetool.vdmj.values.CharacterValue;
 import org.overturetool.vdmj.values.NilValue;
@@ -57,9 +52,8 @@ public class IO
 {
 	private static String lastError = "";
 
-	public static BooleanValue writeval(Context ctxt)
+	public static Value writeval(Value tval)
 	{
-		Value tval = ctxt.lookup(new LexNameToken("IO", "val", null));
 		String text = tval.toString();
 
 		Console.out.print(text);
@@ -68,15 +62,10 @@ public class IO
 		return new BooleanValue(true);
 	}
 
-	public static BooleanValue fwriteval(Context ctxt)
+	public static Value fwriteval(Value fval, Value tval, Value dval)
 	{
-		Value tval = ctxt.lookup(new LexNameToken("IO", "val", null));
-		String text = stringOf(tval);
-
-		Value fval = ctxt.lookup(new LexNameToken("IO", "filename", null));
 		String filename = stringOf(fval);
-
-		Value dval = ctxt.lookup(new LexNameToken("IO", "fdir", null));
+		String text = stringOf(tval);
 		String fdir = dval.toString();	// <start>|<append>
 
 		try
@@ -96,43 +85,38 @@ public class IO
 		return new BooleanValue(true);
 	}
 
-	public static TupleValue freadval(Context ctxt)
+	public static Value freadval(Value fval)
 	{
 		ValueList result = new ValueList();
 
 		try
 		{
-			Value fval = ctxt.lookup(new LexNameToken("IO", "f", null));
 			File file = new File(stringOf(fval).replace('/', File.separatorChar));
 
-			File workingDirectory = new File(".");
-			if(file.getAbsolutePath().contains(new Character(File.separatorChar).toString()))
-				file = new File(workingDirectory.getParentFile(),file.getAbsolutePath());
-			System.out.println(file.getAbsolutePath());
+			if (file.getAbsolutePath().contains(File.pathSeparator))
+			{
+				file = new File(new File(".").getParentFile(), file.getAbsolutePath());
+				System.out.println(file.getAbsolutePath());
+			}
 
 			LexTokenReader ltr = new LexTokenReader(file, Dialect.VDM_PP);
 			ExpressionReader reader = new ExpressionReader(ltr);
 			reader.setCurrentModule("IO");
 			Expression exp = reader.readExpression();
 
-			String caller = ctxt.location.module;
-			Interpreter ip = Interpreter.getInstance();
-			ClassDefinition classdef = ip.findClass(caller);
-
-			if (classdef == null)
+			try
 			{
-				throw new Exception("Class " + caller + " not found");
+				Interpreter ip = Interpreter.getInstance();
+				ip.typeCheck(exp, ip.getGlobalEnvironment());
+			}
+			catch (Exception e)
+			{
+				// OK
 			}
 
-			Environment env = new FlatEnvironment(
-				classdef.getSelfDefinition(),
-				new PrivateClassEnvironment(classdef, ip.getGlobalEnvironment()));
-
-			ip.typeCheck(exp, env);
-
 			result.add(new BooleanValue(true));
-			Context ectxt = new Context(ctxt.location, "freadval", null);
-			ectxt.setThreadState(null, ctxt.threadState.CPU);
+			Context ectxt = new Context(null, "freadval", null);
+			ectxt.setThreadState(null, null);
 			result.add(exp.eval(ectxt));
 		}
 		catch (Exception e)
@@ -146,12 +130,9 @@ public class IO
 		return new TupleValue(result);
 	}
 
-	public static BooleanValue fecho(Context ctxt)
+	public static Value fecho(Value fval, Value tval, Value dval)
 	{
-		Value tval = ctxt.lookup(new LexNameToken("IO", "text", null));
 		String text = stringOf(tval);
-
-		Value fval = ctxt.lookup(new LexNameToken("IO", "filename", null));
 		String filename = fval.toString().replace("\"", "");
 
 		if (filename.equals("[]"))
@@ -161,7 +142,6 @@ public class IO
 		}
 		else
 		{
-			Value dval = ctxt.lookup(new LexNameToken("IO", "fdir", null));
 			String fdir = dval.toString();	// <start>|<append>
 
 			try
@@ -222,23 +202,18 @@ public class IO
 		}
 	}
 
-	public static Value print(Context ctxt)
+	public static Value print(Value v)
 	{
-		Value v = ctxt.lookup(new LexNameToken("IO", "arg", null));
 		Console.out.printf("%s", v);
 		Console.out.flush();
 		return new VoidValue();
 	}
 
-	public static Value printf(Context ctxt)
+	public static Value printf(Value fv, Value vs)
 		throws ValueException
 	{
-		Value fv = ctxt.lookup(new LexNameToken("IO", "format", null));
 		String format = stringOf(fv);
-
-		Value vs = ctxt.lookup(new LexNameToken("IO", "args", null));
-		ValueList values = vs.seqValue(ctxt);
-
+		ValueList values = vs.seqValue(null);
 		Console.out.printf(format, values.toArray());
 		Console.out.flush();
 		return new VoidValue();

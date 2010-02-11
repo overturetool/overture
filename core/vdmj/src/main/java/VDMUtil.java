@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *	Copyright (C) 2008, 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,19 +21,15 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.util;
+// This must be in the default package to work with VDMJ's native delegation.
 
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ContextException;
-import org.overturetool.vdmj.runtime.RootContext;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.values.BooleanValue;
-import org.overturetool.vdmj.values.NaturalOneValue;
 import org.overturetool.vdmj.values.NilValue;
 import org.overturetool.vdmj.values.SeqValue;
 import org.overturetool.vdmj.values.TupleValue;
@@ -43,77 +39,33 @@ import org.overturetool.vdmj.values.ValueSet;
 
 public class VDMUtil
 {
-	public static Value set2seq(Context ctxt)
+	public static Value set2seq(Value arg) throws ValueException
 	{
-		try
-		{
-			Value arg = ctxt.lookup(new LexNameToken("VDMUtil", "x", null));
-			ValueSet set = arg.setValue(ctxt);
-			ValueList list = new ValueList();
-			list.addAll(set);
-			return new SeqValue(list);
-		}
-		catch (ValueException e)
-		{
-			throw new ContextException(e, ctxt.location);
-		}
+		ValueSet set = arg.setValue(null);
+		ValueList list = new ValueList();
+		list.addAll(set);
+		return new SeqValue(list);
 	}
 
-	public static Value get_file_pos(Context ctxt)
+	public static Value val2seq_of_char(Value arg)
 	{
-		try
-		{
-			ValueList tuple = new ValueList();
-			Context outer = ctxt.getRoot().outer;
-			RootContext root = outer.getRoot();
-
-			tuple.add(new SeqValue(ctxt.location.file.getPath()));
-			tuple.add(new NaturalOneValue(ctxt.location.startLine));
-			tuple.add(new NaturalOneValue(ctxt.location.startPos));
-			tuple.add(new SeqValue(ctxt.location.module));
-
-			int bra = root.title.indexOf('(');
-
-			if (bra > 0)
-			{
-    			tuple.add(new SeqValue(root.title.substring(0, bra)));
-			}
-			else
-			{
-				tuple.add(new SeqValue(""));
-			}
-
-			return new TupleValue(tuple);
-		}
-		catch (ValueException e)
-		{
-			throw new ContextException(e, ctxt.location);
-		}
-		catch (Exception e)
-		{
-			throw new ContextException(4076, e.getMessage(), ctxt.location, ctxt);
-		}
-	}
-
-	public static Value val2seq_of_char(Context ctxt)
-	{
-		Value arg = ctxt.lookup(new LexNameToken("VDMUtil", "x", null));
 		return new SeqValue(arg.toString());
 	}
 
-	public static Value seq_of_char2val(Context ctxt)
+	public static Value seq_of_char2val(Value arg)
 	{
 		ValueList result = new ValueList();
 
 		try
 		{
-			Value fval = ctxt.lookup(new LexNameToken("VDMUtil", "s", null));
-			String expression = fval.toString().replace("\"", "");
+			String expression = arg.toString().replace("\"", "");
 			LexTokenReader ltr = new LexTokenReader(expression, Dialect.VDM_PP);
 			ExpressionReader reader = new ExpressionReader(ltr);
 			reader.setCurrentModule("VDMUtil");
 			Expression exp = reader.readExpression();
 			result.add(new BooleanValue(true));
+			Context ctxt = new Context(null, "seq_of_char2val", null);
+			ctxt.setThreadState(null, null);
 			result.add(exp.eval(ctxt));
 		}
 		catch (Exception e)
