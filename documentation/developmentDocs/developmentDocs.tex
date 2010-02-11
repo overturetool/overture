@@ -9,6 +9,12 @@
 \usepackage{latexsym}
 \usepackage{longtable} % ,multirow}
 \usepackage{hyperref}
+\usepackage{float}
+
+
+\floatstyle{ruled}
+\newfloat{program}{thp}{lop}
+\floatname{program}{Extension point}
 
 \newcommand{\vdmtools}{VDMTools}
 \newcommand{\vdmstyle}[1]{\texttt{#1}}
@@ -58,6 +64,10 @@
 			 belowskip=5mm,
 			 framexleftmargin=0mm, 
 			 framexrightmargin=0mm}
+
+
+
+
 %\lstdefinestyle{mystyle}{basicstyle=\sffamily\small,
 %			 frame=tb,
 %                         numbers=left,
@@ -139,9 +149,17 @@
 
 %%%%%%%%%%%%%%%%%%%%%% Commands associated with development docs
 \newcommand{\epoint}[1]{{\tt #1}}
-
-
-
+\newcommand{\class}[1]{\textit{#1}}
+\newcommand{\java}[1]{{\tt #1}}
+\newcommand{\lstjava}[1]{
+	\lstset
+	{
+		language=Java,
+		basicstyle=\footnotesize,
+		captionpos=b,
+		caption=#1
+	}
+}
 
 
 \begin{document}
