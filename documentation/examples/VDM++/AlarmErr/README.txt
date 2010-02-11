@@ -21,5 +21,5 @@ with alarms. A comparable model of this example also exists in VDM-SL.
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
 #ENTRY_POINT=
-#EXPECTED_RESULT=NO_ERROR_TYPE_CHECK
+#EXPECTED_RESULT=NO_CHECK
 #******************************************************

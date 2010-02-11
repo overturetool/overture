@@ -204,7 +204,7 @@ public class VdmReadme
 		FileWriter outputFileReader;
 		try
 		{
-			outputFileReader = new FileWriter(newReadMeFile);
+			outputFileReader = new FileWriter(newReadMeFile,false);
 			BufferedWriter outputStream = new BufferedWriter(outputFileReader);
 			
 			outputStream.write(toString());

@@ -1,5 +1,8 @@
 package org.overture.ide.ui.outline;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
@@ -11,6 +14,11 @@ import org.overturetool.vdmj.patterns.IgnorePattern;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.patterns.RecordPattern;
+import org.overturetool.vdmj.patterns.TuplePattern;
+import org.overturetool.vdmj.types.OperationType;
+import org.overturetool.vdmj.types.Type;
+
+import com.sun.org.apache.xml.internal.serializer.ToUnknownStream;
 
 public class DisplayNameCreator {
 
@@ -43,7 +51,27 @@ public class DisplayNameCreator {
 							else if (def.paramDefinitions != null)
 								sb.append(def.paramDefinitions.get(i).name.name
 										+ " " + def.parameterPatterns.get(i));
-							else 	sb.append("UNRESOLVED");
+							else 	
+							{
+								
+								if(def.type!=null)
+								{
+									StringBuilder parametersSb= new StringBuilder();
+									for(Type t : def.type.parameters)
+									{
+										sb.append(t.toString().replace("unresolved ", "")+ " %s");
+									}
+									List<String> patterns = new Vector<String>();
+									for(Pattern pattern: def.parameterPatterns)
+									{
+										patterns.add(pattern.toString());
+									}
+									sb.append(String.format(parametersSb.toString(),patterns));
+									
+								}
+								else
+									sb.append("UNRESOLVED");
+							}
 						}
 						if (i + 1 < def.parameterPatterns.size())
 							sb.append(", ");
@@ -103,7 +131,7 @@ public class DisplayNameCreator {
 				else if (pattern instanceof IgnorePattern)
 					sb.append("-");
 				else
-					sb.append("TYPE_UNRESOLVED");
+					sb.append(pattern.toString());
 			
 			return sb.toString();
 		}

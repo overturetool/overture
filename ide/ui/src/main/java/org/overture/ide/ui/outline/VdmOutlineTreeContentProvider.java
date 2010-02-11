@@ -54,7 +54,7 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider
 			{
 				e.printStackTrace();
 			}
-		return null;
+		return new Object[0];
 	}
 
 	public void dispose()

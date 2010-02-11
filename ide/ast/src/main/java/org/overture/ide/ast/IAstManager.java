@@ -91,4 +91,10 @@ public interface IAstManager
 	 * @return a list of known natures
 	 */
 	public List<String> getNatures(IProject project);
+	
+	
+	/**
+	 * Refreshed the AST for all VDM projects
+	 */
+	public  void refreshProjects();
 }

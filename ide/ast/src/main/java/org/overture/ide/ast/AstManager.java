@@ -6,7 +6,14 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.overture.ide.ast.dltk.DltkAstConverter;
 import org.overturetool.vdmj.definitions.ClassDefinition;
@@ -124,6 +131,45 @@ public class AstManager implements IAstManager {
 			natures.addAll(roots.keySet());
 		}
 		return natures;
+	}
+	
+	
+	
+	public  void refreshProjects()
+	{
+		Job refreshJob = new Job("AST Refresh"){
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor)
+			{
+				final String VDM_PP_NATURE = "org.overture.ide.vdmpp.core.nature";
+				final String VDM_SL_NATURE = "org.overture.ide.vdmsl.core.nature";
+				final String VDM_RT_NATURE = "org.overture.ide.vdmrt.core.nature";
+				for (IProject project : ResourcesPlugin.getWorkspace()
+						.getRoot()
+						.getProjects())
+				{
+					try
+					{
+						if (project.isAccessible()&& project.isOpen()&&( project.hasNature(VDM_SL_NATURE)
+								|| project.hasNature(VDM_PP_NATURE)
+								|| project.hasNature(VDM_RT_NATURE)))
+						{
+							if(!getProjects().contains(project) )
+							project.build(IncrementalProjectBuilder.FULL_BUILD,null);
+							
+						}
+					} catch (CoreException e)
+					{
+						e.printStackTrace();
+					}
+				}
+				return new Status(IStatus.OK,"org.overture.ide.ast","AST Refresh completed");
+			}
+			
+		};
+		refreshJob.schedule();
+		
 	}
 
 }

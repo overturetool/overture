@@ -19,8 +19,8 @@ import org.overturetool.vdmj.Release;
 public class VdmProject implements IVdmProject
 {
 	public static final String BUILDER_ID = "org.eclipse.dltk.core.scriptbuilder";
-	private final String LANGUAGE_VERSION_ARGUMENT_KEY = "VDM_LANGUAGE_VERSION";
-	private final String DYNAMIC_TYPE_CHECKS_ARGUMENT_KEY = "VDM_DYNAMIC_TYPE_CHECKS";
+	private final String LANGUAGE_VERSION_ARGUMENT_KEY = "LANGUAGE_VERSION";
+	private final String DYNAMIC_TYPE_CHECKS_ARGUMENT_KEY = "DYNAMIC_TYPE_CHECKS";
 	private final String INV_CHECKS_ARGUMENT_KEY = "INV_CHECKS";
 	private final String POST_CHECKS_ARGUMENT_KEY = "POST_CHECKS";
 	private final String PRE_CHECKS_ARGUMENT_KEY = "PRE_CHECKS";
@@ -402,9 +402,12 @@ public class VdmProject implements IVdmProject
 		getProject().build(IncrementalProjectBuilder.FULL_BUILD , null);
 	}
 	
-	public void typeCheck(IProgressMonitor monitor) throws CoreException
+	public void typeCheck(boolean clean,IProgressMonitor monitor) throws CoreException
 	{
+		if(clean)
 		getProject().build(IncrementalProjectBuilder.FULL_BUILD , monitor);
+		else
+			getProject().build(IncrementalProjectBuilder.AUTO_BUILD , monitor);
 	}
 	
 	public static void waitForBuidCompletion()

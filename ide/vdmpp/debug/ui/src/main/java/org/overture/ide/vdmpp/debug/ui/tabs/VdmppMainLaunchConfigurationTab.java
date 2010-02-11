@@ -7,42 +7,19 @@
  ******************************************************************************/
 package org.overture.ide.vdmpp.debug.ui.tabs;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.PreferencesLookupDelegate;
-import org.eclipse.dltk.debug.core.DLTKDebugPreferenceConstants;
-import org.eclipse.dltk.debug.ui.launchConfigurations.MainLaunchConfigurationTab;
-import org.eclipse.dltk.debug.ui.messages.DLTKLaunchConfigurationsMessages;
-import org.eclipse.dltk.internal.core.SourceMethod;
-import org.eclipse.dltk.internal.ui.filters.FieldsFilter;
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
-import org.eclipse.ui.model.WorkbenchContentProvider;
-import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.eclipse.ui.views.navigator.ResourceComparator;
+import org.overture.ide.ast.AstManager;
+import org.overture.ide.ast.NotAllowedException;
 import org.overture.ide.debug.ui.tabs.VdmMainLaunchConfigurationTab;
+import org.overture.ide.utility.VdmProject;
 import org.overture.ide.vdmpp.core.VdmPpProjectNature;
-import org.overture.ide.vdmpp.debug.core.VDMPPDebugConstants;
+import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.definitions.ClassList;
+import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.runtime.ClassInterpreter;
 
 /**
  * Main launch configuration tab for overture scripts
  */
-@SuppressWarnings("restriction")
 public class VdmppMainLaunchConfigurationTab extends VdmMainLaunchConfigurationTab {
 
 	public VdmppMainLaunchConfigurationTab(String mode) {
@@ -52,5 +29,28 @@ public class VdmppMainLaunchConfigurationTab extends VdmMainLaunchConfigurationT
 	@Override
 	protected String getNatureID() {
 		return VdmPpProjectNature.VDM_PP_NATURE;
+	}
+
+	@Override
+	protected boolean validateTypes(String module, String operation)
+	{
+		try
+		{
+			Settings.dialect = Dialect.VDM_PP;
+			Settings.release = new VdmProject(getProject().getProject()).getLanguageVersion();
+			ClassList classes = AstManager.instance().getRootNode(getProject().getProject(), getNatureID()).getClassList();
+			ClassInterpreter ci = new ClassInterpreter(classes);
+			ci.typeCheck("new "+module+"."+operation);
+			return true;
+		} catch (NotAllowedException e)
+		{
+			setErrorMessage(e.toString());
+			e.printStackTrace();
+		} catch (Exception e)
+		{
+			setErrorMessage(e.toString());
+		}
+		
+		return false;
 	}
 }

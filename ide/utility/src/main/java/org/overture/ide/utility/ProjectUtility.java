@@ -17,7 +17,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.content.IContentType;
 
-public class ProjectUtility {
+public class ProjectUtility
+{
 
 	/***
 	 * Get files from a eclipse project
@@ -30,10 +31,12 @@ public class ProjectUtility {
 	 * @throws CoreException
 	 */
 	public static List<IFile> getFiles(IProject project, String contentTypeId)
-			throws CoreException {
+			throws CoreException
+	{
 		List<IFile> list = new Vector<IFile>();
 		for (IResource res : project.members(IContainer.INCLUDE_PHANTOMS
-				| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS)) {
+				| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
+		{
 			list.addAll(getFiles(project, res, contentTypeId));
 		}
 		return list;
@@ -47,10 +50,12 @@ public class ProjectUtility {
 	 * @return a list of IFile
 	 * @throws CoreException
 	 */
-	public static List<IFile> getFiles(IProject project) throws CoreException {
+	public static List<IFile> getFiles(IProject project) throws CoreException
+	{
 		List<IFile> list = new Vector<IFile>();
 		for (IResource res : project.members(IContainer.INCLUDE_PHANTOMS
-				| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS)) {
+				| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
+		{
 			list.addAll(getFiles(project, res, null));
 		}
 		return list;
@@ -70,7 +75,8 @@ public class ProjectUtility {
 	 * @throws CoreException
 	 */
 	private static List<IFile> getFiles(IProject project, IResource resource,
-			String contentTypeId) throws CoreException {
+			String contentTypeId) throws CoreException
+	{
 		List<IFile> list = new Vector<IFile>();
 
 		if (resource instanceof IFolder)
@@ -80,17 +86,18 @@ public class ProjectUtility {
 				return list;
 			// . folders like.svn
 			for (IResource res : ((IFolder) resource).members(IContainer.INCLUDE_PHANTOMS
-					| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS)) {
+					| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
+			{
 
-				
 				list.addAll(getFiles(project, res, contentTypeId));
 			}
 		}
 		// check if it is a IFile and that there exists a known content type for
 		// this file and the project
-		else if (resource instanceof IFile) {
-			IContentType contentType = project.getContentTypeMatcher().findContentTypeFor(
-					resource.toString());
+		else if (resource instanceof IFile)
+		{
+			IContentType contentType = project.getContentTypeMatcher()
+					.findContentTypeFor(resource.toString());
 
 			if (contentType != null
 					&& ((contentTypeId != null && contentTypeId.equals(contentType.getId())) || contentTypeId == null))
@@ -109,51 +116,74 @@ public class ProjectUtility {
 	 *            the File to look up
 	 * @return a new IFile representing the file in the eclipse filesystem
 	 */
-	public static IFile findIFile(IProject project, File file) {
+	public static IFile findIFile(IProject project, File file)
+	{
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IPath location = Path.fromOSString(file.getAbsolutePath());
 		IFile ifile = workspace.getRoot().getFileForLocation(location);
 
-		if (ifile == null) {
+		if (ifile == null)
+		{
 
 			IPath absolutePath = new Path(file.getAbsolutePath());
-			// check if the project contains a IFile which maps to the same filesystem location
-			try {
-				for (IFile f : getFiles(project)) {
-					if(f.getLocation().equals(absolutePath))
+			// check if the project contains a IFile which maps to the same
+			// filesystem location
+			try
+			{
+				for (IFile f : getFiles(project))
+				{
+					if (f.getLocation().equals(absolutePath))
 						return f;
 				}
-			} catch (CoreException e1) {}
+			} catch (CoreException e1)
+			{
+			}
 
-			// project does not contain this file, this means that the file has been include elsewhere and a link will be created to the file instead.
-			try {
+			// project does not contain this file, this means that the file has
+			// been include elsewhere and a link will be created to the file
+			// instead.
+			try
+			{
 				linkFileToProject(project, file);
-			} catch (CoreException e) {	}
+			} catch (CoreException e)
+			{
+			}
 
 		}
 		return ifile;
 	}
-	
-	public static void linkFileToProject(IProject project, File file) throws CoreException
+
+	public static void linkFileToProject(IProject project, File file)
+			throws CoreException
 	{
 		IPath absolutePath = new Path(file.getAbsolutePath());
 		IFile ifile = project.getFile(absolutePath.lastSegment());
 		ifile.createLink(absolutePath, IResource.NONE, null);
 	}
 
-	public static File getFile(IProject project, IPath path) {
-		return project.getFile(path.removeFirstSegments(1)).getLocation().toFile();
-	}
-	
-	public static File getFile(IWorkspaceRoot wroot, IPath path) {
-		return wroot.getFile(path.removeFirstSegments(1)).getLocation().toFile();
+	public static File getFile(IProject project, IPath path)
+	{
+		return project.getFile(path.removeFirstSegments(1))
+				.getLocation()
+				.toFile();
 	}
 
-	public static File getFile(IProject project, IFile file) {
-		Path path = new Path(project.getFullPath().addTrailingSeparator().toString()
+	public static File getFile(IWorkspaceRoot wroot, IPath path)
+	{
+		return wroot.getFile(path.removeFirstSegments(1))
+				.getLocation()
+				.toFile();
+	}
+
+	public static File getFile(IProject project, IFile file)
+	{
+		Path path = new Path(project.getFullPath()
+				.addTrailingSeparator()
+				.toString()
 				+ file.getProjectRelativePath().toString());
 		return getFile(project, path);
 	}
+
 	
 
 }

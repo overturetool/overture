@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
@@ -42,6 +43,7 @@ public class Controller
 		sb.append(HtmlTable.makeRow(HtmlTable.makeCellHeaderss(new String[] {
 				"Project Name", "Syntax check", "Type check",
 				"Interpretation test" })));
+		Collections.sort(projects);
 		for (ProjectPacker p : projects)
 		{
 			ProjectTester pTest = new ProjectTester(logOutput);

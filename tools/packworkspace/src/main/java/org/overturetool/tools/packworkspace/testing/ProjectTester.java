@@ -35,10 +35,13 @@ public class ProjectTester
 
 	public ProjectTester(File reportLocation) {
 		this.reportLocation = reportLocation;
+		if(!reportLocation.exists())
+			reportLocation.mkdirs();
 	}
 
 	public String test(ProjectPacker project) throws IOException
 	{
+		System.out.print("\nTesting: "+ project.getSettings().getName()+" => ");
 		switch (project.getDialect())
 		{
 		case VDM_PP:
@@ -62,12 +65,19 @@ public class ProjectTester
 
 		StringBuilder sb = new StringBuilder();
 
-		project.getSettings().createReadme(new File(reportLocation,
-				project.getSettings().getName() + "/Settings.txt"));
+		File dir = new File(reportLocation,
+				project.getSettings().getName());
+		if(!dir.exists())
+			dir.mkdirs();
+		
+		project.getSettings().createReadme(new File(dir, "Settings.txt"));
 		setConsole(project.getSettings().getName(), Phase.SyntaxCheck);
+		
+		System.out.print("Syntax check...");
 		statusParse = controller.parse(project.getSpecFiles());
 		if (statusParse == ExitStatus.EXIT_OK)
 		{
+			System.out.print("Type check...");
 			setConsole(project.getSettings().getName(), Phase.TypeCheck);
 			statusTypeCheck = controller.typeCheck();
 
@@ -76,6 +86,7 @@ public class ProjectTester
 			{
 				try
 				{
+					System.out.print("Interpreter test...");
 					setConsole(project.getSettings().getName(),
 							Phase.Interpretation);
 					Interpreter i = controller.getInterpreter();
@@ -86,8 +97,10 @@ public class ProjectTester
 					statusInterpreter = ExitStatus.EXIT_OK;
 				} catch (Exception e)
 				{
+					Console.err.write(e.toString());
+					Console.err.flush();
 					statusInterpreter = ExitStatus.EXIT_ERRORS;
-					;
+					
 				}
 			}
 		}
@@ -177,6 +190,9 @@ public class ProjectTester
 			value += "/"+HtmlPage.makeLink("Err", projectName + "/" + phase
 					+ "Err.txt");
 
+		if(value.startsWith("/"))
+			value=value.substring(1);
+		
 		return value;
 	}
 

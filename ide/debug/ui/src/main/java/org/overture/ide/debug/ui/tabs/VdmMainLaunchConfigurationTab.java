@@ -7,6 +7,7 @@
  ******************************************************************************/
 package org.overture.ide.debug.ui.tabs;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
@@ -39,7 +40,6 @@ import org.overture.ide.ui.outline.DisplayNameCreator;
 import org.overture.ide.ui.outline.ExecutableFilter;
 import org.overture.ide.ui.outline.VdmOutlineLabelProvider;
 import org.overture.ide.ui.outline.VdmOutlineTreeContentProvider;
-import org.overture.ide.utility.VdmProject;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.lex.Dialect;
@@ -58,6 +58,7 @@ public abstract class VdmMainLaunchConfigurationTab extends
 
 	public VdmMainLaunchConfigurationTab(String mode) {
 		super(mode);
+		
 	}
 
 	// private Button enableLogging;
@@ -100,12 +101,19 @@ public abstract class VdmMainLaunchConfigurationTab extends
 	@Override
 	protected boolean validate()
 	{
-		return super.validate() && validateClass() && validateOperation();
+		boolean syntaxCorrect = validateClass() && validateOperation();
+		if(!syntaxCorrect)
+			return syntaxCorrect;
+		else
+			return super.validate() && validateTypes(fModuleNameText.getText(), fOperationText.getText());
+			
 	}
+	
+	protected abstract boolean validateTypes(String module, String operation);
 
 	private boolean validateOperation()
 	{
-		if((fOperationText == null || fOperationText.getText().length() == 0))
+		if ((fOperationText == null || fOperationText.getText().length() == 0))
 		{
 			setErrorMessage("No operation specified");
 			return false;
@@ -136,9 +144,9 @@ public abstract class VdmMainLaunchConfigurationTab extends
 
 	private boolean validateClass()
 	{
-		if((fModuleNameText == null || fModuleNameText.getText().length() == 0))
+		if ((fModuleNameText == null || fModuleNameText.getText().length() == 0))
 		{
-			setErrorMessage("No "+ getModuleLabelName()+" specified");
+			setErrorMessage("No " + getModuleLabelName() + " specified");
 			return false;
 		}
 		LexTokenReader ltr = new LexTokenReader(fModuleNameText.getText(),
@@ -169,7 +177,7 @@ public abstract class VdmMainLaunchConfigurationTab extends
 	{
 		super.doCreateControl(composite);
 		createOperationEditor(composite);
-
+		AstManager.instance().refreshProjects();
 	}
 
 	/*
@@ -240,7 +248,7 @@ public abstract class VdmMainLaunchConfigurationTab extends
 	protected String getScriptName()
 	{
 		return ".project";// Cant disable file check so we select a file which
-							// always will be there
+		// always will be there
 	}
 
 	@Override
@@ -298,7 +306,7 @@ public abstract class VdmMainLaunchConfigurationTab extends
 	 */
 	protected void chooseOperation() throws CoreException
 	{
-		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(getShell(),
+		final ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(getShell(),
 				new VdmOutlineLabelProvider(),
 				new VdmOutlineTreeContentProvider());
 		dialog.setTitle(getModuleLabelName()
@@ -309,20 +317,70 @@ public abstract class VdmMainLaunchConfigurationTab extends
 		{
 			return;
 		}
+		// dialog.addFilter(new ExecutableFilter());
+		//dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
+//dialog.setInput(new Object());
+		final IProject project = getProject().getProject();
+		final String natureId = getNatureID();
+//		Object d = getShell();
+//		final Display display = getShell().getDisplay();
+//		Job addContentJob = new Job("Fetch outline for launch config") {
+//
+//			@Override
+//			protected IStatus run(IProgressMonitor monitor)
+//			{
+//
+//				try
+//				{
+//					RootNode node = AstManager.instance().getRootNode(project,
+//							natureId);
+//					if (node == null)
+//					{
+//						try
+//						{
+//							new VdmProject(project).typeCheck();
+//						} catch (CoreException e)
+//						{
+//
+//						}
+//						VdmProject.waitForBuidCompletion();
+//						node = AstManager.instance().getRootNode(project,
+//								natureId);
+//					}
+//					final RootNode n = node;
+//					display.asyncExec(new Runnable() {
+//
+//						public void run()
+//						{
+//							try{
+//							dialog.setInput(n);
+//							 dialog.addFilter(new ExecutableFilter());
+//							dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
+//							dialog.getShell().getDisplay().readAndDispatch();
+//							
+//							}catch(Exception e)
+//							{
+//								e.printStackTrace();
+//							}
+//						}
+//
+//					});
+//
+//				} catch (Exception e)
+//				{
+//					e.printStackTrace();
+//				}
+//
+//				return new Status(IStatus.OK, "launch", "got outline");
+//			}
+//		};
+//		addContentJob.setPriority(Job.BUILD);
+//		addContentJob.schedule();
 
-		dialog.addFilter(new ExecutableFilter());
-
-		RootNode node = AstManager.instance()
-				.getRootNode(getProject().getProject(), getNatureID());
-		if (node == null)
-		{
-			new VdmProject(getProject().getProject()).typeCheck();
-			VdmProject.waitForBuidCompletion();
-			node = AstManager.instance().getRootNode(getProject().getProject(),
-					getNatureID());
-		}
+		RootNode node = AstManager.instance().getRootNode(project,
+				natureId);
 		dialog.setInput(node);
-
+		 dialog.addFilter(new ExecutableFilter());
 		dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
 		if (dialog.open() == IDialogConstants.OK_ID)
 		{

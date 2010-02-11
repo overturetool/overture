@@ -11,7 +11,7 @@
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="true"
-            id="org.overture.ide.plugins.poviewer.contribution1"
+            id="org.overture.ide.plugins.poviewer.contribution.project.pp"
             objectClass="org.eclipse.core.resources.IProject">
             <filter
          name="projectNature"
@@ -47,7 +47,7 @@
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="true"
-            id="org.overture.ide.plugins.poviewer.contribution1"
+            id="org.overture.ide.plugins.poviewer.contribution.file.pp"
             objectClass="org.eclipse.core.resources.IFile">
             <filter
          name="projectNature"
@@ -86,7 +86,7 @@
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="true"
-            id="org.overture.ide.plugins.poviewer.contribution1"
+            id="org.overture.ide.plugins.poviewer.contribution.project.rt"
             objectClass="org.eclipse.core.resources.IProject">
             <filter
          name="projectNature"
@@ -118,7 +118,7 @@
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="true"
-            id="org.overture.ide.plugins.poviewer.contribution1"
+            id="org.overture.ide.plugins.poviewer.contribution.file.rt"
             objectClass="org.eclipse.core.resources.IFile">
             <filter
          name="projectNature"
@@ -156,7 +156,7 @@
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="true"
-            id="org.overture.ide.plugins.poviewer.contribution1"
+            id="org.overture.ide.plugins.poviewer.contribution.project.sl"
             objectClass="org.eclipse.core.resources.IProject">
             <filter
          name="projectNature"
@@ -188,7 +188,7 @@
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="true"
-            id="org.overture.ide.plugins.poviewer.contribution1"
+            id="org.overture.ide.plugins.poviewer.contribution.file.sl"
             objectClass="org.eclipse.core.resources.IFile">
             <filter
          name="projectNature"

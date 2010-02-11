@@ -7,7 +7,7 @@
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="true"
-            id="org.overture.ide.umltrans.contribution1"
+            id="org.overture.ide.umltrans.contribution.vdmpp"
             objectClass="org.eclipse.core.resources.IProject">
             <filter
          name="projectNature"
@@ -59,7 +59,7 @@
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="true"
-            id="org.overture.ide.umltrans.contribution1"
+            id="org.overture.ide.umltrans.contribution.vdmrt"
             objectClass="org.eclipse.core.resources.IProject">
             <filter
          name="projectNature"

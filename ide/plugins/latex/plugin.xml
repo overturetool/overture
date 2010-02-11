@@ -156,6 +156,9 @@
           callOnEmptyDelta="false"
           hasNature="false"
           isConfigurable="false">
+       <run
+             class="org.overture.ide.plugins.latex.builder.LatexIncrementalProjectBuilder">
+       </run>
     </builder>
  </extension> 
 

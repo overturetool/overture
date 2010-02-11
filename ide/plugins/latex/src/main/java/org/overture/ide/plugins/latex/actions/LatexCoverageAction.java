@@ -166,10 +166,12 @@ public class LatexCoverageAction implements IObjectActionDelegate
 				try
 				{
 					File projectRoot = selectedProject.getLocation().toFile();
+					File outputFolder = LatexBuilder.makeOutputFolder(selectedProject);
 					LatexBuilder latexBuilder = new LatexBuilder();
+					
 					latexBuilder.prepare(selectedProject, dialect);
 
-					File outputFolder = LatexBuilder.makeOutputFolder(selectedProject);
+					
 
 					File outputFolderForGeneratedModelFiles = new File(outputFolder,
 							"specification");
@@ -181,13 +183,14 @@ public class LatexCoverageAction implements IObjectActionDelegate
 					if (root == null || !root.isChecked())
 					{
 						IVdmProject vdmProject = new VdmProject(selectedProject);
-						vdmProject.typeCheck(monitor);
+						vdmProject.typeCheck(false,monitor);
 						VdmProject.waitForBuidCompletion();
 						root = AstManager.instance()
 								.getRootNode(selectedProject, natureId);
 					}
 					if (root != null && root.isChecked())
 					{
+						boolean modelOnly = !new LatexProject(selectedProject).hasDocument();
 						LexLocation.resetLocations();
 						if (root.hasClassList())
 						{
@@ -206,7 +209,8 @@ public class LatexCoverageAction implements IObjectActionDelegate
 								createCoverage(latexBuilder,
 										outputFolderForGeneratedModelFiles,
 										outputFiles,
-										classDefinition.location.file);
+										classDefinition.location.file,
+										modelOnly);
 
 							}
 						} else if (root.hasModuleList())
@@ -228,7 +232,8 @@ public class LatexCoverageAction implements IObjectActionDelegate
 									createCoverage(latexBuilder,
 											outputFolderForGeneratedModelFiles,
 											outputFiles,
-											moduleFile);
+											moduleFile,
+											modelOnly);
 								}
 							}
 						}
@@ -245,7 +250,7 @@ public class LatexCoverageAction implements IObjectActionDelegate
 								documentFileName);
 					else
 					{
-						documentFileName =new LatexProject(selectedProject).getMainDocument(); 
+						documentFileName = new LatexProject(selectedProject).getMainDocument();
 						outputFolder = new File(documentFileName);
 						buildPdf(selectedProject,
 								monitor,
@@ -288,28 +293,34 @@ public class LatexCoverageAction implements IObjectActionDelegate
 
 				if (monitor.isCanceled())
 					pdflatex.kill();
+				else
+				{
+					PdfLatex pdflatex2 = new PdfLatex(selectedProject,
+							outputFolder,
+							documentFileName);
+					pdflatex2.start();
 
-				PdfLatex pdflatex2 = new PdfLatex(selectedProject,
-						outputFolder,
-						documentFileName);
-				pdflatex2.start();
+					while (!monitor.isCanceled() && !pdflatex2.isFinished)
+						Thread.sleep(500);
 
-				while (!monitor.isCanceled() && !pdflatex2.isFinished)
-					Thread.sleep(500);
-
-				if (monitor.isCanceled())
-					pdflatex2.kill();
+					if (monitor.isCanceled())
+						pdflatex2.kill();
+				}
 
 				selectedProject.refreshLocal(IResource.DEPTH_INFINITE, null);
 			}
 
 			private void createCoverage(LatexBuilder latexBuilder,
 					File outputFolderForGeneratedModelFiles,
-					List<File> outputFiles, File moduleFile)
+					List<File> outputFiles, File moduleFile, boolean modelOnly)
 					throws IOException, FileNotFoundException
 			{
 				if (isStandardLibarary(moduleFile))
 					return;
+
+				if (!outputFolderForGeneratedModelFiles.exists())
+					outputFolderForGeneratedModelFiles.mkdirs();
+
 				File texFile = new File(outputFolderForGeneratedModelFiles,
 						moduleFile.getName().replace(" ", "") + ".tex");
 				if (texFile.exists())
@@ -332,8 +343,9 @@ public class LatexCoverageAction implements IObjectActionDelegate
 				}
 				latexBuilder.addInclude(texFile.getAbsolutePath());
 				SourceFile f = new SourceFile(moduleFile);
+
 				PrintWriter pw = new PrintWriter(texFile);
-				f.printLatexCoverage(pw, false, true);
+				f.printLatexCoverage(pw, false, modelOnly);
 				ConsoleWriter cw = new ConsoleWriter(shell);
 				f.printCoverage(cw);
 				pw.close();
@@ -356,16 +368,7 @@ public class LatexCoverageAction implements IObjectActionDelegate
 			}
 
 		};
-		expandJob.setPriority(Job.INTERACTIVE);
-		try
-		{
-			selectedProject.build(IncrementalProjectBuilder.FULL_BUILD, null);
-		} catch (CoreException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		expandJob.setPriority(Job.BUILD);
 		expandJob.schedule(0);
 
 	}

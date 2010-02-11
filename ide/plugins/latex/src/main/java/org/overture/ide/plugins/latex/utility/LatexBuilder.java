@@ -141,10 +141,11 @@ public class LatexBuilder
 			throws IOException
 	{
 		FileWriter outputFileReader = new FileWriter(new File(outputFolder,
-				fileName));
+				fileName),false);
 		BufferedWriter outputStream = new BufferedWriter(outputFileReader);
 		outputStream.write(content);
 		outputStream.close();
+		outputFileReader.close();
 	}
 
 	public static URL getResource(String pluginId, String path)

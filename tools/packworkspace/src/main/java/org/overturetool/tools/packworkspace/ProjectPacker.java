@@ -12,7 +12,7 @@ import java.util.Vector;
 
 import org.overturetool.vdmj.lex.Dialect;
 
-public class ProjectPacker
+public class ProjectPacker implements Comparable<ProjectPacker>
 {
 	static final String VDM_README_FILENAME="README.txt";
 	File root;
@@ -30,9 +30,9 @@ public class ProjectPacker
 				System.out.println("Creating initial README file for: "+ root.getAbsolutePath());
 				settings.createReadme();
 			}
-			File readme1 = new File(root,"README.txt.txt");
-			if(readme1.exists())
-				readme1.delete();
+//			File readme1 = new File(root,"README.txt.txt");
+//			if(readme1.exists())
+//				readme1.delete();
 			//copyfile(readme.getAbsolutePath(), new File(readme.getAbsolutePath()+".txt").getAbsolutePath());
 			
 			settings.initialize();
@@ -171,5 +171,14 @@ public class ProjectPacker
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
+	}
+
+
+
+
+
+	public int compareTo(ProjectPacker o)
+	{
+		return this.getSettings().getName().toLowerCase().compareTo(o.getSettings().getName().toLowerCase());
 	}
 }

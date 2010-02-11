@@ -1,5 +1,17 @@
 Overture IDE release notes:
 
+Version 0.1.7
+10 February 2010	Fixed inheritance problem of values in VDM-PP
+					Fixed new file wizard does not have project selected in VDM-PP
+					Added functionality to link Java code with "is not yes specified" both static and dynamic
+					Type check added to launch configuration validation
+					Quick Interpreter added with a global context for Expression evaluation
+					Combinatorial can now be evaluated with a test filtering option
+					Pdflatex builder integrated to support model document creation plus coverage option
+					Alpha coverage editor included
+					New create project wizard with standard library header include option
+					Automatic AST refresh added to launch configuration to make the outline available
+
 Version 0.1.3
 07 January 2010:	Fixed: Problem with debug of specification files in different encoding. Where the debugger could not be started do to
 					 none standard chars in class/module and operation/function.
