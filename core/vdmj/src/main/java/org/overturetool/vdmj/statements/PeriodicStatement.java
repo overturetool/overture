@@ -78,6 +78,7 @@ public class PeriodicStatement extends Statement
 
 			for (Expression arg: args)
 			{
+				arg.location.hit();
 				values[i] = -1;
 
 				if (arg instanceof IntegerLiteralExpression)
@@ -115,6 +116,7 @@ public class PeriodicStatement extends Statement
 		}
 
 		opname.setTypeQualifier(new TypeList());
+		opname.location.hit();
 		Definition opdef = env.findName(opname, NameScope.NAMES);
 
 		if (opdef == null)
