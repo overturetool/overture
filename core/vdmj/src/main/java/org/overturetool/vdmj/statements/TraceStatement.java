@@ -65,6 +65,8 @@ public class TraceStatement extends Statement
 	@Override
 	public Value eval(Context ctxt)
 	{
+		breakpoint.check(location, ctxt);
+
 		TestSequence tests = tracedef.getTests(ctxt);
 		Interpreter interpreter = Interpreter.getInstance();
 		Value argval = ctxt.check(arg);

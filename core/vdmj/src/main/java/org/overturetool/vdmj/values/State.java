@@ -79,6 +79,8 @@ public class State implements ValueListener
 				}
 
 				EqualsExpression ee = (EqualsExpression)definition.initExpression;
+				ee.location.hit();
+				ee.left.location.hit();
 				Value v = ee.right.eval(globals);
 
 				if (!(v instanceof RecordValue))

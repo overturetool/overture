@@ -47,6 +47,7 @@ public class TraceVariableStatement extends Statement
 	@Override
 	public Value eval(Context ctxt)
 	{
+		location.hit();
 		Value val = var.value;
 
 		if (val.isType(ObjectValue.class))
