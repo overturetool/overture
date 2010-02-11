@@ -64,7 +64,7 @@ public class NilPattern extends Pattern
 	{
 		NameValuePairList result = new NameValuePairList();
 
-		if (!(expval instanceof NilValue))
+		if (!(expval.deref() instanceof NilValue))
 		{
 			patternFail(4106, "Nil pattern match failed");
 		}
