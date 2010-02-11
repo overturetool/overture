@@ -1,4 +1,0 @@
-\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
-\contentsline {chapter}{\numberline {2}Implementation}{3}{chapter.2}
-\contentsline {section}{\numberline {2.1}Launcher}{3}{section.2.1}
-\contentsline {subsection}{\numberline {2.1.1}The Players}{3}{subsection.2.1.1}
