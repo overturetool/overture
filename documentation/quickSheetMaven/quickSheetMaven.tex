@@ -1,0 +1,179 @@
+\documentclass[10pt,landscape]{article}
+\usepackage{multicol}
+\usepackage{calc}
+\usepackage{ifthen}
+\usepackage[landscape]{geometry} 
+\usepackage{times}
+\usepackage{listings}
+
+\usepackage{termrefr}
+\usepackage{longtable}
+
+
+
+
+
+
+%\usepackage{myalltt}%%%
+% If you're reading this, be prepared for confusion.  Making this was
+% a learning experience for me, and it shows.  Much of the placement
+% was hacked in; if you make it better, let me know...
+
+
+% 2008-04
+% Changed page margin code to use the geometry package. Also added code for
+% conditional page margins, depending on paper size. Thanks to Uwe Ziegenhagen
+% for the suggestions.
+% 2006-08
+% Made changes based on suggestions from Gene Cooperman. <gene at ccs.neu.edu>
+
+
+% To Do:
+% \listoffigures \listoftables
+% \setcounter{secnumdepth}{0}
+
+
+% This sets page margins to .5 inch if using letter paper, and to 1cm
+% if using A4 paper. (This probably isn't strictly necessary.)
+% If using another size paper, use default 1cm margins.
+\ifthenelse{\lengthtest { \paperwidth = 11in}}
+	{ \geometry{top=.5in,left=.5in,right=.5in,bottom=.5in} }
+	{\ifthenelse{ \lengthtest{ \paperwidth = 297mm}}
+		{\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} }
+		{\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} }
+	}
+
+% Turn off header and footer
+\pagestyle{empty}
+ 
+
+% Redefine section commands to use less space
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%x
+                                {\normalfont\large\bfseries}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
+                                {-1explus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%
+                                {\normalfont\normalsize\bfseries}}
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {1ex plus .2ex}%
+                                {\normalfont\small\bfseries}}
+\makeatother
+
+
+
+% Don't print section numbers
+\setcounter{secnumdepth}{0}
+
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt plus 0.5ex}
+%---------------------
+\renewcommand{\thefootnote}{\alph{footnote}}
+\newcommand{\keyw}[1]{{\bf\texttt #1}}
+\newcommand{\kw}[1]{{\bf\ttfamily #1}}
+
+% -----------------------------------------------------------------------
+
+\begin{document}
+
+\raggedright
+\footnotesize
+\begin{multicols}{2}
+
+
+% multicol parameters
+% These lengths are set only within the two main columns
+%\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+
+\begin{center}
+     \Large{Quick Maven} \\
+\end{center}
+\begin{minipage}[c]{1\linewidth}
+\section{General}
+Maven is a software tool for Java project management and build automation. It is similar in functionality to the Apache Ant tool, but is based on different concepts.\\
+In this sheet a number of commands used for Overture are described. They are all terminal commands and executed in a terminal in the following form.\\
+\begin{center}
+
+\vfil
+\fbox{\keyw{mvn} \textbf{option} \textbf{goal}}\\
+\vfil
+\end{center}
+Where a maven \textbf{goal} is the desired action which should be performed on the maven project where the terminal is currently active.
+
+\subsection{Build Lifecycles}
+The build lifecycle is a list of named \textit{phases} which can be used to give order to \textbf{goal} execution. This means that a goal of a plug-in can be bound to a specific \textit{phase} thus called when this \textit{phase} is reached in the build:
+
+\begin{itemize}
+	\item process-resources
+	\item compile
+	\item process-test-resources
+	\item test-compile
+	\item test
+	\item package
+	\item install
+	\item deploy
+\end{itemize}
+
+\subsection{Basic goals}
+
+\begin{tabular}{lp{8cm}}
+	\keyw{compile}	& Compiles the project and all sub projects\\
+	\keyw{test}		& Runs compile and then tests\\
+	\keyw{package}	& Build a jar containing the compiled resources of the project.\\
+	\keyw{install}	& Installs the jar of the project in the local repository including it's pom so other plug-ins which depends on it just can add this to their classpath.\\
+	\keyw{assembly:assembly}	& Build an executable jar including all depended plug-ins.\footnote{Not a default goal it comes from a assembly plug-in where the manifest needs to be specified}
+\end{tabular}
+
+\subsection{Options}
+\begin{tabular}{lp{8cm}}
+	\keyw{-X}	& Show debug info\\
+	\keyw{-o}	& Run off line. This speeds up the process a lot if you already have downloaded all depended plug-ins to the local repository.\\
+	\keyw{-N}	& Do not run recursive. (Do not run sub projects)\\
+	\keyw{-fae}	& Fail at end. This is use full if running a root project. Allow all non-impacted builds to complete.\\
+	\keyw{-Dmaven.test.skip=true}	& Skip all testing
+\end{tabular}
+\end{minipage}
+\begin{minipage}[c]{1\linewidth}
+\section{Eclipse}
+
+\subsection{maven-eclipse-plugin Goals}
+\begin{tabular}{lp{8cm}}
+	\keyw{eclipse:eclipse}	& Creates Eclipse project files for a project.\\
+	\keyw{eclipse:clean}		& Deletes all Eclipse files from a project.
+\end{tabular}
+
+
+\subsection{maven-psteclipse-plugin Goals}
+
+\begin{tabular}{lp{8cm}}
+	\keyw{psteclipse:eclipse-plugin}	& Generates Eclipse files based on the packing of the pom:
+	\begin{tabular}{lp{5cm}}
+		\textit{source-plugin}& Creates the Eclipse structure if missing.\\
+		\textit{binary-plugin}& Creates the Eclipse structure if missing and a lib folder with the jars from all depended jar files. It also generated the Manifest with all classes from the jar files exported.\footnote{It can also be made to import a number of packages.}\\
+	\end{tabular}
+\end{tabular}
+\end{minipage}
+
+
+
+
+%\begin{minipage}[c]{1\linewidth}
+%
+%\end{minipage}
+%\vfill
+%
+%\scriptsize
+%
+%
+%
+\end{multicols}
+
+\end{document}
