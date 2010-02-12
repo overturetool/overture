@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.overturetool.vdmj.debug.RemoteControl;
+import org.overturetool.vdmj.debug.RemoteInterpreter;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.runtime.Interpreter;
@@ -60,6 +62,7 @@ abstract public class VDMJ
 	 * @param args Arguments passed to the program.
 	 */
 
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args)
 	{
 		List<File> filenames = new Vector<File>();
@@ -67,6 +70,8 @@ abstract public class VDMJ
 		VDMJ controller = null;
 		Dialect dialect = Dialect.VDM_SL;
 		boolean isBase64 = false;
+		String remoteName = null;
+		Class<RemoteControl> remoteClass = null;
 
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
 		{
@@ -215,6 +220,17 @@ abstract public class VDMJ
     				usage("-log option requires a filename");
     			}
     		}
+    		else if (arg.equals("-remote"))
+    		{
+    			if (i.hasNext())
+    			{
+       				remoteName = i.next();
+    			}
+    			else
+    			{
+    				usage("-remote option requires a Java classname");
+    			}
+    		}
     		else if (arg.startsWith("-"))
     		{
     			usage("Unknown option " + arg);
@@ -264,6 +280,35 @@ abstract public class VDMJ
 			}
 		}
 
+		if (remoteName != null)
+		{
+			try
+			{
+				Class<?> cls = ClassLoader.getSystemClassLoader().loadClass(remoteName);
+				boolean ok = false;
+
+				for (Class<?> i: cls.getInterfaces())
+				{
+					if (i.getName().equals(RemoteControl.class.getName()))
+					{
+						ok = true;
+						break;
+					}
+				}
+
+				if (!ok)
+				{
+					usage("Remote class does not implement RemoteControl");
+				}
+
+				remoteClass = (Class<RemoteControl>)cls;
+			}
+			catch (ClassNotFoundException e)
+			{
+				usage("Cannot locate " + remoteName + " on the CLASSPATH");
+			}
+		}
+
 		ExitStatus status = null;
 
 		if (filenames.isEmpty() && !interpret)
@@ -289,7 +334,34 @@ abstract public class VDMJ
 
             			if (status == ExitStatus.EXIT_OK && interpret)
             			{
-            				status = controller.interpret(filenames);
+            				if (remoteClass == null)
+            				{
+            					status = controller.interpret(filenames);
+            				}
+        					else
+        					{
+        						try
+								{
+									RemoteControl remote = remoteClass.newInstance();
+									Interpreter i = controller.getInterpreter();
+									i.init(null);
+
+									try
+									{
+										remote.run(new RemoteInterpreter(i));
+										status = ExitStatus.EXIT_OK;
+									}
+									catch (Exception e)
+									{
+										println(e.getMessage());
+										status = ExitStatus.EXIT_ERRORS;
+									}
+								}
+								catch (Exception e)
+								{
+									usage(e.getMessage());
+								}
+        					}
             			}
             		}
 				}
@@ -326,6 +398,7 @@ abstract public class VDMJ
 		System.err.println("-inv: disable type/state invariant checks");
 		System.err.println("-dtc: disable all dynamic type checking");
 		System.err.println("-log: enable real-time event logging");
+		System.err.println("-remote <class>: enable remote control");
 
 		System.exit(1);
 	}

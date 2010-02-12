@@ -117,6 +117,7 @@ public class DBGPReader
 
 	private static final int SOURCE_LINES = 5;
 
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args)
 	{
 		Settings.usingDBGP = true;
@@ -135,6 +136,8 @@ public class DBGPReader
 		boolean expBase64 = false;
 		File coverage = null;
 		String defaultName = null;
+		String remoteName = null;
+		Class<RemoteControl> remoteClass = null;
 
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
 		{
@@ -308,6 +311,17 @@ public class DBGPReader
     				usage("-default64 option requires a name");
     			}
     		}
+    		else if (arg.equals("-remote"))
+    		{
+    			if (i.hasNext())
+    			{
+       				remoteName = i.next();
+    			}
+    			else
+    			{
+    				usage("-remote option requires a Java classname");
+    			}
+    		}
     		else if (arg.startsWith("-"))
     		{
     			usage("Unknown option " + arg);
@@ -367,6 +381,35 @@ public class DBGPReader
 			}
 		}
 
+		if (remoteName != null)
+		{
+			try
+			{
+				Class<?> cls = ClassLoader.getSystemClassLoader().loadClass(remoteName);
+				boolean ok = false;
+
+				for (Class<?> i: cls.getInterfaces())
+				{
+					if (i.getName().equals(RemoteControl.class.getName()))
+					{
+						ok = true;
+						break;
+					}
+				}
+
+				if (!ok)
+				{
+					usage("Remote class does not implement RemoteControl");
+				}
+
+				remoteClass = (Class<RemoteControl>)cls;
+			}
+			catch (ClassNotFoundException e)
+			{
+				usage("Cannot locate " + remoteName + " on the CLASSPATH");
+			}
+		}
+
 		controller.setWarnings(warnings);
 		controller.setQuiet(quiet);
 
@@ -390,7 +433,16 @@ public class DBGPReader
 						i.setDefaultName(defaultName);
 					}
 
-					new DBGPReader(host, port, ideKey, i, expression, null).startup();
+					if (remoteClass == null)
+					{
+						new DBGPReader(host, port, ideKey, i, expression, null).startup();
+					}
+					else
+					{
+						RemoteControl remote = remoteClass.newInstance();
+						i.init(null);
+						remote.run(new RemoteInterpreter(i));
+					}
 
 					if (coverage != null)
 					{
@@ -433,7 +485,7 @@ public class DBGPReader
 			" -e <expression> | -e64 <base64 expression>" +
 			" [-w] [-q] [-log <logfile URL>] [-c <charset>] [-r <release>]" +
 			" [-coverage <dir URL>] [-default64 <base64 name>]" +
-			" {<filename URLs>}");
+			" [-remote <class>] {<filename URLs>}");
 
 		System.exit(1);
 	}
@@ -472,9 +524,9 @@ public class DBGPReader
 		this.cpu = cpu;
 	}
 
-	public DBGPReader newThread(CPUValue cpu2) throws Exception
+	public DBGPReader newThread(CPUValue _cpu) throws Exception
 	{
-		DBGPReader r = new DBGPReader(host, port, ideKey, interpreter, null, cpu2);
+		DBGPReader r = new DBGPReader(host, port, ideKey, interpreter, null, _cpu);
 		r.command = DBGPCommandType.UNKNOWN;
 		r.transaction = "?";
 		return r;
