@@ -24,7 +24,7 @@ public class ProjectTester
 {
 	VDMJ controller;
 	File reportLocation;
-
+	final String DEVIDER_LINE ="\n\n======================================================================\n\n";
 	ExitStatus statusParse = null;
 	ExitStatus statusTypeCheck = null;
 	ExitStatus statusInterpreter = null;
@@ -36,13 +36,14 @@ public class ProjectTester
 
 	public ProjectTester(File reportLocation) {
 		this.reportLocation = reportLocation;
-		if(!reportLocation.exists())
+		if (!reportLocation.exists())
 			reportLocation.mkdirs();
 	}
 
 	public String test(ProjectPacker project) throws IOException
 	{
-		System.out.print("\nTesting: "+ project.getSettings().getName()+" => ");
+		System.out.print(addFixedSize( "\nTesting: " + project.getSettings().getName()
+				,28)+ " => ");
 		switch (project.getDialect())
 		{
 		case VDM_PP:
@@ -66,14 +67,13 @@ public class ProjectTester
 
 		StringBuilder sb = new StringBuilder();
 
-		File dir = new File(reportLocation,
-				project.getSettings().getName());
-		if(!dir.exists())
+		File dir = new File(reportLocation, project.getSettings().getName());
+		if (!dir.exists())
 			dir.mkdirs();
-		
+
 		project.getSettings().createReadme(new File(dir, "Settings.txt"));
 		setConsole(project.getSettings().getName(), Phase.SyntaxCheck);
-		
+
 		System.out.print("Syntax check...");
 		statusParse = controller.parse(project.getSpecFiles());
 		if (statusParse == ExitStatus.EXIT_OK)
@@ -82,28 +82,33 @@ public class ProjectTester
 			setConsole(project.getSettings().getName(), Phase.TypeCheck);
 			statusTypeCheck = controller.typeCheck();
 
-			String entryPoint = project.getSettings().getEntryPoint();
-			if (entryPoint != null
-					&& entryPoint.length() > 0 && statusTypeCheck==ExitStatus.EXIT_OK)
+			for (String entryPoint : project.getSettings().getEntryPoints())
 			{
-				try
+				if (entryPoint != null && entryPoint.length() > 0
+						&& statusTypeCheck == ExitStatus.EXIT_OK)
 				{
-					System.out.print("Interpreter test...");
-					setConsole(project.getSettings().getName(),
-							Phase.Interpretation);
-					Interpreter i = controller.getInterpreter();
-					i.init(null);
-					if(project.getDialect()==Dialect.VDM_SL)
-						i.setDefaultName(entryPoint.substring(0,entryPoint.indexOf('`')));
-					Value value = i.execute(entryPoint, null);
-					Console.out.println(value);
-					statusInterpreter = ExitStatus.EXIT_OK;
-				} catch (Exception e)
-				{
-					Console.err.write(e.toString());
-					Console.err.flush();
-					statusInterpreter = ExitStatus.EXIT_ERRORS;
-					
+					try
+					{
+						System.out.print("Interpreter test...");
+						setConsole(project.getSettings().getName(),
+								Phase.Interpretation);
+						Interpreter i = controller.getInterpreter();
+						i.init(null);
+						if (project.getDialect() == Dialect.VDM_SL)
+							i.setDefaultName(entryPoint.substring(0,
+									entryPoint.indexOf('`')));
+						Value value = i.execute(entryPoint, null);
+						Console.out.println(value);
+						statusInterpreter = ExitStatus.EXIT_OK;
+					} catch (Exception e)
+					{
+						Console.err.write(e.toString());
+						Console.err.flush();
+						statusInterpreter = ExitStatus.EXIT_ERRORS;
+
+					}
+					Console.out.write(DEVIDER_LINE);
+					Console.err.write(DEVIDER_LINE);
 				}
 			}
 		}
@@ -190,12 +195,13 @@ public class ProjectTester
 			value += HtmlPage.makeLink("Out", projectName + "/" + phase
 					+ "Out.txt");
 		if (logFileExists(err))
-			value += "/"+HtmlPage.makeLink("Err", projectName + "/" + phase
-					+ "Err.txt");
+			value += "/"
+					+ HtmlPage.makeLink("Err", projectName + "/" + phase
+							+ "Err.txt");
 
-		if(value.startsWith("/"))
-			value=value.substring(1);
-		
+		if (value.startsWith("/"))
+			value = value.substring(1);
+
 		return value;
 	}
 
@@ -258,5 +264,14 @@ public class ProjectTester
 	public boolean isFaild()
 	{
 		return isFaild;
+	}
+	private String addFixedSize(String text, int size)
+	{
+		while (text.length()<size)
+		{
+			text+=" ";
+		}
+		return text;
+		
 	}
 }

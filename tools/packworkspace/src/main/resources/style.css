@@ -42,6 +42,13 @@ table.mytable tr.special td
 	border-bottom-color: #0033CC;
 }
 
+table.mytable tr.total
+{
+	border-style: none none none single;
+	border-width: medium;
+	border-color: inherit;
+}
+
 table.mytable a
 {
 	color: #000000;

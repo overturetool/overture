@@ -15,6 +15,10 @@ public class HtmlTable
 	{
 		return "\n\t<tr>" + data + "\n\t</tr>";
 	}
+	public static String makeRowTotal(String data)
+	{
+		return "\n\t<tr class=\"total\">" + data + "\n\t</tr>";
+	}
 
 	public static String makeCell(String data)
 	{

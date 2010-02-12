@@ -109,13 +109,18 @@ writeFile(new File(logOutput,"style.css"), HtmlPage.makeStyleCss());
 
 		}
 	}
+	
+	public Integer count = 0;
+	public Integer synErrors = 0;
+	public Integer typeErrors = 0;
+	public Integer interpretationErrors = 0;
 
 	public String getOverview()
 	{
-		Integer count = testProjects.size();
-		Integer synErrors = 0;
-		Integer typeErrors = 0;
-		Integer interpretationErrors = 0;
+		 count = testProjects.size();
+		 synErrors = 0;
+		 typeErrors = 0;
+		 interpretationErrors = 0;
 		for (ProjectTester t : testProjects)
 		{
 			if (!t.isSyntaxCorrect())
@@ -125,6 +130,7 @@ writeFile(new File(logOutput,"style.css"), HtmlPage.makeStyleCss());
 			if (!t.isInterpretationSuccessfull())
 				interpretationErrors++;
 		}
+		
 		return makeCell(synErrors+typeErrors+interpretationErrors,HtmlPage.makeLink( getName(),getName()+"/index.html"))+
 		
 		HtmlTable.makeCell(count.toString())+makeCell(synErrors)+makeCell(typeErrors)+makeCell(interpretationErrors);
@@ -146,6 +152,10 @@ writeFile(new File(logOutput,"style.css"), HtmlPage.makeStyleCss());
 
 	public static void createOverviewPage(List<Controller> controllers) throws IOException
 	{
+		 Integer totalCount = 0;
+		 Integer totalSynErrors = 0;
+		 Integer totalTypeErrors = 0;
+		 Integer totalInterpretationErrors = 0;
 		StringBuilder sb = new StringBuilder();
 		sb.append(HtmlTable.makeRow(HtmlTable.makeCellHeaderss(new String[] {
 				"Test set","Project count", "Syntax check", "Type check",
@@ -153,7 +163,16 @@ writeFile(new File(logOutput,"style.css"), HtmlPage.makeStyleCss());
 		for (Controller c : controllers)
 		{
 			sb.append(HtmlTable.makeRow( c.getOverview()));
+			totalCount+=c.count;
+			totalSynErrors+=c.synErrors;
+			totalTypeErrors+=c.typeErrors;
+			totalInterpretationErrors+=c.interpretationErrors;
 		}
+		
+		
+		sb.append(HtmlTable.makeRowTotal( HtmlTable.makeCell("Totals"+
+				HtmlTable.makeCell(totalCount.toString())+makeCell(totalSynErrors)+makeCell(totalTypeErrors)+makeCell(totalInterpretationErrors))));
+		
 
 		String page = HtmlPage.makePage(HtmlPage.makeH1("Test Overview")
 				+ HtmlTable.makeTable(sb.toString()));

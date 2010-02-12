@@ -80,6 +80,20 @@ public class HtmlPage
 		"\nbody"+
 		"\n{"+
 		"\nfont-family: Arial, Helvetica, sans-serif;"+
+		"\n}"+
+		"\ntable.mytable tr.total td"+
+		"\n{"+
+		"\n			border-style: double none none none;"+
+		"\n			border-width: medium;"+
+		"\n			border-color: inherit;"+
+		"\n}"+
+		"\ntable.mytable tr.total td.ok"+
+		"\n{"+
+		"\n			background-color: #80F479;"+
+		"\n}"+
+		"\ntable.mytable tr.total td.faild"+
+		"\n{"+
+		"\n			background-color: #F87676;"+
 		"\n}";
 }
 		

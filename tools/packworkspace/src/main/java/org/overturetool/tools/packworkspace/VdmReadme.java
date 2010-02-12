@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
+import java.util.Vector;
 
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.lex.Dialect;
@@ -32,7 +34,7 @@ public class VdmReadme
 	private Boolean preChecks = true;
 	private Boolean dynamicTypeChecks = true;
 	private Boolean suppressWarnings = false;
-	private String entryPoint = "";
+	private final List<String> entryPoints = new Vector<String>();
 	private ResultStatus expectedResult = ResultStatus.NO_ERROR_TYPE_CHECK;
 	private String name = "";
 	private Dialect dialect = Dialect.VDM_PP;
@@ -155,8 +157,11 @@ public class VdmReadme
 		BufferedWriter outputStream = new BufferedWriter(outputFileReader);
 		outputStream.write(content);
 		outputStream.write("\n\nLanguage Version: "+ getLanguageVersion());
-		if(getEntryPoint().length()>0)
-			outputStream.write("\nEntry point     : "+ getEntryPoint());
+		if(getEntryPoints().size()>0)
+			for(String entrypoint: entryPoints)
+			{
+				outputStream.write("\nEntry point     : "+ entrypoint);
+			}
 		outputStream.flush();
 		outputStream.close();
 		outputFileReader.close();
@@ -280,7 +285,12 @@ public class VdmReadme
 		sb.append("\n#"+PRE_CHECKS+"="+preChecks);
 		sb.append("\n#"+DYNAMIC_TYPE_CHECKS+"="+dynamicTypeChecks);
 		sb.append("\n#"+SUPPRESS_WARNINGS+"="+suppressWarnings);
-		sb.append("\n#"+ENTRY_POINT+"="+entryPoint);
+		//sb.append("\n#"+ENTRY_POINT+"="+entryPoints);
+		if(getEntryPoints().size()>0)
+			for(String entrypoint: entryPoints)
+			{
+				sb.append("\n#"+ENTRY_POINT+"="+ entrypoint);
+			}
 		sb.append("\n#"+EXPECTED_RESULT+"="+expectedResult);
 		
 //		sb.append("\n#LANGUAGE_VERSION=vdm10");
@@ -357,12 +367,12 @@ public class VdmReadme
 
 	public void setEntryPoint(String entryPoint)
 	{
-		this.entryPoint = entryPoint;
+		this.entryPoints.add( entryPoint);
 	}
 
-	public String getEntryPoint()
+	public List<String> getEntryPoints()
 	{
-		return entryPoint;
+		return entryPoints;
 	}
 
 	public void setExpectedResult(ResultStatus expectedResult)
