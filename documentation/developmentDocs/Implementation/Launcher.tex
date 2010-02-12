@@ -24,17 +24,14 @@ To define a new launchConfigurationType this is the extension point.
 \begin{program}
 \scriptsize
 \begin{verbatim}
-<extension
+ <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
-            delegate="org.overture.debug.core.launching.VdmLauchConfigurationDelegate"
-            delegateName="Vdm Delegate"
-            id="org.overture.debug.vdmLaunchConfigurationType"
+            delegate="org.overture.ide.debug.core.launch.VdmLaunchConfiguration"
+            id="org.overture.ide.debug.launchConfigurationType"
             modes="run, debug"
-            name="VDMLaunchConfigurationType"
-            public="true"
-            sourceLocatorId="org.overture.debug.core.sourceLookupDirector.vdm"
-            sourcePathComputerId="org.overture.debug.core.sourcePathComputer.vdm">
+            name="Overture Launch Configuration Type"
+            public="true">
       </launchConfigurationType>
    </extension>
 \end{verbatim}
@@ -142,9 +139,9 @@ The \epoint{launchConfigurationTypeImages} extension point is a way to assign a 
 <extension
          point="org.eclipse.debug.ui.launchConfigurationTypeImages">
       <launchConfigurationTypeImage
-            configTypeID="org.overture.debug.vdmLaunchConfigurationType"
+            configTypeID="org.overture.ide.debug.launchConfigurationType"
             icon="icons/cview16/overture_nav.gif"
-            id="org.overture.debug.vdmLaunchConfigurationTypeImage">
+            id="org.overture.ide.debug.launchConfigurationTypeImage">
       </launchConfigurationTypeImage>
    </extension>
 \end{verbatim}
