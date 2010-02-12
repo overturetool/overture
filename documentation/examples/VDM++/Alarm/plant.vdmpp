@@ -7,11 +7,12 @@ alarms   : set of Alarm;
 schedule : map Period to set of Expert;
 inv PlantInv(alarms,schedule);
 
-functions
+operations
 
-PlantInv: set of Alarm * map Period to set of Expert -> 
+PlantInv: set of Alarm * map Period to set of Expert ==> 
           bool
 PlantInv(as,sch) ==
+  return
   (forall p in set dom sch & sch(p) <> {}) and
   (forall a in set as &
      forall p in set dom sch &
