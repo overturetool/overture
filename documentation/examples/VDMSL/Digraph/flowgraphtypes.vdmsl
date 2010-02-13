@@ -66,7 +66,6 @@ values
      A6: BinRel={mk_(1,1), mk_(2,2), mk_(3,3), mk_(4,4), mk_(5,5)}; --sling relation
      A7: BinRel={mk_(1,2), mk_(2,3), mk_(2,4), mk_(3,5), mk_(4,6), mk_(6,5), mk_(5,7), mk_(5,2)}; -- cyclic relation
      A8: BinRel=A7 union {mk_(6,1)}; -- nested cycle
-
 -- Flowgraphs
   
      G1: FlowGraph= mk_FlowGraph(N1, A1,1,4); -- isolated nodes
@@ -76,7 +75,6 @@ values
      G5: FlowGraph= mk_FlowGraph(N2, A5,1,7);
      G6: FlowGraph= mk_FlowGraph(N2, A6,1,5);  
 
-
  -- STATE DEFINITION
 
 state ST of -- two isolated nodes, no arcs
@@ -84,6 +82,5 @@ state ST of -- two isolated nodes, no arcs
 init x == 
   x = mk_ST(mk_FlowGraph({1,2},{},1,2)) 
 end
-
 
 end flowgraph_types

@@ -8,16 +8,6 @@ for an industrial plant. The purpose of the model is to clarify the
 rules governing the duty roster and calling out of experts to deal
 with alarms. A comparable model of this example also exists in VDM++.
 
-Exe: Run(ex1)
-Exe: Run(ex2)
-Exe: Run(ex3)
-Exe: Run(ex4)
-Exe: Run(ex5)
-Exe: Run(ex6)
-Exe: Run(ex7)
-Exe: Run(ex8)
-
-
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
@@ -27,6 +17,13 @@ Exe: Run(ex8)
 #PRE_CHECKS=true
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
-#ENTRY_POINT=
+#ENTRY_POINT=DEFAULT`Run(e1)
+#ENTRY_POINT=DEFAULT`Run(e2)
+#ENTRY_POINT=DEFAULT`Run(e3)
+#ENTRY_POINT=DEFAULT`Run(e4)
+#ENTRY_POINT=DEFAULT`Run(e5)
+#ENTRY_POINT=DEFAULT`Run(e6)
+#ENTRY_POINT=DEFAULT`Run(e7)
+#ENTRY_POINT=DEFAULT`Run(e8)
 #EXPECTED_RESULT=NO_ERROR_TYPE_CHECK
 #******************************************************

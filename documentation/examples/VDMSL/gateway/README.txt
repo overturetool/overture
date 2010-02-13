@@ -1,3 +1,7 @@
+This example is for a trusted gateway made by John Fitzgerald and 
+Peter Gorm Larsen inspired by a more comprehensive model developed
+by British Aerospace.
+
 
 #******************************************************
 #  AUTOMATED TEST SETTINGS
