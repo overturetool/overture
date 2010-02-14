@@ -1,4 +1,3 @@
-
 This specification is of the Message Authenticator Algorithm (MAA)
 standard is used in the area of data security in banking and the scope
 of the standard is authentication. More details can be found in:
@@ -16,6 +15,7 @@ Development Methods'', Springer-Verlag, October 1991.
 #POST_CHECKS=true
 #PRE_CHECKS=true
 #DYNAMIC_TYPE_CHECKS=true
+#DOKUMENT=maa.tex
 #SUPPRESS_WARNINGS=false
 #ENTRY_POINT=
 #EXPECTED_RESULT=NO_ERROR_TYPE_CHECK

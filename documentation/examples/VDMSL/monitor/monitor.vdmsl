@@ -52,6 +52,3 @@ functions
 
   RaiseAlarm(temp: TempRead) alarm : bool
   post not Safe(temp) <=> alarm
-
-
-

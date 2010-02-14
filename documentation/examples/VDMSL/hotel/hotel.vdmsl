@@ -41,10 +41,9 @@ post exists new_k:Key &
         in
 	desk.issued = desk~.issued union {new_k} and 
 	desk.prev = desk~.prev ++ {r |-> new_k}  and 
-	if g in set dom guests
+	if g in set dom guests~
 	then guests = guests~ ++ {g |-> guests~(g) union {new_c}}
-        else guests = guests~ munion {g |-> {new_c}};
-
+    else guests = guests~ munion {g |-> {new_c}};
 
 
 Enter(r:Room,g:Guest)
@@ -69,7 +68,7 @@ CheckInExpl(g,r) ==
       (desk.issued := desk.issued union {new_k}; 
        desk.prev   := desk.prev ++ {r |-> new_k}; 
        guests      := if g in set dom guests
-	              then guests ++ {g |-> guests(g) union {new_c}}
+	                  then guests ++ {g |-> guests(g) union {new_c}}
                       else guests munion {g |-> {new_c}}
       )
 pre r in set dom desk.prev;

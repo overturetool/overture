@@ -3,12 +3,12 @@ exports all
 definitions
 types
 
-Quadrant = seq of M
-inv Q == 
-  forall a in set elems Q &
-    (not exists b in set elems Q \ {a} &
-           (b.start >= a.start and b.start <= a.stop) or
-           (b.stop  >= a.start and b.stop  <= a.stop));
+Quadrant = seq of M;
+--inv Q == 
+--  forall a in set elems Q &
+--    (not exists b in set elems Q \ {a} &
+--           (b.start >= a.start and b.start <= a.stop) or
+--           (b.stop  >= a.start and b.stop  <= a.stop));
 
 M :: type : <USED> | <FREE>
      start: nat

@@ -175,4 +175,11 @@ BoolLit:: val : bool;
 
 NumLit :: val : int
 
+values
+
+ expr : Expr = mk_LetBeSTExpr(mk_SetBind(mk_PatternName(mk_(mk_Name(["x"]),mk_(1,1))),
+                                         mk_SetEnumerationExpr([mk_NumLit(1),mk_NumLit(2)])), 
+                              mk_BoolLit(true), 
+                              mk_Name(["x"]))
+
 \end{vdm_al}
