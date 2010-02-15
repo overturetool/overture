@@ -371,6 +371,10 @@ the Overture executable.
 \item \markDone{ Make it possible for users to add a java implementation of a VDM class by adding a jar to the lib folder. The implementation should be done so one instance in java corresponds to one instance in VDM. No static. \developer{KennethLausdahl,NickBattle}, \textbf{Dependencies: \ref{staticIsNotYetSpecified}} }
 \end{enumerate}
 
+For lower level description of the goals please refer to appendix \ref{app:lowlevelgoals};
+
+
+
 \item[Release 0.4.0 (September 2010):] The aim for this release is to
   include the following features:   
 \begin{enumerate}
@@ -413,6 +417,8 @@ the Overture executable.
   do it. \developer{??}
 \end{enumerate}
 \end{description}
+
+
 
 \begin{description}
 \item[Release X (?):] The aim for this release is to
@@ -511,5 +517,62 @@ the DESTECS executable.
 \bibliographystyle{newalpha}
 
 \bibliography{dan}
+
+\appendix*
+
+
+\chapter{Low level goals for IDE release plan.}
+\label{app:lowlevelgoals}
+Low level goals for IDE release plan.
+
+\begin{enumerate}
+\item Core:
+	\begin{itemize}
+	\item Utilities (VdmProject)
+	\item AST
+	\item VDMJ (export)
+	\item Core Parser
+	\item Core Builder
+	\item Commands
+	\end{itemize}
+
+\item Core.Vdmpp
+	\begin{itemize}
+	\item Nature
+	\item Content Type
+	\end{itemize}
+
+\item VDMJ Builder/Parser Update
+
+\item UI:
+	\begin{itemize}
+	\item Abstract Editor
+	\item Outline
+	\item Navigator
+	\item Properties (Language Version, etc)
+	\item Abstract Wizards (New Project/File)
+	\item Perspective?
+	\end{itemize}
+
+\item UI.Vdmpp
+	\begin{itemize}
+	\item Editor
+	\item Wizards
+	\item Templates
+	\item Perspective?
+	\end{itemize}
+
+\item Debug
+	\begin{itemize}
+	\item Launch Core
+	\item Debug Model Core
+	\item Launch UI - (Tabs, shortcuts)
+	\item Debug UI - (source highlight, source lookup)
+	\end{itemize}
+
+\item Debug.Vdmpp - (Launch tabs)?
+
+
+\end{enumerate}
 
 \end{document}
