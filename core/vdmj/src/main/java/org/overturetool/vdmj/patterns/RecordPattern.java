@@ -37,6 +37,7 @@ import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
+import org.overturetool.vdmj.typechecker.TypeComparator;
 import org.overturetool.vdmj.types.Field;
 import org.overturetool.vdmj.types.RecordType;
 import org.overturetool.vdmj.types.Type;
@@ -188,7 +189,8 @@ public class RecordPattern extends Pattern
 			patternFail(e);
 		}
 
-		if (!type.equals(exprec.type))
+		// if (!type.equals(exprec.type))
+		if (!TypeComparator.compatible(type, exprec.type))
 		{
 			patternFail(4114, "Record type does not match pattern");
 		}
