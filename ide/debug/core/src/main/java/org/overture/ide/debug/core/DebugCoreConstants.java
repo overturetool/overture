@@ -10,6 +10,7 @@ public interface DebugCoreConstants {
 	// used in the launch configuration
 	final String DEBUGGING_MODULE = "vdmDebuggingModule";
 	final String DEBUGGING_OPERATION = "vdmDebuggingMethod";
+	final String DEBUGGING_REMOTE_CONTROL = "vdmDebuggingRemoteControlClass";
 	final String DEBUGGING_CREATE_COVERAGE = "create_coverage";
 	final String DEBUGGING_REMOTE_DEBUG = "remote_debug";
 	final String DEBUGGING_VM_MEMORY_OPTION = "vdmDebuggingMemoryOption";

@@ -24,7 +24,7 @@
       <launchConfigurationType
             delegate="org.overture.ide.vdmsl.debug.core.VdmjVdmSlLaunchConfigurationDelegate"
             id="org.overture.ide.vdmsl.debug.core.launchConfigurationTypeVDMJ"
-            modes="debug, run"
+            modes="debug"
             name="VDMJ VDM-SL"
             public="true"
             sourceLocatorId="overtureSourceLocator"

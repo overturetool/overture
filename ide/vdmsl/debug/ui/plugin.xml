@@ -33,7 +33,7 @@
          class="org.overture.ide.vdmsl.debug.ui.shortcuts.VdmSlVdmjLaunchShortcut"
          id="org.overture.ide.vdmsl.debug.ui.shortcuts.VdmSlVdmjLaunchShortcut"
          label="Launch VDMJ VDM-SL"
-         modes="run, debug"
+         modes="debug"
          icon="icons/cview16/vdmsl_file_tsk.gif">
    <contextualLaunch>
         <enablement>
@@ -59,11 +59,11 @@
          class="org.overture.ide.vdmsl.debug.ui.tabs.VdmSlTabGroup"
          id="org.overture.ide.vdmsl.debug.ui.tabs.VdmSlTabGroup"
          type="org.overture.ide.vdmsl.debug.core.launchConfigurationTypeVDMJ">
-      <launchMode
+      <!--launchMode
             description="Run VDM++ specification"
             mode="run"
             perspective="org.overture.ide.vdmsl.ui.VdmSlPerspective">
-      </launchMode>
+      </launchMode-->
       <launchMode
             description="Debug VDM++ Model"
             mode="debug"

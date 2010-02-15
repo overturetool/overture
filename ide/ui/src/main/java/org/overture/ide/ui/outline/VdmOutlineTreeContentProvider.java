@@ -1,10 +1,13 @@
 package org.overture.ide.ui.outline;
 
+import java.io.File;
+
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.overture.ide.ast.NotAllowedException;
 import org.overture.ide.ast.RootNode;
 import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.modules.Module;
 
 public class VdmOutlineTreeContentProvider implements ITreeContentProvider
@@ -49,7 +52,23 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider
 				if (node.hasClassList())
 					return node.getClassList().toArray();
 				else if (node.hasModuleList())
-					return node.getModuleList().toArray();
+				{
+					if(!node.getModuleList().isEmpty() && node.getModuleList().get(0).name.name.equals("DEFAULT"))
+					{
+						DefinitionList definitions = new DefinitionList();
+						
+						for(Module m : node.getModuleList())
+						{
+							definitions.addAll(m.defs);
+						}
+						
+						
+						Module module = new Module(new File("mergedFile"),definitions);
+						return new Object[]{module};
+					}
+					else
+						return node.getModuleList().toArray();
+				}
 			} catch (NotAllowedException e)
 			{
 				e.printStackTrace();

@@ -54,6 +54,7 @@ public class VdmSlMainLaunchConfigurationTab  extends VdmMainLaunchConfiguration
 				
 			}				
 			ModuleList modules =root.getModuleList();
+			modules.combineDefaults();
 			ModuleInterpreter ci = new ModuleInterpreter(modules);
 			ci.setDefaultName(module);
 			ci.typeCheck(module+"`"+operation);

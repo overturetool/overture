@@ -73,7 +73,7 @@ public class LatexBuilder
 			String tmp = includeName.replace('\\', '/');
 			includeName = tmp.substring(tmp.lastIndexOf('/') + 1);
 
-			sb.append("\n" + "\\section{" + includeName + "}");
+			sb.append("\n" + "\\section{" + latexQuote(includeName) + "}");
 
 			if (path.contains(latexRoot.getAbsolutePath()))
 			{
@@ -88,10 +88,27 @@ public class LatexBuilder
 				sb.append("\n" + "\\input{" + path.replace('\\', '/') + "}");
 
 		}
-		document = document.replace(TITLE, title)
+		document = document.replace(TITLE, latexQuote(title))
 				.replace(PROJECT_INCLUDE_MODEL_FILES, sb.toString());
 
 		writeFile(outputFolder, documentFileName, document);
+	}
+	
+	private String latexQuote(String s)
+	{
+		// Latex specials: \# \$ \% \^{} \& \_ \{ \} \~{} \\
+
+		return s.
+			replace("\\", "\\textbackslash ").
+			replace("#", "\\#").
+			replace("$", "\\$").
+			replace("%", "\\%").
+			replace("&", "\\&").
+			replace("_", "\\_").
+			replace("{", "\\{").
+			replace("}", "\\}").
+			replace("~", "\\~").
+			replaceAll("\\^{1}", "\\\\^{}");
 	}
 
 	public void addInclude(String path)

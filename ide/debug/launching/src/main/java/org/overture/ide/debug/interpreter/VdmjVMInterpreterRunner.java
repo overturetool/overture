@@ -271,11 +271,24 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 //		arguments.add(Console.charset);
 		// 4: expression
 
+		String fullyQualifiedRemoteControlClass = launch.getLaunchConfiguration()
+		.getAttribute(DebugCoreConstants.DEBUGGING_REMOTE_CONTROL,"");
+		if(fullyQualifiedRemoteControlClass==null || fullyQualifiedRemoteControlClass.length()==0)
+		{
 		arguments.add("-e64");
 		arguments.add(buildEncodedLaunchExpression(launch,charset));
 		
 		arguments.add("-default64");
 		arguments.add(buildDefaultLaunchExpression(launch,charset));//,charset
+		}else
+		{
+			arguments.add("-e64");
+			arguments.add(Base64.encode("A".getBytes()).toString());
+			
+//			arguments.add("-default64");
+//			arguments.add(Base64.encode("X".getBytes()).toString());
+		}
+	
 		
 	
 		
@@ -308,6 +321,13 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 //		arguments.add("file:"+externalPath);
 //	}	
 		//end test
+		
+		if(fullyQualifiedRemoteControlClass!=null && fullyQualifiedRemoteControlClass.length()>0)
+			
+			{
+				arguments.add("-remote");
+				arguments.add(fullyQualifiedRemoteControlClass);
+			}
 		// 5-n: add files to the arguments
 
 		arguments.addAll(getFiles(project, contentType));

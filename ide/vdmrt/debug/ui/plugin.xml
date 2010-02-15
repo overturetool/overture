@@ -33,7 +33,7 @@
 	         class="org.overture.ide.vdmrt.debug.ui.shortcuts.VdmRtVdmjLaunchShortcut"
 	         id="org.overture.ide.vdmrt.debug.ui.shortcuts.VdmRtVdmjLaunchShortcut"
 	         label="Launch VDMJ VDM-RT"
-	         modes="run, debug"
+	         modes="debug"
 	         icon="icons/cview16/vdmrt_file_tsk.gif">
 	   <contextualLaunch>
 	        <enablement>
@@ -59,11 +59,11 @@
 	         class="org.overture.ide.vdmrt.debug.ui.tabs.VdmRtTabGroup"
 	         id="org.overture.ide.vdmrt.debug.ui.tabs.VdmRtTabGroup"
 	         type="org.overture.ide.vdmrt.debug.core.VdmjVdmRtLaunchConfigurationDelegate">
-	      <launchMode
+	      <!--launchMode
 	            description="Run VDM-RT specification"
 	            mode="run"
 	            perspective="org.overture.ide.ui.VdmDefaultPerspective">
-	      </launchMode>
+	      </launchMode-->
 	      <launchMode
 	            description="Debug VDM-RT Model"
 	            mode="debug"

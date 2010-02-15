@@ -65,6 +65,7 @@ public abstract class VdmMainLaunchConfigurationTab extends
 	private Button fOperationButton;
 	private Text fModuleNameText;
 	private Text fOperationText;
+	private Text fRemoteControlClassText;
 	private Button checkBoxGenerateLatexCoverage = null;
 	private Button checkBoxRemoteDebug = null;
 	private Button fdebugInConsole;
@@ -101,6 +102,8 @@ public abstract class VdmMainLaunchConfigurationTab extends
 	@Override
 	protected boolean validate()
 	{
+		if(fRemoteControlClassText.getText().length()>0)
+			return true;// super.validate();
 		try
 		{
 			Console.charset = getProject().getProject().getDefaultCharset();
@@ -194,6 +197,7 @@ return !(fModuleNameText == null || fModuleNameText.getText().length() == 0);
 	{
 		super.doCreateControl(composite);
 		createOperationEditor(composite);
+		createRemoteControlEditor(composite);
 		AstManager.instance().refreshProjects();
 	}
 
@@ -251,6 +255,57 @@ return !(fModuleNameText == null || fModuleNameText.getText().length() == 0);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		fOperationText.setLayoutData(gd);
 		fOperationText.addModifyListener(fListener);
+
+		setControl(parent);
+	}
+	
+	private void createRemoteControlEditor(Composite parent)
+	{
+		Group group = new Group(parent, parent.getStyle());
+		group.setText("Remote Control:");
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+
+		group.setLayoutData(gd);
+
+		GridLayout layout = new GridLayout();
+		layout.makeColumnsEqualWidth = false;
+		layout.numColumns = 3;
+		group.setLayout(layout);
+
+		// editParent = group;
+
+		Label label = new Label(group, SWT.MIN);
+		label.setText("Fully qualified remote control class:");
+		gd = new GridData(GridData.BEGINNING);
+		label.setLayoutData(gd);
+
+		fRemoteControlClassText = new Text(group, SWT.SINGLE | SWT.BORDER);
+
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		fRemoteControlClassText.setLayoutData(gd);
+		fRemoteControlClassText.addModifyListener(fListener);
+		fRemoteControlClassText.setEnabled(false);
+//
+//		fOperationButton = createPushButton(group,
+//				DLTKLaunchConfigurationsMessages.mainTab_projectButton,
+//				null);
+//		fOperationButton.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e)
+//			{
+//				handleOperationButtonSelected();
+//			}
+//		});
+//
+//		label = new Label(group, SWT.NORMAL);
+//		label.setText("Operation:");
+//		gd = new GridData(GridData.FILL_HORIZONTAL);
+//		label.setLayoutData(gd);
+//
+//		fOperationText = new Text(group, SWT.SINGLE | SWT.BORDER);
+//		gd = new GridData(GridData.FILL_HORIZONTAL);
+//		fOperationText.setLayoutData(gd);
+//		fOperationText.addModifyListener(fListener);
 
 		setControl(parent);
 	}
@@ -478,6 +533,8 @@ return !(fModuleNameText == null || fModuleNameText.getText().length() == 0);
 				fModuleNameText.getText());
 		config.setAttribute(DebugCoreConstants.DEBUGGING_OPERATION,
 				fOperationText.getText());
+		config.setAttribute(DebugCoreConstants.DEBUGGING_REMOTE_CONTROL,
+				fRemoteControlClassText.getText().trim());
 
 		if (vmOption != null && vmOption.trim().length() > 0)
 			config.setAttribute(DebugCoreConstants.DEBUGGING_VM_MEMORY_OPTION,
@@ -512,7 +569,9 @@ return !(fModuleNameText == null || fModuleNameText.getText().length() == 0);
 					""));
 			fOperationText.setText(config.getAttribute(DebugCoreConstants.DEBUGGING_OPERATION,
 					""));
-
+			fRemoteControlClassText.setText(config.getAttribute(DebugCoreConstants.DEBUGGING_REMOTE_CONTROL,
+			""));
+			
 			checkBoxRemoteDebug.setSelection(config.getAttribute(DebugCoreConstants.DEBUGGING_REMOTE_DEBUG,
 					false));
 
