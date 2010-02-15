@@ -335,13 +335,13 @@ the Overture executable.
 		\item General plugin.xml problem.
 	\end{enumerate} \developer{AugustoRibeiro}, \textbf{Dependencies: R020:\ref{analyseDLTKDebug}}\label{launchconfig}
 
-\item Making sure that the run and debug buttons in the IDE work
+\item \markDone{Making sure that the run and debug buttons in the IDE work
   appropriately and does not crash whenever the user tries to start
   them. Ideally these should simply change to the debug perspective if
   no debug configuration is present and be ready to type an expression
   into a quick console where simple expressions can be typed and
   executed (and up and down in the list of commands given is
-  supported). \developer{AugustoRibeiro}, \textbf{Dependencies: \ref{launchconfig}} 
+  supported). \developer{AugustoRibeiro}, \textbf{Dependencies: \ref{launchconfig}} }
 
 \item A button for moving a test case from the combinatorial testing
   perspective into the debugger such that it will stop at the right
@@ -357,18 +357,18 @@ the Overture executable.
 \item Include all definitions in the Outline view for all VDM
   dialects. \developer{AugustoRibeiro}, \textbf{Dependencies: R020:\ref{completeAST}} 
 
-\item When creating new projects (by wizard) in the IDE include the possibility
+\item \markDone{ When creating new projects (by wizard) in the IDE include the possibility
   for including standard libraries (i.e.\ (VDM headers) IO and Math) in the
   project. These are then to be included in a special ``lib''
-  directory. \developer{??}, \textbf{Dependencies: None} 
+  directory. \developer{??}, \textbf{Dependencies: None}} 
 
 \item Make sure that proof obligations for standard libraries are
   ignorred. \developer{NickBattle}, \textbf{Dependencies: None}  
 
-\item Make it posible for users to provide static implementations to ``is not yet specified'' functions and
-  operations by adding a Jar file to a lib folder in the project. \developer{KennethLaudahl,NickBattle}\label{staticIsNotYetSpecified} \textit{Prototype done}
+\item \markDone{Make it possible for users to provide static implementations to ``is not yet specified'' functions and
+  operations by adding a Jar file to a lib folder in the project. \developer{KennethLaudahl,NickBattle}\label{staticIsNotYetSpecified} \textit{Prototype done}}
 
-\item Make it possible for users to add a java implementation of a VDM class by adding a jar to the lib folder. The implementation should be done so one instance in java corresponds to one instance in VDM. No static. \developer{KennethLausdahl,NickBattle}, \textbf{Dependencies: \ref{staticIsNotYetSpecified}} 
+\item \markDone{ Make it possible for users to add a java implementation of a VDM class by adding a jar to the lib folder. The implementation should be done so one instance in java corresponds to one instance in VDM. No static. \developer{KennethLausdahl,NickBattle}, \textbf{Dependencies: \ref{staticIsNotYetSpecified}} }
 \end{enumerate}
 
 \item[Release 0.4.0 (September 2010):] The aim for this release is to
