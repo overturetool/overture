@@ -17,21 +17,27 @@ import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.StderrRedirector;
 import org.overturetool.vdmj.messages.StdoutRedirector;
+import org.overturetool.vdmj.pog.ProofObligation;
+import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.values.Value;
 
 public class ProjectTester
 {
+	public static boolean skipInterpreter= true;
 	VDMJ controller;
 	File reportLocation;
-	final String DEVIDER_LINE ="\n\n======================================================================\n\n";
+	final String DEVIDER_LINE = "\n\n======================================================================\n\n";
 	ExitStatus statusParse = null;
 	ExitStatus statusTypeCheck = null;
+	ExitStatus statusPo = null;
 	ExitStatus statusInterpreter = null;
+	Integer poCount = 0;
+
 	boolean isFaild = false;
 
 	enum Phase {
-		SyntaxCheck, TypeCheck, Interpretation
+		SyntaxCheck, TypeCheck, PO, Interpretation
 	}
 
 	public ProjectTester(File reportLocation) {
@@ -42,8 +48,9 @@ public class ProjectTester
 
 	public String test(ProjectPacker project) throws IOException
 	{
-		System.out.print(addFixedSize( "\nTesting: " + project.getSettings().getName()
-				,28)+ " => ");
+		System.out.print(addFixedSize("\nTesting: "
+				+ project.getSettings().getName(), 28)
+				+ " => ");
 		switch (project.getDialect())
 		{
 		case VDM_PP:
@@ -81,11 +88,29 @@ public class ProjectTester
 			System.out.print("Type check...");
 			setConsole(project.getSettings().getName(), Phase.TypeCheck);
 			statusTypeCheck = controller.typeCheck();
+			try
+			{
+				System.out.print("PO...");
+				setConsole(project.getSettings().getName(), Phase.PO);
+				ProofObligationList pos = controller.getInterpreter()
+						.getProofObligations();
+				pos.renumber();
+				poCount = pos.size();
+				for (ProofObligation proofObligation : pos)
+				{
+					Console.out.println("Number "+proofObligation.number+": \n\n"+proofObligation.toString()+DEVIDER_LINE);
+					statusPo = ExitStatus.EXIT_OK;
+				}
+			} catch (Exception e)
+			{
+				e.printStackTrace(Console.err);
+				statusPo = ExitStatus.EXIT_ERRORS;
+			}
 
 			for (String entryPoint : project.getSettings().getEntryPoints())
 			{
 				if (entryPoint != null && entryPoint.length() > 0
-						&& statusTypeCheck == ExitStatus.EXIT_OK)
+						&& statusTypeCheck == ExitStatus.EXIT_OK &&!skipInterpreter)
 				{
 					try
 					{
@@ -99,6 +124,7 @@ public class ProjectTester
 									entryPoint.indexOf('`')));
 						Value value = i.execute(entryPoint, null);
 						Console.out.println(value);
+						Console.out.flush();
 						statusInterpreter = ExitStatus.EXIT_OK;
 					} catch (Exception e)
 					{
@@ -125,10 +151,16 @@ public class ProjectTester
 			isFaild = statusTypeCheck != ExitStatus.EXIT_OK
 					|| statusParse != ExitStatus.EXIT_OK;
 			break;
+		case NO_ERROR_PO:
+			isFaild = statusTypeCheck != ExitStatus.EXIT_OK
+					|| statusParse != ExitStatus.EXIT_OK
+					|| statusPo != ExitStatus.EXIT_OK;
+			break;
 		case NO_ERROR_INTERPRETER:
 			isFaild = statusInterpreter != ExitStatus.EXIT_OK
 					|| statusTypeCheck != ExitStatus.EXIT_OK
-					|| statusParse != ExitStatus.EXIT_OK;
+					|| statusParse != ExitStatus.EXIT_OK
+					|| statusPo != ExitStatus.EXIT_OK;
 			break;
 		}
 
@@ -155,6 +187,15 @@ public class ProjectTester
 							+ " "
 							+ getLinks(project.getSettings().getName(),
 									Phase.TypeCheck)));
+		else
+			sb.append(HtmlTable.makeCell(""));
+		
+		if (statusPo!= null)
+			sb.append(makeCell(statusPo,
+					statusPo.name()
+							+ " "
+							+ getLinks(project.getSettings().getName(),
+									Phase.PO)));
 		else
 			sb.append(HtmlTable.makeCell(""));
 
@@ -265,13 +306,18 @@ public class ProjectTester
 	{
 		return isFaild;
 	}
+
+	public Integer getPoCount()
+	{
+		return poCount;
+	}
 	private String addFixedSize(String text, int size)
 	{
-		while (text.length()<size)
+		while (text.length() < size)
 		{
-			text+=" ";
+			text += " ";
 		}
 		return text;
-		
+
 	}
 }

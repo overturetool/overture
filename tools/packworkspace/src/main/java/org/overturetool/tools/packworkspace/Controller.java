@@ -41,7 +41,7 @@ public class Controller
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(HtmlTable.makeRow(HtmlTable.makeCellHeaderss(new String[] {
-				"Project Name", "Syntax check", "Type check",
+				"Project Name", "Syntax check", "Type check","PO",
 				"Interpretation test" })));
 		Collections.sort(projects);
 		for (ProjectPacker p : projects)
@@ -113,6 +113,7 @@ writeFile(new File(logOutput,"style.css"), HtmlPage.makeStyleCss());
 	public Integer count = 0;
 	public Integer synErrors = 0;
 	public Integer typeErrors = 0;
+	public Integer poCount = 0;
 	public Integer interpretationErrors = 0;
 
 	public String getOverview()
@@ -129,11 +130,12 @@ writeFile(new File(logOutput,"style.css"), HtmlPage.makeStyleCss());
 				typeErrors++;
 			if (!t.isInterpretationSuccessfull())
 				interpretationErrors++;
+			poCount+=t.getPoCount();
 		}
 		
 		return makeCell(synErrors+typeErrors+interpretationErrors,HtmlPage.makeLink( getName(),getName()+"/index.html"))+
 		
-		HtmlTable.makeCell(count.toString())+makeCell(synErrors)+makeCell(typeErrors)+makeCell(interpretationErrors);
+		HtmlTable.makeCell(count.toString())+makeCell(synErrors)+makeCell(typeErrors)+HtmlTable.makeCell(poCount.toString())+makeCell(interpretationErrors);
 	}
 	
 	private static String makeCell(Integer status)
@@ -155,10 +157,11 @@ writeFile(new File(logOutput,"style.css"), HtmlPage.makeStyleCss());
 		 Integer totalCount = 0;
 		 Integer totalSynErrors = 0;
 		 Integer totalTypeErrors = 0;
+		 Integer totalPos = 0;
 		 Integer totalInterpretationErrors = 0;
 		StringBuilder sb = new StringBuilder();
 		sb.append(HtmlTable.makeRow(HtmlTable.makeCellHeaderss(new String[] {
-				"Test set","Project count", "Syntax check", "Type check",
+				"Test set","Project count", "Syntax check", "Type check","PO",
 				"Interpretation test" })));
 		for (Controller c : controllers)
 		{
@@ -166,12 +169,13 @@ writeFile(new File(logOutput,"style.css"), HtmlPage.makeStyleCss());
 			totalCount+=c.count;
 			totalSynErrors+=c.synErrors;
 			totalTypeErrors+=c.typeErrors;
+			totalPos+=c.poCount;
 			totalInterpretationErrors+=c.interpretationErrors;
 		}
 		
 		
 		sb.append(HtmlTable.makeRowTotal( HtmlTable.makeCell("Totals"+
-				HtmlTable.makeCell(totalCount.toString())+makeCell(totalSynErrors)+makeCell(totalTypeErrors)+makeCell(totalInterpretationErrors))));
+				HtmlTable.makeCell(totalCount.toString())+makeCell(totalSynErrors)+makeCell(totalTypeErrors)+HtmlTable.makeCell(totalPos.toString())+makeCell(totalInterpretationErrors))));
 		
 
 		String page = HtmlPage.makePage(HtmlPage.makeH1("Test Overview")

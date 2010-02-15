@@ -58,6 +58,7 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 		copyFiles(root,outputLocation,dialect);
 		settings.writeProjectFile(outputLocation);
 		settings.writeReadmeContentFile(outputLocation, VDM_README_FILENAME);
+		settings.writeLaunchFile(outputLocation);
 		newLocation= outputLocation;
 		return outputLocation;
 	}

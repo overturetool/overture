@@ -15,7 +15,7 @@ import org.overturetool.vdmj.lex.Dialect;
 public class VdmReadme
 {
 	public enum ResultStatus {
-		NO_ERROR_INTERPRETER, NO_ERROR_TYPE_CHECK, NO_ERROR_SYNTAX, NO_CHECK
+		NO_ERROR_SYNTAX, NO_ERROR_TYPE_CHECK, NO_CHECK, NO_ERROR_PO, NO_ERROR_INTERPRETER
 	}
 
 	File file;
@@ -27,6 +27,7 @@ public class VdmReadme
 	private final String SUPPRESS_WARNINGS = "SUPPRESS_WARNINGS";
 	private final String ENTRY_POINT = "ENTRY_POINT";
 	private final String EXPECTED_RESULT = "EXPECTED_RESULT";
+	private final String TEX_DOCUMENT = "DOCUMENT";
 
 	private Release languageVersion = Release.DEFAULT;
 	private Boolean invChecks = true;
@@ -36,24 +37,26 @@ public class VdmReadme
 	private Boolean suppressWarnings = false;
 	private final List<String> entryPoints = new Vector<String>();
 	private ResultStatus expectedResult = ResultStatus.NO_ERROR_TYPE_CHECK;
+	private String texDocument="";
 	private String name = "";
 	private Dialect dialect = Dialect.VDM_PP;
-	private boolean settingsParsed=false;
-	private String content="";
+	private boolean settingsParsed = false;
+	private String content = "";
 
-	public VdmReadme(File file, String name,Dialect dialect,boolean autoInitialize) {
+	public VdmReadme(File file, String name, Dialect dialect,
+			boolean autoInitialize) {
 		this.file = file;
 		this.name = name;
 		this.dialect = dialect;
-		if(autoInitialize)
-		initialize();
+		if (autoInitialize)
+			initialize();
 	}
 
 	public void initialize()
 	{
 		try
 		{
-			
+
 			BufferedReader input = new BufferedReader(new FileReader(file));
 			try
 			{
@@ -63,8 +66,8 @@ public class VdmReadme
 				{
 					if (line.startsWith("#") && line.contains("="))
 						processLine(line.substring(1).trim());
-					if(!line.startsWith("#"))
-						sb.append("\n"+line);
+					if (!line.startsWith("#"))
+						sb.append("\n" + line);
 				}
 				content = sb.toString();
 			} finally
@@ -75,8 +78,8 @@ public class VdmReadme
 		{
 			ex.printStackTrace();
 		}
-		
-		if(!settingsParsed)
+
+		if (!settingsParsed)
 			appendReadme();
 
 	}
@@ -86,7 +89,7 @@ public class VdmReadme
 		String[] data = line.split("=");
 		if (data.length > 1)
 		{
-			settingsParsed=true;
+			settingsParsed = true;
 			if (data[0].equals(LANGUAGE_VERSION))
 				setLanguageVersion(Release.lookup(data[1]));
 			else if (data[0].equals(INV_CHECKS))
@@ -103,6 +106,8 @@ public class VdmReadme
 				setEntryPoint(data[1].trim());
 			else if (data[0].equals(EXPECTED_RESULT))
 				setExpectedResult(ResultStatus.valueOf(data[1]));
+			else if( data[0].equals(TEX_DOCUMENT))
+				setTexDocument(data[1].trim());
 		}
 	}
 
@@ -115,20 +120,7 @@ public class VdmReadme
 			outputFileReader = new FileWriter(new File(outputFolder, ".project"));
 			BufferedWriter outputStream = new BufferedWriter(outputFileReader);
 
-			String projectNature = "";
-			switch (dialect)
-			{
-			case VDM_PP:
-				projectNature = OvertureProject.VDMPP_NATURE;
-				break;
-			case VDM_SL:
-				projectNature = OvertureProject.VDMSL_NATURE;
-				break;
-			case VDM_RT:
-				projectNature = OvertureProject.VDMRT_NATURE;
-				break;
-
-			}
+			String projectNature = getNature();
 
 			String builderArguments = getBuilderArguments();
 
@@ -136,7 +128,7 @@ public class VdmReadme
 					projectNature)
 					.replace(OvertureProject.NAME_PLACEHOLDER, name)
 					.replace(OvertureProject.ARGUMENTS_PLACEHOLDER,
-							builderArguments));
+							builderArguments).replace(OvertureProject.TEX_DOCUMENT, getTexDocument().trim()));
 			outputStream.flush();
 			outputStream.close();
 			outputFileReader.close();
@@ -147,24 +139,45 @@ public class VdmReadme
 
 		}
 	}
-	public void writeReadmeContentFile(File outputFolder,String fileName)
+
+	private String getNature()
+	{
+		String projectNature = "";
+		switch (dialect)
+		{
+		case VDM_PP:
+			projectNature = OvertureProject.VDMPP_NATURE;
+			break;
+		case VDM_SL:
+			projectNature = OvertureProject.VDMSL_NATURE;
+			break;
+		case VDM_RT:
+			projectNature = OvertureProject.VDMRT_NATURE;
+			break;
+
+		}
+		return projectNature;
+	}
+
+	public void writeReadmeContentFile(File outputFolder, String fileName)
 	{
 		FileWriter outputFileReader;
 
 		try
 		{
-		outputFileReader = new FileWriter(new File(outputFolder,fileName),false);
-		BufferedWriter outputStream = new BufferedWriter(outputFileReader);
-		outputStream.write(content);
-		outputStream.write("\n\nLanguage Version: "+ getLanguageVersion());
-		if(getEntryPoints().size()>0)
-			for(String entrypoint: entryPoints)
-			{
-				outputStream.write("\nEntry point     : "+ entrypoint);
-			}
-		outputStream.flush();
-		outputStream.close();
-		outputFileReader.close();
+			outputFileReader = new FileWriter(new File(outputFolder, fileName),
+					false);
+			BufferedWriter outputStream = new BufferedWriter(outputFileReader);
+			outputStream.write(content);
+			outputStream.write("\n\nLanguage Version: " + getLanguageVersion());
+			if (getEntryPoints().size() > 0)
+				for (String entrypoint : entryPoints)
+				{
+					outputStream.write("\nEntry point     : " + entrypoint);
+				}
+			outputStream.flush();
+			outputStream.close();
+			outputFileReader.close();
 		} catch (IOException e)
 		{
 			e.printStackTrace();
@@ -194,26 +207,26 @@ public class VdmReadme
 		sb.append("\n\t\t\t\t</dictionary>");
 		return sb.toString();
 	}
-	
+
 	public void createReadme()
 	{
 		createReadme(file);
 	}
-	
+
 	public void createReadme(File newReadMeFile)
 	{
-		
-//		if(newReadMeFile.exists())
-//			return;
-		
+
+		// if(newReadMeFile.exists())
+		// return;
+
 		FileWriter outputFileReader;
 		try
 		{
-			outputFileReader = new FileWriter(newReadMeFile,false);
+			outputFileReader = new FileWriter(newReadMeFile, false);
 			BufferedWriter outputStream = new BufferedWriter(outputFileReader);
-			
+
 			outputStream.write(toString());
-			
+
 			outputStream.flush();
 			outputStream.close();
 			outputFileReader.close();
@@ -222,7 +235,7 @@ public class VdmReadme
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	public void appendReadme()
@@ -239,7 +252,7 @@ public class VdmReadme
 					if (line.startsWith("#") && line.contains("="))
 						continue;
 					else
-						sb.append("\n"+line);
+						sb.append("\n" + line);
 				}
 			} finally
 			{
@@ -249,17 +262,15 @@ public class VdmReadme
 		{
 			ex.printStackTrace();
 		}
-		
-		
-		
+
 		FileWriter outputFileReader;
 		try
 		{
-			outputFileReader = new FileWriter(file,false);
+			outputFileReader = new FileWriter(file, false);
 			BufferedWriter outputStream = new BufferedWriter(outputFileReader);
-			
-			outputStream.write(sb.toString()+"\n\n"+toString());
-			
+
+			outputStream.write(sb.toString() + "\n\n" + toString());
+
 			outputStream.flush();
 			outputStream.close();
 			outputFileReader.close();
@@ -268,9 +279,97 @@ public class VdmReadme
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+	}
+
+	public void writeLaunchFile(File folder)
+	{
+		File launch = new File(folder, name + ".launch");
+		StringBuilder sb = new StringBuilder();
+		String method = "";
+		String module = "";
+
+		if (entryPoints.isEmpty())
+			return;
+
+		String entryPoint = entryPoints.get(0);
+		if (entryPoint.contains("`"))
+		{
+			module = entryPoint.substring(0, entryPoint.indexOf('`')).trim();
+			method = entryPoint.substring(entryPoint.indexOf('`') + 1).trim();
+		} else if (entryPoint.contains("."))
+		{
+			module = entryPoint.substring(0, entryPoint.indexOf(").")+1)
+					.trim()
+					.replace("new ", "");
+			method = entryPoint.substring(entryPoint.indexOf(").") + 2).trim();
+		}
 		
+		String launchConfigarationId ="org.overture.ide.vdmpp.debug.core.launchConfigurationTypeVDMJ";
+		switch(dialect){
+		case VDM_SL:
+			launchConfigarationId=launchConfigarationId.replace("vdmpp", "vdmsl");
+			break;
+		case VDM_PP:
+			
+			break;
+		case VDM_RT:
+			launchConfigarationId=launchConfigarationId.replace("vdmrt", "vdmrt");
+			break;
+		}
+
+		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
+		sb.append("\n<launchConfiguration type=\""+escapeXml(launchConfigarationId)+"\">");
+		sb.append("\n<booleanAttribute key=\"create_coverage\" value=\"true\"/>");
+		sb.append("\n<booleanAttribute key=\"dbgp_break_on_first_line\" value=\"false\"/>");
+		sb.append("\n<intAttribute key=\"dbgp_connection_timeout\" value=\"5000\"/>");
+		sb.append("\n<booleanAttribute key=\"dbgp_enable_logging\" value=\"true\"/>");
+		sb.append("\n<booleanAttribute key=\"enableBreakOnFirstLine\" value=\"false\"/>");
+		sb.append("\n<booleanAttribute key=\"enableDbgpLogging\" value=\"false\"/>");
+		sb.append("\n<stringAttribute key=\"mainScript\" value=\".project\"/>");
+		sb.append("\n<stringAttribute key=\"nature\" value=\"" + escapeXml(getNature())
+				+ "\"/>");
+		//sb.append("\n<listAttribute key=\"org.eclipse.debug.core.MAPPED_RESOURCE_PATHS\">");
+		// sb.append("\n<listEntry value=\"/dansk/.project\"/>");
+		// sb.append("\n</listAttribute>");
+		// sb.append("\n<listAttribute key=\"org.eclipse.debug.core.MAPPED_RESOURCE_TYPES\">");
+		// sb.append("\n<listEntry value=\"1\"/>");
+		// sb.append("\n</listAttribute>");
+		sb.append("\n<stringAttribute key=\"project\" value=\"" + escapeXml(name) + "\"/>");
+		sb.append("\n<booleanAttribute key=\"remote_debug\" value=\"false\"/>");
+		sb.append("\n<stringAttribute key=\"vdmDebuggingMethod\" value=\""
+				+ escapeXml(method) + "\"/>");
+		sb.append("\n<stringAttribute key=\"vdmDebuggingModule\" value=\""
+				+ escapeXml(module) + "\"/>");
+		sb.append("\n<stringAttribute key=\"vdmDebuggingRemoteControlClass\" value=\"\"/>");
+		sb.append("\n</launchConfiguration>");
+		
+		
+		
+		FileWriter outputFileReader;
+		try
+		{
+			outputFileReader = new FileWriter(launch, false);
+			BufferedWriter outputStream = new BufferedWriter(outputFileReader);
+
+			outputStream.write(sb.toString());
+
+			outputStream.flush();
+			outputStream.close();
+			outputFileReader.close();
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 	
+	private static String escapeXml(String data)
+	{
+		return data.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(">", " &gt;").replace("'", "&apos;").replace(" ", "");
+	}
+
 	@Override
 	public String toString()
 	{
@@ -278,29 +377,29 @@ public class VdmReadme
 		sb.append("\n#******************************************************");
 		sb.append("\n#  AUTOMATED TEST SETTINGS");
 		sb.append("\n#------------------------------------------------------");
-		
-		sb.append("\n#"+LANGUAGE_VERSION+"="+languageVersion);
-		sb.append("\n#"+INV_CHECKS+"="+invChecks);
-		sb.append("\n#"+POST_CHECKS+"="+postChecks);
-		sb.append("\n#"+PRE_CHECKS+"="+preChecks);
-		sb.append("\n#"+DYNAMIC_TYPE_CHECKS+"="+dynamicTypeChecks);
-		sb.append("\n#"+SUPPRESS_WARNINGS+"="+suppressWarnings);
-		//sb.append("\n#"+ENTRY_POINT+"="+entryPoints);
-		if(getEntryPoints().size()>0)
-			for(String entrypoint: entryPoints)
+
+		sb.append("\n#" + LANGUAGE_VERSION + "=" + languageVersion);
+		sb.append("\n#" + INV_CHECKS + "=" + invChecks);
+		sb.append("\n#" + POST_CHECKS + "=" + postChecks);
+		sb.append("\n#" + PRE_CHECKS + "=" + preChecks);
+		sb.append("\n#" + DYNAMIC_TYPE_CHECKS + "=" + dynamicTypeChecks);
+		sb.append("\n#" + SUPPRESS_WARNINGS + "=" + suppressWarnings);
+		// sb.append("\n#"+ENTRY_POINT+"="+entryPoints);
+		if (getEntryPoints().size() > 0)
+			for (String entrypoint : entryPoints)
 			{
-				sb.append("\n#"+ENTRY_POINT+"="+ entrypoint);
+				sb.append("\n#" + ENTRY_POINT + "=" + entrypoint);
 			}
-		sb.append("\n#"+EXPECTED_RESULT+"="+expectedResult);
-		
-//		sb.append("\n#LANGUAGE_VERSION=vdm10");
-//		sb.append("\n#INV_CHECKS=true");
-//		sb.append("\n#POST_CHECKS=true");
-//		sb.append("\n#PRE_CHECKS=true");
-//		sb.append("\n#DYNAMIC_TYPE_CHECKS=true");
-//		sb.append("\n#SUPPRESS_WARNINGS=false");
-//		sb.append("\n#ENTRY_POINT=new Test1().Run()");
-//		sb.append("\n#EXPECTED_RESULT=NO_ERROR_INTERPRETER");
+		sb.append("\n#" + EXPECTED_RESULT + "=" + expectedResult);
+
+		// sb.append("\n#LANGUAGE_VERSION=vdm10");
+		// sb.append("\n#INV_CHECKS=true");
+		// sb.append("\n#POST_CHECKS=true");
+		// sb.append("\n#PRE_CHECKS=true");
+		// sb.append("\n#DYNAMIC_TYPE_CHECKS=true");
+		// sb.append("\n#SUPPRESS_WARNINGS=false");
+		// sb.append("\n#ENTRY_POINT=new Test1().Run()");
+		// sb.append("\n#EXPECTED_RESULT=NO_ERROR_INTERPRETER");
 		sb.append("\n#******************************************************");
 		return sb.toString();
 	}
@@ -367,7 +466,7 @@ public class VdmReadme
 
 	public void setEntryPoint(String entryPoint)
 	{
-		this.entryPoints.add( entryPoint);
+		this.entryPoints.add(entryPoint);
 	}
 
 	public List<String> getEntryPoints()
@@ -403,5 +502,15 @@ public class VdmReadme
 	public Dialect getDialect()
 	{
 		return dialect;
+	}
+
+	public void setTexDocument(String texDocument)
+	{
+		this.texDocument = texDocument;
+	}
+
+	public String getTexDocument()
+	{
+		return texDocument;
 	}
 }
