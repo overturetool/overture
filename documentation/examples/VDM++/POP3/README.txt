@@ -9,5 +9,6 @@
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
 #ENTRY_POINT=new POP3Test().Test1()
+#ENTRY_POINT=new POP3Test().Test2()
 #EXPECTED_RESULT=NO_ERROR_INTERPRETER
 #******************************************************

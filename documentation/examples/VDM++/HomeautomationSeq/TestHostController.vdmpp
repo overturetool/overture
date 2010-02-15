@@ -38,10 +38,10 @@ protected SetUp: () ==> ()
 	(--env := new Environment();
 	world := new World();
 	host := new HostController(23, 78);
-	tempSensor := new TemperatureSensor(1, <TEMPSENSOR>, 0);
-	humidSensor := new HumidSensor(2, <HUMIDSENSOR>, 0);
-	win := new Window(3, <WINDOW>);
-	therm := new Thermostat(4, <THERMOSTAT>);
+--	tempSensor := new TemperatureSensor(1, <TEMPSENSOR>, 0);
+--	humidSensor := new HumidSensor(2, <HUMIDSENSOR>, 0);
+--	win := new Window(3, <WINDOW>);
+--	therm := new Thermostat(4, <THERMOSTAT>);
 	);
 
 protected Test: () ==> ()

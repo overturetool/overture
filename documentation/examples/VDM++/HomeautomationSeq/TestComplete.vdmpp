@@ -20,7 +20,7 @@ operations
 public Execute: () ==> ()
 	Execute() ==
 		(dcl ts : TestSuite := new TestSuite();
-		ts.AddTest(new TestSurroundings("TestSurroundings"));
+--		ts.AddTest(new TestSurroundings("TestSurroundings"));
 		ts.AddTest(new TestSensor("TestSensor"));
 		ts.AddTest(new TestActuator("TestActuator"));
 		ts.AddTest(new TestHostController("TestHC"));
