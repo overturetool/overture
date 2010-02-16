@@ -1,0 +1,17 @@
+module Eval
+exports all
+definitions 
+operations 
+
+operations
+
+evalExpr : AS`Expression * AS`Spec ==> Schd`Val | Schd`BreakInfo
+evalExpr(expr,spec)== is not yet specified;
+
+evalSchedule : () ==> ()
+evalSchedule() == skip;
+
+expandSpec : AS`Spec ==> ()
+expandSpec(spec) == skip;
+
+end Eval

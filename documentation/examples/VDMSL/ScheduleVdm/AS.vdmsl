@@ -1,0 +1,84 @@
+module AS exports all definitions 
+types 
+Identifier = seq of char;
+
+Spec = 	ThreadDefinition | 
+		OperationDefinitions | 
+		SynchronizationDefinitions;
+
+---
+--- OPERATION DEFINITIONS
+---
+OperationDefinitions ::
+	operationList : seq of OperationDefinition;
+
+OperationDefinition ::
+	shape : OperationShape;
+
+OperationShape =
+	ExplicitOperation;
+
+ExplicitOperation ::
+	identifier 	: Identifier
+	body 		: OperationBody;
+
+OperationBody ::
+	statement : [Statement];
+
+---
+--- Permision
+---
+ActiveExpression  ::
+	nameList : seq of Name;
+	
+---
+--- THREAD DEFINITIONS
+---
+ThreadDefinition ::
+	threadSpecification : [ThreadSpecification];
+
+ThreadSpecification =
+--	PeriodicThread |
+	ProcedureThread ;
+
+--PeriodicThread ::
+--	args : seq of Expression
+--	name : Name;
+
+ProcedureThread ::
+	statement : Statement;  
+	
+---
+--- SYNCHRONIZATION 
+---
+SynchronizationDefinitions ::
+	syncList : seq of PermissionPredicate;
+
+PermissionPredicate ::
+	name : Name
+	expression : Expression;
+	
+---
+--- EXPRESSIONS
+---
+Expression = 	ActiveExpression | 
+				Name;
+				
+Name ::
+	classIdentifier : [Identifier]
+	identifier : Identifier;
+
+---
+--- STATEMENTS
+---
+Statement =	AssignStatement |
+			CallStatement | 
+			token;
+			
+AssignStatement ::
+	stateDesignator : Name
+	expression : Expression;
+
+CallStatement ::
+	name : Name
+end AS

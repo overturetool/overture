@@ -1,0 +1,57 @@
+module Schd
+exports all
+definitions
+
+types
+
+Name 			= seq of char;
+ObjRef 			= token;
+CpuId 			= token;
+BusId 			= token;
+ThreadId 		= token;
+MessageId 		= token;
+
+
+
+ThreadInfo ::
+	status 	: <RUN> | <BREAK> | <BLOCKED>
+	cpu 	: [CpuId]
+	obj 	: ObjRef
+	prioity : nat
+	ast		: AS`Statement;
+	
+CpuInfo ::
+	threads : map ThreadId to ThreadInfo
+	deployed: set of ObjRef
+	policy  : <FC> | <FCFS>;
+	
+MessageInfo ::
+	time 	: nat
+	src 	: CpuId
+	dest	: CpuId;
+	
+BusInfo ::
+	cpus	: set of CpuId
+	msgInfo	: map MessageId to MessageInfo
+	policy	: <FCFS> | <OTHER>;
+	
+PermInfo ::;
+
+BreakInfo::;
+
+Val::;
+	
+	
+
+state Sigma of
+
+busInfo 	: map BusId to BusInfo
+cpuInfo 	: map CpuId to CpuInfo
+permInfo 	: map Name  to PermInfo
+time 		: nat
+
+end
+
+
+
+end Schd
