@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+ <!-- Extension point for builders of VDM -->
+  <extension-point id="org.overture.ide.core.buildParticipant" name="Builder" schema="schema/org.overture.ide.core.builder.exsd"/>
+   <!-- Extension point for parsers of VDM -->
+  <extension-point id="org.overture.ide.core.parsePaticipant" name="Parser" schema="schema/org.overture.ide.core.parsePaticipant.exsd"/>
+
+
+ <!-- Basic builder for VDM -->
+  <extension
+        id="org.overture.ide.core.builder.VdmBuilder"
+        point="org.eclipse.core.resources.builders">
+     <builder
+           callOnEmptyDelta="false"
+           hasNature="false"
+           isConfigurable="true">
+        <run
+              class="org.overture.ide.core.builder.VdmBuilder">
+        </run>
+     </builder>
+  </extension>
+
+</plugin>
