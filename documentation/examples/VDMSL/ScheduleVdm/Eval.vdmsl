@@ -6,12 +6,10 @@ operations
 operations
 
 evalExpr : AS`Expression * AS`Spec ==> Schd`Val | Schd`BreakInfo
-evalExpr(expr,spec)== is not yet specified;
+evalExpr(expr,spec)== 
+  is not yet specified;
 
 evalSchedule : () ==> ()
 evalSchedule() == skip;
-
-expandSpec : AS`Spec ==> ()
-expandSpec(spec) == skip;
 
 end Eval

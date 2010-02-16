@@ -5,9 +5,8 @@ definitions
 types
 
 Name 			= seq of char;
-ObjRef 			= token;
-CpuId 			= token;
-BusId 			= token;
+CpuId 			= AS`Identifier;
+BusId 			= AS`Identifier;
 ThreadId 		= token;
 MessageId 		= token;
 
@@ -49,9 +48,32 @@ busInfo 	: map BusId to BusInfo
 cpuInfo 	: map CpuId to CpuInfo
 permInfo 	: map Name  to PermInfo
 time 		: nat
-
 end
 
+operations
+
+expandSpec : AS`Spec ==> ()
+expandSpec(mk_AS`Spec(sys,classm)) == 
+ (expandSys(sys);
+  for all id in set dom classm do
+    expandClass(id, classm(id))
+ );
+  
+expandSys: AS`System ==> ()
+expandSys(mk_AS`System(cpus,buses,deployed)) ==
+  (busInfo := {id |-> mk_BusInfo(buses(id),{|->},<FCFS>) 
+              | id in set dom buses};
+   cpuInfo := {id |->
+               let deplid = if id in set dom deployed
+                            then deployed(id)
+                            else {}
+               in
+                 mk_CpuInfo({|->},deplid,pol)
+              | mk_(id,pol) in set cpus}
+  );    
+expandClass: AS`Identifier * AS`Class ==> ()
+expandClass(id,mk_AS`Class(td,opdefs,sync)) ==
+   is not yet specified;
 
 
 end Schd

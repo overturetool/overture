@@ -17,6 +17,7 @@ does not have a main debug functionality.
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
+#AUTHOR= Paul Mukherjee
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true

@@ -11,6 +11,7 @@ Spring Semester, 1997.
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
+#AUTHOR= Matthew Suderman
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true
