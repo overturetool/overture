@@ -513,4 +513,9 @@ public class VdmReadme
 	{
 		return texDocument;
 	}
+	
+	public File getWorkingDirectory()
+	{
+		return file.getParentFile();
+	}
 }

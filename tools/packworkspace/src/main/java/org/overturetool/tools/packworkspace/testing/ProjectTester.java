@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
+import java.util.Vector;
 
 import org.overturetool.tools.packworkspace.ProjectPacker;
 import org.overturetool.vdmj.ExitStatus;
@@ -20,11 +22,10 @@ import org.overturetool.vdmj.messages.StdoutRedirector;
 import org.overturetool.vdmj.pog.ProofObligation;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Interpreter;
-import org.overturetool.vdmj.values.Value;
 
 public class ProjectTester
 {
-	public static boolean skipInterpreter= true;
+	public static boolean skipInterpreter = false;
 	VDMJ controller;
 	File reportLocation;
 	final String DEVIDER_LINE = "\n\n======================================================================\n\n";
@@ -81,25 +82,32 @@ public class ProjectTester
 		project.getSettings().createReadme(new File(dir, "Settings.txt"));
 		setConsole(project.getSettings().getName(), Phase.SyntaxCheck);
 
-		System.out.print("Syntax check...");
+		System.out.print("Syntax..");
 		statusParse = controller.parse(project.getSpecFiles());
 		if (statusParse == ExitStatus.EXIT_OK)
 		{
-			System.out.print("Type check...");
+			System.out.print("Type..");
 			setConsole(project.getSettings().getName(), Phase.TypeCheck);
 			statusTypeCheck = controller.typeCheck();
 			try
 			{
-				System.out.print("PO...");
+				System.out.print("PO..");
 				setConsole(project.getSettings().getName(), Phase.PO);
 				ProofObligationList pos = controller.getInterpreter()
 						.getProofObligations();
 				pos.renumber();
 				poCount = pos.size();
-				for (ProofObligation proofObligation : pos)
-				{
-					Console.out.println("Number "+proofObligation.number+": \n\n"+proofObligation.toString()+DEVIDER_LINE);
+				if (poCount == 0)
 					statusPo = ExitStatus.EXIT_OK;
+				else
+				{
+					for (ProofObligation proofObligation : pos)
+					{
+						Console.out.println("Number " + proofObligation.number
+								+ ": \n\n" + proofObligation.toString()
+								+ DEVIDER_LINE);
+						statusPo = ExitStatus.EXIT_OK;
+					}
 				}
 			} catch (Exception e)
 			{
@@ -107,14 +115,23 @@ public class ProjectTester
 				statusPo = ExitStatus.EXIT_ERRORS;
 			}
 
+			int intryPointCount = 0;
 			for (String entryPoint : project.getSettings().getEntryPoints())
 			{
 				if (entryPoint != null && entryPoint.length() > 0
-						&& statusTypeCheck == ExitStatus.EXIT_OK &&!skipInterpreter)
+						&& statusTypeCheck == ExitStatus.EXIT_OK
+						&& !skipInterpreter)
 				{
 					try
 					{
-						System.out.print("Interpreter test...");
+
+						if (intryPointCount == 0)
+							System.out.println("Runtime:");
+						intryPointCount++;
+
+						System.out.println("\tTesting Entrypoint: "
+								+ entryPoint);
+
 						setConsole(project.getSettings().getName(),
 								Phase.Interpretation);
 						Interpreter i = controller.getInterpreter();
@@ -122,10 +139,11 @@ public class ProjectTester
 						if (project.getDialect() == Dialect.VDM_SL)
 							i.setDefaultName(entryPoint.substring(0,
 									entryPoint.indexOf('`')));
-						Value value = i.execute(entryPoint, null);
-						Console.out.println(value);
+						// Value value = i.execute(entryPoint, null);
+						statusInterpreter = runInterpreter(project, entryPoint);
+						// Console.out.println(value);
 						Console.out.flush();
-						statusInterpreter = ExitStatus.EXIT_OK;
+
 					} catch (Exception e)
 					{
 						Console.err.write(e.toString());
@@ -189,13 +207,10 @@ public class ProjectTester
 									Phase.TypeCheck)));
 		else
 			sb.append(HtmlTable.makeCell(""));
-		
-		if (statusPo!= null)
-			sb.append(makeCell(statusPo,
-					statusPo.name()
-							+ " "
-							+ getLinks(project.getSettings().getName(),
-									Phase.PO)));
+
+		if (statusPo != null)
+			sb.append(makeCell(statusPo, statusPo.name() + " "
+					+ getLinks(project.getSettings().getName(), Phase.PO)));
 		else
 			sb.append(HtmlTable.makeCell(""));
 
@@ -208,6 +223,132 @@ public class ProjectTester
 			sb.append(HtmlTable.makeCell(""));
 
 		return HtmlTable.makeRow(sb.toString());
+	}
+
+	private ExitStatus runInterpreter(ProjectPacker project, String entryPoint)
+			throws IOException, InterruptedException
+	{
+
+		List<String> command = new Vector<String>();
+		command.add("java");
+		command.add("-cp");
+		File thisJar = new File(this.getClass()
+				.getProtectionDomain()
+				.getCodeSource()
+				.getLocation()
+				.getPath());
+		String cp = thisJar.getAbsolutePath();
+		if (System.getProperty("user.name", "").equals("kela"))
+			cp += ";"
+					+ "C:\\overture\\overturesvn\\core\\vdmj\\target\\classes";
+		File lib = new File(project.getSettings().getWorkingDirectory(), "lib");
+		if (lib.exists() && lib.isDirectory())
+		{
+			for (File f : lib.listFiles())
+			{
+				if (f.getName().toLowerCase().endsWith(".jar"))
+					cp += ";" + f.getAbsolutePath();
+			}
+		}
+		command.add(cp);
+		command.add("org.overturetool.vdmj.VDMJ");
+
+		command.add(project.getDialect().getArgstring());
+		// -r <release>: VDM language release
+		command.add("-r");
+		command.add(project.getSettings().getLanguageVersion().toString());
+		// -w: suppress warning messages
+		// command.add("-w");
+
+		// -q: suppress information messages
+		// command.add("-q");
+		// -i: run the interpreter if successfully type checked
+		// command.add("-i");
+		// command.add(entryPoint);
+		// -p: generate proof obligations and stop
+
+		// -e <exp>: evaluate <exp> and stop
+		command.add("-e");
+		command.add(entryPoint);
+		// -c <charset>: select a file charset
+
+		// -t <charset>: select a console charset
+
+		// -o <filename>: saved type checked specification
+		if (!project.getSettings().getPreChecks())
+			command.add("-pre");
+		// -pre: disable precondition checks
+		if (!project.getSettings().getPostChecks())
+			command.add("-post");
+		// -post: disable postcondition checks
+		if (!project.getSettings().getInvChecks())
+			command.add("-inv");
+		// -inv: disable type/state invariant checks
+		if (!project.getSettings().getInvChecks())
+			command.add("-inv");
+		// -dtc: disable all dynamic type checking
+		if (!project.getSettings().getDynamicTypeChecks())
+			command.add("-dtc");
+		// -log: enable real-time event logging
+
+		// -remote <class>: enable remote control
+		for (File f : project.getSpecFiles())
+		{
+			command.add(f.getAbsolutePath());
+		}
+		// System.err.println("VDMJ: " + msg + "\n");
+		// System.err.println("Usage: VDMJ <-vdmsl | -vdmpp | -vdmrt> [<options>] [<files>]");
+		// System.err.println("-vdmsl: parse files as VDM-SL");
+		// System.err.println("-vdmpp: parse files as VDM++");
+		// System.err.println("-vdmrt: parse files as VICE");
+		// System.err.println("-r <release>: VDM language release");
+		// System.err.println("-w: suppress warning messages");
+		// System.err.println("-q: suppress information messages");
+		// System.err.println("-i: run the interpreter if successfully type checked");
+		// System.err.println("-p: generate proof obligations and stop");
+		// System.err.println("-e <exp>: evaluate <exp> and stop");
+		// System.err.println("-c <charset>: select a file charset");
+		// System.err.println("-t <charset>: select a console charset");
+		// System.err.println("-o <filename>: saved type checked specification");
+		// System.err.println("-pre: disable precondition checks");
+		// System.err.println("-post: disable postcondition checks");
+		// System.err.println("-inv: disable type/state invariant checks");
+		// System.err.println("-dtc: disable all dynamic type checking");
+		// System.err.println("-log: enable real-time event logging");
+		// System.err.println("-remote <class>: enable remote control");
+
+		ProcessBuilder pb = new ProcessBuilder(command);
+		pb.directory(project.getSettings().getWorkingDirectory());
+		Process p = pb.start();
+
+		File projectDir = new File(reportLocation, project.getSettings()
+				.getName());
+		projectDir.mkdirs();
+		ProcessConsolePrinter pcpErr = new ProcessConsolePrinter(new File(projectDir,
+				Phase.Interpretation + "Err.txt"),
+				p.getErrorStream());
+		pcpErr.start();
+		
+		StringBuilder sb = new StringBuilder();
+		for(String cmd : command)
+		{
+			sb.append(" "+cmd);
+		}
+		sb.append("\nWorking directory: " + pb.directory().getAbsolutePath());
+		
+		ProcessConsolePrinter pcpOut = new ProcessConsolePrinter(new File(projectDir,
+				Phase.Interpretation + "Out.txt"),
+				p.getInputStream(),sb.toString().trim());
+		pcpOut.start();
+
+		p.waitFor();
+		pcpErr.interrupt();
+		pcpOut.interrupt();
+		if (p.exitValue() == 0)
+			return ExitStatus.EXIT_OK;
+		else
+			return ExitStatus.EXIT_ERRORS;
+
 	}
 
 	private static String makeCell(ExitStatus status, String text)
@@ -311,6 +452,7 @@ public class ProjectTester
 	{
 		return poCount;
 	}
+
 	private String addFixedSize(String text, int size)
 	{
 		while (text.length() < size)
