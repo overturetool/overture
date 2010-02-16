@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-<extension point="org.eclipse.ui.newWizards">
-     
-      <category
-            id="org.overture.ide.category"
-            name="Overture">
-      </category>
-   </extension>
    
     <!--
 	 	OverturePerspectiveName
@@ -21,75 +14,10 @@
 	  -->
   
   <!-- preferences -->
-  <extension point="org.eclipse.ui.preferencePages">
-     <page
-           class="org.overture.ide.ui.preferences.OvertureGlobalPreferencesPage"
-           id="org.overture.ide.ui.OvertureGlobalPreferencesPage"
-           name="Overture">
-     </page>
-  </extension>
-  <extension
-        point="org.eclipse.ui.views">
-     <category
-           id="org.overture.ide.ui.view.category"
-           name="Overture">
-     </category>
- </extension>
   
   
-  <extension point="org.eclipse.ui.popupMenus">
-   <!-- Enable the menu on projects -->
-      <objectContribution
-            adaptable="true"
-            id="org.overture.ide.ui.projectmenus"
-            objectClass="org.eclipse.core.resources.IProject">
-         	<menu
-               id="org.overture.ide.ui.buildMenu"
-               label="Build Menu"
-               path="buildmenu">
-            <separator
-                  name="groupBuild">
-            </separator>
-         </menu>
-         <action
-               class="org.overture.ide.ui.actions.BuildProjectAction"
-               enablesFor="1"
-               id="org.overture.ide.ui.actions.BuildProjectAction"
-               label="Type check"
-               menubarPath="groupBuild"
-               tooltip="Type check project">
-         </action>
-         <action
-               class="org.overture.ide.ui.actions.CleanProjectAction"
-               enablesFor="1"
-               id="org.overture.ide.ui.actions.CleanProjectAction"
-               label="Clean"
-               menubarPath="groupBuild"
-               tooltip="Clean project">
-         </action>
-       
-      </objectContribution>
-    </extension>
   
   
      <!-- vdmPpEditorScope -->
-     <extension point="org.eclipse.ui.contexts">
-        <context
-              description="VDM editor scope"
-              id="org.overture.ide.ui.vdmEditorScope"
-              name="vdmEditorScope"
-              parentId="org.eclipse.dltk.ui.scriptEditorScope">
-        </context>
-     </extension>
-     <extension
-           point="org.eclipse.ui.propertyPages">
-        <page
-              class="org.overture.ide.ui.property.VdmLanguagePropertyPage1"
-              icon="icons/cview16/overture_nav.gif"
-              id="org.overture.ide.ui.property.vdmlanguage"
-              name="VDM Settings">
-                     
-        </page>
-     </extension>
   
 </plugin>
