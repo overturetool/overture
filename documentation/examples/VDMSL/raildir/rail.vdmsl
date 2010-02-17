@@ -602,7 +602,8 @@ functions
    Is_wf_Station_topo (stationtopo) ==
      Is_wf_Tracks (stationtopo.tracks) and
      Is_wf_Points (stationtopo.tracks,stationtopo.points) and
-     Is_wf_Crossings (stationtopo.tracks,stationtopo.points,stationtopo.crossings) and
+     Is_wf_Crossings (stationtopo.tracks,stationtopo.points,
+                      stationtopo.crossings) and
      Is_wf_Signals (stationtopo.tracks,stationtopo.signals)
 \end{vdm_al}
 
@@ -823,7 +824,8 @@ set of
 train identifiers to sets of track segments occupied by the trains.
 
 \begin{vdm_al}
-   Trains: Track_states * (map Train_id to set of Track_id) +> (map Train_id to set of Track_id)
+   Trains: Track_states * (map Train_id to set of Track_id) +> 
+           (map Train_id to set of Track_id)
 
    Trains (trackstates,sorted)  ==
      if   trackstates = {|->}
@@ -831,7 +833,8 @@ train identifiers to sets of track segments occupied by the trains.
      else let t in set dom trackstates in
               if   trackstates (t) = {|->}
               then Trains ({t} <-: trackstates,sorted)
-              else Trains ({t} <-: trackstates, Update (mk_(t,trackstates(t)),sorted));
+              else Trains ({t} <-: trackstates, 
+                           Update (mk_(t,trackstates(t)),sorted));
 \end{vdm_al}
 
 The function $Update$ takes two arguments, one which is a pair of a
@@ -849,8 +852,10 @@ occupy. $Update$ updates the second argument with the first argument.
      then sorted
      else let tid in set dom trackstate in
               if   tid in set dom sorted
-              then Update (mk_(t,{tid} <-: trackstate), sorted ++ { tid |-> {t} union sorted (tid)} )
-              else Update (mk_(t,{tid} <-: trackstate), sorted munion { tid |-> {t} } );
+              then Update (mk_(t,{tid} <-: trackstate), 
+                               sorted ++ { tid |-> {t} union sorted (tid)} )
+              else Update (mk_(t,{tid} <-: trackstate), 
+                               sorted munion { tid |-> {t} } );
 \end{vdm_al}
 
 A train is connected if the track segments which it occupies form a path
@@ -898,8 +903,10 @@ the track topology, otherwise it does not.
               if   mk_(t,hd connected) in set tracks
               then Path ((trackset \ {t}) union tried,[t]^connected,tracks,{})
               else if   mk_(connected (len connected),t) in set tracks
-                   then Path ((trackset \ {t}) union tried,connected^[t],tracks,{})
-                   else Path ((trackset \ {t}),connected,tracks,tried union {t});
+                   then Path ((trackset \ {t}) union 
+                               tried,connected^[t],tracks,{})
+                   else Path ((trackset \ {t}),connected,tracks,
+                               tried union {t});
 \end{vdm_al}
 
 A train is placed correctly at the tracks according to the points, if it for each
@@ -986,7 +993,8 @@ imports
         Point_control = <left> | <right> renamed Point_control;
         Crossings = set of (station`Track_id * station`Track_id) 
                     renamed Crossings;
-        Signals  = map (station`Track_id * station`Track_id) to station`Signal_id
+        Signals  = map (station`Track_id * station`Track_id) 
+                   to station`Signal_id
                    renamed Signals;
         Signal_id = seq of char
                     renamed Signal_id;  
@@ -1102,22 +1110,24 @@ the thick line indicates the point control.
          forall t in set dom trains &
           forall t1,t2 in set trains (t) &
            mk_(t1,t2) in set dom stationtopo.points =>
-           Ok_Point_states (mk_(t1,t2),stationtopo.points,stationstate.pointstates);
+           Ok_Point_states (mk_(t1,t2),stationtopo.points,
+                            stationstate.pointstates);
 \end{vdm_al}
 
 The functions $Trains$ and $Update$ are the same as used in the
 function {\it Is\_wf\_Trains}. They are presented here without comments.
 
 \begin{vdm_al}
-   Trains: Track_states * (map Train_id to set of Track_id) +> (map Train_id to set of Track_id)
-
+   Trains: Track_states * (map Train_id to set of Track_id) +> 
+           (map Train_id to set of Track_id)
    Trains (trackstates,sorted)  ==
      if   trackstates = {|->}
      then sorted
      else let t in set dom trackstates in
               if   trackstates (t) = {|->}
               then Trains ({t} <-: trackstates,sorted)
-              else Trains ({t} <-: trackstates, Update (mk_(t,trackstates(t)),sorted));
+              else Trains ({t} <-: trackstates, 
+                           Update (mk_(t,trackstates(t)),sorted));
 \end{vdm_al}
 
 \begin{vdm_al}
@@ -1129,8 +1139,10 @@ function {\it Is\_wf\_Trains}. They are presented here without comments.
      then sorted
      else let tid in set dom trainids in
               if   tid in set dom sorted
-              then Update (mk_(t,{tid} <-: trainids), sorted ++ { tid |-> {t} union sorted (tid)} )
-              else Update (mk_(t,{tid} <-: trainids), sorted ++ { tid |-> {t} });
+              then Update (mk_(t,{tid} <-: trainids), 
+                           sorted ++ { tid |-> {t} union sorted (tid)} )
+              else Update (mk_(t,{tid} <-: trainids), 
+                           sorted ++ { tid |-> {t} });
 \end{vdm_al}
 
 The function {\it Ok\_Point\_states} checks whether the current point states
@@ -1159,13 +1171,15 @@ $tpair$, given that only a point and one of its neighbours are
 considered. 
 
 \begin{vdm_al}
-   Point_state_ok: (Track_id * Track_id) * Track_id * Points * Point_states +> bool
+   Point_state_ok: (Track_id * Track_id) * Track_id * Points * Point_states +> 
+                   bool
 
    Point_state_ok (tpair,t,points,pointstates) ==
      let mk_(pcnt,-) = pointstates (t) in
          (points (tpair)) (t) = pcnt
 
-   pre t in set dom pointstates and tpair in set dom points and t in set dom points(tpair)
+   pre t in set dom pointstates and tpair in set dom points and 
+       t in set dom points(tpair)
 
 end safe_req
 \end{vdm_al}
@@ -1283,8 +1297,10 @@ imports
                  renamed Points;
         Point_control = <left> | <right>
                         renamed Point_control;
-        Crossings = set of (station`Track_id * station`Track_id) renamed Crossings;
-        Signals = map (station`Track_id * station`Track_id) to station`Signal_id
+        Crossings = set of (station`Track_id * station`Track_id) 
+        renamed Crossings;
+        Signals = map (station`Track_id * station`Track_id) 
+                  to station`Signal_id
                   renamed Signals;
         Signal_id = seq of char
                     renamed Signal_id; 
@@ -1396,7 +1412,8 @@ $NoDerail$ from the module $Safe-req$.
          forall t in set dom trains &
           forall t1,t2 in set trains (t) &
            mk_(t1,t2) in set dom stationtopo.points =>
-           Ok_Point_states (mk_(t1,t2),stationtopo.points,stationstate.pointstates);
+           Ok_Point_states (mk_(t1,t2),stationtopo.points,
+                            stationstate.pointstates);
 \end{vdm_al}
 
 A train may derail if just one of the points controlled by the
@@ -1424,7 +1441,8 @@ The functions $Trains$ and $Update$ are the same functions as $Trains$
 and $Update$ from the module $safe-req$. 
 
 \begin{vdm_al}
-   Trains: Track_states * (map Train_id to set of Track_id) +> (map Train_id to set of Track_id)
+   Trains: Track_states * (map Train_id to set of Track_id) +> 
+           (map Train_id to set of Track_id)
 
    Trains (trackstates,sorted)  ==
      if   trackstates = {|->}
@@ -1432,7 +1450,8 @@ and $Update$ from the module $safe-req$.
      else let t in set dom trackstates in
               if   trackstates (t) = {|->}
               then Trains ({t} <-: trackstates,sorted)
-              else Trains ({t} <-: trackstates, Update (mk_(t,trackstates(t)),sorted));
+              else Trains ({t} <-: trackstates, 
+                           Update (mk_(t,trackstates(t)),sorted));
 
    Update: (Track_id * Track_state) * (map Train_id to set of Track_id) +> 
    (map Train_id to set of Track_id)
@@ -1442,8 +1461,10 @@ and $Update$ from the module $safe-req$.
      then sorted
      else let tid in set dom trainids in
               if   tid in set dom sorted
-              then Update (mk_(t,{tid} <-: trainids), sorted ++ { tid |-> {t} union sorted (tid)} )
-              else Update (mk_(t,{tid} <-: trainids), sorted ++ { tid |-> {t} });
+              then Update (mk_(t,{tid} <-: trainids), 
+                               sorted ++ { tid |-> {t} union sorted (tid)} )
+              else Update (mk_(t,{tid} <-: trainids), 
+                               sorted ++ { tid |-> {t} });
 \end{vdm_al}
 
 In order to determine whether it is allowed to have points released
@@ -1472,8 +1493,10 @@ interlocking system.
    NoDerailFixed (area,stationtopo,stationstate) ==
      forall t1,t2 in set area &
       mk_(t1,t2) in set dom stationtopo.points => 
-      Ok_Point_states  (mk_(t1,t2),stationtopo.points,stationstate.pointstates) and
-      InterlockPoints (mk_(t1,t2),stationtopo.points,stationstate.pointstates);
+      Ok_Point_states  (mk_(t1,t2),stationtopo.points,
+                        stationstate.pointstates) and
+      InterlockPoints (mk_(t1,t2),stationtopo.points,
+                       stationstate.pointstates);
 \end{vdm_al}
 
 The functions {\it Ok\_Point\_states} and $Point\_state\_ok$ were also defined in
@@ -1494,13 +1517,15 @@ the safety requirements. They are stated here without comments.
    pre mk_(t1,t2) in set dom points;
 
 
-   Point_state_ok: (Track_id * Track_id) * Track_id * Points * Point_states +> bool
+   Point_state_ok: (Track_id * Track_id) * Track_id * Points * Point_states +> 
+                   bool
 
    Point_state_ok (tpair,t,points,pointstates) ==
      let mk_(pcnt,-) = pointstates (t) in
          (points (tpair)) (t) = pcnt
 
-   pre t in set dom pointstates and tpair in set dom points and t in set dom points(tpair); 
+   pre t in set dom pointstates and tpair in set dom points and 
+       t in set dom points(tpair); 
 \end{vdm_al}
 
 Given a pair of track segments,
@@ -1602,16 +1627,17 @@ The function $Occupied$, for each train, finds the track segments
 occupied by the train.
 
 \begin{vdm_al}
-   Occupied: Track_states * (map Train_id to set of Track_id) +> map Train_id to set of Track_id
-
+   Occupied: Track_states * (map Train_id to set of Track_id) +> 
+             map Train_id to set of Track_id
    Occupied (trackstates,occupied) ==
      if   forall s in set rng trackstates & s = {|->}
      then occupied
      else let trains in set rng trackstates be st trains <> {|->} in
               let train in set dom trains in
                   Occupied (RemoveTrain (train,trackstates),
-                            occupied munion {train |-> {tid | tid in set dom trackstates &
-                                                        train in set dom trackstates (tid)} } )
+                            occupied munion 
+                            {train |-> {tid | tid in set dom trackstates 
+                                            & train in set dom trackstates (tid)} } )
 
    pre forall trackstate in set rng trackstates & 
        dom trackstate inter dom occupied = {};
@@ -1629,16 +1655,18 @@ removed from the track segment states by the function $RemoveTrain$.
      then {|->}
      else let tid in set dom trackstates in
               if   train in set dom trackstates (tid)
-              then RemoveTrain (train,trackstates ++ {tid |-> ({train} <-: trackstates (tid))})
-              else {tid |-> trackstates (tid)} munion RemoveTrain (train,{tid} <-: trackstates);
+              then RemoveTrain (train,trackstates ++ 
+                                      {tid |-> ({train} <-: trackstates (tid))})
+              else {tid |-> trackstates (tid)} munion 
+                   RemoveTrain (train,{tid} <-: trackstates);
 
 \end{vdm_al}
 
 The function $DeduceAreas$ deduces an area for each train at the station.
 
 \begin{vdm_al}
-   DeduceAreas: (map Train_id to set of Track_id) * Station_topo * Station_state +> Areas
-
+   DeduceAreas: (map Train_id to set of Track_id) * 
+                Station_topo * Station_state +> Areas
    DeduceAreas (occupied,stationtopo,stationstate) ==
      if   occupied = {|->}
      then {|->}
@@ -1680,11 +1708,13 @@ next it investigates which of these nodes it is possible for the train
 to proceed to, assuming that the train is in node $t$.
 
 \begin{vdm_al}
-   Neighbours : Track_id * set of Track_id * Station_topo * Station_state +> set of Track_id
+   Neighbours : Track_id * set of Track_id * Station_topo * Station_state +> 
+                set of Track_id
 
    Neighbours (t,area,stationtopo,stationstate) ==
      let neighcand = NeighbourCandidates (t,area,stationtopo.tracks) in
-         {t' | t' in set neighcand & OkEdge (mk_(t,t'),stationtopo,stationstate)};
+         {t' | t' in set neighcand 
+             & OkEdge (mk_(t,t'),stationtopo,stationstate)};
 \end{vdm_al}
 
 The function $NeighbourCandidates$ finds all track segments which are

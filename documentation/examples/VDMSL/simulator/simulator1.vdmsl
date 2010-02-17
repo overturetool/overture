@@ -67,8 +67,8 @@ inv mk_State(label, type, isinitial, substates) ==
            ((exists1 s in set substates & (s.isinitial = true)) and
             (forall s in set substates &
               (((s.type = <SIMPLE>) and (s.substates = { })) or
-               ((s.type = <COMPLEX>) and (exists_entry_state(s.substates)))))) in
-
+               ((s.type = <COMPLEX>) and (exists_entry_state(s.substates)))))) 
+    in
    (((type = <SIMPLE>) and (substates = { })) or
     ((type = <COMPLEX>) and (exists_entry_state(substates)))));
 
@@ -162,7 +162,8 @@ Trom :: label            : String
         currentstate     : State
         assignmentvector : token
 
-inv mk_Trom(label,tromclass,porttypes,events,states,attributes,lsltraits,attrfunctions,
+inv mk_Trom(label,tromclass,porttypes,events,states,attributes,
+            lsltraits,attrfunctions,
       transitionspecs,timeconstraints,currentstate,assignmentvector) ==
 
    (forall pt1, pt2 in set porttypes &
@@ -208,13 +209,16 @@ inv mk_Trom(label,tromclass,porttypes,events,states,attributes,lsltraits,attrfun
           (exists1 tr2 in set lsltraits & (tr2.traittype = el))))) and
 
    (forall af in set attrfunctions &
-      ((exists1 s in set states & ((s = af.stat) or (substate_of(af.stat, s)))) and
+      ((exists1 s in set states & ((s = af.stat) or 
+                                   (substate_of(af.stat, s)))) and
        (forall afa in set af.attributes &
           (exists1 a in set attributes & (a = afa))))) and
 
    (forall ts in set transitionspecs &
-      ((exists1 s in set states & ((s = ts.sourcestate) or (substate_of(ts.sourcestate, s)))) and
-       (exists1 d in set states & ((d = ts.destinstate) or (substate_of(ts.destinstate, d)))) and
+      ((exists1 s in set states & ((s = ts.sourcestate) or 
+                                   (substate_of(ts.sourcestate, s)))) and
+       (exists1 d in set states & ((d = ts.destinstate) or 
+                                   (substate_of(ts.destinstate, d)))) and
        (exists1 e in set events & (e = ts.triggerevent)))) and
  
    (forall tc in set timeconstraints &
@@ -261,15 +265,19 @@ inv mk_Subsystem(label, includes, troms, portlinks) ==
            (exists1 trom in set troms &
               ((trom.label = tptuple.tromlabel) and
                (exists1 pt in set trom.porttypes &
-                  (exists1 p in set elems pt.portlist & (p.label = tptuple.portlabel))))),
+                  (exists1 p in set elems pt.portlist & 
+                     (p.label = tptuple.portlabel))))),
 
         linked_subsystem : TromPortTuple * set of Subsystem +> bool
         linked_subsystem(tptuple, subsystems) ==
            (exists1 s in set subsystems &
-              (((linked_trom(tptuple, s.troms)) and (not linked_subsystem(tptuple, s.includes))) or
-               ((not linked_trom(tptuple, s.troms)) and (linked_subsystem(tptuple, s.includes)))) and
+              (((linked_trom(tptuple, s.troms)) and 
+               (not linked_subsystem(tptuple, s.includes))) or
+               ((not linked_trom(tptuple, s.troms)) and 
+                (linked_subsystem(tptuple, s.includes)))) and
 
-            (forall s2 in set {su | su : Subsystem & su in set subsystems and su <> s} &
+            (forall s2 in set {su | su : Subsystem & 
+               su in set subsystems and su <> s} &
                ((not linked_trom(tptuple, s2.troms)) and
                 (not linked_subsystem(tptuple, s2.includes))))) in
 
@@ -302,23 +310,30 @@ inv mk_System(subsystem, simulationeventlist, lsllibrary, clock) ==
 
    (let contains_trom : Subsystem +> bool
         contains_trom(subsys) ==
-           ((subsys.troms <> { }) or (exists1 s in set subsys.includes & (contains_trom(s)))) in
+           ((subsys.troms <> { }) or 
+           (exists1 s in set subsys.includes & (contains_trom(s)))) 
+    in
 
       contains_trom(subsystem)) and
 
    (let contains_portlink : Subsystem +> bool
         contains_portlink(subsys) ==
-           ((subsys.portlinks <> { }) or (exists1 s in set subsys.includes & (contains_portlink(s)))) in
+           ((subsys.portlinks <> { }) or 
+           (exists1 s in set subsys.includes & (contains_portlink(s)))) 
+    in
 
       contains_portlink(subsystem)) and
 
    (forall i, j in set inds simulationeventlist &
       (((i = j) and (simulationeventlist(i) = simulationeventlist(j)))or
-       ((i < j) and (simulationeventlist(i).occurtime <= simulationeventlist(j).occurtime)) or
-       ((i > j) and (simulationeventlist(i).occurtime >= simulationeventlist(j).occurtime)))) and
+       ((i < j) and (simulationeventlist(i).occurtime <= 
+                     simulationeventlist(j).occurtime)) or
+       ((i > j) and (simulationeventlist(i).occurtime >= 
+                     simulationeventlist(j).occurtime)))) and
 
    (forall se1, se2 in set elems simulationeventlist &
-      (((se1.occurtime = se2.occurtime) and (se1.tromlabel <> se2.tromlabel)) or
+      (((se1.occurtime = se2.occurtime) and 
+        (se1.tromlabel <> se2.tromlabel)) or
        (se1.occurtime <> se2.occurtime))) and
 
    (let accepted_by_trom : SimulationEvent * Subsystem +> bool
@@ -329,26 +344,36 @@ inv mk_System(subsystem, simulationeventlist, lsllibrary, clock) ==
                    ((e.label = se.eventlabel) and
                     (exists1 pt in set trom.porttypes &
                        ((pt = e.porttype) and
-                        (exists1 p in set elems pt.portlist & (p.label = se.portlabel)))))))) in
+                        (exists1 p in set elems pt.portlist & 
+                           (p.label = se.portlabel)))))))) in
 
     let accepted_by_subsystem : SimulationEvent * Subsystem +> bool
         accepted_by_subsystem(se, subsys) ==
            (exists1 s in set subsys.includes &
-              ((((accepted_by_trom(se, s)) and (not accepted_by_subsystem(se, s))) or
-                ((not accepted_by_trom(se, s)) and (accepted_by_subsystem(se, s)))) and
-               (forall s2 in set {su | su : Subsystem & su in set subsys.includes and su <> s} &
-                ((not accepted_by_trom(se, s2)) and (not accepted_by_subsystem(se, s2)))))) in
+              ((((accepted_by_trom(se, s)) and 
+                 (not accepted_by_subsystem(se, s))) or
+                ((not accepted_by_trom(se, s)) and 
+                 (accepted_by_subsystem(se, s)))) and
+               (forall s2 in set {su | su : Subsystem & 
+                  su in set subsys.includes and su <> s} &
+                ((not accepted_by_trom(se, s2)) and 
+                 (not accepted_by_subsystem(se, s2)))))) in
 
       (forall se in set elems simulationeventlist &
-         (((accepted_by_trom(se, subsystem)) and (not accepted_by_subsystem(se, subsystem))) or
-          ((not accepted_by_trom(se, subsystem)) and (accepted_by_subsystem(se, subsystem)))))) and
+         (((accepted_by_trom(se, subsystem)) and 
+          (not accepted_by_subsystem(se, subsystem))) or
+          ((not accepted_by_trom(se, subsystem)) and 
+           (accepted_by_subsystem(se, subsystem)))))) and
 
    (let exists_lsltrait : Subsystem +> bool
         exists_lsltrait(subsys) ==
            ((forall trom in set subsys.troms &
-               (forall tr in set trom.lsltraits & (exists traitdef in set lsllibrary & (traitdef.label = tr.traitlabel)))) and
+               (forall tr in set trom.lsltraits & 
+                  (exists traitdef in set lsllibrary & 
+                     (traitdef.label = tr.traitlabel)))) and
 
-            (forall s in set subsys.includes & (exists_lsltrait(s)))) in
+            (forall s in set subsys.includes & 
+               (exists_lsltrait(s)))) in
 
        (exists_lsltrait(subsystem)))
 
@@ -449,7 +474,8 @@ functions
            (s.type = <COMPLEX> and initial = get_entry_state(s)))));
 
 
-   get_linked_tromport_tuple(tupleA : TromPortTuple, subsystem : Subsystem) tupleB : [TromPortTuple]
+   get_linked_tromport_tuple(tupleA : TromPortTuple, subsystem : Subsystem) 
+                             tupleB : [TromPortTuple]
 
    post
 
@@ -509,7 +535,8 @@ functions
       (event in set trom.events);
 
 
-   get_simevent_index(se : SimulationEvent, se_list : seq of SimulationEvent) index : nat1
+   get_simevent_index(se : SimulationEvent, 
+                      se_list : seq of SimulationEvent) index : nat1
 
    pre
 
@@ -576,7 +603,8 @@ operations
 
            (se.eventhistory = nil))) and
 
-       (forall trom in set {trom | trom : Trom & exists_in_subsystem(trom, SUBSYSTEM)} &
+       (forall trom in set {trom | trom : Trom & 
+                                   exists_in_subsystem(trom, SUBSYSTEM)} &
 
              ((trom.currentstate = get_initial_state(trom)) and
 
@@ -596,7 +624,8 @@ operations
 
            (se.eventhistory <> nil))) and
 
-       (forall trom in set {trom | trom : Trom & exists_in_subsystem(trom, SUBSYSTEM)} &
+       (forall trom in set {trom | trom : Trom 
+                                 & exists_in_subsystem(trom, SUBSYSTEM)} &
 
              (forall tc in set trom.timeconstraints &
 
@@ -697,7 +726,8 @@ operations
       (CLOCK = CLOCK~);
 
 
-   update_trom_current_state(trom : Trom, se : SimulationEvent, ts : TransitionSpec)
+   update_trom_current_state(trom : Trom, se : SimulationEvent, 
+                             ts : TransitionSpec)
 
    pre
 
@@ -712,7 +742,8 @@ operations
         (trom.currentstate = get_entry_state(ts.destinstate))));
 
 
-   update_history_assignment_vector(trom : Trom, se : SimulationEvent, ts : [TransitionSpec])
+   update_history_assignment_vector(trom : Trom, se : SimulationEvent, 
+                                    ts : [TransitionSpec])
 
    pre
 
@@ -723,7 +754,8 @@ operations
       (se.eventhistory.assignmentvector = trom.assignmentvector);
 
 
-   update_history_notransition(trom : Trom, se : SimulationEvent, ts : [TransitionSpec])
+   update_history_notransition(trom : Trom, se : SimulationEvent, 
+                               ts : [TransitionSpec])
 
    pre
 
@@ -740,7 +772,8 @@ operations
        (se.eventhistory.reactionshistory = { }));
 
 
-   update_history_transition(trom : Trom, se : SimulationEvent, ts : TransitionSpec)
+   update_history_transition(trom : Trom, se : SimulationEvent, 
+                             ts : TransitionSpec)
 
    pre
 
@@ -757,7 +790,8 @@ operations
        (se.eventhistory.reactionshistory = { }));
 
 
-   update_history_fire_reaction(trom : Trom, se : SimulationEvent, tc : TimeConstraint,
+   update_history_fire_reaction(trom : Trom, se : SimulationEvent, 
+                                tc : TimeConstraint,
          rw : ReactionWindow)
 
    pre
@@ -781,7 +815,8 @@ operations
           (rh.reaction = <FIRED>)));
 
 
-   update_history_disable_reaction(trom : Trom, se : SimulationEvent, tc : TimeConstraint,
+   update_history_disable_reaction(trom : Trom, se : SimulationEvent, 
+                                   tc : TimeConstraint,
          rw : ReactionWindow)
 
    pre
@@ -801,7 +836,8 @@ operations
           (rh.reaction = <DISABLED>)));
 
 
-   update_history_enable_reaction(trom : Trom, se : SimulationEvent, tc : TimeConstraint,
+   update_history_enable_reaction(trom : Trom, se : SimulationEvent, 
+                                  tc : TimeConstraint,
         ts : TransitionSpec)
 
    ext rd CLOCK : nat
@@ -826,7 +862,8 @@ operations
              (rh.reaction = <ENABLED>))));
 
 
-   fire_reaction(trom : Trom, se : SimulationEvent, tc : TimeConstraint, rw : ReactionWindow)
+   fire_reaction(trom : Trom, se : SimulationEvent, 
+                 tc : TimeConstraint, rw : ReactionWindow)
 
    pre
 
@@ -843,7 +880,8 @@ operations
       (rw not in set tc.reactionwindows);
 
 
-   disable_reaction(trom : Trom, se : SimulationEvent, tc : TimeConstraint, rw : ReactionWindow)
+   disable_reaction(trom : Trom, se : SimulationEvent, 
+                    tc : TimeConstraint, rw : ReactionWindow)
 
    ext rd SUBSYSTEM : Subsystem
 
@@ -889,7 +927,8 @@ operations
                                         SIMULATIONEVENTLIST~(i) <> se3]))))));
 
 
-   enable_reaction(trom : Trom, se : SimulationEvent, tc : TimeConstraint, ts : TransitionSpec)
+   enable_reaction(trom : Trom, se : SimulationEvent, 
+                   tc : TimeConstraint, ts : TransitionSpec)
 
    ext rd CLOCK : nat
 
@@ -919,7 +958,8 @@ operations
       (let se2 : SimulationEvent be st
 
          se2 = mk_SimulationEvent
-                         (tc.constrainedevent.label, trom.label, port.label, occurtime, nil) in
+                         (tc.constrainedevent.label, trom.label, 
+                          port.label, occurtime, nil) in
 
          ((rw in set tc.reactionwindows) and
 
@@ -930,15 +970,18 @@ operations
             (let tromporttuple : [TromPortTuple] be st
 
                tromporttuple = get_linked_tromport_tuple
-                           (mk_TromPortTuple(se2.tromlabel, se2.portlabel), SUBSYSTEM) in
+                           (mk_TromPortTuple(se2.tromlabel, 
+                                             se2.portlabel), SUBSYSTEM) in
 
             (((tromporttuple <> nil) and
 
               (let se3 : SimulationEvent be st
 
                se3 = mk_SimulationEvent
-                                 (se2.eventlabel, tromporttuple.tromlabel,
-                                  tromporttuple.portlabel, se2.occurtime, nil) in
+                                 (se2.eventlabel, 
+                                  tromporttuple.tromlabel,
+                                  tromporttuple.portlabel, 
+                                  se2.occurtime, nil) in
 
                (se3 in set elems SIMULATIONEVENTLIST))) or
 
@@ -947,7 +990,8 @@ operations
            (tc.constrainedevent.type = <INTERNAL>)))))));
 
 
-   get_enabled_simevent(trom : Trom, tc : TimeConstraint) se : SimulationEvent
+   get_enabled_simevent(trom : Trom, tc : TimeConstraint) 
+                        se : SimulationEvent
 
    ext rd CLOCK : nat
 
@@ -970,7 +1014,8 @@ operations
        (se.eventhistory = nil));
 
 
-   get_enabled_simevent_synch(tromporttuple : TromPortTuple, tc : TimeConstraint) se : SimulationEvent
+   get_enabled_simevent_synch(tromporttuple : TromPortTuple, 
+                              tc : TimeConstraint) se : SimulationEvent
 
    ext rd CLOCK : nat
 
@@ -1005,7 +1050,8 @@ operations
 
       ((CLOCK = 0) and
 
-       (forall trom in set {trom | trom : Trom & exists_in_subsystem(trom, SUBSYSTEM)} &
+       (forall trom in set {trom | trom : Trom 
+                                 & exists_in_subsystem(trom, SUBSYSTEM)} &
 
          (let event : [Event] = get_unconstrained_internal_event(trom) in
 
@@ -1060,11 +1106,11 @@ operations
 
               (SIMULATIONEVENTLIST =
 
-                 [SIMULATIONEVENTLIST~(i) |
-                                            i in set inds SIMULATIONEVENTLIST~ & i <= j] ^
+                 [SIMULATIONEVENTLIST~(i) 
+                 | i in set inds SIMULATIONEVENTLIST~ & i <= j] ^
             [se2] ^
-                    [SIMULATIONEVENTLIST~(i) |
-                                               i in set inds SIMULATIONEVENTLIST~ & i > j])))) or
+                    [SIMULATIONEVENTLIST~(i) 
+                    | i in set inds SIMULATIONEVENTLIST~ & i > j])))) or
 
           (event = nil)));
 
