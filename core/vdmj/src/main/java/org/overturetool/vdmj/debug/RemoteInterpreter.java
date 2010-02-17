@@ -38,4 +38,9 @@ public class RemoteInterpreter
 	{
 		return interpreter.execute(line, null).toString();
 	}
+
+	public void init()
+	{
+		interpreter.init(null);
+	}
 }

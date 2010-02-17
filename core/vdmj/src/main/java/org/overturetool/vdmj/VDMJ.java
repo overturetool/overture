@@ -285,22 +285,6 @@ abstract public class VDMJ
 			try
 			{
 				Class<?> cls = ClassLoader.getSystemClassLoader().loadClass(remoteName);
-				boolean ok = false;
-
-				for (Class<?> i: cls.getInterfaces())
-				{
-					if (i.getName().equals(RemoteControl.class.getName()))
-					{
-						ok = true;
-						break;
-					}
-				}
-
-				if (!ok)
-				{
-					usage("Remote class does not implement RemoteControl");
-				}
-
 				remoteClass = (Class<RemoteControl>)cls;
 			}
 			catch (ClassNotFoundException e)
@@ -356,6 +340,10 @@ abstract public class VDMJ
 										println(e.getMessage());
 										status = ExitStatus.EXIT_ERRORS;
 									}
+								}
+								catch (InstantiationException e)
+								{
+									usage("Cannot instantiate " + remoteName);
 								}
 								catch (Exception e)
 								{
