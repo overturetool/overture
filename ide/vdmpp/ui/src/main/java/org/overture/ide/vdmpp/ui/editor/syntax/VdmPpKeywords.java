@@ -1,10 +1,13 @@
-package org.overture.ide.vdmpp.ui.internal.partitioning;
+package org.overture.ide.vdmpp.ui.editor.syntax;
 
-import org.overture.ide.ui.partitioning.IVdmKeywords;
+import java.util.ArrayList;
+import java.util.List;
 
-public class VdmPpKeywords implements IVdmKeywords
-{
-	 public static final String[] reservedwords = {
+import org.overture.ide.ui.editor.syntax.IVdmKeywords;
+
+public class  VdmPpKeywords implements IVdmKeywords {
+
+	public static final String[] reservedwords = {
 	      "#act", "#active", "#fin", "#req", "#waiting",
 	      "abs", "all", "always", "and", "async", "atomic",
 	      "be", "bool", "by", "card", "cases", "char",
@@ -94,9 +97,34 @@ public class VdmPpKeywords implements IVdmKeywords
 			return unaryoperators;
 		}
 
-		public String[] getHistoryCounters()
-		{
-			return historyCounters;
+		public String[] getAllKeywords() {
+			int offset = 0;
+			String[] all = new String[basictypes.length 
+			                          + binaryoperators.length 
+			                          + multipleKeywords.length 
+			                          + reservedwords.length 
+			                          + textvalues.length 
+			                          + unaryoperators.length];
+			
+			System.arraycopy(basictypes, 0, all, offset, basictypes.length);
+			offset = offset + basictypes.length;
+			
+			System.arraycopy(binaryoperators, 0, all, offset, binaryoperators.length);
+			offset = offset + binaryoperators.length;
+			
+			System.arraycopy(multipleKeywords, 0, all, offset, multipleKeywords.length);
+			offset = offset + multipleKeywords.length;
+			
+			System.arraycopy(reservedwords, 0, all, offset, reservedwords.length);
+			offset = offset + reservedwords.length;
+			
+			System.arraycopy(textvalues, 0, all, offset, textvalues.length);
+			offset = offset + textvalues.length;
+			
+			System.arraycopy(unaryoperators, 0, all, offset, unaryoperators.length);
+			offset = offset + binaryoperators.length;
+			
+			return all;
 		}
 
 }
