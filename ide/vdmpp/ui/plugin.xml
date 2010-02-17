@@ -2,145 +2,15 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.eclipse.dltk.ui.language">
-      <language
-            class="org.overture.ide.vdmpp.ui.VdmRtUILanguageToolkit"
-            nature="org.overture.ide.vdmpp.core.nature"
-            priority="0">
-      </language>
-   </extension>
-<extension point="org.eclipse.ui.newWizards">
-      <wizard
-            category="org.overture.ide.category"
-            class="org.overture.ide.ui.wizards.CreateVdmProjectWizard:org.overture.ide.vdmpp.core.nature"
-            icon="icons/cview16/vdmpp_file_tsk.png"
-            id="org.overture.ide.vdmpp.createprojectwizard"
-            name="VDM-PP Project"
-            project="true"
-            preferredPerspectives="org.overture.ide.vdmpp.ui.VdmPpPerspective" 
-            finalPerspective="org.overture.ide.vdmpp.ui.VdmPpPerspective" >
-         <description>
-            Create new VDM-PP project
-         </description>
-      </wizard>
-      <wizard
-            category="org.overture.ide.category"
-            class="org.overture.ide.vdmpp.ui.wizards.VdmPpNewClassWizard"
-            icon="icons/cview16/vdmpp_file_tsk.png"
-            id="org.overture.ide.vdmpp.ui.wizards.VdmPpNewClassWizard"
-            name="VDM-PP Class"
-           >
-            <description>New VDM++ class</description>
-      </wizard>
-   </extension>
-<extension
-      point="org.eclipse.ui.ide.projectNatureImages">
-   <image
-         icon="icons/ovr16/vdmpp_ovr.gif"
-         id="org.overture.ide.vdmpp.ui.nature.image"
-         natureId="org.overture.ide.vdmpp.core.nature">
-   </image>
-</extension>
-
-
-  <!-- Editor -->
-<extension point="org.eclipse.ui.editors">
+         point="org.eclipse.ui.editors">
       <editor
-            class="org.overture.ide.vdmpp.ui.internal.editor.VdmPpEditor"
-            contributorClass="org.eclipse.dltk.internal.ui.editor.SourceModuleEditorActionContributor"
-            default="false"
+            class="org.overture.ide.vdmpp.ui.editor.core.VdmPpEditor"
+            default="true"
+            extensions="vdmpp"
             icon="icons/cview16/vdmpp_file_tsk.png"
-            id="org.overture.ide.vdmpp.ui.internal.editor.VdmPpEditor"
-            name="VDM PP Editor">
-         <contentTypeBinding contentTypeId="org.overture.ide.vdmpp.content-type"/>
+            id="org.overture.ide.vdmpp.ui.editor"
+            name="Vdm++ Editor">
       </editor>
    </extension>
 
-<!-- partitioning -->
-<extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="org.overture.ide.vdmpp.ui.internal.editor.VdmPpUIPreferenceInitializer">
-      </initializer>
-   </extension>
-   
-   <!-- customize the outline to include fileds etc. -->
-     <extension
-         point="org.eclipse.dltk.core.sourceElementParsers">
-      <parser
-            class="org.overture.ide.vdmpp.ui.internal.outline.SourceElementParser"
-            nature="org.overture.ide.vdmpp.core.nature"
-            priority="0">
-      </parser>
-   </extension>
- 
-     
-     
-     <!-- vdmPpEditorScope -->
-     <extension point="org.eclipse.ui.contexts">
-        <context
-              description="VDM++ editor scope"
-              id="org.overture.ide.vdmpp.ui.vdmPpEditorScope"
-              name="vdmPpEditorScope"
-              parentId="org.overture.ide.ui.vdmEditorScope">
-        </context>
-     </extension>
-     
-   
-     
-     
-   <!--
-   	templates
-   -->
-   
-   <extension point="org.eclipse.ui.preferencePages">
-         <page
-              class="org.overture.ide.vdmpp.ui.preferences.VdmPpCodeTemplatesPreferencePage"
-              id="org.overture.ide.vdmpp.ui.VdmPpCodeTemplatesPreferencePage"
-              name="Templates VDM++"
-              category="org.overture.ide.ui.OvertureGlobalPreferencesPage"
-              />
-	</extension>
-    
-   <extension point="org.eclipse.dltk.ui.language">
-      <language
-            class="org.overture.ide.vdmpp.ui.internal.editor.VdmPpUILanguageToolkit2"
-            nature="org.overture.ide.vdmpp.core.nature"
-            priority="1">
-      </language>
-   </extension>
-   
-   <extension point="org.eclipse.ui.editors.templates">
-       <contextType
-          class="org.overture.ide.ui.completion.templates.VdmUniversalTemplateContextType"
-          id="org.overture.ide.vdmpp.ui.completion.templates.VdmUniversalTemplateContextType"
-          name="VDM++ Template content">
-       </contextType>
-      <include
-          file="templates/templates.xml"
-       >
-       </include>
-
-    </extension>
-
-	<!-- completion added because of the template.. -->
-	<extension point="org.eclipse.dltk.ui.scriptCompletionProposalComputer"
-		id="VdmPpCompletionProposalComputer">
-		<scriptCompletionProposalComputer
-			class="org.overture.ide.vdmpp.ui.completions.VdmPpCompletionProposalComputer"
-			categoryId="org.eclipse.dltk.ui.scriptTypeProposalCategory"
-			toolkitId="org.overture.ide.vdmpp.core.nature">
-			<partition type="__dftl_partition_content_type"/>
-		</scriptCompletionProposalComputer>
-</extension>
-
-	<!-- VDM++ Perspective -->
- <extension point="org.eclipse.ui.perspectives">
-    <perspective
-          class="org.overture.ide.vdmpp.ui.VdmPpPerspective"
-          icon="icons/cview16/vdmpp_file_tsk.png"
-          id="org.overture.ide.vdmpp.ui.VdmPpPerspective"
-          name="VDM++">
-    </perspective>
- </extension>   
 </plugin>
