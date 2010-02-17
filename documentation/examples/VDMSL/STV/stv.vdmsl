@@ -1,11 +1,13 @@
 values
 
 Number_of_vacancies = 5;
-Cand_names = {<Adam>,<Bill>,<Charlie>,<Donald>,<Edward>,<Frank>,<George>,<Harry>,<Ian>,<John>};
+Cand_names = {<Adam>,<Bill>,<Charlie>,<Donald>,<Edward>,<Frank>,<George>,
+              <Harry>,<Ian>,<John>};
 
 rand_choice = [<Bill>,<Adam>,<John>,<Frank>];
 
-Votes = {{<Adam> |-> 1,<Bill> |-> 2,<Charlie> |-> 3,<Frank> |-> 4} |->100000, 
+Votes = {
+{<Adam> |-> 1,<Bill> |-> 2,<Charlie> |-> 3,<Frank> |-> 4} |->100000, 
 {<Bill> |-> 1,<Adam> |-> 2,<Charlie> |-> 3,<George> |-> 4} |->100000, 
 {<Adam> |-> 1,<Charlie> |-> 2,<Bill> |-> 3,<Harry> |-> 4} |->100000, 
 {<Bill> |-> 1,<Charlie> |-> 2,<Adam> |-> 3,<Ian> |-> 4} |->100000, 
@@ -191,7 +193,8 @@ non_transferable_papers(parcel,disc,cont) ==
         { v | v in set dom parcel & 
                 non_transferable_paper(v,disc,cont)} <: parcel;
 
-next_preference: Candidate_names * Voting_paper * set of Candidate_names -> bool
+next_preference: Candidate_names * Voting_paper * set of Candidate_names -> 
+                 bool
 next_preference(name,vote,continuing) ==
         if name in set dom vote 
         then exists i in set rng vote &
@@ -495,7 +498,8 @@ PROCESS_SUB_PARCELS:Candidate * seq of Sub_parcel ==> ()
 PROCESS_SUB_PARCELS(ex_cand, sub_parcels) ==
  ( dcl i: nat:=0;
    dcl non_trans_value: real:=0;
-   dcl bundle: Sub_parcel_bundle:=mk_Sub_parcel_bundle({|->},mk_Sub_parcel({|->},0.0),0);
+   dcl bundle: Sub_parcel_bundle:=mk_Sub_parcel_bundle({|->},
+                                  mk_Sub_parcel({|->},0.0),0);
    dcl new_candidates: set of Candidate := continuing \ {ex_cand};
    dcl new_stage: Stage := hd stages;
    while i <> len sub_parcels do
@@ -509,7 +513,8 @@ PROCESS_SUB_PARCELS(ex_cand, sub_parcels) ==
           new_stage:= construct_new_stage(new_stage,ex_cand.name,bundle);
           (let no_cands = number_of_candidates_satisfying_quota(new_candidates,
 				[new_stage],quota) in
-          (if 0 < no_cands and no_cands <= number_of_remaining_vacancies({e.name | e in set elected})
+          (if 0 < no_cands and no_cands <= number_of_remaining_vacancies
+                                             ({e.name | e in set elected})
            then let  xs_quota_scs = {sc.name | sc in set elems
                                        new_stage & sc.count >= quota} in
                 let  new_elected = { cand | cand in set new_candidates &
@@ -524,7 +529,8 @@ PROCESS_SUB_PARCELS(ex_cand, sub_parcels) ==
                                   {score|score in set (hd record).scores &
                                     score.name not in set 
                                     {sc.name | sc in set elems 
-                                     new_stage}} union {mk_Score(ex_cand.name,0)},
+                                     new_stage}} union 
+                                  {mk_Score(ex_cand.name,0)},
                                  non_trans_value,0)]^record;
         stages:= [[new_stage(i) | i in set inds new_stage & 
                           new_stage(i).name <> ex_cand.name]]^stages);
