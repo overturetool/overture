@@ -1,6 +1,6 @@
 package org.overture.ide.vdmpp.core;
 
-public interface VdmPpCorePluginConstants
+public interface IVdmPpCoreConstants
 {
 
 	String PLUGIN_ID = "org.overture.ide.vdmpp.core";

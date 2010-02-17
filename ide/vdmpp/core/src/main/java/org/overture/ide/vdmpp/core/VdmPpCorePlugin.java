@@ -4,16 +4,17 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IShutdownListener;
 import org.osgi.framework.BundleContext;
 
 
 public class VdmPpCorePlugin extends Plugin
 {
 	// The plug-in ID
-	public static final String PLUGIN_ID = VdmPpCorePluginConstants.PLUGIN_ID;//"org.overturetool.core";
+	public static final String PLUGIN_ID = IVdmPpCoreConstants.PLUGIN_ID;//"org.overturetool.core";
 
+	public static final boolean DEBUG = true;
+	
+	
 	// The shared instance
 	private static VdmPpCorePlugin plugin;
 	
@@ -53,7 +54,7 @@ public class VdmPpCorePlugin extends Plugin
 	}
 
 	public static void log(Exception ex) {
-		if (DLTKCore.DEBUG){
+		if (DEBUG){
 			ex.printStackTrace();
 		}
 		String message = ex.getMessage();
@@ -65,7 +66,5 @@ public class VdmPpCorePlugin extends Plugin
 	
 	private final ListenerList shutdownListeners = new ListenerList();
 
-	public void addShutdownListener(IShutdownListener listener) {
-		shutdownListeners.add(listener);
-	}
+	
 }

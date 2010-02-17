@@ -21,13 +21,5 @@
             priority="high">
       </content-type>     
    </extension>
-   <extension
-         point="org.eclipse.dltk.core.language">
-      <language
-            class="org.overture.ide.vdmpp.core.VdmPpLanguageToolkit"
-            nature="org.overture.ide.vdmpp.core.nature"
-            priority="0">
-      </language>
-   </extension>
   
 </plugin>
