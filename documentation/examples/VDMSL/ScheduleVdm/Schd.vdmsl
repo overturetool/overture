@@ -7,21 +7,21 @@ types
 Name 			= seq of char;
 CpuId 			= AS`Identifier;
 BusId 			= AS`Identifier;
+ClassId			= AS`Identifier;
+OpId			= AS`Identifier;
 ThreadId 		= token;
 MessageId 		= token;
-
-
 
 ThreadInfo ::
 	status 	: <RUN> | <BREAK> | <BLOCKED>
 	cpu 	: [CpuId]
-	obj 	: ObjRef
+	obj 	: AS`ObjRef
 	prioity : nat
 	ast		: AS`Statement;
 	
 CpuInfo ::
 	threads : map ThreadId to ThreadInfo
-	deployed: set of ObjRef
+	deployed: set of AS`ObjRef
 	policy  : <FC> | <FCFS>;
 	
 MessageInfo ::
@@ -34,7 +34,13 @@ BusInfo ::
 	msgInfo	: map MessageId to MessageInfo
 	policy	: <FCFS> | <OTHER>;
 	
-PermInfo ::;
+ClassInfo ::
+	thread	: [ThreadInfo]
+	ops		: set of OpId
+	sync	: PermInfo;
+
+PermInfo ::
+	syncMap	: map AS`OperationDefinition to AS`SynchronizationDefinitions; -- or: set of AS`PermissionPredicate; ???
 
 BreakInfo::;
 
@@ -46,6 +52,7 @@ state Sigma of
 
 busInfo 	: map BusId to BusInfo
 cpuInfo 	: map CpuId to CpuInfo
+classInfo	: map ClassId to ClassInfo
 permInfo 	: map Name  to PermInfo
 time 		: nat
 end
@@ -70,10 +77,10 @@ expandSys(mk_AS`System(cpus,buses,deployed)) ==
                in
                  mk_CpuInfo({|->},deplid,pol)
               | mk_(id,pol) in set cpus}
-  );    
+  );   
+   
 expandClass: AS`Identifier * AS`Class ==> ()
 expandClass(id,mk_AS`Class(td,opdefs,sync)) ==
    is not yet specified;
-
 
 end Schd

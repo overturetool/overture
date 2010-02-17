@@ -1,9 +1,9 @@
 class IO
 
--- 	VDMTools STANDARD LIBRARY: INPUT/OUTPUT
+-- 	Overture STANDARD LIBRARY: INPUT/OUTPUT
 --      --------------------------------------------
 -- 
--- Standard library for the VDMTools Interpreter. When the interpreter
+-- Standard library for the Overture Interpreter. When the interpreter
 -- evaluates the preliminary functions/operations in this file,
 -- corresponding internal functions is called instead of issuing a run
 -- time error. Signatures should not be changed, as well as name of
@@ -65,5 +65,16 @@ fecho (filename,text,fdir) ==
 public
 ferror:()  ==> seq of char
 ferror () ==
-  is not yet specified
+  is not yet specified;
+  
+-- New simplified format printing operations
+
+public static print: ? ==> ()
+print(arg) ==
+	is not yet specified;
+
+public static printf: seq of char * seq of ? ==> ()
+printf(format, args) ==
+	is not yet specified;
+
 end IO
