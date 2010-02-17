@@ -1,9 +1,8 @@
 package org.overture.ide.ui;
 
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.overture.ide.ui.editor.partitions.VdmPartitionScanner;
+import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
 
 public class VdmUIPlugin extends AbstractUIPlugin {
 	public static boolean DEBUG = true;
