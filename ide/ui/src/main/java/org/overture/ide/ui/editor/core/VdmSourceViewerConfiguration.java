@@ -15,9 +15,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.autoedit.VdmAutoEditStrategy;
-import org.overture.ide.ui.editor.partitions.VdmPartitionScanner;
-import org.overture.ide.ui.editor.syntax.VdmCodeScanner;
-import org.overture.ide.ui.editor.syntax.VdmColorProvider;
+import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
 
 public abstract class VdmSourceViewerConfiguration extends SourceViewerConfiguration {
 

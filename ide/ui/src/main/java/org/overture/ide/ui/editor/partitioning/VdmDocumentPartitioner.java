@@ -1,4 +1,4 @@
-package org.overture.ide.ui.editor.partitions;
+package org.overture.ide.ui.editor.partitioning;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;

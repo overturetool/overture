@@ -6,12 +6,12 @@ public class VdmWordDetector implements IWordDetector {
 
 	public boolean isWordPart(char c) {
 		// TODO Auto-generated method stub
-		return !Character.isWhitespace(c);
+		return Character.isLetter(c) || Character.isDigit(c);
 	}
 
 	public boolean isWordStart(char c) {
 		// TODO Auto-generated method stub
-		return !Character.isWhitespace(c);
+		return Character.isLetter(c) ;
 	}
 
 }

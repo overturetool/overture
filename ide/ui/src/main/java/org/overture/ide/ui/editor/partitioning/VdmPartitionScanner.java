@@ -1,4 +1,4 @@
-package org.overture.ide.ui.editor.partitions;
+package org.overture.ide.ui.editor.partitioning;
 
 import java.util.ArrayList;
 import java.util.List;

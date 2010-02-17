@@ -12,6 +12,7 @@ import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
+import org.eclipse.swt.SWT;
 
 
 public abstract class VdmCodeScanner extends RuleBasedScanner {
@@ -20,7 +21,7 @@ public abstract class VdmCodeScanner extends RuleBasedScanner {
 
 	public VdmCodeScanner(VdmColorProvider provider) {
 
-		IToken keyword = new Token(new TextAttribute(provider.getColor(VdmColorProvider.KEYWORD)));
+		IToken keyword = new Token(new TextAttribute(provider.getColor(VdmColorProvider.KEYWORD),null,SWT.BOLD));
 		IToken string = new Token(new TextAttribute(provider.getColor(VdmColorProvider.STRING)));
 		IToken comment = new Token(new TextAttribute(provider.getColor(VdmColorProvider.SINGLE_LINE_COMMENT)));
 		IToken other = new Token(new TextAttribute(provider.getColor(VdmColorProvider.DEFAULT)));
@@ -28,6 +29,7 @@ public abstract class VdmCodeScanner extends RuleBasedScanner {
 		List<IRule> rules = new ArrayList<IRule>();
 		// Add rule for single line comments.
 		rules.add(new EndOfLineRule("--", comment));
+		
 		// Add rule for strings.
 		rules.add(new SingleLineRule("\"", "\"", string, '\\'));
 		rules.add(new SingleLineRule("'", "'", string, '\\'));

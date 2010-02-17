@@ -11,10 +11,10 @@ import org.eclipse.swt.widgets.Display;
 public class VdmColorProvider {
 	
 	public static final RGB MULTI_LINE_COMMENT = new RGB(128, 0, 0);
-	public static final RGB SINGLE_LINE_COMMENT = new RGB(128, 128, 0);
-	public static final RGB KEYWORD = new RGB(0, 0, 128);
+	public static final RGB SINGLE_LINE_COMMENT = new RGB(63, 127, 95);
+	public static final RGB KEYWORD = new RGB(127, 0, 85);
 	public static final RGB TYPE = new RGB(0, 0, 128);
-	public static final RGB STRING = new RGB(0, 128, 0);
+	public static final RGB STRING = new RGB(42, 0, 255);
 	public static final RGB DEFAULT = new RGB(0, 0, 0);
 	public static final RGB VDMDOC_KEYWORD = new RGB(0, 128, 0);
 	public static final RGB VDMDOC_TAG = new RGB(128, 128, 128);

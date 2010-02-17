@@ -4,11 +4,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 import org.overture.ide.ui.VdmUIPlugin;
-import org.overture.ide.ui.editor.partitions.VdmDocumentPartitioner;
-import org.overture.ide.ui.editor.partitions.VdmPartitionScanner;
+import org.overture.ide.ui.editor.partitioning.VdmDocumentPartitioner;
+import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
 
 public class VdmDocumentProvider extends FileDocumentProvider {
 
