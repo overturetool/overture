@@ -272,7 +272,7 @@ public class VDMPP extends VDMJ
 	 */
 
 	@Override
-	protected ExitStatus interpret(List<File> filenames)
+	protected ExitStatus interpret(List<File> filenames, String defaultName)
 	{
 		ClassInterpreter interpreter = null;
 
@@ -296,6 +296,12 @@ public class VDMPP extends VDMJ
    			long before = System.currentTimeMillis();
    			interpreter = getInterpreter();
    			interpreter.init(null);
+
+   			if (defaultName != null)
+   			{
+   				interpreter.setDefaultName(defaultName);
+   			}
+
    			long after = System.currentTimeMillis();
 
    	   		infoln("Initialized " + plural(classes.size(), "class", "es") + " in " +
@@ -309,7 +315,7 @@ public class VDMPP extends VDMJ
 		}
 		catch (Exception e)
 		{
-			println("Initialization: " + e);
+			println("Initialization: " + e.getMessage());
 			return ExitStatus.EXIT_ERRORS;
 		}
 

@@ -72,6 +72,7 @@ abstract public class VDMJ
 		boolean isBase64 = false;
 		String remoteName = null;
 		Class<RemoteControl> remoteClass = null;
+		String defaultName = null;
 
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
 		{
@@ -231,6 +232,17 @@ abstract public class VDMJ
     				usage("-remote option requires a Java classname");
     			}
     		}
+    		else if (arg.equals("-default"))
+    		{
+    			if (i.hasNext())
+    			{
+       				defaultName = i.next();
+    			}
+    			else
+    			{
+    				usage("-default option requires a name");
+    			}
+    		}
     		else if (arg.startsWith("-"))
     		{
     			usage("Unknown option " + arg);
@@ -306,7 +318,7 @@ abstract public class VDMJ
 			{
 				if (filenames.isEmpty())
 				{
-					status = controller.interpret(filenames);
+					status = controller.interpret(filenames, null);
 				}
 				else
 				{
@@ -320,7 +332,7 @@ abstract public class VDMJ
             			{
             				if (remoteClass == null)
             				{
-            					status = controller.interpret(filenames);
+								status = controller.interpret(filenames, defaultName);
             				}
         					else
         					{
@@ -328,6 +340,12 @@ abstract public class VDMJ
 								{
 									RemoteControl remote = remoteClass.newInstance();
 									Interpreter i = controller.getInterpreter();
+
+									if (defaultName != null)
+									{
+										i.setDefaultName(defaultName);
+									}
+
 									i.init(null);
 
 									try
@@ -381,6 +399,7 @@ abstract public class VDMJ
 		System.err.println("-c <charset>: select a file charset");
 		System.err.println("-t <charset>: select a console charset");
 		System.err.println("-o <filename>: saved type checked specification");
+		System.err.println("-default <name>: set the default module/class");
 		System.err.println("-pre: disable precondition checks");
 		System.err.println("-post: disable postcondition checks");
 		System.err.println("-inv: disable type/state invariant checks");
@@ -424,10 +443,11 @@ abstract public class VDMJ
 	 * or one).
 	 *
 	 * @param filenames The filenames currently loaded.
+	 * @param defaultName The default module or class (or null).
 	 * @return The exit status of the interpreter.
 	 */
 
-	abstract protected ExitStatus interpret(List<File> filenames);
+	abstract protected ExitStatus interpret(List<File> filenames, String defaultName);
 
 	public void setWarnings(boolean w)
 	{
