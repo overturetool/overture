@@ -87,8 +87,8 @@
 \lstset{language=VDM++}
 \lstset{alsolanguage=Java}
 % The command below enables you to escape into normal LaTeX mode inside your 
-% VDM chunks by starting with a `?´ character and ending with a `£´
-%\lstset{escapeinside=?£}
+% VDM chunks by starting with a `?ï¿½ character and ending with a `ï¿½ï¿½
+%\lstset{escapeinside=?ï¿½}
 
 \newcommand{\kw}[1]{{\tt #1}}
 
@@ -206,23 +206,23 @@ Overture/VDM interpreter in order for the multi-threaded and
 multi-processor interpretation to work appropriately and subsequently
 pave the way for the co-simulation with 20-sim in the DESTECS project.
 
-\section{Main issues that needs adressing}
+\section{Main issues that needs addressing}
 
 The current version of the Overture/VDM interpreter have a number of
-issues that definitely needs adressing to make it useful for modelling
+issues which definitely needs to be addressed to make it useful for modeling
 and validation of multi-threaded VDM++ and VDM-RT models. The main
-points here are:
+points are:
 
 \begin{enumerate}
-\item Whenever a multi-threaded VDM model is present the interpreter
-  make use of multithreaded java threads and this result in a
+\item Whenever a multi-threaded VDM model is present, the interpreter
+  make use of multiple Java threads resulting in a
   non-deterministic execution of such models where errors envisaged
   can be hard to reproduce.
 \item Whenever the interpretation is stopped with a breakpoint in the
-  interpretation of a multi-threaded VDM model only the thread that is
-  broken is stopped (or threads that are created in a break
+  interpretation of a multi-threaded VDM model only the thread reaching
+  the breakpoint is stopped (or threads that are created in a break
   state). This means that other threads continue their execution. This
-  is not the way this should work because this both means that these
+  is not the way this should work since these other
   threads will be able to advance much longer than envisaged and it is
   impossible to inspect the exact position of the thread execution and
   inspect the value of the instance variables and local variables.
@@ -230,7 +230,7 @@ points here are:
   relation to the real time of an interpretation) and not whenever its
   value have potentially changed due to the dependencies of the
   history counters and the instance variables adjusted. This means
-  that windows of oppertunities where the permission predicates can
+  that windows of opportunities where the permission predicates can
   enable the blocked threads to continue are not exploited.
 \item Only explicit duration and cycle statements will move the
   simulated time. This severely hinders the realistic expectations one
@@ -240,30 +240,30 @@ points here are:
   taken into account.
 \end{enumerate}
 
-\section{Main issues that would be nice to adress}
+\section{Main issues that would be nice to address}
 
-In addition to the issues that needs to be solved there is a number of
-issues that have been discussed at different points of time and are
+In addition to the issues that needs to be solved there are a number of
+issues which have been discussed at different points of time and are
 desirable in the longer term to enable as well. The list of these
 issues include:
 
 \begin{enumerate}
 \item Handling of static instance variables in instances of classes
-  that are deployed to multiple cpus are not handled appropriately
-  right now (nor in VDMTools). In essence if such an instance variable
+  that are deployed to multiple cpus are not done appropriately
+  right now (nor in VDMTools). In essence, if such an instance variable
   is updated in one cpu it is instantly also available at the other
   cpus where it is deployed. This is naturally cheating compared to a
-  real world. This may require a language chnage so this needs to be
+  real world. This may require a language change so this needs to be
   clarified and a proposal will have to be made for the LB when this
   is done.
-\item At the moment all deployment of instances of classes happen
+\item At the moment the deployment of instances of classes happen
   statically in the system class constructor (also in VDMTools). When
   one wish to use the VDM-RT dialect to describe a system where the
   different instances actually physically move and change their
   deployment dynamically this is not appropriate. A new MSc student
   will explore whether it is possible to incorporate concepts for
-  dynamic allocation (for example inspired from teh CREDO project) in
-  a VDM-RT context. This again will probably require language chnages
+  dynamic allocation (for example inspired from the CREDO project) in
+  a VDM-RT context. This again will probably require language changes
   so it needs to be approved by the LB but it would be advantageous to
   be able to conduct the research for such an extension before
   deciding upon whether it shall be permanently incorporated into
@@ -271,50 +271,54 @@ issues include:
 \item It would be desirable to be able to use duration intervals
   instead of simply a fixed amount, and then be able to run the
   execution in different modes (smallest number, random but controlled
-  by seed or lagest numbers).
+  by seed or largest numbers).
 \item At the moment both Overture/VDM and VDMTools have a single
   virtual cpu containing all the environment functionality. It would
-  be desibale to explore the possibility of defining multiple virtual
+  be desirable to explore the possibility of defining multiple virtual
   cpus for the system class.
-\item Incorporating of predicates over the events happening over time
+\item Incorporation of predicates of events happening over time
   (either dynamically or with post-analysis after the execution based
   on a logfile) would be desirable. Whenever such timed predicates are
   broken the user should easily be able to determine the cause of the
   violation (either if stopped immediately when it was broken or
-  graphically in visualisations of logfiles).
+  graphically in visualizations of logfiles). Another option would be to
+  incorporate a special keyword: \emph{maxDuration} for use in post 
+  conditions, to describe the maximum allowed duration of the given 
+  operation.
 \end{enumerate}
 
 \section{Suggested Solutions}
 
-It is sugegsted to keep the use of java threads in the Overture/VDM
-interpreter but have a master thread that controls all threads. This
+It is suggested to keep the use of Java threads in the Overture/VDM
+interpreter but have a master thread which controls all threads. This
 master will then act as the overall scheduler in case multi-threaded
 VDM models are to be interpreted. Thus there will at any point of time
-just be one thread executing and thus the nondeterminism arasing from
-the Java virtual machine will be eliminated. In addition the problem
+just be one thread executing and thus the nondeterminism arising from
+the Java virtual machine will be eliminated. In addition, the problem
 about stopping threads at breakpoints will disappear. Concerning the
-reevaluation of permission predicates extra stuff will need to be
+reevaluation of permission predicates, additions will need to be
 inserted in the Overture/VDM interpreter for this. Essentially this
 boils down to a static analysis of all the permission predicates where
-dependency information is derived at initialisation time. Subsequently
+dependency information is derived at initialisation time. Subsequently,
 this information is to be used by the scheduler whenever any of the
 things dependent upon for a block permission predicate is updated.
 
-When we talk about the VDM-RT interpreter the master thread will need
+Talking about the VDM-RT interpreter, the master thread will need
 to carry out a round-robin investigation of what functionality each
-resource (cpu and bus) can execute before updating the time and once
-all have been processed the one with the smallest time step will be
+resource (cpu and bus) can execute before updating the time. Once
+all have been processed the smallest time step will be
 chosen and all threads will be moved forward with this amount of
-time. For the treads that have a longer duratiojn this means that the
-remaining duration will be decremented accordingly. For those that
-have dirations equal to the minimum duration the transactions
+time. For the treads that have a longer duration this means that the
+remaining duration will be decremented accordingly. For threads that
+have durations equal to the minimum duration the transactions
 performed in that local thread will be committed and made available to
-all othert threads. This is also the place where the co-simulation
+all other threads. This is also the place where the co-simulation
 will be incorporated (before the cpus are asked to progress time with
-the smallest time step the co-simulation will be asked to progress
-this amount of time and either that will happen and values will be
-exchanged or an event happen at a smaller amount of time and then all
-cpus are asked to progress with that amount). 
+the smallest time step, the continuous-time model will be asked to progress
+this amount of time. Either the continuous-time model will increase time 
+by the negotiated amount and values will be exchanged between the two
+models, or an event happen at an earlier time and then all
+cpus are asked to progress by that amount). 
 
 \section{Handling of Breakpoints}
 
