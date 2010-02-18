@@ -322,8 +322,7 @@ cpus are asked to progress by that amount).
 
 \section{Handling of Breakpoints}
 
-
-Definitions:
+Several minor corrections to the way breakpoints are handled in the debugger is desired. The following definitions will be used:
 
 \begin{itemize}
 	\item Resume
@@ -334,27 +333,26 @@ Definitions:
 	\item Step Return
 \end{itemize}
 
-
-
 \includegraphics[width=369pt]{figures/stackTrace.png}
 
+When reaching a breakpoint during debugging, the thread reaching the breakpoint should be marked and the source location of the breakpoint should be shown. The following outline would be desirable:
 
-When debugging and a breakpoint is reached the thread where the breakpoint is reached should be marked and the source location of the breakpoint should be shown.
+\includegraphics[width=369pt]{figures/NewDebugLook.png}
+
+All cpus are shown on the first level of the debug view. For each cpu, the currently active thread is shown on top, with the option of expanding the list of threads in order to display all threads deployed to the cpu. This will ensure that the active threads are visible at a glance, and give a good overview of the architecture of the system. In addition, all sleeping threads can still be examined should the user wish to. 
 
 \begin{itemize}
-	\item When a breakpoint is reached all threads shall stop before the next eval.
+	\item When a breakpoint is reached all threads shall stop before the next evaluation.
 \end{itemize}
-
-
 
 When the user selects:
 
 \begin{itemize}
 	\item Terminate: The model is killed. The root process should die.
-	\item Resume: The current thread and all other is resumed and will only stop again it the Suspend button is pressed or a breakpoint is reached.
+	\item Resume: The current thread and all other threads are resumed and will only stop again it the Suspend button is pressed or a breakpoint is reached.
 	\item Step:
 \begin{itemize}
-	\item All other threads than the selected one is resumed. The one selected is allowed to eval one time of setp over. Eventually the other threads will stop because of synchronization constraints. New periodic threads must not be allowed to start before the debugging thread is stepped enough time steps to allow a new scheduling of a new periodic thread.
+	\item All other threads than the selected one are resumed. The one selected is allowed to evaluate one step of time. Eventually the other threads will stop because of synchronization constraints. New periodic threads must not be allowed to start before the debugging thread has done enough time steps to allow a new scheduling of a new periodic thread.
 \end{itemize}
 
 \end{itemize}
