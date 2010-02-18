@@ -1,10 +1,11 @@
 module Schd
+imports from Eval all
 exports all
 definitions
 
 types
 
-Name 			= seq of char;
+--Name 			= seq of char;
 CpuId 			= AS`Identifier;
 BusId 			= AS`Identifier;
 ClassId			= AS`Identifier;
@@ -12,12 +13,23 @@ OpId			= AS`Identifier;
 ThreadId 		= token;
 MessageId 		= token;
 
+ThreadStatus = <RUN> | <BREAK> | BLOCKED | DURATION;
+
 ThreadInfo ::
-	status 	: <RUN> | <BREAK> | <BLOCKED>
+	status 	: ThreadStatus
 	cpu 	: [CpuId]
 	obj 	: AS`ObjRef
+	debug	: bool
 	prioity : nat
 	ast		: AS`Statement;
+	
+-- Both <RUN> and DURATION will be shown as suspended in the debugger
+	
+BLOCKED ::
+	nm		: AS`Name;
+	
+DURATION ::
+	t		: nat;
 	
 CpuInfo ::
 	threads : map ThreadId to ThreadInfo
@@ -40,7 +52,8 @@ ClassInfo ::
 	sync	: PermInfo;
 
 PermInfo ::
-	syncMap	: map AS`OperationDefinition to AS`SynchronizationDefinitions; -- or: set of AS`PermissionPredicate; ???
+	hisCount	: set of AS`Name 	-- Operation name used in history counters
+	instVars	: set of AS`Name;	-- Names of instance variables used inside perm predicate
 
 BreakInfo::;
 
@@ -53,11 +66,25 @@ state Sigma of
 busInfo 	: map BusId to BusInfo
 cpuInfo 	: map CpuId to CpuInfo
 classInfo	: map ClassId to ClassInfo
-permInfo 	: map Name  to PermInfo
+permInfo 	: map AS`Name to PermInfo
+threadInfo	: map nat to ThreadInfo
 time 		: nat
+
+inv s == s.threadInfo <> {|->} => exists1 t in set rng s.threadInfo & t.debug
 end
 
 operations
+
+
+StartScheduler : AS`Expression * AS`Spec * nat ==> Val
+StartScheduler (expr, spec, delta) ==
+  (dcl res : ThreadStatus := Eval`evalExpr(expr,delta);
+   expandSpec(spec);
+   while(not finished) 
+   do 
+     (
+     );
+  ); 
 
 expandSpec : AS`Spec ==> ()
 expandSpec(mk_AS`Spec(sys,classm)) == 
@@ -80,7 +107,19 @@ expandSys(mk_AS`System(cpus,buses,deployed)) ==
   );   
    
 expandClass: AS`Identifier * AS`Class ==> ()
-expandClass(id,mk_AS`Class(td,opdefs,sync)) ==
-   is not yet specified;
+expandClass(id,mk_AS`Class(td,opdefs,mk_AS`SynchronizationDefinitions(sync))) ==
+   permInfo := {sync(i).name |-> mk_PermInfo(extractHistCounts(sync(i).expression), 
+   											 extractInstVar(sync(i).expression))
+   				| i in set inds sync};
+    
+functions
+
+extractHistCounts: AS`Expression -> set of AS`Name
+extractHistCounts(expr) ==
+	is not yet specified;
+
+extractInstVar: AS`Expression -> set of AS`Name
+extractInstVar(expr) ==
+	is not yet specified;
 
 end Schd
