@@ -485,7 +485,7 @@ return !(fModuleNameText == null || fModuleNameText.getText().length() == 0);
 	}
 
 	/*
-	 * @see
+	 * @see 
 	 * org.eclipse.dltk.debug.ui.launchConfigurations.ScriptLaunchConfigurationTab
 	 * #
 	 * breakOnFirstLinePrefEnabled(org.eclipse.dltk.core.PreferencesLookupDelegate

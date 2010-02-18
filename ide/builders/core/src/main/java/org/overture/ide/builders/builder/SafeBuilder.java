@@ -9,9 +9,9 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
-import org.overture.ide.ast.AstManager;
-import org.overture.ide.ast.RootNode;
 import org.overture.ide.builders.core.VdmBuilderCorePlugin;
+import org.overture.ide.core.ast.AstManager;
+import org.overture.ide.core.ast.RootNode;
 import org.overture.ide.utility.VdmProject;
 
 public class SafeBuilder extends Thread

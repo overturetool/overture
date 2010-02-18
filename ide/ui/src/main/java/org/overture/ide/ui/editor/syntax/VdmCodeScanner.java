@@ -19,6 +19,12 @@ public abstract class VdmCodeScanner extends RuleBasedScanner {
 
 	private String[] fgKeywords = getKeywords();
 
+	public static final String[] latexOperators = {
+		  "\\begin{vdm_al}",
+		  "\\end{vdm_al}"
+	  };
+	
+	
 	public VdmCodeScanner(VdmColorProvider provider) {
 
 		IToken keyword = new Token(new TextAttribute(provider.getColor(VdmColorProvider.KEYWORD),null,SWT.BOLD));
@@ -37,9 +43,16 @@ public abstract class VdmCodeScanner extends RuleBasedScanner {
 		rules.add(new WhitespaceRule(new VdmWhitespaceDetector()));
 		// Add word rule for keywords.
 		WordRule wordRule = new WordRule(new VdmWordDetector(), other);
+		
+		//TODO: this is a hack to get latex related stuff commented
+		rules.add(new SingleLineRule("\\begin{vdm_al","}", comment));
+		rules.add(new SingleLineRule("\\end{vdm_al","}", comment));
+		
 		for (int i = 0; i < fgKeywords.length; i++)
 			wordRule.addWord(fgKeywords[i], keyword);
 		
+		
+			
 		rules.add(wordRule);
 		IRule[] result = new IRule[rules.size()];
 		rules.toArray(result);

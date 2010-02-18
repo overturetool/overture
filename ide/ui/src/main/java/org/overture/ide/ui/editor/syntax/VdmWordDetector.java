@@ -11,7 +11,7 @@ public class VdmWordDetector implements IWordDetector {
 
 	public boolean isWordStart(char c) {
 		// TODO Auto-generated method stub
-		return Character.isLetter(c) ;
+		return Character.isLetter(c);
 	}
 
 }

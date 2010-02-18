@@ -15,9 +15,9 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.builder.IScriptBuilder;
-import org.overture.ide.ast.AstManager;
 import org.overture.ide.builders.core.VdmBuilderCorePlugin;
 import org.overture.ide.builders.core.VdmBuilderCorePluginConstants;
+import org.overture.ide.core.ast.AstManager;
 
 public class BuildParticipant implements IScriptBuilder
 {

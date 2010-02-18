@@ -64,7 +64,7 @@ public class  VdmPpKeywords implements IVdmKeywords {
 	      "dunion", "dinter", "power", "isofbaseclass", "isofclass", 
 		  "samebaseclass", "sameclass"};
 	  
-	 
+	  
 
 
 	  public String[] getBasictypes()
