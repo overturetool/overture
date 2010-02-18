@@ -288,7 +288,7 @@ public class ProjectTester
 
 		// -e <exp>: evaluate <exp> and stop
 		command.add("-e");
-		command.add(entryPoint);
+		command.add("\""+entryPoint.replace("\"", "\\\"")+"\"");
 		// -c <charset>: select a file charset
 
 		// -t <charset>: select a console charset
