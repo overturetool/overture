@@ -38,7 +38,7 @@ public class ProjectTester
 	boolean isFaild = false;
 
 	enum Phase {
-		SyntaxCheck, TypeCheck, PO, Interpretation
+		SyntaxCheck, TypeCheck, PO, Interpretation,Latex
 	}
 
 	public ProjectTester(File reportLocation) {
@@ -49,6 +49,7 @@ public class ProjectTester
 
 	public String test(ProjectPacker project) throws IOException
 	{
+		LatexBuilder latex=null;
 		System.out.print(addFixedSize("\nTesting: "
 				+ project.getSettings().getName(), 28)
 				+ " => ");
@@ -113,6 +114,16 @@ public class ProjectTester
 			{
 				e.printStackTrace(Console.err);
 				statusPo = ExitStatus.EXIT_ERRORS;
+			}
+			
+			try
+			{
+			latex =	new LatexBuilder(project);
+			latex.build(reportLocation,controller.getInterpreter());
+			} catch (Exception e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 
 			int intryPointCount = 0;
@@ -221,6 +232,14 @@ public class ProjectTester
 							Phase.Interpretation)));
 		else
 			sb.append(HtmlTable.makeCell(""));
+		
+		if (latex != null)
+			sb.append(makeCell(latex.isBuild()?ExitStatus.EXIT_ERRORS: ExitStatus.EXIT_OK, getLinks(project.getSettings().getName()+"/latex",
+					Phase.Latex)
+					+ " "+
+					HtmlPage.makeLink("Pdf", project.getSettings().getName() + "/latex/" + project.getSettings().getName()+ ".pdf")));
+		else
+			sb.append(HtmlTable.makeCell(""));
 
 		return HtmlTable.makeRow(sb.toString());
 	}
@@ -292,6 +311,16 @@ public class ProjectTester
 		// -log: enable real-time event logging
 
 		// -remote <class>: enable remote control
+		
+		// -default: sets the default module
+	
+		if(entryPoint.contains("`"))
+		{
+			command.add("-default");
+			command.add(entryPoint.substring(0,entryPoint.indexOf('`')));
+		}
+		
+		
 		for (File f : project.getSpecFiles())
 		{
 			command.add(f.getAbsolutePath());
@@ -392,6 +421,8 @@ public class ProjectTester
 		StringBuilder sb = new StringBuilder();
 		try
 		{
+			if(!file.exists())
+				return false;
 			BufferedReader input = new BufferedReader(new FileReader(file));
 			try
 			{

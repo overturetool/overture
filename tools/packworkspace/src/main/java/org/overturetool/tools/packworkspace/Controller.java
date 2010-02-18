@@ -42,7 +42,7 @@ public class Controller
 		StringBuilder sb = new StringBuilder();
 		sb.append(HtmlTable.makeRow(HtmlTable.makeCellHeaderss(new String[] {
 				"Project Name", "Syntax check", "Type check","PO",
-				"Interpretation test" })));
+				"Interpretation test","Doc" })));
 		Collections.sort(projects);
 		for (ProjectPacker p : projects)
 		{
