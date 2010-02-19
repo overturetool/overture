@@ -1,7 +1,10 @@
 package org.overture.ide.ui;
 
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.overture.ide.core.Activator;
 import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
 
 public class VdmUIPlugin extends AbstractUIPlugin {
@@ -56,5 +59,6 @@ public class VdmUIPlugin extends AbstractUIPlugin {
 		println(e.getMessage());
 		
 	}
+	
 	
 }

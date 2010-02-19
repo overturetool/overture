@@ -22,7 +22,7 @@ public class VdmPpNewProjectWizard extends VdmNewProjectWizard {
 
 	@Override
 	protected String getPageTitle() {
-		return "VDM++ New Project Wizard";
+		return "VDM++ Project";
 	}
 
 }

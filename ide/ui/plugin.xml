@@ -18,24 +18,18 @@
       <perspectiveExtension
             targetID="org.overture.ide.ui.perspective">
          <view
-               id="org.overture.ide.ui.editorView"
-               minimized="false"
-               relationship="stack"
-               relative="org.eclipse.ui.editorss">
-         </view>
-         <view
                id="org.overture.ide.ui.navigatorView"
                minimized="false"
                ratio="0.25"
                relationship="left"
-               relative="org.eclipse.ui.views.ResourceNavigator">
+               relative="org.eclipse.ui.editorss">
          </view>
       </perspectiveExtension>
    </extension>
    <extension
          point="org.eclipse.ui.views">
       <view
-            class="org.eclipse.ui.navigator.CommonNavigator"
+            class="org.overture.ide.ui.navigator.VdmNavigator"
             icon="icons/cview16/overture_nav.gif"
             id="org.overture.ide.ui.navigatorView"
             name="VDM Explorer">
@@ -55,19 +49,28 @@
             viewerId="org.overture.ide.ui.navigatorView">
          <includes>
             <contentExtension
-                  pattern="org.eclipse.ui.navigator.resourceContent">
-            </contentExtension>
-            <contentExtension
-                  pattern="org.eclipse.ui.navigator.resources.filters.*">
-            </contentExtension>
-            <contentExtension
-                  pattern="org.eclipse.ui.navigator.resources.linkHelper">
-            </contentExtension>
-            <contentExtension
-                  pattern="org.eclipse.ui.navigator.resources.workingSets">
+                  pattern="org.overture.ide.ui.navigatorContent">
             </contentExtension>
          </includes>
       </viewerContentBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="org.overture.ide.ui.navigator.VdmNavigatorContentProvider"
+            id="org.overture.ide.ui.navigatorContent"
+            labelProvider="org.overture.ide.ui.navigator.VdmNavigatorLabelProvider"
+            name="VDM Navigation Content"
+            priority="highest">
+         <triggerPoints>
+            <or>
+               <instanceof
+                     value="org.eclipse.core.resources.IWorkspaceRoot">
+               </instanceof>
+            </or>
+         </triggerPoints>
+      </navigatorContent>
    </extension>
   
   

@@ -66,4 +66,5 @@ public interface IVdmProject
 	public abstract void typeCheck() throws CoreException;
 	public abstract void typeCheck(boolean clean,IProgressMonitor monitor) throws CoreException;
 
+	public abstract String getProjectName();
 }

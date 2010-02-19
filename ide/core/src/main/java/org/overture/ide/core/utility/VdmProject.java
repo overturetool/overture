@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import org.eclipse.core.internal.resources.Project;
+import org.eclipse.core.internal.resources.Resource;
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -435,6 +437,10 @@ public class VdmProject implements IVdmProject
 				}
 			}
 		}
+	}
+
+	public String getProjectName() {
+		return this.project.getName();
 	}
 
 }

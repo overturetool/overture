@@ -4,13 +4,14 @@ import java.net.URI;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.overture.ide.core.utility.ProjectUtility;
 
 
-public abstract class VdmNewProjectWizard extends Wizard implements IWorkbenchWizard{
+public abstract class VdmNewProjectWizard extends Wizard implements IWorkbenchWizard, INewWizard{
 
 	
 	private WizardNewProjectCreationPage _pageOne;
