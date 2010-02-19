@@ -28,5 +28,4 @@ class Stack
     Top() ==
       return (hd stack);
 
-
 end Stack
