@@ -32,7 +32,7 @@ This graph  is defined by the relation
 
 \begin{figure}
 \begin{center}
-\input{spor.pstex_t}
+\includegraphics[width=2.5in]{spor}
 \caption{Track topology\label{spor}}
 \end{center}
 \end{figure}
@@ -40,21 +40,21 @@ This graph  is defined by the relation
 
 \begin{figure}
 \begin{center}
-\input{graph.pstex_t}
+\includegraphics[width=2.5in]{graph.png}
 \caption{Track topology graph\label{graph}}
 \end{center}
 \end{figure}
 
-\bdisp
-\begin{array}{lll}
+%\bdisp
+\begin{tabular}{lll}
    Tracks & = & \{ (16,17),\ (17,16),\  (17,18),\  (17,21),\ (17,22),\
    (18,17),\\
           & & \ \ (18,19),\ (19,18),\ (19,20),\
                     (19,24),\ (20,19),\ (21,17),\\
           & &\ \ (22,17),\ (22,23),\ (23,22),
                  (23,24),\ (24,23),\ (24,19) \}
-\end{array}
-\edisp
+\end{tabular}
+%\edisp
 
 \rule{2mm}{2mm}
 
@@ -100,7 +100,7 @@ types
 
 A track topology is defined by a relation on track segments, where each track
 segment has a unique identification.
-The interpretation of the $Tracks$ relation is that
+The interpretation of the {\ttfamily Tracks} relation is that
 each pair of track segments in the relation is physically connected.
 
 The well-formedness constraints on the model are stated below. 
@@ -109,10 +109,10 @@ The well-formedness constraints on the model are stated below.
 
 \begin{enumerate}
 
-\item The $Tracks$  relation does not contain any elements\footnote{
+\item The {\ttfamily Tracks}  relation does not contain any elements\footnote{
 This restriction makes the functions simpler.}
  of the form
-$(t,t)$.
+{\ttfamily (t,t)}.
 
 \begin{vdm_al}
 functions
@@ -122,7 +122,7 @@ functions
       forall mk_(t1,t2) in set tracks & t1 <> t2;
 \end{vdm_al}
 
-\item The $Tracks$ relation is symmetric, i.e.\
+\item The {\ttfamily Tracks} relation is symmetric, i.e.\
 if it is possible to drive a train from one track segment to another,
 it is also possible to drive in the opposite direction.
 
@@ -153,7 +153,7 @@ station at Funen, which consists of two parallel tracks.
 \subsubsection{Points and Crossings}
 
 In the above model we assumed that whenever a pair of track segments
-is in the $Tracks$ 
+is in the {\ttfamily Tracks} 
 relation, they are physically connected, and therefore it is
 possible to drive a train
 from one track segment to the other. However,
@@ -167,7 +167,7 @@ possible to exit in one direction (assuming no reversing).
 
 \begin{figure}
 \begin{center}
-\input{point.pstex_t}
+\includegraphics[width=1in]{point.png}
 \caption{Point\label{point}}
 \end{center}
 \end{figure}
@@ -229,15 +229,15 @@ in Figure~\ref{graphsp} by the track segments $17\slash$ and $17\backslash$.
 
 \begin{figure}
 \begin{center}
-\input{graphsp.pstex_t}
+\includegraphics[width=2.5in]{graphsp.png}
 \caption{Graph with points and crossings\label{graphsp}}
 \end{center}
 \end{figure}
 
 The formulas are
 
-\bdisp
-  \begin{array}{lll}
+%\bdisp
+  \begin{tabular}{lll}
      Points & = & \{ \begin{array}[t]{lll}
                      (19,20) & \Mapsto  & \{ 19 \Mapsto  \const{left}\} , \\
                      (20,19) & \Mapsto  & \{ 19 \Mapsto  \const{left}\} , \\
@@ -247,8 +247,8 @@ The formulas are
                      (24,23) & \Mapsto  & \{ 24 \Mapsto  \const{left}\} , \\
                      (23,24) & \Mapsto  & \{ 24 \Mapsto  \const{left}\} \ \}
                      \end{array}
-  \end{array}
-\edisp
+  \end{tabular}
+%\edisp
 
 \bdisp
   \begin{array}{lll}
@@ -262,7 +262,8 @@ The VDM-SL formulas are
 
 \begin{vdm_al}
 types
-     Points      = map (Track_id * Track_id) to (map Track_id to Point_control);
+     Points      = map (Track_id * Track_id) to 
+                       (map Track_id to Point_control);
      Point_control = <left> | <right>;
      Crossings   =  set of (Track_id * Track_id)
 
@@ -294,7 +295,7 @@ The well-formedness constrains for points and crossings are stated below.
 
 \begin{enumerate}
 \item The domain of  $Points$ is a subset of
-$Tracks$, i.e.\ for each pair of track segments in the domain of $Points$ it must be possible
+{\ttfamily Tracks}, i.e.\ for each pair of track segments in the domain of $Points$ it must be possible
 to drive between the two track segments.
 
 \begin{vdm_al}
@@ -337,7 +338,7 @@ branch to move from $t2$ to $t1$.
 \end{vdm_al}
 
 
-\item In $Tracks$, a point is related to 3 track segments, whereas other
+\item In {\ttfamily Tracks}, a point is related to 3 track segments, whereas other
   track segments are related to at most two track segments.
 Note that a track segment may be related to only  one other track
 segment, as it may be at the end of a track\footnote{We assume that
@@ -351,7 +352,8 @@ segment, as it may be at the end of a track\footnote{We assume that
      forall pid in set dom points (tpair) &
       card {t | mk_(t,t') in set tracks & t' = pid } = 3) and
     (forall mk_(t1,-) in set tracks &
-     (not exists tpair in set dom points & t1 in set dom points (tpair)) =>
+     (not exists tpair in set dom points & 
+             t1 in set dom points (tpair)) =>
       card {t|mk_(t,t') in set tracks & t'=t1} <= 2 );
 \end{vdm_al}
 
@@ -394,7 +396,7 @@ Together the well-formedness constrains on points are
 
 \paragraph*{Crossing well-formedness}
 \begin{enumerate}
-\item The intersection of the relations $Tracks$ and $Crossings$ is empty, i.e.\
+\item The intersection of the relations {\ttfamily Tracks} and $Crossings$ is empty, i.e.\
 it is not possible to drive from one branch in a crossing to the other.
 
 \begin{vdm_al}
@@ -406,7 +408,7 @@ it is not possible to drive from one branch in a crossing to the other.
 \end{vdm_al}
 
 \item All track segments in the $Crossings$ relation
-are in the $Tracks$ relation.
+are in the {\ttfamily Tracks} relation.
 
 \begin{vdm_al}
    CrossInTracks: Tracks * Crossings +> bool
@@ -491,14 +493,14 @@ This is modelled by the graph in Figure~\ref{graphsig}.
 
 \begin{figure}
 \begin{center}
-\input{sporsig.pstex_t}
+\includegraphics[width=3.5in]{sporsig.png}
 \caption{Track topology with signals\label{sporsig}}
 \end{center}
 \end{figure}
 
 \begin{figure}
 \begin{center}
-\input{graphsig.pstex_t}
+\includegraphics[width=3.5in]{graphsig.png}
 \caption{Graph with points, crossings and signals\label{graphsig}}
 \end{center}
 \end{figure}
@@ -554,15 +556,17 @@ functions
 relation, such that either the signal is placed at the interface (the
 track segment separation)
 between the station and the open line ({\tt "}{\it ol}{\tt "}), or it is placed at a track
-segment separation which is in the $Tracks$ relation.
+segment separation which is in the {\ttfamily Tracks} relation.
 
 \begin{vdm_al}
    SigInTracks: Tracks * Signals +> bool
 
    SigInTracks (tracks,signals) ==
      forall mk_(t1,t2) in set dom signals &
-      (t1 = "ol" => card { t | mk_(t,t') in set tracks & t' = t2 } = 1 ) and
-      (t2 = "ol" => card { t | mk_(t,t') in set tracks & t' = t1 } = 1 ) and
+      (t1 = "ol" => card { t | mk_(t,t') in set tracks 
+                             & t' = t2 } = 1 ) and
+      (t2 = "ol" => card { t | mk_(t,t') in set tracks 
+                             & t' = t1 } = 1 ) and
       (t1 <> "ol" and t2 <> "ol" => mk_(t1,t2) in set tracks );
 \end{vdm_al}
 \end{enumerate}
@@ -758,8 +762,10 @@ topology, and all track segments which are points in the station
 
    PointsTopoInState (points,pointstates)  ==
      forall mk_(t1,t2) in set dom points &
-      (t1 in set dom points (mk_(t1,t2)) => t1 in set dom pointstates) and
-      (t2 in set dom points (mk_(t1,t2)) => t2 in set dom pointstates);
+      (t1 in set dom points (mk_(t1,t2)) => 
+       t1 in set dom pointstates) and
+      (t2 in set dom points (mk_(t1,t2)) => 
+       t2 in set dom pointstates);
 \end{vdm_al}
 
 \item All signal id's in the station state space
@@ -788,7 +794,8 @@ segment which is part of a crossing, it cannot occupy the other track segment in
 the same crossing as well.
 
 \begin{vdm_al}
-   Is_wf_Trains: Tracks * Points * Crossings * Track_states +> bool
+   Is_wf_Trains: Tracks * Points * Crossings * Track_states +> 
+                 bool
 
    Is_wf_Trains (tracks,points,crossings,trackstates)  ==
      UniqueTrain (trackstates)    and
@@ -844,7 +851,8 @@ from train identifiers to the track segments which the train
 occupy. $Update$ updates the second argument with the first argument.
 
 \begin{vdm_al}
-   Update: (Track_id * Track_state) * (map Train_id to set of Track_id) +> 
+   Update: (Track_id * Track_state) * 
+           (map Train_id to set of Track_id) +> 
            (map Train_id to set of Track_id)
 
    Update (mk_(t,trackstate),sorted)  ==
@@ -853,7 +861,8 @@ occupy. $Update$ updates the second argument with the first argument.
      else let tid in set dom trackstate in
               if   tid in set dom sorted
               then Update (mk_(t,{tid} <-: trackstate), 
-                               sorted ++ { tid |-> {t} union sorted (tid)} )
+                               sorted ++ 
+                               { tid |-> {t} union sorted (tid)} )
               else Update (mk_(t,{tid} <-: trackstate), 
                                sorted munion { tid |-> {t} } );
 \end{vdm_al}
@@ -894,15 +903,18 @@ been added to the list. If this is the case, the train forms a path in
 the track topology, otherwise it does not.
 
 \begin{vdm_al}
-   Path: set of Track_id * seq of Track_id * Tracks * set of Track_id +> bool
+   Path: set of Track_id * seq of Track_id * Tracks * 
+         set of Track_id +> bool
 
    Path (trackset,connected,tracks,tried)  ==
      if   trackset = {}
      then tried = {}
      else let t in set trackset in
               if   mk_(t,hd connected) in set tracks
-              then Path ((trackset \ {t}) union tried,[t]^connected,tracks,{})
-              else if   mk_(connected (len connected),t) in set tracks
+              then Path ((trackset \ {t}) union tried,
+                          [t]^connected,tracks,{})
+              else if mk_(connected (len connected),t) in set 
+                      tracks
                    then Path ((trackset \ {t}) union 
                                tried,connected^[t],tracks,{})
                    else Path ((trackset \ {t}),connected,tracks,
@@ -913,7 +925,8 @@ A train is placed correctly at the tracks according to the points, if it for eac
 point only requires the point to be in one state.
 
 \begin{vdm_al}
-   OkPointTrains: (map Train_id to set of Track_id) * Points +> bool
+   OkPointTrains: (map Train_id to set of Track_id) * Points +> 
+                  bool
 
    OkPointTrains (trains,points)  ==
      forall trackset in set rng trains &
@@ -930,7 +943,8 @@ A train is placed correctly at crossings, if it for each crossing at most
 occupies one of the track segments constituting the crossing.
 
 \begin{vdm_al}
-   OkCrossTrains: (map Track_id to set of Track_id) * Crossings +> bool
+   OkCrossTrains: (map Track_id to set of Track_id) * Crossings +> 
+                  bool
 
    OkCrossTrains (trains,crossings)  ==
      forall trackidset in set rng trains &
@@ -943,14 +957,14 @@ A station state is well-formed if it satisfies all of the above
 well-formedness constraints.
 
 \begin{vdm_al}
-   Is_wf_Station_state :  Station_topo * Station_state +> bool
+Is_wf_Station_state :  Station_topo * Station_state +> bool
 
-   Is_wf_Station_state (stationtopo,stationstate) ==
-     ConformTracks (stationtopo.tracks,stationstate.trackstates)    and
-     ConformPoints (stationtopo.points,stationstate.pointstates)    and
-     ConformSignals (stationtopo.signals,stationstate.signalstates) and
-     Is_wf_Trains (stationtopo.tracks,stationtopo.points,stationtopo.crossings,
-                   stationstate.trackstates)
+Is_wf_Station_state (stationtopo,stationstate) ==
+  ConformTracks (stationtopo.tracks,stationstate.trackstates)    and
+  ConformPoints (stationtopo.points,stationstate.pointstates)    and
+  ConformSignals (stationtopo.signals,stationstate.signalstates) and
+  Is_wf_Trains (stationtopo.tracks,stationtopo.points,
+                stationtopo.crossings,stationstate.trackstates)
 
 
 end station
@@ -985,7 +999,8 @@ imports
                    points : station`Points
                    crossings : station`Crossings
                    signals : station`Signals renamed Station_topo;
-        Tracks = set of (station`Track_id * station`Track_id) renamed Tracks; 
+        Tracks = set of (station`Track_id * station`Track_id) 
+        renamed Tracks; 
         Track_id = seq of char renamed Track_id;
         Points = map (station`Track_id * station`Track_id) to
 	         (map station`Track_id to station`Point_control)
@@ -1024,7 +1039,8 @@ imports
   functions
         Is_wf_Station_topo  : station`Station_topo +> bool 
                               renamed Is_wf_Station_topo;
-        Is_wf_Station_state : station`Station_topo * station`Station_state +> 
+        Is_wf_Station_state : station`Station_topo * 
+                              station`Station_state +> 
                               bool
                               renamed Is_wf_Station_state
 
@@ -1097,7 +1113,7 @@ the thick line indicates the point control.
 
 \begin{figure}
 \begin{center}
-\input{derail.pstex_t}
+\includegraphics[width=4.5in]{derail.png}
 \caption{Derailing in points} \label{derail}
 \end{center}
 \end{figure}
@@ -1131,7 +1147,8 @@ function {\it Is\_wf\_Trains}. They are presented here without comments.
 \end{vdm_al}
 
 \begin{vdm_al}
-   Update: (Track_id * Track_state) * (map Train_id to set of Track_id) +> 
+   Update: (Track_id * Track_state) * 
+           (map Train_id to set of Track_id) +> 
    (map Train_id to set of Track_id)
 
    Update (mk_(t,trainids),sorted)  ==
@@ -1140,7 +1157,8 @@ function {\it Is\_wf\_Trains}. They are presented here without comments.
      else let tid in set dom trainids in
               if   tid in set dom sorted
               then Update (mk_(t,{tid} <-: trainids), 
-                           sorted ++ { tid |-> {t} union sorted (tid)} )
+                           sorted ++ 
+                           { tid |-> {t} union sorted (tid)} )
               else Update (mk_(t,{tid} <-: trainids), 
                            sorted ++ { tid |-> {t} });
 \end{vdm_al}
@@ -1151,7 +1169,8 @@ the first argument of the function, given that one of the two track
 segments is a point. 
 
 \begin{vdm_al}
-   Ok_Point_states: (Track_id * Track_id) * Points * Point_states +> bool
+   Ok_Point_states: (Track_id * Track_id) * Points * Point_states +> 
+                    bool
 
    Ok_Point_states (mk_(t1,t2),points,pointstates) ==
      if   {t1,t2} = dom points (mk_(t1,t2))
@@ -1171,8 +1190,8 @@ $tpair$, given that only a point and one of its neighbours are
 considered. 
 
 \begin{vdm_al}
-   Point_state_ok: (Track_id * Track_id) * Track_id * Points * Point_states +> 
-                   bool
+   Point_state_ok: (Track_id * Track_id) * Track_id * Points * 
+                   Point_states +> bool
 
    Point_state_ok (tpair,t,points,pointstates) ==
      let mk_(pcnt,-) = pointstates (t) in
@@ -1255,7 +1274,7 @@ signalling.
 
 \begin{figure}
 \begin{center}
-\input{trainpaths.pstex_t}
+\includegraphics[width=4.5in]{trainpaths.png}
 \caption{Train areas\label{trainpaths}}
 \end{center}
 \end{figure}
@@ -1273,7 +1292,7 @@ area for the train at the track segments 2 and 3 consist of the track segments
 
 \begin{figure}
 \begin{center}
-\input{flankprot2.pstex_t}
+\includegraphics[width=4.5in]{flankprot2.png}
 \caption{Shunting areas.} \label{flankprot2}
 \end{center}
 \end{figure}
@@ -1290,7 +1309,8 @@ imports
                    points : station`Points
                    crossings : station`Crossings
                    signals : station`Signals renamed Station_topo;
-        Tracks = set of (station`Track_id * station`Track_id) renamed Tracks;
+        Tracks = set of (station`Track_id * station`Track_id) 
+                 renamed Tracks;
         Track_id = seq of char renamed Track_id;
         Points = map (station`Track_id * station`Track_id) to
 	         (map station`Track_id to station`Point_control)
@@ -1334,7 +1354,8 @@ imports
   functions
         Is_wf_Station_topo  : station`Station_topo +> bool 
                               renamed Is_wf_Station_topo;
-        Is_wf_Station_state : station`Station_topo * station`Station_state +> 
+        Is_wf_Station_state : station`Station_topo * 
+                              station`Station_state +> 
                               bool
                               renamed Is_wf_Station_state
 
@@ -1453,8 +1474,9 @@ and $Update$ from the module $safe-req$.
               else Trains ({t} <-: trackstates, 
                            Update (mk_(t,trackstates(t)),sorted));
 
-   Update: (Track_id * Track_state) * (map Train_id to set of Track_id) +> 
-   (map Train_id to set of Track_id)
+   Update: (Track_id * Track_state) * 
+           (map Train_id to set of Track_id) +> 
+           (map Train_id to set of Track_id)
 
    Update (mk_(t,trainids),sorted)  ==
      if   trainids = {|->}
@@ -1462,7 +1484,8 @@ and $Update$ from the module $safe-req$.
      else let tid in set dom trainids in
               if   tid in set dom sorted
               then Update (mk_(t,{tid} <-: trainids), 
-                               sorted ++ { tid |-> {t} union sorted (tid)} )
+                               sorted ++ 
+                               { tid |-> {t} union sorted (tid)} )
               else Update (mk_(t,{tid} <-: trainids), 
                                sorted ++ { tid |-> {t} });
 \end{vdm_al}
@@ -1503,7 +1526,8 @@ The functions {\it Ok\_Point\_states} and $Point\_state\_ok$ were also defined i
 the safety requirements. They are stated here without comments.
 
 \begin{vdm_al}
-   Ok_Point_states: (Track_id * Track_id) * Points * Point_states +> bool
+   Ok_Point_states: (Track_id * Track_id) * Points * Point_states +> 
+                    bool
 
    Ok_Point_states (mk_(t1,t2),points,pointstates) ==
      if   {t1,t2} = dom points (mk_(t1,t2))
@@ -1517,8 +1541,8 @@ the safety requirements. They are stated here without comments.
    pre mk_(t1,t2) in set dom points;
 
 
-   Point_state_ok: (Track_id * Track_id) * Track_id * Points * Point_states +> 
-                   bool
+   Point_state_ok: (Track_id * Track_id) * Track_id * Points * 
+                   Point_states +> bool
 
    Point_state_ok (tpair,t,points,pointstates) ==
      let mk_(pcnt,-) = pointstates (t) in
@@ -1535,7 +1559,8 @@ between the two track segments, are controlled by the interlocking
 system.
 
 \begin{vdm_al}
-   InterlockPoints: (Track_id * Track_id) * Points * Point_states +> bool
+   InterlockPoints: (Track_id * Track_id) * Points * Point_states +> 
+                    bool
 
    InterlockPoints (mk_(t1,t2),points,pointstates) ==
      if   IsPoint (t1,points) and IsPoint (t2,points)
@@ -1586,7 +1611,8 @@ may have control in any branch.
                              stationstate.pointstates);
 
 
-   OkAutonomPoint_states: (Track_id * Track_id) * Points * Point_states +> bool
+   OkAutonomPoint_states: (Track_id * Track_id) * Points * 
+                          Point_states +> bool
 
    OkAutonomPoint_states (mk_(t1,t2),points,pointstates) ==
      if   IsInterlockPoint (t1,points,pointstates)  and
@@ -1636,8 +1662,10 @@ occupied by the train.
               let train in set dom trains in
                   Occupied (RemoveTrain (train,trackstates),
                             occupied munion 
-                            {train |-> {tid | tid in set dom trackstates 
-                                            & train in set dom trackstates (tid)} } )
+                            {train |-> {tid 
+                                       | tid in set dom trackstates 
+                                        & train in set 
+                                          dom trackstates (tid)} } )
 
    pre forall trackstate in set rng trackstates & 
        dom trackstate inter dom occupied = {};
@@ -1656,7 +1684,8 @@ removed from the track segment states by the function $RemoveTrain$.
      else let tid in set dom trackstates in
               if   train in set dom trackstates (tid)
               then RemoveTrain (train,trackstates ++ 
-                                      {tid |-> ({train} <-: trackstates (tid))})
+                                      {tid |-> ({train} <-: 
+                                      trackstates (tid))})
               else {tid |-> trackstates (tid)} munion 
                    RemoveTrain (train,{tid} <-: trackstates);
 
@@ -1671,9 +1700,11 @@ The function $DeduceAreas$ deduces an area for each train at the station.
      if   occupied = {|->}
      then {|->}
      else let train in set dom occupied in
-          let area = FindArea (occupied (train),{},stationtopo,stationstate) in
+          let area = FindArea (occupied (train),{},
+                               stationtopo,stationstate) in
              {train |-> area} munion
-             DeduceAreas ({train} <-: occupied, stationtopo,stationstate);
+             DeduceAreas ({train} <-: occupied, 
+                          stationtopo,stationstate);
 \end{vdm_al}
 
 Each train is contained in exactly one area even though there is a stop signal
@@ -1690,14 +1721,17 @@ The third and the fourth argument is the station topology and the station
 state.
 
 \begin{vdm_al}
-   FindArea : set of Track_id * Area * Station_topo * Station_state +> Area
+   FindArea : set of Track_id * Area * Station_topo * Station_state +> 
+              Area
 
   FindArea (tracks,area,stationtopo,stationstate) ==
     if   tracks = {}
     then area
     else let t in set tracks in
-             let neighbours = Neighbours (t,area,stationtopo,stationstate) in
-                 FindArea ((tracks\ {t}) union neighbours, area union {t},
+             let neighbours = Neighbours (t,area,stationtopo,
+                                          stationstate) in
+                 FindArea ((tracks\ {t}) union neighbours, 
+                           area union {t},
                            stationtopo,stationstate);
 
 \end{vdm_al}
@@ -1708,7 +1742,8 @@ next it investigates which of these nodes it is possible for the train
 to proceed to, assuming that the train is in node $t$.
 
 \begin{vdm_al}
-   Neighbours : Track_id * set of Track_id * Station_topo * Station_state +> 
+   Neighbours : Track_id * set of Track_id * Station_topo * 
+                Station_state +> 
                 set of Track_id
 
    Neighbours (t,area,stationtopo,stationstate) ==
@@ -1719,11 +1754,12 @@ to proceed to, assuming that the train is in node $t$.
 
 The function $NeighbourCandidates$ finds all track segments which are
 related  to a track segment, $t$,
-in the $Tracks$ relation and which have not already been included
+in the {\ttfamily Tracks} relation and which have not already been included
 in the area.
 
 \begin{vdm_al}
-   NeighbourCandidates: Track_id * set of Track_id * Tracks +> set of Track_id
+   NeighbourCandidates: Track_id * set of Track_id * Tracks +> 
+                        set of Track_id
 
    NeighbourCandidates (t,area,tracks) ==
      {t'| mk_(t1,t') in set tracks & t = t1 and t' not in set area };
@@ -1739,7 +1775,8 @@ signal.
 
    OkEdge (tpair,stationtopo,stationstate) ==
      OkPoints (tpair,stationtopo.points,stationstate.pointstates) and
-     not (StopSignal (tpair,stationtopo.signals,stationstate.signalstates));
+     not (StopSignal (tpair,stationtopo.signals,
+                      stationstate.signalstates));
 \end{vdm_al}
 
 Given two nodes, representing two track segments connected by an edge labelled
@@ -1762,14 +1799,14 @@ checks whether there is a possibility of derailing in the area.
 
 \begin{figure}
 \begin{center}
-\input{pointedges.pstex_t}
+\includegraphics[width=1.5in]{pointedges.png}
 \caption{Point in area} \label{pointedges}
 \end{center}
 \end{figure}
 
 \begin{figure}
 \begin{center}
-\input{derailedge.pstex_t}
+\includegraphics[width=1.5in]{derailedge.png}
 \caption{Point in area} \label{derailedge}
 \end{center}
 \end{figure}
@@ -1864,7 +1901,7 @@ short while.
 
 \begin{figure}
 \begin{center}
-\input{trainroute.pstex_t}
+\includegraphics[width=4.5in]{trainroute.png}
 \caption{Trainroute} \label{trainroute}
 \end{center}
 \end{figure}
@@ -1885,7 +1922,7 @@ signal {\sf stop}.
 
 \begin{figure}
 \begin{center}
-\input{flankprot.pstex_t}
+\includegraphics[width=4.5in]{flankprot.png}
 \caption{Flank protection.} \label{flankprot}
 \end{center}
 \end{figure}
@@ -1916,7 +1953,7 @@ see Figure~\ref{complement}.
 
 \begin{figure}
 \begin{center}
-\input{complement.pstex_t}
+\includegraphics[width=3.5in]{complement.png}
 \caption{Complement to train route with flank protection} \label{complement}
 \end{center}
 \end{figure}

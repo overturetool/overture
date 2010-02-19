@@ -192,8 +192,9 @@ invariant ensures that:
 
 \begin{vdm_al}
 	grid = map position to char
-	inv gr == rng gr subset (letters union {white, black})
-		and dom gr = {mk_position(i,j) | i in set {1,...,size}, j in set {1,...,size}};
+	inv gr == rng gr subset (letters union {white, black}) and 
+	          dom gr = {mk_position(i,j) | i in set {1,...,size}, 
+	                                       j in set {1,...,size}};
 \end{vdm_al}
 
 Finally, a quote type $HV$ is introduced to denote the horizontal and vertical
@@ -459,10 +460,12 @@ ext wr cwgrid : grid
     wr waiting_words : set of word
    pre COMPATIBLE(cwgrid, w, p, d)
   post (d = <H> =>
-	cwgrid = cwgrid~ ++ {mk_position(p.h + i - 1, p.v) |-> w(i) | i in set inds w})
+	cwgrid = cwgrid~ ++ {mk_position(p.h + i - 1, p.v) |-> w(i) 
+	                    | i in set inds w})
 	and
  	(d = <V> =>
-	cwgrid = cwgrid~ ++ {mk_position(p.h, p.v + i - 1) |-> w(i) | i in set inds w})
+	cwgrid = cwgrid~ ++ {mk_position(p.h, p.v + i - 1) |-> w(i) 
+	                    | i in set inds w})
 	and
 	CW_INVARIANT(cwgrid, valid_words,waiting_words)
 ;
@@ -565,10 +568,12 @@ ext wr cwgrid : grid
     wr waiting_words : set of word
    pre IS_LOCATED(cwgrid, w, p, d)
   post (d = <H> =>
-	cwgrid = cwgrid~ ++ {mk_position(p.h + i - 1, p.v) |-> white | i in set inds w})
+	cwgrid = cwgrid~ ++ {mk_position(p.h + i - 1, p.v) |-> white 
+	                    | i in set inds w})
 	and
  	(d = <V> =>
-	cwgrid = cwgrid~ ++ {mk_position(p.h, p.v + i - 1) |-> white | i in set inds w})
+	cwgrid = cwgrid~ ++ {mk_position(p.h, p.v + i - 1) |-> white 
+	                    | i in set inds w})
 	and
 	CW_INVARIANT(cwgrid,valid_words, waiting_words)
 ;

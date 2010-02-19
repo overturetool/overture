@@ -1,0 +1,384 @@
+%
+% This file should be named durnew.sty
+%
+
+\def\stackthree#1#2#3{\mathrel{\mathop{#2}\limits^{#1}_{#3}}}
+\def\stackunder#1#2{\mathrel{\mathop{#1}\limits_{#2}}}
+
+\def\once{\bigtriangledown}
+
+%\newcommand{\exit}{\underline{exit}}
+%\newcommand{\failure}{\mbox{{\em \underline{failure}}}}
+%\newcommand{\abortion}{\underline{abortion}}
+%\newcommand{\true}{\underline{true}}
+%\newcommand{\false}{\mbox{{\em \underline{false}}}}
+%\newcommand{\undefined}{\mbox{{\em \underline{undefined}}}}
+%\newcommand{\error}{\underline{error}}
+%\newcommand{\inval}{\underline{invalid}}
+%\newcommand{\DOM}{\mbox{\underline{dom}}}
+%\newcommand{\pset}{\mbox{-\underline{set}\ }}
+%\newcommand{\mod}{\mbox{mod}}
+
+%\newcommand{\occam}{{\tt occam}}
+%\newcommand{\procos}{{\bf ProCoS}}
+%\def\plzero{\rm PL$_0$}
+%\def\plone{\rm PL$_1$}
+%\def\plpar{PL$_{\parallel}$}
+%\def\slzero{\rm SL$_0$}
+
+%\newcommand{\var}{\mbox{var}}
+%\newcommand{\const}{\mbox{const}}
+%\newcommand{\LSYN}{\mbox{$[\![\,$}}
+%\newcommand{\RSYN}{\mbox{$\,]\!]$}}
+
+
+%  The command \s*xyz* will make "xyz" a san-serif keyword,
+%  \u*xyz* will make "xyz" an underlined keyword in "ordinary" font and
+%  \cp*xyz* causes xyz to be written in Small Caps style.
+
+\def\s*#1*{\ifmmode\mathord{\hbox{\sf #1}}\else{\sf #1}\fi}
+
+\def\u*#1*{\ifmmode\mathord{\hbox{\mbox{\underline{#1}}}}
+           \else{\mbox{\underline{#1}}}\fi}
+
+\def\c*#1*{\ifmmode\mathord{\hbox{\sc #1}}\else{\sc #1}\fi}
+
+%
+% Commands for writing duration formulae
+%
+
+\newcommand{\defs}{\mathrel{\widehat=}}
+\newcommand{\pred}[1]{\lceil #1 \rceil}
+\newcommand{\cat}{{}^{\frown}}
+\newcommand{\com}[1]{\{\ \mbox{ #1 }\ \} }
+\newcommand{\means}[1]{[\![\, #1 \,]\!]}
+
+% begin{ itemlist.sty }
+
+%
+%  LATEX style option:
+%
+%   Definition of special list environments
+%
+%    \begin{itemlist}{"largest item"}
+%       Starts a list indented corresponding to "largest item".  Items will
+%       be boldfaced.
+%
+%   \begin{genitemlist}{"label format"}{"largest item"}
+%       As for itemlist, but with labels formatted according to "label
+%       format".  In the format, the item is indicated by "#1".
+%       Format example: "\it #1 :" will put the item in italics and
+%       add a colon.
+
+\def\mklbl#1{\bf #1\hfill}
+\def\itemlist#1{\list{}{\settowidth\labelwidth{\mklbl{#1}}
+  \leftmargin=\labelwidth \advance\leftmargin\labelsep
+  \let\makelabel\mklbl}}
+\let\enditemlist\endlist
+
+\def\genitemlist#1#2{\list{}{\def\makelabel##1{#1\hfil}
+  \settowidth\labelwidth{\makelabel{#2}}
+  \leftmargin=\labelwidth \advance\leftmargin\labelsep}}
+\let\endgenitemlist\endlist
+
+% end{ itemlist.sty }
+
+
+
+% begin{ mathtab.sty }
+
+%
+%  MATHTAB  -- an environment similar to TABBING, but using math mode.
+%
+
+\def\@mstartline{\global\@curtabmar\@nxttabmar\relax
+                 \global\@curtab\@curtabmar\setbox\@curline\hbox
+                 {}\@startfield}                % \strut moved to startfield
+
+\def\@mstartfield{\global\setbox\@curfield\hbox\bgroup\strut\(\displaystyle
+                                                                \bgroup}
+\def\@mstopfield{\egroup\)\egroup}
+\def\@mcontfield{\global\setbox\@curfield\hbox\bgroup\unhbox\@curfield\(}
+
+\def\mathtab{
+ \let\@startline=\@mstartline
+ \let\@startfield=\@mstartfield
+ \let\@stopfield=\@mstopfield
+ \let\@contfield=\@mcontfield
+ \tabbing}
+
+\let\endmathtab=\endtabbing
+
+% end{ mathtab.sty }
+
+
+
+% begin{ math.sty }
+
+%
+%       Notation to be used in math mode
+%
+%       HHL     87-11-13
+%
+
+\newcount\repcount              %  NOTE  repetition cannot be nested
+\def\mrepeat#1#2{
+    \repcount=0
+    \loop\ifnum \repcount < #2 \advance \repcount by 1
+      #1
+    \repeat
+  }
+
+%  Generalization of horizontal arrow definitions in Plain TeX.
+%
+%       \Lrightarrow{0} equals \rightarrow
+%       \Lrightarrow{1} equals \longrightarrow  (almost)
+%       \Lrightarrow{2} extends \longrightarrow by the size of a -
+%       etc.
+%       Correspondingly for left and double arrows.
+%       For left/right arrows, {0} equals the long version.
+
+\def\mjoinrel{\mkern-4mu}               %  In Plain TeX: -3mu
+
+\def\Lrightarrow#1{\mrepeat{\relbar\mjoinrel}{#1}\rightarrow}
+\def\LRightarrow#1{\mrepeat{\Relbar\mjoinrel}{#1}\Rightarrow}
+\def\Lleftarrow#1{\leftarrow\mrepeat{\mjoinrel\relbar}{#1}}
+\def\LLeftarrow#1{\Leftarrow\mrepeat{\mjoinrel\Relbar}{#1}}
+\def\Lleftrightarrow#1{
+  \leftarrow\mrepeat{\mjoinrel\relbar}{#1}\mjoinrel\rightarrow}
+\def\LLeftrightarrow#1{
+  \Leftarrow\mrepeat{\mjoinrel\Relbar}{#1}\mjoinrel\Rightarrow}
+
+%  Special case: stacking on top of right-arrows (for transitions etc.)
+%       \trans  generates an arrow corresponding to \longrightarrow.
+%       \Trans  generates a double arrow of the same size.
+%       The l-version makes the arrow approx. twice as long.
+%       The L-version uses the generic arrows described above.
+
+\def\Ltrans#1#2{\stackrel{#1\,}{\Lrightarrow{#2}}}
+\def\LTrans#1#2{\stackrel{#1\>}{\LRightarrow{#2}}}
+
+\def\trans#1{\Ltrans{#1}{1}}
+\def\ltrans#1{\Ltrans{#1}{3}}
+
+\def\Trans#1{\LTrans{#1\,}{1}}
+\def\lTrans#1{\LTrans{#1\,}{3}}
+
+%
+%  Special operators
+%
+
+\def\triplebar{\mathop{|\mkern-1mu|\mkern-1mu|}}
+
+%
+%  Commands for special embracings
+%
+\def\sem#1{\mathopen{[\![} #1 \mathclose{]\!]}}
+
+\def\size#1{\left | #1 \right |}
+\def\bigsize#1{\bigl | #1 \bigr |}
+\def\Bigsize#1{\Bigl | #1 \Bigr |}
+\def\biggsize#1{\biggl | #1 \biggr |}
+\def\Biggsize#1{\Biggl | #1 \Biggr |}
+
+\def\atomic#1{\mathopen{\mbox{\tt <\,}} #1 \mathclose{\mbox{\tt \,>}}}
+
+\def\tuborg#1{\left\{ \begin{array}{ll} #1 \end{array} \right .}
+
+\def\infrule#1#2{#1 \over #2}
+
+\def\Pset#1{{\cal P}(#1)}
+\def\setdef#1#2{\{\, #1 \mid #2 \,\}}
+\def\enum#1{\{ #1 \}}
+
+\def\tup#1{\langle #1 \rangle}
+
+\def\beq{\begin{eqnarray*}}
+\def\eeq{\end{eqnarray*}}
+
+
+%
+%  Math-style options
+%
+
+\def\nodigitchange              %  Digits will be roman in all families
+ {\mathcode`\0="0030
+  \mathcode`\1="0031
+  \mathcode`\2="0032
+  \mathcode`\3="0033
+  \mathcode`\4="0034
+  \mathcode`\5="0035
+  \mathcode`\6="0036
+  \mathcode`\7="0037
+  \mathcode`\0="0038
+  \mathcode`\0="0039}
+
+\def\itletters                  % Make default math-letters standard italic
+ {\mathcode`\A="7441
+  \mathcode`\B="7442
+  \mathcode`\C="7443
+  \mathcode`\D="7444
+  \mathcode`\E="7445
+  \mathcode`\F="7446
+  \mathcode`\G="7447
+  \mathcode`\H="7448
+  \mathcode`\I="7449
+  \mathcode`\J="744A
+  \mathcode`\K="744B
+  \mathcode`\L="744C
+  \mathcode`\M="744D
+  \mathcode`\N="744E
+  \mathcode`\O="744F
+  \mathcode`\P="7450
+  \mathcode`\Q="7451
+  \mathcode`\R="7452
+  \mathcode`\S="7453
+  \mathcode`\T="7454
+  \mathcode`\U="7455
+  \mathcode`\V="7456
+  \mathcode`\W="7457
+  \mathcode`\X="7458
+  \mathcode`\Y="7459
+  \mathcode`\Z="745A
+
+  \mathcode`\a="7461
+  \mathcode`\b="7462
+  \mathcode`\c="7463
+  \mathcode`\d="7464
+  \mathcode`\e="7465
+  \mathcode`\f="7466
+  \mathcode`\g="7467
+  \mathcode`\h="7468
+  \mathcode`\i="7469
+  \mathcode`\j="746A
+  \mathcode`\k="746B
+  \mathcode`\l="746C
+  \mathcode`\m="746D
+  \mathcode`\n="746E
+  \mathcode`\o="746F
+  \mathcode`\p="7470
+  \mathcode`\q="7471
+  \mathcode`\r="7472
+  \mathcode`\s="7473
+  \mathcode`\t="7474
+  \mathcode`\u="7475
+  \mathcode`\v="7476
+  \mathcode`\w="7477
+  \mathcode`\x="7478
+  \mathcode`\y="7479
+  \mathcode`\z="747A
+ }
+
+\def\sfletters                  % Make default math-letters sans serif
+ {\mathcode`\A="7841
+  \mathcode`\B="7842
+  \mathcode`\C="7843
+  \mathcode`\D="7844
+  \mathcode`\E="7845
+  \mathcode`\F="7846
+  \mathcode`\G="7847
+  \mathcode`\H="7848
+  \mathcode`\I="7849
+  \mathcode`\J="784A
+  \mathcode`\K="784B
+  \mathcode`\L="784C
+  \mathcode`\M="784D
+  \mathcode`\N="784E
+  \mathcode`\O="784F
+  \mathcode`\P="7850
+  \mathcode`\Q="7851
+  \mathcode`\R="7852
+  \mathcode`\S="7853
+  \mathcode`\T="7854
+  \mathcode`\U="7855
+  \mathcode`\V="7856
+  \mathcode`\W="7857
+  \mathcode`\X="7858
+  \mathcode`\Y="7859
+  \mathcode`\Z="785A
+
+  \mathcode`\a="7861
+  \mathcode`\b="7862
+  \mathcode`\c="7863
+  \mathcode`\d="7864
+  \mathcode`\e="7865
+  \mathcode`\f="7866
+  \mathcode`\g="7867
+  \mathcode`\h="7868
+  \mathcode`\i="7869
+  \mathcode`\j="786A
+  \mathcode`\k="786B
+  \mathcode`\l="786C
+  \mathcode`\m="786D
+  \mathcode`\n="786E
+  \mathcode`\o="786F
+  \mathcode`\p="7870
+  \mathcode`\q="7871
+  \mathcode`\r="7872
+  \mathcode`\s="7873
+  \mathcode`\t="7874
+  \mathcode`\u="7875
+  \mathcode`\v="7876
+  \mathcode`\w="7877
+  \mathcode`\x="7878
+  \mathcode`\y="7879
+  \mathcode`\z="787A
+ }
+
+% end{ math.sty }
+
+
+%
+%  Definitions to be used in the ProCoS language definition document
+%
+%  Version:     HHL     89-07-11
+%               HHL     89-07-27
+%
+
+%  The command \*xyz* will make "xyz" a typewriter-style keyword.
+
+\def\*#1*{\ifmmode\mathord{\hbox{\tt #1}}\else{\tt #1}\fi}
+
+
+%  The command \inoutop will make ? and ! behave like operators in math mode.
+
+{\catcode`\!=\active \gdef!{\mathinner{\mathchar"5021}}}
+{\catcode`\?=\active \gdef?{\mathinner{\mathchar"503F}}}
+\def\inoutop{\mathcode`\?="8000 \mathcode`\!="8000}
+
+
+%
+%  The \OR command separates syntactic constructs by "|"
+%
+
+% \def\OR{\mathclose{\null}\:\ | \ \:\mathopen{\null}}
+
+%
+%  GRAMMAR  -- special environment for syntax rules
+%
+
+\newlength{\grammarlength}
+
+\def\grammar#1{
+  \begin{mathtab}
+    \hskip \leftmargini \= \+ \settowidth{\grammarlength}{#1}
+                \addtolength{\grammarlength}{2mm}
+                \hspace{\grammarlength} \= ::== \= \kill}
+
+\def\endgrammar{\end{mathtab}}
+
+
+%
+% DISP -- environment for indented mathematical tabbing environment
+%
+%   The indentation corresponds to lists at level two
+
+\def\bdisp{\begin{mathtab} \hskip\leftmargini \= \+ \kill}
+\def\edisp{\end{mathtab}}
+\def\sdisp{\\ \\}
+
+
+
+
+
+

@@ -9,6 +9,7 @@ ISSN: 0885-8985.
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
+#AUTHOR= Peter Gorm Larsen and John Fitzgerald
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true

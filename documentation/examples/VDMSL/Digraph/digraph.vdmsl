@@ -6,7 +6,9 @@
 
 -- This model is only an illustration of the problems germane to automatic 
 -- software anlaysis. To get a better understanding of the scope of the 
--- analysis consult the text "Software Verification and Analysis, An -- Integrated, Hands-on -- Approach," by Janusz Laski w/William Stanley, -- Springer 2009. A brief online introduction is offered on the Website
+-- analysis consult the text "Software Verification and Analysis, An 
+-- Integrated, Hands-on -- Approach," by Janusz Laski w/William Stanley, 
+-- Springer 2009. A brief online introduction is offered on the Website
 -- www.stadtools.com.
 -----------------------------------------------------------------
 

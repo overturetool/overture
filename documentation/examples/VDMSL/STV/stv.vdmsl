@@ -94,6 +94,8 @@ state St of
     (forall cand1 in set s.elected union s.excluded union s.continuing,
         cand2 in set s.elected union s.excluded union s.continuing &
           (cand1 = cand2) <=> (cand1.name = cand2.name))
+init s == s =
+  mk_St({},{},{},[],42,[],[])
 end
 
 
