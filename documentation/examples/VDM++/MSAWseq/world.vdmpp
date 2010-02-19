@@ -6,7 +6,7 @@ public static
   env : [Environment] := nil;
 
 public static 
-  timerRef : TimeStamp := new TimeStamp();    
+  timerRef : Timer := new Timer();    
 
   
    
@@ -17,20 +17,14 @@ public
   World() ==
     ( env := new Environment("scenario.txt");
       env.setAirSpace(MSAW`airspace);
-      MSAW`atc.addObstacle(MSAW`militaryZone);
       MSAW`atc.addRadar(MSAW`radar1);
       MSAW`atc.addRadar(MSAW`radar2);
+      MSAW`atc.addObstacle(MSAW`militaryZone);
     );
   
-public Run : () ==> ()
-Run() ==
- (
-  start(env);
-  start(MSAW`atc);
-  env.isFinished();
-  MSAW`atc.isFinished();
-  
-  env.showResult()
- )
- 
+public 
+  Run : () ==> ()
+  Run() ==
+    env.Run();
+
 end World

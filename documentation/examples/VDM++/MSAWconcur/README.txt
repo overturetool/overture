@@ -1,3 +1,4 @@
+This project is currently not running
 
 #******************************************************
 #  AUTOMATED TEST SETTINGS
