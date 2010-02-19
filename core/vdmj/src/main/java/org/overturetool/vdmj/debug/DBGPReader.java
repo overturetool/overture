@@ -1211,26 +1211,6 @@ public class DBGPReader
 	{
 		checkArgs(c, 1, false);
 
-		if (remoteControl != null)
-		{
-			try
-			{
-				status = DBGPStatus.RUNNING;
-				statusReason = DBGPReason.OK;
-				remoteControl.run(new RemoteInterpreter(interpreter, this));
-				stdout("Remote control completed");
-				statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
-			}
-			catch (Exception e)
-			{
-				status = DBGPStatus.STOPPED;
-				statusReason = DBGPReason.ERROR;
-				errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
-			}
-
-			return false;	// Do not continue after remote session
-		}
-
 		if (status == DBGPStatus.BREAK || status == DBGPStatus.STOPPING)
 		{
 			if (breakContext != null)
@@ -1263,26 +1243,48 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
 		}
 
-		try
+		if (remoteControl != null)
 		{
-			status = DBGPStatus.RUNNING;
-			statusReason = DBGPReason.OK;
-			theAnswer = interpreter.execute(expression, this);
-			stdout(expression + " = " + theAnswer.toString());
-			statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
-		}
-		catch (ContextException e)
-		{
-			dyingThread(e);
-		}
-		catch (Exception e)
-		{
-			status = DBGPStatus.STOPPED;
-			statusReason = DBGPReason.ERROR;
-			errorResponse(DBGPErrorCode.EVALUATION_ERROR, e.getMessage());
-		}
+			try
+			{
+				status = DBGPStatus.RUNNING;
+				statusReason = DBGPReason.OK;
+				remoteControl.run(new RemoteInterpreter(interpreter, this));
+				stdout("Remote control completed");
+				statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
+			}
+			catch (Exception e)
+			{
+				status = DBGPStatus.STOPPED;
+				statusReason = DBGPReason.ERROR;
+				errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
+			}
 
-		return true;
+			return false;	// Do not continue after remote session
+		}
+		else
+		{
+    		try
+    		{
+    			status = DBGPStatus.RUNNING;
+    			statusReason = DBGPReason.OK;
+    			theAnswer = interpreter.execute(expression, this);
+    			stdout(expression + " = " + theAnswer.toString());
+    			statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
+    		}
+    		catch (ContextException e)
+    		{
+    			dyingThread(e);
+    		}
+    		catch (Exception e)
+    		{
+    			status = DBGPStatus.STOPPED;
+    			statusReason = DBGPReason.ERROR;
+    			errorResponse(DBGPErrorCode.EVALUATION_ERROR, e.getMessage());
+    		}
+
+    		return true;
+		}
 	}
 
 	private boolean processEval(DBGPCommand c) throws DBGPException
