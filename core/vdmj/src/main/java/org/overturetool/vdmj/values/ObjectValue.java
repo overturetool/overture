@@ -57,12 +57,13 @@ public class ObjectValue extends Value
 	private Object delegateObject = null;
 
 	public ObjectValue(ClassType type,
-		NameValuePairMap members, List<ObjectValue> superobjects)
+		NameValuePairMap members, List<ObjectValue> superobjects, CPUValue cpu)
 	{
 		this.objectReference = getReference();
 		this.type = type;
 		this.members = members;
 		this.superobjects = superobjects;
+		this.CPU = cpu;
 
 		setSelf(this);
 	}
@@ -352,7 +353,7 @@ public class ObjectValue extends Value
 	public ObjectValue shallowCopy()
 	{
 		mycopy = new ObjectValue(type,
-					new NameValuePairMap(), new Vector<ObjectValue>());
+					new NameValuePairMap(), new Vector<ObjectValue>(), CPU);
 
 		List<ObjectValue> supers = mycopy.superobjects;
 		NameValuePairMap memcopy = mycopy.members;
@@ -361,7 +362,7 @@ public class ObjectValue extends Value
    		{
    			supers.add(	// Type skeleton only...
    				new ObjectValue(sobj.type,
-   					new NameValuePairMap(), new Vector<ObjectValue>()));
+   					new NameValuePairMap(), new Vector<ObjectValue>(), sobj.CPU));
    		}
 
 		for (LexNameToken name: members.keySet())

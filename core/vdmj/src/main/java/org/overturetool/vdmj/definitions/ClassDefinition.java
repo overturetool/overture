@@ -1242,7 +1242,8 @@ public class ClassDefinition extends Definition
 		setPermissions(superInheritedDefinitions, members, initCtxt);
 
 		ObjectValue object =
-			new ObjectValue((ClassType)getType(), members, inherited);
+			new ObjectValue((ClassType)getType(), members, inherited,
+			ctxt.threadState.CPU);
 
 		if (invariant != null)
 		{

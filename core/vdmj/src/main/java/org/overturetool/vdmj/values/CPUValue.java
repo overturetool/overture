@@ -115,7 +115,7 @@ public class CPUValue extends ObjectValue
 
 	public CPUValue(Type classtype, NameValuePairMap map, ValueList argvals)
 	{
-		super((ClassType)classtype, map, new Vector<ObjectValue>());
+		super((ClassType)classtype, map, new Vector<ObjectValue>(), null);
 
 		this.cpuNumber = nextCPU++;
 
@@ -136,7 +136,7 @@ public class CPUValue extends ObjectValue
 	public CPUValue(
 		int number, Type classtype, NameValuePairMap map, ValueList argvals)
 	{
-		super((ClassType)classtype, map, new Vector<ObjectValue>());
+		super((ClassType)classtype, map, new Vector<ObjectValue>(), null);
 
 		this.cpuNumber = number;
 

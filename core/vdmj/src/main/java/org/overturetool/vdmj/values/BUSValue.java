@@ -75,7 +75,7 @@ public class BUSValue extends ObjectValue
 
 	public BUSValue(Type classtype, NameValuePairMap map, ValueList argvals)
 	{
-		super((ClassType)classtype, map, new Vector<ObjectValue>());
+		super((ClassType)classtype, map, new Vector<ObjectValue>(), null);
 
 		this.busNumber = nextBUS++;
 
@@ -94,7 +94,7 @@ public class BUSValue extends ObjectValue
 	public BUSValue(
 		int number, Type classtype, NameValuePairMap map, ValueList argvals)
 	{
-		super((ClassType)classtype, map, new Vector<ObjectValue>());
+		super((ClassType)classtype, map, new Vector<ObjectValue>(), null);
 
 		this.busNumber = number;
 
