@@ -24,19 +24,27 @@
 package org.overturetool.vdmj.debug;
 
 import org.overturetool.vdmj.runtime.Interpreter;
+import org.overturetool.vdmj.values.Value;
 
 public class RemoteInterpreter
 {
 	private final Interpreter interpreter;
+	private final DBGPReader dbgp;
 
-	public RemoteInterpreter(Interpreter interpreter)
+	public RemoteInterpreter(Interpreter interpreter, DBGPReader dbgp)
 	{
 		this.interpreter = interpreter;
+		this.dbgp = dbgp;
 	}
 
 	public String execute(String line) throws Exception
 	{
-		return interpreter.execute(line, null).toString();
+		return interpreter.execute(line, dbgp).toString();
+	}
+
+	public Value valueExecute(String line) throws Exception
+	{
+		return interpreter.execute(line, dbgp);
 	}
 
 	public void init()

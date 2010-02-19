@@ -320,7 +320,7 @@ abstract public class VDMJ
 
 									try
 									{
-										remote.run(new RemoteInterpreter(i));
+										remote.run(new RemoteInterpreter(i, null));
 										status = ExitStatus.EXIT_OK;
 									}
 									catch (Exception e)

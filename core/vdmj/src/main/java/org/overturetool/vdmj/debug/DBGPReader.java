@@ -114,6 +114,7 @@ public class DBGPReader
 	private Value theAnswer = null;
 	private boolean breaksSuspended = false;
 	private boolean connected = false;
+	private RemoteControl remoteControl = null;
 
 	private static final int SOURCE_LINES = 5;
 
@@ -417,16 +418,10 @@ public class DBGPReader
 						i.setDefaultName(defaultName);
 					}
 
-					if (remoteClass == null)
-					{
-						new DBGPReader(host, port, ideKey, i, expression, null).startup();
-					}
-					else
-					{
-						RemoteControl remote = remoteClass.newInstance();
-						i.init(null);
-						remote.run(new RemoteInterpreter(i));
-					}
+					RemoteControl remote =
+						(remoteClass == null) ? null : remoteClass.newInstance();
+
+					new DBGPReader(host, port, ideKey, i, expression, null).startup(remote);
 
 					if (coverage != null)
 					{
@@ -541,8 +536,9 @@ public class DBGPReader
 		}
 	}
 
-	private void startup() throws IOException
+	private void startup(RemoteControl remote) throws IOException
 	{
+		remoteControl = remote;		// Main thread only
 		interpreter.init(this);
 		connect();
 	}
@@ -1215,6 +1211,26 @@ public class DBGPReader
 	{
 		checkArgs(c, 1, false);
 
+		if (remoteControl != null)
+		{
+			try
+			{
+				status = DBGPStatus.RUNNING;
+				statusReason = DBGPReason.OK;
+				remoteControl.run(new RemoteInterpreter(interpreter, this));
+				stdout("Remote control completed");
+				statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
+			}
+			catch (Exception e)
+			{
+				status = DBGPStatus.STOPPED;
+				statusReason = DBGPReason.ERROR;
+				errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
+			}
+
+			return false;	// Do not continue after remote session
+		}
+
 		if (status == DBGPStatus.BREAK || status == DBGPStatus.STOPPING)
 		{
 			if (breakContext != null)
@@ -1252,7 +1268,7 @@ public class DBGPReader
 			status = DBGPStatus.RUNNING;
 			statusReason = DBGPReason.OK;
 			theAnswer = interpreter.execute(expression, this);
-			stdout("\nResult: "+theAnswer.toString());
+			stdout(expression + " = " + theAnswer.toString());
 			statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
 		}
 		catch (ContextException e)
