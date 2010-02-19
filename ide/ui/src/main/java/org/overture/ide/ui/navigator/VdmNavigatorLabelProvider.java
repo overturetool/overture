@@ -1,5 +1,9 @@
 package org.overture.ide.ui.navigator;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -27,6 +31,17 @@ public class VdmNavigatorLabelProvider extends LabelProvider implements ILabelPr
 		if(IVdmProject.class.isInstance(element)) {
 			image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_PROJECT);
 		}
+		else if(IResource.class.isInstance(element))
+		{
+			IResource resource = (IResource) element;
+			IContentTypeManager ctm = Platform.getContentTypeManager();
+			IContentType[] contentTypes = ctm.findContentTypesFor(resource.getName());
+
+			
+				
+			
+		}
+		
 		return image;
 	}
 
