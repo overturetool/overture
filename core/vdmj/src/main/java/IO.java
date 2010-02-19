@@ -66,7 +66,7 @@ public class IO
 	public static Value fwriteval(Value fval, Value tval, Value dval)
 	{
 		String filename = stringOf(fval);
-		String text = stringOf(tval);
+		String text = tval.toString();// stringOf(tval);
 		String fdir = dval.toString();	// <start>|<append>
 
 		try
@@ -94,10 +94,9 @@ public class IO
 		{
 			File file = new File(stringOf(fval).replace('/', File.separatorChar));
 
-			if (file.getAbsolutePath().contains(File.pathSeparator))
+			if (!file.isAbsolute())
 			{
 				file = new File(new File(".").getParentFile(), file.getAbsolutePath());
-				System.out.println(file.getAbsolutePath());
 			}
 
 			LexTokenReader ltr = new LexTokenReader(file, Dialect.VDM_PP);
