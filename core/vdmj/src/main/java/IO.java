@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexTokenReader;
@@ -116,7 +117,7 @@ public class IO
 
 			result.add(new BooleanValue(true));
 			Context ectxt = new Context(null, "freadval", null);
-			ectxt.setThreadState(null, null);
+			ectxt.setThreadState(null, CPUClassDefinition.virtualCPU);
 			result.add(exp.eval(ectxt));
 		}
 		catch (Exception e)
