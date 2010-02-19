@@ -1517,7 +1517,8 @@ eval_VectorMult(mk_EST_value(est_val,sto,time))(mk_Multiple(op,to_p))(e)
        else let new_val = vector_subv(val,lower,upper),
                 new_type = mk_VectorType(lower,upper,type.type,type.fl) in
             let new_v = mk_Vector(new_val,new_type),
-                new_t = tplus(tplus(b2.time,t_vector_subv(upper - lower)), tplus(t_min,t_max)) in
+                new_t = tplus(tplus(b2.time,t_vector_subv(upper - lower)), 
+                        tplus(t_min,t_max)) in
             mk_EST_value(new_v,sto,new_t);
 
 

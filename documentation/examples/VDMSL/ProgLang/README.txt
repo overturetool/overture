@@ -6,6 +6,7 @@ of the software technology course at the Technical University Graz, Austria.
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
+#AUTHOR= ernhard K. Aichernig and Andreas Kerschbaumer
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true

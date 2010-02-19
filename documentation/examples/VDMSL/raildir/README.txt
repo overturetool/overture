@@ -12,6 +12,11 @@ a non-trivial system. This work was conducted by Kirsten Mark Hansen
 work for the Danish State Railways. More about this work can be found
 at:
 
+K.M. Hansen, Formalising Railway Interlocking Systems, 
+Nordic Seminar on Dependable Computing Systems, Department 
+of Computer Science, Technical University of Denmark, August 
+1994, pp. 83-94.
+
 Kirsten Mark Hansen. Linking Safety Analysis to Safety Requirements
 - Exemplified by Railway Interlocking Systems. PhD thesis, 
 Department of Information Technology, Technical University of 

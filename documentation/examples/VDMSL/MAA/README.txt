@@ -10,6 +10,7 @@ Development Methods'', Springer-Verlag, October 1991.
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
+#AUTHOR= Graeme Parkin
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true

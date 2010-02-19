@@ -10,6 +10,7 @@ best-fit (or neither), produces the most memory fragmentation.
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
+#AUTHOR= Nick Battle
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true
