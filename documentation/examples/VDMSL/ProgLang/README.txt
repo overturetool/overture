@@ -13,7 +13,7 @@ of the software technology course at the Technical University Graz, Austria.
 #PRE_CHECKS=true
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
-#DOCUMENT=overview.tex
+#DOCUMENT=proglang.tex
 #ENTRY_POINT=Test`RunTypeCheck()
 #ENTRY_POINT=Test`RunEval()
 #EXPECTED_RESULT=NO_ERROR_INTERPRETER

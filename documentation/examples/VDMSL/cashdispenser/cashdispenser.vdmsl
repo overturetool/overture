@@ -128,7 +128,7 @@ operations
 functions
   Encode: PinCode +> Code
   Encode(pin) ==
-    pin; -- NB! The actual encoding procedure has not yet been chosen
+    pin; -- NB The actual encoding procedure has not yet been chosen
 
   Sum: seq of real +> real
   Sum(rs) ==

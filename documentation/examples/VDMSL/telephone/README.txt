@@ -21,6 +21,7 @@ by an exchange.
 #PRE_CHECKS=true
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
+#DOCUMEN= telephone.tex
 #ENTRY_POINT=
 #EXPECTED_RESULT=NO_ERROR_TYPE_CHECK
 #******************************************************

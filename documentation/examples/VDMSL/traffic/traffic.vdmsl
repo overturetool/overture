@@ -90,6 +90,3 @@ functions
   ChgLight: (map Path to Light) * Path * Light -> (map Path to Light)
   ChgLight(lights,p,colour) ==
     lights ++ {p |-> colour}
-
--- extensions taking the time component into account is placed 
--- in the file traffic2.vdm

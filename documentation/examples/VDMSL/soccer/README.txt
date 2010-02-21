@@ -16,6 +16,7 @@ given as an appendix.
 #PRE_CHECKS=true
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
+#DOCUMENT=soccer.tex
 #ENTRY_POINT=SOCCER_EXPL`SUBSTITUTION(3,15)
 #EXPECTED_RESULT=NO_ERROR_TYPE_CHECK
 #******************************************************

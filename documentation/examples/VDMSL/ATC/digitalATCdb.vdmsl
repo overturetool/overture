@@ -475,7 +475,7 @@ Line :: areas : Area_map
 	connect : Connect_map
 --      ver : Version                --
 --      edit_date : Date             -- These 4 fields are
---      valid_date : Date            --       to be used version control system.
+--      valid_date : Date            -- to be used version control system.
 --      locked : bool                --
 inv mk_Line(areas, connect) == 
     forall c in set dom connect & 
@@ -942,7 +942,8 @@ One_Side_Unique_Path_at_Connection(ln) ==
                 p.used(dr) and 
                 EndJoint(p, dr) = n1.no} > 1 =>
 
-                (ln.areas(n1.aid).trackcs(n1.tcid).joints(n1.no).remark.atc_terminal(dr) or
+                (ln.areas(n1.aid).trackcs(n1.tcid).joints(n1.no).
+                    remark.atc_terminal(dr) or
 
                  let dr2 = if not ln.connect(con).chng_direction then dr
                                 else if dr = <ADIR> then <BDIR> else <ADIR> in
@@ -958,7 +959,8 @@ Following_Path_Exists_at_Connect(ln) ==
         (exists p in set rng ln.areas(n1.aid).paths &
                 p.used(dr) and
                 EndJoint(p, dr) = n1.no) =>
-        (ln.areas(n1.aid).trackcs(n1.tcid).joints(n1.no).remark.atc_terminal(dr) or
+        (ln.areas(n1.aid).trackcs(n1.tcid).joints(n1.no).
+            remark.atc_terminal(dr) or
         (exists p2 in set rng ln.areas(n2.aid).paths &
                  let dr2 = if not ln.connect(con).chng_direction then dr
                                 else if dr = <ADIR> then <BDIR> else <ADIR> in
@@ -973,11 +975,13 @@ Preceding_Path_Exists_at_Connect(ln) ==
         (exists p in set rng ln.areas(n1.aid).paths &
                 p.used(dr) and
                 StartJoint(p, dr) = n1.no) =>
-        (ln.areas(n1.aid).trackcs(n1.tcid).joints(n1.no).remark.atc_terminal(dr) or
+        (ln.areas(n1.aid).trackcs(n1.tcid).joints(n1.no).
+            remark.atc_terminal(dr) or
         (exists p2 in set rng ln.areas(n2.aid).paths &
-                let dr2 = if not ln.connect(con).chng_direction then dr
-                                else if dr = <ADIR> then <BDIR> else <ADIR> in
+                let dr2 = if not ln.connect(con).chng_direction 
+                          then dr
+                          elseif dr = <ADIR> 
+                          then <BDIR> 
+                          else <ADIR> in
                 p2.used(dr2) and
                 EndJoint(p2, dr2) = n2.no));
-
-        

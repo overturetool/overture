@@ -5,6 +5,8 @@
 %\usepackage{german}
 \usepackage{alltt}
 \usepackage{a4wide}
+\usepackage{longtable}
+\usepackage{fullpage}
 
 \title{Static and Dynamic Semantics of a Simple Programming Language}
 \author{Bernhard K. Aichernig and Andreas Kerschbaumer\footnote{Institute for
@@ -37,11 +39,11 @@ semantics is a function mapping a program to its final global
 environment, which is the  state of all global 
 variables after execution. 
 
-\include{ast.vdmsl}
+\include{generated/latex/specification/ast.vdmsl}
 
-\include{statsem.vdmsl}
+\include{generated/latex/specification/statsem.vdmsl}
 
-\include{dynsem.vdmsl}
+\include{generated/latex/specification/dynsem.vdmsl}
 
 \end{document}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

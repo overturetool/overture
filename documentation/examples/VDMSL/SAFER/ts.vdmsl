@@ -34,19 +34,24 @@ functions
     then AUX`null_tran_command ++ {<Z> |-> tran(<Z>)}
     else AUX`null_tran_command;
 
-  CombinedRotCmds: AUX`RotCommand * AUX`RotCommand * set of AUX`RotAxis +> AUX`RotCommand
+  CombinedRotCmds: AUX`RotCommand * AUX`RotCommand * set of AUX`RotAxis +> 
+                   AUX`RotCommand
   CombinedRotCmds(hcm_rot,aah,ignore_hcm) ==
     let aah_axes = ignore_hcm union 
                    {a | a in set AUX`rot_axis_set & hcm_rot(a) = <Zero>}
     in {a |-> aah(a) | a in set aah_axes} munion 
        {a |-> hcm_rot(a) | a in set AUX`rot_axis_set\aah_axes};
 
-  IntegratedCommands: AUX`SixDofCommand * AUX`RotCommand * set of AUX`RotAxis * set of AUX`RotAxis +> AUX`SixDofCommand
-  IntegratedCommands(mk_AUX`SixDofCommand(tran,rot),aah,active_axes,ignore_hcm) == 
+  IntegratedCommands: AUX`SixDofCommand * AUX`RotCommand * 
+                      set of AUX`RotAxis * set of AUX`RotAxis +> 
+                      AUX`SixDofCommand
+  IntegratedCommands(mk_AUX`SixDofCommand(tran,rot),aah,
+                     active_axes,ignore_hcm) == 
     if AAH`AllAxesOff(active_axes) 
     then if RotCmdsPresent(rot) 
          then mk_AUX`SixDofCommand(AUX`null_tran_command,rot)
-         else mk_AUX`SixDofCommand(PrioritizedTranCmd(tran),AUX`null_rot_command)
+         else mk_AUX`SixDofCommand(PrioritizedTranCmd(tran),
+                                   AUX`null_rot_command)
     else if RotCmdsPresent(rot) 
          then mk_AUX`SixDofCommand(AUX`null_tran_command,
                                    CombinedRotCmds(rot,aah,ignore_hcm))
@@ -134,9 +139,11 @@ functions
       mk_(<Pos>,<Pos>,<Pos>) -> mk_({},{})
     end;
 
-  SelectedThrusters: AUX`SixDofCommand * AUX`RotCommand * set of AUX`RotAxis * set of AUX`RotAxis +> ThrusterSet
+  SelectedThrusters: AUX`SixDofCommand * AUX`RotCommand * set of AUX`RotAxis * 
+                     set of AUX`RotAxis +> ThrusterSet
   SelectedThrusters(hcm,aah,active_axes,ignore_hcm) ==
-    let mk_AUX`SixDofCommand(tran,rot) = IntegratedCommands(hcm,aah,active_axes,ignore_hcm),
+    let mk_AUX`SixDofCommand(tran,rot) = 
+        IntegratedCommands(hcm,aah,active_axes,ignore_hcm),
         mk_(bf_mandatory,bf_optional) = 
                BFThrusters(tran(<X>),rot(<Pitch>),rot(<Yaw>)),
         mk_(lrud_mandatory,lrud_optional) = 

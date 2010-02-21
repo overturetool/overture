@@ -177,9 +177,13 @@ NumLit :: val : int
 
 values
 
- expr : Expr = mk_LetBeSTExpr(mk_SetBind(mk_PatternName(mk_(mk_Name(["x"]),mk_(1,1))),
-                                         mk_SetEnumerationExpr([mk_NumLit(1),mk_NumLit(2)])), 
+ pat : Pattern = mk_PatternName(mk_(mk_Name(["x"]),mk_(1,1)));
+ 
+ sexpr : Expr = mk_SetEnumerationExpr([mk_NumLit(1),mk_NumLit(2)]);
+ expr : Expr = mk_LetBeSTExpr(mk_SetBind(pat,sexpr), 
                               mk_BoolLit(true), 
-                              mk_Name(["x"]))
+                              mk_Name(["x"]));
+                              
+ expr2 : Expr = mk_BinaryExpr(expr, <NUMPLUS>, expr);
 
 \end{vdm_al}

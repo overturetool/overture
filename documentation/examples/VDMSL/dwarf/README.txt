@@ -12,6 +12,7 @@ executable specification.
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
+#AUTHOR= Peter Gorm Larsen
 #LANGUAGE_VERSION=vdm10
 #INV_CHECKS=true
 #POST_CHECKS=true

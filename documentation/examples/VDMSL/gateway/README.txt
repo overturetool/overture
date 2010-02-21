@@ -35,6 +35,7 @@ Verlag, March 1996.
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
+#AUTHOR= John Fitzgerald and Peter Gorm Larsen
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true

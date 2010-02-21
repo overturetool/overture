@@ -25,7 +25,8 @@ RunControlCycle (input) ==
   let ts = SAFER`ControlCycle (swpos, hgpos, rcom) in
   GenerateThrusterMatrix (ts);
 
-TransformInput: Input -> HCM`SwitchPositions * HCM`HandGripPosition * AUX`RotCommand
+TransformInput: Input -> HCM`SwitchPositions * HCM`HandGripPosition * 
+                         AUX`RotCommand
 TransformInput (input) ==
   let [mode,aah,horiz,trans,vert,twist,roll,pitch,yaw] = input in
   let swpos = mk_HCM`SwitchPositions(

@@ -1,0 +1,80 @@
+\documentclass{article}
+\usepackage{fullpage}
+\usepackage{makeidx}
+\usepackage{overture}%vdmsl-2e}
+\usepackage{longtable}
+
+\newcommand{\StateDef}[1]{{\bf #1}}
+\newcommand{\TypeDef}[1]{{\bf #1}}
+\newcommand{\TypeOcc}[1]{{\it #1}}
+\newcommand{\FuncDef}[1]{{\bf #1}}
+\newcommand{\FuncOcc}[1]{#1}
+\newcommand{\ModDef}[1]{{\tiny #1}}
+
+\makeindex
+
+\title{Soccer Referee's book}
+\author{Yves LEDRU\footnotemark}
+\date{February 23, 1995}
+
+\begin{document}
+\maketitle
+\footnotetext{Laboratoire de G\'enie Informatique - Institut IMAG (UJF - INPG -
+CNRS), BP 
+53, F-38041 Grenoble
+Cedex 9 (FRANCE) - Tel + 33 76827214 - Fax + 33 76446675 - e-mail
+Yves.Ledru@Imag.fr}
+
+This tutorial example is taken out of a  VDM course given
+to the students of the Dipl\^{o}me d'Etudes Sup\'erieures Sp\'ecialis\'ees en
+G\'enie Informatique (5th year) at the Universit\'e Joseph Fourier. A first 
+version uses the implicit style of specification of VDM-SL and thus may not be
+executed with the IFAD toolbox. An explicit version is given as an appendix.
+
+\section{Informal statement}
+
+The following example models the referee's book for a soccer game. Its goal is
+to model the rules for the substitution of players during a game.
+
+The rules may be informally stated as follows:
+
+\begin{itemize}
+\item A soccer team consists of up to eleven players and a set of substitutes.
+\item At most one of the players is the goal-keeper. 
+\item The rules of soccer allow for the substitution of a player by one of the
+substitutes. 
+\item Once a player has been replaced by another, he may no longer take part in
+the match.
+\item There is a maximum number of allowed substitutions (usually one goal
+keeper and two field players).
+\end{itemize}
+ 
+During the 1994 World Cup, a problem arose about the interpretation of these
+rules when the goal keeper of Italy was excluded during a match against Norway.
+The important phases of this match
+were: 
+
+\begin{enumerate}
+\item The italian goalkeeper Pagliuka (number 1) is excluded.
+\item Baggio (number 10) exits the field and is substituted by the substitute
+goalkeeper (number 12).
+\item Two further substitutions of field players are performed.
+\end{enumerate}
+
+The question was then to know whether the rules had been followed or not. How
+many field player substitutions did actually take place?
+
+To model this particular problem, we need a further rule:
+
+\begin{itemize}
+\item The referee may exclude one of the players (including the substitutes).
+\end{itemize}
+
+Finally, the FIFA rules also allow to exchange the role of goalkeeper between
+two players. This change must be formally notified to the referee (who must
+always know who is allowed to touch the ball with his hands).
+
+\newpage
+\include{generated/latex/specification/soccer.vdmsl}
+
+\end{document}

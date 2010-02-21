@@ -14,6 +14,7 @@ alarms. A comparable model of this example also exists in VDM++.
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
+#AUTHOR=John Fitzgerald and Peter Gorm Larsen
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true

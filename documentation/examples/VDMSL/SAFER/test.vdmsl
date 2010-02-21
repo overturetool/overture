@@ -27,23 +27,12 @@ values
 
   switches_tran_up = mk_HCM`SwitchPositions(<Tran>,<Up>);
 
---  grip_1  = mk_HCM`HandGripPosition(<Zero>,<Pos>,<Zero>,<Zero>);
---  grip_1a = mk_HCM`HandGripPosition(<Pos>,<Pos>,<Zero>,<Zero>);
-
---  arg_1 = SAFER`ControlCycle(switches_1,grip_1,AUX`null_rot_command);
-
---  forward_thrusters : set of TS`ThrusterName = {<F1>,<F2>,<F3>,<F4>};
---  backward_thrusters : set of TS`ThrusterName = {<B1>,<B2>,<B3>,<B4>};
---  left_thrusters : set of TS`ThrusterName = {<L1R>,<L1F>,<L3R>,<L3F>};
---  right_thrusters : set of TS`ThrusterName = {<R2R>,<R2F>,<R4R>,<R4F>};
---  down_thrusters : set of TS`ThrusterName = {<D1R>,<D1F>,<D2R>,<D2F>};
---  up_thrusters : set of TS`ThrusterName = {<U3R>,<U3F>,<U4R>,<U4F>};
-
   switch_positions : set of HCM`SwitchPositions = 
     {mk_HCM`SwitchPositions(mode,aah) | 
        mode in set {<Tran>,<Rot>}, aah in set {<Up>,<Down>}};
 
-  zero_grip : HCM`HandGripPosition = mk_HCM`HandGripPosition(<Zero>,<Zero>,<Zero>,<Zero>);
+  zero_grip : HCM`HandGripPosition = mk_HCM`HandGripPosition(<Zero>,<Zero>,
+                                                             <Zero>,<Zero>);
 
   all_grip_positions : set of HCM`HandGripPosition =
     {mk_HCM`HandGripPosition(vert,horiz,trans,twist) |
@@ -62,7 +51,7 @@ values
      vert = <Zero> and trans = <Zero> and twist = <Zero> or 
      horiz = <Zero> and trans = <Zero> and twist = <Zero>};
 
-  possibilities -- total of 972 cases! 
+  possibilities -- total of 972 cases
     : set of (HCM`SwitchPositions * HCM`HandGripPosition * AUX`RotCommand)
     = 
     {mk_(switch,grip,aah_law) |
@@ -150,9 +139,11 @@ operations
                     mk_HCM`SwitchPositions(
                      if mode = "translation" then <Tran> else <Rot>,
                      if aah = "1" then <Up> else <Down> ),
-                   mk_HCM`HandGripPosition(ConvertAxisCmd(vert),ConvertAxisCmd(horiz),
+                   mk_HCM`HandGripPosition(ConvertAxisCmd(vert),
+                                           ConvertAxisCmd(horiz),
                       ConvertAxisCmd(trans),ConvertAxisCmd(twist)),
-                   {<Roll> |-> ConvertAxisCmd(roll), <Pitch> |-> ConvertAxisCmd(pitch),
+                   {<Roll> |-> ConvertAxisCmd(roll), 
+                    <Pitch> |-> ConvertAxisCmd(pitch),
                     <Yaw> |-> ConvertAxisCmd(yaw)})
 	 in
 	   (GEOM`ShowThrust(ConvertTIds(ts));

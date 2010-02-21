@@ -11,6 +11,7 @@ order in which they were received from the sensor.
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
+#AUTHOR= John Fitzgerald and Peter Gorm Larsen
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true

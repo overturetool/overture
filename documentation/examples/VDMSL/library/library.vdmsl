@@ -178,7 +178,8 @@ isidentical2(dB1,dB2,olddB,record1)==
 	required(recordtype(olddB,record1.id)))
 	else isidentical2(dB1,dB2\{record2},olddB,record1);
 
-isidentical3: set of Record*set of Record*set of Record*Record*Record*set of Valuetype +> bool
+isidentical3: set of Record*set of Record*set of Record*Record*
+              Record*set of Valuetype +> bool
 isidentical3(dB1,dB2,olddB,record1,record2,requiredfields)==
 	if requiredfields={} then true
 	else let field in set requiredfields in
@@ -456,7 +457,8 @@ pre 	i in set usedIds(dB) and
 	not (iscomplete(dB,i) and isidentical(dB))
 post	getvalue(f,dB,i)=v and 
 	dB\{get(dB,i)}=dB~\{get(dB~,i)} and
-	forall x in set field(recordtype(dB,i))\{f} & getvalue(x,dB,i)=getvalue(x,dB~,i);
+	forall x in set field(recordtype(dB,i))\{f} & 
+	   getvalue(x,dB,i)=getvalue(x,dB~,i);
 
 COMPLETE: Id ==> bool
 COMPLETE(i)==

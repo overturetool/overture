@@ -11,12 +11,14 @@ Springer Verlag, October 1994.
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
+#AUTHOR= Peter Gorm Larsen
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true
 #PRE_CHECKS=true
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
+#ENTRY_POINT=DEFAULT`LooseEvalExpr(expr2)
 #ENTRY_POINT=DEFAULT`LooseEvalExpr(mk_NumLit(8))
 #ENTRY_POINT=DEFAULT`LooseEvalExpr(expr)
 #EXPECTED_RESULT=NO_ERROR_TYPE_CHECK

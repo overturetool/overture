@@ -1,26 +1,3 @@
-%\documentstyle[a4,makeidx,vdmsl_v1.1.35]{article}
-% With old latex you can use thid line instead
-\documentclass{article}
-\usepackage{a4}
-\usepackage{makeidx}
-\usepackage{vdmsl-2e}
-
-\newcommand{\StateDef}[1]{{\bf #1}}
-\newcommand{\TypeDef}[1]{{\bf #1}}
-\newcommand{\TypeOcc}[1]{{\it #1}}
-\newcommand{\FuncDef}[1]{{\bf #1}}
-\newcommand{\FuncOcc}[1]{#1}
-\newcommand{\ModDef}[1]{{\tiny #1}}
-
-\makeindex
-
-\begin{document}
-
-\title{Specification of an Specification of an automatic planner}
-\author{Submitted by T.L.\ McCluskey and Pat Diskin}
-\maketitle
-
-\end{document}
 \begin{vdm_al}
 types
 
@@ -33,8 +10,8 @@ types
 		del	 : set of Literal;
 	
 	Planning_Problem :: AS : set of Action
-		          I     : State
-		          G   : Goal
+		          I : State
+		          G : Goal
 
 	inv  mk_Planning_Problem ( AS, I, G) ==
 	forall l in set G &
@@ -116,8 +93,7 @@ make_before(u, v, p) ==
 	then p union {mk_Arc(u, v)} else p;
 
 
-newid(isa : set of Action_id)
-i: Action_id pre true
+newid(isa : set of Action_id) i: Action_id 
 post i not in set isa;
 
 achieve : Action_instances * Bounded_Poset * Action_id * Goal_instance -> bool 
@@ -146,7 +122,6 @@ ext	wr pp : Planning_Problem
 	wr Ts : Bounded_Poset
 	wr Ps : Goal_instances
 	wr As : Goal_instances
-pre	true
 post	pp = ppi and
 	Os =  {mk_token("pinit") |->  mk_Action([mk_token("pinit")], { }, 
 			ppi.I, { }), 
@@ -185,7 +160,3 @@ post	let NewA = newid(dom Os~) in
 	As = As~ union {gi}
 
 \end{vdm_al}
-
-\printindex
-
-\end{document}

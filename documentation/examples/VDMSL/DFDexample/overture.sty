@@ -1,49 +1,41 @@
-%\definecolor{notovered}{rgb}{1,0,0}  %red
+\usepackage{longtable}
+\usepackage{times}
+\usepackage{graphics}
+\usepackage[pdftex,dvipsnames]{color}
+\definecolor{notovered}{rgb}{1,0,0}  %red
 % definition of VDM++, JavaCC, JJTree, JTB, ANTLR and SableCC for listings
 \usepackage{listings}
-\include{customlangdef}
-% define the layout for listings
-\lstdefinestyle{tool}{basicstyle=\ttfamily,
-                         frame=trBL, 
-			 showstringspaces=false, 
-			 frameround=ffff, 
-			 framexleftmargin=0mm, 
-			 framexrightmargin=0mm}
-\lstdefinestyle{mystyle}{basicstyle=\ttfamily,
-                         frame=trBL, 
-%                         numbers=left, 
-%			 gobble=0, 
-			 showstringspaces=false, 
-%			 linewidth=\textwidth, 
-			 frameround=fttt, 
-			 aboveskip=5mm,
-			 belowskip=5mm,
-			 framexleftmargin=0mm, 
-			 framexrightmargin=0mm}
-%\lstdefinestyle{mystyle}{basicstyle=\sffamily\small,
-%			 frame=tb,
-%                         numbers=left,
-%			 gobble=0,
-%			 showstringspaces=false,
-%			 linewidth=345pt,
-%			 frameround=ffff,
-%			 framexleftmargin=8mm,
-%			 framexrightmargin=8mm,
-%			 framextopmargin=1mm,
-%			 framexbottommargin=1mm,
-%			 aboveskip=7mm,
-%			 belowskip=5mm,
-%			 xleftmargin=10mm,}
 
-\lstset{style=mystyle}
-\lstset{language=VDM++}
-\lstset{alsolanguage=Java}
-% The command below enables you to escape into normal LaTeX mode inside your 
-% VDM chunks by starting with a `?´ character and ending with a `£´
-\lstset{escapeinside=?£}
+% use package for VDM language definition
+\usepackage{overturelanguagedef}
+% Define Overture listing for The VDM language
+\lstdefinestyle{overtureLanguageStyle}{basicstyle=\ttfamily,
+			frame=trBL, 
+%			numbers=left, 
+%			gobble=0, 
+			showstringspaces=false, 
+%			linewidth=\textwidth, 
+			frameround=fttt, 
+			aboveskip=5mm,
+			belowskip=5mm,
+			framexleftmargin=0mm, 
+			framexrightmargin=0mm}
+% Set escape for inserting coverage macros
+\lstset{escapeinside=!!}
+% Set the default style for lstlistings
+\lstset{style=overtureLanguageStyle}
 
-\usepackage{times}
+% Custom macro used to color uncoverage model parts in listings
+\newcommand{\notcovered}[1]{\textcolor{notovered}{#1}}
 
-\newcommand{\notcovered}[1]{\textcolor{red}{#1}}
-\lstnewenvironment{vdm_al}{\lstset{language=VDM++}}
+% Environment definition for VDM blocks
+%  The listing style is reset to overture and the language is set to the active one in the project where the model has been generated from.
+\lstnewenvironment{vdm_al}{\lstset{style=overtureLanguageStyle}\lstset{language=OVERTURE_LANGUAGE}}
 {}
+
+% Environment definition for test coverage use by VDM Tools
+\lstnewenvironment{rtinfo}{}
+{}
+
+
+

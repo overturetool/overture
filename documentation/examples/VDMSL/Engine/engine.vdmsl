@@ -67,7 +67,8 @@ state StartingSystem of
 init ss == 
   ss = mk_StartingSystem (<FuelSwitchAtCut>, <off>, <off>, 0, true,
                           false, <closed>, false, false, false, false, 
-                          0, 0, false, false, false, false, false, false, false)
+                          0, 0, false, false, false, false, false, false, 
+                          false)
 end
 
 functions

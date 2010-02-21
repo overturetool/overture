@@ -79,7 +79,7 @@ values
      G1: FlowGraph= mk_FlowGraph(N1, A1,1,4); -- isolated nodes
      G2: FlowGraph= mk_FlowGraph(N1, A2,1,4); -- linear graph
      G3: FlowGraph= mk_FlowGraph(N2, A3,1,6);
-     G4: FlowGraph= mk_FlowGraph(N3, A1,1,6); -- invalid 
+--     G4: FlowGraph= mk_FlowGraph(N3, A1,1,6); -- invalid 
      G5: FlowGraph= mk_FlowGraph(N2, A5,1,7);
      G6: FlowGraph= mk_FlowGraph(N2, A6,1,5);  
 

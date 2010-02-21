@@ -11,6 +11,7 @@ included.
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
 #AUTHOR= Kevin Blackburn
+#DOCUMENT=bar.tex
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true

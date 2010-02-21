@@ -14,6 +14,8 @@ H.Toetenel, Formal Aspects of Computing'' 1994, Vol 6, December
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
+#AUTHOR= Peter Gorm Larsen
+#DOCUMENT= dfdexample.tex
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true
