@@ -19,7 +19,7 @@ on the book's web site~{\url{www.vdmbook.com}. Throughout this guide
 We will use examples based on the \emph{alarm} case study introduced
 in Chapter~2 of the book. For readers using this as a
 free-standing guide, an informal explanation of the case study and its
-VDM-SL model are given in \ref{app:alarm}.
+VDM-SL model are given in Appendix~\ref{app:alarm}.
 
 We will introduce the Overture tools during a ``hands-on'' tour of
 their functionality, providing enough detail to allow you to use
@@ -46,8 +46,9 @@ Section~\ref{sec:vdmsupport} introduces terminology used by
 Eclipse-based tools like Overture. Section~\ref{sec:templates}
 describes the features that support the construction and editing of
 VDM-SL models.  Section~\ref{sec:debugging} describes the testing and
-debugging features and
-Section~\ref{sec:POtool} describes the facilities for automatically
+debugging features and Section~\ref{sec:testcov} describes how
+line coverage from using the debugger can be covered and displayed.
+Afterwards Section~\ref{sec:POtool} describes the facilities for automatically
 generating the checks~(called \emph{proof obligations}) that must
 be performed in order to ensure that a VDM-SL model is consistent and
 meaningful.  Finally, Section~\ref{sec:cmdline} shows how parts of
@@ -80,17 +81,21 @@ initiative.
 
 A large library of sample VDM-SL models, including all those needed
 for the exercises in the book, is available and can be downloaded from
-SourceForge under the \texttt{files/Examples} section using the
+SourceForge as the \texttt{examplesSL.zip} file using the
 URL\footnote{The library files are created to be used with Eclipse,
   but can be opened with file compression programs like \texttt{Winrar} on
-  Windows}: 
+  Windows but it is not necessary to open it at all.}: 
 \begin{quote}
 \url{https://sf.net/projects/overture/files/Examples/}
 \end{quote}
 You can import the example library zip folder as described in
-Section~\ref{sec:vdmsupport}.  Finally, the web site
-\texttt{www.vdmbook.com} contains all the examples used in this book
-as plain text files. 
+Section~\ref{sec:vdmsupport}.  Finally, in order to make use of the
+test coverage feature described in Section~\ref{sec:testcov} it is
+necessary to have \LaTeX\ and its \texttt{pdflatex} feature. This can
+for example be obtained from:
+\begin{quote}
+\url{http://miktex.org/2.8/}
+\end{quote}
 
 \subsection*{Note for users of \vdmtools$^{\mbox{\small\textbf{{\textregistered}}}}$}
 Overture provides a new open source VDM tool set, but it can
@@ -125,9 +130,9 @@ it will ask you for permission to do so.
 
 \begin{figure}[tbh]
 \begin{center}
+  \includegraphics[width=4.5in]{figures/OverturePerspective}
   \caption[labelInTOC]{The Overture Perspective}
   \label{fig:OverturePerspective}
-  \includegraphics[width=4.5in]{figures/OverturePerspective}
 \end{center}
 \end{figure}
 
@@ -136,7 +141,7 @@ delete Overture projects and navigate between the files in these
 projects. Start by importing the alarm project. This can be done by
 right-clicking the explorer view and selecting \emph{Import}, followed
 by \emph{General} $\rightarrow$ \emph{Existing Projects into
-  Workspace}.  In this way the projects from \texttt{.zip} file
+  Workspace}.  In this way the projects from \texttt{examplesSL.zip} file
 mentioned above can be imported very easily. Initially it is
 recommended that you only import the \texttt{AlarmErrSL} and the
 \texttt{AlarmSL} projects as shown in
@@ -145,9 +150,9 @@ Figure~\ref{fig:importalarm}\footnote{You need both of these for
 
 \begin{figure}[!htb]
 \begin{center}
+  \includegraphics[width=2.5in]{figures/importalarm}
   \caption[labelInTOC]{Importing the \texttt{Alarm} VDM-SL Projects}
   \label{fig:importalarm}
-  \includegraphics[width=2.5in]{figures/importalarm}
 \end{center}
 \end{figure}
 
@@ -171,9 +176,9 @@ example).
 
 \begin{figure}[!htb]
 \begin{center}
-  \caption[labelInTOC]{The Outline View}
-  \label{fig:OutlineView}
   \includegraphics[width=4.5in]{figures/OutlineView}
+  \caption[labelInTOC]{The Outline View connected to the Editor view}
+  \label{fig:OutlineView}
 \end{center}
 \end{figure}
 
@@ -223,40 +228,71 @@ of templates makes it much easier for users lacking deep familiarity
 with VDM syntax to nevertheless construct models.
 \begin{figure}
 \begin{center}
+\includegraphics[width=4in]{figures/FunctionTemplate}
 \caption{Explicit function template}
 \label{fig:functionTemplate}
-\includegraphics[width=4in]{figures/FunctionTemplate}
 \end{center}
 \end{figure}
 
-A new VDM-SL
-project is created by choosing \emph{File} $ \rightarrow$ \emph{New}
-$\rightarrow$ \emph{Project}. The dialog box shown in
-Figure~\ref{fig:newOvertureProjectSL} will appear. Ensure
-that VDM-SL is selected as the project type, click \emph{Next} and
-then name the project and then simply select \texttt{Finish}. Now you
-have an empty project and you can then either add new VDM-SL files to
-the project or simply paste in existing VDM-SL source files from
-elsewhere. Adding a VDM-SL file to a project you can rightclick on the
-project and then select \emph{New} $\rightarrow$ \emph{VDM-SL
-  Module} and then give a meaningfull name to the module you would
-like to start defining and press \texttt{Finish}. This will create a
-new file with a module with the selected name and with space for the
-different kinds of definitions you can make inside such a VDM-SL module.  
+A new VDM-SL project is created by choosing \emph{File} $ \rightarrow$
+\emph{New} $\rightarrow$ \emph{Project}. The dialog box shown in
+Figure~\ref{fig:newOvertureProjectSL} will appear. Ensure that VDM-SL
+is selected as the project type, click \emph{Next} and then name the
+project \texttt{Test} and if next is selected again it gets possible
+to select standard libraries as shown in
+Figure~\ref{fig:stdlibs}. These standard libraries require users to
+make use of modules but in return it is possible to get standard
+input/output, math and general utility functionality by selecting the
+appropriate standard libraries. In this \texttt{Test} project we can
+try to select the \texttt{IO} standard library. Afterwards one simply
+select \texttt{Finish}. Now you have an almost empty project (with the
+exception of the \texttt{IO.vdmsl} file in the \texttt{lib} directory)
+and you can then
+either add new VDM-SL files to the project or simply paste in existing
+VDM-SL source files from elsewhere. Adding a VDM-SL file to a project
+you can rightclick on the project and then select \emph{New}
+$\rightarrow$ \emph{VDM-SL Module} and then give a meaningfull name
+(e.g.\ \texttt{Test}) to
+the module you would like to start defining and press
+\texttt{Finish}. This will create a new file with a module with the
+selected name and with space for the different kinds of definitions
+you can make inside such a VDM-SL module.
 
 \begin{figure}[!htb]
 \begin{center}
+  \includegraphics[width=2.5in]{figures/newovertureSLproject}
   \caption[labelInTOC]{Creating a New VDM-SL Project}
   \label{fig:newOvertureProjectSL}
-  \includegraphics[width=2.5in]{figures/newovertureSLproject}
+\end{center}
+\end{figure}
+
+\begin{figure}[!htb]
+\begin{center}
+  \includegraphics[width=2.5in]{figures/stdlibs}
+  \caption[labelInTOC]{The VDM-SL Standard Libraries}
+  \label{fig:stdlibs}
 \end{center}
 \end{figure}
 
 \begin{myexercise}\label{ex:tb-error}
-Try to create a new VDM-SL project and copy and paste in the
-\texttt{alarmerr.vdmsl} file. This file contains deliberate syntax and
-type errors. Correct all the errors discovered by the syntax and type
-checker from Overture and save the file.
+Try to create a new \texttt{Test} VDM-SL project and update the
+\texttt{test.vdmsl} file before {\bf\ttfamily{exports all}} with:
+\begin{lstlisting}
+imports from IO all
+\end{lstlisting}
+in order to make use of the IO standard library in the \texttt{Test}
+module. Inside \texttt{IO} there is for example a definition of a
+function called \texttt{print} and that can for example be used in an
+operation as:
+\begin{lstlisting}
+Try: nat ==> nat
+Try(n) ==
+  (IO`print(n);
+   return n + 1)
+\end{lstlisting}
+Insert this and later on when you have learned how to create a debug
+configuration you can try to see what happens when \texttt{Try} is
+debugged. 
 \end{myexercise}
  
 \section{Debugging}\label{sec:debugging}
@@ -289,7 +325,9 @@ Figure~\ref{fig:debugConfiguration} shows the debug
 configuration for the alarm model. The class and operation/function
 name can be chosen from a Browse dialog; if the operation or function
 has arguments, these must be typed in manually between the brackets of
-the entry point function/operation. This means that one need to change
+the entry point function/operation. If this is not typed such that the
+overall expression is type correct an error will be shown at the top
+of the debug configuration window. This means that one need to change
 the \emph{Operation} line for example from:
   
 \begin{lstlisting}
@@ -302,9 +340,9 @@ NumberOfExperts(p2, plant1)
 
 \begin{figure}[htp]
 \begin{center}
+  \includegraphics[width=4in]{figures/DebugConfiguration}
   \caption{The debug configuration dialog}
   \label{fig:debugConfiguration}
-  \includegraphics[width=4in]{figures/DebugConfiguration}
 \end{center}
 \end{figure}
 
@@ -326,9 +364,9 @@ and debug again.
 The Debug perspective is illustrated in Figure~\ref{fig:DebuggingVDM}.
 \begin{figure}[htp]
 \begin{center}
+  \includegraphics[width=4.5in]{figures/DebuggingVDM}
   \caption[Debugging perspective]{Debugging perspective}
   \label{fig:DebuggingVDM}
-  \includegraphics[width=4.5in]{figures/DebuggingVDM}
 \end{center}
 \end{figure}
 The \emph{Debug view} is located in the upper left corner of the Debug
@@ -427,11 +465,11 @@ Figure~\ref{fig:DebuggingVDM}.
 \label{ex:tool-monitor}Use the interpreter to evaluate the
   following expressions:
 \begin{lstlisting}
-NumberOfExperts(p2,plant)
-NumberOfExperts(p3,plant)
-ExpertIsOnDuty(e1,plant)
-ExpertIsOnDuty(e2,plant)
-ExpertIsOnDuty(e3,plant)
+NumberOfExperts(p2,plant1)
+NumberOfExperts(p3,plant1)
+ExpertIsOnDuty(e1,plant1)
+ExpertIsOnDuty(e2,plant1)
+ExpertIsOnDuty(e3,plant1)
 \end{lstlisting}
 %Rising([34,67,45,120,7])
 %OverLimit([333,321,345,399,357])
@@ -440,7 +478,22 @@ ExpertIsOnDuty(e3,plant)
 \end{myexercise}
 
 
-%\section{Test coverage}\label{sec:testcov}
+\section{Test coverage}\label{sec:testcov}
+
+It is often useful to know how much of a model has been exercised by a
+set of tests. This gives some insight into the thoroughness of a test
+suite and may also help to identify parts of the model that have not
+been assessed, allowing new tests to be devised to cover these. When
+any evaluation is performed on a VDM-SL model, the interpreter records
+the lines of the VDM-SL model that are executed. This permits the line
+coverage to be examined after a test to identify the parts of the
+VDM-SL model that have not yet been exercised -- coverage is
+cumulative, so a set of tests can be executed and their total coverage
+examined at the end.
+
+In our simple example, the different tests in the exercise above does cause the majority of
+the VDM-SL model to be executed, but the \verb|ExpertIsOnDuty|
+function in \verb|alarm.vdmsl| is covered. 
 
 %\begin{figure}[tb]
 %\caption{Test coverage information\label{fig:testcov}}
@@ -671,37 +724,21 @@ commands available at a breakpoint, such as \verb|continue|,
 commands is described in the VDMJ User Guide\footnote{Supplied with
 the Overture documentation.}.
 
-When any evaluation is performed on a VDM-SL model, VDMJ records the
-lines of the VDM-SL model that are executed. This permits the line
-coverage to be examined after a test to identify the parts of the
-VDM-SL model that have not yet been exercised -- coverage is
-cumulative, so a set of tests can be executed and their total coverage
-examined at the end.
-
-In our simple example, the single test does not cause the majority of
-the VDM-SL model to be executed, but the \verb|ExpertIsOnDuty|
-function in \verb|alarm.vdmsl| is covered. To display coverage, the
-\verb|coverage <file>| command is used. Lines that have been executed
-are listed with a '+' prefix, while those that have not have a '-'
-prefix; lines that are not executable have no prefix. Alternatively,
-detailed \LaTeX\ coverage can be produced with the \verb|latex|
-command:
-
-\begin{lstlisting}
-> coverage AlarmSL/alarm.vdmsl
-...
-NumberOfExperts: Period * Plant -> nat
-NumberOfExperts(peri,plant) ==
--  card plant.schedule(peri)
--pre peri in set dom plant.schedule;
-
-ExpertIsOnDuty: Expert * Plant -> set of Period
-ExpertIsOnDuty(ex,mk_Plant(sch,-)) ==
-+  {peri| peri in set dom sch & ex in set sch(peri)};
-...
-> latex AlarmSL/alarm.vdmsl
-Latex coverage written to AlarmSL/alarm.vdmsl.tex
-\end{lstlisting}
+%\begin{lstlisting}
+%> coverage AlarmSL/alarm.vdmsl
+%...
+%NumberOfExperts: Period * Plant -> nat
+%NumberOfExperts(peri,plant) ==
+%-  card plant.schedule(peri)
+%-pre peri in set dom plant.schedule;
+%
+%ExpertIsOnDuty: Expert * Plant -> set of Period
+%ExpertIsOnDuty(ex,mk_Plant(sch,-)) ==
+%+  {peri| peri in set dom sch & ex in set sch(peri)};
+%...
+%> latex AlarmSL/alarm.vdmsl
+%Latex coverage written to AlarmSL/alarm.vdmsl.tex
+%\end{lstlisting}
 \lstset{style=mystyle}
 
 \lstset{style=mystyle,language=VDM-SL}
@@ -714,6 +751,7 @@ We have introduced the following features of Overture:
 \item syntax and type checking of VDM-SL models;
 \item error reporting;
 \item executing and debugging VDM-SL models; 
+\item collecting and displaying test coverage information on VDM-SL models;
 \item generating proof obligations for VDM-SL models; and
 \item using the command-line interface. 
 \end{itemize}
@@ -737,9 +775,9 @@ ChangeExpert(mk_Plant(plan,alarms),ex1,ex2,peri) ==
 value from the schedule for the given period \texttt{peri} and
 {\bf\ttfamily union} adds the \texttt{ex2} value.
 
-Do you see any problems with this function? This definition is placed
-in the file \texttt{changeexpert.vdmsl} which is a part of the \texttt{AlarmSL}
-project.
+Do you see any problems with this function? In the \texttt{AlarmSL}
+project this definition is placed
+in the file \texttt{changeexpert.vdmsl}.
 %so you should configure your
 %project once again by adding this file. When it has been syntax
 %checked and type checked the
@@ -755,15 +793,15 @@ this by setting the option for invariant checking. If the invariant is
 broken it is possible to make a break point for the invariant
 \texttt{inv\_Plant} itself and call that with a \texttt{Plant} value
 which possibly satisfies the invariant. Single stepping inside this
-makes it easier to discover how the invariant is broken\footnote{Note that in
-the current version of the Overture IDE violating such invariants an
-internal error (0029) will occur so to see what is going on it is
-advisable to put a breakpoint in the \texttt{ChangeExpert} function
-and then step into it, so you can see the evaluation of the invariant.}.  
-If
-necessary, add the pre-condition needed to complete the function. Try
-to generate the proof obligations for the \texttt{changeexpert.vdmsl}
-file and see if you can find the proof obligation ensuring that the
-invariant cannot be broken.
+makes it easier to discover how the invariant is broken\footnote{Note
+  that in the current version of the Overture IDE violating such
+  invariants an execution error (206) with error 4079 will occur so to
+  see what is going on it is advisable to put a breakpoint in the
+  \texttt{ChangeExpert} function and then step into it, so you can see
+  the evaluation of the invariant.}.  If necessary, add the
+pre-condition needed to complete the function. Try to generate the
+proof obligations for the \texttt{changeexpert.vdmsl} file and see if
+you can find the proof obligation ensuring that the invariant cannot
+be broken.
 \end{myhardexercise}
 

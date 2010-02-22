@@ -159,6 +159,7 @@ values
   a1:Alarm = mk_Alarm("Power supply missing",<Elec>);
   a2:Alarm = mk_Alarm("Tank overflow",<Mech>);
   a3:Alarm = mk_Alarm("CO2 detected",<Chem>);
+  a4:Alarm = mk_Alarm("Biological attack",<Bio>);
 
-  pl: Plant = mk_Plant(s,{a1,a2,a3})
+  plant1: Plant = mk_Plant(s,{a1,a2,a3,a4})
 \end{lstlisting}  
