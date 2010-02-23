@@ -89,5 +89,13 @@ pre addr not in set sta.used and
     addr in set sta.access
 post RESULT = true;
 
+operations
+
+public RunTest : () ==> bool
+RunTest () ==
+  (let s : State = mk_State({<a0> |-> <c0>}, {<a0>,<a1>}, {<a0>})
+   in
+     AllocSafe2(<a1>,s);
+  ); 
 
 end Example3

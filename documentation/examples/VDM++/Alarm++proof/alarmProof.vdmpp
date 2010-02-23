@@ -52,5 +52,23 @@ static  QualificationOK: set of Expert * Qualification -> bool
   QualificationOK(exs,reqquali) ==
     exists ex in set exs & reqquali in set ex.quali;
   
+operations
+
+public RunTest : () ==> ()
+RunTest () ==
+  (let a1  : Alarm = mk_Alarm("Mechanical fault",<Mech>),
+       a2  : Alarm = mk_Alarm("Tank overflow",<Chem>),
+       ex1 : Expert = mk_Expert(mk_token(1),{<Mech>,<Bio>}),
+       ex2 : Expert = mk_Expert(mk_token(2),{<Elec>}),
+       ex3 : Expert = mk_Expert(mk_token(3),{<Chem>,<Bio>,<Mech>}),
+       ex4 : Expert = mk_Expert(mk_token(4),{<Elec>,<Chem>}),
+       p1  : Period = mk_token("Monday day"),
+       p2  : Period = mk_token("Monday night"),
+       plant : Plant = mk_Plant({p1 |-> {ex1,ex4}, p2 |-> {ex2,ex3}},{a1})       
+   in
+     (dcl periods : set of Period := ExpertIsOnDuty(ex1,plant);
+     );
+  ); 
+		
 end alarm
 
