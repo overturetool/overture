@@ -47,7 +47,9 @@ Eclipse-based tools like Overture. Section~\ref{sec:templates}
 describes the features that support the construction and editing of
 VDM-SL models.  Section~\ref{sec:debugging} describes the testing and
 debugging features and Section~\ref{sec:testcov} describes how
-line coverage from using the debugger can be covered and displayed.
+line coverage from using the debugger can be covered and
+displayed. This is followed with Section~\ref{sec:CT} with an
+explanation about a combinatorial testing feature available in Overture.
 Afterwards Section~\ref{sec:POtool} describes the facilities for automatically
 generating the checks~(called \emph{proof obligations}) that must
 be performed in order to ensure that a VDM-SL model is consistent and
@@ -57,8 +59,11 @@ interface, allowing batch-mode testing.
 
 \section{Getting Hold of the Software}\label{sec:install}
 
-
-Overture is an open source tool, developed by a community of volunteers and built on the Eclipse platform. The project to develop the tools is managed using SourceForge.  The best way to run Overture is to download a special version of Eclipse with the Overture functionality already pre-installed. If you go to:
+Overture is an open source tool, developed by a community of
+volunteers and built on the Eclipse platform. The project to develop
+the tools is managed using SourceForge.  The best way to run Overture
+is to download a special version of Eclipse with the Overture
+functionality already pre-installed. If you go to: 
   \begin{quote}
   \url{http://sourceforge.net/projects/overture}
   \end{quote}
@@ -91,8 +96,8 @@ URL\footnote{The library files are created to be used with Eclipse,
 You can import the example library zip folder as described in
 Section~\ref{sec:vdmsupport}.  Finally, in order to make use of the
 test coverage feature described in Section~\ref{sec:testcov} it is
-necessary to have \LaTeX\ and its \texttt{pdflatex} feature. This can
-for example be obtained from:
+necessary to have the text processing system called \LaTeX\ and its
+\texttt{pdflatex} feature. This can for example be obtained from:
 \begin{quote}
 \url{http://miktex.org/2.8/}
 \end{quote}
@@ -130,7 +135,7 @@ it will ask you for permission to do so.
 
 \begin{figure}[tbh]
 \begin{center}
-  \includegraphics[width=4.5in]{figures/OverturePerspective}
+  \includegraphics[width=5.5in]{figures/OverturePerspective}
   \caption[labelInTOC]{The Overture Perspective}
   \label{fig:OverturePerspective}
 \end{center}
@@ -157,7 +162,27 @@ Figure~\ref{fig:importalarm}\footnote{You need both of these for
 \end{figure}
 
 Depending on the dialect of VDM used in a given project, a
-corresponding Overture editor will be available here. 
+corresponding Overture editor will be available here. When the
+\texttt{AlarmSL} project have been imported one can right click on the
+project in the \emph{Explorer} view and then select the
+\texttt{Properties} item in the menu and then
+Figure~\ref{fig:settings} will pop up. This include the properties set
+for this project and here there are specific VDM options. Note here
+that there is a language version option that for the \texttt{AlarmSL}
+project set to \texttt{vdm10} which indicates that it include
+non-standard features such as {\bf\ttfamily traces}. In addition,
+options are gathered here for additional checks where the
+\texttt{AlarmSL} project simply follow the standard settings used for
+new projects.
+
+\begin{figure}[!htb]
+\begin{center}
+  \includegraphics[width=4.0in]{figures/settings}
+  \caption[labelInTOC]{Properties for the \texttt{AlarmSL} Project}
+  \label{fig:settings}
+\end{center}
+\end{figure}
+
 
 The \emph{Outline view}, to the right of the editor (see
 Figure~\ref{fig:OutlineView}), presents an outline of the
@@ -165,7 +190,6 @@ model in the file selected in the editor. It displays any declared
 VDM-SL modules, as well as their state components, values, types,
 functions and operations. In case of a flat VDM-SL model the module is
 called {\ttfamily{DEFAULT}}.
-% and traces.
 Figure~\ref{fig:OverturePerspective} shows the outline view
 on the right hand side. Clicking on an operation or function name will
 move the cursor in the editor to the definition of the operation or function. At
@@ -300,19 +324,24 @@ debugged.
 This section describes facilities for debugging a model by stepping
 through the evaluation of functions and operations. The alarm example
 is used. The following test file (\texttt{testalarm.vdmsl}) can be
-found in the alarm project.
+found in the alarm project and it is provided in
+Appendix~\ref{sec:VDMModel}. 
 
 \lstset{language=VDM-SL}
-\input{testalarm.vdmsl}
+%\input{testalarm.vdmsl}
 
-By using this test, it is possible to exercise the system in order to
-check whether, for this test, the correct expert is paged as a result
-of a given alarm.
+By using the values defined in this test file, it is possible to
+exercise the system in order to check whether, for this test, the
+correct expert is paged as a result of a given alarm.
 
 
 \subsection{The Debug configuration}
 
-Before the debugging can be initiated in Overture, a debug
+Before the debugging can be initiated in Overture\footnote{In the
+  current version of Overture we advise to use the \texttt{clean}
+  feature that can be activated by right clicking the project and
+  selecting \texttt{Clean}. This will make sure that proper type
+  checking is conduction prior to debugging.}, a debug
 configuration must be created by right-clicking the project and
 choosing \emph{Debug As} $ \rightarrow $ \emph{Debug
 configuration}\footnote{Note that the
@@ -320,8 +349,12 @@ configuration}\footnote{Note that the
   not supported in the current version of Overture.}. 
 The debug configuration dialog requires the project
 name, the class and the operation/function used as the entry point of the
-test.
-Figure~\ref{fig:debugConfiguration} shows the debug
+test. When the \texttt{AlarmSL} project was imported you also
+automatically got a basic launch configuration called
+\texttt{AlarmSL}. This one simply calls \texttt{Run(e1)} but you can
+change it to call something else by chosing a different function from
+the Browse dialog.
+Figure~\ref{fig:debugConfiguration} shows the \texttt{AlarmSL} debug
 configuration for the alarm model. The class and operation/function
 name can be chosen from a Browse dialog; if the operation or function
 has arguments, these must be typed in manually between the brackets of
@@ -356,7 +389,10 @@ perspective. Breakpoints can easily be set by double clicking in
 left margin in the editor view. When the debugger reaches the location
 of a breakpoint, evaluation suspends and the user can inspect the
 values of variables and step through the VDM-SL model line by line. So
-for \texttt{NumberOfExperts} try to set such a breakpoint in line 34
+for \texttt{NumberOfExperts} try to set such a breakpoint in line
+34\footnote{Line numbers can be added in the editor by right clicking
+  in the left-hand-side 
+ margin of the editor view and selecting \texttt{Show Line Numbers}.}
 and debug again.
  
 %The \emph{Debug perspective} shows the VDM model in an editor, like the
@@ -379,18 +415,18 @@ running.
 
 \begin{table}
 \begin{center}
-\caption{Overture debugging buttons\label{tab:debugButtons}}
 \begin{tabular}{|l|l|}\hline \hline
 \textbf{Button} & \textbf{Explanation} \\ \hline
-\includegraphics[width=0.06\textwidth]{figures/resume} & Resume debugging \\
-\includegraphics[width=0.06\textwidth]{figures/suspend} & Suspend debugging\\
-\includegraphics[width=0.06\textwidth]{figures/terminate} & Terminate debugging\\
-\includegraphics[width=0.06\textwidth]{figures/stepinto} & Step into\\
-\includegraphics[width=0.06\textwidth]{figures/stepover} & Step over \\
-\includegraphics[width=0.06\textwidth]{figures/stepreturn} & Step return\\
-\includegraphics[width=0.06\textwidth]{figures/stepbystep} & Use step filters\\
+\includegraphics[width=0.03\textwidth]{figures/resume} & Resume debugging \\
+\includegraphics[width=0.03\textwidth]{figures/suspend} & Suspend debugging\\
+\includegraphics[width=0.03\textwidth]{figures/terminate} & Terminate debugging\\
+\includegraphics[width=0.03\textwidth]{figures/stepinto} & Step into\\
+\includegraphics[width=0.03\textwidth]{figures/stepover} & Step over \\
+\includegraphics[width=0.03\textwidth]{figures/stepreturn} & Step return\\
+\includegraphics[width=0.03\textwidth]{figures/stepbystep} & Use step filters\\
 \hline \hline
 \end{tabular}
+\caption{Overture debugging buttons\label{tab:debugButtons}}
 \end{center}
 \end{table}
 
@@ -430,9 +466,9 @@ should become active.
 
 \begin{figure}[htp]
 \begin{center}
+  \includegraphics[width=4in]{figures/Breakpointconditional}
   \caption{Conditional breakpoint options}
   \label{fig:BreakpointConditional}
-  \includegraphics[width=4in]{figures/Breakpointconditional}
 \end{center}
 \end{figure}
 
@@ -491,16 +527,59 @@ VDM-SL model that have not yet been exercised -- coverage is
 cumulative, so a set of tests can be executed and their total coverage
 examined at the end.
 
-In our simple example, the different tests in the exercise above does cause the majority of
-the VDM-SL model to be executed, but the \verb|ExpertIsOnDuty|
-function in \verb|alarm.vdmsl| is covered. 
+In our simple example, the different tests in the exercise above does
+cause the majority of the VDM-SL model to be executed, but for
+demonstration purposes let us start by cleaning the model (right click
+on the project and select \texttt{Clean}). If we simply take the
+\texttt{AlarmSL} debug launch configuration the
+\verb|ExpertIsOnDuty| function in \verb|alarm.vdmsl| is called by the
+\texttt{Run} function. Once the debugger has completed and the result
+is written out in the \texttt{console} it is possible to right click
+on the \texttt{AlarmSL} project and select the \emph{Latex} $
+\rightarrow $ \emph{Latex coverage} the coverage information that have
+been gathered in any expressions that have been debugged since the
+last change to a file have been saved or the project have been cleaned
+will be turned into a pdf file. The \texttt{AlarmSL.pdf} file is
+placed in the \texttt{generated/latex} directory as shown in
+Figure~\ref{fig:testcov} and it includes the
+VDM definitions from all the files included in the project including
+coverage information.  
 
-%\begin{figure}[tb]
-%\caption{Test coverage information\label{fig:testcov}}
-%\begin{center}
-%\resizebox{\textwidth}{!}{\includegraphics{toolintro/testcoverage}}
-%\end{center}
-%\end{figure}
+\begin{figure}[tb]
+\begin{center}
+\resizebox{.4\textwidth}{!}{\includegraphics{figures/generatedpdf}}
+\end{center}
+\caption{The generated pdf file with test coverage information\label{fig:testcov}}
+\end{figure}
+
+The coverage information is provided in a way where uncovered
+expressions are shown in red in the generated pdf file. In addition
+after the content of each VDM-SL source file a table with coverage
+overview is provided in tabular form. For the \texttt{alarm.vdmsl}
+file this looks like:
+
+\begin{longtable}{|l|r|r|}
+\hline
+Function or operation & Coverage & Calls \\
+\hline
+\hline
+ExpertIsOnDuty & 100.0\% & 1 \\
+\hline
+ExpertToPage & 0.0\% & 0 \\
+\hline
+NumberOfExperts & 0.0\% & 0 \\
+\hline
+QualificationOK & 100.0\% & 12 \\
+\hline
+\hline
+alarm.vdmsl & 64.0\% & 13 \\
+\hline
+\end{longtable}
+
+\noindent where the \texttt{ExpertIsOnDuty} function is fully covered
+by just one call (due to the fact that its body is simply one line)
+and here the \texttt{QualificationOK} function is called 12 times
+because it is used inside the invariant of the \texttt{Plant} type.
 
 %It is often useful to know how much of a model has been exercised by a
 %set of tests. This gives some insight into the thoroughness of a test
@@ -523,6 +602,92 @@ function in \verb|alarm.vdmsl| is covered.
 %model. In order to see how this is done, refer to the user manual for
 %VDMTools \cite{UserMan}.
 
+
+\section{Combinatorial Testing}\label{sec:CT}
+
+The previous sections have shown how to test and debug models
+manually. However, Overture also contains a feature enabling more
+automation in the testing process, making more comprehensive
+high-volume testing feasible. It is possible to write regular
+expressions, as \emph{traces}, that one would like to expand into a
+large set of individual tests.
+
+In order to illustrate how this can be used, we extend the
+\texttt{testalarm.vdmsl} file with a few definitions illustrating the
+principles. However, the value of this feature is most significant
+when we deal with operations that update state components because then
+test sequencing is important to be able to detect more subtle errors.
+
+In order to do the automation, Overture needs to know about the
+combinations of function calls that you would like to have carried
+out, so it is necessary to write a kind of regular expression called a
+\emph{trace} in the VDM-10 version. VDM-SL has been extended such that
+traces can be written directly as a part of a VDM-SL model. A full
+explanation of this can be found in~\cite{Larsen&09d}. Here the
+definition looks like:
+
+\begin{lstlisting}
+traces
+
+  Test1: let a in set alarms
+         in
+           let p in set ps 
+           in
+             (NumberOfExperts(p,plant1);
+              pre_ExpertToPage(a,p,plant1);
+              let ex in set exs
+              in
+                post_ExpertToPage(a,p,plant1,ex))
+               
+  Test2: let ex in set exs
+         in
+           ExpertIsOnDuty(ex,plant1)
+\end{lstlisting}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=4.5in]{figures/tracesalarm}
+\caption{Using Combinatorial Testing for the Alarm VDM-SL model\label{fig:stracesalarm}}
+\end{center}
+\end{figure}
+
+\noindent The nested let-be-such-that statements in the trace
+called \texttt{Test1} yield all possible combinations of
+their variable bindings whereas manual debugging will just select a
+few combinations.  The cardinality of these sets determines the
+overall number of test cases, each being formed as a sequence of three
+function calls, where the last one is nested inside a new
+let-be-such-that expression. In this case, the cardinality of the three
+sets are respectively 4 (\texttt{alarms}), 5 (\texttt{ps}) and 8 (\texttt{exs}). Multiplying these gives 160. If you
+select the Combinatorial Testing perspective you will see the
+\textsf{CT Overview} view. Inside this view you can select the alarm
+project, right click it and choose the \textsf{Full Evaluation}
+option as shown in Figure~\ref{fig:CToptions}. 
+Now Overture expands and executes all 160 test cases one after
+another. The results of these executions are illustrated with green
+check marks and red crosses, meaning that the tests passed or failed
+respectively. See Figure~\ref{fig:stracesalarm}. Note that in the
+Combinatorial Testing perspective, the view in the lower region is
+able to show the individual steps of a selected test case, along with
+the corresponding results from its three function calls.
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=1.5in]{figures/CToptions}
+\caption{Invoking the combinatorial testing feature\label{fig:CToptions}}
+\end{center}
+\end{figure}
+
+The syntax for traces also enables function/operation repetition and alternatives to be
+specified, but these were not needed for this simple case. Using the full power
+of traces it is possible to efficiently generate and execute very large test
+suites. Naturally, this is most likely to find inconsistencies when the model
+attempts to define its essential predicates (invariants, pre and
+post-conditions)\footnote{Note that when using repetitions and
+  sequencing in combination it is easy to define traces that expands
+  to hundreds of thousands of test cases and naturally their execution
+  may then be very slow if one executes them all.}.
+
 \section{Proof Obligations}\label{sec:POtool}
 
 Overture can also generate the \emph{Proof Obligations} for a VDM-SL
@@ -541,8 +706,8 @@ obligation perspective with a special \emph{PO view}. For the alarm
 example this view looks like in Figure~\ref{fig:POview}.
 \begin{figure}[htbp]
 \begin{center}
+\includegraphics[width=5.5in]{figures/POview}
 \caption{The Proof Obligation view for the Alarm VDM-SL model\label{fig:POview}}
-\includegraphics[width=4.5in]{figures/POview}
 \end{center}
 \end{figure}
 Here the fifth proof obligation is related to the satisfiability of
@@ -751,7 +916,9 @@ We have introduced the following features of Overture:
 \item syntax and type checking of VDM-SL models;
 \item error reporting;
 \item executing and debugging VDM-SL models; 
-\item collecting and displaying test coverage information on VDM-SL models;
+\item collecting and displaying test coverage information on VDM-SL
+  models;
+\item a combinatorial testing feature for VDM-SL models;
 \item generating proof obligations for VDM-SL models; and
 \item using the command-line interface. 
 \end{itemize}
