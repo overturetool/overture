@@ -1232,7 +1232,7 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(Token.SET_CLOSE, 2136, "Expecting '}' after set comprehension");
-			result = new SetCompExpression(first, bindings, exp);
+			result = new SetCompExpression(start, first, bindings, exp);
 		}
 		else
 		{
@@ -1247,7 +1247,7 @@ public class ExpressionReader extends SyntaxReader
 					Expression end = readExpression();
 					checkFor(Token.SET_CLOSE, 2138, "Expecting '}' after set range");
 					reader.unpush();
-					return new SetRangeExpression(first, end);
+					return new SetRangeExpression(start, first, end);
 				}
 
 				reader.pop();	// Not a set range then...
@@ -1287,7 +1287,7 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(Token.SET_CLOSE, 2140, "Expecting '}' after map comprehension");
-			result = new MapCompExpression(first, bindings, exp);
+			result = new MapCompExpression(start, first, bindings, exp);
 		}
 		else
 		{
@@ -1341,7 +1341,7 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(Token.SEQ_CLOSE, 2142, "Expecting ']' after list comprehension");
-			result = new SeqCompExpression(first, setbind, exp);
+			result = new SeqCompExpression(start, first, setbind, exp);
 		}
 		else
 		{

@@ -26,6 +26,7 @@ package org.overturetool.vdmj.expressions;
 import java.util.Collections;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.MultiBindListDefinition;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.patterns.SetBind;
 import org.overturetool.vdmj.pog.POForAllPredicateContext;
 import org.overturetool.vdmj.pog.POForAllContext;
@@ -53,9 +54,10 @@ public class SeqCompExpression extends SeqExpression
 	public final SetBind setbind;
 	public final Expression predicate;
 
-	public SeqCompExpression(Expression first, SetBind setbind, Expression predicate)
+	public SeqCompExpression(LexLocation start,
+		Expression first, SetBind setbind, Expression predicate)
 	{
-		super(first);
+		super(start);
 		this.first = first;
 		this.setbind = setbind;
 		this.predicate = predicate;

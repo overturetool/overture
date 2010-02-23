@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.MultiBindListDefinition;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.patterns.MultipleBind;
 import org.overturetool.vdmj.patterns.MultipleTypeBind;
 import org.overturetool.vdmj.patterns.Pattern;
@@ -63,10 +64,11 @@ public class MapCompExpression extends MapExpression
 	public final Expression predicate;
 	private Type maptype;
 
-	public MapCompExpression(MapletExpression first, List<MultipleBind> bindings,
+	public MapCompExpression(LexLocation start,
+		MapletExpression first, List<MultipleBind> bindings,
 		Expression predicate)
 	{
-		super(first);
+		super(start);
 		this.first = first;
 		this.bindings = bindings;
 		this.predicate = predicate;

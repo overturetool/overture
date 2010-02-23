@@ -1549,14 +1549,14 @@ public class ASTConverter
 				predicate = convertExpression(comp.getGuard());
 			}
 
-			exp = new SetCompExpression(first, mbinds, predicate);
+			exp = new SetCompExpression(location, first, mbinds, predicate);
 		}
 		else if (expression instanceof IOmlSetRangeExpression)
 		{
 			IOmlSetRangeExpression sre = (IOmlSetRangeExpression)expression;
 			Expression from = convertExpression(sre.getLower());
 			Expression to = convertExpression(sre.getUpper());
-			exp = new SetRangeExpression(from, to);
+			exp = new SetRangeExpression(location, from, to);
 		}
 		else if (expression instanceof IOmlSequenceEnumeration)
 		{
@@ -1576,7 +1576,7 @@ public class ASTConverter
 				predicate = convertExpression(comp.getGuard());
 			}
 
-			exp = new SeqCompExpression(first, bind, predicate);
+			exp = new SeqCompExpression(location, first, bind, predicate);
 		}
 		else if (expression instanceof IOmlSubsequenceExpression)
 		{
@@ -1604,7 +1604,7 @@ public class ASTConverter
 				predicate = convertExpression(comp.getGuard());
 			}
 
-			exp = new MapCompExpression(first, bind, predicate);
+			exp = new MapCompExpression(location, first, bind, predicate);
 
 		}
 		else if (expression instanceof IOmlIfExpression)

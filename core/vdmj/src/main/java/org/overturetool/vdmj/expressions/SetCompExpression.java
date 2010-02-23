@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.MultiBindListDefinition;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.patterns.MultipleBind;
 import org.overturetool.vdmj.patterns.MultipleTypeBind;
 import org.overturetool.vdmj.patterns.Pattern;
@@ -62,10 +63,10 @@ public class SetCompExpression extends SetExpression
 	public final Expression predicate;
 	private SetType settype;
 
-	public SetCompExpression(Expression first, List<MultipleBind> bindings,
-		Expression predicate)
+	public SetCompExpression(LexLocation start,
+		Expression first, List<MultipleBind> bindings, Expression predicate)
 	{
-		super(first);
+		super(start);
 		this.first = first;
 		this.bindings = bindings;
 		this.predicate = predicate;

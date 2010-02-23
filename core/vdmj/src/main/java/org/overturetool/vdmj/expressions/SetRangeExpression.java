@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.expressions;
 
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
@@ -47,9 +48,9 @@ public class SetRangeExpression extends SetExpression
 	public Type ftype = null;
 	public Type ltype = null;
 
-	public SetRangeExpression(Expression first, Expression last)
+	public SetRangeExpression(LexLocation start, Expression first, Expression last)
 	{
-		super(first);
+		super(start);
 		this.first = first;
 		this.last = last;
 	}
