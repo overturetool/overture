@@ -1,8 +1,12 @@
 class AbPurseFunctional
+
 types
+
  public AbPurse :: balance : nat
                    lost : nat;
+
  public  PurseId = token;
+
  public AbWorld ::
    authentic : set of PurseId
    abPurses : map PurseId to AbPurse
@@ -18,18 +22,15 @@ public GetBalance: AbPurse -> nat
 public GetLost: AbPurse -> nat
   GetLost(p) == p.lost;
 
-public IncreaseBalance:
-          AbPurse * nat -> AbPurse
+public IncreaseBalance: AbPurse * nat -> AbPurse
   IncreaseBalance(p, val) ==
     mk_AbPurse(p.balance + val, p.lost);
 
-public IncreaseLost:
-          AbPurse * nat -> AbPurse
+public IncreaseLost: AbPurse * nat -> AbPurse
   IncreaseLost(p, val) ==
     mk_AbPurse(p.balance, p.lost + val);
 
-public ReduceBalance:
-           AbPurse * nat -> AbPurse
+public ReduceBalance: AbPurse * nat -> AbPurse
   ReduceBalance(p, val) ==
     mk_AbPurse(p.balance - val, p.lost)
   pre p.balance >= val;
@@ -38,16 +39,12 @@ public GetTotal : AbPurse -> nat
   GetTotal(p) ==
     p.balance + p.lost;
 
-newAbWorld : map PurseId to
-             AbPurse * set of PurseId
-                 -> AbWorld
+newAbWorld : map PurseId to AbPurse * set of PurseId -> AbWorld
   newAbWorld(purses, auth) ==
     mk_AbWorld(auth, purses)
   pre dom purses subset auth;
 
-public TransferOk:
-       AbWorld * PurseId * PurseId * nat
-          -> AbWorld
+public TransferOk: AbWorld * PurseId * PurseId * nat -> AbWorld
   TransferOk(wrld, frm, too, val) ==
   (let
   newFrm =
@@ -84,9 +81,7 @@ public TransferOk:
     (GetLost(wrld.abPurses(name)) =
       GetLost(RESULT.abPurses(name))));
 
-public TransferLost:
-   AbWorld * PurseId * PurseId * nat
-      -> AbWorld
+public TransferLost: AbWorld * PurseId * PurseId * nat -> AbWorld
   TransferLost(wrld, frm, -, val) ==
   (
   let
@@ -111,5 +106,15 @@ public TransferLost:
     and
 	 GetLost(wrld.abPurses(name)) =
       GetLost(RESULT.abPurses(name));
+
+operations
+
+public RunTest : () ==> AbWorld
+RunTest () ==
+  (let w : AbWorld = mk_AbWorld({mk_token(1), mk_token(2)}, 
+                                {mk_token(1) |-> mk_AbPurse(100,0), mk_token(2) |-> mk_AbPurse(10,0)})
+   in
+     TransferOk(w, mk_token(1), mk_token(2), 30);
+  );
 
 end AbPurseFunctional
