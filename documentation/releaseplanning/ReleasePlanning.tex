@@ -268,12 +268,7 @@ the Overture executable.
 \item Follow standard way to use pictures in Eclipse and document this
   for all developers. \developer{AugustoRibeiro}. \textbf{Dependencies: None}\label{picturesEclipse}
 
-\item Complete the new ASTGen utility and add all sources for it to
-  the tools utility in the Overture SF SVN. \developer{NickBattle} \textbf{Dependencies: None},\label{completeAST}
 
-\item Change to the AST generated from the new version of ASTGen all
-  over the Overture sources (i.e.\ this will affect the development of
-  UML, JML and POtrans components). \developer{NickBattle, KennethLausdahl}, \textbf{Dependencies: \ref{completeAST}}
 
 \item \markDone{ The combinatorial testing feature will be updated in the IDE
   with the features for reducing the size of the test suites in
@@ -303,7 +298,7 @@ the Overture executable.
   developers to make updates for the IDE and for the DESTECS
   development to follow similar principles. This shall document the
   implementation of the editor, the parser, the builder, the outline
-  and the AST access. \developer{AugustoRibeiro}, \textbf{Dependencies: \ref{completeAST}, \ref{analyseDLTKDebug}}
+  and the AST access. \textbf{Status:} Ongoing \developer{AugustoRibeiro}, \textbf{Dependencies: \ref{completeAST}, \ref{analyseDLTKDebug}}
 
 \item Specify the top level scheduling strategy for the interpreter
   dealing with multiple threads in VDM++ and VDM-RT (to subsequently
@@ -324,8 +319,14 @@ the Overture executable.
   include the following features:  
 \begin{enumerate}
 
-\item Create a new explorer  for VDM in the same style as ``script explorer'' named ``VDM
-  explorer''. \developer{AugustoRibeiro}, \textbf{Dependencies: \ref{picturesEclipse}} 
+\item Complete the new ASTGen utility and add all sources for it to
+  the tools utility in the Overture SF SVN. \developer{NickBattle} \textbf{Dependencies: None},\label{completeAST}
+
+\item Change to the AST generated from the new version of ASTGen all
+  over the Overture sources (i.e.\ this will affect the development of
+  UML, JML and POtrans components). \developer{NickBattle, KennethLausdahl}, \textbf{Dependencies: \ref{completeAST}}
+
+\item Replace DLTK (For lower level description of the goals please refer to appendix \ref{app:lowlevelgoals}). \developer{AugustoRibeiro}, \textbf{Dependencies: \ref{picturesEclipse}} 
 
 \item Launch configuration setup: 
 	\begin{enumerate}
@@ -371,7 +372,7 @@ the Overture executable.
 \item \markDone{ Make it possible for users to add a java implementation of a VDM class by adding a jar to the lib folder. The implementation should be done so one instance in java corresponds to one instance in VDM. No static. \developer{KennethLausdahl,NickBattle}, \textbf{Dependencies: \ref{staticIsNotYetSpecified}} }
 \end{enumerate}
 
-For lower level description of the goals please refer to appendix \ref{app:lowlevelgoals};
+
 
 
 
