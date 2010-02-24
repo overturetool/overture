@@ -24,6 +24,9 @@
 package org.overturetool.vdmj.expressions;
 
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.pog.NonEmptySeqObligation;
+import org.overturetool.vdmj.pog.POContextStack;
+import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
@@ -83,6 +86,14 @@ public class HeadExpression extends UnaryExpression
         {
         	return abort(e);
         }
+	}
+
+	@Override
+	public ProofObligationList getProofObligations(POContextStack ctxt)
+	{
+		ProofObligationList obligations = super.getProofObligations(ctxt);
+		obligations.add(new NonEmptySeqObligation(exp, ctxt));
+		return obligations;
 	}
 
 	@Override
