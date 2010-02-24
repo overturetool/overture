@@ -3,31 +3,31 @@ class TRACKER
 
 types
 
-  Tracker :: containers : ContainerInfo
+ public Tracker :: containers : ContainerInfo
              phases     : PhaseInfo
   inv mk_Tracker(containers,phases) ==
     Consistent(containers,phases) and
     PhasesDistinguished(phases) and
     MaterialSafe(containers,phases);
 
-  ContainerInfo = map ContainerId to Container;
+ public ContainerInfo = map ContainerId to Container;
 
-  PhaseInfo = map PhaseId to Phase;
+ public PhaseInfo = map PhaseId to Phase;
 
-  Container :: fiss_mass : real
+ public Container :: fiss_mass : real
                material  : Material;
 
-  Phase :: contents           : set of ContainerId
+ public Phase :: contents           : set of ContainerId
            expected_materials : set of Material
            capacity           : nat
   inv p == card p.contents <= p.capacity and
            p.expected_materials <> {};
 
-  ContainerId = token;
+ public ContainerId = token;
 
-  PhaseId = token;
+ public PhaseId = token;
 
-  Material = token
+ public Material = token
 
 functions
 

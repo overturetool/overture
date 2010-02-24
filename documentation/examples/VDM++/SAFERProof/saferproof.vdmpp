@@ -2,7 +2,7 @@ class SAFERSys
 
 types
 
-  SAFER:: clock: nat  -- init s == s = mk_SAFER(0)
+ public SAFER:: clock: nat  -- init s == s = mk_SAFER(0)
 
 functions  -- operations
 
@@ -48,7 +48,7 @@ values
 
   tran_axis_set : set of TranAxis = {<X>,<Y>,<Z>};
 
-  rot_axis_set : set of RotAxis = {<Roll>,<Pitch>,<Yaw>};
+ public rot_axis_set : set of RotAxis = {<Roll>,<Pitch>,<Yaw>};
 
   null_tran_command : TranCommand = {a |-> <Zero> | a in set tran_axis_set};
 
@@ -59,16 +59,16 @@ values
 
 types
  
-  AxisCommand = <Neg> | <Zero> | <Pos>;
+ public AxisCommand = <Neg> | <Zero> | <Pos>;
 
   TranAxis = <X> | <Y> | <Z>;
 
-  RotAxis = <Roll> | <Pitch> | <Yaw>;
+ public RotAxis = <Roll> | <Pitch> | <Yaw>;
 
   TranCommand = map TranAxis to AxisCommand
   inv cmd == dom cmd = tran_axis_set;
 
-  RotCommand = map RotAxis to AxisCommand
+ public RotCommand = map RotAxis to AxisCommand
   inv cmd == dom cmd = rot_axis_set;
 
   SixDofCommand ::
@@ -81,7 +81,7 @@ types
 
 
 types
-  AAH:: active_axes : set of RotAxis
+ public AAH:: active_axes : set of RotAxis
         ignore_hcm  : set of RotAxis
         toggle      : EngageState
         timeout     : nat
@@ -156,7 +156,7 @@ functions
 
 types
 
-  SwitchPositions ::
+ public SwitchPositions ::
     mode: ControlModeSwitch
     aah : ControlButton;
 
@@ -164,7 +164,7 @@ types
 
   ControlButton = <Up> | <Down>;
   
-  HandGripPosition:: vert  : AxisCommand
+ public HandGripPosition:: vert  : AxisCommand
                      horiz : AxisCommand
                      trans : AxisCommand
                      twist : AxisCommand
@@ -194,7 +194,7 @@ types
                  <L1R>| <L1F>| <R2R>| <R2F>| <L3R>| <L3F>| <R4R>| <R4F>|
                  <D1R>| <D1F>| <D2R>| <D2F>| <U3R>| <U3F>| <U4R>| <U4F>;
 
-  ThrusterSet = set of ThrusterName
+ public ThrusterSet = set of ThrusterName
 
 functions
 
@@ -325,6 +325,42 @@ functions
         lrud_thr = if rot(<Pitch>) = <Zero> and rot(<Yaw>) = <Zero> 
                    then lrud_optional union lrud_mandatory
                    else lrud_mandatory
-    in bf_thr union lrud_thr
+    in bf_thr union lrud_thr;
+
+operations
+
+public BigTest: () ==> map (SwitchPositions * HandGripPosition * RotCommand) to (ThrusterSet * SAFER * AAH)
+BigTest() ==
+  let switch_positions : set of SwitchPositions = {mk_SwitchPositions(mode,aah) | mode in set {<Tran>,<Rot>}, aah in set {<Up>,<Down>}},
+      grip_positions : set of HandGripPosition = {mk_HandGripPosition(vert,horiz,trans,twist) |
+                                                  vert, horiz, trans, twist in set axis_command_set &
+                                                  vert = <Zero> and horiz = <Zero> and trans = <Zero> or 
+                                                  vert = <Zero> and horiz = <Zero> and twist = <Zero> or 
+                                                  vert = <Zero> and trans = <Zero> and twist = <Zero> or 
+                                                  horiz = <Zero> and trans = <Zero> and twist = <Zero>},
+      all_rot_commands : set of RotCommand = {{<Roll> |-> a, <Pitch> |-> b, <Yaw> |-> c} | a, b, c in set axis_command_set},     
+      safer : SAFER = mk_SAFER(0),
+      aah : AAH = mk_AAH({},{},<AAH_off>,0)
+  in 
+    (return {mk_(switch,grip,aah_law) |-> ControlCycle(switch,grip,aah_law,safer,aah) |
+             switch in set switch_positions, 
+             grip in set grip_positions, 
+             aah_law in set all_rot_commands}
+    );
+
+public HugeTest: () ==> map (SwitchPositions * HandGripPosition * RotCommand) to (ThrusterSet * SAFER * AAH)
+HugeTest() == 
+  let switch_positions : set of SwitchPositions = {mk_SwitchPositions(mode,aah) | mode in set {<Tran>,<Rot>}, aah in set {<Up>,<Down>}},
+      all_grip_positions : set of HandGripPosition = {mk_HandGripPosition(vert,horiz,trans,twist) | 
+                                                  vert, horiz, trans, twist in set axis_command_set},
+      all_rot_commands : set of RotCommand = {{<Roll> |-> a, <Pitch> |-> b, <Yaw> |-> c} | a, b, c in set axis_command_set},     
+      safer : SAFER = mk_SAFER(0),
+      aah : AAH = mk_AAH({},{},<AAH_off>,0) 
+  in
+    (return {mk_(switch,grip,aah_law) |-> ControlCycle(switch,grip,aah_law,safer,aah) |
+             switch in set switch_positions, 
+             grip in set all_grip_positions, 
+             aah_law in set all_rot_commands}
+    );
 
 end SAFERSys
