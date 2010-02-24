@@ -64,6 +64,7 @@ public class VdmPpCorePlugin extends Plugin
 		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, 0, message, ex));
 	}
 	
+	@SuppressWarnings("unused")
 	private final ListenerList shutdownListeners = new ListenerList();
 
 	

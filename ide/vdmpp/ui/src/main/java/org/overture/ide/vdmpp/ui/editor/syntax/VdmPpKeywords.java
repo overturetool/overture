@@ -1,8 +1,5 @@
 package org.overture.ide.vdmpp.ui.editor.syntax;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.overture.ide.ui.editor.syntax.IVdmKeywords;
 
 public class  VdmPpKeywords implements IVdmKeywords {

@@ -32,5 +32,13 @@
             preferredPerspectives="org.overture.ide.ui.perspective">
       </wizard>
    </extension>
+   <extension
+         point="org.eclipse.ui.ide.projectNatureImages">
+      <image
+            icon="icons/ovr16/vdmpp_ovr.gif"
+            id="org.overture.ide.vdmpp.ui.image2"
+            natureId="org.overture.ide.vdmpp.core.nature">
+      </image>
+   </extension>
 
 </plugin>

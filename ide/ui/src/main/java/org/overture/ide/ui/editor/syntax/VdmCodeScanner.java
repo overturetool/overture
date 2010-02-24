@@ -7,6 +7,7 @@ import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.EndOfLineRule;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
+import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
@@ -35,6 +36,8 @@ public abstract class VdmCodeScanner extends RuleBasedScanner {
 		List<IRule> rules = new ArrayList<IRule>();
 		// Add rule for single line comments.
 		rules.add(new EndOfLineRule("--", comment));
+		// Multi line comment
+		rules.add(new MultiLineRule("/*", "*/", comment));
 		
 		// Add rule for strings.
 		rules.add(new SingleLineRule("\"", "\"", string, '\\'));

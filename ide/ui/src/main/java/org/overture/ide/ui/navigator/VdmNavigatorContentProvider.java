@@ -12,94 +12,36 @@ import org.overture.ide.core.utility.VdmProject;
 public class VdmNavigatorContentProvider implements ITreeContentProvider {
 
 
-
-
-
 	private static final Object[] NO_CHILDREN = {};
-	private IVdmProject[] _vdmProjectParents;
 
 	public Object[] getChildren(Object parentElement) {
-		Object[] children = null;
-		if (IWorkspaceRoot.class.isInstance(parentElement)) {
-			if (_vdmProjectParents == null) {
-				_vdmProjectParents = initializeParent(parentElement);
-			}
-
-			children = _vdmProjectParents;
-		} else if(IVdmProject.class.isInstance(parentElement))
-		{
-			IVdmProject project = (IVdmProject) parentElement;
-			try {
-				children =  project.getProject().members();
-			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		else
-		{
-			children = NO_CHILDREN;
-		}
-
-		return children;
+		return null;
+		
 	}
-
-
-	private IVdmProject[] initializeParent(Object parentElement) {
-		IProject [] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		IVdmProject[] result = new IVdmProject[projects.length];
-		for (int i = 0; i < projects.length; i++) {
-			result[i] = new VdmProject(projects[i]);
-		}
-
-		return result;
-	}
-
-
 
 	public Object getParent(Object element) {
-		
+		// TODO Auto-generated method stub
 		return null;
 	}
 
-
-
 	public boolean hasChildren(Object element) {
-		boolean hasChildren = false;
-		if(element instanceof IVdmProject)
-		{
-			IVdmProject project = (IVdmProject) element;
-			try {
-				hasChildren =  project.getProject().members().length > 0;
-			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		return hasChildren;
+		// TODO Auto-generated method stub
+		return false;
 	}
-
-
 
 	public Object[] getElements(Object inputElement) {
-		
-		return this.getChildren(inputElement);
+		// TODO Auto-generated method stub
+		return null;
 	}
-
-
 
 	public void dispose() {
 		// TODO Auto-generated method stub
 		
 	}
 
-
-
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		// TODO Auto-generated method stub
 		
 	}
-
-
+	
 }

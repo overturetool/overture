@@ -37,6 +37,17 @@
    </extension>
    <extension
          point="org.eclipse.ui.navigator.viewer">
+      <viewerContentBinding
+            viewerId="org.overture.ide.ui.navigatorView">
+         <includes>
+            <contentExtension
+                  pattern="org.eclipse.ui.navigator.resourceContent">
+            </contentExtension>
+            <contentExtension
+                  pattern="org.eclipse.ui.navigator.resources.filters.*">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
       <viewerActionBinding
             viewerId="org.overture.ide.ui.navigatorView">
          <includes>
@@ -45,28 +56,22 @@
             </actionExtension>
          </includes>
       </viewerActionBinding>
-      <viewerContentBinding
+      <viewer
             viewerId="org.overture.ide.ui.navigatorView">
-         <includes>
-            <contentExtension
-                  pattern="org.overture.ide.ui.navigatorContent">
-            </contentExtension>
-         </includes>
-      </viewerContentBinding>
+      </viewer>
    </extension>
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">
       <navigatorContent
-            activeByDefault="true"
             contentProvider="org.overture.ide.ui.navigator.VdmNavigatorContentProvider"
-            id="org.overture.ide.ui.navigatorContent"
+            icon="icons/cview16/overture_nav.gif"
+            id="org.overture.ide.ui.navigatorContent2"
             labelProvider="org.overture.ide.ui.navigator.VdmNavigatorLabelProvider"
-            name="VDM Navigation Content"
-            priority="highest">
+            name="name">
          <triggerPoints>
             <or>
                <instanceof
-                     value="org.eclipse.core.resources.IWorkspaceRoot">
+                     value="org.eclipse.core.resources.IProject">
                </instanceof>
             </or>
          </triggerPoints>
