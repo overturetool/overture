@@ -93,7 +93,8 @@ inv sch ==
            quali     : Qualification
 \end{lstlisting}
 
-The functionality can be defined as follows.
+The functionality from the requirements presented above can be defined
+in a number of functions as follows.
 
 \begin{lstlisting}
 functions
@@ -116,14 +117,24 @@ functions
   QualificationOK: set of Expert * Qualification -> bool
   QualificationOK(exs,reqquali) ==
     exists ex in set exs & reqquali in set ex.quali
+\end{lstlisting}
 
+The \texttt{ChangeExpert} function below is not correct but it is used
+for exercise/test purposes in this tutorial.
+
+\begin{lstlisting}
 functions
 
 ChangeExpert: Plant * Expert * Expert * Period -> Plant
 ChangeExpert(mk_Plant(plan,alarms),ex1,ex2,peri) ==
   mk_Plant(plan ++ {peri |-> plan(peri)\{ex1} union {ex2}},
            alarms)
+\end{lstlisting}
 
+In order to test the model different values can be defined. Such value
+definitions make use of the types defined in the VDM-SL model.
+
+\begin{lstlisting}
 values
  
   p1:Period = mk_token("Monday day");
@@ -167,12 +178,20 @@ values
   plant1: Plant = mk_Plant(s,{a1,a2,a3,a4})
 \end{lstlisting}  
 
+A basic explicit operation for test purposes can be defined as below.
+
 \begin{lstlisting}  
 operations
 
 Run: Expert ==> set of Period
 Run(e) == return ExpertIsOnDuty(e, plant1);
+\end{lstlisting}
 
+In the new VDM-10 variant of VDM-SL {\bf\ttfamily traces} have been
+incorporated since they can be used with tool support for
+combinatorial testing purposes.
+
+\begin{lstlisting}
 traces
 
   Test1: let a in set alarms

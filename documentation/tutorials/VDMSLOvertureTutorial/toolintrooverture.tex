@@ -355,7 +355,12 @@ automatically got a basic launch configuration called
 change it to call something else by chosing a different function from
 the Browse dialog.
 Figure~\ref{fig:debugConfiguration} shows the \texttt{AlarmSL} debug
-configuration for the alarm model. The class and operation/function
+configuration for the alarm model. Note the three different debug
+options here. Two of these are used for internal development purposes
+by the Overture development team but the one called \texttt{Generate
+  Latex Coverage} is important for you to check in case you would like
+to collec t test coverage information as explained below in
+Section~\ref{sec:testcov}. The class and operation/function
 name can be chosen from a Browse dialog; if the operation or function
 has arguments, these must be typed in manually between the brackets of
 the entry point function/operation. If this is not typed such that the
@@ -373,7 +378,7 @@ NumberOfExperts(p2, plant1)
 
 \begin{figure}[htp]
 \begin{center}
-  \includegraphics[width=4in]{figures/DebugConfiguration}
+  \includegraphics[width=4in]{figures/debuglauncer}
   \caption{The debug configuration dialog}
   \label{fig:debugConfiguration}
 \end{center}
@@ -533,7 +538,9 @@ demonstration purposes let us start by cleaning the model (right click
 on the project and select \texttt{Clean}). If we simply take the
 \texttt{AlarmSL} debug launch configuration the
 \verb|ExpertIsOnDuty| function in \verb|alarm.vdmsl| is called by the
-\texttt{Run} function. Once the debugger has completed and the result
+\texttt{Run} function. Remember that whenever test coverage
+information is desired the \texttt{Generate Latex Coverage} option
+must be selected. Once the debugger has completed and the result
 is written out in the \texttt{console} it is possible to right click
 on the \texttt{AlarmSL} project and select the \emph{Latex} $
 \rightarrow $ \emph{Latex coverage} the coverage information that have
@@ -543,7 +550,9 @@ will be turned into a pdf file. The \texttt{AlarmSL.pdf} file is
 placed in the \texttt{generated/latex} directory as shown in
 Figure~\ref{fig:testcov} and it includes the
 VDM definitions from all the files included in the project including
-coverage information.  
+coverage information. Note that whenever the model is adjusted or it
+is cleaned so it gets type checked again all the files in the
+\texttt{generated} directory is deleted.
 
 \begin{figure}[tb]
 \begin{center}
