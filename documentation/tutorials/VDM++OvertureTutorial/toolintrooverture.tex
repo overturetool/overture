@@ -69,15 +69,17 @@ would like.
 % checking and synchronise definitions for all classes with an Enterprise
 % Architect model, if desired.
 Section~\ref{sec:debugging} describes the process of testing and
-debugging using Overture. Section~\ref{sec:CT} shows how
-parts of the test process can be automated using Overture's
-combinatorial testing feature.  Section~\ref{sec:PO} demonstrates how
-it is possible automatically to generate the additional
-checks (called \emph{proof obligations}) needed ensure that a model is
+debugging using Overture. Section~\ref{sec:testcov}  describes how
+line coverage from using the debugger can be covered and displayed. 
+Section~\ref{sec:CT} shows how parts of the test process can be 
+automated using Overture's combinatorial testing feature.  
+Section~\ref{sec:PO} demonstrates how it is possible automatically 
+to generate the additional checks (called \emph{proof obligations}) needed ensure that a model is
 consistent.  Finally, Section~\ref{sec:cmdline} illustrates how parts
-of Overture's functionality can be accessed from a command line,
-including support for test coverage analysis which is not currently
-available from the Eclipse GUI.
+of Overture's functionality can be accessed from a command line.
+
+%including support for test coverage analysis which is not currently
+%available from the Eclipse GUI.
 % internal consistency checking facilities can be used to identify potential
 % sources of run-time errors. Finally the section provides a brief introduction
 % to further functionality from Overture used later in this book. The tables
@@ -214,8 +216,8 @@ prefer to use a text editor to perform such updates in the VDM++ text, then conv
 UML model automatically.
 
 To convert a UML class diagram model to a VDM++ model, you first need
-to export the UML model from EA to XMI format. This
-is then imported subsequently into Overture~(see Figure~\ref{fig:xmiexport}).
+to export the UML model from EA to XMI format~(see Figure~\ref{fig:xmiexport}). This
+is then subsequently imported into Overture as will be explained in Section~\ref{sec:fromUMLtoVDM}.
 
 \begin{figure}[htbp]
 \begin{center}
@@ -263,7 +265,7 @@ other perspectives are also available in Overture.
 
 \begin{figure}[!htb]
 \begin{center}
-  \includegraphics[width=4.5in]{figures/OverturePerspective}
+  \includegraphics[width=5in]{figures/OverturePerspective}
   \caption[labelInTOC]{The Overture Perspective}
   \label{fig:OverturePerspective}
 \end{center}
@@ -291,24 +293,44 @@ Figure~\ref{fig:importalarm}\footnote{You need both of these for
 
 An editor customised to the dialect of VDM being used in the project
 will appear when one of the imported files are selected in the
-Explorer view by double clicking.  A new VDM++ project is created by choosing
-\emph{File} $ \rightarrow$ \emph{New} $\rightarrow$
-\emph{Project}. The dialog shown in
-Figure~\ref{fig:newOvertureProjectPP} will appear. Click \emph{Next}
-and name the project.
-
+Explorer view by double clicking. When the
+\texttt{AlarmErrPP} project has been imported one can right click on the
+project in the \emph{Explorer} view and then select the
+\texttt{Properties} item in the menu and then
+Figure~\ref{fig:settings} will pop up. This includes the properties set
+for this project including specific VDM options. Note that there is a 
+language version option that for the \texttt{AlarmErrPP}
+project set to \texttt{vdm10} which indicates that it include
+non-standard features such as {\bf\ttfamily traces} which is explained 
+in Section~\ref{sec:CT}. In addition, options are gathered here for 
+additional checks where the \texttt{AlarmErrPP} project simply follow 
+the standard settings used for new projects.
 
 \begin{figure}[!htb]
 \begin{center}
-  \includegraphics[width=2.5in]{figures/newoverturePPproject}
-  \caption[labelInTOC]{Creating a New VDM++ Project}
-  \label{fig:newOvertureProjectPP}
+  \includegraphics[width=4.0in]{figures/settings}
+  \caption[labelInTOC]{Properties for the \texttt{AlarmErrPP} Project}
+  \label{fig:settings}
 \end{center}
 \end{figure}
 
+%A new VDM++ project is created by choosing
+%\emph{File} $ \rightarrow$ \emph{New} $\rightarrow$
+%\emph{Project}. The dialog shown in
+%Figure~\ref{fig:newOvertureProjectPP} will appear. Click \emph{Next}
+%and name the project.
+
+%\begin{figure}[!htb]
+%\begin{center}
+%  \includegraphics[width=2.5in]{figures/newoverturePPproject}
+%  \caption[labelInTOC]{Creating a New VDM++ Project}
+%  \label{fig:newOvertureProjectPP}
+%\end{center}
+%\end{figure}
+
 The \emph{Outline view}, to the right of the editor (see
 Figure~\ref{fig:OutlineView}) displays an outline of the file selected
-in the editor. It shows all declared classes,their instance variables,
+in the editor. It shows all declared classes, their instance variables,
 values, types, functions, operations and traces.
 Figure~\ref{fig:OverturePerspective} shows the outline view on the
 right hand side. Clicking on an operation or function will move the
@@ -335,6 +357,79 @@ Overture-specific functionality. One convenient feature is a toolbar
 that appears on the right side of the screen and allows the user to
 switch between perspectives; the particular perspectives on show here
 vary dynamically according to history.
+
+\section{Getting Started using Templates}\label{sec:templates}
+
+Before proceeding, please make sure that you have imported both the
+\texttt{AlarmErrPP} and the \texttt{Alarm++tracesPP} projects as shown in
+Figure~\ref{fig:importalarm}. When editing a VDM++ model, the Overture IDE parses the content of the
+editor buffer continuously as changes are made. Any parse errors will
+be reported in the problems view, as well as being highlighted in the
+editor. See the bottom of Figure
+\ref{fig:OverturePerspective}. Each time a VDM++ model file is
+saved the editor type-checks the model and reports any errors or
+warnings. Note also that the suggestions made in the error messages
+may not always be entirely the action you may wish to take when
+correcting the source since the tool cannot guess what you intended
+to write.
+
+Templates can be particularly useful when modifying VDM++ models. If you hit
+the key combination \textit{CTRL+space} after the initial characters
+of the template needed, Overture triggers a proposal. For example, if
+you type ''op'' followed by \textit{CTRL+space}, the Overture IDE
+will propose the use of an implicit or explicit operation template as
+shown in Figure~\ref{fig:operationTemplate}. The Overture IDE
+supports several types of template: cases, quantifications, functions
+(explicit/implicit), operations (explicit/implicit) and many
+more. Additional templates can easily be added in the future. The use
+of templates makes it much easier for users lacking deep familiarity
+with VDM syntax to nevertheless construct models.
+
+\begin{figure}
+	\begin{center}
+	\includegraphics[width=4in]{figures/OperationTemplate}
+	\caption{Explicit operation template}
+	\label{fig:operationTemplate}
+	\end{center}
+\end{figure}
+
+A new VDM++ project is created by choosing \emph{File} $ \rightarrow$
+\emph{New} $\rightarrow$ \emph{Project}. The dialog box shown in
+Figure~\ref{fig:newoverturePPproject} will appear. Ensure that VDM++
+is selected as the project type, click \emph{Next} and then name the
+project \texttt{Test} and if next is selected again it gets possible
+to select standard libraries as shown in
+Figure~\ref{fig:stdlibs}. These standard libraries require users to
+make use of modules but in return it is possible to get standard
+input/output, math and general utility functionality by selecting the
+appropriate standard libraries. In this \texttt{Test} project we can
+try to select the \texttt{IO} standard library. Afterwards one simply
+select \texttt{Finish}. Now you have an almost empty project (with the
+exception of the \texttt{IO.vdmpp} file in the \texttt{lib} directory)
+and you can then either add new VDM++ files to the project or simply paste in existing
+VDM++ source files from elsewhere. Adding a VDM++ file to a project
+you can rightclick on the project and then select \emph{New}
+$\rightarrow$ \emph{VDM++ Class} and then give a meaning full name
+(e.g.\ \texttt{Test}) to the class you would like to start defining and press
+\texttt{Finish}. This will create a new class file with the
+selected name and with space for the different kinds of definitions
+you can make inside such a VDM++ class.
+
+\begin{figure}[!htb]
+\begin{center}
+  \includegraphics[width=2.5in]{figures/newoverturePPproject}
+  \caption[labelInTOC]{Creating a New VDM++ Project}
+  \label{fig:newoverturePPproject}
+\end{center}
+\end{figure}
+
+\begin{figure}[!htb]
+\begin{center}
+  \includegraphics[width=2.5in]{figures/stdlibs}
+  \caption[labelInTOC]{The VDM++ Standard Libraries}
+  \label{fig:stdlibs}
+\end{center}
+\end{figure}
 
 \section{Mapping UML to  VDM}\label{sec:fromUMLtoVDM}\label{sec:syntaxcheck}
 \label{sec:typecheck}
@@ -373,27 +468,30 @@ current release. For
 example, any custom types are transformed to VDM++ definitions using
 machine-generated identifiers since custom types are not named in
 UML. As a result, you have to expect to make minor modifications to
-the generated VDM files. When making corrections to the model, you can
-use the Overture IDE templates. When you hit the key combination
-\textit{CTRL+space} after entering the initial characters of the
-template needed, Overture will offer possible completions. For
-example, if you type ''op'' followed by \textit{CTRL+space}, Overture
-will propose the use of an implicit or explicit operation template.
+the generated VDM files. 
 
-\begin{figure}
-	\begin{center}
-	\includegraphics[width=4in]{figures/OperationTemplate}
-	\caption{Explicit operation template}
-	\label{fig:operationTemplate}
-	\end{center}
-\end{figure}
+%When making corrections to the model, you can
+%use the Overture IDE templates. When you hit the key combination
+%\textit{CTRL+space} after entering the initial characters of the
+%template needed, Overture will offer possible completions. For
+%example, if you type ''op'' followed by \textit{CTRL+space}, Overture
+%will propose the use of an implicit or explicit operation template. An
+%example of this can be seen in Figure~\ref{fig:operationTemplate}.
+%
+%\begin{figure}
+%	\begin{center}
+%	\includegraphics[width=4in]{figures/OperationTemplate}
+%	\caption{Explicit operation template}
+%	\label{fig:operationTemplate}
+%	\end{center}
+%\end{figure}
 
-The Overture IDE supports many templates for language constructs
-including cases statements, classes, quantified expressions, functions
-(explicit/implicit), operations (explicit/implicit) and many
-more. Further templates can easily be added in the future. The use of
-templates makes it more concenient to write VDM models without
-detailed prior knowledge of the language syntax.
+%The Overture IDE supports many templates for language constructs
+%including cases statements, classes, quantified expressions, functions
+%(explicit/implicit), operations (explicit/implicit) and many
+%more. Further templates can easily be added in the future. The use of
+%templates makes it more concenient to write VDM models without
+%detailed prior knowledge of the language syntax.
 
 Before proceeding, finish the model of the alarm system. Begin by
 deleting the alarm project in the Overture IDE, and import the alarm
@@ -452,10 +550,11 @@ changes in EA.
 
 This section describes how to debug a model by testing it using the
 Overture IDE. The following test file (\texttt{Test1.vdmpp}) can be
-found in the alarm project.
+found in the alarm project and it is provided in
+Appendix~\ref{sec:VDMModel}.
 
 \lstset{language=VDM++}
-\input{test1.vpp.tex}
+%\input{test1.vpp.tex}
 
 Using this test, it is possible to exercise the system informally in
 order to check if the correct expert is paged as a result of a given
@@ -492,19 +591,18 @@ function/operation\footnote{Note that in the current version of
 Once the debug configuration is ready, the model can be debugged. This
 will change the main perspective of the Overture IDE to the
 \emph{Debug perspective} which contains the views needed for debugging
-in VDM. Breakpoints can easily be set by double clicking in left
+in VDM. The Debug perspective is illustrated in Figure~\ref{fig:DebuggingVDM}. 
+Breakpoints can easily be set by double clicking in left
 margin in the editor view. When the debugger reaches the location of a
 breakpoint, evaluation suspends and you can inspect the values of
 different variables and step through the VDM model line by line.
  
 %The \emph{Debug perspective} shows the VDM model in an editor, like the
 %Overture perspective, along with other specialized views for debugging.
-The Debug perspective is illustrated in
-Figure~\ref{fig:DebuggingVDM}.
 
 \begin{figure}[htp]
 \begin{center}
-  \includegraphics[width=4.5in]{figures/DebuggingVDM}
+  \includegraphics[width=5in]{figures/DebuggingVDM}
   \caption[Debugging perspective]{Debugging perspective}
   \label{fig:DebuggingVDM}
 \end{center}
@@ -522,18 +620,18 @@ view\footnote{In the current version only the thread where the
 
 \begin{table}
 \begin{center}
-\caption{Overture debugging buttons\label{tab:debugButtons}}
 \begin{tabular}{|l|l|}\hline \hline
 \textbf{Button} & \textbf{Explanation} \\ \hline
-\includegraphics[width=0.06\textwidth]{figures/resume} & Resume debugging \\
-\includegraphics[width=0.06\textwidth]{figures/suspend} & Suspend debugging\\
-\includegraphics[width=0.06\textwidth]{figures/terminate} & Terminate debugging\\
-\includegraphics[width=0.06\textwidth]{figures/stepinto} & Step into\\
-\includegraphics[width=0.06\textwidth]{figures/stepover} & Step over \\
-\includegraphics[width=0.06\textwidth]{figures/stepreturn} & Step return\\
-\includegraphics[width=0.06\textwidth]{figures/stepbystep} & Use step filters\\
+\includegraphics[width=0.03\textwidth]{figures/resume} & Resume debugging \\
+\includegraphics[width=0.03\textwidth]{figures/suspend} & Suspend debugging\\
+\includegraphics[width=0.03\textwidth]{figures/terminate} & Terminate debugging\\
+\includegraphics[width=0.03\textwidth]{figures/stepinto} & Step into\\
+\includegraphics[width=0.03\textwidth]{figures/stepover} & Step over \\
+\includegraphics[width=0.03\textwidth]{figures/stepreturn} & Step return\\
+\includegraphics[width=0.03\textwidth]{figures/stepbystep} & Use step filters\\
 \hline \hline
 \end{tabular}
+\caption{Overture debugging buttons\label{tab:debugButtons}}
 \end{center}
 \end{table}
 
@@ -560,10 +658,10 @@ located in the upper right corner in the Debug perspective.
 The \emph{Breakpoints view} gives an overview of all breakpoints set
 (see Figure~\ref{fig:BreakpointView}). From this view you
 can easily navigate to the location of a given breakpoint, disable or
-delete them, or set their properties.
+delete them, or set their properties. 
 %In figure
 %\ref{fig:DebuggingVDM} the Breakpoints view is hidden behind the
-%Variables view in the upper right hand corner in a tabbed notebook. 
+%Variables view in the upper right hand corner in a tabbed notebook.
 Conditional breakpoints are supported. These are a powerful tool for
 the developer since they allow a condition to be specified which has
 to be true in order for the debugger to stop at the given
@@ -609,6 +707,69 @@ Figure~\ref{fig:DebuggingVDM}.
 \label{ex:tool-monitor}Use the interpreter to evaluate the
   following expression: {\ttfamily new Test1().Run()}.
 \end{myexercise}
+
+\section{Test coverage}\label{sec:testcov}
+
+It is often useful to know how much of a model has been exercised by a
+set of tests. This gives some insight into the thoroughness of a test
+suite and may also help to identify parts of the model that have not
+been assessed, allowing new tests to be devised to cover these. When
+any evaluation is performed on a VDM++ model, the interpreter records
+the lines of the VDM++ model that are executed. This permits the line
+coverage to be examined after a test to identify the parts of the
+VDM++ model that have not yet been exercised -- coverage is
+cumulative, so a set of tests can be executed and their total coverage
+examined at the end.
+
+In our simple example, the different tests in the exercise above does
+cause the majority of the VDM++ model to be executed, but for
+demonstration purposes let us start by cleaning the model (right click
+on the project and select \texttt{Clean}). If we simply take the
+\texttt{AlarmErrPP} debug launch configuration the
+\verb|ExpertIsOnDuty| function in \verb|plant.vdmpp| is called by the
+\texttt{Run} function. Remember that whenever test coverage
+information is desired the \texttt{Generate Latex Coverage} option
+must be selected. Once the debugger has completed and the result
+is written out in the \texttt{console} it is possible to right click
+on the \texttt{AlarmErrPP} project and select the \emph{Latex} $
+\rightarrow $ \emph{Latex coverage} the coverage information that have
+been gathered in any expressions that have been debugged since the
+last change to a file have been saved or the project have been cleaned
+will be turned into a pdf file. The \texttt{AlarmErrPP.pdf} file is
+placed in the \texttt{generated/latex} directory. Note that whenever the model is adjusted or it
+is cleaned so it gets type checked again all the files in the
+\texttt{generated} directory is deleted.
+
+The coverage information is provided in a way where uncovered
+expressions are shown in red in the generated pdf file. In addition
+after the content of each VDM++ source file a table with coverage
+overview is provided in tabular form. For the \texttt{plant.vdmpp}
+file this looks like:
+
+\begin{longtable}{|l|r|r|}
+\hline
+Function or operation & Coverage & Calls \\
+\hline
+\hline
+ExpertIsOnDuty & 100.0\% & 1 \\
+\hline
+ExpertToPage & 100.0\% & 1 \\
+\hline
+NumberOfExperts & 0.0\% & 0 \\
+\hline
+Plant & 100.0\% & 1 \\
+\hline
+PlantInv & 100.0\% & 2 \\
+\hline
+\hline
+plant.vdmpp & 89.0\% & 5 \\
+\hline
+\end{longtable}
+
+\noindent where the \texttt{ExpertIsOnDuty} and \texttt{ExpertToPage} 
+operations are fully covered
+by just one call (due to the fact that its body is simply one line)
+whereas the \texttt{PlantInv} operation is called 2 times.
 
 \section{Combinatorial Testing}\label{sec:CT}
 
