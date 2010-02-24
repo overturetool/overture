@@ -1113,59 +1113,6 @@ extra debugging commands available at a breakpoint, such as \verb|continue|,
 described in the VDMJ User Guide\footnote{Supplied with the Overture
 documentation.}.
 
-When any evaluation is performed on a VDM model, VDMJ records the lines of the
-VDM model that are executed. This permits the line coverage to be examined
-after a test to identify the parts of the VDM model that have not yet been
-exercised -- coverage is cumulative, so a set of tests can be executed and their
-total coverage examined at the end.
-
-
-In our simple example, the single test does cause the majority of the
-VDM model to be executed, but the \verb|NumberOfExperts| operation in
-\verb|plant.vdmpp| remains unused. To display coverage, the 
-\verb|coverage <file>| command is used. 
-Lines that have been executed are listed with a '+'
-prefix, while those that have not have a '-' prefix; lines that are not
-executable have no prefix. Alternatively, the coverage can be written
-to a \LaTeX\ file using the \verb|latex| command:
-
-\begin{lstlisting}
-> coverage plant.vdmpp
-Test coverage for plant.vdmpp:
-  ...
-  public ExpertToPage: Alarm * Period ==> Expert
-  ExpertToPage(a, p) ==
-+   let expert in set schedule(p) be st
-+       a.GetReqQuali() in set expert.GetQuali()
-    in
-+     return expert
-+ pre a in set alarms and
-+     p in set dom schedule
-+ post let expert = RESULT
-       in
-+        expert in set schedule(p) and
-+        a.GetReqQuali() in set expert.GetQuali();
-
-  public NumberOfExperts: Period ==> nat
-  NumberOfExperts(p) ==
--   return card schedule(p)
-- pre p in set dom schedule;
-
-  public ExpertIsOnDuty: Expert ==> set of Period
-  ExpertIsOnDuty(ex) ==
-+   return {p | p in set dom schedule & 
-+               ex in set schedule(p)};
-  ...
-  
-Coverage = 87%
->
-
-> latex AlarmPP/Plant.vdmpp
-Latex coverage written to AlarmPP\Plant.vdmpp.tex
-> 
-\end{lstlisting}
-\lstset{style=mystyle}
-
 \lstset{style=mystyle,language=VDM++}
 
 \section{Summary}\label{sec:toolintrosummary}
@@ -1180,6 +1127,8 @@ support for VDM++:
 \item type checking of VDM++ models;
 %\item the notion of error messages;
 \item executing and debugging VDM++ models;
+\item collecting and displaying test coverage information on VDM++
+  models;
 %\item a command-line interface;
 %\item pretty printing VDM++ models with test coverage information;
 \item combinatorial testing enabling automation of parts of the

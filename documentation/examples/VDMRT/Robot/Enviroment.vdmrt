@@ -17,24 +17,27 @@ operations
  GetPointAvalibility(p) ==
    return completeGrid.GetPointAvalibility(p.X,p.Y);
    
-  public handleEvent : Grid * seq of SteeringController`Route * Grid`Point * bool==> ()
- handleEvent(g, routes,dest,b) ==
+public handleEvent : Grid * seq of SteeringController`Route * 
+                     Grid`Point * bool==> ()
+handleEvent(g, routes,dest,b) ==
    file.Save(g,routes,dest,b);
  
 public isFinished : () ==> ()
  isFinished () == Robot`steering.isFinished();
  
 thread
- (--here we have to interact with the robot, punch, shoot...something
+ (--here we have to interact with the robot, 
+  --punch, shoot...something
  
-    completeGrid := file.Load("testMap.map");
+   completeGrid := file.Load("testMap.map");
    start(Robot`nmc);   --observe
    start(Robot`mobs1); --move
    start(Robot`mobs2); --move
    start(Robot`mobs3); --move
    start(Robot`mobs4); --move
    start(Robot`steering);
-   Robot`steering.SetDiscoverInfo(file.startingPoint ,file.dest, file.battery);
+   Robot`steering.SetDiscoverInfo(file.startingPoint,
+                                  file.dest, file.battery);
  
    busy := false;
  

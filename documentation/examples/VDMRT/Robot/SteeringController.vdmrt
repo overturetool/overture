@@ -77,7 +77,9 @@ operations
   private GetNextMove : set of Grid`Point ==> [Grid`Point]
  GetNextMove (neighbourPoints) ==
  (
-   let freePts= {p|p in set neighbourPoints & workingGrid.GetPointAvalibility(p.X,p.Y)=<Free> and not IsInRoute(p)}
+   let freePts= {p|p in set neighbourPoints 
+                  & workingGrid.GetPointAvalibility(p.X,p.Y)=<Free> and
+                    not IsInRoute(p)}
      in
        if card freePts > 0 then
          return Robot`nmc.GetNextPoint(freePts, dest)
@@ -132,8 +134,9 @@ operations
        in routes(len routes) := r ^ [p]
    )
  
-  pre GetBatUsage()*2 <= batCap and batCap > 1 and let cp = routes(len routes)(len routes(len routes))
-       in p.X <> cp.X or p.Y <> cp.Y
+  pre GetBatUsage()*2 <= batCap and batCap > 1 and 
+      let cp = routes(len routes)(len routes(len routes))
+      in p.X <> cp.X or p.Y <> cp.Y
  post p = routes(len routes)(len routes(len routes));
  
  
@@ -172,7 +175,8 @@ operations
  (
    while not IsDestination(GetPos()) and GetBatUsage()*2 <= batCap do
    (
-     let neighbourPoints = {n|n in set GetNeighbourPoints() & workingGrid.IsValidGridPoint(n)}
+     let neighbourPoints = {n|n in set GetNeighbourPoints() 
+                             & workingGrid.IsValidGridPoint(n)}
        in
          if card neighbourPoints > 0 then
          (
@@ -190,7 +194,8 @@ operations
                    if DoesRouteHaveMoreOptions() then
                      RestartNewRoute()
                    else
-                     return false; -- no routes to destination. Dead end
+                     return false; 
+                     -- no routes to destination. Dead end
                );
          )
          else
@@ -205,10 +210,13 @@ operations
  private DiscoverUnknownNeighbourPoints : set of Grid`Point ==> ()
  DiscoverUnknownNeighbourPoints(neighbourPoints) ==
  (
-   let unknownPoints = {p| p in set neighbourPoints & workingGrid.GetPointAvalibility(p.X,p.Y)=<Unknown>}
+   let unknownPoints = {p| p in set neighbourPoints 
+                         & workingGrid.GetPointAvalibility(p.X,p.Y)=<Unknown>}
      in
      (
-       let knownMappings = { p |-> obs.GetPointAvalibility(p) | obs in set obsSensors, p in set unknownPoints & obs.GetDirection() = GetPointDirection(p)}
+       let knownMappings = { p |-> obs.GetPointAvalibility(p) 
+                           | obs in set obsSensors, p in set unknownPoints 
+                           & obs.GetDirection() = GetPointDirection(p)}
          in
              workingGrid.SetPointMP(knownMappings)
      );

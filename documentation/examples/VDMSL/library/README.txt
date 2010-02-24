@@ -17,6 +17,6 @@ type instead of <nil> would be appropriate here.
 #PRE_CHECKS=true
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
-#ENTRY_POINT=isnumber(42)
+#ENTRY_POINT=DEFAULT`isnumber(42)
 #EXPECTED_RESULT=NO_ERROR_TYPE_CHECK
 #******************************************************

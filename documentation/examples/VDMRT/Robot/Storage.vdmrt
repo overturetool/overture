@@ -57,21 +57,25 @@ operations
    dest := mk_Grid`Point(data(destIndex).#1,data(destIndex).#2);
    battery := (inData(batCapIndex).#1);
    fields := len data - 2; --just for test
-  let obsticales = { mk_Grid`Point(data(i).#1,inData(i).#2) |-> <Occupied> | i in set {4, ...,len data}}      
+  let obsticales = { mk_Grid`Point(data(i).#1,inData(i).#2) |-> <Occupied> 
+                   | i in set {4, ...,len data}}      
      in g.SetPointMP(obsticales);
    return g;
    )
  
  )
- pre startIndex in set inds (data) and destIndex in set inds (data) and batCapIndex in set inds (data);
+ pre startIndex in set inds (data) and 
+     destIndex in set inds (data) and 
+     batCapIndex in set inds (data);
  
  public Save : Grid * seq of SteeringController`Route * Grid`Point * bool ==> ()
  Save(g, routes,dest,b) ==
  (
    PrintLine("#--START--#");
    PrintLine("#--Start Successfull Destination--#");
-   def - = file.fwriteval[bool * Grid`Point]( outputFileName,mk_(b, dest),<append>) in skip;
-   PrintLine("#--End Successfull Destination--#");
+   def - = file.fwriteval[bool * Grid`Point]
+                         (outputFileName,mk_(b, dest),<append>) 
+   in skip;   PrintLine("#--End Successfull Destination--#");
    PrintLine("#--Start Grid--#");
    for all x in set dom g.points
    do
@@ -94,7 +98,8 @@ private WriteMap: Grid`Point * Grid`PointAvalibility ==> ()
 WriteMap(g,p) ==
 (
   file := new IO();
-  def - = file.fwriteval[Grid`Point * Grid`PointAvalibility]( outputFileName,mk_(g,p),<append>) in skip;
+  def - = file.fwriteval[Grid`Point * Grid`PointAvalibility]
+                        (outputFileName,mk_(g,p),<append>) in skip;
 );
  
  
@@ -104,7 +109,8 @@ WriteRoute(r) ==
   file := new IO();
   for all x in set inds r
   do(
-      def - = file.fwriteval[Grid`Point]( outputFileName,(r(x)),<append>) in skip;
+      def - = file.fwriteval[Grid`Point]( outputFileName,(r(x)),<append>) 
+      in skip;
      );
   
  );

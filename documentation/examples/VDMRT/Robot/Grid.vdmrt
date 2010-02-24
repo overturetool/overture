@@ -11,7 +11,8 @@ public points: map Point to PointAvalibility := {|->};
  
 private maxPoint: Point := mk_Point(10E6,10E6);
  
-inv forall p in set dom points & IsValidGridPoint(p) --& exists pa in set rng points & points(p)=pa;
+inv forall p in set dom points & IsValidGridPoint(p) 
+--& exists pa in set rng points & points(p)=pa;
  
 operations
  

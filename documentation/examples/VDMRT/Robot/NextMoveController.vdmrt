@@ -44,8 +44,10 @@ private LocateMovingObstacles : () ==>()
 private SetObs: map Grid`Point to Grid`PointAvalibility ==> ()
  SetObs(mp) ==
   (
-   obs := { |->}; -- remove old data could be replaced by using the thread id of the thread
-   obs := obs ++ mp;
+   obs := { |->}; 
+   -- remove old data could be replaced by using the thread 
+   -- id of the thread
+   obs := obs ++ mp
  );
  
 private WaitForAvalibility: Grid`Point ==> ()
@@ -80,7 +82,9 @@ Util`PrintDebug("not");
  
  public GetNextPoint : set of Grid`Point * Grid`Point ==> [Grid`Point]
  GetNextPoint(neighbours, dest) ==
-   let tmp={p| p in set neighbours & not exists q in set neighbours & Distance(p, dest) > Distance(q, dest)}
+   let tmp={p| p in set neighbours 
+             & not exists q in set neighbours & 
+                      Distance(p, dest) > Distance(q, dest)}
     in
       for all p in set tmp      
         do
