@@ -3,6 +3,7 @@
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
 #LANGUAGE_VERSION=classic
+#AUTHOR= Sten Agerholm
 #INV_CHECKS=true
 #POST_CHECKS=true
 #PRE_CHECKS=true
