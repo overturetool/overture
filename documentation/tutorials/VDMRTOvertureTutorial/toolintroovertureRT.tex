@@ -110,10 +110,10 @@ go to:
 
 A library of sample VDM-RT models, including all those needed
 for the exercises in the book, is available and can be downloaded from
-SourceForge under the \texttt{files/Examples} section using the
+SourceForge under the \texttt{examplesRT.zip} file using the
 URL\footnote{The library files are created to be used with Eclipse,
   but can be opened with file compression programs like \texttt{Winrar} on
-  Windows}:
+  Windows.}:
 \begin{quote}
 \url{https://sf.net/projects/overture/files/Examples/}
 \end{quote}
@@ -121,7 +121,13 @@ You can import the example library zip folder as described in
 Section~\ref{sec:vdmsupport}.  Finally, the web site
 \texttt{www.vdmbook.com} contains all the examples used in this book
 as plain text files but these are also all present in the above
-mentioned zip file.
+mentioned zip file. Finally, in order to make use of the
+test coverage feature described in Section~\ref{sec:testcov} it is
+necessary to have the text processing system called \LaTeX\ and its
+\texttt{pdflatex} feature. This can for example be obtained from:
+\begin{quote}
+\url{http://miktex.org/2.8/}
+\end{quote}
 
 \paragraph{Note for \vdmtools$^{\mbox{\small\textbf{{\textregistered}}}}$ users.} 
 Overture provides a new open source VDM tool set, but it can also work
@@ -389,13 +395,13 @@ possible to switch between threads from the Debug view.
 \caption{Overture debugging buttons\label{tab:debugButtons}}
 \begin{tabular}{|l|l|}\hline \hline
 \textbf{Button} & \textbf{Explanation} \\ \hline
-\includegraphics[width=0.06\textwidth]{figures/resume} & Resume debugging \\
-\includegraphics[width=0.06\textwidth]{figures/suspend} & Suspend debugging\\
-\includegraphics[width=0.06\textwidth]{figures/terminate} & Terminate debugging\\
-\includegraphics[width=0.06\textwidth]{figures/stepinto} & Step into\\
-\includegraphics[width=0.06\textwidth]{figures/stepover} & Step over \\
-\includegraphics[width=0.06\textwidth]{figures/stepreturn} & Step return\\
-\includegraphics[width=0.06\textwidth]{figures/stepbystep} & Use step filters\\
+\includegraphics[width=0.03\textwidth]{figures/resume} & Resume debugging \\
+\includegraphics[width=0.03\textwidth]{figures/suspend} & Suspend debugging\\
+\includegraphics[width=0.03\textwidth]{figures/terminate} & Terminate debugging\\
+\includegraphics[width=0.03\textwidth]{figures/stepinto} & Step into\\
+\includegraphics[width=0.03\textwidth]{figures/stepover} & Step over \\
+\includegraphics[width=0.03\textwidth]{figures/stepreturn} & Step return\\
+\includegraphics[width=0.03\textwidth]{figures/stepbystep} & Use step filters\\
 \hline \hline
 \end{tabular}
 \end{center}
@@ -459,6 +465,61 @@ the debugger is at a breakpoint. The Interactive Console keeps a
 command history, so that previously executed commands can be run again
 easily. The interactive console can be seen at the bottom of
 Figure~\ref{fig:userguide:DebuggingVDM}.
+
+\section{Test coverage}\label{sec:testcov}
+
+It is often useful to know how much of a model has been exercised by a
+set of tests. This gives some insight into the thoroughness of a test
+suite and may also help to identify parts of the model that have not
+been assessed, allowing new tests to be devised to cover these. When
+any evaluation is performed on a VDM-RT model, the interpreter records
+the lines of the VDM-RT model that are executed. This permits the line
+coverage to be examined after a test to identify the parts of the
+VDM++ model that have not yet been exercised -- coverage is
+cumulative, so a set of tests can be executed and their total coverage
+examined at the end.
+
+In our simple example, the different tests in the exercise above does
+cause the majority of the VDM-RT model to be executed, but for
+demonstration purposes let us start by cleaning the model (right click
+on the project and select \texttt{Clean}). Let us evaluate the
+\texttt{RunScenario1} and \texttt{RunScenario2} operations where the
+\texttt{Generate test coverage} option is selected.  Once the debugger
+has completed and the result is written out in the \texttt{console} it
+is possible to right click on the \texttt{CarRadioNavi} project and
+select the \emph{Latex} $ \rightarrow $ \emph{Latex coverage} the
+coverage information that have been gathered in any expressions that
+have been debugged since the last change to a file have been saved or
+the project have been cleaned will be turned into a pdf file. The
+\texttt{CarRadioNavi.pdf} file is placed in the
+\texttt{generated/latex} directory. Note that whenever the model is
+adjusted or it is cleaned so it gets type checked again all the files
+in the \texttt{generated} directory is deleted.
+
+The coverage information is provided in a way where uncovered
+expressions are shown in red in the generated pdf file. In addition
+after the content of each VDM-RT source file a table with coverage
+overview is provided in tabular form. So for example for the
+\texttt{MMI} class this looks like:
+
+\begin{longtable}{|l|r|r|}
+\hline
+Function or operation & Coverage & Calls \\
+\hline
+\hline
+HandleKeyPress & 90.0\% & 36 \\
+\hline
+UpdateScreen & 87.0\% & 65 \\
+\hline
+\hline
+mmi.vdmrt & 88.0\% & 101 \\
+\hline
+\end{longtable}
+
+\noindent where the \texttt{ExpertIsOnDuty} and \texttt{ExpertToPage} 
+operations are fully covered
+by just one call (due to the fact that its body is simply one line)
+whereas the \texttt{PlantInv} operation is called 2 times.
 
 \section{Realtime Log Viewer}\label{sec:RTLV}
 
@@ -804,69 +865,6 @@ The \verb|help| command is context sensitive, and will list the extra debugging
 commands available at a breakpoint, such as \verb|continue|, \verb|step|,
 \verb|stack|, \verb|list| and so on. The full set of commands is described in the
 VDMJ User Guide\footnote{Supplied with the Overture documentation.}.
-
-When any evaluation is performed on a VDM model, VDMJ records the lines of the
-VDM-RT model that are executed. This permits the line coverage to be examined
-after a test to identify the parts of the VDM-RT model that have not yet been
-exercised -- coverage is cumulative, so a set of tests can be executed and their
-total coverage examined at the end.
-
-In our simple example, the single test executes the body of the
-\verb|RunScenario2| operation, but the \verb|RunScenario1| operation
-remains unused. To display coverage, the \verb|coverage <file>|
-command is used. Lines that have been executed are listed with a '+'
-prefix, while those that have not have a '-' prefix; lines that are
-not executable have no prefix. Alternatively, coverage can be generated
-as a \LaTeX output file, which displays parts oflines that have been
-executed. This is produced with the \verb|latex| command.
-\begin{lstlisting}
-> coverage CarNaviRadio/World.vdmrt
-Test coverage for CarNaviRadio\World.vdmrt:
-
-  class World
-  
-  types
-    public perfdata = nat * nat * real
-  
-  instance variables
-+ static public envTasks : map seq of char to 
-                             EnvironmentTask := {|->};
-  
-  operations
-  addEnvironmentTask: seq of char * EnvironmentTask 
-                      ==> ()
-  addEnvironmentTask (pnm, penv) ==
-+  (envTasks := envTasks munion { pnm |-> penv };
-+   penv.Run() );
-  
-  public RunScenario1: () ==> map seq of char to perfdata
-  RunScenario1 () ==
--  (addEnvironmentTask("VolumeKnob", new VolumeKnob(10));
--   addEnvironmentTask("TransmitTMC", 
-                       new TransmitTMC(10));
--   return { name |-> envTasks(name).getMinMaxAverage() 
--          | name in set dom envTasks } );
-  
-  public RunScenario2: () ==> map seq of char to perfdata 
-  RunScenario2 () ==
-+  (addEnvironmentTask("InsertAddress", 
-                       new InsertAddress(10));
-+   addEnvironmentTask("TransmitTMC", 
-                       new TransmitTMC(10));
-+   return { name |-> envTasks(name).getMinMaxAverage() 
-+          | name in set dom envTasks } );
-  
-  
-  end World
-
-Coverage = 63%
-
- 
-> latex CarNaviRadio/World.vdmrt
-Latex coverage written to CarNaviRadio\World.vdmrt.tex
-> 
-\end{lstlisting}
-
 
 \lstset{style=mystyle}
 
