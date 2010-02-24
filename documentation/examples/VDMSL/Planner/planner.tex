@@ -1,0 +1,28 @@
+%\documentstyle[a4,makeidx,vdmsl_v1.1.35]{article}
+% With old latex you can use thid line instead
+\documentclass{article}
+\usepackage{fullpage}
+\usepackage{makeidx}
+%\usepackage{vdmsl-2e}
+\usepackage{overture}
+
+\newcommand{\StateDef}[1]{{\bf #1}}
+\newcommand{\TypeDef}[1]{{\bf #1}}
+\newcommand{\TypeOcc}[1]{{\it #1}}
+\newcommand{\FuncDef}[1]{{\bf #1}}
+\newcommand{\FuncOcc}[1]{#1}
+\newcommand{\ModDef}[1]{{\tiny #1}}
+
+\makeindex
+
+\begin{document}
+
+\title{Specification of an Specification of an automatic planner}
+\author{Submitted by T.L.\ McCluskey and Pat Diskin}
+\maketitle
+
+\include{generated/latex/specification/planner.vdmsl}
+
+\printindex
+
+\end{document}

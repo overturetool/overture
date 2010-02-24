@@ -19,6 +19,7 @@ McGraw-Hill Software Engineering Series, London. ISBN 0-07-707735-0.
 #PRE_CHECKS=true
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
+#DOCUMENT=planner.tex
 #ENTRY_POINT=
 #EXPECTED_RESULT=NO_ERROR_TYPE_CHECK
 #******************************************************
