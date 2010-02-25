@@ -73,8 +73,9 @@ debugging using Overture. Section~\ref{sec:testcov}  describes how
 line coverage from using the debugger can be covered and displayed. 
 Section~\ref{sec:CT} shows how parts of the test process can be 
 automated using Overture's combinatorial testing feature.  
-Section~\ref{sec:PO} demonstrates how it is possible automatically 
-to generate the additional checks (called \emph{proof obligations}) needed ensure that a model is
+Section~\ref{sec:PO} demonstrates how it is possible to automatically 
+generate the additional checks (called \emph{proof obligations}) needed 
+in order to ensure that a model is
 consistent.  Finally, Section~\ref{sec:cmdline} illustrates how parts
 of Overture's functionality can be accessed from a command line.
 
@@ -168,10 +169,10 @@ necessary to have the text processing system called \LaTeX\ and its
 \paragraph{Note for \vdmtools$^{\mbox{\small\textbf{{\textregistered}}}}$ users.} 
 Overture provides a new open source VDM tool set, but it can
 also work with
-\vdmtools$^{\mbox{\small\textbf{{\textregistered}}}}$. \vdmtools, originally developed IFAD A/S, is now
+\vdmtools$^{\mbox{\small\textbf{{\textregistered}}}}$. \vdmtools, originally developed by IFAD A/S, is now
 maintained and developed by CSK Systems~(see
 \url{http://www.vdmtools.jp/en/}). In the future Overture will be able
-to accesses
+to access
 \vdmtools\ functionality via a remote API, but the integration will to
 some extent be limited by the API capabilities. However, the additional
 features of the Overture IDE make it worth considering as a front end
@@ -364,6 +365,8 @@ that appears on the right side of the screen and allows the user to
 switch between perspectives; the particular perspectives on show here
 vary dynamically according to history.
 
+
+
 \section{Getting Started using Templates}\label{sec:templates}
 
 Before proceeding, please make sure that you have imported both the
@@ -403,19 +406,18 @@ A new VDM++ project is created by choosing \emph{File} $ \rightarrow$
 \emph{New} $\rightarrow$ \emph{Project}. The dialog box shown in
 Figure~\ref{fig:newoverturePPproject} will appear. Ensure that VDM++
 is selected as the project type, click \emph{Next} and then name the
-project \texttt{Test} and if next is selected again it gets possible
+project \texttt{AlarmUML}. Following this it is possible
 to select standard libraries as shown in
-Figure~\ref{fig:stdlibs}. These standard libraries require users to
-make use of modules but in return it is possible to get standard
+Figure~\ref{fig:stdlibs}. These standard libraries gives the possibility to get standard
 input/output, math and general utility functionality by selecting the
-appropriate standard libraries. In this \texttt{Test} project we can
+appropriate standard libraries. In this \texttt{AlarmUML} project we can
 try to select the \texttt{IO} standard library. Afterwards one simply
 select \texttt{Finish}. Now you have an almost empty project (with the
 exception of the \texttt{IO.vdmpp} file in the \texttt{lib} directory)
 and you can then either add new VDM++ files to the project or simply paste in existing
 VDM++ source files from elsewhere. Adding a VDM++ file to a project
 you can rightclick on the project and then select \emph{New}
-$\rightarrow$ \emph{VDM++ Class} and then give a meaning full name
+$\rightarrow$ \emph{VDM-PP Class} and then give a meaning full name
 (e.g.\ \texttt{Test}) to the class you would like to start defining and press
 \texttt{Finish}. This will create a new class file with the
 selected name and with space for the different kinds of definitions
@@ -441,10 +443,12 @@ you can make inside such a VDM++ class.
 \label{sec:typecheck}
 
 In order to map the UML class diagram created in Enterprise Architect
-to VDM, a new project must be created in the Overture tool to receive
-it. This is done by right-clicking in the \emph{Script Explorer} view,
-and creating a new VDM-PP project and for example naming it
-\texttt{AlarmUML}. By right-clicking the new project
+to VDM, use the \texttt{AlarmUML} project.
+%, a new project must be created in the Overture tool to receive
+%it. This is done by right-clicking in the \emph{Script Explorer} view,
+%and creating a new VDM-PP project and for example naming it
+%\texttt{AlarmUML}. 
+By right-clicking the project
 root in the \emph{Script Explorer}, \emph{UML Transformation} can be
 chosen, followed by \emph{Import XMI}. Now browse to the XMI/XML file
 exported from EA and open this.
@@ -499,26 +503,27 @@ the generated VDM files.
 %templates makes it more concenient to write VDM models without
 %detailed prior knowledge of the language syntax.
 
-Before proceeding, finish the model of the alarm system. Begin by
-deleting the alarm project in the Overture IDE, and import the alarm
-project from the book's web site. This can be done by right clicking
-the project view and selecting \emph{Import}, followed by
-\emph{Existing Projects into Workspace}.
+%Before proceeding, finish the model of the alarm system. Begin by
+%deleting the alarm project in the Overture IDE, and import the alarm
+%project from the book's web site. This can be done by right clicking
+%the project view and selecting \emph{Import}, followed by
+%\emph{Existing Projects into Workspace}.
+%
+%When editing a VDM model, the Overture IDE parses the content of the
+%editor buffer continuously as changes are made. Any parsing errors
+%will be reported in the problems view, as well as being highlighted in
+%the editor~(see the bottom of
+%Figure~\ref{fig:OverturePerspective}). Each time a VDM model is saved
+%the editor type checks the entire VDM++ model and reports any errors or
+%warnings. Note also that the suggestions about missing characters 
+%made in the error messages
+%may not always be entirely the action you may wish to take when
+%correcting the source since the tool cannot guess what you intended to
+%write.
 
-When editing a VDM model, the Overture IDE parses the content of the
-editor buffer continuously as changes are made. Any parsing errors
-will be reported in the problems view, as well as being highlighted in
-the editor~(see the bottom of
-Figure~\ref{fig:OverturePerspective}). Each time a VDM model is saved
-the editor type checks the entire VDM++ model and reports any errors or
-warnings. Note also that the suggestions about missing characters 
-made in the error messages
-may not always be entirely the action you may wish to take when
-correcting the source since the tool cannot guess what you intended to
-write.
-
-The imported \texttt{AlarmErrPP} project contains a number of VDM++
-model files with a number of
+Before proceeding, delete the \texttt{AlarmUML} project in the Overture IDE.
+For the following, the \texttt{AlarmErrPP} project is used. This project contains 
+a number of VDM++ model files with a number of
 deliberate errors.  The errors are common ones such a
 semicolons separating definitions that has been forgotten.
 
@@ -555,7 +560,7 @@ changes in EA.
 \section{Debugging}\label{sec:debugging}
 
 This section describes how to debug a model by testing it using the
-Overture IDE. The following test file (\texttt{Test1.vdmpp}) can be
+Overture IDE. A test file (\texttt{Test1.vdmpp}) can be
 found in the alarm project and it is provided in
 Appendix~\ref{sec:VDMModel}.
 
@@ -618,8 +623,8 @@ The \emph{Debug view} in the upper left corner of the \emph{Debug
   perspective} shows all running threads in the VDM++ model and their
 call stacks. It also shows whether a given model is stopped, suspended
 or running. All threads are also shown, along with their running
-status. It is possible to switch between threads from the \emph{Debug}
-view\footnote{In the current version only the thread where the
+status. It is possible to switch between threads from the \emph{Debug view}
+\footnote{In the current version only the thread where the
   breakpoint is met is stopped, but in the future all threads will be
   stopped when a breakpoint is met and all will be enabled again once
   the user resume the execution.}.
@@ -694,7 +699,7 @@ Figure~\ref{fig:BreakpointConditional}.
 The \emph{Expressions view} allows the user to enter \emph{watch}
 expressions whose values are automatically displayed and updated when
 stepping. Watch expressions can be added manually or created by
-selecting \emph{create watch expression} from the \emph{Variables} view. It
+selecting \emph{create watch expression} from the \emph{Variables view}. It
 is possible to edit existing expressions.  Like the Breakpoints view,
 this view is hidden in the upper right hand corner in
 Figure~\ref{fig:DebuggingVDM}.
@@ -714,6 +719,8 @@ Figure~\ref{fig:DebuggingVDM}.
   following expression: {\ttfamily new Test1().Run()}.
 \end{myexercise}
 
+
+
 \section{Test coverage}\label{sec:testcov}
 
 It is often useful to know how much of a model has been exercised by a
@@ -732,13 +739,14 @@ cause the majority of the VDM++ model to be executed, but for
 demonstration purposes let us start by cleaning the model (right click
 on the project and select \texttt{Clean}). If we simply take the
 \texttt{AlarmErrPP} debug launch configuration the
-\verb|ExpertIsOnDuty| function in \verb|plant.vdmpp| is called by the
+\verb|ExpertIsOnDuty| and \verb|ExpertToPage| operations in 
+\verb|plant.vdmpp| are called by the
 \texttt{Run} function. Remember that whenever test coverage
 information is desired the \texttt{Generate Latex Coverage} option
 must be selected. Once the debugger has completed and the result
 is written out in the \texttt{console} it is possible to right click
 on the \texttt{AlarmErrPP} project and select the \emph{Latex} $
-\rightarrow $ \emph{Latex coverage} the coverage information that have
+\rightarrow $ \emph{Latex coverage}. The coverage information that have
 been gathered in any expressions that have been debugged since the
 last change to a file have been saved or the project have been cleaned
 will be turned into a pdf file. The \texttt{AlarmErrPP.pdf} file is
@@ -748,7 +756,7 @@ is cleaned so it gets type checked again all the files in the
 
 The coverage information is provided in a way where uncovered
 expressions are shown in red in the generated pdf file. In addition
-after the content of each VDM++ source file a table with coverage
+to the content of each VDM++ source file a table with coverage
 overview is provided in tabular form. For the \texttt{plant.vdmpp}
 file this looks like:
 
@@ -776,6 +784,8 @@ plant.vdmpp & 89.0\% & 5 \\
 operations are fully covered
 by just one call (due to the fact that its body is simply one line)
 whereas the \texttt{PlantInv} operation is called 2 times.
+
+
 
 \section{Combinatorial Testing}\label{sec:CT}
 
@@ -825,16 +835,17 @@ argument, and the expert added for the schedule at this period does
 not have all the necessary qualifications, the invariant will again be
 violated. In fact this means that one would probably have to change
 the signature of this operation such that it instead of taking a
-simple expert would take a collection of experts.  We could use the
-debugger presented above to test these two new operations manually,
-but we can also automate a part of this process.
+simple expert would take a collection of experts. Instead of adding the 
+two operations manually, use the \texttt{Alarm++tracesPP} project.
 
+We could use the debugger presented above to test these two new 
+operations manually, but we can also automate a part of this process.
 In order to do the automation, Overture needs to know about the
 combinations of operation calls that you would like to have carried
 out, so it is necessary to write a kind of regular expression called a
 \emph{trace}. VDM++ has been extended such that traces can be written
 directly as a part of a VDM++ model. A full explanation of this can be
-found in~\cite{Larsen&09d}. In our case, inside the \texttt{Test2}
+found in~\cite{Larsen&09d}. In our case, inside the \texttt{Test1}
 class one can write\footnote{Such \emph{traces} can actually also be
   represented as UML sequence diagrams and then automatically
   translated into the corresponding VDM++ textual form, but since this
@@ -862,9 +873,9 @@ their variable bindings whereas manual debugging will just select a
 few combinations.  The cardinality of these sets determines the
 overall number of test cases, each being formed as a sequence of four
 operation calls, as shown. In this case, the cardinality of the three
-sets are respectively 4, 3 and 4. Multiplying these gives 48. If you
+sets are respectively 4, 3 and 4. Multiplying these gives 48 tests in total. If you
 select the Combinatorial Testing perspective you will see the
-\textsf{CT Overview} view. Inside this view you can select the alarm
+\textsf{CT Overview} view. Inside this view you can select the \texttt{Alarm++tracesPP}
 project, right click it and choose the \textsf{Run selected}
 option. Now Overture expands and executes all 48 test cases one after
 another. The results of these executions are illustrated with green
@@ -883,7 +894,7 @@ the corresponding results from its four operation calls.
 
 The syntax for traces also enables operation repetition and alternatives to be
 specified, but these were not needed for this simple case. Using the full power
-of traces it is possible to efficiently generate and execute very large test
+of traces, it is possible to efficiently generate and execute very large test
 suites. Naturally, this is most likely to find inconsistencies when the model
 attempts to define its essential predicates (invariants, pre and
 post-conditions)\footnote{Note that when using repetitions and
