@@ -8,10 +8,9 @@ Bundle-Name: org.overture.ide.debug.core
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.debug.core;singleton:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.eclipse.dltk.debug,
- org.eclipse.debug.core;bundle-version="3.5.0",
- org.eclipse.dltk.core;bundle-version="1.0.0",
- org.eclipse.core.runtime;bundle-version="3.5.0"
+Require-Bundle: org.eclipse.debug.core;bundle-version="3.5.0",
+ org.eclipse.core.runtime;bundle-version="3.5.0",
+ org.eclipse.ui.console;bundle-version="3.4.0"
 Export-Package: org.overture.ide.debug.core
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.overture.ide.debug.core.DebugCorePlugin

@@ -201,7 +201,10 @@ public class ProjectUtility
             e.printStackTrace();
             project = null;
         }
-        return project;
+        
+        IProject resProject = new VdmProject(project);
+        
+        return resProject;
     }
 
 	private static IProject createBaseProject(String projectName, URI location) {
@@ -226,7 +229,9 @@ public class ProjectUtility
             }
         }
 
-        return newProject;
+        IProject resProject = new VdmProject(newProject);
+        
+        return resProject;
     }
 
 	private static void createFolder(IFolder folder) throws CoreException {

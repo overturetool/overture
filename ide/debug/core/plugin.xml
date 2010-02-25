@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="org.overture.ide.debug.core.OvertureDebugPreferenceInitializer">
-      </initializer>
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="org.overture.ide.debug.core.launching.VdmLaunchConfigurationDelegate"
+            id="org.overture.ide.debug.core.launchConfigurationType"
+            modes="run, debug"
+            name="VDM launcher"
+            public="true">
+      </launchConfigurationType>
    </extension>
 </plugin>

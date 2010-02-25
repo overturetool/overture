@@ -3,20 +3,10 @@
 <plugin>
 
 <!-- preference pages -->
-<extension point="org.eclipse.ui.preferencePages">
-    <page
-      category="org.overture.ide.ui.OvertureGlobalPreferencesPage"
-      class="org.overture.ide.debug.ui.preferences.OvertureInterpreterPreferencePage"
-      id="org.overture.ide.debug.ui.preferences.OvertureInterpreterPreferencePage"
-      name="Interpreters" />
-  </extension>
 
 <!--
 	Console preference initializer 
 -->
-  <extension point="org.eclipse.core.runtime.preferences">
-    <initializer class="org.overture.ide.debug.ui.preferences.ConsolePreferenceInitializer" />
-  </extension>
 
 
 
@@ -37,9 +27,17 @@
   -->
   <extension point="org.eclipse.ui.perspectiveExtensions">
     <perspectiveExtension
-      targetID="org.overture.ide.ui.VdmDefaultPerspective">
+      targetID="org.overture.ide.ui.perspective">
       <actionSet id="org.eclipse.debug.ui.breakpointActionSet"></actionSet>
     </perspectiveExtension>
+  </extension>
+  <extension
+        point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+     <launchConfigurationTypeImage
+           configTypeID="org.overture.ide.debug.core.launchConfigurationType"
+           icon="icons/oml16.png"
+           id="org.overture.ide.debug.ui.launchConfigurationTypeImage">
+     </launchConfigurationTypeImage>
   </extension>
   
 </plugin>
