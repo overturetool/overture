@@ -245,7 +245,9 @@ is shown how to analyse and display logs from executing
 such VDM-RT models. After these sections the main part of the user
 manual is completed in Section~\ref{sec:commandline} with an
 explanation of the features from Overture which are also available from
-a command-line interface. From Appendix~\ref{app:internalerrors}
+a command-line interface. Appendix~\ref{app:templates} provide a list
+of all the standard templates built into Overture. 
+From Appendix~\ref{app:internalerrors}
 to~\ref{app:POcategories} complete lists of different kinds of errors,
 warnings and proof obligations are provided and further explanation
 are provided where it is judged necessary.
@@ -558,6 +560,11 @@ that can be set for each VDM project are:
   this check here.
 \end{description}
 
+In addition to these project settings it is possible to chose to have
+a main \LaTeX\ file where one can incorporate the explanations outside
+the \texttt{vdm\_al} environment and decide the order in which the
+different VDM source files shall be included. \fbox{TBW}
+
 \section{Editing VDM models}\label{sec:editVDM}
 
 \subsection{VDM Dialect Perspectives}
@@ -606,7 +613,8 @@ become visible. In Figure~\ref{fig:Templatepreferences} it can be seen
 how the template for cases expressions is defined in Overture. Note
 that new templates can be added and the already defined ones can be
 adjusted by selecting the \emph{Edit} button. It is also possible to
-remove templates using the \emph{Remove} button.
+remove templates using the \emph{Remove} button. A full list of the
+standard defined templates is available in Appendix~\ref{app:templates}.
 
 \begin{figure}
 \begin{center}
@@ -683,19 +691,19 @@ The Debug Perspective is illustrated on Figure~\ref{fig:userguide:DebuggingVDM}
 \caption{Overture debugging buttons\label{tab:debugButtons}}
 \begin{tabular}{|l|l|}\hline \hline
 \textbf{Button} & \textbf{Explanation} \\ \hline
-\includegraphics[width=0.06\textwidth]{figures/resume} & Resume
+\includegraphics[width=0.03\textwidth]{figures/resume} & Resume
 debugging\index{icon!resume debugging} \\
-\includegraphics[width=0.06\textwidth]{figures/suspend} & Suspend
+\includegraphics[width=0.03\textwidth]{figures/suspend} & Suspend
 debugging\index{icon!suspend debugging}\\
-\includegraphics[width=0.06\textwidth]{figures/terminate} & Terminate
+\includegraphics[width=0.03\textwidth]{figures/terminate} & Terminate
 debugging\index{icon!terminate debugging}\\
-\includegraphics[width=0.06\textwidth]{figures/stepinto} & Step
+\includegraphics[width=0.03\textwidth]{figures/stepinto} & Step
 into\index{icon!step into}\\
-\includegraphics[width=0.06\textwidth]{figures/stepover} & Step
+\includegraphics[width=0.03\textwidth]{figures/stepover} & Step
 over\index{icon!step over} \\
-\includegraphics[width=0.06\textwidth]{figures/stepreturn} & Step
+\includegraphics[width=0.03\textwidth]{figures/stepreturn} & Step
 return\index{icon!step return}\\
-\includegraphics[width=0.06\textwidth]{figures/stepbystep} & Use step
+\includegraphics[width=0.03\textwidth]{figures/stepbystep} & Use step
 filters\index{icon!use step filters}\\
 \hline \hline
 \end{tabular}
@@ -1157,6 +1165,23 @@ be seen in Figure~\ref{fig:userguide:ExecutionCPU}.\index{single CPU overview}
   \label{fig:userguide:ExecutionCPU}
 \end{center}
 \end{figure}
+
+\section{Defining Your Own Java Libraries to be used from Overture}\label{sec:javalibs}
+
+VDM models are not appropriate for describing everything and in
+addition it is common to have existing legacy code that a user may not
+wish to spend time on modelling use VDM but would like to make use of
+from a VDM model. Therefore a feature enabling a combination of a VDM
+model and a library with functionality in a standard \texttt{jar} file
+has been enabled. Using this feature it is possible from a VDM model
+to call functionality provided by the jar file. 
+
+\fbox{TBW}
+
+\section{Enabling Remote Control of the Overture
+  Interpreter}\label{sec:remote}
+
+\fbox{TBW}
 
 \section{A Command-Line Interface to VDMJ}\label{sec:commandline}
 
@@ -1684,6 +1709,9 @@ breakpoint, there are additional commands that can be used. These are:
 \addcontentsline{toc}{section}{\protect\numberline{}{References}}
 
 \newpage
+\section{Templates in Overture}\label{app:templates}
+
+\newpage
 \section{Internal Errors}\label{app:internalerrors}
 
 This appendix provides a list of the internal errors used in Overture
@@ -1713,7 +1741,9 @@ to the SourceForge bug reporting utility
 \item[0013:] \texttt{Document has no expression?}
 \item[0014:] \texttt{Unexpected type in definition block}
 \item[0015:] \texttt{Unexpected type definition shape: <type>}
-\item[0016:] \texttt{Typeless functions not supported}
+\item[0016:] \texttt{Typeless functions not supported} In an
+  experimental version of Overture typeless functions was supported
+  but this have been removed again.
 \item[0017:] \texttt{Unexpected function shape: <shape>}
 \item[0018:] \texttt{Unknown function body type}
 \item[0019:] \texttt{Unexpected operation shape: <shape>}
@@ -2065,7 +2095,7 @@ reported. These can be as follows:
 \item[2274:] \texttt{Expecting 'cycles'}
 \item[2275:] \texttt{Expecting 'cycles('}
 \item[2276:] \texttt{Expecting ')' after cycles}
-2277, -
+%2277, -
 \item[2278:] \texttt{Async only permitted for operations}
 \item[2279:] \texttt{Invalid breakpoint hit condition}
 \item[2280:] \texttt{System class cannot be a subclass}
@@ -2420,9 +2450,15 @@ Warnings from the type checker include:
 \item[5008:] \texttt{<name/location> hides <name/location>}
 \item[5009:] \texttt{Empty set used in bind}
 \item[5010:] \texttt{State init expression cannot be executed}
-5011, -
-\item[5012:] \texttt{Recursive function has no measure}
-5013, -
+%\item[5011:] -
+\item[5012:] \texttt{Recursive function has no measure} Whenever a
+  recursive function is defined the user have the possibility defining
+  a measure (i.e.\ a function that takes the same parameters as the
+  recursive function and returns a natural number that should decrease
+  at every recursive call). If such measures are included the proof
+  obligation generator can provide proof obligations that will ensure
+  termination of the recursion.
+%\item[5013:] -
 \item[5014:] \texttt{Uninitialized BUS ignored}. This warning appears
   if one has defined a \texttt{BUS} that is not used.
 \item[5015:] \texttt{LaTeX source should start with \%comment,
@@ -2624,9 +2660,12 @@ circumstances under which the PO category can be expected.
 \item[finite set:] If a type binding to a type that potentially have
   infinitely many elements is used inside a set comprehension this
   proof obligation will be generated because all sets in VDM are finite.
-\item[map compatible:]
+\item[map compatible:] Mappings in VDM represent a unique relationship
+  between the domain values and the corresponding range values. Proof
+  obligations in this category are meant to ensure that such a unique
+  relationship is guranteed.
 \item[map sequence compatible:]
-\item[map set compatible:]
+\item[map set compatible:] 
 \item[sequence modification:]
 \item[tuple selection:] This proof obligation category is used
   whenever a tuple selection expression is used and it must be
@@ -2653,8 +2692,11 @@ circumstances under which the PO category can be expected.
   reminder to ensure that a while loop is terminating. However, for
   embedded systems that is typically not desirable and thus in those
   cases there is no need to satisfy this proof obligation.
-\item[operation post condition:]
-\item[operation parameter patterns:]
+\item[operation post condition:] Whenever an explicit operation has a
+  post-condition there is an implicit proof obligation generated to
+  remind the user that one would have to ensure that the explicit body
+  of the operation for all possible input satisfy the post-condition.
+\item[operation parameter patterns:] 
 \item[operation satifiability:] For all implicit operation definitions
   this proof obligation will be generated to ensure that it will be
   possible to find a result satisfying the post-condition for all

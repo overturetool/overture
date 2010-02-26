@@ -53,9 +53,9 @@ addTokenDevice(td) ==
 						if (t < time)
 						then ( 
 							if ( route_id = nil )
-							then (
-									tokenDevices(tid).requestTransportPlan(nav);)
-							else( cyberrail.addToStimuliQueue(mk_MessageTypes`INACTIVEROUTE(route_id)); );
+							then tokenDevices(tid).requestTransportPlan(nav)
+							else cyberrail.addToStimuliQueue(
+							        mk_MessageTypes`INACTIVEROUTE(route_id));
 								
 							reduceInline();
 							done := len inlines = 0;

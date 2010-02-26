@@ -53,8 +53,12 @@ registerHistory(fo) ==
  (let id = fo.getId()
   in 
     if id in set dom history 
-    then history := history ++ {id |-> addHistory(history(id),fo.getCoordinates(),fo.getAltitude())}
-    else history := history munion {id |-> addHistory([],fo.getCoordinates(),fo.getAltitude())}
+    then history := history ++ {id |-> addHistory(history(id),
+                                                  fo.getCoordinates(),
+                                                  fo.getAltitude())}
+    else history := history munion {id |-> addHistory([],
+                                                      fo.getCoordinates(),
+                                                      fo.getAltitude())}
  );
 
 private cleanUpHistory : () ==> ()

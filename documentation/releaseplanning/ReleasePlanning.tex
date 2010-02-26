@@ -319,9 +319,9 @@ the Overture executable.
   include the following features:  
 \begin{enumerate}
 
-\item Provide help (F1) inside Eclipse;
+\item Provide help (F1) inside Eclipse; \developer{AugustoRibeiro}
 
-\item provide goto definition and completion;
+\item provide goto definition and completion; \developer{AugustoRibeiro}
 
 \item Complete the new ASTGen utility and add all sources for it to
   the tools utility in the Overture SF SVN. \developer{NickBattle} \textbf{Dependencies: None},\label{completeAST}
@@ -373,7 +373,15 @@ the Overture executable.
 \item \markDone{Make it possible for users to provide static implementations to ``is not yet specified'' functions and
   operations by adding a Jar file to a lib folder in the project. \developer{KennethLaudahl,NickBattle}\label{staticIsNotYetSpecified} \textit{Prototype done}}
 
-\item \markDone{ Make it possible for users to add a java implementation of a VDM class by adding a jar to the lib folder. The implementation should be done so one instance in java corresponds to one instance in VDM. No static. \developer{KennethLausdahl,NickBattle}, \textbf{Dependencies: \ref{staticIsNotYetSpecified}} }
+\item \markDone{ Make it possible for users to add a java
+  implementation of a VDM class by adding a jar to the lib folder. The
+  implementation should be done so one instance in java corresponds to
+  one instance in VDM. No
+  static. \developer{KennethLausdahl,NickBattle},
+  \textbf{Dependencies: \ref{staticIsNotYetSpecified}} }
+\item Make use of {\bf\ttfamily measure}'s inside the the interpreter
+  so it would be checked in the same way as invariants, pre and post
+  conditions. \developer{NickBattle}
 \end{enumerate}
 
 

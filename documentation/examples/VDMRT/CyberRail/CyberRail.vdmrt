@@ -44,13 +44,16 @@ public isFinished : () ==> ()
 isFinished () == skip;
 
 
-public calculateTransportPlan : NavigationInput * TokenDevice ==> [TransportPlan`DTO]
+public calculateTransportPlan : NavigationInput * TokenDevice ==> 
+                                [TransportPlan`DTO]
 calculateTransportPlan(navInput, tokenDevice) ==
 (
  dcl tempPlan : TransportPlan;
  dcl tempGrid : RailwayGrid`Grid := railway.getGrid();
- def l = {r | r in set tempGrid & r(1).departureLocation = navInput.departureLocation 
-         and r(len r).arrivalLocation = navInput.arrivalLocation} in (
+ def l = {r | r in set tempGrid 
+            & r(1).departureLocation = navInput.departureLocation and
+              r(len r).arrivalLocation = navInput.arrivalLocation} 
+ in (
   if card l = 0
   then
   (
@@ -58,12 +61,18 @@ calculateTransportPlan(navInput, tokenDevice) ==
   )
   else if navInput.transportChoice = <Cheapest>
   then
-   tempPlan :=  new TransportPlan(findCheapest(l), <Cheapest>, navInput.id_token)
-  else tempPlan :=  new TransportPlan(findQuickest(l), <Quickest>, navInput.id_token);
+   tempPlan :=  new TransportPlan(findCheapest(l), 
+                                  <Cheapest>, 
+                                  navInput.id_token)
+  else tempPlan :=  new TransportPlan(findQuickest(l), 
+                                      <Quickest>, 
+                                      navInput.id_token);
  );
  return tempPlan.getByValue(); 
 )
-pre exists r in set railway.getGrid() & r(1).departureLocation = navInput.departureLocation and r(len r).arrivalLocation = navInput.arrivalLocation;
+pre exists r in set railway.getGrid() & 
+      r(1).departureLocation = navInput.departureLocation and 
+      r(len r).arrivalLocation = navInput.arrivalLocation;
 
 
 public setActiveRoute : nat ==> ()
@@ -139,34 +148,36 @@ handleEvents() ==
 
 private handleQ_Env_in : () ==> ()
 handleQ_Env_in() == (
-let msg = hd q_Env_in in 
-			(
-				cases msg:
-					mk_MessageTypes`INACTIVEROUTE(-) -> handleInactiveRoute(msg), 
-					mk_MessageTypes`ACTIVEROUTE(-) -> skip,
-					mk_MessageTypes`ADDROUTE(-) -> skip,
-					mk_MessageTypes`REMOVEROUTE(-) -> skip
-				end;
-			);
-			reduce_Q_Env();
+let msg = hd q_Env_in 
+in 
+  (cases msg:
+	mk_MessageTypes`INACTIVEROUTE(-) -> handleInactiveRoute(msg), 
+	mk_MessageTypes`ACTIVEROUTE(-) -> skip,
+	mk_MessageTypes`ADDROUTE(-) -> skip,
+	mk_MessageTypes`REMOVEROUTE(-) -> skip
+   end;
+   );
+reduce_Q_Env();
 )
 pre len q_Env_in > 0;
 
 private handleQ_APM_in : () ==> ()
 handleQ_APM_in() == (
-let msg = hd q_APM_in in
-					(
-						cases msg: 
-						mk_MessageTypes`CALCPLAN(navi, tokenDevice) -> handleCalcPlan(navi, tokenDevice)
-													end;
-					);
-					reduce_Q_APM();
+let msg = hd q_APM_in 
+in
+  (cases msg: 
+	mk_MessageTypes`CALCPLAN(navi, tokenDevice) -> 
+	      handleCalcPlan(navi, tokenDevice)
+   end;
+   );
+reduce_Q_APM();
 )
 pre len q_APM_in > 0;
 
 private handleCalcPlan : CyberRail`NavigationInput * TokenDevice ==> ()
 handleCalcPlan(navi, tokenDevice)==(
-	q_APM_out.addToSystemQueue( mk_MessageTypes`RETURNPLAN( calculateTransportPlan(navi, tokenDevice), tokenDevice))
+	q_APM_out.addToSystemQueue( mk_MessageTypes`RETURNPLAN( 
+	      calculateTransportPlan(navi, tokenDevice), tokenDevice))
 );
 
 private handleInactiveRoute : MessageTypes`MessageT ==> ()

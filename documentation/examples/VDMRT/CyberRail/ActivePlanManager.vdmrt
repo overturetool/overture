@@ -67,9 +67,10 @@ strategyEnd() ==
 
 			if t.containsRoute(id_route)
 			then
-			(
-				let p = inverse activeTokens in
-				q_CR_out.addToSystemQueue(mk_MessageTypes`CALCPLAN(t.getPlanAsNaviInput(),p(t)));
+			(let p = inverse activeTokens in
+			   q_CR_out.addToSystemQueue(
+			             mk_MessageTypes`CALCPLAN(
+			              t.getPlanAsNaviInput(),p(t)));
 			)
  	 	);
 		);
@@ -123,7 +124,8 @@ handleQ_Tok_out() == (
   q_Tok_out := tl q_Tok_out;
  )
 )
-pre len q_Tok_out > 0 and exists plan in set rng activeTokens & plan = hd q_Tok_out;
+pre len q_Tok_out > 0 and 
+    exists plan in set rng activeTokens & plan = hd q_Tok_out;
 
 private handleQ_CR_in : () ==> ()
 handleQ_CR_in() ==
@@ -131,14 +133,13 @@ handleQ_CR_in() ==
 	busy := true;
 		
 		let msg = hd q_CR_in in
-		(
-			cases msg:
-				mk_MessageTypes`RETURNPLAN(-,-) -> handleTransportPlan(msg),
-				--mk_MessageTypes`INACTIVEROUTE(-) -> handleInactiveRoute(msg),
-				mk_MessageTypes`STRATEGYNOTIFY(-) -> handleInactiveRoute(msg),
-				mk_MessageTypes`STRATEGYINIT() -> handleStrategyInit(),
-				mk_MessageTypes`STRATEGYEND() -> handleStrategyEnd()
-			end;
+		(cases msg:
+		  mk_MessageTypes`RETURNPLAN(-,-) -> handleTransportPlan(msg),
+		  --mk_MessageTypes`INACTIVEROUTE(-) -> handleInactiveRoute(msg),
+		  mk_MessageTypes`STRATEGYNOTIFY(-) -> handleInactiveRoute(msg),
+		  mk_MessageTypes`STRATEGYINIT() -> handleStrategyInit(),
+		  mk_MessageTypes`STRATEGYEND() -> handleStrategyEnd()
+		end;
 		);
 		reduce_Q_CR();
 )
@@ -183,7 +184,8 @@ handleTransportPlan(msg) ==
 	
 	let mk_MessageTypes`RETURNPLAN(dto, tok) = msg in
 	(
-		addTransportPlan(new TransportPlan(dto.routeList, dto.choice, dto.id_token), tok);
+		addTransportPlan(new TransportPlan(dto.routeList, 
+		                 dto.choice, dto.id_token), tok);
 	)
 );
 
@@ -193,7 +195,8 @@ handleRequestPlan(msg) ==
 
 	let mk_MessageTypes`REQUESTPLAN(navi, tok) = msg in
 		(
-			q_CR_out.addToSystemQueue(mk_MessageTypes`CALCPLAN(navi,tok));
+			q_CR_out.addToSystemQueue(
+			          mk_MessageTypes`CALCPLAN(navi,tok));
 		)
 );
 
@@ -206,21 +209,6 @@ reduce_Q_CR () == (q_CR_in := tl q_CR_in;
 )
 pre len q_CR_in > 0;
 							
-
-
-
---public requestTransportPlan : CyberRail`NavigationInput * TokenDevice ==> TransportPlan
---requestTransportPlan(navIn, tok) == (
---	 let dto = q_CR_out.calculateTransportPlan(navIn,tok) in (
---		let plan = new TransportPlan(dto.routeList, dto.choice, dto.id_token) in (
---		addTransportPlan(plan,tok);
---		return plan;
---		);
---	)
---
---);
-
-
 --Initialize CyberRail ref.
 public setQ_CR_out :  CyberRail ==> ()
 setQ_CR_out(cr) == (q_CR_out := cr);

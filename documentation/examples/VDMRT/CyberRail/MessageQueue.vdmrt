@@ -41,9 +41,12 @@ pop() == (
 );
 
 sync
-per push => #fin(push) - #fin(pop) < size; 	--ensure that there's space in the queue
-per pop => #fin(push) - #fin(pop) > 0;			--ensure that there's data in the queue
-mutex(pop,push);		--Only a single activation of pop at a time.
+per push => #fin(push) - #fin(pop) < size; 	
+--ensure that there's space in the queue
+per pop => #fin(push) - #fin(pop) > 0;			
+--ensure that there's data in the queue
+mutex(pop,push);		
+--Only a single activation of pop at a time.
 --Have not testet if this sync is enough.	
 
 end MessageQueue

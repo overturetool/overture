@@ -24,7 +24,12 @@ VDM-SL model are given in Appendix~\ref{app:alarm}.
 We will introduce the Overture tools during a ``hands-on'' tour of
 their functionality, providing enough detail to allow you to use
 Overture for serious applications, including the exercises in the
-book. However, this is by no means a complete guide to Overture; more
+book. However, this is by no means a complete guide to
+Overture\footnote{Note that the Overture tool suite support three
+  different VDM dialects; VDM-SL (Specification Language), VDM++ and
+  VDM-RT (Real Time) so although this tutorial illustrate how to use
+  Overture with VDM-SL models you will see multiple references to
+  these dialects throughout this tutorial.}; more
 information can be obtained from
 \begin{quote}
 \url{www.overturetool.org}.
@@ -247,7 +252,10 @@ will propose the use of an implicit or explicit function template as
 shown in Figure~\ref{fig:functionTemplate}. The Overture IDE
 supports several types of template: cases, quantifications, functions
 (explicit/implicit), operations (explicit/implicit) and many
-more. Additional templates can easily be added in the future. The use
+more\footnote{It is possible to see and enhance the complete list of
+  these by selecting \emph{Window} $\rightarrow$ \emph{Preferences}
+  $\rightarrow$ \emph{Overture}.}. 
+Additional templates can easily be added in the future. The use
 of templates makes it much easier for users lacking deep familiarity
 with VDM syntax to nevertheless construct models.
 \begin{figure}
@@ -540,7 +548,8 @@ on the project and select \texttt{Clean}). If we simply take the
 \verb|ExpertIsOnDuty| function in \verb|alarm.vdmsl| is called by the
 \texttt{Run} function. Remember that whenever test coverage
 information is desired the \texttt{Generate Latex Coverage} option
-must be selected. Once the debugger has completed and the result
+must be selected as shown in Figure~\ref{fig:debugConfiguration}. 
+Once the debugger has completed and the result
 is written out in the \texttt{console} it is possible to right click
 on the \texttt{AlarmSL} project and select the \emph{Latex} $
 \rightarrow $ \emph{Latex coverage} the coverage information that have
@@ -660,13 +669,13 @@ traces
 \end{center}
 \end{figure}
 
-\noindent The nested let-be-such-that statements in the trace
+\noindent The nested let-be statements in the trace
 called \texttt{Test1} yield all possible combinations of
 their variable bindings whereas manual debugging will just select a
 few combinations.  The cardinality of these sets determines the
 overall number of test cases, each being formed as a sequence of three
 function calls, where the last one is nested inside a new
-let-be-such-that expression. In this case, the cardinality of the three
+let-be expression. In this case, the cardinality of the three
 sets are respectively 4 (\texttt{alarms}), 5 (\texttt{ps}) and 8 (\texttt{exs}). Multiplying these gives 160. If you
 select the Combinatorial Testing perspective you will see the
 \textsf{CT Overview} view. Inside this view you can select the alarm

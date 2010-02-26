@@ -52,7 +52,8 @@ setTransportPlan(tp) ==
 public travel : () ==> ()
 travel () == (
 		onTheRoad();
-		if( transportPlan <> nil and transportPlan.routesRemaining() > 0 ) then(
+		if( transportPlan <> nil and transportPlan.routesRemaining() > 0 ) 
+		then(
 		--dcl t : TransportPlan`Route := (transportPlan.getNextRoute());
 	transportPlan.routeTraveled(); 
 	)

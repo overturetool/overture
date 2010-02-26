@@ -27,7 +27,11 @@ formal modelling in VDM++ with object-oriented design using UML. This
 is done by providing a ``hands-on'' tour of Overture, providing enough
 detail to allow you to use Overture for serious applications,
 including the exercises in the book. However, this is by no means a
-complete guide to Overture; more information can be obtained
+complete guide to Overture\footnote{Note that the Overture tool suite support three
+  different VDM dialects; VDM-SL (Specification Language), VDM++ and
+  VDM-RT (Real Time) so although this tutorial illustrate how to use
+  Overture with VDM-RT models you will see multiple references to
+  these dialects throughout this tutorial.}; more information can be obtained
 from~\url{www.overturetool.org}.
 
 
@@ -224,7 +228,9 @@ explicit operation template.
 The Overture IDE supports many templates for language constructs
 including cases statements, classes, quantified expressions, functions
 (explicit/implicit), operations (explicit/implicit) and many
-more. Further templates can easily be added in the future. The use of
+more\footnote{It is possible to see and enhance the complete list of
+  these by selecting \emph{Window} $\rightarrow$ \emph{Preferences}
+  $\rightarrow$ \emph{Overture}.}. Further templates can easily be added in the future. The use of
 templates makes it more concenient to write VDM models without
 detailed prior knowledge of the language syntax.
 
@@ -484,7 +490,11 @@ cause the majority of the VDM-RT model to be executed, but for
 demonstration purposes let us start by cleaning the model (right click
 on the project and select \texttt{Clean}). Let us evaluate the
 \texttt{RunScenario1} and \texttt{RunScenario2} operations where the
-\texttt{Generate test coverage} option is selected.  Once the debugger
+\texttt{Generate test coverage} option is selected. 
+Remember that whenever test coverage
+information is desired the \texttt{Generate Latex Coverage} option
+must be selected as shown in Figure~\ref{fig:debugConfiguration}. 
+ Once the debugger
 has completed and the result is written out in the \texttt{console} it
 is possible to right click on the \texttt{CarRadioNavi} project and
 select the \emph{Latex} $ \rightarrow $ \emph{Latex coverage} the
@@ -646,7 +656,7 @@ be seen in Figure~\ref{fig:userguide:ExecutionCPU}.
 %        plant.RemoveExpertFromSchedule(p,myex2));
 %\end{lstlisting}
 
-%\noindent The three nested let-be-such-that statements in the trace called
+%\noindent The three nested let-be statements in the trace called
 %\texttt{AddingAndDeleting} yield all possible combinations of their variable
 %bindings (whereas manual debugging will select an arbitrary few combinations).
 %The cardinality of these sets determines the overall number of test cases (each

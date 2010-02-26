@@ -42,7 +42,8 @@ public handleFOWarningEvent : FOId * Coordinates * Altitude * FOWarning *
 handleFOWarningEvent(id,coord,alt,warn,msa,t) ==
   outlines := outlines ^ [mk_(id,coord,alt,warn,msa,t)];
  
-public handleRadarWarningEvent : Coordinates * nat1 * RadarWarning * nat *  Time ==> ()
+public handleRadarWarningEvent : Coordinates * nat1 * RadarWarning * 
+                                 nat *  Time ==> ()
 handleRadarWarningEvent(coord,range,radWarn,num,pt) ==
   outlines := outlines ^ [mk_(coord,range,radWarn,num,pt)];
  
