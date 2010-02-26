@@ -6,7 +6,7 @@ Oakland University in the USA. Most of the definitions in this
 specification can be interpreted.
 
 This model is only an illustration of the problems germane to automatic 
-software anlaysis. To get a better understanding of the scope of the 
+software analysis. To get a better understanding of the scope of the 
 analysis consult the text "Software Verification and Analysis, An 
 Integrated, Hands-on -- Approach," by Janusz Laski w/William Stanley, 
 Springer 2009. A brief online introduction is offered on the Website
@@ -23,5 +23,5 @@ www.stadtools.com.
 #SUPPRESS_WARNINGS=false
 #ENTRY_POINT=relations`IsTransitive(relations`A5)
 #ENTRY_POINT=relations`IsTransitive(relations`A7)
-#EXPECTED_RESULT=NO_ERROR_TYPE_CHECK
+#EXPECTED_RESULT=NO_ERROR_INTERPRETER
 #******************************************************
