@@ -39,5 +39,14 @@
            id="org.overture.ide.debug.ui.launchConfigurationTypeImage">
      </launchConfigurationTypeImage>
   </extension>
+  <extension
+        point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+     <launchConfigurationTabGroup
+           class="org.overture.ide.debug.ui.launching.AbstractLaunchConfigurationTabGroup"
+           description="VDM launch tab"
+           id="org.overture.ide.debug.ui.launchConfigurationTabGroup"
+           type="org.overture.ide.debug.core.launchConfigurationType">
+     </launchConfigurationTabGroup>
+  </extension>
   
 </plugin>
