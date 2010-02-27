@@ -28,7 +28,7 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
-import org.overturetool.vdmj.types.NaturalType;
+import org.overturetool.vdmj.types.NaturalOneType;
 import org.overturetool.vdmj.types.SetType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
@@ -64,7 +64,7 @@ public class IndicesExpression extends UnaryExpression
 			detail("Actual type", etype);
 		}
 
-		return new SetType(location, new NaturalType(location));
+		return new SetType(location, new NaturalOneType(location));
 	}
 
 	@Override
