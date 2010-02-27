@@ -1,6 +1,6 @@
 types
 
-array = seq of int;
+array = seq1 of int;
 
 values
 
@@ -51,7 +51,7 @@ lupslOp1Laski(a) ==
 
 state lups of
   lupslarr : array 
-init s == s = mk_lups([])
+init s == s = mk_lups([1])
 end
 
 operations
