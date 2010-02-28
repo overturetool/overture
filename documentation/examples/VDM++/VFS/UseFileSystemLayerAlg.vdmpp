@@ -6,10 +6,12 @@ public sys : FileSystemLayerAlg := new FileSystemLayerAlg();
 values
 
   file : FileSystemLayerAlg`File = mk_FileSystemLayerAlg`File(
-                                    mk_FileSystemLayerAlg`Attributes(<RegularFile>),
+                                    mk_FileSystemLayerAlg`Attributes(
+                                     <RegularFile>),
                                     "hello world");
   file2: FileSystemLayerAlg`File = mk_FileSystemLayerAlg`File(
-                                    mk_FileSystemLayerAlg`Attributes(<Directory>),
+                                    mk_FileSystemLayerAlg`Attributes(
+                                     <Directory>),
                                     nil);
  ofd : FileSystemLayerAlg`OpenFileDescriptor = 
        mk_FileSystemLayerAlg`OpenFileDescriptor(["whoami"]);

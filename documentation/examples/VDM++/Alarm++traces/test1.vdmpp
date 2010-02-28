@@ -1,5 +1,5 @@
 \begin{vdm_al}
-class Test2
+class Test1
 
 instance variables
 
@@ -44,5 +44,5 @@ traces
                            plant.RemoveExpertFromSchedule(p,myex2))
                            
                        
-end Test2
+end Test1
 \end{vdm_al}

@@ -1,4 +1,3 @@
-
 This is an erronerous version of the alarm example from the VDM++
 book, John Fitzgerald, Peter Gorm Larsen, Paul Mukherjee, Nico Plat
 and Marcel Verhoef. Validated Designs for Object-oriented Systems,
@@ -14,6 +13,7 @@ with alarms. A comparable model of this example also exists in VDM-SL.
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
+#AUTHOR= John Fitzgerald and Peter Gorm Larsen
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true

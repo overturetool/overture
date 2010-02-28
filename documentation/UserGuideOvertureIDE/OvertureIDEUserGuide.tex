@@ -148,6 +148,15 @@ Berkshire. RG12 8SN, UK}
 
 \maketitle
 
+
+{\textbf{Document history}
+
+\begin{tabular}{|l|l|l|}\hline
+Month   & Year & version of Overture.exe \\ \hline
+January & 2010 & 0.1.5 \\ \hline
+March   & 2010 & 0.2   \\ \hline
+\end{tabular}
+
 \tableofcontents
 
 \begin{abstract}
@@ -387,7 +396,8 @@ be done by right clicking such projects and then selecting the
 %menu as shown in Figure~\ref{fig:closeproject}. 
 For such closed projects it is possible
 to open them again in the same fashion using the \emph{Open project}
-entry in the same right click menu.
+entry in the same right click
+menu.\index{project!open}\index{project!close} 
  
 %\begin{figure}[!htb]
 %\begin{center}
@@ -439,7 +449,7 @@ directories that have no source files.
 In case line numbers\index{line number} are desired in the Overture
 editor it is possible to to right click in the left-hand-side margin
 of the editor and then select \texttt{show line numbers} as shown in
-Figure~\ref{fig:linenumbers}. 
+Figure~\ref{fig:linenumbers}.\index{line numbers} 
 
 \begin{figure}[!htb]
 \begin{center}
@@ -456,13 +466,14 @@ It is possible to import Overture VDM projects by
 right-clicking the explorer view and selecting \emph{Import}, followed
 by \emph{General} $\rightarrow$ \emph{Existing Projects into
   Workspace}.  In this way the projects from \texttt{.zip} files
-mentioned in Section~\ref{sec:install} can be imported very easily. 
+mentioned in Section~\ref{sec:install} can be imported very
+easily.\index{project!import}  
 
 \subsection{Creating a New Overture Project}
 \begin{enumerate}
 	\item Create a new project by choosing \emph{File}
           $\rightarrow$ \emph{New} $\rightarrow$ \emph{Project}
-          $\rightarrow$ \emph{Overture}; 
+          $\rightarrow$ \emph{Overture}; \index{project!create}
 	\item Select the VDM dialect you wish to use (VDM-SL, VDM-PP
           or VDM-RT);\index{VDM dialect}
 	\item Press \emph{Next}
@@ -522,7 +533,7 @@ specific settings. One can get access to these by selecting a project
 in the \emph{Explorer view} and then right clicking and selecting
 \emph{properties}. Here, a VDM specific settings property which
 looks like in Figure~\ref{fig:VDMSettings} is shown. The options 
-that can be set for each VDM project are:
+that can be set for each VDM project are:\index{project!options}
 
 \begin{figure}[!hbt]
 \begin{center}
@@ -647,7 +658,7 @@ Explorer view and then selecting the \emph{Debug As} $\rightarrow$
 \emph{debug Configuration}. Finally it is also possible to get to the
 \emph{Debug Configuration} by using the small downwards pointing arrow
 next to the debug icon
-(\includegraphics[width=0.06\textwidth]{icons/debuggericon}) at the
+(\includegraphics[width=0.03\textwidth]{icons/debuggericon}) at the
 top of the Overture tool. 
 
 \begin{figure}[htp]
@@ -665,7 +676,7 @@ needed for debugging in VDM. Breakpoints can easily be set at desired
 places in the model, by double clicking in the left margin. When the
 debugger reaches the location of the breakpoint, the user can inspect
 the values of different identifiers and step through the VDM model
-line by line.
+line by line.\index{perspective!debug}
  
 The debug perspective shows the VDM model in an editor as the one used in the
 Overture Perspective, but in this perspective there are also views useful during
@@ -859,7 +870,8 @@ selected VDM file one can right click in the \emph{Explorer} view and
 then select the \emph{Proof Obligations} $\rightarrow$ \emph{Generate Proof
   Obligations} menu item. Overture will then change into a special
 \emph{Proof Obligations Perspective}\index{proof
-  obligation!perspective} as shown in Figure~\ref{fig:POview}.  
+  obligation!perspective} as shown in
+Figure~\ref{fig:POview}.\index{perspective!proof obligations}  
 
 \begin{figure}[htbp]
 \begin{center}
@@ -889,7 +901,8 @@ view.\index{filter proved}
 
 In order to automate parts of the testing process a notion of
 \emph{traces} have been introduced into VDM++ (note that this is 
-only available for VDM-SL models if VDM-10 have been selected). Such traces conceptually correspond
+only available for VDM-SL models if VDM-10 have been selected). 
+Such traces conceptually correspond
 to regular expressions that can be expanded to a collection of test
 cases. Each such test case is then composed as a sequence of operation
 calls. If a user defines such traces it is possible to make use of a
@@ -901,7 +914,7 @@ the problem and reuse the same traces definitions.
 
 \subsection{The Use of the Trace Definition Syntax}\label{sec:syntax}
 
-The syntax for trace definitions are defined as:
+The syntax for trace definitions are defined as:\index{traces}
 
 \Rule{traces definitions}{\Lop{traces},
    \SeqPt{\Ruleref{named trace}}
@@ -1018,7 +1031,8 @@ The different kinds of repeat patterns have the following meanings:
 If one have used the {\bf\ttfamily traces} syntax described above it
 is possible to go to the \emph{Combinatorial testing}
 perspective\index{combinatorial testing}. An example of using that
-perspective can be seen in Figure~\ref{fig:tracesalarm}.
+perspective can be seen in
+Figure~\ref{fig:tracesalarm}.\index{perspective!combinatorial testing}
 
 Different icons are used to illustrate the verdict in a test
 case. These are:
@@ -1174,12 +1188,19 @@ wish to spend time on modelling use VDM but would like to make use of
 from a VDM model. Therefore a feature enabling a combination of a VDM
 model and a library with functionality in a standard \texttt{jar} file
 has been enabled. Using this feature it is possible from a VDM model
-to call functionality provided by the jar file. 
+to call functionality provided by the jar file. This functionality
+corresponds to DL modules/classes in a VDMTools context \cite{DLMan}.
 
 \fbox{TBW}
 
 \section{Enabling Remote Control of the Overture
   Interpreter}\label{sec:remote}
+
+In some situations it may also be valuable to be able to establish a
+front end (for example with a GUI) to interpreting different aspects
+of a VDM model. This is enabled in a fashion similar to in the
+previous section using a java jar file. This functionality corresponds
+to the CORBA based API from VDMTools \cite{APIMan}.
 
 \fbox{TBW}
 
@@ -1187,7 +1208,7 @@ to call functionality provided by the jar file.
 
 A central part of the Overture tool is a Java application
 called VDMJ that provides a command-line interface that may be valuable
-for users outside the Eclipse interface of Overture.
+for users outside the Eclipse interface of Overture.\index{VDMJ}
 
 \subsection{Starting VDMJ}
 
@@ -2441,7 +2462,11 @@ Warnings from the type checker include:
 \begin{description}
 \item[5000:] \texttt{Definition <name> not used}
 \item[5001:] \texttt{Instance variable is not initialized: <name>}
-\item[5002:] \texttt{Mutex of overloaded operation}
+\item[5002:] \texttt{Mutex of overloaded operation} This warning is
+  provided if one defined a mutex for an operation that is defined
+  using overloading. The users needs to be aware that all of the
+  overloaded operations will now by synchronisation controlled by this
+  constraint. 
 \item[5003:] \texttt{Permission guard of overloaded operation}
 \item[5004:] \texttt{History expression of overloaded operation}
 \item[5005:] \texttt{Should access member <member> from a static context}
@@ -2525,8 +2550,10 @@ detected. This includes the following kinds of errors:
 \item[4051:] \texttt{Cannot apply implicit function: <name>}
 \item[4052:] \texttt{Wrong number of arguments passed to <name>}
 \item[4053:] \texttt{Parameter patterns do not match arguments}
-\item[4055:] \texttt{Precondition failure: <pre\_name>}
-\item[4056:] \texttt{Postcondition failure: <post\_name>}
+\item[4055:] \texttt{Precondition failure: <pre\_name>} This error
+  occurs if a pre-condition to a function or operation is violated.
+\item[4056:] \texttt{Postcondition failure: <post\_name>} This error
+  occurs if a post-condition to a function or operation is violated.
 \item[4057:] \texttt{Curried function return type is not a function}
 \item[4058:] \texttt{Value <value> is not a nat1}
 \item[4059:] \texttt{Value <value> is not a nat}

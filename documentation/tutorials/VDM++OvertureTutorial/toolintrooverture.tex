@@ -745,7 +745,7 @@ In our simple example, the different tests in the exercise above does
 cause the majority of the VDM++ model to be executed, but for
 demonstration purposes let us start by cleaning the model (right click
 on the project and select \texttt{Clean}). If we simply take the
-\texttt{AlarmErrPP} debug launch configuration the
+\texttt{AlarmPP} debug launch configuration the
 \verb|ExpertIsOnDuty| and \verb|ExpertToPage| operations in 
 \verb|plant.vdmpp| are called by the
 \texttt{Run} function. Remember that whenever test coverage
@@ -753,14 +753,24 @@ information is desired the \texttt{Generate Latex Coverage} option
 must be selected as shown in Figure~\ref{fig:debugConfiguration}. 
 Once the debugger has completed and the result
 is written out in the \texttt{console} it is possible to right click
-on the \texttt{AlarmErrPP} project and select the \emph{Latex} $
+on the \texttt{AlarmPP} project and select the \emph{Latex} $
 \rightarrow $ \emph{Latex coverage}. The coverage information that have
 been gathered in any expressions that have been debugged since the
 last change to a file have been saved or the project have been cleaned
-will be turned into a pdf file. The \texttt{AlarmErrPP.pdf} file is
-placed in the \texttt{generated/latex} directory. Note that whenever the model is adjusted or it
+will be turned into a pdf file. The \texttt{AlarmPP.pdf} file is
+placed in the \texttt{generated/latex} directory as shown in
+Figure~\ref{fig:testcov} and it includes the
+VDM definitions from all the files included in the project including
+coverage information. Note that whenever the model is adjusted or it
 is cleaned so it gets type checked again all the files in the
 \texttt{generated} directory is deleted.
+
+\begin{figure}[tb]
+\begin{center}
+\resizebox{.4\textwidth}{!}{\includegraphics{figures/generatedpdf}}
+\end{center}
+\caption{The generated pdf file with test coverage information\label{fig:testcov}}
+\end{figure}
 
 The coverage information is provided in a way where uncovered
 expressions are shown in red in the generated pdf file. In addition
