@@ -2,6 +2,7 @@
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
+#AUTHOR= Christian Thillemann and Bardur Joensen
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true

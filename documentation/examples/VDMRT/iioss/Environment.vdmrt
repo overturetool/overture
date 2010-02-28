@@ -5,7 +5,7 @@ types
 	
 	public InputTP   = Time * seq of inline;
 	
-	public outline = EventId * EventType * seq of char * nat; --EventId * tekst ?? TODO global or type class
+	public outline = EventId * EventType * seq of char * nat; 
 	public inline = EventId * EventType * PigId * [Position] * PigStyId * Time;
 
 instance variables
@@ -36,7 +36,6 @@ operations
 			inlines := input;
 			simtime := timeval;
 	    );
-	    --IIOSSTYPES`DebugPrint("" ^ [inlines]);
 	);
 	
 	public addServer : Server ==> ()

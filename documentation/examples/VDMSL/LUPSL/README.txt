@@ -1,6 +1,10 @@
-This VDM model is made by Lothar Schmitz
+This VDM model is made by Lothar Schmitz and it has taken different
+standard algorithms for the length of longest upsequence problem
+from David Gries and Janusz Laski (see references below). Different 
+versions of the algorithms are included. See also:
 
-David Gries: The Science of Programming, Springer-Verlag 1981, pp. 259-262.
+David Gries: The Science of Programming, Springer-Verlag 1981, 
+pp. 259-262.
 
 Janusz Laski und William Stanley, Software Verification and Analysis, 
 Springer-Verlag, 2009.

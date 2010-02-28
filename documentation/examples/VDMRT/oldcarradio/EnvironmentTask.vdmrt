@@ -1,7 +1,3 @@
-%
-% $Id: EnvironmentTask.vpp,v 1.3 2006/01/05 13:41:22 mave Exp $
-%
-
 \begin{vdm_al}
 class EnvironmentTask is subclass of AbstractTask
 
@@ -29,8 +25,10 @@ functions
   pre dom ps2e inter dom pe2s = dom ps2e
   
 operations
-  public EnvironmentTask: seq of char * EventDispatcher * nat ==> EnvironmentTask
-  EnvironmentTask (tnm, disp, pno) == ( max_stimuli := pno; AbstractTask(tnm,disp) );
+  public EnvironmentTask: seq of char * EventDispatcher * nat ==>
+         EnvironmentTask
+  EnvironmentTask (tnm, disp, pno) == 
+  ( max_stimuli := pno; AbstractTask(tnm,disp) );
 
   protected handleEvent: Event ==> ()
   handleEvent (-) == skip;

@@ -246,21 +246,20 @@ error messages may not always be entirely the action you may wish to
 take when correcting the source since the tool cannot guess what you
 intended to write.
 
-Most of the imported files in the car navigation project should be
-syntactically correct, but the \texttt{World.vdmrt} file contains one
-deliberate syntax error. The error in this case is a common one: a
-semicolon separating the different definitions has been forgotten.
+%Most of the imported files in the car navigation project should be
+%syntactically correct, but the \texttt{World.vdmrt} file contains one
+%deliberate syntax error. The error in this case is a common one: a
+%semicolon separating the different definitions has been forgotten.
 
-\begin{myhardexercise}\label{ex:type-errors}
-Correct all the errors discovered by the type checker and syntax and
-type check your corrected files until no errors appear.
-\textbf{Hint:} Consult the model presented in 
-Appendix~\ref{app:navigation}
-%Chapter~\ref{cha:guide} 
-to see how values (note using ``\vdmstyle{=}'' rather than
-``\vdmstyle{:=}''), types and constructors should be defined and how
-access modifiers should be used.
-\end{myhardexercise}
+%\begin{myhardexercise}\label{ex:type-errors}
+%Correct all the errors discovered by the type checker and syntax and
+%type check your corrected files until no errors appear.
+%\textbf{Hint:} Consult the model presented in 
+%Appendix~\ref{app:navigation}
+%to see how values (note using ``\vdmstyle{=}'' rather than
+%``\vdmstyle{:=}''), types and constructors should be defined and how
+%access modifiers should be used.
+%\end{myhardexercise}
 
 
 \section{Mapping UML to  VDM}\label{sec:fromUMLtoVDM}\label{sec:syntaxcheck}
@@ -272,6 +271,7 @@ it. This is done by right-clicking in the \emph{Script Explorer} view,
 and creating a new VDM-RT project and for example naming it
 \texttt{CarRadioNavUML}. If the desired language dialect (say a VDM-RT 
 project) is not directly available in the right-click menu, please choose
+\emph{Project} or 
 \emph{Other} and browse to the VDM-RT project. By right-clicking the new 
 project root in the \emph{Script Explorer}, \emph{UML Transformation} can 
 be chosen, followed by \emph{Import XMI}. Now browse to the XMI/XML file
@@ -356,7 +356,11 @@ Before you start to debug a model in Overture, you need to set up a
 \emph{debug configuration}. Right click the project and choose
 \emph{Debug As} $ \rightarrow $ \emph{Debug configuration}\footnote{Note that the
   \emph{Run As} functionality existing Eclipse users are used to is
-  not supported in the current version of Overture.}. The dialog
+  not supported in the current version of Overture. In the current
+  version of Overture debugging of VDM-RT models in general does not
+  work very well because of the scheduling done internally in the
+  interpreter. This is currently being redesigned and it is expected
+  that in the next stable release this will be fully operational.}. The dialog
 requires the project name, the class, the operation/function used as
 the entry point of the test and the source file containing the entry
 point definition.  As an example,
@@ -534,13 +538,13 @@ whereas the \texttt{PlantInv} operation is called 2 times.
 \section{Realtime Log Viewer}\label{sec:RTLV}
 
 When a VDM-RT model is being executed a textual logfile is created in
-a ''logs/debugconfig'' folder with the \emph{.logrt} extension. This
-logfile can be viewed in the build-in RealTime Log Viewer, by
-double-clicking the file in the project view. The viewer allows you to
-explore system execution in different ways. In
-Figure~\ref{fig:userguide:ArchitecturalOverview} the architectural
-overview of the system is given, describing the distributed nature of
-the model.
+a ''\texttt{generated/logs/debugconfig}'' folder with the
+\emph{.logrt} extension. This logfile can be viewed in the build-in
+RealTime Log Viewer, by double-clicking the file in the project
+view. The viewer allows you to explore system execution in different
+ways. In Figure~\ref{fig:userguide:ArchitecturalOverview} the
+architectural overview of the system is given, describing the
+distributed nature of the model.
 
 \begin{figure}[htp]
 \begin{center}

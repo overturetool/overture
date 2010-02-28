@@ -1,7 +1,3 @@
-%
-% $Id: NavigationDatabaseLookup.vpp,v 1.3 2006/01/05 13:41:22 mave Exp $
-%
-
 \begin{vdm_al}
 class NavigationDatabaseLookup is subclass of BasicTask
 

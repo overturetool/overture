@@ -33,7 +33,8 @@ inv threshold < 8
     responseF <= 16;
 \end{vdm_al} 
 
-The Constructor initializes the instance variables with the default values as consulted in (citation needed);
+The Constructor initializes the instance variables with the 
+default values as consulted in (citation needed);
 
 \begin{vdm_al}
 operations

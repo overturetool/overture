@@ -1,6 +1,7 @@
 \section{World class}
 
-The World class as its name tell is the class modelling the world where the system and environment will co-exist.
+The World class as its name tell is the class modelling the world 
+where the system and environment will co-exist.
 
 \begin{vdm_al}
 class World is subclass of GLOBAL 
@@ -12,7 +13,8 @@ instance variables
 public static env : [Environment] := nil;
 \end{vdm_al}
 
-The World constructor its the responsible for connect system and environment.
+The World constructor its the responsible for connect system and 
+environment.
 
 \begin{vdm_al}
 operations

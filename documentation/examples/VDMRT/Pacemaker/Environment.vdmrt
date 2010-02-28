@@ -1,6 +1,9 @@
 \section{Environment class}
 
-The environment class is the class responsible for read a file containing inputs labelled by time and deliver them to the correct system sensor at the right time. It also collects the (re)actions from the system and provides functionality to enable the inspection of them.
+The environment class is the class responsible for read a file containing 
+inputs labelled by time and deliver them to the correct system sensor at 
+the right time. It also collects the (re)actions from the system and 
+provides functionality to enable the inspection of them.
 
 \begin{vdm_al}
 class Environment is subclass of GLOBAL

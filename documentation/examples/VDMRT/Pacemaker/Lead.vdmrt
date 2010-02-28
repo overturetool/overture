@@ -1,6 +1,8 @@
 \section{Lead class}
 
-The Lead models a Pacemaker lead that read and write pulse values from and to the heart. Each lead its attached to a specific chamber and this is captured using the instance variable chamber.
+The Lead models a Pacemaker lead that read and write pulse values from 
+and to the heart. Each lead its attached to a specific chamber and this 
+is captured using the instance variable chamber.
 
 
 \begin{vdm_al}
@@ -32,7 +34,8 @@ attached to.
  getChamber () == return chamber;
 \end{vdm_al}
 
-Whenever theres an electrical pulse in that chamber the environment will call the following stimulate operation.
+Whenever theres an electrical pulse in that chamber the environment will 
+call the following stimulate operation.
 
 \begin{vdm_al}
 

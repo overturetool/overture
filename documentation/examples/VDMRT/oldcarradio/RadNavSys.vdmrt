@@ -1,7 +1,3 @@
-%
-% $Id: RadNavSys.vpp,v 1.3 2006/01/05 13:41:22 mave Exp $
-%
-
 \begin{vdm_al}
 class RadNavSys
 
@@ -16,7 +12,7 @@ instance variables
 
 operations
 
-  RadNavSys: () ==> RadNavSys
+  public RadNavSys: () ==> RadNavSys
   RadNavSys () ==
    (addApplicationTask(new MMIHandleKeyPressOne(dispatch));
     addApplicationTask(new RadioAdjustVolume(dispatch));
@@ -29,7 +25,7 @@ operations
   -- tasks. because there are no events from the environment tasks yet
   -- all tasks will block in their own event handler loops. similarly
   -- the dispatcher task is started and blocked
-  RadNavSys: nat ==> RadNavSys
+  public RadNavSys: nat ==> RadNavSys
   RadNavSys (pi) ==
     ( mode := pi;
       cases (mode) :
@@ -81,7 +77,8 @@ operations
         2 -> ( addEnvironmentTask(new InsertAddress(dispatch,10));
                addEnvironmentTask(new TransmitTMC(dispatch,10)) )
       end;
-      return { name |-> envTasks(name).getMinMaxAverage() | name in set dom envTasks } )
+      return { name |-> envTasks(name).getMinMaxAverage() 
+             | name in set dom envTasks } )
 
 end RadNavSys
 \end{vdm_al}

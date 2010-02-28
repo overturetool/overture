@@ -1,7 +1,8 @@
 \section{Pacemaker class}
 
 This is the pacemaker system and will contain the components of it as 
-static variables the first ones are the atrial and ventricular leads responsibles for discharge and sense electrical pulses.
+static variables the first ones are the atrial and ventricular leads 
+responsibles for discharge and sense electrical pulses.
 
 
 \begin{vdm_al}

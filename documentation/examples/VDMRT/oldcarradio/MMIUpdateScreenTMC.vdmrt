@@ -1,7 +1,3 @@
-%
-% $Id: MMIUpdateScreenTMC.vpp,v 1.2 2006/01/05 13:41:22 mave Exp $
-%
-
 \begin{vdm_al}
 class MMIUpdateScreenTMC is subclass of BasicTask
 

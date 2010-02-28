@@ -1,7 +1,3 @@
-%
-% $Id: AbstractTask.vpp,v 1.3 2006/01/05 13:41:21 mave Exp $
-%
-
 \begin{vdm_al}
 class AbstractTask
 
@@ -32,10 +28,11 @@ operations
     then events := events ^ [pe]
     else interrupts := interrupts ^ [pe];
 
-  -- getEvent is called by the event loop of this AbstractTask instance to process
-  -- incoming events when they are available. note that getEvent is blocked by a
-  -- permission predicate (see sync) when no events are available and also
-  -- note that getEvent gives interrupts priority over other events
+  -- getEvent is called by the event loop of this AbstractTask instance to 
+  -- process incoming events when they are available. note that getEvent 
+  -- is blocked by a permission predicate (see sync) when no events are 
+  -- available and also note that getEvent gives interrupts priority over 
+  -- other events
   protected getEvent: () ==> Event
   getEvent () ==
     if len interrupts > 0

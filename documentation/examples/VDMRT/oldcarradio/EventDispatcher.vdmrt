@@ -1,7 +1,3 @@
-%
-% $Id: EventDispatcher.vpp,v 1.3 2006/01/05 13:41:22 mave Exp $
-%
-
 \begin{vdm_al}
 class EventDispatcher is subclass of Logger
 
@@ -11,26 +7,29 @@ instance variables
   interrupts: seq of AbstractTaskEvent := []
 
 operations
-  -- Register is used to maintain a callback link to all the tasks in the system and
-  -- the environment. the link is used by the SendNetwork and SendInterrupt operations
-  -- and the event loop of the EventDispatcher (see thread)
+  -- Register is used to maintain a callback link to all the tasks in the 
+  -- system and the environment. the link is used by the SendNetwork and 
+  -- SendInterrupt operations and the event loop of the EventDispatcher 
+  -- (see thread)
   public Register: AbstractTask ==> ()
   Register (pat) ==
     queues := queues munion { pat.getName() |-> pat }
     pre pat.getName() not in set dom queues;
 
   -- setEvent is used to maintain temporary queues for the event loop of
-  -- EventDispatcher. it is called by the SendNetwork and SendInterrupt operations
-  -- which are in turn called from the other tasks in the system and the environment.
+  -- EventDispatcher. it is called by the SendNetwork and SendInterrupt 
+  -- operations which are in turn called from the other tasks in the 
+  -- system and the environment.
   setEvent: AbstractTask * Event ==> ()
   setEvent (pat, pe) == 
     if isofclass(NetworkEvent,pe)
     then messages := messages ^ [new AbstractTaskEvent(pat,pe)]
     else interrupts := interrupts ^ [new AbstractTaskEvent(pat,pe)];
 
-  -- getEvent is used to retrieve events from the temporary event queues if they are
-  -- available. otherwise getEvent is blocked (see sync) which will also block the
-  -- event handler of EventDispatcher
+  -- getEvent is used to retrieve events from the temporary event 
+  -- queues if they are available. otherwise getEvent is blocked 
+  -- (see sync) which will also block the event handler of 
+  -- EventDispatcher
   getEvent: () ==> AbstractTask * Event
   getEvent () ==
     if len interrupts > 0
