@@ -193,7 +193,7 @@ public class LexLocation implements Serializable
 
 			if (!l.file.equals(file) ||
 				l.startLine < linecount ||
-				l.startPos < charpos)
+				(l.startLine == linecount && l.startPos < charpos))
 			{
 				break;
 			}
