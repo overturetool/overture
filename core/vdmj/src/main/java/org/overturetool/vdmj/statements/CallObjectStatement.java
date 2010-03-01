@@ -254,6 +254,12 @@ public class CallObjectStatement extends Statement
 	{
 		breakpoint.check(location, ctxt);
 
+		// The check above increments the hit counter for the call, but so
+		// do the evaluations of the designator below, so we correct the
+		// hit count here...
+
+		location.hits--;
+
 		try
 		{
 			ObjectValue obj = designator.eval(ctxt).objectValue(ctxt);
