@@ -51,17 +51,17 @@ public class MapValue extends Value
 	}
 
 	@Override
-	public Value getUpdatable(ValueListener listener)
+	public Value getUpdatable(ValueListenerList listeners)
 	{
 		ValueMap nm = new ValueMap();
 
 		for (Value k: values.keySet())
 		{
-			Value v = values.get(k).getUpdatable(listener);
+			Value v = values.get(k).getUpdatable(listeners);
 			nm.put(k, v);
 		}
 
-		return UpdatableValue.factory(new MapValue(nm), listener);
+		return UpdatableValue.factory(new MapValue(nm), listeners);
 	}
 
 	public Value lookup(Value arg, Context ctxt) throws ValueException

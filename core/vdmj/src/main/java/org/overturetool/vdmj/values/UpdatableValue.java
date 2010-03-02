@@ -41,46 +41,46 @@ import org.overturetool.vdmj.types.Type;
 public class UpdatableValue extends ReferenceValue
 {
 	private static final long serialVersionUID = 1L;
-	public final ValueListener listener;
+	public final ValueListenerList listeners;
 
-	public static UpdatableValue factory(Value value, ValueListener listener)
+	public static UpdatableValue factory(Value value, ValueListenerList listeners)
 	{
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
-			return new TransactionValue(value, listener);
+			return new TransactionValue(value, listeners);
 		}
 		else
 		{
-			return new UpdatableValue(value, listener);
+			return new UpdatableValue(value, listeners);
 		}
 	}
 
-	public static UpdatableValue factory(ValueListener listener)
+	public static UpdatableValue factory(ValueListenerList listeners)
 	{
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
-			return new TransactionValue(listener);
+			return new TransactionValue(listeners);
 		}
 		else
 		{
-			return new UpdatableValue(listener);
+			return new UpdatableValue(listeners);
 		}
 	}
 
-	protected UpdatableValue(Value value, ValueListener listener)
+	protected UpdatableValue(Value value, ValueListenerList listeners)
 	{
 		super(value);
-		this.listener = listener;
+		this.listeners = listeners;
 	}
 
-	protected UpdatableValue(ValueListener listener)
+	protected UpdatableValue(ValueListenerList listeners)
 	{
 		super();
-		this.listener = listener;
+		this.listeners = listeners;
 	}
 
 	@Override
-	public synchronized Value getUpdatable(ValueListener watch)
+	public synchronized Value getUpdatable(ValueListenerList watch)
 	{
 		return new UpdatableValue(value, watch);
 	}
@@ -88,7 +88,7 @@ public class UpdatableValue extends ReferenceValue
 	@Override
 	public synchronized Value convertValueTo(Type to, Context ctxt) throws ValueException
 	{
-		return value.convertValueTo(to, ctxt).getUpdatable(listener);
+		return value.convertValueTo(to, ctxt).getUpdatable(listeners);
 	}
 
 	@Override
@@ -104,19 +104,19 @@ public class UpdatableValue extends ReferenceValue
 		}
 		else
 		{
-			value = newval.getUpdatable(listener).deref();
+			value = newval.getUpdatable(listeners).deref();
 		}
 
-		if (listener != null)
+		if (listeners != null)
 		{
-			listener.changedValue(location, value, ctxt);
+			listeners.changedValue(location, value, ctxt);
 		}
 	}
 
 	@Override
 	public synchronized Object clone()
 	{
-		return new UpdatableValue((Value)value.clone(), listener);
+		return new UpdatableValue((Value)value.clone(), listeners);
 	}
 
 	@Override

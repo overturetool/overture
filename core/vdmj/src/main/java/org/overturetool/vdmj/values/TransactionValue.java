@@ -47,15 +47,15 @@ public class TransactionValue extends UpdatableValue
 	private Value newvalue = null;		// The pending value before a commit
 	private long newthreadid = -1;		// The thread that made the change
 
-	protected TransactionValue(Value value, ValueListener listener)
+	protected TransactionValue(Value value, ValueListenerList listeners)
 	{
-		super(value, listener);
+		super(value, listeners);
 		newvalue = value;
 	}
 
-	protected TransactionValue(ValueListener listener)
+	protected TransactionValue(ValueListenerList listeners)
 	{
-		super(listener);
+		super(listeners);
 		newvalue = value;
 	}
 
@@ -73,7 +73,7 @@ public class TransactionValue extends UpdatableValue
 	}
 
 	@Override
-	public synchronized Value getUpdatable(ValueListener watch)
+	public synchronized Value getUpdatable(ValueListenerList watch)
 	{
 		return new TransactionValue(select(), watch);
 	}
@@ -81,7 +81,7 @@ public class TransactionValue extends UpdatableValue
 	@Override
 	public synchronized Value convertValueTo(Type to, Context ctxt) throws ValueException
 	{
-		return select().convertValueTo(to, ctxt).getUpdatable(listener);
+		return select().convertValueTo(to, ctxt).getUpdatable(listeners);
 	}
 
 	@Override
@@ -101,7 +101,7 @@ public class TransactionValue extends UpdatableValue
 		}
 		else
 		{
-			newvalue = newval.getUpdatable(listener).deref();
+			newvalue = newval.getUpdatable(listeners).deref();
 		}
 
 		if (newthreadid < 0)
@@ -113,9 +113,9 @@ public class TransactionValue extends UpdatableValue
 			}
 		}
 
-		if (listener != null)
+		if (listeners != null)
 		{
-			listener.changedValue(location, newvalue, ctxt);
+			listeners.changedValue(location, newvalue, ctxt);
 		}
 	}
 
@@ -163,7 +163,7 @@ public class TransactionValue extends UpdatableValue
 	@Override
 	public synchronized Object clone()
 	{
-		return new TransactionValue((Value)select().clone(), listener);
+		return new TransactionValue((Value)select().clone(), listeners);
 	}
 
 	@Override

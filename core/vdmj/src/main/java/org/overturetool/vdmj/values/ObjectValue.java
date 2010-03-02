@@ -123,14 +123,14 @@ public class ObjectValue extends Value
 	}
 
 	@Override
-	public Value getUpdatable(ValueListener listener)
+	public Value getUpdatable(ValueListenerList listeners)
 	{
 		// Object values are not updatable unless their members are explicitly.
 		// So this always just returns "this" wrapped in an UpdatableValue, so
 		// that objects can be updated as a whole, rather than recursing into
 		// the member list.
 
-		return UpdatableValue.factory(this, listener);
+		return UpdatableValue.factory(this, listeners);
 	}
 
 	public OperationValue getThreadOperation(Context ctxt) throws ValueException

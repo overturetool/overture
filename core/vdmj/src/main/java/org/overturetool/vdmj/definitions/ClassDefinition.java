@@ -63,6 +63,7 @@ import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.ValueList;
+import org.overturetool.vdmj.values.ValueListenerList;
 
 /**
  * A class to represent a VDM++ class definition.
@@ -113,6 +114,8 @@ public class ClassDefinition extends Definition
 	public OperationValue invopvalue = null;
 	/** A listener for changes that require the class invariant to be checked. */
 	public ClassInvariantListener invlistener = null;
+	/** A listener list. */
+	public ValueListenerList invlistenerlist = null;
 	/** True if the class defines any abstract operations or functions. */
 	public boolean isAbstract = false;
 	/** True if the class has any constructors at all. */
@@ -183,6 +186,7 @@ public class ClassDefinition extends Definition
 			invariant.setClassDefinition(this);
 			invopvalue = new OperationValue(invariant, null, null, null);
 			invlistener = new ClassInvariantListener(invopvalue);
+			invlistenerlist = new ValueListenerList(invlistener);
 		}
 	}
 
@@ -1024,7 +1028,7 @@ public class ClassDefinition extends Definition
 				}
 				else if (d.isStatic() && d.isInstanceVariable())
 				{
-					nvl = d.getNamedValues(initCtxt).getUpdatable(invlistener);
+					nvl = d.getNamedValues(initCtxt).getUpdatable(invlistenerlist);
 				}
 			}
 
@@ -1231,7 +1235,7 @@ public class ClassDefinition extends Definition
 			if (!d.isStatic() && !d.isFunctionOrOperation())
 			{
 				NameValuePairList nvpl =
-					d.getNamedValues(initCtxt).getUpdatable(invlistener);
+					d.getNamedValues(initCtxt).getUpdatable(invlistenerlist);
 
 				initCtxt.putList(nvpl);
 				members.putAll(nvpl);

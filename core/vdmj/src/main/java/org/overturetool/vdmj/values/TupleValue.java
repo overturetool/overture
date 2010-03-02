@@ -49,17 +49,17 @@ public class TupleValue extends Value
 	}
 
 	@Override
-	public Value getUpdatable(ValueListener listener)
+	public Value getUpdatable(ValueListenerList listeners)
 	{
 		ValueList ntup = new ValueList();
 
 		for (Value k: values)
 		{
-			Value v = k.getUpdatable(listener);
+			Value v = k.getUpdatable(listeners);
 			ntup.add(v);
 		}
 
-		return UpdatableValue.factory(new TupleValue(ntup), listener);
+		return UpdatableValue.factory(new TupleValue(ntup), listeners);
 	}
 
 	@Override

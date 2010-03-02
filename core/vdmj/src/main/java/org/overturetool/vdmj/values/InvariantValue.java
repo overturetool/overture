@@ -70,10 +70,10 @@ public class InvariantValue extends ReferenceValue
 	}
 
 	@Override
-	public Value getUpdatable(ValueListener listener)
+	public Value getUpdatable(ValueListenerList listeners)
 	{
 		return UpdatableValue.factory(
-			new InvariantValue(type, value.getUpdatable(listener)), listener);
+			new InvariantValue(type, value.getUpdatable(listeners)), listeners);
 	}
 
 	@Override

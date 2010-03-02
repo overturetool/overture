@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *	Copyright (c) 2010 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -25,49 +25,23 @@ package org.overturetool.vdmj.values;
 
 import java.util.Vector;
 
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.util.Utils;
+import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.runtime.Context;
 
-
-@SuppressWarnings("serial")
-public class NameValuePairList extends Vector<NameValuePair>
+public class ValueListenerList extends Vector<ValueListener>
 {
-	public NameValuePairList()
+	private static final long serialVersionUID = 1L;
+
+	public ValueListenerList(ValueListener listener)
 	{
-		super();
+		add(listener);
 	}
 
-	public NameValuePairList(NameValuePair nv)
+	public void changedValue(LexLocation location, Value value, Context ctxt)
 	{
-		add(nv);
-	}
-
-	public boolean add(LexNameToken name, Value value)
-	{
-		return super.add(new NameValuePair(name, value));
-	}
-
-	@Override
-	public boolean add(NameValuePair nv)
-	{
-		return super.add(nv);
-	}
-
-	public NameValuePairList getUpdatable(ValueListenerList listeners)
-	{
-		NameValuePairList nlist = new NameValuePairList();
-
-		for (NameValuePair nvp: this)
+		for (ValueListener vl: this)
 		{
-			nlist.add(nvp.name, nvp.value.getUpdatable(listeners));
+			vl.changedValue(location, value, ctxt);
 		}
-
-		return nlist;
-	}
-
-	@Override
-	public String toString()
-	{
-		return Utils.listToString("[", this, ", ", "]");
 	}
 }

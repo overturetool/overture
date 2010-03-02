@@ -97,17 +97,17 @@ public class SeqValue extends Value
 	}
 
 	@Override
-	public Value getUpdatable(ValueListener listener)
+	public Value getUpdatable(ValueListenerList listeners)
 	{
 		ValueList nseq = new ValueList();
 
 		for (Value k: values)
 		{
-			Value v = k.getUpdatable(listener);
+			Value v = k.getUpdatable(listeners);
 			nseq.add(v);
 		}
 
-		return UpdatableValue.factory(new SeqValue(nseq), listener);
+		return UpdatableValue.factory(new SeqValue(nseq), listeners);
 	}
 
 	public Value get(Value arg, Context ctxt) throws ValueException

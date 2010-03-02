@@ -135,7 +135,7 @@ public class MapSeqDesignator extends StateDesignator
 					// in order to have it updated.
 
 					UpdatableValue ur = (UpdatableValue)root;
-					result = UpdatableValue.factory(ur.listener);
+					result = UpdatableValue.factory(ur.listeners);
 					map.put(index, result);
 				}
 			}
@@ -152,7 +152,7 @@ public class MapSeqDesignator extends StateDesignator
 						// creates the value in order to have it updated.
 
 						UpdatableValue ur = (UpdatableValue)root;
-						seq.add(UpdatableValue.factory(ur.listener));
+						seq.add(UpdatableValue.factory(ur.listeners));
 					}
 					else
 					{

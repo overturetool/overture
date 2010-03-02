@@ -68,17 +68,17 @@ public class SetValue extends Value
 	}
 
 	@Override
-	public Value getUpdatable(ValueListener listener)
+	public Value getUpdatable(ValueListenerList listeners)
 	{
 		ValueSet nset = new ValueSet();
 
 		for (Value k: values)
 		{
-			Value v = k.getUpdatable(listener);
+			Value v = k.getUpdatable(listeners);
 			nset.add(v);
 		}
 
-		return UpdatableValue.factory(new SetValue(nset), listener);
+		return UpdatableValue.factory(new SetValue(nset), listeners);
 	}
 
 	@Override

@@ -131,17 +131,17 @@ public class RecordValue extends Value
 	}
 
 	@Override
-	public Value getUpdatable(ValueListener listener)
+	public Value getUpdatable(ValueListenerList listeners)
 	{
 		FieldMap nm = new FieldMap();
 
 		for (FieldValue fv: fieldmap)
 		{
-			Value uv = fv.value.getUpdatable(listener);
+			Value uv = fv.value.getUpdatable(listeners);
 			nm.add(fv.name, uv, fv.comparable);
 		}
 
-		return UpdatableValue.factory(new RecordValue(type, nm, invariant), listener);
+		return UpdatableValue.factory(new RecordValue(type, nm, invariant), listeners);
 	}
 
 	@Override

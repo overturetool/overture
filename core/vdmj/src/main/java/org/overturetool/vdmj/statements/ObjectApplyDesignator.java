@@ -135,7 +135,7 @@ public class ObjectApplyDesignator extends ObjectDesignator
 				{
 					// Not already in map - get listener from root object
 					UpdatableValue ur = (UpdatableValue)uv;
-					rv = UpdatableValue.factory(ur.listener);
+					rv = UpdatableValue.factory(ur.listeners);
 					mv.put(a, rv);
 				}
 
