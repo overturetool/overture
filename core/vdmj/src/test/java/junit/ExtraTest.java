@@ -50,7 +50,7 @@ public class ExtraTest extends TestCase
 		super.tearDown();
 	}
 
-	private void process(String resource) throws Exception
+	private void process(String resource)
 	{
 		Console.out.println("Processing " + resource + "...");
 
@@ -79,27 +79,27 @@ public class ExtraTest extends TestCase
 		assertEquals("Type check errors", 0, TypeChecker.getErrorCount());
 	}
 
-	public void testFunctionInv() throws Exception
+	public void testFunctionInv()
 	{
 		process("funcinv.vdm");
 	}
 
-	public void testOperationInv() throws Exception
+	public void testOperationInv()
 	{
 		process("opinv.vdm");
 	}
 
-	public void testStateInv() throws Exception
+	public void testStateInv()
 	{
 		process("stateinv.vdm");
 	}
 
-	public void testTypeInv() throws Exception
+	public void testTypeInv()
 	{
 		process("typeinv.vdm");
 	}
 
-	public void testStateScope() throws Exception
+	public void testStateScope()
 	{
 		process("scope.vdm");
 	}

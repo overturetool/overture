@@ -493,7 +493,6 @@ public class DBGPReader
 	public DBGPReader(
 		String host, int port, String ideKey,
 		Interpreter interpreter, String expression, CPUValue cpu)
-		throws Exception
 	{
 		this.host = host;
 		this.port = port;
@@ -503,7 +502,7 @@ public class DBGPReader
 		this.cpu = cpu;
 	}
 
-	public DBGPReader newThread(CPUValue _cpu) throws Exception
+	public DBGPReader newThread(CPUValue _cpu)
 	{
 		DBGPReader r = new DBGPReader(host, port, ideKey, interpreter, null, _cpu);
 		r.command = DBGPCommandType.UNKNOWN;

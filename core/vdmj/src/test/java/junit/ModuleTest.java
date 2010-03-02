@@ -50,7 +50,7 @@ public class ModuleTest extends TestCase
 		super.tearDown();
 	}
 
-	private void process(String resource) throws Exception
+	private void process(String resource)
 	{
 		Console.out.println("Processing " + resource + "...");
 
@@ -79,72 +79,72 @@ public class ModuleTest extends TestCase
 		assertEquals("Type check errors", 0, TypeChecker.getErrorCount());
 	}
 
-	public void testRailway() throws Exception
+	public void testRailway()
 	{
 		process("railway.vdm");
 	}
 
-	public void testCSKExample() throws Exception
+	public void testCSKExample()
 	{
 		process("cskexample.vdm");
 	}
 
-	public void testBar() throws Exception
+	public void testBar()
 	{
 		process("bar.vdm");
 	}
 
-	public void testNDB() throws Exception
+	public void testNDB()
 	{
 		process("ndb.vdm");
 	}
 
-	public void testLoose() throws Exception
+	public void testLoose()
 	{
 		process("loose.vdm");
 	}
 
-	public void testSoccer() throws Exception
+	public void testSoccer()
 	{
 		process("soccer.vdm");
 	}
 
-	public void testDLModule() throws Exception
+	public void testDLModule()
 	{
 		process("dlmodule.vdm");
 	}
 
-	public void testSimulator() throws Exception
+	public void testSimulator()
 	{
 		process("simulator1.vdm");
 	}
 
-	public void testGraphEd() throws Exception
+	public void testGraphEd()
 	{
 		process("graph-ed.vdm");
 	}
 
-	public void testProg() throws Exception
+	public void testProg()
 	{
 		process("proglang.vdm");
 	}
 
-	public void testMetro() throws Exception
+	public void testMetro()
 	{
 		process("metro.vdm");
 	}
 
-	public void testTelephone() throws Exception
+	public void testTelephone()
 	{
 		process("telephone.vdm");
 	}
 
-	public void testSAFER() throws Exception
+	public void testSAFER()
 	{
 		process("SAFER.vdm");
 	}
 
-	public void testExpress() throws Exception
+	public void testExpress()
 	{
 		process("express.vdm");
 	}
