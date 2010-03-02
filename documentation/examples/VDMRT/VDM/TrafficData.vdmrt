@@ -4,7 +4,8 @@
 \begin{vdm_al}
 -----------------------------------------------
 -- Class:			TrafficData
--- Description: 	TrafficData is the base for different types of messages in the system.
+-- Description: 	TrafficData is the base for different types of 
+--					messages in the system.
 -----------------------------------------------
 
 --
@@ -58,7 +59,12 @@ return time >= timeToLive;
 
 public ToString : () ==> seq of char 
 ToString() ==
-return "traffic data reporting " ^ MessageTypeToString(message) ^ " moved " ^ Types`DirectionToString(dir) ^ " at " ^ pos.toString()  ^ " with lifetime " ^ Printer`natToString(timeToLive - time);
+return "traffic data reporting " 
+		^ MessageTypeToString(message) 
+		^ " moved " ^ Types`DirectionToString(dir) 
+		^ " at " ^ pos.toString()  
+		^ " with lifetime " 
+		^ Printer`natToString(timeToLive - time);
 
 --
 -- Functions definition section

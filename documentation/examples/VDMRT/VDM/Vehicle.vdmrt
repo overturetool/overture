@@ -3,7 +3,8 @@
 \begin{vdm_al}
 -----------------------------------------------
 -- Class:			Vehicle
--- Description: 	Vehicle class describes the physical moving elements in the system
+-- Description: 	Vehicle class describes the physical moving 
+--					elements in the system
 -----------------------------------------------
 
 --

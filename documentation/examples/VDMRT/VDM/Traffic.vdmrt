@@ -104,11 +104,15 @@ in
 pos1.inRange(pos2, Config`TrafficCongestionRange);
 
 
--- compare the range of a single vehicle to a set of vehicles moving in the same direction
-public FindInRangeWithSameDirection : Vehicle * seq of Vehicle -> set of Vehicle
+-- compare the range of a single vehicle to a set of vehicles moving in 
+-- the same direction
+public FindInRangeWithSameDirection : Vehicle * seq of Vehicle 
+	 -> set of Vehicle
 FindInRangeWithSameDirection(v ,vs) ==
 let dir = v.GetDirection() in
- { ir | ir in set elems vs & v <> ir and dir = ir.GetDirection() and InRange(v,ir) = true }
+ { ir | ir in set elems vs & v <> ir 
+ 						   and dir = ir.GetDirection() 
+ 						   and InRange(v,ir) = true }
 
 
 --

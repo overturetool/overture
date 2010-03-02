@@ -34,7 +34,6 @@ Position(x_, y_) ==
 (
  x := x_;
  y := y_;
- --Printer`Out("Position created: It is not the position, but the disposition.");
 );
 		
 public X: () ==> int
@@ -66,7 +65,9 @@ y := newY
 public toString : () ==> seq of char
 toString() == 
 (
-	return "position X: " ^ Printer`intToString(x) ^ " Y: " ^ Printer`intToString(y) 
+	return "position X: " 
+	^ Printer`intToString(x) 
+	^ " Y: " ^ Printer`intToString(y) 
 );
 
 public inRange : Position * int ==> bool

@@ -54,8 +54,9 @@ World() ==
  VDM`vdmCtrl.addTrafficLight(VDM`tl1);
  env.setVDMCtrl(VDM`vdmCtrl);
 
- Printer`OutAlways("World created:  Maybe this world is another planet's hell.");
- Printer`OutAlways("---------------------------------------------------------------------------------------------------\n");
+ Printer`OutAlways("World created: "  
+				 ^ " Maybe this world is another planet's hell.");
+ Printer`OutAlways("------------------------------------------\n");
 );
 
 public Run: () ==> ()

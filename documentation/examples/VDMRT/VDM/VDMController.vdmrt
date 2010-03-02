@@ -43,7 +43,8 @@ addTrafficLight(light) ==
 (
     lights := lights munion {light.GetID() |-> light};    
 )
-pre light.GetID() not in set dom lights and light.GetID() not in set dom ctrlUnits;
+pre light.GetID() not in set dom lights 
+				  and light.GetID() not in set dom ctrlUnits;
 
 public getController : nat ==> Controller
 getController(id) ==
@@ -71,20 +72,24 @@ CalculateInRange() ==
    -- vehicles
    let units = rng ctrlUnits in   
     -- for all units, find the ones in range. 
-    -- This could be optimized given that if one unit can see another unit, then they can see each other, 
-    -- no need to calculate the range again for units seeing each other. However will be complex, given that 
-    -- one unit might have serveral units in its range that arent in range of each other.              
+    -- This could be optimized given that if one unit can see another unit,
+    -- then they can see each other, no need to calculate the range again 
+    -- for units seeing each other. However this will be complex, given that 
+    -- one unit might have serveral units in its range that aren't in range 
+    -- of each other.              
     for all unit in set units do 
     (
      let inrange = FindInRangeWithOppositeDirection(unit, units)  
      in
      (
-       --only request data, the way the loop is built will ensure that all units will request data. 
+       -- only request data, the way the loop is built will ensure that all 
+       -- units will request data. 
        if(card inrange > 0)
        then
        for all oncomingVehicle in set inrange do
        (
-         unit.AddTrafficData(oncomingVehicle.GetVehicleID() ,oncomingVehicle.GetTrafficData());
+         unit.AddTrafficData(oncomingVehicle.GetVehicleID() 
+         					,oncomingVehicle.GetTrafficData());
          
          let vehicleDTO = unit.getVehicleDTO() in 
          oncomingVehicle.AddOncomingVehicle(vehicleDTO); 
@@ -107,7 +112,8 @@ cases d:
 end;
 
 
--- compare the range of a single vehicle/controller to a set of vehicles/controllers
+-- compare the range of a single vehicle/controller to a 
+-- set of vehicles/controllers
 public  FindInRange : Controller * set of Controller -> set of Controller
 FindInRange(v, vs) ==
  let inrange = { ir | ir in set vs & v <> ir and InRange(v,ir) = true }
@@ -123,8 +129,10 @@ in
 pos1.inRange(pos2, Config`Range); 
   
   
--- compare the range of a single vehicle/controller to a set of vehicles/controllers moving in the opposite direction
-public FindInRangeWithOppositeDirection : Controller * set of Controller -> set of Controller
+-- compare the range of a single vehicle/controller to a set of 
+-- vehicles/controllers moving in the opposite direction
+public FindInRangeWithOppositeDirection : Controller * set of Controller 
+	-> set of Controller
 FindInRangeWithOppositeDirection(u ,us) ==
 let dir = OppositeDirection(u.GetDirection()) in
  let inrange = { ir | ir in set FindInRange(u, us) & dir = ir.GetDirection()}
@@ -155,7 +163,8 @@ thread
 --
 sync
 per Step => #fin(addController) > 0; 
-mutex (CalculateInRange, addController, getController);  --heavy performance loss
+-- has heavy performance loss
+mutex (CalculateInRange, addController, getController);
 mutex (addController);
 mutex (getController);
 mutex (CalculateInRange)

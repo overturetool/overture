@@ -33,7 +33,8 @@ cpu12 : CPU := new CPU (<FCFS>,1E6);
 cpu13 : CPU := new CPU (<FCFS>,1E6);
 cpu14 : CPU := new CPU (<FCFS>,1E6);
 
-bus1 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu1, cpu2, cpu3, cpu4, cpu5, cpu6, cpu7, cpu8, cpu9, cpu10, cpu11, cpu12, cpu13, cpu14});
+bus1 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu1, cpu2, cpu3, cpu4, cpu5, cpu6,
+				 	   cpu7, cpu8, cpu9, cpu10, cpu11, cpu12, cpu13, cpu14});
 --bus1 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu1});
 --bus2 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu2});
 --bus3 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu3});
@@ -50,39 +51,69 @@ bus1 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu1, cpu2, cpu3, cpu4, cpu5, cpu6, cpu7
 --bus14 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu14});
 
 -- Vehicles
-public static ctrl1 : Controller := new Controller(new Vehicle(1, new Position(1, 1), 1, <NORTH>));
+public static ctrl1 : Controller := new Controller(
+									new Vehicle(1, 
+									new Position(1, 1), 1, <NORTH>));
 
-public static ctrl2 : Controller := new Controller(new Vehicle(2, new Position(1, 2), 1, <NORTH>));
+public static ctrl2 : Controller := new Controller(
+									new Vehicle(2, 
+									new Position(1, 2), 1, <NORTH>));
 
-public static ctrl3 : Controller := new Controller(new Vehicle(3, new Position(1, 3), 1, <NORTH>));
+public static ctrl3 : Controller := new Controller(
+									new Vehicle(3, 
+									new Position(1, 3), 1, <NORTH>));
 
-public static ctrl4 : Controller := new Controller(new Vehicle(4, new Position(1, 3), 1, <SOUTH>));
+public static ctrl4 : Controller := new Controller(
+									new Vehicle(4, 
+									new Position(1, 3), 1, <SOUTH>));
 
-public static ctrl5 : Controller := new Controller(new Vehicle(5, new Position(1, 0), 1, <NORTH>));
+public static ctrl5 : Controller := new Controller(
+									new Vehicle(5, 
+									new Position(1, 0), 1, <NORTH>));
 
-public static ctrl6 : Controller := new Controller(new Vehicle(6, new Position(1, 0), 1, <NORTH>));
+public static ctrl6 : Controller := new Controller(
+									new Vehicle(6, 
+									new Position(1, 0), 1, <NORTH>));
 
-public static ctrl7 : Controller := new Controller(new Vehicle(7, new Position(1, -4), 1, <NORTH>));
+public static ctrl7 : Controller := new Controller(
+									new Vehicle(7, 
+									new Position(1, -4), 1, <NORTH>));
 
-public static ctrl8 : Controller := new Controller(new Vehicle(8, new Position(1, 5), 1, <SOUTH>));
+public static ctrl8 : Controller := new Controller(
+									new Vehicle(8, 
+									new Position(1, 5), 1, <SOUTH>));
 
-public static ctrl9 : Controller := new Controller(new Vehicle(9, new Position(1, 6), 1, <SOUTH>));
+public static ctrl9 : Controller := new Controller(
+									new Vehicle(9, 
+									new Position(1, 6), 1, <SOUTH>));
 
-public static ctrl10 : Controller := new Controller(new Vehicle(10, new Position(1, 8), 1, <SOUTH>));
+public static ctrl10 : Controller := new Controller(
+									 new Vehicle(10, 
+									 new Position(1, 8), 1, <SOUTH>));
 
-public static ctrl11 : Controller := new Controller(new Vehicle(11, new Position(1, 5), 1, <EAST>));
+public static ctrl11 : Controller := new Controller(
+									 new Vehicle(11, 
+									 new Position(1, 5), 1, <EAST>));
 
-public static ctrl12 : Controller := new Controller(new Vehicle(12, new Position(7, 5), 1, <WEST>));
+public static ctrl12 : Controller := new Controller(
+									  new Vehicle(12, 
+									  new Position(7, 5), 1, <WEST>));
 
-public static ctrl13 : Controller := new Controller(new Vehicle(13, new Position(12, 5), 1, <WEST>));
+public static ctrl13 : Controller := new Controller(
+									 new Vehicle(13, 
+									 new Position(12, 5), 1, <WEST>));
 
-public static ctrl14 : Controller := new Controller(new Vehicle(14, new Position(14, 5), 1, <WEST>));
+public static ctrl14 : Controller := new Controller(
+									 new Vehicle(14, 
+									 new Position(14, 5), 1, <WEST>));
 
 
 
 
 --traffic lights
-public static tl1 : TrafficLight := new TrafficLight(20, new Position(1, 1), 100);
+public static tl1 : TrafficLight := new TrafficLight(20 
+													,new Position(1, 1)
+													, 100);
 
 -- environment 
 public static vdmCtrl : VDMController := new VDMController();

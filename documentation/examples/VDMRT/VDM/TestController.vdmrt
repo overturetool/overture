@@ -106,7 +106,7 @@ RunTest () ==
   ctrl.AddTrafficData(25, [new TrafficData(<Congestion>, pos , <NORTH>)]);
   ctrl.AddTrafficData(26, [new TrafficData(<LeftTurn>, pos , <NORTH>)]);
 
-  --test that the same vehicle cant communicate until pass threshold. 
+  --test that the same vehicle can't communicate until pass threshold. 
   ctrl.AddTrafficData(31, [new TrafficData(<Congestion>, pos , <NORTH>)]);
   ctrl.AddTrafficData(32, [new TrafficData(<Congestion>, pos , <NORTH>)]);
   ctrl.AddTrafficData(33, [new TrafficData(<Congestion>, pos , <NORTH>)]);
@@ -115,8 +115,9 @@ RunTest () ==
   ctrl.AddTrafficData(35, [new TrafficData(<Congestion>, pos , <NORTH>)]);
   ctrl.AddTrafficData(31, [new TrafficData(<LeftTurn>, pos , <NORTH>)]);
   
-  -- actually this can't be automatically tested. The added data is internal only. 
-  -- The test can be verified only by checking the handled events in environment. 
+  -- actually this can't be automatically tested. 
+  -- The added data is internal only. The test can only be verified  
+  -- by checking the handled events in environment. 
   
 );
   

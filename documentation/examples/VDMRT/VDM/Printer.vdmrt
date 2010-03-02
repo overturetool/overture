@@ -31,7 +31,9 @@ operations
   
   public static OutWithTS: seq of char ==> ()
   OutWithTS (pstr) ==
-    def - = new IO().echo(Printer`natToString(time) ^ ": " ^ pstr ^ "\n") in skip;
+    def - = new IO().echo(Printer`natToString(time) 
+    					  ^ ": " ^ pstr ^ "\n") 
+    					  in skip;
 
   public static natToString : nat ==> seq of char 
   natToString(n) ==

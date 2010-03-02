@@ -3,7 +3,8 @@
 \begin{vdm_al}
 -----------------------------------------------
 -- Class:			Controller
--- Description: 	Controller is main class in every independent VDM element
+-- Description: 	Controller is main class in 
+--					every independent VDM element
 -----------------------------------------------
 
 --
@@ -15,16 +16,23 @@ class Controller
 -- instance variables
 --
 instance variables
-private internalTrafficData : seq of TrafficData := []; 	    -- traffic data issued by this controller, that will be passed on other controllers.
+-- traffic data issued by this controller, that will be passed on 
+-- other controllers.
+private internalTrafficData : seq of TrafficData := []; 	    
 inv len internalTrafficData <=  Config`TrafficDataKeeptNumber;
-private externalTrafficData : seq of TrafficData := [];  		-- traffic data from other controllers moving in the opposite direction,  
-inv len externalTrafficData <= Config`TrafficDataKeeptNumber;   -- this will not be passes on as it makes no sense with the current warning types. 
+-- traffic data from other controllers moving in the opposite direction,
+private externalTrafficData : seq of TrafficData := [];  		
+-- this will not be passes on as it makes no sense with the current 
+-- warning types.  
+inv len externalTrafficData <= Config`TrafficDataKeeptNumber;    
 
+--keep track of whom we have communicated with.
 private communicatedWith : seq of nat := [];
-inv len communicatedWith <= Config`TrafficDataKeeptNumber; 		--keep track of whom we have communicated with. 
+inv len communicatedWith <= Config`TrafficDataKeeptNumber; 		 
 
 private traffic : Traffic;
-private vdmVehicle : Vehicle; -- the vehicle the VDM system Controller is placed in.
+ -- the vehicle the VDM system Controller is placed in.
+private vdmVehicle : Vehicle;
 --
 -- Types definition section
 --
@@ -75,7 +83,8 @@ AddTrafficData(vdmUnitID, data) ==
  
  for d in data do 
  ( 
-  World`env.handleEvent("Vehicle: " ^ Printer`natToString(GetVehicleID()) ^ " received " ^  d.ToString());
+  World`env.handleEvent("Vehicle: " ^ Printer`natToString(GetVehicleID()) ^ 
+  						" received " ^  d.ToString());
  );
  --keep track of who we have communicated with
  if len communicatedWith < Config`TrafficDataKeeptNumber
@@ -101,8 +110,10 @@ AddInternalTrafficData(data) ==
 public GetTrafficData: () ==> seq of TrafficData 
 GetTrafficData() ==
 -- deep copy
-return [ new TrafficData(internalTrafficData(i).GetMessage(), internalTrafficData(i).GetPosition(), internalTrafficData(i).GetDirection()) 
-| i in set inds internalTrafficData ];
+return [ new TrafficData(internalTrafficData(i).GetMessage(), 
+						 internalTrafficData(i).GetPosition(), 
+				 		 internalTrafficData(i).GetDirection()) 
+						| i in set inds internalTrafficData ];
 
 
 public GetVehicleID : () ==> nat
@@ -140,7 +151,9 @@ Step() ==
   then 
   (
   --remove td
-  internalTrafficData := [internalTrafficData(i) | i in set inds internalTrafficData & internalTrafficData(i) <> td];
+  internalTrafficData := [internalTrafficData(i) 
+  					| i in set inds internalTrafficData 
+  					& internalTrafficData(i) <> td];
   )
  );
  
@@ -150,9 +163,12 @@ Step() ==
  (
  --The position check will only be relevant if the car has speed 0
  if vdmVehicle.GetSpeed() = 0 => 
- not exists data in set elems internalTrafficData & Position`Compare(data.GetPosition(), GetPosition()) and  data.GetMessage() = <LowGrip> 
+ not exists data in set elems internalTrafficData 
+ 				& Position`Compare(data.GetPosition(), GetPosition()) 
+ 				and  data.GetMessage() = <LowGrip> 
  then 
- let lowGripMsg = new TrafficData(<LowGrip>, GetPosition().deepCopy(), GetDirection()) 
+ let lowGripMsg = new TrafficData(<LowGrip>, GetPosition().deepCopy()
+ 								 , GetDirection()) 
  in  
  AddInternalTrafficData(lowGripMsg);
  );
@@ -163,9 +179,12 @@ Step() ==
  (
  --The position check will only be relevant if the car has speed 0
  if vdmVehicle.GetSpeed() = 0 =>
- not exists data in set elems internalTrafficData & Position`Compare(data.GetPosition(), GetPosition()) and  data.GetMessage() = <LeftTurn> 
+ not exists data in set elems internalTrafficData 
+ 				& Position`Compare(data.GetPosition(), GetPosition()) 
+ 				and  data.GetMessage() = <LeftTurn> 
  then 
- let turnMsg = new TrafficData(<LeftTurn>, GetPosition().deepCopy(), GetDirection()) 
+ let turnMsg = new TrafficData(<LeftTurn>, GetPosition().deepCopy()
+ 								,GetDirection()) 
  in  
  AddInternalTrafficData(turnMsg);
  );
@@ -176,10 +195,13 @@ Step() ==
  (
  --The position check will only be relevant if the car has speed 0
  if vdmVehicle.GetSpeed() = 0 =>
- not exists data in set elems internalTrafficData & Position`Compare(data.GetPosition(), GetPosition()) and  data.GetMessage() = <Congestion> 
+ not exists data in set elems internalTrafficData 
+ 				& Position`Compare(data.GetPosition(), GetPosition()) 
+ 				  and  data.GetMessage() = <Congestion> 
  then
   ( 
-  let congMsg = new TrafficData(<Congestion>, GetPosition().deepCopy(), GetDirection()) 
+  let congMsg = new TrafficData(<Congestion>, GetPosition().deepCopy()
+  								, GetDirection()) 
    in  
    (
     AddInternalTrafficData(congMsg);

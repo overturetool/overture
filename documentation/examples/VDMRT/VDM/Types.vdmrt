@@ -15,8 +15,9 @@ types
 public Time = nat;
 public Direction = <NORTH> | <SOUTH> | <EAST> | <WEST>;
 
-public Event = VechicleRun | TrafficLightRun | VehicleUpdateSpeed | VehicleUpdatePosition 
-| VehicleUpdateDirection | VehicleLowGrip | VehicleTurnIndication | WasteTime;
+public Event = VechicleRun | TrafficLightRun | VehicleUpdateSpeed 
+			   | VehicleUpdatePosition | VehicleUpdateDirection 
+			   | VehicleLowGrip | VehicleTurnIndication | WasteTime;
 
 public VechicleRun ::
         ID : nat

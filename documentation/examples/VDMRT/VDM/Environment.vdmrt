@@ -36,7 +36,9 @@ operations
 public Environment: seq of char ==> Environment
 Environment(filename) ==
 (
- 	Printer`OutWithTS("Environment created:  Some aren't used to an environment where excellence is expected");
+ 	Printer`OutWithTS("Environment created: "  
+ 					 ^ "Some aren't used to an environment"  
+					 ^ "where excellence is expected");
 
 	def mk_(-,input) = io.freadval[InputTP](filename) in
 	(
@@ -64,12 +66,13 @@ Events() ==
 				if event.t <= curtime
 				then
 				(
-				     Printer`OutWithTS("Environment: Start Vehicle event " ^ Printer`natToString(event.ID)); 
+				     Printer`OutWithTS("Environment: Start Vehicle event "
+				     					 ^ Printer`natToString(event.ID)); 
 					 let ctrl = vdmCtrl.getController(event.ID) in
 					 (
 					 ctrl.run();
 					 );
-			    eventOccurred := true;
+			    	 eventOccurred := true;
 				)
 		    ),
 		    mk_Types`TrafficLightRun(-,-) ->
@@ -77,12 +80,13 @@ Events() ==
 			    if event.t <= curtime
 				then
 				(
-			    Printer`OutWithTS("Environment: Start TrafficLight event");
+			    	Printer`OutWithTS("Environment: " 
+			    					  ^ " Start TrafficLight event");
 			     
-			      let light = vdmCtrl.getTrafficLight(event.ID) in 
-			      start(light);
+			      	let light = vdmCtrl.getTrafficLight(event.ID) in 
+			      	start(light);
 
-			      eventOccurred := true;
+			     	eventOccurred := true;
 			     )
 		    ),
 		    mk_Types`VehicleUpdateSpeed(-,-,-) ->
@@ -90,11 +94,16 @@ Events() ==
 		    	if event.t <= curtime
 				then
 				(
-					 Printer`OutWithTS("Environment: SpeedUpdate event: For vehicle: " ^ Printer`natToString(event.ID) ^ " New Speed: " ^ Printer`natToString(event.speed)); 
+					 Printer`OutWithTS("Environment: SpeedUpdate event: " 
+					 					^ "For vehicle: " 
+					 					^ Printer`natToString(event.ID) 
+					 					^ " New Speed: " 
+					 					^ Printer`natToString(event.speed));
+					 					 
 					 let c = vdmCtrl.getController(event.ID) in 
 					     c.getVehicle().SetSpeed(event.speed);
 				
-				eventOccurred := true;
+					 eventOccurred := true;
 				) 
 		    ),
 		    mk_Types`VehicleUpdatePosition(-,-,-,-) ->
@@ -102,22 +111,28 @@ Events() ==
 			 	if event.t <= curtime
 				then
 				(
-			 	 let pos = new Position(event.posX, event.posY) in
-			 	  let c = vdmCtrl.getController(event.ID) in 
-			       (
-			       c.getVehicle().SetPosition(pos); 
-			       Printer`OutWithTS("Environment: PositionUpdate event: For vehicle: " ^ Printer`natToString(event.ID) ^ " New position:" ^ pos.toString());
-			       );
+			 	 	let pos = new Position(event.posX, event.posY) in
+			 	 		let c = vdmCtrl.getController(event.ID) in 
+			       		(
+			       		c.getVehicle().SetPosition(pos); 
+			       		Printer`OutWithTS("Environment: PositionUpdate event: 
+									For vehicle: " 
+									^ Printer`natToString(event.ID) 
+									^ " New position:" 
+									^ pos.toString());
+			       		);
 			     
-			     eventOccurred := true;
-			     )
+			     	eventOccurred := true;
+			    )
 		    ),
 		    mk_Types`VehicleLowGrip (-,-,-) ->
 		    (
-		    	if event.t <= curtime
+    			if event.t <= curtime
 				then
 				(
-				 Printer`OutWithTS("Environment: LowGrip event: For vehicle: " ^ Printer`natToString(event.ID)); 
+				 Printer`OutWithTS("Environment: LowGrip event: " 
+				 					^ "For vehicle: " 
+				 					^ Printer`natToString(event.ID)); 
 				 let c = vdmCtrl.getController(event.ID) in 
 			     c.getVehicle().setLowGrip(event.lowGrip); 
 			    
@@ -129,7 +144,11 @@ Events() ==
 		    	if event.t <= curtime
 				then
 				(
-				 Printer`OutWithTS("Environment: TurnIndication event: For vehicle: " ^ Printer`natToString(event.ID) ^ " New indicator: " ^ Vehicle`IndicatorToString(event.turn));  
+				 Printer`OutWithTS("Environment: TurnIndication event: " 
+				 					^ "For vehicle: " 
+		 							^ Printer`natToString(event.ID) 
+		 							^ " New indicator: " 
+		 							^ Vehicle`IndicatorToString(event.turn));  
 				 let c = vdmCtrl.getController(event.ID) in 
 			     c.getVehicle().setTurnIndicator(event.turn); 
 			     
@@ -141,7 +160,11 @@ Events() ==
 		    	if event.t <= curtime
 				then
 				(
-				 Printer`OutWithTS("Environment: DirectionUpdate event: For vehicle: " ^ Printer`natToString(event.ID) ^ " New Direction: " ^ Types`DirectionToString(event.direction)); 
+				 Printer`OutWithTS("Environment: DirectionUpdate event: " 
+				 				  ^ "For vehicle: " 
+				 				  ^ Printer`natToString(event.ID) 
+				 				  ^ " New Direction: " 
+				 				  ^ Types`DirectionToString(event.direction)); 
 			 	 let c = vdmCtrl.getController(event.ID) in 
 			     c.getVehicle().SetDirection(event.direction); 
 			    
@@ -157,7 +180,7 @@ Events() ==
 			     eventOccurred := true;
 			    )
 		    ),
-		    others -> Printer`OutWithTS("Environment: No match found!")
+		    others -> Printer`OutWithTS("Environment: No match found")
 		end;
 
 		if eventOccurred 
@@ -185,12 +208,13 @@ Events() ==
    public report : () ==> ()
    report() ==
    (
-   Printer`OutAlways("\n\nHowever beautiful the strategy, you should occasionally look at the results.");
-   Printer`OutAlways("****************************************RESULT****************************************");
-   Printer`OutAlways("*******************************************************************************************");
+   Printer`OutAlways("\n\nHowever beautiful the strategy," ^ 
+   					"you should occasionally look at the results.");
+   Printer`OutAlways("**RESULT***");
+   Printer`OutAlways("***********");
    Printer`OutAlways(outlines);
-   Printer`OutAlways("\n*******************************************************************************************");
-   Printer`OutAlways("*******************************************************************************************");
+   Printer`OutAlways("\n***********");
+   Printer`OutAlways("***********");
    );
    
    public isFinished : () ==> () 

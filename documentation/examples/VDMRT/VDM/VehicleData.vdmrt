@@ -3,7 +3,7 @@
 \begin{vdm_al}
 -----------------------------------------------
 -- Class:			Vehicle
--- Description: 	Vehicle class describes the physical moving elements in the system
+-- Description: 	DTO representing the data in the Vehicle class
 -----------------------------------------------
 
 --
@@ -32,7 +32,8 @@ public Indicator = <LEFT> | <RIGHT> | <NONE>;
 --
 operations
 
-public VehicleData : nat * Position * nat * Types`Direction * bool ==> VehicleData
+public VehicleData : nat * Position * nat * Types`Direction * bool 
+	==> VehicleData
 VehicleData(identifier, p, s, d, grip) ==
 (
   pos := p;

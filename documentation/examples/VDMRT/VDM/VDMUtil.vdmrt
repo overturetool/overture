@@ -17,8 +17,10 @@ static public set2seq[@T] : set of @T +> seq of @T
 set2seq(x) == is not yet specified;
 
 -- Returns a context information tuple which represents
--- (fine_name * line_num * column_num * class_name * fnop_name) of corresponding source text
-static public get_file_pos : () +> [ seq of char * nat * nat * seq of char * seq of char ]
+-- (fine_name * line_num * column_num * class_name * fnop_name) of 
+-- corresponding source text
+static public get_file_pos : () +> [ seq of char * nat * 
+								   nat * seq of char * seq of char ]
 get_file_pos() == is not yet specified;
 
 -- Converts a VDM value into a seq of char.
