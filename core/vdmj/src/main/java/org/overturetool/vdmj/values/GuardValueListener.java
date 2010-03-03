@@ -23,9 +23,12 @@
 
 package org.overturetool.vdmj.values;
 
+import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.runtime.CPUThread;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ControlQueue;
+import org.overturetool.vdmj.runtime.RunState;
 
 public class GuardValueListener<T> implements ValueListener
 {
@@ -38,10 +41,14 @@ public class GuardValueListener<T> implements ValueListener
 
 	public void changedValue(LexLocation location, Value value, Context ctxt)
 	{
-		if (object instanceof ControlQueue)
+		if (Settings.dialect == Dialect.VDM_RT)
 		{
-			ControlQueue cq = (ControlQueue)object;
-			cq.stim();
+			ObjectValue self = (ObjectValue)object;
+
+			for (CPUThread th: self.guardWaiters)
+			{
+				th.setState(RunState.RUNNABLE);
+			}
 		}
 		else
 		{

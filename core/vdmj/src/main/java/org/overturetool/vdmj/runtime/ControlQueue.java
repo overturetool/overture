@@ -83,7 +83,6 @@ public class ControlQueue
 		if (joined != null)
 		{
 			joined.setState(RunState.RUNNABLE);
-			joined.cpu.wakeUp();
 		}
 	}
 
@@ -98,7 +97,6 @@ public class ControlQueue
 		{
 			CPUThread w = waiters.remove(0);
 			w.setState(RunState.RUNNABLE);
-			w.cpu.wakeUp();
 		}
 	}
 }

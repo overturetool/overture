@@ -36,6 +36,25 @@ public class CPUThread
 		this.thread = thread;
 	}
 
+	@Override
+	public int hashCode()
+	{
+		return (int)(cpu.cpuNumber + thread.getId());
+	}
+
+	@Override
+	public boolean equals(Object other)
+	{
+		if (other instanceof CPUThread)
+		{
+			CPUThread co = (CPUThread)other;
+			return cpu.cpuNumber == co.cpu.cpuNumber &&
+					thread.getId() == co.thread.getId();
+		}
+
+		return false;
+	}
+
 	public CPUThread(CPUValue cpu)
 	{
 		this.cpu = cpu;
@@ -45,5 +64,6 @@ public class CPUThread
 	public void setState(RunState newstate)
 	{
 		cpu.setState(thread, newstate);
+		cpu.wakeUp();
 	}
 }
