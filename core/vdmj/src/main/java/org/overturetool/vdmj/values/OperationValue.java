@@ -90,7 +90,7 @@ public class OperationValue extends Value
 	public boolean isAsync = false;
 
 	private Expression guard = null;
-	private static final int DEADLOCK_TIMEOUT_MS = 5000;
+	private static final int DEADLOCK_TIMEOUT_MS = 10000;
 
 	public int hashAct = 0; // Number of activations
 	public int hashFin = 0; // Number of finishes
