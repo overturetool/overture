@@ -1,0 +1,24 @@
+class Object
+/*
+作成者 = 佐原伸
+作成日 = 2000年 8月 23日 
+Responsibility
+	オブジェクト共通の振る舞いを表す。
+
+Abstract
+	すべてのオブジェクトに共通な機能を定義する。
+*/
+	
+functions 
+
+public hashCode : () -> int
+hashCode() == is subclass responsibility;
+
+public equals : Object -> bool
+equals(-) == is subclass responsibility;
+
+operations
+public getContent : () ==> [seq of char | int]
+getContent() == is subclass responsibility;
+			
+end Object

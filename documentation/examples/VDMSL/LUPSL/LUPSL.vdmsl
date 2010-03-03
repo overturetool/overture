@@ -39,6 +39,14 @@ lupsl : array -> nat
 lupsl(a) == 
   MaxOfSet({lupsltok(a,j) | j in set inds a});
 
+ascending : array * set of int -> bool
+ascending(a,s) ==
+   forall i,j in set s & i<j => a(i)<=a(j) pre s subset (inds a);
+
+lupslSpec : array -> int
+lupslSpec(a) ==
+   MaxOfSet({ card s | s in set power inds a & ascending(a,s) })
+
 operations
 
 lupslOp1Laski : array ==> nat
@@ -47,7 +55,8 @@ lupslOp1Laski(a) ==
    for all k in set inds a do
       lupsls := lupsls union {lupsltok(a,k)};
    return MaxOfSet(lupsls);
-  );
+  )
+post lupslSpec(a) = RESULT;
 
 state lups of
   lupslarr : array 
@@ -62,7 +71,8 @@ lupsmOp1Gries(a) ==
    for k = 2 to len a do
       lupsm4kop1Gries(a,k);
    return len lupslarr;
-  );
+  )
+post lupslSpec(a) = RESULT;
  
 lupsm4kop1Gries : array * nat1 ==> ()
 lupsm4kop1Gries(a,k) ==
@@ -85,7 +95,8 @@ lupslOp2Laski(a) ==
       let lak = lupsltok(a,k) in
         if lak > lupslmax then lupslmax := lak;
    return lupslmax;
-  );
+  )
+post lupslSpec(a) = RESULT;
  
 lupsmOp2Gries : array ==> nat
 lupsmOp2Gries(a) == 
@@ -93,7 +104,8 @@ lupsmOp2Gries(a) ==
    for k = 2 to len a do
       lupsm4kop2Gries(a,k);
    return len lupslarr;
-  );
+  )
+post lupslSpec(a) = RESULT;
 
 lupsm4kop2Gries : array * nat1 ==> ()
 lupsm4kop2Gries(a,k) ==
@@ -117,7 +129,8 @@ lupslOp3Laski(a) ==
         if lak > lupslmax 
         then lupslmax := lak;
    return lupslmax;
-  );
+  )
+post lupslSpec(a) = RESULT;
 
 lupsltokop1Laski : array * nat1 ==> nat
 lupsltokop1Laski(a,k) ==
@@ -141,7 +154,8 @@ lupsmOp3Gries(a) ==
    for k = 2 to len a do
       lupsm4kop3Gries(a,k);
    return len lupslarr;
-  );
+  )
+post lupslSpec(a) = RESULT;
  
 lupsm4kop3Gries : array * nat1 ==> ()
 lupsm4kop3Gries(a,k) ==
@@ -175,8 +189,8 @@ lupslOp4Laski(a) ==
         if lak > lupslmax 
         then lupslmax := lak;
    return lupslmax;
-  );
-
+  )
+post lupslSpec(a) = RESULT;
  
 lupsltokop2Laski : array * nat1 ==> nat
 lupsltokop2Laski(a,k) ==

@@ -1,0 +1,205 @@
+class Date  is subclass of CalendarDefinition	-- date
+/*
+Responsibility
+	I am a date of Gregorio Calendar.
+Abstract
+	I calculate date by cooperating with Calendar class.
+	There can be two or more objects at the same date. 
+
+Therefore, it is judged that the date is equal by using EQ operation. 
+*/
+
+instance variables
+
+private ModifiedJulianDate : real := 0;
+private usingCalendar : Calendar;
+
+/*
+ModifiedJulianDateは、julianDateでは数値が大きくなりすぎたので採用されたdateを表す数値で、1858年11月17日を0とする。
+calculation誤差の関係から、2倍精度浮動小数点(Cではdouble)でなければならない。
+*/
+
+functions
+
+----Query
+
+public getNumberOfDayOfTheWeek: () -> Calendar`NumberOfDayOfTheWeek
+getNumberOfDayOfTheWeek() == calendar().getNumberOfDayOfTheWeek(self);
+
+public getNameOfDayOfTheWeek : () -> Calendar`NameOfDayOfTheWeek
+getNameOfDayOfTheWeek() == calendar().getNameOfDayOfTheWeek(self) ;
+
+--指定された曜日が、selfとdateの間に何日あるかを返す。 
+public getNumberOfTheDayOfWeek: Date * Calendar`NameOfDayOfTheWeek -> int
+getNumberOfTheDayOfWeek(date,nameOfDayOfTheWeek) == calendar().getNumberOfTheDayOfWeek(self,date,nameOfDayOfTheWeek);
+
+--selfとdateの間の休日あるいは日曜日の数を返す（startDateを含む）
+public getTheNumberOfDayOff: Date -> int
+getTheNumberOfDayOff(date) == calendar().getTheNumberOfDayOff(self,date);
+
+--selfとdateの間の休日あるいは日曜日の数を返す（startDateを含まない）
+public getTheNumberOfDayOffExceptStartDate: Date -> int
+getTheNumberOfDayOffExceptStartDate(date) == calendar().getTheNumberOfDayOffExceptStartDate(self,date) ;
+
+--dateから、そのdateの属する年を求める。
+public Year: () -> int
+Year() == calendar().Year(self);
+		
+--dateから、そのdateの属する月を求める。
+public Month: () -> int
+Month() == calendar().Month(self);
+		
+--dateから、日を求める。
+public day: () -> int
+day() == calendar().day(self);
+
+/* calculation  */
+
+--休日でないdateを返す（未来へ向かって探索する）
+public getFutureWeekday : ()-> Date
+getFutureWeekday() == calendar().getFutureWeekday(self);
+
+--休日でないdateを返す（過去へ向かって探索する）
+public getPastWeekday : ()-> Date
+getPastWeekday() == calendar().getPastWeekday(self);
+
+--selfに、平日n日分を加算する
+public addWeekday : int -> Date
+addWeekday(addNumOfDays) == calendar().addWeekday(self,addNumOfDays);
+
+--selfに、平日n日分を減算する
+public subtractWeekday : int -> Date
+subtractWeekday(subtractNumOfDays) == calendar().subtractWeekday(self,subtractNumOfDays) ;
+
+/* checking */
+
+public isSunday : () -> bool
+isSunday() == calendar().isSunday(self);
+
+public isSaturday : () -> bool
+isSaturday() == calendar().isSaturday(self);
+
+public isWeekday : () -> bool
+isWeekday() == calendar().isWeekday(self);
+
+public isNotDayOff : () -> bool
+isNotDayOff() == calendar().isNotDayOff(self);
+
+public isDayOff : () -> bool 
+isDayOff() == calendar().isDayOff(self);
+
+public isSundayOrDayoff : () -> bool 
+isSundayOrDayoff() ==  calendar().isSundayOrDayoff(self);
+
+--new Date().getDateFrom_yyyy_mm_dd(2001,12,31).daysFromNewYear() = 365
+public daysFromNewYear: () -> int
+daysFromNewYear() == calendar().daysFromNewYear(self);
+
+/* conversion */
+
+public get_yyyy_mm_dd: () -> int * int * int
+get_yyyy_mm_dd() == mk_(self.Year(), self.Month(), self.day());
+
+private toStringAux: int -> seq of char
+toStringAux(i) == 
+	let	str = Integer`asString	in
+	if i >= 10 then str(i) else "0" ^ str(i);
+
+public date2Str: () -> seq of char
+date2Str() == self.asString();
+
+operations
+
+----conversion
+
+public asString: () ==> seq of char
+asString() ==
+	(let	asString =Integer`asString,
+		y = self.Year(),
+		m = self.Month(),
+		d = self.day(),
+		yearStr = asString(y),
+		monthStr = toStringAux(m),
+		dateStr = toStringAux(d)
+	in
+		return yearStr ^ monthStr ^ dateStr
+	);
+
+public print: ()   ==> seq of char
+print() ==
+	(let	asString =Integer`asString,
+		y = self.Year(),
+		m = self.Month(),
+		d = self.day(),
+		yearStr = asString(y),
+		monthStr = toStringAux(m),
+		dateStr = toStringAux(d)
+	in
+		return "Year=" ^ yearStr ^ ", Month=" ^ monthStr ^ ", Day=" ^ dateStr ^ ", "
+	);
+
+
+----比較
+
+/*
+操作名
+	大小比較を行う関数群。
+引数
+	date
+返値
+	真ならtrueを返し、そうでなければfalseを返す。
+内容
+	自身と与えられたdateの大小比較を行う。
+*/
+public LT: Date ==> bool
+LT(date) == return floor self.getModifiedJulianDate() < floor date.getModifiedJulianDate();
+
+public GT: Date ==> bool
+GT(date) == return floor self.getModifiedJulianDate() > floor date.getModifiedJulianDate();
+
+public LE: Date ==> bool
+LE(date) == return not self.GT(date);
+
+public GE: Date ==> bool
+GE(date) == return not self.LT(date);
+
+--自身と与えられたdateがEQか判定する。
+public EQ: Date ==> bool	--等しければtrueを返し、そうでなければfalseを返す。
+EQ(date) ==  return (floor self.getModifiedJulianDate() = floor date.getModifiedJulianDate());
+
+--自身と与えられたdateが等しくないか判定する。
+public NE: Date ==> bool	--等しければfalseを返し、そうでなければtrueを返す。
+NE(date) ==  return (floor self.getModifiedJulianDate() <> floor date.getModifiedJulianDate());
+
+----calculation
+
+--自身にnumOfDaysを加算したdateを返す
+public plus: int ==> Date
+plus(addNumOfDays) == return calendar().modifiedJulianDate2Date(self.getModifiedJulianDate() + addNumOfDays) ;
+
+--自身からnumOfDaysを減算したdateを返す
+public minus: int ==> Date
+minus(subtractNumOfDays) == return calendar().modifiedJulianDate2Date(self.getModifiedJulianDate() - subtractNumOfDays) ;
+
+--インスタンス変数へのアクセス操作
+
+--ModifiedJulianDate
+public setModifiedJulianDate: real ==> ()
+setModifiedJulianDate(r) == ModifiedJulianDate := r;
+
+public getModifiedJulianDate: () ==> real
+getModifiedJulianDate() == return ModifiedJulianDate;
+
+public calendar : () ==> Calendar
+calendar() == return usingCalendar;
+
+--Constructor
+public Date : Calendar * real ==> Date
+Date(aCal, aModifiedJulianDate) == 
+	(
+	usingCalendar := aCal;
+	setModifiedJulianDate(aModifiedJulianDate);
+	return self
+	);
+
+end Date

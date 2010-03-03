@@ -1,0 +1,148 @@
+\subsection{FHashtable}
+ハッシュ表に関わる関数を定義する。
+
+\begin{vdm_al}
+--"$Id"
+class FHashtable
+
+functions
+\end{vdm_al}
+
+Putは、aKeyとaValueの写をハッシュ表に追加する。
+\begin{vdm_al}
+static public Put[@T1, @T2] : 
+	(map @T1 to (map @T1 to  @T2)) -> (@T1 -> @T1) -> @T1 -> @T2 
+	-> (map @T1 to (map @T1 to  @T2))
+Put(aHashtable)(aHashCode)(aKey)(aValue) ==
+	let	hashcode = aHashCode(aKey)
+	in
+	if hashcode in set dom aHashtable then
+		aHashtable ++ {hashcode |-> (aHashtable(hashcode) ++ {aKey |-> aValue})}
+	else
+		aHashtable munion {hashcode |-> {aKey |-> aValue}}
+	;
+\end{vdm_al}
+
+PutAllは、写像の内容をハッシュ表に追加する。
+\begin{vdm_al}
+static public PutAll[@T1, @T2] : 
+	(map @T1 to (map @T1 to  @T2)) -> (@T1 -> @T1) -> (map @T1 to  @T2) 
+	-> (map @T1 to (map @T1 to  @T2)) 
+PutAll(aHashtable)(aHashCode)(aMap) == 
+	PutAllAux[@T1, @T2](aHashtable)(aHashCode)(aMap)(dom aMap);
+
+static public PutAllAux[@T1, @T2] :
+	(map @T1 to (map @T1 to  @T2)) -> (@T1 -> @T1) -> (map @T1 to  @T2)  -> set of @T1
+	-> (map @T1 to (map @T1 to  @T2)) 
+PutAllAux(aHashtable)(aHashCode)(aMap)(aKeySet) ==
+	if aKeySet = {} then
+		aHashtable
+	else
+		let	aKey in set aKeySet	in
+		let	newHashtable = Put[@T1, @T2](aHashtable)(aHashCode)(aKey)(aMap(aKey))	
+		in
+		PutAllAux[@T1, @T2](newHashtable)(aHashCode)(aMap)(aKeySet \ {aKey})
+	;
+\end{vdm_al}
+
+Getは、aKeyに対応する値を取り出す。
+\begin{vdm_al}
+static public Get[@T1, @T2] : (map @T1 to (map @T1 to  @T2)) -> (@T1 -> @T1) -> @T1  -> [@T2]
+Get(aHashtable)(aHashCode)(aKey) ==
+	let	hashcode = aHashCode(aKey)
+	in
+	if hashcode in set dom aHashtable then
+		FMap`Get[@T1, @T2](aHashtable(hashcode))(aKey)
+	else
+		nil
+	;
+\end{vdm_al}
+
+Removeは、keyとそれに対応する値をハッシュ表から削除する。
+\begin{vdm_al}
+static public Remove[@T1, @T2] : (map @T1 to (map @T1 to  @T2)) -> (@T1 -> @T1) -> @T1 -> (map @T1 to (map @T1 to  @T2))
+Remove(aHashtable)(aHashCode)(aKey) == 
+	let	hashcode = aHashCode(aKey)
+	in
+	{h |-> ({aKey} <-: aHashtable(hashcode)) | h in set {hashcode}} munion 
+		{hashcode} <-: aHashtable ;
+\end{vdm_al}
+
+Clearは、ハッシュ表をクリアーする。
+\begin{vdm_al}
+static public Clear[@T1, @T2] : () -> (map @T1 to (map @T1 to  @T2))
+Clear() == ({ |-> });
+\end{vdm_al}
+
+KeySetは、ハッシュ表のすべてのkeyの集合を返す。
+\begin{vdm_al}
+static public KeySet[@T1, @T2] : (map @T1 to (map @T1 to  @T2)) -> set of  @T1
+KeySet(aHashtable) == 
+	--let	aMapSet : set of (map @T1 to @T2) = rng aHashtable,
+		--f : map @T1 to @T2 -> set of @T1 = lambda x : map @T1 to  @T2 & dom x
+	let	aMapSet = rng aHashtable
+	in
+	if aMapSet <> {} then
+		--dunion FSet`Fmap[map @T1 to  @T2, set of @T1](f)(aMapSet)
+		dunion  {dom s | s in set aMapSet} 
+	else
+		{};
+\end{vdm_al}
+
+ValueSetは、Hashtableのすべての値の集合を返す。
+\begin{vdm_al}
+static public ValueSet[@T1, @T2] : (map @T1 to (map @T1 to  @T2)) -> set of  @T2
+ValueSet(aHashtable) == 
+	--let	aMapSet : set of (map @T1 to @T2) = rng aHashtable,
+		--f : map @T1 to @T2 -> set of @T2 = lambda x : map @T1 to  @T2 & rng x
+	let	aMapSet = rng aHashtable
+	in
+	if aMapSet <> {} then
+		--dunion FSet`Fmap[map @T1 to  @T2, set of @T2](f)(aMapSet)
+		dunion  {rng s | s in set aMapSet} 
+	else
+		{};
+\end{vdm_al}
+	
+Sizeは、Hashtable中のkeyの数を返す。
+\begin{vdm_al}
+static public Size[@T1, @T2] : (map @T1 to (map @T1 to  @T2)) -> nat
+Size(aHashtable) == card KeySet[@T1, @T2](aHashtable) ;
+\end{vdm_al}
+
+IsEmptyは、Hashtable中にkeyが無いか否かを返す。
+\begin{vdm_al}
+static public IsEmpty[@T1, @T2] : (map @T1 to (map @T1 to  @T2)) -> bool
+IsEmpty(aHashtable) == KeySet[@T1, @T2](aHashtable) = {};
+\end{vdm_al}
+		
+Containsは、与えられたaValueがあるならば、trueを返す。
+\begin{vdm_al}
+static public Contains[@T1, @T2] : (map @T1 to (map @T1 to  @T2)) -> @T2 -> bool
+Contains(aHashtable)(aValue) == 
+	let	aMapSet = rng aHashtable	
+	in
+	if aMapSet <> {} then
+		exists aMap in set aMapSet & aValue in set rng aMap
+	else
+		false;
+\end{vdm_al}
+		
+ContainsKeyは、与えられたkeyがあるならば、ｔｒｕｅを返す。
+\begin{vdm_al}
+static public ContainsKey[@T1, @T2] : (map @T1 to (map @T1 to  @T2)) -> @T1 -> bool
+ContainsKey(aHashtable)(aKey) == 
+	let	aMapSet = rng aHashtable	
+	in
+	if aMapSet <> {} then
+		exists aMap in set aMapSet & aKey in set dom aMap
+	else
+		false;
+
+end FHashtable
+\end{vdm_al}
+
+
+\begin{rtinfo}
+[FHashtable]{vdm.tc}[FHashtable]
+\end{rtinfo}

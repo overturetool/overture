@@ -1,0 +1,1 @@
+lambda m : FunctionT03`INT & lambda n : FunctionT03`INT & m mod n

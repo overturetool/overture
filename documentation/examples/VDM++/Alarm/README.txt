@@ -7,11 +7,10 @@ alarms for an industrial plant. The purpose of the model is to clarify
 the rules governing the duty roster and calling out of experts to deal
 with alarms. A comparable model of this example also exists in VDM-SL.
 
-Exe: new Test1().Run()
-
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
+#AUTHOR= John Fitzgerald and Peter Gorm Larsen
 #LANGUAGE_VERSION=vdm10
 #INV_CHECKS=true
 #POST_CHECKS=true

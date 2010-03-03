@@ -1,0 +1,2 @@
+-- File for getting base day (today on business, sometimes it is different from today)
+mk_(2003, 10, 24)

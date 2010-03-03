@@ -1,0 +1,48 @@
+\begin{vdm_al}
+class Function
+
+functions 
+\end{vdm_al}
+
+\begin{vdm_al}
+static public Funtil[@T] : (@T -> bool) -> (@T -> @T) -> @T -> @T
+Funtil(p)(f)(x) == if p(x) then x else Funtil[@T](p)(f)(f(x));
+\end{vdm_al}
+
+\begin{vdm_al}
+static public Fwhile[@T] : (@T -> bool) -> (@T -> @T) -> @T -> @T
+Fwhile(p)(f)(x) == if p(x) then Fwhile[@T](p)(f)(f(x)) else x;
+\end{vdm_al}
+
+\begin{vdm_al}
+static public Seq[@T] : seq of (@T -> @T) -> @T -> @T
+Seq(fs)(p) ==
+	cases fs :
+	[xf] ^ xfs	-> Seq[@T](xfs)(xf(p)),
+	[]					-> p
+	end
+--measure length
+;
+
+--static length[@T] : seq of (@T -> @T) -> @T -> nat
+--length(fs)(-) == len fs;
+\end{vdm_al}
+
+\begin{vdm_al}
+static public readFn[@T] : seq of char -> [@T]
+readFn(fname) ==
+	let 
+		io = new IO(),
+		mk_(aResult, f) = io.freadval[@T](fname)
+	in
+	if aResult then
+		f
+	else
+		let -= io.echo("Can't read values from the data file = " ^ fname)
+		in
+		nil;
+\end{vdm_al}
+
+\begin{vdm_al}
+end Function
+\end{vdm_al}
