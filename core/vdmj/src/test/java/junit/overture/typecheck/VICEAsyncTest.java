@@ -27,27 +27,27 @@ import junit.overture.OvertureTest;
 
 public class VICEAsyncTest extends OvertureTest
 {
-	public void test_async1() throws Exception
+	public void test_async1()
 	{
 		typecheck("VICE/async/async-01");
 	}
 
-	public void test_async2() throws Exception
+	public void test_async2()
 	{
 		typecheck("VICE/async/async-02");
 	}
 
-	public void test_async3() throws Exception
+	public void test_async3()
 	{
 		typecheck("VICE/async/async-03");
 	}
 
-	public void test_async4() throws Exception
+	public void test_async4()
 	{
 		typecheck("VICE/async/async-04");
 	}
 
-	public void test_async5() throws Exception
+	public void test_async5()
 	{
 		typecheck("VICE/async/async-05");
 	}

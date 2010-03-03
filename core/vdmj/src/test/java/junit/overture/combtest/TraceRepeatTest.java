@@ -27,27 +27,27 @@ import junit.overture.OvertureTest;
 
 public class TraceRepeatTest extends OvertureTest
 {
-	public void test_Traces1() throws Exception
+	public void test_Traces1()
 	{
 		combtest("traces/tracerepeat/tracerepeat-01", "new UseStack().PushBeforePop()");
 	}
 
-	public void test_Traces2() throws Exception
+	public void test_Traces2()
 	{
 		combtest("traces/tracerepeat/tracerepeat-02", "new UseStack().PushBeforePop()");
 	}
 
-	public void test_Traces3() throws Exception
+	public void test_Traces3()
 	{
 		combtest("traces/tracerepeat/tracerepeat-03", "new UseStack().PushBeforePop()");
 	}
 
-	public void test_Traces4() throws Exception
+	public void test_Traces4()
 	{
 		combtest("traces/tracerepeat/tracerepeat-04", "new UseStack().PushBeforePop()");
 	}
 
-	public void test_Traces5() throws Exception
+	public void test_Traces5()
 	{
 		combtest("traces/tracerepeat/tracerepeat-05", "traces/tracerepeat/tracerepeat-051", "new UseStack().trace1()", 0);
 		combtest("traces/tracerepeat/tracerepeat-05", "traces/tracerepeat/tracerepeat-052", "new UseStack().trace2()", 0);
@@ -64,17 +64,17 @@ public class TraceRepeatTest extends OvertureTest
 		combtest("traces/tracerepeat/tracerepeat-05", "traces/tracerepeat/tracerepeat-0513", "new UseStack().trace13()", 0);
 	}
 
-	public void test_Traces6() throws Exception
+	public void test_Traces6()
 	{
 		combtest("traces/tracerepeat/tracerepeat-06", "new UseA().trace1()");
 	}
 
-	public void test_Traces7() throws Exception
+	public void test_Traces7()
 	{
 		combtest("traces/tracerepeat/tracerepeat-07", "new UseA().trace1()");
 	}
 
-	public void test_Traces8() throws Exception
+	public void test_Traces8()
 	{
 		combtest("traces/tracerepeat/tracerepeat-08", "new UseA().trace1()");
 	}

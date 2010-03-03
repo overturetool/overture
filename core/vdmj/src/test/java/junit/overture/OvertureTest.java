@@ -75,7 +75,7 @@ abstract public class OvertureTest extends TestCase
 		super.tearDown();
 	}
 
-	protected void syntax(String rpath) throws Exception
+	protected void syntax(String rpath)
 	{
 		setNames("/Overture/syntax/", rpath);
 		List<VDMMessage> actual = new Vector<VDMMessage>();
@@ -83,7 +83,7 @@ abstract public class OvertureTest extends TestCase
 		checkErrors(actual);
 	}
 
-	protected void typecheck(String rpath) throws Exception
+	protected void typecheck(String rpath)
 	{
 		setNames("/Overture/typecheck/", rpath);
 		List<VDMMessage> actual = new Vector<VDMMessage>();
@@ -157,12 +157,12 @@ abstract public class OvertureTest extends TestCase
 		TRUE, VOID, UNDEFINED, ERROR
 	}
 
-	protected void evaluate(String rpath, ResultType rt) throws Exception
+	protected void evaluate(String rpath, ResultType rt)
 	{
 		evaluate(rpath, rt, 0);
 	}
 
-	protected void evaluate(String rpath, ResultType rt, int error) throws Exception
+	protected void evaluate(String rpath, ResultType rt, int error)
 	{
 		setNames("/Overture/evaluate/", rpath);
 		List<VDMMessage> actual = new Vector<VDMMessage>();
@@ -232,18 +232,17 @@ abstract public class OvertureTest extends TestCase
 		}
 	}
 
-	protected void combtest(String rpath, String testExp) throws Exception
+	protected void combtest(String rpath, String testExp)
 	{
 		combtest(rpath, rpath, testExp, 0);	// No expected error
 	}
 
-	protected void combtest(String rpath, String testExp, int error) throws Exception
+	protected void combtest(String rpath, String testExp, int error)
 	{
 		combtest(rpath, rpath, testExp, error);
 	}
 
 	protected void combtest(String vpath, String apath, String testExp, int error)
-		throws Exception
 	{
 		Console.out.println("Processing " + apath + "...");
 
@@ -312,7 +311,7 @@ abstract public class OvertureTest extends TestCase
 		}
 	}
 
-	private void checkErrors(List<VDMMessage> actual) throws Exception
+	private void checkErrors(List<VDMMessage> actual)
 	{
 		try
 		{
@@ -396,7 +395,6 @@ abstract public class OvertureTest extends TestCase
 	}
 
 	private ClassList parse(List<VDMMessage> messages)
-		throws Exception
 	{
 		ClassList classes = null;
 

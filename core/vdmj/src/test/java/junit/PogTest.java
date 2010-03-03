@@ -137,7 +137,7 @@ public class PogTest extends TestCase
 		"-- After iv := (iv + 1)\n(iv < 10)\n"
 	};
 
-	public void testPOG() throws Exception
+	public void testPOG()
 	{
 		URL rurl = getClass().getResource("/pogtest/pog.vpp");
 		String file = rurl.getPath();

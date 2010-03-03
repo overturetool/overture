@@ -31,7 +31,7 @@ import org.overturetool.vdmj.typechecker.TypeChecker;
 
 public class CharsetTest extends VDMTestCase
 {
-	private void process(String resource, String charset) throws Exception
+	private void process(String resource, String charset)
 	{
 		Console.out.println("Processing " + resource + "...");
 
@@ -55,17 +55,17 @@ public class CharsetTest extends VDMTestCase
 		assertEquals("Type check errors", 0, TypeChecker.getErrorCount());
 	}
 
-	public void test_Dvorak() throws Exception
+	public void test_Dvorak()
 	{
 		process("Dvorak.vpp", "UTF-8");
 	}
 
-	public void test_JapaneseUtf8() throws Exception
+	public void test_JapaneseUtf8()
 	{
 		process("Japanese_UTF8.vpp", "UTF-8");
 	}
 
-	public void test_Shift_JIS() throws Exception
+	public void test_Shift_JIS()
 	{
 		process("Shift_JIS.vpp", "SJIS");
 	}

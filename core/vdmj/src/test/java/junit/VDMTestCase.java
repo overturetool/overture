@@ -42,12 +42,12 @@ import junit.framework.TestCase;
 
 public class VDMTestCase extends TestCase
 {
-	protected ClassList parseClasses(String vpppath) throws Exception
+	protected ClassList parseClasses(String vpppath)
 	{
 		return parseClasses(vpppath, Charset.defaultCharset().name());
 	}
 
-	protected ClassList parseClasses(String vpppath, String charset) throws Exception
+	protected ClassList parseClasses(String vpppath, String charset)
 	{
 		Settings.dialect = Dialect.VDM_PP;
 		ClassList classes = null;

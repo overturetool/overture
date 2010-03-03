@@ -27,7 +27,7 @@ import junit.overture.OvertureTest;
 
 public class TraceExampleTest extends OvertureTest
 {
-	public void test_Traces1() throws Exception
+	public void test_Traces1()
 	{
 		combtest("examples/worldcup", "new UseGP().InitBeforePlay()");
 	}

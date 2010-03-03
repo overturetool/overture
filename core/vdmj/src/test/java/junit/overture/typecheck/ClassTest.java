@@ -27,12 +27,12 @@ import junit.overture.OvertureTest;
 
 public class ClassTest extends OvertureTest
 {
-	public void test_Typecheck1() throws Exception
+	public void test_Typecheck1()
 	{
 		typecheck("typecheck1");
 	}
 
-	public void test_Typecheck2() throws Exception
+	public void test_Typecheck2()
 	{
 		typecheck("typecheck2");
 	}

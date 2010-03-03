@@ -27,12 +27,12 @@ import junit.overture.OvertureTest;
 
 public class ClassTest extends OvertureTest
 {
-	public void test_Evaluate1() throws Exception
+	public void test_Evaluate1()
 	{
 		evaluate("evaluate1", ResultType.TRUE);
 	}
 
-	public void test_Evaluate2() throws Exception
+	public void test_Evaluate2()
 	{
 		evaluate("evaluate2", ResultType.VOID);
 	}

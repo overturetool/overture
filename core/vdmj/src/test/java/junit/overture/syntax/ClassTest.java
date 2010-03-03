@@ -27,12 +27,12 @@ import junit.overture.OvertureTest;
 
 public class ClassTest extends OvertureTest
 {
-	public void test_Syntax1() throws Exception
+	public void test_Syntax1()
 	{
 		syntax("syntax1");
 	}
 
-	public void test_Syntax2() throws Exception
+	public void test_Syntax2()
 	{
 		syntax("syntax2");
 	}

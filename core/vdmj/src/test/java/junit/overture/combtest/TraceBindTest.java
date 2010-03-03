@@ -27,12 +27,12 @@ import junit.overture.OvertureTest;
 
 public class TraceBindTest extends OvertureTest
 {
-	public void test_Traces1() throws Exception
+	public void test_Traces1()
 	{
 		combtest("traces/tracesbind/tracebind-01", "new UseStack().PushBeforePop()", 4089);
 	}
 
-	public void test_Traces2() throws Exception
+	public void test_Traces2()
 	{
 		combtest("traces/tracesbind/tracebind-02", "new UseStack().PushBeforePop()");
 	}

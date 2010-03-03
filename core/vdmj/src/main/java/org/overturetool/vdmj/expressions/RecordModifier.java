@@ -24,11 +24,9 @@
 package org.overturetool.vdmj.expressions;
 
 import java.io.Serializable;
-import java.util.Collection;
 
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.ValueList;
 
 public class RecordModifier implements Serializable
