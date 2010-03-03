@@ -1,0 +1,28 @@
+\begin{vdm_al}
+class ClockTick is subclass of GLOBAL
+
+instance variables
+
+tid : int := -1;
+
+operations
+
+public 
+ClockTick : nat ==> ClockTick
+ClockTick (t) == tid := t;
+
+thread
+
+ while true do
+   (
+    World`timerRef.NotifyThread(tid);
+    World`timerRef.WaitRelative(1);
+   )
+
+end ClockTick
+\end{vdm_al}
+
+\begin{rtinfo}[ClockTick`ClockTick]
+{vdm.tc}[ClockTick]
+\end{rtinfo}
+
