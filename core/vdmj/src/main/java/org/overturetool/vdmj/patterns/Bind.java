@@ -68,6 +68,9 @@ public abstract class Bind implements Serializable
 	/** Return a list of all possible values for the bind. */
 	abstract public ValueList getBindValues(Context ctxt);
 
+	/** Return a list of all values read by the bind evaluation. */
+	abstract public ValueList getValues(Context ctxt);
+
 	/**
 	 * @see org.overturetool.vdmj.definitions.Definition#report
 	 */

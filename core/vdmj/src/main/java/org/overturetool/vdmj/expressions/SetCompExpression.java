@@ -216,4 +216,22 @@ public class SetCompExpression extends SetExpression
 	{
 		return "set comprehension";
 	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = first.getValues(ctxt);
+
+		for (MultipleBind mb: bindings)
+		{
+			list.addAll(mb.getValues(ctxt));
+		}
+
+		if (predicate != null)
+		{
+			list.addAll(predicate.getValues(ctxt));
+		}
+
+		return list;
+	}
 }

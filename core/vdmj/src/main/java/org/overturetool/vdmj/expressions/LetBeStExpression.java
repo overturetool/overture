@@ -191,4 +191,18 @@ public class LetBeStExpression extends Expression
 	{
 		return "let be st";
 	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = bind.getValues(ctxt);
+
+		if (suchThat != null)
+		{
+			list.addAll(suchThat.getValues(ctxt));
+		}
+
+		list.addAll(value.getValues(ctxt));
+		return list;
+	}
 }

@@ -36,6 +36,7 @@ import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.values.NameValuePairList;
+import org.overturetool.vdmj.values.ValueList;
 
 
 /**
@@ -277,4 +278,16 @@ public class DefinitionList extends Vector<Definition>
 			}
 		}
  	}
+
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = new ValueList();
+
+		for (Definition d: this)
+		{
+			list.addAll(d.getValues(ctxt));
+		}
+
+		return list;
+	}
 }

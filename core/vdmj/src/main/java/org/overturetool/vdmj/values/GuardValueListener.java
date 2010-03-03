@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (c) 2008 Fujitsu Services Ltd.
+ *	Copyright (c) 2010 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,37 +21,34 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.expressions;
+package org.overturetool.vdmj.values;
 
-import java.io.Serializable;
-import java.util.Collection;
-
-import org.overturetool.vdmj.lex.LexIdentifierToken;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.values.Value;
-import org.overturetool.vdmj.values.ValueList;
+import org.overturetool.vdmj.runtime.ControlQueue;
 
-public class RecordModifier implements Serializable
+public class GuardValueListener<T> implements ValueListener
 {
-	private static final long serialVersionUID = 1L;
+	private final T object;
 
-	public final LexIdentifierToken tag;
-	public final Expression value;
-
-	public RecordModifier(LexIdentifierToken tag, Expression value)
+	public GuardValueListener(T object)
 	{
-		this.tag = tag;
-		this.value = value;
+		this.object = object;
 	}
 
-	@Override
-	public String toString()
+	public void changedValue(LexLocation location, Value value, Context ctxt)
 	{
-		return tag + " |-> " + value;
-	}
-
-	public ValueList getValues(Context ctxt)
-	{
-		return value.getValues(ctxt);
+		if (object instanceof ControlQueue)
+		{
+			ControlQueue cq = (ControlQueue)object;
+			cq.stim();
+		}
+		else
+		{
+    		synchronized (object)
+    		{
+    			object.notifyAll();
+    		}
+		}
 	}
 }

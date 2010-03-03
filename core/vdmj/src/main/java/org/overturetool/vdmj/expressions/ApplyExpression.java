@@ -444,4 +444,12 @@ public class ApplyExpression extends Expression
 	{
 		return "apply";
 	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = args.getValues(ctxt);
+		list.addAll(root.getValues(ctxt));
+		return list;
+	}
 }

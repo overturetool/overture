@@ -48,6 +48,7 @@ import org.overturetool.vdmj.runtime.AsyncThread;
 import org.overturetool.vdmj.runtime.Breakpoint;
 import org.overturetool.vdmj.runtime.ClassContext;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ControlQueue;
 import org.overturetool.vdmj.runtime.Holder;
 import org.overturetool.vdmj.runtime.MessageRequest;
 import org.overturetool.vdmj.runtime.MessageResponse;
@@ -89,10 +90,9 @@ public class OperationValue extends Value
 	public boolean isAsync = false;
 
 	private Expression guard = null;
+	public ControlQueue guardCQ = null;
 	private static long guardPasses = 0;
-	private static final int DEADLOCK_DELAY_MS = 10;
-	private static final int DEADLOCK_RETRIES = 500;
-	private static final int DEADLOCK_TIMEOUT_MS = DEADLOCK_RETRIES * DEADLOCK_DELAY_MS;
+	private static final int DEADLOCK_TIMEOUT_MS = 5000;
 
 	public int hashAct = 0; // Number of activations
 	public int hashFin = 0; // Number of finishes
@@ -189,6 +189,30 @@ public class OperationValue extends Value
 
 			guard = new AndExpression(guard,
 				new LexKeywordToken(Token.AND, guard.location), add);
+		}
+	}
+
+	public void prepareGuard(ObjectContext ctxt)
+	{
+		if (guard != null)
+		{
+			ValueListener vl = null;
+
+			if (Settings.dialect == Dialect.VDM_RT)
+			{
+				guardCQ = new ControlQueue();
+				vl = new GuardValueListener<ControlQueue>(guardCQ);
+			}
+			else
+			{
+				vl = new GuardValueListener<ObjectValue>(self);
+			}
+
+			for (Value v: guard.getValues(ctxt))
+			{
+				UpdatableValue uv = (UpdatableValue)v;
+				uv.addListener(vl);
+			}
 		}
 	}
 
@@ -411,28 +435,26 @@ public class OperationValue extends Value
 		synchronized (self)		// So that test and act() are atomic
 		{
 			debug("TEST " + guard);
-			int retries = DEADLOCK_RETRIES;
-			long previousPasses = guardPasses;
+			long expires = System.currentTimeMillis() + DEADLOCK_TIMEOUT_MS;
 
 			while (!guard.eval(ctxt).boolValue(ctxt))
 			{
 				try
 				{
 					debug("WAITING on " + guard);
-					self.wait(DEADLOCK_DELAY_MS);
+					self.wait(DEADLOCK_TIMEOUT_MS);
 					debug("RESUME on " + guard);
 
-					if (guardPasses == previousPasses &&
-						!VDMThreadSet.isDebugStopped() &&
-						--retries <= 0)
+					long now = System.currentTimeMillis();
+
+					if (!VDMThreadSet.isDebugStopped() && now >= expires)
 					{
 						Console.out.print(VDMThreadSet.dump());
 						abort(4067, "Deadlock detected", ctxt);
 					}
 					else
 					{
-						previousPasses = guardPasses;
-						retries = DEADLOCK_RETRIES;
+						expires = now + DEADLOCK_TIMEOUT_MS;
 					}
 				}
 				catch (InterruptedException e)
@@ -444,10 +466,100 @@ public class OperationValue extends Value
 
 			act();
 		}
+
+//		synchronized (self)		// So that test and act() are atomic
+//		{
+//			debug("TEST " + guard);
+//			int retries = DEADLOCK_RETRIES;
+//			long previousPasses = guardPasses;
+//
+//			while (!guard.eval(ctxt).boolValue(ctxt))
+//			{
+//				try
+//				{
+//					debug("WAITING on " + guard);
+//					self.wait(DEADLOCK_DELAY_MS);
+//					debug("RESUME on " + guard);
+//
+//					if (guardPasses == previousPasses &&
+//						!VDMThreadSet.isDebugStopped() &&
+//						--retries <= 0)
+//					{
+//						Console.out.print(VDMThreadSet.dump());
+//						abort(4067, "Deadlock detected", ctxt);
+//					}
+//					else
+//					{
+//						previousPasses = guardPasses;
+//						retries = DEADLOCK_RETRIES;
+//					}
+//				}
+//				catch (InterruptedException e)
+//				{
+//					debug("INTERRUPT on " + guard);
+//					Breakpoint.handleInterrupt(guard.location, ctxt);
+//				}
+//			}
+//
+//			act();
+//		}
 	}
 
 	private void guardRT(Context ctxt) throws ValueException
 	{
+//		// RT deadlocks are detected by time rather than a wait(t) for
+//		// a certain number of retries. This is because other threads
+//		// on the same CPU have to be allowed to run immediately; we
+//		// can't pause the whole CPU with a wait(t) and starve the others.
+//
+//		long expires = System.currentTimeMillis() + DEADLOCK_TIMEOUT_MS;
+//		guardCQ.join(self.getCPU());
+//
+//		while (true)
+//		{
+//			synchronized (self)		// So that test and act() are atomic
+//			{
+//				// For the purpose of doing durations, guard tests
+//				// are not really swapped-in threads. So we cheat and
+//				// mark the CPU as not-running at this point, which
+//				// is cleared again when (below) we return from our
+//				// yield, or we pass the guard test.
+//
+//				SystemClock.cpuRunning(self.getCPU().cpuNumber, false);
+//
+//				// We have to suspend thread swapping round the guard,
+//				// else we will reschedule another CPU thread while
+//				// having self locked, and that locks up everything!
+//
+//				ctxt.threadState.setAtomic(true);
+//    			boolean ok = guard.eval(ctxt).boolValue(ctxt);
+//    			ctxt.threadState.setAtomic(false);
+//
+//    			if (ok)
+//    			{
+//    				act();
+//    				SystemClock.cpuRunning(self.getCPU().cpuNumber, true);
+//    				break;	// Out of while loop
+//    			}
+//			}
+//
+//			// suspend for a STIM from the listeners/notifySelf
+//			guardCQ.block();
+//
+//			long now = System.currentTimeMillis();
+//
+//			if (!VDMThreadSet.isDebugStopped() && now > expires)
+//			{
+//				abort(4067, "Deadlock detected", ctxt);
+//			}
+//			else
+//			{
+//				expires = now + DEADLOCK_TIMEOUT_MS;
+//			}
+//		}
+//
+//		guardCQ.leave();
+
 		// RT deadlocks are detected by time rather than a wait(t) for
 		// a certain number of retries. This is because other threads
 		// on the same CPU have to be allowed to run immediately; we
@@ -662,9 +774,16 @@ public class OperationValue extends Value
 	{
 		if (self != null)
 		{
-			synchronized (self)
+			if (guardCQ != null)
 			{
-				self.notifyAll();
+				guardCQ.stim();
+			}
+			else
+			{
+    			synchronized (self)
+    			{
+    				self.notifyAll();
+    			}
 			}
 		}
 	}

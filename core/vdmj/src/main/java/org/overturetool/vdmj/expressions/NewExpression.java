@@ -186,4 +186,10 @@ public class NewExpression extends Expression
 	{
 		return "new";
 	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		return args.getValues(ctxt);
+	}
 }

@@ -100,6 +100,10 @@ public abstract class MultipleBind implements Serializable
 	/** Get a list of POs. */
 	abstract public ProofObligationList getProofObligations(POContextStack ctxt);
 
+	/** Return a list of all values read by the bind evaluation. */
+	abstract public ValueList getValues(Context ctxt);
+
+
 	public Type getPossibleType()
 	{
 		return plist.getPossibleType(location);

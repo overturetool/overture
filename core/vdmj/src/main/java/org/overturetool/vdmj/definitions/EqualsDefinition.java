@@ -49,6 +49,7 @@ import org.overturetool.vdmj.types.UnionType;
 import org.overturetool.vdmj.types.UnknownType;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 import org.overturetool.vdmj.values.ValueSet;
 
 /**
@@ -310,5 +311,18 @@ public class EqualsDefinition extends Definition
 	public String kind()
 	{
 		return "equals";
+	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = test.getValues(ctxt);
+
+		if (setbind != null)
+		{
+			list.addAll(setbind.getValues(ctxt));
+		}
+
+		return list;
 	}
 }

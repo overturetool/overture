@@ -35,6 +35,7 @@ import org.overturetool.vdmj.types.BooleanType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 public class ElseIfExpression extends Expression
 {
@@ -105,5 +106,13 @@ public class ElseIfExpression extends Expression
 	public String kind()
 	{
 		return "elseif";
+	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = elseIfExp.getValues(ctxt);
+		list.addAll(thenExp.getValues(ctxt));
+		return list;
 	}
 }

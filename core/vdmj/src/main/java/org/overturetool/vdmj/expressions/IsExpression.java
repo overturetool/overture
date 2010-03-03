@@ -37,6 +37,7 @@ import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.values.BooleanValue;
 import org.overturetool.vdmj.values.RecordValue;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 public class IsExpression extends Expression
 {
@@ -161,5 +162,11 @@ public class IsExpression extends Expression
 	public String kind()
 	{
 		return "is_";
+	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		return test.getValues(ctxt);
 	}
 }

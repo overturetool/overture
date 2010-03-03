@@ -182,4 +182,18 @@ public class SeqCompExpression extends SeqExpression
 	{
 		return "seq comprehension";
 	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = first.getValues(ctxt);
+		list.addAll(setbind.getValues(ctxt));
+
+		if (predicate != null)
+		{
+			list.addAll(predicate.getValues(ctxt));
+		}
+
+		return list;
+	}
 }

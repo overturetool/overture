@@ -38,6 +38,7 @@ import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.types.TypeSet;
 import org.overturetool.vdmj.util.Utils;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 
 public class CasesExpression extends Expression
@@ -165,5 +166,23 @@ public class CasesExpression extends Expression
 	public String kind()
 	{
 		return "cases";
+	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = exp.getValues(ctxt);
+
+		for (CaseAlternative c: cases)
+		{
+			list.addAll(c.getValues(ctxt));
+		}
+
+		if (others != null)
+		{
+			list.addAll(others.getValues(ctxt));
+		}
+
+		return list;
 	}
 }

@@ -110,4 +110,10 @@ public class ElementsExpression extends SetExpression
 	{
 		return "elems";
 	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		return exp.getValues(ctxt);
+	}
 }

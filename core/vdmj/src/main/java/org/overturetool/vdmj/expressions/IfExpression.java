@@ -39,6 +39,7 @@ import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.types.TypeSet;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 
 public class IfExpression extends Expression
@@ -108,6 +109,8 @@ public class IfExpression extends Expression
 	public Expression findExpression(int lineno)
 	{
 		Expression found = super.findExpression(lineno);
+		if (found != null) return found;
+		found = ifExp.findExpression(lineno);
 		if (found != null) return found;
 		found = thenExp.findExpression(lineno);
 		if (found != null) return found;
@@ -185,5 +188,24 @@ public class IfExpression extends Expression
 	public String kind()
 	{
 		return "if";
+	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = ifExp.getValues(ctxt);
+		list.addAll(thenExp.getValues(ctxt));
+
+		for (ElseIfExpression elif: elseList)
+		{
+			list.addAll(elif.getValues(ctxt));
+		}
+
+		if (elseExp != null)
+		{
+			list.addAll(elseExp.getValues(ctxt));
+		}
+
+		return list;
 	}
 }

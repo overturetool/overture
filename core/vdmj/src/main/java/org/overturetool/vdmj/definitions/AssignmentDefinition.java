@@ -40,6 +40,7 @@ import org.overturetool.vdmj.types.VoidType;
 import org.overturetool.vdmj.values.NameValuePair;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 /**
  * A class to represent assignable variable definitions.
@@ -154,5 +155,11 @@ public class AssignmentDefinition extends Definition
 	public boolean isUpdatable()
 	{
 		return true;
+	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		return expression.getValues(ctxt);
 	}
 }

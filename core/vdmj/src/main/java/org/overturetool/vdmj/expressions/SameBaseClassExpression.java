@@ -36,6 +36,7 @@ import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.values.BooleanValue;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 public class SameBaseClassExpression extends Expression
 {
@@ -140,5 +141,13 @@ public class SameBaseClassExpression extends Expression
 		}
 
 		return new BooleanType(location);
+	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = left.getValues(ctxt);
+		list.addAll(right.getValues(ctxt));
+		return list;
 	}
 }

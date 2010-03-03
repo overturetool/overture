@@ -145,4 +145,10 @@ public class FieldNumberExpression extends Expression
 	{
 		return "field #";
 	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		return tuple.getValues(ctxt);
+	}
 }

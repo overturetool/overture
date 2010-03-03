@@ -41,7 +41,7 @@ import org.overturetool.vdmj.types.Type;
 public class UpdatableValue extends ReferenceValue
 {
 	private static final long serialVersionUID = 1L;
-	public final ValueListenerList listeners;
+	public ValueListenerList listeners;
 
 	public static UpdatableValue factory(Value value, ValueListenerList listeners)
 	{
@@ -92,24 +92,42 @@ public class UpdatableValue extends ReferenceValue
 	}
 
 	@Override
-	public synchronized void set(LexLocation location, Value newval, Context ctxt)
+	public void set(LexLocation location, Value newval, Context ctxt)
 	{
 		// Anything with structure added to an UpdateableValue has to be
 		// updatable, otherwise you can "freeze" part of the substructure
 		// such that it can't be changed.
 
-		if (newval instanceof UpdatableValue)
+		synchronized (this)
 		{
-			value = newval.deref();		// To avoid nested updatables
+    		if (newval instanceof UpdatableValue)
+    		{
+    			value = newval.deref();	// To avoid nested updatables
+    		}
+    		else
+    		{
+    			value = newval.getUpdatable(listeners).deref();
+    		}
 		}
-		else
-		{
-			value = newval.getUpdatable(listeners).deref();
-		}
+
+		// The listeners are outside the sync because they have to lock
+		// the object they notify, which can be holding a lock on this one.
 
 		if (listeners != null)
 		{
 			listeners.changedValue(location, value, ctxt);
+		}
+	}
+
+	public void addListener(ValueListener listener)
+	{
+		if (listeners != null)
+		{
+			listeners.add(listener);
+		}
+		else
+		{
+			listeners = new ValueListenerList(listener);
 		}
 	}
 

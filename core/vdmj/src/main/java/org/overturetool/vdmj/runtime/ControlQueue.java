@@ -37,16 +37,24 @@ public class ControlQueue
 	public void join(CPUValue cpu)
 	{
 		CPUThread self = new CPUThread(cpu);
-
-		if (joined != null)
-		{
-			waiters.add(self);
-			cpu.yield(RunState.WAITING);
-		}
+		boolean wait = false;
 
 		synchronized (this)
 		{
-			joined = self;
+    		if (joined != null && joined != self)
+    		{
+    			waiters.add(self);
+    			wait = true;
+    		}
+    		else
+    		{
+    			joined = self;
+    		}
+		}
+
+		if (wait)
+		{
+			cpu.yield(RunState.WAITING);
 		}
 	}
 

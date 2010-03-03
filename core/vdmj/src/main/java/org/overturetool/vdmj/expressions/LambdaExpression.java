@@ -45,6 +45,7 @@ import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.values.FunctionValue;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 
 public class LambdaExpression extends Expression
@@ -145,5 +146,11 @@ public class LambdaExpression extends Expression
 	public String kind()
 	{
 		return "lambda";
+	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		return expression.getValues(ctxt);
 	}
 }

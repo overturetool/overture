@@ -40,6 +40,7 @@ import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 public class CaseAlternative implements Serializable
 {
@@ -118,5 +119,10 @@ public class CaseAlternative implements Serializable
 		ctxt.push(new PONotCaseContext(pattern, type, cexp));
 
 		return obligations;
+	}
+
+	public ValueList getValues(Context ctxt)
+	{
+		return result.getValues(ctxt);
 	}
 }

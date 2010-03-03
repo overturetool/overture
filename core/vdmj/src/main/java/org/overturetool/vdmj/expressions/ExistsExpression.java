@@ -179,4 +179,18 @@ public class ExistsExpression extends Expression
 	{
 		return "exists";
 	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = new ValueList();
+
+		for (MultipleBind mb: bindList)
+		{
+			list.addAll(mb.getValues(ctxt));
+		}
+
+		list.addAll(predicate.getValues(ctxt));
+		return list;
+	}
 }

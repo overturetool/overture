@@ -38,6 +38,7 @@ import org.overturetool.vdmj.typechecker.TypeChecker;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 /**
  *	The parent class of all VDM expressions.
@@ -171,6 +172,20 @@ public abstract class Expression implements Serializable
 	public Expression findExpression(int lineno)
 	{
 		return (location.startLine == lineno) ? this : null;
+	}
+
+	/**
+	 * Return a list of all the updatable values read by the expression. This
+	 * is used to add listeners to values that affect permission guards, so
+	 * that the guard may be efficiently re-evaluated when the values change.
+	 *
+	 * @param ctxt	The context in which to search for values.
+	 * @return  A list of values read by the expression.
+	 */
+
+	public ValueList getValues(Context ctxt)
+	{
+		return new ValueList();  // Default, for expressions with no variables
 	}
 
 	/**

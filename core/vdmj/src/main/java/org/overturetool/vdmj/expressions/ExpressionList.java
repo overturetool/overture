@@ -24,10 +24,11 @@
 package org.overturetool.vdmj.expressions;
 
 import java.util.Vector;
-
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
+import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.util.Utils;
+import org.overturetool.vdmj.values.ValueList;
 
 
 @SuppressWarnings("serial")
@@ -60,5 +61,17 @@ public class ExpressionList extends Vector<Expression>
 		}
 
 		return null;
+	}
+
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = new ValueList();
+
+		for (Expression exp: this)
+		{
+			list.addAll(exp.getValues(ctxt));
+		}
+
+		return list;
 	}
 }

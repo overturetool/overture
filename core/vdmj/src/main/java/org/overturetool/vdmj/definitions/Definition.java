@@ -44,6 +44,7 @@ import org.overturetool.vdmj.typechecker.TypeChecker;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 /**
  * The abstract parent of all definitions. A definition can represent a data
@@ -158,6 +159,17 @@ public abstract class Definition implements Serializable
 	 */
 
 	abstract public LexNameList getVariableNames();
+
+	/**
+	 * Return a list of external values that are read by the definition.
+	 * @param ctxt The context in which to evaluate the expressions.
+	 * @return A list of values read.
+	 */
+
+	public ValueList getValues(Context ctxt)
+	{
+		return new ValueList();
+	}
 
 	/**
 	 * Return the static type of the definition. For example, the type of a

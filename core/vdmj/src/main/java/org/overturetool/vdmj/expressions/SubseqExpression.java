@@ -154,4 +154,13 @@ public class SubseqExpression extends Expression
 	{
 		return "subsequence";
 	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = seq.getValues(ctxt);
+		list.addAll(from.getValues(ctxt));
+		list.addAll(to.getValues(ctxt));
+		return list;
+	}
 }

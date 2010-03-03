@@ -34,6 +34,7 @@ import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.values.TokenValue;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 public class MkBasicExpression extends Expression
 {
@@ -112,5 +113,11 @@ public class MkBasicExpression extends Expression
 	public String kind()
 	{
 		return "mk_";
+	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		return arg.getValues(ctxt);
 	}
 }

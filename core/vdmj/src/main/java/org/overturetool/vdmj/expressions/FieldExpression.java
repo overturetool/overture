@@ -44,6 +44,7 @@ import org.overturetool.vdmj.values.FieldMap;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.RecordValue;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 public class FieldExpression extends Expression
 {
@@ -258,5 +259,11 @@ public class FieldExpression extends Expression
 	public String kind()
 	{
 		return "field name";
+	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		return object.getValues(ctxt);
 	}
 }

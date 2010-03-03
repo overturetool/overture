@@ -166,4 +166,12 @@ public class IotaExpression extends Expression
 	{
 		return "iota";
 	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = bind.getValues(ctxt);
+		list.addAll(predicate.getValues(ctxt));
+		return list;
+	}
 }

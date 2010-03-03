@@ -36,7 +36,9 @@ import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.types.UnknownType;
+import org.overturetool.vdmj.values.UpdatableValue;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 public class VariableExpression extends Expression
 {
@@ -214,5 +216,20 @@ public class VariableExpression extends Expression
 	public String kind()
 	{
 		return "variable";
+	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		Value v = ctxt.check(name);
+
+		if (v == null || !(v instanceof UpdatableValue))
+		{
+			return new ValueList();
+		}
+		else
+		{
+			return new ValueList(v);
+		}
 	}
 }

@@ -129,4 +129,10 @@ public class MultipleSetBind extends MultipleBind
 	{
 		return set.getProofObligations(ctxt);
 	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		return set.getValues(ctxt);
+	}
 }

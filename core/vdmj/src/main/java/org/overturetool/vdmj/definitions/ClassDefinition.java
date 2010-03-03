@@ -120,6 +120,8 @@ public class ClassDefinition extends Definition
 	public boolean isAbstract = false;
 	/** True if the class has any constructors at all. */
 	public boolean hasConstructors = false;
+	/** True if the class has a sync section with per or mutex defs. */
+	public boolean hasPermissions = false;
 
 	/** A delegate Java object for any native methods. */
 	private Delegate delegate = null;
@@ -1288,6 +1290,23 @@ public class ClassDefinition extends Definition
        		ov.eval(ov.name.location, argvals, ctorCtxt);
 		}
 
+		if (hasPermissions)
+		{
+    		ObjectContext self = new ObjectContext(
+				location, name.name + " guards", ctxt, object);
+
+    		for (LexNameToken member: members.keySet())
+			{
+				Value v = members.get(member);
+
+				if (v instanceof OperationValue)
+				{
+					OperationValue opv = (OperationValue)v;
+					opv.prepareGuard(self);
+				}
+			}
+		}
+
 		return object;
 	}
 
@@ -1312,6 +1331,8 @@ public class ClassDefinition extends Definition
     			{
     				op.operationValue(initCtxt).setGuard(exp);
     			}
+
+    			hasPermissions  = true;
     		}
     		else if (d instanceof MutexSyncDefinition)
     		{
@@ -1327,6 +1348,8 @@ public class ClassDefinition extends Definition
     					op.operationValue(initCtxt).setGuard(exp);
     				}
     			}
+
+    			hasPermissions = true;
     		}
 		}
 	}

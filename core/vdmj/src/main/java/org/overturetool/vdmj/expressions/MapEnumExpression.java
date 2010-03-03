@@ -40,6 +40,7 @@ import org.overturetool.vdmj.types.TypeSet;
 import org.overturetool.vdmj.util.Utils;
 import org.overturetool.vdmj.values.MapValue;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 import org.overturetool.vdmj.values.ValueMap;
 
 
@@ -163,5 +164,18 @@ public class MapEnumExpression extends MapExpression
 	public String kind()
 	{
 		return "map enumeration";
+	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = new ValueList();
+
+		for (MapletExpression maplet: members)
+		{
+			list.addAll(maplet.getValues(ctxt));
+		}
+
+		return list;
 	}
 }

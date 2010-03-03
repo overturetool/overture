@@ -44,6 +44,7 @@ import org.overturetool.vdmj.values.NameValuePair;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 public class LetDefExpression extends Expression
 {
@@ -166,5 +167,13 @@ public class LetDefExpression extends Expression
 	public String kind()
 	{
 		return "let def";
+	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = localDefs.getValues(ctxt);
+		list.addAll(expression.getValues(ctxt));
+		return list;
 	}
 }

@@ -114,4 +114,10 @@ public class SeqEnumExpression extends SeqExpression
 	{
 		return "seq enumeration";
 	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		return members.getValues(ctxt);
+	}
 }

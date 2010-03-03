@@ -44,6 +44,7 @@ import org.overturetool.vdmj.util.Utils;
 import org.overturetool.vdmj.values.FunctionValue;
 import org.overturetool.vdmj.values.ParameterValue;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 public class FuncInstantiationExpression extends Expression
 {
@@ -307,5 +308,11 @@ public class FuncInstantiationExpression extends Expression
 	public String kind()
 	{
 		return "instantiation";
+	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		return function.getValues(ctxt);
 	}
 }

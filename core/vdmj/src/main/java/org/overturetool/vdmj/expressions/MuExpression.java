@@ -42,6 +42,7 @@ import org.overturetool.vdmj.util.Utils;
 import org.overturetool.vdmj.values.FieldMap;
 import org.overturetool.vdmj.values.RecordValue;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 
 public class MuExpression extends Expression
@@ -180,5 +181,18 @@ public class MuExpression extends Expression
 	public String kind()
 	{
 		return "mu";
+	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = record.getValues(ctxt);
+
+		for (RecordModifier rm: modifiers)
+		{
+			list.addAll(rm.getValues(ctxt));
+		}
+
+		return list;
 	}
 }

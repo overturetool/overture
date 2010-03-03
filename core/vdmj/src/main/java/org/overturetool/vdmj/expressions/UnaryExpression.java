@@ -26,6 +26,8 @@ package org.overturetool.vdmj.expressions;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
+import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.values.ValueList;
 
 abstract public class UnaryExpression extends Expression
 {
@@ -51,5 +53,11 @@ abstract public class UnaryExpression extends Expression
 	public ProofObligationList getProofObligations(POContextStack ctxt)
 	{
 		return exp.getProofObligations(ctxt);
+	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		return exp.getValues(ctxt);
 	}
 }

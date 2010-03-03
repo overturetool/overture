@@ -178,4 +178,18 @@ public class ForAllExpression extends Expression
 	{
 		return "forall";
 	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = new ValueList();
+
+		for (MultipleBind mb: bindList)
+		{
+			list.addAll(mb.getValues(ctxt));
+		}
+
+		list.addAll(predicate.getValues(ctxt));
+		return list;
+	}
 }

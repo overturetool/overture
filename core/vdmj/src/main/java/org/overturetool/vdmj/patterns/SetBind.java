@@ -101,4 +101,10 @@ public class SetBind extends Bind
 	{
 		return set.getProofObligations(ctxt);
 	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		return set.getValues(ctxt);
+	}
 }

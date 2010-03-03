@@ -26,9 +26,11 @@ package org.overturetool.vdmj.expressions;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
+import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Type;
+import org.overturetool.vdmj.values.ValueList;
 
 abstract public class BinaryExpression extends Expression
 {
@@ -92,5 +94,13 @@ abstract public class BinaryExpression extends Expression
 	public String toString()
 	{
 		return "(" + left + " " + op + " " + right + ")";
+	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = left.getValues(ctxt);
+		list.addAll(right.getValues(ctxt));
+		return list;
 	}
 }

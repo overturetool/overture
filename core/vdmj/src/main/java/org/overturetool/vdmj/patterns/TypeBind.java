@@ -77,4 +77,10 @@ public class TypeBind extends Bind
 	{
 		return new ProofObligationList();
 	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		return new ValueList();
+	}
 }

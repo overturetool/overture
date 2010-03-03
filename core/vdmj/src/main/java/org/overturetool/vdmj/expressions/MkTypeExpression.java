@@ -197,4 +197,10 @@ public class MkTypeExpression extends Expression
 	{
 		return "mk_";
 	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		return args.getValues(ctxt);
+	}
 }

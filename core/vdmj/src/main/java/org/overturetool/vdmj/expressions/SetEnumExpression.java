@@ -36,6 +36,7 @@ import org.overturetool.vdmj.types.TypeSet;
 import org.overturetool.vdmj.util.Utils;
 import org.overturetool.vdmj.values.SetValue;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 import org.overturetool.vdmj.values.ValueSet;
 
 public class SetEnumExpression extends SetExpression
@@ -113,5 +114,11 @@ public class SetEnumExpression extends SetExpression
 	public String kind()
 	{
 		return "set enumeration";
+	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		return members.getValues(ctxt);
 	}
 }

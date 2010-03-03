@@ -76,4 +76,10 @@ public class MultipleTypeBind extends MultipleBind
 	{
 		return new ProofObligationList();
 	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		return new ValueList();
+	}
 }

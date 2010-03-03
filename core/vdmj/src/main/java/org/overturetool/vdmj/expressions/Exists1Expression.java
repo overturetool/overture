@@ -144,4 +144,12 @@ public class Exists1Expression extends Expression
 	{
 		return "exists1";
 	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = bind.getValues(ctxt);
+		list.addAll(predicate.getValues(ctxt));
+		return list;
+	}
 }

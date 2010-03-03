@@ -49,6 +49,7 @@ import org.overturetool.vdmj.types.UnknownType;
 import org.overturetool.vdmj.types.VoidType;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 /**
  * A class to hold a value definition.
@@ -305,5 +306,11 @@ public class ValueDefinition extends Definition
 	public String kind()
 	{
 		return "value";
+	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		return exp.getValues(ctxt);
 	}
 }

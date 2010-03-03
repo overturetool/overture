@@ -40,6 +40,7 @@ import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.values.BooleanValue;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 public class IsOfClassExpression extends Expression
 {
@@ -149,5 +150,11 @@ public class IsOfClassExpression extends Expression
 		}
 
 		return new BooleanType(location);
+	}
+
+	@Override
+	public ValueList getValues(Context ctxt)
+	{
+		return exp.getValues(ctxt);
 	}
 }
