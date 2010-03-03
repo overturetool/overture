@@ -2615,3 +2615,93 @@ RealT03:	Test isNDigitsAfterTheDecimalPoint and getNumberOfDigitsAfterTheDecimal
 RealT04:	Test numberOfDigit.	 OK.
 RealT05:	Test roundAterDecimalPointByNdigit.	 OK.
 RealT06:	Test EQ (Equal).	 OK.
+TermT01:	Test of term constructor and isInThePeriod()	 OK.
+Test result of a testcase seaquence.	 OK!!
+TimeT06:	Test currentDateTime from file.	 OK.
+TimeT05:	Set instance variables.	 OK.
+TimeT04:	ATime subtracting.	 OK.
+TimeT03:	Time ading.	 OK.
+TimeT02:	ATime comparing.	 OK.
+TimeT01:	Test of constructor.	 OK.
+Test result of a testcase seaquence.	 OK!!
+MapT01:	Test of Get function.	 OK.
+MapT02:	Test of Contains related functions.	 OK.
+Test result of a testcase seaquence.	 OK!!
+HashtableT52:	Functional finding.	 OK.
+HashtableT53:	Test of functional remove.	 OK.
+HashtableT54:	Functional Put and Get.	 OK.
+HashtableT55:	Functional getting information.	 OK.
+HashtableT56:	When hashode overlapped.	 OK.
+HashtableT57:	Test of functional Size.	 OK.
+HashtableT01:	Constructor test.	 OK.
+HashtableT02:	search test.	 OK.
+HashtableT03:	Delete test.	 OK.
+HashtableT04:	Test of put, get.	 OK.
+HashtableT05:	Test of getting keys and values.	 OK.
+HashtableT06:	Test when hashCode overlaps.	 OK.
+HashtableT07:	Test of size.	 OK.
+Test result of a testcase seaquence.	 OK!!
+FHashtableT01:	 Test Contains, PutAll	OK.
+FHashtableT02:	 Test Clear, Remove, ContainsKey	OK.
+FHashtableT03:	 Test Put, Get	OK.
+FHashtableT04:	 Test KeySet, ValueSet	OK.
+FHashtableT05:	 Test hashCode is duplicate	OK.
+FHashtableT06:	 Test Size	OK.
+Result-of-testcases.	OK!!
+DoubleListQueueT01:	 Test Queue	 OK.
+Test result of a testcase seaquence.	 OK!!
+QueueT01:	 Test Queue	 OK.
+Test result of a testcase seaquence.	 OK!!
+ UniqueNumberT01:	 UniqueNumberT01 Unit test	 OK.
+Test result of a testcase seaquence.	 OK!!
+RealT01:	Test of getInterest	 OK.
+RealT02:	Test of root.	 OK.
+RealT03:	Test isNDigitsAfterTheDecimalPoint and getNumberOfDigitsAfterTheDecimalPoint.	 OK.
+RealT04:	Test numberOfDigit.	 OK.
+RealT05:	Test roundAterDecimalPointByNdigit.	 OK.
+RealT06:	Test EQ (Equal).	 OK.
+TermT01:	Test of term constructor and isInThePeriod()	 OK.
+Test result of a testcase seaquence.	 OK!!
+TimeT06:	Test currentDateTime from file.	 OK.
+TimeT05:	Set instance variables.	 OK.
+TimeT04:	ATime subtracting.	 OK.
+TimeT03:	Time ading.	 OK.
+TimeT02:	ATime comparing.	 OK.
+TimeT01:	Test of constructor.	 OK.
+Test result of a testcase seaquence.	 OK!!
+MapT01:	Test of Get function.	 OK.
+MapT02:	Test of Contains related functions.	 OK.
+Test result of a testcase seaquence.	 OK!!
+HashtableT52:	Functional finding.	 OK.
+HashtableT53:	Test of functional remove.	 OK.
+HashtableT54:	Functional Put and Get.	 OK.
+HashtableT55:	Functional getting information.	 OK.
+HashtableT56:	When hashode overlapped.	 OK.
+HashtableT57:	Test of functional Size.	 OK.
+HashtableT01:	Constructor test.	 OK.
+HashtableT02:	search test.	 OK.
+HashtableT03:	Delete test.	 OK.
+HashtableT04:	Test of put, get.	 OK.
+HashtableT05:	Test of getting keys and values.	 OK.
+HashtableT06:	Test when hashCode overlaps.	 OK.
+HashtableT07:	Test of size.	 OK.
+Test result of a testcase seaquence.	 OK!!
+FHashtableT01:	 Test Contains, PutAll	OK.
+FHashtableT02:	 Test Clear, Remove, ContainsKey	OK.
+FHashtableT03:	 Test Put, Get	OK.
+FHashtableT04:	 Test KeySet, ValueSet	OK.
+FHashtableT05:	 Test hashCode is duplicate	OK.
+FHashtableT06:	 Test Size	OK.
+Result-of-testcases.	OK!!
+DoubleListQueueT01:	 Test Queue	 OK.
+Test result of a testcase seaquence.	 OK!!
+QueueT01:	 Test Queue	 OK.
+Test result of a testcase seaquence.	 OK!!
+ UniqueNumberT01:	 UniqueNumberT01 Unit test	 OK.
+Test result of a testcase seaquence.	 OK!!
+RealT01:	Test of getInterest	 OK.
+RealT02:	Test of root.	 OK.
+RealT03:	Test isNDigitsAfterTheDecimalPoint and getNumberOfDigitsAfterTheDecimalPoint.	 OK.
+RealT04:	Test numberOfDigit.	 OK.
+RealT05:	Test roundAterDecimalPointByNdigit.	 OK.
+RealT06:	Test EQ (Equal).	 OK.
