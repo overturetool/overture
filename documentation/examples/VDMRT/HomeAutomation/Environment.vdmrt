@@ -20,10 +20,10 @@ instance variables
   private outlines : seq of outline := [];
   private simtime  : nat;
   private finished : bool := false;
-  private envTemp  : nat := 0;
-  private envHumid : nat := 0;
-  inv envTemp >= 0;
-  inv envHumid >= 0;
+  private envTemp  : int := 0;
+  private envHumid : int := 0;
+--  inv envTemp >= 0;
+--  inv envHumid >= 0;
 
 --
 -- Types definition section

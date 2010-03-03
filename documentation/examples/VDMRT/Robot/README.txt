@@ -2,7 +2,9 @@
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
+#AUTHOR=Lasse Lorentzen and Kenneth Lausdahl
 #LANGUAGE_VERSION=classic
+#LIB= IO
 #INV_CHECKS=true
 #POST_CHECKS=true
 #PRE_CHECKS=true
