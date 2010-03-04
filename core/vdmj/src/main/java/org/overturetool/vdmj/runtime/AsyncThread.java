@@ -196,7 +196,6 @@ public class AsyncThread extends Thread
     		}
 
 			reader.complete(DBGPReason.OK, null);
-			cpu.removeThread();
 		}
 		catch (ContextException e)
 		{
@@ -215,6 +214,10 @@ public class AsyncThread extends Thread
 			{
 				reader.complete(DBGPReason.EXCEPTION, null);
 			}
+		}
+		finally
+		{
+			cpu.removeThread();
 		}
 	}
 
@@ -275,8 +278,6 @@ public class AsyncThread extends Thread
     		{
     			request.bus.reply(response);
     		}
-
-    		cpu.removeThread();
 		}
 		catch (ContextException e)
 		{
@@ -285,6 +286,10 @@ public class AsyncThread extends Thread
 		catch (RTException e)
 		{
 			// Thread stopped
+		}
+		finally
+		{
+    		cpu.removeThread();
 		}
 	}
 
