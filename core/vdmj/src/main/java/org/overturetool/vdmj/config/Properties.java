@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (c) 2009 Fujitsu Services Ltd.
+ *	Copyright (c) 2010 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,38 +21,31 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmjc.config;
+package org.overturetool.vdmj.config;
 
-import org.overturetool.vdmjc.common.ConfigBase;
+import org.overturetool.vdmj.util.ConfigBase;
 
 /**
  * The Config class is used to hold global configuration values. The
- * values are read from the vdmjc.properties file, and defaults are defined
+ * values are read from the vdmj.properties file, and defaults are defined
  * as public statics.
  */
 
-public class Config extends ConfigBase
+public class Properties extends ConfigBase
 {
-	/** The maximum number of listener connections. */
-	public static int listener_connection_limit = 100;
-
-	/** The VDMJ jar location. */
-	public static String vdmj_jar = "./vdmj-1.0.0.jar";
-
-	/** Extra VDMJ JVM arguments. */
-	public static String vdmj_jvm = "";
+	/** The default duration for RT statements executed in a block. */
+	public static int rt_duration_default = 2;
 
 	/**
 	 * When the class is initialized, we call the ConfigBase init method, which
 	 * uses the properties file passed to update the static fields above.
-	 * @throws Exception
 	 */
 
 	public static void init()
 	{
 		try
 		{
-			init("vdmjc.properties", Config.class);
+			init("vdmj.properties", Properties.class);
 		}
 		catch (Exception e)
 		{

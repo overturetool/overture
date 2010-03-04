@@ -26,7 +26,10 @@ package org.overturetool.vdmj.statements;
 import java.util.List;
 import java.util.Vector;
 
+import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -43,7 +46,7 @@ import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.VoidValue;
 
 
-public class SimpleBlockStatement extends Statement
+abstract public class SimpleBlockStatement extends Statement
 {
 	private static final long serialVersionUID = 1L;
 	public final List<Statement> statements = new Vector<Statement>();
@@ -99,7 +102,7 @@ public class SimpleBlockStatement extends Statement
 			else
 			{
 				notreached = true;
-				
+
     			if (st instanceof UnionType)
     			{
     				UnionType ust = (UnionType)st;
@@ -107,7 +110,7 @@ public class SimpleBlockStatement extends Statement
     				for (Type t: ust.types)
     				{
     					addOne(rtypes, t);
-    					
+
     					if (t instanceof VoidType ||
     						t instanceof UnknownType)
     					{
@@ -118,7 +121,7 @@ public class SimpleBlockStatement extends Statement
     			else
     			{
     				addOne(rtypes, st);
-    				
+
 					if (st instanceof VoidType ||
 						st instanceof UnknownType)
 					{
@@ -187,18 +190,39 @@ public class SimpleBlockStatement extends Statement
 	}
 
 	@Override
-	public Value eval(Context ctxt)
+	abstract public Value eval(Context ctxt);
+
+	protected Value evalBlock(Context ctxt)
 	{
-		breakpoint.check(location, ctxt);
+		// Note, no breakpoint check - designed to be called by eval
 
-		for (Statement s: statements)
+		if (Settings.dialect == Dialect.VDM_RT &&
+			ctxt.threadState.getTimestep() < 0)
 		{
-			Value rv = s.eval(ctxt);
+			int time = Properties.rt_duration_default;
 
-			if (!rv.isVoid())
+			for (Statement s: statements)
 			{
-				return rv;
+				Value rv = s.eval(ctxt);
+				ctxt.threadState.CPU.duration(time);
+
+				if (!rv.isVoid())
+    			{
+    				return rv;
+    			}
 			}
+		}
+		else
+		{
+    		for (Statement s: statements)
+    		{
+    			Value rv = s.eval(ctxt);
+
+    			if (!rv.isVoid())
+    			{
+    				return rv;
+    			}
+    		}
 		}
 
 		return new VoidValue();

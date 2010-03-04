@@ -54,6 +54,7 @@ import org.overturetool.vdmj.VDMJ;
 import org.overturetool.vdmj.VDMPP;
 import org.overturetool.vdmj.VDMRT;
 import org.overturetool.vdmj.VDMSL;
+import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.expressions.Expression;
@@ -139,6 +140,8 @@ public class DBGPReader
 		String defaultName = null;
 		String remoteName = null;
 		Class<RemoteControl> remoteClass = null;
+
+		Properties.init();		// Read properties file, if any
 
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
 		{

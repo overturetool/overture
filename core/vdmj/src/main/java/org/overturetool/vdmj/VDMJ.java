@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.debug.RemoteControl;
 import org.overturetool.vdmj.debug.RemoteInterpreter;
 import org.overturetool.vdmj.lex.Dialect;
@@ -71,6 +72,8 @@ abstract public class VDMJ
 		String remoteName = null;
 		Class<RemoteControl> remoteClass = null;
 		String defaultName = null;
+
+		Properties.init();		// Read properties file, if any
 
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
 		{

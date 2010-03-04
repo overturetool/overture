@@ -35,7 +35,6 @@ import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.values.Value;
-import org.overturetool.vdmj.values.VoidValue;
 
 public class BlockStatement extends SimpleBlockStatement
 {
@@ -100,17 +99,7 @@ public class BlockStatement extends SimpleBlockStatement
 			evalContext.putList(d.getNamedValues(evalContext));
 		}
 
-		for (Statement s: statements)
-		{
-			Value rv = s.eval(evalContext);
-
-			if (!rv.isVoid())
-			{
-				return rv;
-			}
-		}
-
-		return new VoidValue();
+		return evalBlock(evalContext);
 	}
 
 	@Override

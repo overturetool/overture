@@ -34,14 +34,7 @@ public class VDMJC
 {
 	public static void main(String[] args)
 	{
-		try
-		{
-			Config.init();
-		}
-		catch (Exception e)
-		{
-			// Silently use default config values if no properties file.
-		}
+		Config.init();
 
 		try
 		{

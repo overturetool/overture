@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmjc.common;
+package org.overturetool.vdmj.util;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -91,5 +91,10 @@ public class ConfigBase
 				}
 			}
 		}
+	}
+
+	public static String getProperty(String key, String def)
+	{
+		return props.getProperty(key, def);
 	}
 }

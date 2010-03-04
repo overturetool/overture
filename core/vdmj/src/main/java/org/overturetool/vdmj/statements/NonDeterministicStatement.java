@@ -24,6 +24,8 @@
 package org.overturetool.vdmj.statements;
 
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.values.Value;
 
 public class NonDeterministicStatement extends SimpleBlockStatement
 {
@@ -48,5 +50,12 @@ public class NonDeterministicStatement extends SimpleBlockStatement
 	public String kind()
 	{
 		return "non-deterministic";
+	}
+
+	@Override
+	public Value eval(Context ctxt)
+	{
+		breakpoint.check(location, ctxt);
+		return evalBlock(ctxt);
 	}
 }

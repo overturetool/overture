@@ -40,7 +40,6 @@ import org.overturetool.vdmj.lex.LexKeywordToken;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.Token;
-import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
@@ -437,7 +436,6 @@ public class OperationValue extends Value
 
 					if (!VDMThreadSet.isDebugStopped() && now >= expires)
 					{
-						Console.out.print(VDMThreadSet.dump());
 						abort(4067, "Deadlock detected", ctxt);
 					}
 					else
@@ -497,9 +495,17 @@ public class OperationValue extends Value
 			// The waiters list is processed by the GuardValueListener
 			// and by notifySelf.
 
-			self.guardWaiters.add(me);
+			synchronized (self.guardWaiters)
+			{
+				self.guardWaiters.add(me);
+			}
+
 			cpu.yield(RunState.WAITING);
-			self.guardWaiters.remove(me);
+
+			synchronized (self.guardWaiters)
+			{
+				self.guardWaiters.remove(me);
+			}
 
 			long now = System.currentTimeMillis();
 
@@ -673,9 +679,12 @@ public class OperationValue extends Value
 		{
 			if (Settings.dialect == Dialect.VDM_RT)
 			{
-				for (CPUThread th: self.guardWaiters)
+				synchronized (self.guardWaiters)
 				{
-					th.setState(RunState.RUNNABLE);
+    				for (CPUThread th: self.guardWaiters)
+    				{
+    					th.setState(RunState.RUNNABLE);
+    				}
 				}
 			}
 			else
