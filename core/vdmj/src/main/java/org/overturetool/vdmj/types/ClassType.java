@@ -25,6 +25,7 @@ package org.overturetool.vdmj.types;
 
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -84,6 +85,21 @@ public class ClassType extends Type
 
 			for (Definition d: classdef.getDefinitions())
 			{
+				// There is a problem resolving ParameterTypes via a FunctionType
+				// when this is not being done via ExplicitFunctionDefinition
+				// which extends the environment with the type names that
+				// are in scope. So we skip these here.
+
+				if (d instanceof ExplicitFunctionDefinition)
+				{
+					ExplicitFunctionDefinition fd = (ExplicitFunctionDefinition)d;
+
+					if (fd.typeParams != null)
+					{
+						continue;	// Skip polymorphic functions
+					}
+				}
+
 				d.getType().typeResolve(self, root);
 			}
 

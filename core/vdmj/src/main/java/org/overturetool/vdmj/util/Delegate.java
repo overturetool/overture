@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.util;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -249,5 +250,22 @@ public class Delegate implements Serializable
 			throw new InternalException(59,
 				"Failed in native method: " + e.getTargetException().getMessage());
 		}
+	}
+
+	/**
+	 * The Method objects in the delegateMethods map cannot be serialized,
+	 * which means that deep copies fail. So here, we clear the map when
+	 * serialization occurs. The map is re-build later on demand.
+	 */
+
+	private void writeObject(java.io.ObjectOutputStream out)
+		throws IOException
+	{
+		if (delegateMethods != null)
+		{
+			delegateMethods.clear();
+		}
+
+		out.defaultWriteObject();
 	}
 }
