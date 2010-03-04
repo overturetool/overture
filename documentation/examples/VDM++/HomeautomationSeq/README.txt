@@ -11,5 +11,6 @@
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
 #ENTRY_POINT=new TestComplete().Execute()
+#LIB=IO
 #EXPECTED_RESULT=NO_ERROR_INTERPRETER
 #******************************************************

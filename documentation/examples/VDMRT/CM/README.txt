@@ -14,5 +14,6 @@ distributed real time version of this example.
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
 #ENTRY_POINT=
+#LIB=IO
 #EXPECTED_RESULT=NO_ERROR_TYPE_CHECK
 #******************************************************

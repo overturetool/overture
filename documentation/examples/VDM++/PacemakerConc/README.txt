@@ -12,5 +12,6 @@
 #ENTRY_POINT=new World("tests/scenarioBrokenHeart.arg",<DOO>).Run()
 #ENTRY_POINT=new World("tests/scenarioDoubleHeart.arg",<DOO>).Run()
 #ENTRY_POINT=new World("tests/scenarioSometimesHeart.arg",<DOO>).Run()
+#LIB=IO
 #EXPECTED_RESULT=NO_ERROR_INTERPRETER
 #******************************************************

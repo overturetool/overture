@@ -17,7 +17,7 @@ Springer-Verlag, Lecture Notes in Computer Science 5014, pp. 181--197.
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
 #AUTHOR= Hugo Macedo
-#LIB= IO
+#LIB=IO
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true
