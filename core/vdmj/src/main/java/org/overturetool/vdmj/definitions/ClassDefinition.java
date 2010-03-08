@@ -912,7 +912,7 @@ public class ClassDefinition extends Definition
 	public void staticInit(Context ctxt)
 	{
 		staticInit = false;		// Forced initialization
-		setStatics(ctxt);
+		setStaticDefinitions(ctxt);
 	}
 
 	/**
@@ -932,23 +932,26 @@ public class ClassDefinition extends Definition
 	 * checker.
 	 */
 
-	private void setStatics(Context initCtxt)
+	private void setStaticDefinitions(Context initCtxt)
 	{
-		if (staticInit) return; else staticInit = true;
-
-		for (ClassDefinition sdef: superdefs)
+		if (!staticInit)
 		{
-			sdef.setStatics(initCtxt);
+			staticInit = true;
+
+    		for (ClassDefinition sdef: superdefs)
+    		{
+    			sdef.setStaticDefinitions(initCtxt);
+    		}
+
+    		privateStaticValues = new NameValuePairMap();
+    		publicStaticValues = new NameValuePairMap();
+
+    		// We initialize function and operation definitions first as these
+    		// can be called by variable initializations.
+
+    		setStaticDefinitions(definitions, initCtxt);
+    		setStaticDefinitions(localInheritedDefinitions, initCtxt);
 		}
-
-		privateStaticValues = new NameValuePairMap();
-		publicStaticValues = new NameValuePairMap();
-
-		// We initialize function and operation definitions first as these
-		// can be called by variable initializations.
-
-		setStaticDefinitions(definitions, initCtxt);
-		setStaticDefinitions(localInheritedDefinitions, initCtxt);
 	}
 
 	private void setStaticDefinitions(DefinitionList defs, Context initCtxt)
@@ -986,20 +989,18 @@ public class ClassDefinition extends Definition
 
 	private void setStaticValues(Context initCtxt)
 	{
-		if (!staticInit)
+		if (!staticValuesInit)
 		{
-			assert false : "setStaticValues called before setStatics";
+			staticValuesInit = true;
+
+    		for (ClassDefinition sdef: superdefs)
+    		{
+    			sdef.setStaticValues(initCtxt);
+    		}
+
+    		setStaticValues(definitions, initCtxt, false);
+    		setStaticValues(localInheritedDefinitions, initCtxt, true);
 		}
-
-		if (staticValuesInit) return; else staticValuesInit = true;
-
-		for (ClassDefinition sdef: superdefs)
-		{
-			sdef.setStaticValues(initCtxt);
-		}
-
-		setStaticValues(definitions, initCtxt, false);
-		setStaticValues(localInheritedDefinitions, initCtxt, true);
 	}
 
 	private void setStaticValues(
@@ -1018,8 +1019,12 @@ public class ClassDefinition extends Definition
 				for (LexNameToken vname: names)
 				{
 					LexNameToken iname = vname.getModifiedName(id.superdef.name.module);
-					Value v = initCtxt.get(iname);
-					nvl.add(vname, v);
+					Value v = initCtxt.check(iname);
+
+					if (v != null)		// TypeDefinition names aren't values
+					{
+						nvl.add(vname, v);
+					}
 				}
 			}
 			else
@@ -1140,7 +1145,7 @@ public class ClassDefinition extends Definition
 		Context ctxt, Map<LexNameToken, ObjectValue> done)
 		throws ValueException
 	{
-		setStatics(ctxt.getGlobal());		// When static member := new X()
+		setStaticDefinitions(ctxt.getGlobal());		// When static member := new X()
 		setStaticValues(ctxt.getGlobal());	// When static member := new X()
 
 		List<ObjectValue> inherited = new Vector<ObjectValue>();
