@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.overturetool.tools.packworkspace.testing.ProjectTester.Phase;
-
 public class ProcessConsolePrinter extends Thread
 {
 	File file = null;

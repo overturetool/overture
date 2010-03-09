@@ -28,6 +28,9 @@ public class VdmReadme
 	private final String ENTRY_POINT = "ENTRY_POINT";
 	private final String EXPECTED_RESULT = "EXPECTED_RESULT";
 	private final String TEX_DOCUMENT = "DOCUMENT";
+	private final String LIB = "LIB";
+	private final String TEX_AUTHOR = "AUTHOR";
+	private final String ENCODING = "ENCODING";
 
 	private Release languageVersion = Release.DEFAULT;
 	private Boolean invChecks = true;
@@ -37,7 +40,10 @@ public class VdmReadme
 	private Boolean suppressWarnings = false;
 	private final List<String> entryPoints = new Vector<String>();
 	private ResultStatus expectedResult = ResultStatus.NO_ERROR_TYPE_CHECK;
-	private String texDocument="";
+	private String texDocument = "";
+	private String texAuthor = "";
+	private String encoding = "";
+	private List<String> libs = new Vector<String>();
 	private String name = "";
 	private Dialect dialect = Dialect.VDM_PP;
 	private boolean settingsParsed = false;
@@ -106,8 +112,14 @@ public class VdmReadme
 				setEntryPoint(data[1].trim());
 			else if (data[0].equals(EXPECTED_RESULT))
 				setExpectedResult(ResultStatus.valueOf(data[1]));
-			else if( data[0].equals(TEX_DOCUMENT))
+			else if (data[0].equals(TEX_DOCUMENT))
 				setTexDocument(data[1].trim());
+			else if (data[0].equals(TEX_AUTHOR))
+				setTexAuthor(data[1].trim());
+			else if (data[0].equals(ENCODING))
+				setEncoding(data[1].trim());
+			else if (data[0].equals(LIB))
+				setLibs(data[1].trim().split(";"));
 		}
 	}
 
@@ -128,10 +140,11 @@ public class VdmReadme
 					projectNature)
 					.replace(OvertureProject.NAME_PLACEHOLDER, name)
 					.replace(OvertureProject.ARGUMENTS_PLACEHOLDER,
-							builderArguments).replace(OvertureProject.TEX_DOCUMENT, getTexDocument().trim()));
+							builderArguments)
+					.replace(OvertureProject.TEX_DOCUMENT,
+							getTexDocument().trim()));
 			outputStream.flush();
 			outputStream.close();
-			outputFileReader.close();
 
 		} catch (IOException e)
 		{
@@ -177,7 +190,7 @@ public class VdmReadme
 				}
 			outputStream.flush();
 			outputStream.close();
-			outputFileReader.close();
+
 		} catch (IOException e)
 		{
 			e.printStackTrace();
@@ -229,7 +242,7 @@ public class VdmReadme
 
 			outputStream.flush();
 			outputStream.close();
-			outputFileReader.close();
+
 		} catch (IOException e)
 		{
 			// TODO Auto-generated catch block
@@ -273,7 +286,7 @@ public class VdmReadme
 
 			outputStream.flush();
 			outputStream.close();
-			outputFileReader.close();
+
 		} catch (IOException e)
 		{
 			// TODO Auto-generated catch block
@@ -299,27 +312,31 @@ public class VdmReadme
 			method = entryPoint.substring(entryPoint.indexOf('`') + 1).trim();
 		} else if (entryPoint.contains("."))
 		{
-			module = entryPoint.substring(0, entryPoint.indexOf(").")+1)
+			module = entryPoint.substring(0, entryPoint.indexOf(").") + 1)
 					.trim()
 					.replace("new ", "");
 			method = entryPoint.substring(entryPoint.indexOf(").") + 2).trim();
 		}
-		
-		String launchConfigarationId ="org.overture.ide.vdmpp.debug.core.launchConfigurationTypeVDMJ";
-		switch(dialect){
+
+		String launchConfigarationId = "org.overture.ide.vdmpp.debug.core.launchConfigurationTypeVDMJ";
+		switch (dialect)
+		{
 		case VDM_SL:
-			launchConfigarationId=launchConfigarationId.replace("vdmpp", "vdmsl");
+			launchConfigarationId = launchConfigarationId.replace("vdmpp",
+					"vdmsl");
 			break;
 		case VDM_PP:
-			
+
 			break;
 		case VDM_RT:
-			launchConfigarationId=launchConfigarationId.replace("vdmrt", "vdmrt");
+			launchConfigarationId = launchConfigarationId.replace("vdmrt",
+					"vdmrt");
 			break;
 		}
 
 		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
-		sb.append("\n<launchConfiguration type=\""+escapeXml(launchConfigarationId)+"\">");
+		sb.append("\n<launchConfiguration type=\""
+				+ escapeXml(launchConfigarationId) + "\">");
 		sb.append("\n<booleanAttribute key=\"create_coverage\" value=\"true\"/>");
 		sb.append("\n<booleanAttribute key=\"dbgp_break_on_first_line\" value=\"false\"/>");
 		sb.append("\n<intAttribute key=\"dbgp_connection_timeout\" value=\"5000\"/>");
@@ -327,15 +344,16 @@ public class VdmReadme
 		sb.append("\n<booleanAttribute key=\"enableBreakOnFirstLine\" value=\"false\"/>");
 		sb.append("\n<booleanAttribute key=\"enableDbgpLogging\" value=\"false\"/>");
 		sb.append("\n<stringAttribute key=\"mainScript\" value=\".project\"/>");
-		sb.append("\n<stringAttribute key=\"nature\" value=\"" + escapeXml(getNature())
-				+ "\"/>");
-		//sb.append("\n<listAttribute key=\"org.eclipse.debug.core.MAPPED_RESOURCE_PATHS\">");
+		sb.append("\n<stringAttribute key=\"nature\" value=\""
+				+ escapeXml(getNature()) + "\"/>");
+		// sb.append("\n<listAttribute key=\"org.eclipse.debug.core.MAPPED_RESOURCE_PATHS\">");
 		// sb.append("\n<listEntry value=\"/dansk/.project\"/>");
 		// sb.append("\n</listAttribute>");
 		// sb.append("\n<listAttribute key=\"org.eclipse.debug.core.MAPPED_RESOURCE_TYPES\">");
 		// sb.append("\n<listEntry value=\"1\"/>");
 		// sb.append("\n</listAttribute>");
-		sb.append("\n<stringAttribute key=\"project\" value=\"" + escapeXml(name) + "\"/>");
+		sb.append("\n<stringAttribute key=\"project\" value=\""
+				+ escapeXml(name) + "\"/>");
 		sb.append("\n<booleanAttribute key=\"remote_debug\" value=\"false\"/>");
 		sb.append("\n<stringAttribute key=\"vdmDebuggingMethod\" value=\""
 				+ escapeXml(method) + "\"/>");
@@ -343,9 +361,7 @@ public class VdmReadme
 				+ escapeXml(module) + "\"/>");
 		sb.append("\n<stringAttribute key=\"vdmDebuggingRemoteControlClass\" value=\"\"/>");
 		sb.append("\n</launchConfiguration>");
-		
-		
-		
+
 		FileWriter outputFileReader;
 		try
 		{
@@ -356,7 +372,7 @@ public class VdmReadme
 
 			outputStream.flush();
 			outputStream.close();
-			outputFileReader.close();
+
 		} catch (IOException e)
 		{
 			// TODO Auto-generated catch block
@@ -364,10 +380,15 @@ public class VdmReadme
 		}
 
 	}
-	
+
 	private static String escapeXml(String data)
 	{
-		return data.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(">", " &gt;").replace("'", "&apos;").replace(" ", "");
+		return data.replace("&", "&amp;")
+				.replace("\"", "&quot;")
+				.replace("<", "&lt;")
+				.replace(">", " &gt;")
+				.replace("'", "&apos;")
+				.replace(" ", "");
 	}
 
 	@Override
@@ -402,6 +423,22 @@ public class VdmReadme
 		// sb.append("\n#EXPECTED_RESULT=NO_ERROR_INTERPRETER");
 		sb.append("\n#******************************************************");
 		return sb.toString();
+	}
+
+	public String getSpecFileExtension()
+	{
+		switch (dialect)
+		{
+		case VDM_PP:
+			return "vdmpp";
+		case VDM_RT:
+			return "vdmrt";
+		case VDM_SL:
+			return "vdmsl";
+
+		default:
+			return "vdmpp";
+		}
 	}
 
 	public void setLanguageVersion(Release languageVersion)
@@ -513,9 +550,44 @@ public class VdmReadme
 	{
 		return texDocument;
 	}
-	
+
 	public File getWorkingDirectory()
 	{
 		return file.getParentFile();
+	}
+
+	public void setTexAuthor(String texAuthor)
+	{
+		this.texAuthor = texAuthor;
+	}
+
+	public String getTexAuthor()
+	{
+		return texAuthor;
+	}
+
+	public void setEncoding(String encoding)
+	{
+		this.encoding = encoding;
+	}
+
+	public String getEncoding()
+	{
+		return encoding;
+	}
+
+	public void setLibs(String[] argumentLibs)
+	{
+		for (String lib : argumentLibs)
+		{
+			if (lib.trim().length() > 0)
+				this.libs.add(lib.trim() +"."+ getSpecFileExtension());
+		}
+
+	}
+
+	public List<String> getLibs()
+	{
+		return libs;
 	}
 }

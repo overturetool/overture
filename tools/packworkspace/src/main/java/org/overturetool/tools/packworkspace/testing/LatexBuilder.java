@@ -1,15 +1,10 @@
 package org.overturetool.tools.packworkspace.testing;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.URL;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import org.overturetool.tools.packworkspace.ProjectPacker;
@@ -23,11 +18,13 @@ public class LatexBuilder
 	final static String OUTPUT_FOLDER_NAME = "latex";
 	final String PROJECT_INCLUDE_MODEL_FILES = "%PROJECT_INCLUDE_MODEL_FILES";
 	final String TITLE = "%TITLE";
+	final String AUTHOR = "%AUTHOR";
 	ProjectPacker project;
 	List<String> includes = new Vector<String>();
 	File output = null;
-	String documentFileName ="";
-	
+	private String documentFileName = "";
+	private String alternativeDocumentFileName = "";
+
 	public File getLatexDirectory()
 	{
 		return output;
@@ -37,8 +34,8 @@ public class LatexBuilder
 		this.project = project;
 	}
 
-	public void build(File reportLocation, Interpreter interpreter)
-			throws IOException
+	public void build(File reportLocation, Interpreter interpreter,
+			String author) throws IOException
 	{
 		File projectDir = new File(reportLocation, project.getSettings()
 				.getName());
@@ -62,12 +59,14 @@ public class LatexBuilder
 
 		}
 
-		String overturesty = readFile("/latex/overture.sty");
-		String overturelanguagedef = readFile("/latex/" + languageStyleFolder
-				+ "/overturelanguagedef.sty");
+		String overturesty = FileUtils.readFile("/latex/overture.sty");
+		String overturelanguagedef = FileUtils.readFile("/latex/"
+				+ languageStyleFolder + "/overturelanguagedef.sty");
 
-		writeFile(output, "/overture.sty", overturesty);
-		writeFile(output, "/overturelanguagedef.sty", overturelanguagedef);
+		FileUtils.writeFile(output, "/overture.sty", overturesty);
+		FileUtils.writeFile(output,
+				"/overturelanguagedef.sty",
+				overturelanguagedef);
 
 		for (File f : interpreter.getSourceFiles())
 		{
@@ -87,41 +86,45 @@ public class LatexBuilder
 				e.printStackTrace();
 			}
 		}
-		String documentName = saveDocument(output, project.getSettings()
-				.getName());
-		Process p = Runtime.getRuntime().exec("pdflatex.exe " + documentName,
+		String documentName = "";
+		if (alternativeDocumentFileName == null || alternativeDocumentFileName.length()==0)
+			documentName = saveDocument(output,
+					project.getSettings().getName(),
+					author);
+		else
+			documentName = alternativeDocumentFileName;
+		Process p = Runtime.getRuntime().exec("pdflatex " + documentName,
 				null,
 				output);
 
-		ProcessConsolePrinter p1=	new ProcessConsolePrinter(new File(output, Phase.Latex + "Err.txt"),
-				p.getErrorStream());
+		ProcessConsolePrinter p1 = new ProcessConsolePrinter(new File(output,
+				Phase.Latex + "Err.txt"), p.getErrorStream());
 		p1.start();
 
-		ProcessConsolePrinter	p2=	new ProcessConsolePrinter(new File(output, Phase.Latex + "Out.txt"),
-				p.getInputStream());
-	p2.start();
-	
-//	try
-//	{
-//		p.waitFor();
-//	} catch (InterruptedException e)
-//	{
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	}
-//	p1.interrupt();
-//	p2.interrupt();
+		ProcessConsolePrinter p2 = new ProcessConsolePrinter(new File(output,
+				Phase.Latex + "Out.txt"), p.getInputStream());
+		p2.start();
+
+		// try
+		// {
+		// p.waitFor();
+		// } catch (InterruptedException e)
+		// {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// p1.interrupt();
+		// p2.interrupt();
 	}
 
-	public String saveDocument(File projectRoot, String name)
+	public String saveDocument(File projectRoot, String name, String author)
 			throws IOException
 	{
-		String document = readFile("/latex/document.tex");
-		 documentFileName = name + ".tex";
+		String document = FileUtils.readFile("/latex/document.tex");
+		setDocumentFileName(name + ".tex");
 		File latexRoot = output;
 		StringBuilder sb = new StringBuilder();
-		String title = "Coverage Report: "
-				+ name;
+		String title = "Coverage Report: " + name;
 
 		for (String path : includes)
 		{
@@ -150,34 +153,17 @@ public class LatexBuilder
 		document = document.replace(TITLE, latexQuote(title))
 				.replace(PROJECT_INCLUDE_MODEL_FILES, sb.toString());
 
-		writeFile(output, documentFileName, document);
-		return documentFileName;
+		if (author != null && author.trim().length() != 0)
+			document = document.replace(AUTHOR, "\\author{"
+					+ latexQuote(author) + "}");
+
+		FileUtils.writeFile(output, getDocumentFileName(), document);
+		return getDocumentFileName();
 	}
-	
+
 	public boolean isBuild()
 	{
-		return new File(documentFileName).exists();
-	}
-
-	private static String readFile(String relativePath) throws IOException
-	{
-		StringBuilder sb = new StringBuilder();
-		for (String s : FileUtils.readTextFromJar(relativePath))
-		{
-			sb.append("\n" + s);
-		}
-		return sb.toString();
-	}
-
-	private void writeFile(File outputFolder, String fileName, String content)
-			throws IOException
-	{
-		FileWriter outputFileReader = new FileWriter(new File(outputFolder,
-				fileName), false);
-		BufferedWriter outputStream = new BufferedWriter(outputFileReader);
-		outputStream.write(content);
-		outputStream.close();
-		outputFileReader.close();
+		return new File(getDocumentFileName()).exists();
 	}
 
 	public static String latexQuote(String s)
@@ -200,5 +186,26 @@ public class LatexBuilder
 	{
 		if (!includes.contains(path))
 			includes.add(path);
+	}
+
+	public void setDocumentFileName(String documentFileName)
+	{
+		this.documentFileName = documentFileName;
+	}
+
+	public String getDocumentFileName()
+	{
+		return documentFileName;
+	}
+
+	public void setAlternativeDocumentFileName(
+			String alternativeDocumentFileName)
+	{
+		this.alternativeDocumentFileName = alternativeDocumentFileName;
+	}
+
+	public String getAlternativeDocumentFileName()
+	{
+		return alternativeDocumentFileName;
 	}
 }

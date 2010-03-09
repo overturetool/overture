@@ -41,8 +41,8 @@ public class Controller
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(HtmlTable.makeRow(HtmlTable.makeCellHeaderss(new String[] {
-				"Project Name", "Syntax check", "Type check","PO",
-				"Interpretation test","Doc" })));
+				"Project Name", "Syntax check", "Type check", "PO",
+				"Interpretation test", "Doc" })));
 		Collections.sort(projects);
 		for (ProjectPacker p : projects)
 		{
@@ -56,7 +56,7 @@ public class Controller
 				+ inputRootFolder.getName())
 				+ HtmlTable.makeTable(sb.toString()));
 		writeFile(new File(logOutput, "index.html"), page);
-writeFile(new File(logOutput,"style.css"), HtmlPage.makeStyleCss());
+		writeFile(new File(logOutput, "style.css"), HtmlPage.makeStyleCss());
 	}
 
 	public void packExamples(File outputFolder, String outputName)
@@ -77,9 +77,9 @@ writeFile(new File(logOutput,"style.css"), HtmlPage.makeStyleCss());
 			projects.add(p);
 		}
 		String zipName = outputName + ".zip";
-		if(new File(zipName).exists())
+		if (new File(zipName).exists())
 			new File(zipName).delete();
-		
+
 		FolderZiper.zipFolder(outputFolder.getName(), zipName);
 		// GZIPfile.getInterface().zip(outputFolder, new
 		// File(outputName+".zip"));
@@ -91,25 +91,44 @@ writeFile(new File(logOutput,"style.css"), HtmlPage.makeStyleCss());
 
 	public static void delete(File tmpFolder)
 	{
-		System.out.println("Trying to delete: " + tmpFolder);
-		try
-		{
-			if (tmpFolder != null && tmpFolder.isFile())
-				tmpFolder.delete();
-			else
+		System.out.println("\nTrying to delete: " + tmpFolder);
+//		if (System.getProperty("os.name").toLowerCase().contains("windows"))
+//		{
+//			Process p;
+//			try
+//			{String command = "cmd.exe /C rmdir /S /Q \""
+//				+ tmpFolder.getAbsolutePath() + "\"";
+//			System.out.println(command);
+//				p = Runtime.getRuntime().exec(command);
+//
+//				p.waitFor();
+//			} catch (IOException e)
+//			{
+//				e.printStackTrace();
+//			} catch (InterruptedException e)
+//			{
+//				e.printStackTrace();
+//			}
+//			return;
+//		} else
+			try
 			{
-				for (File file : tmpFolder.listFiles())
+				if (tmpFolder != null && tmpFolder.isFile())
+					tmpFolder.delete();
+				else
 				{
-					delete(file);
+					for (File file : tmpFolder.listFiles())
+					{
+						delete(file);
+					}
+					tmpFolder.delete();
 				}
-				tmpFolder.delete();
-			}
-		} catch (Exception e)
-		{
+			} catch (Exception e)
+			{
 
-		}
+			}
 	}
-	
+
 	public Integer count = 0;
 	public Integer synErrors = 0;
 	public Integer typeErrors = 0;
@@ -118,10 +137,10 @@ writeFile(new File(logOutput,"style.css"), HtmlPage.makeStyleCss());
 
 	public String getOverview()
 	{
-		 count = testProjects.size();
-		 synErrors = 0;
-		 typeErrors = 0;
-		 interpretationErrors = 0;
+		count = testProjects.size();
+		synErrors = 0;
+		typeErrors = 0;
+		interpretationErrors = 0;
 		for (ProjectTester t : testProjects)
 		{
 			if (!t.isSyntaxCorrect())
@@ -130,60 +149,67 @@ writeFile(new File(logOutput,"style.css"), HtmlPage.makeStyleCss());
 				typeErrors++;
 			if (!t.isInterpretationSuccessfull())
 				interpretationErrors++;
-			poCount+=t.getPoCount();
+			poCount += t.getPoCount();
 		}
-		
-		return makeCell(synErrors+typeErrors+interpretationErrors,HtmlPage.makeLink( getName(),getName()+"/index.html"))+
-		
-		HtmlTable.makeCell(count.toString())+makeCell(synErrors)+makeCell(typeErrors)+HtmlTable.makeCell(poCount.toString())+makeCell(interpretationErrors);
+
+		return makeCell(synErrors + typeErrors + interpretationErrors,
+				HtmlPage.makeLink(getName(), getName() + "/index.html"))
+				+
+
+				HtmlTable.makeCell(count.toString())
+				+ makeCell(synErrors)
+				+ makeCell(typeErrors)
+				+ HtmlTable.makeCell(poCount.toString())
+				+ makeCell(interpretationErrors);
 	}
-	
+
 	private static String makeCell(Integer status)
 	{
-		return makeCell(status,status.toString());
-		
+		return makeCell(status, status.toString());
+
 	}
-	private static String makeCell(Integer status,String text)
+
+	private static String makeCell(Integer status, String text)
 	{
-		if(status>0)
+		if (status > 0)
 			return HtmlTable.makeCell(text, HtmlTable.STYLE_CLASS_FAILD);
 		else
 			return HtmlTable.makeCell(text, HtmlTable.STYLE_CLASS_OK);
-		
+
 	}
 
-	public static void createOverviewPage(List<Controller> controllers) throws IOException
+	public static void createOverviewPage(List<Controller> controllers)
+			throws IOException
 	{
-		 Integer totalCount = 0;
-		 Integer totalSynErrors = 0;
-		 Integer totalTypeErrors = 0;
-		 Integer totalPos = 0;
-		 Integer totalInterpretationErrors = 0;
+		Integer totalCount = 0;
+		Integer totalSynErrors = 0;
+		Integer totalTypeErrors = 0;
+		Integer totalPos = 0;
+		Integer totalInterpretationErrors = 0;
 		StringBuilder sb = new StringBuilder();
 		sb.append(HtmlTable.makeRow(HtmlTable.makeCellHeaderss(new String[] {
-				"Test set","Project count", "Syntax check", "Type check","PO",
-				"Interpretation test" })));
+				"Test set", "Project count", "Syntax check", "Type check",
+				"PO", "Interpretation test" })));
 		for (Controller c : controllers)
 		{
-			sb.append(HtmlTable.makeRow( c.getOverview()));
-			totalCount+=c.count;
-			totalSynErrors+=c.synErrors;
-			totalTypeErrors+=c.typeErrors;
-			totalPos+=c.poCount;
-			totalInterpretationErrors+=c.interpretationErrors;
+			sb.append(HtmlTable.makeRow(c.getOverview()));
+			totalCount += c.count;
+			totalSynErrors += c.synErrors;
+			totalTypeErrors += c.typeErrors;
+			totalPos += c.poCount;
+			totalInterpretationErrors += c.interpretationErrors;
 		}
-		
-		
-		sb.append(HtmlTable.makeRowTotal( HtmlTable.makeCell("Totals"+
-				HtmlTable.makeCell(totalCount.toString())+makeCell(totalSynErrors)+makeCell(totalTypeErrors)+HtmlTable.makeCell(totalPos.toString())+makeCell(totalInterpretationErrors))));
-		
+
+		sb.append(HtmlTable.makeRowTotal(HtmlTable.makeCell("Totals"
+				+ HtmlTable.makeCell(totalCount.toString())
+				+ makeCell(totalSynErrors) + makeCell(totalTypeErrors)
+				+ HtmlTable.makeCell(totalPos.toString())
+				+ makeCell(totalInterpretationErrors))));
 
 		String page = HtmlPage.makePage(HtmlPage.makeH1("Test Overview")
 				+ HtmlTable.makeTable(sb.toString()));
-		writeFile(new File(reportDir,
-				"index.html"),page);
-		writeFile(new File(reportDir,
-		"style.css"),HtmlPage.makeStyleCss());
+		writeFile(new File(reportDir, "index.html"), page);
+		writeFile(new File(reportDir, "style.css"), HtmlPage.makeStyleCss());
 	}
 
 	private static void writeFile(File file, String content) throws IOException

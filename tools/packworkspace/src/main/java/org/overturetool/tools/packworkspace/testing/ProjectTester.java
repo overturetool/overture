@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Vector;
 
@@ -38,7 +39,7 @@ public class ProjectTester
 	boolean isFaild = false;
 
 	enum Phase {
-		SyntaxCheck, TypeCheck, PO, Interpretation,Latex
+		SyntaxCheck, TypeCheck, PO, Interpretation, Latex
 	}
 
 	public ProjectTester(File reportLocation) {
@@ -49,7 +50,7 @@ public class ProjectTester
 
 	public String test(ProjectPacker project) throws IOException
 	{
-		LatexBuilder latex=null;
+		LatexBuilder latex = null;
 		System.out.print(addFixedSize("\nTesting: "
 				+ project.getSettings().getName(), 28)
 				+ " => ");
@@ -73,7 +74,15 @@ public class ProjectTester
 		Settings.postchecks = project.getSettings().getPostChecks();
 		Settings.prechecks = project.getSettings().getPreChecks();
 		Settings.release = project.getSettings().getLanguageVersion();
-
+		if (project.getSettings().getEncoding() != null
+				&& project.getSettings().getEncoding().length() > 0)
+		{
+			if (Charset.isSupported(project.getSettings().getEncoding()))
+				VDMJ.filecharset = project.getSettings().getEncoding();
+			else
+				System.err.println("Charset not supported: "
+						+ project.getSettings().getEncoding());
+		}
 		StringBuilder sb = new StringBuilder();
 
 		File dir = new File(reportLocation, project.getSettings().getName());
@@ -83,89 +92,116 @@ public class ProjectTester
 		project.getSettings().createReadme(new File(dir, "Settings.txt"));
 		setConsole(project.getSettings().getName(), Phase.SyntaxCheck);
 
-		System.out.print("Syntax..");
-		statusParse = controller.parse(project.getSpecFiles());
-		if (statusParse == ExitStatus.EXIT_OK)
+		CrcTable tmpCrcTable = new CrcTable(dir, false);
+		for (File file : project.getSpecFiles())
 		{
-			System.out.print("Type..");
-			setConsole(project.getSettings().getName(), Phase.TypeCheck);
-			statusTypeCheck = controller.typeCheck();
-			try
+			tmpCrcTable.add(file.getAbsolutePath());
+		}
+		CrcTable readCrcTable = new CrcTable(dir);
+		boolean runCheck = true;
+		if (tmpCrcTable.equals(readCrcTable))
+			runCheck = false;
+
+		if (runCheck)
+		{
+			tmpCrcTable.saveCheckSums();
+			System.out.print("Syntax..");
+			statusParse = controller.parse(project.getSpecFiles());
+			if (statusParse == ExitStatus.EXIT_OK)
 			{
-				System.out.print("PO..");
-				setConsole(project.getSettings().getName(), Phase.PO);
-				ProofObligationList pos = controller.getInterpreter()
-						.getProofObligations();
-				pos.renumber();
-				poCount = pos.size();
-				if (poCount == 0)
-					statusPo = ExitStatus.EXIT_OK;
-				else
+				System.out.print("Type..");
+				setConsole(project.getSettings().getName(), Phase.TypeCheck);
+				statusTypeCheck = controller.typeCheck();
+				try
 				{
-					for (ProofObligation proofObligation : pos)
-					{
-						Console.out.println("Number " + proofObligation.number
-								+ ": \n\n" + proofObligation.toString()
-								+ DEVIDER_LINE);
+					System.out.print("PO..");
+					setConsole(project.getSettings().getName(), Phase.PO);
+					ProofObligationList pos = controller.getInterpreter()
+							.getProofObligations();
+					pos.renumber();
+					poCount = pos.size();
+					if (poCount == 0)
 						statusPo = ExitStatus.EXIT_OK;
+					else
+					{
+						for (ProofObligation proofObligation : pos)
+						{
+							Console.out.println("Number "
+									+ proofObligation.number + ": \n\n"
+									+ proofObligation.toString() + DEVIDER_LINE);
+							statusPo = ExitStatus.EXIT_OK;
+						}
 					}
-				}
-			} catch (Exception e)
-			{
-				e.printStackTrace(Console.err);
-				statusPo = ExitStatus.EXIT_ERRORS;
-			}
-			
-			try
-			{
-			latex =	new LatexBuilder(project);
-			latex.build(reportLocation,controller.getInterpreter());
-			} catch (Exception e1)
-			{
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
-			int intryPointCount = 0;
-			for (String entryPoint : project.getSettings().getEntryPoints())
-			{
-				if (entryPoint != null && entryPoint.length() > 0
-						&& statusTypeCheck == ExitStatus.EXIT_OK
-						&& !skipInterpreter)
+				} catch (Exception e)
 				{
-					try
-					{
-
-						if (intryPointCount == 0)
-							System.out.println("Runtime:");
-						intryPointCount++;
-
-						System.out.println("\tTesting Entrypoint: "
-								+ entryPoint);
-
-						setConsole(project.getSettings().getName(),
-								Phase.Interpretation);
-						Interpreter i = controller.getInterpreter();
-						i.init(null);
-						if (project.getDialect() == Dialect.VDM_SL)
-							i.setDefaultName(entryPoint.substring(0,
-									entryPoint.indexOf('`')));
-						// Value value = i.execute(entryPoint, null);
-						statusInterpreter = runInterpreter(project, entryPoint);
-						// Console.out.println(value);
-						Console.out.flush();
-
-					} catch (Exception e)
-					{
-						Console.err.write(e.toString());
-						Console.err.flush();
-						statusInterpreter = ExitStatus.EXIT_ERRORS;
-
-					}
-					Console.out.write(DEVIDER_LINE);
-					Console.err.write(DEVIDER_LINE);
+					e.printStackTrace(Console.err);
+					statusPo = ExitStatus.EXIT_ERRORS;
 				}
+
+				try
+				{
+					latex = new LatexBuilder(project);
+					if(project.getSettings().getTexDocument()!=null &&project.getSettings().getTexDocument().length()>0)
+						latex.setAlternativeDocumentFileName(project.getSettings().getTexDocument());
+					System.out.print("Doc..");
+					latex.build(reportLocation,
+							controller.getInterpreter(),
+							project.getSettings().getTexAuthor());
+				} catch (Exception e1)
+				{
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+				int intryPointCount = 0;
+				for (String entryPoint : project.getSettings().getEntryPoints())
+				{
+					if (entryPoint != null && entryPoint.length() > 0
+							&& statusTypeCheck == ExitStatus.EXIT_OK
+							&& !skipInterpreter)
+					{
+						try
+						{
+
+							if (intryPointCount == 0)
+								System.out.println("Runtime:");
+							intryPointCount++;
+
+							System.out.println("\tTesting Entrypoint: "
+									+ entryPoint);
+
+							setConsole(project.getSettings().getName(),
+									Phase.Interpretation);
+							Interpreter i = controller.getInterpreter();
+							i.init(null);
+							if (project.getDialect() == Dialect.VDM_SL)
+								i.setDefaultName(entryPoint.substring(0,
+										entryPoint.indexOf('`')));
+							// Value value = i.execute(entryPoint, null);
+							statusInterpreter = runInterpreter(project,
+									entryPoint);
+							// Console.out.println(value);
+							Console.out.flush();
+
+						} catch (Exception e)
+						{
+							Console.err.write(e.toString());
+							Console.err.flush();
+							statusInterpreter = ExitStatus.EXIT_ERRORS;
+
+						}
+						Console.out.write(DEVIDER_LINE);
+						Console.err.write(DEVIDER_LINE);
+					}
+				}
+				storeStatus(dir);
 			}
+		} else
+		{
+			System.out.print("Skipping..");
+			loadStatus(dir);
+			latex = new LatexBuilder(project);
+			latex.setDocumentFileName(project.getSettings().getName()+".tex");
 		}
 
 		switch (project.getSettings().getExpectedResult())
@@ -232,16 +268,45 @@ public class ProjectTester
 							Phase.Interpretation)));
 		else
 			sb.append(HtmlTable.makeCell(""));
-		
+
 		if (latex != null)
-			sb.append(makeCell(latex.isBuild()?ExitStatus.EXIT_ERRORS: ExitStatus.EXIT_OK, getLinks(project.getSettings().getName()+"/latex",
-					Phase.Latex)
-					+ " "+
-					HtmlPage.makeLink("Pdf", project.getSettings().getName() + "/latex/" + project.getSettings().getName()+ ".pdf")));
+			sb.append(makeCell(latex.isBuild() ? ExitStatus.EXIT_ERRORS
+					: ExitStatus.EXIT_OK, getLinks(project.getSettings()
+					.getName()
+					+ "/latex", Phase.Latex)
+					+ " "
+					+ HtmlPage.makeLink("Pdf", project.getSettings().getName()
+							+ "/latex/" + project.getSettings().getName()
+							+ ".pdf")));
 		else
 			sb.append(HtmlTable.makeCell(""));
 
 		return HtmlTable.makeRow(sb.toString());
+	}
+
+	private void loadStatus(File dir)
+	{
+		TestStatus info = new TestStatus(dir, true);
+		statusParse = info.statusParse;
+		statusTypeCheck = info.statusTypeCheck;
+		statusPo = info.statusPo;
+		statusInterpreter = info.statusInterpreter;
+		poCount = info.poCount;
+		isFaild = info.isFaild;
+
+	}
+
+	private void storeStatus(File dir)
+	{
+		TestStatus info = new TestStatus(dir, false);
+		info.statusParse = statusParse;
+		info.statusTypeCheck = statusTypeCheck;
+		info.statusPo = statusPo;
+		info.statusInterpreter = statusInterpreter;
+		info.poCount = poCount;
+		info.isFaild = isFaild;
+		info.save();
+
 	}
 
 	private ExitStatus runInterpreter(ProjectPacker project, String entryPoint)
@@ -288,7 +353,7 @@ public class ProjectTester
 
 		// -e <exp>: evaluate <exp> and stop
 		command.add("-e");
-		command.add("\""+entryPoint.replace("\"", "\\\"")+"\"");
+		command.add("\"" + entryPoint.replace("\"", "\\\"") + "\"");
 		// -c <charset>: select a file charset
 
 		// -t <charset>: select a console charset
@@ -311,16 +376,15 @@ public class ProjectTester
 		// -log: enable real-time event logging
 
 		// -remote <class>: enable remote control
-		
+
 		// -default: sets the default module
-	
-		if(entryPoint.contains("`"))
+
+		if (entryPoint.contains("`"))
 		{
 			command.add("-default");
-			command.add(entryPoint.substring(0,entryPoint.indexOf('`')));
+			command.add(entryPoint.substring(0, entryPoint.indexOf('`')));
 		}
-		
-		
+
 		for (File f : project.getSpecFiles())
 		{
 			command.add(f.getAbsolutePath());
@@ -357,17 +421,18 @@ public class ProjectTester
 				Phase.Interpretation + "Err.txt"),
 				p.getErrorStream());
 		pcpErr.start();
-		
+
 		StringBuilder sb = new StringBuilder();
-		for(String cmd : command)
+		for (String cmd : command)
 		{
-			sb.append(" "+cmd);
+			sb.append(" " + cmd);
 		}
 		sb.append("\nWorking directory: " + pb.directory().getAbsolutePath());
-		
+
 		ProcessConsolePrinter pcpOut = new ProcessConsolePrinter(new File(projectDir,
 				Phase.Interpretation + "Out.txt"),
-				p.getInputStream(),sb.toString().trim());
+				p.getInputStream(),
+				sb.toString().trim());
 		pcpOut.start();
 
 		p.waitFor();
@@ -421,7 +486,7 @@ public class ProjectTester
 		StringBuilder sb = new StringBuilder();
 		try
 		{
-			if(!file.exists())
+			if (!file.exists())
 				return false;
 			BufferedReader input = new BufferedReader(new FileReader(file));
 			try
