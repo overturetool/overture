@@ -11,16 +11,11 @@ RadarOut = Coordinates * nat1 * RadarWarning * nat *  Time;
   
 outline = FOOut | RadarOut; 
 
-
-
-
 instance variables 
 
   io : IO := new IO();
   inlines  : seq of inline  := [];
   outlines : seq of outline := [];
-
-
 
   airspace : [AirSpace] := nil;
   busy : bool := true;
@@ -43,7 +38,8 @@ public handleFOWarningEvent : FOId * Coordinates * Altitude * FOWarning *
 handleFOWarningEvent(id,coord,alt,warn,msa,time) ==
   outlines := outlines ^ [mk_(id,coord,alt,warn,msa,time)];
  
-public handleRadarWarningEvent : Coordinates * nat1 * RadarWarning * nat *  Time ==> ()
+public handleRadarWarningEvent : Coordinates * nat1 * 
+                                 RadarWarning * nat *  Time ==> ()
 handleRadarWarningEvent(coord,range,radWarn,num,pt) ==
   outlines := outlines ^ [mk_(coord,range,radWarn,num,pt)];
  

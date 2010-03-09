@@ -44,11 +44,15 @@ updateHistory() ==
 
 private registerHistory : FO ==> ()
 registerHistory(fo) ==
- (let id = fo.getId()
+ (let id = fo.getId(),
+      coor = fo.getCoordinates(),
+      alt = fo.getAltitude()
   in 
     if id in set dom history 
-    then history := history ++ {id |-> addHistory(history(id),fo.getCoordinates(),fo.getAltitude())}
-    else history := history munion {id |-> addHistory([],fo.getCoordinates(),fo.getAltitude())}
+    then history := history ++ 
+                    {id |-> addHistory(history(id),coor,alt)}
+    else history := history munion 
+                    {id |-> addHistory([],coor,alt)}
  );
 
 public cleanUpHistory : () ==> ()
@@ -212,6 +216,5 @@ private predictAltitude : seq of nat -> nat
 predictAltitude(alts) ==
   alts(1) + (alts(1) - alts(2)) 
 pre len alts = 2;  
- 
  
 end AirTrafficController

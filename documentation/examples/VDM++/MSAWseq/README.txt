@@ -1,7 +1,12 @@
+This VDM++ model is made by August Ribeiro as input for the VDM
+courses delivered at IHA in Denmark. It is a concurrent version 
+of the Minimum Safety Altitude Warning System (MSAW) example.
 
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
+#AUTHOR= Augusto Ribeiro
+#LIB= IO, MATH
 #LANGUAGE_VERSION=vdm10
 #INV_CHECKS=true
 #POST_CHECKS=true
