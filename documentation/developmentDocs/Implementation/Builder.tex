@@ -1,2 +1,20 @@
 \section{Builder}
-TBD
+
+
+
+
+\begin{lstlisting}[language=XML]
+<!-- Basic builder for VDM -->
+  <extension
+        id="org.overture.ide.core.builder.VdmBuilder"
+        point="org.eclipse.core.resources.builders">
+     <builder
+           callOnEmptyDelta="false"
+           hasNature="false"
+           isConfigurable="true">
+        <run
+              class="org.overture.ide.core.builder.VdmBuilder">
+        </run>
+     </builder>
+  </extension>
+\end{lstlisting}
