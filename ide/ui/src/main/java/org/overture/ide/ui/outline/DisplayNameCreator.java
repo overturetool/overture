@@ -14,11 +14,7 @@ import org.overturetool.vdmj.patterns.IgnorePattern;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.patterns.RecordPattern;
-import org.overturetool.vdmj.patterns.TuplePattern;
-import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.Type;
-
-import com.sun.org.apache.xml.internal.serializer.ToUnknownStream;
 
 public class DisplayNameCreator {
 

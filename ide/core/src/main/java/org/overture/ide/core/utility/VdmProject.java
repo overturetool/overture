@@ -979,6 +979,7 @@ public class VdmProject  implements IVdmProject, IProject
 		
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
 		return this.project.getAdapter(adapter);
 	}

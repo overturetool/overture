@@ -24,7 +24,7 @@ public class VdmPluginImages {
 	// The plug-in registry
 	private static ImageRegistry fgImageRegistry = null;
 
-	private static HashMap fgAvoidSWTErrorMap = null;
+	private static HashMap<String, ImageDescriptor> fgAvoidSWTErrorMap = null;
 	private static final String T_OBJ = "obj16"; //$NON-NLS-1$
 	private static final String T_OVR = "ovr16"; //$NON-NLS-1$
 	private static final String T_WIZBAN = "wizban"; //$NON-NLS-1$
@@ -404,7 +404,7 @@ public class VdmPluginImages {
 	/* package */static ImageRegistry getImageRegistry() {
 		if (fgImageRegistry == null) {
 			fgImageRegistry = new ImageRegistry();
-			for (Iterator iter = fgAvoidSWTErrorMap.keySet().iterator(); iter.hasNext();) {
+			for (Iterator<String> iter = fgAvoidSWTErrorMap.keySet().iterator(); iter.hasNext();) {
 				String key = (String) iter.next();
 				fgImageRegistry.put(key, (ImageDescriptor) fgAvoidSWTErrorMap.get(key));
 			}
@@ -436,7 +436,7 @@ public class VdmPluginImages {
 		try {
 			ImageDescriptor result = create(prefix, name, true);
 			if (fgAvoidSWTErrorMap == null) {
-				fgAvoidSWTErrorMap = new HashMap();
+				fgAvoidSWTErrorMap = new HashMap<String, ImageDescriptor>();
 			}
 			fgAvoidSWTErrorMap.put(key, result);
 			if (fgImageRegistry != null) {

@@ -18,7 +18,7 @@ public class VdmLaunchConfigurationDelegate implements
 			ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		
 		
-		List commandList = new ArrayList();
+		List<String> commandList = new ArrayList<String>();
 		
 		
 		ILaunchConfigurationWorkingCopy workConfiguration = configuration.getWorkingCopy();		
