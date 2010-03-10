@@ -10,6 +10,7 @@ lients to fetch email messages from the email server.
 #AUTHOR= Paul Mukherjee
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
+#lib=IO
 #POST_CHECKS=true
 #PRE_CHECKS=true
 #DYNAMIC_TYPE_CHECKS=true

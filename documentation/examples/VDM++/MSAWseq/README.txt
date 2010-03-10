@@ -6,7 +6,7 @@ of the Minimum Safety Altitude Warning System (MSAW) example.
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
 #AUTHOR= Augusto Ribeiro
-#LIB= IO, MATH
+#LIB= IO; MATH
 #LANGUAGE_VERSION=vdm10
 #INV_CHECKS=true
 #POST_CHECKS=true

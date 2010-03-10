@@ -76,15 +76,15 @@ end
 operations
 
 
-StartScheduler : AS`Expression * AS`Spec * nat ==> Val
-StartScheduler (expr, spec, delta) ==
-  (dcl res : ThreadStatus := Eval`evalExpr(expr,delta);
-   expandSpec(spec);
-   while(not finished) 
-   do 
-     (
-     );
-  ); 
+--StartScheduler : AS`Expression * AS`Spec * nat ==> Val
+--StartScheduler (expr, spec, delta) ==
+--  (dcl res : ThreadStatus := Eval`evalExpr(expr,delta);
+--   expandSpec(spec);
+--   while(not finished) 
+--   do 
+--     (
+--     );
+--  ); 
 
 expandSpec : AS`Spec ==> ()
 expandSpec(mk_AS`Spec(sys,classm)) == 
