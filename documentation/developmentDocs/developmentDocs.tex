@@ -3,7 +3,7 @@
 \usepackage{graphics}
 \usepackage{times}
 \usepackage{listings}
-%\usepackage{color}
+
 \usepackage[usenames,dvipsnames]{color}
 \usepackage{graphicx}
 \usepackage{latexsym}
@@ -66,6 +66,30 @@
 			 framexrightmargin=0mm}
 
 
+% Slightly nicer XML printing than the default.
+\lstdefinelanguage{DCXML}
+{
+	morecomment=[n][keywordstyle]{<}{\ },
+	morecomment=[n][keywordstyle]{<}{\\},
+	morecomment=[n][keywordstyle]{<}{>},
+	morecomment=[n][keywordstyle]{<}{\	},	
+	morestring=[b]',
+	morestring=[b]"
+}
+
+% Some nice defaults for listings
+\lstset{ 
+	basicstyle=\tiny, 
+%	identifierstyle=\textit, 
+	breaklines=true, 
+	frame=shadowbox, 
+	float=htbp, 
+	xleftmargin=5pt, 
+	xrightmargin=5pt,
+	keywordstyle=\color[rgb]{0,0,1},
+   commentstyle=\color[rgb]{0.133,0.545,0.133},
+   stringstyle=\color[rgb]{0.627,0.126,0.941},
+}
 
 
 %\lstdefinestyle{mystyle}{basicstyle=\sffamily\small,

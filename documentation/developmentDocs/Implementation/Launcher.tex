@@ -21,9 +21,9 @@ Also connected with the launcher is its UI part which is the window that pops up
 
 \subsection{launchConfigurationType}
 To define a new launchConfigurationType this is the extension point.
-\begin{program}
-\scriptsize
-\begin{verbatim}
+
+\lstset{language=XML, caption=lauchConfigurationTypes extension point}
+\begin{lstlisting}
  <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
@@ -34,10 +34,7 @@ To define a new launchConfigurationType this is the extension point.
             public="true">
       </launchConfigurationType>
    </extension>
-\end{verbatim}
-\caption{lauchConfigurationTypes extension point}
-\normalsize
-\end{program}
+\end{lstlisting}
 
 Important fields here are the
 \begin{description}
@@ -133,9 +130,9 @@ This is the simplified version of the launch delegate, in practise, because the 
 \subsection{launchConfigurationTypeImages}
 The \epoint{launchConfigurationTypeImages} extension point is a way to assign a icon to a launch configuration.
 
-\begin{program}
-\scriptsize
-\begin{verbatim}
+
+\lstset{language=XML, caption=launchConfigurationTypeImages extension point}
+\begin{lstlisting}
 <extension
          point="org.eclipse.debug.ui.launchConfigurationTypeImages">
       <launchConfigurationTypeImage
@@ -143,11 +140,11 @@ The \epoint{launchConfigurationTypeImages} extension point is a way to assign a 
             icon="icons/cview16/overture_nav.gif"
             id="org.overture.ide.debug.launchConfigurationTypeImage">
       </launchConfigurationTypeImage>
-   </extension>
-\end{verbatim}
-\caption{launchConfigurationTypeImages extension point}
-\normalsize
-\end{program}
+</extension>
+\end{lstlisting}
+
+
+
 
 Fields:
 \begin{description}
