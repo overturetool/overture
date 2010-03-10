@@ -1,6 +1,7 @@
 package org.overturetool.traces.vdmj;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -23,6 +24,7 @@ import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.runtime.ModuleInterpreter;
 import org.overturetool.vdmj.runtime.ObjectContext;
+import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.syntax.ClassReader;
 import org.overturetool.vdmj.syntax.ModuleReader;
@@ -43,15 +45,11 @@ public class TraceInterpreter
 	protected String activeTrace;
 
 	Interpreter interpreter;
-	
-	boolean reduce= false;
+	protected File coverage;
+	boolean reduce = false;
 	float subset;
-	long seed=0;
+	long seed = 0;
 	TraceReductionType traceReductionType = TraceReductionType.NONE;
-	
-	
-	
-	
 
 	public void processTraces(List<File> specFiles, String className,
 			TraceXmlWrapper storage, boolean runTypeCheck, Dialect dialect,
@@ -63,21 +61,22 @@ public class TraceInterpreter
 					className,
 					storage,
 					runTypeCheck,
-					dialect,languageVersion);
-		}
-		else if (dialect == Dialect.VDM_SL)
+					dialect,
+					languageVersion);
+		} else if (dialect == Dialect.VDM_SL)
 		{
 			processTracesModules(specFiles,
 					className,
 					storage,
 					runTypeCheck,
-					dialect,languageVersion);
+					dialect,
+					languageVersion);
 		}
 	}
 
 	private void processTracesClasses(List<File> specFiles, String className,
-			TraceXmlWrapper storage, boolean runTypeCheck, Dialect dialect, Release languageVersion)
-			throws Exception
+			TraceXmlWrapper storage, boolean runTypeCheck, Dialect dialect,
+			Release languageVersion) throws Exception
 	{
 		ClassList classes = new ClassList();
 		int parsErrors = 0;
@@ -100,24 +99,41 @@ public class TraceInterpreter
 
 		if (parsErrors == 0)
 		{
-		processTrace(classes,className,runTypeCheck,storage,dialect,languageVersion);
+			processTrace(classes,
+					className,
+					runTypeCheck,
+					storage,
+					dialect,
+					languageVersion);
 		}
 	}
-	public void processTrace(ClassList classList,String className, boolean runTypeCheck, TraceXmlWrapper storage, Dialect dialect, Release languageVersion,float subset, TraceReductionType traceReductionType,long seed) throws Exception
+
+	public void processTrace(ClassList classList, String className,
+			boolean runTypeCheck, TraceXmlWrapper storage, Dialect dialect,
+			Release languageVersion, float subset,
+			TraceReductionType traceReductionType, long seed) throws Exception
 	{
 		this.reduce = true;
 		this.seed = seed;
 		this.traceReductionType = traceReductionType;
 		this.subset = subset;
-		
-		processTrace(classList,className,runTypeCheck,storage,dialect,languageVersion);
+
+		processTrace(classList,
+				className,
+				runTypeCheck,
+				storage,
+				dialect,
+				languageVersion);
 		this.reduce = false;
 	}
-	public void processTrace(ClassList classList,String className, boolean runTypeCheck, TraceXmlWrapper storage, Dialect dialect, Release languageVersion) throws Exception
+
+	public void processTrace(ClassList classList, String className,
+			boolean runTypeCheck, TraceXmlWrapper storage, Dialect dialect,
+			Release languageVersion) throws Exception
 	{
 		Settings.dialect = dialect;
 		Settings.release = languageVersion;
-		if(runTypeCheck)
+		if (runTypeCheck)
 		{
 			TypeChecker tc = new ClassTypeChecker(classList);
 			if (runTypeCheck)
@@ -136,25 +152,26 @@ public class TraceInterpreter
 				TypeChecker.printErrors(new PrintWriter(typeErrors));
 				typeError(typeErrors.toString());
 			}
-		}else
+		} else
 			interpreter = new ClassInterpreter(classList);
-		
+
 		interpreter.init(null);
-		ClassDefinition classdef 	= interpreter.findClass(className);
-		
+		ClassDefinition classdef = interpreter.findClass(className);
+
 		if (classdef == null)
 		{
 			error("Class not found: " + className);
 			throw new ClassNotFoundException(className);
 		}
-		
-		processTraces(classdef,classdef.definitions ,className, storage);
+
+		processTraces(classdef, classdef.definitions, className, storage);
+		if (coverage != null)
+			writeCoverage(interpreter, coverage);
 	}
-	
-	
+
 	private void processTracesModules(List<File> specFiles, String moduleName,
-			TraceXmlWrapper storage, boolean runTypeCheck, Dialect dialect, Release languageVersion)
-			throws Exception
+			TraceXmlWrapper storage, boolean runTypeCheck, Dialect dialect,
+			Release languageVersion) throws Exception
 	{
 		ModuleList modules = new ModuleList();
 		int parsErrors = 0;
@@ -177,25 +194,40 @@ public class TraceInterpreter
 
 		if (parsErrors == 0)
 		{
-			processTrace(modules,moduleName,runTypeCheck,storage,dialect,languageVersion);
+			processTrace(modules,
+					moduleName,
+					runTypeCheck,
+					storage,
+					dialect,
+					languageVersion);
 		}
 	}
-	
-	public void processTrace(ModuleList moduleList,String moduleName, boolean runTypeCheck, TraceXmlWrapper storage, Dialect dialect, Release languageVersion,float subset, TraceReductionType traceReductionType,long seed) throws Exception
+
+	public void processTrace(ModuleList moduleList, String moduleName,
+			boolean runTypeCheck, TraceXmlWrapper storage, Dialect dialect,
+			Release languageVersion, float subset,
+			TraceReductionType traceReductionType, long seed) throws Exception
 	{
 		this.reduce = true;
 		this.seed = seed;
 		this.traceReductionType = traceReductionType;
 		this.subset = subset;
-		processTrace( moduleList, moduleName,  runTypeCheck,  storage,  dialect,  languageVersion);
+		processTrace(moduleList,
+				moduleName,
+				runTypeCheck,
+				storage,
+				dialect,
+				languageVersion);
 		this.reduce = false;
 	}
-	
-	public void processTrace(ModuleList moduleList,String moduleName, boolean runTypeCheck, TraceXmlWrapper storage, Dialect dialect, Release languageVersion) throws Exception
+
+	public void processTrace(ModuleList moduleList, String moduleName,
+			boolean runTypeCheck, TraceXmlWrapper storage, Dialect dialect,
+			Release languageVersion) throws Exception
 	{
 		Settings.dialect = dialect;
 		Settings.release = languageVersion;
-		if(runTypeCheck)
+		if (runTypeCheck)
 		{
 			TypeChecker tc = new ModuleTypeChecker(moduleList);
 			if (runTypeCheck)
@@ -214,19 +246,21 @@ public class TraceInterpreter
 				TypeChecker.printErrors(new PrintWriter(typeErrors));
 				typeError(typeErrors.toString());
 			}
-		}else
+		} else
 			interpreter = new ModuleInterpreter(moduleList);
-		
+
 		interpreter.init(null);
 		Module moduledef = interpreter.findModule(moduleName);
-		
+
 		if (moduledef == null)
 		{
 			error("Module not found: " + moduleName);
 			throw new ClassNotFoundException(moduleName);
 		}
-		
-		processTraces(moduledef,moduledef.defs ,moduleName, storage);
+
+		processTraces(moduledef, moduledef.defs, moduleName, storage);
+		if (coverage != null)
+			writeCoverage(interpreter, coverage);
 	}
 
 	public void processTraces(Object classDef, List<Definition> definitions,
@@ -237,7 +271,6 @@ public class TraceInterpreter
 			Settings.prechecks = true;
 			Settings.postchecks = true;
 			Settings.dynamictypechecks = true;
-			
 
 			if (storage != null)
 				storage.StartClass(className);
@@ -256,7 +289,7 @@ public class TraceInterpreter
 			{
 				if (definition instanceof NamedTraceDefinition)
 				{
-					
+
 					Context ctxt = createContext(classDef);
 
 					evaluateTests(className, storage, definition, ctxt);
@@ -266,7 +299,7 @@ public class TraceInterpreter
 			completed();
 		} catch (ContextException e)
 		{
-e.printStackTrace();
+			e.printStackTrace();
 			error(e.getMessage());
 			throw e;
 		} catch (Exception e)
@@ -283,7 +316,7 @@ e.printStackTrace();
 	private Context createContext(Object classdef) throws Exception
 	{
 		ObjectValue object = null;
-		interpreter.init(null);//need to init else newInstance can 
+		interpreter.init(null);// need to init else newInstance can
 		try
 		{
 			if (classdef instanceof ClassDefinition)
@@ -296,22 +329,22 @@ e.printStackTrace();
 						interpreter.initialContext,
 						object);
 				return ctxt;
-			}else
-				if (classdef instanceof Module)
-				{
-					return interpreter.initialContext;
-//					return new StateContext(
-//							new LexLocation(), "global environment");
-//					Environment env = new ModuleEnvironment((Module) classdef);
-//					return  new StateContext(((Module) classdef).name.location,
-//							"module scope",	null, ((Module) classdef).getStateContext());
-//					//return ((Module)classdef).getStateContext();
-//				return
-//						new StateContext(((Module)classdef).name.location, "global environment");
-				}
-			
-			error("Could not make content for: "+ classdef );
-			throw new Exception("Could not make content for: "+ classdef );
+			} else if (classdef instanceof Module)
+			{
+				return interpreter.initialContext;
+				// return new StateContext(
+				// new LexLocation(), "global environment");
+				// Environment env = new ModuleEnvironment((Module) classdef);
+				// return new StateContext(((Module) classdef).name.location,
+				// "module scope", null, ((Module) classdef).getStateContext());
+				// //return ((Module)classdef).getStateContext();
+				// return
+				// new StateContext(((Module)classdef).name.location,
+				// "global environment");
+			}
+
+			error("Could not make content for: " + classdef);
+			throw new Exception("Could not make content for: " + classdef);
 
 		} catch (ValueException e)
 		{
@@ -326,10 +359,10 @@ e.printStackTrace();
 	{
 		NamedTraceDefinition mtd = (NamedTraceDefinition) traceDefinition;
 		TestSequence tests = null;
-		if(reduce)
-			tests=	mtd.getTests(ctxt,subset,traceReductionType,seed);
+		if (reduce)
+			tests = mtd.getTests(ctxt, subset, traceReductionType, seed);
 		else
-			tests=mtd.getTests(ctxt);
+			tests = mtd.getTests(ctxt);
 
 		processingTrace(className, mtd.name.name, tests.size());
 		if (storage != null)
@@ -370,7 +403,8 @@ e.printStackTrace();
 				interpreter.init(null); // Initialize completely between
 				// every
 				// run...
-				List<Object> result = interpreter.runtrace(mtd.classDefinition, test);
+				List<Object> result = interpreter.runtrace(mtd.classDefinition,
+						test);
 
 				tests.filter(result, test, n);
 
@@ -505,5 +539,25 @@ e.printStackTrace();
 	protected void prePrintTraceStatus()
 	{
 
+	}
+
+	public void setCoverageDir(File coverageDir)
+	{
+		this.coverage = coverageDir;
+	}
+
+	private static void writeCoverage(Interpreter interpreter, File coverage)
+			throws IOException
+	{
+		for (File f : interpreter.getSourceFiles())
+		{
+			SourceFile source = interpreter.getSourceFile(f);
+
+			File data = new File(coverage.getPath() + File.separator
+					+ f.getName() + ".cov");
+			PrintWriter pw = new PrintWriter(data);
+			source.writeCoverage(pw);
+			pw.close();
+		}
 	}
 }

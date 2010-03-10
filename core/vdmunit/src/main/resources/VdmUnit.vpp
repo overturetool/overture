@@ -317,7 +317,7 @@ operations
   public addError: Test * Throwable ==> ()
   addError (ptst, perr) ==
     ( -- add the error to the list of exceptions caught so far
-      fErrors := fErrors ^ [mk_ InternalError(ptst.getName(), perr)];
+      fErrors := fErrors ^ [mk_InternalError(ptst.getName(), perr)];
       -- now inform all listeners
       for all listener in set fListeners do
         listener.addError(ptst, perr) );

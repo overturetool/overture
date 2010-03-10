@@ -1,51 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-
- <extension
-         point="org.eclipse.dltk.core.sourceParsers">
-      <parserContribution
-            natureId="org.overture.ide.vdmsl.core.nature">
-         <parser
-               class="org.overture.ide.parsers.vdmj.sourceparsers.VdmSlSourceParserFactory"
-               description="VDM-SL Source Parser"
-               id="org.overture.ide.parsers.vdmj.sl"
-               name="VDMJ VDM-SL Source Parser"
-               priority="1">
-         </parser>
-      </parserContribution>
+   <extension
+         point="org.overture.ide.core.parsePaticipant">
+      <parser
+            class="org.overture.ide.parsers.vdmj.SourceParserVdmPp"
+            nature="org.overture.ide.vdmpp.core.nature">
+      </parser>
    </extension>
+
   
 
 
- <extension
-         point="org.eclipse.dltk.core.sourceParsers">
-      <parserContribution
-            natureId="org.overture.ide.vdmpp.core.nature">
-         <parser
-               class="org.overture.ide.parsers.vdmj.sourceparsers.VdmPpSourceParserFactory"
-               description="VDM-PP Source Parser"
-               id="org.overture.ide.parsers.vdmj.pp"
-               name="VDMJ VDM-PP Source Parser"
-               priority="1">
-         </parser>
-      </parserContribution>
-   </extension>
    
    
    
-    <extension
-         point="org.eclipse.dltk.core.sourceParsers">
-      <parserContribution
-            natureId="org.overture.ide.vdmrt.core.nature">
-         <parser
-               class="org.overture.ide.parsers.vdmj.sourceparsers.VdmRtSourceParserFactory"
-               description="VDM-RT Source Parser"
-               id="org.overture.ide.parsers.vdmj.rt"
-               name="VDMJ VDM-RT Source Parser"
-               priority="1">
-         </parser>
-      </parserContribution>
-   </extension>
 
 </plugin>

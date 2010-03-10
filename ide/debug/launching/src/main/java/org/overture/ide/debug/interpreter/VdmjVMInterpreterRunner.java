@@ -95,7 +95,7 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 
 	}
 
-	static String debugVmMemoryOption = null;
+	static String[] debugVmMemoryOption = null;
 
 	public void doRunImpl(InterpreterConfig config, ILaunch launch,
 			IOvertureInterpreterRunnerConfig iconfig, String contentType,
@@ -144,8 +144,13 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 		if (debugVmMemoryOption == null)
 			debugVmMemoryOption = getDebugVmMemoryOption();
 		if (debugVmMemoryOption != null)
-			vmInstall.setVMArguments(new String[] { debugVmMemoryOption });// "-Xmx1024M"
-
+		{
+			for (String item : debugVmMemoryOption)
+			{
+				System.out.println("Argument: "+ item);
+			}
+			vmInstall.setVMArguments( debugVmMemoryOption );// "-Xmx1024M" "-Xss1024k"
+		}
 		IVMRunner vmRunner = vmInstall.getVMRunner(ILaunchManager.DEBUG_MODE);
 		if (vmRunner != null)
 		{
@@ -473,9 +478,9 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 		return null;
 	}
 
-	private static String getDebugVmMemoryOption()
+	private static String[] getDebugVmMemoryOption()
 	{
-		String memoryOption = null;
+		List<String> memoryOption = new Vector<String>();
 		String eclipseCommands = System.getProperties()
 				.getProperty("eclipse.commands");
 		if (eclipseCommands != null)
@@ -486,19 +491,22 @@ public class VdmjVMInterpreterRunner extends AbstractInterpreterRunner
 			{
 				String token = st.nextToken();
 
-				if (keyFound)
+				if (keyFound && !token.startsWith("-"))
 				{
-					memoryOption = "-" + token;
-					keyFound = false;
+					memoryOption.add( "-" + token);
+					//keyFound = false;
 				}
-
+				if(token.startsWith("-"))
+					keyFound = false;
+				
 				if (token.equals("-org.overture.ide.debug.memory"))
 					keyFound = true;
 
 			}
 		}
-
-		return memoryOption;
+		String[] arr = new String[memoryOption.size()];
+		memoryOption.toArray(arr);
+		return arr;
 	}
 
 	public static String[] getClassPath(IJavaProject myJavaProject)

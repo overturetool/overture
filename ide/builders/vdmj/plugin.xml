@@ -2,24 +2,12 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.overture.ide.builder">
+         point="org.overture.ide.core.buildParticipant">
       <builder
-            class="org.overture.ide.builders.vdmj.BuilderSl">
+            class="org.overutre.ide.builders.vdmj.VdmPpBuilder">
       </builder>
    </extension>
    
-   <extension
-         point="org.overture.ide.builder">
-      <builder
-            class="org.overture.ide.builders.vdmj.BuilderPp">
-      </builder>
-   </extension>
    
-    <extension
-         point="org.overture.ide.builder">
-      <builder
-            class="org.overture.ide.builders.vdmj.BuilderRt">
-      </builder>
-   </extension>
 
 </plugin>
