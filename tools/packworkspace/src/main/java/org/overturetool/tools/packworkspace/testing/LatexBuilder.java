@@ -24,6 +24,21 @@ public class LatexBuilder
 	File output = null;
 	private String documentFileName = "";
 	private String alternativeDocumentFileName = "";
+	private static List<Process> processes = new Vector<Process>();
+	private static List<ProcessConsolePrinter> processConsolePrinters = new Vector<ProcessConsolePrinter>();
+	
+	public static void destroy()
+	{
+		for (Process p : LatexBuilder.processes) {
+			if(p!=null)
+				p.destroy();
+		}
+		
+		for (Thread t : processConsolePrinters) {
+			if(t!=null)
+				t.interrupt();
+		}
+	}
 
 	public File getLatexDirectory()
 	{
@@ -40,7 +55,7 @@ public class LatexBuilder
 		File projectDir = new File(reportLocation, project.getSettings()
 				.getName());
 
-		output = new File(projectDir, Phase.Latex.toString());
+		output = new File(projectDir, OUTPUT_FOLDER_NAME);
 		if (!output.exists())
 			output.mkdirs();
 
@@ -96,6 +111,7 @@ public class LatexBuilder
 		Process p = Runtime.getRuntime().exec("pdflatex " + documentName,
 				null,
 				output);
+		processes.add(p);
 
 		ProcessConsolePrinter p1 = new ProcessConsolePrinter(new File(output,
 				Phase.Latex + "Err.txt"), p.getErrorStream());

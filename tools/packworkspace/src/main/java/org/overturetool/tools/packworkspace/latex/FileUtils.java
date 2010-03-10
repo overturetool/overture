@@ -68,4 +68,12 @@ public class FileUtils
 
 	}
 
+	public static void writeFile(File file, String content) throws IOException
+	{
+		FileWriter outputFileWriter = new FileWriter(file);
+		BufferedWriter outputStream = new BufferedWriter(outputFileWriter);
+		outputStream.write(content);
+		outputStream.close();
+		outputFileWriter.close();
+	}
 }

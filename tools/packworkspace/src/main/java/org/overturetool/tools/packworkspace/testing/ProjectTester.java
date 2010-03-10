@@ -323,15 +323,17 @@ public class ProjectTester
 				.getPath());
 		String cp = thisJar.getAbsolutePath();
 		if (System.getProperty("user.name", "").equals("kela"))
-			cp += ";"
-					+ "C:\\overture\\overturesvn\\core\\vdmj\\target\\classes";
+			cp += getCpSeperator()
+					+ new File("target/classes".replace('/', File.separatorChar)).getAbsolutePath();
+		
 		File lib = new File(project.getSettings().getWorkingDirectory(), "lib");
 		if (lib.exists() && lib.isDirectory())
 		{
 			for (File f : lib.listFiles())
 			{
 				if (f.getName().toLowerCase().endsWith(".jar"))
-					cp += ";" + f.getAbsolutePath();
+					cp += getCpSeperator() + f.getAbsolutePath();
+				
 			}
 		}
 		command.add(cp);
@@ -443,6 +445,14 @@ public class ProjectTester
 		else
 			return ExitStatus.EXIT_ERRORS;
 
+	}
+	
+	private String getCpSeperator()
+	{
+		if(System.getProperty("os.name").toLowerCase().contains("win"))
+			return ";";
+		else
+			return ":";
 	}
 
 	private static String makeCell(ExitStatus status, String text)

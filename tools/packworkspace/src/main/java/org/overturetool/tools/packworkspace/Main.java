@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
+import org.overturetool.tools.packworkspace.testing.LatexBuilder;
 import org.overturetool.vdmj.lex.Dialect;
 
 public class Main
@@ -68,7 +69,12 @@ public class Main
 		controllers.add(controller);
 		Controller.createOverviewPage(controllers);
 
+		System.out.println("Wating for latex");
+		Thread.sleep(5000);
+		LatexBuilder.destroy();
+		
 		System.out.println("Done.");
+		System.exit(0);
 	}
 
 	private static Controller runController(Dialect dialect,
@@ -122,8 +128,14 @@ public class Main
 		Controller.createOverviewPage(controllers);
 
 		Controller.delete(tmpFolder);
+		
+		System.out.println("\nWating for latex");
+		Thread.sleep(5000);
+		LatexBuilder.destroy();
 
 		System.out.println("Done.");
+		
+		System.exit(0);
 		
 	}
 

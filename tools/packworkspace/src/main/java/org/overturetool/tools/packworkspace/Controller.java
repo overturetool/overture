@@ -1,13 +1,12 @@
 package org.overturetool.tools.packworkspace;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
+import org.overturetool.tools.packworkspace.latex.FileUtils;
 import org.overturetool.tools.packworkspace.testing.HtmlPage;
 import org.overturetool.tools.packworkspace.testing.HtmlTable;
 import org.overturetool.tools.packworkspace.testing.ProjectTester;
@@ -26,16 +25,42 @@ public class Controller
 		this.inputRootFolder = inputRootFolder;
 
 		reportDir.mkdirs();
+		printHeading(dialect.toString());
 	}
 
 	public String getName()
 	{
 		return inputRootFolder.getName();
 	}
+	
+	public static void printHeading(String text)
+	{
+		System.out.println("\n================================================================================");
+		System.out.println("|                                                                              |");
+		text = "| "+text;
+		while(text.length()<79)
+			text+=" ";
+		text+="|";
+		
+		System.out.println(text);
+		System.out.println("|                                                                              |");
+	}
+	
+	public static void printSubHeading(String text)
+	{
+		System.out.println("--------------------------------------------------------------------------------");
+		text = "| "+text;
+		while(text.length()<79)
+			text+=" ";
+		text+="|";
+		
+		System.out.println(text);
+		System.out.println("|                                                                              |");
+	}
 
 	public void testProjects() throws IOException
 	{
-		System.out.println("Testing...");
+		printSubHeading("Testing".toUpperCase());
 
 		File logOutput = new File(reportDir, inputRootFolder.getName());
 
@@ -55,8 +80,8 @@ public class Controller
 		String page = HtmlPage.makePage(HtmlPage.makeH1(dialect + ": "
 				+ inputRootFolder.getName())
 				+ HtmlTable.makeTable(sb.toString()));
-		writeFile(new File(logOutput, "index.html"), page);
-		writeFile(new File(logOutput, "style.css"), HtmlPage.makeStyleCss());
+		FileUtils.writeFile(new File(logOutput, "index.html"), page);
+		FileUtils.writeFile(new File(logOutput, "style.css"), HtmlPage.makeStyleCss());
 	}
 
 	public void packExamples(File outputFolder, String outputName)
@@ -66,7 +91,7 @@ public class Controller
 		// delete(outputFolder);
 		outputFolder.mkdirs();
 
-		System.out.println("PACKING: " + inputRootFolder.getName());
+		printSubHeading("PACKING: " + inputRootFolder.getName());
 		for (File exampleFolder : inputRootFolder.listFiles())
 		{
 			if (exampleFolder.getName().equals(".svn"))
@@ -83,7 +108,7 @@ public class Controller
 		FolderZiper.zipFolder(outputFolder.getName(), zipName);
 		// GZIPfile.getInterface().zip(outputFolder, new
 		// File(outputName+".zip"));
-		System.out.println("Folder zipped: " + outputName);
+		printSubHeading("Folder zipped: ".toUpperCase() + outputName);
 		// while (outputFolder.exists())
 		// delete(outputFolder);
 
@@ -91,26 +116,8 @@ public class Controller
 
 	public static void delete(File tmpFolder)
 	{
-		System.out.println("\nTrying to delete: " + tmpFolder);
-//		if (System.getProperty("os.name").toLowerCase().contains("windows"))
-//		{
-//			Process p;
-//			try
-//			{String command = "cmd.exe /C rmdir /S /Q \""
-//				+ tmpFolder.getAbsolutePath() + "\"";
-//			System.out.println(command);
-//				p = Runtime.getRuntime().exec(command);
-//
-//				p.waitFor();
-//			} catch (IOException e)
-//			{
-//				e.printStackTrace();
-//			} catch (InterruptedException e)
-//			{
-//				e.printStackTrace();
-//			}
-//			return;
-//		} else
+		//System.out.println("Deleting: " + tmpFolder);
+
 			try
 			{
 				if (tmpFolder != null && tmpFolder.isFile())
@@ -125,8 +132,10 @@ public class Controller
 				}
 			} catch (Exception e)
 			{
-
+				System.err.println("\nFaild to deleting: " + tmpFolder);
 			}
+			if(tmpFolder.exists())
+				System.err.println("\nFaild to deleting - file not closed: " + tmpFolder);
 	}
 
 	public Integer count = 0;
@@ -208,16 +217,9 @@ public class Controller
 
 		String page = HtmlPage.makePage(HtmlPage.makeH1("Test Overview")
 				+ HtmlTable.makeTable(sb.toString()));
-		writeFile(new File(reportDir, "index.html"), page);
-		writeFile(new File(reportDir, "style.css"), HtmlPage.makeStyleCss());
+		FileUtils.writeFile(new File(reportDir, "index.html"), page);
+		FileUtils.writeFile(new File(reportDir, "style.css"), HtmlPage.makeStyleCss());
 	}
 
-	private static void writeFile(File file, String content) throws IOException
-	{
-		FileWriter outputFileWriter = new FileWriter(file);
-		BufferedWriter outputStream = new BufferedWriter(outputFileWriter);
-		outputStream.write(content);
-		outputStream.close();
-		outputFileWriter.close();
-	}
+
 }

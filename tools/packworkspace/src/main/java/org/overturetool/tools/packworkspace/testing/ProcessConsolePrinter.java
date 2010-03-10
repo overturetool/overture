@@ -47,11 +47,11 @@ public class ProcessConsolePrinter extends Thread
 				outputStream.write("\n" + line);
 				outputStream.flush();
 			}
+			
 			outputStream.close();
 		} catch (IOException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 		}
 	}
 }
