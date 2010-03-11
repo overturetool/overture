@@ -69,12 +69,11 @@ classInfo	: map ClassId to ClassInfo
 permInfo 	: map AS`Name to PermInfo
 threadInfo	: map nat to ThreadInfo
 time 		: nat
-
+finished    : bool
 inv s == s.threadInfo <> {|->} => exists1 t in set rng s.threadInfo & t.debug
 end
 
 operations
-
 
 --StartScheduler : AS`Expression * AS`Spec * nat ==> Val
 --StartScheduler (expr, spec, delta) ==
