@@ -53,6 +53,7 @@ createSignal () ==
              done : bool := false;
          while not done do
            def mk_ (eventid, pmt, pa, pt) = hd inlines in
+            (IO`print(curtime);
              if pt <= curtime
              then (for all id in set dom ranges do
                      def mk_(papplhs,pappsize) = ranges(id) in
@@ -62,7 +63,7 @@ createSignal () ==
                    done := len inlines = 0;
                    return) 
              else (done := true;
-                   return))
+                   return)))
    else (busy := false;
          return));
 

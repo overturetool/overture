@@ -5,7 +5,8 @@ operations
 
 operations
 
-evalExpr : AS`Expression * nat ==> Schd`Val | Schd`BreakInfo
+evalExpr : AS`Expression * nat ==> Schd`Val | Schd`BreakInfo |
+                                   Schd`ThreadStatus
 evalExpr(expr, delta)== 
   is not yet specified;
 
