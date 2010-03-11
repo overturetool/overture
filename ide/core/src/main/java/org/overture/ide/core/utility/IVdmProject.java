@@ -1,7 +1,13 @@
 package org.overture.ide.core.utility;
 
+import java.io.File;
+import java.util.List;
+
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.overturetool.vdmj.Release;
 
@@ -62,4 +68,14 @@ public interface IVdmProject extends IProject
 	public abstract void typeCheck(boolean clean,IProgressMonitor monitor) throws CoreException;
 
 	public abstract String getProjectName();
+	
+	public abstract String getVdmNature();
+	
+	public abstract List<IFile> getSpecFiles() throws CoreException;
+	public abstract List<IFile> getFiles() throws CoreException;
+	
+	public abstract File getFile(IFile file);
+	public abstract IFile findIFile( File file);
+	public abstract  File getSystemFile( IPath path);
+	public abstract File getFile(IWorkspaceRoot wroot, IPath path);
 }

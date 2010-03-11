@@ -11,7 +11,7 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.overture.ide.core.Activator;
 import org.overture.ide.core.ast.NotAllowedException;
-import org.overture.ide.core.utility.ProjectUtility;
+import org.overture.ide.core.utility.VdmProject;
 
 
 public abstract class VdmNewProjectWizard extends Wizard implements IWorkbenchWizard, INewWizard{
@@ -66,7 +66,7 @@ public abstract class VdmNewProjectWizard extends Wizard implements IWorkbenchWi
 
 	    try
 		{
-			ProjectUtility.createProject(name, location, getNature());
+			VdmProject.createProject(name, location, getNature());
 		} catch (CoreException e)
 		{
 			if(Activator.DEBUG)

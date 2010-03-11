@@ -14,12 +14,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.overture.ide.core.utility.IVdmProject;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.modules.Module;
 
 public class AstManager implements IAstManager {
+	@SuppressWarnings("unchecked")
 	Map<IProject, Map<String, RootNode>> asts;
 
+	@SuppressWarnings("unchecked")
 	protected AstManager() {
 		asts = new HashMap<IProject, Map<String, RootNode>>();
 	}
@@ -97,6 +100,7 @@ public class AstManager implements IAstManager {
 	// return null;
 	// }
 
+	@SuppressWarnings("unchecked")
 	public RootNode getRootNode(IProject project, String nature) {
 		Map<String, RootNode> natureAst = asts.get(project);
 		if (natureAst != null && natureAst.containsKey(nature)) {
@@ -121,6 +125,7 @@ public class AstManager implements IAstManager {
 		return projects;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<String> getNatures(IProject project) {
 		List<String> natures = new Vector<String>();
 
@@ -168,6 +173,12 @@ public class AstManager implements IAstManager {
 		};
 		refreshJob.schedule();
 		
+	}
+
+	@SuppressWarnings("unchecked")
+	public RootNode getRootNode(IVdmProject project)
+	{
+		return getRootNode(project, project.getVdmNature());
 	}
 
 }

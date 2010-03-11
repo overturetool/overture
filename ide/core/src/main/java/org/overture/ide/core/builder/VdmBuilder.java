@@ -13,7 +13,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.overture.ide.core.Activator;
 import org.overture.ide.core.ast.AstManager;
-import org.overture.ide.core.utility.LanguageManager;
+import org.overture.ide.core.utility.IVdmProject;
+import org.overture.ide.core.utility.VdmProject;
 
 public class VdmBuilder extends VdmCoreBuilder
 { // implements IScriptBuilder {
@@ -47,7 +48,11 @@ public class VdmBuilder extends VdmCoreBuilder
 		if (Activator.DEBUG)
 			System.out.println("buildModelElements");
 
-		final IProject currentProject = getProject();
+		if(!VdmProject.isVdmProject(getProject()))
+		if(Activator.DEBUG)
+			System.err.println("Project is now VDM: "+ getProject());
+		
+		final IVdmProject currentProject = VdmProject.createProject(getProject());
 
 		if (isBuilding(currentProject))
 		{

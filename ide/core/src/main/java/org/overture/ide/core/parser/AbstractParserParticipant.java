@@ -7,13 +7,11 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.ast.AstManager;
 import org.overture.ide.core.ast.IAstManager;
-import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.ast.RootNode;
 import org.overture.ide.core.utility.FileUtility;
 import org.overture.ide.core.utility.IVdmProject;
@@ -25,7 +23,7 @@ import org.overturetool.vdmj.messages.VDMWarning;
 public abstract class AbstractParserParticipant implements ISourceParser {
 
 	protected String natureId;
-	protected IProject project;
+	protected IVdmProject project;
 	
 	private List<VDMError> errors = new ArrayList<VDMError>();
 	private List<VDMWarning> warnings = new ArrayList<VDMWarning>();
@@ -34,7 +32,7 @@ public abstract class AbstractParserParticipant implements ISourceParser {
 		this.natureId = natureId;
 	}
 
-	public void setProject(IProject project) {
+	public void setProject(IVdmProject project) {
 		this.project = project;
 	}
 	private void clearFileMarkers(IFile file)
@@ -74,12 +72,7 @@ public abstract class AbstractParserParticipant implements ISourceParser {
 	}
 
 	public void parse(IFile file, String data) {
-		try {
-			file.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		ParseResult result;
 		try
 		{
@@ -156,10 +149,10 @@ private void setFileMarkers(IFile file,ParseResult result)
 	@SuppressWarnings("unchecked")
 	protected void setParseAst(String filePath,List ast, boolean parseErrorsOccured) {
 		IAstManager astManager = AstManager.instance();
-		astManager.updateAst(project, natureId, ast);
+		astManager.updateAst(project, project.getVdmNature(), ast);
 		RootNode rootNode = astManager.getRootNode(project, natureId);
 		if (rootNode != null) {
-
+			
 			rootNode.setParseCorrect(filePath,!parseErrorsOccured);
 
 		}

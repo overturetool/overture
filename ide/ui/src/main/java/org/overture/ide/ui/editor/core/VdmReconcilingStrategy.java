@@ -6,8 +6,10 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.overture.ide.core.Activator;
+import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.parser.ISourceParser;
 import org.overture.ide.core.parser.SourceParserManager;
+import org.overture.ide.core.utility.VdmProject;
 
 public class VdmReconcilingStrategy implements IReconcilingStrategy
 {
@@ -24,16 +26,29 @@ public class VdmReconcilingStrategy implements IReconcilingStrategy
 		}
 		try
 		{
-			for (String natureId : currentDocument.getProject()
-					.getDescription()
-					.getNatureIds())
+
+			if (VdmProject.isVdmProject(currentDocument.getProject()))
 			{
-				ISourceParser parser = SourceParserManager.getInstance()
-						.getSourceParser(currentDocument.getProject(), natureId);
-				if (parser != null)
-					parser.parse(currentDocument.getFile(),
-							currentDocument.get());
+
+				try
+				{
+					ISourceParser parser = SourceParserManager.getInstance()
+							.getSourceParser(new VdmProject(currentDocument.getProject()));
+
+					if (parser != null)
+					{
+						parser.parse(currentDocument.getFile(),
+								currentDocument.get());
+					}
+				} catch (NotAllowedException e)
+				{
+					if (Activator.DEBUG)
+					{
+						e.printStackTrace();
+					}
+				}
 			}
+
 		} catch (CoreException e)
 		{
 			if (Activator.DEBUG)

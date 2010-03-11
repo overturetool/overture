@@ -3,6 +3,7 @@ package org.overture.ide.core.ast;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
+import org.overture.ide.core.utility.IVdmProject;
 
 
 public interface IAstManager
@@ -68,7 +69,17 @@ public interface IAstManager
 	 * @param nature The nature if filter the AST
 	 * @return The rootnode for the current project + nature
 	 */
+	@SuppressWarnings("unchecked")
 	RootNode getRootNode(IProject project, String nature);
+	
+	/**
+	 * Get the RootNode from a project and the corresponding nature
+	 * @param project The project to select
+	 * @param nature The nature if filter the AST
+	 * @return The rootnode for the current project + nature
+	 */
+	@SuppressWarnings("unchecked")
+	RootNode getRootNode(IVdmProject project);
 	
 	void setAstAsTypeChecked(IProject project, String nature);
 	

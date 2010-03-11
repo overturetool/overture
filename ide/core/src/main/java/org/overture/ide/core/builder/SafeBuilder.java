@@ -2,28 +2,27 @@ package org.overture.ide.core.builder;
 
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
-
 import org.overture.ide.core.Activator;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.ast.AstManager;
 import org.overture.ide.core.ast.RootNode;
-import org.overture.ide.core.utility.VdmProject;
+import org.overture.ide.core.parser.SourceParserManager;
+import org.overture.ide.core.utility.IVdmProject;
 
 public class SafeBuilder extends Thread
 {
 
-	final IProject currentProject;
+	final IVdmProject currentProject;
 	final List<IStatus> statusList;
 	final IProgressMonitor monitor;
 
-	public SafeBuilder(final IProject currentProject,
+	public SafeBuilder(final IVdmProject currentProject,
 			final List<IStatus> statusList, final IProgressMonitor monitor) {
 		this.currentProject = currentProject;
 		this.statusList = statusList;
@@ -40,39 +39,44 @@ public class SafeBuilder extends Thread
 					.getConfigurationElementsFor(ICoreConstants.EXTENSION_BUILDER_ID);
 			for (IConfigurationElement e : config)
 			{
-				final Object o = e.createExecutableExtension("class");
-				if (o instanceof BuildParcitipant)
+				if (currentProject.hasNature(e.getAttribute("nature")))
 				{
-					ISafeRunnable runnable = new ISafeRunnable() {
+					final Object o = e.createExecutableExtension("class");
+					if (o instanceof AbstractVdmBuilder)
+					{
+						ISafeRunnable runnable = new ISafeRunnable() {
 
-						public void handleException(Throwable exception)
-						{
-							exception.printStackTrace();
-
-						}
-
-						public void run() throws Exception
-						{
-							BuildParcitipant builder = (BuildParcitipant) o;
-
-							if (currentProject.hasNature(builder.getNatureId()))
+							public void handleException(Throwable exception)
 							{
+								exception.printStackTrace();
 
-								BuildParcitipant.parseMissingFiles(currentProject,
-										builder.getNatureId(),
-										builder.getContentTypeId(),
+							}
+
+							@SuppressWarnings("unchecked")
+							public void run() throws Exception
+							{
+								AbstractVdmBuilder builder = (AbstractVdmBuilder) o;
+
+								// if
+								// (currentProject.hasNature(builder.getNatureId()))
+								// {
+
+								AstManager.instance().clean(currentProject);// we do now support incremental
+																			// build
+
+								SourceParserManager.parseMissingFiles(currentProject,
 										monitor);
 
 								final RootNode rootNode = AstManager.instance()
-										.getRootNode(currentProject,
-												builder.getNatureId());
+										.getRootNode(currentProject);
 								// if the project don't have parse errors
-								if (rootNode!=null && rootNode.isParseCorrect())
+								if (rootNode != null
+										&& rootNode.isParseCorrect())
 								{
 									if (Activator.DEBUG)
 										System.out.println("Type correct .. building");
 									monitor.subTask("Type checking");
-									statusList.add(builder.buileModelElements(new VdmProject(currentProject),
+									statusList.add(builder.buileModelElements(currentProject,
 											rootNode));
 									// mark ast root as type checked
 
@@ -83,9 +87,10 @@ public class SafeBuilder extends Thread
 									}
 								}
 							}
-						}
-					};
-					SafeRunner.run(runnable);
+							// }
+						};
+						SafeRunner.run(runnable);
+					}
 				}
 			}
 		} catch (Exception ex)
@@ -94,5 +99,4 @@ public class SafeBuilder extends Thread
 		}
 
 	}
-
 }

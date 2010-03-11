@@ -1,19 +1,32 @@
 package org.overture.ide.core.utility;
 
+import java.io.File;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.resources.ICommand;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.Job;
+import org.overture.ide.core.Activator;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overturetool.vdmj.Release;
@@ -48,7 +61,8 @@ public class VdmProject extends Project implements IVdmProject
 	{
 		try
 		{
-			for (ILanguage language : LanguageManager.getInstance().getLanguages())
+			for (ILanguage language : LanguageManager.getInstance()
+					.getLanguages())
 			{
 
 				if (project.hasNature(language.getNature()))
@@ -59,9 +73,31 @@ public class VdmProject extends Project implements IVdmProject
 			}
 		} catch (CoreException e)
 		{
-			
+
 		}
 		return false;
+	}
+
+	public static IVdmProject createProject(IProject project)
+	{
+		try
+		{
+			return new VdmProject(project);
+		} catch (CoreException e)
+		{
+			if (Activator.DEBUG)
+			{
+				e.printStackTrace();
+			}
+			return null;
+		} catch (NotAllowedException e)
+		{
+			if (Activator.DEBUG)
+			{
+				e.printStackTrace();
+			}
+			return null;
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -499,6 +535,221 @@ public class VdmProject extends Project implements IVdmProject
 				}
 			}
 		}
+	}
+
+	/***
+	 * This method removed all problem markers and its sub-types from the
+	 * project. It is called before an instance of the AbstractBuilder is
+	 * created
+	 * 
+	 * @param project
+	 *            The project which should be build.
+	 */
+	public void clearProblemMarkers()
+	{
+		try
+		{
+			deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+
+		} catch (CoreException e)
+		{
+			if (Activator.DEBUG)
+			{
+
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	public File getFile(IFile file)
+	{
+		Path path = new Path(file.getProject()
+				.getFullPath()
+				.addTrailingSeparator()
+				.toString()
+				+ file.getProjectRelativePath().toString());
+		return getSystemFile(path);
+	}
+
+	public File getSystemFile(IPath path)
+	{
+		return project.getFile(path.removeFirstSegments(1))
+				.getLocation()
+				.toFile();
+	}
+
+	public File getFile(IWorkspaceRoot wroot, IPath path)
+	{
+		return wroot.getFile(path.removeFirstSegments(1))
+				.getLocation()
+				.toFile();
+	}
+
+	/***
+	 * Get files from a eclipse project
+	 * 
+	 * @param project
+	 *            the project to scan
+	 * @param contentTypeId
+	 *            of the type of files that should be returned
+	 * @return a list of IFile
+	 * @throws CoreException
+	 */
+	public List<IFile> getSpecFiles() throws CoreException
+	{
+		List<IFile> list = new Vector<IFile>();
+
+		for (String contentTypeId : language.getContentTypes())
+		{
+			list.addAll(getFiles(contentTypeId));
+		}
+
+		return list;
+	}
+
+	public String getVdmNature()
+	{
+		return language.getNature();
+	}
+
+	/***
+	 * Get files from a eclipse project
+	 * 
+	 * @param project
+	 *            the project to scan
+	 * @param contentTypeId
+	 *            of the type of files that should be returned
+	 * @return a list of IFile
+	 * @throws CoreException
+	 */
+	public List<IFile> getFiles(String contentTypeId) throws CoreException
+	{
+		List<IFile> list = new Vector<IFile>();
+		for (IResource res : members(IContainer.INCLUDE_PHANTOMS
+				| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
+		{
+			list.addAll(getFiles(this, res, contentTypeId));
+		}
+		return list;
+	}
+
+	/***
+	 * Recursive search of a project for files based on the content type
+	 * 
+	 * @param project
+	 *            the project to search
+	 * @param resource
+	 *            the resource currently selected to be searched
+	 * @param contentTypeId
+	 *            a possibly null content type id, if null it is just checked
+	 *            that a content type exist for the file
+	 * @return a list of IFiles
+	 * @throws CoreException
+	 */
+	private static List<IFile> getFiles(IProject project, IResource resource,
+			String contentTypeId) throws CoreException
+	{
+		List<IFile> list = new Vector<IFile>();
+
+		if (resource instanceof IFolder)
+		{
+			if (resource instanceof IFolder
+					&& resource.getLocation().lastSegment().startsWith("."))// skip
+				return list;
+			// . folders like.svn
+			for (IResource res : ((IFolder) resource).members(IContainer.INCLUDE_PHANTOMS
+					| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
+			{
+
+				list.addAll(getFiles(project, res, contentTypeId));
+			}
+		}
+		// check if it is a IFile and that there exists a known content type for
+		// this file and the project
+		else if (resource instanceof IFile)
+		{
+			IContentType contentType = project.getContentTypeMatcher()
+					.findContentTypeFor(resource.toString());
+
+			if (contentType != null
+					&& ((contentTypeId != null && contentTypeId.equals(contentType.getId())) || contentTypeId == null))
+				list.add((IFile) resource);
+		}
+		return list;
+	}
+
+	/***
+	 * Get files from a eclipse project that has a defined content type
+	 * 
+	 * @param project
+	 *            the project to scan
+	 * @return a list of IFile
+	 * @throws CoreException
+	 */
+	public List<IFile> getFiles() throws CoreException
+	{
+		List<IFile> list = new Vector<IFile>();
+		for (IResource res : project.members(IContainer.INCLUDE_PHANTOMS
+				| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
+		{
+			list.addAll(getFiles(project, res, null));
+		}
+		return list;
+	}
+
+	/***
+	 * Gets the IFile from the Eclipse filesystem from a normal file placed in a
+	 * project
+	 * 
+	 * @param project
+	 *            the project which holds the file
+	 * @param file
+	 *            the File to look up
+	 * @return a new IFile representing the file in the eclipse filesystem
+	 */
+	public IFile findIFile(File file)
+	{
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IPath location = Path.fromOSString(file.getAbsolutePath());
+		IFile ifile = workspace.getRoot().getFileForLocation(location);
+
+		if (ifile == null)
+		{
+
+			IPath absolutePath = new Path(file.getAbsolutePath());
+			// check if the project contains a IFile which maps to the same
+			// filesystem location
+			try
+			{
+				for (IFile f : getFiles())
+				{
+					if (f.getLocation().equals(absolutePath))
+						return f;
+				}
+			} catch (CoreException e1)
+			{
+			}
+
+			// project does not contain this file, this means that the file has
+			// been include elsewhere and a link will be created to the file
+			// instead.
+			try
+			{
+				linkFileToProject(file);
+			} catch (CoreException e)
+			{
+			}
+
+		}
+		return ifile;
+	}
+
+	public void linkFileToProject(File file) throws CoreException
+	{
+		IPath absolutePath = new Path(file.getAbsolutePath());
+		IFile ifile = project.getFile(absolutePath.lastSegment());
+		ifile.createLink(absolutePath, IResource.NONE, null);
 	}
 
 }

@@ -28,7 +28,7 @@
             name="VDM-PP"
             nature="org.overture.ide.vdmpp.core.nature">
          <ContentType
-               id="org.overture.ide.vdmpp.core.ContentType1">
+               id="org.overture.ide.vdmpp.content-type">
          </ContentType>
       </Language>
    </extension>

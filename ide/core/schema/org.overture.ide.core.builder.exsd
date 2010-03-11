@@ -55,8 +55,15 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn="org.overture.ide.core.builder.BuildParcitipant:"/>
+                  <meta.attribute kind="java" basedOn="org.overture.ide.core.builder.AbstractVdmBuilder:"/>
                </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="nature" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The nature the parser supports
+               </documentation>
             </annotation>
          </attribute>
       </complexType>

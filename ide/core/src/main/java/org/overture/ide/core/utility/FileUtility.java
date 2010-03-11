@@ -91,16 +91,17 @@ public class FileUtility {
 			if (file == null)
 				return;
 			SourceLocationConverter converter = new SourceLocationConverter(getContent(file));
-			int lineNumber = converter.getStartPos( location);
 			//lineNumber -= 1;
-			IMarker[] markers = file.findMarkers(IMarker.PROBLEM, false,
+			IMarker[] markers = file.findMarkers(IMarker.PROBLEM, true,
 					IResource.DEPTH_INFINITE);
 			for (IMarker marker : markers) {
 				if ((marker.getAttribute(IMarker.MESSAGE)!=null &&marker.getAttribute(IMarker.MESSAGE).equals(message)
 						)&&( marker.getAttribute(IMarker.SEVERITY)!=null && marker.getAttribute(IMarker.SEVERITY).equals(
 								severity))
-						&& (marker.getAttribute(IMarker.LINE_NUMBER)!=null && marker.getAttribute(IMarker.LINE_NUMBER).equals(
-								lineNumber)))
+						&& (marker.getAttribute(IMarker.CHAR_START)!=null && marker.getAttribute(IMarker.CHAR_START).equals(
+								converter.getStartPos( location)))
+								&& (marker.getAttribute(IMarker.CHAR_END)!=null && marker.getAttribute(IMarker.CHAR_END).equals(
+										converter.getEndPos( location))))
 					return;
 
 			}
