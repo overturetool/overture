@@ -74,7 +74,7 @@ public class Delegate implements Serializable
 			try
 			{
 				String classname = name.replace('_', '.');
-				delegateClass = ClassLoader.getSystemClassLoader().loadClass(classname);
+				delegateClass = this.getClass().getClassLoader().loadClass(classname);
 				delegateMethods = new HashMap<String, Method>();
 				delegateArgs = new HashMap<String, LexNameList>();
 			}
