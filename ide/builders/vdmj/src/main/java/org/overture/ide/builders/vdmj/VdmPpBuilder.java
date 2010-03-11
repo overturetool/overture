@@ -1,4 +1,4 @@
-package org.overutre.ide.builders.vdmj;
+package org.overture.ide.builders.vdmj;
 
 import org.eclipse.core.runtime.IStatus;
 import org.overture.ide.core.ast.RootNode;

@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.overture.ide.core.Activator;
 import org.overture.ide.core.ast.AstManager;
+import org.overture.ide.core.utility.LanguageManager;
 
 public class VdmBuilder extends VdmCoreBuilder
 { // implements IScriptBuilder {

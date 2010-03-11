@@ -6,6 +6,7 @@
   <extension-point id="org.overture.ide.core.buildParticipant" name="Builder" schema="schema/org.overture.ide.core.builder.exsd"/>
    <!-- Extension point for parsers of VDM -->
   <extension-point id="org.overture.ide.core.parsePaticipant" name="Parser" schema="schema/org.overture.ide.core.parsePaticipant.exsd"/>
+  <extension-point id="org.overture.ide.core.language" name="Language" schema="schema/org.overture.ide.core.language.exsd"/>
 
 
  <!-- Basic builder for VDM -->

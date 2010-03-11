@@ -2,12 +2,15 @@ package org.overture.ide.ui.wizard;
 
 import java.net.URI;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
+import org.overture.ide.core.Activator;
+import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.utility.ProjectUtility;
 
 
@@ -61,7 +64,18 @@ public abstract class VdmNewProjectWizard extends Wizard implements IWorkbenchWi
 	        location = _pageOne.getLocationURI();
 	    } // else location == null
 
-	    ProjectUtility.createProject(name, location, getNature());
+	    try
+		{
+			ProjectUtility.createProject(name, location, getNature());
+		} catch (CoreException e)
+		{
+			if(Activator.DEBUG)
+			e.printStackTrace();
+		} catch (NotAllowedException e)
+		{
+			if(Activator.DEBUG)
+			e.printStackTrace();
+		}
 
 	    return true;
 	}

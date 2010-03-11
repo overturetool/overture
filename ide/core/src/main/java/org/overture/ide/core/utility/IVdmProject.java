@@ -5,15 +5,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.overturetool.vdmj.Release;
 
-public interface IVdmProject
+public interface IVdmProject extends IProject
 {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.overture.ide.utility.IVdmProject#getProject()
-	 */
-	public abstract IProject getProject();
+	
 
 	/*
 	 * (non-Javadoc)

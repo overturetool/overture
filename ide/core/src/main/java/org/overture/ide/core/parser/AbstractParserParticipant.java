@@ -13,8 +13,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.ast.AstManager;
 import org.overture.ide.core.ast.IAstManager;
+import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.ast.RootNode;
 import org.overture.ide.core.utility.FileUtility;
+import org.overture.ide.core.utility.IVdmProject;
 import org.overture.ide.core.utility.VdmProject;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
@@ -118,8 +120,21 @@ private void setFileMarkers(IFile file,ParseResult result)
 						ICoreConstants.PLUGIN_ID);
 			}
 		}
+		
+		IVdmProject vdmProject = null;
+		if(VdmProject.isVdmProject(project))
+		{
+			try
+			{
+				vdmProject = new VdmProject(project);
+			} catch (Exception e)
+			{
+				
+			}
+		}
+		
 		if (warnings.size() > 0
-				&& !new VdmProject(project).hasSuppressWarnings())
+				&&vdmProject!=null && vdmProject.hasSuppressWarnings())
 		{
 			for (VDMWarning warning : warnings)
 			{

@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.content.IContentType;
+import org.overture.ide.core.ast.NotAllowedException;
 
 public class ProjectUtility
 {
@@ -188,7 +189,7 @@ public class ProjectUtility
 		return getFile(project, path);
 	}
 
-	public static IProject createProject(String projectName, URI location, String nature) {
+	public static IProject createProject(String projectName, URI location, String nature) throws CoreException, NotAllowedException {
         Assert.isNotNull(projectName);
         Assert.isTrue(projectName.trim().length() > 0);
 
@@ -207,7 +208,7 @@ public class ProjectUtility
         return resProject;
     }
 
-	private static IProject createBaseProject(String projectName, URI location) {
+	private static IProject createBaseProject(String projectName, URI location) throws CoreException, NotAllowedException {
         // it is acceptable to use the ResourcesPlugin class
         IProject newProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 
@@ -229,9 +230,9 @@ public class ProjectUtility
             }
         }
 
-        IProject resProject = new VdmProject(newProject);
+//        IProject resProject = new VdmProject(newProject);
         
-        return resProject;
+        return newProject;
     }
 
 	private static void createFolder(IFolder folder) throws CoreException {

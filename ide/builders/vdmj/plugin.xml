@@ -4,7 +4,7 @@
    <extension
          point="org.overture.ide.core.buildParticipant">
       <builder
-            class="org.overutre.ide.builders.vdmj.VdmPpBuilder">
+            class="org.overture.ide.builders.vdmj.VdmPpBuilder">
       </builder>
    </extension>
    

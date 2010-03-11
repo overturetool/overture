@@ -21,5 +21,16 @@
             priority="high">
       </content-type>     
    </extension>
+   <extension
+         point="org.overture.ide.core.language">
+      <Language
+            dialect="VDM_PP"
+            name="VDM-PP"
+            nature="org.overture.ide.vdmpp.core.nature">
+         <ContentType
+               id="org.overture.ide.vdmpp.core.ContentType1">
+         </ContentType>
+      </Language>
+   </extension>
   
 </plugin>

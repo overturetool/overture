@@ -32,13 +32,13 @@ public class VdmCoreBuilder extends IncrementalProjectBuilder
 		} else
 		{
 			IResourceDelta delta = getDelta(getProject());
-			if (delta == null)
-			{
+//			if (delta == null)
+//			{
 				fullBuild(monitor);
-			} else
-			{
-				incrementalBuild(delta, monitor);
-			}
+//			} else
+//			{
+//				incrementalBuild(delta, monitor);
+//			}
 		}
 
 		endBuild(monitor);
