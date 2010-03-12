@@ -66,7 +66,7 @@ public class AstManager implements IAstManager {
 	public synchronized void updateAst(IProject project, String nature, List modules) {
 		Map<String, RootNode> natureAst = asts.get(project);
 		if (natureAst != null) {
-			RootNode root = natureAst.get(nature);
+			IVdmElement root = natureAst.get(nature);
 			if (root != null && root.getRootElementList() != null) {
 				root.update(modules);
 			} else
@@ -101,7 +101,7 @@ public class AstManager implements IAstManager {
 	// }
 
 	@SuppressWarnings("unchecked")
-	public RootNode getRootNode(IProject project, String nature) {
+	public IVdmElement getRootNode(IProject project, String nature) {
 		Map<String, RootNode> natureAst = asts.get(project);
 		if (natureAst != null && natureAst.containsKey(nature)) {
 			return natureAst.get(nature);
@@ -176,7 +176,7 @@ public class AstManager implements IAstManager {
 	}
 
 	@SuppressWarnings("unchecked")
-	public RootNode getRootNode(IVdmProject project)
+	public IVdmElement getRootNode(IVdmProject project)
 	{
 		return getRootNode(project, project.getVdmNature());
 	}

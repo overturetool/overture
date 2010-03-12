@@ -70,7 +70,7 @@ public interface IAstManager
 	 * @return The rootnode for the current project + nature
 	 */
 	@SuppressWarnings("unchecked")
-	RootNode getRootNode(IProject project, String nature);
+	IVdmElement getRootNode(IProject project, String nature);
 	
 	/**
 	 * Get the RootNode from a project and the corresponding nature
@@ -79,7 +79,7 @@ public interface IAstManager
 	 * @return The rootnode for the current project + nature
 	 */
 	@SuppressWarnings("unchecked")
-	RootNode getRootNode(IVdmProject project);
+	IVdmElement getRootNode(IVdmProject project);
 	
 	void setAstAsTypeChecked(IProject project, String nature);
 	

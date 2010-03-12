@@ -5,12 +5,13 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
 
-public class RootNode<T>
+public class RootNode<T> implements IVdmElement<T>
 {
 	private boolean checked = false;
 	private Hashtable<String, Boolean> parseCurrectTable = new Hashtable<String, Boolean>();
@@ -22,27 +23,42 @@ public class RootNode<T>
 		this.rootElementList = modules;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.overture.ide.core.ast.IVdmElement#setRootElementList(java.util.List)
+	 */
 	public synchronized void setRootElementList(List<T> rootElementList)
 	{
 		this.rootElementList = rootElementList;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.overture.ide.core.ast.IVdmElement#getRootElementList()
+	 */
 	public synchronized List<T> getRootElementList()
 	{
 		return rootElementList;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.overture.ide.core.ast.IVdmElement#getCheckedTime()
+	 */
 	public synchronized Date getCheckedTime()
 	{
 		return checkedTime;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.overture.ide.core.ast.IVdmElement#setChecked(boolean)
+	 */
 	public synchronized void setChecked(boolean checked)
 	{
 		this.checked = checked;
 		this.checkedTime = new Date();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.overture.ide.core.ast.IVdmElement#isChecked()
+	 */
 	public synchronized boolean isChecked()
 	{
 		return checked;
@@ -102,12 +118,8 @@ public class RootNode<T>
 	//
 	// }
 
-	/***
-	 * Updates the local list with a new Definition if it already exists the old
-	 * one is replaced
-	 * 
-	 * @param module
-	 *            the new definition
+	/* (non-Javadoc)
+	 * @see org.overture.ide.core.ast.IVdmElement#update(java.util.List)
 	 */
 	@SuppressWarnings("unchecked")
 	public synchronized void update(List<T> modules)
@@ -156,13 +168,8 @@ public class RootNode<T>
 
 	}
 
-	/***
-	 * Check if any definition in the list has the file as source location
-	 * 
-	 * @param file
-	 *            The file which should be tested against all definitions in the
-	 *            list
-	 * @return true if the file has a definition in the list
+	/* (non-Javadoc)
+	 * @see org.overture.ide.core.ast.IVdmElement#hasFile(java.io.File)
 	 */
 	public synchronized boolean hasFile(File file)
 	{
@@ -179,6 +186,9 @@ public class RootNode<T>
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.overture.ide.core.ast.IVdmElement#getModuleList()
+	 */
 	public synchronized ModuleList getModuleList() throws NotAllowedException
 	{
 		ModuleList modules = new ModuleList();
@@ -193,6 +203,9 @@ public class RootNode<T>
 		return modules;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.overture.ide.core.ast.IVdmElement#getClassList()
+	 */
 	public synchronized ClassList getClassList() throws NotAllowedException
 	{
 		ClassList classes = new ClassList();
@@ -207,6 +220,9 @@ public class RootNode<T>
 		return classes;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.overture.ide.core.ast.IVdmElement#hasClassList()
+	 */
 	public synchronized boolean hasClassList()
 	{
 		for (Object definition : rootElementList)
@@ -217,6 +233,9 @@ public class RootNode<T>
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.overture.ide.core.ast.IVdmElement#hasModuleList()
+	 */
 	public synchronized boolean hasModuleList()
 	{
 		for (Object definition : rootElementList)
@@ -227,6 +246,9 @@ public class RootNode<T>
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.overture.ide.core.ast.IVdmElement#setParseCorrect(java.lang.String, java.lang.Boolean)
+	 */
 	public synchronized void setParseCorrect(String file, Boolean isParseCorrect)
 	{
 		if (parseCurrectTable.containsKey(file))
@@ -236,11 +258,25 @@ public class RootNode<T>
 		checked = false;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.overture.ide.core.ast.IVdmElement#isParseCorrect()
+	 */
 	public synchronized boolean isParseCorrect()
 	{
 		for (Boolean isCurrect : parseCurrectTable.values())
 			if (!isCurrect)
 				return false;
 		return true;
+	}
+
+	@Override
+	public boolean exists() {
+		return rootElementList != null && rootElementList.size() > 0;
+	}
+
+	@Override
+	public IVdmElement filter(IFile file) {
+		return null;
+		
 	}
 }

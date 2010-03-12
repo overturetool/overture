@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.Platform;
 import org.overture.ide.core.Activator;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.ast.AstManager;
-import org.overture.ide.core.ast.RootNode;
+import org.overture.ide.core.ast.IVdmElement;
 import org.overture.ide.core.utility.IVdmProject;
 
 public class SourceParserManager {
@@ -148,7 +148,7 @@ public class SourceParserManager {
 	{
 		
 
-		RootNode rootNode = AstManager.instance()
+		IVdmElement rootNode = AstManager.instance()
 				.getRootNode(project);
 		if (rootNode != null && rootNode.hasFile(project.getFile(file)))
 			return;

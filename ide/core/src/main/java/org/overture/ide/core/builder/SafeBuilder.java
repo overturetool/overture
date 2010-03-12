@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.overture.ide.core.Activator;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.ast.AstManager;
-import org.overture.ide.core.ast.RootNode;
+import org.overture.ide.core.ast.IVdmElement;
 import org.overture.ide.core.parser.SourceParserManager;
 import org.overture.ide.core.utility.IVdmProject;
 
@@ -67,7 +67,7 @@ public class SafeBuilder extends Thread
 								SourceParserManager.parseMissingFiles(currentProject,
 										monitor);
 
-								final RootNode rootNode = AstManager.instance()
+								final IVdmElement rootNode = AstManager.instance()
 										.getRootNode(currentProject);
 								// if the project don't have parse errors
 								if (rootNode != null

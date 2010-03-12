@@ -11,7 +11,7 @@ import org.overture.ide.core.Activator;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.ast.AstManager;
 import org.overture.ide.core.ast.IAstManager;
-import org.overture.ide.core.ast.RootNode;
+import org.overture.ide.core.ast.IVdmElement;
 import org.overture.ide.core.utility.FileUtility;
 import org.overture.ide.core.utility.IVdmProject;
 import org.overture.ide.core.utility.VdmProject;
@@ -173,7 +173,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 	{
 		IAstManager astManager = AstManager.instance();
 		astManager.updateAst(project, project.getVdmNature(), ast);
-		RootNode rootNode = astManager.getRootNode(project, natureId);
+		IVdmElement rootNode = astManager.getRootNode(project, natureId);
 		if (rootNode != null)
 		{
 
