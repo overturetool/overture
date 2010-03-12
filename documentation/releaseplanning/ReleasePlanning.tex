@@ -320,7 +320,7 @@ the Overture executable.
 \begin{enumerate}
 \item Decide if we want to include the Update Manager or embed a number of videly used features like Sub Version control.
 
-\item Investigate the posibility of Eclipse p2. (Adding Self-Update to an RCP Application) \url{http://wiki.eclipse.org/RCP_FAQ}
+
 
 \item Provide help (F1) inside Eclipse; \developer{AugustoRibeiro}
 
@@ -333,7 +333,7 @@ the Overture executable.
   over the Overture sources (i.e.\ this will affect the development of
   UML, JML and POtrans components). \developer{NickBattle, KennethLausdahl}, \textbf{Dependencies: \ref{completeAST}}
 
-\item Replace DLTK (For lower level description of the goals please refer to appendix \ref{app:lowlevelgoals}). \developer{AugustoRibeiro}, \textbf{Dependencies: \ref{picturesEclipse}} 
+\item Replace DLTK. This includes a complete recoding of all existing Editors, Wizards, Outlines etc including a build from scratch Debug interface inspired from DLTK but only using the DBGProtocol as DLTK do.\footnote{The decision for replacing DLTK has been made based on the investigation of Eclipse where it have been found more feasible to use Eclipse directly rather than using DLTK since a lot of the existing code do work rounds to get back to eclipse. The benefit of this change in the long run is seen larger than the work to recreate some of the DLTK features.} (For lower level description of the goals please refer to appendix \ref{app:lowlevelgoals}). \developer{AugustoRibeiro}, \textbf{Dependencies: \ref{picturesEclipse}} 
 
 \item Launch configuration setup: 
 	\begin{enumerate}
@@ -394,6 +394,9 @@ the Overture executable.
 \item[Release 0.4.0 (September 2010):] The aim for this release is to
   include the following features:   
 \begin{enumerate}
+
+\item Investigate the posibility of Eclipse p2. (Adding Self-Update to an RCP Application) \url{http://wiki.eclipse.org/RCP_FAQ}
+
 \item First stable bi-directional connection from Overture/VDM++
   to/from JML. \developer{CarlosVilhena}
 \item New version of the interpreter for scheduling of multiple
