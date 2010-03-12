@@ -78,17 +78,21 @@ terminology used by Eclipse tools like Overture.
 Section~\ref{sec:fromUMLtoVDM} shows how VDM-RT models can be
 connected to UML.
 Section~\ref{sec:debugging} describes the process of testing and
-debugging VDM-RT models using Overture. Section~\ref{sec:RTLV} goes on
+debugging VDM-RT models using Overture.
+Section~\ref{sec:testcov} follows up to show how test coverage
+information from the testing carried out can be produced and displayed
+directly in a pdf document generated using the \LaTeX\ text processing
+system. 
+Section~\ref{sec:CT} shows how parts of the test process can be
+automated using Overture's combinatorial testing feature.
+ Section~\ref{sec:RTLV} goes on
 to show the Real-Time Log Viewer which gives a graphical presentation
 of thread execution.
-%Section~\ref{sec:CT} shows how parts of the test process can be
-%automated using Overture's combinatorial testing feature.
 Section~\ref{sec:PO} demonstrates the automatic generation of the
 additional checks (called \emph{proof obligations}) needed to ensure
 that a model is consistent.  Finally, Section~\ref{sec:cmdline}
 illustrates how parts of Overture's functionality can be accessed from
-a command line, including support for test coverage analysis which is
-not currently available from the Overture IDE.
+a command line.
 
 \section{Obtaining the Overture Tools}\label{sec:install}
 
@@ -153,10 +157,10 @@ products. Thus if a user is familiar with one Eclipse-based product,
 it will generally be easy to start using a different product on the
 same workbench. The Eclipse workbench consists of several panels
 called \emph{views}, such as the Script Explorer view at the top left
-of Figure~\ref{fig:userguire:OverturePerspective}. A particular
+of Figure~\ref{fig:userguide:OverturePerspective}. A particular
 collection of panels designed to assist a specific activity is called a
 \emph{perspective}. For example
-Figure~\ref{fig:userguire:OverturePerspective} shows the standard
+Figure~\ref{fig:userguide:OverturePerspective} shows the standard
 Overture perspective which contains views for managing Overture
 projects, and viewing and editing files. As we shall show later,
 several other perspectives are avilable in Overture.
@@ -177,7 +181,7 @@ appear here.
 \begin{center}
   \includegraphics[width=4.5in]{figures/OverturePerspectiveRT}
   \caption[labelInTOC]{The Overture Perspective}
-  \label{fig:userguire:OverturePerspective}
+  \label{fig:userguide:OverturePerspective}
 \end{center}
 \end{figure}
 
@@ -185,7 +189,7 @@ The \emph{Outline view}, to the right of the editor (see
 Figure~\ref{fig:userguide:OutlineView}), displays an outline of the
 file selected in the editor. It shows all declared classes, their
 instance variables, values, types, functions, operations and traces.
-Figure~\ref{fig:userguire:OverturePerspective} shows the outline view
+Figure~\ref{fig:userguide:OverturePerspective} shows the outline view
 on the right hand side. Clicking on an operation or function in the
 outline will move the cursor in the editor view to its definition. At
 the top of the outline view there is a button to~(optionally) display
@@ -200,7 +204,29 @@ the items in the outline view in alphabetical order.
 \end{figure}
 
 The \emph{Problems view} presents information about the projects you
-are working on, including warnings and error messages. 
+are working on, including warnings and error messages. In
+Figure~\ref{fig:userguide:OverturePerspective} the problems view is
+shown at the bottom.
+
+In the standard Overture perspective there is a \emph{VDM Quick
+  Interpreter} view in a pane in the same area as the problems
+view. This can be used for evaluation of standard VDM expressions
+independent of all VDM projects incorporated in your Overture
+IDE. This can be very convenient to gain understanding of the
+different VDM operators. In Figure~\ref{fig:QuickIntView} it is
+possible to see how a couple of expressions (typed in at the box at
+the botton of the view) are evaluated\footnote{If errors appear in
+  this evaluation the current version of the Overture IDE simply yield
+  a \texttt{Fatal error} where it is anticipated that later releases
+  will provide more helpful run-time errors to the users.}. 
+
+\begin{figure}[!htb]
+\begin{center}
+  \includegraphics[width=4.5in]{figures/quickinterpreter}
+  \caption[labelInTOC]{The VDM quick interpreter view}
+  \label{fig:QuickIntView}
+\end{center}
+\end{figure}
 
 Most of the other features of the workbench, such as the menus and
 toolbars, are similar to other Eclipse applications, though for
@@ -238,7 +264,7 @@ When editing a VDM model, the Overture IDE parses the content of the
 editor buffer continuously as changes are made. If there are any
 syntax errors, these will be reported in the problems view, as well as
 being highlighted in the editor. See the bottom of
-Figure~\ref{fig:userguire:OverturePerspective}. Each time a
+Figure~\ref{fig:userguide:OverturePerspective}. Each time a
 VDM-RT model file is saved the editor type checks the model and reports
 any errors or warnings. Note also that the suggestions made about
 missing characters in the
@@ -499,7 +525,7 @@ on the project and select \texttt{Clean}). Let us evaluate the
 \texttt{Generate test coverage} option is selected. 
 Remember that whenever test coverage
 information is desired the \texttt{Generate Latex Coverage} option
-must be selected as shown in Figure~\ref{fig:debugConfiguration}. 
+must be selected as shown in Figure~\ref{fig:userguide:debugConfiguration}. 
  Once the debugger
 has completed and the result is written out in the \texttt{console} it
 is possible to right click on the \texttt{CarRadioNavi} project and
@@ -532,15 +558,84 @@ mmi.vdmrt & 88.0\% & 101 \\
 \hline
 \end{longtable}
 
-\noindent where the \texttt{ExpertIsOnDuty} and \texttt{ExpertToPage} 
-operations are fully covered
-by just one call (due to the fact that its body is simply one line)
-whereas the \texttt{PlantInv} operation is called 2 times.
+\noindent where the \texttt{ExpertIsOnDuty} and \texttt{ExpertToPage}
+operations are fully covered by just one call (due to the fact that
+its body is simply one line) whereas the \texttt{PlantInv} operation
+is called twice\footnote{Note that the coverage from the combinatorial
+  testing feature described in Section~\ref{sec:CT} is not taken into
+  account in the current version of the Overture IDE, but this will be
+  enabled in a later release.}.
+
+\section{Combinatorial Testing}\label{sec:CT}
+
+The previous sections have shown how to manually test and debug models
+that use an executable subset of VDM-RT. However, Overture also
+contains a feature enabling more automation in the testing process. It
+is possible to write regular expressions, as \emph{traces}, that one
+would like to expand into a large set of individual tests. When new
+traces are incorporated in a VDM project you may need to press the
+\textsf{Refresh} button
+(\includegraphics[width=0.02\textwidth]{figures/refresh}) in the
+\emph{CT Overview} view.
+
+In order to illustrate how this can be used, we have introduced a
+\texttt{Test} class which only in introduced in this example for
+illustration purposes.
+
+In order to do the automation, Overture needs to know about the
+combinations of operation calls that you would like to have carried
+out, so it is necessary to write a kind of regular expression called a
+\emph{trace}. VDM-RT has been extended such that traces can be written
+directly as a part of a VDM-RT model. A full explanation of this can be
+found at \cite{Larsen&09d}. In our case, inside the \texttt{Test}
+class one can find:
+
+\begin{lstlisting}
+traces
+
+TT: let x in set {1,2,3}
+    in
+      (mmi.HandleKeyPress(x,x) | 
+       mmi.UpdateScreen(x,x) | 
+       radio.AdjustVolume(x) |
+       radio.HandleTMC(x) |
+       nav.DatabaseLookup(x) |
+       nav.DecodeTMC(x))
+ \end{lstlisting}
+
+\noindent The let-be statements in the trace called
+\texttt{TT} yield all possible combinations of the variable
+bindings to \texttt{x} (whereas manual debugging will select an
+arbitrary binding here). This is followed by the call of 6 different
+operations seperated by an alternative operator (\texttt{|}). The
+selected \texttt{x} value is then used as argument t each of these
+operations so in total this generates 18 (3 times 6) test cases.  If you
+right click it and choose the \textsf{Run selected} option. Now Overture expands
+and executes all 18 test cases one after each other. The results of these
+executions are illustrated with green check marks and red crosses, meaning that
+the tests passed or failed respectively. See Figure~\ref{fig:tracesradnav}. Note
+that in the Combinatorial Testing perspective, the view in the lower region is
+able to show the individual steps of a selected test case, along with the
+corresponding results from its four operation calls.
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=4.5in]{figures/tracesradnav}
+\caption{Using Combinatorial Testing for the Alarm VDM++ model\label{fig:tracesradnav}}
+\end{center}
+\end{figure}
+
+The syntax for traces also enables operation sequencing and repetition to be
+specified, but these were not needed for this simple case. Using the full power
+of traces it is possible to efficiently generate and execute very large test
+suites. Naturally, this is most likely to find inconsistencies when the model
+attempts to define its essential predicates (invariants, pre and post-conditions).
 
 \section{Realtime Log Viewer}\label{sec:RTLV}
 
-When a VDM-RT model is being executed a textual logfile is created in
-a ''\texttt{generated/logs/debugconfig}'' folder with the
+When a VDM-RT model is being executed a textual logfile with
+information about the time of the generation is created in
+a folder called ''\texttt{generated/logs/debugconfig}'' with the
 \emph{.logrt} extension. This logfile can be viewed in the build-in
 RealTime Log Viewer, by double-clicking the file in the project
 view. The viewer allows you to explore system execution in different
@@ -589,107 +684,6 @@ be seen in Figure~\ref{fig:userguide:ExecutionCPU}.
   \label{fig:userguide:ExecutionCPU}
 \end{center}
 \end{figure}
-
-%\section{Combinatorial Testing}\label{sec:CT}
-
-%The previous sections have shown how to manually test and debug models
-%that use an executable subset of VDM++. However, Overture also
-%contains a feature enabling more automation in the testing process. It
-%is possible to write regular expressions, as \emph{traces}, that one
-%would like to expand into a large set of individual tests.
-%
-%In order to illustrate how this can be used, we extend the \texttt{Plant} class
-%with two additional operations for adding and removing experts from a given
-%schedule. Both operations take a given \texttt{Period} and an \texttt{Expert} and then update the \texttt{schedule} instance variable from the \texttt{Plant}
-%class. The \texttt{AddExpertToSchedule} operation can be defined as:
-%
-%\begin{lstlisting}
-%public AddExpertToSchedule: Period * Expert ==> ()
-%AddExpertToSchedule(p,ex) ==
-%  schedule(p) := if p in set dom schedule
-%                 then schedule(p) union {ex}
-%                 else {ex};
-%\end{lstlisting}
-
-%\noindent and the \texttt{RemoveExpertFromSchedule} operation can
-%be expressed as:
-%
-%\begin{lstlisting}
-%public RemoveExpertFromSchedule: Period * Expert ==> ()
-%RemoveExpertFromSchedule(p,ex) == 
-%  let exs = schedule(p) in
-%    schedule := if card exs = 1
-%                then {p} <-: schedule
-%                else schedule ++ {p |-> exs \ {ex}}
-%pre p in set dom schedule;
-%\end{lstlisting}
-
-%\noindent Note that \texttt{RemoveExpertFromSchedule} has a deliberate
-%error.  It fails to take account of the invariant so this operation
-%can leave the \texttt{Plant} in a state where it cannot be guaranteed
-%that experts with the right qualifications are available in the
-%periods that have been scheduled. \texttt{AddExpertToSchedule} has a
-%similar error.  If nobody is scheduled at the period provided as an
-%argument, and the expert added for the schedule at this period does
-%not have all the necessary qualifications, the invariant will again be
-%violated. In fact this means that one would probably have to change
-%the signature of this operation such that it instead of taking a
-%simple expert would take a collection of experts.  We could use the
-%debugger presented above to manually test these two new operations,
-%but we can also automate a part of this process.
-
-%In order to do the automation, Overture needs to know about the
-%combinations of operation calls that you would like to have carried
-%out, so it is necessary to write a kind of regular expression called a
-%\emph{trace}. VDM++ has been extended such that traces can be written
-%directly as a part of a VDM++ model. A full explanation of this can be
-%found at \cite{Larsen&09d}. In our case, inside the \texttt{Test2}
-%class one can write:
-
-%\begin{lstlisting}
-%traces
-%
-%AddingAndDeleting: 
-%  let myex in set exs
-%  in
-%    let myex2 in set exs \ {myex}
-%    in
-%      let p in set ps 
-%      in
-%       (plant.AddExpertToSchedule(p,myex);
-%        plant.AddExpertToSchedule(p,myex2);
-%        plant.RemoveExpertFromSchedule(p,myex);
-%        plant.RemoveExpertFromSchedule(p,myex2));
-%\end{lstlisting}
-
-%\noindent The three nested let-be statements in the trace called
-%\texttt{AddingAndDeleting} yield all possible combinations of their variable
-%bindings (whereas manual debugging will select an arbitrary few combinations).
-%The cardinality of these sets determines the overall number of test cases (each
-%being formed as a sequence of four operation calls, as shown). In this case, the
-%cardinality of the three sets are respectively 4, 3 and 4. Multiplying these
-%gives 48. If you select the Combinatorial Testing perspective you will see the
-%\textsf{CT Overview} view. Inside this view one can select the alarm project,
-%right click it and choose the \textsf{Run selected} option. Now Overture expands
-%and executes all 48 test cases one after each other. The results of these
-%executions are illustrated with green check marks and red crosses, meaning that
-%the tests passed or failed respectively. See Figure~\ref{fig:stracesalarm}. Note
-%that in the Combinatorial Testing perspective, the view in the lower region is
-%able to show the individual steps of a selected test case, along with the
-%corresponding results from its four operation calls.
-
-%\begin{figure}[htbp]
-%\begin{center}
-%\includegraphics[width=4.5in]{figures/tracesalarm}
-%\caption{Using Combinatorial Testing for the Alarm VDM++ model\label{fig:stracesalarm}}
-%\end{center}
-%\end{figure}
-%
-%The syntax for traces also enables operation repetition and alternatives to be
-%specified, but these were not needed for this simple case. Using the full power
-%of traces it is possible to efficiently generate and execute very large test
-%suites. Naturally, this is most likely to find inconsistencies when the model
-%attempts to define its essential predicates (invariants, pre and post-conditions).
 
 \section{Proof Obligations}\label{sec:PO}
 
@@ -779,7 +773,7 @@ java -jar vdmj-2.0.0.jar -vdmrt CarNaviRadio
 \end{lstlisting}
 
 \noindent That will perform a syntax and type check of all the VDM-RT model
-files in the directory \verb|CarNaviRadio|, producing any errors and warning
+files in the directory called \verb|CarNaviRadio|, producing any errors and warning
 messages on the console, before terminating:
 
 \begin{lstlisting}

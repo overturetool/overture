@@ -361,6 +361,26 @@ The \emph{Problems view} presents information about all the open projects you
 are working on, such as warning and error messages. In
 Figure~\ref{fig:OverturePerspective} the problems view is shown at the bottom.
 
+In the standard Overture perspective there is a \emph{VDM Quick
+  Interpreter} view in a pane in the same area as the problems
+view. This can be used for evaluation of standard VDM expressions
+independent of all VDM projects incorporated in your Overture
+IDE. This can be very convenient to gain understanding of the
+different VDM operators. In Figure~\ref{fig:QuickIntView} it is
+possible to see how a couple of expressions (typed in at the box at
+the botton of the view) are evaluated\footnote{If errors appear in
+  this evaluation the current version of the Overture IDE simply yield
+  a \texttt{Fatal error} where it is anticipated that later releases
+  will provide more helpful run-time errors to the users.}. 
+
+\begin{figure}[!htb]
+\begin{center}
+  \includegraphics[width=4.5in]{figures/quickinterpreter}
+  \caption[labelInTOC]{The VDM quick interpreter view}
+  \label{fig:QuickIntView}
+\end{center}
+\end{figure}
+
 Most of the other features of the workbench, such as the menus and
 toolbars, are similar to those used in other Eclipse applications,
 though it is worth noting that there is a special menu with
@@ -800,12 +820,15 @@ plant.vdmpp & 89.0\% & 5 \\
 \hline
 \end{longtable}
 
-\noindent where the \texttt{ExpertIsOnDuty} and \texttt{ExpertToPage} 
-operations are fully covered
-by just one call (due to the fact that its body is simply one line)
-whereas the \texttt{PlantInv} operation is called 2 times.
+\noindent where the \texttt{ExpertIsOnDuty} and \texttt{ExpertToPage}
+operations are fully covered by just one call (due to the fact that
+its body is simply one line) whereas the \texttt{PlantInv} operation
+is called twice\footnote{Note that the coverage from the combinatorial
+  testing feature described in Section~\ref{sec:CT} is not taken into
+  account in the current version of the Overture IDE, but this will be
+  enabled in a later release.}.
 
-\newpage
+%\newpage
 
 \section{Combinatorial Testing}\label{sec:CT}
 
@@ -814,7 +837,10 @@ manually. However, Overture also contains a feature enabling more
 automation in the testing process, making more comprehensive
 high-volume testing feasible. It is possible to write regular
 expressions, as \emph{traces}, that one would like to expand into a
-large set of individual tests.
+large set of individual tests. When new traces are incorporated in a
+VDM project you may need to press the \textsf{Refresh} button
+(\includegraphics[width=0.02\textwidth]{figures/refresh}) in the
+\emph{CT Overview} view.
 
 In order to illustrate how this can be used, we extend the
 \texttt{Plant} class with two additional operations for adding and
