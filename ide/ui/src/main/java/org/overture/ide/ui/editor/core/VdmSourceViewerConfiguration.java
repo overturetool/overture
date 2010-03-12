@@ -84,4 +84,5 @@ public abstract class VdmSourceViewerConfiguration extends SourceViewerConfigura
 		return new IAutoEditStrategy[]{strategy};
 	}
 	
+	
 }

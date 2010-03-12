@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.overture.ide.core.ast.IVdmElement;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.ast.RootNode;
 import org.overturetool.vdmj.definitions.ClassDefinition;
@@ -48,7 +49,7 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider
 		if (inputElement instanceof RootNode)
 			try
 			{
-				RootNode node = (RootNode) inputElement;
+				IVdmElement node = (IVdmElement) inputElement;
 				if (node.hasClassList())
 					return node.getClassList().toArray();
 				else if (node.hasModuleList())
@@ -84,7 +85,7 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
 	{
-		// TODO Auto-generated method stub
+		System.out.println("OUTLINE: input changed");
 
 	}
 

@@ -1,19 +1,21 @@
 package org.overture.ide.ui.editor.core;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
+import org.overture.ide.core.utility.IVdmProject;
+import org.overture.ide.core.utility.VdmProject;
 
 public class VdmDocument extends Document implements IDocument
 {
 	private IFile file;
 
-	public IProject getProject()
+	public IVdmProject getProject()
 	{
-		if (file != null)
-			return file.getProject();
-
+		if (file != null && VdmProject.isVdmProject(file.getProject()))
+		{
+			return VdmProject.createProject(file.getProject());
+		}
 		return null;
 	}
 

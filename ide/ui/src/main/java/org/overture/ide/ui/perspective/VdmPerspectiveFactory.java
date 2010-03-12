@@ -26,6 +26,8 @@ public class VdmPerspectiveFactory implements IPerspectiveFactory {
 		outputfolder.addView(IPageLayout.ID_PROBLEM_VIEW);
 		outputfolder.addView(IPageLayout.ID_TASK_LIST);
 		outputfolder.addView(IConsoleConstants.ID_CONSOLE_VIEW);
+		
+		layout.addView(IPageLayout.ID_OUTLINE, IPageLayout.RIGHT, (float)0.75, editorArea);
 //		
 //		//outputfolder.addPlaceholder(IConsoleConstants.ID_CONSOLE_VIEW);
 //		outputfolder.addPlaceholder(IPageLayout.ID_BOOKMARKS);
