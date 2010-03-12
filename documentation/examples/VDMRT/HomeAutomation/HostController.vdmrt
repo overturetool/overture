@@ -249,6 +249,8 @@ Finish() ==
 
 sync
   mutex(PeriodicOp); -- ADDED
+  mutex(AddNode,RemoveNode); -- without this a transactional error occur
+  -- with it a deadlock appear
   per IsFinished => finished;
   per printStr => print;
 

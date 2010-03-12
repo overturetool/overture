@@ -62,7 +62,7 @@ CreateSignal() ==
          (if timeIn <= curtime
           then (SetTemp(tempIn);
                 SetHumid(humidIn);
-                let - = io.echo("\nNew env values set!")
+                let - = io.echo("\nNew env values set")
                 in skip;                
                 let - = io.writeval[nat](timeIn)
                 in skip;                
