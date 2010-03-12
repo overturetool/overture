@@ -1,7 +1,5 @@
 package org.overture.ide.core.parser;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +7,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.overture.ide.core.Activator;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.ast.AstManager;
 import org.overture.ide.core.ast.IAstManager;
@@ -19,176 +18,182 @@ import org.overture.ide.core.utility.VdmProject;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 
-
-public abstract class AbstractParserParticipant implements ISourceParser {
+public abstract class AbstractParserParticipant implements ISourceParser
+{
 
 	protected String natureId;
 	protected IVdmProject project;
-	
-	private List<VDMError> errors = new ArrayList<VDMError>();
-	private List<VDMWarning> warnings = new ArrayList<VDMWarning>();
 
-	public void setNatureId(String natureId) {
+	public void setNatureId(String natureId)
+	{
 		this.natureId = natureId;
 	}
 
-	public void setProject(IVdmProject project) {
+	public void setProject(IVdmProject project)
+	{
 		this.project = project;
 	}
-	private void clearFileMarkers(IFile file)
-	{
-		try {
-			file.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 
-//	public  void parse(char[] charArray, char[] source, IFile file)
-//	{
-//		clearFileMarkers(file);
-//		ParseResult result = startParse(charArray,source,file);
-//		if (result != null)
-//			setParseAst(file.getLocation().toFile().getAbsolutePath(),result.getAst(),!result.hasParseErrors());
-//	}
-
-	public  void parse(IFile file)
+	/**
+	 * Parses a file and updates file markers and the AstManager with the result
+	 */
+	public void parse(IFile file)
 	{
-//		clearFileMarkers(file);
+
 		ParseResult result;
 		try
 		{
-			result = startParse(file,new String(FileUtility.getCharContent(FileUtility.getContent(file))),file.getCharset() );
-			setFileMarkers(file,result);
-		if (result != null)
-			setParseAst(file.getLocation().toFile().getAbsolutePath(),result.getAst(),!result.hasParseErrors());
-		
+			result = startParse(file,
+					new String(FileUtility.getCharContent(FileUtility.getContent(file))),
+					file.getCharset());
+			setFileMarkers(file, result);
+			if (result != null)
+				setParseAst(file.getLocation().toFile().getAbsolutePath(),
+						result.getAst(),
+						!result.hasParseErrors());
+
 		} catch (CoreException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if (Activator.DEBUG)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 
-	public void parse(IFile file, String data) {
-		
+	/**
+	 * Parses a file and updates file markers and the AstManager with the result
+	 */
+	public void parse(IFile file, String data)
+	{
+
 		ParseResult result;
 		try
 		{
 			result = startParse(file, data, file.getCharset());
-		setFileMarkers(file,result);
-		if (result != null)
-			
-			setParseAst(file.getLocation().toFile().getAbsolutePath(),result.getAst(),!result.hasParseErrors());
+			setFileMarkers(file, result);
+			if (result != null)
+
+				setParseAst(file.getLocation().toFile().getAbsolutePath(),
+						result.getAst(),
+						!result.hasParseErrors());
 		} catch (CoreException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if (Activator.DEBUG)
+			{
+				e.printStackTrace();
+			}
 		}
 
 	}
 
-private void setFileMarkers(IFile file,ParseResult result)
+	/**
+	 * Adds markers to a file based on the result. if errors occurred the problem markers are first cleared.
+	 * 
+	 * @param file
+	 *            the file where the markers should be set
+	 * @param result
+	 *            the result indicating if parse errors occurred
+	 * @throws CoreException
+	 */
+	private void setFileMarkers(IFile file, ParseResult result)
+			throws CoreException
 	{
-	if (file != null)
-	{
-		if (result.hasParseErrors())
+		if (file != null)
 		{
-			clearFileMarkers(file);
-			int previousErrorNumber = -1;
-			for (VDMError error : errors)
+			FileUtility.deleteMarker(file,IMarker.PROBLEM,ICoreConstants.PLUGIN_ID);
+			if (result.hasParseErrors())
 			{
-				if (previousErrorNumber == error.number)// this check is
-														// done to avoid
-														// error fall
-														// through
-					continue;
-				else
-					previousErrorNumber = error.number;
-				FileUtility.addMarker(file,
-						error.message,
-						error.location,
-						IMarker.SEVERITY_ERROR,
-						ICoreConstants.PLUGIN_ID);
+				file.deleteMarkers(IMarker.PROBLEM,
+						true,
+						IResource.DEPTH_INFINITE);
+				int previousErrorNumber = -1;
+				for (VDMError error : result.getErrors())
+				{
+					if (previousErrorNumber == error.number)// this check is
+						// done to avoid
+						// error fall
+						// through
+						continue;
+					else
+						previousErrorNumber = error.number;
+					FileUtility.addMarker(file,
+							error.message,
+							error.location,
+							IMarker.SEVERITY_ERROR,
+							ICoreConstants.PLUGIN_ID);
+				}
+			}
+
+			IVdmProject vdmProject = null;
+			if (VdmProject.isVdmProject(project))
+			{
+				try
+				{
+					vdmProject = new VdmProject(project);
+				} catch (Exception e)
+				{
+
+				}
+			}
+
+			if (result.getWarnings().size() > 0 && vdmProject != null
+					&& vdmProject.hasSuppressWarnings())
+			{
+				for (VDMWarning warning : result.getWarnings())
+				{
+					FileUtility.addMarker(file,
+							warning.message,
+							warning.location,
+							IMarker.SEVERITY_WARNING,
+							ICoreConstants.PLUGIN_ID);
+				}
 			}
 		}
-		
-		IVdmProject vdmProject = null;
-		if(VdmProject.isVdmProject(project))
-		{
-			try
-			{
-				vdmProject = new VdmProject(project);
-			} catch (Exception e)
-			{
-				
-			}
-		}
-		
-		if (warnings.size() > 0
-				&&vdmProject!=null && vdmProject.hasSuppressWarnings())
-		{
-			for (VDMWarning warning : warnings)
-			{
-				FileUtility.addMarker(file,
-						warning.message,
-						warning.location,
-						IMarker.SEVERITY_WARNING,
-						ICoreConstants.PLUGIN_ID);
-			}
-		}
-	}
-		
+
 	}
 
-//	protected abstract ParseResult startParse(IFile file, String data);
-	protected abstract ParseResult startParse(IFile file, String source, String contentType);
-//	protected abstract ParseResult startParse(IFile file);
+	/**
+	 * Delegate method for parsing, the methods addWarning and addError should be used to report
+	 * 
+	 * @param file
+	 *            the file to be parsed
+	 * @param content
+	 *            the content of the file
+	 * @param charset
+	 *            the charset of the content
+	 * @return the result of the parse including error report and the AST
+	 */
+	protected abstract ParseResult startParse(IFile file, String content,
+			String charset);
 
 	@SuppressWarnings("unchecked")
-	protected void setParseAst(String filePath,List ast, boolean parseErrorsOccured) {
+	protected void setParseAst(String filePath, List ast,
+			boolean parseErrorsOccured)
+	{
 		IAstManager astManager = AstManager.instance();
 		astManager.updateAst(project, project.getVdmNature(), ast);
 		RootNode rootNode = astManager.getRootNode(project, natureId);
-		if (rootNode != null) {
-			
-			rootNode.setParseCorrect(filePath,!parseErrorsOccured);
+		if (rootNode != null)
+		{
+
+			rootNode.setParseCorrect(filePath, !parseErrorsOccured);
 
 		}
 	}
 
-	protected void addWarning(IFile file, String message, int lineNumber) {
-		FileUtility.addMarker(file, message, lineNumber,
+	protected void addWarning(IFile file, String message, int lineNumber)
+	{
+		FileUtility.addMarker(file,
+				message,
+				lineNumber,
 				IMarker.SEVERITY_WARNING);
 	}
 
-	protected void addError(IFile file, String message, int lineNumber) {
-		FileUtility
-				.addMarker(file, message, lineNumber, IMarker.SEVERITY_ERROR);
+	protected void addError(IFile file, String message, int lineNumber)
+	{
+		FileUtility.addMarker(file, message, lineNumber, IMarker.SEVERITY_ERROR);
 	}
-	
-	/**
-	 * Handle Errors
-	 * 
-	 * @param list
-	 *            encountered during a parse or type check
-	 */
-	protected void processErrors(List<VDMError> errors)
-	{
-		this.errors.addAll(errors);
-	};
-
-	/**
-	 * Handle Warnings
-	 * 
-	 * @param errors
-	 *            encountered during a parse or type check
-	 */
-	protected void processWarnings(List<VDMWarning> warnings)
-	{
-		this.warnings.addAll(warnings);
-	};
 
 	protected void processInternalError(Throwable e)
 	{
@@ -196,32 +201,67 @@ private void setFileMarkers(IFile file,ParseResult result)
 	};
 
 	@SuppressWarnings("unchecked")
-	public
-	class ParseResult {
-		private boolean hasParseErrors = false;
-
+	public class ParseResult
+	{
 		private List ast = null;
+		private List<VDMError> errors = new ArrayList<VDMError>();
+		private List<VDMWarning> warnings = new ArrayList<VDMWarning>();
+		private Throwable fatalError;
 
-		public ParseResult(boolean hasParseErrors, List ast) {
-			this.setHasParseErrors(hasParseErrors);
-			this.setAst(ast);
+		public ParseResult() {
+
 		}
 
-		private void setHasParseErrors(boolean hasParseErrors) {
-			this.hasParseErrors = hasParseErrors;
+		
+
+		public boolean hasParseErrors()
+		{
+			return errors.size()!=0 || fatalError!=null;
 		}
 
-		public boolean hasParseErrors() {
-			return hasParseErrors;
-		}
-
-		private void setAst(List ast) {
+		public void setAst(List ast)
+		{
 			this.ast = ast;
 		}
 
-		public List getAst() {
+		public List getAst()
+		{
 			return ast;
 		}
+
+		public void setWarnings(List<VDMWarning> warnings)
+		{
+			this.warnings.addAll(warnings);
+		}
+
+		public List<VDMWarning> getWarnings()
+		{
+			return warnings;
+		}
+
+		public void setErrors(List<VDMError> errors)
+		{
+			this.errors.addAll(errors);
+		}
+
+		public List<VDMError> getErrors()
+		{
+			return errors;
+		}
+
+		public void setFatalError(Throwable fatalError)
+		{
+			if (Activator.DEBUG)
+			{
+				fatalError.printStackTrace();
+			}
+			this.fatalError = fatalError;
+		}
+
+		public Throwable getFatalError()
+		{
+			return fatalError;
+		};
 
 	}
 }

@@ -31,6 +31,12 @@ public class SourceParserManager {
 		return _instance;
 	}
 
+	/**
+	 * Loads a source parser for the given project
+	 * @param project the project to load the source parser for
+	 * @return a valid source parser for the current project based on the highest priority parser available from the nature, or null if no parser could be found
+	 * @throws CoreException
+	 */
 	public ISourceParser getSourceParser(IVdmProject project)
 			throws CoreException {
 		IConfigurationElement[] config = Platform.getExtensionRegistry()
@@ -56,6 +62,12 @@ public class SourceParserManager {
 
 	}
 
+	/**
+	 * Gets the parser available for the given nature having the highest priority
+	 * @param natureId the nature to lookup a parser for
+	 * @param config the configuration of the extension point
+	 * @return a valid source parser or null
+	 */
 	private IConfigurationElement getParserWithHeighestPriority(
 			String natureId, IConfigurationElement[] config) {
 		IConfigurationElement selectedParser = null;
@@ -123,6 +135,13 @@ public class SourceParserManager {
 
 	}
 
+	/**
+	 * Parse a single file from a project
+	 * @param project the project where the file originates from
+	 * @param file the file to be parsed
+	 * @throws CoreException
+	 * @throws IOException
+	 */
 	@SuppressWarnings("unchecked")
 	public static void parseFile(IVdmProject project,
 			final IFile file) throws CoreException, IOException

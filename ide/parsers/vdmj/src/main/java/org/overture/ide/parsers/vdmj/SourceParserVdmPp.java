@@ -8,15 +8,11 @@ import org.overturetool.vdmj.lex.*;
 import org.overturetool.vdmj.messages.*;
 import org.overturetool.vdmj.syntax.*;
 
-
-
-
-public class SourceParserVdmPp extends AbstractParserParticipant 
+public class SourceParserVdmPp extends AbstractParserParticipant
 {
 
 	@Override
-	protected ParseResult startParse(IFile file, String source,
-			String contentType)
+	protected ParseResult startParse(IFile file, String source, String charset)
 	{
 		Settings.dialect = Dialect.VDM_PP;
 		ClassList classes = new ClassList();
@@ -26,37 +22,45 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 		int pwarn = 0;
 
 		ClassReader reader = null;
+		ParseResult result = new ParseResult();
+		try
+		{
 
-		try {
-
-			LexTokenReader ltr = new LexTokenReader(source, Settings.dialect,
-					file.getLocation().toFile(),contentType);
+			LexTokenReader ltr = new LexTokenReader(source,
+					Settings.dialect,
+					file.getLocation().toFile(),
+					charset);
 			reader = new ClassReader(ltr);
 			classes.addAll(reader.readClasses());
+			result.setAst(classes);
 
-		} catch (InternalException e) {
-			//processInternalError(e);
+		} catch (InternalException e)
+		{
+
 			perrs++;
-		} catch (Throwable e) {
-			//processInternalError(e);
+			result.setFatalError(e);
+		} catch (Throwable e)
+		{
+
 			perrs++;
+			result.setFatalError(e);
 		}
 
-		if (reader != null && reader.getErrorCount() > 0) {
+		if (reader != null && reader.getErrorCount() > 0)
+		{
 			perrs += reader.getErrorCount();
 
-			processErrors(reader.getErrors());
+			result.setErrors(reader.getErrors());
 		}
 
-		if (reader != null && reader.getWarningCount() > 0) {
+		if (reader != null && reader.getWarningCount() > 0)
+		{
 			pwarn += reader.getWarningCount();
 
-			processWarnings(reader.getWarnings());
+			result.setWarnings(reader.getWarnings());
 		}
 
-		return new ParseResult( perrs != 0,classes );
+		return result;
 	}
-
-	
 
 }
