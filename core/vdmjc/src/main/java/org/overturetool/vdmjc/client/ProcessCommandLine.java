@@ -30,6 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.overturetool.vdmjc.common.Utils;
+import org.overturetool.vdmjc.config.Config;
 import org.overturetool.vdmjc.dbgp.DBGPStatus;
 
 
@@ -83,6 +84,14 @@ public class ProcessCommandLine extends CommandLine
 
 	private boolean start()
 	{
+		File jar = new File(Config.vdmj_jar);
+
+		if (!jar.canRead())
+		{
+			println("Cannot open VDMJ jar file: " + Config.vdmj_jar);
+			return false;
+		}
+
 		process = new ProcessListener(dialect, loadedFiles, expression);
 		process.start();
 
