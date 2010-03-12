@@ -10,6 +10,7 @@ import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.overture.ide.core.ast.AstManager;
 import org.overture.ide.core.ast.IVdmElement;
@@ -31,7 +32,9 @@ public abstract class VdmEditor extends TextEditor {
 	protected ISourceViewer createSourceViewer(Composite parent,
 			IVerticalRuler ruler, int styles) {
 		
-		ISourceViewer viewer = new VdmSourceViewer(parent,ruler, getOverviewRuler(), isOverviewRulerVisible(), styles, this);		
+		ISourceViewer viewer = new VdmSourceViewer(parent,ruler, getOverviewRuler(), isOverviewRulerVisible(), styles, this);
+		
+		
 		getSourceViewerDecorationSupport(viewer);
 		
 		return viewer;
@@ -80,16 +83,19 @@ public abstract class VdmEditor extends TextEditor {
 //		}
 
 		// uninstall & unregister preference store listener
-		getSourceViewerDecorationSupport(sourceViewer).uninstall();
-		((ISourceViewerExtension2)sourceViewer).unconfigure();
+//		getSourceViewerDecorationSupport(sourceViewer).uninstall();
+//		((ISourceViewerExtension2)sourceViewer).unconfigure();
 
 		//setPreferenceStore(createCombinedPreferenceStore(input));
 
 		// install & register preference store listener
+		if(sourceViewer != null)
+		{
 		sourceViewer.configure(getSourceViewerConfiguration());
 		getSourceViewerDecorationSupport(sourceViewer).install(getPreferenceStore());
 
 		internalDoSetInput(input);
+		}
 	}
 	
 	private void internalDoSetInput(IEditorInput input) throws CoreException {
@@ -141,6 +147,7 @@ public abstract class VdmEditor extends TextEditor {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private IVdmElement getInputVdmElement() {
 		IDocument doc = this.getDocumentProvider().getDocument(null);
 		if(doc instanceof VdmDocument)
