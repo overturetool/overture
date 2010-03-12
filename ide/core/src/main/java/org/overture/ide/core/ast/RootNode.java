@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.overturetool.vdmj.definitions.ClassDefinition;
@@ -23,7 +24,9 @@ public class RootNode<T> implements IVdmElement<T>
 		this.rootElementList = modules;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#setRootElementList(java.util.List)
 	 */
 	public synchronized void setRootElementList(List<T> rootElementList)
@@ -31,7 +34,9 @@ public class RootNode<T> implements IVdmElement<T>
 		this.rootElementList = rootElementList;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#getRootElementList()
 	 */
 	public synchronized List<T> getRootElementList()
@@ -39,7 +44,9 @@ public class RootNode<T> implements IVdmElement<T>
 		return rootElementList;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#getCheckedTime()
 	 */
 	public synchronized Date getCheckedTime()
@@ -47,7 +54,9 @@ public class RootNode<T> implements IVdmElement<T>
 		return checkedTime;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#setChecked(boolean)
 	 */
 	public synchronized void setChecked(boolean checked)
@@ -56,7 +65,9 @@ public class RootNode<T> implements IVdmElement<T>
 		this.checkedTime = new Date();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#isChecked()
 	 */
 	public synchronized boolean isChecked()
@@ -65,30 +76,30 @@ public class RootNode<T> implements IVdmElement<T>
 	}
 
 	/***
-	 * Updates the local definition list with a new list of Definitions if any
-	 * definition exists the old definitions are replaced
+	 * Updates the local definition list with a new list of Definitions if any definition exists the old
+	 * definitions are replaced
 	 * 
 	 * @param module
 	 *            the new definition
 	 */
-//	@SuppressWarnings("unchecked")
-//	public synchronized void update(List<T> modules)
-//	{
-//		this.setChecked(false);
-//		if (this.rootElementList.size() != 0)
-//			for (Object module : modules)
-//			{
-//				if (module instanceof ClassDefinition)
-//					update((ClassDefinition) module);
-//				else if (module instanceof Module)
-//					update((Module) module);
-//			}
-//		else
-//		{
-//			this.rootElementList.addAll(modules);
-//		}
-//
-//	}
+	// @SuppressWarnings("unchecked")
+	// public synchronized void update(List<T> modules)
+	// {
+	// this.setChecked(false);
+	// if (this.rootElementList.size() != 0)
+	// for (Object module : modules)
+	// {
+	// if (module instanceof ClassDefinition)
+	// update((ClassDefinition) module);
+	// else if (module instanceof Module)
+	// update((Module) module);
+	// }
+	// else
+	// {
+	// this.rootElementList.addAll(modules);
+	// }
+	//
+	// }
 
 	// /***
 	// * Updates the local list with a new Definition if it already exists the
@@ -118,7 +129,9 @@ public class RootNode<T> implements IVdmElement<T>
 	//
 	// }
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#update(java.util.List)
 	 */
 	@SuppressWarnings("unchecked")
@@ -129,7 +142,7 @@ public class RootNode<T> implements IVdmElement<T>
 		if (this.rootElementList.size() != 0)
 			for (Object module : modules)
 			{
-							
+
 				// if (module instanceof ClassDefinition)
 				// update((ClassDefinition) module);
 				// else if (module instanceof Module)
@@ -168,7 +181,9 @@ public class RootNode<T> implements IVdmElement<T>
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#hasFile(java.io.File)
 	 */
 	public synchronized boolean hasFile(File file)
@@ -186,7 +201,9 @@ public class RootNode<T> implements IVdmElement<T>
 		return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#getModuleList()
 	 */
 	public synchronized ModuleList getModuleList() throws NotAllowedException
@@ -203,7 +220,9 @@ public class RootNode<T> implements IVdmElement<T>
 		return modules;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#getClassList()
 	 */
 	public synchronized ClassList getClassList() throws NotAllowedException
@@ -220,7 +239,9 @@ public class RootNode<T> implements IVdmElement<T>
 		return classes;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#hasClassList()
 	 */
 	public synchronized boolean hasClassList()
@@ -233,7 +254,9 @@ public class RootNode<T> implements IVdmElement<T>
 		return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#hasModuleList()
 	 */
 	public synchronized boolean hasModuleList()
@@ -246,7 +269,9 @@ public class RootNode<T> implements IVdmElement<T>
 		return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#setParseCorrect(java.lang.String, java.lang.Boolean)
 	 */
 	public synchronized void setParseCorrect(String file, Boolean isParseCorrect)
@@ -258,7 +283,9 @@ public class RootNode<T> implements IVdmElement<T>
 		checked = false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#isParseCorrect()
 	 */
 	public synchronized boolean isParseCorrect()
@@ -270,13 +297,31 @@ public class RootNode<T> implements IVdmElement<T>
 	}
 
 	@Override
-	public boolean exists() {
+	public boolean exists()
+	{
 		return rootElementList != null && rootElementList.size() > 0;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public IVdmElement filter(IFile file) {
-		return null;
-		
+	public IVdmElement filter(IFile file)
+	{
+		List modules = new Vector();
+
+		for (Object o : rootElementList)
+		{
+			if (o instanceof Module
+					&& ((Module) o).name.location.file.equals(file))
+				modules.add(o);
+			else if (o instanceof ClassDefinition
+					&& ((ClassDefinition) o).name.location.file.equals(file))
+				modules.add(o);
+
+		}
+		if (modules.size() > 0)
+			return new RootNode<T>(modules);
+		else
+			return null;
+
 	}
 }
