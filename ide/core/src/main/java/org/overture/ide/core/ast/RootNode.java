@@ -296,14 +296,12 @@ public class RootNode<T> implements IVdmElement<T>
 		return true;
 	}
 
-	@Override
 	public boolean exists()
 	{
 		return rootElementList != null && rootElementList.size() > 0;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public IVdmElement filter(IFile file)
 	{
 		List modules = new Vector();
@@ -311,10 +309,10 @@ public class RootNode<T> implements IVdmElement<T>
 		for (Object o : rootElementList)
 		{
 			if (o instanceof Module
-					&& ((Module) o).name.location.file.equals(file))
+					&& ((Module) o).name.location.file.getName().equals(file.getName()))
 				modules.add(o);
 			else if (o instanceof ClassDefinition
-					&& ((ClassDefinition) o).name.location.file.equals(file))
+					&& ((ClassDefinition) o).name.location.file.getName().equals(file.getName()))
 				modules.add(o);
 
 		}

@@ -33,10 +33,13 @@ public class VdmReconcilingStrategy implements IReconcilingStrategy {
 
 		if (activeWorkbenchWindow != null) {
 			IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+			if(activePage!=null)
+			{
 			IViewPart outlineCandidate = activePage.findView(IPageLayout.ID_OUTLINE);
 			if(outlineCandidate instanceof ContentOutline)
 			{
 				outline = (ContentOutline) outlineCandidate;
+			}
 			}
 		}
 	}

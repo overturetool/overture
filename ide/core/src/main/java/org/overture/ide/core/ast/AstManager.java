@@ -20,11 +20,11 @@ import org.overturetool.vdmj.modules.Module;
 
 public class AstManager implements IAstManager {
 	@SuppressWarnings("unchecked")
-	Map<IProject, Map<String, RootNode>> asts;
+	Map<String, Map<String, RootNode>> asts;
 
 	@SuppressWarnings("unchecked")
 	protected AstManager() {
-		asts = new HashMap<IProject, Map<String, RootNode>>();
+		asts = new HashMap<String, Map<String, RootNode>>();
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class AstManager implements IAstManager {
 
 	@SuppressWarnings("unchecked")
 	public synchronized void updateAst(IProject project, String nature, List modules) {
-		Map<String, RootNode> natureAst = asts.get(project);
+		Map<String, RootNode> natureAst = asts.get(project.getName());
 		if (natureAst != null) {
 			IVdmElement root = natureAst.get(nature);
 			if (root != null && root.getRootElementList() != null) {
@@ -74,7 +74,7 @@ public class AstManager implements IAstManager {
 		} else {
 			HashMap<String, RootNode> astModules = new HashMap<String, RootNode>();
 			astModules.put(nature, new RootNode(modules));
-			asts.put(project, astModules);
+			asts.put(project.getName(), astModules);
 		}
 		// System.out.println("addAstModuleDeclaration : " + project.getName()
 		// + "(" + nature + ") - " + getNames(modules));
@@ -102,7 +102,7 @@ public class AstManager implements IAstManager {
 
 	@SuppressWarnings("unchecked")
 	public IVdmElement getRootNode(IProject project, String nature) {
-		Map<String, RootNode> natureAst = asts.get(project);
+		Map<String, RootNode> natureAst = asts.get(project.getName());
 		if (natureAst != null && natureAst.containsKey(nature)) {
 			return natureAst.get(nature);
 		}
@@ -114,14 +114,14 @@ public class AstManager implements IAstManager {
 	}
 
 	public void clean(IProject project) {
-		if (asts.get(project) != null)
-			asts.remove(project);
+		if (asts.get(project.getName()) != null)
+			asts.remove(project.getName());
 
 	}
 
 	public List<IProject> getProjects() {
 		List<IProject> projects = new Vector<IProject>();
-		projects.addAll(asts.keySet());
+//		projects.addAll(asts.keySet());
 		return projects;
 	}
 

@@ -78,5 +78,16 @@
       </navigatorContent>
    </extension>
   
+  <!-- VDM Language property on projects -->
+   <extension
+           point="org.eclipse.ui.propertyPages">
+        <page
+              class="org.overture.ide.ui.property.VdmLanguagePropertyPage"
+              icon="icons/cview16/overture_nav.gif"
+              id="org.overture.ide.ui.property.vdmlanguage"
+              name="VDM Settings">
+                     
+        </page>
+     </extension>
   
 </plugin>
