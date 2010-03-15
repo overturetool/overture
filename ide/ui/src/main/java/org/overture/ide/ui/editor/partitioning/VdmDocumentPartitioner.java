@@ -20,7 +20,7 @@ public class VdmDocumentPartitioner extends FastPartitioner implements
 	@Override
 	public void connect(IDocument document, boolean delayInitialise)
 	{
-	    super.connect(document, delayInitialise);
+	    super.connect(document, delayInitialise);	 
 	    printPartitions(document);
 	}
 

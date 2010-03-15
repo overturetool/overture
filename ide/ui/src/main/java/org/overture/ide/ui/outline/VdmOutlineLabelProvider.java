@@ -4,7 +4,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 
-public class VdmOutlineLabelProvider implements ILabelProvider
+public class VdmOutlineLabelProvider  implements ILabelProvider
 {
 
 	public Image getImage(Object element)

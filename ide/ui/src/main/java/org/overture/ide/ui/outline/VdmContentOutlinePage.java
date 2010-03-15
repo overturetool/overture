@@ -16,13 +16,22 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		IContentOutlinePage
 {
 
+	/**
+	 * Constant indicating that all levels of the tree should be expanded or
+	 * collapsed.
+	 *
+	 * @see #expandToLevel(int)
+	 * @see #collapseToLevel(Object, int)
+	 */
+	public static final int ALL_LEVELS = -1;
+	
 	private VdmEditor vdmEditor;
 	private IEditorInput editorInput;
 	private TreeViewer fOutlineViewer;
 	private IVdmElement fInput;
 
 	public VdmContentOutlinePage(VdmEditor vdmEditor) {
-		this.vdmEditor = vdmEditor;
+		this.vdmEditor = vdmEditor;	
 	}
 
 	@Override
@@ -33,6 +42,7 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		fOutlineViewer.setContentProvider(new VdmOutlineTreeContentProvider());
 		fOutlineViewer.setLabelProvider(new VdmOutlineLabelProvider());
 		fOutlineViewer.addSelectionChangedListener(this);
+		fOutlineViewer.setAutoExpandLevel(ALL_LEVELS);
 		fOutlineViewer.setInput(fInput);
 
 	}
