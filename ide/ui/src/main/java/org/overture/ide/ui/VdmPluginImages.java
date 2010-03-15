@@ -16,9 +16,9 @@ import org.osgi.framework.Bundle;
 
 public class VdmPluginImages {
 
-	public static final IPath ICONS_PATH = new Path("/icons/full"); //$NON-NLS-1$
+	public static final IPath ICONS_PATH = new Path("/icons/"); //$NON-NLS-1$
 
-	private static final String NAME_PREFIX = "org.eclipse.dltk.ui."; //$NON-NLS-1$
+	private static final String NAME_PREFIX = "org.overture.ui."; //$NON-NLS-1$
 	private static final int NAME_PREFIX_LENGTH = NAME_PREFIX.length();
 
 	// The plug-in registry
