@@ -7,14 +7,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.overture.ide.core.VdmCore;
-import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.IVdmProject;
+import org.overture.ide.core.IVdmSourceUnit;
+import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.VdmProject;
-
 import org.overture.ide.core.utility.FileUtility;
-import org.overture.ide.internal.core.ast.VdmModelManager;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 

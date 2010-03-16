@@ -3,17 +3,16 @@ package org.overture.ide.core.parser;
 import java.io.IOException;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.overture.ide.core.VdmCore;
-import org.overture.ide.core.IVdmModel;
-import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.ICoreConstants;
+import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.IVdmProject;
+import org.overture.ide.core.IVdmSourceUnit;
+import org.overture.ide.core.VdmCore;
 import org.overture.ide.internal.core.ast.VdmModelManager;
 
 public class SourceParserManager {

@@ -5,9 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.runtime.IPath;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.modules.ModuleList;

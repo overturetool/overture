@@ -11,14 +11,11 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-
-import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.IVdmModel;
-import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.IVdmProject;
+import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.ast.VdmModel;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.modules.Module;

@@ -1,12 +1,10 @@
 package org.overture.ide.core;
 
 import java.io.File;
-import java.lang.annotation.ElementType;
 import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
-
 import org.overture.ide.internal.core.ast.VdmModelManager;
 
 public class VdmSourceUnit implements IVdmSourceUnit
@@ -81,6 +79,11 @@ public class VdmSourceUnit implements IVdmSourceUnit
 	public void setType(int type)
 	{
 		this.type = type;
+	}
+
+	public int getElementType()
+	{
+		return getType();
 	}
 	
 

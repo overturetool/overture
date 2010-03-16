@@ -181,7 +181,7 @@ public interface IVdmElement extends IAdaptable {
 //	 *   <code>IJavaElement</code>
 //	 * @see IJavaElement
 //	 */
-//	int getElementType();
+	int getElementType();
 //
 //	/**
 //	 * Returns a string representation of this element handle. The format of

@@ -1,6 +1,5 @@
 package org.overture.ide.core.parser;
 
-import org.eclipse.core.resources.IFile;
 import org.overture.ide.core.IVdmSourceUnit;
 
 public interface ISourceParser {

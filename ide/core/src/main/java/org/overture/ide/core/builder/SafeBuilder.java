@@ -8,11 +8,10 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
-import org.overture.ide.core.VdmCore;
-import org.overture.ide.core.IVdmModel;
-import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.ICoreConstants;
+import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.IVdmProject;
+import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.parser.SourceParserManager;
 import org.overture.ide.internal.core.ast.VdmModelManager;
 

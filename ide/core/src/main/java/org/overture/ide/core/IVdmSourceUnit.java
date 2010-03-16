@@ -1,13 +1,9 @@
 package org.overture.ide.core;
 //ICompilationUnit
 import java.io.File;
-import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.overture.ide.core.ast.NotAllowedException;
-import org.overturetool.vdmj.definitions.ClassList;
-import org.overturetool.vdmj.modules.ModuleList;
 
 public interface IVdmSourceUnit extends IVdmElement{
 

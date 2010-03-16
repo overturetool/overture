@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
+import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.IVdmSourceUnit;
 import org.overturetool.vdmj.definitions.ClassDefinition;
@@ -297,5 +298,10 @@ public class VdmModel<T> implements IVdmModel<T>
 				return unit;
 		}
 		return null;
+	}
+
+	public int getElementType()
+	{
+		return IVdmElement.VDM_MODEL;
 	}
 }
