@@ -17,4 +17,4 @@ Export-Package: org.overture.ide.core,
  org.overture.ide.core.builder,
  org.overture.ide.core.parser,
  org.overture.ide.core.utility
-Bundle-Activator: org.overture.ide.core.Activator
+Bundle-Activator: org.overture.ide.core.VdmCore
