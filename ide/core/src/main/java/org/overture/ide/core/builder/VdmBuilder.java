@@ -11,10 +11,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
-import org.overture.ide.core.Activator;
-import org.overture.ide.core.ast.AstManager;
-import org.overture.ide.core.utility.IVdmProject;
-import org.overture.ide.core.utility.VdmProject;
+import org.overture.ide.core.VdmCore;
+import org.overture.ide.core.IVdmProject;
+import org.overture.ide.core.VdmProject;
+import org.overture.ide.internal.core.ast.VdmModelManager;
 
 public class VdmBuilder extends VdmCoreBuilder
 { // implements IScriptBuilder {
@@ -45,13 +45,13 @@ public class VdmBuilder extends VdmCoreBuilder
 	@Override
 	public void fullBuild(final IProgressMonitor monitor) throws CoreException
 	{
-		if (Activator.DEBUG)
+		if (VdmCore.DEBUG)
 			System.out.println("buildModelElements");
 
-		if(!VdmProject.isVdmProject(getProject()))
-		if(Activator.DEBUG)
-			System.err.println("Project is now VDM: "+ getProject());
-		
+		if (!VdmProject.isVdmProject(getProject()))
+			if (VdmCore.DEBUG)
+				System.err.println("Project is now VDM: " + getProject());
+
 		final IVdmProject currentProject = VdmProject.createProject(getProject());
 
 		if (isBuilding(currentProject))
@@ -123,34 +123,36 @@ public class VdmBuilder extends VdmCoreBuilder
 
 	public void clean(IProgressMonitor monitor)
 	{
-		if (Activator.DEBUG)
+		if (VdmCore.DEBUG)
 			System.out.println("clean");
 		monitor.beginTask("Cleaning project: " + getProject().getName(),
 				IProgressMonitor.UNKNOWN);
 		// AstManager.instance().clean(project.getProject());
-
-		clearProblemMarkers();
-
-		AstManager.instance().clean(getProject());// IMPORTANT we do not
-		// have an
-		// incremental
-		// builder so a full
-		// parse/ build is
-		// required,
-		// therefore remove
-		// any AST nodes in
-		// store.
-		try
+		if (VdmProject.isVdmProject(getProject()))
 		{
-			IResource res = getProject().findMember("generated");
+			clearProblemMarkers();
 
-			ResourcesPlugin.getWorkspace().delete(new IResource[] { res },
-					true,
-					monitor);
+			VdmModelManager.getInstance().clean(VdmProject.createProject(getProject()));// IMPORTANT we do not
+			// have an
+			// incremental
+			// builder so a full
+			// parse/ build is
+			// required,
+			// therefore remove
+			// any AST nodes in
+			// store.
+			try
+			{
+				IResource res = getProject().findMember("generated");
 
-		} catch (Exception e)
-		{
-			// we can do any thing about it
+				ResourcesPlugin.getWorkspace().delete(new IResource[] { res },
+						true,
+						monitor);
+
+			} catch (Exception e)
+			{
+				// we can do any thing about it
+			}
 		}
 		monitor.done();
 
@@ -158,14 +160,14 @@ public class VdmBuilder extends VdmCoreBuilder
 
 	public void endBuild(IProgressMonitor monitor)
 	{
-		if (Activator.DEBUG)
+		if (VdmCore.DEBUG)
 			System.out.println("endBuild");
 		removeBuilding(getProject());
 	}
 
 	public void initialize()
 	{
-		if (Activator.DEBUG)
+		if (VdmCore.DEBUG)
 			System.out.println("initialize");
 
 		syncProjectResources();

@@ -1,4 +1,4 @@
-package org.overture.ide.core.utility;
+package org.overture.ide.core;
 
 import java.io.File;
 import java.util.List;
@@ -71,11 +71,13 @@ public interface IVdmProject extends IProject
 	
 	public abstract String getVdmNature();
 	
-	public abstract List<IFile> getSpecFiles() throws CoreException;
+	public abstract List<IVdmSourceUnit> getSpecFiles() throws CoreException;
 	public abstract List<IFile> getFiles() throws CoreException;
 	
 	public abstract File getFile(IFile file);
 	public abstract IFile findIFile( File file);
 	public abstract  File getSystemFile( IPath path);
 	public abstract File getFile(IWorkspaceRoot wroot, IPath path);
+	
+	public abstract IVdmModel getModel();
 }

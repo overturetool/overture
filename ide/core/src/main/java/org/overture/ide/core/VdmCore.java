@@ -1,19 +1,36 @@
 package org.overture.ide.core;
 
 import org.eclipse.core.runtime.Plugin;
+
 import org.osgi.framework.BundleContext;
+import org.overture.ide.internal.core.DeltaProcessingState;
+import org.overture.ide.internal.core.DeltaProcessor;
+import org.overture.ide.internal.core.ast.VdmModelManager;
 
 
-public class Activator extends Plugin
+public class VdmCore extends Plugin
 {
 	// The plug-in ID
 	public static final String PLUGIN_ID = ICoreConstants.PLUGIN_ID;
 
 	// The shared instance
-	private static Activator plugin;
+	private static VdmCore plugin;
 
 	public static boolean DEBUG= true;
 
+	static DeltaProcessor deltaProcessor = new DeltaProcessor(new DeltaProcessingState(), VdmModelManager.getInstance());
+	public static DeltaProcessor getDeltaProcessor()
+	{
+		return deltaProcessor;
+	}
+	
+	public static void addElementChangedListener(IElementChangedListener listener) {
+		getDeltaProcessor().getState().addElementChangedListener(listener);
+	}
+	
+	public static void removeElementChangedListener(IElementChangedListener listener) {
+		getDeltaProcessor().getState().removeElementChangedListener(listener);
+	}
 
 
 	/*
@@ -41,7 +58,7 @@ public class Activator extends Plugin
 	 *
 	 * @return the shared instance
 	 */
-	public static Activator getDefault() {
+	public static VdmCore getDefault() {
 		return plugin;
 	}
 

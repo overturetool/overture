@@ -6,7 +6,7 @@ import java.util.Vector;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
-import org.overture.ide.core.Activator;
+import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.ICoreConstants;
 import org.overturetool.vdmj.lex.Dialect;
 
@@ -56,7 +56,7 @@ public class LanguageManager
 				language.setDialect(Dialect.valueOf(e.getAttribute("dialect")));
 			} catch (Exception exception)
 			{
-				if (Activator.DEBUG)
+				if (VdmCore.DEBUG)
 				{
 					System.err.println("Cannot parse dialect of language extension: "
 							+ language.getName());

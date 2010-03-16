@@ -1,14 +1,21 @@
-package org.overture.ide.core.ast;
+package org.overture.ide.core;
 
 import java.io.File;
 import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.runtime.IPath;
+import org.overture.ide.core.ast.NotAllowedException;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.modules.ModuleList;
 
-public interface IVdmElement<T> {
+
+
+
+public interface IVdmModel<T> extends IVdmElement{
 
 	public abstract void setRootElementList(List<T> rootElementList);
 
@@ -54,6 +61,12 @@ public interface IVdmElement<T> {
 
 	public abstract boolean exists();
 
-	public abstract IVdmElement filter(IFile file);
+	public abstract IVdmModel filter(IFile file);
+	
+	public abstract IVdmSourceUnit getVdmSourceUnit(IFile file);
+	
+	public abstract void addVdmSourceUnit(IVdmSourceUnit unit);
+
+
 
 }

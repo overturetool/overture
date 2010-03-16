@@ -7,14 +7,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.overture.ide.core.Activator;
+import org.overture.ide.core.VdmCore;
+import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.ICoreConstants;
-import org.overture.ide.core.ast.AstManager;
-import org.overture.ide.core.ast.IAstManager;
-import org.overture.ide.core.ast.IVdmElement;
+import org.overture.ide.core.IVdmProject;
+import org.overture.ide.core.VdmProject;
+
 import org.overture.ide.core.utility.FileUtility;
-import org.overture.ide.core.utility.IVdmProject;
-import org.overture.ide.core.utility.VdmProject;
+import org.overture.ide.internal.core.ast.VdmModelManager;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 
@@ -37,24 +37,24 @@ public abstract class AbstractParserParticipant implements ISourceParser
 	/**
 	 * Parses a file and updates file markers and the AstManager with the result
 	 */
-	public void parse(IFile file)
+	public void parse(IVdmSourceUnit file)
 	{
 
 		ParseResult result;
 		try
 		{
 			result = startParse(file,
-					new String(FileUtility.getCharContent(FileUtility.getContent(file))),
-					file.getCharset());
-			setFileMarkers(file, result);
+					new String(FileUtility.getCharContent(FileUtility.getContent(file.getFile()))),
+					file.getFile().getCharset());
+			setFileMarkers(file.getFile(), result);
 			if (result != null)
-				setParseAst(file.getLocation().toFile().getAbsolutePath(),
+				setParseAst(file,
 						result.getAst(),
 						!result.hasParseErrors());
 
 		} catch (CoreException e)
 		{
-			if (Activator.DEBUG)
+			if (VdmCore.DEBUG)
 			{
 				e.printStackTrace();
 			}
@@ -64,22 +64,22 @@ public abstract class AbstractParserParticipant implements ISourceParser
 	/**
 	 * Parses a file and updates file markers and the AstManager with the result
 	 */
-	public void parse(IFile file, String data)
+	public void parse(IVdmSourceUnit file, String data)
 	{
 
 		ParseResult result;
 		try
 		{
-			result = startParse(file, data, file.getCharset());
-			setFileMarkers(file, result);
+			result = startParse(file, data, file.getFile().getCharset());
+			setFileMarkers(file.getFile(), result);
 			if (result != null)
 
-				setParseAst(file.getLocation().toFile().getAbsolutePath(),
+				setParseAst(file,
 						result.getAst(),
 						!result.hasParseErrors());
 		} catch (CoreException e)
 		{
-			if (Activator.DEBUG)
+			if (VdmCore.DEBUG)
 			{
 				e.printStackTrace();
 			}
@@ -130,7 +130,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 			{
 				try
 				{
-					vdmProject = new VdmProject(project);
+					vdmProject = VdmProject.createProject(project);
 				} catch (Exception e)
 				{
 
@@ -164,22 +164,23 @@ public abstract class AbstractParserParticipant implements ISourceParser
 	 *            the charset of the content
 	 * @return the result of the parse including error report and the AST
 	 */
-	protected abstract ParseResult startParse(IFile file, String content,
+	protected abstract ParseResult startParse(IVdmSourceUnit file, String content,
 			String charset);
 
 	@SuppressWarnings("unchecked")
-	protected void setParseAst(String filePath, List ast,
+	protected void setParseAst(IVdmSourceUnit sourceUnit, List ast,
 			boolean parseErrorsOccured)
 	{
-		IAstManager astManager = AstManager.instance();
-		astManager.updateAst(project, project.getVdmNature(), ast);
-		IVdmElement rootNode = astManager.getRootNode(project, natureId);
-		if (rootNode != null)
-		{
-
-			rootNode.setParseCorrect(filePath, !parseErrorsOccured);
-
-		}
+		sourceUnit.reconcile(ast, parseErrorsOccured);
+//		IVdmModelManager astManager = VdmModelManager.instance();
+//		astManager.update(project, project.getVdmNature(), ast);
+//		IVdmSourceUnit rootNode = astManager.getRootNode(project, natureId);
+//		if (rootNode != null)
+//		{
+//
+//			rootNode.setParseCorrect(filePath, !parseErrorsOccured);
+//
+//		}
 	}
 
 	protected void addWarning(IFile file, String message, int lineNumber)
@@ -251,7 +252,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 
 		public void setFatalError(Throwable fatalError)
 		{
-			if (Activator.DEBUG)
+			if (VdmCore.DEBUG)
 			{
 				fatalError.printStackTrace();
 			}

@@ -5,9 +5,10 @@ import java.io.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IStatus;
-import org.overture.ide.core.ast.IVdmElement;
+import org.overture.ide.core.IVdmModel;
+import org.overture.ide.core.IVdmSourceUnit;
+import org.overture.ide.core.IVdmProject;
 import org.overture.ide.core.utility.FileUtility;
-import org.overture.ide.core.utility.IVdmProject;
 import org.overturetool.vdmj.lex.LexLocation;
 
 public abstract class AbstractVdmBuilder
@@ -15,14 +16,14 @@ public abstract class AbstractVdmBuilder
 	private IVdmProject project;
 	
 	@SuppressWarnings("unchecked")
-	public IStatus buileModelElements(IVdmProject project,IVdmElement rooList)
+	public IStatus buileModelElements(IVdmProject project,IVdmModel rooList)
 	{
 		this.setProject(project);
 		return buileModelElements(rooList);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public abstract IStatus buileModelElements(IVdmElement rooList);
+	public abstract IStatus buileModelElements(IVdmModel rooList);
 
 //	public abstract String getNatureId();
 	

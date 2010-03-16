@@ -1,4 +1,4 @@
-package org.overture.ide.core.ast;
+package org.overture.ide.internal.core.ast;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,67 +14,90 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.overture.ide.core.utility.IVdmProject;
+
+import org.overture.ide.core.VdmCore;
+import org.overture.ide.core.IVdmModel;
+import org.overture.ide.core.IVdmSourceUnit;
+import org.overture.ide.core.IVdmProject;
+import org.overture.ide.core.ast.VdmModel;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.modules.Module;
 
-public class AstManager implements IAstManager {
+public class VdmModelManager implements IVdmModelManager {
+	
+	
+	
+	
 	@SuppressWarnings("unchecked")
-	Map<String, Map<String, RootNode>> asts;
+	Map<IVdmProject, Map<String, IVdmModel>> asts;
 
 	@SuppressWarnings("unchecked")
-	protected AstManager() {
-		asts = new HashMap<String, Map<String, RootNode>>();
+	protected VdmModelManager() {
+		asts = new HashMap<IVdmProject, Map<String, IVdmModel>>();
 	}
 
 	/**
 	 * A handle to the unique Singleton instance.
 	 */
-	static private AstManager _instance = null;
+	static private VdmModelManager _instance = null;
 
 	/**
 	 * @return The unique instance of this class.
 	 */
-	static public IAstManager instance() {
+	static public IVdmModelManager getInstance() {
 		if (null == _instance) {
-			_instance = new AstManager();
+			_instance = new VdmModelManager();
 		}
 		return _instance;
 	}
 
+//	@SuppressWarnings("unchecked")
+//	public synchronized void addAstModuleDeclaration(
+//			IVdmProject project, String nature, char[] fileName, char[] source,
+//			List modules) {
+//
+//		updateAst(project, nature, modules);
+//		System.out.println("AST update : " + project.getName() + "("
+//				+ nature + ") - "
+//				+ new Path(new String(fileName)).lastSegment().toString()
+//				+ " Modules: " + getNames(modules));
+//
+//		try {
+//		//	return new DltkAstConverter(source).parse(modules);
+//		} catch (Exception e) {
+//			System.out.println("DLTK AST convertion error");
+//			e.printStackTrace();
+//		//	return new ModuleDeclaration(0);
+//		}
+//	}
+
 	@SuppressWarnings("unchecked")
-	public synchronized void addAstModuleDeclaration(
-			IProject project, String nature, char[] fileName, char[] source,
-			List modules) {
-
-		updateAst(project, nature, modules);
-		System.out.println("AST update : " + project.getName() + "("
-				+ nature + ") - "
-				+ new Path(new String(fileName)).lastSegment().toString()
-				+ " Modules: " + getNames(modules));
-
-		try {
-		//	return new DltkAstConverter(source).parse(modules);
-		} catch (Exception e) {
-			System.out.println("DLTK AST convertion error");
-			e.printStackTrace();
-		//	return new ModuleDeclaration(0);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public synchronized void updateAst(IProject project, String nature, List modules) {
-		Map<String, RootNode> natureAst = asts.get(project.getName());
+	public synchronized void update(IVdmProject project, List modules) {
+		Map<String, IVdmModel> natureAst = asts.get(project);
+		String nature = project.getVdmNature();
 		if (natureAst != null) {
-			IVdmElement root = natureAst.get(nature);
+			IVdmModel root = natureAst.get(nature );
 			if (root != null && root.getRootElementList() != null) {
 				root.update(modules);
 			} else
-				natureAst.put(nature, new RootNode(modules));
+				natureAst.put(nature, new VdmModel(modules));
 		} else {
-			HashMap<String, RootNode> astModules = new HashMap<String, RootNode>();
-			astModules.put(nature, new RootNode(modules));
-			asts.put(project.getName(), astModules);
+			HashMap<String, IVdmModel> astModules = new HashMap<String, IVdmModel>();
+			astModules.put(nature, new VdmModel(modules));
+			asts.put(project, astModules);
+		}
+		
+		if(VdmCore.DEBUG)
+		{
+			String names = "";
+			for (Object object : modules)
+			{
+				if(object instanceof ClassDefinition)
+					names+=" "+ ((ClassDefinition)object).name.name;
+				if(object instanceof Module)
+					names+=" "+ ((Module)object).name.name;
+			}
+			System.out.println("AstManager.update: "+ project.getName()+"->"+ names);
 		}
 		// System.out.println("addAstModuleDeclaration : " + project.getName()
 		// + "(" + nature + ") - " + getNames(modules));
@@ -101,27 +124,29 @@ public class AstManager implements IAstManager {
 	// }
 
 	@SuppressWarnings("unchecked")
-	public IVdmElement getRootNode(IProject project, String nature) {
-		Map<String, RootNode> natureAst = asts.get(project.getName());
+	public IVdmModel getRootNode(IVdmProject project, String nature) {
+		Map<String, IVdmModel> natureAst = asts.get(project);
 		if (natureAst != null && natureAst.containsKey(nature)) {
 			return natureAst.get(nature);
+		}else
+		{
+			update(project, new Vector());
+			return getRootNode(project);
 		}
-		return null;
+		
 	}
 
-	public void setAstAsTypeChecked(IProject project, String nature) {
+	
 
-	}
-
-	public void clean(IProject project) {
-		if (asts.get(project.getName()) != null)
-			asts.remove(project.getName());
+	public void clean(IVdmProject project) {
+		if (asts.get(project) != null)
+			asts.remove(project);
 
 	}
 
 	public List<IProject> getProjects() {
 		List<IProject> projects = new Vector<IProject>();
-//		projects.addAll(asts.keySet());
+		projects.addAll(asts.keySet());
 		return projects;
 	}
 
@@ -129,7 +154,7 @@ public class AstManager implements IAstManager {
 	public List<String> getNatures(IProject project) {
 		List<String> natures = new Vector<String>();
 
-		Map<String, RootNode> roots = asts.get(project);
+		Map<String, IVdmModel> roots = asts.get(project);
 		if (roots != null) {
 			natures.addAll(roots.keySet());
 		}
@@ -176,9 +201,13 @@ public class AstManager implements IAstManager {
 	}
 
 	@SuppressWarnings("unchecked")
-	public IVdmElement getRootNode(IVdmProject project)
+	public IVdmModel getRootNode(IVdmProject project)
 	{
 		return getRootNode(project, project.getVdmNature());
 	}
+
+
+
+
 
 }

@@ -9,11 +9,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.overture.ide.core.Activator;
+import org.overture.ide.core.VdmCore;
+import org.overture.ide.core.IVdmModel;
+import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.ICoreConstants;
-import org.overture.ide.core.ast.AstManager;
-import org.overture.ide.core.ast.IVdmElement;
-import org.overture.ide.core.utility.IVdmProject;
+import org.overture.ide.core.IVdmProject;
+import org.overture.ide.internal.core.ast.VdmModelManager;
 
 public class SourceParserManager {
 	/**
@@ -127,8 +128,8 @@ public class SourceParserManager {
 		{
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		}
-		List<IFile> files = project.getSpecFiles();
-		for (IFile iFile : files)
+		List<IVdmSourceUnit> files = project.getSpecFiles();
+		for (IVdmSourceUnit iFile : files)
 		{
 			parseFile(project, iFile);
 		}
@@ -144,13 +145,13 @@ public class SourceParserManager {
 	 */
 	@SuppressWarnings("unchecked")
 	public static void parseFile(IVdmProject project,
-			final IFile file) throws CoreException, IOException
+			final IVdmSourceUnit file) throws CoreException, IOException
 	{
 		
 
-		IVdmElement rootNode = AstManager.instance()
+		IVdmModel rootNode = VdmModelManager.getInstance()
 				.getRootNode(project);
-		if (rootNode != null && rootNode.hasFile(project.getFile(file)))
+		if (rootNode != null && rootNode.hasFile(project.getFile(file.getFile())))
 			return;
 
 		try
@@ -160,7 +161,7 @@ public class SourceParserManager {
 					.parse(file);
 		} catch (Exception e)
 		{
-			if (Activator.DEBUG)
+			if (VdmCore.DEBUG)
 			{
 				System.err.println("Error in parseFile");
 				e.printStackTrace();

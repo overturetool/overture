@@ -7,20 +7,23 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
+import org.overture.ide.core.IVdmModel;
+import org.overture.ide.core.IVdmSourceUnit;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
 
-public class RootNode<T> implements IVdmElement<T>
+public class VdmModel<T> implements IVdmModel<T>
 {
 	private boolean checked = false;
 	private Hashtable<String, Boolean> parseCurrectTable = new Hashtable<String, Boolean>();
 
 	private Date checkedTime;
 	private List<T> rootElementList;
+	private List<IVdmSourceUnit> vdmSourceUnits = new Vector<IVdmSourceUnit>();
 
-	public RootNode(List<T> modules) {
+	public VdmModel(List<T> modules) {
 		this.rootElementList = modules;
 	}
 
@@ -75,59 +78,7 @@ public class RootNode<T> implements IVdmElement<T>
 		return checked;
 	}
 
-	/***
-	 * Updates the local definition list with a new list of Definitions if any definition exists the old
-	 * definitions are replaced
-	 * 
-	 * @param module
-	 *            the new definition
-	 */
-	// @SuppressWarnings("unchecked")
-	// public synchronized void update(List<T> modules)
-	// {
-	// this.setChecked(false);
-	// if (this.rootElementList.size() != 0)
-	// for (Object module : modules)
-	// {
-	// if (module instanceof ClassDefinition)
-	// update((ClassDefinition) module);
-	// else if (module instanceof Module)
-	// update((Module) module);
-	// }
-	// else
-	// {
-	// this.rootElementList.addAll(modules);
-	// }
-	//
-	// }
 
-	// /***
-	// * Updates the local list with a new Definition if it already exists the
-	// old
-	// * one is replaced
-	// *
-	// * @param module
-	// * the new definition
-	// */
-	// @SuppressWarnings("unchecked")
-	// private void update(Module module)
-	// {
-	// Module existingModule = null;
-	// for (Object m : this.rootElementList)
-	// {
-	// if (m instanceof Module
-	// && ((Module) m).name.equals(module.name)
-	// && ((Module) m).name.location.file.getName()
-	// .equals(module.name.location.file.getName()))
-	// existingModule = (Module) m;
-	// }
-	//
-	// if (existingModule != null)
-	// this.rootElementList.remove(existingModule);
-	//
-	// this.rootElementList.add(module);
-	//
-	// }
 
 	/*
 	 * (non-Javadoc)
@@ -302,24 +253,49 @@ public class RootNode<T> implements IVdmElement<T>
 	}
 
 	@SuppressWarnings("unchecked")
-	public IVdmElement filter(IFile file)
+	public IVdmModel filter(IFile file)
 	{
 		List modules = new Vector();
 
 		for (Object o : rootElementList)
 		{
 			if (o instanceof Module
-					&& ((Module) o).name.location.file.getName().equals(file.getName()))
+					&& ((Module) o).name.location.file.getName()
+							.equals(file.getName()))
 				modules.add(o);
 			else if (o instanceof ClassDefinition
-					&& ((ClassDefinition) o).name.location.file.getName().equals(file.getName()))
+					&& ((ClassDefinition) o).name.location.file.getName()
+							.equals(file.getName()))
 				modules.add(o);
 
 		}
 		if (modules.size() > 0)
-			return new RootNode<T>(modules);
+			return new VdmModel<T>(modules);
 		else
 			return null;
 
+	}
+
+	public Object getAdapter(Class adapter)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void addVdmSourceUnit(IVdmSourceUnit unit)
+	{
+		if (!vdmSourceUnits.contains(unit))
+			this.vdmSourceUnits.add(unit);
+
+	}
+
+	public IVdmSourceUnit getVdmSourceUnit(IFile file)
+	{
+		for (IVdmSourceUnit unit : vdmSourceUnits)
+		{
+			if (unit.getFile().equals(file))
+				return unit;
+		}
+		return null;
 	}
 }

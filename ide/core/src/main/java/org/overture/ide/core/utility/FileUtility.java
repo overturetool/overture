@@ -11,7 +11,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.overture.ide.core.Activator;
+import org.overture.ide.core.VdmCore;
 import org.overturetool.vdmj.lex.LexLocation;
 
 public class FileUtility
@@ -163,7 +163,7 @@ public class FileUtility
 			}
 		} catch (CoreException e)
 		{
-			if (Activator.DEBUG)
+			if (VdmCore.DEBUG)
 			{
 				e.printStackTrace();
 			}

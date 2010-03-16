@@ -8,12 +8,13 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
-import org.overture.ide.core.Activator;
+import org.overture.ide.core.VdmCore;
+import org.overture.ide.core.IVdmModel;
+import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.ICoreConstants;
-import org.overture.ide.core.ast.AstManager;
-import org.overture.ide.core.ast.IVdmElement;
+import org.overture.ide.core.IVdmProject;
 import org.overture.ide.core.parser.SourceParserManager;
-import org.overture.ide.core.utility.IVdmProject;
+import org.overture.ide.internal.core.ast.VdmModelManager;
 
 public class SafeBuilder extends Thread
 {
@@ -61,19 +62,18 @@ public class SafeBuilder extends Thread
 								// (currentProject.hasNature(builder.getNatureId()))
 								// {
 
-								AstManager.instance().clean(currentProject);// we do now support incremental
+								VdmModelManager.getInstance().clean(currentProject);// we do now support incremental
 																			// build
 
 								SourceParserManager.parseMissingFiles(currentProject,
 										monitor);
 
-								final IVdmElement rootNode = AstManager.instance()
-										.getRootNode(currentProject);
+								final IVdmModel rootNode = currentProject.getModel();
 								// if the project don't have parse errors
 								if (rootNode != null
 										&& rootNode.isParseCorrect())
 								{
-									if (Activator.DEBUG)
+									if (VdmCore.DEBUG)
 										System.out.println("Type correct .. building");
 									monitor.subTask("Type checking");
 									statusList.add(builder.buileModelElements(currentProject,

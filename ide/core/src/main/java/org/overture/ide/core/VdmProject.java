@@ -1,8 +1,9 @@
-package org.overture.ide.core.utility;
+package org.overture.ide.core;
 
 import java.io.File;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -26,9 +27,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.Job;
-import org.overture.ide.core.Activator;
-import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.ast.NotAllowedException;
+import org.overture.ide.core.utility.ILanguage;
+import org.overture.ide.core.utility.LanguageManager;
+import org.overture.ide.core.utility.Project;
+import org.overture.ide.internal.core.ast.VdmModelManager;
 import org.overturetool.vdmj.Release;
 
 public class VdmProject extends Project implements IVdmProject
@@ -42,7 +45,7 @@ public class VdmProject extends Project implements IVdmProject
 
 	private ILanguage language = null;
 
-	public VdmProject(IProject project) throws CoreException,
+	private VdmProject(IProject project) throws CoreException,
 			NotAllowedException {
 		super(project);
 		for (ILanguage language : LanguageManager.getInstance().getLanguages())
@@ -78,25 +81,38 @@ public class VdmProject extends Project implements IVdmProject
 		return false;
 	}
 
+	static Map<String, IVdmProject> projects = new Hashtable<String, IVdmProject>();
+
 	public static IVdmProject createProject(IProject project)
 	{
-		try
+		if (projects.containsKey(project.getName()))
+			return projects.get(project.getName());
+		else
 		{
-			return new VdmProject(project);
-		} catch (CoreException e)
-		{
-			if (Activator.DEBUG)
+			try
 			{
-				e.printStackTrace();
-			}
-			return null;
-		} catch (NotAllowedException e)
-		{
-			if (Activator.DEBUG)
+				IVdmProject vdmProject = new VdmProject(project);
+				projects.put(vdmProject.getName(), vdmProject);
+				for (IVdmSourceUnit unit : vdmProject.getSpecFiles())
+				{
+					vdmProject.getModel().addVdmSourceUnit(unit);
+				}
+				return vdmProject;
+			} catch (CoreException e)
 			{
-				e.printStackTrace();
+				if (VdmCore.DEBUG)
+				{
+					e.printStackTrace();
+				}
+				return null;
+			} catch (NotAllowedException e)
+			{
+				if (VdmCore.DEBUG)
+				{
+					e.printStackTrace();
+				}
+				return null;
 			}
-			return null;
 		}
 	}
 
@@ -156,16 +172,12 @@ public class VdmProject extends Project implements IVdmProject
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.overture.ide.utility.IVdmProject#setBuilder(org.overturetool.vdmj
-	 * .Release)
+	 * @see org.overture.ide.utility.IVdmProject#setBuilder(org.overturetool.vdmj .Release)
 	 */
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.overture.ide.utility.IVdmProject1#setBuilder(org.overturetool.vdmj
-	 * .Release)
+	 * @see org.overture.ide.utility.IVdmProject1#setBuilder(org.overturetool.vdmj .Release)
 	 */
 	public void setBuilder(Release languageVersion) throws CoreException
 	{
@@ -281,9 +293,7 @@ public class VdmProject extends Project implements IVdmProject
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.overture.ide.utility.IVdmProject1#setDynamictypechecks(java.lang.
-	 * Boolean)
+	 * @see org.overture.ide.utility.IVdmProject1#setDynamictypechecks(java.lang. Boolean)
 	 */
 	public void setDynamictypechecks(Boolean value) throws CoreException
 	{
@@ -296,8 +306,7 @@ public class VdmProject extends Project implements IVdmProject
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.overture.ide.utility.IVdmProject1#setInvchecks(java.lang.Boolean)
+	 * @see org.overture.ide.utility.IVdmProject1#setInvchecks(java.lang.Boolean)
 	 */
 	public void setInvchecks(Boolean value) throws CoreException
 	{
@@ -310,8 +319,7 @@ public class VdmProject extends Project implements IVdmProject
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.overture.ide.utility.IVdmProject1#setPostchecks(java.lang.Boolean)
+	 * @see org.overture.ide.utility.IVdmProject1#setPostchecks(java.lang.Boolean)
 	 */
 	public void setPostchecks(Boolean value) throws CoreException
 	{
@@ -324,8 +332,7 @@ public class VdmProject extends Project implements IVdmProject
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.overture.ide.utility.IVdmProject1#setPrechecks(java.lang.Boolean)
+	 * @see org.overture.ide.utility.IVdmProject1#setPrechecks(java.lang.Boolean)
 	 */
 	public void setPrechecks(Boolean value) throws CoreException
 	{
@@ -338,9 +345,7 @@ public class VdmProject extends Project implements IVdmProject
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.overture.ide.utility.IVdmProject1#setSuppressWarnings(java.lang.Boolean
-	 * )
+	 * @see org.overture.ide.utility.IVdmProject1#setSuppressWarnings(java.lang.Boolean )
 	 */
 	public void setSuppressWarnings(Boolean value) throws CoreException
 	{
@@ -402,8 +407,8 @@ public class VdmProject extends Project implements IVdmProject
 	}
 
 	/**
-	 * For this marvelous project we need to: - create the default Eclipse
-	 * project - add the custom project nature - create the folder structure
+	 * For this marvelous project we need to: - create the default Eclipse project - add the custom project
+	 * nature - create the folder structure
 	 * 
 	 * @param projectName
 	 * @param location
@@ -538,9 +543,8 @@ public class VdmProject extends Project implements IVdmProject
 	}
 
 	/***
-	 * This method removed all problem markers and its sub-types from the
-	 * project. It is called before an instance of the AbstractBuilder is
-	 * created
+	 * This method removed all problem markers and its sub-types from the project. It is called before an
+	 * instance of the AbstractBuilder is created
 	 * 
 	 * @param project
 	 *            The project which should be build.
@@ -553,7 +557,7 @@ public class VdmProject extends Project implements IVdmProject
 
 		} catch (CoreException e)
 		{
-			if (Activator.DEBUG)
+			if (VdmCore.DEBUG)
 			{
 
 				e.printStackTrace();
@@ -596,9 +600,9 @@ public class VdmProject extends Project implements IVdmProject
 	 * @return a list of IFile
 	 * @throws CoreException
 	 */
-	public List<IFile> getSpecFiles() throws CoreException
+	public List<IVdmSourceUnit> getSpecFiles() throws CoreException
 	{
-		List<IFile> list = new Vector<IFile>();
+		List<IVdmSourceUnit> list = new Vector<IVdmSourceUnit>();
 
 		for (String contentTypeId : language.getContentTypes())
 		{
@@ -623,9 +627,10 @@ public class VdmProject extends Project implements IVdmProject
 	 * @return a list of IFile
 	 * @throws CoreException
 	 */
-	public List<IFile> getFiles(String contentTypeId) throws CoreException
+	public List<IVdmSourceUnit> getFiles(String contentTypeId)
+			throws CoreException
 	{
-		List<IFile> list = new Vector<IFile>();
+		List<IVdmSourceUnit> list = new Vector<IVdmSourceUnit>();
 		for (IResource res : members(IContainer.INCLUDE_PHANTOMS
 				| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
 		{
@@ -642,15 +647,15 @@ public class VdmProject extends Project implements IVdmProject
 	 * @param resource
 	 *            the resource currently selected to be searched
 	 * @param contentTypeId
-	 *            a possibly null content type id, if null it is just checked
-	 *            that a content type exist for the file
+	 *            a possibly null content type id, if null it is just checked that a content type exist for
+	 *            the file
 	 * @return a list of IFiles
 	 * @throws CoreException
 	 */
-	private static List<IFile> getFiles(IProject project, IResource resource,
-			String contentTypeId) throws CoreException
+	private static List<IVdmSourceUnit> getFiles(IProject project,
+			IResource resource, String contentTypeId) throws CoreException
 	{
-		List<IFile> list = new Vector<IFile>();
+		List<IVdmSourceUnit> list = new Vector<IVdmSourceUnit>();
 
 		if (resource instanceof IFolder)
 		{
@@ -674,9 +679,36 @@ public class VdmProject extends Project implements IVdmProject
 
 			if (contentType != null
 					&& ((contentTypeId != null && contentTypeId.equals(contentType.getId())) || contentTypeId == null))
-				list.add((IFile) resource);
+				list.add(VdmProject.getVdmSourceUnit((IFile) resource));
 		}
 		return list;
+	}
+
+	static Map<IFile, IVdmSourceUnit> vdmSourceUnits = new Hashtable<IFile, IVdmSourceUnit>();
+
+	public static IVdmSourceUnit getVdmSourceUnit(IFile file)
+	{
+		if (file == null)
+		{
+			return null;
+		}
+
+		if (vdmSourceUnits.containsKey(file))
+		{
+			return vdmSourceUnits.get(file);
+		} else
+		{
+			if (VdmProject.isVdmProject(file.getProject()))
+			{
+				IVdmProject project = VdmProject.createProject(file.getProject());
+				IVdmSourceUnit unit = new VdmSourceUnit(project,
+						file);
+				vdmSourceUnits.put(file, unit);
+				project.getModel().addVdmSourceUnit(unit);
+				return unit;
+			}
+		}
+		return null;
 	}
 
 	/***
@@ -690,17 +722,16 @@ public class VdmProject extends Project implements IVdmProject
 	public List<IFile> getFiles() throws CoreException
 	{
 		List<IFile> list = new Vector<IFile>();
-		for (IResource res : project.members(IContainer.INCLUDE_PHANTOMS
-				| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
-		{
-			list.addAll(getFiles(project, res, null));
-		}
+//		for (IResource res : project.members(IContainer.INCLUDE_PHANTOMS
+//				| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
+//		{
+//			list.addAll(getFiles(project, res, null));
+//		}
 		return list;
 	}
 
 	/***
-	 * Gets the IFile from the Eclipse filesystem from a normal file placed in a
-	 * project
+	 * Gets the IFile from the Eclipse filesystem from a normal file placed in a project
 	 * 
 	 * @param project
 	 *            the project which holds the file
@@ -750,6 +781,11 @@ public class VdmProject extends Project implements IVdmProject
 		IPath absolutePath = new Path(file.getAbsolutePath());
 		IFile ifile = project.getFile(absolutePath.lastSegment());
 		ifile.createLink(absolutePath, IResource.NONE, null);
+	}
+
+	public IVdmModel getModel()
+	{
+		return VdmModelManager.getInstance().getRootNode(this);
 	}
 
 }

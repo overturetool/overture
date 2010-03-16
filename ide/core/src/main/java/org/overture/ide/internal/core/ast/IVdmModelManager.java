@@ -1,12 +1,14 @@
-package org.overture.ide.core.ast;
+package org.overture.ide.internal.core.ast;
 
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.overture.ide.core.utility.IVdmProject;
+import org.overture.ide.core.IVdmModel;
+import org.overture.ide.core.IVdmSourceUnit;
+import org.overture.ide.core.IVdmProject;
 
 
-public interface IAstManager
+public interface IVdmModelManager
 {
 	/**
 	 * Set a new parsed AST
@@ -19,7 +21,7 @@ public interface IAstManager
 	 *            A new class list or module list
 	 */
 	@SuppressWarnings("unchecked")
-	void updateAst(IProject project, String nature, List data);
+	void update(IVdmProject project,  List data);
 
 	
 
@@ -34,25 +36,25 @@ public interface IAstManager
 //	 */
 //	ModuleDeclaration getAstModuleDeclaration(IProject project, String nature);
 
-	/**
-	 * Set the new AST nodes in the ast for the current project and nature
-	 * 
-	 * @param project
-	 *            The project of the AST component
-	 * @param nature
-	 *            The nature used when parsing
-	 * @param fileName
-	 *            The file which is parsed
-	 * @param source
-	 *            The source of the file
-	 * @param modules
-	 *            The modules constructed by the parser
-	 * @return Returns a ModuleDeclaration of the AST parsed by the parser
-	 */
-	@SuppressWarnings("unchecked")
-	void addAstModuleDeclaration(IProject project, String nature,
-			char[] fileName, char[] source, List modules);
-	
+//	/**
+//	 * Set the new AST nodes in the ast for the current project and nature
+//	 * 
+//	 * @param project
+//	 *            The project of the AST component
+//	 * @param nature
+//	 *            The nature used when parsing
+//	 * @param fileName
+//	 *            The file which is parsed
+//	 * @param source
+//	 *            The source of the file
+//	 * @param modules
+//	 *            The modules constructed by the parser
+//	 * @return Returns a ModuleDeclaration of the AST parsed by the parser
+//	 */
+//	@SuppressWarnings("unchecked")
+//	void addAstModuleDeclaration(IVdmProject project, String nature,
+//			char[] fileName, char[] source, List modules);
+//	
 	
 
 //	/**
@@ -70,7 +72,7 @@ public interface IAstManager
 	 * @return The rootnode for the current project + nature
 	 */
 	@SuppressWarnings("unchecked")
-	IVdmElement getRootNode(IProject project, String nature);
+	IVdmModel getRootNode(IVdmProject project, String nature);
 	
 	/**
 	 * Get the RootNode from a project and the corresponding nature
@@ -79,16 +81,16 @@ public interface IAstManager
 	 * @return The rootnode for the current project + nature
 	 */
 	@SuppressWarnings("unchecked")
-	IVdmElement getRootNode(IVdmProject project);
+	IVdmModel getRootNode(IVdmProject project);
 	
-	void setAstAsTypeChecked(IProject project, String nature);
+
 	
 	
 	/**
 	 * Removed all AST info from the current project 
 	 * @param project the project which should be cleaned
 	 */
-	void clean(IProject project);
+	void clean(IVdmProject project);
 	
 	/**
 	 * Returns all known projects of the Manager
