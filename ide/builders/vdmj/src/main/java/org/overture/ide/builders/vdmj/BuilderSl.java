@@ -2,7 +2,8 @@ package org.overture.ide.builders.vdmj;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.overture.ide.core.ast.IVdmElement;
+import org.overture.ide.core.IVdmModel;
+import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.Settings;
@@ -33,7 +34,7 @@ public class BuilderSl extends VdmjBuilder
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public IStatus buileModelElements(IVdmElement rooList)
+	public IStatus buileModelElements(IVdmModel rooList)
 	{
 		try
 		{
