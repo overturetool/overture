@@ -1,6 +1,8 @@
 package org.overture.ide.parsers.vdmj;
 
 import org.eclipse.core.resources.IFile;
+import org.overture.ide.core.IVdmModel;
+import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.parser.AbstractParserParticipant;
 import org.overturetool.vdmj.*;
 import org.overturetool.vdmj.definitions.*;
@@ -12,8 +14,9 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 {
 
 	@Override
-	protected ParseResult startParse(IFile file, String source, String charset)
+	protected ParseResult startParse(IVdmSourceUnit file, String source, String charset)
 	{
+		file.setType(IVdmSourceUnit.VDM_CLASS_SPEC);
 		Settings.dialect = Dialect.VDM_PP;
 		ClassList classes = new ClassList();
 		classes.clear();
@@ -28,7 +31,7 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 
 			LexTokenReader ltr = new LexTokenReader(source,
 					Settings.dialect,
-					file.getLocation().toFile(),
+					file.getSystemFile(),
 					charset);
 			reader = new ClassReader(ltr);
 			classes.addAll(reader.readClasses());
