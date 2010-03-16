@@ -6,6 +6,7 @@ import org.eclipse.jface.viewers.StyledString.Styler;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.utility.Flags;
 import org.overture.ide.ui.internal.VdmUIMessages;
+import org.overturetool.vdmj.definitions.ClassDefinition;
 
 public class VdmElementLabelComposer {
 
@@ -120,7 +121,7 @@ public class VdmElementLabelComposer {
 	 */
 	public static final String ADDITIONAL_DELIMITERS= "<>(),?{} "; //$NON-NLS-1$
 
-	private final static long QUALIFIER_FLAGS= VdmElementLabels.P_COMPRESSED | VdmElementLabels.USE_RESOLVED;
+//	private final static long QUALIFIER_FLAGS= VdmElementLabels.P_COMPRESSED | VdmElementLabels.USE_RESOLVED;
 
 	private static final Styler QUALIFIER_STYLE= StyledString.QUALIFIER_STYLER;
 	private static final Styler COUNTER_STYLE= StyledString.COUNTER_STYLER;
@@ -167,6 +168,22 @@ public class VdmElementLabelComposer {
 	 */
 	public VdmElementLabelComposer(StringBuffer buffer) {
 		this(new FlexibleStringBuffer(buffer));
+	}
+
+	public void appendElementLabel(IVdmElement element, long flags) {
+		if(element instanceof ClassDefinition){
+			appendClassDefinitionLabel((ClassDefinition) element,flags);
+		}
+		else 
+		{
+			fBuffer.append("THIS IS A TEST");
+		}
+		
+	}
+
+	private void appendClassDefinitionLabel(ClassDefinition element, long flags) {
+		// TODO Auto-generated method stub
+		fBuffer.append(element.name.name);
 	}
 
 //	/**

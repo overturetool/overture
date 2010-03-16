@@ -14,6 +14,12 @@ import org.overture.ide.core.utility.Flags;
 import org.overture.ide.core.utility.IVdmProject;
 import org.overture.ide.ui.VdmPluginImages;
 import org.overture.ide.ui.VdmUIPlugin;
+import org.overturetool.vdmj.definitions.AccessSpecifier;
+import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
+import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
+import org.overturetool.vdmj.definitions.LocalDefinition;
 
 public class VdmElementImageProvider {
 	/**
@@ -79,7 +85,19 @@ public class VdmElementImageProvider {
 	private ImageDescriptor computeDescriptor(Object element, int flags){
 		if (element instanceof IVdmElement) {
 			return getJavaImageDescriptor((IVdmElement) element, flags);
-		} else if (element instanceof IFile) {
+		} else if( element instanceof ClassDefinition)
+		{
+			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_OBJS_CLASS);
+		} else if( element instanceof InstanceVariableDefinition)
+		{
+			return getInstanceVariableDefinitionImage((InstanceVariableDefinition) element);
+		} else if( element instanceof ExplicitOperationDefinition){
+			return getExplicitOperationDefinitionImage((ExplicitOperationDefinition) element);
+		} else if( element instanceof LocalDefinition){
+			return getLocalDefinitionImage((LocalDefinition) element);
+		}
+		
+		else if (element instanceof IFile) {
 			IFile file= (IFile) element;
 //			if (JavaCore.isJavaLikeFileName(file.getName())) {
 //				return getCUResourceImageDescriptor(file, flags); // image for a CU not on the build path
@@ -89,6 +107,75 @@ public class VdmElementImageProvider {
 			return getWorkbenchImageDescriptor((IAdaptable) element, flags);
 		}
 		return null;
+	}
+
+	private ImageDescriptor getLocalDefinitionImage(LocalDefinition element) {
+		ImageDescriptor result = null;		
+		AccessSpecifier as = element.accessSpecifier;
+						
+		if(as.access.toString().equals("private"))
+		{
+			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PRIVATE);
+		} else if(as.access.toString().equals("public"))
+		{
+			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PUBLIC);
+		} else if (as.access.toString().equals("protected"))
+		{
+			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PROTECTED);
+		} else if(as.access.toString().equals("default"))
+		{
+			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_DEFAULT);
+		}
+		
+		
+		return result;
+	}
+
+	private ImageDescriptor getExplicitOperationDefinitionImage(
+			ExplicitOperationDefinition element) {
+		ImageDescriptor result = null;		
+		AccessSpecifier as = element.accessSpecifier;
+						
+		if(as.access.toString().equals("private"))
+		{
+			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_METHOD_PRIVATE);
+		} else if(as.access.toString().equals("public"))
+		{
+			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_METHOD_PUBLIC);
+		} else if (as.access.toString().equals("protected"))
+		{
+			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_METHOD_PROTECTED);
+		}else if(as.access.toString().equals("default"))
+		{
+			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_METHOD_DEFAULT);
+		}
+		
+		
+		return result;
+		
+	}
+
+	private ImageDescriptor getInstanceVariableDefinitionImage(InstanceVariableDefinition element) {
+		ImageDescriptor result = null;		
+		AccessSpecifier as = element.accessSpecifier;
+						
+		if(as.access.toString().equals("private"))
+		{
+			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PRIVATE);
+		} else if(as.access.toString().equals("public"))
+		{
+			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PUBLIC);
+		} else if (as.access.toString().equals("protected"))
+		{
+			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PROTECTED);
+		} else if(as.access.toString().equals("default"))
+		{
+			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_DEFAULT);
+		}
+		
+		
+		return result;
+		
 	}
 
 	private static boolean showOverlayIcons(int flags) {

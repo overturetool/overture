@@ -20,7 +20,8 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 		IStyledLabelProvider {
 
 	protected ListenerList fListeners = new ListenerList();
-
+	 
+	public String bla = null;
 	protected VdmElementImageProvider fImageLabelProvider;
 //	protected StorageLabelProvider fStorageLabelProvider;
 

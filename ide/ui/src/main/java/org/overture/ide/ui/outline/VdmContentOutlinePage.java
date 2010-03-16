@@ -11,6 +11,8 @@ import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.overture.ide.core.ast.IVdmElement;
 import org.overture.ide.ui.editor.core.VdmEditor;
+import org.overture.ide.ui.internal.viewsupport.DecorationgVdmLabelProvider;
+import org.overture.ide.ui.internal.viewsupport.VdmUILabelProvider;
 
 public class VdmContentOutlinePage extends ContentOutlinePage implements
 		IContentOutlinePage
@@ -40,10 +42,12 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 
 		fOutlineViewer = new TreeViewer(parent);
 		fOutlineViewer.setContentProvider(new VdmOutlineTreeContentProvider());
-		fOutlineViewer.setLabelProvider(new VdmOutlineLabelProvider());
+		//fOutlineViewer.setLabelProvider(new VdmOutlineLabelProvider());
+		fOutlineViewer.setLabelProvider(new DecorationgVdmLabelProvider(new VdmUILabelProvider()) );
 		fOutlineViewer.addSelectionChangedListener(this);
 		fOutlineViewer.setAutoExpandLevel(ALL_LEVELS);
 		fOutlineViewer.setInput(fInput);
+		addSelectionChangedListener(new VdmSelectionListener());
 
 	}
 
@@ -79,7 +83,7 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 	@Override
 	public void addSelectionChangedListener(ISelectionChangedListener listener)
 	{
-		// TODO Auto-generated method stub
+		super.addSelectionChangedListener(listener);
 
 	}
 
