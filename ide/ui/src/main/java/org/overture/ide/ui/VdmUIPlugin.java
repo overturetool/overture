@@ -7,7 +7,7 @@ import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.overture.ide.core.Activator;
+import org.overture.ide.core.VdmCore;
 import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
 import org.overture.ide.ui.internal.viewsupport.ImageDescriptorRegistry;
 import org.overture.ide.ui.internal.viewsupport.ProblemMarkerManager;

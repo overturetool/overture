@@ -15,11 +15,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.overture.ide.core.Activator;
+import org.overture.ide.core.VdmCore;
+import org.overture.ide.core.VdmProject;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.parser.ISourceParser;
 import org.overture.ide.core.parser.SourceParserManager;
-import org.overture.ide.core.utility.VdmProject;
 import org.overture.ide.ui.outline.VdmContentOutlinePage;
 
 public class VdmReconcilingStrategy implements IReconcilingStrategy {
@@ -45,39 +45,36 @@ public class VdmReconcilingStrategy implements IReconcilingStrategy {
 	}
 
 	public void reconcile(IRegion partition) {
-		if (Activator.DEBUG) {
+		if (VdmCore.DEBUG) {
 			System.out.println("reconcile(IRegion partition)");
 			System.out.println("File: "
 					+ (currentDocument).getFile().toString());
-			if(outline != null)
-			{
-				VdmContentOutlinePage page = (VdmContentOutlinePage) outline.getCurrentPage();
-				
-			}
+//			if(outline != null)
+//			{
+//				VdmContentOutlinePage page = (VdmContentOutlinePage) outline.getCurrentPage();
+//				
+//			}
 		}
 		try {
 
 			if (VdmProject.isVdmProject(currentDocument.getProject())) {
 
-				try {
-					ISourceParser parser = SourceParserManager
-							.getInstance()
-							.getSourceParser(
-									new VdmProject(currentDocument.getProject()));
+				if(VdmProject.isVdmProject(currentDocument.getProject()))
+				{
+				ISourceParser parser = SourceParserManager
+						.getInstance()
+						.getSourceParser(
+								VdmProject.createProject(currentDocument.getProject()));
 
-					if (parser != null) {
-						parser.parse(currentDocument.getFile(), currentDocument
-								.get());
-					}
-				} catch (NotAllowedException e) {
-					if (Activator.DEBUG) {
-						e.printStackTrace();
-					}
+				if (parser != null) {
+					parser.parse(VdmProject.getVdmSourceUnit( currentDocument.getFile()), currentDocument
+							.get());
+				}
 				}
 			}
 
 		} catch (CoreException e) {
-			if (Activator.DEBUG)
+			if (VdmCore.DEBUG)
 				e.printStackTrace();
 		}
 	}

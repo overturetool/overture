@@ -6,8 +6,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.overture.ide.core.utility.IVdmProject;
-import org.overture.ide.core.utility.VdmProject;
+import org.overture.ide.core.IVdmProject;
+import org.overture.ide.core.VdmProject;
 
 public class VdmNavigatorContentProvider implements ITreeContentProvider {
 

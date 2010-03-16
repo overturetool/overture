@@ -9,9 +9,9 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
-import org.overture.ide.core.Activator;
+import org.overture.ide.core.VdmCore;
+import org.overture.ide.core.VdmProject;
 import org.overture.ide.core.ast.NotAllowedException;
-import org.overture.ide.core.utility.VdmProject;
 
 
 public abstract class VdmNewProjectWizard extends Wizard implements IWorkbenchWizard, INewWizard{
@@ -69,11 +69,11 @@ public abstract class VdmNewProjectWizard extends Wizard implements IWorkbenchWi
 			VdmProject.createProject(name, location, getNature());
 		} catch (CoreException e)
 		{
-			if(Activator.DEBUG)
+			if(VdmCore.DEBUG)
 			e.printStackTrace();
 		} catch (NotAllowedException e)
 		{
-			if(Activator.DEBUG)
+			if(VdmCore.DEBUG)
 			e.printStackTrace();
 		}
 

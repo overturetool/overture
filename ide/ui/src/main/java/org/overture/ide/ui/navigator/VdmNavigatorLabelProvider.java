@@ -10,7 +10,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.IDescriptionProvider;
-import org.overture.ide.core.utility.IVdmProject;
+import org.overture.ide.core.IVdmProject;
 import org.overture.ide.ui.VdmUIPlugin;
 
 public class VdmNavigatorLabelProvider extends LabelProvider implements ILabelProvider, IDescriptionProvider {

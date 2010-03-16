@@ -4,9 +4,10 @@ import java.io.File;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.overture.ide.core.ast.IVdmElement;
+import org.overture.ide.core.IVdmModel;
+import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.ast.NotAllowedException;
-import org.overture.ide.core.ast.RootNode;
+import org.overture.ide.core.ast.VdmModel;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.modules.Module;
@@ -46,34 +47,31 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider
 
 	public Object[] getElements(Object inputElement)
 	{
-		if (inputElement instanceof RootNode)
-			try
-			{
-				IVdmElement node = (IVdmElement) inputElement;
-				if (node.hasClassList())
-					return node.getClassList().toArray();
-				else if (node.hasModuleList())
-				{
-					if(!node.getModuleList().isEmpty() && node.getModuleList().get(0).name.name.equals("DEFAULT"))
-					{
-						DefinitionList definitions = new DefinitionList();
-						
-						for(Module m : node.getModuleList())
-						{
-							definitions.addAll(m.defs);
-						}
-						
-						
-						Module module = new Module(new File("mergedFile"),definitions);
-						return new Object[]{module};
-					}
-					else
-						return node.getModuleList().toArray();
-				}
-			} catch (NotAllowedException e)
-			{
-				e.printStackTrace();
-			}
+		if (inputElement instanceof IVdmSourceUnit)
+		{
+			IVdmSourceUnit node = (IVdmSourceUnit) inputElement;
+			if (node.getType() == IVdmSourceUnit.VDM_CLASS_SPEC)
+				return node.getParseList().toArray();
+//				else if (node.hasModuleList())
+//				{
+//					if(!node.getModuleList().isEmpty() && node.getModuleList().get(0).name.name.equals("DEFAULT"))
+//					{
+//						DefinitionList definitions = new DefinitionList();
+//						
+//						for(Module m : node.getModuleList())
+//						{
+//							definitions.addAll(m.defs);
+//						}
+//						
+//						
+//						Module module = new Module(new File("mergedFile"),definitions);
+//						return new Object[]{module};
+//					}
+//					else
+//						return node.getModuleList().toArray();
+			return new Object[0];
+//				}
+		}
 		return new Object[0];
 	}
 
