@@ -1,11 +1,9 @@
 package org.overture.ide.ui.internal.viewsupport;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
 import org.overture.ide.core.IVdmElement;
-import org.overture.ide.core.utility.Flags;
-import org.overture.ide.ui.internal.VdmUIMessages;
+import org.overture.ide.ui.internal.util.Strings;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 
 public class VdmElementLabelComposer {

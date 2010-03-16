@@ -135,6 +135,7 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		fOutlineViewer.addSelectionChangedListener(this);
 		fOutlineViewer.setAutoExpandLevel(ALL_LEVELS);
 		fOutlineViewer.setInput(fInput);
+		
 		addSelectionChangedListener(new VdmSelectionListener());
 
 	}
@@ -206,6 +207,7 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		if (fOutlineViewer != null)
 		{
 			fOutlineViewer.setInput(fInput);
+			fOutlineViewer.expandAll();
 			
 		}
 		if(fListener!=null)

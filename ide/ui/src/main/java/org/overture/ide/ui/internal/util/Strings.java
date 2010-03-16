@@ -9,7 +9,8 @@ import org.eclipse.jface.text.ILineTracker;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.osgi.util.TextProcessor;
-import org.overture.ide.core.utility.IVdmProject;
+import org.overture.ide.core.IVdmProject;
+
 
 /**
  * Helper class to provide String manipulation functions not available in standard JDK.

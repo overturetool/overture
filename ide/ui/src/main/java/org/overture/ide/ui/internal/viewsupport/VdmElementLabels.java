@@ -1,18 +1,9 @@
 package org.overture.ide.ui.internal.viewsupport;
 
-import java.awt.Font;
-
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.jface.viewers.StyledString.Styler;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.TextStyle;
-import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.eclipse.osgi.util.TextProcessor;
 import org.overture.ide.core.IVdmElement;
-import org.overture.ide.core.utility.IVdmProject;
-import org.overture.ide.ui.internal.VdmUIMessages;
 import org.overture.ide.ui.internal.util.Strings;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
@@ -20,7 +11,6 @@ import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
 import org.overturetool.vdmj.definitions.LocalDefinition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
-import org.overturetool.vdmj.types.InvariantType;
 import org.overturetool.vdmj.types.NamedType;
 import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.Type;

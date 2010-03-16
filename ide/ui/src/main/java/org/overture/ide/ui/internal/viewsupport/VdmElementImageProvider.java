@@ -1,7 +1,6 @@
 package org.overture.ide.ui.internal.viewsupport;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
@@ -10,13 +9,10 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.overture.ide.core.IVdmElement;
-import org.overture.ide.core.utility.Flags;
-import org.overture.ide.core.utility.IVdmProject;
 import org.overture.ide.ui.VdmPluginImages;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overturetool.vdmj.definitions.AccessSpecifier;
 import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
 import org.overturetool.vdmj.definitions.LocalDefinition;
@@ -382,7 +378,8 @@ public class VdmElementImageProvider {
 //	}
 
 	private static boolean isDefaultFlag(int flags) {
-		return !Flags.isPublic(flags) && !Flags.isProtected(flags) && !Flags.isPrivate(flags);
+//		return !Flags.isPublic(flags) && !Flags.isProtected(flags) && !Flags.isPrivate(flags);
+	return false;
 	}
 
 //	private ImageDescriptor getPackageFragmentIcon(IVdmElement element) throws VdmModelException {
@@ -481,66 +478,67 @@ public class VdmElementImageProvider {
 
 	private static boolean confirmSynchronized(IVdmElement member) {
 		// Synchronized types are allowed but meaningless.
-		return member.getElementType() != IVdmElement.TYPE;
+//		return member.getElementType() != IVdmElement.TYPE;
+		return false;
 	}
 
 
 	public static ImageDescriptor getMethodImageDescriptor(boolean isInInterfaceOrAnnotation, int flags) {
-		if (Flags.isPublic(flags) || isInInterfaceOrAnnotation)
-			return VdmPluginImages.DESC_MISC_PUBLIC;
-		if (Flags.isProtected(flags))
-			return VdmPluginImages.DESC_MISC_PROTECTED;
-		if (Flags.isPrivate(flags))
-			return VdmPluginImages.DESC_MISC_PRIVATE;
+//		if (Flags.isPublic(flags) || isInInterfaceOrAnnotation)
+//			return VdmPluginImages.DESC_MISC_PUBLIC;
+//		if (Flags.isProtected(flags))
+//			return VdmPluginImages.DESC_MISC_PROTECTED;
+//		if (Flags.isPrivate(flags))
+//			return VdmPluginImages.DESC_MISC_PRIVATE;
 
 		return VdmPluginImages.DESC_MISC_DEFAULT;
 	}
 
 	public static ImageDescriptor getFieldImageDescriptor(boolean isInInterfaceOrAnnotation, int flags) {
-		if (Flags.isPublic(flags) || isInInterfaceOrAnnotation || Flags.isEnum(flags))
-			return VdmPluginImages.DESC_FIELD_PUBLIC;
-		if (Flags.isProtected(flags))
-			return VdmPluginImages.DESC_FIELD_PROTECTED;
-		if (Flags.isPrivate(flags))
-			return VdmPluginImages.DESC_FIELD_PRIVATE;
+//		if (Flags.isPublic(flags) || isInInterfaceOrAnnotation || Flags.isEnum(flags))
+//			return VdmPluginImages.DESC_FIELD_PUBLIC;
+//		if (Flags.isProtected(flags))
+//			return VdmPluginImages.DESC_FIELD_PROTECTED;
+//		if (Flags.isPrivate(flags))
+//			return VdmPluginImages.DESC_FIELD_PRIVATE;
 
 		return VdmPluginImages.DESC_FIELD_DEFAULT;
 	}
 
 	public static ImageDescriptor getTypeImageDescriptor(boolean isInner, boolean isInInterfaceOrAnnotation, int flags, boolean useLightIcons) {
-		if (Flags.isEnum(flags)) {
-			if (useLightIcons) {
-				return VdmPluginImages.DESC_OBJS_ENUM_ALT;
-			}
-			if (isInner) {
-				return getInnerEnumImageDescriptor(isInInterfaceOrAnnotation, flags);
-			}
-			return getEnumImageDescriptor(flags);
-		} else if (Flags.isAnnotation(flags)) {
-			if (useLightIcons) {
-				return VdmPluginImages.DESC_OBJS_ANNOTATION_ALT;
-			}
-			if (isInner) {
-				return getInnerAnnotationImageDescriptor(isInInterfaceOrAnnotation, flags);
-			}
-			return getAnnotationImageDescriptor(flags);
-		}  else if (Flags.isInterface(flags)) {
-			if (useLightIcons) {
-				return VdmPluginImages.DESC_OBJS_INTERFACEALT;
-			}
-			if (isInner) {
-				return getInnerInterfaceImageDescriptor(isInInterfaceOrAnnotation, flags);
-			}
-			return getInterfaceImageDescriptor(flags);
-		} else {
-			if (useLightIcons) {
-				return VdmPluginImages.DESC_OBJS_CLASSALT;
-			}
-			if (isInner) {
-				return getInnerClassImageDescriptor(isInInterfaceOrAnnotation, flags);
-			}
+//		if (Flags.isEnum(flags)) {
+//			if (useLightIcons) {
+//				return VdmPluginImages.DESC_OBJS_ENUM_ALT;
+//			}
+//			if (isInner) {
+//				return getInnerEnumImageDescriptor(isInInterfaceOrAnnotation, flags);
+//			}
+//			return getEnumImageDescriptor(flags);
+//		} else if (Flags.isAnnotation(flags)) {
+//			if (useLightIcons) {
+//				return VdmPluginImages.DESC_OBJS_ANNOTATION_ALT;
+//			}
+//			if (isInner) {
+//				return getInnerAnnotationImageDescriptor(isInInterfaceOrAnnotation, flags);
+//			}
+//			return getAnnotationImageDescriptor(flags);
+//		}  else if (Flags.isInterface(flags)) {
+//			if (useLightIcons) {
+//				return VdmPluginImages.DESC_OBJS_INTERFACEALT;
+//			}
+//			if (isInner) {
+//				return getInnerInterfaceImageDescriptor(isInInterfaceOrAnnotation, flags);
+//			}
+//			return getInterfaceImageDescriptor(flags);
+//		} else {
+//			if (useLightIcons) {
+//				return VdmPluginImages.DESC_OBJS_CLASSALT;
+//			}
+//			if (isInner) {
+//				return getInnerClassImageDescriptor(isInInterfaceOrAnnotation, flags);
+//			}
 			return getClassImageDescriptor(flags);
-		}
+//		}
 	}
 
 
@@ -550,74 +548,74 @@ public class VdmElementImageProvider {
 
 
 	private static ImageDescriptor getClassImageDescriptor(int flags) {
-		if (Flags.isPublic(flags) || Flags.isProtected(flags) || Flags.isPrivate(flags))
-			return VdmPluginImages.DESC_OBJS_CLASS;
-		else
+//		if (Flags.isPublic(flags) || Flags.isProtected(flags) || Flags.isPrivate(flags))
+//			return VdmPluginImages.DESC_OBJS_CLASS;
+//		else
 			return VdmPluginImages.DESC_OBJS_CLASS_DEFAULT;
 	}
 
 	private static ImageDescriptor getInnerClassImageDescriptor(boolean isInInterfaceOrAnnotation, int flags) {
-		if (Flags.isPublic(flags) || isInInterfaceOrAnnotation)
-			return VdmPluginImages.DESC_OBJS_INNER_CLASS_PUBLIC;
-		else if (Flags.isPrivate(flags))
-			return VdmPluginImages.DESC_OBJS_INNER_CLASS_PRIVATE;
-		else if (Flags.isProtected(flags))
-			return VdmPluginImages.DESC_OBJS_INNER_CLASS_PROTECTED;
-		else
+//		if (Flags.isPublic(flags) || isInInterfaceOrAnnotation)
+//			return VdmPluginImages.DESC_OBJS_INNER_CLASS_PUBLIC;
+//		else if (Flags.isPrivate(flags))
+//			return VdmPluginImages.DESC_OBJS_INNER_CLASS_PRIVATE;
+//		else if (Flags.isProtected(flags))
+//			return VdmPluginImages.DESC_OBJS_INNER_CLASS_PROTECTED;
+//		else
 			return VdmPluginImages.DESC_OBJS_INNER_CLASS_DEFAULT;
 	}
 
 	private static ImageDescriptor getEnumImageDescriptor(int flags) {
-		if (Flags.isPublic(flags) || Flags.isProtected(flags) || Flags.isPrivate(flags))
-			return VdmPluginImages.DESC_OBJS_ENUM;
-		else
+//		if (Flags.isPublic(flags) || Flags.isProtected(flags) || Flags.isPrivate(flags))
+//			return VdmPluginImages.DESC_OBJS_ENUM;
+//		else
 			return VdmPluginImages.DESC_OBJS_ENUM_DEFAULT;
 	}
 
 	private static ImageDescriptor getInnerEnumImageDescriptor(boolean isInInterfaceOrAnnotation, int flags) {
-		if (Flags.isPublic(flags) || isInInterfaceOrAnnotation)
-			return VdmPluginImages.DESC_OBJS_ENUM;
-		else if (Flags.isPrivate(flags))
-			return VdmPluginImages.DESC_OBJS_ENUM_PRIVATE;
-		else if (Flags.isProtected(flags))
-			return VdmPluginImages.DESC_OBJS_ENUM_PROTECTED;
-		else
+//		if (Flags.isPublic(flags) || isInInterfaceOrAnnotation)
+//			return VdmPluginImages.DESC_OBJS_ENUM;
+//		else if (Flags.isPrivate(flags))
+//			return VdmPluginImages.DESC_OBJS_ENUM_PRIVATE;
+//		else if (Flags.isProtected(flags))
+//			return VdmPluginImages.DESC_OBJS_ENUM_PROTECTED;
+//		else
 			return VdmPluginImages.DESC_OBJS_ENUM_DEFAULT;
 	}
 
 	private static ImageDescriptor getAnnotationImageDescriptor(int flags) {
-		if (Flags.isPublic(flags) || Flags.isProtected(flags) || Flags.isPrivate(flags))
-			return VdmPluginImages.DESC_OBJS_ANNOTATION;
-		else
+//		if (Flags.isPublic(flags) || Flags.isProtected(flags) || Flags.isPrivate(flags))
+//			return VdmPluginImages.DESC_OBJS_ANNOTATION;
+//		else
 			return VdmPluginImages.DESC_OBJS_ANNOTATION_DEFAULT;
 	}
 
 	private static ImageDescriptor getInnerAnnotationImageDescriptor(boolean isInInterfaceOrAnnotation, int flags) {
-		if (Flags.isPublic(flags) || isInInterfaceOrAnnotation)
-			return VdmPluginImages.DESC_OBJS_ANNOTATION;
-		else if (Flags.isPrivate(flags))
-			return VdmPluginImages.DESC_OBJS_ANNOTATION_PRIVATE;
-		else if (Flags.isProtected(flags))
-			return VdmPluginImages.DESC_OBJS_ANNOTATION_PROTECTED;
-		else
+//		if (Flags.isPublic(flags) || isInInterfaceOrAnnotation)
+//			return VdmPluginImages.DESC_OBJS_ANNOTATION;
+//		else if (Flags.isPrivate(flags))
+//			return VdmPluginImages.DESC_OBJS_ANNOTATION_PRIVATE;
+//		else if (Flags.isProtected(flags))
+//			return VdmPluginImages.DESC_OBJS_ANNOTATION_PROTECTED;
+//		else
 			return VdmPluginImages.DESC_OBJS_ANNOTATION_DEFAULT;
 	}
 
 	private static ImageDescriptor getInterfaceImageDescriptor(int flags) {
-		if (Flags.isPublic(flags) || Flags.isProtected(flags) || Flags.isPrivate(flags))
-			return VdmPluginImages.DESC_OBJS_INTERFACE;
-		else
+//		if (Flags.isPublic(flags) || Flags.isProtected(flags) || Flags.isPrivate(flags))
+//			return VdmPluginImages.DESC_OBJS_INTERFACE;
+//		else
 			return VdmPluginImages.DESC_OBJS_INTERFACE_DEFAULT;
 	}
 
 	private static ImageDescriptor getInnerInterfaceImageDescriptor(boolean isInInterfaceOrAnnotation, int flags) {
-		if (Flags.isPublic(flags) || isInInterfaceOrAnnotation)
-			return VdmPluginImages.DESC_OBJS_INNER_INTERFACE_PUBLIC;
-		else if (Flags.isPrivate(flags))
-			return VdmPluginImages.DESC_OBJS_INNER_INTERFACE_PRIVATE;
-		else if (Flags.isProtected(flags))
-			return VdmPluginImages.DESC_OBJS_INNER_INTERFACE_PROTECTED;
-		else
+//		if (Flags.isPublic(flags) || isInInterfaceOrAnnotation)
+//			return VdmPluginImages.DESC_OBJS_INNER_INTERFACE_PUBLIC;
+//		else if (Flags.isPrivate(flags))
+//			return VdmPluginImages.DESC_OBJS_INNER_INTERFACE_PRIVATE;
+//		else if (Flags.isProtected(flags))
+//			return VdmPluginImages.DESC_OBJS_INNER_INTERFACE_PROTECTED;
+//		else
 			return VdmPluginImages.DESC_OBJS_INTERFACE_DEFAULT;
 	}
 }
