@@ -31,6 +31,7 @@ public class VdmReadme
 	private final String LIB = "LIB";
 	private final String TEX_AUTHOR = "AUTHOR";
 	private final String ENCODING = "ENCODING";
+	private final String VM_ARGUMENTS="VM_ARGUMENTS";
 
 	private Release languageVersion = Release.DEFAULT;
 	private Boolean invChecks = true;
@@ -44,6 +45,7 @@ public class VdmReadme
 	private String texAuthor = "";
 	private String encoding = "";
 	private List<String> libs = new Vector<String>();
+	private List<String> vmArguments = new Vector<String>();
 	private String name = "";
 	private Dialect dialect = Dialect.VDM_PP;
 	private boolean settingsParsed = false;
@@ -120,6 +122,8 @@ public class VdmReadme
 				setEncoding(data[1].trim());
 			else if (data[0].equals(LIB))
 				setLibs(data[1].trim().split(";"));
+			else if (data[0].equals(VM_ARGUMENTS))
+				setVmArguments(data[1].trim().split(";"));
 		}
 	}
 
@@ -412,7 +416,21 @@ public class VdmReadme
 				sb.append("\n#" + ENTRY_POINT + "=" + entrypoint);
 			}
 		sb.append("\n#" + EXPECTED_RESULT + "=" + expectedResult);
-
+		sb.append("\n#" + ENCODING + "=" + encoding);
+		
+		sb.append("\n#" + TEX_DOCUMENT + "=" + texDocument);
+		sb.append("\n#" + LIB + "=" );
+		for (int i = 0; i < libs.size(); i++)
+		{
+			if(i!=0)
+				sb.append(";");
+			sb.append(libs.get(i).substring(0,libs.get(i).indexOf('.')));
+		}
+		sb.append("\n#" + TEX_AUTHOR + "=" + encoding);
+		
+		
+	
+		
 		// sb.append("\n#LANGUAGE_VERSION=vdm10");
 		// sb.append("\n#INV_CHECKS=true");
 		// sb.append("\n#POST_CHECKS=true");
@@ -589,5 +607,20 @@ public class VdmReadme
 	public List<String> getLibs()
 	{
 		return libs;
+	}
+
+	public void setVmArguments(String[] argumentLibs)
+	{
+		for (String arg : argumentLibs)
+		{
+			if (arg.trim().length() > 0)
+				this.vmArguments.add(arg.trim());
+		}
+		
+	}
+
+	public List<String> getVmArguments()
+	{
+		return vmArguments;
 	}
 }

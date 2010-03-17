@@ -141,8 +141,10 @@ public class ProjectTester
 				try
 				{
 					latex = new LatexBuilder(project);
-					if(project.getSettings().getTexDocument()!=null &&project.getSettings().getTexDocument().length()>0)
-						latex.setAlternativeDocumentFileName(project.getSettings().getTexDocument());
+					if (project.getSettings().getTexDocument() != null
+							&& project.getSettings().getTexDocument().length() > 0)
+						latex.setAlternativeDocumentFileName(project.getSettings()
+								.getTexDocument());
 					System.out.print("Doc..");
 					latex.build(reportLocation,
 							controller.getInterpreter(),
@@ -201,7 +203,7 @@ public class ProjectTester
 			System.out.print("Skipping..");
 			loadStatus(dir);
 			latex = new LatexBuilder(project);
-			latex.setDocumentFileName(project.getSettings().getName()+".tex");
+			latex.setDocumentFileName(project.getSettings().getName() + ".tex");
 		}
 
 		switch (project.getSettings().getExpectedResult())
@@ -315,6 +317,10 @@ public class ProjectTester
 
 		List<String> command = new Vector<String>();
 		command.add("java");
+		for (String argument : project.getSettings().getVmArguments())
+		{
+			command.add("-"+argument);
+		}
 		command.add("-cp");
 		File thisJar = new File(this.getClass()
 				.getProtectionDomain()
@@ -324,7 +330,7 @@ public class ProjectTester
 		String cp = thisJar.getAbsolutePath();
 		if (System.getProperty("user.name", "").equals("kela"))
 			cp += getCpSeperator()
-					+ new File("target/classes".replace('/', File.separatorChar)).getAbsolutePath();
+					+ new File("C:/overture/overturesvn/core/vdmj/target/classes".replace('/', File.separatorChar)).getAbsolutePath();
 		
 		File lib = new File(project.getSettings().getWorkingDirectory(), "lib");
 		if (lib.exists() && lib.isDirectory())
@@ -356,9 +362,17 @@ public class ProjectTester
 		// -e <exp>: evaluate <exp> and stop
 		command.add("-e");
 		command.add("\"" + entryPoint.replace("\"", "\\\"") + "\"");
-		// -c <charset>: select a file charset
-
-		// -t <charset>: select a console charset
+		
+		
+		if (project.getSettings().getEncoding().length() > 0)
+		{
+			// -c <charset>: select a file charset
+			command.add("-c");
+			command.add(project.getSettings().getEncoding());
+			// -t <charset>: select a console charset
+			command.add("-t");
+			command.add(project.getSettings().getEncoding());
+		}
 
 		// -o <filename>: saved type checked specification
 		if (!project.getSettings().getPreChecks())
