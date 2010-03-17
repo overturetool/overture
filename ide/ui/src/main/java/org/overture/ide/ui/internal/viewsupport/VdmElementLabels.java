@@ -10,10 +10,12 @@ import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
 import org.overturetool.vdmj.definitions.LocalDefinition;
+import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.definitions.UntypedDefinition;
 import org.overturetool.vdmj.types.NamedType;
 import org.overturetool.vdmj.types.OperationType;
+import org.overturetool.vdmj.types.RecordType;
 import org.overturetool.vdmj.types.Type;
 
 public class VdmElementLabels {
@@ -72,9 +74,14 @@ public class VdmElementLabels {
 		}
 		if(element instanceof UntypedDefinition){
 			return getUntypedDefinition((UntypedDefinition) element);
+		}else
+		{
+			StyledString result = new StyledString();
+			result.append("Unsupported type reached: "+ element);
+			return result;
 		}
 		
-		return null;
+//		return null;
 	}
 
 	private static StyledString getUntypedDefinition(UntypedDefinition element) {
@@ -102,9 +109,20 @@ public class VdmElementLabels {
 
 	private static StyledString getTypeDefinitionLabel(TypeDefinition element) {
 		StyledString result = new StyledString();
+		if(element.type instanceof RecordType)
+		{
+			
+			result.append(element.name.name);
+		}
+		else if(element.type instanceof NamedType)
+		{
+		
+		
 		result.append(element.name.name);
 		result.append(" : " + getSimpleTypeString(((NamedType) element.type).type),
 				StyledString.DECORATIONS_STYLER);
+		
+		}
 		return result;
 	}
 

@@ -1,5 +1,7 @@
 package org.overture.ide.ui.editor.core;
 
+import java.io.IOException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
@@ -14,7 +16,10 @@ import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.IVdmModel;
+import org.overture.ide.core.IVdmProject;
 import org.overture.ide.core.IVdmSourceUnit;
+import org.overture.ide.core.VdmProject;
+import org.overture.ide.core.parser.SourceParserManager;
 
 import org.overture.ide.ui.outline.VdmContentOutlinePage;
 
@@ -23,11 +28,10 @@ public abstract class VdmEditor extends TextEditor
 
 	VdmContentOutlinePage fOutlinePage = null;
 
-	
 	public VdmEditor() {
 		super();
 		setDocumentProvider(new VdmDocumentProvider());
-		
+
 	}
 
 	@Override
@@ -44,7 +48,6 @@ public abstract class VdmEditor extends TextEditor
 
 		getSourceViewerDecorationSupport(viewer);
 
-		
 		return viewer;
 
 	}
@@ -83,33 +86,53 @@ public abstract class VdmEditor extends TextEditor
 		setOutlinePageInput(page, getEditorInput());
 		return page;
 	}
-	
+
 	/*
 	 * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
-	public void createPartControl(Composite parent) {
+	public void createPartControl(Composite parent)
+	{
 		super.createPartControl(parent);
-		try
+
+		IDocument doc = getDocumentProvider().getDocument(getEditorInput());
+		if (doc instanceof VdmDocument)
 		{
-			doSetInput(getEditorInput());
-		} catch (CoreException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			VdmDocument vdmDoc = (VdmDocument) doc;
+			IVdmProject project = vdmDoc.getProject();
+			try
+			{
+				SourceParserManager.parseFile(VdmProject.getVdmSourceUnit(vdmDoc.getFile()));
+			} catch (CoreException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-//		fEditorSelectionChangedListener= new EditorSelectionChangedListener();
-//		fEditorSelectionChangedListener.install(getSelectionProvider());
-//
-//		if (isSemanticHighlightingEnabled())
-//			installSemanticHighlighting();
-//
-//		fBreadcrumb= createBreadcrumb();
-//		fIsBreadcrumbVisible= isBreadcrumbShown();
-//		if (fIsBreadcrumbVisible)
-//			showBreadcrumb();
-//
-//		PlatformUI.getWorkbench().addWindowListener(fActivationListener);
-		
+		// try
+		// {
+		// doSetInput(getEditorInput());
+		// } catch (CoreException e)
+		// {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// fEditorSelectionChangedListener= new EditorSelectionChangedListener();
+		// fEditorSelectionChangedListener.install(getSelectionProvider());
+		//
+		// if (isSemanticHighlightingEnabled())
+		// installSemanticHighlighting();
+		//
+		// fBreadcrumb= createBreadcrumb();
+		// fIsBreadcrumbVisible= isBreadcrumbShown();
+		// if (fIsBreadcrumbVisible)
+		// showBreadcrumb();
+		//
+		// PlatformUI.getWorkbench().addWindowListener(fActivationListener);
+
 	}
 
 	/*
@@ -117,46 +140,47 @@ public abstract class VdmEditor extends TextEditor
 	 */
 	protected void doSetInput(IEditorInput input) throws CoreException
 	{
-		ISourceViewer sourceViewer= getSourceViewer();
-		if (!(sourceViewer instanceof ISourceViewerExtension2)) {
-			//setPreferenceStore(createCombinedPreferenceStore(input));
+		ISourceViewer sourceViewer = getSourceViewer();
+		if (!(sourceViewer instanceof ISourceViewerExtension2))
+		{
+			// setPreferenceStore(createCombinedPreferenceStore(input));
 			internalDoSetInput(input);
 			return;
 		}
 
 		// uninstall & unregister preference store listener
 		getSourceViewerDecorationSupport(sourceViewer).uninstall();
-		((ISourceViewerExtension2)sourceViewer).unconfigure();
+		((ISourceViewerExtension2) sourceViewer).unconfigure();
 
-		//setPreferenceStore(createCombinedPreferenceStore(input));
+		// setPreferenceStore(createCombinedPreferenceStore(input));
 
 		// install & register preference store listener
 		sourceViewer.configure(getSourceViewerConfiguration());
 		getSourceViewerDecorationSupport(sourceViewer).install(getPreferenceStore());
-		
+
 		internalDoSetInput(input);
-//		ISourceViewer sourceViewer = super.getSourceViewer();
-//		// if (!(sourceViewer instanceof ISourceViewerExtension2)) {
-//		// //setPreferenceStore(createCombinedPreferenceStore(input));
-//		// internalDoSetInput(input);
-//		// return;
-//		// }
-//
-//		// uninstall & unregister preference store listener
-//		// getSourceViewerDecorationSupport(sourceViewer).uninstall();
-//		// ((ISourceViewerExtension2)sourceViewer).unconfigure();
-//
-//		// setPreferenceStore(createCombinedPreferenceStore(input));
-//
-//		// install & register preference store listener
-//		if (sourceViewer != null)
-//		{
-//			sourceViewer.configure(getSourceViewerConfiguration());
-//			getSourceViewerDecorationSupport(sourceViewer).install(getPreferenceStore());
-//
-//			internalDoSetInput(input);
-//		}else super.doSetInput(input);
-//		
+		// ISourceViewer sourceViewer = super.getSourceViewer();
+		// // if (!(sourceViewer instanceof ISourceViewerExtension2)) {
+		// // //setPreferenceStore(createCombinedPreferenceStore(input));
+		// // internalDoSetInput(input);
+		// // return;
+		// // }
+		//
+		// // uninstall & unregister preference store listener
+		// // getSourceViewerDecorationSupport(sourceViewer).uninstall();
+		// // ((ISourceViewerExtension2)sourceViewer).unconfigure();
+		//
+		// // setPreferenceStore(createCombinedPreferenceStore(input));
+		//
+		// // install & register preference store listener
+		// if (sourceViewer != null)
+		// {
+		// sourceViewer.configure(getSourceViewerConfiguration());
+		// getSourceViewerDecorationSupport(sourceViewer).install(getPreferenceStore());
+		//
+		// internalDoSetInput(input);
+		// }else super.doSetInput(input);
+		//		
 	}
 
 	private void internalDoSetInput(IEditorInput input) throws CoreException
@@ -181,16 +205,15 @@ public abstract class VdmEditor extends TextEditor
 			{
 				reconciler.install(vdmSourceViewer);
 				vdmSourceViewer.setReconciler(reconciler);
-				
+
 			}
 		}
 
 		if (fEncodingSupport != null)
 			fEncodingSupport.reset();
 
-		
-		
-		if(fOutlinePage == null){
+		if (fOutlinePage == null)
+		{
 			fOutlinePage = createOutlinePage();
 		}
 		setOutlinePageInput(fOutlinePage, input);
@@ -224,28 +247,32 @@ public abstract class VdmEditor extends TextEditor
 	@SuppressWarnings("unchecked")
 	private IVdmElement getInputVdmElement()
 	{
-		IDocument doc =getDocumentProvider().getDocument(getEditorInput());// this.getDocumentProvider().getDocument(null);
+		IDocument doc = getDocumentProvider().getDocument(getEditorInput());
 		if (doc instanceof VdmDocument)
 		{
 			VdmDocument vdmDoc = (VdmDocument) doc;
-			IVdmSourceUnit rootNode = vdmDoc.getProject().getModel().getVdmSourceUnit(vdmDoc.getFile());
+			IVdmProject project = vdmDoc.getProject();
+			IVdmModel model = project.getModel();
+			IVdmSourceUnit sourceUnit = model.getVdmSourceUnit(vdmDoc.getFile());
 
-			if(rootNode!=null)
-			return rootNode;//return rootNode.filter(vdmDoc.getFile());
+			if (sourceUnit != null)
+				return sourceUnit;// return rootNode.filter(vdmDoc.getFile());
 			else
-				System.err.println("No root parsed for: "+ vdmDoc.getFile());
+				System.err.println("No root parsed for: " + vdmDoc.getFile());
 
 		}
 
 		return null;
 	}
-	
+
 	/**
 	 * Informs the editor that its outliner has been closed.
 	 */
-	public void outlinePageClosed() {
-		if (fOutlinePage != null) {
-			fOutlinePage= null;
+	public void outlinePageClosed()
+	{
+		if (fOutlinePage != null)
+		{
+			fOutlinePage = null;
 			resetHighlightRange();
 		}
 	}
