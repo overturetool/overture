@@ -7,14 +7,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.overture.ide.core.ElementChangedEvent;
-import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.IElementChangedListener;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.IVdmElementDelta;
+import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.ui.editor.core.VdmEditor;
 import org.overture.ide.ui.internal.viewsupport.DecorationgVdmLabelProvider;
@@ -46,7 +45,10 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 //							base= cu.findPrimaryType();
 //							if (base == null) {
 								if (fOutlineViewer != null)
+								{
 									fOutlineViewer.refresh(true);
+									fOutlineViewer.setAutoExpandLevel(ALL_LEVELS);
+								}
 //								return;
 //							}
 //						}
@@ -143,7 +145,38 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 	@Override
 	public void dispose()
 	{
-		// TODO Auto-generated method stub
+		if (vdmEditor == null)
+		return;
+
+
+
+	vdmEditor.outlinePageClosed();
+	vdmEditor= null;
+
+//	fListener.clear();
+//	fListener = null;
+
+//	fPostSelectionChangedListeners.clear();
+//	fPostSelectionChangedListeners= null;
+
+//	if (fPropertyChangeListener != null) {
+//		JavaPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(fPropertyChangeListener);
+//		fPropertyChangeListener= null;
+//	}
+
+//	if (fMenu != null && !fMenu.isDisposed()) {
+//		fMenu.dispose();
+//		fMenu= null;
+//	}
+
+//	if (fActionGroups != null)
+//		fActionGroups.dispose();
+
+//	fTogglePresentation.setEditor(null);
+
+	fOutlineViewer= null;
+
+	super.dispose();
 
 	}
 

@@ -11,7 +11,6 @@ import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.editors.text.TextEditor;
-import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.IVdmModel;
@@ -189,6 +188,11 @@ public abstract class VdmEditor extends TextEditor
 		if (fEncodingSupport != null)
 			fEncodingSupport.reset();
 
+		
+		
+		if(fOutlinePage == null){
+			fOutlinePage = createOutlinePage();
+		}
 		setOutlinePageInput(fOutlinePage, input);
 
 		// if (isShowingOverrideIndicators())
@@ -234,5 +238,15 @@ public abstract class VdmEditor extends TextEditor
 		}
 
 		return null;
+	}
+	
+	/**
+	 * Informs the editor that its outliner has been closed.
+	 */
+	public void outlinePageClosed() {
+		if (fOutlinePage != null) {
+			fOutlinePage= null;
+			resetHighlightRange();
+		}
 	}
 }
