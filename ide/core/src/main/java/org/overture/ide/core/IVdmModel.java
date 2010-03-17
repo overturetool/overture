@@ -14,7 +14,7 @@ import org.overturetool.vdmj.modules.ModuleList;
 
 public interface IVdmModel<T> extends IVdmElement{
 
-	public abstract void setRootElementList(List<T> rootElementList);
+//	public abstract void setRootElementList(List<T> rootElementList);
 
 	public abstract List<T> getRootElementList();
 
@@ -31,8 +31,8 @@ public interface IVdmModel<T> extends IVdmElement{
 	 * @param module
 	 *            the new definition
 	 */
-	@SuppressWarnings("unchecked")
-	public abstract void update(List<T> modules);
+//	@SuppressWarnings("unchecked")
+//	public abstract void update(List<T> modules);
 
 	/***
 	 * Check if any definition in the list has the file as source location
@@ -43,6 +43,7 @@ public interface IVdmModel<T> extends IVdmElement{
 	 * @return true if the file has a definition in the list
 	 */
 	public abstract boolean hasFile(File file);
+	public abstract boolean hasFile(IVdmSourceUnit file);
 
 	public abstract ModuleList getModuleList() throws NotAllowedException;
 
@@ -58,11 +59,13 @@ public interface IVdmModel<T> extends IVdmElement{
 
 	public abstract boolean exists();
 
-	public abstract IVdmModel filter(IFile file);
+//	public abstract IVdmModel filter(IFile file);
 	
 	public abstract IVdmSourceUnit getVdmSourceUnit(IFile file);
 	
 	public abstract void addVdmSourceUnit(IVdmSourceUnit unit);
+
+	public abstract void clean();
 
 
 

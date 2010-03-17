@@ -68,37 +68,37 @@ public class VdmModelManager implements IVdmModelManager {
 //		}
 //	}
 
-	@SuppressWarnings("unchecked")
-	public synchronized void update(IVdmProject project, List modules) {
-		Map<String, IVdmModel> natureAst = asts.get(project);
-		String nature = project.getVdmNature();
-		if (natureAst != null) {
-			IVdmModel root = natureAst.get(nature );
-			if (root != null && root.getRootElementList() != null) {
-				root.update(modules);
-			} else
-				natureAst.put(nature, new VdmModel(modules));
-		} else {
-			HashMap<String, IVdmModel> astModules = new HashMap<String, IVdmModel>();
-			astModules.put(nature, new VdmModel(modules));
-			asts.put(project, astModules);
-		}
-		
-		if(VdmCore.DEBUG)
-		{
-			String names = "";
-			for (Object object : modules)
-			{
-				if(object instanceof ClassDefinition)
-					names+=" "+ ((ClassDefinition)object).name.name;
-				if(object instanceof Module)
-					names+=" "+ ((Module)object).name.name;
-			}
-			System.out.println("AstManager.update: "+ project.getName()+"->"+ names);
-		}
-		// System.out.println("addAstModuleDeclaration : " + project.getName()
-		// + "(" + nature + ") - " + getNames(modules));
-	}
+//	@SuppressWarnings("unchecked")
+//	public synchronized void update(IVdmProject project, List modules) {
+//		Map<String, IVdmModel> natureAst = asts.get(project);
+//		String nature = project.getVdmNature();
+//		if (natureAst != null) {
+//			IVdmModel root = natureAst.get(nature );
+//			if (root != null && root.getRootElementList() != null) {
+//				root.update(modules);
+//			} else
+//				natureAst.put(nature, new VdmModel(modules));
+//		} else {
+//			HashMap<String, IVdmModel> astModules = new HashMap<String, IVdmModel>();
+//			astModules.put(nature, new VdmModel(modules));
+//			asts.put(project, astModules);
+//		}
+//		
+//		if(VdmCore.DEBUG)
+//		{
+//			String names = "";
+//			for (Object object : modules)
+//			{
+//				if(object instanceof ClassDefinition)
+//					names+=" "+ ((ClassDefinition)object).name.name;
+//				if(object instanceof Module)
+//					names+=" "+ ((Module)object).name.name;
+//			}
+//			System.out.println("AstManager.update: "+ project.getName()+"->"+ names);
+//		}
+//		// System.out.println("addAstModuleDeclaration : " + project.getName()
+//		// + "(" + nature + ") - " + getNames(modules));
+//	}
 
 	@SuppressWarnings("unchecked")
 	private static String getNames(List modules) {
@@ -112,32 +112,36 @@ public class VdmModelManager implements IVdmModelManager {
 		return s;
 	}
 
-	// public Object getAstList(IProject project, String nature) {
-	// Map<String, RootNode> natureAst = asts.get(project);
-	// if (natureAst != null && natureAst.containsKey(nature))
-	// return natureAst.get(nature).getRootElementList();
-	// else
-	// return null;
-	// }
+
 
 	@SuppressWarnings("unchecked")
-	public IVdmModel getRootNode(IVdmProject project, String nature) {
+	public synchronized IVdmModel getModel(IVdmProject project) {
+		IVdmModel model = null;
 		Map<String, IVdmModel> natureAst = asts.get(project);
-		if (natureAst != null && natureAst.containsKey(nature)) {
-			return natureAst.get(nature);
-		}else
-		{
-			update(project, new Vector());
-			return getRootNode(project);
+		String nature = project.getVdmNature();
+		if (natureAst != null) {
+			model = natureAst.get(nature );
+			if (model != null ) {
+				return model;
+			} else
+			{
+//				model = new VdmModel();
+//				natureAst.put(nature, model);
+			}
+		} else {
+			
 		}
+		
+		return model;
 		
 	}
 
 	
 
 	public void clean(IVdmProject project) {
-		if (asts.get(project) != null)
-			asts.remove(project);
+//		if (asts.get(project) != null)
+//			asts.remove(project);
+		project.getModel().clean();
 
 	}
 
@@ -197,11 +201,16 @@ public class VdmModelManager implements IVdmModelManager {
 		
 	}
 
-	@SuppressWarnings("unchecked")
-	public IVdmModel getRootNode(IVdmProject project)
+	public IVdmModel createModel(IVdmProject project)
 	{
-		return getRootNode(project, project.getVdmNature());
+		HashMap<String, IVdmModel> astModules = new HashMap<String, IVdmModel>();
+	IVdmModel	model = new VdmModel();
+		astModules.put(project.getVdmNature(), model);
+		asts.put(project, astModules);
+		return model;
 	}
+
+	
 
 
 

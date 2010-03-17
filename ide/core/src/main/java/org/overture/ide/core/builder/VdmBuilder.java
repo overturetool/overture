@@ -118,7 +118,7 @@ public class VdmBuilder extends VdmCoreBuilder
 		// return new Status(IStatus.WARNING,
 		// VdmBuilderCorePluginConstants.PLUGIN_ID,
 		// "No builder returned any result");
-
+removeBuilding(currentProject);
 	}
 
 	public void clean(IProgressMonitor monitor)

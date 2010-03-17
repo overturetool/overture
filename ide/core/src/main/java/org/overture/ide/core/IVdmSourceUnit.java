@@ -23,5 +23,7 @@ public interface IVdmSourceUnit extends IVdmElement{
 	public  List getParseList();
 
 	public boolean exists();
+	public void clean();
+	public abstract IVdmProject getProject();
 
 }

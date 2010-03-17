@@ -19,7 +19,7 @@ public class VdmSourceUnit implements IVdmSourceUnit
 		this.project = project;
 		this.file = file;
 		this.type = IVdmSourceUnit.VDM_DEFAULT;
-	
+
 	}
 
 	public Object getAdapter(Class adapter)
@@ -44,7 +44,7 @@ public class VdmSourceUnit implements IVdmSourceUnit
 		this.parseList.clear();
 		this.parseList.addAll(parseResult);
 
-		VdmModelManager.getInstance().update(project, parseList);
+		//VdmModelManager.getInstance().update(project, parseList);
 		VdmCore.getDeltaProcessor().fire(this,
 				new ElementChangedEvent(new VdmElementDelta(this,
 						IVdmElementDelta.CHANGED),
@@ -75,7 +75,7 @@ public class VdmSourceUnit implements IVdmSourceUnit
 	{
 		return type;
 	}
-	
+
 	public void setType(int type)
 	{
 		this.type = type;
@@ -85,8 +85,23 @@ public class VdmSourceUnit implements IVdmSourceUnit
 	{
 		return getType();
 	}
-	
 
-	
+	@Override
+	public String toString()
+	{
+		return file.toString();
+	}
+
+	public void clean()
+	{
+		//this.parseList.clear();
+		
+		
+	}
+
+	public IVdmProject getProject()
+	{
+		return project;
+	}
 
 }

@@ -3,9 +3,12 @@ package org.overture.ide.core.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.IVdmProject;
@@ -220,6 +223,8 @@ public abstract class AbstractParserParticipant implements ISourceParser
 
 		public void setAst(List ast)
 		{
+			Assert.isNotNull(ast);
+			Assert.isTrue(ast.size()!=0);
 			this.ast = ast;
 		}
 

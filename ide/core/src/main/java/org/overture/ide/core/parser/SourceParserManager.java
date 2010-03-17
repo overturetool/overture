@@ -128,9 +128,12 @@ public class SourceParserManager {
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		}
 		List<IVdmSourceUnit> files = project.getSpecFiles();
-		for (IVdmSourceUnit iFile : files)
+		for (IVdmSourceUnit file : files)
 		{
-			parseFile(project, iFile);
+			IVdmModel model = file.getProject().getModel();
+			if (model != null && model.hasFile(file))
+				return;
+			parseFile( file);
 		}
 
 	}
@@ -143,20 +146,19 @@ public class SourceParserManager {
 	 * @throws IOException
 	 */
 	@SuppressWarnings("unchecked")
-	public static void parseFile(IVdmProject project,
+	public static void parseFile(
 			final IVdmSourceUnit file) throws CoreException, IOException
 	{
 		
 
-		IVdmModel rootNode = VdmModelManager.getInstance()
-				.getRootNode(project);
-		if (rootNode != null && rootNode.hasFile(project.getFile(file.getFile())))
-			return;
+//		IVdmModel model = file.getProject().getModel();
+//		if (model != null && model.hasFile(file))
+//			return;
 
 		try
 		{
 			SourceParserManager.getInstance()
-					.getSourceParser(project)
+					.getSourceParser(file.getProject())
 					.parse(file);
 		} catch (Exception e)
 		{

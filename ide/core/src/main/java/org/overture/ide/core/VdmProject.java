@@ -42,6 +42,9 @@ public class VdmProject extends Project implements IVdmProject
 	private static final String POST_CHECKS_ARGUMENT_KEY = "POST_CHECKS";
 	private static final String PRE_CHECKS_ARGUMENT_KEY = "PRE_CHECKS";
 	private static final String SUPRESS_WARNINGS_ARGUMENT_KEY = "SUPPRESS_WARNINGS";
+	
+	static Map<String, IVdmProject> projects = new Hashtable<String, IVdmProject>();
+	static Map<IFile, IVdmSourceUnit> vdmSourceUnits = new Hashtable<IFile, IVdmSourceUnit>();
 
 	private ILanguage language = null;
 
@@ -81,9 +84,9 @@ public class VdmProject extends Project implements IVdmProject
 		return false;
 	}
 
-	static Map<String, IVdmProject> projects = new Hashtable<String, IVdmProject>();
+	
 
-	public static IVdmProject createProject(IProject project)
+	public synchronized static IVdmProject createProject(IProject project)
 	{
 		if (projects.containsKey(project.getName()))
 			return projects.get(project.getName());
@@ -93,10 +96,15 @@ public class VdmProject extends Project implements IVdmProject
 			{
 				IVdmProject vdmProject = new VdmProject(project);
 				projects.put(vdmProject.getName(), vdmProject);
-				for (IVdmSourceUnit unit : vdmProject.getSpecFiles())
-				{
-					vdmProject.getModel().addVdmSourceUnit(unit);
-				}
+				IVdmModel model = VdmModelManager.getInstance().createModel(vdmProject);
+				System.out.println("Creating project: "+ project.getName());
+				vdmProject.getSpecFiles();
+//				for (IVdmSourceUnit unit : )
+//				{
+//					System.out.println("Adding file: "+ unit + " to "+project.getName());
+//					model.addVdmSourceUnit(unit);
+//					
+//				}
 				return vdmProject;
 			} catch (CoreException e)
 			{
@@ -684,7 +692,7 @@ public class VdmProject extends Project implements IVdmProject
 		return list;
 	}
 
-	static Map<IFile, IVdmSourceUnit> vdmSourceUnits = new Hashtable<IFile, IVdmSourceUnit>();
+	
 
 	public static IVdmSourceUnit getVdmSourceUnit(IFile file)
 	{
@@ -701,12 +709,13 @@ public class VdmProject extends Project implements IVdmProject
 			if (VdmProject.isVdmProject(file.getProject()))
 			{
 				IVdmProject project = VdmProject.createProject(file.getProject());
-				IVdmSourceUnit unit = new VdmSourceUnit(project,
-						file);
+				IVdmModel model = project.getModel();
+				model.addVdmSourceUnit(new VdmSourceUnit(project, file));
+				IVdmSourceUnit unit = model.getVdmSourceUnit(file);
 				vdmSourceUnits.put(file, unit);
-				project.getModel().addVdmSourceUnit(unit);
 				return unit;
-			}
+			}else
+				System.err.println("project is not vdm complient");
 		}
 		return null;
 	}
@@ -722,11 +731,11 @@ public class VdmProject extends Project implements IVdmProject
 	public List<IFile> getFiles() throws CoreException
 	{
 		List<IFile> list = new Vector<IFile>();
-//		for (IResource res : project.members(IContainer.INCLUDE_PHANTOMS
-//				| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
-//		{
-//			list.addAll(getFiles(project, res, null));
-//		}
+		// for (IResource res : project.members(IContainer.INCLUDE_PHANTOMS
+		// | IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
+		// {
+		// list.addAll(getFiles(project, res, null));
+		// }
 		return list;
 	}
 
@@ -785,7 +794,13 @@ public class VdmProject extends Project implements IVdmProject
 
 	public IVdmModel getModel()
 	{
-		return VdmModelManager.getInstance().getRootNode(this);
+		return VdmModelManager.getInstance().getModel(this);
+	}
+
+	@Override
+	public String toString()
+	{
+		return getName();
 	}
 
 }

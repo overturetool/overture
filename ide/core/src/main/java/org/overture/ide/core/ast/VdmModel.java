@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.Assert;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.IVdmSourceUnit;
@@ -17,15 +18,19 @@ import org.overturetool.vdmj.modules.ModuleList;
 
 public class VdmModel<T> implements IVdmModel<T>
 {
+	static int count = 0;
+	int id;
 	private boolean checked = false;
 	private Hashtable<String, Boolean> parseCurrectTable = new Hashtable<String, Boolean>();
 
 	private Date checkedTime;
-	private List<T> rootElementList;
+
 	private List<IVdmSourceUnit> vdmSourceUnits = new Vector<IVdmSourceUnit>();
 
-	public VdmModel(List<T> modules) {
-		this.rootElementList = modules;
+	public VdmModel() {
+		// TODO Auto-generated constructor stub
+		count++;
+		id = count;
 	}
 
 	/*
@@ -33,10 +38,10 @@ public class VdmModel<T> implements IVdmModel<T>
 	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#setRootElementList(java.util.List)
 	 */
-	public synchronized void setRootElementList(List<T> rootElementList)
-	{
-		this.rootElementList = rootElementList;
-	}
+	// public synchronized void setRootElementList(List<T> rootElementList)
+	// {
+	// this.rootElementList = rootElementList;
+	// }
 
 	/*
 	 * (non-Javadoc)
@@ -45,7 +50,12 @@ public class VdmModel<T> implements IVdmModel<T>
 	 */
 	public synchronized List<T> getRootElementList()
 	{
-		return rootElementList;
+		List list = new Vector();
+		for (IVdmSourceUnit unit : vdmSourceUnits)
+		{
+			list.addAll(unit.getParseList());
+		}
+		return list;
 	}
 
 	/*
@@ -79,59 +89,57 @@ public class VdmModel<T> implements IVdmModel<T>
 		return checked;
 	}
 
-
-
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#update(java.util.List)
 	 */
-	@SuppressWarnings("unchecked")
-	public synchronized void update(List<T> modules)
-	{
-
-		this.setChecked(false);
-		if (this.rootElementList.size() != 0)
-			for (Object module : modules)
-			{
-
-				// if (module instanceof ClassDefinition)
-				// update((ClassDefinition) module);
-				// else if (module instanceof Module)
-				// update((Module) module);
-
-				T existingModule = null;
-				if (module instanceof ClassDefinition)
-				{
-
-					for (Object m : this.rootElementList)
-					{
-						if (m instanceof ClassDefinition
-								&& ((ClassDefinition) m).name.equals(((ClassDefinition) module).name))
-							existingModule = (T) m;
-					}
-				} else if (module instanceof Module)
-				{
-					for (Object m : this.rootElementList)
-					{
-						if (m instanceof Module
-								&& ((Module) m).name.equals(((Module) module).name)
-								&& ((Module) m).name.location.file.getName()
-										.equals(((Module) module).name.location.file.getName()))
-							existingModule = (T) m;
-					}
-				}
-				if (existingModule != null)
-					this.rootElementList.remove(existingModule);
-
-				this.rootElementList.add((T) module);
-			}
-		else
-		{
-			this.rootElementList.addAll(modules);
-		}
-
-	}
+//	@SuppressWarnings("unchecked")
+//	public synchronized void update(List<T> modules)
+//	{
+//
+//		this.setChecked(false);
+//		if (this.rootElementList.size() != 0)
+//			for (Object module : modules)
+//			{
+//
+//				// if (module instanceof ClassDefinition)
+//				// update((ClassDefinition) module);
+//				// else if (module instanceof Module)
+//				// update((Module) module);
+//
+//				T existingModule = null;
+//				if (module instanceof ClassDefinition)
+//				{
+//
+//					for (Object m : this.rootElementList)
+//					{
+//						if (m instanceof ClassDefinition
+//								&& ((ClassDefinition) m).name.equals(((ClassDefinition) module).name))
+//							existingModule = (T) m;
+//					}
+//				} else if (module instanceof Module)
+//				{
+//					for (Object m : this.rootElementList)
+//					{
+//						if (m instanceof Module
+//								&& ((Module) m).name.equals(((Module) module).name)
+//								&& ((Module) m).name.location.file.getName()
+//										.equals(((Module) module).name.location.file.getName()))
+//							existingModule = (T) m;
+//					}
+//				}
+//				if (existingModule != null)
+//					this.rootElementList.remove(existingModule);
+//
+//				this.rootElementList.add((T) module);
+//			}
+//		else
+//		{
+//			this.rootElementList.addAll(modules);
+//		}
+//
+//	}
 
 	/*
 	 * (non-Javadoc)
@@ -140,17 +148,14 @@ public class VdmModel<T> implements IVdmModel<T>
 	 */
 	public synchronized boolean hasFile(File file)
 	{
-		for (Object o : rootElementList)
-		{
-			if (o instanceof Module
-					&& ((Module) o).name.location.file.equals(file))
-				return true;
-			else if (o instanceof ClassDefinition
-					&& ((ClassDefinition) o).name.location.file.equals(file))
-				return true;
-
-		}
+		Assert.isNotNull(null);
 		return false;
+	}
+
+	public synchronized boolean hasFile(IVdmSourceUnit file)
+	{
+		return this.vdmSourceUnits.contains(file);
+
 	}
 
 	/*
@@ -161,7 +166,7 @@ public class VdmModel<T> implements IVdmModel<T>
 	public synchronized ModuleList getModuleList() throws NotAllowedException
 	{
 		ModuleList modules = new ModuleList();
-		for (Object definition : rootElementList)
+		for (Object definition : getRootElementList())
 		{
 			if (definition instanceof Module)
 				modules.add((Module) definition);
@@ -180,7 +185,7 @@ public class VdmModel<T> implements IVdmModel<T>
 	public synchronized ClassList getClassList() throws NotAllowedException
 	{
 		ClassList classes = new ClassList();
-		for (Object definition : rootElementList)
+		for (Object definition : getRootElementList())
 		{
 			if (definition instanceof ClassDefinition)
 				classes.add((ClassDefinition) definition);
@@ -198,7 +203,7 @@ public class VdmModel<T> implements IVdmModel<T>
 	 */
 	public synchronized boolean hasClassList()
 	{
-		for (Object definition : rootElementList)
+		for (Object definition : getRootElementList())
 		{
 			if (definition instanceof ClassDefinition)
 				return true;
@@ -213,7 +218,7 @@ public class VdmModel<T> implements IVdmModel<T>
 	 */
 	public synchronized boolean hasModuleList()
 	{
-		for (Object definition : rootElementList)
+		for (Object definition : getRootElementList())
 		{
 			if (definition instanceof Module)
 				return true;
@@ -250,32 +255,32 @@ public class VdmModel<T> implements IVdmModel<T>
 
 	public boolean exists()
 	{
-		return rootElementList != null && rootElementList.size() > 0;
+		return getRootElementList().size() > 0;
 	}
 
-	@SuppressWarnings("unchecked")
-	public IVdmModel filter(IFile file)
-	{
-		List modules = new Vector();
-
-		for (Object o : rootElementList)
-		{
-			if (o instanceof Module
-					&& ((Module) o).name.location.file.getName()
-							.equals(file.getName()))
-				modules.add(o);
-			else if (o instanceof ClassDefinition
-					&& ((ClassDefinition) o).name.location.file.getName()
-							.equals(file.getName()))
-				modules.add(o);
-
-		}
-		if (modules.size() > 0)
-			return new VdmModel<T>(modules);
-		else
-			return null;
-
-	}
+//	@SuppressWarnings("unchecked")
+//	public IVdmModel filter(IFile file)
+//	{
+//		List modules = new Vector();
+//
+//		for (Object o : getRootElementList())
+//		{
+//			if (o instanceof Module
+//					&& ((Module) o).name.location.file.getName()
+//							.equals(file.getName()))
+//				modules.add(o);
+//			else if (o instanceof ClassDefinition
+//					&& ((ClassDefinition) o).name.location.file.getName()
+//							.equals(file.getName()))
+//				modules.add(o);
+//
+//		}
+//		if (modules.size() > 0)
+//			return new VdmModel<T>(modules);
+//		else
+//			return null;
+//
+//	}
 
 	public Object getAdapter(Class adapter)
 	{
@@ -283,14 +288,16 @@ public class VdmModel<T> implements IVdmModel<T>
 		return null;
 	}
 
-	public void addVdmSourceUnit(IVdmSourceUnit unit)
+	public synchronized void addVdmSourceUnit(IVdmSourceUnit unit)
 	{
 		if (!vdmSourceUnits.contains(unit))
 			this.vdmSourceUnits.add(unit);
+		else
+			System.err.println("Add error: " + unit);
 
 	}
 
-	public IVdmSourceUnit getVdmSourceUnit(IFile file)
+	public synchronized IVdmSourceUnit getVdmSourceUnit(IFile file)
 	{
 		for (IVdmSourceUnit unit : vdmSourceUnits)
 		{
@@ -303,5 +310,14 @@ public class VdmModel<T> implements IVdmModel<T>
 	public int getElementType()
 	{
 		return IVdmElement.VDM_MODEL;
+	}
+
+	public void clean()
+	{
+		for (IVdmSourceUnit unit : vdmSourceUnits)
+		{
+			unit.clean();
+		}
+
 	}
 }

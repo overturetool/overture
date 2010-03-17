@@ -19,8 +19,8 @@ public interface IVdmModelManager
 	 * @param classList
 	 *            A new class list or module list
 	 */
-	@SuppressWarnings("unchecked")
-	void update(IVdmProject project,  List data);
+//	@SuppressWarnings("unchecked")
+//	void update(IVdmProject project,  List data);
 
 	
 
@@ -71,16 +71,9 @@ public interface IVdmModelManager
 	 * @return The rootnode for the current project + nature
 	 */
 	@SuppressWarnings("unchecked")
-	IVdmModel getRootNode(IVdmProject project, String nature);
+	IVdmModel getModel(IVdmProject project);
 	
-	/**
-	 * Get the RootNode from a project and the corresponding nature
-	 * @param project The project to select
-	 * @param nature The nature if filter the AST
-	 * @return The rootnode for the current project + nature
-	 */
-	@SuppressWarnings("unchecked")
-	IVdmModel getRootNode(IVdmProject project);
+	
 	
 
 	
@@ -109,4 +102,7 @@ public interface IVdmModelManager
 	 * Refreshed the AST for all VDM projects
 	 */
 	public  void refreshProjects();
+	
+	
+	public IVdmModel createModel(IVdmProject project);
 }
