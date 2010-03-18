@@ -1,0 +1,39 @@
+-- ===============================================================================================================
+-- AllocatorOneTray in tray allocation for a sortation system
+-- By José Antonio Esparza and Kim Bjerge - spring 2010
+-- (strategy pattern)
+-- ===============================================================================================================
+
+class AllocatorOneTray is subclass of AllocatorStrategy
+
+	operations
+	
+	    -- AllocatorOneTray constructor
+		public AllocatorOneTray: TrayAllocator==> AllocatorOneTray
+		AllocatorOneTray(ta) ==
+		(
+			trayAllocator := ta;
+		);
+		
+		-- Allocates tray if empty at induction offset
+		public AllocateTray: nat ==> set of Tray
+		AllocateTray (icid) ==
+			def posTray = InductionOffset(trayAllocator.trayAtCardReader, icid)
+			in 
+				if trayAllocator.sorterRing(posTray).IsTrayEmpty()
+				then return {trayAllocator.sorterRing(posTray)}
+				else return {}
+		pre icid in set inds trayAllocator.inductionGroup;
+
+        -- Returns true if higher priority inductions in induction group
+		public InductionsWithHigherPriority: InductionController ==> bool
+		InductionsWithHigherPriority(ic) ==
+			return exists i in set elems trayAllocator.inductionGroup(1,...,len  trayAllocator.inductionGroup) 
+							& i.GetId() <> ic.GetId() 
+							and i.GetPriority() > ic.GetPriority()
+ 			--  Looking at induction infront this ic causes starvation of the first induction in group
+			--  return exists i in set elems inductionGroup(ic.GetId()+1,...,len inductionGroup) & i.GetPriority() > ic.GetPriority()
+		pre ic in set elems trayAllocator.inductionGroup;
+
+
+end AllocatorOneTray

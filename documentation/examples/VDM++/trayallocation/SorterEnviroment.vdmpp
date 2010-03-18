@@ -1,0 +1,86 @@
+-- ===============================================================================================================
+-- SorterEnvironment in tray allocation for a sortation system
+-- By José Antonio Esparza and Kim Bjerge - spring 2010
+-- ===============================================================================================================
+
+class SorterEnviroment
+	types
+
+	values
+		public Speed	   : nat = 2000;  -- Sorter speed mm/sec
+		public Throughput  : nat = 10000;  -- Required items/hour
+				
+
+	instance variables
+		public sc : SC;
+		public inductionGroup : seq of InductionController := [];
+		itemId : nat := 0;
+		itemLoader : [ItemLoader] := nil;
+				
+	operations
+	
+    -- SorterEnviroment constructor
+	public SorterEnviroment: () ==> SorterEnviroment
+	SorterEnviroment() ==
+	(
+		sc := new SC(self);
+	);
+	
+    -- Assigning item loader to SorterEnviroment
+	public AssignItemLoader: (ItemLoader) ==> ()
+	AssignItemLoader(il) ==
+	(
+		itemLoader := il;
+	);	
+	
+    -- Assigning induction group to SorterEnviroment
+	public AssignInductionGroup: seq of InductionController ==> ()
+	AssignInductionGroup(ig) ==
+	(
+		inductionGroup := ig;
+	);
+	
+	-- Used by traces in TestSernarios
+	public FeedItemOnInduction: nat * Item ==> ()
+	FeedItemOnInduction(ic, item) ==
+		  inductionGroup(ic).FeedItem(item);
+	
+	-- Called by world each time sorter ring moves one tray step 
+	public TimeStep: nat ==> ()
+	TimeStep(t) ==
+	(
+
+	 	for all i in set {1,...,TrayAllocator`NumOfInductions} 
+		do 
+		(
+			-- Check for item to feed induction at time step
+			let size = itemLoader.GetItemAtTimeStep(t, i)
+			in
+				if (size > 0)
+				then 
+				(
+			  		itemId := itemId + 1;
+			  		inductionGroup(i).FeedItem(new Item(size, itemId));
+				);
+ 		);
+
+    	-- Enviroment simulate sorter moved one tray step
+		sc.TrayStep(t mod TrayAllocator`NumOfTrays + 1, <Empty>);
+
+ 		-- Performs tray step for each induction
+	 	for all i in set {1,...,TrayAllocator`NumOfInductions} 
+		do 
+		   inductionGroup(i).TrayStep();
+
+	);
+	
+	
+	functions
+
+	sync
+
+	--thread
+
+	traces
+	
+end SorterEnviroment
