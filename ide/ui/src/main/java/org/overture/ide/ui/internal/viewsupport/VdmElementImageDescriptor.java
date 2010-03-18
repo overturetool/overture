@@ -1,7 +1,6 @@
 package org.overture.ide.ui.internal.viewsupport;
 
 import org.eclipse.core.runtime.Assert;
-
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
@@ -23,7 +22,7 @@ import org.overture.ide.ui.VdmUIPlugin;
  * @noextend This class is not intended to be subclassed by clients.
  */
 public class VdmElementImageDescriptor extends CompositeImageDescriptor {
-
+	
 	/** Flag to render the abstract adornment. */
 	public final static int ABSTRACT= 		0x001;
 
@@ -72,7 +71,6 @@ public class VdmElementImageDescriptor extends CompositeImageDescriptor {
 	 */
 	public final static int TRANSIENT= 	0x1000;
 
-
 	private ImageDescriptor fBaseImage;
 	private int fFlags;
 	private Point fSize;
@@ -88,33 +86,14 @@ public class VdmElementImageDescriptor extends CompositeImageDescriptor {
 	public VdmElementImageDescriptor(ImageDescriptor baseImage, int flags, Point size) {
 		fBaseImage= baseImage;
 		Assert.isNotNull(fBaseImage);
-		fFlags= flags;
-		Assert.isTrue(fFlags >= 0);
+		fFlags = flags;
+		//Assert.isNotNull(element);		
 		fSize= size;
 		Assert.isNotNull(fSize);
 	}
 
-	/**
-	 * Sets the descriptors adornments. Valid values are: {@link #ABSTRACT}, {@link #FINAL},
-	 * {@link #SYNCHRONIZED}, {@link #STATIC}, {@link #RUNNABLE}, {@link #WARNING},
-	 * {@link #ERROR}, {@link #OVERRIDES}, {@link #IMPLEMENTS}, {@link #CONSTRUCTOR},
-	 * {@link #DEPRECATED}, {@link #VOLATILE}, {@link #TRANSIENT} or any combination of those.
-	 *
-	 * @param adornments the image descriptors adornments
-	 */
-	public void setAdornments(int adornments) {
-		Assert.isTrue(adornments >= 0);
-		fFlags= adornments;
-	}
+	
 
-	/**
-	 * Returns the current adornments.
-	 *
-	 * @return the current adornments
-	 */
-	public int getAdronments() {
-		return fFlags;
-	}
 
 	/**
 	 * Sets the size of the image created by calling {@link #createImage()}.
@@ -143,35 +122,30 @@ public class VdmElementImageDescriptor extends CompositeImageDescriptor {
 		return fSize;
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on Object.
-	 */
-	public boolean equals(Object object) {
-		if (object == null || !VdmElementImageDescriptor.class.equals(object.getClass()))
-			return false;
+//	/* (non-Javadoc)
+//	 * Method declared on Object.
+//	 */
+//	public boolean equals(Object object) {
+//		if (object == null || !VdmElementImageDescriptor.class.equals(object.getClass()))
+//			return false;
+//
+//		VdmElementImageDescriptor other= (VdmElementImageDescriptor)object;
+//		return (fBaseImage.equals(other.fBaseImage) && fFlags == other.fFlags && fSize.equals(other.fSize));
+//	}
 
-		VdmElementImageDescriptor other= (VdmElementImageDescriptor)object;
-		return (fBaseImage.equals(other.fBaseImage) && fFlags == other.fFlags && fSize.equals(other.fSize));
-	}
-
-	/* (non-Javadoc)
-	 * Method declared on Object.
-	 */
-	public int hashCode() {
-		return fBaseImage.hashCode() | fFlags | fSize.hashCode();
-	}
+//	/* (non-Javadoc)
+//	 * Method declared on Object.
+//	 */
+//	public int hashCode() {
+//		return fBaseImage.hashCode() | fFlags | fSize.hashCode();
+//	}
 
 	/* (non-Javadoc)
 	 * Method declared in CompositeImageDescriptor
 	 */
 	protected void drawCompositeImage(int width, int height) {
 		ImageData bg= getImageData(fBaseImage);
-
-		if ((fFlags & DEPRECATED) != 0) { // draw *behind* the full image
-			Point size= getSize();
-			ImageData data= getImageData(VdmPluginImages.DESC_OVR_DEPRECATED);
-			drawImage(data, 0, size.y - data.height);
-		}
+						
 		drawImage(bg, 0, 0);
 
 		drawTopRight();
@@ -222,6 +196,7 @@ public class VdmElementImageDescriptor extends CompositeImageDescriptor {
 
 	private void drawTopRight() {
 		Point pos= new Point(getSize().x, 0);
+
 		if ((fFlags & ABSTRACT) != 0) {
 			addTopRightImage(VdmPluginImages.DESC_OVR_ABSTRACT, pos);
 		}
@@ -244,43 +219,12 @@ public class VdmElementImageDescriptor extends CompositeImageDescriptor {
 		Point size= getSize();
 		Point pos= new Point(size.x, size.y);
 
-		int flags= fFlags;
-
-		int syncAndOver= SYNCHRONIZED | OVERRIDES;
-		int syncAndImpl= SYNCHRONIZED | IMPLEMENTS;
-
-		if ((flags & syncAndOver) == syncAndOver) { // both flags set: merged overlay image
-			addBottomRightImage(VdmPluginImages.DESC_OVR_SYNCH_AND_OVERRIDES, pos);
-			flags &= ~syncAndOver; // clear to not render again
-		} else if ((flags & syncAndImpl) == syncAndImpl) { // both flags set: merged overlay image
-			addBottomRightImage(VdmPluginImages.DESC_OVR_SYNCH_AND_IMPLEMENTS, pos);
-			flags &= ~syncAndImpl; // clear to not render again
-		}
-		if ((flags & OVERRIDES) != 0) {
-			addBottomRightImage(VdmPluginImages.DESC_OVR_OVERRIDES, pos);
-		}
-		if ((flags & IMPLEMENTS) != 0) {
-			addBottomRightImage(VdmPluginImages.DESC_OVR_IMPLEMENTS, pos);
-		}
-		if ((flags & SYNCHRONIZED) != 0) {
-			addBottomRightImage(VdmPluginImages.DESC_OVR_SYNCH, pos);
-		}
-		if ((flags & RUNNABLE) != 0) {
-			addBottomRightImage(VdmPluginImages.DESC_OVR_RUN, pos);
-		}
-		if ((flags & TRANSIENT) != 0) {
-			addBottomRightImage(VdmPluginImages.DESC_OVR_TRANSIENT, pos);
-		}
+		
 	}
 
 	private void drawBottomLeft() {
 		Point pos= new Point(0, getSize().y);
-		if ((fFlags & ERROR) != 0) {
-			addBottomLeftImage(VdmPluginImages.DESC_OVR_ERROR, pos);
-		}
-		if ((fFlags & WARNING) != 0) {
-			addBottomLeftImage(VdmPluginImages.DESC_OVR_WARNING, pos);
-		}
+		
 
 	}
 }

@@ -1,5 +1,7 @@
 package org.overture.ide.ui.outline;
 
+import java.util.Vector;
+
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -18,6 +20,9 @@ import org.overture.ide.core.VdmCore;
 import org.overture.ide.ui.editor.core.VdmEditor;
 import org.overture.ide.ui.internal.viewsupport.DecorationgVdmLabelProvider;
 import org.overture.ide.ui.internal.viewsupport.VdmUILabelProvider;
+import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.definitions.ClassInvariantDefinition;
+import org.overturetool.vdmj.definitions.Definition;
 
 public class VdmContentOutlinePage extends ContentOutlinePage implements
 		IContentOutlinePage
@@ -248,5 +253,9 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		fListener= new ElementChangedListener();
 		VdmCore.addElementChangedListener(fListener);
 	}
+
+	
+	
+	
 
 }

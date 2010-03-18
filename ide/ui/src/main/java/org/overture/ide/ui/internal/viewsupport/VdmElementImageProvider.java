@@ -13,9 +13,11 @@ import org.overture.ide.ui.VdmPluginImages;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overturetool.vdmj.definitions.AccessSpecifier;
 import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
 import org.overturetool.vdmj.definitions.LocalDefinition;
+import org.overturetool.vdmj.definitions.ValueDefinition;
 
 public class VdmElementImageProvider {
 	/**
@@ -79,17 +81,26 @@ public class VdmElementImageProvider {
 
 
 	private ImageDescriptor computeDescriptor(Object element, int flags){
+		int adornmentFlags =0;
+	
+		
+		adornmentFlags = computeVdmAdornmentFlags( element);
+		
+		
 		if( element instanceof ClassDefinition)
 		{
 			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_OBJS_CLASS);
 		} else if( element instanceof InstanceVariableDefinition)
 		{
-			return getInstanceVariableDefinitionImage((InstanceVariableDefinition) element);
+			return getInstanceVariableDefinitionImage((InstanceVariableDefinition) element,SMALL_ICONS,adornmentFlags);
 		} else if( element instanceof ExplicitOperationDefinition){
-			return getExplicitOperationDefinitionImage((ExplicitOperationDefinition) element);
+			return getExplicitOperationDefinitionImage((ExplicitOperationDefinition) element,SMALL_ICONS,adornmentFlags);
 		} else if( element instanceof LocalDefinition){
-			return getLocalDefinitionImage((LocalDefinition) element);
+			return getLocalDefinitionImage((LocalDefinition) element,SMALL_ICONS,adornmentFlags);
+		}else if( element instanceof ValueDefinition){
+			return getValueDefinitionImage((ValueDefinition) element,SMALL_ICONS,adornmentFlags);
 		}
+		
 		
 		else if (element instanceof IFile) {
 			IFile file= (IFile) element;
@@ -103,22 +114,47 @@ public class VdmElementImageProvider {
 		return null;
 	}
 
-	private ImageDescriptor getLocalDefinitionImage(LocalDefinition element) {
+	private ImageDescriptor getValueDefinitionImage(ValueDefinition element,
+			int renderFlags, int adornmentFlags) {
 		ImageDescriptor result = null;		
 		AccessSpecifier as = element.accessSpecifier;
-						
+		Point size= useSmallSize(renderFlags) ? SMALL_SIZE : BIG_SIZE;	
+		
 		if(as.access.toString().equals("private"))
 		{
-			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PRIVATE);
+			return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PRIVATE),adornmentFlags,size);
 		} else if(as.access.toString().equals("public"))
 		{
-			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PUBLIC);
+			return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PUBLIC),adornmentFlags,size);
 		} else if (as.access.toString().equals("protected"))
 		{
-			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PROTECTED);
+			return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PROTECTED),adornmentFlags,size);
 		} else if(as.access.toString().equals("default"))
 		{
-			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_DEFAULT);
+			return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_DEFAULT),adornmentFlags,size);
+		}
+		
+		
+		return result;
+	}
+
+	private ImageDescriptor getLocalDefinitionImage(LocalDefinition element, int renderFlags, int adornmentFlags) {
+		ImageDescriptor result = null;		
+		AccessSpecifier as = element.accessSpecifier;
+		Point size= useSmallSize(renderFlags) ? SMALL_SIZE : BIG_SIZE;	
+		
+		if(as.access.toString().equals("private"))
+		{
+			return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PRIVATE),adornmentFlags,size);
+		} else if(as.access.toString().equals("public"))
+		{
+			return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PUBLIC),adornmentFlags,size);
+		} else if (as.access.toString().equals("protected"))
+		{
+			return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PROTECTED),adornmentFlags,size);
+		} else if(as.access.toString().equals("default"))
+		{
+			return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_DEFAULT),adornmentFlags,size);
 		}
 		
 		
@@ -126,45 +162,53 @@ public class VdmElementImageProvider {
 	}
 
 	private ImageDescriptor getExplicitOperationDefinitionImage(
-			ExplicitOperationDefinition element) {
-		ImageDescriptor result = null;		
+			ExplicitOperationDefinition element,int renderFlags, int adornmentFlags) {
+		ImageDescriptor result = null;				
 		AccessSpecifier as = element.accessSpecifier;
-						
+		Point size= useSmallSize(renderFlags) ? SMALL_SIZE : BIG_SIZE;	
+		
+		//result = VdmPluginImages.getDescriptor(VdmPluginImages.IMG_METHOD_PRIVATE);
+		
+		
+		
 		if(as.access.toString().equals("private"))
 		{
-			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_METHOD_PRIVATE);
+			return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_METHOD_PRIVATE), adornmentFlags, size);
 		} else if(as.access.toString().equals("public"))
 		{
-			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_METHOD_PUBLIC);
+			return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_METHOD_PUBLIC), adornmentFlags, size);
 		} else if (as.access.toString().equals("protected"))
 		{
-			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_METHOD_PROTECTED);
+			return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_METHOD_PROTECTED), adornmentFlags, size);
 		}else if(as.access.toString().equals("default"))
 		{
-			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_METHOD_DEFAULT);
+			return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_METHOD_DEFAULT), adornmentFlags, size);
 		}
 		
 		
 		return result;
+//		
 		
+		//return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_METHOD_PROTECTED), 0, size);
 	}
 
-	private ImageDescriptor getInstanceVariableDefinitionImage(InstanceVariableDefinition element) {
+	private ImageDescriptor getInstanceVariableDefinitionImage(InstanceVariableDefinition element, int renderFlags, int adornmentFlags) {
 		ImageDescriptor result = null;		
 		AccessSpecifier as = element.accessSpecifier;
-						
+		Point size= useSmallSize(renderFlags) ? SMALL_SIZE : BIG_SIZE;	
+		
 		if(as.access.toString().equals("private"))
 		{
-			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PRIVATE);
+			return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PRIVATE),adornmentFlags,size);
 		} else if(as.access.toString().equals("public"))
 		{
-			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PUBLIC);
+			return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PUBLIC),adornmentFlags,size);
 		} else if (as.access.toString().equals("protected"))
 		{
-			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PROTECTED);
+			return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_PROTECTED),adornmentFlags,size);
 		} else if(as.access.toString().equals("default"))
 		{
-			return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_DEFAULT);
+			return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_FIELD_DEFAULT),adornmentFlags,size);
 		}
 		
 		
@@ -220,9 +264,85 @@ public class VdmElementImageProvider {
 	}
 
 	
+	public int computeVdmAdornmentFlags(Object element)
+	{
+		int flags = 0;
+		
+		
+		
+		
+		if( element instanceof ClassDefinition)
+		{
+			flags = getClassDefinitionFlags((ClassDefinition)element);
+		} else if( element instanceof InstanceVariableDefinition)
+		{
+			flags = getInstanceVariableDefinitionFlags((InstanceVariableDefinition) element);
+		} else if( element instanceof ExplicitOperationDefinition){
+			flags = getExplicitOperationDefinitionFlags((ExplicitOperationDefinition)element);
+			
+			
+		} else if( element instanceof LocalDefinition){
+			flags = getLocalDefinitionFlags((LocalDefinition) element); 
+		}
+		
+		
+		return flags;
+	}
+
+
 	
 
+	private int getLocalDefinitionFlags(LocalDefinition element) {
+		int flags = 0;
+		
+		flags |= VdmElementImageDescriptor.STATIC;
+		flags |= VdmElementImageDescriptor.FINAL;
+		
+		
+		return flags;
+	}
 
+	private int getInstanceVariableDefinitionFlags(
+			InstanceVariableDefinition element) {
+		int flags = 0;
+		
+		if(element.isStatic()){
+			flags |= VdmElementImageDescriptor.STATIC;
+		}
+			
+		
+		return flags;
+	}
+
+	private int getExplicitOperationDefinitionFlags(
+			ExplicitOperationDefinition element) {
+		
+		int flags = 0;
+		
+		if(element.isConstructor)
+		{
+			flags |= VdmElementImageDescriptor.CONSTRUCTOR;
+		}
+		if(element.isStatic())
+		{
+			flags |= VdmElementImageDescriptor.STATIC;
+		}
+		
+		return flags;
+	}
+
+	private int getClassDefinitionFlags(ClassDefinition element) {
+		int flags = 0;
+		
+		if(element.isAbstract)
+		{
+			flags |= VdmElementImageDescriptor.ABSTRACT;
+		}
+		
+		return flags;
+	}
+
+	
 	public void dispose() {
 	}
 

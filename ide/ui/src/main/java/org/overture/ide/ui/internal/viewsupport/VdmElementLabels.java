@@ -4,8 +4,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.osgi.util.TextProcessor;
 import org.overture.ide.core.IVdmElement;
-import org.overture.ide.ui.internal.util.Strings;
 import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
@@ -13,6 +14,7 @@ import org.overturetool.vdmj.definitions.LocalDefinition;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.definitions.UntypedDefinition;
+import org.overturetool.vdmj.definitions.ValueDefinition;
 import org.overturetool.vdmj.types.NamedType;
 import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.RecordType;
@@ -45,10 +47,10 @@ public class VdmElementLabels {
 	 * @return the styled string
 	 * @since 3.4
 	 */
-	private static StyledString getStyledResourceLabel(IResource resource) {
-		StyledString result = new StyledString(resource.getName());
-		return Strings.markLTR(result);
-	}
+//	private static StyledString getStyledResourceLabel(IResource resource) {
+//		StyledString result = new StyledString(resource.getName());
+//		return Strings.markLTR(result);
+//	}
 
 	public static StyledString getStyledTextLabel(Object element, long flags) {
 //		if (element instanceof IVdmElement) {
@@ -72,6 +74,10 @@ public class VdmElementLabels {
 		if (element instanceof LocalDefinition) {
 			return getLocalDefinitionLabel((LocalDefinition) element);
 		}
+		if(element instanceof ValueDefinition){
+			System.out.println("VALUE DEF");
+		}
+		
 		if(element instanceof UntypedDefinition){
 			return getUntypedDefinition((UntypedDefinition) element);
 		}else
@@ -87,7 +93,14 @@ public class VdmElementLabels {
 	private static StyledString getUntypedDefinition(UntypedDefinition element) {
 		StyledString result = new StyledString();
 		result.append(element.name.name);
-		result.append(" : " + "Unresolved type",
+		DefinitionList defList = element.getDefinitions();
+		for(int i=0; i< defList.size(); i++)
+		{
+			Definition def = defList.get(i);
+			def.toString();
+		}
+		Type elemType = element.getType();
+		result.append(" : " + getSimpleTypeString(elemType),
 				StyledString.DECORATIONS_STYLER);
 		return result;
 	}

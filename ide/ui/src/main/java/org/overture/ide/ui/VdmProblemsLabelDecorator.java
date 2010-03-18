@@ -143,7 +143,7 @@ public class VdmProblemsLabelDecorator implements ILabelDecorator,
 			ImageDescriptor baseImage = new ImageImageDescriptor(image);
 			Rectangle bounds = image.getBounds();
 			return getRegistry().get(new VdmElementImageDescriptor(baseImage,
-					adornmentFlags,
+					0,
 					new Point(bounds.width, bounds.height)));
 		}
 		return image;
