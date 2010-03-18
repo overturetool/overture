@@ -3004,3 +3004,429 @@ FunctionT02:	Test function apply.	 OK.
 FunctionT03:	Test of reading function.	 OK.
 Test result of a testcase seaquence.	 OK!!
 Result of all test cases.	 OK!!
+TermT01:	Test of term constructor and isInThePeriod()	 OK.
+Test result of a testcase seaquence.	 OK!!
+TimeT06:	Test currentDateTime from file.	 OK.
+TimeT05:	Set instance variables.	 OK.
+TimeT04:	ATime subtracting.	 OK.
+TimeT03:	Time ading.	 OK.
+TimeT02:	ATime comparing.	 OK.
+TimeT01:	Test of constructor.	 OK.
+Test result of a testcase seaquence.	 OK!!
+MapT01:	Test of Get function.	 OK.
+MapT02:	Test of Contains related functions.	 OK.
+Test result of a testcase seaquence.	 OK!!
+HashtableT52:	Functional finding.	 OK.
+HashtableT53:	Test of functional remove.	 OK.
+HashtableT54:	Functional Put and Get.	 OK.
+HashtableT55:	Functional getting information.	 OK.
+HashtableT56:	When hashode overlapped.	 OK.
+HashtableT57:	Test of functional Size.	 OK.
+HashtableT01:	Constructor test.	 OK.
+HashtableT02:	search test.	 OK.
+HashtableT03:	Delete test.	 OK.
+HashtableT04:	Test of put, get.	 OK.
+HashtableT05:	Test of getting keys and values.	 OK.
+HashtableT06:	Test when hashCode overlaps.	 OK.
+HashtableT07:	Test of size.	 OK.
+Test result of a testcase seaquence.	 OK!!
+FHashtableT01:	 Test Contains, PutAll	OK.
+FHashtableT02:	 Test Clear, Remove, ContainsKey	OK.
+FHashtableT03:	 Test Put, Get	OK.
+FHashtableT04:	 Test KeySet, ValueSet	OK.
+FHashtableT05:	 Test hashCode is duplicate	OK.
+FHashtableT06:	 Test Size	OK.
+Result-of-testcases.	OK!!
+DoubleListQueueT01:	 Test Queue	 OK.
+Test result of a testcase seaquence.	 OK!!
+QueueT01:	 Test Queue	 OK.
+Test result of a testcase seaquence.	 OK!!
+ UniqueNumberT01:	 UniqueNumberT01 Unit test	 OK.
+Test result of a testcase seaquence.	 OK!!
+RealT01:	Test of getInterest	 OK.
+RealT02:	Test of root.	 OK.
+RealT03:	Test isNDigitsAfterTheDecimalPoint and getNumberOfDigitsAfterTheDecimalPoint.	 OK.
+RealT04:	Test numberOfDigit.	 OK.
+RealT05:	Test roundAterDecimalPointByNdigit.	 OK.
+RealT06:	Test EQ (Equal).	 OK.
+TermT01:	Test of term constructor and isInThePeriod()	 OK.
+Test result of a testcase seaquence.	 OK!!
+TimeT06:	Test currentDateTime from file.	 OK.
+TimeT05:	Set instance variables.	 OK.
+TimeT04:	ATime subtracting.	 OK.
+TimeT03:	Time ading.	 OK.
+TimeT02:	ATime comparing.	 OK.
+TimeT01:	Test of constructor.	 OK.
+Test result of a testcase seaquence.	 OK!!
+MapT01:	Test of Get function.	 OK.
+MapT02:	Test of Contains related functions.	 OK.
+Test result of a testcase seaquence.	 OK!!
+HashtableT52:	Functional finding.	 OK.
+HashtableT53:	Test of functional remove.	 OK.
+HashtableT54:	Functional Put and Get.	 OK.
+HashtableT55:	Functional getting information.	 OK.
+HashtableT56:	When hashode overlapped.	 OK.
+HashtableT57:	Test of functional Size.	 OK.
+HashtableT01:	Constructor test.	 OK.
+HashtableT02:	search test.	 OK.
+HashtableT03:	Delete test.	 OK.
+HashtableT04:	Test of put, get.	 OK.
+HashtableT05:	Test of getting keys and values.	 OK.
+HashtableT06:	Test when hashCode overlaps.	 OK.
+HashtableT07:	Test of size.	 OK.
+Test result of a testcase seaquence.	 OK!!
+FHashtableT01:	 Test Contains, PutAll	OK.
+FHashtableT02:	 Test Clear, Remove, ContainsKey	OK.
+FHashtableT03:	 Test Put, Get	OK.
+FHashtableT04:	 Test KeySet, ValueSet	OK.
+FHashtableT05:	 Test hashCode is duplicate	OK.
+FHashtableT06:	 Test Size	OK.
+Result-of-testcases.	OK!!
+DoubleListQueueT01:	 Test Queue	 OK.
+Test result of a testcase seaquence.	 OK!!
+QueueT01:	 Test Queue	 OK.
+Test result of a testcase seaquence.	 OK!!
+ UniqueNumberT01:	 UniqueNumberT01 Unit test	 OK.
+Test result of a testcase seaquence.	 OK!!
+RealT01:	Test of getInterest	 OK.
+RealT02:	Test of root.	 OK.
+RealT03:	Test isNDigitsAfterTheDecimalPoint and getNumberOfDigitsAfterTheDecimalPoint.	 OK.
+RealT04:	Test numberOfDigit.	 OK.
+RealT05:	Test roundAterDecimalPointByNdigit.	 OK.
+RealT06:	Test EQ (Equal).	 OK.
+RealT07:	Test integrate(x ** 2)	 OK.
+RealT08:	Test integrate(sin) .	 OK.
+Test result of a testcase seaquence.	 OK!!
+SetT01:	 Compare sequences and convert to sequence.	 OK.
+SetT02:	 Get combination.	 OK.
+SetT03:	 Test fmap.	 OK.
+SetT04:	Test sum of set elements.	 OK.
+Test result of a testcase seaquence.	 OK!!
+SequenceT23:	 Test Foldl.	 OK.
+SequenceT24:	 Test Foldr.	 OK.
+SequenceT19:	 Test removes.	 OK.
+SequenceT20:	 Test zip related functions.	 OK.
+SequenceT21:	 Test span.	 OK.
+SequenceT22:	 Test TakeWhile and DropWhile.	 OK.
+SequenceT01:	 Integer sum and product.	 OK.
+SequenceT02:	 Real sum and product.	 OK.
+SequenceT03:	 Sort ascending order (integer and real)	 OK.
+SequenceT04:	 Sort descending order (integer).	 OK.
+SequenceT05:	 Is ordered.	 OK.
+SequenceT06:	 Merge sequences.	 OK.
+SequenceT07:	 Handling sequences.	 OK.
+SequenceT08:	 Test sort.	 OK.
+SequenceT09:	 Delete nil elements.	 OK.
+SequenceT10:	 Get inverse sequence.	 OK.
+SequenceT11:	 Get permutation.	 OK.
+SequenceT12:	 Search sequence.	 OK.
+SequenceT13:	Test fmap.	 OK.
+SequenceT14:	 Test Index.	 OK.
+SequenceT15:	 Test GetAverage.	 OK.
+SequenceT16:	 Test InsertAt.	 OK.
+SequenceT17:	 Test RemoveAt.	 OK.
+SequenceT18:	 Test UpdateAt.	 OK.
+Test result of a testcase seaquence.	 OK!!
+StringT05:	Compare magnitude of character.	 OK.
+StringT06:	Get substring.	 OK.
+StringT01:	Convert digit to integer.	 OK.
+StringT02:	Return dictionary order of character.	 OK.
+StringT03:	Compare magnitude of string.	 OK.
+StringT04:	Compare 2 strings is equal.	 OK.
+StringT07:	Handling digit strings.	 OK.
+StringT08:	Get first position of a character in a string.	 OK.
+StringT09:	Is a string the substring of another string.	 OK.
+Test result of a testcase seaquence.	 OK!!
+IntegerT01:	Convert integer to string.	 OK.
+IntegerT02:	Get GCD and LCM.	 OK.
+Test result of a testcase seaquence.	 OK!!
+NumberT01:	Summary of integer.	 OK.
+NumberT02:	Is computable?	 OK.
+NumberT03:	Type is not computable, but...	 OK.
+Test result of a testcase seaquence.	 OK!!
+CalendarT12:	getRegularMonth	 OK.
+CalendarT11:	getRegularDate	 OK.
+CalendarT10:	Get the end of month.	 OK.
+CalendarT09:	Read today datefrom a file.	 OK.
+CalendarT07:	getDateFromString	 OK.
+CalendarT06:	Get day of the week.	 OK.
+CalendarT05:	Compare date.	 OK.
+CalendarT03:	Calculation of Vernal Equinox, Summer Solstice, Autumnal Equinox, Winter Solstice.	 OK.
+CalendarT02:	Addition and subtraction of date.	 OK.
+CalendarT01:	Make date.	 OK.
+CalendarT04:	Get set of Day off.	 OK.
+Test result of a testcase seaquence.	 OK!!
+SBCalendarT06:	Getting contract date of margin trading.	 OK.
+SBCalendarT05:	Test todayOnBusiness from a file.	 OK.
+SBCalendarT04:	Test of todayOnCompany	 OK.
+SBCalendarT03:	Test validity checking of contract month and getting execution date.	 OK.
+SBCalendarT02:	Getting set of day off.	 OK.
+SBCalendarT01:	Test maxDate and date is nil.	 OK.
+Test result of a testcase seaquence.	 OK!!
+DateT01:	Calculate the day of the week.	 OK.
+DateT02:	Convert date.	 OK.
+DateT03:	getTheNumberOfDayOff	 OK.
+DateT04:	Calculate date.	 OK.
+DateT05:	Compare date.date	 OK.
+DateT06:	Get the day of the week.	 OK.
+DateT07:	Query about date.date	 OK.
+Test result of a testcase seaquence.	 OK!!
+FunctionT01:	Test Fwhile, Funtil.	 OK.
+FunctionT02:	Test function apply.	 OK.
+FunctionT03:	Test of reading function.	 OK.
+Test result of a testcase seaquence.	 OK!!
+Result of all test cases.	 OK!!
+TermT01:	Test of term constructor and isInThePeriod()	 OK.
+Test result of a testcase seaquence.	 OK!!
+TimeT06:	Test currentDateTime from file.	 OK.
+TimeT05:	Set instance variables.	 OK.
+TimeT04:	ATime subtracting.	 OK.
+TimeT03:	Time ading.	 OK.
+TimeT02:	ATime comparing.	 OK.
+TimeT01:	Test of constructor.	 OK.
+Test result of a testcase seaquence.	 OK!!
+MapT01:	Test of Get function.	 OK.
+MapT02:	Test of Contains related functions.	 OK.
+Test result of a testcase seaquence.	 OK!!
+HashtableT52:	Functional finding.	 OK.
+HashtableT53:	Test of functional remove.	 OK.
+HashtableT54:	Functional Put and Get.	 OK.
+HashtableT55:	Functional getting information.	 OK.
+HashtableT56:	When hashode overlapped.	 OK.
+HashtableT57:	Test of functional Size.	 OK.
+HashtableT01:	Constructor test.	 OK.
+HashtableT02:	search test.	 OK.
+HashtableT03:	Delete test.	 OK.
+HashtableT04:	Test of put, get.	 OK.
+HashtableT05:	Test of getting keys and values.	 OK.
+HashtableT06:	Test when hashCode overlaps.	 OK.
+HashtableT07:	Test of size.	 OK.
+Test result of a testcase seaquence.	 OK!!
+FHashtableT01:	 Test Contains, PutAll	OK.
+FHashtableT02:	 Test Clear, Remove, ContainsKey	OK.
+FHashtableT03:	 Test Put, Get	OK.
+FHashtableT04:	 Test KeySet, ValueSet	OK.
+FHashtableT05:	 Test hashCode is duplicate	OK.
+FHashtableT06:	 Test Size	OK.
+Result-of-testcases.	OK!!
+DoubleListQueueT01:	 Test Queue	 OK.
+Test result of a testcase seaquence.	 OK!!
+QueueT01:	 Test Queue	 OK.
+Test result of a testcase seaquence.	 OK!!
+ UniqueNumberT01:	 UniqueNumberT01 Unit test	 OK.
+Test result of a testcase seaquence.	 OK!!
+RealT01:	Test of getInterest	 OK.
+RealT02:	Test of root.	 OK.
+RealT03:	Test isNDigitsAfterTheDecimalPoint and getNumberOfDigitsAfterTheDecimalPoint.	 OK.
+RealT04:	Test numberOfDigit.	 OK.
+RealT05:	Test roundAterDecimalPointByNdigit.	 OK.
+RealT06:	Test EQ (Equal).	 OK.
+RealT07:	Test integrate(x ** 2)	 OK.
+RealT08:	Test integrate(sin) .	 OK.
+Test result of a testcase seaquence.	 OK!!
+SetT01:	 Compare sequences and convert to sequence.	 OK.
+SetT02:	 Get combination.	 OK.
+SetT03:	 Test fmap.	 OK.
+SetT04:	Test sum of set elements.	 OK.
+Test result of a testcase seaquence.	 OK!!
+SequenceT23:	 Test Foldl.	 OK.
+SequenceT24:	 Test Foldr.	 OK.
+SequenceT19:	 Test removes.	 OK.
+SequenceT20:	 Test zip related functions.	 OK.
+SequenceT21:	 Test span.	 OK.
+SequenceT22:	 Test TakeWhile and DropWhile.	 OK.
+SequenceT01:	 Integer sum and product.	 OK.
+SequenceT02:	 Real sum and product.	 OK.
+SequenceT03:	 Sort ascending order (integer and real)	 OK.
+SequenceT04:	 Sort descending order (integer).	 OK.
+SequenceT05:	 Is ordered.	 OK.
+SequenceT06:	 Merge sequences.	 OK.
+SequenceT07:	 Handling sequences.	 OK.
+SequenceT08:	 Test sort.	 OK.
+SequenceT09:	 Delete nil elements.	 OK.
+SequenceT10:	 Get inverse sequence.	 OK.
+SequenceT11:	 Get permutation.	 OK.
+SequenceT12:	 Search sequence.	 OK.
+SequenceT13:	Test fmap.	 OK.
+SequenceT14:	 Test Index.	 OK.
+SequenceT15:	 Test GetAverage.	 OK.
+SequenceT16:	 Test InsertAt.	 OK.
+SequenceT17:	 Test RemoveAt.	 OK.
+SequenceT18:	 Test UpdateAt.	 OK.
+Test result of a testcase seaquence.	 OK!!
+StringT05:	Compare magnitude of character.	 OK.
+StringT06:	Get substring.	 OK.
+StringT01:	Convert digit to integer.	 OK.
+StringT02:	Return dictionary order of character.	 OK.
+StringT03:	Compare magnitude of string.	 OK.
+StringT04:	Compare 2 strings is equal.	 OK.
+StringT07:	Handling digit strings.	 OK.
+StringT08:	Get first position of a character in a string.	 OK.
+StringT09:	Is a string the substring of another string.	 OK.
+Test result of a testcase seaquence.	 OK!!
+IntegerT01:	Convert integer to string.	 OK.
+IntegerT02:	Get GCD and LCM.	 OK.
+Test result of a testcase seaquence.	 OK!!
+NumberT01:	Summary of integer.	 OK.
+NumberT02:	Is computable?	 OK.
+NumberT03:	Type is not computable, but...	 OK.
+Test result of a testcase seaquence.	 OK!!
+CalendarT12:	getRegularMonth	 OK.
+CalendarT11:	getRegularDate	 OK.
+CalendarT10:	Get the end of month.	 OK.
+CalendarT09:	Read today datefrom a file.	 OK.
+CalendarT07:	getDateFromString	 OK.
+CalendarT06:	Get day of the week.	 OK.
+CalendarT05:	Compare date.	 OK.
+CalendarT03:	Calculation of Vernal Equinox, Summer Solstice, Autumnal Equinox, Winter Solstice.	 OK.
+CalendarT02:	Addition and subtraction of date.	 OK.
+CalendarT01:	Make date.	 OK.
+CalendarT04:	Get set of Day off.	 OK.
+Test result of a testcase seaquence.	 OK!!
+SBCalendarT06:	Getting contract date of margin trading.	 OK.
+SBCalendarT05:	Test todayOnBusiness from a file.	 OK.
+SBCalendarT04:	Test of todayOnCompany	 OK.
+SBCalendarT03:	Test validity checking of contract month and getting execution date.	 OK.
+SBCalendarT02:	Getting set of day off.	 OK.
+SBCalendarT01:	Test maxDate and date is nil.	 OK.
+Test result of a testcase seaquence.	 OK!!
+DateT01:	Calculate the day of the week.	 OK.
+DateT02:	Convert date.	 OK.
+DateT03:	getTheNumberOfDayOff	 OK.
+DateT04:	Calculate date.	 OK.
+DateT05:	Compare date.date	 OK.
+DateT06:	Get the day of the week.	 OK.
+DateT07:	Query about date.date	 OK.
+Test result of a testcase seaquence.	 OK!!
+FunctionT01:	Test Fwhile, Funtil.	 OK.
+FunctionT02:	Test function apply.	 OK.
+FunctionT03:	Test of reading function.	 OK.
+Test result of a testcase seaquence.	 OK!!
+Result of all test cases.	 OK!!
+TermT01:	Test of term constructor and isInThePeriod()	 OK.
+Test result of a testcase seaquence.	 OK!!
+TimeT06:	Test currentDateTime from file.	 OK.
+TimeT05:	Set instance variables.	 OK.
+TimeT04:	ATime subtracting.	 OK.
+TimeT03:	Time ading.	 OK.
+TimeT02:	ATime comparing.	 OK.
+TimeT01:	Test of constructor.	 OK.
+Test result of a testcase seaquence.	 OK!!
+MapT01:	Test of Get function.	 OK.
+MapT02:	Test of Contains related functions.	 OK.
+Test result of a testcase seaquence.	 OK!!
+HashtableT52:	Functional finding.	 OK.
+HashtableT53:	Test of functional remove.	 OK.
+HashtableT54:	Functional Put and Get.	 OK.
+HashtableT55:	Functional getting information.	 OK.
+HashtableT56:	When hashode overlapped.	 OK.
+HashtableT57:	Test of functional Size.	 OK.
+HashtableT01:	Constructor test.	 OK.
+HashtableT02:	search test.	 OK.
+HashtableT03:	Delete test.	 OK.
+HashtableT04:	Test of put, get.	 OK.
+HashtableT05:	Test of getting keys and values.	 OK.
+HashtableT06:	Test when hashCode overlaps.	 OK.
+HashtableT07:	Test of size.	 OK.
+Test result of a testcase seaquence.	 OK!!
+FHashtableT01:	 Test Contains, PutAll	OK.
+FHashtableT02:	 Test Clear, Remove, ContainsKey	OK.
+FHashtableT03:	 Test Put, Get	OK.
+FHashtableT04:	 Test KeySet, ValueSet	OK.
+FHashtableT05:	 Test hashCode is duplicate	OK.
+FHashtableT06:	 Test Size	OK.
+Result-of-testcases.	OK!!
+DoubleListQueueT01:	 Test Queue	 OK.
+Test result of a testcase seaquence.	 OK!!
+QueueT01:	 Test Queue	 OK.
+Test result of a testcase seaquence.	 OK!!
+ UniqueNumberT01:	 UniqueNumberT01 Unit test	 OK.
+Test result of a testcase seaquence.	 OK!!
+RealT01:	Test of getInterest	 OK.
+RealT02:	Test of root.	 OK.
+RealT03:	Test isNDigitsAfterTheDecimalPoint and getNumberOfDigitsAfterTheDecimalPoint.	 OK.
+RealT04:	Test numberOfDigit.	 OK.
+RealT05:	Test roundAterDecimalPointByNdigit.	 OK.
+RealT06:	Test EQ (Equal).	 OK.
+RealT07:	Test integrate(x ** 2)	 OK.
+RealT08:	Test integrate(sin) .	 OK.
+Test result of a testcase seaquence.	 OK!!
+SetT01:	 Compare sequences and convert to sequence.	 OK.
+SetT02:	 Get combination.	 OK.
+SetT03:	 Test fmap.	 OK.
+SetT04:	Test sum of set elements.	 OK.
+Test result of a testcase seaquence.	 OK!!
+SequenceT23:	 Test Foldl.	 OK.
+SequenceT24:	 Test Foldr.	 OK.
+SequenceT19:	 Test removes.	 OK.
+SequenceT20:	 Test zip related functions.	 OK.
+SequenceT21:	 Test span.	 OK.
+SequenceT22:	 Test TakeWhile and DropWhile.	 OK.
+SequenceT01:	 Integer sum and product.	 OK.
+SequenceT02:	 Real sum and product.	 OK.
+SequenceT03:	 Sort ascending order (integer and real)	 OK.
+SequenceT04:	 Sort descending order (integer).	 OK.
+SequenceT05:	 Is ordered.	 OK.
+SequenceT06:	 Merge sequences.	 OK.
+SequenceT07:	 Handling sequences.	 OK.
+SequenceT08:	 Test sort.	 OK.
+SequenceT09:	 Delete nil elements.	 OK.
+SequenceT10:	 Get inverse sequence.	 OK.
+SequenceT11:	 Get permutation.	 OK.
+SequenceT12:	 Search sequence.	 OK.
+SequenceT13:	Test fmap.	 OK.
+SequenceT14:	 Test Index.	 OK.
+SequenceT15:	 Test GetAverage.	 OK.
+SequenceT16:	 Test InsertAt.	 OK.
+SequenceT17:	 Test RemoveAt.	 OK.
+SequenceT18:	 Test UpdateAt.	 OK.
+Test result of a testcase seaquence.	 OK!!
+StringT05:	Compare magnitude of character.	 OK.
+StringT06:	Get substring.	 OK.
+StringT01:	Convert digit to integer.	 OK.
+StringT02:	Return dictionary order of character.	 OK.
+StringT03:	Compare magnitude of string.	 OK.
+StringT04:	Compare 2 strings is equal.	 OK.
+StringT07:	Handling digit strings.	 OK.
+StringT08:	Get first position of a character in a string.	 OK.
+StringT09:	Is a string the substring of another string.	 OK.
+Test result of a testcase seaquence.	 OK!!
+IntegerT01:	Convert integer to string.	 OK.
+IntegerT02:	Get GCD and LCM.	 OK.
+Test result of a testcase seaquence.	 OK!!
+NumberT01:	Summary of integer.	 OK.
+NumberT02:	Is computable?	 OK.
+NumberT03:	Type is not computable, but...	 OK.
+Test result of a testcase seaquence.	 OK!!
+CalendarT12:	getRegularMonth	 OK.
+CalendarT11:	getRegularDate	 OK.
+CalendarT10:	Get the end of month.	 OK.
+CalendarT09:	Read today datefrom a file.	 OK.
+CalendarT07:	getDateFromString	 OK.
+CalendarT06:	Get day of the week.	 OK.
+CalendarT05:	Compare date.	 OK.
+CalendarT03:	Calculation of Vernal Equinox, Summer Solstice, Autumnal Equinox, Winter Solstice.	 OK.
+CalendarT02:	Addition and subtraction of date.	 OK.
+CalendarT01:	Make date.	 OK.
+CalendarT04:	Get set of Day off.	 OK.
+Test result of a testcase seaquence.	 OK!!
+SBCalendarT06:	Getting contract date of margin trading.	 OK.
+SBCalendarT05:	Test todayOnBusiness from a file.	 OK.
+SBCalendarT04:	Test of todayOnCompany	 OK.
+SBCalendarT03:	Test validity checking of contract month and getting execution date.	 OK.
+SBCalendarT02:	Getting set of day off.	 OK.
+SBCalendarT01:	Test maxDate and date is nil.	 OK.
+Test result of a testcase seaquence.	 OK!!
+DateT01:	Calculate the day of the week.	 OK.
+DateT02:	Convert date.	 OK.
+DateT03:	getTheNumberOfDayOff	 OK.
+DateT04:	Calculate date.	 OK.
+DateT05:	Compare date.date	 OK.
+DateT06:	Get the day of the week.	 OK.
+DateT07:	Query about date.date	 OK.
+Test result of a testcase seaquence.	 OK!!
+FunctionT01:	Test Fwhile, Funtil.	 OK.
+FunctionT02:	Test function apply.	 OK.
+FunctionT03:	Test of reading function.	 OK.
+Test result of a testcase seaquence.	 OK!!
+Result of all test cases.	 OK!!
