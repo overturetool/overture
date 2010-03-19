@@ -31,5 +31,15 @@
             priority="0">
       </language>
    </extension>
-  
+  <extension
+         point="org.overture.ide.core.language">
+      <Language
+            dialect="VDM_SL"
+            name="VDM-SL"
+            nature="org.overture.ide.vdmsl.core.nature">
+         <ContentType
+               id="org.overture.ide.vdmsl.content-type">
+         </ContentType>
+      </Language>
+   </extension>
 </plugin>
