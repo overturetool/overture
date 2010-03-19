@@ -15,12 +15,13 @@ import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.VdmElementDelta;
+import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
 
-public class VdmModel<T> implements IVdmModel<T>
+public class VdmModel implements IVdmModel
 {
 	static int count = 0;
 	int id;
@@ -52,9 +53,9 @@ public class VdmModel<T> implements IVdmModel<T>
 	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#getRootElementList()
 	 */
-	public synchronized List<T> getRootElementList()
+	public synchronized List<IAstNode> getRootElementList()
 	{
-		List list = new Vector();
+		List<IAstNode> list = new Vector<IAstNode>();
 		for (IVdmSourceUnit unit : vdmSourceUnits)
 		{
 			list.addAll(unit.getParseList());
@@ -100,58 +101,6 @@ public class VdmModel<T> implements IVdmModel<T>
 	{
 		return checked;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.overture.ide.core.ast.IVdmElement#update(java.util.List)
-	 */
-//	@SuppressWarnings("unchecked")
-//	public synchronized void update(List<T> modules)
-//	{
-//
-//		this.setChecked(false);
-//		if (this.rootElementList.size() != 0)
-//			for (Object module : modules)
-//			{
-//
-//				// if (module instanceof ClassDefinition)
-//				// update((ClassDefinition) module);
-//				// else if (module instanceof Module)
-//				// update((Module) module);
-//
-//				T existingModule = null;
-//				if (module instanceof ClassDefinition)
-//				{
-//
-//					for (Object m : this.rootElementList)
-//					{
-//						if (m instanceof ClassDefinition
-//								&& ((ClassDefinition) m).name.equals(((ClassDefinition) module).name))
-//							existingModule = (T) m;
-//					}
-//				} else if (module instanceof Module)
-//				{
-//					for (Object m : this.rootElementList)
-//					{
-//						if (m instanceof Module
-//								&& ((Module) m).name.equals(((Module) module).name)
-//								&& ((Module) m).name.location.file.getName()
-//										.equals(((Module) module).name.location.file.getName()))
-//							existingModule = (T) m;
-//					}
-//				}
-//				if (existingModule != null)
-//					this.rootElementList.remove(existingModule);
-//
-//				this.rootElementList.add((T) module);
-//			}
-//		else
-//		{
-//			this.rootElementList.addAll(modules);
-//		}
-//
-//	}
 
 	/*
 	 * (non-Javadoc)
@@ -270,30 +219,9 @@ public class VdmModel<T> implements IVdmModel<T>
 		return getRootElementList().size() > 0;
 	}
 
-//	@SuppressWarnings("unchecked")
-//	public IVdmModel filter(IFile file)
-//	{
-//		List modules = new Vector();
-//
-//		for (Object o : getRootElementList())
-//		{
-//			if (o instanceof Module
-//					&& ((Module) o).name.location.file.getName()
-//							.equals(file.getName()))
-//				modules.add(o);
-//			else if (o instanceof ClassDefinition
-//					&& ((ClassDefinition) o).name.location.file.getName()
-//							.equals(file.getName()))
-//				modules.add(o);
-//
-//		}
-//		if (modules.size() > 0)
-//			return new VdmModel<T>(modules);
-//		else
-//			return null;
-//
-//	}
 
+
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter)
 	{
 		// TODO Auto-generated method stub

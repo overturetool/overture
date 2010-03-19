@@ -1,13 +1,13 @@
 package org.overture.ide.core.ast;
 
-public class NotAllowedException extends Exception{
+public class NotAllowedException extends Exception
+{
 	public NotAllowedException() {
-	
+
 	}
-	
-	NotAllowedException(String message)
-	{
-	super(message);	
+
+	NotAllowedException(String message) {
+		super(message);
 	}
 
 	/**

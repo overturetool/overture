@@ -10,11 +10,11 @@ public class DeltaProcessor
 	 * The global state of delta processing.
 	 */
 	private DeltaProcessingState state;
-	private IVdmModelManager manager;
+	//private IVdmModelManager manager;
 
 	public DeltaProcessor(DeltaProcessingState state, IVdmModelManager manager) {
 		this.state = state;
-		this.manager = manager;
+		//this.manager = manager;
 	}
 	
 	public DeltaProcessingState getState()

@@ -1,8 +1,12 @@
 package org.overture.ide.parsers.vdmj;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.parser.AbstractParserParticipant;
 import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
@@ -37,7 +41,12 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 					charset);
 			reader = new ClassReader(ltr);
 			classes.addAll(reader.readClasses());
-			result.setAst(classes);
+			List<IAstNode> nodes = new Vector<IAstNode>();
+			for (ClassDefinition classDefinition : classes)
+			{
+				nodes.add(classDefinition);
+			}
+			result.setAst(nodes);
 
 		} catch (InternalException e)
 		{

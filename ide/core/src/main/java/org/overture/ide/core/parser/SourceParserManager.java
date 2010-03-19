@@ -9,11 +9,9 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.overture.ide.core.ICoreConstants;
-import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.IVdmProject;
 import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.VdmCore;
-import org.overture.ide.internal.core.ast.VdmModelManager;
 
 public class SourceParserManager {
 	/**
@@ -147,7 +145,6 @@ public class SourceParserManager {
 	 * @throws CoreException
 	 * @throws IOException
 	 */
-	@SuppressWarnings("unchecked")
 	public static void parseFile(
 			final IVdmSourceUnit file) throws CoreException, IOException
 	{

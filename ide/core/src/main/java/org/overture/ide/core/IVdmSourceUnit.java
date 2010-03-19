@@ -22,9 +22,9 @@ public interface IVdmSourceUnit extends IVdmElement{
 	
 	public File getSystemFile();
 	
-	public  void reconcile(List parseResult,List<LexLocation> allLocation, Map<LexLocation,IAstNode> locationToAstNodeMap,boolean parseErrors);
+	public  void reconcile(List<IAstNode> parseResult,List<LexLocation> allLocation, Map<LexLocation,IAstNode> locationToAstNodeMap,boolean parseErrors);
 	
-	public  List getParseList();
+	public  List<IAstNode> getParseList();
 
 	public boolean exists();
 	public void clean();

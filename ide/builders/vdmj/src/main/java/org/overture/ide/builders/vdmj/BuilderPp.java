@@ -3,7 +3,6 @@ package org.overture.ide.builders.vdmj;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.overture.ide.core.IVdmModel;
-import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.Settings;

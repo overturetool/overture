@@ -6,17 +6,18 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.overture.ide.core.ast.NotAllowedException;
+import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.modules.ModuleList;
 
 
 
 
-public interface IVdmModel<T> extends IVdmElement{
+public interface IVdmModel extends IVdmElement{
 
 //	public abstract void setRootElementList(List<T> rootElementList);
 
-	public abstract List<T> getRootElementList();
+	public abstract List<IAstNode> getRootElementList();
 
 	public abstract Date getCheckedTime();
 

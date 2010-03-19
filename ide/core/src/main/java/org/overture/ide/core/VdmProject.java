@@ -96,7 +96,7 @@ public class VdmProject extends Project implements IVdmProject
 			{
 				IVdmProject vdmProject = new VdmProject(project);
 				projects.put(vdmProject.getName(), vdmProject);
-				IVdmModel model = VdmModelManager.getInstance().createModel(vdmProject);
+				VdmModelManager.getInstance().createModel(vdmProject);
 				System.out.println("Creating project: "+ project.getName());
 				vdmProject.getSpecFiles();
 //				for (IVdmSourceUnit unit : )

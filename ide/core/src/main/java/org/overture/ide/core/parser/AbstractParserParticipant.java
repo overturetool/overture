@@ -197,10 +197,9 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		System.out.println(e.toString());
 	};
 
-	@SuppressWarnings("unchecked")
 	public class ParseResult
 	{
-		private List ast = null;
+		private List<IAstNode> ast = null;
 		private List<VDMError> errors = new ArrayList<VDMError>();
 		private List<VDMWarning> warnings = new ArrayList<VDMWarning>();
 		private Throwable fatalError;
@@ -218,14 +217,14 @@ public abstract class AbstractParserParticipant implements ISourceParser
 			return errors.size()!=0 || fatalError!=null;
 		}
 
-		public void setAst(List ast)
+		public void setAst(List<IAstNode> ast)
 		{
 			Assert.isNotNull(ast);
 			Assert.isTrue(ast.size()!=0);
 			this.ast = ast;
 		}
 
-		public List getAst()
+		public List<IAstNode> getAst()
 		{
 			return ast;
 		}

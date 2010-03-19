@@ -27,7 +27,7 @@ public class VdmSourceUnit implements IVdmSourceUnit
 	Map<Integer, IAstNode> offsetToAstNodeMap = new Hashtable<Integer, IAstNode>();
 	Integer[] lineSize = new Integer[0];
 
-	private List parseList = new Vector();
+	private List<IAstNode> parseList = new Vector<IAstNode>();
 
 	public VdmSourceUnit(IVdmProject project, IFile file) {
 		this.project = project;
@@ -36,6 +36,7 @@ public class VdmSourceUnit implements IVdmSourceUnit
 		makeLineSizes();
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter)
 	{
 		// TODO Auto-generated method stub
@@ -52,11 +53,10 @@ public class VdmSourceUnit implements IVdmSourceUnit
 		return project.getFile(file);
 	}
 
-	public synchronized void reconcile(List parseResult,
+	public synchronized void reconcile(List<IAstNode> parseResult,
 			List<LexLocation> allLocation,
 			Map<LexLocation, IAstNode> locationToAstNodeMap, boolean parseErrors)
 	{
-		this.type = type;
 		this.parseList.clear();
 		this.parseList.addAll(parseResult);
 
@@ -105,7 +105,7 @@ public class VdmSourceUnit implements IVdmSourceUnit
 		// }
 	}
 
-	public synchronized List getParseList()
+	public synchronized List<IAstNode> getParseList()
 	{
 		return this.parseList;
 	}

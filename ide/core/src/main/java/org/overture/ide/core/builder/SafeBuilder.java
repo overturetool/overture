@@ -13,7 +13,6 @@ import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.IVdmProject;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.parser.SourceParserManager;
-import org.overture.ide.internal.core.ast.VdmModelManager;
 
 public class SafeBuilder extends Thread
 {
@@ -52,7 +51,6 @@ public class SafeBuilder extends Thread
 
 							}
 
-							@SuppressWarnings("unchecked")
 							public void run() throws Exception
 							{
 								AbstractVdmBuilder builder = (AbstractVdmBuilder) o;

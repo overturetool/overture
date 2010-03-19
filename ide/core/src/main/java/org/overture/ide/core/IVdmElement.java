@@ -1,9 +1,6 @@
 package org.overture.ide.core;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 
 
 public interface IVdmElement extends IAdaptable {
