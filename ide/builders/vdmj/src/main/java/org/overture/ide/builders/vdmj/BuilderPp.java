@@ -33,7 +33,7 @@ public class BuilderPp extends VdmjBuilder {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public IStatus buileModelElements(IVdmModel rooList)
+	public IStatus buildModel(IVdmModel rooList)
 	{
 	
 		try
@@ -54,7 +54,7 @@ public class BuilderPp extends VdmjBuilder {
 			e.printStackTrace();
 		}
 
-		return buileModelElements(getProject());
+		return buildModel(getProject());
 
 	}
 

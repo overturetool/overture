@@ -15,14 +15,14 @@ public abstract class AbstractVdmBuilder
 	private IVdmProject project;
 	
 	@SuppressWarnings("unchecked")
-	public IStatus buileModelElements(IVdmProject project,IVdmModel rooList)
+	public IStatus buildModel(IVdmProject project,IVdmModel rooList)
 	{
 		this.setProject(project);
-		return buileModelElements(rooList);
+		return buildModel(rooList);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public abstract IStatus buileModelElements(IVdmModel rooList);
+	public abstract IStatus buildModel(IVdmModel rooList);
 
 //	public abstract String getNatureId();
 	

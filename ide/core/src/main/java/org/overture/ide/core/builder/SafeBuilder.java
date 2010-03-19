@@ -61,7 +61,7 @@ public class SafeBuilder extends Thread
 								// (currentProject.hasNature(builder.getNatureId()))
 								// {
 
-								VdmModelManager.getInstance().clean(currentProject);// we do now support incremental
+								currentProject.getModel().clean();// we do now support incremental
 																			// build
 
 								SourceParserManager.parseMissingFiles(currentProject,
@@ -73,9 +73,9 @@ public class SafeBuilder extends Thread
 										&& rootNode.isParseCorrect())
 								{
 									if (VdmCore.DEBUG)
-										System.out.println("Type correct .. building");
+										System.out.println("Parse correct .. building("+currentProject.getName()+")");
 									monitor.subTask("Type checking");
-									statusList.add(builder.buileModelElements(currentProject,
+									statusList.add(builder.buildModel(currentProject,
 											rootNode));
 									// mark ast root as type checked
 

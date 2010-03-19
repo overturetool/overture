@@ -15,7 +15,7 @@ public abstract class VdmjBuilder  extends AbstractVdmBuilder
 {
 	private List<VDMError> errors = new ArrayList<VDMError>();
 	private List<VDMWarning> warnings = new ArrayList<VDMWarning>();
-	protected IStatus buileModelElements(IProject project)
+	protected IStatus buildModel(IProject project)
 	{	
 		
 		ExitStatus typeCheckStatus = null;
@@ -82,6 +82,7 @@ public abstract class VdmjBuilder  extends AbstractVdmBuilder
 	};
 	
 	protected void processInternalError(Throwable e) {
+		e.printStackTrace();
 		System.out.println(e.toString());
 	};
 

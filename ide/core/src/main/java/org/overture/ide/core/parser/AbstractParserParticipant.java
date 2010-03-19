@@ -2,6 +2,7 @@ package org.overture.ide.core.parser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -16,6 +17,8 @@ import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.VdmProject;
 import org.overture.ide.core.utility.FileUtility;
+import org.overturetool.vdmj.ast.IAstNode;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 
@@ -44,13 +47,16 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		ParseResult result;
 		try
 		{
+			LexLocation.getAllLocations().clear();
 			result = startParse(file,
 					new String(FileUtility.getCharContent(FileUtility.getContent(file.getFile()))),
 					file.getFile().getCharset());
 			setFileMarkers(file.getFile(), result);
 			if (result != null)
-				setParseAst(file,
+				file.reconcile(
 						result.getAst(),
+						result.getAllLocation(),
+						result.getLocationToAstNodeMap(),
 						!result.hasParseErrors());
 
 		} catch (CoreException e)
@@ -71,12 +77,15 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		ParseResult result;
 		try
 		{
+			LexLocation.getAllLocations().clear();
 			result = startParse(file, data, file.getFile().getCharset());
 			setFileMarkers(file.getFile(), result);
 			if (result != null)
 
-				setParseAst(file,
+				file.reconcile(
 						result.getAst(),
+						result.getAllLocation(),
+						result.getLocationToAstNodeMap(),
 						!result.hasParseErrors());
 		} catch (CoreException e)
 		{
@@ -168,21 +177,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 	protected abstract ParseResult startParse(IVdmSourceUnit file, String content,
 			String charset);
 
-	@SuppressWarnings("unchecked")
-	protected void setParseAst(IVdmSourceUnit sourceUnit, List ast,
-			boolean parseErrorsOccured)
-	{
-		sourceUnit.reconcile(ast, parseErrorsOccured);
-//		IVdmModelManager astManager = VdmModelManager.instance();
-//		astManager.update(project, project.getVdmNature(), ast);
-//		IVdmSourceUnit rootNode = astManager.getRootNode(project, natureId);
-//		if (rootNode != null)
-//		{
-//
-//			rootNode.setParseCorrect(filePath, !parseErrorsOccured);
-//
-//		}
-	}
+
 
 	protected void addWarning(IFile file, String message, int lineNumber)
 	{
@@ -209,6 +204,8 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		private List<VDMError> errors = new ArrayList<VDMError>();
 		private List<VDMWarning> warnings = new ArrayList<VDMWarning>();
 		private Throwable fatalError;
+		private List<LexLocation> allLocation;
+		private Map<LexLocation,IAstNode> locationToAstNodeMap;
 
 		public ParseResult() {
 
@@ -265,6 +262,34 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		public Throwable getFatalError()
 		{
 			return fatalError;
+		}
+
+
+
+		public void setAllLocation(List<LexLocation> allLocation)
+		{
+			this.allLocation = allLocation;
+		}
+
+
+
+		public List<LexLocation> getAllLocation()
+		{
+			return allLocation;
+		}
+
+
+
+		public void setLocationToAstNodeMap(Map<LexLocation,IAstNode> locationToAstNodeMap)
+		{
+			this.locationToAstNodeMap = locationToAstNodeMap;
+		}
+
+
+
+		public Map<LexLocation,IAstNode> getLocationToAstNodeMap()
+		{
+			return locationToAstNodeMap;
 		};
 
 	}

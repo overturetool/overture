@@ -130,9 +130,11 @@ public class SourceParserManager {
 		List<IVdmSourceUnit> files = project.getSpecFiles();
 		for (IVdmSourceUnit file : files)
 		{
-			IVdmModel model = file.getProject().getModel();
-			if (model != null && model.hasFile(file))
-				return;
+//			IVdmModel model = file.getProject().getModel();
+//			if (model != null && model.hasFile(file) && file.)
+//				return;
+//			if(!file.hasParseTree())
+//				file.getParseList().clear();
 			parseFile( file);
 		}
 

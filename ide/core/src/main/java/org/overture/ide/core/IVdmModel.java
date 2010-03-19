@@ -44,6 +44,7 @@ public interface IVdmModel<T> extends IVdmElement{
 	 */
 	public abstract boolean hasFile(File file);
 	public abstract boolean hasFile(IVdmSourceUnit file);
+	
 
 	public abstract ModuleList getModuleList() throws NotAllowedException;
 

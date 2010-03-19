@@ -1,19 +1,30 @@
 package org.overture.ide.ui.editor.core;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.ISourceViewerExtension2;
 import org.eclipse.jface.text.source.IVerticalRuler;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.overture.ide.core.ISourceReference;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.IVdmProject;
@@ -22,9 +33,38 @@ import org.overture.ide.core.VdmProject;
 import org.overture.ide.core.parser.SourceParserManager;
 
 import org.overture.ide.ui.outline.VdmContentOutlinePage;
+import org.overturetool.vdmj.ast.IAstNode;
+import org.overturetool.vdmj.lex.LexLocation;
 
 public abstract class VdmEditor extends TextEditor
 {
+	/**
+	 * Updates the Java outline page selection and this editor's range indicator.
+	 * 
+	 * @since 3.0
+	 */
+	private class EditorSelectionChangedListener extends
+			AbstractSelectionChangedListener
+	{
+
+		/*
+		 * @see
+		 * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.
+		 * SelectionChangedEvent)
+		 */
+		public void selectionChanged(SelectionChangedEvent event)
+		{
+			// XXX: see https://bugs.eclipse.org/bugs/show_bug.cgi?id=56161
+			VdmEditor.this.selectionChanged();
+		}
+	}
+
+	/**
+	 * The editor selection changed listener.
+	 * 
+	 * @since 3.0
+	 */
+	private EditorSelectionChangedListener fEditorSelectionChangedListener;
 
 	VdmContentOutlinePage fOutlinePage = null;
 
@@ -84,6 +124,34 @@ public abstract class VdmEditor extends TextEditor
 		// VdmContentOutlinePage page= new VdmContentOutlinePage(fOutlinerContextMenuId, this);
 		VdmContentOutlinePage page = new VdmContentOutlinePage(this);
 		setOutlinePageInput(page, getEditorInput());
+		page.addSelectionChangedListener(new ISelectionChangedListener() {
+
+			public void selectionChanged(SelectionChangedEvent event)
+			{
+				ISelection s = event.getSelection();
+				if (s instanceof IStructuredSelection)
+				{
+					IStructuredSelection ss = (IStructuredSelection) s;
+					List elements = ss.toList();
+					if (!elements.isEmpty())
+					{
+						IAstNode node = (IAstNode) elements.get(0);
+						IVdmElement vdmElement = getInputVdmElement();
+						if (vdmElement instanceof IVdmSourceUnit)
+						{
+							IVdmSourceUnit unit = (IVdmSourceUnit) vdmElement;
+							selectAndReveal(unit.getLineOffset(node.getLocation().startLine)
+									+ node.getLocation().startPos-1,
+									node.getLocation().endPos
+											- node.getLocation().startPos);
+						}
+					}
+				}
+
+				
+
+			}
+		});
 		return page;
 	}
 
@@ -93,6 +161,9 @@ public abstract class VdmEditor extends TextEditor
 	public void createPartControl(Composite parent)
 	{
 		super.createPartControl(parent);
+
+		fEditorSelectionChangedListener = new EditorSelectionChangedListener();
+		fEditorSelectionChangedListener.install(getSelectionProvider());
 
 		IDocument doc = getDocumentProvider().getDocument(getEditorInput());
 		if (doc instanceof VdmDocument)
@@ -181,6 +252,25 @@ public abstract class VdmEditor extends TextEditor
 		// internalDoSetInput(input);
 		// }else super.doSetInput(input);
 		//		
+	}
+
+	/*
+	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#doSetSelection(ISelection)
+	 */
+	protected void doSetSelection(ISelection selection)
+	{
+		super.doSetSelection(selection);
+		synchronizeOutlinePageSelection();
+	}
+
+	/*
+	 * @see org.eclipse.ui.part.WorkbenchPart#getOrientation()
+	 * 
+	 * @since 3.1
+	 */
+	public int getOrientation()
+	{
+		return SWT.LEFT_TO_RIGHT; // Java editors are always left to right by default
 	}
 
 	private void internalDoSetInput(IEditorInput input) throws CoreException
@@ -275,5 +365,282 @@ public abstract class VdmEditor extends TextEditor
 			fOutlinePage = null;
 			resetHighlightRange();
 		}
+	}
+
+	/**
+	 * React to changed selection.
+	 * 
+	 * @since 3.0
+	 */
+	protected void selectionChanged()
+	{
+		if (getSelectionProvider() == null)
+			return;
+		IAstNode element = computeHighlightRangeSourceReference();
+		// if (getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_SYNC_OUTLINE_ON_CURSOR_MOVE))
+		synchronizeOutlinePage(element);
+		// if (fIsBreadcrumbVisible && fBreadcrumb != null && !fBreadcrumb.isActive())
+		// setBreadcrumbInput(element);
+		setSelection(element, false);
+		// if (!fSelectionChangedViaGotoAnnotation)
+		// updateStatusLine();
+		// fSelectionChangedViaGotoAnnotation= false;
+	}
+
+	protected void setSelection(IAstNode reference, boolean moveCursor)
+	{
+		if (getSelectionProvider() == null)
+			return;
+
+		ISelection selection = getSelectionProvider().getSelection();
+		if (selection instanceof ITextSelection)
+		{
+			ITextSelection textSelection = (ITextSelection) selection;
+			// PR 39995: [navigation] Forward history cleared after going back in navigation history:
+			// mark only in navigation history if the cursor is being moved (which it isn't if
+			// this is called from a PostSelectionEvent that should only update the magnet)
+			if (moveCursor
+					&& (textSelection.getOffset() != 0 || textSelection.getLength() != 0))
+				markInNavigationHistory();
+		}
+
+		if (reference != null)
+		{
+
+			StyledText textWidget = null;
+
+			ISourceViewer sourceViewer = getSourceViewer();
+			if (sourceViewer != null)
+				textWidget = sourceViewer.getTextWidget();
+
+			if (textWidget == null)
+				return;
+
+			// try {
+			// ISourceRange range= null;
+			// if (reference instanceof ILocalVariable || reference instanceof ITypeParameter || reference
+			// instanceof IAnnotation) {
+			// IJavaElement je= ((IJavaElement)reference).getParent();
+			// if (je instanceof ISourceReference)
+			// range= ((ISourceReference)je).getSourceRange();
+			// } else
+			// range= reference.getSourceRange();
+			//
+			// if (range == null)
+			// return;
+			//
+			// int offset= range.getOffset();
+			// int length= range.getLength();
+			//
+			// if (offset < 0 || length < 0)
+			// return;
+			//
+			// setHighlightRange(offset, length, moveCursor);
+			//
+			// if (!moveCursor)
+			// return;
+			//
+			// offset= -1;
+			// length= -1;
+			//
+			// if (reference instanceof IMember) {
+			// range= ((IMember) reference).getNameRange();
+			// if (range != null) {
+			// offset= range.getOffset();
+			// length= range.getLength();
+			// }
+			// } else if (reference instanceof ITypeParameter) {
+			// range= ((ITypeParameter) reference).getNameRange();
+			// if (range != null) {
+			// offset= range.getOffset();
+			// length= range.getLength();
+			// }
+			// } else if (reference instanceof ILocalVariable) {
+			// range= ((ILocalVariable)reference).getNameRange();
+			// if (range != null) {
+			// offset= range.getOffset();
+			// length= range.getLength();
+			// }
+			// } else if (reference instanceof IAnnotation) {
+			// range= ((IAnnotation)reference).getNameRange();
+			// if (range != null) {
+			// offset= range.getOffset();
+			// length= range.getLength();
+			// }
+			// } else if (reference instanceof IImportDeclaration) {
+			// String content= reference.getSource();
+			// if (content != null) {
+			//						int start= content.indexOf("import") + 6; //$NON-NLS-1$
+			// while (start < content.length() && content.charAt(start) == ' ')
+			// start++;
+			//
+			// int end= content.indexOf(';');
+			// do {
+			// end--;
+			// } while (end >= 0 && content.charAt(end) == ' ');
+			//
+			// offset= range.getOffset() + start;
+			// length= end - start + 1;
+			// } else {
+			// // fallback
+			// offset= range.getOffset();
+			// length= range.getLength();
+			// }
+			// } else if (reference instanceof IPackageDeclaration) {
+			// String name= ((IPackageDeclaration) reference).getElementName();
+			// if (name != null && name.length() > 0) {
+			// String content= reference.getSource();
+			// if (content != null) {
+			//							int packageKeyWordIndex = content.lastIndexOf("package"); //$NON-NLS-1$
+			// if (packageKeyWordIndex != -1) {
+			// offset= range.getOffset() + content.indexOf(name, packageKeyWordIndex + 7);
+			// length= name.length();
+			// }
+			// }
+			// }
+			// }
+			//
+			// if (offset > -1 && length > 0) {
+			//
+			// try {
+			// textWidget.setRedraw(false);
+			// sourceViewer.revealRange(offset, length);
+			// sourceViewer.setSelectedRange(offset, length);
+			// } finally {
+			// textWidget.setRedraw(true);
+			// }
+			//
+			// markInNavigationHistory();
+			// }
+			//
+			// } catch (JavaModelException x) {
+			// } catch (IllegalArgumentException x) {
+			// }
+			//
+			// } else if (moveCursor) {
+			// resetHighlightRange();
+			// markInNavigationHistory();
+		}
+	}
+
+	/**
+	 * Synchronizes the outliner selection with the given element position in the editor.
+	 * 
+	 * @param element
+	 *            the java element to select
+	 */
+	protected void synchronizeOutlinePage(IAstNode element)
+	{
+		synchronizeOutlinePage(element, false);// true
+	}
+
+	/**
+	 * Synchronizes the outliner selection with the given element position in the editor.
+	 * 
+	 * @param element
+	 *            the java element to select
+	 * @param checkIfOutlinePageActive
+	 *            <code>true</code> if check for active outline page needs to be done
+	 */
+	protected void synchronizeOutlinePage(IAstNode element,
+			boolean checkIfOutlinePageActive)
+	{
+		if (fOutlinePage != null && element != null
+				&& !(checkIfOutlinePageActive))
+		{// && isJavaOutlinePageActive()
+			fOutlinePage.select(element);
+		}
+	}
+
+	/**
+	 * Synchronizes the outliner selection with the actual cursor position in the editor.
+	 */
+	public void synchronizeOutlinePageSelection()
+	{
+		synchronizeOutlinePage(computeHighlightRangeSourceReference());
+	}
+
+	/**
+	 * Computes and returns the source reference that includes the caret and serves as provider for the
+	 * outline page selection and the editor range indication.
+	 * 
+	 * @return the computed source reference
+	 * @since 3.0
+	 */
+	protected IAstNode computeHighlightRangeSourceReference()
+	{
+		ISourceViewer sourceViewer = getSourceViewer();
+		if (sourceViewer == null)
+			return null;
+
+		StyledText styledText = sourceViewer.getTextWidget();
+		if (styledText == null)
+			return null;
+
+		int caret = 0;
+		if (sourceViewer instanceof ITextViewerExtension5)
+		{
+			ITextViewerExtension5 extension = (ITextViewerExtension5) sourceViewer;
+			caret = extension.widgetOffset2ModelOffset(styledText.getCaretOffset());
+		} else
+		{
+			int offset = sourceViewer.getVisibleRegion().getOffset();
+			caret = offset + styledText.getCaretOffset();
+		}
+
+		IAstNode element = getElementAt(caret, false);
+
+		if (!(element instanceof IAstNode))
+			return null;
+
+		// if (element.getElementType() == IJavaElement.IMPORT_DECLARATION) {
+		//
+		// IImportDeclaration declaration= (IImportDeclaration) element;
+		// IImportContainer container= (IImportContainer) declaration.getParent();
+		// ISourceRange srcRange= null;
+		//
+		// try {
+		// srcRange= container.getSourceRange();
+		// } catch (JavaModelException e) {
+		// }
+		//
+		// if (srcRange != null && srcRange.getOffset() == caret)
+		// return container;
+		// }
+
+		return (IAstNode) element;
+	}
+
+	/**
+	 * Returns the most narrow java element including the given offset.
+	 * 
+	 * @param offset
+	 *            the offset inside of the requested element
+	 * @param reconcile
+	 *            <code>true</code> if editor input should be reconciled in advance
+	 * @return the most narrow java element
+	 * @since 3.0
+	 */
+	protected IAstNode getElementAt(int offset, boolean reconcile)
+	{
+		return getElementAt(offset);
+	}
+
+	private IAstNode getElementAt(int offset)
+	{
+
+		IVdmElement element = getInputVdmElement();
+		if (element != null && element instanceof IVdmSourceUnit)
+		{
+			IAstNode node = ((IVdmSourceUnit) element).getNodeAt(offset);
+			if (node != null)
+			{
+				System.out.println("Element hit: " + node.getName());
+
+				return node;
+			}
+
+		}
+		return null;
 	}
 }

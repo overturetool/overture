@@ -2,8 +2,11 @@ package org.overture.ide.core;
 //ICompilationUnit
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.overturetool.vdmj.ast.IAstNode;
+import org.overturetool.vdmj.lex.LexLocation;
 
 public interface IVdmSourceUnit extends IVdmElement{
 
@@ -18,12 +21,16 @@ public interface IVdmSourceUnit extends IVdmElement{
 	
 	public File getSystemFile();
 	
-	public  void reconcile(List parseResult,boolean parseErrors);
+	public  void reconcile(List parseResult,List<LexLocation> allLocation, Map<LexLocation,IAstNode> locationToAstNodeMap,boolean parseErrors);
 	
 	public  List getParseList();
 
 	public boolean exists();
 	public void clean();
 	public abstract IVdmProject getProject();
+	
+	public abstract IAstNode getNodeAt(int pos);
+	public int getLineOffset(int lineIndex);
+	public abstract boolean hasParseTree();
 
 }

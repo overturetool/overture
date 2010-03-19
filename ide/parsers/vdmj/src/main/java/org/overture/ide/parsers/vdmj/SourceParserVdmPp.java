@@ -18,6 +18,7 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 	{
 		file.setType(IVdmSourceUnit.VDM_CLASS_SPEC);
 		Settings.dialect = Dialect.VDM_PP;
+		LexTokenReader.TABSTOP=1;
 		ClassList classes = new ClassList();
 		classes.clear();
 		LexLocation.resetLocations();
@@ -62,6 +63,9 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 
 			result.setWarnings(reader.getWarnings());
 		}
+		
+		result.setAllLocation(LexLocation.getAllLocations());
+		result.setLocationToAstNodeMap(LexLocation.getLocationToAstNodeMap());
 
 		return result;
 	}
