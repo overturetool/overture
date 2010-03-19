@@ -3,30 +3,32 @@ package org.overture.ide.parsers.vdmj;
 import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.parser.AbstractParserParticipant;
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.InternalException;
+import org.overturetool.vdmj.modules.Module;
+import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.syntax.ClassReader;
+import org.overturetool.vdmj.syntax.ModuleReader;
 
-public class SourceParserVdmPp extends AbstractParserParticipant
+public class SourceParserVdmSl extends AbstractParserParticipant
 {
 
 	@Override
 	protected ParseResult startParse(IVdmSourceUnit file, String source, String charset)
 	{
-		file.setType(IVdmSourceUnit.VDM_CLASS_SPEC);
-		Settings.dialect = Dialect.VDM_PP;
+		file.setType(IVdmSourceUnit.VDM_MODULE_SPEC);
+		Settings.dialect = Dialect.VDM_SL;
 		LexTokenReader.TABSTOP=1;
-		ClassList classes = new ClassList();
-		classes.clear();
+		ModuleList modules = new ModuleList();
+		modules.clear();
 		LexLocation.resetLocations();
 		int perrs = 0;
 		int pwarn = 0;
 
-		ClassReader reader = null;
+		ModuleReader reader = null;
 		ParseResult result = new ParseResult();
 		try
 		{
@@ -35,9 +37,9 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 					Settings.dialect,
 					file.getSystemFile(),
 					charset);
-			reader = new ClassReader(ltr);
-			classes.addAll(reader.readClasses());
-			result.setAst(classes);
+			reader = new ModuleReader(ltr);
+			modules.addAll(reader.readModules());
+			result.setAst(modules);
 
 		} catch (InternalException e)
 		{
@@ -63,10 +65,6 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 			pwarn += reader.getWarningCount();
 
 			result.setWarnings(reader.getWarnings());
-		}
-		
-		for (ClassDefinition classDefinition : classes) {
-			classDefinition.getDefinitions();
 		}
 		
 		result.setAllLocation(LexLocation.getAllLocations());

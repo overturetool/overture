@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+	
+	<!-- Parser for VDM PP -->
    <extension
          point="org.overture.ide.core.parsePaticipant">
       <parser
@@ -8,6 +10,16 @@
             nature="org.overture.ide.vdmpp.core.nature">
       </parser>
    </extension>
+   
+   <!-- Parser for VDM SL -->
+      <extension
+         point="org.overture.ide.core.parsePaticipant">
+      <parser
+            class="org.overture.ide.parsers.vdmj.SourceParserVdmSl"
+            nature="org.overture.ide.vdmsl.core.nature">
+      </parser>
+   </extension>
+   
 
   
 

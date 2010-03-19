@@ -13,6 +13,7 @@ public interface IVdmSourceUnit extends IVdmElement{
 	public static final int VDM_DEFAULT  = 1;
 	public static final int VDM_CLASS_SPEC  = 1;
 	public static final int VDM_MODULE_SPEC = 2;
+	public static final int VDM_MODULE_SPEC_FLAT = 3;
 	
 	public int getType();
 	public void setType(int type);
