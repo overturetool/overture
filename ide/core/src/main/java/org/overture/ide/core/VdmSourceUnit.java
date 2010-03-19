@@ -58,35 +58,39 @@ public class VdmSourceUnit implements IVdmSourceUnit
 			Map<LexLocation, IAstNode> locationToAstNodeMap, boolean parseErrors)
 	{
 		this.parseList.clear();
-		this.parseList.addAll(parseResult);
-
 		this.allLocation.clear();
-		this.allLocation.addAll(allLocation);
-
 		this.locationToAstNodeMap.clear();
-		this.locationToAstNodeMap.putAll(locationToAstNodeMap);
 
-		makeLineSizes();
+		if (!parseErrors)
+		{
+			this.parseList.addAll(parseResult);
+			this.allLocation.addAll(allLocation);
+			this.locationToAstNodeMap.putAll(locationToAstNodeMap);
+			makeLineSizes();
 
-		makeOffsetToAstMap();
+			makeOffsetToAstMap();
+		} else
+		{
+			lineSize = new Integer[0];
+		}
 
-//		for (LexLocation lexLocation : allLocation)
-//		{
-//			if (locationToAstNodeMap.containsKey((lexLocation)))
-//				System.out.println(locationToAstNodeMap.get(lexLocation)
-//						.getName()
-//						+ " - "
-//						+ lexLocation.startLine
-//						+ ":"
-//						+ lexLocation.startPos
-//						+ " - "
-//						+ lexLocation.endLine
-//						+ ":" + lexLocation.endPos);
-//			else
-//				System.out.println(lexLocation.startLine + ":"
-//						+ lexLocation.startPos + " - " + lexLocation.endLine
-//						+ ":" + lexLocation.endPos);
-//		}
+		// for (LexLocation lexLocation : allLocation)
+		// {
+		// if (locationToAstNodeMap.containsKey((lexLocation)))
+		// System.out.println(locationToAstNodeMap.get(lexLocation)
+		// .getName()
+		// + " - "
+		// + lexLocation.startLine
+		// + ":"
+		// + lexLocation.startPos
+		// + " - "
+		// + lexLocation.endLine
+		// + ":" + lexLocation.endPos);
+		// else
+		// System.out.println(lexLocation.startLine + ":"
+		// + lexLocation.startPos + " - " + lexLocation.endLine
+		// + ":" + lexLocation.endPos);
+		// }
 
 		// VdmModelManager.getInstance().update(project, parseList);
 		VdmCore.getDeltaProcessor().fire(this,
@@ -138,7 +142,7 @@ public class VdmSourceUnit implements IVdmSourceUnit
 
 	public void clean()
 	{
-		 this.parseList.clear();
+		this.parseList.clear();
 
 	}
 
@@ -166,15 +170,15 @@ public class VdmSourceUnit implements IVdmSourceUnit
 			if (i != 0)
 			{
 				IAstNode node = offsetToAstNodeMap.get(knownOffsets.get(i - 1));
-				//TODO needs to be restricted so only a node is returned if it actually spans the location
-//				if (getLineOffset(node.getLocation().endLine)
-//						+ node.getLocation().endPos + 10 >= pos)
-//				{
-					return node;
-//				} else
-//				{
-//					break;
-//				}
+				// TODO needs to be restricted so only a node is returned if it actually spans the location
+				// if (getLineOffset(node.getLocation().endLine)
+				// + node.getLocation().endPos + 10 >= pos)
+				// {
+				return node;
+				// } else
+				// {
+				// break;
+				// }
 			}
 		}
 
@@ -274,7 +278,7 @@ public class VdmSourceUnit implements IVdmSourceUnit
 
 			this.lineSize = new Integer[lines.size()];
 			lines.toArray(this.lineSize);
-//			System.out.println(file.getName() + lines);
+			// System.out.println(file.getName() + lines);
 		} catch (CoreException e)
 		{
 			// TODO Auto-generated catch block
@@ -288,7 +292,7 @@ public class VdmSourceUnit implements IVdmSourceUnit
 
 	public boolean hasParseTree()
 	{
-		return parseList.size()>0;
+		return parseList.size() > 0;
 	}
 
 }

@@ -1,10 +1,8 @@
 package org.overture.ide.ui.editor.core;
 
 import org.eclipse.jface.text.DefaultIndentLineAutoEditStrategy;
-import org.eclipse.jface.text.DefaultUndoManager;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IUndoManager;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.reconciler.IReconciler;
@@ -19,7 +17,7 @@ import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
 
 public abstract class VdmSourceViewerConfiguration extends SourceViewerConfiguration {
 
-	private Object fScanner;
+//	private Object fScanner;
 
 	@Override
 	public String getConfiguredDocumentPartitioning(ISourceViewer sourceViewer) {		
@@ -33,10 +31,10 @@ public abstract class VdmSourceViewerConfiguration extends SourceViewerConfigura
 				VdmPartitionScanner.MULTILINE_COMMENT, VdmPartitionScanner.STRING};
 	}
 	
-	@Override
-	public IUndoManager getUndoManager(ISourceViewer sourceViewer) {
-		return new DefaultUndoManager(25);		
-	}
+//	@Override
+//	public IUndoManager getUndoManager(ISourceViewer sourceViewer) {
+//		return new DefaultUndoManager(25);		
+//	}
 	
 	@Override 
 	public IReconciler getReconciler(ISourceViewer sourceViewer) { 

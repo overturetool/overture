@@ -4,12 +4,10 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.reconciler.IReconciler;
-import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.ISourceViewerExtension2;
 import org.eclipse.jface.text.source.IVerticalRuler;
@@ -17,24 +15,20 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.overture.ide.core.ISourceReference;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.IVdmProject;
 import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.VdmProject;
 import org.overture.ide.core.parser.SourceParserManager;
-
 import org.overture.ide.ui.outline.VdmContentOutlinePage;
 import org.overturetool.vdmj.ast.IAstNode;
-import org.overturetool.vdmj.lex.LexLocation;
 
 public abstract class VdmEditor extends TextEditor
 {
@@ -83,8 +77,7 @@ public abstract class VdmEditor extends TextEditor
 				ruler,
 				getOverviewRuler(),
 				isOverviewRulerVisible(),
-				styles,
-				this);
+				styles);
 
 		getSourceViewerDecorationSupport(viewer);
 
@@ -101,6 +94,7 @@ public abstract class VdmEditor extends TextEditor
 
 	protected abstract VdmSourceViewerConfiguration getVdmSourceViewerConfiguration();
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class required)
 	{
 		if (IContentOutlinePage.class.equals(required))
@@ -126,6 +120,7 @@ public abstract class VdmEditor extends TextEditor
 		setOutlinePageInput(page, getEditorInput());
 		page.addSelectionChangedListener(new ISelectionChangedListener() {
 
+			@SuppressWarnings("unchecked")
 			public void selectionChanged(SelectionChangedEvent event)
 			{
 				ISelection s = event.getSelection();
@@ -169,7 +164,7 @@ public abstract class VdmEditor extends TextEditor
 		if (doc instanceof VdmDocument)
 		{
 			VdmDocument vdmDoc = (VdmDocument) doc;
-			IVdmProject project = vdmDoc.getProject();
+			/*IVdmProject project =*/ vdmDoc.getProject();
 			try
 			{
 				SourceParserManager.parseFile(VdmProject.getVdmSourceUnit(vdmDoc.getFile()));
@@ -280,7 +275,7 @@ public abstract class VdmEditor extends TextEditor
 		if (sourceViewer instanceof VdmSourceViewer)
 			vdmSourceViewer = (VdmSourceViewer) sourceViewer;
 
-		IPreferenceStore store = getPreferenceStore();
+		//IPreferenceStore store = getPreferenceStore();
 
 		// if (vdmSourceViewer != null && isFoldingEnabled() &&(store == null ||
 		// !store.getBoolean(PreferenceConstants.EDITOR_SHOW_SEGMENTS)))
@@ -334,7 +329,6 @@ public abstract class VdmEditor extends TextEditor
 
 	}
 
-	@SuppressWarnings("unchecked")
 	private IVdmElement getInputVdmElement()
 	{
 		IDocument doc = getDocumentProvider().getDocument(getEditorInput());

@@ -13,7 +13,7 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.osgi.framework.Bundle;
-
+@SuppressWarnings("unchecked")
 public class VdmPluginImages {
 
 	public static final IPath ICONS_PATH= new Path("$nl$/icons/"); //$NON-NLS-1$
@@ -51,6 +51,13 @@ public class VdmPluginImages {
 	public static final String IMG_FIELD_PROTECTED= NAME_PREFIX + "field_protected_obj.gif"; 		//$NON-NLS-1$
 	public static final String IMG_FIELD_PRIVATE= NAME_PREFIX + "field_private_obj.gif"; 		//$NON-NLS-1$
 	public static final String IMG_FIELD_DEFAULT= NAME_PREFIX + "field_default_obj.gif"; 		//$NON-NLS-1$
+	
+	public static final String IMG_TYPE_PUBLIC= NAME_PREFIX + "type_public_obj.gif"; 			//$NON-NLS-1$
+	public static final String IMG_TYPE_PROTECTED= NAME_PREFIX + "type_protected_obj.gif"; 		//$NON-NLS-1$
+	public static final String IMG_TYPE_PRIVATE= NAME_PREFIX + "type_private_obj.gif"; 		//$NON-NLS-1$
+	public static final String IMG_TYPE_DEFAULT= NAME_PREFIX + "type_default_obj.gif"; 		//$NON-NLS-1$
+	
+	public static final String IMG_TRACE_DEFAULT= NAME_PREFIX + "trace_default_obj.gif"; 			//$NON-NLS-1$
 
 	public static final String IMG_ELCL_VIEW_MENU= NAME_PREFIX + T_ELCL + "view_menu.gif"; //$NON-NLS-1$
 	public static final String IMG_DLCL_VIEW_MENU= NAME_PREFIX + T_DLCL + "view_menu.gif"; //$NON-NLS-1$
@@ -66,6 +73,8 @@ public class VdmPluginImages {
 	public static final String IMG_OBJS_CLASS= NAME_PREFIX + "class_obj.gif"; 			//$NON-NLS-1$
 	public static final String IMG_OBJS_CLASSALT= NAME_PREFIX + "classfo_obj.gif"; 			//$NON-NLS-1$
 	public static final String IMG_OBJS_CLASS_DEFAULT= NAME_PREFIX + "class_default_obj.gif"; 			//$NON-NLS-1$
+	
+	public static final String IMG_OBJS_MODULE= NAME_PREFIX + "module_obj.gif"; 			//$NON-NLS-1$
 
 	public static final String IMG_OBJS_INNER_CLASS_PUBLIC= NAME_PREFIX + "innerclass_public_obj.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJS_INNER_CLASS_DEFAULT= NAME_PREFIX + "innerclass_default_obj.gif"; //$NON-NLS-1$
@@ -178,6 +187,14 @@ public class VdmPluginImages {
 	public static final ImageDescriptor DESC_FIELD_PROTECTED= createManagedFromKey(T_OBJ, IMG_FIELD_PROTECTED);
 	public static final ImageDescriptor DESC_FIELD_PRIVATE= createManagedFromKey(T_OBJ, IMG_FIELD_PRIVATE);
 	public static final ImageDescriptor DESC_FIELD_DEFAULT= createManagedFromKey(T_OBJ, IMG_FIELD_DEFAULT);
+	
+	
+	public static final ImageDescriptor DESC_TYPE_PUBLIC= createManagedFromKey(T_OBJ, IMG_TYPE_PUBLIC);
+	public static final ImageDescriptor DESC_TYPE_PROTECTED= createManagedFromKey(T_OBJ, IMG_TYPE_PROTECTED);
+	public static final ImageDescriptor DESC_TYPE_PRIVATE= createManagedFromKey(T_OBJ, IMG_TYPE_PRIVATE);
+	public static final ImageDescriptor DESC_TYPE_DEFAULT= createManagedFromKey(T_OBJ, IMG_TYPE_DEFAULT);
+	
+	public static final ImageDescriptor DESC_TRACE_DEFAULT= createManagedFromKey(T_OBJ, IMG_TRACE_DEFAULT);
 
 	public static final ImageDescriptor DESC_MENU_SHIFT_RIGHT= createUnManaged(T_ETOOL, "shift_r_edit.gif"); 	//$NON-NLS-1$
 	public static final ImageDescriptor DESC_MENU_SHIFT_LEFT= createUnManaged(T_ETOOL, "shift_l_edit.gif"); 	//$NON-NLS-1$
@@ -208,6 +225,9 @@ public class VdmPluginImages {
 
 	public static final ImageDescriptor DESC_OBJS_CLASS= createManagedFromKey(T_OBJ, IMG_OBJS_CLASS);
 	public static final ImageDescriptor DESC_OBJS_CLASS_DEFAULT= createManagedFromKey(T_OBJ, IMG_OBJS_CLASS_DEFAULT);
+	
+	
+	public static final ImageDescriptor DESC_OBJS_MODULE= createManagedFromKey(T_OBJ, IMG_OBJS_MODULE);
 
 	public static final ImageDescriptor DESC_OBJS_INNER_CLASS_PUBLIC= createManagedFromKey(T_OBJ, IMG_OBJS_INNER_CLASS_PUBLIC);
 	public static final ImageDescriptor DESC_OBJS_INNER_CLASS_DEFAULT= createManagedFromKey(T_OBJ, IMG_OBJS_INNER_CLASS_DEFAULT);
@@ -517,7 +537,8 @@ public class VdmPluginImages {
 	/*
 	 * Helper method to access the image registry from the JavaPlugin class.
 	 */
-	/* package */ static ImageRegistry getImageRegistry() {
+	/* package */ 
+	static ImageRegistry getImageRegistry() {
 		if (fgImageRegistry == null) {
 			fgImageRegistry= new ImageRegistry();
 			for (Iterator iter= fgAvoidSWTErrorMap.keySet().iterator(); iter.hasNext();) {

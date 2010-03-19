@@ -31,7 +31,6 @@ public class BuilderSl extends VdmjBuilder
 		
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public IStatus buildModel(IVdmModel rooList)
 	{

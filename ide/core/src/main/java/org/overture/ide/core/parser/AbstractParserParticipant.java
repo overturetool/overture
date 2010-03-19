@@ -57,7 +57,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 						result.getAst(),
 						result.getAllLocation(),
 						result.getLocationToAstNodeMap(),
-						!result.hasParseErrors());
+						result.hasParseErrors());
 
 		} catch (CoreException e)
 		{
@@ -86,7 +86,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 						result.getAst(),
 						result.getAllLocation(),
 						result.getLocationToAstNodeMap(),
-						!result.hasParseErrors());
+						result.hasParseErrors());
 		} catch (CoreException e)
 		{
 			if (VdmCore.DEBUG)

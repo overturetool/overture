@@ -2,14 +2,12 @@ package org.overture.ide.ui.outline;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.IVdmSourceUnit;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassInvariantDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.ValueDefinition;
 import org.overturetool.vdmj.modules.Module;
 
 public class VdmOutlineTreeContentProvider implements ITreeContentProvider {
@@ -24,7 +22,14 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider {
 			return filterDefinitionList(defs).toArray();
 			
 		} else if (parentElement instanceof Module) {
-			return ((Module) parentElement).defs.toArray();
+			
+			DefinitionList all = new DefinitionList();
+
+			//all.addAll(((Module) parentElement).defs);
+			all.addAll(((Module) parentElement).defs.singleDefinitions());
+			
+			
+			return all.toArray();
 		}
 		return null;
 	}
@@ -46,7 +51,7 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider {
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof IVdmSourceUnit) {
 			IVdmSourceUnit node = (IVdmSourceUnit) inputElement;
-			if (node.getType() == IVdmSourceUnit.VDM_CLASS_SPEC)
+			//if (node.getType() == IVdmSourceUnit.VDM_CLASS_SPEC)
 				return node.getParseList().toArray();
 			// else if (node.hasModuleList())
 			// {
@@ -66,7 +71,7 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider {
 			// }
 			// else
 			// return node.getModuleList().toArray();
-			return new Object[0];
+			//return new Object[0];
 			// }
 		}
 		return new Object[0];

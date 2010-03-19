@@ -9,14 +9,14 @@ import org.eclipse.swt.widgets.Composite;
 
 public class VdmSourceViewer extends SourceViewer{
 
-	private VdmEditor editor = null;
+	//private VdmEditor editor = null;
 	private IReconciler reconciler = null;
 	
 	public VdmSourceViewer(Composite parent, IVerticalRuler ruler,
 			IOverviewRuler overviewRuler, boolean overviewRulerVisible,
-			int styles, VdmEditor vdmEditor) {
+			int styles) {
 		super(parent,ruler,overviewRuler,overviewRulerVisible,styles);
-		this.editor = vdmEditor;
+	//	this.editor = vdmEditor;
 	}
 
 	public Object getReconciler() {

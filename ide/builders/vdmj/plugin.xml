@@ -10,5 +10,11 @@
    </extension>
    
    
-
+   <extension
+         point="org.overture.ide.core.buildParticipant">
+      <builder
+            class="org.overture.ide.builders.vdmj.BuilderSl"
+            nature="org.overture.ide.vdmsl.core.nature">
+      </builder>
+   </extension>
 </plugin>

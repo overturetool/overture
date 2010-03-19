@@ -2,12 +2,9 @@ package org.overture.ide.ui.outline;
 
 import java.util.List;
 
-import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.ListenerList;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -15,12 +12,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.overture.ide.core.ElementChangedEvent;
 import org.overture.ide.core.IElementChangedListener;
-import org.overture.ide.core.ISourceReference;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.IVdmElementDelta;
 import org.overture.ide.core.IVdmSourceUnit;
@@ -30,6 +25,7 @@ import org.overture.ide.ui.internal.viewsupport.DecorationgVdmLabelProvider;
 import org.overture.ide.ui.internal.viewsupport.VdmUILabelProvider;
 import org.overturetool.vdmj.ast.IAstNode;
 
+@SuppressWarnings("deprecation")
 public class VdmContentOutlinePage extends ContentOutlinePage implements
 		IContentOutlinePage
 {
@@ -50,7 +46,7 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 			if (d != null) {
 				d.asyncExec(new Runnable() {
 					public void run() {
-						IVdmSourceUnit cu= (IVdmSourceUnit) fInput;
+						//IVdmSourceUnit cu= (IVdmSourceUnit) fInput;
 //						IVdmElement base= cu;
 //						if (fTopLevelTypeOnly) {
 //							base= cu.findPrimaryType();
@@ -265,7 +261,6 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 
 	
 
-	@SuppressWarnings("unchecked")
 	public void setInput(IVdmElement je)
 	{
 		this.fInput = je;
@@ -281,6 +276,7 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		VdmCore.addElementChangedListener(fListener);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void select(IAstNode reference) {
 		if (fOutlineViewer != null) {
 
