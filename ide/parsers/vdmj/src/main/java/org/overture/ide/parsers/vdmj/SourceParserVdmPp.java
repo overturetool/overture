@@ -64,6 +64,10 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 			result.setWarnings(reader.getWarnings());
 		}
 		
+		for (ClassDefinition classDefinition : classes) {
+			classDefinition.getDefinitions();
+		}
+		
 		result.setAllLocation(LexLocation.getAllLocations());
 		result.setLocationToAstNodeMap(LexLocation.getLocationToAstNodeMap());
 

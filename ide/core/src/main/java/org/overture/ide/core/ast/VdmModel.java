@@ -8,9 +8,13 @@ import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Assert;
+import org.overture.ide.core.ElementChangedEvent;
 import org.overture.ide.core.IVdmElement;
+import org.overture.ide.core.IVdmElementDelta;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.IVdmSourceUnit;
+import org.overture.ide.core.VdmCore;
+import org.overture.ide.core.VdmElementDelta;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.modules.Module;
@@ -75,8 +79,16 @@ public class VdmModel<T> implements IVdmModel<T>
 	 */
 	public synchronized void setChecked(boolean checked)
 	{
+				
 		this.checked = checked;
 		this.checkedTime = new Date();
+		if(checked == true)
+		{
+			VdmCore.getDeltaProcessor().fire(this,
+					new ElementChangedEvent(new VdmElementDelta(this,
+							IVdmElementDelta.CHANGED),
+							ElementChangedEvent.DeltaType.POST_RECONCILE));
+		}
 	}
 
 	/*

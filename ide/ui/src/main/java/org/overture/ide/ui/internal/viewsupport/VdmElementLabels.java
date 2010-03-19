@@ -17,8 +17,10 @@ import org.overturetool.vdmj.definitions.UntypedDefinition;
 import org.overturetool.vdmj.definitions.ValueDefinition;
 import org.overturetool.vdmj.types.NamedType;
 import org.overturetool.vdmj.types.OperationType;
+import org.overturetool.vdmj.types.ProductType;
 import org.overturetool.vdmj.types.RecordType;
 import org.overturetool.vdmj.types.Type;
+import org.overturetool.vdmj.types.UnresolvedType;
 
 public class VdmElementLabels {
 
@@ -93,22 +95,34 @@ public class VdmElementLabels {
 	private static StyledString getUntypedDefinition(UntypedDefinition element) {
 		StyledString result = new StyledString();
 		result.append(element.name.name);
-		DefinitionList defList = element.getDefinitions();
-		for(int i=0; i< defList.size(); i++)
-		{
-			Definition def = defList.get(i);
-			def.toString();
+		ClassDefinition classDef = element.classDefinition;
+		for (Definition def : classDef.definitions) {
+			if(def instanceof ValueDefinition){
+				for (int i=0; i < def.getDefinitions().size(); i++) {
+					if(def.getDefinitions().get(i).equals(element)){
+						Type type = ((ValueDefinition)def).type;
+						if(type instanceof ProductType){
+							return result.append( " : " + getSimpleTypeString(((ProductType) type).types.get(i)),StyledString.DECORATIONS_STYLER);							
+						}
+						else if(type instanceof UnresolvedType){
+							return result.append( " : " + getSimpleTypeString(type),StyledString.DECORATIONS_STYLER);
+						}
+					}
+				}
+			}			
 		}
-		Type elemType = element.getType();
-		result.append(" : " + getSimpleTypeString(elemType),
-				StyledString.DECORATIONS_STYLER);
+		
+		
+//		Type elemType = element.getType();
+//		result.append(" : " + getSimpleTypeString(elemType),
+//				StyledString.DECORATIONS_STYLER);
 		return result;
 	}
 
 	private static StyledString getLocalDefinitionLabel(LocalDefinition element) {
 		StyledString result = new StyledString();
 		result.append(element.name.name);
-		result.append(" : " + "Missing_Class_Name`" + getSimpleTypeString(element.type),
+		result.append(" : "  + element.type.location.module +"`" + getSimpleTypeString(element.type),
 				StyledString.DECORATIONS_STYLER);
 		return result;
 	}
