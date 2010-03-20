@@ -458,9 +458,42 @@ Figure~\ref{fig:linenumbers}.\index{line numbers}
 \end{center}
 \end{figure}
 
-\subsubsection{Adding additional Eclipse plugins}
+\subsubsection{Adding external plug-ins to Overture IDE}
 
-Example here will be subclipse \fbox{KEL to write}
+The Overture IDE is build as a RCP\footnote{Rich Client Platform} and
+there is no update manager included, however external plug-ins can
+still be manually installed.  To install a plug-in there are two
+things which needs to be done:
+\begin{enumerate}
+\item Copy the plug-in jar or jars into the plugin folder of the Overture IDE installation.
+\item Add the plug-in jar file names to the \texttt{osgi.bundles} in the config.ini file which is found under the folder configuration.
+\end{enumerate}
+
+After the steps above has been performed the IDE can be started and the new plug-ins will be available. (Remember to include all depended plug-ins which is not already a part of the Overture IDE).
+
+So for example in order to add SVN support to the Overture IDE is rather simple:
+\begin{enumerate}
+\item Fetch the update site jars from \url{http://subclipse.tigris.org/} under Download and Install and select Zipped downloads. The latest version demonstrated in this guide is site-1.6.10.zip.
+\item Copy the features and plugins folders into the Overture IDE folder, merging them with the ones of Overture. 
+\item Then add the plugins to the \texttt{osgi.bundles} in the confi.ini file separated by comma.
+\begin{itemize}
+\item org.tigris.subversion.clientadapter
+\item org.tigris.subversion.clientadapter\_1.6.10.jar
+\item org.tigris.subversion.clientadapter.javahl
+\item org.tigris.subversion.clientadapter.javahl\_1.6.9.3.jar
+\item org.tigris.subversion.clientadapter.javahl.win32
+\item org.tigris.subversion.clientadapter.javahl.win32\_1.6.9
+\item org.tigris.subversion.subclipse.core
+\item org.tigris.subversion.subclipse.core\_1.6.10.jar
+\item org.tigris.subversion.subclipse.doc
+\item org.tigris.subversion.subclipse.doc\_1.3.0.jar
+\item org.tigris.subversion.subclipse.graph
+\item org.tigris.subversion.subclipse.graph\_1.0.7.jar
+\item org.tigris.subversion.subclipse.ui
+\item org.tigris.subversion.subclipse.ui\_1.6.10.jar
+\end{itemize}
+When the steps above is completed the Overture IDE can be started and SVN support will then be available.
+\end{enumerate}
 
 \section{Managing Overture Projects}\label{sec:projects}
 
@@ -2831,41 +2864,6 @@ circumstances under which the PO category can be expected.
   possible to find a result satisfying the post-condition for all
   arguments of the operation input types satisfying the pre-conditions. 
 \end{description}
-
-\newpage
-\section{Adding external plug-ins to Overture IDE}
-The Overture IDE is build as a RCP\footnote{Rich Client Platform} and there is no update manager included, however external plug-ins can still be manually installed.
-To install a plug-in there are two things which needs to be done:
-\begin{enumerate}
-\item Copy the plug-in jar or jars into the plugin folder of the Overture IDE installation.
-\item Add the plug-in jar file names to the \texttt{osgi.bundles} in the config.ini file which is found under the folder configuration.
-\end{enumerate}
-After the steps above has been performed the IDE can be started and the new plug-ins will be available. (Remember to include all depended plug-ins which is not already a part of the Overture IDE).
-
-\subsection{Adding SVN support to the Overture IDE}
-Adding SVN support to the Overture IDE is rather simple:
-\begin{enumerate}
-\item Fetch the update site jars from \url{http://subclipse.tigris.org/} under Download and Install and select Zipped downloads. The latest version demonstrated in this guide is site-1.6.10.zip.
-\item Copy the features and plugins folders into the Overture IDE folder, merging them with the ones of Overture. 
-\item Then add the plugins to the \texttt{osgi.bundles} in the confi.ini file separated by comma.
-\begin{itemize}
-\item org.tigris.subversion.clientadapter
-\item org.tigris.subversion.clientadapter\_1.6.10.jar
-\item org.tigris.subversion.clientadapter.javahl
-\item org.tigris.subversion.clientadapter.javahl\_1.6.9.3.jar
-\item org.tigris.subversion.clientadapter.javahl.win32
-\item org.tigris.subversion.clientadapter.javahl.win32\_1.6.9
-\item org.tigris.subversion.subclipse.core
-\item org.tigris.subversion.subclipse.core\_1.6.10.jar
-\item org.tigris.subversion.subclipse.doc
-\item org.tigris.subversion.subclipse.doc\_1.3.0.jar
-\item org.tigris.subversion.subclipse.graph
-\item org.tigris.subversion.subclipse.graph\_1.0.7.jar
-\item org.tigris.subversion.subclipse.ui
-\item org.tigris.subversion.subclipse.ui\_1.6.10.jar
-\end{itemize}
-When the steps above is completed the Overture IDE can be started and SVN support will then be available.
-\end{enumerate}
 
 \newpage
 \section{Index}\label{sec:index}
