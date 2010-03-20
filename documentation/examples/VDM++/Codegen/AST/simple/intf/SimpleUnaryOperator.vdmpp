@@ -1,0 +1,19 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:54 CET 2010
+--
+
+class SimpleUnaryOperator is subclass of SimpleNode
+values
+    public MINUS = new SimpleUnaryOperator("MINUS");
+    public NOT = new SimpleUnaryOperator("NOT");
+    public PLUS = new SimpleUnaryOperator("PLUS");
+
+instance variables
+    public name:[seq of char] := nil;
+
+operations
+    public SimpleUnaryOperator: seq of char ==> SimpleUnaryOperator
+    SimpleUnaryOperator(n) == name := n;
+
+end SimpleUnaryOperator

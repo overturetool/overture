@@ -1,0 +1,11 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:15 CET 2010
+--
+
+class GiraffeIdentifier is subclass of GiraffeType
+operations
+    public getName: () ==> seq of char
+    getName() == is subclass responsibility;
+
+end GiraffeIdentifier

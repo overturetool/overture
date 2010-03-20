@@ -1,0 +1,25 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:16 CET 2010
+--
+
+class GiraffeUnaryExpressionImpl is subclass of GiraffeUnaryExpression
+instance variables
+    private iv_op:GiraffeUnaryOperator;
+    private iv_exp:GiraffeExpression;
+
+operations
+    public GiraffeUnaryExpressionImpl: GiraffeUnaryOperator * GiraffeExpression ==> GiraffeUnaryExpressionImpl
+    GiraffeUnaryExpressionImpl(p_op, p_exp) ==
+    (
+        iv_op := p_op;
+        iv_exp := p_exp;
+    );
+
+    public getOp: () ==> GiraffeUnaryOperator
+    getOp() == return iv_op;
+
+    public getExp: () ==> GiraffeExpression
+    getExp() == return iv_exp;
+
+end GiraffeUnaryExpressionImpl

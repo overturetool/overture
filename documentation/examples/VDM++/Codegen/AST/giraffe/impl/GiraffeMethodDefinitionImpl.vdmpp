@@ -1,0 +1,35 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:16 CET 2010
+--
+
+class GiraffeMethodDefinitionImpl is subclass of GiraffeMethodDefinition
+instance variables
+    private iv_name:GiraffeIdentifier;
+    private iv_parameters:seq of GiraffeParameter;
+    private iv_type:GiraffeType;
+    private iv_body:seq of GiraffeStatement;
+
+operations
+    public GiraffeMethodDefinitionImpl: GiraffeIdentifier * seq of GiraffeParameter * GiraffeType * seq of GiraffeStatement ==> GiraffeMethodDefinitionImpl
+    GiraffeMethodDefinitionImpl(p_name, p_parameters, p_type, p_body) ==
+    (
+        iv_name := p_name;
+        iv_parameters := p_parameters;
+        iv_type := p_type;
+        iv_body := p_body;
+    );
+
+    public getName: () ==> GiraffeIdentifier
+    getName() == return iv_name;
+
+    public getParameters: () ==> seq of GiraffeParameter
+    getParameters() == return iv_parameters;
+
+    public getType: () ==> GiraffeType
+    getType() == return iv_type;
+
+    public getBody: () ==> seq of GiraffeStatement
+    getBody() == return iv_body;
+
+end GiraffeMethodDefinitionImpl

@@ -1,0 +1,20 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:55 CET 2010
+--
+
+class SimpleBooleanLiteralExpressionImpl is subclass of SimpleBooleanLiteralExpression
+instance variables
+    private iv_value:bool;
+
+operations
+    public SimpleBooleanLiteralExpressionImpl: bool ==> SimpleBooleanLiteralExpressionImpl
+    SimpleBooleanLiteralExpressionImpl(p_value) ==
+    (
+        iv_value := p_value;
+    );
+
+    public getValue: () ==> bool
+    getValue() == return iv_value;
+
+end SimpleBooleanLiteralExpressionImpl

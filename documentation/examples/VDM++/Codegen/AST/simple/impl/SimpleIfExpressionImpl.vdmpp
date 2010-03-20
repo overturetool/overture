@@ -1,0 +1,35 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:55 CET 2010
+--
+
+class SimpleIfExpressionImpl is subclass of SimpleIfExpression
+instance variables
+    private iv_test:SimpleExpression;
+    private iv_thn:SimpleExpression;
+    private iv_elif:seq of SimpleElseIfExpression;
+    private iv_ese:SimpleExpression;
+
+operations
+    public SimpleIfExpressionImpl: SimpleExpression * SimpleExpression * seq of SimpleElseIfExpression * SimpleExpression ==> SimpleIfExpressionImpl
+    SimpleIfExpressionImpl(p_test, p_thn, p_elif, p_ese) ==
+    (
+        iv_test := p_test;
+        iv_thn := p_thn;
+        iv_elif := p_elif;
+        iv_ese := p_ese;
+    );
+
+    public getTest: () ==> SimpleExpression
+    getTest() == return iv_test;
+
+    public getThn: () ==> SimpleExpression
+    getThn() == return iv_thn;
+
+    public getElif: () ==> seq of SimpleElseIfExpression
+    getElif() == return iv_elif;
+
+    public getEse: () ==> SimpleExpression
+    getEse() == return iv_ese;
+
+end SimpleIfExpressionImpl

@@ -1,0 +1,1 @@
+function x() == if 10=8 then 32 else 42

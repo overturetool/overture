@@ -1,0 +1,14 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:15 CET 2010
+--
+
+class GiraffeClassDefinition is subclass of GiraffeNode
+operations
+    public getName: () ==> GiraffeIdentifier
+    getName() == is subclass responsibility;
+
+    public getMethods: () ==> set of GiraffeMethodDefinition
+    getMethods() == is subclass responsibility;
+
+end GiraffeClassDefinition

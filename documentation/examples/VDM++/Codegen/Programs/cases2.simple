@@ -1,0 +1,5 @@
+function x() ==
+	cases 32:
+		31 -> 34,
+		others -> 42
+	end

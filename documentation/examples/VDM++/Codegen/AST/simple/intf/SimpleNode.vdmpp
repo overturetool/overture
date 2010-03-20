@@ -1,0 +1,8 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:54 CET 2010
+--
+
+class SimpleNode
+    -- Abstract
+end SimpleNode

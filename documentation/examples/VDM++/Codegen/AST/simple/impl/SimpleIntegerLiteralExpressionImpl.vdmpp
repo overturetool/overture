@@ -1,0 +1,20 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:55 CET 2010
+--
+
+class SimpleIntegerLiteralExpressionImpl is subclass of SimpleIntegerLiteralExpression
+instance variables
+    private iv_value:int;
+
+operations
+    public SimpleIntegerLiteralExpressionImpl: int ==> SimpleIntegerLiteralExpressionImpl
+    SimpleIntegerLiteralExpressionImpl(p_value) ==
+    (
+        iv_value := p_value;
+    );
+
+    public getValue: () ==> int
+    getValue() == return iv_value;
+
+end SimpleIntegerLiteralExpressionImpl

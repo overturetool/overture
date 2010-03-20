@@ -1,0 +1,25 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:16 CET 2010
+--
+
+class GiraffeCaseAlternativeImpl is subclass of GiraffeCaseAlternative
+instance variables
+    private iv_test:GiraffeExpression;
+    private iv_exp:GiraffeExpression;
+
+operations
+    public GiraffeCaseAlternativeImpl: GiraffeExpression * GiraffeExpression ==> GiraffeCaseAlternativeImpl
+    GiraffeCaseAlternativeImpl(p_test, p_exp) ==
+    (
+        iv_test := p_test;
+        iv_exp := p_exp;
+    );
+
+    public getTest: () ==> GiraffeExpression
+    getTest() == return iv_test;
+
+    public getExp: () ==> GiraffeExpression
+    getExp() == return iv_exp;
+
+end GiraffeCaseAlternativeImpl

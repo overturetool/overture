@@ -1,0 +1,19 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:15 CET 2010
+--
+
+class GiraffeBasicType is subclass of GiraffeType
+values
+    public BOOL = new GiraffeBasicType("BOOL");
+    public DOUBLE = new GiraffeBasicType("DOUBLE");
+    public INT = new GiraffeBasicType("INT");
+
+instance variables
+    public name:[seq of char] := nil;
+
+operations
+    public GiraffeBasicType: seq of char ==> GiraffeBasicType
+    GiraffeBasicType(n) == name := n;
+
+end GiraffeBasicType
