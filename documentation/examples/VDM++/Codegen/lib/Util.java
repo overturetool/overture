@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.values.BooleanValue;
 import org.overturetool.vdmj.values.CharacterValue;
@@ -19,7 +20,7 @@ import org.overturetool.vdmj.values.ValueList;
  *
  * @author spand
  */
-public class Util {
+public class Util implements Serializable {
 
     private static final String PROGRAMS_DIR = "Programs";
     private static final String GENERATED_DIR = "generated"+File.separatorChar+"java";
