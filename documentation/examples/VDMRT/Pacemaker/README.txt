@@ -24,6 +24,6 @@ Springer-Verlag, Lecture Notes in Computer Science 5014, pp. 181--197.
 #PRE_CHECKS=true
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
-#ENTRY_POINT=
+#ENTRY_POINT=new World("tests/scenarioGoodHeart.arg",<DOO>).Run()
 #EXPECTED_RESULT=NO_ERROR_TYPE_CHECK
 #******************************************************
