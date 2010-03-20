@@ -458,6 +458,10 @@ Figure~\ref{fig:linenumbers}.\index{line numbers}
 \end{center}
 \end{figure}
 
+\subsubsection{Adding additional Eclipse plugins}
+
+Example here will be subclipse \fbox{KEL to write}
+
 \section{Managing Overture Projects}\label{sec:projects}
 
 \subsection{Importing Overture VDM Projects}\label{subsec:importproj}
@@ -1191,12 +1195,30 @@ has been enabled. Using this feature it is possible from a VDM model
 to call functionality provided by the jar file. This functionality
 corresponds to DL modules/classes in a VDMTools context \cite{DLMan}.
 
-The external libraries which can be defined for VDM is coupled to the \texttt{is not yet specified} statements/ expressions. Only operations or functions of modules or classes can be delegated to an external jar.
-The look up for a delegate java class is done based on the module/class name where \_ is replaced to dot: \texttt{remote\_lib\_sensor} becomes  \texttt{remote.lib.sensor} in java. The look up is only done once and only when a  \texttt{is not yet specified} statements/ expressions is reached.
-The jar with the compiled remote library must be places in the project in a folder named \texttt{lib} it will then be put in the class-path of the interpreter when debugging. To compile a library jar for VDM the VDMJ jar needs to be in the class-path. It can be fund in the Overture IDE installation under \texttt{plugins/org.overture.ide.generated.vdmj\_2.0.1/lib}.
+The external libraries which can be defined for VDM is coupled to the
+\texttt{is not yet specified} statements/ expressions. Only operations
+or functions of modules or classes can be delegated to an external
+jar.  The look up for a delegate java class is done based on the
+module/class name where an underscore (``\_'') is replaced with a dot
+(``.''): \texttt{remote\_lib\_sensor} becomes
+\texttt{remote.lib.sensor} in java. The look up is only done once and
+only when a \texttt{is not yet specified} body is
+reached.  The jar with the compiled remote library must be places in
+the project in a folder named \texttt{lib} it will then be put in the
+class-path of the interpreter when debugging. To compile a library jar
+for VDM the VDMJ jar needs to be in the class-path. It can be fund in
+the Overture IDE installation under
+\texttt{plugins/org.overture.ide.generated.vdmj\_2.0.1/lib}.
 
 \subsection{Remote library example}
-In this example a remote sensor will be defined which could read a value from a real sensor. The VDM model interface of the sensor can be seen in listing \ref{remoteSensorVdm} where as the Java class implementing it can be seen in listing \ref{remoteSensorJava}
+
+In this example a remote sensor will be defined which could read a
+value from a real sensor. The VDM model interface of the sensor can be
+seen in listing \ref{remoteSensorVdm} where as the Java class
+implementing it can be seen in listing \ref{remoteSensorJava}. The
+values that are to be exchanged between the Overture IDE and the jar
+file needs to be the values used in VDMJ. Documentation about these
+can be found in the VDMJ user manual \cite{Battle09}.
 
 \begin{lstlisting}[language=VDM++,label=remoteSensorVdm,caption=Remote sensor VDM class,captionpos=b]
 class remote_lib_sensor
@@ -1236,12 +1258,35 @@ of a VDM model. This is enabled in a fashion similar to in the
 previous section using a java jar file. This functionality corresponds
 to the CORBA based API from VDMTools \cite{APIMan}.
 
-A VDM model can be remote controlled by the use of the java interface \texttt{RemoteControl}. Remote control should be understood as a delegation of control of an interpretation, this means that the remote controller controls the debug session, it is responsible for taking action and executing parts of the VDM model when finished it should return and the debug session will stop. When a Remote controller is used the debugger continues working normally where breakpoints can be used.
-Launching a debugging session with the use of a remote controller can be done by placing the jar with the remote controller in a folder lib inside the project. And then specifying the full qualified name of the remote controller in the launch configuration under the \textit{Remote Control} group.
- To compile a remote control jar for VDM the VDMJ jar needs to be in the class-path. It can be fund in the Overture IDE installation under\\ \texttt{plugins/org.overture.ide.generated.vdmj\_2.0.1/lib}.
+A VDM model can be remote controlled by the use of the java interface
+\texttt{RemoteControl}. Remote control should be understood as a
+delegation of control of an interpretation, this means that the remote
+controller controls the debug session, it is responsible for taking
+action and executing parts of the VDM model when finished it should
+return and the debug session will stop. When a Remote controller is
+used the debugger continues working normally, so for example breakpoints can be
+used.  Launching a debugging session with the use of a remote
+controller can be done by placing the jar with the remote controller
+in a folder lib inside the project. And then specifying the full
+qualified name of the remote controller in the launch configuration
+under the \textit{Remote Control} group.  To compile a remote control
+jar for VDM the VDMJ jar file needs to be in the class-path. It can be found
+in the Overture IDE installation
+under\\ \texttt{plugins/org.overture.ide.generated.vdmj\_2.0.1/lib}.
 
 \subsection{Example of a Remote Control class}
-In this example we have a VDM class A which just returns the input. As seen in listing \ref{remoteControllerJava} it is posible too call \texttt{execute} on the interpreter which is parsed to the remote controller which then returns a string with the result. An more advanced \texttt{valueExecute} also exists which returns the internal Value type of the interpreter which is use full for more advanced types.
+
+In this example we have a VDM class A which just returns the input. As
+seen in listing~\ref{remoteControllerJava} it is posible too call
+\texttt{execute} on the interpreter which is parsed to the remote
+controller which then returns a string with the result. A more
+advanced \texttt{valueExecute} also exists which returns the internal
+Value type of the interpreter which is use full for more advanced
+types. The
+values that are to be exchanged between the Overture IDE and the jar
+file needs to be the values used in VDMJ. Documentation about these
+can be found in the VDMJ user manual \cite{Battle09}.
+
 \begin{lstlisting}[language=JAVA,label=remoteControllerJava,caption=Remote Controller Java class,captionpos=b]
 import org.overturetool.vdmj.debug.RemoteControl;
 import org.overturetool.vdmj.debug.RemoteInterpreter;
