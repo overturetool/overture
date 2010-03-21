@@ -45,8 +45,8 @@ operations
   GetTill(tid) ==
     return tills(tid);
 
-  public Init: () ==> Main
-  Init() ==
+  public Main: () ==> Main
+  Main() ==
     (clock.SetDate("150999");
     let c1 = new Card(123456,1,1),
         c2 = new Card(123457,2,2),
@@ -90,7 +90,7 @@ operations
                     4 |-> SetupTill(4,new Till())};
           cards := [c1,c2,c3,c4,c5,c6,c7];
           resource := resource.Create(clock,new Letterbox());
-          return self));
+         ));
 
     SetupTill : nat * Till ==> Till
     SetupTill(i,t) ==
@@ -121,7 +121,8 @@ operations
        mb.put(msg);
        -- Make till 1 fail as soon as the card is entered
        if tillNum = 1
-       then Fail(tillNum));
+       then Fail(tillNum))
+    pre tillNum in set dom tills;
 
     public WithdrawalAtTill : nat * nat ==> ()
     WithdrawalAtTill(tillNum, amount) ==
@@ -159,14 +160,10 @@ operations
 
     public Run : () ==> seq of char
     Run() ==
-      (dcl user1:User := new User(),
-           user2:User := new User(),
-           user3:User := new User(),
-           user4:User := new User();
-       user1.Create(1,1,123456,self);
-       user2.Create(2,5,123460,self);
-       user3.Create(3,6,123461,self);
-       user4.Create(4,7,123462,self);
+      (dcl user1:User := new User(1,1,123456,self),
+           user2:User := new User(2,5,123460,self),
+           user3:User := new User(3,6,123461,self),
+           user4:User := new User(4,7,123462,self);
        start(user1);
        start(user2);
        start(user3);
@@ -212,8 +209,8 @@ instance variables
 
 operations
 
-  public Create : nat * nat * nat * Main ==> () 
-  Create (nt, nc, np, nm) ==
+  public User : nat * nat * nat * Main ==> User 
+  User (nt, nc, np, nm) ==
     (tillNum := nt;
      cardNum := nc;
      pin := np;

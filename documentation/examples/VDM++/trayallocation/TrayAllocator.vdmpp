@@ -69,7 +69,7 @@ class TrayAllocator
 	   	-- Update current tray at card reader
 	    trayAtCardReader := uid;
 	    
-	    -- Simulate change of Tray state !!!
+	    -- Simulate change of Tray state 
 	    -- sorterRing(trayAtCardReader).SetState(state);
 	 	
 	 	-- Count the number of tray steps 
