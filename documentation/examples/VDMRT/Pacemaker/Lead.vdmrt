@@ -101,7 +101,7 @@ sync
 
 mutex(addLeadPace);
 mutex(dischargePulse);
-
+mutex(followPlan);
 per isFinished =>  scheduledPulse = nil;
 
 end Lead 
