@@ -21,7 +21,7 @@ www.stadtools.com.
 #PRE_CHECKS=true
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
-#ENTRY_POINT=relations`IsTransitive(A5)
+#ENTRY_POINT=relations`IsTransitive(relations`A5)
 #ENTRY_POINT=relations`IsTransitive(A7)
 #EXPECTED_RESULT=NO_ERROR_INTERPRETER
 #******************************************************
