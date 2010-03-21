@@ -25,5 +25,20 @@ Springer-Verlag, Lecture Notes in Computer Science 5014, pp. 181--197.
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
 #ENTRY_POINT=new World("tests/scenarioGoodHeart.arg",<DOO>).Run()
+#ENTRY_POINT=new World("tests/scenarioDoubleHeart.arg",<DOO>).Run()
+#ENTRY_POINT=new World("tests/scenarioBrokenHeart.arg",<DOO>).Run()
+#ENTRY_POINT=new World("tests/scenarioSometimesHeart.arg",<DOO>).Run()
+#ENTRY_POINT=new World("tests/scenarioGoodHeart.arg",<AOO>).Run()
+#ENTRY_POINT=new World("tests/scenarioDoubleHeart.arg",<AOO>).Run()
+#ENTRY_POINT=new World("tests/scenarioBrokenHeart.arg",<AOO>).Run()
+#ENTRY_POINT=new World("tests/scenarioSometimesHeart.arg",<AOO>).Run()
+#ENTRY_POINT=new World("tests/scenarioGoodHeart.arg",<AAI>).Run()
+#ENTRY_POINT=new World("tests/scenarioDoubleHeart.arg",<AAI>).Run()
+#ENTRY_POINT=new World("tests/scenarioBrokenHeart.arg",<AAI>).Run()
+#ENTRY_POINT=new World("tests/scenarioSometimesHeart.arg",<AAI>).Run()
+#ENTRY_POINT=new World("tests/scenarioGoodHeart.arg",<DDD>).Run()
+#ENTRY_POINT=new World("tests/scenarioDoubleHeart.arg",<DDD>).Run()
+#ENTRY_POINT=new World("tests/scenarioBrokenHeart.arg",<DDD>).Run()
+#ENTRY_POINT=new World("tests/scenarioSometimesHeart.arg",<DDD>).Run()
 #EXPECTED_RESULT=NO_ERROR_TYPE_CHECK
 #******************************************************

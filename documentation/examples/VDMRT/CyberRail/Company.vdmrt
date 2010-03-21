@@ -25,13 +25,11 @@ operations
   stimulate() ==
   (
 		if len inlines > 0
-		then( 
-				dcl curtime : nat := World2`timeref.GetTime(),
-				done : bool := false; 
+		then (dcl done : bool := false; 
 				(
 				while not done do(
 					def mk_(nav,tid,route_id,t) = hd inlines in
-						if t <= curtime
+						if t <= time
 						then ( cyberrail.setInactiveRoute(route_id);
 								inlines := tl inlines
 								)
@@ -49,7 +47,6 @@ thread
 	(
 		if busy
 		then stimulate();
-		--World2`timeref.NotifyAndIncTime();
 	)
 
 sync

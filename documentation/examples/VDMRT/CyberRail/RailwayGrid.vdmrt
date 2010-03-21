@@ -24,7 +24,7 @@ operations
 public RailwayGrid : () ==> RailwayGrid	
 RailwayGrid()==
 (	
-duration(0)(
+--duration(0)(
 dcl R1 : TransportPlan`Route 
        := mk_TransportPlan`Route("A", "B", 42, "P1",200, 1), 
 	R2 : TransportPlan`Route 
@@ -53,8 +53,8 @@ dcl R1 : TransportPlan`Route
 	        recAlgo({},[], "C") union 
 	        recAlgo({},[], "D");	
 	writef (grid);
-	);
-	return self;
+--	);
+--	return self;
 );
 
 private recAlgo : Grid * Plan * String ==> Grid

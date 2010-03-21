@@ -5,7 +5,6 @@ class World2
 
 instance variables
   protected envCustomer : [Customer] := nil;
-  public static timeref : TimeStamp := new TimeStamp();
 
 operations
 
@@ -13,7 +12,7 @@ operations
   public World2 : seq of char ==> World2
   World2(fname) ==
 	(
-		duration(0)(
+--		duration(0)(
 		envCustomer := new Customer(fname);
 		envCustomer.addTokenDevice(CRSystem`tok1);
 		envCustomer.addTokenDevice(CRSystem`tok2);
@@ -64,7 +63,7 @@ operations
 		--CRSystem`tok12.setQ_APM_out(CRSystem`apm);		
 		--CRSystem`tok13.setQ_Env_out(envCustomer);
 		--CRSystem`tok13.setQ_APM_out(CRSystem`apm);
-);
+--);
 		
 	);
 
@@ -75,7 +74,8 @@ operations
 	run() == 	
 	(
 		dcl i : nat := 5;
-		duration(0)(
+--		duration(0)
+      (
 		start(envCustomer);
 		start(CRSystem`apm);
 		start(CRSystem`cb);

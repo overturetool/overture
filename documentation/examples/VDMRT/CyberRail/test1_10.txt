@@ -1,0 +1,10 @@
+[ mk_(mk_CyberRail`NavigationInput("A","D",<Cheapest>,1),1,nil,3000),
+mk_(mk_CyberRail`NavigationInput("A","D",<Cheapest>,2),2,nil,3000),
+mk_(mk_CyberRail`NavigationInput("A","D",<Cheapest>,3),3,nil,3000),
+mk_(mk_CyberRail`NavigationInput("A","D",<Cheapest>,4),4,nil,3000),
+mk_(mk_CyberRail`NavigationInput("A","D",<Cheapest>,5),5,nil,3000),
+mk_(mk_CyberRail`NavigationInput("A","D",<Cheapest>,6),6,nil,3000),
+mk_(mk_CyberRail`NavigationInput("A","D",<Cheapest>,7),7,nil,3000),
+mk_(mk_CyberRail`NavigationInput("A","D",<Cheapest>,8),8,nil,3000),
+mk_(mk_CyberRail`NavigationInput("A","D",<Cheapest>,9),9,nil,3000),
+mk_(mk_CyberRail`NavigationInput("A","D",<Cheapest>,10),10,nil,3000) ]
