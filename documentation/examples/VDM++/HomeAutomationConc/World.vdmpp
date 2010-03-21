@@ -1,0 +1,36 @@
+class World
+
+instance variables
+
+private env				: Environment;
+public static timerRef	: TimeStamp := new TimeStamp();
+
+
+operations
+
+public World: () ==> World
+	World() ==
+	(env := new Environment("scenario.txt");
+	HA`Host.AddNode(HA`TempNode.GetID(),HA`TempNode.GetType());
+	HA`Host.AddNode(HA`HumidNode.GetID(),HA`HumidNode.GetType());
+	HA`Host.AddNode(HA`ThermNode.GetID(),HA`ThermNode.GetType());
+	HA`Host.AddNode(HA`WinNode.GetID(),HA`WinNode.GetType());
+
+	start(HA`TempNode);
+	start(HA`HumidNode);
+	start(HA`ThermNode);
+	start(HA`WinNode);
+	start(HA`Host);
+	);
+
+public Run: () ==> ()
+	Run() ==
+		(-- start environment creating input
+		start(env);
+		-- wait til environment has finished creating input
+		env.IsFinished();
+		-- kill HostController thread
+		--HA`Host.Finish();
+		);
+
+end World

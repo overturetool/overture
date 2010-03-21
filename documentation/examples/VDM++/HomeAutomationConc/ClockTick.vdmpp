@@ -1,0 +1,21 @@
+class ClockTick
+
+instance variables
+
+threadID : int := -1;
+
+operations
+
+public ClockTick: nat ==> ClockTick
+ClockTick(t) ==
+threadID := t;
+
+thread
+
+while true do
+(
+  World`timerRef.NotifyThread(threadID);
+  World`timerRef.WaitRelative(1);
+)
+
+end ClockTick
