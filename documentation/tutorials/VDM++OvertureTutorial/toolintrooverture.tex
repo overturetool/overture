@@ -34,7 +34,7 @@ complete guide to Overture\footnote{Note that the Overture tool suite support th
   different VDM dialects; VDM-SL (Specification Language), VDM++ and
   VDM-RT (Real Time) so although this tutorial illustrate how to use
   Overture with VDM++ models you will see multiple references to
-  these dialects throughout this tutorial.}; more information can be obtained
+  these dialects.}; more information can be obtained
 from~\url{www.overturetool.org}.
 
 
@@ -65,10 +65,7 @@ first model can be built in UML.  Section~\ref{sec:vdmsupport}
 provides an initial introduction to the terminology used by Eclipse
 tools like Overture. Section~\ref{sec:fromUMLtoVDM} shows how to
 import EA UML class and sequence diagrams into Overture and
-export them back to UML again. The round-trip engineering abilities of
-this link however is still at a prototype stage so if you wish to use
-this you have to expect that this part is still not as automatic as we
-would like. 
+export them back to UML again.  
 % This includes how to use Overture to configure a VDM++ project, perform static
 % checking and synchronise definitions for all classes with an Enterprise
 % Architect model, if desired.
@@ -172,7 +169,7 @@ necessary to have the text processing system called \LaTeX\ and its
 
 \paragraph{Note for \vdmtools$^{\mbox{\small\textbf{{\textregistered}}}}$ users.} 
 Overture provides a new open source VDM tool set, but it can
-also work with
+also be used with
 \vdmtools$^{\mbox{\small\textbf{{\textregistered}}}}$. \vdmtools, originally developed by IFAD A/S, is now
 maintained and developed by CSK Systems~(see
 \url{http://www.vdmtools.jp/en/}). In the future Overture will be able
@@ -291,8 +288,8 @@ and selecting \emph{Import}, followed by \emph{General} $\rightarrow$
 from \texttt{.zip} file mentioned above can be imported easily. Initially it is
 recommended that you only import the \texttt{AlarmErrPP} and the
 \texttt{Alarm++tracesPP} projects as shown in
-Figure~\ref{fig:importalarm}\footnote{You need both of these for
-  carrying out different kinds of exercises throughout this chapter.}.
+Figure~\ref{fig:importalarm}\footnote{You need both of these to
+  carry out various exercises throughout this chapter.}.
 
 \begin{figure}[!htb]
 \begin{center}
@@ -478,7 +475,10 @@ to VDM, use the \texttt{AlarmUML} project.
 By right-clicking the project
 root in the \emph{Script Explorer}, \emph{UML Transformation} can be
 chosen, followed by \emph{Import XMI}. Now browse to the XMI/XML file
-exported from EA and open this.
+exported from EA and open this. The round-trip engineering abilities of
+this link however is still at a prototype stage so if you wish to use
+this you have to expect that this part is still not as automatic as we
+would like.
 
 The three classes from the Alarm system will be converted to VDM++ format
 (\texttt{.vdmpp}), one file per class.
@@ -612,11 +612,12 @@ shows the debug configuration for the alarm model. The class and
 operation/function name can be chosen from a Browse dialog; if the
 operation or function has arguments, these must be typed in manually
 between the brackets of the entry point
-function/operation\footnote{Note that in the current version of
-  Overture the error handling is not optimal if you type something
-  that is not defined here. If you make mistakes here the current
-  version will normally come with an error message like ``Execution
-  error 206: Unexpected token in expression'' in the \emph{Console} view}.
+function/operation.
+%\footnote{Note that in the current version of
+%  Overture the error handling is not optimal if you type something
+%  that is not defined here. If you make mistakes here the current
+%  version will normally come with an error message like ``Execution
+%  error 206: Unexpected token in expression'' in the \emph{Console} view}.
 
 \begin{figure}[htp]
 \begin{center}
@@ -626,7 +627,8 @@ function/operation\footnote{Note that in the current version of
 \end{center}
 \end{figure}
 
-Once the debug configuration is ready, the model can be debugged. This
+Once the debug configuration is ready, the model can be debugged. If
+any breakpoints are set this
 will change the main perspective of the Overture IDE to the
 \emph{Debug perspective} which contains the views needed for debugging
 in VDM. The Debug perspective is illustrated in Figure~\ref{fig:DebuggingVDM}. 
@@ -650,11 +652,11 @@ The \emph{Debug view} in the upper left corner of the \emph{Debug
   perspective} shows all running threads in the VDM++ model and their
 call stacks. It also shows whether a given model is stopped, suspended
 or running. All threads are also shown, along with their running
-status. It is possible to switch between threads from the \emph{Debug view}
-\footnote{In the current version only the thread where the
-  breakpoint is met is stopped, but in the future all threads will be
-  stopped when a breakpoint is met and all will be enabled again once
-  the user resume the execution.}.
+status. It is possible to switch between threads from the \emph{Debug view}.
+%\footnote{In the current version only the thread where the
+%  breakpoint is met is stopped, but in the future all threads will be
+%  stopped when a breakpoint is met and all will be enabled again once
+%  the user resume the execution.}.
 
 \begin{table}
 \begin{center}
@@ -785,7 +787,7 @@ Figure~\ref{fig:testcov} and it includes the
 VDM definitions from all the files included in the project including
 coverage information. Note that whenever the model is adjusted or it
 is cleaned so it gets type checked again all the files in the
-\texttt{generated} directory is deleted.
+\texttt{generated} directory are deleted.
 
 \begin{figure}[tb]
 \begin{center}
@@ -921,15 +923,25 @@ overall number of test cases, each being formed as a sequence of four
 operation calls, as shown. In this case, the cardinality of the three
 sets are respectively 4, 3 and 4. Multiplying these gives 48 tests in total. If you
 select the Combinatorial Testing perspective you will see the
-\textsf{CT Overview} view. Inside this view you can select the \texttt{Alarm++tracesPP}
-project, right click it and choose the \textsf{Run selected}
-option. Now Overture expands and executes all 48 test cases one after
+\textsf{CT Overview} view. 
+Inside this combinatorial testing view you can
+select the \texttt{Alarm++tracesPP} project, right click it and 
+choose the \textsf{Full
+  Evaluation} option as shown in Figure~\ref{fig:CToptions}. 
+Now Overture expands and executes all 48 test cases one after
 another. The results of these executions are illustrated with green
 check marks and red crosses, meaning that the tests passed or failed
 respectively. See Figure~\ref{fig:stracesalarm}. Note that in the
 Combinatorial Testing perspective, the view in the lower region is
 able to show the individual steps of a selected test case, along with
 the corresponding results from its four operation calls.
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=1.5in]{figures/CToptions}
+\caption{Invoking the combinatorial testing feature\label{fig:CToptions}}
+\end{center}
+\end{figure}
 
 \begin{figure}[htbp]
 \begin{center}
@@ -1080,7 +1092,7 @@ java -jar vdmj-2.0.0.jar -vdmpp AlarmPP
 \end{lstlisting}
 
 \noindent That will perform a syntax and type check of all the
-VDM model files i the \verb|AlarmPP| directory, producing any
+VDM model files in the \verb|AlarmPP| directory, producing any
 errors and warning messages on the console, before terminating:
 
 \begin{lstlisting}

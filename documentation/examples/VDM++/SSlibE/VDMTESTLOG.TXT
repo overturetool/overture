@@ -3432,3 +3432,5 @@ Test result of a testcase seaquence.	 OK!!
 Result of all test cases.	 OK!!
 TermT01:	Test of term constructor and isInThePeriod()	 OK.
 Test result of a testcase seaquence.	 OK!!
+TermT01:	Test of term constructor and isInThePeriod()	 OK.
+Test result of a testcase seaquence.	 OK!!

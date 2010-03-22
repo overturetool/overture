@@ -31,7 +31,7 @@ complete guide to Overture\footnote{Note that the Overture tool suite support th
   different VDM dialects; VDM-SL (Specification Language), VDM++ and
   VDM-RT (Real Time) so although this tutorial illustrate how to use
   Overture with VDM-RT models you will see multiple references to
-  these dialects throughout this tutorial.}; more information can be obtained
+  these dialects.}; more information can be obtained
 from~\url{www.overturetool.org}.
 
 
@@ -67,7 +67,7 @@ audible feedback.
 \item[\textbf{TMC Message Handling:}] Digital traffic information is important for in-car radio navigation systems. It enables features such as automatic re-planning of the planned route in case a traffic jam occurs ahead. It is also increasingly important to enhance road safety by warning the driver, for example when a ghost driver is spotted just ahead on the planned route. TMC is such a digital traffic information service.
 \end{description}
 
-When developing a Real-time model, it is adviced to create an object-oriented model first outside the real-time domain. This will enable the developer to focus on the structure of the system as well as eliminating any concurrency issued before moving on to the real-time domain. This proposed process is described in much more detail in \cite{Larsen&09b}.
+When developing a Real-time model, it is adviced to create an object-oriented model first outside the real-time domain. This will enable the developer to focus on the structure of the system as well as eliminating any concurrency issues before moving on to the real-time domain. This proposed process is described in much more detail in \cite{Larsen&09b}.
 
 The rest of this chapter has the following outline; Section~\ref{sec:install} describes how to obtain the Overture tools.
 Section~\ref{sec:vdmsupport} provides an initial introduction to the
@@ -536,7 +536,7 @@ the project have been cleaned will be turned into a pdf file. The
 \texttt{CarRadioNavi.pdf} file is placed in the
 \texttt{generated/latex} directory. Note that whenever the model is
 adjusted or it is cleaned so it gets type checked again all the files
-in the \texttt{generated} directory is deleted.
+in the \texttt{generated} directory are deleted.
 
 The coverage information is provided in a way where uncovered
 expressions are shown in red in the generated pdf file. In addition
@@ -609,8 +609,12 @@ bindings to \texttt{x} (whereas manual debugging will select an
 arbitrary binding here). This is followed by the call of 6 different
 operations seperated by an alternative operator (\texttt{|}). The
 selected \texttt{x} value is then used as argument t each of these
-operations so in total this generates 18 (3 times 6) test cases.  If you
-right click it and choose the \textsf{Run selected} option. Now Overture expands
+operations so in total this generates 18 (3 times 6) test cases. 
+Inside this combinatorial testing view you can
+select the \texttt{CarRadNav} project, right click it and 
+choose the \textsf{Full
+  Evaluation} option as shown in Figure~\ref{fig:CToptions}. 
+Now Overture expands
 and executes all 18 test cases one after each other. The results of these
 executions are illustrated with green check marks and red crosses, meaning that
 the tests passed or failed respectively. See Figure~\ref{fig:tracesradnav}. Note
@@ -620,8 +624,15 @@ corresponding results from its four operation calls.
 
 \begin{figure}[htbp]
 \begin{center}
+\includegraphics[width=1.5in]{figures/CToptions}
+\caption{Invoking the combinatorial testing feature\label{fig:CToptions}}
+\end{center}
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}
 \includegraphics[width=4.5in]{figures/tracesradnav}
-\caption{Using Combinatorial Testing for the Alarm VDM++ model\label{fig:tracesradnav}}
+\caption{Using Combinatorial Testing for the Radio Navigation VDM-RT model\label{fig:tracesradnav}}
 \end{center}
 \end{figure}
 
@@ -636,7 +647,10 @@ attempts to define its essential predicates (invariants, pre and post-conditions
 When a VDM-RT model is being executed a textual logfile with
 information about the time of the generation is created in
 a folder called ''\texttt{generated/logs/debugconfig}'' with the
-\emph{.logrt} extension. This logfile can be viewed in the build-in
+\emph{.logrt} extension. Note that \texttt{debugconfig} here will be
+the name of the launch configuration that the user have created so if
+several launch confugurations are used these will be separated in
+different directories. This logfile can be viewed in the build-in
 RealTime Log Viewer, by double-clicking the file in the project
 view. The viewer allows you to explore system execution in different
 ways. In Figure~\ref{fig:userguide:ArchitecturalOverview} the
@@ -779,7 +793,6 @@ messages on the console, before terminating:
 \begin{lstlisting}
 Parsed 9 classes in 0.61 secs. No syntax errors
 Type checked 11 classes in 0.093 secs. No type errors
-Initialized 11 classes in 0.079 secs. 
 \end{lstlisting}
 
 \noindent In the case of our example, there are no syntax or type checking
