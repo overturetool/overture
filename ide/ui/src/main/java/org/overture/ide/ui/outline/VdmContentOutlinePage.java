@@ -6,6 +6,7 @@ import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
@@ -31,129 +32,160 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 {
 	/**
 	 * The element change listener of the java outline viewer.
+	 * 
 	 * @see IElementChangedListener
 	 */
-	protected class ElementChangedListener implements IElementChangedListener {
+	protected class ElementChangedListener implements IElementChangedListener
+	{
 
-	
-	
-		public void elementChanged(final ElementChangedEvent e) {
+		public void elementChanged(final ElementChangedEvent e)
+		{
 
 			if (getControl() == null)
 				return;
 
-			Display d= getControl().getDisplay();
-			if (d != null) {
+			Display d = getControl().getDisplay();
+			if (d != null)
+			{
 				d.asyncExec(new Runnable() {
-					public void run() {
-						//IVdmSourceUnit cu= (IVdmSourceUnit) fInput;
-//						IVdmElement base= cu;
-//						if (fTopLevelTypeOnly) {
-//							base= cu.findPrimaryType();
-//							if (base == null) {
-								if (fOutlineViewer != null)
-								{
-									fOutlineViewer.refresh(true);
-									fOutlineViewer.setAutoExpandLevel(ALL_LEVELS);
-								}
-//								return;
-//							}
-//						}
-//						IVdmElementDelta delta= findElement(base, e.getDelta());
-//						if (delta != null && fOutlineViewer != null) {
-//							fOutlineViewer.reconcile(delta);
-//						}
+					public void run()
+					{
+						// IVdmSourceUnit cu= (IVdmSourceUnit) fInput;
+						// IVdmElement base= cu;
+						// if (fTopLevelTypeOnly) {
+						// base= cu.findPrimaryType();
+						// if (base == null) {
+						if (fOutlineViewer != null)
+						{
+							fOutlineViewer.refresh(true);
+							fOutlineViewer.setAutoExpandLevel(ALL_LEVELS);
+						}
+						// return;
+						// }
+						// }
+						// IVdmElementDelta delta= findElement(base, e.getDelta());
+						// if (delta != null && fOutlineViewer != null) {
+						// fOutlineViewer.reconcile(delta);
+						// }
 					}
 				});
 			}
 		}
 
-		private boolean isPossibleStructuralChange(IVdmElementDelta cuDelta) {
-			if (cuDelta.getKind() != IVdmElementDelta.CHANGED) {
+		private boolean isPossibleStructuralChange(IVdmElementDelta cuDelta)
+		{
+			if (cuDelta.getKind() != IVdmElementDelta.CHANGED)
+			{
 				return true; // add or remove
 			}
-//			int flags= cuDelta.getFlags();
-//			if ((flags & IVdmElementDelta.F_CHILDREN) != 0) {
-//				return true;
-//			}
-//			return (flags & (IJavaElementDelta.F_CONTENT | IJavaElementDelta.F_FINE_GRAINED)) == IJavaElementDelta.F_CONTENT;
+			// int flags= cuDelta.getFlags();
+			// if ((flags & IVdmElementDelta.F_CHILDREN) != 0) {
+			// return true;
+			// }
+			// return (flags & (IJavaElementDelta.F_CONTENT | IJavaElementDelta.F_FINE_GRAINED)) ==
+			// IJavaElementDelta.F_CONTENT;
 			return true;
 		}
 
-		protected IVdmElementDelta findElement(IVdmSourceUnit unit, IVdmElementDelta delta) {
+		protected IVdmElementDelta findElement(IVdmSourceUnit unit,
+				IVdmElementDelta delta)
+		{
 
 			if (delta == null || unit == null)
 				return null;
 
-			if(delta.getElement() instanceof IVdmSourceUnit)
+			if (delta.getElement() instanceof IVdmSourceUnit)
 			{
-			IVdmSourceUnit element= (IVdmSourceUnit) delta.getElement();
+				IVdmSourceUnit element = (IVdmSourceUnit) delta.getElement();
 
-			if (unit.equals(element)) {
-				if (isPossibleStructuralChange(delta)) {
-					return delta;
+				if (unit.equals(element))
+				{
+					if (isPossibleStructuralChange(delta))
+					{
+						return delta;
+					}
+					return null;
 				}
-				return null;
-			}
 			}
 
-//			if (element.getElementType() > IVdmElement.CLASS_FILE)
-//				return null;
-//
-//			IJavaElementDelta[] children= delta.getAffectedChildren();
-//			if (children == null || children.length == 0)
-//				return null;
-//
-//			for (int i= 0; i < children.length; i++) {
-//				IJavaElementDelta d= findElement(unit, children[i]);
-//				if (d != null)
-//					return d;
-//			}
+			// if (element.getElementType() > IVdmElement.CLASS_FILE)
+			// return null;
+			//
+			// IJavaElementDelta[] children= delta.getAffectedChildren();
+			// if (children == null || children.length == 0)
+			// return null;
+			//
+			// for (int i= 0; i < children.length; i++) {
+			// IJavaElementDelta d= findElement(unit, children[i]);
+			// if (d != null)
+			// return d;
+			// }
 
 			return null;
 		}
 	}
-	
+
+	public class VdmOutlineViewer extends TreeViewer
+	{
+
+		public VdmOutlineViewer(Composite parent) {
+			super(parent);
+			setAutoExpandLevel(ALL_LEVELS);
+			setUseHashlookup(true);
+		}
+
+		@Override
+		protected void fireSelectionChanged(SelectionChangedEvent event)
+		{
+			if (!inExternalSelectionMode)
+			{
+				super.fireSelectionChanged(event);
+			}
+		}
+
+	}
+
 	/**
-	 * Constant indicating that all levels of the tree should be expanded or
-	 * collapsed.
-	 *
+	 * Constant indicating that all levels of the tree should be expanded or collapsed.
+	 * 
 	 * @see #expandToLevel(int)
 	 * @see #collapseToLevel(Object, int)
 	 */
 	public static final int ALL_LEVELS = -1;
 
 	private VdmEditor vdmEditor;
-	
+
 	private TreeViewer fOutlineViewer;
 	private IVdmElement fInput;
 	private ElementChangedListener fListener;
-	
-	private ListenerList fSelectionChangedListeners= new ListenerList(ListenerList.IDENTITY);
+
+	private ListenerList fSelectionChangedListeners = new ListenerList(ListenerList.IDENTITY);
+
+	private boolean inExternalSelectionMode = false;
 
 	public VdmContentOutlinePage(VdmEditor vdmEditor) {
-		this.vdmEditor = vdmEditor;	
+		this.vdmEditor = vdmEditor;
 	}
 
 	@Override
 	public void createControl(Composite parent)
 	{
 
-		fOutlineViewer = new TreeViewer(parent);
+		fOutlineViewer = new VdmOutlineViewer(parent);
 		fOutlineViewer.setContentProvider(new VdmOutlineTreeContentProvider());
-		//fOutlineViewer.setLabelProvider(new VdmOutlineLabelProvider());
-		fOutlineViewer.setLabelProvider(new DecorationgVdmLabelProvider(new VdmUILabelProvider()) );
+		// fOutlineViewer.setLabelProvider(new VdmOutlineLabelProvider());
+		fOutlineViewer.setLabelProvider(new DecorationgVdmLabelProvider(new VdmUILabelProvider()));
 		fOutlineViewer.addSelectionChangedListener(this);
-		fOutlineViewer.setAutoExpandLevel(ALL_LEVELS);
-		
-		
-		Object[] listeners= fSelectionChangedListeners.getListeners();
-		for (int i= 0; i < listeners.length; i++) {
+	
+
+		Object[] listeners = fSelectionChangedListeners.getListeners();
+		for (int i = 0; i < listeners.length; i++)
+		{
 			fSelectionChangedListeners.remove(listeners[i]);
 			fOutlineViewer.addSelectionChangedListener((ISelectionChangedListener) listeners[i]);
 		}
-		
-		//addSelectionChangedListener(new VdmSelectionListener());
+
+		// addSelectionChangedListener(new VdmSelectionListener());
 
 		fOutlineViewer.setInput(fInput);
 	}
@@ -162,37 +194,35 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 	public void dispose()
 	{
 		if (vdmEditor == null)
-		return;
+			return;
 
+		vdmEditor.outlinePageClosed();
+		vdmEditor = null;
 
+		// fListener.clear();
+		// fListener = null;
 
-	vdmEditor.outlinePageClosed();
-	vdmEditor= null;
+		// fPostSelectionChangedListeners.clear();
+		// fPostSelectionChangedListeners= null;
 
-//	fListener.clear();
-//	fListener = null;
+		// if (fPropertyChangeListener != null) {
+		// JavaPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(fPropertyChangeListener);
+		// fPropertyChangeListener= null;
+		// }
 
-//	fPostSelectionChangedListeners.clear();
-//	fPostSelectionChangedListeners= null;
+		// if (fMenu != null && !fMenu.isDisposed()) {
+		// fMenu.dispose();
+		// fMenu= null;
+		// }
 
-//	if (fPropertyChangeListener != null) {
-//		JavaPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(fPropertyChangeListener);
-//		fPropertyChangeListener= null;
-//	}
+		// if (fActionGroups != null)
+		// fActionGroups.dispose();
 
-//	if (fMenu != null && !fMenu.isDisposed()) {
-//		fMenu.dispose();
-//		fMenu= null;
-//	}
+		// fTogglePresentation.setEditor(null);
 
-//	if (fActionGroups != null)
-//		fActionGroups.dispose();
+		fOutlineViewer = null;
 
-//	fTogglePresentation.setEditor(null);
-
-	fOutlineViewer= null;
-
-	super.dispose();
+		super.dispose();
 
 	}
 
@@ -221,7 +251,8 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 	/*
 	 * @see ISelectionProvider#addSelectionChangedListener(ISelectionChangedListener)
 	 */
-	public void addSelectionChangedListener(ISelectionChangedListener listener) {
+	public void addSelectionChangedListener(ISelectionChangedListener listener)
+	{
 		if (fOutlineViewer != null)
 			fOutlineViewer.addSelectionChangedListener(listener);
 		else
@@ -232,7 +263,8 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 	 * @see ISelectionProvider#setSelection(ISelection)
 	 */
 	@Override
-	public void setSelection(ISelection selection) {
+	public void setSelection(ISelection selection)
+	{
 		if (fOutlineViewer != null)
 			fOutlineViewer.setSelection(selection);
 	}
@@ -241,7 +273,8 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 	 * @see ISelectionProvider#getSelection()
 	 */
 	@Override
-	public ISelection getSelection() {
+	public ISelection getSelection()
+	{
 		if (fOutlineViewer == null)
 			return StructuredSelection.EMPTY;
 		return fOutlineViewer.getSelection();
@@ -250,16 +283,14 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 	/*
 	 * @see ISelectionProvider#removeSelectionChangedListener(ISelectionChangedListener)
 	 */
-	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
+	public void removeSelectionChangedListener(
+			ISelectionChangedListener listener)
+	{
 		if (fOutlineViewer != null)
 			fOutlineViewer.removeSelectionChangedListener(listener);
 		else
 			fSelectionChangedListeners.remove(listener);
 	}
-
-
-
-	
 
 	public void setInput(IVdmElement je)
 	{
@@ -268,30 +299,35 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		{
 			fOutlineViewer.setInput(fInput);
 			fOutlineViewer.expandAll();
-			
+
 		}
-		if(fListener!=null)
+		if (fListener != null)
 			VdmCore.removeElementChangedListener(fListener);
-		fListener= new ElementChangedListener();
+		fListener = new ElementChangedListener();
 		VdmCore.addElementChangedListener(fListener);
 	}
-	
-	@SuppressWarnings("unchecked")
-	public void select(IAstNode reference) {
-		if (fOutlineViewer != null) {
 
-			ISelection s= fOutlineViewer.getSelection();
-			if (s instanceof IStructuredSelection) {
-				IStructuredSelection ss= (IStructuredSelection) s;
-				List elements= ss.toList();
-				if (!elements.contains(reference)) {
-					s= (reference == null ? StructuredSelection.EMPTY : new StructuredSelection(reference));
+	@SuppressWarnings("unchecked")
+	public void select(IAstNode reference)
+	{
+		if (fOutlineViewer != null)
+		{
+
+			inExternalSelectionMode = true;
+			ISelection s = fOutlineViewer.getSelection();
+			if (s instanceof IStructuredSelection)
+			{
+				IStructuredSelection ss = (IStructuredSelection) s;
+				List elements = ss.toList();
+				if (!elements.contains(reference))
+				{
+					s = (reference == null ? StructuredSelection.EMPTY
+							: new StructuredSelection(reference));
 					fOutlineViewer.setSelection(s, true);
 				}
 			}
+			inExternalSelectionMode = false;
 		}
 	}
-	
-
 
 }

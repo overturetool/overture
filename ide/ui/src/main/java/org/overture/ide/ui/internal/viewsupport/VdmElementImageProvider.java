@@ -14,6 +14,7 @@ import org.overturetool.vdmj.definitions.AccessSpecifier;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
 import org.overturetool.vdmj.definitions.LocalDefinition;
@@ -121,7 +122,15 @@ public class VdmElementImageProvider
 			return getExplicitOperationDefinitionImage((ExplicitOperationDefinition) element,
 					SMALL_ICONS,
 					adornmentFlags);
-		} else if (element instanceof LocalDefinition)
+		} 
+		 else if (element instanceof ExplicitFunctionDefinition)
+			{
+				return getExplicitFunctionDefinitionImage((ExplicitFunctionDefinition) element,
+						SMALL_ICONS,
+						adornmentFlags);
+			} 
+		
+		else if (element instanceof LocalDefinition)
 		{
 			return getLocalDefinitionImage((LocalDefinition) element,
 					SMALL_ICONS,
@@ -184,6 +193,43 @@ public class VdmElementImageProvider
 			return getWorkbenchImageDescriptor((IAdaptable) element, flags);
 		}
 		return null;
+	}
+
+	private ImageDescriptor getExplicitFunctionDefinitionImage(
+			ExplicitFunctionDefinition element, int renderFlags,
+			int adornmentFlags)
+	{
+		ImageDescriptor result = null;
+		AccessSpecifier as = element.accessSpecifier;
+		Point size = useSmallSize(renderFlags) ? SMALL_SIZE : BIG_SIZE;
+
+		// result = VdmPluginImages.getDescriptor(VdmPluginImages.IMG_METHOD_PRIVATE);
+
+		adornmentFlags = adornmentFlags | VdmElementImageDescriptor.FINAL;
+		
+		if (as.access.toString().equals("private"))
+		{
+			return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_METHOD_PRIVATE),
+					adornmentFlags,
+					size);
+		} else if (as.access.toString().equals("public"))
+		{
+			return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_METHOD_PUBLIC),
+					adornmentFlags,
+					size);
+		} else if (as.access.toString().equals("protected"))
+		{
+			return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_METHOD_PROTECTED),
+					adornmentFlags,
+					size);
+		} else if (as.access.toString().equals("default"))
+		{
+			return new VdmElementImageDescriptor(VdmPluginImages.getDescriptor(VdmPluginImages.IMG_METHOD_DEFAULT),
+					adornmentFlags,
+					size);
+		}
+
+		return result;
 	}
 
 	private ImageDescriptor getNamedTraceDefinitionImage(

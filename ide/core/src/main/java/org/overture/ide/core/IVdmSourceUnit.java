@@ -30,8 +30,8 @@ public interface IVdmSourceUnit extends IVdmElement{
 	public void clean();
 	public abstract IVdmProject getProject();
 	
-	public abstract IAstNode getNodeAt(int pos);
-	public int getLineOffset(int lineIndex);
+
 	public abstract boolean hasParseTree();
 
+	public abstract Map<LexLocation, IAstNode> getLocationToAstNodeMap();
 }

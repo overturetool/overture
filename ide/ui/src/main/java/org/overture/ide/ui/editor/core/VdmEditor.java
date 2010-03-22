@@ -25,6 +25,7 @@ import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.IVdmProject;
 import org.overture.ide.core.IVdmSourceUnit;
+import org.overture.ide.core.SourceReferenceManager;
 import org.overture.ide.core.VdmProject;
 import org.overture.ide.core.parser.SourceParserManager;
 import org.overture.ide.ui.outline.VdmContentOutlinePage;
@@ -61,6 +62,7 @@ public abstract class VdmEditor extends TextEditor
 	private EditorSelectionChangedListener fEditorSelectionChangedListener;
 
 	VdmContentOutlinePage fOutlinePage = null;
+	SourceReferenceManager sourceReferenceManager = null;
 
 	public VdmEditor() {
 		super();
@@ -131,19 +133,29 @@ public abstract class VdmEditor extends TextEditor
 					if (!elements.isEmpty())
 					{
 						IAstNode node = (IAstNode) elements.get(0);
-						IVdmElement vdmElement = getInputVdmElement();
-						if (vdmElement instanceof IVdmSourceUnit)
+//						IVdmElement vdmElement = getInputVdmElement();
+						if (sourceReferenceManager!=null)
 						{
-							IVdmSourceUnit unit = (IVdmSourceUnit) vdmElement;
-							selectAndReveal(unit.getLineOffset(node.getLocation().startLine)
-									+ node.getLocation().startPos-1,
-									node.getLocation().endPos
-											- node.getLocation().startPos);
+							//IVdmSourceUnit unit = (IVdmSourceUnit) vdmElement;
+
+							int endPos = 0;
+							
+							// fix for VDMJ endPos == 0 when rest of the line is marked as location
+							if (node.getLocation().endPos == 0)
+							{
+								endPos = sourceReferenceManager.getLineOffset(node.getLocation().endLine)- node.getLocation().startPos;
+							} else
+							{
+								endPos = node.getLocation().endPos
+										- node.getLocation().startPos;
+							}
+								selectAndReveal(sourceReferenceManager.getLineOffset(node.getLocation().startLine)
+										+ node.getLocation().startPos - 1,
+										endPos);
+							
 						}
 					}
 				}
-
-				
 
 			}
 		});
@@ -164,7 +176,7 @@ public abstract class VdmEditor extends TextEditor
 		if (doc instanceof VdmDocument)
 		{
 			VdmDocument vdmDoc = (VdmDocument) doc;
-			/*IVdmProject project =*/ vdmDoc.getProject();
+			/* IVdmProject project = */vdmDoc.getProject();
 			try
 			{
 				SourceParserManager.parseFile(VdmProject.getVdmSourceUnit(vdmDoc.getFile()));
@@ -275,13 +287,25 @@ public abstract class VdmEditor extends TextEditor
 		if (sourceViewer instanceof VdmSourceViewer)
 			vdmSourceViewer = (VdmSourceViewer) sourceViewer;
 
-		//IPreferenceStore store = getPreferenceStore();
+		// IPreferenceStore store = getPreferenceStore();
 
 		// if (vdmSourceViewer != null && isFoldingEnabled() &&(store == null ||
 		// !store.getBoolean(PreferenceConstants.EDITOR_SHOW_SEGMENTS)))
 		// vdmSourceViewer.prepareDelayedProjection();
 
 		super.doSetInput(input);
+		
+		
+	IVdmElement inputElement  =	getInputVdmElement();
+		if(inputElement instanceof IVdmSourceUnit)
+		{
+			if(sourceReferenceManager!=null)
+			{
+				sourceReferenceManager.shutdown(null);	
+			}
+			sourceReferenceManager = new SourceReferenceManager((IVdmSourceUnit) inputElement);
+			sourceReferenceManager.startup(null);
+		}
 
 		if (vdmSourceViewer != null && vdmSourceViewer.getReconciler() == null)
 		{
@@ -623,10 +647,10 @@ public abstract class VdmEditor extends TextEditor
 	private IAstNode getElementAt(int offset)
 	{
 
-		IVdmElement element = getInputVdmElement();
-		if (element != null && element instanceof IVdmSourceUnit)
+		
+		if (sourceReferenceManager != null )
 		{
-			IAstNode node = ((IVdmSourceUnit) element).getNodeAt(offset);
+			IAstNode node = sourceReferenceManager.getNodeAt(offset);
 			if (node != null)
 			{
 				System.out.println("Element hit: " + node.getName());

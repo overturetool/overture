@@ -15,6 +15,7 @@ import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.definitions.UntypedDefinition;
 import org.overturetool.vdmj.definitions.ValueDefinition;
 import org.overturetool.vdmj.modules.Module;
+import org.overturetool.vdmj.types.FunctionType;
 import org.overturetool.vdmj.types.NamedType;
 import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.ProductType;
@@ -121,7 +122,7 @@ static Module activeModule;
 	private static StyledString getUntypedDefinition(UntypedDefinition element)
 	{
 		StyledString result = new StyledString();
-		result.append(element.name.name);
+		result.append(element.getName());
 		DefinitionList definitions = null;
 		if (element.classDefinition != null)
 		{
@@ -179,10 +180,17 @@ static Module activeModule;
 	private static StyledString getLocalDefinitionLabel(LocalDefinition element)
 	{
 		StyledString result = new StyledString();
-		result.append(element.name.name);
-		result.append(" : " + element.type.location.module + "`"
-				+ getSimpleTypeString(element.type),
+		result.append(element.getName());
+		if(element.type.location.module.toLowerCase().equals("default"))
+		{
+		result.append(" : " + getSimpleTypeString(element.type),
 				StyledString.DECORATIONS_STYLER);
+		}else
+		{
+			result.append(" : " + element.type.location.module + "`"
+					+ getSimpleTypeString(element.type),
+					StyledString.DECORATIONS_STYLER);
+		}
 		return result;
 	}
 
@@ -190,7 +198,33 @@ static Module activeModule;
 			ExplicitFunctionDefinition element)
 	{
 		StyledString result = new StyledString();
-		result.append(element.name.name);
+		result.append(element.getName());
+		
+		if (element.getType() instanceof FunctionType)
+		{
+			FunctionType type = (FunctionType) element.getType();
+			if (type.parameters.size() == 0)
+			{
+				result.append("() ");
+			} else
+			{
+				result.append("(");
+				int i = 0;
+				while (i < type.parameters.size() - 1)
+				{
+					Type definition = (Type) type.parameters.elementAt(i);
+					result.append(getSimpleTypeString(definition) + ", ");
+
+					i++;
+				}
+				Type definition = (Type) type.parameters.elementAt(i);
+				result.append(getSimpleTypeString(definition) + ")");
+			}
+		}
+
+		result.append(" : " + getSimpleTypeString(element.type.result),
+				StyledString.DECORATIONS_STYLER);
+		
 		return result;
 	}
 
@@ -200,11 +234,11 @@ static Module activeModule;
 		if (element.type instanceof RecordType)
 		{
 
-			result.append(element.name.name);
+			result.append(element.getName());
 		} else if (element.type instanceof NamedType)
 		{
 
-			result.append(element.name.name);
+			result.append(element.getName());
 			result.append(" : "
 					+ getSimpleTypeString(((NamedType) element.type).type),
 					StyledString.DECORATIONS_STYLER);
@@ -218,7 +252,7 @@ static Module activeModule;
 	{
 		StyledString result = new StyledString();
 
-		result.append(element.name.name);
+		result.append(element.getName());
 
 		if (element.getType() instanceof OperationType)
 		{
@@ -252,7 +286,7 @@ static Module activeModule;
 			InstanceVariableDefinition element)
 	{
 		StyledString result = new StyledString();
-		result.append(element.name.name);
+		result.append(element.getName());
 		result.append(" : " + getSimpleTypeString(element.type),
 				StyledString.DECORATIONS_STYLER);
 		return result;
@@ -262,14 +296,14 @@ static Module activeModule;
 			ClassDefinition element, long flags)
 	{
 		StyledString result = new StyledString();
-		result.append(element.name.name);
+		result.append(element.getName());
 		return result;
 	}
 
 	private static StyledString getModuleLabel(Module element, long flags)
 	{
 		StyledString result = new StyledString();
-		result.append(element.name.name);
+		result.append(element.getName());
 		return result;
 	}
 
