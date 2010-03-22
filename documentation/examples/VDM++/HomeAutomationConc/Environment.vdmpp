@@ -71,8 +71,9 @@ thread
 		(if not finished
 		then CreateSignal();
 		
-		World`timerRef.NotifyAndIncTime();
 		World`timerRef.WaitRelative(0);
+    	World`timerRef.NotifyAndIncTime();   
+    	World`timerRef.Awake(); 
 		);
 	finished := true;
 )

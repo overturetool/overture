@@ -14,8 +14,9 @@ thread
 
 while true do
 (
-  World`timerRef.NotifyThread(threadID);
-  World`timerRef.WaitRelative(1);
+    World`timerRef.WaitRelative(1);
+    World`timerRef.NotifyAll();
+    World`timerRef.Awake();
 )
 
 end ClockTick

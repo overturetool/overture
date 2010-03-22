@@ -41,7 +41,9 @@ thread
 Value := Env.ReadTemp();
 
 --World`timerRef.NotifyAndIncTime();
-World`timerRef.WaitRelative(TimeStamp`StepLength);
+World`timerRef.WaitRelative(World`timerRef.stepLength);
+World`timerRef.NotifyAll();
+World`timerRef.Awake();
 )
 )
 

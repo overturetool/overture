@@ -232,7 +232,9 @@ thread
 UpdateValues();
 		Algorithm();
 
-World`timerRef.WaitRelative(TimeStamp`StepLength);
+World`timerRef.WaitRelative(World`timerRef.stepLength);
+World`timerRef.NotifyAll();
+World`timerRef.Awake();
 	)
 )
 
