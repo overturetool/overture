@@ -70,10 +70,8 @@ print := true;
 		else (HA`WinNode.SetCorrection(<CLOSE>);
 			HA`ThermNode.SetCorrection(<NONE>);
 			if print
-			then (printStr("Target values reached");
-				let - = 
-new IO().writeval[nat](World`timerRef.GetTime())
-				in skip;
+			then (IO`print(World`timerRef.GetTime());
+			      printStr(" Target values reached\n");
 				);
 			print := false;
 			);
@@ -99,10 +97,8 @@ print := true;
 		else (HA`WinNode.SetCorrection(<CLOSE>);
 			HA`ThermNode.SetCorrection(<NONE>);
 			if print
-			then (printStr("Target values reached");
-				let - = 
-new IO().writeval[nat](World`timerRef.GetTime())
-				in skip;
+			then (IO`print(World`timerRef.GetTime());
+			      printStr(" Target values reached\n");			
 				);
 			print := false;
 			);
@@ -120,10 +116,8 @@ print := true;
 )
 		else (HA`ThermNode.SetCorrection(<NONE>);
 			if print
-			then (printStr("Target values reached");
-				let - = 
-new IO().writeval[nat](World`timerRef.GetTime())
-				in skip;
+			then (IO`print(World`timerRef.GetTime());
+			      printStr(" Target values reached\n");
 				);
 			print := false;
 			);
@@ -137,10 +131,8 @@ private TWAlgo: () ==> ()
 )
 		else (HA`WinNode.SetCorrection(<CLOSE>);
 			if print
-			then (printStr("Target values reached");
-				let - = 
-new IO().writeval[nat](World`timerRef.GetTime())
-				in skip;
+			then (IO`print(World`timerRef.GetTime());
+			      printStr(" Target values reached\n");
 				);
 			print := false;
 			);
@@ -157,10 +149,8 @@ private HWAlgo: () ==> ()
 )
 		else (HA`WinNode.SetCorrection(<CLOSE>);
 			if print
-			then (printStr("Target values reached");
-				let - = 
-new IO().writeval[nat](World`timerRef.GetTime())
-				in skip;
+			then (IO`print(World`timerRef.GetTime());
+			      printStr(" Target values reached\n");
 				);
 			print := false;
 			);
@@ -190,9 +180,7 @@ elseif (rng NodeList = {<TEMPSENSOR>, <HUMIDSENSOR>,
 private printStr: seq of char ==> ()
 	printStr(str) ==
 		(print := false;
-let - = new IO().echo(str)
-		in
-			skip;
+         IO`print(str);
 		);
 
 public AddNode: nat * NetworkTypes`nodeType ==> ()

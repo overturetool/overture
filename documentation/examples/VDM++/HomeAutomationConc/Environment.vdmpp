@@ -21,8 +21,7 @@ operations
 
 public Environment: seq of char ==> Environment
 	Environment(fname) ==
-		(def mk_ (-,mk_(t,input)) = 
-io.freadval[nat * seq of inline](fname) in
+		(def mk_ (-,mk_(t,input)) = io.freadval[nat * seq of inline](fname) in
 			(inlines := input;
 			simtime := t;
 			);
@@ -44,8 +43,8 @@ private CreateSignal: () ==> ()
 				(if time = curtime
 				then (HA`Env.SetTemp(temp);
 					HA`Env.SetHumid(humid);
-					tBool := io.echo("New env values set!");
-					tBool := io.writeval[nat](time);
+					IO`print(time);
+					IO`print(" New env values set!\n");
 					inlines := tl inlines;
 					return
 					);
