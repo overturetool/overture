@@ -15,6 +15,6 @@ This project is currently not running with the Overture interpreter.
 #PRE_CHECKS=true
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
-#ENTRY_POINT=
+#ENTRY_POINT=new World().Run()
 #EXPECTED_RESULT=NO_ERROR_INTERPRETER
 #******************************************************

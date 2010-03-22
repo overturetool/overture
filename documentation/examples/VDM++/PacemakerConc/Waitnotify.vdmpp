@@ -1,47 +1,108 @@
 \begin{vdm_al}
 class WaitNotify
 
+\end{vdm_al}
+Class used for concurrent VDM++ models. All threads should call the following operations:
+- WaitRelative(t): makes the thread periodic with t = the period
+- NotifyAll(): notified all threads sleeping in the wakeUpMap
+- Awake(): puts the thread to sleep - will wakeup when t time units has passed  
+\begin{vdm_al}
+
+values
+
+\end{vdm_al}
+The step length with which the currentTime is incremented
+\begin{vdm_al}
+
+public stepLength : nat = 10;
+
 instance variables
 
-waitset : set of nat := {}
+currentTime  : nat   := 0;
+wakeUpMap    : map nat to nat := {|->};
 
 operations
 
-public Wait : () ==> ()
-Wait() ==
-( AddToWaitSet (threadid);
-  Awake()
-);
+\end{vdm_al}
+WaitRelative: sleeps the calling thread for 'val' time units - relative to the currentTime
+\begin{vdm_al}
 
-public Notify : () ==> ()
-Notify() ==
-  let p in set waitset in
-    waitset := waitset \ {p};
+public WaitRelative : nat ==> ()
+WaitRelative(val) ==
+  AddToWakeUpMap(threadid, currentTime + val);
+ 
+\end{vdm_al}
+WaitAbsolute: sleeps the calling thread undtil a specific time
+\begin{vdm_al}
+ 
+public WaitAbsolute : nat ==> ()
+WaitAbsolute(val) ==
+  AddToWakeUpMap(threadid, val);
 
-public NotifyThread: nat ==> ()
+\end{vdm_al}
+AddToWakeUpMap: Utility operation - adding the thread to the wakeUpMap
+\begin{vdm_al}
+
+AddToWakeUpMap : nat * nat ==> ()
+AddToWakeUpMap(tId, val) ==
+   wakeUpMap := wakeUpMap ++ { tId |-> val };
+
+\end{vdm_al}
+NotifyThread: notified a specific thread - removing it from the wakeUpMap
+\begin{vdm_al}
+
+public NotifyThread : nat ==> ()
 NotifyThread(tId) ==
-  waitset :=  waitset \ {tId};
+ wakeUpMap := {tId} <-: wakeUpMap;
 
-public NotifyAll: () ==> ()
+\end{vdm_al}
+NotifyAll: notifies all threads - waking up threads which wakeUpTime is up 
+\begin{vdm_al}
+
+public NotifyAll : () ==> ()
 NotifyAll() ==
-  waitset :=  {};
+  let threadSet : set of nat = {th | th in set dom wakeUpMap & wakeUpMap(th) <= currentTime }
+  in
+    for all t in set threadSet 
+    do
+      NotifyThread(t);
 
-private AddToWaitSet : nat ==> ()
-AddToWaitSet(n) ==
-  waitset := waitset union {n};
+\end{vdm_al}
+NotifyAndIncTime: Must only be used by ONE thread - usually the Environment thread.
+Increments the currentTime with stepLength time units, and notifies all threads.
+\begin{vdm_al}
 
-private Awake : () ==> ()
-Awake() == skip
+public NotifyAndIncTime : () ==> ()
+NotifyAndIncTime() ==
+ (currentTime := currentTime + stepLength;
+  NotifyAll();
+ );
+
+\end{vdm_al}
+GetTime: Returns the currentTime.
+\begin{vdm_al}
+
+public GetTime : () ==> nat
+GetTime() ==
+  return currentTime;
+
+\end{vdm_al}
+Awake: Used to sleep threads - will not wake up until threadid is removed from wakeUpMap
+\begin{vdm_al}
+
+public Awake: () ==> ()
+Awake() == skip;
 
 sync
+  per Awake => threadid not in set dom wakeUpMap;
 
-  per Awake => threadid not in set waitset;
-
-  mutex(AddToWaitSet)
+  mutex(NotifyAll);
+  mutex(AddToWakeUpMap);
+  mutex(AddToWakeUpMap, NotifyAll); 
 
 end WaitNotify
 \end{vdm_al}
 
-\begin{rtinfo}[WaitNotify`AddToWaitSet]
+\begin{rtinfo}[WaitNotify`NotifyAndIncTime]
 {vdm.tc}[WaitNotify]
 \end{rtinfo}

@@ -1,37 +1,29 @@
-\section{ClockTick class}
-
-ClockTick is a class containing a thread that its used as a spark plug for the Environment. Each time increment the Environment sleeps and gives a running chance to the other threads. So if all the other threads are blocked this Clock tick will be allways ready to wake up the Environment.
-
-The class is created maintains as an instance variable the thread id \textbf{tid} of the thread that it's suposed to be notified each clock tick.
-
 \begin{vdm_al}
 class ClockTick is subclass of GLOBAL
 
 instance variables
 
-tid : nat := 1;
-\end{vdm_al}
+tid : int := -1;
 
-The constructor recieves the thread id.
-
-\begin{vdm_al}
 operations
 
 public 
 ClockTick : nat ==> ClockTick
 ClockTick (t) == tid := t;
-\end{vdm_al}
 
-And the thread definition follows first the thread in this case the Environment is notified and then ClockTick blocks itself until the time is incremented.
-
-\begin{vdm_al}
 thread
 
  while true do
    (
-    World`timerRef.NotifyThread(tid);
     World`timerRef.WaitRelative(1);
+    World`timerRef.NotifyAll(); --Thread(tid);
+    World`timerRef.Awake();
    )
 
 end ClockTick
 \end{vdm_al}
+
+\begin{rtinfo}[ClockTick`ClockTick]
+{vdm.tc}[ClockTick]
+\end{rtinfo}
+
