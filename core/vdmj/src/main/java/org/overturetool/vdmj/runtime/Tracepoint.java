@@ -48,8 +48,6 @@ public class Tracepoint extends Breakpoint
 		location.hit();
 		hits++;
 
-		handleInterrupt(execl, ctxt);
-
 		if (parsed == null)
 		{
 			String s = "Reached [" + number + "]";

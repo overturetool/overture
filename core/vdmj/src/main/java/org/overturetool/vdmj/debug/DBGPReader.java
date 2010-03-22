@@ -81,7 +81,6 @@ import org.overturetool.vdmj.runtime.ModuleInterpreter;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.runtime.StateContext;
-import org.overturetool.vdmj.runtime.VDMThreadSet;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.util.Base64;
@@ -334,7 +333,22 @@ public class DBGPReader
     		{
     			try
     			{
-    				files.add(new File(new URI(arg)));
+    				File dir = new File(new URI(arg));
+
+    				if (dir.isDirectory())
+    				{
+     					for (File file: dir.listFiles(Settings.dialect.getFilter()))
+    					{
+    						if (file.isFile())
+    						{
+    							files.add(file);
+    						}
+    					}
+    				}
+        			else
+        			{
+        				files.add(dir);
+        			}
     			}
     			catch (URISyntaxException e)
     			{
@@ -410,7 +424,7 @@ public class DBGPReader
 					if (logfile != null)
 					{
 		    			PrintWriter p = new PrintWriter(
-		    				new FileOutputStream(logfile, true));
+		    				new FileOutputStream(logfile, false));
 		    			RTLogger.setLogfile(p);
 					}
 
@@ -566,7 +580,7 @@ public class DBGPReader
 		if (cpu != null)
 		{
 			sb.append(" on ");
-			sb.append(cpu.name);
+			sb.append(cpu.getName());
 		}
 
 		sb.append("\" ");
@@ -800,6 +814,11 @@ public class DBGPReader
 			line = readLine();
 		}
 		while (line != null && process(line));
+	}
+
+	public void stopped(Context ctxt, LexLocation location)
+	{
+		stopped(ctxt, new Breakpoint(location));
 	}
 
 	public void stopped(Context ctxt, Breakpoint bp)
@@ -1403,10 +1422,7 @@ public class DBGPReader
 	private void processStop(DBGPCommand c) throws DBGPException, IOException
 	{
 		checkArgs(c, 1, false);
-
 		statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
-		VDMThreadSet.abortAll();
-		CPUValue.abortAll();
 		TransactionValue.commitAll();
 	}
 

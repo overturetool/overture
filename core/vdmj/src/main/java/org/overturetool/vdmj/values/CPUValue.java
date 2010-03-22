@@ -26,142 +26,55 @@ package org.overturetool.vdmj.values;
 import java.util.List;
 import java.util.Vector;
 
-import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.CPUClassDefinition;
-import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.messages.RTLogger;
-import org.overturetool.vdmj.runtime.AsyncThread;
-import org.overturetool.vdmj.runtime.CPUPolicy;
-import org.overturetool.vdmj.runtime.RTException;
-import org.overturetool.vdmj.runtime.RunState;
-import org.overturetool.vdmj.runtime.SchedulingPolicy;
-import org.overturetool.vdmj.runtime.SystemClock;
-import org.overturetool.vdmj.runtime.ThreadObjectMap;
+import org.overturetool.vdmj.scheduler.FCFSPolicy;
+import org.overturetool.vdmj.scheduler.ResourceScheduler;
+import org.overturetool.vdmj.scheduler.SchedulingPolicy;
+import org.overturetool.vdmj.scheduler.CPUResource;
 import org.overturetool.vdmj.types.ClassType;
-import org.overturetool.vdmj.types.Type;
 
 public class CPUValue extends ObjectValue
 {
 	private static final long serialVersionUID = 1L;
-	private static final long SWAPIN_DURATION = 2;
-	public static int nextCPU = 1;
-	public static List<CPUValue> allCPUs = new Vector<CPUValue>();
-	public static boolean stopping;
+	public final CPUResource resource;
+	private final List<ObjectValue> deployed;
+	public static CPUValue vCPU;
 
-	public final int cpuNumber;
-	public final SchedulingPolicy policy;
-	public final double cyclesPerSec;
-	public final List<ObjectValue> deployed;
-	public final ThreadObjectMap objects;
-
-	public String name;
-	public Thread runningThread;
-	public int switches;
-
-	public static void init()
+	public CPUValue(ClassType classtype, NameValuePairMap map, ValueList argvals)
 	{
-		nextCPU = 1;
-		allCPUs.clear();
-		stopping = false;
-	}
-
-	public static void abortAll()
-	{
-		if (Settings.dialect == Dialect.VDM_RT)
-		{
-			stopping = true;
-			AsyncThread.periodicStop();
-
-    		for (CPUValue cpu: allCPUs)
-    		{
-    			cpu.abort();
-    		}
-		}
-	}
-
-	private void abort()
-	{
-		objects.abort();
-	}
-
-	public static void resetAll()
-	{
-		if (Settings.dialect == Dialect.VDM_RT)
-		{
-			stopping = false;
-			Thread.interrupted();		// Clears interrupted flag
-			AsyncThread.reset();		// Allowed period threads
-			SystemClock.reset();		// Clears runningCPUs, doesn't reset time
-
-    		for (CPUValue cpu: allCPUs)
-    		{
-    			cpu.reset();
-    		}
-
-    		CPUClassDefinition.virtualCPU.addMainThread();
-		}
-	}
-
-	private void reset()
-	{
-		policy.reset();
-		objects.clear();
-
-		runningThread = null;
-		switches = 0;
-		stopping = false;
-	}
-
-	public CPUValue(Type classtype, NameValuePairMap map, ValueList argvals)
-	{
-		super((ClassType)classtype, map, new Vector<ObjectValue>(), null);
-
-		this.cpuNumber = nextCPU++;
+		super(classtype, map, new Vector<ObjectValue>(), null);
 
 		QuoteValue parg = (QuoteValue)argvals.get(0);
-		CPUPolicy cpup = CPUPolicy.valueOf(parg.value.toUpperCase());
-		policy = cpup.factory();
-
+		SchedulingPolicy cpup = SchedulingPolicy.factory(parg.value.toUpperCase());
 		RealValue sarg = (RealValue)argvals.get(1);
-		this.cyclesPerSec = sarg.value;
 
-		this.deployed = new Vector<ObjectValue>();
-		this.objects = new ThreadObjectMap();
-		this.switches = 0;
-
-		allCPUs.add(this);
+		resource = new CPUResource(cpup, sarg.value);
+		deployed = new Vector<ObjectValue>();
 	}
 
-	public CPUValue(
-		int number, Type classtype, NameValuePairMap map, ValueList argvals)
+	public CPUValue(ClassType classtype)	// for virtual CPUs
 	{
-		super((ClassType)classtype, map, new Vector<ObjectValue>(), null);
-
-		this.cpuNumber = number;
-
-		QuoteValue parg = (QuoteValue)argvals.get(0);
-		CPUPolicy cpup = CPUPolicy.valueOf(parg.value.toUpperCase());
-		policy = cpup.factory();
-
-		RealValue sarg = (RealValue)argvals.get(1);
-		this.cyclesPerSec = sarg.value;
-
-		this.deployed = new Vector<ObjectValue>();
-		this.objects = new ThreadObjectMap();
-		this.switches = 0;
-
-		allCPUs.add(this);
+		super(classtype, new NameValuePairMap(), new Vector<ObjectValue>(), null);
+		resource = new CPUResource(new FCFSPolicy(), 0);
+		deployed = new Vector<ObjectValue>();
 	}
 
-	public void addDeployed(ObjectValue obj)
+	public void setup(ResourceScheduler scheduler, String name)
 	{
+		scheduler.register(resource);
+		resource.setName(name);
+	}
+
+	public void deploy(ObjectValue obj)
+	{
+		resource.deploy(obj);
 		deployed.add(obj);
 	}
 
 	public void setPriority(String opname, long priority) throws Exception
 	{
-		if (!policy.hasPriorities())
+		if (!resource.policy.hasPriorities())
 		{
 			throw new Exception("CPUs policy does not support priorities");
 		}
@@ -191,280 +104,42 @@ public class CPUValue extends ObjectValue
 
 	public long getDuration(long cycles)
 	{
-		return (long)(cycles/cyclesPerSec + 1);		// Same as VDMTools
-	}
-
-	public void setName(String name)
-	{
-		this.name = name;
+		return resource.getCyclesDuration(cycles);
 	}
 
 	@Override
 	public String toString()
 	{
-		return name == null ? ("CPU:" + cpuNumber) : name;
+		return resource.toString();
 	}
 
-	public String declString(String sysname, boolean explicit)
+	public String getName()
 	{
-		return
-			"CPUdecl -> id: " + cpuNumber +
-			" expl: " + explicit +
-			" sys: \"" + sysname + "\"" +
-			" name: \"" + name + "\"";
+		return resource.getName();
 	}
 
-	private String objRefString(ObjectValue object)
+	public int getNumber()
 	{
-		return
-			" objref: " + (object == null ? "nil" : object.objectReference) +
-			" clnm: " + (object == null ? "nil" : ("\"" + object.type + "\""));
+		return resource.getNumber();
 	}
 
-	public synchronized void addThread(
-		Thread thread, ObjectValue object, OperationValue op, boolean periodic)
+	public boolean isVirtual()
 	{
-		policy.addThread(thread, op.getPriority());
-		objects.put(thread, object);
-
-		RTLogger.log(
-			"ThreadCreate -> id: " + thread.getId() +
-			" period: " + periodic +
-			objRefString(object) +
-			" cpunm: " + cpuNumber);
+		return resource.isVirtual();
 	}
 
-	public synchronized void addMainThread()
+	public static void init(ResourceScheduler scheduler)
 	{
-		Thread main = Thread.currentThread();
-		policy.addThread(main, 0);		// Default priority
-		objects.put(main, null);
-		policy.setState(main, RunState.RUNNABLE);
-		SystemClock.cpuRunning(cpuNumber, true);
-	}
-
-	public void swapinMainThread()
-	{
-		long main = Thread.currentThread().getId();
-
-		RTLogger.log(
-			"ThreadCreate -> id: " + main +
-			" period: false " +
-			objRefString(null) +
-			" cpunm: " + cpuNumber);
-
-		duration(SWAPIN_DURATION);
-
-		RTLogger.log(
-			"ThreadSwapIn -> id: " + main +
-			" objref: nil" +
-			" clnm: nil" +
-			" cpunm: 0" +
-			" overhead: " + SWAPIN_DURATION);
-
-		addMainThread();
-	}
-
-	public synchronized void removeThread()
-	{
-		Thread current = Thread.currentThread();
-		ObjectValue object = objects.get(current);
-
-		RTLogger.log(
-			"ThreadSwapOut -> id: " + current.getId() +
-			objRefString(object) +
-			" cpunm: " + cpuNumber +
-			" overhead: " + 0);
-
-		policy.removeThread(current);
-		objects.remove(current);
-
-		RTLogger.log(
-			"ThreadKill -> id: " + current.getId() +
-			" cpunm: " + cpuNumber);
-
-		policy.reschedule();
-		runningThread = policy.getThread();
-		notifyAll();
-
-		if (runningThread == null)	// idle
+		try
 		{
-			SystemClock.cpuRunning(cpuNumber, false);
+			CPUResource.init();
+			CPUClassDefinition def = new CPUClassDefinition();
+			vCPU = new CPUValue((ClassType)def.getType());
+			vCPU.setup(scheduler, "vCPU");
 		}
-	}
-
-	public void duration(long step)		// NB. Not synchronized
-    {
-		long end = SystemClock.getWallTime() + step;
-		SystemClock.cpuRunning(cpuNumber, false);
-
-		do
-    	{
-    		SystemClock.timeStep(step);
-    		step = end - SystemClock.getWallTime();
-    	}
-		while (step > 0);
-
-    	SystemClock.cpuRunning(cpuNumber, true);
-    }
-
-	public void yield(Thread thread, RunState newstate)
-	{
-		policy.setState(thread, newstate);
-		yield();
-	}
-
-	public void yield(RunState newstate)
-	{
-		policy.setState(Thread.currentThread(), newstate);
-		yield();
-	}
-
-	public long reschedule()
-	{
-		yield();
-		return policy.getTimeslice();
-	}
-
-	private void yield()
-	{
-		Thread current = Thread.currentThread();
-		policy.reschedule();
-
-		synchronized (this)
+		catch (Exception e)
 		{
-			runningThread = policy.getThread();
-
-			if (runningThread != current)	// Must be within sync block
-			{
-	    		ObjectValue object = objects.get(current);
-
-	    		RTLogger.log(
-	    			"ThreadSwapOut -> id: " + current.getId() +
-	    			objRefString(object) +
-	    			" cpunm: " + cpuNumber +
-	    			" overhead: " + 0);
-			}
-		}
-
-		if (runningThread != current)
-		{
-    		ObjectValue object = objects.get(current);
-
-    		synchronized (this)
-			{
-    			notifyAll();
-        		boolean idle = (runningThread == null);
-
-        		if (idle)
-        		{
-        			SystemClock.cpuRunning(cpuNumber, false);
-        		}
-
-				while (runningThread != current)
-				{
-					try
-					{
-						wait();
-					}
-					catch (InterruptedException e)
-					{
-						throw new RTException("Thread stopped");
-					}
-				}
-
-    			if (idle)	// ie. was idle
-        		{
-        			SystemClock.cpuRunning(cpuNumber, true);
-        		}
-			}
-
-    		switches++;
-    		duration(SWAPIN_DURATION);		// Must be outside sync block
-
-    		RTLogger.log(
-    			"ThreadSwapIn -> id: " + current.getId() +
-    			objRefString(object) +
-    			" cpunm: " + cpuNumber +
-    			" overhead: " + SWAPIN_DURATION);
-		}
-	}
-
-	public void startThread(long start)
-	{
-		Thread current = Thread.currentThread();
-		policy.setState(current, RunState.RUNNABLE);
-		wakeUp();
-
-    	synchronized (this)
-		{
-    		boolean idle = (runningThread == null);
-
-			while (runningThread != current)
-			{
-				try
-				{
-					wait();
-				}
-				catch (InterruptedException e)
-				{
-					throw new RTException("Thread stopped");
-				}
-			}
-
-			if (idle)	// ie. was idle
-			{
-				SystemClock.cpuRunning(cpuNumber, true);
-			}
-		}
-
-    	duration(SWAPIN_DURATION);
-		ObjectValue object = objects.get(current);
-    	switches++;
-
-    	long time = SystemClock.getWallTime();
-
-    	if (start == 0 || start >= time)
-    	{
-        	RTLogger.log(
-        		"ThreadSwapIn -> id: " + current.getId() +
-        		objRefString(object) +
-        		" cpunm: " + cpuNumber +
-        		" overhead: " + SWAPIN_DURATION);
-    	}
-    	else
-    	{
-        	RTLogger.log(
-        		"DelayedThreadSwapIn -> id: " + current.getId() +
-        		objRefString(object) +
-        		" delay: " + (time - start) +
-        		" cpunm: " + cpuNumber +
-        		" overhead: " + SWAPIN_DURATION);
-    	}
-    }
-
-	public void setState(Thread thread, RunState newstate)
-	{
-		policy.setState(thread, newstate);
-	}
-
-	public synchronized void wakeUp()	// Wake up idle CPUs
-	{
-		if (runningThread == null)
-		{
-			policy.reschedule();
-			runningThread = policy.getThread();
-			notifyAll();
-		}
-	}
-
-	public void waitUntil(long expected)
-	{
-		long time = SystemClock.getWallTime();
-
-		if (expected > time)
-		{
-			duration(expected - time);
+			// Parse/lex of built-in ops. Can't happen.
 		}
 	}
 }

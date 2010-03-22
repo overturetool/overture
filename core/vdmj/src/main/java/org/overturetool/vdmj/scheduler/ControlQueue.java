@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (c) 2009 Fujitsu Services Ltd.
+ *	Copyright (c) 2010 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,64 +21,61 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overturetool.vdmj.scheduler;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overturetool.vdmj.values.CPUValue;
+import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.runtime.Context;
 
-public class ControlQueue
+public class ControlQueue implements Serializable
 {
-	private CPUThread joined = null;
+    private static final long serialVersionUID = 1L;
+	private SchedulableThread joined = null;
 	private boolean stimmed = false;
-	private List<CPUThread> waiters = new LinkedList<CPUThread>();
+	private List<SchedulableThread> waiters = new LinkedList<SchedulableThread>();
 
-	public void join(CPUValue cpu)
+	public void reset()
 	{
-		CPUThread self = new CPUThread(cpu);
-		boolean wait = false;
-
-		synchronized (this)
-		{
-    		if (joined != null && joined != self)
-    		{
-    			waiters.add(self);
-    			wait = true;
-    		}
-    		else
-    		{
-    			joined = self;
-    		}
-		}
-
-		if (wait)
-		{
-			cpu.yield(RunState.WAITING);
-		}
+		joined = null;
+		stimmed = false;
+		waiters.clear();
 	}
 
-	public void block()
+	public void join(Context ctxt, LexLocation location)
+	{
+		SchedulableThread th = (SchedulableThread)Thread.currentThread();
+
+		if (joined != null && joined != th)
+		{
+			synchronized (waiters)
+			{
+				waiters.add(th);
+			}
+
+			th.waiting(ctxt, location);
+		}
+
+		joined = th;
+	}
+
+	public void block(Context ctxt, LexLocation location)
 	{
 		if (stimmed)
 		{
-			synchronized (this)
-			{
-				stimmed = false;
-			}
+			stimmed = false;
 		}
 		else
 		{
-			joined.cpu.yield(RunState.WAITING);
+			joined.waiting(ctxt, location);
 		}
 	}
 
 	public void stim()
 	{
-		synchronized (this)
-		{
-			stimmed = true;
-		}
+		stimmed = true;
 
 		if (joined != null)
 		{
@@ -88,15 +85,21 @@ public class ControlQueue
 
 	public void leave()
 	{
-		synchronized (this)
+		joined = null;
+
+		SchedulableThread head = null;
+
+		synchronized (waiters)
 		{
-			joined = null;
+    		if (!waiters.isEmpty())
+    		{
+    			head = waiters.remove(0);
+    		}
 		}
 
-		if (!waiters.isEmpty())
+		if (head != null)
 		{
-			CPUThread w = waiters.remove(0);
-			w.setState(RunState.RUNNABLE);
+			head.setState(RunState.RUNNABLE);
 		}
 	}
 }

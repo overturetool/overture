@@ -24,15 +24,15 @@
 package org.overturetool.vdmj.messages;
 
 import java.io.PrintWriter;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
-import org.overturetool.vdmj.runtime.SystemClock;
+import org.overturetool.vdmj.scheduler.SystemClock;
 
 public class RTLogger
 {
 	private static boolean enabled = false;
-	private static List<String> events = new Vector<String>();
+	private static List<String> events = new LinkedList<String>();
 	private static PrintWriter logfile = null;
 
 	public static synchronized void enable(boolean on)
@@ -48,7 +48,7 @@ public class RTLogger
 	public static synchronized void log(String event)
 	{
 		event = event + " time: " + SystemClock.getWallTime();
-		
+
 		if (!enabled)
 		{
 			return;

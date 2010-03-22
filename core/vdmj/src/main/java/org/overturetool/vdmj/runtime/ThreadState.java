@@ -25,27 +25,26 @@ package org.overturetool.vdmj.runtime;
 
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.scheduler.SchedulableThread;
 import org.overturetool.vdmj.values.CPUValue;
 
 /**
- * A class to hold some runtime information for each VDM thread.
+ * A class to hold some runtime information for each thread.
  */
 
 public class ThreadState
 {
+    private static final long serialVersionUID = 1L;
 	public final long threadId;
 	public final DBGPReader dbgp;
 	public final CPUValue CPU;
 
-	private long timesliceLeft = 0;
-	private boolean atomic = false;		// don't reschedule
+	private boolean atomic = false;	// Don't reschedule
 
-	public InterruptAction action;
-	public LexLocation stepline;
+	public LexLocation stepline;	// Breakpoint stepping values
 	public RootContext nextctxt;
 	public Context outctxt;
 
-	private long timestep;		// Current step being made (not wall time)
 
 	public ThreadState(DBGPReader dbgp, CPUValue cpu)
 	{
@@ -57,8 +56,6 @@ public class ThreadState
 
 	public void init()
 	{
-		this.action = InterruptAction.RUNNING;
-		this.setTimestep(-1);
 		setBreaks(null, null, null);
 	}
 
@@ -75,27 +72,19 @@ public class ThreadState
 		return stepline != null;
 	}
 
-	public synchronized void setTimestep(long timestep)
+	public void reschedule(Context ctxt, LexLocation location)
 	{
-		this.timestep = timestep;
-	}
-
-	public synchronized long getTimestep()
-	{
-		return timestep;
-	}
-
-	public void reschedule()	// Called for VDM_RT at every statement/expression
-	{
-		if (CPUValue.stopping)
+		if (!atomic)
 		{
-			// We can't be the main thread, as that is stopping anyway
-			throw new RTException("CPU Stopping");
-		}
+			// Initialization doesn't occur from SchedulableThreads
 
-		if (!atomic && --timesliceLeft < 0)
-		{
-			timesliceLeft = CPU.reschedule();
+			Thread current = Thread.currentThread();
+
+			if (current instanceof SchedulableThread)
+			{
+				SchedulableThread s = (SchedulableThread)current;
+				s.step(ctxt, location);
+			}
 		}
 	}
 

@@ -280,7 +280,7 @@ public class VDMPP extends VDMJ
 		{
     		try
     		{
-    			PrintWriter p = new PrintWriter(new FileOutputStream(logfile, true));
+    			PrintWriter p = new PrintWriter(new FileOutputStream(logfile, false));
     			RTLogger.setLogfile(p);
     			println("RT events now logged to " + logfile);
     		}
@@ -321,17 +321,27 @@ public class VDMPP extends VDMJ
 
 		try
 		{
+			ExitStatus status;
+
 			if (script != null)
 			{
 				println(interpreter.execute(script, null).toString());
-				return ExitStatus.EXIT_OK;
+				status = ExitStatus.EXIT_OK;
 			}
 			else
 			{
 				infoln("Interpreter started");
 				CommandReader reader = new ClassCommandReader(interpreter, "> ");
-				return reader.run(filenames);
+				status = reader.run(filenames);
 			}
+
+			if (logfile != null)
+			{
+				RTLogger.dump(true);
+				infoln("RT events dumped to " + logfile);
+			}
+
+			return status;
 		}
 		catch (ContextException e)
 		{

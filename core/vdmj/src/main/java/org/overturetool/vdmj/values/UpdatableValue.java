@@ -24,6 +24,7 @@
 package org.overturetool.vdmj.values;
 
 import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
@@ -45,7 +46,8 @@ public class UpdatableValue extends ReferenceValue
 
 	public static UpdatableValue factory(Value value, ValueListenerList listeners)
 	{
-		if (Settings.dialect == Dialect.VDM_RT)
+		if (Settings.dialect == Dialect.VDM_RT &&
+			Properties.rt_duration_transactions)
 		{
 			return new TransactionValue(value, listeners);
 		}
@@ -57,7 +59,8 @@ public class UpdatableValue extends ReferenceValue
 
 	public static UpdatableValue factory(ValueListenerList listeners)
 	{
-		if (Settings.dialect == Dialect.VDM_RT)
+		if (Settings.dialect == Dialect.VDM_RT &&
+			Properties.rt_duration_transactions)
 		{
 			return new TransactionValue(listeners);
 		}

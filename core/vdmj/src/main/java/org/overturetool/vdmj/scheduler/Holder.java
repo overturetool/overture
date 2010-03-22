@@ -21,9 +21,43 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overturetool.vdmj.scheduler;
 
-public enum BUSPolicy
+import java.io.Serializable;
+
+import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.runtime.Context;
+
+public class Holder<T> implements Serializable
 {
-	FCFS, CSMACD
+    private static final long serialVersionUID = 1L;
+	private ControlQueue cq = new ControlQueue();
+	private T contents = null;
+
+	public synchronized void set(T object)
+	{
+		contents = object;
+		cq.stim();
+	}
+
+	public T get(Context ctxt, LexLocation location)
+	{
+		cq.join(ctxt, location);
+
+		while (contents == null)
+		{
+			cq.block(ctxt, location);
+		}
+
+		T result = null;
+
+		synchronized (this)
+		{
+			result = contents;
+		}
+
+		cq.leave();
+
+		return result;
+	}
 }

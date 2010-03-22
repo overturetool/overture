@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (c) 2009 Fujitsu Services Ltd.
+ *	Copyright (c) 2010 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,36 +21,9 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overturetool.vdmj.scheduler;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class FPPolicy extends FCFSPolicy
+public enum RunState
 {
-	private final Map<Thread, Long> priorities;
-
-	public FPPolicy()
-	{
-		this.priorities = new HashMap<Thread, Long>();
-	}
-
-	@Override
-	public synchronized void addThread(Thread thread, long priority)
-	{
-		super.addThread(thread, priority);
-		priorities.put(thread, priority == 0 ? TIMESLICE : priority);
-	}
-
-	@Override
-	public long getTimeslice()
-	{
-		return priorities.get(bestThread);
-	}
-
-	@Override
-	public boolean hasPriorities()
-	{
-		return true;
-	}
+	CREATED, RUNNABLE, RUNNING, LOCKING, WAITING, TIMESTEP, COMPLETE
 }

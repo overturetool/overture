@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (c) 2009 Fujitsu Services Ltd.
+ *	Copyright (c) 2010 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,16 +21,33 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overturetool.vdmj.scheduler;
 
-abstract public class SchedulingPolicy
+import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.values.TransactionValue;
+
+public class SystemClock
 {
-	abstract public boolean hasPriorities();
-	abstract public boolean reschedule();
-	abstract public Thread getThread();
-	abstract public long getTimeslice();
-	abstract public void addThread(Thread thread, long priority);
-	abstract public void removeThread(Thread thread);
-	abstract public void setState(Thread thread, RunState newstate);
-	abstract public void reset();
+	private static long wallTime = 0;
+
+	public static synchronized long getWallTime()
+	{
+		return wallTime;
+	}
+
+	public static void init()
+	{
+		wallTime = 0;
+	}
+
+	public static synchronized void advance(long duration)
+	{
+		wallTime += duration;
+
+		if (Settings.dialect == Dialect.VDM_RT)
+		{
+			TransactionValue.commitAll();
+		}
+	}
 }

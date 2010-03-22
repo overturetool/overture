@@ -53,14 +53,10 @@ import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.pog.ProofObligation;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Breakpoint;
-import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.DebuggerException;
 import org.overturetool.vdmj.runtime.Interpreter;
-import org.overturetool.vdmj.runtime.RTException;
 import org.overturetool.vdmj.runtime.SourceFile;
-import org.overturetool.vdmj.runtime.StopException;
-import org.overturetool.vdmj.runtime.VDMThreadSet;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.values.BooleanValue;
@@ -332,34 +328,6 @@ abstract public class CommandReader
 		{
 			println("Syntax: " + e.getMessage());
 		}
-		catch (ContextException e)
-		{
-			println("Runtime: " + e.getMessage());
-			Breakpoint bp = new Breakpoint(e.location);
-			new DebuggerReader(interpreter, bp, e.ctxt).run();
-		}
-		catch (StopException e)
-		{
-			println("Stopped: " + Interpreter.stoppedException.getMessage());
-			Breakpoint bp = new Breakpoint(Interpreter.stoppedLocation);
-			Context cx = Interpreter.stoppedContext;
-			Interpreter.stopped();
-			new DebuggerReader(interpreter, bp, cx).run();
-		}
-		catch (RTException e)
-		{
-			while (VDMThreadSet.isDebugStopped())
-			{
-				try
-				{
-					Thread.sleep(1000);
-				}
-				catch (InterruptedException x)
-				{
-					// ZZZzzz...
-				}
-			}
-		}
 		catch (DebuggerException e)
 		{
 			println("Debug: " + e.getMessage());
@@ -488,12 +456,6 @@ abstract public class CommandReader
 		LexLocation.clearLocations();
 		println("Cleared all coverage information");
 		interpreter.init(null);
-
-		if (!VDMThreadSet.abortAll(3))
-		{
-			println("Warning: threads remain blocked");
-		}
-
 		println("Global context initialized");
 		return true;
 	}

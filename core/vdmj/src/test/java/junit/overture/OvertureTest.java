@@ -43,7 +43,6 @@ import org.overturetool.vdmj.messages.VDMMessage;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.Interpreter;
-import org.overturetool.vdmj.runtime.VDMThreadSet;
 import org.overturetool.vdmj.statements.TraceStatement;
 import org.overturetool.vdmj.syntax.ClassReader;
 import org.overturetool.vdmj.typechecker.ClassTypeChecker;
@@ -197,7 +196,6 @@ abstract public class OvertureTest extends TestCase
 
 			Value result = interpreter.execute(new File(assertName));
 
-			VDMThreadSet.abortAll();
 			Console.out.println("Result = " + result);
 			Value expected = null;
 
@@ -284,7 +282,6 @@ abstract public class OvertureTest extends TestCase
 
 			interpreter.execute(testExp, null);
 
-			VDMThreadSet.abortAll();
 			pw.close();
 			String result = out.toString();
 			String expected = readFile(new File(assertName));

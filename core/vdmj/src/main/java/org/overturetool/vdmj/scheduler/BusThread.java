@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (c) 2009 Fujitsu Services Ltd.
+ *	Copyright (c) 2010 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,9 +21,38 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overturetool.vdmj.scheduler;
 
-public enum RunState
+import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.runtime.Context;
+
+public class BusThread extends SchedulableThread
 {
-	CREATED, RUNNABLE, WAITING, TIMESTEP, KILLED
+	private static final long serialVersionUID = 1L;
+
+	public BusThread(Resource resource, long priority)
+	{
+		super(resource, null, priority, false, 0);
+		setName("BusThread-" + getId());
+	}
+
+	@Override
+	protected void body()
+	{
+		BUSResource bus = (BUSResource)resource;
+		bus.process(this);
+	}
+
+	@Override
+	protected void handleSignal(Signal sig, Context ctxt, LexLocation location)
+	{
+		switch (sig)
+		{
+			case TERMINATE:
+				throw new ThreadDeath();
+
+			case SUSPEND:	// Ignore
+				break;
+		}
+	}
 }

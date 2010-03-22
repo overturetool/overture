@@ -21,35 +21,47 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overturetool.vdmj.scheduler;
 
-import org.overturetool.vdmj.values.CPUValue;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Holder<T>
+import org.overturetool.vdmj.config.Properties;
+
+public class FPPolicy extends FCFSPolicy
 {
-	private ControlQueue cq = new ControlQueue();
-	private T contents = null;
+    private static final long serialVersionUID = 1L;
+	private final Map<SchedulableThread, Long> priorities;
 
-	public synchronized void set(T object)
+	public FPPolicy()
 	{
-		contents = object;
-		cq.stim();
+		this.priorities = new HashMap<SchedulableThread, Long>();
 	}
 
-	public T get(CPUValue cpu)
+	@Override
+	public void reset()
 	{
-		cq.join(cpu);
-		cq.block();
+		super.reset();
+		priorities.clear();
+	}
 
-		T result = null;
+	@Override
+	public synchronized void register(SchedulableThread thread, long priority)
+	{
+		super.register(thread, priority);
+		priorities.put(thread, priority == 0 ?
+			Properties.scheduler_fcfs_timeslice : priority);
+	}
 
-		synchronized (this)
-		{
-			result = contents;
-		}
+	@Override
+	public long getTimeslice()
+	{
+		return priorities.get(bestThread);
+	}
 
-		cq.leave();
-
-		return result;
+	@Override
+	public boolean hasPriorities()
+	{
+		return true;
 	}
 }

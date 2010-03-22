@@ -33,9 +33,7 @@ import org.overturetool.vdmj.expressions.IntegerLiteralExpression;
 import org.overturetool.vdmj.expressions.RealLiteralExpression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.runtime.Breakpoint;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.OperationType;
@@ -44,9 +42,7 @@ import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.types.UnknownType;
 import org.overturetool.vdmj.types.VoidType;
 import org.overturetool.vdmj.util.Utils;
-import org.overturetool.vdmj.values.OperationValue;
 import org.overturetool.vdmj.values.Value;
-import org.overturetool.vdmj.values.ValueList;
 
 public class PeriodicStatement extends Statement
 {
@@ -166,33 +162,7 @@ public class PeriodicStatement extends Statement
 	@Override
 	public Value eval(Context ctxt)
 	{
-		location.hit();
-
-		try
-		{
-			OperationValue op = ctxt.lookup(opname).operationValue(ctxt);
-			long period = values[0];
-
-			while (true)
-			{
-				long start = System.currentTimeMillis();
-				op.eval(location, new ValueList(), ctxt);
-				long duration = System.currentTimeMillis() - start;
-
-				try
-				{
-					Thread.sleep(duration > period ? 1 : period - duration);
-				}
-				catch (InterruptedException e)
-				{
-					Breakpoint.handleInterrupt(location, ctxt);
-				}
-			}
-		}
-		catch (ValueException e)
-		{
-			return abort(e);
-		}
+		return null;	// Never reached - see StartStatement.
 	}
 
 	@Override

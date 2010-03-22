@@ -25,7 +25,7 @@ package org.overturetool.vdmj.expressions;
 
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.SystemClock;
+import org.overturetool.vdmj.scheduler.SystemClock;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.NaturalOneType;

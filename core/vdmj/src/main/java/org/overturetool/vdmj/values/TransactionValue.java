@@ -85,7 +85,7 @@ public class TransactionValue extends UpdatableValue
 	}
 
 	@Override
-	public synchronized void set(LexLocation location, Value newval, Context ctxt)
+	public void set(LexLocation location, Value newval, Context ctxt)
 	{
 		long current = Thread.currentThread().getId();
 
@@ -95,13 +95,16 @@ public class TransactionValue extends UpdatableValue
 				4142, "Value already updated by thread " + newthreadid, location, ctxt);
 		}
 
-		if (newval instanceof UpdatableValue)
+		synchronized (this)
 		{
-			newvalue = newval.deref();		// To avoid nested updatables
-		}
-		else
-		{
-			newvalue = newval.getUpdatable(listeners).deref();
+    		if (newval instanceof UpdatableValue)
+    		{
+    			newvalue = newval.deref();		// To avoid nested updatables
+    		}
+    		else
+    		{
+    			newvalue = newval.getUpdatable(listeners).deref();
+    		}
 		}
 
 		if (newthreadid < 0)

@@ -39,6 +39,7 @@ import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.pog.ProofObligationList;
+import org.overturetool.vdmj.scheduler.MainThread;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.traces.CallSequence;
@@ -46,6 +47,7 @@ import org.overturetool.vdmj.traces.TraceVariableStatement;
 import org.overturetool.vdmj.traces.Verdict;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.ModuleEnvironment;
+import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.Value;
 
 /**
@@ -159,17 +161,18 @@ public class ModuleInterpreter extends Interpreter
 		return modules;
 	}
 
-	/**
-	 * Initialize the initial environment. This includes the initialization
-	 * of the state variables of all modules, if any.
-	 *
-	 * @throws Exception
-	 */
-
 	@Override
 	public void init(DBGPReader dbgp)
 	{
+		scheduler.init();
+		CPUValue.init(scheduler);
 		initialContext = modules.initialize(dbgp);
+	}
+
+	@Override
+	public void traceInit()
+	{
+		initialContext = modules.initialize(null);
 	}
 
 	@Override
@@ -197,13 +200,19 @@ public class ModuleInterpreter extends Interpreter
 		Environment env = getGlobalEnvironment();
 		typeCheck(expr, env);
 
-		mainContext = new StateContext(defaultModule.name.location,
-							"module scope",	null, defaultModule.getStateContext());
+		Context mainContext = new StateContext(defaultModule.name.location,
+				"module scope",	null, defaultModule.getStateContext());
+
 		mainContext.putAll(initialContext);
 		mainContext.setThreadState(dbgp, null);
 		clearBreakpointHits();
 
-		return expr.eval(mainContext);
+		scheduler.reset();
+		MainThread main = new MainThread(expr, mainContext);
+		main.start();
+		scheduler.start(main);
+
+		return main.getResult();	// Can throw ContextException
 	}
 
 	/**

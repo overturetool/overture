@@ -736,7 +736,7 @@ public class TypeComparator
 				// optional (stripped above), so we test the optional's type.
 
 				OptionalType op = (OptionalType)sup;
-				return searchSubType(op.type, sub);
+				return searchSubType(sub, op.type);
 			}
 			else if (sub instanceof NumericType)
 			{

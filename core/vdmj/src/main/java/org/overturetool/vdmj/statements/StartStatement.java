@@ -23,19 +23,17 @@
 
 package org.overturetool.vdmj.statements;
 
-import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
-import org.overturetool.vdmj.runtime.AsyncThread;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.RootContext;
-import org.overturetool.vdmj.runtime.VDMThread;
 import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.scheduler.ObjectThread;
+import org.overturetool.vdmj.scheduler.PeriodicThread;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.ClassType;
@@ -46,7 +44,6 @@ import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
 import org.overturetool.vdmj.values.SetValue;
 import org.overturetool.vdmj.values.Value;
-import org.overturetool.vdmj.values.ValueList;
 import org.overturetool.vdmj.values.ValueSet;
 import org.overturetool.vdmj.values.VoidValue;
 
@@ -106,18 +103,6 @@ public class StartStatement extends Statement
 	{
 		breakpoint.check(location, ctxt);
 
-		if (Settings.dialect == Dialect.VDM_RT)
-		{
-			return evalRT(ctxt);
-		}
-		else
-		{
-			return evalPP(ctxt);
-		}
-	}
-
-	private Value evalRT(Context ctxt)
-	{
 		try
 		{
 			Value value = objects.eval(ctxt);
@@ -131,7 +116,7 @@ public class StartStatement extends Statement
 					ObjectValue target = v.objectValue(ctxt);
 					OperationValue op = target.getThreadOperation(ctxt);
 
-					startRT(target, op, ctxt.threadState.isStepping());
+					start(target, op, ctxt);
 				}
 			}
 			else
@@ -139,7 +124,7 @@ public class StartStatement extends Statement
 				ObjectValue target = value.objectValue(ctxt);
 				OperationValue op = target.getThreadOperation(ctxt);
 
-				startRT(target, op, ctxt.threadState.isStepping());
+				start(target, op, ctxt);
 			}
 
 			return new VoidValue();
@@ -150,18 +135,16 @@ public class StartStatement extends Statement
 		}
 	}
 
-	// Note that RT does not use VDMThreads at all...
-
-	private void startRT(ObjectValue target, OperationValue op, boolean stepping)
+	private void start(ObjectValue target, OperationValue op, Context ctxt)
 		throws ValueException
 	{
 		if (op.body instanceof PeriodicStatement)
 		{
     		RootContext global = ClassInterpreter.getInstance().initialContext;
-    		Context ctxt = new ObjectContext(op.name.location, "async", global, target);
+    		Context pctxt = new ObjectContext(op.name.location, "async", global, target);
 
 			PeriodicStatement ps = (PeriodicStatement)op.body;
-			OperationValue pop = ctxt.lookup(ps.opname).operationValue(ctxt);
+			OperationValue pop = pctxt.lookup(ps.opname).operationValue(pctxt);
 
 			long period = ps.values[0];
 			long jitter = ps.values[1];
@@ -170,40 +153,12 @@ public class StartStatement extends Statement
 
 			// Note that periodic threads never set the stepping flag
 
-			new AsyncThread(
-				target, pop, new ValueList(), period, jitter, delay, offset, 0, false).start();
+			new PeriodicThread(
+				target, pop, period, jitter, delay, offset, 0).start();
 		}
 		else
 		{
-			new AsyncThread(target, op, new ValueList(), 0, 0, 0, 0, 0, stepping).start();
-		}
-	}
-
-	private Value evalPP(Context ctxt)
-	{
-		try
-		{
-			Value value = objects.eval(ctxt);
-
-			if (value.isType(SetValue.class))
-			{
-				ValueSet set = value.setValue(ctxt);
-
-				for (Value v: set)
-				{
-					new VDMThread(location, v.objectValue(ctxt), ctxt).start();
-				}
-			}
-			else
-			{
-				new VDMThread(location, value.objectValue(ctxt), ctxt).start();
-			}
-
-			return new VoidValue();
-		}
-		catch (ValueException e)
-		{
-			return abort(e);
+			new ObjectThread(location, target, ctxt).start();
 		}
 	}
 

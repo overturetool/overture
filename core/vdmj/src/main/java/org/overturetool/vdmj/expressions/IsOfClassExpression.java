@@ -62,6 +62,8 @@ public class IsOfClassExpression extends Expression
 	@Override
 	public Value eval(Context ctxt)
 	{
+		breakpoint.check(location, ctxt);
+
 		try
 		{
 			Value v = exp.eval(ctxt).deref();

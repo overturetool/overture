@@ -23,39 +23,23 @@
 
 package org.overturetool.vdmj.values;
 
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.Dialect;
+import java.io.Serializable;
+
 import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.runtime.CPUThread;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.RunState;
 
-public class GuardValueListener<T> implements ValueListener
+public class GuardValueListener implements ValueListener, Serializable
 {
-	private final T object;
+    private static final long serialVersionUID = 1L;
+	private final ObjectValue self;
 
-	public GuardValueListener(T object)
+	public GuardValueListener(ObjectValue self)
 	{
-		this.object = object;
+		this.self = self;
 	}
 
 	public void changedValue(LexLocation location, Value value, Context ctxt)
 	{
-		if (Settings.dialect == Dialect.VDM_RT)
-		{
-			ObjectValue self = (ObjectValue)object;
-
-			for (CPUThread th: self.guardWaiters)
-			{
-				th.setState(RunState.RUNNABLE);
-			}
-		}
-		else
-		{
-    		synchronized (object)
-    		{
-    			object.notifyAll();
-    		}
-		}
+		self.guardLock.signal();
 	}
 }

@@ -21,14 +21,44 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overturetool.vdmj.scheduler;
 
-public class RTException extends RuntimeException
+import org.overturetool.vdmj.values.BUSValue;
+import org.overturetool.vdmj.values.CPUValue;
+import org.overturetool.vdmj.values.ObjectValue;
+import org.overturetool.vdmj.values.OperationValue;
+import org.overturetool.vdmj.values.ValueList;
+
+public class MessageRequest extends MessagePacket
 {
 	private static final long serialVersionUID = 1L;
+	public final boolean breakAtStart;
+	public final ValueList args;
+	public final Holder<MessageResponse> replyTo;
 
-	public RTException(String msg)
+	public MessageRequest(
+		BUSValue bus, CPUValue from, CPUValue to,
+		ObjectValue target,	OperationValue operation,
+		ValueList args, Holder<MessageResponse> replyTo, boolean breakAtStart)
 	{
-		super(msg);
+		super(bus, from, to, target, operation);
+
+		this.breakAtStart = breakAtStart;
+		this.args = args;
+		this.replyTo = replyTo;
+	}
+
+	public MessageRequest()
+	{
+		super();
+
+		this.breakAtStart = false;
+		this.args = null;
+		this.replyTo = null;
+	}
+
+	public int getSize()
+	{
+		return args.toString().length();
 	}
 }

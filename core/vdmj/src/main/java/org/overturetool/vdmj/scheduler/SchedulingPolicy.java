@@ -21,22 +21,35 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overturetool.vdmj.scheduler;
 
-public enum CPUPolicy
+import java.io.Serializable;
+
+import org.overturetool.vdmj.scheduler.SchedulingPolicy;
+
+abstract public class SchedulingPolicy implements Serializable
 {
-	FP, FCFS;
+    private static final long serialVersionUID = 1L;
 
-	public SchedulingPolicy factory()
+	abstract public boolean reschedule();
+	abstract public SchedulableThread getThread();
+	abstract public long getTimeslice();
+	abstract public void register(SchedulableThread thread, long priority);
+	abstract public void unregister(SchedulableThread thread);
+	abstract public void reset();
+	abstract public long getTimestep();
+	abstract public void advance();
+	abstract public boolean hasActive();
+	abstract public boolean hasPriorities();
+	abstract public String getStatus();
+
+	public static SchedulingPolicy factory(String type)
 	{
-		switch (this)
+		if (type.equals("FP"))
 		{
-			case FP:
-				return new FPPolicy();
-
-			case FCFS:
-			default:
-				return new FCFSPolicy();
+			return new FPPolicy();
 		}
+
+		return new FCFSPolicy();		// Default for everything!
 	}
 }

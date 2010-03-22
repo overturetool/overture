@@ -37,5 +37,7 @@ public class Settings
 	public static boolean postchecks = true;
 	public static boolean invchecks = true;
 	public static boolean dynamictypechecks = true;
+
 	public static boolean usingDBGP = false;
+	public static boolean usingCmdLine = false;
 }

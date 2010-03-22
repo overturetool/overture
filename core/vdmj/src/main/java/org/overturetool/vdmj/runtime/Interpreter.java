@@ -43,6 +43,7 @@ import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.pog.ProofObligationList;
+import org.overturetool.vdmj.scheduler.ResourceScheduler;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.traces.CallSequence;
@@ -50,8 +51,6 @@ import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 import org.overturetool.vdmj.types.Type;
-import org.overturetool.vdmj.values.CPUValue;
-import org.overturetool.vdmj.values.TransactionValue;
 import org.overturetool.vdmj.values.Value;
 
 
@@ -61,6 +60,9 @@ import org.overturetool.vdmj.values.Value;
 
 abstract public class Interpreter
 {
+	/** The main thread scheduler */
+	public ResourceScheduler scheduler;
+
 	/** The initial execution context. */
 	public RootContext initialContext;
 
@@ -76,31 +78,16 @@ abstract public class Interpreter
 	/** A static instance pointer to the interpreter. */
 	protected static Interpreter instance = null;
 
-	/** The thread running the interpreter. */
-	protected static Thread mainThread = null;
-
-	/** The context of the main thread. */
-	protected static RootContext mainContext = null;
-
-	/** The interrupted exception. */
-	public static Exception stoppedException = null;
-
-	/** The interrupted context. */
-	public static Context stoppedContext = null;
-
-	/** The interrupted location. */
-	public static LexLocation stoppedLocation = null;
-
 	/**
 	 * Create an Interpreter.
 	 */
 
 	public Interpreter()
 	{
+		scheduler = new ResourceScheduler();
 		breakpoints = new TreeMap<Integer, Breakpoint>();
 		sourceFiles = new HashMap<File, SourceFile>();
 		instance = this;
-		mainThread = Thread.currentThread();
 	}
 
 	/**
@@ -125,55 +112,6 @@ abstract public class Interpreter
 	public static Interpreter getInstance()
 	{
 		return instance;	// NB. last one created
-	}
-
-	/**
-	 * Cause the interpreter to suspend all threads.
-	 */
-
-	public static void suspend()
-	{
-		VDMThreadSet.blockAll();
-		mainContext.threadState.action = InterruptAction.SUSPENDED;
-		mainThread.interrupt();
-	}
-
-	/**
-	 * Cause the interpreter to resume all threads.
-	 */
-
-	public static void resume()
-	{
-		VDMThreadSet.unblockAll();
-		mainContext.threadState.action = InterruptAction.RUNNING;
-		mainThread.interrupt();
-	}
-
-	/**
-	 * Cause the interpreter to stop, with an exception.
-	 */
-
-	public static void stop(LexLocation location, Exception e, Context ctxt)
-	{
-		stoppedException = e;
-		stoppedContext = ctxt;
-		stoppedLocation = location == null ? ctxt.location : location;
-		mainContext.threadState.action = InterruptAction.STOPPING;
-		mainThread.interrupt();
-		VDMThreadSet.abortAll();
-		CPUValue.abortAll();
-		TransactionValue.commitAll();
-	}
-
-	/**
-	 * Clear the stop flags after handling.
-	 */
-
-	public static void stopped()
-	{
-		stoppedException = null;
-		stoppedContext = null;
-		stoppedLocation = null;
 	}
 
 	/**
@@ -213,6 +151,14 @@ abstract public class Interpreter
 	 */
 
 	abstract public void init(DBGPReader dbgp);
+
+	/**
+	 * Initialize the context between trace sequences. This is less
+	 * thorough than the full init, since it does not reset the scheduler
+	 * for example.
+	 */
+
+	abstract public void traceInit();
 
 	/**
 	 * Parse the line passed, type check it and evaluate it as an expression

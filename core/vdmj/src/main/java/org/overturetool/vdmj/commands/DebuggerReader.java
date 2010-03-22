@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.vdmj.ExitStatus;
+import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.runtime.Breakpoint;
@@ -35,9 +37,7 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.DebuggerException;
 import org.overturetool.vdmj.runtime.Interpreter;
-import org.overturetool.vdmj.runtime.InterruptAction;
 import org.overturetool.vdmj.runtime.ModuleInterpreter;
-import org.overturetool.vdmj.runtime.VDMThreadSet;
 import org.overturetool.vdmj.syntax.ParserException;
 
 /**
@@ -59,7 +59,7 @@ public class DebuggerReader extends CommandReader
 	public DebuggerReader(
 		Interpreter interpreter, Breakpoint breakpoint, Context ctxt)
 	{
-		super(interpreter, "[thread " + ctxt.threadState.threadId + "]> ");
+		super(interpreter, "[" + Thread.currentThread() + "]> ");
 		this.breakpoint = breakpoint;
 		this.ctxt = ctxt;
 	}
@@ -74,7 +74,6 @@ public class DebuggerReader extends CommandReader
 	{
 		synchronized (DebuggerReader.class)		// Only one console!
 		{
-    		Interpreter.suspend();
     		println("Stopped " + breakpoint);
        		println(interpreter.getSourceLine(breakpoint.location));
 
@@ -89,7 +88,6 @@ public class DebuggerReader extends CommandReader
 
        		ExitStatus status = super.run(new Vector<File>());
 
-    		ctxt.threadState.action = InterruptAction.RUNNING;
     		return status;
 		}
 	}
@@ -122,7 +120,6 @@ public class DebuggerReader extends CommandReader
 
 		try
 		{
-			ctxt.threadState.action = InterruptAction.RUNNING;
    			println(line + " = " + interpreter.evaluate(line, getFrame()));
 		}
 		catch (ParserException e)
@@ -170,7 +167,6 @@ public class DebuggerReader extends CommandReader
 	protected boolean doContinue(String line)
 	{
 		ctxt.threadState.setBreaks(null, null, null);
-		Interpreter.resume();
 		return false;
 	}
 
@@ -254,7 +250,7 @@ public class DebuggerReader extends CommandReader
 	@Override
 	protected boolean doThreads(String line)
 	{
-		print(VDMThreadSet.getStatus());
+		print(interpreter.scheduler.getStatus());
 		return true;
 	}
 
@@ -278,9 +274,7 @@ public class DebuggerReader extends CommandReader
 	@Override
 	protected boolean doStop(String line)
 	{
-		DebuggerException e = new DebuggerException("terminated");
-		Interpreter.stop(null, e, ctxt);
-		throw e;
+		throw new DebuggerException("terminated");
 	}
 
 	@Override
@@ -346,5 +340,14 @@ public class DebuggerReader extends CommandReader
 	{
 		println("Command not available in the debugger context");
 		return true;
+	}
+
+	public static void stopped(Context ctxt, LexLocation location)
+	{
+		if (Settings.usingCmdLine)
+		{
+			Breakpoint bp = new Breakpoint(location);
+			new DebuggerReader(Interpreter.getInstance(), bp, ctxt).run();
+		}
 	}
 }

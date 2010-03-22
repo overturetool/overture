@@ -29,19 +29,17 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.syntax.DefinitionReader;
 import org.overturetool.vdmj.syntax.ParserException;
+import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.NameValuePairMap;
 import org.overturetool.vdmj.values.NaturalValue;
 import org.overturetool.vdmj.values.ObjectValue;
-import org.overturetool.vdmj.values.QuoteValue;
-import org.overturetool.vdmj.values.RealValue;
 import org.overturetool.vdmj.values.SeqValue;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.ValueList;
@@ -50,15 +48,6 @@ import org.overturetool.vdmj.values.VoidValue;
 public class CPUClassDefinition extends ClassDefinition
 {
 	private static final long serialVersionUID = 1L;
-	private static CPUClassDefinition instance = null;
-
-	public static CPUValue virtualCPU = null;
-
-	public static void init()
-	{
-		CPUValue.init();
-		virtualCPU = newDefaultCPU();
-	}
 
 	public CPUClassDefinition() throws ParserException, LexException
 	{
@@ -66,8 +55,6 @@ public class CPUClassDefinition extends ClassDefinition
 			new LexNameToken("CLASS", "CPU", new LexLocation()),
 			new LexNameList(),
 			operationDefs());
-
-		instance = this;
 	}
 
 	private static String defs =
@@ -90,28 +77,6 @@ public class CPUClassDefinition extends ClassDefinition
 		return dr.readDefinitions();
 	}
 
-	public static CPUValue newCPU()
-	{
-		ValueList args = new ValueList();
-
-		args.add(new QuoteValue("FCFS"));
-		args.add(new RealValue(0));
-
-		return new CPUValue(instance.getType(), new NameValuePairMap(), args);
-	}
-
-	public static CPUValue newDefaultCPU()
-	{
-		ValueList args = new ValueList();
-
-		args.add(new QuoteValue("FCFS"));
-		args.add(new RealValue(0));
-
-		CPUValue cv = new CPUValue(0, instance.getType(), new NameValuePairMap(), args);
-		cv.setName("CPU:0");
-		return cv;
-	}
-
 	@Override
 	public ObjectValue newInstance(
 		Definition ctorDefinition, ValueList argvals, Context ctxt)
@@ -120,7 +85,7 @@ public class CPUClassDefinition extends ClassDefinition
 		NameValuePairMap map = new NameValuePairMap();
 		map.putAll(nvpl);
 
-		return new CPUValue(getType(), map, argvals);
+		return new CPUValue((ClassType)getType(), map, argvals);
 	}
 
 	public static Value deploy(Context ctxt)
@@ -130,18 +95,11 @@ public class CPUClassDefinition extends ClassDefinition
     		ObjectContext octxt = (ObjectContext)ctxt;
     		CPUValue cpu = (CPUValue)octxt.self;
     		ObjectValue obj = (ObjectValue)octxt.lookup(varName("obj"));
-    		SeqValue name = (SeqValue)octxt.check(varName("name"));
 
     		obj.setCPU(cpu);
-    		cpu.addDeployed(obj);
+    		cpu.deploy(obj);
 
-   			RTLogger.log(
-    				"DeployObj -> objref: " + obj.objectReference +
-    				(name == null ? "" : " name: " + name) +
-    				" clnm: \"" + obj.type.name.name + "\"" +
-    				" cpunm: " + cpu.cpuNumber);
-
-   			return new VoidValue();
+  			return new VoidValue();
 		}
 		catch (Exception e)
 		{

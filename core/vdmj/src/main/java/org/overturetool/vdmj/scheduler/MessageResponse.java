@@ -21,12 +21,14 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overturetool.vdmj.scheduler;
 
+import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.values.Value;
 
 public class MessageResponse extends MessagePacket
 {
+	private static final long serialVersionUID = 1L;
 	public final Value result;
 	public final ValueException exception;
 	public final Holder<MessageResponse> replyTo;

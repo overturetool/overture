@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *	Copyright (c) 2010 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,9 +21,9 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overturetool.vdmj.scheduler;
 
-public enum InterruptAction
+public enum Signal
 {
-	SUSPENDED, RUNNING, STOPPING
+	SUSPEND, DEADLOCKED, TERMINATE
 }

@@ -24,6 +24,8 @@
 package org.overturetool.vdmj.runtime;
 
 import java.util.HashMap;
+
+import org.overturetool.vdmj.scheduler.AsyncThread;
 import org.overturetool.vdmj.values.ObjectValue;
 
 public class ThreadObjectMap extends HashMap<Thread, ObjectValue>

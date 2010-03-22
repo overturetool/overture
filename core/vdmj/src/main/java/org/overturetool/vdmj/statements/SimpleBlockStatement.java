@@ -26,10 +26,7 @@ package org.overturetool.vdmj.statements;
 import java.util.List;
 import java.util.Vector;
 
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -196,33 +193,14 @@ abstract public class SimpleBlockStatement extends Statement
 	{
 		// Note, no breakpoint check - designed to be called by eval
 
-		if (Settings.dialect == Dialect.VDM_RT &&
-			ctxt.threadState.getTimestep() < 0)
+		for (Statement s: statements)
 		{
-			int time = Properties.rt_duration_default;
+			Value rv = s.eval(ctxt);
 
-			for (Statement s: statements)
+			if (!rv.isVoid())
 			{
-				Value rv = s.eval(ctxt);
-				ctxt.threadState.CPU.duration(time);
-
-				if (!rv.isVoid())
-    			{
-    				return rv;
-    			}
+				return rv;
 			}
-		}
-		else
-		{
-    		for (Statement s: statements)
-    		{
-    			Value rv = s.eval(ctxt);
-
-    			if (!rv.isVoid())
-    			{
-    				return rv;
-    			}
-    		}
 		}
 
 		return new VoidValue();

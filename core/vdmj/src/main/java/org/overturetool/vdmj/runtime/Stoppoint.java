@@ -27,6 +27,7 @@ import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.DebuggerReader;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.scheduler.SchedulableThread;
 import org.overturetool.vdmj.syntax.ParserException;
 
 /**
@@ -49,13 +50,17 @@ public class Stoppoint extends Breakpoint
 		location.hit();
 		hits++;
 
-		handleInterrupt(execl, ctxt);
-
 		try
 		{
 			if (parsed == null || parsed.eval(ctxt).boolValue(ctxt))
 			{
-				VDMThreadSet.incDebugStopped();
+				Thread current = Thread.currentThread();
+
+				if (current instanceof SchedulableThread)
+				{
+					SchedulableThread th = (SchedulableThread)current;
+					th.suspendOthers();
+				}
 
 				if (Settings.usingDBGP)
 				{
@@ -74,10 +79,6 @@ public class Stoppoint extends Breakpoint
 		catch (ValueException e)
 		{
 			println("Breakpoint [" + number + "]: " + e.getMessage() + " \"" + trace + "\"");
-		}
-		finally
-		{
-			VDMThreadSet.decDebugStopped();
 		}
 	}
 

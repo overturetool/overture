@@ -253,11 +253,18 @@ public class Module implements Serializable
 			}
 		}
 
-		StateDefinition sdef = defs.findStateDefinition();
-
-		if (sdef != null)
+		try
 		{
-			sdef.initState(initialContext);
+			StateDefinition sdef = defs.findStateDefinition();
+
+			if (sdef != null)
+			{
+				sdef.initState(initialContext);
+			}
+		}
+		catch (ContextException e)
+		{
+			trouble = e;	// Carry on...
 		}
 
 		return trouble;

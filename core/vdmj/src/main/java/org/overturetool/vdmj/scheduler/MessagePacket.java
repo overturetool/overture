@@ -21,43 +21,58 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overturetool.vdmj.scheduler;
+
+import java.io.Serializable;
 
 import org.overturetool.vdmj.values.BUSValue;
 import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
-import org.overturetool.vdmj.values.ValueList;
 
-public class MessageRequest extends MessagePacket
+public abstract class MessagePacket implements Serializable
 {
-	public final ValueList args;
-	public final Holder<MessageResponse> replyTo;
-	public final boolean breakAtStart;
+    private static final long serialVersionUID = 1L;
+	private static long nextId = 1;
 
-	public MessageRequest(
-		BUSValue bus, CPUValue from, CPUValue to, ObjectValue target,
-		OperationValue operation,
-		ValueList args, Holder<MessageResponse> replyTo, boolean breakAtStart)
+	public final long msgId;
+	public final BUSValue bus;
+	public final SchedulableThread thread;
+	public final CPUValue from;
+	public final CPUValue to;
+	public final ObjectValue target;
+	public final OperationValue operation;
+
+	public MessagePacket(BUSValue bus, CPUValue from, CPUValue to,
+		ObjectValue target, OperationValue operation)
 	{
-		super(bus, from, to, target, operation);
-
-		this.args = args;
-		this.replyTo = replyTo;
-		this.breakAtStart = breakAtStart;
+		this.msgId = getNextId();
+		this.thread = (SchedulableThread)Thread.currentThread();
+		this.bus = bus;
+		this.from = from;
+		this.to = to;
+		this.target = target;
+		this.operation = operation;
 	}
 
-	public MessageRequest()
+	public MessagePacket()
 	{
-		super();
-
-		this.args = null;
-		this.replyTo = null;
-		this.breakAtStart = false;
+		this.msgId = 0;
+		this.thread = null;
+		this.bus = null;
+		this.from = null;
+		this.to = null;
+		this.target = null;
+		this.operation = null;
 	}
 
-	public int getSize()
+	private static synchronized long getNextId()
 	{
-		return args.toString().length();
+		return nextId++;
 	}
+
+	public static void init()
+    {
+		nextId = 1;
+    }
 }

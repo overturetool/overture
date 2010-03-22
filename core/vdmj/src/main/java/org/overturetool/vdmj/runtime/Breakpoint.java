@@ -170,11 +170,10 @@ public class Breakpoint implements Serializable
 		hits++;
 
 		ThreadState state = ctxt.threadState;
-		handleInterrupt(execl, ctxt);
 
-		if (Settings.dialect == Dialect.VDM_RT)
+		if (Settings.dialect != Dialect.VDM_SL)
 		{
-			state.reschedule();
+			state.reschedule(ctxt, execl);
 		}
 
 		if (state.stepline != null)
@@ -206,39 +205,39 @@ public class Breakpoint implements Serializable
 		}
 	}
 
-	/**
-	 * Handle an interrupted thread condition. If the interrupt action is set
-	 * to SUSPEND, the method sleeps until it receives another interrupt; if
-	 * it is set to CONTINUE, it continues immediately; and if it is set to
-	 * STOP, it throws a StopException.
-	 */
-
-	public static void handleInterrupt(LexLocation loc, Context ctxt)
-	{
-		do
-		{
-			switch (ctxt.threadState.action)
-			{
-				case SUSPENDED:
-					try
-					{
-						Thread.sleep(100);
-					}
-					catch (InterruptedException e)
-					{
-						// Change of action
-						break;
-					}
-
-				case RUNNING:
-					break;
-
-				case STOPPING:
-					throw new StopException(loc, ctxt);
-			}
-		}
-		while (ctxt.threadState.action != InterruptAction.RUNNING);
-	}
+//	/**
+//	 * Handle an interrupted thread condition. If the interrupt action is set
+//	 * to SUSPEND, the method sleeps until it receives another interrupt; if
+//	 * it is set to CONTINUE, it continues immediately; and if it is set to
+//	 * STOP, it throws a StopException.
+//	 */
+//
+//	public static void handleInterrupt(LexLocation loc, Context ctxt)
+//	{
+//		do
+//		{
+//			switch (ctxt.threadState.action)
+//			{
+//				case SUSPENDED:
+//					try
+//					{
+//						Thread.sleep(100);
+//					}
+//					catch (InterruptedException e)
+//					{
+//						// Change of action
+//						break;
+//					}
+//
+//				case RUNNING:
+//					break;
+//
+//				case STOPPING:
+//					throw new StopException(loc, ctxt);
+//			}
+//		}
+//		while (ctxt.threadState.action != InterruptAction.RUNNING);
+//	}
 
 
 	/**

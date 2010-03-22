@@ -30,7 +30,6 @@ import java.util.Vector;
 
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.debug.DBGPReader;
-import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.definitions.Definition;
@@ -41,8 +40,11 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.pog.ProofObligationList;
+import org.overturetool.vdmj.scheduler.MainThread;
+import org.overturetool.vdmj.scheduler.SystemClock;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.traces.CallSequence;
@@ -61,7 +63,6 @@ import org.overturetool.vdmj.values.NameValuePair;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.NameValuePairMap;
 import org.overturetool.vdmj.values.ObjectValue;
-import org.overturetool.vdmj.values.TransactionValue;
 import org.overturetool.vdmj.values.Value;
 
 /**
@@ -154,8 +155,26 @@ public class ClassInterpreter extends Interpreter
 	@Override
 	public void init(DBGPReader dbgp)
 	{
-		VDMThreadSet.init();
+		scheduler.init();
+		SystemClock.init();
+		CPUValue.init(scheduler);
+		BUSValue.init();
+		ObjectValue.init();
+
+		logSwapIn();
 		initialContext = classes.initialize(dbgp);
+		classes.systemInit(scheduler, dbgp);
+		logSwapOut();
+
+		createdValues = new NameValuePairMap();
+		createdDefinitions = new DefinitionSet();
+	}
+
+	@Override
+	public void traceInit()
+	{
+		SystemClock.init();
+		initialContext = classes.initialize(null);
 		createdValues = new NameValuePairMap();
 		createdDefinitions = new DefinitionSet();
 	}
@@ -170,24 +189,22 @@ public class ClassInterpreter extends Interpreter
 		return reader.readExpression();
 	}
 
-	private Value execute(Expression expr, DBGPReader dbgp)
+	private Value execute(Expression expr, DBGPReader dbgp) throws Exception
 	{
-		mainContext = new StateContext(
+		Context mainContext = new StateContext(
 			defaultClass.name.location, "global static scope");
 
 		mainContext.putAll(initialContext);
 		mainContext.putAll(createdValues);
-		mainContext.setThreadState(dbgp, CPUClassDefinition.virtualCPU);
+		mainContext.setThreadState(dbgp, CPUValue.vCPU);
 		clearBreakpointHits();
 
-		CPUValue.resetAll();
-		BUSValue.resetAll();
-		Value rv = expr.eval(mainContext);
-		VDMThreadSet.abortAll();
-		CPUValue.abortAll();
-		TransactionValue.commitAll();
+		scheduler.reset();
+		MainThread main = new MainThread(expr, mainContext);
+		main.start();
+		scheduler.start(main);
 
-		return rv;
+		return main.getResult();	// Can throw ContextException
 	}
 
 	/**
@@ -405,5 +422,35 @@ public class ClassInterpreter extends Interpreter
 		}
 
 		return list;
+	}
+
+	private void logSwapIn()
+	{
+		// Show the "system constructor" thread creation
+
+		RTLogger.log(
+			"ThreadCreate -> id: " + Thread.currentThread().getId() +
+			" period: false " +
+			" objref: nil clnm: nil " +
+			" cpunm: 0");
+
+		RTLogger.log(
+			"ThreadSwapIn -> id: " + Thread.currentThread().getId() +
+			" objref: nil clnm: nil " +
+			" cpunm: 0" +
+			" overhead: 0");
+	}
+
+	private void logSwapOut()
+	{
+		RTLogger.log(
+			"ThreadSwapOut -> id: " + Thread.currentThread().getId() +
+			" objref: nil clnm: nil " +
+			" cpunm: 0" +
+			" overhead: 0");
+
+		RTLogger.log(
+			"ThreadKill -> id: " + Thread.currentThread().getId() +
+			" cpunm: 0");
 	}
 }

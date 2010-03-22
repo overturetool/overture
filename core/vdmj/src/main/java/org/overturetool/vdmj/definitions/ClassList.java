@@ -31,10 +31,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.pog.POContextStack;
@@ -42,10 +40,11 @@ import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.RootContext;
 import org.overturetool.vdmj.runtime.StateContext;
-import org.overturetool.vdmj.runtime.SystemClock;
+import org.overturetool.vdmj.scheduler.ResourceScheduler;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.TransactionValue;
 
 
@@ -151,9 +150,23 @@ public class ClassList extends Vector<ClassDefinition>
 		}
 	}
 
-	public RootContext initialize(DBGPReader dbgp)
+	public void systemInit(ResourceScheduler scheduler, DBGPReader dbgp)
 	{
 		SystemDefinition systemClass = null;
+
+		for (ClassDefinition cdef: this)
+		{
+			if (cdef instanceof SystemDefinition)
+			{
+				systemClass = (SystemDefinition)cdef;
+				systemClass.systemInit(scheduler, dbgp);
+				TransactionValue.commitAll();
+			}
+		}
+	}
+
+	public RootContext initialize(DBGPReader dbgp)
+	{
 		StateContext globalContext = null;
 
 		if (isEmpty())
@@ -167,28 +180,7 @@ public class ClassList extends Vector<ClassDefinition>
 				this.get(0).location, "public static environment");
 		}
 
-		if (Settings.dialect == Dialect.VDM_RT)
-		{
-			for (ClassDefinition cdef: this)
-			{
-    			if (cdef instanceof SystemDefinition)
-    			{
-    				systemClass = (SystemDefinition)cdef;
-    			}
-			}
-
-			SystemClock.init();				// Set time back to zero
-			CPUClassDefinition.init();
-			BUSClassDefinition.init();
-			CPUClassDefinition.virtualCPU.swapinMainThread();
-
-			if (systemClass != null)
-			{
-				systemClass.CPUdecls();
-			}
-		}
-
-		globalContext.setThreadState(dbgp, CPUClassDefinition.virtualCPU);
+		globalContext.setThreadState(dbgp, CPUValue.vCPU);
 
 		// Initialize all the functions/operations first because the values
 		// "statics" can call them.
@@ -236,16 +228,6 @@ public class ClassList extends Vector<ClassDefinition>
 		if (failed != null)
 		{
 			throw failed;
-		}
-
-		// If we're VDM-RT and we have a system class, we need to "run"
-		// the default constructor to deploy the objects declared. We
-		// also have to commit any transactional updates made.
-
-		if (systemClass != null)
-		{
-			systemClass.init(globalContext);
-			TransactionValue.commitAll();
 		}
 
 		return globalContext;

@@ -25,13 +25,16 @@ package org.overturetool.vdmj.definitions;
 
 import java.util.HashMap;
 
+import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.expressions.UndefinedExpression;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
+import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.scheduler.ResourceScheduler;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.Type;
@@ -40,12 +43,17 @@ import org.overturetool.vdmj.types.UnresolvedType;
 import org.overturetool.vdmj.values.BUSValue;
 import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.ObjectValue;
+import org.overturetool.vdmj.values.QuoteValue;
+import org.overturetool.vdmj.values.RealValue;
 import org.overturetool.vdmj.values.UpdatableValue;
 import org.overturetool.vdmj.values.ValueList;
+import org.overturetool.vdmj.values.ValueSet;
 
 public class SystemDefinition extends ClassDefinition
 {
 	private static final long serialVersionUID = 1L;
+
+	private static Context systemContext = null;
 
 	public SystemDefinition(LexNameToken className, DefinitionList members)
 	{
@@ -105,41 +113,20 @@ public class SystemDefinition extends ClassDefinition
 		}
 	}
 
-	public void CPUdecls()
+	public void systemInit(ResourceScheduler scheduler, DBGPReader dbgp)
 	{
-		int cpuNumber = 1;
+		systemContext = new StateContext(location, "RT system environment");
+		systemContext.setThreadState(dbgp, CPUValue.vCPU);
 
-		for (Definition d: definitions)
-		{
-			Type t = d.getType();
-
-			if (t instanceof ClassType)
-			{
-				InstanceVariableDefinition ivd = (InstanceVariableDefinition)d;
-				ClassType ct = (ClassType)t;
-
-				if (ct.classdef instanceof CPUClassDefinition)
-				{
-    				RTLogger.log(
-    					"CPUdecl -> id: " + (cpuNumber++) +
-    					" expl: " + !(ivd.expType instanceof UndefinedType) +
-    					" sys: \"" + name.name + "\"" +
-    					" name: \"" + d.name.name + "\"");
-				}
-			}
-		}
-	}
-
-	public void init(Context ctxt)
-	{
 		try
 		{
-			// Run the constructor to do any deploys.
+			// First go through the definitions, looking for CPUs to decl
+			// before we can deploy to them in the constructor. We have to
+			// predict the CPU numbers at this point.
 
-			ObjectValue system = makeNewInstance(null, new ValueList(),
-    				ctxt, new HashMap<LexNameToken, ObjectValue>());
-
-			// Do CPUs first so that default BUSses can connect all CPUs.
+			DefinitionList cpudefs = new DefinitionList();
+			int cpuNumber = 1;
+			CPUClassDefinition instance = null;
 
 			for (Definition d: definitions)
 			{
@@ -147,30 +134,64 @@ public class SystemDefinition extends ClassDefinition
 
 				if (t instanceof ClassType)
 				{
-					UpdatableValue v = (UpdatableValue)system.members.get(d.name);
+					InstanceVariableDefinition ivd = (InstanceVariableDefinition)d;
 					ClassType ct = (ClassType)t;
 
 					if (ct.classdef instanceof CPUClassDefinition)
 					{
-						CPUValue cpu = null;
+						cpudefs.add(d);
+						instance = (CPUClassDefinition)ct.classdef;
 
-						if (v.isUndefined())
-						{
-							cpu = CPUClassDefinition.newCPU();
-							v.set(location, cpu, null);
-						}
-						else
-						{
-							cpu = (CPUValue)v.deref();
-						}
-
-	    				cpu.setName(d.name.name);
+	    				RTLogger.log(
+	    					"CPUdecl -> id: " + (cpuNumber++) +
+	    					" expl: " + !(ivd.expType instanceof UndefinedType) +
+	    					" sys: \"" + name.name + "\"" +
+	    					" name: \"" + d.name.name + "\"");
 					}
 				}
 			}
 
-			// We can create this now that all the CPUs have been created
-			BUSClassDefinition.virtualBUS = BUSClassDefinition.newDefaultBUS();
+			// Run the constructor to do any deploys etc.
+
+			ObjectValue system = makeNewInstance(null, new ValueList(),
+					systemContext, new HashMap<LexNameToken, ObjectValue>());
+
+			// Do CPUs first so that default BUSses can connect all CPUs.
+
+			ValueSet cpus = new ValueSet();
+
+			for (Definition d: cpudefs)
+			{
+    			UpdatableValue v = (UpdatableValue)system.members.get(d.name);
+    			CPUValue cpu = null;
+
+    			if (v.isUndefined())
+    			{
+    				ValueList args = new ValueList();
+
+    				args.add(new QuoteValue("FCFS"));	// Default policy
+    				args.add(new RealValue(0));			// Default speed
+
+    				cpu = (CPUValue)instance.newInstance(null, args, systemContext);
+    				v.set(location, cpu, systemContext);
+    			}
+    			else
+    			{
+    				cpu = (CPUValue)v.deref();
+    			}
+
+    			// Set the name and scheduler for the CPU resource, and
+    			// associate the resource with the scheduler.
+
+    			cpu.setup(scheduler, d.name.name);
+    			cpus.add(cpu);
+			}
+
+			// We can create vBUS now that all the CPUs have been created
+			// This must be first, to ensure it's bus number 0.
+
+			BUSValue.vBUS = BUSClassDefinition.makeVirtualBUS(cpus);
+			BUSValue.vBUS.setup(scheduler, "vBUS");
 
 			for (Definition d: definitions)
 			{
@@ -188,15 +209,18 @@ public class SystemDefinition extends ClassDefinition
 						if (!v.isUndefined())
 						{
 							bus = (BUSValue)v.deref();
-							bus.setName(d.name.name);
-							RTLogger.log(bus.declString());
+
+							// Set the name and scheduler for the BUS resource, and
+							// associate the resource with the scheduler.
+
+							bus.setup(scheduler, d.name.name);
 						}
 					}
 				}
 			}
 
-			// Now we can create the CPU-BUS map as everything is initialized
-			BUSClassDefinition.createMap(ctxt);
+			// For efficiency, we create a 2D array of CPU-to-CPU bus links
+			BUSValue.createMap(systemContext, cpus);
 		}
 		catch (ContextException e)
 		{
@@ -209,7 +233,7 @@ public class SystemDefinition extends ClassDefinition
     	catch (Exception e)
     	{
     		throw new ContextException(
-    			4135, "Cannot instantiate a system class", location, ctxt);
+    			4135, "Cannot instantiate a system class", location, systemContext);
     	}
 	}
 

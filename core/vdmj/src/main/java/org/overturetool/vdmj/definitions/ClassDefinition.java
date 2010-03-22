@@ -35,7 +35,6 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.Token;
-import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -56,6 +55,7 @@ import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.util.Delegate;
+import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.ClassInvariantListener;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.NameValuePairMap;
@@ -104,9 +104,9 @@ public class ClassDefinition extends Definition
 	/** The public visible static values in the class. */
 	private NameValuePairMap publicStaticValues = null;
 	/** True if the class' static members are initialized. */
-	private boolean staticInit = false;
+	protected boolean staticInit = false;
 	/** True if the class' static values are initialized. */
-	private boolean staticValuesInit = false;
+	protected boolean staticValuesInit = false;
 
 	/** The class invariant operation definition, if any. */
 	public ExplicitOperationDefinition invariant = null;
@@ -911,7 +911,12 @@ public class ClassDefinition extends Definition
 
 	public void staticInit(Context ctxt)
 	{
-		staticInit = false;		// Forced initialization
+		staticInit = false;				// Forced initialization
+		staticValuesInit = false;		// Forced initialization
+		
+		privateStaticValues = new NameValuePairMap();
+		publicStaticValues = new NameValuePairMap();
+
 		setStaticDefinitions(ctxt);
 	}
 
@@ -1279,10 +1284,12 @@ public class ClassDefinition extends Definition
 
 		if (Settings.dialect ==	Dialect.VDM_RT)
 		{
-   			RTLogger.log(
-				"DeployObj -> objref: " + object.objectReference +
-				" clnm: \"" + object.type.name.name + "\"" +
-				" cpunm: " + object.getCPU().cpuNumber);
+			CPUValue cpu = object.getCPU();
+			
+			if (cpu != null)
+			{
+				cpu.deploy(object);
+			}
 		}
 
 		if (ctor != null)	// Class may have no constructor defined
