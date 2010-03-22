@@ -486,7 +486,7 @@ public class OperationValue extends Value
 
     		if (isAsync)	// Don't wait
     		{
-        		MessageRequest request = new MessageRequest(
+        		MessageRequest request = new MessageRequest(ctxt.threadState.dbgp,
         			bus, from, to, self, this, argValues, null, stepping);
 
         		bus.transmit(request);
@@ -495,7 +495,7 @@ public class OperationValue extends Value
     		else
     		{
         		Holder<MessageResponse> result = new Holder<MessageResponse>();
-        		MessageRequest request = new MessageRequest(
+        		MessageRequest request = new MessageRequest(ctxt.threadState.dbgp,
         			bus, from, to, self, this, argValues, result, stepping);
 
         		bus.transmit(request);
@@ -505,7 +505,7 @@ public class OperationValue extends Value
 		}
 		else	// local, must be async so don't wait
 		{
-    		MessageRequest request = new MessageRequest(
+    		MessageRequest request = new MessageRequest(ctxt.threadState.dbgp,
     			null, from, to, self, this, argValues, null, stepping);
 
     		new AsyncThread(request).start();

@@ -170,9 +170,9 @@ public class ModuleInterpreter extends Interpreter
 	}
 
 	@Override
-	public void traceInit()
+	public void traceInit(DBGPReader dbgp)
 	{
-		initialContext = modules.initialize(null);
+		initialContext = modules.initialize(dbgp);
 	}
 
 	@Override

@@ -97,7 +97,7 @@ public class AsyncThread extends SchedulableThread
 
     		try
     		{
-    			reader = ctxt.threadState.dbgp.newThread(cpu);
+    			reader = request.dbgp.newThread(cpu);
     			ctxt.setThreadState(reader, cpu);
 
     			if (breakAtStart)

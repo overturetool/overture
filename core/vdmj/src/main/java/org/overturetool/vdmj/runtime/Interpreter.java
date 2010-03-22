@@ -158,7 +158,7 @@ abstract public class Interpreter
 	 * for example.
 	 */
 
-	abstract public void traceInit();
+	abstract public void traceInit(DBGPReader dbgp);
 
 	/**
 	 * Parse the line passed, type check it and evaluate it as an expression

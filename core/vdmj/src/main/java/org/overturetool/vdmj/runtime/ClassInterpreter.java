@@ -171,10 +171,10 @@ public class ClassInterpreter extends Interpreter
 	}
 
 	@Override
-	public void traceInit()
+	public void traceInit(DBGPReader dbgp)
 	{
 		SystemClock.init();
-		initialContext = classes.initialize(null);
+		initialContext = classes.initialize(dbgp);
 		createdValues = new NameValuePairMap();
 		createdDefinitions = new DefinitionSet();
 	}

@@ -89,7 +89,7 @@ public class TraceStatement extends Statement
     			else
     			{
     				// Initialize completely between every run...
-        			interpreter.traceInit();
+        			interpreter.traceInit(ctxt.threadState.dbgp);
         			List<Object> result = interpreter.runtrace(tracedef.classDefinition, test);
         			tests.filter(result, test, n);
 
@@ -131,7 +131,7 @@ public class TraceStatement extends Statement
 			else
 			{
 				// Initialize completely between every run...
-    			interpreter.traceInit();
+    			interpreter.traceInit(ctxt.threadState.dbgp);
     			List<Object> result = interpreter.runtrace(tracedef.classDefinition, test);
 
     			writer.println("Test " + n + " = " + clean);

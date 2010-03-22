@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.scheduler;
 
+import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.values.BUSValue;
 import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.ObjectValue;
@@ -32,29 +33,22 @@ import org.overturetool.vdmj.values.ValueList;
 public class MessageRequest extends MessagePacket
 {
 	private static final long serialVersionUID = 1L;
+	public final DBGPReader dbgp;
 	public final boolean breakAtStart;
 	public final ValueList args;
 	public final Holder<MessageResponse> replyTo;
 
 	public MessageRequest(
-		BUSValue bus, CPUValue from, CPUValue to,
+		DBGPReader dbgp, BUSValue bus, CPUValue from, CPUValue to,
 		ObjectValue target,	OperationValue operation,
 		ValueList args, Holder<MessageResponse> replyTo, boolean breakAtStart)
 	{
 		super(bus, from, to, target, operation);
 
+		this.dbgp = dbgp;
 		this.breakAtStart = breakAtStart;
 		this.args = args;
 		this.replyTo = replyTo;
-	}
-
-	public MessageRequest()
-	{
-		super();
-
-		this.breakAtStart = false;
-		this.args = null;
-		this.replyTo = null;
 	}
 
 	public int getSize()
