@@ -16,7 +16,7 @@ thread
  while true do
    (
     World`timerRef.WaitRelative(1);
-    World`timerRef.NotifyAll(); --Thread(tid);
+    World`timerRef.NotifyAll();
     World`timerRef.Awake();
    )
 

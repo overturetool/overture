@@ -56,17 +56,9 @@ class Item
 	AssignItemToTray(tray) ==
 		trays := trays union {tray};
 
-	-- Remove item from sorter ring - Implicit operation - not used yet !!!
+	-- Remove item from sorter ring - Implicit operation - not used yet
 	public RemoveItemFromTray ()
 	ext wr trays : set of Tray
 	post trays = {}; 
 				
-	functions
-
-	sync
-
-	--thread
-
-	traces
-
 end Item
