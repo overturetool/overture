@@ -28,7 +28,8 @@ addController (pctrl) ==
     (ranges := ranges munion {nid |-> pctrl.getAperture()};
      controllers := controllers munion {nid |-> pctrl}
     );
-   start (pctrl) );
+   --start (pctrl) 
+   );
 
 -- addThreat is a helper operation to modify the event
 -- list. currently events are stored first come first served.

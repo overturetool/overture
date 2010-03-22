@@ -89,8 +89,9 @@ thread
   while World`timerRef.GetTime() < simtime do
    (if busy
     then createSignal();
-    World`timerRef.NotifyAndIncTime();
     World`timerRef.WaitRelative(0);
+    World`timerRef.NotifyAndIncTime();
+    World`timerRef.Awake();
    );
   busy := false
  )

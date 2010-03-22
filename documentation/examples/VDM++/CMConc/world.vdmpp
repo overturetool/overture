@@ -5,7 +5,7 @@ instance variables
 
 -- maintain a link to the environment
 public static env : [Environment] := nil;
-public static timerRef : TimeStamp := new TimeStamp();
+public static timerRef : WaitNotify := new WaitNotify();
 
 operations
 
@@ -38,6 +38,25 @@ World () ==
    CM`controller2.addDispenser(CM`dispenser10);
    CM`controller2.addDispenser(CM`dispenser11);
    CM`detector.addController(CM`controller2);
+      
+   -- start all dispensers and controllers
+   start(CM`dispenser0);
+   start(CM`dispenser1);
+   start(CM`dispenser2);
+   start(CM`dispenser3);
+   start(CM`controller0);
+
+   start(CM`dispenser4);
+   start(CM`dispenser5);
+   start(CM`dispenser6);
+   start(CM`dispenser7);
+   start(CM`controller1);
+ 
+   start(CM`dispenser8);
+   start(CM`dispenser9);
+   start(CM`dispenser10);
+   start(CM`dispenser11);
+   start(CM`controller2);
       
    -- start the detector
    start(CM`detector) );

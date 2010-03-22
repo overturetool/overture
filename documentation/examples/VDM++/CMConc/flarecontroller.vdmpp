@@ -31,7 +31,8 @@ addDispenser (pfldisp) ==
                  {id |-> mk_(angle, DISPENSER_APERTURE)};
        dispensers := dispensers munion {id |-> pfldisp}
       );
-     start (pfldisp) );
+     --start (pfldisp) 
+     );
 
 -- get the left hand-side start point and opening angle
 public getAperture: () ==> GLOBAL`Angle * GLOBAL`Angle
@@ -83,8 +84,8 @@ thread
 -- events. getThread is automatically blocked if there
 -- are no threats available
 ( -- first start the dispenser threads
- for all id in set dom dispensers do
-   start (dispensers(id));
+ --for all id in set dom dispensers do
+   --start (dispensers(id));
  -- now enter the event handling loop
  while true do
    processThreat();
