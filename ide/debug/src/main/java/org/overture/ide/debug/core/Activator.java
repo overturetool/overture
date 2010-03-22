@@ -6,9 +6,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugException;
 import org.osgi.framework.BundleContext;
 
-public class DebugCorePlugin extends Plugin {
+public class Activator extends Plugin {
 
-	private static DebugCorePlugin fgPlugin;
+	private static Activator fgPlugin;
 			
 	public static final int INTERNAL_ERROR = 120;
 	
@@ -25,16 +25,16 @@ public class DebugCorePlugin extends Plugin {
 
 	public static void logTraceMessage(String message) {
 		if (getDefault().isTraceMode()) {
-			IStatus s = new Status(IStatus.WARNING, DebugCoreConstants.PLUGIN_ID, INTERNAL_ERROR, message, null);
+			IStatus s = new Status(IStatus.WARNING, IDebugConstants.PLUGIN_ID, INTERNAL_ERROR, message, null);
 			getDefault().getLog().log(s);
 		}
 	}	
 
-	public static DebugCorePlugin getDefault() {		
+	public static Activator getDefault() {		
 		return fgPlugin;
 	}
 
-	public DebugCorePlugin() {
+	public Activator() {
 		super();	
 		fgPlugin = this;
 	}
@@ -68,6 +68,6 @@ public class DebugCorePlugin extends Plugin {
 		} 
 		// this message is intentionally not internationalized, as an exception may
 		// be due to the resource bundle itself
-		log(new Status(IStatus.ERROR, DebugCoreConstants.PLUGIN_ID, INTERNAL_ERROR, "Internal error logged from Tcl Debug: ", top));		
+		log(new Status(IStatus.ERROR, IDebugConstants.PLUGIN_ID, INTERNAL_ERROR, "Internal error logged from Tcl Debug: ", top));		
 	}
 }

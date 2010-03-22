@@ -9,7 +9,7 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
-import org.overture.ide.debug.core.model.VdmDebugTarget;
+import org.overture.ide.debug.core.IDebugConstants;
 
 public class VdmLaunchConfigurationDelegate implements
 		ILaunchConfigurationDelegate {
@@ -22,7 +22,7 @@ public class VdmLaunchConfigurationDelegate implements
 		
 		
 		ILaunchConfigurationWorkingCopy workConfiguration = configuration.getWorkingCopy();		
-		workConfiguration.setAttribute(IVdmConstants.ATTR_VDM_PROGRAM, "file:/C:/OvertureDevelopment/runtime-EclipseApplication1/alarm/");
+		workConfiguration.setAttribute(IDebugConstants.ATTR_VDM_PROGRAM, "file:/C:/OvertureDevelopment/runtime-EclipseApplication1/alarm/");
 		configuration = workConfiguration.doSave();
 	
 //		
