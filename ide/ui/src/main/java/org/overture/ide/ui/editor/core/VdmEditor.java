@@ -13,6 +13,7 @@ import org.eclipse.jface.text.source.ISourceViewerExtension2;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
@@ -20,6 +21,9 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.part.IShowInSource;
+import org.eclipse.ui.part.ShowInContext;
+import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.IVdmModel;
@@ -81,17 +85,21 @@ public abstract class VdmEditor extends TextEditor
 				isOverviewRulerVisible(),
 				styles);
 
-		getSourceViewerDecorationSupport(viewer);
+		SourceViewerDecorationSupport a = getSourceViewerDecorationSupport(viewer);
 
 		return viewer;
-
+		
 	}
 
+	
+	
 	@Override
 	protected void initializeEditor()
 	{
 		super.initializeEditor();
 		setSourceViewerConfiguration(getVdmSourceViewerConfiguration());
+		
+		
 	}
 
 	protected abstract VdmSourceViewerConfiguration getVdmSourceViewerConfiguration();
@@ -107,6 +115,8 @@ public abstract class VdmEditor extends TextEditor
 			}
 			return fOutlinePage;
 		}
+		
+		
 		return super.getAdapter(required);
 	}
 
@@ -218,6 +228,8 @@ public abstract class VdmEditor extends TextEditor
 	 */
 	protected void doSetInput(IEditorInput input) throws CoreException
 	{
+		
+		
 		ISourceViewer sourceViewer = getSourceViewer();
 		if (!(sourceViewer instanceof ISourceViewerExtension2))
 		{
@@ -280,6 +292,10 @@ public abstract class VdmEditor extends TextEditor
 		return SWT.LEFT_TO_RIGHT; // Java editors are always left to right by default
 	}
 
+	public SourceReferenceManager getSourceReferenceManager(){
+		return this.sourceReferenceManager;
+	}
+	
 	private void internalDoSetInput(IEditorInput input) throws CoreException
 	{
 		ISourceViewer sourceViewer = getSourceViewer();

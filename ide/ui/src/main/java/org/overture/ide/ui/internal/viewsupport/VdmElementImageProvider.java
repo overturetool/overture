@@ -22,7 +22,9 @@ import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.definitions.UntypedDefinition;
 import org.overturetool.vdmj.definitions.ValueDefinition;
+import org.overturetool.vdmj.modules.ImportFromModule;
 import org.overturetool.vdmj.modules.Module;
+import org.overturetool.vdmj.modules.ModuleImports;
 
 public class VdmElementImageProvider
 {
@@ -181,6 +183,15 @@ public class VdmElementImageProvider
 			}
 		}
 
+		else if (element instanceof ModuleImports){
+			return VdmPluginImages.DESC_OBJS_IMPCONT;
+		} 
+		
+		else if(element instanceof ImportFromModule){
+			return VdmPluginImages.DESC_OBJS_IMPDECL;
+		}
+			
+		
 		else if (element instanceof IFile)
 		{
 			IFile file = (IFile) element;

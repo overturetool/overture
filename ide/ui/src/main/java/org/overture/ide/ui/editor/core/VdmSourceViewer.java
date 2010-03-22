@@ -16,9 +16,13 @@ public class VdmSourceViewer extends SourceViewer{
 			IOverviewRuler overviewRuler, boolean overviewRulerVisible,
 			int styles) {
 		super(parent,ruler,overviewRuler,overviewRulerVisible,styles);
-	//	this.editor = vdmEditor;
+		this.showAnnotations(true);
+		
+	 
 	}
 
+	
+	
 	public Object getReconciler() {
 		return this.reconciler;
 	}
