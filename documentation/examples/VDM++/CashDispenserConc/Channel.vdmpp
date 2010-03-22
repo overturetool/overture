@@ -22,7 +22,7 @@ instance variables
   req : [Request] := nil;
   resp :[Response] := nil;
   timer : Timer := new Timer();
-  curTime : nat;
+  curTime : nat := 0;
 \end{vdm_al}
 
 The constant value timeout is an arbitrary constant used to model the amount 

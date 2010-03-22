@@ -27,11 +27,10 @@ values
   maxNumberOfTries : nat = 3;
 
 operations
-  public Create : Clock * Letterbox ==> CentralResource
-  Create(c,l) ==
+  public CentralResource : Clock * Letterbox ==> CentralResource
+  CentralResource(c,l) ==
     (clock := c;
-     letterbox := l;
-     return self);
+     letterbox := l);
 \end{vdm_al}
 
 The following three operations provide the functionality requested in the 

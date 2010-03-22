@@ -88,8 +88,8 @@ Finally we have a few minor operations. Create is used to initialize the
 Channel and CentralResource.
 
 \begin{vdm_al}
-  public Create : Channel * CentralResource ==> ()
-  Create(nc, nr) ==
+  public LocalTill : Channel * CentralResource ==> LocalTill
+  LocalTill(nc, nr) ==
     (c := nc;
      resource := nr);
 \end{vdm_al}

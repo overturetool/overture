@@ -5,7 +5,7 @@ instance variables
   ltills : map TillId to LocalTill := {|->};
   tills : map TillId to Till := {|->};
   cards : seq of Card := [];
-  resource : CentralResource := new CentralResource();
+  resource : CentralResource;
   clock : Clock := new Clock();
   letterbox : Letterbox := new Letterbox();
   mb : MessageBuffer := new MessageBuffer();
@@ -56,15 +56,15 @@ operations
         c6 = new Card(123461,6,5),
         c7 = new Card(123462,7,5)
     in
-    let peter = new Cardholder().Create("Peter Gorm Larsen",
+    let peter = new Cardholder("Peter Gorm Larsen",
                                         "Granvej 24"),
-        paul = new Cardholder().Create("Paul Mukherjee",
+        paul = new Cardholder("Paul Mukherjee",
                                         "Rugaardsvej 47"),
-        sten = new Cardholder().Create("Sten Agerholm",
+        sten = new Cardholder("Sten Agerholm",
                                         "Teisensvej ??"),
-        kim = new Cardholder().Create("Kim Sunesen",
+        kim = new Cardholder("Kim Sunesen",
                                       "??"),
-        CSK = new Cardholder().Create("CSK","Forskerparken 10A")
+        CSK = new Cardholder("CSK","Forskerparken 10A")
      in
        let pglacc1 = new Account({1 |-> peter},5000),
            saacc1  = new Account({2 |-> sten},0),
@@ -79,7 +79,8 @@ operations
            pmid1  = 4,
            ifid1  = 5
        in 
-         (resource.AddAccount(pglid1,pglacc1);
+         (resource := new CentralResource(clock,new Letterbox());
+          resource.AddAccount(pglid1,pglacc1);
           resource.AddAccount(said1,saacc1);              
           resource.AddAccount(ksid1,ksacc1);
           resource.AddAccount(pmid1,pmacc1);
@@ -89,17 +90,14 @@ operations
                     3 |-> SetupTill(3,new Till()),
                     4 |-> SetupTill(4,new Till())};
           cards := [c1,c2,c3,c4,c5,c6,c7];
-          resource := resource.Create(clock,new Letterbox());
          ));
 
     SetupTill : nat * Till ==> Till
     SetupTill(i,t) ==
-       let lt = new LocalTill(),
-           c = new Channel(),
-           lr = new LocalResource() in
-         (lr.Create(c);
-          lt.Create(c, resource);
-          start(lt);
+       let c = new Channel(),
+           lt = new LocalTill(c, resource),
+           lr = new LocalResource(c) in
+         (start(lt);
           ltills := ltills ++ { i |-> lt};
           t.Set(lr));
 
@@ -173,6 +171,7 @@ operations
 
 sync
 
+  mutex(SetupTill);
   per Wait => #fin(ReturnCard) = 4
       
 

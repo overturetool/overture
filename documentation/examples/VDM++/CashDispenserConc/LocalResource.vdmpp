@@ -13,7 +13,7 @@ A LocalResource has only one instance variable: a reference to a Channel.
 
 \begin{vdm_al}
 instance variables
-  c : Channel;
+  c : Channel := new Channel();
 
 operations
 \end{vdm_al}
@@ -21,8 +21,8 @@ operations
 The Create operation is used to initialize the Channel.
 
 \begin{vdm_al}
-  public Create : Channel ==> ()
-  Create(nc) ==
+  public LocalResource : Channel ==> LocalResource
+  LocalResource(nc) ==
     c := nc;
 \end{vdm_al}
 

@@ -15,11 +15,10 @@ instance variables
   address : Address;
 
 operations
-  public Create : Name * Address ==> Cardholder
-  Create(nm,addr) ==
+  public Cardholder : Name * Address ==> Cardholder
+  Cardholder(nm,addr) ==
     (name := nm;
-     address := addr;
-     return self);
+     address := addr);
 
   public GetName : () ==> Name 
   GetName () ==
