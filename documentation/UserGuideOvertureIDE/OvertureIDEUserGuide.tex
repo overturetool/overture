@@ -116,8 +116,8 @@
 \lstset{language=VDM++}
 %\lstset{alsolanguage=Java}
 % The command below enables you to escape into normal LaTeX mode inside your 
-% VDM chunks by starting with a `!´ character and ending with a `£´
-\lstset{escapeinside=!£}
+% VDM chunks by starting with a `!ï¿½ character and ending with a `ï¿½ï¿½
+\lstset{escapeinside=!ï¿½}
 
 %This file has been converted to use LaTeX2e
 %\documentstyle[overture]{article}
@@ -164,13 +164,13 @@ This document is a user manual for the Overture Integrated Development
 Environment (IDE) open source tool for
 VDM. It can serve as a reference for anybody wishing to make use of
 this tool with one of the VDM dialects (VDM-SL, VDM++ and VDM-RT).
-This tool support is build of top of the Eclipse platform. The
+This tool support is build on top of the Eclipse platform. The
 objective of the Overture open source initiative is to create and support a
-platform that both can be used for experimentation of new subsets or
+platform that can be used for both experimentation of new subsets or
 supersets of VDM dialects as well as new features analysing such VDM
 models in different ways. The tool is entirely open source so anybody
-can join the development team and influenece the future
-developments. The long term target is also to ensure that stable
+can join the development team and influence the future
+developments. The long term target is to ensure that stable
 versions of the tool suite can be used for large scale industrial
 applications of the VDM technology.
 \end{abstract}
@@ -194,7 +194,7 @@ the underlying formalism or logic
 suggests that the effort expended on formal modeling and analysis can
 be recovered in reduced rework costs arising from design errors.
 
-VDM models can be expressed in a specification language (VDM-SL) that
+VDM models can be expressed in a specification language (VDM-SL) which
 supports the description of data and functionality
 \cite{ISOVDM96a,Fitzgerald&98b,Fitzgerald&09}. Data are defined by
 means of types built using constructors that define structured data
@@ -235,7 +235,7 @@ projects are managed in the Overture IDE. In Section~\ref{sec:editVDM}
 the features supported when editing VDM models are explained. This is
 followed in Section~\ref{sec:debug} with an explanation of the
 interpretation and debugging capabilities in the Overture
-IDE. Section~\ref{sec:testcoverage} then illustates how test coverage
+IDE. Section~\ref{sec:testcoverage} then illustrates how test coverage
 information can be gathered when models are interpreted. Afterwards,
 Section~\ref{sec:prettyprint} shows how models with and without test
 coverage information can be generated to the text processing system
@@ -268,7 +268,7 @@ user manual can be found.
 \section{Getting Hold of the Software}\label{sec:install}
 
 Overture is an open source tool, developed by a community of volunteers 
-and built on top of the Eclipse platform. The project to develop the tools 
+and is built on top of the Eclipse platform. The project to develop the tools 
 is managed using SourceForge.  The best way to run Overture is to download 
 a special version of Eclipse with the Overture functionality already pre-installed. If you go to:
   \begin{quote}
@@ -279,7 +279,7 @@ a special version of Eclipse with the Overture functionality already pre-install
   operating system.  Supported systems are: Windows, Linux and
   Mac\footnote{It is planned to develop an update facility, allowing
     updates to be applied directly from within the generic Eclipse
-    platform without requiring a reinstallation. However, this can be
+    platform without requiring a re-installation. However, this can be
     a risky process because of the dependencies on non-Overture
     components and so is not yet supported.}.
 Note that when you have extracted all files from the zip file with the
@@ -330,7 +330,7 @@ useful composition of views for conducting a particular task.
 \end{figure}
 
 The \emph{Script Explorer view}\index{explorer} lets you create, select, 
-and delete Overture  projects and navigate between the files in these 
+and delete Overture projects and navigate between the files in these 
 projects, as well as adding new files to existing projects.
 
 Depending upon the dialect of VDM used in a given project,
@@ -339,7 +339,7 @@ project is created choosing the \emph{File} $ \rightarrow$ \emph{New}
 $\rightarrow$ \emph{Project} resulting in
 Figure~\ref{fig:userguide:newOvertureProjectSL}. Here select
 the desired VDM dialect and press \emph{Next}. Finally, a name needs 
-to be given to the project and the simply select \texttt{Finish}. 
+to be given to the project and then simply select \texttt{Finish}. 
 
 
 \begin{figure}[!h]
@@ -371,7 +371,7 @@ is a button to sort what is displayed in the outline view, for instance it is po
 \end{center}
 \end{figure}
 
-The \emph{Problems view}\index{problems} at the buttom of 
+The \emph{Problems view}\index{problems} at the bottom of 
 Figure~\ref{fig:userguire:OverturePerspective} gathers 
 information messages about the projects you are
 working on. This includes information generated by Overture, such as
@@ -392,7 +392,7 @@ these vary dynamically according to context and history.
 In order not to take up too much space and computing power it may be
 advantageously to close projects that are not used currently. This can
 be done by right clicking such projects and then selecting the
-\emph{Close Project} entry in the 
+\emph{Close Project} entry in the menu.
 %menu as shown in Figure~\ref{fig:closeproject}. 
 For such closed projects it is possible
 to open them again in the same fashion using the \emph{Open project}
@@ -429,9 +429,9 @@ additional types of file extensions.\index{file extension}
 \subsubsection{Remove Directories without Source Files}
 
 In case the directory with the VDM source files includes
-subdirectories without source files it may be comvenient to remove
-this additional noice from the \emph{Explorer} view. This can be
-acomplished by pressing the small downward pointing arrow at the top
+subdirectories without source files it may be convenient to remove
+this additional noise from the \emph{Explorer} view. This can be
+accomplished by pressing the small downward pointing arrow at the top
 right-most corner of the \emph{Explorer} view. Then the menu shown in
 Figure~\ref{fig:filteringfiles} will pop up and here \emph{Filters...}
 is selected and then different parts can be filtered away including
@@ -461,19 +461,19 @@ Figure~\ref{fig:linenumbers}.\index{line numbers}
 \subsubsection{Adding external plug-ins to Overture IDE}
 
 The Overture IDE is build as a RCP\footnote{Rich Client Platform} and
-there is no update manager included, however external plug-ins can
-still be manually installed.  To install a plug-in there are two
+there no update manager is included -- external plug-ins can
+still be manually installed though. To install a plug-in there are two
 things which needs to be done:
 \begin{enumerate}
-\item Copy the plug-in jar or jars into the plugin folder of the Overture IDE installation.
+\item Copy the plug-in jar or jars into the plugin folder of the Overture IDE installation; and
 \item Add the plug-in jar file names to the \texttt{osgi.bundles} in the config.ini file which is found under the folder configuration.
 \end{enumerate}
 
-After the steps above has been performed the IDE can be started and the new plug-ins will be available. (Remember to include all depended plug-ins which is not already a part of the Overture IDE).
+After the steps above have been performed, the IDE can be started and the new plug-ins will be available. (Remember to include all depended plug-ins which is not already a part of the Overture IDE).
 
-So for example in order to add SVN support to the Overture IDE is rather simple:
+For example, in order to add SVN support to the Overture IDE you simply have to:
 \begin{enumerate}
-\item Fetch the update site jars from \url{http://subclipse.tigris.org/} under Download and Install and select Zipped downloads. The latest version demonstrated in this guide is site-1.6.10.zip.
+\item Fetch the update site jars from \url{http://subclipse.tigris.org/} under \emph{Download and Install} and select \emph{Zipped downloads}. The latest version demonstrated in this guide is site-1.6.10.zip.
 \item Copy the features and plugins folders into the Overture IDE folder, merging them with the ones of Overture. 
 \item Then add the plugins to the \texttt{osgi.bundles} in the confi.ini file separated by comma.
 \begin{itemize}
@@ -492,7 +492,7 @@ So for example in order to add SVN support to the Overture IDE is rather simple:
 \item org.tigris.subversion.subclipse.ui
 \item org.tigris.subversion.subclipse.ui\_1.6.10.jar
 \end{itemize}
-When the steps above is completed the Overture IDE can be started and SVN support will then be available.
+When the steps above are completed the Overture IDE can be started and SVN support will be available.
 \end{enumerate}
 
 \section{Managing Overture Projects}\label{sec:projects}
@@ -507,18 +507,21 @@ mentioned in Section~\ref{sec:install} can be imported very
 easily.\index{project!import}  
 
 \subsection{Creating a New Overture Project}
+
+Follow these steps in order to create a new Overture project:
+
 \begin{enumerate}
 	\item Create a new project by choosing \emph{File}
           $\rightarrow$ \emph{New} $\rightarrow$ \emph{Project}
-          $\rightarrow$ \emph{Overture}; \index{project!create}
+          $\rightarrow$ \emph{Overture}; \index{project!create};
 	\item Select the VDM dialect you wish to use (VDM-SL, VDM-PP
-          or VDM-RT);\index{VDM dialect}
-	\item Press \emph{Next}
-        \item Type in a project name
+          or VDM-RT);\index{VDM dialect};
+	\item Press \emph{Next};
+         \item Type in a project name;
 	\item Chose whether you would like the contents of the new
           project to be in your workspace or outside from existing
-          source files (browse to the appropriate directory) and
-        \item click
+          source files (browse to the appropriate directory); and
+         \item Click
 	the finish button (see Figure~\ref{fig:CreateProjectWizard}).
 \end{enumerate}
 
@@ -538,7 +541,7 @@ easily.\index{project!import}
 
 Switching to the Overture perspective will change the layout of the user
 interface to focus on the VDM development. To change perspective go to the menu 
-window $\rightarrow$ open perspective $\rightarrow$ other\ldots and choose the
+\emph{window} $\rightarrow$ \emph{open perspective} $\rightarrow$ \emph{other}\ldots and choose the
 Overture perspective.
 When the developer is in the Overture Perspective the user can create files
 using one of the following methods:
@@ -591,20 +594,20 @@ that can be set for each VDM project are:\index{project!options}
   set here.
 \item[Dynamic type checks:] This is an option to the interpreter (default on) 
   for continuously type checking the values
-  during interpretation of a VDM model. It is possible to swich off
+  during interpretation of a VDM model. It is possible to switch off
   the check here.
 \item[Invariant checks:] This is an option to the interpreter (default on) 
-  for continuously also checking both state and type invariants of the values
-  during interpretation of a VDM model. It is possible to swich off
+  for continuously checking both state and type invariants of the values
+  during interpretation of a VDM model. It is possible to switch off
   this check here but note that option requires dynamic type
-  checking also to be swiched on.
+  checking also to be switched on.
 \item[Pre condition checks:] This is an option to the interpreter (default on) 
   for continuously checking pre-conditions for all functions and operations
-  during interpretation of a VDM model. It is possible to swich off
+  during interpretation of a VDM model. It is possible to switch off
   this check here.
 \item[Post condition checks:] This is an option to the interpreter (default on) 
   for continuously checking post-conditions for all functions and operations
-  during interpretation of a VDM model. It is possible to swich off
+  during interpretation of a VDM model. It is possible to switch off
   this check here.
 \end{description}
 
@@ -619,7 +622,7 @@ different VDM source files shall be included. \fbox{TBW}
 
 Whenever one wishes to edit parts of a VDM model it can be done in the
 editor view. In general it is recommended to make use of the VDM
-dialect perspective when one wish to carry out the editing, since
+dialect perspective when one wishes to carry out the editing, since
 browsing in the VDM model is supported both by the editor view as well
 as by the Outline view. Whenever editing is carried out in the edit
 view syntax checking is carried out continuously (even before the
@@ -641,9 +644,9 @@ will propose the use of an implicit or explicit function template as
 shown in Figure~\ref{fig:functionTemplate}. The Overture IDE
 supports several types of template: cases, quantifications, functions
 (explicit/implicit), operations (explicit/implicit) and many
-more. Additional templates can easily be added in the future. The use
-of templates makes it much easier for users lacking deep familiarity
-with VDM syntax to nevertheless construct models.
+more. The use
+of templates makes it much easier for users not familiar
+with the VDM syntax to nevertheless construct models.
 
 \begin{figure}
 \begin{center}
@@ -716,7 +719,7 @@ the values of different identifiers and step through the VDM model
 line by line.\index{perspective!debug}
  
 The debug perspective shows the VDM model in an editor as the one used in the
-Overture Perspective, but in this perspective there are also views useful during
+Overture Perspective, but with additional views useful during
 debugging. The features provided in the debug perspective are described below.
 The Debug Perspective is illustrated on Figure~\ref{fig:userguide:DebuggingVDM}
 
@@ -760,13 +763,13 @@ filters\index{icon!use step filters}\\
 
 \subsubsection{Debug View}
 
-The debug View is located in the upper left corner in the Debug Perspective -
-see Figure~\ref{fig:userguide:DebuggingVDM}. The debug view shows all running
+The \emph{Debug view} is located in the upper left corner in the Debug Perspective -
+see Figure~\ref{fig:userguide:DebuggingVDM}. The \emph{Debug view} shows all running
 models and the call stack belonging to them. It also displays whether a given model is
 stopped, suspended or running. In the top of the view buttons
 for debugging such as; stop, step into, step over, resume, etc.\ are located.
 All threads are also shown, along with their running status. It is possible to
-switch between threads from the Debug View.
+switch between threads from the \emph{Debug view}.
 
 At the top of the view are buttons for controlling debugging such as; stop, step
 into, step over and resume. These are standard Eclipse debugging
@@ -774,20 +777,20 @@ buttons (see Table~\ref{tab:debugButtons}).
 
 \subsubsection{Variables View}
  
-This view shows all the variables in a given context, when a breakpoint is
+This view shows all the variables in a given context, to be examined after a breakpoint has been
 reached. The variables and their values displayed are automatically updated when
-stepping through a model. The variables view is by default located in the upper
-right hand corner in the Debug Perspective. It is also possible to inspect complex variables,
+stepping through a model. The \emph{Variables view} is by default located in the upper
+right hand corner in the \emph{Debug perspective}. It is also possible to inspect complex variables,
 expanding nested structures and so forth.
 
 \subsubsection{Breakpoints View}
 
-Breakpoints can be added both from the edit perspective and the debug perspective
-from the editor view. In the debug perspective however, there is a breakpoints
-view that shows all breakpoints. From the breakpoints view the user can easily
+Breakpoints can be added both from the edit perspective and the \emph{Debug perspective}
+from the editor view. In the debug perspective however, there is a \emph{Breakpoints
+view} that shows all breakpoints. From the \emph{Breakpoints view} the user can easily
 navigate to the location of a given breakpoint, disable, delete or set the hit
 count or a break condition. In Figure~\ref{fig:userguide:DebuggingVDM} the
-Breakpoints View is hidden behind the Variables View in the upper right hand 
+\emph{Breakpoints view} is hidden behind the \emph{Variables view} in the upper right hand 
 corner in a tabbed notebook. 
 
 \subsubsection{Conditional breakpoints}
@@ -801,7 +804,7 @@ defined. A conditional breakpoint with a hit count lets the user specify a given
 number of calls to a particular place at which the debugger should break.
 
 Making a breakpoint conditional is done by right clicking on the breakpoint
-mark in the left margin and select the option Breakpoint properties\ldots This
+mark in the left margin and select the option \emph{Breakpoint properties}\ldots This
 opens a dialog like the one shown in
 Figure~\ref{fig:userguide:BreakpointConditional}. It is possible to choose
 between two different conditional breakpoints, a hit count condition and one
@@ -817,21 +820,21 @@ based on an expression defined by the user.
 
 \subsubsection{Expressions View}
 
-The expressions view allows the user to write expressions used for inspecting
-values of the model. As for the variables view, the expressions are 
-automatically updated when stepping throught the model.
-Watch expressions can be added manually or created by selecting 'create watch
-expression' from the variables view. It is of course possible to edit existing
-expressions. Like the Breakpoints View this view is hidden in the upper right
+The \emph{Expressions view} allows the user to write expressions used for inspecting
+values of the model. As for the \emph{Variables view}, the expressions are 
+automatically updated when stepping through the model.
+Watch expressions can be added manually or created by selecting \emph{create watch
+expression} from the \emph{Variables view}. It is of course possible to edit existing
+expressions. Like the \emph{Breakpoints view} this view is hidden in the upper right
 hand corner.
 
 \subsubsection{Interactive Console View}
 
-While the Expressions View allows to easily inspect values, the functionality is
+While the \emph{Expressions view} allows to easily inspect values, the functionality is
 somewhat limited compared to the functionality provided by VDMTools. For more
-thorough inspections the Interactive Console View is more suited. Here commands
+thorough inspections the \emph{Interactive console view} is more suited. Here commands
 can be executed on the given context, i.e.\ where the debugger is at a
-breakpoint. The Interactive console keeps a command history, so that already
+breakpoint. The \emph{Interactive console} keeps a command history, so that already
 executed commands can be run again without actually typing in the command all
 over. Figure~\ref{fig:userguide:interactiveConsole} shows the interactive
 console.
@@ -853,6 +856,16 @@ how well a given test suite\index{Test Coverage!Test suite} covers the
 VDM model. This is done by collecting information in a special
 test coverage file about which statements and expressions are
 evaluated during the execution of the test suite.
+
+In order to enable collection of test coverage data, go to the \emph{Debug 
+configuration} and select the \emph{Generate Latex coverage}. After running a 
+debug configuration, a new file with the \emph{cov} extension will be created for 
+each file in the project. All these files are put into a folder named
+\texttt{generated/coverage/yyyy_mm_dd_hh_mm_ss}. From these generated files,
+a \emph{pdf} file containing the entire model with color coded test coverage data 
+can be generated by right clicking on the project name and choosing
+\emph{Latex} \rightarrow \emph{Latex Coverage}. All parts of the model \emph{not}
+covered by the test, is colored red.
 
 \fbox{More}
 
@@ -883,27 +896,27 @@ executed. In essence these can be considered as additional to the
 existing type checking performed. Just like almost all other computer
 based languages it is not possible to automatically statically check
 if such places indeed could result in a run-time error or not. Thus
-Overture provides socalled ``proof obligations''\index{proof
+Overture provides so-called ``proof obligations''\index{proof
   obligation} for all places where such run-time errors ``could''
 occur. Each \emph{Proof Obligation} (PO) is formulated as a predicate
 that must hold on a particular place of the VDM model and thus it may
 have particular context information associated with it. These POs can
-be considered as constraints that will gurantee the internal integrity
+be considered as constraints that will guarantee the internal integrity
 of the VDM models if they are all correct. In the long term it will be
 possible to prove these constraints by a proof component in Overture
 but this is not yet working as well as we wish. 
 
-It takes a little time for newcommers to VDM to get used to the form
+It takes a little time for newcomers to VDM to get used to the form
 of these so it may be worthwhile to elaborate a bit on the form of the
-proof obligations. Theses can be divided into different
+proof obligations. POs can be divided into different
 categories\index{proof obligation!categories}
 depending upon their nature. These can be found in
 Appendix~\ref{app:POcategories} along with a short explanation for
 each of them.
 
 The proof obligation generator is invoked either on a VDM project (and
-then POs for all the VDM model files will be generated) or for a
-selected VDM file one can right click in the \emph{Explorer} view and
+then POs for all the VDM model files will be generated) or only for a
+selected VDM file. One can right click in the \emph{Explorer} view and
 then select the \emph{Proof Obligations} $\rightarrow$ \emph{Generate Proof
   Obligations} menu item. Overture will then change into a special
 \emph{Proof Obligations Perspective}\index{proof
@@ -923,13 +936,13 @@ obligation have a number of components:
 \item A unique number in the list shown;
 \item The name of the definition in which the proof obligation is
   generated from;
-\item The proof obligation category (type) and finally
+\item The proof obligation category (type); and
 \item A status field indicating whether the proof obligation is
   trivially correct or would have to be proved by a normal proof
   engine.
 \end{itemize}
 
-Note that at the top of the \emph{Proof Obligation Explorer} it is
+At the top of the \emph{Proof Obligation Explorer} it is
 possible to filter away all the proof obligations that are trivially
 correct pressing the \emph{Filter proved} button at the top of this
 view.\index{filter proved} 
@@ -938,7 +951,7 @@ view.\index{filter proved}
 
 In order to automate parts of the testing process a notion of
 \emph{traces} have been introduced into VDM++ (note that this is 
-only available for VDM-SL models if VDM-10 have been selected). 
+only available for VDM-SL models if the VDM-10 language version has been selected). 
 Such traces conceptually correspond
 to regular expressions that can be expanded to a collection of test
 cases. Each such test case is then composed as a sequence of operation
@@ -946,7 +959,7 @@ calls. If a user defines such traces it is possible to make use of a
 special combinatorial testing perspective that enables the automatic
 unfolding of the traces and automatic execution of each of the test
 cases. Subsequently, the results of running all these can be inspected
-and erroneus test cases can easily be found. The user can then fix 
+and erroneous test cases can easily be found. The user can then fix 
 the problem and reuse the same traces definitions.
 
 \subsection{The Use of the Trace Definition Syntax}\label{sec:syntax}
@@ -974,7 +987,7 @@ that are used for generated argument files for test cases
   \SeqPt{\Lit{;}, \Ruleref{trace definition term}}
 }
 
-So the ``\texttt{;}'' operator is used for indicating a sequencing
+The ``\texttt{;}'' operator is used for indicating a sequencing
 relationship between its \emph{trace definition term}'s.
 
 \Rule{trace definition term}{
@@ -982,7 +995,7 @@ relationship between its \emph{trace definition term}'s.
   \Ruleref{trace definition term}, \Lit{|}, \Ruleref{trace definition}
 }
 
-So the ``\texttt{|}'' operator is used for indicating alternative
+The ``\texttt{|}'' operator is used for indicating alternative
 choices between trace definitions. 
 
 \Rule{trace definition}{
@@ -1118,7 +1131,7 @@ as the model where the details for each definition can be found and
 used for detailed semantic analysis. The exchange between VDM++ and
 UML is done using the XML formal called XMI\index{XMI}. At the moment
 only the UML tool Enterprise Architect\index{Exterprise Architect} is
-supported. Export from EA is done by selcted the \emph{Project} menu
+supported. Export from EA is done by selecting the \emph{Project} menu
 and selecting \emph{Import/Export} $\rightarrow$ \emph{Export Package
   to XMI}. This is illustrated in Figure~\ref{fig:exportfromUML}.
 
@@ -1131,8 +1144,8 @@ and selecting \emph{Import/Export} $\rightarrow$ \emph{Export Package
 
 Mapping back and forth between a VDM++ model and a UML model is in
 practice done from the \emph{Explorer} view where right-clicking
-the project will result in a menu popping up. In this menu there is an
-entry for \emph{UML transformation}\index{UML transformation}. If this
+the project will result in a menu with
+entries for \emph{UML transformation}\index{UML transformation}. If this
 is selected it is either possible to \emph{Import XMI}\index{import
   XMI} if one wish to import UML definitions from UML or to
 \emph{Export XMI}\index{Export XMI} if one wish to go from VDM++ to
@@ -1164,11 +1177,12 @@ create a {\ttfamily\bf system} with appropriate declarations of
 \texttt{CPU}s and \texttt{BUS}ses.
  
 \section{Analysing and Displaying Logs from VDM-RT Executions}\label{sec:showlog}
+
 When a VDM-RT model is being executed a textual logfile is created in
 a ''\texttt{logs/debugconfig}'' folder with the \emph{.logrt} extension. The
 file name for the logfile indicates the time at which it has been
 written so it is possible to store multiple of these. This logfile can be
-viewed in the build-in RealTime Log Viewer,\index{RealTime Log viewer}
+viewed in the build-in \emph{RealTime Log Viewer},\index{RealTime Log viewer}
 by double-clicking the file in the project view. The viewer enables
 the user to explore system execution in various perspectives. In
 Figure~\ref{fig:userguide:ArchitecturalOverview} the architectural
@@ -1183,7 +1197,7 @@ the model.\index{architecture overview}
 \end{center}
 \end{figure}
 
-The RealTime Log Viewer also enables the user to get an overview of
+The \emph{RealTime Log Viewer} also enables the user to get an overview of
 the model execution\index{model execution overview} on a system level -- this can be seen in
 Figure~\ref{fig:userguide:ExecutionOverview}. This view shows how the
 different CPUs\index{CPU} communicate via the BUSes\index{BUS} of the system. 
@@ -1203,7 +1217,7 @@ also possible to export all the generated views to \emph{JPG} format
 using the \emph{Export Image} button.\index{export image button} All
 the generated pictures will be placed in the ''\texttt{logs}'' folder.
 
-In addition to the execution overview, the RealTime Log Viewer can
+In addition to the execution overview, the \emph{RealTime Log Viewer} can
 also give an overview of all executions on a single CPU. This view
 gives a detailed description of all operations and functions invoked
 on the CPU as well as the scheduling of concurrent processes. This can
@@ -1219,24 +1233,23 @@ be seen in Figure~\ref{fig:userguide:ExecutionCPU}.\index{single CPU overview}
 
 \section{Defining Your Own Java Libraries to be used from Overture}\label{sec:javalibs}
 
-VDM models are not appropriate for describing everything and in
-addition it is common to have existing legacy code that a user may not
-wish to spend time on modelling use VDM but would like to make use of
-from a VDM model. Therefore a feature enabling a combination of a VDM
+VDM models are not appropriate for describing everything it is common to have existing legacy code that a user may not
+wish to spend time modeling in VDM but would like to make use of
+from a VDM model. Hence, a feature enabling a combination of a VDM
 model and a library with functionality in a standard \texttt{jar} file
-has been enabled. Using this feature it is possible from a VDM model
-to call functionality provided by the jar file. This functionality
+has been enabled. Using this feature it is possible 
+to call functionality provided by the jar file from a VDM model. This functionality
 corresponds to DL modules/classes in a VDMTools context \cite{DLMan}.
 
 The external libraries which can be defined for VDM is coupled to the
 \texttt{is not yet specified} statements/ expressions. Only operations
 or functions of modules or classes can be delegated to an external
-jar.  The look up for a delegate java class is done based on the
+jar. The look up for a delegate java class is done based on the
 module/class name where an underscore (``\_'') is replaced with a dot
 (``.''): \texttt{remote\_lib\_sensor} becomes
 \texttt{remote.lib.sensor} in java. The look up is only done once and
 only when a \texttt{is not yet specified} body is
-reached.  The jar with the compiled remote library must be places in
+reached. The jar with the compiled remote library must be places in
 the project in a folder named \texttt{lib} it will then be put in the
 class-path of the interpreter when debugging. To compile a library jar
 for VDM the VDMJ jar needs to be in the class-path. It can be fund in
@@ -1245,7 +1258,7 @@ the Overture IDE installation under
 
 \subsection{Remote library example}
 
-In this example a remote sensor will be defined which could read a
+In this example a remote sensor will be defined which can read a
 value from a real sensor. The VDM model interface of the sensor can be
 seen in listing \ref{remoteSensorVdm} where as the Java class
 implementing it can be seen in listing \ref{remoteSensorJava}. The
@@ -1286,22 +1299,22 @@ public class sensor
   Interpreter}\label{sec:remote}
 
 In some situations it may also be valuable to be able to establish a
-front end (for example with a GUI) to interpreting different aspects
-of a VDM model. This is enabled in a fashion similar to in the
+front end (for example with a GUI) for interpreting different aspects
+of a VDM model. This is enabled in a fashion similar to the approach described in the 
 previous section using a java jar file. This functionality corresponds
 to the CORBA based API from VDMTools \cite{APIMan}.
 
-A VDM model can be remote controlled by the use of the java interface
+A VDM model can be remotely controlled by the use of the java interface
 \texttt{RemoteControl}. Remote control should be understood as a
-delegation of control of an interpretation, this means that the remote
-controller controls the debug session, it is responsible for taking
-action and executing parts of the VDM model when finished it should
+delegation of control of an interpretation, which means that the remote
+controller is in charge of the debug session, and is responsible for taking
+action and executing parts of the VDM model. When finished it should
 return and the debug session will stop. When a Remote controller is
 used the debugger continues working normally, so for example breakpoints can be
-used.  Launching a debugging session with the use of a remote
+used. Launching a debugging session with the use of a remote
 controller can be done by placing the jar with the remote controller
-in a folder lib inside the project. And then specifying the full
-qualified name of the remote controller in the launch configuration
+in a folder \texttt{lib} inside the project. The full
+qualified name of the remote controller must then be specified in the launch configuration
 under the \textit{Remote Control} group.  To compile a remote control
 jar for VDM the VDMJ jar file needs to be in the class-path. It can be found
 in the Overture IDE installation
@@ -1309,12 +1322,12 @@ under\\ \texttt{plugins/org.overture.ide.generated.vdmj\_2.0.1/lib}.
 
 \subsection{Example of a Remote Control class}
 
-In this example we have a VDM class A which just returns the input. As
-seen in listing~\ref{remoteControllerJava} it is posible too call
+In this example we have a VDM class \texttt{A} which just returns the input. As
+seen in listing~\ref{remoteControllerJava} it is possible to call
 \texttt{execute} on the interpreter which is parsed to the remote
 controller which then returns a string with the result. A more
 advanced \texttt{valueExecute} also exists which returns the internal
-Value type of the interpreter which is use full for more advanced
+Value type of the interpreter which is useful for more advanced
 types. The
 values that are to be exchanged between the Overture IDE and the jar
 file needs to be the values used in VDMJ. Documentation about these
@@ -1353,7 +1366,7 @@ tool, so the minimum command line invocation is as follows:
 
 \lstset{style=tool,language=}
 \begin{lstlisting}
-$ !\textbf{java -jar vdmj-2.0.0.jar}£
+$ !\textbf{java -jar vdmj-2.0.0.jar}ï¿½
 VDMJ: You must specify either -vdmsl, -vdmpp or -vdmrt
 Usage: VDMJ <-vdmsl | -vdmpp | -vdmrt> [<options>] [<files>]
 \end{lstlisting}
@@ -1438,7 +1451,7 @@ specification, assuming the specification has no type checking errors.
 \lstset{style=tool,language=}
 
 %\begin{lstlisting}
-%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl flat.vdmsl}£
+%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl flat.vdmsl}ï¿½
 %Parsed 1 module in 0.202 secs. No syntax errors
 %Warning 5012: Recursive function has no measure in (flat.vdmsl) at 
 %line 3:1
@@ -1446,12 +1459,12 @@ specification, assuming the specification has no type checking errors.
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -q -w flat.vdmsl}£
+%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -q -w flat.vdmsl}ï¿½
 %<quiet!>
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -w -e "fac(10)" flat.vdmsl}£
+%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -w -e "fac(10)" flat.vdmsl}ï¿½
 %Parsed 1 module in 0.28 secs. No syntax errors
 %Type checked 1 module in 0.031 secs. No type errors, 
 %suppressed 1 warning
@@ -1461,26 +1474,26 @@ specification, assuming the specification has no type checking errors.
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -e "fac(10)" -q -w flat.vdmsl}£
+%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -e "fac(10)" -q -w flat.vdmsl}ï¿½
 %3628800
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -i -w flat.vdmsl}£
+%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -i -w flat.vdmsl}ï¿½
 %Parsed 1 module in 0.202 secs. No syntax errors
 %Type checked 1 module in 0.016 secs. No type errors, 
 %suppressed 1 warning
 %Initialized 1 module in 0.031 secs.
 %Interpreter started
-%> !\textbf{print fac(10)}£
+%> !\textbf{print fac(10)}ï¿½
 %= 3628800
 %Executed in 0.0 secs.
-%> !\textbf{quit}£
+%> !\textbf{quit}ï¿½
 %Bye
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -p -w flat.vdmsl}£
+%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -p -w flat.vdmsl}ï¿½
 %Parsed 1 module in 0.218 secs. No syntax errors
 %Type checked 1 module in 0.015 secs. No type errors, 
 %suppressed 1 warning
@@ -1494,7 +1507,7 @@ specification, assuming the specification has no type checking errors.
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -w -e "fac(0)" -w flat.vdmsl}£
+%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -w -e "fac(0)" -w flat.vdmsl}ï¿½
 %Parsed 1 module in 0.203 secs. No syntax errors
 %Type checked 1 module in 0.015 secs. No type errors, 
 %suppressed 1 warning
@@ -1513,7 +1526,7 @@ specification, assuming the specification has no type checking errors.
 
 %\begin{lstlisting}
 %$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -w -pre -e "fac(0)" 
-%-w flat.vdmsl}£
+%-w flat.vdmsl}ï¿½
 %Parsed 1 module in 0.218 secs. No syntax errors
 %Type checked 1 module in 0.016 secs. No type errors, 
 %suppressed 1 warning
@@ -1523,7 +1536,7 @@ specification, assuming the specification has no type checking errors.
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -w -o flat.lib flat.vdmsl}£
+%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -w -o flat.lib flat.vdmsl}ï¿½
 %Parsed 1 module in 0.203 secs. No syntax errors
 %Type checked 1 module in 0.016 secs. No type errors, 
 %suppressed 1 warning
@@ -1531,7 +1544,7 @@ specification, assuming the specification has no type checking errors.
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl flat.lib -e "fac(10)"}£
+%$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl flat.lib -e "fac(10)"}ï¿½
 %Loaded 1 module from flat.lib in 0.187 secs
 %Initialized 1 module in 0.0 secs.
 %3628800
@@ -1567,7 +1580,7 @@ VDM-SL specification from a single file called \texttt{shmem.vdmsl},
 the following options would be used:
 
 \begin{lstlisting}
-$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -i shmem.vdmsl}£
+$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -i shmem.vdmsl}ï¿½
 Parsed 1 module in 0.266 secs. No syntax errors
 Type checked in 0.047 secs. No type errors
 Interpreter started
@@ -1696,12 +1709,12 @@ do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
 \end{description}
 
 %\begin{lstlisting}
-%> !\textbf{modules}£
+%> !\textbf{modules}ï¿½
 %M (default)
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%> !\textbf{state}£
+%> !\textbf{state}ï¿½
 %M`Q4 = [mk_M(<FREE>, 0, 9999)]
 %M`rseed = 87654321
 %M`Memory = mk_Memory(87654321, [mk_M(<FREE>, 0, 9999)],
@@ -1710,19 +1723,19 @@ do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%> !\textbf{print rand(100)}£
+%> !\textbf{print rand(100)}ï¿½
 %= 71
 %Executed in 0.0 secs.
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%> !\textbf{print rand(100)}£
+%> !\textbf{print rand(100)}ï¿½
 %= 44
 %Executed in 0.0 secs.
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%> !\textbf{state}£
+%> !\textbf{state}ï¿½
 %M`Q4 = [mk_M(<FREE>, 0, 9999)]
 %M`rseed = 566044643
 %M`Memory = mk_Memory(566044643, [mk_M(<FREE>, 0, 9999)], 
@@ -1731,12 +1744,12 @@ do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%> !\textbf{init}£
+%> !\textbf{init}ï¿½
 %Global context initialized
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%> !\textbf{state}£
+%> !\textbf{state}ï¿½
 %M`Q4 = [mk_M(<FREE>, 0, 9999)]
 %M`rseed = 87654321
 %M`Memory = mk_Memory(87654321, [mk_M(<FREE>, 0, 9999)],
@@ -1745,19 +1758,19 @@ do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%> !\textbf{print rand(100)}£
+%> !\textbf{print rand(100)}ï¿½
 %= 71
 %Executed in 0.0 secs.
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%> !\textbf{print rand(100)}£
+%> !\textbf{print rand(100)}ï¿½
 %= 44
 %Executed in 0.0 secs.
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%> !\textbf{env}£
+%> !\textbf{env}ï¿½
 %M`fragments = (M`Quadrant -> nat)
 %M`combine = (M`Quadrant -> M`Quadrant)
 %M`tryBest = (nat ==> nat)
@@ -1781,7 +1794,7 @@ do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%> !\textbf{pog}£
+%> !\textbf{pog}ï¿½
 %Generated 36 proof obligations:
 %Proof Obligation 1:
 %M`fits: cases exhaustive obligation in 'M' (shmem.vdm) at 
