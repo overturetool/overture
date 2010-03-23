@@ -142,20 +142,14 @@ public class NewExpression extends Expression
     			argvals.add(arg.eval(ctxt));
     		}
 
-    		if (classdef.invlistener != null)
-    		{
-    			// Suppress during construction
-    			classdef.invlistener.doInvariantChecks = false;
-    		}
-
 			ObjectValue objval =
 				classdef.newInstance(ctorDefinition, argvals, ctxt);
 
-    		if (classdef.invlistener != null)
+    		if (objval.invlistener != null)
     		{
     			// Check the initial values of the object's fields
-    			classdef.invlistener.doInvariantChecks = true;
-    			classdef.invlistener.changedValue(location, objval, ctxt);
+    			objval.invlistener.doInvariantChecks = true;
+    			objval.invlistener.changedValue(location, objval, ctxt);
     		}
 
     		return objval;

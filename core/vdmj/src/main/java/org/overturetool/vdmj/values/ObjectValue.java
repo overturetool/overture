@@ -25,6 +25,7 @@ package org.overturetool.vdmj.values;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
@@ -52,8 +53,10 @@ public class ObjectValue extends Value
 	public final NameValuePairMap members;
 	public final List<ObjectValue> superobjects;
 
-	public Lock guardLock;
-	private CPUValue CPU;
+	public ClassInvariantListener invlistener = null;
+
+	public transient Lock guardLock;
+	private transient CPUValue CPU;
 	private Object delegateObject = null;
 
 	public ObjectValue(ClassType type,
@@ -298,7 +301,6 @@ public class ObjectValue extends Value
 	@Override
 	public int hashCode()
 	{
-		// return type.hashCode() + members.hashCode() + superobjects.hashCode();
 		return type.hashCode() + objectReference + superobjects.hashCode();
 	}
 
@@ -353,6 +355,11 @@ public class ObjectValue extends Value
 	@Override
 	public ObjectValue shallowCopy()
 	{
+		if (mycopy != null)
+		{
+			return mycopy;
+		}
+
 		mycopy = new ObjectValue(type,
 					new NameValuePairMap(), new Vector<ObjectValue>(), CPU);
 
@@ -373,21 +380,15 @@ public class ObjectValue extends Value
 			if (mv.deref() instanceof ObjectValue)
 			{
 				ObjectValue om = (ObjectValue)mv.deref();
-
-				if (om.mycopy != null)	// Currently copying it
-				{
-					memcopy.put(name, om.mycopy);
-				}
-				else
-				{
-					memcopy.put(name, om.shallowCopy());
-				}
+				memcopy.put(name, om.shallowCopy());
 			}
 			else
 			{
 				memcopy.put(name, (Value)mv.clone());
 			}
 		}
+
+		mycopy.setSelf(mycopy);
 
 		ObjectValue rv = mycopy;
 		mycopy = null;
@@ -413,6 +414,7 @@ public class ObjectValue extends Value
 			ObjectInputStream ois = new ObjectInputStream(is);
 			ObjectValue result = (ObjectValue)ois.readObject();
 
+			result.setSelf(result);
 			return result;
 		}
 		catch (Exception e)
@@ -421,17 +423,19 @@ public class ObjectValue extends Value
 		}
 	}
 
-//	private void writeObject(java.io.ObjectOutputStream out)
+//	private void writeObject(ObjectOutputStream out)
 //		throws IOException
 //	{
 //		out.defaultWriteObject();
 //	}
-//
-//	private void readObject(ObjectInputStream in)
-//		throws ClassNotFoundException, IOException
-//    {
-//		in.defaultReadObject();
-//    }
+
+	private void readObject(ObjectInputStream in)
+		throws ClassNotFoundException, IOException
+    {
+		in.defaultReadObject();
+		CPU = CPUValue.vCPU;
+		guardLock = new Lock();
+    }
 
 	public synchronized void setCPU(CPUValue cpu)
 	{
@@ -466,5 +470,11 @@ public class ObjectValue extends Value
 	public static void init()
 	{
 		nextObjectReference = 0;
+	}
+
+	public void setListener(ClassInvariantListener listener)
+	{
+		invlistener = listener;
+		listener.invopvalue.setSelf(this);
 	}
 }

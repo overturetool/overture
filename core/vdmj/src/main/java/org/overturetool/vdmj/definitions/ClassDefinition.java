@@ -110,10 +110,6 @@ public class ClassDefinition extends Definition
 
 	/** The class invariant operation definition, if any. */
 	public ExplicitOperationDefinition invariant = null;
-	/** The class invariant operation value, if any. */
-	public OperationValue invopvalue = null;
-	/** A listener for changes that require the class invariant to be checked. */
-	public ClassInvariantListener invlistener = null;
 	/** A listener list. */
 	public ValueListenerList invlistenerlist = null;
 	/** True if the class defines any abstract operations or functions. */
@@ -186,9 +182,13 @@ public class ClassDefinition extends Definition
 		if (invariant != null)
 		{
 			invariant.setClassDefinition(this);
-			invopvalue = new OperationValue(invariant, null, null, null);
-			invlistener = new ClassInvariantListener(invopvalue);
-			invlistenerlist = new ValueListenerList(invlistener);
+
+			// This listener is created for static invariants. Instances
+			// have their own listeners.
+
+			OperationValue invop = new OperationValue(invariant, null, null, null);
+			ClassInvariantListener listener = new ClassInvariantListener(invop);
+			invlistenerlist = new ValueListenerList(listener);
 		}
 	}
 
@@ -913,7 +913,7 @@ public class ClassDefinition extends Definition
 	{
 		staticInit = false;				// Forced initialization
 		staticValuesInit = false;		// Forced initialization
-		
+
 		privateStaticValues = new NameValuePairMap();
 		publicStaticValues = new NameValuePairMap();
 
@@ -1242,12 +1242,24 @@ public class ClassDefinition extends Definition
 			}
 		}
 
+		// Object instances have their own listeners
+		ValueListenerList listeners = null;
+		ClassInvariantListener listener = null;
+
+		if (invariant != null)
+		{
+			OperationValue invop = new OperationValue(invariant, null, null, null);
+			listener = new ClassInvariantListener(invop);
+			listener.doInvariantChecks = false;	// during construction
+			listeners = new ValueListenerList(listener);
+		}
+
 		for (Definition d: definitions)
 		{
 			if (!d.isStatic() && !d.isFunctionOrOperation())
 			{
 				NameValuePairList nvpl =
-					d.getNamedValues(initCtxt).getUpdatable(invlistenerlist);
+					d.getNamedValues(initCtxt).getUpdatable(listeners);
 
 				initCtxt.putList(nvpl);
 				members.putAll(nvpl);
@@ -1261,12 +1273,9 @@ public class ClassDefinition extends Definition
 			new ObjectValue((ClassType)getType(), members, inherited,
 			ctxt.threadState.CPU);
 
-		if (invariant != null)
+		if (listener != null)
 		{
-			// inv_C isn't a callable member any more, but we have to set self
-			// so that the invariant system can call it.
-
-			invopvalue.setSelf(object);
+			object.setListener(listener);
 		}
 
 		Value ctor = null;
@@ -1285,7 +1294,7 @@ public class ClassDefinition extends Definition
 		if (Settings.dialect ==	Dialect.VDM_RT)
 		{
 			CPUValue cpu = object.getCPU();
-			
+
 			if (cpu != null)
 			{
 				cpu.deploy(object);

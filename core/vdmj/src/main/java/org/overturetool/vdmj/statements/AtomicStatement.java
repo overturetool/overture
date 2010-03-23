@@ -25,7 +25,6 @@ package org.overturetool.vdmj.statements;
 
 import java.util.List;
 
-import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.StateDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -38,6 +37,7 @@ import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.VoidType;
 import org.overturetool.vdmj.util.Utils;
 import org.overturetool.vdmj.values.ClassInvariantListener;
+import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.State;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.VoidValue;
@@ -49,7 +49,6 @@ public class AtomicStatement extends Statement
 
 	public final List<AssignmentStatement> assignments;
 	private StateDefinition statedef = null;
-	private ClassDefinition classdef = null;
 
 	public AtomicStatement(LexLocation location, List<AssignmentStatement> assignments)
 	{
@@ -73,7 +72,6 @@ public class AtomicStatement extends Statement
 	public Type typeCheck(Environment env, NameScope scope)
 	{
 		statedef = env.findStateDefinition();
-		classdef = env.findClassDefinition();
 
 		for (AssignmentStatement stmt: assignments)
 		{
@@ -125,10 +123,15 @@ public class AtomicStatement extends Statement
 			state = statedef.getState();
 			state.doInvariantChecks = false;
 		}
-		else if (classdef != null && classdef.invlistener != null)
+		else
 		{
-			listener = classdef.invlistener;
-			listener.doInvariantChecks = false;
+			ObjectValue self = ctxt.getSelf();
+
+			if (self != null)
+			{
+				listener = self.invlistener;
+				listener.doInvariantChecks = false;
+			}
 		}
 
 		for (AssignmentStatement stmt: assignments)

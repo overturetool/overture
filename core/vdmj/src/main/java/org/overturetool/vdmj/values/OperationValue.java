@@ -446,7 +446,7 @@ public class OperationValue extends Value
 
 	private void notifySelf()
 	{
-		if (self != null)
+		if (self != null && self.guardLock != null)
 		{
 			debug("Signal guard");
 			self.guardLock.signal();
