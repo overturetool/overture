@@ -135,7 +135,12 @@ RelativeToAbsoluteTimes(ts) ==
            ns = RelativeToAbsoluteTimes(tl ts) in
          [mk_(f,t)] ^ [ let mk_(nf, nt) = ns(i)
                         in mk_(nf, nt + t)
-                      | i in set inds ns];
+                      | i in set inds ns]
+measure RespLen;
+
+RespLen: seq of Response -> nat
+RespLen(l) ==
+  len l;
 
 Angle2MagId: Angle -> MagId
 Angle2MagId(angle) ==

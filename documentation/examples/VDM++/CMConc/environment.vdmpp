@@ -80,6 +80,7 @@ isFinished () == skip;
 sync
 
 mutex (handleEvent);
+mutex (createSignal);
 per isFinished => not busy;
 
 thread
