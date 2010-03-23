@@ -4,6 +4,7 @@ import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IDebugElement;
 import org.eclipse.debug.core.model.IDebugTarget;
+import org.overture.ide.debug.core.IDebugConstants;
 
 public class VdmDebugElement extends PlatformObject implements IDebugElement {
 
@@ -22,9 +23,8 @@ public class VdmDebugElement extends PlatformObject implements IDebugElement {
 		return getDebugTarget().getLaunch();
 	}
 
-	public String getModelIdentifier() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getModelIdentifier() {		
+		return IDebugConstants.ID_VDM_DEBUG_MODEL;
 	}
 
 	@SuppressWarnings("unchecked")

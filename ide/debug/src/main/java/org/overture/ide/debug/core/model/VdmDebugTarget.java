@@ -1,5 +1,9 @@
 package org.overture.ide.debug.core.model;
 
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
@@ -14,31 +18,41 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget {
 	
 	private ILaunch fLaunch;
 	private IProcess fProcess;
+	private List<IThread> fThreads;
+	private IThread fThread;
 	
-	public VdmDebugTarget(ILaunch launch, IProcess process) {
+	public VdmDebugTarget(ILaunch launch, IProcess process, Socket s) {
 		super(null);
 		fTarget = this;
 		fLaunch = launch;
 		fProcess = process;
+		
+		fThread = new VdmThread(this);
+		fThreads = new ArrayList<IThread>();
+		fThreads.add(fThread);
+		
 	}
 	
 	public String getName() throws DebugException {
-		// TODO Auto-generated method stub
-		return null;
+		return "VdmVM";
 	}
 
 	public IProcess getProcess() {
 		return fProcess;
 	}
+	
+	public ILaunch getLaunch(){
+		return this.fLaunch;
+	}
 
 	public IThread[] getThreads() throws DebugException {
-		// TODO Auto-generated method stub
-		return null;
+		IThread[] result = new IThread[fThreads.size()];
+		System.arraycopy(fThreads.toArray(), 0, result, 0, fThreads.size());
+		return result;
 	}
 
 	public boolean hasThreads() throws DebugException {
-		// TODO Auto-generated method stub
-		return false;
+		return fThreads.size()>0;
 	}
 
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
