@@ -12,7 +12,7 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Activator: org.overture.ide.ui.VdmUIPlugin
 Import-Package: org.eclipse.core.runtime
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.5.0",
- org.eclipse.ui;bundle-version="3.5.1",
+ org.eclipse.ui;bundle-version="3.5.1";visibility:=reexport,
  org.eclipse.ui.editors;bundle-version="3.5.0",
  org.eclipse.jface.text;bundle-version="3.5.1",
  org.eclipse.ui.ide;bundle-version="3.5.1",
@@ -25,6 +25,7 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.5.0",
  org.eclipse.ui.views.log;bundle-version="1.0.100"
 Export-Package: org.overture.ide.ui.editor.core,
  org.overture.ide.ui.editor.syntax,
+ org.overture.ide.ui.internal.viewsupport,
  org.overture.ide.ui.outline,
  org.overture.ide.ui.wizard
 

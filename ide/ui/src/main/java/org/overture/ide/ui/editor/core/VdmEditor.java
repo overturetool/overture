@@ -7,13 +7,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewerExtension5;
+import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.reconciler.IReconciler;
+import org.eclipse.jface.text.source.Annotation;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.ISourceViewerExtension2;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
@@ -21,8 +23,6 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.editors.text.TextEditor;
-import org.eclipse.ui.part.IShowInSource;
-import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.overture.ide.core.IVdmElement;
@@ -200,6 +200,20 @@ public abstract class VdmEditor extends TextEditor
 				e.printStackTrace();
 			}
 		}
+		
+//		IAnnotationModel model= getDocumentProvider().getAnnotationModel(getEditorInput());
+//		IDocument document = getDocumentProvider().getDocument(getEditorInput());
+		
+//		if(model!=null && document !=null)
+//		{
+//			getSourceViewer().setDocument(document, model);
+//			model.connect(document);
+			IAnnotationModel	model =getVerticalRuler().getModel();//.setModel(model);
+			Annotation annotation =new Annotation("org.overture.ide.problem", false, "jek");
+			model.addAnnotation(annotation,new Position( 300));
+			updateMarkerViews(annotation);
+//		}
+		
 		// try
 		// {
 		// doSetInput(getEditorInput());
@@ -345,6 +359,8 @@ public abstract class VdmEditor extends TextEditor
 
 		// if (isShowingOverrideIndicators())
 		// installOverrideIndicator(false);
+		
+		
 	}
 
 	/**
@@ -419,6 +435,7 @@ public abstract class VdmEditor extends TextEditor
 		// if (!fSelectionChangedViaGotoAnnotation)
 		// updateStatusLine();
 		// fSelectionChangedViaGotoAnnotation= false;
+		
 	}
 
 	protected void setSelection(IAstNode reference, boolean moveCursor)

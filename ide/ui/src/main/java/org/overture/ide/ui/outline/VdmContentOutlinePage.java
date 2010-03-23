@@ -172,7 +172,7 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 	{
 
 		fOutlineViewer = new VdmOutlineViewer(parent);
-		fOutlineViewer.setContentProvider(new VdmOutlineTreeContentProvider(fOutlineViewer));
+		fOutlineViewer.setContentProvider(new VdmOutlineTreeContentProvider());
 		// fOutlineViewer.setLabelProvider(new VdmOutlineLabelProvider());
 		fOutlineViewer.setLabelProvider(new DecorationgVdmLabelProvider(new VdmUILabelProvider()));
 		fOutlineViewer.addSelectionChangedListener(this);

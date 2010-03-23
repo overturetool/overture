@@ -102,5 +102,14 @@
          </action>
       </objectContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors.annotationTypes">
+      <type
+            markerSeverity="2"
+            markerType="org.overture.ide.problem"
+            name="org.overture.ide.ui.error"
+            super="org.eclipse.ui.workbench.texteditor.error">
+      </type>
+   </extension>
   
 </plugin>
