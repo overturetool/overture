@@ -6,10 +6,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugException;
 import org.osgi.framework.BundleContext;
 
-public class Activator extends Plugin {
+public class VdmDebugPlugin extends Plugin {
 
-	private static Activator fgPlugin;
+	private static VdmDebugPlugin fgPlugin;
 			
+	public static final String PLUGIN_ID = "org.overture.ide.debug.core";
 	public static final int INTERNAL_ERROR = 120;
 	
 	public static void log(IStatus status) {
@@ -30,11 +31,11 @@ public class Activator extends Plugin {
 		}
 	}	
 
-	public static Activator getDefault() {		
+	public static VdmDebugPlugin getDefault() {		
 		return fgPlugin;
 	}
 
-	public Activator() {
+	public VdmDebugPlugin() {
 		super();	
 		fgPlugin = this;
 	}

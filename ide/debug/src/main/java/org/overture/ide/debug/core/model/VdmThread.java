@@ -1,5 +1,7 @@
 package org.overture.ide.debug.core.model;
 
+import java.util.ArrayList;
+
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IStackFrame;
@@ -7,8 +9,13 @@ import org.eclipse.debug.core.model.IThread;
 
 public class VdmThread extends VdmDebugElement implements IThread{
 
+	private String fName;
+	private ArrayList<IStackFrame> fFrames;
+	
+	
 	public VdmThread(VdmDebugTarget target) {
 		super(target);
+		fFrames = new ArrayList<IStackFrame>();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -18,8 +25,7 @@ public class VdmThread extends VdmDebugElement implements IThread{
 	}
 
 	public String getName() throws DebugException {
-		// TODO Auto-generated method stub
-		return null;
+		return fName;
 	}
 
 	public int getPriority() throws DebugException {
@@ -37,9 +43,8 @@ public class VdmThread extends VdmDebugElement implements IThread{
 		return null;
 	}
 
-	public boolean hasStackFrames() throws DebugException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean hasStackFrames() throws DebugException {		
+		return fFrames.size() > 0;
 	}
 
 	public boolean canResume() {
@@ -116,5 +121,11 @@ public class VdmThread extends VdmDebugElement implements IThread{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void setName(String name){
+		fName = name;
+	}
+
+	
 
 }
