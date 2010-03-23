@@ -5,7 +5,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.ui.CommonTab;
+import org.eclipse.debug.internal.ui.IDebugHelpContextIds;
+import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -20,6 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.overture.ide.core.IVdmProject;
 import org.overture.ide.core.VdmProject;
@@ -39,7 +41,7 @@ import org.overturetool.vdmj.syntax.ParserException;
 /**
  * Main launch configuration tab for overture scripts
  */
-public  class VdmMainLaunchConfigurationTab extends CommonTab
+public  class VdmMainLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 {
 
 	
@@ -91,25 +93,27 @@ public  class VdmMainLaunchConfigurationTab extends CommonTab
 	@Override
 	public boolean isValid(ILaunchConfiguration config)
 	{
-		if (fRemoteControlClassText.getText().length() > 0)
-			return true;// super.validate();
-		try
-		{
-			Console.charset = getProject().getDefaultCharset();
-		} catch (CoreException e)
-		{
-			e.printStackTrace();
-		}
-
-		boolean syntaxCorrect = validateClass() && validateOperation();
-		if (!syntaxCorrect)
-			return syntaxCorrect;
-		else
-			return super.isValid(config)
-					&& validateTypes(fModuleNameText.getText(),
-							fOperationText.getText());
-
+		return true;
 		
+//		if (fRemoteControlClassText.getText().length() > 0)
+//			return true;// super.validate();
+//		try
+//		{
+//			Console.charset = getProject().getDefaultCharset();
+//		} catch (CoreException e)
+//		{
+//			e.printStackTrace();
+//		}
+//
+//		boolean syntaxCorrect = validateClass() && validateOperation();
+//		if (!syntaxCorrect)
+//			return syntaxCorrect;
+//		else
+//			return super.isValid(config)
+//					&& validateTypes(fModuleNameText.getText(),
+//							fOperationText.getText());
+//
+//		
 		
 	}
 	
@@ -188,11 +192,18 @@ public  class VdmMainLaunchConfigurationTab extends CommonTab
 
 	
 	
-	@Override
+	
 	public void createControl(Composite parent)
 	{
-		createOperationEditor(parent);
-		createRemoteControlEditor(parent);
+		Composite comp = new Composite(parent, SWT.NONE);
+		
+		setControl(comp);
+		//PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IDebugHelpContextIds.LAUNCH_CONFIGURATION_DIALOG_COMMON_TAB);
+		comp.setLayout(new GridLayout(1, true));
+		comp.setFont(parent.getFont());
+		
+		createOperationEditor(comp);
+		createRemoteControlEditor(comp);
 	}
 
 	/*
@@ -407,7 +418,7 @@ public  class VdmMainLaunchConfigurationTab extends CommonTab
 
 	
 
-	@Override
+	
 	public void performApply(ILaunchConfigurationWorkingCopy configuration)
 	{
 //		// cons
@@ -438,15 +449,27 @@ public  class VdmMainLaunchConfigurationTab extends CommonTab
 //
 //		config.setAttribute(DLTKDebugPreferenceConstants.PREF_DBGP_CONNECTION_TIMEOUT,
 //				5000);
-		super.performApply(configuration);
+//		super.performApply(configuration);
 	}
 
-	@Override
+	
+
+	public String getName()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
 	public void initializeFrom(ILaunchConfiguration configuration)
 	{
+		// TODO Auto-generated method stub
 		
-		super.initializeFrom(configuration);
-
 	}
 
 }
