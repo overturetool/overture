@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.runtime;
 
+import java.io.Serializable;
+
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.scheduler.SchedulableThread;
@@ -32,7 +34,7 @@ import org.overturetool.vdmj.values.CPUValue;
  * A class to hold some runtime information for each thread.
  */
 
-public class ThreadState
+public class ThreadState implements Serializable
 {
     private static final long serialVersionUID = 1L;
 	public final long threadId;

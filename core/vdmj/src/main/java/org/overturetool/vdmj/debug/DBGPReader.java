@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -89,8 +90,10 @@ import org.overturetool.vdmj.values.NameValuePairMap;
 import org.overturetool.vdmj.values.TransactionValue;
 import org.overturetool.vdmj.values.Value;
 
-public class DBGPReader
+public class DBGPReader implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	private final String host;
 	private final int port;
 	private final String ideKey;

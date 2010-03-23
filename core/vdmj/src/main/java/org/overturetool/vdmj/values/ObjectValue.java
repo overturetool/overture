@@ -51,9 +51,9 @@ public class ObjectValue extends Value
 	public final ClassType type;
 	public final NameValuePairMap members;
 	public final List<ObjectValue> superobjects;
-	public final transient Lock guardLock = new Lock();
 
-	private transient CPUValue CPU;
+	public Lock guardLock;
+	private CPUValue CPU;
 	private Object delegateObject = null;
 
 	public ObjectValue(ClassType type,
@@ -64,6 +64,7 @@ public class ObjectValue extends Value
 		this.members = members;
 		this.superobjects = superobjects;
 		this.CPU = cpu;
+		this.guardLock = new Lock();
 
 		setSelf(this);
 	}
@@ -344,7 +345,7 @@ public class ObjectValue extends Value
 	@Override
 	public Object clone()
 	{
-		return deepCopy(); 	// shallowCopy(); ?
+		return deepCopy();
 	}
 
 	private ObjectValue mycopy = null;
@@ -410,13 +411,27 @@ public class ObjectValue extends Value
 
 			ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
 			ObjectInputStream ois = new ObjectInputStream(is);
-			return (ObjectValue)ois.readObject();
+			ObjectValue result = (ObjectValue)ois.readObject();
+
+			return result;
 		}
 		catch (Exception e)
 		{
 			throw new InternalException(5, "Illegal clone: " + e);
 		}
 	}
+
+//	private void writeObject(java.io.ObjectOutputStream out)
+//		throws IOException
+//	{
+//		out.defaultWriteObject();
+//	}
+//
+//	private void readObject(ObjectInputStream in)
+//		throws ClassNotFoundException, IOException
+//    {
+//		in.defaultReadObject();
+//    }
 
 	public synchronized void setCPU(CPUValue cpu)
 	{
