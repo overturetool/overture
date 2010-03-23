@@ -172,7 +172,8 @@ operations
 sync
 
   mutex(SetupTill);
-  per Wait => #fin(ReturnCard) = 4
+  mutex(ReturnCard);
+  per Wait => #fin(ReturnCard) >= 3
       
 
 end Main
