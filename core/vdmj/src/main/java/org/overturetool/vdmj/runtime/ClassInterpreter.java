@@ -470,7 +470,7 @@ public class ClassInterpreter extends Interpreter
 	}
 
 	@Override
-	protected List<Object> runOneTrace(
+	public List<Object> runOneTrace(
 		ClassDefinition classdef, CallSequence test, boolean debug)
 	{
 		List<Object> list = new Vector<Object>();

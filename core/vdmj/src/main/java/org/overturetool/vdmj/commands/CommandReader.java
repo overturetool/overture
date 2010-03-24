@@ -289,7 +289,11 @@ abstract public class CommandReader
 				}
 				else if (line.startsWith("runtrace "))
 				{
-					carryOn = doRuntrace(line);
+					carryOn = doRuntrace(line, false);
+				}
+				else if (line.startsWith("debugtrace "))
+				{
+					carryOn = doRuntrace(line, true);
 				}
 				else
 				{
@@ -352,7 +356,7 @@ abstract public class CommandReader
 		return true;
 	}
 
-	protected boolean doRuntrace(String line)
+	protected boolean doRuntrace(String line, boolean debug)
 	{
 		String[] parts = line.split("\\s+");
 		int testNo = 0;
@@ -365,7 +369,7 @@ abstract public class CommandReader
 			}
 			catch (NumberFormatException e)
 			{
-				println("runtrace <name> [test number]");
+				println(parts[0] + " <name> [test number]");
 				return true;
 			}
 		}
@@ -375,7 +379,7 @@ abstract public class CommandReader
 		try
 		{
    			long before = System.currentTimeMillis();
-   			interpreter.runtrace(line, testNo, false);
+   			interpreter.runtrace(line, testNo, debug);
    			long after = System.currentTimeMillis();
 			println("Executed in " + (double)(after-before)/1000 + " secs. ");
 

@@ -600,6 +600,6 @@ abstract public class Interpreter
 		Settings.usingDBGP = wasDBGP;
 	}
 
-	abstract protected List<Object> runOneTrace(
+	abstract public List<Object> runOneTrace(
 		ClassDefinition classDefinition, CallSequence test, boolean debug);
 }

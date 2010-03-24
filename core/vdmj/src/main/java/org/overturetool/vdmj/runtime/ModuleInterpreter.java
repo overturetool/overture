@@ -360,7 +360,7 @@ public class ModuleInterpreter extends Interpreter
 	}
 
 	@Override
-	protected List<Object> runOneTrace(
+	public List<Object> runOneTrace(
 		ClassDefinition classdef, CallSequence test, boolean debug)
 	{
 		clearBreakpointHits();

@@ -84,6 +84,8 @@ public class CTMainThread extends MainThread
 		}
 		catch (ContextException e)
 		{
+			result.add(e.getMessage().replaceAll(" \\(.+\\)", ""));
+
 			if (debug)
 			{
 				setException(e);
@@ -93,8 +95,6 @@ public class CTMainThread extends MainThread
 			}
 			else
 			{
-    			result.add(e.getMessage().replaceAll(" \\(.+\\)", ""));
-
     			switch (e.number)
     			{
     				case 4055:	// precondition fails for functions
