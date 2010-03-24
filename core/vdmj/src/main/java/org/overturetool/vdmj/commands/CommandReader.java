@@ -283,9 +283,13 @@ abstract public class CommandReader
 				{
 					carryOn = doLog(line);
 				}
-				else if (line.startsWith("print") || line.startsWith("p "))
+				else if (line.startsWith("print ") || line.startsWith("p "))
 				{
 					carryOn = doEvaluate(line);
+				}
+				else if (line.startsWith("runtrace "))
+				{
+					carryOn = doRuntrace(line);
 				}
 				else
 				{
@@ -315,6 +319,63 @@ abstract public class CommandReader
 		{
    			long before = System.currentTimeMillis();
    			println("= " + interpreter.execute(line, null));
+   			long after = System.currentTimeMillis();
+			println("Executed in " + (double)(after-before)/1000 + " secs. ");
+
+			if (RTLogger.getLogSize() > 0)
+			{
+				println("Dumped RT events");
+				RTLogger.dump(false);
+			}
+		}
+		catch (ParserException e)
+		{
+			println("Syntax: " + e.getMessage());
+		}
+		catch (DebuggerException e)
+		{
+			println("Debug: " + e.getMessage());
+		}
+		catch (RuntimeException e)
+		{
+			println("Runtime: " + e);
+		}
+		catch (VDMErrorsException e)
+		{
+			println(e.toString());
+		}
+		catch (Exception e)
+		{
+			println("Error: " + e.getMessage());
+		}
+
+		return true;
+	}
+
+	protected boolean doRuntrace(String line)
+	{
+		String[] parts = line.split("\\s+");
+		int testNo = 0;
+
+		if (parts.length == 3)
+		{
+			try
+			{
+				testNo = Integer.parseInt(parts[2]);
+			}
+			catch (NumberFormatException e)
+			{
+				println("runtrace <name> [test number]");
+				return true;
+			}
+		}
+
+		line = parts[1];
+
+		try
+		{
+   			long before = System.currentTimeMillis();
+   			interpreter.runtrace(line, testNo, false);
    			long after = System.currentTimeMillis();
 			println("Executed in " + (double)(after-before)/1000 + " secs. ");
 
@@ -923,6 +984,7 @@ abstract public class CommandReader
 	protected void doHelp(@SuppressWarnings("unused") String line)
 	{
 		println("print <expression> - evaluate expression");
+		println("runtrace <name> [test number] - run CT trace(s)");
 		println("assert <file> - run assertions from a file");
 		println("init - re-initialize the global environment");
 		println("env - list the global symbols in the default environment");

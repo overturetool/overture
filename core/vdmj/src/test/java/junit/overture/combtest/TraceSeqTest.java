@@ -29,11 +29,11 @@ public class TraceSeqTest extends OvertureTest
 {
 	public void test_Traces1()
 	{
-		combtest("traces/traceseq/traceseq-01", "new UseStack().PushBeforePop()");
+		combtest("traces/traceseq/traceseq-01", "UseStack`PushBeforePop");
 	}
 
 	public void test_Traces2()
 	{
-		combtest("traces/traceseq/traceseq-02", "new UseStack().PushBeforePop()");
+		combtest("traces/traceseq/traceseq-02", "UseStack`PushBeforePop");
 	}
 }

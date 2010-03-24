@@ -31,9 +31,11 @@ import java.util.Vector;
 
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.StateContext;
@@ -230,5 +232,28 @@ public class ModuleList extends Vector<Module>
 		}
 
 		return rv;
+	}
+
+	public NamedTraceDefinition findTraceDefinition(LexNameToken name)
+	{
+		for (Module m: this)
+		{
+			for (Definition d: m.defs)
+			{
+				if (d.name.equals(name))
+				{
+					if (d instanceof NamedTraceDefinition)
+					{
+						return (NamedTraceDefinition)d;
+					}
+					else
+					{
+						return null;
+					}
+				}
+			}
+		}
+
+		return null;
 	}
 }

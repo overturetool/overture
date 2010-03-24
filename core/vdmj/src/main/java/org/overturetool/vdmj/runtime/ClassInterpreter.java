@@ -35,6 +35,7 @@ import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionSet;
 import org.overturetool.vdmj.definitions.LocalDefinition;
+import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -43,6 +44,7 @@ import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.pog.ProofObligationList;
+import org.overturetool.vdmj.scheduler.CTMainThread;
 import org.overturetool.vdmj.scheduler.MainThread;
 import org.overturetool.vdmj.scheduler.SystemClock;
 import org.overturetool.vdmj.statements.Statement;
@@ -266,6 +268,19 @@ public class ClassInterpreter extends Interpreter
 	}
 
 	@Override
+	protected NamedTraceDefinition findTraceDefinition(LexNameToken name)
+	{
+		Definition d = classes.findName(name, NameScope.NAMESANDSTATE);
+
+		if (d == null || !(d instanceof NamedTraceDefinition))
+		{
+			return null;
+		}
+
+		return (NamedTraceDefinition)d;
+	}
+
+	@Override
 	public Value findGlobal(LexNameToken name)
 	{
 		// The name will not be type-qualified, so we can't use the usual
@@ -452,5 +467,40 @@ public class ClassInterpreter extends Interpreter
 		RTLogger.log(
 			"ThreadKill -> id: " + Thread.currentThread().getId() +
 			" cpunm: 0");
+	}
+
+	@Override
+	protected List<Object> runOneTrace(
+		ClassDefinition classdef, CallSequence test, boolean debug)
+	{
+		List<Object> list = new Vector<Object>();
+		ObjectValue object = null;
+
+		try
+		{
+			// Create a new test object
+			object = classdef.newInstance(null, null, initialContext);
+		}
+		catch (ValueException e)
+		{
+			list.add(e.getMessage());
+			return list;
+		}
+
+		Context ctxt = new ObjectContext(
+				classdef.name.location, classdef.name.name + "()",
+				initialContext, object);
+
+		ctxt.put(classdef.name.getSelfName(), object);
+
+		ctxt.setThreadState(null, CPUValue.vCPU);
+		clearBreakpointHits();
+
+		scheduler.reset();
+		CTMainThread main = new CTMainThread(test, ctxt, debug);
+		main.start();
+		scheduler.start(main);
+
+		return main.getList();
 	}
 }

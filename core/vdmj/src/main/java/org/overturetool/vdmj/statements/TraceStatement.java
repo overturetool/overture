@@ -26,6 +26,7 @@ package org.overturetool.vdmj.statements;
 import java.io.PrintWriter;
 import java.util.List;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.Console;
@@ -70,6 +71,12 @@ public class TraceStatement extends Statement
 		TestSequence tests = tracedef.getTests(ctxt);
 		Interpreter interpreter = Interpreter.getInstance();
 		Value argval = ctxt.check(arg);
+
+		boolean wasDBGP = Settings.usingDBGP;
+		boolean wasCMD = Settings.usingCmdLine;
+
+		Settings.usingCmdLine = false;		// Make errors return not debug
+		Settings.usingDBGP = false;
 
 		if (argval == null)
 		{
@@ -138,6 +145,9 @@ public class TraceStatement extends Statement
     			writer.println("Result = " + result);
 			}
 		}
+
+		Settings.usingCmdLine = wasCMD;
+		Settings.usingDBGP = wasDBGP;
 
 		return new VoidValue();
 	}

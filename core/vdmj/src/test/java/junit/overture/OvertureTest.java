@@ -43,7 +43,6 @@ import org.overturetool.vdmj.messages.VDMMessage;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.Interpreter;
-import org.overturetool.vdmj.statements.TraceStatement;
 import org.overturetool.vdmj.syntax.ClassReader;
 import org.overturetool.vdmj.typechecker.ClassTypeChecker;
 import org.overturetool.vdmj.typechecker.TypeChecker;
@@ -278,9 +277,11 @@ abstract public class OvertureTest extends TestCase
 			interpreter.init(null);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			PrintWriter pw = new PrintWriter(out);
-			TraceStatement.setOutput(pw);
+			// TraceStatement.setOutput(pw);
+			Interpreter.setTraceOutput(pw);
 
-			interpreter.execute(testExp, null);
+			//interpreter.execute(testExp, null);
+			interpreter.runtrace(testExp, 0, false);
 
 			pw.close();
 			String result = out.toString();

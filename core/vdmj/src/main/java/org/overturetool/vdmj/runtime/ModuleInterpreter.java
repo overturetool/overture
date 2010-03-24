@@ -30,15 +30,18 @@ import java.util.Vector;
 
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
+import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.pog.ProofObligationList;
+import org.overturetool.vdmj.scheduler.CTMainThread;
 import org.overturetool.vdmj.scheduler.MainThread;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ExpressionReader;
@@ -252,6 +255,12 @@ public class ModuleInterpreter extends Interpreter
 		return modules.findModule(name);
 	}
 
+	@Override
+	protected NamedTraceDefinition findTraceDefinition(LexNameToken name)
+	{
+		return modules.findTraceDefinition(name);
+	}
+
 	/**
 	 * Find a Statement in the given file that starts on the given line.
 	 * If there are none, return null.
@@ -292,6 +301,7 @@ public class ModuleInterpreter extends Interpreter
 	public List<Object> runtrace(ClassDefinition def, CallSequence statements)
 	{
 		List<Object> list = new Vector<Object>();
+
 		try
 		{
 			for (Statement statement: statements)
@@ -347,5 +357,19 @@ public class ModuleInterpreter extends Interpreter
 		}
 
 		return list;
+	}
+
+	@Override
+	protected List<Object> runOneTrace(
+		ClassDefinition classdef, CallSequence test, boolean debug)
+	{
+		clearBreakpointHits();
+
+		scheduler.reset();
+		CTMainThread main = new CTMainThread(test, initialContext, debug);
+		main.start();
+		scheduler.start(main);
+
+		return main.getList();
 	}
 }

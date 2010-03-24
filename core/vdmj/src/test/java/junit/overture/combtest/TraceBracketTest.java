@@ -29,11 +29,11 @@ public class TraceBracketTest extends OvertureTest
 {
 	public void test_Traces1()
 	{
-		combtest("traces/tracebracket/tracebracket-01", "new UseStack().PushBeforePop()");
+		combtest("traces/tracebracket/tracebracket-01", "UseStack`PushBeforePop");
 	}
 
 	public void test_Traces2()
 	{
-		combtest("traces/tracebracket/tracebracket-02", "new UseStack().PushBeforePop()");
+		combtest("traces/tracebracket/tracebracket-02", "UseStack`PushBeforePop");
 	}
 }

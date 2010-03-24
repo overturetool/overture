@@ -27,6 +27,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,12 +35,19 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
+import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.lex.LexToken;
+import org.overturetool.vdmj.lex.LexTokenReader;
+import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -47,6 +55,7 @@ import org.overturetool.vdmj.scheduler.ResourceScheduler;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.traces.CallSequence;
+import org.overturetool.vdmj.traces.TestSequence;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeChecker;
@@ -493,4 +502,104 @@ abstract public class Interpreter
 	}
 
 	abstract public List<Object> runtrace(ClassDefinition def, CallSequence statements);
+
+
+	private static PrintWriter writer = null;
+
+	public static void setTraceOutput(PrintWriter pw)
+	{
+		writer = pw;
+	}
+
+	abstract protected NamedTraceDefinition findTraceDefinition(LexNameToken name);
+
+	public void runtrace(String strname, int testNo, boolean debug)
+		throws Exception
+	{
+		LexTokenReader ltr = new LexTokenReader(strname, Dialect.VDM_SL);
+		LexToken token = ltr.nextToken();
+		LexNameToken name = null;
+
+		switch (token.type)
+		{
+			case NAME:
+				name = (LexNameToken)token;
+				break;
+
+			case IDENTIFIER:
+				name = new LexNameToken(getDefaultName(), (LexIdentifierToken)token);
+				break;
+
+			default:
+				throw new Exception("Expecting trace name");
+		}
+
+		NamedTraceDefinition tracedef = findTraceDefinition(name);
+
+		if (tracedef == null)
+		{
+			throw new Exception("Trace " + name + " not found");
+		}
+
+		TestSequence tests = tracedef.getTests(initialContext);
+
+		boolean wasDBGP = Settings.usingDBGP;
+		boolean wasCMD = Settings.usingCmdLine;
+
+		if (!debug)
+		{
+			Settings.usingCmdLine = false;
+			Settings.usingDBGP = false;
+		}
+
+		if (writer == null)
+		{
+			writer = Console.out;
+		}
+
+		if (testNo > tests.size())
+		{
+			throw new Exception("Trace " + name +
+				" only has " + tests.size() + " tests");
+		}
+
+		int n = 1;
+
+		for (CallSequence test: tests)
+		{
+			if (testNo > 0 && n != testNo)
+			{
+				n++;
+				continue;
+			}
+
+			// Bodge until we figure out how to not have explicit op names.
+			String clean = test.toString().replaceAll("\\.\\w+`", ".");
+
+			if (test.getFilter() > 0)
+			{
+    			writer.println("Test " + n + " = " + clean);
+				writer.println(
+					"Test " + n + " FILTERED by test " + test.getFilter());
+			}
+			else
+			{
+				// Initialize completely between every run...
+    			traceInit(null);
+    			List<Object> result = runOneTrace(tracedef.classDefinition, test, debug);
+    			tests.filter(result, test, n);
+
+    			writer.println("Test " + n + " = " + clean);
+    			writer.println("Result = " + result);
+			}
+
+			n++;
+		}
+
+		Settings.usingCmdLine = wasCMD;
+		Settings.usingDBGP = wasDBGP;
+	}
+
+	abstract protected List<Object> runOneTrace(
+		ClassDefinition classDefinition, CallSequence test, boolean debug);
 }
