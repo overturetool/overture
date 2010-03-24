@@ -33,9 +33,9 @@ import org.overture.ide.debug.utils.xml.XMLTagNode;
 import org.overturetool.vdmj.debug.DBGPRedirect;
 import org.overturetool.vdmj.util.Base64;
 
-public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget {
+public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
+{
 
-	
 	private ILaunch fLaunch;
 	private IProcess fProcess;
 	private List<IThread> fThreads;
@@ -46,8 +46,8 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget {
 	private int id = 0;
 	private int xid = 0;
 	private Socket fSocket;
-	
-	//read runner
+
+	// read runner
 	private ReaderRunnable readerRunner = null;
 	private BufferedInputStream input = null;
 	private boolean connected = true;
@@ -56,214 +56,240 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget {
 	private BufferedOutputStream output;
 	private PrintWriter fRequestWriter;
 	private BufferedReader fRequestReader;
-	
-	public VdmDebugTarget(ILaunch launch, IProcess process, Socket s) throws DebugException {
+
+	public VdmDebugTarget(ILaunch launch, IProcess process, Socket s)
+			throws DebugException {
 		super(null);
 		fTarget = this;
 		fLaunch = launch;
 		fProcess = process;
 		fSocket = s;
-		
+
 		fThread = new VdmThread(this);
 		fThread.setName("Thread [Main]");
 		fThreads = new ArrayList<IThread>();
 		fThreads.add(fThread);
-		
+
 		connected = true;
-		
-		
-		
-		try {
+
+		try
+		{
 			fSocket = s;
 			fRequestWriter = new PrintWriter(fSocket.getOutputStream());
-//			fRequestReader = new BufferedReader(new InputStreamReader(fRequestSocket.getInputStream()));
+			// fRequestReader = new BufferedReader(new InputStreamReader(fRequestSocket.getInputStream()));
 			input = new BufferedInputStream(fSocket.getInputStream());
 			output = new BufferedOutputStream(fSocket.getOutputStream());
-			
-			
-			
-			
-		} catch (UnknownHostException e) {
+
+		} catch (UnknownHostException e)
+		{
 			abort("Unable to connect to Vdm VM", e);
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			abort("Unable to connect to Vdm VM", e);
 		}
-		
-		
-		
-		DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(this);
+
+		DebugPlugin.getDefault()
+				.getBreakpointManager()
+				.addBreakpointListener(this);
 		readerRunner = new ReaderRunnable();
-				
+
 		new Thread(readerRunner).start();
-		
+
 	}
-	
-	public String getName() throws DebugException {
+
+	public String getName() throws DebugException
+	{
 		return "VdmVM";
 	}
 
-	public IProcess getProcess() {
+	public IProcess getProcess()
+	{
 		return fProcess;
 	}
-	
-	public ILaunch getLaunch(){
+
+	public ILaunch getLaunch()
+	{
 		return this.fLaunch;
 	}
 
-	public IThread[] getThreads() throws DebugException {
+	public IThread[] getThreads() throws DebugException
+	{
 		IThread[] result = new IThread[fThreads.size()];
 		System.arraycopy(fThreads.toArray(), 0, result, 0, fThreads.size());
 		return result;
 	}
 
-	public boolean hasThreads() throws DebugException {
-		return fThreads.size()>0;
+	public boolean hasThreads() throws DebugException
+	{
+		return fThreads.size() > 0;
 	}
 
-	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
+	public boolean supportsBreakpoint(IBreakpoint breakpoint)
+	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public boolean canTerminate() {
+	public boolean canTerminate()
+	{
 		return !fTerminated;
 	}
 
-	public boolean isTerminated() {		
+	public boolean isTerminated()
+	{
 		return fTerminated;
 	}
 
-	public void terminate() throws DebugException {
+	public void terminate() throws DebugException
+	{
 		// TODO Do dispose of objects here
 		fTerminated = true;
 	}
 
-	public boolean canResume() {
+	public boolean canResume()
+	{
 		return (fSuspended && !fTerminated);
 	}
 
-	public boolean canSuspend() {
+	public boolean canSuspend()
+	{
 		return !fSuspended && !fTerminated;
 	}
 
-	public boolean isSuspended() {		
+	public boolean isSuspended()
+	{
 		return fSuspended;
 	}
 
-	public void resume() throws DebugException {
-		
-		
+	public void resume() throws DebugException
+	{
+
 		write("run -i " + (++xid));
-		
+
 		fireResumeEvent(DebugEvent.RESUME);
 		fSuspended = false;
 	}
 
-	
 	/**
 	 * 
-	 * @param detail - see DebugEvent detail constants;
+	 * @param detail
+	 *            - see DebugEvent detail constants;
 	 * @throws DebugException
 	 */
-	public void suspend() throws DebugException {
+	public void suspend() throws DebugException
+	{
 		fSuspended = true;
 		fireSuspendEvent(DebugEvent.SUSPEND);
-		
+
 	}
 
-	public void breakpointAdded(IBreakpoint breakpoint) {
+	public void breakpointAdded(IBreakpoint breakpoint)
+	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta) {
+	public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta)
+	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
+	public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta)
+	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	public boolean canDisconnect() {
+	public boolean canDisconnect()
+	{
 		return false;
 	}
 
-	public void disconnect() throws DebugException {
+	public void disconnect() throws DebugException
+	{
 		// TODO Disconnect here
 		fDisconected = true;
 	}
 
-	public boolean isDisconnected() {		
+	public boolean isDisconnected()
+	{
 		return fDisconected;
 	}
 
 	public IMemoryBlock getMemoryBlock(long startAddress, long length)
-			throws DebugException {		
+			throws DebugException
+	{
 		return null;
 	}
 
-	public boolean supportsStorageRetrieval() {		
+	public boolean supportsStorageRetrieval()
+	{
 		return false;
 	}
 
 	/**
-	 * Install breakpoints that are already registered with the breakpoint
-	 * manager.
+	 * Install breakpoints that are already registered with the breakpoint manager.
 	 */
-	private void installDeferredBreakpoints() {
-		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(IDebugConstants.ID_VDM_DEBUG_MODEL);
-		for (int i = 0; i < breakpoints.length; i++) {
+	private void installDeferredBreakpoints()
+	{
+		IBreakpoint[] breakpoints = DebugPlugin.getDefault()
+				.getBreakpointManager()
+				.getBreakpoints(IDebugConstants.ID_VDM_DEBUG_MODEL);
+		for (int i = 0; i < breakpoints.length; i++)
+		{
 			breakpointAdded(breakpoints[i]);
 		}
 	}
-	
-	private void started() {
+
+	private void started()
+	{
 		fireCreationEvent();
 		installDeferredBreakpoints();
-		try {
+		try
+		{
 			resume();
-		} catch (DebugException e) {
+		} catch (DebugException e)
+		{
 		}
-		
-	}
-	
-	private void suspended(int breakpoint) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	private void terminated() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-class ReaderRunnable implements Runnable {
-		
-		
-		
-		
-		
-		
-		
-		
-		public void run() {
 
+	}
 
-			while(isConnected())
+	private void suspended(int breakpoint)
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	private void terminated()
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	class ReaderRunnable implements Runnable
+	{
+
+		public void run()
+		{
+
+			while (isConnected())
 			{
-				try {
+				try
+				{
 					receive();
-				} catch (IOException e) {
+				} catch (IOException e)
+				{
 
 					e.printStackTrace();
 					connected = false;
 				}
 			}
-			try {
+			try
+			{
 				input.close();
-			} catch (IOException e) {
+			} catch (IOException e)
+			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				System.out.println("Reader runner closing socket");
@@ -271,21 +297,18 @@ class ReaderRunnable implements Runnable {
 
 		}
 
-		
-
-		public BufferedInputStream getInput() {
+		public BufferedInputStream getInput()
+		{
 			return input;
 		}
-		
 
-		public boolean isConnected() {
+		public boolean isConnected()
+		{
 			return connected;
 		}
-		
+
 	}
 
-
-	
 	private void receive() throws IOException
 	{
 		// <ascii length> \0 <XML data> \0
@@ -301,7 +324,7 @@ class ReaderRunnable implements Runnable {
 
 		if (c == -1)
 		{
-			connected = false;		// End of thread
+			connected = false; // End of thread
 			return;
 		}
 
@@ -318,9 +341,11 @@ class ReaderRunnable implements Runnable {
 
 		while (done < remaining && --retries > 0)
 		{
-			try {
+			try
+			{
 				Thread.sleep(100);
-			} catch (InterruptedException e) {
+			} catch (InterruptedException e)
+			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -331,20 +356,20 @@ class ReaderRunnable implements Runnable {
 
 		if (retries == 0)
 		{
-			throw new IOException("Timeout DBGp reply on thread " + this.id +
-				", got [" + new String(data) + "]");
+			throw new IOException("Timeout DBGp reply on thread " + this.id
+					+ ", got [" + new String(data) + "]");
 		}
 
 		if (done != remaining)
 		{
-			throw new IOException("Short DBGp reply on thread " + this.id +
-				", got [" + new String(data) + "]");
+			throw new IOException("Short DBGp reply on thread " + this.id
+					+ ", got [" + new String(data) + "]");
 		}
 
 		if (input.read() != 0)
 		{
-			throw new IOException("Malformed DBGp terminator on thread " + this.id +
-				", got [" + new String(data) + "]");
+			throw new IOException("Malformed DBGp terminator on thread "
+					+ this.id + ", got [" + new String(data) + "]");
 		}
 
 		process(data);
@@ -355,112 +380,99 @@ class ReaderRunnable implements Runnable {
 		XMLParser parser = new XMLParser(data);
 		XMLNode node = parser.readNode();
 
-//		if (trace) System.err.println("[" + id + "] " + node);	// diags!
+		// if (trace) System.err.println("[" + id + "] " + node); // diags!
 
 		try
 		{
-			XMLTagNode tagnode = (XMLTagNode)node;
+			XMLTagNode tagnode = (XMLTagNode) node;
 
 			if (tagnode.tag.equals("init"))
 			{
 				System.out.println("Process Init: " + tagnode);
 				processInit(tagnode);
-			}
-			else if(tagnode.tag.equals("response"))
+			} else if (tagnode.tag.equals("response"))
 			{
 				System.out.println("Process Response: " + tagnode);
 				processResponse(tagnode);
-			}
-			else if(tagnode.tag.equals("stream"))
+			} else if (tagnode.tag.equals("stream"))
 			{
 				processStream(tagnode);
 			}
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			throw new IOException("Unexpected XML response: " + node);
 		}
 	}
-	
-	private void processStream(XMLTagNode msg) {
-		
-		XMLOpenTagNode otn = (XMLOpenTagNode)msg;
+
+	private void processStream(XMLTagNode msg)
+	{
+
+		XMLOpenTagNode otn = (XMLOpenTagNode) msg;
 		String stream = otn.getAttr("type");
-		XMLDataNode data = (XMLDataNode)otn.children.get(0);
+		XMLDataNode data = (XMLDataNode) otn.children.get(0);
 		String text;
-		try {
+		try
+		{
 			text = new String(Base64.decode(data.cdata));
 			System.out.println(stream + ": " + text);
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}    	
+		}
 
 	}
 
+	private void processResponse(XMLTagNode msg)
+	{
 
-
-	private void processResponse(XMLTagNode msg) {
-		
-		
 		String command = msg.getAttr("command");
-		
-		
 
-		if(command.equals("breakpoint_set"))
+		if (command.equals("breakpoint_set"))
 		{
 			String transaction_id = msg.getAttr("transaction_id");
 			Integer tid = Integer.parseInt(transaction_id);
 			Integer id = Integer.parseInt(msg.getAttr("id"));
-			
-//			synchronized (breakpointMap) {
-//				if(breakpointMap.containsKey(tid))
-//				{
-//					
-//					VdmLineBreakpoint bp = breakpointMap.get(tid);
-//					bp.setId(id);
-//					breakpointMap.remove(tid);
-//				}
-//			}
-		}
-		else if(command.equals("run"))
+
+			// synchronized (breakpointMap) {
+			// if(breakpointMap.containsKey(tid))
+			// {
+			//					
+			// VdmLineBreakpoint bp = breakpointMap.get(tid);
+			// bp.setId(id);
+			// breakpointMap.remove(tid);
+			// }
+			// }
+		} else if (command.equals("run"))
 		{
 			String newstatus = msg.getAttr("status");
-			if(newstatus.equals("break"))
+			if (newstatus.equals("break"))
 			{
 				breakpointHit("event");
-			}
-			else if(newstatus.equals("stopped"))
+			} else if (newstatus.equals("stopped"))
 			{
 				terminated();
-				try {
-					
+				try
+				{
+
 					this.fSocket.close();
-				} catch (IOException e) {
+				} catch (IOException e)
+				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-		}
-		else if(command.equals("context_get"))
+		} else if (command.equals("context_get"))
 		{
-			
-			
-				
-					
-			
-		}
-		else if(command.equals("stack_get"))
+
+		} else if (command.equals("stack_get"))
 		{
 			XMLOpenTagNode node = (XMLOpenTagNode) msg;
 			IStackFrame[] frames = null;
-//			fStack = new VdmStackFrame(fThread, node.children, (int)id);
+			// fStack = new VdmStackFrame(fThread, node.children, (int)id);
 		}
-		
 
 	}
-
-	
 
 	private void processInit(XMLTagNode tagnode) throws IOException
 	{
@@ -472,22 +484,20 @@ class ReaderRunnable implements Runnable {
 		if (space == -1)
 		{
 			id = Integer.parseInt(sid);
-		}
-		else
+		} else
 		{
 			id = Integer.parseInt(sid.substring(0, space));
 		}
 
 		redirect("stdout", DBGPRedirect.REDIRECT);
 		redirect("stderr", DBGPRedirect.REDIRECT);
-				
-		started();
-		
-	}
-	
-	
 
-	public void redirect(String command, DBGPRedirect option) throws IOException
+		started();
+
+	}
+
+	public void redirect(String command, DBGPRedirect option)
+			throws IOException
 	{
 		write(command + " -i " + (++xid) + " -c " + option.value);
 	}
@@ -495,51 +505,67 @@ class ReaderRunnable implements Runnable {
 	/**
 	 * Sends a request to the PDA VM and waits for an OK.
 	 * 
-	 * @param request debug command
-	 * @throws DebugException if the request fails
+	 * @param request
+	 *            debug command
+	 * @throws DebugException
+	 *             if the request fails
 	 */
-	private void write(String request)  {
+	private void write(String request)
+	{
 		System.out.println("Writing request: " + request);
-		
-		try {
+
+		try
+		{
 			output.write(request.getBytes("UTF-8"));
 			output.write('\n');
-			output.flush();	
-		} catch (UnsupportedEncodingException e) {
+			output.flush();
+		} catch (UnsupportedEncodingException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	/**
-	 * Notification a breakpoint was encountered. Determine
-	 * which breakpoint was hit and fire a suspend event.
+	 * Notification a breakpoint was encountered. Determine which breakpoint was hit and fire a suspend event.
 	 * 
-	 * @param event debug event
+	 * @param event
+	 *            debug event
 	 */
-	private void breakpointHit(String event) {
+	private void breakpointHit(String event)
+	{
 		// determine which breakpoint was hit, and set the thread's breakpoint
 		int lastSpace = event.lastIndexOf(' ');
-		if (lastSpace > 0) {
+		if (lastSpace > 0)
+		{
 			String line = event.substring(lastSpace + 1);
 			int lineNumber = Integer.parseInt(line);
-			IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(IDebugConstants.ID_VDM_DEBUG_MODEL);
-			for (int i = 0; i < breakpoints.length; i++) {
+			IBreakpoint[] breakpoints = DebugPlugin.getDefault()
+					.getBreakpointManager()
+					.getBreakpoints(IDebugConstants.ID_VDM_DEBUG_MODEL);
+			for (int i = 0; i < breakpoints.length; i++)
+			{
 				IBreakpoint breakpoint = breakpoints[i];
-				if (supportsBreakpoint(breakpoint)) {
-					if (breakpoint instanceof ILineBreakpoint) {
+				if (supportsBreakpoint(breakpoint))
+				{
+					if (breakpoint instanceof ILineBreakpoint)
+					{
 						ILineBreakpoint lineBreakpoint = (ILineBreakpoint) breakpoint;
-						try {
-							if (lineBreakpoint.getLineNumber() == lineNumber) {
-								//TODO: is this needed ?
-								//fThread.setBreakpoints(new IBreakpoint[]{breakpoint});
+						try
+						{
+							if (lineBreakpoint.getLineNumber() == lineNumber)
+							{
+								// TODO: is this needed ?
+								// fThread.setBreakpoints(new IBreakpoint[]{breakpoint});
 								break;
 							}
-						} catch (CoreException e) {
+						} catch (CoreException e)
+						{
 						}
 					}
 				}
@@ -548,6 +574,4 @@ class ReaderRunnable implements Runnable {
 		suspended(DebugEvent.BREAKPOINT);
 	}
 
-	
-	
 }

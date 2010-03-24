@@ -10,7 +10,7 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IDebugElement;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.overture.ide.debug.core.IDebugConstants;
-import org.overture.ide.debug.core.VdmDebugPlugin;
+import org.overture.ide.debug.core.Activator;
 
 public class VdmDebugElement extends PlatformObject implements IDebugElement {
 
@@ -42,7 +42,7 @@ public class VdmDebugElement extends PlatformObject implements IDebugElement {
 	}
 	
 	protected void abort(String message, Throwable e) throws DebugException {
-		throw new DebugException(new Status(IStatus.ERROR, VdmDebugPlugin.getDefault().PLUGIN_ID, 
+		throw new DebugException(new Status(IStatus.ERROR, IDebugConstants.PLUGIN_ID, 
 				DebugPlugin.INTERNAL_ERROR, message, e));
 	}
 	
