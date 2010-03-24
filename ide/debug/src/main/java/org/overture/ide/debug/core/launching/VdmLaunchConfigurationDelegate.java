@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
 import org.eclipse.debug.core.model.IProcess;
@@ -30,7 +29,6 @@ import org.overture.ide.core.IVdmProject;
 import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.VdmProject;
 import org.overture.ide.core.utility.ClasspathUtils;
-import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.model.VdmDebugTarget;
 import org.overture.ide.debug.utils.ProcessConsolePrinter;
@@ -82,7 +80,6 @@ public class VdmLaunchConfigurationDelegate implements
 					server.close();
 				} catch (IOException e1)
 				{
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 
@@ -157,7 +154,7 @@ public class VdmLaunchConfigurationDelegate implements
 					+ getArgumentString(commandList));
 		}
 		commandList.add(0, "java");
-		commandList.addAll(1, getClassPath());
+		commandList.addAll(1, getClassPath(project));
 		commandList.add(3, IDebugConstants.DEBUG_ENGINE_CLASS);
 
 		VdmDebugTarget target = null;
@@ -169,15 +166,6 @@ public class VdmLaunchConfigurationDelegate implements
 			Thread acceptorThread = new Thread(socketAcceptor);
 			acceptorThread.setName("Socket Acceptor");
 			acceptorThread.start();
-
-			try
-			{
-				Thread.sleep(200);
-			} catch (InterruptedException e1)
-			{
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 
 			IProcess p = launchExternalProcess(launch, commandList, project);
 
@@ -247,7 +235,7 @@ return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVER
 	}
 
 	private IProcess launchExternalProcess(ILaunch launch,
-			List<String> commandList, IVdmProject project)
+			List<String> commandList, IVdmProject project) throws CoreException
 	{
 
 		String executeString = getArgumentString(commandList);
@@ -275,19 +263,14 @@ return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVER
 			}
 		} catch (IOException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CoreException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			abort("Could not launch debug process", e);
+		} 
 
 		return DebugPlugin.newProcess(launch, process, "VDMJ debugger");
 	}
 
 	private String getDefaultBase64(ILaunchConfiguration configuration,
-			String charset)
+			String charset) throws CoreException
 	{
 		String defaultModule;
 		try
@@ -296,20 +279,15 @@ return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVER
 					"");
 
 			return Base64.encode(defaultModule.getBytes(charset)).toString();
-		} catch (CoreException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (UnsupportedEncodingException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			abort("Unsuported encoding used for expression", e);
 		}
 		return "";
 	}
 
 	private String getExpressionBase64(ILaunchConfiguration configuration,
-			String charset)
+			String charset) throws CoreException
 	{
 		String expression;
 		try
@@ -318,24 +296,34 @@ return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVER
 			expression = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION,
 					"");
 			return Base64.encode(expression.getBytes(charset)).toString();
-		} catch (CoreException e)
+		}  catch (UnsupportedEncodingException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		abort("Unsuported encoding used for expression", e);
 		}
 		return "";
 	}
 
-	private List<String> getClassPath()
+	private List<String> getClassPath(IVdmProject project)
 	{
 		List<String> commandList = new Vector<String>();
 		List<String> entries = new Vector<String>();
+		//get the bundled class path of the debugger
 		ClasspathUtils.collectClasspath(new String[] { IDebugConstants.DEBUG_ENGINE_BUNDLE_ID },
 				entries);
+		//get the class path for all jars in the project lib folder
+		File lib = new File(project.getLocation().toFile(),"lib");
+		if(lib.exists() && lib.isDirectory())
+		{
+			for (File f : getAllFiles(lib))
+			{
+				if(f.getName().toLowerCase().endsWith(".jar"))
+				{
+					entries.add(f.getAbsolutePath());
+				}
+			}
+		}
+		
+		
 		if (entries.size() > 0)
 		{
 			commandList.add("-cp");
@@ -353,6 +341,23 @@ return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVER
 		}
 		return commandList;
 	}
+	
+	private static List<File> getAllFiles(File file){
+	List<File> files = new Vector<File>();
+		if(file.isDirectory())
+		{
+			for (File f : file.listFiles())
+			{
+				files.addAll(getAllFiles(f));	
+			}
+			
+		}else
+		{
+			files.add(file);
+		}
+		return files;
+	}
+	
 
 	private String getCpSeperator()
 	{
@@ -410,41 +415,28 @@ return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVER
 		return -1;
 	}
 
-	private List<String> getSpecFiles(IVdmProject project)
+	private List<String> getSpecFiles(IVdmProject project) throws CoreException
 	{
 		List<String> files = new Vector<String>();
-		try
-		{
+		
 
 			for (IVdmSourceUnit unit : project.getSpecFiles())
 			{
 				files.add(unit.getSystemFile().toURI().toASCIIString());
 			}
 
-		} catch (CoreException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return files;
 	}
 
-	private IVdmProject getProject(ILaunchConfiguration configuration)
+	private IVdmProject getProject(ILaunchConfiguration configuration) throws CoreException
 	{
 		IProject project = null;
-		try
-		{
+		
 			project = ResourcesPlugin.getWorkspace()
 					.getRoot()
 					.getProject(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT,
 							""));
-		} catch (CoreException e)
-		{
-			if (Activator.DEBUG)
-			{
-				e.printStackTrace();
-			}
-		}
+		
 		if (project != null && VdmProject.isVdmProject(project))
 		{
 			return VdmProject.createProject(project);
