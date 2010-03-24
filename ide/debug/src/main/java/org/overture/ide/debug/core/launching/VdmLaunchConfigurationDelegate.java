@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
 import org.eclipse.debug.core.model.IProcess;
@@ -32,6 +33,7 @@ import org.overture.ide.core.utility.ClasspathUtils;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.model.VdmDebugTarget;
 import org.overture.ide.debug.utils.ProcessConsolePrinter;
+import org.overture.ide.debug.utils.communication.DebugCommunication;
 import org.overture.ide.ui.internal.util.ConsoleWriter;
 import org.overturetool.vdmj.util.Base64;
 
@@ -102,8 +104,22 @@ public class VdmLaunchConfigurationDelegate implements
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException
 	{
-		InetSocketAddress address = new InetSocketAddress("localhost",
-				findFreePort());
+
+		DebugCommunication debugComm = null;
+		try {
+			debugComm = DebugCommunication.getInstance();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		//Storing the debug session id
+		ILaunchConfigurationWorkingCopy lcwc = configuration.getWorkingCopy();
+		lcwc.setAttribute(IDebugConstants.VDM_DEBUG_SESSION_ID, debugComm.getSessionId());
+		lcwc.doSave();
+		
+//		InetSocketAddress address = new InetSocketAddress("localhost",
+//				findFreePort());
 
 		List<String> commandList = new ArrayList<String>();
 
@@ -111,11 +127,12 @@ public class VdmLaunchConfigurationDelegate implements
 		String charSet = project.getDefaultCharset();
 
 		commandList.add("-h");
-		commandList.add(address.getAddress().getHostAddress());
+		commandList.add("localhost");
 		commandList.add("-p");
-		commandList.add(new Integer(address.getPort()).toString());
+		commandList.add(new Integer(debugComm.getPort()).toString());
 		commandList.add("-k");
-		commandList.add("dbgp_1265361483486");
+		//commandList.add("dbgp_1265361483486");
+		commandList.add(configuration.getAttribute(IDebugConstants.VDM_DEBUG_SESSION_ID, "0000000"));
 		commandList.add("-w");
 		commandList.add("-q");
 		commandList.add(project.getDialect().getArgstring());
@@ -160,26 +177,44 @@ public class VdmLaunchConfigurationDelegate implements
 		VdmDebugTarget target = null;
 		if (mode.equals(ILaunchManager.DEBUG_MODE))
 		{
-			System.out.println("Accepting debugger on: "
-					+ address.getHostName() + " " + address.getPort());
-			SocketAcceptor socketAcceptor = new SocketAcceptor(address);
-			Thread acceptorThread = new Thread(socketAcceptor);
-			acceptorThread.setName("Socket Acceptor");
-			acceptorThread.start();
+//			System.out.println("Accepting debugger on: "
+//					+ address.getHostName() + " " + address.getPort());
+//			SocketAcceptor socketAcceptor = new SocketAcceptor(address);
+//			Thread acceptorThread = new Thread(socketAcceptor);
+//			acceptorThread.setName("Socket Acceptor");
+//			acceptorThread.start();
 
+//			try
+//			{
+//				Thread.sleep(200);
+//			} catch (InterruptedException e1)
+//			{
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+
+			
+			
+			
+
+			//Socket s = socketAcceptor.getSocket();
+
+//			if (s == null)
+//				abort("Failed to connect to debugger", null);
+
+			target = new VdmDebugTarget(launch);
+			
+			debugComm.RegisterDebugTarger(configuration.getAttribute(IDebugConstants.VDM_DEBUG_SESSION_ID, "0000000"), target);
+			
+			
 			IProcess p = launchExternalProcess(launch, commandList, project);
-
-			Socket s = socketAcceptor.getSocket();
-
-			if (s == null)
-				abort("Failed to connect to debugger", null);
-
-			target = new VdmDebugTarget(launch, p, s);
+			target.setProcess(p);
 			launch.addDebugTarget(target);
 
 		}
 	}
 
+	
 	private String getRemoteControllerName(ILaunchConfiguration configuration) throws CoreException
 	{
 		return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_CONTROL,

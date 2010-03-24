@@ -22,6 +22,7 @@ public interface IDebugConstants
 	final static String VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION = "vdm_launch_config_memory_option";
 	final static String VDM_LAUNCH_CONFIG_ENABLE_LOGGING = "vdm_launch_config_enable_logging";
 	
+	final static String VDM_DEBUG_SESSION_ID = "vdm_debug_session_id";
 
 	public static final String ID_VDM_DEBUG_MODEL = "org.overture.ide.debug.vdm";
 	public static final String ATTR_VDM_PROGRAM = ID_VDM_DEBUG_MODEL

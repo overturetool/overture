@@ -11,10 +11,11 @@ public class VdmThread extends VdmDebugElement implements IThread{
 
 	private String fName;
 	private ArrayList<IStackFrame> fFrames;
+	private int id;
 	
-	
-	public VdmThread(VdmDebugTarget target) {
+	public VdmThread(VdmDebugTarget target,int id) {
 		super(target);
+		this.id = id;
 		fFrames = new ArrayList<IStackFrame>();
 		// TODO Auto-generated constructor stub
 	}
@@ -124,6 +125,10 @@ public class VdmThread extends VdmDebugElement implements IThread{
 	
 	public void setName(String name){
 		fName = name;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	

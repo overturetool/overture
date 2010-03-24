@@ -25,6 +25,7 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.overture.ide.debug.core.IDebugConstants;
+import org.overture.ide.debug.utils.communication.DebugCommunication;
 import org.overture.ide.debug.utils.xml.XMLDataNode;
 import org.overture.ide.debug.utils.xml.XMLNode;
 import org.overture.ide.debug.utils.xml.XMLOpenTagNode;
@@ -43,7 +44,6 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 	private boolean fTerminated = false;
 	private boolean fSuspended = false;
 	private boolean fDisconected = false;
-	private int id = 0;
 	private int xid = 0;
 	private Socket fSocket;
 
@@ -56,45 +56,33 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 	private BufferedOutputStream output;
 	private PrintWriter fRequestWriter;
 	private BufferedReader fRequestReader;
+	private String sessionId;
 
-	public VdmDebugTarget(ILaunch launch, IProcess process, Socket s)
+	public VdmDebugTarget(ILaunch launch)
 			throws DebugException {
 		super(null);
 		fTarget = this;
 		fLaunch = launch;
-		fProcess = process;
-		fSocket = s;
+		
 
-		fThread = new VdmThread(this);
+		fThread = new VdmThread(this, 1); //TODO: assuming main thread is number 1;
 		fThread.setName("Thread [Main]");
 		fThreads = new ArrayList<IThread>();
 		fThreads.add(fThread);
 
 		connected = true;
 
-		try
-		{
-			fSocket = s;
-			fRequestWriter = new PrintWriter(fSocket.getOutputStream());
-			// fRequestReader = new BufferedReader(new InputStreamReader(fRequestSocket.getInputStream()));
-			input = new BufferedInputStream(fSocket.getInputStream());
-			output = new BufferedOutputStream(fSocket.getOutputStream());
-
-		} catch (UnknownHostException e)
-		{
-			abort("Unable to connect to Vdm VM", e);
-		} catch (IOException e)
-		{
-			abort("Unable to connect to Vdm VM", e);
-		}
+		
 
 		DebugPlugin.getDefault()
 				.getBreakpointManager()
 				.addBreakpointListener(this);
-		readerRunner = new ReaderRunnable();
+		
 
-		new Thread(readerRunner).start();
-
+	}
+	
+	public void setProcess(IProcess process){
+		fProcess = process;
 	}
 
 	public String getName() throws DebugException
@@ -142,6 +130,17 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 
 	public void terminate() throws DebugException
 	{
+		
+		try
+		{
+			DebugCommunication.getInstance().disposeTarget(sessionId);
+			if(!fSocket.isClosed())
+				this.fSocket.close();
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		// TODO Do dispose of objects here
 		fTerminated = true;
 	}
@@ -261,8 +260,15 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 
 	}
 
-	private void terminated()
+	private void terminated() 
 	{
+		
+		try {
+			terminate();
+		} catch (DebugException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		// TODO Auto-generated method stub
 
 	}
@@ -280,8 +286,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 					receive();
 				} catch (IOException e)
 				{
-
-					e.printStackTrace();
+					
 					connected = false;
 				}
 			}
@@ -356,20 +361,20 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 
 		if (retries == 0)
 		{
-			throw new IOException("Timeout DBGp reply on thread " + this.id
+			throw new IOException("Timeout DBGp reply on thread " + ((VdmThread)fThread).getId()
 					+ ", got [" + new String(data) + "]");
 		}
 
 		if (done != remaining)
 		{
-			throw new IOException("Short DBGp reply on thread " + this.id
+			throw new IOException("Short DBGp reply on thread " + ((VdmThread)fThread).getId()
 					+ ", got [" + new String(data) + "]");
 		}
 
 		if (input.read() != 0)
 		{
 			throw new IOException("Malformed DBGp terminator on thread "
-					+ this.id + ", got [" + new String(data) + "]");
+					+ ((VdmThread)fThread).getId() + ", got [" + new String(data) + "]");
 		}
 
 		process(data);
@@ -452,15 +457,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 			} else if (newstatus.equals("stopped"))
 			{
 				terminated();
-				try
-				{
-
-					this.fSocket.close();
-				} catch (IOException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				
 			}
 		} else if (command.equals("context_get"))
 		{
@@ -477,7 +474,9 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 	private void processInit(XMLTagNode tagnode) throws IOException
 	{
 		String sid = tagnode.getAttr("thread");
-
+		sessionId = tagnode.getAttr("idekey");
+		
+		int id =-1;
 		// Either "123" or "123 on <CPU name>" for VDM-RT
 		int space = sid.indexOf(' ');
 
@@ -572,6 +571,53 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 			}
 		}
 		suspended(DebugEvent.BREAKPOINT);
+	}
+
+	public void newThread(XMLTagNode tagnode, Socket s) throws DebugException {
+		String sid = tagnode.getAttr("thread");
+		int id =-1;
+		// Either "123" or "123 on <CPU name>" for VDM-RT
+		int space = sid.indexOf(' ');
+
+		if (space == -1)
+		{
+			id = Integer.parseInt(sid);
+		} else
+		{
+			id = Integer.parseInt(sid.substring(0, space));
+		}
+
+		
+		if(id == 1){ //Assuming 1 is main thread;
+			try
+			{
+				fSocket = s;
+				fRequestWriter = new PrintWriter(fSocket.getOutputStream());
+				// fRequestReader = new BufferedReader(new InputStreamReader(fRequestSocket.getInputStream()));
+				input = new BufferedInputStream(fSocket.getInputStream());
+				output = new BufferedOutputStream(fSocket.getOutputStream());
+				readerRunner = new ReaderRunnable();
+				new Thread(readerRunner).start();
+				
+			} catch (UnknownHostException e)
+			{
+				abort("Unable to connect to Vdm VM", e);
+			} catch (IOException e)
+			{
+				abort("Unable to connect to Vdm VM", e);
+			}
+		}
+		try {
+			redirect("stdout", DBGPRedirect.REDIRECT);
+			redirect("stderr", DBGPRedirect.REDIRECT);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+
+		started();
+		
 	}
 
 }
