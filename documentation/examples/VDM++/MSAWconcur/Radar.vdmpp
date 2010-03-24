@@ -104,6 +104,9 @@ while true do
  )
 
 sync 
-per isFinished => not busy
+per isFinished => not busy;
+mutex(removeNotDetected);
+mutex (addNewlyDetected);
+mutex(UpdatePriorityList)
       
 end Radar
