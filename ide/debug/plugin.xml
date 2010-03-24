@@ -40,6 +40,11 @@
            description="VDM launch tab"
            id="org.overture.ide.debug.ui.launchConfigurationTabGroup"
            type="org.overture.ide.debug.core.launchConfigurationType">
+           
      </launchConfigurationTabGroup>
   </extension>
+  
+  
+  
+  
 </plugin>

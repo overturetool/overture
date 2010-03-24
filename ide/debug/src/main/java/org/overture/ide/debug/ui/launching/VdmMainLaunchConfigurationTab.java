@@ -35,12 +35,16 @@ import org.overture.ide.ui.internal.viewsupport.VdmUILabelProvider;
 import org.overture.ide.ui.outline.DisplayNameCreator;
 import org.overture.ide.ui.outline.ExecutableFilter;
 import org.overture.ide.ui.outline.VdmOutlineTreeContentProvider;
+import org.overturetool.vdmj.ast.IAstNode;
+import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.syntax.ParserException;
 
@@ -59,11 +63,11 @@ public class VdmMainLaunchConfigurationTab extends
 	private Text fRemoteControlClassText;
 	private Button checkBoxGenerateLatexCoverage = null;
 	private Button checkBoxRemoteDebug = null;
-	private Button checkBoxEnableLogging=null;
+	private Button checkBoxEnableLogging = null;
+	private String expressionPathseperator = "";
+	private String defaultModule = "";
+	private String expression = "";
 	private WidgetListener fListener = new WidgetListener();
-	public void setVmOptions(String option)
-	{
-	}
 
 	// private String moduleDefinitionPath;
 
@@ -82,14 +86,16 @@ public class VdmMainLaunchConfigurationTab extends
 
 		public void widgetSelected(SelectionEvent e)
 		{
-//			fOperationText.setEnabled(!fdebugInConsole.getSelection());
+			// fOperationText.setEnabled(!fdebugInConsole.getSelection());
 			updateLaunchConfigurationDialog();
 		}
 	}
 
 	protected IProject getProject()
 	{
-		return ResourcesPlugin.getWorkspace().getRoot().getProject(fProjectText.getText());
+		return ResourcesPlugin.getWorkspace()
+				.getRoot()
+				.getProject(fProjectText.getText());
 
 	}
 
@@ -411,8 +417,7 @@ public class VdmMainLaunchConfigurationTab extends
 		layout.makeColumnsEqualWidth = false;
 		layout.numColumns = 3;
 		group.setLayout(layout);
-		
-		
+
 		checkBoxGenerateLatexCoverage = new Button(group, SWT.CHECK);
 		checkBoxGenerateLatexCoverage.setText("Generate Latex coverage");
 		checkBoxGenerateLatexCoverage.setSelection(false);
@@ -422,15 +427,13 @@ public class VdmMainLaunchConfigurationTab extends
 		checkBoxRemoteDebug.setText("Remote debug");
 		checkBoxRemoteDebug.setSelection(false);
 		checkBoxRemoteDebug.addSelectionListener(fListener);
-		
+
 		checkBoxEnableLogging = new Button(group, SWT.CHECK);
 		checkBoxEnableLogging.setText("Enable logging");
 		checkBoxEnableLogging.setSelection(false);
 		checkBoxEnableLogging.addSelectionListener(fListener);
 
 	}
-
-
 
 	/**
 	 * chooses a project for the type of launch config that it is
@@ -443,18 +446,18 @@ public class VdmMainLaunchConfigurationTab extends
 		final ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(getShell(),
 				new DecorationgVdmLabelProvider(new VdmUILabelProvider()),
 				new VdmOutlineTreeContentProvider());
-//		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(getShell(), new WorkbenchLabelProvider(), new BaseWorkbenchContentProvider());
-		
-//		dialog.setTitle(getModuleLabelName()
-//				+ " and operation/function selection");
-//		dialog.setMessage("searchButton_message");
+		// ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(getShell(), new
+		// WorkbenchLabelProvider(), new BaseWorkbenchContentProvider());
+
+		// dialog.setTitle(getModuleLabelName()
+		// + " and operation/function selection");
+		// dialog.setMessage("searchButton_message");
 
 		// dialog.addFilter(new ExecutableFilter());
 		// dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
-		
+
 		final IProject project = getProject();
 		IVdmProject vdmProject = VdmProject.createProject(project);
-		
 
 		dialog.setInput(vdmProject.getModel());
 		dialog.addFilter(new ExecutableFilter());
@@ -462,6 +465,8 @@ public class VdmMainLaunchConfigurationTab extends
 		if (dialog.open() == IDialogConstants.OK_ID)
 		{
 			Definition method = (Definition) dialog.getFirstResult();
+			IAstNode module = null;
+
 			if (method.classDefinition != null)
 			{
 				boolean foundConstructor = false;
@@ -471,43 +476,43 @@ public class VdmMainLaunchConfigurationTab extends
 							&& ((ExplicitOperationDefinition) def).isConstructor)
 					{
 						foundConstructor = true;
+						module = def;
+						defaultModule = def.getName();
 						fModuleNameText.setText(DisplayNameCreator.getDisplayName(def));
 					}
 				}
 				if (!foundConstructor)
+				{
+					module = method.classDefinition;
+					defaultModule = method.classDefinition.getName();
 					fModuleNameText.setText(DisplayNameCreator.getDisplayName(method.classDefinition)
 							+ "()");
+				}
 			} else if (method.location != null
 					&& method.location.module != null)
-				fModuleNameText.setText(method.location.module);
-			else
-				fModuleNameText.setText("DEFAULT");// undetermined module
+			{
+				defaultModule = method.location.module;
+				fModuleNameText.setText(defaultModule);
+			} else
+			{
+				defaultModule = "DEFAULT";
+				fModuleNameText.setText(defaultModule);// undetermined module
+			}
 
 			// fOperationText.setText(method.name.name + "()");
 			fOperationText.setText(DisplayNameCreator.getDisplayName(method));
+			expressionPathseperator = getCombinChar(module, method);
+			if (module != null && module instanceof ClassDefinition)
+			{
+				expression = "new " + fModuleNameText.getText()
+						+ expressionPathseperator + fOperationText.getText();
+			} else
+			{
+				expression = fModuleNameText.getText()
+						+ expressionPathseperator + fOperationText.getText();
+			}
 
 		}
-	}
-
-	public void performApply(ILaunchConfigurationWorkingCopy configuration)
-	{
-		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT,
-				fProjectText.getText());
-		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_MODULE,
-				fModuleNameText.getText());
-		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_OPERATION,
-				fOperationText.getText());
-		
-		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_CONTROL,
-				fRemoteControlClassText.getText());
-		
-		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG,
-				checkBoxRemoteDebug.getSelection());
-		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE,
-				checkBoxGenerateLatexCoverage.getSelection());
-		
-		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING,
-				checkBoxEnableLogging.getSelection());
 	}
 
 	public String getName()
@@ -521,6 +526,63 @@ public class VdmMainLaunchConfigurationTab extends
 
 	}
 
+	private String getCombinChar(IAstNode module, IAstNode operation)
+	{
+		boolean staticAccess = true;
+		if (module != null && !(module instanceof Module))
+		{
+			if (operation instanceof ExplicitOperationDefinition
+					&& !((ExplicitOperationDefinition) operation).isStatic())
+			{
+				staticAccess = false;
+			} else if (operation instanceof ExplicitFunctionDefinition
+					&& !((ExplicitFunctionDefinition) operation).isStatic())
+			{
+				staticAccess = false;
+			}
+		}
+
+		if (staticAccess)
+		{
+			return "`";
+		} else
+		{
+			return ".";
+		}
+	}
+
+	public void performApply(ILaunchConfigurationWorkingCopy configuration)
+	{
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT,
+				fProjectText.getText());
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_MODULE,
+				fModuleNameText.getText());
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_OPERATION,
+				fOperationText.getText());
+
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_CONTROL,
+				fRemoteControlClassText.getText());
+
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG,
+				checkBoxRemoteDebug.getSelection());
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE,
+				checkBoxGenerateLatexCoverage.getSelection());
+
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING,
+				checkBoxEnableLogging.getSelection());
+
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION_SEPERATOR,
+				expressionPathseperator);
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_DEFAULT,
+				defaultModule);
+
+		
+			System.out.println("Expression: " + expression);
+			configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION,
+					expression);
+		
+	}
+
 	public void initializeFrom(ILaunchConfiguration configuration)
 	{
 		try
@@ -532,19 +594,25 @@ public class VdmMainLaunchConfigurationTab extends
 					""));
 			fOperationText.setText(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_OPERATION,
 					""));
-			
-			
-			
+
 			fRemoteControlClassText.setText(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_CONTROL,
 					""));
-			
-			checkBoxRemoteDebug.setSelection(	configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG,
+
+			checkBoxRemoteDebug.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG,
 					false));
-			checkBoxGenerateLatexCoverage.setSelection(	configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE,
+			checkBoxGenerateLatexCoverage.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE,
 					false));
-			
-			checkBoxEnableLogging.setSelection(	configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING,
+
+			checkBoxEnableLogging.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING,
 					false));
+
+			expressionPathseperator = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION_SEPERATOR,
+					".");
+			defaultModule = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_DEFAULT,
+					"");
+
+			expression = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION,
+					"");
 		} catch (CoreException e)
 		{
 			// TODO Auto-generated catch block

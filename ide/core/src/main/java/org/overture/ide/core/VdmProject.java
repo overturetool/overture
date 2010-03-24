@@ -33,6 +33,7 @@ import org.overture.ide.core.utility.LanguageManager;
 import org.overture.ide.core.utility.Project;
 import org.overture.ide.internal.core.ast.VdmModelManager;
 import org.overturetool.vdmj.Release;
+import org.overturetool.vdmj.lex.Dialect;
 
 public class VdmProject extends Project implements IVdmProject
 {
@@ -801,6 +802,11 @@ public class VdmProject extends Project implements IVdmProject
 	public String toString()
 	{
 		return getName();
+	}
+
+	public Dialect getDialect()
+	{
+		return this.language.getDialect();
 	}
 
 }
