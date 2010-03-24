@@ -56,6 +56,7 @@ import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.traces.CallSequence;
 import org.overturetool.vdmj.traces.TestSequence;
+import org.overturetool.vdmj.traces.TraceReductionType;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeChecker;
@@ -513,35 +514,43 @@ abstract public class Interpreter
 
 	abstract protected NamedTraceDefinition findTraceDefinition(LexNameToken name);
 
-	public void runtrace(String strname, int testNo, boolean debug)
+	public void runtrace(String name, int testNo, boolean debug)
 		throws Exception
 	{
-		LexTokenReader ltr = new LexTokenReader(strname, Dialect.VDM_SL);
+		runtrace(name, testNo, debug, 1.0F, TraceReductionType.NONE, 1234);
+	}
+
+	public void runtrace(
+		String name, int testNo, boolean debug,
+		float subset, TraceReductionType type, long seed)
+		throws Exception
+	{
+		LexTokenReader ltr = new LexTokenReader(name, Dialect.VDM_SL);
 		LexToken token = ltr.nextToken();
-		LexNameToken name = null;
+		LexNameToken lexname = null;
 
 		switch (token.type)
 		{
 			case NAME:
-				name = (LexNameToken)token;
+				lexname = (LexNameToken)token;
 				break;
 
 			case IDENTIFIER:
-				name = new LexNameToken(getDefaultName(), (LexIdentifierToken)token);
+				lexname = new LexNameToken(getDefaultName(), (LexIdentifierToken)token);
 				break;
 
 			default:
 				throw new Exception("Expecting trace name");
 		}
 
-		NamedTraceDefinition tracedef = findTraceDefinition(name);
+		NamedTraceDefinition tracedef = findTraceDefinition(lexname);
 
 		if (tracedef == null)
 		{
-			throw new Exception("Trace " + name + " not found");
+			throw new Exception("Trace " + lexname + " not found");
 		}
 
-		TestSequence tests = tracedef.getTests(initialContext);
+		TestSequence tests = tracedef.getTests(initialContext, subset, type, seed);
 
 		boolean wasDBGP = Settings.usingDBGP;
 		boolean wasCMD = Settings.usingCmdLine;
@@ -559,7 +568,7 @@ abstract public class Interpreter
 
 		if (testNo > tests.size())
 		{
-			throw new Exception("Trace " + name +
+			throw new Exception("Trace " + lexname +
 				" only has " + tests.size() + " tests");
 		}
 
