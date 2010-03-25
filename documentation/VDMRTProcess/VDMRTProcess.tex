@@ -5697,9 +5697,9 @@ end Consumer
 
 The Time Stamp pattern is for use in synchronous systems, where each
 different thread has its own execution period. Such threads we refer
-to as clients. The main class in the Time Stamp pattern is the
-\texttt{TimeStamp} class, which extends the \texttt{WaitNotify} class described
-in Section~\ref{sec:waitnotify}. A single instance of a
+to as clients. 
+%The main class in the Time Stamp pattern is the \texttt{TimeStamp} class, which extends the \texttt{WaitNotify} class described in Section~\ref{sec:waitnotify}. 
+A single instance of a
 \texttt{TimeStamp} class will be shared amongst all of the different
 clients, and is used to ensure each client is awoken for its execution
 period. An example arrangement is shown in
@@ -5710,22 +5710,21 @@ A sample execution is shown in Figure~\ref{fig:seqdiagtimestamp}. In
 this example three clients exist: two ``fast'' clients and one
 ``slow'' client. The two fast clients each have execution period every
 10 time steps, while the slow client has execution period every 30
-time steps. Each client calls \texttt{TimeStamp`WaitRelative} with its
-execution period, and is then awoken at that time, or as soon as
-possible thereafter. When awoken each client executes its
+time steps. Each client executes its
 \texttt{ComputationPhase} -- that computation it is intended to perform
-periodically. When it completes its \texttt{ComputationPhase} it calls
-\texttt{TimeStamp`Notify} to release any waiting clients. Note that
-since the clients are incidental to the pattern, they are not given in
-the following specification.
+periodically. When it completes its \texttt{ComputationPhase} it calls 
+\texttt{TimeStamp`WaitRelative} with its
+execution period, and is then awoken at that time, or as soon as
+possible thereafter. \texttt{TimeStamp`NotifyAll} 
+is then called in order to release any waiting clients. Finally, \texttt{TimeStamp`Awake}
+is called, where the thread waits until it is time to wake up. Note that 
+since the clients are incidental to the pattern, they are not given in the following specification.
 
 \subsection{The TimeStamp Class}
 
-The \texttt{TimeStamp} class extends the \texttt{WaitNotify} class. It
-maintains a map from thread ids to time (\texttt{wakeUpMap}),
-representing when a particular thread should be woken. It therefore
-overrides the \texttt{WaitNotify} interface to ensure that this map is
-correctly maintained. The other instance variable in the class
+The \texttt{TimeStamp} class maintains a map from thread ids to 
+time (\texttt{wakeUpMap}), representing when a particular thread 
+should be woken. The other instance variable in the class
 represents the current time. Note that this concept is orthogonal to
 the notion of simulated time described earlier in this document.
 
@@ -5744,7 +5743,7 @@ the notion of simulated time described earlier in this document.
 \end{figure}
 
 \begin{lstlisting}
-class TimeStamp is subclass of WaitNotify
+class TimeStamp
 
 instance variables
   
@@ -5760,9 +5759,7 @@ operations
 
 public WaitRelative : nat ==> ()
 WaitRelative(val) ==
-( AddToWakeUpMap(threadid, currentTime + val);
-  WaitNotify`Wait();
-);
+  AddToWakeUpMap(threadid, currentTime + val);
 \end{lstlisting}
 
 Absolute waits are performed using \texttt{WaitAbsolute}. Note that if time
@@ -5772,9 +5769,7 @@ woken.
 \begin{lstlisting}
 public WaitAbsolute : nat ==> ()
 WaitAbsolute(val) ==
-( AddToWakeUpMap(threadid, val);
-  WaitNotify`Wait();
-);
+  AddToWakeUpMap(threadid, val);
 \end{lstlisting}
 
 \texttt{AddToWakeUpMap} is used to add new waits to the \texttt{wakeUpMap}.
@@ -5785,35 +5780,34 @@ AddToWakeUpMap(tId, val) ==
   wakeUpMap := wakeUpMap ++ { tId |-> val };
 \end{lstlisting}
 
-The following notify operations override those in the
-\texttt{WaitNotify} class. A specific thread can be immediately awoken
+A specific thread can be immediately awoken
 using \texttt{NotifyThread}.
 
 \begin{lstlisting}
 public NotifyThread : nat ==> ()
 NotifyThread(tId) ==
-( wakeUpMap := {tId} <-: wakeUpMap;
-  WaitNotify`NotifyThread(tId)
-);
+  wakeUpMap := {tId} <-: wakeUpMap;
 \end{lstlisting}
 
-An arbitrary thread is immediately awoken using \texttt{Notify}.
+%An arbitrary thread is immediately awoken using \texttt{Notify}.
+%
+%\begin{lstlisting}
+%public Notify : () ==> ()
+%Notify() ==
+%  let tId in set dom wakeUpMap in
+%    NotifyThread(tId);
+%\end{lstlisting}
 
-\begin{lstlisting}
-public Notify : () ==> ()
-Notify() ==
-  let tId in set dom wakeUpMap in
-    NotifyThread(tId);
-\end{lstlisting}
-
-All waiting threads are immediately awoken using \texttt{NotifyAll}.
+Testing all waiting threads to find which needs to be awoken using \texttt{NotifyAll}.
 
 \begin{lstlisting}
 public NotifyAll : () ==> ()
 NotifyAll() ==
-( wakeUpMap := {|->};
-  WaitNotify`NotifyAll()
-);
+  let threadSet : set of nat = {th | th in set dom wakeUpMap & wakeUpMap(th) <= currentTime }
+  in
+    for all t in set threadSet 
+    do
+      NotifyThread(t);
 \end{lstlisting}
 
 The operation \texttt{NotifyAndIncTime} is used to increment time and
@@ -5823,8 +5817,7 @@ awake all threads waiting for the current time step.
 NotifyAndIncTime : () ==> ()
 NotifyAndIncTime() ==
 ( currentTime := currentTime + 1;
-  for all t in set dom (wakeUpMap :> {currentTime}) do
-    NotifyThread(t)
+  NotifyAll();
 );
 \end{lstlisting}
 
@@ -5842,8 +5835,9 @@ operations, we need to set access to them to be mutually exclusive.
 
 \begin{lstlisting}
 sync
-
-  mutex(AddToWakeUpMap, Notify, NotifyThread, NotifyAll);
+  mutex(NotifyAll);
+  mutex(AddToWakeUpMap);
+  mutex(AddToWakeUpMap, NotifyAll); 
 \end{lstlisting}
 
 \chapter{Examples In Full}\label{app:listing}
