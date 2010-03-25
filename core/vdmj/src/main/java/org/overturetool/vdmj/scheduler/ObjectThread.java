@@ -55,6 +55,8 @@ public class ObjectThread extends SchedulableThread
 	{
 		super(object.getCPU().resource, object, 0, false, 0);
 
+		setName("ObjectThread-" + getId());
+
 		this.title =
 			"Thread " + getId() +
 			", self #" + object.objectReference +
@@ -108,7 +110,7 @@ public class ObjectThread extends SchedulableThread
 		{
 			suspendOthers();
 			ResourceScheduler.setException(e);
-			DebuggerReader.stopped(e.ctxt, operation.name.location);
+			DebuggerReader.stopped(e.ctxt, e.location);
 		}
 		catch (Exception e)
 		{

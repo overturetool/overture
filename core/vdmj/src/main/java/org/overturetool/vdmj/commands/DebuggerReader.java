@@ -59,7 +59,7 @@ public class DebuggerReader extends CommandReader
 	public DebuggerReader(
 		Interpreter interpreter, Breakpoint breakpoint, Context ctxt)
 	{
-		super(interpreter, "[" + Thread.currentThread() + "]> ");
+		super(interpreter, "[" + Thread.currentThread().getName() + "]> ");
 		this.breakpoint = breakpoint;
 		this.ctxt = ctxt;
 	}
@@ -346,8 +346,15 @@ public class DebuggerReader extends CommandReader
 	{
 		if (Settings.usingCmdLine)
 		{
-			Breakpoint bp = new Breakpoint(location);
-			new DebuggerReader(Interpreter.getInstance(), bp, ctxt).run();
+			try
+			{
+				Breakpoint bp = new Breakpoint(location);
+				new DebuggerReader(Interpreter.getInstance(), bp, ctxt).run();
+			}
+			catch (Exception e)
+			{
+				println("Exception: " + e);
+			}
 		}
 	}
 }

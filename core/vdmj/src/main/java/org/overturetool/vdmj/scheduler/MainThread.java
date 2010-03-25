@@ -86,7 +86,7 @@ public class MainThread extends SchedulableThread
 		{
 			setException(e);
 			suspendOthers();
-			DebuggerReader.stopped(e.ctxt, expression.location);
+			DebuggerReader.stopped(e.ctxt, e.location);
 		}
 		catch (Exception e)
 		{
