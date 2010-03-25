@@ -174,6 +174,7 @@ public class CPUResource extends Resource
 		return cpuNumber;
 	}
 
+	@Override
 	public boolean isVirtual()
 	{
 		return this == vCPU;

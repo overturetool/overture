@@ -115,4 +115,6 @@ abstract public class Resource implements Serializable
 	abstract public void reset();
 
 	abstract public String getStatus();
+
+	abstract public boolean isVirtual();
 }

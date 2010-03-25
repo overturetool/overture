@@ -50,8 +50,6 @@ import org.overturetool.vdmj.scheduler.SystemClock;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.traces.CallSequence;
-import org.overturetool.vdmj.traces.TraceVariableStatement;
-import org.overturetool.vdmj.traces.Verdict;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -357,86 +355,6 @@ public class ClassInterpreter extends Interpreter
 	public ProofObligationList getProofObligations()
 	{
 		return classes.getProofObligations();
-	}
-
-	@Override
-	public List<Object> runtrace(ClassDefinition classdef, CallSequence statements)
-	{
-		List<Object> list = new Vector<Object>();
-		ObjectValue object = null;
-
-		try
-		{
-			// Create a new test object
-			object = classdef.newInstance(null, null, initialContext);
-		}
-		catch (ValueException e)
-		{
-			list.add(e.getMessage());
-			return list;
-		}
-
-		Context ctxt = new ObjectContext(
-				classdef.name.location, classdef.name.name + "()",
-				initialContext, object);
-
-		ctxt.put(classdef.name.getSelfName(), object);
-
-		try
-		{
-			for (Statement statement: statements)
-			{
-				if (statement instanceof TraceVariableStatement)
-				{
-					// Just update the context...
-					statement.eval(ctxt);
-				}
-				else
-				{
- 					list.add(statement.eval(ctxt));
-				}
-			}
-
-			list.add(Verdict.PASSED);
-		}
-		catch (ContextException e)
-		{
-			list.add(e.getMessage().replaceAll(" \\(.+\\)", ""));
-
-			switch (e.number)
-			{
-				case 4055:	// precondition fails for functions
-				case 4071:	// precondition fails for operations
-				case 4087:	// invalid type conversion
-				case 4060:	// type invariant failure
-				case 4130:	// class invariant failure
-
-					if (e.ctxt.outer == ctxt)
-					{
-						// These exceptions are inconclusive if they occur
-						// in a call directly from the test because it could
-						// be a test error, but if the test call has made
-						// further call(s), then they are real failures.
-
-						list.add(Verdict.INCONCLUSIVE);
-					}
-					else
-					{
-						list.add(Verdict.FAILED);
-					}
-					break;
-
-				default:
-					list.add(Verdict.FAILED);
-			}
-		}
-		catch (Exception e)
-		{
-			list.add(e.getMessage());
-			list.add(Verdict.FAILED);
-		}
-
-		return list;
 	}
 
 	private void logSwapIn()

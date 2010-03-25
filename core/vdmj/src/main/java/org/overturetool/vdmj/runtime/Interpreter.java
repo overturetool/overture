@@ -502,9 +502,6 @@ abstract public class Interpreter
 		return null;
 	}
 
-	abstract public List<Object> runtrace(ClassDefinition def, CallSequence statements);
-
-
 	private static PrintWriter writer = null;
 
 	public static void setTraceOutput(PrintWriter pw)

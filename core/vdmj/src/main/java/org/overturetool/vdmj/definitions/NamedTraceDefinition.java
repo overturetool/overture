@@ -25,16 +25,11 @@ package org.overturetool.vdmj.definitions;
 
 import java.util.List;
 
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.Token;
-import org.overturetool.vdmj.patterns.IdentifierPattern;
-import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.statements.TraceStatement;
 import org.overturetool.vdmj.traces.SequenceTraceNode;
 import org.overturetool.vdmj.traces.TestSequence;
 import org.overturetool.vdmj.traces.TraceDefinitionTerm;
@@ -43,23 +38,15 @@ import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.FlatEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
-import org.overturetool.vdmj.types.NaturalOneType;
 import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.Type;
-import org.overturetool.vdmj.types.TypeList;
-import org.overturetool.vdmj.types.VoidType;
 import org.overturetool.vdmj.util.Utils;
-import org.overturetool.vdmj.values.NameValuePairList;
-import org.overturetool.vdmj.values.OperationValue;
 
 public class NamedTraceDefinition extends Definition
 {
 	private static final long serialVersionUID = 1L;
 	public final List<String> pathname;
 	public final List<TraceDefinitionTerm> terms;
-
-	private StateDefinition state;
-	private ExplicitOperationDefinition oneTest;
 
 	public NamedTraceDefinition(
 		LexLocation location, List<String> pathname, List<TraceDefinitionTerm> terms)
@@ -76,23 +63,11 @@ public class NamedTraceDefinition extends Definition
 	}
 
 	@Override
-	public void implicitDefinitions(Environment base)
-	{
-		state = base.findStateDefinition();
-		oneTest = getOneTestDefinition();
-	}
-
-	@Override
 	public Definition findName(LexNameToken sought, NameScope scope)
 	{
 		if (super.findName(sought, scope) != null)
 		{
 			return this;
-		}
-
-		if (oneTest.findName(sought, scope) != null)
-		{
-			return oneTest;
 		}
 
 		return null;
@@ -119,57 +94,7 @@ public class NamedTraceDefinition extends Definition
 	@Override
 	public LexNameList getVariableNames()
 	{
-		return new LexNameList(name);
-	}
-
-	@Override
-	public NameValuePairList getNamedValues(Context ctxt)
-	{
-		ExplicitOperationDefinition opdef = new ExplicitOperationDefinition(
-			name, new OperationType(location),
-			new PatternList(), null, null, new TraceStatement(this));
-
-		NameValuePairList nvpl = new NameValuePairList();
-		nvpl.add(name, new OperationValue(opdef, null, null, state));
-		nvpl.add(oneTest.name, new OperationValue(oneTest, null, null, state));
-
-		return nvpl;
-	}
-
-	private ExplicitOperationDefinition getOneTestDefinition()
-	{
-		TypeList ptypes = new TypeList(new NaturalOneType(location));
-		LexNameToken oneName = getOneName(ptypes);
-		PatternList params = new PatternList();
-
-		// Note the _test_ parameter name is illegal in VDM to avoid name
-		// clashes between the parameter and test class names.
-
-		params.add(
-			new IdentifierPattern(
-				new LexNameToken(name.module, "_test_", name.location)));
-
-		ExplicitOperationDefinition def = new ExplicitOperationDefinition(
-			oneName, new OperationType(location, ptypes, new VoidType(location)),
-			params, null, null, new TraceStatement(this));
-
-		def.setAccessSpecifier(accessSpecifier);
-		def.classDefinition = classDefinition;
-		return def;
-	}
-
-	private LexNameToken getOneName(TypeList ptypes)
-	{
-		if (Settings.dialect != Dialect.VDM_SL)
-		{
-			LexNameToken oneName = name.copy();
-			oneName.setTypeQualifier(ptypes);
-			return oneName;
-		}
-		else
-		{
-			return new LexNameToken(name.module, name.name + "_", name.location);
-		}
+		return new LexNameList();
 	}
 
 	@Override
@@ -196,8 +121,6 @@ public class NamedTraceDefinition extends Definition
 		{
 			term.typeCheck(base, NameScope.NAMESANDSTATE);
 		}
-
-		oneTest.typeCheck(base, NameScope.NAMESANDSTATE);
 	}
 
 	public TestSequence getTests(Context ctxt)

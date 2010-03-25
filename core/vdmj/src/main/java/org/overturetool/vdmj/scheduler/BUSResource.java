@@ -202,6 +202,7 @@ public class BUSResource extends Resource
 		}
 	}
 
+	@Override
 	public boolean isVirtual()
 	{
 		return this == vBUS;
