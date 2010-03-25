@@ -6,7 +6,7 @@ public static
   env : [Environment] := nil;
 
 public static 
-  timerRef : WaitNotify := new WaitNotify();    
+  timerRef : TimeStamp := new TimeStamp();    
 
   
    

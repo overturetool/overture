@@ -119,35 +119,30 @@ public UpdatesPresent:() ==> ()
 UpdatesPresent() ==
   busy := true;
 
-functions
+operations
 
-public detectedByTwoRadars : set of Radar -> set of FO
+public detectedByTwoRadars : set of Radar ==> set of FO
 detectedByTwoRadars(radars) == 
-  dunion {a.getDetected() inter b.getDetected() 
+  return dunion {a.getDetected() inter b.getDetected() 
          | a,b in set radars & a <> b};
     
-public detectedByAllRadars : set of Radar -> set of FO
+public detectedByAllRadars : set of Radar ==> set of FO
 detectedByAllRadars(radars) ==
-  dinter {r.getDetected() | r in set radars};    
+  return dinter {r.getDetected() | r in set radars};    
 
-
-functions
-
-isFOSafe : Obstacle * Position -> bool
+isFOSafe : Obstacle * Position ==> bool
 isFOSafe(obs,pos) ==
   let obsloc      = obs.getCoordinates(),
       secureRange = obs.getSecureRange(),
       foloc       = pos.coord
   in
-    isPointInRange(obsloc,secureRange,foloc) => 
-    isFOatSafeAltitude(obs.getMSA(),pos);
+    return isPointInRange(obsloc,secureRange,foloc) => 
+           isFOatSafeAltitude(obs.getMSA(),pos);
     
        
-isFOatSafeAltitude : MinimumSafetyAltitude * Position -> bool
+isFOatSafeAltitude : MinimumSafetyAltitude * Position ==> bool
 isFOatSafeAltitude(msa,pos) == 
-  msa <> <NotAllowed> and msa < pos.altitude;
-  
-operations
+  return msa <> <NotAllowed> and msa < pos.altitude;
  
 willFObeSafe : Obstacle * FO ==> ()
 willFObeSafe(obs,fo) ==

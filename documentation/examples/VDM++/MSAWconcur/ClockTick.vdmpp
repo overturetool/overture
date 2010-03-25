@@ -13,8 +13,9 @@ ClockTick(t) == tid := t;
 thread 
 
 while true do
- (World`timerRef.NotifyThread(tid);
-  World`timerRef.WaitRelative(1);
+ (World`timerRef.WaitRelative(1);
+  World`timerRef.NotifyAll();
+  World`timerRef.Awake();
  )
 
  end ClockTick
