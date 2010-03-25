@@ -5706,19 +5706,17 @@ period. An example arrangement is shown in
 Figure~\ref{fig:classtimestamp} with two client classes included for
 illustrative purposes.
 
-A sample execution is shown in Figure~\ref{fig:seqdiagtimestamp}. In
-this example three clients exist: two ``fast'' clients and one
-``slow'' client. The two fast clients each have execution period every
-10 time steps, while the slow client has execution period every 30
-time steps. Each client executes its
+% A sample execution is shown in Figure~\ref{fig:seqdiagtimestamp}. In this example three clients exist: two ``fast'' clients and one ``slow'' client. The two fast clients each have execution period every 10 time steps, while the slow client has execution period every 30 time steps. 
+Each client executes its
 \texttt{ComputationPhase} -- that computation it is intended to perform
 periodically. When it completes its \texttt{ComputationPhase} it calls 
 \texttt{TimeStamp`WaitRelative} with its
 execution period, and is then awoken at that time, or as soon as
 possible thereafter. \texttt{TimeStamp`NotifyAll} 
-is then called in order to release any waiting clients. Finally, \texttt{TimeStamp`Awake}
-is called, where the thread waits until it is time to wake up. Note that 
-since the clients are incidental to the pattern, they are not given in the following specification.
+is then called in order to release any waiting clients. Finally, the thread 
+blocks on \texttt{TimeStamp`Awake}, where the thread waits until it 
+is time to wake up. Note that since the clients are incidental to the 
+pattern, they are not given in the following specification.
 
 \subsection{The TimeStamp Class}
 
@@ -5735,12 +5733,12 @@ the notion of simulated time described earlier in this document.
 \caption{Class Diagram for Time Stamp Pattern\label{fig:classtimestamp}}
 \end{figure}
 
-\begin{figure}
-\begin{center}
-\includegraphics[width=\textwidth]{figures/timestampseqdiag.png}
-\end{center}
-\caption{Sequence Diagram for Time Stamp Pattern\label{fig:seqdiagtimestamp}}
-\end{figure}
+%\begin{figure}
+%\begin{center}
+%\includegraphics[width=\textwidth]{figures/timestampseqdiag.png}
+%\end{center}
+%\caption{Sequence Diagram for Time Stamp Pattern\label{fig:seqdiagtimestamp}}
+%\end{figure}
 
 \begin{lstlisting}
 class TimeStamp
@@ -5751,8 +5749,7 @@ currentTime : nat := 0;
 wakeUpMap : map nat to nat := {|->};
 \end{lstlisting}
 
-A client may request a relative or an absolute wait. The former is
-performed using \texttt{WaitRelative}.
+A client may request an absolute wait. using \texttt{WaitRelative}.
 
 \begin{lstlisting}
 operations
@@ -5803,7 +5800,8 @@ Testing all waiting threads to find which needs to be awoken using \texttt{Notif
 \begin{lstlisting}
 public NotifyAll : () ==> ()
 NotifyAll() ==
-  let threadSet : set of nat = {th | th in set dom wakeUpMap & wakeUpMap(th) <= currentTime }
+  let threadSet : set of nat = {th | th in set dom wakeUpMap 
+                                   & wakeUpMap(th) <= currentTime }
   in
     for all t in set threadSet 
     do
