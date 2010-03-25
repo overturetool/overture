@@ -119,8 +119,8 @@
 \lstset{language=VDM++}
 %\lstset{alsolanguage=Java}
 % The command below enables you to escape into normal LaTeX mode inside your 
-% VDM chunks by starting with a `!ï¿½ character and ending with a `ï¿½ï¿½
-\lstset{escapeinside=?£}
+% VDM chunks by starting with a `!' character and ending with a `!'
+\lstset{escapeinside=!!}
 
 %This file has been converted to use LaTeX2e
 %\documentstyle[overture]{article}
@@ -440,7 +440,7 @@ executed to completion subject to scheduling and descheduling. A
 periodic thread has the form
 
 \begin{lstlisting}
-periodic (?\textit{period},\textit{jitter},\textit{delay},\textit{offset}£) (?\textit{operation}£)
+periodic (!\textit{period},\textit{jitter},\textit{delay},\textit{offset}!) (!\textit{operation}!)
 \end{lstlisting}
 
 A periodic thread is started in the same way as a procedural thread,
@@ -494,7 +494,7 @@ be placed on the execution time of a particular portion of a model. A
 duration statement has the form
 
 \begin{lstlisting}
-duration (?\textit{time}£) ?\textit{statement}£
+duration (!\textit{time}!) !\textit{statement}!
 \end{lstlisting}
 
 This means that \emph{statement} is estimated to take \emph{time} time
@@ -510,7 +510,7 @@ model relative to the \texttt{CPU} it is allocated to (deployed). A cycles
 statement has the form
 
 \begin{lstlisting}
-cycles (?\textit{instruction cycles}£) ?\textit{statement}£
+cycles (!\textit{instruction cycles}!) !\textit{statement}!
 \end{lstlisting}
 
 This means that \emph{statement} is estimated to take
@@ -4035,7 +4035,7 @@ permission predicate is an expression specifying the circumstances in
 which an operation may be executed.
 
 \begin{lstlisting}
-per ?\emph{operation name}£ => ?\emph{guard condition}£
+per !\emph{operation name}! => !\emph{guard condition}!
 \end{lstlisting}
 
 The semantics of a permission predicate is that when a client requests
