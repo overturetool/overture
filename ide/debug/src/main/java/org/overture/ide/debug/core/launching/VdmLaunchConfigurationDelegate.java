@@ -49,6 +49,7 @@ public class VdmLaunchConfigurationDelegate implements
 	{
 		private ServerSocket server = null;
 		private Socket socket = null;
+		private Object lock = new Object();
 
 		public SocketAcceptor(InetSocketAddress address) {
 			try
@@ -70,11 +71,14 @@ public class VdmLaunchConfigurationDelegate implements
 			}
 		}
 
-		synchronized private void listen()
+		private void listen()
 		{
 			try
 			{
-				this.socket = server.accept();
+				synchronized (lock)
+				{
+					this.socket = server.accept();
+				}
 			} catch (IOException e)
 			{
 				try
@@ -88,9 +92,12 @@ public class VdmLaunchConfigurationDelegate implements
 			}
 		}
 
-		synchronized public Socket getSocket()
+		public Socket getSocket()
 		{
-			return this.socket;
+			synchronized (lock)
+			{
+				return this.socket;
+			}
 		}
 
 		public void run()
@@ -146,23 +153,24 @@ public class VdmLaunchConfigurationDelegate implements
 			commandList.add(getExpressionBase64(configuration, charSet));
 			commandList.add("-default64");
 			commandList.add(getDefaultBase64(configuration, charSet));
-		}else{
-			//temp fix for commanline args of dbgreader
+		} else
+		{
+			// temp fix for commanline args of dbgreader
 			commandList.add("-e64");
 			commandList.add(Base64.encode("A".getBytes()).toString());
 		}
-		
-		if(isCoverageEnabled(configuration)){
+
+		if (isCoverageEnabled(configuration))
+		{
 			commandList.add("-coverage");
 			commandList.add(getCoverageDir(project));
 		}
-		
-		if(isRemoteControllerEnabled(configuration))
+
+		if (isRemoteControllerEnabled(configuration))
 		{
 			commandList.add("-remote");
 			commandList.add(getRemoteControllerName(configuration));
 		}
-		
 
 		commandList.addAll(getSpecFiles(project));
 		if (useRemoteDebug(configuration))
@@ -214,17 +222,18 @@ public class VdmLaunchConfigurationDelegate implements
 		}
 	}
 
-	
-	private String getRemoteControllerName(ILaunchConfiguration configuration) throws CoreException
+	private String getRemoteControllerName(ILaunchConfiguration configuration)
+			throws CoreException
 	{
 		return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_CONTROL,
-		"");
+				"");
 	}
 
 	private String getCoverageDir(IVdmProject project)
 	{
 		DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-		File coverageDir = new File(new File(getOutputFolder(project), "coverage"),dateFormat.format(new Date()));
+		File coverageDir = new File(new File(getOutputFolder(project),
+				"coverage"), dateFormat.format(new Date()));
 		coverageDir.mkdirs();
 		return coverageDir.toURI().toASCIIString();
 	}
@@ -254,17 +263,20 @@ public class VdmLaunchConfigurationDelegate implements
 				"")
 				.length() > 0;
 	}
-	
+
 	private boolean isCoverageEnabled(ILaunchConfiguration configuration)
-	throws CoreException
-{
-return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE,
-		false)
-		;
-}
-	
-	protected File getOutputFolder(IVdmProject project) {
-		File outputDir = new File(project.getLocation().toFile().toURI().toASCIIString(),"generated");
+			throws CoreException
+	{
+		return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE,
+				false);
+	}
+
+	protected File getOutputFolder(IVdmProject project)
+	{
+		File outputDir = new File(project.getLocation()
+				.toFile()
+				.toURI()
+				.toASCIIString(), "generated");
 		outputDir.mkdirs();
 		return outputDir;
 	}
@@ -299,7 +311,7 @@ return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVER
 		} catch (IOException e)
 		{
 			abort("Could not launch debug process", e);
-		} 
+		}
 
 		return DebugPlugin.newProcess(launch, process, "VDMJ debugger");
 	}
@@ -331,9 +343,9 @@ return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVER
 			expression = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION,
 					"");
 			return Base64.encode(expression.getBytes(charset)).toString();
-		}  catch (UnsupportedEncodingException e)
+		} catch (UnsupportedEncodingException e)
 		{
-		abort("Unsuported encoding used for expression", e);
+			abort("Unsuported encoding used for expression", e);
 		}
 		return "";
 	}
@@ -342,23 +354,22 @@ return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVER
 	{
 		List<String> commandList = new Vector<String>();
 		List<String> entries = new Vector<String>();
-		//get the bundled class path of the debugger
+		// get the bundled class path of the debugger
 		ClasspathUtils.collectClasspath(new String[] { IDebugConstants.DEBUG_ENGINE_BUNDLE_ID },
 				entries);
-		//get the class path for all jars in the project lib folder
-		File lib = new File(project.getLocation().toFile(),"lib");
-		if(lib.exists() && lib.isDirectory())
+		// get the class path for all jars in the project lib folder
+		File lib = new File(project.getLocation().toFile(), "lib");
+		if (lib.exists() && lib.isDirectory())
 		{
 			for (File f : getAllFiles(lib))
 			{
-				if(f.getName().toLowerCase().endsWith(".jar"))
+				if (f.getName().toLowerCase().endsWith(".jar"))
 				{
 					entries.add(f.getAbsolutePath());
 				}
 			}
 		}
-		
-		
+
 		if (entries.size() > 0)
 		{
 			commandList.add("-cp");
@@ -376,23 +387,23 @@ return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVER
 		}
 		return commandList;
 	}
-	
-	private static List<File> getAllFiles(File file){
-	List<File> files = new Vector<File>();
-		if(file.isDirectory())
+
+	private static List<File> getAllFiles(File file)
+	{
+		List<File> files = new Vector<File>();
+		if (file.isDirectory())
 		{
 			for (File f : file.listFiles())
 			{
-				files.addAll(getAllFiles(f));	
+				files.addAll(getAllFiles(f));
 			}
-			
-		}else
+
+		} else
 		{
 			files.add(file);
 		}
 		return files;
 	}
-	
 
 	private String getCpSeperator()
 	{
@@ -453,25 +464,25 @@ return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVER
 	private List<String> getSpecFiles(IVdmProject project) throws CoreException
 	{
 		List<String> files = new Vector<String>();
-		
 
-			for (IVdmSourceUnit unit : project.getSpecFiles())
-			{
-				files.add(unit.getSystemFile().toURI().toASCIIString());
-			}
+		for (IVdmSourceUnit unit : project.getSpecFiles())
+		{
+			files.add(unit.getSystemFile().toURI().toASCIIString());
+		}
 
 		return files;
 	}
 
-	private IVdmProject getProject(ILaunchConfiguration configuration) throws CoreException
+	private IVdmProject getProject(ILaunchConfiguration configuration)
+			throws CoreException
 	{
 		IProject project = null;
-		
-			project = ResourcesPlugin.getWorkspace()
-					.getRoot()
-					.getProject(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT,
-							""));
-		
+
+		project = ResourcesPlugin.getWorkspace()
+				.getRoot()
+				.getProject(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT,
+						""));
+
 		if (project != null && VdmProject.isVdmProject(project))
 		{
 			return VdmProject.createProject(project);

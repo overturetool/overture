@@ -10,7 +10,6 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IDebugElement;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.overture.ide.debug.core.IDebugConstants;
-import org.overture.ide.debug.core.Activator;
 
 public class VdmDebugElement extends PlatformObject implements IDebugElement {
 

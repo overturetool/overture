@@ -3,63 +3,42 @@ package org.overture.ide.ui.internal.util;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.eclipse.swt.SWTException;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
+import org.overture.ide.ui.VdmUIPlugin;
 
 public class ConsoleWriter extends PrintWriter
 {
-	private String consoleName="Overture.IDE.DefaultConsole";
-	public static Shell shell;
-	
-	private Shell getShell()
-	{
-		if(shell==null)
-			try{
-			shell = new Shell();
-			}catch(SWTException e)
-			{
-				
-			}
-		return shell;
-	}
-	
-	public ConsoleWriter()
-	{
+	private String consoleName = "Overture";
+
+	public ConsoleWriter() {
 		super(System.out);
-		
 	}
-	
-	public ConsoleWriter(String consoleName)
-	{
+
+	public ConsoleWriter(String consoleName) {
 		super(System.out);
-	this.consoleName = consoleName;
+		this.consoleName = consoleName;
 	}
-	
+
 	@Override
 	public void println(String x)
 	{
-		Shell s = getShell();
-		if(s==null)
-			System.out.println(x);
-		else
-			ConsolePrint(s, x);
+		ConsolePrint(x);
 	}
-	
+
 	public void Show()
 	{
 		MessageConsole myConsole = findConsole(consoleName);
 		myConsole.activate();
 	}
-	
-	public  void ConsolePrint(final Shell shell, final String message)
+
+	public void ConsolePrint(final String message)
 	{
-		getShell().getDisplay().asyncExec(new Runnable()
-		{
+		getDisplay().asyncExec(new Runnable() {
 
 			public void run()
 			{
@@ -76,8 +55,45 @@ public class ConsoleWriter extends PrintWriter
 		});
 
 	}
+	
+	public void clear(){
+		getDisplay().asyncExec(new Runnable() {
 
-	public  MessageConsole findConsole(String name)
+			public void run()
+			{
+				try
+				{
+					MessageConsole myConsole = findConsole(consoleName);
+					myConsole.clearConsole();
+				} catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	public void ConsolePrint(final String message, final int color)
+	{
+		getDisplay().asyncExec(new Runnable() {
+			public void run()
+			{
+				try
+				{
+					MessageConsole myConsole = findConsole(consoleName);
+					MessageConsoleStream out = myConsole.newMessageStream();
+					out.setColor(Display.getCurrent().getSystemColor(color));
+					out.println(message);
+				} catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		});
+
+	}
+
+	public MessageConsole findConsole(String name)
 	{
 		ConsolePlugin plugin = ConsolePlugin.getDefault();
 		IConsoleManager conMan = plugin.getConsoleManager();
@@ -91,9 +107,9 @@ public class ConsoleWriter extends PrintWriter
 		return myConsole;
 	}
 
-	public  void ConsolePrint(final Shell shell, final Exception exception)
+	public void ConsolePrint(final Exception exception)
 	{
-		ConsolePrint(shell, getExceptionStackTraceAsString(exception));
+		ConsolePrint(getExceptionStackTraceAsString(exception));
 	}
 
 	public static String getExceptionStackTraceAsString(Exception exception)
@@ -101,5 +117,10 @@ public class ConsoleWriter extends PrintWriter
 		StringWriter sw = new StringWriter();
 		exception.printStackTrace(new PrintWriter(sw));
 		return sw.toString();
+	}
+
+	public static Display getDisplay()
+	{
+		return VdmUIPlugin.getDefault().getWorkbench().getDisplay();
 	}
 }
