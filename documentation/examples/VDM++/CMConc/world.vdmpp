@@ -5,7 +5,7 @@ instance variables
 
 -- maintain a link to the environment
 public static env : [Environment] := nil;
-public static timerRef : WaitNotify := new WaitNotify();
+public static timerRef : TimeStamp := new TimeStamp();
 
 operations
 
