@@ -43,6 +43,38 @@
            
      </launchConfigurationTabGroup>
   </extension>
+  <extension
+        point="org.eclipse.debug.core.breakpoints">
+     <breakpoint
+           class="org.overture.ide.debug.core.model.VdmLineBreakpoint"
+           id="org.overture.ide.debug.breakpoint"
+           markerType="org.eclipse.debug.core.lineBreakpointMarker"
+           name="Vdm Line Breakpoint">
+     </breakpoint>
+  </extension>
+  <extension
+        id="vdm.lineBreakpoint.marker"
+        point="org.eclipse.core.resources.markers">
+     <super
+           type="org.eclipse.debug.core.lineBreakpointMarker">
+     </super>
+     <persistent
+           value="true">
+     </persistent>
+     <attribute
+           name="org.overture.ide.debug.attribute2">
+     </attribute>
+  </extension>
+  <extension
+        point="org.eclipse.core.runtime.adapters">
+     <factory
+           adaptableType="org.eclipse.ui.texteditor.ITextEditor"
+           class="org.overture.ide.debug.core.model.VdmBreakpointAdapterFactory">
+        <adapter
+              type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget">
+        </adapter>
+     </factory>
+  </extension>
   
   
   

@@ -8,6 +8,7 @@ import java.net.Socket;
 
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IStackFrame;
+import org.overture.ide.debug.core.model.VdmThread;
 import org.overture.ide.debug.utils.xml.XMLDataNode;
 import org.overture.ide.debug.utils.xml.XMLNode;
 import org.overture.ide.debug.utils.xml.XMLOpenTagNode;
@@ -55,10 +56,11 @@ public class DebugThreadProxy
 	private BufferedOutputStream output;
 	private BufferedInputStream input = null;
 	private boolean connected;
-	IDebugThreadProxyCallback callback = null;
-	Integer threadId;
+	private IDebugThreadProxyCallback callback = null;
+	private Integer threadId;
 	private int xid = 0;
-	Thread dbgpReaderThread;
+	private Thread dbgpReaderThread;
+	private VdmThread fThread;
 
 	public DebugThreadProxy(Socket socket, String sessionId, Integer threadId,
 			IDebugThreadProxyCallback callback) {
@@ -138,7 +140,7 @@ public class DebugThreadProxy
 			redirect("stdout", DBGPRedirect.REDIRECT);
 			redirect("stderr", DBGPRedirect.REDIRECT);
 			
-			callback.fireStarted();
+//			callback.fireStarted();
 
 		} catch (IOException e)
 		{
@@ -299,6 +301,8 @@ public class DebugThreadProxy
 			Integer tid = Integer.parseInt(transaction_id);
 			Integer id = Integer.parseInt(msg.getAttr("id"));
 
+			
+			callback.fireBreakpointSet(tid,id);
 			// synchronized (breakpointMap) {
 			// if(breakpointMap.containsKey(tid))
 			// {
@@ -326,11 +330,15 @@ public class DebugThreadProxy
 		} else if (command.equals("stack_get"))
 		{
 			XMLOpenTagNode node = (XMLOpenTagNode) msg;
-			IStackFrame[] frames = null;
+			fThread.setStackFrame(node);
 			// fStack = new VdmStackFrame(fThread, node.children, (int)id);
+		} else if(command.equals("stack_depth")){
+			System.out.println("STACK DEPTH = " + msg.toString());
 		}
 
 	}
+
+	
 
 	private void processInit(XMLTagNode tagnode) throws IOException
 	{
@@ -355,5 +363,34 @@ public class DebugThreadProxy
 		callback.fireStarted();
 
 	}
+	
+	public int breakpointAdd(int line, String path){
+		String breakpoint_set = 
+			"breakpoint_set " +
+			" -r 0" +
+			" -t line" +
+			" -s enabled" +
+			" -n " + line +
+			" -i " + (++xid) +
+			" -f " +  path;
+		write(breakpoint_set);
+		
+		return xid;
+	}
 
+	public void getStack() {
+		
+		
+		write("stack_get -i " + (++xid));
+		
+	}
+
+	public void setVdmThread(VdmThread t){
+		fThread = t;
+	}
+
+	public void getStackDepth() {
+		write("stack_depth -i " + (++xid));
+		
+	}
 }

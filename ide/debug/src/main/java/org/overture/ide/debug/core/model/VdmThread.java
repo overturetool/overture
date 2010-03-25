@@ -6,17 +6,25 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
+import org.overture.ide.debug.utils.communication.DebugThreadProxy;
+import org.overture.ide.debug.utils.xml.XMLOpenTagNode;
 
 public class VdmThread extends VdmDebugElement implements IThread{
 
 	private String fName;
 	private ArrayList<IStackFrame> fFrames;
 	private int id;
+	private DebugThreadProxy proxy;
 	
-	public VdmThread(VdmDebugTarget target,int id) {
+	private boolean fSuspended = false;
+	private boolean fTerminated = false;
+	
+	public VdmThread(VdmDebugTarget target,int id, DebugThreadProxy proxy) {
 		super(target);
 		this.id = id;
 		fFrames = new ArrayList<IStackFrame>();
+		this.proxy = proxy;
+		this.proxy.start();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -34,9 +42,8 @@ public class VdmThread extends VdmDebugElement implements IThread{
 		return 0;
 	}
 
-	public IStackFrame[] getStackFrames() throws DebugException {
-		// TODO Auto-generated method stub
-		return null;
+	public IStackFrame[] getStackFrames() throws DebugException {		
+		return (IStackFrame[]) fFrames.toArray(new IStackFrame[fFrames.size()]);
 	}
 
 	public IStackFrame getTopStackFrame() throws DebugException {
@@ -45,31 +52,31 @@ public class VdmThread extends VdmDebugElement implements IThread{
 	}
 
 	public boolean hasStackFrames() throws DebugException {		
+		
+		
 		return fFrames.size() > 0;
 	}
 
 	public boolean canResume() {
-		// TODO Auto-generated method stub
-		return false;
+		return fSuspended && !fTerminated;
 	}
 
 	public boolean canSuspend() {
-		// TODO Auto-generated method stub
-		return false;
+		return !fSuspended && !fTerminated;
 	}
 
 	public boolean isSuspended() {
-		// TODO Auto-generated method stub
-		return false;
+		return fSuspended;
 	}
 
 	public void resume() throws DebugException {
-		// TODO Auto-generated method stub
-		
+		fSuspended = false;
 	}
 
 	public void suspend() throws DebugException {
-		// TODO Auto-generated method stub
+		proxy.setVdmThread(this);
+		getStackMsg();
+		fSuspended = true;
 		
 	}
 
@@ -109,18 +116,15 @@ public class VdmThread extends VdmDebugElement implements IThread{
 	}
 
 	public boolean canTerminate() {
-		// TODO Auto-generated method stub
-		return false;
+		return !fTerminated;
 	}
 
 	public boolean isTerminated() {
-		// TODO Auto-generated method stub
-		return false;
+		return fTerminated;
 	}
 
 	public void terminate() throws DebugException {
-		// TODO Auto-generated method stub
-		
+		fTerminated = true;
 	}
 	
 	public void setName(String name){
@@ -131,6 +135,18 @@ public class VdmThread extends VdmDebugElement implements IThread{
 		return id;
 	}
 
+	public DebugThreadProxy getProxy(){
+		return proxy;
+	}
 	
+	private void getStackMsg(){
+		proxy.getStack();
+	}
 
+	public void setStackFrame(XMLOpenTagNode node) {
+		System.out.println(node.toString());
+		
+	}
+	
+	
 }

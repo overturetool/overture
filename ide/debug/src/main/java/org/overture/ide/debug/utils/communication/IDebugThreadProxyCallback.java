@@ -1,5 +1,7 @@
 package org.overture.ide.debug.utils.communication;
 
+import org.overture.ide.debug.utils.xml.XMLOpenTagNode;
+
 public interface IDebugThreadProxyCallback
 {
 	/*
@@ -39,5 +41,9 @@ public interface IDebugThreadProxyCallback
 	 * Called when debugging is started
 	 */
 	void fireStarted();
+
+	void fireBreakpointSet(Integer tid, Integer breakpointId);
+
+	
 
 }
