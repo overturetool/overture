@@ -266,6 +266,7 @@ mutex (FindRoute);
  
 mutex (SetDiscoverInfo, FindRoute);
 mutex (SetDiscoverInfo);
+mutex (AddObstacleSensor);
   
 functions
  
