@@ -595,12 +595,13 @@ traces
 
 TT: let x in set {1,2,3}
     in
-      (mmi.HandleKeyPress(x,x) | 
-       mmi.UpdateScreen(x,x) | 
-       radio.AdjustVolume(x) |
-       radio.HandleTMC(x) |
-       nav.DatabaseLookup(x) |
-       nav.DecodeTMC(x))
+      ((mmi.HandleKeyPress(x,x) | 
+        mmi.UpdateScreen(x,x) | 
+        radio.AdjustVolume(x) |
+        radio.HandleTMC(x) |
+        nav.DatabaseLookup(x) |
+        nav.DecodeTMC(x));
+       EnvironmentTask`IsFinished())
  \end{lstlisting}
 
 \noindent The let-be statements in the trace called
@@ -621,6 +622,22 @@ the tests passed or failed respectively. See Figure~\ref{fig:tracesradnav}. Note
 that in the Combinatorial Testing perspective, the view in the lower region is
 able to show the individual steps of a selected test case, along with the
 corresponding results from its four operation calls.
+
+Note that here \texttt{IsFinished} have been defined in the
+\texttt{EnvironmentTask} class as:
+
+\begin{lstlisting}
+public static IsFinished: () ==> ()
+IsFinished() == skip;
+
+sync
+
+  per IsFinished => #fin(logSysToEnv) > 0;
+\end{lstlisting}
+This is necessary because the operations being tested are all defined
+as being asynchronous and thus the execution would complete before the
+system had a change to do its work if the \texttt{IsFinished}
+operation was not used.
 
 \begin{figure}[htbp]
 \begin{center}
@@ -851,7 +868,7 @@ session with a breakpoint at the start of the same operation:
 > p world.RunScenario2()
 = {"InsertAddress" |-> mk_(3993, 16132, 7759.2727272727),
    "TransmitTMC" |-> mk_(3871, 12128, 6980.714285714285)}
-Executed in 0.312 secs.
+Executed in 1.094 secs.
 
 > break World`addEnvironmentTask
 Created break [1] in 'World' (CarNaviRadio\World.vdmrt) 
@@ -862,11 +879,11 @@ at line 12:5
 Stopped break [1] in 'World' (CarNaviRadio\World.vdmrt) 
 at line 12:5
 12:      ( envTasks := envTasks munion { pnm |-> penv };
-[thread 1]> print penv
+[MainThread-164]> print penv
 penv = InsertAddress{#77, max_stimuli:=10, e2s:={|->},
  s2e:={|->},EnvironmentTask{#76, max_stimuli:=10, num:=0,
  e2s:={|->},s2e:={|->}}}
-[thread 1]> continue
+[MainThread-164]> continue
 Runtime: Error 4021: Duplicate map keys have different 
 values:
     "InsertAddress" in 'World' (CarNaviRadio\World.vdmrt) 
@@ -874,7 +891,7 @@ at line 12:28
 Stopped in 'World' (CarNaviRadio\World.vdmrt) 
 at line 12:28
 12:      ( envTasks := envTasks munion { pnm |-> penv };
-[thread 1]> continue
+[MainThread-164]> continue
 > \end{lstlisting}
 
 \noindent Notice that the \verb|print| command is available at the breakpoint

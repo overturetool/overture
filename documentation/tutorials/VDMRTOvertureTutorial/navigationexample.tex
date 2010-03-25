@@ -169,7 +169,7 @@ operations
 end Navigation
 \end{lstlisting}
 
-\section{The Environment Tast Class}
+\section{The Environment Task Class}
 
 \begin{lstlisting}
 class EnvironmentTask 
@@ -255,12 +255,16 @@ operations
             diff := diff + dt );
       return mk_(min, max, diff / card dom s2e) )
 
+public static IsFinished: () ==> ()
+IsFinished() == skip;
+
 sync
   -- getNum is mutually exclusive to ensure unique values
   mutex (getNum);
-  -- getMinMaxAverage is blocked until all responses have been 
-  -- received
-  per getMinMaxAverage => card dom s2e >= max_stimuli
+  -- getMinMaxAverage is blocked until all responses have been received
+  per getMinMaxAverage => card dom s2e >= max_stimuli;
+
+  per IsFinished => #fin(logSysToEnv) > 0;
 
 end EnvironmentTask
 \end{lstlisting}
@@ -405,12 +409,13 @@ traces
 
 TT: let x in set {1,2,3}
     in
-      (mmi.HandleKeyPress(x,x) | 
-       mmi.UpdateScreen(x,x) | 
-       radio.AdjustVolume(x) |
-       radio.HandleTMC(x) |
-       nav.DatabaseLookup(x) |
-       nav.DecodeTMC(x))
+      ((mmi.HandleKeyPress(x,x) | 
+        mmi.UpdateScreen(x,x) | 
+        radio.AdjustVolume(x) |
+        radio.HandleTMC(x) |
+        nav.DatabaseLookup(x) |
+        nav.DecodeTMC(x));
+       EnvironmentTask`IsFinished())
  
 end Test
 \end{lstlisting}

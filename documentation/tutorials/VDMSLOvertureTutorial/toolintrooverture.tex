@@ -901,7 +901,7 @@ start of the same operation:
 \begin{lstlisting}
 > print Run(e1)
 = {mk_token("Monday day"), mk_token("Tuesday day")}
-Executed in 0.016 secs.
+Executed in 0.015 secs.
 
 > break ExpertIsOnDuty
 Created break [1] in 'DEFAULT' (AlarmSL\alarm.vdmsl) 
@@ -911,7 +911,7 @@ at line 39:6
 Stopped break [1] in 'DEFAULT' (AlarmSL\alarm.vdmsl) 
 at line 39:6
 39:{peri| peri in set dom sch & ex in set sch(peri)};
-[thread 1]> print sch
+[MainThread-9]> print sch
 sch = {mk_token("Tuesday night") |->
  {mk_Expert(mk_token(174), {<Elec>, <Chem>, 
                             <Bio>, <Mech>})},
@@ -926,9 +926,9 @@ sch = {mk_token("Tuesday night") |->
  {mk_Expert(mk_token(134), {<Elec>}),
   mk_Expert(mk_token(154), {<Bio>, <Chem>, <Elec>}),
   mk_Expert(mk_token(190), {<Mech>, <Bio>})}}
-[thread 1]> continue
+[MainThread-9]> continue
 = {mk_token("Monday day"), mk_token("Tuesday day")}
-Executed in 8.966 secs. 
+Executed in 18.281 secs. 
 > 
 \end{lstlisting}
 

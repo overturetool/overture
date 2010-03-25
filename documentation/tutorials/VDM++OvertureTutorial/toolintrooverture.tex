@@ -1168,15 +1168,15 @@ Created break [1] in 'Test1' (test1.vdmpp) at line 26:3
 > print test.Run()
 Stopped break [1] in 'Test1' (test1.vdmpp) at line 26:3
 26:    let periods = plant.ExpertIsOnDuty(ex1),
-[thread 1]> print plant.NumberOfExperts(
+[MainThread-10]> print plant.NumberOfExperts(
                      mk_token("Wednesday"))
 Runtime: Error 4071: Precondition failure: 
          pre_NumberOfExperts in 
          'Test1' (console) at line 1:1
-[thread 1]> continue
-= mk_({mk_token("Monday day")}, 
+[MainThread-10]> continue
+= mk_({mk_token("Monday day")}
       Expert{#3, quali:={<Mech>, <Bio>}})
-Executed in 91.014 secs. 
+Executed in 34.858 secs. 
 \end{lstlisting}
 
 \noindent Notice that the \verb|print| command is available at the breakpoint
