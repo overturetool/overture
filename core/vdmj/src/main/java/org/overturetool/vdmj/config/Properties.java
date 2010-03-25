@@ -39,9 +39,12 @@ public class Properties extends ConfigBase
 	/** The default timeslice (statements executed) for a FCFS policy */
 	public static int scheduler_fcfs_timeslice = 100;
 
+	/** The vCPU/vBUS timeslice */
+	public static int scheduler_virtual_timeslice = 10000;
+
 	/** Enable transactional variable updates. */
 	public static boolean rt_duration_transactions = false;
-	
+
 	/** Enable extra RT log diagnostics for guards etc. */
 	public static boolean diags_guards = false;
 

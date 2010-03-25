@@ -112,7 +112,14 @@ public class FCFSPolicy extends SchedulingPolicy
 	@Override
 	public long getTimeslice()
 	{
-		return Properties.scheduler_fcfs_timeslice;
+		if (bestThread.isVirtual())
+		{
+			return Properties.scheduler_virtual_timeslice;
+		}
+		else
+		{
+			return Properties.scheduler_fcfs_timeslice;
+		}
 	}
 
 	@Override

@@ -45,6 +45,7 @@ public abstract class SchedulableThread extends Thread implements Serializable
 	protected final Resource resource;
 	protected final ObjectValue object;
 	private final boolean periodic;
+	private final boolean virtual;
 
 	protected RunState state;
 	private Signal signal;
@@ -61,6 +62,7 @@ public abstract class SchedulableThread extends Thread implements Serializable
 		this.resource = resource;
 		this.object = object;
 		this.periodic = periodic;
+		this.virtual = resource.isVirtual();
 		this.setSwapInBy(swapInBy);
 
 		state = RunState.CREATED;
@@ -76,8 +78,6 @@ public abstract class SchedulableThread extends Thread implements Serializable
 		{
 			allThreads.add(this);
 		}
-
-		setName("SchedulableThread-" + getId());
 	}
 
 	@Override
@@ -101,7 +101,7 @@ public abstract class SchedulableThread extends Thread implements Serializable
 	@Override
 	public String toString()
 	{
-		return "SchedulableThread-" + getId() + " (" + state + ")";
+		return getName() + " (" + state + ")";
 	}
 
     @Override
@@ -141,13 +141,16 @@ public abstract class SchedulableThread extends Thread implements Serializable
 
 	public void step(Context ctxt, LexLocation location)
 	{
-		if (Settings.dialect == Dialect.VDM_RT)
+		if (!virtual)
 		{
-			duration(Properties.rt_duration_default, ctxt, location);
-		}
-		else
-		{
-			SystemClock.advance(Properties.rt_duration_default);
+    		if (Settings.dialect == Dialect.VDM_RT)
+    		{
+    			duration(Properties.rt_duration_default, ctxt, location);
+    		}
+    		else
+    		{
+    			SystemClock.advance(Properties.rt_duration_default);
+    		}
 		}
 
 		if (++steps >= timeslice)
@@ -327,6 +330,11 @@ public abstract class SchedulableThread extends Thread implements Serializable
 	public boolean isActive()
 	{
 		return state == RunState.TIMESTEP || state == RunState.WAITING;
+	}
+
+	public boolean isVirtual()
+	{
+		return virtual;
 	}
 
 	public void setTimestep(long timestep)

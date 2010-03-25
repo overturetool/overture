@@ -31,7 +31,7 @@ import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.NaturalOneType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
-import org.overturetool.vdmj.values.NaturalOneValue;
+import org.overturetool.vdmj.values.NaturalValue;
 import org.overturetool.vdmj.values.Value;
 
 public class TimeExpression extends Expression
@@ -50,7 +50,7 @@ public class TimeExpression extends Expression
 
 		try
         {
-	        return new NaturalOneValue(SystemClock.getWallTime());
+	        return new NaturalValue(SystemClock.getWallTime());
         }
         catch (Exception e)
         {

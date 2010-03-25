@@ -183,12 +183,18 @@ public class ClassDefinition extends Definition
 		{
 			invariant.setClassDefinition(this);
 
-			// This listener is created for static invariants. Instances
-			// have their own listeners.
+			// This listener is created for static invariants. This gets called
+			// when any statics get updated, but that could affect the validity
+			// of all instances that mention the static in their inv clause.
+			// For now, we suppress the trigger for static updates... one for
+			// the LB :-)
 
-			OperationValue invop = new OperationValue(invariant, null, null, null);
-			ClassInvariantListener listener = new ClassInvariantListener(invop);
-			invlistenerlist = new ValueListenerList(listener);
+			invlistenerlist = null;
+
+//			OperationValue invop = new OperationValue(invariant, null, null, null);
+//			invop.isStatic = true;
+//			ClassInvariantListener listener = new ClassInvariantListener(invop);
+//			invlistenerlist = new ValueListenerList(listener);
 		}
 	}
 

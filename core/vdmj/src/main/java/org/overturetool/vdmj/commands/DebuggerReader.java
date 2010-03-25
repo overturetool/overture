@@ -353,7 +353,7 @@ public class DebuggerReader extends CommandReader
 			}
 			catch (Exception e)
 			{
-				println("Exception: " + e);
+				println("Exception: " + e.getMessage());
 			}
 		}
 	}

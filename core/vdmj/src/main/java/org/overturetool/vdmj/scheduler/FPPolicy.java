@@ -49,8 +49,11 @@ public class FPPolicy extends FCFSPolicy
 	public synchronized void register(SchedulableThread thread, long priority)
 	{
 		super.register(thread, priority);
-		priorities.put(thread, priority == 0 ?
-			Properties.scheduler_fcfs_timeslice : priority);
+
+		priorities.put(thread,
+			priority == 0 ?	Properties.scheduler_fcfs_timeslice :
+			thread.isVirtual() ? Properties.scheduler_virtual_timeslice :
+			priority);
 	}
 
 	@Override

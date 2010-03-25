@@ -23,7 +23,6 @@
 
 package org.overturetool.vdmj.statements;
 
-import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
@@ -31,9 +30,7 @@ import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
 import org.overturetool.vdmj.definitions.StateDefinition;
 import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.pog.StateInvariantObligation;
@@ -47,7 +44,6 @@ import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeSet;
 import org.overturetool.vdmj.types.UnknownType;
 import org.overturetool.vdmj.types.VoidType;
-import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.VoidValue;
 
@@ -148,31 +144,31 @@ public class AssignmentStatement extends Statement
 			abort(e);
 		}
 
-		if (Settings.dialect == Dialect.VDM_RT)
-		{
-			ObjectValue self = ctxt.getSelf();	// May be a static
-
-			// The showtrace plugin does not like "quotes", nor does it
-			// have a \" type convention, so we substitute for apostrophes.
-			String noquotes = newval.toString().replaceAll("\\\"", "\'");
-
-			if (self == null)
-			{
-    			RTLogger.log(
-    				"InstVarChange -> instnm: \"" + target.toString() + "\"" +
-    				" val: \"" + noquotes + "\"" +
-    				" objref: nil" +
-    				" id: " + Thread.currentThread().getId());
-			}
-			else
-			{
-    			RTLogger.log(
-    				"InstVarChange -> instnm: \"" + target.toString() + "\"" +
-    				" val: \"" + noquotes + "\"" +
-    				" objref: " + self.objectReference +
-    				" id: " + Thread.currentThread().getId());
-			}
-		}
+//		if (Settings.dialect == Dialect.VDM_RT)
+//		{
+//			ObjectValue self = ctxt.getSelf();	// May be a static
+//
+//			// The showtrace plugin does not like "quotes", nor does it
+//			// have a \" type convention, so we substitute for apostrophes.
+//			String noquotes = newval.toString().replaceAll("\\\"", "\'");
+//
+//			if (self == null)
+//			{
+//    			RTLogger.log(
+//    				"InstVarChange -> instnm: \"" + target.toString() + "\"" +
+//    				" val: \"" + noquotes + "\"" +
+//    				" objref: nil" +
+//    				" id: " + Thread.currentThread().getId());
+//			}
+//			else
+//			{
+//    			RTLogger.log(
+//    				"InstVarChange -> instnm: \"" + target.toString() + "\"" +
+//    				" val: \"" + noquotes + "\"" +
+//    				" objref: " + self.objectReference +
+//    				" id: " + Thread.currentThread().getId());
+//			}
+//		}
 
 		return new VoidValue();
 	}
