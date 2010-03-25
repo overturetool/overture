@@ -48,6 +48,9 @@ public class Properties extends ConfigBase
 	/** Enable extra RT log diagnostics for guards etc. */
 	public static boolean diags_guards = false;
 
+	/** Enable extra RT log diagnostics for timesteps. */
+	public static boolean diags_timestep = false;
+
 	/**
 	 * When the class is initialized, we call the ConfigBase init method, which
 	 * uses the properties file passed to update the static fields above.

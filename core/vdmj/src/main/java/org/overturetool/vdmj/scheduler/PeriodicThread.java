@@ -94,7 +94,7 @@ public class PeriodicThread extends SchedulableThread
 			if (offset > 0 || jitter > 0)
 			{
     			long noise = (jitter == 0) ? 0 :
-    				Math.abs(new Random().nextLong() % (jitter + 1));
+    				Math.abs(PRNG.nextLong() % (jitter + 1));
 
     			waitUntil(offset + noise, ctxt, operation.name.location);
 			}
@@ -220,7 +220,7 @@ public class PeriodicThread extends SchedulableThread
 
 	public static void reset()
 	{
-		PRNG.setSeed(123);		// Always the same sequence
+		PRNG.setSeed(123);
 	}
 
 	@Override

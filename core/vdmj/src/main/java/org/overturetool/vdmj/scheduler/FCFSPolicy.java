@@ -106,7 +106,10 @@ public class FCFSPolicy extends SchedulingPolicy
 	@Override
 	public SchedulableThread getThread()
 	{
-		return bestThread;
+		synchronized (threads)		// As it was set under threads
+		{
+			return bestThread;
+		}
 	}
 
 	@Override
@@ -125,7 +128,10 @@ public class FCFSPolicy extends SchedulingPolicy
 	@Override
 	public long getTimestep()
 	{
-		return minimumDuration;
+		synchronized (threads)		// As it was set under threads
+		{
+			return minimumDuration;
+		}
 	}
 
 	@Override

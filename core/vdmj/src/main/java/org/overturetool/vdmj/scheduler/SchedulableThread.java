@@ -32,6 +32,7 @@ import org.overturetool.vdmj.commands.DebuggerReader;
 import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.values.ObjectValue;
 
@@ -312,12 +313,12 @@ public abstract class SchedulableThread extends Thread implements Serializable
 		return object;
 	}
 
-	public void setSwapInBy(long swapInBy)
+	public synchronized void setSwapInBy(long swapInBy)
 	{
 		this.swapInBy = swapInBy;
 	}
 
-	public long getSwapInBy()
+	public synchronized long getSwapInBy()
 	{
 		return swapInBy;
 	}
@@ -337,7 +338,7 @@ public abstract class SchedulableThread extends Thread implements Serializable
 		return virtual;
 	}
 
-	public void setTimestep(long timestep)
+	public synchronized void setTimestep(long timestep)
 	{
 		if (!inOuterTimeStep)
 		{
@@ -347,19 +348,25 @@ public abstract class SchedulableThread extends Thread implements Serializable
 		{
 			this.timestep = 0;
 		}
+
+		if (Properties.diags_timestep)
+		{
+			RTLogger.log(String.format("-- %s waiting to move time by %d",
+				this, timestep));
+		}
 	}
 
-	public long getTimestep()
+	public synchronized long getTimestep()
 	{
 		return timestep;
 	}
 
-	public void inOuterTimestep(boolean b)
+	public synchronized void inOuterTimestep(boolean b)
 	{
 		inOuterTimeStep = b;
 	}
 
-	public boolean inOuterTimestep()
+	public synchronized boolean inOuterTimestep()
 	{
 		return inOuterTimeStep;
 	}

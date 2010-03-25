@@ -24,7 +24,9 @@
 package org.overturetool.vdmj.scheduler;
 
 import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.values.TransactionValue;
 
 public class SystemClock
@@ -47,6 +49,11 @@ public class SystemClock
 
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
+			if (Properties.diags_timestep)
+			{
+				RTLogger.log(String.format("-- Moved time by %d", duration));
+			}
+
 			TransactionValue.commitAll();
 		}
 	}
