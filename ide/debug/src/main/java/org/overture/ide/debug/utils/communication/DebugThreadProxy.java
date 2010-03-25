@@ -5,10 +5,14 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.util.List;
+import java.util.Vector;
 
 import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.model.IStackFrame;
+import org.overture.ide.debug.core.model.VdmStackFrame;
 import org.overture.ide.debug.core.model.VdmThread;
+import org.overture.ide.debug.core.model.VdmValue;
+import org.overture.ide.debug.core.model.VdmVariable;
 import org.overture.ide.debug.utils.xml.XMLDataNode;
 import org.overture.ide.debug.utils.xml.XMLNode;
 import org.overture.ide.debug.utils.xml.XMLOpenTagNode;
@@ -17,14 +21,17 @@ import org.overture.ide.debug.utils.xml.XMLTagNode;
 import org.overturetool.vdmj.debug.DBGPRedirect;
 import org.overturetool.vdmj.util.Base64;
 
-public class DebugThreadProxy
+public class DebugThreadProxy extends AsyncCaller
 {
 	private class DBGPReader extends Thread
 	{
+		public DBGPReader() {
+			setDaemon(true);
+		}
+
 		@Override
 		public void run()
 		{
-
 			while (isConnected())
 			{
 				try
@@ -32,7 +39,6 @@ public class DebugThreadProxy
 					receive();
 				} catch (IOException e)
 				{
-
 					// e.printStackTrace();
 					connected = false;
 				}
@@ -46,11 +52,9 @@ public class DebugThreadProxy
 				e.printStackTrace();
 				System.out.println("Reader runner closing socket");
 			}
-
 		}
 	}
-	
-	
+
 	private Socket fSocket;
 	private String sessionId;
 	private BufferedOutputStream output;
@@ -101,7 +105,8 @@ public class DebugThreadProxy
 	 * @throws DebugException
 	 *             if the request fails
 	 */
-	private void write(String request)
+	@Override
+	protected void write(String request)
 	{
 		callback.firePrintMessage(true, "Writing request: " + request);
 
@@ -109,7 +114,8 @@ public class DebugThreadProxy
 		{
 			output.write(request.getBytes("UTF-8"));
 			output.write('\n');
-			output.flush();
+			if (!fSocket.isClosed())
+				output.flush();
 		} catch (UnsupportedEncodingException e)
 		{
 			// TODO Auto-generated catch block
@@ -139,8 +145,8 @@ public class DebugThreadProxy
 
 			redirect("stdout", DBGPRedirect.REDIRECT);
 			redirect("stderr", DBGPRedirect.REDIRECT);
-			
-//			callback.fireStarted();
+
+			// callback.fireStarted();
 
 		} catch (IOException e)
 		{
@@ -155,8 +161,6 @@ public class DebugThreadProxy
 	 * 
 	 * *
 	 *******************************************************************************/
-
-
 
 	public BufferedInputStream getInput()
 	{
@@ -292,17 +296,17 @@ public class DebugThreadProxy
 
 	private void processResponse(XMLTagNode msg)
 	{
-
+		String transaction_id = msg.getAttr("transaction_id");
+		Integer transactionId = Integer.parseInt(transaction_id);
 		String command = msg.getAttr("command");
 
 		if (command.equals("breakpoint_set"))
 		{
-			String transaction_id = msg.getAttr("transaction_id");
+
 			Integer tid = Integer.parseInt(transaction_id);
 			Integer id = Integer.parseInt(msg.getAttr("id"));
 
-			
-			callback.fireBreakpointSet(tid,id);
+			callback.fireBreakpointSet(tid, id);
 			// synchronized (breakpointMap) {
 			// if(breakpointMap.containsKey(tid))
 			// {
@@ -326,19 +330,21 @@ public class DebugThreadProxy
 			}
 		} else if (command.equals("context_get"))
 		{
-
+			XMLOpenTagNode node = (XMLOpenTagNode) msg;
+			setResult(transactionId, processContext(node));
 		} else if (command.equals("stack_get"))
 		{
 			XMLOpenTagNode node = (XMLOpenTagNode) msg;
-			fThread.setStackFrame(node);
+			setResult(transactionId, processStackFrame(node));
 			// fStack = new VdmStackFrame(fThread, node.children, (int)id);
-		} else if(command.equals("stack_depth")){
+		} else if (command.equals("stack_depth"))
+		{
+			setResult(transactionId,
+					Integer.parseInt(((XMLOpenTagNode) msg).text));
 			System.out.println("STACK DEPTH = " + msg.toString());
 		}
 
 	}
-
-	
 
 	private void processInit(XMLTagNode tagnode) throws IOException
 	{
@@ -363,34 +369,104 @@ public class DebugThreadProxy
 		callback.fireStarted();
 
 	}
-	
-	public int breakpointAdd(int line, String path){
-		String breakpoint_set = 
-			"breakpoint_set " +
-			" -r 0" +
-			" -t line" +
-			" -s enabled" +
-			" -n " + line +
-			" -i " + (++xid) +
-			" -f " +  path;
+
+	private VdmStackFrame[] processStackFrame(XMLOpenTagNode node)
+	{
+		List<VdmStackFrame> frames = new Vector<VdmStackFrame>();
+
+		for (XMLNode n : node.children)
+		{
+			XMLTagNode stackNode = (XMLTagNode) n;
+			String[] cmdbegin = stackNode.getAttr("cmdbegin").split(":");
+
+			String filename = stackNode.getAttr("filename");
+			String type = stackNode.getAttr("type");
+			String lineno = stackNode.getAttr("lineno");
+			String level = stackNode.getAttr("level");
+			VdmStackFrame frame = new VdmStackFrame(null,
+					filename,
+					Integer.parseInt(cmdbegin[0]),
+					Integer.parseInt(cmdbegin[1]),
+					Integer.parseInt(lineno),
+					Integer.parseInt(level));
+			frames.add(frame);
+		}
+
+		return frames.toArray(new VdmStackFrame[frames.size()]);
+	}
+
+	private VdmVariable[] processContext(XMLOpenTagNode node)
+	{
+		List<VdmVariable> variables = new Vector<VdmVariable>();
+		for (XMLNode prop : node.children)
+		{
+
+			XMLOpenTagNode p = (XMLOpenTagNode) prop;
+			String name = (p.getAttr("name"));
+			String fullname = p.getAttr("fullname");
+			String classname = p.getAttr("classname");
+			String type = p.getAttr("type");
+			XMLDataNode dataNode = (XMLDataNode) p.getChild(0);
+			String data = "";
+			try
+			{
+				data = (new String(Base64.decode(dataNode.cdata), "UTF-8"));
+			} catch (UnsupportedEncodingException e)
+			{
+				data = "DECODING FAILD";
+				e.printStackTrace();
+			} catch (Exception e)
+			{
+				data = "DECODING FAILD";
+				e.printStackTrace();
+			}
+			variables.add(new VdmVariable(null, name, type, new VdmValue(null,
+					type,
+					data)));
+
+		}
+		return variables.toArray(new VdmVariable[variables.size()]);
+	}
+
+	public int breakpointAdd(int line, String path)
+	{
+		String breakpoint_set = "breakpoint_set " + " -r 0" + " -t line"
+				+ " -s enabled" + " -n " + line + " -i " + (++xid) + " -f "
+				+ path;
 		write(breakpoint_set);
-		
+
 		return xid;
 	}
 
-	public void getStack() {
-		
-		
-		write("stack_get -i " + (++xid));
-		
+	public VdmStackFrame[] getStack() throws InterruptedException
+	{
+		Integer ticket = getNextTicket();
+		String command = "stack_get -i " + ticket;
+		return (VdmStackFrame[]) request(ticket, command);
 	}
 
-	public void setVdmThread(VdmThread t){
+	public void setVdmThread(VdmThread t)
+	{
 		fThread = t;
 	}
 
-	public void getStackDepth() {
-		write("stack_depth -i " + (++xid));
-		
+	public Integer getStackDepth() throws InterruptedException
+	{
+		Integer ticket = getNextTicket();
+		String command = "stack_depth -i " + (ticket);
+		return (Integer) request(ticket, command);
+
 	}
+
+	public VdmVariable[] getVariables(int depth) throws InterruptedException
+	{
+		// int type,
+		// int depth
+		// write("context_get -i " + (++xid) + " -c " + type + " -d " + depth);
+
+		Integer ticket = getNextTicket();
+		String command = "context_get -i " + ticket + " -d " + depth;
+		return (VdmVariable[]) request(ticket, command);
+	}
+
 }

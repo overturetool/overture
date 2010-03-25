@@ -137,7 +137,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget {
 	}
 
 	public String getName() throws DebugException {
-		return "VdmVM";
+		return "VDM Application";
 	}
 
 	public IProcess getProcess() {
