@@ -71,12 +71,17 @@ operations
             else (if max < dt then max := dt);
             diff := diff + dt );
       return mk_(min, max, diff / card dom s2e) )
-pre card dom s2e > 0
+pre card dom s2e > 0;
+
+public static IsFinished: () ==> ()
+IsFinished() == skip;
 
 sync
   -- getNum is mutually exclusive to ensure unique values
   mutex (getNum);
   -- getMinMaxAverage is blocked until all responses have been received
-  per getMinMaxAverage => card dom s2e >= max_stimuli
+  per getMinMaxAverage => card dom s2e >= max_stimuli;
+
+  per IsFinished => #fin(logSysToEnv) > 0;
 
 end EnvironmentTask
