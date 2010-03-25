@@ -10,7 +10,7 @@ types
 instance variables
 
 public static env      : [Environment] := nil;
-public static timerRef : WaitNotify := new WaitNotify();
+public static timerRef : TimeStamp := new TimeStamp();
 \end{vdm_al}
 
 The World constructor its the responsible for connect system and environment.

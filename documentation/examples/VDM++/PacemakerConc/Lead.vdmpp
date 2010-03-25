@@ -92,8 +92,10 @@ To the lead class the changes are the same a thread definition substitutes the S
 thread
   while true do 
     (      
-      World`timerRef.WaitRelative(5);
       followPlan();
+      World`timerRef.WaitRelative(5);
+      World`timerRef.NotifyAll();
+      World`timerRef.Awake();
     );
     
 \end{vdm_al}

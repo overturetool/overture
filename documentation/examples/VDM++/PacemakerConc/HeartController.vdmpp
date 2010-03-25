@@ -161,6 +161,8 @@ thread
  (while true do
     (      
       World`timerRef.WaitRelative(interval);
+      World`timerRef.NotifyAll();
+      World`timerRef.Awake();
       pace();
     );
  );

@@ -1,5 +1,5 @@
 \begin{vdm_al}
-class WaitNotify
+class TimeStamp
 
 \end{vdm_al}
 Class used for concurrent VDM++ models. All threads should call the following operations:
@@ -100,9 +100,9 @@ sync
   mutex(AddToWakeUpMap);
   mutex(AddToWakeUpMap, NotifyAll); 
 
-end WaitNotify
+end TimeStamp
 \end{vdm_al}
 
-\begin{rtinfo}[WaitNotify`NotifyAndIncTime]
-{vdm.tc}[WaitNotify]
+\begin{rtinfo}[TimeStamp`NotifyAndIncTime]
+{vdm.tc}[TimeStamp]
 \end{rtinfo}

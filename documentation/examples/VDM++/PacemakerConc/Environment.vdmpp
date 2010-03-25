@@ -143,8 +143,9 @@ thread
        if World`timerRef.GetTime() >= simtime
        then (Pacemaker`heartController.finish();
              Pacemaker`rateController.finish());
-       World`timerRef.NotifyAndIncTime();      
        World`timerRef.WaitRelative(0);
+       World`timerRef.NotifyAndIncTime();             
+       World`timerRef.Awake();
      );
 
   );
