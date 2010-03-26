@@ -123,8 +123,6 @@ public class BacktrackInputReader extends Reader
 
 	/**
 	 * Create an object to read the string passed with the default charset.
-	 *
-	 * @param file	The filename to open
 	 */
 
 	public BacktrackInputReader(String expression)

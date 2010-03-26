@@ -258,7 +258,7 @@ public class VDMSL extends VDMJ
 	}
 
 	/**
-	 * @see org.overturetool.vdmj.VDMJ#interpret(List)
+	 * @see org.overturetool.vdmj.VDMJ#interpret(List, String)
 	 */
 
 	@Override
