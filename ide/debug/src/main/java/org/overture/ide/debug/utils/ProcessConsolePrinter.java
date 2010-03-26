@@ -19,6 +19,7 @@ public class ProcessConsolePrinter extends Thread
 		this.cw = cw;
 		this.stream = inputStream;
 		this.name = name;
+		setDaemon(true);
 	}
 
 	@Override

@@ -1,10 +1,14 @@
 package org.overture.ide.debug.core.model;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.overture.ide.debug.utils.communication.DebugThreadProxy;
+import org.overturetool.vdmj.runtime.DebuggerException;
 
 public class VdmThread extends VdmDebugElement implements IThread
 {
@@ -15,6 +19,7 @@ public class VdmThread extends VdmDebugElement implements IThread
 
 	private boolean fSuspended = false;
 	private boolean fTerminated = false;
+	private boolean fIsStepping = false;
 
 	public VdmThread(VdmDebugTarget target, int id, DebugThreadProxy proxy) {
 		super(target);
@@ -94,7 +99,12 @@ public class VdmThread extends VdmDebugElement implements IThread
 
 	public void resume() throws DebugException
 	{
+		
+		proxy.resume();
 		fSuspended = false;
+		fIsStepping = false;
+		
+		
 	}
 
 	public void suspend() throws DebugException
@@ -105,49 +115,66 @@ public class VdmThread extends VdmDebugElement implements IThread
 
 	public boolean canStepInto()
 	{
-		// TODO Auto-generated method stub
-		return false;
+			return true;
 	}
 
 	public boolean canStepOver()
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean canStepReturn()
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean isStepping()
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return fIsStepping;
 	}
 
 	public void stepInto() throws DebugException
 	{
-		// TODO Auto-generated method stub
-
+		try
+		{
+			proxy.step_into();
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+			throw new DebuggerException(e.getMessage());
+		}
+		fIsStepping = true;
 	}
 
 	public void stepOver() throws DebugException
 	{
-		// TODO Auto-generated method stub
-
+		try
+		{
+			proxy.step_over();
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+			throw new DebuggerException(e.getMessage());
+		}
+		fIsStepping = true;
 	}
 
 	public void stepReturn() throws DebugException
 	{
-		// TODO Auto-generated method stub
-
+		try
+		{
+			proxy.step_out();
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+			throw new DebuggerException(e.getMessage());
+		}
+		fIsStepping = true;
 	}
 
 	public boolean canTerminate()
 	{
-		return !fTerminated;
+		return false;//!fTerminated;
 	}
 
 	public boolean isTerminated()

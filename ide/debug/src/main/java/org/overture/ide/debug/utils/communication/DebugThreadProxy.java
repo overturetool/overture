@@ -5,7 +5,9 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.debug.core.DebugException;
@@ -330,7 +332,12 @@ public class DebugThreadProxy extends AsyncCaller
 		{
 			XMLOpenTagNode node = (XMLOpenTagNode) msg;
 			setResult(transactionId, processContext(node));
-		} else if (command.equals("stack_get"))
+		}else if (command.equals("context_names"))
+		{
+			XMLOpenTagNode node = (XMLOpenTagNode) msg;
+			setResult(transactionId, processContextNames(node));
+		} 
+		else if (command.equals("stack_get"))
 		{
 			XMLOpenTagNode node = (XMLOpenTagNode) msg;
 			setResult(transactionId, processStackFrame(node));
@@ -343,6 +350,8 @@ public class DebugThreadProxy extends AsyncCaller
 		}
 
 	}
+
+	
 
 	private void processInit(XMLTagNode tagnode) throws IOException
 	{
@@ -456,6 +465,17 @@ public class DebugThreadProxy extends AsyncCaller
 		}
 		return variables.toArray(new VdmVariable[variables.size()]);
 	}
+	
+	private Map<String,Integer> processContextNames(XMLOpenTagNode node)
+	{
+		Map<String,Integer> names= new Hashtable<String,Integer>();
+		for (XMLNode prop : node.children)
+		{
+			XMLTagNode p = (XMLTagNode) prop;
+			names.put(p.getAttr("name"), Integer.parseInt(p.getAttr("id")));
+		}
+		return names;
+	}
 
 	public int breakpointAdd(int line, String path)
 	{
@@ -482,15 +502,62 @@ public class DebugThreadProxy extends AsyncCaller
 
 	}
 
-	public VdmVariable[] getVariables(int depth) 
+	public VdmVariable[] getVariables(int depth, int contextId) 
 	{
 		// int type,
 		// int depth
 		// write("context_get -i " + (++xid) + " -c " + type + " -d " + depth);
 
 		Integer ticket = getNextTicket();
-		String command = "context_get -i " + ticket + " -d " + depth;
+		String command = "context_get -i " + ticket + " -d " + depth+ " -c "+ contextId;
 		return (VdmVariable[]) request(ticket, command);
 	}
+	
+	public Map<String,Integer> getContextNames()
+	{
+		Integer ticket = getNextTicket();
+		String command = "context_names -i " + ticket ;//+ " -d " + depth;
+		return (Map<String,Integer>) request(ticket, command);
+		
+	}
+	
+	public void detach() throws IOException
+	{
+		write("detach -i " + (++xid));
+	}
+
+	public void allstop() throws IOException
+	{
+		write("stop -i " + (++xid));
+	}
+	public void runme() throws IOException
+	{
+		write("run -i " + (getNextTicket()));
+	}
+
+	public void step_into() throws IOException
+	{
+		write("step_into -i " + (getNextTicket()));
+	}
+
+	public void step_over() throws IOException
+	{
+		write("step_into -i " + (getNextTicket()));
+	}
+
+	public void step_out() throws IOException
+	{
+		write("step_into -i " + (getNextTicket()));
+	}
+
+//	public void expr(String expression) throws IOException
+//	{
+//		write("expr -i " + (++xid) + " -- " + Base64.encode(expression));
+//	}
+//
+//	public void eval(String expression) throws IOException
+//	{
+//		write("eval -i " + (++xid) + " -- " + Base64.encode(expression));
+//	}
 
 }

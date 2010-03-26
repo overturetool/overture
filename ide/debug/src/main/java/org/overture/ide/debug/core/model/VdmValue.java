@@ -9,11 +9,24 @@ public class VdmValue extends VdmDebugElement implements IValue
 
 	private String referenceTypeName;
 	private String value;
+	IVariable[] variables = new IVariable[0];
 
-	public VdmValue(VdmDebugTarget target, String referenceTypeName, String value) {
+	public VdmValue(VdmDebugTarget target, String referenceTypeName,
+			String value) {
 		super(target);
 		this.referenceTypeName = referenceTypeName;
 		this.value = value;
+	}
+
+	public VdmValue(VdmDebugTarget target, String referenceTypeName,
+			String value, IVariable[] variables) {
+		super(target);
+		this.referenceTypeName = referenceTypeName;
+		this.value = value;
+		if (variables != null)
+		{
+			this.variables = variables;
+		}
 	}
 
 	public void setDebugTarget(VdmDebugTarget target)
@@ -33,14 +46,12 @@ public class VdmValue extends VdmDebugElement implements IValue
 
 	public IVariable[] getVariables() throws DebugException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return variables;
 	}
 
 	public boolean hasVariables() throws DebugException
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return variables.length>0;
 	}
 
 	public boolean isAllocated() throws DebugException

@@ -1,6 +1,9 @@
 package org.overture.ide.debug.core.model;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IRegisterGroup;
@@ -86,7 +89,27 @@ public class VdmStackFrame extends VdmDebugElement implements IStackFrame
 
 	public IVariable[] getVariables() throws DebugException
 	{
-		return proxy.getVariables(level);
+		Map<String,Integer> contextNames = proxy.getContextNames();
+		
+		List<IVariable> variables = new Vector<IVariable>();
+		
+		for (String name : contextNames.keySet())
+		{
+			if(contextNames.get(name)!=0)
+			{
+			VdmVariable v = new VdmVariable(null, name, "",new VdmValue(null,"","",proxy.getVariables(level, contextNames.get(name))));
+			variables.add(v);
+			}else
+			{
+				//get locals
+				for (IVariable iVariable : proxy.getVariables(level,0))
+				{
+					variables.add(iVariable);
+				}
+				
+			}
+		}
+		return variables.toArray(new IVariable[variables.size()]);
 	}
 
 	public boolean hasRegisterGroups() throws DebugException
@@ -96,7 +119,6 @@ public class VdmStackFrame extends VdmDebugElement implements IStackFrame
 
 	public boolean hasVariables() throws DebugException
 	{
-		// TODO Auto-generated method stub
 		return true;
 	}
 
