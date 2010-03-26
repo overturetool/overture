@@ -285,14 +285,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 
 						int line = ((ILineBreakpoint) breakpoint).getLineNumber();
 						File file = ((VdmLineBreakpoint) breakpoint).getFile();
-
-						String path = file.getAbsolutePath();
-
-						// TODO: Other OSs paths
-						path = path.replace("\\", "/");
-						path = "file:/" + path;
-
-						int xid = fThread.getProxy().breakpointAdd(line, path);
+						int xid = fThread.getProxy().breakpointAdd(line, file.toURI().toASCIIString());
 
 						synchronized (breakpointMap)
 						{
