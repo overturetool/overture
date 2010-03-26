@@ -8,7 +8,9 @@
             id="org.overture.ide.debug.core.launchConfigurationType"
             modes="run, debug"
             name="VDM launcher"
-            public="true">
+            public="true"
+            sourceLocatorId="org.overture.ide.debug.sourceLocator"
+            sourcePathComputerId="org.overture.ide.debug.sourcePathComputer">
       </launchConfigurationType>
    </extension>
    
@@ -66,11 +68,33 @@
         point="org.eclipse.core.runtime.adapters">
      <factory
            adaptableType="org.eclipse.ui.texteditor.ITextEditor"
-           class="org.overture.ide.debug.core.model.VdmBreakpointAdapterFactory">
+           class="org.overture.ide.debug.ui.model.VdmBreakpointAdapterFactory">
         <adapter
               type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget">
         </adapter>
      </factory>
+  </extension>
+  <extension
+        point="org.eclipse.debug.core.sourceLocators">
+     <sourceLocator
+           class="org.overture.ide.debug.core.launching.VdmSourceLocatorDirector"
+           id="org.overture.ide.debug.sourceLocator"
+           name="Vdm Source Locator">
+     </sourceLocator>
+  </extension>
+  <extension
+        point="org.eclipse.debug.core.sourcePathComputers">
+     <sourcePathComputer
+           class="org.overture.ide.debug.core.launching.VdmSourcePathComputerDelegate"
+           id="org.overture.ide.debug.sourcePathComputer">
+     </sourcePathComputer>
+  </extension>
+  <extension
+        point="org.eclipse.debug.ui.debugModelPresentations">
+     <debugModelPresentation
+           class="org.overture.ide.debug.ui.model.VdmDebugModelPresentation"
+           id="org.overture.ide.debug.vdm">
+     </debugModelPresentation>
   </extension>
   
   

@@ -114,7 +114,7 @@ public class VdmAnnotationHover extends DefaultAnnotationHover {
 				IMarker m = mAnn.getMarker();
 				try {
 					String a = (String) m.getAttribute(IMarker.MESSAGE);
-					hoverResult.add(a);					
+					hoverResult.add(a + "  ");					
 				} catch (CoreException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

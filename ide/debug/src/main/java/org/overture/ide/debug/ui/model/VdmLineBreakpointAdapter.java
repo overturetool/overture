@@ -1,4 +1,4 @@
-package org.overture.ide.debug.core.model;
+package org.overture.ide.debug.ui.model;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -11,6 +11,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.overture.ide.debug.core.IDebugConstants;
+import org.overture.ide.debug.core.model.VdmLineBreakpoint;
 
 public class VdmLineBreakpointAdapter implements IToggleBreakpointsTarget{
 	

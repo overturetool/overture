@@ -1,4 +1,4 @@
-package org.overture.ide.debug.core.model;
+package org.overture.ide.debug.ui.model;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdapterFactory;

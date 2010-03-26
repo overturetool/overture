@@ -423,7 +423,7 @@ public class DebugThreadProxy extends AsyncCaller
 			VdmStackFrame frame = new VdmStackFrame(null,
 					filename,
 					nameIsFileUri,
-					charStart,
+					charStart, 
 					charEnd,
 					lineNumber,
 					Integer.parseInt(level),where);

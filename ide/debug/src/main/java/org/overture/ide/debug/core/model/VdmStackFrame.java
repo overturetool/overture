@@ -191,4 +191,13 @@ public class VdmStackFrame extends VdmDebugElement implements IStackFrame
 	{
 	}
 
+	public String getSourceName() {
+		if(nameIsFileUri){
+			int i = name.lastIndexOf('/');
+			String fileName =  name.substring(i+1);
+			return fileName;
+		}
+		return null;
+	}
+
 }
