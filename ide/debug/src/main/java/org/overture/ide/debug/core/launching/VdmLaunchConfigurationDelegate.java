@@ -45,69 +45,7 @@ import org.overturetool.vdmj.util.Base64;
 public class VdmLaunchConfigurationDelegate implements
 		ILaunchConfigurationDelegate
 {
-	class SocketAcceptor implements Runnable
-	{
-		private ServerSocket server = null;
-		private Socket socket = null;
-		private Object lock = new Object();
-
-		public SocketAcceptor(InetSocketAddress address) {
-			try
-			{
-				server = new ServerSocket(address.getPort());// ,
-				// 0,
-				// address.getAddress());
-				server.setSoTimeout(50000);
-			} catch (IOException e)
-			{
-				try
-				{
-					abort("A debugger is already running, please terminate it first",
-							null);
-				} catch (CoreException e1)
-				{
-
-				}
-			}
-		}
-
-		private void listen()
-		{
-			try
-			{
-				synchronized (lock)
-				{
-					this.socket = server.accept();
-				}
-			} catch (IOException e)
-			{
-				try
-				{
-					server.close();
-				} catch (IOException e1)
-				{
-					e1.printStackTrace();
-				}
-
-			}
-		}
-
-		public Socket getSocket()
-		{
-			synchronized (lock)
-			{
-				return this.socket;
-			}
-		}
-
-		public void run()
-		{
-			listen();
-
-		}
-
-	}
-
+	
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException
 	{

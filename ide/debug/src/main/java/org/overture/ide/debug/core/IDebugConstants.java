@@ -29,6 +29,7 @@ public interface IDebugConstants
 			+ ".ATTR_VDM_PROGRAM";
 	public static final String ID_VDM_EXECUTABLE = "java";
 	
+	public static final String BREAKPOINT_MARKER_ID = "org.eclipse.debug.core.lineBreakpointMarker";
 	
 	//debugger
 	public static final String DEBUG_ENGINE_BUNDLE_ID = "org.overture.ide.generated.vdmj";

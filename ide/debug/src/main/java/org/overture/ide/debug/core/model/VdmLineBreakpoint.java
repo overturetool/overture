@@ -17,30 +17,41 @@ public class VdmLineBreakpoint extends LineBreakpoint {
 	private File file;
 	private int id;
 	
+	
+	public VdmLineBreakpoint() {
+		super();
+	}
+
+	
 	public VdmLineBreakpoint(final IResource resource, final int lineNumber) throws CoreException {
 		
-		IPath path = resource.getRawLocation();
-		path = path.makeAbsolute();
-		
-		setFile(path.toFile());
+		initPath(resource);
 		
 		
 		
 		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
 				IMarker marker = resource
-						.createMarker("org.eclipse.debug.core.lineBreakpointMarker");
+						.createMarker("vdm.lineBreakpoint.marker");
 				setMarker(marker);
 				marker.setAttribute(IBreakpoint.ENABLED, Boolean.TRUE);
 				marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
 				marker.setAttribute(IBreakpoint.ID, getModelIdentifier());
 				marker.setAttribute(IMarker.MESSAGE, "Line Breakpoint: "
 						+ resource.getName() + " [line: " + lineNumber + "]");
+				marker.setAttribute(IBreakpoint.PERSISTED, Boolean.TRUE);
 			}
 		};
 		run(getMarkerRule(resource), runnable);
 	     
 	  }
+	
+	private void initPath(IResource resource){
+		IPath path = resource.getRawLocation();
+		path = path.makeAbsolute();
+		
+		setFile(path.toFile());
+	}
 	
 	public String getModelIdentifier() {
 		return IDebugConstants.ID_VDM_DEBUG_MODEL;
@@ -62,4 +73,10 @@ public class VdmLineBreakpoint extends LineBreakpoint {
 		return id;
 	}
 
+	
+	@Override
+	public void setMarker(IMarker marker) throws CoreException {
+		super.setMarker(marker);
+		initPath(marker.getResource());
+	}
 }

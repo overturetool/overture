@@ -48,7 +48,7 @@
      <breakpoint
            class="org.overture.ide.debug.core.model.VdmLineBreakpoint"
            id="org.overture.ide.debug.breakpoint"
-           markerType="org.eclipse.debug.core.lineBreakpointMarker"
+           markerType="vdm.lineBreakpoint.marker"
            name="Vdm Line Breakpoint">
      </breakpoint>
   </extension>
@@ -61,9 +61,6 @@
      <persistent
            value="true">
      </persistent>
-     <attribute
-           name="org.overture.ide.debug.attribute2">
-     </attribute>
   </extension>
   <extension
         point="org.eclipse.core.runtime.adapters">

@@ -76,7 +76,9 @@ public class VdmThread extends VdmDebugElement implements IThread
 
 	public boolean hasStackFrames() throws DebugException
 	{
-
+		if(fTerminated){
+			return false;
+		}
 		Integer s = proxy.getStackDepth();
 		System.out.println("Stack depth is: " + s);
 		return s > 0;

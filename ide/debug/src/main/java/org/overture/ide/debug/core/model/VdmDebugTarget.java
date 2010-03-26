@@ -6,8 +6,14 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
@@ -20,6 +26,9 @@ import org.eclipse.debug.core.model.IMemoryBlock;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.swt.SWT;
+import org.overture.ide.core.IVdmProject;
+import org.overture.ide.core.IVdmSourceUnit;
+import org.overture.ide.core.VdmProject;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.utils.communication.DebugThreadProxy;
 import org.overture.ide.debug.utils.communication.IDebugThreadProxyCallback;
@@ -205,6 +214,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 
 	public void terminate() throws DebugException
 	{
+		fThreads.clear();
 		fTerminated = true;
 		// proxy.terminate();
 		// for (IThread thread : fThreads) {
@@ -347,11 +357,59 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
+	private void installPreviousBreakpointMarkers() {
+		IProject project = null;
+
+		try {
+			project = ResourcesPlugin.getWorkspace().getRoot().getProject(
+					fLaunch.getLaunchConfiguration().getAttribute(
+							IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, ""));
+
+			IVdmProject vdmProject = null;
+
+			if (project != null && VdmProject.isVdmProject(project)) {
+				vdmProject = VdmProject.createProject(project);
+			}
+
+			List<IVdmSourceUnit> specFiles = vdmProject.getSpecFiles();
+			
+			for (IVdmSourceUnit unit : specFiles) {
+				IFile f = unit.getFile();
+				System.out.println("file name: " + f.toString());
+				IMarker[] markers = unit.getFile().findMarkers(null, false, IResource.DEPTH_INFINITE);
+				for (IMarker iMarker : markers) {					
+					if(iMarker.getType().equals(IDebugConstants.BREAKPOINT_MARKER_ID))
+					{
+						
+						
+						Map attributes = iMarker.getAttributes();
+						
+						Integer ln = (Integer) iMarker.getAttribute("lineNumber");
+						System.out.println("Line number: " + ln);
+						
+						IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(IDebugConstants.ID_VDM_DEBUG_MODEL);
+						
+					
+//						DebugPlugin.getDefault()
+//						.getBreakpointManager().addBreakpoint(new VdmLineBreakpoint(f, ln));
+					}
+				}
+				System.out.println("Markers size " + markers.length);
+			}
+			
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Install breakpoints that are already registered with the breakpoint manager.
 	 */
 	private void installDeferredBreakpoints()
 	{
+		installPreviousBreakpointMarkers();
 		IBreakpoint[] breakpoints = DebugPlugin.getDefault()
 				.getBreakpointManager()
 				.getBreakpoints(IDebugConstants.ID_VDM_DEBUG_MODEL);
