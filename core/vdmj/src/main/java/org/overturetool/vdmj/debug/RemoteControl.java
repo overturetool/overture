@@ -25,5 +25,5 @@ package org.overturetool.vdmj.debug;
 
 public interface RemoteControl
 {
-	void run(RemoteInterpreter interpreter) throws Exception;
+	public void run(RemoteInterpreter interpreter) throws Exception;
 }
