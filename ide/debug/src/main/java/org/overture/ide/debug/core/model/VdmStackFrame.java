@@ -1,5 +1,7 @@
 package org.overture.ide.debug.core.model;
 
+import java.io.File;
+
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IRegisterGroup;
 import org.eclipse.debug.core.model.IStackFrame;
@@ -15,17 +17,21 @@ public class VdmStackFrame extends VdmDebugElement implements IStackFrame
 	private int lineNumber;
 	private int level;
 	private String name;
+	private String where;
 	private IThread thread;
 	DebugThreadProxy proxy;
+	boolean nameIsFileUri=false;
 
-	public VdmStackFrame(VdmDebugTarget target, String name, int charStart,
-			int charEnd, int lineNumber, int level) {
+	public VdmStackFrame(VdmDebugTarget target, String name,boolean nameIsFileUri ,int charStart,
+			int charEnd, int lineNumber, int level,String where) {
 		super(target);
 		this.charEnd = charEnd;
 		this.charStart = charStart;
 		this.lineNumber = lineNumber;
 		this.name = name;
 		this.level = level;
+		this.nameIsFileUri = nameIsFileUri;
+		this.where = where;
 	}
 
 	public void setDebugTarget(VdmDebugTarget target)
@@ -56,13 +62,21 @@ public class VdmStackFrame extends VdmDebugElement implements IStackFrame
 
 	public String getName() throws DebugException
 	{
-		return name;
+		String w="";
+		if(where!=null && where.trim().length()>0)
+		{
+			w = " ("+where+") ";
+		}
+		if(nameIsFileUri)
+		{
+			return new File(name).getName()+w+" line: "+ lineNumber;
+		}
+		return name+w;
 	}
 
 	public IRegisterGroup[] getRegisterGroups() throws DebugException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return new IRegisterGroup[0];
 	}
 
 	public IThread getThread()
@@ -72,20 +86,11 @@ public class VdmStackFrame extends VdmDebugElement implements IStackFrame
 
 	public IVariable[] getVariables() throws DebugException
 	{
-		try
-		{
-			return proxy.getVariables(level);
-		} catch (InterruptedException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
+		return proxy.getVariables(level);
 	}
 
 	public boolean hasRegisterGroups() throws DebugException
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -97,92 +102,71 @@ public class VdmStackFrame extends VdmDebugElement implements IStackFrame
 
 	public boolean canStepInto()
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean canStepOver()
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean canStepReturn()
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean isStepping()
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public void stepInto() throws DebugException
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 	public void stepOver() throws DebugException
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 	public void stepReturn() throws DebugException
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 	public boolean canResume()
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean canSuspend()
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean isSuspended()
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public void resume() throws DebugException
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 	public void suspend() throws DebugException
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 	public boolean canTerminate()
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean isTerminated()
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public void terminate() throws DebugException
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 }

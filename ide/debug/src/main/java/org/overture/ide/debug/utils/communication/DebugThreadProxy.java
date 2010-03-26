@@ -64,8 +64,6 @@ public class DebugThreadProxy extends AsyncCaller
 	private Integer threadId;
 	private int xid = 0;
 	private Thread dbgpReaderThread;
-	private VdmThread fThread;
-
 	public DebugThreadProxy(Socket socket, String sessionId, Integer threadId,
 			IDebugThreadProxyCallback callback) {
 		this.fSocket = socket;
@@ -377,18 +375,49 @@ public class DebugThreadProxy extends AsyncCaller
 		for (XMLNode n : node.children)
 		{
 			XMLTagNode stackNode = (XMLTagNode) n;
-			String[] cmdbegin = stackNode.getAttr("cmdbegin").split(":");
+			Integer lineNumber = 0;
+			Integer charStart = 0;
+			Integer charEnd = 0;
+			String where="";
+			boolean nameIsFileUri=false;
+			
+			if(stackNode.getAttr("cmdbegin")!=null)
+			{
+				String[] cmdBegin = stackNode.getAttr("cmdbegin").split(":");
+				if(cmdBegin.length>1)
+				{
+					charStart = Integer.parseInt(cmdBegin[1]);
+				}
+			}
+			
+			if(stackNode.getAttr("cmdend")!=null)
+			{
+				String[] cmdEnd = stackNode.getAttr("cmdend").split(":");
+				if(cmdEnd.length>1)
+				{
+					charEnd = Integer.parseInt(cmdEnd[1]);
+				}
+			}
+			
+			if(stackNode.getAttr("where")!=null)
+			{
+				where = stackNode.getAttr("´where");
+			}
+			
 
 			String filename = stackNode.getAttr("filename");
-			String type = stackNode.getAttr("type");
-			String lineno = stackNode.getAttr("lineno");
+			nameIsFileUri= stackNode.getAttr("type").equalsIgnoreCase("file");
+			
+			
+			lineNumber =Integer.parseInt( stackNode.getAttr("lineno"));
 			String level = stackNode.getAttr("level");
 			VdmStackFrame frame = new VdmStackFrame(null,
 					filename,
-					Integer.parseInt(cmdbegin[0]),
-					Integer.parseInt(cmdbegin[1]),
-					Integer.parseInt(lineno),
-					Integer.parseInt(level));
+					nameIsFileUri,
+					charStart,
+					charEnd,
+					lineNumber,
+					Integer.parseInt(level),where);
 			frames.add(frame);
 		}
 
@@ -438,19 +467,14 @@ public class DebugThreadProxy extends AsyncCaller
 		return xid;
 	}
 
-	public VdmStackFrame[] getStack() throws InterruptedException
+	public VdmStackFrame[] getStack()
 	{
 		Integer ticket = getNextTicket();
 		String command = "stack_get -i " + ticket;
 		return (VdmStackFrame[]) request(ticket, command);
 	}
-
-	public void setVdmThread(VdmThread t)
-	{
-		fThread = t;
-	}
-
-	public Integer getStackDepth() throws InterruptedException
+	
+	public Integer getStackDepth() 
 	{
 		Integer ticket = getNextTicket();
 		String command = "stack_depth -i " + (ticket);
@@ -458,7 +482,7 @@ public class DebugThreadProxy extends AsyncCaller
 
 	}
 
-	public VdmVariable[] getVariables(int depth) throws InterruptedException
+	public VdmVariable[] getVariables(int depth) 
 	{
 		// int type,
 		// int depth

@@ -18,7 +18,7 @@ public class AsyncCaller
 	}
 
 	public Object request(Integer ticket, String command)
-			throws InterruptedException
+			//throws InterruptedException
 	{
 		// Integer ticket = getNextTicket();
 

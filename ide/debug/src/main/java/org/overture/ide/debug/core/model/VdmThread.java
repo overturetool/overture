@@ -1,176 +1,177 @@
 package org.overture.ide.debug.core.model;
 
-import java.util.ArrayList;
-
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.overture.ide.debug.utils.communication.DebugThreadProxy;
-import org.overture.ide.debug.utils.xml.XMLOpenTagNode;
 
-public class VdmThread extends VdmDebugElement implements IThread{
+public class VdmThread extends VdmDebugElement implements IThread
+{
 
 	private String fName;
-	private ArrayList<IStackFrame> fFrames;
 	private int id;
 	private DebugThreadProxy proxy;
-	
+
 	private boolean fSuspended = false;
 	private boolean fTerminated = false;
-	
-	public VdmThread(VdmDebugTarget target,int id, DebugThreadProxy proxy) {
+
+	public VdmThread(VdmDebugTarget target, int id, DebugThreadProxy proxy) {
 		super(target);
 		this.id = id;
-		fFrames = new ArrayList<IStackFrame>();
 		this.proxy = proxy;
 		this.proxy.start();
-		// TODO Auto-generated constructor stub
 	}
 
-	public IBreakpoint[] getBreakpoints() {
+	public IBreakpoint[] getBreakpoints()
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public String getName() throws DebugException {
+	public String getName() throws DebugException
+	{
 		return fName;
 	}
 
-	public int getPriority() throws DebugException {
-		// TODO Auto-generated method stub
+	public int getPriority() throws DebugException
+	{
 		return 0;
 	}
 
-	public IStackFrame[] getStackFrames() throws DebugException {		
-		//return (IStackFrame[]) fFrames.toArray(new IStackFrame[fFrames.size()]);
-		try
+	public IStackFrame[] getStackFrames() throws DebugException
+	{
+		if (isSuspended())
 		{
-			VdmStackFrame[] fs= proxy.getStack();
-			for (VdmStackFrame f : fs)
+			VdmStackFrame[] frames = proxy.getStack();
+			for (VdmStackFrame f : frames)
 			{
 				f.setDebugTarget(fTarget);
-				f.setThread(this,proxy);
+				f.setThread(this, proxy);
 			}
-			return fs;
-		} catch (InterruptedException e)
+			return frames;
+		} else
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
+			return new IStackFrame[0];
 		}
 	}
 
-	public IStackFrame getTopStackFrame() throws DebugException {
-		// TODO Auto-generated method stub
+	public IStackFrame getTopStackFrame() throws DebugException
+	{
+		if (isSuspended())
+		{
+			IStackFrame[] frames = getStackFrames();
+			if (frames.length > 0)
+			{
+				return frames[0];
+			}
+		}
 		return null;
 	}
 
-	public boolean hasStackFrames() throws DebugException {		
-		
-		try
-		{
-			Integer s = proxy.getStackDepth();
-			System.out.println("Stack depth is: "+s);
-			return s>0;
-		} catch (InterruptedException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return fFrames.size() > 0;
+	public boolean hasStackFrames() throws DebugException
+	{
+
+		Integer s = proxy.getStackDepth();
+		System.out.println("Stack depth is: " + s);
+		return s > 0;
 	}
 
-	public boolean canResume() {
+	public boolean canResume()
+	{
 		return fSuspended && !fTerminated;
 	}
 
-	public boolean canSuspend() {
+	public boolean canSuspend()
+	{
 		return !fSuspended && !fTerminated;
 	}
 
-	public boolean isSuspended() {
+	public boolean isSuspended()
+	{
 		return fSuspended;
 	}
 
-	public void resume() throws DebugException {
+	public void resume() throws DebugException
+	{
 		fSuspended = false;
 	}
 
-	public void suspend() throws DebugException {
-		proxy.setVdmThread(this);
-//		getStackMsg();
+	public void suspend() throws DebugException
+	{
 		fSuspended = true;
-		
+
 	}
 
-	public boolean canStepInto() {
+	public boolean canStepInto()
+	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public boolean canStepOver() {
+	public boolean canStepOver()
+	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public boolean canStepReturn() {
+	public boolean canStepReturn()
+	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public boolean isStepping() {
+	public boolean isStepping()
+	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public void stepInto() throws DebugException {
+	public void stepInto() throws DebugException
+	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	public void stepOver() throws DebugException {
+	public void stepOver() throws DebugException
+	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	public void stepReturn() throws DebugException {
+	public void stepReturn() throws DebugException
+	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	public boolean canTerminate() {
+	public boolean canTerminate()
+	{
 		return !fTerminated;
 	}
 
-	public boolean isTerminated() {
+	public boolean isTerminated()
+	{
 		return fTerminated;
 	}
 
-	public void terminate() throws DebugException {
+	public void terminate() throws DebugException
+	{
 		fTerminated = true;
 	}
-	
-	public void setName(String name){
+
+	public void setName(String name)
+	{
 		fName = name;
 	}
 
-	public int getId() {
+	public int getId()
+	{
 		return id;
 	}
 
-	public DebugThreadProxy getProxy(){
+	public DebugThreadProxy getProxy()
+	{
 		return proxy;
 	}
-	
-//	private void getStackMsg(){
-//		proxy.getStack();
-//	}
-
-//	public void setStackFrame(XMLOpenTagNode node) {
-//		System.out.println(node.toString());
-//		
-//	}
-	
-	
 }
