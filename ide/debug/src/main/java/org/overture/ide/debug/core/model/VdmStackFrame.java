@@ -15,8 +15,8 @@ import org.overture.ide.debug.utils.communication.DebugThreadProxy;
 public class VdmStackFrame extends VdmDebugElement implements IStackFrame
 {
 
-	private int charEnd;
-	private int charStart;
+	private int charEnd=-1;
+	private int charStart=-1;
 	private int lineNumber;
 	private int level;
 	private String name;
@@ -50,12 +50,17 @@ public class VdmStackFrame extends VdmDebugElement implements IStackFrame
 
 	public int getCharEnd() throws DebugException
 	{
+		if(charEnd==-1)
+		{
+			return charStart+1;
+		}
 		return charEnd;
 	}
 
 	public int getCharStart() throws DebugException
 	{
-		return charStart;
+		//return charStart;
+		return -1;
 	}
 
 	public int getLineNumber() throws DebugException

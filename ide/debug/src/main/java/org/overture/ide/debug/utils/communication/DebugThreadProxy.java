@@ -385,8 +385,8 @@ public class DebugThreadProxy extends AsyncCaller
 		{
 			XMLTagNode stackNode = (XMLTagNode) n;
 			Integer lineNumber = 0;
-			Integer charStart = 0;
-			Integer charEnd = 0;
+			Integer charStart = -1;
+			Integer charEnd = -1;
 			String where="";
 			boolean nameIsFileUri=false;
 			
