@@ -14,9 +14,9 @@ cpu2 : CPU := new CPU (<FCFS>,1E6);
 cpu3 : CPU := new CPU (<FP>,1E9);
 
 -- cpus for the flare dispensers
-cpu4 : CPU := new CPU (<FCFS>,1E6);
-cpu5 : CPU := new CPU (<FCFS>,1E6);
-cpu6 : CPU := new CPU (<FCFS>,1E6);
+cpu4 : CPU := new CPU (<FCFS>,1E10);
+cpu5 : CPU := new CPU (<FCFS>,1E10);
+cpu6 : CPU := new CPU (<FCFS>,1E10);
 
 -- bus to connect sensors 1 and 2 to the missile detector
 bus1 : BUS := new BUS (<FCFS>,1E3,{cpu1,cpu3});
