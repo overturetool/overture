@@ -54,7 +54,17 @@ public class SystemClock
 				RTLogger.log(String.format("-- Moved time by %d", duration));
 			}
 
-			TransactionValue.commitAll();
+			if (Properties.rt_duration_transactions)
+			{
+    			if (duration == 0)
+    			{
+    				TransactionValue.commitOne(Thread.currentThread().getId());
+    			}
+    			else
+    			{
+    				TransactionValue.commitAll();
+    			}
+			}
 		}
 	}
 }
