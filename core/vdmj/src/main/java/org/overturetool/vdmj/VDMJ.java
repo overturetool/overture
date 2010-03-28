@@ -113,6 +113,7 @@ abstract public class VDMJ
     		}
     		else if (arg.equals("-e"))
     		{
+    			Settings.usingCmdLine = false;
     			interpret = true;
     			pog = false;
 
@@ -363,7 +364,7 @@ abstract public class VDMJ
 		System.err.println("Usage: VDMJ <-vdmsl | -vdmpp | -vdmrt> [<options>] [<files>]");
 		System.err.println("-vdmsl: parse files as VDM-SL");
 		System.err.println("-vdmpp: parse files as VDM++");
-		System.err.println("-vdmrt: parse files as VICE");
+		System.err.println("-vdmrt: parse files as VDM-RT");
 		System.err.println("-r <release>: VDM language release");
 		System.err.println("-w: suppress warning messages");
 		System.err.println("-q: suppress information messages");

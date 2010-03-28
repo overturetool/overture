@@ -208,6 +208,7 @@ public class ModuleList extends Vector<Module>
 				{
 					def.defs.addAll(m.defs);
 					def.files.add(m.name.location.file);
+					def.typechecked |= m.typechecked;
 				}
 				else
 				{
