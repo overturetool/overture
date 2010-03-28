@@ -142,16 +142,16 @@ public abstract class SchedulableThread extends Thread implements Serializable
 
 	public void step(Context ctxt, LexLocation location)
 	{
-		if (!virtual)
+		if (Settings.dialect == Dialect.VDM_RT)
 		{
-    		if (Settings.dialect == Dialect.VDM_RT)
-    		{
-    			duration(Properties.rt_duration_default, ctxt, location);
-    		}
-    		else
-    		{
-    			SystemClock.advance(Properties.rt_duration_default);
-    		}
+			if (!virtual)
+			{
+				duration(Properties.rt_duration_default, ctxt, location);
+			}
+		}
+		else
+		{
+			SystemClock.advance(Properties.rt_duration_default);
 		}
 
 		if (++steps >= timeslice)
@@ -172,7 +172,7 @@ public abstract class SchedulableThread extends Thread implements Serializable
 		notifyAll();
 	}
 
-	private synchronized void reschedule(Context ctxt, LexLocation location)
+	protected synchronized void reschedule(Context ctxt, LexLocation location)
 	{
 		// Yield control but remain runnable - called by thread
 		waitUntilState(RunState.RUNNABLE, RunState.RUNNING, ctxt, location);

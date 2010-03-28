@@ -29,6 +29,7 @@ import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.DebuggerReader;
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.debug.DBGPReason;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
@@ -212,9 +213,20 @@ public class PeriodicThread extends SchedulableThread
 	{
 		long time = SystemClock.getWallTime();
 
-		if (until > time)
+		if (Settings.dialect == Dialect.VDM_RT)
 		{
-			duration(until - time, ctxt, location);
+    		if (until > time)
+    		{
+    			duration(until - time, ctxt, location);
+    		}
+		}
+		else
+		{
+    		while (until > time)
+    		{
+    			reschedule(ctxt, location);
+    			time = SystemClock.getWallTime();
+    		}
 		}
 	}
 
