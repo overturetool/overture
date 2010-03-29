@@ -187,7 +187,7 @@ public class DebuggerReader extends CommandReader
 	@Override
 	protected boolean doStack(String line)
 	{
-		println("Stopped at " + this.breakpoint);
+		println(breakpoint.stoppedAtString());
 		getFrame().printStackTrace(Console.out, true);
 		return true;
 	}

@@ -2186,7 +2186,7 @@ public class DBGPReader implements Serializable
 
 		OutputStream out = new ByteArrayOutputStream();
 		PrintWriter pw = new PrintWriter(out);
-		pw.println("Stopped at " + breakpoint);
+		pw.println(breakpoint.stoppedAtString());
 		breakContext.printStackTrace(pw, true);
 		pw.close();
 		cdataResponse(out.toString());
@@ -2414,7 +2414,7 @@ public class DBGPReader implements Serializable
 
 		OutputStream out = new ByteArrayOutputStream();
 		PrintWriter pw = new PrintWriter(out);
-		pw.println("Stopped at " + breakpoint);
+		pw.println(breakpoint.stoppedAtString());
 		pw.println(interpreter.getSourceLine(
 			breakpoint.location.file, breakpoint.location.startLine, ":  "));
 		pw.close();
