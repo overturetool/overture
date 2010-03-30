@@ -147,36 +147,84 @@ public class RecordValue extends Value
 	@Override
 	public boolean equals(Object other)
 	{
+//		if (other instanceof Value)
+//		{
+//			Value val = ((Value)other).deref();
+//
+//    		if (val instanceof RecordValue)
+//    		{
+//    			RecordValue ot = (RecordValue)val;
+//
+//    			if (ot.type.equals(type))
+//    			{
+//    				for (Field f: type.fields)
+//    				{
+//    					if (!f.equalityAbstration)
+//    					{
+//    						Value fv = fieldmap.get(f.tag);
+//    						Value ofv = ot.fieldmap.get(f.tag);
+//
+//    						if (fv == null || ofv == null || !fv.equals(ofv))
+//    						{
+//    							return false;
+//    						}
+//    					}
+//    				}
+//
+//    				return true;
+//    			}
+//    		}
+//		}
+//
+//		return false;
+
 		if (other instanceof Value)
 		{
-			Value val = ((Value)other).deref();
+			return compareTo((Value)other) == 0;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
-    		if (val instanceof RecordValue)
-    		{
-    			RecordValue ot = (RecordValue)val;
+	@Override
+	public int compareTo(Value other)
+	{
+		Value val = other.deref();
 
-    			if (ot.type.equals(type))
-    			{
-    				for (Field f: type.fields)
-    				{
-    					if (!f.equalityAbstration)
-    					{
-    						Value fv = fieldmap.get(f.tag);
-    						Value ofv = ot.fieldmap.get(f.tag);
+		if (val instanceof RecordValue)
+		{
+			RecordValue ot = (RecordValue)val;
 
-    						if (fv == null || ofv == null || !fv.equals(ofv))
-    						{
-    							return false;
-    						}
-    					}
-    				}
+			if (ot.type.equals(type))
+			{
+				for (Field f: type.fields)
+				{
+					if (!f.equalityAbstration)
+					{
+						Value fv = fieldmap.get(f.tag);
+						Value ofv = ot.fieldmap.get(f.tag);
 
-    				return true;
-    			}
-    		}
+						if (fv == null || ofv == null)
+						{
+							return -1;
+						}
+
+						int comp = fv.compareTo(ofv);
+
+						if (comp != 0)
+						{
+							return comp;
+						}
+					}
+				}
+
+				return 0;
+			}
 		}
 
-		return false;
+		return -1;
 	}
 
 	@Override

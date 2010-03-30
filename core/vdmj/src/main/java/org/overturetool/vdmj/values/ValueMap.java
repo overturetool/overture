@@ -23,16 +23,17 @@
 
 package org.overturetool.vdmj.values;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
- * A map of value/values.
+ * A map of value/values. Note that this extends TreeMap to guarantee the
+ * ordering of values (via their compareTo natural ordering).
  */
 
 @SuppressWarnings("serial")
-public class ValueMap extends HashMap<Value, Value>
+public class ValueMap extends TreeMap<Value, Value>
 {
 	public ValueMap()
 	{

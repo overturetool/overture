@@ -91,6 +91,20 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 	@Override
 	abstract public boolean equals(Object other);
 
+	/**
+	 * The method for the comparable interface. This is only implemented by
+	 * numeric types, and allows collections of them to be sorted. By default,
+	 * the method compares the string form of the values, which gives an
+	 * arbitrary, but fixed order for such values.
+	 *
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	
+	public int compareTo(Value other)
+	{
+		return toString().compareTo(other.toString());
+	}
+
 	@Override
 	abstract public int hashCode();
 
@@ -278,20 +292,6 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 	public Value getUpdatable(ValueListenerList listeners)
 	{
 		return UpdatableValue.factory(this, listeners);
-	}
-
-	/**
-	 * The method for the comparable interface. This is only implemented by
-	 * numeric types, and allows collections of them to be sorted. By default,
-	 * the method compares the string form of the values, which gives an
-	 * arbitrary, but fixed order for such values.
-	 *
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
-
-	public int compareTo(Value other)
-	{
-		return toString().compareTo(other.toString());
 	}
 
 	public double realValue(Context ctxt) throws ValueException
