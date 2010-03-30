@@ -133,19 +133,6 @@ public class ValueList extends Vector<Value>
 		return sb.toString();
 	}
 
-	public ValueList sorted()
-	{
-		ValueList copy = new ValueList();
-
-		for (Value v: this)
-		{
-			copy.add(v.sorted());
-		}
-
-		Collections.sort(copy);
-		return copy;
-	}
-
 	@Override
 	public Object clone()
 	{

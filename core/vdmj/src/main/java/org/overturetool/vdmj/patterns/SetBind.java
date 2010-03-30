@@ -70,7 +70,8 @@ public class SetBind extends Bind
 		try
 		{
 			ValueList results = new ValueList();
-			ValueSet elements = set.eval(ctxt).setValue(ctxt).sorted();
+			ValueSet elements = set.eval(ctxt).setValue(ctxt);
+			elements.sort();
 
 			for (Value e: elements)
 			{

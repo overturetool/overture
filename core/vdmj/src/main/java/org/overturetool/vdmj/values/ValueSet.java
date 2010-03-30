@@ -5,17 +5,17 @@
  *	Author: Nick Battle
  *
  *	This file is part of VDMJ.
- *	
+ *
  *	VDMJ is free software: you can redistribute it and/or modify
  *	it under the terms of the GNU General Public License as published by
  *	the Free Software Foundation, either version 3 of the License, or
  *	(at your option) any later version.
- *	
+ *
  *	VDMJ is distributed in the hope that it will be useful,
  *	but WITHOUT ANY WARRANTY; without even the implied warranty of
  *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *	GNU General Public License for more details.
- *	
+ *
  *	You should have received a copy of the GNU General Public License
  *	along with VDMJ.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -41,24 +41,30 @@ import org.overturetool.vdmj.util.Utils;
 @SuppressWarnings("serial")
 public class ValueSet extends Vector<Value>		// NB based on Vector
 {
+	private boolean isSorted;
+
 	public ValueSet()
 	{
 		super();
+		isSorted = true;
 	}
 
 	public ValueSet(int size)
 	{
 		super(size);
+		isSorted = true;
 	}
 
 	public ValueSet(ValueSet from)
 	{
 		addAll(from);
+		isSorted = from.isSorted;
 	}
 
 	public ValueSet(Value v)
 	{
 		add(v);
+		isSorted = true;
 	}
 
 	@Override
@@ -89,11 +95,20 @@ public class ValueSet extends Vector<Value>		// NB based on Vector
 	@Override
 	public boolean add(Value v)
 	{
-		return contains(v) ? true : super.add(v);
+		if (contains(v))
+		{
+			return true;
+		}
+		else
+		{
+			isSorted = false;
+			return super.add(v);
+		}
 	}
 
 	public boolean addNoCheck(Value v)
 	{
+		isSorted = false;
 		return super.add(v);	// Used by power set function
 	}
 
@@ -114,17 +129,13 @@ public class ValueSet extends Vector<Value>		// NB based on Vector
 		return Utils.listToString("{", this, ", ", "}");
 	}
 
-	public ValueSet sorted()
+	public void sort()
 	{
-		ValueSet copy = new ValueSet();
-
-		for (Value v: this)
+		if (!isSorted)
 		{
-			copy.add(v.sorted());
+			Collections.sort(this);
+			isSorted = true;
 		}
-
-		Collections.sort(copy);
-		return copy;
 	}
 
 	// BEWARE: This can generate a lot of sets if there are sets with
@@ -244,6 +255,7 @@ public class ValueSet extends Vector<Value>		// NB based on Vector
 			copy.add(vcopy);
 		}
 
+		copy.isSorted = isSorted;
 		return copy;
 	}
 }

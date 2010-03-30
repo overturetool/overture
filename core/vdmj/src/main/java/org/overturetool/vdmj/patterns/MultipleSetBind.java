@@ -98,7 +98,8 @@ public class MultipleSetBind extends MultipleBind
 		try
 		{
 			ValueList vl = new ValueList();
-			ValueSet vs = set.eval(ctxt).setValue(ctxt).sorted();
+			ValueSet vs = set.eval(ctxt).setValue(ctxt);
+			vs.sort();
 
 			for (Value v: vs)
 			{

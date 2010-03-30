@@ -23,7 +23,6 @@
 
 package org.overturetool.vdmj.values;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.overturetool.vdmj.runtime.Context;
@@ -44,6 +43,20 @@ public class SetValue extends Value
 
 	public SetValue(ValueSet values)
 	{
+		// We arrange that VDMJ set values usually have sorted contents.
+		// This guarantees deterministic behaviour in places that would
+		// otherwise be variable.
+
+		this(values, true);
+	}
+
+	public SetValue(ValueSet values, boolean sort)
+	{
+		if (sort)
+		{
+			values.sort();
+		}
+
 		this.values = values;
 	}
 
@@ -51,20 +64,6 @@ public class SetValue extends Value
 	public ValueSet setValue(Context ctxt)
 	{
 		return values;
-	}
-
-	@Override
-	public Value sorted()
-	{
-		ValueSet nset = new ValueSet();
-
-		for (Value k: values)
-		{
-			nset.add(k.sorted());
-		}
-
-		Collections.sort(nset);
-		return new SetValue(nset);
 	}
 
 	@Override
@@ -117,7 +116,7 @@ public class SetValue extends Value
 
 		for (ValueSet v: psets)
 		{
-			rs.add(new SetValue(v));
+			rs.add(new SetValue(v, false));		// NB not re-sorted!
 		}
 
 		return rs;

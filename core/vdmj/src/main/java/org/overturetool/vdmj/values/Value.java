@@ -294,12 +294,6 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 		return toString().compareTo(other.toString());
 	}
 
-	public Value sorted()
-	{
-		// Sort sub-elements into a standard order, where appropriate.
-		return this;
-	}
-
 	public double realValue(Context ctxt) throws ValueException
 	{
 		abort(4089, "Can't get real value of " + kind(), ctxt);
