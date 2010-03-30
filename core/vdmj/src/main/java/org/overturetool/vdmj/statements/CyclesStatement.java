@@ -28,8 +28,6 @@ import org.overturetool.vdmj.expressions.IntegerLiteralExpression;
 import org.overturetool.vdmj.expressions.RealLiteralExpression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ContextException;
-import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.scheduler.SchedulableThread;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -42,43 +40,14 @@ public class CyclesStatement extends Statement
 	public final Expression cycles;
 	public final Statement statement;
 
+	private long value = 0;
+
 	public CyclesStatement(
 		LexLocation location, Expression cycles, Statement stmt)
 	{
 		super(location);
 		this.cycles = cycles;
 		this.statement = stmt;
-	}
-
-	@Override
-	public Value eval(Context ctxt)
-	{
-		location.hit();
-
-		SchedulableThread me = (SchedulableThread)Thread.currentThread();
-
-		if (me.inOuterTimestep())
-		{
-			// Already in a timed step, so ignore nesting
-			return statement.eval(ctxt);
-		}
-		else
-		{
-			try
-			{
-				long val = cycles.eval(ctxt).intValue(ctxt);
-				long step = ctxt.threadState.CPU.getDuration(val);
-				me.inOuterTimestep(true);
-				Value rv = statement.eval(ctxt);
-				me.inOuterTimestep(false);
-				me.duration(step, ctxt, location);
-				return rv;
-			}
-			catch (ValueException e)
-			{
-				throw new ContextException(e, location);
-			}
-		}
 	}
 
 	@Override
@@ -104,6 +73,8 @@ public class CyclesStatement extends Statement
 			{
 				cycles.report(3282, "Argument to cycles must be integer >= 0");
 			}
+
+			value = i.value.value;
 		}
 		else if (cycles instanceof RealLiteralExpression)
 		{
@@ -114,6 +85,8 @@ public class CyclesStatement extends Statement
 			{
 				cycles.report(3282, "Argument to cycles must be integer >= 0");
 			}
+
+			value = (long)i.value.value;
 		}
 		else
 		{
@@ -121,6 +94,29 @@ public class CyclesStatement extends Statement
 		}
 
 		return statement.typeCheck(env, scope);
+	}
+
+	@Override
+	public Value eval(Context ctxt)
+	{
+		location.hit();
+
+		SchedulableThread me = (SchedulableThread)Thread.currentThread();
+
+		if (me.inOuterTimestep())
+		{
+			// Already in a timed step, so ignore nesting
+			return statement.eval(ctxt);
+		}
+		else
+		{
+			long step = ctxt.threadState.CPU.getDuration(value);
+			me.inOuterTimestep(true);
+			Value rv = statement.eval(ctxt);
+			me.inOuterTimestep(false);
+			me.duration(step, ctxt, location);
+			return rv;
+		}
 	}
 
 	@Override

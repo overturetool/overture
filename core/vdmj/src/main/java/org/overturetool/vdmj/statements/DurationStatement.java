@@ -51,28 +51,6 @@ public class DurationStatement extends Statement
 	}
 
 	@Override
-	public Value eval(Context ctxt)
-	{
-		location.hit();
-
-		SchedulableThread me = (SchedulableThread)Thread.currentThread();
-
-		if (me.inOuterTimestep())
-		{
-			// Already in a timed step, so ignore nesting
-			return statement.eval(ctxt);
-		}
-		else
-		{
-			me.inOuterTimestep(true);
-			Value rv = statement.eval(ctxt);
-			me.inOuterTimestep(false);
-			me.duration(step, ctxt, location);
-			return rv;
-		}
-	}
-
-	@Override
 	public String kind()
 	{
 		return "duration";
@@ -107,6 +85,8 @@ public class DurationStatement extends Statement
 			{
 				duration.report(3282, "Argument to duration must be integer >= 0");
 			}
+
+			step = (long)i.value.value;
 		}
 		else
 		{
@@ -114,6 +94,28 @@ public class DurationStatement extends Statement
 		}
 
 		return statement.typeCheck(env, scope);
+	}
+
+	@Override
+	public Value eval(Context ctxt)
+	{
+		location.hit();
+
+		SchedulableThread me = (SchedulableThread)Thread.currentThread();
+
+		if (me.inOuterTimestep())
+		{
+			// Already in a timed step, so ignore nesting
+			return statement.eval(ctxt);
+		}
+		else
+		{
+			me.inOuterTimestep(true);
+			Value rv = statement.eval(ctxt);
+			me.inOuterTimestep(false);
+			me.duration(step, ctxt, location);
+			return rv;
+		}
 	}
 
 	@Override

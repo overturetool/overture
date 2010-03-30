@@ -200,14 +200,23 @@ public abstract class SchedulableThread extends Thread implements Serializable
 	public synchronized void duration(long pause, Context ctxt, LexLocation location)
 	{
 		// Wait until pause has passed - called by thread
+
 		setTimestep(pause);
 		long end = SystemClock.getWallTime() + pause;
 
 		while (getTimestep() > 0)
 		{
-			waitUntilState(RunState.TIMESTEP, RunState.RUNNING, ctxt, location);
+    		if (Properties.diags_timestep)
+    		{
+    			RTLogger.log(String.format("-- %s Waiting to move time by %d",
+    				this, timestep));
+    		}
+
+    		waitUntilState(RunState.TIMESTEP, RunState.RUNNING, ctxt, location);
 			setTimestep(end - SystemClock.getWallTime());
 		}
+
+		setTimestep(-1);	// Finished
 	}
 
 	private synchronized void waitWhileState(
@@ -338,21 +347,15 @@ public abstract class SchedulableThread extends Thread implements Serializable
 		return virtual;
 	}
 
-	public synchronized void setTimestep(long timestep)
+	public synchronized void setTimestep(long step)
 	{
 		if (!inOuterTimeStep)
 		{
-			this.timestep = timestep;
+			timestep = step;
 		}
 		else
 		{
-			this.timestep = 0;
-		}
-
-		if (Properties.diags_timestep)
-		{
-			RTLogger.log(String.format("-- %s waiting to move time by %d",
-				this, timestep));
+			timestep = -1;		// Not moving time
 		}
 	}
 
