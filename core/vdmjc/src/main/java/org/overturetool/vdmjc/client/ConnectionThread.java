@@ -653,4 +653,9 @@ public class ConnectionThread extends Thread
 	{
 		xcmd_overture_cmd("log", file);
 	}
+
+	public void xcmd_overture_runtrace(String name, int testNo, boolean debug) throws IOException
+	{
+		xcmd_overture_cmd("runtrace", name + " " + testNo + " " + debug);
+	}
 }

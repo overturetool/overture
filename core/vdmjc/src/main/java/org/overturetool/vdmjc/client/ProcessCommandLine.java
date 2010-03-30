@@ -240,6 +240,14 @@ public class ProcessCommandLine extends CommandLine
 	            {
 	            	carryOn = processCoverage(line);
 	            }
+	            else if (line.startsWith("runtrace"))
+	            {
+	            	carryOn = processRuntrace(line, false);
+	            }
+	            else if (line.startsWith("debugtrace"))
+	            {
+	            	carryOn = processRuntrace(line, true);
+	            }
 	            else if (line.startsWith("latex"))
 	            {
 	            	carryOn = processLatex(line);
@@ -319,6 +327,7 @@ public class ProcessCommandLine extends CommandLine
 			println("Running:");
     		println("  init");
     		println("  run");
+    		println("  runtrace <trace> [test number]");
     		println("  p[rint] <expression>");
     		println("  coverage [<files>]");
     		println("  latex|latexdoc [<files>]");
@@ -632,6 +641,49 @@ public class ProcessCommandLine extends CommandLine
 		{
 			println("Problem locating files");
 		}
+
+		return true;
+	}
+
+
+	private boolean processRuntrace(String line, boolean debug) throws IOException
+	{
+   		if (currentThread.getStatus() == DBGPStatus.RUNNING)
+   		{
+   			println("Thread is running...");
+   			return true;
+   		}
+
+		String[] parts = line.split("\\s+");
+		int testNo = 0;
+		String name = null;
+
+		switch (parts.length)
+		{
+			default:
+				println(parts[0] + " <name> [test number]");
+				return true;
+
+			case 2:
+				name = parts[1];
+				testNo = 0;
+				break;
+
+			case 3:
+    			try
+    			{
+    				name = parts[1];
+    				testNo = Integer.parseInt(parts[2]);
+    			}
+    			catch (NumberFormatException e)
+    			{
+    				println(parts[0] + " <name> [test number]");
+    				return true;
+    			}
+    			break;
+		}
+
+		currentThread.xcmd_overture_runtrace(name, testNo, debug);
 
 		return true;
 	}

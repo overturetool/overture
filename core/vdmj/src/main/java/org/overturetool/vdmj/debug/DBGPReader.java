@@ -1040,7 +1040,7 @@ public class DBGPReader implements Serializable
 		}
 		catch (Throwable e)
 		{
-			errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.toString());
+			errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
 		}
 
 		return carryOn;
@@ -2061,6 +2061,10 @@ public class DBGPReader implements Serializable
 		{
 			processCoverage(c);
 		}
+		else if (option.value.equals("runtrace"))
+		{
+			processRuntrace(c);
+		}
 		else if (option.value.startsWith("latex"))
 		{
 			processLatex(c);
@@ -2087,11 +2091,11 @@ public class DBGPReader implements Serializable
 		}
 		else if (option.value.equals("classes"))
 		{
-			processClasses(c);
+			processClasses();
 		}
 		else if (option.value.equals("modules"))
 		{
-			processModules(c);
+			processModules();
 		}
 		else if (option.value.equals("default"))
 		{
@@ -2159,7 +2163,7 @@ public class DBGPReader implements Serializable
 	{
 		if (!(interpreter instanceof ClassInterpreter))
 		{
-			throw new DBGPException(DBGPErrorCode.INTERNAL_ERROR, c.toString());
+			throw new DBGPException(DBGPErrorCode.INTERNAL_ERROR, "Not available for VDM-SL");
 		}
 
 		try
@@ -2279,11 +2283,12 @@ public class DBGPReader implements Serializable
 		cdataResponse(out.toString());
 	}
 
-	private void processClasses(DBGPCommand c) throws IOException, DBGPException
+	private void processClasses() throws IOException, DBGPException
 	{
 		if (!(interpreter instanceof ClassInterpreter))
 		{
-			throw new DBGPException(DBGPErrorCode.INTERNAL_ERROR, c.toString());
+			throw new DBGPException(
+				DBGPErrorCode.INTERNAL_ERROR, "Not available for VDM-SL");
 		}
 
 		ClassInterpreter cinterpreter = (ClassInterpreter)interpreter;
@@ -2308,11 +2313,12 @@ public class DBGPReader implements Serializable
 		cdataResponse(out.toString());
 	}
 
-	private void processModules(DBGPCommand c) throws DBGPException, IOException
+	private void processModules() throws DBGPException, IOException
 	{
 		if (!(interpreter instanceof ModuleInterpreter))
 		{
-			throw new DBGPException(DBGPErrorCode.INTERNAL_ERROR, c.toString());
+			throw new DBGPException(
+				DBGPErrorCode.INTERNAL_ERROR, "Only available for VDM-SL");
 		}
 
 		ModuleInterpreter minterpreter = (ModuleInterpreter)interpreter;
@@ -2346,7 +2352,7 @@ public class DBGPReader implements Serializable
 		}
 		catch (Exception e)
 		{
-			throw new DBGPException(DBGPErrorCode.INTERNAL_ERROR, c.toString());
+			throw new DBGPException(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
 		}
 	}
 
@@ -2372,6 +2378,33 @@ public class DBGPReader implements Serializable
 			source.printCoverage(pw);
 			pw.close();
 			cdataResponse(out.toString());
+		}
+	}
+
+	private void processRuntrace(DBGPCommand c) throws DBGPException
+	{
+		if (status == DBGPStatus.BREAK)
+		{
+			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+		}
+
+		try
+		{
+			String[] parts = c.data.split("\\s+");
+			int testNo = Integer.parseInt(parts[1]);
+			boolean debug = Boolean.parseBoolean(parts[2]);
+
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			PrintWriter pw = new PrintWriter(out);
+			Interpreter.setTraceOutput(pw);
+			interpreter.runtrace(parts[0], testNo, debug);
+			pw.close();
+
+			cdataResponse(out.toString());
+		}
+		catch (Exception e)
+		{
+			throw new DBGPException(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
 		}
 	}
 
