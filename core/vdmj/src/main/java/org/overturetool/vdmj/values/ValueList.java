@@ -23,9 +23,7 @@
 
 package org.overturetool.vdmj.values;
 
-import java.util.Collections;
 import java.util.Vector;
-
 import org.overturetool.vdmj.util.Utils;
 
 /**

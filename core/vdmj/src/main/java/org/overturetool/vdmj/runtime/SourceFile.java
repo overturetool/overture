@@ -35,10 +35,10 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.overturetool.vdmj.VDMJ;
+import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.lex.LexTokenReader;
 
 /**
  * A class to hold a source file for source debug output.
@@ -192,7 +192,7 @@ public class SourceFile
 				continue;
 			}
 
-			String spaced = detab(line, LexTokenReader.TABSTOP);
+			String spaced = detab(line, Properties.parser_tabstop);
 			List<LexLocation> list = hits.get(lnum);
 			out.println(markup(spaced, list));
 

@@ -33,6 +33,9 @@ import org.overturetool.vdmj.util.ConfigBase;
 
 public class Properties extends ConfigBase
 {
+	/** The tab stop for source files. */
+	public static int parser_tabstop = 4;
+
 	/** The default duration for RT statements. */
 	public static int rt_duration_default = 2;
 

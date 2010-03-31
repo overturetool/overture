@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 
+import org.overturetool.vdmj.config.Properties;
+
 /**
  * The main lexical analyser class.
  */
@@ -111,9 +113,6 @@ public class LexTokenReader extends BacktrackInputReader
 
 	/** An end of file symbol. */
 	private static final char EOF = (char)-1;
-
-	/** The assumed tab stop, for calculating positions. */
-	public static final int TABSTOP = 4;
 
 	/**
 	 * Create a LexTokenReader for the filename passed.
@@ -363,9 +362,14 @@ public class LexTokenReader extends BacktrackInputReader
 			linecount++;
 			charpos = 0;
 		}
+		else if (c == '\t')
+		{
+			charpos +=
+				Properties.parser_tabstop - charpos % Properties.parser_tabstop;
+		}
 		else
 		{
-			charpos += (c == '\t' ? (TABSTOP - charpos % TABSTOP) : 1);
+			charpos++;
 		}
 
 		ch = c;
