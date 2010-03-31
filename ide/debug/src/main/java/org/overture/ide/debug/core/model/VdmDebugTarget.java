@@ -32,7 +32,6 @@ import org.overture.ide.core.VdmProject;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.utils.communication.DebugThreadProxy;
 import org.overture.ide.debug.utils.communication.IDebugThreadProxyCallback;
-import org.overture.ide.debug.utils.xml.XMLOpenTagNode;
 import org.overture.ide.debug.utils.xml.XMLTagNode;
 import org.overture.ide.ui.internal.util.ConsoleWriter;
 import org.overturetool.vdmj.runtime.DebuggerException;

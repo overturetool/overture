@@ -1,18 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension
-         point="org.eclipse.debug.core.launchConfigurationTypes">
-      <launchConfigurationType
-            delegate="org.overture.ide.debug.core.launching.VdmLaunchConfigurationDelegate"
-            id="org.overture.ide.debug.core.launchConfigurationType"
-            modes="run, debug"
-            name="VDM launcher"
-            public="true"
-            sourceLocatorId="org.overture.ide.debug.sourceLocator"
-            sourcePathComputerId="org.overture.ide.debug.sourcePathComputer">
-      </launchConfigurationType>
-   </extension>
+   <extension-point id="org.overture.ide.debug.sourceviewerEditor" name="Source Viewer Editor" schema="schema/org.overture.ide.debug.sourceviewerEditor.exsd"/>
+
    
    
    
@@ -27,24 +17,9 @@
       <actionSet id="org.eclipse.debug.ui.breakpointActionSet"></actionSet>
     </perspectiveExtension>
   </extension>
-  <extension
-        point="org.eclipse.debug.ui.launchConfigurationTypeImages">
-     <launchConfigurationTypeImage
-           configTypeID="org.overture.ide.debug.core.launchConfigurationType"
-           icon="icons/oml16.png"
-           id="org.overture.ide.debug.ui.launchConfigurationTypeImage">
-     </launchConfigurationTypeImage>
-  </extension>
-  <extension
-        point="org.eclipse.debug.ui.launchConfigurationTabGroups">
-     <launchConfigurationTabGroup
-           class="org.overture.ide.debug.ui.launching.AbstractLaunchConfigurationTabGroup"
-           description="VDM launch tab"
-           id="org.overture.ide.debug.ui.launchConfigurationTabGroup"
-           type="org.overture.ide.debug.core.launchConfigurationType">
-           
-     </launchConfigurationTabGroup>
-  </extension>
+  
+  
+  
   <extension
         point="org.eclipse.debug.core.breakpoints">
      <breakpoint

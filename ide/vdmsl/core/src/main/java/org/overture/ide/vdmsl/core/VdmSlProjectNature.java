@@ -6,7 +6,7 @@ import org.eclipse.core.runtime.CoreException;
 
 public class VdmSlProjectNature implements IProjectNature
 {
-	public static final String VDM_SL_NATURE = VdmSlCorePluginConstants.PLUGIN_ID
+	public static final String VDM_SL_NATURE = IVdmSlCoreConstants.PLUGIN_ID
 	+ ".nature";
 	public void configure() throws CoreException
 	{

@@ -40,5 +40,6 @@
             natureId="org.overture.ide.vdmpp.core.nature">
       </image>
    </extension>
+  
 
 </plugin>

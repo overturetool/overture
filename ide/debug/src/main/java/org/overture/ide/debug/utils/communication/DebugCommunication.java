@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +17,6 @@ import org.overture.ide.debug.core.model.VdmDebugTarget;
 import org.overture.ide.debug.utils.xml.XMLNode;
 import org.overture.ide.debug.utils.xml.XMLParser;
 import org.overture.ide.debug.utils.xml.XMLTagNode;
-import org.overturetool.vdmj.debug.DBGPRedirect;
-import org.overturetool.vdmj.expressions.NewExpression;
 
 public class DebugCommunication implements IDisposable{
 

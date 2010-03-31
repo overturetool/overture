@@ -8,17 +8,8 @@
 
   <groupId>org.overture.ide.vdmsl</groupId>
   <artifactId>org.overture.ide.vdmsl.debug</artifactId>
-  <packaging>pom</packaging>
-  <version>2.0.0</version>
-  <name>Overture IDE VDM-SL Debug Top-level</name>
-  <description>Top level of the Overture IDE Debug for VDM-SL</description>
-  
-  <modules>
-    <!-- Put all child Eclipse Plugin projects(modules) here -->
-
-    <module>core</module>
-    <module>ui</module>
-    
-
-  </modules>
+  <name>org.overture.ide.vdmsl.debug</name>
+  <version>1.0.0</version>
+ 
+  <packaging>source-plugin</packaging>
 </project>

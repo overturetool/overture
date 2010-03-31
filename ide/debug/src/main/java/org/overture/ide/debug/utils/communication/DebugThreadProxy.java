@@ -5,14 +5,17 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.debug.core.DebugException;
+import org.overture.ide.debug.core.model.VdmGroupValue;
+import org.overture.ide.debug.core.model.VdmMultiValue;
+import org.overture.ide.debug.core.model.VdmSimpleValue;
 import org.overture.ide.debug.core.model.VdmStackFrame;
-import org.overture.ide.debug.core.model.VdmThread;
 import org.overture.ide.debug.core.model.VdmValue;
 import org.overture.ide.debug.core.model.VdmVariable;
 import org.overture.ide.debug.utils.xml.XMLDataNode;
@@ -66,6 +69,7 @@ public class DebugThreadProxy extends AsyncCaller
 	private Integer threadId;
 	private int xid = 0;
 	private Thread dbgpReaderThread;
+
 	public DebugThreadProxy(Socket socket, String sessionId, Integer threadId,
 			IDebugThreadProxyCallback callback) {
 		this.fSocket = socket;
@@ -108,7 +112,7 @@ public class DebugThreadProxy extends AsyncCaller
 	@Override
 	protected void write(String request)
 	{
-		callback.firePrintMessage(true, "Writing request: " + request);
+		callback.firePrintMessage(true, "Request:  " + request);
 
 		try
 		{
@@ -251,11 +255,11 @@ public class DebugThreadProxy extends AsyncCaller
 
 			if (tagnode.tag.equals("init"))
 			{
-				callback.firePrintMessage(false, "Process Init: " + tagnode);
+				callback.firePrintMessage(false, "Res Init: " + tagnode);
 				processInit(tagnode);
 			} else if (tagnode.tag.equals("response"))
 			{
-				callback.firePrintMessage(false, "Process Response: " + tagnode);
+				callback.firePrintMessage(false, "Response: " + tagnode);
 				processResponse(tagnode);
 			} else if (tagnode.tag.equals("stream"))
 			{
@@ -328,16 +332,16 @@ public class DebugThreadProxy extends AsyncCaller
 				callback.fireStopped();// terminated();
 
 			}
-		} else if (command.equals("context_get"))
+		} else if (command.equals("context_get")
+				|| command.equals("property_get"))
 		{
 			XMLOpenTagNode node = (XMLOpenTagNode) msg;
 			setResult(transactionId, processContext(node));
-		}else if (command.equals("context_names"))
+		} else if (command.equals("context_names"))
 		{
 			XMLOpenTagNode node = (XMLOpenTagNode) msg;
 			setResult(transactionId, processContextNames(node));
-		} 
-		else if (command.equals("stack_get"))
+		} else if (command.equals("stack_get"))
 		{
 			XMLOpenTagNode node = (XMLOpenTagNode) msg;
 			setResult(transactionId, processStackFrame(node));
@@ -350,8 +354,6 @@ public class DebugThreadProxy extends AsyncCaller
 		}
 
 	}
-
-	
 
 	private void processInit(XMLTagNode tagnode) throws IOException
 	{
@@ -387,46 +389,45 @@ public class DebugThreadProxy extends AsyncCaller
 			Integer lineNumber = 0;
 			Integer charStart = -1;
 			Integer charEnd = -1;
-			String where="";
-			boolean nameIsFileUri=false;
-			
-			if(stackNode.getAttr("cmdbegin")!=null)
+			String where = "";
+			boolean nameIsFileUri = false;
+
+			if (stackNode.getAttr("cmdbegin") != null)
 			{
 				String[] cmdBegin = stackNode.getAttr("cmdbegin").split(":");
-				if(cmdBegin.length>1)
+				if (cmdBegin.length > 1)
 				{
 					charStart = Integer.parseInt(cmdBegin[1]);
 				}
 			}
-			
-			if(stackNode.getAttr("cmdend")!=null)
+
+			if (stackNode.getAttr("cmdend") != null)
 			{
 				String[] cmdEnd = stackNode.getAttr("cmdend").split(":");
-				if(cmdEnd.length>1)
+				if (cmdEnd.length > 1)
 				{
 					charEnd = Integer.parseInt(cmdEnd[1]);
 				}
 			}
-			
-			if(stackNode.getAttr("where")!=null)
+
+			if (stackNode.getAttr("where") != null)
 			{
 				where = stackNode.getAttr("´where");
 			}
-			
 
 			String filename = stackNode.getAttr("filename");
-			nameIsFileUri= stackNode.getAttr("type").equalsIgnoreCase("file");
-			
-			
-			lineNumber =Integer.parseInt( stackNode.getAttr("lineno"));
+			nameIsFileUri = stackNode.getAttr("type").equalsIgnoreCase("file");
+
+			lineNumber = Integer.parseInt(stackNode.getAttr("lineno"));
 			String level = stackNode.getAttr("level");
 			VdmStackFrame frame = new VdmStackFrame(null,
 					filename,
 					nameIsFileUri,
-					charStart, 
+					charStart,
 					charEnd,
 					lineNumber,
-					Integer.parseInt(level),where);
+					Integer.parseInt(level),
+					where);
 			frames.add(frame);
 		}
 
@@ -438,37 +439,94 @@ public class DebugThreadProxy extends AsyncCaller
 		List<VdmVariable> variables = new Vector<VdmVariable>();
 		for (XMLNode prop : node.children)
 		{
-
-			XMLOpenTagNode p = (XMLOpenTagNode) prop;
-			String name = (p.getAttr("name"));
-			String fullname = p.getAttr("fullname");
-			String classname = p.getAttr("classname");
-			String type = p.getAttr("type");
-			XMLDataNode dataNode = (XMLDataNode) p.getChild(0);
-			String data = "";
-			try
-			{
-				data = (new String(Base64.decode(dataNode.cdata), "UTF-8"));
-			} catch (UnsupportedEncodingException e)
-			{
-				data = "DECODING FAILD";
-				e.printStackTrace();
-			} catch (Exception e)
-			{
-				data = "DECODING FAILD";
-				e.printStackTrace();
-			}
-			variables.add(new VdmVariable(null, name, type, new VdmValue(null,
-					type,
-					data)));
-
+			variables.add(processContextNode((XMLOpenTagNode) prop));
 		}
 		return variables.toArray(new VdmVariable[variables.size()]);
 	}
-	
-	private Map<String,Integer> processContextNames(XMLOpenTagNode node)
+
+	private VdmVariable processContextNode(XMLOpenTagNode node)
 	{
-		Map<String,Integer> names= new Hashtable<String,Integer>();
+		XMLOpenTagNode p = node;
+		String name = (p.getAttr("name"));
+		//String fullname = p.getAttr("fullname");
+		//String classname = p.getAttr("classname");
+		String type = p.getAttr("type");
+		String key = p.getAttr("key");
+		boolean childern = p.getAttr("children") != null
+				&& p.getAttr("children").equals("1");
+		String data = "";
+		Integer page = 0;
+		if (p.getAttr("page") != null)
+		{
+			page = Integer.parseInt(p.getAttr("page"));
+		}
+		Integer numChildren = 0;
+		if(p.getAttr("numchildren")!=null)
+		{
+			numChildren = Integer.parseInt(p.getAttr("numchildren"));
+		}
+		Integer pageSize = 0;
+		if(p.getAttr("pagesize")!=null)
+		{
+			pageSize = Integer.parseInt(p.getAttr("pagesize"));
+		}
+		List<VdmVariable> childVariables = new Vector<VdmVariable>();
+
+		for (XMLNode child : p.children)
+		{
+			if (child instanceof XMLDataNode)
+			{
+				XMLDataNode dataNode = (XMLDataNode) child;
+
+				try
+				{
+					data = (new String(Base64.decode(dataNode.cdata), "UTF-8"));
+
+				} catch (UnsupportedEncodingException e)
+				{
+					data = "DECODING FAILD";
+					e.printStackTrace();
+				} catch (Exception e)
+				{
+					data = "DECODING FAILD";
+					e.printStackTrace();
+				}
+			} else if (child instanceof XMLOpenTagNode)
+			{
+				childVariables.add(processContextNode((XMLOpenTagNode) child));
+			}
+		}
+
+		VdmValue vdmValue = null;
+
+		if (!childern)
+		{
+			vdmValue = new VdmSimpleValue(type, data);
+		} else
+		{
+			VdmVariable[] childs = null;
+			if (childVariables.size() > 0)
+			{
+				childs = childVariables.toArray(new VdmVariable[childVariables.size()]);
+			}
+			
+			if(numChildren> pageSize)
+			{
+				vdmValue = new VdmGroupValue(type, type, key, page,pageSize,numChildren ,childs);	
+				
+			}else{
+				vdmValue = new VdmMultiValue(type, data, key, page, childs);	
+			}
+			
+		}
+
+		return (new VdmVariable(null, name, type, vdmValue));
+
+	}
+
+	private Map<String, Integer> processContextNames(XMLOpenTagNode node)
+	{
+		Map<String, Integer> names = new Hashtable<String, Integer>();
 		for (XMLNode prop : node.children)
 		{
 			XMLTagNode p = (XMLTagNode) prop;
@@ -487,14 +545,14 @@ public class DebugThreadProxy extends AsyncCaller
 		return xid;
 	}
 
-	public VdmStackFrame[] getStack()
+	public VdmStackFrame[] getStack() throws SocketTimeoutException
 	{
 		Integer ticket = getNextTicket();
 		String command = "stack_get -i " + ticket;
 		return (VdmStackFrame[]) request(ticket, command);
 	}
-	
-	public Integer getStackDepth() 
+
+	public Integer getStackDepth() throws SocketTimeoutException
 	{
 		Integer ticket = getNextTicket();
 		String command = "stack_depth -i " + (ticket);
@@ -502,25 +560,41 @@ public class DebugThreadProxy extends AsyncCaller
 
 	}
 
-	public VdmVariable[] getVariables(int depth, int contextId) 
+	public VdmVariable[] getVariables(int depth, int contextId) throws SocketTimeoutException
 	{
 		// int type,
 		// int depth
 		// write("context_get -i " + (++xid) + " -c " + type + " -d " + depth);
 
 		Integer ticket = getNextTicket();
-		String command = "context_get -i " + ticket + " -d " + depth+ " -c "+ contextId;
+		String command = "context_get -i " + ticket + " -d " + depth + " -c "
+				+ contextId;
 		return (VdmVariable[]) request(ticket, command);
 	}
-	
-	public Map<String,Integer> getContextNames()
+
+	@SuppressWarnings("unchecked")
+	public Map<String, Integer> getContextNames() throws SocketTimeoutException
 	{
 		Integer ticket = getNextTicket();
-		String command = "context_names -i " + ticket ;//+ " -d " + depth;
-		return (Map<String,Integer>) request(ticket, command);
-		
+		String command = "context_names -i " + ticket;// + " -d " + depth;
+		return (Map<String, Integer>) request(ticket, command);
+
 	}
-	
+
+	public VdmVariable[] getVariables(int stackDepth, String propertyLongName,
+			String key, Integer page) throws SocketTimeoutException
+	{
+		Integer ticket = getNextTicket();
+		String command = "property_get -i " + ticket + " -d " + stackDepth
+				+ " -n " + propertyLongName + " -p "+ page;
+		if(key!=null && key.length()>0)
+		{
+			command += " -k " + key;
+		}
+		return (VdmVariable[]) request(ticket, command);
+
+	}
+
 	public void detach() throws IOException
 	{
 		write("detach -i " + (++xid));
@@ -530,6 +604,7 @@ public class DebugThreadProxy extends AsyncCaller
 	{
 		write("stop -i " + (++xid));
 	}
+
 	public void runme() throws IOException
 	{
 		write("run -i " + (getNextTicket()));
@@ -550,14 +625,14 @@ public class DebugThreadProxy extends AsyncCaller
 		write("step_into -i " + (getNextTicket()));
 	}
 
-//	public void expr(String expression) throws IOException
-//	{
-//		write("expr -i " + (++xid) + " -- " + Base64.encode(expression));
-//	}
-//
-//	public void eval(String expression) throws IOException
-//	{
-//		write("eval -i " + (++xid) + " -- " + Base64.encode(expression));
-//	}
+	// public void expr(String expression) throws IOException
+	// {
+	// write("expr -i " + (++xid) + " -- " + Base64.encode(expression));
+	// }
+	//
+	// public void eval(String expression) throws IOException
+	// {
+	// write("eval -i " + (++xid) + " -- " + Base64.encode(expression));
+	// }
 
 }

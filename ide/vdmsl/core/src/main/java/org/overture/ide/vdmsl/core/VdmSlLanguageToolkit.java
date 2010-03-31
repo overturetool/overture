@@ -19,12 +19,12 @@ public class VdmSlLanguageToolkit extends AbstractLanguageToolkit implements
 	public String getLanguageContentType()
 	{
 		
-		return VdmSlCorePluginConstants.CONTENT_TYPE;
+		return IVdmSlCoreConstants.CONTENT_TYPE;
 	}
 
 	public String getLanguageName()
 	{
-		return VdmSlCorePluginConstants.LANGUAGE_NAME;
+		return IVdmSlCoreConstants.LANGUAGE_NAME;
 	}
 
 	public String getNatureId()

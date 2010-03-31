@@ -1,5 +1,6 @@
 package org.overture.ide.debug.utils.communication;
 
+import java.net.SocketTimeoutException;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public class AsyncCaller
 		return ++nextTicket;
 	}
 
-	public Object request(Integer ticket, String command)
+	public Object request(Integer ticket, String command) throws java.net.SocketTimeoutException
 			//throws InterruptedException
 	{
 		// Integer ticket = getNextTicket();
@@ -28,9 +29,10 @@ public class AsyncCaller
 		setLock(ticket, t);
 		write(command);
 		Object result = null;
+		long callTime = System.currentTimeMillis();
 		synchronized (t)
 		{
-			while (result == null)
+			while (result == null && callTime >= System.currentTimeMillis()-timeOut)
 			{
 				try
 				{
@@ -44,6 +46,11 @@ public class AsyncCaller
 				result = getResult(ticket);
 			}
 			
+		}
+		
+		if(result==null)
+		{
+			throw new SocketTimeoutException("Timeout on ticket: "+ticket+" and command: "+ command);
 		}
 
 		return result;

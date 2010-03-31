@@ -2,32 +2,21 @@ package org.overture.ide.debug.core.model;
 
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
-import org.eclipse.debug.core.model.IVariable;
 
-public class VdmValue extends VdmDebugElement implements IValue
+public abstract class VdmValue extends VdmDebugElement implements IValue
 {
 
 	private String referenceTypeName;
-	private String value;
-	IVariable[] variables = new IVariable[0];
+	protected VdmStackFrame stackFrame;
+	
 
-	public VdmValue(VdmDebugTarget target, String referenceTypeName,
-			String value) {
-		super(target);
+	public VdmValue(String referenceTypeName) {
+		super(null);
 		this.referenceTypeName = referenceTypeName;
-		this.value = value;
+		
 	}
 
-	public VdmValue(VdmDebugTarget target, String referenceTypeName,
-			String value, IVariable[] variables) {
-		super(target);
-		this.referenceTypeName = referenceTypeName;
-		this.value = value;
-		if (variables != null)
-		{
-			this.variables = variables;
-		}
-	}
+	
 
 	public void setDebugTarget(VdmDebugTarget target)
 	{
@@ -39,25 +28,35 @@ public class VdmValue extends VdmDebugElement implements IValue
 		return referenceTypeName;
 	}
 
-	public String getValueString() throws DebugException
-	{
-		return value;
-	}
-
-	public IVariable[] getVariables() throws DebugException
-	{
-		return variables;
-	}
-
-	public boolean hasVariables() throws DebugException
-	{
-		return variables.length>0;
-	}
+//	public String getValueString() throws DebugException
+//	{
+//		return value;
+//	}
+//
+//	public IVariable[] getVariables() throws DebugException
+//	{
+//		VdmVariable[] variables =stackFrame.proxy.getVariables(stackFrame.level, "NAME", key);
+//		for (VdmVariable iVariable : variables)
+//		{
+//			iVariable.setStackFrame(stackFrame);
+//			iVariable.setDebugTarget(stackFrame.getDebugTarget());
+//		}
+//		return variables;
+//	}
+//
+//	public boolean hasVariables() throws DebugException
+//	{
+//		return hasChildern;
+//	}
 
 	public boolean isAllocated() throws DebugException
 	{
-		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public void setStackFrame(VdmStackFrame stackFrame)
+	{
+		this.stackFrame = stackFrame;
 	}
 
 }

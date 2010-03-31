@@ -1,6 +1,5 @@
 package org.overture.ide.debug.utils.communication;
 
-import org.overture.ide.debug.utils.xml.XMLOpenTagNode;
 
 public interface IDebugThreadProxyCallback
 {

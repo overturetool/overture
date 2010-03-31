@@ -1,12 +1,16 @@
 package org.overture.ide.debug.core.model;
 
 import java.io.IOException;
-import java.util.Map;
+import java.net.SocketTimeoutException;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
+import org.overture.ide.debug.core.Activator;
+import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.utils.communication.DebugThreadProxy;
 import org.overturetool.vdmj.runtime.DebuggerException;
 
@@ -20,6 +24,7 @@ public class VdmThread extends VdmDebugElement implements IThread
 	private boolean fSuspended = false;
 	private boolean fTerminated = false;
 	private boolean fIsStepping = false;
+	private VdmStackFrame[] frames = null;
 
 	public VdmThread(VdmDebugTarget target, int id, DebugThreadProxy proxy) {
 		super(target);
@@ -48,11 +53,25 @@ public class VdmThread extends VdmDebugElement implements IThread
 	{
 		if (isSuspended())
 		{
-			VdmStackFrame[] frames = proxy.getStack();
+			try
+			{
+				frames = proxy.getStack();
+			
 			for (VdmStackFrame f : frames)
 			{
 				f.setDebugTarget(fTarget);
 				f.setThread(this, proxy);
+			}
+			} catch (SocketTimeoutException e)
+			{
+				if (Activator.DEBUG)
+				{
+					e.printStackTrace();
+				}
+				throw new DebugException(new Status(IStatus.WARNING,
+						IDebugConstants.PLUGIN_ID,
+						"Cannot fetch stack from debug engine",
+						e));
 			}
 			return frames;
 		} else
@@ -76,10 +95,27 @@ public class VdmThread extends VdmDebugElement implements IThread
 
 	public boolean hasStackFrames() throws DebugException
 	{
-		if(fTerminated){
+		if (fTerminated)
+		{
 			return false;
 		}
-		Integer s = proxy.getStackDepth();
+		Integer s;
+		try
+		{
+			s = proxy.getStackDepth();
+		} catch (SocketTimeoutException e)
+		{
+
+			if (Activator.DEBUG)
+			{
+				e.printStackTrace();
+			}
+			throw new DebugException(new Status(IStatus.WARNING,
+					IDebugConstants.PLUGIN_ID,
+					"Cannot fetch stack depth from debug engine",
+					e));
+		}
+
 		System.out.println("Stack depth is: " + s);
 		return s > 0;
 	}
@@ -101,12 +137,17 @@ public class VdmThread extends VdmDebugElement implements IThread
 
 	public void resume() throws DebugException
 	{
-		
+		if (frames != null)
+		{
+			for (VdmStackFrame frame : frames)
+			{
+				frame.clearVariables();
+			}
+		}
 		proxy.resume();
 		fSuspended = false;
 		fIsStepping = false;
-		
-		
+
 	}
 
 	public void suspend() throws DebugException
@@ -117,7 +158,7 @@ public class VdmThread extends VdmDebugElement implements IThread
 
 	public boolean canStepInto()
 	{
-			return true;
+		return true;
 	}
 
 	public boolean canStepOver()
@@ -137,6 +178,13 @@ public class VdmThread extends VdmDebugElement implements IThread
 
 	public void stepInto() throws DebugException
 	{
+		if (frames != null)
+		{
+			for (VdmStackFrame frame : frames)
+			{
+				frame.clearVariables();
+			}
+		}
 		try
 		{
 			proxy.step_into();
@@ -150,6 +198,13 @@ public class VdmThread extends VdmDebugElement implements IThread
 
 	public void stepOver() throws DebugException
 	{
+		if (frames != null)
+		{
+			for (VdmStackFrame frame : frames)
+			{
+				frame.clearVariables();
+			}
+		}
 		try
 		{
 			proxy.step_over();
@@ -163,6 +218,13 @@ public class VdmThread extends VdmDebugElement implements IThread
 
 	public void stepReturn() throws DebugException
 	{
+		if (frames != null)
+		{
+			for (VdmStackFrame frame : frames)
+			{
+				frame.clearVariables();
+			}
+		}
 		try
 		{
 			proxy.step_out();
@@ -176,7 +238,7 @@ public class VdmThread extends VdmDebugElement implements IThread
 
 	public boolean canTerminate()
 	{
-		return false;//!fTerminated;
+		return false;// !fTerminated;
 	}
 
 	public boolean isTerminated()

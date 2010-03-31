@@ -3,14 +3,16 @@ package org.overture.ide.debug.core;
 public interface IDebugConstants
 {
 
-	final String VDMPP_DEBUGGING_ENGINE_ID_KEY = "vdmpp_debugging_engine_id";
-	String PLUGIN_ID = "org.overture.ide.debug";
+	final static String VDMPP_DEBUGGING_ENGINE_ID_KEY = "vdmpp_debugging_engine_id";
+	final static String PLUGIN_ID = "org.overture.ide.debug";
+	final static String EXTENSION_SOURCEVIEWER_EDITOR = "org.overture.ide.debug.sourceviewerEditor";
 	
 
 	// used in the launch configuration
 	final static String VDM_LAUNCH_CONFIG_PROJECT = "vdm_launch_config_project";
 	final static String VDM_LAUNCH_CONFIG_MODULE = "vdm_launch_config_module";
 	final static String VDM_LAUNCH_CONFIG_OPERATION = "vdm_launch_config_method";
+	final static String VDM_LAUNCH_CONFIG_STATIC_OPERATION = "vdm_launch_config_static_method";
 	final static String VDM_LAUNCH_CONFIG_EXPRESSION_SEPERATOR = "vdm_launch_config_expression_seperator";
 	final static String VDM_LAUNCH_CONFIG_EXPRESSION= "vdm_launch_config_expression";
 	

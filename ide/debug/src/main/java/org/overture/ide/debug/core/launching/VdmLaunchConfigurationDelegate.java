@@ -3,9 +3,7 @@ package org.overture.ide.debug.core.launching;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,26 +43,29 @@ import org.overturetool.vdmj.util.Base64;
 public class VdmLaunchConfigurationDelegate implements
 		ILaunchConfigurationDelegate
 {
-	
+
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException
 	{
 
 		DebugCommunication debugComm = null;
-		try {
+		try
+		{
 			debugComm = DebugCommunication.getInstance();
-		} catch (IOException e1) {
+		} catch (IOException e1)
+		{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
-		//Storing the debug session id
+
+		// Storing the debug session id
 		ILaunchConfigurationWorkingCopy lcwc = configuration.getWorkingCopy();
-		lcwc.setAttribute(IDebugConstants.VDM_DEBUG_SESSION_ID, debugComm.getSessionId());
+		lcwc.setAttribute(IDebugConstants.VDM_DEBUG_SESSION_ID,
+				debugComm.getSessionId());
 		lcwc.doSave();
-		
-//		InetSocketAddress address = new InetSocketAddress("localhost",
-//				findFreePort());
+
+		// InetSocketAddress address = new InetSocketAddress("localhost",
+		// findFreePort());
 
 		List<String> commandList = new ArrayList<String>();
 
@@ -76,8 +77,9 @@ public class VdmLaunchConfigurationDelegate implements
 		commandList.add("-p");
 		commandList.add(new Integer(debugComm.getPort()).toString());
 		commandList.add("-k");
-		//commandList.add("dbgp_1265361483486");
-		commandList.add(configuration.getAttribute(IDebugConstants.VDM_DEBUG_SESSION_ID, "0000000"));
+		// commandList.add("dbgp_1265361483486");
+		commandList.add(configuration.getAttribute(IDebugConstants.VDM_DEBUG_SESSION_ID,
+				"0000000"));
 		commandList.add("-w");
 		commandList.add("-q");
 		commandList.add(project.getDialect().getArgstring());
@@ -123,36 +125,33 @@ public class VdmLaunchConfigurationDelegate implements
 		VdmDebugTarget target = null;
 		if (mode.equals(ILaunchManager.DEBUG_MODE))
 		{
-//			System.out.println("Accepting debugger on: "
-//					+ address.getHostName() + " " + address.getPort());
-//			SocketAcceptor socketAcceptor = new SocketAcceptor(address);
-//			Thread acceptorThread = new Thread(socketAcceptor);
-//			acceptorThread.setName("Socket Acceptor");
-//			acceptorThread.start();
+			// System.out.println("Accepting debugger on: "
+			// + address.getHostName() + " " + address.getPort());
+			// SocketAcceptor socketAcceptor = new SocketAcceptor(address);
+			// Thread acceptorThread = new Thread(socketAcceptor);
+			// acceptorThread.setName("Socket Acceptor");
+			// acceptorThread.start();
 
-//			try
-//			{
-//				Thread.sleep(200);
-//			} catch (InterruptedException e1)
-//			{
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
+			// try
+			// {
+			// Thread.sleep(200);
+			// } catch (InterruptedException e1)
+			// {
+			// // TODO Auto-generated catch block
+			// e1.printStackTrace();
+			// }
 
-			
-			
-			
+			// Socket s = socketAcceptor.getSocket();
 
-			//Socket s = socketAcceptor.getSocket();
-
-//			if (s == null)
-//				abort("Failed to connect to debugger", null);
+			// if (s == null)
+			// abort("Failed to connect to debugger", null);
 
 			target = new VdmDebugTarget(launch);
-			
-			debugComm.RegisterDebugTarger(configuration.getAttribute(IDebugConstants.VDM_DEBUG_SESSION_ID, "0000000"), target);
-			
-			
+
+			debugComm.RegisterDebugTarger(configuration.getAttribute(IDebugConstants.VDM_DEBUG_SESSION_ID,
+					"0000000"),
+					target);
+
 			IProcess p = launchExternalProcess(launch, commandList, project);
 			target.setProcess(p);
 			launch.addDebugTarget(target);
