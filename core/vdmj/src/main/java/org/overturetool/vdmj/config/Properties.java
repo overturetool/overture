@@ -64,7 +64,7 @@ public class Properties extends ConfigBase
 		}
 		catch (Exception e)
 		{
-			// Silently use default config values if no properties file.
+			System.err.println(e.getMessage());
 		}
 	}
 }

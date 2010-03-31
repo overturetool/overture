@@ -36,46 +36,67 @@ public class ConfigBase
 	public static void init(String resource, Class<?> target) throws Exception
 	{
 		FileInputStream fis = null;
+		String propertyFile = resource;
 
 		try
 		{
-    		URL rurl = ConfigBase.class.getResource("/" + resource);
+    		try
+			{
+				URL rurl = ConfigBase.class.getResource("/" + resource);
 
-    		if (rurl == null)
+				if (rurl == null)
+				{
+					// properties file is not on the classpath
+					return;
+				}
+
+				propertyFile = rurl.getPath();
+				fis = new FileInputStream(propertyFile);
+				props.load(fis);
+			}
+    		catch (Exception ex)
     		{
-    			throw new Exception(resource + " is not on the classpath");
+    			throw new Exception(propertyFile + ": " + ex.getMessage());
     		}
 
-    		String propertyFile = rurl.getPath();
-			fis = new FileInputStream(propertyFile);
-			props.load(fis);
+    		String name = "?";
+    		String value = "?";
 
-			for (Field f : target.getFields())
+			try
 			{
-				String name = f.getName();
-				Class<?> type = f.getType();
-				String value = props.getProperty(name.replace('_', '.'));
-
-				if (value != null)
+				for (Field f : target.getFields())
 				{
-					if (type == Integer.TYPE)
+					name = f.getName();
+					Class<?> type = f.getType();
+					value = props.getProperty(name.replace('_', '.'));
+
+					if (value != null)
 					{
-						f.setInt(target, Integer.parseInt(value));
-					}
-					else if (type == Boolean.TYPE)
-					{
-						f.setBoolean(target, Boolean.parseBoolean(value));
-					}
-					else if (type == String.class)
-					{
-						f.set(target, value);
+						if (type == Integer.TYPE)
+						{
+							f.setInt(target, Integer.parseInt(value));
+						}
+						else if (type == Boolean.TYPE)
+						{
+							f.setBoolean(target, Boolean.parseBoolean(value));
+						}
+						else if (type == String.class)
+						{
+							f.set(target, value);
+						}
+						else
+						{
+							throw new Exception("Cannot process " + name +
+								", Java type " + type + " unsupported");
+						}
 					}
 				}
 			}
-		}
-		catch (Exception ex)
-		{
-			throw new Exception("Config exception : " + ex.getMessage());
+			catch (Exception ex)
+			{
+				throw new Exception(propertyFile +
+					": (" +	name + " = " + value + ") " + ex.getMessage());
+			}
 		}
 		finally
 		{
