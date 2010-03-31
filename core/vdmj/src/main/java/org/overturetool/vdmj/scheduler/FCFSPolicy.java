@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overturetool.vdmj.config.Properties;
+import org.overturetool.vdmj.values.TransactionValue;
 
 public class FCFSPolicy extends SchedulingPolicy
 {
@@ -144,6 +145,12 @@ public class FCFSPolicy extends SchedulingPolicy
     			if (th.getRunState() == RunState.TIMESTEP)
     			{
     				th.setState(RunState.RUNNABLE);
+
+    				if (Properties.rt_duration_transactions &&
+    					th.getDurationEnd() == SystemClock.getWallTime())
+    				{
+    					TransactionValue.commitOne(th.getId());
+    				}
     			}
     		}
 		}

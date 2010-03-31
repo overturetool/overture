@@ -53,6 +53,7 @@ public abstract class SchedulableThread extends Thread implements Serializable
 	private long timeslice;
 	private long steps;
 	private long timestep;
+	private long durationEnd;
 	private long swapInBy;
 	private boolean inOuterTimeStep;
 
@@ -70,7 +71,8 @@ public abstract class SchedulableThread extends Thread implements Serializable
 		signal = null;
 		timeslice = 0;
 		steps = 0;
-		timestep = -1;
+		timestep = Long.MAX_VALUE;
+		durationEnd = 0;
 		inOuterTimeStep = false;
 
 		resource.register(this, priority);
@@ -197,26 +199,31 @@ public abstract class SchedulableThread extends Thread implements Serializable
 		waitWhileState(RunState.RUNNING, RunState.RUNNING, null, null);
 	}
 
-	public synchronized void duration(long pause, Context ctxt, LexLocation location)
+	public synchronized void duration(
+		long pause, Context ctxt, LexLocation location)
 	{
 		// Wait until pause has passed - called by thread
 
-		setTimestep(pause);
-		long end = SystemClock.getWallTime() + pause;
-
-		while (getTimestep() > 0)
+		if (!inOuterTimeStep)
 		{
-    		if (Properties.diags_timestep)
+    		setTimestep(pause);
+    		durationEnd = SystemClock.getWallTime() + pause;
+
+    		do
     		{
-    			RTLogger.log(String.format("-- %s Waiting to move time by %d",
-    				this, timestep));
+        		if (Properties.diags_timestep)
+        		{
+        			RTLogger.log(String.format("-- %s Waiting to move time by %d",
+        				this, timestep));
+        		}
+
+        		waitUntilState(RunState.TIMESTEP, RunState.RUNNING, ctxt, location);
+    			setTimestep(durationEnd - SystemClock.getWallTime());
     		}
+    		while (getTimestep() > 0);
 
-    		waitUntilState(RunState.TIMESTEP, RunState.RUNNING, ctxt, location);
-			setTimestep(end - SystemClock.getWallTime());
+    		setTimestep(Long.MAX_VALUE);	// Finished
 		}
-
-		setTimestep(-1);	// Finished
 	}
 
 	private synchronized void waitWhileState(
@@ -349,19 +356,17 @@ public abstract class SchedulableThread extends Thread implements Serializable
 
 	public synchronized void setTimestep(long step)
 	{
-		if (!inOuterTimeStep)
-		{
-			timestep = step;
-		}
-		else
-		{
-			timestep = -1;		// Not moving time
-		}
+		timestep = step;
 	}
 
 	public synchronized long getTimestep()
 	{
 		return timestep;
+	}
+
+	public synchronized long getDurationEnd()
+	{
+		return durationEnd;
 	}
 
 	public synchronized void inOuterTimestep(boolean b)

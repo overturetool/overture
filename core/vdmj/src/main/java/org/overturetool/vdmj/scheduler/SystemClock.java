@@ -27,7 +27,6 @@ import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.messages.RTLogger;
-import org.overturetool.vdmj.values.TransactionValue;
 
 public class SystemClock
 {
@@ -47,24 +46,10 @@ public class SystemClock
 	{
 		wallTime += duration;
 
-		if (Settings.dialect == Dialect.VDM_RT)
+		if (Settings.dialect == Dialect.VDM_RT &&
+			Properties.diags_timestep)
 		{
-			if (Properties.diags_timestep)
-			{
-				RTLogger.log(String.format("-- Moved time by %d", duration));
-			}
-
-			if (Properties.rt_duration_transactions)
-			{
-    			if (duration == 0)
-    			{
-    				TransactionValue.commitOne(Thread.currentThread().getId());
-    			}
-    			else
-    			{
-    				TransactionValue.commitAll();
-    			}
-			}
+			RTLogger.log(String.format("-- Moved time by %d", duration));
 		}
 	}
 }
