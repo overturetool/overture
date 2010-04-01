@@ -3,7 +3,7 @@ class Alarm
 types
 \end{vdm_al}
 
-\begin{vdm_al}--[String]
+\begin{vdm_al}
 types
 
 public String = seq of char;
@@ -14,7 +14,7 @@ descr    : String;
 reqQuali : Expert`Qualification;
 \end{vdm_al}
 
-\begin{vdm_al}--[AlarmConstructor]
+\begin{vdm_al}
 operations
 
 public Alarm: Expert`Qualification * String ==> Alarm
