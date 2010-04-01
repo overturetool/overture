@@ -1,4 +1,4 @@
-\begin{vdm_al}--[PlantWithInv]
+\begin{vdm_al}
 class Plant
 
 instance variables
