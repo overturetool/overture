@@ -3512,13 +3512,13 @@ mutex (addThreat,evalQueue);
 per isFinished => not busy
 \end{lstlisting}
 
-\subsection{Introducing the Wait Notify Class}
+\subsection{Introducing the TimeStamp Class}
 
-The \texttt{WaitNotify} design pattern is introduced in detail in 
+The \texttt{TimeStamp} design pattern is introduced in detail in 
 Appendix~\ref{sec:TimeStamp}. However, here the main operations that have
 been used in the concurrent VDM++ counter measures model are introduced.
 
-The \texttt{WaitNotify} pattern is used for ensuring synchronous steps
+The \texttt{TimeStamp} pattern is used for ensuring synchronous steps
 are taken between otherwise independent threads (acting as clients from the
 \texttt{WaitNotify} perspective). 
 %The \texttt{TimeStamp} class is a subclass of 
@@ -3526,12 +3526,12 @@ are taken between otherwise independent threads (acting as clients from the
 %in Java \cite{Gosling&00} and that is described in detail in 
 %Appendix~\ref{app:waitnotify}.
 
-\texttt{WaitNotify} has two instance variables that represent the current time
+\texttt{TimeStamp} has two instance variables that represent the current time
 and information about which threads that shall be woken up when
 respectively.
 
 \begin{lstlisting}
-class WaitNotify
+class TimeStamp
 
 instance variables
   
@@ -3548,7 +3548,17 @@ operations
 
 public WaitRelative : nat ==> ()
 WaitRelative(val) ==
-  AddToWakeUpMap(threadid, currentTime + val);  
+  AddToWakeUpMap(threadid, currentTime + val);
+\end{lstlisting}
+
+Absolute waits are performed using \texttt{WaitAbsolute}. Note that if time
+given is less than the current time, then the client will never be
+woken.
+
+\begin{lstlisting}
+public WaitAbsolute : nat ==> ()
+WaitAbsolute(val) ==
+  AddToWakeUpMap(threadid, val);
 \end{lstlisting}
 
 \texttt{AddToWakeUpMap} is used to add new waits to the \texttt{wakeUpMap}.
@@ -3559,20 +3569,16 @@ AddToWakeUpMap(tId, val) ==
   wakeUpMap := wakeUpMap ++ { tId |-> val };
 \end{lstlisting}
 
-The operation \texttt{NotifyAndIncTime} is used to increment time and
-awake all threads waiting for the current time step.
+A specific thread can be immediately awoken
+using \texttt{NotifyThread}.
 
 \begin{lstlisting}
-public NotifyAndIncTime : () ==> ()
-NotifyAndIncTime() ==
- (currentTime := currentTime + stepLength;
-  NotifyAll();
- );
+public NotifyThread : nat ==> ()
+NotifyThread(tId) ==
+  wakeUpMap := {tId} <-: wakeUpMap;
 \end{lstlisting}
 
-The operation \texttt{NotifyAll} is used to run through all threads in the 
-\texttt{wakeUpMap} waking the correct ones. Only if \texttt{currentTime}
-exceeds the time to which the thread need to wake up, the thread is awoken.
+Testing all waiting threads to find which needs to be awoken using \texttt{NotifyAll}.
 
 \begin{lstlisting}
 public NotifyAll : () ==> ()
@@ -3585,13 +3591,15 @@ NotifyAll() ==
       NotifyThread(t);
 \end{lstlisting}
 
-A specific thread can be immediately awoken
-using \texttt{NotifyThread}.
+The operation \texttt{NotifyAndIncTime} is used to increment time and
+awake all threads waiting for the current time step.
 
 \begin{lstlisting}
-public NotifyThread : nat ==> ()
-NotifyThread(tId) ==
- wakeUpMap := {tId} <-: wakeUpMap;
+NotifyAndIncTime : () ==> ()
+NotifyAndIncTime() ==
+( currentTime := currentTime + 1;
+  NotifyAll();
+);
 \end{lstlisting}
 
 The current time of the class may be obtained via the \texttt{GetTime}
@@ -3603,18 +3611,6 @@ GetTime() ==
   return currentTime;
 \end{lstlisting}
 
-Finally, the operation \texttt{Awake} is used to put threads to
-sleep. As long as the {\bf\ttfamily{threadid}} is in the
-\texttt{wakeUpMap}, the thread is blocked in this operation call.
-
-\begin{lstlisting}
-public Awake: () ==> ()
-Awake() == skip;
-
-sync
-  per Awake => threadid not in set dom wakeUpMap;
-\end{lstlisting}
-
 Since \texttt{wakeUpMap} is manipulated by a number of different
 operations, we need to set access to them to be mutually exclusive.
 
@@ -3623,19 +3619,9 @@ sync
   mutex(NotifyAll);
   mutex(AddToWakeUpMap);
   mutex(AddToWakeUpMap, NotifyAll); 
+
+end TimeStamp
 \end{lstlisting}
-
-%The time stamp thread periodically calls
-%\texttt{NotifyAndIncTime}. The period of the thread depends on the
-%desired value of one time step.
-
-%\begin{lstlisting}
-%thread
-
-%  periodic (1000)(NotifyAndIncTime)
-
-%end TimeStamp
-%\end{lstlisting}
 
 \subsection{Introducing the ClockTick Class}
 
@@ -5838,7 +5824,7 @@ sync
 
 end TimeStamp
 \end{lstlisting}
-
+ 
 \chapter{Examples In Full}\label{app:listing}
 
 \section{VDM-SL Model for Counter Measures System}\label{app:VDMSLmodel}
