@@ -5835,6 +5835,8 @@ sync
   mutex(NotifyAll);
   mutex(AddToWakeUpMap);
   mutex(AddToWakeUpMap, NotifyAll); 
+
+end TimeStamp
 \end{lstlisting}
 
 \chapter{Examples In Full}\label{app:listing}
@@ -7233,37 +7235,33 @@ end FlareDispenser
 \end{lstlisting}
 
 
-\subsection{The Wait Notify Class}
+\subsection{The TimeStamp Class}
 
 \begin{lstlisting}
-class WaitNotify
-
-values
-
-public stepLength : nat = 10;
+class TimeStamp
 
 instance variables
-
-currentTime  : nat   := 0;
-wakeUpMap    : map nat to nat := {|->};
+  
+currentTime : nat := 0;
+wakeUpMap : map nat to nat := {|->};
 
 operations
 
 public WaitRelative : nat ==> ()
 WaitRelative(val) ==
   AddToWakeUpMap(threadid, currentTime + val);
- 
+
 public WaitAbsolute : nat ==> ()
 WaitAbsolute(val) ==
   AddToWakeUpMap(threadid, val);
 
 AddToWakeUpMap : nat * nat ==> ()
 AddToWakeUpMap(tId, val) ==
-   wakeUpMap := wakeUpMap ++ { tId |-> val };
+  wakeUpMap := wakeUpMap ++ { tId |-> val };
 
 public NotifyThread : nat ==> ()
 NotifyThread(tId) ==
- wakeUpMap := {tId} <-: wakeUpMap;
+  wakeUpMap := {tId} <-: wakeUpMap;
 
 public NotifyAll : () ==> ()
 NotifyAll() ==
@@ -7274,27 +7272,22 @@ NotifyAll() ==
     do
       NotifyThread(t);
 
-public NotifyAndIncTime : () ==> ()
+NotifyAndIncTime : () ==> ()
 NotifyAndIncTime() ==
- (currentTime := currentTime + stepLength;
+( currentTime := currentTime + 1;
   NotifyAll();
- );
+);
 
 public GetTime : () ==> nat
 GetTime() ==
   return currentTime;
 
-public Awake: () ==> ()
-Awake() == skip;
-
 sync
-  per Awake => threadid not in set dom wakeUpMap;
-
   mutex(NotifyAll);
   mutex(AddToWakeUpMap);
   mutex(AddToWakeUpMap, NotifyAll); 
 
-end WaitNotify
+end TimeStamp
 \end{lstlisting}
 
 \subsection{The ClockTick Class}
