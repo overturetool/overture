@@ -116,10 +116,15 @@ ReleaseLock(clId) ==
   locks := {clId} <-: locks
 pre clId in set dom locks;
 
-
+sync
+mutex(AcquireLock);
+mutex(ReleaseLock);
+mutex(AcquireLock, ReleaseLock, IsLocked);
 \end{vdm_al}
 
 \begin{vdm_al}
+operations
+
 CreateClientHandler: MessageChannel ==> ()
 CreateClientHandler(mc) ==
   start(new POP3ClientHandler(self, mc));
