@@ -9,7 +9,7 @@
 	<extension point="org.overture.ide.debug.sourceviewerEditor">
 		<SourceViewerEditor 
 			ContentTypeId="org.overture.ide.vdmpp.content-type"
-			EditorId="org.overture.ide.vdmpp.ui.editor">
+			EditorId="org.overture.ide.vdmpp.ui.VdmPpEditor">
 		</SourceViewerEditor>
 	</extension>
 

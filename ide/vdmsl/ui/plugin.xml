@@ -8,7 +8,7 @@
             default="true"
             extensions="vdmsl"
             icon="icons/cview16/vdmsl_file_tsk.gif"
-            id="org.overture.ide.vdmsl.ui.editor"
+            id="org.overture.ide.vdmsl.ui.VdmSlEditor"
             name="Vdm-Sl Editor">
       </editor>
    </extension>

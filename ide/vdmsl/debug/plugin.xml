@@ -9,7 +9,7 @@
          point="org.overture.ide.debug.sourceviewerEditor">
       <SourceViewerEditor
             ContentTypeId="org.overture.ide.vdmsl.content-type"
-            EditorId="org.overture.ide.vdmsl.ui.editor">
+            EditorId="org.overture.ide.vdmsl.ui.VdmSlEditor">
       </SourceViewerEditor>
    </extension>
 

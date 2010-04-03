@@ -12,6 +12,7 @@ import org.eclipse.debug.core.model.IThread;
 import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.utils.communication.DebugThreadProxy;
+import org.overture.ide.debug.utils.xml.XMLTagNode;
 import org.overturetool.vdmj.runtime.DebuggerException;
 
 public class VdmThread extends VdmDebugElement implements IThread
@@ -25,6 +26,7 @@ public class VdmThread extends VdmDebugElement implements IThread
 	private boolean fTerminated = false;
 	private boolean fIsStepping = false;
 	private VdmStackFrame[] frames = null;
+	private boolean isMultiMain = false;
 
 	public VdmThread(VdmDebugTarget target, int id, DebugThreadProxy proxy) {
 		super(target);
@@ -32,7 +34,7 @@ public class VdmThread extends VdmDebugElement implements IThread
 		this.proxy = proxy;
 		this.proxy.start();
 	}
-
+	
 	public IBreakpoint[] getBreakpoints()
 	{
 		// TODO Auto-generated method stub
@@ -51,17 +53,17 @@ public class VdmThread extends VdmDebugElement implements IThread
 
 	public IStackFrame[] getStackFrames() throws DebugException
 	{
-		if (isSuspended())
+		if (isSuspended() && !isMultiMain)
 		{
 			try
 			{
 				frames = proxy.getStack();
-			
-			for (VdmStackFrame f : frames)
-			{
-				f.setDebugTarget(fTarget);
-				f.setThread(this, proxy);
-			}
+
+				for (VdmStackFrame f : frames)
+				{
+					f.setDebugTarget(fTarget);
+					f.setThread(this, proxy);
+				}
 			} catch (SocketTimeoutException e)
 			{
 				if (Activator.DEBUG)
@@ -82,7 +84,7 @@ public class VdmThread extends VdmDebugElement implements IThread
 
 	public IStackFrame getTopStackFrame() throws DebugException
 	{
-		if (isSuspended())
+		if (isSuspended() && !isMultiMain)
 		{
 			IStackFrame[] frames = getStackFrames();
 			if (frames.length > 0)
@@ -95,7 +97,7 @@ public class VdmThread extends VdmDebugElement implements IThread
 
 	public boolean hasStackFrames() throws DebugException
 	{
-		if (fTerminated)
+		if (fTerminated || isMultiMain)
 		{
 			return false;
 		}
@@ -105,15 +107,16 @@ public class VdmThread extends VdmDebugElement implements IThread
 			s = proxy.getStackDepth();
 		} catch (SocketTimeoutException e)
 		{
-
-			if (Activator.DEBUG)
-			{
-				e.printStackTrace();
-			}
-			throw new DebugException(new Status(IStatus.WARNING,
-					IDebugConstants.PLUGIN_ID,
-					"Cannot fetch stack depth from debug engine",
-					e));
+			
+				if (Activator.DEBUG)
+				{
+					e.printStackTrace();
+				}
+				throw new DebugException(new Status(IStatus.WARNING,
+						IDebugConstants.PLUGIN_ID,
+						"Cannot fetch stack depth from debug engine",
+						e));
+			
 		}
 
 		System.out.println("Stack depth is: " + s);
@@ -249,6 +252,7 @@ public class VdmThread extends VdmDebugElement implements IThread
 	public void terminate() throws DebugException
 	{
 		fTerminated = true;
+		fireTerminateEvent();
 	}
 
 	public void setName(String name)
@@ -264,5 +268,21 @@ public class VdmThread extends VdmDebugElement implements IThread
 	public DebugThreadProxy getProxy()
 	{
 		return proxy;
+	}
+
+	public void init(XMLTagNode tagnode) throws IOException
+	{
+		if (id != 1)
+		{
+			String sid = tagnode.getAttr("thread");
+			this.fName = sid;
+		}
+		proxy.processInit(tagnode);
+	}
+
+	public void setMultiMain()
+	{
+	this.isMultiMain = true;
+		
 	}
 }

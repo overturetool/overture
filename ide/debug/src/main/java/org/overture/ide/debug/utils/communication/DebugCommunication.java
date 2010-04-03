@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
@@ -23,7 +22,7 @@ public class DebugCommunication implements IDisposable{
 	static private DebugCommunication instance = null;
 	private ServerSocket server;
 	private boolean keepAlive = true;
-	private List<Socket> sockets;
+	//private List<Socket> sockets;
 	private Map<String, VdmDebugTarget> targets = new HashMap<String, VdmDebugTarget>();
 	private int sessionId = 0;
 

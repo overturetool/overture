@@ -13,7 +13,7 @@ public interface IDebugConstants
 	final static String VDM_LAUNCH_CONFIG_MODULE = "vdm_launch_config_module";
 	final static String VDM_LAUNCH_CONFIG_OPERATION = "vdm_launch_config_method";
 	final static String VDM_LAUNCH_CONFIG_STATIC_OPERATION = "vdm_launch_config_static_method";
-	final static String VDM_LAUNCH_CONFIG_EXPRESSION_SEPERATOR = "vdm_launch_config_expression_seperator";
+	//final static String VDM_LAUNCH_CONFIG_EXPRESSION_SEPERATOR = "vdm_launch_config_expression_seperator";
 	final static String VDM_LAUNCH_CONFIG_EXPRESSION= "vdm_launch_config_expression";
 	
 	final static String VDM_LAUNCH_CONFIG_DEFAULT = "vdm_launch_config_default";

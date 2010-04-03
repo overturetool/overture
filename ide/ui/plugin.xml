@@ -5,7 +5,7 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             class="org.overture.ide.ui.perspective.VdmPerspectiveFactory"
-            icon="icons/cview16/overture_nav.gif"
+            icon="icons/cview16/overture_nav.png"
             id="org.overture.ide.ui.perspective"
             name="VDM Perspective">
          <description>
@@ -18,7 +18,7 @@
       <perspectiveExtension
             targetID="org.overture.ide.ui.perspective">
          <view
-               id="org.overture.ide.ui.navigatorView"
+               id="org.overture.ide.ui.VdmExplorer"
                minimized="false"
                ratio="0.25"
                relationship="left"
@@ -30,15 +30,15 @@
          point="org.eclipse.ui.views">
       <view
             class="org.overture.ide.ui.navigator.VdmNavigator"
-            icon="icons/cview16/overture_nav.gif"
-            id="org.overture.ide.ui.navigatorView"
+            icon="icons/cview16/overture_nav.png"
+            id="org.overture.ide.ui.VdmExplorer"
             name="VDM Explorer">
       </view>
    </extension>
    <extension
          point="org.eclipse.ui.navigator.viewer">
       <viewerContentBinding
-            viewerId="org.overture.ide.ui.navigatorView">
+            viewerId="org.overture.ide.ui.VdmExplorer">
          <includes>
             <contentExtension
                   pattern="org.eclipse.ui.navigator.resourceContent">
@@ -56,15 +56,18 @@
             </actionExtension>
          </includes>
       </viewerActionBinding>
+      <!-- inheritBindingsFromViewer can add the context menu from another view -->
       <viewer
-            viewerId="org.overture.ide.ui.navigatorView">
+            inheritBindingsFromViewer="org.eclipse.ui.navigator.ProjectExplorer"
+            viewerId="org.overture.ide.ui.VdmExplorer">
       </viewer>
    </extension>
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">
       <navigatorContent
+      		activeByDefault="true"
             contentProvider="org.overture.ide.ui.navigator.VdmNavigatorContentProvider"
-            icon="icons/cview16/overture_nav.gif"
+            icon="icons/cview16/overture_nav.png"
             id="org.overture.ide.ui.navigatorContent2"
             labelProvider="org.overture.ide.ui.navigator.VdmNavigatorLabelProvider"
             name="name">
@@ -75,6 +78,16 @@
                </instanceof>
             </or>
          </triggerPoints>
+         	<possibleChildren>
+				<or>
+					<instanceof	value="org.eclipse.core.resources.IResource" />
+					
+				</or>
+			</possibleChildren> 
+         <override
+               policy="InvokeAlwaysRegardlessOfSuppressedExt"
+               suppressedExtensionId="org.eclipse.team.ui.resourceContent"/>
+         
       </navigatorContent>
    </extension>
   
@@ -83,7 +96,7 @@
            point="org.eclipse.ui.propertyPages">
         <page
               class="org.overture.ide.ui.property.VdmLanguagePropertyPage"
-              icon="icons/cview16/overture_nav.gif"
+              icon="icons/cview16/overture_nav.png"
               id="org.overture.ide.ui.property.vdmlanguage"
               name="VDM Settings">
                      

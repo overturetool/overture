@@ -355,7 +355,7 @@ public class DebugThreadProxy extends AsyncCaller
 
 	}
 
-	private void processInit(XMLTagNode tagnode) throws IOException
+	public void processInit(XMLTagNode tagnode) throws IOException
 	{
 		String sid = tagnode.getAttr("thread");
 		sessionId = tagnode.getAttr("idekey");

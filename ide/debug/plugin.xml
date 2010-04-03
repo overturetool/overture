@@ -1,78 +1,119 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="org.overture.ide.debug.sourceviewerEditor" name="Source Viewer Editor" schema="schema/org.overture.ide.debug.sourceviewerEditor.exsd"/>
+	<extension-point id="org.overture.ide.debug.sourceviewerEditor"
+		name="Source Viewer Editor" schema="schema/org.overture.ide.debug.sourceviewerEditor.exsd" />
 
-   
-   
-   
-     <!-- 
-  
-  	add breakpoint actionsSet to the OverturePerspective 
-  	(this is the menu -> run -> (toggle breakpoint, remove all breakpoints, etc)
-  -->
-  <extension point="org.eclipse.ui.perspectiveExtensions">
-    <perspectiveExtension
-      targetID="org.overture.ide.ui.perspective">
-      <actionSet id="org.eclipse.debug.ui.breakpointActionSet"></actionSet>
-    </perspectiveExtension>
-  </extension>
-  
-  
-  
-  <extension
-        point="org.eclipse.debug.core.breakpoints">
-     <breakpoint
-           class="org.overture.ide.debug.core.model.VdmLineBreakpoint"
-           id="org.overture.ide.debug.breakpoint"
-           markerType="vdm.lineBreakpoint.marker"
-           name="Vdm Line Breakpoint">
-     </breakpoint>
-  </extension>
-  <extension
-        id="vdm.lineBreakpoint.marker"
-        point="org.eclipse.core.resources.markers">
-     <super
-           type="org.eclipse.debug.core.lineBreakpointMarker">
-     </super>
-     <persistent
-           value="true">
-     </persistent>
-  </extension>
-  <extension
-        point="org.eclipse.core.runtime.adapters">
-     <factory
-           adaptableType="org.eclipse.ui.texteditor.ITextEditor"
-           class="org.overture.ide.debug.ui.model.VdmBreakpointAdapterFactory">
-        <adapter
-              type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget">
-        </adapter>
-     </factory>
-  </extension>
-  <extension
-        point="org.eclipse.debug.core.sourceLocators">
-     <sourceLocator
-           class="org.overture.ide.debug.core.launching.VdmSourceLocatorDirector"
-           id="org.overture.ide.debug.sourceLocator"
-           name="Vdm Source Locator">
-     </sourceLocator>
-  </extension>
-  <extension
-        point="org.eclipse.debug.core.sourcePathComputers">
-     <sourcePathComputer
-           class="org.overture.ide.debug.core.launching.VdmSourcePathComputerDelegate"
-           id="org.overture.ide.debug.sourcePathComputer">
-     </sourcePathComputer>
-  </extension>
-  <extension
-        point="org.eclipse.debug.ui.debugModelPresentations">
-     <debugModelPresentation
-           class="org.overture.ide.debug.ui.model.VdmDebugModelPresentation"
-           id="org.overture.ide.debug.vdm">
-     </debugModelPresentation>
-  </extension>
-  
-  
-  
-  
+	<!--
+
+		add breakpoint actionsSet to the OverturePerspective (this is the menu
+		-> run -> (toggle breakpoint, remove all breakpoints, etc)
+	-->
+	<extension point="org.eclipse.ui.perspectiveExtensions">
+		<perspectiveExtension targetID="org.overture.ide.ui.perspective">
+			<actionSet id="org.eclipse.debug.ui.breakpointActionSet"></actionSet>
+		</perspectiveExtension>
+	</extension>
+
+	<!-- Breakpoints -->
+
+	<extension point="org.eclipse.debug.core.breakpoints">
+		<breakpoint class="org.overture.ide.debug.core.model.VdmLineBreakpoint"
+					id="org.overture.ide.debug.breakpoint" 
+					markerType="vdm.lineBreakpoint.marker"
+					name="Vdm Line Breakpoint">
+		</breakpoint>
+	</extension>
+	<extension id="vdm.lineBreakpoint.marker" 
+			   point="org.eclipse.core.resources.markers">
+		<super type="org.eclipse.debug.core.lineBreakpointMarker"></super>
+		<persistent value="true">
+		</persistent>
+	</extension>
+	<extension point="org.eclipse.core.runtime.adapters">
+		<factory adaptableType="org.eclipse.ui.texteditor.ITextEditor"
+			class="org.overture.ide.debug.ui.model.VdmBreakpointAdapterFactory">
+			<adapter type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget">
+			</adapter>
+		</factory>
+	</extension>
+	
+	<!-- Enables double click on ruler for breakpoint creation -->
+	 <extension
+         point="org.eclipse.ui.editorActions">
+      <editorContribution
+            targetID="org.overture.ide.vdmpp.ui.VdmPpEditor"
+            id="org.overture.ide.debug.VdmEditor.BreakpointRulerActions">
+         <action
+               label="%AddBreakpoint.label"
+               class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
+               actionID="RulerDoubleClick"
+               id="org.overture.ide.debug.ui.actions.ManageBreakpointRulerAction">
+         </action>
+      </editorContribution>
+	</extension>
+	
+	<!-- source locator -->
+	<extension point="org.eclipse.debug.core.sourceLocators">
+		<sourceLocator
+			class="org.overture.ide.debug.core.launching.VdmSourceLocatorDirector"
+			id="org.overture.ide.debug.sourceLocator" 
+			name="Vdm Source Locator">
+		</sourceLocator>
+	</extension>
+	<extension point="org.eclipse.debug.core.sourcePathComputers">
+		<sourcePathComputer
+			class="org.overture.ide.debug.core.launching.VdmSourcePathComputerDelegate"
+			id="org.overture.ide.debug.sourcePathComputer">
+		</sourcePathComputer>
+	</extension>
+	<extension point="org.eclipse.debug.ui.debugModelPresentations">
+		<debugModelPresentation
+			class="org.overture.ide.debug.ui.model.VdmDebugModelPresentation" id="org.overture.ide.debug.vdm">
+		</debugModelPresentation>
+	</extension>
+
+
+<!-- Shoutcut for launching project. Extends the Debug and Run context menu in the VDM Explorer -->
+ <extension point="org.eclipse.debug.ui.launchShortcuts">
+  <shortcut
+     id="org.overture.ide.debug.ui.localVdmShortcut"
+     modes="run,debug"
+     class="org.overture.ide.debug.ui.launchConfigurations.VdmApplicationLaunchShortcut"
+     label="Vdm Application"
+     icon="icons/cview16/vdmpp_file_tsk.png">
+     <contextualLaunch>
+           <enablement>
+             <with variable="selection">
+             <count value="1"/>
+                <iterate>
+                	<and>
+                		<instanceof value="org.eclipse.core.resources.IProject"></instanceof>
+                		<and>
+							<adapt type="org.eclipse.core.resources.IProject" />
+							<test property="org.eclipse.core.resources.open" value="true"/>
+						</and>
+                	</and>
+                </iterate>
+           	</with>
+           </enablement>
+  		 </contextualLaunch>
+  </shortcut>
+ </extension>
+
+
+
+
+<!-- Adds the launch and java debug actions whenever a java relevant part is open.
+	Makes the Run and Debug bottons clickable in the VDM Explorer -->
+   <extension point="org.eclipse.ui.actionSetPartAssociations">
+       <actionSetPartAssociation
+            targetID="org.eclipse.debug.ui.launchActionSet">
+         <part
+               id="org.overture.ide.ui.VdmExplorer">
+         </part>
+      </actionSetPartAssociation>
+      
+      
+   </extension>
 </plugin>

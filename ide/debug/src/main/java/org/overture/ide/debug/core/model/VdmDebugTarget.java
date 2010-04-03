@@ -124,6 +124,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 	private ConsoleWriter console;
 	private String sessionId;
 	private HashMap<Integer, VdmLineBreakpoint> breakpointMap = new HashMap<Integer, VdmLineBreakpoint>();
+	private IVdmProject project;
 
 	public VdmDebugTarget(ILaunch launch) throws DebugException {
 		super(null);
@@ -213,15 +214,17 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 
 	public void terminate() throws DebugException
 	{
+
+		for (IThread thread : fThreads)
+		{
+			thread.terminate();
+		}
 		fThreads.clear();
-		fTerminated = true;
-		// proxy.terminate();
-		// for (IThread thread : fThreads) {
-		// thread.terminate();
-		// }
+
 		try
 		{
-			fThread.getProxy().allstop();
+			if (fThread != null && fThread.getProxy() != null)
+				fThread.getProxy().allstop();
 		} catch (IOException e)
 		{
 			e.printStackTrace();
@@ -229,6 +232,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 		}
 		fProcess.terminate();
 		fTerminated = true;
+		fireTerminateEvent();
 	}
 
 	public boolean canResume()
@@ -251,6 +255,10 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 
 		fThread.getProxy().resume();
 		fSuspended = false;
+		for (IThread thread : fThreads)
+		{
+			thread.resume();
+		}
 		fireResumeEvent(DebugEvent.RESUME);
 
 	}
@@ -281,15 +289,27 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 				{
 					try
 					{
-
-						int line = ((ILineBreakpoint) breakpoint).getLineNumber();
-						File file = ((VdmLineBreakpoint) breakpoint).getFile();
-						int xid = fThread.getProxy().breakpointAdd(line, file.toURI().toASCIIString());
-
-						synchronized (breakpointMap)
+						IResource resource = breakpoint.getMarker()
+								.getResource();
+						if (resource instanceof IFile)
 						{
-							breakpointMap.put(new Integer(xid),
-									(VdmLineBreakpoint) breakpoint);
+							// check that the breakpoint is from this project's IFile resource
+							if (resource.getProject()
+									.getName()
+									.equals(project.getName()))
+							{
+								int line = ((ILineBreakpoint) breakpoint).getLineNumber();
+								File file = ((VdmLineBreakpoint) breakpoint).getFile();
+								int xid = fThread.getProxy()
+										.breakpointAdd(line,
+												file.toURI().toASCIIString());
+
+								synchronized (breakpointMap)
+								{
+									breakpointMap.put(new Integer(xid),
+											(VdmLineBreakpoint) breakpoint);
+								}
+							}
 						}
 
 					} catch (CoreException e)
@@ -350,47 +370,58 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 	}
 
 	@SuppressWarnings("unchecked")
-	private void installPreviousBreakpointMarkers() {
+	private void installPreviousBreakpointMarkers()
+	{
 		IProject project = null;
 
-		try {
-			project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-					fLaunch.getLaunchConfiguration().getAttribute(
-							IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, ""));
+		try
+		{
+			project = ResourcesPlugin.getWorkspace()
+					.getRoot()
+					.getProject(fLaunch.getLaunchConfiguration()
+							.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT,
+									""));
 
 			IVdmProject vdmProject = null;
 
-			if (project != null && VdmProject.isVdmProject(project)) {
+			if (project != null && VdmProject.isVdmProject(project))
+			{
 				vdmProject = VdmProject.createProject(project);
 			}
 
 			List<IVdmSourceUnit> specFiles = vdmProject.getSpecFiles();
-			
-			for (IVdmSourceUnit unit : specFiles) {
+
+			for (IVdmSourceUnit unit : specFiles)
+			{
 				IFile f = unit.getFile();
 				System.out.println("file name: " + f.toString());
-				IMarker[] markers = unit.getFile().findMarkers(null, false, IResource.DEPTH_INFINITE);
-				for (IMarker iMarker : markers) {					
-					if(iMarker.getType().equals(IDebugConstants.BREAKPOINT_MARKER_ID))
+				IMarker[] markers = unit.getFile().findMarkers(null,
+						false,
+						IResource.DEPTH_INFINITE);
+				for (IMarker iMarker : markers)
+				{
+					if (iMarker.getType()
+							.equals(IDebugConstants.BREAKPOINT_MARKER_ID))
 					{
-						
-						
+
 						Map attributes = iMarker.getAttributes();
-						
+
 						Integer ln = (Integer) iMarker.getAttribute("lineNumber");
 						System.out.println("Line number: " + ln);
-						
-						IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(IDebugConstants.ID_VDM_DEBUG_MODEL);
-						
-					
-//						DebugPlugin.getDefault()
-//						.getBreakpointManager().addBreakpoint(new VdmLineBreakpoint(f, ln));
+
+						IBreakpoint[] breakpoints = DebugPlugin.getDefault()
+								.getBreakpointManager()
+								.getBreakpoints(IDebugConstants.ID_VDM_DEBUG_MODEL);
+
+						// DebugPlugin.getDefault()
+						// .getBreakpointManager().addBreakpoint(new VdmLineBreakpoint(f, ln));
 					}
 				}
 				System.out.println("Markers size " + markers.length);
 			}
-			
-		} catch (CoreException e) {
+
+		} catch (CoreException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -500,13 +531,34 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 		{ // Assuming 1 is main thread;
 
 			fThread = t; // TODO: assuming main thread is number 1;
-			fThread.setName("Thread [Main]");
-			fThreads.add(fThread);
+			t.setName("Thread [Main]");
+
 			started();
 
-		} else
+		}
+
+		fThreads.add(t);
+
+		try
 		{
-			fThreads.add(fThread);
+			t.init(tagnode);
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(fThreads.size()>1)
+		{
+			for (int i = 0; i < fThreads.size(); i++)
+			{
+				VdmThread thread = (VdmThread)fThreads.get(i);
+				if(thread.getId()==1)
+				{
+					thread.setMultiMain();
+					break;
+				}
+			}
 		}
 		// proxy = new DebugThreadProxy(s, sessionId, new Integer(fThread
 		// .getId()), new CallbackHandler());
@@ -537,6 +589,12 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 	public void printErr(String message)
 	{
 		console.ConsolePrint(message, SWT.COLOR_RED);
+	}
+
+	public void setProject(IVdmProject project)
+	{
+		this.project = project;
+
 	}
 
 }

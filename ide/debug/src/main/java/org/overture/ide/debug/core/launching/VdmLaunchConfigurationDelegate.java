@@ -154,6 +154,7 @@ public class VdmLaunchConfigurationDelegate implements
 
 			IProcess p = launchExternalProcess(launch, commandList, project);
 			target.setProcess(p);
+			target.setProject(project);
 			launch.addDebugTarget(target);
 
 		}
