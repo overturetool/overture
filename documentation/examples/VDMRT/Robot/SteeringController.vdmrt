@@ -12,7 +12,7 @@ instance variables
  private dest: Grid`Point;
  private  workingGrid : Grid;
  busy : bool := true;
- inv batCap > 1 and len routes > 0 => GetBatUsage()*2 <= batCap;
+-- inv batCap > 1 and len routes > 0 => GetBatUsage()*2 <= batCap;
  
 operations
  
