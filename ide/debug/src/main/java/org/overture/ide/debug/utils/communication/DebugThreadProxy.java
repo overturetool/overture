@@ -11,8 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.debug.core.DebugException;
 import org.overture.ide.debug.core.model.VdmGroupValue;
+import org.overture.ide.debug.core.model.VdmLineBreakpoint;
 import org.overture.ide.debug.core.model.VdmMultiValue;
 import org.overture.ide.debug.core.model.VdmSimpleValue;
 import org.overture.ide.debug.core.model.VdmStackFrame;
@@ -624,6 +626,10 @@ public class DebugThreadProxy extends AsyncCaller
 	public void step_out() throws IOException
 	{
 		write("step_into -i " + (getNextTicket()));
+	}
+
+	public void breakpointRemove(VdmLineBreakpoint breakpoint) {
+		write("breakpoint_remove -i " + (++xid) + " -d " + ((VdmLineBreakpoint)breakpoint).getId());
 	}
 
 	// public void expr(String expression) throws IOException
