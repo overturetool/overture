@@ -41,7 +41,13 @@ public class VdmDebugModelPresentation extends LabelProvider implements
 	 */
 	public String getEditorId(IEditorInput input, Object element)
 	{
-		if (element instanceof IFile || element instanceof ILineBreakpoint)
+		if(element instanceof ILineBreakpoint)
+		{
+			ILineBreakpoint breakpoint = (ILineBreakpoint) element;
+			element = breakpoint.getMarker().getResource();
+		}
+		
+		if (element instanceof IFile)
 		{
 			IFile file = (IFile) element;
 				try
