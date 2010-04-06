@@ -19,7 +19,6 @@
     <module>vdmsl</module>
     <module>vdmpp</module>
     <module>vdmrt</module>
-    <module>ast</module>
     <module>generated</module>
     <module>platform</module>
     <module>parsers</module>
@@ -27,8 +26,7 @@
     <module>ui</module>
     <module>debug</module>
     <module>plugins</module>
-    <module>utility</module>
-  <module>core</module>
+    <module>core</module>
   </modules>
 
 <reporting>
