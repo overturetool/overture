@@ -79,7 +79,16 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 
 		public void fireStarted()
 		{
-			started();
+			//started();
+			installDeferredBreakpoints();
+			try
+			{
+				resume();
+			} catch (DebugException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		public void fireStopped()
@@ -133,7 +142,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 
 		fThreads = new ArrayList<IThread>();
 
-		console = loggingConsole = new ConsoleWriter("Overture Debug");
+		console = new ConsoleWriter("Overture Debug");
 		console.clear();
 		console.Show();
 
@@ -163,7 +172,9 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 						false))
 		{
 			logging = true;
-			loggingConsole = new ConsoleWriter("VDM Debug logging");
+			loggingConsole = new ConsoleWriter("Debug protocol log");
+			loggingConsole.clear();
+			loggingConsole.Show();
 		}
 
 	}
@@ -253,13 +264,13 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 	public void resume() throws DebugException
 	{
 
-		fThread.getProxy().resume();
+		//fThread.getProxy().resume();
 		fSuspended = false;
 		for (IThread thread : fThreads)
 		{
 			thread.resume();
 		}
-		fireResumeEvent(DebugEvent.RESUME);
+		//fireResumeEvent(DebugEvent.RESUME);
 
 	}
 
@@ -446,13 +457,13 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 	{
 
 		fireCreationEvent();
-		installDeferredBreakpoints();
-		try
-		{
-			resume();
-		} catch (DebugException e)
-		{
-		}
+//		installDeferredBreakpoints();
+//		try
+//		{
+//			resume();
+//		} catch (DebugException e)
+//		{
+//		}
 
 	}
 
@@ -555,7 +566,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 				VdmThread thread = (VdmThread)fThreads.get(i);
 				if(thread.getId()==1)
 				{
-					thread.setMultiMain();
+					//thread.setMultiMain();
 					break;
 				}
 			}

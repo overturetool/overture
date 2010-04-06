@@ -147,8 +147,8 @@ public class DebugThreadProxy extends AsyncCaller
 			// readerRunner = new ReaderRunnable();
 			// new Thread(readerRunner).start();
 
-			redirect("stdout", DBGPRedirect.REDIRECT);
-			redirect("stderr", DBGPRedirect.REDIRECT);
+//			redirect("stdout", DBGPRedirect.REDIRECT);
+//			redirect("stderr", DBGPRedirect.REDIRECT);
 
 			// callback.fireStarted();
 
@@ -357,6 +357,7 @@ public class DebugThreadProxy extends AsyncCaller
 
 	public void processInit(XMLTagNode tagnode) throws IOException
 	{
+		callback.firePrintMessage(false,  "Process init: " + tagnode.toString());
 		String sid = tagnode.getAttr("thread");
 		sessionId = tagnode.getAttr("idekey");
 

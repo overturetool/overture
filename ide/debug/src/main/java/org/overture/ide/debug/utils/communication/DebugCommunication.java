@@ -27,9 +27,9 @@ public class DebugCommunication implements IDisposable{
 	private int sessionId = 0;
 
 	private DebugCommunication() throws IOException {
-		int portNumber = findFreePort();
-		if(portNumber == -1) 
-			throw new IOException("Debug communication: no ports available");//very unlikely 
+		int portNumber = 9000;//findFreePort();
+//		if(portNumber == -1) 
+//			throw new IOException("Debug communication: no ports available");//very unlikely 
 		server = new ServerSocket(portNumber);
 		System.out.println("listning on port: " + portNumber);
 		//server.setSoTimeout(50000);
@@ -57,13 +57,19 @@ public class DebugCommunication implements IDisposable{
 		return this.server.getLocalPort();
 	}
 
-	public void RegisterDebugTarger(String sessionId, VdmDebugTarget target) throws DebugException {
+	public void registerDebugTarger(String sessionId, VdmDebugTarget target) throws DebugException {
 
 		if (!targets.containsKey(sessionId)) {
 			targets.put(sessionId, target);
 		}else {
 			throw new DebugException(new Status(IStatus.ERROR, IDebugConstants.PLUGIN_ID, "Failed to register target: session Id already exists"));
 		}
+	}
+	
+	public void removeSession(String sessionId)
+	{
+		if(targets.containsKey(sessionId))
+			targets.remove(sessionId);
 	}
 
 	class ThreadAccept implements Runnable {
@@ -175,6 +181,9 @@ public class DebugCommunication implements IDisposable{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}else
+		{
+			System.err.println("Unexpected node: " + tagnode.toString());
 		}
 
 		

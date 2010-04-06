@@ -58,10 +58,16 @@ public class VdmLaunchConfigurationDelegate implements
 			e1.printStackTrace();
 		}
 
+		Integer debugSessionId = new Integer( debugComm.getSessionId());
+		if (useRemoteDebug(configuration))
+		{
+			debugSessionId = 1;
+			debugComm.removeSession(debugSessionId.toString());
+		}
+		
 		// Storing the debug session id
 		ILaunchConfigurationWorkingCopy lcwc = configuration.getWorkingCopy();
-		lcwc.setAttribute(IDebugConstants.VDM_DEBUG_SESSION_ID,
-				debugComm.getSessionId());
+		lcwc.setAttribute(IDebugConstants.VDM_DEBUG_SESSION_ID,	debugSessionId);
 		lcwc.doSave();
 
 		// InetSocketAddress address = new InetSocketAddress("localhost",
@@ -78,8 +84,7 @@ public class VdmLaunchConfigurationDelegate implements
 		commandList.add(new Integer(debugComm.getPort()).toString());
 		commandList.add("-k");
 		// commandList.add("dbgp_1265361483486");
-		commandList.add(configuration.getAttribute(IDebugConstants.VDM_DEBUG_SESSION_ID,
-				"0000000"));
+		commandList.add(debugSessionId.toString());
 		commandList.add("-w");
 		commandList.add("-q");
 		commandList.add(project.getDialect().getArgstring());
@@ -125,32 +130,9 @@ public class VdmLaunchConfigurationDelegate implements
 		VdmDebugTarget target = null;
 		if (mode.equals(ILaunchManager.DEBUG_MODE))
 		{
-			// System.out.println("Accepting debugger on: "
-			// + address.getHostName() + " " + address.getPort());
-			// SocketAcceptor socketAcceptor = new SocketAcceptor(address);
-			// Thread acceptorThread = new Thread(socketAcceptor);
-			// acceptorThread.setName("Socket Acceptor");
-			// acceptorThread.start();
-
-			// try
-			// {
-			// Thread.sleep(200);
-			// } catch (InterruptedException e1)
-			// {
-			// // TODO Auto-generated catch block
-			// e1.printStackTrace();
-			// }
-
-			// Socket s = socketAcceptor.getSocket();
-
-			// if (s == null)
-			// abort("Failed to connect to debugger", null);
-
 			target = new VdmDebugTarget(launch);
 
-			debugComm.RegisterDebugTarger(configuration.getAttribute(IDebugConstants.VDM_DEBUG_SESSION_ID,
-					"0000000"),
-					target);
+			debugComm.registerDebugTarger(debugSessionId.toString(),target);
 
 			IProcess p = launchExternalProcess(launch, commandList, project);
 			target.setProcess(p);
