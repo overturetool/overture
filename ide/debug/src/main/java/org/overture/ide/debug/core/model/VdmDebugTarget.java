@@ -6,16 +6,13 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.debug.core.DebugEvent;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
@@ -27,84 +24,14 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.swt.SWT;
 import org.overture.ide.core.IVdmProject;
-import org.overture.ide.core.IVdmSourceUnit;
-import org.overture.ide.core.VdmProject;
+import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;
-import org.overture.ide.debug.utils.communication.DebugThreadProxy;
-import org.overture.ide.debug.utils.communication.IDebugThreadProxyCallback;
 import org.overture.ide.debug.utils.xml.XMLTagNode;
 import org.overture.ide.ui.internal.util.ConsoleWriter;
 import org.overturetool.vdmj.runtime.DebuggerException;
 
-public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget {
-	private class CallbackHandler implements IDebugThreadProxyCallback {
-
-		public void fireBreakpointHit() {
-			breakpointHit("event");
-
-			for (IThread t : fThreads) {
-				if (t instanceof VdmThread) {
-					try {
-						((VdmThread) t).suspend();
-					} catch (DebugException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-
-		}
-
-		public void firePrintErr(String text) {
-			printErr(text);
-		}
-
-		public void firePrintMessage(boolean output, String message) {
-			printMessage(output, message);
-		}
-
-		public void firePrintOut(String text) {
-			printOut(text);
-		}
-		
-		public void fireStarted()
-		{
-			//started();
-			installDeferredBreakpoints();
-			try
-			{
-				resume();
-			} catch (DebugException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		public void fireStopped() {
-			try {
-				terminate();
-			} catch (DebugException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		public void fireBreakpointSet(Integer tid, Integer breakpointId) {
-			synchronized (breakpointMap) {
-				if (breakpointMap.containsKey(tid)) {
-
-					VdmLineBreakpoint bp = breakpointMap.get(tid);
-					bp.setId(breakpointId);
-					breakpointMap.remove(tid);
-				}
-			}
-
-		}
-
-	}
-
-	// private DebugThreadProxy proxy;
+public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
+{
 	private ILaunch fLaunch;
 	private IProcess fProcess;
 	private List<IThread> fThreads;
@@ -130,105 +57,125 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget {
 		console.clear();
 		console.Show();
 
-		try {
+		try
+		{
 			setLogging(launch);
-		} catch (CoreException e) {
+		} catch (CoreException e)
+		{
 			// OK
 		}
 
-		DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(
-				this);
+		DebugPlugin.getDefault()
+				.getBreakpointManager()
+				.addBreakpointListener(this);
 
 	}
 
-	public void setProcess(IProcess process) {
+	public void setProcess(IProcess process)
+	{
 		fProcess = process;
 	}
 
-	private void setLogging(ILaunch launch) throws CoreException {
-		if (launch.getLaunchConfiguration().getAttribute(
-				IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false)) {
+	private void setLogging(ILaunch launch) throws CoreException
+	{
+		if (launch.getLaunchConfiguration()
+				.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING,
+						false))
+		{
 			logging = true;
-			loggingConsole = new ConsoleWriter("VDM Debug logging");
+			loggingConsole = new ConsoleWriter("VDM Debug log");
 		}
 
 	}
 
-	public String getName() throws DebugException {
+	public String getName() throws DebugException
+	{
 		return "VDM Application";
 	}
 
-	public IProcess getProcess() {
+	public IProcess getProcess()
+	{
 		return fProcess;
 	}
 
 	@Override
-	public ILaunch getLaunch() {
+	public ILaunch getLaunch()
+	{
 		return this.fLaunch;
 	}
 
-	public IThread[] getThreads() throws DebugException {
+	public IThread[] getThreads() throws DebugException
+	{
 		IThread[] result = new IThread[fThreads.size()];
 		System.arraycopy(fThreads.toArray(), 0, result, 0, fThreads.size());
 		return result;
 	}
 
-	public boolean hasThreads() throws DebugException {
+	public boolean hasThreads() throws DebugException
+	{
 		return fThreads.size() > 0;
 	}
 
-	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
-		// TODO Auto-generated method stub
-		return true;
+	public boolean supportsBreakpoint(IBreakpoint breakpoint)
+	{
+		return true; // Yes VDMJ supports breakpoints always
 	}
 
-	public boolean canTerminate() {
+	public boolean canTerminate()
+	{
 		return !fTerminated;
 	}
 
-	public boolean isTerminated() {
+	public boolean isTerminated()
+	{
 		return fTerminated;
 	}
 
-	public void terminate() throws DebugException {
-
-		for (IThread thread : fThreads) {
-			thread.terminate();
-		}
-		fThreads.clear();
-
-		try {
+	public void terminate() throws DebugException
+	{
+		try
+		{
 			if (fThread != null && fThread.getProxy() != null)
 				fThread.getProxy().allstop();
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			e.printStackTrace();
 			throw new DebuggerException(e.getMessage());
 		}
+//		for (IThread thread : fThreads)
+//		{
+//			thread.terminate();
+//		}
+		fThreads.clear();
 		fProcess.terminate();
 		fTerminated = true;
 		fireTerminateEvent();
 	}
 
-	public boolean canResume() {
+	public boolean canResume()
+	{
 		return (fSuspended && !fTerminated);
 	}
 
-	public boolean canSuspend() {
+	public boolean canSuspend()
+	{
 		return !fSuspended && !fTerminated;
 	}
 
-	public boolean isSuspended() {
+	public boolean isSuspended()
+	{
 		return fSuspended;
 	}
 
-	public void resume() throws DebugException {
-
-		fThread.getProxy().resume();
+	public void resume() throws DebugException
+	{
 		fSuspended = false;
-		for (IThread thread : fThreads) {
-			thread.resume();
-		}
-		fireResumeEvent(DebugEvent.RESUME);
+		//Control of remune is only done on main thread
+		fThread.getProxy().resume();
+		// for (IThread thread : fThreads) {
+		// thread.resume();
+		// }
+		// fireResumeEvent(DebugEvent.RESUME);
 
 	}
 
@@ -238,294 +185,241 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget {
 	 *            - see DebugEvent detail constants;
 	 * @throws DebugException
 	 */
-	public void suspend() throws DebugException {
+	public void suspend() throws DebugException
+	{
 		fSuspended = true;
 
 	}
 
-	public void breakpointAdded(IBreakpoint breakpoint) {
-		if (isTerminated()) {
+	public void breakpointAdded(IBreakpoint breakpoint)
+	{
+		if (isTerminated())
+		{
 			return;
 		}
-		if (supportsBreakpoint(breakpoint)) {
-			try {
-				if (breakpoint.isEnabled()) {
-					try {
+		if (supportsBreakpoint(breakpoint))
+		{
+			try
+			{
+				if (breakpoint.isEnabled())
+				{
+					try
+					{
 						IResource resource = breakpoint.getMarker()
 								.getResource();
-						if (resource instanceof IFile) {
+						if (resource instanceof IFile)
+						{
 							// check that the breakpoint is from this project's
 							// IFile resource
-							if (resource.getProject().getName().equals(
-									project.getName())) {
-								int line = ((ILineBreakpoint) breakpoint)
-										.getLineNumber();
-								File file = ((VdmLineBreakpoint) breakpoint)
-										.getFile();
-								int xid = fThread.getProxy().breakpointAdd(
-										line, file.toURI().toASCIIString());
+							if (resource.getProject()
+									.getName()
+									.equals(project.getName()))
+							{
+								int line = ((ILineBreakpoint) breakpoint).getLineNumber();
+								File file = ((VdmLineBreakpoint) breakpoint).getFile();
+								int xid = fThread.getProxy()
+										.breakpointAdd(line,
+												file.toURI().toASCIIString());
 
-								synchronized (breakpointMap) {
+								synchronized (breakpointMap)
+								{
 									breakpointMap.put(new Integer(xid),
 											(VdmLineBreakpoint) breakpoint);
 								}
 							}
 						}
 
-					} catch (CoreException e) {
+					} catch (CoreException e)
+					{
 					}
 				}
-			} catch (CoreException e) {
+			} catch (CoreException e)
+			{
 			}
 		}
 
 	}
 
-	public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta) {
+	public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta)
+	{
 		System.out.println("Breakpoint change");
-		if (supportsBreakpoint(breakpoint)) {
-			try {
-				if (breakpoint.isEnabled()) {
+		if (supportsBreakpoint(breakpoint))
+		{
+			try
+			{
+				if (breakpoint.isEnabled())
+				{
 					breakpointAdded(breakpoint);
-				} else {
+				} else
+				{
 					breakpointRemoved(breakpoint, null);
 				}
-			} catch (CoreException e) {
+			} catch (CoreException e)
+			{
 			}
 		}
 	}
 
-	public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
-		if (!isTerminated()) {
-			if (breakpoint instanceof VdmLineBreakpoint) {
-				fThread.getProxy().breakpointRemove(
-						(VdmLineBreakpoint) breakpoint);
+	public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta)
+	{
+		if (!isTerminated())
+		{
+			if (breakpoint instanceof VdmLineBreakpoint)
+			{
+				fThread.getProxy()
+						.breakpointRemove((VdmLineBreakpoint) breakpoint);
 			}
 		}
 
 	}
 
-	public boolean canDisconnect() {
+	public boolean canDisconnect()
+	{
 		return false;
 	}
 
-	public void disconnect() throws DebugException {
-		try {
+	public void disconnect() throws DebugException
+	{
+		try
+		{
 			fThread.getProxy().detach();
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			e.printStackTrace();
 			throw new DebuggerException(e.getMessage());
 		}
 		fDisconected = true;
 	}
 
-	public boolean isDisconnected() {
+	public boolean isDisconnected()
+	{
 		return fDisconected;
 	}
 
 	public IMemoryBlock getMemoryBlock(long startAddress, long length)
-			throws DebugException {
+			throws DebugException
+	{
 		return null;
 	}
 
-	public boolean supportsStorageRetrieval() {
+	public boolean supportsStorageRetrieval()
+	{
 		return false;
 	}
 
-	@SuppressWarnings("unchecked")
-	private void installPreviousBreakpointMarkers() {
-		IProject project = null;
-
-		try {
-			project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-					fLaunch.getLaunchConfiguration().getAttribute(
-							IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, ""));
-
-			IVdmProject vdmProject = null;
-
-			if (project != null && VdmProject.isVdmProject(project)) {
-				vdmProject = VdmProject.createProject(project);
-			}
-
-			List<IVdmSourceUnit> specFiles = vdmProject.getSpecFiles();
-
-			for (IVdmSourceUnit unit : specFiles) {
-				IFile f = unit.getFile();
-				System.out.println("file name: " + f.toString());
-				IMarker[] markers = unit.getFile().findMarkers(null, false,
-						IResource.DEPTH_INFINITE);
-				for (IMarker iMarker : markers) {
-					if (iMarker.getType().equals(
-							IDebugConstants.BREAKPOINT_MARKER_ID)) {
-
-						Map attributes = iMarker.getAttributes();
-
-						Integer ln = (Integer) iMarker
-								.getAttribute("lineNumber");
-						System.out.println("Line number: " + ln);
-
-						IBreakpoint[] breakpoints = DebugPlugin.getDefault()
-								.getBreakpointManager().getBreakpoints(
-										IDebugConstants.ID_VDM_DEBUG_MODEL);
-
-						// DebugPlugin.getDefault()
-						// .getBreakpointManager().addBreakpoint(new
-						// VdmLineBreakpoint(f, ln));
-					}
-				}
-				System.out.println("Markers size " + markers.length);
-			}
-
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
 	/**
-	 * Install breakpoints that are already registered with the breakpoint
-	 * manager.
+	 * Install breakpoints that are already registered with the breakpoint manager.
 	 */
-	private void installDeferredBreakpoints() {
-		//installPreviousBreakpointMarkers();
+	private void installDeferredBreakpoints()
+	{
+		// installPreviousBreakpointMarkers();
 		IBreakpoint[] breakpoints = DebugPlugin.getDefault()
-				.getBreakpointManager().getBreakpoints(
-						IDebugConstants.ID_VDM_DEBUG_MODEL);
-		for (int i = 0; i < breakpoints.length; i++) {
+				.getBreakpointManager()
+				.getBreakpoints(IDebugConstants.ID_VDM_DEBUG_MODEL);
+		for (int i = 0; i < breakpoints.length; i++)
+		{
 			breakpointAdded(breakpoints[i]);
 		}
 	}
 
-	private void started() {
-
-		fireCreationEvent();
-//		installDeferredBreakpoints();
-//		try
-//		{
-//			resume();
-//		} catch (DebugException e)
-//		{
-//		}
-
-	}
-
-	private void suspended(int breakpoint) {
-		fSuspended = true;
-		fireSuspendEvent(DebugEvent.BREAKPOINT);
-
-	}
-
-	/**
-	 * Notification a breakpoint was encountered. Determine which breakpoint was
-	 * hit and fire a suspend event.
-	 * 
-	 * @param event
-	 *            debug event
-	 */
-	private void breakpointHit(String event) {
-		// determine which breakpoint was hit, and set the thread's breakpoint
-		int lastSpace = event.lastIndexOf(' ');
-		if (lastSpace > 0) {
-			String line = event.substring(lastSpace + 1);
-			int lineNumber = Integer.parseInt(line);
-			IBreakpoint[] breakpoints = DebugPlugin.getDefault()
-					.getBreakpointManager().getBreakpoints(
-							IDebugConstants.ID_VDM_DEBUG_MODEL);
-			for (int i = 0; i < breakpoints.length; i++) {
-				IBreakpoint breakpoint = breakpoints[i];
-				if (supportsBreakpoint(breakpoint)) {
-					if (breakpoint instanceof ILineBreakpoint) {
-						ILineBreakpoint lineBreakpoint = (ILineBreakpoint) breakpoint;
-						try {
-							if (lineBreakpoint.getLineNumber() == lineNumber) {
-								// TODO: is this needed ?
-								// fThread.setBreakpoints(new
-								// IBreakpoint[]{breakpoint});
-								break;
-							}
-						} catch (CoreException e) {
-						}
-					}
-				}
-			}
-		}
-		suspended(DebugEvent.BREAKPOINT);
-	}
-
-	public void newThread(XMLTagNode tagnode, Socket s) throws DebugException {
+	public void newThread(XMLTagNode tagnode, Socket s) throws DebugException
+	{
 		String sid = tagnode.getAttr("thread");
 		int id = -1;
 		// Either "123" or "123 on <CPU name>" for VDM-RT
 		int space = sid.indexOf(' ');
 
-		if (space == -1) {
+		if (space == -1)
+		{
 			id = Integer.parseInt(sid);
-		} else {
+		} else
+		{
 			id = Integer.parseInt(sid.substring(0, space));
 		}
 
-		VdmThread t = new VdmThread(this, id, new DebugThreadProxy(s,
-				sessionId, id, new CallbackHandler()));
+		VdmThread t = new VdmThread(this, id, sessionId, s);
 
-		if (id == 1) { // Assuming 1 is main thread;
+		if (id == 1)
+		{ // Assuming 1 is main thread;
 
 			fThread = t; // TODO: assuming main thread is number 1;
-			t.setName("Thread [Main]");
-
-			started();
-
+			installDeferredBreakpoints();
 		}
 
 		fThreads.add(t);
 
-		try {
+		try
+		{
 			t.init(tagnode);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (IOException e)
+		{
+			if (Activator.DEBUG)
+			{
+				e.printStackTrace();
+			}
+			throw new DebugException(new Status(IStatus.ERROR,
+					IDebugConstants.PLUGIN_ID,
+					"Cannot init thread",
+					e));
+
 		}
 
-		
-		if(fThreads.size()>1)
+		if (fThreads.size() > 1)
 		{
 			for (int i = 0; i < fThreads.size(); i++)
 			{
-				VdmThread thread = (VdmThread)fThreads.get(i);
-				if(thread.getId()==1)
+				VdmThread thread = (VdmThread) fThreads.get(i);
+				if (thread.getId() == 1)
 				{
-					//thread.setMultiMain();
+					 thread.setMultiMain();
 					break;
 				}
 			}
 		}
-		// proxy = new DebugThreadProxy(s, sessionId, new Integer(fThread
-		// .getId()), new CallbackHandler());
-		// proxy.start();
-
 	}
 
-	public void printMessage(boolean outgoing, String message) {
-		if (logging) {
-			if (outgoing) {
+	public void printMessage(boolean outgoing, String message)
+	{
+		if (logging)
+		{
+			if (outgoing)
+			{
 				loggingConsole.ConsolePrint(message, SWT.COLOR_DARK_BLUE);
-			} else {
+			} else
+			{
 				loggingConsole.ConsolePrint(message, SWT.COLOR_DARK_YELLOW);
 			}
 			loggingConsole.Show();
 		}
 	}
 
-	public void printOut(String message) {
+	public void printOut(String message)
+	{
 		console.ConsolePrint(message);
 	}
 
-	public void printErr(String message) {
+	public void printErr(String message)
+	{
 		console.ConsolePrint(message, SWT.COLOR_RED);
 	}
 
-	public void setProject(IVdmProject project) {
+	public void setProject(IVdmProject project)
+	{
 		this.project = project;
 
+	}
+
+	public void setBreakpointId(Integer tid, Integer breakpointId)
+	{
+		synchronized (breakpointMap)
+		{
+			if (breakpointMap.containsKey(tid))
+			{
+				VdmLineBreakpoint bp = breakpointMap.get(tid);
+				bp.setId(breakpointId);
+				breakpointMap.remove(tid);
+			}
+		}
 	}
 
 }

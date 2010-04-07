@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.debug.core.DebugException;
 import org.overture.ide.debug.core.model.VdmGroupValue;
 import org.overture.ide.debug.core.model.VdmLineBreakpoint;
@@ -360,20 +359,20 @@ public class DebugThreadProxy extends AsyncCaller
 	public void processInit(XMLTagNode tagnode) throws IOException
 	{
 		callback.firePrintMessage(false,  "Process init: " + tagnode.toString());
-		String sid = tagnode.getAttr("thread");
+//		String sid = tagnode.getAttr("thread");
 		sessionId = tagnode.getAttr("idekey");
 
-		int id = -1;
-		// Either "123" or "123 on <CPU name>" for VDM-RT
-		int space = sid.indexOf(' ');
-
-		if (space == -1)
-		{
-			id = Integer.parseInt(sid);
-		} else
-		{
-			id = Integer.parseInt(sid.substring(0, space));
-		}
+//		int id = -1;
+//		// Either "123" or "123 on <CPU name>" for VDM-RT
+//		int space = sid.indexOf(' ');
+//
+//		if (space == -1)
+//		{
+//			id = Integer.parseInt(sid);
+//		} else
+//		{
+//			id = Integer.parseInt(sid.substring(0, space));
+//		}
 
 		redirect("stdout", DBGPRedirect.REDIRECT);
 		redirect("stderr", DBGPRedirect.REDIRECT);
