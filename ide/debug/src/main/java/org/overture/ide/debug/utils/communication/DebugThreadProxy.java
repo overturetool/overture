@@ -631,6 +631,14 @@ public class DebugThreadProxy extends AsyncCaller
 		write("breakpoint_remove -i " + (++xid) + " -d " + ((VdmLineBreakpoint)breakpoint).getId());
 	}
 
+	public void shutdown() throws IOException
+	{
+		if(!fSocket.isClosed()){
+			fSocket.close();
+		}
+		
+	}
+
 	// public void expr(String expression) throws IOException
 	// {
 	// write("expr -i " + (++xid) + " -- " + Base64.encode(expression));

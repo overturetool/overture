@@ -142,10 +142,24 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 			e.printStackTrace();
 			throw new DebuggerException(e.getMessage());
 		}
-//		for (IThread thread : fThreads)
-//		{
-//			thread.terminate();
-//		}
+shutdown();
+	}
+	
+	public void shutdown() throws DebugException
+	{
+		for (IThread thread : fThreads)
+		{
+			if(thread instanceof VdmThread)
+			{
+				try
+				{
+					((VdmThread)thread).shutdown();
+				} catch (IOException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}}
+		}
 		fThreads.clear();
 		fProcess.terminate();
 		fTerminated = true;

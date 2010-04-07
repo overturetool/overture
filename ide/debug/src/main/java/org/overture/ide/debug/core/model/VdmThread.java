@@ -56,6 +56,14 @@ public class VdmThread extends VdmDebugElement implements IThread
 		public void fireStopped()
 		{
 			fTerminated = true;
+			try
+			{
+				fTarget.shutdown();
+			} catch (DebugException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		public void fireBreakpointSet(Integer tid, Integer breakpointId)
@@ -401,5 +409,11 @@ public class VdmThread extends VdmDebugElement implements IThread
 			// no action, just a state change for the buttons
 		}
 
+	}
+
+	public void shutdown() throws IOException
+	{
+		proxy.shutdown();
+		
 	}
 }
