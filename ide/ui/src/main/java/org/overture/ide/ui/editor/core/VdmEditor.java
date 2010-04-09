@@ -32,6 +32,7 @@ import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.SourceReferenceManager;
 import org.overture.ide.core.VdmProject;
 import org.overture.ide.core.parser.SourceParserManager;
+import org.overture.ide.ui.IVdmIdeUiConstants;
 import org.overture.ide.ui.outline.VdmContentOutlinePage;
 import org.overturetool.vdmj.ast.IAstNode;
 
@@ -98,7 +99,7 @@ public abstract class VdmEditor extends TextEditor
 	{
 		super.initializeEditor();
 		setSourceViewerConfiguration(getVdmSourceViewerConfiguration());
-		
+		setRulerContextMenuId(IVdmIdeUiConstants.RULERBAR_ID);
 		
 	}
 

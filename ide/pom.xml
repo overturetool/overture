@@ -27,6 +27,7 @@
     <module>debug</module>
     <module>plugins</module>
     <module>core</module>
+    <module>help</module>
   </modules>
 
 <reporting>

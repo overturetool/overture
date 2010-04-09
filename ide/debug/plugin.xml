@@ -116,4 +116,26 @@
       
       
    </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <viewerContribution
+            id="org.overture.ide.debug.rulerbarPopupMenu"
+            targetID="org.overture.ide.ui.rulerbar">
+         <action
+               class="org.overture.ide.debug.ui.actions.VdmLineBreakpointPropertiesRulerActionDelegate"
+               id="org.overture.ide.rulerbar.vdmLineBreakpointAction"
+               label="Breakpoint properties..."
+               menubarPath="addictions">
+         </action>
+      </viewerContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="org.overture.ide.debug.ui.propertyPages.VdmLineBreakpointPropertyPage"
+            id="org.overture.ide.debug.vdmLineBreakpointPropertyPage"
+            name="Breakpoint properties"
+            objectClass="org.overture.ide.debug.core.model.VdmLineBreakpoint">
+      </page>
+   </extension>
 </plugin>

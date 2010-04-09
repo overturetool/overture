@@ -96,9 +96,15 @@
            point="org.eclipse.ui.propertyPages">
         <page
               class="org.overture.ide.ui.property.VdmLanguagePropertyPage"
-              icon="icons/cview16/overture_nav.png"
               id="org.overture.ide.ui.property.vdmlanguage"
               name="VDM Settings">
+           <enabledWhen>
+              <or>
+                 <instanceof
+                       value="org.eclipse.core.resources.IProject">
+                 </instanceof>
+              </or>
+           </enabledWhen>
                      
         </page>
      </extension>

@@ -46,6 +46,8 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 	private HashMap<Integer, VdmLineBreakpoint> breakpointMap = new HashMap<Integer, VdmLineBreakpoint>();
 	private IVdmProject project;
 
+	private List<IBreakpoint> fBreakpoints = new ArrayList<IBreakpoint>();
+	
 	public VdmDebugTarget(ILaunch launch) throws DebugException {
 		super(null);
 		fTarget = this;
@@ -217,34 +219,30 @@ shutdown();
 			{
 				if (breakpoint.isEnabled())
 				{
-					try
+					IResource resource = breakpoint.getMarker()
+							.getResource();
+					if (resource instanceof IFile)
 					{
-						IResource resource = breakpoint.getMarker()
-								.getResource();
-						if (resource instanceof IFile)
+						// check that the breakpoint is from this project's
+						// IFile resource
+						if (resource.getProject()
+								.getName()
+								.equals(project.getName()))
 						{
-							// check that the breakpoint is from this project's
-							// IFile resource
-							if (resource.getProject()
-									.getName()
-									.equals(project.getName()))
-							{
-								int line = ((ILineBreakpoint) breakpoint).getLineNumber();
-								File file = ((VdmLineBreakpoint) breakpoint).getFile();
-								int xid = fThread.getProxy()
-										.breakpointAdd(line,
-												file.toURI().toASCIIString());
+//								int line = ((ILineBreakpoint) breakpoint).getLineNumber();
+//								File file = ((VdmLineBreakpoint) breakpoint).getFile();
+//								int xid = fThread.getProxy()
+//										.breakpointAdd(line,
+//												file.toURI().toASCIIString());
+							int xid = fThread.getProxy().breakpointAdd(breakpoint);
+							
 
-								synchronized (breakpointMap)
-								{
-									breakpointMap.put(new Integer(xid),
-											(VdmLineBreakpoint) breakpoint);
-								}
+							synchronized (breakpointMap)
+							{
+								breakpointMap.put(new Integer(xid),
+										(VdmLineBreakpoint) breakpoint);
 							}
 						}
-
-					} catch (CoreException e)
-					{
 					}
 				}
 			} catch (CoreException e)
@@ -256,7 +254,7 @@ shutdown();
 
 	public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta)
 	{
-		System.out.println("Breakpoint change");
+		System.out.println("Breakpoint changed" );
 		if (supportsBreakpoint(breakpoint))
 		{
 			try
@@ -432,8 +430,23 @@ shutdown();
 				VdmLineBreakpoint bp = breakpointMap.get(tid);
 				bp.setId(breakpointId);
 				breakpointMap.remove(tid);
+				getBreakpoints().add(bp);
 			}
 		}
+	}
+	/**
+	 * Returns the collection of breakpoints installed in this
+	 * debug target.
+	 * 
+	 * @return list of installed breakpoints - instances of 
+	 * 	<code>IJavaBreakpoint</code>
+	 */
+	public List<IBreakpoint> getBreakpoints() {
+		return fBreakpoints;
+	}
+
+	public boolean isAvailable() {
+		return !isTerminated();
 	}
 
 }

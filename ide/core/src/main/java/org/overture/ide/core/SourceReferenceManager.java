@@ -130,7 +130,7 @@ public class SourceReferenceManager implements IManager
 
 	}
 
-	private int[] getPosLine(int offset)
+	public int[] getPosLine(int offset)
 	{
 		int tmpOffset = 0;
 		int line = 0;
@@ -160,7 +160,7 @@ public class SourceReferenceManager implements IManager
 		}
 		offset++;
 		line++;// convert to 1-indexed
-		return new int[] { offset, line };
+		return new int[] {line, offset };
 	}
 
 	public int getLineOffset(int lineIndex)

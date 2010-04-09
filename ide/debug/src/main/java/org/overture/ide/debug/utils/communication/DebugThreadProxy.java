@@ -2,6 +2,7 @@ package org.overture.ide.debug.utils.communication;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
@@ -11,7 +12,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.model.IBreakpoint;
+import org.eclipse.debug.core.model.ILineBreakpoint;
+import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.model.VdmGroupValue;
 import org.overture.ide.debug.core.model.VdmLineBreakpoint;
 import org.overture.ide.debug.core.model.VdmMultiValue;
@@ -539,6 +544,8 @@ public class DebugThreadProxy extends AsyncCaller
 
 	public int breakpointAdd(int line, String path)
 	{
+				
+		
 		String breakpoint_set = "breakpoint_set " + " -r 0" + " -t line"
 				+ " -s enabled" + " -n " + line + " -i " + (++xid) + " -f "
 				+ path;
@@ -637,6 +644,61 @@ public class DebugThreadProxy extends AsyncCaller
 			fSocket.close();
 		}
 		
+	}
+
+	public int breakpointAdd(IBreakpoint breakpoint) {
+		StringBuffer buf = new StringBuffer();
+		buf.append("breakpoint_set ");
+		buf.append("-i " + (++xid));
+		//Boolean value indicating if this breakpoint is temporary. [optional, defaults to false]
+		buf.append(" -r 0 ");
+		//STATE	breakpoint state [optional, defaults to "enabled"]
+		buf.append("-s enabled ");
+		
+		if(breakpoint instanceof VdmLineBreakpoint){
+			VdmLineBreakpoint lineBreakpoint = (VdmLineBreakpoint) breakpoint;
+			int line;
+			try {
+				line = lineBreakpoint.getLineNumber();
+				String path = lineBreakpoint.getFile().toURI().toASCIIString();
+				
+				
+				//the line number (lineno) of the breakpoint [optional]
+				buf.append("-n " + line + " ");
+				//he filename to which the breakpoint belongs [optional]
+				buf.append("-f " + path + " ");
+				
+				if(lineBreakpoint.isConditionEnabled()){
+					//breakpoint type
+					buf.append("-t conditional ");
+					String condition = lineBreakpoint.getCondition();
+					buf.append("-- " + condition + " ");
+				}
+				else{
+					//breakpoint type
+					buf.append("-t line ");
+				}
+				
+				if(lineBreakpoint.getHitCount() > 0){
+					buf.append("-h " + lineBreakpoint.getHitCount() + " ");
+				}
+				
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+//		String breakpoint_set = "breakpoint_set " + " -r 0" + " -t line"
+//				+ " -s enabled" + " -n " + line + " -i " + (++xid) + " -f "
+//				+ path;
+		if(Activator.DEBUG){
+			System.out.println(buf.toString());
+		}
+		write(buf.toString());
+
+		return xid;
 	}
 
 	// public void expr(String expression) throws IOException
