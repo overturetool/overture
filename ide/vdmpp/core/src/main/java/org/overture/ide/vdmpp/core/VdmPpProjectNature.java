@@ -7,9 +7,6 @@ import org.eclipse.core.runtime.CoreException;
 
 public class VdmPpProjectNature implements IProjectNature
 {
-	public static final String VDM_PP_NATURE = IVdmPpCoreConstants.PLUGIN_ID
-	+ ".nature";
-	
 	public void configure() throws CoreException
 	{
 		// TODO Auto-generated method stub

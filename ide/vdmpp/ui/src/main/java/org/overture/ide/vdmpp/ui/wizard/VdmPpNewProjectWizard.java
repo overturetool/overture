@@ -1,13 +1,13 @@
 package org.overture.ide.vdmpp.ui.wizard;
 
 import org.overture.ide.ui.wizard.VdmNewProjectWizard;
-import org.overture.ide.vdmpp.core.VdmPpProjectNature;
+import org.overture.ide.vdmpp.core.IVdmPpCoreConstants;
 
 public class VdmPpNewProjectWizard extends VdmNewProjectWizard {	
 
 	@Override
 	protected String getNature() {
-		return VdmPpProjectNature.VDM_PP_NATURE;
+		return IVdmPpCoreConstants.NATURE;
 	}
 
 	@Override

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+	<!--
+		Specify content type and related editor id to be used by the source
+		viewer in debug when a breakpoint is reached
+	-->
+	<extension point="org.overture.ide.debug.sourceviewerEditor">
+		<SourceViewerEditor 
+			ContentTypeId="org.overture.ide.vdmrt.content-type"
+			EditorId="org.overture.ide.vdmrt.ui.VdmRtEditor">
+		</SourceViewerEditor>
+	</extension>
+
+	<!-- Declare launch configuration type -->
+	<extension point="org.eclipse.debug.core.launchConfigurationTypes">
+		<launchConfigurationType
+			delegate="org.overture.ide.debug.core.launching.VdmLaunchConfigurationDelegate"
+			id="org.overture.ide.vdmrt.debug.launchConfigurationType" 
+			modes="debug"
+			name="VDM RT Model" 
+			public="true" 
+			sourceLocatorId="org.overture.ide.debug.sourceLocator"
+			sourcePathComputerId="org.overture.ide.debug.sourcePathComputer">
+		</launchConfigurationType>
+	</extension>
+
+	<!-- Add the launch config group to the launch dialog -->
+	<extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+		<launchConfigurationTabGroup
+			class="org.overture.ide.vdmrt.debug.ui.launching.VdmRtLaunchConfigurationTabGroup"
+			description="VDM-RT Launch Tab" 
+			id="org.overture.ide.debug.ui.launchConfigurationTabGroup"
+			type="org.overture.ide.vdmrt.debug.launchConfigurationType">
+		</launchConfigurationTabGroup>
+	</extension>
+
+	<!--
+		Declare a icon for a launch config type, this is e.g. used in the
+		launch config dialog
+	-->
+	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+		<launchConfigurationTypeImage
+			configTypeID="org.overture.ide.vdmrt.debug.launchConfigurationType"
+			icon="icons/cview16/vdmrt_file_tsk.png" 
+			id="org.overture.ide.debug.ui.launchConfigurationTypeImage">
+		</launchConfigurationTypeImage>
+	</extension>
+
+</plugin>

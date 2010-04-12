@@ -2,7 +2,6 @@ package org.overture.ide.vdmpp.core;
 
 public interface IVdmPpCoreConstants
 {
-
 	public static final String PLUGIN_ID = "org.overture.ide.vdmpp.core";
 	public static final String CONTENT_TYPE = "org.overture.ide.vdmpp.content-type";
 	public static final String LANGUAGE_NAME = "VDM-PP";

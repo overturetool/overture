@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+ <plugin>
    <extension
          id="nature"
          name="VDM-RT nature"
@@ -19,17 +20,20 @@
             id="org.overture.ide.vdmrt.content-type"
             name="VDM-RT Content type"
             priority="high">
-      </content-type>
-         
-         
+      </content-type>     
    </extension>
    <extension
-         point="org.eclipse.dltk.core.language">
-      <language
-            class="org.overture.ide.vdmrt.core.VdmRtLanguageToolkit"
-            nature="org.overture.ide.vdmrt.core.nature"
-            priority="0">
-      </language>
+         point="org.overture.ide.core.language">
+      <Language
+            dialect="VDM_RT"
+            name="VDM-RT"
+            nature="org.overture.ide.vdmrt.core.nature">
+         <ContentType
+               id="org.overture.ide.vdmrt.content-type">
+         </ContentType>
+      </Language>
    </extension>
   
+</plugin>
+
 </plugin>
