@@ -8,9 +8,12 @@ import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
+import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
+import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
 import org.overturetool.vdmj.definitions.LocalDefinition;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
+import org.overturetool.vdmj.definitions.PerSyncDefinition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.definitions.UntypedDefinition;
 import org.overturetool.vdmj.definitions.ValueDefinition;
@@ -24,6 +27,7 @@ import org.overturetool.vdmj.modules.ImportedType;
 import org.overturetool.vdmj.modules.ImportedValue;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleImports;
+import org.overturetool.vdmj.types.Field;
 import org.overturetool.vdmj.types.FunctionType;
 import org.overturetool.vdmj.types.NamedType;
 import org.overturetool.vdmj.types.OperationType;
@@ -31,6 +35,7 @@ import org.overturetool.vdmj.types.ProductType;
 import org.overturetool.vdmj.types.RecordType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.UnresolvedType;
+import org.overturetool.vdmj.types.VoidType;
 
 public class VdmElementLabels {
 
@@ -84,8 +89,16 @@ public class VdmElementLabels {
 		if (element instanceof ExplicitOperationDefinition) {
 			return getExplicitOperationDefinitionLabel((ExplicitOperationDefinition) element);
 		}
+		if (element instanceof ImplicitOperationDefinition) {
+			return getImplicitOperationDefinitionLabel((ImplicitOperationDefinition) element);
+		}
+
 		if (element instanceof ExplicitFunctionDefinition) {
 			return getExplicitFunctionDefinitionLabel((ExplicitFunctionDefinition) element);
+		}
+
+		if (element instanceof ImplicitFunctionDefinition) {
+			return getImplicitFunctionDefinitionLabel((ImplicitFunctionDefinition) element);
 		}
 		if (element instanceof LocalDefinition) {
 			return getLocalDefinitionLabel((LocalDefinition) element);
@@ -115,6 +128,18 @@ public class VdmElementLabels {
 			return getImportLabel((Import) element);
 		}
 
+		if (element instanceof Field) {
+			StyledString result = new StyledString();
+			result.append(((Field) element).tag);
+			result.append(" : " + processUnresolved(((Field) element).type),
+					StyledString.DECORATIONS_STYLER);
+			return result;
+		}
+		
+		if(element instanceof PerSyncDefinition){
+			return getPerSyncDefinitionLabel((PerSyncDefinition) element);
+		}
+
 		else {
 			StyledString result = new StyledString();
 			result.append("Unsupported type reached: " + element);
@@ -122,6 +147,84 @@ public class VdmElementLabels {
 		}
 
 		// return null;
+	}
+
+	private static StyledString getPerSyncDefinitionLabel(
+			PerSyncDefinition element) {
+		StyledString result = new StyledString();
+		result.append(element.getName());
+		result.append(" : synch predicate",StyledString.DECORATIONS_STYLER);
+		return result;
+	}
+
+	private static StyledString getImplicitOperationDefinitionLabel(
+			ImplicitOperationDefinition element) {
+		StyledString result = new StyledString();
+
+		result.append(element.getName());
+
+		if (element.getType() instanceof OperationType) {
+			OperationType type = (OperationType) element.getType();
+			if (type.parameters.size() == 0) {
+				result.append("() ");
+			} else {
+				result.append("(");
+				int i = 0;
+				while (i < type.parameters.size() - 1) {
+					Type definition = (Type) type.parameters.elementAt(i);
+					result.append(getSimpleTypeString(definition) + ", ");
+
+					i++;
+				}
+				Type definition = (Type) type.parameters.elementAt(i);
+				result.append(getSimpleTypeString(definition) + ")");
+			}
+		}
+
+		if(element.type.result instanceof VoidType){
+			result.append(" : ()",
+					StyledString.DECORATIONS_STYLER);
+		}else{
+			result.append(" : " + getSimpleTypeString(element.type.result),
+					StyledString.DECORATIONS_STYLER);
+		}
+		
+
+		return result;
+	}
+
+	private static StyledString getImplicitFunctionDefinitionLabel(
+			ImplicitFunctionDefinition element) {
+		StyledString result = new StyledString();
+		result.append(element.getName());
+
+		if (element.getType() instanceof FunctionType) {
+			FunctionType type = (FunctionType) element.getType();
+			if (type.parameters.size() == 0) {
+				result.append("() ");
+			} else {
+				result.append("(");
+				int i = 0;
+				while (i < type.parameters.size() - 1) {
+					Type definition = (Type) type.parameters.elementAt(i);
+					result.append(getSimpleTypeString(definition) + ", ");
+
+					i++;
+				}
+				Type definition = (Type) type.parameters.elementAt(i);
+				result.append(getSimpleTypeString(definition) + ")");
+			}
+		}
+
+		if (element.type.result instanceof VoidType) {
+			result.append(" : ()", StyledString.DECORATIONS_STYLER);
+		} else {
+			result.append(" : " + getSimpleTypeString(element.type.result),
+					StyledString.DECORATIONS_STYLER);
+
+		}
+
+		return result;
 	}
 
 	private static StyledString getImportLabel(Import element) {
@@ -256,8 +359,14 @@ public class VdmElementLabels {
 			}
 		}
 
-		result.append(" : " + getSimpleTypeString(element.type.result),
-				StyledString.DECORATIONS_STYLER);
+		if (element.type.result instanceof VoidType) {
+			result.append(" : ()", StyledString.DECORATIONS_STYLER);
+		} else {
+			result.append(" : " + getSimpleTypeString(element.type.result),
+					StyledString.DECORATIONS_STYLER);
+
+		}
+		
 
 		return result;
 	}
@@ -267,6 +376,7 @@ public class VdmElementLabels {
 		if (element.type instanceof RecordType) {
 
 			result.append(element.getName());
+			result.append(" : record type", StyledString.DECORATIONS_STYLER);
 		} else if (element.type instanceof NamedType) {
 
 			result.append(element.getName());
@@ -302,8 +412,13 @@ public class VdmElementLabels {
 			}
 		}
 
-		result.append(" : " + getSimpleTypeString(element.type.result),
-				StyledString.DECORATIONS_STYLER);
+		if (element.type.result instanceof VoidType) {
+			result.append(" : ()", StyledString.DECORATIONS_STYLER);
+		} else {
+			result.append(" : " + getSimpleTypeString(element.type.result),
+					StyledString.DECORATIONS_STYLER);
+
+		}
 
 		return result;
 	}
