@@ -40,37 +40,50 @@
       <viewerContentBinding
             viewerId="org.overture.ide.ui.VdmExplorer">
          <includes>
-            <contentExtension
+            <!--contentExtension
+                  isRoot="false"
                   pattern="org.eclipse.ui.navigator.resourceContent">
             </contentExtension>
             <contentExtension
+                  isRoot="false"
                   pattern="org.eclipse.ui.navigator.resources.filters.*">
+            </contentExtension-->
+            <contentExtension
+                  pattern="org.overture.ide.ui.vdmNavigatorContent">
             </contentExtension>
+             		       	      
+	          <contentExtension pattern="org.eclipse.ui.navigator.resources.filters.*"/>
+           <contentExtension pattern="org.eclipse.ui.navigator.resources.linkHelper"/>
+           <contentExtension pattern="org.eclipse.ui.navigator.resources.workingSets"/>
+           <contentExtension
+                 pattern="org.overture.ide.ui.navigator.resources.filters.*">
+           </contentExtension>
          </includes>
       </viewerContentBinding>
       <viewerActionBinding
-            viewerId="org.overture.ide.ui.navigatorView">
+            viewerId="org.overture.ide.ui.VdmExplorer">
          <includes>
             <actionExtension
                   pattern="org.eclipse.ui.navigator.resources.*">
             </actionExtension>
          </includes>
       </viewerActionBinding>
-      <!-- inheritBindingsFromViewer can add the context menu from another view -->
+     
       <viewer
-            inheritBindingsFromViewer="org.eclipse.ui.navigator.ProjectExplorer"
             viewerId="org.overture.ide.ui.VdmExplorer">
+           
       </viewer>
    </extension>
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">
       <navigatorContent
-      		activeByDefault="true"
+            activeByDefault="true"
             contentProvider="org.overture.ide.ui.navigator.VdmNavigatorContentProvider"
             icon="icons/cview16/overture_nav.png"
-            id="org.overture.ide.ui.navigatorContent2"
+            id="org.overture.ide.ui.vdmNavigatorContent"
             labelProvider="org.overture.ide.ui.navigator.VdmNavigatorLabelProvider"
-            name="name">
+            name="VDM Navigator Content"
+            priority="highest">
          <triggerPoints>
             <or>
                <instanceof
@@ -87,9 +100,99 @@
          <override
                policy="InvokeAlwaysRegardlessOfSuppressedExt"
                suppressedExtensionId="org.eclipse.team.ui.resourceContent"/>
+               
+          <enablement>
+		         <or>         
+		            <adapt type="org.eclipse.core.resources.IProject" /> 
+		            <instanceof value="org.eclipse.core.resources.IResource" /> 
+		         </or>
+         </enablement>
+         
+            <commonSorter
+              class="org.eclipse.ui.internal.navigator.resources.workbench.ResourceExtensionSorter"
+              id="org.eclipse.ui.navigator.resources.sorters.defaultSorter">
+           <parentExpression>
+           		  <or>           
+		            <instanceof value="org.eclipse.core.resources.IResource" /> 
+		         </or>
+		   </parentExpression>
+        </commonSorter>
+        <dropAssistant
+              class="org.eclipse.ui.navigator.resources.ResourceDropAdapterAssistant"
+              id="org.eclipse.ui.navigator.resources.resourceDropAdapter">
+           <possibleDropTargets>
+              <or>
+                 <adapt type="org.eclipse.core.resources.IProject"/>
+                 <adapt type="org.eclipse.core.resources.IFolder"/>
+                 <adapt type="org.eclipse.core.resources.IFile"/>
+              </or>
+           </possibleDropTargets>
+        </dropAssistant> 
+         
+         
          
       </navigatorContent>
+ 
+  <!-- Expression Filters -->  
+      <commonFilter
+            id="org.eclipse.ui.navigator.resources.filters.startsWithDot"
+            name="%filters.startsWithDot.name"
+            description="%filters.startsWithDot.description"
+            activeByDefault="true"
+            >
+         <filterExpression>
+         	<and>
+	            <adapt type="org.eclipse.core.resources.IResource">
+            		<test property="org.eclipse.core.resources.name" value=".*"/>
+            	</adapt>	            
+	        </and>
+         </filterExpression>
+      </commonFilter>
+      <commonFilter  
+            id="org.eclipse.ui.navigator.resources.filters.endsWithClass"
+            name="%filters.endsWithClass.name"
+            description="%filters.endsWithClass.description"
+            activeByDefault="false"
+            >
+         <filterExpression>
+         	<and>
+	            <instanceof value="org.eclipse.core.resources.IFile"/>
+            	<test property="org.eclipse.core.resources.name" value="*.class"/>	            
+	        </and>
+         </filterExpression>
+      </commonFilter> 
+      <commonFilter
+            id="org.eclipse.ui.navigator.resources.filters.closedProject"
+            name="%filters.closedProject.name"
+            description="%filters.closedProject.description" 
+            activeByDefault="false"
+           >
+         <filterExpression>
+         	<and>
+	            <instanceof value="org.eclipse.core.resources.IProject"/>
+            	<test property="org.eclipse.core.resources.open" value="false"/>	            
+	        </and>
+         </filterExpression>
+      </commonFilter>
+      <commonFilter
+            activeByDefault="true"
+            id="org.overture.ide.ui.navigator.resources.filters.noneVdmProjects"
+            name="None VDM Projects">
+         <filterExpression>
+            <adapt
+                  type="org.eclipse.core.resources.IProject">
+               <not>
+                  <instanceof
+                        value="org.overture.ide.core.IVdmProject">
+                  </instanceof>
+               </not>
+            </adapt>
+         </filterExpression>
+      </commonFilter>
    </extension>
+   
+   
+   
   
   <!-- VDM Language property on projects -->
    <extension

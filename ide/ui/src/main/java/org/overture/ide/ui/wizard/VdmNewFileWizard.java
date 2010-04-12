@@ -5,7 +5,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
-import org.overture.ide.ui.VdmUIPlugin;
 
 public abstract class VdmNewFileWizard extends Wizard implements IWorkbenchWizard {
 
@@ -53,7 +52,6 @@ public abstract class VdmNewFileWizard extends Wizard implements IWorkbenchWizar
 	}
 
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		VdmUIPlugin.println("VdmNewFileWizard.init");
 		this.fStructuredSelection = selection;
 	}
 

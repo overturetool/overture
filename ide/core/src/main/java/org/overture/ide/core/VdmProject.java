@@ -809,4 +809,14 @@ public class VdmProject extends Project implements IVdmProject
 		return this.language.getDialect();
 	}
 
+//	@Override
+//	public boolean equals(Object obj)
+//	{
+//		return project.equals(obj);
+//	}
+//	@Override
+//	public int hashCode()
+//	{
+//		return project.hashCode();
+//	}
 }
