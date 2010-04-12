@@ -9,7 +9,8 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.ObjectPluginAction;
 import org.overture.ide.core.ICoreConstants;
-import org.overture.ide.core.VdmProject;
+import org.overture.ide.core.resources.VdmProject;
+
 
 @SuppressWarnings("restriction")
 public class AddBuilderAction implements IObjectActionDelegate

@@ -27,8 +27,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.overture.ide.core.IVdmProject;
-import org.overture.ide.core.VdmProject;
+
+import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.core.resources.VdmProject;
 import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.ui.internal.viewsupport.DecorationgVdmLabelProvider;

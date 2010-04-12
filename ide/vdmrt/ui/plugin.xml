@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+<!-- Editor -->
    <extension
          point="org.eclipse.ui.editors">
       <editor
@@ -12,25 +13,55 @@
             name="Vdm-Rt Editor">
       </editor>
    </extension>
+   <!-- Wizards -->
    <extension
          point="org.eclipse.ui.newWizards">
       <wizard
+            category="org.overture.ide.ui.wizard"
             class="org.overture.ide.vdmrt.ui.wizard.VdmRtNewProjectWizard"
             finalPerspective="org.overture.ide.ui.perspective"
             icon="icons/cview16/vdmrt_file_tsk.gif"
-            id="org.overture.ide.vdmrt.ui.wizard1"
-            name="VDM-RT Project"
+            id="org.overture.ide.vdmrt.ui.projectWizard"
+            name="Project"
             preferredPerspectives="org.overture.ide.ui.perspective"
             project="true">
       </wizard>
       <wizard
+            category="org.overture.ide.ui.wizard"
             class="org.overture.ide.vdmrt.ui.wizard.VdmRtNewFileWizard"
             finalPerspective="org.overture.ide.ui.perspective"
             icon="icons/cview16/vdmrt_file_tsk.gif"
-            id="org.overture.ide.vdmrt.ui.wizard2"
-            name="VDM-RT File Wizard">
+            id="org.overture.ide.vdmrt.ui.fileWizard"
+            name="Empty File"
+            preferredPerspectives="org.overture.ide.ui.perspective"
+            project="false">
       </wizard>
+      <wizard
+            category="org.overture.ide.ui.wizard"
+            class="org.overture.ide.vdmrt.ui.wizard.VdmRtNewClassWizard"
+            finalPerspective="org.overture.ide.ui.perspective"
+            icon="icons/obj16/class_obj.gif"
+            id="org.overture.ide.vdmrt.ui.classWizard"
+            name="Class"
+            preferredPerspectives="org.overture.ide.ui.perspective"
+            project="false">
+      </wizard>
+      <wizard
+            category="org.overture.ide.ui.wizard"
+            class="org.overture.ide.vdmrt.ui.wizard.VdmRtNewSystemWizard"
+            finalPerspective="org.overture.ide.ui.perspective"
+            
+            id="org.overture.ide.vdmrt.ui.systemWizard"
+            name="System"
+            preferredPerspectives="org.overture.ide.ui.perspective"
+            project="false">
+      </wizard>
+      <primaryWizard
+            id="org.overture.ide.vdmrt.ui.projectWizard">
+      </primaryWizard>
    </extension>
+   
+   <!-- Nature image -->
    <extension
          point="org.eclipse.ui.ide.projectNatureImages">
       <image
@@ -40,6 +71,82 @@
       </image>
    </extension>
 
-
+ <!-- VDM Explorer contribution of menus -->
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <commonWizard
+            menuGroupId="org.overture.ide.ui.vdm"
+            type="new"
+            wizardId="org.overture.ide.vdmrt.ui.projectWizard">
+         <enablement></enablement>
+      </commonWizard>
+      <commonWizard
+            menuGroupId="org.overture.ide.ui.vdm"
+            type="new"
+            wizardId="org.overture.ide.vdmrt.ui.fileWizard">
+         <enablement>
+            <or>
+               <adapt
+                     type="org.overture.ide.core.resources.IVdmProject">
+                  <test
+                        property="org.overture.ide.core.resources.dialect"
+                        value="VDM_RT">
+                  </test>
+               </adapt>
+               <adapt
+                     type="org.eclipse.core.resources.IFolder">
+                  <test
+                        property="org.overture.ide.core.resources.dialect"
+                        value="VDM_RT">
+                  </test>
+               </adapt>
+            </or></enablement>
+      </commonWizard>
+      <commonWizard
+            menuGroupId="org.overture.ide.ui.vdm"
+            type="new"
+            wizardId="org.overture.ide.vdmrt.ui.classWizard">
+         <enablement>
+            <or>
+               <adapt
+                     type="org.overture.ide.core.resources.IVdmProject">
+                  <test
+                        property="org.overture.ide.core.resources.dialect"
+                        value="VDM_RT">
+                  </test>
+               </adapt>
+               <adapt
+                     type="org.eclipse.core.resources.IFolder">
+                  <test
+                        property="org.overture.ide.core.resources.dialect"
+                        value="VDM_RT">
+                  </test>
+               </adapt>
+            </or></enablement>
+      </commonWizard>
+       <commonWizard
+            menuGroupId="org.overture.ide.ui.vdm"
+            type="new"
+            wizardId="org.overture.ide.vdmrt.ui.systemWizard">
+         <enablement>
+            <or>
+               <adapt
+                     type="org.overture.ide.core.resources.IVdmProject">
+                  <test
+                        property="org.overture.ide.core.resources.dialect"
+                        value="VDM_RT">
+                  </test>
+               </adapt>
+               <adapt
+                     type="org.eclipse.core.resources.IFolder">
+                  <test
+                        property="org.overture.ide.core.resources.dialect"
+                        value="VDM_RT">
+                  </test>
+               </adapt>
+            </or></enablement>
+      </commonWizard>
+   </extension>
+  
 
 </plugin>

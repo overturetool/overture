@@ -12,17 +12,17 @@ public class VdmRtNewProjectWizard extends VdmNewProjectWizard {
 
 	@Override
 	protected String getPageDescription() {		
-		return "Chose location for VDM++ project";
+		return "Chose location for VDM-RT project";
 	}
 
 	@Override
 	protected String getPageName() {		
-		return "VDM++ Project Location";
+		return "VDM-RT Project Location";
 	}
 
 	@Override
 	protected String getPageTitle() {
-		return "VDM++ Project";
+		return "VDM-RT Project";
 	}
 
 }

@@ -24,9 +24,10 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
 import org.eclipse.debug.core.model.IProcess;
-import org.overture.ide.core.IVdmProject;
-import org.overture.ide.core.IVdmSourceUnit;
-import org.overture.ide.core.VdmProject;
+
+import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.core.resources.IVdmSourceUnit;
+import org.overture.ide.core.resources.VdmProject;
 import org.overture.ide.core.utility.ClasspathUtils;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.model.VdmDebugTarget;

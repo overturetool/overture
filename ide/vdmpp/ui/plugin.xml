@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+
+<!-- Editor -->
    <extension
          point="org.eclipse.ui.editors">
       <editor
@@ -12,29 +14,46 @@
             name="Vdm PP Editor">
       </editor>
    </extension>
+   
+   <!-- Wizards -->
    <extension
          point="org.eclipse.ui.newWizards">
       <wizard
-            category="org.overture.ide.ui.vdm"
+            category="org.overture.ide.ui.wizard"
             class="org.overture.ide.vdmpp.ui.wizard.VdmPpNewProjectWizard"
             finalPerspective="org.overture.ide.ui.perspective"
             icon="icons/cview16/vdmpp_file_tsk.png"
             id="org.overture.ide.vdmpp.ui.projectWizard"
-            name="VDM PP Project"
+            name="Project"
             preferredPerspectives="org.overture.ide.ui.perspective"
             project="true">
       </wizard>
       <wizard
-            category="org.overture.ide.ui.vdm"
+            category="org.overture.ide.ui.wizard"
             class="org.overture.ide.vdmpp.ui.wizard.VdmPpNewFileWizard"
             finalPerspective="org.overture.ide.ui.perspective"
             icon="icons/cview16/vdmpp_file_tsk.png"
             id="org.overture.ide.vdmpp.ui.fileWizard"
-            name="VDM PP File Wizard"
+            name="Empty File"
             preferredPerspectives="org.overture.ide.ui.perspective"
             project="false">
       </wizard>
+      <wizard
+            category="org.overture.ide.ui.wizard"
+            class="org.overture.ide.vdmpp.ui.wizard.VdmPpNewClassWizard"
+            finalPerspective="org.overture.ide.ui.perspective"
+            icon="icons/obj16/class_obj.gif"
+            id="org.overture.ide.vdmpp.ui.classWizard"
+            name="Class"
+            preferredPerspectives="org.overture.ide.ui.perspective"
+            project="false">
+      </wizard>
+      <primaryWizard
+            id="org.overture.ide.vdmpp.ui.projectWizard">
+      </primaryWizard>
    </extension>
+   
+   <!-- Nature image -->
    <extension
          point="org.eclipse.ui.ide.projectNatureImages">
       <image
@@ -43,6 +62,8 @@
             natureId="org.overture.ide.vdmpp.core.nature">
       </image>
    </extension>
+   
+   <!-- VDM Explorer contribution of menus -->
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">
       <commonWizard
@@ -52,9 +73,48 @@
          <enablement></enablement>
       </commonWizard>
       <commonWizard
+            menuGroupId="org.overture.ide.ui.vdm"
             type="new"
             wizardId="org.overture.ide.vdmpp.ui.fileWizard">
-         <enablement></enablement>
+         <enablement>
+            <or>
+               <adapt
+                     type="org.overture.ide.core.resources.IVdmProject">
+                  <test
+                        property="org.overture.ide.core.resources.dialect"
+                        value="VDM_PP">
+                  </test>
+               </adapt>
+               <adapt
+                     type="org.eclipse.core.resources.IFolder">
+                  <test
+                        property="org.overture.ide.core.resources.dialect"
+                        value="VDM_PP">
+                  </test>
+               </adapt>
+            </or></enablement>
+      </commonWizard>
+      <commonWizard
+            menuGroupId="org.overture.ide.ui.vdm"
+            type="new"
+            wizardId="org.overture.ide.vdmpp.ui.classWizard">
+         <enablement>
+            <or>
+               <adapt
+                     type="org.overture.ide.core.resources.IVdmProject">
+                  <test
+                        property="org.overture.ide.core.resources.dialect"
+                        value="VDM_PP">
+                  </test>
+               </adapt>
+               <adapt
+                     type="org.eclipse.core.resources.IFolder">
+                  <test
+                        property="org.overture.ide.core.resources.dialect"
+                        value="VDM_PP">
+                  </test>
+               </adapt>
+            </or></enablement>
       </commonWizard>
    </extension>
   

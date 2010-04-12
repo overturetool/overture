@@ -19,8 +19,9 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 
-import org.overture.ide.core.IVdmProject;
-import org.overture.ide.core.VdmProject;
+
+import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.core.resources.VdmProject;
 import org.overturetool.vdmj.Release;
 
 @SuppressWarnings("restriction")

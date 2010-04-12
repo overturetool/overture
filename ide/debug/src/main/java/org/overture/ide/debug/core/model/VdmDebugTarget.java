@@ -23,7 +23,8 @@ import org.eclipse.debug.core.model.IMemoryBlock;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.swt.SWT;
-import org.overture.ide.core.IVdmProject;
+
+import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.utils.xml.XMLTagNode;

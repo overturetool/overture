@@ -1,6 +1,8 @@
 package org.overture.ide.core.parser;
 
-import org.overture.ide.core.IVdmSourceUnit;
+import org.overture.ide.core.resources.IVdmSourceUnit;
+
+
 
 public interface ISourceParser {
 

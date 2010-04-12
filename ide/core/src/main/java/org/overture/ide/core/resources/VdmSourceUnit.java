@@ -1,4 +1,4 @@
-package org.overture.ide.core;
+package org.overture.ide.core.resources;
 
 import java.io.File;
 import java.util.Hashtable;
@@ -7,6 +7,10 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
+import org.overture.ide.core.ElementChangedEvent;
+import org.overture.ide.core.IVdmElementDelta;
+import org.overture.ide.core.VdmCore;
+import org.overture.ide.core.VdmElementDelta;
 import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.lex.LexLocation;
 

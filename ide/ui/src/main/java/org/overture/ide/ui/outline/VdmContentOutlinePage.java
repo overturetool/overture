@@ -19,8 +19,9 @@ import org.overture.ide.core.ElementChangedEvent;
 import org.overture.ide.core.IElementChangedListener;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.IVdmElementDelta;
-import org.overture.ide.core.IVdmSourceUnit;
+
 import org.overture.ide.core.VdmCore;
+import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.ui.editor.core.VdmEditor;
 import org.overture.ide.ui.internal.viewsupport.DecorationgVdmLabelProvider;
 import org.overture.ide.ui.internal.viewsupport.VdmUILabelProvider;

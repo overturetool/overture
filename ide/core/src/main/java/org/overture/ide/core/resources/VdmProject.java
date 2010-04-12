@@ -1,4 +1,4 @@
-package org.overture.ide.core;
+package org.overture.ide.core.resources;
 
 import java.io.File;
 import java.net.URI;
@@ -27,6 +27,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.Job;
+import org.overture.ide.core.ICoreConstants;
+import org.overture.ide.core.IVdmModel;
+import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.utility.ILanguage;
 import org.overture.ide.core.utility.LanguageManager;

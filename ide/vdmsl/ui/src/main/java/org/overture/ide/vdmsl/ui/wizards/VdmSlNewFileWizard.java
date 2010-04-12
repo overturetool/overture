@@ -19,4 +19,10 @@ public class VdmSlNewFileWizard extends VdmNewFileWizard {
 		return "VDM-Sl New File Wizard";
 	}
 
+	@Override
+	protected String getFileExtension()
+	{
+		return "vdmsl";
+	}
+
 }

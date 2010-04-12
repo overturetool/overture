@@ -12,10 +12,11 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.overture.ide.core.ICoreConstants;
-import org.overture.ide.core.IVdmProject;
-import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.VdmCore;
-import org.overture.ide.core.VdmProject;
+
+import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.core.resources.IVdmSourceUnit;
+import org.overture.ide.core.resources.VdmProject;
 import org.overture.ide.core.utility.FileUtility;
 import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -52,7 +53,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 					new String(FileUtility.getCharContent(FileUtility.getContent(file.getFile()))),
 					file.getFile().getCharset());
 			setFileMarkers(file.getFile(), result);
-			if (result != null)
+			if (result != null && result.getAst()!=null)
 				file.reconcile(
 						result.getAst(),
 						result.getAllLocation(),
@@ -219,8 +220,8 @@ public abstract class AbstractParserParticipant implements ISourceParser
 
 		public void setAst(List<IAstNode> ast)
 		{
-			Assert.isNotNull(ast);
-			Assert.isTrue(ast.size()!=0);
+			Assert.isNotNull(ast,"AST cannot be null");
+			Assert.isTrue(ast.size()!=0,"AST cannot be an empty list");
 			this.ast = ast;
 		}
 
@@ -253,7 +254,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		{
 			if (VdmCore.DEBUG)
 			{
-				fatalError.printStackTrace();
+				//fatalError.printStackTrace();
 			}
 			this.fatalError = fatalError;
 		}

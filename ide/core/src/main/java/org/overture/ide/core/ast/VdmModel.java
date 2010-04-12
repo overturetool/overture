@@ -12,9 +12,10 @@ import org.overture.ide.core.ElementChangedEvent;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.IVdmElementDelta;
 import org.overture.ide.core.IVdmModel;
-import org.overture.ide.core.IVdmSourceUnit;
+
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.VdmElementDelta;
+import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;

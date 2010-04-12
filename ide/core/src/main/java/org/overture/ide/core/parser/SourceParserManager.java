@@ -4,14 +4,16 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.overture.ide.core.ICoreConstants;
-import org.overture.ide.core.IVdmProject;
-import org.overture.ide.core.IVdmSourceUnit;
+
 import org.overture.ide.core.VdmCore;
+import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.core.resources.IVdmSourceUnit;
 
 public class SourceParserManager {
 	/**
@@ -156,9 +158,10 @@ public class SourceParserManager {
 
 		try
 		{
-			SourceParserManager.getInstance()
-					.getSourceParser(file.getProject())
-					.parse(file);
+		ISourceParser parser =	SourceParserManager.getInstance()
+					.getSourceParser(file.getProject());
+		Assert.isNotNull(parser, "No parser for file : "+file.toString() +" in project " +file.getProject().toString());
+		parser.parse(file);
 		} catch (Exception e)
 		{
 			if (VdmCore.DEBUG)

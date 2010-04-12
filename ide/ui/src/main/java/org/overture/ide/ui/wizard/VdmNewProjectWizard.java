@@ -6,12 +6,9 @@ import java.io.IOException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
-import org.overture.ide.core.IVdmProject;
-import org.overture.ide.core.VdmProject;
+import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.core.resources.VdmProject;
 import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.utility.PluginFolderInclude;
 import org.overture.ide.ui.wizard.pages.LibraryIncludePage;
@@ -24,18 +21,13 @@ import org.overturetool.vdmj.lex.Dialect;
 public abstract class VdmNewProjectWizard extends BasicNewProjectResourceWizard
 {
 
-	private WizardNewProjectCreationPage _pageOne;
 	private LibraryIncludePage _pageTwo;
 	private static final String WIZARD_NAME = "VDM New Project Wizard";
-	private String fPageName;
-	private String fPageTitle;
-	private String fPageDescription;
-
 	public VdmNewProjectWizard() {
 		setWindowTitle(WIZARD_NAME);
-		this.fPageName = getPageName();
-		this.fPageTitle = getPageTitle();
-		this.fPageDescription = getPageDescription();
+		getPageName();
+		getPageTitle();
+		getPageDescription();
 	}
 
 //	public void init(IWorkbench workbench, IStructuredSelection selection)

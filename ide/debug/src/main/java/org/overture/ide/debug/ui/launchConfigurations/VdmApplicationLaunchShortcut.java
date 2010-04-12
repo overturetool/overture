@@ -22,9 +22,10 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 import org.overture.ide.core.IVdmModel;
-import org.overture.ide.core.IVdmProject;
-import org.overture.ide.core.VdmProject;
+
 import org.overture.ide.core.ast.NotAllowedException;
+import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.core.resources.VdmProject;
 import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overturetool.vdmj.ast.IAstNode;

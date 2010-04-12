@@ -3,8 +3,9 @@ package org.overture.ide.ui.editor.core;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.overture.ide.core.IVdmProject;
-import org.overture.ide.core.VdmProject;
+import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.core.resources.VdmProject;
+
 
 public class VdmDocument extends Document implements IDocument
 {

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.overture.ide.core.ast.NotAllowedException;
+import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.modules.ModuleList;

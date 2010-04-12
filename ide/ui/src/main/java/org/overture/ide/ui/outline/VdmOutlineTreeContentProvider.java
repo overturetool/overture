@@ -7,7 +7,8 @@ import org.eclipse.core.runtime.internal.adaptor.IModel;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.overture.ide.core.IVdmModel;
-import org.overture.ide.core.IVdmSourceUnit;
+import org.overture.ide.core.resources.IVdmSourceUnit;
+
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassInvariantDefinition;
 import org.overturetool.vdmj.definitions.Definition;

@@ -27,11 +27,13 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.IVdmModel;
-import org.overture.ide.core.IVdmProject;
-import org.overture.ide.core.IVdmSourceUnit;
+
 import org.overture.ide.core.SourceReferenceManager;
-import org.overture.ide.core.VdmProject;
+
 import org.overture.ide.core.parser.SourceParserManager;
+import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.core.resources.IVdmSourceUnit;
+import org.overture.ide.core.resources.VdmProject;
 import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.outline.VdmContentOutlinePage;
 import org.overturetool.vdmj.ast.IAstNode;

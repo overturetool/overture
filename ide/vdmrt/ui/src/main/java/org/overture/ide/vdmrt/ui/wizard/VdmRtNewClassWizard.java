@@ -1,8 +1,8 @@
 package org.overture.ide.vdmrt.ui.wizard;
 
-import org.overture.ide.ui.wizard.VdmNewFileWizard;
+import org.overture.ide.vdmpp.ui.wizard.VdmPpNewClassWizard;
 
-public class VdmRtNewFileWizard extends VdmNewFileWizard {
+public class VdmRtNewClassWizard extends VdmPpNewClassWizard {
 
 	@Override
 	protected String getPageDescription() {		

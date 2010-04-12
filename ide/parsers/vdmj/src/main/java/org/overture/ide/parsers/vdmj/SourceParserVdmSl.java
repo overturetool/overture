@@ -3,8 +3,9 @@ package org.overture.ide.parsers.vdmj;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ide.core.IVdmSourceUnit;
+
 import org.overture.ide.core.parser.AbstractParserParticipant;
+import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.lex.Dialect;
@@ -47,7 +48,14 @@ public class SourceParserVdmSl extends AbstractParserParticipant
 			{
 				nodes.add(module);
 			}
+			if(nodes.size()>0)
+			{
 			result.setAst(nodes);
+			}else
+			{
+				perrs++;
+				result.setFatalError(new Exception("No VDM source in file"));
+			}
 
 		} catch (InternalException e)
 		{

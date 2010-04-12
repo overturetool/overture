@@ -19,4 +19,10 @@ public class VdmPpNewFileWizard extends VdmNewFileWizard {
 		return "VDM++ New File Wizard";
 	}
 
+	@Override
+	protected String getFileExtension()
+	{
+		return "vdmpp";
+	}
+
 }

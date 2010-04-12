@@ -6,7 +6,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IStatus;
 import org.overture.ide.core.IVdmModel;
-import org.overture.ide.core.IVdmProject;
+
+import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.utility.FileUtility;
 import org.overturetool.vdmj.lex.LexLocation;
 

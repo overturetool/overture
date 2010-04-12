@@ -4,7 +4,8 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.overture.ide.core.IVdmModel;
-import org.overture.ide.core.IVdmProject;
+import org.overture.ide.core.resources.IVdmProject;
+
 
 
 public interface IVdmModelManager

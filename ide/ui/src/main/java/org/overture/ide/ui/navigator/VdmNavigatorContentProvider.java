@@ -4,7 +4,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.ui.internal.navigator.resources.workbench.ResourceExtensionContentProvider;
 import org.eclipse.ui.model.IWorkbenchAdapter;
-import org.overture.ide.core.VdmProject;
+import org.overture.ide.core.resources.VdmProject;
+
 
 public class VdmNavigatorContentProvider extends ResourceExtensionContentProvider implements ITreeContentProvider {
 

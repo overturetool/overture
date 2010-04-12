@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+
+<!-- Editor -->
    <extension
          point="org.eclipse.ui.editors">
       <editor
@@ -12,6 +14,8 @@
             name="Vdm-Sl Editor">
       </editor>
    </extension>
+   
+   <!-- Nature image -->
    <extension
          point="org.eclipse.ui.ide.projectNatureImages">
       <image
@@ -20,53 +24,96 @@
             natureId="org.overture.ide.vdmsl.core.nature">
       </image>
    </extension>
+   
+   <!-- Wizards -->
    <extension
          point="org.eclipse.ui.newWizards">
       <wizard
+            category="org.overture.ide.ui.wizard"
             class="org.overture.ide.vdmsl.ui.wizards.VdmSlNewProjectWizard"
             finalPerspective="org.overture.ide.ui.perspective"
             icon="icons/cview16/vdmsl_file_tsk.gif"
             id="org.overture.ide.vdmsl.ui.projectWizard"
-            name="Vdm-Sl Project"
+            name="Project"
             preferredPerspectives="org.overture.ide.ui.perspective"
             project="true">
       </wizard>
       <wizard
+            category="org.overture.ide.ui.wizard"
             class="org.overture.ide.vdmsl.ui.wizards.VdmSlNewFileWizard"
             finalPerspective="org.overture.ide.ui.perspective"
             icon="icons/cview16/vdmsl_file_tsk.gif"
             id="org.overture.ide.vdmsl.ui.fileWizard"
-            name="VDM-Sl File Wizard"
+            name="Empty File"
             preferredPerspectives="org.overture.ide.ui.perspective">
       </wizard>
+      <wizard
+            category="org.overture.ide.ui.wizard"
+            class="org.overture.ide.vdmsl.ui.wizards.VdmSlNewModuleWizard"
+            finalPerspective="org.overture.ide.ui.perspective"
+            icon="icons/obj16/module_obj.gif"
+            id="org.overture.ide.vdmsl.ui.moduleWizard"
+            name="Module"
+            preferredPerspectives="org.overture.ide.ui.perspective">
+      </wizard>
+      <primaryWizard
+            id="org.overture.ide.vdmsl.ui.projectWizard">
+      </primaryWizard>
    </extension>
   
 
-	<!-- project nature image -->
-
-
-  <!-- Editor -->
-
-<!-- partitioning -->
-
-   
-   
-   <!-- customize the outline to include fileds etc. -->
-      
-      
-      
-       <!--
-   	templates
-   -->
-   
-    
-   
-    
-    
-  	<!-- completion added because of the template.. -->
-
-
-     <!-- vdmSlEditorScope -->
-
-	<!-- VDM-SL perspective -->     
+ <!-- VDM Explorer contribution of menus -->
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <commonWizard
+            menuGroupId="org.overture.ide.ui.vdm"
+            type="new"
+            wizardId="org.overture.ide.vdmsl.ui.projectWizard">
+         <enablement></enablement>
+      </commonWizard>
+      <commonWizard
+            menuGroupId="org.overture.ide.ui.vdm"
+            type="new"
+            wizardId="org.overture.ide.vdmsl.ui.fileWizard">
+         <enablement>
+            <or>
+               <adapt
+                     type="org.overture.ide.core.resources.IVdmProject">
+                  <test
+                        property="org.overture.ide.core.resources.dialect"
+                        value="VDM_SL">
+                  </test>
+               </adapt>
+               <adapt
+                     type="org.eclipse.core.resources.IFolder">
+                  <test
+                        property="org.overture.ide.core.resources.dialect"
+                        value="VDM_SL">
+                  </test>
+               </adapt>
+            </or></enablement>
+      </commonWizard>
+      <commonWizard
+            menuGroupId="org.overture.ide.ui.vdm"
+            type="new"
+            wizardId="org.overture.ide.vdmsl.ui.moduleWizard">
+         <enablement>
+            <or>
+               <adapt
+                     type="org.overture.ide.core.resources.IVdmProject">
+                  <test
+                        property="org.overture.ide.core.resources.dialect"
+                        value="VDM_SL">
+                  </test>
+               </adapt>
+               <adapt
+                     type="org.eclipse.core.resources.IFolder">
+                  <test
+                        property="org.overture.ide.core.resources.dialect"
+                        value="VDM_SL">
+                  </test>
+               </adapt>
+            </or></enablement>
+      </commonWizard>
+   </extension>     
 </plugin>

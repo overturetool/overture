@@ -1,10 +1,11 @@
-package org.overture.ide.core;
+package org.overture.ide.core.resources;
 //ICompilationUnit
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.overture.ide.core.IVdmElement;
 import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.lex.LexLocation;
 

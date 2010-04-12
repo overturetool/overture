@@ -12,8 +12,9 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.overture.ide.core.VdmCore;
-import org.overture.ide.core.IVdmProject;
-import org.overture.ide.core.VdmProject;
+import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.core.resources.VdmProject;
+
 import org.overture.ide.internal.core.ast.VdmModelManager;
 
 public class VdmBuilder extends VdmCoreBuilder

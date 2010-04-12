@@ -11,6 +11,16 @@
       </parser>
    </extension>
    
+   
+   	<!-- Parser for VDM RT -->
+   <extension
+         point="org.overture.ide.core.parsePaticipant">
+      <parser
+            class="org.overture.ide.parsers.vdmj.SourceParserVdmRt"
+            nature="org.overture.ide.vdmrt.core.nature">
+      </parser>
+   </extension>
+   
    <!-- Parser for VDM SL -->
       <extension
          point="org.overture.ide.core.parsePaticipant">

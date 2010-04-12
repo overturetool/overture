@@ -3,8 +3,8 @@ package org.overture.ide.parsers.vdmj;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ide.core.IVdmSourceUnit;
 import org.overture.ide.core.parser.AbstractParserParticipant;
+import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.definitions.ClassDefinition;
@@ -19,11 +19,18 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 {
 
 	@Override
-	protected ParseResult startParse(IVdmSourceUnit file, String source, String charset)
+	protected ParseResult startParse(IVdmSourceUnit file, String source,
+			String charset)
+	{
+		Settings.dialect = Dialect.VDM_PP;
+		return startParseFile(file, source, charset);
+	}
+
+	protected ParseResult startParseFile(IVdmSourceUnit file, String source,
+			String charset)
 	{
 		file.setType(IVdmSourceUnit.VDM_CLASS_SPEC);
-		Settings.dialect = Dialect.VDM_PP;
-		LexTokenReader.TABSTOP=1;
+		LexTokenReader.TABSTOP = 1;
 		ClassList classes = new ClassList();
 		classes.clear();
 		LexLocation.resetLocations();
@@ -46,7 +53,14 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 			{
 				nodes.add(classDefinition);
 			}
-			result.setAst(nodes);
+			if (nodes.size() > 0)
+			{
+				result.setAst(nodes);
+			} else
+			{
+				perrs++;
+				result.setFatalError(new Exception("No VDM source in file"));
+			}
 
 		} catch (InternalException e)
 		{
@@ -73,11 +87,12 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 
 			result.setWarnings(reader.getWarnings());
 		}
-		
-		for (ClassDefinition classDefinition : classes) {
+
+		for (ClassDefinition classDefinition : classes)
+		{
 			classDefinition.getDefinitions();
 		}
-		
+
 		result.setAllLocation(LexLocation.getAllLocations());
 		result.setLocationToAstNodeMap(LexLocation.getLocationToAstNodeMap());
 

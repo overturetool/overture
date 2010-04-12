@@ -1,8 +1,8 @@
-package org.overture.ide.vdmpp.ui;
+package org.overture.ide.vdmrt.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
-public class VdmPpUIPlugin extends AbstractUIPlugin {
+public class VdmRtUIPlugin extends AbstractUIPlugin {
 
 	private static final boolean DEBUG = true;
 	

@@ -6,9 +6,10 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.overture.ide.core.VdmCore;
-import org.overture.ide.core.VdmProject;
+
 import org.overture.ide.core.parser.ISourceParser;
 import org.overture.ide.core.parser.SourceParserManager;
+import org.overture.ide.core.resources.VdmProject;
 
 public class VdmReconcilingStrategy implements IReconcilingStrategy
 {

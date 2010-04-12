@@ -14,8 +14,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.overture.ide.core.IVdmModel;
-import org.overture.ide.core.IVdmProject;
+
 import org.overture.ide.core.ast.VdmModel;
+import org.overture.ide.core.resources.IVdmProject;
 
 public class VdmModelManager implements IVdmModelManager {
 	

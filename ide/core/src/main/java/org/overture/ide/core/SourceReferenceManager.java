@@ -11,6 +11,7 @@ import java.util.Vector;
 import org.eclipse.core.internal.resources.IManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
