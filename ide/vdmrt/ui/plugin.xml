@@ -2,136 +2,44 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.eclipse.dltk.ui.language">
-      <language
-            class="org.overture.ide.vdmrt.ui.VdmRtUILanguageToolkit"
-            nature="org.overture.ide.vdmrt.core.nature"
-            priority="0">
-      </language>
-   </extension>
-<extension point="org.eclipse.ui.newWizards">
-      <wizard
-            category="org.overture.ide.category"
-            class="org.overture.ide.ui.wizards.CreateVdmProjectWizard:org.overture.ide.vdmrt.core.nature"
-            icon="icons/cview16/vdmrt_file_tsk.gif"
-            id="org.overture.ide.vdmrt.createprojectwizard"
-            name="VDM-RT Project"
-            finalPerspective="org.overture.ide.vdmrt.ui.VdmRtPerspective"
-            preferredPerspectives="org.overture.ide.vdmrt.ui.VdmRtPerspective"
-            project="true">
-         <description>
-            Create new VDM-RT project
-         </description>
-      </wizard>
-      <wizard
-            category="org.overture.ide.category"
-            class="org.overture.ide.vdmrt.ui.wizards.VdmRtNewClassWizard"
-            icon="icons/cview16/vdmrt_file_tsk.gif"
-            id="org.overture.ide.vdmrt.ui.wizards.VdmRtNewClassWizard"
-            name="VDM-RT Class">
-            <description>New VDM-RT class</description>
-      </wizard>
-   </extension>
-<extension point="org.eclipse.ui.ide.projectNatureImages">
-   <image
-         icon="icons/ovr16/vdmrt_ovr.gif"
-         id="org.overture.ide.vdmrt.ui.nature.image"
-         natureId="org.overture.ide.vdmrt.core.nature">
-   </image>
-</extension>
-
-
-  <!-- Editor -->
-<extension point="org.eclipse.ui.editors">
+         point="org.eclipse.ui.editors">
       <editor
-            class="org.overture.ide.vdmrt.ui.internal.editor.VdmRtEditor"
-            contributorClass="org.eclipse.dltk.internal.ui.editor.SourceModuleEditorActionContributor"
-            default="false"
+            class="org.overture.ide.vdmrt.ui.editor.core.VdmRtEditor"
+            default="true"
+            extensions="vdmrt"
             icon="icons/cview16/vdmrt_file_tsk.gif"
-            id="org.overture.ide.vdmrt.ui.internal.editor.VdmRtEditor"
-            name="VDM RT Editor">
-         <contentTypeBinding contentTypeId="org.overture.ide.vdmrt.content-type"/>
+            id="org.overture.ide.vdmrt.ui.VdmRtEditor"
+            name="Vdm-Rt Editor">
       </editor>
    </extension>
-
-	<!-- partitioning -->
-	<extension point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="org.overture.ide.vdmrt.ui.internal.editor.VdmRtUIPreferenceInitializer">
-      </initializer>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            class="org.overture.ide.vdmrt.ui.wizard.VdmRtNewProjectWizard"
+            finalPerspective="org.overture.ide.ui.perspective"
+            icon="icons/cview16/vdmrt_file_tsk.gif"
+            id="org.overture.ide.vdmrt.ui.wizard1"
+            name="VDM-RT Project"
+            preferredPerspectives="org.overture.ide.ui.perspective"
+            project="true">
+      </wizard>
+      <wizard
+            class="org.overture.ide.vdmrt.ui.wizard.VdmRtNewFileWizard"
+            finalPerspective="org.overture.ide.ui.perspective"
+            icon="icons/cview16/vdmrt_file_tsk.gif"
+            id="org.overture.ide.vdmrt.ui.wizard2"
+            name="VDM-RT File Wizard">
+      </wizard>
    </extension>
-   
-   
-     <!-- customize the outline to include fileds etc. -->
-      <extension point="org.eclipse.dltk.core.sourceElementParsers">
-      <parser
-            class="org.overture.ide.vdmrt.ui.internal.outline.SourceElementParser"
-            nature="org.overture.ide.vdmrt.core.nature"
-            priority="0">
-      </parser>
+   <extension
+         point="org.eclipse.ui.ide.projectNatureImages">
+      <image
+            icon="icons/ovr16/vdmrt_ovr.gif"
+            id="org.overture.ide.vdmrt.ui.image1"
+            natureId="org.overture.ide.vdmrt.core.nature">
+      </image>
    </extension>
-   
-   <!--
-   	templates
-   -->
-   
-   <extension point="org.eclipse.ui.preferencePages">
-         <page
-              class="org.overture.ide.vdmrt.ui.preferences.VdmRtCodeTemplatesPreferencePage"
-              id="org.overture.ide.vdmrt.ui.VdmRtCodeTemplatesPreferencePage"
-              name="Templates VDM-RT"
-              category="org.overture.ide.ui.OvertureGlobalPreferencesPage"
-              />
-	</extension>
-    
-   <extension point="org.eclipse.dltk.ui.language">
-      <language
-            class="org.overture.ide.vdmrt.ui.internal.editor.VdmRtUILanguageToolkit2"
-            nature="org.overture.ide.vdmrt.core.nature"
-            priority="1">
-      </language>
-   </extension>
-   
-   <extension point="org.eclipse.ui.editors.templates">
-       <contextType
-          class="org.overture.ide.ui.completion.templates.VdmUniversalTemplateContextType"
-          id="org.overture.ide.vdmrt.ui.completion.templates.VdmUniversalTemplateContextType"
-          name="VDM-RT Template content">
-       </contextType>
-      		<include file="templates/templates.xml" >
-       </include>
 
-    </extension>
 
-	<!-- completion added because of the template.. -->
-	<extension point="org.eclipse.dltk.ui.scriptCompletionProposalComputer"
-		id="VdmRtCompletionProposalComputer">
-		<scriptCompletionProposalComputer
-			class="org.overture.ide.vdmrt.ui.completions.VdmRtCompletionProposalComputer"
-			categoryId="org.eclipse.dltk.ui.scriptTypeProposalCategory"
-			toolkitId="org.overture.ide.vdmrt.core.nature">
-			<partition type="__dftl_partition_content_type"/>
-		</scriptCompletionProposalComputer>
-	</extension>
 
-   
-      <!-- vdmRtEditorScope -->
-     <extension point="org.eclipse.ui.contexts">
-        <context
-              description="VDM-RT editor scope"
-              id="org.overture.ide.vdmrt.ui.vdmRtEditorScope"
-              name="vdmRTEditorScope"
-              parentId="org.overture.ide.ui.vdmEditorScope">
-        </context>
-     </extension>
-   
-   <!-- RT-perspective-->
-   <extension point="org.eclipse.ui.perspectives">
-    <perspective
-          class="org.overture.ide.vdmrt.ui.VdmRtPerspective"
-          icon="icons/cview16/vdmrt_file_tsk.gif"
-          id="org.overture.ide.vdmrt.ui.VdmRtPerspective"
-          name="VDM-RT">
-    </perspective>
- </extension>
 </plugin>
