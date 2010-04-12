@@ -2,12 +2,8 @@ package org.overture.ide.ui;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.IBaseLabelProvider;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.overture.ide.core.VdmCore;
 import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
 import org.overture.ide.ui.internal.viewsupport.ImageDescriptorRegistry;
 import org.overture.ide.ui.internal.viewsupport.ProblemMarkerManager;
@@ -16,7 +12,7 @@ public class VdmUIPlugin extends AbstractUIPlugin {
 	public static boolean DEBUG = true;
 	private static VdmUIPlugin plugin;
 	public final static String VDM_PARTITIONING = "__vdm__partitioning__";
-	public static final String PLUGIN_ID = "org.overture.ide.ui";
+	//public static final String PLUGIN_ID = "org.overture.ide.ui";
 	private VdmPartitionScanner fPartitionScanner;
 	private ImageDescriptorRegistry fImageDescriptorRegistry;
 	private ProblemMarkerManager fProblemMarkerManager;
