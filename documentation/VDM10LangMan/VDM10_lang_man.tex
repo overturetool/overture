@@ -7,13 +7,13 @@
 \usepackage{color}
 \usepackage{graphicx}
 \usepackage{latexsym}
-\usepackage{array}
 \usepackage{longtable} % ,multirow
 \usepackage{vdmsl-2e}
 \usepackage{makeidx}
 \usepackage{hyperref}
 \usepackage{ifthen}
 \usepackage{makeidx}
+\usepackage{fancyhdr}
 
 \newcommand{\nonstandard}[1]{}
 \newcommand{\vdmtools}{VDMTools}
@@ -205,12 +205,11 @@
 \end{minipage}}
 \end{center}}
 
-\usepackage{fancyhdr}
 
 \pagestyle{fancy}
 \fancyhead{}
 \fancyhead[LO]{\leftmark}
-\fancyhead[RE]{Tutorial to Overture/VDM-RT}
+\fancyhead[RE]{VDM-10 Language Manual}
 \fancyhead[RO,LE]{\resizebox{0.05\textwidth}{!}{\includegraphics{OMLlogoattempt.jpg}}}
 \fancyfoot[C]{\thepage}
 \makeindex
@@ -11155,7 +11154,7 @@ more information about categories.
 \rule{\textwidth}{.5mm}
         \begin{tabular}{lp{13cm}}
         \multicolumn{2}{l}{\rm initial letter:} \\
-        if   & codepoint < U+0100 \\
+        if   & codepoint $<$ U+0100 \\
         then &  Any character in categories Ll, Lm, Lo, Lt, Lu or U+0024 (a dollar sign) \\
         else & Any character except categories Cc, Zl, Zp, Zs, Cs,
                 Cn, Nd, Pc \\
@@ -11164,7 +11163,7 @@ more information about categories.
 \blankline
 \begin{tabular}{lp{13cm}}
         \multicolumn{2}{l}{following letter: }\\
-        if   & codepoint < U+0100 \\
+        if   & codepoint $<$ U+0100 \\
         then & Any character in categories Ll, Lm, Lo, Lt, Lu, Nd or 
                U+0024 (a dollar sign) or U+005F (underscore) or U+0027 (apostrophe) \\
         else & Any character except categories Cc, Zl, Zp, Zs, Cs, Cn 
@@ -11479,7 +11478,6 @@ reserved: \keyw{init\_}, \keyw{inv\_}, \keyw{is\_}, \keyw{mk\_},
 \Ruledef{character literal}{
   \Lit{\mbox{\,}'\mbox{\,}}, \Ruleref{character} \dsepl 
   \Ruleref{escape sequence} \dsep 
-  \Ruleref{multi character}, 
   \Lit{\mbox{\,}'\mbox{\,}}
   }\nonstandard{1}
 
@@ -11488,8 +11486,9 @@ reserved: \keyw{init\_}, \keyw{inv\_}, \keyw{is\_}, \keyw{mk\_},
   \Lit{{\char'134}n} \dsepl \Lit{{\char'134}t} \dsepl
   \Lit{{\char'134}f} \dsepl \Lit{{\char'134}e} \dsepl \Lit{{\char'134}a} \dsep
   \Lit{{\char'134}x} \hyperlink{charSetTable}{hexadecimal
-    digit},\hyperlink{charSetTable}{hexadecimal digit}, \hyperlink{charSetTable}{hexadecimal digit},\hyperlink{charSetTable}{hexadecimal digit} \dsepl
-  \Lit{{\char'134}u} \hyperlink{charSetTable}{hexadecimal digit},\hyperlink{charSetTable}{hexadecimal digit} \dsepl
+    digit},\hyperlink{charSetTable}{hexadecimal digit} \dsep
+  \Lit{{\char'134}u} \hyperlink{charSetTable}{hexadecimal
+    digit},\hyperlink{charSetTable}{hexadecimal digit},  \hyperlink{charSetTable}{hexadecimal digit},\hyperlink{charSetTable}{hexadecimal digit} \dsep
   \Lit{{\char'134}c} \Ruleref{character} \dsep
   \Lit{{\char'134}} \hyperlink{charSetTable}{octal digit}, \hyperlink{charSetTable}{octal digit}, \hyperlink{charSetTable}{octal digit} \dsep
   \Lit{{\char'134}"} \dsepl
@@ -11501,20 +11500,19 @@ reserved: \keyw{init\_}, \keyw{inv\_}, \keyw{is\_}, \keyw{mk\_},
   \SeqPt{%
 %    \Lit{\mbox{\,}"\mbox{\,}"\mbox{\,}}\dsepl%  was , - changed by br!
 %    character -- \Brack{\Lit{\mbox{\,}"\mbox{\,}}\dsepl newline}
-     \Lit{\mbox{\,}"\mbox{\,}"\mbox{\,}}\dsepl
+     \Lit{\mbox{\,}\char'134"\mbox{\,}}\dsepl
      \Ruleref{character} \dsepl \Ruleref{escape sequence}
     },
   \Lit{\mbox{\,}"\mbox{\,}}
   }
 
 \Ruledef{quote literal}{
-  \hyperlink{charSetTable}{distinguished letter}, \lfeed
-  \SeqPt{\Lit{\_} \dsepl \hyperlink{charSetTable}{distinguished letter}
-   \dsepl \hyperlink{charSetTable}{digit}}% \Ruleref{M30} (\Ruleref{hyphen allowed})
+  \Lit{$<$}, \Ruleref{identifier}, \Lit{$>$}
+
   }
 
 \Ruledef{Single-line comment}{
-  \Lit{--}, \SeqPt{\Ruleref{character} -- \hyperlink{charSetTable}{newline}}, \hyperlink{charSetTable}{newline}
+  \Lit{--}, \SeqPt{\Ruleref{character} -- newline}, newline
   }
 
 \Ruledef{Multiple-line comment}{
@@ -11523,6 +11521,7 @@ reserved: \keyw{init\_}, \keyw{inv\_}, \keyw{is\_}, \keyw{mk\_},
 
 The escape sequences given above are to be interpreted as follows:
 
+\begin{table}[htb]
 \begin{center}
 \begin{tabular}{ll}\hline
 Sequence & Interpretation\\ \hline
@@ -11541,7 +11540,7 @@ Sequence & Interpretation\\ \hline
 hexadecimal digit, hexadecimal digit  & (e.g.\ \texttt{{\char'134}u0041} is `A'))\\
   \Lit{{\char'134}c} character 
                            & U+00nn (control character)\\
-                           & (e.g.\ \texttt{{\char'134}c A} $\equiv$ 
+                           & (e.g.\ \texttt{{\char'134}cA} $\equiv$ 
                                     \texttt{{\char'134}x01})\\
   \Lit{{\char'134}} octal digit, octal digit, octal digit 
                            & U+00nn (octal representation of character)\\
@@ -11549,6 +11548,9 @@ hexadecimal digit, hexadecimal digit  & (e.g.\ \texttt{{\char'134}u0041} is `A')
   \Lit{{\char'134}'}       & U+0027 (apostrophe) \\ \hline
 \end{tabular}
 \end{center}
+\caption{Escape sequences}
+\end{table}
+
 
 
 \chapter{Operator Precedence}\label{app-c}
@@ -11740,6 +11742,7 @@ of expression they are used in.
 family is defined in the following table.
 
 \blankline
+\begin{table}{thb}
 \begin{center}
   \begin{tabular}{ccccc}
     \hline
@@ -11760,6 +11763,8 @@ family is defined in the following table.
     \hline
   \end{tabular}
 \end{center}
+\caption{Operator precedence}
+\end{table}
 
 \section{The Family of Relations}
 
