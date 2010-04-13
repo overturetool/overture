@@ -72,7 +72,8 @@ mk_( 16, <SHOW_PIG>, 4, nil, 2, 8000 )
 	);
 	
 	public getServer: () ==> Server
-	getServer() == return server;
+	getServer() == return server
+	pre server <> nil;
 	
 	public getNoSensors: () ==> nat
 	getNoSensors() == return card dom sensors;        

@@ -7,17 +7,11 @@ instance variables
 	private io : IO := new IO();
 	--mapper gateway til gris ID
 	private stables : map PigId to StableController := {|->}; --map pigId to controller
-	inv forall pID1, pID2 in set dom stables & pID1 <> pID2;  
 
 	private medicTimes : seq of medicTime := [mk_(1,1,5000), mk_(2,5,8000)];
 	private busy : bool := false;
 
 operations
-	public Server : () ==> Server
-	Server() == 
-	(
-		return self;
-	);
 
 	public GetNoPigs: () ==> nat
 	GetNoPigs() == return card dom stables;
@@ -45,7 +39,7 @@ operations
 	(
 		stables := stables munion {pigID |-> stableController};
 	)
-	pre forall id in set dom stables & id <> pigID
+	pre pigID not in set dom stables
 	post card dom stables = card dom stables~ + 1;
 	
 		-- Remove a Pig 
@@ -54,8 +48,8 @@ operations
 	(
 		stables := {pigID} <-: stables;
 	)
-	pre exists id in set dom stables & id = pigID
-	post card dom stables = card dom stables~ - 1;
+	pre pigID in set dom stables 
+	post card dom stables + 1 = card dom stables~;
 
 	public NeedMedic : () ==> ()
 	NeedMedic() ==

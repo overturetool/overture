@@ -20,7 +20,7 @@ operations
 	);
 	
 	-- Add a Pig to pigSty and inform the server
-	public AddPig: PigId * Sensor * [Position]==> ()
+	public AddPig: PigId * Sensor * Position ==> ()
 	AddPig(pigID, sensor, position) ==
 	(
 		dcl pigStyId: PigStyId := sensors(sensor);  
@@ -28,7 +28,7 @@ operations
 		pigsInSty := pigsInSty munion {pigPos |-> pigStyId};
 		parent.AddPig(pigID, self);
 	)
-	pre exists s in set dom sensors & s = sensor; 
+	pre sensor in set dom sensors; 
 
 	
 	-- Remove a Pig from pigSty and inform the server
@@ -71,17 +71,19 @@ operations
 	(
 		actuators := actuators munion {act |-> sti};
 	)
-	pre forall a in set dom actuators & a <> act; 
+	pre act not in set dom actuators; 
 
 	public AddSensor: Sensor * PigStyId ==> ()
 	AddSensor(sens, sti) ==
 	(
 		sensors := sensors munion {sens |-> sti};
 	)
-	pre forall s in set dom sensors & s <> sens;
+	pre sens not in set dom sensors;
 
 
 sync
+	mutex(AddSensor);
+	mutex(AddActuator);
 	mutex(RemovePig,AddPig);
 	mutex(AddPig);
 	mutex(RemovePig);
