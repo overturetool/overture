@@ -47,7 +47,7 @@
 %} %% This will be replaced by a perl script extracting the solutions
   %% and inserting them automatically into the solutions chapter.
 \newcommand{\insertfig}[4]{ % Filename, epsheight, epswidth, caption,  label
-\begin{figure}[H]
+\begin{figure}[htb]
 \begin{center}
 \includegraphics[width=#2]{#1} 
 \end{center}
@@ -239,7 +239,8 @@ April   & 2010 & 0.2   \\ \hline
 %\addtocounter{page}{2}
 \tableofcontents
 \newpage
-
+\mbox{}
+\newpage
 \pagenumbering{arabic} 
 \setcounter{page}{1}
 
