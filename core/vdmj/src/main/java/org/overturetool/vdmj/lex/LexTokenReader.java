@@ -712,22 +712,16 @@ public class LexTokenReader extends BacktrackInputReader
 					unpush();
 					type = Token.NE;
 				}
-				else if (Character.isLetter(ch))
+				else if (startOfName(ch))
 				{
 					// <QuoteLiteral> or <x
-					StringBuilder name = new StringBuilder();
-
-					do
-					{
-						name.append(ch);
-						rdCh();
-					}
-					while (Character.isLetterOrDigit(ch) || ch == '_');
+					String name = rdIdentifier();
 
 					if (ch == '>')
 					{
 						unpush();
-						last = new LexQuoteToken(name.toString(), location(tokline, tokpos));
+						last = new LexQuoteToken(name, location(tokline, tokpos));
+						type = Token.QUOTE;
 					}
 					else
 					{
