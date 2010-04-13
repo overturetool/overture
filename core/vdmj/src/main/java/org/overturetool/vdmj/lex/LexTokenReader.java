@@ -415,6 +415,11 @@ public class LexTokenReader extends BacktrackInputReader
     		    	ch = (char)(rdCh() - 'A' + 1);	// eg. CTRL-A = 1
     		    	break;
 
+    		    case 'u':
+    		    	ch = (char)(value(rdCh())*4096 + value(rdCh())*256 +
+    		    				value(rdCh())*16 + value(rdCh()));
+    		    	break;
+
     		    case '0': case '1':	case '2': case '3': case '4':
     			case '5': case '6':	case '7':
     		    	ch = (char)(value(ch)*64 + value(rdCh())*8 + value(rdCh()));
