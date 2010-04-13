@@ -33,7 +33,7 @@ import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 
-public class VdmApplicationLaunchShortcut implements ILaunchShortcut2
+public abstract class AbstractVdmApplicationLaunchShortcut implements ILaunchShortcut2
 {
 
 	public void launch(ISelection selection, String mode)
