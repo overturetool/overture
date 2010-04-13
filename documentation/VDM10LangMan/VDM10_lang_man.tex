@@ -2207,7 +2207,7 @@ one by one. Each of them will be described by means of:
     }
 
   \Rule{let be expression}{ 
-    \Lop{let}, \Ruleref{bind},
+    \Lop{let}, \Ruleref{multiple bind},
     \OptPt{\Lop{be}, \Lop{st}, \Ruleref{expression}}, \Lop{in}, \lfeed
     \Ruleref{expression}
     } 
@@ -2248,9 +2248,11 @@ one by one. Each of them will be described by means of:
      
   A {\it let-be-such-that expression} has the form:
   \begin{lstlisting}
-    let b be st e1 in e2
+    let mb be st e1 in e2
   \end{lstlisting}%
-  where {\tt b} is a binding of a pattern to a set value (or a type),
+  where {\tt mb} is a multi-binding of one or more patterns (mostly
+  just one pattern)
+ to a set value (or a type),
   {\tt e1} is a boolean expression, and {\tt e2} is an expression, of
   any type, involving the pattern identifiers of the pattern in {\tt
     b}. The {\tt \keyw{be st} e1} part is optional. The expression
@@ -3707,24 +3709,24 @@ Assuming the classes \texttt{Tree},
     \ldots
   }
   \Rule{act expression}{
-    \Lit{\#act}, \Lit{(}, \Ruleref{name}, \Lit{)} \dsep
-    \Lit{\#act}, \Lit{(}, \Ruleref{name list}, \Lit{)}
+    \Lop{\#act}, \Lit{(}, \Ruleref{name}, \Lit{)} \dsep
+    \Lop{\#act}, \Lit{(}, \Ruleref{name list}, \Lit{)}
   }
   \Rule{fin expression}{
-    \Lit{\#fin}, \Lit{(}, \Ruleref{name}, \Lit{)} \dsep
-    \Lit{\#fin}, \Lit{(}, \Ruleref{name list}, \Lit{)}
+    \Lop{\#fin}, \Lit{(}, \Ruleref{name}, \Lit{)} \dsep
+    \Lop{\#fin}, \Lit{(}, \Ruleref{name list}, \Lit{)}
   }
   \Rule{active expression}{
-    \Lit{\#active}, \Lit{(}, \Ruleref{name}, \Lit{)} \dsep
-    \Lit{\#active}, \Lit{(}, \Ruleref{name list}, \Lit{)}
+    \Lop{\#active}, \Lit{(}, \Ruleref{name}, \Lit{)} \dsep
+    \Lop{\#active}, \Lit{(}, \Ruleref{name list}, \Lit{)}
   }
   \Rule{req expression}{
-    \Lit{\#req}, \Lit{(}, \Ruleref{name}, \Lit{)} \dsep
-    \Lit{\#req}, \Lit{(}, \Ruleref{name list}, \Lit{)}
+    \Lop{\#req}, \Lit{(}, \Ruleref{name}, \Lit{)} \dsep
+    \Lop{\#req}, \Lit{(}, \Ruleref{name list}, \Lit{)}
   }
   \Rule{waiting expression}{
-    \Lit{\#waiting}, \Lit{(}, \Ruleref{name}, \Lit{)} \dsep
-    \Lit{\#waiting}, \Lit{(}, \Ruleref{name list}, \Lit{)}
+    \Lop{\#waiting}, \Lit{(}, \Ruleref{name}, \Lit{)} \dsep
+    \Lop{\#waiting}, \Lit{(}, \Ruleref{name list}, \Lit{)}
   }
 
 \item[Semantics:] History expressions can only be used in
@@ -3732,20 +3734,23 @@ permission predicates (see section \ref{sec:permissionpred}). History
 expressions may contain one or more of the following expressions:
   
 \begin{itemize}
-\item {\tt \#act (}{\em operation name}{\tt )}. The number of times
+\item {\bf\ttfamily \#act}{\tt (}{\em operation name}{\tt )}. The number of times
   that {\em operation name} operation has been activated.
-\item {\tt \#fin(}{\em operation name}{\tt )}. The number of times that
+\item {\bf\ttfamily \#fin}{\tt (}{\em operation name}{\tt )}. The number of times that
   the {\em operation name} operation has been completed.
-\item {\tt \#active(}{\em operation name}{\tt )}. The number of {\em operation
-  name} operations that are currently active.  Thus: {\tt \#active(}{\em
+\item {\bf\ttfamily \#active}{\tt (}{\em operation name}{\tt )}. The number of {\em operation
+  name} operations that are currently active.  Thus: {\bf\ttfamily
+  \#active}{\tt (}{\em
     operation name}{\tt )} $=$ {\tt \#act(}{\em operation name}{\tt )}
-  $-$ {\tt \#fin(}{\em operation name}{\tt )}.
-\item {\tt \#req(}{\em operation name}{\tt )}. The number of requests
+  $-$ {\bf\ttfamily \#fin}{\tt (}{\em operation name}{\tt )}.
+\item {\bf\ttfamily \#req}{\tt (}{\em operation name}{\tt )}. The number of requests
   that has been issued for the {\em operation name} operation.
-\item {\tt \#waiting(}{\em operation name}{\tt )}. The number of
-  outstanding requests for the {\em operation name} operation. Thus: {\tt
-    \#waiting(}{\em operation name}{\tt )} $=$ {\tt \#req(}{\em operation
-    name}{\tt )} $-$ {\tt \#act(}{\em operation name}{\tt )}.
+\item {\bf\ttfamily \#waiting}{\tt (}{\em operation name}{\tt )}. The number of
+  outstanding requests for the {\em operation name} operation. Thus:
+  {\bf\ttfamily 
+    \#waiting}{\tt (}{\em operation name}{\tt )} $=$ {\bf\ttfamily
+    \#req}{\tt (}{\em operation
+    name}{\tt )} $-$ {\bf\ttfamily \#act}{\tt (}{\em operation name}{\tt )}.
 \end{itemize}
 For all of these operators, the name list version
 \texttt{\#}\textit{history op(op1,$\ldots$,opN)} is simply shorthand
@@ -3769,16 +3774,16 @@ values for the interval [\textbf{S},\textbf{T}]:
 
 \begin{center}\small
 \begin{tabular}{llll}
-\texttt{\#act(A) = 1} & \texttt{\#act(B) = 1} & \texttt{\#act(C) = 1}
-& \texttt{\#act(A,B,C) = 3}\\
-\texttt{\#fin(A) = 1} & \texttt{\#fin(B) = 1} & \texttt{\#fin(C) = 0}
-& \texttt{\#fin(A,B,C) = 2}\\
-\texttt{\#active(A) = 0} & \texttt{\#active(B) = 0} & 
-\texttt{\#active(C) = 1} & \texttt{\#active(A,B,C) = 1}\\
-\texttt{\#req(A) = 2} & \texttt{\#req(B) = 1} & \texttt{\#req(C) = 3}
-& \texttt{\#req(A,B,C) = 6}\\
-\texttt{\#waiting(A) = 1} & \texttt{\#waiting(B) = 0} & 
-\texttt{\#waiting(C) = 2} & \texttt{\#waiting(A,B,C) = 3}\\
+\texttt{{\bf\ttfamily \#act}(A) = 1} & \texttt{{\bf\ttfamily \#act}(B) = 1} & \texttt{{\bf\ttfamily \#act}(C) = 1}
+& \texttt{{\bf\ttfamily \#act}(A,B,C) = 3}\\
+\texttt{{\bf\ttfamily \#fin}(A) = 1} & \texttt{{\bf\ttfamily \#fin}(B) = 1} & \texttt{{\bf\ttfamily \#fin}(C) = 0}
+& \texttt{{\bf\ttfamily \#fin}(A,B,C) = 2}\\
+\texttt{{\bf\ttfamily \#active}(A) = 0} & \texttt{{\bf\ttfamily \#active}(B) = 0} & 
+\texttt{{\bf\ttfamily \#active}(C) = 1} & \texttt{{\bf\ttfamily \#active}(A,B,C) = 1}\\
+\texttt{{\bf\ttfamily \#req}(A) = 2} & \texttt{{\bf\ttfamily \#req}(B) = 1} & \texttt{{\bf\ttfamily \#req}(C) = 3}
+& \texttt{{\bf\ttfamily \#req}(A,B,C) = 6}\\
+\texttt{{\bf\ttfamily \#waiting}(A) = 1} & \texttt{{\bf\ttfamily \#waiting}(B) = 0} & 
+\texttt{{\bf\ttfamily \#waiting}(C) = 2} & \texttt{{\bf\ttfamily \#waiting}(A,B,C) = 3}\\
 \end{tabular}
 \end{center}
 
@@ -10667,24 +10672,24 @@ In VDM++ and VDM-RT extended explicit function definition looks like:
 \subsection{History Expressions (VDM++ and VDM-RT)}
 
   \Ruledef{act expression}{
-    \Lit{\#act}, \Lit{(}, \Ruleref{name}, \Lit{)} \dsep
-    \Lit{\#act}, \Lit{(}, \Ruleref{name list}, \Lit{)}
+    \Lop{\#act}, \Lit{(}, \Ruleref{name}, \Lit{)} \dsep
+    \Lop{\#act}, \Lit{(}, \Ruleref{name list}, \Lit{)}
   }
   \Ruledef{fin expression}{
-    \Lit{\#fin}, \Lit{(}, \Ruleref{name}, \Lit{)} \dsep
-    \Lit{\#fin}, \Lit{(}, \Ruleref{name list}, \Lit{)}
+    \Lop{\#fin}, \Lit{(}, \Ruleref{name}, \Lit{)} \dsep
+    \Lop{\#fin}, \Lit{(}, \Ruleref{name list}, \Lit{)}
   }
   \Ruledef{active expression}{
-    \Lit{\#active}, \Lit{(}, \Ruleref{name}, \Lit{)} \dsep
-    \Lit{\#active}, \Lit{(}, \Ruleref{name list}, \Lit{)}
+    \Lop{\#active}, \Lit{(}, \Ruleref{name}, \Lit{)} \dsep
+    \Lop{\#active}, \Lit{(}, \Ruleref{name list}, \Lit{)}
   }
   \Ruledef{req expression}{
-    \Lit{\#req}, \Lit{(}, \Ruleref{name}, \Lit{)} \dsep
-    \Lit{\#req}, \Lit{(}, \Ruleref{name list}, \Lit{)}
+    \Lop{\#req}, \Lit{(}, \Ruleref{name}, \Lit{)} \dsep
+    \Lop{\#req}, \Lit{(}, \Ruleref{name list}, \Lit{)}
   }
   \Ruledef{waiting expression}{
-    \Lit{\#waiting}, \Lit{(}, \Ruleref{name}, \Lit{)} \dsep
-    \Lit{\#waiting}, \Lit{(}, \Ruleref{name list}, \Lit{)}
+    \Lop{\#waiting}, \Lit{(}, \Ruleref{name}, \Lit{)} \dsep
+    \Lop{\#waiting}, \Lit{(}, \Ruleref{name list}, \Lit{)}
   }
 
 
