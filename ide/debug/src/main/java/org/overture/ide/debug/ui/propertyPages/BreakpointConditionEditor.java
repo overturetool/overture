@@ -23,6 +23,12 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.overture.ide.debug.core.model.IVdmLineBreakpoint;
 import org.overture.ide.ui.editor.core.VdmSourceViewer;
+import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.lex.LexException;
+import org.overturetool.vdmj.lex.LexTokenReader;
+import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.syntax.ExpressionReader;
+import org.overturetool.vdmj.syntax.ParserException;
 
 public class BreakpointConditionEditor {
 	private VdmSourceViewer fViewer;
@@ -177,10 +183,32 @@ public class BreakpointConditionEditor {
 		String newValue = fViewer.getDocument().get();
 		if (!newValue.equals(fOldValue)) {
 			fOldValue = newValue;
+			validateSyntax();
 		}
 		refreshValidState();
 	}
 	
+	private void validateSyntax()
+	{
+		LexTokenReader ltr;
+		ltr = new LexTokenReader(fOldValue,
+				Dialect.VDM_RT,
+				Console.charset);
+
+		ExpressionReader reader = new ExpressionReader(ltr);
+		try
+		{
+			reader.readExpression();
+		} catch (ParserException e)
+		{
+			fPage.addErrorMessage( e.getMessage());
+		} catch (LexException e)
+		{
+			fPage.addErrorMessage( e.getMessage());
+		}
+		
+	}
+
 	/**
 	 * Dispose of the handlers, etc
 	 */
