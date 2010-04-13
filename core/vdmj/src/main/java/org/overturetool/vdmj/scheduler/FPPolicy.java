@@ -59,7 +59,15 @@ public class FPPolicy extends FCFSPolicy
 	@Override
 	public long getTimeslice()
 	{
-		return priorities.get(bestThread);
+		long slice = priorities.get(bestThread);
+
+		if (Properties.scheduler_jitter > 0)
+		{
+			// Plus or minus jitter ticks...
+			slice += PRNG.nextLong() % (Properties.scheduler_jitter + 1);
+		}
+
+		return slice;
 	}
 
 	@Override

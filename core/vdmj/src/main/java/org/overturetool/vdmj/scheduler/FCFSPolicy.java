@@ -25,6 +25,7 @@ package org.overturetool.vdmj.scheduler;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.values.TransactionValue;
@@ -35,10 +36,12 @@ public class FCFSPolicy extends SchedulingPolicy
 	protected final List<SchedulableThread> threads;
 	protected SchedulableThread bestThread = null;
 	protected long minimumDuration = -1;
+	protected Random PRNG = null;
 
 	public FCFSPolicy()
 	{
 		threads = new LinkedList<SchedulableThread>();
+		PRNG = new Random();	// NB deliberately non-deterministic!
 	}
 
 	@Override
@@ -116,14 +119,24 @@ public class FCFSPolicy extends SchedulingPolicy
 	@Override
 	public long getTimeslice()
 	{
+		long slice = 0;
+
 		if (bestThread.isVirtual())
 		{
-			return Properties.scheduler_virtual_timeslice;
+			slice = Properties.scheduler_virtual_timeslice;
 		}
 		else
 		{
-			return Properties.scheduler_fcfs_timeslice;
+			slice = Properties.scheduler_fcfs_timeslice;
 		}
+
+		if (Properties.scheduler_jitter > 0)
+		{
+			// Plus or minus jitter ticks...
+			slice += PRNG.nextLong() % (Properties.scheduler_jitter + 1);
+		}
+
+		return slice;
 	}
 
 	@Override

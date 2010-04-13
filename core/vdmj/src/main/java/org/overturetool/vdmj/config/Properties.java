@@ -45,6 +45,9 @@ public class Properties extends ConfigBase
 	/** The vCPU/vBUS timeslice */
 	public static int scheduler_virtual_timeslice = 10000;
 
+	/** The timeslice variation (+/- jitter ticks) */
+	public static int scheduler_jitter = 0;
+
 	/** Enable transactional variable updates. */
 	public static boolean rt_duration_transactions = false;
 
