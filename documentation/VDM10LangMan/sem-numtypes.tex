@@ -1,0 +1,57 @@
+\item[Semantics of Operators:] The operators Unary minus, Sum,
+  Difference, Product, Division, Less than, Greater than, Less or
+  equal, Greater or equal, Equal and Not equal have the usual
+  semantics of such operators.
+
+  \vspace{1ex}
+  \begin{TypeSemantics}
+    Floor & yields the greatest integer which is equal to or smaller
+    than {\tt x}. \\ \hline
+
+    Absolute value & yields the absolute value of {\tt x}, i.e.\ {\tt
+      x} itself if {\tt x >= 0} and {\tt -x} if {\tt x < 0}. \\ \hline
+
+    Power & yields {\tt x} raised to the {\tt y}'th power. \\ \hline
+  \end{TypeSemantics}
+
+  \vspace{1ex}
+  There is often confusion on how integer division, remainder and
+  modulus work on negative numbers. In fact, there are two valid
+  answers to {\tt -14 \keyw{div} 3}: either (the intuitive) {\tt -4}
+  as in the Toolbox, or {\tt -5} as in e.g.\ Standard ML
+  \cite{Paulson91}. It is therefore appropriate to explain these
+  operations in some detail.
+
+  Integer division is defined using {\sf floor} and real number
+  division:
+
+  \begin{lstlisting}
+    x/y <  0:   x div y = -floor(abs(-x/y))
+    x/y >= 0:   x div y =  floor(abs(x/y))
+  \end{lstlisting}
+
+  Note that the order of \keyw{floor} and \keyw{abs} on the right-hand
+  side makes a difference, the above example would yield {\tt -5} if
+  we changed the order. This is because \keyw{floor} always yields a
+  smaller (or equal) integer, e.g.\ {\tt \keyw{floor} (14/3)} is {\tt
+    4} while {\tt \keyw{floor} (-14/3)} is {\tt -5}.
+
+  Remainder {\tt x \keyw{rem} y} and modulus {\tt x \keyw{mod} y} are
+  the same if the signs of {\tt x} and {\tt y} are the same, otherwise
+  they differ and \keyw{rem} takes the sign of {\tt x} and \keyw{mod}
+  takes the sign of {\tt y}. The formulas for remainder and modulus
+  are:
+  \begin{lstlisting}
+    x rem y = x - y * (x div y)
+    x mod y = x - y * floor(x/y)
+  \end{lstlisting}
+  Hence, {\tt -14 \keyw{rem} 3} equals {\tt -2} and {\tt -14
+    \keyw{mod} 3} equals {\tt 1}. One can view these results by
+  walking the real axis, starting at {\tt -14} and making jumps of
+  {\tt 3}. The remainder will be the last negative number one visits,
+  because the first argument corresponding to {\tt x} is negative,
+  while the modulus will be the first positive number one visit,
+  because the second argument corresponding to {\tt y} is positive.
+%  When the signs of the arguments change then the procedure for
+%  walking changes accordingly.
+

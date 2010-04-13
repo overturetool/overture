@@ -1,0 +1,40 @@
+\item[Semantics of Operators:] \mbox{}
+
+\begin{TypeSemantics}
+Membership & tests if {\tt e} is a member of the set {\tt s1} \\\hline
+
+Not membership & tests if {\tt e} is not a member of the set {\tt s1} \\\hline
+
+Union & yields the union of the sets {\tt s1} and {\tt s2}, i.e.\ the
+set containing all the elements of both {\tt s1} and {\tt s2}. \\ 
+\hline
+
+Intersection & yields the intersection of sets {\tt s1} and {\tt s2},
+i.e.\ the set containing the elements that are in both {\tt s1} and
+{\tt s2}. \\ \hline
+
+Difference & yields the set containing all the elements from {\tt s1}
+that are not in {\tt s2}. {\tt s2} need not be a subset of {\tt s1}. \\ \hline
+
+Subset & tests if {\tt s1} is a subset of {\tt s2}, i.e.\ whether all
+elements from {\tt s1} are also in {\tt s2}. Notice that any set is a
+subset of itself. \\ \hline
+
+Proper subset & tests if {\tt s1} is a proper subset of {\tt s2}, i.e.\ it is
+a subset and {\tt s2$\backslash$s1} is non-empty. \\ \hline
+
+Cardinality & yields the number of elements in {\tt s1}. \\ \hline
+
+Distributed union & the resulting set is the union of all the elements
+(these are sets themselves) of {\tt ss}, i.e.\ it contains all the
+elements of all the elements/sets of {\tt ss}. \\ \hline
+
+Distributes intersection & the resulting set is the intersection of
+all the elements (these are sets themselves) of, i.e.\ it contains
+the elements that are in all the elements/sets of {\tt ss}. {\tt ss}
+must be non-empty. \\ \hline
+
+Finite power set & yields the power set of {\tt s1}, i.e.\ the set of
+all subsets of {\tt s1}. \\ \hline
+\end{TypeSemantics}
+
