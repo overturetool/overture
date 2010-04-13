@@ -1,6 +1,5 @@
 package org.overture.ide.debug.ui.propertyPages;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +24,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.overture.ide.debug.core.IDebugConstants;
@@ -38,7 +36,7 @@ public class VdmBreakpointPropertyPage extends PropertyPage {
 	protected Button fHitCountButton;
 	protected Text fHitCountText;
 	protected Combo fSuspendPolicy;
-	protected List fErrorMessages= new ArrayList();
+	protected List<String> fErrorMessages= new ArrayList<String>();
 	
 	/**
 	 * Attribute used to indicate that a breakpoint should be deleted

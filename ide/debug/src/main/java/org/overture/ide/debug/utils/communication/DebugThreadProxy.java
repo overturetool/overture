@@ -2,7 +2,6 @@ package org.overture.ide.debug.utils.communication;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
@@ -15,7 +14,6 @@ import java.util.Vector;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IBreakpoint;
-import org.eclipse.debug.core.model.ILineBreakpoint;
 import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.model.VdmGroupValue;
 import org.overture.ide.debug.core.model.VdmLineBreakpoint;
@@ -73,7 +71,6 @@ public class DebugThreadProxy extends AsyncCaller
 	private boolean connected;
 	private IDebugThreadProxyCallback callback = null;
 	private Integer threadId;
-	private int xid = 0;
 	private Thread dbgpReaderThread;
 
 	public DebugThreadProxy(Socket socket, String sessionId, Integer threadId,
@@ -103,7 +100,8 @@ public class DebugThreadProxy extends AsyncCaller
 
 	public void resume()
 	{
-		write("run -i " + (++xid));
+		Integer ticket = getNextTicket();
+		write("run -i " + ticket);
 
 	}
 
@@ -140,7 +138,8 @@ public class DebugThreadProxy extends AsyncCaller
 
 	public void redirect(String command, DBGPRedirect option)
 	{
-		write(command + " -i " + (++xid) + " -c " + option.value);
+		Integer ticket = getNextTicket();
+		write(command + " -i " + ticket + " -c " + option.value);
 	}
 
 	public void start()
@@ -545,13 +544,13 @@ public class DebugThreadProxy extends AsyncCaller
 	public int breakpointAdd(int line, String path)
 	{
 				
-		
+		Integer ticket = getNextTicket();
 		String breakpoint_set = "breakpoint_set " + " -r 0" + " -t line"
-				+ " -s enabled" + " -n " + line + " -i " + (++xid) + " -f "
+				+ " -s enabled" + " -n " + line + " -i " + ticket + " -f "
 				+ path;
 		write(breakpoint_set);
 
-		return xid;
+		return ticket;
 	}
 
 	public VdmStackFrame[] getStack() throws SocketTimeoutException
@@ -606,12 +605,14 @@ public class DebugThreadProxy extends AsyncCaller
 
 	public void detach() throws IOException
 	{
-		write("detach -i " + (++xid));
+		Integer ticket = getNextTicket();
+		write("detach -i " + ticket);
 	}
 
 	public void allstop() throws IOException
 	{
-		write("stop -i " + (++xid));
+		Integer ticket = getNextTicket();
+		write("stop -i " + ticket);
 	}
 
 	public void runme() throws IOException
@@ -635,7 +636,8 @@ public class DebugThreadProxy extends AsyncCaller
 	}
 
 	public void breakpointRemove(VdmLineBreakpoint breakpoint) {
-		write("breakpoint_remove -i " + (++xid) + " -d " + ((VdmLineBreakpoint)breakpoint).getId());
+		Integer ticket = getNextTicket();
+		write("breakpoint_remove -i " + ticket + " -d " + ((VdmLineBreakpoint)breakpoint).getId());
 	}
 
 	public void shutdown() throws IOException
@@ -648,8 +650,9 @@ public class DebugThreadProxy extends AsyncCaller
 
 	public int breakpointAdd(IBreakpoint breakpoint) {
 		StringBuffer buf = new StringBuffer();
+		Integer ticket = getNextTicket();
 		buf.append("breakpoint_set ");
-		buf.append("-i " + (++xid));
+		buf.append("-i " + ticket);
 		//Boolean value indicating if this breakpoint is temporary. [optional, defaults to false]
 		buf.append(" -r 0 ");
 		//STATE	breakpoint state [optional, defaults to "enabled"]
@@ -668,20 +671,22 @@ public class DebugThreadProxy extends AsyncCaller
 				//he filename to which the breakpoint belongs [optional]
 				buf.append("-f " + path + " ");
 				
+				if(lineBreakpoint.getHitCount() > 0){
+					buf.append("-h " + lineBreakpoint.getHitCount() + " ");
+				}
+				
 				if(lineBreakpoint.isConditionEnabled()){
 					//breakpoint type
 					buf.append("-t conditional ");
 					String condition = lineBreakpoint.getCondition();
-					buf.append("-- " + condition + " ");
+					buf.append("-- base64(" + Base64.encode(condition.getBytes()) + ") ");
 				}
 				else{
 					//breakpoint type
 					buf.append("-t line ");
 				}
 				
-				if(lineBreakpoint.getHitCount() > 0){
-					buf.append("-h " + lineBreakpoint.getHitCount() + " ");
-				}
+				
 				
 			} catch (CoreException e) {
 				// TODO Auto-generated catch block
@@ -698,7 +703,7 @@ public class DebugThreadProxy extends AsyncCaller
 		}
 		write(buf.toString());
 
-		return xid;
+		return ticket;
 	}
 
 	// public void expr(String expression) throws IOException
