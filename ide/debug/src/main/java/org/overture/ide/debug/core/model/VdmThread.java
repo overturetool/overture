@@ -112,7 +112,7 @@ public class VdmThread extends VdmDebugElement implements IThread
 
 	public IStackFrame[] getStackFrames() throws DebugException
 	{
-		if (isSuspended() && !isMultiMain)
+		if (isSuspended())// && !isMultiMain)
 		{
 			try
 			{
@@ -143,7 +143,7 @@ public class VdmThread extends VdmDebugElement implements IThread
 
 	public IStackFrame getTopStackFrame() throws DebugException
 	{
-		if (isSuspended() && !isMultiMain)
+		if (isSuspended() )//&& !isMultiMain)
 		{
 			IStackFrame[] frames = getStackFrames();
 			if (frames.length > 0)
@@ -156,7 +156,7 @@ public class VdmThread extends VdmDebugElement implements IThread
 
 	public boolean hasStackFrames() throws DebugException
 	{
-		if (fTerminated || isMultiMain)
+		if (fTerminated )//|| isMultiMain)
 		{
 			return false;
 		}

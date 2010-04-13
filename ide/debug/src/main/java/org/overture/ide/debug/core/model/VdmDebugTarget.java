@@ -35,7 +35,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 {
 	private ILaunch fLaunch;
 	private IProcess fProcess;
-	private List<IThread> fThreads;
+	private List<VdmThread> fThreads;
 	private VdmThread fThread;
 	private boolean fTerminated = false;
 	private boolean fSuspended = false;
@@ -54,7 +54,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 		fTarget = this;
 		fLaunch = launch;
 
-		fThreads = new ArrayList<IThread>();
+		fThreads = new ArrayList<VdmThread>();
 
 		console = loggingConsole = new ConsoleWriter("Overture Debug");
 		console.clear();
@@ -188,10 +188,10 @@ shutdown();
 	{
 		fSuspended = false;
 		//Control of remune is only done on main thread
-		fThread.getProxy().resume();
-		// for (IThread thread : fThreads) {
-		// thread.resume();
-		// }
+		//fThread.getProxy().resume();
+		 for (VdmThread thread : fThreads) {
+		 thread.getProxy().resume();
+		 }
 		// fireResumeEvent(DebugEvent.RESUME);
 
 	}

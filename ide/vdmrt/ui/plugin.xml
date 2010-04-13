@@ -50,7 +50,7 @@
             category="org.overture.ide.ui.wizard"
             class="org.overture.ide.vdmrt.ui.wizard.VdmRtNewSystemWizard"
             finalPerspective="org.overture.ide.ui.perspective"
-            
+            icon="icons/obj16/system_obj.gif"
             id="org.overture.ide.vdmrt.ui.systemWizard"
             name="System"
             preferredPerspectives="org.overture.ide.ui.perspective"

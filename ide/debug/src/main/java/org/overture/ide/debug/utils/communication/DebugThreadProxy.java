@@ -679,7 +679,8 @@ public class DebugThreadProxy extends AsyncCaller
 					//breakpoint type
 					buf.append("-t conditional ");
 					String condition = lineBreakpoint.getCondition();
-					buf.append("-- base64(" + Base64.encode(condition.getBytes()) + ") ");
+					//buf.append("-- base64(" + Base64.encode(condition.getBytes()) + ") ");
+					buf.append("-- " + Base64.encode(condition.getBytes()) );
 				}
 				else{
 					//breakpoint type

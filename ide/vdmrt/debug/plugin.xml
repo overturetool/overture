@@ -43,7 +43,7 @@
 	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
 		<launchConfigurationTypeImage
 			configTypeID="org.overture.ide.vdmrt.debug.launchConfigurationType"
-			icon="icons/cview16/vdmrt_file_tsk.png" 
+			icon="icons/cview16/vdmrt_file_tsk.gif" 
 			id="org.overture.ide.debug.ui.launchConfigurationTypeImage">
 		</launchConfigurationTypeImage>
 	</extension>

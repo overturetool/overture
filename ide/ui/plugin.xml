@@ -283,20 +283,24 @@
             super="org.eclipse.ui.workbench.texteditor.error">
       </type>
    </extension>
+   
+   <!-- Wizards -->
    <extension
          point="org.eclipse.ui.newWizards">
+         <!-- Wizard categories -->
       <category
             id="org.overture.ide.ui.wizard"
             name="Overture">
       </category>
        <wizard
-            category="org.overture.ide.ui.wizard"
-            class="org.overture.ide.ui.wizard.VdmAddLibraryWizard"
-            finalPerspective="org.overture.ide.ui.perspective"
-            id="org.overture.ide.vdmpp.ui.addLibraryWizard"
-            name="Add VDM Library"
-            preferredPerspectives="org.overture.ide.ui.perspective"
-            project="false">
+             category="org.overture.ide.ui.wizard"
+             class="org.overture.ide.ui.wizard.VdmAddLibraryWizard"
+             finalPerspective="org.overture.ide.ui.perspective"
+             icon="icons/obj16/vdm_library_obj.gif"
+             id="org.overture.ide.vdmpp.ui.addLibraryWizard"
+             name="Add VDM Library"
+             preferredPerspectives="org.overture.ide.ui.perspective"
+             project="false">
       </wizard>
    </extension>
   
