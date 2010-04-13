@@ -361,7 +361,7 @@ int2string(i) ==
   else  int2stringR(i)
 measure Abs;
 
-Abs: int -> nat
+static Abs: int -> nat
 Abs(i) ==
   abs i;
 
