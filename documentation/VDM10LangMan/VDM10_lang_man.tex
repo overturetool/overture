@@ -7,6 +7,7 @@
 \usepackage{color}
 \usepackage{graphicx}
 \usepackage{latexsym}
+\usepackage{array}
 \usepackage{longtable} % ,multirow
 \usepackage{vdmsl-2e}
 \usepackage{makeidx}
@@ -28,13 +29,6 @@
 %\newcommand{\initexercise}{\setcounter{exerciseno}{0}}
 %\newcounter{exerciseno}
 \newcommand{\MYEQUIV}{$\equiv$}
-\newcommand{\RuleTarget}[1]{\hypertarget{rule:#1}{}}
-\newcommand{\Ruledef}[2]
-{
-  \RuleTarget{#1}\Rule{#1}{#2}%
-  }
-\newcommand{\Ruleref}[1]{
-  \hyperlink{rule:#1}{#1}}
 \newenvironment{TypeSemantics}{\begin{longtable}[r]{|p{3.5cm}|p{9cm}|}\hline%
   Operator Name & Semantics Description \\ \hline\hline \endhead}% 
   {\hline\end{longtable}}
@@ -167,6 +161,13 @@
     
   \end{tabbing}\end{quote}
   }
+\newcommand{\RuleTarget}[1]{\hypertarget{rule:#1}{}}
+\newcommand{\Ruledef}[2]
+{
+  \RuleTarget{#1}\Rule{#1}{#2}%
+  }
+\newcommand{\Ruleref}[1]{
+  \hyperlink{rule:#1}{#1}}
 \newcommand{\SeqPt}[1]{\{\ #1\ \}}
 \newcommand{\lfeed}{\\ \> \>}
 \newcommand{\dsepl}{\ $|$\ }
@@ -4979,7 +4980,7 @@ one by one. Each of them will be described by means of:
     }
 
   \Rule{let be statement}{
-    \Lop{let}, \Ruleref{bind}, \OptPt{\Lop{be}, \Lop{st}, \Ruleref{expression}},
+    \Lop{let}, \Ruleref{multiple bind}, \OptPt{\Lop{be}, \Lop{st}, \Ruleref{expression}},
     \Lop{in}, \lfeed
     \Ruleref{statement}
     }
@@ -9017,8 +9018,7 @@ same prefix will be skipped automatically.
 }
 
 \Rule{trace apply expression}{
-  \Ruleref{identifier}, \Lit{.}, \Ruleref{identifier}, 
-  \Lit{(}, \Ruleref{expression list}, \Lit{)}
+  \Ruleref{call statement}
 }
 
 \Rule{trace repeat pattern}{
@@ -9041,8 +9041,8 @@ same prefix will be skipped automatically.
 \Rule{trace binding}{
   \Lop{let}, \Ruleref{local definitions}, 
              \SeqPt{\Lit{,}, \Ruleref{local definition}}, \Lop{in} \dsep
-  \Lop{let}, \Ruleref{bind}, \Lop{in} \dsep
-  \Lop{let}, \Ruleref{bind}, \Lop{be}, \Lop{st}, \Ruleref{expression}, \Lop{in}
+  \Lop{let}, \Ruleref{multiple bind}, \Lop{in} \dsep
+  \Lop{let}, \Ruleref{multiple bind}, \Lop{be}, \Lop{st}, \Ruleref{expression}, \Lop{in}
 }
 
 \item[Semantics:] Semantically the trace definitions provided in a
@@ -10042,8 +10042,7 @@ In VDM++ and VDM-RT extended explicit function definition looks like:
 }
 
 \Ruledef{trace apply expression}{
-  \Ruleref{identifier}, \Lit{.}, \Ruleref{identifier}, 
-  \Lit{(}, \Ruleref{expression list}, \Lit{)}
+  \Ruleref{call statement}
 }
 
 \Ruledef{trace repeat pattern}{
@@ -10066,8 +10065,8 @@ In VDM++ and VDM-RT extended explicit function definition looks like:
 \Ruledef{trace binding}{
   \Lop{let}, \Ruleref{local definitions}, 
              \SeqPt{\Lit{,}, \Ruleref{local definition}}, \Lop{in} \dsep
-  \Lop{let}, \Ruleref{bind}, \Lop{in} \dsep
-  \Lop{let}, \Ruleref{bind}, \Lop{be}, \Lop{st}, \Ruleref{expression}, \Lop{in}
+  \Lop{let}, \Ruleref{multiple bind}, \Lop{in} \dsep
+  \Lop{let}, \Ruleref{multiple bind}, \Lop{be}, \Lop{st}, \Ruleref{expression}, \Lop{in}
 }
 
 \section{Expressions}
@@ -10140,7 +10139,7 @@ In VDM++ and VDM-RT extended explicit function definition looks like:
   }
 
 \Ruledef{let be expression}{
-  \Lop{let}, \Ruleref{bind},
+  \Lop{let}, \Ruleref{multiple bind},
   \OptPt{\Lop{be}, \Lop{st}, \Ruleref{expression}}, \Lop{in}, \lfeed
   \Ruleref{expression}
   }
@@ -10781,7 +10780,7 @@ In VDM++ and VDM-RT extended explicit function definition looks like:
   }
 
 \Ruledef{let be statement}{
-  \Lop{let}, \Ruleref{bind}, \OptPt{\Lop{be}, \Lop{st},
+  \Lop{let}, \Ruleref{multiple bind}, \OptPt{\Lop{be}, \Lop{st},
   \Ruleref{expression}}, \Lop{in}, \lfeed
   \Ruleref{statement}
   }
@@ -11124,82 +11123,52 @@ In VDM++ and VDM-RT a call statement looks like:
 
 \section{Characters}
 
-The character set is shown in Table~\ref{charSetTable}, with the forms of
-characters used in this document. Notice that this character set corresponds
-exactly to the ASCII (or ISO 646) syntax.
+The characters that comprise a valid VDM specification are defined in
+terms of Unicode codepoints. The actual character encoding of a VDM
+source file (for example UTF-8, ISO-Latin-1 or Shift-JIS) is not
+defined, and the tool support is responsible for converting whatever
+encoding is used into Unicode during the parse of the file. 
 
-In the VDM-SL\ standard a character is defined as:
+All VDM keywords and delimiter tokens are composed of characters from
+the Basic Latin block (``ASCII'' codepoints less than U+0080). On the
+other hand, user identifiers (variable names, function names and so
+on) can be composed of a rich variety of Unicode codepoints,
+reflecting the need for fully internationalized specifications. 
 
-\Ruledef{character}{
-  \hyperlink{charSetTable}{plain letter} \dsep
-  \hyperlink{charSetTable}{key word letter} \dsep
-  \hyperlink{charSetTable}{distinguished letter} \dsep
-  Greek letter \dsep
-  \hyperlink{charSetTable}{digit} \dsep
-  \hyperlink{charSetTable}{delimiter character} \dsep
-  \hyperlink{charSetTable}{other characters} \dsep
-  \Ruleref{separator}
-  }
+All Unicode codepoints have a ``category''. Certain categories are
+entirely excluded from the set of codepoints that are permitted in
+identifiers. This prevents, say, puntuation characters from being
+used. On the other hand, to provide a degree of compatibility with the
+original VDM ISO standard, and for backward compatibility, there are
+different rules for the formation of user identifiers that only use
+ASCII characters. For example, the underscore is permitted in
+identifiers (U+005F), even though this is in the connecting
+punctuation category, which would not normally be allowed. 
 
-The plain letters and the keyword letters are displayed in
-Table~\ref{charSetTable} (in a document the keyword letters simply use the
-corresponding small letters). The distinguished letters use the
-corresponding capital and lower-case
-letters where the whole quote literal is preceded by
-``{\tt <}'' and followed by ``{\tt >}'' (note that quote literals
-can also use underscores and digits). The Greek letters can also be used
-with a number sign ``{\tt \#}'' followed by the corresponding letter (this
-information is used by the \LaTeX\ pretty printer such that the Greek letters
-can be produced). All delimiter characters (in the ASCII version of the
-standard) are listed in Table~\ref{charSetTable}. In the standard a
-distinction between delimiter characters and compound delimiters are
-made.
-We have
-chosen not to use this distinction in this presentation. Please also notice
-that some of the delimiters in the mathematical syntax are keywords in the
-ASCII syntax which is used here.
+See \url{http://www.fileformat.info/info/unicode/category/index.htm} for
+more information about categories. 
 
 \begin{table}[ht]
 \setlength{\tabcolsep}{3.5mm}
 \setlength{\arraycolsep}{3.5mm}
 
 \rule{\textwidth}{.5mm}
-    {\tt
-    \begin{tabular}{*{13}{l}} 
-        % that's 13 italic columns
-        \multicolumn{13}{l}{\rm plain letter:} \\
-        a & b & c & d & e & f & g & h & i & j & k & l & m \\
-        n & o & p & q & r & s & t & u & v & w & x & y & z \\
-        A & B & C & D & E & F & G & H & I & J & K & L & M \\
-        N & O & P & Q & R & S & T & U & V & W & X & Y & Z
+        \begin{tabular}{lp{13cm}}
+        \multicolumn{2}{l}{\rm initial letter:} \\
+        if   & codepoint < U+0100 \\
+        then &  Any character in categories Ll, Lm, Lo, Lt, Lu or U+0024 (a dollar sign) \\
+        else & Any character except categories Cc, Zl, Zp, Zs, Cs,
+                Cn, Nd, Pc \\
     \end{tabular}
-    }
 
 \blankline
-    {\sf  
-    \begin{tabular}{*{13}{l}}
-        % that's 13 keyword columns
-        \multicolumn{13}{l}{\rm keyword letter:} \\
-        a & b & c & d & e & f & g & h & i & j & k & l & m \\
-        n & o & p & q & r & s & t & u & v & w & x & y & z
+\begin{tabular}{lp{13cm}}
+        \multicolumn{2}{l}{following letter: }\\
+        if   & codepoint < U+0100 \\
+        then & Any character in categories Ll, Lm, Lo, Lt, Lu, Nd or 
+               U+0024 (a dollar sign) or U+005F (underscore) or U+0027 (apostrophe) \\
+        else & Any character except categories Cc, Zl, Zp, Zs, Cs, Cn 
     \end{tabular}
-    }
-
-\blankline
-{\tt
-    \begin{tabular}{*{10}{l}}
-        % that's 10 math columns
-        \multicolumn{10}{l}{\mbox{{\rm delimiter character:}}} \\
-          ,         & :         & ;         & =         & (         &
-          )         & |         & -         & [         & ]         \\
-          \{        & \}        & +         & /         & <         &
-          >         & <=        & >=        & <>        &  .        \\
-          \verb+*+  & ->        & +>        & ==>       & ||        &
-          =>        &   <=>     & |->       & <:        & :>        \\
-          <-:       & :->       & \&        & ==        & **        & 
-          \verb+^+  & ++        &           &           &           \\
-    \end{tabular}
-}
 
 \blankline
     \begin{tabular}{*{10}{l}}
@@ -11237,33 +11206,13 @@ ASCII syntax which is used here.
         & {\tt 7} 
      \end{tabular}
 
-\blankline
-    \begin{tabular}{*{6}{l}}
-        \multicolumn{6}{l}{other characters:} \\
-        {\tt \_} 
-        & {\tt \char'140} % `
-        & {\tt \char'047} % '
-        & {\tt \char'042} % ''
-        & {\tt \char'100} % @
-        & {\tt \~{}}
-    \end{tabular}
-
-\blankline
-    \begin{tabular}{p{14cm}}   %{p{\textwidth}}
-        newline: \\
-        \\
-        white space: \\
-        \\
-        These have no graphic form, but are a combination of white space
-        and line break.  There are two separators: without line break
-        (white space) and with line break (newline).
-    \end{tabular}
-
 \rule{\textwidth}{.5mm}
 \hypertarget{charSetTable}{\caption{Character set}}
 \label{charSetTable}
 
 \end{table}
+
+        
 
 \clearpage % to force table to appear *here*
 
@@ -11446,18 +11395,14 @@ consecutive symbols must be separated by a separator.
 %#endif VDMPP
   }
 
-\Ruledef{separator}{
-  \hyperlink{charSetTable}{newline} \dsepl 
-  \hyperlink{charSetTable}{white space}
-  }
+%\Ruledef{separator}{
+%  \hyperlink{charSetTable}{newline} \dsepl 
+%  \hyperlink{charSetTable}{white space}
+%  }
 
 \Ruledef{identifier}{
-  \Brack{\hyperlink{charSetTable}{plain letter} \dsepl Greek letter}, \lfeed
-  \SeqPt{\Brack{\hyperlink{charSetTable}{plain letter} \dsepl Greek letter} \dsepl % \Ruleref{IS THIS RIGHT}??
-    \hyperlink{charSetTable}{digit}      \dsepl
-    \Lit{'}  \dsepl
-    \Lit{\_}
-    }
+  \Ruleref{initial letter}, 
+  \SeqPt{following letter}
   }
 
 \medskip
@@ -11468,10 +11413,6 @@ reserved and cannot be redefined by the user. These two predefined
 classes contain the functionality described in
 Section~\ref{sec:system} above.
 
-
-\noindent Note that the hyphen which can be used in identifiers is written
-as a low line (also known as an underscore ``\_''), whereas it is
-translated to ``-'' in the mathematical syntax.
 All identifiers beginning with one of the reserved prefixes are
 reserved: \keyw{init\_}, \keyw{inv\_}, \keyw{is\_}, \keyw{mk\_},
 \keyw{post\_} and \keyw{pre\_}.
@@ -11546,19 +11487,14 @@ reserved: \keyw{init\_}, \keyw{inv\_}, \keyw{is\_}, \keyw{mk\_},
   \Lit{\char'134\char'134} \dsepl \Lit{{\char'134}r} \dsepl
   \Lit{{\char'134}n} \dsepl \Lit{{\char'134}t} \dsepl
   \Lit{{\char'134}f} \dsepl \Lit{{\char'134}e} \dsepl \Lit{{\char'134}a} \dsep
-  \Lit{{\char'134}x} \hyperlink{charSetTable}{hexadecimal digit},\hyperlink{charSetTable}{hexadecimal digit} \dsepl
+  \Lit{{\char'134}x} \hyperlink{charSetTable}{hexadecimal
+    digit},\hyperlink{charSetTable}{hexadecimal digit}, \hyperlink{charSetTable}{hexadecimal digit},\hyperlink{charSetTable}{hexadecimal digit} \dsepl
+  \Lit{{\char'134}u} \hyperlink{charSetTable}{hexadecimal digit},\hyperlink{charSetTable}{hexadecimal digit} \dsepl
   \Lit{{\char'134}c} \Ruleref{character} \dsep
   \Lit{{\char'134}} \hyperlink{charSetTable}{octal digit}, \hyperlink{charSetTable}{octal digit}, \hyperlink{charSetTable}{octal digit} \dsep
   \Lit{{\char'134}"} \dsepl
   \Lit{{\char'134}'} \dsepl
   }
-
-\Ruledef{multi character}{Greek letter \dsep
-   \Lit{<=} \dsepl \Lit{>=} \dsepl \Lit{<>} \dsepl \Lit{->} \dsepl
-   \Lit{+>} \dsepl \Lit{==>} \dsepl \Lit{||} \dsep \Lit{=>} \dsepl
-   \Lit{<=>} \dsepl \Lit{|->} \dsepl \Lit{<:} \dsepl \Lit{:>} \dsepl
-   \Lit{<-:} \dsep \Lit{:->} \dsepl \Lit{==} \dsepl \Lit{**} \dsepl
-   \Lit{++}}  
 
 \Ruledef{text literal}{
   \Lit{\mbox{\,}"\mbox{\,}},
@@ -11590,26 +11526,30 @@ The escape sequences given above are to be interpreted as follows:
 \begin{center}
 \begin{tabular}{ll}\hline
 Sequence & Interpretation\\ \hline
-  \Lit{\char'134\char'134} & backslash character\\
-  \Lit{{\char'134}r}       & return character\\
-  \Lit{{\char'134}n}       & newline character\\
-  \Lit{{\char'134}t}       & tab character\\
-  \Lit{{\char'134}f}       & formfeed character\\
-  \Lit{{\char'134}e}       & escape character\\
-  \Lit{{\char'134}a}       & alarm (bell)\\
+  \Lit{\char'134\char'134} & U+005C (backslash character)\\
+  \Lit{{\char'134}r}       & U+000D (return character)\\
+  \Lit{{\char'134}n}       & U+000A (newline character)\\
+  \Lit{{\char'134}t}       & U+0009 (tab character)\\
+  \Lit{{\char'134}f}       & U+000C (formfeed character)\\
+  \Lit{{\char'134}e}       & U+001B (escape character)\\
+  \Lit{{\char'134}a}       & U+0007 (alarm (bell))\\
   \Lit{{\char'134}x} hexadecimal digit, hexadecimal digit
-                           & hex representation of character\\
-                           & (e.g. \texttt{{\char'134}x41} is `A')\\
+                           & U+00xy (hex representation of character\\
+                           & (e.g.\ \texttt{{\char'134}x41} is `A'))\\
+  \Lit{{\char'134}u} hexadecimal digit, hexadecimal digit,
+                           & U+abcd (hex representation of character\\
+hexadecimal digit, hexadecimal digit  & (e.g.\ \texttt{{\char'134}u0041} is `A'))\\
   \Lit{{\char'134}c} character 
-                           & control character\\
-                           & (e.g. \texttt{{\char'134}c A} $\equiv$ 
+                           & U+00nn (control character)\\
+                           & (e.g.\ \texttt{{\char'134}c A} $\equiv$ 
                                     \texttt{{\char'134}x01})\\
   \Lit{{\char'134}} octal digit, octal digit, octal digit 
-                           & octal representation of character\\
-  \Lit{{\char'134}{\char'042}}       & the \texttt{{\char'042}} character\\
-  \Lit{{\char'134}'}       & the \verb+'+ character \\ \hline
+                           & U+00nn (octal representation of character)\\
+  \Lit{{\char'134}{\char'042}}       & U+0022 (double quote)\\
+  \Lit{{\char'134}'}       & U+0027 (apostrophe) \\ \hline
 \end{tabular}
 \end{center}
+
 
 \chapter{Operator Precedence}\label{app-c}
 
