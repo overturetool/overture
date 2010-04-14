@@ -1870,9 +1870,11 @@ In the VDM languages we can define first order and higher order
 functions. A higher order function is either a Curried function
 (a function that returns a function as result), or a function that takes
 functions as arguments. Furthermore, both first order and higher order
-functions can be polymorphic. In VDM++ and VDM-RT access modifiers
-including {\bf\ttfamily static} can
-be used. In general, the syntax for the definition of a
+functions can be polymorphic. In VDM++ and VDM-RT functions are
+automatically available in a static form (i.e.\ without having an
+instance of the defining class). Thus there is no need to use the
+{\bf\ttfamily static} keyword that can be used for operations in VDM++
+and VDM-RT. . In general, the syntax for the definition of a
 function is:
 
 \Rule{function definitions}{
@@ -1885,7 +1887,7 @@ function is:
   }
 
 \Rule{access function definition}{
-    (\OptPt{\Ruleref{access}}, \OptPt{\Lop{static}})  \dsepl\  (\OptPt{\Lop{static}}, \OptPt{\Ruleref{access}}), \lfeed
+    \OptPt{\Ruleref{access}}, 
       \Ruleref{function definition}
   }
 
@@ -1983,12 +1985,6 @@ during development of a model; whereas the \keyw{is subclass
   responsibility} indicates that implementation of this body must be
 undertaken by any subclasses so that can only be used in VDM++ and
 VDM-RT.
-
-Details of the access and \keyw{static} (can only be used in VDM++ and
-VDM-RT) specifiers can be found in
-section \ref{ch:interface}. Note that a static function may not call
-non-static operations or functions, and self expressions cannot be
-used in the definition of a static function.
 
 A simple example of an explicit function definition is the function
 \texttt{map\_inter} which takes two compatible maps over natural
@@ -2430,7 +2426,7 @@ inside operations.
 
   \Rule{unary operator}{
     \Lit{+} \dsepl \Lit{-} \dsepl \Lop{abs} \dsepl
-    \Lop{floor} \dsepl \Lop{not} \dsep
+    \Lop{floor} \dsepl \Lop{not} \dsepl \Lop{reverse} \dsep
     \Lop{card} \dsepl \Lop{power} \dsepl \Lop{dunion} \dsepl
     \Lop{dinter} \dsep
     \Lop{hd} \dsepl \Lop{tl} \dsepl \Lop{len} \dsepl \Lop{elems} \dsepl
@@ -5489,7 +5485,7 @@ invariant is preserved.
 
   \Rule{sequence for loop}{
     \Lop{for}, \Ruleref{pattern bind}, \Lop{in}, 
-    \OptPt{\Lop{reverse}}, \Ruleref{expression}, \lfeed
+    \Ruleref{expression}, \lfeed
     \Lop{do}, \Ruleref{statement}
     }\index{for loop}
 
@@ -5543,9 +5539,7 @@ invariant is preserved.
   \end{lstlisting}
   where {\tt l} is a sequence expression. The statement {\tt s} is
   evaluated in the current environment extended with a binding of e to
-  subsequent values from the sequence {\tt l}. If the keyword
-  \keyw{reverse} is used the elements of the sequence {\tt l} will be
-  taken in reverse order.
+  subsequent values from the sequence {\tt l}. 
 
 \item[Examples:] The operation \texttt{Remove} demonstrates the use of a 
   \textit{sequence-for} loop to remove all occurences of a given number from a 
@@ -9687,7 +9681,7 @@ The access part is only possible in VDM++ and VDM-RT.
 
 %\ifthenelse{\boolean{VDMpp}}{
   \Rule{access function definition}{
-    (\OptPt{\Ruleref{access}}, \OptPt{\Lop{static}})  \dsepl\  (\OptPt{\Lop{static}}, \OptPt{\Ruleref{access}}), \lfeed
+    \OptPt{\Ruleref{access}},
       \Ruleref{function definition}
   }
 %}{}
@@ -10210,6 +10204,7 @@ In VDM++ and VDM-RT extended explicit function definition looks like:
   \Ruleref{sequence length} \dsep
   \Ruleref{sequence elements} \dsep
   \Ruleref{sequence indices} \dsep
+  \Ruleref{sequence reverse} \dsep
   \Ruleref{distributed sequence concatenation} \dsep
   \Ruleref{map domain} \dsep
   \Ruleref{map range} \dsep
@@ -10270,6 +10265,10 @@ In VDM++ and VDM-RT extended explicit function definition looks like:
 
 \Ruledef{sequence indices}{
   \Lop{inds}
+  }
+
+\Ruledef{sequence reverse}{
+  \Lop{reverse}
   }
 
 \Ruledef{distributed sequence concatenation}{
@@ -10878,7 +10877,7 @@ In VDM++ and VDM-RT extended explicit function definition looks like:
 
 \Ruledef{sequence for loop}{
   \Lop{for}, \Ruleref{pattern bind}, \Lop{in},
-  \OptPt{\Lop{reverse}}, \lfeed
+  \lfeed
   \Ruleref{expression}, \Lop{do}, \Ruleref{statement}
   }
 
