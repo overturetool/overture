@@ -974,6 +974,7 @@ predicate and {\tt e} is an arbitrary expression.
     {\tt \keyw{elems} l} & Elements & \TO{\SEQ{A}}{\SET{A}} \\
     {\tt \keyw{inds} l} & Indexes & \TO{\SEQ{A}}{\SET{\keyw{nat1}}} \\
     {\tt l1 \char'136\ l2} & Concatenation & \TO{\PROD{(\SEQ{A})}{(\SEQ{A})}}{\SEQ{A}} \\
+    {\tt \keyw{reverse} l} & Reverse & \TO{\SEQ{A}}{\SEQ{A}}\\
     {\tt \keyw{conc} ll} & Distributed concatenation & \TO{\SEQ{\SEQ{A}}}{\SEQ{A}}\\
     {\tt l ++ m} & Sequence modification & \TO{\PROD{\SEQ{A}}{\MAP{\keyw{nat1}}{A}}}{\SEQ{A}}\\
     {\tt l(i)} & Sequence application & \TO{\PROD{\SEQ{A}}{\keyw{nat1}}}{A} \\
@@ -985,6 +986,7 @@ predicate and {\tt e} is an arbitrary expression.
 \index{\keyw{len}}\index{Length}\index{\keyw{elems}}\index{Elements}%
 \index{\keyw{inds}}\index{Indexes}\index{\texttt{\char'136}}\index{Concatenation}%
 \index{\keyw{conc}}\index{Distributed concatenation}%
+\index{\keyw{reverse}}\index{Reverse sequence}%
 \index{\texttt{++}!sequence modification}\index{Sequence modification}%
 \index{\texttt{()}!sequence apply}\index{Sequence application}%
 \index{\texttt{=}!sequence equality}\index{Equality!sequence type}\index{\texttt{<>}!sequence inequality}\index{Inequality!sequence type}%
@@ -1010,6 +1012,7 @@ predicate and {\tt e} is an arbitrary expression.
       \texttt{[1,4,1,5,9,2,2,7,1,8]}\\
     \texttt{l3(\keyw{len} l3)}    & $\equiv$ & \texttt{<Tunisia>}\\
     \texttt{"England"(2)}       & $\equiv$ & \texttt{'n'}\\
+    \texttt{\keyw{reverse} l1}  & $\equiv$ & \texttt{[2,9,5,1,4,1,3]} \\
     \texttt{\keyw{conc} [l1,l2] = l1\char'136 l2} 
                                   & $\equiv$ & \keyw{true}\\
     \texttt{\keyw{conc} [l1,l1,l2] = l1\char'136 l2} 
