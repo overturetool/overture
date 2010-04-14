@@ -11,54 +11,48 @@ import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 
-public abstract class VdmjBuilder  extends AbstractVdmBuilder
-{
+public abstract class VdmjBuilder extends AbstractVdmBuilder {
 	private List<VDMError> errors = new ArrayList<VDMError>();
 	private List<VDMWarning> warnings = new ArrayList<VDMWarning>();
-	protected IStatus buildModel(IProject project)
-	{	
-		
+
+	protected IStatus buildModel(IProject project) {
+
 		ExitStatus typeCheckStatus = null;
-		
+
 		typeCheckStatus = typeCheck();
-		if (typeCheckStatus == ExitStatus.EXIT_ERRORS)
-		{
-			for (VDMError error : errors)
-			{
-				addErrorMarker( error);
+		if (typeCheckStatus == ExitStatus.EXIT_ERRORS) {
+			for (VDMError error : errors) {
+				addErrorMarker(error);
 			}
 		}
-		if(!getProject().hasSuppressWarnings())
-		for (VDMWarning warning : warnings)
-		{
-			addWarningMarker(project,warning);
-		}
+		if (!getProject().hasSuppressWarnings())
+			for (VDMWarning warning : warnings) {
+				addWarningMarker(project, warning);
+			}
+		IStatus typeChecked = null;
 
 		if (typeCheckStatus == ExitStatus.EXIT_ERRORS) {
-			IStatus typeChecked = new Status(IStatus.ERROR,
-					IBuilderVdmjConstants.PLUGIN_ID, 0, "not typechecked",
-					null);
-			return typeChecked;
-		} 
-		else {
+			typeChecked = new Status(IStatus.ERROR,
+					IBuilderVdmjConstants.PLUGIN_ID, 0, "not typechecked", null);
 
-			IStatus typeChecked = new Status(IStatus.OK,
-					IBuilderVdmjConstants.PLUGIN_ID, 0, "Type Checked",
-					null);
-			return typeChecked;
+		} else {
+
+			typeChecked = new Status(IStatus.OK,
+					IBuilderVdmjConstants.PLUGIN_ID, 0, "Type Checked", null);
+
 		}
-		
+		return typeChecked;
+
 	}
 
-	private void addErrorMarker(VDMError error)
-	{
-		addErrorMarker(error.location.file, error.message, error.location, IBuilderVdmjConstants.PLUGIN_ID);
+	private void addErrorMarker(VDMError error) {
+		addErrorMarker(error.location.file, error.message, error.location,
+				IBuilderVdmjConstants.PLUGIN_ID);
 	}
 
-
-	private void addWarningMarker(IProject project,VDMWarning error)
-	{
-		addWarningMarker(error.location.file, error.message, error.location, IBuilderVdmjConstants.PLUGIN_ID);
+	private void addWarningMarker(IProject project, VDMWarning error) {
+		addWarningMarker(error.location.file, error.message, error.location,
+				IBuilderVdmjConstants.PLUGIN_ID);
 	}
 
 	/**
@@ -80,7 +74,7 @@ public abstract class VdmjBuilder  extends AbstractVdmBuilder
 	protected void processWarnings(List<VDMWarning> warnings) {
 		this.warnings.addAll(warnings);
 	};
-	
+
 	protected void processInternalError(Throwable e) {
 		e.printStackTrace();
 		System.out.println(e.toString());

@@ -24,7 +24,7 @@ public interface IVdmModel extends IVdmElement{
 
 	public abstract void setChecked(boolean checked);
 
-	public abstract boolean isChecked();
+	public abstract boolean isTypeCorrect();
 
 	/***
 	 * Updates the local list with a new Definition if it already exists the old

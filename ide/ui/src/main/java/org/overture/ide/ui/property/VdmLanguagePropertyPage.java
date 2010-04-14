@@ -22,6 +22,7 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.VdmProject;
+import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overturetool.vdmj.Release;
 
 @SuppressWarnings("restriction")
@@ -194,7 +195,8 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 			project.setPrechecks(checkBoxUsePreChecks.getSelection());
 			project.setSuppressWarnings(checkBoxSuppressWarnings.getSelection());
 
-			project.typeCheck();
+			//project.typeCheck();
+			VdmTypeCheckerUi.typeCheck(getShell(), project);
 		} catch (CoreException e)
 		{
 			// TODO Auto-generated catch block

@@ -6,11 +6,13 @@ import java.util.Vector;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
+import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.VdmProject;
@@ -39,7 +41,8 @@ public class VdmBuilder extends VdmCoreBuilder
 			buildingProjects.remove(project);
 	}
 
-	public VdmBuilder() {
+	public VdmBuilder()
+	{
 
 	}
 
@@ -47,11 +50,11 @@ public class VdmBuilder extends VdmCoreBuilder
 	public void fullBuild(final IProgressMonitor monitor) throws CoreException
 	{
 		if (VdmCore.DEBUG)
+		{
 			System.out.println("buildModelElements");
-
-		if (!VdmProject.isVdmProject(getProject()))
-			if (VdmCore.DEBUG)
-				System.err.println("Project is now VDM: " + getProject());
+		}
+		Assert.isTrue(!VdmProject.isVdmProject(getProject()), "Project is not VDM: "
+				+ getProject());
 
 		final IVdmProject currentProject = VdmProject.createProject(getProject());
 
@@ -60,12 +63,14 @@ public class VdmBuilder extends VdmCoreBuilder
 			monitor.subTask("Waiting for other build: "
 					+ currentProject.getName());
 			while (isBuilding(currentProject))
+			{
 				try
 				{
 					Thread.sleep(1000);
 				} catch (InterruptedException e)
 				{
 				}
+			}
 			monitor.done();
 			// return new Status(IStatus.INFO,
 			// BUILDER_ID,
@@ -77,13 +82,12 @@ public class VdmBuilder extends VdmCoreBuilder
 
 		final List<IStatus> statusList = new Vector<IStatus>();
 
-		final SafeBuilder builder = new SafeBuilder(currentProject,
-				statusList,
-				monitor);
+		final SafeBuilder builder = new SafeBuilder(currentProject, statusList, monitor);
 
 		builder.start();
 
-		ISafeRunnable runnable = new ISafeRunnable() {
+		ISafeRunnable runnable = new ISafeRunnable()
+		{
 
 			public void handleException(Throwable exception)
 			{
@@ -98,7 +102,9 @@ public class VdmBuilder extends VdmCoreBuilder
 				{
 					Thread.sleep(500);
 					if (monitor.isCanceled())
+					{
 						builder.stop();
+					}
 				}
 			}
 
@@ -119,40 +125,38 @@ public class VdmBuilder extends VdmCoreBuilder
 		// return new Status(IStatus.WARNING,
 		// VdmBuilderCorePluginConstants.PLUGIN_ID,
 		// "No builder returned any result");
-removeBuilding(currentProject);
+		removeBuilding(currentProject);
 	}
 
 	public void clean(IProgressMonitor monitor)
 	{
 		if (VdmCore.DEBUG)
+		{
 			System.out.println("clean");
-		monitor.beginTask("Cleaning project: " + getProject().getName(),
-				IProgressMonitor.UNKNOWN);
+		}
+		monitor.beginTask("Cleaning project: " + getProject().getName(), IProgressMonitor.UNKNOWN);
 		// AstManager.instance().clean(project.getProject());
 		if (VdmProject.isVdmProject(getProject()))
 		{
 			clearProblemMarkers();
 
-			VdmModelManager.getInstance().clean(VdmProject.createProject(getProject()));// IMPORTANT we do not
-			// have an
-			// incremental
-			// builder so a full
-			// parse/ build is
-			// required,
-			// therefore remove
-			// any AST nodes in
-			// store.
+			// IMPORTANT we do not have an incremental builder so a full parse/ build is required, therefore remove any
+			// AST nodes in store.
+			IVdmModel model = VdmProject.createProject(getProject()).getModel();
+			if (model != null)
+			{
+				model.clean();
+			}
+
 			try
 			{
 				IResource res = getProject().findMember("generated");
 
-				ResourcesPlugin.getWorkspace().delete(new IResource[] { res },
-						true,
-						monitor);
+				ResourcesPlugin.getWorkspace().delete(new IResource[] { res }, true, monitor);
 
 			} catch (Exception e)
 			{
-				// we can do any thing about it
+				// we can't do any thing about it
 			}
 		}
 		monitor.done();
@@ -162,14 +166,18 @@ removeBuilding(currentProject);
 	public void endBuild(IProgressMonitor monitor)
 	{
 		if (VdmCore.DEBUG)
+		{
 			System.out.println("endBuild");
+		}
 		removeBuilding(getProject());
 	}
 
 	public void initialize()
 	{
 		if (VdmCore.DEBUG)
+		{
 			System.out.println("initialize");
+		}
 
 		syncProjectResources();
 

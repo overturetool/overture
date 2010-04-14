@@ -106,7 +106,7 @@
    <extension
          point="org.eclipse.ui.propertyPages">
       <page
-            class="org.overture.ide.debug.ui.propertyPages.VdmLineBreakpointPropertyPage"
+            class="org.overture.ide.debug.ui.propertypages.VdmLineBreakpointPropertyPage"
             id="org.overture.ide.debug.vdmLineBreakpointPropertyPage"
             name="Breakpoint properties"
             objectClass="org.overture.ide.debug.core.model.VdmLineBreakpoint">

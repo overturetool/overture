@@ -68,7 +68,7 @@ public interface IVdmProject extends IProject
 	public abstract void setSuppressWarnings(Boolean value)
 			throws CoreException;
 	
-	public abstract void typeCheck() throws CoreException;
+	public abstract boolean typeCheck(IProgressMonitor monitor) throws CoreException;
 	public abstract void typeCheck(boolean clean,IProgressMonitor monitor) throws CoreException;
 
 	public abstract String getProjectName();

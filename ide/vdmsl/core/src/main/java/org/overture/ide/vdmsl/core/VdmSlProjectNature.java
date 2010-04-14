@@ -1,13 +1,11 @@
 package org.overture.ide.vdmsl.core;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
+import org.overture.ide.core.resources.VdmProjectNature;
 
-public class VdmSlProjectNature implements IProjectNature
+public class VdmSlProjectNature extends VdmProjectNature
 {
-	public static final String VDM_SL_NATURE = IVdmSlCoreConstants.PLUGIN_ID
-	+ ".nature";
+	public static final String VDM_SL_NATURE = IVdmSlCoreConstants.NATURE;
 	public void configure() throws CoreException
 	{
 		// TODO Auto-generated method stub
@@ -20,16 +18,6 @@ public class VdmSlProjectNature implements IProjectNature
 
 	}
 
-	public IProject getProject()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void setProject(IProject project)
-	{
-		// TODO Auto-generated method stub
-
-	}
+	
 
 }

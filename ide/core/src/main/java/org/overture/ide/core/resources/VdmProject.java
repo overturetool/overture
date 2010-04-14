@@ -24,13 +24,18 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.SafeRunner;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.Job;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.ast.NotAllowedException;
+import org.overture.ide.core.builder.SafeBuilder;
 import org.overture.ide.core.utility.ILanguage;
 import org.overture.ide.core.utility.LanguageManager;
 import org.overture.ide.core.utility.Project;
@@ -46,14 +51,15 @@ public class VdmProject extends Project implements IVdmProject
 	private static final String POST_CHECKS_ARGUMENT_KEY = "POST_CHECKS";
 	private static final String PRE_CHECKS_ARGUMENT_KEY = "PRE_CHECKS";
 	private static final String SUPRESS_WARNINGS_ARGUMENT_KEY = "SUPPRESS_WARNINGS";
-	
+
 	static Map<String, IVdmProject> projects = new Hashtable<String, IVdmProject>();
 	static Map<IFile, IVdmSourceUnit> vdmSourceUnits = new Hashtable<IFile, IVdmSourceUnit>();
 
 	private ILanguage language = null;
 
 	private VdmProject(IProject project) throws CoreException,
-			NotAllowedException {
+			NotAllowedException
+	{
 		super(project);
 		for (ILanguage language : LanguageManager.getInstance().getLanguages())
 		{
@@ -71,8 +77,7 @@ public class VdmProject extends Project implements IVdmProject
 	{
 		try
 		{
-			for (ILanguage language : LanguageManager.getInstance()
-					.getLanguages())
+			for (ILanguage language : LanguageManager.getInstance().getLanguages())
 			{
 
 				if (project.hasNature(language.getNature()))
@@ -88,8 +93,6 @@ public class VdmProject extends Project implements IVdmProject
 		return false;
 	}
 
-	
-
 	public synchronized static IVdmProject createProject(IProject project)
 	{
 		if (projects.containsKey(project.getName()))
@@ -101,14 +104,14 @@ public class VdmProject extends Project implements IVdmProject
 				IVdmProject vdmProject = new VdmProject(project);
 				projects.put(vdmProject.getName(), vdmProject);
 				VdmModelManager.getInstance().createModel(vdmProject);
-				System.out.println("Creating project: "+ project.getName());
+				System.out.println("Creating project: " + project.getName());
 				vdmProject.getSpecFiles();
-//				for (IVdmSourceUnit unit : )
-//				{
-//					System.out.println("Adding file: "+ unit + " to "+project.getName());
-//					model.addVdmSourceUnit(unit);
-//					
-//				}
+				// for (IVdmSourceUnit unit : )
+				// {
+				// System.out.println("Adding file: "+ unit + " to "+project.getName());
+				// model.addVdmSourceUnit(unit);
+				//					
+				// }
 				return vdmProject;
 			} catch (CoreException e)
 			{
@@ -183,30 +186,23 @@ public class VdmProject extends Project implements IVdmProject
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.utility.IVdmProject#setBuilder(org.overturetool.vdmj .Release)
 	 */
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.utility.IVdmProject1#setBuilder(org.overturetool.vdmj .Release)
 	 */
 	public void setBuilder(Release languageVersion) throws CoreException
 	{
-		addBuilder(getProject(),
-				ICoreConstants.BUILDER_ID,
-				LANGUAGE_VERSION_ARGUMENT_KEY,
-				languageVersion.toString());
+		addBuilder(getProject(), ICoreConstants.BUILDER_ID, LANGUAGE_VERSION_ARGUMENT_KEY, languageVersion.toString());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.utility.IVdmProject#hasBuilder()
 	 */
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.utility.IVdmProject1#hasBuilder()
 	 */
 	public boolean hasBuilder() throws CoreException
@@ -224,12 +220,10 @@ public class VdmProject extends Project implements IVdmProject
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.utility.IVdmProject#getLanguageVersion()
 	 */
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.utility.IVdmProject1#getLanguageVersion()
 	 */
 	public Release getLanguageVersion() throws CoreException
@@ -254,7 +248,6 @@ public class VdmProject extends Project implements IVdmProject
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.utility.IVdmProject1#hasDynamictypechecks()
 	 */
 	public boolean hasDynamictypechecks()
@@ -264,7 +257,6 @@ public class VdmProject extends Project implements IVdmProject
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.utility.IVdmProject1#hasInvchecks()
 	 */
 	public boolean hasInvchecks()
@@ -274,7 +266,6 @@ public class VdmProject extends Project implements IVdmProject
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.utility.IVdmProject1#hasPostchecks()
 	 */
 	public boolean hasPostchecks()
@@ -284,7 +275,6 @@ public class VdmProject extends Project implements IVdmProject
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.utility.IVdmProject1#hasPrechecks()
 	 */
 	public boolean hasPrechecks()
@@ -294,7 +284,6 @@ public class VdmProject extends Project implements IVdmProject
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.utility.IVdmProject1#hasSuppressWarnings()
 	 */
 	public boolean hasSuppressWarnings()
@@ -304,67 +293,47 @@ public class VdmProject extends Project implements IVdmProject
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.utility.IVdmProject1#setDynamictypechecks(java.lang. Boolean)
 	 */
 	public void setDynamictypechecks(Boolean value) throws CoreException
 	{
-		addBuilder(getProject(),
-				ICoreConstants.BUILDER_ID,
-				DYNAMIC_TYPE_CHECKS_ARGUMENT_KEY,
-				value.toString());
+		addBuilder(getProject(), ICoreConstants.BUILDER_ID, DYNAMIC_TYPE_CHECKS_ARGUMENT_KEY, value.toString());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.utility.IVdmProject1#setInvchecks(java.lang.Boolean)
 	 */
 	public void setInvchecks(Boolean value) throws CoreException
 	{
-		addBuilder(getProject(),
-				ICoreConstants.BUILDER_ID,
-				INV_CHECKS_ARGUMENT_KEY,
-				value.toString());
+		addBuilder(getProject(), ICoreConstants.BUILDER_ID, INV_CHECKS_ARGUMENT_KEY, value.toString());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.utility.IVdmProject1#setPostchecks(java.lang.Boolean)
 	 */
 	public void setPostchecks(Boolean value) throws CoreException
 	{
-		addBuilder(getProject(),
-				ICoreConstants.BUILDER_ID,
-				POST_CHECKS_ARGUMENT_KEY,
-				value.toString());
+		addBuilder(getProject(), ICoreConstants.BUILDER_ID, POST_CHECKS_ARGUMENT_KEY, value.toString());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.utility.IVdmProject1#setPrechecks(java.lang.Boolean)
 	 */
 	public void setPrechecks(Boolean value) throws CoreException
 	{
-		addBuilder(getProject(),
-				ICoreConstants.BUILDER_ID,
-				PRE_CHECKS_ARGUMENT_KEY,
-				value.toString());
+		addBuilder(getProject(), ICoreConstants.BUILDER_ID, PRE_CHECKS_ARGUMENT_KEY, value.toString());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.utility.IVdmProject1#setSuppressWarnings(java.lang.Boolean )
 	 */
 	public void setSuppressWarnings(Boolean value) throws CoreException
 	{
-		addBuilder(getProject(),
-				ICoreConstants.BUILDER_ID,
-				SUPRESS_WARNINGS_ARGUMENT_KEY,
-				value.toString());
+		addBuilder(getProject(), ICoreConstants.BUILDER_ID, SUPRESS_WARNINGS_ARGUMENT_KEY, value.toString());
 	}
 
 	private boolean hasArgument(String argumentKey, boolean defaultValue)
@@ -388,9 +357,7 @@ public class VdmProject extends Project implements IVdmProject
 	private Object getBuilderArguemnt(String argumentKey) throws CoreException
 	{
 		if (hasBuilder())
-			return getBuilderArgument(project,
-					ICoreConstants.BUILDER_ID,
-					argumentKey);
+			return getBuilderArgument(project, ICoreConstants.BUILDER_ID, argumentKey);
 
 		return null;
 	}
@@ -407,8 +374,7 @@ public class VdmProject extends Project implements IVdmProject
 			{
 				if (command.getArguments().containsKey(argumentKey))
 				{
-					Object argumentValue = command.getArguments()
-							.get(argumentKey);
+					Object argumentValue = command.getArguments().get(argumentKey);
 					if (argumentValue != null)
 						return argumentValue;
 				}
@@ -419,8 +385,8 @@ public class VdmProject extends Project implements IVdmProject
 	}
 
 	/**
-	 * For this marvelous project we need to: - create the default Eclipse project - add the custom project
-	 * nature - create the folder structure
+	 * For this marvelous project we need to: - create the default Eclipse project - add the custom project nature -
+	 * create the folder structure
 	 * 
 	 * @param projectName
 	 * @param location
@@ -460,21 +426,15 @@ public class VdmProject extends Project implements IVdmProject
 	private static IProject createBaseProject(String projectName, URI location)
 	{
 		// it is acceptable to use the ResourcesPlugin class
-		IProject newProject = ResourcesPlugin.getWorkspace()
-				.getRoot()
-				.getProject(projectName);
+		IProject newProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 
 		if (!newProject.exists())
 		{
 			URI projectLocation = location;
-			IProjectDescription desc = newProject.getWorkspace()
-					.newProjectDescription(newProject.getName());
+			IProjectDescription desc = newProject.getWorkspace().newProjectDescription(newProject.getName());
 
 			if (location != null
-					|| ResourcesPlugin.getWorkspace()
-							.getRoot()
-							.getLocationURI()
-							.equals(location))
+					|| ResourcesPlugin.getWorkspace().getRoot().getLocationURI().equals(location))
 			{
 				projectLocation = null;
 			}
@@ -513,9 +473,50 @@ public class VdmProject extends Project implements IVdmProject
 		}
 	}
 
-	public void typeCheck() throws CoreException
+	public boolean typeCheck(IProgressMonitor monitor) throws CoreException
 	{
-		getProject().build(IncrementalProjectBuilder.FULL_BUILD, null);
+
+		// getProject().build(IncrementalProjectBuilder.FULL_BUILD, null);
+		IVdmModel model = getModel();
+		if (model.isTypeCorrect())
+		{
+			return true; // no need to do any work
+		} else
+		{
+			final IVdmProject currentProject = this;
+
+			final IProgressMonitor mon = monitor;
+			ISafeRunnable runnable = new ISafeRunnable()
+			{
+
+				public void handleException(Throwable exception)
+				{
+					exception.printStackTrace();
+				}
+
+				@SuppressWarnings("deprecation")
+				public void run() throws Exception
+				{
+					final List<IStatus> statusList = new Vector<IStatus>();
+
+					final SafeBuilder builder = new SafeBuilder(currentProject, statusList, mon);
+					builder.start();
+					while (builder.isAlive())
+					{
+						Thread.sleep(100);
+						if (mon.isCanceled())
+						{
+							builder.stop();
+						}
+					}
+					
+				}
+
+			};
+			SafeRunner.run(runnable);
+
+			return model.isTypeCorrect();
+		}
 	}
 
 	public void typeCheck(boolean clean, IProgressMonitor monitor)
@@ -555,8 +556,8 @@ public class VdmProject extends Project implements IVdmProject
 	}
 
 	/***
-	 * This method removed all problem markers and its sub-types from the project. It is called before an
-	 * instance of the AbstractBuilder is created
+	 * This method removed all problem markers and its sub-types from the project. It is called before an instance of
+	 * the AbstractBuilder is created
 	 * 
 	 * @param project
 	 *            The project which should be build.
@@ -580,26 +581,19 @@ public class VdmProject extends Project implements IVdmProject
 
 	public File getFile(IFile file)
 	{
-		Path path = new Path(file.getProject()
-				.getFullPath()
-				.addTrailingSeparator()
-				.toString()
+		Path path = new Path(file.getProject().getFullPath().addTrailingSeparator().toString()
 				+ file.getProjectRelativePath().toString());
 		return getSystemFile(path);
 	}
 
 	public File getSystemFile(IPath path)
 	{
-		return project.getFile(path.removeFirstSegments(1))
-				.getLocation()
-				.toFile();
+		return project.getFile(path.removeFirstSegments(1)).getLocation().toFile();
 	}
 
 	public File getFile(IWorkspaceRoot wroot, IPath path)
 	{
-		return wroot.getFile(path.removeFirstSegments(1))
-				.getLocation()
-				.toFile();
+		return wroot.getFile(path.removeFirstSegments(1)).getLocation().toFile();
 	}
 
 	/***
@@ -659,8 +653,7 @@ public class VdmProject extends Project implements IVdmProject
 	 * @param resource
 	 *            the resource currently selected to be searched
 	 * @param contentTypeId
-	 *            a possibly null content type id, if null it is just checked that a content type exist for
-	 *            the file
+	 *            a possibly null content type id, if null it is just checked that a content type exist for the file
 	 * @return a list of IFiles
 	 * @throws CoreException
 	 */
@@ -686,8 +679,7 @@ public class VdmProject extends Project implements IVdmProject
 		// this file and the project
 		else if (resource instanceof IFile)
 		{
-			IContentType contentType = project.getContentTypeMatcher()
-					.findContentTypeFor(resource.toString());
+			IContentType contentType = project.getContentTypeMatcher().findContentTypeFor(resource.toString());
 
 			if (contentType != null
 					&& ((contentTypeId != null && contentTypeId.equals(contentType.getId())) || contentTypeId == null))
@@ -695,8 +687,6 @@ public class VdmProject extends Project implements IVdmProject
 		}
 		return list;
 	}
-
-	
 
 	public static IVdmSourceUnit getVdmSourceUnit(IFile file)
 	{
@@ -718,7 +708,7 @@ public class VdmProject extends Project implements IVdmProject
 				IVdmSourceUnit unit = model.getVdmSourceUnit(file);
 				vdmSourceUnits.put(file, unit);
 				return unit;
-			}else
+			} else
 				System.err.println("project is not vdm complient");
 		}
 		return null;
@@ -812,14 +802,14 @@ public class VdmProject extends Project implements IVdmProject
 		return this.language.getDialect();
 	}
 
-//	@Override
-//	public boolean equals(Object obj)
-//	{
-//		return project.equals(obj);
-//	}
-//	@Override
-//	public int hashCode()
-//	{
-//		return project.hashCode();
-//	}
+	// @Override
+	// public boolean equals(Object obj)
+	// {
+	// return project.equals(obj);
+	// }
+	// @Override
+	// public int hashCode()
+	// {
+	// return project.hashCode();
+	// }
 }

@@ -26,7 +26,7 @@ public class VdmModel implements IVdmModel
 {
 	static int count = 0;
 	int id;
-	private boolean checked = false;
+	private boolean typeChecked = false;
 	private Hashtable<String, Boolean> parseCurrectTable = new Hashtable<String, Boolean>();
 
 	private Date checkedTime;
@@ -38,16 +38,6 @@ public class VdmModel implements IVdmModel
 		count++;
 		id = count;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.overture.ide.core.ast.IVdmElement#setRootElementList(java.util.List)
-	 */
-	// public synchronized void setRootElementList(List<T> rootElementList)
-	// {
-	// this.rootElementList = rootElementList;
-	// }
 
 	/*
 	 * (non-Javadoc)
@@ -82,7 +72,7 @@ public class VdmModel implements IVdmModel
 	public synchronized void setChecked(boolean checked)
 	{
 				
-		this.checked = checked;
+		this.typeChecked = checked;
 		this.checkedTime = new Date();
 		if(checked == true)
 		{
@@ -98,9 +88,9 @@ public class VdmModel implements IVdmModel
 	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#isChecked()
 	 */
-	public synchronized boolean isChecked()
+	public synchronized boolean isTypeCorrect()
 	{
-		return checked;
+		return typeChecked;
 	}
 
 	/*
@@ -199,7 +189,7 @@ public class VdmModel implements IVdmModel
 			parseCurrectTable.remove(file);
 
 		parseCurrectTable.put(file, isParseCorrect);
-		checked = false;
+		typeChecked = false;
 	}
 
 	/*
