@@ -1,4 +1,4 @@
-package org.overture.ide.debug.ui.propertyPages;
+package org.overture.ide.debug.ui.propertypages;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.internal.ui.SWTFactory;

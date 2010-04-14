@@ -1,4 +1,4 @@
-package org.overture.ide.debug.ui.propertyPages;
+package org.overture.ide.debug.ui.propertypages;
 
 import java.util.ArrayList;
 import java.util.List;

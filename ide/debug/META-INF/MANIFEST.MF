@@ -21,6 +21,7 @@ Require-Bundle: org.eclipse.debug.core;bundle-version="3.5.0";visibility:=reexpo
  org.eclipse.ui.ide;bundle-version="3.5.1"
 Export-Package: org.overture.ide.debug.core,
  org.overture.ide.debug.core.launching,
+ org.overture.ide.debug.ui.launchconfigurations,
  org.overture.ide.debug.ui.launching
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.overture.ide.debug.core.Activator

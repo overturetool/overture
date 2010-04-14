@@ -23,14 +23,6 @@
          
          
    </extension>
-   <extension
-         point="org.eclipse.dltk.core.language">
-      <language
-            class="org.overture.ide.vdmsl.core.VdmSlLanguageToolkit"
-            nature="org.overture.ide.vdmsl.core.nature"
-            priority="0">
-      </language>
-   </extension>
   <extension
          point="org.overture.ide.core.language">
       <Language

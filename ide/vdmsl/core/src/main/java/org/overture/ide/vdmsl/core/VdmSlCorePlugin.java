@@ -4,8 +4,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IShutdownListener;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -13,17 +11,10 @@ import org.osgi.framework.BundleContext;
  */
 public class VdmSlCorePlugin extends Plugin {
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = IVdmSlCoreConstants.PLUGIN_ID;//"org.overturetool.core";
-
+	public static boolean DEBUG = true;
+	
 	// The shared instance
 	private static VdmSlCorePlugin plugin;
-	
-	/**
-	 * The constructor
-	 */
-	public VdmSlCorePlugin() {
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -55,19 +46,17 @@ public class VdmSlCorePlugin extends Plugin {
 	}
 
 	public static void log(Exception ex) {
-		if (DLTKCore.DEBUG){
+		if (DEBUG){
 			ex.printStackTrace();
 		}
 		String message = ex.getMessage();
 		if (message == null){		
 			message = "(no message)"; //$NON-NLS-1$
 		}
-		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, 0, message, ex));
+		getDefault().getLog().log(new Status(IStatus.ERROR, IVdmSlCoreConstants.PLUGIN_ID, 0, message, ex));
 	}
 	
 	private final ListenerList shutdownListeners = new ListenerList();
 
-	public void addShutdownListener(IShutdownListener listener) {
-		shutdownListeners.add(listener);
-	}
+	
 }

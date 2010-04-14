@@ -1,4 +1,4 @@
-package org.overture.ide.debug.ui.launchconfigurations;
+package org.overture.ide.vdmpp.debug.ui.launchconfigurations;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +13,6 @@ import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
-import org.eclipse.debug.ui.ILaunchShortcut2;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -22,20 +21,21 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 import org.overture.ide.core.IVdmModel;
-
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.VdmProject;
 import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;
+import org.overture.ide.debug.ui.launchconfigurations.AbstractVdmApplicationLaunchShortcut;
 import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 
-public abstract class AbstractVdmApplicationLaunchShortcut implements ILaunchShortcut2
+public class VdmApplicationLaunchShortcut extends AbstractVdmApplicationLaunchShortcut
 {
 
+	@Override
 	public void launch(ISelection selection, String mode)
 	{
 		if (selection instanceof IStructuredSelection)
@@ -47,6 +47,7 @@ public abstract class AbstractVdmApplicationLaunchShortcut implements ILaunchSho
 		}
 	}
 
+	@Override
 	public void launch(IEditorPart editor, String mode)
 	{
 		//IEditorInput input = editor.getEditorInput();
@@ -56,24 +57,28 @@ public abstract class AbstractVdmApplicationLaunchShortcut implements ILaunchSho
 		// }
 	}
 
+	@Override
 	public ILaunchConfiguration[] getLaunchConfigurations(ISelection selection)
 	{
 		// TODO Auto-generated method stub
 		return new ILaunchConfiguration[0];
 	}
 
+	@Override
 	public ILaunchConfiguration[] getLaunchConfigurations(IEditorPart editorpart)
 	{
 		// TODO Auto-generated method stub
 		return new ILaunchConfiguration[0];
 	}
 
+	@Override
 	public IResource getLaunchableResource(ISelection selection)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public IResource getLaunchableResource(IEditorPart editorpart)
 	{
 		// TODO Auto-generated method stub
@@ -86,6 +91,7 @@ public abstract class AbstractVdmApplicationLaunchShortcut implements ILaunchSho
 	 * 
 	 * @return type selection dialog title
 	 */
+	@Override
 	protected String getTypeSelectionTitle()
 	{
 		return "Type selection title";
@@ -96,6 +102,7 @@ public abstract class AbstractVdmApplicationLaunchShortcut implements ILaunchSho
 	 * 
 	 * @return error message when editor cannot be launched
 	 */
+	@Override
 	protected String getEditorEmptyMessage()
 	{
 		return "Empty editor input";
@@ -106,6 +113,7 @@ public abstract class AbstractVdmApplicationLaunchShortcut implements ILaunchSho
 	 * 
 	 * @return error message when selection cannot be launched
 	 */
+	@Override
 	protected String getSelectionEmptyMessage()
 	{
 		return "Empty selection";
@@ -246,6 +254,7 @@ public abstract class AbstractVdmApplicationLaunchShortcut implements ILaunchSho
 	 * org.eclipse.jdt.debug.ui.launchConfigurations.JavaLaunchShortcut#createConfiguration(org.eclipse.jdt
 	 * .core.IType)
 	 */
+	@Override
 	protected ILaunchConfiguration createConfiguration(IAstNode type, String projectName)
 	{
 		ILaunchConfiguration config = null;
@@ -294,6 +303,7 @@ public abstract class AbstractVdmApplicationLaunchShortcut implements ILaunchSho
 	 * 
 	 * @see org.eclipse.jdt.debug.ui.launchConfigurations.JavaLaunchShortcut#getConfigurationType()
 	 */
+	@Override
 	protected ILaunchConfigurationType getConfigurationType()
 	{
 		return getLaunchManager().getLaunchConfigurationType("org.overture.ide.vdmpp.debug.launchConfigurationType");// IDebugConstants.ATTR_VDM_PROGRAM);
@@ -304,6 +314,7 @@ public abstract class AbstractVdmApplicationLaunchShortcut implements ILaunchSho
 	 * 
 	 * @return active workbench window shell
 	 */
+	@Override
 	protected Shell getShell()
 	{
 		return Activator.getActiveWorkbenchShell();
@@ -315,6 +326,7 @@ public abstract class AbstractVdmApplicationLaunchShortcut implements ILaunchSho
 	 * 
 	 * @return a configuration to use for launching the given type or <code>null</code> if none
 	 */
+	@Override
 	protected ILaunchConfiguration findLaunchConfiguration(IAstNode type,String projectName, ILaunchConfigurationType configType) {
 		List<ILaunchConfiguration> candidateConfigs = Collections.emptyList();
 		try {
@@ -334,7 +346,7 @@ public abstract class AbstractVdmApplicationLaunchShortcut implements ILaunchSho
 		}
 		int candidateCount = candidateConfigs.size();
 		if (candidateCount == 1) {
-			return (ILaunchConfiguration) candidateConfigs.get(0);
+			return candidateConfigs.get(0);
 		} else if (candidateCount > 1) {
 			//return chooseConfiguration(candidateConfigs);
 			return candidateConfigs.get(0);
