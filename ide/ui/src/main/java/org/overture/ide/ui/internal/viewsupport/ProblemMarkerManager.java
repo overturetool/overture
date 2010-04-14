@@ -23,7 +23,6 @@ import org.eclipse.jface.text.source.IAnnotationModelListenerExtension;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.progress.UIJob;
 import org.overture.ide.ui.VdmUIPlugin;
-import org.overture.ide.ui.internal.VdmUIMessages;
 import org.overture.ide.ui.internal.util.SWTUtil;
 
 /**
@@ -38,9 +37,9 @@ public class ProblemMarkerManager implements IResourceChangeListener, IAnnotatio
 	 */
 	private static class ProjectErrorVisitor implements IResourceDeltaVisitor {
 
-		private HashSet fChangedElements;
+		private HashSet<IResource> fChangedElements;
 
-		public ProjectErrorVisitor(HashSet changedElements) {
+		public ProjectErrorVisitor(HashSet<IResource> changedElements) {
 			fChangedElements= changedElements;
 		}
 
@@ -88,22 +87,22 @@ public class ProblemMarkerManager implements IResourceChangeListener, IAnnotatio
 
 	private ListenerList fListeners;
 
-	private Set fResourcesWithMarkerChanges;
-	private Set fResourcesWithAnnotationChanges;
+	private Set<IResource> fResourcesWithMarkerChanges;
+	private Set<Object> fResourcesWithAnnotationChanges;
 
 	private UIJob fNotifierJob;
 
 	public ProblemMarkerManager() {
 		fListeners= new ListenerList();
-		fResourcesWithMarkerChanges= new HashSet();
-		fResourcesWithAnnotationChanges= new HashSet();
+		fResourcesWithMarkerChanges= new HashSet<IResource>();
+		fResourcesWithAnnotationChanges= new HashSet<Object>();
 	}
 
 	/*
 	 * @see IResourceChangeListener#resourceChanged
 	 */
 	public void resourceChanged(IResourceChangeEvent event) {
-		HashSet changedElements= new HashSet();
+		HashSet<IResource> changedElements= new HashSet<IResource>();
 
 		try {
 			IResourceDelta delta= event.getDelta();
@@ -189,7 +188,7 @@ public class ProblemMarkerManager implements IResourceChangeListener, IAnnotatio
 
 	private void postAsyncUpdate(final Display display) {
 		if (fNotifierJob == null) {
-			fNotifierJob= new UIJob(display, VdmUIMessages.ProblemMarkerManager_problem_marker_update_job_description) {
+			fNotifierJob= new UIJob(display, "VdmUIMessages.ProblemMarkerManager_problem_marker_update_job_description") {
 				public IStatus runInUIThread(IProgressMonitor monitor) {
 					runPendingUpdates();
 					return Status.OK_STATUS;

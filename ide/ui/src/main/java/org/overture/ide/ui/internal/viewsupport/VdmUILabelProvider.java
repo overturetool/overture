@@ -25,7 +25,7 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 	protected VdmElementImageProvider fImageLabelProvider;
 //	protected StorageLabelProvider fStorageLabelProvider;
 
-	private ArrayList fLabelDecorators;
+	private ArrayList<ILabelDecorator> fLabelDecorators;
 
 	private int fImageFlags;
 	private long fTextFlags;
@@ -56,7 +56,7 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 	 */
 	public void addLabelDecorator(ILabelDecorator decorator) {
 		if (fLabelDecorators == null) {
-			fLabelDecorators= new ArrayList(2);
+			fLabelDecorators= new ArrayList<ILabelDecorator>(2);
 		}
 		fLabelDecorators.add(decorator);
 	}

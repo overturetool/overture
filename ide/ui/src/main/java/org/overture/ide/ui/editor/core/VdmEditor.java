@@ -88,7 +88,7 @@ public abstract class VdmEditor extends TextEditor
 				isOverviewRulerVisible(),
 				styles);
 
-		SourceViewerDecorationSupport a = getSourceViewerDecorationSupport(viewer);
+		getSourceViewerDecorationSupport(viewer);
 
 		return viewer;
 		

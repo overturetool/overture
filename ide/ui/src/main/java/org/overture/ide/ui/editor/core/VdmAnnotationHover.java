@@ -6,20 +6,14 @@ import java.util.List;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-
-
-import org.eclipse.jface.internal.text.html.HTMLPrinter;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.DefaultAnnotationHover;
-import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
-import org.overture.ide.core.SourceReferenceManager;
-import org.overture.ide.ui.internal.VdmUIMessages;
 
 public class VdmAnnotationHover extends DefaultAnnotationHover {
 
@@ -66,15 +60,15 @@ public class VdmAnnotationHover extends DefaultAnnotationHover {
 	
 	
 	
-	private List getAnnotations(ISourceViewer viewer, int lineNumber) {
+	private List<Annotation> getAnnotations(ISourceViewer viewer, int lineNumber) {
 		IAnnotationModel model= viewer.getAnnotationModel();
 		IDocument document= viewer.getDocument();
 		return getAnnotationsAtLine(model, document, lineNumber);
 		}
 	
-	private List getAnnotationsAtLine(IAnnotationModel model,
+	private List<Annotation> getAnnotationsAtLine(IAnnotationModel model,
 			IDocument document, int lineNumber) {
-		List result = new ArrayList();
+		List<Annotation> result = new ArrayList<Annotation>();
 		Iterator<Annotation> it = model.getAnnotationIterator();
 		
 		
