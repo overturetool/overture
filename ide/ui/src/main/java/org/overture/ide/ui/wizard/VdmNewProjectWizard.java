@@ -112,6 +112,7 @@ public abstract class VdmNewProjectWizard extends BasicNewProjectResourceWizard
 				setVdmBuilder(prj);
 
 				createSelectedLibraries(prj);
+				createModelFolder(prj);
 
 			} catch (CoreException e)
 			{
@@ -122,6 +123,13 @@ public abstract class VdmNewProjectWizard extends BasicNewProjectResourceWizard
 		}
 
 		return ok;
+	}
+
+	private void createModelFolder(IProject prj) {
+		File projectRoot = prj.getLocation().toFile();
+		File modelFolder = new File(projectRoot, "model");
+		if (!modelFolder.exists())
+			modelFolder.mkdirs();
 	}
 
 	private void createSelectedLibraries(IProject prj) throws CoreException

@@ -33,7 +33,7 @@ public class VdmNavigatorLabelProvider extends LabelProvider implements ILabelPr
     public final Image getImage(Object element) {
 		
 		if(element instanceof SourceContainer){
-			return VdmPluginImages.get(VdmPluginImages.IMG_OBJS_PACKDECL);
+			return ((SourceContainer)element).getImage();
 		}
 		
 		if(element instanceof ResourceContainer){
