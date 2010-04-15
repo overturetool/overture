@@ -71,8 +71,11 @@ public class VdmProject extends Project implements IVdmProject
 
 	public static boolean isVdmProject(IProject project)
 	{
+		
+					
 		try
-		{
+		{			
+			
 			for (ILanguage language : LanguageManager.getInstance().getLanguages())
 			{
 

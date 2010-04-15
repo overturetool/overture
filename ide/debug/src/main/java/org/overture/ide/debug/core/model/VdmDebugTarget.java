@@ -1,6 +1,5 @@
 package org.overture.ide.debug.core.model;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -18,12 +17,10 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IDebugTarget;
-import org.eclipse.debug.core.model.ILineBreakpoint;
 import org.eclipse.debug.core.model.IMemoryBlock;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.swt.SWT;
-
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;

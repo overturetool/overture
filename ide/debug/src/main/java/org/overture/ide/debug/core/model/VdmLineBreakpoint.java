@@ -22,7 +22,7 @@ public class VdmLineBreakpoint extends VdmBreakpoint implements IVdmLineBreakpoi
 	 * The map of cached compiled expressions (ICompiledExpression) for this breakpoint, keyed by thread.
 	 * This value must be cleared every time the breakpoint is added to a target.
 	 */
-	private Map fCompiledExpressions= new HashMap();
+	private Map<Object, Object> fCompiledExpressions= new HashMap<Object, Object>();
 	/**
 	 * Breakpoint attribute storing a breakpoint's conditional expression
 	 * (value <code>"org.eclipse.jdt.debug.core.condition"</code>). This attribute is stored as a
@@ -45,11 +45,11 @@ public class VdmLineBreakpoint extends VdmBreakpoint implements IVdmLineBreakpoi
 	 * The map of the result value of the condition (IValue) for this
 	 * breakpoint, keyed by debug target.
 	 */
-	private Map fConditionValues= new HashMap();
+	private Map<Object, Object> fConditionValues= new HashMap<Object, Object>();
 	/**
 	 * Maps suspended threads to the suspend event that suspended them
 	 */
-	private Map fSuspendEvents= new HashMap();
+	private Map<Object, Object> fSuspendEvents= new HashMap<Object, Object>();
 	
 	public VdmLineBreakpoint() {
 		super();
