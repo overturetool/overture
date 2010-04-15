@@ -1,22 +1,17 @@
 package org.overture.ide.debug.ui.launching;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -31,16 +26,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-import org.eclipse.ui.internal.UIPlugin;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.eclipse.ui.progress.IProgressService;
-
-import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.VdmProject;
 import org.overture.ide.debug.core.Activator;
@@ -119,27 +108,28 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	@Override
 	public boolean isValid(ILaunchConfiguration config)
 	{
-		return true;
+		//return true;
 
 		// if (fRemoteControlClassText.getText().length() > 0)
 		// return true;// super.validate();
-		// try
-		// {
-		// Console.charset = getProject().getDefaultCharset();
-		// } catch (CoreException e)
-		// {
-		// e.printStackTrace();
-		// }
+		 try
+		 {
+		 Console.charset = getProject().getDefaultCharset();
+		 } catch (CoreException e)
+		 {
+		 e.printStackTrace();
+		 }
 		//
-		// boolean syntaxCorrect = validateClass() && validateOperation();
-		// if (!syntaxCorrect)
-		// return syntaxCorrect;
-		// else
+		 boolean syntaxCorrect = validateClass() && validateOperation();
+		 if (!syntaxCorrect)
+		 return syntaxCorrect;
+		 else if(VdmProject.isVdmProject(getProject())){
 		// return super.isValid(config)
-		// && validateTypes(fModuleNameText.getText(),
-		// fOperationText.getText());
+		return validateTypes(VdmProject.createProject(getProject()),expression);
+		 }
 		//
 		//		
+		 return false;
 
 	}
 
@@ -150,10 +140,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		validateOperation();
 	}
 
-	protected boolean validateTypes(String module, String operation)
-	{
-		return true;// abstract
-	}
+	protected abstract boolean validateTypes(IVdmProject project,String expression);
 
 	private boolean validateOperation()
 	{
