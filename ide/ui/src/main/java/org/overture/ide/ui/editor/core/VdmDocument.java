@@ -4,30 +4,33 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.core.resources.VdmProject;
+import org.overture.ide.core.resources.IVdmSourceUnit;
 
 
 public class VdmDocument extends Document implements IDocument
 {
-	private IFile file;
+	private IVdmSourceUnit source;
 
 	public IVdmProject getProject()
 	{
-		if (file != null && VdmProject.isVdmProject(file.getProject()))
-		{
-			return VdmProject.createProject(file.getProject());
-		}
-		return null;
+		return source.getProject();
+//		if (file != null && VdmProject.isVdmProject(file.getProject()))
+//		{
+//			return VdmProject.createProject(file.getProject());
+//		}
+//		return null;
 	}
 
-	public IFile getFile()
+	public IVdmSourceUnit getSourceUnit()
 	{
-		return this.file;
+		return this.source;
 	}
 
-	public void setFile(IFile file)
+	
+
+	public void setSourceUnit(IVdmSourceUnit source)
 	{
-		this.file = file;
+		this.source = source;
 	}
 
 }

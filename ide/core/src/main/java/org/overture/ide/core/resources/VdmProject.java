@@ -3,7 +3,6 @@ package org.overture.ide.core.resources;
 import java.io.File;
 import java.net.URI;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -11,7 +10,6 @@ import java.util.Vector;
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -28,8 +26,6 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SafeRunner;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.Job;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.IVdmModel;
@@ -39,6 +35,7 @@ import org.overture.ide.core.builder.SafeBuilder;
 import org.overture.ide.core.utility.ILanguage;
 import org.overture.ide.core.utility.LanguageManager;
 import org.overture.ide.core.utility.Project;
+import org.overture.ide.internal.core.ResourceManager;
 import org.overture.ide.internal.core.ast.VdmModelManager;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.lex.Dialect;
@@ -52,8 +49,7 @@ public class VdmProject extends Project implements IVdmProject
 	private static final String PRE_CHECKS_ARGUMENT_KEY = "PRE_CHECKS";
 	private static final String SUPRESS_WARNINGS_ARGUMENT_KEY = "SUPPRESS_WARNINGS";
 
-	static Map<String, IVdmProject> projects = new Hashtable<String, IVdmProject>();
-	static Map<IFile, IVdmSourceUnit> vdmSourceUnits = new Hashtable<IFile, IVdmSourceUnit>();
+
 
 	private ILanguage language = null;
 
@@ -95,24 +91,14 @@ public class VdmProject extends Project implements IVdmProject
 
 	public synchronized static IVdmProject createProject(IProject project)
 	{
-		if (projects.containsKey(project.getName()))
-			return projects.get(project.getName());
+		if (ResourceManager.getInstance().hasProject(project))
+			return ResourceManager.getInstance().getProject(project);
 		else
 		{
 			try
 			{
 				IVdmProject vdmProject = new VdmProject(project);
-				projects.put(vdmProject.getName(), vdmProject);
-				VdmModelManager.getInstance().createModel(vdmProject);
-				System.out.println("Creating project: " + project.getName());
-				vdmProject.getSpecFiles();
-				// for (IVdmSourceUnit unit : )
-				// {
-				// System.out.println("Adding file: "+ unit + " to "+project.getName());
-				// model.addVdmSourceUnit(unit);
-				//					
-				// }
-				return vdmProject;
+				return ResourceManager.getInstance().addProject(vdmProject);
 			} catch (CoreException e)
 			{
 				if (VdmCore.DEBUG)
@@ -640,79 +626,14 @@ public class VdmProject extends Project implements IVdmProject
 		for (IResource res : members(IContainer.INCLUDE_PHANTOMS
 				| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
 		{
-			list.addAll(getFiles(this, res, contentTypeId));
+			list.addAll(ResourceManager.getInstance().getFiles(this, res, contentTypeId));
 		}
 		return list;
 	}
 
-	/***
-	 * Recursive search of a project for files based on the content type
-	 * 
-	 * @param project
-	 *            the project to search
-	 * @param resource
-	 *            the resource currently selected to be searched
-	 * @param contentTypeId
-	 *            a possibly null content type id, if null it is just checked that a content type exist for the file
-	 * @return a list of IFiles
-	 * @throws CoreException
-	 */
-	private static List<IVdmSourceUnit> getFiles(IProject project,
-			IResource resource, String contentTypeId) throws CoreException
-	{
-		List<IVdmSourceUnit> list = new Vector<IVdmSourceUnit>();
 
-		if (resource instanceof IFolder)
-		{
-			if (resource instanceof IFolder
-					&& resource.getLocation().lastSegment().startsWith("."))// skip
-				return list;
-			// . folders like.svn
-			for (IResource res : ((IFolder) resource).members(IContainer.INCLUDE_PHANTOMS
-					| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
-			{
 
-				list.addAll(getFiles(project, res, contentTypeId));
-			}
-		}
-		// check if it is a IFile and that there exists a known content type for
-		// this file and the project
-		else if (resource instanceof IFile)
-		{
-			IContentType contentType = project.getContentTypeMatcher().findContentTypeFor(resource.toString());
 
-			if (contentType != null
-					&& ((contentTypeId != null && contentTypeId.equals(contentType.getId())) || contentTypeId == null))
-				list.add(VdmProject.getVdmSourceUnit((IFile) resource));
-		}
-		return list;
-	}
-
-	public static IVdmSourceUnit getVdmSourceUnit(IFile file)
-	{
-		if (file == null)
-		{
-			return null;
-		}
-
-		if (vdmSourceUnits.containsKey(file))
-		{
-			return vdmSourceUnits.get(file);
-		} else
-		{
-			if (VdmProject.isVdmProject(file.getProject()))
-			{
-				IVdmProject project = VdmProject.createProject(file.getProject());
-				IVdmModel model = project.getModel();
-				model.addVdmSourceUnit(new VdmSourceUnit(project, file));
-				IVdmSourceUnit unit = model.getVdmSourceUnit(file);
-				vdmSourceUnits.put(file, unit);
-				return unit;
-			} else
-				System.err.println("project is not vdm complient");
-		}
-		return null;
-	}
 
 	/***
 	 * Get files from a eclipse project that has a defined content type
@@ -800,6 +721,18 @@ public class VdmProject extends Project implements IVdmProject
 	public Dialect getDialect()
 	{
 		return this.language.getDialect();
+	}
+
+	public IVdmSourceUnit findSourceUnit(IFile file) throws CoreException
+	{
+		for (IVdmSourceUnit source : getSpecFiles())
+		{
+			if(source.getFile().equals(file))
+			{
+				return source;
+			}
+		}
+		return null;
 	}
 
 	// @Override

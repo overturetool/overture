@@ -70,6 +70,10 @@ public interface IVdmElementDelta
 	 */
 	public int F_ANNOTATIONS = 0x400000;
 	
+	/**
+	 * Change flag indicating that the resource has been type checked
+	 */
+	public int F_TYPE_CHECKED = 3;
 	
 	/**
 	 * Returns the element that this delta describes a change to.

@@ -40,9 +40,9 @@ public class VdmReconcilingStrategy implements IReconcilingStrategy
 	{
 		if (VdmCore.DEBUG)
 		{
-			System.out.println("reconcile(IRegion partition)");
-			System.out.println("File: "
-					+ (currentDocument).getFile().toString());
+//			System.out.println("reconcile(IRegion partition)");
+//			System.out.println("File: "
+//					+ (currentDocument).getFile().toString());
 			// if(outline != null)
 			// {
 			// VdmContentOutlinePage page = (VdmContentOutlinePage) outline.getCurrentPage();
@@ -62,7 +62,7 @@ public class VdmReconcilingStrategy implements IReconcilingStrategy
 
 					if (parser != null)
 					{
-						parser.parse(VdmProject.getVdmSourceUnit(currentDocument.getFile()),
+						parser.parse(currentDocument.getSourceUnit(),
 								currentDocument.get());
 					}
 				}

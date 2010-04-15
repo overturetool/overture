@@ -78,7 +78,7 @@ public class VdmModel implements IVdmModel
 		{
 			VdmCore.getDeltaProcessor().fire(this,
 					new ElementChangedEvent(new VdmElementDelta(this,
-							IVdmElementDelta.CHANGED),
+							IVdmElementDelta.F_TYPE_CHECKED),
 							ElementChangedEvent.DeltaType.POST_RECONCILE));
 		}
 	}

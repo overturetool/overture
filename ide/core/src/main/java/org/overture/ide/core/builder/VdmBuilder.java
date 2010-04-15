@@ -3,10 +3,8 @@ package org.overture.ide.core.builder;
 import java.util.List;
 import java.util.Vector;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
@@ -17,25 +15,23 @@ import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.VdmProject;
 
-import org.overture.ide.internal.core.ast.VdmModelManager;
-
 public class VdmBuilder extends VdmCoreBuilder
 { // implements IScriptBuilder {
 	// This must be the ID from your extension point
 
-	private static Vector<IProject> buildingProjects = new Vector<IProject>();
+	private static Vector<IVdmProject> buildingProjects = new Vector<IVdmProject>();
 
-	protected static synchronized boolean isBuilding(IProject project)
+	protected static synchronized boolean isBuilding(IVdmProject project)
 	{
 		return buildingProjects.contains(project);
 	}
 
-	protected static synchronized void setBuilding(IProject project)
+	protected static synchronized void setBuilding(IVdmProject project)
 	{
 		buildingProjects.add(project);
 	}
 
-	protected static synchronized void removeBuilding(IProject project)
+	protected static synchronized void removeBuilding(IVdmProject project)
 	{
 		if (buildingProjects.contains(project))
 			buildingProjects.remove(project);
@@ -53,16 +49,12 @@ public class VdmBuilder extends VdmCoreBuilder
 		{
 			System.out.println("buildModelElements");
 		}
-		Assert.isTrue(!VdmProject.isVdmProject(getProject()), "Project is not VDM: "
-				+ getProject());
-
-		final IVdmProject currentProject = VdmProject.createProject(getProject());
-
-		if (isBuilding(currentProject))
+		
+		if (isBuilding(getVdmProject()))
 		{
 			monitor.subTask("Waiting for other build: "
-					+ currentProject.getName());
-			while (isBuilding(currentProject))
+					+ getVdmProject().getName());
+			while (isBuilding(getVdmProject()))
 			{
 				try
 				{
@@ -77,12 +69,12 @@ public class VdmBuilder extends VdmCoreBuilder
 			// "Build cancelled since another builder already was running.");
 		}
 
-		setBuilding(currentProject);
+		setBuilding(getVdmProject());
 		clean(monitor);
 
 		final List<IStatus> statusList = new Vector<IStatus>();
 
-		final SafeBuilder builder = new SafeBuilder(currentProject, statusList, monitor);
+		final SafeBuilder builder = new SafeBuilder(getVdmProject(), statusList, monitor);
 
 		builder.start();
 
@@ -125,7 +117,7 @@ public class VdmBuilder extends VdmCoreBuilder
 		// return new Status(IStatus.WARNING,
 		// VdmBuilderCorePluginConstants.PLUGIN_ID,
 		// "No builder returned any result");
-		removeBuilding(currentProject);
+		removeBuilding(getVdmProject());
 	}
 
 	public void clean(IProgressMonitor monitor)
@@ -169,7 +161,7 @@ public class VdmBuilder extends VdmCoreBuilder
 		{
 			System.out.println("endBuild");
 		}
-		removeBuilding(getProject());
+		removeBuilding(getVdmProject());
 	}
 
 	public void initialize()

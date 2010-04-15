@@ -30,10 +30,7 @@ import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.statements.Statement;
 
 /*
- * 
- * 	public abstract IAstNode getNodeAt(int pos);
- public int getLineOffset(int lineIndex);
- * 
+ * public abstract IAstNode getNodeAt(int pos); public int getLineOffset(int lineIndex);
  */
 
 @SuppressWarnings("restriction")
@@ -43,27 +40,29 @@ public class SourceReferenceManager implements IManager
 	{
 		public void elementChanged(final ElementChangedEvent e)
 		{
-	refresh();
+			IVdmElementDelta delta = e.getDelta();
+			if (delta.getKind() == IVdmElementDelta.ADDED
+					|| delta.getKind() == IVdmElementDelta.CHANGED)
+				refresh();
 		}
 	}
-	
-	
-	
-	
-	
+
 	Map<Integer, IAstNode> offsetToAstNodeMap = new Hashtable<Integer, IAstNode>();
 	List<SourceReference> sourceReferences = new Vector<SourceReference>();
 	Integer[] lineSize = new Integer[0];
 
 	IVdmSourceUnit sourceUnit;
 
-	public SourceReferenceManager(IVdmSourceUnit sourceUnit) {
+	ElementChangedListener listener = null;
+
+	public SourceReferenceManager(IVdmSourceUnit sourceUnit)
+	{
 		this.sourceUnit = sourceUnit;
-		
+
 		refresh();
 
 	}
-	
+
 	public void refresh()
 	{
 		makeLineSizes();
@@ -161,7 +160,7 @@ public class SourceReferenceManager implements IManager
 		}
 		offset++;
 		line++;// convert to 1-indexed
-		return new int[] {line, offset };
+		return new int[] { line, offset };
 	}
 
 	public int getLineOffset(int lineIndex)
@@ -277,11 +276,7 @@ public class SourceReferenceManager implements IManager
 
 			if (element != null && element.getLocation() != null)
 			{
-				return new SourceReference(element.getLocation().startLine,
-						element.getLocation().startPos,
-						element.getLocation().endLine,
-						element.getLocation().endPos,
-						element);
+				return new SourceReference(element.getLocation().startLine, element.getLocation().startPos, element.getLocation().endLine, element.getLocation().endPos, element);
 			} else
 			{
 				return null;
@@ -302,11 +297,7 @@ public class SourceReferenceManager implements IManager
 
 			if (element != null && element.getLocation() != null)
 			{
-				return new SourceReference(element.getLocation().startLine,
-						element.getLocation().startPos,
-						element.getLocation().endLine,
-						element.getLocation().endPos,
-						element);
+				return new SourceReference(element.getLocation().startLine, element.getLocation().startPos, element.getLocation().endLine, element.getLocation().endPos, element);
 			} else
 			{
 				return null;
@@ -349,11 +340,7 @@ public class SourceReferenceManager implements IManager
 
 			if (element != null && element.getLocation() != null)
 			{
-				return new SourceReference(element.getLocation().startLine,
-						element.getLocation().startPos,
-						element.getLocation().endLine,
-						element.getLocation().endPos,
-						element);
+				return new SourceReference(element.getLocation().startLine, element.getLocation().startPos, element.getLocation().endLine, element.getLocation().endPos, element);
 			} else
 			{
 				return null;
@@ -362,11 +349,7 @@ public class SourceReferenceManager implements IManager
 
 		public SourceReference getOuterLocation(Statement element)
 		{
-			return new SourceReference(element.getLocation().startLine,
-					element.getLocation().startPos,
-					element.getLocation().endLine,
-					element.getLocation().endPos,
-					element);
+			return new SourceReference(element.getLocation().startLine, element.getLocation().startPos, element.getLocation().endLine, element.getLocation().endPos, element);
 
 		}
 
@@ -386,11 +369,7 @@ public class SourceReferenceManager implements IManager
 			int endLine = element.body.getLocation().endLine;
 			int endPos = element.body.getLocation().endPos;
 
-			SourceReference sf = new SourceReference(startLine,
-					startPos,
-					endLine,
-					endPos,
-					element);
+			SourceReference sf = new SourceReference(startLine, startPos, endLine, endPos, element);
 
 			sf.expand(getOuterLocation(element.body));
 			sf.expand(getOuterLocation(element.precondition));
@@ -415,11 +394,7 @@ public class SourceReferenceManager implements IManager
 			int endLine = element.body.getLocation().endLine;
 			int endPos = element.body.getLocation().endPos;
 
-			SourceReference sf = new SourceReference(startLine,
-					startPos,
-					endLine,
-					endPos,
-					element);
+			SourceReference sf = new SourceReference(startLine, startPos, endLine, endPos, element);
 
 			sf.expand(getOuterLocation(element.body));
 			sf.expand(getOuterLocation(element.precondition));
@@ -436,11 +411,7 @@ public class SourceReferenceManager implements IManager
 			int endLine = element.getLocation().endLine;
 			int endPos = element.getLocation().endPos;
 
-			SourceReference sf = new SourceReference(startLine,
-					startPos,
-					endLine,
-					endPos,
-					element);
+			SourceReference sf = new SourceReference(startLine, startPos, endLine, endPos, element);
 
 			sf.expand(getOuterLocation(element.left));
 			sf.expand(getOuterLocation(element.right));
@@ -456,11 +427,7 @@ public class SourceReferenceManager implements IManager
 			int endLine = element.getLocation().endLine;
 			int endPos = element.getLocation().endPos;
 
-			SourceReference sf = new SourceReference(startLine,
-					startPos,
-					endLine,
-					endPos,
-					element);
+			SourceReference sf = new SourceReference(startLine, startPos, endLine, endPos, element);
 
 			sf.expand(getOuterLocation(element.thenExp));
 			sf.expand(getOuterLocation(element.elseExp));
@@ -481,11 +448,7 @@ public class SourceReferenceManager implements IManager
 			int endLine = element.getLocation().endLine;
 			int endPos = element.getLocation().endPos;
 
-			SourceReference sf = new SourceReference(startLine,
-					startPos,
-					endLine,
-					endPos,
-					element);
+			SourceReference sf = new SourceReference(startLine, startPos, endLine, endPos, element);
 
 			sf.expand(getOuterLocation(element.thenExp));
 			sf.expand(getOuterLocation(element.elseIfExp));
@@ -501,11 +464,7 @@ public class SourceReferenceManager implements IManager
 			int endLine = element.getLocation().endLine;
 			int endPos = element.getLocation().endPos;
 
-			SourceReference sf = new SourceReference(startLine,
-					startPos,
-					endLine,
-					endPos,
-					element);
+			SourceReference sf = new SourceReference(startLine, startPos, endLine, endPos, element);
 
 			sf.expand(getOuterLocation(element.left));
 			sf.expand(getOuterLocation(element.right));
@@ -521,11 +480,7 @@ public class SourceReferenceManager implements IManager
 			int endLine = element.getLocation().endLine;
 			int endPos = element.getLocation().endPos;
 
-			SourceReference sf = new SourceReference(startLine,
-					startPos,
-					endLine,
-					endPos,
-					element);
+			SourceReference sf = new SourceReference(startLine, startPos, endLine, endPos, element);
 
 			sf.expand(getOuterLocation(element.exp));
 			for (CaseAlternative caseA : element.cases)
@@ -550,11 +505,7 @@ public class SourceReferenceManager implements IManager
 			int endLine = element.location.endLine;
 			int endPos = element.location.endPos;
 
-			SourceReference sf = new SourceReference(startLine,
-					startPos,
-					endLine,
-					endPos,
-					null);
+			SourceReference sf = new SourceReference(startLine, startPos, endLine, endPos, null);
 
 			sf.expand(getOuterLocation(element.cexp));
 			sf.expand(getOuterLocation(element.result));
@@ -570,11 +521,7 @@ public class SourceReferenceManager implements IManager
 			int endLine = element.getLocation().endLine;
 			int endPos = element.getLocation().endPos;
 
-			SourceReference sf = new SourceReference(startLine,
-					startPos,
-					endLine,
-					endPos,
-					element);
+			SourceReference sf = new SourceReference(startLine, startPos, endLine, endPos, element);
 
 			sf.expand(getOuterLocation(element.expression));
 			for (Definition def : element.localDefs)
@@ -593,11 +540,7 @@ public class SourceReferenceManager implements IManager
 			int endLine = element.getLocation().endLine;
 			int endPos = element.getLocation().endPos;
 
-			SourceReference sf = new SourceReference(startLine,
-					startPos,
-					endLine,
-					endPos,
-					element);
+			SourceReference sf = new SourceReference(startLine, startPos, endLine, endPos, element);
 
 			sf.expand(getOuterLocation(element.exp));
 			return sf;
@@ -612,7 +555,8 @@ public class SourceReferenceManager implements IManager
 		IAstNode node = null;
 
 		public SourceReference(int startLine, int startPos, int endLine,
-				int endPos, IAstNode node) {
+				int endPos, IAstNode node)
+		{
 			this.node = node;
 
 			startOffset = getLineOffset(startLine) + startPos;
@@ -660,13 +604,18 @@ public class SourceReferenceManager implements IManager
 
 	public void shutdown(IProgressMonitor monitor) throws CoreException
 	{
-		VdmCore.removeElementChangedListener(new ElementChangedListener());
-		
+		if (listener != null)
+		{
+			VdmCore.removeElementChangedListener(listener);
+		}
 	}
 
 	public void startup(IProgressMonitor monitor) throws CoreException
 	{
-		VdmCore.addElementChangedListener(new ElementChangedListener());
-		
+		if (listener == null)
+		{
+			listener = new ElementChangedListener();
+			VdmCore.addElementChangedListener(listener);
+		}
 	}
 }

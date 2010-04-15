@@ -105,42 +105,42 @@ public class VdmModelManager implements IVdmModelManager {
 	
 	
 	
-	public  void refreshProjects()
-	{
-		Job refreshJob = new Job("AST Refresh"){
-
-			@Override
-			protected IStatus run(IProgressMonitor monitor)
-			{
-				final String VDM_PP_NATURE = "org.overture.ide.vdmpp.core.nature";
-				final String VDM_SL_NATURE = "org.overture.ide.vdmsl.core.nature";
-				final String VDM_RT_NATURE = "org.overture.ide.vdmrt.core.nature";
-				for (IProject project : ResourcesPlugin.getWorkspace()
-						.getRoot()
-						.getProjects())
-				{
-					try
-					{
-						if (project.isAccessible()&& project.isOpen()&&( project.hasNature(VDM_SL_NATURE)
-								|| project.hasNature(VDM_PP_NATURE)
-								|| project.hasNature(VDM_RT_NATURE)))
-						{
-							if(!getProjects().contains(project) )
-							project.build(IncrementalProjectBuilder.FULL_BUILD,null);
-							
-						}
-					} catch (CoreException e)
-					{
-						e.printStackTrace();
-					}
-				}
-				return new Status(IStatus.OK,"org.overture.ide.ast","AST Refresh completed");
-			}
-			
-		};
-		refreshJob.schedule();
-		
-	}
+//	public  void refreshProjects()
+//	{
+//		Job refreshJob = new Job("AST Refresh"){
+//
+//			@Override
+//			protected IStatus run(IProgressMonitor monitor)
+//			{
+//				final String VDM_PP_NATURE = "org.overture.ide.vdmpp.core.nature";
+//				final String VDM_SL_NATURE = "org.overture.ide.vdmsl.core.nature";
+//				final String VDM_RT_NATURE = "org.overture.ide.vdmrt.core.nature";
+//				for (IProject project : ResourcesPlugin.getWorkspace()
+//						.getRoot()
+//						.getProjects())
+//				{
+//					try
+//					{
+//						if (project.isAccessible()&& project.isOpen()&&( project.hasNature(VDM_SL_NATURE)
+//								|| project.hasNature(VDM_PP_NATURE)
+//								|| project.hasNature(VDM_RT_NATURE)))
+//						{
+//							if(!getProjects().contains(project) )
+//							project.build(IncrementalProjectBuilder.FULL_BUILD,null);
+//							
+//						}
+//					} catch (CoreException e)
+//					{
+//						e.printStackTrace();
+//					}
+//				}
+//				return new Status(IStatus.OK,"org.overture.ide.ast","AST Refresh completed");
+//			}
+//			
+//		};
+//		refreshJob.schedule();
+//		
+//	}
 
 	public IVdmModel createModel(IVdmProject project)
 	{

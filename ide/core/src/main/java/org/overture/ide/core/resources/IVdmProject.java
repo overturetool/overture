@@ -82,6 +82,7 @@ public interface IVdmProject extends IProject
 	public abstract IFile findIFile( File file);
 	public abstract  File getSystemFile( IPath path);
 	public abstract File getFile(IWorkspaceRoot wroot, IPath path);
+	public abstract IVdmSourceUnit findSourceUnit(IFile file) throws CoreException;
 	
 	public abstract IVdmModel getModel();
 }

@@ -1,10 +1,12 @@
 package org.overture.ide.core;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Plugin;
 
 import org.osgi.framework.BundleContext;
 import org.overture.ide.internal.core.DeltaProcessingState;
 import org.overture.ide.internal.core.DeltaProcessor;
+import org.overture.ide.internal.core.ResourceManager;
 import org.overture.ide.internal.core.ast.VdmModelManager;
 
 
@@ -40,6 +42,7 @@ public class VdmCore extends Plugin
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(ResourceManager.getInstance());
 		plugin = this;
 	}
 

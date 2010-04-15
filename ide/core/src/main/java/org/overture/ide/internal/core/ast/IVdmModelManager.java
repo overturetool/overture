@@ -50,7 +50,7 @@ public interface IVdmModelManager
 	/**
 	 * Refreshed the AST for all VDM projects
 	 */
-	public  void refreshProjects();
+//	public  void refreshProjects();
 	
 	
 	public IVdmModel createModel(IVdmProject project);
