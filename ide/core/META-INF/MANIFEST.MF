@@ -21,3 +21,4 @@ Export-Package: org.overture.ide.core,
  org.overture.ide.core.resources,
  org.overture.ide.core.utility
 Bundle-Activator: org.overture.ide.core.VdmCore
+Eclipse-AutoStart: true

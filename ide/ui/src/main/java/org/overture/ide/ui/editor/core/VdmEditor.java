@@ -183,10 +183,13 @@ public abstract class VdmEditor extends TextEditor
 		if (doc instanceof VdmDocument)
 		{
 			VdmDocument vdmDoc = (VdmDocument) doc;
-			/* IVdmProject project = */vdmDoc.getProject();
+			///* IVdmProject project = */vdmDoc.getProject();
 			try
 			{
+				if(vdmDoc!=null && vdmDoc.getSourceUnit()!=null)
+				{
 				SourceParserManager.parseFile(vdmDoc.getSourceUnit());
+				}
 			} catch (CoreException e)
 			{
 				// TODO Auto-generated catch block

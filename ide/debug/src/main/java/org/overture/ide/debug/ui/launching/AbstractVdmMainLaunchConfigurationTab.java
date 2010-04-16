@@ -82,7 +82,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	{
 		public void modifyText(ModifyEvent e)
 		{
-			validatePage();
+			//validatePage();
 			updateLaunchConfigurationDialog();
 		}
 
@@ -94,53 +94,71 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		public void widgetSelected(SelectionEvent e)
 		{
 			// fOperationText.setEnabled(!fdebugInConsole.getSelection());
-			expression = getExpression(fModuleNameText.getText(), fOperationText.getText(), staticOperation);
+			
 			updateLaunchConfigurationDialog();
 		}
 	}
 
 	protected IProject getProject()
 	{
+		if(fProjectText!=null && fProjectText.getText().length()>0)
+		{
 		return ResourcesPlugin.getWorkspace().getRoot().getProject(fProjectText.getText());
+		}else
+		{
+			setErrorMessage("Project not set");
+			return null;
+		}
 
 	}
+	
+	
 
 	@Override
 	public boolean isValid(ILaunchConfiguration config)
 	{
-		//return true;
-
+		// return true;
+setErrorMessage(null);
 		// if (fRemoteControlClassText.getText().length() > 0)
 		// return true;// super.validate();
-		 try
-		 {
-		 Console.charset = getProject().getDefaultCharset();
-		 } catch (CoreException e)
-		 {
-		 e.printStackTrace();
-		 }
+		if(super.isValid(config) && getProject()!=null && getProject().exists()&& getProject().isOpen() )
+		{
+			
+			
+		try
+		{
+			Console.charset = getProject().getDefaultCharset();
+		} catch (CoreException e)
+		{
+			e.printStackTrace();
+		}
 		//
-		 boolean syntaxCorrect = validateClass() && validateOperation();
-		 if (!syntaxCorrect)
-		 return syntaxCorrect;
-		 else if(VdmProject.isVdmProject(getProject())){
-		// return super.isValid(config)
-		return validateTypes(VdmProject.createProject(getProject()),expression);
-		 }
+		boolean syntaxCorrect = validateClass() && validateOperation();
+		if (!syntaxCorrect)
+		{
+			return syntaxCorrect;
+		}
+		else if (VdmProject.isVdmProject(getProject()))
+		{
+			expression = getExpression(fModuleNameText.getText(), fOperationText.getText(), staticOperation);
+			return validateTypes(VdmProject.createProject(getProject()), expression);
+		}
+		}
 		//
 		//		
-		 return false;
+		return false;
 
 	}
 
-	private void validatePage()
-	{
-		setErrorMessage(null);
-		validateClass();
-		validateOperation();
-	}
+//	private void validatePage()
+//	{
+//		setErrorMessage(null);
+//		validateClass();
+//		validateOperation();
+//	}
 
-	protected abstract boolean validateTypes(IVdmProject project,String expression);
+	protected abstract boolean validateTypes(IVdmProject project,
+			String expression);
 
 	private boolean validateOperation()
 	{
@@ -458,24 +476,26 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		// ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(getShell(), new
 		// WorkbenchLabelProvider(), new BaseWorkbenchContentProvider());
 
-		 dialog.setTitle(getModuleLabelName()
-		 + " and operation/function selection");
-		 dialog.setMessage("Select a function");
+		dialog.setTitle(getModuleLabelName()
+				+ " and operation/function selection");
+		dialog.setMessage("Select a function");
 
-		 dialog.addFilter(new ExecutableFilter());
+		dialog.addFilter(new ExecutableFilter());
 		// dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
-		 dialog.setAllowMultiple(false);
-		 dialog.setValidator(new ISelectionStatusValidator()
+		dialog.setAllowMultiple(false);
+		dialog.setValidator(new ISelectionStatusValidator()
 		{
-			
+
 			public IStatus validate(Object[] selection)
 			{
-				if(selection.length == 1 && (selection[0] instanceof ExplicitOperationDefinition|| selection[0] instanceof ExplicitFunctionDefinition))
+				if (selection.length == 1
+						&& (selection[0] instanceof ExplicitOperationDefinition || selection[0] instanceof ExplicitFunctionDefinition))
 				{
-					//new Status(IStatus.OK,IDebugConstants.PLUGIN_ID,IStatus.OK,"Selection: "+ ((IAstNode)selection[0]).getName(),null);
+					// new Status(IStatus.OK,IDebugConstants.PLUGIN_ID,IStatus.OK,"Selection: "+
+					// ((IAstNode)selection[0]).getName(),null);
 					return Status.OK_STATUS;
 				}
-				return new Status(IStatus.CANCEL,IDebugConstants.PLUGIN_ID,"Invalid selection");
+				return new Status(IStatus.CANCEL, IDebugConstants.PLUGIN_ID, "Invalid selection");
 			}
 		});
 

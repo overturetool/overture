@@ -151,7 +151,7 @@ public class VdmApplicationLaunchShortcut extends AbstractVdmApplicationLaunchSh
 			return;
 		}
 		IAstNode type = null;
-		if (types.length == 0)
+		if (types== null ||types.length == 0)
 		{
 			MessageDialog.openError(getShell(), "no type", emptyMessage);
 		} else if (types.length > 1)

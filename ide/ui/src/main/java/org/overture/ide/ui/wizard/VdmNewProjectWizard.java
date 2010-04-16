@@ -143,7 +143,7 @@ public abstract class VdmNewProjectWizard extends BasicNewProjectResourceWizard
 		if (useIo || useMath || useUtil)
 		{
 			File projectRoot = prj.getLocation().toFile();
-			File libFolder = new File(projectRoot, "lib");
+			File libFolder = new File(new File(projectRoot, "model"),"lib");
 			if (!libFolder.exists())
 				libFolder.mkdirs();
 
