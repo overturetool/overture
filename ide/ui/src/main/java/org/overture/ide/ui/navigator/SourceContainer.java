@@ -45,7 +45,8 @@ public class SourceContainer extends Folder {
 		String[] segments = path.segments();
 		StringBuffer s = new StringBuffer();
 
-		for (int i = 0; i < segments.length - 1; i++) {
+		
+		for (int i = 1; i < segments.length - 1; i++) {
 			s.append(segments[i]);
 			s.append('.');
 		}
