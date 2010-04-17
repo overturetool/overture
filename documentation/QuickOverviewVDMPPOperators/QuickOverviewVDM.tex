@@ -139,6 +139,7 @@
     {\tt \keyw{elems} l} & Elements & \TO{\SEQ{A}}{\SET{A}} \sindex{elems@\kw{elems}}\sindex{sequence!elements}\\
     {\tt \keyw{inds} l} & Indices & \TO{\SEQ{A}}{\SET{\keyw{nat1}}} \sindex{inds@\kw{inds}}\sindex{sequence!indices}\\
     {\tt l1 \char'136\ l2} & Concatenation & \TO{\PROD{(\SEQ{A})}{(\SEQ{A})}}{\SEQ{A}} \sindex{sequence!concatenation}\\
+    {\tt \keyw{reverse} l} & Reverse & \TO{\SEQ{A}}{\SEQ{A}}\\
     {\tt \keyw{conc} ll} & Distributed concatenation & \TO{\SEQ{\SEQ{A}}}{\SEQ{A}}\sindex{conc@\kw{conc}}\sindex{sequence!concatenation!distributed}\\
     {\tt l ++ m} & Sequence modification & \TO{\PROD{\SEQ{A}}{\MAP{\keyw{nat}}{A}}}{\SEQ{A}}\sindex{sequence!modification}\\
     {\tt l(i)} & Sequence index & \TO{\PROD{\SEQ{A}}{\keyw{nat1}}}{A} \sindex{sequence!index}\\

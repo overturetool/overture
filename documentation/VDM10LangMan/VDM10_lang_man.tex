@@ -3502,7 +3502,7 @@ for each new period).
       \Lop{nat1} \dsepl 
       \Lop{int} \dsep 
       \Lop{rat} \dsepl 
-      \Lop{real} \dsep
+      \Lop{real} \dsepl
       \Lop{char} \dsepl
       \Lop{token}
       }
@@ -6509,8 +6509,8 @@ are:
 \item[\texttt{<FCFS>}:] First Come First Served
 \end{description} 
 
-The currently supported primary scheduling policies for the \texttt{BUS}
-are:
+The currently supported primary scheduling policy for the \texttt{BUS}
+is:
 \begin{description}
 %\item[\texttt{<TDMA>}:] Time Division Multiple Access
 \item[\texttt{<FCFS>}:] First Come First Served
@@ -7049,8 +7049,8 @@ point of the caller;
 \item operations which have no corresponding permission predicate are
   subject to no restrictions at all;
 \item synchronization constraints apply equally to calls within an
-  object (i.e. one operation within an object calls another operation
-  within that object) and outside an object (i.e. an operation from
+  object (i.e.\ one operation within an object calls another operation
+  within that object) and outside an object (i.e.\ an operation from
   one object calls an operation in another object);
 \item operation invocations have the semantics of a rendez-vous (as in
 Ada, see \cite{adalrm}) in case two active objects are involved. Thus if an
@@ -7168,7 +7168,7 @@ sync
 
 Note that it is only permitted to have one permission predicate for each
 operation. The
-\texttt{\#active} operator is explained below.
+{\bf\ttfamily{\#active}} operator is explained below.
 
 A \keyw{mutex(all)} constraint specifies that all of the operations
 specified in that class \textit{and any superclasses} are to be
@@ -7190,11 +7190,11 @@ of activations and completions of the operations, given as functions
 {\tt \#fin}: operation name $\rightarrow$ $\Nat$ 
 \end{quote}
 
-Furthermore, a derived function {\tt \#active} is available such that
-{\tt \#active(}{\tt A}{\tt )} $=$ {\tt \#act(}{\tt A}{\tt )} $-$
-{\tt \#fin(}{\tt A}{\tt )}, giving the number of currently active
-instances of {\tt A}. Another history function - \texttt{\#req} - is
-defined in section \ref{queuesec}.
+Furthermore, a derived function {\bf\ttfamily \#active} is available such that
+{\bf\ttfamily \#active}{\tt (A}{\tt )} $=$ {\bf\ttfamily \#act}{\tt (A}{\tt )} $-$
+{\bf\ttfamily \#fin}{\tt (A}{\tt )}, giving the number of currently active
+instances of {\tt A}. Another history function -- {\bf\ttfamily{\#req}} -- is
+defined in section~\ref{queuesec}.
 \item[Examples:]
 Consider a Web server\label{example:webserver} that is capable of
 supporting 10 simultaneous 
@@ -7282,11 +7282,11 @@ of history.
 \item[Semantics:] 
 A queue condition guard acts on requests waiting in the queues for the
 execution of the operations.
-This requires use of a third history function {\tt \#req} such that
-{\tt \#req(A)} counts the number of messages which have been received by the
+This requires use of a third history function {\bf\ttfamily \#req} such that
+{\bf\ttfamily \#req}{\tt (A)} counts the number of messages which have been received by the
 object requesting execution of operation {\tt A}.
-Again it is useful to introduce the function {\tt \#waiting} such that:
-{\tt \#waiting(}{\tt A}{\tt )} $=$ {\tt \#req(}{\tt A}{\tt )} $-$ {\tt \#act(}{\tt A}{\tt )},
+Again it is useful to introduce the function {\bf\ttfamily \#waiting} such that:
+{\bf\ttfamily \#waiting}{\tt (A}{\tt )} $=$ {\bf\ttfamily \#req}{\tt (A}{\tt )} $-$ {\bf\ttfamily \#act}{\tt (A}{\tt )},
 which counts the number of items in the queue.
 
 \item[Examples:] 
