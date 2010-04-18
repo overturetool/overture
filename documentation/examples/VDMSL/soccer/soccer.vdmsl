@@ -428,13 +428,12 @@ post goalkeeper = p
 \begin{vdm_al}
 SUBSTITUTION : player * player ==> ()
 SUBSTITUTION (pl, subs) ==
-(
-on_field_players := on_field_players union {subs} \ {pl};
-potential_substitutes := potential_substitutes \ {subs};
-if pl = goalkeeper then
-           	 (goalkeeper := subs; 
+( on_field_players := on_field_players union {subs} \ {pl};
+  potential_substitutes := potential_substitutes \ {subs};
+  if pl = goalkeeper 
+  then (goalkeeper := subs; 
 		nb_gk_subs := nb_gk_subs +1)
-else (nb_fp_subs := nb_fp_subs +1)
+  else nb_fp_subs := nb_fp_subs +1
 )
 pre pl in set on_field_players and subs in set potential_substitutes
        and (pl = goalkeeper => within_allowed_limits(nb_gk_subs+1,nb_fp_subs))
@@ -481,9 +480,10 @@ SUBSTITUTION_FP (pl , subs) ==
        and nb_fp_subs = nb_fp_subs~ +1
 ;
 SUBSTITUTION_EXPL : player * player ==> ()
-SUBSTITUTION_EXPL (pl , subs)
-== if pl = goalkeeper then SUBSTITUTION_GK(pl,subs)
-			else SUBSTITUTION_FP(pl,subs)
+SUBSTITUTION_EXPL (pl , subs) ==
+  if pl = goalkeeper 
+  then SUBSTITUTION_GK(pl,subs)
+  else SUBSTITUTION_FP(pl,subs)
 pre (pl = goalkeeper => 
           pre_SUBSTITUTION_GK(pl,subs,
                               mk_R_Book(on_field_players,potential_substitutes,

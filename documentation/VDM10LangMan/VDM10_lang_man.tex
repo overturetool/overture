@@ -246,15 +246,19 @@ April   & 2010 & 0.2   \\ \hline
 
 \chapter{Introduction}
 
+The Vienna Development Method (VDM)
+\cite{Bjorner&78,Jones90a,Fitzgerald&08c} was originally developed at
+the IBM laboratories in Vienna in the 1970's and as such it is one of
+the longest established formal method.
 This document is a common language manual for the three dialects for
 VDM-SL, VDM++ and VDM-RT in the VDM-10 commonly agreed language
-revision. These dialects are supported by both VDMTools (in the
-appropriate version) as well as in the Overture open source tool built
-on top of the Eclipse platform. Whenever a construct is common to the
-three different dialects the term ``VDM languages'' will be
-used. Whenever a construct is specific to a subset of the VDM
-languages the specific dialect term mentioned above will be mentioned
-explictly. 
+revision. These dialects are supported by both VDMTools
+\cite{Fitzgerald&08a} (in the appropriate version) as well as in the
+Overture open source tool \cite{Larsen&10a} built on top of the
+Eclipse platform. Whenever a construct is common to the three
+different dialects the term ``VDM languages'' will be used. Whenever a
+construct is specific to a subset of the VDM languages the specific
+dialect term mentioned above will be mentioned explictly.
 
 \section{The VDM Specification Language (VDM-SL)}
 
@@ -289,7 +293,8 @@ formal specifications.
 
 The VDM-RT language (formerly called VICE as an acronym for ``VDM++ In
 Constrained Environments'') is used to appropriately model and analyse
-Real-Time embedded and distributed systems~\cite{Verhoef&06b}.
+Real-Time embedded and distributed
+systems~\cite{Mukherjee&00,Verhoef&06b,Verhoef&07,Verhoef08,Larsen&09b}. 
 
 
 \section{Purpose of The Document}
@@ -2071,7 +2076,9 @@ Functions can also be defined using recursion (i.e.\ by calling
 themselves). When this is done one is recommended to add
 a \Lop{measure} function that can be used in the proof obligations
 generated from the model such that termination proofs can be carried
-out. A simple example here could be the traditional factorial function
+out. The {\bf\ttfamily measure} function shall take the same same type of
+parameters as the recursive function itself and it yield a natural
+number. A simple example here could be the traditional factorial function
 defined as:
 \begin{lstlisting}
 functions
@@ -2088,6 +2095,14 @@ where \texttt{id} would be defined as:
 id: nat +> nat
 id(n) == n
 \end{lstlisting}
+Here the proof obligation will become:
+\begin{lstlisting}
+forall n:nat &
+  (not (n = 0) =>
+    id(n) > id((n - 1)))
+\end{lstlisting}
+\noindent This proof obligation will ensure that the recursive
+function will terminate and thus sooner or later reach the base case.
 
 \section{Polymorphic Functions}
 
@@ -3355,7 +3370,7 @@ section \ref{call-stmt}.
   \end{lstlisting}
   The threadid expression returns a natural number which uniquely
   identifies the thread in which the expression is executed. Note that 
-  periodic threads gets a new threadid at the start of each period.
+  periodic threads gets a new threadid at the start of each new period.
 
 \item[Examples:] 
 Using threadid's it is possible to provide a VDM++ base class that
@@ -3412,7 +3427,8 @@ In this example the threadid expression is used in two places:
 \end{itemize}
 
 Note also that one needs to be careful about the use of the wait-notify
-mechanism when having periodic threads (because they change their threadid 
+mechanism when having periodic threads (because they change their
+{\bf\ttfamily threadid} 
 for each new period).
 \end{description}
 
@@ -7487,7 +7503,7 @@ of describing the activities in a thread.
 
 \item[Semantics:] 
 For each periodic thread four different numbers are used. They are in order 
-of appearance: 
+of appearance (also illustrated in Figure~\ref{fig:PeriodJitterDelayOffset}): 
 
 \begin{enumerate}
 \item \textbf{period:} This is a non-negative, non-zero value that describes the length of the 
@@ -7501,6 +7517,13 @@ inter arrival distance between two adjacent events.
 the first period of the event stream starts. Note that the first event occurs in the interval
 [offset, offset+ jitter].
 \end{enumerate}
+
+\begin{figure}
+\begin{center}
+\resizebox{0.8\textwidth}{!}{\includegraphics{pjdoTuple.png}}
+\caption{{Period (p), jitter (j), delay (d) and offset (o)}\label{fig:PeriodJitterDelayOffset}}
+\end{center}
+\end{figure}
 
 Given a defined time resolution $\Delta$T, a thread with a periodic
 obligation invokes the mentioned operation at the beginning of each
