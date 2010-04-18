@@ -4325,7 +4325,7 @@ traditional programming languages.
 
 %  \ifthenelse{\boolean{VDMpp}}{
     \Rule{access value definition}{
-       (\OptPt{\Ruleref{access}}, \OptPt{\Lop{static}})  \dsepl\ (\OptPt{\Lop{static}}, \OptPt{\Ruleref{access}}), \lfeed 
+       \OptPt{\Ruleref{access}},  
          \Ruleref{value definition}
     }%}{}
 
@@ -4355,7 +4355,7 @@ where the {\tt access} part only can be used in VDM++ and VDM-RT.
   well, and this can be useful in order to obtain more exact type
   information.
 
-Details of the VDM++ and VDM-RT access and \keyw{static} specifiers
+Details of the VDM++ and VDM-RT access specifiers
 can be found in section \ref{ch:interface}.
 
 \item[Examples:] The example below, taken from \cite{Fitzgerald&98}
@@ -9683,7 +9683,7 @@ The access part is only possible in VDM++ and VDM-RT.
 
 %  \ifthenelse{\boolean{VDMpp}}{
     \Rule{access value definition}{
-       (\OptPt{\Ruleref{access}}, \OptPt{\Lop{static}})  \dsepl\ (\OptPt{\Lop{static}}, \OptPt{\Ruleref{access}}), \lfeed 
+       \OptPt{\Ruleref{access}}, 
          \Ruleref{value definition}
     }
 %}{}
