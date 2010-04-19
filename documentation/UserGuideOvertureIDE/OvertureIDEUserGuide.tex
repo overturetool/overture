@@ -149,7 +149,7 @@ Berkshire. RG12 8SN, UK}
 \maketitle
 
 
-{\textbf{Document history}
+\textbf{Document history}
 
 \begin{tabular}{|l|l|l|}\hline
 Month   & Year & version of Overture.exe \\ \hline
@@ -961,122 +961,10 @@ cases. Subsequently, the results of running all these can be inspected
 and erroneous test cases can easily be found. The user can then fix 
 the problem and reuse the same traces definitions.
 
-\subsection{The Use of the Trace Definition Syntax}\label{sec:syntax}
-
-The syntax for trace definitions are defined as:\index{traces}
-
-\Rule{traces definitions}{\Lop{traces},
-   \SeqPt{\Ruleref{named trace}}
-}
-
-\Rule{named trace}{\Ruleref{identifier},
-  \SeqPt{\Lit{/}, \Ruleref{identifier}},
-  \Lit{:},\Ruleref{trace definition list}
-}
-
-The naming of trace definitions (with the ``\texttt{/}'' separator) 
-is used for indicating the paths
-that are used for generated argument files for test cases
-(\texttt{.arg}) and the corresponding result files
-(\texttt{.res})\footnote{Currently the full path names are however
-  not supported in an Overture context but this is envisaged in the future.}.
-
-\Rule{trace definition list}{
-  \Ruleref{trace definition term}, 
-  \SeqPt{\Lit{;}, \Ruleref{trace definition term}}
-}
-
-The ``\texttt{;}'' operator is used for indicating a sequencing
-relationship between its \emph{trace definition term}'s.
-
-\Rule{trace definition term}{
-  \Ruleref{trace definition} \dsep
-  \Ruleref{trace definition term}, \Lit{|}, \Ruleref{trace definition}
-}
-
-The ``\texttt{|}'' operator is used for indicating alternative
-choices between trace definitions. 
-
-\Rule{trace definition}{
-  \Ruleref{trace core definition} \dsep
-  \Ruleref{trace bindings}, \Ruleref{trace core definition} \dsep
-  \Ruleref{trace core definition}, \Ruleref{trace repeat pattern} \dsep
-  \Ruleref{trace bindings}, \Ruleref{trace core definition}, 
-  \Ruleref{trace repeat pattern}
-}
-
-Trace definitions can have different forms and combinations:
-
-\begin{itemize}
-\item Core definitions which includes application of operations and
-  bracketed trace expressions.
-\item Trace bindings where identifiers can be bound to values and in
-  case of looseness ({\bf\ttfamily let} \emph{bind} {\bf\ttfamily in
-  set} \emph{setexpr} {\bf\ttfamily in} \emph{expr}) this will
-  give raise to multiple test cases generated.
-\item Trace repeat patterns which are used whenever repetition is
-  desired.
-\end{itemize}
-
-\Rule{trace core definition}{
-  \Ruleref{trace apply expression} \dsep
-  \Ruleref{trace bracketed expression}
-}
-
-\Rule{trace apply expression}{
-  \Ruleref{identifier}, \Lit{.}, \Ruleref{identifier}, 
-  \Lit{(}, \Ruleref{expression list}, \Lit{)}
-}
-
-Trace apply expressions are the most basic element in trace
-definitions. The identifier before the ``\texttt{.}'' indicate an
-object for which the operation (listed after the ``\texttt{.}'') is to
-be applied with a list of arguments (the expression list inside the
-brackets). Note that with the current syntax for trace definitions,
-apply expressions are limited to this form \texttt{instid.opid(args)} so it
-is for example not at the moment possible to call an operation in the
-same class directly as \texttt{opid(args)}. Nor is it possible with the
-current syntax to make use of a particular operation in a superclass
-in case of multiple possible ones which in VDM++ is would be written
-as \texttt{instid.clid`opid(args)}. In the current version it is also
-not allowed to call functions here directly, although that may be
-changed at some stage in the future.
-
-\Rule{trace repeat pattern}{
-  \Lit{*} \dsep 
-  \Lit{+} \dsep
-  \Lit{?} \dsep
-  \Lit{\{}, \Ruleref{numeric literal}, \Lit{\}} \dsep
-  \Lit{\{}, \Ruleref{numeric literal}, \Lit{,} 
-  \Ruleref{numeric literal}, \Lit{\}}
-} 
-
-The different kinds of repeat patterns have the following meanings:
-\begin{itemize}
-\item  \Lit{*} means 0 to n occurrences (n is tool specific). 
-\item  \Lit{+} means 1 to n occurrences (n is tool specific). 
-\item  \Lit{?} means 0 or 1 occurrences. 
-\item  \Lit{\{}, n, \Lit{\}} means n occurrences.
-\item  \Lit{\{}, n, \Lit{,} m \Lit{\}} means between n and m occurrences.
-\end{itemize}
-
-\Rule{trace bracketed expression}{
-  \Lit{(}, \Ruleref{trace definition list}, \Lit{)}
-}
-
-\Rule{trace bindings}{
-  \Ruleref{trace binding}, \SeqPt{\Ruleref{trace binding}}
-}
-
-\Rule{trace binding}{
-  \Lop{let}, \Ruleref{local definitions}, 
-             \SeqPt{\Lit{,}, \Ruleref{local definition}}, \Lop{in} \dsep
-  \Lop{let}, \Ruleref{bind}, \Lop{in} \dsep
-  \Lop{let}, \Ruleref{bind}, \Lop{be}, \Lop{st}, \Ruleref{expression}, \Lop{in}
-}
-
 \subsection{Using the Combinatorial Testing GUI}
 
+The syntax for trace definitions are defined in the VDM-10 language
+manual.\index{traces}
 If one have used the {\bf\ttfamily traces} syntax described above it
 is possible to go to the \emph{Combinatorial testing}
 perspective\index{combinatorial testing}. An example of using that
@@ -1389,7 +1277,7 @@ various extra options can be used. These are:
   the result and stop.
 \item[\texttt{-c <charset>}:] This will select a file character set. This is to
 allow a specification written in languages other than the default for your system
-to be used (see section~\ref{sec:international}). 
+to be used. 
 \item[\texttt{-t <charset>}:] This will select a console character set. The output
 terminal can use a different character set to the specification files.
 \item[\texttt{-o <filename>}:] This will save the internal
@@ -1403,6 +1291,7 @@ parsing/checking overhead. If files are sufficiently large, this may be faster.
 \item[\texttt{-log}:] This will enable VDM-RT real-time event logging. These
   are useful with the Overture Eclipse GUI, which has a plugin to
   display timing diagrams (see Section~\ref{sec:showlog}).
+\item [\texttt{-remote}:] This enables remote control of the VDMJ executable.
 \end{description}
 
 %Notice that the error indicates that the tool must be invoked with either the \texttt{-vdmsl}, \texttt{-vdmpp} or \texttt{-vdmrt}
@@ -1626,8 +1515,7 @@ do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
 \item[\texttt{[p]rint <expression>}:] This command evaluates the
   expression provided in the current
   context.\index{print}\index{command!print} Note that if combinatorial traces
-  are defined in the model using the syntax from
-  Section~\ref{sec:syntax} then the \texttt{print} command can also be
+  are defined in the model then the \texttt{print} command can also be
   used to evaluate a named trace. This will carry out the combinatorial
   test by expanding all the regular expressions and executing the resulting
   operation sequences. \index{combinatorial testing}   
@@ -2638,7 +2526,7 @@ Warnings from the type checker include:
 \end{description}
 
 \newpage
-\section{Run-Time Errors}\label{app:typeerr}
+\section{Run-Time Errors}\label{app:runtimeerr}
 
 When using the interpreter/debugger it is possible to get run-time
 errors indicating that a problem with the VDM model analysed have been

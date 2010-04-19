@@ -184,7 +184,9 @@ or Rational Rose (\url{http://www-306.ibm.com/software/rational/}).
 VDM \cite{Jones90a,Dawes91,Fitzgerald&98} is a formal method
 \cite{Craigen&93b,Hinchey&95} and these are characterized by being
 able to express things in an abstract fashion and having a precise
-semantics for the models produced in these languages.  Some of these
+semantics for the models produced in these languages. Three different
+dialects exists for VDM;
+VDM-SL, VDM++ and VDM-RT \cite{Larsen&10b}. Some of these
 methods include methodological steps of getting from a very abstract
 model to a more concrete model. This process is typically referred to
 as refinement \cite{Jones90a,Morgan90a,Woodcock&96,Back&98} when formal
@@ -210,7 +212,7 @@ In
 Chapter~\ref{chap:period} periodic threads and statically schedulable
 systems are treated. Chapter~\ref{chap:schedule} provides insight 
 into the scheduling principles that can be used for the execution of
-concurrent and for distributed VDM++ models in Overture and \VDMTools. In 
+concurrent and for distributed VDM-RT models in Overture and \VDMTools. In 
 Chapter~\ref{chap:timetrace} it is presented how post-execution analysis
 can be made of timed logfiles produced by \VDMTools\ during execution 
 of a scenario (primarily using the \showtrace\ from Overture). 
@@ -348,12 +350,12 @@ about an optimal system architecture. The things that are left out of
 the modelling here are memory and optimisation techniques such as caching
 and pipelining.
 
-\section{Overview of VDM++ and its tool support}
+\section{Overview of VDM and its tool support}
 
-In this section we give a brief description of those features of VDM++
-specifically suited to modelling real-time systems and deployment to
-multiple processors. A more substantial overview of VDM++ can be found
-in \cite{LangManPP}.
+In this section we give a brief description of those features of VDM
+dialects specifically suited to modelling real-time systems and
+deployment to multiple processors. A more substantial overview of the
+VDM languages can be found in \cite{LangManPP}.
 
 VDM++ is a model-based object-oriented specification language. It
 permits description of concurrent models by using threads. Real-time
@@ -381,7 +383,7 @@ a feature in Overture
 called \showtrace\ that may be used. More details will be
 provided about that in Chapter~\ref{chap:timetrace}.
 
-We now describe four key features of VDM++ used when modelling
+We now describe four key features of VDM-RT used when modelling
 real-time systems: 
 \begin{enumerate}
 \item threads,
@@ -489,7 +491,7 @@ objects. This mechanism is described in Chapter~\ref{chap:sync}.
 
 \subsection{Duration and Cycles Statements}
 
-A duration statement is a VDM++ statement that allows a fixed estimate to
+A duration statement is a VDM-RT statement that allows a fixed estimate to
 be placed on the execution time of a particular portion of a model. A
 duration statement has the form
 
@@ -504,7 +506,7 @@ which time is to be interpreted are described in
 Section~\ref{sec:timingintro} below.  Otherwise the duration statement
 has the exact functional effect of its body \textit{statement}.
 
-A cycles statement is a VDM++ statement that allows a relative
+A cycles statement is a VDM-RT statement that allows a relative
 estimate to be placed on the execution of a particular portion of a
 model relative to the \texttt{CPU} it is allocated to (deployed). A cycles
 statement has the form
@@ -569,7 +571,7 @@ are (however, in the first version all of them are treated as FCFS):
 \end{description} 
 
 Note that the principles used for describing the system to be developed using 
-the VDM++ technology may be copied for the environment as well. This means that
+the VDM technology may be copied for the environment as well. This means that
 it is possible to use the ``\keyw{system}'' keyword also for the environment as
 a whole and thus be able to accurately describe the interaction between the
 system and its environment. In case this is not done virtual processors 
@@ -696,7 +698,7 @@ Four sources of timing information are used during execution:
 
 \begin{description}
 \item[Model enhanced with cycles and durations:] When executing a 
-portion of the VDM++ model which falls under the scope of a duration
+portion of the VDM model which falls under the scope of a duration
 or a cycles statement, the internal clock is incremented by the given
 duration/number of clock cycles at the completion of the
 statement. Note that the durations are absolute in time whereas the
@@ -729,7 +731,7 @@ text file, it may be analyzed separately.
 
 \section{Structure of document}
 
-After this short introduction to reactive systems, VDM++ and timing
+After this short introduction to reactive systems, VDM and timing
 analysis this document proceeds in Chapter~\ref{chap:process} with a
 relatively short description of the envisaged development process for
 real-time systems using Overture or 
@@ -828,7 +830,7 @@ information. At this stage it may prove necessary to revisit the
 concurrent design model, as it may be that design decisions made at
 that stage prove to be infeasible when real-time information is added
 to the model (for instance, the model may not be able to meet its
-deadlines). From the concurrent and distributed real-time VDM++ design
+deadlines). From the concurrent and distributed real-time VDM-RT design
 model an implementation may be developed.  Testing of the final
 implementation (and the different design-oriented models) may be able
 to use the most abstract model as a test oracle. We return to the
@@ -1394,7 +1396,7 @@ for concurrent models. The main changes from the sequential model are:
 Here ``XX'' is a figure that would be determined by the standards used
 by each individual company or organization.
 
-\section{Concurrent Real-Time and Distributed VDM++ Design Model}
+\section{Concurrent Real-Time and Distributed VDM-RT Design Model}
 
 At this stage real-time information is added to the model. In addition
 if the system in question is to be distributed over multiple
@@ -1432,7 +1434,7 @@ execution time relative to a processor (in the form of the number of
 expected clock cycles).
 
 For those parts of the model which are effectively modelling the
-environment. Depending upon the accuracy needed for the VDM++ model of
+environment. Depending upon the accuracy needed for the VDM-RT model of
 the system under design the model of the environment should be more
 elaborate. Here is is possible to have different instances in the
 environment on each their own virtual processor or even be modelled
@@ -1538,7 +1540,7 @@ to provide:
 
 \begin{enumerate}
 \item The model is syntax and type correct.
-\item The UML class diagram and VDM++ model are synchronized.
+\item The UML class diagram and VDM-RT model are synchronized.
 \item The model is schedulable.
 \item The model displays no deadlocks.
 \item The model is functionally correct for all executed scenarios.
@@ -1572,7 +1574,7 @@ In other circumstances the implementation must be written by
 hand. However this tends to be quite straightforward due to the
 quantity and depth of information acquired during the modelling
 stages. Typically a number of rules can be applied reasonably
-mechanically, to translate the VDM++ model into code. 
+mechanically, to translate the VDM-RT model into code. 
 %For instance
 %\cite{Bousquet00} gives a list of rules that can be applied to translate
 %VDM++ models into an Ada 95 implementation.
@@ -1591,7 +1593,7 @@ this situation. The approach described in this document aims to find
 potential bottlenecks in the system even before the final
 implementation is made. The aim is to be able to sit on the host
 computer (where the development takes place) and simulate the timing
-behaviour of the concurrent real-time VDM++ design model with
+behaviour of the concurrent real-time VDM-RT design model with
 information about the timing behaviour of the intended possibly
 distributed hardware platform.
 
@@ -1599,7 +1601,7 @@ distributed hardware platform.
 \begin{center}
 \includegraphics[width=0.5\textwidth]{figures/VDM++levelsofmodels.jpg}
 \end{center}
-\caption{Relationship Between VDM++ Models}\label{fig:relationship}
+\caption{Relationship Between VDM Models}\label{fig:relationship}
 \end{figure}
 
 With the approach described in this document the test cases used in
@@ -1615,19 +1617,19 @@ models takes more and more details into account.
 \section{Discussion}
 
 In this chapter we have described the evolution of one VDM-SL model
-and three VDM++ models: a sequential model, a concurrent model and a
-concurrent distributed real-time model. There is no formal relationship between
-them in the sense that no formal relationship has been established
-between any of the models. This is consistent with the pragmatic
-software engineering approach advocated in this process, in contrast
-to a pure formal development. Nonetheless, since the process involves
-adding detail to each model, to obtain the next model, in some sense
-we can consider each model a sub-model of the next, as shown in
-Figure~\ref{fig:relationship}. 
-That is to say, the concurrent model is an extension of the
-sequential one, and the real-time and distributed model is an
-extension of the concurrent one. Each of the models get more and more
-concrete and complex, but gradually closer and closer to reality.
+and three object oriented VDM models: a sequential model, a concurrent
+model and a concurrent distributed real-time model. There is no formal
+relationship between them in the sense that no formal relationship has
+been established between any of the models. This is consistent with
+the pragmatic software engineering approach advocated in this process,
+in contrast to a pure formal development. Nonetheless, since the
+process involves adding detail to each model, to obtain the next
+model, in some sense we can consider each model a sub-model of the
+next, as shown in Figure~\ref{fig:relationship}.  That is to say, the
+concurrent model is an extension of the sequential one, and the
+real-time and distributed model is an extension of the concurrent
+one. Each of the models get more and more concrete and complex, but
+gradually closer and closer to reality.
 
 \chapter{Example Development}\label{chap:example}
 
@@ -1640,7 +1642,7 @@ different models developed are presented.
 
 \section{The Counter Measures System}\label{sec:CMdesc}
 
-The application to be modelled in VDM++ is the controller for a
+The application to be modelled in VDM is the controller for a
 missile counter measures system. This takes information from sensors
 concerning threats and sends commands to hardware which releases
 flares intended to distract the threat sensed.  The overall high-level
@@ -3720,14 +3722,14 @@ and~\ref{sec:seqVDM}. This validation was again conducted using
 traditional testing techniques and a large amount of reuse of the test
 cases from the sequential VDM++ model was possible.
 
-\section{Real-Time Concurrent and Distributed VDM++ Design Model}\label{sec:realtime}
+\section{Real-Time Concurrent and Distributed VDM-RT Design Model}\label{sec:realtime}
 
 The real-time model differs from the concurrent model in a number of ways:
 
 \begin{itemize}
 \item The \texttt{ClockTick} class and the \texttt{timerRef} instance
   variable inside the \texttt{World} class is no longer needed since
-  the extensions to VDM++ include time directly.
+  the extensions to VDM-RT include time directly.
 \item The \texttt{CM} class is changed into a system (by changing the
 {\bf\ttfamily{class}} keyword to a {\bf\ttfamily{system}} keyword). In addition
 static instance variables are introduced for the \texttt{CPU}'s and the
@@ -3957,12 +3959,12 @@ periodic (1000,0,0,0) (evalQueue)
 
 As for the VDM models presented earlier there is a need to
 validate the correct behaviour of the real-time and distributed 
-VDM++ model presented
+VDM-RT model presented
 above. Both of these models use the standard
 \texttt{IO} class for input and output. As previously one would start 
 this by providing simple test cases and then gradually make them more
 and more complex. Since the input format used for the real-time and
-distributed VDM++ model is identical to the one used for the
+distributed VDM-RT model is identical to the one used for the
 concurrent VDM++ model all the test cases with different
 \texttt{scenario.txt} files can be reused again without any changes.
 However, due to the timing now being closer to the ``real-world''
@@ -4666,7 +4668,7 @@ value for that one.
 
 \section{Summary}
 
-Systems exhibiting periodicity can be described using VDM++ in a
+Systems exhibiting periodicity can be described using VDM in a
 straightforward manner, using language primitives. Based on these
 primitives, features such as timers and clocks can be built into
 models.
@@ -5313,7 +5315,7 @@ way in which the target machine influences simulated time is by the use
 of the default times, which correspond to the time taken to execute
 assembly instructions on the target processors.
 
-However, this is an approximation, since the VDM++ interpreter has its
+However, this is an approximation, since the VDM interpreter has its
 own instruction set, which will not coincide with that of any
 processor. Therefore there will inevitably be an element of adjustment
 of the default times, to improve the precision of the simulation. This
@@ -5321,13 +5323,13 @@ adjustment is referred to as \emph{calibration}.
 
 Normally calibration occurs by comparing time traces obtained by
 execution of the actual application on the target, with those obtained
-by executing the VDM++ model.  Since the VDM++ model is deterministic,
+by executing the VDM model.  Since the VDM model is deterministic,
 it can be rerun with one scenario but different sets of default times,
 to allow convergence to the actual application. Note that by the very
 nature of the approach, the simulation will never precisely match the
 timing behaviour of the actual application; the property desired is
 that the application exhibits no timing bottlenecks that were not
-identified by the VDM++ model.
+identified by the VDM model.
 
 \chapter{Postscript}\label{chap:postscript}
 
@@ -5369,7 +5371,7 @@ step in the right direction.
 because it is waiting for a permission predicate to become true.
 \item[Bottleneck] Part of the system whose timing behaviour critically
 affects the overall performance of the system.
-\item[Concurrent Real-Time Distributed VDM++ Design Model] A model which defines a 
+\item[Concurrent Real-Time Distributed VDM-RT Design Model] A model which defines a 
 particular dynamic and physical architecture including its real-time behaviour and deployment to \texttt{CPU}'s.
 \item[Concurrent VDM++ Design Model] A model which defines a particular dynamic
 architecture, without worrying in the first instance about real-time behaviour.
@@ -7389,7 +7391,7 @@ printf(format, args) ==
 end IO
 \end{lstlisting}
 
-\section{Real-Time Concurrent VDM++ Model for Counter Measures System}
+\section{Real-Time Concurrent VDM-RT Model for Counter Measures System}
 
 \subsection{The CM Class}
 
