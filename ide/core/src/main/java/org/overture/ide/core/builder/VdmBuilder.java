@@ -43,7 +43,7 @@ public class VdmBuilder extends VdmCoreBuilder
 	}
 
 	@Override
-	public void fullBuild(final IProgressMonitor monitor) throws CoreException
+	public void build(final IProgressMonitor monitor) throws CoreException
 	{
 		if (VdmCore.DEBUG)
 		{
@@ -70,7 +70,9 @@ public class VdmBuilder extends VdmCoreBuilder
 		}
 
 		setBuilding(getVdmProject());
-		clean(monitor);
+		//clean(monitor);
+		clearProblemMarkers();
+		clearInternalModel();
 
 		final List<IStatus> statusList = new Vector<IStatus>();
 
@@ -134,11 +136,7 @@ public class VdmBuilder extends VdmCoreBuilder
 
 			// IMPORTANT we do not have an incremental builder so a full parse/ build is required, therefore remove any
 			// AST nodes in store.
-			IVdmModel model = VdmProject.createProject(getProject()).getModel();
-			if (model != null)
-			{
-				model.clean();
-			}
+			clearInternalModel();
 
 			try
 			{
@@ -153,6 +151,15 @@ public class VdmBuilder extends VdmCoreBuilder
 		}
 		monitor.done();
 
+	}
+
+	private void clearInternalModel()
+	{
+		IVdmModel model = VdmProject.createProject(getProject()).getModel();
+		if (model != null)
+		{
+			model.clean();
+		}
 	}
 
 	public void endBuild(IProgressMonitor monitor)

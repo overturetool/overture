@@ -51,8 +51,8 @@ public class VdmSlMainLaunchConfigurationTab extends
 			ModuleList modules = model.getModuleList();
 			modules.combineDefaults();
 			ModuleInterpreter ci = new ModuleInterpreter(modules);
-			if (expression.contains("`"))
-				ci.setDefaultName(expression.substring(0, expression.indexOf("("))); // needed for static fn/op check
+			if (expression.contains(STATIC_CALL_SEPERATOR))
+				ci.setDefaultName(expression.substring(0, expression.indexOf(STATIC_CALL_SEPERATOR))); // needed for static fn/op check
 
 			ci.typeCheck(expression);
 			return true;

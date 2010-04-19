@@ -31,7 +31,7 @@ public class DebugCommunication implements IDisposable{
 //		if(portNumber == -1) 
 //			throw new IOException("Debug communication: no ports available");//very unlikely 
 		server = new ServerSocket(portNumber);
-		System.out.println("listning on port: " + portNumber);
+		//System.out.println("listning on port: " + portNumber);
 		//server.setSoTimeout(50000);
 		
 		
@@ -160,10 +160,10 @@ public class DebugCommunication implements IDisposable{
 
 		if (tagnode.tag.equals("init")) {
 
-			System.out.println("Process Init: " + tagnode);
+			//System.out.println("Process Init: " + tagnode);
 			processInit(tagnode,s);
 		} else {
-			System.out.println("Unexpected tag: " + tagnode.tag);
+			System.err.println("Unexpected tag: " + tagnode.tag);
 		}
 		
 			

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -154,8 +156,18 @@ public class VdmLaunchConfigurationDelegate implements
 		DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 		File coverageDir = new File(new File(getOutputFolder(project),
 				"coverage"), dateFormat.format(new Date()));
-		coverageDir.mkdirs();
-		return coverageDir.toURI().toASCIIString();
+		coverageDir.mkdir();
+		String uri= coverageDir.toURI().toASCIIString();
+		uri = uri.substring(uri.lastIndexOf("file:"));
+		try
+		{
+			new File(new URI(uri)).mkdirs();
+		} catch (URISyntaxException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return uri;
 	}
 
 	private String getArgumentString(List<String> args)
@@ -208,7 +220,7 @@ public class VdmLaunchConfigurationDelegate implements
 		String executeString = getArgumentString(commandList);
 
 		Process process = null;
-		System.out.println(executeString);
+		//System.out.println(executeString);
 		try
 		{
 			if (!useRemoteDebug(launch.getLaunchConfiguration()))

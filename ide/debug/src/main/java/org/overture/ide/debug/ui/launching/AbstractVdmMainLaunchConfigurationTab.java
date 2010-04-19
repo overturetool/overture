@@ -642,7 +642,7 @@ setErrorMessage(null);
 		// expressionPathseperator);
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_DEFAULT, defaultModule);
 
-		System.out.println("Expression: " + expression);
+		//System.out.println("Expression: " + expression);
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION, expression);
 
 	}

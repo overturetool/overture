@@ -34,7 +34,8 @@ public class DebugThreadProxy extends AsyncCaller
 {
 	private class DBGPReader extends Thread
 	{
-		public DBGPReader() {
+		public DBGPReader()
+		{
 			setDaemon(true);
 		}
 
@@ -74,7 +75,8 @@ public class DebugThreadProxy extends AsyncCaller
 	private Thread dbgpReaderThread;
 
 	public DebugThreadProxy(Socket socket, String sessionId, Integer threadId,
-			IDebugThreadProxyCallback callback) {
+			IDebugThreadProxyCallback callback)
+	{
 		this.fSocket = socket;
 		this.sessionId = sessionId;
 		this.callback = callback;
@@ -152,8 +154,8 @@ public class DebugThreadProxy extends AsyncCaller
 			// readerRunner = new ReaderRunnable();
 			// new Thread(readerRunner).start();
 
-//			redirect("stdout", DBGPRedirect.REDIRECT);
-//			redirect("stderr", DBGPRedirect.REDIRECT);
+			// redirect("stdout", DBGPRedirect.REDIRECT);
+			// redirect("stderr", DBGPRedirect.REDIRECT);
 
 			// callback.fireStarted();
 
@@ -166,9 +168,7 @@ public class DebugThreadProxy extends AsyncCaller
 	}
 
 	/*********************************************************************************
-	 * '
-	 * 
-	 * *
+	 * ' *
 	 *******************************************************************************/
 
 	public BufferedInputStream getInput()
@@ -337,7 +337,41 @@ public class DebugThreadProxy extends AsyncCaller
 				callback.fireStopped();// terminated();
 
 			}
-		} else if (command.equals("context_get")
+		} else if (command.equals("step_over"))
+		{
+			String newstatus = msg.getAttr("status");
+			if (newstatus.equals("break"))
+			{
+				callback.suspended(IDebugThreadProxyCallback.STEP_OVER);
+			}else if (newstatus.equals("stopped"))
+			{
+				callback.fireStopped();// terminated();
+
+			}
+		}else if (command.equals("step_into"))
+		{
+			String newstatus = msg.getAttr("status");
+			if (newstatus.equals("break"))
+			{
+				callback.suspended(IDebugThreadProxyCallback.STEP_INTO);
+			}else if (newstatus.equals("stopped"))
+			{
+				callback.fireStopped();// terminated();
+
+			}
+		}else if (command.equals("step_out"))
+		{
+			String newstatus = msg.getAttr("status");
+			if (newstatus.equals("break"))
+			{
+				callback.suspended(IDebugThreadProxyCallback.STEP_RETURN);
+			}else if (newstatus.equals("stopped"))
+			{
+				callback.fireStopped();// terminated();
+
+			}
+		}
+		else if (command.equals("context_get")
 				|| command.equals("property_get"))
 		{
 			XMLOpenTagNode node = (XMLOpenTagNode) msg;
@@ -353,30 +387,29 @@ public class DebugThreadProxy extends AsyncCaller
 			// fStack = new VdmStackFrame(fThread, node.children, (int)id);
 		} else if (command.equals("stack_depth"))
 		{
-			setResult(transactionId,
-					Integer.parseInt(((XMLOpenTagNode) msg).text));
-			System.out.println("STACK DEPTH = " + msg.toString());
+			setResult(transactionId, Integer.parseInt(((XMLOpenTagNode) msg).text));
+			// System.out.println("STACK DEPTH = " + msg.toString());
 		}
 
 	}
 
 	public void processInit(XMLTagNode tagnode) throws IOException
 	{
-		callback.firePrintMessage(false,  "Process init: " + tagnode.toString());
-//		String sid = tagnode.getAttr("thread");
+		callback.firePrintMessage(false, "Process init: " + tagnode.toString());
+		// String sid = tagnode.getAttr("thread");
 		sessionId = tagnode.getAttr("idekey");
 
-//		int id = -1;
-//		// Either "123" or "123 on <CPU name>" for VDM-RT
-//		int space = sid.indexOf(' ');
-//
-//		if (space == -1)
-//		{
-//			id = Integer.parseInt(sid);
-//		} else
-//		{
-//			id = Integer.parseInt(sid.substring(0, space));
-//		}
+		// int id = -1;
+		// // Either "123" or "123 on <CPU name>" for VDM-RT
+		// int space = sid.indexOf(' ');
+		//
+		// if (space == -1)
+		// {
+		// id = Integer.parseInt(sid);
+		// } else
+		// {
+		// id = Integer.parseInt(sid.substring(0, space));
+		// }
 
 		redirect("stdout", DBGPRedirect.REDIRECT);
 		redirect("stderr", DBGPRedirect.REDIRECT);
@@ -426,14 +459,7 @@ public class DebugThreadProxy extends AsyncCaller
 
 			lineNumber = Integer.parseInt(stackNode.getAttr("lineno"));
 			String level = stackNode.getAttr("level");
-			VdmStackFrame frame = new VdmStackFrame(null,
-					filename,
-					nameIsFileUri,
-					charStart,
-					charEnd,
-					lineNumber,
-					Integer.parseInt(level),
-					where);
+			VdmStackFrame frame = new VdmStackFrame(null, filename, nameIsFileUri, charStart, charEnd, lineNumber, Integer.parseInt(level), where);
 			frames.add(frame);
 		}
 
@@ -454,8 +480,8 @@ public class DebugThreadProxy extends AsyncCaller
 	{
 		XMLOpenTagNode p = node;
 		String name = (p.getAttr("name"));
-		//String fullname = p.getAttr("fullname");
-		//String classname = p.getAttr("classname");
+		// String fullname = p.getAttr("fullname");
+		// String classname = p.getAttr("classname");
 		String type = p.getAttr("type");
 		String key = p.getAttr("key");
 		boolean childern = p.getAttr("children") != null
@@ -467,12 +493,12 @@ public class DebugThreadProxy extends AsyncCaller
 			page = Integer.parseInt(p.getAttr("page"));
 		}
 		Integer numChildren = 0;
-		if(p.getAttr("numchildren")!=null)
+		if (p.getAttr("numchildren") != null)
 		{
 			numChildren = Integer.parseInt(p.getAttr("numchildren"));
 		}
 		Integer pageSize = 0;
-		if(p.getAttr("pagesize")!=null)
+		if (p.getAttr("pagesize") != null)
 		{
 			pageSize = Integer.parseInt(p.getAttr("pagesize"));
 		}
@@ -515,15 +541,16 @@ public class DebugThreadProxy extends AsyncCaller
 			{
 				childs = childVariables.toArray(new VdmVariable[childVariables.size()]);
 			}
-			
-			if(numChildren> pageSize)
+
+			if (numChildren > pageSize)
 			{
-				vdmValue = new VdmGroupValue(type, type, key, page,pageSize,numChildren ,childs);	
-				
-			}else{
-				vdmValue = new VdmMultiValue(type, data, key, page, childs);	
+				vdmValue = new VdmGroupValue(type, type, key, page, pageSize, numChildren, childs);
+
+			} else
+			{
+				vdmValue = new VdmMultiValue(type, data, key, page, childs);
 			}
-			
+
 		}
 
 		return (new VdmVariable(null, name, type, vdmValue));
@@ -543,7 +570,7 @@ public class DebugThreadProxy extends AsyncCaller
 
 	public int breakpointAdd(int line, String path)
 	{
-				
+
 		Integer ticket = getNextTicket();
 		String breakpoint_set = "breakpoint_set " + " -r 0" + " -t line"
 				+ " -s enabled" + " -n " + line + " -i " + ticket + " -f "
@@ -568,7 +595,8 @@ public class DebugThreadProxy extends AsyncCaller
 
 	}
 
-	public VdmVariable[] getVariables(int depth, int contextId) throws SocketTimeoutException
+	public VdmVariable[] getVariables(int depth, int contextId)
+			throws SocketTimeoutException
 	{
 		// int type,
 		// int depth
@@ -594,8 +622,8 @@ public class DebugThreadProxy extends AsyncCaller
 	{
 		Integer ticket = getNextTicket();
 		String command = "property_get -i " + ticket + " -d " + stackDepth
-				+ " -n " + propertyLongName + " -p "+ page;
-		if(key!=null && key.length()>0)
+				+ " -n " + propertyLongName + " -p " + page;
+		if (key != null && key.length() > 0)
 		{
 			command += " -k " + key;
 		}
@@ -627,81 +655,87 @@ public class DebugThreadProxy extends AsyncCaller
 
 	public void step_over() throws IOException
 	{
-		write("step_into -i " + (getNextTicket()));
+		write("step_over -i " + (getNextTicket()));
 	}
 
 	public void step_out() throws IOException
 	{
-		write("step_into -i " + (getNextTicket()));
+		write("step_out -i " + (getNextTicket()));
 	}
 
-	public void breakpointRemove(VdmLineBreakpoint breakpoint) {
+	public void breakpointRemove(VdmLineBreakpoint breakpoint)
+	{
 		Integer ticket = getNextTicket();
-		write("breakpoint_remove -i " + ticket + " -d " + ((VdmLineBreakpoint)breakpoint).getId());
+		write("breakpoint_remove -i " + ticket + " -d "
+				+ ((VdmLineBreakpoint) breakpoint).getId());
 	}
 
 	public void shutdown() throws IOException
 	{
-		if(!fSocket.isClosed()){
+		if (!fSocket.isClosed())
+		{
 			fSocket.close();
 		}
-		
+
 	}
 
-	public int breakpointAdd(IBreakpoint breakpoint) {
+	public int breakpointAdd(IBreakpoint breakpoint)
+	{
 		StringBuffer buf = new StringBuffer();
 		Integer ticket = getNextTicket();
 		buf.append("breakpoint_set ");
 		buf.append("-i " + ticket);
-		//Boolean value indicating if this breakpoint is temporary. [optional, defaults to false]
+		// Boolean value indicating if this breakpoint is temporary. [optional, defaults to false]
 		buf.append(" -r 0 ");
-		//STATE	breakpoint state [optional, defaults to "enabled"]
+		// STATE breakpoint state [optional, defaults to "enabled"]
 		buf.append("-s enabled ");
-		
-		if(breakpoint instanceof VdmLineBreakpoint){
+
+		if (breakpoint instanceof VdmLineBreakpoint)
+		{
 			VdmLineBreakpoint lineBreakpoint = (VdmLineBreakpoint) breakpoint;
 			int line;
-			try {
+			try
+			{
 				line = lineBreakpoint.getLineNumber();
 				String path = lineBreakpoint.getFile().toURI().toASCIIString();
-				
-				
-				//the line number (lineno) of the breakpoint [optional]
+
+				// the line number (lineno) of the breakpoint [optional]
 				buf.append("-n " + line + " ");
-				//he filename to which the breakpoint belongs [optional]
+				// he filename to which the breakpoint belongs [optional]
 				buf.append("-f " + path + " ");
-				
-				if(lineBreakpoint.getHitCount() > 0){
+
+				if (lineBreakpoint.getHitCount() > 0)
+				{
 					buf.append("-h " + lineBreakpoint.getHitCount() + " ");
 				}
-				
-				if(lineBreakpoint.isConditionEnabled()){
-					//breakpoint type
+
+				if (lineBreakpoint.isConditionEnabled())
+				{
+					// breakpoint type
 					buf.append("-t conditional ");
 					String condition = lineBreakpoint.getCondition();
-					//buf.append("-- base64(" + Base64.encode(condition.getBytes()) + ") ");
-					buf.append("-- " + Base64.encode(condition.getBytes()) );
-				}
-				else{
-					//breakpoint type
+					// buf.append("-- base64(" + Base64.encode(condition.getBytes()) + ") ");
+					buf.append("-- " + Base64.encode(condition.getBytes()));
+				} else
+				{
+					// breakpoint type
 					buf.append("-t line ");
 				}
-				
-				
-				
-			} catch (CoreException e) {
+
+			} catch (CoreException e)
+			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
-		
-//		String breakpoint_set = "breakpoint_set " + " -r 0" + " -t line"
-//				+ " -s enabled" + " -n " + line + " -i " + (++xid) + " -f "
-//				+ path;
-		if(Activator.DEBUG){
-			System.out.println(buf.toString());
-		}
+
+		// String breakpoint_set = "breakpoint_set " + " -r 0" + " -t line"
+		// + " -s enabled" + " -n " + line + " -i " + (++xid) + " -f "
+		// + path;
+		// if(Activator.DEBUG){
+		// System.out.println(buf.toString());
+		// }
 		write(buf.toString());
 
 		return ticket;

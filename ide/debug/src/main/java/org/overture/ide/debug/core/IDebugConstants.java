@@ -42,4 +42,8 @@ public interface IDebugConstants
 	 * Status code indicating an unexpected error.
 	 */
 	public static final int ERROR = 120;	
+	
+	
+	public static final String CONSOLE_DEBUG_NAME = "Overture Debug";
+	public static final String CONSOLE_LOGGING_NAME = "VDM Debug log";
 }

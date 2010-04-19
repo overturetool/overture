@@ -221,21 +221,21 @@ public class ResourceManager implements IResourceChangeListener
 			switch (delta.getKind())
 			{
 			case IResourceDelta.ADDED:
-				System.out.print("Resource ");
-				System.out.print(res.getFullPath());
-				System.out.println(" was added.");
+//				System.out.print("Resource ");
+//				System.out.print(res.getFullPath());
+//				System.out.println(" was added.");
 				add(res);
 				break;
 			case IResourceDelta.REMOVED:
-				System.out.print("Resource ");
-				System.out.print(res.getFullPath());
-				System.out.println(" was removed.");
+//				System.out.print("Resource ");
+//				System.out.print(res.getFullPath());
+//				System.out.println(" was removed.");
 				remove(res);
 				break;
 			case IResourceDelta.CHANGED:
-				System.out.print("Resource ");
-				System.out.print(res.getFullPath());
-				System.out.println(" has changed.");
+//				System.out.print("Resource ");
+//				System.out.print(res.getFullPath());
+//				System.out.println(" has changed.");
 				break;
 			}
 			return true; // visit the children

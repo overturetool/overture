@@ -3,6 +3,33 @@ package org.overture.ide.debug.utils.communication;
 
 public interface IDebugThreadProxyCallback
 {
+	/**
+	 * Step start detail. Indicates a thread was resumed by a step
+	 * into action.
+	 * @since 2.0
+	 */
+	public static final int STEP_INTO= 0x0001;
+	
+	/**
+	 * Step start detail. Indicates a thread was resumed by a step
+	 * over action.
+	 * @since 2.0
+	 */
+	public static final int STEP_OVER= 0x0002;
+	
+	/**
+	 * Step start detail. Indicates a thread was resumed by a step
+	 * return action.
+	 * @since 2.0
+	 */
+	public static final int STEP_RETURN= 0x0004;		
+
+	/**
+	 * Step end detail. Indicates a thread was suspended due
+	 * to the completion of a step action.
+	 */
+	public static final int STEP_END= 0x0008;
+	
 	/*
 	 * Called on console output
 	 * 
@@ -42,6 +69,8 @@ public interface IDebugThreadProxyCallback
 	void fireStarted();
 
 	void fireBreakpointSet(Integer tid, Integer breakpointId);
+
+	void suspended(int reason);
 
 	
 

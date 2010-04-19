@@ -34,7 +34,7 @@
             finalPerspective="org.overture.ide.ui.perspective"
             icon="icons/cview16/vdmsl_file_tsk.gif"
             id="org.overture.ide.vdmsl.ui.projectWizard"
-            name="Project"
+            name="%newProjectWizardName"
             preferredPerspectives="org.overture.ide.ui.perspective"
             project="true">
       </wizard>

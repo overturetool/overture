@@ -12,6 +12,9 @@
 	<extension point="org.eclipse.ui.perspectiveExtensions">
 		<perspectiveExtension targetID="org.overture.ide.ui.perspective">
 			<actionSet id="org.eclipse.debug.ui.breakpointActionSet"></actionSet>
+   <actionSet
+         id="org.eclipse.debug.ui.launchActionSet">
+   </actionSet>
 		</perspectiveExtension>
 	</extension>
 
@@ -69,7 +72,8 @@
 	</extension>
 	<extension point="org.eclipse.debug.ui.debugModelPresentations">
 		<debugModelPresentation
-			class="org.overture.ide.debug.ui.model.VdmDebugModelPresentation" id="org.overture.ide.debug.vdm">
+			class="org.overture.ide.debug.ui.model.VdmDebugModelPresentation" 
+			id="org.overture.ide.debug.vdm">
 		</debugModelPresentation>
 	</extension>
 
@@ -111,5 +115,20 @@
             name="Breakpoint properties"
             objectClass="org.overture.ide.debug.core.model.VdmLineBreakpoint">
       </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.console.consoleFactories">
+      <consoleFactory
+            class="org.overture.ide.debug.core.ConsoleFactoryDebug"
+            icon="icons/cview16/vdmpp_file_tsk.png"
+            label="Overture Debug">
+      </consoleFactory>
+   </extension>
+   <extension
+         point="org.eclipse.ui.console.consoleFactories">
+      <consoleFactory
+            class="org.overture.ide.debug.core.ConsoleFactoryLogging"
+            label="VDM Debug log">
+      </consoleFactory>
    </extension>
 </plugin>

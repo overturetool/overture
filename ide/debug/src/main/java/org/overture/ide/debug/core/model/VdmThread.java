@@ -29,7 +29,7 @@ public class VdmThread extends VdmDebugElement implements IThread
 		public void fireBreakpointHit()
 		{
 			breakpointHit("event");
-			suspended(0);
+			//suspended(0);
 		}
 
 		public void firePrintErr(String text)
@@ -56,6 +56,7 @@ public class VdmThread extends VdmDebugElement implements IThread
 		public void fireStopped()
 		{
 			fTerminated = true;
+			fSuspended = false;
 			try
 			{
 				fTarget.shutdown();
@@ -64,11 +65,33 @@ public class VdmThread extends VdmDebugElement implements IThread
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			fireTerminateEvent();
 		}
 
 		public void fireBreakpointSet(Integer tid, Integer breakpointId)
 		{
 			fTarget.setBreakpointId(tid, breakpointId);
+		}
+
+		public void suspended(int reason)
+		{
+			fSuspended = true;
+			switch(reason)
+			{
+			case IDebugThreadProxyCallback.STEP_INTO:
+				fireSuspendEvent(DebugEvent.STEP_INTO);
+				break;
+			case IDebugThreadProxyCallback.STEP_OVER:
+				fireSuspendEvent(DebugEvent.STEP_OVER);
+				break;
+			case IDebugThreadProxyCallback.STEP_RETURN:
+				fireSuspendEvent(DebugEvent.STEP_RETURN);
+				break;
+			case IDebugThreadProxyCallback.STEP_END:
+				fireSuspendEvent(DebugEvent.STEP_END);
+				break;
+			}
+			
 		}
 
 	}
@@ -97,7 +120,7 @@ public class VdmThread extends VdmDebugElement implements IThread
 	public IBreakpoint[] getBreakpoints()
 	{
 		// TODO Auto-generated method stub
-		return null;
+		return new IBreakpoint[0];
 	}
 
 	public String getName() throws DebugException
@@ -250,14 +273,15 @@ public class VdmThread extends VdmDebugElement implements IThread
 				frame.clearVariables();
 			}
 		}
-		try
-		{
-			proxy.step_into();
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-			throw new DebuggerException(e.getMessage());
-		}
+//		try
+//		{
+//			proxy.step_into();
+//		} catch (IOException e)
+//		{
+//			e.printStackTrace();
+//			throw new DebuggerException(e.getMessage());
+//		}
+		fTarget.getThreadControl().stepInto();
 		fIsStepping = true;
 	}
 
@@ -270,14 +294,15 @@ public class VdmThread extends VdmDebugElement implements IThread
 				frame.clearVariables();
 			}
 		}
-		try
-		{
-			proxy.step_over();
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-			throw new DebuggerException(e.getMessage());
-		}
+//		try
+//		{
+//			proxy.step_over();
+//		} catch (IOException e)
+//		{
+//			e.printStackTrace();
+//			throw new DebuggerException(e.getMessage());
+//		}
+		fTarget.getThreadControl().stepOver();
 		fIsStepping = true;
 	}
 
@@ -290,14 +315,16 @@ public class VdmThread extends VdmDebugElement implements IThread
 				frame.clearVariables();
 			}
 		}
-		try
-		{
-			proxy.step_out();
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-			throw new DebuggerException(e.getMessage());
-		}
+//		try
+//		{
+//			proxy.step_out();
+//		} catch (IOException e)
+//		{
+//			e.printStackTrace();
+//			throw new DebuggerException(e.getMessage());
+//		}
+		fTarget.getThreadControl().stepReturn();
+		
 		fIsStepping = true;
 	}
 
@@ -393,13 +420,17 @@ public class VdmThread extends VdmDebugElement implements IThread
 				}
 			}
 		}
-		suspended(DebugEvent.BREAKPOINT);
+		fSuspended = true;
+		fireEvent(new DebugEvent(this, DebugEvent.SUSPEND, DebugEvent.BREAKPOINT));
+		fTarget.suspendByBreakpoint();
+		//suspended(DebugEvent.BREAKPOINT);
+		
 	}
 
 	private void suspended(int breakpoint)
 	{
 		fSuspended = true;
-		fireSuspendEvent(DebugEvent.BREAKPOINT);
+		//fireSuspendEvent(DebugEvent.BREAKPOINT);
 		try
 		{
 			// if a thread suspends the target is suspended

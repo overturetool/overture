@@ -33,6 +33,16 @@
 			description="VDM-PP Launch Tab" 
 			id="org.overture.ide.debug.ui.launchConfigurationTabGroup"
 			type="org.overture.ide.vdmpp.debug.launchConfigurationType">
+			<launchMode 
+                  mode="debug"
+                  perspective="org.eclipse.debug.ui.DebugPerspective"
+                  description="%localVdmPpApplicationTabGroupDescription.debug">
+            </launchMode>
+            <launchMode
+                  mode="run"
+                  perspective="org.eclipse.debug.ui.DebugPerspective"
+                  description="%localVdmPpApplicationTabGroupDescription.run">
+            </launchMode>
 		</launchConfigurationTabGroup>
 	</extension>
 
@@ -63,11 +73,13 @@
              <count value="1"/>
                 <iterate>
                 	<and>
-                		<instanceof value="org.eclipse.core.resources.IProject"></instanceof>
-                		<and>
-							<adapt type="org.eclipse.core.resources.IProject" />
-							<test property="org.eclipse.core.resources.open" value="true"/>
-						</and>
+                		<adapt
+                     type="org.overture.ide.core.resources.IVdmProject">
+                  <test
+                        property="org.overture.ide.core.resources.dialect"
+                        value="VDM_PP">
+                  </test>
+               </adapt>
                 	</and>
                 </iterate>
            	</with>

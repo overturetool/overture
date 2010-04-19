@@ -27,13 +27,14 @@ public abstract class VdmCoreBuilder extends IncrementalProjectBuilder
 
 		if (kind == IncrementalProjectBuilder.FULL_BUILD)
 		{
-			fullBuild(monitor);
+			clean(monitor);
+			build(monitor);
 		} else
 		{
 			// IResourceDelta delta = getDelta(getProject());
 			// if (delta == null)
 			// {
-			fullBuild(monitor);
+			build(monitor);
 			// } else
 			// {
 			// incrementalBuild(delta, monitor);
@@ -66,7 +67,7 @@ public abstract class VdmCoreBuilder extends IncrementalProjectBuilder
 	// }
 	// }
 
-	public abstract void fullBuild(IProgressMonitor monitor) throws CoreException;
+	public abstract void build(IProgressMonitor monitor) throws CoreException;
 
 	public abstract void endBuild(IProgressMonitor monitor);
 

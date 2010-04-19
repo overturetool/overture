@@ -22,7 +22,7 @@
             finalPerspective="org.overture.ide.ui.perspective"
             icon="icons/cview16/vdmrt_file_tsk.gif"
             id="org.overture.ide.vdmrt.ui.projectWizard"
-            name="Project"
+            name="%newProjectWizardName"
             preferredPerspectives="org.overture.ide.ui.perspective"
             project="true">
       </wizard>

@@ -12,6 +12,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
@@ -30,6 +31,89 @@ import org.overturetool.vdmj.runtime.DebuggerException;
 
 public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 {
+	public class VdmDebugThreadControl
+	{
+		public void stepReturn() throws DebugException
+		{
+			for (VdmThread thread : fThreads)
+			{
+				try
+				{
+					thread.getProxy().step_out();
+				} catch (IOException e)
+				{
+					if (Activator.DEBUG)
+					{
+						e.printStackTrace();
+					}
+					throw new DebuggerException(e.getMessage());
+				}
+			}
+		}
+
+		public void stepOver() throws DebugException
+		{
+			for (VdmThread thread : fThreads)
+			{
+				try
+				{
+					thread.getProxy().step_over();
+				} catch (IOException e)
+				{
+					if (Activator.DEBUG)
+					{
+						e.printStackTrace();
+					}
+					throw new DebuggerException(e.getMessage());
+				}
+			}
+		}
+
+		public void stepInto() throws DebugException
+		{
+			for (VdmThread thread : fThreads)
+			{
+				try
+				{
+					thread.getProxy().step_into();
+				} catch (IOException e)
+				{
+					if (Activator.DEBUG)
+					{
+						e.printStackTrace();
+					}
+					throw new DebuggerException(e.getMessage());
+				}
+			}
+		}
+
+		public void shutdown() throws IOException
+		{
+			for (VdmThread thread : fThreads)
+			{
+				try
+				{
+					thread.getProxy().shutdown();
+				} catch (IOException e)
+				{
+					if (Activator.DEBUG)
+					{
+						e.printStackTrace();
+					}
+					throw new DebuggerException(e.getMessage());
+				}
+			}
+		}
+
+		public void resume() throws DebugException
+		{
+			for (VdmThread thread : fThreads)
+			{
+				thread.getProxy().resume();
+			}
+		}
+	}
+
 	private ILaunch fLaunch;
 	private IProcess fProcess;
 	private List<VdmThread> fThreads;
@@ -43,17 +127,20 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 	private String sessionId;
 	private HashMap<Integer, VdmLineBreakpoint> breakpointMap = new HashMap<Integer, VdmLineBreakpoint>();
 	private IVdmProject project;
+	private VdmDebugThreadControl threadControl;
 
 	private List<IBreakpoint> fBreakpoints = new ArrayList<IBreakpoint>();
-	
-	public VdmDebugTarget(ILaunch launch) throws DebugException {
+
+	public VdmDebugTarget(ILaunch launch) throws DebugException
+	{
 		super(null);
 		fTarget = this;
 		fLaunch = launch;
 
 		fThreads = new ArrayList<VdmThread>();
+		threadControl = new VdmDebugThreadControl();
 
-		console = loggingConsole = new ConsoleWriter("Overture Debug");
+		console = new ConsoleWriter("Overture Debug");
 		console.clear();
 		console.Show();
 
@@ -65,10 +152,14 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 			// OK
 		}
 
-		DebugPlugin.getDefault()
-				.getBreakpointManager()
-				.addBreakpointListener(this);
+		DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(this);
+		fireCreationEvent();
 
+	}
+	
+	public VdmDebugThreadControl getThreadControl()
+	{
+		return threadControl;
 	}
 
 	public void setProcess(IProcess process)
@@ -78,12 +169,10 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 
 	private void setLogging(ILaunch launch) throws CoreException
 	{
-		if (launch.getLaunchConfiguration()
-				.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING,
-						false))
+		if (launch.getLaunchConfiguration().getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false))
 		{
 			logging = true;
-			loggingConsole = new ConsoleWriter("VDM Debug log");
+			loggingConsole = new ConsoleWriter(IDebugConstants.CONSOLE_LOGGING_NAME);
 		}
 
 	}
@@ -142,23 +231,24 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 			e.printStackTrace();
 			throw new DebuggerException(e.getMessage());
 		}
-shutdown();
+		shutdown();
 	}
-	
+
 	public void shutdown() throws DebugException
 	{
 		for (IThread thread : fThreads)
 		{
-			if(thread instanceof VdmThread)
+			if (thread instanceof VdmThread)
 			{
 				try
 				{
-					((VdmThread)thread).shutdown();
+					((VdmThread) thread).shutdown();
 				} catch (IOException e)
 				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}}
+				}
+			}
 		}
 		fThreads.clear();
 		fProcess.terminate();
@@ -184,17 +274,14 @@ shutdown();
 	public void resume() throws DebugException
 	{
 		fSuspended = false;
-		//Control of remune is only done on main thread
-		//fThread.getProxy().resume();
-		 for (VdmThread thread : fThreads) {
-		 thread.getProxy().resume();
-		 }
+		// Control of remune is only done on main thread
+		// fThread.getProxy().resume();
+		getThreadControl().resume();
 		// fireResumeEvent(DebugEvent.RESUME);
 
 	}
 
 	/**
-	 * 
 	 * @param detail
 	 *            - see DebugEvent detail constants;
 	 * @throws DebugException
@@ -203,6 +290,12 @@ shutdown();
 	{
 		fSuspended = true;
 
+	}
+
+	public void suspendByBreakpoint()
+	{
+		fSuspended = true;
+		fireSuspendEvent(DebugEvent.BREAKPOINT);
 	}
 
 	public void breakpointAdded(IBreakpoint breakpoint)
@@ -217,28 +310,23 @@ shutdown();
 			{
 				if (breakpoint.isEnabled())
 				{
-					IResource resource = breakpoint.getMarker()
-							.getResource();
+					IResource resource = breakpoint.getMarker().getResource();
 					if (resource instanceof IFile)
 					{
 						// check that the breakpoint is from this project's
 						// IFile resource
-						if (resource.getProject()
-								.getName()
-								.equals(project.getName()))
+						if (resource.getProject().getName().equals(project.getName()))
 						{
-//								int line = ((ILineBreakpoint) breakpoint).getLineNumber();
-//								File file = ((VdmLineBreakpoint) breakpoint).getFile();
-//								int xid = fThread.getProxy()
-//										.breakpointAdd(line,
-//												file.toURI().toASCIIString());
+							// int line = ((ILineBreakpoint) breakpoint).getLineNumber();
+							// File file = ((VdmLineBreakpoint) breakpoint).getFile();
+							// int xid = fThread.getProxy()
+							// .breakpointAdd(line,
+							// file.toURI().toASCIIString());
 							int xid = fThread.getProxy().breakpointAdd(breakpoint);
-							
 
 							synchronized (breakpointMap)
 							{
-								breakpointMap.put(new Integer(xid),
-										(VdmLineBreakpoint) breakpoint);
+								breakpointMap.put(new Integer(xid), (VdmLineBreakpoint) breakpoint);
 							}
 						}
 					}
@@ -252,7 +340,7 @@ shutdown();
 
 	public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta)
 	{
-		System.out.println("Breakpoint changed" );
+		System.out.println("Breakpoint changed");
 		if (supportsBreakpoint(breakpoint))
 		{
 			try
@@ -276,8 +364,7 @@ shutdown();
 		{
 			if (breakpoint instanceof VdmLineBreakpoint)
 			{
-				fThread.getProxy()
-						.breakpointRemove((VdmLineBreakpoint) breakpoint);
+				fThread.getProxy().breakpointRemove((VdmLineBreakpoint) breakpoint);
 			}
 		}
 
@@ -323,9 +410,7 @@ shutdown();
 	private void installDeferredBreakpoints()
 	{
 		// installPreviousBreakpointMarkers();
-		IBreakpoint[] breakpoints = DebugPlugin.getDefault()
-				.getBreakpointManager()
-				.getBreakpoints(IDebugConstants.ID_VDM_DEBUG_MODEL);
+		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(IDebugConstants.ID_VDM_DEBUG_MODEL);
 		for (int i = 0; i < breakpoints.length; i++)
 		{
 			breakpointAdded(breakpoints[i]);
@@ -367,10 +452,7 @@ shutdown();
 			{
 				e.printStackTrace();
 			}
-			throw new DebugException(new Status(IStatus.ERROR,
-					IDebugConstants.PLUGIN_ID,
-					"Cannot init thread",
-					e));
+			throw new DebugException(new Status(IStatus.ERROR, IDebugConstants.PLUGIN_ID, "Cannot init thread", e));
 
 		}
 
@@ -381,7 +463,7 @@ shutdown();
 				VdmThread thread = (VdmThread) fThreads.get(i);
 				if (thread.getId() == 1)
 				{
-					 thread.setMultiMain();
+					thread.setMultiMain();
 					break;
 				}
 			}
@@ -432,18 +514,19 @@ shutdown();
 			}
 		}
 	}
+
 	/**
-	 * Returns the collection of breakpoints installed in this
-	 * debug target.
+	 * Returns the collection of breakpoints installed in this debug target.
 	 * 
-	 * @return list of installed breakpoints - instances of 
-	 * 	<code>IJavaBreakpoint</code>
+	 * @return list of installed breakpoints - instances of <code>IJavaBreakpoint</code>
 	 */
-	public List<IBreakpoint> getBreakpoints() {
+	public List<IBreakpoint> getBreakpoints()
+	{
 		return fBreakpoints;
 	}
 
-	public boolean isAvailable() {
+	public boolean isAvailable()
+	{
 		return !isTerminated();
 	}
 
