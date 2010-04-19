@@ -7182,9 +7182,12 @@ sync
              someVariable > 42;
 \end{lstlisting}
 
-Note that it is only permitted to have one permission predicate for each
-operation. The
-{\bf\ttfamily{\#active}} operator is explained below.
+Note that it is only permitted to have one ``stand-alone'' permission
+predicate for each operation. It is also important to note that if
+permission predicates are made over operations that are overloaded
+(see Section~\ref{sec:classdep}) then it will incorporate all of their history
+counters as the same operation. The {\bf\ttfamily{\#active}} operator
+is explained below.
 
 A \keyw{mutex(all)} constraint specifies that all of the operations
 specified in that class \textit{and any superclasses} are to be
