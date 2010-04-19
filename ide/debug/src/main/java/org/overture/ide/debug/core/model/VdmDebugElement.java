@@ -11,80 +11,125 @@ import org.eclipse.debug.core.model.IDebugElement;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.overture.ide.debug.core.IDebugConstants;
 
-public class VdmDebugElement extends PlatformObject implements IDebugElement {
+public class VdmDebugElement extends PlatformObject implements IDebugElement
+{
 
-	
 	protected VdmDebugTarget fTarget;
-	
-	public VdmDebugElement(VdmDebugTarget target) {
+	protected ILaunch fLaunch;
+
+	public VdmDebugElement(VdmDebugTarget target)
+	{
 		fTarget = target;
 	}
-	
-	public IDebugTarget getDebugTarget() {		
-		return fTarget;
-	}
 
-	public ILaunch getLaunch() {		
-		return getDebugTarget().getLaunch();
-	}
-
-	public String getModelIdentifier() {		
+	// IDebugElement
+	public String getModelIdentifier()
+	{
 		return IDebugConstants.ID_VDM_DEBUG_MODEL;
 	}
 
+	public IDebugTarget getDebugTarget()
+	{
+		return fTarget;
+	}
+
+	public ILaunch getLaunch()
+	{
+		if (fLaunch == null && !getDebugTarget().equals(this))//no recursion
+		{
+			return getDebugTarget().getLaunch();
+		}
+		return fLaunch;
+	}
+
+	// END IDebugElement
+
 	@SuppressWarnings("unchecked")
-	public Object getAdapter(Class adapter) {
-		if (adapter == IDebugElement.class) {
+	public Object getAdapter(Class adapter)
+	{
+		if (adapter == IDebugElement.class)
+		{
 			return this;
+		}
+		// This is the fix for the Perspective change on breakpoint hit... refer to (PerspectiveManager and
+		// LauchSuspendTrigger)
+		if (adapter == ILaunch.class)
+		{
+			return getLaunch();
 		}
 		return super.getAdapter(adapter);
 	}
-	
-	protected void abort(String message, Throwable e) throws DebugException {
-		throw new DebugException(new Status(IStatus.ERROR, IDebugConstants.PLUGIN_ID, 
-				DebugPlugin.INTERNAL_ERROR, message, e));
+
+	protected void abort(String message, Throwable e) throws DebugException
+	{
+		throw new DebugException(new Status(IStatus.ERROR, IDebugConstants.PLUGIN_ID, DebugPlugin.INTERNAL_ERROR, message, e));
 	}
-	
+
 	/**
 	 * Fires a debug event
 	 * 
-	 * @param event the event to be fired
+	 * @param event
+	 *            the event to be fired
 	 */
-	protected void fireEvent(DebugEvent event) {
-		DebugPlugin.getDefault().fireDebugEventSet(new DebugEvent[] {event});
+	protected void fireEvent(DebugEvent event)
+	{
+		if (DebugPlugin.getDefault() != null)
+		{
+			DebugPlugin.getDefault().fireDebugEventSet(new DebugEvent[] { event });
+		}
 	}
-	
+
 	/**
 	 * Fires a <code>CREATE</code> event for this element.
 	 */
-	protected void fireCreationEvent() {
+	protected void fireCreationEvent()
+	{
 		fireEvent(new DebugEvent(this, DebugEvent.CREATE));
-	}	
-	
+	}
+
 	/**
-	 * Fires a <code>RESUME</code> event for this element with
-	 * the given detail.
+	 * Fires a <code>RESUME</code> event for this element with the given detail.
 	 * 
-	 * @param detail event detail code
+	 * @param detail
+	 *            event detail code
 	 */
-	public void fireResumeEvent(int detail) {
+	public void fireResumeEvent(int detail)
+	{
 		fireEvent(new DebugEvent(this, DebugEvent.RESUME, detail));
 	}
 
 	/**
-	 * Fires a <code>SUSPEND</code> event for this element with
-	 * the given detail.
+	 * Fires a <code>SUSPEND</code> event for this element with the given detail.
 	 * 
-	 * @param detail event detail code
+	 * @param detail
+	 *            event detail code
 	 */
-	public void fireSuspendEvent(int detail) {
+	public void fireSuspendEvent(int detail)
+	{
 		fireEvent(new DebugEvent(this, DebugEvent.SUSPEND, detail));
 	}
-	
+
 	/**
 	 * Fires a <code>TERMINATE</code> event for this element.
 	 */
-	protected void fireTerminateEvent() {
+	protected void fireTerminateEvent()
+	{
 		fireEvent(new DebugEvent(this, DebugEvent.TERMINATE));
-	}	
+	}
+
+	public void fireChangeEvent()
+	{
+		fireEvent(new DebugEvent(this, DebugEvent.CHANGE));
+	}
+	
+	public void fireChangeEvent(int details)
+	{
+		fireEvent(new DebugEvent(this, DebugEvent.CHANGE,details));
+	}
+
+	public void fireExtendedEvent(Object eventSource, int details)
+	{
+		fireEvent(new DebugEvent(eventSource, DebugEvent.MODEL_SPECIFIC, details));
+
+	}
 }

@@ -1,7 +1,6 @@
 package org.overture.ide.debug.core.model;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,8 +9,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
@@ -23,122 +20,34 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.swt.SWT;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;
-import org.overture.ide.debug.utils.xml.XMLTagNode;
+import org.overture.ide.debug.core.model.VdmDebugState.DebugState;
 import org.overture.ide.ui.internal.util.ConsoleWriter;
 import org.overturetool.vdmj.runtime.DebuggerException;
 
-public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
+public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
+		IVdmExecution
 {
-	public class VdmDebugThreadControl
-	{
-		public void stepReturn() throws DebugException
-		{
-			for (VdmThread thread : fThreads)
-			{
-				try
-				{
-					thread.getProxy().step_out();
-				} catch (IOException e)
-				{
-					if (Activator.DEBUG)
-					{
-						e.printStackTrace();
-					}
-					throw new DebuggerException(e.getMessage());
-				}
-			}
-		}
-
-		public void stepOver() throws DebugException
-		{
-			for (VdmThread thread : fThreads)
-			{
-				try
-				{
-					thread.getProxy().step_over();
-				} catch (IOException e)
-				{
-					if (Activator.DEBUG)
-					{
-						e.printStackTrace();
-					}
-					throw new DebuggerException(e.getMessage());
-				}
-			}
-		}
-
-		public void stepInto() throws DebugException
-		{
-			for (VdmThread thread : fThreads)
-			{
-				try
-				{
-					thread.getProxy().step_into();
-				} catch (IOException e)
-				{
-					if (Activator.DEBUG)
-					{
-						e.printStackTrace();
-					}
-					throw new DebuggerException(e.getMessage());
-				}
-			}
-		}
-
-		public void shutdown() throws IOException
-		{
-			for (VdmThread thread : fThreads)
-			{
-				try
-				{
-					thread.getProxy().shutdown();
-				} catch (IOException e)
-				{
-					if (Activator.DEBUG)
-					{
-						e.printStackTrace();
-					}
-					throw new DebuggerException(e.getMessage());
-				}
-			}
-		}
-
-		public void resume() throws DebugException
-		{
-			for (VdmThread thread : fThreads)
-			{
-				thread.getProxy().resume();
-			}
-		}
-	}
-
-	private ILaunch fLaunch;
 	private IProcess fProcess;
 	private List<VdmThread> fThreads;
 	private VdmThread fThread;
-	private boolean fTerminated = false;
-	private boolean fSuspended = false;
-	private boolean fDisconected = false;
 	private boolean logging = false;
 	private ConsoleWriter loggingConsole;
 	private ConsoleWriter console;
-	private String sessionId;
 	private HashMap<Integer, VdmLineBreakpoint> breakpointMap = new HashMap<Integer, VdmLineBreakpoint>();
 	private IVdmProject project;
-	private VdmDebugThreadControl threadControl;
+
+	private VdmDebugState state = new VdmDebugState();
 
 	private List<IBreakpoint> fBreakpoints = new ArrayList<IBreakpoint>();
 
 	public VdmDebugTarget(ILaunch launch) throws DebugException
 	{
 		super(null);
-		fTarget = this;
-		fLaunch = launch;
+		super.fTarget = this;
+		super.fLaunch = launch;
 
 		fThreads = new ArrayList<VdmThread>();
-		threadControl = new VdmDebugThreadControl();
 
 		console = new ConsoleWriter("Overture Debug");
 		console.clear();
@@ -152,45 +61,17 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 			// OK
 		}
 
+		DebugPlugin.getDefault().addDebugEventListener(new VdmDebugEventListener(this));
 		DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(this);
 		fireCreationEvent();
 
-	}
-	
-	public VdmDebugThreadControl getThreadControl()
-	{
-		return threadControl;
+		state.setState(DebugState.Resumed);
 	}
 
-	public void setProcess(IProcess process)
-	{
-		fProcess = process;
-	}
-
-	private void setLogging(ILaunch launch) throws CoreException
-	{
-		if (launch.getLaunchConfiguration().getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false))
-		{
-			logging = true;
-			loggingConsole = new ConsoleWriter(IDebugConstants.CONSOLE_LOGGING_NAME);
-		}
-
-	}
-
-	public String getName() throws DebugException
-	{
-		return "VDM Application";
-	}
-
+	// IDebugTarget
 	public IProcess getProcess()
 	{
 		return fProcess;
-	}
-
-	@Override
-	public ILaunch getLaunch()
-	{
-		return this.fLaunch;
 	}
 
 	public IThread[] getThreads() throws DebugException
@@ -202,7 +83,12 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 
 	public boolean hasThreads() throws DebugException
 	{
-		return fThreads.size() > 0;
+		return !state.inState(DebugState.Terminated) && fThreads.size() > 0;
+	}
+
+	public String getName() throws DebugException
+	{
+		return "VDM Application";
 	}
 
 	public boolean supportsBreakpoint(IBreakpoint breakpoint)
@@ -210,94 +96,50 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 		return true; // Yes VDMJ supports breakpoints always
 	}
 
+	// ITerminate
 	public boolean canTerminate()
 	{
-		return !fTerminated;
+		return state.canChange(DebugState.Terminated);
 	}
 
 	public boolean isTerminated()
 	{
-		return fTerminated;
+		return state.inState(DebugState.Terminated);
 	}
 
 	public void terminate() throws DebugException
 	{
-		try
-		{
-			if (fThread != null && fThread.getProxy() != null)
-				fThread.getProxy().allstop();
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-			throw new DebuggerException(e.getMessage());
-		}
-		shutdown();
+		doTerminate(this);
+		fireChangeEvent(DebugEvent.CONTENT); // force threads to be removed
 	}
 
-	public void shutdown() throws DebugException
-	{
-		for (IThread thread : fThreads)
-		{
-			if (thread instanceof VdmThread)
-			{
-				try
-				{
-					((VdmThread) thread).shutdown();
-				} catch (IOException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-		fThreads.clear();
-		fProcess.terminate();
-		fTerminated = true;
-		fireTerminateEvent();
-	}
-
+	// ISuspendResume
 	public boolean canResume()
 	{
-		return (fSuspended && !fTerminated);
+		return state.canChange(DebugState.Resumed);
 	}
 
 	public boolean canSuspend()
 	{
-		return !fSuspended && !fTerminated;
+		return state.canChange(DebugState.Suspended);
 	}
 
 	public boolean isSuspended()
 	{
-		return fSuspended;
+		return state.inState(DebugState.Suspended);
 	}
 
 	public void resume() throws DebugException
 	{
-		fSuspended = false;
-		// Control of remune is only done on main thread
-		// fThread.getProxy().resume();
-		getThreadControl().resume();
-		// fireResumeEvent(DebugEvent.RESUME);
-
+		doResume(this);
 	}
 
-	/**
-	 * @param detail
-	 *            - see DebugEvent detail constants;
-	 * @throws DebugException
-	 */
 	public void suspend() throws DebugException
 	{
-		fSuspended = true;
-
+		doSuspend(this);
 	}
 
-	public void suspendByBreakpoint()
-	{
-		fSuspended = true;
-		fireSuspendEvent(DebugEvent.BREAKPOINT);
-	}
-
+	// IBreakpointListener
 	public void breakpointAdded(IBreakpoint breakpoint)
 	{
 		if (isTerminated())
@@ -370,6 +212,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 
 	}
 
+	// IDisconnect
 	public boolean canDisconnect()
 	{
 		return false;
@@ -385,14 +228,15 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 			e.printStackTrace();
 			throw new DebuggerException(e.getMessage());
 		}
-		fDisconected = true;
+		state.setState(DebugState.Disconnected);
 	}
 
 	public boolean isDisconnected()
 	{
-		return fDisconected;
+		return state.inState(DebugState.Disconnected);
 	}
 
+	// IMemoryBlockRetrieval
 	public IMemoryBlock getMemoryBlock(long startAddress, long length)
 			throws DebugException
 	{
@@ -402,6 +246,23 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 	public boolean supportsStorageRetrieval()
 	{
 		return false;
+	}
+
+	// END IMemoryBlockRetrieval
+
+	public void setProcess(IProcess process)
+	{
+		fProcess = process;
+	}
+
+	private void setLogging(ILaunch launch) throws CoreException
+	{
+		if (launch.getLaunchConfiguration().getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false))
+		{
+			logging = true;
+			loggingConsole = new ConsoleWriter(IDebugConstants.CONSOLE_LOGGING_NAME);
+		}
+
 	}
 
 	/**
@@ -417,57 +278,15 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 		}
 	}
 
-	public void newThread(XMLTagNode tagnode, Socket s) throws DebugException
+	public void newThread(VdmThread vdmThread) throws DebugException
 	{
-		String sid = tagnode.getAttr("thread");
-		int id = -1;
-		// Either "123" or "123 on <CPU name>" for VDM-RT
-		int space = sid.indexOf(' ');
-
-		if (space == -1)
-		{
-			id = Integer.parseInt(sid);
-		} else
-		{
-			id = Integer.parseInt(sid.substring(0, space));
-		}
-
-		VdmThread t = new VdmThread(this, id, sessionId, s);
-
-		if (id == 1)
+		if (vdmThread.getId() == 1)
 		{ // Assuming 1 is main thread;
 
-			fThread = t; // TODO: assuming main thread is number 1;
+			fThread = vdmThread; // TODO: assuming main thread is number 1;
 			installDeferredBreakpoints();
 		}
-
-		fThreads.add(t);
-
-		try
-		{
-			t.init(tagnode);
-		} catch (IOException e)
-		{
-			if (Activator.DEBUG)
-			{
-				e.printStackTrace();
-			}
-			throw new DebugException(new Status(IStatus.ERROR, IDebugConstants.PLUGIN_ID, "Cannot init thread", e));
-
-		}
-
-		if (fThreads.size() > 1)
-		{
-			for (int i = 0; i < fThreads.size(); i++)
-			{
-				VdmThread thread = (VdmThread) fThreads.get(i);
-				if (thread.getId() == 1)
-				{
-					thread.setMultiMain();
-					break;
-				}
-			}
-		}
+		fThreads.add(vdmThread);
 	}
 
 	public void printMessage(boolean outgoing, String message)
@@ -525,9 +344,107 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget
 		return fBreakpoints;
 	}
 
-	public boolean isAvailable()
+	// IVdmExecution
+	public void doResume(Object source) throws DebugException
 	{
-		return !isTerminated();
+		for (VdmThread t : fThreads)
+		{
+			if (!t.equals(source))
+			{
+				t.doResume(source);
+			}
+		}
+		state.setState(DebugState.Resumed);
+	}
+
+	public void doStepInto(Object source) throws DebugException
+	{
+		for (VdmThread t : fThreads)
+		{
+			if (!t.equals(source))
+			{
+				t.doStepInto(source);
+			}
+		}
+	}
+
+	public void doStepOver(Object source) throws DebugException
+	{
+		for (VdmThread t : fThreads)
+		{
+			if (!t.equals(source))
+			{
+				t.doStepOver(source);
+			}
+		}
+	}
+
+	public void doStepReturn(Object source) throws DebugException
+	{
+		for (VdmThread t : fThreads)
+		{
+			if (!t.equals(source))
+			{
+				t.doStepReturn(source);
+			}
+		}
+	}
+
+	public void doSuspend(Object source) throws DebugException
+	{
+
+		for (VdmThread t : fThreads)
+		{
+			if (!t.equals(source))
+			{
+				t.doSuspend(source);
+			}
+		}
+		state.setState(DebugState.Suspended);
+	}
+
+	public void doTerminate(Object source) throws DebugException
+	{
+		try
+		{
+			if (fThread != null && fThread.getProxy() != null)
+			{
+				fThread.getProxy().allstop();
+			}
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+			throw new DebuggerException(e.getMessage());
+		}
+
+		fProcess.terminate();
+		state.setState(DebugState.Terminated);
+		console.flush();
+		console.Show();
+	}
+
+	/**
+	 * Handles termination events from
+	 * 
+	 * @param source
+	 * @throws DebugException
+	 */
+	public void handleTerminate(Object source) throws DebugException
+	{
+		boolean allTerminated = true;
+		for (VdmThread t : fThreads)
+		{
+			if (!t.isTerminated())
+			{
+				allTerminated = false;
+			}
+		}
+
+		if (allTerminated)
+		{
+			doTerminate(this);
+			fireChangeEvent(DebugEvent.CONTENT);
+		}
 	}
 
 }

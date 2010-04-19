@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IRegisterGroup;
 import org.eclipse.debug.core.model.IStackFrame;
+import org.eclipse.debug.core.model.IStep;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
 import org.overture.ide.debug.core.Activator;
@@ -172,73 +173,80 @@ public class VdmStackFrame extends VdmDebugElement implements IStackFrame
 		return true;
 	}
 
+	//IStep
 	public boolean canStepInto()
 	{
-		return false;
+		return thread.canStepInto();
 	}
 
 	public boolean canStepOver()
 	{
-		return false;
+		return thread.canStepOver();
 	}
 
 	public boolean canStepReturn()
 	{
-		return false;
+		return thread.canStepReturn();
 	}
 
 	public boolean isStepping()
 	{
-		return false;
+		return thread.isStepping();
 	}
 
 	public void stepInto() throws DebugException
 	{
+		thread.stepInto();
 	}
 
 	public void stepOver() throws DebugException
 	{
+		thread.stepOver();
 	}
 
 	public void stepReturn() throws DebugException
 	{
+		thread.stepReturn();
 	}
 
 	public boolean canResume()
 	{
-		return false;
+		return thread.canResume();
 	}
 
 	public boolean canSuspend()
 	{
-		return false;
+		return thread.canSuspend();
 	}
 
 	public boolean isSuspended()
 	{
-		return false;
+		return thread.isSuspended();
 	}
 
 	public void resume() throws DebugException
 	{
+		thread.resume();
 	}
 
 	public void suspend() throws DebugException
 	{
+		thread.suspend();
 	}
 
 	public boolean canTerminate()
 	{
-		return false;
+		return thread.canTerminate();
 	}
 
 	public boolean isTerminated()
 	{
-		return false;
+		return thread.isTerminated();
 	}
 
 	public void terminate() throws DebugException
 	{
+		thread.terminate();
 	}
 
 	public String getSourceName()

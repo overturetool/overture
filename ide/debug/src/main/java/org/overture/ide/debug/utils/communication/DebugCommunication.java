@@ -11,76 +11,93 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.ui.services.IDisposable;
+import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.model.VdmDebugTarget;
+import org.overture.ide.debug.core.model.VdmThread;
 import org.overture.ide.debug.utils.xml.XMLNode;
 import org.overture.ide.debug.utils.xml.XMLParser;
 import org.overture.ide.debug.utils.xml.XMLTagNode;
 
-public class DebugCommunication implements IDisposable{
+public class DebugCommunication implements IDisposable
+{
 
 	static private DebugCommunication instance = null;
 	private ServerSocket server;
 	private boolean keepAlive = true;
-	//private List<Socket> sockets;
+	// private List<Socket> sockets;
 	private Map<String, VdmDebugTarget> targets = new HashMap<String, VdmDebugTarget>();
 	private int sessionId = 0;
 
-	private DebugCommunication() throws IOException {
-		int portNumber = 9000;//findFreePort();
-//		if(portNumber == -1) 
-//			throw new IOException("Debug communication: no ports available");//very unlikely 
+	private DebugCommunication() throws IOException
+	{
+		int portNumber = 9000;// findFreePort();
+		// if(portNumber == -1)
+		// throw new IOException("Debug communication: no ports available");//very unlikely
 		server = new ServerSocket(portNumber);
-		//System.out.println("listning on port: " + portNumber);
-		//server.setSoTimeout(50000);
-		
-		
+		// System.out.println("listning on port: " + portNumber);
+		// server.setSoTimeout(50000);
+
 		Thread t = new Thread(new ThreadAccept());
 		t.setName("DebugCommunication Socket Listener");
-		t.start();		
+		t.start();
 	}
 
-	public String getSessionId(){
+	public String getSessionId()
+	{
 		return Integer.toString(++sessionId);
 	}
-	
-	static public DebugCommunication getInstance() throws IOException {
-		if (instance == null) {
+
+	static public DebugCommunication getInstance() throws IOException
+	{
+		if (instance == null)
+		{
 			instance = new DebugCommunication();
 			return instance;
-		} else {
+		} else
+		{
 			return instance;
 		}
 	}
 
-	public int getPort() {
+	public int getPort()
+	{
 		return this.server.getLocalPort();
 	}
 
-	public void registerDebugTarger(String sessionId, VdmDebugTarget target) throws DebugException {
+	public void registerDebugTarger(String sessionId, VdmDebugTarget target)
+			throws DebugException
+	{
 
-		if (!targets.containsKey(sessionId)) {
+		if (!targets.containsKey(sessionId))
+		{
 			targets.put(sessionId, target);
-		}else {
+		} else
+		{
 			throw new DebugException(new Status(IStatus.ERROR, IDebugConstants.PLUGIN_ID, "Failed to register target: session Id already exists"));
 		}
 	}
-	
+
 	public void removeSession(String sessionId)
 	{
-		if(targets.containsKey(sessionId))
+		if (targets.containsKey(sessionId))
 			targets.remove(sessionId);
 	}
 
-	class ThreadAccept implements Runnable {
+	class ThreadAccept implements Runnable
+	{
 
-		public void run() {
-			while (keepAlive) {
-				try {
+		public void run()
+		{
+			while (keepAlive)
+			{
+				try
+				{
 					Socket s = server.accept();
 					receive(s);
-					
-				} catch (IOException e) {
+
+				} catch (IOException e)
+				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -89,7 +106,7 @@ public class DebugCommunication implements IDisposable{
 		}
 
 	}
-	
+
 	private void receive(Socket s) throws IOException
 	{
 		BufferedInputStream input = new BufferedInputStream(s.getInputStream());
@@ -106,7 +123,7 @@ public class DebugCommunication implements IDisposable{
 
 		if (c == -1)
 		{
-			//connected = false; // End of thread
+			// connected = false; // End of thread
 			return;
 		}
 
@@ -138,17 +155,20 @@ public class DebugCommunication implements IDisposable{
 
 		if (retries == 0)
 		{
-			throw new IOException("Timeout DBGp reply on initialization, got [" + new String(data) + "]");
+			throw new IOException("Timeout DBGp reply on initialization, got ["
+					+ new String(data) + "]");
 		}
 
 		if (done != remaining)
 		{
-			throw new IOException("Short DBGp reply on initialization got [" + new String(data) + "]");
+			throw new IOException("Short DBGp reply on initialization got ["
+					+ new String(data) + "]");
 		}
 
 		if (input.read() != 0)
 		{
-			throw new IOException("Malformed DBGp terminator on initialization, got [" + new String(data) + "]");
+			throw new IOException("Malformed DBGp terminator on initialization, got ["
+					+ new String(data) + "]");
 		}
 
 		XMLParser parser = new XMLParser(data);
@@ -158,73 +178,115 @@ public class DebugCommunication implements IDisposable{
 
 		XMLTagNode tagnode = (XMLTagNode) node;
 
-		if (tagnode.tag.equals("init")) {
+		if (tagnode.tag.equals("init"))
+		{
 
-			//System.out.println("Process Init: " + tagnode);
-			processInit(tagnode,s);
-		} else {
+			// System.out.println("Process Init: " + tagnode);
+			processInit(tagnode, s);
+		} else
+		{
 			System.err.println("Unexpected tag: " + tagnode.tag);
 		}
-		
-			
+
 	}
-	
+
 	private void processInit(XMLTagNode tagnode, Socket s) throws IOException
 	{
-		
+
 		String sessionId = tagnode.getAttr("idekey");
-		
-		if(targets.containsKey(sessionId)){
-			try {
-				targets.get(sessionId).newThread(tagnode,s);
-			} catch (DebugException e) {
+
+		if (targets.containsKey(sessionId))
+		{
+			try
+			{
+				String sid = tagnode.getAttr("thread");
+				int id = -1;
+				String name = sid;
+				// Either "123" or "123 on <CPU name>" for VDM-RT
+				int space = sid.indexOf(' ');
+
+				if (space == -1)
+				{
+					id = Integer.parseInt(sid);
+				} else
+				{
+					id = Integer.parseInt(sid.substring(0, space));
+				}
+				if(id == 1)
+				{
+					name = "Thread [Main]";
+				}
+				VdmThread t = new VdmThread(targets.get(sessionId), id, name,sessionId, s);
+				
+				targets.get(sessionId).newThread(t);
+				
+				try
+				{
+					t.getProxy().processInit(tagnode);
+				} catch (IOException e)
+				{
+					if (Activator.DEBUG)
+					{
+						e.printStackTrace();
+					}
+					throw new DebugException(new Status(IStatus.ERROR, IDebugConstants.PLUGIN_ID, "Cannot init thread", e));
+
+				}
+				
+			} catch (DebugException e)
+			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}else
+		} else
 		{
 			System.err.println("Unexpected node: " + tagnode.toString());
 		}
 
-		
-
 	}
 
 	/**
-	 * Returns a free port number on localhost, or -1 if unable to find a free
-	 * port.
+	 * Returns a free port number on localhost, or -1 if unable to find a free port.
 	 * 
-	 * @return a free port number on localhost, or -1 if unable to find a free
-	 *         port
+	 * @return a free port number on localhost, or -1 if unable to find a free port
 	 */
-	public static int findFreePort() {
+	public static int findFreePort()
+	{
 		ServerSocket socket = null;
-		try {
+		try
+		{
 			socket = new ServerSocket(0);
 			return socket.getLocalPort();
-		} catch (IOException e) {
-		} finally {
-			if (socket != null) {
-				try {
+		} catch (IOException e)
+		{
+		} finally
+		{
+			if (socket != null)
+			{
+				try
+				{
 					socket.close();
-				} catch (IOException e) {
+				} catch (IOException e)
+				{
 				}
 			}
 		}
 		return -1;
 	}
 
-	public void dispose() {
+	public void dispose()
+	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	public void disposeTarget(String sessionId) {
-		if(targets.containsKey(sessionId)){
+	public void disposeTarget(String sessionId)
+	{
+		if (targets.containsKey(sessionId))
+		{
 			targets.remove(sessionId);
 		}
-		
+
 	}
 
-	
 }

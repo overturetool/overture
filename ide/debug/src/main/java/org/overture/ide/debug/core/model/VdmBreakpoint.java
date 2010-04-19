@@ -203,7 +203,7 @@ public class VdmBreakpoint extends Breakpoint implements IVdmBreakpoint {
 	 * @param target the target in which to re-create the breakpoint 
 	 */
 	protected void recreate(VdmDebugTarget target) throws CoreException {
-		if (target.isAvailable() && target.getBreakpoints().contains(this)) {
+		if (!target.isTerminated() && target.getBreakpoints().contains(this)) {
 //			removeRequests(target);
 //			createRequests(target);
 			System.out.println("TODO: breakpoint changed!! (VdmBreakpoint)");
