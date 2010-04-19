@@ -3,6 +3,8 @@ package org.overture.ide.debug.core.model;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.List;
+import java.util.Vector;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -104,18 +106,26 @@ public class VdmThread extends VdmDebugElement implements IThread,
 			fireSuspendEvent(DebugEvent.STEP_END);
 		}
 
+		public void deadlockDetected()
+		{
+			state.setState(DebugState.Suspended);
+			fireSuspendEvent(DebugEvent.UNSPECIFIED);
+			markDeadlocked(this);
+			fireDeadlockedEvent();
+		}
+
 	}
 
 	private String fName;
 	private int id;
 	private DebugThreadProxy proxy;
 
-	private VdmStackFrame[] frames = null;
+	private List<VdmStackFrame> frames = new Vector<VdmStackFrame>();
 
 	private VdmDebugState state = new VdmDebugState();
 
-	public VdmThread(VdmDebugTarget target, int id, String name,String sessionId,
-			Socket socket)
+	public VdmThread(VdmDebugTarget target, int id, String name,
+			String sessionId, Socket socket)
 	{
 		super(target);
 		this.id = id;
@@ -130,29 +140,51 @@ public class VdmThread extends VdmDebugElement implements IThread,
 	{
 		if (isSuspended())
 		{
-			try
-			{
-				frames = proxy.getStack();
-
-				for (VdmStackFrame f : frames)
-				{
-					f.setDebugTarget(fTarget);
-					f.setThread(this, proxy);
-				}
-			} catch (SocketTimeoutException e)
-			{
-				if (Activator.DEBUG)
-				{
-					e.printStackTrace();
-				}
-				throw new DebugException(new Status(IStatus.WARNING, IDebugConstants.PLUGIN_ID, "Cannot fetch stack from debug engine", e));
-			}
-			return frames;
+			//updateStackFrames();
+			return frames.toArray(new IStackFrame[frames.size()]);
 		} else
 		{
 			return new IStackFrame[0];
 		}
 
+	}
+
+	private void updateStackFrames() throws DebugException
+	{
+		try
+		{
+			VdmStackFrame[] newFrames = proxy.getStack();
+			synchronized (frames)
+			{
+
+				for (int i = 0; i < newFrames.length; i++)
+				{
+					VdmStackFrame frame = newFrames[i];
+					if (i > frames.size()-1)
+					{
+						frames.add(frame);
+					} else
+					{
+						frames.get(i).updateWith(frame);
+					}
+
+					frame.setDebugTarget(fTarget);
+					frame.setThread(this, proxy);
+				}
+				if (frames.size() > newFrames.length)
+				{
+					frames = frames.subList(0, newFrames.length);
+				}
+
+			}
+		} catch (SocketTimeoutException e)
+		{
+			if (Activator.DEBUG)
+			{
+				e.printStackTrace();
+			}
+			throw new DebugException(new Status(IStatus.WARNING, IDebugConstants.PLUGIN_ID, "Cannot fetch stack from debug engine", e));
+		}
 	}
 
 	public boolean hasStackFrames() throws DebugException
@@ -187,10 +219,10 @@ public class VdmThread extends VdmDebugElement implements IThread,
 	{
 		if (isSuspended())
 		{
-			IStackFrame[] frames = getStackFrames();
-			if (frames.length > 0)
+			updateStackFrames();
+			if (frames.size() > 0)
 			{
-				return frames[0];
+				return frames.get(0);
 			}
 		}
 		return null;
@@ -300,7 +332,6 @@ public class VdmThread extends VdmDebugElement implements IThread,
 
 	// END ITerminate
 
-
 	public int getId()
 	{
 		return id;
@@ -311,94 +342,92 @@ public class VdmThread extends VdmDebugElement implements IThread,
 		return proxy;
 	}
 
-	
-
 	// IVdmExecution
 	public void doResume(Object source)
 	{
-			state.setState(DebugState.Resumed);
-			if (frames != null)
+		state.setState(DebugState.Resumed);
+		if (frames != null)
+		{
+			for (VdmStackFrame frame : frames)
 			{
-				for (VdmStackFrame frame : frames)
-				{
-					frame.clearVariables();
-				}
+				frame.clearVariables();
 			}
+		}
 
-			proxy.resume();
+		proxy.resume();
 	}
 
 	public void doStepInto(Object source) throws DebugException
 	{
-			if (frames != null)
+		if (frames != null)
+		{
+			for (VdmStackFrame frame : frames)
 			{
-				for (VdmStackFrame frame : frames)
-				{
-					frame.clearVariables();
-				}
+				frame.clearVariables();
 			}
+		}
 
-			state.setState(DebugState.IsStepping);
+		state.setState(DebugState.IsStepping);
 
-			try
+		try
+		{
+			proxy.step_into();
+		} catch (IOException e)
+		{
+			if (Activator.DEBUG)
 			{
-				proxy.step_into();
-			} catch (IOException e)
-			{
-				if (Activator.DEBUG)
-				{
-					e.printStackTrace();
-				}
-				throw new DebugException(new Status(IStatus.WARNING, IDebugConstants.PLUGIN_ID, "doStepInto", e));
+				e.printStackTrace();
 			}
+			throw new DebugException(new Status(IStatus.WARNING, IDebugConstants.PLUGIN_ID, "doStepInto", e));
+		}
 	}
 
 	public void doStepOver(Object source) throws DebugException
 	{
-			if (frames != null)
+		if (frames != null)
+		{
+			for (VdmStackFrame frame : frames)
 			{
-				for (VdmStackFrame frame : frames)
-				{
-					frame.clearVariables();
-				}
+				frame.clearVariables();
 			}
+		}
 
-			state.setState(DebugState.IsStepping);
-			try
+		state.setState(DebugState.IsStepping);
+		try
+		{
+			proxy.step_over();
+		} catch (IOException e)
+		{
+			if (Activator.DEBUG)
 			{
-				proxy.step_over();
-			} catch (IOException e)
-			{
-				if (Activator.DEBUG)
-				{
-					e.printStackTrace();
-				}
-				throw new DebugException(new Status(IStatus.WARNING, IDebugConstants.PLUGIN_ID, "doStepOver", e));
+				e.printStackTrace();
 			}
+			throw new DebugException(new Status(IStatus.WARNING, IDebugConstants.PLUGIN_ID, "doStepOver", e));
+		}
 	}
 
 	public void doStepReturn(Object source) throws DebugException
 	{
-			if (frames != null)
+		if (frames != null)
+		{
+			for (VdmStackFrame frame : frames)
 			{
-				for (VdmStackFrame frame : frames)
-				{
-					frame.clearVariables();
-				}
+				frame.clearVariables();
 			}
+		}
 
-			state.setState(DebugState.IsStepping);
-			try
+		state.setState(DebugState.IsStepping);
+		try
+		{
+			proxy.step_out();
+		} catch (IOException e)
+		{
+			if (Activator.DEBUG)
 			{
-				proxy.step_out();
-			} catch (IOException e)
-			{
-				if (Activator.DEBUG)
-				{
-					e.printStackTrace();
-				}
-				throw new DebugException(new Status(IStatus.WARNING, IDebugConstants.PLUGIN_ID, "doStepReturn", e));
+				e.printStackTrace();
 			}
+			throw new DebugException(new Status(IStatus.WARNING, IDebugConstants.PLUGIN_ID, "doStepReturn", e));
+		}
 	}
 
 	public void doSuspend(Object source)
@@ -408,7 +437,14 @@ public class VdmThread extends VdmDebugElement implements IThread,
 
 	public void doTerminate(Object source)
 	{
-			state.setState(DebugState.Terminated);
-			proxy.terminate();
+		state.setState(DebugState.Terminated);
+		proxy.terminate();
+	}
+
+	public void markDeadlocked(Object source)
+	{
+		state.setState(DebugState.Deadlocked);
+		this.fName += " - DEADLOCKED";
+		
 	}
 }

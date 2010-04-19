@@ -14,7 +14,6 @@ import java.util.Vector;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IBreakpoint;
-import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.model.VdmGroupValue;
 import org.overture.ide.debug.core.model.VdmLineBreakpoint;
 import org.overture.ide.debug.core.model.VdmMultiValue;
@@ -294,6 +293,10 @@ public class DebugThreadProxy extends AsyncCaller
 			} else if (stream.equals("stderr"))
 			{
 				callback.firePrintErr(text);
+				if(text.replaceAll("\n", "").replaceAll("\t", "").trim().equalsIgnoreCase("DEADLOCK detected"))
+				{
+					callback.deadlockDetected();
+				}
 			}
 		} catch (Exception e)
 		{

@@ -447,4 +447,17 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 		}
 	}
 
+	public void markDeadlocked(Object source)throws DebugException
+	{
+		for (VdmThread t : fThreads)
+		{
+			if (!t.equals(source))
+			{
+				t.markDeadlocked(source);
+			}
+		}
+		state.setState(DebugState.Deadlocked);
+		fireChangeEvent(DebugEvent.CONTENT);//update all thread names
+	}
+
 }

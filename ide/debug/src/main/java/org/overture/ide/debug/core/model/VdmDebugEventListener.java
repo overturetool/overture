@@ -74,7 +74,23 @@ public class VdmDebugEventListener implements IDebugEventSetListener
 
 	private void handleModelSpecific(DebugEvent debugEvent)
 	{
-
+		try
+		{
+			switch (debugEvent.getDetail())
+			{
+				case VdmDebugElement.MODEL_DEADLOCKED:
+					//target.doSuspend(debugEvent.getSource());
+					target.markDeadlocked(debugEvent.getSource());
+					//MessageDialog.openError(Activator.getActiveWorkbenchShell(), "Deadlock detected", "Model suspended for inspection do to a DEADLOCK.");
+					break;
+			}
+		} catch (DebugException e)
+		{
+			if (Activator.DEBUG)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -208,7 +224,8 @@ public class VdmDebugEventListener implements IDebugEventSetListener
 	 * Checks if a given source is a part of the debug target set as target. This is used to insure that other debug
 	 * sessions do not fire events which will affect this session
 	 * 
-	 * @param source the source how fires the given debug event
+	 * @param source
+	 *            the source how fires the given debug event
 	 * @return true if source is included in the target
 	 */
 	private boolean hasSource(Object source)

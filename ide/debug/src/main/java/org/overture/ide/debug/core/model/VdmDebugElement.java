@@ -13,6 +13,7 @@ import org.overture.ide.debug.core.IDebugConstants;
 
 public class VdmDebugElement extends PlatformObject implements IDebugElement
 {
+	public final static int MODEL_DEADLOCKED =0x1;
 
 	protected VdmDebugTarget fTarget;
 	protected ILaunch fLaunch;
@@ -127,9 +128,14 @@ public class VdmDebugElement extends PlatformObject implements IDebugElement
 		fireEvent(new DebugEvent(this, DebugEvent.CHANGE,details));
 	}
 
-	public void fireExtendedEvent(Object eventSource, int details)
+	public void fireModelSpecificEvent( int details)
 	{
-		fireEvent(new DebugEvent(eventSource, DebugEvent.MODEL_SPECIFIC, details));
+		fireEvent(new DebugEvent(this, DebugEvent.MODEL_SPECIFIC, details));
 
+	}
+	
+	public void fireDeadlockedEvent()
+	{
+		fireModelSpecificEvent(MODEL_DEADLOCKED);
 	}
 }

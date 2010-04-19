@@ -21,7 +21,7 @@ public class VdmDebugState
 	 */
 	public enum DebugState
 	{
-		Terminated, Suspended, Disconnected, IsStepping, Resumed
+		Terminated, Suspended, Disconnected, IsStepping, Resumed, Deadlocked
 	};
 
 	/**
@@ -55,6 +55,9 @@ public class VdmDebugState
 				case Resumed:
 					Assert.isLegal(canChange(DebugState.Resumed), "Cannot resume in a terminated state");
 					states.clear();
+					states.add(newState);
+					break;
+				case Deadlocked:
 					states.add(newState);
 					break;
 			}
@@ -91,7 +94,7 @@ public class VdmDebugState
 			case Suspended:
 				return states.size()==1 && inState(DebugState.Resumed);
 			case IsStepping:
-				return (!inState(DebugState.Terminated)||!inState(DebugState.Disconnected)) && inState(DebugState.Suspended);
+				return (!inState(DebugState.Terminated)||!inState(DebugState.Disconnected)||!inState(DebugState.Deadlocked)) && inState(DebugState.Suspended);
 			case Resumed:
 				return states.size()==0 || inState(DebugState.IsStepping) ||inState(DebugState.Suspended);
 			default:

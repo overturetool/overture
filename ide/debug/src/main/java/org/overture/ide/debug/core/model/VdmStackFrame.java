@@ -11,7 +11,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IRegisterGroup;
 import org.eclipse.debug.core.model.IStackFrame;
-import org.eclipse.debug.core.model.IStep;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
 import org.overture.ide.debug.core.Activator;
@@ -265,4 +264,14 @@ public class VdmStackFrame extends VdmDebugElement implements IStackFrame
 		variables = null;
 	}
 
+	public void updateWith(VdmStackFrame newFrame)
+	{
+		this.charEnd = newFrame.charEnd;
+		this.charStart = newFrame.charStart;
+		this.lineNumber = newFrame.lineNumber;
+		this.name = newFrame.name;
+		this.level = newFrame.level;
+		this.nameIsFileUri = newFrame.nameIsFileUri;
+		this.where = newFrame.where;
+	}
 }

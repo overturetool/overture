@@ -71,6 +71,8 @@ public interface IDebugThreadProxyCallback
 	void fireBreakpointSet(Integer tid, Integer breakpointId);
 
 	void suspended(int reason);
+	
+	void deadlockDetected();
 
 	
 
