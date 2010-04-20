@@ -18,7 +18,7 @@ public interface IVdmProject extends IProject
 
 	
 
-	/*
+	/**
 	 * (non-Javadoc)
 	 * 
 	 * @see
@@ -28,14 +28,14 @@ public interface IVdmProject extends IProject
 	public abstract void setBuilder(Release languageVersion)
 			throws CoreException;
 
-	/*
+	/**
 	 * (non-Javadoc)
 	 * 
 	 * @see org.overture.ide.utility.IVdmProject#hasBuilder()
 	 */
 	public abstract boolean hasBuilder() throws CoreException;
 
-	/*
+	/**
 	 * (non-Javadoc)
 	 * 
 	 * @see org.overture.ide.utility.IVdmProject#getLanguageVersion()

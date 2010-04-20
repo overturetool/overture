@@ -7,9 +7,9 @@
             class="org.overture.ide.ui.perspective.VdmPerspectiveFactory"
             icon="icons/cview16/overture_nav.png"
             id="org.overture.ide.ui.perspective"
-            name="VDM Perspective">
+            name="%VdmPerspectiveName">
          <description>
-            Insert VDM Perspective Description
+            %VdmPerspectiveDescription
          </description>
       </perspective>
    </extension>
@@ -32,7 +32,7 @@
             class="org.overture.ide.ui.navigator.VdmNavigator"
             icon="icons/cview16/overture_nav.png"
             id="org.overture.ide.ui.VdmExplorer"
-            name="VDM Explorer">
+            name="%VdmExplorerName">
       </view>
    </extension>
    <extension

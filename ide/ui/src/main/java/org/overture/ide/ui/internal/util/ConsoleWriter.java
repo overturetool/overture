@@ -84,6 +84,7 @@ public class ConsoleWriter extends PrintWriter
 					MessageConsoleStream out = myConsole.newMessageStream();
 					out.setColor(Display.getCurrent().getSystemColor(color));
 					out.println(message);
+					out.flush();
 				} catch (Exception e)
 				{
 					e.printStackTrace();

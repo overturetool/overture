@@ -38,11 +38,11 @@
                   perspective="org.eclipse.debug.ui.DebugPerspective"
                   description="%localVdmPpApplicationTabGroupDescription.debug">
             </launchMode>
-            <launchMode
+            <!--launchMode
                   mode="run"
                   perspective="org.eclipse.debug.ui.DebugPerspective"
                   description="%localVdmPpApplicationTabGroupDescription.run">
-            </launchMode>
+            </launchMode-->
 		</launchConfigurationTabGroup>
 	</extension>
 
@@ -63,7 +63,7 @@
  <extension point="org.eclipse.debug.ui.launchShortcuts">
   <shortcut
      id="org.overture.ide.debug.ui.localVdmShortcut"
-     modes="run,debug"
+     modes="debug"
      class="org.overture.ide.vdmpp.debug.ui.launchconfigurations.VdmApplicationLaunchShortcut"
      label="Vdm Application"
      icon="icons/cview16/vdmpp_file_tsk.png">
