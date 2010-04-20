@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.vdmj.commands.DebuggerReader;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.statements.Statement;
@@ -128,6 +129,18 @@ public class CTMainThread extends MainThread
 			result.add(e.getMessage());
 			result.add(Verdict.FAILED);
 		}
+	}
+
+	@Override
+	protected void handleSignal(Signal sig, Context lctxt, LexLocation location)
+	{
+		if (sig == Signal.DEADLOCKED)
+		{
+			result.add("DEADLOCK detected");
+			result.add(Verdict.FAILED);
+		}
+
+		super.handleSignal(sig, lctxt, location);
 	}
 
 	public List<Object> getList()
