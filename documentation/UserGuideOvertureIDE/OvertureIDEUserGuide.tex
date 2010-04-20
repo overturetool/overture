@@ -1500,25 +1500,22 @@ do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
 \item[\texttt{log [<file> | off]}:] This command can only be used in
   VDM-RT models. It starts to log real-time events to the file indicated. By
   default, event logging is turned off, but logging can be enabled to
-  the console by using log with no arguments, or to a file using \\texttt{log
+  the console by using log with no arguments, or to a file using \texttt{log
   <filename>}. Logging can subsequently be turned off again by using
   \\texttt{log off}. The events logged include requests, activations and
   completions of all functions and operations, as well as all creation
   of instances of classes, creation of CPUs and BUSses, deployment of objects
   to specific CPUs and the swapping in an out of threads.\index{log}\index{command!log}  
-\item[\texttt{threads}:] This command can only be used for the VDM++
-  and VDM-RT dialects. It lists the active threads with status
-  information for each thread.\index{threads}\index{command!threads} 
 \item[\texttt{state}:] This command can only be used for the VDM-SL
   dialect and shows the default module state.\index{state}\index{command!state}  
   The value of the state can be changed by operations called.
 \item[\texttt{[p]rint <expression>}:] This command evaluates the
   expression provided in the current
-  context.\index{print}\index{command!print} Note that if combinatorial traces
-  are defined in the model then the \texttt{print} command can also be
-  used to evaluate a named trace. This will carry out the combinatorial
+  context.\index{print}\index{command!print}     
+\item[\texttt{runtrace <name>}:] This command runs the trace called
+  \texttt{<name>}. This will carry out the combinatorial
   test by expanding all the regular expressions and executing the resulting
-  operation sequences. \index{combinatorial testing}   
+  operation sequences. \index{combinatorial testing}
 \item[\texttt{assert <file>}:] This command runs assertions from the
   file provided. The assertions in the file must be Boolean
   expressions, one per line. This command evaluates each assertion in
@@ -1754,6 +1751,9 @@ breakpoint, there are additional commands that can be used. These are:
   current breakpoint. \index{source}\index{command!source} 
 \item[\texttt{stop}:] This command terminate the execution
   immediately.\index{stop}\index{command!stop}  
+\item[\texttt{threads}:] This command can only be used for the VDM++
+  and VDM-RT dialects. It lists the active threads with status
+  information for each thread.\index{threads}\index{command!threads} 
 \end{description}
 
 \appendix
