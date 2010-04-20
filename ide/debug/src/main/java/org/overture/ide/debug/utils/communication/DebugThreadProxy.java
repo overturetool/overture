@@ -117,7 +117,7 @@ public class DebugThreadProxy extends AsyncCaller
 	@Override
 	protected void write(String request)
 	{
-		callback.firePrintMessage(true, "Request:  " + request);
+		callback.firePrintMessage(true, adjustLength("Request ("+threadId+"):  ") + request);
 
 		try
 		{
@@ -259,11 +259,11 @@ public class DebugThreadProxy extends AsyncCaller
 
 			if (tagnode.tag.equals("init"))
 			{
-				callback.firePrintMessage(false, "Res Init: " + tagnode);
+				callback.firePrintMessage(false, adjustLength("Res Init("+threadId+"):") + tagnode);
 				processInit(tagnode);
 			} else if (tagnode.tag.equals("response"))
 			{
-				callback.firePrintMessage(false, "Response: " + tagnode);
+				callback.firePrintMessage(false,adjustLength( "Response("+threadId+"): ") + tagnode);
 				processResponse(tagnode);
 			} else if (tagnode.tag.equals("stream"))
 			{
@@ -286,7 +286,7 @@ public class DebugThreadProxy extends AsyncCaller
 		try
 		{
 			text = new String(Base64.decode(data.cdata));
-			callback.firePrintMessage(false, stream + ": " + text);
+			callback.firePrintMessage(false,adjustLength( stream + "("+threadId+")  :") + text);
 			if (stream.equals("stdout"))
 			{
 				callback.firePrintOut(text);
@@ -398,7 +398,7 @@ public class DebugThreadProxy extends AsyncCaller
 
 	public void processInit(XMLTagNode tagnode) throws IOException
 	{
-		callback.firePrintMessage(false, "Process init: " + tagnode.toString());
+		callback.firePrintMessage(false,adjustLength( "P init("+threadId+")  :") + tagnode.toString());
 
 		sessionId = tagnode.getAttr("idekey");
 
@@ -741,5 +741,12 @@ public class DebugThreadProxy extends AsyncCaller
 	// {
 	// write("eval -i " + (++xid) + " -- " + Base64.encode(expression));
 	// }
+	
+	private static String adjustLength(String message)
+	{
+		while(message.length()<14)
+			message+=" ";
+		return message;
+	}
 
 }

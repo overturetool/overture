@@ -104,6 +104,11 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 
 	public boolean isTerminated()
 	{
+		//check process since no event handler is available on the process to check
+		if(fProcess.isTerminated())
+		{
+			state.setState(DebugState.Terminated);
+		}
 		return state.inState(DebugState.Terminated);
 	}
 
