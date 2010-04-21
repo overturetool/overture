@@ -1,5 +1,8 @@
 package org.overture.ide.ui.internal.viewsupport;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -93,7 +96,10 @@ public class VdmElementImageProvider {
 		return fRegistry;
 	}
 
-	static Module activeModule;
+	
+	//TODO: this map should be deleted when the AST fix is made 
+	//so that definitions contain a reference to the module they belong
+	static Map<String,Module> activeModule = new HashMap<String,Module>();
 
 	private ImageDescriptor computeDescriptor(Object element, int flags) {
 		int adornmentFlags = 0;
@@ -101,11 +107,11 @@ public class VdmElementImageProvider {
 		adornmentFlags = computeVdmAdornmentFlags(element);
 
 		if (element instanceof ClassDefinition) {
-			activeModule = null;
+//			activeModule = null;
 			return VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_OBJS_CLASS);
 		} else if (element instanceof Module) {
-			activeModule = (Module) element;
+			activeModule.put(((Module)element).getName(), ((Module)element));
 			return VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_OBJS_MODULE);
 		} else if (element instanceof TypeDefinition) {
@@ -148,8 +154,11 @@ public class VdmElementImageProvider {
 				ClassDefinition classDef = ((UntypedDefinition) element).classDefinition;
 				definitions = classDef.definitions;
 			} else {
-				if (activeModule != null)
-					definitions = activeModule.defs;
+				if (activeModule != null){
+					UntypedDefinition untypedDef = (UntypedDefinition) element;
+					
+					definitions = activeModule.get(untypedDef.name.module).defs;
+				}
 			}
 			if (definitions != null) {
 				for (Definition def : definitions) {

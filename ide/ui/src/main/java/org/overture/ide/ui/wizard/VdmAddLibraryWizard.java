@@ -68,7 +68,7 @@ public class VdmAddLibraryWizard extends Wizard implements IWorkbenchWizard
 		if (useIo || useMath || useUtil)
 		{
 			File projectRoot = prj.getLocation().toFile();
-			File libFolder = new File(new File(projectRoot, "model"),"lib");
+			File libFolder = new File(projectRoot,"lib");
 			if (!libFolder.exists())
 				libFolder.mkdirs();
 

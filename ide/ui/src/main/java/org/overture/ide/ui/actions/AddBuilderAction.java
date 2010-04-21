@@ -1,4 +1,4 @@
-package org.overture.ide.ui.action;
+package org.overture.ide.ui.actions;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.IAction;

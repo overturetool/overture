@@ -52,10 +52,8 @@ public class VdmDebugElement extends PlatformObject implements IDebugElement
 		{
 			return this;
 		}
-		// This is the fix for the Perspective change on breakpoint hit... refer to (PerspectiveManager and
-		// LauchSuspendTrigger)
-		if (adapter == ILaunch.class)
-		{
+		//This is the fix for the Perspective change on breakpoint hit... refer to (PerspectiveManager and LauchSuspendTrigger)
+		if(adapter == ILaunch.class){
 			return getLaunch();
 		}
 		return super.getAdapter(adapter);

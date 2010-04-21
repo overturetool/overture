@@ -3,42 +3,59 @@ package org.overture.ide.ui.navigator;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.eclipse.core.internal.resources.Folder;
-import org.eclipse.core.internal.resources.Workspace;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.model.IWorkbenchAdapter;
 
-public class ResourceContainer extends Folder {
+public class ResourceContainer implements IWorkbenchAdapter, IVdmContainer {
 
-	private IFolder fFolder;
 	
+	private IContainer fContainer;
+//	
+//	private IFolder fFolder;
+//	private IProject fProject;
+
 	public ResourceContainer(IFolder folder) {
-		super(folder.getFullPath(),(Workspace) folder.getWorkspace());
-		fFolder = folder;
+		// super(folder.getFullPath(),(Workspace) folder.getWorkspace());
+		//fFolder = folder;
+		fContainer = folder;
+	}
+
+	public ResourceContainer(IProject element) {
+		//this.fProject = element;
+		fContainer = element;
 	}
 
 	
 
-	public IFolder getFolder() {
-		return fFolder;
-	}
+	public Collection<Object> getChildren() {
 
-
-
-	public Collection<IResource> getChildren() {
+		ArrayList<Object> res = new ArrayList<Object>();
 		
-		ArrayList<IResource> res = new ArrayList<IResource>();
+
 		try {
-			for (IResource iResource : fFolder.members()) {
-				if(iResource instanceof IFolder){
+//			if (fProject != null) {
+//				members = fProject.members();
+//			} else {
+//				members = fFolder.members();
+//			}
+
+			for (IResource iResource : fContainer.members()) {
+				if (iResource instanceof IFolder) {
+					res.add(new ResourceContainer((IFolder) iResource));
+				} else if (iResource instanceof IFile
+						&& VdmNavigatorContentProvider
+								.isFileResource((IFile) iResource)) {
 					res.add(iResource);
 				}
-				else if (iResource instanceof IFile && VdmNavigatorContentProvider.isFileResource((IFile) iResource)){
-					res.add(iResource);
-				}
-				
+
 			}
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
@@ -46,11 +63,45 @@ public class ResourceContainer extends Folder {
 		}
 		return res;
 	}
-	
+
 	@Override
 	public int hashCode() {
+
+		return ("ResourceContainer" + fContainer.getFullPath()).hashCode();
 		
-		return ("ResourceContainer" + fFolder.getFullPath()).hashCode();
+		
+//		if(fProject != null){
+//			return ("ResourceContainer" + fProject.getFullPath()).hashCode();
+//		}
+//		else{
+//			return ("ResourceContainer" + fFolder.getFullPath()).hashCode();	
+//		}
+		
 	}
-	
+
+	public Object[] getChildren(Object o) {
+		return this.getChildren().toArray();
+	}
+
+	public ImageDescriptor getImageDescriptor(Object object) {
+		return PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
+				ISharedImages.IMG_OBJ_FOLDER);
+	}
+
+	public String getLabel(Object o) {
+		if (fContainer instanceof IProject) {
+			return "Resources";
+		} else {
+			return fContainer.getFullPath().lastSegment();
+		}
+	}
+
+	public Object getParent(Object o) {
+		return fContainer.getParent();
+	}
+
+	public IContainer getContainer() {
+		return fContainer;
+	}
+
 }

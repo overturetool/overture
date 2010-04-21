@@ -71,11 +71,50 @@
        <dragAssistant
              class="org.eclipse.ui.navigator.resources.ResourceDragAdapterAssistant"
              viewerId="org.eclipse.ui.navigator.ProjectExplorer"/>
+       
      
       <viewer
             viewerId="org.overture.ide.ui.VdmExplorer">
+         <popupMenu
+               allowsPlatformContributions="true">
+            <insertionPoint
+                  name="group.new"
+                  separator="true">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.edit"
+                  separator="true">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.build"
+                  separator="true">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.reorganize"
+                  separator="true">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.port"
+                  separator="true">
+            </insertionPoint>
+            <insertionPoint
+                  name="group.properties"
+                  separator="true">
+            </insertionPoint>
+         </popupMenu>
            
       </viewer>
+      <viewerActionBinding
+            viewerId="org.overture.ide.ui.VdmExplorer">
+         <includes>
+            <actionExtension
+                  pattern="org.overture.ide.ui.VdmNewAction">
+            </actionExtension>
+            <actionExtension
+                  pattern="org.overture.ide.ui.VdmRefreshAction">
+            </actionExtension>
+         </includes>
+      </viewerActionBinding>
    </extension>
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">
@@ -97,6 +136,12 @@
          	<possibleChildren>
 				<or>
 					<instanceof	value="org.eclipse.core.resources.IResource" />
+     <instanceof
+           value="org.overture.ide.ui.navigator.SourceContainer">
+     </instanceof>
+     <instanceof
+           value="org.overture.ide.ui.navigator.ResourceContainer">
+     </instanceof>
 					
 				</or>
 			</possibleChildren> 
@@ -107,7 +152,13 @@
           <enablement>
 		         <or>         
 		            <adapt type="org.eclipse.core.resources.IProject" /> 
-		            <instanceof value="org.eclipse.core.resources.IResource" /> 
+		            <instanceof value="org.eclipse.core.resources.IResource" />
+              <instanceof
+                    value="org.overture.ide.ui.navigator.SourceContainer">
+              </instanceof>
+              <instanceof
+                    value="org.overture.ide.ui.navigator.ResourceContainer">
+              </instanceof> 
 		         </or>
          </enablement>
          
@@ -121,13 +172,20 @@
 		   </parentExpression>
         </commonSorter>
         <dropAssistant
-              class="org.eclipse.ui.navigator.resources.ResourceDropAdapterAssistant"
+              class="org.overture.ide.ui.navigator.VdmDropAdapterAssistent"
               id="org.eclipse.ui.navigator.resources.resourceDropAdapter">
            <possibleDropTargets>
               <or>
                  <adapt type="org.eclipse.core.resources.IProject"/>
                  <adapt type="org.eclipse.core.resources.IFolder"/>
                  <adapt type="org.eclipse.core.resources.IFile"/>
+                 <instanceof
+                       value="org.overture.ide.ui.navigator.SourceContainer">
+                 </instanceof>
+                 <instanceof
+                       value="org.overture.ide.ui.navigator.ResourceContainer">
+                 </instanceof>
+                 
               </or>
            </possibleDropTargets>
         </dropAssistant> 
@@ -148,6 +206,20 @@
               <adapt type="org.eclipse.core.resources.IResource"/>
            </enablement>
         </actionProvider>
+         <actionProvider
+               class="org.overture.ide.ui.navigator.VdmNewActionProvider"
+               id="org.overture.ide.ui.VdmNewAction">
+            <enablement>
+               <or>
+                  <instanceof
+                        value="org.overture.ide.ui.navigator.ResourceContainer">
+                  </instanceof>
+                  <instanceof
+                        value="org.overture.ide.ui.navigator.SourceContainer">
+                  </instanceof>
+               </or>
+            </enablement>
+         </actionProvider>
         
         <actionProvider
               class="org.eclipse.ui.internal.navigator.resources.actions.ResourceMgmtActionProvider"
@@ -160,7 +232,7 @@
 					</adapt>
 				</or>
            </enablement>
-        </actionProvider> 
+        </actionProvider>
               
         
          
@@ -268,7 +340,7 @@
             id="org.overture.ide.ui.objectContribution1"
             objectClass="org.eclipse.core.resources.IProject">
          <action
-               class="org.overture.ide.ui.action.AddBuilderAction"
+               class="org.overture.ide.ui.actions.AddBuilderAction"
                id="org.overture.ide.ui.action.AddBuilder"
                label="Add VDM Builder">
          </action>
@@ -304,4 +376,39 @@
       </wizard>
    </extension>
   
+  <!-- Templates -->
+  <extension point="org.eclipse.ui.preferencePages">
+         <page
+              class="org.overture.ide.ui.templates.VdmPpCodeTemplatesPreferencePage"
+              id="org.overture.ide.vdmpp.ui.VdmPpCodeTemplatesPreferencePage"
+              name="Templates VDM++"
+              />
+	</extension>
+ 	<extension point="org.eclipse.ui.editors.templates">
+       <contextType
+          class="org.overture.ide.ui.templates.VdmUniversalTemplateContextType"
+          id="org.overture.ide.ui.contextType.vdm"
+          name="VDM Template content">
+       </contextType>
+      <include
+          file="templates/templates.xml">
+       </include>
+    </extension>
+  <extension
+        point="org.eclipse.ui.bindings">
+     <key
+           commandId="org.overture.ide.ui.commands.toggleComment"
+           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+           sequence="M1+7">
+     </key>
+  </extension>
+  <extension
+        point="org.eclipse.ui.commands">
+     <command
+           categoryId="org.eclipse.ui.category.textEditor"
+           defaultHandler="org.overture.ide.ui.commands.ToggleComment"
+           id="org.overture.ide.ui.commands.toggleComment"
+           name="name">
+     </command>
+  </extension>
 </plugin>

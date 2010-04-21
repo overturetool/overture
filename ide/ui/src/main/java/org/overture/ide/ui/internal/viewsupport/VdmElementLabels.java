@@ -1,5 +1,8 @@
 package org.overture.ide.ui.internal.viewsupport;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.osgi.util.TextProcessor;
 import org.overture.ide.core.IVdmElement;
@@ -66,18 +69,22 @@ public class VdmElementLabels {
 	// StyledString result = new StyledString(resource.getName());
 	// return Strings.markLTR(result);
 	// }
-	static Module activeModule;
+	
+
+	//TODO: this map should be deleted when the AST fix is made 
+	//so that definitions contain a reference to the module they belong
+	static Map<String,Module> activeModule = new HashMap<String,Module>();
 
 	public static StyledString getStyledTextLabel(Object element, long flags) {
 		// if (element instanceof IVdmElement) {
 		// return getElementLabel((IVdmElement) element, flags);
 		// }
 		if (element instanceof ClassDefinition) {
-			activeModule = null;
+//			activeModule = null;
 			return getClassDefinitionLabel((ClassDefinition) element, flags);
 		}
 		if (element instanceof Module) {
-			activeModule = (Module) element;
+			activeModule.put(((Module)element).getName(), ((Module)element));
 			return getModuleLabel((Module) element, flags);
 		}
 		if (element instanceof InstanceVariableDefinition) {
@@ -153,7 +160,7 @@ public class VdmElementLabels {
 			PerSyncDefinition element) {
 		StyledString result = new StyledString();
 		result.append(element.getName());
-		result.append(" : synch predicate",StyledString.DECORATIONS_STYLER);
+		result.append(" : sync predicate",StyledString.DECORATIONS_STYLER);
 		return result;
 	}
 
@@ -280,7 +287,7 @@ public class VdmElementLabels {
 			definitions = classDef.definitions;
 		} else {
 			if (activeModule != null)
-				definitions = activeModule.defs;
+				definitions = activeModule.get(element.name.module).defs;
 		}
 		if (definitions != null) {
 			for (Definition def : definitions) {

@@ -18,11 +18,13 @@ public class VdmSourceViewer extends SourceViewer{
 		super(parent,ruler,overviewRuler,overviewRulerVisible,styles);
 		this.showAnnotations(true);
 		
-	 
+//		setPrefixForComments();					
 	}
 
 	
 	
+
+
 	public Object getReconciler() {
 		return this.reconciler;
 	}

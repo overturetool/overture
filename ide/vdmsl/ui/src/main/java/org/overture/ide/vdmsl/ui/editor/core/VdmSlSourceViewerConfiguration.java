@@ -15,4 +15,7 @@ public class VdmSlSourceViewerConfiguration extends
 	protected ITokenScanner getVdmCodeScanner() {
 		return new VdmSlCodeScanner(new VdmColorProvider());
 	}
+	
+	
+	
 }

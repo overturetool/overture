@@ -116,4 +116,19 @@
             </or></enablement>
       </commonWizard>
    </extension>     
+   <!-- Enables double click on ruler for breakpoint creation -->
+	 <extension
+         point="org.eclipse.ui.editorActions">
+      <editorContribution
+            targetID="org.overture.ide.vdmsl.ui.VdmSlEditor"
+            id="org.overture.ide.debug.VdmEditor.BreakpointRulerActions">
+         <action
+               label="%AddBreakpoint.label"
+               class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
+               actionID="RulerDoubleClick"
+               id="org.overture.ide.debug.ui.actions.ManageBreakpointRulerAction">
+         </action>
+      </editorContribution>
+	</extension>
+   
 </plugin>

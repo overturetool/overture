@@ -31,15 +31,7 @@ public class VdmNavigatorLabelProvider extends LabelProvider implements ILabelPr
      */
 	@Override
     public final Image getImage(Object element) {
-		
-		if(element instanceof SourceContainer){
-			return ((SourceContainer)element).getImage();
-		}
-		
-		if(element instanceof ResourceContainer){
-			element = ((ResourceContainer) element).getFolder();
-		}
-		
+				
 		
         //obtain the base image by querying the element
         IWorkbenchAdapter adapter = getAdapter(element);
@@ -60,14 +52,8 @@ public class VdmNavigatorLabelProvider extends LabelProvider implements ILabelPr
 	
 	@Override
 	public String getText(Object element) {
+				
 		
-		if(element instanceof SourceContainer){
-			return ((SourceContainer)element).getText();
-		}
-		
-		if(element instanceof ResourceContainer){
-			element = ((ResourceContainer) element).getFolder();
-		}
 		//query the element for its label
         IWorkbenchAdapter adapter = getAdapter(element);
         if (adapter == null) {

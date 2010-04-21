@@ -26,6 +26,8 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
 import org.eclipse.debug.core.model.IProcess;
+import org.eclipse.debug.internal.ui.launchConfigurations.PerspectiveManager;
+import org.eclipse.debug.ui.DebugUITools;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.core.resources.VdmProject;
@@ -141,7 +143,17 @@ public class VdmLaunchConfigurationDelegate implements
 			target.setProject(project);
 			launch.addDebugTarget(target);
 
+			String perspective = DebugUITools.getLaunchPerspective(configuration.getType(), mode);
+			if(perspective != null)
+				System.out.println("Perspective to open:" + perspective);
+			else
+				System.out.println("No perspective switch set");
+			
+			
 		}
+		
+		
+		
 	}
 
 	private String getRemoteControllerName(ILaunchConfiguration configuration)

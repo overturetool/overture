@@ -7,11 +7,9 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -19,6 +17,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.IWorkbenchAdapter;
@@ -38,7 +37,7 @@ public class VdmNavigatorContentProvider extends BaseWorkbenchContentProvider
 
 		if (adapter != null) {
 			Object[] children = adapter.getChildren(element);
-			for (int i = 0; i < children.length; i++) {				
+			for (int i = 0; i < children.length; i++) {
 				if (children[i] instanceof IProject) {
 					IProject p = (IProject) children[i];
 					if (!p.isOpen()) {
@@ -60,7 +59,7 @@ public class VdmNavigatorContentProvider extends BaseWorkbenchContentProvider
 	}
 
 	public void resourceChanged(IResourceChangeEvent event) {
-		UIJob job = new UIJob(Workbench.getInstance().getDisplay(),
+		UIJob job = new UIJob(PlatformUI.getWorkbench().getDisplay(),
 				"Navigator Update") {
 
 			@Override
@@ -109,42 +108,54 @@ public class VdmNavigatorContentProvider extends BaseWorkbenchContentProvider
 
 	}
 
-	// private static final Object[] NO_CHILDREN = {};
-	//
+	 private static final Object[] NO_CHILDREN = {};
+	
 	public Object[] getChildren(Object element) {
-		ArrayList<Object> result = new ArrayList<Object>();
-		if (element instanceof ResourceContainer) {
-			result
-					.addAll(getResourceContainerChildren((ResourceContainer) element));
-			return result.toArray();
-		}
+		
+		// if (element instanceof ResourceContainer) {
+		// result
+		// .addAll(getResourceContainerChildren((ResourceContainer) element));
+		// // return result.toArray();
+		// } else if (element instanceof SourceContainer) {
+		// SourceContainer sourceContainer = (SourceContainer) element;
+		// result.addAll(sourceContainer.getChildren());
+		// // return result.toArray();
+		// } else {
 
-		if (element instanceof SourceContainer) {
-			SourceContainer sourceContainer = (SourceContainer) element;
-			result.addAll(sourceContainer.getChildren());
-			return result.toArray();
-		}
-
+		
+		//TODO: these lines should be commented to obtain the old navigator
+		//START COMMENT HERE
+//		if(element instanceof IProject){
+//			ArrayList<Object> result = new ArrayList<Object>();
+//			result.add(new SourceContainer((IProject) element));
+//			result.add(new ResourceContainer((IProject) element));
+//			return result.toArray();
+//		}
+		//END COMMENT HERE
+	
+		
 		IWorkbenchAdapter adapter = getAdapter(element);
+
 		if (adapter != null) {
 			Object[] children = adapter.getChildren(element);
-			for (Object object : children) {
-				if (object instanceof IFolder) {
-					result.addAll(getIFolderChildren((IFolder) object));
-
-				}
-				if (object instanceof IFile) {
-
-					result.add(object);
-
-				}
-
-			}
-
-			return result.toArray();
+			return children;
+//			for (Object object : children) {
+//				if (object instanceof IFolder) {
+//					result.addAll(getIFolderChildren((IFolder) object));
+//
+//				}
+//				if (object instanceof IFile) {
+//
+//					result.add(object);
+//
+//				}
+//
+//			}
 		}
 
-		return new Object[0];
+		return NO_CHILDREN;
+		// }
+		
 
 	}
 
@@ -155,7 +166,7 @@ public class VdmNavigatorContentProvider extends BaseWorkbenchContentProvider
 		if (isRootFolder(folder)) {
 			result.add(new SourceContainer(folder, true));
 		}
-		//result.addAll(childrenContainingSource((IFolder) object));
+		// result.addAll(childrenContainingSource((IFolder) object));
 
 		return result;
 	}
@@ -177,24 +188,15 @@ public class VdmNavigatorContentProvider extends BaseWorkbenchContentProvider
 
 	}
 
-	//
-	// public Object getParent(Object element) {
-	// // TODO Auto-generated method stub
-	// return null;
-	// }
-	//
 	public boolean hasChildren(Object element) {
 		return getChildren(element).length > 0;
 
 	}
 
-	
-
 	static public boolean isRootFolder(IFolder folder) {
 		return folder.getProjectRelativePath().toPortableString().equals(
 				"model");
 	}
-	
 
 	static public boolean isFileResource(IFile iResource) {
 		String extention = ((IFile) iResource).getFileExtension();
@@ -204,39 +206,5 @@ public class VdmNavigatorContentProvider extends BaseWorkbenchContentProvider
 		else
 			return false;
 	}
-
-//	private boolean containsResources(IFolder folder) {
-//
-//		boolean result = false;
-//
-//		try {
-//			IResource[] resources = folder.members();
-//
-//			if (resources.length > 0) {
-//				for (IResource iResource : resources) {
-//					if (iResource instanceof IFile) {
-//
-//						if (isFileResource((IFile) iResource)) {
-//							result = true;
-//							break;
-//						}
-//					}
-//
-//					if (iResource instanceof IFolder) {
-//						result = containsResources((IFolder) iResource);
-//					}
-//
-//				}
-//			} else {
-//				result = true;
-//			}
-//
-//		} catch (CoreException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//		return result;
-//	}
 
 }

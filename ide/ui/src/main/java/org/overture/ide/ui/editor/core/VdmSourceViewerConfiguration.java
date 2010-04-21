@@ -7,6 +7,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.reconciler.IReconciler;
@@ -19,11 +20,17 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.autoedit.VdmAutoEditStrategy;
 import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
+import org.overture.ide.ui.templates.VdmContentAssistProcessor;
+import org.overture.ide.ui.templates.VdmContentAssistant;
+
+import com.sun.xml.internal.ws.util.StringUtils;
 
 public abstract class VdmSourceViewerConfiguration extends
 		SourceViewerConfiguration
 {
 
+	private String[] commentingPrefix = new String[]{"--"};
+	
 	// private Object fScanner;
 
 	@Override
@@ -110,7 +117,7 @@ public abstract class VdmSourceViewerConfiguration extends
 			public String getHoverInfo(ITextViewer textViewer,
 					IRegion hoverRegion)
 			{
-				return "Hej";
+				return null;
 			}
 		};
 	}
@@ -125,7 +132,24 @@ public abstract class VdmSourceViewerConfiguration extends
 		return new VdmAnnotationHover(false);
 	}
 	
-
+	@Override
+	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+		return new VdmContentAssistant();
+	}
 	
+	@Override
+	public String[] getDefaultPrefixes(ISourceViewer sourceViewer,
+			String contentType) {
+		if(contentType.equals(IDocument.DEFAULT_CONTENT_TYPE)){
+			return commentingPrefix; 
+		}
+		if(contentType.equals(VdmPartitionScanner.SINGLELINE_COMMENT)){
+			return commentingPrefix;
+		}
 		
+		return super.getDefaultPrefixes(sourceViewer, contentType);
+	}
+	
+	
 }
+

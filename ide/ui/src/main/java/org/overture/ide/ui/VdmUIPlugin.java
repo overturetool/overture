@@ -2,6 +2,12 @@ package org.overture.ide.ui;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.templates.ContextTypeRegistry;
+import org.eclipse.jface.text.templates.TemplateContextType;
+import org.eclipse.jface.text.templates.persistence.TemplateStore;
+import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
+import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
@@ -12,19 +18,26 @@ public class VdmUIPlugin extends AbstractUIPlugin {
 	public static boolean DEBUG = true;
 	private static VdmUIPlugin plugin;
 	public final static String VDM_PARTITIONING = "__vdm__partitioning__";
-	//public static final String PLUGIN_ID = "org.overture.ide.ui";
+
+	// public static final String PLUGIN_ID = "org.overture.ide.ui";
 	private VdmPartitionScanner fPartitionScanner;
 	private ImageDescriptorRegistry fImageDescriptorRegistry;
 	private ProblemMarkerManager fProblemMarkerManager;
-	
+	private Object fTemplateStore;
+	private Object fContextTypeRegistry;
+
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
 	}
+
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+	 * 
+	 * @see
+	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
+	 * )
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
@@ -34,56 +47,59 @@ public class VdmUIPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns the shared instance
-	 *
+	 * 
 	 * @return the shared instance
 	 */
 	public static VdmUIPlugin getDefault() {
 		return plugin;
 	}
-	
-	public VdmPartitionScanner getPartitionScanner(){
-		if(fPartitionScanner == null)
+
+	public VdmPartitionScanner getPartitionScanner() {
+		if (fPartitionScanner == null)
 			fPartitionScanner = new VdmPartitionScanner();
-		
+
 		return fPartitionScanner;
 	}
-	
-	
+
 	public static void log(Exception exception) {
 		exception.printStackTrace();
 	}
-	
-	public static void println(String s)
-	{
-		if(DEBUG)
+
+	public static void println(String s) {
+		if (DEBUG)
 			System.out.println(s);
 	}
+
 	public static void printe(Exception e) {
 		println(e.getStackTrace().toString());
 		println(e.getMessage());
-		
+
 	}
+
 	public static void logErrorMessage(String string) {
 		// TODO Auto-generated method stub
-		
+
 	}
+
 	public static ImageDescriptorRegistry getImageDescriptorRegistry() {
 		return getDefault().internalGetImageDescriptorRegistry();
 	}
-	
+
 	private synchronized ImageDescriptorRegistry internalGetImageDescriptorRegistry() {
 		if (fImageDescriptorRegistry == null)
-			fImageDescriptorRegistry= new ImageDescriptorRegistry();
+			fImageDescriptorRegistry = new ImageDescriptorRegistry();
 		return fImageDescriptorRegistry;
 	}
-	
+
 	public synchronized ProblemMarkerManager getProblemMarkerManager() {
 		if (fProblemMarkerManager == null)
-			fProblemMarkerManager= new ProblemMarkerManager();
+			fProblemMarkerManager = new ProblemMarkerManager();
 		return fProblemMarkerManager;
 	}
-	
+
 	public static IWorkspace getWorkspace() {
 		return ResourcesPlugin.getWorkspace();
 	}
+
+	
 }

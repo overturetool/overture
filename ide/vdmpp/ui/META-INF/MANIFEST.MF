@@ -10,10 +10,12 @@ Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.vdmpp.ui;singleton:=true
 Require-Bundle: org.overture.ide.vdmpp.core;bundle-version="1.0.0",
  org.overture.ide.core;bundle-version="2.0.0",
- org.overture.ide.ui;bundle-version="1.0.0"
+ org.overture.ide.ui;bundle-version="1.0.0",
+ org.eclipse.debug.ui;bundle-version="3.5.2"
 Bundle-Activator: org.overture.ide.vdmpp.ui.VdmPpUIPlugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.overture.ide.vdmpp.ui.wizard
+
 
 
 

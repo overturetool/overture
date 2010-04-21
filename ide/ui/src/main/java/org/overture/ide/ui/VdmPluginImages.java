@@ -201,6 +201,9 @@ public class VdmPluginImages {
 	public static final ImageDescriptor DESC_MENU_SHIFT_RIGHT= createUnManaged(T_ETOOL, "shift_r_edit.gif"); 	//$NON-NLS-1$
 	public static final ImageDescriptor DESC_MENU_SHIFT_LEFT= createUnManaged(T_ETOOL, "shift_l_edit.gif"); 	//$NON-NLS-1$
 
+	public static final ImageDescriptor DESC_MENU_REFRESH= createUnManaged(T_ETOOL, "refresh.gif"); 	//$NON-NLS-1$
+	
+	
 	public static final ImageDescriptor DESC_OBJS_GHOST= createManagedFromKey(T_OBJ, IMG_OBJS_GHOST);
 	public static final ImageDescriptor DESC_OBJS_PACKDECL= createManagedFromKey(T_OBJ, IMG_OBJS_PACKDECL);
 	public static final ImageDescriptor DESC_OBJS_IMPDECL= createManagedFromKey(T_OBJ, IMG_OBJS_IMPDECL);
@@ -437,6 +440,7 @@ public class VdmPluginImages {
 	public static final ImageDescriptor DESC_WIZBAN_CLEAN_UP= createUnManaged(T_WIZBAN, "cleanup_wiz.png"); //$NON-NLS-1$
 
 
+	
 	public static final ImageDescriptor DESC_TOOL_SHOW_EMPTY_PKG= createUnManaged(T_ETOOL, "show_empty_pkg.gif"); 		//$NON-NLS-1$
 	public static final ImageDescriptor DESC_TOOL_SHOW_SEGMENTS= createUnManaged(T_ETOOL, "segment_edit.gif"); 		//$NON-NLS-1$
 

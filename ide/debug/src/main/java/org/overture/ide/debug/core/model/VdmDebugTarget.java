@@ -18,7 +18,11 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IMemoryBlock;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IThread;
+import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.swt.SWT;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.WorkbenchException;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.model.VdmDebugState.DebugState;
@@ -63,6 +67,11 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 
 		DebugPlugin.getDefault().addDebugEventListener(new VdmDebugEventListener(this));
 		DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(this);
+		
+		
+
+		
+		
 		fireCreationEvent();
 
 		state.setState(DebugState.Resumed);
