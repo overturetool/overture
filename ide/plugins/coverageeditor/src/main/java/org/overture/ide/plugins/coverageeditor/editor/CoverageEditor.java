@@ -29,7 +29,8 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
-import org.overture.ide.utility.SourceLocationConverter;
+
+import org.overture.ide.core.utility.SourceLocationConverter;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
