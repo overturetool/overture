@@ -4,8 +4,6 @@ import java.io.File;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -20,11 +18,14 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
-import org.overture.ide.ast.AstManager;
-import org.overture.ide.ast.RootNode;
-import org.overture.ide.plugins.poviewer.PoviewerPluginConstants;
+import org.overture.ide.core.IVdmModel;
+import org.overture.ide.core.ast.NotAllowedException;
+import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.core.resources.VdmProject;
+import org.overture.ide.plugins.poviewer.Activator;
+import org.overture.ide.plugins.poviewer.IPoviewerConstants;
 import org.overture.ide.plugins.poviewer.view.PoOverviewTableView;
-import org.overture.ide.utility.ProjectUtility;
+import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overturetool.vdmj.pog.ProofObligationList;
 
 public abstract class ViewPosAction implements IObjectActionDelegate
@@ -37,7 +38,8 @@ public abstract class ViewPosAction implements IObjectActionDelegate
 	/**
 	 * Constructor for Action1.
 	 */
-	public ViewPosAction() {
+	public ViewPosAction()
+	{
 		super();
 	}
 
@@ -61,23 +63,22 @@ public abstract class ViewPosAction implements IObjectActionDelegate
 		try
 		{
 			IProject selectedProject = null;
-			selectedProject = ProjectHelper.getSelectedProject(action,
-					selectedProject);
+			selectedProject = ProjectHelper.getSelectedProject(action, selectedProject);
 
-			if (selectedProject == null)
+			if (selectedProject == null
+					&& !VdmProject.isVdmProject(selectedProject))
 			{
-				ConsoleWriter.ConsolePrint(shell,
-						"Could not find selected project");
+				ConsoleWriter.ConsolePrint(shell, "Could not find selected project");
 				return;
 			}
 
 			IFile tmpFile = ProjectHelper.getSelectedFile(action);
 			if (tmpFile != null)
 			{
-				selectedFile = ProjectUtility.getFile(selectedProject, tmpFile);
+				// selectedFile = ProjectUtility.getFile(selectedProject, tmpFile);
 			}
 
-			viewPos(selectedProject);
+			viewPos(VdmProject.createProject(selectedProject));
 
 		} catch (Exception ex)
 		{
@@ -89,55 +90,53 @@ public abstract class ViewPosAction implements IObjectActionDelegate
 
 	public boolean skipElement(File file)
 	{
-		return (selectedFile != null && !selectedFile.getName()
-				.equals((file.getName())));
+		return (selectedFile != null && !selectedFile.getName().equals((file.getName())));
 
 	}
 
 	protected abstract String getNature();
 
-	private void viewPos(final IProject project) throws PartInitException
+	private void viewPos(final IVdmProject project) throws PartInitException
 	{
+		final IVdmModel model = project.getModel();
 
-		final Job showJob = new Job("Generating Proof Obligations") {
+		if (!model.isParseCorrect())
+		{
+			return;
+			//return new Status(Status.ERROR, IPoviewerConstants.PLUGIN_ID, "Project contains parse errors");
+		}
+
+		if (model == null || !model.isTypeCorrect())
+		{
+			VdmTypeCheckerUi.typeCheck(shell, project);
+		}
+		final Job showJob = new Job("Generating Proof Obligations")
+		{
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor)
 			{
 				monitor.worked(IProgressMonitor.UNKNOWN);
 
-				RootNode root = AstManager.instance().getRootNode(project,
-						getNature());
-				if (root == null || !root.isChecked())
-				{
-					IStatus res = buildProject(project, monitor, root);
-					if (!res.isOK())
-						return res;
-
-					root = AstManager.instance().getRootNode(project,
-							getNature());
-				}
+				
 
 				try
 				{
-					if (root == null || (root != null && !root.isChecked()))
-						throw new Exception("Project is not build correctly, build error");
+					if (!model.isParseCorrect() || !model.isTypeCorrect())
+					{
+						return new Status(Status.ERROR, IPoviewerConstants.PLUGIN_ID, "Project is not build correctly, build error");
+					}
 
-					final ProofObligationList pos = getProofObligations(root);
+					final ProofObligationList pos = getProofObligations(model);
 					pos.renumber();
 					showPOs(project, pos);
 
 				} catch (Exception e)
 				{
 					e.printStackTrace();
-					return new Status(IStatus.ERROR,
-							"org.overture.ide.plugins.poviewer",
-							"Error showing PO's",
-							e);
+					return new Status(IStatus.ERROR, IPoviewerConstants.PLUGIN_ID, "Error showing PO's", e);
 				}
-				return new Status(IStatus.OK,
-						"org.overture.ide.plugins.poviewer",
-						"Ok");
+				return new Status(IStatus.OK, "org.overture.ide.plugins.poviewer", "Ok");
 			}
 
 		};
@@ -152,9 +151,7 @@ public abstract class ViewPosAction implements IObjectActionDelegate
 			// IWorkbenchPage p=
 			// targetPart.getSite().getWorkbenchWindow().o.getSite().getWorkbenchWindow().openPage(PoviewerPluginConstants.ProofObligationPerspectiveId,null);
 			// p.activate(targetPart);
-			PlatformUI.getWorkbench()
-					.showPerspective(PoviewerPluginConstants.ProofObligationPerspectiveId,
-							targetPart.getSite().getWorkbenchWindow());
+			PlatformUI.getWorkbench().showPerspective(IPoviewerConstants.ProofObligationPerspectiveId, targetPart.getSite().getWorkbenchWindow());
 		} catch (WorkbenchException e)
 		{
 
@@ -169,61 +166,37 @@ public abstract class ViewPosAction implements IObjectActionDelegate
 	{
 	}
 
-	private IStatus buildProject(final IProject project,
-			IProgressMonitor monitor, RootNode root)
+	protected abstract ProofObligationList getProofObligations(IVdmModel model)
+			throws NotAllowedException;
+
+	private void showPOs(final IVdmProject project, final ProofObligationList pos)
 	{
-		if (root == null || !root.isChecked())
-			try
+		targetPart.getSite().getPage().getWorkbenchWindow().getShell().getDisplay().asyncExec(new Runnable()
+		{
+
+			public void run()
 			{
-				project.build(IncrementalProjectBuilder.FULL_BUILD, monitor);
-			} catch (CoreException e1)
-			{
-				e1.printStackTrace();
-				return new Status(IStatus.ERROR,
-						"org.overture.ide.plugins.poviewer",
-						"Error building",
-						e1);
-			}
-		return new Status(IStatus.OK,
-				PoviewerPluginConstants.PoViewerId,
-				"Build successfull");
-	}
-
-	protected abstract ProofObligationList getProofObligations(RootNode root);
-
-	private void showPOs(final IProject project, final ProofObligationList pos)
-	{
-		targetPart.getSite()
-				.getPage()
-				.getWorkbenchWindow()
-				.getShell()
-				.getDisplay()
-				.asyncExec(new Runnable() {
-
-					public void run()
+				IViewPart v;
+				try
+				{
+					v = targetPart.getSite().getPage().showView(IPoviewerConstants.PoOverviewTableViewId);
+					if (v instanceof PoOverviewTableView)
 					{
-						IViewPart v;
-						try
-						{
-							v = targetPart.getSite()
-									.getPage()
-									.showView(PoviewerPluginConstants.PoOverviewTableViewId);
-							if (v instanceof PoOverviewTableView)
-							{
-								((PoOverviewTableView) v).setDataList(project,
-										pos);
-
-							}
-
-							openPoviewPerspective();
-						} catch (PartInitException e)
-						{
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						((PoOverviewTableView) v).setDataList(project, pos);
 
 					}
 
-				});
+					openPoviewPerspective();
+				} catch (PartInitException e)
+				{
+					if (Activator.DEBUG)
+					{
+						e.printStackTrace();
+					}
+				}
+
+			}
+
+		});
 	}
 }

@@ -23,7 +23,8 @@ import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
-import org.overture.ide.utility.ConsoleWriter;
+
+import org.overture.ide.ui.internal.util.ConsoleWriter;
 import org.overturetool.traceviewer.ast.itf.IOmlTraceFile;
 import org.overturetool.traceviewer.parser.TraceParser;
 

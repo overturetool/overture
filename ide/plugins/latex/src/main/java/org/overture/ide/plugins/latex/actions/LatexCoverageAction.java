@@ -11,7 +11,6 @@ import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -26,23 +25,19 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.util.BundleUtility;
 import org.osgi.framework.Bundle;
-import org.overture.ide.ast.AstManager;
-import org.overture.ide.ast.RootNode;
+import org.overture.ide.core.IVdmModel;
+import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.plugins.latex.Activator;
 import org.overture.ide.plugins.latex.utility.LatexBuilder;
 import org.overture.ide.plugins.latex.utility.LatexProject;
 import org.overture.ide.plugins.latex.utility.PdfLatex;
 import org.overture.ide.plugins.latex.utility.TreeSelectionLocater;
-import org.overture.ide.utility.ConsoleWriter;
-import org.overture.ide.utility.IVdmProject;
-import org.overture.ide.utility.ProjectUtility;
-import org.overture.ide.utility.VdmProject;
-import org.overture.ide.vdmpp.core.VdmPpCorePluginConstants;
-import org.overture.ide.vdmpp.core.VdmPpProjectNature;
-import org.overture.ide.vdmrt.core.VdmRtCorePluginConstants;
-import org.overture.ide.vdmrt.core.VdmRtProjectNature;
-import org.overture.ide.vdmsl.core.VdmSlCorePluginConstants;
-import org.overture.ide.vdmsl.core.VdmSlProjectNature;
+import org.overture.ide.ui.internal.util.ConsoleWriter;
+import org.overture.ide.ui.utility.VdmTypeCheckerUi;
+import org.overture.ide.vdmpp.core.IVdmPpCoreConstants;
+import org.overture.ide.vdmrt.core.IVdmRtCoreConstants;
+import org.overture.ide.vdmsl.core.IVdmSlCoreConstants;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
@@ -66,7 +61,7 @@ public class LatexCoverageAction implements IObjectActionDelegate
 	 */
 	public LatexCoverageAction() {
 		super();
-		console = new ConsoleWriter(shell);
+		console = new ConsoleWriter("LATEX");
 	}
 
 	/**
@@ -85,29 +80,25 @@ public class LatexCoverageAction implements IObjectActionDelegate
 
 		try
 		{
-			IProject selectedProject = null;
-			selectedProject = TreeSelectionLocater.getSelectedProject(action,
-					selectedProject);
+			
+		IVdmProject	selectedProject = TreeSelectionLocater.getSelectedProject(action);
 			if (selectedProject == null)
 			{
 				console.print("Could not find selected project");
 				return;
 			}
 
-			if (selectedProject.hasNature(VdmPpProjectNature.VDM_PP_NATURE))
+			if (selectedProject.hasNature(IVdmPpCoreConstants.NATURE))
 				makeLatex(selectedProject,
-						VdmPpCorePluginConstants.CONTENT_TYPE,
-						VdmPpProjectNature.VDM_PP_NATURE,
+						
 						Dialect.VDM_PP);
-			if (selectedProject.hasNature(VdmSlProjectNature.VDM_SL_NATURE))
+			if (selectedProject.hasNature(IVdmSlCoreConstants.NATURE))
 				makeLatex(selectedProject,
-						VdmSlCorePluginConstants.CONTENT_TYPE,
-						VdmSlProjectNature.VDM_SL_NATURE,
+						
 						Dialect.VDM_SL);
-			if (selectedProject.hasNature(VdmRtProjectNature.VDM_RT_NATURE))
+			if (selectedProject.hasNature(IVdmRtCoreConstants.NATURE))
 				makeLatex(selectedProject,
-						VdmRtCorePluginConstants.CONTENT_TYPE,
-						VdmRtProjectNature.VDM_RT_NATURE,
+						
 						Dialect.VDM_RT);
 
 		} catch (Exception ex)
@@ -152,8 +143,8 @@ public class LatexCoverageAction implements IObjectActionDelegate
 	final static String VDM_MODEL_ENV_BEGIN = "\\begin{vdm_al}";
 	final static String VDM_MODEL_ENV_END = "\\end{vdm_al}";
 
-	private void makeLatex(final IProject selectedProject,
-			final String contentTypeId, final String natureId,
+	private void makeLatex(final IVdmProject selectedProject,
+			//final String contentTypeId, final String natureId,
 			final Dialect dialect)
 	{
 		final Job expandJob = new Job("Builder coverage tex files.") {
@@ -178,28 +169,20 @@ public class LatexCoverageAction implements IObjectActionDelegate
 					if (!outputFolderForGeneratedModelFiles.exists())
 						outputFolderForGeneratedModelFiles.mkdirs();
 
-					RootNode root = AstManager.instance()
-							.getRootNode(selectedProject, natureId);
-					if (root == null || !root.isChecked())
+					IVdmModel model = selectedProject.getModel();
+					if (model == null || !model.isTypeCorrect())
 					{
-						IVdmProject vdmProject = new VdmProject(selectedProject);
-						vdmProject.typeCheck(false,monitor);
-						VdmProject.waitForBuidCompletion();
-						root = AstManager.instance()
-								.getRootNode(selectedProject, natureId);
+						VdmTypeCheckerUi.typeCheck(shell, selectedProject);
 					}
-					if (root != null && root.isChecked())
+					if (model != null && model.isTypeCorrect())
 					{
 						boolean modelOnly = !new LatexProject(selectedProject).hasDocument();
 						LexLocation.resetLocations();
-						if (root.hasClassList())
+						if (model.hasClassList())
 						{
-							ClassList classlist = AstManager.instance()
-									.getRootNode(selectedProject, natureId)
-									.getClassList();
+						
 
-							ClassList classes = parseClasses(selectedProject,
-									classlist);
+							ClassList classes = parseClasses(selectedProject);
 
 							List<File> outputFiles = getFileChildern(new File(projectRoot,
 									"generated"));
@@ -213,17 +196,12 @@ public class LatexCoverageAction implements IObjectActionDelegate
 										modelOnly);
 
 							}
-						} else if (root.hasModuleList())
+						} else if (model.hasModuleList())
 						{
-							ModuleList modulelist = AstManager.instance()
-									.getRootNode(selectedProject, natureId)
-									.getModuleList();
-
 							List<File> outputFiles = getFileChildern(new File(projectRoot,
 									"generated"));
 
-							ModuleList modules = parseModules(selectedProject,
-									modulelist);
+							ModuleList modules = parseModules(selectedProject);
 
 							for (Module classDefinition : modules)
 							{
@@ -334,7 +312,7 @@ public class LatexCoverageAction implements IObjectActionDelegate
 					if (file.getName().toLowerCase().endsWith(".cov")
 							&& (moduleFile.getName()).equals(getFileName(file)))
 					{
-						System.out.println("Match");
+						//System.out.println("Match");
 						LexLocation.mergeHits(moduleFile, file);
 						outputFiles.remove(i);
 
@@ -346,7 +324,7 @@ public class LatexCoverageAction implements IObjectActionDelegate
 
 				PrintWriter pw = new PrintWriter(texFile);
 				f.printLatexCoverage(pw, false, modelOnly);
-				ConsoleWriter cw = new ConsoleWriter(shell);
+				ConsoleWriter cw = new ConsoleWriter("LATEX");
 				f.printCoverage(cw);
 				pw.close();
 			}
@@ -407,25 +385,15 @@ public class LatexCoverageAction implements IObjectActionDelegate
 	{
 	}
 
-	private ClassList parseClasses(final IProject selectedProject,
-			ClassList classlist)
+	private ClassList parseClasses(final IVdmProject project) throws CoreException
 	{
 		ClassReader reader;
 		ClassList classes = new ClassList();
-		for (ClassDefinition cd : classlist)
+		for (IVdmSourceUnit source : project.getSpecFiles())
 		{
-			String charset = "";
-			try
-			{
-				charset = ProjectUtility.findIFile(selectedProject,
-						cd.location.file).getCharset();
-
-			} catch (CoreException e)
-			{
-				e.printStackTrace();
-			}
-
-			LexTokenReader ltr = new LexTokenReader(cd.location.file,
+			String charset = source.getFile().getCharset();
+			
+			LexTokenReader ltr = new LexTokenReader(source.getSystemFile(),
 					Dialect.VDM_RT,
 					charset);
 			reader = new ClassReader(ltr);
@@ -435,33 +403,22 @@ public class LatexCoverageAction implements IObjectActionDelegate
 		return classes;
 	}
 
-	private ModuleList parseModules(final IProject selectedProject,
-			ModuleList modulelist)
+	private ModuleList parseModules(final IVdmProject project) throws CoreException
 	{
 		ModuleReader reader;
 		ModuleList modules = new ModuleList();
-		for (Module m : modulelist)
+		for (IVdmSourceUnit source : project.getSpecFiles())
 		{
-			String charset = "";
-			try
-			{
-				charset = ProjectUtility.findIFile(selectedProject,
-						m.files.get(0)).getCharset();
+			String charset = source.getFile().getCharset();
 
-			} catch (CoreException e)
-			{
-				e.printStackTrace();
-			}
-
-			for (File f : m.files)
-			{
-				LexTokenReader ltr = new LexTokenReader(f,
+			
+				LexTokenReader ltr = new LexTokenReader(source.getSystemFile(),
 						Dialect.VDM_SL,
 						charset);
 				reader = new ModuleReader(ltr);
 
 				modules.addAll(reader.readModules());
-			}
+			
 		}
 		return modules;
 	}

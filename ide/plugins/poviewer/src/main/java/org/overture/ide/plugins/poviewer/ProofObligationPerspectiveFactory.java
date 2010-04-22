@@ -3,6 +3,7 @@ package org.overture.ide.plugins.poviewer;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.overture.ide.ui.IVdmUiConstants;
 
 public class ProofObligationPerspectiveFactory implements IPerspectiveFactory {
 
@@ -17,7 +18,7 @@ public class ProofObligationPerspectiveFactory implements IPerspectiveFactory {
 		String editorArea = factory.getEditorArea();
 		
 		IFolderLayout folder= factory.createFolder("left", IPageLayout.LEFT, (float)0.2, editorArea); //$NON-NLS-1$
-		String navigator = "org.eclipse.dltk.ui.ScriptExplorer";
+		String navigator =IVdmUiConstants.NAVIGATOR;
 
 		folder.addView(navigator);
 		
@@ -29,7 +30,7 @@ public class ProofObligationPerspectiveFactory implements IPerspectiveFactory {
 				factory.getEditorArea());
 		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
 		bottom.addView("org.eclipse.ui.console.ConsoleView");
-		bottom.addView(PoviewerPluginConstants.PoTableViewId); //NON-NLS-1
+		bottom.addView(IPoviewerConstants.PoTableViewId); //NON-NLS-1
 		
 
 		IFolderLayout right =
@@ -39,7 +40,7 @@ public class ProofObligationPerspectiveFactory implements IPerspectiveFactory {
 				0.65f,
 				factory.getEditorArea());
 		
-		right.addView(PoviewerPluginConstants.PoOverviewTableViewId); //NON-NLS-1
+		right.addView(IPoviewerConstants.PoOverviewTableViewId); //NON-NLS-1
 		
 	}
 

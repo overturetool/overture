@@ -2,7 +2,7 @@ package org.overture.ide.plugins.latex.properties;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.core.IScriptProject;
+
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeSelection;
@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.internal.WorkbenchPlugin;
+import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.latex.utility.LatexProject;
 
 @SuppressWarnings("restriction")
@@ -151,8 +152,8 @@ public class WorkbenchPropertyPage1 extends PropertyPage implements
 				Object project = selection.getPaths()[0].getFirstSegment();
 				if (project instanceof IProject)
 					selectedProject = (IProject) project;
-				else if (project instanceof IScriptProject)
-					selectedProject = ((IScriptProject) project).getProject();
+				else if (project instanceof IVdmProject)
+					selectedProject = ((IVdmProject) project);
 
 			}
 		} else if (selectedItem instanceof IStructuredSelection)

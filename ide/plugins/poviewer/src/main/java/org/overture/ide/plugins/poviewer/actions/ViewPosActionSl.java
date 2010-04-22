@@ -1,7 +1,9 @@
 package org.overture.ide.plugins.poviewer.actions;
 
-import org.overture.ide.ast.RootNode;
-import org.overture.ide.vdmsl.core.VdmSlProjectNature;
+
+import org.overture.ide.core.IVdmModel;
+import org.overture.ide.core.ast.NotAllowedException;
+import org.overture.ide.vdmsl.core.IVdmSlCoreConstants;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -10,13 +12,13 @@ public class ViewPosActionSl extends ViewPosAction {
 
 	@Override
 	protected String getNature() {
-		return VdmSlProjectNature.VDM_SL_NATURE;
+		return IVdmSlCoreConstants.NATURE;
 	}
 
 	@Override
-	protected ProofObligationList getProofObligations(RootNode root) {
+	protected ProofObligationList getProofObligations(IVdmModel root) throws NotAllowedException {
 		ModuleList cl = new ModuleList();
-		for (Object definition : root.getRootElementList()) {
+		for (Object definition : root.getModuleList()) {
 			if (definition instanceof Module)
 				if (skipElement(((Module) definition).name.location.file))
 					continue;

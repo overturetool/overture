@@ -2,8 +2,6 @@ package org.overture.ide.plugins.poviewer.view;
 
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -32,10 +30,10 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
+import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.poviewer.Activator;
-import org.overture.ide.plugins.poviewer.PoviewerPluginConstants;
-import org.overture.ide.utility.FileUtility;
-import org.overture.ide.utility.ProjectUtility;
+import org.overture.ide.plugins.poviewer.IPoviewerConstants;
+import org.overture.ide.ui.utility.EditorUtility;
 import org.overturetool.vdmj.pog.POStatus;
 import org.overturetool.vdmj.pog.ProofObligation;
 
@@ -45,7 +43,7 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 	private TableViewer viewer;
 	private Action doubleClickAction;
 	final Display display = Display.getCurrent();
-	private IProject project;
+	private IVdmProject project;
 	
 	private ViewerFilter provedFilter = new ViewerFilter() {
 
@@ -216,7 +214,7 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 					try
 					{
 						IViewPart v = getSite().getPage()
-								.showView(PoviewerPluginConstants.PoTableViewId);
+								.showView(IPoviewerConstants.PoTableViewId);
 
 						if (v instanceof PoTableView)
 							((PoTableView) v).setDataList(project,
@@ -262,9 +260,7 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 
 			private void gotoDefinition(ProofObligation po)
 			{
-				IFile file = ProjectUtility.findIFile(project, po.location.file);
-				FileUtility.gotoLocation(file, po.location, po.name);
-
+				EditorUtility.gotoLocation(project.findIFile(po.location.file), po.location, po.name);
 			}
 		};
 		
@@ -366,7 +362,7 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 		});
 	}
 
-	public void setDataList(final IProject project,
+	public void setDataList(final IVdmProject project,
 			final List<ProofObligation> data)
 	{
 		this.project = project;

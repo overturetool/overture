@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.overture.ide.utility.ConsoleWriter;
+import org.overture.ide.ui.internal.util.ConsoleWriter;
+
+
 
 public class ProcessConsolePrinter extends Thread
 {

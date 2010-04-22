@@ -7,9 +7,9 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.texteditor.IDocumentProvider;
-import org.overture.ide.vdmpp.ui.editor.core.VdmPpEditor;
+import org.overture.ide.vdmsl.ui.editor.core.VdmSlEditor;
 
-public class VdmPpCoverageEditor extends VdmPpEditor
+public class VdmSlCoverageEditor extends VdmSlEditor
 {
 	private CoverageEditor covEditor = new CoverageEditor()
 	{
@@ -29,7 +29,7 @@ public class VdmPpCoverageEditor extends VdmPpEditor
 
 	};
 
-	public VdmPpCoverageEditor()
+	public VdmSlCoverageEditor()
 	{
 		super();
 		covEditor.setEditorDocumentProvider();

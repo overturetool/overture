@@ -2,7 +2,8 @@ package org.overture.ide.plugins.latex.utility;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.overture.ide.utility.VdmProject;
+import org.overture.ide.core.resources.VdmProject;
+
 
 public class LatexProject
 {
