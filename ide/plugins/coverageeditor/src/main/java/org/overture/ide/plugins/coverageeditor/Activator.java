@@ -13,6 +13,8 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
+
+	public static boolean DEBUG = true;
 	
 	/**
 	 * The constructor

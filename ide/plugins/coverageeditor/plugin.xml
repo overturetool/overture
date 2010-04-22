@@ -4,9 +4,9 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="org.overture.ide.plugins.coverageeditor.editor.CoverageEditor"
+            class="org.overture.ide.plugins.coverageeditor.editor.VdmPpCoverageEditor"
             default="false"
-            extensions="*.cov"
+            extensions="*vdmpp..cov"
             icon="icons/cview32/cov_file_tsk.png"
             id="org.overture.ide.plugins.coverageeditor.editor"
             name="VDM Coverage Editor">
