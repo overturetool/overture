@@ -15,6 +15,7 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.5.0",
  org.overture.ide.vdmrt.core;bundle-version="1.0.0",
  org.overture.ide.vdmsl.core;bundle-version="1.0.0",
  org.eclipse.jface.text;bundle-version="3.5.0",
- org.overture.ide.core;bundle-version="2.0.0"
+ org.overture.ide.core;bundle-version="2.0.0",
+ org.eclipse.ui.editors;bundle-version="3.5.0"
 Bundle-Activator: org.overture.ide.plugins.coverageeditor.Activator
 

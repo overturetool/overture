@@ -6,9 +6,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.Vector;
 
 import org.eclipse.core.internal.resources.Folder;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -16,20 +19,19 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.LineStyleEvent;
+import org.eclipse.swt.custom.LineStyleListener;
+import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.TextLayout;
-import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.part.EditorPart;
-
+import org.eclipse.ui.editors.text.TextEditor;
+import org.overture.ide.core.SourceReferenceManager;
+import org.overture.ide.core.resources.VdmProject;
 import org.overture.ide.core.utility.SourceLocationConverter;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
@@ -38,7 +40,7 @@ import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.syntax.ClassReader;
 
 @SuppressWarnings("restriction")
-public class CoverageEditor extends EditorPart
+public class CoverageEditor extends TextEditor
 {
 
 	private File selectedFile;
@@ -74,7 +76,7 @@ public class CoverageEditor extends EditorPart
 		IPath path = ((IPathEditorInput) input).getPath();
 
 		selectedFile = path.toFile();
-
+IFile vdmSourceFile = null;
 		try
 		{
 			readFile(selectedFile);
@@ -102,6 +104,7 @@ public class CoverageEditor extends EditorPart
 				charset = f.getCharset();
 				sourceFile = f.getLocation().toFile();
 				content = readFile(((org.eclipse.core.internal.resources.File) res).getContents());
+				vdmSourceFile = (IFile) res;
 			}
 
 		} catch (IOException e)
@@ -113,7 +116,17 @@ public class CoverageEditor extends EditorPart
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		if(VdmProject.isVdmProject(project))
+		{
+		try
+		{
+			sourceReferenceManager = new SourceReferenceManager(VdmProject.createProject(project).findSourceUnit(vdmSourceFile));
+		} catch (CoreException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}
 	}
 	
 	public static IResource findMember(IResource resource, String memberName) throws CoreException
@@ -143,14 +156,16 @@ public class CoverageEditor extends EditorPart
 	{
 		return false;
 	}
-
+	List<StyleRange> styleRanges = new Vector<StyleRange>();
+	SourceReferenceManager sourceReferenceManager = null;
 	@Override
 	public void createPartControl(Composite parent)
 	{
-		Composite c = new Composite(parent, SWT.V_SCROLL);
-		Display display = c.getDisplay();
+		super.createPartControl(parent);
+//		Composite c = new Composite(parent, SWT.V_SCROLL);
+		Display display = getSourceViewer().getTextWidget().getDisplay();
 
-		Font fontNormal = new Font(display, "Courier New", 10, SWT.NORMAL);
+//		Font fontNormal = new Font(display, "Courier New", 10, SWT.NORMAL);
 		// Font font2 = new Font(display, "MS Mincho", 20, SWT.ITALIC);
 		// Font font3 = new Font(display, "Arabic Transparent", 18, SWT.NORMAL);
 
@@ -158,14 +173,29 @@ public class CoverageEditor extends EditorPart
 		Color red = display.getSystemColor(SWT.COLOR_RED);
 		Color black = display.getSystemColor(SWT.COLOR_BLACK);
 		// Color white = display.getSystemColor(SWT.COLOR_WHITE);
-		final TextLayout layout = new TextLayout(display);
-		layout.setFont(fontNormal);
+		
+		
+//		final TextLayout layout =  //new TextLayout(display);
+//		layout.setFont(fontNormal);
+		
+		
 
 		// TextStyle styleNormal = new TextStyle(fontNormal, black, null);
-		TextStyle styleCovered = new TextStyle(fontNormal, black, green);
-		TextStyle styleNotcovered = new TextStyle(fontNormal, black, red);
+//		TextStyle styleCovered = new TextStyle(fontNormal, black, green);
+//		TextStyle styleNotcovered = new TextStyle(fontNormal, black, red);
 
-		layout.setText(content);
+		getSourceViewer().getTextWidget().setText(content);
+		getSourceViewer().getTextWidget().setEditable(false);
+		getSourceViewer().getTextWidget().addLineStyleListener(new LineStyleListener()
+		{
+			
+			public void lineGetStyle(LineStyleEvent event)
+			{
+				event.styles = styleRanges.toArray(new StyleRange[0]);
+				
+			}
+		});
+//		layout.setText(content);
 
 		ClassReader reader;
 		ClassList classes = new ClassList();
@@ -214,7 +244,10 @@ public class CoverageEditor extends EditorPart
 							int end = converter.getEndPos(l);
 							if (start < content.length() && start < end
 									&& end < content.length())
-								layout.setStyle(styleCovered, start, end);
+							{
+							//	layout.setStyle(styleCovered, start, end);
+								styleRanges.add(new StyleRange(start, end, black, green));
+							}
 
 							break;
 						}
@@ -240,7 +273,10 @@ public class CoverageEditor extends EditorPart
 					int end = converter.getEndPos(l);
 					if (start < content.length() && start < end
 							&& end < content.length())
-						layout.setStyle(styleNotcovered, start, end);
+					{
+						//layout.setStyle(styleNotcovered, start, end);
+						styleRanges.add(new StyleRange(start, end-start, black, red));
+					}
 				}
 
 			}
@@ -254,15 +290,27 @@ public class CoverageEditor extends EditorPart
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		c.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
-
-		c.addListener(SWT.Paint, new Listener() {
-			public void handleEvent(Event event)
-			{
-				layout.draw(event.gc, 10, 10);
-			}
-		});
+		try{
+//			styleRanges.clear();
+//			styleRanges.add(new StyleRange(495, 8,black, green));
+//			styleRanges.add(new StyleRange(395, 8,black, green));
+//		getSourceViewer().getTextWidget().replaceStyleRanges(0,content.length(),styleRanges.toArray(new StyleRange[styleRanges.size()]));
+		for (StyleRange styleRange : styleRanges)
+		{
+			getSourceViewer().getTextWidget().replaceStyleRanges(styleRange.start,styleRange.length,new StyleRange[]{styleRange});
+		}
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+//		c.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
+//
+//		c.addListener(SWT.Paint, new Listener() {
+//			public void handleEvent(Event event)
+//			{
+//				layout.draw(event.gc, 10, 10);
+//			}
+//		});
 	}
 
 	@Override
