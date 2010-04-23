@@ -262,10 +262,9 @@ dialect term mentioned above will be mentioned explictly.
 
 \section{The VDM Specification Language (VDM-SL)}
 
-This document describes the syntax and semantics of the VDM-SL
-language which is essentially standard ISO/VDM-SL \cite{ISOVDM96}
-with a modular extension
-\footnote{A few other extensions are also included.}.
+The syntax and semantics of the VDM-SL
+language is essentially the standard ISO/VDM-SL \cite{ISOVDM96}
+with a modular extension\footnote{A few other extensions are also included.}.
 Notice that all syntactically correct VDM-SL specifications are also correct in
  VDM-SL. 
 Even though we have tried to present the language in a
@@ -294,7 +293,8 @@ formal specifications.
 The VDM-RT language (formerly called VICE as an acronym for ``VDM++ In
 Constrained Environments'') is used to appropriately model and analyse
 Real-Time embedded and distributed
-systems~\cite{Mukherjee&00,Verhoef&06b,Verhoef&07,Verhoef08,Larsen&09b}. 
+systems~\cite{Mukherjee&00,Verhoef&06b,Verhoef&07,Verhoef08,Larsen&09b}. Thus
+VDM-RT is a pure extension of the VDM++ language.
 
 
 \section{Purpose of The Document}
@@ -315,14 +315,12 @@ it is for example possible to write Japanese characters directly.
 
 \section{Structure of the Document}
 
-Section~\ref{syntax-notation} presents the BNF notation used for the
+Chapter~\ref{syntax-notation} presents the BNF notation used for the
 description of syntactic constructs.  The VDM notations are described
-in section~\ref{typedef} to section~\ref{top-level}.
+in Chapter~\ref{typedef} to Chapter~\ref{chap:trace}.
 %Section~\ref{diff} provides a complete list of the differences between
 %ISO/VDM-SL and the VDM-10 notations while s
-Section~\ref{static}
-contains a short explanation of the static semantics of the VDM
-languages. The complete syntax of the language is described in
+The complete syntax of the language is described in
 Appendix~\ref{app-a}, the lexical specification in
 Appendix~\ref{app-b} and the operator precedence in
 Appendix~\ref{app-c}. Appendix~\ref{sec:diff} presents a list of the
@@ -381,7 +379,7 @@ that the operands have the same type. Because of a
 construct called a union type (described below) this is not the case
 for the VDM languages.
 
-In this section we will present the syntax of data type
+In this chapter we will present the syntax of data type
 definitions. In addition, we will show how values belonging to a type
 can be constructed and manipulated (by means of built-in operators).
 We will present the basic data types first and then we will proceed
@@ -423,17 +421,18 @@ which computations may fail to terminate or to deliver a result. To
 deal with such potential undefinedness, 
 the VDM languages employs a three valued logic: values may be
 true, false or bottom (undefined). 
-The semantics of the interpreters differs from the ISO/VDM-SL in that it does
+The semantics of the VDM interpreters differs from the ISO/VDM-SL standard
+in that it does
 not have an LPF (Logic of Partial Functions) three valued logic where
 the order of the operands is  
 unimportant (see \cite{Jones90a}).  The \keyw{and} operator, the
 \keyw{or} operator and the imply operator, though, have a conditional
 semantics meaning that if the first operand is sufficient to determine
 the final result, the second operand will not be evaluated. In a sense
-the semantics of the logic in the interpreter can still be considered
+the semantics of the logic in the VDM interpreter can still be considered
 to be three-valued as for ISO/VDM-SL. However, bottom values may
 either result in infinite computation or a run-time error in the
-interpreter.
+VDM interpreter.
 
 \begin{description}
 \item[Name:] \Index{Boolean}
@@ -537,12 +536,14 @@ integers, rationals and reals.  Except for three, all the
 numerical operators can have mixed operands of the three types. The
 exceptions are integer division, modulo and the remainder operation.
 
-The five numeric types denote a hierarchy where \Index{\keyw{real}} is
+The five numeric types denote a subset hierarchy where \Index{\keyw{real}} is
 the most general type followed by \Index{\keyw{rat}}\footnote{From the
-interpreter's point of view there is no
+VDM interpreter's point of view there is no
   difference between \keyw{real} and \keyw{rat} because only rational
   numbers can be represented in a computer.}, \Index{\keyw{int}},
-\Index{\keyw{nat}} and \Index{\keyw{nat1}}.
+\Index{\keyw{nat}} and \Index{\keyw{nat1}}. Note that no ``casting''
+like it is done in many programming languages is needed in the VDM
+languages. 
 
 \vspace{1ex}
 \begin{tabular}{|l|l|} \hline
@@ -618,7 +619,7 @@ Note that all numbers are necessarily of type \keyw{real} (and
 
   The types stated for operands are the most general types allowed.  This
   means for instance that unary minus works for operands of all five types
-  (\keyw{nat1}, \keyw{nat}, \keyw{int} \keyw{rat} and \keyw{real}).
+  (\keyw{nat1}, \keyw{nat}, \keyw{int}, \keyw{rat} and \keyw{real}).
      
 \input{sem-numtypes}
 
@@ -738,7 +739,7 @@ tokens are equality and inequality. In VDM,
 tokens cannot be individually represented whereas they can be written
 with a \keyw{mk\_token} around an arbitrary expression. This is a way
 of enabling testing of specifications which contain token
-types. However, in order to resemble the VDM-SL\ standard these token
+types. However, in order to resemble the ISO/VDM-SL standard these token
 values cannot be decomposed by means of any pattern matching and they
 cannot be used for anything other than equality and inequality
 comparisons.
@@ -781,7 +782,7 @@ them will contain:
   most cases there will also be given a forward reference to the
   section where the syntax of the basic constructor expressions is given.
 \item Built-in operators for values belonging to the
-  type \footnote{These operators are used in either unary or binary
+  type\footnote{These operators are used in either unary or binary
     expressions which are given with all the operators in
     section~\ref{unandbin}.}.
 \item Semantics of the built-in operators.
@@ -835,7 +836,7 @@ a logical predicate.
     bindings for which the predicate {\tt P} evaluates to \keyw{true}.
     A binding is either a set binding or a type
     binding\footnote{Notice that type bindings cannot be executed by
-      the interpreter because in general
+      the VDM interpreters because in general
       they are not executable (see section~\ref{bind} for further
       information about this).}.  A set bind {\tt bdn} has the form
     {\tt pat1, \ldots, patp \keyw{in set} s}, where {\tt pati} is a
@@ -978,8 +979,8 @@ predicate and {\tt e} is an arbitrary expression.
     {\tt \keyw{len} l} & Length & \TO{\SEQ{A}}{\keyw{nat}} \\
     {\tt \keyw{elems} l} & Elements & \TO{\SEQ{A}}{\SET{A}} \\
     {\tt \keyw{inds} l} & Indexes & \TO{\SEQ{A}}{\SET{\keyw{nat1}}} \\
-    {\tt l1 \char'136\ l2} & Concatenation & \TO{\PROD{(\SEQ{A})}{(\SEQ{A})}}{\SEQ{A}} \\
     {\tt \keyw{reverse} l} & Reverse & \TO{\SEQ{A}}{\SEQ{A}}\\
+    {\tt l1 \char'136\ l2} & Concatenation & \TO{\PROD{(\SEQ{A})}{(\SEQ{A})}}{\SEQ{A}} \\
     {\tt \keyw{conc} ll} & Distributed concatenation & \TO{\SEQ{\SEQ{A}}}{\SEQ{A}}\\
     {\tt l ++ m} & Sequence modification & \TO{\PROD{\SEQ{A}}{\MAP{\keyw{nat1}}{A}}}{\SEQ{A}}\\
     {\tt l(i)} & Sequence application & \TO{\PROD{\SEQ{A}}{\keyw{nat1}}}{A} \\
@@ -1161,7 +1162,7 @@ set.
           <SaudiArabia> |-> 1,\\
           <SouthAfrica> |-> 2\}}\\
     \\
-    \texttt{m1 ++ \{\parbox[t]{4cm}{\ttfamily\selectfont
+    \texttt{m1 ++ \{\parbox[t]{5cm}{\ttfamily\selectfont
        <France> |-> 8,\\ <England> |-> 4\}}}
                                      & $\equiv$ &
        \texttt{\{}%
@@ -1174,7 +1175,7 @@ set.
     \\
     
     \texttt{\keyw{merge}\{}
-         \parbox[t]{5.7cm}{\ttfamily\selectfont
+         \parbox[t]{6.5cm}{\ttfamily\selectfont
                  \{<France> |-> 9, \\
                    \mbox{\hspace{0.0cm}} <Spain> |-> 4\} \\
                  \{<France> |-> 9, \\
@@ -1383,7 +1384,7 @@ expressions.
   operations. 
 
   Typically composite types are used as alternatives in a union type
-  definition (see~\ref{unions}) such as:
+  definition (see section~\ref{unions}) such as:
 
   \begin{lstlisting}
    MasterA = A | B | ...
@@ -1604,7 +1605,7 @@ types.
     <d>}. 
 \end{description}
 
-\subsection{The Object Reference Type (VDM++ and VDM-RT only)}
+\subsection{The Object Reference Type (VDM++ and VDM-RT}
 
 The object reference type has been added as part of the standard
 VDM-SL\ types. Therefore there is no direct way of restricting the use
@@ -1675,7 +1676,7 @@ Details of access specifiers may be found in section
 
 In the VDM languages function types can also be used in type
 definitions.  A function type from a type {\tt A} (actually a list of
-types) to a type {\tt B} is a type that associates with each element
+types as a tuple type) to a type {\tt B} is a type that associates with each element
 of {\tt A} an element of {\tt B}. A function value can be thought of
 as a function in a programming language which has no side-effects
 (i.e.\ it does not use any global variables).
@@ -1750,10 +1751,10 @@ functions and thus not in a type definition.} or {\tt F = A -> B}%
 \index{\texttt{()}!function apply}\index{Function apply}
   
   Note that equality and inequality between type values should be used
-  with great care. In VDM languages this corresponds to the
+  with great care. In the VDM languages this corresponds to the
   mathematical equality (and inequality) which is not computable for
   infinite values like general functions. Thus, in the
-  interpreter the
+  VDM interpreters the
   equality is on the abstract syntax of the function value (see {\tt
     inc1} and {\tt inc2} below).
 
@@ -1859,14 +1860,14 @@ values of global variables and the old values of global variables. The
 old values of global variables are the values of the variables as they
 were before the operation was evaluated.  Only operations can refer to
 the old values of global variables in a post-condition as functions
-are not allowed to change the global variables.
+are not allowed access to the global variables in any way.
 
 However, in order to be able to execute both functions and operations
-by the interpreter they must be defined explicitly\footnote{Implicitly
+by the VDM interpreters they must be defined explicitly\footnote{Implicitly
 specified functions and operations cannot in general be executed
 because their post-condition does not need to directly relate the
 output to the input. Often it is done by specifying the properties the
-output must satisfy.}. In the VDM langugaes it is also
+output must satisfy.}. In the VDM languages it is also
 possible for explicit function and operation definitions to specify an
 additional pre- and a post-condition.  In the post-condition of 
 explicit function and operation definitions the result value must be
@@ -1882,7 +1883,7 @@ functions can be polymorphic. In VDM++ and VDM-RT functions are
 automatically available in a static form (i.e.\ without having an
 instance of the defining class). Thus there is no need to use the
 {\bf\ttfamily static} keyword that can be used for operations in VDM++
-and VDM-RT. . In general, the syntax for the definition of a
+and VDM-RT. In general, the syntax for the definition of a
 function is:
 
 \Rule{function definitions}{
@@ -2043,7 +2044,7 @@ potentially result in a run-time error since \texttt{m1(d)} and
 \texttt{m2(d)} need not both be defined simultaneously.)
 
 The functions {\tt map\_inter} and {\tt map\_disj} can be evaluated by the
-interpreter, but the implicit function {\tt map\_inter2} cannot be evaluated.
+VDM interpreters, but the implicit function {\tt map\_inter2} cannot be evaluated.
 However, in all three cases the pre- and post-conditions can be used
 in other functions; for instance from the definition of
 \texttt{map\_inter2} we get functions \texttt{\keyw{pre\_}map\_inter2}
@@ -2054,8 +2055,8 @@ and \texttt{\keyw{post\_}map\_inter2} with the following signatures:
   post_map_inter2 : (map nat to nat) * (map nat to nat) *
                    (map nat to nat) +> bool
 \end{lstlisting}
-These kinds of functions are automatically created by the
-interpreter and they can be used in other definitions (this technique
+These kinds of functions are automatically created by the VDM
+interpreters and they can be used in other definitions (this technique
 is called quoting). In general, for a function \texttt{f} with
 signature
 \begin{lstlisting}
@@ -2076,7 +2077,7 @@ Functions can also be defined using recursion (i.e.\ by calling
 themselves). When this is done one is recommended to add
 a \Lop{measure} function that can be used in the proof obligations
 generated from the model such that termination proofs can be carried
-out. The {\bf\ttfamily measure} function shall take the same same type of
+out. The {\bf\ttfamily measure} function shall take the same type of
 parameters as the recursive function itself and it yield a natural
 number. A simple example here could be the traditional factorial function
 defined as:
@@ -2106,7 +2107,7 @@ function will terminate and thus sooner or later reach the base case.
 
 \section{Polymorphic Functions}
 
-Functions can also be polymorphic. This means that we can create
+Functions can also be polymorphic in VDM. This means that we can create
 generic functions that can be used on values of several different
 types. For this purpose type parameters (or type variables which are
 written like normal identifiers prefixed with a {\tt @} sign) are
@@ -2192,11 +2193,11 @@ the function \texttt{fmap}:
     else [f(hd l)] ^ (fmap[@elem] (f)(tl l));
 \end{lstlisting}
 So \texttt{fmap[\keyw{nat}](\keyw{lambda} x:\keyw{nat} \& x * x)([1,2,3,4,5])} $\equiv$ 
-\texttt{[ 1,4,9,16,25 ]}
+\texttt{[ 1,4,9,16,25 ]}.
 
-\chapter{Expressions}
+\chapter{Expressions}\label{chap:expr}
 
-In this subsection we will describe the different kinds of expressions
+In this chapter we will describe the different kinds of expressions
 one by one. Each of them will be described by means of:
 \begin{itemize}
 \item A syntax description in BNF.
@@ -2258,7 +2259,7 @@ one by one. Each of them will be described by means of:
 
   In standard VDM-SL\ the collection of definitions may be mutually
   recursive.  However, in the VDM languages this is not
-  supported by the interpreter.  Furthermore, the definitions must be
+  supported by the VDM interpreters.  Furthermore, the definitions must be
   ordered such that all constructs are defined before they are used.
      
   A {\it let-be-such-that expression} has the form:
@@ -2269,13 +2270,13 @@ one by one. Each of them will be described by means of:
   just one pattern)
  to a set value (or a type),
   {\tt e1} is a boolean expression, and {\tt e2} is an expression, of
-  any type, involving the pattern identifiers of the pattern in {\tt
-    b}. The {\tt \keyw{be st} e1} part is optional. The expression
+  any type, involving the pattern identifiers of the patterns from {\tt
+    mb}. The {\tt \keyw{be st} e1} part is optional. The expression
   denotes the value of the expression {\tt e2} in the context in which
-  the pattern from {\tt b} has been matched against either an element
-  in the set from {\tt b} or against a value from the type in {\tt b}%
+  all the patterns from {\tt mb} has been matched against either an element
+  in the set from {\tt mb} or against a value from the type in {\tt mb}%
   \footnote{Remember that only the set bindings can be executed by
-    means of the interpreter.}.
+    means of the VDM interpreters.}.
   If the {\tt \keyw{st} e1} expression is present, only such bindings
   where {\tt e1} evaluates to true in the matching context are used.
 
@@ -2285,7 +2286,7 @@ one by one. Each of them will be described by means of:
   \texttt{map\_disj} from page \pageref{mapdisj}:
 \begin{lstlisting}
 map_disj : (map nat to nat) * (map nat to nat) -> 
-           map nat to nat
+            map nat to nat
 map_disj (m1,m2) ==
   let inter_dom = dom m1 inter dom m2
   in
@@ -2294,7 +2295,7 @@ pre forall d in set dom m1 inter dom m2 & m1(d) = m2(d)
 \end{lstlisting}
   They are also convenient for decomposing complex
   structures into their components. For instance, using the previously
-  defined record type \texttt{Score} (page \pageref{scoredef}) we can
+  defined record type \texttt{Score} (see page \pageref{scoredef}) we can
   test whether one score is greater than another:
   \begin{lstlisting}
     let mk_Score(-,w1,-,-,p1) = sc1,
@@ -2304,24 +2305,24 @@ pre forall d in set dom m1 inter dom m2 & m1(d) = m2(d)
   In this
   particular example we extract the second and fifth components of the
   two scores. Note that don't care
-  patterns (page \pageref{patterns}) are used to indicate that the
+  patterns (see page \pageref{patterns}) are used to indicate that the
   remaining components are irrelevant 
   for the processing done in the body of this expression.
   
   {\it Let-be-such-that expressions} are useful for abstracting away
   the non-essential choice of an element from a set, in particular in
   formulating recursive definitions over sets. An example of this is a
-  version of the sequence filter function (page \pageref{filterdef})
+  version of the sequence filter function (see page \pageref{filterdef})
   over sets:\label{setfilterdef}
   \begin{lstlisting}
-    set_filter[@elem] : (@elem -> bool) -> (set of @elem) -> 
-                        (set of @elem)
-    set_filter(p)(s) ==
-      if s = {}
-      then {}
-      else let x in set s
-           in (if p(x) then {x} else {}) union
-             set_filter[@elem](p)(s \ {x});
+set_filter[@elem] : (@elem -> bool) -> (set of @elem) -> 
+                    (set of @elem)
+set_filter(p)(s) ==
+  if s = {}
+  then {}
+  else let x in set s
+       in (if p(x) then {x} else {}) union
+         set_filter[@elem](p)(s \ {x});
    \end{lstlisting}
    We could alternatively have defined this function using a set
   comprehension (described in section \ref{setexpr}):
@@ -2402,7 +2403,7 @@ inside operations.
   matched against the corresponding expressions {\tt e1, \ldots,
     en}\footnote{If binds are used, it simply means that the values
     which can match the pattern are further constrained by the type or
-    set expression as explained in section~\ref{patterns}.}.
+    set expression as explained in Chapter~\ref{patterns}.}.
 
 \item[Examples:] The {\it define expression} is
   used in a pragmatic way, in order to make the reader aware of the fact that
@@ -2476,12 +2477,12 @@ inside operations.
 \item[Semantics:] Unary and binary expressions are a combination of
   operands and operators denoting a value of a specific type. The
   signature of all these operators is already given in
-  section~\ref{typedef}, so no further explanation will be provided
+  Chapter~\ref{typedef}, so no further explanation will be provided
   here. The map inverse unary operator is treated separately because
   it is written with postfix notation in the mathematical syntax.
 
 \item[Examples:] Examples using these operators were given in
-  section~\ref{typedef}, so none will be provided here.
+  Chapter~\ref{typedef}, so none will be provided here.
 \end{description}
 
 \section{Conditional Expressions}
@@ -2825,7 +2826,7 @@ print_Const(mk_Const(c)) ==
   simply an identifier), and {\tt s1} and {\tt s2} are sets
   constructed by expressions (whereas {\tt tp1} is used to illustrate
   that type binds can also be used). Notice however that type binds
-  cannot be executed by the interpreter.
+  cannot be executed by the VDM interpreters.
 
   The {\it set range expression} is a special case of a set
   comprehension. It has the form
@@ -2845,11 +2846,11 @@ print_Const(mk_Const(c)) ==
   \begin{tabular}{lcl}
     \texttt{\{<France>, <Spain>\} \keyw{subset} Europe} & $\equiv$ &
       \keyw{true}\\
-    \parbox[t]{7cm}{\raggedright
+    \parbox[t]{8cm}{\raggedright
       \texttt{\{<Brazil>, <Chile>, <England>\}}\\
       \mbox{\hspace{3em}}\texttt{\keyw{subset} Europe} }
       & $\equiv$ &  \keyw{false}\\
-    \parbox[t]{7cm}{\raggedright
+    \parbox[t]{8cm}{\raggedright
       \texttt{\{<France>, <Spain>, {\char'042}France{\char'042}\}} \\
       \mbox{\hspace{3em}}\keyw{subset} \texttt{Europe}} &
       $\equiv$ & \keyw{false}\\
@@ -2891,7 +2892,7 @@ print_Const(mk_Const(c)) ==
     \Ruleref{expression}, \lfeed
     \Lit{(}, \Ruleref{expression},
     \Lit{,}, \Lit{\Range},
-    \Lit{,}, \lfeed
+    \Lit{,}, 
     \Ruleref{expression}, \Lit{)}
     }
 
@@ -2958,7 +2959,7 @@ then:
   \parbox[t]{6cm}{\ttfamily\selectfont
             [GroupA(i).team \\
             | i \keyw{in set inds} GroupA \\
-                  \mbox{\hspace{1em}} \& GroupA(i).won <> 0]}
+            \& GroupA(i).won <> 0]}
     &$\equiv$ & 
         \texttt{[}\parbox[t]{4cm}{\ttfamily\selectfont
                                  <Brazil>, \\
@@ -3218,9 +3219,9 @@ example, we have:
     t1, \ldots, tn} instead of the variable type names given in the
   function definition.
 
-\item[Examples:] Recall that \texttt{GroupA} is a sequence (page 
-  \pageref{GroupAdef}), \texttt{GroupG} is a map (page \pageref{GroupGdef}) 
-  and \texttt{selection\_sort} is a function (page \pageref{selectionSortdef}):
+\item[Examples:] Recall that \texttt{GroupA} is a sequence (see page 
+  \pageref{GroupAdef}), \texttt{GroupG} is a map (see page \pageref{GroupGdef}) 
+  and \texttt{selection\_sort} is a function (see page \pageref{selectionSortdef}):
 
   \begin{tabular}{lcl}
   \texttt{GroupA(1)} & $\equiv$ & 
@@ -3373,7 +3374,7 @@ section \ref{call-stmt}.
   periodic threads gets a new threadid at the start of each new period.
 
 \item[Examples:] 
-Using threadid's it is possible to provide a VDM++ base class that
+Using {\bf\ttfamily threadid}'s it is possible to provide a VDM++ base class that
 implements a Java-style wait-notify in VDM++ using permission
 predicates. Any object that should be available for the wait-notify
 mechanism must derive from this base class.  
@@ -3416,7 +3417,7 @@ class WaitNotify
 
 end WaitNotify
 \end{lstlisting}
-In this example the threadid expression is used in two places:
+In this example the {\bf\ttfamily threadid} expression is used in two places:
 \begin{itemize}
 \item In the \texttt{Wait} operation for threads to register interest
   in this object.
@@ -3426,10 +3427,10 @@ In this example the threadid expression is used in two places:
   from the waitset following another thread's call to \texttt{notify}.
 \end{itemize}
 
-Note also that one needs to be careful about the use of the wait-notify
-mechanism when having periodic threads (because they change their
-{\bf\ttfamily threadid} 
-for each new period).
+%Note also that one needs to be careful about the use of the wait-notify
+%mechanism when having periodic threads (because they change their
+%{\bf\ttfamily threadid} 
+%for each new period).
 \end{description}
 
 \section{The Lambda Expression}\label{lambda}
@@ -3461,7 +3462,7 @@ for each new period).
   the patterns {\tt pati} is the body expression. A lambda expression
   cannot be polymorphic, but apart from that, it corresponds semantically
   to an explicit function definition as explained in
-  section~\ref{functiondef}. A function defined by a lambda expression can
+  chapter~\ref{functiondef}. A function defined by a lambda expression can
   be Curried by using a new lambda expression in the body of it in a nested
   way. When lambda expressions are bound to an identifier they can also
   define a recursive function.
@@ -3535,7 +3536,7 @@ for each new period).
      has the indicated  tag. Otherwise it yields false.
 
      A type judgement is a more general form which can be used for
-     expressions whose types can not be statically determined. The
+     expressions whose types cannot be statically determined. The
      expression \texttt{\keyw{is}\_(e,t)} is equal to true if and only
      if \texttt{e} is of type \texttt{t}.
      
@@ -3581,17 +3582,17 @@ for each new period).
     \Lit{(}, \Ruleref{name}, \Ruleref{expression}, \Lit{)}}
   
 \item[Semantic:] The function {\keyw{isofbaseclass}} when applied to an
-  object reference \texttt{expression} and a class name {\texttt name}
-  yields the boolean value $\True$ if and only if {\texttt name} is a
+  object reference \texttt{expression} and a class name \texttt{name}
+  yields the boolean value {\bf\ttfamily true} if and only if \texttt{name} is a
   root superclass in the inheritance chain of the object referenced to
-  by {\texttt expression}, and $\False$ otherwise.
+  by {\texttt expression}, and {\bf\ttfamily false} otherwise. 
   
 \item[Examples:] \label{treeExDef}
   Suppose that \texttt{BinarySearchTree} is a subclass of
   \texttt{Tree}, \texttt{Tree} is not a subclass of any other class and
   \texttt{Queue} is not related by inheritance to either \texttt{Tree}
-  or \texttt{BinarySearchTree}. Let \texttt{t} be an instance of \
-  texttt{Tree}, \texttt{b} is an instance of \texttt{BinarySearchTree}
+  or \texttt{BinarySearchTree}. Let \texttt{t} be an instance of 
+  \texttt{Tree}, \texttt{b} is an instance of \texttt{BinarySearchTree}
   and \texttt{q} is an instance of \texttt{Queue}. Then:
   
   \begin{tabular}{lcl}
@@ -3617,9 +3618,9 @@ for each new period).
 
 \item[Semantics:] The function \keyw{isofclass} when applied to an
   object reference {expression} and a class name \texttt{name}
-  yields the boolean value $\True$ if and only if \texttt{expression}
+  yields the boolean value {\bf\ttfamily true} if and only if \texttt{expression}
   refers to an object of class \texttt{name} or to an object of any of
-  the subclasses of \texttt{name}, and $\False$ otherwise.
+  the subclasses of \texttt{name}, and {\bf\ttfamily false} otherwise.
 
 \item[Examples:] Assuming the classes \texttt{Tree},
 \texttt{BinarySearchTree}, \texttt{Queue}, and identifiers \texttt{t},
@@ -3653,9 +3654,9 @@ for each new period).
   
 \item[Semantics:] The function \keyw{samebaseclass} when applied to
   object references \texttt{expression1} and \texttt{expression2} yields
-  the boolean value $\True$ if and only if the objects denoted by
+  the boolean value {\bf\ttfamily true} if and only if the objects denoted by
   \texttt{expression1} and \texttt{expression2} are instances of classes
-  that can be derived from the same root superclass, and $\False$
+  that can be derived from the same root superclass, and {\bf\ttfamily false}
   otherwise.
   
 \item[Examples:] Assuming the classes \texttt{Tree},
@@ -3693,9 +3694,9 @@ is an instance of \texttt{AVLTree} and \texttt{bb} is an instance of
    
 \item[Semantics:] The function \keyw{sameclass} when applied to object
   references \texttt{expression1} and \texttt{expression2} yields the
-  boolean value $\True$ if and only if the objects denoted by
+  boolean value {\bf\ttfamily true} if and only if the objects denoted by
   \texttt{expression1} and \texttt{expression2} are instances of the same
-  class, and $\False$ otherwise.
+  class, and {\bf\ttfamily false} otherwise.
 
 \item[Examples:] 
 Assuming the classes \texttt{Tree},
@@ -3755,14 +3756,16 @@ expressions may contain one or more of the following expressions:
 \item {\bf\ttfamily \#fin}{\tt (}{\em operation name}{\tt )}. The number of times that
   the {\em operation name} operation has been completed.
 \item {\bf\ttfamily \#active}{\tt (}{\em operation name}{\tt )}. The number of {\em operation
-  name} operations that are currently active.  Thus: {\bf\ttfamily
+  name} operations that are currently active. \\
+ Thus: {\bf\ttfamily
   \#active}{\tt (}{\em
-    operation name}{\tt )} $=$ {\tt \#act(}{\em operation name}{\tt )}
+    operation name}{\tt )} $=$ {\bf\ttfamily \#act}{\tt (}{\em operation name}{\tt )}
   $-$ {\bf\ttfamily \#fin}{\tt (}{\em operation name}{\tt )}.
 \item {\bf\ttfamily \#req}{\tt (}{\em operation name}{\tt )}. The number of requests
   that has been issued for the {\em operation name} operation.
 \item {\bf\ttfamily \#waiting}{\tt (}{\em operation name}{\tt )}. The number of
-  outstanding requests for the {\em operation name} operation. Thus:
+  outstanding requests for the {\em operation name} operation. \\
+Thus:
   {\bf\ttfamily 
     \#waiting}{\tt (}{\em operation name}{\tt )} $=$ {\bf\ttfamily
     \#req}{\tt (}{\em operation
@@ -3785,7 +3788,7 @@ execution of operation \texttt{A}, \textit{aA} indicates an activation
 of \texttt{A}, \textit{fA} indicates completion of an execution of
 operation \texttt{A}, and likewise for operations \texttt{B} and
 \texttt{C}. The respective history expressions have the following
-values for the interval [\textbf{S},\textbf{T}]:
+values after the interval [\textbf{S},\textbf{T}]:
 \end{description}
 
 \begin{center}\small
@@ -3864,7 +3867,7 @@ and appendix \ref{ap:lexis}.)
 
   An {\it old name\/} is used to access the old value of global
   variables in the post condition of an operation definition (see
-  section~\ref{op-def}) and in the post condition of specification
+  chapter~\ref{op-def}) and in the post condition of specification
   statements (see section~\ref{se:specification}).  It has the form:
 
   \begin{lstlisting} 
@@ -3907,7 +3910,7 @@ end
   The operation {\tt IncIndex} manipulates the variable {\tt index},
   indicated with the \keyw{ext wr} clause. In the post condition, the new
   value of {\tt index} is equal to the old value of {\tt index} plus
-  \texttt{1}. (See more about operations in section~\ref{op-def}).
+  \texttt{1}. (See more about operations in chapter~\ref{op-def}).
 
   For a simple example of 
 module/class
@@ -3936,7 +3939,8 @@ first importing the module \texttt{CGRel} then by
   \begin{lstlisting}
   CGRel`build_rel({mk_(<A>, <B>)})
   \end{lstlisting}
-Note that in VDM++ and VDM-RT \texttt{build\_rel} function must have
+Note that in VDM++ and VDM-RT \texttt{build\_rel} function can
+additionally have
 an access modifier allowing access to it outside the defining class.
 \end{description}
 
@@ -3958,7 +3962,7 @@ an access modifier allowing access to it outside the defining class.
   for instance be used if it has not been decided what the result of
   evaluating the else-branch of an if-then-else expression should be.
   When an {\it undefined expression} is evaluated the
-  interpreter will terminate the execution
+  VDM interpreters will terminate the execution
   and report that an undefined expression was evaluated.
 
   Pragmatically use of undefined expressions differs from
@@ -3997,7 +4001,7 @@ an access modifier allowing access to it outside the defining class.
   pre-condition of \texttt{e} is true for arguments \texttt{e1,...,em}
   where \texttt{m} is the arity of the pre-condition of \texttt{e}. If
   \texttt{e} is not a function or \texttt{m} $>$ \texttt{n} then the
-  result is \texttt{true}. If \texttt{e} has no pre-condition then the
+  result is {\bf\ttfamily true}. If \texttt{e} has no pre-condition then the
   expression equals true.
 \item[Examples:] 
   Consider the functions \texttt{f} and \texttt{g} defined below
@@ -4092,10 +4096,10 @@ an access modifier allowing access to it outside the defining class.
   pattern can be matched to the value, and binding any pattern identifiers
   in the pattern to the corresponding values, i.e.\ making the identifiers
   denote those values throughout their scope. In some cases where a pattern
-  can be used, a bind can be used as well (see next section). If a bind is
+  can be used, a bind can be used as well (see next chapter). If a bind is
   used it simply means that additional information (a type or a set
   expression) is used to constrain the possible values which can match the
-  given pattern.
+  given pattern. 
 
   Matching is defined as follows
   \begin{enumerate}
@@ -4113,7 +4117,7 @@ an access modifier allowing access to it outside the defining class.
     matched.
 
   \item A {\it set union pattern} fits only set values. The two patterns
-    are matched to a partition of two subsets of a set. In the Toolbox
+    are matched to a partition of two subsets of a set. In the VDM interpreters
     the two subsets will always be chosen such that they are non-empty
     and disjoint.
 
@@ -4125,7 +4129,7 @@ an access modifier allowing access to it outside the defining class.
   \item A {\it sequence concatenation pattern} fits only sequence values.
     The two patterns are matched against two subsequences which together
     can be concatenated to form the original sequence value. In the
-    Toolbox the two subsequences will always be chosen so that they
+    VDM interpreters the two subsequences will always be chosen so that they
     are non-empty.
 
   \item A {\it tuple pattern} fits only tuples with the same number of
@@ -4172,7 +4176,7 @@ Set enumerations match patterns to elements of a set. For instance in
 \end{lstlisting}
 the identifiers \texttt{sc1}, \texttt{sc2}, \texttt{sc3} and
 \texttt{sc4} are bound to the four elements of \texttt{GroupA}. Note
-that the choice of binding is loose - for instance
+that the choice of binding is loose -- for instance
 \texttt{sc1} may be bound to [any] element of \texttt{\keyw{elems}
 GroupA}. In this case if \texttt{\keyw{elems} GroupA} does not contain
 precisely four elements, then the expression is not well-formed.
@@ -4191,12 +4195,12 @@ set2seq(s) ==
 \end{lstlisting}
 In the third cases alternative we see the use of a set union pattern. This
 binds \texttt{s1} and \texttt{s2} to arbitrary subsets of \texttt{s}
-such that they partition \texttt{s}. The Toolbox interpreter always
+such that they partition \texttt{s}. The VDM interpreters always
 ensures a disjoint partition.
 
 Sequence enumeration patterns can be used to extract specific elements
 from a sequence. An example of this is the function \texttt{promoted}
-which extracts the first two elements of a seqnce of scores and
+which extracts the first two elements of a sequence of scores and
 returns the corresponding pair of teams:
 \begin{lstlisting}
 promoted : seq of Score -> Team * Team
@@ -4289,21 +4293,21 @@ several examples of record patterns.
     from the type defined by the type expression.  {\it Multiple bind}
     is the same as {\it bind} except that several patterns are bound
     to the same set or type.  Notice that type binds {\bf cannot} be
-    executed by the interpreter.  This would require the interpreter
+    executed by the VDM interpreters.  This would require the VDM interpreters
     to search through infinite domains like the natural numbers.
 
 \item[Examples:] Bindings are mainly used in quantified expressions and
   comprehensions which can be seen from these examples:
   \begin{lstlisting}
-    forall i, j in set inds list & i < j => list(i) <= list(j)
+forall i, j in set inds list & i < j => list(i) <= list(j)
       
-    { y | y in set S & y > 2 }
+{ y | y in set S & y > 2 }
 
-    { y | y: nat & y > 3 }
+{ y | y: nat & y > 3 }
 
-    occurs : seq1 of char * seq1 of char -> bool
-    occurs (substr,str) ==
-      exists i,j in set inds str & substr = str(i,...,j);
+occurs : seq1 of char * seq1 of char -> bool
+occurs (substr,str) ==
+  exists i,j in set inds str & substr = str(i,...,j);
   \end{lstlisting}
 \end{description}
 
@@ -4348,7 +4352,7 @@ where the {\tt access} part only can be used in VDM++ and VDM-RT.
   in order to be able to execute a specification these 
   values must be defined before they are used in the sequence of value
   definitions. This ``declaration before use'' principle is only used
-  by the interpreter for value definitions.
+  by the VDM interpreters for value definitions.
   Thus for instance functions can be used before they are declared. In
   standard VDM-SL there are not any restrictions on the order of the
   definitions at all. It is possible to provide a type restriction as
@@ -4386,11 +4390,22 @@ a1 : Alarm = mk_Alarm("CO2 detected", <Chem>)
   \keyw{protected} and \keyw{public} can only be used in VDM++ and VDM-RT.
   A top-level VDM-SL specification can consist of
   specifications from a number of files or modules (see
-  section~\ref{top-level}).  It is good practice not to let a value depend
+  section~\ref{modules}).  It is good practice not to let a value depend
   on values defined in other modules as the ordering is important.
 \end{description}
 
-\chapter{Instance Variables (VDM++ and VDM-RT)}
+\chapter{Declaration of Modifiable State Components}\label{chap:state}
+
+Syntactically the definition of state components that can be modified
+using VDM operations differ in VDM-SL compared with VDM++ and
+VDM-RT. Since VDM-SL is module based the state definition is similar
+to a monolitic record like construct. On the other hand VDM++ and
+VDM-RT are object-oriented and thus state components needs to be more
+flexible in order to enable inheritence of such definitions and thus
+they are defined in terms of instance variables. In the two sections
+in this chapter the two different ways of defining states is presented.
+
+\section{Instance Variables (VDM++ and VDM-RT)}
 \label{sec:ivars}
 
 Both an object instantiated from a class description and the class
@@ -4416,7 +4431,7 @@ refer to this state as the global state of the object.
   }
 
   \Rule{access assignment definition}{
-    (\OptPt{\Ruleref{access}}, \OptPt{\Lop{static}})  \dsepl\ (\OptPt{\Lop{static}}, \OptPt{\Ruleref{access}}), \lfeed
+    (\OptPt{\Ruleref{access}}, \OptPt{\Lop{static}})  \dsep\ (\OptPt{\Lop{static}}, \OptPt{\Ruleref{access}}), \lfeed
     \Ruleref{assignment definition}
   }
 
@@ -4433,7 +4448,7 @@ refer to this state as the global state of the object.
 %  }
 
 \item[Semantics:] The section describing the internal state is
-preceded by the keyword {\tt instance variables}.  A list of instance
+preceded by the keyword {\bf\ttfamily instance variables}.  A list of instance
 variable definitions and/or invariant definitions follows.  Each
 instance variable definition consists of an instance variable name
 with its corresponding type indication and may also include an
@@ -4460,8 +4475,8 @@ and 2) the class itself.
 %{\tt inv\_classname} is implicitly constructed in the class.%
 %\footnote{Not yet supported by the interpreter.}
 % *****Check this for next version
-This operation is private, has no parameters and returns a boolean
-corresponding to the execution of the invariant expression.
+%This operation is private, has no parameters and returns a boolean
+%corresponding to the execution of the invariant expression.
 
 \item[Example:]
 
@@ -4490,14 +4505,14 @@ end GroupPhase
   \end{lstlisting}
 \end{description}
 
-\chapter{The State Definition (VDM-SL)}\label{statedef}
+\section{The State Definition (VDM-SL)}\label{statedef}
 
-If global variables are desired in a specification, it is possible to make
+If global variables are desired in a VDM-SL specification, it is possible to make
 a state definition. The components of the state definition can be
 considered the collection of global variables which can be referenced
 inside operations. A state in a module is initialised before any of the
 operation definitions (using that state) in a module can be used by
-the interpreter.
+the VDM interpreters.
 
 \begin{description}
 \item[Syntax:]
@@ -4532,13 +4547,13 @@ the interpreter.
   property which must hold for the state {\tt ident} at all
   times. {\tt initpred} denotes a condition which must hold initially.
   It should be noticed that in order to use the
-  interpreter, it is
+  VDM interpreters, it is
   necessary to have an initialisation predicate (if any of the
   operations using the state are to be executed). In addition the body of
   this initialisation predicate must be a binary equality expression with
   the name (which also must be used as the pattern) of the entire state on
   the left-hand side of the equality and the right-hand side must evaluate
-  to a record value of the correct type. This enables the interpreter
+  to a record value of the correct type. This enables the VDM interpreters
   to evaluate the {\tt initpred} condition. A simple example of an
   initialisation predicate is shown below:
 
@@ -4569,7 +4584,7 @@ state GroupPhase of
 inv mk_GroupPhase(gps) ==
   forall gp in set rng gps & 
     (card gp = 4 and
-    {forall sc in set gp & sc.won + sc.lost + sc.drawn <= 3)
+    forall sc in set gp & sc.won + sc.lost + sc.drawn <= 3)
 init gp ==
   gp = mk_GroupPhase({<A> |-> init_sc({<Brazil>, <Norway>, 
                                       <Morocco>, <Scotland>}),
@@ -4589,7 +4604,7 @@ init_sc (ts) ==
 
 \chapter{Operation Definitions} \label{op-def}
 
-Operations have already been mentioned in section~\ref{algorithm}. The
+Operations have already been mentioned in chapter~\ref{algorithm}. The
 general form is described here and for VDM++ and VDM-RT special
   operations called \emph{constructors} which are used for
   constructing instances of a class are described in
@@ -4715,31 +4730,31 @@ only be used in the VDM-RT dialect.
   In both VDM++ and VDM-RT the details of the
   access and \keyw{static} specifiers can be found in section
   \ref{ch:interface}. Note that a static operation may not call
-  non-static operations or functions, and self expressions cannot be
+  non-static operations, and self expressions cannot be
   used in the definition of a static operation. 
 
 The following example of an explicit operation updates the VDM-SL
 state \texttt{GroupPhase} and the VDM++ instance variables of class
 \texttt{GroupPhase} when one team beats another.
 \begin{lstlisting}
-  Win : Team * Team ==> ()
-  Win (wt,lt) ==
-    let gp in set dom gps be st 
-         {wt,lt} subset {sc.team | sc in set gps(gp)}
-    in gps := gps ++ { gp |-> 
-                        {if sc.team = wt
-                         then mu(sc, won |-> sc.won + 1,
-                                     points |-> sc.points + 3)
-                         elseif sc.team = lt
-                         then mu(sc, lost |-> sc.lost + 1)
-                         else sc 
-                    | sc in set gps(gp)}}
-    pre exists gp in set dom gps & 
-          {wt,lt} subset {sc.team | sc in set gps(gp)};
+Win : Team * Team ==> ()
+Win (wt,lt) ==
+  let gp in set dom gps be st 
+       {wt,lt} subset {sc.team | sc in set gps(gp)}
+  in gps := gps ++ { gp |-> 
+                      {if sc.team = wt
+                       then mu(sc, won |-> sc.won + 1,
+                                   points |-> sc.points + 3)
+                       elseif sc.team = lt
+                       then mu(sc, lost |-> sc.lost + 1)
+                       else sc 
+                  | sc in set gps(gp)}}
+pre exists gp in set dom gps & 
+       {wt,lt} subset {sc.team | sc in set gps(gp)};
 \end{lstlisting}
 \label{winDef}
 An explicit operation consists of a statement (or several composed
-using a block statement), as described in section~\ref{sec:stmt}. The 
+using a block statement), as described in chapter~\ref{sec:stmt}. The 
 statement may access any state/instance
 variables it wishes, reading and writing to them as it sees fit.
 
@@ -4747,21 +4762,21 @@ An implicit operation is specified using an optional pre-condition,
 and a mandatory post-condition. For example we could specify the
 \texttt{Win} operation implicitly:
 \begin{lstlisting}
-  Win (wt,lt: Team)
-  ext wr gps : map GroupName to set of Score
-  pre exists gp in set dom gps & 
-          {wt,lt} subset {sc.team | sc in set gps(gp)}
-  post exists gp in set dom} gps &
-         {wt,lt} subset {sc.team | sc in set gps(gp)}
-         and gps = gps~ ++ 
-                       { gp |-> 
-                         {if sc.team = wt
-                          then mu(sc, won |-> sc.won + 1,
-                                     points |-> sc.points + 3)
-                          elseif sc.team = lt
-                          then mu(sc, lost |-> sc.lost + 1)
-                          else sc 
-                     | sc in set gps(gp)}};
+Win (wt,lt: Team)
+ext wr gps : map GroupName to set of Score
+pre exists gp in set dom gps & 
+        {wt,lt} subset {sc.team | sc in set gps(gp)}
+post exists gp in set dom} gps &
+       {wt,lt} subset {sc.team | sc in set gps(gp)}
+       and gps = gps~ ++ 
+                     { gp |-> 
+                       {if sc.team = wt
+                        then mu(sc, won |-> sc.won + 1,
+                                   points |-> sc.points + 3)
+                        elseif sc.team = lt
+                        then mu(sc, lost |-> sc.lost + 1)
+                        else sc 
+                   | sc in set gps(gp)}};
 \end{lstlisting}
 
 The externals field lists the state/instance
@@ -4772,7 +4787,7 @@ variables listed after the reserved
 word \keyw{rd} can only be read whereas the operation can both read and
 write the variables listed after \keyw{wr}. 
  
-In VDM-SL these pre- and post-conditions the interpreter also
+In VDM-SL these pre- and post-conditions the VDM interpreters also
 creates new functions as with the pre- and post-conditions of operation
 definitions.  However, if a specification contains a global state, the
 state is also part of the newly created functions. Thus, functions
@@ -4949,7 +4964,7 @@ the queue. The exceptional case here is that the queue in
 which the exception clause specifies how the operation should
 behave is empty.
 
-Note that the VDM-SL interpreter creates a function here:
+Note that the VDM interpreters for VDM-SL models creates a function here:
 \begin{lstlisting}
   post_DEQUEUE: [Elem] * qsys * qsys +> bool
 \end{lstlisting}
@@ -4971,7 +4986,7 @@ operation overloading as described in section~\ref{sec:classdep}.
 
 \chapter{Statements}\label{sec:stmt}
 
-In this section the different kind of statements will be described
+In this chapter the different kind of statements will be described
 one by one. Each of them will be described by means of:
 \begin{itemize}
 \item A syntax description in BNF.
@@ -5009,7 +5024,7 @@ one by one. Each of them will be described by means of:
     }
 
   where the ``function definition'' component is described in
-  section~\ref{functiondef}.
+  chapter~\ref{functiondef}.
 
 \item[Semantics:] The {\it let statement} and the {\it let-be-such-that
     statement} are similar to the corresponding {\it let} and {\it
@@ -5033,16 +5048,17 @@ one by one. Each of them will be described by means of:
 
   A {\it let-be-such-that statement} has the form
   \begin{lstlisting}
-    let b be st e in s
+    let mb be st e in s
   \end{lstlisting}
-  where {\tt b} is a binding of a pattern to a set value (or a type), {\tt
+  where {\tt mb} is a multi-binding of one or more patterns (mostly
+  just one pattern) to a set value (or a type), {\tt
     e} is a boolean expression, and {\tt s} is a statement, involving the
-  pattern identifiers of the pattern in {\tt b}. The {\tt \keyw{be st} e}
+  pattern identifiers of the patterns from {\tt mb}. The {\tt \keyw{be st} e}
   part is optional. The expression denotes the evaluation of the statement
-  {\tt s} in the context where the pattern from {\tt b} has been matched
-  against an element in the set (or type) from {\tt b}\footnote{Remember
+  {\tt s} in the context where all the patterns from {\tt mb} has been matched
+  against an element in the set (or type) from {\tt mb}\footnote{Remember
     that only the set bindings can be executed by means of the
-    interpreter.}. 
+    VDM interpreters.}. 
   If the \keyw{be st}
   expression {\tt e} is present, only such bindings where {\tt e} evaluates
   to true in the matching context are used.
@@ -5076,8 +5092,8 @@ from the class \texttt{GroupPhase}
          in 
            return sc.team
   \end{lstlisting}
-  Note the use of the \texttt{def} statement (section \ref{defstmt})
-  here; this is used rather than a \texttt{let} statement since the
+  Note the use of the {\bf\ttfamily def} statement (section~\ref{defstmt})
+  here; this is used rather than a {\bf\ttfamily let} statement since the
   right-hand side is an operation call, and therefore is not an
   expression. 
 
@@ -5172,7 +5188,8 @@ SecondRound () ==
     \Ruleref{expression}}}
 
 \item[Semantics:] The {\it block statement} corresponds to block statements
-  from traditional high-level programming languages.  It enables the use of
+  from traditional high-level imperative 
+programming languages.  It enables the use of
   locally defined variables (by means of the declare statement) which can
   be modified inside the body of the block statement. It simply denotes the
   ordered execution of what the individual statements prescribe. The first
@@ -5270,7 +5287,7 @@ or in the context of a VDM++ instance variables
   local state. Thus, the assignment statement has side-effects on the
   state. However, in order to be able to simply change a part of the state,
   the left-hand side of the assignment can be a state designator. A state
-  designator is either simply the name of a global variable, a reference to
+  designator is either simply the name of a variable, a reference to
   a field of a variable, a map reference of a variable, or a sequence
   reference of a variable. In this way it is possible to change the value
   of a small component of the state. For example, if a state component is a
@@ -5307,20 +5324,20 @@ or in the context of a VDM++ instance variables
   refinement of \texttt{Win} on page~\pageref{winDef} illustrates the use of 
   state designators to assign to a specific map key:
   \begin{lstlisting}
-  Win_sd : Team * Team ==> ()
-  Win_sd (wt,lt) ==
-    let gp in set dom gps be st 
-        {wt,lt} subset {sc.team | sc in set gps(gp)}
-    in
-      gps(gp) := { if sc.team = wt
-                   then mu(sc, won |-> sc.won + 1,
-                               points |-> sc.points + 3)
-                   elseif sc.team = lt
-                   then mu(sc, lost |-> sc.lost + 1)
-                   else} sc 
-                 | sc in set gps(gp)}
-  pre exists gp in set dom gps & 
-                 {wt,lt} subset {sc.team | sc in set gps(gp)}
+Win_sd : Team * Team ==> ()
+Win_sd (wt,lt) ==
+  let gp in set dom gps be st 
+      {wt,lt} subset {sc.team | sc in set gps(gp)}
+  in
+    gps(gp) := { if sc.team = wt
+                 then mu(sc, won |-> sc.won + 1,
+                             points |-> sc.points + 3)
+                 elseif sc.team = lt
+                 then mu(sc, lost |-> sc.lost + 1)
+                 else} sc 
+               | sc in set gps(gp)}
+pre exists gp in set dom gps & 
+               {wt,lt} subset {sc.team | sc in set gps(gp)}
   \end{lstlisting}
   The operation \texttt{SelectionSort} is a state based version of the 
   function \texttt{selection\_sort} on page \pageref{selectionSortdef}. It 
@@ -5330,10 +5347,10 @@ state \texttt{St} or the VDM++
 instance variables
  defined on page~\pageref{stdef}. 
   \begin{lstlisting}
-  functions
+functions
  
-  min_index : seq1 of nat -> nat
-  min_index(l) ==
+min_index : seq1 of nat -> nat
+min_index(l) ==
   if len l = 1 
   then 1
   else let mi = min_index(tl l)
@@ -5341,41 +5358,41 @@ instance variables
           then mi+1
           else 1
 
-  operations
+operations
 
-  SelectionSort : nat ==> ()
-  SelectionSort (i) ==
-    if i < len l
-    then (dcl temp: nat;
-          dcl mi : nat := min_index(l(i,...,len l)) + i - 1;
-         temp := l(mi);
-         l(mi) := l(i);
-         l(i) := temp;
-         SelectionSort(i+1)
-        );
+SelectionSort : nat ==> ()
+SelectionSort (i) ==
+  if i < len l
+  then (dcl temp: nat;
+        dcl mi : nat := min_index(l(i,...,len l)) + i - 1;
+        temp := l(mi);
+        l(mi) := l(i);
+        l(i) := temp;
+        SelectionSort(i+1)
+       );
   \end{lstlisting}
 
   The following VDM++ example illustrates multiple assignment.
   \begin{lstlisting}
-  class C
+class C
 
-  instance variables
-    size : nat;
-    l : seq of nat;
-    inv size = len l
+instance variables
+size : nat;
+l : seq of nat;
+inv size = len l
 
-  operations
-    add1 : nat ==> ()
-    add1 (x) ==
-    ( l := [x] ^ l;
-      size := size + 1);
+operations
+add1 : nat ==> ()
+add1 (x) ==
+( l := [x] ^ l;
+  size := size + 1);
 
-    add2 : nat ==> ()
-    add2 (x) ==
-      atomic (l := [x] ^ l;
-              size := size + 1)
+add2 : nat ==> ()
+add2 (x) ==
+  atomic (l := [x] ^ l;
+          size := size + 1)
 
-  end C
+end C
   \end{lstlisting}
 Here, in \texttt{add1} the invariant on the class's instance variables
 is broken, whereas in \texttt{add2} using the multiple assignment, the
@@ -5443,50 +5460,48 @@ invariant is preserved.
   nested if statement (the iota expression is presented on page 
   \pageref{iotaexpr}):
   \begin{lstlisting}
-  GroupWinner_if : GroupName ==> Team
-  GroupWinner_if (gp) ==
-    if clear_winner(gps(gp))
-     -- return unique score in gps(gp) which has more points
-     -- than any other score
-    then return ((iota sc in set gps(gp) &
-                   forall sc' in set gps(gp) \ {sc} &
-                     sc.points > sc'.points).team)
-    elseif winner_by_more_wins(gps(gp))
-     -- return unique score in gps(gp) with maximal points
-     -- & has won more than other scores with maximal points
-    then return ((iota sc in set gps(gp) &
-              forall sc' in set gps(gp) \ {sc} &
-                (sc.points > sc'.points) or
-                (sc.points = sc'.points and 
-                 sc.won > sc'.won)).team)
-     -- no outright winner, so choose random score 
-     -- from joint top scores
-    else RandomElement ( {sc.team | sc in set gps(gp) &
-                           forall sc' in set gps(gp) &
-                            sc'.points <= sc.points} );
+GroupWinner_if : GroupName ==> Team
+GroupWinner_if (gp) ==
+  if clear_winner(gps(gp))
+  -- return unique score in gps(gp) which has more points
+  -- than any other score
+  then return ((iota sc in set gps(gp) &
+                 forall sc' in set gps(gp) \ {sc} &
+                   sc.points > sc'.points).team)
+  elseif winner_by_more_wins(gps(gp))
+  -- return unique score in gps(gp) with maximal points
+  -- & has won more than other scores with maximal points
+  then return ((iota sc in set gps(gp) &
+            forall sc' in set gps(gp) \ {sc} &
+              (sc.points > sc'.points) or
+              (sc.points = sc'.points and 
+               sc.won > sc'.won)).team)
+  -- no outright winner, so choose random score 
+  -- from joint top scores
+  else RandomElement ( {sc.team | sc in set gps(gp) &
+                          forall sc' in set gps(gp) &
+                          sc'.points <= sc.points} );
   \end{lstlisting}
   Alternatively, we could use a cases statement with match value patterns for
   this operation: 
   \begin{lstlisting}
-  GroupWinner_cases : GroupName ==> Team
-  GroupWinner_cases (gp) ==
-    cases true:
-      (clear_winner(gps(gp))) -> 
-           return ((iota sc in set gps(gp) &
-                     forall sc' in set gps(gp) \ {sc} &
-                      sc.points > sc'.points).team),
-
-      (winner_by_more_wins(gps(gp))) ->
-           return ((iota sc in set gps(gp) &
-                     forall sc' in set gps(gp) \ {sc} &
-                       (sc.points > sc'.points) or
-                       (sc.points = sc'.points and 
-                          sc.won > sc'.won)).team),
-
-      others -> RandomElement ( {sc.team | sc in set gps(gp) &
-                                  forall sc' in set gps(gp) &
-                                   sc'.points <= sc.points} )
-    end
+GroupWinner_cases : GroupName ==> Team
+GroupWinner_cases (gp) ==
+  cases true:
+    (clear_winner(gps(gp))) -> 
+         return ((iota sc in set gps(gp) &
+                   forall sc' in set gps(gp) \ {sc} &
+                    sc.points > sc'.points).team),
+    (winner_by_more_wins(gps(gp))) ->
+         return ((iota sc in set gps(gp) &
+                   forall sc' in set gps(gp) \ {sc} &
+                     (sc.points > sc'.points) or
+                     (sc.points = sc'.points and 
+                        sc.won > sc'.won)).team),
+    others -> RandomElement ( {sc.team | sc in set gps(gp) &
+                                forall sc' in set gps(gp) &
+                                 sc'.points <= sc.points} )
+  end
   \end{lstlisting}
 
 \end{description}
@@ -5539,7 +5554,7 @@ invariant is preserved.
   current context is extended with a binding of {\tt id}. Thus, the first
   time {\tt s} is evaluated {\tt id} is bound to the value returned from
   the evaluation of the lower bound {\tt e1} and so forth until the upper
-  bound is reached ie. until \texttt{s} $>$ \texttt{e2} . Note that
+  bound is reached i.e.\ until \texttt{s} $>$ \texttt{e2}. Note that
   {\tt e1, e2} and {\tt e3} are evaluated before entering the loop.
 
   A {\it set for-loop statement\/} has the form:
@@ -5669,9 +5684,9 @@ invariant is preserved.
     stmti} in an arbitrary (non-deterministic)
   order. However, it
   should be noted that the component statements are not executed
-  simultaneously. Notice that the interpreter will use an
+  simultaneously. Notice that the VDM interpreters will use an
   underdetermined\footnote{Even though the
-    user of the interpreter does not know
+    user of the VDM interpreters does not know
     the order in which these statements are executed they are always
     executed in the same order unless the seed option is used.} semantics even though this construct
   is called a non-deterministic statement.
@@ -5790,22 +5805,22 @@ For VDM++ and VDM-RT call statements are defined as:
 opname(param1, param2, !\ldots!, paramn)
   \end{lstlisting}
 
-In VDM++ and VDM-RT the {\it call statement} has the form:
+In VDM++ and VDM-RT the {\it call statement} can additionally have the form:
   \begin{lstlisting}
 object.opname(param1, param2, !\ldots!, paramn)
   \end{lstlisting}
 
   The {\it call statement} calls an operation, {\tt opname}, %
-(in a VDM++ and VDM-RT context in an object, {\tt object}),
+(in a VDM++ and VDM-RT context it can also be on a specific object, {\tt object}),
 and returns the result of
   evaluating the operation. Because operations can manipulate global
   variables a {\it call statement} does not necessarily have to return
-  a value as function calls do.
+  a value as function call do.
 
-  In VDM++ and VDM-RT if an {\emph{ object designator}} is specified
+  In VDM++ and VDM-RT if an {\emph{object designator}} is specified
   it must yield an object reference to an object of a class in which
   the operation {\tt opname} is defined, and then the operation must
-  be specified as public. If no {\tt object designator} is specified
+  be specified as public. If no \emph{object designator} is specified
   the operation will be called in the current object. If the operation
   is defined in a superclass, it must have been defined as public or
   protected. 
@@ -5920,9 +5935,10 @@ and returns the result of
   previous section with an operation which examines the top of the
   stack:
 \begin{lstlisting}
-  public Top : () ==> Elem
-  Top() ==
-    return (hd stack);
+public Top : () ==> Elem
+Top() ==
+  return (hd stack)
+pre stack <> [];
 \end{lstlisting}
 \end{description}
 
@@ -6097,7 +6113,7 @@ also the result of the complete {\it trap statement}.
 undefined expression. It is used to state explicitly that the result
 of a statement is undefined and because of this an error has occurred.
 When an {\it error statement} is evaluated the
-interpreter will
+VDM interpreters will
 terminate the execution of the specification and report that an {\it
 error statement} was evaluated.
 
@@ -6112,7 +6128,8 @@ error statement} was evaluated.
 \item[Examples:] The operation \texttt{SquareRoot} on page
   \pageref{squarerootDef} does not exclude
   the possibility that the number to be square rooted might be
-  negative. We remedy this in the operation \texttt{SquareRootErr}:
+  negative. If we do not wish this to be a pre-condition we can 
+remedy this in the operation \texttt{SquareRootErr}:
   \begin{lstlisting}
   SquareRootErr : real * real ==> real
   SquareRootErr (r,e) ==
@@ -6148,14 +6165,15 @@ error statement} was evaluated.
 
 \item[Examples:] In the operation \texttt{Remove} in section
   \ref{removeDef} the behaviour of the operation within the
-  \textsf{for} loop if \texttt{elem=z} is not explicitly
+  \keyw{for} loop if \texttt{elem=z} is not explicitly
   stated. \texttt{Remove2} below does this.
   \begin{lstlisting}
   Remove2 : (seq of nat) * nat ==> seq of nat
   Remove2 (k,z) ==
     (dcl nk : seq of nat := [];
      for elem in k do
-       if elem <> z then nk := nk^[elem]
+       if elem <> z 
+       then nk := nk^[elem]
        else skip;
      return nk
     );
@@ -6193,14 +6211,14 @@ the form:
   \end{lstlisting}
 
 If a class description includes a thread (see
-section~\ref{ch:thread}), each object created from this class will
+chapter~\ref{ch:thread}), each object created from this class will
 have the ability to operate as a stand-alone virtual machine, or in
 other terms: the object has its own processing capability.  In this
 situation, a {\it new expression} creates the `process' leaving it in
 a waiting state.  For such objects VDM++ and VDM-RT has a mechanism to change
 the waiting state into an active state\footnote{When an object is in
 an active state, its behaviour can be described using a thread (see
-section~\ref{ch:thread}).}  in terms of a predefined operation, which
+chapter~\ref{ch:thread}).}  in terms of a predefined operation, which
 can be invoked through a {\it start statement}.
 
 The explicit separation of object creation and start provides the
@@ -6240,7 +6258,7 @@ bootSequence(rl) ==
   for all p in set pInit(rl) do
     start(p);
 \end{lstlisting}
-Alternatively we could use the \texttt{startlist} statement here:
+Alternatively we could use the \keyw{startlist} statement here:
 \begin{lstlisting}
 bootSequenceList : runLevel ==> ()
 bootSequenceList(rl) ==
@@ -6267,7 +6285,7 @@ statement in terms of a pre- and a post-condition. Thus, it captures
 the abstraction of a statement, permitting it to have an abstract
 (implicit) specification without being forced to an operation
 definition. The specification statement is equivalent with the body of
-an implicitly defined operation (see section~\ref{op-def}). Thus
+an implicitly defined operation (see chapter~\ref{op-def}). Thus
 specification statements can not be executed.
 
 \item[Examples:] We can use a specification statement to specify a
@@ -6300,18 +6318,18 @@ Sort2 () ==
     \Ruleref{duration statement}
   }
   \Rule{duration statement}{
-    \Lop{duration}, \Lit{(}, \Ruleref{numeral}, \Lit{)},\lfeed
+    \Lop{duration}, \Lit{(}, \Ruleref{numeral}, \Lit{)},
     \Ruleref{statement}
   }
 
 \item[Semantics:]
-The duration statement is a runtime directive to the Toolbox
-interpreter telling it that when incrementing the internal clock for the
+The duration statement is a runtime directive to the VDM
+interpreters telling it that when incrementing the internal clock for the
 enclosed statement, the value (a natural number)
 given in the duration statement should
 be used instead of the increment which would normally be computed for that
 statement. Thus the duration statement provides a mechanism to
-override the Toolbox's default execution time computation.
+override the VDM interpreter's default execution time computation.
 
 \item[Example:] First a simple example:
 \begin{lstlisting}
@@ -6320,7 +6338,7 @@ override the Toolbox's default execution time computation.
 \end{lstlisting}
 In this example, assuming that this loop is not executed in the
 context of an enclosing duration statement, on each iteration of the
-loop the Toolbox will increment its internal clock by 10 time units,
+loop the VDM interpreters will increment its internal clock by 10 time units,
 rather than computing the amount of time required to execute the
 statement \texttt{n := n + 1}. 
 
@@ -6335,7 +6353,7 @@ and the remainder are ignored. For instance
 \end{lstlisting}
 The outer duration statement takes precedence, so assuming this is not
 executed in the context of an enclosing duration statement, the
-interpreter would increment its internal clock by 30 time units when
+VDM interpreters would increment its internal clock by 30 time units when
 executing this statement.
 
 Note that nesting can occur due to operation calls. Consider the
@@ -6370,19 +6388,19 @@ only.
     \Ruleref{cycles statement}
   }
   \Rule{cycles statement}{
-    \Lop{cycles}, \Lit{(}, \Ruleref{numeral}, \Lit{)},\lfeed
+    \Lop{cycles}, \Lit{(}, \Ruleref{numeral}, \Lit{)},
     \Ruleref{statement}
   }
 
 \item[Semantics:]
-The cycles statement is a runtime directive to the Toolbox interpreter
+The cycles statement is a runtime directive to the VDM interpreters
 telling it that when incrementing the internal clock for the enclosed
 statement, the value (a natural number)
 given in the cycles statement should be used as
 an indication of how many clock cycles that the enclosed statement
 should be incremented by instead of the increment which would normally
 be computed for that statement. Thus the cycles statement provides a
-mechanism to override the Toolbox's default execution time
+mechanism to override the VDM interpreter's default execution time
 computation similar to the duration statement but in a way that is
 relative to the speed of the \texttt{CPU} that the computation is carried
 out on.
@@ -6394,7 +6412,7 @@ out on.
 \end{lstlisting}
 In this example, assuming that this loop is not executed in the
 context of an enclosing cycles statement, on each iteration of the
-loop the Toolbox will increment its internal clock by the time it will
+loop the VDM interpreters will increment its internal clock by the time it will
 take to process 1000 instructions on the given \texttt{CPU} (relative
 to its capacity), rather than computing the amount of time required to
 execute the statement \texttt{n := n + 1}. 
@@ -6436,9 +6454,544 @@ it takes to process 1000 instructions on the given \texttt{CPU}
 only. 
 \end{description}
 
-\chapter{Top-level Specification (VDM++ and VDM-RT)}
 
-In the previous sections VDM constructs such as types,
+\chapter{Top-level Specification in VDM}
+\label{top-level}
+
+The top-level specification structure differs significantly between
+the VDM-SL appraoch and the VDM++ and VDM-RT approach. In VDM-SL the
+ISO standard prescribes a flat-language but here a modular extension
+is also enabled using imports and exprts primitives. In VDM++ and
+VDM-RT structuring is done using object-oriented classes that can
+inherit constructs between them controlled by access modifiers. These
+two different approaches are explained in the two sections in this
+chapter. 
+
+\section{Top-level Specification in VDM-SL}\label{modules}
+
+In the previous chapters all the  VDM-SL constructs such as types,
+expressions, statements, functions and operations have been described. A
+number of these constructs can constitute a top-level  VDM-SL
+specification. A top-level specification can be created in two ways:
+\begin{enumerate}
+\item The specification is split into a number of modules which are
+  specified separately, but can depend on each other.
+\item The specification is specified in a flat manner, i.e.\ no modules are
+  used.
+\end{enumerate}
+Thus, a complete specification, or document, has the following syntax.
+
+\begin{description}
+\item[Syntax:]
+\Rule{document}{
+  \Ruleref{any module}, \SeqPt{\Ruleref{any module}} \dsep
+   \Ruleref{definition block}, \SeqPt{\Ruleref{definition block}}
+  }
+
+\Rule{any module}{
+  \Ruleref{module} 
+%\dsep
+%  \Ruleref{dynamic link module}
+  }
+\end{description}
+
+\subsection{A Flat Specification}\label{flat}
+
+As said, a flat specification does not use modules. This means that all
+constructs can be used throughout the specification. In the flat case, a
+document has a syntax of:
+
+\Rule{document}{\ldots \dsep
+  \Ruleref{definition block}, \SeqPt{\Ruleref{definition block}}
+  }
+
+\Rule{definition block}{
+  \Ruleref{type definitions} \dsep
+  \Ruleref{state definition} \dsep
+  \Ruleref{value definitions} \dsep
+  \Ruleref{function definitions} \dsep
+  \Ruleref{operation definitions} \dsep
+  \Ruleref{traces definitions}
+  }
+
+Thus, a flat specification is made up of several {\it definition\/} blocks.
+However, only one state definition is allowed. The following is an example
+of a flat top-level specification:
+
+\begin{lstlisting}
+values
+
+  st1 = mk_St([3,2,-9,11,5,3])
+
+state St of
+  l:seq1 of nat
+end
+
+functions
+
+  min_index : seq1 of nat -> nat
+  min_index(l) ==
+    if len l = 1
+    then 1
+    else let mi = min_index(tl l)
+         in
+           if l(mi+1) < hd l
+           then mi+1
+           else 1
+
+operations
+
+  SelectionSort : nat ==> ()
+  SelectionSort (i) ==
+    if i < len l
+    then (dcl temp: nat;
+          dcl mi : nat := min_index(l(i,...,len l)) + i - 1;
+         
+          temp := l(mi);
+          l(mi) := l(i);
+          l(i) := temp;
+          SelectionSort(i+1)
+         )
+\end{lstlisting}
+
+\subsection{A Structured Specification}
+
+As an extension to the standard VDM-SL language, it is possible to
+structure an  VDM-SL specification using modules. In this section,
+the use of modules to create the top-level specification will be described.
+With the structuring facilities offered by  VDM-SL it is possible to:
+\begin{itemize}
+\item Export constructs from a module.
+\item Import constructs from a module.
+\item Rename constructs upon import.
+\item Define a state in a module.
+\end{itemize}
+
+%In addition to these kinds of ordinary modules it is possible to use
+%so-called ``Dynamic Link Modules'' (see section~\ref{sec:DLmodules}).
+
+\subsubsection{The Layout of a Module}
+
+Before the actual facilities are described, the general layout of a
+module is described. A module consists of three parts: a {\it module
+declaration}, an {\it interface section}, and a {\it definitions
+section}. It is possible to leave out the definitions part in the
+early development of a module specification.
+
+In the module declaration, the module is named. The name must be a
+unique module name within the complete specification. The second
+part, the interface section, defines the relation of a module with other
+modules and consists of two sections. These sections are:
+\begin{itemize}
+
+\item An {\it imports section}. In the imports section, all the
+  constructs that are going to be used from other modules are
+  described. If constructs are going to be renamed it has to be done
+  in the imports section. 
+
+\item An {\it exports section}. Here all the constructs that are going
+  to be used in other modules are defined.
+  If no exports section is present the
+  module cannot be used from any other modules.
+\end{itemize}
+The third part of a module declaration, the
+definitions section, contains all the definitions of the module.
+Thus, in general, the syntax of a module is:
+
+
+\begin{description}
+\item[Syntax:]
+\Rule{module}{
+  \Lop{module}, \Ruleref{identifier}, \Ruleref{interface}, \lfeed
+  \OptPt{\Ruleref{module body}}, \Lop{end}, \Ruleref{identifier}
+  }
+
+  \Rule{module body}{
+    \Lop{definitions}, \Ruleref{definition block}, \SeqPt{definition block}
+  }
+\end{description}
+
+To illustrate the use of modules, the example flat top-level
+specification are rewritten with some minor modifications.  Some
+unimportant parts of the flat specification are left out for clarity.
+
+\subsubsection{The Exports Section}
+
+\begin{description}
+\item[Syntax:]
+  \Rule{interface}{
+    \OptPt{\Ruleref{import definition list}}, \lfeed
+    \Ruleref{export definition}
+    }
+
+  \Rule{export definition}{
+    \Lop{exports}, \Ruleref{export module signature}
+    }
+
+  \Rule{export module signature}{
+    \Lop{all} \dsep
+    \Ruleref{export signature}, \lfeed
+    \SeqPt{\Ruleref{export signature}}
+    }
+  
+  \Rule{export signature}{
+    \Ruleref{export types signature} \dsep
+    \Ruleref{values signature} \dsep
+    \Ruleref{export functions signature} \dsep
+    \Ruleref{operations signature}
+%    \dsep
+%    state signature
+    }
+  
+  \Rule{export types signature}{
+    \Lop{types}, \Ruleref{type export}, \lfeed
+    \SeqPt{\Lit{;}, \Ruleref{type export}}, \OptPt{\Lit{;}}
+    }
+  
+  \Rule{type export}{
+    \OptPt{\Lop{struct}}, \Ruleref{name}
+    }
+  
+  \Rule{values signature}{
+    \Lop{values}, \Ruleref{value signature}, \lfeed
+    \SeqPt{\Lit{;}, \Ruleref{value signature}}, \OptPt{\Lit{;}}
+    }
+  
+  \Rule{value signature}{
+    \Ruleref{name list}, \Lit{:}, \Ruleref{type}
+    }
+  
+  \Rule{export functions signature}{
+    \Lop{functions} \Ruleref{function export}, \lfeed
+    \SeqPt{\Lit{;}, \Ruleref{function export}}
+    }
+
+  \Rule{function export}{
+    \Ruleref{name list}, \OptPt{\Ruleref{type variable list}}, \Lit{:}, \lfeed
+    \Ruleref{function type}
+    }
+  
+  \Rule{functions signature}{
+    \Lop{functions} \Ruleref{function signature}, \lfeed
+    \SeqPt{\Lit{;}, \Ruleref{function signature}}, \OptPt{\Lit{;}}
+    }
+  
+  \Rule{function signature}{
+    \Ruleref{name list}, \Lit{:}, \Ruleref{function type}
+    }
+  
+  \Rule{operations signature}{
+    \Lop{operations} \Ruleref{operation signature}, \lfeed
+    \SeqPt{\Lit{;}, \Ruleref{operation signature}}, \OptPt{\Lit{;}}
+    }
+  
+  \Rule{operation signature}{
+    \Ruleref{name list}, \Lit{:}, \Ruleref{operation type}
+    }
+  
+%  \Rule{state signature}{
+%    \Lop{state}, name, \SeqPt{\Lit{,}, name}
+%    }
+
+\item[Semantics:] The exports section must be used to make constructs
+  visible to other modules. Some or all of the defined
+  constructs from a module can be exported. In the latter case, the keyword
+  \keyw{all} is used. However, imported constructs are not exported
+  from the module. If only part 
+  of the constructs are exported, the visible constructs with
+  the appropriate signatures are stated.
+
+  Normally, if a construct is visible to another module,
+  that construct can be considered
+   to be defined inside the module. However, with types and
+  operations there are some exceptions:
+  \begin{description}
+  \item[Types:] If a type {\tt T} is defined in module {\tt A} and
+    this type is also going to be used in module {\tt B}, the type
+    from module {\tt A} has to be exported. This can be done in two ways:
+    \begin{enumerate}
+    \item The name of the type is exported.
+    \item The structure of the type is exported.
+    \end{enumerate}
+    If only the name of the type is exported, the other module cannot create
+    values of type {\tt T}. This means that the exporting module ({\tt A})
+    must provide functions and/or operations to directly create and manipulate
+    values of type {\tt T} by means of the constructors related to the
+    representation of {\tt T}. 
+
+    If we export the structure of the type by using the keyword
+    \keyw{struct}, the other module can create and manipulate values of
+    type {\tt T} (it can also use \keyw{mk\_} keyword and the
+    \keyw{is\_} keyword for this type if it is a record type).
+
+    If the type also defines an invariant, the invariant predicate function
+    is only exported if the structure of the type is exported.
+
+  \item[Operations:] In a module, a state that is global for
+    the module can be defined. All operations within the module can
+    manipulate that state. If operations are exported from a module, they
+     manipulate the state in the exporting module,
+      i.e.\ the state in the module where they are defined.
+  \end{description}
+
+  If an exported function or an operation defines a pre- and/or
+  post-condition, the corresponding predicate functions (see
+  chapter~\ref{functiondef}) are also exported.
+
+\item[Examples:] Consider a model of a bank account. An account is
+characterised by the name of the holder, the account number, the
+bank branch at which the account is maintained, the balance, and an
+encrypted PIN code for the ATM card. We might model this as follows:
+\begin{lstlisting}
+module BankAccount
+
+exports types digit; account
+        functions digval: digit -> nat;
+                  withdrawal: account * real -> account;
+                  isPin: account * nat -> bool;
+                  requestWithdrawal: account * nat -> bool
+definitions
+
+types
+
+  digit = nat
+  inv d == d < 10;
+  
+  account::  holder : seq1 of char
+             number : seq1 of digit
+             branchcode : seq1 of digit
+             balance: real
+             epin: nat
+  inv mk_account(holder, number, branchcode,-,-) ==
+    len number = 8 and len branchcode = 6
+
+functions
+
+    digval : digit -> nat
+    digval(d) == d;
+
+    deposit: account * real -> account
+    deposit(acc,r) == 
+      mu(acc,balance |-> acc.balance + r);
+
+    withdrawal : account * real -> account
+    withdrawal (acc,r) == 
+      mu(acc,balance |-> acc.balance - r);
+
+    isPin : account * nat -> bool
+    isPin(acc,ep) ==
+      ep = acc.epin;
+
+    requestWithdrawal : account * nat -> bool
+    requestWithdrawal (acc,amt) ==
+      acc.balance > amt
+
+end BankAccount
+\end{lstlisting}
+In this module we export two types and five functions. Note that since
+we have enumerated the entities we are exporting, but have not
+exported \texttt{digit} or \texttt{account} using the \keyw{struct}
+keyword, the internals of \texttt{account} values may not be accessed
+by other modules, neither may the invariant for \texttt{digit}. If 
+such access is necessary, the types should be exported with the
+\keyw{struct} keyword, or all constructs in the module should be
+exported using the \keyw{exports all} clause.
+
+The module \texttt{Keypad} given below models the keypad interface of
+an ATM machine. The state variable maintains a buffer of data typed at
+the keypad by the user.
+
+\begin{lstlisting}
+module Keypad
+
+imports
+from BankAccount types digit
+
+exports all
+
+definitions
+
+state buffer of
+  data : seq of BankAccount`digit
+end
+
+operations
+
+    DataAvailable : () ==> bool
+    DataAvailable () ==
+      return(data <> []);
+
+    ReadData : () ==> seq of BankAccount`digit
+    ReadData () ==
+      return (data);
+
+    WriteData : seq of BankAccount`digit ==> ()
+    WriteData (d) ==
+      data := data^d
+
+end Keypad
+\end{lstlisting}
+In this module all constructs are exported. Since the only entities
+defined are the state and operations on it, this means that all of the
+operations may be accessed by an importing module. The state is not
+accessible to importing modules, but remains private to this
+module. However the state constructor
+\texttt{\keyw{mk\_}Keypad`buffer} is accessible.
+
+
+\end{description}
+
+\subsubsection{The Imports Section}
+
+\begin{description}
+\item[Syntax:]
+  \Rule{interface}{
+    \OptPt{\Ruleref{import definition list}}, \lfeed
+    \Ruleref{export definition}
+    }
+
+  \Rule{import definition list}{
+    \Lop{imports}, \Ruleref{import definition}, \lfeed
+    \SeqPt{\Lit{,}, \Ruleref{import definition}}
+    }
+
+  \Rule{import definition}{
+    \Lop{from}, \Ruleref{identifier}, \Ruleref{import module signature}
+    }
+
+  \Rule{import module signature}{
+    \Lop{all} \dsep
+    \Ruleref{import signature}, \lfeed
+    \SeqPt{\Ruleref{import signature}}
+    }
+
+  \Rule{import signature}{
+    \Ruleref{import types signature} \dsep
+    \Ruleref{import values signature} \dsep
+    \Ruleref{import functions signature} \dsep
+    \Ruleref{import operations signature}
+%    \dsep
+%    state signature
+    }
+
+  \Rule{import types signature}{
+    \Lop{types}, \Ruleref{type import}, \lfeed
+    \SeqPt{\Lit{;}, \Ruleref{type import}}, \OptPt{\Lit{;}}
+    }
+
+  \Rule{type import}{
+    \Ruleref{name}, \OptPt{\Lop{renamed}, \Ruleref{name}} \dsep
+    \Ruleref{type definition}, \OptPt{\Lop{renamed}, \Ruleref{name}}
+    }
+
+  \Rule{import values signature}{
+    \Lop{values}, \Ruleref{value import}, \lfeed
+    \SeqPt{\Lit{;}, \Ruleref{value import}}, \OptPt{\Lit{;}}
+    }
+
+  \Rule{value import}{
+    \Ruleref{name}, \OptPt{\Lit{:}, \Ruleref{type}}, \OptPt{\Lop{renamed}, \Ruleref{name}}
+    }
+
+  \Rule{import functions signature}{
+    \Lop{functions}, \Ruleref{function import}, \lfeed
+    \SeqPt{\Lit{;}, \Ruleref{function import}}, \OptPt{\Lit{;}}
+    }
+
+  \Rule{function import}{
+    \Ruleref{name}, \OptPt{\OptPt{\Ruleref{type variable list}},  
+    \Lit{:}, \Ruleref{function type}}, \lfeed
+    \OptPt{\Lop{renamed}, \Ruleref{name}}
+    }
+
+  \Rule{import operations signature}{
+    \Lop{operations}, \Ruleref{operation import}, \lfeed
+    \SeqPt{\Lit{;}, \Ruleref{operation import}}, \OptPt{\Lit{;}}
+    }
+
+  \Rule{operation import}{
+    \Ruleref{name}, \OptPt{\Lit{:}, \Ruleref{operation type}}, \lfeed
+    \OptPt{\Lop{renamed}, \Ruleref{name}}
+    }
+
+\item[Semantics:] The imports section is used to state what constructs are
+  used from other modules with the restriction that only visible constructs
+  can be imported. If all the visible constructs from a
+  module are going to be used, the keyword \keyw{all} is used, unless one or
+  more constructs are going to be renamed. With renaming, an imported
+  construct is given a new name
+  which can be used instead of the original name preceded by the
+  exporting module name. In general this has the form:
+  \begin{lstlisting}
+    name renamed new_name
+  \end{lstlisting}
+  where {\tt name} is the name of the imported construct, and {\tt
+    new\_name} is the new name for the construct. This way,
+  more meaningful names can be given to constructs. Note that in the importing
+  module it is not possible to refer to {\tt DefModule`name} (where
+  {\tt DefModule} is the name of the defining module) any longer but only to
+  {\tt newname}.
+
+  It is possible to include type information in the imports section,
+such that
+  this information will only be used by the static semantics check of the
+  complete module. If no type information is given, the static semantics
+  can also find this information in the exporting module.
+  
+  When a type which has been exported with the \keyw{struct} keyword
+  (with its structure) is imported the
+  importing module may only make use of this structure if it repeats
+  the type definition from the exporting module in its type import. In
+  case such a type is a composite type and it is also renamed this has
+  the consequence that the tag is renamed as well.
+  
+\item[Examples:] We can model an ATM card as consisting of a
+card number and an expiry date. This requires the \texttt{digit} type
+defined in the module \texttt{BankAccount}. It also uses the function
+\texttt{digval} from the same module.
+\begin{lstlisting}
+module ATMCard
+
+imports
+from BankAccount types digit 
+                 functions digval renamed atmc_digval
+
+exports all
+
+definitions
+
+types
+
+    digit = BankAccount`digit;
+
+    atmc:: cardnumber : seq1 of digit
+           expiry : digit * digit * digit * digit
+    inv mk_atmc(cardnumber, mk_(m1,m2,-,-)) ==
+        atmc_digval(m1) * 10 + atmc_digval(m2) <= 12 and
+        len cardnumber >= 8
+
+functions
+
+    getCardnumber : atmc -> seq1 of digit
+    getCardnumber (atmc) ==
+      atmc.cardnumber
+
+end ATMCard
+\end{lstlisting}
+Here the invariant on the type \texttt{atmc} states that expiry dates
+must represent valid dates, and card numbers must be at least 8 digits
+long. Note that since \texttt{digit} is not exported with the
+\keyw{struct} keyword from the module \texttt{BankAccount}, we cannot
+access the invariant for \texttt{digit} in module
+\texttt{ATMCard}. However this notwithstanding, all values of type
+\texttt{digit} manipulated in \texttt{ATMCard} must satisfy the
+invariant. 
+
+\end{description}
+
+\section{Top-level Specification in VDM++ and VDM-RT}
+
+In the previous chapters VDM constructs such as types,
 expressions, statements, functions and operations have been
 described. A number of these constructs can constitute the definitions
 inside a class definition. A top-level specification, or document, is
@@ -6493,7 +7046,7 @@ instead of the keyword ``\keyw{class}''.
 \end{itemize}
 
 The system name as given in the system header is the defining occurrence
-of the name of the class. A system name is globally visible, i.e. visible
+of the name of the class. A system name is globally visible, i.e.\ visible
 in all other classes/systems in the specification.
 
 The system name in the class header must be the same as the system
@@ -6538,7 +7091,7 @@ The \texttt{CPU} class have member operations called \texttt{deploy} and
 \texttt{setPriority}. The \texttt{deploy} operation takes one
 significant parameter
 which must be an object that is declared as a static instance variable
-inside the system \footnote{It is also allowed to take a string as a
+inside the system\footnote{It is also allowed to take a string as a
 second parameter for future extensions but that is ignored at the
 moment.}. The semantics of the deploy operation is that execution
 of all functionality inside this object will take place on the CPU that it
@@ -6613,7 +7166,7 @@ end Simple
 as classes.
 \end{description}
 
-\section{Classes}
+\subsection{Classes}
 \label{sec:classdep}
 
 Compared to the standard VDM-SL\ language, VDM++ and VDM-RT have been
@@ -6654,7 +7207,8 @@ class is described.
   \Ruleref{instance variable definitions} \dsep
 %  time variable definitions \dsep
   \Ruleref{synchronization definitions} \dsep
-  \Ruleref{thread definitions}
+  \Ruleref{thread definitions} \dsep
+  \Ruleref{traces definitions}
 }
 
 \item[Semantics:] Each class description has the following parts:
@@ -6712,10 +7266,10 @@ function with the same name from a class B and all calls involving
 this function name must be resolvable in class C.
 \end{description}
 
-\section{Inheritance}\label{ch:inherit}
+\subsection{Inheritance}\label{ch:inherit}
 
 The concept of inheritance is essential to object orientation.  When
-one defines a class as a subclass of an already existing class the
+one defines a class as a subclass of an already existing class, the
 definition of the subclass introduces an extended class, which is
 composed of the definitions of the superclass together with the
 definitions of the newly defined subclass. 
@@ -6730,15 +7284,15 @@ Through inheritance, a subclass inherits from the superclass:
 \item Its value and type definitions.
 \item Its synchronization definitions as described in
   section \ref{ch:sync-inh}.
-%\item Its thread definitions as described in
-%  Section \ref{ch:thread-inh}.
+\item Its thread definitions as described in
+  chapter~\ref{ch:thread-inh}.
 \end{itemize}
 
 A name conflict occurs when two constructs of the same kind and with the
 same name are inherited from different superclasses.
 Name conflicts must be explicitly resolved through {\it name qualification},
 i.e. prefixing the construct with the name of the superclass and a
-\texttt{`}-sign (back-quote) (see also section~\ref{sec:nameconflicts}).
+\texttt{`}-sign (back-quote) (see also chapter~\ref{sec:nameconflicts}).
 
 \begin{description}
 \item[Example:] In the first example, we see that inheritance can be
@@ -6838,7 +7392,7 @@ A`j}. It should also be noticed that the variable name {\tt i} is
 ambiguous in class {\tt D} as it refers to different variables in
 class {\tt B} and class {\tt C}.
 
-\section{Interface and Availability of Class Members}\label{ch:interface}
+\subsection{Interface and Availability of Class Members}\label{ch:interface}
 
 In VDM++ and VDM-RT definitions inside a class are distinguished between:
 
@@ -6846,7 +7400,7 @@ In VDM++ and VDM-RT definitions inside a class are distinguished between:
 \item[Class attribute:] an attribute of a class for which there
   exists exactly one incarnation no matter how many instances
   (possibly zero) of the class may eventually be created. Class
-  attributes in VDM++ and VDM-RT correspond to {\tt static} class members in
+  attributes in VDM++ and VDM-RT correspond to \keyw{static} class members in
   languages like C++ and Java. Class (static) attributes can be
   referenced by prefixing the name of the attribute with the name of
   the class followed by a \texttt{`}-sign (back-quote), so that, for
@@ -6909,7 +7463,7 @@ is:
   only be used in the class in which they are specified.
 \end{description}
 
-The default access to any class member is \textbf{private}. That is,
+The default access to any class member is \keyw{private}. That is,
 if no access specifier is given for a member it is private.
 
 This is summarized in table \ref{table:access}. A few provisos apply
@@ -7075,7 +7629,7 @@ unable to start operation $o$ then $O_1$ blocks until the operation may be
 executed. Thus invocation occurs when both the calling object and the
 called object are ready. (Note here a slight difference from the
 semantics of Ada: in Ada both parties to the rendez-vous are active
-objects; in VDM++ and VDM-RT only the calling party is active)
+objects; in VDM++ and VDM-RT only the calling party is active).
 \end{itemize}
 The synchronization definition blocks of the class description provide the
 user with ways to override the defaults described above.
@@ -7203,10 +7757,10 @@ expressed in terms of history expressions (see section
 \ref{sec:historyexpr}). History expressions denotes the number
 of activations and completions of the operations, given as functions
 
-{\tt \#act} and {\tt \#fin}, respectively. 
+\keyw{\#act} and \keyw{\#fin}, respectively. 
 \begin{quote}
-{\tt \#act}: operation name $\rightarrow$ $\Nat$ \\
-{\tt \#fin}: operation name $\rightarrow$ $\Nat$ 
+\keyw{\#act}: operation name $\rightarrow$ $\Nat$ \\
+\keyw{\#fin}: operation name $\rightarrow$ $\Nat$ 
 \end{quote}
 
 Furthermore, a derived function {\bf\ttfamily \#active} is available such that
@@ -7365,12 +7919,12 @@ object evaluates its guard expression, it will find it to be true and
 activate the corresponding operation (\texttt{RetrieveURL} or
 \texttt{ExecuteCGI} in this case). The other objects evaluating their
 guard expressions afterwards will find that 
-\texttt{\#active(RetrieveURL) + \#active(ExecuteCGI) = 10}
+\keyw{\#active}{\tt (RetrieveURL) +} \keyw{\#active}{\tt (ExecuteCGI) = 10}
 and thus remain blocked. \textit{Which object is allowed to evaluate the guard
 expression first is undefined.}
 
 It is important to understand that the guard expression need only 
-evaluate to \textsf{true} at the time of the activation. In the
+evaluate to \keyw{true} at the time of the activation. In the
 example as soon as $O_1$, $O_2$ or $O_3$'s request is activated its
 guard expression becomes false again. 
 
@@ -7433,7 +7987,7 @@ operations
   newWriter() == is not yet specified
 
   sync
-  per reader => active(newWriter) = 0; 
+  per reader => #active(newWriter) = 0; 
   per writer => #active(newWriter) = 0; 
   per newWriter => #active(reader, writer, newWriter) = 0; 
 
@@ -7568,7 +8122,7 @@ only incremented if the Timer is active).
 \begin{lstlisting}
 instance variables
   curTime : nat := 0;
-  active  : bool := false;
+  acti    : bool := false;
 \end{lstlisting}
 
 The Timer provides straightforward operations which need no further
@@ -7577,12 +8131,12 @@ explanation.
 operations
   public Start : () ==> ()
   Start() ==
-    (active := true;
+    (acti := true;
      curTime := 0);
 
   public Stop : () ==> () 
   Stop() ==
-    active := false;
+    acti := false;
 
   public GetTime : () ==> nat
   GetTime() ==
@@ -7590,7 +8144,7 @@ operations
 
   IncTime: () ==> ()
   IncTime() ==
-    if active
+    if acti
     then curTime := curTime + 100;
 \end{lstlisting}
 
@@ -7675,7 +8229,7 @@ permission predicates on shared objects.
 %\item {\em guarded command} may not be empty; it must contain one {\em
 %expression}, {\em answer statement} or {\em statement} at minimum.
 %\item {\em expression} in {\em guarded command} must be boolean (if it
-%is absent its default value is $\True$).
+%is absent its default value is {\bf\ttfamily true}).
 %\item {\em name} in the rule for {\em answer statement} must be
 %defined in the class or in one of its superclasses.
 %\end{itemize}
@@ -8473,531 +9027,9 @@ end Multiplier
 %The above specification is effectively
 %the behaviour of a certain digital-to-analogue converter.
 
-\chapter{Top-level Specification (VDM-SL)}
-\label{top-level}\label{modules}
+\chapter{Trace Definitions}\label{chap:trace}
 
-In the previous sections all the  VDM-SL constructs such as types,
-expressions, statements, functions and operations have been described. A
-number of these constructs can constitute a top-level  VDM-SL
-specification. A top-level specification can be created in two ways:
-\begin{enumerate}
-\item The specification is split into a number of modules which are
-  specified separately, but can depend on each other.
-\item The specification is specified in a flat manner, i.e.\ no modules are
-  used.
-\end{enumerate}
-Thus, a complete specification, or document, has the following syntax.
-
-\begin{description}
-\item[Syntax:]
-\Rule{document}{
-  \Ruleref{any module}, \SeqPt{\Ruleref{any module}} \dsep
-   \Ruleref{definition block}, \SeqPt{\Ruleref{definition block}}
-  }
-
-\Rule{any module}{
-  \Ruleref{module} 
-%\dsep
-%  \Ruleref{dynamic link module}
-  }
-\end{description}
-
-\section{A Flat Specification}\label{flat}
-
-As said, a flat specification does not use modules. This means that all
-constructs can be used throughout the specification. In the flat case, a
-document has a syntax of:
-
-\Rule{document}{\ldots \dsep
-  \Ruleref{definition block}, \SeqPt{\Ruleref{definition block}}
-  }
-
-\Rule{definition block}{
-  \Ruleref{type definitions} \dsep
-  \Ruleref{state definition} \dsep
-  \Ruleref{value definitions} \dsep
-  \Ruleref{function definitions} \dsep
-  \Ruleref{operation definitions}
-  }
-
-Thus, a flat specification is made up of several {\it definition\/} blocks.
-However, only one state definition is allowed. The following is an example
-of a flat top-level specification:
-
-\begin{lstlisting}
-values
-
-  st1 = mk_St([3,2,-9,11,5,3])
-
-state St of
-  l:seq1 of nat
-end
-
-functions
-
-  min_index : seq1 of nat -> nat
-  min_index(l) ==
-    if len l = 1
-    then 1
-    else let mi = min_index(tl l)
-         in
-           if l(mi+1) < hd l
-           then mi+1
-           else 1
-
-operations
-
-  SelectionSort : nat ==> ()
-  SelectionSort (i) ==
-    if i < len l
-    then (dcl temp: nat;
-          dcl mi : nat := min_index(l(i,...,len l)) + i - 1;
-         
-          temp := l(mi);
-          l(mi) := l(i);
-          l(i) := temp;
-          SelectionSort(i+1)
-         )
-\end{lstlisting}
-
-\section{A Structured Specification}
-
-As an extension to the standard VDM-SL language, it is possible to
-structure an  VDM-SL specification using modules. In this section,
-the use of modules to create the top-level specification will be described.
-With the structuring facilities offered by  VDM-SL it is possible to:
-\begin{itemize}
-\item Export constructs from a module.
-\item Import constructs from a module.
-\item Rename constructs upon import.
-\item Define a state in a module.
-\end{itemize}
-
-%In addition to these kinds of ordinary modules it is possible to use
-%so-called ``Dynamic Link Modules'' (see section~\ref{sec:DLmodules}).
-
-\subsection{The Layout of a Module}
-
-Before the actual facilities are described, the general layout of a
-module is described. A module consists of three parts: a {\it module
-declaration}, an {\it interface section}, and a {\it definitions
-section}. It is possible to leave out the definitions part in the
-early development of a module specification.
-
-In the module declaration, the module is named. The name must be a
-unique module name within the complete specification. The second
-part, the interface section, defines the relation of a module with other
-modules and consists of a number of sections. These sections are:
-\begin{itemize}
-
-\item An {\it imports section}. In the imports section, all the
-  constructs that are going to be used from other modules are
-  described. If constructs are going to be renamed it has to be done
-  in the imports section. 
-
-\item An {\it exports section}. Here all the constructs that are going
-  to be used in other modules are defined.
-  If no exports section is present the
-  module cannot be used from other modules.
-\end{itemize}
-The third part of a module declaration, the
-definitions section, contains all the definitions of the module.
-Thus, in general, the syntax of a module is:
-
-
-\begin{description}
-\item[Syntax:]
-\Rule{module}{
-  \Lop{module}, \Ruleref{identifier}, \Ruleref{interface}, \lfeed
-  \OptPt{\Ruleref{module body}}, \Lop{end}, \Ruleref{identifier}
-  }
-
-  \Rule{module body}{
-    \Lop{definitions}, \Ruleref{definition block}, \SeqPt{definition block}
-  }
-\end{description}
-
-To illustrate the use of modules, the example flat top-level
-specification are rewritten with some minor modifications.  Some
-unimportant parts of the flat specification are left out for clarity.
-
-\subsection{The Exports Section}
-
-\begin{description}
-\item[Syntax:]
-  \Rule{interface}{
-    \OptPt{\Ruleref{import definition list}}, \lfeed
-    \Ruleref{export definition}
-    }
-
-  \Rule{export definition}{
-    \Lop{exports}, \Ruleref{export module signature}
-    }
-
-  \Rule{export module signature}{
-    \Lop{all} \dsep
-    \Ruleref{export signature}, \lfeed
-    \SeqPt{\Ruleref{export signature}}
-    }
-  
-  \Rule{export signature}{
-    \Ruleref{export types signature} \dsep
-    \Ruleref{values signature} \dsep
-    \Ruleref{export functions signature} \dsep
-    \Ruleref{operations signature}
-%    \dsep
-%    state signature
-    }
-  
-  \Rule{export types signature}{
-    \Lop{types}, \Ruleref{type export}, \lfeed
-    \SeqPt{\Lit{;}, \Ruleref{type export}}, \OptPt{\Lit{;}}
-    }
-  
-  \Rule{type export}{
-    \OptPt{\Lop{struct}}, \Ruleref{name}
-    }
-  
-  \Rule{values signature}{
-    \Lop{values}, \Ruleref{value signature}, \lfeed
-    \SeqPt{\Lit{;}, \Ruleref{value signature}}, \OptPt{\Lit{;}}
-    }
-  
-  \Rule{value signature}{
-    \Ruleref{name list}, \Lit{:}, \Ruleref{type}
-    }
-  
-  \Rule{export functions signature}{
-    \Lop{functions} \Ruleref{function export}, \lfeed
-    \SeqPt{\Lit{;}, \Ruleref{function export}}
-    }
-
-  \Rule{function export}{
-    \Ruleref{name list}, \OptPt{\Ruleref{type variable list}}, \Lit{:}, \lfeed
-    \Ruleref{function type}
-    }
-  
-  \Rule{functions signature}{
-    \Lop{functions} \Ruleref{function signature}, \lfeed
-    \SeqPt{\Lit{;}, \Ruleref{function signature}}, \OptPt{\Lit{;}}
-    }
-  
-  \Rule{function signature}{
-    \Ruleref{name list}, \Lit{:}, \Ruleref{function type}
-    }
-  
-  \Rule{operations signature}{
-    \Lop{operations} \Ruleref{operation signature}, \lfeed
-    \SeqPt{\Lit{;}, \Ruleref{operation signature}}, \OptPt{\Lit{;}}
-    }
-  
-  \Rule{operation signature}{
-    \Ruleref{name list}, \Lit{:}, \Ruleref{operation type}
-    }
-  
-%  \Rule{state signature}{
-%    \Lop{state}, name, \SeqPt{\Lit{,}, name}
-%    }
-
-\item[Semantics:] The exports section must be used to make constructs
-  visible to other modules. Some or all of the defined
-  constructs from a module can be exported. In the latter case, the keyword
-  \keyw{all} is used. However, imported constructs are not exported
-  from the module. If only part 
-  of the constructs are exported, the visible constructs with
-  the appropriate signatures are stated.
-
-  Normally, if a construct is visible to another module,
-  that construct can be considered
-   to be defined inside the module. However, with types and
-  operations there are some exceptions:
-  \begin{description}
-  \item[Types:] If a type {\tt T} is defined in module {\tt A} and
-    this type is also going to be used in module {\tt B}, the type
-    from module {\tt A} has to be exported. This can be done in two ways:
-    \begin{enumerate}
-    \item The name of the type is exported.
-    \item The structure of the type is exported.
-    \end{enumerate}
-    If only the name of the type is exported, the other module cannot create
-    values of type {\tt T}. This means that the exporting module ({\tt A})
-    must provide functions and/or operations to directly create and manipulate
-    values of type {\tt T} by means of the constructors related to the
-    representation of {\tt T}. 
-
-    If we export the structure of the type by using the keyword
-    \keyw{struct}, the other module can create and manipulate values of
-    type {\tt T} (it can also use \keyw{mk\_} keyword and the
-    \keyw{is\_} keyword for this type if it is a record type).
-
-    If the type also defines an invariant, the invariant predicate function
-    is only exported if the structure of the type is exported.
-
-  \item[Operations:] In a module, a state that is global for
-    the module can be defined. All operations within the module can
-    manipulate that state. If operations are exported from a module, they
-     manipulate the state in the exporting module,
-      i.e.\ the state in the module where they are defined.
-  \end{description}
-
-  If an exported function or an operation defines a pre- and/or
-  post-condition, the corresponding predicate functions (see
-  section~\ref{functiondef}) are also exported.
-
-\item[Examples:] Consider a model of a bank account. An account is
-characterised by the name of the holder, the account number, the
-bank branch at which the account is maintained, the balance, and an
-encrypted PIN code for the ATM card. We might model this as follows:
-\begin{lstlisting}
-module BankAccount
-
-exports types digit; account
-        functions digval: digit -> nat;
-                  withdrawal: account * real -> account;
-                  isPin: account * nat -> bool;
-                  requestWithdrawal: account * nat -> bool
-definitions
-
-types
-
-  digit = nat
-  inv d == d < 10;
-  
-  account::  holder : seq1 of char
-             number : seq1 of digit
-             branchcode : seq1 of digit
-             balance: real
-             epin: nat
-  inv mk_account(holder, number, branchcode,-,-) ==
-    len number = 8 and len branchcode = 6
-
-functions
-
-    digval : digit -> nat
-    digval(d) == d;
-
-    deposit: account * real -> account
-    deposit(acc,r) == 
-      mu(acc,balance |-> acc.balance + r);
-
-    withdrawal : account * real -> account
-    withdrawal (acc,r) == 
-      mu(acc,balance |-> acc.balance - r);
-
-    isPin : account * nat -> bool
-    isPin(acc,ep) ==
-      ep = acc.epin;
-
-    requestWithdrawal : account * nat -> bool
-    requestWithdrawal (acc,amt) ==
-      acc.balance > amt
-
-end BankAccount
-\end{lstlisting}
-In this module we export two types and five functions. Note that since
-we have enumerated the entities we are exporting, but have not
-exported \texttt{digit} or \texttt{account} using the \keyw{struct}
-keyword, the internals of \texttt{account} values may not be accessed
-by other modules, neither may the invariant for \texttt{digit}. If 
-such access is necessary, the types should be exported with the
-\keyw{struct} keyword, or all constructs in the module should be
-exported using the \keyw{exports all} clause.
-
-The module \texttt{Keypad} given below models the keypad interface of
-an ATM machine. The state variable maintains a buffer of data typed at
-the keypad by the user.
-
-\begin{lstlisting}
-module Keypad
-
-imports
-from BankAccount types digit
-
-exports all
-
-definitions
-
-state buffer of
-  data : seq of BankAccount`digit
-end
-
-operations
-
-    DataAvailable : () ==> bool
-    DataAvailable () ==
-      return(data <> []);
-
-    ReadData : () ==> seq of BankAccount`digit
-    ReadData () ==
-      return (data);
-
-    WriteData : seq of BankAccount`digit ==> ()
-    WriteData (d) ==
-      data := data^d
-
-end Keypad
-\end{lstlisting}
-In this module all constructs are exported. Since the only entities
-defined are the state and operations on it, this means that all of the
-operations may be accessed by an importing module. The state is not
-accessible to importing modules, but remains private to this
-module. However the state constructor
-\texttt{\keyw{mk\_}Keypad`buffer} is accessible.
-
-
-\end{description}
-
-\subsection{The Imports Section}
-
-\begin{description}
-\item[Syntax:]
-  \Rule{interface}{
-    \OptPt{\Ruleref{import definition list}}, \lfeed
-    \Ruleref{export definition}
-    }
-
-  \Rule{import definition list}{
-    \Lop{imports}, \Ruleref{import definition}, \lfeed
-    \SeqPt{\Lit{,}, \Ruleref{import definition}}
-    }
-
-  \Rule{import definition}{
-    \Lop{from}, \Ruleref{identifier}, \Ruleref{import module signature}
-    }
-
-  \Rule{import module signature}{
-    \Lop{all} \dsep
-    \Ruleref{import signature}, \lfeed
-    \SeqPt{\Ruleref{import signature}}
-    }
-
-  \Rule{import signature}{
-    \Ruleref{import types signature} \dsep
-    \Ruleref{import values signature} \dsep
-    \Ruleref{import functions signature} \dsep
-    \Ruleref{import operations signature}
-%    \dsep
-%    state signature
-    }
-
-  \Rule{import types signature}{
-    \Lop{types}, \Ruleref{type import}, \lfeed
-    \SeqPt{\Lit{;}, \Ruleref{type import}}, \OptPt{\Lit{;}}
-    }
-
-  \Rule{type import}{
-    \Ruleref{name}, \OptPt{\Lop{renamed}, \Ruleref{name}} \dsep
-    \Ruleref{type definition}, \OptPt{\Lop{renamed}, \Ruleref{name}}
-    }
-
-  \Rule{import values signature}{
-    \Lop{values}, \Ruleref{value import}, \lfeed
-    \SeqPt{\Lit{;}, \Ruleref{value import}}, \OptPt{\Lit{;}}
-    }
-
-  \Rule{value import}{
-    \Ruleref{name}, \OptPt{\Lit{:}, \Ruleref{type}}, \OptPt{\Lop{renamed}, \Ruleref{name}}
-    }
-
-  \Rule{import functions signature}{
-    \Lop{functions}, \Ruleref{function import}, \lfeed
-    \SeqPt{\Lit{;}, \Ruleref{function import}}, \OptPt{\Lit{;}}
-    }
-
-  \Rule{function import}{
-    \Ruleref{name}, \OptPt{\OptPt{\Ruleref{type variable list}},  \lfeed
-    \Lit{:}, \Ruleref{function type}},
-    \OptPt{\Lop{renamed}, \Ruleref{name}}
-    }
-
-  \Rule{import operations signature}{
-    \Lop{operations}, \Ruleref{operation import}, \lfeed
-    \SeqPt{\Lit{;}, \Ruleref{operation import}}, \OptPt{\Lit{;}}
-    }
-
-  \Rule{operation import}{
-    \Ruleref{name}, \OptPt{\Lit{:}, \Ruleref{operation type}}, \lfeed
-    \OptPt{\Lop{renamed}, \Ruleref{name}}
-    }
-
-\item[Semantics:] The imports section is used to state what constructs are
-  used from other modules with the restriction that only visible constructs
-  can be imported. If all the visible constructs from a
-  module are going to be used, the keyword \keyw{all} is used, unless one or
-  more constructs are going to be renamed. With renaming, an imported
-  construct is given a new name
-  which can be used instead of the original name preceded by the
-  exporting module name. In general this has the form:
-  \begin{lstlisting}
-    name renamed new_name
-  \end{lstlisting}
-  where {\tt name} is the name of the imported construct, and {\tt
-    new\_name} is the new name for the construct. This way,
-  more meaningful names can be given to constructs. Note that in the importing
-  module it is not possible to refer to {\tt DefModule`name} (where
-  {\tt DefModule} is the name of the defining module) any longer but only to
-  {\tt newname}.
-
-  It is possible to include type information in the imports section,
-such that
-  this information will only be used by the static semantics check of the
-  complete module. If no type information is given, the static semantics
-  can also find this information in the exporting module (see
-  section~\ref{static}).
-  
-  When a type which has been exported with the \keyw{struct} keyword
-  (with its structure) is imported the
-  importing module may only make use of this structure if it repeats
-  the type definition from the exporting module in its type import. In
-  case such a type is a composite type and it is also renamed this has
-  the consequence that the tag is renamed as well.
-  
-\item[Examples:] We can model an ATM card as consisting of a
-card number and an expiry date. This requires the \texttt{digit} type
-defined in the module \texttt{BankAccount}. It also uses the function
-\texttt{digval} from the same module.
-\begin{lstlisting}
-module ATMCard
-
-imports
-from BankAccount types digit 
-                 functions digval renamed atmc_digval
-
-exports all
-
-definitions
-
-types
-
-    digit = BankAccount`digit;
-
-    atmc:: cardnumber : seq1 of digit
-           expiry : digit * digit * digit * digit
-    inv mk_atmc(cardnumber, mk_(m1,m2,-,-)) ==
-        atmc_digval(m1) * 10 + atmc_digval(m2) <= 12 and
-        len cardnumber >= 8
-
-functions
-
-    getCardnumber : atmc -> seq1 of digit
-    getCardnumber (atmc) ==
-      atmc.cardnumber
-
-end ATMCard
-\end{lstlisting}
-Here the invariant on the type \texttt{atmc} states that expiry dates
-must represent valid dates, and card numbers must be at least 8 digits
-long. Note that since \texttt{digit} is not exported with the
-\keyw{struct} keyword from the module \texttt{BankAccount}, we cannot
-access the invariant for \texttt{digit} in module
-\texttt{ATMCard}. However this notwithstanding, all values of type
-\texttt{digit} manipulated in \texttt{ATMCard} must satisfy the
-invariant. 
-
-\end{description}
-\chapter{Trace Definitions}
-
-In order to automate the testing process VDM++ contains a notation
+In order to automate the testing process VDM-10 contains a notation
 enabling the expression of the traces that one would like to have
 tested exhaustively. Such traces are used to express combinations of
 sequences of operations that wish to be tested in all possible
@@ -9070,17 +9102,17 @@ same prefix will be skipped automatically.
 
 \item[Semantics:] Semantically the trace definitions provided in a
              class have no effect. These definitions are simply used
-             to enhance testing of a VDM++ model using principles from
+             to enhance testing of a VDM specification using principles from
              combinatorial testing (also called all-pairs
              testing). So each trace definition can be considered as a
              regular expression describing the test sequences in which
-             different operations should be executed to test the VDM++
-             model. Inside the trace definitions, bindings may appear
+             different operations should be executed to test the VDM
+             specification. Inside the trace definitions, bindings may appear
              and for each possible such binding a particular test case
              can be automatically derived. So one trace definition
              expand into a set of test cases. In this sense a test
              case is a sequence of operation calls executed after each
-             other. Between each test case the VDM++ model is
+             other. Between each test case the VDM specification is
              initialised so they become entirely independent. From a
              static semantics perspective it is important to note that
              the expressions used inside trace definitions must be
@@ -9147,83 +9179,6 @@ end UseStack
 \end{description}
 
 
-\chapter{Static Semantics}\label{static}
-
-VDM specifications that are syntactically correct according to the
-syntax rules do not necessarily obey the
-typing and scoping rules of the language.
-The well-formedness of a
-VDM specification can be checked by the {\em static semantics checker}.
-In the Toolbox such a static semantics checker (for programming
-languages this is normally referred to as a type checker) is also
-present.
-
-In general, it is not statically decidable whether a given VDM
-specification is well-formed or not.  The static semantics for
-the VDM languages differs from the static semantics of other
-languages in the sense that it only rejects specifications which are
-definitely not well-formed, and only accepts specifications which are
-definitely well-formed.  Thus, the static semantics for
-the VDM languages attach a {\em well-formedness grade} to a
-VDM specification.  Such a well-formedness grade indicates whether a
-specification is definitely well-formed, definitely not-well-formed, or
-possibly well-formed.
-
-In the Toolbox this means that the static semantics checker can be
-called for either possible correctness or definite correctness.
-However, it should be noted that only very simple specifications will
-be able to pass the definite well-formed\-ness check. Thus, for
-practical use the possible well-formedness is most useful.
-
-The difference between a possibly well-formedness check and a definite
-well-formedness check can be illustrated by the following
-fragment of a VDM specification:
-\begin{lstlisting}
-   if a = true 
-   then a + 1 
-   else not a
-\end{lstlisting}
-where {\tt a} has the type {\tt \keyw{nat} | \keyw{bool}} (the union
-type of
-\keyw{nat} and
-\keyw{bool}). The reader can easily see that this expression is
-ill-formed if {\tt a} is equal to \keyw{true} because then it will be
-impossible to add one to {\tt a}. However, since such expressions can
-be arbitrarily complex this can in general not be checked statically. In
-this particular example possible well-formedness will yield
-\keyw{true} while definite well-formedness will yield \keyw{false}.
-
-\chapter{Scope Conflicts (VDM++ and VDM-RT)}
-\label{sec:nameconflicts}
-
-A name conflict occurs when two constructs with the same name
-(i.e.\ identified by the same {\em identifier}) are visible in the
-same scope.  This is also true when two such constructs are not in the
-same language category, e.g.\ a type and an operation with the same name.
-A specification with a naming conflict is considered to be erroneous.
-
-In case both constructs are defined in the same class, then the conflict can
-not be resolved other than by renaming one of the constructs.
-If they are defined in different classes, then the conflict can be resolved
-through {\em name qualification}, i.e.\ one of the constructs is
-preceded by the name of the class in which it is defined and
-a \Lit{`} (backquote) separator, so e.g.
-  \begin{lstlisting}
-    types
-      Queue = seq of ComplexTypes`RealNumber
-  \end{lstlisting}
-name qualification is used to define the type {\tt Queue} in terms of a
-type {\tt RealNumber} defined in class {\tt ComplexTypes}.
-
-Note that only name qualification in which a {\em class name} is used to
-resolve the naming conflict uses the \Lit{`} symbol as a separator; a
-\Lit{.} (dot) symbol is used to `qualify' ordinary values and/or objects.
-E.g. the notation
-  \begin{lstlisting}
-    o.i
-  \end{lstlisting}
-may refer to the instance variable {\tt i} of an object, or to the
-field {\tt i} of a compound value (record) {\tt o}.
 
 \bibliographystyle{newalpha}
 
@@ -9252,7 +9207,7 @@ the VDM languages.
 %  \Ruleref{dynamic link module}
   }
 
-\section{Modules}
+\subsection{Modules}
 
 This entire subsection is not present in the current version of the
 VDM-SL standard.
@@ -9462,7 +9417,7 @@ VDM-SL standard.
   \Lop{end}, \Ruleref{identifier}
 }
 
-\section{Classes}
+\subsection{Classes}
 
 \Ruledef{class}{
   \Lop{class}, \Ruleref{identifier}, \OptPt{\Ruleref{inheritance clause}}, \lfeed
@@ -9804,7 +9759,7 @@ In VDM++ and VDM-RT extended explicit function definition looks like:
 
 \Ruledef{function body}{
   \Ruleref{expression} \dsep
-  \Lop{is not yet specified} \dsep \Lop{is subclass responsibility}
+  \Lop{is not yet specified} \dsep \Lop{is subclass responsibility} \dsep
   \Lop{is not yet specified} 
   } \nonstandard{1}
 
@@ -9926,7 +9881,8 @@ In VDM++ and VDM-RT extended explicit function definition looks like:
   }
 
   \Rule{access assignment definition}{
-    (\OptPt{\Ruleref{access}}, \OptPt{\Lop{static}})  \dsepl\ (\OptPt{\Lop{static}}, \OptPt{\Ruleref{access}}), \lfeed
+    (\OptPt{\Ruleref{access}}, \OptPt{\Lop{static}})  \dsep
+    (\OptPt{\Lop{static}}, \OptPt{\Ruleref{access}}), \lfeed
     \Ruleref{assignment definition}
   }
 
@@ -10632,12 +10588,12 @@ In VDM++ and VDM-RT extended explicit function definition looks like:
     \Lop{new}, \Ruleref{name}, \Lit{(}, \OptPt{\Ruleref{expression list}}, \Lit{)}
   }
 
-\subsection{The Self Expression}
+\subsection{The Self Expression (VDM++ and VDM-RT)}
   \Ruledef{self expression}{
     \Lop{self}
   }
 
-\subsection{The Threadid Expression}
+\subsection{The Threadid Expression (VDM++ and VDM-RT)}
   \Ruledef{threadid expression}{
     \Lop{threadid}
   }
@@ -11517,7 +11473,7 @@ reserved: \keyw{init\_}, \keyw{inv\_}, \keyw{is\_}, \keyw{mk\_},
   \Lit{{\char'134}x} \hyperlink{charSetTable}{hexadecimal
     digit},\hyperlink{charSetTable}{hexadecimal digit} \dsep
   \Lit{{\char'134}u} \hyperlink{charSetTable}{hexadecimal
-    digit},\hyperlink{charSetTable}{hexadecimal digit},  \hyperlink{charSetTable}{hexadecimal digit},\hyperlink{charSetTable}{hexadecimal digit} \dsep
+    digit},\hyperlink{charSetTable}{hexadecimal digit},  \lfeed \hyperlink{charSetTable}{hexadecimal digit},\hyperlink{charSetTable}{hexadecimal digit} \dsep
   \Lit{{\char'134}c} \Ruleref{character} \dsep
   \Lit{{\char'134}} \hyperlink{charSetTable}{octal digit}, \hyperlink{charSetTable}{octal digit}, \hyperlink{charSetTable}{octal digit} \dsep
   \Lit{{\char'134}"} \dsepl
@@ -11924,8 +11880,11 @@ Type operators have their own separate precedence ordering, as follows:
 
 \chapter{Differences between the Concrete Syntaxes}\label{sec:diff}
 
-Below is a list of the symbols which are different in the mathematical
-syntax and the ASCII syntax:\\
+Whe VDM was originally developed a mathematical syntax was used and
+this have also been retained in the ISO/VDM-SL standard. However, most
+VDM tools today mainly use an ASCII syntax. Below is a list of the
+symbols which are different in the mathematical syntax and the ASCII
+syntax:\\
 %\samepage
 %\begin{center}
 \begin{longtable}{|l|l|}\hline
