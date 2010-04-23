@@ -133,9 +133,9 @@ public abstract class VdmSourceViewerConfiguration extends
 	}
 	
 	@Override
-	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-		return new VdmContentAssistant();
-	}
+	abstract public IContentAssistant getContentAssistant(ISourceViewer sourceViewer); 
+		//return new VdmContentAssistant();
+	
 	
 	@Override
 	public String[] getDefaultPrefixes(ISourceViewer sourceViewer,

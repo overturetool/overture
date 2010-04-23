@@ -130,5 +130,21 @@
          </action>
       </editorContribution>
 	</extension>
+  <extension
+        point="org.overture.ide.ui.templateContextType">
+     <ContextId
+           Id="org.overture.ide.vdmsl.ui.contextType">
+     </ContextId>
+  </extension>
+  <extension
+        point="org.eclipse.ui.editors.templates">
+     <contextType
+           class="org.overture.ide.vdmsl.ui.editor.contentAssist.VdmSlTemplateContextType"
+           id="org.overture.ide.vdmsl.ui.contextType">
+     </contextType>
+     <include
+           file="templates/templates.xml">
+     </include>
+  </extension>
    
 </plugin>

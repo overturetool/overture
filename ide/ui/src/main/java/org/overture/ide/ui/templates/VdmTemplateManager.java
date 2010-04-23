@@ -2,6 +2,10 @@ package org.overture.ide.ui.templates;
 
 import java.io.IOException;
 
+import org.eclipse.core.internal.registry.ConfigurationElement;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplatePersistenceData;
@@ -51,7 +55,15 @@ public class VdmTemplateManager {
 		if (fRegistry == null) {
 			fRegistry = new ContributionContextTypeRegistry();
 		}
-		fRegistry.addContextType(VdmUniversalTemplateContextType.CONTEXT_TYPE);
+		IExtensionRegistry reg = Platform.getExtensionRegistry();
+		IConfigurationElement[] extensions = reg.getConfigurationElementsFor(IVdmUiConstants.TEMPLATE_EXTENTION_POINT_ID);
+		
+		for (IConfigurationElement iConfigurationElement : extensions) {
+			String id = iConfigurationElement.getAttribute(IVdmUiConstants.TEMPLATE_EXTENTION_POINT_ID_ATTRIBUTE);
+			fRegistry.addContextType(id);
+		}
+		
+		//fRegistry.addContextType(VdmUniversalTemplateContextType.CONTEXT_TYPE);
 		return fRegistry;
 	}
 

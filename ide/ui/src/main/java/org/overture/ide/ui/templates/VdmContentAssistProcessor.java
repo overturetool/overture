@@ -6,7 +6,7 @@ import java.util.List;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 
-public class VdmContentAssistProcessor extends VdmTemplateAssistProcessor {
+public abstract class VdmContentAssistProcessor extends VdmTemplateAssistProcessor {
 
 //	private VdmEditor editor;
 

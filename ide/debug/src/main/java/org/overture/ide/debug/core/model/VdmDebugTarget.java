@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -20,6 +21,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.IBreakpointManagerListener;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IDebugTarget;
@@ -40,7 +42,7 @@ import org.overture.ide.ui.internal.util.ConsoleWriter;
 import org.overturetool.vdmj.runtime.DebuggerException;
 
 public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
-		IVdmExecution
+		IVdmExecution, IBreakpointManagerListener
 {
 	private IProcess fProcess;
 	private List<VdmThread> fThreads;
@@ -78,7 +80,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 
 		DebugPlugin.getDefault().addDebugEventListener(new VdmDebugEventListener(this));
 		DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(this);
-		
+		DebugPlugin.getDefault().getBreakpointManager().addBreakpointManagerListener(this);
 		
 
 		
@@ -207,7 +209,19 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 
 	public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta)
 	{
-		System.out.println("Breakpoint changed");
+		
+		if(!DebugPlugin.getDefault().getBreakpointManager().isEnabled())
+			return;
+		
+		
+		
+		try {
+			System.out.println("Breakpoint changed" + breakpoint.toString() +  breakpoint.isEnabled());
+		} catch (CoreException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		if (supportsBreakpoint(breakpoint))
 		{
 			try
@@ -227,7 +241,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 
 	public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta)
 	{
-		if (!isTerminated())
+		if (isSuspended())
 		{
 			if (breakpoint instanceof VdmLineBreakpoint)
 			{
@@ -295,7 +309,9 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 	 */
 	private void installDeferredBreakpoints()
 	{
-		// installPreviousBreakpointMarkers();
+		if(!DebugPlugin.getDefault().getBreakpointManager().isEnabled())
+			return;
+				
 		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(IDebugConstants.ID_VDM_DEBUG_MODEL);
 		for (int i = 0; i < breakpoints.length; i++)
 		{
@@ -561,6 +577,30 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 		fireChangeEvent(DebugEvent.CONTENT);// update all thread names
 	}
 
+	public void breakpointManagerEnablementChanged(boolean enabled) {
+		
+		if (!isSuspended()) {
+			return;
+		}
+		Iterator<VdmBreakpoint> breakpoints= ((ArrayList<VdmBreakpoint>)((ArrayList<IBreakpoint>)getBreakpoints()).clone()).iterator();
+		while (breakpoints.hasNext()) {
+			VdmBreakpoint breakpoint=  breakpoints.next();
+			try {
+				if (enabled) {
+					breakpointAdded(breakpoint);
+				} else if (breakpoint.shouldSkipBreakpoint()) {
+					breakpointRemoved(breakpoint, null);
+				}
+			} catch (CoreException e) {
+				//logError(e);
+			}
+		}
+		
+		
+	
+	}
+
+	
 	public void setOutputFolder(File outputFolder)
 	{
 		this.outputFolder = outputFolder;

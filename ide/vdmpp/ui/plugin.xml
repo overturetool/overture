@@ -124,33 +124,44 @@
             targetID="org.overture.ide.vdmpp.ui.VdmPpEditor"
             id="org.overture.ide.debug.VdmEditor.BreakpointRulerActions">
          <action
-               label="%AddBreakpoint.label"
-               class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
                actionID="RulerDoubleClick"
-               id="org.overture.ide.debug.ui.actions.ManageBreakpointRulerAction">
+               class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
+               id="org.overture.ide.debug.ui.actions.ManageBreakpointRulerAction"
+               label="%AddBreakpoint.label"
+               style="toggle">
+         </action>
+         <action
+               class="org.overture.ide.vdmpp.ui.EditorActionDelegate1"
+               id="org.overture.ide.vdmpp.ui.action1"
+               label="label"
+               style="push">
          </action>
       </editorContribution>
 	</extension>
- 	
- 	 <!-- templates 
- 	<extension point="org.eclipse.ui.preferencePages">
+
+<!-- Templates -->
+  <extension point="org.eclipse.ui.preferencePages">
          <page
-              class="org.overture.ide.vdmpp.ui.preferences.VdmPpCodeTemplatesPreferencePage"
+              class="org.overture.ide.vdmpp.ui.editor.contentAssist.VdmPpCodeTemplatesPreferencePage"
               id="org.overture.ide.vdmpp.ui.VdmPpCodeTemplatesPreferencePage"
               name="Templates VDM++"
-              category="org.overture.ide.ui.OvertureGlobalPreferencesPage"
               />
 	</extension>
  	<extension point="org.eclipse.ui.editors.templates">
        <contextType
-          class="org.overture.ide.ui.templates.VdmUniversalTemplateContextType"
-          id="org.overture.ide.ui.preference.contextType.vdm"
-          name="VDM++ Template content">
+          class="org.overture.ide.vdmpp.ui.editor.contentAssist.VdmPpTemplateContextType"
+          id="org.overture.ide.vdmpp.ui.contextType"
+          name="VDM Template content">
        </contextType>
       <include
           file="templates/templates.xml">
        </include>
     </extension>
--->
+  <extension
+        point="org.overture.ide.ui.templateContextType">
+     <ContextId
+           Id="org.overture.ide.vdmpp.ui.contextType">
+     </ContextId>
+  </extension>
 
 </plugin>

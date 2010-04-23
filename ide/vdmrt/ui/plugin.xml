@@ -161,5 +161,22 @@
          </action>
       </editorContribution>
 	</extension>
+  <extension
+        point="org.overture.ide.ui.templateContextType">
+     <ContextId
+           Id="org.overture.ide.vdmrt.ui.contextType">
+     </ContextId>
+  </extension>
+  <extension
+        point="org.eclipse.ui.editors.templates">
+     <contextType
+           class="VdmRtTemplateContextType"
+           id="org.overture.ide.vdmrt.ui.contextType"
+           name="Vdm-Rt Context Type">
+     </contextType>
+     <include
+           file="templates/templates.xml">
+     </include>
+  </extension>
 
 </plugin>

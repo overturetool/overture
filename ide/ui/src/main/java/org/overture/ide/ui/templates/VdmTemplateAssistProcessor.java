@@ -17,10 +17,9 @@ import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.jface.text.templates.TemplateException;
 import org.eclipse.swt.graphics.Image;
 import org.overture.ide.ui.VdmPluginImages;
-import org.overture.ide.ui.VdmUIPlugin;
 
 
-public class VdmTemplateAssistProcessor extends TemplateCompletionProcessor {
+public abstract class VdmTemplateAssistProcessor extends TemplateCompletionProcessor {
 
 	@Override
 	protected String extractPrefix(ITextViewer viewer, int offset) {
@@ -54,9 +53,12 @@ public class VdmTemplateAssistProcessor extends TemplateCompletionProcessor {
 	protected TemplateContextType getContextType(ITextViewer viewer,
 			IRegion region) {
 		VdmTemplateManager manager = VdmTemplateManager.getInstance();
-		return manager.getContextTypeRegistry().getContextType(
-				VdmUniversalTemplateContextType.CONTEXT_TYPE);
+		
+		return manager.getContextTypeRegistry().getContextType(getTempleteContextType());
+//				VdmUniversalTemplateContextType.CONTEXT_TYPE);
 	}
+
+	abstract protected String getTempleteContextType();
 
 	protected Image getImage(Template template) {
 		return VdmPluginImages.get(VdmPluginImages.IMG_OBJS_TEMPLATE);

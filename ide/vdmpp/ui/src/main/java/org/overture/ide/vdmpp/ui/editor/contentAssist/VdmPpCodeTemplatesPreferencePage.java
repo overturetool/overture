@@ -1,4 +1,4 @@
-package org.overture.ide.ui.templates;
+package org.overture.ide.vdmpp.ui.editor.contentAssist;
 
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.texteditor.templates.TemplatePreferencePage;

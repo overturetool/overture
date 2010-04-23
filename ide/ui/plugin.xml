@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="org.overture.ide.ui.templateContextType" name="Template Context Type" schema="schema/org.overture.ide.ui.templateContextType.exsd"/>
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
@@ -72,7 +73,7 @@
              class="org.eclipse.ui.navigator.resources.ResourceDragAdapterAssistant"
              viewerId="org.eclipse.ui.navigator.ProjectExplorer"/>
        
-     
+     <!-- Menu 
       <viewer
             viewerId="org.overture.ide.ui.VdmExplorer">
          <popupMenu
@@ -104,17 +105,8 @@
          </popupMenu>
            
       </viewer>
-      <viewerActionBinding
-            viewerId="org.overture.ide.ui.VdmExplorer">
-         <includes>
-            <actionExtension
-                  pattern="org.overture.ide.ui.VdmNewAction">
-            </actionExtension>
-            <actionExtension
-                  pattern="org.overture.ide.ui.VdmRefreshAction">
-            </actionExtension>
-         </includes>
-      </viewerActionBinding>
+      -->
+      
    </extension>
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">
@@ -389,24 +381,7 @@
       </wizard>
    </extension>
   
-  <!-- Templates -->
-  <extension point="org.eclipse.ui.preferencePages">
-         <page
-              class="org.overture.ide.ui.templates.VdmPpCodeTemplatesPreferencePage"
-              id="org.overture.ide.vdmpp.ui.VdmPpCodeTemplatesPreferencePage"
-              name="Templates VDM++"
-              />
-	</extension>
- 	<extension point="org.eclipse.ui.editors.templates">
-       <contextType
-          class="org.overture.ide.ui.templates.VdmUniversalTemplateContextType"
-          id="org.overture.ide.ui.contextType.vdm"
-          name="VDM Template content">
-       </contextType>
-      <include
-          file="templates/templates.xml">
-       </include>
-    </extension>
+  
   <extension
         point="org.eclipse.ui.bindings">
      <key
