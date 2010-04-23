@@ -59,7 +59,7 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 						if (fOutlineViewer != null)
 						{
 							fOutlineViewer.refresh(true);
-							fOutlineViewer.setAutoExpandLevel(2);
+							fOutlineViewer.expandToLevel(AUTO_EXPAND_LEVEL);
 						}
 						// return;
 						// }
@@ -164,6 +164,8 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 
 	private boolean inExternalSelectionMode = false;
 
+	private final int AUTO_EXPAND_LEVEL = 2;
+
 	public VdmContentOutlinePage(VdmEditor vdmEditor) {
 		this.vdmEditor = vdmEditor;
 	}
@@ -173,6 +175,7 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 	{
 
 		fOutlineViewer = new VdmOutlineViewer(parent);
+		fOutlineViewer.setAutoExpandLevel(AUTO_EXPAND_LEVEL);
 		fOutlineViewer.setContentProvider(new VdmOutlineTreeContentProvider());
 		// fOutlineViewer.setLabelProvider(new VdmOutlineLabelProvider());
 		fOutlineViewer.setLabelProvider(new DecorationgVdmLabelProvider(new VdmUILabelProvider()));
@@ -299,7 +302,7 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		if (fOutlineViewer != null)
 		{
 			fOutlineViewer.setInput(fInput);
-			fOutlineViewer.expandAll();
+			fOutlineViewer.expandToLevel(AUTO_EXPAND_LEVEL);
 
 		}
 		if (fListener != null)

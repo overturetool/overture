@@ -50,8 +50,7 @@
    </plugins>
 
    <features>
-      <feature id="org.overture.ide.features.core" version="1.0.0.qualifier"/>
-      <feature id="org.eclipse.platform" version="3.5.2.R35x_v20100210-0800-9hEiFzmFst-TiEn9hNYgDWg1XN8ulH_JvCNGB"/>
+      <feature id="org.overture.ide.features.rcp" version="1.0.0.qualifier"/>
    </features>
 
 

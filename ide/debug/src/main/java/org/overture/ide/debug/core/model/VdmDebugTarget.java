@@ -1,7 +1,14 @@
 package org.overture.ide.debug.core.model;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,6 +16,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
@@ -24,6 +32,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.core.resources.IVdmSourceUnit;
+import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.model.VdmDebugState.DebugState;
 import org.overture.ide.ui.internal.util.ConsoleWriter;
@@ -44,6 +54,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 	private VdmDebugState state = new VdmDebugState();
 
 	private List<IBreakpoint> fBreakpoints = new ArrayList<IBreakpoint>();
+	private File outputFolder;
 
 	public VdmDebugTarget(ILaunch launch) throws DebugException
 	{
@@ -113,8 +124,8 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 
 	public boolean isTerminated()
 	{
-		//check process since no event handler is available on the process to check
-		if(fProcess.isTerminated())
+		// check process since no event handler is available on the process to check
+		if (fProcess.isTerminated())
 		{
 			state.setState(DebugState.Terminated);
 		}
@@ -299,8 +310,27 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 
 			fThread = vdmThread; // TODO: assuming main thread is number 1;
 			installDeferredBreakpoints();
+			handlePreLaunchCommands();
 		}
 		fThreads.add(vdmThread);
+	}
+
+	private void handlePreLaunchCommands()
+	{
+		// try
+		// {
+		// File logDir = new File(new File(outputFolder, "logs"), fLaunch.getLaunchConfiguration().getName());
+		// logDir.mkdirs();
+		// DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+		// Date date = new Date();
+		// String logFilename = dateFormat.format(date) + ".logrt";
+		// File f = new File(logDir, logFilename);
+		// fThread.getProxy().xcmd_overture_log(f.toURI().toASCIIString());
+		// } catch (IOException e)
+		// {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 	}
 
 	public void printMessage(boolean outgoing, String message)
@@ -419,6 +449,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 
 	public void doTerminate(Object source) throws DebugException
 	{
+		handlePostLaunchCommands();
 		try
 		{
 			if (fThread != null && fThread.getProxy() != null)
@@ -435,6 +466,62 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 		state.setState(DebugState.Terminated);
 		console.flush();
 		console.Show();
+	}
+
+	private boolean isCoverageEnabled() throws CoreException
+	{
+		return fLaunch.getLaunchConfiguration().getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE, false);
+	}
+
+	private void handlePostLaunchCommands()
+	{
+		try
+		{
+			if (isCoverageEnabled())
+			{
+				DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+				File coverageDir = new File(new File(outputFolder, "coverage"), dateFormat.format(new Date()));
+				fThread.getProxy().xcmd_overture_writecoverage(coverageDir);
+
+				for (IVdmSourceUnit source : project.getSpecFiles())
+				{
+					String name = source.getSystemFile().getName();
+					
+					writeFile(coverageDir,   name+"cov", getContent(source));
+				}
+			}
+			project.refreshLocal(IResource.DEPTH_INFINITE, null);
+		} catch (Exception e)
+		{
+			if (Activator.DEBUG)
+			{
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	private String getContent(IVdmSourceUnit source)
+			throws CoreException, IOException
+	{
+		InputStreamReader reader = new InputStreamReader(source.getFile().getContents());
+		StringBuilder sb = new StringBuilder();
+
+		int inLine;
+		while ((inLine = reader.read()) != -1)
+		{
+			sb.append((char) inLine);
+		}
+		return sb.toString();
+	}
+
+	public static void writeFile(File outputFolder, String fileName,
+			String content) throws IOException
+	{
+		FileWriter outputFileReader = new FileWriter(new File(outputFolder, fileName));
+		BufferedWriter outputStream = new BufferedWriter(outputFileReader);
+		outputStream.write(content);
+		outputStream.close();
 	}
 
 	/**
@@ -461,7 +548,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 		}
 	}
 
-	public void markDeadlocked(Object source)throws DebugException
+	public void markDeadlocked(Object source) throws DebugException
 	{
 		for (VdmThread t : fThreads)
 		{
@@ -471,7 +558,13 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 			}
 		}
 		state.setState(DebugState.Deadlocked);
-		fireChangeEvent(DebugEvent.CONTENT);//update all thread names
+		fireChangeEvent(DebugEvent.CONTENT);// update all thread names
+	}
+
+	public void setOutputFolder(File outputFolder)
+	{
+		this.outputFolder = outputFolder;
+
 	}
 
 }

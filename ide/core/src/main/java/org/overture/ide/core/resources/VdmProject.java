@@ -738,6 +738,11 @@ public class VdmProject extends Project implements IVdmProject
 		return null;
 	}
 
+	public List<String> getContentTypeIds()
+	{
+		return language.getContentTypes();
+	}
+
 	// @Override
 	// public boolean equals(Object obj)
 	// {

@@ -2,9 +2,12 @@ package org.overture.ide.core.builder;
 
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -13,28 +16,60 @@ import org.overture.ide.core.resources.VdmProject;
 
 public abstract class VdmCoreBuilder extends IncrementalProjectBuilder
 {
+	private class DeltaFileVisitor implements IResourceDeltaVisitor
+	{
+		private boolean sourceFound = false;
+
+		public boolean isSourceFound()
+		{
+			return sourceFound;
+		}
+
+		public boolean visit(IResourceDelta delta) throws CoreException
+		{
+			IResource resource = delta.getResource();
+			if (resource instanceof IFile)
+			{
+
+				if (getVdmProject().getContentTypeIds().contains(((IFile) resource).getContentDescription().getContentType().getId()))
+				{
+					sourceFound = true;
+					return false;// do not visit children
+				}
+			}
+			return true;
+		}
+
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
-	protected final IProject[] build(int kind, Map args, IProgressMonitor monitor)
-			throws CoreException
+	protected final IProject[] build(int kind, Map args,
+			IProgressMonitor monitor) throws CoreException
 	{
 		if (!validateProject())
 		{
 			// Project who invoked the builder is not supported
 			return new IProject[0];
 		}
-		initialize();
+	
 
 		if (kind == IncrementalProjectBuilder.FULL_BUILD)
-		{
+		{	initialize();
 			clean(monitor);
 			build(monitor);
 		} else
 		{
-			// IResourceDelta delta = getDelta(getProject());
+			IResourceDelta delta = getDelta(getProject());
 			// if (delta == null)
+			DeltaFileVisitor visitor = new DeltaFileVisitor();
+			delta.accept(visitor, IResourceDelta.ADDED | IResourceDelta.CHANGED);
 			// {
-			build(monitor);
+			if (visitor.isSourceFound())
+			{
+				initialize();
+				build(monitor);
+			}
 			// } else
 			// {
 			// incrementalBuild(delta, monitor);
@@ -119,7 +154,7 @@ public abstract class VdmCoreBuilder extends IncrementalProjectBuilder
 	{
 		return VdmProject.isVdmProject(getProject());
 	}
-	
+
 	/***
 	 * This method should be used instead of the getProject
 	 */
@@ -127,6 +162,5 @@ public abstract class VdmCoreBuilder extends IncrementalProjectBuilder
 	{
 		return VdmProject.createProject(getProject());
 	}
-	
-	
+
 }

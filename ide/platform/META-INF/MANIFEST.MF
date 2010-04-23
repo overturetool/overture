@@ -7,7 +7,10 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.ui.intro,
- org.eclipse.ui.ide.application;bundle-version="1.0.101"
+ org.eclipse.ui.ide.application;bundle-version="1.0.101",
+ org.eclipse.ui.views.log;bundle-version="1.0.100"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %providerName
+Bundle-Activator: org.overture.ide.platform.Activator
+Bundle-ActivationPolicy: lazy
 

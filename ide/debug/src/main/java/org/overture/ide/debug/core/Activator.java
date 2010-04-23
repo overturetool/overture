@@ -1,7 +1,6 @@
 package org.overture.ide.debug.core;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.swt.widgets.Shell;

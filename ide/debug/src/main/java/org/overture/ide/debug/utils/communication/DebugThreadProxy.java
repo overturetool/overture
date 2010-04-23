@@ -2,6 +2,7 @@ package org.overture.ide.debug.utils.communication;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
@@ -117,7 +118,9 @@ public class DebugThreadProxy extends AsyncCaller
 	@Override
 	protected void write(String request)
 	{
-		callback.firePrintMessage(true, adjustLength("Request ("+threadId+"):  ") + request);
+		callback.firePrintMessage(true, adjustLength("Request (" + threadId
+				+ "):  ")
+				+ request);
 
 		try
 		{
@@ -259,21 +262,53 @@ public class DebugThreadProxy extends AsyncCaller
 
 			if (tagnode.tag.equals("init"))
 			{
-				callback.firePrintMessage(false, adjustLength("Res Init("+threadId+"):") + tagnode);
+				callback.firePrintMessage(false, adjustLength("Res Init("
+						+ threadId + "):")
+						+ tagnode);
 				processInit(tagnode);
 			} else if (tagnode.tag.equals("response"))
 			{
-				callback.firePrintMessage(false,adjustLength( "Response("+threadId+"): ") + tagnode);
+				callback.firePrintMessage(false, adjustLength("Response("
+						+ threadId + "): ")
+						+ tagnode);
 				processResponse(tagnode);
 			} else if (tagnode.tag.equals("stream"))
 			{
 
 				processStream(tagnode);
+			} else if (tagnode.tag.equals("xcmd_overture_response"))
+			{
+				callback.firePrintMessage(false, adjustLength("Res xCmd("
+						+ threadId + "): ")
+						+ tagnode);
+				processXcmdOverture(tagnode);
+			} else
+			{
+				callback.firePrintMessage(false, adjustLength("UNKNOWN"
+						+ threadId + "): ")
+						+ tagnode);
 			}
 		} catch (Exception e)
 		{
 			throw new IOException("Unexpected XML response: " + node);
 		}
+	}
+
+	private void processXcmdOverture(XMLTagNode msg)
+	{
+		String transaction_id = msg.getAttr("transaction_id");
+		Integer transactionId = Integer.parseInt(transaction_id);
+		// String command = msg.getAttr("command");
+		String overtureCmd = msg.getAttr("overtureCmd");
+
+		if (overtureCmd.equals("writecoverage"))
+		{
+			setResult(transactionId, true);
+		} else if (overtureCmd.equals("log"))
+		{
+			setResult(transactionId, true);
+		}
+
 	}
 
 	private void processStream(XMLTagNode msg)
@@ -286,14 +321,16 @@ public class DebugThreadProxy extends AsyncCaller
 		try
 		{
 			text = new String(Base64.decode(data.cdata));
-			callback.firePrintMessage(false,adjustLength( stream + "("+threadId+")  :") + text);
+			callback.firePrintMessage(false, adjustLength(stream + "("
+					+ threadId + ")  :")
+					+ text);
 			if (stream.equals("stdout"))
 			{
 				callback.firePrintOut(text);
 			} else if (stream.equals("stderr"))
 			{
 				callback.firePrintErr(text);
-				if(text.replaceAll("\n", "").replaceAll("\t", "").trim().equalsIgnoreCase("DEADLOCK detected"))
+				if (text.replaceAll("\n", "").replaceAll("\t", "").trim().equalsIgnoreCase("DEADLOCK detected"))
 				{
 					callback.deadlockDetected();
 				}
@@ -346,35 +383,34 @@ public class DebugThreadProxy extends AsyncCaller
 			if (newstatus.equals("break"))
 			{
 				callback.suspended(IDebugThreadProxyCallback.STEP_OVER);
-			}else if (newstatus.equals("stopped"))
+			} else if (newstatus.equals("stopped"))
 			{
 				callback.fireStopped();// terminated();
 
 			}
-		}else if (command.equals("step_into"))
+		} else if (command.equals("step_into"))
 		{
 			String newstatus = msg.getAttr("status");
 			if (newstatus.equals("break"))
 			{
 				callback.suspended(IDebugThreadProxyCallback.STEP_INTO);
-			}else if (newstatus.equals("stopped"))
+			} else if (newstatus.equals("stopped"))
 			{
 				callback.fireStopped();// terminated();
 
 			}
-		}else if (command.equals("step_out"))
+		} else if (command.equals("step_out"))
 		{
 			String newstatus = msg.getAttr("status");
 			if (newstatus.equals("break"))
 			{
 				callback.suspended(IDebugThreadProxyCallback.STEP_RETURN);
-			}else if (newstatus.equals("stopped"))
+			} else if (newstatus.equals("stopped"))
 			{
 				callback.fireStopped();// terminated();
 
 			}
-		}
-		else if (command.equals("context_get")
+		} else if (command.equals("context_get")
 				|| command.equals("property_get"))
 		{
 			XMLOpenTagNode node = (XMLOpenTagNode) msg;
@@ -398,7 +434,9 @@ public class DebugThreadProxy extends AsyncCaller
 
 	public void processInit(XMLTagNode tagnode) throws IOException
 	{
-		callback.firePrintMessage(false,adjustLength( "P init("+threadId+")  :") + tagnode.toString());
+		callback.firePrintMessage(false, adjustLength("P init(" + threadId
+				+ ")  :")
+				+ tagnode.toString());
 
 		sessionId = tagnode.getAttr("idekey");
 
@@ -661,6 +699,49 @@ public class DebugThreadProxy extends AsyncCaller
 				+ ((VdmLineBreakpoint) breakpoint).getId());
 	}
 
+	private String xcmd_overture_cmd(String cmd, Integer ticket, String arg)
+			throws IOException
+	{
+		if (arg == null)
+		{
+			return ("xcmd_overture_cmd -i " + ticket + " -c " + cmd);
+		} else
+		{
+			return ("xcmd_overture_cmd -i " + ticket + " -c " + cmd + " -- " + Base64.encode(arg.getBytes()));
+		}
+	}
+
+	public void xcmd_overture_coverage(File file) throws IOException
+	{
+		write(xcmd_overture_cmd("coverage", getNextTicket(), file.toURI().toString()));
+	}
+
+	public void xcmd_overture_writecoverage(File file) throws IOException
+	{
+		Integer ticket = getNextTicket();
+		String command = "writecoverage";
+
+		request(ticket, xcmd_overture_cmd(command, ticket, file.toURI().toString()));
+	}
+
+	/**
+	 * @param file
+	 *            valid parameters is
+	 *            <ul>
+	 *            <li>null: Logging to console and flush
+	 *            <li>off: Turn logging off
+	 *            <li>uri: A uri to a file where the logging should occur during execution
+	 *            </ul>
+	 * @throws IOException
+	 */
+	public void xcmd_overture_log(String file) throws IOException
+	{
+		Integer ticket = getNextTicket();
+		String command = "log";
+
+		request(ticket, xcmd_overture_cmd(command, ticket, file));
+	}
+
 	public void shutdown() throws IOException
 	{
 		if (!fSocket.isClosed())
@@ -741,11 +822,11 @@ public class DebugThreadProxy extends AsyncCaller
 	// {
 	// write("eval -i " + (++xid) + " -- " + Base64.encode(expression));
 	// }
-	
+
 	private static String adjustLength(String message)
 	{
-		while(message.length()<14)
-			message+=" ";
+		while (message.length() < 14)
+			message += " ";
 		return message;
 	}
 

@@ -44,6 +44,8 @@ public interface IVdmProject extends IProject
 	
 	public abstract String getLanguageVersionName() throws CoreException;
 	
+	public abstract List<String> getContentTypeIds();
+	
 	public abstract Dialect getDialect();
 	
 	public abstract boolean hasDynamictypechecks();

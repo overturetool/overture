@@ -403,9 +403,11 @@ public abstract class VdmEditor extends TextEditor
 			// IVdmSourceUnit sourceUnit = model.getVdmSourceUnit(vdmDoc.getFile());
 			IVdmSourceUnit sourceUnit = vdmDoc.getSourceUnit();
 			if (sourceUnit != null)
+			{
 				return sourceUnit;// return rootNode.filter(vdmDoc.getFile());
-			else
-				System.err.println("No root parsed for: " + sourceUnit);
+			}
+//			else
+//				System.err.println("No root parsed for: " + sourceUnit);
 
 		}
 

@@ -4,12 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
@@ -109,17 +105,19 @@ public class VdmLaunchConfigurationDelegate implements
 			commandList.add(Base64.encode("A".getBytes()).toString());
 		}
 
-		if (isCoverageEnabled(configuration))
-		{
-			commandList.add("-coverage");
-			commandList.add(getCoverageDir(project));
-		}
+//		if (isCoverageEnabled(configuration))
+//		{
+//			commandList.add("-coverage");
+//			commandList.add(getCoverageDir(project));
+//		}
 
 		if (isRemoteControllerEnabled(configuration))
 		{
 			commandList.add("-remote");
 			commandList.add(getRemoteControllerName(configuration));
 		}
+		
+		commandList.addAll(getExtendedCommands(project, configuration));
 
 		commandList.addAll(getSpecFiles(project));
 		if (useRemoteDebug(configuration))
@@ -141,19 +139,25 @@ public class VdmLaunchConfigurationDelegate implements
 			IProcess p = launchExternalProcess(launch, commandList, project);
 			target.setProcess(p);
 			target.setProject(project);
+			target.setOutputFolder(getOutputFolder(project));
 			launch.addDebugTarget(target);
-
-			String perspective = DebugUITools.getLaunchPerspective(configuration.getType(), mode);
-			if(perspective != null)
-				System.out.println("Perspective to open:" + perspective);
-			else
-				System.out.println("No perspective switch set");
-			
 			
 		}
 		
 		
 		
+	}
+
+	/**
+	 * Intended to be used when sub classing the delegate to add additional parameters to the launch of VDMJ
+	 * @param project the project launched
+	 * @param configuration the launch configuration
+	 * @return a list of parameters to be added to the command line just before the files
+	 */
+	protected Collection<? extends String> getExtendedCommands(
+			IVdmProject project, ILaunchConfiguration configuration)
+	{
+		return new Vector<String>();
 	}
 
 	private String getRemoteControllerName(ILaunchConfiguration configuration)
@@ -163,24 +167,24 @@ public class VdmLaunchConfigurationDelegate implements
 				"");
 	}
 
-	private String getCoverageDir(IVdmProject project)
-	{
-		DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-		File coverageDir = new File(new File(getOutputFolder(project),
-				"coverage"), dateFormat.format(new Date()));
-		coverageDir.mkdir();
-		String uri= coverageDir.toURI().toASCIIString();
-		uri = uri.substring(uri.lastIndexOf("file:"));
-		try
-		{
-			new File(new URI(uri)).mkdirs();
-		} catch (URISyntaxException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return uri;
-	}
+//	private String getCoverageDir(IVdmProject project)
+//	{
+//		DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+//		File coverageDir = new File(new File(getOutputFolder(project),
+//				"coverage"), dateFormat.format(new Date()));
+//		coverageDir.mkdir();
+//		String uri= coverageDir.toURI().toASCIIString();
+//		uri = uri.substring(uri.lastIndexOf("file:"));
+//		try
+//		{
+//			new File(new URI(uri)).mkdirs();
+//		} catch (URISyntaxException e)
+//		{
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return uri;
+//	}
 
 	private String getArgumentString(List<String> args)
 	{
@@ -208,19 +212,17 @@ public class VdmLaunchConfigurationDelegate implements
 				.length() > 0;
 	}
 
-	private boolean isCoverageEnabled(ILaunchConfiguration configuration)
-			throws CoreException
-	{
-		return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE,
-				false);
-	}
+//	private boolean isCoverageEnabled(ILaunchConfiguration configuration)
+//			throws CoreException
+//	{
+//		return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE,
+//				false);
+//	}
 
 	protected File getOutputFolder(IVdmProject project)
 	{
 		File outputDir = new File(project.getLocation()
-				.toFile()
-				.toURI()
-				.toASCIIString(), "generated");
+				.toFile(), "generated");
 		outputDir.mkdirs();
 		return outputDir;
 	}

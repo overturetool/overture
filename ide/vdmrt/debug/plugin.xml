@@ -16,7 +16,7 @@
 	<!-- Declare launch configuration type -->
 	<extension point="org.eclipse.debug.core.launchConfigurationTypes">
 		<launchConfigurationType
-			delegate="org.overture.ide.debug.core.launching.VdmLaunchConfigurationDelegate"
+			delegate="org.overture.ide.vdmrt.debug.launching.VdmRtLaunchConfigurationDelegate"
 			id="org.overture.ide.vdmrt.debug.launchConfigurationType" 
 			modes="debug"
 			name="VDM RT Model" 

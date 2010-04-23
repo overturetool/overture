@@ -52,7 +52,7 @@ public class VdmReconcilingStrategy implements IReconcilingStrategy
 		try
 		{
 
-			if (VdmProject.isVdmProject(currentDocument.getProject()))
+			if (currentDocument.getSourceUnit()!=null && VdmProject.isVdmProject(currentDocument.getProject()))
 			{
 
 				if (VdmProject.isVdmProject(currentDocument.getProject()))

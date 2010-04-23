@@ -36,6 +36,7 @@
       <import plugin="org.eclipse.ui.navigator.resources"/>
       <import plugin="org.eclipse.ui.views.log" version="1.0.100" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ltk.ui.refactoring" version="3.4.100" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.ide.application"/>
    </requires>
 
    <plugin

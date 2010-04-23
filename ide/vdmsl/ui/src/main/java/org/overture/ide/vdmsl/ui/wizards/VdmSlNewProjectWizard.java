@@ -1,7 +1,7 @@
 package org.overture.ide.vdmsl.ui.wizards;
 
 import org.overture.ide.ui.wizard.VdmNewProjectWizard;
-import org.overture.ide.vdmsl.core.VdmSlProjectNature;
+import org.overture.ide.vdmsl.core.IVdmSlCoreConstants;
 
 
 
@@ -9,7 +9,7 @@ public class VdmSlNewProjectWizard extends VdmNewProjectWizard {
 
 	@Override
 	protected String getNature() {
-		return VdmSlProjectNature.VDM_SL_NATURE;
+		return IVdmSlCoreConstants.NATURE;
 	}
 
 	@Override

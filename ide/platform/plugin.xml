@@ -71,6 +71,20 @@
          </presentation>
       </config>
    </extension>
+  
+
+ <extension
+         point="org.eclipse.ui.splashHandlers">
+      <splashHandler
+            class="org.overture.ide.platform.splash.SplashHandler"
+            id="org.overture.ide.platform.splash">
+      </splashHandler>
+      <splashHandlerProductBinding
+            productId="org.overture.ide.platform.product"
+            splashId="org.overture.ide.platform.splash">
+      </splashHandlerProductBinding>
+   </extension>
+
 
  
 

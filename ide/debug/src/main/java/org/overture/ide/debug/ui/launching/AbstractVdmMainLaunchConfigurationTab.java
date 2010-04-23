@@ -486,7 +486,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		group.setLayout(layout);
 
 		checkBoxGenerateLatexCoverage = new Button(group, SWT.CHECK);
-		checkBoxGenerateLatexCoverage.setText("Generate Latex coverage");
+		checkBoxGenerateLatexCoverage.setText("Generate coverage");
 		checkBoxGenerateLatexCoverage.setSelection(false);
 		checkBoxGenerateLatexCoverage.addSelectionListener(fListener);
 
