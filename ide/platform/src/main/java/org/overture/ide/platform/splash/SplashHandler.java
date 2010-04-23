@@ -17,7 +17,7 @@ public class SplashHandler extends BasicSplashHandler
 		super.init(splash);
 
 		int foregroundColorInteger;
-		String foregroundColorString = null;
+		//String foregroundColorString = null;
 
 //		try
 //		{
@@ -38,7 +38,7 @@ public class SplashHandler extends BasicSplashHandler
 		final Point buildIdPoint = new Point(350, 200);
 		final String bundleVersion = "v"
 				+ Activator.getDefault().getBundle().getHeaders().get("Bundle-Version");
-		System.out.println(bundleVersion);
+
 		getContent().addPaintListener(new PaintListener()
 		{
 			public void paintControl(PaintEvent e)
