@@ -17,7 +17,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
@@ -28,16 +27,13 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IMemoryBlock;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IThread;
-import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.swt.SWT;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.WorkbenchException;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.model.VdmDebugState.DebugState;
+import org.overture.ide.debug.utils.communication.DebugThreadProxy.DebugProxyState;
 import org.overture.ide.ui.internal.util.ConsoleWriter;
 import org.overturetool.vdmj.runtime.DebuggerException;
 
@@ -81,10 +77,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 		DebugPlugin.getDefault().addDebugEventListener(new VdmDebugEventListener(this));
 		DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(this);
 		DebugPlugin.getDefault().getBreakpointManager().addBreakpointManagerListener(this);
-		
 
-		
-		
 		fireCreationEvent();
 
 		state.setState(DebugState.Resumed);
@@ -209,19 +202,20 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 
 	public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta)
 	{
-		
-		if(!DebugPlugin.getDefault().getBreakpointManager().isEnabled())
+
+		if (!DebugPlugin.getDefault().getBreakpointManager().isEnabled())
 			return;
-		
-		
-		
-		try {
-			System.out.println("Breakpoint changed" + breakpoint.toString() +  breakpoint.isEnabled());
-		} catch (CoreException e1) {
+
+		try
+		{
+			System.out.println("Breakpoint changed" + breakpoint.toString()
+					+ breakpoint.isEnabled());
+		} catch (CoreException e1)
+		{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		if (supportsBreakpoint(breakpoint))
 		{
 			try
@@ -309,9 +303,9 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 	 */
 	private void installDeferredBreakpoints()
 	{
-		if(!DebugPlugin.getDefault().getBreakpointManager().isEnabled())
+		if (!DebugPlugin.getDefault().getBreakpointManager().isEnabled())
 			return;
-				
+
 		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(IDebugConstants.ID_VDM_DEBUG_MODEL);
 		for (int i = 0; i < breakpoints.length; i++)
 		{
@@ -359,6 +353,21 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 			} else
 			{
 				loggingConsole.ConsolePrint(message, SWT.COLOR_DARK_YELLOW);
+			}
+			loggingConsole.Show();
+		}
+	}
+
+	public void printErrorMessage(boolean outgoing, String message)
+	{
+		if (logging)
+		{
+			if (outgoing)
+			{
+				loggingConsole.ConsolePrint(message, SWT.COLOR_RED);
+			} else
+			{
+				loggingConsole.ConsolePrint(message, SWT.COLOR_DARK_RED);
 			}
 			loggingConsole.Show();
 		}
@@ -461,23 +470,30 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 			}
 		}
 		state.setState(DebugState.Suspended);
+		// fireChangeEvent(DebugEvent.STATE);
+
 	}
 
 	public void doTerminate(Object source) throws DebugException
 	{
-		handlePostLaunchCommands();
-		try
+		if (fThread != null
+				&& fThread.getProxy().getDebugState() == DebugProxyState.Ready)
 		{
-			if (fThread != null && fThread.getProxy() != null)
-			{
-				fThread.getProxy().allstop();
-			}
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-			throw new DebuggerException(e.getMessage());
-		}
+			handlePostLaunchCommands();
 
+			try
+			{
+				if (fThread != null && fThread.getProxy() != null
+						&& !fThread.equals(source))
+				{
+					fThread.getProxy().allstop();
+				}
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+				throw new DebuggerException(e.getMessage());
+			}
+		}
 		fProcess.terminate();
 		state.setState(DebugState.Terminated);
 		console.flush();
@@ -502,8 +518,8 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 				for (IVdmSourceUnit source : project.getSpecFiles())
 				{
 					String name = source.getSystemFile().getName();
-					
-					writeFile(coverageDir,   name+"cov", getContent(source));
+
+					writeFile(coverageDir, name + "cov", getContent(source));
 				}
 			}
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -517,8 +533,8 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 
 	}
 
-	private String getContent(IVdmSourceUnit source)
-			throws CoreException, IOException
+	private String getContent(IVdmSourceUnit source) throws CoreException,
+			IOException
 	{
 		InputStreamReader reader = new InputStreamReader(source.getFile().getContents());
 		StringBuilder sb = new StringBuilder();
@@ -557,11 +573,17 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 			}
 		}
 
-		if (allTerminated)
+		if (allTerminated || source instanceof VdmThread
+				&& ((VdmThread) source).getId() == 1)// or main thread
 		{
 			doTerminate(this);
 			fireChangeEvent(DebugEvent.CONTENT);
 		}
+	}
+
+	public void doPreSuspendRequest(Object source) throws DebugException
+	{
+		// not used
 	}
 
 	public void markDeadlocked(Object source) throws DebugException
@@ -577,33 +599,43 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 		fireChangeEvent(DebugEvent.CONTENT);// update all thread names
 	}
 
-	public void breakpointManagerEnablementChanged(boolean enabled) {
-		
-		if (!isSuspended()) {
+	public void breakpointManagerEnablementChanged(boolean enabled)
+	{
+
+		if (!isSuspended())
+		{
 			return;
 		}
-		Iterator<VdmBreakpoint> breakpoints= ((ArrayList<VdmBreakpoint>)((ArrayList<IBreakpoint>)getBreakpoints()).clone()).iterator();
-		while (breakpoints.hasNext()) {
-			VdmBreakpoint breakpoint=  breakpoints.next();
-			try {
-				if (enabled) {
+		Iterator<VdmBreakpoint> breakpoints = ((ArrayList<VdmBreakpoint>) ((ArrayList<IBreakpoint>) getBreakpoints()).clone()).iterator();
+		while (breakpoints.hasNext())
+		{
+			VdmBreakpoint breakpoint = breakpoints.next();
+			try
+			{
+				if (enabled)
+				{
 					breakpointAdded(breakpoint);
-				} else if (breakpoint.shouldSkipBreakpoint()) {
+				} else if (breakpoint.shouldSkipBreakpoint())
+				{
 					breakpointRemoved(breakpoint, null);
 				}
-			} catch (CoreException e) {
-				//logError(e);
+			} catch (CoreException e)
+			{
+				// logError(e);
 			}
 		}
-		
-		
-	
+
 	}
 
-	
 	public void setOutputFolder(File outputFolder)
 	{
 		this.outputFolder = outputFolder;
+
+	}
+
+	public void removeThread(VdmThread thread)
+	{
+		this.fThreads.remove(thread);
 
 	}
 

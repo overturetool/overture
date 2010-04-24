@@ -38,6 +38,14 @@ public interface IDebugThreadProxyCallback
 	 * @param message the message send
 	 */
 	void firePrintMessage(boolean output, String message);
+	/*
+	 * Called on console output
+	 * 
+	 * @param output true on sending and false on receive
+	 * 
+	 * @param message the message send
+	 */
+	void firePrintErrorMessage(boolean output, String message);
 
 	/*
 	 * Prints stdout

@@ -30,7 +30,7 @@ public class VdmDebugState
 	 * @param newState
 	 *            the new state to change into
 	 */
-	public void setState(DebugState newState)
+	public synchronized void setState(DebugState newState)
 	{
 		if (!states.contains(newState))
 		{
@@ -54,7 +54,14 @@ public class VdmDebugState
 					break;
 				case Resumed:
 					Assert.isLegal(canChange(DebugState.Resumed), "Cannot resume in a terminated state");
+					if(states.contains(DebugState.IsStepping))
+					{
 					states.clear();
+					states.add(DebugState.IsStepping);
+					}else
+					{
+					states.clear();
+					}
 					states.add(newState);
 					break;
 				case Deadlocked:
@@ -71,7 +78,7 @@ public class VdmDebugState
 	 *            the state to check for
 	 * @return true if in the requested state else false
 	 */
-	public boolean inState(DebugState state)
+	public synchronized boolean inState(DebugState state)
 	{
 		return states.contains(state);
 	}
@@ -83,7 +90,7 @@ public class VdmDebugState
 	 *            the new state requested
 	 * @return true if allowed else false
 	 */
-	public boolean canChange(DebugState newState)
+	public synchronized boolean canChange(DebugState newState)
 	{
 		switch (newState)
 		{
@@ -92,7 +99,7 @@ public class VdmDebugState
 			case Terminated:
 				return !inState(DebugState.Terminated);
 			case Suspended:
-				return states.size()==1 && inState(DebugState.Resumed);
+				return inState(DebugState.Resumed);//states.size()==1 && 
 			case IsStepping:
 				return (!inState(DebugState.Terminated)||!inState(DebugState.Disconnected)||!inState(DebugState.Deadlocked)) && inState(DebugState.Suspended);
 			case Resumed:

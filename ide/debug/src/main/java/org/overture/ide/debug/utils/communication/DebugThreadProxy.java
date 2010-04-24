@@ -22,6 +22,7 @@ import org.overture.ide.debug.core.model.VdmSimpleValue;
 import org.overture.ide.debug.core.model.VdmStackFrame;
 import org.overture.ide.debug.core.model.VdmValue;
 import org.overture.ide.debug.core.model.VdmVariable;
+import org.overture.ide.debug.core.model.VdmDebugState.DebugState;
 import org.overture.ide.debug.utils.xml.XMLDataNode;
 import org.overture.ide.debug.utils.xml.XMLNode;
 import org.overture.ide.debug.utils.xml.XMLOpenTagNode;
@@ -32,8 +33,10 @@ import org.overturetool.vdmj.util.Base64;
 
 public class DebugThreadProxy extends AsyncCaller
 {
+
 	private class DBGPReader extends Thread
 	{
+
 		public DBGPReader()
 		{
 			setDaemon(true);
@@ -65,6 +68,11 @@ public class DebugThreadProxy extends AsyncCaller
 		}
 	}
 
+	public enum DebugProxyState
+	{
+		Ready, Ended, Terminated
+	};
+
 	private Socket fSocket;
 	private String sessionId;
 	private BufferedOutputStream output;
@@ -73,6 +81,7 @@ public class DebugThreadProxy extends AsyncCaller
 	private IDebugThreadProxyCallback callback = null;
 	private Integer threadId;
 	private Thread dbgpReaderThread;
+	private DebugProxyState debugState = DebugProxyState.Ready;
 
 	public DebugThreadProxy(Socket socket, String sessionId, Integer threadId,
 			IDebugThreadProxyCallback callback)
@@ -83,6 +92,16 @@ public class DebugThreadProxy extends AsyncCaller
 		this.threadId = threadId;
 		this.dbgpReaderThread = new DBGPReader();
 		this.connected = true;
+	}
+
+	public DebugProxyState getDebugState()
+	{
+		return debugState;
+	}
+
+	private void setDebugState(DebugProxyState state)
+	{
+		this.debugState = state;
 	}
 
 	public void terminate()
@@ -346,6 +365,12 @@ public class DebugThreadProxy extends AsyncCaller
 	private void processResponse(XMLTagNode msg)
 	{
 		String transaction_id = msg.getAttr("transaction_id");
+		if (transaction_id.trim().equalsIgnoreCase("?"))
+		{
+			callback.firePrintErrorMessage(false, adjustLength("Response("
+					+ threadId + "): ")
+					+ msg);
+		}
 		Integer transactionId = Integer.parseInt(transaction_id);
 		String command = msg.getAttr("command");
 
@@ -407,6 +432,7 @@ public class DebugThreadProxy extends AsyncCaller
 				callback.suspended(IDebugThreadProxyCallback.STEP_RETURN);
 			} else if (newstatus.equals("stopped"))
 			{
+				setDebugState(DebugProxyState.Ended);
 				callback.fireStopped();// terminated();
 
 			}
@@ -744,6 +770,7 @@ public class DebugThreadProxy extends AsyncCaller
 
 	public void shutdown() throws IOException
 	{
+		setDebugState(DebugProxyState.Terminated);
 		if (!fSocket.isClosed())
 		{
 			fSocket.close();

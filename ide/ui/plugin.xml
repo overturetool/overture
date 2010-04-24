@@ -350,6 +350,7 @@
                label="Add VDM Builder">
          </action>
       </objectContribution>
+      
    </extension>
    <extension
          point="org.eclipse.ui.editors.annotationTypes">

@@ -9,7 +9,7 @@
             extensions="*vdmppcov"
             icon="icons/cview32/cov_file_tsk.png"
             id="org.overture.ide.plugins.coverageeditor.editor.vdmpp"
-            name="VDM Coverage Editor">
+            name="VDM-PP Coverage Editor">
          <contentTypeBinding
                contentTypeId="org.overture.ide.plugins.coverageeditor.vdmppcov.content-type">
          </contentTypeBinding>
@@ -24,7 +24,7 @@
             extensions="*vdmslcov"
             icon="icons/cview32/cov_file_tsk.png"
             id="org.overture.ide.plugins.coverageeditor.editor.vdmsl"
-            name="VDM Coverage Editor">
+            name="VDM-SL Coverage Editor">
          <contentTypeBinding
                contentTypeId="org.overture.ide.plugins.coverageeditor.vdmslcov.content-type">
          </contentTypeBinding>
@@ -39,7 +39,7 @@
             extensions="*vdmrtcov"
             icon="icons/cview32/cov_file_tsk.png"
             id="org.overture.ide.plugins.coverageeditor.editor.vdmrt"
-            name="VDM Coverage Editor">
+            name="VDM-RT Coverage Editor">
          <contentTypeBinding
                contentTypeId="org.overture.ide.plugins.coverageeditor.vdmrtcov.content-type">
          </contentTypeBinding>

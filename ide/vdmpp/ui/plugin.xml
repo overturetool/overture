@@ -130,12 +130,12 @@
                label="%AddBreakpoint.label"
                style="toggle">
          </action>
-         <action
+         <!--action
                class="org.overture.ide.vdmpp.ui.EditorActionDelegate1"
                id="org.overture.ide.vdmpp.ui.action1"
                label="label"
                style="push">
-         </action>
+         </action-->
       </editorContribution>
 	</extension>
 

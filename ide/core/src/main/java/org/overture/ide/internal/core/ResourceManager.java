@@ -143,7 +143,7 @@ public class ResourceManager implements IResourceChangeListener
 			{
 				projects.put(project.getName(), project);
 				VdmModelManager.getInstance().createModel(project);
-				System.out.println("Creating project: " + project.getName());
+				//System.out.println("Creating project: " + project.getName());
 				project.getSpecFiles();
 				return project;
 			} catch (CoreException e)
@@ -176,7 +176,7 @@ public class ResourceManager implements IResourceChangeListener
 				}
 				break;
 			case IResourceChangeEvent.PRE_BUILD:
-				int f4 = 4;
+				
 				break;
 			case IResourceChangeEvent.POST_CHANGE:
 

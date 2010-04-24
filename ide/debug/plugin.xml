@@ -118,4 +118,58 @@
             label="VDM Debug log">
       </consoleFactory>
    </extension>
+   
+   <!-- Debug as context menus -->
+   <extension
+         point="org.eclipse.ui.popupMenus">
+         <objectContribution
+            objectClass="java.lang.Object"
+            id="org.eclipse.debug.ui.contextualLaunch.debug">
+        <action
+              class="org.overture.ide.debug.ui.actions.VdmDebugContextualLaunchAction"
+              enablesFor="+"
+              id="org.overture.ide.debug.ui.contextualLaunch.debug.submenu"
+              label="%DebugContextMenu.label"
+              menubarPath="additions"
+              overrideActionId="org.eclipse.debug.ui.contextualLaunch.debug.submenu"
+              style="pulldown">
+         </action>
+        <enablement>
+             <or>
+             	<and>
+             		<not>
+						<with variable="org.eclipse.core.runtime.Platform">
+							<test property="org.eclipse.core.runtime.bundleState"
+								args="org.eclipse.debug.core"
+								value="ACTIVE"/>
+						</with>
+					</not>
+					<adapt type="org.eclipse.core.resources.IResource"/>
+				</and>
+             	<and>
+					<with variable="org.eclipse.core.runtime.Platform">
+						<test property="org.eclipse.core.runtime.bundleState"
+							args="org.eclipse.debug.core"
+							value="ACTIVE"/>
+					</with>
+					<test property="org.eclipse.debug.core.launchable" value="debug"/> 
+				</and>				
+             </or>               
+        </enablement>
+       </objectContribution>
+         <viewerContribution
+               id="org.eclipse.debug.ui.viewer.contextualLaunch.debug"
+               targetID="org.overture.ide.ui.VdmExplorer">
+                <action
+                      class="org.overture.ide.debug.ui.actions.VdmDebugContextualLaunchAction"
+                      enablesFor="+"
+                      id="org.overture.ide.debug.ui.contextualLaunch.debug.submenu"
+                      label="%DebugContextMenu.label"
+                      menubarPath="additions"
+                      overrideActionId="org.eclipse.debug.ui.contextualLaunch.debug.submenu"
+                      style="pulldown">
+         </action>
+         </viewerContribution> 
+   </extension>
+   
 </plugin>

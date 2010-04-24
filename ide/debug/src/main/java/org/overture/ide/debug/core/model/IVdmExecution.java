@@ -48,6 +48,14 @@ public interface IVdmExecution
 	void doTerminate(Object source) throws DebugException;
 	
 	/**
+	 * Handle pre suspend processing
+	 * @param source the source who requested this change to occur. This can be used to check if a cycle is occurring.
+	 * @throws DebugException
+	 */
+	void doPreSuspendRequest(Object source) throws DebugException;
+	
+	
+	/**
 	 * Sets the given thread to deadlocked
 	 * @param source the source who requested this change to occur. This can be used to check if a cycle is occurring.
 	 * @throws DebugException

@@ -15,6 +15,7 @@ import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
 import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;
+import org.overture.ide.debug.core.model.VdmDebugState.DebugState;
 import org.overture.ide.debug.utils.communication.DebugThreadProxy;
 
 public class VdmStackFrame extends VdmDebugElement implements IStackFrame
@@ -26,7 +27,7 @@ public class VdmStackFrame extends VdmDebugElement implements IStackFrame
 	public int level;
 	private String name;
 	private String where;
-	private IThread thread;
+	private VdmThread thread;
 	public DebugThreadProxy proxy;
 	boolean nameIsFileUri = false;
 	private IVariable[] variables = null;
@@ -54,7 +55,7 @@ public class VdmStackFrame extends VdmDebugElement implements IStackFrame
 		return super.fTarget;
 	}
 
-	public void setThread(IThread thread, DebugThreadProxy proxy)
+	public void setThread(VdmThread thread, DebugThreadProxy proxy)
 	{
 		this.thread = thread;
 		this.proxy = proxy;
@@ -106,6 +107,10 @@ public class VdmStackFrame extends VdmDebugElement implements IStackFrame
 
 	public IVariable[] getVariables() throws DebugException
 	{
+		if(!thread.isSuspended())
+		{
+			return new IVariable[0];
+		}
 		if (variables != null)
 		{
 			return variables;
@@ -150,10 +155,14 @@ public class VdmStackFrame extends VdmDebugElement implements IStackFrame
 			this.variables = variables.toArray(new IVariable[variables.size()]);
 		} catch (SocketTimeoutException e)
 		{
+			//TODO
 			if (Activator.DEBUG)
 			{
 				e.printStackTrace();
 			}
+			// Assume that the thread is running again and don't loop in the read DBGP Command loop
+			thread.getDebugState().setState(DebugState.Resumed);
+			
 			throw new DebugException(new Status(IStatus.WARNING,
 					IDebugConstants.PLUGIN_ID,
 					"Cannot fetch variables from debug engine",
@@ -264,14 +273,5 @@ public class VdmStackFrame extends VdmDebugElement implements IStackFrame
 		variables = null;
 	}
 
-	public void updateWith(VdmStackFrame newFrame)
-	{
-		this.charEnd = newFrame.charEnd;
-		this.charStart = newFrame.charStart;
-		this.lineNumber = newFrame.lineNumber;
-		this.name = newFrame.name;
-		this.level = newFrame.level;
-		this.nameIsFileUri = newFrame.nameIsFileUri;
-		this.where = newFrame.where;
-	}
+	
 }

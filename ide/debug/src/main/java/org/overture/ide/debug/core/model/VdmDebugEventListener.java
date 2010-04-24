@@ -83,6 +83,12 @@ public class VdmDebugEventListener implements IDebugEventSetListener
 					target.markDeadlocked(debugEvent.getSource());
 					//MessageDialog.openError(Activator.getActiveWorkbenchShell(), "Deadlock detected", "Model suspended for inspection do to a DEADLOCK.");
 					break;
+				case VdmDebugElement.PRE_SUSPEND_REQUEST:
+					if(debugEvent.getSource() instanceof VdmThread)
+					{
+						((VdmThread)debugEvent.getSource()).doPreSuspendRequest(debugEvent.getSource());
+					}
+					break;
 			}
 		} catch (DebugException e)
 		{

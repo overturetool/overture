@@ -65,7 +65,7 @@
         category="org.eclipse.ui.externaltools"
         class="org.overture.ide.vdmpp.debug.ui.launchconfigurations.VdmApplicationLaunchShortcut"
         icon="icons/cview16/vdmpp_file_tsk.png"
-        id="org.overture.ide.debug.ui.localVdmShortcut"
+        id="org.overture.ide.vdmp.debug.ui.localVdmShortcut"
         label="Vdm Application"
         modes="debug">
      <contextualLaunch>

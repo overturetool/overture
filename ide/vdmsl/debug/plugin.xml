@@ -47,5 +47,36 @@
 			id="org.overture.ide.debug.ui.launchConfigurationTypeImage">
 		</launchConfigurationTypeImage>
 	</extension>
+	
+	
+	<!-- Shoutcut for launching project. Extends the Debug and Run context menu in the VDM Explorer -->
+ <extension point="org.eclipse.debug.ui.launchShortcuts">
+  <shortcut
+        category="org.eclipse.ui.externaltools"
+        class="org.overture.ide.vdmsl.debug.ui.launchconfigurations.VdmApplicationLaunchShortcut"
+        icon="icons/cview16/vdmsl_file_tsk.gif"
+        id="org.overture.ide.vdmsl.debug.ui.localVdmShortcut"
+        label="Vdm Application"
+        modes="debug">
+     <contextualLaunch>
+           <enablement>
+             <with variable="selection">
+             <count value="1"/>
+                <iterate>
+                	<and>
+                		<adapt
+                     type="org.overture.ide.core.resources.IVdmProject">
+                  <test
+                        property="org.overture.ide.core.resources.dialect"
+                        value="VDM_SL">
+                  </test>
+               </adapt>
+                	</and>
+                </iterate>
+           	</with>
+           </enablement>
+  		 </contextualLaunch>
+  </shortcut>
+ </extension>
 
 </plugin>

@@ -14,6 +14,7 @@ import org.overture.ide.debug.core.IDebugConstants;
 public class VdmDebugElement extends PlatformObject implements IDebugElement
 {
 	public final static int MODEL_DEADLOCKED =0x1;
+	public final static int PRE_SUSPEND_REQUEST =0x2;
 
 	protected VdmDebugTarget fTarget;
 	protected ILaunch fLaunch;
