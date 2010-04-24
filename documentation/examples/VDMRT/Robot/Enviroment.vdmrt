@@ -29,7 +29,7 @@ thread
  (--here we have to interact with the robot, 
   --punch, shoot...something
  
-   completeGrid := file.Load("testMap.map");
+   completeGrid := file.Load("testmap.map");
    start(Robot`nmc);   --observe
    start(Robot`mobs1); --move
    start(Robot`mobs2); --move
