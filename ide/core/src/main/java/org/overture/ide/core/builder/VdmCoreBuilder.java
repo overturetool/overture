@@ -28,7 +28,8 @@ public abstract class VdmCoreBuilder extends IncrementalProjectBuilder
 		public boolean visit(IResourceDelta delta) throws CoreException
 		{
 			IResource resource = delta.getResource();
-			if (resource instanceof IFile)
+			resource.refreshLocal(IResource.DEPTH_INFINITE, null);
+			if (resource instanceof IFile && ((IFile) resource).getContentDescription()!=null)
 			{
 
 				if (getVdmProject().getContentTypeIds().contains(((IFile) resource).getContentDescription().getContentType().getId()))

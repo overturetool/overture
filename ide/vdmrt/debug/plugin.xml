@@ -52,7 +52,7 @@
  <extension point="org.eclipse.debug.ui.launchShortcuts">
   <shortcut
         category="org.eclipse.ui.externaltools"
-        class="org.overture.ide.vdmrt.debug.ui.launchconfigurations.VdmApplicationLaunchShortcut"
+        class="org.overture.ide.vdmrt.debug.ui.launchconfigurations.VdmRtApplicationLaunchShortcut"
         icon="icons/cview16/vdmrt_file_tsk.gif"
         id="org.overture.ide.vdmrt.debug.ui.localVdmShortcut"
         label="Vdm Application"

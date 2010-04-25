@@ -1,6 +1,7 @@
 package org.overture.ide.core.ast;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
@@ -8,6 +9,8 @@ import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.overture.ide.core.ElementChangedEvent;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.IVdmElementDelta;
@@ -15,6 +18,7 @@ import org.overture.ide.core.IVdmModel;
 
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.VdmElementDelta;
+import org.overture.ide.core.parser.SourceParserManager;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.definitions.ClassDefinition;
@@ -33,7 +37,8 @@ public class VdmModel implements IVdmModel
 
 	private List<IVdmSourceUnit> vdmSourceUnits = new Vector<IVdmSourceUnit>();
 
-	public VdmModel() {
+	public VdmModel()
+	{
 		// TODO Auto-generated constructor stub
 		count++;
 		id = count;
@@ -41,7 +46,6 @@ public class VdmModel implements IVdmModel
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#getRootElementList()
 	 */
 	public synchronized List<IAstNode> getRootElementList()
@@ -56,7 +60,6 @@ public class VdmModel implements IVdmModel
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#getCheckedTime()
 	 */
 	public synchronized Date getCheckedTime()
@@ -66,26 +69,21 @@ public class VdmModel implements IVdmModel
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#setChecked(boolean)
 	 */
 	public synchronized void setChecked(boolean checked)
 	{
-				
+
 		this.typeChecked = checked;
 		this.checkedTime = new Date();
-		if(checked == true)
+		if (checked == true)
 		{
-			VdmCore.getDeltaProcessor().fire(this,
-					new ElementChangedEvent(new VdmElementDelta(this,
-							IVdmElementDelta.F_TYPE_CHECKED),
-							ElementChangedEvent.DeltaType.POST_RECONCILE));
+			VdmCore.getDeltaProcessor().fire(this, new ElementChangedEvent(new VdmElementDelta(this, IVdmElementDelta.F_TYPE_CHECKED), ElementChangedEvent.DeltaType.POST_RECONCILE));
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#isChecked()
 	 */
 	public synchronized boolean isTypeCorrect()
@@ -95,7 +93,6 @@ public class VdmModel implements IVdmModel
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#hasFile(java.io.File)
 	 */
 	public synchronized boolean hasFile(File file)
@@ -112,7 +109,6 @@ public class VdmModel implements IVdmModel
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#getModuleList()
 	 */
 	public synchronized ModuleList getModuleList() throws NotAllowedException
@@ -131,7 +127,6 @@ public class VdmModel implements IVdmModel
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#getClassList()
 	 */
 	public synchronized ClassList getClassList() throws NotAllowedException
@@ -150,7 +145,6 @@ public class VdmModel implements IVdmModel
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#hasClassList()
 	 */
 	public synchronized boolean hasClassList()
@@ -165,7 +159,6 @@ public class VdmModel implements IVdmModel
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#hasModuleList()
 	 */
 	public synchronized boolean hasModuleList()
@@ -180,7 +173,6 @@ public class VdmModel implements IVdmModel
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#setParseCorrect(java.lang.String, java.lang.Boolean)
 	 */
 	public synchronized void setParseCorrect(String file, Boolean isParseCorrect)
@@ -194,7 +186,6 @@ public class VdmModel implements IVdmModel
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.overture.ide.core.ast.IVdmElement#isParseCorrect()
 	 */
 	public synchronized boolean isParseCorrect()
@@ -209,8 +200,6 @@ public class VdmModel implements IVdmModel
 	{
 		return getRootElementList().size() > 0;
 	}
-
-
 
 	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter)
@@ -248,6 +237,50 @@ public class VdmModel implements IVdmModel
 		for (IVdmSourceUnit unit : vdmSourceUnits)
 		{
 			unit.clean();
+		}
+
+	}
+
+	public void refresh(boolean completeRefresh,IProgressMonitor monitor)
+	{
+		int worked = 1;
+		if (monitor != null)
+		{
+
+			monitor.beginTask("Refreshing model", vdmSourceUnits.size());
+		}
+		for (IVdmSourceUnit source : vdmSourceUnits)
+		{
+			if(!completeRefresh && source.getParseList().size()>0)
+			{
+				continue;
+			}
+				
+			try
+			{
+				SourceParserManager.parseFile(source);
+			} catch (CoreException e)
+			{
+				if (VdmCore.DEBUG)
+				{
+					e.printStackTrace();
+				}
+			} catch (IOException e)
+			{
+				if (VdmCore.DEBUG)
+				{
+					e.printStackTrace();
+				}
+			}
+			if (monitor != null)
+			{
+				monitor.worked(++worked);
+			}
+		}
+
+		if (monitor != null)
+		{
+			monitor.done();
 		}
 
 	}

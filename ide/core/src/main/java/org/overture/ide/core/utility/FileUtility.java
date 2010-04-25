@@ -209,6 +209,7 @@ public class FileUtility
 		List<Character> content = new Vector<Character>();
 		try
 		{
+			file.refreshLocal(IResource.DEPTH_ONE,null);
 			inStream = file.getContents();
 			in = new InputStreamReader(inStream, file.getCharset());
 

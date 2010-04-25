@@ -63,8 +63,22 @@ public class ResourceManager implements IResourceChangeListener
 			if (VdmProject.isVdmProject(file.getProject()))
 			{
 				IVdmProject project = VdmProject.createProject(file.getProject());
-				IVdmSourceUnit unit = createSourceUnit(file, project);
-				return unit;
+
+				try
+				{
+					if (file.getContentDescription()!=null && project.getContentTypeIds().contains(file.getContentDescription().getContentType().getId()))
+					{
+						IVdmSourceUnit unit = createSourceUnit(file, project);
+						return unit;
+					}
+				} catch (CoreException e)
+				{
+					if (VdmCore.DEBUG)
+					{
+						e.printStackTrace();
+					}
+				}
+
 			} else
 				System.err.println("project is not vdm complient");
 		}
@@ -143,7 +157,7 @@ public class ResourceManager implements IResourceChangeListener
 			{
 				projects.put(project.getName(), project);
 				VdmModelManager.getInstance().createModel(project);
-				//System.out.println("Creating project: " + project.getName());
+				// System.out.println("Creating project: " + project.getName());
 				project.getSpecFiles();
 				return project;
 			} catch (CoreException e)
@@ -164,28 +178,28 @@ public class ResourceManager implements IResourceChangeListener
 			IResource res = event.getResource();
 			switch (event.getType())
 			{
-			case IResourceChangeEvent.PRE_DELETE:
-			case IResourceChangeEvent.PRE_CLOSE:
-				if (event.getResource() instanceof IProject)
-				{
-					// VDM Project is closing
-					if (hasProject((IProject) res))
+				case IResourceChangeEvent.PRE_DELETE:
+				case IResourceChangeEvent.PRE_CLOSE:
+					if (event.getResource() instanceof IProject)
 					{
-						remove(res);
+						// VDM Project is closing
+						if (hasProject((IProject) res))
+						{
+							remove(res);
+						}
 					}
-				}
-				break;
-			case IResourceChangeEvent.PRE_BUILD:
-				
-				break;
-			case IResourceChangeEvent.POST_CHANGE:
+					break;
+				case IResourceChangeEvent.PRE_BUILD:
 
-				event.getDelta().accept(new DeltaPrinter());
+					break;
+				case IResourceChangeEvent.POST_CHANGE:
 
-				break;
+					event.getDelta().accept(new DeltaPrinter());
 
-			default:
-				break;
+					break;
+
+				default:
+					break;
 			}
 		} catch (CoreException e)
 		{
@@ -220,23 +234,23 @@ public class ResourceManager implements IResourceChangeListener
 			IResource res = delta.getResource();
 			switch (delta.getKind())
 			{
-			case IResourceDelta.ADDED:
-//				System.out.print("Resource ");
-//				System.out.print(res.getFullPath());
-//				System.out.println(" was added.");
-				add(res);
-				break;
-			case IResourceDelta.REMOVED:
-//				System.out.print("Resource ");
-//				System.out.print(res.getFullPath());
-//				System.out.println(" was removed.");
-				remove(res);
-				break;
-			case IResourceDelta.CHANGED:
-//				System.out.print("Resource ");
-//				System.out.print(res.getFullPath());
-//				System.out.println(" has changed.");
-				break;
+				case IResourceDelta.ADDED:
+					// System.out.print("Resource ");
+					// System.out.print(res.getFullPath());
+					// System.out.println(" was added.");
+					add(res);
+					break;
+				case IResourceDelta.REMOVED:
+					// System.out.print("Resource ");
+					// System.out.print(res.getFullPath());
+					// System.out.println(" was removed.");
+					remove(res);
+					break;
+				case IResourceDelta.CHANGED:
+					// System.out.print("Resource ");
+					// System.out.print(res.getFullPath());
+					// System.out.println(" has changed.");
+					break;
 			}
 			return true; // visit the children
 		}
@@ -256,9 +270,20 @@ public class ResourceManager implements IResourceChangeListener
 					IVdmProject project = VdmProject.createProject(file.getProject());
 					Assert.isNotNull(project, "Project creation faild for file: "
 							+ res);
-					IVdmSourceUnit unit = createSourceUnit(file, project);
-					Assert.isNotNull(unit, "Source unit creation faild for: "
-							+ res);
+
+					try
+					{
+						project.getSpecFiles();// sync with content type files
+					} catch (CoreException e)
+					{
+						if (VdmCore.DEBUG)
+						{
+							e.printStackTrace();
+						}
+					}
+					// IVdmSourceUnit unit = createSourceUnit(file, project);
+					// Assert.isNotNull(unit, "Source unit creation faild for: "
+					// + res);
 				}
 			}
 

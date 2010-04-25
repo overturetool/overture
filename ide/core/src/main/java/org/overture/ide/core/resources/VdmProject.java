@@ -67,6 +67,9 @@ public class VdmProject extends Project implements IVdmProject
 		}
 		if (this.language == null)
 			throw new NotAllowedException();
+		
+		//Fix for old projects with Script Builder
+		this.setBuilder(this.getLanguageVersion());
 	}
 
 	public static boolean isVdmProject(IProject project)

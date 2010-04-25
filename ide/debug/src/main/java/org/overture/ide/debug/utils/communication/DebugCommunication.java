@@ -34,7 +34,12 @@ public class DebugCommunication implements IDisposable
 		int portNumber = 9000;// findFreePort();
 		// if(portNumber == -1)
 		// throw new IOException("Debug communication: no ports available");//very unlikely
+		try{
 		server = new ServerSocket(portNumber);
+		}catch(Exception e)
+		{
+			server = new ServerSocket(findFreePort());
+		}
 		// System.out.println("listning on port: " + portNumber);
 		// server.setSoTimeout(50000);
 

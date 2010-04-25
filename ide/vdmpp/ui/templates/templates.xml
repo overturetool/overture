@@ -95,11 +95,11 @@ end ${className}</template>
 		
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
 		deleted="false" description="Explicit Operation" enabled="true"
-		name="operationExplicit" id="operationExplicitPp">${accessSpecifier}
-		${operationName} : ${parameterTypes} ==&gt; ${resultType}
-		${operationName} (${parameterNames}) == ${statements}
+		name="operationExplicit" id="operationExplicitPp">${public} ${operationName} : ${parameterTypes} ==&gt; ${resultType}
+		${operationName} (${parameterNames}) ==
+			${statements}
 		pre ${preCondition}
-		post ${postCondition}</template>
+		post ${postCondition};</template>
 		
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
 		deleted="false" description="Implicit operation" enabled="true"

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overturetool.vdmj.ast.IAstNode;
@@ -71,5 +72,10 @@ public interface IVdmModel extends IVdmElement{
 	public abstract void clean();
 
 
-
+	/**
+	 * Refresh source unit (reparse, will require type check again then)
+	 * @param completeRefresh true to reparse all source units. False only to reparse source unit with empty parse lists
+	 * @param monitor null or a progress monitor
+	 */
+	public void refresh(boolean completeRefresh,IProgressMonitor monitor);
 }
