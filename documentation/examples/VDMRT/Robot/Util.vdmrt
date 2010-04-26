@@ -15,7 +15,7 @@ operations
  (
    def file = new IO()
    in
-     def - = file.echo(debugData) in skip;
+     def - = file.echo(debugData ^ "\n") in skip;
  );
  
  
