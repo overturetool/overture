@@ -37,7 +37,6 @@ abstract public class SchedulingPolicy implements Serializable
 	abstract public void register(SchedulableThread thread, long priority);
 	abstract public void unregister(SchedulableThread thread);
 	abstract public void reset();
-	abstract public long getTimestep();
 	abstract public void advance();
 	abstract public boolean hasActive();
 	abstract public boolean hasPriorities();

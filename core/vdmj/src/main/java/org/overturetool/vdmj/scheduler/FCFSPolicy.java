@@ -35,8 +35,9 @@ public class FCFSPolicy extends SchedulingPolicy
     private static final long serialVersionUID = 1L;
 	protected final List<SchedulableThread> threads;
 	protected SchedulableThread bestThread = null;
-	protected long minimumDuration = -1;
 	protected Random PRNG = null;
+
+	private SchedulableThread durationThread = null;
 
 	public FCFSPolicy()
 	{
@@ -49,7 +50,6 @@ public class FCFSPolicy extends SchedulingPolicy
 	{
 		threads.clear();
 		bestThread = null;
-		minimumDuration = -1;
 	}
 
 	@Override
@@ -74,28 +74,27 @@ public class FCFSPolicy extends SchedulingPolicy
 	public boolean reschedule()
 	{
 		bestThread = null;
-		minimumDuration = Long.MAX_VALUE;		// No one is stepping
+
+		if (durationThread != null)
+		{
+			bestThread = durationThread;
+			durationThread = null;
+			return true;
+		}
 
 		synchronized (threads)
 		{
-    		out: for (SchedulableThread th: threads)
+    		for (SchedulableThread th: threads)
     		{
     			switch (th.getRunState())
     			{
     				case RUNNABLE:
-    					minimumDuration = -1;	// Can't step yet
         				bestThread = th;
         				threads.remove(th);
         				threads.add(th);
-        				break out;
+        				return true;
 
     				case TIMESTEP:
-    					if (th.getTimestep() < minimumDuration)
-    					{
-    						minimumDuration = th.getTimestep();
-    					}
-    					break;
-
     				case WAITING:
     				case LOCKING:
     				default:
@@ -104,7 +103,7 @@ public class FCFSPolicy extends SchedulingPolicy
     		}
 		}
 
-		return (bestThread != null);
+		return false;
 	}
 
 	@Override
@@ -140,15 +139,6 @@ public class FCFSPolicy extends SchedulingPolicy
 	}
 
 	@Override
-	public long getTimestep()
-	{
-		synchronized (threads)		// As it was set under threads
-		{
-			return minimumDuration;
-		}
-	}
-
-	@Override
 	public void advance()
 	{
 		synchronized (threads)
@@ -157,6 +147,7 @@ public class FCFSPolicy extends SchedulingPolicy
     		{
     			if (th.getRunState() == RunState.TIMESTEP)
     			{
+    				durationThread = th;
     				th.setState(RunState.RUNNABLE);
 
     				if (Properties.rt_duration_transactions &&

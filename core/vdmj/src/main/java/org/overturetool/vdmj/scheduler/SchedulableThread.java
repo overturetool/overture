@@ -156,7 +156,9 @@ public abstract class SchedulableThread extends Thread implements Serializable
 			SystemClock.advance(Properties.rt_duration_default);
 		}
 
-		if (++steps >= timeslice)
+		// Note that we don't reschedule if we are in an outer cycles/duration
+
+		if (++steps >= timeslice && !inOuterTimeStep)
 		{
 			reschedule(ctxt, location);
 			steps = 0;

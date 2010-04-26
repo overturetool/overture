@@ -35,7 +35,7 @@ public class CPUResource extends Resource
 	private final int cpuNumber;
 	private final double clock;
 
-	private SchedulableThread running = null;
+	private SchedulableThread swappedIn = null;
 
 	public CPUResource(SchedulingPolicy policy, double clock)
 	{
@@ -43,7 +43,7 @@ public class CPUResource extends Resource
 		this.cpuNumber = nextCPU++;
 		this.clock = clock;
 
-		running = null;
+		swappedIn = null;
 
 		if (cpuNumber == 0)
 		{
@@ -60,7 +60,7 @@ public class CPUResource extends Resource
 	@Override
 	public void reset()
 	{
-		running = null;
+		swappedIn = null;
 		policy.reset();
 		PeriodicThread.reset();
 	}
@@ -72,17 +72,23 @@ public class CPUResource extends Resource
 	@Override
 	public boolean reschedule()
 	{
+		if (swappedIn != null &&
+			swappedIn.getRunState() == RunState.TIMESTEP)
+		{
+			return false;	// Can't schedule anything else and we're idle.
+		}
+
 		if (policy.reschedule())
 		{
 			SchedulableThread best = policy.getThread();
 
-			if (running != best)
+			if (swappedIn != best)
 			{
-				if (running != null)
+				if (swappedIn != null)
 				{
 	    			RTLogger.log(
-	    				"ThreadSwapOut -> id: " + running.getId() +
-	    				objRefString(running.getObject()) +
+	    				"ThreadSwapOut -> id: " + swappedIn.getId() +
+	    				objRefString(swappedIn.getObject()) +
 	    				" cpunm: " + cpuNumber +
 	    				" overhead: " + 0);
 				}
@@ -108,25 +114,31 @@ public class CPUResource extends Resource
 				}
 			}
 
-			running = best;
-			running.runslice(policy.getTimeslice());
+			swappedIn = best;
+			swappedIn.runslice(policy.getTimeslice());
 
-			if (running.getRunState() == RunState.COMPLETE)
+			switch (swappedIn.getRunState())
 			{
-    			RTLogger.log(
-    				"ThreadSwapOut -> id: " + running.getId() +
-    				objRefString(running.getObject()) +
-    				" cpunm: " + cpuNumber +
-    				" overhead: " + 0);
+				case COMPLETE:
+        			RTLogger.log(
+        				"ThreadSwapOut -> id: " + swappedIn.getId() +
+        				objRefString(swappedIn.getObject()) +
+        				" cpunm: " + cpuNumber +
+        				" overhead: " + 0);
 
-    			RTLogger.log(
-					"ThreadKill -> id: " + running.getId() +
-					" cpunm: " + cpuNumber);
+        			RTLogger.log(
+    					"ThreadKill -> id: " + swappedIn.getId() +
+    					" cpunm: " + cpuNumber);
 
-    			running = null;
+        			swappedIn = null;
+        			return true;	// We may be able to run other threads
+
+				case TIMESTEP:
+					return false;	// We're definitely idle
+
+				default:
+					return true;	// We may be able to run other threads
 			}
-
-			return true;
 		}
 		else
 		{
@@ -137,7 +149,24 @@ public class CPUResource extends Resource
 	@Override
 	public long getMinimumTimestep()
 	{
-		return policy.getTimestep();
+		if (swappedIn == null)
+		{
+			return Long.MAX_VALUE;		// We're not in timestep
+		}
+		else
+		{
+			switch (swappedIn.getRunState())
+			{
+				case TIMESTEP:
+					return swappedIn.getTimestep();
+
+				case RUNNING:
+					return -1;			// Can't timestep
+
+				default:
+					return Long.MAX_VALUE;
+			}
+		}
 	}
 
 	public void createThread(SchedulableThread th)

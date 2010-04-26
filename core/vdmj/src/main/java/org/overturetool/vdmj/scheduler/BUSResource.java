@@ -40,6 +40,8 @@ public class BUSResource extends Resource
 	private final List<CPUResource> cpus;
 	private final List<MessagePacket> messages;
 
+	private SchedulableThread busThread = null;
+
 	public BUSResource(boolean isVirtual,
 		SchedulingPolicy policy, double speed, List<CPUResource> cpus)
 	{
@@ -50,6 +52,8 @@ public class BUSResource extends Resource
 		this.speed = speed;
 		this.cpus = cpus;
 		this.messages = new LinkedList<MessagePacket>();
+
+		busThread = null;
 
 		if (isVirtual)
 		{
@@ -95,8 +99,8 @@ public class BUSResource extends Resource
 
 		if (policy.reschedule())
 		{
-			SchedulableThread best = policy.getThread();
-			best.runslice(policy.getTimeslice());
+			busThread = policy.getThread();
+			busThread.runslice(policy.getTimeslice());
 			return true;
 		}
 		else
@@ -108,7 +112,24 @@ public class BUSResource extends Resource
 	@Override
 	public long getMinimumTimestep()
 	{
-		return policy.getTimestep();
+		if (busThread == null)
+		{
+			return Long.MAX_VALUE;		// We're not in timestep
+		}
+		else
+		{
+			switch (busThread.getRunState())
+			{
+				case TIMESTEP:
+					return busThread.getTimestep();
+
+				case RUNNING:
+					return -1;			// Can't timestep
+
+				default:
+					return Long.MAX_VALUE;
+			}
+		}
 	}
 
 	public boolean links(CPUResource from, CPUResource to)
