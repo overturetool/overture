@@ -40,7 +40,7 @@ public class Properties extends ConfigBase
 	public static int rt_duration_default = 2;
 
 	/** The default timeslice (statements executed) for a FCFS policy */
-	public static int scheduler_fcfs_timeslice = 100;
+	public static int scheduler_fcfs_timeslice = 10;
 
 	/** The vCPU/vBUS timeslice */
 	public static int scheduler_virtual_timeslice = 10000;
