@@ -18,7 +18,6 @@ import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.ui.progress.UIJob;

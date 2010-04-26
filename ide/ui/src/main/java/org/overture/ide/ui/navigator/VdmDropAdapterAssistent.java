@@ -33,6 +33,7 @@ import org.eclipse.ui.navigator.CommonDropAdapterAssistant;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.overture.ide.ui.VdmUIPlugin;
 
+@SuppressWarnings("restriction")
 public class VdmDropAdapterAssistent extends CommonDropAdapterAssistant {
 
 	private static final IResource[] NO_RESOURCES = new IResource[0];
@@ -344,9 +345,9 @@ public class VdmDropAdapterAssistent extends CommonDropAdapterAssistant {
 	 * @return the resource selection from the LocalSelectionTransfer
 	 */
 	private IResource[] getSelectedResources(IStructuredSelection selection) {
-		ArrayList selectedResources = new ArrayList();
+		ArrayList<Object> selectedResources = new ArrayList<Object>();
 
-		for (Iterator i = selection.iterator(); i.hasNext();) {
+		for (Iterator<Object> i = selection.iterator(); i.hasNext();) {
 			Object o = i.next();
 			if (o instanceof IResource) {
 				selectedResources.add(o);

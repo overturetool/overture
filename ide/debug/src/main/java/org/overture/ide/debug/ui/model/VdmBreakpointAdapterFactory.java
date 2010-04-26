@@ -4,6 +4,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 public class VdmBreakpointAdapterFactory implements IAdapterFactory
@@ -22,7 +23,11 @@ public class VdmBreakpointAdapterFactory implements IAdapterFactory
 				IFile file = (IFile) resource;
 				try
 				{
-					String contentTypeId = file.getContentDescription().getContentType().getId();
+					IContentDescription contentDesc = file.getContentDescription();
+					if(contentDesc == null){
+						return null;
+					}
+					String contentTypeId = contentDesc.getContentType().getId();
 					if(SourceViewerEditorManager.getInstance().getContentTypeIds().contains(contentTypeId))
 					{
 						return new VdmLineBreakpointAdapter();
@@ -32,11 +37,7 @@ public class VdmBreakpointAdapterFactory implements IAdapterFactory
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-//				String extension = resource.getFileExtension();
-//				if (extension != null && extension.equals("vdmpp"))
-//				{
-//					return new VdmLineBreakpointAdapter();
-//				}
+
 			}
 		}
 		return null;

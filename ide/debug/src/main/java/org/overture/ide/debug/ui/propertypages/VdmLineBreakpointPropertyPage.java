@@ -23,15 +23,16 @@ public class VdmLineBreakpointPropertyPage extends VdmBreakpointPropertyPage imp
 	private Button fConditionIsTrue;
 	private Button fConditionHasChanged;
 	private Label fSuspendWhenLabel;
-	// Watchpoint editors
-	private Button fFieldAccess;
-	private Button fFieldModification;
-	// Method breakpoint editors
-	private Button fMethodEntry;
-	private Button fMethodExit;
 	
-	private static final String fgWatchpointError = "fgWatchpointError";//PropertyPageMessages.JavaLineBreakpointPage_0; 
-	private static final String fgMethodBreakpointError = "fgMethodBreakpointError";//PropertyPageMessages.JavaLineBreakpointPage_1;
+	// Watchpoint editors
+//	private Button fFieldAccess;
+//	private Button fFieldModification;
+//	// Method breakpoint editors
+//	private Button fMethodEntry;
+//	private Button fMethodExit;
+//	
+//	private static final String fgWatchpointError = "fgWatchpointError";//PropertyPageMessages.JavaLineBreakpointPage_0; 
+//	private static final String fgMethodBreakpointError = "fgMethodBreakpointError";//PropertyPageMessages.JavaLineBreakpointPage_1;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.internal.debug.ui.propertypages.JavaBreakpointPage#doStore()

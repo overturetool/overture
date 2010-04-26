@@ -11,8 +11,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.internal.util.Util;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.ui.navigator.IDescriptionProvider;
-import org.overture.ide.ui.VdmPluginImages;
-import org.overture.ide.ui.VdmUIPlugin;
 
 public class VdmNavigatorLabelProvider extends LabelProvider implements ILabelProvider, IDescriptionProvider {
 

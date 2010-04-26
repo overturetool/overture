@@ -61,7 +61,7 @@ public class ImageDescriptorRegistry {
 	 * Disposes all images managed by this registry.
 	 */
 	public void dispose() {
-		for (Iterator iter= fRegistry.values().iterator(); iter.hasNext(); ) {
+		for (Iterator<Image> iter= fRegistry.values().iterator(); iter.hasNext(); ) {
 			Image image= (Image)iter.next();
 			image.dispose();
 		}

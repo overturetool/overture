@@ -1,12 +1,9 @@
 package org.overture.ide.ui.editor.core;
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
@@ -28,19 +25,12 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.editors.text.TextEditor;
-import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.overture.ide.core.IVdmElement;
-import org.overture.ide.core.IVdmModel;
-
 import org.overture.ide.core.SourceReferenceManager;
-
 import org.overture.ide.core.parser.SourceParserManager;
-import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overture.ide.core.resources.VdmProject;
 import org.overture.ide.ui.IVdmUiConstants;
-import org.overture.ide.ui.actions.IVdmActionDefinitionIds;
 import org.overture.ide.ui.actions.ToggleCommentAction;
 import org.overture.ide.ui.outline.VdmContentOutlinePage;
 import org.overturetool.vdmj.ast.IAstNode;
@@ -48,8 +38,8 @@ import org.overturetool.vdmj.ast.IAstNode;
 public abstract class VdmEditor extends TextEditor
 {
 	
-	private static final String RESOURCE_BUNDLE = "org.overture.ide.ui.editor.VdmEditor";
-	private ISourceViewer viewer = null;
+	
+	
 	/**
 	 * Updates the Java outline page selection and this editor's range indicator.
 	 * 
@@ -93,7 +83,6 @@ public abstract class VdmEditor extends TextEditor
 	{
 
 		ISourceViewer viewer = new VdmSourceViewer(parent, ruler, getOverviewRuler(), isOverviewRulerVisible(), styles);
-		this.viewer = viewer;
 		getSourceViewerDecorationSupport(viewer);
 
 		return viewer;
@@ -721,43 +710,43 @@ public abstract class VdmEditor extends TextEditor
 		super.dispose();
 	}
 	
-	@Override
-	protected void createActions() {		
-		super.createActions();
-		ResourceBundle bla = new ResourceBundle() {
-			
-			@Override
-			protected Object handleGetObject(String key) {
-				if(key.equals("ToggleComment.label")){
-					return "Toggle Comment";
-				}
-				if(key.equals("ToggleComment.tooltip")){
-					return "Toggle Comment Tooltip";
-				}
-				if(key.equals("ToggleComment.description")){
-					return "Toggle Comment Description";
-				}
-				if(key.equals("ToggleComment.image")){
-					return null;
-				}
-				
-				
-				
-				return null;
-			}
-			
-			@Override
-			public Enumeration<String> getKeys() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-		};
-		Action action= new ToggleCommentAction(bla, "ToggleComment.", this); //$NON-NLS-1$
-		action.setActionDefinitionId(IVdmActionDefinitionIds.TOGGLE_COMMENT);
-		setAction("ToggleComment", action); //$NON-NLS-1$
-		markAsStateDependentAction("ToggleComment", true); //$NON-NLS-1$
-		configureToggleCommentAction();
-	}
+//	@Override
+//	protected void createActions() {		
+//		super.createActions();
+//		ResourceBundle bla = new ResourceBundle() {
+//			
+//			@Override
+//			protected Object handleGetObject(String key) {
+//				if(key.equals("ToggleComment.label")){
+//					return "Toggle Comment";
+//				}
+//				if(key.equals("ToggleComment.tooltip")){
+//					return "Toggle Comment Tooltip";
+//				}
+//				if(key.equals("ToggleComment.description")){
+//					return "Toggle Comment Description";
+//				}
+//				if(key.equals("ToggleComment.image")){
+//					return null;
+//				}
+//				
+//				
+//				
+//				return null;
+//			}
+//			
+//			@Override
+//			public Enumeration<String> getKeys() {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//		};
+//		Action action= new ToggleCommentAction(bla, "ToggleComment.", this); //$NON-NLS-1$
+//		action.setActionDefinitionId(IVdmActionDefinitionIds.TOGGLE_COMMENT);
+//		setAction("ToggleComment", action); //$NON-NLS-1$
+//		markAsStateDependentAction("ToggleComment", true); //$NON-NLS-1$
+//		configureToggleCommentAction();
+//	}
 	
 	/**
 	 *  Configure actions

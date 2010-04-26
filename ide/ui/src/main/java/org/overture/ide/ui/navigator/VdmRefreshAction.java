@@ -1,6 +1,5 @@
 package org.overture.ide.ui.navigator;
 
-import org.eclipse.ui.navigator.CommonActionProvider;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
@@ -21,7 +20,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchCommandConstants;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -30,8 +28,6 @@ import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonMenuConstants;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.overture.ide.ui.IVdmUiConstants;
-import org.overture.ide.ui.VdmPluginImages;
-import org.overture.ide.ui.VdmUIPlugin;
 
 
 public class VdmRefreshAction extends CommonActionProvider {
@@ -69,7 +65,7 @@ public class VdmRefreshAction extends CommonActionProvider {
 	    public void fillContextMenu(IMenuManager menu) {
 	        IStructuredSelection selection = (IStructuredSelection) getContext().getSelection();
 	        boolean hasClosedProjects = false;
-	        Iterator resources = selection.iterator();
+	        Iterator<Object> resources = selection.iterator();
 
 	        while (resources.hasNext() && (!hasClosedProjects)) {
 	            Object next = resources.next();

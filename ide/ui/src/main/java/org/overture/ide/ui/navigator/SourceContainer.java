@@ -3,8 +3,6 @@ package org.overture.ide.ui.navigator;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.eclipse.core.internal.resources.Folder;
-import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -13,7 +11,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.overture.ide.ui.VdmPluginImages;
 

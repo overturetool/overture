@@ -8,8 +8,6 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.overture.ide.ui.VdmPluginImages;
 import org.overture.ide.ui.VdmUIPlugin;
@@ -51,16 +49,7 @@ public class VdmElementImageProvider {
 	public static final Point SMALL_SIZE = new Point(16, 16);
 	public static final Point BIG_SIZE = new Point(22, 16);
 
-	private static ImageDescriptor DESC_OBJ_PROJECT_CLOSED;
-	private static ImageDescriptor DESC_OBJ_PROJECT;
-	{
-		ISharedImages images = VdmUIPlugin.getDefault().getWorkbench()
-				.getSharedImages();
-		DESC_OBJ_PROJECT_CLOSED = images
-				.getImageDescriptor(IDE.SharedImages.IMG_OBJ_PROJECT_CLOSED);
-		DESC_OBJ_PROJECT = images
-				.getImageDescriptor(IDE.SharedImages.IMG_OBJ_PROJECT);
-	}
+
 
 	private ImageDescriptorRegistry fRegistry;
 

@@ -3,7 +3,6 @@ package org.overture.ide.debug.core.model;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
-import org.overture.ide.debug.utils.communication.DebugThreadProxy;
 
 public class VdmVariable extends VdmDebugElement implements IVariable
 {
@@ -11,7 +10,8 @@ public class VdmVariable extends VdmDebugElement implements IVariable
 	private String name;
 	private String referenceTypeName;
 	private VdmValue value;
-	private DebugThreadProxy proxy;
+//	private DebugThreadProxy proxy;
+	@SuppressWarnings("unused")
 	private VdmStackFrame stackFrame;
 
 	public VdmVariable(VdmDebugTarget target, String name,

@@ -31,7 +31,7 @@ public class ToggleCommentAction extends TextEditorAction {
 	/** The document partitioning */
 	private String fDocumentPartitioning;
 	/** The comment prefixes */
-	private Map fPrefixesMap;
+	private Map<String, String[]> fPrefixesMap;
 
 	/**
 	 * Creates and initializes the action for the given text editor. The action
@@ -271,7 +271,7 @@ public class ToggleCommentAction extends TextEditorAction {
 		fPrefixesMap= null;
 
 		String[] types= configuration.getConfiguredContentTypes(sourceViewer);
-		Map prefixesMap= new HashMap(types.length);
+		Map<String, String[]> prefixesMap= new HashMap<String, String[]>(types.length);
 		for (int i= 0; i < types.length; i++) {
 			String type= types[i];
 			String[] prefixes= configuration.getDefaultPrefixes(sourceViewer, type);

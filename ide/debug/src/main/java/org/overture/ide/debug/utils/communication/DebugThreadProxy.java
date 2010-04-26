@@ -22,7 +22,6 @@ import org.overture.ide.debug.core.model.VdmSimpleValue;
 import org.overture.ide.debug.core.model.VdmStackFrame;
 import org.overture.ide.debug.core.model.VdmValue;
 import org.overture.ide.debug.core.model.VdmVariable;
-import org.overture.ide.debug.core.model.VdmDebugState.DebugState;
 import org.overture.ide.debug.utils.xml.XMLDataNode;
 import org.overture.ide.debug.utils.xml.XMLNode;
 import org.overture.ide.debug.utils.xml.XMLOpenTagNode;

@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.osgi.util.TextProcessor;
-import org.overture.ide.core.IVdmElement;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
@@ -20,12 +19,9 @@ import org.overturetool.vdmj.definitions.PerSyncDefinition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.definitions.UntypedDefinition;
 import org.overturetool.vdmj.definitions.ValueDefinition;
-import org.overturetool.vdmj.lex.LexNameList;
-import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.modules.Import;
 import org.overturetool.vdmj.modules.ImportAll;
 import org.overturetool.vdmj.modules.ImportFromModule;
-import org.overturetool.vdmj.modules.ImportedFunction;
 import org.overturetool.vdmj.modules.ImportedType;
 import org.overturetool.vdmj.modules.ImportedValue;
 import org.overturetool.vdmj.modules.Module;
@@ -452,11 +448,7 @@ public class VdmElementLabels {
 		return result;
 	}
 
-	private static void getElementLabel(IVdmElement element, long flags,
-			StyledString result) {
-		new VdmElementLabelComposer(result).appendElementLabel(element, flags);
 
-	}
 
 	public static String getTextLabel(Object element, long evaluateTextFlags) {
 		// TODO Auto-generated method stub

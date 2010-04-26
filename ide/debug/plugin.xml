@@ -74,9 +74,9 @@
    <extension point="org.eclipse.ui.actionSetPartAssociations">
        <actionSetPartAssociation
             targetID="org.eclipse.debug.ui.launchActionSet">
-         <part
-               id="org.overture.ide.ui.VdmExplorer">
-         </part>
+          <part
+                id="org.overture.ide.ui.VdmExplorer">
+          </part>
       </actionSetPartAssociation>
       
       
@@ -100,7 +100,8 @@
             class="org.overture.ide.debug.ui.propertypages.VdmLineBreakpointPropertyPage"
             id="org.overture.ide.debug.vdmLineBreakpointPropertyPage"
             name="Breakpoint properties"
-            objectClass="org.overture.ide.debug.core.model.VdmLineBreakpoint">
+            objectClass="org.overture.ide.debug.core.model.VdmLineBreakpoint"
+            >
       </page>
    </extension>
    <extension

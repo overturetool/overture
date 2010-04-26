@@ -233,8 +233,8 @@
   <!-- Expression Filters -->  
       <commonFilter
             id="org.eclipse.ui.navigator.resources.filters.startsWithDot"
-            name="%Filters.startsWithDot.name"
-            description="%Filters.startsWithDot.description"
+            name="%filters.startsWithDot.name"
+            description="%filters.startsWithDot.description"
             activeByDefault="true"
             >
          <filterExpression>
@@ -247,8 +247,8 @@
       </commonFilter>
       <commonFilter  
             id="org.eclipse.ui.navigator.resources.filters.endsWithClass"
-            name="%Filters.endsWithClass.name"
-            description="%Filters.endsWithClass.description"
+            name="%filters.endsWithClass.name"
+            description="%filters.endsWithClass.description"
             activeByDefault="false"
             >
          <filterExpression>
@@ -260,8 +260,8 @@
       </commonFilter> 
        <commonFilter  
             id="org.eclipse.ui.navigator.resources.filters.endsWithCovTbl"
-            name="%Filters.endsWithCovTbl.name"
-            description="%Filters.endsWithCovTbl.description"
+            name="%filters.endsWithCovTbl.name"
+            description="%filters.endsWithCovTbl.description"
             activeByDefault="true"
             >
          <filterExpression>

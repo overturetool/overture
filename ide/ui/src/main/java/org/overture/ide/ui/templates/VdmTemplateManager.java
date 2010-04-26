@@ -2,13 +2,11 @@ package org.overture.ide.ui.templates;
 
 import java.io.IOException;
 
-import org.eclipse.core.internal.registry.ConfigurationElement;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
-import org.eclipse.jface.text.templates.persistence.TemplatePersistenceData;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
@@ -23,7 +21,7 @@ public class VdmTemplateManager {
 	private static VdmTemplateManager instance;
 	private TemplateStore fStore = null;
 	private ContributionContextTypeRegistry fRegistry;
-	private TemplatePersistenceData[] templateData;
+//	private TemplatePersistenceData[] templateData;
 
 	private VdmTemplateManager() {
 	}

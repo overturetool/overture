@@ -22,10 +22,10 @@ public class VdmColoredViewersManager implements IPropertyChangeListener {
 
 	private static VdmColoredViewersManager fgInstance= new VdmColoredViewersManager();
 
-	private Set fManagedLabelProviders;
+	private Set<VdmColoringLabelProvider> fManagedLabelProviders;
 
 	public VdmColoredViewersManager() {
-		fManagedLabelProviders= new HashSet();
+		fManagedLabelProviders= new HashSet<VdmColoringLabelProvider>();
 	}
 
 	public void installColoredLabels(VdmColoringLabelProvider labelProvider) {
@@ -70,7 +70,7 @@ public class VdmColoredViewersManager implements IPropertyChangeListener {
 	}
 
 	protected final void updateAllViewers() {
-		for (Iterator iterator= fManagedLabelProviders.iterator(); iterator.hasNext();) {
+		for (Iterator<VdmColoringLabelProvider> iterator= fManagedLabelProviders.iterator(); iterator.hasNext();) {
 			VdmColoringLabelProvider lp= (VdmColoringLabelProvider) iterator.next();
 			lp.update();
 		}

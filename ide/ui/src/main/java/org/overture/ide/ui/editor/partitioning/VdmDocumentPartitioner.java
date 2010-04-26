@@ -1,12 +1,10 @@
 package org.overture.ide.ui.editor.partitioning;
 
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
-import org.overture.ide.ui.VdmUIPlugin;
 
 public class VdmDocumentPartitioner extends FastPartitioner implements
 		IDocumentPartitioner {

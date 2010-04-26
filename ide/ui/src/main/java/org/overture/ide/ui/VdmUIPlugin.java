@@ -2,12 +2,6 @@ package org.overture.ide.ui;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.templates.ContextTypeRegistry;
-import org.eclipse.jface.text.templates.TemplateContextType;
-import org.eclipse.jface.text.templates.persistence.TemplateStore;
-import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
-import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
@@ -23,8 +17,8 @@ public class VdmUIPlugin extends AbstractUIPlugin {
 	private VdmPartitionScanner fPartitionScanner;
 	private ImageDescriptorRegistry fImageDescriptorRegistry;
 	private ProblemMarkerManager fProblemMarkerManager;
-	private Object fTemplateStore;
-	private Object fContextTypeRegistry;
+//	private Object fTemplateStore;
+//	private Object fContextTypeRegistry;
 
 	@Override
 	public void start(BundleContext context) throws Exception {

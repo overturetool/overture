@@ -8,22 +8,22 @@ import org.eclipse.swt.graphics.Image;
 
 public class VdmTemplateCompletionProposal extends TemplateProposal {
 
-	private final Template fTemplate;
-	private final TemplateContext fContext;
-	private final Image fImage;
-	private final IRegion fRegion;
-	private int fRelevance;
-	private String fDisplayString;
+//	private final Template fTemplate;
+//	private final TemplateContext fContext;
+//	private final Image fImage;
+//	private final IRegion fRegion;
+//	private int fRelevance;
+//	private String fDisplayString;
 	
 	public VdmTemplateCompletionProposal(Template template,
 			TemplateContext context, IRegion region, Image image, int relevance) {
 		super(template, context, region, image, relevance);
-		fTemplate=template;
-		 fContext = context;
-		 fImage=image;
-		 fRegion=region;
-		 fRelevance=relevance;
-		 fDisplayString=null;
+//		fTemplate=template;
+//		 fContext = context;
+//		 fImage=image;
+//		 fRegion=region;
+//		 fRelevance=relevance;
+//		 fDisplayString=null;
 	}
 
 //	@Override

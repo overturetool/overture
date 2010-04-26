@@ -16,13 +16,13 @@
 	<!-- Declare launch configuration type -->
 	<extension point="org.eclipse.debug.core.launchConfigurationTypes">
 		<launchConfigurationType
-			delegate="org.overture.ide.debug.core.launching.VdmLaunchConfigurationDelegate"
-			id="org.overture.ide.vdmpp.debug.launchConfigurationType" 
-			modes="debug"
-			name="VDM PP Model" 
-			public="true" 
-			sourceLocatorId="org.overture.ide.debug.sourceLocator"
-			sourcePathComputerId="org.overture.ide.debug.sourcePathComputer">
+        delegate="org.overture.ide.debug.core.launching.VdmLaunchConfigurationDelegate"
+        id="org.overture.ide.vdmpp.debug.launchConfigurationType"
+        modes="debug"
+        name="VDM PP Model"
+        public="true"
+        sourceLocatorId="org.overture.ide.debug.sourceLocator"
+        sourcePathComputerId="org.overture.ide.debug.sourcePathComputer">
 		</launchConfigurationType>
 	</extension>
 
@@ -62,7 +62,6 @@
 	<!-- Shoutcut for launching project. Extends the Debug and Run context menu in the VDM Explorer -->
  <extension point="org.eclipse.debug.ui.launchShortcuts">
   <shortcut
-        category="org.eclipse.ui.externaltools"
         class="org.overture.ide.vdmpp.debug.ui.launchconfigurations.VdmPpApplicationLaunchShortcut"
         icon="icons/cview16/vdmpp_file_tsk.png"
         id="org.overture.ide.vdmp.debug.ui.localVdmShortcut"
@@ -73,20 +72,33 @@
              <with variable="selection">
              <count value="1"/>
                 <iterate>
-                	<and>
-                		<adapt
-                     type="org.overture.ide.core.resources.IVdmProject">
-                  <test
-                        property="org.overture.ide.core.resources.dialect"
-                        value="VDM_PP">
-                  </test>
-               </adapt>
-                	</and>
+                   <or>
+                      <adapt
+                            type="org.overture.ide.core.resources.IVdmProject">
+                         <test
+                               property="org.overture.ide.core.resources.dialect"
+                               value="VDM_PP">
+                         </test>
+                      </adapt>
+                   </or>
                 </iterate>
            	</with>
            </enablement>
   		 </contextualLaunch>
+     <configurationType
+           id="org.overture.ide.vdmpp.debug.launchConfigurationType">
+     </configurationType>
   </shortcut>
+ </extension>
+ <extension
+       point="org.eclipse.debug.ui.launchGroups">
+    <launchGroup
+          bannerImage="icons/cview16/vdmpp_file_tsk.png"
+          id="org.overture.ide.vdmpp.debug.launchGroup"
+          image="icons/cview16/vdmpp_file_tsk.png"
+          label="Vdm Launch Group"
+          mode="debug">
+    </launchGroup>
  </extension>
 	
 

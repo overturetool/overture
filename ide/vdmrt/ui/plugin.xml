@@ -178,5 +178,14 @@
            file="templates/templates.xml">
      </include>
   </extension>
+  <extension
+        point="org.eclipse.ui.actionSetPartAssociations">
+     <actionSetPartAssociation
+           targetID="org.eclipse.debug.ui.launchActionSet">
+        <part
+              id="org.overture.ide.ui.VdmExplorer">
+        </part>
+     </actionSetPartAssociation>
+  </extension>
 
 </plugin>
