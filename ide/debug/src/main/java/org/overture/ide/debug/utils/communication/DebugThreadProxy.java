@@ -473,12 +473,18 @@ public class DebugThreadProxy extends AsyncCaller
 
 	public void processInternal(XMLTagNode msg)
 	{
-		if (msg.tag.equals("internal"))
+		if (msg.tag.equals("internal")&& msg.attrs.size()>0)
 		{
 			String id = msg.getAttr("threadId");
 			String name = msg.getAttr("threadName");
 			String stateString = msg.getAttr("threadState");
-			RunState state = RunState.valueOf(stateString);
+			RunState state=null;
+			try{
+			 state = RunState.valueOf(stateString);
+			}catch(Exception e)
+			{
+				return;
+			}
 			callback.updateInternalState(id, name, state);
 		}
 	}
