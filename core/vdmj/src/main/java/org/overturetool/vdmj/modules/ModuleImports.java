@@ -26,13 +26,15 @@ package org.overturetool.vdmj.modules;
 import java.io.Serializable;
 import java.util.List;
 
+import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 
 
-public class ModuleImports implements Serializable
+public class ModuleImports implements Serializable,IAstNode
 {
 	private static final long serialVersionUID = 1L;
 	public final LexIdentifierToken name;
@@ -42,6 +44,7 @@ public class ModuleImports implements Serializable
 	{
 		this.name = name;
 		this.imports = imports;
+		LexLocation.addAstNode(getLocation(), this);
 	}
 
 	@Override
@@ -91,5 +94,23 @@ public class ModuleImports implements Serializable
 		{
 			ifm.typeCheck(env);
 		}
+	}
+
+	public LexLocation getLocation()
+	{
+		if(name!=null)
+		{
+			return this.name.location;
+		}
+		return null;
+	}
+
+	public String getName()
+	{
+		if(name!=null)
+		{
+			return this.name.name;
+		}
+		return null;
 	}
 }

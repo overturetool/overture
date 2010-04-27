@@ -25,6 +25,7 @@ package org.overturetool.vdmj.types;
 
 import java.io.Serializable;
 
+import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.definitions.AccessSpecifier;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
@@ -43,7 +44,7 @@ import org.overturetool.vdmj.values.ValueList;
  * The parent class of all static type checking types.
  */
 
-public abstract class Type implements Comparable<Type>, Serializable
+public abstract class Type implements Comparable<Type>, Serializable, IAstNode
 {
 	private static final long serialVersionUID = 1L;
 
@@ -374,5 +375,15 @@ public abstract class Type implements Comparable<Type>, Serializable
 	public void detail2(String tag1, Object obj1, String tag2, Object obj2)
 	{
 		TypeChecker.detail2(tag1, obj1, tag2, obj2);
+	}
+	
+	public String getName()
+	{
+		return location.module;
+	}
+	
+	public LexLocation getLocation()
+	{
+		return location;
 	}
 }

@@ -26,11 +26,13 @@ package org.overturetool.vdmj.modules;
 import java.io.Serializable;
 import java.util.List;
 
+import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.lex.LexLocation;
 
 
-public class ModuleExports implements Serializable
+public class ModuleExports implements Serializable,IAstNode
 {
 	private static final long serialVersionUID = 1L;
 	public final List<List<Export>> exports;
@@ -92,5 +94,15 @@ public class ModuleExports implements Serializable
 		}
 
 		return exportDefs;
+	}
+
+	public LexLocation getLocation()
+	{
+		return null;
+	}
+
+	public String getName()
+	{
+		return null;
 	}
 }

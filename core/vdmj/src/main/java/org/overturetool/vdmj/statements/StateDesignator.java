@@ -25,6 +25,7 @@ package org.overturetool.vdmj.statements;
 
 import java.io.Serializable;
 
+import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
@@ -41,7 +42,7 @@ import org.overturetool.vdmj.values.Value;
  * The root of the state designator hierarchy.
  */
 
-public abstract class StateDesignator implements Serializable
+public abstract class StateDesignator implements Serializable,IAstNode
 {
 	private static final long serialVersionUID = 1L;
 
@@ -106,5 +107,15 @@ public abstract class StateDesignator implements Serializable
 	public void detail2(String tag1, Object obj1, String tag2, Object obj2)
 	{
 		TypeChecker.detail2(tag1, obj1, tag2, obj2);
+	}
+	
+	public String getName()
+	{
+		return location.module;
+	}
+	
+	public LexLocation getLocation()
+	{
+		return location;
 	}
 }

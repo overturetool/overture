@@ -25,6 +25,7 @@ package org.overturetool.vdmj.expressions;
 
 import java.io.Serializable;
 
+import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -44,7 +45,7 @@ import org.overturetool.vdmj.values.ValueList;
  *	The parent class of all VDM expressions.
  */
 
-public abstract class Expression implements Serializable
+public abstract class Expression implements Serializable,IAstNode
 {
 	private static final long serialVersionUID = 1L;
 
@@ -66,6 +67,7 @@ public abstract class Expression implements Serializable
 		this.breakpoint = new Breakpoint(location);
 
 		location.executable(true);
+		LexLocation.addAstNode(getLocation(), this);
 	}
 
 	/**
@@ -289,5 +291,15 @@ public abstract class Expression implements Serializable
 		{
 			TypeChecker.detail2(tag1, obj1, tag2, obj2);
 		}
+	}
+	
+	public String getName()
+	{
+		return location.module;
+	}
+	
+	public LexLocation getLocation()
+	{
+		return location;
 	}
 }

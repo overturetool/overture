@@ -25,6 +25,7 @@ package org.overturetool.vdmj.definitions;
 
 import java.io.Serializable;
 
+import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
@@ -53,7 +54,7 @@ import org.overturetool.vdmj.values.ValueList;
  * definition.
  */
 
-public abstract class Definition implements Serializable
+public abstract class Definition implements Serializable, IAstNode
 {
 	private static final long serialVersionUID = 1L;
 
@@ -85,6 +86,7 @@ public abstract class Definition implements Serializable
 		this.name = name;
 		this.nameScope = scope;
 		this.accessSpecifier = AccessSpecifier.DEFAULT;
+		LexLocation.addAstNode(getLocation(), this);
 	}
 
 	@Override
@@ -577,5 +579,16 @@ public abstract class Definition implements Serializable
 	public Value abort(LocatedException e, Context ctxt)
 	{
 		throw new ContextException(e.number, e.getMessage(), e.location, ctxt);
+	}
+	
+	
+	public String getName()
+	{
+		return name.name;
+	}
+	
+	public LexLocation getLocation()
+	{
+		return location;
 	}
 }

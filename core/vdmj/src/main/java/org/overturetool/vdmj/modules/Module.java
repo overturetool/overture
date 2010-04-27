@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Vector;
 
+import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.RenamedDefinition;
@@ -49,7 +50,7 @@ import org.overturetool.vdmj.values.Value;
  * A class holding all the details for one module.
  */
 
-public class Module implements Serializable
+public class Module implements Serializable,IAstNode
 {
 	private static final long serialVersionUID = 1L;
 
@@ -97,6 +98,8 @@ public class Module implements Serializable
 		importdefs = new DefinitionList();	// and import nothing
 
 		this.delegate = new Delegate(name.name, defs);
+		
+		LexLocation.addAstNode(getLocation(), this);
 	}
 
 	/**
@@ -390,5 +393,23 @@ public class Module implements Serializable
 	public Value invokeDelegate(Context ctxt)
 	{
 		return delegate.invokeDelegate(delegateObject, ctxt);
+	}
+
+	public LexLocation getLocation()
+	{
+		if(name!=null)
+		{
+			return this.name.location;
+		}
+		return null;
+	}
+
+	public String getName()
+	{
+		if(name!=null)
+		{
+			return this.name.name;
+		}
+		return null;
 	}
 }
