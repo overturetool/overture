@@ -29,10 +29,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Vector;
+
+import org.overturetool.vdmj.ast.IAstNode;
 
 /**
  * A class to hold the location of a token.
@@ -44,6 +47,9 @@ public class LexLocation implements Serializable
 
 	/** A collection of all LexLocation objects. */
 	private static List<LexLocation> allLocations = new Vector<LexLocation>();
+	
+	/** A collection of all LexLocation objects to the AstNodes. */
+	private static Map<LexLocation,IAstNode> locationToAstNode = new Hashtable<LexLocation,IAstNode>();
 
 	/** A map of f/op/class names to their lexical span, for coverage. */
 	private static Map<LexNameToken, LexLocation> nameSpans =
@@ -448,5 +454,20 @@ public class LexLocation implements Serializable
 		}
 
 		br.close();
+	}
+	
+	public static void addAstNode(LexLocation location, IAstNode node)
+	{
+		locationToAstNode.put(location, node);
+	}
+	
+	public static Map<LexLocation,IAstNode> getLocationToAstNodeMap()
+	{
+		return locationToAstNode;
+	}
+	
+	public static List<LexLocation> getAllLocations()
+	{
+		return allLocations;
 	}
 }

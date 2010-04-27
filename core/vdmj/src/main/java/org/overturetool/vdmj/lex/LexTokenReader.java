@@ -114,6 +114,10 @@ public class LexTokenReader extends BacktrackInputReader
 	/** An end of file symbol. */
 	private static final char EOF = (char)-1;
 
+
+	/** The assumed tab stop, for calculating positions. */
+	public static /*final*/ int TABSTOP = 4;
+
 	/**
 	 * Create a LexTokenReader for the filename passed.
 	 *
