@@ -60,7 +60,7 @@ import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
-import org.overture.ide.ast.AstManager;
+import org.overture.ide.core.resources.VdmProject;
 import org.overture.ide.plugins.traces.OvertureTracesPlugin;
 import org.overture.ide.plugins.traces.TracesConstants;
 import org.overture.ide.plugins.traces.internal.VdmjTracesHelper;
@@ -71,11 +71,7 @@ import org.overture.ide.plugins.traces.views.treeView.ProjectTreeNode;
 import org.overture.ide.plugins.traces.views.treeView.TraceTestGroup;
 import org.overture.ide.plugins.traces.views.treeView.TraceTestTreeNode;
 import org.overture.ide.plugins.traces.views.treeView.TraceTreeNode;
-import org.overture.ide.utility.FileUtility;
-import org.overture.ide.utility.ProjectUtility;
-import org.overture.ide.vdmpp.core.VdmPpProjectNature;
-import org.overture.ide.vdmrt.core.VdmRtProjectNature;
-import org.overture.ide.vdmsl.core.VdmSlProjectNature;
+import org.overture.ide.ui.utility.EditorUtility;
 import org.overturetool.traces.utility.ITracesHelper;
 import org.overturetool.traces.utility.TraceHelperNotInitializedException;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
@@ -149,7 +145,7 @@ public class TracesTreeView extends ViewPart
 				if (traceHelpers.get(project.getName()) != null)
 					traceHelpers.remove(project.getName());
 
-				ITracesHelper tmpHelper = new VdmjTracesHelper(project, 3);
+				ITracesHelper tmpHelper = new VdmjTracesHelper(getSite().getShell(),VdmProject.createProject(project), 3);
 
 				if (tmpHelper.GetClassNamesWithTraces().size() > 0)
 
@@ -174,17 +170,11 @@ public class TracesTreeView extends ViewPart
 
 	public static boolean isValidProject(IProject project)
 	{
-		try
-		{
-			return project.isOpen()
-					&& project.isAccessible()
-					&& (project.hasNature(VdmPpProjectNature.VDM_PP_NATURE)
-							|| project.hasNature(VdmRtProjectNature.VDM_RT_NATURE) || project.hasNature(VdmSlProjectNature.VDM_SL_NATURE)&& AstManager.instance().getProjects().contains(project));
-		} catch (CoreException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
+		return project.isOpen()
+				&& project.isAccessible()
+				&& VdmProject.isVdmProject(project);
+//					&& (project.hasNature(VdmPpProjectNature.VDM_PP_NATURE)
+//							|| project.hasNature(VdmRtProjectNature.VDM_RT_NATURE) || project.hasNature(VdmSlProjectNature.VDM_SL_NATURE)&& AstManager.instance().getProjects().contains(project));
 	}
 
 	private void SetTraceHelpers()
@@ -1131,10 +1121,10 @@ public class TracesTreeView extends ViewPart
 						// gotoLine(,
 						// tn.GetTraceDefinition().location.startLine,
 						// tn.getName());
-						IFile file = ProjectUtility.findIFile(iproject,
+						IFile file = VdmProject.createProject(iproject).findIFile(
 								helper.GetFile(tn.getParent().getName()));
 
-						FileUtility.gotoLocation(file,
+						EditorUtility.gotoLocation(file,
 								tn.GetTraceDefinition().location,
 								tn.getName());
 					} catch (IOException e)

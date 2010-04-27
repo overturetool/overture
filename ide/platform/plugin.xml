@@ -9,7 +9,7 @@
        point="org.eclipse.core.runtime.products">
     <product
           application="org.eclipse.ui.ide.workbench"
-          name="%productName">
+          name="Overture Platform">
        <property
              name="windowImages"
              value="icons/ctool16/overture_misc.png,icons/ctool32/overture_misc.png,icons/ctool48/overture_misc.png,icons/ctool64/overture_misc.png,icons/ctool128/overture_misc.png">
@@ -36,7 +36,7 @@
        </property>
        <property
              name="appName"
-             value="%productName">
+             value="Overture Platform">
        </property>
        <property
              name="preferenceCustomization"

@@ -205,11 +205,11 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 			{
 				ILaunchConfiguration config = configs[i];
 
-				String module = config.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_MODULE, "");
+				String defaultModule = config.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_DEFAULT, "");
 				String pName = config.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, "");
 				String operation = config.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_OPERATION, "");
 
-				if (module.equals(getModuleName(type).toString())
+				if (defaultModule.equals(getModuleName(type).toString())
 						&& pName.equalsIgnoreCase(projectName)
 						&& operation.equals(getOperationName(type) + "()"))
 				{ //$NON-NLS-1$

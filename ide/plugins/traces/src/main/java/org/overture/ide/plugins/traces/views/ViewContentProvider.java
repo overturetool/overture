@@ -132,8 +132,7 @@ ITreeContentProvider {
 
 			try {
 				// if the project is a overture project
-				if (iprojects[j].isOpen()
-						&& iprojects[j].getNature(VdmPpProjectNature.VDM_PP_NATURE) != null) {
+				if (TracesTreeView.isValidProject(iprojects[j])) {
 					
 					// create project node
 					projectTreeNode = new ProjectTreeNode(iprojects[j]);

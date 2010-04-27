@@ -14,6 +14,7 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.console.IConsoleConstants;
+import org.overture.ide.ui.IVdmUiConstants;
 
 
 
@@ -46,7 +47,7 @@ public class CombinatorialTestingPerspective implements IPerspectiveFactory {
 		String editorArea = factory.getEditorArea();
 		
 		IFolderLayout folder= factory.createFolder("left", IPageLayout.LEFT, (float)0.2, editorArea); //$NON-NLS-1$
-		String navigator = "org.eclipse.dltk.ui.ScriptExplorer";
+		String navigator = IVdmUiConstants.NAVIGATOR;
 
 		folder.addView(navigator);
 		

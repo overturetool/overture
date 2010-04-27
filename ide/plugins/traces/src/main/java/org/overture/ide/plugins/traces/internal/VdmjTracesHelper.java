@@ -7,29 +7,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
-import org.overture.ide.ast.AstManager;
-import org.overture.ide.ast.NotAllowedException;
-import org.overture.ide.ast.RootNode;
-import org.overture.ide.builders.builder.AbstractBuilder;
+import org.overture.ide.core.ast.NotAllowedException;
+import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.traces.TracesXmlStoreReader;
 import org.overture.ide.plugins.traces.TracesXmlStoreReader.TraceStatusXml;
-import org.overture.ide.utility.IVdmProject;
-import org.overture.ide.utility.VdmProject;
-import org.overture.ide.vdmpp.core.VdmPpCorePluginConstants;
-import org.overture.ide.vdmpp.core.VdmPpProjectNature;
-import org.overture.ide.vdmrt.core.VdmRtCorePluginConstants;
-import org.overture.ide.vdmrt.core.VdmRtProjectNature;
-import org.overture.ide.vdmsl.core.VdmSlCorePluginConstants;
-import org.overture.ide.vdmsl.core.VdmSlProjectNature;
+import org.overture.ide.ui.utility.VdmTypeCheckerUi;
+import org.overture.ide.vdmpp.core.IVdmPpCoreConstants;
 import org.overturetool.traces.utility.ITracesHelper;
 import org.overturetool.traces.utility.TraceHelperNotInitializedException;
 import org.overturetool.traces.utility.TraceTestResult;
@@ -37,11 +27,9 @@ import org.overturetool.traces.utility.TraceTestStatus;
 import org.overturetool.traces.utility.TraceXmlWrapper;
 import org.overturetool.traces.vdmj.TraceInterpreter;
 import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.modules.Module;
-import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.traces.TraceReductionType;
 import org.xml.sax.SAXException;
 
@@ -53,38 +41,44 @@ public class VdmjTracesHelper implements ITracesHelper
 	String projectName;
 	final String TRACE_STORE_DIR_NAME = "generated/traces";
 	IVdmProject project;
-	String nature = VdmPpProjectNature.VDM_PP_NATURE;
+	String nature = IVdmPpCoreConstants.NATURE;
 	HashMap<String, TracesXmlStoreReader> classTraceReaders = new HashMap<String, TracesXmlStoreReader>();
 	File projectDir;
 	Dialect dialect = Dialect.VDM_PP;
-	String contentTypeId = VdmPpCorePluginConstants.CONTENT_TYPE;
+	String contentTypeId = IVdmPpCoreConstants.CONTENT_TYPE;
+	Shell shell;
 
-	public VdmjTracesHelper(IProject project, int max) throws Exception {
-		this.project = new VdmProject(project);
+	public VdmjTracesHelper(Shell shell,IVdmProject project, int max) throws Exception {
+		this.project = project;
+this.shell = shell;
+//		if (project.hasNature(VdmPpProjectNature.VDM_PP_NATURE))
+//		{
+//			nature = VdmPpProjectNature.VDM_PP_NATURE;
+//			contentTypeId = VdmPpCorePluginConstants.CONTENT_TYPE;
+//			dialect = Dialect.VDM_PP;
+//		} else if (project.hasNature(VdmRtProjectNature.VDM_RT_NATURE))
+//		{
+//			nature = VdmRtProjectNature.VDM_RT_NATURE;
+//			contentTypeId = VdmRtCorePluginConstants.CONTENT_TYPE;
+//			dialect = Dialect.VDM_RT;
+//		} else if (project.hasNature(VdmSlProjectNature.VDM_SL_NATURE))
+//		{
+//			nature = VdmSlProjectNature.VDM_SL_NATURE;
+//			contentTypeId = VdmSlCorePluginConstants.CONTENT_TYPE;
+//			dialect = Dialect.VDM_SL;
+//		}
 
-		if (project.hasNature(VdmPpProjectNature.VDM_PP_NATURE))
-		{
-			nature = VdmPpProjectNature.VDM_PP_NATURE;
-			contentTypeId = VdmPpCorePluginConstants.CONTENT_TYPE;
-			dialect = Dialect.VDM_PP;
-		} else if (project.hasNature(VdmRtProjectNature.VDM_RT_NATURE))
-		{
-			nature = VdmRtProjectNature.VDM_RT_NATURE;
-			contentTypeId = VdmRtCorePluginConstants.CONTENT_TYPE;
-			dialect = Dialect.VDM_RT;
-		} else if (project.hasNature(VdmSlProjectNature.VDM_SL_NATURE))
-		{
-			nature = VdmSlProjectNature.VDM_SL_NATURE;
-			contentTypeId = VdmSlCorePluginConstants.CONTENT_TYPE;
-			dialect = Dialect.VDM_SL;
-		}
-
+		nature = this.project.getVdmNature();
+		contentTypeId = this.project.getContentTypeIds().get(0);
+		dialect = this.project.getDialect();
+		
 		this.projectDir = new File(project.getLocation().toFile(),
 				TRACE_STORE_DIR_NAME.replace('/', File.separatorChar));
 		if (!this.projectDir.exists())
 			this.projectDir.mkdirs();
 
-		AbstractBuilder.parseMissingFiles(project, nature, contentTypeId, null);
+		project.getModel().refresh(false, null);
+		//AbstractBuilder.parseMissingFiles(project, nature, contentTypeId, null);
 
 		org.overturetool.vdmj.Settings.prechecks = true;
 		org.overturetool.vdmj.Settings.postchecks = true;
@@ -102,25 +96,25 @@ public class VdmjTracesHelper implements ITracesHelper
 
 	}
 
-	private ClassList getClasses() throws NotAllowedException
-	{
-		RootNode root = AstManager.instance().getRootNode(project.getProject(),
-				nature);
-		if (root != null)
-			return root.getClassList();
-		else
-			return new ClassList();
-	}
-
-	private ModuleList getModules() throws NotAllowedException
-	{
-		RootNode root = AstManager.instance().getRootNode(project.getProject(),
-				nature);
-		if (root != null)
-			return root.getModuleList();
-		else
-			return new ModuleList();
-	}
+//	private ClassList getClasses() throws NotAllowedException
+//	{
+//		RootNode root = AstManager.instance().getRootNode(project.getProject(),
+//				nature);
+//		if (root != null)
+//			return root.getClassList();
+//		else
+//			return new ClassList();
+//	}
+//
+//	private ModuleList getModules() throws NotAllowedException
+//	{
+//		RootNode root = AstManager.instance().getRootNode(project.getProject(),
+//				nature);
+//		if (root != null)
+//			return root.getModuleList();
+//		else
+//			return new ModuleList();
+//	}
 
 	public List<String> GetClassNamesWithTraces() throws IOException
 	{
@@ -131,7 +125,7 @@ public class VdmjTracesHelper implements ITracesHelper
 		{
 			if (dialect == Dialect.VDM_SL)
 			{
-				for (Module classdef : getModules())
+				for (Module classdef : project.getModel().getModuleList())
 				{
 					for (Object string : classdef.defs)
 					{
@@ -146,7 +140,7 @@ public class VdmjTracesHelper implements ITracesHelper
 
 			} else
 			{
-				for (ClassDefinition classdef : getClasses())
+				for (ClassDefinition classdef : project.getModel().getClassList())
 				{
 					for (Object string : classdef.definitions)
 					{
@@ -242,14 +236,14 @@ public class VdmjTracesHelper implements ITracesHelper
 		buildProjectIfRequired();
 
 		if (dialect == Dialect.VDM_SL)
-			interpeter.processTrace(getModules(),
+			interpeter.processTrace(project.getModel().getModuleList(),
 					className,
 					false,
 					storage,
 					dialect,
 					project.getLanguageVersion());
 		else
-			interpeter.processTrace(getClasses(),
+			interpeter.processTrace(project.getModel().getClassList(),
 					className,
 					false,
 					storage,
@@ -275,7 +269,7 @@ public class VdmjTracesHelper implements ITracesHelper
 		buildProjectIfRequired();
 
 		if (dialect == Dialect.VDM_SL)
-			interpeter.processTrace(getModules(),
+			interpeter.processTrace(project.getModel().getModuleList(),
 					className,
 					false,
 					storage,
@@ -285,7 +279,7 @@ public class VdmjTracesHelper implements ITracesHelper
 					traceReductionType,
 					seed);
 		else
-			interpeter.processTrace(getClasses(),
+			interpeter.processTrace(project.getModel().getClassList(),
 					className,
 					false,
 					storage,
@@ -299,23 +293,33 @@ public class VdmjTracesHelper implements ITracesHelper
 
 	void buildProjectIfRequired()
 	{
-		RootNode root = AstManager.instance().getRootNode(project.getProject(),
-				nature);
-		if (root != null && root.isChecked())
-			return;
-		else
-			try
-			{
-				IProgressMonitor progressMonitor = null;
+		shell.getDisplay().asyncExec(new Runnable() {
 
-				project.getProject()
-						.build(IncrementalProjectBuilder.FULL_BUILD,
-								progressMonitor);
-			} catch (CoreException e)
+			public void run()
 			{
-				System.out.println("Error forcing build from traces");
-				e.printStackTrace();
+VdmTypeCheckerUi.typeCheck(shell, project);
+				
 			}
+
+		});
+		
+//		RootNode root = AstManager.instance().getRootNode(project.getProject(),
+//				nature);
+//		if (root != null && root.isChecked())
+//			return;
+//		else
+//			try
+//			{
+//				IProgressMonitor progressMonitor = null;
+//
+//				project.getProject()
+//						.build(IncrementalProjectBuilder.FULL_BUILD,
+//								progressMonitor);
+//			} catch (CoreException e)
+//			{
+//				System.out.println("Error forcing build from traces");
+//				e.printStackTrace();
+//			}
 	}
 
 	public List<NamedTraceDefinition> GetTraceDefinitions(String className)
@@ -381,7 +385,7 @@ public class VdmjTracesHelper implements ITracesHelper
 
 		try
 		{
-			for (ClassDefinition cl : getClasses())
+			for (ClassDefinition cl : project.getModel().getClassList())
 			{
 				if (cl.name.name.equals(className))
 					return cl;
@@ -398,7 +402,7 @@ public class VdmjTracesHelper implements ITracesHelper
 
 		try
 		{
-			for (Module cl : getModules())
+			for (Module cl : project.getModel().getModuleList())
 			{
 				if (cl.name.name.equals(moduleName))
 					return cl;
@@ -486,10 +490,10 @@ public class VdmjTracesHelper implements ITracesHelper
 	{
 		try
 		{
-			if (dialect == Dialect.VDM_SL && getModules() != null
-					&& getModules().size() > 0)
+			if (dialect == Dialect.VDM_SL && project.getModel().getModuleList() != null
+					&& project.getModel().getModuleList().size() > 0)
 				return;
-			else if (getClasses() != null && getClasses().size() > 0)
+			else if (project.getModel().getClassList() != null && project.getModel().getClassList().size() > 0)
 				return;
 
 			throw new TraceHelperNotInitializedException(projectName);

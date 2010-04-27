@@ -120,12 +120,14 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 	public boolean isTerminated()
 	{
 		// check process since no event handler is available on the process to check
-		if (fProcess.isTerminated())
+		if (fProcess.isTerminated() && !isRemoteDebug())
 		{
 			state.setState(DebugState.Terminated);
 		}
 		return state.inState(DebugState.Terminated);
 	}
+
+	
 
 	public void terminate() throws DebugException
 	{
@@ -637,6 +639,17 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 	{
 		this.fThreads.remove(thread);
 
+	}
+	
+	private boolean isRemoteDebug()
+	{
+		try
+		{
+			return fLaunch!=null && fLaunch .getLaunchConfiguration()!=null && fLaunch.getLaunchConfiguration().getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, false);
+		} catch (CoreException e)
+		{
+			return false;
+		}
 	}
 
 }

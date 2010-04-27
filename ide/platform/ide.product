@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="%productName" uid="org.overture.ide.platform.product" id="org.overture.ide.platform.product" application="org.eclipse.ui.ide.workbench" version="1.0.0" useFeatures="true" includeLaunchers="true">
+<product name="Overture Platform" uid="org.overture.ide.platform.product" id="org.overture.ide.platform.product" application="org.eclipse.ui.ide.workbench" version="1.0.1" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/org.overture.ide.platform/icons/ctool128/overture_misc.png"/>
@@ -50,7 +50,7 @@
    </plugins>
 
    <features>
-      <feature id="org.overture.ide.features.rcp" version="1.0.0.qualifier"/>
+      <feature id="org.overture.ide.features.rcp" version="1.0.1.qualifier"/>
    </features>
 
 

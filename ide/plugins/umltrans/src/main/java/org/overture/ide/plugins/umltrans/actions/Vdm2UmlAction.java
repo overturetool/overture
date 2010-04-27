@@ -8,8 +8,6 @@ import java.util.Vector;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -22,16 +20,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.overture.ide.utility.FileUtility;
-import org.overture.ide.utility.ProjectUtility;
-import org.overture.ide.utility.VdmProject;
-import org.overture.ide.vdmpp.core.VdmPpCorePluginConstants;
-import org.overture.ide.vdmpp.core.VdmPpProjectNature;
-import org.overture.ide.vdmrt.core.VdmRtCorePluginConstants;
-import org.overture.ide.vdmrt.core.VdmRtProjectNature;
+import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.core.resources.IVdmSourceUnit;
+import org.overture.ide.core.resources.VdmProject;
 import org.overturetool.parser.imp.ParserError;
 import org.overturetool.umltrans.Main.CmdLineProcesser;
 import org.overturetool.umltrans.Main.ParseException;
+import org.overturetool.vdmj.lex.Dialect;
 
 
 public class Vdm2UmlAction implements IObjectActionDelegate
@@ -78,18 +73,30 @@ public class Vdm2UmlAction implements IObjectActionDelegate
 
 			
 			
-			List<IFile> files = new Vector<IFile>();// = ProjectUtility.getFiles(selectedProject);
+			List<IVdmSourceUnit> files = new Vector<IVdmSourceUnit>();// = ProjectUtility.getFiles(selectedProject);
 			
-			if (selectedProject.hasNature(VdmPpProjectNature.VDM_PP_NATURE))
-				files= ProjectUtility.getFiles(selectedProject, VdmPpCorePluginConstants.CONTENT_TYPE);
+			if(VdmProject.isVdmProject(selectedProject))
+			{
+				IVdmProject p = VdmProject.createProject(selectedProject);
+				if(p.getDialect() == Dialect.VDM_PP || p.getDialect() == Dialect.VDM_RT)
+				{
+					files = p.getSpecFiles();
+				}else
+				{
+					return;
+				}
+			}
 			
-			if (selectedProject.hasNature(VdmRtProjectNature.VDM_RT_NATURE))
-				files= ProjectUtility.getFiles(selectedProject, VdmRtCorePluginConstants.CONTENT_TYPE);
+//			if (selectedProject.hasNature(VdmPpProjectNature.VDM_PP_NATURE))
+//				files= ProjectUtility.getFiles(selectedProject, VdmPpCorePluginConstants.CONTENT_TYPE);
+//			
+//			if (selectedProject.hasNature(VdmRtProjectNature.VDM_RT_NATURE))
+//				files= ProjectUtility.getFiles(selectedProject, VdmRtCorePluginConstants.CONTENT_TYPE);
 			
 			List<File> filesPathes = new Vector<File>();
-			for (IFile file : files)
+			for (IVdmSourceUnit file : files)
 			{
-				filesPathes.add(file.getLocation().toFile());
+				filesPathes.add(file.getSystemFile());
 			}
 
 			File outFile = new File(selectedProject.getLocation().toFile(),

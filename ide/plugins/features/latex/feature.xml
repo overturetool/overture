@@ -16,9 +16,9 @@
       [Enter License Description here.]
    </license>
 
-   <includes
-         id="org.overture.ide.features.core"
-         version="0.0.0"/>
+   <requires>
+      <import feature="org.overture.ide.features.core" version="1.0.0.qualifier" match="greaterOrEqual"/>
+   </requires>
 
    <plugin
          id="org.overture.ide.plugins.latex"

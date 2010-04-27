@@ -10,17 +10,11 @@ Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.plugins.traces;singleton
  :=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.eclipse.ui;bundle-version="3.4.2",
- org.eclipse.core.runtime;bundle-version="3.4.0",
- org.eclipse.core.resources;bundle-version="3.4.2",
- org.eclipse.ui.console;bundle-version="3.3.1",
- org.eclipse.ui.ide;bundle-version="3.4.2",
+Require-Bundle: org.eclipse.ui.console;bundle-version="3.3.1",
  org.overture.ide.vdmpp.core;bundle-version="1.0.0",
  org.overture.ide.generated.traces;bundle-version="1.0.0",
- org.overture.ide.builders.core;bundle-version="1.0.0",
- org.overture.ide.ast;bundle-version="1.0.0",
- org.overture.ide.utility;bundle-version="1.0.0",
- org.overture.ide.generated.vdmj;bundle-version="1.0.0",
  org.overture.ide.vdmrt.core;bundle-version="1.0.0",
- org.overture.ide.vdmsl.core;bundle-version="1.0.0"
+ org.overture.ide.vdmsl.core;bundle-version="1.0.0",
+ org.overture.ide.core;bundle-version="2.0.0",
+ org.overture.ide.ui;bundle-version="1.0.0"
 Bundle-Activator: org.overture.ide.plugins.traces.OvertureTracesPlugin

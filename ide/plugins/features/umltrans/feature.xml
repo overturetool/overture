@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.overture.ide.plugins.features.quickinterpreter"
-      label="VDM Quick Interpreter"
+      id="org.overture.ide.plugins.features.umltrans"
+      label="UML Transformation"
       version="1.0.0.qualifier">
 
    <description url="http://www.example.com/description">
@@ -17,11 +17,17 @@
    </license>
 
    <requires>
-      <import feature="org.overture.ide.features.core" version="1.0.0.qualifier" match="greaterOrEqual"/>
+      <import feature="org.overture.ide.features.core" version="1.0.1.qualifier"/>
    </requires>
 
    <plugin
-         id="org.overture.ide.plugins.quickinterpreter"
+         id="org.overture.ide.generated.umltrans"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.overture.ide.plugins.umltrans"
          download-size="0"
          install-size="0"
          version="0.0.0"
