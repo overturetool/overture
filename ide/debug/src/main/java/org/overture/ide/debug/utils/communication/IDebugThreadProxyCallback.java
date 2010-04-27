@@ -1,5 +1,7 @@
 package org.overture.ide.debug.utils.communication;
 
+import org.overturetool.vdmj.scheduler.RunState;
+
 
 public interface IDebugThreadProxyCallback
 {
@@ -78,9 +80,17 @@ public interface IDebugThreadProxyCallback
 
 	void fireBreakpointSet(Integer tid, Integer breakpointId);
 
-	void suspended(int reason);
+	void suspended();
 	
 	void deadlockDetected();
+	
+	/**
+	 * Update info about internal state of debugger thread
+	 * @param id The internal debugger id
+	 * @param name The internal name
+	 * @param state The current internal state
+	 */
+	void updateInternalState(String id, String name, RunState state);
 
 	
 

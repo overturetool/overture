@@ -54,13 +54,13 @@ public class VdmDebugState
 					break;
 				case Resumed:
 					Assert.isLegal(canChange(DebugState.Resumed), "Cannot resume in a terminated state");
-					if(states.contains(DebugState.IsStepping))
+					if (states.contains(DebugState.IsStepping))
 					{
-					states.clear();
-					states.add(DebugState.IsStepping);
-					}else
+						states.clear();
+						states.add(DebugState.IsStepping);
+					} else
 					{
-					states.clear();
+						states.clear();
 					}
 					states.add(newState);
 					break;
@@ -95,17 +95,32 @@ public class VdmDebugState
 		switch (newState)
 		{
 			case Disconnected:
-				return !inState(DebugState.Terminated) && !inState(DebugState.Disconnected);
+				return !inState(DebugState.Terminated)
+						&& !inState(DebugState.Disconnected);
 			case Terminated:
 				return !inState(DebugState.Terminated);
 			case Suspended:
-				return inState(DebugState.Resumed);//states.size()==1 && 
+				return inState(DebugState.Resumed);// states.size()==1 &&
 			case IsStepping:
-				return (!inState(DebugState.Terminated)||!inState(DebugState.Disconnected)||!inState(DebugState.Deadlocked)) && inState(DebugState.Suspended);
+				return (!inState(DebugState.Terminated)
+						|| !inState(DebugState.Disconnected) || !inState(DebugState.Deadlocked))
+						&& inState(DebugState.Suspended);
 			case Resumed:
-				return states.size()==0 || inState(DebugState.IsStepping) ||inState(DebugState.Suspended);
+				return states.size() == 0 || inState(DebugState.IsStepping)
+						|| inState(DebugState.Suspended);
 			default:
 				return false;
 		}
+	}
+
+	@Override
+	public String toString()
+	{
+		String string = "";
+		for (DebugState s : states)
+		{
+			string += s + " ";
+		}
+		return string;
 	}
 }

@@ -21,6 +21,7 @@ import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.model.VdmDebugState.DebugState;
 import org.overture.ide.debug.utils.communication.DebugThreadProxy;
 import org.overture.ide.debug.utils.communication.IDebugThreadProxyCallback;
+import org.overturetool.vdmj.scheduler.RunState;
 
 public class VdmThread extends VdmDebugElement implements IThread,
 		IVdmExecution
@@ -124,7 +125,7 @@ public class VdmThread extends VdmDebugElement implements IThread,
 			fTarget.setBreakpointId(tid, breakpointId);
 		}
 
-		public void suspended(int reason)
+		public void suspended()
 		{
 
 			try
@@ -155,12 +156,17 @@ public class VdmThread extends VdmDebugElement implements IThread,
 			fireDeadlockedEvent();
 		}
 
+		public void updateInternalState(String id, String name, RunState state)
+		{
+			internalState = state;
+		}
+
 	}
 
 	private String fName;
 	private int id;
 	private DebugThreadProxy proxy;
-
+	RunState internalState = RunState.CREATED;
 	private List<VdmStackFrame> frames = null;
 
 	private VdmDebugState state = new VdmDebugState();
@@ -295,18 +301,19 @@ public class VdmThread extends VdmDebugElement implements IThread,
 
 	public IStackFrame getTopStackFrame() throws DebugException
 	{
-		// if (isSuspended()&& id == 4)
-		// {
-		// if(frames==null)
-		// {
-		// updateStackFrames();
-		// }
-		// if (frames!=null && frames.size() > 0)
-		// {
-		// return frames.get(0);
-		// }
-		// }
-		return null;
+		if (internalState== RunState.RUNNING && isSuspended())
+		{
+			if (frames == null)
+			{
+				updateStackFrames();
+			}
+			if (frames != null && frames.size() > 0)
+			{
+				return frames.get(0);
+			}
+		}
+
+			return null;
 	}
 
 	public String getName() throws DebugException
@@ -466,6 +473,7 @@ public class VdmThread extends VdmDebugElement implements IThread,
 
 	public void doStepOver(Object source) throws DebugException
 	{
+		System.out.println("StepOver: "+ state);
 		if (frames != null)
 		{
 			for (VdmStackFrame frame : frames)

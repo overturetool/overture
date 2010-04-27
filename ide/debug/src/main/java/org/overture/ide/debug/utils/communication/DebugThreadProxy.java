@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import org.overture.ide.debug.utils.xml.XMLOpenTagNode;
 import org.overture.ide.debug.utils.xml.XMLParser;
 import org.overture.ide.debug.utils.xml.XMLTagNode;
 import org.overturetool.vdmj.debug.DBGPRedirect;
+import org.overturetool.vdmj.scheduler.RunState;
 import org.overturetool.vdmj.util.Base64;
 
 public class DebugThreadProxy extends AsyncCaller
@@ -82,6 +84,8 @@ public class DebugThreadProxy extends AsyncCaller
 	private Thread dbgpReaderThread;
 	private DebugProxyState debugState = DebugProxyState.Ready;
 
+	private boolean isSuspended = false;
+
 	public DebugThreadProxy(Socket socket, String sessionId, Integer threadId,
 			IDebugThreadProxyCallback callback)
 	{
@@ -120,6 +124,7 @@ public class DebugThreadProxy extends AsyncCaller
 
 	public void resume()
 	{
+
 		Integer ticket = getNextTicket();
 		write("run -i " + ticket);
 
@@ -391,50 +396,12 @@ public class DebugThreadProxy extends AsyncCaller
 			// }
 		} else if (command.equals("run"))
 		{
-			String newstatus = msg.getAttr("status");
-			if (newstatus.equals("break"))
-			{
-				callback.fireBreakpointHit();
-				// breakpointHit("event");
-			} else if (newstatus.equals("stopped"))
-			{
-				callback.fireStopped();// terminated();
+			processRun(msg);
 
-			}
-		} else if (command.equals("step_over"))
+		} else if (command.equals("step_over") || command.equals("step_into")
+				|| command.equals("step_out"))
 		{
-			String newstatus = msg.getAttr("status");
-			if (newstatus.equals("break"))
-			{
-				callback.suspended(IDebugThreadProxyCallback.STEP_OVER);
-			} else if (newstatus.equals("stopped"))
-			{
-				callback.fireStopped();// terminated();
-
-			}
-		} else if (command.equals("step_into"))
-		{
-			String newstatus = msg.getAttr("status");
-			if (newstatus.equals("break"))
-			{
-				callback.suspended(IDebugThreadProxyCallback.STEP_INTO);
-			} else if (newstatus.equals("stopped"))
-			{
-				callback.fireStopped();// terminated();
-
-			}
-		} else if (command.equals("step_out"))
-		{
-			String newstatus = msg.getAttr("status");
-			if (newstatus.equals("break"))
-			{
-				callback.suspended(IDebugThreadProxyCallback.STEP_RETURN);
-			} else if (newstatus.equals("stopped"))
-			{
-				setDebugState(DebugProxyState.Ended);
-				callback.fireStopped();// terminated();
-
-			}
+			precessStep(msg);
 		} else if (command.equals("context_get")
 				|| command.equals("property_get"))
 		{
@@ -455,6 +422,65 @@ public class DebugThreadProxy extends AsyncCaller
 			// System.out.println("STACK DEPTH = " + msg.toString());
 		}
 
+	}
+
+	private void processRun(XMLTagNode msg)
+	{
+		String newstatus = msg.getAttr("status");
+
+		XMLOpenTagNode node = (XMLOpenTagNode) msg;
+		for (XMLNode n : node.children)
+		{
+			XMLTagNode internalNode = (XMLTagNode) n;
+			processInternal(internalNode);
+		}
+
+		if (newstatus.equals("break"))
+		{
+			isSuspended = true;
+			callback.fireBreakpointHit();
+			// breakpointHit("event");
+		} else if (newstatus.equals("stopped"))
+		{
+			callback.fireStopped();// terminated();
+
+		}
+
+	}
+
+	private void precessStep(XMLTagNode msg)
+	{
+		String newstatus = msg.getAttr("status");
+
+		XMLOpenTagNode node = (XMLOpenTagNode) msg;
+		for (XMLNode n : node.children)
+		{
+			XMLTagNode internalNode = (XMLTagNode) n;
+			processInternal(internalNode);
+		}
+
+		if (newstatus.equals("break"))
+		{
+			isSuspended = true;
+			callback.suspended();
+		} else if (newstatus.equals("stopped"))
+		{
+			callback.fireStopped();// terminated();
+
+		}
+
+	}
+
+	public void processInternal(XMLTagNode msg)
+	{
+		if (msg.tag.equals("internal"))
+		{
+			String id = msg.getAttr("threadId");
+			String name = msg.getAttr("threadName");
+			String stateString = msg.getAttr("threadState");
+			RunState state = RunState.valueOf(stateString);
+			callback.updateInternalState(id, name, state);
+		}
 	}
 
 	public void processInit(XMLTagNode tagnode) throws IOException
@@ -636,6 +662,11 @@ public class DebugThreadProxy extends AsyncCaller
 
 	public VdmStackFrame[] getStack() throws SocketTimeoutException
 	{
+		if (!isSuspended)
+		{
+			return new VdmStackFrame[0];
+		}
+
 		Integer ticket = getNextTicket();
 		String command = "stack_get -i " + ticket;
 		return (VdmStackFrame[]) request(ticket, command);
@@ -643,6 +674,10 @@ public class DebugThreadProxy extends AsyncCaller
 
 	public Integer getStackDepth() throws SocketTimeoutException
 	{
+		if (!isSuspended)
+		{
+			return 0;
+		}
 		Integer ticket = getNextTicket();
 		String command = "stack_depth -i " + (ticket);
 		return (Integer) request(ticket, command);
@@ -652,6 +687,10 @@ public class DebugThreadProxy extends AsyncCaller
 	public VdmVariable[] getVariables(int depth, int contextId)
 			throws SocketTimeoutException
 	{
+		if (!isSuspended)
+		{
+			return new VdmVariable[0];
+		}
 		// int type,
 		// int depth
 		// write("context_get -i " + (++xid) + " -c " + type + " -d " + depth);
@@ -665,6 +704,10 @@ public class DebugThreadProxy extends AsyncCaller
 	@SuppressWarnings("unchecked")
 	public Map<String, Integer> getContextNames() throws SocketTimeoutException
 	{
+		if (!isSuspended)
+		{
+			return new HashMap<String, Integer>();
+		}
 		Integer ticket = getNextTicket();
 		String command = "context_names -i " + ticket;// + " -d " + depth;
 		return (Map<String, Integer>) request(ticket, command);
@@ -674,6 +717,10 @@ public class DebugThreadProxy extends AsyncCaller
 	public VdmVariable[] getVariables(int stackDepth, String propertyLongName,
 			String key, Integer page) throws SocketTimeoutException
 	{
+		if (!isSuspended)
+		{
+			return new VdmVariable[0];
+		}
 		Integer ticket = getNextTicket();
 		String command = "property_get -i " + ticket + " -d " + stackDepth
 				+ " -n " + propertyLongName + " -p " + page;
@@ -699,21 +746,41 @@ public class DebugThreadProxy extends AsyncCaller
 
 	public void runme() throws IOException
 	{
+		if (!isSuspended)
+		{
+			return;
+		}
+		isSuspended = false;
 		write("run -i " + (getNextTicket()));
 	}
 
 	public void step_into() throws IOException
 	{
+		if (!isSuspended)
+		{
+			return;
+		}
+		isSuspended = false;
 		write("step_into -i " + (getNextTicket()));
 	}
 
 	public void step_over() throws IOException
 	{
+		if (!isSuspended)
+		{
+			return;
+		}
+		isSuspended = false;
 		write("step_over -i " + (getNextTicket()));
 	}
 
 	public void step_out() throws IOException
 	{
+		if (!isSuspended)
+		{
+			return;
+		}
+		isSuspended = false;
 		write("step_out -i " + (getNextTicket()));
 	}
 
