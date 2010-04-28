@@ -15,6 +15,7 @@ import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.model.VdmDebugTarget;
 import org.overture.ide.debug.core.model.VdmThread;
+import org.overture.ide.debug.core.model.VdmDebugState.DebugState;
 import org.overture.ide.debug.utils.xml.XMLNode;
 import org.overture.ide.debug.utils.xml.XMLParser;
 import org.overture.ide.debug.utils.xml.XMLTagNode;
@@ -221,9 +222,21 @@ public class DebugCommunication implements IDisposable
 				{
 					name = "Thread [Main]";
 				}
-				VdmThread t = new VdmThread(targets.get(sessionId), id, name,sessionId, s);
 				
-				targets.get(sessionId).newThread(t);
+				VdmDebugTarget target = targets.get(sessionId);
+				
+				DebugState initialState =DebugState.Resumed;
+				if(target.isTerminated() )
+				{
+					initialState = DebugState.Terminated;
+				}else if(target.isSuspended())
+				{
+					initialState = DebugState.Suspended;
+				}
+				
+				VdmThread t = new VdmThread(targets.get(sessionId), id, name,sessionId, s,initialState);
+				
+				target.newThread(t);
 				
 				try
 				{

@@ -1,8 +1,6 @@
 package org.overture.ide.debug.core.model;
 
-import java.io.IOException;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -103,7 +101,7 @@ public class VdmThread extends VdmDebugElement implements IThread,
 
 		public void fireStarted()
 		{
-			if (!state.inState(DebugState.Terminated))
+			if (!state.inState(DebugState.Terminated)&& !state.inState(DebugState.Suspended))
 			{
 				doResume(thread);
 			}
@@ -170,14 +168,15 @@ public class VdmThread extends VdmDebugElement implements IThread,
 	RunState internalState = RunState.CREATED;
 	private List<VdmStackFrame> frames = null;
 
-	private VdmDebugState state = new VdmDebugState();
+	private VdmDebugState state = new VdmDebugState(null);
 	private Object lock = new Object();
 	private boolean updating = false;
 
 	public VdmThread(VdmDebugTarget target, int id, String name,
-			String sessionId, Socket socket)
+			String sessionId, Socket socket,DebugState initialState)
 	{
 		super(target);
+		this.state=new VdmDebugState(initialState);
 		this.id = id;
 		this.fName = name;
 		this.proxy = new DebugThreadProxy(socket, sessionId, id, new CallbackHandler(this));

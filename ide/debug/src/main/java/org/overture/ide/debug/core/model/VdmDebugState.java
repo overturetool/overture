@@ -24,6 +24,14 @@ public class VdmDebugState
 		Terminated, Suspended, Disconnected, IsStepping, Resumed, Deadlocked
 	};
 
+	public VdmDebugState(DebugState initialState)
+	{
+		if (initialState != null)
+		{
+			this.states.add(initialState);
+		}
+	}
+
 	/**
 	 * Sets a new state, an Assert.IsLegal is asserted if the given state is not valid based on the current state
 	 * 

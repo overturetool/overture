@@ -1,5 +1,6 @@
 package org.overture.ide.debug.core.model;
 
+import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
@@ -55,7 +56,6 @@ public class VdmVariable extends VdmDebugElement implements IVariable
 
 	public boolean hasValueChanged() throws DebugException
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -66,9 +66,14 @@ public class VdmVariable extends VdmDebugElement implements IVariable
 		{
 			if(stackFrame.proxy.propertySet(name, value.getKey(), expression))
 			{
-				System.out.println("updated");
+				if(value instanceof VdmSimpleValue)
+				{
+					((VdmSimpleValue)value).updateValue(expression);
+					stackFrame.fireChangeEvent(DebugEvent.CONTENT);
+				}
+				//System.out.println("updated");
 			}else{
-				System.out.println("NOT updated");
+				//System.out.println("NOT updated");
 			}
 		} catch (DBGPProxyException e)
 		{

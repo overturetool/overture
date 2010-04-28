@@ -29,6 +29,11 @@ public class VdmSimpleValue extends VdmValue
 		return new IVariable[0];
 	}
 	
+	public void updateValue(String newValue)
+	{
+		this.value = newValue;
+	}
+	
 	
 	
 	@Override

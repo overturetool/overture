@@ -50,7 +50,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 	private HashMap<Integer, VdmLineBreakpoint> breakpointMap = new HashMap<Integer, VdmLineBreakpoint>();
 	private IVdmProject project;
 
-	private VdmDebugState state = new VdmDebugState();
+	private VdmDebugState state = new VdmDebugState(DebugState.Resumed);
 
 	private List<IBreakpoint> fBreakpoints = new ArrayList<IBreakpoint>();
 	private File outputFolder;
