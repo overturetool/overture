@@ -42,7 +42,8 @@ public enum DBGPOptionType
 	A("-a"),
 	C("-c"),
 	B("-b"),
-	E("-e");
+	E("-e"),
+	L("-l");
 
 	public String tag;
 

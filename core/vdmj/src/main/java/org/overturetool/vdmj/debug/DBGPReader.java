@@ -94,32 +94,32 @@ public class DBGPReader implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	private final String host;
-	private final int port;
-	private final String ideKey;
-	private final String expression;
-	private Socket socket;
-	private InputStream input;
-	private OutputStream output;
-	private final Interpreter interpreter;
-	private final CPUValue cpu;
+	protected final String host;
+	protected final int port;
+	protected final String ideKey;
+	protected final String expression;
+	protected Socket socket;
+	protected InputStream input;
+	protected OutputStream output;
+	protected final Interpreter interpreter;
+	protected final CPUValue cpu;
 
-	private int sessionId = 0;
-	private DBGPStatus status = null;
-	private DBGPReason statusReason = null;
-	private DBGPCommandType command = null;
-	private String transaction = "";
-	private DBGPFeatures features;
-	private byte separator = '\0';
+	protected int sessionId = 0;
+	protected DBGPStatus status = null;
+	protected DBGPReason statusReason = null;
+	protected DBGPCommandType command = null;
+	protected String transaction = "";
+	protected DBGPFeatures features;
+	protected byte separator = '\0';
 
-	private Context breakContext = null;
-	private Breakpoint breakpoint = null;
-	private Value theAnswer = null;
-	private boolean breaksSuspended = false;
-	private boolean connected = false;
-	private RemoteControl remoteControl = null;
+	protected Context breakContext = null;
+	protected Breakpoint breakpoint = null;
+	protected Value theAnswer = null;
+	protected boolean breaksSuspended = false;
+	protected boolean connected = false;
+	protected RemoteControl remoteControl = null;
 
-	private static final int SOURCE_LINES = 5;
+	protected static final int SOURCE_LINES = 5;
 
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args)
@@ -476,7 +476,7 @@ public class DBGPReader implements Serializable
 		}
 	}
 
-	private static void usage(String string)
+	protected static void usage(String string)
 	{
 		System.err.println(string);
 		System.err.println(
@@ -489,7 +489,7 @@ public class DBGPReader implements Serializable
 		System.exit(1);
 	}
 
-	private static String validateCharset(String cs)
+	protected static String validateCharset(String cs)
 	{
 		if (!Charset.isSupported(cs))
 		{
@@ -530,7 +530,7 @@ public class DBGPReader implements Serializable
 		return r;
 	}
 
-	private void connect() throws IOException
+	protected void connect() throws IOException
 	{
 		if (!connected)
 		{
@@ -555,14 +555,14 @@ public class DBGPReader implements Serializable
 		}
 	}
 
-	private void startup(RemoteControl remote) throws IOException
+	protected void startup(RemoteControl remote) throws IOException
 	{
 		remoteControl = remote;		// Main thread only
 		interpreter.init(this);
 		connect();
 	}
 
-	private void init() throws IOException
+	protected void init() throws IOException
 	{
 		sessionId = Math.abs(new Random().nextInt());
 		status = DBGPStatus.STARTING;
@@ -607,7 +607,7 @@ public class DBGPReader implements Serializable
 		write(sb);
 	}
 
-	private String readLine() throws IOException
+	protected String readLine() throws IOException
 	{
 		StringBuilder line = new StringBuilder();
 		int c = input.read();
@@ -621,7 +621,7 @@ public class DBGPReader implements Serializable
 		return (line.length() == 0 && c == -1) ? null : line.toString();
 	}
 
-	private void write(StringBuilder data) throws IOException
+	protected void write(StringBuilder data) throws IOException
 	{
 		byte[] header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".getBytes("UTF-8");
 		byte[] body = data.toString().getBytes("UTF-8");
@@ -636,7 +636,7 @@ public class DBGPReader implements Serializable
 		output.flush();
 	}
 
-	private void response(StringBuilder hdr, StringBuilder body) throws IOException
+	protected void response(StringBuilder hdr, StringBuilder body) throws IOException
 	{
 		StringBuilder sb = new StringBuilder();
 
@@ -668,7 +668,7 @@ public class DBGPReader implements Serializable
 		write(sb);
 	}
 
-	private void errorResponse(DBGPErrorCode errorCode, String reason)
+	protected void errorResponse(DBGPErrorCode errorCode, String reason)
 	{
 		try
 		{
@@ -692,12 +692,12 @@ public class DBGPReader implements Serializable
 		}
 	}
 
-	private void statusResponse() throws IOException
+	protected void statusResponse() throws IOException
 	{
 		statusResponse(status, statusReason);
 	}
 
-	private void statusResponse(DBGPStatus s, DBGPReason reason)
+	protected void statusResponse(DBGPStatus s, DBGPReason reason)
 		throws IOException
 	{
 		StringBuilder sb = new StringBuilder();
@@ -715,7 +715,7 @@ public class DBGPReader implements Serializable
 		response(sb, null);
 	}
 
-	private StringBuilder breakpointResponse(Breakpoint bp)
+	protected StringBuilder breakpointResponse(Breakpoint bp)
 	{
 		StringBuilder sb = new StringBuilder();
 
@@ -736,7 +736,7 @@ public class DBGPReader implements Serializable
 		return sb;
 	}
 
-	private StringBuilder stackResponse(LexLocation location, int level)
+	protected StringBuilder stackResponse(LexLocation location, int level)
 	{
 		StringBuilder sb = new StringBuilder();
 
@@ -750,7 +750,7 @@ public class DBGPReader implements Serializable
 		return sb;
 	}
 
-	private StringBuilder propertyResponse(NameValuePairMap vars)
+	protected StringBuilder propertyResponse(NameValuePairMap vars)
 		throws UnsupportedEncodingException
 	{
 		StringBuilder sb = new StringBuilder();
@@ -763,7 +763,7 @@ public class DBGPReader implements Serializable
 		return sb;
 	}
 
-	private StringBuilder propertyResponse(LexNameToken name, Value value)
+	protected StringBuilder propertyResponse(LexNameToken name, Value value)
 		throws UnsupportedEncodingException
 	{
 		return propertyResponse(
@@ -771,7 +771,7 @@ public class DBGPReader implements Serializable
 			name.module, value.toString());
 	}
 
-	private StringBuilder propertyResponse(
+	protected StringBuilder propertyResponse(
 		String name, String fullname, String clazz, String value)
 		throws UnsupportedEncodingException
     {
@@ -793,13 +793,13 @@ public class DBGPReader implements Serializable
     	return sb;
     }
 
-	private void cdataResponse(String msg) throws IOException
+	protected void cdataResponse(String msg) throws IOException
 	{
 		// Send back a CDATA response with a plain message
 		response(null, new StringBuilder("<![CDATA[" + quote(msg) + "]]>"));
 	}
 
-	private static String quote(String in)
+	protected static String quote(String in)
 	{
 		return in
     		.replace("&", "&amp;")
@@ -808,7 +808,7 @@ public class DBGPReader implements Serializable
     		.replace("\"", "&quot;");
 	}
 
-	private void run() throws IOException
+	protected void run() throws IOException
 	{
 		String line = null;
 
@@ -912,7 +912,7 @@ public class DBGPReader implements Serializable
 		}
 	}
 
-	private boolean process(String line)
+	protected boolean process(String line)
 	{
 		boolean carryOn = true;
 
@@ -1046,7 +1046,7 @@ public class DBGPReader implements Serializable
 		return carryOn;
 	}
 
-	private DBGPCommand parse(String[] parts) throws Exception
+	protected DBGPCommand parse(String[] parts) throws Exception
 	{
 		// "<type> [<options>] [-- <base64 args>]"
 
@@ -1122,7 +1122,7 @@ public class DBGPReader implements Serializable
 		return new DBGPCommand(command, options, args);
 	}
 
-	private void checkArgs(DBGPCommand c, int n, boolean data) throws DBGPException
+	protected void checkArgs(DBGPCommand c, int n, boolean data) throws DBGPException
 	{
 		if (data && c.data == null)
 		{
@@ -1135,13 +1135,13 @@ public class DBGPReader implements Serializable
 		}
 	}
 
-	private void processStatus(DBGPCommand c) throws DBGPException, IOException
+	protected void processStatus(DBGPCommand c) throws DBGPException, IOException
 	{
 		checkArgs(c, 1, false);
 		statusResponse();
 	}
 
-	private void processFeatureGet(DBGPCommand c) throws DBGPException, IOException
+	protected void processFeatureGet(DBGPCommand c) throws DBGPException, IOException
 	{
 		checkArgs(c, 2, false);
 		DBGPOption option = c.getOption(DBGPOptionType.N);
@@ -1174,7 +1174,7 @@ public class DBGPReader implements Serializable
 		response(hdr, body);
 	}
 
-	private void processFeatureSet(DBGPCommand c) throws DBGPException, IOException
+	protected void processFeatureSet(DBGPCommand c) throws DBGPException, IOException
 	{
 		checkArgs(c, 3, false);
 		DBGPOption option = c.getOption(DBGPOptionType.N);
@@ -1209,7 +1209,7 @@ public class DBGPReader implements Serializable
 		response(hdr, null);
 	}
 
-	private void dyingThread(ContextException ex)
+	protected void dyingThread(ContextException ex)
 	{
 		try
 		{
@@ -1231,7 +1231,7 @@ public class DBGPReader implements Serializable
 		}
 	}
 
-	private boolean processRun(DBGPCommand c) throws DBGPException
+	protected boolean processRun(DBGPCommand c) throws DBGPException
 	{
 		checkArgs(c, 1, false);
 
@@ -1311,7 +1311,7 @@ public class DBGPReader implements Serializable
 		}
 	}
 
-	private boolean processEval(DBGPCommand c) throws DBGPException
+	protected boolean processEval(DBGPCommand c) throws DBGPException
 	{
 		checkArgs(c, 1, true);
 
@@ -1345,7 +1345,7 @@ public class DBGPReader implements Serializable
 		return true;
 	}
 
-	private boolean processExpr(DBGPCommand c) throws DBGPException
+	protected boolean processExpr(DBGPCommand c) throws DBGPException
 	{
 		checkArgs(c, 1, true);
 
@@ -1381,7 +1381,7 @@ public class DBGPReader implements Serializable
 		return true;
 	}
 
-	private void processStepInto(DBGPCommand c) throws DBGPException
+	protected void processStepInto(DBGPCommand c) throws DBGPException
 	{
 		checkArgs(c, 1, false);
 
@@ -1394,7 +1394,7 @@ public class DBGPReader implements Serializable
 		statusReason = DBGPReason.OK;
 	}
 
-	private void processStepOver(DBGPCommand c) throws DBGPException
+	protected void processStepOver(DBGPCommand c) throws DBGPException
 	{
 		checkArgs(c, 1, false);
 
@@ -1408,7 +1408,7 @@ public class DBGPReader implements Serializable
 		statusReason = DBGPReason.OK;
 	}
 
-	private void processStepOut(DBGPCommand c) throws DBGPException
+	protected void processStepOut(DBGPCommand c) throws DBGPException
 	{
 		checkArgs(c, 1, false);
 
@@ -1422,14 +1422,14 @@ public class DBGPReader implements Serializable
 		statusReason = DBGPReason.OK;
 	}
 
-	private void processStop(DBGPCommand c) throws DBGPException, IOException
+	protected void processStop(DBGPCommand c) throws DBGPException, IOException
 	{
 		checkArgs(c, 1, false);
 		statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
 		TransactionValue.commitAll();
 	}
 
-	private void breakpointGet(DBGPCommand c) throws DBGPException, IOException
+	protected void breakpointGet(DBGPCommand c) throws DBGPException, IOException
 	{
 		checkArgs(c, 2, false);
 
@@ -1450,7 +1450,7 @@ public class DBGPReader implements Serializable
 		response(null, breakpointResponse(bp));
 	}
 
-	private void breakpointSet(DBGPCommand c)
+	protected void breakpointSet(DBGPCommand c)
 		throws DBGPException, IOException, URISyntaxException
 	{
 		DBGPOption option = c.getOption(DBGPOptionType.T);
@@ -1604,7 +1604,7 @@ public class DBGPReader implements Serializable
 		response(hdr, null);
 	}
 
-	private void breakpointUpdate(DBGPCommand c) throws DBGPException
+	protected void breakpointUpdate(DBGPCommand c) throws DBGPException
 	{
 		checkArgs(c, 2, false);
 
@@ -1625,7 +1625,7 @@ public class DBGPReader implements Serializable
 		throw new DBGPException(DBGPErrorCode.UNIMPLEMENTED, c.toString());
 	}
 
-	private void breakpointRemove(DBGPCommand c) throws DBGPException, IOException
+	protected void breakpointRemove(DBGPCommand c) throws DBGPException, IOException
 	{
 		checkArgs(c, 2, false);
 
@@ -1647,7 +1647,7 @@ public class DBGPReader implements Serializable
 		response(null, null);
 	}
 
-	private void breakpointList(DBGPCommand c) throws IOException, DBGPException
+	protected void breakpointList(DBGPCommand c) throws IOException, DBGPException
 	{
 		checkArgs(c, 1, false);
 		StringBuilder bps = new StringBuilder();
@@ -1661,7 +1661,7 @@ public class DBGPReader implements Serializable
 		response(null, bps);
 	}
 
-	private void stackDepth(DBGPCommand c) throws DBGPException, IOException
+	protected void stackDepth(DBGPCommand c) throws DBGPException, IOException
 	{
 		checkArgs(c, 1, false);
 
@@ -1676,7 +1676,7 @@ public class DBGPReader implements Serializable
 		response(null, sb);
 	}
 
-	private void stackGet(DBGPCommand c) throws DBGPException, IOException
+	protected void stackGet(DBGPCommand c) throws DBGPException, IOException
 	{
 		checkArgs(c, 1, false);
 
@@ -1734,7 +1734,7 @@ public class DBGPReader implements Serializable
 		}
 	}
 
-	private void contextNames(DBGPCommand c) throws DBGPException, IOException
+	protected void contextNames(DBGPCommand c) throws DBGPException, IOException
 	{
 		if (c.data != null)
 		{
@@ -1749,16 +1749,22 @@ public class DBGPReader implements Serializable
 		}
 
 		StringBuilder names = new StringBuilder();
-		String dialect = Settings.dialect == Dialect.VDM_SL ? "Module" : "Class";
+//		String dialect = Settings.dialect == Dialect.VDM_SL ? "Module" : "Class";
 
-		names.append("<context name=\"Local\" id=\"0\"/>");
-		names.append("<context name=\"" + dialect + "\" id=\"1\"/>");
-		names.append("<context name=\"Global\" id=\"2\"/>");
+//		names.append("<context name=\"Local\" id=\"0\"/>");
+//		names.append("<context name=\"" + dialect + "\" id=\"1\"/>");
+//		names.append("<context name=\"Global\" id=\"2\"/>");
+		
+		for (DBGPContextType type : DBGPContextType.values())
+		{
+			String name = type == DBGPContextType.CLASS && Settings.dialect == Dialect.VDM_SL?"Module":type.name();
+			names.append("<context name=\""+name+"\" id=\""+type.code+"\"/>");
+		}
 
 		response(null, names);
 	}
 
-	private NameValuePairMap getContextValues(DBGPContextType context, int depth)
+	protected NameValuePairMap getContextValues(DBGPContextType context, int depth)
 	{
 		NameValuePairMap vars = new NameValuePairMap();
 
@@ -1812,7 +1818,7 @@ public class DBGPReader implements Serializable
 		return vars;
 	}
 
-	private void contextGet(DBGPCommand c) throws DBGPException, IOException
+	protected void contextGet(DBGPCommand c) throws DBGPException, IOException
 	{
 		if (c.data != null || c.options.size() > 3)
 		{
@@ -1854,7 +1860,7 @@ public class DBGPReader implements Serializable
 		response(null, propertyResponse(vars));
 	}
 
-	private void propertyGet(DBGPCommand c) throws DBGPException, IOException
+	protected void propertyGet(DBGPCommand c) throws DBGPException, IOException
 	{
 		if (c.data != null || c.options.size() > 4)
 		{
@@ -1921,7 +1927,7 @@ public class DBGPReader implements Serializable
 		response(null, propertyResponse(longname, value));
 	}
 
-	private void processSource(DBGPCommand c) throws DBGPException, IOException
+	protected void processSource(DBGPCommand c) throws DBGPException, IOException
 	{
 		if (c.data != null || c.options.size() > 4)
 		{
@@ -1982,7 +1988,7 @@ public class DBGPReader implements Serializable
 		response(null, sb);
 	}
 
-	private void processStdout(DBGPCommand c) throws DBGPException, IOException
+	protected void processStdout(DBGPCommand c) throws DBGPException, IOException
 	{
 		checkArgs(c, 2, false);
 		DBGPOption option = c.getOption(DBGPOptionType.C);
@@ -1998,7 +2004,7 @@ public class DBGPReader implements Serializable
 		response(new StringBuilder("success=\"1\""), null);
 	}
 
-	private void processStderr(DBGPCommand c) throws DBGPException, IOException
+	protected void processStderr(DBGPCommand c) throws DBGPException, IOException
 	{
 		checkArgs(c, 2, false);
 		DBGPOption option = c.getOption(DBGPOptionType.C);
@@ -2030,7 +2036,7 @@ public class DBGPReader implements Serializable
 		write(sb);
 	}
 
-	private void processOvertureCmd(DBGPCommand c)
+	protected void processOvertureCmd(DBGPCommand c)
 		throws DBGPException, IOException, URISyntaxException
 	{
 		checkArgs(c, 2, false);
@@ -2111,7 +2117,7 @@ public class DBGPReader implements Serializable
 		}
 	}
 
-	private void processInit(DBGPCommand c) throws IOException, DBGPException
+	protected void processInit(DBGPCommand c) throws IOException, DBGPException
 	{
 		if (status == DBGPStatus.BREAK || status == DBGPStatus.STOPPING)
 		{
@@ -2123,7 +2129,7 @@ public class DBGPReader implements Serializable
 		cdataResponse("Global context and test coverage initialized");
 	}
 
-	private void processLog(DBGPCommand c) throws IOException
+	protected void processLog(DBGPCommand c) throws IOException
 	{
 		StringBuilder out = new StringBuilder();
 
@@ -2159,7 +2165,7 @@ public class DBGPReader implements Serializable
 		cdataResponse(out.toString());
 	}
 
-	private void processCreate(DBGPCommand c) throws DBGPException
+	protected void processCreate(DBGPCommand c) throws DBGPException
 	{
 		if (!(interpreter instanceof ClassInterpreter))
 		{
@@ -2180,7 +2186,7 @@ public class DBGPReader implements Serializable
 		}
 	}
 
-	private void processStack(DBGPCommand c) throws IOException, DBGPException
+	protected void processStack(DBGPCommand c) throws IOException, DBGPException
 	{
 		if ((status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
 			|| breakpoint == null)
@@ -2196,7 +2202,7 @@ public class DBGPReader implements Serializable
 		cdataResponse(out.toString());
 	}
 
-	private void processTrace(DBGPCommand c) throws DBGPException
+	protected void processTrace(DBGPCommand c) throws DBGPException
 	{
 		File file = null;
 		int line = 0;
@@ -2251,7 +2257,7 @@ public class DBGPReader implements Serializable
 		}
 	}
 
-	private void processList() throws IOException
+	protected void processList() throws IOException
 	{
 		Map<Integer, Breakpoint> map = interpreter.getBreakpoints();
 		OutputStream out = new ByteArrayOutputStream();
@@ -2268,7 +2274,7 @@ public class DBGPReader implements Serializable
 		cdataResponse(out.toString());
 	}
 
-	private void processFiles() throws IOException
+	protected void processFiles() throws IOException
 	{
 		Set<File> filenames = interpreter.getSourceFiles();
 		OutputStream out = new ByteArrayOutputStream();
@@ -2283,7 +2289,7 @@ public class DBGPReader implements Serializable
 		cdataResponse(out.toString());
 	}
 
-	private void processClasses() throws IOException, DBGPException
+	protected void processClasses() throws IOException, DBGPException
 	{
 		if (!(interpreter instanceof ClassInterpreter))
 		{
@@ -2313,7 +2319,7 @@ public class DBGPReader implements Serializable
 		cdataResponse(out.toString());
 	}
 
-	private void processModules() throws DBGPException, IOException
+	protected void processModules() throws DBGPException, IOException
 	{
 		if (!(interpreter instanceof ModuleInterpreter))
 		{
@@ -2343,7 +2349,7 @@ public class DBGPReader implements Serializable
 		cdataResponse(out.toString());
 	}
 
-	private void processDefault(DBGPCommand c) throws DBGPException
+	protected void processDefault(DBGPCommand c) throws DBGPException
 	{
 		try
 		{
@@ -2356,7 +2362,7 @@ public class DBGPReader implements Serializable
 		}
 	}
 
-	private void processCoverage(DBGPCommand c)
+	protected void processCoverage(DBGPCommand c)
 		throws DBGPException, IOException, URISyntaxException
 	{
 		if (status == DBGPStatus.BREAK)
@@ -2381,7 +2387,7 @@ public class DBGPReader implements Serializable
 		}
 	}
 
-	private void processRuntrace(DBGPCommand c) throws DBGPException
+	protected void processRuntrace(DBGPCommand c) throws DBGPException
 	{
 		if (status == DBGPStatus.BREAK)
 		{
@@ -2408,7 +2414,7 @@ public class DBGPReader implements Serializable
 		}
 	}
 
-	private void processLatex(DBGPCommand c)
+	protected void processLatex(DBGPCommand c)
 		throws DBGPException, IOException, URISyntaxException
     {
     	if (status == DBGPStatus.BREAK)
@@ -2437,7 +2443,7 @@ public class DBGPReader implements Serializable
     	}
     }
 
-	private void processCurrentLine(DBGPCommand c) throws DBGPException, IOException
+	protected void processCurrentLine(DBGPCommand c) throws DBGPException, IOException
 	{
 		if ((status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
 			|| breakpoint == null)
@@ -2454,7 +2460,7 @@ public class DBGPReader implements Serializable
 		cdataResponse(out.toString());
 	}
 
-	private void processCurrentSource(DBGPCommand c) throws DBGPException, IOException
+	protected void processCurrentSource(DBGPCommand c) throws DBGPException, IOException
 	{
 		if ((status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
 			|| breakpoint == null)
@@ -2481,7 +2487,7 @@ public class DBGPReader implements Serializable
 		cdataResponse(sb.toString());
 	}
 
-	private void processPOG(DBGPCommand c) throws IOException
+	protected void processPOG(DBGPCommand c) throws IOException
 	{
 		ProofObligationList all = interpreter.getProofObligations();
 		ProofObligationList list = null;
@@ -2519,12 +2525,12 @@ public class DBGPReader implements Serializable
 		}
 	}
 
-	private String plural(int n, String s, String pl)
+	protected String plural(int n, String s, String pl)
 	{
 		return n + " " + (n != 1 ? s + pl : s);
 	}
 
-	private static void writeCoverage(Interpreter interpreter, File coverage)
+	protected static void writeCoverage(Interpreter interpreter, File coverage)
 		throws IOException
 	{
 		for (File f: interpreter.getSourceFiles())
