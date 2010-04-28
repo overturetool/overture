@@ -8,15 +8,18 @@ public abstract class VdmValue extends VdmDebugElement implements IValue
 
 	private String referenceTypeName;
 	protected VdmStackFrame stackFrame;
-	
+	protected final String key;
 
-	public VdmValue(String referenceTypeName) {
+	public VdmValue(String referenceTypeName, String key) {
 		super(null);
 		this.referenceTypeName = referenceTypeName;
-		
+		this.key = key;
 	}
 
-	
+	public String getKey()
+	{
+		return key;
+	}
 
 	public void setDebugTarget(VdmDebugTarget target)
 	{

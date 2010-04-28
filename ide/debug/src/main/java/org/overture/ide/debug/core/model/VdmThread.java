@@ -19,6 +19,7 @@ import org.eclipse.debug.core.model.IThread;
 import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.model.VdmDebugState.DebugState;
+import org.overture.ide.debug.utils.communication.DBGPProxyException;
 import org.overture.ide.debug.utils.communication.DebugThreadProxy;
 import org.overture.ide.debug.utils.communication.IDebugThreadProxyCallback;
 import org.overturetool.vdmj.scheduler.RunState;
@@ -241,7 +242,7 @@ public class VdmThread extends VdmDebugElement implements IThread,
 			// }
 			frames = Arrays.asList(newFrames);
 
-		} catch (SocketTimeoutException e)
+		} catch (DBGPProxyException e)
 		{
 			if (Activator.DEBUG)
 			{
@@ -460,7 +461,7 @@ public class VdmThread extends VdmDebugElement implements IThread,
 		try
 		{
 			proxy.step_into();
-		} catch (IOException e)
+		} catch (DBGPProxyException e)
 		{
 			if (Activator.DEBUG)
 			{
@@ -486,7 +487,7 @@ public class VdmThread extends VdmDebugElement implements IThread,
 		try
 		{
 			proxy.step_over();
-		} catch (IOException e)
+		} catch (DBGPProxyException e)
 		{
 			if (Activator.DEBUG)
 			{
@@ -511,7 +512,7 @@ public class VdmThread extends VdmDebugElement implements IThread,
 		try
 		{
 			proxy.step_out();
-		} catch (IOException e)
+		} catch (DBGPProxyException e)
 		{
 			if (Activator.DEBUG)
 			{

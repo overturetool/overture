@@ -420,6 +420,17 @@ public class DebugThreadProxy extends AsyncCaller
 		{
 			setResult(transactionId, Integer.parseInt(((XMLOpenTagNode) msg).text));
 			// System.out.println("STACK DEPTH = " + msg.toString());
+		}else if (command.equals("property_set"))
+		{
+			String success = msg.getAttr("success");
+			
+			if(success!=null && success.equals("1"))
+			{
+				setResult(transactionId, true);
+			}else
+			{
+				setResult(transactionId, false);
+			}	
 		}
 
 	}
@@ -570,6 +581,7 @@ public class DebugThreadProxy extends AsyncCaller
 		// String classname = p.getAttr("classname");
 		String type = p.getAttr("type");
 		String key = p.getAttr("key");
+		Boolean constant = p.getAttr("constant")!=null && p.getAttr("constant").equals("1")? true :false;
 		boolean childern = p.getAttr("children") != null
 				&& p.getAttr("children").equals("1");
 		String data = "";
@@ -619,7 +631,7 @@ public class DebugThreadProxy extends AsyncCaller
 
 		if (!childern)
 		{
-			vdmValue = new VdmSimpleValue(type, data);
+			vdmValue = new VdmSimpleValue(type,data,key);
 		} else
 		{
 			VdmVariable[] childs = null;
@@ -639,7 +651,7 @@ public class DebugThreadProxy extends AsyncCaller
 
 		}
 
-		return (new VdmVariable(null, name, type, vdmValue));
+		return (new VdmVariable(null, name, type, vdmValue,constant));
 
 	}
 
@@ -666,7 +678,7 @@ public class DebugThreadProxy extends AsyncCaller
 		return ticket;
 	}
 
-	public VdmStackFrame[] getStack() throws SocketTimeoutException
+	public VdmStackFrame[] getStack() throws DBGPProxyException
 	{
 		if (!isSuspended)
 		{
@@ -675,10 +687,16 @@ public class DebugThreadProxy extends AsyncCaller
 
 		Integer ticket = getNextTicket();
 		String command = "stack_get -i " + ticket;
-		return (VdmStackFrame[]) request(ticket, command);
+		try
+		{
+			return (VdmStackFrame[]) request(ticket, command);
+		} catch (SocketTimeoutException e)
+		{
+			throw new DBGPProxyException(e, this.threadId);
+		}
 	}
 
-	public Integer getStackDepth() throws SocketTimeoutException
+	public Integer getStackDepth() throws DBGPProxyException
 	{
 		if (!isSuspended)
 		{
@@ -686,12 +704,18 @@ public class DebugThreadProxy extends AsyncCaller
 		}
 		Integer ticket = getNextTicket();
 		String command = "stack_depth -i " + (ticket);
-		return (Integer) request(ticket, command);
+		try
+		{
+			return (Integer) request(ticket, command);
+		} catch (SocketTimeoutException e)
+		{
+			throw new DBGPProxyException(e, this.threadId);
+		}
 
 	}
 
 	public VdmVariable[] getVariables(int depth, int contextId)
-			throws SocketTimeoutException
+			throws DBGPProxyException
 	{
 		if (!isSuspended)
 		{
@@ -704,11 +728,33 @@ public class DebugThreadProxy extends AsyncCaller
 		Integer ticket = getNextTicket();
 		String command = "context_get -i " + ticket + " -d " + depth + " -c "
 				+ contextId;
-		return (VdmVariable[]) request(ticket, command);
+		try
+		{
+			return (VdmVariable[]) request(ticket, command);
+		} catch (SocketTimeoutException e)
+		{
+			throw new DBGPProxyException(e, this.threadId);
+		}
+	}
+	
+	
+	public Boolean propertySet(String propertyLongName, String key,String newValue) throws DBGPProxyException
+	{
+		Integer ticket = getNextTicket();
+		String encodedData = Base64.encode(newValue.getBytes()).toString();
+		String command = "property_set -i " + ticket+" -n "+propertyLongName+" -k "+key+" -l "+ encodedData.length()+ " -- "+ encodedData;
+		try
+		{
+			return (Boolean) request(ticket, command);
+		} catch (SocketTimeoutException e)
+		{
+			throw new DBGPProxyException(e, this.threadId);
+		}
+
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<String, Integer> getContextNames() throws SocketTimeoutException
+	public Map<String, Integer> getContextNames() throws DBGPProxyException
 	{
 		if (!isSuspended)
 		{
@@ -716,12 +762,18 @@ public class DebugThreadProxy extends AsyncCaller
 		}
 		Integer ticket = getNextTicket();
 		String command = "context_names -i " + ticket;// + " -d " + depth;
-		return (Map<String, Integer>) request(ticket, command);
+		try
+		{
+			return (Map<String, Integer>) request(ticket, command);
+		} catch (SocketTimeoutException e)
+		{
+			throw new DBGPProxyException(e, this.threadId);
+		}
 
 	}
 
 	public VdmVariable[] getVariables(int stackDepth, String propertyLongName,
-			String key, Integer page) throws SocketTimeoutException
+			String key, Integer page) throws DBGPProxyException
 	{
 		if (!isSuspended)
 		{
@@ -734,23 +786,29 @@ public class DebugThreadProxy extends AsyncCaller
 		{
 			command += " -k " + key;
 		}
-		return (VdmVariable[]) request(ticket, command);
+		try
+		{
+			return (VdmVariable[]) request(ticket, command);
+		} catch (SocketTimeoutException e)
+		{
+			throw new DBGPProxyException(e, this.threadId);
+		}
 
 	}
 
-	public void detach() throws IOException
+	public void detach() throws DBGPProxyException
 	{
 		Integer ticket = getNextTicket();
 		write("detach -i " + ticket);
 	}
 
-	public void allstop() throws IOException
+	public void allstop() throws DBGPProxyException
 	{
 		Integer ticket = getNextTicket();
 		write("stop -i " + ticket);
 	}
 
-	public void runme() throws IOException
+	public void runme() throws DBGPProxyException
 	{
 		if (!isSuspended)
 		{
@@ -760,7 +818,7 @@ public class DebugThreadProxy extends AsyncCaller
 		write("run -i " + (getNextTicket()));
 	}
 
-	public void step_into() throws IOException
+	public void step_into() throws DBGPProxyException
 	{
 		if (!isSuspended)
 		{
@@ -770,7 +828,7 @@ public class DebugThreadProxy extends AsyncCaller
 		write("step_into -i " + (getNextTicket()));
 	}
 
-	public void step_over() throws IOException
+	public void step_over() throws DBGPProxyException
 	{
 		if (!isSuspended)
 		{
@@ -780,7 +838,7 @@ public class DebugThreadProxy extends AsyncCaller
 		write("step_over -i " + (getNextTicket()));
 	}
 
-	public void step_out() throws IOException
+	public void step_out() throws DBGPProxyException
 	{
 		if (!isSuspended)
 		{
@@ -798,7 +856,7 @@ public class DebugThreadProxy extends AsyncCaller
 	}
 
 	private String xcmd_overture_cmd(String cmd, Integer ticket, String arg)
-			throws IOException
+			throws DBGPProxyException
 	{
 		if (arg == null)
 		{
@@ -809,17 +867,26 @@ public class DebugThreadProxy extends AsyncCaller
 		}
 	}
 
-	public void xcmd_overture_coverage(File file) throws IOException
+	public void xcmd_overture_coverage(File file) throws DBGPProxyException
 	{
 		write(xcmd_overture_cmd("coverage", getNextTicket(), file.toURI().toString()));
 	}
 
-	public void xcmd_overture_writecoverage(File file) throws IOException
+	public void xcmd_overture_writecoverage(File file) throws DBGPProxyException
 	{
 		Integer ticket = getNextTicket();
 		String command = "writecoverage";
 
-		request(ticket, xcmd_overture_cmd(command, ticket, file.toURI().toString()));
+		try
+		{
+			request(ticket, xcmd_overture_cmd(command, ticket, file.toURI().toString()));
+		} catch (DBGPProxyException e)
+		{
+			throw new DBGPProxyException(e, this.threadId);
+		} catch (SocketTimeoutException e)
+		{
+			throw new DBGPProxyException(e, this.threadId);
+		}
 	}
 
 	/**
@@ -832,12 +899,18 @@ public class DebugThreadProxy extends AsyncCaller
 	 *            </ul>
 	 * @throws IOException
 	 */
-	public void xcmd_overture_log(String file) throws IOException
+	public void xcmd_overture_log(String file) throws DBGPProxyException
 	{
 		Integer ticket = getNextTicket();
 		String command = "log";
 
-		request(ticket, xcmd_overture_cmd(command, ticket, file));
+		try
+		{
+			request(ticket, xcmd_overture_cmd(command, ticket, file));
+		} catch (SocketTimeoutException e)
+		{
+			throw new DBGPProxyException(e, this.threadId);
+		}
 	}
 
 	public void shutdown() throws IOException

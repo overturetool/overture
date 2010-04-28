@@ -33,6 +33,7 @@ import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.model.VdmDebugState.DebugState;
+import org.overture.ide.debug.utils.communication.DBGPProxyException;
 import org.overture.ide.debug.utils.communication.DebugThreadProxy.DebugProxyState;
 import org.overture.ide.ui.internal.util.ConsoleWriter;
 import org.overturetool.vdmj.runtime.DebuggerException;
@@ -256,7 +257,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 		try
 		{
 			fThread.getProxy().detach();
-		} catch (IOException e)
+		} catch (DBGPProxyException e)
 		{
 			e.printStackTrace();
 			throw new DebuggerException(e.getMessage());
@@ -488,7 +489,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 				{
 					fThread.getProxy().allstop();
 				}
-			} catch (IOException e)
+			} catch (DBGPProxyException e)
 			{
 				e.printStackTrace();
 				throw new DebuggerException(e.getMessage());

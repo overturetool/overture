@@ -6,10 +6,12 @@ import org.eclipse.debug.core.model.IVariable;
 public class VdmSimpleValue extends VdmValue
 {
 	private String value;
+	
 
-	public VdmSimpleValue(String referenceTypeName, String value) {
-		super(referenceTypeName);
+	public VdmSimpleValue(String referenceTypeName, String value, String key) {
+		super(referenceTypeName,key);
 		this.value = value;
+		
 	}
 
 	public boolean hasVariables() throws DebugException
@@ -26,6 +28,8 @@ public class VdmSimpleValue extends VdmValue
 	{
 		return new IVariable[0];
 	}
+	
+	
 	
 	@Override
 	public String toString()

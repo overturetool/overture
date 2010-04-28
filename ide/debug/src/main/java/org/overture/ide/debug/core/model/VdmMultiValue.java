@@ -1,26 +1,25 @@
 package org.overture.ide.debug.core.model;
 
-import java.net.SocketTimeoutException;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IVariable;
 import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;
+import org.overture.ide.debug.utils.communication.DBGPProxyException;
 
 public class VdmMultiValue extends VdmValue
 {
 	protected VdmVariable[] variables = null;
 	private String type;
-	private String key;
+	
 	private Integer page;
 	protected boolean isResolved = false;
 
 	public VdmMultiValue(String referenceTypeName, String type, String key,
 			Integer page, VdmVariable[] variables) {
-		super(referenceTypeName);
-		this.key = key;
+		super(referenceTypeName,key);
+		
 		this.type = type;
 		this.page = page;
 		this.variables = variables;
@@ -55,7 +54,7 @@ public class VdmMultiValue extends VdmValue
 				}
 				this.variables = variables;
 				isResolved = true;
-			} catch (SocketTimeoutException e)
+			} catch (DBGPProxyException e)
 			{
 				if (Activator.DEBUG)
 				{

@@ -12,7 +12,7 @@ public class VdmGroupValue extends VdmMultiValue
 		
 		List<VdmVariable> vars = new Vector<VdmVariable>();
 		
-		vars.add(new VdmVariable(null, "[1..."+(pageSize+1)+"]", referenceTypeName, new VdmMultiValue(referenceTypeName, type, null, page, variables)));
+		vars.add(new VdmVariable(null, "[1..."+(pageSize+1)+"]", referenceTypeName, new VdmMultiValue(referenceTypeName, type, null, page, variables),true));
 		page++;
 		while(page * pageSize < numChildren)
 		{
@@ -21,7 +21,7 @@ public class VdmGroupValue extends VdmMultiValue
 			
 			String name = "["+(begin+1)+"..."+(end+1)+"]";
 			
-			vars.add(new VdmVariable(null,name,referenceTypeName,new VdmMultiValue( referenceTypeName,type,key,page,null )));
+			vars.add(new VdmVariable(null,name,referenceTypeName,new VdmMultiValue( referenceTypeName,type,key,page,null ),true));
 			page++;
 		}
 		super.variables = vars.toArray(new VdmVariable[vars.size()]);

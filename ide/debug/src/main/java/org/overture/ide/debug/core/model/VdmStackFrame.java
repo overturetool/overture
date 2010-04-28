@@ -16,6 +16,7 @@ import org.eclipse.debug.core.model.IVariable;
 import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.model.VdmDebugState.DebugState;
+import org.overture.ide.debug.utils.communication.DBGPProxyException;
 import org.overture.ide.debug.utils.communication.DebugThreadProxy;
 
 public class VdmStackFrame extends VdmDebugElement implements IStackFrame
@@ -133,7 +134,7 @@ public class VdmStackFrame extends VdmDebugElement implements IStackFrame
 									null,
 									0,
 									proxy.getVariables(level,
-											contextNames.get(name))));
+											contextNames.get(name))),true);
 					variables.add(v);
 				} else
 				{
@@ -153,7 +154,7 @@ public class VdmStackFrame extends VdmDebugElement implements IStackFrame
 			}
 
 			this.variables = variables.toArray(new IVariable[variables.size()]);
-		} catch (SocketTimeoutException e)
+		} catch (DBGPProxyException e)
 		{
 			//TODO
 			if (Activator.DEBUG)
