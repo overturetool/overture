@@ -16,7 +16,11 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.jobs.Job;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.resources.IVdmProject;
@@ -66,7 +70,8 @@ public class ResourceManager implements IResourceChangeListener
 
 				try
 				{
-					if (file.getContentDescription()!=null && project.getContentTypeIds().contains(file.getContentDescription().getContentType().getId()))
+					if (file.getContentDescription() != null
+							&& project.getContentTypeIds().contains(file.getContentDescription().getContentType().getId()))
 					{
 						IVdmSourceUnit unit = createSourceUnit(file, project);
 						return unit;
@@ -255,22 +260,66 @@ public class ResourceManager implements IResourceChangeListener
 			return true; // visit the children
 		}
 
-		private void add(IResource res)
+		private void add(final IResource res)
 		{
 			if (res instanceof IProject
 					&& VdmProject.isVdmProject((IProject) res))
 			{
-				Assert.isNotNull(VdmProject.createProject((IProject) res), "VDM Project creation faild for project: "
-						+ res);
+				addProject(res, false);
+
 			} else if (res instanceof IFile)
 			{
 				IFile file = (IFile) res;
 				if (VdmProject.isVdmProject(file.getProject()))
 				{
-					IVdmProject project = VdmProject.createProject(file.getProject());
-					Assert.isNotNull(project, "Project creation faild for file: "
-							+ res);
+					// IVdmProject project = VdmProject.createProject(file.getProject());
+					// Assert.isNotNull(project, "Project creation faild for file: "
+					// + res);
+					addProject(res.getProject(), true);
 
+					// IVdmSourceUnit unit = createSourceUnit(file, project);
+					// Assert.isNotNull(unit, "Source unit creation faild for: "
+					// + res);
+				}
+			}
+
+		}
+	}
+
+	private static void addProject(final IResource res,
+			final boolean refreshSpecFiles)
+	{
+		Job j = new Job("Create VDM Project")
+		{
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor)
+			{
+				while (res.getWorkspace().isTreeLocked())
+				{
+					try
+					{
+						Thread.sleep(500);
+					} catch (InterruptedException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				IVdmProject project = VdmProject.createProject((IProject) res);
+				Assert.isNotNull(project, "VDM Project creation faild for project: "
+						+ res);
+				try
+				{
+					project.setBuilder(project.getLanguageVersion());
+				} catch (CoreException e1)
+				{
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+				if (refreshSpecFiles)
+				{
 					try
 					{
 						project.getSpecFiles();// sync with content type files
@@ -281,12 +330,16 @@ public class ResourceManager implements IResourceChangeListener
 							e.printStackTrace();
 						}
 					}
-					// IVdmSourceUnit unit = createSourceUnit(file, project);
-					// Assert.isNotNull(unit, "Source unit creation faild for: "
-					// + res);
+				}
+				if (project != null)
+				{
+					return Status.OK_STATUS;
+				} else
+				{
+					return Status.CANCEL_STATUS;
 				}
 			}
-
-		}
+		};
+		j.schedule(500);
 	}
 }

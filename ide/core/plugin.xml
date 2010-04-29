@@ -12,6 +12,7 @@
  <!-- Basic builder for VDM -->
   <extension
         id="org.overture.ide.core.builder.VdmBuilder"
+        name="VDM Builder"
         point="org.eclipse.core.resources.builders">
      <builder
            callOnEmptyDelta="false"
