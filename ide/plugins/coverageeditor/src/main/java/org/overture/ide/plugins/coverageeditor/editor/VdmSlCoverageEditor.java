@@ -77,10 +77,7 @@ public class VdmSlCoverageEditor extends VdmSlEditor
 
 	}
 
-	@Override
-	public void setFocus()
-	{
-	}
+	
 
 	@Override
 	public boolean isEditable()

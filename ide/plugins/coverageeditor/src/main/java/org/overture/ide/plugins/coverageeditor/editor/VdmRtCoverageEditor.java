@@ -54,7 +54,7 @@ public class VdmRtCoverageEditor extends VdmRtEditor
 		super.init(site, input);
 
 		covEditor.init(site, input);
-
+ 
 	}
 
 	@Override
@@ -75,11 +75,6 @@ public class VdmRtCoverageEditor extends VdmRtEditor
 		super.createPartControl(parent);
 		covEditor.createPartControl(parent);
 
-	}
-
-	@Override
-	public void setFocus()
-	{
 	}
 
 	@Override

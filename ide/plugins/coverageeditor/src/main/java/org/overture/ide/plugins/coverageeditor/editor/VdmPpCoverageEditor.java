@@ -38,7 +38,7 @@ public class VdmPpCoverageEditor extends VdmPpEditor
 	@Override
 	public void doSave(IProgressMonitor monitor)
 	{
-
+		monitor.done();
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class VdmPpCoverageEditor extends VdmPpEditor
 	{
 
 	}
-
+ 
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException
@@ -77,10 +77,10 @@ public class VdmPpCoverageEditor extends VdmPpEditor
 
 	}
 
-	@Override
-	public void setFocus()
-	{
-	}
+//	@Override
+//	public void setFocus()
+//	{
+//	}
 
 	@Override
 	public boolean isEditable()
