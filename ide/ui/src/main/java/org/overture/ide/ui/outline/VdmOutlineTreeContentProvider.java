@@ -12,6 +12,7 @@ import org.overturetool.vdmj.definitions.ClassInvariantDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
+import org.overturetool.vdmj.definitions.InheritedDefinition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.modules.Import;
 import org.overturetool.vdmj.modules.ImportFromModule;
@@ -132,8 +133,13 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider {
 						fInput.remove(i);
 						i--;
 					}
-
 				}
+
+				if (def instanceof InheritedDefinition) {
+					fInput.remove(i);
+					i--;
+				}
+
 			} catch (NullPointerException e) {
 				fInput.remove(i);
 				i--;
