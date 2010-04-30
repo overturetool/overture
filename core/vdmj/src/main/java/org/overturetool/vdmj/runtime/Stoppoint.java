@@ -52,7 +52,20 @@ public class Stoppoint extends Breakpoint
 
 		try
 		{
-			if (parsed == null || parsed.eval(ctxt).boolValue(ctxt))
+			boolean shouldBreak = parsed == null;
+			if(!shouldBreak)
+			{
+				//Clear thread state while evaluating the expression and set
+				//the state back after. Done to prevent the debugger from stopping
+				// in the expression
+				Context outctxt = ctxt.threadState.outctxt;
+				RootContext rootContext = ctxt.threadState.nextctxt;
+				LexLocation stepline = ctxt.threadState.stepline;
+				ctxt.threadState.init();
+				shouldBreak = parsed.eval(ctxt).boolValue(ctxt);
+				ctxt.threadState.setBreaks(stepline, rootContext, outctxt);
+			}
+			if (shouldBreak)
 			{
 				Thread current = Thread.currentThread();
 
