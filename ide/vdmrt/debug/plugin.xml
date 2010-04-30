@@ -33,6 +33,16 @@
 			description="VDM-RT Launch Tab" 
 			id="org.overture.ide.debug.ui.launchConfigurationTabGroup"
 			type="org.overture.ide.vdmrt.debug.launchConfigurationType">
+			<launchMode 
+                  mode="debug"
+                  perspective="org.eclipse.debug.ui.DebugPerspective"
+                  description="%localVdmRtApplicationTabGroupDescription.debug">
+            </launchMode>
+            <!--launchMode
+                  mode="run"
+                  perspective="org.eclipse.debug.ui.DebugPerspective"
+                  description="%localVdmRtApplicationTabGroupDescription.run">
+            </launchMode-->
 		</launchConfigurationTabGroup>
 	</extension>
 
@@ -51,7 +61,6 @@
 <!-- Shoutcut for launching project. Extends the Debug and Run context menu in the VDM Explorer -->
  <extension point="org.eclipse.debug.ui.launchShortcuts">
   <shortcut
-        category="org.eclipse.ui.externaltools"
         class="org.overture.ide.vdmrt.debug.ui.launchconfigurations.VdmRtApplicationLaunchShortcut"
         icon="icons/cview16/vdmrt_file_tsk.gif"
         id="org.overture.ide.vdmrt.debug.ui.localVdmShortcut"
@@ -75,6 +84,9 @@
            	</with>
            </enablement>
   		 </contextualLaunch>
+  		    <configurationType
+           id="org.overture.ide.vdmrt.debug.launchConfigurationType">
+     </configurationType>
   </shortcut>
  </extension>
 

@@ -172,7 +172,16 @@ public class LatexCoverageAction implements IObjectActionDelegate
 					IVdmModel model = selectedProject.getModel();
 					if (model == null || !model.isTypeCorrect())
 					{
-						VdmTypeCheckerUi.typeCheck(shell, selectedProject);
+						shell.getDisplay().asyncExec(new Runnable()
+						{
+							
+							public void run()
+							{
+								VdmTypeCheckerUi.typeCheck(shell, selectedProject);
+								
+							}
+						});
+						
 					}
 					if (model != null && model.isTypeCorrect())
 					{
@@ -309,7 +318,7 @@ public class LatexCoverageAction implements IObjectActionDelegate
 					File file = outputFiles.get(i);
 					// System.out.println("Compare with file: "
 					// + file.getName());
-					if (file.getName().toLowerCase().endsWith(".cov")
+					if (file.getName().toLowerCase().endsWith(".covtbl")
 							&& (moduleFile.getName()).equals(getFileName(file)))
 					{
 						//System.out.println("Match");

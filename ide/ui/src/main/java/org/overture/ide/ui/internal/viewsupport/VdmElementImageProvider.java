@@ -22,6 +22,7 @@ import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
 import org.overturetool.vdmj.definitions.LocalDefinition;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
+import org.overturetool.vdmj.definitions.PerSyncDefinition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.definitions.UntypedDefinition;
 import org.overturetool.vdmj.definitions.ValueDefinition;
@@ -126,7 +127,14 @@ public class VdmElementImageProvider {
 			return getImplicitOperationDefinitionImage(
 					(ImplicitOperationDefinition) element, SMALL_ICONS,
 					adornmentFlags);
+		}else if(element instanceof PerSyncDefinition){
+			return getPerSyncDefinitionImage(
+					(PerSyncDefinition) element, SMALL_ICONS,
+					adornmentFlags);
 		}
+		
+		
+		
 		
 		else if (element instanceof LocalDefinition) {
 			return getLocalDefinitionImage((LocalDefinition) element,
@@ -323,12 +331,23 @@ public class VdmElementImageProvider {
 
 	private ImageDescriptor getNamedTraceDefinitionImage(
 			NamedTraceDefinition element, int renderFlags, int adornmentFlags) {
-		ImageDescriptor result = null;
+		//ImageDescriptor result = null;
 
 		Point size = useSmallSize(renderFlags) ? SMALL_SIZE : BIG_SIZE;
 
 		return new VdmElementImageDescriptor(VdmPluginImages
 				.getDescriptor(VdmPluginImages.IMG_TRACE_DEFAULT),
+				adornmentFlags, size);
+	}
+	
+	private ImageDescriptor getPerSyncDefinitionImage(
+			PerSyncDefinition element, int renderFlags, int adornmentFlags) {
+		//ImageDescriptor result = null;
+
+		Point size = useSmallSize(renderFlags) ? SMALL_SIZE : BIG_SIZE;
+
+		return new VdmElementImageDescriptor(VdmPluginImages
+				.getDescriptor(VdmPluginImages.IMG_OBJS_VDM_PER_SYNC),
 				adornmentFlags, size);
 	}
 

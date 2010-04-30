@@ -14,6 +14,7 @@ public class LatexIncrementalProjectBuilder extends IncrementalProjectBuilder
 		// TODO Auto-generated constructor stub
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
 			throws CoreException

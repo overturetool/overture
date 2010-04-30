@@ -3,6 +3,7 @@ package org.overture.ide.parsers.vdmj;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.core.runtime.CoreException;
 import org.overture.ide.core.parser.AbstractParserParticipant;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overturetool.vdmj.Settings;
@@ -30,6 +31,22 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 			String charset)
 	{
 		file.setType(IVdmSourceUnit.VDM_CLASS_SPEC);
+		
+		try
+		{
+			Settings.release = file.getProject().getLanguageVersion();
+		} catch (CoreException e1)
+		{
+			if (Activator.DEBUG)
+			{
+				e1.printStackTrace();
+			}
+		}
+		Settings.dynamictypechecks = file.getProject().hasDynamictypechecks();
+		Settings.invchecks = file.getProject().hasInvchecks();
+		Settings.postchecks = file.getProject().hasPostchecks();
+		Settings.prechecks = file.getProject().hasPrechecks();
+		
 		LexTokenReader.TABSTOP = 1;
 		ClassList classes = new ClassList();
 		classes.clear();

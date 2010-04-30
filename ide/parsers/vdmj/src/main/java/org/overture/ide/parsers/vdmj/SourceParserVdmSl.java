@@ -3,7 +3,7 @@ package org.overture.ide.parsers.vdmj;
 import java.util.List;
 import java.util.Vector;
 
-
+import org.eclipse.core.runtime.CoreException;
 import org.overture.ide.core.parser.AbstractParserParticipant;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overturetool.vdmj.Settings;
@@ -20,11 +20,27 @@ public class SourceParserVdmSl extends AbstractParserParticipant
 {
 
 	@Override
-	protected ParseResult startParse(IVdmSourceUnit file, String source, String charset)
+	protected ParseResult startParse(IVdmSourceUnit file, String source,
+			String charset)
 	{
 		file.setType(IVdmSourceUnit.VDM_MODULE_SPEC);
 		Settings.dialect = Dialect.VDM_SL;
-		LexTokenReader.TABSTOP=1;
+		try
+		{
+			Settings.release = file.getProject().getLanguageVersion();
+		} catch (CoreException e1)
+		{
+			if (Activator.DEBUG)
+			{
+				e1.printStackTrace();
+			}
+		}
+		Settings.dynamictypechecks = file.getProject().hasDynamictypechecks();
+		Settings.invchecks = file.getProject().hasInvchecks();
+		Settings.postchecks = file.getProject().hasPostchecks();
+		Settings.prechecks = file.getProject().hasPrechecks();
+
+		LexTokenReader.TABSTOP = 1;
 		ModuleList modules = new ModuleList();
 		modules.clear();
 		LexLocation.resetLocations();
@@ -36,22 +52,19 @@ public class SourceParserVdmSl extends AbstractParserParticipant
 		try
 		{
 
-			LexTokenReader ltr = new LexTokenReader(source,
-					Settings.dialect,
-					file.getSystemFile(),
-					charset);
+			LexTokenReader ltr = new LexTokenReader(source, Settings.dialect, file.getSystemFile(), charset);
 			reader = new ModuleReader(ltr);
 			modules.addAll(reader.readModules());
 
 			List<IAstNode> nodes = new Vector<IAstNode>();
-			for (Module module: modules)
+			for (Module module : modules)
 			{
 				nodes.add(module);
 			}
-			if(nodes.size()>0)
+			if (nodes.size() > 0)
 			{
-			result.setAst(nodes);
-			}else
+				result.setAst(nodes);
+			} else
 			{
 				perrs++;
 				result.setFatalError(new Exception("No VDM source in file"));
@@ -82,7 +95,7 @@ public class SourceParserVdmSl extends AbstractParserParticipant
 
 			result.setWarnings(reader.getWarnings());
 		}
-		
+
 		result.setAllLocation(LexLocation.getAllLocations());
 		result.setLocationToAstNodeMap(LexLocation.getLocationToAstNodeMap());
 

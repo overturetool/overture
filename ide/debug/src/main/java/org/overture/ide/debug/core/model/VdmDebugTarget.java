@@ -382,6 +382,10 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 	public void printErr(String message)
 	{
 		console.ConsolePrint(message, SWT.COLOR_RED);
+		if(!logging)
+		{
+			console.Show();
+		}
 	}
 
 	public void setProject(IVdmProject project)

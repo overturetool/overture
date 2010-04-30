@@ -11,6 +11,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.VdmCore;
 import org.overturetool.vdmj.lex.LexLocation;
 
@@ -40,7 +41,10 @@ public class FileUtility
 			IMarker marker = file.createMarker(IMarker.PROBLEM);
 			marker.setAttribute(IMarker.MESSAGE, message);
 			marker.setAttribute(IMarker.SEVERITY, severity);
-			marker.setAttribute(IMarker.SOURCE_ID, "org.overture.ide");
+			marker.setAttribute(IMarker.SOURCE_ID, ICoreConstants.PLUGIN_ID);
+			marker.setAttribute(IMarker.LOCATION, "line: "+lineNumber);
+			
+			
 			if (lineNumber == -1)
 			{
 				lineNumber = 1;
@@ -76,7 +80,8 @@ public class FileUtility
 			IMarker marker = file.createMarker(IMarker.PROBLEM);
 			marker.setAttribute(IMarker.MESSAGE, message);
 			marker.setAttribute(IMarker.SEVERITY, severity);
-			marker.setAttribute(IMarker.SOURCE_ID, "org.overture.ide");
+			marker.setAttribute(IMarker.SOURCE_ID, ICoreConstants.PLUGIN_ID);
+			marker.setAttribute(IMarker.LOCATION, "line: "+lineNumber);
 
 			SourceLocationConverter converter = new SourceLocationConverter(getContent(file));
 			marker.setAttribute(IMarker.CHAR_START,
@@ -134,6 +139,8 @@ public class FileUtility
 			marker.setAttribute(IMarker.MESSAGE, message);
 			marker.setAttribute(IMarker.SEVERITY, severity);
 			marker.setAttribute(IMarker.SOURCE_ID, sourceId);
+			marker.setAttribute(IMarker.LOCATION, "line: "+location.startLine);
+			marker.setAttribute(IMarker.LINE_NUMBER,location.startLine); 
 
 			marker.setAttribute(IMarker.CHAR_START,
 					converter.getStartPos(location));

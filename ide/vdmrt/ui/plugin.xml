@@ -154,10 +154,11 @@
             targetID="org.overture.ide.vdmrt.ui.VdmRtEditor"
             id="org.overture.ide.debug.VdmEditor.BreakpointRulerActions">
          <action
-               label="%AddBreakpoint.label"
-               class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
                actionID="RulerDoubleClick"
-               id="org.overture.ide.debug.ui.actions.ManageBreakpointRulerAction">
+               class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
+               id="org.overture.ide.debug.ui.actions.ManageBreakpointRulerAction"
+               label="%AddBreakpoint.label"
+               style="toggle">
          </action>
       </editorContribution>
 	</extension>

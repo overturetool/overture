@@ -28,6 +28,7 @@ import org.overturetool.vdmj.expressions.UnaryExpression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.statements.Statement;
+import org.overturetool.vdmj.types.Field;
 
 /*
  * public abstract IAstNode getNodeAt(int pos); public int getLineOffset(int lineIndex);
@@ -272,6 +273,10 @@ public class SourceReferenceManager implements IManager
 			if (element instanceof Statement)
 			{
 				return getOuterLocation((Statement) element);
+			}
+			if (element instanceof Field)
+			{
+				return getOuterLocation((Field) element);
 			}
 
 			if (element != null && element.getLocation() != null)
@@ -543,6 +548,31 @@ public class SourceReferenceManager implements IManager
 			SourceReference sf = new SourceReference(startLine, startPos, endLine, endPos, element);
 
 			sf.expand(getOuterLocation(element.exp));
+			return sf;
+		}
+		
+		public SourceReference getOuterLocation(
+				Field element)
+		{
+			int startLine = element.getLocation().startLine;
+			int startPos = element.getLocation().startPos;
+
+			if (element.accessibility.access != null)
+			{
+				// no location available. Estimate at least a space and the number of chars of the access
+				// specifier
+				startPos -= element.accessibility.access.name().length() + 1;
+			}
+
+			int endLine = element.type.getLocation().endLine;
+			int endPos = element.type.getLocation().endPos;
+
+			SourceReference sf = new SourceReference(startLine, startPos, endLine, endPos, element);
+
+//			sf.expand(getOuterLocation(element.body));
+//			sf.expand(getOuterLocation(element.precondition));
+//			sf.expand(getOuterLocation(element.postcondition));
+
 			return sf;
 		}
 
