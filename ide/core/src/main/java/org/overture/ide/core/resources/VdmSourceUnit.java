@@ -16,16 +16,16 @@ import org.overturetool.vdmj.lex.LexLocation;
 
 public class VdmSourceUnit implements IVdmSourceUnit
 {
-	private IVdmProject project;
-	private IFile file;
-	private int type;
-	List<LexLocation> allLocation = new Vector<LexLocation>();
-	Map<LexLocation, IAstNode> locationToAstNodeMap = new Hashtable<LexLocation, IAstNode>();
-	
+	protected IVdmProject project;
+	protected IFile file;
+	protected int type;
+	protected	List<LexLocation> allLocation = new Vector<LexLocation>();
+	protected	Map<LexLocation, IAstNode> locationToAstNodeMap = new Hashtable<LexLocation, IAstNode>();
+	protected boolean parseErrors= false;
 	
 
 
-	private List<IAstNode> parseList = new Vector<IAstNode>();
+	protected List<IAstNode> parseList = new Vector<IAstNode>();
 
 	public VdmSourceUnit(IVdmProject project, IFile file) {
 		this.project = project;
@@ -58,7 +58,7 @@ public class VdmSourceUnit implements IVdmSourceUnit
 		this.parseList.clear();
 		this.allLocation.clear();
 		this.locationToAstNodeMap.clear();
-
+this.parseErrors = parseErrors;
 		if (!parseErrors)
 		{
 			this.parseList.addAll(parseResult);
@@ -85,10 +85,7 @@ public class VdmSourceUnit implements IVdmSourceUnit
 		// }
 
 		// VdmModelManager.getInstance().update(project, parseList);
-		VdmCore.getDeltaProcessor().fire(this,
-				new ElementChangedEvent(new VdmElementDelta(this,
-						IVdmElementDelta.CHANGED),
-						ElementChangedEvent.DeltaType.POST_RECONCILE));
+		fireChangedEvent();
 		// file.getLocation().toFile().getAbsolutePath()
 		// IVdmModelManager astManager = VdmModelManager.instance();
 		// astManager.update(project, project.getVdmNature(), ast);
@@ -99,6 +96,14 @@ public class VdmSourceUnit implements IVdmSourceUnit
 		// rootNode.setParseCorrect(filePath, !parseErrorsOccured);
 		//
 		// }
+	}
+
+	protected void fireChangedEvent()
+	{
+		VdmCore.getDeltaProcessor().fire(this,
+				new ElementChangedEvent(new VdmElementDelta(this,
+						IVdmElementDelta.CHANGED),
+						ElementChangedEvent.DeltaType.POST_RECONCILE));
 	}
 
 	public synchronized List<IAstNode> getParseList()
@@ -156,6 +161,15 @@ public class VdmSourceUnit implements IVdmSourceUnit
 		return locationToAstNodeMap;
 	}
 
+	public boolean hasParseErrors()
+	{
+		return this.parseErrors;
+	}
+
+	public VdmSourceUnitWorkingCopy getWorkingCopy()
+	{
+		return new VdmSourceUnitWorkingCopy(this);
+	}
 
 
 }

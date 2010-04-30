@@ -35,4 +35,8 @@ public interface IVdmSourceUnit extends IVdmElement{
 	public abstract boolean hasParseTree();
 
 	public abstract Map<LexLocation, IAstNode> getLocationToAstNodeMap();
+	
+	public abstract boolean hasParseErrors();
+	
+	public abstract VdmSourceUnitWorkingCopy getWorkingCopy();
 }

@@ -3,7 +3,6 @@ package org.overture.ide.core.ast;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
@@ -15,7 +14,6 @@ import org.overture.ide.core.ElementChangedEvent;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.IVdmElementDelta;
 import org.overture.ide.core.IVdmModel;
-
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.VdmElementDelta;
 import org.overture.ide.core.parser.SourceParserManager;
@@ -30,12 +28,12 @@ public class VdmModel implements IVdmModel
 {
 	static int count = 0;
 	int id;
-	private boolean typeChecked = false;
-	private Hashtable<String, Boolean> parseCurrectTable = new Hashtable<String, Boolean>();
+	protected boolean typeChecked = false;
+	//private Hashtable<String, Boolean> parseCurrectTable = new Hashtable<String, Boolean>();
 
-	private Date checkedTime;
+	protected Date checkedTime;
 
-	private List<IVdmSourceUnit> vdmSourceUnits = new Vector<IVdmSourceUnit>();
+	protected List<IVdmSourceUnit> vdmSourceUnits = new Vector<IVdmSourceUnit>();
 
 	public VdmModel()
 	{
@@ -78,8 +76,13 @@ public class VdmModel implements IVdmModel
 		this.checkedTime = new Date();
 		if (checked == true)
 		{
-			VdmCore.getDeltaProcessor().fire(this, new ElementChangedEvent(new VdmElementDelta(this, IVdmElementDelta.F_TYPE_CHECKED), ElementChangedEvent.DeltaType.POST_RECONCILE));
+			fireModelCheckedEvent();
 		}
+	}
+
+	protected void fireModelCheckedEvent()
+	{
+		VdmCore.getDeltaProcessor().fire(this, new ElementChangedEvent(new VdmElementDelta(this, IVdmElementDelta.F_TYPE_CHECKED), ElementChangedEvent.DeltaType.POST_RECONCILE));
 	}
 
 	/*
@@ -171,18 +174,18 @@ public class VdmModel implements IVdmModel
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.overture.ide.core.ast.IVdmElement#setParseCorrect(java.lang.String, java.lang.Boolean)
-	 */
-	public synchronized void setParseCorrect(String file, Boolean isParseCorrect)
-	{
-		if (parseCurrectTable.containsKey(file))
-			parseCurrectTable.remove(file);
-
-		parseCurrectTable.put(file, isParseCorrect);
-		typeChecked = false;
-	}
+//	/*
+//	 * (non-Javadoc)
+//	 * @see org.overture.ide.core.ast.IVdmElement#setParseCorrect(java.lang.String, java.lang.Boolean)
+//	 */
+//	public synchronized void setParseCorrect(String file, Boolean isParseCorrect)
+//	{
+//		if (parseCurrectTable.containsKey(file))
+//			parseCurrectTable.remove(file);
+//
+//		parseCurrectTable.put(file, isParseCorrect);
+//		typeChecked = false;
+//	}
 
 	/*
 	 * (non-Javadoc)
@@ -190,10 +193,31 @@ public class VdmModel implements IVdmModel
 	 */
 	public synchronized boolean isParseCorrect()
 	{
-		for (Boolean isCurrect : parseCurrectTable.values())
-			if (!isCurrect)
-				return false;
-		return true;
+		boolean isParseCorrect = true;
+		for (IVdmSourceUnit source : vdmSourceUnits)
+		{
+			if (source.hasParseErrors())
+			{
+				isParseCorrect = false;
+				break;
+			}
+		}
+		return isParseCorrect;
+		// vdmSourceUnits.get(0).
+		// if(parseCurrectTable.size()==0)
+		// {
+		// return false;//we don't want to type check if empty
+		// }
+		//		
+		//		
+		// for (Boolean isCurrect : parseCurrectTable.values())
+		// {
+		// if (!isCurrect)
+		// {
+		// return false;
+		// }
+		// }
+		// return true;
 	}
 
 	public boolean exists()
@@ -238,10 +262,12 @@ public class VdmModel implements IVdmModel
 		{
 			unit.clean();
 		}
+		//this.parseCurrectTable.clear();
+		this.typeChecked = false;
 
 	}
 
-	public void refresh(boolean completeRefresh,IProgressMonitor monitor)
+	public void refresh(boolean completeRefresh, IProgressMonitor monitor)
 	{
 		int worked = 1;
 		if (monitor != null)
@@ -251,11 +277,11 @@ public class VdmModel implements IVdmModel
 		}
 		for (IVdmSourceUnit source : vdmSourceUnits)
 		{
-			if(!completeRefresh && source.getParseList().size()>0)
+			if (!completeRefresh && source.getParseList().size() > 0)
 			{
 				continue;
 			}
-				
+
 			try
 			{
 				SourceParserManager.parseFile(source);
@@ -283,5 +309,15 @@ public class VdmModel implements IVdmModel
 			monitor.done();
 		}
 
+	}
+
+	public List<IVdmSourceUnit> getSourceUnits()
+	{
+		return this.vdmSourceUnits;
+	}
+
+	public VdmModelWorkingCopy getWorkingCopy()
+	{
+		return new VdmModelWorkingCopy(this);
 	}
 }

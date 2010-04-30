@@ -21,6 +21,8 @@ public class MethodSearchEngine
 	public final static int EXPLICIT_OPERATION = 4;
 	public final static int STATIC = 8;
 	public final static int PUBLIC = 16;
+	public static final int WORLD_CLASS = 32;
+	public static final int RUN = 64;
 
 	public IAstNode[] searchMainMethods(IRunnableContext context,
 			Object[] nodes, int constraints)
@@ -30,8 +32,12 @@ public class MethodSearchEngine
 		boolean onlyExplicitOperation = (constraints & EXPLICIT_OPERATION) == EXPLICIT_OPERATION;
 		boolean onlyStatic = (constraints & STATIC) == STATIC;
 		boolean onlyPublicAccess = (constraints & PUBLIC) == PUBLIC;
+		boolean onlyRun = (constraints & RUN) == RUN;
+		boolean onlyWorldClass = (constraints & WORLD_CLASS) == WORLD_CLASS;
 
 		final String MAIN_NAME = "main";
+		final String RUN_NAME = "run";
+		final String WORLD_NAME = "world";
 
 		List<IAstNode> matched = new Vector<IAstNode>();
 
@@ -47,6 +53,16 @@ public class MethodSearchEngine
 				if (isConstructor(exop))
 				{
 					continue;//is constructor
+				}
+				
+				if(onlyRun && !exop.getName().equalsIgnoreCase(RUN_NAME))
+				{
+					continue;
+				}
+				
+				if(onlyWorldClass && (exop.classDefinition==null || !exop.classDefinition.getName().equalsIgnoreCase(WORLD_NAME)))
+				{
+					continue;
 				}
 
 				if (onlyStatic && !exop.isStatic())
@@ -119,6 +135,17 @@ public class MethodSearchEngine
 				{
 					continue;
 				}
+				
+				if(onlyRun && !exfu.getName().equalsIgnoreCase(RUN_NAME))
+				{
+					continue;
+				}
+				
+				if(onlyWorldClass && (exfu.classDefinition==null || !exfu.classDefinition.getName().equalsIgnoreCase(WORLD_NAME)))
+				{
+					continue;
+				}
+				
 				if (onlyMain
 						&& !exfu.getName().toLowerCase().equals(MAIN_NAME))
 				{

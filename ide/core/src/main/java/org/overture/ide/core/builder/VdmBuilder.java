@@ -10,37 +10,44 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
-import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.VdmCore;
-import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.VdmProject;
 
 public class VdmBuilder extends VdmCoreBuilder
 { // implements IScriptBuilder {
 	// This must be the ID from your extension point
 
-	private static Vector<IVdmProject> buildingProjects = new Vector<IVdmProject>();
+//	private static Map<IProject, SafeBuilder> buildingProjects = new Hashtable<IProject, SafeBuilder>();
+//
+//	protected static synchronized boolean isBuilding(IVdmProject project)
+//	{
+//		return buildingProjects.containsKey(project.getProject());
+//	}
+//
+//	protected synchronized SafeBuilder getBuildingBuilder(IVdmProject project)
+//	{
+//		if (buildingProjects.containsKey(project.getProject()))
+//		{
+//			return buildingProjects.get(project.getProject());
+//		}
+//		return null;
+//	}
+//
+//	protected static synchronized void setBuilding(IVdmProject project,
+//			SafeBuilder monitor)
+//	{
+//		buildingProjects.put(project.getProject(), monitor);
+//	}
+//
+//	protected static synchronized void removeBuilding(IVdmProject project)
+//	{
+//		if (buildingProjects.containsKey(project.getProject()))
+//		{
+//			buildingProjects.remove(project.getProject());
+//		}
+//	}
 
-	protected static synchronized boolean isBuilding(IVdmProject project)
-	{
-		return buildingProjects.contains(project);
-	}
-
-	protected static synchronized void setBuilding(IVdmProject project)
-	{
-		buildingProjects.add(project);
-	}
-
-	protected static synchronized void removeBuilding(IVdmProject project)
-	{
-		if (buildingProjects.contains(project))
-			buildingProjects.remove(project);
-	}
-
-	public VdmBuilder()
-	{
-
-	}
+	
 
 	@Override
 	public void build(final IProgressMonitor monitor) throws CoreException
@@ -49,77 +56,55 @@ public class VdmBuilder extends VdmCoreBuilder
 		{
 			System.out.println("buildModelElements");
 		}
-		
-		if (isBuilding(getVdmProject()))
+
+//		if (isBuilding(getVdmProject()))
+//		{
+//			SafeBuilder buildingMonitor = getBuildingBuilder(getVdmProject());
+//			if (buildingMonitor != null)
+//			{
+//				buildingMonitor.interrupt();
+//			}
+//
+//		}
+		try
 		{
-			monitor.subTask("Waiting for other build: "
-					+ getVdmProject().getName());
-			while (isBuilding(getVdmProject()))
+			final List<IStatus> statusList = new Vector<IStatus>();
+
+			final SafeBuilder builder = new SafeBuilder(getVdmProject(), statusList, monitor);
+//			setBuilding(getVdmProject(), builder);
+			clearProblemMarkers();
+			// clearInternalModel();
+
+			builder.start();
+
+			ISafeRunnable runnable = new ISafeRunnable()
 			{
-				try
+
+				public void handleException(Throwable exception)
 				{
-					Thread.sleep(1000);
-				} catch (InterruptedException e)
-				{
+					exception.printStackTrace();
+
 				}
-			}
-			monitor.done();
-			// return new Status(IStatus.INFO,
-			// BUILDER_ID,
-			// "Build cancelled since another builder already was running.");
-		}
 
-		setBuilding(getVdmProject());
-		//clean(monitor);
-		clearProblemMarkers();
-		clearInternalModel();
-
-		final List<IStatus> statusList = new Vector<IStatus>();
-
-		final SafeBuilder builder = new SafeBuilder(getVdmProject(), statusList, monitor);
-
-		builder.start();
-
-		ISafeRunnable runnable = new ISafeRunnable()
-		{
-
-			public void handleException(Throwable exception)
-			{
-				exception.printStackTrace();
-
-			}
-
-			@SuppressWarnings("deprecation")
-			public void run() throws Exception
-			{
-				while (builder.isAlive())
+				public void run() throws Exception
 				{
-					Thread.sleep(500);
-					if (monitor.isCanceled())
+					while (builder.isAlive())
 					{
-						builder.stop();
+						Thread.sleep(500);
+						if (monitor.isCanceled())
+						{
+							builder.interrupt();
+						}
 					}
 				}
-			}
 
-		};
-		SafeRunner.run(runnable);
+			};
+			SafeRunner.run(runnable);
 
-		// for (IStatus s : statusList)
-		// {
-		// if (!s.isOK())
-		// return s;
-		// }
-		// if (statusList.size() > 0)
-		// {
-		//
-		// // just return the first status
-		// return statusList.get(0);
-		// } else
-		// return new Status(IStatus.WARNING,
-		// VdmBuilderCorePluginConstants.PLUGIN_ID,
-		// "No builder returned any result");
-		removeBuilding(getVdmProject());
+		} finally
+		{
+//			removeBuilding(getVdmProject());
+		}
 	}
 
 	public void clean(IProgressMonitor monitor)
@@ -136,7 +121,7 @@ public class VdmBuilder extends VdmCoreBuilder
 
 			// IMPORTANT we do not have an incremental builder so a full parse/ build is required, therefore remove any
 			// AST nodes in store.
-			clearInternalModel();
+			// clearInternalModel();
 
 			try
 			{
@@ -153,14 +138,14 @@ public class VdmBuilder extends VdmCoreBuilder
 
 	}
 
-	private void clearInternalModel()
-	{
-		IVdmModel model = VdmProject.createProject(getProject()).getModel();
-		if (model != null)
-		{
-			model.clean();
-		}
-	}
+	// private void clearInternalModel()
+	// {
+	// IVdmModel model = VdmProject.createProject(getProject()).getModel();
+	// if (model != null)
+	// {
+	// model.clean();
+	// }
+	// }
 
 	public void endBuild(IProgressMonitor monitor)
 	{
@@ -168,7 +153,7 @@ public class VdmBuilder extends VdmCoreBuilder
 		{
 			System.out.println("endBuild");
 		}
-		removeBuilding(getVdmProject());
+//		removeBuilding(getVdmProject());
 	}
 
 	public void initialize()

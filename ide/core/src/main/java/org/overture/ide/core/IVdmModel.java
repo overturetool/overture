@@ -7,6 +7,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.overture.ide.core.ast.NotAllowedException;
+import org.overture.ide.core.ast.VdmModelWorkingCopy;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.definitions.ClassList;
@@ -57,7 +58,7 @@ public interface IVdmModel extends IVdmElement{
 
 	public abstract boolean hasModuleList();
 
-	public abstract void setParseCorrect(String file, Boolean isParseCorrect);
+	//public abstract void setParseCorrect(String file, Boolean isParseCorrect);
 
 	public abstract boolean isParseCorrect();
 
@@ -70,6 +71,10 @@ public interface IVdmModel extends IVdmElement{
 	public abstract void addVdmSourceUnit(IVdmSourceUnit unit);
 
 	public abstract void clean();
+	
+	public abstract List<IVdmSourceUnit> getSourceUnits();
+	
+	public abstract VdmModelWorkingCopy getWorkingCopy();
 
 
 	/**

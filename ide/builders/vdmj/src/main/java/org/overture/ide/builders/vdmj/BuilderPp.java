@@ -10,6 +10,7 @@ import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.typechecker.ClassTypeChecker;
+import org.overturetool.vdmj.typechecker.TypeCheckException;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 
 /***
@@ -69,11 +70,16 @@ public class BuilderPp extends VdmjBuilder {
 		int terrs = 0;
 
 		try {
-			TypeChecker typeChecker = new ClassTypeChecker(classes);
+			
+		TypeChecker typeChecker = new ClassTypeChecker(classes);
 			typeChecker.typeCheck();
 		} catch (InternalException e) {
 			processInternalError(e);
-		} catch (Throwable e) {
+		terrs++;
+		}catch(TypeCheckException e){
+		//is already in TypeChecker Errors
+			terrs++;
+		}catch (Throwable e) {
 			processInternalError(e);
 
 			if (e instanceof StackOverflowError) {

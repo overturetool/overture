@@ -8,7 +8,6 @@ import java.util.Vector;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
@@ -28,7 +27,6 @@ import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
-
 import org.overture.ide.ui.internal.util.ConsoleWriter;
 import org.overturetool.traceviewer.ast.itf.IOmlTraceFile;
 import org.overturetool.traceviewer.parser.TraceParser;
@@ -360,10 +358,11 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 			new ProgressMonitorDialog(shell).run(true, true, op);
 		} catch (InvocationTargetException e)
 		{
+			e.printStackTrace();
 
 		} catch (InterruptedException e)
 		{
-
+e.printStackTrace();
 		}
 	}
 
@@ -407,7 +406,15 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 				showMessage((new StringBuilder(String.valueOf(t.theAst.getTrace().size()))).append(" lines read from file \"").append(fname).append("\"").toString());
 				theVisitor = new TracefileVisitor();
 				theVisitor.visitNode(t.theAst);
-				createTabPages();
+				getSite().getShell().getDisplay().asyncExec(new Runnable() {
+
+					public void run()
+					{
+						createTabPages();
+					}
+
+				});
+				
 			}
 		} else
 		{

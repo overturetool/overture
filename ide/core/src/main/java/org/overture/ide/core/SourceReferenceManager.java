@@ -77,7 +77,7 @@ public class SourceReferenceManager implements IManager
 		}
 	}
 
-	public IAstNode getNodeAt(int pos)
+	public synchronized IAstNode getNodeAt(int pos)
 	{
 		try
 		{
@@ -185,7 +185,7 @@ public class SourceReferenceManager implements IManager
 		}
 	}
 
-	private void makeOuterOffsetToAstMap()
+	private synchronized void makeOuterOffsetToAstMap()
 	{
 		VdmjLocationCalculator calc = new VdmjLocationCalculator();
 		for (LexLocation location : sourceUnit.getLocationToAstNodeMap().keySet())

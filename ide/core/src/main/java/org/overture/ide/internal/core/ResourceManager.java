@@ -14,13 +14,12 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.IWorkspaceRunnable;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.core.runtime.jobs.Job;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.resources.IVdmProject;
@@ -70,6 +69,10 @@ public class ResourceManager implements IResourceChangeListener
 
 				try
 				{
+					if(!file.isSynchronized(IResource.DEPTH_INFINITE))
+					{
+						file.refreshLocal(IResource.DEPTH_INFINITE, null);
+					}
 					if (file.getContentDescription() != null
 							&& project.getContentTypeIds().contains(file.getContentDescription().getContentType().getId()))
 					{
@@ -265,7 +268,7 @@ public class ResourceManager implements IResourceChangeListener
 			if (res instanceof IProject
 					&& VdmProject.isVdmProject((IProject) res))
 			{
-				addProject(res, false);
+				addBuilderProject((IProject) res);// , false);
 
 			} else if (res instanceof IFile)
 			{
@@ -275,8 +278,8 @@ public class ResourceManager implements IResourceChangeListener
 					// IVdmProject project = VdmProject.createProject(file.getProject());
 					// Assert.isNotNull(project, "Project creation faild for file: "
 					// + res);
-					addProject(res.getProject(), true);
-
+					// addProject(res.getProject(), true);
+					addBuilderProject(res.getProject());
 					// IVdmSourceUnit unit = createSourceUnit(file, project);
 					// Assert.isNotNull(unit, "Source unit creation faild for: "
 					// + res);
@@ -286,60 +289,95 @@ public class ResourceManager implements IResourceChangeListener
 		}
 	}
 
-	private static void addProject(final IResource res,
-			final boolean refreshSpecFiles)
+	private List<IProject> addBuilders = new Vector<IProject>();
+	private boolean addBuilderThreadRunning = false;
+
+	private synchronized IProject getAddBuidlerProject()
 	{
-		Job j = new Job("Create VDM Project")
+		if (addBuilders.size() > 0)
+		{
+			IProject p = addBuilders.get(0);
+			addBuilders.remove(p);
+			return p;
+		}
+		return null;
+	}
+
+	private synchronized void addBuilderProject(IProject project)
+	{
+		if (!addBuilders.contains(project))
+		{
+			addBuilders.add(project);
+			if (!addBuilderThreadRunning)
+			{
+
+				System.out.println("starting add builder thread");
+				new AddBuilderThread().start();
+				addBuilderThreadRunning = true;
+			}
+		}
+	}
+
+	private class AddBuilderThread extends Thread
+	{
+		@Override
+		public void run()
 		{
 
-			@Override
-			protected IStatus run(IProgressMonitor monitor)
+			try
 			{
-				while (res.getWorkspace().isTreeLocked())
+				while (ResourcesPlugin.getWorkspace().isTreeLocked())
 				{
 					try
 					{
 						Thread.sleep(500);
 					} catch (InterruptedException e)
 					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
 					}
 				}
-				IVdmProject project = VdmProject.createProject((IProject) res);
-				Assert.isNotNull(project, "VDM Project creation faild for project: "
-						+ res);
-				try
+				ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable()
 				{
-					project.setBuilder(project.getLanguageVersion());
-				} catch (CoreException e1)
-				{
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 
-				if (refreshSpecFiles)
-				{
-					try
+					public void run(IProgressMonitor monitor)
+							throws CoreException
 					{
-						project.getSpecFiles();// sync with content type files
-					} catch (CoreException e)
-					{
-						if (VdmCore.DEBUG)
+
+						IProject p = null;
+						while (addBuilders.size()>0)
 						{
-							e.printStackTrace();
+							p = getAddBuidlerProject();
+							if (p == null)
+							{
+								addBuilderThreadRunning = false;
+								System.out.println("ended add builder thread");
+								return;
+							}
+
+							System.out.println("Adding builder for: " + p);
+							IVdmProject project = VdmProject.createProject(p);
+							Assert.isNotNull(project, "VDM Project creation faild for project: "
+									+ p);
+							try
+							{
+								if (!project.hasBuilder())
+								{
+									project.setBuilder(project.getLanguageVersion());
+								}
+								project.getSpecFiles();// sync with content type files
+							} catch (CoreException e1)
+							{
+								e1.printStackTrace();
+							}
+
 						}
+						System.out.println("DONE adding");
 					}
-				}
-				if (project != null)
-				{
-					return Status.OK_STATUS;
-				} else
-				{
-					return Status.CANCEL_STATUS;
-				}
+				}, null);
+			} catch (CoreException e)
+			{
+				e.printStackTrace();
 			}
-		};
-		j.schedule(500);
+		}
 	}
+
 }

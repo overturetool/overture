@@ -9,9 +9,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.overture.ide.core.ICoreConstants;
-import org.overture.ide.core.IVdmModel;
-
 import org.overture.ide.core.VdmCore;
+import org.overture.ide.core.ast.VdmModelWorkingCopy;
 import org.overture.ide.core.parser.SourceParserManager;
 import org.overture.ide.core.resources.IVdmProject;
 
@@ -23,7 +22,8 @@ public class SafeBuilder extends Thread
 	final IProgressMonitor monitor;
 
 	public SafeBuilder(final IVdmProject currentProject,
-			final List<IStatus> statusList, final IProgressMonitor monitor) {
+			final List<IStatus> statusList, final IProgressMonitor monitor)
+	{
 		this.currentProject = currentProject;
 		this.statusList = statusList;
 		this.monitor = monitor;
@@ -35,8 +35,7 @@ public class SafeBuilder extends Thread
 
 		try
 		{
-			IConfigurationElement[] config = Platform.getExtensionRegistry()
-					.getConfigurationElementsFor(ICoreConstants.EXTENSION_BUILDER_ID);
+			IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(ICoreConstants.EXTENSION_BUILDER_ID);
 			for (IConfigurationElement e : config)
 			{
 				if (currentProject.hasNature(e.getAttribute("nature")))
@@ -44,7 +43,8 @@ public class SafeBuilder extends Thread
 					final Object o = e.createExecutableExtension("class");
 					if (o instanceof AbstractVdmBuilder)
 					{
-						ISafeRunnable runnable = new ISafeRunnable() {
+						ISafeRunnable runnable = new ISafeRunnable()
+						{
 
 							public void handleException(Throwable exception)
 							{
@@ -60,34 +60,38 @@ public class SafeBuilder extends Thread
 								// (currentProject.hasNature(builder.getNatureId()))
 								// {
 
-								currentProject.getModel().clean();// we do now support incremental
-																			// build
+								// currentProject.getModel().clean();// we do now support incremental
+								// // build
+								final VdmModelWorkingCopy model = currentProject.getModel().getWorkingCopy();
+								SourceParserManager.parseMissingFiles(currentProject, model, monitor);
 
-								SourceParserManager.parseMissingFiles(currentProject,
-										monitor);
-
-								final IVdmModel rootNode = currentProject.getModel();
 								// if the project don't have parse errors
-								if (rootNode != null
-										&& rootNode.isParseCorrect())
+								if (model != null && model.isParseCorrect())
 								{
 									if (VdmCore.DEBUG)
-										System.out.println("Parse correct .. building("+currentProject.getName()+")");
-									monitor.subTask("Type checking");
-									statusList.add(builder.buildModel(currentProject,
-											rootNode));
-									// mark ast root as type checked
-
-									if (rootNode != null)
 									{
-										rootNode.setChecked(statusList.get(statusList.size() - 1)
-												.getCode() < IStatus.ERROR);
+										System.out.println("Parse correct .. building("
+												+ currentProject.getName()
+												+ ")");
 									}
+									monitor.subTask("Type checking: "
+											+ currentProject);
+									statusList.add(builder.buildModel(currentProject, model));
+									// mark ast root as type checked
+									monitor.done();
+									if (model != null)
+									{
+										model.setChecked(statusList.get(statusList.size() - 1).getCode() < IStatus.ERROR);
+
+										model.commit();
+									}
+									return;
 								}
 							}
 							// }
 						};
 						SafeRunner.run(runnable);
+						break;
 					}
 				}
 			}

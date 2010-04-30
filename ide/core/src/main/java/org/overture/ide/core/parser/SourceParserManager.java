@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.overture.ide.core.ICoreConstants;
+import org.overture.ide.core.IVdmModel;
 
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.resources.IVdmProject;
@@ -116,26 +117,26 @@ public class SourceParserManager {
 	 * @throws CoreException
 	 * @throws IOException
 	 */
-	public static void parseMissingFiles(IVdmProject project, IProgressMonitor monitor)
+	public static void parseMissingFiles(IVdmProject project,IVdmModel model ,IProgressMonitor monitor)
 			throws CoreException, IOException
 	{
 		if (monitor != null)
 		{
-			monitor.subTask("Parsing files");
+			monitor.subTask("Parsing files: "+project.getName());
 		}
 		if (!project.isSynchronized(IResource.DEPTH_INFINITE))
 		{
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		}
-		List<IVdmSourceUnit> files = project.getSpecFiles();
-		for (IVdmSourceUnit file : files)
+		List<IVdmSourceUnit> files = model.getSourceUnits();
+		for (IVdmSourceUnit source : files)
 		{
 //			IVdmModel model = file.getProject().getModel();
 //			if (model != null && model.hasFile(file) && file.)
 //				return;
 //			if(!file.hasParseTree())
 //				file.getParseList().clear();
-			parseFile( file);
+			parseFile( source);
 		}
 
 	}
@@ -143,12 +144,12 @@ public class SourceParserManager {
 	/**
 	 * Parse a single file from a project
 	 * @param project the project where the file originates from
-	 * @param file the file to be parsed
+	 * @param source the file to be parsed
 	 * @throws CoreException
 	 * @throws IOException
 	 */
 	public static void parseFile(
-			final IVdmSourceUnit file) throws CoreException, IOException
+			final IVdmSourceUnit source) throws CoreException, IOException
 	{
 		
 
@@ -159,9 +160,9 @@ public class SourceParserManager {
 		try
 		{
 		ISourceParser parser =	SourceParserManager.getInstance()
-					.getSourceParser(file.getProject());
-		Assert.isNotNull(parser, "No parser for file : "+file.toString() +" in project " +file.getProject().toString());
-		parser.parse(file);
+					.getSourceParser(source.getProject());
+		Assert.isNotNull(parser, "No parser for file : "+source.toString() +" in project " +source.getProject().toString());
+		parser.parse(source);
 		} catch (Exception e)
 		{
 			if (VdmCore.DEBUG)
