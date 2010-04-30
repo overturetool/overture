@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.definitions;
 
+import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.ExpressionList;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -72,6 +73,18 @@ public class ThreadDefinition extends Definition
 	public Definition findName(LexNameToken sought, NameScope scope)
 	{
 		return operationDef.findName(sought, scope);
+	}
+
+	@Override
+	public Expression findExpression(int lineno)
+	{
+		return statement.findExpression(lineno);
+	}
+
+	@Override
+	public Statement findStatement(int lineno)
+	{
+		return statement.findStatement(lineno);
 	}
 
 	@Override
