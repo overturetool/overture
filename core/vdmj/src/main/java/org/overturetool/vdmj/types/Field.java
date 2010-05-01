@@ -25,12 +25,14 @@ package org.overturetool.vdmj.types;
 
 import java.io.Serializable;
 
+import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.definitions.AccessSpecifier;
 import org.overturetool.vdmj.definitions.TypeDefinition;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.Environment;
 
-public class Field implements Serializable
+public class Field implements Serializable, IAstNode
 {
 	private static final long serialVersionUID = 1L;
 
@@ -97,5 +99,15 @@ public class Field implements Serializable
 		}
 
 		return false;
+	}
+	
+	public String getName()
+	{
+		return tagname.getName();
+	}
+	
+	public LexLocation getLocation()
+	{
+		return tagname.location;
 	}
 }
