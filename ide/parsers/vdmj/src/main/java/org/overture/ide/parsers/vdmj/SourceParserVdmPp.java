@@ -8,6 +8,7 @@ import org.overture.ide.core.parser.AbstractParserParticipant;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.ast.IAstNode;
+import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
@@ -47,7 +48,9 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 		Settings.postchecks = file.getProject().hasPostchecks();
 		Settings.prechecks = file.getProject().hasPrechecks();
 		
-		LexTokenReader.TABSTOP = 1;
+		Properties.init();
+		Properties.parser_tabstop = 1;
+		
 		ClassList classes = new ClassList();
 		classes.clear();
 		LexLocation.resetLocations();

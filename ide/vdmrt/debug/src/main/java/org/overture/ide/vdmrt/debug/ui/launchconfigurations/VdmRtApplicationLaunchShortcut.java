@@ -22,6 +22,17 @@ public class VdmRtApplicationLaunchShortcut extends VdmPpApplicationLaunchShortc
 	{
 		return "Select VDM-RT Application";
 	}
+	
+	/**
+	 * Returns an error message to use when the selection does not contain a type that can be launched.
+	 * 
+	 * @return error message when selection cannot be launched
+	 */
+	@Override
+	protected String getSelectionEmptyMessage()
+	{
+		return "Selection does not contain a launchable Run operation type within the World class";
+	}
 
 	
 	/*

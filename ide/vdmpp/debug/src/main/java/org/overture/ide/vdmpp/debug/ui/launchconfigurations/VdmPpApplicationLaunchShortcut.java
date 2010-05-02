@@ -48,7 +48,7 @@ public class VdmPpApplicationLaunchShortcut extends VdmLaunchShortcut
 	@Override
 	protected String getSelectionEmptyMessage()
 	{
-		return "Selection does not contain a main type";
+		return "Selection does not contain a launchable operation or function type";
 	}
 
 	/*

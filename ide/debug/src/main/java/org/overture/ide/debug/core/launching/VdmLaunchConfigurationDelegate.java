@@ -11,6 +11,7 @@ import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -74,6 +75,10 @@ public class VdmLaunchConfigurationDelegate implements
 		List<String> commandList = new ArrayList<String>();
 
 		IVdmProject project = getProject(configuration);
+		
+		Assert.isNotNull(project, " Project not found: "+configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT,
+						""));
+		
 		String charSet = project.getDefaultCharset();
 
 		commandList.add("-h");

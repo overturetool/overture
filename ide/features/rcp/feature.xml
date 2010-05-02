@@ -52,6 +52,10 @@
          id="org.overture.ide.plugins.features.umltrans"
          version="0.0.0"/>
 
+   <includes
+         id="org.overture.ide.plugins.features.csk"
+         version="0.0.0"/>
+
    <plugin
          id="org.eclipse.ui.views.log"
          download-size="0"

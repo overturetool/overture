@@ -24,6 +24,7 @@
     <module>latex</module>
     <module>quickinterpreter</module>
     <module>coverageeditor</module>
+    <module>csk</module>
 
 
   </modules>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <viewerContribution
+            id="org.overture.ide.plugins.csk.viewerContribution1"
+            targetID="org.overture.ide.ui.VdmExplorer">
+         <menu
+               icon="icons/cview16/vdmtools_nav.gif"
+               id="org.overture.ide.plugins.csk.menu1"
+               label="VDM Tools"
+               path="additions">
+            <separator
+                  name="csk.seperator">
+            </separator>
+         </menu>
+         <action
+               class="org.overture.ide.plugins.csk.actions.ActionOpenProject"
+               id="org.overture.ide.plugins.csk.actionOpenProject"
+               label="Open VDM Tools"
+               menubarPath="org.overture.ide.plugins.csk.menu1/csk.seperator">
+         </action>
+         <action
+               class="org.overture.ide.plugins.csk.actions.ActionCodeGenJava"
+               id="org.overture.ide.plugins.csk.actionCodeGenJava"
+               label="Code Generate Java"
+               menubarPath="org.overture.ide.plugins.csk.menu1/csk.seperator">
+         </action>
+      </viewerContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.overture.ide.plugins.csk.internal.WorkbenchPreferencePage1"
+            id="org.overture.ide.plugins.csk.page1"
+            name="CSK">
+      </page>
+   </extension>
+
+</plugin>
