@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -20,10 +21,10 @@ import org.overture.ide.plugins.csk.internal.VdmTools;
 @SuppressWarnings("restriction")
 public class ActionOpenProject implements IViewActionDelegate
 {
-
+IViewPart view;
 	public void init(IViewPart view)
 	{
-
+this.view = view;
 	}
 
 	public void run(IAction action)
@@ -40,7 +41,8 @@ public class ActionOpenProject implements IViewActionDelegate
 					files.add(source.getSystemFile());
 				}
 
-				new VdmTools().createProject(project.getLocation().toFile(), project.getName(), files);
+				new VdmTools().createProject(view.getSite().getShell(), project, files);
+				project.refreshLocal(IResource.DEPTH_INFINITE, null);
 
 			} catch (CoreException e)
 			{

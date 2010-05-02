@@ -21,12 +21,12 @@
                label="Open VDM Tools"
                menubarPath="org.overture.ide.plugins.csk.menu1/csk.seperator">
          </action>
-         <action
+         <!--action
                class="org.overture.ide.plugins.csk.actions.ActionCodeGenJava"
                id="org.overture.ide.plugins.csk.actionCodeGenJava"
                label="Code Generate Java"
                menubarPath="org.overture.ide.plugins.csk.menu1/csk.seperator">
-         </action>
+         </action-->
       </viewerContribution>
    </extension>
    <extension

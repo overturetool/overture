@@ -4,6 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.widgets.Shell;
+import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.csk.Activator;
 import org.overture.ide.plugins.csk.ICskConstants;
 import org.overture.ide.ui.utility.PluginFolderInclude;
@@ -32,9 +37,10 @@ public class VdmTools
 	+ "j2v_stubsOnly:0\n" + "j2v_transforms:0";
 	
 	
-	public void createProject(File location, String projectName,
+	public void createProject(Shell shell, IVdmProject project,
 			List<File> files) throws IOException
 	{
+		File location = project.getLocation().toFile();
 		StringBuilder sb = new StringBuilder();
 		sb.append(HEADER1);
 		sb.append(files.size()+3);
@@ -48,15 +54,50 @@ public class VdmTools
 			sb.append(HEADER_FILE+path.length()+","+path);
 		}
 		
-		PluginFolderInclude.writeFile(location,projectName+".prj", sb.toString());
-		PluginFolderInclude.writeFile(location,projectName+".opt", VDM_TOOLS_PROJECT_OPT);
+		File generated = new File(location,"generated");
+		generated.mkdirs();
 		
-		Runtime.getRuntime().exec("\""+Activator.getDefault().getPreferenceStore().getString(ICskConstants.VPPGDE_PATH)+"\" "+projectName+".prj",null,location);
+		PluginFolderInclude.writeFile(generated,project.getName()+".prj", sb.toString());
+		VdmToolsOptions options = new VdmToolsOptions();
+		options.JCG_PACKAGE = (project.getName().replaceAll(" ", "")+"."+"model").toLowerCase();
+		options.DTC = project.hasDynamictypechecks();
+		options.INV =project.hasInvchecks();
+		options.POST =project.hasPostchecks();
+		options.PRE =project.hasPrechecks();
+		
+		options.Save(generated, project.getName());
+		Runtime.getRuntime().exec("\""+getVppgdePath(shell)+"\" "+project.getName()+".prj",null,generated);
 	}
 
 
 	private String getFilePath(File location,File file)
 	{
-		return "./"+file.getAbsolutePath().substring(location.getAbsolutePath().length()+1);
+		return file.getAbsolutePath();//"./../"+file.getAbsolutePath().substring(location.getAbsolutePath().length()+1);
+	}
+	
+	
+	private static String getVppgdePath(Shell shell)
+	{
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		String path = store.getString(ICskConstants.VPPGDE_PATH);
+		
+		boolean valid = path.length()>0;
+		if(!valid)
+		{
+			store.setDefault(ICskConstants.VPPGDE_PATH,ICskConstants.DEFAULT_VPPGDE_PATH);
+			path = store.getString(ICskConstants.VPPGDE_PATH);
+		}
+		
+		if(valid)
+		{
+			valid = new File (path).exists();
+			
+		}
+		if(!valid){
+			MessageDialog.openError(shell, "VDM Tools Error", "CSK VPPGDE Path not valid");
+			
+		}
+		Assert.isTrue(valid, "VPPGDE path is not valid");
+		return path;
 	}
 }
