@@ -347,7 +347,7 @@ public class VdmElementImageProvider {
 		Point size = useSmallSize(renderFlags) ? SMALL_SIZE : BIG_SIZE;
 
 		return new VdmElementImageDescriptor(VdmPluginImages
-				.getDescriptor(VdmPluginImages.IMG_OBJS_VDM_PER_SYNC),
+				.getDescriptor(VdmPluginImages.IMG_OBJS_LOCK),
 				adornmentFlags, size);
 	}
 

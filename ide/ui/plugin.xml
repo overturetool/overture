@@ -397,7 +397,25 @@
            categoryId="org.eclipse.ui.category.textEditor"
            defaultHandler="org.overture.ide.ui.commands.ToggleComment"
            id="org.overture.ide.ui.commands.toggleComment"
-           name="name">
+           name="Toggle Comment">
      </command>
+  </extension>
+  <extension
+        point="org.eclipse.ui.decorators">
+     <decorator
+           class="org.overture.ide.ui.navigator.ProblemLabelDecorator"
+           id="org.overture.ide.ui.decorator1"
+           label="label"
+           lightweight="true"
+           location="BOTTOM_LEFT"
+           state="true">
+        <enablement>
+           <or>
+              <objectClass
+                    name="org.eclipse.core.resources.IResource">
+              </objectClass>
+           </or>
+        </enablement>
+     </decorator>
   </extension>
 </plugin>

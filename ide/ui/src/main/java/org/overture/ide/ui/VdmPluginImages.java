@@ -62,6 +62,8 @@ public class VdmPluginImages {
 	public static final String IMG_ELCL_VIEW_MENU= NAME_PREFIX + T_ELCL + "view_menu.gif"; //$NON-NLS-1$
 	public static final String IMG_DLCL_VIEW_MENU= NAME_PREFIX + T_DLCL + "view_menu.gif"; //$NON-NLS-1$
 
+	
+	public static final String IMG_OBJS_LOCK = NAME_PREFIX + "lock_obj.gif";
 	public static final String IMG_OBJS_GHOST= NAME_PREFIX + "ghost.gif"; 				//$NON-NLS-1$
 	public static final String IMG_OBJS_SEARCH_TSK= NAME_PREFIX + "search_tsk.gif"; 		//$NON-NLS-1$
 	public static final String IMG_OBJS_PACKDECL= NAME_PREFIX + "packd_obj.gif"; 			//$NON-NLS-1$
@@ -205,7 +207,7 @@ public class VdmPluginImages {
 
 	public static final ImageDescriptor DESC_MENU_REFRESH= createUnManaged(T_ETOOL, "refresh.gif"); 	//$NON-NLS-1$
 	
-	
+	public static final ImageDescriptor DESC_OBJS_LOCK= createManagedFromKey(T_OBJ, IMG_OBJS_LOCK);
 	public static final ImageDescriptor DESC_OBJS_GHOST= createManagedFromKey(T_OBJ, IMG_OBJS_GHOST);
 	public static final ImageDescriptor DESC_OBJS_PACKDECL= createManagedFromKey(T_OBJ, IMG_OBJS_PACKDECL);
 	public static final ImageDescriptor DESC_OBJS_IMPDECL= createManagedFromKey(T_OBJ, IMG_OBJS_IMPDECL);
