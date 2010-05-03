@@ -78,5 +78,19 @@
   		 </contextualLaunch>
   </shortcut>
  </extension>
+<extension
+        point="org.eclipse.ui.popupMenus">
+     <viewerContribution
+           id="org.overture.ide.vdmsl.ui.RulerBarPopupActions"
+           targetID="org.overture.ide.vdmsl.ui.VdmSlEditor.RulerContext">
+        <action
+              class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
+              icon="icons/cview16/brkp_obj.gif"
+              id="org.overture.ide.vdmsl.ui.ToggleBreakpointRuler"
+              label="Toggle Breakpoint"
+              menubarPath="additions">
+        </action>
+     </viewerContribution>
+  </extension>
 
 </plugin>

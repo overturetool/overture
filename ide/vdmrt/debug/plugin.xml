@@ -8,7 +8,7 @@
 	-->
 	<extension point="org.overture.ide.debug.sourceviewerEditor">
 		<SourceViewerEditor 
-			ContentTypeId="org.overture.ide.vdmrt.content-type"
+			ContentTypeId="org.overture.ide.vdmrt.core.content-type"
 			EditorId="org.overture.ide.vdmrt.ui.VdmRtEditor">
 		</SourceViewerEditor>
 	</extension>
@@ -90,4 +90,19 @@
   </shortcut>
  </extension>
 
+
+<extension
+        point="org.eclipse.ui.popupMenus">
+     <viewerContribution
+           id="org.overture.ide.vdmrt.ui.RulerBarPopupActions"
+           targetID="org.overture.ide.vdmrt.ui.VdmRtEditor.RulerContext">
+        <action
+              class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
+              icon="icons/cview16/brkp_obj.gif"
+              id="org.overture.ide.vdmrt.ui.ToggleBreakpointRuler"
+              label="Toggle Breakpoint"
+              menubarPath="additions">
+        </action>
+     </viewerContribution>
+  </extension>
 </plugin>

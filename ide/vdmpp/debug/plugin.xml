@@ -100,6 +100,19 @@
           mode="debug">
     </launchGroup>
  </extension>
-	
+	<extension
+        point="org.eclipse.ui.popupMenus">
+     <viewerContribution
+           id="org.overture.ide.vdmpp.ui.RulerBarPopupActions"
+           targetID="org.overture.ide.vdmpp.ui.VdmPpEditor.RulerContext">
+        <action
+              class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
+              icon="icons/cview16/brkp_obj.gif"
+              id="org.overture.ide.vdmpp.ui.ToggleBreakpointRuler"
+              label="Toggle Breakpoint"
+              menubarPath="additions">
+        </action>
+     </viewerContribution>
+  </extension>
 
 </plugin>

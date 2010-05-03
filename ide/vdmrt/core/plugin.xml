@@ -27,7 +27,7 @@
             name="VDM-RT"
             nature="org.overture.ide.vdmrt.core.nature">
          <ContentType
-               id="org.overture.ide.vdmrt.core.content-type">
+               id="org.overture.ide.vdmrt.content-type">
          </ContentType>
       </Language>
    </extension>

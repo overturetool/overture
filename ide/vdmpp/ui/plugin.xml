@@ -158,5 +158,6 @@
            Id="org.overture.ide.vdmpp.ui.contextType">
      </ContextId>
   </extension>
+  
 
 </plugin>
