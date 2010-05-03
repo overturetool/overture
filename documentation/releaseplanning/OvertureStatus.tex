@@ -21,6 +21,23 @@
 \end{description}
 
 \subsection{IDE}
+
+\subsubsection{Plug-ins}
+
+\begin{description}
+
+
+\item[Idedebughelper] discontinues.
+\item[Latex] Supports Latex document generation of a complete specification including coverage tables and colouring. Support is provided for all dialects: SL, PP and RT.
+
+\item[PO Viewer] Viewer/Generator of PO's for all dialects SL, PP and RT.
+\item[Proofsupport] Stable but not implemented to an extend where it is usable in the IDE. (To limited)
+\item[Showtrace / Real Time Log viewer] Viewer of RT log files. Stable but has an performance issue with large files. Navigation buttons also needs some work, it is not clear where they are located.
+\item[Traces / Combinatorial Testing] Implemented for all dialects SL, PP and RT. Stable for now but needs to be redeveloped because of they way it evaluates traces using the internal IDE AST. Error null is currently being printed in the console when an evaluation is impossible because of a AST out of state.
+\item[Umltrans] Implementation is stable for the PP and RT except the system class.
+\end{description}
+
+\subsubsection{IDE}
 \begin{description}
 \item[ast] Stable, scheduled to be moved to \textit{org.overutre.ide.core}
 \item[builders/core]
@@ -30,16 +47,6 @@
 
 \item[parsers/vdmj]
 \item[platform]
-
-
-\item[plugins/idedebughelper]
-\item[plugins/latex] Stable. Contrins support for all dialects. Assums that pdflatex is avaliable
-
-\item[plugins/poviewer] Stable supports all dialects.
-\item[plugins/proofsupport]
-\item[plugins/showtrace] Stable
-\item[plugins/traces] Stable
-\item[plugins/umltrans] Stable
 
 \item[ui]
 \item[utility]Stable, scheduled to be moved to \textit{org.overutre.ide.core}

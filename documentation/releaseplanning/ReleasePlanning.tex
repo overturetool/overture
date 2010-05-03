@@ -318,7 +318,7 @@ the Overture executable.
 \item[Release 0.3.0 (June 2010):] The aim for this release is to
   include the following features:  
 \begin{enumerate}
-\item Decide if we want to include the Update Manager or embed a number of videly used features like Sub Version control.
+\item  \markDone{Decide if we want to include the Update Manager or embed a number of videly used features like Sub Version control.: We will include the update manager and self update for RCP Update to reduce the effort needed to update the tool}
 
 
 
@@ -333,15 +333,15 @@ the Overture executable.
   over the Overture sources (i.e.\ this will affect the development of
   UML, JML and POtrans components). \developer{NickBattle, KennethLausdahl}, \textbf{Dependencies: \ref{completeAST}}
 
-\item Replace DLTK. This includes a complete recoding of all existing Editors, Wizards, Outlines etc including a build from scratch Debug interface inspired from DLTK but only using the DBGProtocol as DLTK do.\footnote{The decision for replacing DLTK has been made based on the investigation of Eclipse where it have been found more feasible to use Eclipse directly rather than using DLTK since a lot of the existing code do work rounds to get back to eclipse. The benefit of this change in the long run is seen larger than the work to recreate some of the DLTK features.} (For lower level description of the goals please refer to appendix \ref{app:lowlevelgoals}). \developer{AugustoRibeiro}, \textbf{Dependencies: \ref{picturesEclipse}} 
+\item  \markDone{Replace DLTK. This includes a complete recoding of all existing Editors, Wizards, Outlines etc including a build from scratch Debug interface inspired from DLTK but only using the DBGProtocol as DLTK do.\footnote{The decision for replacing DLTK has been made based on the investigation of Eclipse where it have been found more feasible to use Eclipse directly rather than using DLTK since a lot of the existing code do work rounds to get back to eclipse. The benefit of this change in the long run is seen larger than the work to recreate some of the DLTK features.} (For lower level description of the goals please refer to appendix \ref{app:lowlevelgoals}). \developer{AugustoRibeiro,KennethLausdahl}, \textbf{Dependencies: \ref{picturesEclipse}} }
 
-\item Launch configuration setup: 
+\item  \markDone{Launch configuration setup: 
 	\begin{enumerate}
 		\item When creating a new debug configuration it shall be named after
   the name of the project (and not just ``New configuration'').
 		\item The configuration should be linked to the project so it is available from \textit{Debug As}
 		\item General plugin.xml problem.
-	\end{enumerate} \developer{AugustoRibeiro}, \textbf{Dependencies: R020:\ref{analyseDLTKDebug}}\label{launchconfig}
+	\end{enumerate} \developer{AugustoRibeiro,KennethLausdahl}, \textbf{Dependencies: R020:\ref{analyseDLTKDebug}}\label{launchconfig}}
 
 \item \markDone{Making sure that the run and debug buttons in the IDE work
   appropriately and does not crash whenever the user tries to start
@@ -349,21 +349,21 @@ the Overture executable.
   no debug configuration is present and be ready to type an expression
   into a quick console where simple expressions can be typed and
   executed (and up and down in the list of commands given is
-  supported). \developer{AugustoRibeiro}, \textbf{Dependencies: \ref{launchconfig}} }
+  supported). \developer{KennethLausdahl}, \textbf{Dependencies: \ref{launchconfig}} }
 
 \item A button for moving a test case from the combinatorial testing
   perspective into the debugger such that it will stop at the right
   place for the run-time error reported for the test case
-  selected. \developer{KennethLausdahl,ChristianThillerman}, \textbf{Dependencies: \ref{launchconfig}} 
+  selected. \developer{KennethLausdahl see launch shortcut to see how this can be done}, \textbf{Dependencies: \ref{launchconfig}} 
 
-\item Stop all threads when a breakpoint or a run-time error has
-  occured in one of the threads. \developer{NickBattle,++}, \textbf{Dependencies: R020:\ref{toplevelscheduling}} 
+\item  \markDone{Stop all threads when a breakpoint or a run-time error has
+  occured in one of the threads. \developer{NickBattle,KEL, ARI}, \textbf{Dependencies: R020:\ref{toplevelscheduling}} }
 
-\item In the debug perspective it shall be possible to look into the
-  contents of objects in the variables view. \developer{??}, \textbf{Dependencies: R020:\ref{analyseDLTKDebug},\ref{completeAST}} 
+\item  \markDone{In the debug perspective it shall be possible to look into the
+  contents of objects in the variables view. \developer{KEL}, \textbf{Dependencies: R020:\ref{analyseDLTKDebug},\ref{completeAST}} }
 
-\item Include all definitions in the Outline view for all VDM
-  dialects. \developer{AugustoRibeiro}, \textbf{Dependencies: R020:\ref{completeAST}} 
+\item  \markDone{Include all definitions in the Outline view for all VDM
+  dialects. \developer{AugustoRibeiro}, \textbf{Dependencies: R020:\ref{completeAST}}}  Missing RT System and Threads
 
 \item \markDone{ When creating new projects (by wizard) in the IDE include the possibility
   for including standard libraries (i.e.\ (VDM headers) IO and Math) in the
@@ -395,7 +395,7 @@ the Overture executable.
   include the following features:   
 \begin{enumerate}
 
-\item Investigate the posibility of Eclipse p2. (Adding Self-Update to an RCP Application) \url{http://wiki.eclipse.org/RCP_FAQ}
+\item \markDone{ Investigate the possibility of Eclipse p2. (Adding Self-Update to an RCP Application) \url{http://wiki.eclipse.org/RCP_FAQ}} Will do.
 
 \item First stable bi-directional connection from Overture/VDM++
   to/from JML. \developer{CarlosVilhena}
@@ -447,7 +447,7 @@ the Overture executable.
 	\begin{enumerate}
 		\item Start VDM Tools command line prompt from a Overture project. Where the prompt is a console inside Eclipse.
 		
-		\item Create a VDM Tools project file from a Overture project and launch the VDM Tools GUI.
+		\item  \markDone{Create a VDM Tools project file from a Overture project and launch the VDM Tools GUI.\developer{KEL}}
 		
 		\item Create a number of buttons for VDM Tools code generation through the VDM Tools comman dline interface, with output in the console.
 		
@@ -467,9 +467,9 @@ the Overture executable.
 
 \item Make VDM source format
 
-\item Coverage Editor
+\item  \markDone{Coverage Editor\developer{KEL}}
 
-\item DLTK replacement
+\item  \markDone{DLTK replacement
 
 	\begin{enumerate}
 		\item Recreate Debugger. New debug protocol separation from VDMJC. Launch, Debug runner, 
@@ -478,7 +478,7 @@ the Overture executable.
 		\item Recreate the Editor
 		\item Recreate the outline
 		\item Recreate the package explorer
-	\end{enumerate}
+	\end{enumerate}}
 
 \item Ant scripts to build a product
 \item Tests of the plug-ins
@@ -499,7 +499,7 @@ the DESTECS executable.
   include the following features:  
 \begin{enumerate}
 \item Develop development environment for DESTECS enabling different
-  plug-ins to be added and docuenting this. \developer{KennethLausdahl}
+  plug-ins to be added and documenting this. \developer{KennethLausdahl}
 \item Stand-alone DESTECS executable with the DESTECS icon
   \developer{KennethLausdahl} 
 \item Develop wizard for creating a new DESTECS project. This shall
@@ -551,7 +551,7 @@ the DESTECS executable.
 \chapter{Low level goals for IDE release plan.}
 \label{app:lowlevelgoals}
 Low level goals for IDE release plan.
-
+\markDone{
 \begin{enumerate}
 \item Core:
 	\begin{itemize}
@@ -607,7 +607,7 @@ Low level goals for IDE release plan.
 
 
 \end{enumerate}
-
+}
 \input{OvertureStatus}
 
 \end{document}
