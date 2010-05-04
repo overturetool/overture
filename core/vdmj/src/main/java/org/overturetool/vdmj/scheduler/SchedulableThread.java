@@ -32,6 +32,7 @@ import org.overturetool.vdmj.commands.DebuggerReader;
 import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.values.ObjectValue;
@@ -379,5 +380,17 @@ public abstract class SchedulableThread extends Thread implements Serializable
 	public synchronized boolean inOuterTimestep()
 	{
 		return inOuterTimeStep;
+	}
+
+	public CPUResource getCPUResource()
+	{
+		if (resource instanceof CPUResource)
+		{
+			return (CPUResource)resource;
+		}
+		else
+		{
+			throw new InternalException(66, "Thread is not running on a CPU");
+		}
 	}
 }

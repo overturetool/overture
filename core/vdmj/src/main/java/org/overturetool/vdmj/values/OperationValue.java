@@ -614,21 +614,35 @@ public class OperationValue extends Value
 	{
 		if (traceRT)
 		{
+			Thread ct = Thread.currentThread();
+
 			if (isStatic)
 			{
+				int cpu = 0;
+
+				if (ct instanceof SchedulableThread)
+				{
+					SchedulableThread th = (SchedulableThread)ct;
+					cpu = th.getCPUResource().getNumber();
+				}
+				else
+				{
+					cpu = 0;	// Initialization on vCPU
+				}
+
 	    		RTLogger.log(
-	    			kind + " -> id: " + Thread.currentThread().getId() +
+	    			kind + " -> id: " + ct.getId() +
 	    			" opname: \"" + name + "\"" +
 	    			" objref: nil" +
 	    			" clnm: \"" + classdef.name.name + "\"" +
-	    			" cpunm: 0" +
+	    			" cpunm: " + cpu +
 	    			" async: " + isAsync
 	    			);
 			}
 			else
 			{
         		RTLogger.log(
-        			kind + " -> id: " + Thread.currentThread().getId() +
+        			kind + " -> id: " + ct.getId() +
         			" opname: \"" + name + "\"" +
         			" objref: " + self.objectReference +
         			" clnm: \"" + self.type.name.name + "\"" +
