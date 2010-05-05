@@ -189,6 +189,7 @@ public class SourceReferenceManager implements IManager
 	private synchronized void makeOuterOffsetToAstMap()
 	{
 		VdmjLocationCalculator calc = new VdmjLocationCalculator();
+		//TODO concurrent moducifation
 		for (LexLocation location : sourceUnit.getLocationToAstNodeMap().keySet())
 		{
 			try

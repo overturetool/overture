@@ -169,6 +169,10 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 				e.printStackTrace();
 			}
 			//
+			
+			if(fRemoteControlClassText.getText().length()==0)
+			{
+			
 			boolean syntaxCorrect = validateClass() && validateOperation();
 			if (!syntaxCorrect)
 			{
@@ -177,6 +181,9 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 			{
 				expression = getExpression(fModuleNameText.getText(), fOperationText.getText(), staticOperation);
 				return validateTypes(VdmProject.createProject(getProject()), expression);
+			}
+			}else{
+				return true;//fRemoteControlClassText.getText().s.split(".").length>1;
 			}
 		}
 		//
@@ -469,7 +476,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		fRemoteControlClassText.setLayoutData(gd);
 		fRemoteControlClassText.addModifyListener(fListener);
-		fRemoteControlClassText.setEnabled(false);
+		fRemoteControlClassText.setEnabled(true);
 	}
 
 	protected void createOtherOptions(Composite parent)

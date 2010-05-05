@@ -60,6 +60,6 @@ public enum DBGPErrorType
 	@Override
 	public String toString()
 	{
-		return value.toString() + " - "+ description;
+		return value.toString() + ": "+ description;
 	}
 }

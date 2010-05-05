@@ -295,6 +295,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 		{
 			logging = true;
 			loggingConsole = new ConsoleWriter(IDebugConstants.CONSOLE_LOGGING_NAME);
+			loggingConsole.clear();
 		}
 
 	}
@@ -348,6 +349,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 	{
 		if (logging)
 		{
+			message = message.replaceAll("\n", " ").replaceAll("\t", "").replaceAll("\r", " ");
 			if (outgoing)
 			{
 				loggingConsole.ConsolePrint(message, SWT.COLOR_DARK_BLUE);
@@ -365,10 +367,10 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 		{
 			if (outgoing)
 			{
-				loggingConsole.ConsolePrint(message, SWT.COLOR_RED);
+				loggingConsole.ConsolePrint(message, SWT.COLOR_DARK_RED);
 			} else
 			{
-				loggingConsole.ConsolePrint(message, SWT.COLOR_DARK_RED);
+				loggingConsole.ConsolePrint(message, SWT.COLOR_RED);
 			}
 			loggingConsole.Show();
 		}

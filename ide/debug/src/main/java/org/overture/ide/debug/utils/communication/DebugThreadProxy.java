@@ -28,6 +28,7 @@ import org.overture.ide.debug.utils.xml.XMLNode;
 import org.overture.ide.debug.utils.xml.XMLOpenTagNode;
 import org.overture.ide.debug.utils.xml.XMLParser;
 import org.overture.ide.debug.utils.xml.XMLTagNode;
+import org.overturetool.vdmj.debug.DBGPException;
 import org.overturetool.vdmj.debug.DBGPRedirect;
 import org.overturetool.vdmj.scheduler.RunState;
 import org.overturetool.vdmj.util.Base64;
@@ -282,7 +283,7 @@ public class DebugThreadProxy extends AsyncCaller
 		try
 		{
 			XMLTagNode tagnode = (XMLTagNode) node;
-
+			
 			if (tagnode.tag.equals("init"))
 			{
 				callback.firePrintMessage(false, adjustLength("Res Init("
@@ -311,6 +312,9 @@ public class DebugThreadProxy extends AsyncCaller
 						+ threadId + "): ")
 						+ tagnode);
 			}
+			
+			processError(tagnode);
+			
 		} catch (Exception e)
 		{
 			throw new IOException("Unexpected XML response: " + node);
@@ -420,17 +424,17 @@ public class DebugThreadProxy extends AsyncCaller
 		{
 			setResult(transactionId, Integer.parseInt(((XMLOpenTagNode) msg).text));
 			// System.out.println("STACK DEPTH = " + msg.toString());
-		}else if (command.equals("property_set"))
+		} else if (command.equals("property_set"))
 		{
 			String success = msg.getAttr("success");
-			
-			if(success!=null && success.equals("1"))
+
+			if (success != null && success.equals("1"))
 			{
 				setResult(transactionId, true);
-			}else
+			} else
 			{
 				setResult(transactionId, false);
-			}	
+			}
 		}
 
 	}
@@ -484,15 +488,16 @@ public class DebugThreadProxy extends AsyncCaller
 
 	public void processInternal(XMLTagNode msg)
 	{
-		if (msg.tag.equals("internal")&& msg.attrs.size()>0)
+		if (msg.tag.equals("internal") && msg.attrs.size() > 0)
 		{
 			String id = msg.getAttr("threadId");
 			String name = msg.getAttr("threadName");
 			String stateString = msg.getAttr("threadState");
-			RunState state=null;
-			try{
-			 state = RunState.valueOf(stateString);
-			}catch(Exception e)
+			RunState state = null;
+			try
+			{
+				state = RunState.valueOf(stateString);
+			} catch (Exception e)
 			{
 				return;
 			}
@@ -581,7 +586,8 @@ public class DebugThreadProxy extends AsyncCaller
 		// String classname = p.getAttr("classname");
 		String type = p.getAttr("type");
 		String key = p.getAttr("key");
-		Boolean constant = p.getAttr("constant")!=null && p.getAttr("constant").equals("1")? true :false;
+		Boolean constant = p.getAttr("constant") != null
+				&& p.getAttr("constant").equals("1") ? true : false;
 		boolean childern = p.getAttr("children") != null
 				&& p.getAttr("children").equals("1");
 		String data = "";
@@ -631,7 +637,7 @@ public class DebugThreadProxy extends AsyncCaller
 
 		if (!childern)
 		{
-			vdmValue = new VdmSimpleValue(type,data,key);
+			vdmValue = new VdmSimpleValue(type, data, key);
 		} else
 		{
 			VdmVariable[] childs = null;
@@ -651,7 +657,7 @@ public class DebugThreadProxy extends AsyncCaller
 
 		}
 
-		return (new VdmVariable(null, name, type, vdmValue,constant));
+		return (new VdmVariable(null, name, type, vdmValue, constant));
 
 	}
 
@@ -664,6 +670,54 @@ public class DebugThreadProxy extends AsyncCaller
 			names.put(p.getAttr("name"), Integer.parseInt(p.getAttr("id")));
 		}
 		return names;
+	}
+
+	private void processError(XMLTagNode node)
+	{
+		if (node.tag.equals("error"))
+		{
+			String code = node.getAttr("code");
+			DBGPErrorType error;
+			try
+			{
+				error = DBGPErrorType.lookup(Integer.parseInt(code));
+			} catch (NumberFormatException e)
+			{
+				error = DBGPErrorType.UNKNOWN_ERROR;
+			} catch (DBGPException e)
+			{
+				error = DBGPErrorType.UNKNOWN_ERROR;
+			}
+			StringBuilder sb = new StringBuilder();
+			sb.append(error);
+			if (node instanceof XMLOpenTagNode)
+			{
+				for (XMLNode child : ((XMLOpenTagNode) node).children)
+				{
+					if (child instanceof XMLOpenTagNode)
+					{
+						XMLOpenTagNode dataNode = (XMLOpenTagNode) child;
+						sb.append("\n" + dataNode.text);
+					}
+				}
+			}
+			callback.firePrintErrorMessage(false, sb.toString());
+		} else
+		{
+
+			if (node instanceof XMLOpenTagNode)
+			{
+				for (XMLNode prop : ((XMLOpenTagNode) node).children)
+				{
+					if (prop instanceof XMLTagNode)
+					{
+						processError((XMLTagNode) prop);
+					}
+					XMLTagNode p = (XMLTagNode) prop;
+
+				}
+			}
+		}
 	}
 
 	public int breakpointAdd(int line, String path)
@@ -736,13 +790,15 @@ public class DebugThreadProxy extends AsyncCaller
 			throw new DBGPProxyException(e, this.threadId);
 		}
 	}
-	
-	
-	public Boolean propertySet(String propertyLongName, String key,String newValue) throws DBGPProxyException
+
+	public Boolean propertySet(String propertyLongName, String key,
+			String newValue) throws DBGPProxyException
 	{
 		Integer ticket = getNextTicket();
 		String encodedData = Base64.encode(newValue.getBytes()).toString();
-		String command = "property_set -i " + ticket+" -n "+propertyLongName+" -k "+key+" -l "+ encodedData.length()+ " -- "+ encodedData;
+		String command = "property_set -i " + ticket + " -n "
+				+ propertyLongName + " -k " + key + " -l "
+				+ encodedData.length() + " -- " + encodedData;
 		try
 		{
 			return (Boolean) request(ticket, command);
@@ -872,7 +928,8 @@ public class DebugThreadProxy extends AsyncCaller
 		write(xcmd_overture_cmd("coverage", getNextTicket(), file.toURI().toString()));
 	}
 
-	public void xcmd_overture_writecoverage(File file) throws DBGPProxyException
+	public void xcmd_overture_writecoverage(File file)
+			throws DBGPProxyException
 	{
 		Integer ticket = getNextTicket();
 		String command = "writecoverage";
