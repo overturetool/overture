@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -142,6 +143,8 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		Class<RemoteControl> remoteClass = null;
 
 		Properties.init();		// Read properties file, if any
+		
+		Properties.parser_tabstop = 1;
 
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
 		{
@@ -620,6 +623,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		catch (DBGPException e)
 		{
 			errorResponse(e.code, e.reason);
+		}catch(StackOverflowError e)
+		{
+			
+			errorResponse(DBGPErrorCode.INTERNAL_ERROR, "StackOverflowError:\n"+getStackTrace(e));
 		}
 		catch (Throwable e)
 		{
@@ -841,7 +848,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
     	StringBuilder nestedChildren = null;
     	
     	//store property for retrieval of additional pages or value editing
-    	if(numChildren>pageSize || depth == currentDepth || value instanceof UpdatableValue)
+    	if(numChildren>pageSize || depth == currentDepth || value instanceof UpdatableValue|| value instanceof ObjectValue)
     	{
 			debugValueKeyCounter++;
 			debugValueMap.put(debugValueKeyCounter, value);
@@ -850,7 +857,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		
     	if(numChildren>pageSize || depth == currentDepth)
     	{
-    		name +=" (id="+ debugValueKeyCounter+")";
+    		name +=" (ref="+ debugValueKeyCounter+")";
     	}
 
     	if(numChildren>0)
@@ -974,16 +981,9 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			}
 			return count;
 			
-		}else if(value instanceof UpdatableValue)
+		}else if(value instanceof UpdatableValue || value instanceof TransactionValue || value instanceof  ReferenceValue)
 		{
-			return getChildCount(((UpdatableValue)value).deref());
-		}else if(value instanceof TransactionValue)
-		{
-			return getChildCount(((TransactionValue)value).deref());
-		}
-		else if(value instanceof ReferenceValue)
-		{
-			return getChildCount(((ReferenceValue)value).deref());
+			return getChildCount(deref(value));
 		}else if(value instanceof RecordValue)
 		{
 			RecordValue rVal = (RecordValue) value;
@@ -1033,12 +1033,14 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		}else if(value instanceof ObjectValue)
 		{
 			ObjectValue oVal = (ObjectValue) value;
+			currentDepth++;
 			for (LexNameToken key : oVal.members.keySet())
 			{
 				Value val = oVal.members.get(key);
 				if(isDebugVisible(val))
 				{
-					s.append(propertyResponse(key, val));
+					s.append(propertyResponse(key.name, key.getExplicit(true).toString(),
+							key.module,val,depth,currentDepth));
 				}
 			}
 		}else if(value instanceof UpdatableValue)
@@ -1101,7 +1103,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 	 */
 	private Value deref(Value value)
 	{
-		if(value instanceof ReferenceValue || value instanceof UpdatableValue|| value instanceof TransactionValue)
+		if(value instanceof ReferenceValue || value instanceof UpdatableValue || value instanceof TransactionValue)
 		{
 			return value.deref();
 		}
@@ -1604,4 +1606,14 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			pw.close();
 		}
 	}
+	
+	public static String getStackTrace(Throwable t)
+    {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw, true);
+        t.printStackTrace(pw);
+        pw.flush();
+        sw.flush();
+        return sw.toString();
+    }
 }
