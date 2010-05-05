@@ -54,8 +54,12 @@ public class DebugThreadProxy extends AsyncCaller
 					receive();
 				} catch (IOException e)
 				{
-					// e.printStackTrace();
+					 e.printStackTrace();
 					connected = false;
+				} catch (DBGPProxyException e)
+				{
+					connected = false;
+					e.printStackTrace();
 				}
 			}
 			try
@@ -207,7 +211,7 @@ public class DebugThreadProxy extends AsyncCaller
 		return connected;
 	}
 
-	private void receive() throws IOException
+	private void receive() throws IOException, DBGPProxyException
 	{
 		// <ascii length> \0 <XML data> \0
 
@@ -273,7 +277,7 @@ public class DebugThreadProxy extends AsyncCaller
 		process(data);
 	}
 
-	private void process(byte[] data) throws IOException
+	private void process(byte[] data) throws IOException, DBGPProxyException
 	{
 		XMLParser parser = new XMLParser(data);
 		XMLNode node = parser.readNode();
@@ -317,7 +321,7 @@ public class DebugThreadProxy extends AsyncCaller
 			
 		} catch (Exception e)
 		{
-			throw new IOException("Unexpected XML response: " + node);
+			throw new DBGPProxyException(new IOException("Unexpected XML response: " + node),threadId);
 		}
 	}
 
@@ -674,6 +678,7 @@ public class DebugThreadProxy extends AsyncCaller
 
 	private void processError(XMLTagNode node)
 	{
+		try{
 		if (node.tag.equals("error"))
 		{
 			String code = node.getAttr("code");
@@ -713,10 +718,15 @@ public class DebugThreadProxy extends AsyncCaller
 					{
 						processError((XMLTagNode) prop);
 					}
-					XMLTagNode p = (XMLTagNode) prop;
+					
 
 				}
 			}
+
+		}
+		}catch(Exception e)
+		{
+			e.printStackTrace();
 		}
 	}
 

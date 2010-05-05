@@ -46,14 +46,14 @@ public class SourceLocationConverter
 				int end = start + codeLine.length();
 
 				// TODO if tab is not 4 characters.
-				for (char c : charLine)
-				{
-					if (c == '\t')
-					{
-						start -= 3;
-						end -= 3;
-					}
-				}
+//				for (char c : charLine)
+//				{
+//					if (c == '\t')
+//					{
+//						start -= 3;
+//						end -= 3;
+//					}
+//				}
 				return new int[] { start, end };
 			} else
 				return new int[] { 0, 0 };
