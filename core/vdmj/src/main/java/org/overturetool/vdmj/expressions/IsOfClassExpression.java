@@ -63,6 +63,7 @@ public class IsOfClassExpression extends Expression
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);
+		classname.location.hit();
 
 		try
 		{

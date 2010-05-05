@@ -57,6 +57,9 @@ public class IsOfBaseClassExpression extends Expression
 	@Override
 	public Value eval(Context ctxt)
 	{
+		breakpoint.check(location, ctxt);
+		baseclass.location.hit();
+
 		try
 		{
 			Value v = exp.eval(ctxt).deref();

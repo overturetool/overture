@@ -55,6 +55,8 @@ public class SameBaseClassExpression extends Expression
 	@Override
 	public Value eval(Context ctxt)
 	{
+		breakpoint.check(location, ctxt);
+
 		try
 		{
 			Value l = left.eval(ctxt);
