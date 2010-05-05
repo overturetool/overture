@@ -47,7 +47,7 @@ public class VdmSourcePathComputerDelegate implements
 					.findMember(vdmProject.getFullPath());
 			if (resource != null)
 			{
-				IContainer container = resource.getParent();
+				IContainer container = (IContainer) resource;
 				if (container.getType() == IResource.PROJECT)
 				{
 					sourceContainer = new ProjectSourceContainer((IProject) container,
