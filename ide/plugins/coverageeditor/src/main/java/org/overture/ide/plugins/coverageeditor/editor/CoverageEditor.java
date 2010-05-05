@@ -37,6 +37,7 @@ import org.overture.ide.core.utility.SourceLocationConverter;
 import org.overture.ide.plugins.coverageeditor.Activator;
 import org.overture.ide.ui.editor.core.VdmDocument;
 import org.overture.ide.ui.editor.core.VdmDocumentProvider;
+import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
@@ -167,6 +168,7 @@ public abstract class CoverageEditor
 
 		LexLocation.resetLocations();
 		LexLocation.clearLocations();
+		Properties.parser_tabstop = 1;
 		LexTokenReader ltr = new LexTokenReader(content, project.getDialect(), sourceFile, charset);
 
 		switch (project.getDialect())
