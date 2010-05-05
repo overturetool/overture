@@ -17,6 +17,7 @@ public abstract class AbstractVdmLaunchConfigurationTabGroup extends
 		tabs.add(getMainTab());
 		tabs.add(new SourceLookupTab());
 		tabs.add(new CommonTab());
+		tabs.add(new VmArgumentsLaunchConfigurationTab());
 		tabs.addAll(getAdditionalTabs());
 		setTabs(tabs.toArray(new ILaunchConfigurationTab[tabs.size()]));
 

@@ -129,8 +129,10 @@ public class VdmLaunchConfigurationDelegate implements
 					+ getArgumentString(commandList));
 		}
 		commandList.add(0, "java");
+		
 		commandList.addAll(1, getClassPath(project));
 		commandList.add(3, IDebugConstants.DEBUG_ENGINE_CLASS);
+		commandList.addAll(1,getVmArguments(configuration));
 
 		VdmDebugTarget target = null;
 		if (mode.equals(ILaunchManager.DEBUG_MODE))
@@ -149,6 +151,26 @@ public class VdmLaunchConfigurationDelegate implements
 		
 		
 		
+	}
+
+	private Collection<? extends String> getVmArguments(
+			ILaunchConfiguration configuration) throws CoreException
+	{
+		List<String> options = new Vector<String>();
+		String opt = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION, "");
+		if(opt.trim().length()!=0)
+		{
+			String[] opts = opt.split(" ");
+			for (String o : opts)
+			{
+				o = o.trim();
+				if(o.startsWith("-"))
+				{
+					options.add(o);
+				}
+			}
+		}
+		return options;
 	}
 
 	/**
