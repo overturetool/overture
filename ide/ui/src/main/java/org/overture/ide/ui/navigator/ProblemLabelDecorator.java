@@ -1,6 +1,7 @@
 package org.overture.ide.ui.navigator;
 
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
@@ -16,6 +17,11 @@ public class ProblemLabelDecorator extends BaseLabelProvider implements ILightwe
 	public void decorate(Object element, IDecoration decoration) {		
 		if (element instanceof IResource) {
 			IResource resource = (IResource) element;
+			if(resource instanceof IProject){
+				if(!((IProject) resource).isOpen())
+					return;
+			}
+			
 			try {
 				IMarker[] markers = resource.findMarkers(IMarker.PROBLEM, true,
 						IResource.DEPTH_INFINITE);

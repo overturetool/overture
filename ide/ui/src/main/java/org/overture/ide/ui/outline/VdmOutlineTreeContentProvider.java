@@ -7,12 +7,15 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmSourceUnit;
+import org.overture.ide.ui.internal.viewsupport.ThreadSupport;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassInvariantDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
+import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.InheritedDefinition;
+import org.overturetool.vdmj.definitions.ThreadDefinition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.modules.Import;
 import org.overturetool.vdmj.modules.ImportFromModule;
@@ -33,6 +36,8 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider {
 
 			DefinitionList defs = ((ClassDefinition) parentElement)
 					.getDefinitions();
+
+			defs = checkForThreads(defs);
 
 			return filterDefinitionList(defs).toArray();
 
@@ -70,6 +75,29 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider {
 		}
 
 		return null;
+	}
+
+	private DefinitionList checkForThreads(DefinitionList defs) {
+		for (int i = 0; i < defs.size(); i++) {
+			Definition def = defs.get(i);
+
+			if (def != null) {
+				if (def instanceof ThreadSupport) {
+
+				} else {
+					if (def instanceof ThreadDefinition) {
+						ThreadDefinition eod = (ThreadDefinition) def;
+						if (eod.getName().equals("thread")) {
+							defs.remove(i);
+							// defs.add(new ThreadSupport(eod));
+							i--;
+						}
+
+					}
+				}
+			}
+		}
+		return defs;
 	}
 
 	public Object getParent(Object element) {
@@ -119,28 +147,34 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider {
 
 		for (int i = 0; i < fInput.size(); i++) {
 
-			try {
-				Definition def = fInput.get(i);
-				def.hashCode();
+			Definition def = fInput.get(i);
+			if (def != null) {
+				try {
 
-				if (def instanceof ClassInvariantDefinition) {
+					def.hashCode();
 
-				}
+					if (def instanceof ClassInvariantDefinition) {
 
-				if (def instanceof ExplicitFunctionDefinition) {
-					if (def.name.name.startsWith("pre_")
-							|| def.name.name.startsWith("post_")) {
+					}
+
+					if (def instanceof ExplicitFunctionDefinition) {
+						if (def.name.name.startsWith("pre_")
+								|| def.name.name.startsWith("post_")) {
+							fInput.remove(i);
+							i--;
+						}
+					}
+
+					if (def instanceof InheritedDefinition) {
 						fInput.remove(i);
 						i--;
 					}
-				}
 
-				if (def instanceof InheritedDefinition) {
+				} catch (NullPointerException e) {
 					fInput.remove(i);
 					i--;
 				}
-
-			} catch (NullPointerException e) {
+			}else{
 				fInput.remove(i);
 				i--;
 			}

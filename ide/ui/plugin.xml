@@ -284,21 +284,6 @@
 	        </and>
          </filterExpression>
       </commonFilter>-->
-      <commonFilter
-            activeByDefault="true"
-            id="org.overture.ide.ui.navigator.resources.filters.noneVdmProjects"
-            name="None VDM Projects">
-         <filterExpression>
-            <adapt
-                  type="org.eclipse.core.resources.IProject">
-               <not>
-                  <instanceof
-                        value="org.overture.ide.core.resources.IVdmProject">
-                  </instanceof>
-               </not>
-            </adapt>
-         </filterExpression>
-      </commonFilter>
       <commonWizard
             menuGroupId="org.overture.ide.ui.vdm"
             type="new"

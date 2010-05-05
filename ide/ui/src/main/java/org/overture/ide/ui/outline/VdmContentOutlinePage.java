@@ -26,6 +26,7 @@ import org.overture.ide.ui.editor.core.VdmEditor;
 import org.overture.ide.ui.internal.viewsupport.DecorationgVdmLabelProvider;
 import org.overture.ide.ui.internal.viewsupport.VdmUILabelProvider;
 import org.overturetool.vdmj.ast.IAstNode;
+import org.overturetool.vdmj.definitions.ThreadDefinition;
 
 @SuppressWarnings("deprecation")
 public class VdmContentOutlinePage extends ContentOutlinePage implements
@@ -314,6 +315,8 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 	@SuppressWarnings("unchecked")
 	public void select(IAstNode reference)
 	{
+		
+		
 		if (fOutlineViewer != null)
 		{
 
