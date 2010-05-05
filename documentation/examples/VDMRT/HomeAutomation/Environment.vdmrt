@@ -39,7 +39,7 @@ public outline	= nat * nat * nat;
 -- Operations definition section
 --
 operations
-
+ 
 public Environment: seq of char ==> Environment
 Environment(fname) ==
  (def mk_ (-,mk_(t,input)) = io.freadval[nat * seq of inline](fname) 
@@ -93,7 +93,7 @@ public SetHumid: nat ==> ()
 SetHumid(h) ==
   envHumid := h;
 
-public ReadTemp: () ==> nat
+public ReadTemp: () ==> int
 ReadTemp() ==
   return envTemp;
 

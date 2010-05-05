@@ -21,7 +21,7 @@ instance variables
 -- Operations definition section
 --
 operations
-
+ 
 public World: () ==> World
 World() ==
  (env := new Environment("scenario.txt");

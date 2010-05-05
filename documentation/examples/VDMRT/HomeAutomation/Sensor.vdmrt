@@ -17,7 +17,7 @@ instance variables
 
   protected ID    : nat;
   protected Type  : NetworkTypes`nodeType;
-  protected Value : nat;
+  protected Value : int;
 
 --
 -- Operations definition section
@@ -32,7 +32,7 @@ public GetType: () ==> NetworkTypes`nodeType
 GetType() ==
   return Type;
 
-public ReadValue: () ==> nat
+public ReadValue: () ==> int
 ReadValue() ==
   cycles (1E3)
   return Value;
