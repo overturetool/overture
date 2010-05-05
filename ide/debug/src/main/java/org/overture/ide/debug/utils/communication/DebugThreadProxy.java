@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -52,19 +53,38 @@ public class DebugThreadProxy extends AsyncCaller
 				try
 				{
 					receive();
-				} catch (IOException e)
+				} 
+				catch(SocketException e)
 				{
-					 e.printStackTrace();
+//					if(connected)
+//					{
+//						e.printStackTrace();
+//					}
 					connected = false;
+					break;
+				}
+				
+				catch (IOException e)
+				{
+					if(connected)
+					{
+						e.printStackTrace();
+					}
+					connected = false;
+					break;
 				} catch (DBGPProxyException e)
 				{
 					connected = false;
 					e.printStackTrace();
+					break;
 				}
 			}
 			try
 			{
+				if(fSocket.isConnected())
+				{
 				input.close();
+				}
 			} catch (IOException e)
 			{
 				// TODO Auto-generated catch block
@@ -117,10 +137,11 @@ public class DebugThreadProxy extends AsyncCaller
 		try
 		{
 			DebugCommunication.getInstance().disposeTarget(sessionId);
-			if (!fSocket.isClosed())
-			{
-				this.fSocket.close();
-			}
+//			if (!fSocket.isClosed())
+//			{
+//				this.fSocket.close();
+//			}
+			connected = false;
 		} catch (IOException e)
 		{
 			// Ok, socket is closed
@@ -983,11 +1004,11 @@ public class DebugThreadProxy extends AsyncCaller
 	public void shutdown() throws IOException
 	{
 		setDebugState(DebugProxyState.Terminated);
-		if (!fSocket.isClosed())
-		{
-			fSocket.close();
-		}
-
+//		if (!fSocket.isClosed())
+//		{
+//			fSocket.close();
+//		}
+connected = false;
 	}
 
 	public int breakpointAdd(IBreakpoint breakpoint)
