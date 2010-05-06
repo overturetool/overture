@@ -259,58 +259,6 @@ This section presents a plan for the contents of the 2010 releases of
 the Overture executable.
 
 \begin{description}
-\item[Release 0.2.0 (March 2010):] The aim for this release is to
-  include the following features:  
-\begin{enumerate}
-\item \markDone{Analyse whether we can go for a debugger without
-  DLTK. \developer{AugustoRibeiro},\textbf{Dependencies: None}\label{analyseDLTKDebug}}
- 
-\item Follow standard way to use pictures in Eclipse and document this
-  for all developers. \developer{AugustoRibeiro}. \textbf{Dependencies: None}\label{picturesEclipse}
-
-
-
-\item \markDone{ The combinatorial testing feature will be updated in the IDE
-  with the features for reducing the size of the test suites in
-  intelligent ways made available in VDMJ for all VDM
-  dialects. \developer{KennethLausdahl}, \textit{Done(Prototype):
-    2. feb 2010 - Kenneth}} Unit test, user manual and tutorial update
-  still outstanding.
-
-\item \markDone{In the edit perspective automatic type checking will only be
-  performed in case the syntax is correct for all definitions such
-  that type errors does not get mixed with syntax
-  errors. \developer{KennethLausdahl}, \textit{Done: 1. feb 2010 - Kenneth} } \textbf{Remarks:} missing doc
-
-\item \markDone{ When the Overture tool is first started up and the user kills
-  the welcome window the VDM++ edit perspective will be started
-  automatically. \developer{AugustoRibeiro}, \textit{Done: 1. feb 2010 - Kenneth}} 
-
-\item \markDone{Syntax and type check the arguments used in the debug
-  configuration. \developer{KennethLausdahl}}, \textbf{Dependencies: None} \textbf{Remarks:} missing doc
-
-\item \markDone{ Remove all communication exceptions from VDMJ which causes the
-  console to change (e.g.\ the existing problem with the debugger in
-  the IDE whenever an invariant for instance invariants are
-  broken). \developer{NickBattle, KennethLausdahl}, \textbf{Dependencies: None}}
-
-\item Documentation of the Overture IDE in order to enable more
-  developers to make updates for the IDE and for the DESTECS
-  development to follow similar principles. This shall document the
-  implementation of the editor, the parser, the builder, the outline
-  and the AST access. \textbf{Status:} Ongoing \developer{AugustoRibeiro}, \textbf{Dependencies: \ref{completeAST}, \ref{analyseDLTKDebug}}
-
-\item Specify the top level scheduling strategy for the interpreter
-  dealing with multiple threads in VDM++ and VDM-RT (to subsequently
-  be implemented in the interpreter).\\
-  \hfill \developer{KennethLausdahl,++} \label{toplevelscheduling}
-
-\item \markDone{Make the pretty printer with test coverage usable for all VDM
-  dialects. \developer{KennethLausdahl, NickBattle}}  \textbf{Remarks:} missing doc
-
-
-
-\end{enumerate}
 
 %
 % Release 0.3.0
@@ -318,11 +266,24 @@ the Overture executable.
 \item[Release 0.3.0 (June 2010):] The aim for this release is to
   include the following features:  
 \begin{enumerate}
-\item  \markDone{Decide if we want to include the Update Manager or embed a number of videly used features like Sub Version control.: We will include the update manager and self update for RCP Update to reduce the effort needed to update the tool}
+
+\item Follow standard way to use pictures in Eclipse and document this
+  for all developers. \developer{AugustoRibeiro}. \textbf{Dependencies: None}\label{picturesEclipse}
 
 
+\item Documentation of the Overture IDE in order to enable more
+  developers to make updates for the IDE and for the DESTECS
+  development to follow similar principles. This shall document the
+  implementation of the editor, the parser, the builder, the outline
+  and the AST access. \textbf{Status:} Ongoing \developer{AugustoRibeiro}, \textbf{Dependencies: \ref{completeAST}, \ref{analyseDLTKDebug}}
+	DESTECS:
+	\begin{enumerate}
+		\item Parser 
+		\item Builder; How to insure TC is completed
+		\item How to add debug with a new interpreter and corresponding launch configuration.
+		\end{enumerate}
 
-\item Provide help (F1) inside Eclipse; \developer{AugustoRibeiro}
+\item Provide help (F1) inside Eclipse, as a first go we just add pdf files to the welcome page; \developer{AugustoRibeiro}
 
 \item provide goto definition and completion; \developer{AugustoRibeiro}
 
@@ -333,55 +294,15 @@ the Overture executable.
   over the Overture sources (i.e.\ this will affect the development of
   UML, JML and POtrans components). \developer{NickBattle, KennethLausdahl}, \textbf{Dependencies: \ref{completeAST}}
 
-\item  \markDone{Replace DLTK. This includes a complete recoding of all existing Editors, Wizards, Outlines etc including a build from scratch Debug interface inspired from DLTK but only using the DBGProtocol as DLTK do.\footnote{The decision for replacing DLTK has been made based on the investigation of Eclipse where it have been found more feasible to use Eclipse directly rather than using DLTK since a lot of the existing code do work rounds to get back to eclipse. The benefit of this change in the long run is seen larger than the work to recreate some of the DLTK features.} (For lower level description of the goals please refer to appendix \ref{app:lowlevelgoals}). \developer{AugustoRibeiro,KennethLausdahl}, \textbf{Dependencies: \ref{picturesEclipse}} }
-
-\item  \markDone{Launch configuration setup: 
-	\begin{enumerate}
-		\item When creating a new debug configuration it shall be named after
-  the name of the project (and not just ``New configuration'').
-		\item The configuration should be linked to the project so it is available from \textit{Debug As}
-		\item General plugin.xml problem.
-	\end{enumerate} \developer{AugustoRibeiro,KennethLausdahl}, \textbf{Dependencies: R020:\ref{analyseDLTKDebug}}\label{launchconfig}}
-
-\item \markDone{Making sure that the run and debug buttons in the IDE work
-  appropriately and does not crash whenever the user tries to start
-  them. Ideally these should simply change to the debug perspective if
-  no debug configuration is present and be ready to type an expression
-  into a quick console where simple expressions can be typed and
-  executed (and up and down in the list of commands given is
-  supported). \developer{KennethLausdahl}, \textbf{Dependencies: \ref{launchconfig}} }
-
 \item A button for moving a test case from the combinatorial testing
   perspective into the debugger such that it will stop at the right
   place for the run-time error reported for the test case
   selected. \developer{KennethLausdahl see launch shortcut to see how this can be done}, \textbf{Dependencies: \ref{launchconfig}} 
 
-\item  \markDone{Stop all threads when a breakpoint or a run-time error has
-  occured in one of the threads. \developer{NickBattle,KEL, ARI}, \textbf{Dependencies: R020:\ref{toplevelscheduling}} }
-
-\item  \markDone{In the debug perspective it shall be possible to look into the
-  contents of objects in the variables view. \developer{KEL}, \textbf{Dependencies: R020:\ref{analyseDLTKDebug},\ref{completeAST}} }
-
 \item  \markDone{Include all definitions in the Outline view for all VDM
   dialects. \developer{AugustoRibeiro}, \textbf{Dependencies: R020:\ref{completeAST}}}  Missing RT System and Threads
 
-\item \markDone{ When creating new projects (by wizard) in the IDE include the possibility
-  for including standard libraries (i.e.\ (VDM headers) IO and Math) in the
-  project. These are then to be included in a special ``lib''
-  directory. \developer{??}, \textbf{Dependencies: None}} 
 
-\item  \markDone{ Make sure that proof obligations for standard libraries are
-  ignorred. \developer{NickBattle}, \textbf{Dependencies: None}  }
-
-\item \markDone{Make it possible for users to provide static implementations to ``is not yet specified'' functions and
-  operations by adding a Jar file to a lib folder in the project. \developer{KennethLaudahl,NickBattle}\label{staticIsNotYetSpecified} \textit{Prototype done}}
-
-\item \markDone{ Make it possible for users to add a java
-  implementation of a VDM class by adding a jar to the lib folder. The
-  implementation should be done so one instance in java corresponds to
-  one instance in VDM. No
-  static. \developer{KennethLausdahl,NickBattle},
-  \textbf{Dependencies: \ref{staticIsNotYetSpecified}} }
 \item Make use of {\bf\ttfamily measure}'s inside the the interpreter
   so it would be checked in the same way as invariants, pre and post
   conditions. \developer{NickBattle}
@@ -390,7 +311,9 @@ the Overture executable.
 
 
 
-
+%
+% Release 0.4.0
+%
 \item[Release 0.4.0 (September 2010):] The aim for this release is to
   include the following features:   
 \begin{enumerate}
@@ -447,8 +370,6 @@ the Overture executable.
 	\begin{enumerate}
 		\item Start VDM Tools command line prompt from a Overture project. Where the prompt is a console inside Eclipse.
 		
-		\item  \markDone{Create a VDM Tools project file from a Overture project and launch the VDM Tools GUI.\developer{KEL}}
-		
 		\item Create a number of buttons for VDM Tools code generation through the VDM Tools comman dline interface, with output in the console.
 		
 		\item Make a VDM Tools corba DBGPReader to enable a VDM Tools debugger to connect to the Overture IDE and use the basic debug facility.
@@ -467,18 +388,7 @@ the Overture executable.
 
 \item Make VDM source format
 
-\item  \markDone{Coverage Editor\developer{KEL}}
 
-\item  \markDone{DLTK replacement
-
-	\begin{enumerate}
-		\item Recreate Debugger. New debug protocol separation from VDMJC. Launch, Debug runner, 
-		\item Recreate the parser
-		\item Recreate the builder
-		\item Recreate the Editor
-		\item Recreate the outline
-		\item Recreate the package explorer
-	\end{enumerate}}
 
 \item Ant scripts to build a product
 \item Tests of the plug-ins
@@ -548,66 +458,7 @@ the DESTECS executable.
 \appendix*
 
 
-\chapter{Low level goals for IDE release plan.}
-\label{app:lowlevelgoals}
-Low level goals for IDE release plan.
-\markDone{
-\begin{enumerate}
-\item Core:
-	\begin{itemize}
-	\item Utilities (VdmProject)
-	\item AST
-	\item VDMJ (export)
-	\item Core Parser
-	\item Core Builder
-	\item Commands
-	\end{itemize}
 
-\item Core.Vdmpp
-	\begin{itemize}
-	\item Nature
-	\item Content Type
-	\end{itemize}
-
-\item VDMJ Builder/Parser Update
-
-\item UI:
-	\begin{itemize}
-	\item Abstract Editor
-		\begin{itemize}
-		\item Syntax Highlight
-		\item Navigation
-		\item Auto Completion
-		\item ...
-		\end{itemize}
-	\item Outline
-	\item Navigator
-	\item Properties (Language Version, etc)
-	\item Abstract Wizards (New Project/File)
-	\item Perspective?
-	\end{itemize}
-
-\item UI.Vdmpp
-	\begin{itemize}
-	\item Editor
-	\item Wizards
-	\item Templates
-	\item Perspective?
-	\end{itemize}
-
-\item Debug
-	\begin{itemize}
-	\item Launch Core
-	\item Debug Model Core
-	\item Launch UI - (Tabs, shortcuts)
-	\item Debug UI - (source highlight, source lookup)
-	\end{itemize}
-
-\item Debug.Vdmpp - (Launch tabs)?
-
-
-\end{enumerate}
-}
 \input{OvertureStatus}
-
+\input{Released}
 \end{document}
