@@ -23,6 +23,8 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
 import org.eclipse.debug.core.model.IProcess;
+import org.eclipse.debug.core.model.IStreamsProxy;
+import org.eclipse.ui.console.ConsolePlugin;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.core.resources.VdmProject;
@@ -139,9 +141,11 @@ public class VdmLaunchConfigurationDelegate implements
 		{
 			target = new VdmDebugTarget(launch);
 
-			debugComm.registerDebugTarger(debugSessionId.toString(),target);
+			
+			debugComm.registerDebugTarget(debugSessionId.toString(),target);
 
 			IProcess p = launchExternalProcess(launch, commandList, project);
+			IStreamsProxy sProxy = p.getStreamsProxy();
 			target.setProcess(p);
 			target.setProject(project);
 			target.setOutputFolder(getOutputFolder(project));
@@ -268,7 +272,11 @@ public class VdmLaunchConfigurationDelegate implements
 						null,
 						project.getLocation().toFile());
 
-				ConsoleWriter cw = new ConsoleWriter("Launch Console");
+				
+				
+				
+				
+				ConsoleWriter cw = new ConsoleWriter("Overture Debug");
 				new ProcessConsolePrinter("interpreter",
 						cw,
 						process.getInputStream()).start();
