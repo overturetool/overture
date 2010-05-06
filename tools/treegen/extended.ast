@@ -1,0 +1,27 @@
+class Extended
+  is subclass of Base
+
+values
+  package = "nl.marcelverhoef.extended";
+  directory = "d:\workspace\test"
+
+instance variables
+  cnt : nat
+  
+types
+
+Expression ::
+	correct : bool;
+	
+UnaryExpression ::
+  	result : real;
+
+BinaryExpression ::
+ 	result : real;
+
+Toplevel ::
+	expr : Expression
+	result : real
+	
+end Extended
+	

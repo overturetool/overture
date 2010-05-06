@@ -1,0 +1,1073 @@
+--
+-- OVERTURE VDM++ ABSTRACT SYNTAX DEFINITION
+--
+
+class Oml
+
+values
+  package = "org.overturetool.ast";
+  directory = "d:\workspace\test"
+
+instance variables
+  remark : java := "String"
+
+types
+
+Specifications ::
+  class_list : seq of Class;
+
+Class ::
+  identifier : Identifier
+  generic_types: seq of Type					-- added for Thomas Christensen
+  inheritance_clause : [InheritanceClause]
+  class_body : seq of DefinitionBlock
+  system_spec : bool;
+
+InheritanceClause ::
+  identifier_list : seq of Identifier;
+
+DefinitionBlock =
+  TypeDefinitions |
+  ValueDefinitions |
+  FunctionDefinitions |
+  OperationDefinitions |
+  InstanceVariableDefinitions |
+  SynchronizationDefinitions |
+  ThreadDefinition |
+  TraceDefinitions;								-- added for Adriana Sucena
+
+----
+---- TYPE DEFINITIONS
+----
+
+TypeDefinitions ::
+  type_list : seq of TypeDefinition;
+
+TypeDefinition ::
+  access : AccessDefinition
+  shape  : TypeShape;
+
+AccessDefinition ::
+  async_access  : bool
+  static_access : bool
+  scope  : Scope;
+  
+Scope =
+  <PUBLIC> | <PRIVATE> | <PROTECTED> | <DEFAULT>;
+
+TypeShape =
+  SimpleType | ComplexType;
+
+SimpleType ::
+  identifier : Identifier
+  type       : Type
+  invariant  : [Invariant];
+
+ComplexType ::
+  identifier : Identifier
+  field_list : seq of Field
+  invariant  : [Invariant];
+
+Type =
+  BracketedType |
+  BoolType |
+  NatType |
+  Nat1Type |
+  IntType |
+  RatType |
+  RealType |
+  CharType |
+  TokenType |
+  QuoteType |
+  CompositeType |
+  UnionType |
+  ProductType |
+  OptionalType |
+  SetType |
+  Seq0Type |
+  Seq1Type |
+  GeneralMapType |
+  InjectiveMapType |
+  PartialFunctionType |
+  TotalFunctionType |
+  OperationType |
+  EmptyType |
+  TypeName |
+  TypeVariable |
+  ClassTypeInstantiation;			-- added for Thomas Christensen
+
+Invariant ::
+  pattern : Pattern
+  expression : Expression;
+
+BracketedType ::
+  type : Type;
+
+BoolType :: ;
+
+NatType  :: ;
+
+Nat1Type :: ;
+
+IntType :: ;
+
+RatType :: ;
+
+RealType :: ;
+
+CharType :: ;
+
+TokenType :: ;
+  
+QuoteType ::
+  quote_literal : QuoteLiteral;
+
+CompositeType ::
+  identifier : Identifier
+  field_list : seq of Field;
+
+Field ::
+  identifier : [seq of char]
+  type : Type
+  ignore : bool;
+
+UnionType ::
+  lhs_type : Type
+  rhs_type : Type;
+
+ProductType ::
+  lhs_type : Type
+  rhs_type : Type;
+
+OptionalType ::
+  type : Type;
+
+SetType ::
+  type : Type;
+
+Seq0Type ::
+  type : Type;
+
+Seq1Type ::
+  type : Type;
+                 
+GeneralMapType ::
+  dom_type : Type
+  rng_type : Type;
+
+InjectiveMapType ::
+  dom_type : Type
+  rng_type : Type;
+
+PartialFunctionType ::
+  dom_type : Type
+  rng_type : Type;
+
+TotalFunctionType ::
+  dom_type : Type
+  rng_type : Type;
+
+OperationType ::
+  dom_type : Type
+  rng_type : Type;
+
+EmptyType ::;
+
+TypeName ::
+  name : Name;
+
+TypeVariable ::
+  identifier : Identifier;
+  
+ClassTypeInstantiation ::			-- added for Thomas Christensen
+  name : Name
+  generic_types : seq of Type;
+
+---
+--- VALUE DEFINITIONS
+---
+
+ValueDefinitions ::
+  value_list : seq of ValueDefinition;
+
+ValueDefinition ::
+  access     : AccessDefinition
+  shape      : ValueShape;
+
+ValueShape ::
+  pattern    : Pattern
+  type       : [Type]
+  expression : Expression;
+
+---
+--- FUNCTION DEFINITIONS
+---
+
+FunctionDefinitions ::
+  function_list : seq of FunctionDefinition;
+
+FunctionDefinition ::
+  access : AccessDefinition
+  shape  : FunctionShape;
+
+FunctionShape =
+  ExplicitFunction |
+  ImplicitFunction |
+  ExtendedExplicitFunction |
+  TypelessExplicitFunction; 		-- added for Thomas Christensen
+
+ExplicitFunction ::
+  identifier : Identifier
+  type_variable_list : seq of TypeVariable
+  type : Type
+  parameter_list : seq of Parameter
+  body : FunctionBody
+  trailer : FunctionTrailer;
+
+Parameter ::
+  pattern_list : seq of Pattern;
+
+ImplicitFunction ::
+  identifier : Identifier
+  type_variable_list : seq of TypeVariable
+  pattern_type_pair_list : seq of PatternTypePair
+  identifier_type_pair_list : seq of IdentifierTypePair
+  trailer : FunctionTrailer;
+
+PatternTypePair ::
+  pattern_list : seq of Pattern
+  type : Type;
+
+IdentifierTypePair ::
+  identifier : Identifier
+  type : Type;
+
+ExtendedExplicitFunction ::
+  identifier : Identifier
+  type_variable_list : seq of TypeVariable
+  pattern_type_pair_list : seq of PatternTypePair
+  identifier_type_pair_list : seq of IdentifierTypePair
+  body : FunctionBody
+  trailer : FunctionTrailer;
+
+TypelessExplicitFunction ::						-- added for Thomas Christensen
+  identifier : Identifier
+  parameter_list : seq of Parameter
+  body : FunctionBody
+  trailer : FunctionTrailer;
+
+FunctionBody ::  
+  function_body : [Expression]
+  not_yet_specified : bool
+  subclass_responsibility : bool;
+
+FunctionTrailer ::
+  pre_expression : [Expression]
+  post_expression : [Expression];
+
+---
+--- OPERATION DEFINITIONS
+---
+
+OperationDefinitions ::
+  operation_list : seq of OperationDefinition;
+
+OperationDefinition ::
+  access : AccessDefinition
+  shape : OperationShape;
+
+OperationShape =
+  ExplicitOperation |
+  ImplicitOperation |
+  ExtendedExplicitOperation;
+
+ExplicitOperation ::
+  identifier : Identifier
+  type : Type
+  parameter_list : seq of Pattern
+  body : OperationBody
+  trailer : OperationTrailer;
+
+ImplicitOperation ::
+  identifier : Identifier
+  pattern_type_pair_list : seq of PatternTypePair
+  identifier_type_pair_list : seq of IdentifierTypePair
+  trailer : OperationTrailer;
+
+ExtendedExplicitOperation ::
+  identifier : Identifier
+  pattern_type_pair_list : seq of PatternTypePair
+  identifier_type_pair_list : seq of IdentifierTypePair
+  body : OperationBody
+  trailer : OperationTrailer;
+
+OperationBody ::
+  statement : [Statement]
+  not_yet_specified : bool
+  subclass_responsibility : bool;
+  
+OperationTrailer ::
+  externals : [Externals]
+  pre_expression : [Expression]
+  post_expression : [Expression]
+  exceptions : [Exceptions];
+
+Externals ::
+  ext_list : seq of VarInformation;
+
+VarInformation ::
+  mode : Mode
+  name_list : seq of Name
+  type : [Type];
+
+Mode =
+  <RD> | <WR>;
+
+Exceptions ::
+  error_list : seq of Error;
+
+Error ::
+  identifier : Identifier
+  lhs : Expression
+  rhs : Expression;
+
+---
+--- INSTANCE VARIABLES
+---
+
+InstanceVariableDefinitions ::
+  variables_list : seq of InstanceVariableShape;
+
+InstanceVariableShape =
+  InstanceVariable |
+  InstanceVariableInvariant;
+
+InstanceVariable ::
+  access : AccessDefinition
+  assignment_definition : AssignmentDefinition;
+
+InstanceVariableInvariant ::
+  invariant : Expression;
+
+---
+--- SYNCHRONIZATION 
+---
+  
+SynchronizationDefinitions ::
+  sync_list : seq of SyncPredicate;
+
+SyncPredicate =
+  PermissionPredicate |
+  MutexPredicate |
+  MutexAllPredicate ;
+
+PermissionPredicate ::
+  name : Name
+  expression : Expression;
+
+MutexPredicate ::
+  name_list : seq of Name;
+
+MutexAllPredicate ::;
+
+---
+--- THREAD DEFINITIONS
+---
+
+ThreadDefinition ::
+  thread_specification : [ThreadSpecification];
+  
+ThreadSpecification =
+  PeriodicThread |
+  SporadicThread |
+  ProcedureThread ;
+    
+PeriodicThread ::
+  args : seq of Expression
+  name : Name;
+
+SporadicThread ::				-- added for Marcel Verhoef
+  args : seq of Expression
+  name : Name;
+  
+ProcedureThread ::
+  statement : Statement;  
+  
+---
+--- TRACE DEFINITIONS (added for Adriana Sucena)
+---
+
+TraceDefinitions ::
+  traces : seq of NamedTrace;
+  
+NamedTrace ::
+  name : seq of seq of char 
+  defs : TraceDefinition;
+
+TraceDefinition =
+  TraceDefinitionItem |
+  TraceSequenceDefinition |
+  TraceChoiceDefinition;
+    
+TraceSequenceDefinition ::
+  defs : seq of TraceDefinition;
+  
+TraceChoiceDefinition ::
+  defs : seq of TraceDefinition;
+  
+TraceDefinitionItem ::
+  bind    : seq of TraceBinding
+  test    : TraceCoreDefinition
+  regexpr : [TraceRepeatPattern];
+  
+TraceBinding =
+	TraceLetBinding |
+	TraceLetBeBinding;
+	
+TraceLetBinding ::
+  definition_list : seq of ValueShape;
+
+TraceLetBeBinding ::
+  bind : Bind
+  best : [Expression];
+  
+TraceCoreDefinition =
+  TraceMethodApply |
+  TraceBracketedDefinition;
+  
+TraceMethodApply ::
+  variable_name : Identifier
+  method_name : Identifier
+  args : seq of Expression;
+  
+TraceBracketedDefinition ::
+  definition : TraceDefinition;
+  
+TraceRepeatPattern =
+  TraceZeroOrMore |
+  TraceOneOrMore |
+  TraceZeroOrOne |
+  TraceRange;
+  
+TraceZeroOrMore :: ;
+
+TraceOneOrMore :: ;
+
+TraceZeroOrOne :: ;
+
+TraceRange ::
+  lower : NumericLiteral
+  upper : [NumericLiteral]; 
+
+---
+--- EXPRESSIONS
+---
+
+Expression =
+  BracketedExpression |
+  LetExpression |
+  LetBeExpression |
+  DefExpression |
+  IfExpression |
+  CasesExpression |
+  UnaryExpression |
+  BinaryExpression |
+  ForAllExpression |
+  ExistsExpression |
+  ExistsUniqueExpression |
+  IotaExpression |
+  TokenExpression |
+  SetEnumeration |
+  SetComprehension |
+  SetRangeExpression |
+  SequenceEnumeration |
+  SequenceComprehension |
+  SubsequenceExpression |
+  MapEnumeration |
+  MapComprehension |
+  TupleConstructor |
+  RecordConstructor |
+  MuExpression |
+  ApplyExpression |
+  FieldSelect |
+  FunctionTypeSelect |
+  FunctionTypeInstantiation |
+  LambdaExpression |
+  NewExpression |
+  SelfExpression |
+  ThreadIdExpression |
+  TimeExpression |
+  IsExpression |
+  UndefinedExpression |
+  PreconditionExpression |
+  IsofbaseclassExpression |
+  IsofclassExpression |
+  SamebaseclassExpression |
+  SameclassExpression |
+  ReqExpression |
+  ActExpression |
+  FinExpression |
+  ActiveExpression |
+  WaitingExpression |
+  Name |
+  OldName |
+  SymbolicLiteralExpression;
+
+BracketedExpression ::
+  expression : Expression;
+
+LetExpression ::
+  definition_list : seq of ValueShape
+  expression : Expression;
+
+LetBeExpression ::
+  bind : Bind
+  best : [Expression]
+  expression : Expression;
+
+DefExpression ::
+  pattern_bind_list : seq of PatternBindExpression
+  expression : Expression;
+
+PatternBindExpression ::
+  pattern_bind : PatternBind
+  expression : Expression;
+
+IfExpression ::
+  if_expression : Expression
+  then_expression : Expression
+  elseif_expression_list : seq of ElseIfExpression
+  else_expression : Expression;
+
+ElseIfExpression ::
+  elseif_expression : Expression
+  then_expression : Expression;
+
+CasesExpression ::
+  match_expression : Expression
+  alternative_list : seq of CasesExpressionAlternative
+  others_expression : [Expression];
+
+CasesExpressionAlternative ::
+  pattern_list : seq of Pattern
+  expression : Expression;
+
+UnaryExpression ::
+  operator : UnaryOperator
+  expression : Expression;
+
+UnaryOperator =
+  <PLUS> |
+  <MINUS> |
+  <ABS> |
+  <FLOOR> |
+  <NOT> |
+  <CARD> |
+  <POWER> |
+  <DUNION> |
+  <DINTER> |
+  <HD> |
+  <TL> |
+  <LEN> |
+  <ELEMS> |
+  <INDS> |
+  <DCONC> |
+  <DOM> |
+  <RNG> |
+  <DMERGE> |
+  <INVERSE>;
+
+BinaryExpression ::
+  lhs_expression : Expression
+  operator : BinaryOperator
+  rhs_expression : Expression;
+
+BinaryOperator =
+  <PLUS> |
+  <MINUS> |
+  <MULTIPLY> |
+  <DIVIDE> |
+  <DIV> |
+  <REM> |
+  <MOD> |
+  <LT> |
+  <LE> |
+  <GT> |
+  <GE> |
+  <EQ> |
+  <NE> |
+  <OR> |
+  <AND> |
+  <IMPLY> |
+  <EQUIV> |
+  <INSET> |
+  <NOTINSET> |
+  <SUBSET> |
+  <PSUBSET> |
+  <UNION> |
+  <DIFFERENCE> |
+  <INTER> |
+  <CONC> |
+  <MODIFY> |
+  <MUNION> |
+  <MAPDOMRESTO> |
+  <MAPDOMRESBY> |
+  <MAPRNGRESTO> |
+  <MAPRNGRESBY> |
+  <COMP> |
+  <ITERATE> |
+  <TUPSEL> ;
+
+ForAllExpression ::
+  bind_list : seq of Bind
+  expression : Expression;
+
+ExistsExpression ::
+  bind_list : seq of Bind
+  expression : Expression;
+
+ExistsUniqueExpression ::
+  bind : Bind
+  expression : Expression;
+
+IotaExpression ::
+  bind : Bind
+  expression : Expression;
+
+TokenExpression ::
+  expression : Expression;
+  
+SetEnumeration ::
+  expression_list : seq of Expression;
+
+SetComprehension ::
+  expression : Expression
+  bind_list : seq of Bind
+  guard : [Expression];
+
+SetRangeExpression ::
+  lower : Expression
+  upper : Expression;
+
+SequenceEnumeration ::
+  expression_list : seq of Expression;
+
+SequenceComprehension ::
+  expression : Expression
+  set_bind : SetBind
+  guard : [Expression];
+
+SubsequenceExpression ::
+  expression : Expression
+  lower : Expression
+  upper : Expression;
+
+MapEnumeration ::
+  maplet_list : seq of Maplet;
+
+Maplet ::
+  dom_expression : Expression
+  rng_expression : Expression;
+
+MapComprehension ::
+  expression : Maplet
+  bind_list : seq of Bind
+  guard : [Expression];
+
+TupleConstructor ::
+  expression_list : seq of Expression;
+
+RecordConstructor ::
+  name : Name
+  expression_list : seq of Expression;
+
+MuExpression ::
+  expression : Expression
+  modifier_list : seq of RecordModifier;
+
+RecordModifier ::
+  identifier : Identifier
+  expression : Expression;
+
+ApplyExpression ::
+  expression : Expression
+  expression_list : seq of Expression;
+
+FieldSelect ::
+  expression : Expression
+  name : Name;
+
+FunctionTypeSelect ::
+  expression : Expression
+  function_type_instantiation : FunctionTypeInstantiation;
+  
+FunctionTypeInstantiation ::
+  name : Name
+  type_list : seq of Type;
+
+LambdaExpression ::
+  type_bind_list : seq of TypeBind
+  expression : Expression;
+
+NewExpression ::
+  name : Name
+  generic_types : seq of Type				-- added for Thomas Christensen
+  expression_list : seq of Expression;
+
+SelfExpression :: ;
+
+ThreadIdExpression :: ;
+
+TimeExpression :: ;
+
+IsExpression ::
+  type : Type
+  expression : Expression;
+
+UndefinedExpression ::;
+
+PreconditionExpression ::
+  expression_list : seq of Expression;
+
+IsofbaseclassExpression ::
+  name : Name
+  expression : Expression;
+
+IsofclassExpression ::
+  name : Name
+  expression : Expression;
+
+SamebaseclassExpression ::
+  lhs_expression : Expression
+  rhs_expression : Expression;
+
+SameclassExpression ::
+  lhs_expression : Expression
+  rhs_expression : Expression;
+
+ReqExpression ::
+  name_list : seq of Name;
+
+ActExpression  ::
+  name_list : seq of Name;
+
+FinExpression  ::
+  name_list : seq of Name;
+
+ActiveExpression  ::
+  name_list : seq of Name;
+
+WaitingExpression ::
+  name_list : seq of Name;
+  
+Name ::
+  class_identifier : [Identifier]
+  identifier : Identifier;
+
+OldName ::
+  identifier : Identifier;
+
+SymbolicLiteralExpression ::
+  literal : Literal;
+
+---
+--- STATEMENTS
+---
+
+Statement =
+  LetStatement |
+  LetBeStatement |
+  DefStatement |
+  BlockStatement |
+  DclStatement |
+  AssignStatement |
+  AtomicStatement |
+  IfStatement |
+  CasesStatement |
+  SequenceForLoop |
+  SetForLoop |
+  IndexForLoop |
+  WhileLoop |
+  NondeterministicStatement |
+  CallStatement |
+  ReturnStatement |
+  SpecificationStatement |
+  StartStatement |
+  DurationStatement |
+  CyclesStatement |
+  AlwaysStatement |
+  TrapStatement |
+  RecursiveTrapStatement |
+  ExitStatement |
+  ErrorStatement |
+  SkipStatement ;
+
+LetStatement ::
+  definition_list : seq of ValueShape
+  statement : Statement;
+
+LetBeStatement ::
+  bind : Bind
+  best : [Expression]
+  statement : Statement;
+
+DefStatement ::
+  definition_list : seq of EqualsDefinition
+  statement : Statement;
+
+EqualsDefinition ::
+  pattern_bind : PatternBind
+  expression : Expression;
+
+BlockStatement ::
+  dcl_statement_list : seq of DclStatement
+  statement_list : seq of Statement;
+
+DclStatement ::
+  definition_list : seq of AssignmentDefinition;
+
+AssignmentDefinition ::
+  identifier : Identifier
+  type : Type
+  expression : [Expression];
+
+AssignStatement ::
+  state_designator : StateDesignator
+  expression : Expression;
+
+AtomicStatement ::
+  assignment_list : seq of AssignStatement;
+
+StateDesignator =
+  StateDesignatorName |
+  FieldReference |
+  MapOrSequenceReference;
+
+StateDesignatorName ::
+  name : Name;
+
+FieldReference ::
+  state_designator : StateDesignator
+  identifier : Identifier;
+
+MapOrSequenceReference ::
+  state_designator : StateDesignator
+  expression : Expression;
+
+IfStatement ::
+  expression : Expression
+  then_statement : Statement
+  elseif_statement : seq of ElseIfStatement
+  else_statement : [Statement];
+
+ElseIfStatement ::
+  expression : Expression
+  statement : Statement;
+
+CasesStatement ::
+  match_expression : Expression
+  alternative_list : seq of CasesStatementAlternative
+  others_statement : [Statement];  
+
+CasesStatementAlternative ::
+  pattern_list : seq of Pattern
+  statement : Statement;
+
+SequenceForLoop ::
+  pattern_bind : PatternBind
+  in_reverse : bool
+  expression : Expression
+  statement : Statement;
+
+SetForLoop ::
+  pattern : Pattern
+  expression : Expression
+  statement : Statement;
+
+IndexForLoop ::
+  identifier : Identifier
+  init_expression : Expression
+  limit_expression : Expression
+  by_expression : [Expression]
+  statement : Statement;
+
+WhileLoop ::
+  expression : Expression
+  statement : Statement;
+
+NondeterministicStatement ::
+  statement_list : seq of Statement;
+
+CallStatement ::
+  object_designator : [ObjectDesignator]
+  name : Name
+  expression_list : seq of Expression;
+
+ObjectDesignator =
+  ObjectDesignatorExpression |
+  ObjectFieldReference |
+  ObjectApply;
+
+ObjectDesignatorExpression ::
+  expression : Expression;
+
+ObjectFieldReference ::
+  object_designator : ObjectDesignator
+  name : Name;
+  
+ObjectApply ::
+  object_designator : ObjectDesignator
+  expression_list : seq of Expression;
+
+ReturnStatement ::
+  expression : [Expression];
+
+SpecificationStatement ::
+  externals : [Externals]
+  pre_expression : [Expression]
+  post_expression : Expression
+  exceptions : [Exceptions];
+
+StartStatement ::
+  expression : Expression;
+
+DurationStatement ::
+  duration_expression : seq of Expression
+  statement : Statement;
+
+CyclesStatement ::
+  cycles_expression : seq of Expression
+  statement : Statement;
+
+AlwaysStatement ::
+  always_part : Statement
+  in_part : Statement;
+
+TrapStatement ::
+  pattern_bind : PatternBind
+  with_part : Statement
+  in_part : Statement;
+
+RecursiveTrapStatement ::
+  trap_list : seq of TrapDefinition
+  in_part : Statement;
+
+TrapDefinition ::
+  pattern_bind : PatternBind
+  statement : Statement;
+
+ExitStatement ::
+  expression : [Expression];
+
+ErrorStatement ::;
+
+SkipStatement ::;
+
+---
+--- PATTERNS
+---
+
+Pattern =
+  DontCarePattern |
+  PatternIdentifier |
+  MatchValue |
+  SymbolicLiteralPattern |
+  SetEnumPattern |
+  SetUnionPattern |
+  SeqEnumPattern |
+  SeqConcPattern |
+  TuplePattern |
+  RecordPattern;
+
+DontCarePattern ::;
+
+PatternIdentifier ::
+  identifier : Identifier;
+
+MatchValue ::
+  expression : Expression;
+
+SymbolicLiteralPattern ::
+  literal : Literal;
+
+SetEnumPattern ::
+  pattern_list : seq of Pattern;
+
+SetUnionPattern ::
+  lhs_pattern : Pattern
+  rhs_pattern : Pattern;
+
+SeqEnumPattern ::
+  pattern_list : seq of Pattern;
+
+SeqConcPattern ::
+  lhs_pattern : Pattern
+  rhs_pattern : Pattern;
+
+TuplePattern ::
+  pattern_list : seq of Pattern;
+
+RecordPattern ::
+  name : Name
+  pattern_list : seq of Pattern;
+
+---
+--- BINDINGS
+---
+
+PatternBind =
+  Pattern |
+  Bind;
+
+Bind =
+  SetBind |
+  TypeBind;
+
+-- SetBind is used for both single and multiple binds
+
+SetBind ::
+  pattern : seq of Pattern
+  expression : Expression;
+
+-- TypeBind is used for both single and multiple binds
+
+TypeBind ::
+  pattern : seq of Pattern
+  type : Type;
+
+---
+--- LEXICAL ELEMENTS
+---
+
+Literal =
+  NumericLiteral |
+  RealLiteral |
+  BooleanLiteral |
+  NilLiteral |
+  CharacterLiteral |
+  TextLiteral | 
+  QuoteLiteral;
+
+NumericLiteral ::
+  val : nat;
+
+RealLiteral ::
+  val : real;
+
+BooleanLiteral ::
+  val : bool;
+
+NilLiteral ::;
+
+CharacterLiteral ::
+  val : char;
+
+TextLiteral ::
+  val : seq of char;
+
+QuoteLiteral ::
+  val : seq of char;
+
+Identifier = seq of char
+
+end Oml

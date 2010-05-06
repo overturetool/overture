@@ -1,0 +1,8 @@
+class ExtExt
+  is subclass of Extended
+
+values
+  package = "nl.marcelverhoef.extext";
+  directory = "d:\workspace\test"
+
+end ExtExt

@@ -1,0 +1,17 @@
+class ExtOml
+  is subclass of Oml
+  
+values
+  package = "org.overturetool.extast";
+  directory = "d:\workspace\test"
+
+instance variables
+  xpos : nat;
+  ypos : nat
+  
+types
+  Document ::
+    expr : [Expression]
+    spec : [Specifications]
+    
+end ExtOml
