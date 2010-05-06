@@ -1,5 +1,6 @@
 package org.overture.ide.debug.utils.communication;
 
+import org.overture.ide.debug.logging.LogItem;
 import org.overturetool.vdmj.scheduler.RunState;
 
 
@@ -32,22 +33,24 @@ public interface IDebugThreadProxyCallback
 	 */
 	public static final int STEP_END= 0x0008;
 	
-	/*
-	 * Called on console output
-	 * 
-	 * @param output true on sending and false on receive
-	 * 
-	 * @param message the message send
-	 */
-	void firePrintMessage(boolean output, String message);
-	/*
-	 * Called on console output
-	 * 
-	 * @param output true on sending and false on receive
-	 * 
-	 * @param message the message send
-	 */
-	void firePrintErrorMessage(boolean output, String message);
+//	/*
+//	 * Called on console output
+//	 * 
+//	 * @param output true on sending and false on receive
+//	 * 
+//	 * @param message the message send
+//	 */
+//	void firePrintMessage(LogItem item);
+//	/*
+//	 * Called on console output
+//	 * 
+//	 * @param output true on sending and false on receive
+//	 * 
+//	 * @param message the message send
+//	 */
+//	void firePrintErrorMessage(LogItem item);
+	
+	void fireLogEvent(LogItem item);
 
 	/*
 	 * Prints stdout

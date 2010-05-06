@@ -17,6 +17,7 @@ import org.eclipse.debug.core.model.IThread;
 import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.model.VdmDebugState.DebugState;
+import org.overture.ide.debug.logging.LogItem;
 import org.overture.ide.debug.utils.communication.DBGPProxyException;
 import org.overture.ide.debug.utils.communication.DebugThreadProxy;
 import org.overture.ide.debug.utils.communication.IDebugThreadProxyCallback;
@@ -84,14 +85,18 @@ public class VdmThread extends VdmDebugElement implements IThread,
 			fTarget.printErr(text);
 		}
 
-		public void firePrintMessage(boolean output, String message)
+//		public void firePrintMessage(LogItem item)
+//		{
+//			fTarget.printMessage(item);
+//		}
+//
+//		public void firePrintErrorMessage(LogItem item)
+//		{
+//			fTarget.printErrorMessage(item);
+//		}
+		public void fireLogEvent(LogItem item)
 		{
-			fTarget.printMessage(output, message);
-		}
-
-		public void firePrintErrorMessage(boolean output, String message)
-		{
-			fTarget.printErrorMessage(output, message);
+			fTarget.printLog(item);
 		}
 
 		public void firePrintOut(String text)

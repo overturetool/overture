@@ -12,19 +12,28 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;
 
-public class VmArgumentsLaunchConfigurationTab extends AbstractLaunchConfigurationTab
+/**
+ * Tab page to set the VM options used in the launch delegate. Posible options might be.
+ * <ul>
+ * <li> -Xmx1024M
+ * <li> -Xss20M
+ * <ul>
+ * @author kela
+ *
+ */
+public class VmArgumentsLaunchConfigurationTab extends
+		AbstractLaunchConfigurationTab
 {
 	class WidgetListener implements ModifyListener, SelectionListener
 	{
 		public void modifyText(ModifyEvent e)
 		{
-			// validatePage();
+
 			updateLaunchConfigurationDialog();
 		}
 
@@ -35,14 +44,13 @@ public class VmArgumentsLaunchConfigurationTab extends AbstractLaunchConfigurati
 
 		public void widgetSelected(SelectionEvent e)
 		{
-			// fOperationText.setEnabled(!fdebugInConsole.getSelection());
-
 			updateLaunchConfigurationDialog();
 		}
 	}
-	
+
 	private Text fArgumentsText;
 	private WidgetListener fListener = new WidgetListener();
+
 	public void createControl(Composite parent)
 	{
 		Composite comp = new Composite(parent, SWT.NONE);
@@ -50,19 +58,8 @@ public class VmArgumentsLaunchConfigurationTab extends AbstractLaunchConfigurati
 		setControl(comp);
 		comp.setLayout(new GridLayout(1, true));
 		comp.setFont(parent.getFont());
-		
-//		Group group = new Group(comp, comp.getStyle());
-//		group.setText("Arguments");
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-//
-//		group.setLayoutData(gd);
-//
-//		GridLayout layout = new GridLayout();
-//		layout.makeColumnsEqualWidth = false;
-//		layout.numColumns = 3;
-//		group.setLayout(layout);
 
-		// editParent = group;
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 
 		Label label = new Label(comp, SWT.MIN);
 		label.setText("Arguments:");
@@ -73,8 +70,8 @@ public class VmArgumentsLaunchConfigurationTab extends AbstractLaunchConfigurati
 
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		fArgumentsText.setLayoutData(gd);
-		fArgumentsText.addModifyListener(fListener);	
-		
+		fArgumentsText.addModifyListener(fListener);
+
 	}
 
 	public String getName()
@@ -86,7 +83,7 @@ public class VmArgumentsLaunchConfigurationTab extends AbstractLaunchConfigurati
 	{
 		try
 		{
-			fArgumentsText.setText( configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION, ""));
+			fArgumentsText.setText(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION, ""));
 		} catch (CoreException e)
 		{
 			if (Activator.DEBUG)
@@ -94,19 +91,19 @@ public class VmArgumentsLaunchConfigurationTab extends AbstractLaunchConfigurati
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
 
 	public void performApply(ILaunchConfigurationWorkingCopy configuration)
 	{
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION, fArgumentsText.getText());
-		
+
 	}
 
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
 	{
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION, "");
-		
+
 	}
 
 }

@@ -142,7 +142,7 @@ public class VdmLaunchConfigurationDelegate implements
 			target = new VdmDebugTarget(launch);
 
 			
-			debugComm.registerDebugTarget(debugSessionId.toString(),target);
+			debugComm.registerDebugTarger(debugSessionId.toString(),target);
 
 			IProcess p = launchExternalProcess(launch, commandList, project);
 			IStreamsProxy sProxy = p.getStreamsProxy();

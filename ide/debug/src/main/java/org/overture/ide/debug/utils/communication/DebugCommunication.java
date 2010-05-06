@@ -231,7 +231,7 @@ public class DebugCommunication implements IDisposable
 					initialState = DebugState.Terminated;
 				}else if(target.isSuspended())
 				{
-					initialState = DebugState.Suspended;
+					//initialState = DebugState.Suspended;
 				}
 				
 				VdmThread t = new VdmThread(targets.get(sessionId), id, name,sessionId, s,initialState);

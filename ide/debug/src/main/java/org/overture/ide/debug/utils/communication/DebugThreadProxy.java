@@ -24,6 +24,7 @@ import org.overture.ide.debug.core.model.VdmSimpleValue;
 import org.overture.ide.debug.core.model.VdmStackFrame;
 import org.overture.ide.debug.core.model.VdmValue;
 import org.overture.ide.debug.core.model.VdmVariable;
+import org.overture.ide.debug.logging.LogItem;
 import org.overture.ide.debug.utils.xml.XMLDataNode;
 import org.overture.ide.debug.utils.xml.XMLNode;
 import org.overture.ide.debug.utils.xml.XMLOpenTagNode;
@@ -167,9 +168,7 @@ public class DebugThreadProxy extends AsyncCaller
 	@Override
 	protected void write(String request)
 	{
-		callback.firePrintMessage(true, adjustLength("Request (" + threadId
-				+ "):  ")
-				+ request);
+		callback.fireLogEvent(createOutputLogItem("Request",  request,false));
 
 		try
 		{
@@ -311,15 +310,12 @@ public class DebugThreadProxy extends AsyncCaller
 			
 			if (tagnode.tag.equals("init"))
 			{
-				callback.firePrintMessage(false, adjustLength("Res Init("
-						+ threadId + "):")
-						+ tagnode);
+				callback.fireLogEvent(createInputLogItem("Res Init"  ,tagnode,false));
+
 				processInit(tagnode);
 			} else if (tagnode.tag.equals("response"))
 			{
-				callback.firePrintMessage(false, adjustLength("Response("
-						+ threadId + "): ")
-						+ tagnode);
+				callback.fireLogEvent(createInputLogItem("Response"  ,tagnode,false));
 				processResponse(tagnode);
 			} else if (tagnode.tag.equals("stream"))
 			{
@@ -327,15 +323,11 @@ public class DebugThreadProxy extends AsyncCaller
 				processStream(tagnode);
 			} else if (tagnode.tag.equals("xcmd_overture_response"))
 			{
-				callback.firePrintMessage(false, adjustLength("Res xCmd("
-						+ threadId + "): ")
-						+ tagnode);
+				callback.fireLogEvent(createInputLogItem("Res xCmd"  ,tagnode,false));
 				processXcmdOverture(tagnode);
 			} else
 			{
-				callback.firePrintMessage(false, adjustLength("UNKNOWN"
-						+ threadId + "): ")
-						+ tagnode);
+				callback.fireLogEvent(createInputLogItem("UNKNOWN"  ,tagnode,false));
 			}
 			
 			processError(tagnode);
@@ -373,9 +365,7 @@ public class DebugThreadProxy extends AsyncCaller
 		try
 		{
 			text = new String(Base64.decode(data.cdata));
-			callback.firePrintMessage(false, adjustLength(stream + "("
-					+ threadId + ")  :")
-					+ text);
+callback.fireLogEvent(createInputLogItem("stream", text, false));
 			if (stream.equals("stdout"))
 			{
 				callback.firePrintOut(text);
@@ -400,9 +390,7 @@ public class DebugThreadProxy extends AsyncCaller
 		String transaction_id = msg.getAttr("transaction_id");
 		if (transaction_id.trim().equalsIgnoreCase("?"))
 		{
-			callback.firePrintErrorMessage(false, adjustLength("Response("
-					+ threadId + "): ")
-					+ msg);
+			callback.fireLogEvent(createInputLogItem("Response", msg, true));
 		}
 		Integer transactionId = Integer.parseInt(transaction_id);
 		String command = msg.getAttr("command");
@@ -532,10 +520,8 @@ public class DebugThreadProxy extends AsyncCaller
 
 	public void processInit(XMLTagNode tagnode) throws IOException
 	{
-		callback.firePrintMessage(false, adjustLength("P init(" + threadId
-				+ ")  :")
-				+ tagnode.toString());
-
+		callback.fireLogEvent(createInputLogItem("P init", tagnode, false));
+		
 		sessionId = tagnode.getAttr("idekey");
 
 		redirect("stdout", DBGPRedirect.REDIRECT);
@@ -727,7 +713,8 @@ public class DebugThreadProxy extends AsyncCaller
 					}
 				}
 			}
-			callback.firePrintErrorMessage(false, sb.toString());
+//			callback.firePrintErrorMessage(false, sb.toString());
+			callback.fireLogEvent(createInputLogItem("Error",  sb.toString(),true));
 		} else
 		{
 
@@ -1083,11 +1070,26 @@ connected = false;
 	// write("eval -i " + (++xid) + " -- " + Base64.encode(expression));
 	// }
 
-	private static String adjustLength(String message)
+//	private static String adjustLength(String message)
+//	{
+//		while (message.length() < 14)
+//			message += " ";
+//		return message;
+//	}
+	
+	private LogItem createOutputLogItem(String type, String message,Boolean isError)
 	{
-		while (message.length() < 14)
-			message += " ";
-		return message;
+		return new LogItem(sessionId, type, threadId, true, message,isError);
+	}
+	
+	private LogItem createInputLogItem(String type, XMLNode node,Boolean isError)
+	{
+		return new LogItem(sessionId, type, threadId, false, node,isError);
+	}
+	
+	private LogItem createInputLogItem(String type, String message,Boolean isError)
+	{
+		return new LogItem(sessionId, type, threadId, false, message,isError);
 	}
 
 }

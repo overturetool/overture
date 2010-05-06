@@ -28,11 +28,18 @@ import org.eclipse.debug.core.model.IMemoryBlock;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.swt.SWT;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.debug.core.Activator;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.model.VdmDebugState.DebugState;
+import org.overture.ide.debug.logging.LogItem;
+import org.overture.ide.debug.logging.LogView;
 import org.overture.ide.debug.utils.communication.DBGPProxyException;
 import org.overture.ide.debug.utils.communication.DebugThreadProxy.DebugProxyState;
 import org.overture.ide.ui.internal.util.ConsoleWriter;
@@ -45,7 +52,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 	private List<VdmThread> fThreads;
 	private VdmThread fThread;
 	private boolean logging = false;
-	private ConsoleWriter loggingConsole;
+	private LogView logView;
 	private ConsoleWriter console;
 	private HashMap<Integer, VdmLineBreakpoint> breakpointMap = new HashMap<Integer, VdmLineBreakpoint>();
 	private IVdmProject project;
@@ -294,8 +301,34 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 		if (launch.getLaunchConfiguration().getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false))
 		{
 			logging = true;
-			loggingConsole = new ConsoleWriter(IDebugConstants.CONSOLE_LOGGING_NAME);
-			loggingConsole.clear();
+			final IWorkbench wb = PlatformUI.getWorkbench();
+			if (wb.getWorkbenchWindowCount() > 0)
+			{
+
+				wb.getDisplay().syncExec(new Runnable()
+				{
+
+					public void run()
+					{
+						IWorkbenchPage page = wb.getWorkbenchWindows()[0].getActivePage();
+						IViewPart v;
+						try
+						{
+							v = page.showView(IDebugConstants.LogViewId);
+							if (v instanceof LogView)
+								logView = ((LogView) v);
+						} catch (PartInitException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+					}
+				});
+
+			}
+			
+			logView.clear();
 		}
 
 	}
@@ -345,34 +378,12 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 		// }
 	}
 
-	public void printMessage(boolean outgoing, String message)
+	public void printLog(LogItem item)
 	{
 		if (logging)
 		{
-			message = message.replaceAll("\n", " ").replaceAll("\t", "").replaceAll("\r", " ");
-			if (outgoing)
-			{
-				loggingConsole.ConsolePrint(message, SWT.COLOR_DARK_BLUE);
-			} else
-			{
-				loggingConsole.ConsolePrint(message, SWT.COLOR_DARK_YELLOW);
-			}
-			loggingConsole.Show();
-		}
-	}
-
-	public void printErrorMessage(boolean outgoing, String message)
-	{
-		if (logging)
-		{
-			if (outgoing)
-			{
-				loggingConsole.ConsolePrint(message, SWT.COLOR_DARK_RED);
-			} else
-			{
-				loggingConsole.ConsolePrint(message, SWT.COLOR_RED);
-			}
-			loggingConsole.Show();
+			logView.log(item);
+			logView.setFocus();
 		}
 	}
 
@@ -384,7 +395,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 	public void printErr(String message)
 	{
 		console.ConsolePrint(message, SWT.COLOR_RED);
-		if(!logging)
+		if (!logging)
 		{
 			console.Show();
 		}

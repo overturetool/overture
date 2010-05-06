@@ -172,5 +172,15 @@
          </action>
          </viewerContribution> 
    </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            class="org.overture.ide.debug.logging.LogView"
+            id="org.overture.ide.debug.logging.logview"
+            name="VDM Debug Log viewer"
+            restorable="true">
+      </view>
+   </extension>
    
 </plugin>

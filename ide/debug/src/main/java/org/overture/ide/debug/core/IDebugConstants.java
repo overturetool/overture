@@ -46,4 +46,5 @@ public interface IDebugConstants
 	
 	public static final String CONSOLE_DEBUG_NAME = "Overture Debug";
 	public static final String CONSOLE_LOGGING_NAME = "VDM Debug log";
+	static final String LogViewId = "org.overture.ide.debug.logging.logview";
 }
