@@ -403,8 +403,8 @@ public class TraceInterpreter
 				interpreter.init(null); // Initialize completely between
 				// every
 				// run...
-				List<Object> result = interpreter.runtrace(mtd.classDefinition,
-						test);
+				List<Object> result = interpreter.runOneTrace(mtd.classDefinition,
+						test,false);
 
 				tests.filter(result, test, n);
 
