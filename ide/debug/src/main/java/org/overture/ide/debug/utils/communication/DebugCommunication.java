@@ -71,7 +71,7 @@ public class DebugCommunication implements IDisposable
 		return this.server.getLocalPort();
 	}
 
-	public void registerDebugTarger(String sessionId, VdmDebugTarget target)
+	public void registerDebugTarget(String sessionId, VdmDebugTarget target)
 			throws DebugException
 	{
 
