@@ -2,6 +2,7 @@ package org.overture.ide.ui.outline;
 
 import java.util.List;
 
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -13,6 +14,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.overture.ide.core.ElementChangedEvent;
@@ -167,6 +169,8 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 
 	private final int AUTO_EXPAND_LEVEL = 2;
 
+	private MemberFilterActionGroup fMemberFilterActionGroup;
+
 	public VdmContentOutlinePage(VdmEditor vdmEditor) {
 		this.vdmEditor = vdmEditor;
 	}
@@ -181,8 +185,9 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		// fOutlineViewer.setLabelProvider(new VdmOutlineLabelProvider());
 		fOutlineViewer.setLabelProvider(new DecorationgVdmLabelProvider(new VdmUILabelProvider()));
 		fOutlineViewer.addSelectionChangedListener(this);
-	
-
+		
+		
+		
 		Object[] listeners = fSelectionChangedListeners.getListeners();
 		for (int i = 0; i < listeners.length; i++)
 		{
@@ -192,7 +197,38 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 
 		// addSelectionChangedListener(new VdmSelectionListener());
 
+		registerToolBarActions();
+		
 		fOutlineViewer.setInput(fInput);
+	}
+
+	private void registerToolBarActions() {
+		
+		
+		IPageSite site= getSite();
+			IActionBars actionBars = site.getActionBars();
+		
+			IToolBarManager toolBarManager= actionBars.getToolBarManager();
+			//toolBarManager.add(new LexicalSortingAction());
+
+			fMemberFilterActionGroup= new MemberFilterActionGroup(fOutlineViewer, "org.overture.ide.ui.VdmOutlinePage"); //$NON-NLS-1$
+			fMemberFilterActionGroup.contributeToToolBar(toolBarManager);
+
+//			fCustomFiltersActionGroup.fillActionBars(actionBars);
+//
+//			IMenuManager viewMenuManager= actionBars.getMenuManager();
+//			viewMenuManager.add(new Separator("EndFilterGroup")); //$NON-NLS-1$
+//
+//			fToggleLinkingAction= new ToggleLinkingAction();
+//			fToggleLinkingAction.setActionDefinitionId(IWorkbenchCommandConstants.NAVIGATE_TOGGLE_LINK_WITH_EDITOR);
+//			viewMenuManager.add(new ClassOnlyAction());
+//			viewMenuManager.add(fToggleLinkingAction);
+//
+//			fCategoryFilterActionGroup= new CategoryFilterActionGroup(fOutlineViewer, "org.eclipse.jdt.ui.JavaOutlinePage", new IJavaElement[] {fInput}); //$NON-NLS-1$
+//			fCategoryFilterActionGroup.contributeToViewMenu(viewMenuManager);
+		
+
+		
 	}
 
 	@Override
