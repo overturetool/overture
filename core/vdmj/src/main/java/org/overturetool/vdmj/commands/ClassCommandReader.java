@@ -144,7 +144,7 @@ public class ClassCommandReader extends CommandReader
 		{
 			try
 			{
-				PrintWriter p = new PrintWriter(new FileOutputStream(parts[1], true));
+				PrintWriter p = new PrintWriter(new FileOutputStream(parts[1], false));
 				RTLogger.setLogfile(p);
 				println("RT events now logged to " + parts[1]);
 			}
