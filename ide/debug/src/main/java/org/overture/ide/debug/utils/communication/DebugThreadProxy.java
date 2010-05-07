@@ -54,20 +54,19 @@ public class DebugThreadProxy extends AsyncCaller
 				try
 				{
 					receive();
-				} 
-				catch(SocketException e)
+				} catch (SocketException e)
 				{
-//					if(connected)
-//					{
-//						e.printStackTrace();
-//					}
+					// if(connected)
+					// {
+					// e.printStackTrace();
+					// }
 					connected = false;
 					break;
 				}
-				
+
 				catch (IOException e)
 				{
-					if(connected)
+					if (connected)
 					{
 						e.printStackTrace();
 					}
@@ -82,9 +81,9 @@ public class DebugThreadProxy extends AsyncCaller
 			}
 			try
 			{
-				if(fSocket.isConnected())
+				if (fSocket.isConnected())
 				{
-				input.close();
+					input.close();
 				}
 			} catch (IOException e)
 			{
@@ -138,10 +137,10 @@ public class DebugThreadProxy extends AsyncCaller
 		try
 		{
 			DebugCommunication.getInstance().disposeTarget(sessionId);
-//			if (!fSocket.isClosed())
-//			{
-//				this.fSocket.close();
-//			}
+			// if (!fSocket.isClosed())
+			// {
+			// this.fSocket.close();
+			// }
 			connected = false;
 		} catch (IOException e)
 		{
@@ -168,7 +167,7 @@ public class DebugThreadProxy extends AsyncCaller
 	@Override
 	protected void write(String request)
 	{
-		callback.fireLogEvent(createOutputLogItem("Request",  request,false));
+		callback.fireLogEvent(createOutputLogItem("Request", request, false));
 
 		try
 		{
@@ -307,15 +306,17 @@ public class DebugThreadProxy extends AsyncCaller
 		try
 		{
 			XMLTagNode tagnode = (XMLTagNode) node;
-			
+
+			processError(tagnode);
+
 			if (tagnode.tag.equals("init"))
 			{
-				callback.fireLogEvent(createInputLogItem("Res Init"  ,tagnode,false));
+				callback.fireLogEvent(createInputLogItem("Res Init", tagnode, false));
 
 				processInit(tagnode);
 			} else if (tagnode.tag.equals("response"))
 			{
-				callback.fireLogEvent(createInputLogItem("Response"  ,tagnode,false));
+				callback.fireLogEvent(createInputLogItem("Response", tagnode, false));
 				processResponse(tagnode);
 			} else if (tagnode.tag.equals("stream"))
 			{
@@ -323,18 +324,18 @@ public class DebugThreadProxy extends AsyncCaller
 				processStream(tagnode);
 			} else if (tagnode.tag.equals("xcmd_overture_response"))
 			{
-				callback.fireLogEvent(createInputLogItem("Res xCmd"  ,tagnode,false));
+				callback.fireLogEvent(createInputLogItem("Res xCmd", tagnode, false));
 				processXcmdOverture(tagnode);
 			} else
 			{
-				callback.fireLogEvent(createInputLogItem("UNKNOWN"  ,tagnode,false));
+				callback.fireLogEvent(createInputLogItem("UNKNOWN", tagnode, false));
 			}
-			
-			processError(tagnode);
-			
+
 		} catch (Exception e)
 		{
-			throw new DBGPProxyException(new IOException("Unexpected XML response: " + node),threadId);
+			// e.printStackTrace();
+			throw new DBGPProxyException(new IOException("Unexpected XML response: "
+					+ node), threadId);
 		}
 	}
 
@@ -365,7 +366,7 @@ public class DebugThreadProxy extends AsyncCaller
 		try
 		{
 			text = new String(Base64.decode(data.cdata));
-callback.fireLogEvent(createInputLogItem("stream", text, false));
+			callback.fireLogEvent(createInputLogItem(stream, text, false));
 			if (stream.equals("stdout"))
 			{
 				callback.firePrintOut(text);
@@ -478,7 +479,6 @@ callback.fireLogEvent(createInputLogItem("stream", text, false));
 
 	private void precessStep(XMLTagNode msg)
 	{
-		String newstatus = msg.getAttr("status");
 
 		XMLOpenTagNode node = (XMLOpenTagNode) msg;
 		for (XMLNode n : node.children)
@@ -487,16 +487,19 @@ callback.fireLogEvent(createInputLogItem("stream", text, false));
 			processInternal(internalNode);
 		}
 
-		if (newstatus.equals("break"))
+		String newstatus = msg.getAttr("status");
+		if (newstatus != null)
 		{
-			isSuspended = true;
-			callback.suspended();
-		} else if (newstatus.equals("stopped"))
-		{
-			callback.fireStopped();// terminated();
+			if (newstatus.equals("break"))
+			{
+				isSuspended = true;
+				callback.suspended();
+			} else if (newstatus.equals("stopped"))
+			{
+				callback.fireStopped();// terminated();
 
+			}
 		}
-
 	}
 
 	public void processInternal(XMLTagNode msg)
@@ -515,13 +518,14 @@ callback.fireLogEvent(createInputLogItem("stream", text, false));
 				return;
 			}
 			callback.updateInternalState(id, name, state);
+
 		}
 	}
 
 	public void processInit(XMLTagNode tagnode) throws IOException
 	{
 		callback.fireLogEvent(createInputLogItem("P init", tagnode, false));
-		
+
 		sessionId = tagnode.getAttr("idekey");
 
 		redirect("stdout", DBGPRedirect.REDIRECT);
@@ -685,54 +689,57 @@ callback.fireLogEvent(createInputLogItem("stream", text, false));
 
 	private void processError(XMLTagNode node)
 	{
-		try{
-		if (node.tag.equals("error"))
+		try
 		{
-			String code = node.getAttr("code");
-			DBGPErrorType error;
-			try
+			if (node.tag.equals("error"))
 			{
-				error = DBGPErrorType.lookup(Integer.parseInt(code));
-			} catch (NumberFormatException e)
-			{
-				error = DBGPErrorType.UNKNOWN_ERROR;
-			} catch (DBGPException e)
-			{
-				error = DBGPErrorType.UNKNOWN_ERROR;
-			}
-			StringBuilder sb = new StringBuilder();
-			sb.append(error);
-			if (node instanceof XMLOpenTagNode)
-			{
-				for (XMLNode child : ((XMLOpenTagNode) node).children)
+				String code = node.getAttr("code");
+				DBGPErrorType error;
+				try
 				{
-					if (child instanceof XMLOpenTagNode)
+					error = DBGPErrorType.lookup(Integer.parseInt(code));
+				} catch (NumberFormatException e)
+				{
+					error = DBGPErrorType.UNKNOWN_ERROR;
+				} catch (DBGPException e)
+				{
+					error = DBGPErrorType.UNKNOWN_ERROR;
+				}
+				StringBuilder sb = new StringBuilder();
+				sb.append(error);
+				if (node instanceof XMLOpenTagNode)
+				{
+					for (XMLNode child : ((XMLOpenTagNode) node).children)
 					{
-						XMLOpenTagNode dataNode = (XMLOpenTagNode) child;
-						sb.append("\n" + dataNode.text);
+						if (child instanceof XMLOpenTagNode)
+						{
+							XMLOpenTagNode dataNode = (XMLOpenTagNode) child;
+							sb.append("\n" + dataNode.text);
+						}
 					}
 				}
-			}
-//			callback.firePrintErrorMessage(false, sb.toString());
-			callback.fireLogEvent(createInputLogItem("Error",  sb.toString(),true));
-		} else
-		{
+				// callback.firePrintErrorMessage(false, sb.toString());
+				callback.fireLogEvent(createInputLogItem("Error", sb.toString(), true));
 
-			if (node instanceof XMLOpenTagNode)
+				//callback.firePrintErr(sb.toString());
+				callback.fireStopped();
+			} else
 			{
-				for (XMLNode prop : ((XMLOpenTagNode) node).children)
+
+				if (node instanceof XMLOpenTagNode)
 				{
-					if (prop instanceof XMLTagNode)
+					for (XMLNode prop : ((XMLOpenTagNode) node).children)
 					{
-						processError((XMLTagNode) prop);
+						if (prop instanceof XMLTagNode)
+						{
+							processError((XMLTagNode) prop);
+						}
+
 					}
-					
-
 				}
-			}
 
-		}
-		}catch(Exception e)
+			}
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -991,11 +998,11 @@ callback.fireLogEvent(createInputLogItem("stream", text, false));
 	public void shutdown() throws IOException
 	{
 		setDebugState(DebugProxyState.Terminated);
-//		if (!fSocket.isClosed())
-//		{
-//			fSocket.close();
-//		}
-connected = false;
+		// if (!fSocket.isClosed())
+		// {
+		// fSocket.close();
+		// }
+		connected = false;
 	}
 
 	public int breakpointAdd(IBreakpoint breakpoint)
@@ -1070,26 +1077,29 @@ connected = false;
 	// write("eval -i " + (++xid) + " -- " + Base64.encode(expression));
 	// }
 
-//	private static String adjustLength(String message)
-//	{
-//		while (message.length() < 14)
-//			message += " ";
-//		return message;
-//	}
-	
-	private LogItem createOutputLogItem(String type, String message,Boolean isError)
+	// private static String adjustLength(String message)
+	// {
+	// while (message.length() < 14)
+	// message += " ";
+	// return message;
+	// }
+
+	private LogItem createOutputLogItem(String type, String message,
+			Boolean isError)
 	{
-		return new LogItem(sessionId, type, threadId, true, message,isError);
+		return new LogItem(sessionId, type, threadId, true, message, isError);
 	}
-	
-	private LogItem createInputLogItem(String type, XMLNode node,Boolean isError)
+
+	private LogItem createInputLogItem(String type, XMLNode node,
+			Boolean isError)
 	{
-		return new LogItem(sessionId, type, threadId, false, node,isError);
+		return new LogItem(sessionId, type, threadId, false, node, isError);
 	}
-	
-	private LogItem createInputLogItem(String type, String message,Boolean isError)
+
+	private LogItem createInputLogItem(String type, String message,
+			Boolean isError)
 	{
-		return new LogItem(sessionId, type, threadId, false, message,isError);
+		return new LogItem(sessionId, type, threadId, false, message, isError);
 	}
 
 }

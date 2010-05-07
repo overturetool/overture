@@ -11,7 +11,7 @@ public class AsyncCaller
 	Map<Integer, Thread> threads = new Hashtable<Integer, Thread>();
 	Map<Integer, Object> results = new Hashtable<Integer, Object>();
 
-	private final long timeOut = 200;
+	private final long timeOut = 500;
 
 	protected synchronized Integer getNextTicket()
 	{

@@ -16,6 +16,8 @@ public class WorkbenchPreferencePage1 extends
 	protected void createFieldEditors()
 	{
 		addField(new FileFieldEditor(ICskConstants.VPPGDE_PATH, "VDM Tools vppgde path", getFieldEditorParent()));
+		addField(new FileFieldEditor(ICskConstants.VRTGDE_PATH, "VDM Tools vrtgde path", getFieldEditorParent()));
+		addField(new FileFieldEditor(ICskConstants.VSLGDE_PATH, "VDM Tools vslgde path", getFieldEditorParent()));
 
 	}
 

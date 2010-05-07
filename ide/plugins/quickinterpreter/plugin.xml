@@ -13,7 +13,18 @@
       </view>
    </extension>
 
-
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.overture.ide.ui.perspective">
+         <view
+               id="org.overture.ide.plugins.quickinterpreter.viewinterpreter"
+               minimized="true"
+               relationship="stack"
+               relative="org.eclipse.ui.views.ProblemView">
+         </view>
+      </perspectiveExtension>
+   </extension>
 
 
 

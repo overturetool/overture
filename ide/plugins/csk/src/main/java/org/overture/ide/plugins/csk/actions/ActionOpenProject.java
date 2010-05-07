@@ -21,10 +21,11 @@ import org.overture.ide.plugins.csk.internal.VdmTools;
 @SuppressWarnings("restriction")
 public class ActionOpenProject implements IViewActionDelegate
 {
-IViewPart view;
+	IViewPart view;
+
 	public void init(IViewPart view)
 	{
-this.view = view;
+		this.view = view;
 	}
 
 	public void run(IAction action)
@@ -63,12 +64,9 @@ this.view = view;
 
 	}
 
-	
-	
-	
 	public static IVdmProject getSelectedProject(IAction action)
 	{
-		
+
 		if (action instanceof ViewPluginAction)
 		{
 			ViewPluginAction vAction = (ViewPluginAction) action;

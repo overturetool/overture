@@ -140,8 +140,8 @@ public class LatexCoverageAction implements IObjectActionDelegate
 
 	}
 
-	final static String VDM_MODEL_ENV_BEGIN = "\\begin{vdm_al}";
-	final static String VDM_MODEL_ENV_END = "\\end{vdm_al}";
+//	final static String VDM_MODEL_ENV_BEGIN = "\\begin{vdm_al}";
+//	final static String VDM_MODEL_ENV_END = "\\end{vdm_al}";
 
 	private void makeLatex(final IVdmProject selectedProject,
 			//final String contentTypeId, final String natureId,
@@ -183,11 +183,11 @@ public class LatexCoverageAction implements IObjectActionDelegate
 						});
 						
 					}
-					if (model != null && model.isTypeCorrect())
+//					if ()
 					{
 						boolean modelOnly = !new LatexProject(selectedProject).hasDocument();
 						LexLocation.resetLocations();
-						if (model.hasClassList())
+						if (selectedProject.getDialect()== Dialect.VDM_PP || selectedProject.getDialect()== Dialect.VDM_RT)
 						{
 						
 
@@ -205,7 +205,8 @@ public class LatexCoverageAction implements IObjectActionDelegate
 										modelOnly);
 
 							}
-						} else if (model.hasModuleList())
+						} 
+						else if (selectedProject.getDialect()== Dialect.VDM_SL)
 						{
 							List<File> outputFiles = getFileChildern(new File(projectRoot,
 									"generated"));
@@ -340,17 +341,18 @@ public class LatexCoverageAction implements IObjectActionDelegate
 
 			private boolean isStandardLibarary(File moduleFile)
 			{
-				String name = moduleFile.getAbsolutePath()
-						.toLowerCase()
-						.replace('\\', '/');
-				return (name.endsWith("/lib/io.vdmpp")
-						|| name.endsWith("/lib/io.vdmrt")
-						|| name.endsWith("/lib/io.vdmsl")
-						|| name.endsWith("/lib/math.vdmpp")
-						|| name.endsWith("/lib/math.vdmrt")
-						|| name.endsWith("/lib/math.vdmsl")
-						|| name.endsWith("/lib/vdmutil.vdmpp")
-						|| name.endsWith("/lib/vdmutil.vdmrt") || name.endsWith("/lib/vdmutil.vdmsl"));
+				return moduleFile.getParentFile().getName().equalsIgnoreCase("lib");
+//				String name = moduleFile.getAbsolutePath()
+//						.toLowerCase()
+//						.replace('\\', '/');
+//				return (name.endsWith("/lib/io.vdmpp")
+//						|| name.endsWith("/lib/io.vdmrt")
+//						|| name.endsWith("/lib/io.vdmsl")
+//						|| name.endsWith("/lib/math.vdmpp")
+//						|| name.endsWith("/lib/math.vdmrt")
+//						|| name.endsWith("/lib/math.vdmsl")
+//						|| name.endsWith("/lib/vdmutil.vdmpp")
+//						|| name.endsWith("/lib/vdmutil.vdmrt") || name.endsWith("/lib/vdmutil.vdmsl"));
 
 			}
 

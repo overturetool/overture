@@ -85,15 +85,15 @@ public class VdmThread extends VdmDebugElement implements IThread,
 			fTarget.printErr(text);
 		}
 
-//		public void firePrintMessage(LogItem item)
-//		{
-//			fTarget.printMessage(item);
-//		}
-//
-//		public void firePrintErrorMessage(LogItem item)
-//		{
-//			fTarget.printErrorMessage(item);
-//		}
+		// public void firePrintMessage(LogItem item)
+		// {
+		// fTarget.printMessage(item);
+		// }
+		//
+		// public void firePrintErrorMessage(LogItem item)
+		// {
+		// fTarget.printErrorMessage(item);
+		// }
 		public void fireLogEvent(LogItem item)
 		{
 			fTarget.printLog(item);
@@ -106,9 +106,14 @@ public class VdmThread extends VdmDebugElement implements IThread,
 
 		public void fireStarted()
 		{
-			if (!state.inState(DebugState.Terminated)&& !state.inState(DebugState.Suspended))
+			if (!state.inState(DebugState.Terminated)
+					&& !state.inState(DebugState.Suspended)
+					&& (!fTarget.isSuspended() || !fTarget.isTerminated()))
 			{
-				doResume(thread);
+//				if (!fTarget.isSuspended())
+				{
+					doResume(thread);
+				}
 			}
 		}
 
@@ -178,10 +183,10 @@ public class VdmThread extends VdmDebugElement implements IThread,
 	private boolean updating = false;
 
 	public VdmThread(VdmDebugTarget target, int id, String name,
-			String sessionId, Socket socket,DebugState initialState)
+			String sessionId, Socket socket, DebugState initialState)
 	{
 		super(target);
-		this.state=new VdmDebugState(initialState);
+		this.state = new VdmDebugState(initialState);
 		this.id = id;
 		this.fName = name;
 		this.proxy = new DebugThreadProxy(socket, sessionId, id, new CallbackHandler(this));
@@ -306,7 +311,7 @@ public class VdmThread extends VdmDebugElement implements IThread,
 
 	public IStackFrame getTopStackFrame() throws DebugException
 	{
-		if (internalState== RunState.RUNNING && isSuspended())
+		if (internalState == RunState.RUNNING && isSuspended())
 		{
 			if (frames == null)
 			{
@@ -318,7 +323,7 @@ public class VdmThread extends VdmDebugElement implements IThread,
 			}
 		}
 
-			return null;
+		return null;
 	}
 
 	public String getName() throws DebugException
@@ -478,7 +483,7 @@ public class VdmThread extends VdmDebugElement implements IThread,
 
 	public void doStepOver(Object source) throws DebugException
 	{
-		System.out.println("StepOver: "+ state);
+		System.out.println("StepOver: " + state);
 		if (frames != null)
 		{
 			for (VdmStackFrame frame : frames)

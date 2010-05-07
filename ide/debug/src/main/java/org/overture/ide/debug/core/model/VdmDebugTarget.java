@@ -480,13 +480,13 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 	public void doSuspend(Object source) throws DebugException
 	{
 
-		for (VdmThread t : fThreads)
-		{
-			if (!t.equals(source))
-			{
-				t.doSuspend(source);
-			}
-		}
+//		for (VdmThread t : fThreads)
+//		{
+//			if (!t.equals(source))
+//			{
+//				t.doSuspend(source);
+//			}
+//		}
 		state.setState(DebugState.Suspended);
 		// fireChangeEvent(DebugEvent.STATE);
 
@@ -668,6 +668,18 @@ public class VdmDebugTarget extends VdmDebugElement implements IDebugTarget,
 		{
 			return false;
 		}
+	}
+	
+	public boolean hasSuspendedThread()
+	{
+		for (int i = 0; i < fThreads.size(); i++)
+		{
+			if(fThreads.get(i).isSuspended())
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
