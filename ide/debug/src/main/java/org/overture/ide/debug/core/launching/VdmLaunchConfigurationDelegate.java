@@ -142,10 +142,10 @@ public class VdmLaunchConfigurationDelegate implements
 			target = new VdmDebugTarget(launch);
 
 			
-			debugComm.registerDebugTarger(debugSessionId.toString(),target);
+			debugComm.registerDebugTarget(debugSessionId.toString(),target);
 
 			IProcess p = launchExternalProcess(launch, commandList, project);
-			IStreamsProxy sProxy = p.getStreamsProxy();
+//			IStreamsProxy sProxy = p.getStreamsProxy();
 			target.setProcess(p);
 			target.setProject(project);
 			target.setOutputFolder(getOutputFolder(project));
@@ -276,13 +276,13 @@ public class VdmLaunchConfigurationDelegate implements
 				
 				
 				
-				ConsoleWriter cw = new ConsoleWriter("Overture Debug");
-				new ProcessConsolePrinter("interpreter",
-						cw,
-						process.getInputStream()).start();
-				new ProcessConsolePrinter("interpreter error",
-						cw,
-						process.getErrorStream()).start();
+//				ConsoleWriter cw = new ConsoleWriter(IDebugConstants.CONSOLE_DEBUG_NAME);
+//				new ProcessConsolePrinter(false,
+//						cw,
+//						process.getInputStream()).start();
+//				new ProcessConsolePrinter(true,
+//						cw,
+//						process.getErrorStream()).start();
 			} else
 			{
 				process = Runtime.getRuntime().exec("help");
