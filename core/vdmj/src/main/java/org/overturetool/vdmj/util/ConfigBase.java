@@ -23,10 +23,9 @@
 
 package org.overturetool.vdmj.util;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.net.URL;
 import java.util.Properties;
 
 public class ConfigBase
@@ -35,23 +34,21 @@ public class ConfigBase
 
 	public static void init(String resource, Class<?> target) throws Exception
 	{
-		FileInputStream fis = null;
+		InputStream fis = null;
 		String propertyFile = resource;
 
 		try
 		{
     		try
 			{
-				URL rurl = ConfigBase.class.getResource("/" + resource);
-
-				if (rurl == null)
-				{
-					// properties file is not on the classpath
-					return;
-				}
-
-				propertyFile = rurl.getPath();
-				fis = new FileInputStream(propertyFile);
+    			fis = ConfigBase.class.getResourceAsStream("/" + resource);
+    			
+    			if (fis == null)
+    			{
+    				// properties file is not on the classpath
+    				return;
+    			}
+    			
 				props.load(fis);
 			}
     		catch (Exception ex)
