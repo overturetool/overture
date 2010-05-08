@@ -1,8 +1,8 @@
 /*******************************************************************************
  *
- *	Copyright (c) 2009 Fujitsu Services Ltd.
+ *	Copyright (c) 2010 Overture.
  *
- *	Author: Nick Battle
+ *	Author: Kenneth Lausdahl
  *
  *	This file is part of VDMJ.
  *
