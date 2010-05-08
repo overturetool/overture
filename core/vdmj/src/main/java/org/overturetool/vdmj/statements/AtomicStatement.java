@@ -127,7 +127,7 @@ public class AtomicStatement extends Statement
 		{
 			ObjectValue self = ctxt.getSelf();
 
-			if (self != null)
+			if (self != null && self.invlistener != null)
 			{
 				listener = self.invlistener;
 				listener.doInvariantChecks = false;
