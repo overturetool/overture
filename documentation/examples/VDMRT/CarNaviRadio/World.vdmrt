@@ -26,5 +26,4 @@ operations
       return { name |-> envTasks(name).getMinMaxAverage() 
              | name in set dom envTasks } );
 
-
 end World

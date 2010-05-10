@@ -15,7 +15,9 @@ operations
 	SetValues(eventId, val) == 
 	(
 							-- eventID, eventType, text, eventTime
-		World`env.handleEvent(eventId, <SHOW_PIG>, " " ^ [val], time);
+		World`env.handleEvent(eventId, <SHOW_PIG>, 
+                              " PigPosition " ^ VDMUtil`val2seq_of_char[PigPosition](val), 
+                              time);
 	);
 sync
 	mutex(SetValues);

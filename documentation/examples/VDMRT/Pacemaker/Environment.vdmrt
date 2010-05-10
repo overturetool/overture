@@ -111,7 +111,8 @@ The (re)actions from the pacemaker are delivered to the environment through the 
 
 public 
 handleEvent : Pulse * Chamber * Time ==> ()
-handleEvent(p,c,t) == outlines := outlines ^ [mk_(p,c,t)]; 
+handleEvent(p,c,t) == 
+  outlines := outlines ^ [mk_(p,c,t)]; 
 \end{vdm_al}
 
 ShowResult is an operation used to inspect that collection.

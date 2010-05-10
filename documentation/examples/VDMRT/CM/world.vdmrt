@@ -46,7 +46,7 @@ World () ==
 public Run: () ==> ()
 Run () == 
   (-- start the environment
-   start (env);
+   start (env); 
    -- wait for the environment to handle all input
    env.isFinished();
    -- wait for the missile detector to finish

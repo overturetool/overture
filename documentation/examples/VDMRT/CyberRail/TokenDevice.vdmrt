@@ -89,6 +89,7 @@ per onTheRoad => (transportPlan <> nil) and (len transportPlan.routeList > 0);
 per isFinished => (transportPlan = nil) or (len transportPlan.routeList = 0);
 
 mutex(requestTransportPlan);
+mutex(travel);
 
 end TokenDevice
 

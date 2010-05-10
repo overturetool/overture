@@ -21,7 +21,10 @@ operations
 	(
 		if (pigId not in set dom stables) then
 		(
-			World`env.handleEvent(eventid, <SHOW_PIG>, " Pig " ^ [pigId] ^" not in stable: " , time);
+			World`env.handleEvent(eventid, <SHOW_PIG>, 
+                                  " Pig " ^ VDMUtil`val2seq_of_char[nat](pigId) 
+                                  ^" not in stable: " , 
+                                  time);
 		)
 		else 
 		(
@@ -30,8 +33,7 @@ operations
 				stbCtrl.PointAtPig(eventid, pigId);
 			)
 		);
-	)
-	pre card rng stables > 0;
+	);
 
 	-- Add a Pig to 
 	async public AddPig: PigId * StableController ==> ()
@@ -61,7 +63,9 @@ operations
 			(
 				if (pigid in set dom stables) then
 				(
-					World`env.handleEvent(eventid, <NEED_MEDIC>, " " ^ [pigid], time);
+					World`env.handleEvent(eventid, <NEED_MEDIC>, 
+                                          " " ^ VDMUtil`val2seq_of_char[nat](pigid), 
+                                          time);
 					
 				);
 				medicTimes := tl medicTimes;			
@@ -80,7 +84,9 @@ sync
 	mutex(AddPig);
 	mutex(RemovePig);
 	mutex(RemovePig,AddPig);
-	--mutex(PointAtPig);
+    mutex(NeedMedic);
+
+	per PointAtPig => card rng stables > 0;
 	
 	per isFinished => not busy
 	

@@ -135,7 +135,8 @@ mk_( 16, <SHOW_PIG>, 4, nil, 2, 8000 )
 		IIOSSTYPES`DebugPrint("ShowResult");
 		for outline in outlines do
 		(
-			IIOSSTYPES`DebugPrint(" " ^ [outline]);
+			IIOSSTYPES`DebugPrint(" "); 
+            IO`print(outline);
 		);		
 		IIOSSTYPES`DebugPrint("---------------");
 	);
