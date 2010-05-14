@@ -2,7 +2,6 @@ package nl.marcelverhoef.treegen.typecheck;
 
 // project specific imports
 import java.util.*;
-import nl.marcelverhoef.treegen.ast.imp.*;
 import nl.marcelverhoef.treegen.ast.itf.*;
 
 public class TreeChecker {
@@ -22,7 +21,19 @@ public class TreeChecker {
 	// create a map to store all free type name variables per class definition
 	public HashMap<String,HashSet<String>> tns = new HashMap<String,HashSet<String>>();
 
-	public void performCheck(List<TreeGenAstClassDefinition> defs)
+	// create a set to store all reserved types
+	public HashSet<String> restps = new HashSet<String>();
+	
+	// constructor
+	public TreeChecker()
+	{
+		// initialize the reserved type table
+		restps.add("Node");
+		restps.add("Visitor");
+		restps.add("Document");
+	}
+	
+	public void performCheck(List<ITreeGenAstClassDefinition> defs)
 	{
 		// reset the number of errors
 		errors = 0;
@@ -126,18 +137,31 @@ public class TreeChecker {
 	
 	public void performCheckValueDefinition(ClassDefinition cd, ITreeGenAstValueDefinition tgavd)
 	{
-		// diagnostics message
-		if (debug) System.out.println("Checking value definition "+cd.class_name+"."+tgavd.getKey());
+		// obtain the name of the value definition
+		String vdnm = tgavd.getKey();
 		
-		if (cd.values.containsKey(tgavd.getKey())) {
+		// diagnostics message
+		if (debug) System.out.println("Checking value definition "+cd.class_name+"."+vdnm);
+		
+		// check for redefinition of the value
+		if (cd.values.containsKey(vdnm)) {
 			// flag error: value multiple defined
-			System.out.println("value definition '"+tgavd.getKey()+"' is multiple defined");
+			System.out.println("value definition '"+vdnm+"' is multiple defined");
 			
 			// increase error count
 			errors++;
 		} else {
-			// add the value definition to the class definition
-			cd.values.put(tgavd.getKey(), tgavd.getValue());
+			// treat the top-level entry differently
+			if (vdnm.compareTo("toplevel") == 0) {
+				// handle the (comma separated) top-level entry definitions
+				for (String tplvlnm : tgavd.getValue().split(",")) {
+					// add each individual top-level name
+					cd.tplvl.add(tplvlnm);
+				}
+			} else {
+				// add the value definition to the class definition
+				cd.values.put(vdnm, tgavd.getValue());
+			}
 		}
 	}
 	
@@ -205,37 +229,47 @@ public class TreeChecker {
 		// diagnostics message
 		if (debug) System.out.println("Checking shorthand definition "+cd.class_name+"."+shnm);
 		
-		// retrieve the type of the shorthand definition
-		Type theType = retrieveType(tgashd.getType());
-		
-		// check for consistent type conversion
-		if (theType == null) {
-			// flag error (type conversion failed)
-			System.out.println("Shorthand type '"+shnm+"' cannot be converted!");
+		// check for allowed type name
+		if (restps.contains(shnm)) {
+			// flag error: type name is reserved
+			System.out.println("Shorthand type '"+shnm+"' is a reserved type name!");
+			
 			// increase the error count
 			errors++;
 		} else {
-			// store the type in the class definition
-			if (cd.types.containsKey(tgashd.getShorthandName())) {
-				// flag error (multiple defined type)
-				System.out.println("Shorthand type '"+shnm+"' is multiple defined!");
+			// retrieve the type of the shorthand definition
+			Type theType = retrieveType(tgashd.getType());
+			
+			// check for consistent type conversion
+			if (theType == null) {
+				// flag error (type conversion failed)
+				System.out.println("Shorthand type '"+shnm+"' cannot be converted!");
 				
 				// increase the error count
 				errors++;
 			} else {
-				// store the short-hand (does NOT need to be a union type)
-				cd.types.put(shnm, theType);
-				
-				// check for a type name union (defining the subtype relationships)
-				if (theType.isUnionType()) {
-					// convert by casting
-					UnionType theUnionType = (UnionType) theType;
+				// store the type in the class definition
+				if (cd.types.containsKey(tgashd.getShorthandName())) {
+					// flag error (multiple defined type)
+					System.out.println("Shorthand type '"+shnm+"' is multiple defined!");
 					
-					// check for type name union
-					if (theUnionType.isTypeNameUnion()) {
-						for (String tnm: theUnionType.getTypeNames()) {
-							// insert each type name in the sub type look-up table
-							cd.subtypes.put(tnm, shnm);
+					// increase the error count
+					errors++;
+				} else {
+					// store the short-hand (does NOT need to be a union type)
+					cd.types.put(shnm, theType);
+					
+					// check for a type name union (defining the subtype relationships)
+					if (theType.isUnionType()) {
+						// convert by casting
+						UnionType theUnionType = (UnionType) theType;
+						
+						// check for type name union
+						if (theUnionType.isTypeNameUnion()) {
+							for (String tnm: theUnionType.getTypeNames()) {
+								// insert each type name in the sub type look-up table
+								cd.subtypes.put(tnm, shnm);
+							}
 						}
 					}
 				}
@@ -251,37 +285,46 @@ public class TreeChecker {
 		// obtain the record type name
 		String recnm = tgacd.getCompositeName();
 		
-		// consistency check
-		if (cd.types.containsKey(recnm)) {
-			// flag error: type multiple defined
-			System.out.println("Composite definition '"+recnm+"' is multiple defined");
+		// check for allowed type name
+		if (restps.contains(recnm)) {
+			// flag error: type name is reserved
+			System.out.println("Composite definition '"+recnm+"' is a reserved type name!");
 			
 			// increase the error count
 			errors++;
 		} else {
-			// create the record type
-			RecordType theRecord = new RecordType(recnm);
-			
-			// iterate over the fields of the record
-			for (ITreeGenAstCompositeField tgfld : tgacd.getFields()) {
-				// obtain the embedded field type
-				Type theType = retrieveType(tgfld.getType());
+			// consistency check
+			if (cd.types.containsKey(recnm)) {
+				// flag error: type multiple defined
+				System.out.println("Composite definition '"+recnm+"' is multiple defined");
 				
-				// consistency check
-				if (theType == null) {
-					// flag error: field type conversion failed
-					System.out.println("Field type conversion failed in '"+recnm+"."+tgfld.getFieldName()+"'");
+				// increase the error count
+				errors++;
+			} else {
+				// create the record type
+				RecordType theRecord = new RecordType(recnm);
+				
+				// iterate over the fields of the record
+				for (ITreeGenAstCompositeField tgfld : tgacd.getFields()) {
+					// obtain the embedded field type
+					Type theType = retrieveType(tgfld.getType());
 					
-					// increase error count
-					errors++;
-				} else {
-					// add the field to the record type definition
-					theRecord.fields.add(new Field(tgfld.getFieldName(), theType));
+					// consistency check
+					if (theType == null) {
+						// flag error: field type conversion failed
+						System.out.println("Field type conversion failed in '"+recnm+"."+tgfld.getFieldName()+"'");
+						
+						// increase error count
+						errors++;
+					} else {
+						// add the field to the record type definition
+						theRecord.fields.add(new Field(tgfld.getFieldName(), theType));
+					}
 				}
+				
+				// insert the record type in the look-up table
+				cd.types.put(recnm, theRecord);
 			}
-			
-			// insert the record type in the look-up table
-			cd.types.put(recnm, theRecord);
 		}
 	}
 	
@@ -308,6 +351,26 @@ public class TreeChecker {
 					if (cd.getTypeByName(fvnm) == null) {
 						// flag error: type is not defined
 						System.out.println("Type '"+clnm+"."+fvnm+"' is not defined anywhere");
+						
+						// increase the error count
+						errors++;
+					}
+				}
+				
+				// check for required top-level definitions
+				if (cd.getToplevel().isEmpty()) {
+					// flag error: top-level definition must not be empty
+					System.out.println("class "+clnm+" does not have a top-level definition");
+					
+					// increase the error count
+					errors++;
+				}
+				
+				// iterate over the list of top-level types
+				for (String tplvl: cd.getToplevel()) {
+					if (cd.getTypeByName(tplvl) == null) {
+						// flag error: top-level type is not defined
+						System.out.println("Top-level (value) type '"+tplvl+"' is not defined anywhere");
 						
 						// increase the error count
 						errors++;

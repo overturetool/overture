@@ -33,6 +33,9 @@ public class TreeGenAstQuotedType extends TreeGenAstTypeSpecification implements
 		m_quote = null;
 	}
 
+	// visitor support
+	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitQuotedType(this); }
+
 	// the identity function
 	public String identify() { return "TreeGenAstQuotedType"; }
 }

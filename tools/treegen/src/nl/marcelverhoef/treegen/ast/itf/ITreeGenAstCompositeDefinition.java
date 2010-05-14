@@ -2,8 +2,11 @@
 
 package nl.marcelverhoef.treegen.ast.itf;
 
+// import java collection types
+import java.util.*;
+
 public abstract interface ITreeGenAstCompositeDefinition extends ITreeGenAstDefinitions
 {
 	public abstract String getCompositeName();
-	public abstract java.util.List<? extends ITreeGenAstCompositeField> getFields();
+	public abstract List<ITreeGenAstCompositeField> getFields();
 }

@@ -8,7 +8,7 @@ import nl.marcelverhoef.treegen.ast.itf.*;
 public class TreeGenAstUnionType extends TreeGenAstTypeSpecification implements ITreeGenAstUnionType
 {
 	// private member variable (lhs)
-	private TreeGenAstTypeSpecification m_lhs = null;
+	private ITreeGenAstTypeSpecification m_lhs = null;
 
 	// public operation to retrieve the embedded private field value
 	public ITreeGenAstTypeSpecification getLhs()
@@ -17,7 +17,7 @@ public class TreeGenAstUnionType extends TreeGenAstTypeSpecification implements 
 	}
 
 	// public operation to set the embedded private field value
-	public void setLhs(TreeGenAstTypeSpecification p_lhs)
+	public void setLhs(ITreeGenAstTypeSpecification p_lhs)
 	{
 		// consistency check (field must be non null!)
 		assert(p_lhs != null);
@@ -27,7 +27,7 @@ public class TreeGenAstUnionType extends TreeGenAstTypeSpecification implements 
 	}
 
 	// private member variable (rhs)
-	private TreeGenAstTypeSpecification m_rhs = null;
+	private ITreeGenAstTypeSpecification m_rhs = null;
 
 	// public operation to retrieve the embedded private field value
 	public ITreeGenAstTypeSpecification getRhs()
@@ -36,7 +36,7 @@ public class TreeGenAstUnionType extends TreeGenAstTypeSpecification implements 
 	}
 
 	// public operation to set the embedded private field value
-	public void setRhs(TreeGenAstTypeSpecification p_rhs)
+	public void setRhs(ITreeGenAstTypeSpecification p_rhs)
 	{
 		// consistency check (field must be non null!)
 		assert(p_rhs != null);
@@ -52,6 +52,9 @@ public class TreeGenAstUnionType extends TreeGenAstTypeSpecification implements 
 		m_lhs = null;
 		m_rhs = null;
 	}
+
+	// visitor support
+	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitUnionType(this); }
 
 	// the identity function
 	public String identify() { return "TreeGenAstUnionType"; }

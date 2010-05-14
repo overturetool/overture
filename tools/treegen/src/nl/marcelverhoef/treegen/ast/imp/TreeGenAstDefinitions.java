@@ -13,6 +13,9 @@ public class TreeGenAstDefinitions extends TreeGenAstNode implements ITreeGenAst
 		super();
 	}
 
+	// visitor support
+	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitDefinitions(this); }
+
 	// the identity function
 	public String identify() { return "TreeGenAstDefinitions"; }
 }

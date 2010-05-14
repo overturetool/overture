@@ -8,7 +8,7 @@ import nl.marcelverhoef.treegen.ast.itf.*;
 public class TreeGenAstSeqType extends TreeGenAstTypeSpecification implements ITreeGenAstSeqType
 {
 	// private member variable (type)
-	private TreeGenAstTypeSpecification m_type = null;
+	private ITreeGenAstTypeSpecification m_type = null;
 
 	// public operation to retrieve the embedded private field value
 	public ITreeGenAstTypeSpecification getType()
@@ -17,7 +17,7 @@ public class TreeGenAstSeqType extends TreeGenAstTypeSpecification implements IT
 	}
 
 	// public operation to set the embedded private field value
-	public void setType(TreeGenAstTypeSpecification p_type)
+	public void setType(ITreeGenAstTypeSpecification p_type)
 	{
 		// consistency check (field must be non null!)
 		assert(p_type != null);
@@ -32,6 +32,9 @@ public class TreeGenAstSeqType extends TreeGenAstTypeSpecification implements IT
 		super();
 		m_type = null;
 	}
+
+	// visitor support
+	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitSeqType(this); }
 
 	// the identity function
 	public String identify() { return "TreeGenAstSeqType"; }

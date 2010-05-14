@@ -13,6 +13,9 @@ public class TreeGenAstTypeSpecification extends TreeGenAstNode implements ITree
 		super();
 	}
 
+	// visitor support
+	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitTypeSpecification(this); }
+
 	// the identity function
 	public String identify() { return "TreeGenAstTypeSpecification"; }
 }

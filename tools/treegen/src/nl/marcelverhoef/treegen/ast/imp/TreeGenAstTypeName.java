@@ -33,6 +33,9 @@ public class TreeGenAstTypeName extends TreeGenAstTypeSpecification implements I
 		m_name = null;
 	}
 
+	// visitor support
+	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitTypeName(this); }
+
 	// the identity function
 	public String identify() { return "TreeGenAstTypeName"; }
 }

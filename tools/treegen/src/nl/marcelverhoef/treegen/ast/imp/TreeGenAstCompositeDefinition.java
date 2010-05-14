@@ -5,6 +5,9 @@ package nl.marcelverhoef.treegen.ast.imp;
 // import the abstract tree interfaces
 import nl.marcelverhoef.treegen.ast.itf.*;
 
+// import java collection types
+import java.util.*;
+
 public class TreeGenAstCompositeDefinition extends TreeGenAstDefinitions implements ITreeGenAstCompositeDefinition
 {
 	// private member variable (composite_name)
@@ -27,16 +30,16 @@ public class TreeGenAstCompositeDefinition extends TreeGenAstDefinitions impleme
 	}
 
 	// private member variable (fields)
-	private java.util.Vector<? extends TreeGenAstCompositeField> m_fields = new java.util.Vector<TreeGenAstCompositeField>();
+	private List<ITreeGenAstCompositeField> m_fields = new Vector<ITreeGenAstCompositeField>();
 
 	// public operation to retrieve the embedded private field value
-	public java.util.List<? extends ITreeGenAstCompositeField> getFields()
+	public List<ITreeGenAstCompositeField> getFields()
 	{
 		return m_fields;
 	}
 
 	// public operation to set the embedded private field value
-	public void setFields(java.util.Vector<? extends TreeGenAstCompositeField> p_fields)
+	public void setFields(List<ITreeGenAstCompositeField> p_fields)
 	{
 		// consistency check (field must be non null!)
 		assert(p_fields != null);
@@ -52,6 +55,9 @@ public class TreeGenAstCompositeDefinition extends TreeGenAstDefinitions impleme
 		m_composite_name = null;
 		m_fields = null;
 	}
+
+	// visitor support
+	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitCompositeDefinition(this); }
 
 	// the identity function
 	public String identify() { return "TreeGenAstCompositeDefinition"; }

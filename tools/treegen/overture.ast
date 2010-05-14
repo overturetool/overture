@@ -6,7 +6,8 @@ class Oml
 
 values
   package = "org.overturetool.ast";
-  directory = "d:\workspace\test"
+  directory = "d:\workspace\test";
+  toplevel = "Specifications,Expression"
 
 instance variables
   remark : java := "String"

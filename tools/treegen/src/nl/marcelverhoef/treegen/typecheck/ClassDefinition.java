@@ -24,6 +24,9 @@ public class ClassDefinition {
 	
 	// the subtypes defined within a class
 	public HashMap<String,String> subtypes = new HashMap<String,String>();
+	
+	// the top-level entries to the tree
+	public HashSet<String> tplvl = new HashSet<String>();
 
 	// retrieve the type by name
 	public Type getTypeByName (String ptn)
@@ -39,6 +42,22 @@ public class ClassDefinition {
 			// flag error: type cannot be found
 			return null;
 		}
+	}
+	
+	// retrieve the root type by name
+	public Type getRootTypeByName (String ptn)
+	{
+		// declare and find the type 
+		Type theType = getTypeByName(ptn);
+	
+		// check for the type existance
+		if (theType != null) {
+			// recurse to root if the type is defined
+			while (theType.super_type != null) theType = theType.super_type;
+		}
+		
+		// return the root type (if it exists)
+		return theType;
 	}
 
 	// retrieve all variables recursively
@@ -105,6 +124,7 @@ public class ClassDefinition {
 		return class_name.toLowerCase();
 	}
 	
+	// retrieve the top-level directory
 	public String getDirectory()
 	{
 		// check if the directory name is defined
@@ -113,4 +133,44 @@ public class ClassDefinition {
 		// default: return the current directory indicator
 		return ".";
 	}
+	
+	// check whether or not the class uses collection types
+	public boolean hasCollection (String tpnm) {
+		// check the base node variables
+		for (String mvnm: variables.keySet()) {
+			MemberVariable mv = variables.get(mvnm);
+				if (mv.type.isCollection()) return true;
+		}
+		
+		// retrieve the type
+		Type tp = this.getTypeByName(tpnm);
+		if (tp != null) {
+			if (tp.isRecordType()) {
+				// cast to a record type
+				RecordType rtp = (RecordType) tp;
+				
+				// check each field
+				for (Field fld : rtp.getAllFields()) {
+					if (fld.field_type.isCollection()) return true;
+				}
+			}
+		}
+		
+		// default
+		return false;
+	}
+	
+	// retrieve the top-level tree entry points
+	public Set<String> getToplevel()
+	{
+		// make a copy of the top-level entries
+		HashSet<String> retval = new HashSet<String>(tplvl);
+		
+		// merge all top-level entities from the derived types
+		if (super_class != null) retval.addAll(super_class.getToplevel());
+		
+		// return the result set
+		return retval;
+	}
+
 }

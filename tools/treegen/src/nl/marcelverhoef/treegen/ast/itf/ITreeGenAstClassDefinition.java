@@ -2,9 +2,12 @@
 
 package nl.marcelverhoef.treegen.ast.itf;
 
+// import java collection types
+import java.util.*;
+
 public abstract interface ITreeGenAstClassDefinition extends ITreeGenAstNode
 {
 	public abstract String getClassName();
 	public abstract String getSuperClass();
-	public abstract java.util.List<? extends ITreeGenAstDefinitions> getDefs();
+	public abstract List<ITreeGenAstDefinitions> getDefs();
 }

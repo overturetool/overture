@@ -1,7 +1,7 @@
 package nl.marcelverhoef.treegen;
 
 // project specific imports
-import nl.marcelverhoef.treegen.ast.imp.*;
+import nl.marcelverhoef.treegen.ast.itf.*;
 import nl.marcelverhoef.treegen.typecheck.*;
 import nl.marcelverhoef.treegen.codegenerator.*;
 
@@ -17,7 +17,7 @@ public class TreeGen {
 			int errors = 0;
 			
 			// define the overall list of classes
-			java.util.List<TreeGenAstClassDefinition> defs = new java.util.Vector<TreeGenAstClassDefinition>();
+			java.util.List<ITreeGenAstClassDefinition> defs = new java.util.Vector<ITreeGenAstClassDefinition>();
 			
 			// check each command-line argument
 			for (String arg: args) {

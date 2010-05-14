@@ -9,9 +9,4 @@ instance variables
   xpos : nat;
   ypos : nat
   
-types
-  Document ::
-    expr : [Expression]
-    spec : [Specifications]
-    
 end ExtOml

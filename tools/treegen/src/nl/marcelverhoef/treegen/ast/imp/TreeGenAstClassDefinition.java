@@ -5,6 +5,9 @@ package nl.marcelverhoef.treegen.ast.imp;
 // import the abstract tree interfaces
 import nl.marcelverhoef.treegen.ast.itf.*;
 
+// import java collection types
+import java.util.*;
+
 public class TreeGenAstClassDefinition extends TreeGenAstNode implements ITreeGenAstClassDefinition
 {
 	// private member variable (class_name)
@@ -46,16 +49,16 @@ public class TreeGenAstClassDefinition extends TreeGenAstNode implements ITreeGe
 	}
 
 	// private member variable (defs)
-	private java.util.Vector<? extends TreeGenAstDefinitions> m_defs = new java.util.Vector<TreeGenAstDefinitions>();
+	private List<ITreeGenAstDefinitions> m_defs = new Vector<ITreeGenAstDefinitions>();
 
 	// public operation to retrieve the embedded private field value
-	public java.util.List<? extends ITreeGenAstDefinitions> getDefs()
+	public List<ITreeGenAstDefinitions> getDefs()
 	{
 		return m_defs;
 	}
 
 	// public operation to set the embedded private field value
-	public void setDefs(java.util.Vector<? extends TreeGenAstDefinitions> p_defs)
+	public void setDefs(List<ITreeGenAstDefinitions> p_defs)
 	{
 		// consistency check (field must be non null!)
 		assert(p_defs != null);
@@ -72,6 +75,9 @@ public class TreeGenAstClassDefinition extends TreeGenAstNode implements ITreeGe
 		m_super_class = null;
 		m_defs = null;
 	}
+
+	// visitor support
+	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitClassDefinition(this); }
 
 	// the identity function
 	public String identify() { return "TreeGenAstClassDefinition"; }

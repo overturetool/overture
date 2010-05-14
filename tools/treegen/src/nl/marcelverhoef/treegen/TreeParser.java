@@ -18,8 +18,10 @@ package nl.marcelverhoef.treegen;
 
 
 //#line 9 "TreeGen.y"
+import nl.marcelverhoef.treegen.ast.itf.*;
 import nl.marcelverhoef.treegen.ast.imp.*;
-//#line 19 "TreeParser.java"
+import java.util.*;
+//#line 21 "TreeParser.java"
 
 
 
@@ -330,7 +332,7 @@ final static String yyrule[] = {
 "Type : MAP Type TO Type",
 };
 
-//#line 472 "TreeGen.y"
+//#line 474 "TreeGen.y"
 
 //
 // PARSER CLASS CONSTRUCTORS AND OPERATIONS
@@ -343,15 +345,16 @@ private TreeScanner theScanner;
 private String theFileName;
 
 // keep a list of reserved value names
-private static java.util.HashSet<String> values;
+private static HashSet<String> values;
 
 // keep track of the current class definition
-private java.util.Vector<TreeGenAstClassDefinition> tgacdl;
+private List <ITreeGenAstClassDefinition> tgacdl;
 
 static {
-	values = new java.util.HashSet<String>();
+	values = new HashSet<String>();
 	values.add("package");
 	values.add("directory");
+	values.add("toplevel");
 }
 
 // keep track of the number of parse errors
@@ -389,10 +392,10 @@ public TreeParser (String fname, boolean debug)
 	theFileName = fname;
 }
 
-public java.util.List<TreeGenAstClassDefinition> parse ()
+public List<ITreeGenAstClassDefinition> parse ()
 {
 	// initialize the top-level class definition
-	tgacdl = new java.util.Vector<TreeGenAstClassDefinition>();
+	tgacdl = new Vector<ITreeGenAstClassDefinition>();
 	
 	// call the embedded parse routine
 	try {
@@ -433,7 +436,7 @@ private void yyerror (String errmsg)
 	// increase the error counter
 	errors++;
 }
-//#line 389 "TreeParser.java"
+//#line 392 "TreeParser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -589,18 +592,18 @@ boolean doaction;
       {
 //########## USER-SUPPLIED ACTIONS ##########
 case 1:
-//#line 36 "TreeGen.y"
+//#line 38 "TreeGen.y"
 {
 	  	yyerror ("no class definition found");
 	  }
 break;
 case 2:
-//#line 41 "TreeGen.y"
+//#line 43 "TreeGen.y"
 {
 	  }
 break;
 case 3:
-//#line 47 "TreeGen.y"
+//#line 49 "TreeGen.y"
 {
 	  	/* add parsed class definition to the list*/
 	  	TreeGenAstClassDefinition tgacd = (TreeGenAstClassDefinition) val_peek(0).obj;
@@ -608,7 +611,7 @@ case 3:
 	  }
 break;
 case 4:
-//#line 54 "TreeGen.y"
+//#line 56 "TreeGen.y"
 {
 	  	/* add parsed class definition to the list*/
 	  	TreeGenAstClassDefinition tgacd = (TreeGenAstClassDefinition) val_peek(0).obj;
@@ -616,7 +619,7 @@ case 4:
 	  }
 break;
 case 5:
-//#line 67 "TreeGen.y"
+//#line 69 "TreeGen.y"
 {
 	  	/* check whether class names are identical*/
 	  	if (val_peek(2).sval.compareTo(val_peek(0).sval) != 0) {
@@ -627,12 +630,12 @@ case 5:
 	  	TreeGenAstClassDefinition tgacd = new TreeGenAstClassDefinition();
 	  	tgacd.setClassName(val_peek(2).sval);
 	  	tgacd.setSuperClass(new String());
-	  	tgacd.setDefs(new java.util.Vector<TreeGenAstDefinitions>());
+	  	tgacd.setDefs(new Vector<ITreeGenAstDefinitions>());
 	  	yyval.obj = tgacd;
 	  }
 break;
 case 6:
-//#line 82 "TreeGen.y"
+//#line 84 "TreeGen.y"
 {
 	  	/* check whether class names are identical*/
 	  	if (val_peek(3).sval.compareTo(val_peek(0).sval) != 0) {
@@ -641,7 +644,7 @@ case 6:
 	  	
 	  	/* create the class definition*/
 	  	TreeGenAstClassDefinition tgacd = new TreeGenAstClassDefinition();
-	  	java.util.Vector<TreeGenAstDefinitions> tgadl = (java.util.Vector<TreeGenAstDefinitions>) val_peek(2).obj;
+	  	List<ITreeGenAstDefinitions> tgadl = (Vector<ITreeGenAstDefinitions>) val_peek(2).obj;
 	  	tgacd.setClassName(val_peek(3).sval);
 	  	tgacd.setSuperClass(new String());
 	  	tgacd.setDefs(tgadl);
@@ -649,7 +652,7 @@ case 6:
 	  }
 break;
 case 7:
-//#line 98 "TreeGen.y"
+//#line 100 "TreeGen.y"
 {
 	  	/* check whether class names are identical*/
 	  	if (val_peek(6).sval.compareTo(val_peek(0).sval) != 0) {
@@ -660,12 +663,12 @@ case 7:
 	  	TreeGenAstClassDefinition tgacd = new TreeGenAstClassDefinition();
 	  	tgacd.setClassName(val_peek(6).sval);
 	  	tgacd.setSuperClass(val_peek(2).sval);
-	  	tgacd.setDefs(new java.util.Vector<TreeGenAstDefinitions>());
+	  	tgacd.setDefs(new Vector<ITreeGenAstDefinitions>());
 	  	yyval.obj = tgacd;
 	  }
 break;
 case 8:
-//#line 113 "TreeGen.y"
+//#line 115 "TreeGen.y"
 {
 	  	/* check whether class names are identical*/
 	  	if (val_peek(7).sval.compareTo(val_peek(0).sval) != 0) {
@@ -674,7 +677,7 @@ case 8:
 	  	
 	  	/* create the class definition*/
 	  	TreeGenAstClassDefinition tgacd = new TreeGenAstClassDefinition();
-	  	java.util.Vector<TreeGenAstDefinitions> tgadl = (java.util.Vector<TreeGenAstDefinitions>) val_peek(2).obj;
+	  	List <ITreeGenAstDefinitions> tgadl = (Vector<ITreeGenAstDefinitions>) val_peek(2).obj;
 	  	tgacd.setClassName(val_peek(7).sval);
 	  	tgacd.setSuperClass(val_peek(3).sval);
 	  	tgacd.setDefs(tgadl);
@@ -682,89 +685,89 @@ case 8:
 	  }
 break;
 case 9:
-//#line 131 "TreeGen.y"
+//#line 133 "TreeGen.y"
 {
 	  	/* pass an empty list upwards*/
-	  	yyval.obj = new java.util.Vector<TreeGenAstDefinitions>();
+	  	yyval.obj = new Vector<ITreeGenAstDefinitions>();
 	  }
 break;
 case 10:
-//#line 137 "TreeGen.y"
+//#line 139 "TreeGen.y"
 {
 	  	yyval.obj = val_peek(0).obj;
 	  }
 break;
 case 11:
-//#line 142 "TreeGen.y"
+//#line 144 "TreeGen.y"
 {
 	  	/* concatenate the lists*/
-	  	java.util.Vector<TreeGenAstDefinitions> lhs = (java.util.Vector<TreeGenAstDefinitions>) val_peek(1).obj;
-	  	java.util.Vector<TreeGenAstDefinitions> rhs = (java.util.Vector<TreeGenAstDefinitions>) val_peek(0).obj;
+	  	List<ITreeGenAstDefinitions> lhs = (Vector<ITreeGenAstDefinitions>) val_peek(1).obj;
+	  	List<ITreeGenAstDefinitions> rhs = (Vector<ITreeGenAstDefinitions>) val_peek(0).obj;
 	  	lhs.addAll(rhs);	  	
 	  	yyval.obj = lhs;
 	  }
 break;
 case 12:
-//#line 153 "TreeGen.y"
+//#line 155 "TreeGen.y"
 {
 	  	yyval.obj = val_peek(0).obj;
 	  }
 break;
 case 13:
-//#line 158 "TreeGen.y"
+//#line 160 "TreeGen.y"
 {
 	  	yyval.obj = val_peek(0).obj;
 	  }
 break;
 case 14:
-//#line 163 "TreeGen.y"
+//#line 165 "TreeGen.y"
 {
 	  	yyval.obj = val_peek(0).obj;
 	  }
 break;
 case 15:
-//#line 174 "TreeGen.y"
+//#line 176 "TreeGen.y"
 {
 	  	/* pass an empty list upwards*/
-	  	yyval.obj = new java.util.Vector<TreeGenAstDefinitions>();
+	  	yyval.obj = new Vector<ITreeGenAstDefinitions>();
 	  }
 break;
 case 16:
-//#line 180 "TreeGen.y"
+//#line 182 "TreeGen.y"
 {
 	  	/* pass the value definition list upwards*/
 	  	yyval.obj = val_peek(0).obj;
 	  }
 break;
 case 17:
-//#line 188 "TreeGen.y"
+//#line 190 "TreeGen.y"
 {
 	  	/* pass an empty list upwards*/
-	  	yyval.obj = new java.util.Vector<TreeGenAstDefinitions>();
+	  	yyval.obj = new Vector<ITreeGenAstDefinitions>();
 	  }
 break;
 case 18:
-//#line 194 "TreeGen.y"
+//#line 196 "TreeGen.y"
 {
 	  	/* create a new list and add the value definition to the list*/
-	  	java.util.Vector<TreeGenAstDefinitions> res = new java.util.Vector<TreeGenAstDefinitions>();
+	  	List <ITreeGenAstDefinitions> res = new Vector<ITreeGenAstDefinitions>();
 	  	TreeGenAstValueDefinition tgavd = (TreeGenAstValueDefinition) val_peek(0).obj;
 	  	res.add(tgavd);
 	  	yyval.obj = res;
 	  }
 break;
 case 19:
-//#line 203 "TreeGen.y"
+//#line 205 "TreeGen.y"
 {
 	  	/* retrieve the partial list and add the value definition to the list*/
-	  	java.util.Vector<TreeGenAstDefinitions> res = (java.util.Vector<TreeGenAstDefinitions>) val_peek(2).obj;
+	  	List <ITreeGenAstDefinitions> res = (Vector<ITreeGenAstDefinitions>) val_peek(2).obj;
 	  	TreeGenAstValueDefinition tgavd = (TreeGenAstValueDefinition) val_peek(0).obj;
 	  	res.add(tgavd);
 	  	yyval.obj = res;
 	  }
 break;
 case 20:
-//#line 214 "TreeGen.y"
+//#line 216 "TreeGen.y"
 {
 	  	/* check whether the value definition is allowed*/
 	  	if (!values.contains(val_peek(2).sval)) {
@@ -780,43 +783,43 @@ case 20:
 	  }
 break;
 case 21:
-//#line 235 "TreeGen.y"
+//#line 237 "TreeGen.y"
 {
-	  	yyval.obj = new java.util.Vector<TreeGenAstDefinitions>();
+	  	yyval.obj = new Vector<ITreeGenAstDefinitions>();
 	  }
 break;
 case 22:
-//#line 240 "TreeGen.y"
+//#line 242 "TreeGen.y"
 {
 	  	yyval.obj = val_peek(0).obj;
 	  }
 break;
 case 23:
-//#line 247 "TreeGen.y"
+//#line 249 "TreeGen.y"
 {
-	  	yyval.obj = new java.util.Vector<TreeGenAstDefinitions>();
+	  	yyval.obj = new Vector<ITreeGenAstDefinitions>();
 	  }
 break;
 case 24:
-//#line 252 "TreeGen.y"
+//#line 254 "TreeGen.y"
 {
-	  	java.util.Vector<TreeGenAstDefinitions> res = new java.util.Vector<TreeGenAstDefinitions>();
+	  	List <ITreeGenAstDefinitions> res = new Vector<ITreeGenAstDefinitions>();
 	  	TreeGenAstVariableDefinition tgavd = (TreeGenAstVariableDefinition) val_peek(0).obj;
 	  	res.add(tgavd);
 	  	yyval.obj = res;
 	  }
 break;
 case 25:
-//#line 260 "TreeGen.y"
+//#line 262 "TreeGen.y"
 {
-	  	java.util.Vector<TreeGenAstDefinitions> res = (java.util.Vector<TreeGenAstDefinitions>) val_peek(2).obj;
+	  	List <ITreeGenAstDefinitions> res = (Vector<ITreeGenAstDefinitions>) val_peek(2).obj;
 	  	TreeGenAstVariableDefinition tgavd = (TreeGenAstVariableDefinition) val_peek(0).obj;
 	  	res.add(tgavd);
 	  	yyval.obj = res;
 	  }
 break;
 case 26:
-//#line 270 "TreeGen.y"
+//#line 272 "TreeGen.y"
 {
 	  	TreeGenAstVariableDefinition tgavd = new TreeGenAstVariableDefinition();
 	  	TreeGenAstTypeSpecification tgatp = (TreeGenAstTypeSpecification) val_peek(0).obj;
@@ -827,7 +830,7 @@ case 26:
 	  }
 break;
 case 27:
-//#line 281 "TreeGen.y"
+//#line 283 "TreeGen.y"
 {
 	  	TreeGenAstVariableDefinition tgavd = new TreeGenAstVariableDefinition();
 	  	TreeGenAstTypeSpecification tgatp = (TreeGenAstTypeSpecification) val_peek(2).obj;
@@ -838,43 +841,43 @@ case 27:
 	  }
 break;
 case 28:
-//#line 297 "TreeGen.y"
+//#line 299 "TreeGen.y"
 {
-	  	yyval.obj = new java.util.Vector<TreeGenAstDefinitions>(); 
+	  	yyval.obj = new Vector<ITreeGenAstDefinitions>(); 
 	  }
 break;
 case 29:
-//#line 302 "TreeGen.y"
+//#line 304 "TreeGen.y"
 {
 	  	yyval.obj = val_peek(0).obj;
 	  }
 break;
 case 30:
-//#line 309 "TreeGen.y"
+//#line 311 "TreeGen.y"
 {
-	  	yyval.obj = new java.util.Vector<TreeGenAstDefinitions>(); 
+	  	yyval.obj = new Vector<ITreeGenAstDefinitions>(); 
 	  }
 break;
 case 31:
-//#line 314 "TreeGen.y"
+//#line 316 "TreeGen.y"
 {
-	  	java.util.Vector<TreeGenAstDefinitions> res = new java.util.Vector<TreeGenAstDefinitions>();
+	  	List <ITreeGenAstDefinitions> res = new Vector<ITreeGenAstDefinitions>();
 	  	TreeGenAstDefinitions tpd = (TreeGenAstDefinitions) val_peek(0).obj;
 	  	res.add(tpd);
 	  	yyval.obj = res; 
 	  }
 break;
 case 32:
-//#line 322 "TreeGen.y"
+//#line 324 "TreeGen.y"
 {
-	  	java.util.Vector<TreeGenAstDefinitions> res = (java.util.Vector<TreeGenAstDefinitions>) val_peek(2).obj;
+	  	List <ITreeGenAstDefinitions> res = (Vector<ITreeGenAstDefinitions>) val_peek(2).obj;
 	  	TreeGenAstDefinitions tpd = (TreeGenAstDefinitions) val_peek(0).obj;
 	  	res.add(tpd);
 	  	yyval.obj = res; 
 	  }
 break;
 case 33:
-//#line 337 "TreeGen.y"
+//#line 339 "TreeGen.y"
 {
 	  	TreeGenAstShorthandDefinition tgash = new TreeGenAstShorthandDefinition();
 	  	TreeGenAstTypeSpecification tps = (TreeGenAstTypeSpecification) val_peek(0).obj;
@@ -884,45 +887,45 @@ case 33:
 	  }
 break;
 case 34:
-//#line 350 "TreeGen.y"
+//#line 352 "TreeGen.y"
 {
 	  	TreeGenAstCompositeDefinition tgac = new TreeGenAstCompositeDefinition();
-	  	java.util.Vector<TreeGenAstCompositeField> cfv = new java.util.Vector<TreeGenAstCompositeField>();
+	  	List <ITreeGenAstCompositeField> cfv = new Vector<ITreeGenAstCompositeField>();
 	  	tgac.setCompositeName(val_peek(1).sval);
 	  	tgac.setFields(cfv);
 		yyval.obj = tgac;	  	
       }
 break;
 case 35:
-//#line 363 "TreeGen.y"
+//#line 365 "TreeGen.y"
 {
 	  	TreeGenAstCompositeDefinition tgac = new TreeGenAstCompositeDefinition();
-	  	java.util.Vector<TreeGenAstCompositeField> cfv = (java.util.Vector<TreeGenAstCompositeField>) val_peek(0).obj;
+	  	List <ITreeGenAstCompositeField> cfv = (Vector<ITreeGenAstCompositeField>) val_peek(0).obj;
 	  	tgac.setCompositeName(val_peek(2).sval);
 	  	tgac.setFields(cfv);
 		yyval.obj = tgac;	  	
 	  }
 break;
 case 36:
-//#line 374 "TreeGen.y"
+//#line 376 "TreeGen.y"
 {
 	  	TreeGenAstCompositeField tgacf = (TreeGenAstCompositeField) val_peek(0).obj;
-	  	java.util.Vector<TreeGenAstCompositeField> res = new java.util.Vector<TreeGenAstCompositeField>();
+	  	List <ITreeGenAstCompositeField> res = new Vector<ITreeGenAstCompositeField>();
 	  	res.add(tgacf);
 	  	yyval.obj = res;
 	  }
 break;
 case 37:
-//#line 382 "TreeGen.y"
+//#line 384 "TreeGen.y"
 {
 	  	TreeGenAstCompositeField tgacf = (TreeGenAstCompositeField) val_peek(0).obj;
-	  	java.util.Vector<TreeGenAstCompositeField> res = (java.util.Vector<TreeGenAstCompositeField>) val_peek(1).obj;
+	  	List <ITreeGenAstCompositeField> res = (Vector<ITreeGenAstCompositeField>) val_peek(1).obj;
 	  	res.add(tgacf);
 	  	yyval.obj = res;
 	  }
 break;
 case 38:
-//#line 392 "TreeGen.y"
+//#line 394 "TreeGen.y"
 {
 	  	TreeGenAstCompositeField tgacf = new TreeGenAstCompositeField();
 	  	TreeGenAstTypeSpecification et = (TreeGenAstTypeSpecification) val_peek(0).obj;
@@ -932,7 +935,7 @@ case 38:
 	  }
 break;
 case 39:
-//#line 403 "TreeGen.y"
+//#line 405 "TreeGen.y"
 { 
 	    TreeGenAstTypeName tgatn = new TreeGenAstTypeName();
 	  	tgatn.setName(val_peek(0).sval);
@@ -940,7 +943,7 @@ case 39:
 	  }
 break;
 case 40:
-//#line 410 "TreeGen.y"
+//#line 412 "TreeGen.y"
 {
 	  	TreeGenAstQuotedType tgaqt = new TreeGenAstQuotedType();
 	  	tgaqt.setQuote(val_peek(0).sval);
@@ -948,7 +951,7 @@ case 40:
 	  }
 break;
 case 41:
-//#line 417 "TreeGen.y"
+//#line 419 "TreeGen.y"
 {
 	  	TreeGenAstUnionType tgaut = new TreeGenAstUnionType();
 	  	TreeGenAstTypeSpecification lhs = (TreeGenAstTypeSpecification) val_peek(2).obj; 
@@ -959,7 +962,7 @@ case 41:
 	  }
 break;
 case 42:
-//#line 427 "TreeGen.y"
+//#line 429 "TreeGen.y"
 {
 	  	TreeGenAstOptionalType tgaot = new TreeGenAstOptionalType();
 	  	TreeGenAstTypeSpecification et = (TreeGenAstTypeSpecification) val_peek(1).obj;
@@ -968,13 +971,13 @@ case 42:
 	  }
 break;
 case 43:
-//#line 435 "TreeGen.y"
+//#line 437 "TreeGen.y"
 {
 	  	yyval.obj = val_peek(2).obj;
 	  }
 break;
 case 44:
-//#line 440 "TreeGen.y"
+//#line 442 "TreeGen.y"
 {
 	  	TreeGenAstSeqType tgast = new TreeGenAstSeqType();
 	  	TreeGenAstTypeSpecification et = (TreeGenAstTypeSpecification) val_peek(0).obj;
@@ -983,7 +986,7 @@ case 44:
 	  }
 break;
 case 45:
-//#line 448 "TreeGen.y"
+//#line 450 "TreeGen.y"
 {
 	  	TreeGenAstSetType tgast = new TreeGenAstSetType();
 	  	TreeGenAstTypeSpecification et = (TreeGenAstTypeSpecification) val_peek(0).obj;
@@ -992,7 +995,7 @@ case 45:
 	  }
 break;
 case 46:
-//#line 456 "TreeGen.y"
+//#line 458 "TreeGen.y"
 {
 	  	TreeGenAstMapType tgamt = new TreeGenAstMapType();
 	  	TreeGenAstTypeSpecification etd = (TreeGenAstTypeSpecification) val_peek(2).obj;
@@ -1002,7 +1005,7 @@ case 46:
 	  	yyval.obj = tgamt;
 	  }
 break;
-//#line 952 "TreeParser.java"
+//#line 955 "TreeParser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

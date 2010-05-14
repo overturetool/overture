@@ -6,7 +6,8 @@ class TreeGenAst
 
 values
 	package   = "nl.marcelverhoef.treegen.ast";
-	directory = "."
+	directory = ".";
+	toplevel = "ClassDefinition"
 	
 instance variables
 	line   : nat;

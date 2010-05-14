@@ -53,6 +53,9 @@ public class TreeGenAstValueDefinition extends TreeGenAstDefinitions implements 
 		m_value = null;
 	}
 
+	// visitor support
+	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitValueDefinition(this); }
+
 	// the identity function
 	public String identify() { return "TreeGenAstValueDefinition"; }
 }

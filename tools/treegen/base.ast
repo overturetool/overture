@@ -2,12 +2,15 @@ class Base
 
 values
   package = "nl.marcelverhoef.base";
-  directory = "d:\workspace\test"
+  directory = "d:\workspace\test";
+  toplevel = "Expression"
 
 instance variables
   pos : java := "nl.marcelverhoef.position.Position"
   
 types
+
+SeqOfChar = seq of char;
 
 Expression =
 	UnaryExpression |
@@ -27,7 +30,7 @@ BinaryExpression ::
 SequenceExpression ::
 	seq_expr : seq of Expression
 	set_expr : set of Expression
-	map1_expr : map nat to seq of char
+	map1_expr : map nat to SeqOfChar
 	map2_expr : map UnaryExpression to Expression
 	seq2_expr : seq of real
 	set2_expr : set of nat;
@@ -44,5 +47,6 @@ BinaryOperator =
 	
 NatLiteral ::
 	val : nat
+	txt : SeqOfChar
 
 end Base

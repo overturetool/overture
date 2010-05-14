@@ -27,7 +27,7 @@ public class TreeGenAstShorthandDefinition extends TreeGenAstDefinitions impleme
 	}
 
 	// private member variable (type)
-	private TreeGenAstTypeSpecification m_type = null;
+	private ITreeGenAstTypeSpecification m_type = null;
 
 	// public operation to retrieve the embedded private field value
 	public ITreeGenAstTypeSpecification getType()
@@ -36,7 +36,7 @@ public class TreeGenAstShorthandDefinition extends TreeGenAstDefinitions impleme
 	}
 
 	// public operation to set the embedded private field value
-	public void setType(TreeGenAstTypeSpecification p_type)
+	public void setType(ITreeGenAstTypeSpecification p_type)
 	{
 		// consistency check (field must be non null!)
 		assert(p_type != null);
@@ -52,6 +52,9 @@ public class TreeGenAstShorthandDefinition extends TreeGenAstDefinitions impleme
 		m_shorthand_name = null;
 		m_type = null;
 	}
+
+	// visitor support
+	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitShorthandDefinition(this); }
 
 	// the identity function
 	public String identify() { return "TreeGenAstShorthandDefinition"; }

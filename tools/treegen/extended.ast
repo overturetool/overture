@@ -3,7 +3,8 @@ class Extended
 
 values
   package = "nl.marcelverhoef.extended";
-  directory = "d:\workspace\test"
+  directory = "d:\workspace\test";
+  toplevel = "Toplevel"
 
 instance variables
   cnt : nat

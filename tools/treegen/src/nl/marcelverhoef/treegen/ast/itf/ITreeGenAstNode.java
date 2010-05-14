@@ -8,6 +8,9 @@ public abstract interface ITreeGenAstNode
 	public abstract Integer getColumn();
 	public abstract Integer getLine();
 
+	// visitor support
+	public abstract void accept(ITreeGenAstVisitor pVisitor);
+
 	// the identity function
 	public abstract String identify();
 }

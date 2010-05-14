@@ -44,6 +44,9 @@ public class TreeGenAstNode implements ITreeGenAstNode
 		m_line = null;
 	}
 
+	// visitor support
+	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitNode(this); }
+
 	// the identity function
 	public String identify() { return "TreeGenAstNode"; }
 }

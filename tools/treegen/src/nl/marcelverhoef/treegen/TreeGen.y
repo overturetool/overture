@@ -6,7 +6,9 @@
 
 // java imports required for the generated parser semantics actions
 %{
+import nl.marcelverhoef.treegen.ast.itf.*;
 import nl.marcelverhoef.treegen.ast.imp.*;
+import java.util.*;
 %}
 
 // definition of the parser tokens
@@ -74,7 +76,7 @@ ClassDefinition:
 	  	TreeGenAstClassDefinition tgacd = new TreeGenAstClassDefinition();
 	  	tgacd.setClassName($2.sval);
 	  	tgacd.setSuperClass(new String());
-	  	tgacd.setDefs(new java.util.Vector<TreeGenAstDefinitions>());
+	  	tgacd.setDefs(new Vector<ITreeGenAstDefinitions>());
 	  	$$.obj = tgacd;
 	  }
 	  
@@ -87,7 +89,7 @@ ClassDefinition:
 	  	
 	  	// create the class definition
 	  	TreeGenAstClassDefinition tgacd = new TreeGenAstClassDefinition();
-	  	java.util.Vector<TreeGenAstDefinitions> tgadl = (java.util.Vector<TreeGenAstDefinitions>) $3.obj;
+	  	List<ITreeGenAstDefinitions> tgadl = (Vector<ITreeGenAstDefinitions>) $3.obj;
 	  	tgacd.setClassName($2.sval);
 	  	tgacd.setSuperClass(new String());
 	  	tgacd.setDefs(tgadl);
@@ -105,7 +107,7 @@ ClassDefinition:
 	  	TreeGenAstClassDefinition tgacd = new TreeGenAstClassDefinition();
 	  	tgacd.setClassName($2.sval);
 	  	tgacd.setSuperClass($6.sval);
-	  	tgacd.setDefs(new java.util.Vector<TreeGenAstDefinitions>());
+	  	tgacd.setDefs(new Vector<ITreeGenAstDefinitions>());
 	  	$$.obj = tgacd;
 	  }
 	  
@@ -118,7 +120,7 @@ ClassDefinition:
 	  	
 	  	// create the class definition
 	  	TreeGenAstClassDefinition tgacd = new TreeGenAstClassDefinition();
-	  	java.util.Vector<TreeGenAstDefinitions> tgadl = (java.util.Vector<TreeGenAstDefinitions>) $7.obj;
+	  	List <ITreeGenAstDefinitions> tgadl = (Vector<ITreeGenAstDefinitions>) $7.obj;
 	  	tgacd.setClassName($2.sval);
 	  	tgacd.setSuperClass($6.sval);
 	  	tgacd.setDefs(tgadl);
@@ -130,7 +132,7 @@ DefinitionList:
 	  error
 	  {
 	  	// pass an empty list upwards
-	  	$$.obj = new java.util.Vector<TreeGenAstDefinitions>();
+	  	$$.obj = new Vector<ITreeGenAstDefinitions>();
 	  }
 	  
 	| DefinitionBlock
@@ -141,8 +143,8 @@ DefinitionList:
 	| DefinitionList DefinitionBlock
 	  {
 	  	// concatenate the lists
-	  	java.util.Vector<TreeGenAstDefinitions> lhs = (java.util.Vector<TreeGenAstDefinitions>) $1.obj;
-	  	java.util.Vector<TreeGenAstDefinitions> rhs = (java.util.Vector<TreeGenAstDefinitions>) $2.obj;
+	  	List<ITreeGenAstDefinitions> lhs = (Vector<ITreeGenAstDefinitions>) $1.obj;
+	  	List<ITreeGenAstDefinitions> rhs = (Vector<ITreeGenAstDefinitions>) $2.obj;
 	  	lhs.addAll(rhs);	  	
 	  	$$.obj = lhs;
 	  }
@@ -173,7 +175,7 @@ ValueDefinitions:
 	  VALUES
 	  {
 	  	// pass an empty list upwards
-	  	$$.obj = new java.util.Vector<TreeGenAstDefinitions>();
+	  	$$.obj = new Vector<ITreeGenAstDefinitions>();
 	  }
 	  
 	| VALUES ValueDefinitionList
@@ -187,13 +189,13 @@ ValueDefinitionList:
 	  error
 	  {
 	  	// pass an empty list upwards
-	  	$$.obj = new java.util.Vector<TreeGenAstDefinitions>();
+	  	$$.obj = new Vector<ITreeGenAstDefinitions>();
 	  }
 	  
 	| ValueDefinition
 	  {
 	  	// create a new list and add the value definition to the list
-	  	java.util.Vector<TreeGenAstDefinitions> res = new java.util.Vector<TreeGenAstDefinitions>();
+	  	List <ITreeGenAstDefinitions> res = new Vector<ITreeGenAstDefinitions>();
 	  	TreeGenAstValueDefinition tgavd = (TreeGenAstValueDefinition) $1.obj;
 	  	res.add(tgavd);
 	  	$$.obj = res;
@@ -202,7 +204,7 @@ ValueDefinitionList:
 	| ValueDefinitionList SCOLON ValueDefinition
 	  {
 	  	// retrieve the partial list and add the value definition to the list
-	  	java.util.Vector<TreeGenAstDefinitions> res = (java.util.Vector<TreeGenAstDefinitions>) $1.obj;
+	  	List <ITreeGenAstDefinitions> res = (Vector<ITreeGenAstDefinitions>) $1.obj;
 	  	TreeGenAstValueDefinition tgavd = (TreeGenAstValueDefinition) $3.obj;
 	  	res.add(tgavd);
 	  	$$.obj = res;
@@ -233,7 +235,7 @@ ValueDefinition:
 InstanceVariableDefinitions:
 	  INSTANCE VARIABLES
 	  {
-	  	$$.obj = new java.util.Vector<TreeGenAstDefinitions>();
+	  	$$.obj = new Vector<ITreeGenAstDefinitions>();
 	  }
 	  
 	| INSTANCE VARIABLES InstanceVariableDefinitionList
@@ -245,12 +247,12 @@ InstanceVariableDefinitions:
 InstanceVariableDefinitionList:
 	  error
 	  {
-	  	$$.obj = new java.util.Vector<TreeGenAstDefinitions>();
+	  	$$.obj = new Vector<ITreeGenAstDefinitions>();
 	  }
 	  
 	| InstanceVariable
 	  {
-	  	java.util.Vector<TreeGenAstDefinitions> res = new java.util.Vector<TreeGenAstDefinitions>();
+	  	List <ITreeGenAstDefinitions> res = new Vector<ITreeGenAstDefinitions>();
 	  	TreeGenAstVariableDefinition tgavd = (TreeGenAstVariableDefinition) $1.obj;
 	  	res.add(tgavd);
 	  	$$.obj = res;
@@ -258,7 +260,7 @@ InstanceVariableDefinitionList:
 	  
 	| InstanceVariableDefinitionList SCOLON InstanceVariable
 	  {
-	  	java.util.Vector<TreeGenAstDefinitions> res = (java.util.Vector<TreeGenAstDefinitions>) $1.obj;
+	  	List <ITreeGenAstDefinitions> res = (Vector<ITreeGenAstDefinitions>) $1.obj;
 	  	TreeGenAstVariableDefinition tgavd = (TreeGenAstVariableDefinition) $3.obj;
 	  	res.add(tgavd);
 	  	$$.obj = res;
@@ -295,7 +297,7 @@ InstanceVariable:
 TypeDefinitions:
 	  TYPES
 	  {
-	  	$$.obj = new java.util.Vector<TreeGenAstDefinitions>(); 
+	  	$$.obj = new Vector<ITreeGenAstDefinitions>(); 
 	  }
 	  
 	| TYPES TypeDefinitionList
@@ -307,12 +309,12 @@ TypeDefinitions:
 TypeDefinitionList:
 	  error
 	  {
-	  	$$.obj = new java.util.Vector<TreeGenAstDefinitions>(); 
+	  	$$.obj = new Vector<ITreeGenAstDefinitions>(); 
 	  }
 	  
 	| TypeDefinition
 	  {
-	  	java.util.Vector<TreeGenAstDefinitions> res = new java.util.Vector<TreeGenAstDefinitions>();
+	  	List <ITreeGenAstDefinitions> res = new Vector<ITreeGenAstDefinitions>();
 	  	TreeGenAstDefinitions tpd = (TreeGenAstDefinitions) $1.obj;
 	  	res.add(tpd);
 	  	$$.obj = res; 
@@ -320,7 +322,7 @@ TypeDefinitionList:
 	  
 	| TypeDefinitionList SCOLON TypeDefinition
 	  {
-	  	java.util.Vector<TreeGenAstDefinitions> res = (java.util.Vector<TreeGenAstDefinitions>) $1.obj;
+	  	List <ITreeGenAstDefinitions> res = (Vector<ITreeGenAstDefinitions>) $1.obj;
 	  	TreeGenAstDefinitions tpd = (TreeGenAstDefinitions) $3.obj;
 	  	res.add(tpd);
 	  	$$.obj = res; 
@@ -349,7 +351,7 @@ TypeDefinition:
 	| IDENT DCOLON
       {
 	  	TreeGenAstCompositeDefinition tgac = new TreeGenAstCompositeDefinition();
-	  	java.util.Vector<TreeGenAstCompositeField> cfv = new java.util.Vector<TreeGenAstCompositeField>();
+	  	List <ITreeGenAstCompositeField> cfv = new Vector<ITreeGenAstCompositeField>();
 	  	tgac.setCompositeName($1.sval);
 	  	tgac.setFields(cfv);
 		$$.obj = tgac;	  	
@@ -362,7 +364,7 @@ TypeDefinition:
 	| IDENT DCOLON FieldList
 	  {
 	  	TreeGenAstCompositeDefinition tgac = new TreeGenAstCompositeDefinition();
-	  	java.util.Vector<TreeGenAstCompositeField> cfv = (java.util.Vector<TreeGenAstCompositeField>) $3.obj;
+	  	List <ITreeGenAstCompositeField> cfv = (Vector<ITreeGenAstCompositeField>) $3.obj;
 	  	tgac.setCompositeName($1.sval);
 	  	tgac.setFields(cfv);
 		$$.obj = tgac;	  	
@@ -373,7 +375,7 @@ FieldList:
 	  Field
 	  {
 	  	TreeGenAstCompositeField tgacf = (TreeGenAstCompositeField) $1.obj;
-	  	java.util.Vector<TreeGenAstCompositeField> res = new java.util.Vector<TreeGenAstCompositeField>();
+	  	List <ITreeGenAstCompositeField> res = new Vector<ITreeGenAstCompositeField>();
 	  	res.add(tgacf);
 	  	$$.obj = res;
 	  }
@@ -381,7 +383,7 @@ FieldList:
 	| FieldList Field
 	  {
 	  	TreeGenAstCompositeField tgacf = (TreeGenAstCompositeField) $2.obj;
-	  	java.util.Vector<TreeGenAstCompositeField> res = (java.util.Vector<TreeGenAstCompositeField>) $1.obj;
+	  	List <ITreeGenAstCompositeField> res = (Vector<ITreeGenAstCompositeField>) $1.obj;
 	  	res.add(tgacf);
 	  	$$.obj = res;
 	  }
@@ -481,15 +483,16 @@ private TreeScanner theScanner;
 private String theFileName;
 
 // keep a list of reserved value names
-private static java.util.HashSet<String> values;
+private static HashSet<String> values;
 
 // keep track of the current class definition
-private java.util.Vector<TreeGenAstClassDefinition> tgacdl;
+private List <ITreeGenAstClassDefinition> tgacdl;
 
 static {
-	values = new java.util.HashSet<String>();
+	values = new HashSet<String>();
 	values.add("package");
 	values.add("directory");
+	values.add("toplevel");
 }
 
 // keep track of the number of parse errors
@@ -527,10 +530,10 @@ public TreeParser (String fname, boolean debug)
 	theFileName = fname;
 }
 
-public java.util.List<TreeGenAstClassDefinition> parse ()
+public List<ITreeGenAstClassDefinition> parse ()
 {
 	// initialize the top-level class definition
-	tgacdl = new java.util.Vector<TreeGenAstClassDefinition>();
+	tgacdl = new Vector<ITreeGenAstClassDefinition>();
 	
 	// call the embedded parse routine
 	try {
