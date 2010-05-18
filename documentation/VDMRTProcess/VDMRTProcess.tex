@@ -557,8 +557,20 @@ given \texttt{BUS} instance.
 The currently supported primary scheduling policies for the \texttt{CPU}
 are:
 \begin{description}
-\item[\texttt{<FP>}:] Fixed Priority
-\item[\texttt{<FCFS>}:] First Come First Served
+\item[\texttt{<FP>}:] Fixed Priority. If this scheduling policy is
+  used the cpu scheduler will examine the threads with the highest
+  priority first to see if they are ready to be executed or they are
+  blocked for some reason (a synchronisation constraint or by an
+  operation call on a different cpu).
+\item[\texttt{<FCFS>}:] First Come First Served. If this scheduling
+  policy is used the cpu scheduler will always swap between threads in
+  a round-robin fashion starting with the first one created. Each
+  thread will be allowed to continue its execution for a time limit
+  (decided by the user) before the next thread is examined. In this
+  way fairness will be ensured at normal cpus but for threads running
+  at the virtual cpu (where time is not incremeneted based on
+  instruction execution) no fairness is ensured since ian infinite
+  loop here may take over the entire execution.
 \end{description} 
 
 The currently supported primary scheduling policies for the \texttt{BUS}
@@ -4175,12 +4187,11 @@ semantically equivalent to the above expression):
 
 \begin{lstlisting}
 sync
-  per opA => #active(opA) + #active(opB) = 0;
-  per opB => #active(opA) + #active(opB) = 0 and
-             #active(opB) + #active(opC) + #active(opD) = 0;
-  per opC => #active(opB) + #active(opC) + #active(opD) = 0;
-  per opD => #active(opB) + #active(opC) + #active(opD) = 0 
-             and
+  per opA => #active(opB) = 0;
+  per opB => #active(opA) = 0 and
+             #active(opC) + #active(opD) = 0;
+  per opC => #active(opB) + #active(opD) = 0;
+  per opD => #active(opB) + #active(opC) = 0 and
              someVariable > 42;
 \end{lstlisting}
 
@@ -4653,16 +4664,13 @@ operations
         b : B := new B(),
         c : C := new C();
     ...
-    duration (0)
     startlist({a,b,c});
     ...
   )
 end Main
 \end{lstlisting}
 
-Note here that the {\bf\ttfamily{duration}}\texttt{(0) }{\bf\ttfamily{startlist}}\texttt{(...)} statement is
-used to ensure that the time at which all three threads are enabled to
-start is the same. In case it was desirable to let one of them start later 
+In case it was desirable to let one of them start later 
 than the others it would be possible to set the offset to a positive
 value for that one.
 
