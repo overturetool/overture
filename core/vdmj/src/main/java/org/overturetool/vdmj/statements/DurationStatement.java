@@ -100,6 +100,7 @@ public class DurationStatement extends Statement
 	public Value eval(Context ctxt)
 	{
 		location.hit();
+		duration.location.hit();
 
 		SchedulableThread me = (SchedulableThread)Thread.currentThread();
 

@@ -100,6 +100,7 @@ public class CyclesStatement extends Statement
 	public Value eval(Context ctxt)
 	{
 		location.hit();
+		cycles.location.hit();
 
 		SchedulableThread me = (SchedulableThread)Thread.currentThread();
 
