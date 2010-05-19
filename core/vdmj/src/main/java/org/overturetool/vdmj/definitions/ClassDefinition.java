@@ -409,9 +409,11 @@ public class ClassDefinition extends Definition
 	{
 		List<String> done = new Vector<String>();
 
-		for (Definition def1: definitions)
+		DefinitionList singles = definitions.singleDefinitions();
+
+		for (Definition def1: singles)
 		{
-			for (Definition def2: definitions)
+			for (Definition def2: singles)
 			{
 				if (def1 != def2 &&
 					def1.name != null && def2.name != null &&
@@ -444,7 +446,7 @@ public class ClassDefinition extends Definition
 							!(def2 instanceof PerSyncDefinition))
 						{
     						def1.report(3017, "Duplicate definitions for " + def1.name.name);
-    						detail2(def1.name.name, def1.getType(), def2.name.name, def2.getType());
+    						detail2(def1.name.name, def1.location, def2.name.name, def2.location);
     						done.add(def1.name.name);
 						}
 					}
