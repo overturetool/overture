@@ -34,12 +34,14 @@ public class RTLogger
 	private static boolean enabled = false;
 	private static List<String> events = new LinkedList<String>();
 	private static PrintWriter logfile = null;
+	private static String cached = null;
 
 	public static synchronized void enable(boolean on)
 	{
 		if (!on)
 		{
 			dump(true);
+			cached = null;
 		}
 
 		enabled = on;
@@ -47,13 +49,59 @@ public class RTLogger
 
 	public static synchronized void log(String event)
 	{
-		event = event + " time: " + SystemClock.getWallTime();
-
 		if (!enabled)
 		{
 			return;
 		}
-		else if (logfile == null)
+
+		event = event + " time: " + SystemClock.getWallTime();
+
+		if (event.startsWith("ThreadSwapIn") ||
+			event.startsWith("DelayedThreadSwapIn"))
+		{
+			if (cached != null)
+			{
+				doLog(cached);
+			}
+
+			cached = event;
+			return;
+		}
+
+		if (cached != null)
+		{
+			if (event.startsWith("ThreadSwapOut"))
+			{
+				String[] cparts = cached.split("\\s+");
+				String[] eparts = event.split("\\s+");
+
+				if (cparts[0].equals("DelayedThreadSwapIn") &&
+					cparts[3].equals(eparts[3]) &&	// thread
+					cparts[15].equals(eparts[13]))	// time
+				{
+					cached = null;
+					return;
+				}
+
+				if (cparts[0].equals("ThreadSwapIn") &&
+					cparts[3].equals(eparts[3]) &&	// thread
+					cparts[13].equals(eparts[13]))	// time
+				{
+					cached = null;
+					return;
+				}
+			}
+
+			doLog(cached);
+			cached = null;
+		}
+
+		doLog(event);
+	}
+
+	private static void doLog(String event)
+	{
+		if (logfile == null)
 		{
 			Console.out.println(event);
 		}
@@ -73,6 +121,7 @@ public class RTLogger
 		enabled = true;
 		dump(true);		// Write out and close previous
 		logfile = out;
+		cached = null;
 	}
 
 	public static int getLogSize()
