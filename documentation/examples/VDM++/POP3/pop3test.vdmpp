@@ -53,7 +53,7 @@ MakeMailDrop() ==
                                        false) 
   | i in set inds users};
 
-MakeMessages: POP3Types`UserName -> seq of POP3Message
+public MakeMessages: POP3Types`UserName -> seq of POP3Message
 MakeMessages (user) ==
   [ new POP3Message(headers(i), 
                     bodies(i) ^ " to " ^ user,
@@ -138,6 +138,32 @@ Test2() ==
       )
     );
 
+Start: POP3TestSender | POP3TestListener ==> ()
+Start(obj) ==
+  start(obj);
+  
+instance variables
+
+server : POP3Server := new POP3Server(MakeMailDrop(), ch, MakePasswordMap());
+ch : MessageChannelBuffer := new MessageChannelBuffer();
+mc1 : MessageChannel := new MessageChannel();
+mc2 : MessageChannel := new MessageChannel();
+mc3 : MessageChannel := new MessageChannel();
+send1 : POP3TestSender := new POP3TestSender("c1", TestRun1(), mc1);
+send2 : POP3TestSender := new POP3TestSender("c2", TestRun1(), mc2);
+listen1 : POP3TestListener := new POP3TestListener("l1", mc1);
+listen2 : POP3TestListener := new POP3TestListener("l2", mc2)
+
+traces
+
+  Two: StartServer(server);
+       --let mc in set {mc1,mc2,mc3} in
+       (ch.Put(mc1) | ch.Put(mc2) | ch.Put(mc3)){3};
+       Start(send1); Start(send2);
+       Start(listen1); Start(listen2);
+       listen1.IsFinished();
+       listen2.IsFinished();
+       
 end POP3Test
 
 class POP3TestSender

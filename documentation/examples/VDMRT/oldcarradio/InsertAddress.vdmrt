@@ -9,8 +9,8 @@ operations
   -- and checks whether the response time for the matching
   -- stimulus was less than or equal to 2000 time units
   protected handleEvent: Event ==> ()
-  handleEvent (pev) == duration (0) logSysToEnv(pev.getEvent())
-  post checkResponseTimes(e2s,s2e,2000);
+  handleEvent (pev) == duration (0) logSysToEnv(pev.getEvent());
+ -- post checkResponseTimes(e2s,s2e,6000);
 
   -- createSignal generates the stimuli for the system
   createSignal: () ==> ()

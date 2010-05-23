@@ -61,7 +61,8 @@ NotifyAll: notifies all threads - waking up threads which wakeUpTime is up
 
 public NotifyAll : () ==> ()
 NotifyAll() ==
-  let threadSet : set of nat = {th | th in set dom wakeUpMap & wakeUpMap(th) <= currentTime }
+  let threadSet : set of nat = {th | th in set dom wakeUpMap 
+                                   & wakeUpMap(th) <= currentTime }
   in
     for all t in set threadSet 
     do

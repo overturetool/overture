@@ -51,4 +51,11 @@ functions
 -- detecting whether an alarm should be raised
 
   RaiseAlarm(temp: TempRead) alarm : bool
-  post not Safe(temp) <=> alarm
+  post not Safe(temp) <=> alarm;
+
+  MixQuant: TempRead -> bool
+  MixQuant(temp) ==
+    exists min in set {1,...,5} &
+       forall i in set {1,...,5} &
+          i <> min =>
+          temp(i) > temp(min)

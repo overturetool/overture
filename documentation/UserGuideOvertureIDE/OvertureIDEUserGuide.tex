@@ -1,4 +1,4 @@
-\documentclass{overturerep}
+\documentclass{overturerepsec}
 %**********************************************************
 %
 % Bibliography support
@@ -6,6 +6,7 @@
 %**********************************************************
 %\def\@reportno{YY--NN}		% default report no.
 %\def\reportno#1{\gdef\@reportno{#1}}
+\usepackage{fancyhdr}
 
 \newcommand{\bthisbibliography}[1]{\section*{References}%
    \begin {list} {}%
@@ -63,6 +64,13 @@
 \newcommand{\PUBLIC}{\ifthenelse{\boolean{VDMpp}}{public\mbox{}}{\mbox{}}}
 \newcommand{\PRIVATE}{\ifthenelse{\boolean{VDMpp}}{private}{\mbox{}}}
 \newcommand{\PROTECTED}{\ifthenelse{\boolean{VDMpp}}{protected}{\mbox{}}}
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[LO]{\leftmark}
+\fancyhead[RE]{Overture VDM-10 Tool Support: User Guide}
+\fancyhead[RO,LE]{\resizebox{0.05\textwidth}{!}{\includegraphics{OMLlogoattempt.jpg}}}
+\fancyfoot[C]{\thepage}
 
 \usepackage{makeidx}
 
@@ -135,7 +143,7 @@
 \makeindex
 
 \begin{document}
-\title{User Guide for the Overture VDM Tool Support}
+\title{Overture VDM-10 Tool Support: User Guide}
 \author{Peter Gorm Larsen, Kenneth Lausdahl, Augusto Ribeiro and Sune Wolff \\ 
 Engineering College of Aarhus\\
 Dalgas Avenue 2, DK-8000 \AA{}rhus C, Denmark\\[3mm]
@@ -144,17 +152,20 @@ Fujitsu Services\\
 Lovelace Road, Bracknell, \\
 Berkshire. RG12 8SN, UK}
 
-\reportno{TR-2009-02}     
+\date{May 2010}
+
+\reportno{TR-002}     
 
 \maketitle
 
 
 \textbf{Document history}
 
-\begin{tabular}{|l|l|l|}\hline
-Month   & Year & version of Overture.exe \\ \hline
-January & 2010 & 0.1.5 \\ \hline
-March   & 2010 & 0.2   \\ \hline
+\begin{tabular}{|l|l|l|l|}\hline
+Month   & Year & Version & Version of Overture.exe \\ \hline
+January & 2010 &         & 0.1.5 \\ \hline
+March   & 2010 &         & 0.2   \\ \hline
+May     & 2010 & 1       & 0.2   \\ \hline
 \end{tabular}
 
 \tableofcontents

@@ -55,7 +55,7 @@
 % This next statement is done by \begin{titlepage}
 %    \setcounter{page}{0}
     \begin{center}
-      {\large\bf Overture Technical Report Series\\ No. \@reportno \\[5mm]}
+      {\large\bf  Overture Technical Report Series\\ No. \@reportno \\[5mm]}
       {\large\bf \@date \par}
     \end{center}
     \vfill
@@ -78,7 +78,7 @@
       \vskip.7\baselineskip
       \titlepagerule
 \begin{minipage}{.8\textwidth}
-{\large{\bf  Overture -- Open-source Tools for Formal Modelling}}
+Overture -- Open-source Tools for Formal Modelling.
 \end{minipage}
 \hfill
 \resizebox{0.05\textwidth}{!}{\includegraphics{OMLlogoattempt.jpg}}

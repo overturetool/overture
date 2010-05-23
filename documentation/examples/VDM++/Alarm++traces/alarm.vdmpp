@@ -5,7 +5,7 @@ types
 
 \begin{vdm_al}
 types
- 
+  
 public String = seq of char;
 
 instance variables 

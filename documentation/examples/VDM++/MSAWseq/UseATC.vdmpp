@@ -7,7 +7,6 @@ values
   c1: GLOBAL`Coordinates = mk_GLOBAL`Coordinates(2,-2);
   c2: GLOBAL`Coordinates = mk_GLOBAL`Coordinates(3,-3);
   
-  
 instance variables
 
   atc: AirTrafficController := new AirTrafficController()

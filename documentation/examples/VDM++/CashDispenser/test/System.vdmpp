@@ -76,7 +76,7 @@ operations
           resource.AddLetterbox(clock,new Letterbox())));
 
 traces
-  
+ 
   T1: let c in set cards
       in
         let t in set rng tills
@@ -85,7 +85,7 @@ traces
           in
             (t.InsertCard(c);t.Validate(p);t.MakeWithdrawal(1000)) 
             
-  T2: let c in set cards
+  T2: let c in set cards 
       in
         let t1, t2 in set rng tills
         in

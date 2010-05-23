@@ -23,7 +23,7 @@ functions
       ps2e(idx) - pe2s(idx) <= plim
   -- the responses received should also be sent
   pre dom ps2e inter dom pe2s = dom ps2e
-  
+ 
 operations
   public EnvironmentTask: nat ==> EnvironmentTask
   EnvironmentTask (pno) == max_stimuli := pno;

@@ -60,6 +60,6 @@ sync
 	per calculate => #fin (giveResult) = #act (calculate)
 	
 thread
-	doit();
+	doit(); 
 	
 end Multiplier

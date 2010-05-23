@@ -54,7 +54,7 @@ And Run is the operation that starts a test sequence.
 
 public Run: () ==> ()
 Run () == 
-  (
+  ( 
    start(env); 
    env.isFinished();
    Pacemaker`heartController.isFinished();
