@@ -241,7 +241,7 @@ public class ModuleList extends Vector<Module>
 		{
 			for (Definition d: m.defs)
 			{
-				if (d.name.equals(name))
+				if (name.equals(d.name))
 				{
 					if (d instanceof NamedTraceDefinition)
 					{
