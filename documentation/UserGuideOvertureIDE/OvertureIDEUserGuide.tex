@@ -1,4 +1,4 @@
-\documentclass{overturerepsec}
+\documentclass{overturerepchap}
 %**********************************************************
 %
 % Bibliography support
@@ -8,7 +8,7 @@
 %\def\reportno#1{\gdef\@reportno{#1}}
 \usepackage{fancyhdr}
 
-\newcommand{\bthisbibliography}[1]{\section*{References}%
+\newcommand{\bthisbibliography}[1]{\chapter*{References}%
    \begin {list} {}%
      {\settowidth {\labelwidth} {[#1]XX}%
       \setlength {\leftmargin} {\labelwidth}%
@@ -186,7 +186,7 @@ versions of the tool suite can be used for large scale industrial
 applications of the VDM technology.
 \end{abstract}
 
-\section{Introduction}
+\chapter{Introduction}
 
 The Vienna Development Method (VDM) is one of the longest established
 model-oriented formal methods for the development of computer-based
@@ -238,32 +238,32 @@ not yet available in Overture.
 This guide explains how to use the Overture IDE for developing models
 for different VDM dialects. This user manual starts with an explanation
 of how to get hold of the software in
-Section~\ref{sec:install}. This is followed in
-Section~\ref{sec:vdmsupport} with an introduction to the concepts used
+Chapter~\ref{sec:install}. This is followed in
+Chapter~\ref{sec:vdmsupport} with an introduction to the concepts used
 in the different Overture perspectives based on Eclipse
-terminology. In Section~\ref{sec:projects} it is explained how
-projects are managed in the Overture IDE. In Section~\ref{sec:editVDM}
+terminology. In Chapter~\ref{sec:projects} it is explained how
+projects are managed in the Overture IDE. In Chapter~\ref{sec:editVDM}
 the features supported when editing VDM models are explained. This is
-followed in Section~\ref{sec:debug} with an explanation of the
+followed in Chapter~\ref{sec:debug} with an explanation of the
 interpretation and debugging capabilities in the Overture
-IDE. Section~\ref{sec:testcoverage} then illustrates how test coverage
+IDE. Chapter~\ref{sec:testcoverage} then illustrates how test coverage
 information can be gathered when models are interpreted. Afterwards,
-Section~\ref{sec:prettyprint} shows how models with and without test
+Chapter~\ref{sec:prettyprint} shows how models with and without test
 coverage information can be generated to the text processing system
 \LaTeX\ and automatically converted to \texttt{pdf} format if one have
 \texttt{pdflatex} installed on the computer. Afterwards, from
-Section~\ref{sec:POmanagement} to Section~\ref{sec:showlog} different
-VDM specific features are explained. In Section~\ref{sec:POmanagement}
+Chapter~\ref{sec:POmanagement} to Chapter~\ref{sec:showlog} different
+VDM specific features are explained. In Chapter~\ref{sec:POmanagement}
 the use of the notion for proof obligations and its support in
-Overture is explained. In Section~\ref{sec:testing} a notion of
+Overture is explained. In Chapter~\ref{sec:testing} a notion of
 combinatorial testing and the automation support for that in Overture
-is presented. In Section~\ref{sec:vdmuml} support for mapping between
+is presented. In Chapter~\ref{sec:vdmuml} support for mapping between
 object-oriented VDM models and UML models is presented. In
 Section~\ref{sec:ToVDMRT} it is illustrated how a VDM++ project can be 
-changed into a new VDM-RT project. In Section~\ref{sec:showlog} it
+changed into a new VDM-RT project. In Chapter~\ref{sec:showlog} it
 is shown how to analyse and display logs from executing
 such VDM-RT models. After these sections the main part of the user
-manual is completed in Section~\ref{sec:commandline} with an
+manual is completed in Chapter~\ref{sec:commandline} with an
 explanation of the features from Overture which are also available from
 a command-line interface. Appendix~\ref{app:templates} provide a list
 of all the standard templates built into Overture. 
@@ -276,7 +276,7 @@ Appendix~\ref{sec:index} an index of significant terms used in this
 user manual can be found. 
 
 
-\section{Getting Hold of the Software}\label{sec:install}
+\chapter{Getting Hold of the Software}\label{sec:install}
 
 Overture is an open source tool, developed by a community of volunteers 
 and is built on top of the Eclipse platform. The project to develop the tools 
@@ -310,11 +310,11 @@ and can be downloaded from SourceForge under the
 \url{https://sf.net/projects/overture/files/Examples/}
 \end{quote}
 Such existing projects can be imported as described in
-subsection~\ref{subsec:importproj}. 
+section~\ref{subsec:importproj}. 
 
-\section{Using the Overture Perspective}\label{sec:vdmsupport}
+\chapter{Using the Overture Perspective}\label{sec:vdmsupport}
 
-\subsection{Getting into the Eclipse Terminology}
+\section{Getting into the Eclipse Terminology}
 
 Eclipse is an open source platform based around a
 \emph{workbench}\index{workbench} that provides a common look and feel
@@ -396,9 +396,9 @@ convenient feature is a toolbar of shortcuts to switch between
 different perspectives that appears on the right side of the screen;
 these vary dynamically according to context and history.
 
-\subsection{Additional Eclipse Features Applicable in Overture}
+\section{Additional Eclipse Features Applicable in Overture}
 
-\subsubsection{Opening and Closing Projects}
+\subsection{Opening and Closing Projects}
 
 In order not to take up too much space and computing power it may be
 advantageously to close projects that are not used currently. This can
@@ -418,7 +418,7 @@ menu.\index{project!open}\index{project!close}
 %\end{center}
 %\end{figure}
 
-\subsubsection{Adding Additional VDM File Extensions}
+\subsection{Adding Additional VDM File Extensions}
 
 If one would like to use additional file types to be associated with a
 particular VDM editor instead of the standard {\ttfamily vdmsl},
@@ -437,7 +437,7 @@ additional types of file extensions.\index{file extension}
 \end{center}
 \end{figure}
 
-\subsubsection{Remove Directories without Source Files}
+\subsection{Remove Directories without Source Files}
 
 In case the directory with the VDM source files includes
 subdirectories without source files it may be convenient to remove
@@ -455,7 +455,7 @@ directories that have no source files.
 \end{center}
 \end{figure}
 
-\subsubsection{Including line numbers in the Editor}
+\subsection{Including line numbers in the Editor}
 
 In case line numbers\index{line number} are desired in the Overture
 editor it is possible to to right click in the left-hand-side margin
@@ -469,7 +469,7 @@ Figure~\ref{fig:linenumbers}.\index{line numbers}
 \end{center}
 \end{figure}
 
-\subsubsection{Adding external plug-ins to Overture IDE}
+\subsection{Adding external plug-ins to Overture IDE}
 
 The Overture IDE is build as a RCP\footnote{Rich Client Platform} and
 there no update manager is included -- external plug-ins can
@@ -506,18 +506,18 @@ For example, in order to add SVN support to the Overture IDE you simply have to:
 When the steps above are completed the Overture IDE can be started and SVN support will be available.
 \end{enumerate}
 
-\section{Managing Overture Projects}\label{sec:projects}
+\chapter{Managing Overture Projects}\label{sec:projects}
 
-\subsection{Importing Overture VDM Projects}\label{subsec:importproj}
+\section{Importing Overture VDM Projects}\label{subsec:importproj}
 
 It is possible to import Overture VDM projects by
 right-clicking the explorer view and selecting \emph{Import}, followed
 by \emph{General} $\rightarrow$ \emph{Existing Projects into
   Workspace}.  In this way the projects from \texttt{.zip} files
-mentioned in Section~\ref{sec:install} can be imported very
+mentioned in Chapter~\ref{sec:install} can be imported very
 easily.\index{project!import}  
 
-\subsection{Creating a New Overture Project}
+\section{Creating a New Overture Project}
 
 Follow these steps in order to create a new Overture project:
 
@@ -548,7 +548,7 @@ Follow these steps in order to create a new Overture project:
 %  Creating a new file
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Creating Files}
+\section{Creating Files}
 
 Switching to the Overture perspective will change the layout of the user
 interface to focus on the VDM development. To change perspective go to the menu 
@@ -577,7 +577,7 @@ module/class template to get the user started with defining the
 module/class meant to be placed in this new file. Naturally, keywords 
 not used can be deleted.
 
-\subsection{Setting Project Options}\label{subsec:options}
+\section{Setting Project Options}\label{subsec:options}
 
 For each Overture VDM project it is possible to set various VDM
 specific settings. One can get access to these by selecting a project
@@ -628,9 +628,9 @@ the \texttt{vdm\_al} environment and decide the order in which the
 different VDM source files shall be included\footnote{This feature is
   not fully supported in this version of the Overture IDE.}.
 
-\section{Editing VDM models}\label{sec:editVDM}
+\chapter{Editing VDM models}\label{sec:editVDM}
 
-\subsection{VDM Dialect Perspectives}
+\section{VDM Dialect Perspectives}
 
 Whenever one wishes to edit parts of a VDM model it can be done in the
 editor view. In general it is recommended to make use of the VDM
@@ -645,7 +645,7 @@ problems (errors and/or warnings) can be found. These will be
 displayed both in the problems view as well as with small icons in the
 editor view at the lines where the problems have been identified.
 
-\subsection{Using Templates}
+\section{Using Templates}
 
 Templates can be particularly useful when modifying VDM models of all 
 three dialects (SL, PP and RT). If you hit
@@ -687,11 +687,11 @@ standard defined templates is available in Appendix~\ref{app:templates}.
 \end{center}
 \end{figure}
 
-\section{Interpretation and Debugging in Overture}\label{sec:debug}
+\chapter{Interpretation and Debugging in Overture}\label{sec:debug}
 
 This section describes how to debug a model using the Overture IDE. 
 
-\subsection{Debug configuration}
+\section{Debug configuration}
 
 Debugging the model under development is done by creating a debug configuration
 \index{debug configuration}
@@ -721,7 +721,7 @@ top of the Overture tool.
 \end{center}
 \end{figure}
 
-\subsection{Debug Perspective}
+\section{Debug Perspective}
 
 The Debug Perspective\index{debug perspective} contains the views
 needed for debugging in VDM. Breakpoints can easily be set at desired
@@ -773,7 +773,7 @@ filters\index{icon!use step filters}\\
 \end{center}
 \end{table}
 
-\subsubsection{Debug View}
+\subsection{Debug View}
 
 The \emph{Debug view} is located in the upper left corner in the Debug Perspective -
 see Figure~\ref{fig:userguide:DebuggingVDM}. The \emph{Debug view} shows all running
@@ -787,7 +787,7 @@ At the top of the view are buttons for controlling debugging such as; stop, step
 into, step over and resume. These are standard Eclipse debugging
 buttons (see Table~\ref{tab:debugButtons}).
 
-\subsubsection{Variables View}
+\subsection{Variables View}
  
 This view shows all the variables in a given context, to be examined after a breakpoint has been
 reached. The variables and their values displayed are automatically updated when
@@ -795,7 +795,7 @@ stepping through a model. The \emph{Variables view} is by default located in the
 right hand corner in the \emph{Debug perspective}. It is also possible to inspect complex variables,
 expanding nested structures and so forth.
 
-\subsubsection{Breakpoints View}
+\subsection{Breakpoints View}
 
 Breakpoints can be added both from the edit perspective and the \emph{Debug perspective}
 from the editor view. In the debug perspective however, there is a \emph{Breakpoints
@@ -805,7 +805,7 @@ count or a break condition. In Figure~\ref{fig:userguide:DebuggingVDM} the
 \emph{Breakpoints view} is hidden behind the \emph{Variables view} in the upper right hand 
 corner in a tabbed notebook. 
 
-\subsubsection{Conditional breakpoints}
+\subsection{Conditional breakpoints}
 \label{sec:userguide:breakpoints}
 
 Conditional breakpoints can also be defined. These are a powerful tool for the
@@ -830,7 +830,7 @@ based on an expression defined by the user.
 \end{center}
 \end{figure}
 
-\subsubsection{Expressions View}
+\subsection{Expressions View}
 
 The \emph{Expressions view} allows the user to write expressions used for inspecting
 values of the model. As for the \emph{Variables view}, the expressions are 
@@ -840,7 +840,7 @@ expression} from the \emph{Variables view}. It is of course possible to edit exi
 expressions. Like the \emph{Breakpoints view} this view is hidden in the upper right
 hand corner.
 
-\subsubsection{Interactive Console View}
+\subsection{Interactive Console View}
 
 While the \emph{Expressions view} allows to easily inspect values, the functionality is
 somewhat limited compared to the functionality provided by VDMTools. For more
@@ -859,7 +859,7 @@ console.
 \end{center}
 \end{figure}
 
-\section{Collecting Test Coverage Information}\label{sec:testcoverage}
+\chapter{Collecting Test Coverage Information}\label{sec:testcoverage}
 
 When a VDM model is being interpreted it is possible to automatically
 collect test coverage information. 
@@ -879,7 +879,7 @@ can be generated by right clicking on the project name and choosing
 \emph{Latex} $\rightarrow$ \emph{Latex Coverage}. All parts of the model \emph{not}
 covered by the test, is colored red.
 
-\section{Pretty Printing to \LaTeX}\label{sec:prettyprint}
+\chapter{Pretty Printing to \LaTeX}\label{sec:prettyprint}
 
 Include {\ttfamily overture.tex} which among other things makes use of
 the {\ttfamily times.cls} and {\ttfamily listings.cls} style
@@ -898,7 +898,7 @@ VDM model parts must be enclosed within ``\verb+\begin{vdm_al}+''
 and ``\verb+\end{vdm_al}+''. The text-parts outside the specification
 blocks are ignored by the parser (but used by the pretty-printer).
 
-\section{Managing Proof Obligations}\label{sec:POmanagement}
+\chapter{Managing Proof Obligations}\label{sec:POmanagement}
 
 In the different VDM dialects it is possible to identify places where
 run-time errors potentially could occur if the model was to be
@@ -957,7 +957,7 @@ possible to filter away all the proof obligations that are trivially
 correct pressing the \emph{Filter proved} button at the top of this
 view.\index{filter proved} 
 
-\section{Combinatorial Testing}\label{sec:testing}
+\chapter{Combinatorial Testing}\label{sec:testing}
 
 In order to automate parts of the testing process a notion of
 \emph{traces} have been introduced into VDM++ (note that this is 
@@ -972,7 +972,7 @@ cases. Subsequently, the results of running all these can be inspected
 and erroneous test cases can easily be found. The user can then fix 
 the problem and reuse the same traces definitions.
 
-\subsection{Using the Combinatorial Testing GUI}
+\section{Using the Combinatorial Testing GUI}
 
 The syntax for trace definitions are defined in the VDM-10 language
 manual.\index{traces}
@@ -1016,7 +1016,7 @@ of test cases for the trace definition name.\index{icon!skipped test case}
 \end{center}
 \end{figure}
 
-\section{Mapping VDM++ back and forth to UML}\label{sec:vdmuml}
+\chapter{Mapping VDM++ back and forth to UML}\label{sec:vdmuml}
 
 For VDM++ and VDM-RT projects it is
 possible to move automatically back and forth between a VDM model
@@ -1053,7 +1053,7 @@ At the class diagram at the UML level additional classes will be
 generated for standard VDM++ basic types. When such UML models are
 mapped back to VDM++ such additional classes are ignored. 
 
-\section{Moving from VDM++ to VDM-RT}\label{sec:ToVDMRT}
+\chapter{Moving from VDM++ to VDM-RT}\label{sec:ToVDMRT}
 
 In the methodology for the development of distributed real-time
 embedded systems using the VDM technology a step is described where one
@@ -1074,7 +1074,7 @@ starting point for a VDM-RT model. One then manually need to
 create a {\ttfamily\bf system} with appropriate declarations of
 \texttt{CPU}s and \texttt{BUS}ses.
  
-\section{Analysing and Displaying Logs from VDM-RT Executions}\label{sec:showlog}
+\chapter{Analysing and Displaying Logs from VDM-RT Executions}\label{sec:showlog}
 
 When a VDM-RT model is being executed a textual logfile is created in
 a ''\texttt{logs/debugconfig}'' folder with the \emph{.logrt} extension. The
@@ -1129,7 +1129,7 @@ be seen in Figure~\ref{fig:userguide:ExecutionCPU}.\index{single CPU overview}
 \end{center}
 \end{figure}
 
-\section{Defining Your Own Java Libraries to be used from Overture}\label{sec:javalibs}
+\chapter{Defining Your Own Java Libraries to be used from Overture}\label{sec:javalibs}
 
 VDM models are not appropriate for describing everything it is common to have existing legacy code that a user may not
 wish to spend time modeling in VDM but would like to make use of
@@ -1154,12 +1154,12 @@ for VDM the VDMJ jar needs to be in the class-path. It can be fund in
 the Overture IDE installation under
 \texttt{plugins/org.overture.ide.generated.vdmj\_2.0.1/lib}.
 
-\subsection{Remote library example}
+\section{Remote library example}
 
 In this example a remote sensor will be defined which can read a
 value from a real sensor. The VDM model interface of the sensor can be
-seen in listing \ref{remoteSensorVdm} where as the Java class
-implementing it can be seen in listing \ref{remoteSensorJava}. The
+seen in listing~\ref{remoteSensorVdm} where as the Java class
+implementing it can be seen in listing~\ref{remoteSensorJava}. The
 values that are to be exchanged between the Overture IDE and the jar
 file needs to be the values used in VDMJ. Documentation about these
 can be found in the VDMJ user manual \cite{Battle09}.
@@ -1193,7 +1193,7 @@ public class sensor
 }
 \end{lstlisting}
 
-\section{Enabling Remote Control of the Overture
+\chapter{Enabling Remote Control of the Overture
   Interpreter}\label{sec:remote}
 
 In some situations it may also be valuable to be able to establish a
@@ -1218,7 +1218,7 @@ jar for VDM the VDMJ jar file needs to be in the class-path. It can be found
 in the Overture IDE installation
 under\\ \texttt{plugins/org.overture.ide.generated.vdmj\_2.0.1/lib}.
 
-\subsection{Example of a Remote Control class}
+\section{Example of a Remote Control class}
 
 In this example we have a VDM class \texttt{A} which just returns the input. As
 seen in listing~\ref{remoteControllerJava} it is possible to call
@@ -1250,13 +1250,13 @@ public class RemoteController implements RemoteControl
 }
 \end{lstlisting}
 
-\section{A Command-Line Interface to VDMJ}\label{sec:commandline}
+\chapter{A Command-Line Interface to VDMJ}\label{sec:commandline}
 
 A central part of the Overture tool is a Java application
 called VDMJ that provides a command-line interface that may be valuable
 for users outside the Eclipse interface of Overture.\index{VDMJ}
 
-\subsection{Starting VDMJ}
+\section{Starting VDMJ}
 
 VDMJ\index{VDMJ} is contained entirely within one jar file. The jar
 file contains a MANIFEST that identifies the main class to start the
@@ -1301,7 +1301,7 @@ parsing/checking overhead. If files are sufficiently large, this may be faster.
 \item[\texttt{-dtc}:] this will disable all dynamic type checking.
 \item[\texttt{-log}:] This will enable VDM-RT real-time event logging. These
   are useful with the Overture Eclipse GUI, which has a plugin to
-  display timing diagrams (see Section~\ref{sec:showlog}).
+  display timing diagrams (see Chapter~\ref{sec:showlog}).
 \item [\texttt{-remote}:] This enables remote control of the VDMJ executable.
 \end{description}
 
@@ -1450,7 +1450,7 @@ specification, assuming the specification has no type checking errors.
 %Bye
 %\end{lstlisting}
 
-\subsection{Parsing, Type Checking, and Proof Obligations}
+\section{Parsing, Type Checking, and Proof Obligations}
 
 All specification files loaded by VDMJ are parsed and type checked
 automatically. There are no type checking options; the type checker
@@ -1461,7 +1461,7 @@ obligations cannot be generated (though warnings are allowed).
 All warnings and error messages are printed on standard output, even
 with the \texttt{-q} option.  A source file may contain VDM embedded
 in a LaTeX file using \verb|vdm_al| environments (see
-Section~\ref{sec:prettyprint}); the markup is ignored by the parser,
+Chapter~\ref{sec:prettyprint}); the markup is ignored by the parser,
 though reported line numbers will be correct.
 
 The Java process will return with an exit code of zero if the
@@ -1469,7 +1469,7 @@ specification is clean (ignoring warnings).  Parser or type checking
 errors result in an exit code of 1. The interpreter and PO generator
 always exit with a code of zero.
 
-\subsection{The Interpreter with Debugging Fuctionality}
+\section{The Interpreter with Debugging Fuctionality}
 
 Assuming a specification does not contain any parse or type checking errors, the interpreter can be
 started by using the \texttt{-i} command line option.
@@ -1776,10 +1776,10 @@ breakpoint, there are additional commands that can be used. These are:
 \addcontentsline{toc}{section}{\protect\numberline{}{References}}
 
 \newpage
-\section{Templates in Overture}\label{app:templates}
+\chapter{Templates in Overture}\label{app:templates}
 
 \newpage
-\section{Internal Errors}\label{app:internalerrors}
+\chapter{Internal Errors}\label{app:internalerrors}
 
 This appendix provides a list of the internal errors used in Overture
 and an explanantion, for each of them, the circumstances under which the
@@ -1854,7 +1854,7 @@ to the SourceForge bug reporting utility
 \end{description}
 
 \newpage
-\section{Lexical Errors}\label{app:lexerr}
+\chapter{Lexical Errors}\label{app:lexerr}
 
 When a VDM model is parsed, the first phase is to gather the single
 characters into tokens that can be used in the further
@@ -1877,7 +1877,7 @@ can be as follows:
 \end{description}
 
 \newpage
-\section{Syntatic Errors}\label{app:synerr}
+\chapter{Syntatic Errors}\label{app:synerr}
 
 If the syntax of the file you have provided does not live up to the
 syntax rules for the VDM dialect you wish to use, syntax errors will be
@@ -2171,7 +2171,7 @@ reported. These can be as follows:
 \end{description}
 
 \newpage
-\section{Type Errors and Warnings}\label{app:typeerr}
+\chapter{Type Errors and Warnings}\label{app:typeerr}
 
 If the syntax rules are satisfied, it is still possible to get type
 errors from additional type checking. The errors here can be as
@@ -2537,7 +2537,7 @@ Warnings from the type checker include:
 \end{description}
 
 \newpage
-\section{Run-Time Errors}\label{app:runtimeerr}
+\chapter{Run-Time Errors}\label{app:runtimeerr}
 
 When using the interpreter/debugger it is possible to get run-time
 errors indicating that a problem with the VDM model analysed have been
@@ -2690,7 +2690,7 @@ detected. This includes the following kinds of errors:
 \end{description}
 
 \newpage
-\section{Categores of Proof Obligations}\label{app:POcategories}
+\chapter{Categores of Proof Obligations}\label{app:POcategories}
 
 This appendix provide a list of the different proof obligation
 categories used in Overture and an explanantion for each of them the
@@ -2777,7 +2777,7 @@ circumstances under which the PO category can be expected.
 \end{description}
 
 \newpage
-\section{Index}\label{sec:index}
+\chapter{Index}\label{sec:index}
 \printindex\label{sec:index}
 \addcontentsline{toc}{section}{\protect\numberline{}{Index}}
 
