@@ -234,6 +234,11 @@ public class SetPattern extends Pattern
 	@Override
 	public boolean isConstrained()
 	{
+		if (plist.getPossibleType(location).isUnion())
+		{
+			return true;	// Set types are various, so we must permute
+		}
+
 		for (Pattern p: plist)
 		{
 			if (p.isConstrained()) return true;
