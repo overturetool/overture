@@ -32,7 +32,7 @@
 \DeclareOption{11pt}{\OptionNotUsed}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions
-\LoadClass[12pt]{report}
+\LoadClass[12pt]{book}
 
 % use more of the page (from fullpage.sty):
 \setlength\marginparwidth {0\p@}
@@ -55,7 +55,7 @@
 % This next statement is done by \begin{titlepage}
 %    \setcounter{page}{0}
     \begin{center}
-      {\large\bf Overture -- Open-source Tools for Formal Modelling  \@reportno \\}
+      {\large\bf Overture Technical Report Series\\ No. \@reportno \\[5mm]}
       {\large\bf \@date \par}
     \end{center}
     \vfill
@@ -78,10 +78,10 @@
       \vskip.7\baselineskip
       \titlepagerule
 \begin{minipage}{.8\textwidth}
-Overture -- Open-source Tools for Formal Modelling.
+{\large{\bf  Overture -- Open-source Tools for Formal Modelling}}
 \end{minipage}
 \hfill
-\resizebox{0.1\textwidth}{!}{\includegraphics{OMLlogoattempt.jpg}}
+\resizebox{0.05\textwidth}{!}{\includegraphics{OMLlogoattempt.jpg}}
     }
   \end{titlepage}
   \setcounter{footnote}{0} \let\thanks\relax \let\maketitle\relax
