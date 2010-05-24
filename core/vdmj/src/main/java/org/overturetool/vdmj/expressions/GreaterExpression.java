@@ -46,7 +46,7 @@ public class GreaterExpression extends NumericBinaryExpression
 	@Override
 	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
 	{
-		super.typeCheck(env, qualifiers, scope);
+		checkNumeric(env, scope);
 		return new BooleanType(location);
 	}
 

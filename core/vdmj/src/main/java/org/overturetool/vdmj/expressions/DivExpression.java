@@ -29,6 +29,11 @@ import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.typechecker.Environment;
+import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.types.IntegerType;
+import org.overturetool.vdmj.types.Type;
+import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.values.NumericValue;
 import org.overturetool.vdmj.values.Value;
 
@@ -39,6 +44,13 @@ public class DivExpression extends NumericBinaryExpression
 	public DivExpression(Expression left, LexToken op, Expression right)
 	{
 		super(left, op, right);
+	}
+
+	@Override
+	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
+	{
+		checkNumeric(env, scope);
+		return new IntegerType(location);
 	}
 
 	@Override

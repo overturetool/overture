@@ -26,6 +26,11 @@ package org.overturetool.vdmj.expressions;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.typechecker.Environment;
+import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.types.IntegerType;
+import org.overturetool.vdmj.types.Type;
+import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.values.IntegerValue;
 import org.overturetool.vdmj.values.Value;
 
@@ -36,6 +41,13 @@ public class RemExpression extends NumericBinaryExpression
 	public RemExpression(Expression left, LexToken op, Expression right)
 	{
 		super(left, op, right);
+	}
+
+	@Override
+	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
+	{
+		checkNumeric(env, scope);
+		return new IntegerType(location);
 	}
 
 	@Override

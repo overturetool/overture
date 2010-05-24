@@ -26,6 +26,15 @@ package org.overturetool.vdmj.expressions;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.typechecker.Environment;
+import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.types.IntegerType;
+import org.overturetool.vdmj.types.NaturalOneType;
+import org.overturetool.vdmj.types.NaturalType;
+import org.overturetool.vdmj.types.NumericType;
+import org.overturetool.vdmj.types.RealType;
+import org.overturetool.vdmj.types.Type;
+import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.values.NumericValue;
 import org.overturetool.vdmj.values.Value;
 
@@ -36,6 +45,40 @@ public class TimesExpression extends NumericBinaryExpression
 	public TimesExpression(Expression left, LexToken op, Expression right)
 	{
 		super(left, op, right);
+	}
+
+	@Override
+	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
+	{
+		checkNumeric(env, scope);
+
+		NumericType ln = ltype.getNumeric();
+		NumericType rn = rtype.getNumeric();
+
+		if (ln instanceof RealType)
+		{
+			return ln;
+		}
+		else if (rn instanceof RealType)
+		{
+			return rn;
+		}
+		else if (ln instanceof IntegerType)
+		{
+			return ln;
+		}
+		else if (rn instanceof IntegerType)
+		{
+			return rn;
+		}
+		else if (ln instanceof NaturalType && rn instanceof NaturalType)
+		{
+			return ln;
+		}
+		else
+		{
+			return new NaturalOneType(ln.location);
+		}
 	}
 
 	@Override

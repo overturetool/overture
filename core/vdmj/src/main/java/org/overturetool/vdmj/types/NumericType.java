@@ -36,11 +36,6 @@ public abstract class NumericType extends BasicType
 
 	public abstract int getWeight();
 
-	public NumericType widestOf(NumericType other)
-	{
-		return getWeight() >= (other).getWeight() ? this : other;
-	}
-
 	@Override
 	public boolean isNumeric()
 	{

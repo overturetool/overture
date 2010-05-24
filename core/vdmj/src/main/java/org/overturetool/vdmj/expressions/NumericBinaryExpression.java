@@ -44,7 +44,10 @@ abstract public class NumericBinaryExpression extends BinaryExpression
 	}
 
 	@Override
-	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
+	abstract public Type typeCheck(
+		Environment env, TypeList qualifiers, NameScope scope);
+
+	protected void checkNumeric(Environment env, NameScope scope)
 	{
 		ltype = left.typeCheck(env, null, scope);
 		rtype = right.typeCheck(env, null, scope);
@@ -62,11 +65,6 @@ abstract public class NumericBinaryExpression extends BinaryExpression
 			detail("Actual", rtype);
 			rtype = new RealType(location);
 		}
-
-		NumericType ln = ltype.getNumeric();
-		NumericType rn = rtype.getNumeric();
-
-		return ln.widestOf(rn);
 	}
 
 	@Override

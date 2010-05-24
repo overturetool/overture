@@ -34,12 +34,10 @@ import org.overturetool.vdmj.expressions.BooleanLiteralExpression;
 import org.overturetool.vdmj.expressions.CharLiteralExpression;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.ExpressionList;
-import org.overturetool.vdmj.expressions.IntegerLiteralExpression;
 import org.overturetool.vdmj.expressions.MapEnumExpression;
 import org.overturetool.vdmj.expressions.MapletExpression;
 import org.overturetool.vdmj.expressions.MkTypeExpression;
 import org.overturetool.vdmj.expressions.NotYetSpecifiedExpression;
-import org.overturetool.vdmj.expressions.RealLiteralExpression;
 import org.overturetool.vdmj.expressions.SeqEnumExpression;
 import org.overturetool.vdmj.expressions.SetEnumExpression;
 import org.overturetool.vdmj.expressions.SetRangeExpression;
@@ -545,37 +543,31 @@ public class SubTypeObligation extends ProofObligation
     		if (etype instanceof NumericType)
     		{
     			NumericType nt = (NumericType)etype;
-    			double signum = -1;
 
-    			if (rec && exp instanceof IntegerLiteralExpression)
+    			if (atype instanceof NumericType)
     			{
-    				IntegerLiteralExpression lit = (IntegerLiteralExpression)exp;
-    				signum = Math.signum(lit.value.value);
-    			}
-    			else if (rec && exp instanceof RealLiteralExpression)
-    			{
-    				RealLiteralExpression lit = (RealLiteralExpression)exp;
+    				NumericType ant = (NumericType)atype;
 
-    				if (Math.round(lit.value.value) == lit.value.value)
+    				if (ant.getWeight() > nt.getWeight())
     				{
-    					signum = Math.signum(lit.value.value);
-    				}
-    			}
-
-    			if (nt instanceof NaturalOneType)
-    			{
-    				if (signum <= 0)
-    				{
-    					sb.append(exp);
-    					sb.append(" > 0");
-    				}
-    			}
-    			else if (nt instanceof NaturalType)
-    			{
-    				if (signum < 0)
-    				{
-    					sb.append(exp);
-    					sb.append(" >= 0");
+            			if (nt instanceof NaturalOneType)
+            			{
+          					sb.append(exp);
+           					sb.append(" > 0");
+            			}
+            			else if (nt instanceof NaturalType)
+            			{
+           					sb.append(exp);
+           					sb.append(" >= 0");
+            			}
+            			else
+            			{
+                			sb.append("is_");
+                			sb.append(nt);
+                			sb.append("(");
+                			sb.append(exp);
+                			sb.append(")");
+            			}
     				}
     			}
     			else

@@ -29,7 +29,7 @@ import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.IntegerType;
-import org.overturetool.vdmj.types.NumericType;
+import org.overturetool.vdmj.types.RealType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.values.NumericValue;
@@ -47,14 +47,16 @@ public class SubtractExpression extends NumericBinaryExpression
 	@Override
 	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
 	{
-		NumericType result = (NumericType)super.typeCheck(env, qualifiers, scope);
+		checkNumeric(env, scope);
 
-		if (result.getWeight() < 2)		// nat or nat1, as subtract may be -ive
+		if (ltype instanceof RealType || rtype instanceof RealType)
 		{
-			result = new IntegerType(result.location);
+			return new RealType(location);
 		}
-
-		return result;
+		else
+		{
+			return new IntegerType(location);
+		}
 	}
 
 	@Override

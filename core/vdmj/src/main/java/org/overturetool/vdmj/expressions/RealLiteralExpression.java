@@ -28,6 +28,9 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.types.IntegerType;
+import org.overturetool.vdmj.types.NaturalOneType;
+import org.overturetool.vdmj.types.NaturalType;
 import org.overturetool.vdmj.types.RealType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
@@ -54,7 +57,25 @@ public class RealLiteralExpression extends Expression
 	@Override
 	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
 	{
-		return new RealType(location);
+		if (Math.round(value.value) == value.value)
+		{
+    		if (value.value < 0)
+    		{
+    			return new IntegerType(location);
+    		}
+    		else if (value.value == 0)
+    		{
+    			return new NaturalType(location);
+    		}
+    		else
+    		{
+    			return new NaturalOneType(location);
+    		}
+		}
+		else
+		{
+			return new RealType(location);
+		}
 	}
 
 	@Override
