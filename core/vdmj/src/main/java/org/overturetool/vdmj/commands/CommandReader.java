@@ -59,6 +59,7 @@ import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ParserException;
+import org.overturetool.vdmj.traces.TraceReductionType;
 import org.overturetool.vdmj.values.BooleanValue;
 import org.overturetool.vdmj.values.FunctionValue;
 import org.overturetool.vdmj.values.OperationValue;
@@ -76,6 +77,12 @@ abstract public class CommandReader
 
 	/** The prompt for the user. */
 	protected final String prompt;
+
+	/** The degree of trace reduction. */
+	private float reduction = 1.0F;
+
+	/** The type of trace reduction. */
+	private TraceReductionType reductionType = TraceReductionType.RANDOM;
 
 	/**
 	 * Create a command reader with the given interpreter and prompt.
@@ -295,6 +302,10 @@ abstract public class CommandReader
 				{
 					carryOn = doRuntrace(line, true);
 				}
+				else if (line.startsWith("filter"))
+				{
+					carryOn = doFilter(line);
+				}
 				else
 				{
 					println("Bad command. Try 'help'");
@@ -356,6 +367,42 @@ abstract public class CommandReader
 		return true;
 	}
 
+	protected boolean doFilter(String line)
+	{
+		String[] parts = line.split("\\s+");
+
+		if (parts.length != 2)
+		{
+			println("Usage: filter %age | [ RANDOM | SHAPES_NOVARS | SHAPES_VARNAMES | SHAPES_VARVALUES ]");
+		}
+		else
+		{
+			try
+			{
+				reduction = Float.parseFloat(parts[1]) / 100.0F;
+
+				if (reduction > 1 || reduction < 0)
+				{
+					println("Usage: filter %age (1-100)");
+				}
+			}
+			catch (NumberFormatException e)
+			{
+				try
+				{
+					reductionType = TraceReductionType.valueOf(parts[1]);
+				}
+				catch (Exception e1)
+				{
+					println("Usage: filter %age | [ RANDOM | SHAPES_NOVARS | SHAPES_VARNAMES | SHAPES_VARVALUES ]");
+				}
+			}
+		}
+
+		println("Trace filter currently " + reduction*100 + "% " + reductionType);
+		return true;
+	}
+
 	protected boolean doRuntrace(String line, boolean debug)
 	{
 		String[] parts = line.split("\\s+");
@@ -379,7 +426,7 @@ abstract public class CommandReader
 		try
 		{
    			long before = System.currentTimeMillis();
-   			interpreter.runtrace(line, testNo, debug);
+   			interpreter.runtrace(line, testNo, debug, reduction, reductionType, 999);
    			long after = System.currentTimeMillis();
 			println("Executed in " + (double)(after-before)/1000 + " secs. ");
 
@@ -989,6 +1036,7 @@ abstract public class CommandReader
 	{
 		println("print <expression> - evaluate expression");
 		println("runtrace <name> [test number] - run CT trace(s)");
+		println("filter %age | <reduction type> - reduce CT trace(s)");
 		println("assert <file> - run assertions from a file");
 		println("init - re-initialize the global environment");
 		println("env - list the global symbols in the default environment");
