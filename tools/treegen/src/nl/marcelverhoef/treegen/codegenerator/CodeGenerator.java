@@ -322,6 +322,47 @@ public class CodeGenerator {
 		return "undefined";
 	}
 	
+	public boolean isUserDefined(Type tp)
+	{
+		// check sequence type
+		if (tp.isSeqType()) {
+			// obtain and check the embedded type
+			SeqType theSeqType = (SeqType) tp;
+			return isUserDefined(theSeqType.seq_type);
+		}
+		
+		// check set type
+		if (tp.isSetType()) {
+			// obtain and check the embedded type
+			SetType theSetType = (SetType) tp;
+			return isUserDefined(theSetType.set_type);
+		}
+		
+		// check map type
+		if (tp.isMapType()) {
+			// obtain and check the embedded type
+			MapType theMapType = (MapType) tp;
+			return (isUserDefined(theMapType.domain) || isUserDefined(theMapType.range));
+		}
+		
+		if (tp.isTypeName()) {
+			// obtain and check the embedded type
+			TypeName theTypeName = (TypeName) tp;
+			
+			// retrieve the type from the class definition look-up table
+			Type theEmbeddedType = current.getTypeByName(theTypeName.type_name);
+			
+			// check for string type (a shorthand was used to denote 'seq of char' as the embedded type
+			if (theEmbeddedType != null) {
+				return  (!theEmbeddedType.isStringType());
+			} else {
+				return true;
+			}
+		}
+		
+		// default return (all other cases)
+		return false;
+	}
 	public String beautify (String str) {
 		// place holder for the result
 		String res = new String();
@@ -536,6 +577,25 @@ public class CodeGenerator {
 		
 		// compose the interface body
 		itf += "public abstract interface "+inm+"\n{\n";
+		
+		// IMPLEMENTATION: add the pointer to the parent
+		cls += "\t// link each node to a possible parent node\n";
+		cls += "\tprivate "+inm+" parent = null;\n\n";
+		
+		// IMPLEMENTATION: add an operation to retrieve the parent
+		cls += "\t// retrieve the parent node\n";
+		cls += "\tpublic "+inm+" getParent() { return parent; }\n\n";
+		
+		// IMPLEMENTATION: add an operation to set the parent
+		cls += "\t// set the parent node\n";
+		cls += "\tpublic void setParent("+inm+" pNode)\n";
+		cls += "\t{\n\t\tassert(pNode != null);\n\t\tparent = pNode;\n\t}\n\n";
+		
+		// INTERFACE: add the operation to set and get the parent
+		itf += "\t// get the parent of this node\n";
+		itf += "\tpublic abstract "+inm+" getParent();\n\n";
+		itf += "\t// set the parent of this node\n";
+		itf += "\tpublic abstract void setParent("+inm+" pNode);\n\n";
 		
 		// process the node class instance variables
 		HashMap<String,MemberVariable> vars = cd.getAllVariables();
@@ -1073,7 +1133,9 @@ public class CodeGenerator {
 				cls += "\t\tassert(p_"+field.field_name+" != null);\n\n";
 			}
 			cls += "\t\t// instantiate the member variable\n";
-			cls += "\t\tm_"+field.field_name+" = p_"+field.field_name+";\n\t}\n\n";
+			cls += "\t\tm_"+field.field_name+" = p_"+field.field_name+";\n";
+			cls += generateSetParent(field);
+			cls += "\t}\n\n";
 		}
 		
 		// compose the default constructor
@@ -1108,6 +1170,57 @@ public class CodeGenerator {
 		writeToFile(itfdir+inm+".java", itf);		
 	}
 
+	public String generateSetParent(Field field)
+	{
+		// check type names
+		if (field.field_type.isTypeName() && isUserDefined(field.field_type)) {
+			String retval = "\n\t\t// set the parent of the parameter passed\n";
+			retval += "\t\tp_"+field.field_name+".setParent(this);\n";
+			return retval;
+		}
+		
+		// check the sequences
+		if (field.field_type.isSeqType() && isUserDefined(field.field_type)) {
+			String retval = "\n\t\t// set the parent of each element in the sequence parameter passed\n";
+			retval += "\t\tfor ("+iprefix+"Node lnode: p_"+field.field_name+") lnode.setParent(this);\n";
+			return retval;
+		}
+		
+		// check the sets
+		if (field.field_type.isSetType() && isUserDefined(field.field_type)) {
+			String retval = "\n\t\t// set the parent of each element in the set parameter passed\n";
+			retval += "\t\tfor ("+iprefix+"Node lnode: p_"+field.field_name+") lnode.setParent(this);\n";
+			return retval;
+		}
+		
+		// check the maps
+		if (field.field_type.isMapType()) {
+			// cast to a map type
+			MapType theMapType = (MapType) field.field_type;
+			
+			// compose the result string
+			String retval = new String();
+			
+			// first check the domain
+			if (isUserDefined(theMapType.domain)) {
+				retval += "\n\t\t// set the parent of each domain element in the map parameter passed\n";
+				retval += "\t\tfor ("+iprefix+"Node lnode: p_"+field.field_name+".keySet()) lnode.setParent(this);\n";
+			}
+			
+			// then check the range
+			if (isUserDefined(theMapType.range)) {
+				retval += "\n\t\t// set the parent of each range element in the map parameter passed\n";
+				retval += "\t\tfor ("+iprefix+"Node lnode: p_"+field.field_name+".values()) lnode.setParent(this);\n";
+			}
+			
+			// return the composed string
+			return retval;
+		}
+		
+		// default return
+		return "";
+	}
+	
 	public void generateConvertors(String clnm, ClassDefinition cd)
 	{
 		// first check if there are defined subtypes
