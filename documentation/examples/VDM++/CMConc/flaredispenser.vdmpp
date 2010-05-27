@@ -98,9 +98,9 @@ per isFinished => not busy
 
 thread
   while true do
-    (World`timerRef.WaitRelative(World`timerRef.stepLength);
-     evalQueue();
-     World`timerRef.Awake());
+    (evalQueue();
+     World`timerRef.WaitRelative(World`timerRef.stepLength);
+	);
      
 end FlareDispenser
 \end{vdm_al}

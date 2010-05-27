@@ -84,14 +84,10 @@ mutex (createSignal);
 per isFinished => not busy;
 
 thread
- (
-  start(new ClockTick(threadid));
-  while World`timerRef.GetTime() < simtime do
+ (while World`timerRef.GetTime() < simtime do
    (if busy
     then createSignal();
-    World`timerRef.WaitRelative(0);
-    World`timerRef.NotifyAndIncTime();
-    World`timerRef.Awake();
+    World`timerRef.WaitRelative(1);
    );
   busy := false
  )
