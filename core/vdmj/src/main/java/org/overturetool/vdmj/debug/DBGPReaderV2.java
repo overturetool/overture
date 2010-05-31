@@ -905,7 +905,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
     	
     	sb.append(" constant=\""+(constant?"1":"0")+"\"");
     	sb.append(" children=\""+children+"\"");
-    	sb.append(" size=\"" + size + "\"");
+    	
+    	StringBuffer encodedData = Base64.encode(data.getBytes("UTF-8"));
+    	
+    	sb.append(" size=\"" + encodedData.length() + "\"");
     	if(key!=null)
     	{
     		sb.append(" key=\"" + key + "\"");
@@ -916,7 +919,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
     		sb.append(" numchildren=\""+numChildren+"\"");
     	}
     	sb.append("><![CDATA[");
-    	sb.append(Base64.encode(data.getBytes("UTF-8")));
+    	sb.append(encodedData);
     	sb.append("]]>");
     	
     	if(nestedProperties!=null && nestedProperties.length()>0)
@@ -1017,7 +1020,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			{
 				Value element = sVal.values.get(i);
 				Integer vdmIndex = i+1;
-				s.append(propertyResponse("Element (id="+vdmIndex.toString()+")", vdmIndex.toString(), "-", element,depth,currentDepth));
+				s.append(propertyResponse("Element["+makeDisplayId(sVal.values.size(),vdmIndex)+"]", vdmIndex.toString(), "-", element,depth,currentDepth));
 				
 			}
 		}else if(value instanceof SetValue)
@@ -1027,7 +1030,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			{
 				Value element = sVal.values.get(i);
 				Integer vdmIndex = i+1;
-				s.append(propertyResponse("Element ("+vdmIndex.toString()+")", vdmIndex.toString(), "-", element,depth,currentDepth));
+				s.append(propertyResponse("Element "+makeDisplayId(sVal.values.size(),vdmIndex), vdmIndex.toString(), "-", element,depth,currentDepth));
 				
 			}
 		}else if(value instanceof ObjectValue)
@@ -1069,7 +1072,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 				StringBuilder entries = new StringBuilder();
 				entries.append(propertyResponse("dom", vdmIndex.toString(), "-", dom,depth,currentDepth));
 				entries.append(propertyResponse("rng", vdmIndex.toString(), "-", rng,depth,currentDepth));
-				s.append(makeProperty("Maplet (id="+vdmIndex.toString()+")", vdmIndex.toString(), value.kind(),"", page, pageSize, true, 0, null, 2, "{"+dom+" |-> "+rng+"}", entries));
+				s.append(makeProperty("Maplet "+makeDisplayId(mVal.values.keySet().size(),vdmIndex), vdmIndex.toString(), value.kind(),"", page, pageSize, true, 2, null, 2, "{"+dom+" |-> "+rng+"}", entries));
 			}
 		}else if(value instanceof RecordValue)
 		{
@@ -1088,7 +1091,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			{
 				Value v = tVal.values.get(i);
 				Integer vdmIndex = i+1;
-				s.append(propertyResponse("#"+vdmIndex, vdmIndex.toString(), "-", v,depth,currentDepth));
+				s.append(propertyResponse("#"+makeDisplayId(tVal.values.size(),vdmIndex), vdmIndex.toString(), "-", v,depth,currentDepth));
 				
 			}
 		}
@@ -1096,6 +1099,15 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		return s;
 	}
 	
+	private String makeDisplayId(Integer size, Integer vdmIndex) {
+		StringBuffer id =new StringBuffer( vdmIndex.toString());
+		while(size.toString().length()>id.length())
+		{
+			id.insert(0,"0");
+		}
+		return id.toString();
+	}
+
 	/**
 	 * Deref Value of Reference and Updatable Value types
 	 * @param value The value to deref
@@ -1365,7 +1377,28 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 	private StringBuilder propertyResponse(Integer key,Integer page) throws UnsupportedEncodingException
 	{
 		Value value = debugValueMap.get(key);
-		return propertyResponseChild(value, 1, 0, defaultPageSize,page);
+		StringBuilder sb = new StringBuilder();
+    	Integer numChildren = getChildCount(value);
+    	    	
+    	Integer pageSize = defaultPageSize;
+    	String data = null;
+    	StringBuilder nestedChildren = null;
+    	String name = "(ref="+ key+")";
+    	
+    	if(numChildren>0)
+    	{
+    		data = value.kind().toString();
+    	}else
+    	{
+    		data = value.toString();
+    	}
+    	
+    	sb.append(propertyResponseChild(value, 1, 0, defaultPageSize,page));
+    	nestedChildren = propertyResponseChild(value, 1, 0, defaultPageSize,page);
+    	    	
+    	boolean constant = numChildren>0 || !(value instanceof UpdatableValue);
+    	
+    	return makeProperty(name, name, value.kind(), "", page, pageSize, constant, data.length(), key, numChildren, data, nestedChildren);
 	}
 
 	
