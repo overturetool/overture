@@ -91,11 +91,11 @@ To the lead class the changes are the same a thread definition substitutes the S
 \begin{vdm_al}
 thread
   while true do 
-    (      
-      followPlan();
+    ( if(scheduledPulse <> nil)
+      then followPlan();
       World`timerRef.WaitRelative(5);
-      World`timerRef.NotifyAll();
-      World`timerRef.Awake();
+--      World`timerRef.NotifyAll();
+--      World`timerRef.Awake();
     );
     
 \end{vdm_al}
@@ -106,7 +106,7 @@ And syncronization premission predicates are introduced.
 
 sync
 
-per followPlan => scheduledPulse <> nil;
+--per followPlan => scheduledPulse <> nil;
 per isFinished => scheduledPulse = nil;
 
 mutex(addLeadPace);

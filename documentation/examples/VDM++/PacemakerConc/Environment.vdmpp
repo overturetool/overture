@@ -136,16 +136,16 @@ The Run function it's substituted by a thread definition.
 \begin{vdm_al}
 thread
   (
-   start(new ClockTick(threadid));
+--   start(new ClockTick(threadid));
    while true do
      ( if busy
        then createSignal();
        if World`timerRef.GetTime() >= simtime
        then (Pacemaker`heartController.finish();
              Pacemaker`rateController.finish());
-       World`timerRef.WaitRelative(0);
-       World`timerRef.NotifyAndIncTime();             
-       World`timerRef.Awake();
+       World`timerRef.WaitRelative(1);
+--       World`timerRef.NotifyAndIncTime();             
+--       World`timerRef.Awake();
      );
 
   );
