@@ -159,13 +159,13 @@ public class VdmBreakpointPropertyPage extends PropertyPage {
 	 * @param breakpoint the breakpoint to update
 	 * @throws CoreException if an exception occurs while setting the suspend policy
 	 */
-	private void storeSuspendPolicy(IVdmBreakpoint breakpoint) throws CoreException {
-		int suspendPolicy = IVdmBreakpoint.SUSPEND_VM;
-		if(fSuspendPolicy.getSelectionIndex() == 0) {
-			suspendPolicy = IVdmBreakpoint.SUSPEND_THREAD;
-		}
-		breakpoint.setSuspendPolicy(suspendPolicy);
-	}
+//	private void storeSuspendPolicy(IVdmBreakpoint breakpoint) throws CoreException {
+//		int suspendPolicy = IVdmBreakpoint.SUSPEND_VM;
+//		if(fSuspendPolicy.getSelectionIndex() == 0) {
+//			suspendPolicy = IVdmBreakpoint.SUSPEND_THREAD;
+//		}
+//		breakpoint.setSuspendPolicy(suspendPolicy);
+//	}
 
 	/**
 	 * Creates the labels and editors displayed for the breakpoint.
@@ -229,7 +229,7 @@ public class VdmBreakpointPropertyPage extends PropertyPage {
 	protected void createLabels(Composite parent) {
 		Composite labelComposite = createComposite(parent, 2);
 		try {
-			String typeName = ((IVdmBreakpoint) getElement()).getTypeName();
+			String typeName = ((IVdmBreakpoint) getElement()).getMessage();
 			if (typeName != null) {
 				createLabel(labelComposite, "TODO: property label (VdmBreakpointPropertyPage"); 
 				Text text = SWTFactory.createText(labelComposite, SWT.READ_ONLY, 1, 1);
@@ -248,18 +248,18 @@ public class VdmBreakpointPropertyPage extends PropertyPage {
 	 * @param parent the composite in which the suspend policy
 	 * 		editor will be created.
 	 */
-	private void createSuspendPolicyEditor(Composite parent) throws CoreException {
-		Composite comp = createComposite(parent, 2);
-		createLabel(comp, "Suspend Policy"); 
-		boolean suspendThread= getBreakpoint().getSuspendPolicy() == IVdmBreakpoint.SUSPEND_THREAD;
-		fSuspendPolicy = new Combo(comp, SWT.BORDER | SWT.READ_ONLY);
-		fSuspendPolicy.add("Suspend Thread");
-		fSuspendPolicy.add("Suspend VM");
-		fSuspendPolicy.select(1);
-		if(suspendThread) {
-			fSuspendPolicy.select(0);
-		}
-	}
+//	private void createSuspendPolicyEditor(Composite parent) throws CoreException {
+//		Composite comp = createComposite(parent, 2);
+//		createLabel(comp, "Suspend Policy"); 
+//		boolean suspendThread= getBreakpoint().getSuspendPolicy() == IVdmBreakpoint.SUSPEND_THREAD;
+//		fSuspendPolicy = new Combo(comp, SWT.BORDER | SWT.READ_ONLY);
+//		fSuspendPolicy.add("Suspend Thread");
+//		fSuspendPolicy.add("Suspend VM");
+//		fSuspendPolicy.select(1);
+//		if(suspendThread) {
+//			fSuspendPolicy.select(0);
+//		}
+//	}
 
 	/**
 	 * @param parent the composite in which the hit count editor

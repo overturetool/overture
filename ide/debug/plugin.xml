@@ -21,7 +21,7 @@
 	<!-- Breakpoints -->
 
 	<extension point="org.eclipse.debug.core.breakpoints">
-		<breakpoint class="org.overture.ide.debug.core.model.VdmLineBreakpoint"
+		<breakpoint class="org.overture.ide.debug.core.model.internal.VdmLineBreakpoint"
 					id="org.overture.ide.debug.breakpoint" 
 					markerType="vdm.lineBreakpoint.marker"
 					name="Vdm Line Breakpoint">
@@ -100,7 +100,7 @@
             class="org.overture.ide.debug.ui.propertypages.VdmLineBreakpointPropertyPage"
             id="org.overture.ide.debug.vdmLineBreakpointPropertyPage"
             name="Breakpoint properties"
-            objectClass="org.overture.ide.debug.core.model.VdmLineBreakpoint"
+            objectClass="org.overture.ide.debug.core.model.internal.VdmLineBreakpoint"
             >
       </page>
    </extension>
@@ -123,41 +123,7 @@
    <!-- Debug as context menus -->
    <extension
          point="org.eclipse.ui.popupMenus">
-         <objectContribution
-            objectClass="java.lang.Object"
-            id="org.eclipse.debug.ui.contextualLaunch.debug">
-        <action
-              class="org.overture.ide.debug.ui.actions.VdmDebugContextualLaunchAction"
-              enablesFor="+"
-              id="org.overture.ide.debug.ui.contextualLaunch.debug.submenu"
-              label="%DebugContextMenu.label"
-              menubarPath="additions"
-              overrideActionId="org.eclipse.debug.ui.contextualLaunch.debug.submenu"
-              style="pulldown">
-         </action>
-        <enablement>
-             <or>
-             	<and>
-             		<not>
-						<with variable="org.eclipse.core.runtime.Platform">
-							<test property="org.eclipse.core.runtime.bundleState"
-								args="org.eclipse.debug.core"
-								value="ACTIVE"/>
-						</with>
-					</not>
-					<adapt type="org.eclipse.core.resources.IResource"/>
-				</and>
-             	<and>
-					<with variable="org.eclipse.core.runtime.Platform">
-						<test property="org.eclipse.core.runtime.bundleState"
-							args="org.eclipse.debug.core"
-							value="ACTIVE"/>
-					</with>
-					<test property="org.eclipse.debug.core.launchable" value="debug"/> 
-				</and>				
-             </or>               
-        </enablement>
-       </objectContribution>
+         
          <viewerContribution
                id="org.eclipse.debug.ui.viewer.contextualLaunch.debug"
                targetID="org.overture.ide.ui.VdmExplorer">
@@ -172,6 +138,7 @@
          </action>
          </viewerContribution> 
    </extension>
+
    <extension
          point="org.eclipse.ui.views">
       <view
@@ -182,5 +149,14 @@
             restorable="true">
       </view>
    </extension>
+   
+	<extension point="org.eclipse.ui.views">
+		<view
+			class="org.overture.ide.debug.ui.log.VdmDebugLogView"
+			id="org.overture.ide.debug.ui.log.dbgpLogView" 
+			name="Vdm Log Viewer2"
+			>
+		</view>
+	</extension>
    
 </plugin>

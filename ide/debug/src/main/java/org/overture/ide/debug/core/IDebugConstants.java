@@ -47,6 +47,12 @@ public interface IDebugConstants
 	public static final String CONSOLE_DEBUG_NAME = "Overture Debug";
 	public static final String CONSOLE_LOGGING_NAME = "VDM Debug log";
 	static final String LogViewId = "org.overture.ide.debug.logging.logview";
+	static final String PREF_DBGP_RESPONSE_TIMEOUT = "dbgp_connection_timeout";
+
+	public static final String FILE_SCHEME = "file"; //$NON-NLS-1$
+	public static final String DBGP_SCHEME = "dbgp"; //$NON-NLS-1$
+	public static final String UNKNOWN_SCHEME = "unknown"; //$NON-NLS-1$
+	static final int ERR_DEBUGGER_PROCESS_TERMINATED = 121;
 	 
 	
 }

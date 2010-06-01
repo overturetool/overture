@@ -14,7 +14,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.overture.ide.debug.core.Activator;
+import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.IDebugConstants;
 
 /**
@@ -86,7 +86,7 @@ public class VmArgumentsLaunchConfigurationTab extends
 			fArgumentsText.setText(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION, ""));
 		} catch (CoreException e)
 		{
-			if (Activator.DEBUG)
+			if (VdmDebugPlugin.DEBUG)
 			{
 				e.printStackTrace();
 			}

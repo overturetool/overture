@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.dialogs.FilteredItemsSelectionDialog;
 import org.eclipse.ui.model.IWorkbenchAdapter;
-import org.overture.ide.debug.core.Activator;
+import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
@@ -225,7 +225,7 @@ public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 	 * @see org.eclipse.ui.dialogs.FilteredItemsSelectionDialog#getDialogSettings()
 	 */
 	protected IDialogSettings getDialogSettings() {
-		IDialogSettings settings = Activator.getDefault().getDialogSettings();
+		IDialogSettings settings = VdmDebugPlugin.getDefault().getDialogSettings();
 		IDialogSettings section = settings.getSection(SETTINGS_ID);
 		if (section == null) {
 			section = settings.addNewSection(SETTINGS_ID);

@@ -23,6 +23,16 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.ViewPart;
+import org.overture.ide.debug.core.dbgp.IDbgpRawListener;
+import org.overture.ide.debug.core.dbgp.IDbgpRawPacket;
+import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
+import org.overture.ide.debug.core.dbgp.internal.DbgpRawPacket;
+import org.overture.ide.debug.core.dbgp.internal.packets.DbgpNotifyPacket;
+import org.overture.ide.debug.core.dbgp.internal.packets.DbgpResponsePacket;
+import org.overture.ide.debug.core.dbgp.internal.packets.DbgpStreamPacket;
+import org.overture.ide.debug.core.dbgp.internal.utils.DbgpXmlPacketParser;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class LogView extends ViewPart
 {
@@ -272,6 +282,47 @@ public class LogView extends ViewPart
 				}
 			});
 		}
+	}
+
+	private static final String INIT_TAG = "init"; //$NON-NLS-1$
+	private static final String RESPONSE_TAG = "response"; //$NON-NLS-1$
+	private static final String STREAM_TAG = "stream"; //$NON-NLS-1$
+	private static final String NOTIFY_TAG = "notify"; //$NON-NLS-1$
+	
+	public void dbgpPacketReceived(int sessionId, IDbgpRawPacket content) {
+		
+		try {
+			Document doc = ((DbgpRawPacket)content).getParsedXml();
+			Element element = (Element) doc.getFirstChild();
+			String tag = element.getTagName();
+			
+			if (tag.equals(INIT_TAG)) {
+				DbgpResponsePacket responsePacket = new DbgpResponsePacket(element, -1);
+			} else if (tag.equals(RESPONSE_TAG)) {
+				DbgpResponsePacket packet = DbgpXmlPacketParser
+						.parseResponsePacket(element);			
+				System.out.println(packet.toString());
+				
+				this.log(new LogItem(new Integer(sessionId).toString(),RESPONSE_TAG,0,false,""));
+				
+				
+			} else if (tag.equals(STREAM_TAG)) {
+				DbgpStreamPacket streamPacket = DbgpXmlPacketParser.parseStreamPacket(element);
+			} else if (tag.equals(NOTIFY_TAG)) {
+				DbgpNotifyPacket notifyPacket = DbgpXmlPacketParser.parseNotifyPacket(element);
+			}
+			
+		} catch (DbgpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+	public void dbgpPacketSent(int sessionId, IDbgpRawPacket content) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -13,7 +13,8 @@ public class VdmDebugContextualLaunchAction extends ContextualLaunchAction imple
 	}
 
 	public void init(IViewPart view)
-	{	
+	{
+		
 	}
 
 }

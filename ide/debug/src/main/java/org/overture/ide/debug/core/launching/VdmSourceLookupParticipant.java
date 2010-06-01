@@ -2,7 +2,7 @@ package org.overture.ide.debug.core.launching;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.sourcelookup.AbstractSourceLookupParticipant;
-import org.overture.ide.debug.core.model.VdmStackFrame;
+import org.overture.ide.debug.core.model.internal.VdmStackFrame;
 
 public class VdmSourceLookupParticipant extends AbstractSourceLookupParticipant
 {
@@ -11,7 +11,7 @@ public class VdmSourceLookupParticipant extends AbstractSourceLookupParticipant
 	{
 		if (object instanceof VdmStackFrame)
 		{
-			return ((VdmStackFrame) object).getSourceName();
+			return ((VdmStackFrame) object).getOnlyFileName();
 		}
 		return null;
 	}

@@ -31,7 +31,7 @@ import org.eclipse.ui.progress.IProgressService;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overture.ide.debug.core.Activator;
+import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
@@ -160,7 +160,7 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 	{
 		try
 		{
-			DebugTypeSelectionDialog mmsd = new DebugTypeSelectionDialog(Activator.getActiveWorkbenchShell(), types, title, project);
+			DebugTypeSelectionDialog mmsd = new DebugTypeSelectionDialog(VdmDebugPlugin.getActiveWorkbenchShell(), types, title, project);
 			if (mmsd.open() == Window.OK)
 			{
 				return (IAstNode) mmsd.getResult()[0];
@@ -324,7 +324,7 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 	 */
 	protected Shell getShell()
 	{
-		return Activator.getActiveWorkbenchShell();
+		return VdmDebugPlugin.getActiveWorkbenchShell();
 	}
 
 	/*
@@ -464,7 +464,7 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 					});
 				} catch (InvocationTargetException e)
 				{
-					if (Activator.DEBUG)
+					if (VdmDebugPlugin.DEBUG)
 					{
 						e.printStackTrace();
 					}

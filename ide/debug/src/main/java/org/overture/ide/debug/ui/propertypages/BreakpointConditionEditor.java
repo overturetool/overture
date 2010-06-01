@@ -58,7 +58,7 @@ public class BreakpointConditionEditor
 		String condition = new String();
 		try
 		{
-			condition = fBreakpoint.getCondition();
+			condition = fBreakpoint.getExpression();
 			fErrorMessage = "Enter a condition";
 			
 			fOldValue = ""; //$NON-NLS-1$

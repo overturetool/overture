@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.eclipse.swt.SWT;
 import org.overture.ide.ui.internal.util.ConsoleWriter;
 
 
@@ -13,12 +14,12 @@ public class ProcessConsolePrinter extends Thread
 {
 	ConsoleWriter cw = null;
 	InputStream stream = null;
-	String name = null;
+	boolean error = false;
 
-	public ProcessConsolePrinter(String name ,ConsoleWriter cw, InputStream inputStream) {
+	public ProcessConsolePrinter(Boolean error ,ConsoleWriter cw, InputStream inputStream) {
 		this.cw = cw;
 		this.stream = inputStream;
-		this.name = name;
+		this.error = error;
 		setDaemon(true);
 	}
 
@@ -32,10 +33,21 @@ public class ProcessConsolePrinter extends Thread
 		{
 			while ((line = input.readLine()) != null)
 			{
+				
+				
+				
 				if (cw != null)
-					cw.println(name + ": " +line);
+				{
+					if(error){
+						cw.ConsolePrint(line, SWT.COLOR_RED);
+					}
+					else{
+						cw.println(line);
+					}
+					
+				}
 				else
-					System.out.println(name + ": " + line);
+					System.out.println(line);
 			}
 		} catch (IOException e)
 		{

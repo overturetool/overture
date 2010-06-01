@@ -38,7 +38,7 @@ import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.VdmProject;
-import org.overture.ide.debug.core.Activator;
+import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.ui.internal.viewsupport.DecorationgVdmLabelProvider;
 import org.overture.ide.ui.internal.viewsupport.VdmUILabelProvider;
@@ -359,7 +359,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 									}
 								} catch (CoreException e)
 								{
-									if (Activator.DEBUG)
+									if (VdmDebugPlugin.DEBUG)
 									{
 										e.printStackTrace();
 									}
@@ -430,7 +430,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 					chooseOperation();
 				} catch (CoreException e1)
 				{
-					if (Activator.DEBUG)
+					if (VdmDebugPlugin.DEBUG)
 					{
 						e1.printStackTrace();
 					}
@@ -701,7 +701,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 			}
 		} catch (CoreException e)
 		{
-			if (Activator.DEBUG)
+			if (VdmDebugPlugin.DEBUG)
 			{
 				e.printStackTrace();
 			}

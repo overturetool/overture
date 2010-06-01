@@ -1,5 +1,6 @@
 package org.overture.ide.debug.logging;
 
+import org.overture.ide.debug.core.dbgp.IDbgpSessionInfo;
 import org.overture.ide.debug.utils.xml.XMLNode;
 
 public class LogItem
@@ -64,6 +65,17 @@ public class LogItem
 		this.output = output;
 		this.data = data;
 		this.isError = isError;
+		this.node = null;
+	}
+
+	public LogItem(IDbgpSessionInfo info, String type, boolean output,
+			String string2) {
+		this.sessionId = info.getSession();
+		this.type = type;
+		this.threadId = Integer.parseInt(info.getThreadId().split(" ")[0]);
+		this.output = output;
+		this.data = string2;
+		this.isError = false;
 		this.node = null;
 	}
 

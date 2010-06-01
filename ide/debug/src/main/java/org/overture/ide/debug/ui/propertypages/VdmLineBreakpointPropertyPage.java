@@ -44,15 +44,15 @@ public class VdmLineBreakpointPropertyPage extends VdmBreakpointPropertyPage imp
 			boolean enableCondition = fEnableConditionButton.getSelection();
 			String condition = fConditionEditor.getCondition();
 			boolean suspendOnTrue= fConditionIsTrue.getSelection();
-			if (breakpoint.isConditionEnabled() != enableCondition) {
-				breakpoint.setConditionEnabled(enableCondition);
+			if (breakpoint.getExpressionState() != enableCondition) {
+				breakpoint.setExpressionState(enableCondition);
 			}
-			if (!condition.equals(breakpoint.getCondition())) {
-				breakpoint.setCondition(condition);
+			if (!condition.equals(breakpoint.getExpression())) {
+				breakpoint.setExpression(condition);
 			}
-			if (breakpoint.isConditionSuspendOnTrue() != suspendOnTrue) {
-				breakpoint.setConditionSuspendOnTrue(suspendOnTrue);
-			}
+//			if (breakpoint.isConditionSuspendOnTrue() != suspendOnTrue) {
+//				breakpoint.setConditionSuspendOnTrue(suspendOnTrue);
+//			}
 		}
 //		if (breakpoint instanceof IJavaWatchpoint) {
 //			IJavaWatchpoint watchpoint= (IJavaWatchpoint) getBreakpoint();
@@ -122,9 +122,9 @@ public class VdmLineBreakpointPropertyPage extends VdmBreakpointPropertyPage imp
 	protected void createTypeSpecificEditors(Composite parent) throws CoreException {
 		setTitle("Line Breakpoint");
 		IVdmLineBreakpoint breakpoint = (IVdmLineBreakpoint) getBreakpoint();
-		if (breakpoint.supportsCondition()) {
+//		if (breakpoint..supportsCondition()) {
 			createConditionEditor(parent);
-		}
+//		}
 //		if (breakpoint instanceof IJavaWatchpoint) {
 //			setTitle(PropertyPageMessages.JavaLineBreakpointPage_19);
 //			IJavaWatchpoint watchpoint= (IJavaWatchpoint) getBreakpoint();
@@ -186,7 +186,7 @@ public class VdmLineBreakpointPropertyPage extends VdmBreakpointPropertyPage imp
 		
 		Composite conditionComposite = SWTFactory.createGroup(parent, EMPTY_STRING, 1, 1, GridData.FILL_BOTH);
 		fEnableConditionButton = createCheckButton(conditionComposite, label);
-		fEnableConditionButton.setSelection(breakpoint.isConditionEnabled());
+		fEnableConditionButton.setSelection(breakpoint.getExpressionState());
 		fEnableConditionButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				setConditionEnabled(fEnableConditionButton.getSelection());
@@ -196,12 +196,12 @@ public class VdmLineBreakpointPropertyPage extends VdmBreakpointPropertyPage imp
 		fSuspendWhenLabel = createLabel(conditionComposite, "Suspend when:"); 
 		fConditionIsTrue = createRadioButton(conditionComposite, "condition is 'true'"); 
 		fConditionHasChanged = createRadioButton(conditionComposite, "value of condition changes"); 
-		if (breakpoint.isConditionSuspendOnTrue()) {
-			fConditionIsTrue.setSelection(true);
-		} 
-		else {
+//		if (breakpoint.isConditionSuspendOnTrue()) {
+//			fConditionIsTrue.setSelection(true);
+//		} 
+//		else {
 			fConditionHasChanged.setSelection(true);
-		}
+//		}
 		setConditionEnabled(fEnableConditionButton.getSelection());
 	}
 

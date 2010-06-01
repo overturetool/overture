@@ -5,13 +5,13 @@ import java.util.Hashtable;
 import java.util.Map;
 
 public class AsyncCaller
-{
-	Integer nextTicket = 0;
+{	
+	static Integer nextTicket = 0;
 
 	Map<Integer, Thread> threads = new Hashtable<Integer, Thread>();
 	Map<Integer, Object> results = new Hashtable<Integer, Object>();
 
-	private final long timeOut = 500;
+	private final long timeOut = 1000;
 
 	protected synchronized Integer getNextTicket()
 	{
@@ -24,10 +24,16 @@ public class AsyncCaller
 		// Integer ticket = getNextTicket();
 
 		// final Lock lock = new ReentrantLock();
-		// lock.lock();
-		Thread t = Thread.currentThread();
+		// lock.lock();	
+		Thread t = Thread.currentThread();		
 		setLock(ticket, t);
 		write(command);
+		try {
+			t.sleep(100);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		Object result = null;
 		long callTime = System.currentTimeMillis();
 		synchronized (t)
@@ -37,13 +43,13 @@ public class AsyncCaller
 				try
 				{
 
-					t.wait(timeOut);
+					t.wait(100);
 
 				} catch (InterruptedException e)
 				{
 					// What we expect
 				}
-				result = getResult(ticket);
+				result = getResult(ticket);	
 			}
 			
 		}
@@ -85,7 +91,7 @@ public class AsyncCaller
 		if (threads.containsKey(ticket))
 		{
 			results.put(ticket, result);
-			threads.get(ticket).interrupt();
+			//threads.get(ticket).interrupt();
 			threads.remove(ticket);
 		}
 	}
