@@ -34,6 +34,8 @@ import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.actions.ToggleCommentAction;
 import org.overture.ide.ui.outline.VdmContentOutlinePage;
 import org.overturetool.vdmj.ast.IAstNode;
+import org.overturetool.vdmj.definitions.MutexSyncDefinition;
+import org.overturetool.vdmj.statements.BlockStatement;
 
 public abstract class VdmEditor extends TextEditor
 {
@@ -580,6 +582,14 @@ public abstract class VdmEditor extends TextEditor
 	 */
 	protected void synchronizeOutlinePage(IAstNode element)
 	{
+		//TODO: don't search for mutexes
+		if(element instanceof MutexSyncDefinition)
+			return;
+		if(element instanceof BlockStatement)
+			return;
+		
+		
+		
 		synchronizeOutlinePage(element, false);// true
 	}
 

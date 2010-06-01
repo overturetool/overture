@@ -6,7 +6,7 @@ import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableContext;
-import org.overture.ide.debug.core.Activator;
+import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.ui.launchconfigurations.LauncherMessages;
 import org.overture.ide.debug.ui.launchconfigurations.MethodSearchEngine;
@@ -93,7 +93,7 @@ public class VdmPpApplicationLaunchShortcut extends VdmLaunchShortcut
 		} catch (CoreException exception)
 		{
 
-			MessageDialog.openError(Activator.getActiveWorkbenchShell(), LauncherMessages.VdmLaunchShortcut_3, exception.getStatus().getMessage());
+			MessageDialog.openError(VdmDebugPlugin.getActiveWorkbenchShell(), LauncherMessages.VdmLaunchShortcut_3, exception.getStatus().getMessage());
 		}
 		return config;
 	}
