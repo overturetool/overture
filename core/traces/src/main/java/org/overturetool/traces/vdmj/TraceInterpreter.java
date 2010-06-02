@@ -359,10 +359,14 @@ public class TraceInterpreter
 	{
 		NamedTraceDefinition mtd = (NamedTraceDefinition) traceDefinition;
 		TestSequence tests = null;
-		if (reduce)
-			tests = mtd.getTests(ctxt, subset, traceReductionType, seed);
-		else
-			tests = mtd.getTests(ctxt);
+		if (!reduce)
+		{
+			subset=	1.0F;
+			traceReductionType=  TraceReductionType.NONE;
+			seed =System.currentTimeMillis();
+		}
+		
+		tests = mtd.getTests(ctxt, subset, traceReductionType, seed);
 
 		processingTrace(className, mtd.name.name, tests.size());
 		if (storage != null)
@@ -370,8 +374,10 @@ public class TraceInterpreter
 					mtd.location.file.getName(),
 					mtd.location.startLine,
 					mtd.location.startPos,
-
-					tests.size());
+					tests.size(),
+					new Float(subset),
+					traceReductionType,
+					new Long(seed));
 
 		int n = 1;
 

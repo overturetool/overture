@@ -9,25 +9,25 @@ import org.xml.sax.SAXException;
 
 public interface ITracesHelper
 {
-	public abstract boolean Initialized();
+	public abstract boolean initialized();
 
-	public abstract List<String> GetClassNamesWithTraces() throws IOException,
+	public abstract List<String> getClassNamesWithTraces() throws IOException,
 			TraceHelperNotInitializedException;
 
-	public abstract List<NamedTraceDefinition> GetTraceDefinitions(
+	public abstract List<NamedTraceDefinition> getTraceDefinitions(
 			String className) throws IOException, SAXException,
 			ClassNotFoundException, TraceHelperNotInitializedException;
 
-	public abstract List<TraceTestResult> GetTraceTests(String className,
+	public abstract List<TraceTestResult> getTraceTests(String className,
 			String trace) throws SAXException, IOException,
 			ClassNotFoundException, TraceHelperNotInitializedException;
 
-	public abstract List<TraceTestResult> GetTraceTests(String className,
+	public abstract List<TraceTestResult> getTraceTests(String className,
 			String trace, Integer startNumber, Integer stopNumber)
 			throws SAXException, IOException, ClassNotFoundException,
 			TraceHelperNotInitializedException;
 
-	public abstract Integer GetTraceTestCount(String className, String trace)
+	public abstract Integer getTraceTestCount(String className, String trace)
 			throws SAXException, IOException, ClassNotFoundException,
 			TraceHelperNotInitializedException;
 
@@ -42,20 +42,20 @@ public interface ITracesHelper
 	throws ClassNotFoundException, TraceHelperNotInitializedException,IOException,Exception;
 	
 
-	public abstract TraceTestStatus GetStatus(String className, String trace,
+	public abstract TraceTestStatus getStatus(String className, String trace,
 			Integer num) throws SAXException, IOException,
 			ClassNotFoundException;
 
-	public abstract TraceTestResult GetResult(String className, String trace,
+	public abstract TraceTestResult getResult(String className, String trace,
 			Integer num) throws SAXException, IOException,
 			ClassNotFoundException;
 
-	public abstract File GetFile(String className) throws IOException,
+	public abstract File getFile(String className) throws IOException,
 			ClassNotFoundException, TraceHelperNotInitializedException;
 
-	public abstract int GetSkippedCount(String className, String traceName)
+	public abstract int getSkippedCount(String className, String traceName)
 			throws SAXException, IOException, ClassNotFoundException;
 	
-	public abstract String GetProjectName();
+	public abstract String getProjectName();
 
 }

@@ -3,6 +3,9 @@ package org.overturetool.traces.utility;
 import java.io.IOException;
 import java.util.List;
 import java.util.Stack;
+
+import org.overturetool.vdmj.messages.Redirector;
+import org.overturetool.vdmj.traces.TraceReductionType;
 import org.overturetool.vdmj.traces.Verdict;
 import org.overturetool.vdmj.values.Value;
 
@@ -28,6 +31,9 @@ public class TraceXmlWrapper
 	public static final String NUMBER_OF_SKIPPED_TESTS_TAG = "SkippedCount";
 	public static final String NUMBER_OF_FAILD_TESTS_TAG = "FaildCount";
 	public static final String NUMBER_OF_INCONCLUSIVE_TESTS_TAG = "InconclusiveCount";
+	public static final String SUBSET = "SUBSET";
+	public static final String TRACE_REDUCTION = "REDUCTION";
+	public static final String SEED = "SEED";
 
 	public TraceXmlWrapper(String fileName) throws IOException
 	{
@@ -51,7 +57,7 @@ public class TraceXmlWrapper
 	}
 
 	public void StartTrace(String traceName, String fileName, Integer line,
-			Integer col, Integer numberOfTests)
+			Integer col, Integer numberOfTests, Float subset, TraceReductionType traceReductionType, Long seed)
 	{
 		xml.StartElement(
 				TRACE_TAG,
@@ -64,7 +70,13 @@ public class TraceXmlWrapper
 				START_LINE_TAG,
 				line.toString(),
 				START_COL_TAG,
-				col.toString());
+				col.toString(),
+				SUBSET,
+				subset.toString(),
+				TRACE_REDUCTION,
+				traceReductionType.toString(),
+				SEED,
+				seed.toString());
 		openElements.push(TRACE_TAG);
 	}
 
