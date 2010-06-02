@@ -17,25 +17,25 @@ public class TraceTestTreeNode implements IAdaptable ,ITreeNode{
 		this.result = status;
 	}
 
-	public boolean HasRunTimeError() {
+	public boolean hasRunTimeError() {
 		return runTimeError;
 	}
 
-	public void SetRunTimeError() {
+	public void setRunTimeError() {
 		this.runTimeError = true;
 	}
 
-	public void SetStatus(Verdict status) {
+	public void setStatus(Verdict status) {
 		this.runTimeError = false;
 		this.result.setStatus(status);
 	}
 	
-	public void SetResult(TraceTestResult result) {
+	public void setResult(TraceTestResult result) {
 		
 		this.result=result;
 	}
 
-	public Verdict GetStatus() {
+	public Verdict getStatus() {
 		return this.result.getStatus();
 	}
 
@@ -43,7 +43,7 @@ public class TraceTestTreeNode implements IAdaptable ,ITreeNode{
 		return parent;
 	}
 	
-	public TraceTestResult GetResult()
+	public TraceTestResult getResult()
 	{
 		return result;
 	}

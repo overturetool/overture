@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
+import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
 
 public class VdmTypeCheckerUi
@@ -113,12 +114,30 @@ public class VdmTypeCheckerUi
 	// // });
 	// }
 
+	public static class CompletedStatus{
+		private boolean completed;
+		
+		public synchronized boolean isCompleted()
+		{
+			return completed;
+		}
+		public synchronized void setCompledted()
+		{
+			completed = true;
+		}
+	}
+	
 	public static boolean typeCheck(Shell shell, final IVdmProject project)
 	{
 		Assert.isNotNull(shell, "Shell for type checker cannot be null");
 		Assert.isNotNull(project, "Project for type checker cannot be null");
-
-		if(project.getModel().isTypeCorrect())
+		
+		final IVdmModel model = project.getModel();
+		
+		
+		final CompletedStatus checkCompleted = new CompletedStatus();
+		
+		if(!model.getRootElementList().isEmpty() && model.isTypeCorrect() )
 		{
 			return true; //skip future checking to speed up the process
 		}
@@ -133,7 +152,9 @@ public class VdmTypeCheckerUi
 				{
 					try
 					{
+						model.refresh(false, monitor);
 						project.typeCheck(monitor);
+						checkCompleted.setCompledted();
 
 					} catch (CoreException e)
 					{
@@ -150,6 +171,17 @@ public class VdmTypeCheckerUi
 		{
 
 		}
+		
+		while(!checkCompleted.isCompleted())
+		{
+			try
+			{
+				Thread.sleep(100);
+			} catch (InterruptedException e)
+			{
+			}
+		}
+		
 		return project.getModel().isTypeCorrect();
 	}
 }

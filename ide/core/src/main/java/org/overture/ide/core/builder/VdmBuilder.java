@@ -149,10 +149,10 @@ public class VdmBuilder extends VdmCoreBuilder
 
 	public void endBuild(IProgressMonitor monitor)
 	{
-		if (VdmCore.DEBUG)
-		{
-			System.out.println("endBuild");
-		}
+//		if (VdmCore.DEBUG)
+//		{
+//			System.out.println("endBuild");
+//		}
 //		removeBuilding(getVdmProject());
 	}
 

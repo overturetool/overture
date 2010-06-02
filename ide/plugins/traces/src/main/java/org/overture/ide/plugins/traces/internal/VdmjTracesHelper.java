@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.console.ConsolePlugin;
@@ -17,6 +19,7 @@ import org.eclipse.ui.console.MessageConsoleStream;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.traces.TracesXmlStoreReader;
+import org.overture.ide.plugins.traces.TracesXmlStoreReader.TraceInfo;
 import org.overture.ide.plugins.traces.TracesXmlStoreReader.TraceStatusXml;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.ide.vdmpp.core.IVdmPpCoreConstants;
@@ -40,45 +43,48 @@ public class VdmjTracesHelper implements ITracesHelper
 	// ClassInterpreter ci;
 	String projectName;
 	final String TRACE_STORE_DIR_NAME = "generated/traces";
-	IVdmProject project;
+	public final IVdmProject project;
 	String nature = IVdmPpCoreConstants.NATURE;
-	HashMap<String, TracesXmlStoreReader> classTraceReaders = new HashMap<String, TracesXmlStoreReader>();
+	Map<String, TracesXmlStoreReader> classTraceReaders = new HashMap<String, TracesXmlStoreReader>();
 	File projectDir;
 	Dialect dialect = Dialect.VDM_PP;
 	String contentTypeId = IVdmPpCoreConstants.CONTENT_TYPE;
 	Shell shell;
 
-	public VdmjTracesHelper(Shell shell,IVdmProject project, int max) throws Exception {
+	public VdmjTracesHelper(Shell shell, IVdmProject project, int max)
+			throws Exception
+	{
 		this.project = project;
-this.shell = shell;
-//		if (project.hasNature(VdmPpProjectNature.VDM_PP_NATURE))
-//		{
-//			nature = VdmPpProjectNature.VDM_PP_NATURE;
-//			contentTypeId = VdmPpCorePluginConstants.CONTENT_TYPE;
-//			dialect = Dialect.VDM_PP;
-//		} else if (project.hasNature(VdmRtProjectNature.VDM_RT_NATURE))
-//		{
-//			nature = VdmRtProjectNature.VDM_RT_NATURE;
-//			contentTypeId = VdmRtCorePluginConstants.CONTENT_TYPE;
-//			dialect = Dialect.VDM_RT;
-//		} else if (project.hasNature(VdmSlProjectNature.VDM_SL_NATURE))
-//		{
-//			nature = VdmSlProjectNature.VDM_SL_NATURE;
-//			contentTypeId = VdmSlCorePluginConstants.CONTENT_TYPE;
-//			dialect = Dialect.VDM_SL;
-//		}
+		this.shell = shell;
+		// if (project.hasNature(VdmPpProjectNature.VDM_PP_NATURE))
+		// {
+		// nature = VdmPpProjectNature.VDM_PP_NATURE;
+		// contentTypeId = VdmPpCorePluginConstants.CONTENT_TYPE;
+		// dialect = Dialect.VDM_PP;
+		// } else if (project.hasNature(VdmRtProjectNature.VDM_RT_NATURE))
+		// {
+		// nature = VdmRtProjectNature.VDM_RT_NATURE;
+		// contentTypeId = VdmRtCorePluginConstants.CONTENT_TYPE;
+		// dialect = Dialect.VDM_RT;
+		// } else if (project.hasNature(VdmSlProjectNature.VDM_SL_NATURE))
+		// {
+		// nature = VdmSlProjectNature.VDM_SL_NATURE;
+		// contentTypeId = VdmSlCorePluginConstants.CONTENT_TYPE;
+		// dialect = Dialect.VDM_SL;
+		// }
+		
+		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 
 		nature = this.project.getVdmNature();
 		contentTypeId = this.project.getContentTypeIds().get(0);
 		dialect = this.project.getDialect();
-		
-		this.projectDir = new File(project.getLocation().toFile(),
-				TRACE_STORE_DIR_NAME.replace('/', File.separatorChar));
+
+		this.projectDir = new File(project.getLocation().toFile(), TRACE_STORE_DIR_NAME.replace('/', File.separatorChar));
 		if (!this.projectDir.exists())
 			this.projectDir.mkdirs();
 
 		project.getModel().refresh(false, null);
-		//AbstractBuilder.parseMissingFiles(project, nature, contentTypeId, null);
+		// AbstractBuilder.parseMissingFiles(project, nature, contentTypeId, null);
 
 		org.overturetool.vdmj.Settings.prechecks = true;
 		org.overturetool.vdmj.Settings.postchecks = true;
@@ -91,32 +97,32 @@ this.shell = shell;
 			initialized = true;
 		} catch (Exception ex)
 		{
-			ConsolePrint(ex.getMessage());
+			consolePrint(ex.getMessage());
 		}
 
 	}
 
-//	private ClassList getClasses() throws NotAllowedException
-//	{
-//		RootNode root = AstManager.instance().getRootNode(project.getProject(),
-//				nature);
-//		if (root != null)
-//			return root.getClassList();
-//		else
-//			return new ClassList();
-//	}
-//
-//	private ModuleList getModules() throws NotAllowedException
-//	{
-//		RootNode root = AstManager.instance().getRootNode(project.getProject(),
-//				nature);
-//		if (root != null)
-//			return root.getModuleList();
-//		else
-//			return new ModuleList();
-//	}
+	// private ClassList getClasses() throws NotAllowedException
+	// {
+	// RootNode root = AstManager.instance().getRootNode(project.getProject(),
+	// nature);
+	// if (root != null)
+	// return root.getClassList();
+	// else
+	// return new ClassList();
+	// }
+	//
+	// private ModuleList getModules() throws NotAllowedException
+	// {
+	// RootNode root = AstManager.instance().getRootNode(project.getProject(),
+	// nature);
+	// if (root != null)
+	// return root.getModuleList();
+	// else
+	// return new ModuleList();
+	// }
 
-	public List<String> GetClassNamesWithTraces() throws IOException
+	public List<String> getClassNamesWithTraces() throws IOException
 	{
 
 		List<String> classNames = new ArrayList<String>();
@@ -164,10 +170,10 @@ this.shell = shell;
 		return classNames;
 	}
 
-	public File GetFile(String className)
+	public File getFile(String className)
 			throws TraceHelperNotInitializedException, ClassNotFoundException
 	{
-		CheckInitialization();
+		checkInitialization();
 
 		if (dialect == Dialect.VDM_SL)
 		{
@@ -186,23 +192,20 @@ this.shell = shell;
 		}
 	}
 
-	public TraceTestResult GetResult(String className, String trace, Integer num)
+	public TraceTestResult getResult(String className, String trace, Integer num)
 			throws IOException, SAXException
 	{
 
-		return classTraceReaders.get(className).GetTraceTestResults(trace,
-				num,
-				num).get(0);
+		return classTraceReaders.get(className).getTraceTestResults(trace, num, num).get(0);
 
 	}
 
-	public int GetSkippedCount(String className, String traceName)
+	public int getSkippedCount(String className, String traceName)
 
 	{
 		if (classTraceReaders.containsKey(className))
 		{
-			HashMap<String, TraceStatusXml> traceStatus = classTraceReaders.get(className)
-					.GetTraceStatus();
+			Map<String, TraceStatusXml> traceStatus = classTraceReaders.get(className).getTraceStatus();
 			if (traceStatus != null && traceStatus.containsKey(traceName))
 			{
 				return traceStatus.get(traceName).getSkippedTestCount();
@@ -212,7 +215,7 @@ this.shell = shell;
 		return 0;
 	}
 
-	public TraceTestStatus GetStatus(String className, String trace, Integer num)
+	public TraceTestStatus getStatus(String className, String trace, Integer num)
 
 	{
 
@@ -225,8 +228,7 @@ this.shell = shell;
 	{
 		TraceInterpreter interpeter = null;
 		if (monitor instanceof IProgressMonitor)
-			interpeter = new ObservableTraceInterpeter((IProgressMonitor) monitor,
-					this);
+			interpeter = new ObservableTraceInterpeter((IProgressMonitor) monitor, this);
 		else
 			interpeter = new TraceInterpreter();
 
@@ -234,21 +236,13 @@ this.shell = shell;
 				+ File.separatorChar + className + ".xml");
 
 		buildProjectIfRequired();
+		
+//		Thread.sleep(1000);
 
 		if (dialect == Dialect.VDM_SL)
-			interpeter.processTrace(project.getModel().getModuleList(),
-					className,
-					false,
-					storage,
-					dialect,
-					project.getLanguageVersion());
+			interpeter.processTrace(project.getModel().getModuleList(), className, false, storage, dialect, project.getLanguageVersion());
 		else
-			interpeter.processTrace(project.getModel().getClassList(),
-					className,
-					false,
-					storage,
-					dialect,
-					project.getLanguageVersion());
+			interpeter.processTrace(project.getModel().getClassList(), className, false, storage, dialect, project.getLanguageVersion());
 	}
 
 	public void processClassTraces(String className, float subset,
@@ -258,8 +252,7 @@ this.shell = shell;
 	{
 		TraceInterpreter interpeter = null;
 		if (monitor instanceof IProgressMonitor)
-			interpeter = new ObservableTraceInterpeter((IProgressMonitor) monitor,
-					this);
+			interpeter = new ObservableTraceInterpeter((IProgressMonitor) monitor, this);
 		else
 			interpeter = new TraceInterpreter();
 
@@ -269,65 +262,51 @@ this.shell = shell;
 		buildProjectIfRequired();
 
 		if (dialect == Dialect.VDM_SL)
-			interpeter.processTrace(project.getModel().getModuleList(),
-					className,
-					false,
-					storage,
-					dialect,
-					project.getLanguageVersion(),
-					subset,
-					traceReductionType,
-					seed);
+			interpeter.processTrace(project.getModel().getModuleList(), className, false, storage, dialect, project.getLanguageVersion(), subset, traceReductionType, seed);
 		else
-			interpeter.processTrace(project.getModel().getClassList(),
-					className,
-					false,
-					storage,
-					dialect,
-					project.getLanguageVersion(),
-					subset,
-					traceReductionType,
-					seed);
+			interpeter.processTrace(project.getModel().getClassList(), className, false, storage, dialect, project.getLanguageVersion(), subset, traceReductionType, seed);
 
 	}
 
 	void buildProjectIfRequired()
 	{
-		shell.getDisplay().asyncExec(new Runnable() {
+		project.getModel().clean();
+		shell.getDisplay().syncExec(new Runnable()
+		{
 
 			public void run()
 			{
-VdmTypeCheckerUi.typeCheck(shell, project);
-				
+				VdmTypeCheckerUi.typeCheck(shell, project);
+
 			}
 
 		});
-		
-//		RootNode root = AstManager.instance().getRootNode(project.getProject(),
-//				nature);
-//		if (root != null && root.isChecked())
-//			return;
-//		else
-//			try
-//			{
-//				IProgressMonitor progressMonitor = null;
-//
-//				project.getProject()
-//						.build(IncrementalProjectBuilder.FULL_BUILD,
-//								progressMonitor);
-//			} catch (CoreException e)
-//			{
-//				System.out.println("Error forcing build from traces");
-//				e.printStackTrace();
-//			}
+
+		// RootNode root = AstManager.instance().getRootNode(project.getProject(),
+		// nature);
+		// if (root != null && root.isChecked())
+		// return;
+		// else
+		// try
+		// {
+		// IProgressMonitor progressMonitor = null;
+		//
+		// project.getProject()
+		// .build(IncrementalProjectBuilder.FULL_BUILD,
+		// progressMonitor);
+		// } catch (CoreException e)
+		// {
+		// System.out.println("Error forcing build from traces");
+		// e.printStackTrace();
+		// }
 	}
 
-	public List<NamedTraceDefinition> GetTraceDefinitions(String className)
+	public List<NamedTraceDefinition> getTraceDefinitions(String className)
 			throws IOException, SAXException, ClassNotFoundException,
 			TraceHelperNotInitializedException
 
 	{
-		CheckInitialization();
+		checkInitialization();
 		List<NamedTraceDefinition> traces = new Vector<NamedTraceDefinition>();
 
 		if (dialect == Dialect.VDM_SL)
@@ -366,8 +345,7 @@ VdmTypeCheckerUi.typeCheck(shell, project);
 			try
 			{
 				// result file exists, create reader
-				TracesXmlStoreReader reader = new TracesXmlStoreReader(classTraceXmlFile,
-						className);
+				TracesXmlStoreReader reader = new TracesXmlStoreReader(classTraceXmlFile, className);
 				classTraceReaders.put(className, reader);
 			} catch (SAXException e)
 			{
@@ -414,16 +392,12 @@ VdmTypeCheckerUi.typeCheck(shell, project);
 		return null;
 	}
 
-	public List<TraceTestResult> GetTraceTests(String className, String trace)
+	public List<TraceTestResult> getTraceTests(String className, String trace)
 			throws IOException, SAXException
 
 	{
 
-		List<TraceTestResult> testStatus = classTraceReaders.get(className)
-				.GetTraceTestResults(trace,
-						1,
-						classTraceReaders.get(className)
-								.GetTraceTestCount(trace));
+		List<TraceTestResult> testStatus = classTraceReaders.get(className).getTraceTestResults(trace, 1, classTraceReaders.get(className).getTraceTestCount(trace));
 
 		return testStatus;
 
@@ -437,7 +411,7 @@ VdmTypeCheckerUi.typeCheck(shell, project);
 
 	}
 
-	public void ConsolePrint(String message)
+	public void consolePrint(String message)
 	{
 
 		MessageConsole myConsole = findConsole("TracesConsole");
@@ -460,40 +434,49 @@ VdmTypeCheckerUi.typeCheck(shell, project);
 		return myConsole;
 	}
 
-	public Integer GetTraceTestCount(String className, String trace)
+	public Integer getTraceTestCount(String className, String trace)
 	{
 		if (classTraceReaders.containsKey(className))
-			return classTraceReaders.get(className).GetTraceTestCount(trace);
+			return classTraceReaders.get(className).getTraceTestCount(trace);
 		else
 			return 0;
 
 	}
 
-	public List<TraceTestResult> GetTraceTests(String className, String trace,
+	public TraceInfo getTraceInfo(String className, String trace)
+	{
+		if (classTraceReaders.containsKey(className))
+			return classTraceReaders.get(className).getTraceInfo(trace);
+
+		return null;
+	}
+
+	public List<TraceTestResult> getTraceTests(String className, String trace,
 			Integer startNumber, Integer stopNumber) throws IOException,
 			SAXException
 	{
 
-		List<TraceTestResult> list = classTraceReaders.get(className)
-				.GetTraceTestResults(trace, startNumber, stopNumber);
+		List<TraceTestResult> list = classTraceReaders.get(className).getTraceTestResults(trace, startNumber, stopNumber);
 
 		return list;
 	}
 
-	public boolean Initialized()
+	public boolean initialized()
 	{
 		return initialized;
 	}
 
-	private void CheckInitialization()
+	private void checkInitialization()
 			throws TraceHelperNotInitializedException
 	{
 		try
 		{
-			if (dialect == Dialect.VDM_SL && project.getModel().getModuleList() != null
+			if (dialect == Dialect.VDM_SL
+					&& project.getModel().getModuleList() != null
 					&& project.getModel().getModuleList().size() > 0)
 				return;
-			else if (project.getModel().getClassList() != null && project.getModel().getClassList().size() > 0)
+			else if (project.getModel().getClassList() != null
+					&& project.getModel().getClassList().size() > 0)
 				return;
 
 			throw new TraceHelperNotInitializedException(projectName);
@@ -503,7 +486,7 @@ VdmTypeCheckerUi.typeCheck(shell, project);
 		}
 	}
 
-	public String GetProjectName()
+	public String getProjectName()
 	{
 		return projectName;
 	}

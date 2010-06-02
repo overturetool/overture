@@ -216,7 +216,10 @@ public class FileUtility
 		List<Character> content = new Vector<Character>();
 		try
 		{
-			file.refreshLocal(IResource.DEPTH_ONE,null);
+			if(!file.isSynchronized(IResource.DEPTH_ONE))
+			{
+				file.refreshLocal(IResource.DEPTH_ONE,null);
+			}
 			inStream = file.getContents();
 			in = new InputStreamReader(inStream, file.getCharset());
 

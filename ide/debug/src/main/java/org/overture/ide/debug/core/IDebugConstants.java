@@ -18,6 +18,8 @@ public interface IDebugConstants
 	
 	final static String VDM_LAUNCH_CONFIG_DEFAULT = "vdm_launch_config_default";
 	
+	final static String VDM_LAUNCH_CONFIG_IS_TRACE = "vdm_launch_config_is_trace";
+	
 	final static String VDM_LAUNCH_CONFIG_REMOTE_CONTROL = "vdm_launch_config_remote_control_class";
 	final static String VDM_LAUNCH_CONFIG_CREATE_COVERAGE = "vdm_launch_config_create_coverage";
 	final static String VDM_LAUNCH_CONFIG_REMOTE_DEBUG = "vdm_launch_config_remote_debug";

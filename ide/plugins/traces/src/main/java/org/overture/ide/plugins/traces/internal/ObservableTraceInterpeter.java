@@ -34,7 +34,7 @@ public class ObservableTraceInterpeter extends TraceInterpreter
 		// +traceCount,traceCount);
 		// worked=0;
 		monitor.subTask("Evaluating tests");
-		console.ConsolePrint("Executing: " + className + " - Trace count: "
+		console.consolePrint("Executing: " + className + " - Trace count: "
 				+ traceCount);
 	}
 
@@ -53,7 +53,7 @@ public class ObservableTraceInterpeter extends TraceInterpreter
 				+ " - Trace count: " + testCount, 100);
 		monitor.worked(worked);
 
-		console.ConsolePrint(className + " - " + traceName + " Test count = "
+		console.consolePrint(className + " - " + traceName + " Test count = "
 				+ testCount);
 
 	}
@@ -83,7 +83,7 @@ public class ObservableTraceInterpeter extends TraceInterpreter
 		// printTraceStatus();
 
 		long endClass = System.currentTimeMillis();
-		console.ConsolePrint("Class " + activeClass + " processed in "
+		console.consolePrint("Class " + activeClass + " processed in "
 				+ (double) (endClass - beginClass) / 1000 + " secs");
 
 		// monitor.done();
@@ -94,7 +94,7 @@ public class ObservableTraceInterpeter extends TraceInterpreter
 		if (super.activeTrace != null && super.beginTrace != 0)
 		{
 			long endTrace = System.currentTimeMillis();
-			console.ConsolePrint("Trace " + activeClass + " - " + activeTrace
+			console.consolePrint("Trace " + activeClass + " - " + activeTrace
 					+ " processed in " + (double) (endTrace - beginTrace)
 					/ 1000 + " secs");
 		}
@@ -103,14 +103,14 @@ public class ObservableTraceInterpeter extends TraceInterpreter
 	@Override
 	protected void error(String message)
 	{
-		console.ConsolePrint(message);
+		console.consolePrint(message);
 
 	}
 
 	@Override
 	protected void typeError(String message)
 	{
-		console.ConsolePrint(message);
+		console.consolePrint(message);
 
 	}
 

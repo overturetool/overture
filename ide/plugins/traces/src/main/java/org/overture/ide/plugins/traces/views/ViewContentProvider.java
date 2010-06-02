@@ -141,7 +141,7 @@ ITreeContentProvider {
 					if (tr == null)
 						continue;
 
-					List<String> classes = tr.GetClassNamesWithTraces();
+					List<String> classes = tr.getClassNamesWithTraces();
 					boolean isTraceProject = false;
 					for (String className : classes) {
 						if (className != null) {

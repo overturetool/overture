@@ -11,5 +11,6 @@ Bundle-SymbolicName: org.overture.ide.vdmpp.debug;singleton:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.overture.ide.debug,
  org.overture.ide.vdmpp.core;bundle-version="1.0.0"
-Export-Package: org.overture.ide.vdmpp.debug.ui.launchconfigurations
+Export-Package: org.overture.ide.vdmpp.debug,
+ org.overture.ide.vdmpp.debug.ui.launchconfigurations
 Bundle-Activator: org.overture.ide.vdmpp.debug.Activator

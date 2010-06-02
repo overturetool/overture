@@ -368,7 +368,7 @@ public class TraceTest extends ViewPart implements ISelectionListener
 			{
 				TraceTestTreeNode traceTestCaseNode = (TraceTestTreeNode) first;
 			
-				TraceTestResult res = traceTestCaseNode.GetResult();
+				TraceTestResult res = traceTestCaseNode.getResult();
 				
 				List<Data> list = new ArrayList<Data>();
 

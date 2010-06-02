@@ -39,7 +39,7 @@ public class ViewLabelProvider extends LabelProvider {
 //		}
 		if (obj instanceof TraceTestTreeNode) {
 			String imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNKNOWN;
-			Verdict status = (((TraceTestTreeNode) obj).GetStatus());
+			Verdict status = (((TraceTestTreeNode) obj).getStatus());
 			if (status == Verdict.PASSED)
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_SUCCES;
 			else if (status == null)
@@ -53,7 +53,7 @@ public class ViewLabelProvider extends LabelProvider {
 			else if (status == Verdict.SKIPPED)
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_SKIPPED;
 
-			if (((TraceTestTreeNode) obj).HasRunTimeError())
+			if (((TraceTestTreeNode) obj).hasRunTimeError())
 				imgPath = OvertureTracesPlugin.IMG_ERROR;
 
 			return OvertureTracesPlugin.getImageDescriptor(imgPath).createImage();

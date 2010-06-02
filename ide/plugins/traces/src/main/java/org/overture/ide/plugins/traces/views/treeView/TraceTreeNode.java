@@ -1,12 +1,18 @@
 package org.overture.ide.plugins.traces.views.treeView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.swt.widgets.Display;
+import org.overture.ide.plugins.traces.TracesXmlStoreReader.TraceInfo;
+import org.overture.ide.plugins.traces.internal.VdmjTracesHelper;
 import org.overturetool.traces.utility.ITracesHelper;
+import org.overturetool.traces.utility.TraceHelperNotInitializedException;
 import org.overturetool.traces.utility.TraceTestResult;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
+import org.xml.sax.SAXException;
 
 
 public class TraceTreeNode implements IAdaptable,ITreeNode
@@ -18,13 +24,31 @@ public class TraceTreeNode implements IAdaptable,ITreeNode
 	private int testSkippedCount = 0;
 	private int testTotal = 0;
 	private ITracesHelper traceHelper;
+	private TraceInfo info;
 
 	public TraceTreeNode(NamedTraceDefinition traceDef,
-			ITracesHelper traceHelper)
+			ITracesHelper traceHelper, String className) throws SAXException, IOException, ClassNotFoundException, TraceHelperNotInitializedException
 	{
 		this.traceDefinition = traceDef;
 		this.setTraceHelper(traceHelper);
 		this.children = new ArrayList<ITreeNode>();
+		
+		
+		
+		if(traceHelper instanceof VdmjTracesHelper)
+		{
+			setInfo(((VdmjTracesHelper)traceHelper).getTraceInfo(className, traceDef.getName()));
+		}
+		
+		Integer totalTests = traceHelper.getTraceTestCount(className,
+				traceDef.getName());
+		this.setTestTotal(totalTests);
+
+		this.setSkippedCount(traceHelper.getSkippedCount(className,
+				traceDef.getName()));
+
+		if (totalTests > 0)
+			this.addChild(new NotYetReadyTreeNode());
 	}
 
 	public ITreeNode getParent()
@@ -32,12 +56,12 @@ public class TraceTreeNode implements IAdaptable,ITreeNode
 		return parent;
 	}
 
-	public NamedTraceDefinition GetTraceDefinition()
+	public NamedTraceDefinition getTraceDefinition()
 	{
 		return traceDefinition;
 	}
 
-	public void SetSkippedCount(int skippedCount)
+	public void setSkippedCount(int skippedCount)
 	{
 		testSkippedCount = skippedCount;
 	}
@@ -182,11 +206,11 @@ public class TraceTreeNode implements IAdaptable,ITreeNode
 //		}
 //	}
 
-	public void LoadTests() throws Exception
+	public void loadTests() throws Exception
 	{
 		children.clear();
 
-		Long size = new Long(getTraceHelper().GetTraceTestCount(
+		Long size = new Long(getTraceHelper().getTraceTestCount(
 				parent.getName(),
 				getName()));
 		
@@ -194,7 +218,7 @@ public class TraceTreeNode implements IAdaptable,ITreeNode
 
 		if (!gs.hasGroups())
 		{
-			List<TraceTestResult> traceStatus = getTraceHelper().GetTraceTests(
+			List<TraceTestResult> traceStatus = getTraceHelper().getTraceTests(
 					parent.getName(),
 					getName());
 			for (TraceTestResult traceTestStatus : traceStatus)
@@ -207,22 +231,52 @@ public class TraceTreeNode implements IAdaptable,ITreeNode
 			Long currentCount = new Long(0);
 			for (int i = 0; i < gs.getNumberOfGroups() - 1 && currentCount<size; i++)
 			{
-				TraceTestGroup group = new TraceTestGroup(currentCount + 1,
+				final TraceTestGroup group = new TraceTestGroup(currentCount + 1,
 						currentCount + gs.getGroupSize() + 1);
 				currentCount += gs.getGroupSize();
 				this.addChild(group);
+				Display.getCurrent().syncExec(new Runnable()
+				{
+					
+					public void run()
+					{
+						
+						try
+						{
+							group.loadGroupStatus();
+						} catch (Exception e)
+						{
+							e.printStackTrace();
+						} 
+					}
+				});
+				
 			}
 			if (!currentCount.equals( size))
 			{
-				TraceTestGroup group = new TraceTestGroup(currentCount + 1,
+			final	TraceTestGroup group = new TraceTestGroup(currentCount + 1,
 						size + 1);
 				this.addChild(group);
-
+				Display.getCurrent().syncExec(new Runnable()
+				{
+					
+					public void run()
+					{
+						
+						try
+						{
+							group.loadGroupStatus();
+						} catch (Exception e)
+						{
+							e.printStackTrace();
+						} 
+					}
+				});
 			}
 		}
 	}
 	
-	public void UnloadTests()
+	public void unloadTests()
 	{
 		children.clear();
 		children.add(new NotYetReadyTreeNode());
@@ -243,6 +297,16 @@ public class TraceTreeNode implements IAdaptable,ITreeNode
 	public ITracesHelper getTraceHelper()
 	{
 		return traceHelper;
+	}
+
+	private void setInfo(TraceInfo info)
+	{
+		this.info = info;
+	}
+
+	public TraceInfo getInfo()
+	{
+		return info;
 	}
 
 	
