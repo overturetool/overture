@@ -65,8 +65,13 @@ public class VdmVariable extends VdmDebugElement implements
 					(!expression.startsWith("'") || !expression.endsWith("'")) && //$NON-NLS-1$ //$NON-NLS-2$
 					(!expression.startsWith("\"") || !expression.endsWith("\""))) //$NON-NLS-1$ //$NON-NLS-2$
 				expression = "\"" + expression.replaceAll("\\\"", "\\\\\"") + "\""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-			if (getCoreCommands().setProperty(property.getEvalName(),
-					frame.getLevel(), expression)) {
+//			if (getCoreCommands().setProperty(property.getEvalName(),
+//					frame.getLevel(), expression)) {
+//				clearEvaluationManagerCache();
+//				update();
+			
+			
+			if (getCoreCommands().setProperty(property.getName(),property.getKey(),expression)) {
 				clearEvaluationManagerCache();
 				update();
 			}
@@ -95,8 +100,9 @@ public class VdmVariable extends VdmDebugElement implements
 		String name = property.getEvalName();
 
 		// TODO: Use key if provided
-		this.property = getCoreCommands().getProperty(name, frame.getLevel());
-
+		//this.property = getCoreCommands().getProperty(name, frame.getLevel());
+		
+		this.property = getCoreCommands().getPropertyByKey(property.getPage(), name, frame.getLevel(), property.getKey());
 		DebugEventHelper.fireChangeEvent(this);
 	}
 
