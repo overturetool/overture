@@ -668,7 +668,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 							
 				Value newval = interpreter.evaluate(c.data, interpreter.initialContext);
 				
-				if(newval != null && newval.kind().equals(uv.kind()))
+				if(newval != null && canAssignValue( newval.kind(),uv.kind()))
 				{
 					uv.set(breakpoint.location, newval, breakContext);
 					success = true;
@@ -703,6 +703,39 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		response(hdr, null);
 		
 		
+	}
+
+	private boolean canAssignValue(String newKind, String source) {
+
+		if(newKind.equals(source))
+		{
+			return true;
+		}
+		
+		final String TYPE_REAL="real";
+		final String TYPE_NAT="nat";
+		final String TYPE_NAT1="nat1";
+		final String TYPE_INT="int";
+		
+		
+		if(newKind.contains(TYPE_NAT) &&source.equals(TYPE_NAT))
+		{
+			return true;
+		}
+		if(newKind.contains(TYPE_NAT) &&  source.equals(TYPE_REAL) )
+		{
+			return true;
+		}
+		
+		if(newKind.contains(TYPE_NAT) &&source.equals(TYPE_INT))
+		{
+			return true;
+		}
+		if(newKind.contains(TYPE_INT) &&  source.equals(TYPE_REAL) )
+		{
+			return true;
+		}
+		return false;
 	}
 
 	/**
