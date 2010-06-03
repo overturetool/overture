@@ -31,6 +31,7 @@ import org.overture.ide.core.SourceReferenceManager;
 import org.overture.ide.core.parser.SourceParserManager;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.ui.IVdmUiConstants;
+import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.actions.ToggleCommentAction;
 import org.overture.ide.ui.outline.VdmContentOutlinePage;
 import org.overturetool.vdmj.ast.IAstNode;
@@ -589,8 +590,12 @@ public abstract class VdmEditor extends TextEditor
 			return;
 		
 		
-		
+		try{
 		synchronizeOutlinePage(element, false);// true
+		}
+		catch(Exception e){
+			
+		}
 	}
 
 	/**
