@@ -113,4 +113,8 @@ end ${className}</template>
 	<template autoinsert="true" context="org.overture.ide.vdmrt.ui.contextType"
 		deleted="false" description="while predicate do \n statement" enabled="true"
 		name="whileLoop" id="whileLoopRt">while ${predicate} do ${statement}</template>
+		
+	<template autoinsert="true" context="org.overture.ide.vdmrt.ui.contextType"
+		deleted="false" description="periodic(periode,jitter,delay,offset)(operation name)" enabled="true"
+		name="periodic" id="periodicThreadRt">periodic(${periode},${jitter},${delay},${offset})(${operationName});</template>
 </templates>
