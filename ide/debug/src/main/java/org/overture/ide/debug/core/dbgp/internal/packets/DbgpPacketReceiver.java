@@ -69,7 +69,6 @@ public class DbgpPacketReceiver extends DbgpWorkingThread {
 
 		public synchronized void terminate() {
 			terminated = true;
-			System.out.println("PacketWaiterTerminated");
 			notifyAll();
 		}
 	}

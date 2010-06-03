@@ -24,7 +24,7 @@ import org.overture.ide.debug.core.dbgp.exceptions.DbgpTimeoutException;
 import org.overture.ide.debug.core.model.IVdmThread;
 
 public abstract class DbgpOperation {
-	private static final boolean DEBUG = VdmDebugPlugin.DEBUG;
+	private static final boolean DEBUG = false;//VdmDebugPlugin.DEBUG;
 
 	public interface IResultHandler {
 		void finish(IDbgpStatus status, DbgpException e);

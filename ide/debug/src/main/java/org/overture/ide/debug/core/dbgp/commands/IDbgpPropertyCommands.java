@@ -27,8 +27,7 @@ public interface IDbgpPropertyCommands {
 	 */
 
 	IDbgpProperty getPropertyByKey(Integer page, String name,
-			Integer stackDepth, String key)
-			throws DbgpException;
+			Integer stackDepth, String key) throws DbgpException;
 
 	IDbgpProperty getProperty(String name) throws DbgpException;
 
@@ -43,5 +42,8 @@ public interface IDbgpPropertyCommands {
 	boolean setProperty(IDbgpProperty property) throws DbgpException;
 
 	boolean setProperty(String name, int stackDepth, String value)
+			throws DbgpException;
+
+	boolean setProperty(String longName, String key, String newValue)
 			throws DbgpException;
 }

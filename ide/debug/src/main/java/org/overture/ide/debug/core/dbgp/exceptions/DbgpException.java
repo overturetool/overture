@@ -14,7 +14,7 @@ public class DbgpException extends Exception {
 	private static final long serialVersionUID = 1L;
 
 	public DbgpException() {
-		super();
+		super("DbgpException");
 	}
 
 	public DbgpException(String message, Throwable cause) {

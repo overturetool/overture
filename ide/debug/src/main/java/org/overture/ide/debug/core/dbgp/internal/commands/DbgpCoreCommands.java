@@ -246,4 +246,9 @@ public class DbgpCoreCommands implements IDbgpCoreCommands {
 		return propertyCommands.getProperty(page, name, stackDepth);
 	}
 
+	public boolean setProperty(String longName, String key, String newValue)
+			throws DbgpException {		
+		return propertyCommands.setProperty(longName, key, newValue);
+	}
+
 }

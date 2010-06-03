@@ -24,6 +24,7 @@ import org.overture.ide.debug.core.dbgp.IDbgpSession;
 import org.overture.ide.debug.core.dbgp.breakpoints.IDbgpBreakpoint;
 import org.overture.ide.debug.core.dbgp.commands.IDbgpExtendedCommands;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
+import org.overture.ide.debug.core.dbgp.exceptions.DbgpTimeoutException;
 import org.overture.ide.debug.core.dbgp.internal.IDbgpTerminationListener;
 import org.overture.ide.debug.core.dbgp.internal.utils.Util;
 import org.overture.ide.debug.core.model.IDebugLaunchConstants;
@@ -122,9 +123,11 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 			VdmDebugPlugin.log(e);
 			IVdmStreamProxy proxy = getVdmDebugTarget().getStreamProxy();
 			if (proxy != null) {
-				proxy.writeStderr("\n" + e.getMessage() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				
+				proxy.writeStderr("\n" + this.getName()+ " " + e.getMessage() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 				stack.update(false);
 				IStackFrame[] frames = stack.getFrames();
+				
 				proxy.writeStderr("\nStack trace:\n"); //$NON-NLS-1$
 				try {
 					for (int i = 0; i < frames.length; i++) {
@@ -176,9 +179,9 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 
 			final DbgpDebugger engine = this.stateManager.getEngine();
 
-			if (VdmDebugPlugin.DEBUG) {
-				DbgpDebugger.printEngineInfo(engine);
-			}
+//			if (VdmDebugPlugin.DEBUG) {
+//				DbgpDebugger.printEngineInfo(engine);
+//			}
 
 			engine.setMaxChildren(propertyPageSize);
 			engine.setMaxDepth(2);
@@ -258,8 +261,13 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 		return stack.getTopFrame();
 	}
 
-	public String getName() {		
-		return "Thread " + session.getInfo().getThreadId();
+	public String getName() {
+		String name = session.getInfo().getThreadId();
+		if(name.length()>0)
+		{
+			name = name.substring(0,1).toUpperCase()+name.substring(1);
+		}
+		return name;
 	}
 
 	public IBreakpoint[] getBreakpoints() {

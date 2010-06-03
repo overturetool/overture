@@ -36,4 +36,5 @@ public abstract class DbgpTermination implements IDbgpTermination {
 	public void removeTerminationListener(IDbgpTerminationListener listener) {
 		listeners.remove(listener);
 	}
+	
 }

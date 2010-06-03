@@ -11,7 +11,9 @@
 package org.overture.ide.debug.ui.log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Vector;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -30,6 +32,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
@@ -41,6 +44,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.ViewPart;
+import org.overture.ide.debug.logging.DebugLogExecutionControlFilter;
 
 public class VdmDebugLogView extends ViewPart {
 	public static final String VIEW_ID = "org.overture.ide.debug.ui.log.dbgpLogView"; //$NON-NLS-1$
@@ -51,6 +55,7 @@ public class VdmDebugLogView extends ViewPart {
 	private TextViewer textViewer;
 	private IDocument textDocument;
 	private IPropertyChangeListener fontRegistryChangeListener;
+	private IAction executionFilterAction;
 
 	public VdmDebugLogView() {
 		super();
@@ -66,11 +71,12 @@ public class VdmDebugLogView extends ViewPart {
 				| SWT.MULTI | SWT.FULL_SELECTION | SWT.VIRTUAL);
 		viewer.getTable().setHeaderVisible(true);
 		viewer.getTable().setLinesVisible(true);
-		addColumn(Messages.Column_Date, 100, true);
+		//addColumn(Messages.Column_Date, 100, true);
+		
 		addColumn(Messages.Column_Time, 100, true);
 		addColumn(Messages.Column_Type, 80, true);
-		addColumn(Messages.Column_Session, 80, true);
-		addColumn(Messages.Column_Message, 400, false);
+		addColumn(Messages.Column_Session, 60, true);
+		addColumn(Messages.Column_Message, 500, false);
 		viewer.getTable().addListener(SWT.Resize, new Listener() {
 
 			public void handleEvent(Event event) {
@@ -186,6 +192,16 @@ public class VdmDebugLogView extends ViewPart {
 	private IAction copyAction;
 	private IAction clearAction;
 
+	public void clear(){
+		viewer.getControl().getDisplay().getDefault().syncExec(new Runnable() {
+			public void run() {
+				clearAction.run();
+			}
+			
+		});
+			
+	}
+	
 	public void createActions() {
 		copyAction = new VdmDebugLogCopyAction(viewer);
 		clearAction = new Action(Messages.VdmDebugLogView_clear) {
@@ -196,12 +212,41 @@ public class VdmDebugLogView extends ViewPart {
 				viewer.refresh();
 			}
 		};
+		
+		executionFilterAction = new Action("Execution filter", SWT.TOGGLE)
+		{
+			public void run()
+			{
+				synchronized (viewer)
+				{
+					List<ViewerFilter> filters = new Vector<ViewerFilter>();
+					filters.addAll(Arrays.asList(viewer.getFilters()));
+					if (executionFilterAction.isChecked())
+					{
+						filters.add(new VdmDebugLogExecutionFilter());
+					} else
+					{
+						for (int i = 0; i < filters.size(); i++)
+						{
+							if (filters.get(i) instanceof VdmDebugLogExecutionFilter)
+							{
+								filters.remove(i);
+								break;
+							}
+						}
+					}
+					viewer.setFilters(filters.toArray(new ViewerFilter[filters.size()]));
+					viewer.refresh();
+				}
+			}
+		};
 	}
 
 	private void createMenu() {
 		IMenuManager manager = getViewSite().getActionBars().getMenuManager();
 		manager.add(copyAction);
 		manager.add(clearAction);
+		manager.add(executionFilterAction);
 	}
 
 	private void createToolbar() {

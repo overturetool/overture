@@ -17,6 +17,7 @@ import org.overture.ide.debug.core.dbgp.commands.IDbgpPropertyCommands;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 import org.overture.ide.debug.core.dbgp.internal.utils.DbgpXmlEntityParser;
 import org.overture.ide.debug.core.dbgp.internal.utils.DbgpXmlParser;
+import org.overturetool.vdmj.util.Base64;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -123,6 +124,17 @@ public class DbgpPropertyCommands extends DbgpBaseCommands implements
 		request.setData(value);
 		return DbgpXmlParser.parseSuccess(communicate(request));
 	}
+	
+	public boolean setProperty(String longName, String key, String newValue) throws DbgpException{
+		DbgpRequest request = createRequest(PROPERTY_SET_COMMAND);
+		String encodedData = Base64.encode(newValue.getBytes()).toString();
+		request.addOption("-n", longName);
+		request.addOption("-k", key);
+		request.addOption("-l", encodedData.length());
+		request.setData(newValue);
+		return DbgpXmlParser.parseSuccess(communicate(request));
+	}
 
+	
 
 }

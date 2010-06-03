@@ -443,10 +443,10 @@ public class VdmThreadManager implements IVdmThreadManager,
 	public void stepInto() throws DebugException{
 		synchronized (threads) {
 			IThread[] threads = getThreads();
-			System.out.println("Thread number:" + threads.length );
+//			System.out.println("Thread number:" + threads.length );
 			for (int i = 0; i < threads.length; ++i) {
 				((VdmThread)threads[i]).stepIntoInner();
-				System.out.println("Step Thread: " + i);
+//				System.out.println("Step Thread: " + i);
 			}
 		}
 	}

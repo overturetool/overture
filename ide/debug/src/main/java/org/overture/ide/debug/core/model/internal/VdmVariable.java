@@ -71,7 +71,7 @@ public class VdmVariable extends VdmDebugElement implements
 //				update();
 			
 			
-			if (getCoreCommands().setProperty(property.getName(),property.getKey(),expression)) {
+			if (getCoreCommands().setProperty(property.getEvalName(),property.getKey(),expression)) {
 				clearEvaluationManagerCache();
 				update();
 			}

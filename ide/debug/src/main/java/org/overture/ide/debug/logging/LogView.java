@@ -303,7 +303,7 @@ public class LogView extends ViewPart
 						.parseResponsePacket(element);			
 				System.out.println(packet.toString());
 				
-				this.log(new LogItem(new Integer(sessionId).toString(),RESPONSE_TAG,0,false,""));
+				this.log(new LogItem(new Integer(sessionId).toString(),RESPONSE_TAG,"",false,""));
 				
 				
 			} else if (tag.equals(STREAM_TAG)) {

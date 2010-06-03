@@ -54,7 +54,7 @@ public class DbgpDebuggingEngineCommunicator implements IDbgpCommunicator {
 		this.engine = engine;
 		this.options = options;
 
-		timeout = 3000;
+		timeout = 0;
 //		timeout = VdmDebugPlugin.getDefault().getPluginPreferences().getInt(
 //				IDebugConstants.PREF_DBGP_RESPONSE_TIMEOUT);
 	}
@@ -87,7 +87,7 @@ public class DbgpDebuggingEngineCommunicator implements IDbgpCommunicator {
 			}
 
 			if (packet == null) {
-				throw new DbgpTimeoutException();
+				throw new DbgpTimeoutException(request);
 			}
 
 			Element response = packet.getContent();

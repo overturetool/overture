@@ -117,10 +117,11 @@ public class VdmDebugLogManager implements ILaunchListener,
 		boolean loggingEnabled=false;
 		try {
 			loggingEnabled = launch.getLaunchConfiguration().getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false);
+			
 		} catch (CoreException e1) {
 			
 		}
-
+		
 		// bail if we're not a VdmDebugTarget or logging isn't enabled
 		if (!((target instanceof IVdmDebugTarget) && loggingEnabled)) {
 			return;
@@ -141,7 +142,7 @@ public class VdmDebugLogManager implements ILaunchListener,
 					try {
 						view = (VdmDebugLogView) page
 								.showView(VdmDebugLogView.VIEW_ID);
-
+						
 						DebugPlugin.getDefault().addDebugEventListener(
 								VdmDebugLogManager.this);
 					} catch (PartInitException e) {

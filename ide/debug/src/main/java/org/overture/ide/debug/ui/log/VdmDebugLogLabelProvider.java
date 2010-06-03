@@ -47,19 +47,19 @@ public class VdmDebugLogLabelProvider extends LabelProvider implements
 		if (element instanceof VdmDebugLogItem) {
 			final VdmDebugLogItem item = (VdmDebugLogItem) element;
 			switch (columnIndex) {
-			case 0:
-				return dateFormat.format(new Date(item.getTimestamp()));
-			case 1:
+//			case 0:
+//				return dateFormat.format(new Date(item.getTimestamp()));
+			case 1-1:
 				return timeFormat.format(new Date(item.getTimestamp()));
-			case 2:
+			case 2-1:
 				return item.getType();
-			case 3:
+			case 3-1:
 				if (item.getSessionId() > 0) {
 					return String.valueOf(item.getSessionId());
 				} else {
 					break;
 				}
-			case 4:
+			case 4-1:
 				return formatMessage(item);
 			}
 		}
