@@ -179,7 +179,7 @@ public class VdmLaunchConfigurationDelegate implements
 		commandList.add("-h");
 		commandList.add("localhost");
 		commandList.add("-p");
-		commandList.add(new Integer(IDebugPreferenceConstants.DBGP_DEFAULT_PORT).toString());
+		commandList.add(new Integer(VdmDebugPlugin.getDefault().getDbgpService().getPort()).toString());
 		commandList.add("-k");
 		// commandList.add("dbgp_1265361483486");
 		commandList.add(debugSessionId.toString());

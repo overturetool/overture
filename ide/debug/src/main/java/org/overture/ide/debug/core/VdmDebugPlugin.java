@@ -18,6 +18,7 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IDebugTarget;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
@@ -161,10 +162,8 @@ public class VdmDebugPlugin extends AbstractUIPlugin {
 	}
 
 	private int getPreferencePort() {
-		return 9000;
-		// return getPluginPreferences().getInt(
-		//
-		// IDebugPreferenceConstants.PREF_DBGP_PORT);
+		
+		 return getPluginPreferences().getInt(IDebugPreferenceConstants.PREF_DBGP_PORT);
 
 	}
 
@@ -304,6 +303,15 @@ public class VdmDebugPlugin extends AbstractUIPlugin {
 		if (display == null)
 			display = Display.getDefault();
 		return display;
+	}
+	
+	/** 
+	 * Initializes a preference store with default preference values 
+	 * for this plug-in.
+	 */
+	@Override
+	protected void initializeDefaultPreferences(IPreferenceStore store) {
+		store.setDefault(IDebugPreferenceConstants.PREF_DBGP_PORT, IDebugPreferenceConstants.DBGP_AVAILABLE_PORT);
 	}
 
 }

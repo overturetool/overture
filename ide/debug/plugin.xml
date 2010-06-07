@@ -158,5 +158,16 @@
 			>
 		</view>
 	</extension>
+	
+	<!-- Preference pages -->
+	 <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.overture.ide.debug.preferences.WorkbenchPreferencePage1"
+            id="org.overture.ide.debug.page1"
+            name="VDM Debugger">
+      </page>
+   </extension>
+	
    
 </plugin>
