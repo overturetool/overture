@@ -56,6 +56,7 @@ public class PeriodicThread extends SchedulableThread
 	private final static Random PRNG = new Random();
 
 	private boolean running = false;
+	boolean runningDbgp = false;
 
 	public PeriodicThread(
 		ObjectValue self, OperationValue operation,
@@ -81,6 +82,7 @@ public class PeriodicThread extends SchedulableThread
 			this.first = false;
 			this.expected = expected;
 		}
+//		System.out.println("Creating Thread: "+ getName()+ " Time: "+ SystemClock.getWallTime());
 	}
 
 	@Override
@@ -105,6 +107,7 @@ public class PeriodicThread extends SchedulableThread
 			waitUntil(expected, ctxt, operation.name.location);
 		}
 
+		//TODO This creates a Very large number of threads
 		new PeriodicThread(
 			getObject(), operation, period, jitter, delay, 0,
 			nextTime()).start();
@@ -119,9 +122,15 @@ public class PeriodicThread extends SchedulableThread
 		{
 			runCmd(ctxt);
 		}
+		//TODO
+//		new PeriodicThread(
+//				getObject(), operation, period, jitter, delay, 0,
+//				nextTime()).start();
+		//TODO
+//		System.out.println("Completing Thread: "+ getName()+ " Time: "+ SystemClock.getWallTime());
 	}
 
-
+	
 	private void runDBGP(Context ctxt)
 	{
 		DBGPReader reader = null;
@@ -131,23 +140,33 @@ public class PeriodicThread extends SchedulableThread
     		try
     		{
     			reader = ctxt.threadState.dbgp.newThread(object.getCPU());
+    			runningDbgp = true;
     			ctxt.setThreadState(reader, object.getCPU());
 
         		operation.localEval(
         			operation.name.location, new ValueList(), ctxt, true);
+        		
+        		reader.complete(DBGPReason.OK, null);
     		}
     		catch (ValueException e)
     		{
+    			if(reader!=null)
+    			{
+    				reader.complete(DBGPReason.OK, new ContextException(e, operation.name.location));
+    			}
     			throw new ContextException(e, operation.name.location);
     		}
 
-			reader.complete(DBGPReason.OK, null);
+			
 		}
 		catch (ContextException e)
 		{
 			suspendOthers();
 			ResourceScheduler.setException(e);
-			reader.stopped(e.ctxt, e.location);
+			if(runningDbgp)
+			{
+				reader.stopped(e.ctxt, e.location);
+			}
 		}
 		catch (Exception e)
 		{
@@ -157,6 +176,42 @@ public class PeriodicThread extends SchedulableThread
 		finally
 		{
 			TransactionValue.commitAll();
+		}
+	}
+	
+	@Override
+	protected void handleSignal(Signal sig, Context ctxt, LexLocation location)
+	{
+		switch (sig)
+		{
+			case TERMINATE:
+				throw new ThreadDeath();
+
+			case SUSPEND:
+			case DEADLOCKED:
+				if (ctxt != null)
+				{
+    				if (Settings.usingDBGP)
+    				{
+    					if(runningDbgp)
+    					{
+    						if(ctxt.threadState.dbgp != null)
+    						{
+    							ctxt.threadState.dbgp.stopped(ctxt, location);
+    						}
+    					}
+    				}
+    				else
+    				{
+    					DebuggerReader.stopped(ctxt, location);
+    				}
+
+    				if (sig == Signal.DEADLOCKED)
+    				{
+    					throw new ThreadDeath();
+    				}
+				}
+				break;
 		}
 	}
 

@@ -82,6 +82,7 @@ import org.overturetool.vdmj.runtime.ModuleInterpreter;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.runtime.StateContext;
+import org.overturetool.vdmj.scheduler.SchedulableThread;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.util.Base64;
@@ -573,12 +574,12 @@ public class DBGPReader implements Serializable
 
 		sb.append("<init ");
 		sb.append("appid=\"");
-		sb.append(features.getProperty("language_name"));
+		sb.append(features.getProperty(DBGPFeatures.LANGUAGE_NAME));
 		sb.append("\" ");
 		sb.append("idekey=\"" + ideKey + "\" ");
 		sb.append("session=\"" + sessionId + "\" ");
 		sb.append("thread=\"");
-		sb.append(Thread.currentThread().getId());
+		sb.append(Thread.currentThread().getName());
 
 		if (cpu != null)
 		{
@@ -588,13 +589,13 @@ public class DBGPReader implements Serializable
 
 		sb.append("\" ");
 		sb.append("parent=\"");
-		sb.append(features.getProperty("language_name"));
+		sb.append(features.getProperty(DBGPFeatures.LANGUAGE_NAME));
 		sb.append("\" ");
 		sb.append("language=\"");
-		sb.append(features.getProperty("language_name"));
+		sb.append(features.getProperty(DBGPFeatures.LANGUAGE_NAME));
 		sb.append("\" ");
 		sb.append("protocol_version=\"");
-		sb.append(features.getProperty("protocol_version"));
+		sb.append(features.getProperty(DBGPFeatures.PROTOCOL_VERSION));
 		sb.append("\"");
 
 		Set<File> files = interpreter.getSourceFiles();
@@ -607,26 +608,30 @@ public class DBGPReader implements Serializable
 		write(sb);
 	}
 
+
 	protected String readLine() throws IOException
 	{
 		StringBuilder line = new StringBuilder();
 		int c = input.read();
-
 		while (c != '\n' && c > 0)
 		{
-			if (c != '\r') line.append((char)c);		// Ignore CRs
-			c = input.read();
+			if (c != '\r')
+			{
+				line.append((char)c);		// Ignore CRs
+			}
+			c = input.read();			
 		}
 
 		return (line.length() == 0 && c == -1) ? null : line.toString();
 	}
 
+	String lastTransaction = "-1";
 	protected void write(StringBuilder data) throws IOException
 	{
 		byte[] header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".getBytes("UTF-8");
 		byte[] body = data.toString().getBytes("UTF-8");
 		byte[] size = Integer.toString(header.length + body.length).getBytes("UTF-8");
-
+		
 		output.write(size);
 		output.write(separator);
 		output.write(header);
@@ -634,6 +639,13 @@ public class DBGPReader implements Serializable
 		output.write(separator);
 
 		output.flush();
+		
+//		if(lastTransaction.equals(transaction))
+//		{
+//			System.err.println("transaction error: threadid: "+ Thread.currentThread().getName());	
+//			System.err.println("transaction error: "+transaction+" MESSAGE: "+ data.toString());
+//		}
+		lastTransaction = transaction;
 	}
 
 	protected void response(StringBuilder hdr, StringBuilder body) throws IOException
@@ -808,8 +820,23 @@ public class DBGPReader implements Serializable
     		.replace("\"", "&quot;");
 	}
 
+	Thread ownerThread= null;
 	protected void run() throws IOException
 	{
+		//Check inserted to insure that a DBGPReader never is shared between threads
+		if(ownerThread==null && Thread.currentThread() instanceof SchedulableThread)
+		{
+			ownerThread = Thread.currentThread();
+		}
+		
+		if(ownerThread!=null)
+		{
+			if(ownerThread.getId()!=Thread.currentThread().getId())
+			{
+				System.err.println("Concurrent access to DBGPReader: "+ ownerThread.getName()+" <-> "+ Thread.currentThread().getName());
+			}
+		}
+		
 		String line = null;
 
 		do
@@ -1155,7 +1182,7 @@ public class DBGPReader implements Serializable
 		StringBuilder hdr = new StringBuilder();
    		StringBuilder body = new StringBuilder();
 
-		if (feature == null)
+   		if (feature == null)
 		{
 			// Unknown feature - unsupported in header; nothing in body
     		hdr.append("feature_name=\"");
@@ -1295,6 +1322,7 @@ public class DBGPReader implements Serializable
     			theAnswer = interpreter.execute(expression, this);
     			stdout(expression + " = " + theAnswer.toString());
     			statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
+    			
     		}
     		catch (ContextException e)
     		{

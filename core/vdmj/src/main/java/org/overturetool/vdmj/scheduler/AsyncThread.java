@@ -86,7 +86,7 @@ public class AsyncThread extends SchedulableThread
 			runCmd(ctxt);
 		}
 	}
-
+	boolean runningDbgp = false;
 	private void runDBGP(Context ctxt)
 	{
 		DBGPReader reader = null;
@@ -98,6 +98,7 @@ public class AsyncThread extends SchedulableThread
     		try
     		{
     			reader = request.dbgp.newThread(cpu);
+    			runningDbgp = true;
     			ctxt.setThreadState(reader, cpu);
 
     			if (breakAtStart)
@@ -108,9 +109,15 @@ public class AsyncThread extends SchedulableThread
 
         		Value rv = operation.localEval(operation.name.location, args, ctxt, false);
        			response = new MessageResponse(rv, request);
+       			
+       			reader.complete(DBGPReason.OK, null);
     		}
     		catch (ValueException e)
     		{
+    			if(reader!=null)
+    			{
+    				reader.complete(DBGPReason.OK, new ContextException(e, operation.name.location));
+    			}
     			response = new MessageResponse(e, request);
     		}
 
@@ -119,13 +126,17 @@ public class AsyncThread extends SchedulableThread
     			request.bus.reply(response);
     		}
 
-			reader.complete(DBGPReason.OK, null);
+//			reader.complete(DBGPReason.OK, null);
 		}
 		catch (ContextException e)
 		{
 			suspendOthers();
 			ResourceScheduler.setException(e);
-			reader.stopped(e.ctxt, e.location);
+			if(runningDbgp)
+			{
+				reader.stopped(e.ctxt, e.location);
+			}
+			
 		}
 		catch (Exception e)
 		{
@@ -180,4 +191,41 @@ public class AsyncThread extends SchedulableThread
 			TransactionValue.commitAll();
 		}
 	}
+	
+	@Override
+	protected void handleSignal(Signal sig, Context ctxt, LexLocation location)
+	{
+		switch (sig)
+		{
+			case TERMINATE:
+				throw new ThreadDeath();
+
+			case SUSPEND:
+			case DEADLOCKED:
+				if (ctxt != null)
+				{
+    				if (Settings.usingDBGP)
+    				{
+    					if(runningDbgp)
+    					{
+    						if(ctxt.threadState.dbgp != null)
+    						{
+    							ctxt.threadState.dbgp.stopped(ctxt, location);
+    						}
+    					}
+    				}
+    				else
+    				{
+    					DebuggerReader.stopped(ctxt, location);
+    				}
+
+    				if (sig == Signal.DEADLOCKED)
+    				{
+    					throw new ThreadDeath();
+    				}
+				}
+				break;
+		}
+	}
+
 }

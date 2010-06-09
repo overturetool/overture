@@ -72,6 +72,7 @@ import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.scheduler.SchedulableThread;
+import org.overturetool.vdmj.traces.TraceReductionType;
 import org.overturetool.vdmj.util.Base64;
 import org.overturetool.vdmj.values.BooleanValue;
 import org.overturetool.vdmj.values.CPUValue;
@@ -116,9 +117,9 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 	 */
 	private Integer debugValueKeyCounter = 0;
 	/**
-	 * The default page size used between this reader and the client
+	 * Indicating if the debugger is running in a trace mode
 	 */
-	private Integer defaultPageSize = 200;
+	private static Boolean traceExpression = false;
 
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args)
@@ -328,7 +329,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
     			{
     				usage("-remote option requires a Java classname");
     			}
-    		}
+    		}else if (arg.equals("-t"))
+			{
+				traceExpression = true;
+			}
     		else if (arg.startsWith("-"))
     		{
     			usage("Unknown option " + arg);
@@ -665,7 +669,8 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			if(v instanceof UpdatableValue)
 			{
 				uv = (UpdatableValue) v;
-							
+			
+				//TODO BUG: Here is a problem if the evaluate is suspended in a property_set by the scheduler
 				Value newval = interpreter.evaluate(c.data, interpreter.initialContext);
 				
 				if(newval != null && canAssignValue( newval.kind(),uv.kind()))
@@ -714,7 +719,6 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		
 		final String TYPE_REAL="real";
 		final String TYPE_NAT="nat";
-		final String TYPE_NAT1="nat1";
 		final String TYPE_INT="int";
 		
 		
@@ -874,7 +878,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
     	Integer numChildren = getChildCount(value);
     	
     	Integer page = 0;
-    	Integer pageSize = defaultPageSize;
+    	Integer pageSize = Integer.parseInt(features.getProperty(DBGPFeatures.MAX_CHILDREN));;
     	
     	Integer key=null;
     	String data = null;
@@ -1178,7 +1182,140 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			v instanceof NilValue;
 	}
 
+	/**
+	 * Overridden to enable trace handling
+	 */
+	@Override
+	protected boolean processRun(DBGPCommand c) throws DBGPException
+	{
+		checkArgs(c, 1, false);
+
+		if (status == DBGPStatus.BREAK || status == DBGPStatus.STOPPING)
+		{
+			if (breakContext != null)
+			{
+				breakContext.threadState.setBreaks(null, null, null);
+				status = DBGPStatus.RUNNING;
+				statusReason = DBGPReason.OK;
+				return false;	// run means continue
+			}
+			else
+			{
+				throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+			}
+		}
+
+		if (status == DBGPStatus.STARTING && expression == null)
+		{
+			status = DBGPStatus.RUNNING;
+			statusReason = DBGPReason.OK;
+			return false;	// a run for a new thread, means continue
+		}
+
+		if (status != DBGPStatus.STARTING)
+		{
+			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+		}
+
+		if (c.data != null)	// data is in "expression"
+		{
+			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
+		}
+
+		if (remoteControl != null)
+		{
+			try
+			{
+				status = DBGPStatus.RUNNING;
+				statusReason = DBGPReason.OK;
+				remoteControl.run(new RemoteInterpreter(interpreter, this));
+				stdout("Remote control completed");
+				statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
+			}
+			catch (Exception e)
+			{
+				status = DBGPStatus.STOPPED;
+				statusReason = DBGPReason.ERROR;
+				errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
+			}
+
+			return false;	// Do not continue after remote session
+		}
+		else
+		{
+    		try
+    		{
+    			status = DBGPStatus.RUNNING;
+    			statusReason = DBGPReason.OK;
+    			if(!traceExpression)
+    			{
+	    			theAnswer = interpreter.execute(expression, this);
+	    			stdout(expression + " = " + theAnswer.toString());
+    			}else
+    			{
+    				String[] parts = expression.split("\\s+");
+    				int testNo = 0;
+    				float reduction = 1.0F;
+					TraceReductionType reductionType =  TraceReductionType.NONE;
+					long seed = 999;
+    				//Test`T1 4 {subset,reduction,seed}
+    				if (parts.length >= 2 && !parts[1].startsWith("{"))
+    				{
+    					try
+    					{
+    						testNo = Integer.parseInt(parts[1]);
+    					}
+    					catch (NumberFormatException e)
+    					{
+    						errorResponse(DBGPErrorCode.INTERNAL_ERROR, parts[0] + " <name> [test number]");
+    						return true;
+    					}
+    				}
+    				if (parts.length >= 2 && parts[parts.length-1].length()>7 && parts[parts.length-1].startsWith("{"))
+    				{
+    					try
+    					{
+    						String settings = parts[parts.length-1];
+    						String[] tmp = settings.substring(1,settings.length()-1).split(",");
+    						if(tmp.length == 3)
+    						{
+	    						reduction = Float.parseFloat(tmp[0]);
+	    						reductionType = TraceReductionType.valueOf(tmp[1]);
+	    						seed = Long.parseLong(tmp[2]);
+    						}
+    					}
+    					catch (NumberFormatException e)
+    					{
+    						errorResponse(DBGPErrorCode.INTERNAL_ERROR, parts[0] + " <name> [test number]");
+    						return true;
+    					}
+    				}
+
+    				String traceExpression = parts[0];
+    									
+					interpreter.runtrace(traceExpression, testNo, true, reduction, reductionType , seed,this);
+					stdout(expression + " = " + "Trace completed");
+    			}
+    			
+    			statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
+    			
+    		}
+    		catch (ContextException e)
+    		{
+    			dyingThread(e);
+    		}
+    		catch (Exception e)
+    		{
+    			status = DBGPStatus.STOPPED;
+    			statusReason = DBGPReason.ERROR;
+    			errorResponse(DBGPErrorCode.EVALUATION_ERROR, e.getMessage());
+    		}
+
+    		return true;
+		}
+	}
 	
+
 
 	@Override
 	protected boolean processEval(DBGPCommand c) throws DBGPException
@@ -1413,7 +1550,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		StringBuilder sb = new StringBuilder();
     	Integer numChildren = getChildCount(value);
     	    	
-    	Integer pageSize = defaultPageSize;
+    	Integer pageSize = Integer.parseInt(features.getProperty(DBGPFeatures.MAX_CHILDREN));; 
     	String data = null;
     	StringBuilder nestedChildren = null;
     	String name = "(ref="+ key+")";
@@ -1425,7 +1562,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
     	{
     		data = value.toString();
     	}
-    	
+    	Integer defaultPageSize = Integer.parseInt(features.getProperty(DBGPFeatures.MAX_CHILDREN));
     	sb.append(propertyResponseChild(value, 1, 0, defaultPageSize,page));
     	nestedChildren = propertyResponseChild(value, 1, 0, defaultPageSize,page);
     	    	
@@ -1682,4 +1819,5 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
         sw.flush();
         return sw.toString();
     }
+	
 }
