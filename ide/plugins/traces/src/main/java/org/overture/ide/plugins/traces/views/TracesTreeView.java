@@ -10,6 +10,7 @@ import java.util.concurrent.CancellationException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
@@ -38,6 +39,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -77,22 +79,11 @@ import org.overture.ide.ui.utility.EditorUtility;
 import org.overturetool.traces.utility.ITracesHelper;
 import org.overturetool.traces.utility.TraceHelperNotInitializedException;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
-import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.traces.Verdict;
 import org.xml.sax.SAXException;
 
-/**
- * This sample class demonstrates how to plug-in a new workbench view. The view shows data obtained from the model. The
- * sample creates a dummy model on the fly, but a real implementation would connect to the model available either in
- * this or another plug-in (e.g. the workspace). The view is connected to the model using a content provider.
- * <p>
- * The view uses a label provider to define how model objects should be presented in the view. Each view can present the
- * same model objects using different labels and icons, if needed. Alternatively, a single label provider can be shared
- * between views in order to ensure that objects of the same type are presented in the same way everywhere.
- * <p>
- * http://www.eclipse.org/articles/Article-TreeViewer/TreeViewerArticle.htm
- */
+
 
 public class TracesTreeView extends ViewPart
 {
@@ -105,7 +96,7 @@ public class TracesTreeView extends ViewPart
 	private Action actionSetSort;
 	private Action actionSetInconclusiveFilter;
 	private Action actionSendToInterpreter;
-	private Action actionSelectToolBox;
+
 	private Action actionSelectToolBoxVDMJ;
 	private Action actionSelectToolBoxVDMTools;
 	private Action expandSpecInTree;
@@ -114,7 +105,7 @@ public class TracesTreeView extends ViewPart
 	private Dictionary<String, ITracesHelper> traceHelpers;
 	final Display display = Display.getCurrent();
 
-	private IResourceChangeListener resourceChangedListener = null;
+//	private IResourceChangeListener resourceChangedListener = null;
 	private IProject projectToUpdate = null;
 	private String VDMToolsPath = "";
 	final String VDM_TOOLS_PATH_DEFAULT = "C:\\Program Files\\The VDM++ Toolbox v8.2b\\bin";
@@ -242,7 +233,7 @@ public class TracesTreeView extends ViewPart
 
 		init();
 
-		resourceChangedListener = new IResourceChangeListener()
+		/*resourceChangedListener =*/ new IResourceChangeListener()
 		{
 			public void resourceChanged(IResourceChangeEvent event)
 			{
@@ -560,14 +551,19 @@ monitor.done();
 				final TraceOptionsDialog d = new TraceOptionsDialog(dialog, SWT.DIALOG_TRIM);
 				d.pack();
 				dialog.pack();
+				Point pt = display.getCursorLocation();
+			    dialog.setLocation(pt.x-(d.getSize().x/2), pt.y-(d.getSize().y/2));
 				dialog.open();
 				while (!dialog.isDisposed())
 				{
-					if (TraceOptionsDialog.isCanceled)
+					if (d.isCanceled)
 						return;
 					if (!display.readAndDispatch())
 						display.sleep();
 				}
+				
+				if (d.isCanceled)
+					return;
 
 				ISelection selection = viewer.getSelection();
 				final Object obj = ((IStructuredSelection) selection).getFirstElement();
@@ -615,6 +611,7 @@ monitor.done();
 									String className = classKeys.nextElement();
 									try
 									{
+										projectToUpdate.refreshLocal(IResource.DEPTH_INFINITE, null);
 										th.processClassTraces(className, d.getSubset(), d.getTraceReductionType(), d.getSeed(), monitor);
 									} catch (CancellationException e)
 									{
@@ -904,10 +901,7 @@ monitor.done();
 		};
 		actionSelectToolBoxVDMTools.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_VDM_TOOLS_LOGO));
 
-		actionSelectToolBox = new Action("Select toolbox")
-		{
-
-		};
+	
 
 		actionSendToInterpreter = new Action("Send to Interpreter")
 		{

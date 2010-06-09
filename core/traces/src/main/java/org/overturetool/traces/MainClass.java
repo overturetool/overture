@@ -1,13 +1,12 @@
 package org.overturetool.traces;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
-
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 import org.overturetool.traces.utility.CmdTrace;
 import org.overturetool.traces.utility.TraceXmlWrapper;
@@ -15,18 +14,24 @@ import org.overturetool.traces.vdmj.TraceInterpreter;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.runtime.ContextException;
-import org.overturetool.vdmj.types.ParameterType;
+import org.overturetool.vdmj.traces.TraceReductionType;
 
 public class MainClass
 {
+
 	private static String[] paramterTypes = new String[] { "-outputPath", "-c",
-			"-max", "-toolbox", "-VDMToolsPath", "-help", "-vdmjOnly",
-			"-projectRoot", "-wait" ,"-d","-r"};
+			 "-toolbox", "-VDMToolsPath", "-help", "-vdmjOnly",
+			"-projectRoot", "-wait", "-d", "-r", "-subset", "-seed",
+			"-reduction", "-log", "-store" };
+
+	private static boolean log = false;
+	private static boolean storeOutput = true;
 
 	/**
 	 * @param args
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws Exception
 	{
 		// try {
@@ -55,44 +60,52 @@ public class MainClass
 			// return;
 		} else if (par.containsKey("-outputPath")
 				&& par.containsKey("-vdmjOnly") && par.containsKey("-c")
-				&& par.containsKey("-max"))
+				)
 		{
 			Dialect dialect = Dialect.VDM_PP;
 
-if(par.containsKey("-d"))
-{
-	if(par.get("-d").toLowerCase().equals("vdmsl"))
-		dialect = Dialect.VDM_SL;
-	else if(par.get("-d").toLowerCase().equals("vdmpp"))
-		dialect = Dialect.VDM_PP;
-	else if(par.get("-d").toLowerCase().equals("vdmpp"))
-		dialect = Dialect.VDM_PP;
-}
-			
+			if (par.containsKey("-d"))
+			{
+				if (par.get("-d").toLowerCase().equals("vdmsl"))
+					dialect = Dialect.VDM_SL;
+				else if (par.get("-d").toLowerCase().equals("vdmpp"))
+					dialect = Dialect.VDM_PP;
+				else if (par.get("-d").toLowerCase().equals("vdmrt"))
+					dialect = Dialect.VDM_RT;
+			}
+
 			Release release = Release.DEFAULT;
-			if(par.containsKey("-r"))
+			if (par.containsKey("-r"))
 				release = Release.lookup(par.get("-r"));
 			String projectRoot = null;
 			if (par.containsKey("-projectRoot"))
 				projectRoot = par.get("-projectRoot");
 
-			RunVdmjOnly(par.get("-outputPath"),
-					par.get("-c"),
-					par.get("-max"),
-					files,
-					projectRoot,dialect,release);
+			Float subset = null;
+			if (par.containsKey("-subset"))
+				subset = Float.parseFloat(par.get("-subset"));
+			Long seed = null;
+			if (par.containsKey("-seed"))
+				seed = Long.parseLong(par.get("-seed"));
+			TraceReductionType traceReductionType = null;
+			if (par.containsKey("-reduction"))
+				traceReductionType = TraceReductionType.valueOf(par.get("-reduction"));
+
+			if (par.containsKey("-log"))
+				log = Boolean.parseBoolean(par.get("-log"));
+			if (par.containsKey("-store"))
+				storeOutput = Boolean.parseBoolean(par.get("-store"));
+			// if (par.containsKey("-logAppend"))
+			// logAppend = Boolean.parseBoolean(par.get("-logAppend"));
+
+			RunVdmjOnly(par.get("-outputPath"), par.get("-c"),files, projectRoot, dialect, release, subset, seed, traceReductionType);
 			return;
 
 		} else if (par.containsKey("-outputPath") && par.containsKey("-c")
 				&& par.containsKey("-max") && par.containsKey("-toolbox"))
 		{
-			RunCmd(par.get("-outputPath"),
-					par.get("-c"),
-					par.get("-max"),
-					files,
-					par.get("-toolbox"),
-					par.containsKey("-VDMToolsPath") ? par.get("-VDMToolsPath")
-							: "");
+			RunCmd(par.get("-outputPath"), par.get("-c"), par.get("-max"), files, par.get("-toolbox"), par.containsKey("-VDMToolsPath") ? par.get("-VDMToolsPath")
+					: "");
 			return;
 		}
 
@@ -103,19 +116,25 @@ if(par.containsKey("-d"))
 	}
 
 	private static void RunVdmjOnly(String outputPath, String classes,
-			String maxString, String[] files, String projectRoot, Dialect dialect, Release release)
+			String[] files, String projectRoot,
+			Dialect dialect, Release release, Float subset, Long seed,
+			TraceReductionType traceReductionType)
 	{
-		// TODO Auto-generated method stub
-		Integer max = Integer.parseInt(maxString);
-
 		List<String> cls = new ArrayList<String>();
 		for (String c : classes.split(","))
 		{
 			cls.add(c);
 		}
 
-		TraceInterpreter ti = new TraceInterpreter();
+		TraceInterpreterCsv ti = null;
 
+		if (subset == null || seed == null || traceReductionType == null)
+		{
+			ti = new TraceInterpreterCsv();
+		} else
+		{
+			ti = new TraceInterpreterCsv(subset, traceReductionType, seed);
+		}
 		List<File> specFiles = new Vector<File>();
 
 		for (String file : files)
@@ -129,26 +148,39 @@ if(par.containsKey("-d"))
 		{
 			File projectRootFile = new File(projectRoot);
 			if (projectRootFile.exists())
+			{
+				ti.projectName = projectRootFile.getName();
 				for (File file : GetFiles(projectRootFile))
 				{
 					if (isSpecFile(file))
 						specFiles.add(file);
 				}
+			}
 		}
 
 		try
 		{
 
-			TraceXmlWrapper txw = new TraceXmlWrapper(outputPath
-					+ File.separatorChar + cls.get(0) + ".xml");
+			TraceXmlWrapper txw = null;
+			if (storeOutput)
+			{
+				txw = new TraceXmlWrapper(outputPath + File.separatorChar
+						+ cls.get(0) + ".xml");
+			}
+			ti.processTraces(specFiles, cls.get(0), txw, true, dialect, release);
+			if (txw != null)
+			{
+				txw.Stop();
+			}
+			if (log)
+			{
+				boolean logAppend = new File("log.txt").exists();
+				FileWriter outFile = new FileWriter("log.txt", logAppend);
+				PrintWriter out = new PrintWriter(outFile);
+				out.println(ti.getCsv(!logAppend));
+				out.close();
+			}
 
-			ti.processTraces(specFiles,
-					cls.get(0),
-					txw,
-					true,
-					dialect,
-					release);
-			txw.Stop();
 		} catch (ClassNotFoundException e)
 		{
 
@@ -158,6 +190,114 @@ if(par.containsKey("-d"))
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+
+	}
+
+	public static class TraceInterpreterCsv extends TraceInterpreter
+	{
+		public String projectName = "";
+		//
+		String[] header = {/* 0 */"Project", /* 1 */"Class", /* 2 */"Trace",
+		/* 3 */"Seed", /* 4 */"Subset", /* 5 */"reduction", /* 6 */"size",
+		/* 7 */"faild",/* 8 */"skipped", /* 9 */"inconclusive",/* 10 */"passed",/* 11 */
+		"speed",/* 12 */"total speed" };
+		List<String[]> csv = new Vector<String[]>();
+
+		String[] currect;
+		String[] currectClass;
+
+		public TraceInterpreterCsv()
+		{
+			super();
+		}
+
+		public TraceInterpreterCsv(float subset,
+				TraceReductionType traceReductionType, long seed)
+		{
+			super(subset, traceReductionType, seed);
+		}
+
+		@Override
+		protected void preProcessingClass(String className, Integer traceCount)
+		{
+			super.preProcessingClass(className, traceCount);
+
+			currectClass = new String[header.length];
+			currectClass[0] = projectName;
+			currectClass[1] = className;
+			// csv.add(currectClass);
+
+		}
+
+		@Override
+		protected void processingTrace(String className, String traceName,
+				Integer testCount)
+		{
+			super.processingTrace(className, traceName, testCount);
+			currect = new String[header.length];
+			csv.add(currect);
+			currect[0] = currectClass[0];
+			currect[1] = currectClass[1];
+			currect[2] = traceName;
+			currect[3] = String.valueOf(seed);
+			currect[4] = String.valueOf(subset);
+			currect[5] = traceReductionType.toString();
+			currect[6] = testCount.toString();
+		}
+
+		@Override
+		protected void processingTraceFinished(String className, String name,
+				int size, int faildCount, int inconclusiveCount,
+				int skippedCount)
+		{
+			super.processingTraceFinished(className, name, size, faildCount, inconclusiveCount, skippedCount);
+			currect[7] = String.valueOf(faildCount);
+			currect[8] = String.valueOf(skippedCount);
+			currect[9] = String.valueOf(inconclusiveCount);
+			currect[10] = String.valueOf((size - (faildCount
+					+ inconclusiveCount + skippedCount)));
+			long endTrace = System.currentTimeMillis();
+			currect[11] = String.valueOf((double) (endTrace - beginTrace) / 1000);
+		}
+
+		@Override
+		protected void completed()
+		{
+			long endClass = System.currentTimeMillis();
+			currectClass[12] = String.valueOf((double) (endClass - beginClass) / 1000);
+			if(currect!=null)
+			{
+			currect[12] = String.valueOf((double) (endClass - beginClass) / 1000);
+			}
+			super.completed();
+		}
+
+		public String getCsv(boolean withHeader)
+		{
+			StringBuilder sb = new StringBuilder();
+			final String divider = "\t;\t";
+			if (withHeader)
+			{
+				for (String heading : header)
+				{
+					sb.append(heading + divider);
+				}
+				sb.append("\n");
+				sb.append("\n");
+			}
+
+			for (String[] line : csv)
+			{
+				for (String string : line)
+				{
+					sb.append((string == null ? "" : string) + divider);
+				}
+				sb.append("\n");
+			}
+
+			return sb.toString();
+
 		}
 
 	}
@@ -186,7 +326,7 @@ if(par.containsKey("-d"))
 						files.add(file2);
 					}
 
-					int ki = 0;
+					
 				} else if (currentFile.isFile())
 					files.add(currentFile);
 			}
@@ -230,14 +370,14 @@ if(par.containsKey("-d"))
 	// });
 	// }
 
-	private static String[] SplitInputFiles(String files, String splitter)
-	{
-		if (files.contains(splitter))
-			return files.split(splitter);
-		else
-			return new String[] { files };
-
-	}
+//	private static String[] SplitInputFiles(String files, String splitter)
+//	{
+//		if (files.contains(splitter))
+//			return files.split(splitter);
+//		else
+//			return new String[] { files };
+//
+//	}
 
 	private static void PrintHelp()
 	{

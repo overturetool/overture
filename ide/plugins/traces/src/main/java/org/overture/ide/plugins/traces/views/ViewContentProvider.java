@@ -16,7 +16,6 @@ import org.overture.ide.plugins.traces.views.treeView.NotYetReadyTreeNode;
 import org.overture.ide.plugins.traces.views.treeView.ProjectTreeNode;
 import org.overture.ide.plugins.traces.views.treeView.TreeParent;
 import org.overturetool.traces.utility.ITracesHelper;
-import org.overture.ide.vdmpp.core.*;
 
 public class ViewContentProvider implements IStructuredContentProvider,
 ITreeContentProvider {
