@@ -26,6 +26,7 @@ package org.overturetool.vdmj.scheduler;
 import java.util.List;
 import java.util.Vector;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.DebuggerReader;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
@@ -91,7 +92,13 @@ public class CTMainThread extends MainThread
 			{
 				setException(e);
 				suspendOthers();
-				DebuggerReader.stopped(e.ctxt, e.location);
+				if(Settings.usingDBGP)
+				{	
+					ctxt.threadState.dbgp.stopped(e.ctxt, e.location);
+				}else
+				{	
+					DebuggerReader.stopped(e.ctxt, e.location);	
+				}
 				result.add(Verdict.FAILED);
 			}
 			else

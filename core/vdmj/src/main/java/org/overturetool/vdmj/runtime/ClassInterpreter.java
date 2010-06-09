@@ -386,24 +386,18 @@ public class ClassInterpreter extends Interpreter
 			"ThreadKill -> id: " + Thread.currentThread().getId() +
 			" cpunm: 0");
 	}
+	
 
 	@Override
-	public List<Object> runOneTrace(
-		ClassDefinition classdef, CallSequence test, boolean debug)
+	public Context getInitialTraceContext(NamedTraceDefinition tracedef,boolean debug, DBGPReader dbgp) throws ValueException
 	{
-		List<Object> list = new Vector<Object>();
 		ObjectValue object = null;
 
-		try
-		{
-			// Create a new test object
-			object = classdef.newInstance(null, null, initialContext);
-		}
-		catch (ValueException e)
-		{
-			list.add(e.getMessage());
-			return list;
-		}
+		ClassDefinition classdef=tracedef.classDefinition;
+		
+		// Create a new test object
+		object = classdef.newInstance(null, null, initialContext);
+		
 
 		Context ctxt = new ObjectContext(
 				classdef.name.location, classdef.name.name + "()",
@@ -411,7 +405,36 @@ public class ClassInterpreter extends Interpreter
 
 		ctxt.put(classdef.name.getSelfName(), object);
 
-		ctxt.setThreadState(null, CPUValue.vCPU);
+		ctxt.setThreadState(dbgp, CPUValue.vCPU);
+		
+		return ctxt;
+	}
+
+
+	@Override
+	public List<Object> runOneTrace(
+			NamedTraceDefinition tracedef, CallSequence test, boolean debug)
+	{
+		return runOneTrace(tracedef,test,debug,null);
+	}
+	
+	@Override
+	public List<Object> runOneTrace(
+			NamedTraceDefinition tracedef, CallSequence test,boolean debug, DBGPReader dbgp)
+	{
+		List<Object> list = new Vector<Object>();
+		Context ctxt = null;
+
+		try
+		{
+			ctxt = getInitialTraceContext(tracedef, debug, dbgp);
+		}
+		catch (ValueException e)
+		{
+			list.add(e.getMessage());
+			return list;
+		}
+
 		clearBreakpointHits();
 
 		scheduler.reset();

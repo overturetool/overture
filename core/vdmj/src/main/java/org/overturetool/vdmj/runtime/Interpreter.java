@@ -490,13 +490,13 @@ abstract public class Interpreter
 		return typeCheck(expr, getGlobalEnvironment());
 	}
 
-	public ClassDefinition findClass(@SuppressWarnings("unused") String classname)
+	public ClassDefinition findClass(String classname)
 	{
 		assert false : "findClass cannot be called for modules";
 		return null;
 	}
 
-	public Module findModule(@SuppressWarnings("unused") String module)
+	public Module findModule(String module)
 	{
 		assert false : "findModule cannot be called for classes";
 		return null;
@@ -514,12 +514,12 @@ abstract public class Interpreter
 	public void runtrace(String name, int testNo, boolean debug)
 		throws Exception
 	{
-		runtrace(name, testNo, debug, 1.0F, TraceReductionType.NONE, 1234);
+		runtrace(name, testNo, debug, 1.0F, TraceReductionType.NONE, 1234,null);
 	}
 
 	public void runtrace(
 		String name, int testNo, boolean debug,
-		float subset, TraceReductionType type, long seed)
+		float subset, TraceReductionType type, long seed, DBGPReader dbgp)
 		throws Exception
 	{
 		LexTokenReader ltr = new LexTokenReader(name, Dialect.VDM_SL);
@@ -546,9 +546,15 @@ abstract public class Interpreter
 		{
 			throw new Exception("Trace " + lexname + " not found");
 		}
-
-		TestSequence tests = tracedef.getTests(initialContext, subset, type, seed);
-
+		
+		TestSequence tests = null;
+		
+		Context ctxt = null;
+		
+		ctxt = getInitialTraceContext(tracedef, debug, dbgp);
+		
+		tests = tracedef.getTests(ctxt, subset, type, seed);
+		
 		boolean wasDBGP = Settings.usingDBGP;
 		boolean wasCMD = Settings.usingCmdLine;
 
@@ -592,7 +598,7 @@ abstract public class Interpreter
 			{
 				// Initialize completely between every run...
     			traceInit(null);
-    			List<Object> result = runOneTrace(tracedef.classDefinition, test, debug);
+    			List<Object> result = runOneTrace(tracedef, test, debug,dbgp);
     			tests.filter(result, test, n);
 
     			writer.println("Test " + n + " = " + clean);
@@ -607,5 +613,10 @@ abstract public class Interpreter
 	}
 
 	abstract public List<Object> runOneTrace(
-		ClassDefinition classDefinition, CallSequence test, boolean debug);
+			NamedTraceDefinition tracedef, CallSequence test, boolean debug);
+	
+	abstract public List<Object> runOneTrace(
+			NamedTraceDefinition tracedef, CallSequence test, boolean debug, DBGPReader dbgp);
+	
+	abstract public Context getInitialTraceContext(NamedTraceDefinition tracedef, boolean debug, DBGPReader dbgp) throws ValueException;
 }

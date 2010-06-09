@@ -26,9 +26,9 @@ package org.overturetool.vdmj.runtime;
 import java.io.File;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import org.overturetool.vdmj.debug.DBGPReader;
-import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
@@ -293,15 +293,46 @@ public class ModuleInterpreter extends Interpreter
 	{
 		return modules.getProofObligations();
 	}
+	
+	@Override
+	public Context getInitialTraceContext(NamedTraceDefinition tracedef, boolean debug, DBGPReader dbgp) throws ValueException
+	{
+		Context ctxt = initialContext;
+		
+		initialContext.setThreadState(dbgp, initialContext.threadState.CPU);
+
+		return ctxt;
+	}
+	
+	@Override
+	public List<Object> runOneTrace(
+			NamedTraceDefinition tracedef, CallSequence test, boolean debug)
+	{
+		return runOneTrace(tracedef, test, debug, null);
+	}
 
 	@Override
 	public List<Object> runOneTrace(
-		ClassDefinition classdef, CallSequence test, boolean debug)
+			NamedTraceDefinition tracedef, CallSequence test, boolean debug, DBGPReader dbgp)
 	{
-		clearBreakpointHits();
+		List<Object> list = new Vector<Object>();
+		Context ctxt = null;
 
+		try
+		{
+			ctxt = getInitialTraceContext(tracedef, debug, dbgp);
+
+		}
+		catch (ValueException e)
+		{
+			list.add(e.getMessage());
+			return list;
+		}
+		
+		clearBreakpointHits();
+		
 		scheduler.reset();
-		CTMainThread main = new CTMainThread(test, initialContext, debug);
+		CTMainThread main = new CTMainThread(test, ctxt, debug);
 		main.start();
 		scheduler.start(main);
 
