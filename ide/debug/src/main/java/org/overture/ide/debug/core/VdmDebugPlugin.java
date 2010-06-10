@@ -23,6 +23,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -52,6 +53,16 @@ public class VdmDebugPlugin extends AbstractUIPlugin {
 
 	}
 
+	public static IWorkbenchPage getActivePage() {
+		IWorkbenchWindow w = getActiveWorkbenchWindow();
+		if (w != null) {
+			return w.getActivePage();
+		}
+		return null;
+	}
+	
+	
+	
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		ILaunchManager launchManager = DebugPlugin.getDefault()

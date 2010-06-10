@@ -1,5 +1,7 @@
 package org.overture.ide.debug.ui.model;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -15,11 +17,14 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.model.internal.VdmLineBreakpoint;
+import org.overture.ide.ui.editor.core.VdmEditor;
+import org.overturetool.vdmj.ast.IAstNode;
 
 public class VdmLineBreakpointAdapter implements IToggleBreakpointsTarget {
 
@@ -45,7 +50,18 @@ public class VdmLineBreakpointAdapter implements IToggleBreakpointsTarget {
 		// DLTKDebugPlugin.log(e);
 		// }
 		ITextEditor textEditor = getEditor(part);
+				
 		if (textEditor != null) {
+			
+			if(textEditor instanceof VdmEditor){
+				VdmEditor vEditor = (VdmEditor) textEditor;
+				IAstNode node = vEditor.getElementAt(((ITextSelection) selection).getOffset());				
+				if(node != null)
+				{
+				System.out.println(node.toString());	
+				}
+			}
+			
 			IResource resource = (IResource) textEditor.getEditorInput()
 					.getAdapter(IResource.class);
 			ITextSelection textSelection = (ITextSelection) selection;
@@ -81,6 +97,14 @@ public class VdmLineBreakpointAdapter implements IToggleBreakpointsTarget {
 				VdmLineBreakpoint lineBreakpoint = new VdmLineBreakpoint(
 						IDebugConstants.ID_VDM_DEBUG_MODEL, resource, location,
 						lineNumber + 1, start, end, false);
+				
+				StringBuilder message = new StringBuilder();
+				message.append("Line breakpoint:");
+				message.append(location.lastSegment());
+				message.append("[line:" + (lineNumber + 1) + "]");
+				
+				lineBreakpoint.setMessage(message.toString());
+				
 				DebugPlugin.getDefault().getBreakpointManager().addBreakpoint(
 						lineBreakpoint);
 
@@ -91,6 +115,8 @@ public class VdmLineBreakpointAdapter implements IToggleBreakpointsTarget {
 
 		}
 	}
+
+	
 
 	/*
 	 * (non-Javadoc)

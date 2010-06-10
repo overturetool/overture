@@ -9,6 +9,10 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.model.internal;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -20,6 +24,8 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.overture.ide.debug.core.ExtendedDebugEventDetails;
 import org.overture.ide.debug.core.VdmDebugPlugin;
+import org.overture.ide.debug.core.dbgp.IDbgpNotification;
+import org.overture.ide.debug.core.dbgp.IDbgpNotificationListener;
 import org.overture.ide.debug.core.dbgp.IDbgpSession;
 import org.overture.ide.debug.core.dbgp.breakpoints.IDbgpBreakpoint;
 import org.overture.ide.debug.core.dbgp.commands.IDbgpExtendedCommands;
@@ -38,7 +44,7 @@ import org.overture.ide.debug.logging.LogItem;
 
 public class VdmThread extends VdmDebugElement implements IVdmThread,
 		IThreadManagement, IDbgpTerminationListener,
-		VdmThreadStateManager.IStateChangeHandler  {
+		VdmThreadStateManager.IStateChangeHandler {
 
 	private VdmThreadStateManager stateManager;
 
@@ -65,50 +71,47 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 		DebugEventHelper.fireExtendedEvent(this,
 				ExtendedDebugEventDetails.BEFORE_SUSPEND);
 
-		
+		// if (handleSmartStepInto()) {
+		// return;
+		// }
 
-//		if (handleSmartStepInto()) {
-//			return;
-//		}
-
-		
-		this.target.printLog(new LogItem(this.session.getInfo(), "Break", false, "Suspend"));
+		this.target.printLog(new LogItem(this.session.getInfo(), "Break",
+				false, "Suspend"));
 		DebugEventHelper.fireChangeEvent(this);
 		DebugEventHelper.fireSuspendEvent(this, detail);
-		
+
 		stack.update(true);
-		
-		
+
 	}
 
-//	private boolean handleSmartStepInto() {
-//		if (stateManager.isStepInto()
-//				&& getVdmDebugTarget().isUseStepFilters()
-//				&& stack.getFrames().length > currentStackLevel) {
-//			stateManager.setStepInto(false);
-//			IVdmDebugTarget target = this.getVdmDebugTarget();
-//			String[] filters = target.getFilters();
-//			IDLTKLanguageToolkit toolkit = this.getVdmDebugTarget()
-//					.getLanguageToolkit();
-//			if (toolkit != null) {
-//				ISmartStepEvaluator evaluator = SmartStepEvaluatorManager
-//						.getEvaluator(toolkit.getNatureId());
-//				if (evaluator != null) {
-//					if (evaluator.isFiltered(filters, this)) {
-//						try {
-//							this.stepReturn();
-//							return true;
-//						} catch (DebugException e) {
-//							if (DLTKCore.DEBUG) {
-//								e.printStackTrace();
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
-//		return false;
-//	}
+	// private boolean handleSmartStepInto() {
+	// if (stateManager.isStepInto()
+	// && getVdmDebugTarget().isUseStepFilters()
+	// && stack.getFrames().length > currentStackLevel) {
+	// stateManager.setStepInto(false);
+	// IVdmDebugTarget target = this.getVdmDebugTarget();
+	// String[] filters = target.getFilters();
+	// IDLTKLanguageToolkit toolkit = this.getVdmDebugTarget()
+	// .getLanguageToolkit();
+	// if (toolkit != null) {
+	// ISmartStepEvaluator evaluator = SmartStepEvaluatorManager
+	// .getEvaluator(toolkit.getNatureId());
+	// if (evaluator != null) {
+	// if (evaluator.isFiltered(filters, this)) {
+	// try {
+	// this.stepReturn();
+	// return true;
+	// } catch (DebugException e) {
+	// if (DLTKCore.DEBUG) {
+	// e.printStackTrace();
+	// }
+	// }
+	// }
+	// }
+	// }
+	// }
+	// return false;
+	// }
 
 	public void handleResume(int detail) {
 		DebugEventHelper.fireExtendedEvent(this,
@@ -123,11 +126,12 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 			VdmDebugPlugin.log(e);
 			IVdmStreamProxy proxy = getVdmDebugTarget().getStreamProxy();
 			if (proxy != null) {
-				
-				proxy.writeStderr("\n" + this.getName()+ " " + e.getMessage() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+
+				proxy
+						.writeStderr("\n" + this.getName() + " " + e.getMessage() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 				stack.update(false);
 				IStackFrame[] frames = stack.getFrames();
-				
+
 				proxy.writeStderr("\nStack trace:\n"); //$NON-NLS-1$
 				try {
 					for (int i = 0; i < frames.length; i++) {
@@ -144,10 +148,8 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 				}
 			}
 		}
-		
-		
-			manager.handleCustomTerminationCommands();
-		
+
+		manager.handleCustomTerminationCommands();
 
 		session.requestTermination();
 		try {
@@ -179,9 +181,9 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 
 			final DbgpDebugger engine = this.stateManager.getEngine();
 
-//			if (VdmDebugPlugin.DEBUG) {
-//				DbgpDebugger.printEngineInfo(engine);
-//			}
+			// if (VdmDebugPlugin.DEBUG) {
+			// DbgpDebugger.printEngineInfo(engine);
+			// }
 
 			engine.setMaxChildren(propertyPageSize);
 			engine.setMaxDepth(2);
@@ -200,34 +202,34 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 				engine.redirectStdin();
 			}
 			engine.setNotifyOk(true);
-			if (isDebugConsole) {
+			if (true) {
 				engine.redirectStdout();
 				engine.redirectStderr();
 			}
 			monitor.worked(2);
 
-//			HotCodeReplaceManager.getDefault().addHotCodeReplaceListener(this);
+			// HotCodeReplaceManager.getDefault().addHotCodeReplaceListener(this);
 		} finally {
 			monitor.done();
 		}
-		// final IDbgpExtendedCommands extended = session.getExtendedCommands();
-		// session.getNotificationManager().addNotificationListener(
-		// new IDbgpNotificationListener() {
-		// private final BufferedReader reader = new BufferedReader(
-		// new InputStreamReader(getStreamProxy().getStdin()));
-		//
-		// public void dbgpNotify(IDbgpNotification notification) {
-		// try {
-		// extended.sendStdin(reader.readLine() + "\n");
-		// } catch (IOException e) {
-		// // TODO: log exception
-		// e.printStackTrace();
-		// } catch (DbgpException e) {
-		// // TODO: log exception
-		// e.printStackTrace();
-		// }
-		// }
-		// });
+		final IDbgpExtendedCommands extended = session.getExtendedCommands();
+		session.getNotificationManager().addNotificationListener(
+				new IDbgpNotificationListener() {
+					private final BufferedReader reader = new BufferedReader(
+							new InputStreamReader(getStreamProxy().getStdin()));
+
+					public void dbgpNotify(IDbgpNotification notification) {
+						try {
+							extended.sendStdin(reader.readLine() + "\n");
+						} catch (IOException e) {
+							// TODO: log exception
+							e.printStackTrace();
+						} catch (DbgpException e) {
+							// TODO: log exception
+							e.printStackTrace();
+						}
+					}
+				});
 	}
 
 	public boolean hasStackFrames() {
@@ -263,9 +265,8 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 
 	public String getName() {
 		String name = session.getInfo().getThreadId();
-		if(name.length()>0)
-		{
-			name = name.substring(0,1).toUpperCase()+name.substring(1);
+		if (name.length() > 0) {
+			name = name.substring(0, 1).toUpperCase() + name.substring(1);
 		}
 		return name;
 	}
@@ -292,7 +293,8 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 
 	public void suspend() throws DebugException {
 		stateManager.suspend();
-		this.target.printLog(new LogItem(this.session.getInfo(), "REQUEST", true, "Suspend"));
+		this.target.printLog(new LogItem(this.session.getInfo(), "REQUEST",
+				true, "Suspend"));
 	}
 
 	// Resume
@@ -300,20 +302,21 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 		return stateManager.canResume();
 	}
 
-	
 	public void resume() throws DebugException {
 		this.manager.resume();
 	}
 
-	public void resumeInner()throws DebugException{
-		this.target.printLog(new LogItem(this.session.getInfo(), "REQUEST", true, "Resume"));		
+	public void resumeInner() throws DebugException {
+		this.target.printLog(new LogItem(this.session.getInfo(), "REQUEST",
+				true, "Resume"));
 		stateManager.resume();
 	}
-	
+
 	public void initialStepInto() {
 		stateManager.setSuspended(false, DebugEvent.CLIENT_REQUEST);
 		stateManager.getEngine().stepInto();
-		this.target.printLog(new LogItem(this.session.getInfo(), "REQUEST", true, "Initial Step Into"));
+		this.target.printLog(new LogItem(this.session.getInfo(), "REQUEST",
+				true, "Initial Step Into"));
 	}
 
 	// IStep
@@ -332,14 +335,15 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 
 	public void stepInto() throws DebugException {
 		this.manager.stepInto();
-//		currentStackLevel = this.stack.getFrames().length;
-//		stateManager.stepInto();
+		// currentStackLevel = this.stack.getFrames().length;
+		// stateManager.stepInto();
 	}
-	
-	public void stepIntoInner() throws DebugException{
+
+	public void stepIntoInner() throws DebugException {
 		currentStackLevel = this.stack.getFrames().length;
 		stateManager.stepInto();
-		this.target.printLog(new LogItem(this.session.getInfo(), "REQUEST", true, "Step Into"));
+		this.target.printLog(new LogItem(this.session.getInfo(), "REQUEST",
+				true, "Step Into"));
 	}
 
 	// Step over
@@ -350,10 +354,11 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 	public void stepOver() throws DebugException {
 		this.manager.stepOver();
 	}
-	
-	public void stepOverInner() throws DebugException{
+
+	public void stepOverInner() throws DebugException {
 		stateManager.stepOver();
-		this.target.printLog(new LogItem(this.session.getInfo(), "REQUEST", true, "Step Over"));
+		this.target.printLog(new LogItem(this.session.getInfo(), "REQUEST",
+				true, "Step Over"));
 	}
 
 	// Step return
@@ -364,10 +369,11 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 	public void stepReturn() throws DebugException {
 		this.manager.stepReturn();
 	}
-	
-	public void stepReturnInner() throws DebugException{
+
+	public void stepReturnInner() throws DebugException {
 		stateManager.stepReturn();
-		this.target.printLog(new LogItem(this.session.getInfo(), "REQUEST", true, "Step Return"));
+		this.target.printLog(new LogItem(this.session.getInfo(), "REQUEST",
+				true, "Step Return"));
 	}
 
 	// ITerminate
@@ -423,7 +429,7 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 	public void objectTerminated(Object object, Exception e) {
 		terminated = true;
 		Assert.isTrue(object == session);
-		//HotCodeReplaceManager.getDefault().removeHotCodeReplaceListener(this);
+		// HotCodeReplaceManager.getDefault().removeHotCodeReplaceListener(this);
 		manager.terminateThread(this);
 	}
 
@@ -436,20 +442,20 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 		stateManager.notifyModified();
 	}
 
-//	public void hotCodeReplaceFailed(IVdmDebugTarget target,
-//			DebugException exception) {
-//		if (isSuspended()) {
-//			stack.updateFrames();
-//			DebugEventHelper.fireChangeEvent(this);
-//		}
-//	}
-//
-//	public void hotCodeReplaceSucceeded(IVdmDebugTarget target) {
-//		if (isSuspended()) {
-//			stack.updateFrames();
-//			DebugEventHelper.fireChangeEvent(this);
-//		}
-//	}
+	// public void hotCodeReplaceFailed(IVdmDebugTarget target,
+	// DebugException exception) {
+	// if (isSuspended()) {
+	// stack.updateFrames();
+	// DebugEventHelper.fireChangeEvent(this);
+	// }
+	// }
+	//
+	// public void hotCodeReplaceSucceeded(IVdmDebugTarget target) {
+	// if (isSuspended()) {
+	// stack.updateFrames();
+	// DebugEventHelper.fireChangeEvent(this);
+	// }
+	// }
 
 	public int getPropertyPageSize() {
 		return propertyPageSize;
@@ -487,6 +493,6 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 }

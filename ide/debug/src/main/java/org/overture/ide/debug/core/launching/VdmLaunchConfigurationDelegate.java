@@ -370,10 +370,10 @@ public class VdmLaunchConfigurationDelegate implements
 			if (!useRemoteDebug(launch.getLaunchConfiguration()))
 			{
 				process = Runtime.getRuntime().exec(executeString, null, project.getLocation().toFile());
-
-				ConsoleWriter cw = new ConsoleWriter(IDebugConstants.CONSOLE_DEBUG_NAME);
-				new ProcessConsolePrinter(false, cw, process.getInputStream()).start();
-				new ProcessConsolePrinter(true, cw, process.getErrorStream()).start();
+//
+//				ConsoleWriter cw = new ConsoleWriter(IDebugConstants.CONSOLE_DEBUG_NAME);
+//				new ProcessConsolePrinter(false, cw, process.getInputStream()).start();
+//				new ProcessConsolePrinter(true, cw, process.getErrorStream()).start();
 			} else
 			{
 				process = Runtime.getRuntime().exec("help");

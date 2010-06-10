@@ -158,6 +158,81 @@
 			>
 		</view>
 	</extension>
+
+
+
+
+
+
+
+
+
+
+
+ <extension
+       point="org.eclipse.debug.core.watchExpressionDelegates">
+    <watchExpressionDelegate
+          debugModel="org.overture.ide.debug.vdm"
+          delegateClass="org.overture.ide.debug.core.model.internal.VdmWatchExpressionDelegate">
+    </watchExpressionDelegate>
+ </extension>
+ <extension
+       point="org.eclipse.ui.actionSets">
+    <actionSet
+          id="org.overture.ide.debug.debugActionSet"
+          label="Vdm Action Set"
+          visible="false">
+       <menu
+             id="org.overture.ide.debug.vdmMenu"
+             label="label"
+             path="addictions">
+          <separator
+                name="vdmGroup">
+          </separator>
+       </menu>
+       <action
+             class="org.overture.ide.debug.ui.actions.VdmWatchAction"
+             definitionId="org.overture.ide.debug.command.watch"
+             icon="icons/cview16/vdmpp_file_tsk.png"
+             id="org.overture.ide.debug.action.watchAction"
+             label="Watch"
+             menubarPath="org.overture.ide.debug.vdmMenu/vdmGroup"
+             style="push">
+          <enablement>
+             <and>
+                <systemProperty
+                      name="org.overture.debug.ui.debuggerActive"
+                      value="true">
+                </systemProperty>
+                
+                   <objectClass
+                         name="org.eclipse.jface.text.ITextSelection">
+                   </objectClass>
+                
+             </and>
+          </enablement>
+       </action>
+    </actionSet>
+ </extension>
+ <extension
+       point="org.eclipse.ui.commands">
+    <command
+          categoryId="org.eclipse.ui.category.textEditor"
+          defaultHandler="org.overture.ide.debug.ui.actions.WatchCommand"
+          id="org.overture.ide.debug.command.watch"
+          name="Watch Command">
+    </command>
+ </extension>
+ <extension
+       point="org.eclipse.core.expressions.propertyTesters">
+    <propertyTester
+          class="org.overture.ide.debug.ui.actions.PropertyTester1"
+          id="org.overture.ide.debug.propertyTester1"
+          namespace="org.overture.debug.ui"
+          properties="debuggerActive"
+          type="org.eclipse.core.resources.IResource">
+    </propertyTester>
+ </extension>
 	
 	<!-- Preference pages -->
 	 <extension
