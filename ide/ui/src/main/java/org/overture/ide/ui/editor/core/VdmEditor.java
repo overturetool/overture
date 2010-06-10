@@ -26,13 +26,13 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.SourceReferenceManager;
 import org.overture.ide.core.parser.SourceParserManager;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.ui.IVdmUiConstants;
-import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.actions.ToggleCommentAction;
 import org.overture.ide.ui.outline.VdmContentOutlinePage;
 import org.overturetool.vdmj.ast.IAstNode;
@@ -385,9 +385,12 @@ public abstract class VdmEditor extends TextEditor
 
 	}
 
-	private IVdmElement getInputVdmElement()
+	public IVdmElement getInputVdmElement()
 	{
-		IDocument doc = getDocumentProvider().getDocument(getEditorInput());
+		IDocumentProvider docProvider = getDocumentProvider();
+		if(docProvider!=null)
+		{
+		IDocument doc = docProvider.getDocument(getEditorInput());
 		if (doc instanceof VdmDocument)
 		{
 			VdmDocument vdmDoc = (VdmDocument) doc;
@@ -403,7 +406,7 @@ public abstract class VdmEditor extends TextEditor
 //				System.err.println("No root parsed for: " + sourceUnit);
 
 		}
-
+		}
 		return null;
 	}
 
@@ -707,6 +710,8 @@ public abstract class VdmEditor extends TextEditor
 		}
 		return null;
 	}
+	
+	
 
 	@Override
 	public void dispose()
@@ -775,4 +780,6 @@ public abstract class VdmEditor extends TextEditor
 			((ToggleCommentAction)action).configure(sourceViewer, configuration);
 		}
 	}
+
+	
 }
