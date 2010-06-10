@@ -3229,9 +3229,8 @@ and all the classes that had a \texttt{Step} operation.
 In addition to these changes the way timing is treated is changed so
 the \texttt{Timer} class is replaced with a more elaborate treatment
 of time. This is done using the
-\texttt{WaitNotify} and the \texttt{ClockTick} classes. These classes
-may be reused directly for other concurrent VDM++ models following the
-same principles.
+\texttt{TimeStamp} class, which may be reused directly for other 
+concurrent VDM++ models following the same principles.
 
 Communication occurs between the sensor and the missile detector
 (unidirectional) and between the missile detector and the flare
@@ -3253,7 +3252,7 @@ previous model, so are not given again here.
 \subsection{Updating the World Class}
 
 The \texttt{timerRef} instance variable is changed from a reference to 
-the \texttt{Timer} class to a reference to the \texttt{WaitNotify} class.
+the \texttt{Timer} class to a reference to the \texttt{TimeStamp} class.
 This is done in order to synchronize properly between the different 
 independent threads.
 
@@ -3292,13 +3291,10 @@ deleted and instead a thread is included. This looks like:
 \begin{lstlisting}
 thread
  (
-  start(new ClockTick(threadid));
   while World`timerRef.GetTime() < simtime do
    (if busy
     then createSignal();
-    World`timerRef.WaitRelative(0);
-    World`timerRef.NotifyAndIncTime();
-    World`timerRef.Awake();
+    World`timerRef.WaitRelative(1);
    );
   busy := false
  )
@@ -3312,13 +3308,13 @@ defined as:
 \begin{lstlisting}
 simtime : Time;
 \end{lstlisting}
-and it is initialised the the \texttt{Environment} constructor. This
+and it is initialised in the \texttt{Environment} constructor. This
 is used to simulate how long time we at most wish to simulate the
 entire system. Actually in a case like the CM example where the system
 only needs to respond to input events present in the
 \texttt{Environment} it is not strictly needed, but since we would
-also like to be able to descrive reactive systems where the system to
-be designed is able to react to the absense of events from the
+also like to be able to describe reactive systems where the system to
+be designed is able to react to the absence of events from the
 \texttt{Environment} this kind of principle needs to be introduced
 because in that case it would be needed.
 
@@ -3345,19 +3341,18 @@ per isFinished => not busy;
 
 \subsection{Updating the Missile Detector Class}
 
-In the \texttt{addController} operation, the controller added is also started,
-so the definition now looks like:
-
-\begin{lstlisting}
-public addController: FlareController ==> ()
-addController (pctrl) ==
-  (dcl nid : nat := card dom ranges + 1;
-   atomic
-    (ranges := ranges munion {nid |-> pctrl.getAperture()};
-     controllers := controllers munion {nid |-> pctrl}
-    );
-   start (pctrl) );
-\end{lstlisting}
+%The \texttt{addController} operation definition looks like:
+%
+%\begin{lstlisting}
+%public addController: FlareController ==> ()
+%addController (pctrl) ==
+%  (dcl nid : nat := card dom ranges + 1;
+%   atomic
+%    (ranges := ranges munion {nid |-> pctrl.getAperture()};
+%     controllers := controllers munion {nid |-> pctrl}
+%    );
+%   );
+%\end{lstlisting}
 
 The \texttt{Step} operation is deleted just like for the \texttt{Run}
 operation in the \texttt{Environment} class. Instead a thread is
@@ -3366,18 +3361,24 @@ in a way quite similar to what \texttt{Step} did previously if any threats
 were present.
 
 \begin{lstlisting} 
-thread
+operations
 
 -- the missile detector continuously processes sensor
 -- events. getThread is automatically blocked if there
 -- are no threats available
-while true do
-  (def mk_ (evid,pmt, pa, pt) = getThreat() in
+processSensor: () ==> ()
+processSensor() ==
+( def mk_ (evid,pmt, pa, pt) = getThreat() in
      for all id in set dom ranges do
        def mk_(papplhs, pappsize) = ranges(id) in
          if canObserve(pa, papplhs, pappsize)
          then controllers(id).addThreat(evid,pmt,pa,pt);
-   busy := len threats > 0 )
+   busy := len threats > 0);
+
+thread
+
+while true do
+  processSensor();
 \end{lstlisting}
 
 The operation \texttt{isFinished} is different from the sequential
@@ -3412,20 +3413,19 @@ per isFinished => not busy
 
 \subsection{Updating the Flare Controller Class}
 
-In the \texttt{addDispenser} operation, the dispenser added is also started,
-so the definition now looks like:
-
-\begin{lstlisting}
-public addDispenser: FlareDispenser ==> ()
-addDispenser (pfldisp) ==
-  let angle = aperture + pfldisp.GetAngle() in
-    (dcl id : nat := card dom ranges + 1;
-     atomic
-      (ranges := ranges munion 
-                 {id |-> mk_(angle, DISPENSER_APERTURE)};
-       dispensers := dispensers munion {id |-> pfldisp});
-     start (pfldisp) );
-\end{lstlisting}
+%The \texttt{addDispenser} operation definition now looks like:
+%
+%\begin{lstlisting}
+%public addDispenser: FlareDispenser ==> ()
+%addDispenser (pfldisp) ==
+%  let angle = aperture + pfldisp.GetAngle() in
+%    (dcl id : nat := card dom ranges + 1;
+%     atomic
+%      (ranges := ranges munion 
+%                 {id |-> mk_(angle, DISPENSER_APERTURE)};
+%       dispensers := dispensers munion {id |-> pfldisp});
+%     );
+%\end{lstlisting}
 
 Just like for the \texttt{MissileDetector} class the \texttt{Step} operation
 is deleted and instead a new thread is introduced. The thread first needs
@@ -3435,15 +3435,21 @@ The thread for the flare controller is similar to the part of the operation
 continuously processes sensor events. 
 
 \begin{lstlisting}
-thread
+operations
 
-(while true do
-   (def mk_ (evid,pmt, pa, pt) = getThreat() in
+processThreat: () ==> ()
+processThreat() ==
+  (def mk_ (evid,pmt, pa, pt) = getThreat() in
       for all id in set dom ranges do
         def mk_(papplhs, pappsize) = ranges(id) in
           if canObserve(pa, papplhs, pappsize)
           then dispensers(id).addThreat(evid,pmt,pt);
-    busy := len threats > 0 ) )
+    busy := len threats > 0 );
+
+thread
+
+while true do
+  proceesThreat();
 \end{lstlisting}
 
 The operation \texttt{isFinished} is different from the sequential
@@ -3487,9 +3493,9 @@ is placed inside a new operation called \texttt{evalQueue}.
 \begin{lstlisting}
 thread
   while true do
-    (World`timerRef.WaitRelative(World`timerRef.stepLength);
-     evalQueue();
-     World`timerRef.Awake());
+    (evalQueue();
+     World`timerRef.WaitRelative(World`timerRef.stepLength);
+    );
      
 operations
 
@@ -3542,9 +3548,11 @@ are taken between otherwise independent threads (acting as clients from the
 %in Java \cite{Gosling&00} and that is described in detail in 
 %Appendix~\ref{app:waitnotify}.
 
-\texttt{TimeStamp} has two instance variables that represent the current time
+\texttt{TimeStamp} has three instance variables that represent the current time
 and information about which threads that shall be woken up when
-respectively.
+respectively. The \texttt{barrierCount} specify the number of periodic 
+threads which needs to be places in the \texttt{wakeUpMap} before this 
+is evaluated.
 
 \begin{lstlisting}
 class TimeStamp
@@ -3553,6 +3561,7 @@ instance variables
   
 currentTime : nat := 0;
 wakeUpMap : map nat to nat := {|->};
+barrierCount : nat1;
 \end{lstlisting}
 
 A client may request a relative or an absolute wait, but in the concurrent
@@ -3564,7 +3573,7 @@ operations
 
 public WaitRelative : nat ==> ()
 WaitRelative(val) ==
-  AddToWakeUpMap(threadid, currentTime + val);
+  WaitAbsolute(currentTime + val);
 \end{lstlisting}
 
 Absolute waits are performed using \texttt{WaitAbsolute}. Note that if time
@@ -3574,7 +3583,12 @@ woken.
 \begin{lstlisting}
 public WaitAbsolute : nat ==> ()
 WaitAbsolute(val) ==
-  AddToWakeUpMap(threadid, val);
+ (AddToWakeUpMap(threadid, val);
+  -- Last to enter the barrier notifies the rest.
+  BarrierReached();
+  -- Wait till time is up
+  Awake();
+ );
 \end{lstlisting}
 
 \texttt{AddToWakeUpMap} is used to add new waits to the \texttt{wakeUpMap}.
@@ -3585,37 +3599,71 @@ AddToWakeUpMap(tId, val) ==
   wakeUpMap := wakeUpMap ++ { tId |-> val };
 \end{lstlisting}
 
-A specific thread can be immediately awoken
-using \texttt{NotifyThread}.
+The operation \texttt{BarrierReached} evaluates the \texttt{wakeUpMap} when 
+all period threads have entered the mapping. Time is incremented and all threads
+that needs to be awoken is removed from the \texttt{wakeUpMap}.
 
 \begin{lstlisting}
-public NotifyThread : nat ==> ()
-NotifyThread(tId) ==
-  wakeUpMap := {tId} <-: wakeUpMap;
+BarrierReached : () ==> ()
+BarrierReached() == 
+ (while  (card dom wakeUpMap = barrierCount) do
+   (currentTime := currentTime + stepLength;
+    let threadSet : set of nat = {th | th in set dom wakeUpMap 
+                                                & wakeUpMap(th) <> nil and 
+                                                   wakeUpMap(th) <= currentTime }
+    in
+      for all t in set threadSet 
+      do
+         wakeUpMap := {t} <-: wakeUpMap;
+   );
+ )
+post forall x in set rng wakeUpMap & x = nil or x >= currentTime;
 \end{lstlisting}
 
-Testing all waiting threads to find which needs to be awoken using \texttt{NotifyAll}.
+%A specific thread can be immediately awoken
+%using \texttt{NotifyThread}.
+%
+%\begin{lstlisting}
+%public NotifyThread : nat ==> ()
+%NotifyThread(tId) ==
+%  wakeUpMap := {tId} <-: wakeUpMap;
+%\end{lstlisting}
+%
+%Testing all waiting threads to find which needs to be awoken using \texttt{NotifyAll}.
+%
+%\begin{lstlisting}
+%public NotifyAll : () ==> ()
+%NotifyAll() ==
+%  let threadSet : set of nat = {th | th in set dom wakeUpMap 
+%                                   & wakeUpMap(th) <= currentTime }
+%  in
+%    for all t in set threadSet 
+%    do
+%      NotifyThread(t);
+%\end{lstlisting}
+%
+%The operation \texttt{NotifyAndIncTime} is used to increment time and
+%awake all threads waiting for the current time step.
+%
+%\begin{lstlisting}
+%NotifyAndIncTime : () ==> ()
+%NotifyAndIncTime() ==
+%( currentTime := currentTime + 1;
+%  NotifyAll();
+%);
+%\end{lstlisting}
+
+All threads block on the operation \texttt{Awake} until they are removed from
+the \texttt{wakeUpMap} as described above.
 
 \begin{lstlisting}
-public NotifyAll : () ==> ()
-NotifyAll() ==
-  let threadSet : set of nat = {th | th in set dom wakeUpMap 
-                                   & wakeUpMap(th) <= currentTime }
-  in
-    for all t in set threadSet 
-    do
-      NotifyThread(t);
-\end{lstlisting}
+operations
 
-The operation \texttt{NotifyAndIncTime} is used to increment time and
-awake all threads waiting for the current time step.
+Awake: () ==> ()
+Awake() == skip;
 
-\begin{lstlisting}
-NotifyAndIncTime : () ==> ()
-NotifyAndIncTime() ==
-( currentTime := currentTime + 1;
-  NotifyAll();
-);
+sync
+  per Awake => threadid not in set dom wakeUpMap;
 \end{lstlisting}
 
 The current time of the class may be obtained via the \texttt{GetTime}
@@ -3632,21 +3680,21 @@ operations, we need to set access to them to be mutually exclusive.
 
 \begin{lstlisting}
 sync
-  mutex(NotifyAll);
   mutex(AddToWakeUpMap);
-  mutex(AddToWakeUpMap, NotifyAll); 
+  mutex(BarrierReached);
+  mutex(AddToWakeUpMap, BarrierReached);
 
 end TimeStamp
 \end{lstlisting}
 
-\subsection{Introducing the ClockTick Class}
-
-\texttt{ClockTick} is a class containing a thread that its used as a spark plug
-for all other threads in the model. Each time the \texttt{Environment}
-increment the time and subsequently sleeps and gives a chance to the
-other threads for running. So if all the other threads are blocked
-this Clock tick will always be ready to wake up the \texttt{Environment} or 
-another thread.
+%\subsection{Introducing the ClockTick Class}
+%
+%\texttt{ClockTick} is a class containing a thread that its used as a spark plug
+%for all other threads in the model. Each time the \texttt{Environment}
+%increment the time and subsequently sleeps and gives a chance to the
+%other threads for running. So if all the other threads are blocked
+%this Clock tick will always be ready to wake up the \texttt{Environment} or 
+%another thread.
 
 %The class maintains as an instance variable for the thread id
 %\textbf{tid} of the thread that it is supposed to be notified each clock
@@ -3670,22 +3718,22 @@ another thread.
 %ClockTick (t) == tid := t;
 %\end{lstlisting}
 
-The thread definition of \texttt{ClockTick} should be used as a template
-for all other threads in the model. First, it places itself in the \texttt{wakeUpMap} 
-using \texttt{WaitRelative}. Following this the thread notifies all other threads, ensuring 
-the \texttt{Environment} thread is woken. Finally, it puts itself to sleep using the
-\texttt{Awake} operation of \texttt{WaitRelative}.
-
-\begin{lstlisting}
-thread
-
- while true do
-   (
-    World`timerRef.WaitRelative(1);
-    World`timerRef.NotifyAll();
-    World`timerRef.Awake();
-   )
-\end{lstlisting}
+%The thread definition of \texttt{ClockTick} should be used as a template
+%for all other threads in the model. First, it places itself in the \texttt{wakeUpMap} 
+%using \texttt{WaitRelative}. Following this the thread notifies all other threads, ensuring 
+%the \texttt{Environment} thread is woken. Finally, it puts itself to sleep using the
+%\texttt{Awake} operation of \texttt{WaitRelative}.
+%
+%\begin{lstlisting}
+%thread
+%
+% while true do
+%   (
+%    World`timerRef.WaitRelative(1);
+%    World`timerRef.NotifyAll();
+%    World`timerRef.Awake();
+%   )
+%\end{lstlisting}
 
 \subsection{Validation of the Model}
 
@@ -3741,7 +3789,7 @@ cases from the sequential VDM++ model was possible.
 The real-time model differs from the concurrent model in a number of ways:
 
 \begin{itemize}
-\item The \texttt{ClockTick} class and the \texttt{timerRef} instance
+\item The \texttt{timerRef} instance
   variable inside the \texttt{World} class is no longer needed since
   the extensions to VDM-RT include time directly.
 \item The \texttt{CM} class is changed into a system (by changing the
@@ -5709,11 +5757,13 @@ Each client executes its
 periodically. When it completes its \texttt{ComputationPhase} it calls 
 \texttt{TimeStamp`WaitRelative} with its
 execution period, and is then awoken at that time, or as soon as
-possible thereafter. \texttt{TimeStamp`NotifyAll} 
-is then called in order to release any waiting clients. Finally, the thread 
-blocks on \texttt{TimeStamp`Awake}, where the thread waits until it 
-is time to wake up. Note that since the clients are incidental to the 
+possible thereafter. Note that since the clients are incidental to the 
 pattern, they are not given in the following specification.
+
+%\texttt{TimeStamp`NotifyAll} 
+%is then called in order to release any waiting clients. Finally, the thread 
+%blocks on \texttt{TimeStamp`Awake}, where the thread waits until it 
+%is time to wake up. 
 
 \subsection{The TimeStamp Class}
 
@@ -5744,6 +5794,7 @@ instance variables
   
 currentTime : nat := 0;
 wakeUpMap : map nat to nat := {|->};
+barrierCount : nat1;
 \end{lstlisting}
 
 A client may request an absolute wait. using \texttt{WaitRelative}.
@@ -5753,7 +5804,7 @@ operations
 
 public WaitRelative : nat ==> ()
 WaitRelative(val) ==
-  AddToWakeUpMap(threadid, currentTime + val);
+  WaitAbsolute(currentTime + val);
 \end{lstlisting}
 
 Absolute waits are performed using \texttt{WaitAbsolute}. Note that if time
@@ -5763,7 +5814,12 @@ woken.
 \begin{lstlisting}
 public WaitAbsolute : nat ==> ()
 WaitAbsolute(val) ==
-  AddToWakeUpMap(threadid, val);
+ (AddToWakeUpMap(threadid, val);
+  -- Last to enter the barrier notifies the rest.
+  BarrierReached();
+  -- Wait till time is up
+  Awake();
+);
 \end{lstlisting}
 
 \texttt{AddToWakeUpMap} is used to add new waits to the \texttt{wakeUpMap}.
@@ -5774,14 +5830,48 @@ AddToWakeUpMap(tId, val) ==
   wakeUpMap := wakeUpMap ++ { tId |-> val };
 \end{lstlisting}
 
-A specific thread can be immediately awoken
-using \texttt{NotifyThread}.
+The operation \texttt{BarrierReached} evaluates the \texttt{wakeUpMap} when 
+all period threads have entered the mapping. Time is incremented and all threads
+that needs to be awoken is removed from the \texttt{wakeUpMap}.
 
 \begin{lstlisting}
-public NotifyThread : nat ==> ()
-NotifyThread(tId) ==
-  wakeUpMap := {tId} <-: wakeUpMap;
+BarrierReached : () ==> ()
+BarrierReached() == 
+ (while  (card dom wakeUpMap = barrierCount) do
+   (currentTime := currentTime + stepLength;
+    let threadSet : set of nat = {th | th in set dom wakeUpMap 
+                                                & wakeUpMap(th) <> nil and 
+                                                   wakeUpMap(th) <= currentTime }
+    in
+      for all t in set threadSet 
+      do
+         wakeUpMap := {t} <-: wakeUpMap;
+   );
+ )
+post forall x in set rng wakeUpMap & x = nil or x >= currentTime;
 \end{lstlisting}
+
+All threads block on the operation \texttt{Awake} until they are removed from
+the \texttt{wakeUpMap} as described above.
+
+\begin{lstlisting}
+operations
+
+Awake: () ==> ()
+Awake() == skip;
+
+sync
+  per Awake => threadid not in set dom wakeUpMap;
+\end{lstlisting}
+
+%A specific thread can be immediately awoken
+%using \texttt{NotifyThread}.
+%
+%\begin{lstlisting}
+%public NotifyThread : nat ==> ()
+%NotifyThread(tId) ==
+%  wakeUpMap := {tId} <-: wakeUpMap;
+%\end{lstlisting}
 
 %An arbitrary thread is immediately awoken using \texttt{Notify}.
 %
@@ -5792,29 +5882,29 @@ NotifyThread(tId) ==
 %    NotifyThread(tId);
 %\end{lstlisting}
 
-Testing all waiting threads to find which needs to be awoken using \texttt{NotifyAll}.
-
-\begin{lstlisting}
-public NotifyAll : () ==> ()
-NotifyAll() ==
-  let threadSet : set of nat = {th | th in set dom wakeUpMap 
-                                   & wakeUpMap(th) <= currentTime }
-  in
-    for all t in set threadSet 
-    do
-      NotifyThread(t);
-\end{lstlisting}
-
-The operation \texttt{NotifyAndIncTime} is used to increment time and
-awake all threads waiting for the current time step.
-
-\begin{lstlisting}
-NotifyAndIncTime : () ==> ()
-NotifyAndIncTime() ==
-( currentTime := currentTime + 1;
-  NotifyAll();
-);
-\end{lstlisting}
+%Testing all waiting threads to find which needs to be awoken using \texttt{NotifyAll}.
+%
+%\begin{lstlisting}
+%public NotifyAll : () ==> ()
+%NotifyAll() ==
+%  let threadSet : set of nat = {th | th in set dom wakeUpMap 
+%                                   & wakeUpMap(th) <= currentTime }
+%  in
+%    for all t in set threadSet 
+%    do
+%      NotifyThread(t);
+%\end{lstlisting}
+%
+%The operation \texttt{NotifyAndIncTime} is used to increment time and
+%awake all threads waiting for the current time step.
+%
+%\begin{lstlisting}
+%NotifyAndIncTime : () ==> ()
+%NotifyAndIncTime() ==
+%( currentTime := currentTime + 1;
+%  NotifyAll();
+%);
+%\end{lstlisting}
 
 The current time of the class may be obtained via the \texttt{GetTime}
 operation.
@@ -5830,9 +5920,9 @@ operations, we need to set access to them to be mutually exclusive.
 
 \begin{lstlisting}
 sync
-  mutex(NotifyAll);
   mutex(AddToWakeUpMap);
-  mutex(AddToWakeUpMap, NotifyAll); 
+  mutex(BarrierReached);
+  mutex(AddToWakeUpMap, BarrierReached);
 
 end TimeStamp
 \end{lstlisting}
@@ -6701,7 +6791,7 @@ instance variables
 
 -- maintain a link to the environment
 public static env : [Environment] := nil;
-public static timerRef : TimeStamp := new TimeStamp();
+public static timerRef : TimeStamp := new TimeStamp(13);
 
 operations
 
@@ -6734,6 +6824,25 @@ World () ==
    CM`controller2.addDispenser(CM`dispenser10);
    CM`controller2.addDispenser(CM`dispenser11);
    CM`detector.addController(CM`controller2);
+      
+   -- start all dispensers and controllers
+   start(CM`dispenser0);
+   start(CM`dispenser1);
+   start(CM`dispenser2);
+   start(CM`dispenser3);
+   start(CM`controller0);
+
+   start(CM`dispenser4);
+   start(CM`dispenser5);
+   start(CM`dispenser6);
+   start(CM`dispenser7);
+   start(CM`controller1);
+ 
+   start(CM`dispenser8);
+   start(CM`dispenser9);
+   start(CM`dispenser10);
+   start(CM`dispenser11);
+   start(CM`controller2);
       
    -- start the detector
    start(CM`detector) );
@@ -6889,14 +6998,10 @@ mutex (createSignal);
 per isFinished => not busy;
 
 thread
- (
-  start(new ClockTick(threadid));
-  while World`timerRef.GetTime() < simtime do
+ (while World`timerRef.GetTime() < simtime do
    (if busy
     then createSignal();
-    World`timerRef.WaitRelative(0);
-    World`timerRef.NotifyAndIncTime();
-    World`timerRef.Awake();
+    World`timerRef.WaitRelative(1);
    );
   busy := false
  )
@@ -7112,13 +7217,9 @@ thread
 -- the flare controller continuously processes sensor
 -- events. getThread is automatically blocked if there
 -- are no threats available
-( -- first start the dispenser threads
- for all id in set dom dispensers do
-   start (dispensers(id));
- -- now enter the event handling loop
+
  while true do
    processThreat();
-)
 
 end FlareController
 \end{lstlisting}
@@ -7225,9 +7326,9 @@ per isFinished => not busy
 
 thread
   while true do
-    (World`timerRef.WaitRelative(World`timerRef.stepLength);
-     evalQueue();
-     World`timerRef.Awake());
+    (evalQueue();
+     World`timerRef.WaitRelative(World`timerRef.stepLength);
+    );
      
 end FlareDispenser
 \end{lstlisting}
@@ -7236,82 +7337,71 @@ end FlareDispenser
 \subsection{The TimeStamp Class}
 
 \begin{lstlisting}
+\begin{vdm_al}
 class TimeStamp
 
+values
+  public stepLength : nat = 1;
+
 instance variables
-  
-currentTime : nat := 0;
-wakeUpMap : map nat to nat := {|->};
+  currentTime  : nat   := 0;
+  wakeUpMap  : map nat to [nat] := {|->};
+  barrierCount : nat1;
 
 operations
 
+public TimeStamp : nat1 ==> TimeStamp
+TimeStamp(count) ==
+  barrierCount := count;
+
 public WaitRelative : nat ==> ()
 WaitRelative(val) ==
-  AddToWakeUpMap(threadid, currentTime + val);
-
+  WaitAbsolute(currentTime + val);
+ 
 public WaitAbsolute : nat ==> ()
-WaitAbsolute(val) ==
+WaitAbsolute(val) == (
   AddToWakeUpMap(threadid, val);
-
-AddToWakeUpMap : nat * nat ==> ()
-AddToWakeUpMap(tId, val) ==
-  wakeUpMap := wakeUpMap ++ { tId |-> val };
-
-public NotifyThread : nat ==> ()
-NotifyThread(tId) ==
-  wakeUpMap := {tId} <-: wakeUpMap;
-
-public NotifyAll : () ==> ()
-NotifyAll() ==
-  let threadSet : set of nat = {th | th in set dom wakeUpMap 
-                                   & wakeUpMap(th) <= currentTime }
-  in
-    for all t in set threadSet 
-    do
-      NotifyThread(t);
-
-NotifyAndIncTime : () ==> ()
-NotifyAndIncTime() ==
-( currentTime := currentTime + 1;
-  NotifyAll();
+  -- Last to enter the barrier notifies the rest.
+  BarrierReached();
+  -- Wait till time is up
+  Awake();
 );
+
+BarrierReached : () ==> ()
+BarrierReached() == 
+ (while  (card dom wakeUpMap = barrierCount) 
+  do
+   (currentTime := currentTime + stepLength;
+    let threadSet : set of nat = {th | th in set dom wakeUpMap 
+                                                & wakeUpMap(th) <> nil and 
+                                                   wakeUpMap(th) <= currentTime }
+    in
+      for all t in set threadSet 
+        do
+          wakeUpMap := {t} <-: wakeUpMap;
+   );
+ )
+post forall x in set rng wakeUpMap & x = nil or x >= currentTime;
+
+AddToWakeUpMap : nat * [nat] ==> ()
+AddToWakeUpMap(tId, val) ==
+   wakeUpMap := wakeUpMap ++ { tId |-> val };
 
 public GetTime : () ==> nat
 GetTime() ==
   return currentTime;
 
+Awake: () ==> ()
+Awake() == skip;
+
 sync
-  mutex(NotifyAll);
+  per Awake => threadid not in set dom wakeUpMap;
+
   mutex(AddToWakeUpMap);
-  mutex(AddToWakeUpMap, NotifyAll); 
+  mutex(BarrierReached);
+  mutex(AddToWakeUpMap, BarrierReached);
 
 end TimeStamp
-\end{lstlisting}
-
-\subsection{The ClockTick Class}
-
-\begin{lstlisting}
-class ClockTick is subclass of GLOBAL
-
-instance variables
-
-tid : int := -1;
-
-operations
-
-public 
-ClockTick : Time ==> ClockTick
-ClockTick (t) == tid := t;
-
-thread
-
- while true do
-   (
-    World`timerRef.NotifyThread(tid);
-    World`timerRef.WaitRelative(1);
-   )
-
-end ClockTick
 \end{lstlisting}
 
 \subsection{The IO Class}
