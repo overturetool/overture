@@ -1,5 +1,6 @@
 package org.overture.ide.core;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
@@ -9,6 +10,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.internal.resources.IManager;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.overture.ide.core.resources.IVdmSourceUnit;
@@ -78,7 +80,7 @@ public class SourceReferenceManager implements IManager
 		}
 	}
 
-	public synchronized IAstNode getNodeAt(int pos)
+	public synchronized IAstNode getNodeAt(int pos, IResource iResource)
 	{
 		try
 		{
@@ -87,7 +89,7 @@ public class SourceReferenceManager implements IManager
 				for (SourceReference reference : sourceReferences)
 				{
 					if (reference.isWithinRange(pos)
-							&& (reference.getNode() instanceof Definition))
+							&& (reference.getNode() instanceof Definition) && reference.getFile().getName().equals(iResource.getName()))
 					{
 						return reference.getNode();
 					}
@@ -119,7 +121,10 @@ public class SourceReferenceManager implements IManager
 				// if (getLineOffset(node.getLocation().endLine)
 				// + node.getLocation().endPos + 10 >= pos)
 				// {
-				return node;
+				if(node.getLocation().file.equals(iResource.getName()))
+				{
+					return node;
+				}
 				// } else
 				// {
 				// break;
@@ -263,6 +268,7 @@ public class SourceReferenceManager implements IManager
 	{
 		public SourceReference getOuterLocation(IAstNode element)
 		{
+			
 			if (element instanceof Definition)
 			{
 				return getOuterLocation((Definition) element);
@@ -584,17 +590,23 @@ public class SourceReferenceManager implements IManager
 		int startOffset = 0;
 		int endOffset = 0;
 		IAstNode node = null;
-
+		File resource = null;
+		
+		
 		public SourceReference(int startLine, int startPos, int endLine,
 				int endPos, IAstNode node)
 		{
 			this.node = node;
-
 			startOffset = getLineOffset(startLine) + startPos;
-
 			endOffset = getLineOffset(endLine) + endPos;
+			this.resource = node.getLocation().file;
+			
 		}
 
+		public File getFile(){
+			return this.resource;
+		}
+		
 		public boolean isWithinRange(int offset)
 		{
 			return offset >= startOffset && offset <= endOffset;
