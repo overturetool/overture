@@ -89,7 +89,8 @@ public class SourceReferenceManager implements IManager
 				for (SourceReference reference : sourceReferences)
 				{
 					if (reference.isWithinRange(pos)
-							&& (reference.getNode() instanceof Definition) && reference.getFile().getName().equals(iResource.getName()))
+							&& (reference.getNode() instanceof Definition)
+							&& reference.getFile().getName().equals(iResource.getName()))
 					{
 						return reference.getNode();
 					}
@@ -121,7 +122,7 @@ public class SourceReferenceManager implements IManager
 				// if (getLineOffset(node.getLocation().endLine)
 				// + node.getLocation().endPos + 10 >= pos)
 				// {
-				if(node.getLocation().file.equals(iResource.getName()))
+				if (node.getLocation().file.equals(iResource.getName()))
 				{
 					return node;
 				}
@@ -194,22 +195,26 @@ public class SourceReferenceManager implements IManager
 	private synchronized void makeOuterOffsetToAstMap()
 	{
 		VdmjLocationCalculator calc = new VdmjLocationCalculator();
-		//TODO concurrent moducifation
-		for (LexLocation location : sourceUnit.getLocationToAstNodeMap().keySet())
+		// TODO concurrent moducifation
+		Map<LexLocation, IAstNode> locationMap = sourceUnit.getLocationToAstNodeMap();
+		synchronized (locationMap)
 		{
-			try
+			for (LexLocation location : locationMap.keySet())
 			{
-				SourceReference outerLocation = null;
-
-				outerLocation = calc.getOuterLocation(sourceUnit.getLocationToAstNodeMap().get(location));
-
-				if (outerLocation != null)
+				try
 				{
-					sourceReferences.add(outerLocation);
+					SourceReference outerLocation = null;
+
+					outerLocation = calc.getOuterLocation(locationMap.get(location));
+
+					if (outerLocation != null)
+					{
+						sourceReferences.add(outerLocation);
+					}
+				} catch (Exception e)
+				{
+					e.printStackTrace();
 				}
-			} catch (Exception e)
-			{
-				e.printStackTrace();
 			}
 		}
 	}
@@ -217,7 +222,7 @@ public class SourceReferenceManager implements IManager
 	/** An end of file symbol. */
 	private static final int EOF = (int) -1;
 
-	private void makeLineSizes()
+	private synchronized void makeLineSizes()
 	{
 		LexTokenReader.TABSTOP = 1;
 		InputStream inpput;
@@ -268,7 +273,7 @@ public class SourceReferenceManager implements IManager
 	{
 		public SourceReference getOuterLocation(IAstNode element)
 		{
-			
+
 			if (element instanceof Definition)
 			{
 				return getOuterLocation((Definition) element);
@@ -557,9 +562,8 @@ public class SourceReferenceManager implements IManager
 			sf.expand(getOuterLocation(element.exp));
 			return sf;
 		}
-		
-		public SourceReference getOuterLocation(
-				Field element)
+
+		public SourceReference getOuterLocation(Field element)
 		{
 			int startLine = element.getLocation().startLine;
 			int startPos = element.getLocation().startPos;
@@ -576,9 +580,9 @@ public class SourceReferenceManager implements IManager
 
 			SourceReference sf = new SourceReference(startLine, startPos, endLine, endPos, element);
 
-//			sf.expand(getOuterLocation(element.body));
-//			sf.expand(getOuterLocation(element.precondition));
-//			sf.expand(getOuterLocation(element.postcondition));
+			// sf.expand(getOuterLocation(element.body));
+			// sf.expand(getOuterLocation(element.precondition));
+			// sf.expand(getOuterLocation(element.postcondition));
 
 			return sf;
 		}
@@ -591,8 +595,7 @@ public class SourceReferenceManager implements IManager
 		int endOffset = 0;
 		IAstNode node = null;
 		File resource = null;
-		
-		
+
 		public SourceReference(int startLine, int startPos, int endLine,
 				int endPos, IAstNode node)
 		{
@@ -600,13 +603,14 @@ public class SourceReferenceManager implements IManager
 			startOffset = getLineOffset(startLine) + startPos;
 			endOffset = getLineOffset(endLine) + endPos;
 			this.resource = node.getLocation().file;
-			
+
 		}
 
-		public File getFile(){
+		public File getFile()
+		{
 			return this.resource;
 		}
-		
+
 		public boolean isWithinRange(int offset)
 		{
 			return offset >= startOffset && offset <= endOffset;

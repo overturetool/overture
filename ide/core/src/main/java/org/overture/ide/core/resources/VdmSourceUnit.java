@@ -137,7 +137,7 @@ this.parseErrors = parseErrors;
 		return file.toString();
 	}
 
-	public void clean()
+	public synchronized void clean()
 	{
 		this.parseList.clear();
 
@@ -156,7 +156,7 @@ this.parseErrors = parseErrors;
 		return parseList.size() > 0;
 	}
 
-	public Map<LexLocation, IAstNode> getLocationToAstNodeMap()
+	public synchronized Map<LexLocation, IAstNode> getLocationToAstNodeMap()
 	{
 		return locationToAstNodeMap;
 	}
