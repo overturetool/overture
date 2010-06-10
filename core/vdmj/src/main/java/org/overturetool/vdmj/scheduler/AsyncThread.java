@@ -79,28 +79,25 @@ public class AsyncThread extends SchedulableThread
 
 		if (Settings.usingDBGP)
 		{
+			DBGPReader reader = ctxt.threadState.dbgp.newThread(cpu);
+			ctxt.setThreadState(reader,cpu);
 			runDBGP(ctxt);
 		}
 		else
 		{
+			ctxt.setThreadState(null, cpu);
 			runCmd(ctxt);
 		}
 	}
-	boolean runningDbgp = false;
+	
 	private void runDBGP(Context ctxt)
 	{
-		DBGPReader reader = null;
-
 		try
 		{
     		MessageResponse response = null;
 
     		try
     		{
-    			reader = request.dbgp.newThread(cpu);
-    			runningDbgp = true;
-    			ctxt.setThreadState(reader, cpu);
-
     			if (breakAtStart)
     			{
     				// Step at the first location you check (start of body)
@@ -110,14 +107,12 @@ public class AsyncThread extends SchedulableThread
         		Value rv = operation.localEval(operation.name.location, args, ctxt, false);
        			response = new MessageResponse(rv, request);
        			
-       			reader.complete(DBGPReason.OK, null);
+       			ctxt.threadState.dbgp.complete(DBGPReason.OK, null);
     		}
     		catch (ValueException e)
     		{
-    			if(reader!=null)
-    			{
-    				reader.complete(DBGPReason.OK, new ContextException(e, operation.name.location));
-    			}
+    			ctxt.threadState.dbgp.complete(DBGPReason.OK, new ContextException(e, operation.name.location));
+    			
     			response = new MessageResponse(e, request);
     		}
 
@@ -126,16 +121,13 @@ public class AsyncThread extends SchedulableThread
     			request.bus.reply(response);
     		}
 
-//			reader.complete(DBGPReason.OK, null);
 		}
 		catch (ContextException e)
 		{
 			suspendOthers();
 			ResourceScheduler.setException(e);
-			if(runningDbgp)
-			{
-				reader.stopped(e.ctxt, e.location);
-			}
+			ctxt.threadState.dbgp.stopped(e.ctxt, e.location);
+			
 			
 		}
 		catch (Exception e)
@@ -153,8 +145,6 @@ public class AsyncThread extends SchedulableThread
 	{
 		try
 		{
-    		ctxt.setThreadState(null, cpu);
-
 			if (breakAtStart)
 			{
 				// Step at the first location you check (start of body)
@@ -192,40 +182,4 @@ public class AsyncThread extends SchedulableThread
 		}
 	}
 	
-	@Override
-	protected void handleSignal(Signal sig, Context ctxt, LexLocation location)
-	{
-		switch (sig)
-		{
-			case TERMINATE:
-				throw new ThreadDeath();
-
-			case SUSPEND:
-			case DEADLOCKED:
-				if (ctxt != null)
-				{
-    				if (Settings.usingDBGP)
-    				{
-    					if(runningDbgp)
-    					{
-    						if(ctxt.threadState.dbgp != null)
-    						{
-    							ctxt.threadState.dbgp.stopped(ctxt, location);
-    						}
-    					}
-    				}
-    				else
-    				{
-    					DebuggerReader.stopped(ctxt, location);
-    				}
-
-    				if (sig == Signal.DEADLOCKED)
-    				{
-    					throw new ThreadDeath();
-    				}
-				}
-				break;
-		}
-	}
-
 }

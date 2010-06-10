@@ -458,14 +458,15 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 				}
 				catch (ContextException e)
 				{
-					System.out.println("Initialization: " + e);
+					System.err.println("Initialization: " + e);
 					e.ctxt.printStackTrace(Console.out, true);
 					RTLogger.dump(true);
 					System.exit(3);
 				}
 				catch (Exception e)
 				{
-					System.out.println("Initialization: " + e);
+					System.err.println("Initialization: " + e);
+					e.printStackTrace();
 					RTLogger.dump(true);
 					System.exit(3);
 				}
@@ -789,6 +790,11 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 	protected void statusResponse(DBGPStatus s, DBGPReason reason)
 	throws IOException
 	{
+		if(s == DBGPStatus.STOPPED)
+		{
+			stopped = true;
+		}
+		
 		StringBuilder sb = new StringBuilder();
 	
 		status = s;
@@ -1229,7 +1235,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 				status = DBGPStatus.RUNNING;
 				statusReason = DBGPReason.OK;
 				remoteControl.run(new RemoteInterpreter(interpreter, this));
-				stdout("Remote control completed");
+				stdout("\nRemote control completed");
 				statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
 			}
 			catch (Exception e)
@@ -1250,7 +1256,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
     			if(!traceExpression)
     			{
 	    			theAnswer = interpreter.execute(expression, this);
-	    			stdout(expression + " = " + theAnswer.toString());
+	    			stdout("\n"+expression + " = " + theAnswer.toString()+"\n");
     			}else
     			{
     				String[] parts = expression.split("\\s+");
@@ -1293,8 +1299,8 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 
     				String traceExpression = parts[0];
     									
-					interpreter.runtrace(traceExpression, testNo, true, reduction, reductionType , seed,this);
-					stdout(expression + " = " + "Trace completed");
+					interpreter.runtrace(traceExpression, testNo, true, reduction, reductionType , seed);
+					stdout("\n"+expression + " = " + "Trace completed\n");
     			}
     			
     			statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);

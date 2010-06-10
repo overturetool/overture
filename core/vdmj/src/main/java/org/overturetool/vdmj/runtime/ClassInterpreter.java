@@ -389,7 +389,7 @@ public class ClassInterpreter extends Interpreter
 	
 
 	@Override
-	public Context getInitialTraceContext(NamedTraceDefinition tracedef,boolean debug, DBGPReader dbgp) throws ValueException
+	public Context getInitialTraceContext(NamedTraceDefinition tracedef,boolean debug) throws ValueException
 	{
 		ObjectValue object = null;
 
@@ -405,29 +405,19 @@ public class ClassInterpreter extends Interpreter
 
 		ctxt.put(classdef.name.getSelfName(), object);
 
-		ctxt.setThreadState(dbgp, CPUValue.vCPU);
-		
 		return ctxt;
-	}
-
-
-	@Override
-	public List<Object> runOneTrace(
-			NamedTraceDefinition tracedef, CallSequence test, boolean debug)
-	{
-		return runOneTrace(tracedef,test,debug,null);
 	}
 	
 	@Override
 	public List<Object> runOneTrace(
-			NamedTraceDefinition tracedef, CallSequence test,boolean debug, DBGPReader dbgp)
+			NamedTraceDefinition tracedef, CallSequence test,boolean debug)
 	{
 		List<Object> list = new Vector<Object>();
 		Context ctxt = null;
 
 		try
 		{
-			ctxt = getInitialTraceContext(tracedef, debug, dbgp);
+			ctxt = getInitialTraceContext(tracedef, debug);
 		}
 		catch (ValueException e)
 		{

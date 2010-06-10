@@ -119,6 +119,7 @@ public class DBGPReader implements Serializable
 	protected boolean breaksSuspended = false;
 	protected boolean connected = false;
 	protected RemoteControl remoteControl = null;
+	protected boolean stopped = false;
 
 	protected static final int SOURCE_LINES = 5;
 
@@ -611,18 +612,31 @@ public class DBGPReader implements Serializable
 
 	protected String readLine() throws IOException
 	{
-		StringBuilder line = new StringBuilder();
-		int c = input.read();
-		while (c != '\n' && c > 0)
+		try
 		{
-			if (c != '\r')
+			StringBuilder line = new StringBuilder();
+			int c = input.read();
+			while (c != '\n' && c > 0)
 			{
-				line.append((char)c);		// Ignore CRs
+				if (c != '\r')
+				{
+					line.append((char)c);		// Ignore CRs
+				}
+				c = input.read();			
 			}
-			c = input.read();			
+	
+			return (line.length() == 0 && c == -1) ? null : line.toString();
+		}catch(SocketException e)
+		{
+			//If DBGP is stopped there is no guarantee that the IDE will be available
+			if(stopped)
+			{
+				return null;
+			}else
+			{
+				throw e;
+			}
 		}
-
-		return (line.length() == 0 && c == -1) ? null : line.toString();
 	}
 
 	String lastTransaction = "-1";
@@ -713,6 +727,11 @@ public class DBGPReader implements Serializable
 		throws IOException
 	{
 		StringBuilder sb = new StringBuilder();
+		
+		if(s == DBGPStatus.STOPPED)
+		{
+			stopped = true;
+		}
 
 		status = s;
 		statusReason = reason;

@@ -426,7 +426,7 @@ abstract public class CommandReader
 		try
 		{
    			long before = System.currentTimeMillis();
-   			interpreter.runtrace(line, testNo, debug, reduction, reductionType, 999,null);
+   			interpreter.runtrace(line, testNo, debug, reduction, reductionType, 999);
    			long after = System.currentTimeMillis();
 			println("Executed in " + (double)(after-before)/1000 + " secs. ");
 

@@ -295,32 +295,23 @@ public class ModuleInterpreter extends Interpreter
 	}
 	
 	@Override
-	public Context getInitialTraceContext(NamedTraceDefinition tracedef, boolean debug, DBGPReader dbgp) throws ValueException
+	public Context getInitialTraceContext(NamedTraceDefinition tracedef, boolean debug) throws ValueException
 	{
-		Context ctxt = initialContext;
-		
-		initialContext.setThreadState(dbgp, initialContext.threadState.CPU);
-
-		return ctxt;
+		return initialContext;
 	}
 	
+
+
 	@Override
 	public List<Object> runOneTrace(
 			NamedTraceDefinition tracedef, CallSequence test, boolean debug)
-	{
-		return runOneTrace(tracedef, test, debug, null);
-	}
-
-	@Override
-	public List<Object> runOneTrace(
-			NamedTraceDefinition tracedef, CallSequence test, boolean debug, DBGPReader dbgp)
 	{
 		List<Object> list = new Vector<Object>();
 		Context ctxt = null;
 
 		try
 		{
-			ctxt = getInitialTraceContext(tracedef, debug, dbgp);
+			ctxt = getInitialTraceContext(tracedef, debug);
 
 		}
 		catch (ValueException e)

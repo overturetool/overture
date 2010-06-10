@@ -514,12 +514,12 @@ abstract public class Interpreter
 	public void runtrace(String name, int testNo, boolean debug)
 		throws Exception
 	{
-		runtrace(name, testNo, debug, 1.0F, TraceReductionType.NONE, 1234,null);
+		runtrace(name, testNo, debug, 1.0F, TraceReductionType.NONE, 1234);
 	}
 
 	public void runtrace(
 		String name, int testNo, boolean debug,
-		float subset, TraceReductionType type, long seed, DBGPReader dbgp)
+		float subset, TraceReductionType type, long seed)
 		throws Exception
 	{
 		LexTokenReader ltr = new LexTokenReader(name, Dialect.VDM_SL);
@@ -551,7 +551,7 @@ abstract public class Interpreter
 		
 		Context ctxt = null;
 		
-		ctxt = getInitialTraceContext(tracedef, debug, dbgp);
+		ctxt = getInitialTraceContext(tracedef, debug);
 		
 		tests = tracedef.getTests(ctxt, subset, type, seed);
 		
@@ -597,8 +597,8 @@ abstract public class Interpreter
 			else
 			{
 				// Initialize completely between every run...
-    			traceInit(null);
-    			List<Object> result = runOneTrace(tracedef, test, debug,dbgp);
+    			traceInit(ctxt.threadState.dbgp);
+    			List<Object> result = runOneTrace(tracedef, test, debug);
     			tests.filter(result, test, n);
 
     			writer.println("Test " + n + " = " + clean);
@@ -615,8 +615,6 @@ abstract public class Interpreter
 	abstract public List<Object> runOneTrace(
 			NamedTraceDefinition tracedef, CallSequence test, boolean debug);
 	
-	abstract public List<Object> runOneTrace(
-			NamedTraceDefinition tracedef, CallSequence test, boolean debug, DBGPReader dbgp);
-	
-	abstract public Context getInitialTraceContext(NamedTraceDefinition tracedef, boolean debug, DBGPReader dbgp) throws ValueException;
+		
+	abstract public Context getInitialTraceContext(NamedTraceDefinition tracedef, boolean debug) throws ValueException;
 }
