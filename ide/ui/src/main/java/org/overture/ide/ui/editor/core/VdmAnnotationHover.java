@@ -106,6 +106,7 @@ public class VdmAnnotationHover extends DefaultAnnotationHover {
 				
 				MarkerAnnotation mAnn = (MarkerAnnotation) ann;
 				IMarker m = mAnn.getMarker();
+				
 				try {
 					String a = (String) m.getAttribute(IMarker.MESSAGE);
 					hoverResult.add(a + "  ");					

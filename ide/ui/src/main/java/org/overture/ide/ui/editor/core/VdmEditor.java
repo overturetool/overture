@@ -3,6 +3,7 @@ package org.overture.ide.ui.editor.core;
 import java.io.IOException;
 import java.util.List;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.IDocument;
@@ -690,12 +691,12 @@ public abstract class VdmEditor extends TextEditor
 		return getElementAt(offset);
 	}
 
-	private IAstNode getElementAt(int offset)
+	public IAstNode getElementAt(int offset)
 	{
 
 		if (sourceReferenceManager != null)
 		{
-			IAstNode node = sourceReferenceManager.getNodeAt(offset);
+			IAstNode node = sourceReferenceManager.getNodeAt(offset,(IResource) this.getEditorInput().getAdapter(IResource.class));
 			if (node != null)
 			{
 				// System.out.println("Element hit: " + node.getName());
