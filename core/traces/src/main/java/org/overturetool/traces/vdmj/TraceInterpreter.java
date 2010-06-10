@@ -125,7 +125,7 @@ public class TraceInterpreter
 	{
 		Settings.dialect = dialect;
 		Settings.release = languageVersion;
-		if(dialect==Dialect.VDM_RT)
+		if (dialect == Dialect.VDM_RT)
 		{
 			classList.add(new CPUClassDefinition());
 			classList.add(new BUSClassDefinition());
@@ -281,8 +281,8 @@ public class TraceInterpreter
 			{
 				if (definition instanceof NamedTraceDefinition)
 				{
-interpreter.init(null);
-					Context ctxt = interpreter.getInitialTraceContext((NamedTraceDefinition) definition, false, null);// createContext(classDef);
+					interpreter.init(null);
+					Context ctxt = interpreter.getInitialTraceContext((NamedTraceDefinition) definition, false);// createContext(classDef);
 
 					evaluateTests(className, storage, definition, ctxt);
 				}
@@ -291,9 +291,9 @@ interpreter.init(null);
 			completed();
 		} catch (ContextException e)
 		{
-			//e.printStackTrace();
+			// e.printStackTrace();
 			error(e.getMessage());
-			//throw e;
+			// throw e;
 		} catch (Exception e)
 		{
 			error(e.getMessage());
