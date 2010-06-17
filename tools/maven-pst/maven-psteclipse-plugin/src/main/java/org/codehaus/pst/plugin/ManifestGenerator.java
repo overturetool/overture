@@ -376,7 +376,8 @@ public class ManifestGenerator extends AbstractMojoHelper implements
 				classpath.append(",");
 			}
 			classpath.append(LIB_DIRECTORY);
-			classpath.append(File.separator);
+			//classpath.append(File.separator);
+			classpath.append("/");//always linux style, eclipse windows handles this
 			File file = artifact.getFile();
 			String fileName = file.getName();
 			classpath.append(fileName);
