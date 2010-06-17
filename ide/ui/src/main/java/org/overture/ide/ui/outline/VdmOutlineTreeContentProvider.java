@@ -15,6 +15,7 @@ import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.InheritedDefinition;
+import org.overturetool.vdmj.definitions.LocalDefinition;
 import org.overturetool.vdmj.definitions.ThreadDefinition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.modules.Import;
@@ -51,7 +52,7 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider {
 				all.add(((Module) parentElement).imports);
 			}
 			all.addAll(((Module) parentElement).defs.singleDefinitions());
-
+			filterSLModule(all);
 			// all.addAll(((Module) parentElement).defs.singleDefinitions());
 			return all.toArray();
 		} else if (parentElement instanceof ModuleImports) {
@@ -75,6 +76,23 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider {
 		}
 
 		return null;
+	}
+
+	private void filterSLModule(List<Object> all)
+	{
+		for (int i=0; i < all.size(); i++)
+		{
+			if (all.get(i) instanceof LocalDefinition){
+				LocalDefinition localDef = (LocalDefinition) all.get(i);
+				if(localDef.nameScope.name().equals("OLDSTATE"))
+				{
+					all.remove(i);
+					i--;
+				}
+				
+			}
+		}
+		
 	}
 
 	private DefinitionList checkForThreads(DefinitionList defs) {

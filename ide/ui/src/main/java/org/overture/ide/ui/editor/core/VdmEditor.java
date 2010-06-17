@@ -52,7 +52,7 @@ public abstract class VdmEditor extends TextEditor
 	private class EditorSelectionChangedListener extends
 			AbstractSelectionChangedListener
 	{
-
+		
 		/*
 		 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.
 		 * SelectionChangedEvent)
@@ -76,6 +76,7 @@ public abstract class VdmEditor extends TextEditor
 
 	public VdmEditor()
 	{
+		
 		super();
 		setDocumentProvider(new VdmDocumentProvider());
 
@@ -154,7 +155,7 @@ public abstract class VdmEditor extends TextEditor
 							if (node.getLocation().endPos == 0)
 							{
 								endPos = sourceReferenceManager.getLineOffset(node.getLocation().endLine)
-										- node.getLocation().startPos;
+										- sourceReferenceManager.getLineOffset(node.getLocation().startLine) - node.getLocation().startPos;
 							} else
 							{
 								endPos = node.getLocation().endPos
@@ -702,7 +703,8 @@ public abstract class VdmEditor extends TextEditor
 			IAstNode node = sourceReferenceManager.getNodeAt(offset,(IResource) this.getEditorInput().getAdapter(IResource.class));
 			if (node != null)
 			{
-				// System.out.println("Element hit: " + node.getName());
+				if(node.getName() != null)
+					System.out.println("Element hit: " + node.getName());
 
 				return node;
 			}

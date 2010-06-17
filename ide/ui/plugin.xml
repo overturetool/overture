@@ -390,7 +390,7 @@
      <decorator
            class="org.overture.ide.ui.navigator.ProblemLabelDecorator"
            id="org.overture.ide.ui.decorator1"
-           label="label"
+           label="Error label decorator"
            lightweight="true"
            location="BOTTOM_LEFT"
            state="true">

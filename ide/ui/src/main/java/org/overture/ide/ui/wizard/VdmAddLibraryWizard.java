@@ -3,13 +3,19 @@ package org.overture.ide.ui.wizard;
 import java.io.File;
 import java.io.IOException;
 
+
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.core.resources.VdmProject;
+
 import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.utility.PluginFolderInclude;
@@ -48,6 +54,16 @@ public class VdmAddLibraryWizard extends Wizard implements IWorkbenchWizard
 		if (selection.getFirstElement() instanceof IVdmProject)
 		{
 			this.project = (IVdmProject) selection.getFirstElement();
+		}else if(selection.getFirstElement() instanceof IFolder)
+		{
+			IProject project = ((IFolder)selection.getFirstElement()).getProject();
+			if(VdmProject.isVdmProject(project))
+			{
+				this.project = VdmProject.createProject(project);
+			}else
+			{
+				MessageDialog.openError(getShell(), "Project type error", "Project is not a VDM project");
+			}
 		}
 
 	}
