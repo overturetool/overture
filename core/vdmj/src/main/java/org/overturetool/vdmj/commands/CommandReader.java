@@ -551,13 +551,11 @@ abstract public class CommandReader
 		return notAvailable(line);
 	}
 
-	@SuppressWarnings("unused")
 	protected boolean doCreate(String line) throws Exception
 	{
 		return notAvailable(line);
 	}
 
-	@SuppressWarnings("unused")
 	protected boolean doDefault(String line) throws Exception
 	{
 		return notAvailable(line);
