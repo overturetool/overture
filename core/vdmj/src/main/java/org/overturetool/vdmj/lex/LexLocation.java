@@ -181,6 +181,7 @@ public class LexLocation implements Serializable
 	public static void resetLocations()
 	{
 		allLocations = new Vector<LexLocation>();
+		locationToAstNode = new Hashtable<LexLocation, IAstNode>();
 		nameSpans =	new HashMap<LexNameToken, LexLocation>();
 	}
 
