@@ -89,8 +89,8 @@ public class SourceReferenceManager implements IManager
 				for (SourceReference reference : sourceReferences)
 				{
 					if (reference.isWithinRange(pos)
-							&& (reference.getNode() instanceof Definition)
-							&& reference.getFile().getName().equals(iResource.getName()))
+							&& (reference.getNode() instanceof Definition))
+//							&& reference.getFile().getName().equals(iResource.getName()))
 					{
 						return reference.getNode();
 					}
@@ -594,7 +594,7 @@ public class SourceReferenceManager implements IManager
 		int startOffset = 0;
 		int endOffset = 0;
 		IAstNode node = null;
-		File resource = null;
+//		File resource = null;
 
 		public SourceReference(int startLine, int startPos, int endLine,
 				int endPos, IAstNode node)
@@ -602,14 +602,14 @@ public class SourceReferenceManager implements IManager
 			this.node = node;
 			startOffset = getLineOffset(startLine) + startPos;
 			endOffset = getLineOffset(endLine) + endPos;
-			this.resource = node.getLocation().file;
+			//this.resource = node.getLocation().file;
 
 		}
 
-		public File getFile()
-		{
-			return this.resource;
-		}
+//		public File getFile()
+//		{
+//			return this.resource;
+//		}
 
 		public boolean isWithinRange(int offset)
 		{

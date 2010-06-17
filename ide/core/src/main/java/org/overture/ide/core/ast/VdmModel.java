@@ -240,6 +240,14 @@ public class VdmModel implements IVdmModel
 			System.err.println("Add error: " + unit);
 
 	}
+	
+	public  synchronized void remove(IVdmSourceUnit unit)
+	{
+		if (vdmSourceUnits.contains(unit))
+			this.vdmSourceUnits.remove(unit);
+		else
+			System.err.println("Remove error: " + unit);	
+	}
 
 	public synchronized IVdmSourceUnit getVdmSourceUnit(IFile file)
 	{
@@ -320,4 +328,6 @@ public class VdmModel implements IVdmModel
 	{
 		return new VdmModelWorkingCopy(this);
 	}
+
+	
 }

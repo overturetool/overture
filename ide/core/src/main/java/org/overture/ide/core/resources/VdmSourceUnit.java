@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.swing.tree.TreePath;
+
 import org.eclipse.core.resources.IFile;
 import org.overture.ide.core.ElementChangedEvent;
 import org.overture.ide.core.IVdmElementDelta;
@@ -14,7 +16,7 @@ import org.overture.ide.core.VdmElementDelta;
 import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.lex.LexLocation;
 
-public class VdmSourceUnit implements IVdmSourceUnit
+public class VdmSourceUnit implements IVdmSourceUnit 
 {
 	protected IVdmProject project;
 	protected IFile file;

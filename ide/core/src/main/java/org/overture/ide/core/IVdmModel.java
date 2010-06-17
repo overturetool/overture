@@ -83,4 +83,6 @@ public interface IVdmModel extends IVdmElement{
 	 * @param monitor null or a progress monitor
 	 */
 	public void refresh(boolean completeRefresh,IProgressMonitor monitor);
+
+	public abstract void remove(IVdmSourceUnit iVdmSourceUnit);
 }

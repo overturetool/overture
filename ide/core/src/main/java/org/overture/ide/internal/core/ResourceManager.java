@@ -1,8 +1,10 @@
 package org.overture.ide.internal.core;
 
 import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IContainer;
@@ -33,6 +35,7 @@ public class ResourceManager implements IResourceChangeListener
 
 	Map<String, IVdmProject> projects = new Hashtable<String, IVdmProject>();
 	Map<IFile, IVdmSourceUnit> vdmSourceUnits = new Hashtable<IFile, IVdmSourceUnit>();
+	Queue<IVdmProject> lastAccessed = new LinkedList<IVdmProject>();
 
 	/**
 	 * A handle to the unique Singleton instance.
@@ -65,16 +68,19 @@ public class ResourceManager implements IResourceChangeListener
 		{
 			if (VdmProject.isVdmProject(file.getProject()))
 			{
-				IVdmProject project = VdmProject.createProject(file.getProject());
+				IVdmProject project = VdmProject.createProject(file
+						.getProject());
 
 				try
 				{
-					if(!file.isSynchronized(IResource.DEPTH_INFINITE))
+					if (!file.isSynchronized(IResource.DEPTH_INFINITE))
 					{
 						file.refreshLocal(IResource.DEPTH_INFINITE, null);
 					}
 					if (file.getContentDescription() != null
-							&& project.getContentTypeIds().contains(file.getContentDescription().getContentType().getId()))
+							&& project.getContentTypeIds().contains(
+									file.getContentDescription()
+											.getContentType().getId()))
 					{
 						IVdmSourceUnit unit = createSourceUnit(file, project);
 						return unit;
@@ -110,7 +116,8 @@ public class ResourceManager implements IResourceChangeListener
 	 * @param resource
 	 *            the resource currently selected to be searched
 	 * @param contentTypeId
-	 *            a possibly null content type id, if null it is just checked that a content type exist for the file
+	 *            a possibly null content type id, if null it is just checked
+	 *            that a content type exist for the file
 	 * @return a list of IFiles
 	 * @throws CoreException
 	 */
@@ -125,8 +132,9 @@ public class ResourceManager implements IResourceChangeListener
 					&& resource.getLocation().lastSegment().startsWith("."))// skip
 				return list;
 			// . folders like.svn
-			for (IResource res : ((IFolder) resource).members(IContainer.INCLUDE_PHANTOMS
-					| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
+			for (IResource res : ((IFolder) resource)
+					.members(IContainer.INCLUDE_PHANTOMS
+							| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
 			{
 
 				list.addAll(getFiles(project, res, contentTypeId));
@@ -136,10 +144,12 @@ public class ResourceManager implements IResourceChangeListener
 		// this file and the project
 		else if (resource instanceof IFile)
 		{
-			IContentType contentType = project.getContentTypeMatcher().findContentTypeFor(resource.toString());
+			IContentType contentType = project.getContentTypeMatcher()
+					.findContentTypeFor(resource.toString());
 
 			if (contentType != null
-					&& ((contentTypeId != null && contentTypeId.equals(contentType.getId())) || contentTypeId == null))
+					&& ((contentTypeId != null && contentTypeId
+							.equals(contentType.getId())) || contentTypeId == null))
 				list.add(getVdmSourceUnit((IFile) resource));
 		}
 		return list;
@@ -157,10 +167,19 @@ public class ResourceManager implements IResourceChangeListener
 
 	public synchronized IVdmProject addProject(IVdmProject project)
 	{
+
 		if (projects.containsKey(project.getName()))
 			return projects.get(project.getName());
 		else
 		{
+
+			IVdmProject p = getLeastAccessed();
+			if (p != null)
+			{
+				lastAccessed.remove(p);
+				lastAccessed.add(project);
+			}
+
 			try
 			{
 				projects.put(project.getName(), project);
@@ -179,6 +198,13 @@ public class ResourceManager implements IResourceChangeListener
 		}
 	}
 
+	private IVdmProject getLeastAccessed()
+	{
+
+		return lastAccessed.poll();
+
+	}
+
 	public void resourceChanged(IResourceChangeEvent event)
 	{
 		try
@@ -188,14 +214,7 @@ public class ResourceManager implements IResourceChangeListener
 			{
 				case IResourceChangeEvent.PRE_DELETE:
 				case IResourceChangeEvent.PRE_CLOSE:
-					if (event.getResource() instanceof IProject)
-					{
-						// VDM Project is closing
-						if (hasProject((IProject) res))
-						{
-							remove(res);
-						}
-					}
+					remove(res);
 					break;
 				case IResourceChangeEvent.PRE_BUILD:
 
@@ -218,7 +237,8 @@ public class ResourceManager implements IResourceChangeListener
 
 	private synchronized void remove(IResource res)
 	{
-		if (res instanceof IProject)
+		// VDM Project is closing
+		if (res instanceof IProject && hasProject((IProject) res))
 		{
 			if (projects.containsKey(res.getName()))
 			{
@@ -228,9 +248,12 @@ public class ResourceManager implements IResourceChangeListener
 		{
 			if (vdmSourceUnits.containsKey(res))
 			{
+				vdmSourceUnits.get(res).getProject().getModel().remove(vdmSourceUnits.get(res));
 				vdmSourceUnits.remove(res);
 			}
 
+		}else{
+			System.out.println("Resource not handled in remove: "+ res);
 		}
 
 	}
@@ -275,8 +298,10 @@ public class ResourceManager implements IResourceChangeListener
 				IFile file = (IFile) res;
 				if (VdmProject.isVdmProject(file.getProject()))
 				{
-					// IVdmProject project = VdmProject.createProject(file.getProject());
-					// Assert.isNotNull(project, "Project creation faild for file: "
+					// IVdmProject project =
+					// VdmProject.createProject(file.getProject());
+					// Assert.isNotNull(project,
+					// "Project creation faild for file: "
 					// + res);
 					// addProject(res.getProject(), true);
 					addBuilderProject(res.getProject());
@@ -343,7 +368,7 @@ public class ResourceManager implements IResourceChangeListener
 					{
 
 						IProject p = null;
-						while (addBuilders.size()>0)
+						while (addBuilders.size() > 0)
 						{
 							p = getAddBuidlerProject();
 							if (p == null)
@@ -355,15 +380,18 @@ public class ResourceManager implements IResourceChangeListener
 
 							System.out.println("Adding builder for: " + p);
 							IVdmProject project = VdmProject.createProject(p);
-							Assert.isNotNull(project, "VDM Project creation faild for project: "
-									+ p);
+							Assert.isNotNull(project,
+									"VDM Project creation faild for project: "
+											+ p);
 							try
 							{
 								if (!project.hasBuilder())
 								{
-									project.setBuilder(project.getLanguageVersion());
+									project.setBuilder(project
+											.getLanguageVersion());
 								}
-								project.getSpecFiles();// sync with content type files
+								project.getSpecFiles();// sync with content type
+								// files
 							} catch (CoreException e1)
 							{
 								e1.printStackTrace();
