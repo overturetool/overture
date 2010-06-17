@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SafeRunner;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.IVdmModel;
@@ -638,28 +639,6 @@ public class VdmProject extends Project implements IVdmProject
 	}
 
 
-
-
-
-	/***
-	 * Get files from a eclipse project that has a defined content type
-	 * 
-	 * @param project
-	 *            the project to scan
-	 * @return a list of IFile
-	 * @throws CoreException
-	 */
-	public List<IFile> getFiles() throws CoreException
-	{
-		List<IFile> list = new Vector<IFile>();
-		// for (IResource res : project.members(IContainer.INCLUDE_PHANTOMS
-		// | IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
-		// {
-		// list.addAll(getFiles(project, res, null));
-		// }
-		return list;
-	}
-
 	/***
 	 * Gets the IFile from the Eclipse filesystem from a normal file placed in a project
 	 * 
@@ -671,22 +650,21 @@ public class VdmProject extends Project implements IVdmProject
 	 */
 	public IFile findIFile(File file)
 	{
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IPath location = Path.fromOSString(file.getAbsolutePath());
-		IFile ifile = workspace.getRoot().getFileForLocation(location);
+		IFile ifile = project.getFile(location);
 
-		if (ifile == null)
+		if (ifile == null || !ifile.exists())
 		{
 
 			IPath absolutePath = new Path(file.getAbsolutePath());
 			// check if the project contains a IFile which maps to the same
-			// filesystem location
+			// file system location
 			try
 			{
-				for (IFile f : getFiles())
+				for (IVdmSourceUnit f : getSpecFiles())
 				{
-					if (f.getLocation().equals(absolutePath))
-						return f;
+					if (f.getFile().getLocation().equals(absolutePath))
+						return f.getFile();
 				}
 			} catch (CoreException e1)
 			{
@@ -708,9 +686,29 @@ public class VdmProject extends Project implements IVdmProject
 
 	public void linkFileToProject(File file) throws CoreException
 	{
-		IPath absolutePath = new Path(file.getAbsolutePath());
-		IFile ifile = project.getFile(absolutePath.lastSegment());
-		ifile.createLink(absolutePath, IResource.NONE, null);
+		final IPath absolutePath = new Path(file.getAbsolutePath());
+		final IFile ifile = project.getFile(absolutePath.lastSegment());
+		Job j = new Job("Link file"){
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor)
+			{
+				try
+				{
+					ifile.createLink(absolutePath, IResource.REPLACE, null);
+				} catch (CoreException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				// TODO Auto-generated method stub
+				return Status.OK_STATUS;
+			}
+			
+		};
+		j.setPriority(Job.BUILD);
+		j.schedule();
+		
 	}
 
 	public IVdmModel getModel()

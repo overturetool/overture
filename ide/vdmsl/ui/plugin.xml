@@ -8,10 +8,12 @@
       <editor
             class="org.overture.ide.vdmsl.ui.editor.core.VdmSlEditor"
             default="true"
-            extensions="vdmsl"
             icon="icons/cview16/vdmsl_file_tsk.gif"
             id="org.overture.ide.vdmsl.ui.VdmSlEditor"
             name="Vdm-Sl Editor">
+         <contentTypeBinding
+               contentTypeId="org.overture.ide.vdmsl.content-type">
+         </contentTypeBinding>
       </editor>
    </extension>
    

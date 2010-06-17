@@ -7,10 +7,12 @@
       <editor
             class="org.overture.ide.vdmrt.ui.editor.core.VdmRtEditor"
             default="true"
-            extensions="vdmrt"
             icon="icons/cview16/vdmrt_file_tsk.gif"
             id="org.overture.ide.vdmrt.ui.VdmRtEditor"
             name="Vdm-Rt Editor">
+         <contentTypeBinding
+               contentTypeId="org.overture.ide.vdmrt.core.content-type">
+         </contentTypeBinding>
       </editor>
    </extension>
    <!-- Wizards -->

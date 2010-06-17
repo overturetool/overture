@@ -76,30 +76,47 @@ public class VdmBuilder extends VdmCoreBuilder
 			// clearInternalModel();
 
 			builder.start();
-
-			ISafeRunnable runnable = new ISafeRunnable()
+			
+			try{
+			while (builder.isAlive())
 			{
-
-				public void handleException(Throwable exception)
+				Thread.sleep(500);
+				if (monitor.isCanceled())
 				{
-					exception.printStackTrace();
-
+					builder.interrupt();
+					Thread.sleep(2000);
+					builder.stop();
 				}
+			}}catch(Exception e)
+			{
+				
+			}
 
-				public void run() throws Exception
-				{
-					while (builder.isAlive())
-					{
-						Thread.sleep(500);
-						if (monitor.isCanceled())
-						{
-							builder.interrupt();
-						}
-					}
-				}
-
-			};
-			SafeRunner.run(runnable);
+//			ISafeRunnable runnable = new ISafeRunnable()
+//			{
+//
+//				public void handleException(Throwable exception)
+//				{
+//					exception.printStackTrace();
+//
+//				}
+//
+//				public void run() throws Exception
+//				{
+//					while (builder.isAlive())
+//					{
+//						Thread.sleep(500);
+//						if (monitor.isCanceled())
+//						{
+//							builder.interrupt();
+//							Thread.sleep(2000);
+//							builder.stop();
+//						}
+//					}
+//				}
+//
+//			};
+//			SafeRunner.run(runnable);
 
 		} finally
 		{

@@ -78,7 +78,7 @@ public interface IVdmProject extends IProject
 	public abstract String getVdmNature();
 	
 	public abstract List<IVdmSourceUnit> getSpecFiles() throws CoreException;
-	public abstract List<IFile> getFiles() throws CoreException;
+
 	
 	public abstract File getFile(IFile file);
 	public abstract IFile findIFile( File file);
