@@ -18,6 +18,9 @@ public class ViewPosActionSl extends ViewPosAction {
 	@Override
 	protected ProofObligationList getProofObligations(IVdmModel root) throws NotAllowedException {
 		ModuleList cl = new ModuleList();
+		if(!root.isTypeCorrect()){
+			return null;
+		}
 		for (Object definition : root.getModuleList()) {
 			if (definition instanceof Module)
 				if (skipElement(((Module) definition).name.location.file))

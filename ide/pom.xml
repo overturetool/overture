@@ -28,6 +28,7 @@
     <module>plugins</module>
     <module>core</module>
     <module>help</module>
+    <module>build</module>
   </modules>
 
 <reporting>

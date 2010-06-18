@@ -50,7 +50,7 @@
    </plugins>
 
    <features>
-      <feature id="org.overture.ide.features.rcp" version="1.0.1.qualifier"/>
+      <feature id="org.overture.ide.features.rcp" version="1.0.1"/>
    </features>
 
 

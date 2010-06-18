@@ -1,0 +1,169 @@
+<!--
+    This program and the accompanying materials are made available
+    under the terms of the Eclipse Public License v1.0 which
+    accompanies this distribution, and is available at
+      http://www.eclipse.org/legal/epl-v10.html
+    
+    This build script creates a build directory containing the plugins
+    and features to be built, and then kicks off the PDE build process.
+    You could just as easily do this from a shell script or cron job.
+    
+    Also, the script can be run inside the Eclipse IDE by choosing 
+    Run As -> Ant Build from the context menu. It could obviously be
+    run outside of the IDE if you have ANT installed on your path.
+    
+    If you have any questions about this build, feel free to contact me
+    at patrick@rcpquickstart.com.
+    
+    Modified by Lukas Zapletal <lzapletal@pikeelectronic.com>.
+-->
+<project name="org.overture.ide" default="build">
+	<property file="build.properties" />
+
+	<!--
+        PDE Build expects that the build directory contains a "plugins" 
+        directory and a "features" directory. These directories should contain
+        the various plug-ins and features to be built.
+        
+        It's possible to use the CVS checkout process that is built into 
+        PDE Build. This is done with map files and is beyond the scope of 
+        this tutorial. 
+        
+        This tutorial simply copies the projects directly from your workspace
+        into the appropriate build directory folders.
+    -->
+	<target name="init">
+		<mkdir dir="${buildDirectory}" />
+		<mkdir dir="${buildDirectory}/plugins" />
+		<mkdir dir="${buildDirectory}/features" />
+		<copy todir="${buildDirectory}/plugins">
+			<fileset dir="../">
+				<include name="ui/**" />
+				<include name="core/**" />
+				<include name="debug/**" />
+				<include name="help/**" />
+				<include name="platform/**" />
+				<include name="ui/**" />
+			</fileset>
+			<fileset dir="../plugins/">
+				<include name="**" />
+			</fileset>
+		</copy>
+
+
+		<copy todir="${buildDirectory}/plugins/builders.vdmj">
+			<fileset dir="../builders/vdmj" />
+		</copy>
+		<copy todir="${buildDirectory}/plugins/parsers.vdmj">
+			<fileset dir="../parsers/vdmj" />
+		</copy>
+
+
+		<copy todir="${buildDirectory}/plugins/vdmpp.core">
+			<fileset dir="../vdmpp/core" />
+		</copy>
+
+		<copy todir="${buildDirectory}/plugins/vdmpp.ui">
+			<fileset dir="../vdmpp/ui" />
+		</copy>
+		<copy todir="${buildDirectory}/plugins/vdmpp.debug">
+			<fileset dir="../vdmpp/debug" />
+		</copy>
+
+
+		<copy todir="${buildDirectory}/plugins/vdmsl.core">
+			<fileset dir="../vdmsl/core" />
+		</copy>
+
+		<copy todir="${buildDirectory}/plugins/vdmsl.ui">
+			<fileset dir="../vdmsl/ui" />
+		</copy>
+		<copy todir="${buildDirectory}/plugins/vdmsl.debug">
+			<fileset dir="../vdmsl/debug" />
+		</copy>
+
+
+		<copy todir="${buildDirectory}/plugins/vdmrt.core">
+			<fileset dir="../vdmrt/core" />
+		</copy>
+
+		<copy todir="${buildDirectory}/plugins/vdmrt.ui">
+			<fileset dir="../vdmrt/ui" />
+		</copy>
+		<copy todir="${buildDirectory}/plugins/vdmrt.debug">
+			<fileset dir="../vdmrt/debug" />
+		</copy>
+
+		<copy todir="${buildDirectory}/plugins/generated.showtrace">
+			<fileset dir="../generated/showtrace" />
+		</copy>
+
+		<copy todir="${buildDirectory}/plugins/generated.traces">
+			<fileset dir="../generated/traces" />
+		</copy>
+
+		<copy todir="${buildDirectory}/plugins/generated.umltrans">
+			<fileset dir="../generated/umltrans" />
+		</copy>
+
+		<copy todir="${buildDirectory}/plugins/generated.vdmj">
+			<fileset dir="../generated/vdmj" />
+		</copy>
+
+		<copy todir="${buildDirectory}">
+			<fileset dir="../">
+				<include name="features/core/**" />
+				<include name="features/rcp/**" />
+			</fileset>
+		</copy>
+		<!-- Copying features and renaming the directories to a flat structure -->
+		<copy todir="${buildDirectory}/features/features.coverageeditor">
+			<fileset dir="../plugins/features/coverageeditor" />
+		</copy>
+		<copy todir="${buildDirectory}/features/features.csk">
+			<fileset dir="../plugins/features/csk" />
+		</copy>
+		<copy todir="${buildDirectory}/features/features.ct">
+			<fileset dir="../plugins/features/ct" />
+		</copy>
+		<copy todir="${buildDirectory}/features/features.latex">
+			<fileset dir="../plugins/features/latex" />
+		</copy>
+		<copy todir="${buildDirectory}/features/features.poviewer">
+			<fileset dir="../plugins/features/poviewer" />
+		</copy>
+		<copy todir="${buildDirectory}/features/features.quickinterpreter">
+			<fileset dir="../plugins/features/quickinterpreter" />
+		</copy>
+		<copy todir="${buildDirectory}/features/features.realtimelogviewer">
+			<fileset dir="../plugins/features/realtimelogviewer" />
+		</copy>
+		<copy todir="${buildDirectory}/features/features.umltrans">
+			<fileset dir="../plugins/features/umltrans" />
+		</copy>
+	</target>
+
+	<!--
+        This target actually executes the PDE Build process by launching the 
+        Eclipse antRunner application.
+    -->
+	<target name="pde-build">
+		<echo message="Executing ${eclipseLocation}/plugins/org.eclipse.equinox.launcher_${equinoxLauncherPluginVersion}.jar" />
+		<java classname="org.eclipse.equinox.launcher.Main" fork="true" failonerror="true">
+			<arg value="-application" />
+			<arg value="org.eclipse.ant.core.antRunner" />
+			<arg value="-buildfile" />
+			<arg value="${eclipseLocation}/plugins/org.eclipse.pde.build_${pdeBuildPluginVersion}/scripts/productBuild/productBuild.xml" />
+			<arg value="-Dtimestamp=${timestamp}" />
+			<classpath>
+				<pathelement location="${eclipseLocation}/plugins/org.eclipse.equinox.launcher_${equinoxLauncherPluginVersion}.jar" />
+			</classpath>
+		</java>
+	</target>
+
+	<target name="clean">
+		<delete dir="${buildDirectory}" />
+	</target>
+
+	<target name="build" depends="init, pde-build" />
+</project>

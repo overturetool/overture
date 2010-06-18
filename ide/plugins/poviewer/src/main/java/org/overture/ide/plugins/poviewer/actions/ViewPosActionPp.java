@@ -17,6 +17,9 @@ public class ViewPosActionPp extends ViewPosAction {
 
 	@Override
 	protected ProofObligationList getProofObligations(IVdmModel model) throws NotAllowedException {
+		if(!model.isTypeCorrect()){
+			return null;
+		}
 		ClassList cl = new ClassList();
 		for (Object definition : model.getClassList()) {
 			if (definition instanceof ClassDefinition) {
