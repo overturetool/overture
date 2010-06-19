@@ -19,7 +19,7 @@
     <module>showtrace</module>
     <module>traces</module>
     <module>idedebughelper</module>
-    <module>proofsupport</module>
+    <!--module>proofsupport</module-->
     <module>poviewer</module>
     <module>latex</module>
     <module>quickinterpreter</module>

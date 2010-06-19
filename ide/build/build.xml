@@ -44,102 +44,154 @@
 				<include name="help/**" />
 				<include name="platform/**" />
 				<include name="ui/**" />
+				<exclude name="**/target/" />
 			</fileset>
 			<fileset dir="../plugins/">
 				<include name="**" />
+				<exclude name="**/idedebughelper/" />
+				<exclude name="**/proofsupport/" />
 			</fileset>
 		</copy>
 
 
 		<copy todir="${buildDirectory}/plugins/builders.vdmj">
-			<fileset dir="../builders/vdmj" />
+			<fileset dir="../builders/vdmj">
+				<exclude name="**/target/" />
+			</fileset>
+
 		</copy>
 		<copy todir="${buildDirectory}/plugins/parsers.vdmj">
-			<fileset dir="../parsers/vdmj" />
+			<fileset dir="../parsers/vdmj">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 
 
 		<copy todir="${buildDirectory}/plugins/vdmpp.core">
-			<fileset dir="../vdmpp/core" />
+			<fileset dir="../vdmpp/core">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 
 		<copy todir="${buildDirectory}/plugins/vdmpp.ui">
-			<fileset dir="../vdmpp/ui" />
+			<fileset dir="../vdmpp/ui">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 		<copy todir="${buildDirectory}/plugins/vdmpp.debug">
-			<fileset dir="../vdmpp/debug" />
+			<fileset dir="../vdmpp/debug">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 
 
 		<copy todir="${buildDirectory}/plugins/vdmsl.core">
-			<fileset dir="../vdmsl/core" />
+			<fileset dir="../vdmsl/core">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 
 		<copy todir="${buildDirectory}/plugins/vdmsl.ui">
-			<fileset dir="../vdmsl/ui" />
+			<fileset dir="../vdmsl/ui">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 		<copy todir="${buildDirectory}/plugins/vdmsl.debug">
-			<fileset dir="../vdmsl/debug" />
+			<fileset dir="../vdmsl/debug">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 
 
 		<copy todir="${buildDirectory}/plugins/vdmrt.core">
-			<fileset dir="../vdmrt/core" />
+			<fileset dir="../vdmrt/core">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 
 		<copy todir="${buildDirectory}/plugins/vdmrt.ui">
-			<fileset dir="../vdmrt/ui" />
+			<fileset dir="../vdmrt/ui">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 		<copy todir="${buildDirectory}/plugins/vdmrt.debug">
-			<fileset dir="../vdmrt/debug" />
+			<fileset dir="../vdmrt/debug">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 
 		<copy todir="${buildDirectory}/plugins/generated.showtrace">
-			<fileset dir="../generated/showtrace" />
+			<fileset dir="../generated/showtrace">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 
 		<copy todir="${buildDirectory}/plugins/generated.traces">
-			<fileset dir="../generated/traces" />
+			<fileset dir="../generated/traces">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 
 		<copy todir="${buildDirectory}/plugins/generated.umltrans">
-			<fileset dir="../generated/umltrans" />
+			<fileset dir="../generated/umltrans">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 
 		<copy todir="${buildDirectory}/plugins/generated.vdmj">
-			<fileset dir="../generated/vdmj" />
+			<fileset dir="../generated/vdmj">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 
 		<copy todir="${buildDirectory}">
 			<fileset dir="../">
 				<include name="features/core/**" />
 				<include name="features/rcp/**" />
+				<exclude name="**/target/" />
 			</fileset>
+
 		</copy>
 		<!-- Copying features and renaming the directories to a flat structure -->
 		<copy todir="${buildDirectory}/features/features.coverageeditor">
-			<fileset dir="../plugins/features/coverageeditor" />
+			<fileset dir="../plugins/features/coverageeditor">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 		<copy todir="${buildDirectory}/features/features.csk">
-			<fileset dir="../plugins/features/csk" />
+			<fileset dir="../plugins/features/csk">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 		<copy todir="${buildDirectory}/features/features.ct">
-			<fileset dir="../plugins/features/ct" />
+			<fileset dir="../plugins/features/ct">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 		<copy todir="${buildDirectory}/features/features.latex">
-			<fileset dir="../plugins/features/latex" />
+			<fileset dir="../plugins/features/latex">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 		<copy todir="${buildDirectory}/features/features.poviewer">
-			<fileset dir="../plugins/features/poviewer" />
+			<fileset dir="../plugins/features/poviewer">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 		<copy todir="${buildDirectory}/features/features.quickinterpreter">
-			<fileset dir="../plugins/features/quickinterpreter" />
+			<fileset dir="../plugins/features/quickinterpreter">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 		<copy todir="${buildDirectory}/features/features.realtimelogviewer">
-			<fileset dir="../plugins/features/realtimelogviewer" />
+			<fileset dir="../plugins/features/realtimelogviewer">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 		<copy todir="${buildDirectory}/features/features.umltrans">
-			<fileset dir="../plugins/features/umltrans" />
+			<fileset dir="../plugins/features/umltrans">
+				<exclude name="**/target/" />
+			</fileset>
 		</copy>
 	</target>
 
@@ -149,12 +201,24 @@
     -->
 	<target name="pde-build">
 		<echo message="Executing ${eclipseLocation}/plugins/org.eclipse.equinox.launcher_${equinoxLauncherPluginVersion}.jar" />
+		<echo message="Eclipse base location: ${eclipseLocation}" />
+		<echo message="Base location: ${base}" />
+		<echo message="Product: ${product}" />
 		<java classname="org.eclipse.equinox.launcher.Main" fork="true" failonerror="true">
 			<arg value="-application" />
 			<arg value="org.eclipse.ant.core.antRunner" />
 			<arg value="-buildfile" />
 			<arg value="${eclipseLocation}/plugins/org.eclipse.pde.build_${pdeBuildPluginVersion}/scripts/productBuild/productBuild.xml" />
 			<arg value="-Dtimestamp=${timestamp}" />
+			<arg value="-Dproduct=${product}" />
+			<arg value="-Dbase=${base}" />
+			<arg value="-DeclipseLocation=${eclipseLocation}" />
+			<arg value="-DbuildDirectory=${buildDirectory}" />
+			<arg value="-DpdeBuildPluginVersion=${pdeBuildPluginVersion}" />
+			<arg value="-Dbaseos=${baseos}" />
+			<arg value="-Dbasews=${basews}" />
+			<arg value="-Dbasearch=${basearch}" />
+
 			<classpath>
 				<pathelement location="${eclipseLocation}/plugins/org.eclipse.equinox.launcher_${equinoxLauncherPluginVersion}.jar" />
 			</classpath>
