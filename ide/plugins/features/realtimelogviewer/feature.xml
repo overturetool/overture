@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.plugins.features.realtimelogviewer"
       label="Real-Time Log Viewer"
-      version="1.0.0.qualifier">
+      version="1.0.0">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -17,7 +17,7 @@
    </license>
 
    <requires>
-      <import feature="org.overture.ide.features.core" version="1.0.0.qualifier" match="greaterOrEqual"/>
+      <import feature="org.overture.ide.features.core" version="1.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
