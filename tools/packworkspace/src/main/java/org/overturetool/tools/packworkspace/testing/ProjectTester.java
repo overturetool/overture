@@ -38,11 +38,13 @@ public class ProjectTester
 
 	boolean isFaild = false;
 
-	enum Phase {
+	enum Phase
+	{
 		SyntaxCheck, TypeCheck, PO, Interpretation, Latex
 	}
 
-	public ProjectTester(File reportLocation) {
+	public ProjectTester(File reportLocation)
+	{
 		this.reportLocation = reportLocation;
 		if (!reportLocation.exists())
 			reportLocation.mkdirs();
@@ -56,20 +58,19 @@ public class ProjectTester
 				+ " => ");
 		switch (project.getDialect())
 		{
-		case VDM_PP:
-			controller = new VDMPP();
-			break;
-		case VDM_RT:
-			controller = new VDMRT();
-			break;
-		case VDM_SL:
-			controller = new VDMSL();
-			break;
+			case VDM_PP:
+				controller = new VDMPP();
+				break;
+			case VDM_RT:
+				controller = new VDMRT();
+				break;
+			case VDM_SL:
+				controller = new VDMSL();
+				break;
 		}
 
 		Settings.dialect = project.getDialect();
-		Settings.dynamictypechecks = project.getSettings()
-				.getDynamicTypeChecks();
+		Settings.dynamictypechecks = project.getSettings().getDynamicTypeChecks();
 		Settings.invchecks = project.getSettings().getInvChecks();
 		Settings.postchecks = project.getSettings().getPostChecks();
 		Settings.prechecks = project.getSettings().getPreChecks();
@@ -116,8 +117,7 @@ public class ProjectTester
 				{
 					System.out.print("PO..");
 					setConsole(project.getSettings().getName(), Phase.PO);
-					ProofObligationList pos = controller.getInterpreter()
-							.getProofObligations();
+					ProofObligationList pos = controller.getInterpreter().getProofObligations();
 					pos.renumber();
 					poCount = pos.size();
 					if (poCount == 0)
@@ -143,12 +143,9 @@ public class ProjectTester
 					latex = new LatexBuilder(project);
 					if (project.getSettings().getTexDocument() != null
 							&& project.getSettings().getTexDocument().length() > 0)
-						latex.setAlternativeDocumentFileName(project.getSettings()
-								.getTexDocument());
+						latex.setAlternativeDocumentFileName(project.getSettings().getTexDocument());
 					System.out.print("Doc..");
-					latex.build(reportLocation,
-							controller.getInterpreter(),
-							project.getSettings().getTexAuthor());
+					latex.build(reportLocation, controller.getInterpreter(), project.getSettings().getTexAuthor());
 				} catch (Exception e1)
 				{
 					// TODO Auto-generated catch block
@@ -172,16 +169,13 @@ public class ProjectTester
 							System.out.println("\tTesting Entrypoint: "
 									+ entryPoint);
 
-							setConsole(project.getSettings().getName(),
-									Phase.Interpretation);
+							setConsole(project.getSettings().getName(), Phase.Interpretation);
 							Interpreter i = controller.getInterpreter();
 							i.init(null);
 							if (project.getDialect() == Dialect.VDM_SL)
-								i.setDefaultName(entryPoint.substring(0,
-										entryPoint.indexOf('`')));
+								i.setDefaultName(entryPoint.substring(0, entryPoint.indexOf('`')));
 							// Value value = i.execute(entryPoint, null);
-							statusInterpreter = runInterpreter(project,
-									entryPoint);
+							statusInterpreter = runInterpreter(project, entryPoint);
 							// Console.out.println(value);
 							Console.out.flush();
 
@@ -208,52 +202,47 @@ public class ProjectTester
 
 		switch (project.getSettings().getExpectedResult())
 		{
-		case NO_CHECK:
-			isFaild = false;
-			break;
-		case NO_ERROR_SYNTAX:
-			isFaild = statusParse != ExitStatus.EXIT_OK;
-			break;
-		case NO_ERROR_TYPE_CHECK:
-			isFaild = statusTypeCheck != ExitStatus.EXIT_OK
-					|| statusParse != ExitStatus.EXIT_OK;
-			break;
-		case NO_ERROR_PO:
-			isFaild = statusTypeCheck != ExitStatus.EXIT_OK
-					|| statusParse != ExitStatus.EXIT_OK
-					|| statusPo != ExitStatus.EXIT_OK;
-			break;
-		case NO_ERROR_INTERPRETER:
-			isFaild = statusInterpreter != ExitStatus.EXIT_OK
-					|| statusTypeCheck != ExitStatus.EXIT_OK
-					|| statusParse != ExitStatus.EXIT_OK
-					|| statusPo != ExitStatus.EXIT_OK;
-			break;
+			case NO_CHECK:
+				isFaild = false;
+				break;
+			case NO_ERROR_SYNTAX:
+				isFaild = statusParse != ExitStatus.EXIT_OK;
+				break;
+			case NO_ERROR_TYPE_CHECK:
+				isFaild = statusTypeCheck != ExitStatus.EXIT_OK
+						|| statusParse != ExitStatus.EXIT_OK;
+				break;
+			case NO_ERROR_PO:
+				isFaild = statusTypeCheck != ExitStatus.EXIT_OK
+						|| statusParse != ExitStatus.EXIT_OK
+						|| statusPo != ExitStatus.EXIT_OK;
+				break;
+			case NO_ERROR_INTERPRETER:
+				isFaild = statusInterpreter != ExitStatus.EXIT_OK
+						|| statusTypeCheck != ExitStatus.EXIT_OK
+						|| statusParse != ExitStatus.EXIT_OK
+						|| statusPo != ExitStatus.EXIT_OK;
+				break;
 		}
 
 		if (!isFaild)
-			sb.append(HtmlTable.makeCell(HtmlPage.makeLink(project.getSettings()
-					.getName(),
-					project.getSettings().getName() + "/Settings.txt")));
+			sb.append(HtmlTable.makeCell(HtmlPage.makeLink(project.getSettings().getName(), project.getSettings().getName()
+					+ "/Settings.txt")));
 		else
-			sb.append(makeCell(ExitStatus.EXIT_ERRORS,
-					HtmlPage.makeLink(project.getSettings().getName(),
-							project.getSettings().getName() + "/Settings.txt")));
+			sb.append(makeCell(ExitStatus.EXIT_ERRORS, HtmlPage.makeLink(project.getSettings().getName(), project.getSettings().getName()
+					+ "/Settings.txt")));
 
 		if (statusParse != null)
 			sb.append(makeCell(statusParse, statusParse.name()
 					+ " "
-					+ getLinks(project.getSettings().getName(),
-							Phase.SyntaxCheck)));
+					+ getLinks(project.getSettings().getName(), Phase.SyntaxCheck)));
 		else
 			sb.append(HtmlTable.makeCell(""));
 
 		if (statusTypeCheck != null)
-			sb.append(makeCell(statusTypeCheck,
-					statusTypeCheck.name()
-							+ " "
-							+ getLinks(project.getSettings().getName(),
-									Phase.TypeCheck)));
+			sb.append(makeCell(statusTypeCheck, statusTypeCheck.name()
+					+ " "
+					+ getLinks(project.getSettings().getName(), Phase.TypeCheck)));
 		else
 			sb.append(HtmlTable.makeCell(""));
 
@@ -266,15 +255,13 @@ public class ProjectTester
 		if (statusInterpreter != null)
 			sb.append(makeCell(statusInterpreter, statusInterpreter.name()
 					+ " "
-					+ getLinks(project.getSettings().getName(),
-							Phase.Interpretation)));
+					+ getLinks(project.getSettings().getName(), Phase.Interpretation)));
 		else
 			sb.append(HtmlTable.makeCell(""));
 
 		if (latex != null)
 			sb.append(makeCell(latex.isBuild() ? ExitStatus.EXIT_ERRORS
-					: ExitStatus.EXIT_OK, getLinks(project.getSettings()
-					.getName()
+					: ExitStatus.EXIT_OK, getLinks(project.getSettings().getName()
 					+ "/latex", Phase.Latex)
 					+ " "
 					+ HtmlPage.makeLink("Pdf", project.getSettings().getName()
@@ -319,19 +306,15 @@ public class ProjectTester
 		command.add("java");
 		for (String argument : project.getSettings().getVmArguments())
 		{
-			command.add("-"+argument);
+			command.add("-" + argument);
 		}
 		command.add("-cp");
-		File thisJar = new File(this.getClass()
-				.getProtectionDomain()
-				.getCodeSource()
-				.getLocation()
-				.getPath());
+		File thisJar = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
 		String cp = thisJar.getAbsolutePath();
 		if (System.getProperty("user.name", "").equals("kela"))
 			cp += getCpSeperator()
 					+ new File("C:/overture/overturesvn/core/vdmj/target/classes".replace('/', File.separatorChar)).getAbsolutePath();
-		
+
 		File lib = new File(project.getSettings().getWorkingDirectory(), "lib");
 		if (lib.exists() && lib.isDirectory())
 		{
@@ -339,7 +322,7 @@ public class ProjectTester
 			{
 				if (f.getName().toLowerCase().endsWith(".jar"))
 					cp += getCpSeperator() + f.getAbsolutePath();
-				
+
 			}
 		}
 		command.add(cp);
@@ -362,8 +345,7 @@ public class ProjectTester
 		// -e <exp>: evaluate <exp> and stop
 		command.add("-e");
 		command.add("\"" + entryPoint.replace("\"", "\\\"") + "\"");
-		
-		
+
 		if (project.getSettings().getEncoding().length() > 0)
 		{
 			// -c <charset>: select a file charset
@@ -430,12 +412,10 @@ public class ProjectTester
 		pb.directory(project.getSettings().getWorkingDirectory());
 		Process p = pb.start();
 
-		File projectDir = new File(reportLocation, project.getSettings()
-				.getName());
+		File projectDir = new File(reportLocation, project.getSettings().getName());
 		projectDir.mkdirs();
-		ProcessConsolePrinter pcpErr = new ProcessConsolePrinter(new File(projectDir,
-				Phase.Interpretation + "Err.txt"),
-				p.getErrorStream());
+		ProcessConsolePrinter pcpErr = new ProcessConsolePrinter(new File(projectDir, Phase.Interpretation
+				+ "Err.txt"), p.getErrorStream());
 		pcpErr.start();
 
 		StringBuilder sb = new StringBuilder();
@@ -445,13 +425,19 @@ public class ProjectTester
 		}
 		sb.append("\nWorking directory: " + pb.directory().getAbsolutePath());
 
-		ProcessConsolePrinter pcpOut = new ProcessConsolePrinter(new File(projectDir,
-				Phase.Interpretation + "Out.txt"),
-				p.getInputStream(),
-				sb.toString().trim());
+		ProcessConsolePrinter pcpOut = new ProcessConsolePrinter(new File(projectDir, Phase.Interpretation
+				+ "Out.txt"), p.getInputStream(), sb.toString().trim());
 		pcpOut.start();
 
-		p.waitFor();
+		try
+		{
+		Thread killer =	new ProcessTimeOutKiller(p,5*60);
+			p.waitFor();
+			killer.stop();
+		} catch (Exception e)
+		{
+			return ExitStatus.EXIT_ERRORS;
+		}
 		pcpErr.interrupt();
 		pcpOut.interrupt();
 		if (p.exitValue() == 0)
@@ -460,10 +446,52 @@ public class ProjectTester
 			return ExitStatus.EXIT_ERRORS;
 
 	}
-	
+
+	private class ProcessTimeOutKiller extends Thread
+	{
+		Process p;
+		final long startTime;
+		
+		
+		final long endTime;
+
+		public ProcessTimeOutKiller(Process p, int timeOutSeconds)
+		{
+			this.p = p;
+			startTime = System.currentTimeMillis();
+			
+
+			endTime = startTime + (timeOutSeconds*1000);
+//			System.out.println("Run in ms: "+ new Long(endTime-startTime));
+			setDaemon(true);
+			start();
+		}
+		
+		@Override
+		public void run()
+		{
+			while(true)
+			{
+				try
+				{
+					Thread.sleep(100);
+					if(endTime<= System.currentTimeMillis())
+					{
+						p.destroy();
+						System.out.print(" -KILLED");
+						return;
+					}
+				} catch (InterruptedException e)
+				{
+				
+				}
+			}
+		}
+	}
+
 	private String getCpSeperator()
 	{
-		if(System.getProperty("os.name").toLowerCase().contains("win"))
+		if (System.getProperty("os.name").toLowerCase().contains("win"))
 			return ";";
 		else
 			return ":";
@@ -473,12 +501,12 @@ public class ProjectTester
 	{
 		switch (status)
 		{
-		case EXIT_ERRORS:
-			return HtmlTable.makeCell(text, HtmlTable.STYLE_CLASS_FAILD);
-		case EXIT_OK:
-			return HtmlTable.makeCell(text, HtmlTable.STYLE_CLASS_OK);
-		case RELOAD:
-			return HtmlTable.makeCell(text);
+			case EXIT_ERRORS:
+				return HtmlTable.makeCell(text, HtmlTable.STYLE_CLASS_FAILD);
+			case EXIT_OK:
+				return HtmlTable.makeCell(text, HtmlTable.STYLE_CLASS_OK);
+			case RELOAD:
+				return HtmlTable.makeCell(text);
 
 		}
 		return text;
@@ -541,10 +569,10 @@ public class ProjectTester
 	{
 		File projectDir = new File(reportLocation, projectName);
 		projectDir.mkdirs();
-		Console.out = new StdoutRedirector(new FileWriter(new File(projectDir,
-				phase + "Out.txt"), false));
-		Console.err = new StderrRedirector(new FileWriter(new File(projectDir,
-				phase + "Err.txt"), false));
+		Console.out = new StdoutRedirector(new FileWriter(new File(projectDir, phase
+				+ "Out.txt"), false));
+		Console.err = new StderrRedirector(new FileWriter(new File(projectDir, phase
+				+ "Err.txt"), false));
 	}
 
 	public boolean isSyntaxCorrect()

@@ -13,7 +13,7 @@ public interface OvertureProject {
 			+ "	</projects>\n"
 			+ "	<buildSpec>\n"
 			+ "		<buildCommand>\n"
-			+ "			<name>org.eclipse.dltk.core.scriptbuilder</name>\n"
+			+ "			<name>org.overture.ide.core.builder.VdmBuilder</name>\n"
 			+ "			<arguments>\nARGUMENTS_PLACEHOLDER\n"
 			+ "			</arguments>\n"
 			+ "		</buildCommand>\n"

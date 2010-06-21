@@ -68,13 +68,15 @@ ferror () ==
   is not yet specified;
   
 -- New simplified format printing operations
-
+-- The questionmark in the signature simply means any type
 public static print: ? ==> ()
 print(arg) ==
-	is not yet specified;
+  is not yet specified;
 
+-- New simplified format printing operations
+-- The questionmark in the signature simply means any type
 public static printf: seq of char * seq of ? ==> ()
 printf(format, args) ==
-	is not yet specified;
+  is not yet specified;
 
 end IO
