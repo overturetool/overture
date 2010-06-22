@@ -17,7 +17,7 @@
    </license>
 
    <requires>
-      <import feature="org.overture.ide.features.core" version="1.0.1"/>
+      <import feature="org.overture.ide.features.core" version="0.3.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin

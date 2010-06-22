@@ -52,7 +52,7 @@ public class DbgpBreakpointCommands extends DbgpBaseCommands implements
 	final String WATCH_BREAKPOINT = "watch"; //$NON-NLS-1$
 
 	protected IDbgpBreakpoint[] parseBreakpointsResponse(Element response) {
-		List list = new ArrayList();
+		List<IDbgpBreakpoint> list = new ArrayList<IDbgpBreakpoint>();
 
 		NodeList breakpoints = response.getElementsByTagName(BREAKPOINT_TAG);
 		for (int i = 0; i < breakpoints.getLength(); ++i) {

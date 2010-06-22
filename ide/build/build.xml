@@ -44,7 +44,7 @@
 				<include name="help/**" />
 				<include name="platform/**" />
 				<include name="ui/**" />
-				<exclude name="**/target/" />
+				<!--exclude name="**/target/" /-->
 			</fileset>
 			<fileset dir="../plugins/">
 				<include name="**" />
@@ -53,6 +53,30 @@
 			</fileset>
 		</copy>
 
+
+		<!-- Platform plugin, manage version number -->
+		<copy todir="${buildDirectory}/plugins" filtering="true">
+			<fileset dir="../">
+				<include name="platform/**" />
+				<exclude name="**/target/" />
+			</fileset>
+		</copy>
+		<copy file="../platform/plugin.properties" toFile="${buildDirectory}/plugins/platform/plugin.properties" overwrite="true" filtering="true">
+			<filterchain>
+				<replacetokens>
+					<token key="version" value="${platformReleaseVersion}" />
+				</replacetokens>
+			</filterchain>
+		</copy>
+		<copy file="../platform/META-INF/MANIFEST.MF" toFile="${buildDirectory}/plugins/platform/META-INF/MANIFEST.MF" overwrite="true" filtering="true">
+			<filterchain>
+				<tokenfilter>
+					<replaceregex pattern="0.0.0" replace="${platformReleaseVersion}" flags="gi" />
+				</tokenfilter>
+			</filterchain>
+		</copy>
+
+		<!-- IDE -->
 
 		<copy todir="${buildDirectory}/plugins/builders.vdmj">
 			<fileset dir="../builders/vdmj">

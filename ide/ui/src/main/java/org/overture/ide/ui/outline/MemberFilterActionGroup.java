@@ -88,7 +88,7 @@ public class MemberFilterActionGroup extends ActionGroup {
 		fFilter= new MemberFilter();
 
 		String title, helpContext;
-		ArrayList actions= new ArrayList(4);
+		ArrayList<MemberFilterAction> actions= new ArrayList<MemberFilterAction>(4);
 
 		// fields
 		int filterProperty= FILTER_FIELDS;

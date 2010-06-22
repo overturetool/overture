@@ -44,13 +44,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.ViewPart;
-import org.overture.ide.debug.logging.DebugLogExecutionControlFilter;
 
 public class VdmDebugLogView extends ViewPart {
 	public static final String VIEW_ID = "org.overture.ide.debug.ui.log.dbgpLogView"; //$NON-NLS-1$
 	public static final String THEME_ID = "org.eclipse.dltk.debug.ui.dbgpLogView.txtViewFont"; //$NON-NLS-1$
 
-	private final List items = new ArrayList();
+	private final List<VdmDebugLogItem> items = new ArrayList<VdmDebugLogItem>();
 	private TableViewer viewer;
 	private TextViewer textViewer;
 	private IDocument textDocument;

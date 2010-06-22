@@ -200,9 +200,9 @@ public class VdmDebugPlugin extends AbstractUIPlugin {
 	}
 
 	public static String[] getLocalAddresses() {
-		Set addresses = new HashSet();
+		Set<String> addresses = new HashSet<String>();
 		try {
-			Enumeration netInterfaces = NetworkInterface.getNetworkInterfaces();
+			Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
 			while (netInterfaces.hasMoreElements()) {
 				NetworkInterface ni = (NetworkInterface) netInterfaces
 						.nextElement();
@@ -214,7 +214,7 @@ public class VdmDebugPlugin extends AbstractUIPlugin {
 						&& ni.getDisplayName().indexOf("VMware") != -1) { //$NON-NLS-1$
 					continue;
 				}
-				Enumeration inetAddresses = ni.getInetAddresses();
+				Enumeration<InetAddress> inetAddresses = ni.getInetAddresses();
 				while (inetAddresses.hasMoreElements()) {
 					InetAddress ip = (InetAddress) inetAddresses.nextElement();
 					// ignore loopback address (127.0.0.1)

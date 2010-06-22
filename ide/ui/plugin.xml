@@ -395,11 +395,11 @@
            location="BOTTOM_LEFT"
            state="true">
         <enablement>
-           <or>
+          
               <objectClass
                     name="org.eclipse.core.resources.IResource">
               </objectClass>
-           </or>
+           
         </enablement>
      </decorator>
   </extension>

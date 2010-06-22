@@ -100,7 +100,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 
 	private final String modelId;
 
-	private static final WeakHashMap targets = new WeakHashMap();
+	private static final WeakHashMap<VdmDebugTarget,String> targets = new WeakHashMap<VdmDebugTarget,String>();
 	private String[] stepFilters;
 
 	private boolean useStepFilters;
@@ -119,9 +119,9 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 
 	private IVdmProject vdmProject = null;
 
-	public static List getAllTargets() {
+	public static List<VdmDebugTarget> getAllTargets() {
 		synchronized (targets) {
-			return new ArrayList(targets.keySet());
+			return new ArrayList<VdmDebugTarget>(targets.keySet());
 		}
 	}
 

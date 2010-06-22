@@ -29,7 +29,7 @@ public class DbgpDataTypeCommands extends DbgpBaseCommands implements
 
 	private static final String TAG_MAP = "map"; //$NON-NLS-1$
 
-	private final Map converter;
+	private final Map<String,Integer> converter;
 
 	private Integer typeToInteger(String type) {
 		return (Integer) converter.get(type);
@@ -38,7 +38,7 @@ public class DbgpDataTypeCommands extends DbgpBaseCommands implements
 	public DbgpDataTypeCommands(IDbgpCommunicator communicator) {
 		super(communicator);
 
-		converter = new HashMap();
+		converter = new HashMap<String,Integer>();
 		converter.put("bool", new Integer(BOOL_TYPE)); //$NON-NLS-1$
 		converter.put("int", new Integer(INT_TYPE)); //$NON-NLS-1$
 		converter.put("float", new Integer(FLOAT_TYPE)); //$NON-NLS-1$
@@ -50,11 +50,11 @@ public class DbgpDataTypeCommands extends DbgpBaseCommands implements
 		converter.put("resource", new Integer(RESOURCE_TYPE)); //$NON-NLS-1$
 	}
 
-	public Map getTypeMap() throws DbgpException {
+	public Map<String,Integer> getTypeMap() throws DbgpException {
 		DbgpRequest request = createRequest(TYPEMAP_GET_COMMAND);
 		Element element = communicate(request);
 
-		Map result = new HashMap();
+		Map<String,Integer> result = new HashMap<String,Integer>();
 
 		NodeList maps = element.getElementsByTagName(TAG_MAP);
 

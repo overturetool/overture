@@ -65,6 +65,7 @@ final class VdmVariableWrapperValue implements IVdmValue {
 		return getDebugTarget().getModelIdentifier();
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
 		return null;
 	}

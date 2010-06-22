@@ -216,14 +216,14 @@ public class VdmElementImageDescriptor extends CompositeImageDescriptor {
 	}
 
 	private void drawBottomRight() {
-		Point size= getSize();
-		Point pos= new Point(size.x, size.y);
+//		Point size= getSize();
+//		Point pos= new Point(size.x, size.y);
 
 		
 	}
 
 	private void drawBottomLeft() {
-		Point pos= new Point(0, getSize().y);
+//		Point pos= new Point(0, getSize().y);
 		
 
 	}

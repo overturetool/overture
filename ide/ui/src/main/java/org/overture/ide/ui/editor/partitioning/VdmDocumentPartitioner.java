@@ -2,7 +2,6 @@ package org.overture.ide.ui.editor.partitioning;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 
@@ -25,9 +24,9 @@ public class VdmDocumentPartitioner extends FastPartitioner implements
 	
 	public void printPartitions(IDocument document)
 	{
-	    StringBuffer buffer = new StringBuffer();
-
-	    ITypedRegion[] partitions = computePartitioning(0, document.getLength());
+//	    StringBuffer buffer = new StringBuffer();
+//
+//	    ITypedRegion[] partitions = computePartitioning(0, document.getLength());
 //	    for (int i = 0; i < partitions.length; i++)
 //	    {
 //	        try

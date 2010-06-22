@@ -1,7 +1,6 @@
 package org.overture.ide.vdmsl.core;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
@@ -56,7 +55,7 @@ public class VdmSlCorePlugin extends Plugin {
 		getDefault().getLog().log(new Status(IStatus.ERROR, IVdmSlCoreConstants.PLUGIN_ID, 0, message, ex));
 	}
 	
-	private final ListenerList shutdownListeners = new ListenerList();
+//	private final ListenerList shutdownListeners = new ListenerList();
 
 	
 }

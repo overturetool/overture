@@ -40,6 +40,7 @@ public abstract class VdmDebugElement extends PlatformObject implements
 		return getDebugTarget().getModelIdentifier();
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
 		if (adapter == IDebugElement.class) {
 			return this;

@@ -228,6 +228,7 @@ public class DbgpSession extends DbgpTermination implements IDbgpSession,
 		communicator.configure(debugOptions);
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object get(Class type) {
 		if (type == IDbgpSpawnpointCommands.class) {
 			return spawnpointCommands;

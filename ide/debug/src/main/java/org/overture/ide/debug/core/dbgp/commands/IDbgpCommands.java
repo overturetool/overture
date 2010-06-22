@@ -14,5 +14,6 @@ public interface IDbgpCommands {
 
 	IDbgpExtendedCommands getExtendedCommands();
 
+	@SuppressWarnings("unchecked")
 	Object get(Class type);
 }

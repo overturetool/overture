@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-Vendor: Overture.
 Bundle-ClassPath: .
-Bundle-Version: 1.0.0
+Bundle-Version: 0.3.0
 Eclipse-BuddyPolicy: registered
 Bundle-Localization: plugin
 Bundle-Name: org.overture.ide.help

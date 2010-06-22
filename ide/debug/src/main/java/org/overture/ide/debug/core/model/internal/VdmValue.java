@@ -285,6 +285,7 @@ public class VdmValue extends VdmDebugElement implements IVdmValue,
 		return variables;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
 		if (adapter == IIndexedValue.class && type.isCollection()) {
 			return this;

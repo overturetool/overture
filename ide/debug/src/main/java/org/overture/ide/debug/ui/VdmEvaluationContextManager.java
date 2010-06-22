@@ -1,11 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- 
+ * Copyright (c) 2000, 2007 IBM Corporation and others. All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is
+ * available at http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
 package org.overture.ide.debug.ui;
@@ -31,17 +27,17 @@ import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.model.IVdmStackFrame;
 
 /**
- * Manages the current evaluation context (stack frame) for evaluation actions.
- * In each page, the selection is tracked in each debug view (if any). When a
- * stack frame selection exists, the "debuggerActive" System property is set to
+ * Manages the current evaluation context (stack frame) for evaluation actions. In each page, the selection is tracked
+ * in each debug view (if any). When a stack frame selection exists, the "debuggerActive" System property is set to
  * true.
  */
 public class VdmEvaluationContextManager implements IWindowListener,
-		IDebugContextListener {
+		IDebugContextListener
+{
 
 	/**
-	 * System property indicating a stack frame is selected in the debug view
-	 * with an <code>IVdmStackFrame</code> adapter.
+	 * System property indicating a stack frame is selected in the debug view with an <code>IVdmStackFrame</code>
+	 * adapter.
 	 */
 	private static final String DEBUGGER_ACTIVE = VdmDebugPlugin.PLUGIN_ID
 			+ ".debuggerActive"; //$NON-NLS-1$
@@ -52,21 +48,26 @@ public class VdmEvaluationContextManager implements IWindowListener,
 
 	private IWorkbenchWindow activeWindow;
 
-	protected VdmEvaluationContextManager() {
+	protected VdmEvaluationContextManager()
+	{
 		DebugUITools.getDebugContextManager().addDebugContextListener(this);
 		pageToContextMap = new HashMap();
 	}
 
-	public static void startup() {
-		Runnable r = new Runnable() {
-			public void run() {
-				if (manager == null) {
+	public static void startup()
+	{
+		Runnable r = new Runnable()
+		{
+			public void run()
+			{
+				if (manager == null)
+				{
 					manager = new VdmEvaluationContextManager();
 
 					IWorkbench workbench = PlatformUI.getWorkbench();
-					IWorkbenchWindow[] windows = workbench
-							.getWorkbenchWindows();
-					for (int i = 0; i < windows.length; i++) {
+					IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
+					for (int i = 0; i < windows.length; i++)
+					{
 						manager.windowOpened(windows[i]);
 					}
 					workbench.addWindowListener(manager);
@@ -77,56 +78,55 @@ public class VdmEvaluationContextManager implements IWindowListener,
 		VdmDebugPlugin.getStandardDisplay().asyncExec(r);
 	}
 
-	public void windowActivated(IWorkbenchWindow window) {
+	public void windowActivated(IWorkbenchWindow window)
+	{
 		activeWindow = window;
 	}
 
-	public void windowClosed(IWorkbenchWindow window) {
+	public void windowClosed(IWorkbenchWindow window)
+	{
 	}
 
-	public void windowDeactivated(IWorkbenchWindow window) {
+	public void windowDeactivated(IWorkbenchWindow window)
+	{
 	}
 
-	public void windowOpened(IWorkbenchWindow window) {
+	public void windowOpened(IWorkbenchWindow window)
+	{
 	}
 
 	/**
-	 * Sets the evaluation context for the given page, and notes that a valid
-	 * execution context exists.
+	 * Sets the evaluation context for the given page, and notes that a valid execution context exists.
 	 * 
 	 * @param page
 	 * @param frame
 	 */
-	private void setContext(IWorkbenchPage page, IVdmStackFrame frame) {
+	private void setContext(IWorkbenchPage page, IVdmStackFrame frame)
+	{
 		pageToContextMap.put(page, frame);
 		System.setProperty(DEBUGGER_ACTIVE, "true"); //$NON-NLS-1$
 
 		/*
-		 * if (frame.canForceReturn()) {
-		 * System.setProperty(SUPPORTS_FORCE_RETURN, "true"); //$NON-NLS-1$ }
-		 * else { System.setProperty(SUPPORTS_FORCE_RETURN, "false");
-		 * //$NON-NLS-1$ } if
+		 * if (frame.canForceReturn()) { System.setProperty(SUPPORTS_FORCE_RETURN, "true"); //$NON-NLS-1$ } else {
+		 * System.setProperty(SUPPORTS_FORCE_RETURN, "false"); //$NON-NLS-1$ } if
 		 * (((IVdmStackFrame)frame.getDebugTarget()).supportsInstanceRetrieval()){
-		 * System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "true");
-		 * //$NON-NLS-1$ } else {
-		 * System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "false");
-		 * //$NON-NLS-1$ } if (instOf) {
-		 * System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "true");
-		 * //$NON-NLS-1$ } else {
-		 * System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "false");
-		 * //$NON-NLS-1$ }
+		 * System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "true"); //$NON-NLS-1$ } else {
+		 * System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "false"); //$NON-NLS-1$ } if (instOf) {
+		 * System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "true"); //$NON-NLS-1$ } else {
+		 * System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "false"); //$NON-NLS-1$ }
 		 */
 	}
 
 	/**
-	 * Removes an evaluation context for the given page, and determines if any
-	 * valid execution context remain.
+	 * Removes an evaluation context for the given page, and determines if any valid execution context remain.
 	 * 
 	 * @param page
 	 */
-	private void removeContext(IWorkbenchPage page) {
+	private void removeContext(IWorkbenchPage page)
+	{
 		pageToContextMap.remove(page);
-		if (pageToContextMap.isEmpty()) {
+		if (pageToContextMap.isEmpty())
+		{
 			System.setProperty(DEBUGGER_ACTIVE, "false"); //$NON-NLS-1$
 			// System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "false");
 			// //$NON-NLS-1$
@@ -136,9 +136,12 @@ public class VdmEvaluationContextManager implements IWindowListener,
 		}
 	}
 
-	private static IVdmStackFrame getContext(IWorkbenchPage page) {
-		if (manager != null) {
-			if (manager.pageToContextMap != null) {
+	private static IVdmStackFrame getContext(IWorkbenchPage page)
+	{
+		if (manager != null)
+		{
+			if (manager.pageToContextMap != null)
+			{
 				return (IVdmStackFrame) manager.pageToContextMap.get(page);
 			}
 		}
@@ -146,9 +149,8 @@ public class VdmEvaluationContextManager implements IWindowListener,
 	}
 
 	/**
-	 * Returns the evaluation context for the given part, or <code>null</code>
-	 * if none. The evaluation context corresponds to the selected stack frame
-	 * in the following priority order:
+	 * Returns the evaluation context for the given part, or <code>null</code> if none. The evaluation context
+	 * corresponds to the selected stack frame in the following priority order:
 	 * <ol>
 	 * <li>stack frame in the same page</li>
 	 * <li>stack frame in the same window</li>
@@ -158,22 +160,22 @@ public class VdmEvaluationContextManager implements IWindowListener,
 	 * 
 	 * @param part
 	 *            the part that the evaluation action was invoked from
-	 * @return the stack frame that supplies an evaluation context, or
-	 *         <code>null</code> if none
+	 * @return the stack frame that supplies an evaluation context, or <code>null</code> if none
 	 */
-	public static IVdmStackFrame getEvaluationContext(IWorkbenchPart part) {
+	public static IVdmStackFrame getEvaluationContext(IWorkbenchPart part)
+	{
 		IWorkbenchPage page = part.getSite().getPage();
 		IVdmStackFrame frame = getContext(page);
-		if (frame == null) {
+		if (frame == null)
+		{
 			return getEvaluationContext(page.getWorkbenchWindow());
 		}
 		return frame;
 	}
 
 	/**
-	 * Returns the evaluation context for the given window, or <code>null</code>
-	 * if none. The evaluation context corresponds to the selected stack frame
-	 * in the following priority order:
+	 * Returns the evaluation context for the given window, or <code>null</code> if none. The evaluation context
+	 * corresponds to the selected stack frame in the following priority order:
 	 * <ol>
 	 * <li>stack frame in active page of the window</li>
 	 * <li>stack frame in another page of the window</li>
@@ -182,33 +184,40 @@ public class VdmEvaluationContextManager implements IWindowListener,
 	 * </ol>
 	 * 
 	 * @param window
-	 *            the window that the evaluation action was invoked from, or
-	 *            <code>null</code> if the current window should be consulted
-	 * @return the stack frame that supplies an evaluation context, or
-	 *         <code>null</code> if none
+	 *            the window that the evaluation action was invoked from, or <code>null</code> if the current window
+	 *            should be consulted
+	 * @return the stack frame that supplies an evaluation context, or <code>null</code> if none
 	 * @return IJavaStackFrame
 	 */
-	public static IVdmStackFrame getEvaluationContext(IWorkbenchWindow window) {
-		List alreadyVisited = new ArrayList();
-		if (window == null) {
+	public static IVdmStackFrame getEvaluationContext(IWorkbenchWindow window)
+	{
+		List<IWorkbenchWindow> alreadyVisited = new ArrayList<IWorkbenchWindow>();
+		if (window == null)
+		{
 			window = manager.activeWindow;
 		}
 		return getEvaluationContext(window, alreadyVisited);
 	}
 
-	private static IVdmStackFrame getEvaluationContext(
-			IWorkbenchWindow window, List alreadyVisited) {
+	private static IVdmStackFrame getEvaluationContext(IWorkbenchWindow window,
+			List<IWorkbenchWindow> alreadyVisited)
+	{
 		IWorkbenchPage activePage = window.getActivePage();
 		IVdmStackFrame frame = null;
-		if (activePage != null) {
+		if (activePage != null)
+		{
 			frame = getContext(activePage);
 		}
-		if (frame == null) {
+		if (frame == null)
+		{
 			IWorkbenchPage[] pages = window.getPages();
-			for (int i = 0; i < pages.length; i++) {
-				if (activePage != pages[i]) {
+			for (int i = 0; i < pages.length; i++)
+			{
+				if (activePage != pages[i])
+				{
 					frame = getContext(pages[i]);
-					if (frame != null) {
+					if (frame != null)
+					{
 						return frame;
 					}
 				}
@@ -216,12 +225,14 @@ public class VdmEvaluationContextManager implements IWindowListener,
 
 			alreadyVisited.add(window);
 
-			IWorkbenchWindow[] windows = PlatformUI.getWorkbench()
-					.getWorkbenchWindows();
-			for (int i = 0; i < windows.length; i++) {
-				if (!alreadyVisited.contains(windows[i])) {
+			IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+			for (int i = 0; i < windows.length; i++)
+			{
+				if (!alreadyVisited.contains(windows[i]))
+				{
 					frame = getEvaluationContext(windows[i], alreadyVisited);
-					if (frame != null) {
+					if (frame != null)
+					{
 						return frame;
 					}
 				}
@@ -231,20 +242,26 @@ public class VdmEvaluationContextManager implements IWindowListener,
 		return frame;
 	}
 
-	public void debugContextChanged(DebugContextEvent event) {
-		if ((event.getFlags() & DebugContextEvent.ACTIVATED) > 0) {
+	public void debugContextChanged(DebugContextEvent event)
+	{
+		if ((event.getFlags() & DebugContextEvent.ACTIVATED) > 0)
+		{
 			IWorkbenchPart part = event.getDebugContextProvider().getPart();
-			if (part != null) {
+			if (part != null)
+			{
 				IWorkbenchPage page = part.getSite().getPage();
 				ISelection selection = event.getContext();
-				if (selection instanceof IStructuredSelection) {
+				if (selection instanceof IStructuredSelection)
+				{
 					IStructuredSelection ss = (IStructuredSelection) selection;
-					if (ss.size() == 1) {
+					if (ss.size() == 1)
+					{
 						Object element = ss.getFirstElement();
-						if (element instanceof IAdaptable) {
-							IVdmStackFrame frame = (IVdmStackFrame) ((IAdaptable) element)
-									.getAdapter(IVdmStackFrame.class);
-							if (frame != null) {
+						if (element instanceof IAdaptable)
+						{
+							IVdmStackFrame frame = (IVdmStackFrame) ((IAdaptable) element).getAdapter(IVdmStackFrame.class);
+							if (frame != null)
+							{
 								setContext(page, frame);
 								return;
 							}

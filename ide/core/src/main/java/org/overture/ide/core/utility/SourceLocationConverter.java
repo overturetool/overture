@@ -41,7 +41,7 @@ public class SourceLocationConverter
 			if (lineNumber > 0 && codeLines.length > lineNumber)
 			{
 				String codeLine = codeLines[lineNumber];
-				char[] charLine = codeLine.toCharArray();
+//				char[] charLine = codeLine.toCharArray();
 				int start = codeLineLengths[lineNumber];
 				int end = start + codeLine.length();
 

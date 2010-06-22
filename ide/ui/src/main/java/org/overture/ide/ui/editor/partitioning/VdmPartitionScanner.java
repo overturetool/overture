@@ -31,7 +31,7 @@ public class VdmPartitionScanner extends RuleBasedPartitionScanner {
 		IToken multilinecomment= new Token(MULTILINE_COMMENT); 
 		IToken singlelinecomment= new Token(SINGLELINE_COMMENT); 
 		IToken string = new Token(STRING); 
-		IToken latex = new Token(LATEX);
+//		IToken latex = new Token(LATEX);
 		
 		List<PatternRule> rules= new ArrayList<PatternRule>(); 
 		// Add rule for single line comments. 

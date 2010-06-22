@@ -2,12 +2,9 @@ package org.overture.ide.ui.outline;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.omg.PortableInterceptor.NON_EXISTENT;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
-import org.overturetool.vdmj.definitions.LocalDefinition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
-import org.overturetool.vdmj.definitions.UntypedDefinition;
 import org.overturetool.vdmj.lex.Token;
 
 public class MemberFilter extends ViewerFilter {

@@ -68,11 +68,13 @@ public class ElementChangedEvent extends EventObject
 		 */
 		POST_RECONCILE(4), DEFAULT_CHANGE_EVENT(0);
 
-		private final int value;
+//		private final int value;
 
 		private DeltaType(int value) {
-			this.value = value;
+//			this.value = value;
 		}
+		
+		
 	}
 
 	private static final long serialVersionUID = -8947240431612844420L; // backward compatible

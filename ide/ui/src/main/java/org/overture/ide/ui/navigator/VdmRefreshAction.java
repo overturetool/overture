@@ -60,7 +60,7 @@ public class VdmRefreshAction extends CommonActionProvider {
 	     * @param menu
 	     * context menu to add actions to
 	     */
-	    @SuppressWarnings("rawtypes")
+	    
 	    @Override
 	    public void fillContextMenu(IMenuManager menu) {
 	        IStructuredSelection selection = (IStructuredSelection) getContext().getSelection();

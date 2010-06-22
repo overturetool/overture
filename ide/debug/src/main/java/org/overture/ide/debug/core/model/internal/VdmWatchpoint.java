@@ -107,7 +107,7 @@ public class VdmWatchpoint extends VdmLineBreakpoint implements
 			ACCESS, MODIFICATION };
 
 	public String[] getUpdatableAttributes() {
-		List all = new ArrayList();
+		List<String> all = new ArrayList<String>();
 		all.addAll(Arrays.asList(super.getUpdatableAttributes()));
 		all.addAll(Arrays.asList(UPDATABLE_ATTRS));
 		return (String[]) all.toArray(new String[all.size()]);

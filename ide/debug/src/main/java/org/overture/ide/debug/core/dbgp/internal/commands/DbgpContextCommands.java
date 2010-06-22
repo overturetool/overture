@@ -41,9 +41,9 @@ public class DbgpContextCommands extends DbgpBaseCommands implements
 		super(communicator);
 	}
 
-	protected Map parseContextNamesResponse(Element response)
+	protected Map<Integer,String> parseContextNamesResponse(Element response)
 			throws DbgpException {
-		Map map = new HashMap();
+		Map<Integer,String> map = new HashMap<Integer,String>();
 
 		NodeList contexts = response.getElementsByTagName(TAG_CONTEXT);
 		for (int i = 0; i < contexts.getLength(); ++i) {
@@ -60,7 +60,7 @@ public class DbgpContextCommands extends DbgpBaseCommands implements
 			throws DbgpException {
 		NodeList properties = response.getChildNodes();
 
-		List list = new ArrayList();
+		List<IDbgpProperty> list = new ArrayList<IDbgpProperty>();
 		for (int i = 0; i < properties.getLength(); ++i) {
 
 			Node item = properties.item(i);
@@ -74,7 +74,7 @@ public class DbgpContextCommands extends DbgpBaseCommands implements
 		return (IDbgpProperty[]) list.toArray(new IDbgpProperty[list.size()]);
 	}
 
-	public Map getContextNames(int stackDepth) throws DbgpException {
+	public Map<Integer,String> getContextNames(int stackDepth) throws DbgpException {
 		DbgpRequest request = createRequest(CONTEXT_NAMES_COMMAND);
 		request.addOption("-d", stackDepth); //$NON-NLS-1$
 		return parseContextNamesResponse(communicate(request));

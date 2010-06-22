@@ -93,6 +93,7 @@ public class VdmValueProxy implements IVdmValue {
 		return origin.getModelIdentifier();
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
 		return origin.getAdapter(adapter);
 	}
