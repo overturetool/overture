@@ -1,5 +1,7 @@
 package org.overture.ide.plugins.latex.properties;
 
+import java.io.File;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 
@@ -34,7 +36,8 @@ public class WorkbenchPropertyPage1 extends PropertyPage implements
 	private Text fileNameText;
 	private LatexProject project;
 
-	public WorkbenchPropertyPage1() {
+	public WorkbenchPropertyPage1()
+	{
 		// TODO Auto-generated constructor stub
 	}
 
@@ -51,11 +54,7 @@ public class WorkbenchPropertyPage1 extends PropertyPage implements
 		layout.type = SWT.VERTICAL;
 		myComposite.setLayout(layout);
 
-		ISelection selection = WorkbenchPlugin.getDefault()
-				.getWorkbench()
-				.getActiveWorkbenchWindow()
-				.getActivePage()
-				.getSelection();
+		ISelection selection = WorkbenchPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getSelection();
 		this.project = new LatexProject(getSelectedProject(selection));
 
 		Group mainDocumentGroup = new Group(myComposite, SWT.NONE);
@@ -88,19 +87,16 @@ public class WorkbenchPropertyPage1 extends PropertyPage implements
 		buttonSelectFile = new Button(mainDocumentGroup, SWT.NONE);
 		buttonSelectFile.setLayoutData(new GridData());
 		buttonSelectFile.setText("Browse...");
-		buttonSelectFile.addSelectionListener(new SelectionListener() {
+		buttonSelectFile.addSelectionListener(new SelectionListener()
+		{
 
 			public void widgetSelected(SelectionEvent e)
 			{
 				org.eclipse.swt.widgets.FileDialog dialog = new FileDialog(myComposite.getShell());
-				dialog.setFileName(project.getProject()
-						.getLocation()
-						.toFile()
-						.getAbsolutePath());
+				dialog.setFileName(project.getProject().getLocation().toFile().getAbsolutePath()+File.separatorChar+project.getProject().getName() + ".tex");
+				
 				fileNameText.setText(dialog.open());
-				useAutoReportGeneration.setSelection(fileNameText.getText()
-						.trim()
-						.length() == 0);
+				useAutoReportGeneration.setSelection(fileNameText.getText().trim().length() == 0);
 
 			}
 
