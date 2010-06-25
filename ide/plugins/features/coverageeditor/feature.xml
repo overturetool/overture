@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.features.plugins.coverageeditor"
       label="Coverage Eeditor"
-      version="1.0.0">
+      version="1.0.0.qualifier">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
