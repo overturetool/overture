@@ -75,7 +75,7 @@ public class VdmPluginImages {
 	public static final String IMG_OBJS_CLASS= NAME_PREFIX + "class_obj.gif"; 			//$NON-NLS-1$
 	public static final String IMG_OBJS_CLASSALT= NAME_PREFIX + "classfo_obj.gif"; 			//$NON-NLS-1$
 	public static final String IMG_OBJS_CLASS_DEFAULT= NAME_PREFIX + "class_default_obj.gif"; 			//$NON-NLS-1$
-	
+	public static final String IMG_OBJS_SYSTEM= NAME_PREFIX + "system_obj.gif"; 			//$NON-NLS-1$
 	public static final String IMG_OBJS_MODULE= NAME_PREFIX + "module_obj.gif"; 			//$NON-NLS-1$
 	
 	public static final String IMG_OBJS_VDM_LIBRARY= NAME_PREFIX + "vdm_library_obj.gif"; 			//$NON-NLS-1$
@@ -234,7 +234,7 @@ public class VdmPluginImages {
 
 	public static final ImageDescriptor DESC_OBJS_CLASS= createManagedFromKey(T_OBJ, IMG_OBJS_CLASS);
 	public static final ImageDescriptor DESC_OBJS_CLASS_DEFAULT= createManagedFromKey(T_OBJ, IMG_OBJS_CLASS_DEFAULT);
-	
+	public static final ImageDescriptor DESC_OBJS_SYSTEM= createManagedFromKey(T_OBJ, IMG_OBJS_SYSTEM);
 	
 	public static final ImageDescriptor DESC_OBJS_MODULE= createManagedFromKey(T_OBJ, IMG_OBJS_MODULE);
 	

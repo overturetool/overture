@@ -23,6 +23,7 @@ import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
 import org.overturetool.vdmj.definitions.LocalDefinition;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.definitions.PerSyncDefinition;
+import org.overturetool.vdmj.definitions.SystemDefinition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.definitions.UntypedDefinition;
 import org.overturetool.vdmj.definitions.ValueDefinition;
@@ -96,7 +97,11 @@ public class VdmElementImageProvider {
 
 		adornmentFlags = computeVdmAdornmentFlags(element);
 
-		if (element instanceof ClassDefinition) {
+		if (element instanceof SystemDefinition) {
+//			activeModule = null;
+			return VdmPluginImages
+					.getDescriptor(VdmPluginImages.IMG_OBJS_SYSTEM);
+		} else if (element instanceof ClassDefinition) {
 //			activeModule = null;
 			return VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_OBJS_CLASS);
