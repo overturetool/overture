@@ -21,6 +21,8 @@
     <module>astg</module>
     <module>maven-pst</module>
     <module>packworkspace</module>
+	 <module>treegen</module>
+	 <module>treegenplugin</module>
 
   </modules>
 
