@@ -50,9 +50,10 @@
       </filter>
         
  <menu
-               id="org.overture.ide.latex.menuMain"
-               label="Latex"
-               path="additions">
+       icon="icons/ctool16/miktex_tsk.png"
+       id="org.overture.ide.latex.menuMain"
+       label="Latex"
+       path="additions">
             <separator
                   name="groupLatex">
             </separator>
@@ -61,9 +62,8 @@
           <action
                 class="org.overture.ide.plugins.latex.actions.LatexCoverageAction"
                 enablesFor="1"
-                icon="icons/ctool16/miktex_tsk.png"
                 id="org.overture.ide.latex.actions.LatexCoverageActionPp"
-                label="Latex Coverage"
+                label="PdfLatex"
                 menubarPath="org.overture.ide.latex.menuMain/groupLatex"
                 tooltip="Latex Coverage">
          </action>
@@ -82,9 +82,10 @@
       </filter>
         
  <menu
-               id="org.overture.ide.latex.menuMain"
-               label="Latex"
-               path="additions">
+       icon="icons/ctool16/miktex_tsk.png"
+       id="org.overture.ide.latex.menuMain"
+       label="Latex"
+       path="additions">
             <separator
                   name="groupLatex">
             </separator>
@@ -93,9 +94,8 @@
           <action
                 class="org.overture.ide.plugins.latex.actions.LatexCoverageAction"
                 enablesFor="1"
-                icon="icons/ctool16/miktex_tsk.png"
                 id="org.overture.ide.latex.actions.LatexCoverageActionRt"
-                label="Latex Coverage"
+                label="PdfLatex"
                 menubarPath="org.overture.ide.latex.menuMain/groupLatex"
                 tooltip="Latex Coverage">
          </action>
@@ -115,9 +115,10 @@
       </filter>
         
  <menu
-               id="org.overture.ide.latex.menuMain"
-               label="Latex"
-               path="additions">
+       icon="icons/ctool16/miktex_tsk.png"
+       id="org.overture.ide.latex.menuMain"
+       label="Latex"
+       path="additions">
             <separator
                   name="groupLatex">
             </separator>
@@ -126,9 +127,8 @@
           <action
                 class="org.overture.ide.plugins.latex.actions.LatexCoverageAction"
                 enablesFor="1"
-                icon="icons/ctool16/miktex_tsk.png"
                 id="org.overture.ide.latex.actions.LatexCoverageActionSl"
-                label="Latex Coverage"
+                label="PdfLatex"
                 menubarPath="org.overture.ide.latex.menuMain/groupLatex"
                 tooltip="Latex Coverage">
          </action>
@@ -143,12 +143,22 @@
     <page
           category="org.overture.ide.ui.property.vdmlanguage"
           class="org.overture.ide.plugins.latex.properties.WorkbenchPropertyPage1"
-          icon="icons/ctool16/miktex_tsk.png"
           id="org.overture.ide.plugins.latex.page1"
           name="Latex">
+       <enabledWhen>
+              <and>
+                 <instanceof
+                       value="org.eclipse.core.resources.IProject">
+                 </instanceof>
+                   <adapt
+                     type="org.overture.ide.core.resources.IVdmProject">
+                 
+               </adapt>
+              </and>
+           </enabledWhen>
     </page>
  </extension>
- <extension
+ <!--extension
        id="org.overture.ide.plugins.latex.builder"
        name="Pdf Latex Builder"
        point="org.eclipse.core.resources.builders">
@@ -160,7 +170,7 @@
              class="org.overture.ide.plugins.latex.builder.LatexIncrementalProjectBuilder">
        </run>
     </builder>
- </extension> 
+ </extension--> 
 
 
 
