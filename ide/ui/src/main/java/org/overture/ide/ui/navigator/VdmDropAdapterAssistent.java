@@ -61,9 +61,9 @@ public class VdmDropAdapterAssistent extends CommonDropAdapterAssistant {
 	public IStatus validateDrop(Object target, int aDropOperation,
 			TransferData transferType) {
 
-		if (VdmUIPlugin.DEBUG)
-			System.out.println("Target Object for drop: "
-					+ target.getClass().toString());
+//		if (VdmUIPlugin.DEBUG)
+//			System.out.println("Target Object for drop: "
+//					+ target.getClass().toString());
 
 		if (target instanceof IVdmContainer) {
 			target = ((IVdmContainer) target).getContainer();
@@ -162,9 +162,9 @@ public class VdmDropAdapterAssistent extends CommonDropAdapterAssistant {
 	public IStatus handleDrop(CommonDropAdapter aDropAdapter,
 			DropTargetEvent aDropTargetEvent, Object aTarget) {
 
-		if (VdmUIPlugin.DEBUG)
-			System.out.println("Target Object for drop: "
-					+ aTarget.getClass().toString());
+//		if (VdmUIPlugin.DEBUG)
+//			System.out.println("Target Object for drop: "
+//					+ aTarget.getClass().toString());
 
 		if (Policy.DEBUG_DND) {
 			System.out
