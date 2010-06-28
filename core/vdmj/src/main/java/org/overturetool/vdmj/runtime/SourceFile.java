@@ -150,9 +150,15 @@ public class SourceFile
 
 	public void printLatexCoverage(PrintWriter out, boolean headers)
 	{
-		printLatexCoverage(out,headers,false);
+		printLatexCoverage(out,headers,false,true);
 	}
-	public void printLatexCoverage(PrintWriter out, boolean headers,boolean modelOnly)
+	
+	public void printLatexCoverage(PrintWriter out, boolean headers,boolean modelOnly,boolean includeCoverageTable)
+	{
+		printLatex(out,headers,modelOnly,includeCoverageTable,true);
+	}
+	
+	public void printLatex(PrintWriter out, boolean headers,boolean modelOnly,boolean includeCoverageTable,boolean markCoverage)
 	{
 		Map<Integer, List<LexLocation>> hits =
 					LexLocation.getMissLocations(filename);
@@ -193,9 +199,15 @@ public class SourceFile
 			}
 
 			String spaced = detab(line, Properties.parser_tabstop);
-			List<LexLocation> list = hits.get(lnum);
-			out.println(markup(spaced, list));
-
+			if(markCoverage)
+			{
+				List<LexLocation> list = hits.get(lnum);
+				out.println(markup(spaced, list));
+			}
+			else
+			{
+				out.println(spaced);
+			}
 			if (line.contains("\\end{vdm_al}"))
 			{
 				inVdmAlModelTag = false;
@@ -207,12 +219,25 @@ public class SourceFile
 			out.println("\\end{vdm_al}");
 		}
 
-		out.println("\\bigskip");
-		out.println("\\begin{longtable}{|l|r|r|}");
-		out.println("\\hline");
-		out.println("Function or operation & Coverage & Calls \\\\");
-		out.println("\\hline");
-		out.println("\\hline");
+		if(includeCoverageTable)
+		{
+			out.println("\\bigskip");
+			out.println(createCoverageTable());
+		}
+		if (headers || endDocFound)
+		{
+			out.println("\\end{document}");
+		}
+	}
+
+	private String createCoverageTable()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("\\begin{longtable}{|l|r|r|}"+"\n");
+		sb.append("\\hline"+"\n");
+		sb.append("Function or operation & Coverage & Calls \\\\"+"\n");
+		sb.append("\\hline"+"\n");
+		sb.append("\\hline"+"\n");
 
 		long total = 0;
 
@@ -224,24 +249,20 @@ public class SourceFile
 			long calls = LexLocation.getSpanCalls(name);
 			total += calls;
 
-			out.println(latexQuote(name.toString()) + " & " +
+			sb.append(latexQuote(name.toString()) + " & " +
 				LexLocation.getSpanPercent(name) + "\\% & " +
-				calls + " \\\\");
-			out.println("\\hline");
+				calls + " \\\\"+"\n");
+			sb.append("\\hline"+"\n");
 		}
 
-		out.println("\\hline");
-		out.println(latexQuote(filename.getName()) +
+		sb.append("\\hline"+"\n");
+		sb.append(latexQuote(filename.getName()) +
 			" & " + LexLocation.getHitPercent(filename) +
-			"\\% & " + total + " \\\\");
+			"\\% & " + total + " \\\\"+"\n");
 
-		out.println("\\hline");
-		out.println("\\end{longtable}");
-
-		if (headers || endDocFound)
-		{
-			out.println("\\end{document}");
-		}
+		sb.append("\\hline"+"\n");
+		sb.append("\\end{longtable}"+"\n");
+		return sb.toString();
 	}
 
 	private String markup(String line, List<LexLocation> list)
