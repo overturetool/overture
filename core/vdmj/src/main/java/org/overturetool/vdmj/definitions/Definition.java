@@ -584,7 +584,11 @@ public abstract class Definition implements Serializable, IAstNode
 	
 	public String getName()
 	{
-		return name.name;
+		if(name!=null)
+		{
+			return name.name;
+		}
+		return null;
 	}
 	
 	public LexLocation getLocation()
