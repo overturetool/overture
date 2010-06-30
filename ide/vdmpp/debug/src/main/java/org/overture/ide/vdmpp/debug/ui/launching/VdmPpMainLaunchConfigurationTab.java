@@ -55,8 +55,8 @@ public class VdmPpMainLaunchConfigurationTab extends
 			}
 			ClassList classes = model.getClassList();
 			ClassInterpreter ci = new ClassInterpreter(classes);
-			 if(!expression.contains("new"))
-			ci.setDefaultName(expression.substring(0, expression.indexOf("("))); // needed for static fn/op check
+			if (!expression.contains("new"))
+				ci.setDefaultName(expression.substring(0, expression.indexOf("("))); // needed for static fn/op check
 
 			ci.typeCheck(expression);
 			return true;

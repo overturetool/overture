@@ -54,8 +54,9 @@ public class VdmRtMainLaunchConfigurationTab extends
 			}
 			ClassList classes = model.getClassList();
 			ClassInterpreter ci = new ClassInterpreter(classes);
-			// if(module.contains("`"))
-			// ci.setDefaultName(module.substring(0,module.indexOf("("))); //needed for static fn/op check
+			if (expression.contains("new"))
+				ci.setDefaultName(expression.substring(expression.indexOf(' '), expression.indexOf("(")).trim()); // needed for static fn/op check
+
 			ci.typeCheck(expression);
 			return true;
 		} catch (NotAllowedException e)

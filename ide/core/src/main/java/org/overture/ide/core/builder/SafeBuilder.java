@@ -1,7 +1,5 @@
 package org.overture.ide.core.builder;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
@@ -18,14 +16,13 @@ public class SafeBuilder extends Thread
 {
 
 	final IVdmProject currentProject;
-	final List<IStatus> statusList;
+	
 	final IProgressMonitor monitor;
 
 	public SafeBuilder(final IVdmProject currentProject,
-			final List<IStatus> statusList, final IProgressMonitor monitor)
+			 final IProgressMonitor monitor)
 	{
 		this.currentProject = currentProject;
-		this.statusList = statusList;
 		this.monitor = monitor;
 	}
 
@@ -76,12 +73,12 @@ public class SafeBuilder extends Thread
 									}
 									monitor.subTask("Type checking: "
 											+ currentProject);
-									statusList.add(builder.buildModel(currentProject, model));
+									IStatus status =builder.buildModel(currentProject, model);
 									// mark ast root as type checked
 									monitor.done();
 									if (model != null)
 									{
-										model.setChecked(statusList.get(statusList.size() - 1).getCode() < IStatus.ERROR);
+										model.setChecked(status.getCode() == IStatus.OK);
 
 										model.commit();
 									}

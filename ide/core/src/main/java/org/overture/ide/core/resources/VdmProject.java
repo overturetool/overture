@@ -489,9 +489,9 @@ public class VdmProject extends Project implements IVdmProject
 				@SuppressWarnings("deprecation")
 				public void run() throws Exception
 				{
-					final List<IStatus> statusList = new Vector<IStatus>();
+					
 
-					final SafeBuilder builder = new SafeBuilder(currentProject, statusList, mon);
+					final SafeBuilder builder = new SafeBuilder(currentProject, mon);
 					builder.start();
 					while (builder.isAlive())
 					{

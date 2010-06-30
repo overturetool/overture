@@ -708,8 +708,8 @@ public abstract class VdmEditor extends TextEditor
 			IAstNode node = sourceReferenceManager.getNodeAt(offset,(IResource) this.getEditorInput().getAdapter(IResource.class));
 			if (node != null)
 			{
-				if(node.getName() != null)
-					System.out.println("Element hit: " + node.getName());
+//				if(node.getName() != null)
+//					System.out.println("Element hit: " + node.getName());
 
 				return node;
 			}

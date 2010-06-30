@@ -150,6 +150,12 @@ public class FileUtility
 			e.printStackTrace();
 		}
 	}
+	
+	public static void addMarker(IFile file, String message,
+			int startLine, int startPos, int endLine, int endPos, int severity, String sourceId)
+	{
+		addMarker(file,message,new LexLocation(null, "", startLine, startPos, endLine, endPos),severity,sourceId);
+	}
 
 	public static void deleteMarker(IFile file, String type, String sourceId)
 	{

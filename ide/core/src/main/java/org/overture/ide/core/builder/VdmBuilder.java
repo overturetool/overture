@@ -1,13 +1,9 @@
 package org.overture.ide.core.builder;
 
-import java.util.List;
-import java.util.Vector;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.resources.VdmProject;
 
@@ -25,9 +21,7 @@ public class VdmBuilder extends VdmCoreBuilder
 
 		try
 		{
-			final List<IStatus> statusList = new Vector<IStatus>();
-
-			final SafeBuilder builder = new SafeBuilder(getVdmProject(), statusList, monitor);
+			final SafeBuilder builder = new SafeBuilder(getVdmProject(), monitor);
 
 			clearProblemMarkers();
 
