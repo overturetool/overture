@@ -55,7 +55,7 @@ public class TracefileViewer extends ViewPart implements IViewCallback
         theOverview = new GenericTabItem("Execution overview", folder, null);
         try
         {
-            theMarkers = new TracefileMarker();
+            theMarkers = new TracefileMarker(null);
         }
         catch(CGException cge)
         {
@@ -354,7 +354,7 @@ public class TracefileViewer extends ViewPart implements IViewCallback
         try
         {
             theMarkers.dispose();
-            theMarkers = new TracefileMarker();
+            theMarkers = new TracefileMarker(null);
         }
         catch(CGException cge)
         {

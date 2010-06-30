@@ -8,6 +8,8 @@ import java.util.Vector;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
@@ -27,6 +29,8 @@ import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipse.ui.part.FileEditorInput;
+import org.overture.ide.core.utility.FileUtility;
 import org.overture.ide.ui.internal.util.ConsoleWriter;
 import org.overturetool.traceviewer.ast.itf.IOmlTraceFile;
 import org.overturetool.traceviewer.parser.TraceParser;
@@ -115,13 +119,22 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		theOverview = new GenericTabItem("Execution overview", folder, null);
 		try
 		{
-			theMarkers = new TracefileMarker();
+			IFile file = ((FileEditorInput)getEditorInput()).getFile();
+			theMarkers = new TracefileMarker(file);
+			
+			if(FileUtility.getContent(file).size()==0)
+			{
+				FileUtility.addMarker(file, "File is empty", 0,0,0,0, IMarker.SEVERITY_ERROR, org.overture.ide.plugins.showtrace.viewer.TracefileViewerPlugin.PLUGIN_ID);
+				return;
+			}
 		} catch (CGException cge)
 		{
 			showMessage(cge);
 		}
 		makeActions();
 		contributeToActionBars();
+		
+		
 
 		try
 		{
@@ -366,6 +379,7 @@ e.printStackTrace();
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void doParse(final String fname,IProgressMonitor monitor) throws CGException
 	{
 		
@@ -540,7 +554,8 @@ e.printStackTrace();
 		try
 		{
 			theMarkers.dispose();
-			theMarkers = new TracefileMarker();
+			IFile file = ((FileEditorInput)getEditorInput()).getFile();
+			theMarkers = new TracefileMarker(file);
 		} catch (CGException cge)
 		{
 			showMessage(cge);
