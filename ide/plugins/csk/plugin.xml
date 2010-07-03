@@ -20,7 +20,17 @@
                id="org.overture.ide.plugins.csk.actionOpenProject"
                label="Open VDM Tools"
                menubarPath="org.overture.ide.plugins.csk.menu1/csk.seperator">
+            <enablement>
+               <objectClass
+                     name="org.overture.ide.core.resources.IVdmProject">
+               </objectClass>
+            </enablement>
          </action>
+         <visibility>
+            <objectClass
+                  name="org.overture.ide.core.resources.IVdmProject">
+            </objectClass>
+         </visibility>
          <!--action
                class="org.overture.ide.plugins.csk.actions.ActionCodeGenJava"
                id="org.overture.ide.plugins.csk.actionCodeGenJava"
