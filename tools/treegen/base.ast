@@ -2,7 +2,7 @@ class Base
 
 values
   package = "nl.marcelverhoef.base";
-  directory = "d:\workspace\test";
+  directory = "d:\\workspace\\test\\src";
   toplevel = "Expression"
 
 instance variables

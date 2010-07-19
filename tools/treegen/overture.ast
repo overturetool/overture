@@ -6,11 +6,11 @@ class Oml
 
 values
   package = "org.overturetool.ast";
-  directory = "d:\workspace\test";
-  toplevel = "Specifications,Expression"
+  directory = "d:\\workspace\\test\\src";
+  toplevel = "Specifications,Expression";
 
 instance variables
-  remark : java := "String"
+  remark : java := "String";
 
 types
 
@@ -1069,6 +1069,6 @@ TextLiteral ::
 QuoteLiteral ::
   val : seq of char;
 
-Identifier = seq of char
+Identifier = seq of char;
 
 end Oml

@@ -183,6 +183,12 @@ ValueDefinitions:
 	  	// pass the value definition list upwards
 	  	$$.obj = $2.obj;
 	  }
+	  
+	| VALUES ValueDefinitionList SCOLON
+	  {
+	  	// pass the value definition list upwards
+	  	$$.obj = $2.obj;
+	  }
 ;
 
 ValueDefinitionList:
@@ -239,6 +245,11 @@ InstanceVariableDefinitions:
 	  }
 	  
 	| INSTANCE VARIABLES InstanceVariableDefinitionList
+	  {
+	  	$$.obj = $3.obj;
+	  }
+	  
+	| INSTANCE VARIABLES InstanceVariableDefinitionList SCOLON
 	  {
 	  	$$.obj = $3.obj;
 	  }
@@ -301,6 +312,11 @@ TypeDefinitions:
 	  }
 	  
 	| TYPES TypeDefinitionList
+	  {
+	  	$$.obj = $2.obj;
+	  }
+	  
+	| TYPES TypeDefinitionList SCOLON
 	  {
 	  	$$.obj = $2.obj;
 	  }

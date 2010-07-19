@@ -36,6 +36,19 @@ public class CodeGenerator {
 	private String ibvitf;
 	private String ibvimp;
 	
+	//
+	// CONSTRUCTOR
+	//
+	
+	public CodeGenerator (
+			String ppnm,
+			String pbnm,
+			String ptlvl
+	) {
+		// set the global variables
+		this.packname = ppnm;
+		this.basedir = pbnm;
+	}
 	
 	//
 	// AUXILIARY FUNCTIONS
@@ -455,8 +468,8 @@ public class CodeGenerator {
 	
 	public void generateCodeValues(String clnm, ClassDefinition cd)
 	{
-		// retrieve the top-level directory
-		basedir = cd.getDirectory();
+		// retrieve the top-level directory (and replace all double backslashes by a single backslash)
+		basedir = cd.getDirectory().replaceAll("\\\\\\\\", "\\\\");
 		
 		// retrieve the package definition
 		packname = cd.getPackage();
@@ -487,9 +500,6 @@ public class CodeGenerator {
 		// diagnostics
 		System.out.println("Generating code in directory '"+basedir+"' using package name '"+packname+"'");
 
-		// construct the source directory
-		basedir += File.separator + "src";
-	
 		// create the directory if it does not exist yet
 		if (!createDirectory(basedir)) {
 			// diagnostics
@@ -952,7 +962,7 @@ public class CodeGenerator {
 		for (String qv: ut.getQuotedTypes()) {
 			// IMPLEMENTATION: create the quoted value interface
 			cls += "\t// public enumerated value to describe quoted value <"+qv+">\n";
-			cls += "\tpublic static final "+cnm+" I"+qv+" = new "+cnm+"(\""+qv+"\");\n\n";
+			cls += "\tpublic static final "+cnm+" E"+qv+" = new "+cnm+"(\""+qv+"\");\n\n";
 		}
 		
 		// compose the class footer
@@ -1010,7 +1020,7 @@ public class CodeGenerator {
 		for (String qv: ut.getQuotedTypes()) {
 			// IMPLEMENTATION: create the "is" operators
 			cls += "\t// public member operation to query the quoted value\n";
-			cls += "\tpublic boolean is"+qv+"() { return (m_enum == "+cnm+"Enum.I"+qv+"); }\n\n";
+			cls += "\tpublic boolean is"+qv+"() { return (m_enum == "+cnm+"Enum.E"+qv+"); }\n\n";
 			
 			// INTERFACE: declare the "is" operators
 			itf += "\tpublic abstract boolean is"+qv+"();\n";
@@ -1746,7 +1756,7 @@ public class CodeGenerator {
 			// iterate over the quoted type union
 			cvvn += "\t\t// copy the enumeration value\n";
 			for (String qnm: rtp.getQuotedTypes()) {
-				cvvn += "\t\tif (p_node.is"+qnm+"()) l_result.setEnum("+cnm1+tnm+"Enum.I"+qnm+");\n";
+				cvvn += "\t\tif (p_node.is"+qnm+"()) l_result.setEnum("+cnm1+tnm+"Enum.E"+qnm+");\n";
 			}
 			
 			// return the result

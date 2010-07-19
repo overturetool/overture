@@ -3,7 +3,7 @@ class ExtOml
   
 values
   package = "org.overturetool.extast";
-  directory = "d:\workspace\test"
+  directory = "d:\\workspace\\test\\src"
 
 instance variables
   xpos : nat;
