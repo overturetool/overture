@@ -27,7 +27,7 @@
 					</importPackages>
 				</configuration>
 			</plugin-->
-			<plugin>
+			<!--plugin>
 				<groupId>org.overturetool.tools</groupId>
 				<artifactId>astg</artifactId>
 				
@@ -50,7 +50,7 @@
 					</names>
 					
 				</configuration>
-			</plugin>
+			</plugin-->
   	</plugins>
   </build>
   <dependencies>

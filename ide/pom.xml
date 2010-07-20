@@ -189,7 +189,7 @@
           <arch>x86</arch>
         </os>
       </activation>
-      <dependencies>
+      <!--dependencies>
         <dependency>
           <groupId>
             org.overturetool.eclipse.plugins
@@ -198,7 +198,7 @@
           <version>3.4.1</version>
           <type>jar</type>
         </dependency>
-      </dependencies>
+      </dependencies-->
     </profile>
     <profile>
       <id>org.eclipse.swt.win32</id>
@@ -208,7 +208,7 @@
           <arch>x86</arch>
         </os>
       </activation>
-      <dependencies>
+      <!--dependencies>
         <dependency>
           <groupId>
             org.overturetool.eclipse.plugins
@@ -217,7 +217,7 @@
           <version>3.4.1</version>
           <type>jar</type>
         </dependency>
-      </dependencies>
+      </dependencies-->
     </profile>
     <profile>
       <id>org.eclipse.swt.linux</id>
@@ -227,14 +227,14 @@
           <arch>i386</arch>
         </os>
       </activation>
-      <dependencies>
+      <!--dependencies>
         <dependency>
           <groupId>org.overturetool.eclipse.plugins</groupId>
           <artifactId>org.eclipse.swt.gtk.linux.x86</artifactId>
           <version>3.4.1</version>
           <type>jar</type>
         </dependency>
-      </dependencies>
+      </dependencies-->
     </profile>
   </profiles>
   <properties>

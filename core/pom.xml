@@ -16,7 +16,7 @@
     <module>proofsupport</module>
     <module>stdlib</module>
     <module>ast</module>
-    <module>astgen</module>
+    <!--module>astgen</module-->
     <module>vdmunit</module>
     <module>parser</module>
     <module>potrans</module>

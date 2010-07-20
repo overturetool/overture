@@ -17,13 +17,12 @@
 
 
   <modules>
-    <module>vdmt</module>
-    <module>astg</module>
-    <module>maven-pst</module>
-    <module>packworkspace</module>
-	 <module>treegen</module>
-	 <module>treegenplugin</module>
-
+	<module>vdmt</module>
+	<!--module>astg</module-->
+	<module>maven-pst</module>
+	<module>packworkspace</module>
+	<module>treegen</module>
+	<!--module>treegenplugin</module-->
   </modules>
 
 </project>
