@@ -20,7 +20,7 @@ on 2 different architectures.
 #PRE_CHECKS=true
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
-#ENTRY_POINT= new World2("test1_10.txt").run()
-#ENTRY_POINT= new World2("test2.txt").run()
+#ENTRY_POINT= new World("test1_10.txt").run()
+#ENTRY_POINT= new World("test2.txt").run()
 #EXPECTED_RESULT=NO_ERROR_TYPE_CHECK
 #******************************************************
