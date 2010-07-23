@@ -33,15 +33,15 @@ import org.overturetool.vdmj.values.TransactionValue;
 public class FCFSPolicy extends SchedulingPolicy
 {
     private static final long serialVersionUID = 1L;
-	protected final List<SchedulableThread> threads;
-	protected SchedulableThread bestThread = null;
+	protected final List<ISchedulableThread> threads;
+	protected ISchedulableThread bestThread = null;
 	protected Random PRNG = null;
 
-	private SchedulableThread durationThread = null;
+	private ISchedulableThread durationThread = null;
 
 	public FCFSPolicy()
 	{
-		threads = new LinkedList<SchedulableThread>();
+		threads = new LinkedList<ISchedulableThread>();
 		PRNG = new Random();	// NB deliberately non-deterministic!
 	}
 
@@ -53,7 +53,7 @@ public class FCFSPolicy extends SchedulingPolicy
 	}
 
 	@Override
-	public void register(SchedulableThread thread, long priority)
+	public void register(ISchedulableThread thread, long priority)
 	{
 		synchronized (threads)
 		{
@@ -62,7 +62,7 @@ public class FCFSPolicy extends SchedulingPolicy
 	}
 
 	@Override
-	public void unregister(SchedulableThread thread)
+	public void unregister(ISchedulableThread thread)
 	{
 		synchronized (threads)
 		{
@@ -84,7 +84,7 @@ public class FCFSPolicy extends SchedulingPolicy
 
 		synchronized (threads)
 		{
-    		for (SchedulableThread th: threads)
+    		for (ISchedulableThread th: threads)
     		{
     			switch (th.getRunState())
     			{
@@ -107,7 +107,7 @@ public class FCFSPolicy extends SchedulingPolicy
 	}
 
 	@Override
-	public SchedulableThread getThread()
+	public ISchedulableThread getThread()
 	{
 		synchronized (threads)		// As it was set under threads
 		{
@@ -143,7 +143,7 @@ public class FCFSPolicy extends SchedulingPolicy
 	{
 		synchronized (threads)
 		{
-    		for (SchedulableThread th: threads)
+    		for (ISchedulableThread th: threads)
     		{
     			if (th.getRunState() == RunState.TIMESTEP)
     			{
@@ -165,7 +165,7 @@ public class FCFSPolicy extends SchedulingPolicy
 	{
 		synchronized (threads)
 		{
-    		for (SchedulableThread th: threads)
+    		for (ISchedulableThread th: threads)
     		{
     			if (th.isActive())
     			{
@@ -189,7 +189,7 @@ public class FCFSPolicy extends SchedulingPolicy
 		StringBuilder sb = new StringBuilder();
 		String sep = "";
 
-		for (SchedulableThread th: threads)
+		for (ISchedulableThread th: threads)
 		{
 			sb.append(sep);
 			sb.append(th);

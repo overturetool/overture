@@ -1,8 +1,8 @@
 /*******************************************************************************
  *
- *	Copyright (c) 2010 Fujitsu Services Ltd.
+ *	Overture.
  *
- *	Author: Nick Battle
+ *	Author: Kenneth Lausdahl
  *
  *	This file is part of VDMJ.
  *
@@ -24,6 +24,12 @@
 package org.overturetool.vdmj.scheduler;
 
 import java.io.Serializable;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.DebuggerReader;
@@ -35,15 +41,61 @@ import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.values.ObjectValue;
 
-public abstract class SchedulableThread extends Thread implements Serializable,Runnable, ISchedulableThread
+public abstract class SchedulablePoolThread implements Serializable,Runnable, ISchedulableThread
 {
+	/**
+	 * VdmThreadPoolExecutor used to set the Thread instance which will run a 
+	 * SchedulablePoolThread just before execution.
+	 * It also reports a reject error if the pool no longer can expand to handle the requested number of threads
+	 * @author kela
+	 *
+	 */
+	public static class VdmThreadPoolExecutor extends ThreadPoolExecutor
+	{
+		public VdmThreadPoolExecutor(int corePoolSize, int maximumPoolSize,
+				long keepAliveTime, TimeUnit unit,
+				BlockingQueue<Runnable> workQueue)
+		{
+			super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,new VdmjRejectedExecutionHandler());
+		}
+		
+		@Override
+		protected void beforeExecute(Thread t, Runnable r)
+		{
+			super.beforeExecute(t, r);
+			if(r instanceof SchedulablePoolThread)
+			{
+				SchedulablePoolThread spt = (SchedulablePoolThread) r;
+				spt.setThread(t);
+				t.setName(spt.getName());
+			}
+			
+		}
+		
+		/**
+		 * Prints an error message if a execution is rejected
+		 * @author kela
+		 *
+		 */
+		private static class VdmjRejectedExecutionHandler implements RejectedExecutionHandler
+		{
+			public void rejectedExecution(Runnable r,
+					ThreadPoolExecutor executor)
+			{
+				System.err.println("Thread pool rejected thread: "+ ((ISchedulableThread)r).getName()+" pool size "+executor.getActiveCount());
+				 throw new RejectedExecutionException();
+			}
+			
+		}	
+	}
+	
+	
     private static final long serialVersionUID = 1L;
 
 	protected final Resource resource;
 	protected final ObjectValue object;
 	private final boolean periodic;
 	private final boolean virtual;
-
 	protected RunState state;
 	private Signal signal;
 	private long timeslice;
@@ -52,8 +104,20 @@ public abstract class SchedulableThread extends Thread implements Serializable,R
 	private long durationEnd;
 	private long swapInBy;
 	private boolean inOuterTimeStep;
+	private Thread executingThread;
+	private char name[];
 	private long tid = 0;
-	public SchedulableThread(
+	
+	/**
+	 * Thread pool used by SchedulablePoolThread. It is a none blocking queue 
+	 * with an upper limit set to Integer.MAX_VALUE allowing it to freely expand.
+	 * The thread pool will most likely make the Java VM throw OutOfMemoryError before
+	 * Integer.MAX_VALUE is reached do the the native thread creation requiring 2 MB for each thread.
+	 * {@link http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/ThreadPoolExecutor.html}
+	 */
+	public final static VdmThreadPoolExecutor pool = new VdmThreadPoolExecutor(200, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());// LinkedBlockingQueue
+
+	public SchedulablePoolThread(
 		Resource resource, ObjectValue object, long priority,
 		boolean periodic, long swapInBy)
 	{
@@ -75,6 +139,17 @@ public abstract class SchedulableThread extends Thread implements Serializable,R
 		resource.register(this, priority);
 
 		BasicSchedulableThread.add(this);
+		
+	}
+	
+	private void setThread(Thread t)
+	{
+		executingThread = t;
+	}
+	
+	public Thread getThread()
+	{
+		return this.executingThread;
 	}
 
 	/* (non-Javadoc)
@@ -113,11 +188,11 @@ public abstract class SchedulableThread extends Thread implements Serializable,R
     /* (non-Javadoc)
 	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#start()
 	 */
-    @Override
+    
 	public synchronized void start()
 	{
-		super.start();
-
+		pool.execute(this);
+		
 		while (state == RunState.CREATED)
 		{
 			sleep(null, null);
@@ -135,7 +210,7 @@ public abstract class SchedulableThread extends Thread implements Serializable,R
 	/* (non-Javadoc)
 	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#run()
 	 */
-	@Override
+	
 	public void run()
 	{
 		reschedule(null, null);
@@ -144,6 +219,7 @@ public abstract class SchedulableThread extends Thread implements Serializable,R
 		resource.unregister(this);
 
 		BasicSchedulableThread.remove(this);
+		getThread().setName( "pool-"+ getThread().getId()+ "-thread-");
 	}
 
 	abstract protected void body();
@@ -341,6 +417,17 @@ public abstract class SchedulableThread extends Thread implements Serializable,R
 		interrupt();
 	}
 
+	private void interrupt()
+	{
+		if(getThread()!=null)
+		{
+			getThread().interrupt();
+		}else
+		{
+			Thread.currentThread().interrupt();
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#getObject()
 	 */
@@ -444,15 +531,29 @@ public abstract class SchedulableThread extends Thread implements Serializable,R
 		}
 	}
 	
-	public Thread getThread()
-	{
-		return this;
-	}
-	
-
-	@Override
 	public long getId()
 	{
-		return this.tid;
+		return tid;
 	}
+
+	public final String getName()
+	{
+		return String.valueOf(name);
+	}
+
+	public final void setName(String name)
+	{
+		this.name = name.toCharArray();
+	}
+
+	public boolean isAlive()
+	{
+		if (getThread() != null)
+		{
+			return getThread().isAlive();
+		}
+		return false;
+	}
+
+	
 }

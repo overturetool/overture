@@ -32,10 +32,10 @@ abstract public class SchedulingPolicy implements Serializable
     private static final long serialVersionUID = 1L;
 
 	abstract public boolean reschedule();
-	abstract public SchedulableThread getThread();
+	abstract public ISchedulableThread getThread();
 	abstract public long getTimeslice();
-	abstract public void register(SchedulableThread thread, long priority);
-	abstract public void unregister(SchedulableThread thread);
+	abstract public void register(ISchedulableThread thread, long priority);
+	abstract public void unregister(ISchedulableThread thread);
 	abstract public void reset();
 	abstract public void advance();
 	abstract public boolean hasActive();

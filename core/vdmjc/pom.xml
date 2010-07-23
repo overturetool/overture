@@ -7,7 +7,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overturetool.core</groupId>
 	<artifactId>vdmjc</artifactId>
-	<version>2.0.0</version>
+	<version>2.0.2</version>
 	<name>The VDMJ Client</name>
 	<developers>
 		<developer>

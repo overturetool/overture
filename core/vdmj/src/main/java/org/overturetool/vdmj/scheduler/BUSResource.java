@@ -40,7 +40,7 @@ public class BUSResource extends Resource
 	private final List<CPUResource> cpus;
 	private final List<MessagePacket> messages;
 
-	private SchedulableThread busThread = null;
+	private ISchedulableThread busThread = null;
 
 	public BUSResource(boolean isVirtual,
 		SchedulingPolicy policy, double speed, List<CPUResource> cpus)
@@ -176,7 +176,7 @@ public class BUSResource extends Resource
 		cq.stim();
 	}
 
-	public void process(SchedulableThread th)
+	public void process(ISchedulableThread th)
 	{
 		cq.join(null, null);		// Never leaves
 

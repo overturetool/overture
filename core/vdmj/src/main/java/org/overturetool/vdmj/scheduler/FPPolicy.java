@@ -31,11 +31,11 @@ import org.overturetool.vdmj.config.Properties;
 public class FPPolicy extends FCFSPolicy
 {
     private static final long serialVersionUID = 1L;
-	private final Map<SchedulableThread, Long> priorities;
+	private final Map<ISchedulableThread, Long> priorities;
 
 	public FPPolicy()
 	{
-		this.priorities = new HashMap<SchedulableThread, Long>();
+		this.priorities = new HashMap<ISchedulableThread, Long>();
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class FPPolicy extends FCFSPolicy
 	}
 
 	@Override
-	public synchronized void register(SchedulableThread thread, long priority)
+	public synchronized void register(ISchedulableThread thread, long priority)
 	{
 		super.register(thread, priority);
 

@@ -38,6 +38,7 @@ import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.DebuggerException;
 import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.runtime.ModuleInterpreter;
+import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.syntax.ParserException;
 
 /**
@@ -59,7 +60,7 @@ public class DebuggerReader extends CommandReader
 	public DebuggerReader(
 		Interpreter interpreter, Breakpoint breakpoint, Context ctxt)
 	{
-		super(interpreter, "[" + Thread.currentThread().getName() + "]> ");
+		super(interpreter, "[" + BasicSchedulableThread.getThreadName(Thread.currentThread()) + "]> ");
 		this.breakpoint = breakpoint;
 		this.ctxt = ctxt;
 	}

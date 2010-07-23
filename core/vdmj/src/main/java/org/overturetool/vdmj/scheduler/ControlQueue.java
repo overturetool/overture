@@ -33,9 +33,9 @@ import org.overturetool.vdmj.runtime.Context;
 public class ControlQueue implements Serializable
 {
     private static final long serialVersionUID = 1L;
-	private SchedulableThread joined = null;
+	private ISchedulableThread joined = null;
 	private boolean stimmed = false;
-	private List<SchedulableThread> waiters = new LinkedList<SchedulableThread>();
+	private List<ISchedulableThread> waiters = new LinkedList<ISchedulableThread>();
 
 	public void reset()
 	{
@@ -46,7 +46,7 @@ public class ControlQueue implements Serializable
 
 	public void join(Context ctxt, LexLocation location)
 	{
-		SchedulableThread th = (SchedulableThread)Thread.currentThread();
+		ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
 
 		if (joined != null && joined != th)
 		{
@@ -87,7 +87,7 @@ public class ControlQueue implements Serializable
 	{
 		joined = null;
 
-		SchedulableThread head = null;
+		ISchedulableThread head = null;
 
 		synchronized (waiters)
 		{

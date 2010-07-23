@@ -37,7 +37,7 @@ public abstract class MessagePacket implements Serializable
 
 	public final long msgId;
 	public final BUSValue bus;
-	public final SchedulableThread thread;
+	public final ISchedulableThread thread;
 	public final CPUValue from;
 	public final CPUValue to;
 	public final ObjectValue target;
@@ -47,7 +47,7 @@ public abstract class MessagePacket implements Serializable
 		ObjectValue target, OperationValue operation)
 	{
 		this.msgId = getNextId();
-		this.thread = (SchedulableThread)Thread.currentThread();
+		this.thread = BasicSchedulableThread.getThread(Thread.currentThread());
 		this.bus = bus;
 		this.from = from;
 		this.to = to;

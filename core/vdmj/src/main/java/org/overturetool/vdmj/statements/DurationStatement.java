@@ -28,7 +28,8 @@ import org.overturetool.vdmj.expressions.IntegerLiteralExpression;
 import org.overturetool.vdmj.expressions.RealLiteralExpression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.scheduler.SchedulableThread;
+import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
+import org.overturetool.vdmj.scheduler.ISchedulableThread;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Type;
@@ -102,7 +103,7 @@ public class DurationStatement extends Statement
 		location.hit();
 		duration.location.hit();
 
-		SchedulableThread me = (SchedulableThread)Thread.currentThread();
+		ISchedulableThread me = BasicSchedulableThread.getThread(Thread.currentThread());
 
 		if (me.inOuterTimestep())
 		{

@@ -36,6 +36,7 @@ import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.syntax.ParserException;
 
@@ -148,7 +149,7 @@ public class Breakpoint implements Serializable
 
 	public String stoppedAtString()
 	{
-		return "Stopped [" + Thread.currentThread().getName() + "] " + location;
+		return "Stopped [" + BasicSchedulableThread.getThreadName(Thread.currentThread()) + "] " + location;
 	}
 
 	public void clearHits()

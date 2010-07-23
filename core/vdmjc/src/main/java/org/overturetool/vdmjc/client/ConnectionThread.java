@@ -51,7 +51,7 @@ public class ConnectionThread extends Thread
 	private final BufferedInputStream input;
 	private final BufferedOutputStream output;
 
-	private long id = 0;
+	private String id = "";
 	private long xid = 0;
 	private DBGPStatus status;
 	private boolean connected;
@@ -76,11 +76,11 @@ public class ConnectionThread extends Thread
 	@Override
 	public String toString()
 	{
-		return "Id " + (id == 0 ? "?" : id) + ": " + getStatus();
+		return "Id " +  id + ": " + getStatus();
 	}
 
-	@Override
-	public long getId()
+	
+	public String getIdeId()
 	{
 		return id;
 	}
@@ -262,11 +262,11 @@ public class ConnectionThread extends Thread
 
 		if (space == -1)
 		{
-			id = Integer.parseInt(sid);
+			id = sid;
 		}
 		else
 		{
-			id = Integer.parseInt(sid.substring(0, space));
+			id = sid.substring(0, space);
 		}
 
 		if (principal)

@@ -116,16 +116,16 @@ public class ConnectionListener extends Thread
 		}
 	}
 
-	public ConnectionThread findConnection(long id)
+	public ConnectionThread findConnection(String id)
 	{
-		if (id == 0)
+		if (id ==null)
 		{
 			return principal;
 		}
 
 		for (ConnectionThread ct: getConnections())
 		{
-			if (ct.getId() == id)
+			if (ct.getIdeId()!=null && ct.getIdeId().equals(id))
 			{
 				return ct;
 			}

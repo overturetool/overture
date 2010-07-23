@@ -42,7 +42,7 @@ import org.overturetool.vdmj.values.OperationValue;
 import org.overturetool.vdmj.values.TransactionValue;
 import org.overturetool.vdmj.values.ValueList;
 
-public class PeriodicThread extends SchedulableThread
+public class PeriodicThread extends SchedulablePoolThread
 {
 	private static final long serialVersionUID = 1L;
 	private final OperationValue operation;
@@ -82,7 +82,7 @@ public class PeriodicThread extends SchedulableThread
 			this.expected = expected;
 		}
 	}
-
+	
 	@Override
 	protected void body()
 	{
@@ -105,7 +105,6 @@ public class PeriodicThread extends SchedulableThread
 			{
     			long noise = (jitter == 0) ? 0 :
     				Math.abs(PRNG.nextLong() % (jitter + 1));
-
     			waitUntil(offset + noise, ctxt, operation.name.location);
 			}
 		}
@@ -114,7 +113,6 @@ public class PeriodicThread extends SchedulableThread
 			waitUntil(expected, ctxt, operation.name.location);
 		}
 
-		//TODO This creates a Very large number of threads
 		new PeriodicThread(
 			getObject(), operation, period, jitter, delay, 0,
 			nextTime()).start();
@@ -129,11 +127,7 @@ public class PeriodicThread extends SchedulableThread
 		{
 			runCmd(ctxt);
 		}
-		//TODO
-//		new PeriodicThread(
-//				getObject(), operation, period, jitter, delay, 0,
-//				nextTime()).start();
-		
+
 	}
 
 	
@@ -165,7 +159,7 @@ public class PeriodicThread extends SchedulableThread
 		catch (Exception e)
 		{
 			ResourceScheduler.setException(e);
-			SchedulableThread.signalAll(Signal.SUSPEND);
+			BasicSchedulableThread.signalAll(Signal.SUSPEND);
 		}
 		finally
 		{
@@ -197,7 +191,7 @@ public class PeriodicThread extends SchedulableThread
 		catch (Exception e)
 		{
 			ResourceScheduler.setException(e);
-			SchedulableThread.signalAll(Signal.SUSPEND);
+			BasicSchedulableThread.signalAll(Signal.SUSPEND);
 		}
 		finally
 		{

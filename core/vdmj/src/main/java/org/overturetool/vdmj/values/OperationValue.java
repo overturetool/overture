@@ -25,6 +25,7 @@ package org.overturetool.vdmj.values;
 
 import java.util.Iterator;
 import java.util.ListIterator;
+
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.definitions.ClassDefinition;
@@ -50,11 +51,13 @@ import org.overturetool.vdmj.runtime.RootContext;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.scheduler.AsyncThread;
+import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.scheduler.Holder;
+import org.overturetool.vdmj.scheduler.ISchedulableThread;
+import org.overturetool.vdmj.scheduler.InitThread;
 import org.overturetool.vdmj.scheduler.MessageRequest;
 import org.overturetool.vdmj.scheduler.MessageResponse;
 import org.overturetool.vdmj.scheduler.ResourceScheduler;
-import org.overturetool.vdmj.scheduler.SchedulableThread;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.PatternListTypePair;
@@ -405,7 +408,8 @@ public class OperationValue extends Value
 
 	private void guard(Context ctxt) throws ValueException
 	{
-		if (!(Thread.currentThread() instanceof SchedulableThread))
+		ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
+		if (th==null || th instanceof InitThread )
 		{
 			return;		// Probably during initialization.
 		}
@@ -466,7 +470,7 @@ public class OperationValue extends Value
 		// by the called object, using self's CPU (see trace(msg)).
 
 		RTLogger.log(
-			"OpRequest -> id: " + Thread.currentThread().getId() +
+			"OpRequest -> id: " + BasicSchedulableThread.getThread(Thread.currentThread()).getId() +
 			" opname: \"" + name + "\"" +
 			" objref: " + self.objectReference +
 			" clnm: \"" + self.type.name.name + "\"" +
@@ -614,20 +618,18 @@ public class OperationValue extends Value
 	{
 		if (traceRT)
 		{
-			Thread ct = Thread.currentThread();
+			ISchedulableThread ct = BasicSchedulableThread.getThread(Thread.currentThread());
 
 			if (isStatic)
 			{
 				int cpu = 0;
-
-				if (ct instanceof SchedulableThread)
+				if (ct instanceof InitThread)
 				{
-					SchedulableThread th = (SchedulableThread)ct;
-					cpu = th.getCPUResource().getNumber();
+					cpu = 0;	// Initialization on vCPU
 				}
 				else
 				{
-					cpu = 0;	// Initialization on vCPU
+					cpu = ct.getCPUResource().getNumber();
 				}
 
 	    		RTLogger.log(
@@ -664,12 +666,12 @@ public class OperationValue extends Value
 			if (Settings.dialect == Dialect.VDM_PP)
 			{
 				System.err.println(String.format("%s %s %s",
-					Thread.currentThread(), name, string));
+						BasicSchedulableThread.getThread(Thread.currentThread()), name, string));
 			}
 			else
 			{
 				RTLogger.log(String.format("-- %s %s %s",
-					Thread.currentThread(), name, string));
+						BasicSchedulableThread.getThread(Thread.currentThread()), name, string));
 			}
 		}
 	}

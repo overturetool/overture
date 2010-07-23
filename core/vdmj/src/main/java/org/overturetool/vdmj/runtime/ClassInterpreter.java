@@ -44,7 +44,9 @@ import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.RTLogger;
 import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.pog.ProofObligationList;
+import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.scheduler.CTMainThread;
+import org.overturetool.vdmj.scheduler.InitThread;
 import org.overturetool.vdmj.scheduler.MainThread;
 import org.overturetool.vdmj.scheduler.SystemClock;
 import org.overturetool.vdmj.statements.Statement;
@@ -155,6 +157,9 @@ public class ClassInterpreter extends Interpreter
 	@Override
 	public void init(DBGPReader dbgp)
 	{
+		InitThread iniThread = new InitThread(Thread.currentThread());
+		BasicSchedulableThread.setInitialThread(iniThread);
+		
 		scheduler.init();
 		SystemClock.init();
 		CPUValue.init(scheduler);
@@ -200,6 +205,10 @@ public class ClassInterpreter extends Interpreter
 		clearBreakpointHits();
 
 		scheduler.reset();
+		
+		InitThread iniThread = new InitThread(Thread.currentThread());
+		BasicSchedulableThread.setInitialThread(iniThread);
+		
 		MainThread main = new MainThread(expr, mainContext);
 		main.start();
 		scheduler.start(main);
@@ -362,13 +371,13 @@ public class ClassInterpreter extends Interpreter
 		// Show the "system constructor" thread creation
 
 		RTLogger.log(
-			"ThreadCreate -> id: " + Thread.currentThread().getId() +
+			"ThreadCreate -> id: " + BasicSchedulableThread.getThread(Thread.currentThread()).getId() +
 			" period: false " +
 			" objref: nil clnm: nil " +
 			" cpunm: 0");
 
 		RTLogger.log(
-			"ThreadSwapIn -> id: " + Thread.currentThread().getId() +
+			"ThreadSwapIn -> id: " + BasicSchedulableThread.getThread(Thread.currentThread()).getId() +
 			" objref: nil clnm: nil " +
 			" cpunm: 0" +
 			" overhead: 0");
@@ -377,13 +386,13 @@ public class ClassInterpreter extends Interpreter
 	private void logSwapOut()
 	{
 		RTLogger.log(
-			"ThreadSwapOut -> id: " + Thread.currentThread().getId() +
+			"ThreadSwapOut -> id: " + BasicSchedulableThread.getThread(Thread.currentThread()).getId() +
 			" objref: nil clnm: nil " +
 			" cpunm: 0" +
 			" overhead: 0");
 
 		RTLogger.log(
-			"ThreadKill -> id: " + Thread.currentThread().getId() +
+			"ThreadKill -> id: " + BasicSchedulableThread.getThread(Thread.currentThread()).getId() +
 			" cpunm: 0");
 	}
 	

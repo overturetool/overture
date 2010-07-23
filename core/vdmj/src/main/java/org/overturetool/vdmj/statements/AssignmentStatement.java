@@ -41,6 +41,7 @@ import org.overturetool.vdmj.pog.StateInvariantObligation;
 import org.overturetool.vdmj.pog.SubTypeObligation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeComparator;
@@ -164,7 +165,7 @@ public class AssignmentStatement extends Statement
     				"InstVarChange -> instnm: \"" + target.toString() + "\"" +
     				" val: \"" + noquotes + "\"" +
     				" objref: nil" +
-    				" id: " + Thread.currentThread().getId());
+    				" id: " + BasicSchedulableThread.getThread(Thread.currentThread()).getId());
 			}
 			else
 			{
@@ -172,7 +173,7 @@ public class AssignmentStatement extends Statement
     				"InstVarChange -> instnm: \"" + target.toString() + "\"" +
     				" val: \"" + noquotes + "\"" +
     				" objref: " + self.objectReference +
-    				" id: " + Thread.currentThread().getId());
+    				" id: " + BasicSchedulableThread.getThread(Thread.currentThread()).getId());
 			}
 		}
 

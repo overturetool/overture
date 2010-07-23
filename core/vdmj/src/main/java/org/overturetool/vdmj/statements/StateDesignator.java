@@ -59,7 +59,7 @@ public abstract class StateDesignator implements Serializable,IAstNode
 	abstract public Type typeCheck(Environment env);
 
 	public Definition targetDefinition(
-		@SuppressWarnings("unused") Environment env)
+		Environment env)
 	{
 		return null;
 	}
@@ -67,7 +67,7 @@ public abstract class StateDesignator implements Serializable,IAstNode
 	abstract public Value eval(Context ctxt);
 
 	public ProofObligationList getProofObligations(
-		@SuppressWarnings("unused") POContextStack ctxt)
+		POContextStack ctxt)
 	{
 		return new ProofObligationList();
 	}

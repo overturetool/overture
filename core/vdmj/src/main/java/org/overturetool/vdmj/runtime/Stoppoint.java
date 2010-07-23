@@ -27,7 +27,8 @@ import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.DebuggerReader;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.scheduler.SchedulableThread;
+import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
+import org.overturetool.vdmj.scheduler.ISchedulableThread;
 import org.overturetool.vdmj.syntax.ParserException;
 
 /**
@@ -67,11 +68,10 @@ public class Stoppoint extends Breakpoint
 			}
 			if (shouldBreak)
 			{
-				Thread current = Thread.currentThread();
+				ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
 
-				if (current instanceof SchedulableThread)
+				if (th !=null)
 				{
-					SchedulableThread th = (SchedulableThread)current;
 					th.suspendOthers();
 				}
 

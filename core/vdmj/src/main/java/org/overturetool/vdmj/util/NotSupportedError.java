@@ -1,8 +1,8 @@
 /*******************************************************************************
  *
- *	Copyright (c) 2010 Fujitsu Services Ltd.
+ *	Overture.
  *
- *	Author: Nick Battle
+ *	Author: Kenneth Lausdahl
  *
  *	This file is part of VDMJ.
  *
@@ -21,38 +21,9 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.scheduler;
+package org.overturetool.vdmj.util;
 
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.runtime.Context;
-
-public class BusThread extends SchedulablePoolThread
+public class NotSupportedError extends Error
 {
-	private static final long serialVersionUID = 1L;
-
-	public BusThread(Resource resource, long priority)
-	{
-		super(resource, null, priority, false, 0);
-		setName("BusThread-" + getId());
-	}
-
-	@Override
-	protected void body()
-	{
-		BUSResource bus = (BUSResource)resource;
-		bus.process(this);
-	}
-
-	@Override
-	protected void handleSignal(Signal sig, Context ctxt, LexLocation location)
-	{
-		switch (sig)
-		{
-			case TERMINATE:
-				throw new ThreadDeath();
-
-			case SUSPEND:	// Ignore
-				break;
-		}
-	}
+	private static final long serialVersionUID = 7051228299587965742L;
 }

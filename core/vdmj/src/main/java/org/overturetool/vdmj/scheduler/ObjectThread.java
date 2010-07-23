@@ -42,7 +42,7 @@ import org.overturetool.vdmj.values.ValueList;
  * A class representing a VDM thread running in an object.
  */
 
-public class ObjectThread extends SchedulableThread
+public class ObjectThread extends SchedulablePoolThread
 {
 	private static final long serialVersionUID = 1L;
 	public final OperationValue operation;
@@ -115,7 +115,7 @@ public class ObjectThread extends SchedulableThread
 		catch (Exception e)
 		{
 			ResourceScheduler.setException(e);
-			SchedulableThread.signalAll(Signal.SUSPEND);
+			BasicSchedulableThread.signalAll(Signal.SUSPEND);
 		}
 		finally
 		{
@@ -152,7 +152,7 @@ public class ObjectThread extends SchedulableThread
 		catch (Exception e)
 		{
 			ResourceScheduler.setException(e);
-			SchedulableThread.signalAll(Signal.SUSPEND);
+			BasicSchedulableThread.signalAll(Signal.SUSPEND);
 		}
 		finally
 		{

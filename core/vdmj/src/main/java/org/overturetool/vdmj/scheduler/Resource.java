@@ -81,12 +81,12 @@ abstract public class Resource implements Serializable
 		return name.hashCode();
 	}
 
-	public void register(SchedulableThread th, long priority)
+	public void register(ISchedulableThread th, long priority)
 	{
 		policy.register(th, priority);
 	}
 
-	public void unregister(SchedulableThread th)
+	public void unregister(ISchedulableThread th)
 	{
 		policy.unregister(th);
 	}

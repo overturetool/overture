@@ -31,6 +31,7 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.types.Type;
 
 /**
@@ -62,7 +63,7 @@ public class TransactionValue extends UpdatableValue
 	private Value select()
 	{
 		if (newthreadid > 0 &&
-			Thread.currentThread().getId() == newthreadid)
+				BasicSchedulableThread.getThread(Thread.currentThread()).getId() == newthreadid)
 		{
 			return newvalue;
 		}
@@ -87,7 +88,7 @@ public class TransactionValue extends UpdatableValue
 	@Override
 	public void set(LexLocation location, Value newval, Context ctxt)
 	{
-		long current = Thread.currentThread().getId();
+		long current = BasicSchedulableThread.getThread(Thread.currentThread()).getId();
 
 		if (newthreadid > 0 && current != newthreadid)
 		{
@@ -111,7 +112,7 @@ public class TransactionValue extends UpdatableValue
 		{
 			synchronized (commitList)
 			{
-				newthreadid = Thread.currentThread().getId();
+				newthreadid = BasicSchedulableThread.getThread(Thread.currentThread()).getId();
 				commitList.add(this);
 			}
 		}

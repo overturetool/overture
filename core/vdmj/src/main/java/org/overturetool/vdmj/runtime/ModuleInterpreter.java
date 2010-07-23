@@ -40,7 +40,9 @@ import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.pog.ProofObligationList;
+import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.scheduler.CTMainThread;
+import org.overturetool.vdmj.scheduler.InitThread;
 import org.overturetool.vdmj.scheduler.MainThread;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ExpressionReader;
@@ -164,6 +166,8 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public void init(DBGPReader dbgp)
 	{
+		InitThread iniThread = new InitThread(Thread.currentThread());
+		BasicSchedulableThread.setInitialThread(iniThread);
 		scheduler.init();
 		CPUValue.init(scheduler);
 		initialContext = modules.initialize(dbgp);
@@ -208,6 +212,10 @@ public class ModuleInterpreter extends Interpreter
 		clearBreakpointHits();
 
 		scheduler.reset();
+		
+		InitThread iniThread = new InitThread(Thread.currentThread());
+		BasicSchedulableThread.setInitialThread(iniThread);
+		
 		MainThread main = new MainThread(expr, mainContext);
 		main.start();
 		scheduler.start(main);

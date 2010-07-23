@@ -70,4 +70,17 @@ public enum Dialect implements Serializable
 	{
 		return argstring;
 	}
+	
+	public static Dialect lookup(String dialect)
+	{
+		for (Dialect d: values())
+		{
+			if (d.argstring.equals(dialect))
+			{
+				return d;
+			}
+		}
+
+		return null;
+	}
 }

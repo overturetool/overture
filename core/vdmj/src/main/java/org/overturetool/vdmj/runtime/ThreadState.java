@@ -27,7 +27,9 @@ import java.io.Serializable;
 
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.scheduler.SchedulableThread;
+import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
+import org.overturetool.vdmj.scheduler.ISchedulableThread;
+import org.overturetool.vdmj.scheduler.InitThread;
 import org.overturetool.vdmj.values.CPUValue;
 
 /**
@@ -51,7 +53,7 @@ public class ThreadState implements Serializable
 	public ThreadState(DBGPReader dbgp, CPUValue cpu)
 	{
 		this.dbgp = dbgp;
-		this.threadId = Thread.currentThread().getId();
+		this.threadId = BasicSchedulableThread.getThread(Thread.currentThread()).getId();
 		this.CPU = cpu;
 		init();
 	}
@@ -80,11 +82,10 @@ public class ThreadState implements Serializable
 		{
 			// Initialization doesn't occur from SchedulableThreads
 
-			Thread current = Thread.currentThread();
+			ISchedulableThread s = BasicSchedulableThread.getThread(Thread.currentThread());
 
-			if (current instanceof SchedulableThread)
+			if (s !=null && !(s instanceof InitThread))
 			{
-				SchedulableThread s = (SchedulableThread)current;
 				s.step(ctxt, location);
 			}
 		}

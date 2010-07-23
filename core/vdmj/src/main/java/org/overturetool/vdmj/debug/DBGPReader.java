@@ -82,7 +82,7 @@ import org.overturetool.vdmj.runtime.ModuleInterpreter;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.runtime.StateContext;
-import org.overturetool.vdmj.scheduler.SchedulableThread;
+import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.util.Base64;
@@ -580,8 +580,17 @@ public class DBGPReader implements Serializable
 		sb.append("idekey=\"" + ideKey + "\" ");
 		sb.append("session=\"" + sessionId + "\" ");
 		sb.append("thread=\"");
-		sb.append(Thread.currentThread().getName());
-
+		
+		String threadName = BasicSchedulableThread.getThreadName(Thread.currentThread());
+		
+		
+		if(threadName!=null)
+		{
+			sb.append(threadName);
+		}else
+		{
+			sb.append(Thread.currentThread().getName());
+		}
 		if (cpu != null)
 		{
 			sb.append(" on ");
@@ -639,9 +648,14 @@ public class DBGPReader implements Serializable
 		}
 	}
 
-	String lastTransaction = "-1";
 	protected void write(StringBuilder data) throws IOException
 	{
+		if(output==null)
+		{
+			//TODO: Handle the error in VDMJ, terminate?
+			System.err.println("Socket to IDE not valid.");
+			return;
+		}
 		byte[] header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".getBytes("UTF-8");
 		byte[] body = data.toString().getBytes("UTF-8");
 		byte[] size = Integer.toString(header.length + body.length).getBytes("UTF-8");
@@ -653,13 +667,6 @@ public class DBGPReader implements Serializable
 		output.write(separator);
 
 		output.flush();
-		
-//		if(lastTransaction.equals(transaction))
-//		{
-//			System.err.println("transaction error: threadid: "+ Thread.currentThread().getName());	
-//			System.err.println("transaction error: "+transaction+" MESSAGE: "+ data.toString());
-//		}
-		lastTransaction = transaction;
 	}
 
 	protected void response(StringBuilder hdr, StringBuilder body) throws IOException
@@ -839,23 +846,9 @@ public class DBGPReader implements Serializable
     		.replace("\"", "&quot;");
 	}
 
-	Thread ownerThread= null;
+	
 	protected void run() throws IOException
 	{
-		//Check inserted to insure that a DBGPReader never is shared between threads
-		if(ownerThread==null && Thread.currentThread() instanceof SchedulableThread)
-		{
-			ownerThread = Thread.currentThread();
-		}
-		
-		if(ownerThread!=null)
-		{
-			if(ownerThread.getId()!=Thread.currentThread().getId())
-			{
-				System.err.println("Concurrent access to DBGPReader: "+ ownerThread.getName()+" <-> "+ Thread.currentThread().getName());
-			}
-		}
-		
 		String line = null;
 
 		do

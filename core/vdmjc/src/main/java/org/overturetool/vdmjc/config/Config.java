@@ -37,7 +37,7 @@ public class Config extends ConfigBase
 	public static int listener_connection_limit = 100;
 
 	/** The VDMJ jar location. */
-	public static String vdmj_jar = "./vdmj-1.0.0.jar";
+	public static String vdmj_jar = "./vdmj-2.0.2.jar";
 
 	/** Extra VDMJ JVM arguments. */
 	public static String vdmj_jvm = "";

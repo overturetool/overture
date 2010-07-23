@@ -37,7 +37,7 @@ import org.overturetool.vdmj.values.Value;
  * A class representing the main VDM thread.
  */
 
-public class MainThread extends SchedulableThread
+public class MainThread extends SchedulablePoolThread
 {
 	private static final long serialVersionUID = 1L;
 	public final Context ctxt;
@@ -114,7 +114,7 @@ public class MainThread extends SchedulableThread
 		catch (Exception e)
 		{
 			setException(e);
-			SchedulableThread.signalAll(Signal.SUSPEND);
+			BasicSchedulableThread.signalAll(Signal.SUSPEND);
 		}
 		finally
 		{

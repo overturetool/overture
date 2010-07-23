@@ -71,7 +71,8 @@ import org.overturetool.vdmj.runtime.ModuleInterpreter;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.runtime.StateContext;
-import org.overturetool.vdmj.scheduler.SchedulableThread;
+import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
+import org.overturetool.vdmj.scheduler.ISchedulableThread;
 import org.overturetool.vdmj.traces.TraceReductionType;
 import org.overturetool.vdmj.util.Base64;
 import org.overturetool.vdmj.values.BooleanValue;
@@ -446,6 +447,8 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 					RemoteControl remote =
 						(remoteClass == null) ? null : remoteClass.newInstance();
 
+					
+					
 					new DBGPReaderV2(host, port, ideKey, i, expression, null).startup(remote);
 
 					if (coverage != null)
@@ -811,12 +814,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		body.append("<internal ");
 		
 		
-		Thread current = Thread.currentThread();
+		ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
 
-		if (current instanceof SchedulableThread)
+		if (th !=null)
 		{
-			SchedulableThread th = (SchedulableThread)current;
-			
 			body.append("threadId=\"");
 			body.append(th.getId());
 			body.append("\" ");

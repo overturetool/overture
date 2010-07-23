@@ -35,7 +35,7 @@ public class CPUResource extends Resource
 	private final int cpuNumber;
 	private final double clock;
 
-	private SchedulableThread swappedIn = null;
+	private ISchedulableThread swappedIn = null;
 
 	public CPUResource(SchedulingPolicy policy, double clock)
 	{
@@ -80,7 +80,7 @@ public class CPUResource extends Resource
 
 		if (policy.reschedule())
 		{
-			SchedulableThread best = policy.getThread();
+			ISchedulableThread best = policy.getThread();
 
 			if (swappedIn != best)
 			{
@@ -169,13 +169,14 @@ public class CPUResource extends Resource
 		}
 	}
 
-	public void createThread(SchedulableThread th)
+	public void createThread(ISchedulableThread th)
 	{
 		RTLogger.log(
 			"ThreadCreate -> id: " + th.getId() +
 			" period: " + th.isPeriodic() +
 			objRefString(th.getObject()) +
 			" cpunm: " + cpuNumber);
+			//TODO: Change show trace to allow thread name to allow easier inspection of text log file //+ " name: "+th.getName());
 	}
 
 	public void deploy(ObjectValue object)

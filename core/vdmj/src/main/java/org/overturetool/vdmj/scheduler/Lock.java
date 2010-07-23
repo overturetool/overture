@@ -34,8 +34,8 @@ import org.overturetool.vdmj.runtime.Context;
 public class Lock implements Serializable
 {
     private static final long serialVersionUID = 1L;
-	private SchedulableThread lockedBy = null;
-	private Set<SchedulableThread> waiters = new HashSet<SchedulableThread>();
+	private ISchedulableThread lockedBy = null;
+	private Set<ISchedulableThread> waiters = new HashSet<ISchedulableThread>();
 
 	public void reset()
 	{
@@ -45,7 +45,7 @@ public class Lock implements Serializable
 
 	public void lock(Context ctxt, LexLocation location)
 	{
-		SchedulableThread th = (SchedulableThread)Thread.currentThread();
+		ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
 
 		if (lockedBy != null && lockedBy != th)
 		{
@@ -67,7 +67,7 @@ public class Lock implements Serializable
 
 	public void block(Context ctxt, LexLocation location)
 	{
-		SchedulableThread th = (SchedulableThread)Thread.currentThread();
+		ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
 
 		if (lockedBy != null && lockedBy != th)
 		{
@@ -78,7 +78,7 @@ public class Lock implements Serializable
 
 		synchronized (waiters)
 		{
-			for (SchedulableThread w: waiters)
+			for (ISchedulableThread w: waiters)
 			{
 				if (w.getRunState() == RunState.LOCKING)
 				{
@@ -121,7 +121,7 @@ public class Lock implements Serializable
 	{
 		synchronized (waiters)
 		{
-			for (SchedulableThread th: waiters)
+			for (ISchedulableThread th: waiters)
 			{
 				th.setState(RunState.RUNNABLE);
 			}

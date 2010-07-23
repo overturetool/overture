@@ -126,7 +126,7 @@ public abstract class Statement implements Serializable, IAstNode
 		return (location.startLine == lineno) ? this : null;
 	}
 
-	public Expression findExpression(@SuppressWarnings("unused") int lineno)
+	public Expression findExpression(int lineno)
 	{
 		return null;
 	}

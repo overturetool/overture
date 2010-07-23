@@ -37,9 +37,17 @@ import org.overturetool.vdmjc.config.Config;
 
 public class ProcessListener extends Thread
 {
+	/**
+	 * If true VDMJ can be launched from outside VDMJC in debug mode.
+	 * VDMJC will print the arguments to VDMJ with DBGPReader as main class
+	 * and wait for it to connect.
+	 */
+	public static boolean VDMJ_DEBUG = false;
 	private final Dialect dialect;
 	private final List<File> files;
 	private final String expression;
+	private File logFile = null;
+	private String release = null;
 
 	private ConnectionListener listener;
 	private Process process;
@@ -50,9 +58,16 @@ public class ProcessListener extends Thread
 		this.dialect = dialect;
 		this.files = files;
 		this.expression = expression;
-
+		
 		setName("Process Listener");
 		setDaemon(true);
+	}
+	
+	public ProcessListener(Dialect dialect, List<File> files, String expression, String release,File logFile)
+	{
+		this(dialect,files,expression);
+		this.release = release;
+		this.logFile = logFile;
 	}
 
 	@Override
@@ -65,20 +80,23 @@ public class ProcessListener extends Thread
 
 			List<String> pargs = new Vector<String>();
 
-			pargs.add("java");
-			pargs.add("-cp");
-			pargs.add(Config.vdmj_jar);
-
-			if (Config.vdmj_jvm.length() > 0)
+			if(!VDMJ_DEBUG)
 			{
-    			for (String a: Config.vdmj_jvm.split("\\s+"))
-    			{
-    				pargs.add(a);
-    			}
+				pargs.add("java");
+				pargs.add("-cp");
+				pargs.add(Config.vdmj_jar);
+	
+				if (Config.vdmj_jvm.length() > 0)
+				{
+	    			for (String a: Config.vdmj_jvm.split("\\s+"))
+	    			{
+	    				pargs.add(a);
+	    			}
+				}
+	
+				pargs.add("org.overturetool.vdmj.debug.DBGPReader");
 			}
-
-			pargs.add("org.overturetool.vdmj.debug.DBGPReader");
-
+			
 			pargs.add("-h");
 			pargs.add("localhost");
 			pargs.add("-p");
@@ -88,12 +106,27 @@ public class ProcessListener extends Thread
 			pargs.add(dialect.getArgstring());
 			pargs.add("-e");
 			pargs.add(expression);
+			if(logFile!=null && dialect== Dialect.VDM_RT)
+			{
+				pargs.add("-log");
+				pargs.add(logFile.toURI().toASCIIString());
+			}
+			if(release!=null)
+			{
+				pargs.add("-r");
+				pargs.add(release);
+			}
 
 			for (File file: files)
 			{
 				pargs.add(file.toURI().toString());
 			}
-
+			
+			if(VDMJ_DEBUG)
+			{
+				blockOnRemoteLaunch(pargs);
+			}
+			
     		ProcessBuilder pb = new ProcessBuilder(pargs);
 			process = pb.start();
 
@@ -135,6 +168,27 @@ public class ProcessListener extends Thread
 		die();
 	}
 
+	private void blockOnRemoteLaunch(List<String> pargs) throws IOException,
+			InterruptedException
+	{
+		StringBuilder sb = new StringBuilder();
+		for (String string : pargs)
+		{
+			sb.append(string);
+			sb.append(" ");
+		}
+		System.out.println(sb.toString());
+		
+		ProcessBuilder pb = new ProcessBuilder("help");
+		process = pb.start();
+
+		
+		while(true)
+		{
+			Thread.sleep(1000);
+		}
+	}
+
 	public synchronized boolean waitStarted()
 	{
 		while (process == null)
@@ -157,6 +211,11 @@ public class ProcessListener extends Thread
 
 	public synchronized boolean hasEnded()
 	{
+		if(VDMJ_DEBUG)
+		{
+			return false;
+		}
+		
 		if (process == null)
 		{
 			return true;
@@ -208,7 +267,7 @@ public class ProcessListener extends Thread
 		}
 	}
 
-	public ConnectionThread findConnection(long id)
+	public ConnectionThread findConnection(String id)
 	{
 		return hasEnded() ? null : listener.findConnection(id);
 	}

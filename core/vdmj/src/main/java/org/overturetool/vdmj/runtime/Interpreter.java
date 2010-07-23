@@ -490,13 +490,13 @@ abstract public class Interpreter
 		return typeCheck(expr, getGlobalEnvironment());
 	}
 
-	public ClassDefinition findClass(@SuppressWarnings("unused") String classname)
+	public ClassDefinition findClass(String classname)
 	{
 		assert false : "findClass cannot be called for modules";
 		return null;
 	}
 
-	public Module findModule(@SuppressWarnings("unused") String module)
+	public Module findModule(String module)
 	{
 		assert false : "findModule cannot be called for classes";
 		return null;

@@ -238,7 +238,7 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 	 */
 
 	public void set(
-		@SuppressWarnings("unused") LexLocation location, Value newval, Context ctxt)
+		LexLocation location, Value newval, Context ctxt)
 		throws ValueException
 	{
 		abort(4088, "Set not permitted for " + kind(), ctxt);

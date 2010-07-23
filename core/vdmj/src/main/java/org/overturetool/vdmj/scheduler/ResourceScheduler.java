@@ -35,9 +35,9 @@ public class ResourceScheduler implements Serializable
     private static final long serialVersionUID = 1L;
 
 	public String name = "scheduler";
-	private List<Resource> resources = new LinkedList<Resource>();
-	private static boolean stopping = false;
-	private static MainThread mainThread = null;
+	protected List<Resource> resources = new LinkedList<Resource>();
+	protected static boolean stopping = false;
+	protected static MainThread mainThread = null;
 
 	public void init()
 	{
@@ -123,7 +123,7 @@ public class ResourceScheduler implements Serializable
     			if (resource.hasActive())
     			{
    					Console.err.println("DEADLOCK detected");
-					SchedulableThread.signalAll(Signal.DEADLOCKED);
+					BasicSchedulableThread.signalAll(Signal.DEADLOCKED);
 
 					while (main.isAlive())
 					{
@@ -142,7 +142,7 @@ public class ResourceScheduler implements Serializable
     		}
 		}
 
-		SchedulableThread.signalAll(Signal.TERMINATE);
+		BasicSchedulableThread.signalAll(Signal.TERMINATE);
 	}
 
 	public String getStatus()

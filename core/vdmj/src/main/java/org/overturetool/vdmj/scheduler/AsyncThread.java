@@ -41,7 +41,7 @@ import org.overturetool.vdmj.values.TransactionValue;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.ValueList;
 
-public class AsyncThread extends SchedulableThread
+public class AsyncThread extends SchedulablePoolThread
 {
 	private static final long serialVersionUID = 1L;
 	public final MessageRequest request;
@@ -133,7 +133,7 @@ public class AsyncThread extends SchedulableThread
 		catch (Exception e)
 		{
 			ResourceScheduler.setException(e);
-			SchedulableThread.signalAll(Signal.SUSPEND);
+			BasicSchedulableThread.signalAll(Signal.SUSPEND);
 		}
 		finally
 		{
@@ -174,7 +174,7 @@ public class AsyncThread extends SchedulableThread
 		catch (Exception e)
 		{
 			ResourceScheduler.setException(e);
-			SchedulableThread.signalAll(Signal.SUSPEND);
+			BasicSchedulableThread.signalAll(Signal.SUSPEND);
 		}
 		finally
 		{

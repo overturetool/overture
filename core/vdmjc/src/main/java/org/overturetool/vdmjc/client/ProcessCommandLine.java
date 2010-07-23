@@ -38,6 +38,8 @@ public class ProcessCommandLine extends CommandLine
 {
 	private final List<File> loadedFiles;
 	private final String expression;
+	private File logFile = null;
+	private String release = null;
 
 	private ProcessListener process;
 	private ConnectionThread currentThread = null;
@@ -49,6 +51,16 @@ public class ProcessCommandLine extends CommandLine
 		this.loadedFiles = loadedFiles;
 		this.expression = expression;
 	}
+	
+	public ProcessCommandLine(
+			Dialect dialect, List<File> loadedFiles, String expression, String release,File logFile)
+		{
+			super(dialect, null);
+			this.loadedFiles = loadedFiles;
+			this.expression = expression;
+			this.release = release;
+			this.logFile = logFile;
+		}
 
 	@Override
 	public void run()
@@ -81,6 +93,25 @@ public class ProcessCommandLine extends CommandLine
 		checkThread();
 		return "[" + currentThread + "]> ";
 	}
+	
+	@Override
+	protected boolean acceptScriptCommand(String command)
+	{
+		if(command!=null && command.equalsIgnoreCase("quit"))
+		{
+			if(currentThread.getStatus()== DBGPStatus.STOPPED)
+			{
+				return true;
+			}else
+			{
+				return false;
+			}
+		}else if(currentThread.getStatus()==DBGPStatus.RUNNING)
+		{
+			return false;
+		}
+		return true;
+	}
 
 	private boolean start()
 	{
@@ -92,7 +123,7 @@ public class ProcessCommandLine extends CommandLine
 			return false;
 		}
 
-		process = new ProcessListener(dialect, loadedFiles, expression);
+		process = new ProcessListener(dialect, loadedFiles, expression,release,logFile);
 		process.start();
 
 		if (!process.waitStarted())		// Didn't start
@@ -543,7 +574,7 @@ public class ProcessCommandLine extends CommandLine
 	{
 		try
 		{
-			long newId = Integer.parseInt(line.substring(line.indexOf(' ') + 1));
+			String newId = line.substring(line.indexOf(' ') + 1).trim();
 			ConnectionThread th = process.findConnection(newId);
 
 			if (th != null)
@@ -870,7 +901,18 @@ public class ProcessCommandLine extends CommandLine
 
 			if (m.matches())
 			{
-    			File file = new File(m.group(1));
+				String fileName = m.group(1);
+    			File file = null;
+    			
+    			//lookup loaded file
+    			for (File f : loadedFiles)
+				{
+					if(f.getName().equals(fileName))
+					{
+						file = f;
+					}
+				}
+    			
     			int lnum = Integer.parseInt(m.group(2));
     			String condition = (m.groupCount() == 3) ? m.group(3) : null;
     			currentThread.breakpoint_set(file, lnum, condition);

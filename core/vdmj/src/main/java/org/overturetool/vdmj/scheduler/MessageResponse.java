@@ -32,7 +32,7 @@ public class MessageResponse extends MessagePacket
 	public final Value result;
 	public final ValueException exception;
 	public final Holder<MessageResponse> replyTo;
-	public final Thread caller;
+	public final ISchedulableThread caller;
 	public final long originalId;
 
 	public MessageResponse(Value result, MessageRequest request)

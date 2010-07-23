@@ -242,7 +242,7 @@ public abstract class Type implements Comparable<Type>, Serializable, IAstNode
 		return false;
 	}
 
-	public boolean isProduct(@SuppressWarnings("unused") int n)
+	public boolean isProduct(int n)
 	{
 		return false;
 	}
