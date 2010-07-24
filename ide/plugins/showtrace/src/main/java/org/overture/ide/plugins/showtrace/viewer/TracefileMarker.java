@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
+import jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -20,6 +21,10 @@ import org.overture.ide.core.utility.FileUtility;
 public class TracefileMarker
 {
 	IFile file;
+	static VDMCompare vdmComp = new VDMCompare();
+	private HashSet markers;
+	private Long errors;
+	private Long warnings;
 
 	public TracefileMarker(IFile file) throws CGException
 	{
@@ -43,15 +48,17 @@ public class TracefileMarker
 	{
 		try
 		{
-
 			IMarker theMarker = null;
 			if (file == null)
 			{
 				theMarker = ResourcesPlugin.getWorkspace().getRoot().createMarker(IMarker.PROBLEM);
-				theMarker.setAttribute("message", var_1_1);
+				theMarker.setAttribute(IMarker.MESSAGE, var_1_1);
 				if (var_2_2 != null)
-					theMarker.setAttribute("lineNumber", new Integer(var_2_2.intValue()));
-				theMarker.setAttribute("severity", new Integer(2));
+				{
+					theMarker.setAttribute(IMarker.LINE_NUMBER, new Integer(var_2_2.intValue()));
+				}
+				theMarker.setAttribute(IMarker.SEVERITY, new Integer(2));
+				theMarker.setAttribute(IMarker.SOURCE_ID, TracefileViewerPlugin.PLUGIN_ID);
 				markers.add(theMarker);
 				errors = Long.valueOf(errors.longValue() + 1L);
 			} else
@@ -74,11 +81,14 @@ public class TracefileMarker
 	{
 		try
 		{
-			IMarker theMarker = ResourcesPlugin.getWorkspace().getRoot().createMarker("org.eclipse.core.resources.problemmarker");
-			theMarker.setAttribute("message", var_1_1);
+			IMarker theMarker = ResourcesPlugin.getWorkspace().getRoot().createMarker(IMarker.PROBLEM);
+			theMarker.setAttribute(IMarker.MESSAGE, var_1_1);
 			if (var_2_2 != null)
-				theMarker.setAttribute("lineNumber", new Integer(var_2_2.intValue()));
-			theMarker.setAttribute("severity", new Integer(1));
+			{
+				theMarker.setAttribute(IMarker.LINE_NUMBER, new Integer(var_2_2.intValue()));
+			}
+			theMarker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
+			theMarker.setAttribute(IMarker.SOURCE_ID, TracefileViewerPlugin.PLUGIN_ID);
 			markers.add(theMarker);
 			warnings = Long.valueOf(warnings.longValue() + 1L);
 		} catch (CoreException ce)
@@ -115,9 +125,6 @@ public class TracefileMarker
 
 	}
 
-	static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
-	private HashSet markers;
-	private Long errors;
-	private Long warnings;
+	
 
 }

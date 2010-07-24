@@ -91,7 +91,7 @@ public class LatexBuilder
 			try
 			{
 				PrintWriter pw = new PrintWriter(texFile);
-				sf.printLatexCoverage(pw, false, true);
+				sf.printLatexCoverage(pw, false, true,true);
 				pw.flush();
 				pw.close();
 

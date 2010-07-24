@@ -60,8 +60,8 @@ public class LatexBuilder
 		String documentFileName = name;// + ".tex";
 		File latexRoot = makeOutputFolder(projectRoot);
 		StringBuilder sb = new StringBuilder();
-		String title = "Coverage Report: "
-				+ projectRoot.getName().replace('\\', '/').substring(0,
+		String title = //"Coverage Report: " + 
+		projectRoot.getName().replace('\\', '/').substring(0,
 						projectRoot.getName().length());
 
 		for (String path : includes)

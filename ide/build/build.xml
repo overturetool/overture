@@ -17,8 +17,53 @@
     
     Modified by Lukas Zapletal <lzapletal@pikeelectronic.com>.
 -->
+<!DOCTYPE project [
+       <!ENTITY copyProjects SYSTEM "copyProjects.xml">
+]>
 <project name="org.overture.ide" default="build">
+	<tstamp />
 	<property file="build.properties" />
+
+
+
+	<target name="validateEnv">
+		<sequential>
+			<available file="svn" filepath="${env.PATH}" property="svn.executable" />
+			<available file="mvn" filepath="${env.PATH}" property="mvn.executable" />
+			<!--property name="mvn.executable" value="true">
+			</property-->
+			<echo message="${mvn.executable}">
+			</echo>
+			<fail message="1MVN not avaliable in path">
+				<condition>
+					<not>
+						<available file="${mvn.executable}" />
+					</not>
+				</condition>
+			</fail>
+			<fail message="2SVN not avaliable in path" unless="svn.executable" />
+			<echo>Environment validated</echo>
+		</sequential>
+	</target>
+
+	<!-- Define the classpath which includes the jars that are required for svnant.jar -->
+	<path id="svnant.class.path">
+		<pathelement location="lib/svnant.jar" />
+		<pathelement location="lib/svnClientAdapter.jar" />
+		<pathelement location="lib/svnjavahl.jar" />
+		<pathelement location="lib/svnkit.jar" />
+	</path>
+
+	<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="svnant.class.path" />
+	<!-- SVN info -->
+	<target name="svn-info">
+		<svn>
+			<info target="../" />
+		</svn>
+		<!-- show revision, author and date -->
+
+		<echo message="${svn.info.rev}" />
+	</target>
 
 	<!--
         PDE Build expects that the build directory contains a "plugins" 
@@ -32,191 +77,11 @@
         This tutorial simply copies the projects directly from your workspace
         into the appropriate build directory folders.
     -->
-	<target name="init">
+	<target name="init" depends="svn-info">
 		<mkdir dir="${buildDirectory}" />
 		<mkdir dir="${buildDirectory}/plugins" />
 		<mkdir dir="${buildDirectory}/features" />
-		<copy todir="${buildDirectory}/plugins">
-			<fileset dir="../">
-				<include name="ui/**" />
-				<include name="core/**" />
-				<include name="debug/**" />
-				<include name="help/**" />
-				<include name="platform/**" />
-				<include name="ui/**" />
-				<!--exclude name="**/target/" /-->
-			</fileset>
-			<fileset dir="../plugins/">
-				<include name="**" />
-				<exclude name="**/idedebughelper/" />
-				<exclude name="**/proofsupport/" />
-			</fileset>
-		</copy>
-
-
-		<!-- Platform plugin, manage version number -->
-		<copy todir="${buildDirectory}/plugins" filtering="true">
-			<fileset dir="../">
-				<include name="platform/**" />
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-		<copy file="../platform/plugin.properties" toFile="${buildDirectory}/plugins/platform/plugin.properties" overwrite="true" filtering="true">
-			<filterchain>
-				<replacetokens>
-					<token key="version" value="${platformReleaseVersion}" />
-				</replacetokens>
-			</filterchain>
-		</copy>
-		<copy file="../platform/META-INF/MANIFEST.MF" toFile="${buildDirectory}/plugins/platform/META-INF/MANIFEST.MF" overwrite="true" filtering="true">
-			<filterchain>
-				<tokenfilter>
-					<replaceregex pattern="0.0.0" replace="${platformReleaseVersion}" flags="gi" />
-				</tokenfilter>
-			</filterchain>
-		</copy>
-
-		<!-- IDE -->
-
-		<copy todir="${buildDirectory}/plugins/builders.vdmj">
-			<fileset dir="../builders/vdmj">
-				<exclude name="**/target/" />
-			</fileset>
-
-		</copy>
-		<copy todir="${buildDirectory}/plugins/parsers.vdmj">
-			<fileset dir="../parsers/vdmj">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-
-
-		<copy todir="${buildDirectory}/plugins/vdmpp.core">
-			<fileset dir="../vdmpp/core">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-
-		<copy todir="${buildDirectory}/plugins/vdmpp.ui">
-			<fileset dir="../vdmpp/ui">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-		<copy todir="${buildDirectory}/plugins/vdmpp.debug">
-			<fileset dir="../vdmpp/debug">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-
-
-		<copy todir="${buildDirectory}/plugins/vdmsl.core">
-			<fileset dir="../vdmsl/core">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-
-		<copy todir="${buildDirectory}/plugins/vdmsl.ui">
-			<fileset dir="../vdmsl/ui">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-		<copy todir="${buildDirectory}/plugins/vdmsl.debug">
-			<fileset dir="../vdmsl/debug">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-
-
-		<copy todir="${buildDirectory}/plugins/vdmrt.core">
-			<fileset dir="../vdmrt/core">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-
-		<copy todir="${buildDirectory}/plugins/vdmrt.ui">
-			<fileset dir="../vdmrt/ui">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-		<copy todir="${buildDirectory}/plugins/vdmrt.debug">
-			<fileset dir="../vdmrt/debug">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-
-		<copy todir="${buildDirectory}/plugins/generated.showtrace">
-			<fileset dir="../generated/showtrace">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-
-		<copy todir="${buildDirectory}/plugins/generated.traces">
-			<fileset dir="../generated/traces">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-
-		<copy todir="${buildDirectory}/plugins/generated.umltrans">
-			<fileset dir="../generated/umltrans">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-
-		<copy todir="${buildDirectory}/plugins/generated.vdmj">
-			<fileset dir="../generated/vdmj">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-
-		<copy todir="${buildDirectory}">
-			<fileset dir="../">
-				<include name="features/core/**" />
-				<include name="features/rcp/**" />
-				<exclude name="**/target/" />
-			</fileset>
-
-		</copy>
-		<!-- Copying features and renaming the directories to a flat structure -->
-		<copy todir="${buildDirectory}/features/features.coverageeditor">
-			<fileset dir="../plugins/features/coverageeditor">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-		<copy todir="${buildDirectory}/features/features.csk">
-			<fileset dir="../plugins/features/csk">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-		<copy todir="${buildDirectory}/features/features.ct">
-			<fileset dir="../plugins/features/ct">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-		<copy todir="${buildDirectory}/features/features.latex">
-			<fileset dir="../plugins/features/latex">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-		<copy todir="${buildDirectory}/features/features.poviewer">
-			<fileset dir="../plugins/features/poviewer">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-		<copy todir="${buildDirectory}/features/features.quickinterpreter">
-			<fileset dir="../plugins/features/quickinterpreter">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-		<copy todir="${buildDirectory}/features/features.realtimelogviewer">
-			<fileset dir="../plugins/features/realtimelogviewer">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
-		<copy todir="${buildDirectory}/features/features.umltrans">
-			<fileset dir="../plugins/features/umltrans">
-				<exclude name="**/target/" />
-			</fileset>
-		</copy>
+		&copyProjects;
 	</target>
 
 	<!--
@@ -253,5 +118,17 @@
 		<delete dir="${buildDirectory}" />
 	</target>
 
-	<target name="build" depends="init, pde-build" />
+	<target name="sourceclean">
+		<delete includeemptydirs="true">
+			<fileset dir="${buildDirectory}" includes="*.xml" />
+			<fileset dir="${buildDirectory}/features">
+			</fileset>
+			<fileset dir="${buildDirectory}/plugins">
+			</fileset>
+		</delete>
+
+	</target>
+
+
+	<target name="build" depends="clean,init, pde-build,sourceclean" />
 </project>

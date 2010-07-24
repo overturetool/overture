@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
+import jp.co.csk.vdm.toolbox.VDM.VDMRunTimeException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -20,6 +21,7 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
@@ -41,6 +43,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 	// IEditorSite site=null;
 
 	private File selectedFile;
+	private Display display;
 
 	@Override
 	public void doSave(IProgressMonitor monitor)
@@ -62,6 +65,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 	{
 		setSite(site);
 		setInput(input);
+		this.display = site.getShell().getDisplay();
 
 		// System.out.println(input.getName());
 		// IFile file = ((IPathEditorInput)input).getPath().getFile();
@@ -119,12 +123,16 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		theOverview = new GenericTabItem("Execution overview", folder, null);
 		try
 		{
-			IFile file = ((FileEditorInput)getEditorInput()).getFile();
-			theMarkers = new TracefileMarker(file);
 			
-			if(FileUtility.getContent(file).size()==0)
+			IFile file = ((FileEditorInput) getEditorInput()).getFile();
+			
+			FileUtility.deleteMarker(file, null, TracefileViewerPlugin.PLUGIN_ID);
+			
+			theMarkers = new TracefileMarker(file);
+
+			if (FileUtility.getContent(file).size() == 0)
 			{
-				FileUtility.addMarker(file, "File is empty", 0,0,0,0, IMarker.SEVERITY_ERROR, org.overture.ide.plugins.showtrace.viewer.TracefileViewerPlugin.PLUGIN_ID);
+				FileUtility.addMarker(file, "File is empty", 0, 0, 0, 0, IMarker.SEVERITY_ERROR, TracefileViewerPlugin.PLUGIN_ID);
 				return;
 			}
 		} catch (CGException cge)
@@ -133,8 +141,6 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		}
 		makeActions();
 		contributeToActionBars();
-		
-		
 
 		try
 		{
@@ -358,7 +364,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 
 					try
 					{
-						doParse(fname,monitor);
+						doParse(fname, monitor);
 					} catch (CGException e)
 					{
 						// TODO Auto-generated catch block
@@ -375,43 +381,42 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 
 		} catch (InterruptedException e)
 		{
-e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 
 	@SuppressWarnings("deprecation")
-	private void doParse(final String fname,IProgressMonitor monitor) throws CGException
+	private void doParse(final String fname, IProgressMonitor monitor)
+			throws CGException
 	{
-		
+
 		TracePsrser t = new TracePsrser(fname);
-		
+
 		t.start();
-		
-		
-		while(!t.isFinished())
+
+		while (!t.isFinished())
 		{
-			if(monitor.isCanceled())
+			if (monitor.isCanceled())
 			{
 				try
 				{
 					t.stop();
 				} catch (Exception e)
 				{
-					
+
 				}
 			}
 		}
-		
-		if(t.error!=null)
+
+		if (t.error != null)
 		{
 			showMessage(t.error);
 		}
-		
-		
+
 		if (t.theParser.errorCount() == 0)
 		{
-//			TracefileChecker theChecker = new TracefileChecker(theMarkers);
-//			theChecker.visitNode(t.theAst);
+			// TracefileChecker theChecker = new TracefileChecker(theMarkers);
+			// theChecker.visitNode(t.theAst);
 			if (t.theChecker.hasErrors().booleanValue())
 			{
 				showMessage((new StringBuilder()).append(theMarkers.errorCount()).append(" errors encoutered in file \"").append(fname).append("\"").toString());
@@ -419,8 +424,19 @@ e.printStackTrace();
 			{
 				showMessage((new StringBuilder(String.valueOf(t.theAst.getTrace().size()))).append(" lines read from file \"").append(fname).append("\"").toString());
 				theVisitor = new TracefileVisitor();
-				theVisitor.visitNode(t.theAst);
-				getSite().getShell().getDisplay().asyncExec(new Runnable() {
+				try
+				{
+					theVisitor.visitNode(t.theAst);
+				} catch (VDMRunTimeException e)
+				{
+					e.printStackTrace();
+					//showMessage(e);
+					IFile file = ((FileEditorInput) getEditorInput()).getFile();
+					FileUtility.addMarker(file, e.getMessage(), 0, 0, 0, 0, IMarker.SEVERITY_ERROR, org.overture.ide.plugins.showtrace.viewer.TracefileViewerPlugin.PLUGIN_ID);
+
+				}
+				getSite().getShell().getDisplay().asyncExec(new Runnable()
+				{
 
 					public void run()
 					{
@@ -428,57 +444,55 @@ e.printStackTrace();
 					}
 
 				});
-				
+
 			}
 		} else
 		{
 			showMessage((new StringBuilder(String.valueOf(t.theParser.errorCount()))).append(" errors encoutered in file \"").append(fname).append("\"").toString());
 		}
-		
 
 	}
-	
+
 	private class TracePsrser extends Thread
 	{
 		private String fileName = null;
-	public	TraceParser theParser= null;
-	public	IOmlTraceFile theAst =null;
-	private boolean isFinished = false;
-	private Object lock = new Object();
-	public CGException error;
-	public TracefileChecker theChecker ;
-	
-	public TracePsrser(String file)
-	{
-	this.fileName = file;
-	}
-	
+		public TraceParser theParser = null;
+		public IOmlTraceFile theAst = null;
+		private boolean isFinished = false;
+		private Object lock = new Object();
+		public CGException error;
+		public TracefileChecker theChecker;
+
+		public TracePsrser(String file)
+		{
+			this.fileName = file;
+		}
+
 		@Override
 		public void run()
 		{
-			 theParser = new TracefileParser(fileName, "UTF8", theMarkers);
+			theParser = new TracefileParser(fileName, "UTF8", theMarkers);
 			try
 			{
-				 theAst = theParser.parse();
-				 if (theParser.errorCount() == 0)
-					{
-						 theChecker = new TracefileChecker(theMarkers);
-						theChecker.visitNode(theAst);
-					}
-				 
-				 synchronized (lock)
+				theAst = theParser.parse();
+				if (theParser.errorCount() == 0)
 				{
-				isFinished = true;	
+					theChecker = new TracefileChecker(theMarkers);
+					theChecker.visitNode(theAst);
 				}
-				
+
 			} catch (CGException cge)
 			{
 				error = cge;
-				//showMessage(cge);
+				// showMessage(cge);
 			}
-			
+			synchronized (lock)
+			{
+				isFinished = true;
+			}
+
 		}
-		
+
 		public boolean isFinished()
 		{
 			return isFinished;
@@ -507,6 +521,7 @@ e.printStackTrace();
 
 		} catch (CGException cge)
 		{
+			cge.printStackTrace();
 			showMessage(cge);
 		}
 	}
@@ -554,7 +569,7 @@ e.printStackTrace();
 		try
 		{
 			theMarkers.dispose();
-			IFile file = ((FileEditorInput)getEditorInput()).getFile();
+			IFile file = ((FileEditorInput) getEditorInput()).getFile();
 			theMarkers = new TracefileMarker(file);
 		} catch (CGException cge)
 		{
@@ -566,24 +581,40 @@ e.printStackTrace();
 	 * (non-Javadoc)
 	 * @see org.overture.ide.plugins.showtrace.viewer.IViewCallback#showMessage(java .lang.String)
 	 */
-	public void showMessage(String message)
+	public void showMessage(final String message)
 	{
-		ConsoleWriter cw = new ConsoleWriter();
-		cw.println(message);
-		cw.Show();
-		// MessageDialog.openInformation(getSite().getShell(),
-		// "Tracefile viewer", message);
+		display.asyncExec(new Runnable()
+		{
+
+			public void run()
+			{
+				ConsoleWriter cw = new ConsoleWriter();
+				cw.println(message);
+				cw.Show();
+				// MessageDialog.openInformation(getSite().getShell(),
+				// "Tracefile viewer", message);
+			}
+		});
 	}
 
-	private void showMessage(CGException cge)
+	private void showMessage(final CGException cge)
 	{
-		MessageDialog.openInformation(getSite().getShell(), "Tracefile viewer", cge.getMessage());
-		cge.printStackTrace(System.out);
+		display.asyncExec(new Runnable()
+		{
 
-		ConsoleWriter cw = new ConsoleWriter();
-		cw.println(cge.getMessage());
-		ConsoleWriter.getExceptionStackTraceAsString(cge);
-		cw.Show();
+			public void run()
+			{
+				//MessageDialog.openInformation(getSite().getShell(), "Tracefile viewer", cge.getMessage());
+
+				ConsoleWriter cw = new ConsoleWriter();
+				cw.println(cge.getMessage());
+				ConsoleWriter.getExceptionStackTraceAsString(cge);
+				cw.Show();
+			}
+		});
+
+		// cge.printStackTrace(System.out);
+
 	}
 
 	@Override
