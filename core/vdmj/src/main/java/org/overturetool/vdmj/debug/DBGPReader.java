@@ -330,6 +330,17 @@ public class DBGPReader implements Serializable
     				usage("-remote option requires a Java classname");
     			}
     		}
+    		else if (arg.equals("-consoleName"))
+    		{
+    			if (i.hasNext())
+    			{
+    				LexTokenReader.consoleFileName = i.next();
+    			}
+    			else
+    			{
+    				usage("-consoleName option requires a console name");
+    			}
+    		}
     		else if (arg.startsWith("-"))
     		{
     			usage("Unknown option " + arg);
@@ -486,7 +497,7 @@ public class DBGPReader implements Serializable
 			" -e <expression> | -e64 <base64 expression>" +
 			" [-w] [-q] [-log <logfile URL>] [-c <charset>] [-r <release>]" +
 			" [-coverage <dir URL>] [-default64 <base64 name>]" +
-			" [-remote <class>] {<filename URLs>}");
+			" [-remote <class>] [-consoleName <console>] {<filename URLs>}");
 
 		System.exit(1);
 	}
@@ -887,6 +898,11 @@ public class DBGPReader implements Serializable
 		{
 			errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
 		}
+	}
+	
+	public void invocationError(Exception e)
+	{
+		errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
 	}
 
 	public void tracing(String display)

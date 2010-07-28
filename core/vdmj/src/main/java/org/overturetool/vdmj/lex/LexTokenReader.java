@@ -37,6 +37,8 @@ import org.overturetool.vdmj.config.Properties;
 
 public class LexTokenReader extends BacktrackInputReader
 {
+	/** The filename used for console expressions. */
+	public static String consoleFileName="console";
 	/** The current module name, if parsing a module. */
 	public String currentModule = "";
 	/** The current file name. */
@@ -160,7 +162,7 @@ public class LexTokenReader extends BacktrackInputReader
 	public LexTokenReader(String expression, Dialect dialect)
 	{
 		super(expression);
-		this.file = new File("console");
+		this.file = new File(consoleFileName);
 		this.dialect = dialect;
 		init();
 	}
@@ -177,7 +179,7 @@ public class LexTokenReader extends BacktrackInputReader
 	public LexTokenReader(String expression, Dialect dialect, String charset)
 	{
 		super(expression, charset);
-		this.file = new File("console");
+		this.file = new File(consoleFileName);
 		this.dialect = dialect;
 		init();
 	}

@@ -26,9 +26,11 @@ package org.overturetool.vdmj.scheduler;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.DebuggerReader;
 import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
+import org.overturetool.vdmj.runtime.ThreadState;
 import org.overturetool.vdmj.values.TransactionValue;
 import org.overturetool.vdmj.values.UndefinedValue;
 import org.overturetool.vdmj.values.Value;
@@ -107,9 +109,19 @@ public class MainThread extends SchedulablePoolThread
 		}
 		catch (ContextException e)
 		{
-			suspendOthers();
-			setException(e);
-			ctxt.threadState.dbgp.stopped(e.ctxt, e.location);
+			//If the exception is raised from the console location the debugger is stopped.
+			if(e.location.file.getName().equals(LexTokenReader.consoleFileName))
+			{
+				ThreadState s = ctxt.threadState;
+				s.dbgp.invocationError(e);//TODO
+				BasicSchedulableThread.signalAll(Signal.TERMINATE);
+			}
+			else
+			{
+				suspendOthers();
+				setException(e);
+				ctxt.threadState.dbgp.stopped(e.ctxt, e.location);
+			}
 		}
 		catch (Exception e)
 		{

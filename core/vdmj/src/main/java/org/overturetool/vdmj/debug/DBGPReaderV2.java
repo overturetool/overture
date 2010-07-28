@@ -334,6 +334,17 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			{
 				traceExpression = true;
 			}
+    		else if (arg.equals("-consoleName"))
+    		{
+    			if (i.hasNext())
+    			{
+    				LexTokenReader.consoleFileName = i.next();
+    			}
+    			else
+    			{
+    				usage("-consoleName option requires a console name");
+    			}
+    		}
     		else if (arg.startsWith("-"))
     		{
     			usage("Unknown option " + arg);
