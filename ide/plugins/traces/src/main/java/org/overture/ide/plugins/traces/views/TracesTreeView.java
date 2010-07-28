@@ -5,6 +5,7 @@ import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.CancellationException;
 
@@ -100,9 +101,9 @@ public class TracesTreeView extends ViewPart
 	private Action actionSelectToolBoxVDMJ;
 	private Action actionSelectToolBoxVDMTools;
 	private Action expandSpecInTree;
-	private Action saveTraceResultsAction;
+	
 	private Action refreshAction;
-	private Dictionary<String, ITracesHelper> traceHelpers;
+	private Map<String, ITracesHelper> traceHelpers;
 	final Display display = Display.getCurrent();
 
 //	private IResourceChangeListener resourceChangedListener = null;
@@ -692,9 +693,9 @@ monitor.done();
 								break;
 							try
 							{
-								if (isValidProject(project))
+								if (isValidProject(project) && traceHelpers.containsKey(project.getName()))
 								{
-									ITracesHelper th = traceHelpers.get(project.getName());
+									ITracesHelper th = traceHelpers.get(project.getName());									
 									for (String className : th.getClassNamesWithTraces())
 									{
 										if (monitor.isCanceled())
@@ -720,7 +721,7 @@ monitor.done();
 							{
 
 								updateTraceTestCasesNodeStatus();
-								saveTraceResultsAction.setEnabled(true);
+								//saveTraceResultsAction.setEnabled(true);
 							}
 
 						});

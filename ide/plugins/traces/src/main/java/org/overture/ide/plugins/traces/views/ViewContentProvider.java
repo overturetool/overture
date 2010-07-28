@@ -1,7 +1,7 @@
 package org.overture.ide.plugins.traces.views;
 
-import java.util.Dictionary;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -21,9 +21,9 @@ public class ViewContentProvider implements IStructuredContentProvider,
 ITreeContentProvider {
 	private TreeParent invisibleRoot;
 	// private ArrayList<ProjectTreeNode> projectTraceTreeNodes;
-	Dictionary<String, ITracesHelper> traceHelpers;
+	Map<String, ITracesHelper> traceHelpers;
 	ViewPart viewer;
-	public ViewContentProvider(Dictionary<String, ITracesHelper> trs,ViewPart p) {
+	public ViewContentProvider(Map<String, ITracesHelper> trs,ViewPart p) {
 		this.traceHelpers = trs;
 		viewer =p;
 	}

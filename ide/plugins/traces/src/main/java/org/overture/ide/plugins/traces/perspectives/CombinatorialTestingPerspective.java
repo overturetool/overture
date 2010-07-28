@@ -77,15 +77,12 @@ public class CombinatorialTestingPerspective implements IPerspectiveFactory {
 		factory.addActionSet("org.eclipse.debug.ui.launchActionSet"); //NON-NLS-1
 		factory.addActionSet("org.eclipse.debug.ui.debugActionSet"); //NON-NLS-1
 		factory.addActionSet("org.eclipse.debug.ui.profileActionSet"); //NON-NLS-1
-		factory.addActionSet("org.eclipse.jdt.debug.ui.JDTDebugActionSet"); //NON-NLS-1
-		factory.addActionSet("org.eclipse.jdt.junit.JUnitActionSet"); //NON-NLS-1
 //		factory.addActionSet(JavaUI.ID_ACTION_SET);
 //		factory.addActionSet(JavaUI.ID_ELEMENT_CREATION_ACTION_SET);
 		factory.addActionSet(IPageLayout.ID_NAVIGATE_ACTION_SET); //NON-NLS-1
 	}
 
-	private void addPerspectiveShortcuts() {
-		factory.addPerspectiveShortcut("org.eclipse.team.ui.TeamSynchronizingPerspective"); //NON-NLS-1
+	private void addPerspectiveShortcuts() {		
 	//	factory.addPerspectiveShortcut("org.overturetool.eclipse.ui.OverturePerspective"); //NON-NLS-1
 	}
 
@@ -94,9 +91,7 @@ public class CombinatorialTestingPerspective implements IPerspectiveFactory {
 		factory.addNewWizardShortcut("org.eclipse.ui.wizards.new.file");//NON-NLS-1
 	}
 
-	private void addViewShortcuts() {
-		factory.addShowViewShortcut("org.eclipse.pde.ui.DependenciesView"); //NON-NLS-1
-		factory.addShowViewShortcut("org.eclipse.jdt.junit.ResultView"); //NON-NLS-1
+	private void addViewShortcuts() {		
 		factory.addShowViewShortcut(IConsoleConstants.ID_CONSOLE_VIEW);
 //		factory.addShowViewShortcut(JavaUI.ID_PACKAGES);
 	//	factory.addShowViewShortcut(IPageLayout.ID_RES_NAV);
