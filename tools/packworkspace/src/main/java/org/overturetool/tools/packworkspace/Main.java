@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
+import org.overturetool.tools.packworkspace.rss.RssItem;
 import org.overturetool.tools.packworkspace.testing.LatexBuilder;
 import org.overturetool.vdmj.lex.Dialect;
 
@@ -67,6 +68,14 @@ public class Main
 				inputRootFolder,
 				tmpFolder);
 		controllers.add(controller);
+		
+		List<RssItem> items = new Vector<RssItem>();
+		for (Controller c : controllers)
+		{
+			items.addAll(c.getRssItems());
+		}
+		Controller.createRss(new File("rss.xml"),items);
+		
 		Controller.createOverviewPage(controllers);
 
 		System.out.println("Wating for latex");
@@ -86,7 +95,12 @@ public class Main
 		controller.packExamples(tmpFolder, "Examples"
 				+ dialect.toString().toUpperCase());
 
+		
+		
 		controller.testProjects();
+		
+		
+		
 		return controller;
 	}
 	
@@ -123,7 +137,12 @@ public class Main
 				tmpFolder);
 		controllers.add(controller);
 		
-		
+		List<RssItem> items = new Vector<RssItem>();
+		for (Controller c : controllers)
+		{
+			items.addAll(c.getRssItems());
+		}
+		Controller.createRss(new File("rss.xml"),items);
 		
 		Controller.createOverviewPage(controllers);
 

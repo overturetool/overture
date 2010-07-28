@@ -298,6 +298,7 @@ public class ProjectTester
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private ExitStatus runInterpreter(ProjectPacker project, String entryPoint)
 			throws IOException, InterruptedException
 	{
@@ -431,7 +432,7 @@ public class ProjectTester
 
 		try
 		{
-		Thread killer =	new ProcessTimeOutKiller(p,5*60);
+			Thread killer = new ProcessTimeOutKiller(p, 5 * 60);
 			p.waitFor();
 			killer.stop();
 		} catch (Exception e)
@@ -451,31 +452,29 @@ public class ProjectTester
 	{
 		Process p;
 		final long startTime;
-		
-		
+
 		final long endTime;
 
 		public ProcessTimeOutKiller(Process p, int timeOutSeconds)
 		{
 			this.p = p;
 			startTime = System.currentTimeMillis();
-			
 
-			endTime = startTime + (timeOutSeconds*1000);
-//			System.out.println("Run in ms: "+ new Long(endTime-startTime));
+			endTime = startTime + (timeOutSeconds * 1000);
+			// System.out.println("Run in ms: "+ new Long(endTime-startTime));
 			setDaemon(true);
 			start();
 		}
-		
+
 		@Override
 		public void run()
 		{
-			while(true)
+			while (true)
 			{
 				try
 				{
 					Thread.sleep(100);
-					if(endTime<= System.currentTimeMillis())
+					if (endTime <= System.currentTimeMillis())
 					{
 						p.destroy();
 						System.out.print(" -KILLED");
@@ -483,7 +482,7 @@ public class ProjectTester
 					}
 				} catch (InterruptedException e)
 				{
-				
+
 				}
 			}
 		}

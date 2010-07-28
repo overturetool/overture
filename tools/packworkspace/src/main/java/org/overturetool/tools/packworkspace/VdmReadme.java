@@ -623,4 +623,9 @@ public class VdmReadme
 	{
 		return vmArguments;
 	}
+	
+	public String getContent()
+	{
+		return content;
+	}
 }

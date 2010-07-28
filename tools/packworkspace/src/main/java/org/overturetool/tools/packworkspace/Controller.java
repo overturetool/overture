@@ -1,12 +1,18 @@
 package org.overturetool.tools.packworkspace;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.Vector;
 
 import org.overturetool.tools.packworkspace.latex.FileUtils;
+import org.overturetool.tools.packworkspace.rss.RssChannel;
+import org.overturetool.tools.packworkspace.rss.RssFeed;
+import org.overturetool.tools.packworkspace.rss.RssItem;
 import org.overturetool.tools.packworkspace.testing.HtmlPage;
 import org.overturetool.tools.packworkspace.testing.HtmlTable;
 import org.overturetool.tools.packworkspace.testing.ProjectTester;
@@ -221,5 +227,56 @@ public class Controller
 		FileUtils.writeFile(new File(reportDir, "style.css"), HtmlPage.makeStyleCss());
 	}
 
+	public static void createRss(File outputFile,List<RssItem> items)
+	{
+		RssChannel channel = new RssChannel();
+		channel.title="VDM Examples";
+		channel.description="Overture VDM Examples";
+		channel.link="http://overturetool.org";
+		
+		channel.items.addAll(items);
+		
+		RssFeed feed = new RssFeed();
+		feed.channel = channel;
+		
+		FileWriter outputFileReader;
+		try
+		{
+			outputFileReader = new FileWriter(outputFile, false);
+			BufferedWriter outputStream = new BufferedWriter(outputFileReader);
+
+			outputStream.write(feed.getXml().toString());
+
+			outputStream.flush();
+			outputStream.close();
+
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public  List<RssItem> getRssItems()
+	{
+		List<RssItem> items = new Vector<RssItem>();
+		
+		for (ProjectPacker p : projects)
+		{
+			VdmReadme r = p.settings;
+			RssItem item = new RssItem();
+			
+			item.title = r.getName();
+			item.author = r.getTexAuthor();
+			item.category = r.getDialect().toString();
+			item.comments = r.getLanguageVersion().toString();
+			item.description = r.getContent().trim();
+			item.guid = UUID.randomUUID().toString();
+			item.link="http://overture.sourceforge.net/examples/"+r.getDialect().toString()+"/"+r.getName()+".zip";
+			
+			items.add(item);
+		}
+		
+		return items;
+	}
 
 }
