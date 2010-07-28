@@ -143,19 +143,20 @@
          point="org.eclipse.ui.views">
       <view
             allowMultiple="false"
+            category="org.overture.ide.ui.view.category"
             class="org.overture.ide.debug.logging.LogView"
             id="org.overture.ide.debug.logging.logview"
-            name="VDM Debug Log viewer"
+            name="VDM Debug Log Viewer Events"
             restorable="true">
       </view>
    </extension>
    
 	<extension point="org.eclipse.ui.views">
 		<view
-			class="org.overture.ide.debug.ui.log.VdmDebugLogView"
-			id="org.overture.ide.debug.ui.log.dbgpLogView" 
-			name="Vdm Log Viewer2"
-			>
+        category="org.overture.ide.ui.view.category"
+        class="org.overture.ide.debug.ui.log.VdmDebugLogView"
+        id="org.overture.ide.debug.ui.log.dbgpLogView"
+        name="Vdm Log Viewer Messages">
 		</view>
 	</extension>
 

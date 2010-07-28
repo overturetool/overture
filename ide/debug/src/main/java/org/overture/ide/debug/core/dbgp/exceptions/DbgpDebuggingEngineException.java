@@ -10,8 +10,11 @@
 package org.overture.ide.debug.core.dbgp.exceptions;
 
 import org.eclipse.osgi.util.NLS;
+import org.overture.ide.debug.utils.communication.DBGPErrorType;
+import org.overturetool.vdmj.debug.DBGPException;
 
-public class DbgpDebuggingEngineException extends DbgpException {
+public class DbgpDebuggingEngineException extends DbgpException
+{
 	private static final long serialVersionUID = 1L;
 
 	/* Command parsing errors */
@@ -99,35 +102,50 @@ public class DbgpDebuggingEngineException extends DbgpException {
 
 	private final int code;
 
-	public DbgpDebuggingEngineException(int code) {
+	public DbgpDebuggingEngineException(int code)
+	{
 		this.code = code;
 	}
 
-	public DbgpDebuggingEngineException(int code, String message) {
-		super(
-				NLS
-						.bind(
-								"dbgpDebuggingEngineException",
-								new Integer(code), message));
+	public DbgpDebuggingEngineException(int code, String message)
+	{
+		super(message);
+		//super(NLS.bind("dbgpDebuggingEngineException", new Integer(code),
+//				message));
 		this.code = code;
 	}
 
-	public DbgpDebuggingEngineException(int code, Throwable cause) {
+	public DbgpDebuggingEngineException(int code, Throwable cause)
+	{
 		super(cause);
 		this.code = code;
 	}
 
 	public DbgpDebuggingEngineException(int code, String message,
-			Throwable cause) {
-		super(
-				NLS
-						.bind(
-								"dbgpDebuggingEngineException2",
-								message, new Integer(code)), cause);
+			Throwable cause)
+	{
+//		super(NLS.bind("dbgpDebuggingEngineException2", message, new Integer(
+//				code)), cause);
+		super(message,cause);
 		this.code = code;
 	}
 
-	public int getCode() {
+	public int getCode()
+	{
 		return code;
+	}
+
+	@Override
+	public String getMessage()
+	{
+		String protocolErrorMessage = new Integer(getCode()).toString();
+		try
+		{
+			protocolErrorMessage = DBGPErrorType.lookup(getCode()).toString();
+		} catch (DBGPException e)
+		{
+			//
+		}
+		return protocolErrorMessage + "\nDetailed Message: " + super.getMessage();
 	}
 }

@@ -30,11 +30,16 @@
    <extension
          point="org.eclipse.ui.views">
       <view
+            category="org.overture.ide.ui.view.category"
             class="org.overture.ide.ui.navigator.VdmNavigator"
             icon="icons/cview16/overture_nav.png"
             id="org.overture.ide.ui.VdmExplorer"
             name="%VdmExplorerName">
       </view>
+      <category
+            id="org.overture.ide.ui.view.category"
+            name="Overture">
+      </category>
    </extension>
    <extension
          point="org.eclipse.ui.navigator.viewer">

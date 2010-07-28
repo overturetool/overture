@@ -125,6 +125,9 @@ public class VdmModel implements IVdmModel
 				throw new NotAllowedException("Other definition than Module is found: "
 						+ definition.getClass().getName());
 		}
+		
+		modules.combineDefaults();
+		
 		return modules;
 	}
 

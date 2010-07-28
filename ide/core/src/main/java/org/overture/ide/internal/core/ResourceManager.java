@@ -68,7 +68,8 @@ public class ResourceManager implements IResourceChangeListener
 		{
 			if (VdmProject.isVdmProject(file.getProject()))
 			{
-				IVdmProject project = VdmProject.createProject(file.getProject());
+				IVdmProject project = VdmProject.createProject(file
+						.getProject());
 
 				try
 				{
@@ -77,7 +78,9 @@ public class ResourceManager implements IResourceChangeListener
 						file.refreshLocal(IResource.DEPTH_INFINITE, null);
 					}
 					if (file.getContentDescription() != null
-							&& project.getContentTypeIds().contains(file.getContentDescription().getContentType().getId()))
+							&& project.getContentTypeIds().contains(
+									file.getContentDescription()
+											.getContentType().getId()))
 					{
 						IVdmSourceUnit unit = createSourceUnit(file, project);
 						return unit;
@@ -113,7 +116,8 @@ public class ResourceManager implements IResourceChangeListener
 	 * @param resource
 	 *            the resource currently selected to be searched
 	 * @param contentTypeId
-	 *            a possibly null content type id, if null it is just checked that a content type exist for the file
+	 *            a possibly null content type id, if null it is just checked
+	 *            that a content type exist for the file
 	 * @return a list of IFiles
 	 * @throws CoreException
 	 */
@@ -128,8 +132,9 @@ public class ResourceManager implements IResourceChangeListener
 					&& resource.getLocation().lastSegment().startsWith("."))// skip
 				return list;
 			// . folders like.svn
-			for (IResource res : ((IFolder) resource).members(IContainer.INCLUDE_PHANTOMS
-					| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
+			for (IResource res : ((IFolder) resource)
+					.members(IContainer.INCLUDE_PHANTOMS
+							| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
 			{
 
 				list.addAll(getFiles(project, res, contentTypeId));
@@ -139,10 +144,12 @@ public class ResourceManager implements IResourceChangeListener
 		// this file and the project
 		else if (resource instanceof IFile)
 		{
-			IContentType contentType = project.getContentTypeMatcher().findContentTypeFor(resource.toString());
+			IContentType contentType = project.getContentTypeMatcher()
+					.findContentTypeFor(resource.toString());
 
 			if (contentType != null
-					&& ((contentTypeId != null && contentTypeId.equals(contentType.getId())) || contentTypeId == null))
+					&& ((contentTypeId != null && contentTypeId
+							.equals(contentType.getId())) || contentTypeId == null))
 				list.add(getVdmSourceUnit((IFile) resource));
 		}
 		return list;
@@ -241,7 +248,8 @@ public class ResourceManager implements IResourceChangeListener
 		{
 			if (vdmSourceUnits.containsKey(res))
 			{
-				vdmSourceUnits.get(res).getProject().getModel().remove(vdmSourceUnits.get(res));
+				vdmSourceUnits.get(res).getProject().getModel().remove(
+						vdmSourceUnits.get(res));
 				vdmSourceUnits.remove(res);
 			}
 
@@ -263,9 +271,9 @@ public class ResourceManager implements IResourceChangeListener
 			switch (delta.getKind())
 			{
 				case IResourceDelta.ADDED:
-					// System.out.print("Resource ");
-					// System.out.print(res.getFullPath());
-					// System.out.println(" was added.");
+//					System.out.print("Resource ");
+//					System.out.print(res.getFullPath());
+//					System.out.println(" was added.");
 					add(res);
 					break;
 				case IResourceDelta.REMOVED:
@@ -275,11 +283,12 @@ public class ResourceManager implements IResourceChangeListener
 					remove(res);
 					break;
 				case IResourceDelta.CHANGED:
-					// System.out.print("Resource ");
-					// System.out.print(res.getFullPath());
-					// System.out.println(" has changed.");
+//					System.out.print("Resource ");
+//					System.out.print(res.getFullPath());
+//					System.out.println(" has changed.");
 					break;
 			}
+
 			return true; // visit the children
 		}
 
@@ -295,16 +304,12 @@ public class ResourceManager implements IResourceChangeListener
 				IFile file = (IFile) res;
 				if (VdmProject.isVdmProject(file.getProject()))
 				{
-					// IVdmProject project =
-					// VdmProject.createProject(file.getProject());
-					// Assert.isNotNull(project,
-					// "Project creation faild for file: "
-					// + res);
-					// addProject(res.getProject(), true);
+					// Add the VDM builder to the project if missing and the
+					// project have the correct nature
 					addBuilderProject(res.getProject());
-					// IVdmSourceUnit unit = createSourceUnit(file, project);
-					// Assert.isNotNull(unit, "Source unit creation faild for: "
-					// + res);
+					// Call getVdmSourceUnit to associate the the IFile to the
+					// project if the project contains the content type
+					getVdmSourceUnit(file);
 				}
 			}
 
@@ -377,13 +382,15 @@ public class ResourceManager implements IResourceChangeListener
 
 							System.out.println("Adding builder for: " + p);
 							IVdmProject project = VdmProject.createProject(p);
-							Assert.isNotNull(project, "VDM Project creation faild for project: "
-									+ p);
+							Assert.isNotNull(project,
+									"VDM Project creation faild for project: "
+											+ p);
 							try
 							{
 								if (!project.hasBuilder())
 								{
-									project.setBuilder(project.getLanguageVersion());
+									project.setBuilder(project
+											.getLanguageVersion());
 								}
 								project.getSpecFiles();// sync with content type
 								// files

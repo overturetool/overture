@@ -23,7 +23,7 @@ public enum DBGPErrorType
 	NO_CODE_ON_BREAKPOINT_LINE(203,"no code on breakpoint line (the IDE tried to set a breakpoint on a line which does not have any executable code. The debugger engine is NOT required to return this type if it is impossible to determine if there is code on a given location. (For example, in the PHP debugger backend this will only be returned in some special cases where the current scope falls into the scope of the breakpoint to be set))."),
 	INVALID_BREAKPOINT_STATE(204, "Invalid breakpoint state (using an unsupported breakpoint state was attempted)"),
 	NO_SUCH_BREAKPOINT(205,"No such breakpoint (used in breakpoint_get etc. to show that there is no breakpoint with the given ID)"),
-	ERROR_EVALUATING_CODE(206,"Error evaluating code (use from eval() (or perhaps property_get for a full name get))"),
+	ERROR_EVALUATING_CODE(206,"Error evaluating code"),
 	INVALID_EXPRESSION(207,"Invalid expression (the expression used for a non-eval() was invalid)"),
 	//300 Data errors
 	CANNOT_GET_PROPERTY(300 ,"Can not get property (when the requested property to get did not exist, this is NOT used for an existing but uninitialized property, which just gets the type \"uninitialised\" (See: PreferredTypeNames))."),
