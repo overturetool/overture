@@ -97,7 +97,14 @@ public class CmdLineProcesser
 			else
 				fileLineOffset.add(lineCount);
 
-			sb.append(data);
+			if(file.getName().toLowerCase().startsWith("io"))
+			{
+				
+			}
+			else
+			{
+				sb.append(data);
+			}
 		}
 
 		// return Translator.TranslateVdmToUml(sb.toString(),
