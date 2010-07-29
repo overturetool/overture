@@ -4,11 +4,13 @@ import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.core.resources.VdmProject;
 import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.utility.PluginFolderInclude;
 import org.overture.ide.ui.wizard.pages.LibraryIncludePage;
@@ -23,38 +25,40 @@ public abstract class VdmNewProjectWizard extends BasicNewProjectResourceWizard
 
 	private LibraryIncludePage _pageTwo;
 	private static final String WIZARD_NAME = "VDM New Project Wizard";
-	public VdmNewProjectWizard() {
+
+	public VdmNewProjectWizard()
+	{
 		setWindowTitle(WIZARD_NAME);
 		getPageName();
 		getPageTitle();
 		getPageDescription();
 	}
 
-//	public void init(IWorkbench workbench, IStructuredSelection selection)
-//	{
-//		// TODO Auto-generated method stub
-//
-//	}
+	// public void init(IWorkbench workbench, IStructuredSelection selection)
+	// {
+	// // TODO Auto-generated method stub
+	//
+	// }
 
 	@Override
 	public void addPages()
 	{
 		super.addPages();
-//		_pageOne = new WizardNewProjectCreationPage(this.fPageName);
-//		_pageOne.setTitle(this.fPageTitle);
-//		_pageOne.setDescription(this.fPageDescription);
+		// _pageOne = new WizardNewProjectCreationPage(this.fPageName);
+		// _pageOne.setTitle(this.fPageTitle);
+		// _pageOne.setDescription(this.fPageDescription);
 
 		getPages()[0].setTitle(getPageTitle());
 		getPages()[0].setDescription(getPageDescription());
-		
+
 		_pageTwo = new LibraryIncludePage("Library Include");
 		addPage(_pageTwo);
 	}
 
-//	public boolean canFinish()
-//	{
-//		return _pageOne.getErrorMessage() == null;
-//	}
+	// public boolean canFinish()
+	// {
+	// return _pageOne.getErrorMessage() == null;
+	// }
 
 	// @Override
 	// public boolean performFinish(){
@@ -94,7 +98,8 @@ public abstract class VdmNewProjectWizard extends BasicNewProjectResourceWizard
 	// }
 	// if (this.nature == null || this.nature.length() == 0)
 	// {
-	// throw new RuntimeException("Messages.GenericDLTKProjectWizard_natureMustBeSpecified");
+	// throw new
+	// RuntimeException("Messages.GenericDLTKProjectWizard_natureMustBeSpecified");
 	// }
 	// }
 
@@ -103,6 +108,7 @@ public abstract class VdmNewProjectWizard extends BasicNewProjectResourceWizard
 	{
 
 		boolean ok = super.performFinish();
+		
 		IProject prj = getNewProject();
 
 		if (prj != null)
@@ -112,7 +118,7 @@ public abstract class VdmNewProjectWizard extends BasicNewProjectResourceWizard
 				setVdmBuilder(prj);
 
 				createSelectedLibraries(prj);
-				//createModelFolder(prj);
+				// createModelFolder(prj);
 
 			} catch (CoreException e)
 			{
@@ -125,7 +131,8 @@ public abstract class VdmNewProjectWizard extends BasicNewProjectResourceWizard
 		return ok;
 	}
 
-	private void createModelFolder(IProject prj) {
+	private void createModelFolder(IProject prj)
+	{
 		File projectRoot = prj.getLocation().toFile();
 		File modelFolder = new File(projectRoot, "model");
 		if (!modelFolder.exists())
@@ -134,32 +141,28 @@ public abstract class VdmNewProjectWizard extends BasicNewProjectResourceWizard
 
 	private void createSelectedLibraries(IProject prj) throws CoreException
 	{
-		boolean useMath = _pageTwo.getLibrarySelection()
-				.isMathSelected();
+		boolean useMath = _pageTwo.getLibrarySelection().isMathSelected();
 		boolean useIo = _pageTwo.getLibrarySelection().isIoSelected();
-		boolean useUtil = _pageTwo.getLibrarySelection()
-				.isUtilSelected();
+		boolean useUtil = _pageTwo.getLibrarySelection().isUtilSelected();
 
 		if (useIo || useMath || useUtil)
 		{
 			File projectRoot = prj.getLocation().toFile();
-			File libFolder = new File(projectRoot,"lib");
+			File libFolder = new File(projectRoot, "lib");
 			if (!libFolder.exists())
 				libFolder.mkdirs();
 
 			String extension = "pp";
 
 			Dialect dialect = Dialect.VDM_PP;
-			if (getNature().contains(Dialect.VDM_PP.name().replace("_",
-					"").toLowerCase()))
+			if (getNature().contains(
+					Dialect.VDM_PP.name().replace("_", "").toLowerCase()))
 				dialect = Dialect.VDM_PP;
-			else if (getNature().contains(Dialect.VDM_RT.name()
-					.replace("_", "")
-					.toLowerCase()))
+			else if (getNature().contains(
+					Dialect.VDM_RT.name().replace("_", "").toLowerCase()))
 				dialect = Dialect.VDM_RT;
-			else if (getNature().contains(Dialect.VDM_SL.name()
-					.replace("_", "")
-					.toLowerCase()))
+			else if (getNature().contains(
+					Dialect.VDM_SL.name().replace("_", "").toLowerCase()))
 				dialect = Dialect.VDM_SL;
 
 			extension = dialect.name().replace("_", "").toLowerCase();
@@ -167,32 +170,26 @@ public abstract class VdmNewProjectWizard extends BasicNewProjectResourceWizard
 			{
 				if (useIo)
 					if (dialect == Dialect.VDM_SL)
-						copyFile(libFolder,
-								"includes/lib/sl/IO.vdmsl",
-								"IO." + extension);
+						copyFile(libFolder, "includes/lib/sl/IO.vdmsl", "IO."
+								+ extension);
 					else
-						copyFile(libFolder,
-								"includes/lib/pp/IO.vdmpp",
-								"IO." + extension);
+						copyFile(libFolder, "includes/lib/pp/IO.vdmpp", "IO."
+								+ extension);
 
 				if (useMath)
 					if (dialect == Dialect.VDM_SL)
-						copyFile(libFolder,
-								"includes/lib/sl/MATH.vdmsl",
+						copyFile(libFolder, "includes/lib/sl/MATH.vdmsl",
 								"MATH." + extension);
 					else
-						copyFile(libFolder,
-								"includes/lib/pp/MATH.vdmpp",
+						copyFile(libFolder, "includes/lib/pp/MATH.vdmpp",
 								"MATH." + extension);
 
 				if (useUtil)
 					if (dialect == Dialect.VDM_SL)
-						copyFile(libFolder,
-								"includes/lib/sl/VDMUtil.vdmsl",
+						copyFile(libFolder, "includes/lib/sl/VDMUtil.vdmsl",
 								"VDMUtil." + extension);
 					else
-						copyFile(libFolder,
-								"includes/lib/pp/VDMUtil.vdmpp",
+						copyFile(libFolder, "includes/lib/pp/VDMUtil.vdmpp",
 								"VDMUtil." + extension);
 
 			} catch (IOException e)
@@ -206,9 +203,10 @@ public abstract class VdmNewProjectWizard extends BasicNewProjectResourceWizard
 
 	private void setVdmBuilder(IProject prj) throws CoreException
 	{
-		VdmProject.addNature(prj, getNature());
 
-		IVdmProject p = VdmProject.createProject(prj);
+		addNature(prj, getNature());
+		IVdmProject p = (IVdmProject) prj.getAdapter(IVdmProject.class);
+		Assert.isNotNull(p);
 		p.setBuilder(Release.DEFAULT);
 	}
 
@@ -219,6 +217,23 @@ public abstract class VdmNewProjectWizard extends BasicNewProjectResourceWizard
 				sourceLocation);
 		PluginFolderInclude.writeFile(libFolder, newName, io);
 
+	}
+
+	private static void addNature(IProject project, String nature)
+			throws CoreException
+	{
+		if (!project.hasNature(nature))
+		{
+			IProjectDescription description = project.getDescription();
+			String[] prevNatures = description.getNatureIds();
+			String[] newNatures = new String[prevNatures.length + 1];
+			System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
+			newNatures[prevNatures.length] = nature;
+			description.setNatureIds(newNatures);
+
+			IProgressMonitor monitor = null;
+			project.setDescription(description, monitor);
+		}
 	}
 
 	protected abstract String getPageName();

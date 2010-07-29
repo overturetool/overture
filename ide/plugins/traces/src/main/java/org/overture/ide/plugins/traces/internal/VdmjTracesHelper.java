@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Shell;
@@ -52,10 +54,10 @@ public class VdmjTracesHelper implements ITracesHelper
 	String contentTypeId = IVdmPpCoreConstants.CONTENT_TYPE;
 	Shell shell;
 
-	public VdmjTracesHelper(Shell shell, IVdmProject project, int max)
+	public VdmjTracesHelper(Shell shell, IVdmProject vdmProject, int max)
 			throws Exception
 	{
-		this.project = project;
+		this.project = vdmProject;
 		this.shell = shell;
 		// if (project.hasNature(VdmPpProjectNature.VDM_PP_NATURE))
 		// {
@@ -73,9 +75,11 @@ public class VdmjTracesHelper implements ITracesHelper
 		// contentTypeId = VdmSlCorePluginConstants.CONTENT_TYPE;
 		// dialect = Dialect.VDM_SL;
 		// }
-
+		IProject project = (IProject) vdmProject.getAdapter(IProject.class);
+		Assert.isNotNull(project);
+		
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
-
+		
 		nature = this.project.getVdmNature();
 		contentTypeId = this.project.getContentTypeIds().get(0);
 		dialect = this.project.getDialect();
@@ -85,7 +89,7 @@ public class VdmjTracesHelper implements ITracesHelper
 		if (!this.projectDir.exists())
 			this.projectDir.mkdirs();
 
-		project.getModel().refresh(false, null);
+		vdmProject.getModel().refresh(false, null);
 		// AbstractBuilder.parseMissingFiles(project, nature, contentTypeId,
 		// null);
 
@@ -307,7 +311,8 @@ public class VdmjTracesHelper implements ITracesHelper
 
 		try
 		{
-			project.refreshLocal(IResource.DEPTH_INFINITE, null);
+			IProject aproject = (IProject) project.getAdapter(IProject.class);
+			aproject.refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (CoreException e)
 		{
 			// TODO Auto-generated catch block

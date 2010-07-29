@@ -3,7 +3,6 @@ package org.overture.ide.builders.vdmj;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -35,6 +34,8 @@ public abstract class VdmjBuilder extends AbstractVdmBuilder
 		if (!getProject().hasSuppressWarnings())
 			for (VDMWarning warning : warnings)
 			{
+				
+				
 				addWarningMarker(project, warning);
 			}
 		IStatus typeChecked = null;
@@ -58,7 +59,7 @@ public abstract class VdmjBuilder extends AbstractVdmBuilder
 		addErrorMarker(error.location.file, error.message, error.location, IBuilderVdmjConstants.PLUGIN_ID);
 	}
 
-	private void addWarningMarker(IProject project, VDMWarning error)
+	private void addWarningMarker(IVdmProject project, VDMWarning error)
 	{
 		addWarningMarker(error.location.file, error.message, error.location, IBuilderVdmjConstants.PLUGIN_ID);
 	}

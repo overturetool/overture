@@ -1,4 +1,4 @@
-package org.overture.ide.core.resources;
+package org.overture.ide.internal.core.resources;
 
 import java.io.File;
 import java.net.URI;
@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
@@ -32,15 +33,17 @@ import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.builder.SafeBuilder;
+import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.core.utility.ILanguage;
 import org.overture.ide.core.utility.LanguageManager;
-import org.overture.ide.core.utility.Project;
+
 import org.overture.ide.internal.core.ResourceManager;
 import org.overture.ide.internal.core.ast.VdmModelManager;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.lex.Dialect;
 
-public class VdmProject extends Project implements IVdmProject
+public class VdmProject implements IVdmProject
 {
 	private static final String LANGUAGE_VERSION_ARGUMENT_KEY = "LANGUAGE_VERSION";
 	private static final String DYNAMIC_TYPE_CHECKS_ARGUMENT_KEY = "DYNAMIC_TYPE_CHECKS";
@@ -48,15 +51,16 @@ public class VdmProject extends Project implements IVdmProject
 	private static final String POST_CHECKS_ARGUMENT_KEY = "POST_CHECKS";
 	private static final String PRE_CHECKS_ARGUMENT_KEY = "PRE_CHECKS";
 	private static final String SUPRESS_WARNINGS_ARGUMENT_KEY = "SUPPRESS_WARNINGS";
-
-
-
+	
+	
+	
+	public final IProject project;
 	private ILanguage language = null;
 
 	private VdmProject(IProject project) throws CoreException,
 			NotAllowedException
 	{
-		super(project);
+		this.project = project;
 		for (ILanguage language : LanguageManager.getInstance().getLanguages())
 		{
 			if (project.hasNature(language.getNature()))
@@ -187,6 +191,11 @@ public class VdmProject extends Project implements IVdmProject
 	public void setBuilder(Release languageVersion) throws CoreException
 	{
 		addBuilder(getProject(), ICoreConstants.BUILDER_ID, LANGUAGE_VERSION_ARGUMENT_KEY, languageVersion.toString());
+	}
+
+	private IProject getProject()
+	{
+		return this.project;
 	}
 
 	/*
@@ -558,7 +567,7 @@ public class VdmProject extends Project implements IVdmProject
 	{
 		try
 		{
-			deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+			this.project.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
 
 		} catch (CoreException e)
 		{
@@ -629,10 +638,10 @@ public class VdmProject extends Project implements IVdmProject
 			throws CoreException
 	{
 		List<IVdmSourceUnit> list = new Vector<IVdmSourceUnit>();
-		for (IResource res : members(IContainer.INCLUDE_PHANTOMS
+		for (IResource res : this.project.members(IContainer.INCLUDE_PHANTOMS
 				| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
 		{
-			list.addAll(ResourceManager.getInstance().getFiles(this, res, contentTypeId));
+			list.addAll(ResourceManager.getInstance().getFiles(this.project, res, contentTypeId));
 		}
 		return list;
 	}
@@ -741,6 +750,16 @@ public class VdmProject extends Project implements IVdmProject
 	public List<String> getContentTypeIds()
 	{
 		return language.getContentTypes();
+	}
+
+	public String getName()
+	{
+		return this.project.getName();
+	}
+
+	public Object getAdapter(Class adapter)
+	{
+		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
 	// @Override

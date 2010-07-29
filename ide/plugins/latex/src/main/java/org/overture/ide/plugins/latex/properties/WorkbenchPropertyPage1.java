@@ -215,7 +215,7 @@ public class WorkbenchPropertyPage1 extends PropertyPage implements
 				if (project instanceof IProject)
 					selectedProject = (IProject) project;
 				else if (project instanceof IVdmProject)
-					selectedProject = ((IVdmProject) project);
+					selectedProject = (IProject) ((IVdmProject) project).getAdapter(IProject.class);
 
 			}
 		} else if (selectedItem instanceof IStructuredSelection)

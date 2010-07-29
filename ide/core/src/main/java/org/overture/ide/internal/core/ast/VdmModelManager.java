@@ -81,7 +81,16 @@ public class VdmModelManager implements IVdmModelManager {
 
 	public List<IProject> getProjects() {
 		List<IProject> projects = new Vector<IProject>();
-		projects.addAll(asts.keySet());
+		for (IVdmProject vdmProject : asts.keySet())
+		{
+			IProject project = (IProject) vdmProject.getAdapter(IProject.class);
+			if(project != null)
+			{
+				projects.add(project);
+			}
+		}
+		
+	//	projects.addAll(asts.keySet());
 		return projects;
 	}
 

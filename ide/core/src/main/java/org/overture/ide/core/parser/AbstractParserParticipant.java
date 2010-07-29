@@ -16,7 +16,6 @@ import org.overture.ide.core.VdmCore;
 
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overture.ide.core.resources.VdmProject;
 import org.overture.ide.core.utility.FileUtility;
 import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -136,18 +135,8 @@ public abstract class AbstractParserParticipant implements ISourceParser
 				}
 			}
 
-			IVdmProject vdmProject = null;
-			if (VdmProject.isVdmProject(project))
-			{
-				try
-				{
-					vdmProject = VdmProject.createProject(project);
-				} catch (Exception e)
-				{
-
-				}
-			}
-
+			IVdmProject vdmProject = (IVdmProject) project.getAdapter(IVdmProject.class);
+			
 			if (result.getWarnings().size() > 0 && vdmProject != null
 					&& vdmProject.hasSuppressWarnings())
 			{

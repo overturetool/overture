@@ -6,7 +6,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.ui.internal.ObjectPluginAction;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.core.resources.VdmProject;
 
 @SuppressWarnings("restriction")
 public class TreeSelectionLocater
@@ -23,10 +22,8 @@ public class TreeSelectionLocater
 				if (selection.getPaths().length > 0)
 				{
 					IProject p = (IProject) selection.getPaths()[0].getFirstSegment();
-					if (VdmProject.isVdmProject(p))
-					{
-						project = VdmProject.createProject(p);
-					}
+					project = (IVdmProject) p.getAdapter(IVdmProject.class);
+										
 				}
 			} else if (objectPluginAction.getSelection() instanceof IStructuredSelection)
 			{
@@ -34,10 +31,7 @@ public class TreeSelectionLocater
 				if (selection.getFirstElement() instanceof IProject)
 				{
 					IProject p = (IProject) selection.getFirstElement();
-					if (VdmProject.isVdmProject(p))
-					{
-						project = VdmProject.createProject(p);
-					}
+					project = (IVdmProject) p.getAdapter(IVdmProject.class);
 				}
 			}
 		}

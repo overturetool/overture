@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -36,9 +37,11 @@ public class VdmTools
 			+ "JCG_INTERFACES:\n" + "Seed_nondetstmt:-1\n"
 			+ "j2v_stubsOnly:0\n" + "j2v_transforms:0";
 
-	public void createProject(Shell shell, IVdmProject project, List<File> files)
+	public void createProject(Shell shell, IVdmProject vdmProject, List<File> files)
 			throws IOException
 	{
+		
+		IProject project = (IProject) vdmProject.getAdapter(IProject.class);
 		File location = project.getLocation().toFile();
 		StringBuilder sb = new StringBuilder();
 		sb.append(HEADER1);
@@ -56,17 +59,17 @@ public class VdmTools
 		File generated = new File(location, "generated");
 		generated.mkdirs();
 
-		PluginFolderInclude.writeFile(generated, project.getName() + ".prj", sb.toString());
+		PluginFolderInclude.writeFile(generated, vdmProject.getName() + ".prj", sb.toString());
 		VdmToolsOptions options = new VdmToolsOptions();
-		options.JCG_PACKAGE = (project.getName().replaceAll(" ", "") + "." + "model").toLowerCase();
-		options.DTC = project.hasDynamictypechecks();
-		options.INV = project.hasInvchecks();
-		options.POST = project.hasPostchecks();
-		options.PRE = project.hasPrechecks();
+		options.JCG_PACKAGE = (vdmProject.getName().replaceAll(" ", "") + "." + "model").toLowerCase();
+		options.DTC = vdmProject.hasDynamictypechecks();
+		options.INV = vdmProject.hasInvchecks();
+		options.POST = vdmProject.hasPostchecks();
+		options.PRE = vdmProject.hasPrechecks();
 
-		options.Save(generated, project.getName());
-		Runtime.getRuntime().exec("\"" + getVdmToolsPath(shell, project)
-				+ "\" " + project.getName() + ".prj", null, generated);
+		options.Save(generated, vdmProject.getName());
+		Runtime.getRuntime().exec("\"" + getVdmToolsPath(shell, vdmProject)
+				+ "\" " + vdmProject.getName() + ".prj", null, generated);
 	}
 
 	private String getFilePath(File location, File file)

@@ -13,7 +13,6 @@ import org.eclipse.debug.core.sourcelookup.containers.FolderSourceContainer;
 import org.eclipse.debug.core.sourcelookup.containers.ProjectSourceContainer;
 import org.eclipse.debug.core.sourcelookup.containers.WorkspaceSourceContainer;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.core.resources.VdmProject;
 import org.overture.ide.debug.core.IDebugConstants;
 
 public class VdmSourcePathComputerDelegate implements
@@ -32,19 +31,21 @@ public class VdmSourcePathComputerDelegate implements
 				.getProject(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT,
 						""));
 
-		if (project != null && VdmProject.isVdmProject(project))
+		
+		
+		if (project != null)
 		{
-			vdmProject = VdmProject.createProject(project);
+			vdmProject = (IVdmProject) project.getAdapter(IVdmProject.class);
 		}
 
-		String path = vdmProject.getFullPath().toOSString();
+		String path = project.getFullPath().toOSString();
 
 		ISourceContainer sourceContainer = null;
 		if (path != null)
 		{
 			IResource resource = ResourcesPlugin.getWorkspace()
 					.getRoot()
-					.findMember(vdmProject.getFullPath());
+					.findMember(project.getFullPath());
 			if (resource != null)
 			{
 				IContainer container = (IContainer) resource;

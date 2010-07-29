@@ -4,16 +4,16 @@ import java.io.File;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.overture.ide.core.IVdmModel;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.lex.Dialect;
 
-public interface IVdmProject extends IProject
+public interface IVdmProject extends IAdaptable
 {
 
 	
@@ -73,7 +73,7 @@ public interface IVdmProject extends IProject
 	public abstract boolean typeCheck(IProgressMonitor monitor) throws CoreException;
 	public abstract void typeCheck(boolean clean,IProgressMonitor monitor) throws CoreException;
 
-	public abstract String getProjectName();
+	public abstract String getName();
 	
 	public abstract String getVdmNature();
 	

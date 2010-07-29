@@ -11,6 +11,7 @@ import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -83,26 +84,31 @@ public class LatexCoverageAction implements IObjectActionDelegate
 		try
 		{
 
-			IVdmProject selectedProject = TreeSelectionLocater.getSelectedProject(action);
+			IVdmProject selectedProject = TreeSelectionLocater
+					.getSelectedProject(action);
 			if (selectedProject == null)
 			{
 				console.print("Could not find selected project");
 				return;
 			}
+			IProject project = (IProject) selectedProject
+					.getAdapter(IProject.class);
 
-			if (selectedProject.hasNature(IVdmPpCoreConstants.NATURE))
-				makeLatex(selectedProject,
+			if (project != null)
+			{
+				if (project.hasNature(IVdmPpCoreConstants.NATURE))
+					makeLatex(selectedProject,
 
-				Dialect.VDM_PP);
-			if (selectedProject.hasNature(IVdmSlCoreConstants.NATURE))
-				makeLatex(selectedProject,
+					Dialect.VDM_PP);
+				if (project.hasNature(IVdmSlCoreConstants.NATURE))
+					makeLatex(selectedProject,
 
-				Dialect.VDM_SL);
-			if (selectedProject.hasNature(IVdmRtCoreConstants.NATURE))
-				makeLatex(selectedProject,
+					Dialect.VDM_SL);
+				if (project.hasNature(IVdmRtCoreConstants.NATURE))
+					makeLatex(selectedProject,
 
-				Dialect.VDM_RT);
-
+					Dialect.VDM_RT);
+			}
 		} catch (Exception ex)
 		{
 			System.err.println(ex.getMessage() + ex.getStackTrace());
@@ -159,13 +165,18 @@ public class LatexCoverageAction implements IObjectActionDelegate
 				monitor.worked(IProgressMonitor.UNKNOWN);
 				try
 				{
-					File projectRoot = selectedProject.getLocation().toFile();
-					File outputFolder = LatexBuilder.makeOutputFolder(selectedProject);
+					IProject project = (IProject) selectedProject
+							.getAdapter(IProject.class);
+					Assert.isNotNull(project);
+
+					File projectRoot = project.getLocation().toFile();
+					File outputFolder = LatexBuilder.makeOutputFolder(project);
 					LatexBuilder latexBuilder = new LatexBuilder();
 
-					latexBuilder.prepare(selectedProject, dialect);
+					latexBuilder.prepare(project, dialect);
 
-					File outputFolderForGeneratedModelFiles = new File(outputFolder, "specification");
+					File outputFolderForGeneratedModelFiles = new File(
+							outputFolder, "specification");
 					if (!outputFolderForGeneratedModelFiles.exists())
 						outputFolderForGeneratedModelFiles.mkdirs();
 
@@ -177,7 +188,8 @@ public class LatexCoverageAction implements IObjectActionDelegate
 
 							public void run()
 							{
-								VdmTypeCheckerUi.typeCheck(shell, selectedProject);
+								VdmTypeCheckerUi.typeCheck(shell,
+										selectedProject);
 
 							}
 						});
@@ -186,7 +198,7 @@ public class LatexCoverageAction implements IObjectActionDelegate
 					// if ()
 					{
 
-						boolean modelOnly = !hasDocument(selectedProject);
+						boolean modelOnly = !hasDocument(project);
 						LexLocation.resetLocations();
 						if (selectedProject.getDialect() == Dialect.VDM_PP
 								|| selectedProject.getDialect() == Dialect.VDM_RT)
@@ -194,16 +206,22 @@ public class LatexCoverageAction implements IObjectActionDelegate
 
 							ClassList classes = parseClasses(selectedProject);
 
-							List<File> outputFiles = getFileChildern(new File(projectRoot, "generated"));
+							List<File> outputFiles = getFileChildern(new File(
+									projectRoot, "generated"));
 
 							for (ClassDefinition classDefinition : classes)
 							{
-								createCoverage(latexBuilder, outputFolderForGeneratedModelFiles, outputFiles, classDefinition.location.file, modelOnly);
+								createCoverage(latexBuilder,
+										outputFolderForGeneratedModelFiles,
+										outputFiles,
+										classDefinition.location.file,
+										modelOnly);
 
 							}
 						} else if (selectedProject.getDialect() == Dialect.VDM_SL)
 						{
-							List<File> outputFiles = getFileChildern(new File(projectRoot, "generated"));
+							List<File> outputFiles = getFileChildern(new File(
+									projectRoot, "generated"));
 
 							ModuleList modules = parseModules(selectedProject);
 
@@ -211,7 +229,9 @@ public class LatexCoverageAction implements IObjectActionDelegate
 							{
 								for (File moduleFile : classDefinition.files)
 								{
-									createCoverage(latexBuilder, outputFolderForGeneratedModelFiles, outputFiles, moduleFile, modelOnly);
+									createCoverage(latexBuilder,
+											outputFolderForGeneratedModelFiles,
+											outputFiles, moduleFile, modelOnly);
 								}
 							}
 						}
@@ -221,25 +241,29 @@ public class LatexCoverageAction implements IObjectActionDelegate
 							+ ".tex";
 
 					latexBuilder.saveDocument(projectRoot, documentFileName);
-					if (!hasDocument(selectedProject))
-						buildPdf(selectedProject, monitor, outputFolder, documentFileName);
+					if (!hasDocument(project))
+						buildPdf(project, monitor, outputFolder,
+								documentFileName);
 					else
 					{
-						documentFileName = getDocument(selectedProject);
-						outputFolder = LatexBuilder.makeOutputFolder(selectedProject);
-						buildPdf(selectedProject, monitor, outputFolder, documentFileName);
+						documentFileName = getDocument(project);
+						outputFolder = LatexBuilder.makeOutputFolder(project);
+						buildPdf(project, monitor, outputFolder,
+								documentFileName);
 					}
 				} catch (Exception e)
 				{
 
 					e.printStackTrace();
-					return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Unknown error", e);
+					return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+							"Unknown error", e);
 				}
 
 				monitor.done();
 				// expandCompleted = true;
 
-				return new Status(IStatus.OK, Activator.PLUGIN_ID, IStatus.OK, "Translation completed", null);
+				return new Status(IStatus.OK, Activator.PLUGIN_ID, IStatus.OK,
+						"Translation completed", null);
 
 			}
 
@@ -248,7 +272,8 @@ public class LatexCoverageAction implements IObjectActionDelegate
 					String documentFileName) throws InterruptedException,
 					CoreException
 			{
-				PdfLatex pdflatex = new PdfLatex(selectedProject, outputFolder, documentFileName);
+				PdfLatex pdflatex = new PdfLatex(selectedProject, outputFolder,
+						documentFileName);
 				pdflatex.start();
 
 				while (!monitor.isCanceled() && !pdflatex.isFinished)
@@ -258,7 +283,8 @@ public class LatexCoverageAction implements IObjectActionDelegate
 					pdflatex.kill();
 				else
 				{
-					PdfLatex pdflatex2 = new PdfLatex(selectedProject, outputFolder, documentFileName);
+					PdfLatex pdflatex2 = new PdfLatex(selectedProject,
+							outputFolder, documentFileName);
 					pdflatex2.start();
 
 					while (!monitor.isCanceled() && !pdflatex2.isFinished)
@@ -282,8 +308,8 @@ public class LatexCoverageAction implements IObjectActionDelegate
 				if (!outputFolderForGeneratedModelFiles.exists())
 					outputFolderForGeneratedModelFiles.mkdirs();
 
-				File texFile = new File(outputFolderForGeneratedModelFiles, moduleFile.getName().replace(" ", "")
-						+ ".tex");
+				File texFile = new File(outputFolderForGeneratedModelFiles,
+						moduleFile.getName().replace(" ", "") + ".tex");
 				if (texFile.exists())
 					texFile.delete();
 
@@ -306,12 +332,17 @@ public class LatexCoverageAction implements IObjectActionDelegate
 				SourceFile f = new SourceFile(moduleFile);
 
 				PrintWriter pw = new PrintWriter(texFile);
-				if(markCoverage(selectedProject))
+				IProject project = (IProject) selectedProject
+						.getAdapter(IProject.class);
+				Assert.isNotNull(project);
+				if (markCoverage(project))
 				{
-				f.printLatexCoverage(pw, false, modelOnly, insertCoverageTable(selectedProject));
-				}else
+					f.printLatexCoverage(pw, false, modelOnly,
+							insertCoverageTable(project));
+				} else
 				{
-					f.printLatex(pw, false, modelOnly, insertCoverageTable(selectedProject),false);
+					f.printLatex(pw, false, modelOnly,
+							insertCoverageTable(project), false);
 				}
 				// ConsoleWriter cw = new ConsoleWriter("LATEX");
 				// f.printCoverage(cw);
@@ -320,7 +351,8 @@ public class LatexCoverageAction implements IObjectActionDelegate
 
 			private boolean isStandardLibarary(File moduleFile)
 			{
-				return moduleFile.getParentFile().getName().equalsIgnoreCase("lib");
+				return moduleFile.getParentFile().getName().equalsIgnoreCase(
+						"lib");
 				// String name = moduleFile.getAbsolutePath()
 				// .toLowerCase()
 				// .replace('\\', '/');
@@ -331,7 +363,8 @@ public class LatexCoverageAction implements IObjectActionDelegate
 				// || name.endsWith("/lib/math.vdmrt")
 				// || name.endsWith("/lib/math.vdmsl")
 				// || name.endsWith("/lib/vdmutil.vdmpp")
-				// || name.endsWith("/lib/vdmutil.vdmrt") || name.endsWith("/lib/vdmutil.vdmsl"));
+				// || name.endsWith("/lib/vdmutil.vdmrt") ||
+				// name.endsWith("/lib/vdmutil.vdmsl"));
 
 			}
 
@@ -384,7 +417,8 @@ public class LatexCoverageAction implements IObjectActionDelegate
 		{
 			String charset = source.getFile().getCharset();
 
-			LexTokenReader ltr = new LexTokenReader(source.getSystemFile(), Dialect.VDM_RT, charset);
+			LexTokenReader ltr = new LexTokenReader(source.getSystemFile(),
+					Dialect.VDM_RT, charset);
 			reader = new ClassReader(ltr);
 
 			classes.addAll(reader.readClasses());
@@ -401,7 +435,8 @@ public class LatexCoverageAction implements IObjectActionDelegate
 		{
 			String charset = source.getFile().getCharset();
 
-			LexTokenReader ltr = new LexTokenReader(source.getSystemFile(), Dialect.VDM_SL, charset);
+			LexTokenReader ltr = new LexTokenReader(source.getSystemFile(),
+					Dialect.VDM_SL, charset);
 			reader = new ModuleReader(ltr);
 
 			modules.addAll(reader.readModules());
@@ -412,28 +447,32 @@ public class LatexCoverageAction implements IObjectActionDelegate
 
 	public boolean hasDocument(IProject project) throws CoreException
 	{
-		String result = project.getPersistentProperty(WorkbenchPropertyPage1.getQualifierName(ILatexConstants.LATEX_GENERATE_MAIN_DOCUMENT));
+		String result = project
+				.getPersistentProperty(WorkbenchPropertyPage1
+						.getQualifierName(ILatexConstants.LATEX_GENERATE_MAIN_DOCUMENT));
 		// boolean modelOnly = !new LatexProject(selectedProject).hasDocument();
 		return !(result == null || result.equalsIgnoreCase("true"));
 	}
 
 	public String getDocument(IProject project) throws CoreException
 	{
-		return project.getPersistentProperty(WorkbenchPropertyPage1.getQualifierName(ILatexConstants.LATEX_MAIN_DOCUMENT));
+		return project.getPersistentProperty(WorkbenchPropertyPage1
+				.getQualifierName(ILatexConstants.LATEX_MAIN_DOCUMENT));
 	}
-	
+
 	public boolean insertCoverageTable(IProject project) throws CoreException
 	{
-		String result = project.getPersistentProperty(WorkbenchPropertyPage1.getQualifierName(ILatexConstants.LATEX_INCLUDE_COVERAGETABLE));
+		String result = project.getPersistentProperty(WorkbenchPropertyPage1
+				.getQualifierName(ILatexConstants.LATEX_INCLUDE_COVERAGETABLE));
 		return (result == null || result.equalsIgnoreCase("true"));
-		
+
 	}
-	
 
 	public boolean markCoverage(IProject project) throws CoreException
 	{
-		String result = project.getPersistentProperty(WorkbenchPropertyPage1.getQualifierName(ILatexConstants.LATEX_MARK_COVERAGE));
+		String result = project.getPersistentProperty(WorkbenchPropertyPage1
+				.getQualifierName(ILatexConstants.LATEX_MARK_COVERAGE));
 		return (result == null || result.equalsIgnoreCase("true"));
-		
+
 	}
 }

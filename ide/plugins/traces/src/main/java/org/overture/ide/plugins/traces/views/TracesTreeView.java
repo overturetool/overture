@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -64,7 +65,6 @@ import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.core.resources.VdmProject;
 import org.overture.ide.plugins.traces.OvertureTracesPlugin;
 import org.overture.ide.plugins.traces.TracesConstants;
 import org.overture.ide.plugins.traces.debug.TraceDebugLauncher;
@@ -136,7 +136,9 @@ public class TracesTreeView extends ViewPart
 				if (traceHelpers.get(project.getName()) != null)
 					traceHelpers.remove(project.getName());
 
-				ITracesHelper tmpHelper = new VdmjTracesHelper(getSite().getShell(), VdmProject.createProject(project), 3);
+				IVdmProject vdmProject = (IVdmProject) project.getAdapter(IVdmProject.class);
+				Assert.isNotNull(vdmProject);
+				ITracesHelper tmpHelper = new VdmjTracesHelper(getSite().getShell(), vdmProject, 3);
 
 				if (tmpHelper.getClassNamesWithTraces().size() > 0)
 
@@ -162,7 +164,7 @@ public class TracesTreeView extends ViewPart
 	public static boolean isValidProject(IProject project)
 	{
 		return project.isOpen() && project.isAccessible()
-				&& VdmProject.isVdmProject(project);
+				&& project.getAdapter(IVdmProject.class) != null;
 		// && (project.hasNature(VdmPpProjectNature.VDM_PP_NATURE)
 		// || project.hasNature(VdmRtProjectNature.VDM_RT_NATURE) ||
 		// project.hasNature(VdmSlProjectNature.VDM_SL_NATURE)&& AstManager.instance().getProjects().contains(project));
@@ -1130,7 +1132,9 @@ monitor.done();
 						// gotoLine(,
 						// tn.GetTraceDefinition().location.startLine,
 						// tn.getName());
-						IFile file = VdmProject.createProject(iproject).findIFile(helper.getFile(tn.getParent().getName()));
+						IVdmProject vdmProject = (IVdmProject) iproject.getAdapter(IVdmProject.class);
+						
+						IFile file = vdmProject.findIFile(helper.getFile(tn.getParent().getName()));
 
 						EditorUtility.gotoLocation(file, tn.getTraceDefinition().location, tn.getName());
 					} catch (IOException e)

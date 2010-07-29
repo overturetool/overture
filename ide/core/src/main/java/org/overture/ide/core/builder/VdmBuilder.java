@@ -5,7 +5,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.overture.ide.core.VdmCore;
-import org.overture.ide.core.resources.VdmProject;
+import org.overture.ide.core.resources.IVdmProject;
+
 
 public class VdmBuilder extends VdmCoreBuilder
 { 
@@ -56,7 +57,9 @@ public class VdmBuilder extends VdmCoreBuilder
 		}
 		monitor.beginTask("Cleaning project: " + getProject().getName(), IProgressMonitor.UNKNOWN);
 
-		if (VdmProject.isVdmProject(getProject()))
+		
+		
+		if (getProject().getAdapter(IVdmProject.class) != null)
 		{
 			clearProblemMarkers();
 

@@ -328,7 +328,7 @@
                      
         </page>
      </extension>
-   <extension
+   <!--extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="true"
@@ -341,7 +341,7 @@
          </action>
       </objectContribution>
       
-   </extension>
+   </extension-->
    <extension
          point="org.eclipse.ui.editors.annotationTypes">
       <type

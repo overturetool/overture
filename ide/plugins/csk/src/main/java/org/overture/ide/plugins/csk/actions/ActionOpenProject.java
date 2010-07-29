@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
@@ -30,19 +31,21 @@ public class ActionOpenProject implements IViewActionDelegate
 
 	public void run(IAction action)
 	{
-		IVdmProject project = getSelectedProject(action);
-		if (project != null)
+		IVdmProject vdmProject = getSelectedProject(action);
+		if (vdmProject != null)
 		{
 			List<File> files = new Vector<File>();
 
 			try
 			{
-				for (IVdmSourceUnit source : project.getSpecFiles())
+				for (IVdmSourceUnit source : vdmProject.getSpecFiles())
 				{
 					files.add(source.getSystemFile());
 				}
 
-				new VdmTools().createProject(view.getSite().getShell(), project, files);
+				new VdmTools().createProject(view.getSite().getShell(), vdmProject, files);
+				IProject project = (IProject) vdmProject.getAdapter(IProject.class);
+				
 				project.refreshLocal(IResource.DEPTH_INFINITE, null);
 
 			} catch (CoreException e)

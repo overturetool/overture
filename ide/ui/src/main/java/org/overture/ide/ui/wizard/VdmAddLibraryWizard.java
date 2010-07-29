@@ -7,6 +7,7 @@ import java.io.IOException;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -14,8 +15,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.core.resources.VdmProject;
-
 import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.utility.PluginFolderInclude;
@@ -51,16 +50,19 @@ public class VdmAddLibraryWizard extends Wizard implements IWorkbenchWizard
 
 	public void init(IWorkbench workbench, IStructuredSelection selection)
 	{
+		if(selection.getFirstElement() instanceof IProject ){
+			IProject project = (IProject) selection.getFirstElement();
+			this.project = (IVdmProject) project.getAdapter(IVdmProject.class);
+		}
 		if (selection.getFirstElement() instanceof IVdmProject)
-		{
+		{					
 			this.project = (IVdmProject) selection.getFirstElement();
 		}else if(selection.getFirstElement() instanceof IFolder)
 		{
 			IProject project = ((IFolder)selection.getFirstElement()).getProject();
-			if(VdmProject.isVdmProject(project))
-			{
-				this.project = VdmProject.createProject(project);
-			}else
+			this.project = (IVdmProject) project.getAdapter(IVdmProject.class);
+			
+			if(this.project == null)
 			{
 				MessageDialog.openError(getShell(), "Project type error", "Project is not a VDM project");
 			}
@@ -83,14 +85,18 @@ public class VdmAddLibraryWizard extends Wizard implements IWorkbenchWizard
 
 		if (useIo || useMath || useUtil)
 		{
-			File projectRoot = prj.getLocation().toFile();
+			IProject project = (IProject) prj.getAdapter(IProject.class);
+			Assert.isNotNull(project);
+			
+			
+			File projectRoot = project.getLocation().toFile();
 			File libFolder = new File(projectRoot,"lib");
 			if (!libFolder.exists())
 				libFolder.mkdirs();
 
 			String extension = "pp";
 
-			Dialect dialect = project.getDialect();
+			Dialect dialect = prj.getDialect();
 
 			extension = dialect.name().replace("_", "").toLowerCase();
 			try
@@ -128,7 +134,7 @@ public class VdmAddLibraryWizard extends Wizard implements IWorkbenchWizard
 				e.printStackTrace();
 			}
 
-			prj.refreshLocal(IResource.DEPTH_INFINITE, null);
+			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		}
 
 	}

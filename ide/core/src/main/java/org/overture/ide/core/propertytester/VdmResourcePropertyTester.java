@@ -4,8 +4,6 @@ import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.core.resources.VdmProject;
-
 
 public class VdmResourcePropertyTester extends PropertyTester
 {
@@ -13,38 +11,46 @@ public class VdmResourcePropertyTester extends PropertyTester
 	public boolean test(Object receiver, String property, Object[] args,
 			Object expectedValue)
 	{
-		if(receiver instanceof IVdmProject)
+		if (receiver instanceof IVdmProject)
 		{
-			if(property.equalsIgnoreCase("dialect") )
+			if (property.equalsIgnoreCase("dialect"))
 			{
-				return ((IVdmProject) receiver).getDialect().name().equalsIgnoreCase(expectedValue.toString());
+				return ((IVdmProject) receiver).getDialect().name()
+						.equalsIgnoreCase(expectedValue.toString());
 			}
-		}else if(receiver instanceof IFile)
+		} else if (receiver instanceof IFile)
 		{
 			IFile file = (IFile) receiver;
-			
-			if(VdmProject.isVdmProject(file.getProject()))
+
+			IVdmProject vdmProject = (IVdmProject) file.getProject()
+					.getAdapter(IVdmProject.class);
+
+			if (vdmProject != null)
 			{
-			
-			if(property.equalsIgnoreCase("dialect"))
-			{
-				return VdmProject.createProject(file.getProject()).getDialect().name().equalsIgnoreCase(expectedValue.toString());
+
+				if (property.equalsIgnoreCase("dialect"))
+				{
+					return vdmProject.getDialect().name().equalsIgnoreCase(
+							expectedValue.toString());
+				}
 			}
-			}
-		}else if(receiver instanceof IFolder)
+		} else if (receiver instanceof IFolder)
 		{
 			IFolder file = (IFolder) receiver;
-			
-			if(VdmProject.isVdmProject(file.getProject()))
+			IVdmProject vdmProject = (IVdmProject) file.getProject()
+					.getAdapter(IVdmProject.class);
+
+			if (vdmProject != null)
 			{
-			
-			if(property.equalsIgnoreCase("dialect"))
-			{
-				return VdmProject.createProject(file.getProject()).getDialect().name().equalsIgnoreCase(expectedValue.toString());
-			}
+
+				if (property.equalsIgnoreCase("dialect"))
+				{
+					return vdmProject.getDialect().name().equalsIgnoreCase(
+							expectedValue.toString());
+				}
 			}
 		}
-		
+
 		return false;
 	}
 

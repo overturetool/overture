@@ -21,7 +21,6 @@ import org.eclipse.ui.WorkbenchException;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.core.resources.VdmProject;
 import org.overture.ide.plugins.poviewer.Activator;
 import org.overture.ide.plugins.poviewer.IPoviewerConstants;
 import org.overture.ide.plugins.poviewer.view.PoOverviewTableView;
@@ -64,9 +63,9 @@ public abstract class ViewPosAction implements IObjectActionDelegate
 		{
 			IProject selectedProject = null;
 			selectedProject = ProjectHelper.getSelectedProject(action, selectedProject);
-
-			if (selectedProject == null
-					&& !VdmProject.isVdmProject(selectedProject))
+			
+			
+			if (selectedProject == null)
 			{
 				ConsoleWriter.ConsolePrint(shell, "Could not find selected project");
 				return;
@@ -78,7 +77,8 @@ public abstract class ViewPosAction implements IObjectActionDelegate
 				// selectedFile = ProjectUtility.getFile(selectedProject, tmpFile);
 			}
 
-			viewPos(VdmProject.createProject(selectedProject));
+			IVdmProject project = (IVdmProject) selectedProject.getAdapter(IVdmProject.class);
+			viewPos(project);
 
 		} catch (Exception ex)
 		{

@@ -31,7 +31,6 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.overture.ide.core.SourceReferenceManager;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.core.resources.VdmProject;
 import org.overture.ide.core.resources.VdmSourceUnit;
 import org.overture.ide.core.utility.SourceLocationConverter;
 import org.overture.ide.plugins.coverageeditor.Activator;
@@ -62,7 +61,9 @@ public abstract class CoverageEditor
 				} else
 				{
 					VdmDocument doc = (VdmDocument) super.createDocument(element);
-					doc.setSourceUnit(new VdmSourceUnit(VdmProject.createProject(file.getProject()), file));
+					IVdmProject project = (IVdmProject) file.getProject().getAdapter(IVdmProject.class);
+					Assert.isNotNull(project);
+					doc.setSourceUnit(new VdmSourceUnit(project, file));
 					return doc;
 				}
 			}
@@ -107,10 +108,8 @@ public abstract class CoverageEditor
 				vdmSourceFile = (IFile) res;
 			}
 
-			if (VdmProject.isVdmProject(res.getProject()))
-			{
-				project = VdmProject.createProject(res.getProject());
-			} else
+			project = (IVdmProject) res.getProject().getAdapter(IVdmProject.class);
+			if (project == null)
 			{
 				Assert.isTrue(true, "Coverage project not VDM");
 			}

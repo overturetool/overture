@@ -3,6 +3,7 @@ package org.overture.ide.core.parser;
 import java.io.IOException;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -16,7 +17,8 @@ import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 
-public class SourceParserManager {
+public class SourceParserManager
+{
 	/**
 	 * A handle to the unique Singleton instance.
 	 */
@@ -25,8 +27,10 @@ public class SourceParserManager {
 	/**
 	 * @return The unique instance of this class.
 	 */
-	static public SourceParserManager getInstance() {
-		if (null == _instance) {
+	static public SourceParserManager getInstance()
+	{
+		if (null == _instance)
+		{
 			_instance = new SourceParserManager();
 		}
 		return _instance;
@@ -34,27 +38,34 @@ public class SourceParserManager {
 
 	/**
 	 * Loads a source parser for the given project
-	 * @param project the project to load the source parser for
-	 * @return a valid source parser for the current project based on the highest priority parser available from the nature, or null if no parser could be found
+	 * 
+	 * @param project
+	 *            the project to load the source parser for
+	 * @return a valid source parser for the current project based on the
+	 *         highest priority parser available from the nature, or null if no
+	 *         parser could be found
 	 * @throws CoreException
 	 */
 	public ISourceParser getSourceParser(IVdmProject project)
-			throws CoreException {
-		IConfigurationElement[] config = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(
-						ICoreConstants.EXTENSION_PARSER_ID);
+			throws CoreException
+	{
+		IConfigurationElement[] config = Platform
+				.getExtensionRegistry()
+				.getConfigurationElementsFor(ICoreConstants.EXTENSION_PARSER_ID);
 
 		IConfigurationElement selectedParser = getParserWithHeighestPriority(
 				project.getVdmNature(), config);
-		
-		if (selectedParser != null) {
+
+		if (selectedParser != null)
+		{
 			final Object o = selectedParser.createExecutableExtension("class");
 
-			if (o instanceof AbstractParserParticipant) {
+			if (o instanceof AbstractParserParticipant)
+			{
 				AbstractParserParticipant parser = (AbstractParserParticipant) o;
 
 				parser.setProject(project);
-				
+
 				return parser;
 			}
 
@@ -64,31 +75,42 @@ public class SourceParserManager {
 	}
 
 	/**
-	 * Gets the parser available for the given nature having the highest priority
-	 * @param natureId the nature to lookup a parser for
-	 * @param config the configuration of the extension point
+	 * Gets the parser available for the given nature having the highest
+	 * priority
+	 * 
+	 * @param natureId
+	 *            the nature to lookup a parser for
+	 * @param config
+	 *            the configuration of the extension point
 	 * @return a valid source parser or null
 	 */
 	private IConfigurationElement getParserWithHeighestPriority(
-			String natureId, IConfigurationElement[] config) {
+			String natureId, IConfigurationElement[] config)
+	{
 		IConfigurationElement selectedParser = null;
 		int selectedParserPriority = 0;
-		for (IConfigurationElement e : config) {
-			if (e.getAttribute("nature").equals(natureId)) {
-				if (selectedParser == null) {
+		for (IConfigurationElement e : config)
+		{
+			if (e.getAttribute("nature").equals(natureId))
+			{
+				if (selectedParser == null)
+				{
 					selectedParser = e;
 					String selectedParserPriorityString = selectedParser
 							.getAttribute("priority");
 					if (selectedParserPriorityString != null)
 						selectedParserPriority = Integer
 								.parseInt(selectedParserPriorityString);
-				} else {
+				} else
+				{
 					String parserPriorityString = selectedParser
 							.getAttribute("priority");
-					if (parserPriorityString != null) {
+					if (parserPriorityString != null)
+					{
 						int parserPriority = Integer
 								.parseInt(parserPriorityString);
-						if (parserPriority > selectedParserPriority) {
+						if (parserPriority > selectedParserPriority)
+						{
 							selectedParser = e;
 							selectedParserPriority = parserPriority;
 						}
@@ -98,11 +120,7 @@ public class SourceParserManager {
 		}
 		return selectedParser;
 	}
-	
-	
-	
-	
-	
+
 	/***
 	 * Parses files in a project which has a content type and sould be parsed
 	 * before a build could be performed
@@ -117,52 +135,64 @@ public class SourceParserManager {
 	 * @throws CoreException
 	 * @throws IOException
 	 */
-	public static void parseMissingFiles(IVdmProject project,IVdmModel model ,IProgressMonitor monitor)
-			throws CoreException, IOException
+	public static void parseMissingFiles(IVdmProject vdmProject,
+			IVdmModel model, IProgressMonitor monitor) throws CoreException,
+			IOException
 	{
+
+		IProject project = (IProject) vdmProject.getAdapter(IProject.class);
+
 		if (monitor != null)
 		{
-			monitor.subTask("Parsing files: "+project.getName());
-		}
-		if (!project.isSynchronized(IResource.DEPTH_INFINITE))
-		{
-			project.refreshLocal(IResource.DEPTH_INFINITE, null);
-		}
-		List<IVdmSourceUnit> files = model.getSourceUnits();
-		for (IVdmSourceUnit source : files)
-		{
-//			IVdmModel model = file.getProject().getModel();
-//			if (model != null && model.hasFile(file) && file.)
-//				return;
-//			if(!file.hasParseTree())
-//				file.getParseList().clear();
-			parseFile( source);
+			monitor.subTask("Parsing files: " + project.getName());
 		}
 
+		Assert.isNotNull(project);
+		if (project != null)
+		{
+			if (!project.isSynchronized(IResource.DEPTH_INFINITE))
+			{
+				project.refreshLocal(IResource.DEPTH_INFINITE, null);
+			}
+			List<IVdmSourceUnit> files = model.getSourceUnits();
+			for (IVdmSourceUnit source : files)
+			{
+				// IVdmModel model = file.getProject().getModel();
+				// if (model != null && model.hasFile(file) && file.)
+				// return;
+				// if(!file.hasParseTree())
+				// file.getParseList().clear();
+				parseFile(source);
+			}
+		}
 	}
 
 	/**
 	 * Parse a single file from a project
-	 * @param project the project where the file originates from
-	 * @param source the file to be parsed
+	 * 
+	 * @param project
+	 *            the project where the file originates from
+	 * @param source
+	 *            the file to be parsed
 	 * @throws CoreException
 	 * @throws IOException
 	 */
-	public static void parseFile(
-			final IVdmSourceUnit source) throws CoreException, IOException
+	public static void parseFile(final IVdmSourceUnit source)
+			throws CoreException, IOException
 	{
-		
 
-//		IVdmModel model = file.getProject().getModel();
-//		if (model != null && model.hasFile(file))
-//			return;
+		// IVdmModel model = file.getProject().getModel();
+		// if (model != null && model.hasFile(file))
+		// return;
 
 		try
 		{
-		ISourceParser parser =	SourceParserManager.getInstance()
+			ISourceParser parser = SourceParserManager.getInstance()
 					.getSourceParser(source.getProject());
-		Assert.isNotNull(parser, "No parser for file : "+source.toString() +" in project " +source.getProject().toString());
-		parser.parse(source);
+			Assert.isNotNull(parser, "No parser for file : "
+					+ source.toString() + " in project "
+					+ source.getProject().toString());
+			parser.parse(source);
 		} catch (Exception e)
 		{
 			if (VdmCore.DEBUG)

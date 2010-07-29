@@ -14,53 +14,69 @@ package org.overture.ide.debug.core.model.internal;
 import java.net.URI;
 import java.util.HashMap;
 
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.debug.core.VdmDebugPlugin;
 
-public class VdmBreakpointPathMapper implements IVdmBreakpointPathMapperExtension {
-	private HashMap cache;
+public class VdmBreakpointPathMapper implements
+		IVdmBreakpointPathMapperExtension
+{
+	private HashMap<URI, URI> cache;
 	private String mapTo;
 	private IVdmProject vdmProject;
 	private boolean stripSrcFolders;
 
 	VdmBreakpointPathMapper(IVdmProject project, String mapTo,
-			boolean stripSrcFolders) {
+			boolean stripSrcFolders)
+	{
 		this.mapTo = mapTo;
 		this.vdmProject = project;
 		this.stripSrcFolders = stripSrcFolders;
 
-		this.cache = new HashMap();
+		this.cache = new HashMap<URI, URI>();
 	}
 
-	public void clearCache() {
+	public void clearCache()
+	{
 		cache.clear();
 	}
 
-	public URI map(URI uri) {
+	public URI map(URI uri)
+	{
 		// no mapTo, return original uri
 		if (mapTo == null || "".equals(mapTo)) { //$NON-NLS-1$
 			return uri;
 		}
 
 		// check the cache
-		if (cache.containsKey(uri)) {
+		if (cache.containsKey(uri))
+		{
 			return (URI) cache.get(uri);
 		}
 
 		// now for the fun ;)
-		final IPath projectPath = vdmProject.getProject().getLocation();
-		if (projectPath == null) {
+		IProject project = (IProject) vdmProject.getAdapter(IProject.class);
+
+		if (project == null)
+		{
 			return uri;
 		}
+		
+		final IPath projectPath = project.getLocation();
+		if (projectPath == null)
+		{
+			return uri;
+		}
+
 		final IPath path = new Path(uri.getPath());
 		// only map paths that start w/ the project path
-		if (projectPath.isPrefixOf(path)) {
+		if (projectPath.isPrefixOf(path))
+		{
 			IPath temp = path.removeFirstSegments(projectPath.segmentCount())
 					.setDevice(null);
-			if (stripSrcFolders) {
+			if (stripSrcFolders)
+			{
 				temp = stripSourceFolders(temp);
 			}
 			final IPath outgoing = new Path(mapTo).append(temp);
@@ -70,27 +86,29 @@ public class VdmBreakpointPathMapper implements IVdmBreakpointPathMapperExtensio
 		}
 		cache.put(uri, uri);
 		return uri;
+
 	}
 
-	private IPath stripSourceFolders(IPath path) {
-//		try {
-//			IProjectFragment[] fragments = vdmProject.getProjectFragments();
-//
-//			for (int i = 0; i < fragments.length; i++) {
-//				IProjectFragment frag = fragments[i];
-//				// skip external/archive
-//				if (frag.isExternal() || frag.isArchive()) {
-//					continue;
-//				}
-//
-//				final String name = frag.getElementName();
-//				if (path.segmentCount() > 0 && path.segment(0).equals(name)) {
-//					return path.removeFirstSegments(1);
-//				}
-//			}
-//		} catch (CoreException e) {
-//			VdmDebugPlugin.log(e);
-//		}
+	private IPath stripSourceFolders(IPath path)
+	{
+		// try {
+		// IProjectFragment[] fragments = vdmProject.getProjectFragments();
+		//
+		// for (int i = 0; i < fragments.length; i++) {
+		// IProjectFragment frag = fragments[i];
+		// // skip external/archive
+		// if (frag.isExternal() || frag.isArchive()) {
+		// continue;
+		// }
+		//
+		// final String name = frag.getElementName();
+		// if (path.segmentCount() > 0 && path.segment(0).equals(name)) {
+		// return path.removeFirstSegments(1);
+		// }
+		// }
+		// } catch (CoreException e) {
+		// VdmDebugPlugin.log(e);
+		// }
 
 		return path;
 	}

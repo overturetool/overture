@@ -35,7 +35,7 @@ public class SafeBuilder extends Thread
 			IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(ICoreConstants.EXTENSION_BUILDER_ID);
 			for (IConfigurationElement e : config)
 			{
-				if (currentProject.hasNature(e.getAttribute("nature")))
+				if (currentProject.getVdmNature().equals(e.getAttribute("nature")))
 				{
 					final Object o = e.createExecutableExtension("class");
 					if (o instanceof AbstractVdmBuilder)

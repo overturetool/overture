@@ -12,7 +12,6 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.core.resources.VdmProject;
 
 public abstract class VdmCoreBuilder extends IncrementalProjectBuilder
 {
@@ -154,7 +153,7 @@ public abstract class VdmCoreBuilder extends IncrementalProjectBuilder
 	 */
 	protected boolean validateProject()
 	{
-		return VdmProject.isVdmProject(getProject());
+		return getProject().getAdapter(IVdmProject.class) != null;
 	}
 
 	/***
@@ -162,7 +161,7 @@ public abstract class VdmCoreBuilder extends IncrementalProjectBuilder
 	 */
 	public final IVdmProject getVdmProject()
 	{
-		return VdmProject.createProject(getProject());
+		return (IVdmProject) getProject().getAdapter(IVdmProject.class);
 	}
 
 }

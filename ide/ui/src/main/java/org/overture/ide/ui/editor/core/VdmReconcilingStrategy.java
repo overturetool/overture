@@ -9,7 +9,8 @@ import org.overture.ide.core.VdmCore;
 
 import org.overture.ide.core.parser.ISourceParser;
 import org.overture.ide.core.parser.SourceParserManager;
-import org.overture.ide.core.resources.VdmProject;
+import org.overture.ide.core.resources.IVdmProject;
+
 
 public class VdmReconcilingStrategy implements IReconcilingStrategy
 {
@@ -18,54 +19,58 @@ public class VdmReconcilingStrategy implements IReconcilingStrategy
 
 	// private ContentOutline outline =null;
 
-	public VdmReconcilingStrategy() {
-//		IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench()
-//				.getActiveWorkbenchWindow();
+	public VdmReconcilingStrategy()
+	{
+		// IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench()
+		// .getActiveWorkbenchWindow();
 
-//		if (activeWorkbenchWindow != null)
-//		{
-//			IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-//			if (activePage != null)
-//			{
-//				IViewPart outlineCandidate = activePage.findView(IPageLayout.ID_OUTLINE);
-//				if (outlineCandidate instanceof ContentOutline)
-//				{
-//					outline = (ContentOutline) outlineCandidate;
-//				}
-//			}
-//		}
+		// if (activeWorkbenchWindow != null)
+		// {
+		// IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+		// if (activePage != null)
+		// {
+		// IViewPart outlineCandidate =
+		// activePage.findView(IPageLayout.ID_OUTLINE);
+		// if (outlineCandidate instanceof ContentOutline)
+		// {
+		// outline = (ContentOutline) outlineCandidate;
+		// }
+		// }
+		// }
 	}
 
 	public void reconcile(IRegion partition)
 	{
 		if (VdmCore.DEBUG)
 		{
-//			System.out.println("reconcile(IRegion partition)");
-//			System.out.println("File: "
-//					+ (currentDocument).getFile().toString());
+			// System.out.println("reconcile(IRegion partition)");
+			// System.out.println("File: "
+			// + (currentDocument).getFile().toString());
 			// if(outline != null)
 			// {
-			// VdmContentOutlinePage page = (VdmContentOutlinePage) outline.getCurrentPage();
+			// VdmContentOutlinePage page = (VdmContentOutlinePage)
+			// outline.getCurrentPage();
 			//				
 			// }
 		}
 		try
 		{
 
-			if (currentDocument.getSourceUnit()!=null && VdmProject.isVdmProject(currentDocument.getProject()))
+			IVdmProject vdmProject = (IVdmProject) currentDocument.getProject()
+					.getAdapter(IVdmProject.class);
+
+			if (currentDocument.getSourceUnit() != null && vdmProject != null)
 			{
 
-				if (VdmProject.isVdmProject(currentDocument.getProject()))
-				{
-					ISourceParser parser = SourceParserManager.getInstance()
-							.getSourceParser(VdmProject.createProject(currentDocument.getProject()));
+				ISourceParser parser = SourceParserManager.getInstance()
+						.getSourceParser(vdmProject);
 
-					if (parser != null)
-					{
-						parser.parse(currentDocument.getSourceUnit(),
-								currentDocument.get());
-					}
+				if (parser != null)
+				{
+					parser.parse(currentDocument.getSourceUnit(),
+							currentDocument.get());
 				}
+
 			}
 
 		} catch (CoreException e)

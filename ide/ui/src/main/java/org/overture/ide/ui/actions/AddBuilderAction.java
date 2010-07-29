@@ -9,7 +9,7 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.ObjectPluginAction;
 import org.overture.ide.core.ICoreConstants;
-import org.overture.ide.core.resources.VdmProject;
+
 
 
 @SuppressWarnings("restriction")
@@ -35,7 +35,7 @@ public class AddBuilderAction implements IObjectActionDelegate
 				System.err.println("Could not find selected project");
 				return;
 			}
-			VdmProject.addBuilder(selectedProject, ICoreConstants.BUILDER_ID,"","");
+			//VdmProject.addBuilder(selectedProject, ICoreConstants.BUILDER_ID,"","");
 
 		} catch (Exception ex)
 		{

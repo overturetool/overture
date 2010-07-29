@@ -1,6 +1,7 @@
 package org.overture.ide.ui.property;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -18,10 +19,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.internal.WorkbenchPlugin;
-
-
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.core.resources.VdmProject;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overturetool.vdmj.Release;
 
@@ -41,7 +39,8 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 	private Group typeGroup;
 	private Group interperterGroup;
 
-	public VdmLanguagePropertyPage() {
+	public VdmLanguagePropertyPage()
+	{
 		super();
 	}
 
@@ -55,15 +54,17 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 		myComposite.setLayout(layout);
 
 		IProject p = getSelectedProject();
-		
-		if (p!=null && VdmProject.isVdmProject(p))
+
+		if (p != null)
 		{
-			this.project = VdmProject.createProject(p);
+
+			this.project = (IVdmProject) p.getAdapter(IVdmProject.class);
+			Assert.isNotNull(this.project);
 
 			createLanguagePanel(myComposite);
-
 			createTypeCheckGroup(myComposite);
 			createInterperterGroupCheckGroup(myComposite);
+
 		}
 		return myComposite;
 	}
@@ -93,15 +94,15 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 		}
 
 		comboBoxLanguageVersion.setItems(languageTypes);
-		comboBoxLanguageVersion.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		comboBoxLanguageVersion.setLayoutData(new GridData(
+				GridData.FILL_HORIZONTAL));
 		try
 		{
 			if (project.getLanguageVersion() != null)
 				for (int j = 0; j < languageTypes.length; j++)
 				{
-					if (project.getLanguageVersion()
-							.toString()
-							.equals(languageTypes[j]))
+					if (project.getLanguageVersion().toString().equals(
+							languageTypes[j]))
 						comboBoxLanguageVersion.select(j);
 				}
 		} catch (CoreException e)
@@ -151,14 +152,11 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 
 	}
 
-	@SuppressWarnings({ "deprecation" })
+	@SuppressWarnings( { "deprecation" })
 	public static IProject getSelectedProject()
 	{
-		ISelection selectedItem = WorkbenchPlugin.getDefault()
-				.getWorkbench()
-				.getActiveWorkbenchWindow()
-				.getActivePage()
-				.getSelection();
+		ISelection selectedItem = WorkbenchPlugin.getDefault().getWorkbench()
+				.getActiveWorkbenchWindow().getActivePage().getSelection();
 		IProject selectedProject = null;
 
 		if (selectedItem instanceof ITreeSelection)
@@ -169,7 +167,6 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 				Object project = selection.getPaths()[0].getFirstSegment();
 				if (project instanceof IProject)
 					selectedProject = (IProject) project;
-				
 
 			}
 		} else if (selectedItem instanceof IStructuredSelection)
@@ -187,15 +184,19 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 	{
 		try
 		{
-			project.setBuilder(Release.lookup(comboBoxLanguageVersion.getText()));
+			project.setBuilder(Release
+					.lookup(comboBoxLanguageVersion.getText()));
 
-			project.setDynamictypechecks(checkBoxDynamicTypeChecks.getSelection());
+			project.setDynamictypechecks(checkBoxDynamicTypeChecks
+					.getSelection());
 			project.setInvchecks(checkBoxInvChecks.getSelection());
 			project.setPostchecks(checkBoxUsePostChecks.getSelection());
 			project.setPrechecks(checkBoxUsePreChecks.getSelection());
-			project.setSuppressWarnings(checkBoxSuppressWarnings.getSelection());
+			project
+					.setSuppressWarnings(checkBoxSuppressWarnings
+							.getSelection());
 
-			//project.typeCheck();
+			// project.typeCheck();
 			VdmTypeCheckerUi.typeCheck(getShell(), project);
 		} catch (CoreException e)
 		{

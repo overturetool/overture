@@ -26,9 +26,9 @@ import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overture.ide.core.resources.VdmProject;
 import org.overture.ide.core.resources.VdmSourceUnit;
 import org.overture.ide.internal.core.ast.VdmModelManager;
+import org.overture.ide.internal.core.resources.VdmProject;
 
 public class ResourceManager implements IResourceChangeListener
 {

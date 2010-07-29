@@ -10,7 +10,6 @@ import org.eclipse.ui.editors.text.FileDocumentProvider;
 import org.eclipse.ui.part.FileEditorInput;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overture.ide.core.resources.VdmProject;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.partitioning.VdmDocumentPartitioner;
 import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
@@ -30,13 +29,15 @@ public class VdmDocumentProvider extends FileDocumentProvider
 			{
 				IFile file = ((FileEditorInput) element).getFile();
 				
-			Assert.isTrue(VdmProject.isVdmProject(file.getProject()),"Project of file: "+ file.getName()+" is not VDM");
-			
-			if(VdmProject.isVdmProject(file.getProject()))
-			{
-				IVdmProject project = VdmProject.createProject(file.getProject());
+				IVdmProject vdmProject = (IVdmProject) file.getProject().getAdapter(IVdmProject.class);
 				
-				IVdmSourceUnit source = project.findSourceUnit(file);
+			Assert.isNotNull(vdmProject,"Project of file: "+ file.getName()+" is not VDM");
+			
+			if(vdmProject != null)
+			{
+				
+				
+				IVdmSourceUnit source = vdmProject.findSourceUnit(file);
 				((VdmDocument) document).setSourceUnit(source);
 			}
 

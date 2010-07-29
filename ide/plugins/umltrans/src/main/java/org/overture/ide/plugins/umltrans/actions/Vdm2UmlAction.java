@@ -22,7 +22,6 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overture.ide.core.resources.VdmProject;
 import org.overturetool.parser.imp.ParserError;
 import org.overturetool.umltrans.Main.CmdLineProcesser;
 import org.overturetool.umltrans.Main.ParseException;
@@ -75,9 +74,10 @@ public class Vdm2UmlAction implements IObjectActionDelegate
 			
 			List<IVdmSourceUnit> files = new Vector<IVdmSourceUnit>();// = ProjectUtility.getFiles(selectedProject);
 			
-			if(VdmProject.isVdmProject(selectedProject))
-			{
-				IVdmProject p = VdmProject.createProject(selectedProject);
+			IVdmProject p = (IVdmProject) selectedProject.getAdapter(IVdmProject.class);
+			
+			if(p != null)
+			{				
 				if(p.getDialect() == Dialect.VDM_PP || p.getDialect() == Dialect.VDM_RT)
 				{
 					files = p.getSpecFiles();

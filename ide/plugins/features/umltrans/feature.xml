@@ -21,16 +21,16 @@
    </requires>
 
    <plugin
-         id="org.overture.ide.generated.umltrans"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.overture.ide.plugins.umltrans"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="org.overture.ide.generated.umltrans"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>
