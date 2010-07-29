@@ -95,13 +95,16 @@ public class TraceApplyExpression extends TraceCoreDefinition
 			}
 			else
 			{
+				//TODO This rewrites the source code and enables stepping when evaluating the
+				//arguments where the location is off since the new arguments do not exist in the source
+				// file. What to do? Use the same location as the call statement? or..
     			String value = v.toString();
-    			LexTokenReader ltr = new LexTokenReader(value, Settings.dialect);
+    			LexTokenReader ltr = new LexTokenReader(value, Settings.dialect,arg.location.file);
     			ExpressionReader er = new ExpressionReader(ltr);
     			er.setCurrentModule(currentModule);
 
     			try
-    			{
+    			{    				
     				newargs.add(er.readExpression());
     			}
     			catch (ParserException e)
