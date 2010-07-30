@@ -206,7 +206,7 @@ public abstract class VdmNewProjectWizard extends BasicNewProjectResourceWizard
 
 		addNature(prj, getNature());
 		IVdmProject p = (IVdmProject) prj.getAdapter(IVdmProject.class);
-		Assert.isNotNull(p);
+		Assert.isNotNull(p, "Project could not be adapted");
 		p.setBuilder(Release.DEFAULT);
 	}
 

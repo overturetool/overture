@@ -147,7 +147,7 @@ public class SourceParserManager
 			monitor.subTask("Parsing files: " + project.getName());
 		}
 
-		Assert.isNotNull(project);
+		Assert.isNotNull(project, "Project could not be adapted");
 		if (project != null)
 		{
 			if (!project.isSynchronized(IResource.DEPTH_INFINITE))

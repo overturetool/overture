@@ -86,7 +86,7 @@ public class VdmAddLibraryWizard extends Wizard implements IWorkbenchWizard
 		if (useIo || useMath || useUtil)
 		{
 			IProject project = (IProject) prj.getAdapter(IProject.class);
-			Assert.isNotNull(project);
+			Assert.isNotNull(project, "Project could not be adapted");
 			
 			
 			File projectRoot = project.getLocation().toFile();

@@ -76,7 +76,7 @@ public class VdmjTracesHelper implements ITracesHelper
 		// dialect = Dialect.VDM_SL;
 		// }
 		IProject project = (IProject) vdmProject.getAdapter(IProject.class);
-		Assert.isNotNull(project);
+		Assert.isNotNull(project, "Project could not be adapted");
 		
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		

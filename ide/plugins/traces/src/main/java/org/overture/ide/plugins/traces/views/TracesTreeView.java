@@ -137,7 +137,7 @@ public class TracesTreeView extends ViewPart
 					traceHelpers.remove(project.getName());
 
 				IVdmProject vdmProject = (IVdmProject) project.getAdapter(IVdmProject.class);
-				Assert.isNotNull(vdmProject);
+				Assert.isNotNull(vdmProject, "Project could not be adapted");
 				ITracesHelper tmpHelper = new VdmjTracesHelper(getSite().getShell(), vdmProject, 3);
 
 				if (tmpHelper.getClassNamesWithTraces().size() > 0)

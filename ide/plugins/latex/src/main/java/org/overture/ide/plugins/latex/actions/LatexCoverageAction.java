@@ -167,7 +167,7 @@ public class LatexCoverageAction implements IObjectActionDelegate
 				{
 					IProject project = (IProject) selectedProject
 							.getAdapter(IProject.class);
-					Assert.isNotNull(project);
+					Assert.isNotNull(project, "Project could not be adapted");
 
 					File projectRoot = project.getLocation().toFile();
 					File outputFolder = LatexBuilder.makeOutputFolder(project);
@@ -334,7 +334,7 @@ public class LatexCoverageAction implements IObjectActionDelegate
 				PrintWriter pw = new PrintWriter(texFile);
 				IProject project = (IProject) selectedProject
 						.getAdapter(IProject.class);
-				Assert.isNotNull(project);
+				Assert.isNotNull(project, "Project could not be adapted");
 				if (markCoverage(project))
 				{
 					f.printLatexCoverage(pw, false, modelOnly,

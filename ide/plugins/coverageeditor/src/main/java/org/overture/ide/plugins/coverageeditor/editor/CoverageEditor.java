@@ -62,7 +62,7 @@ public abstract class CoverageEditor
 				{
 					VdmDocument doc = (VdmDocument) super.createDocument(element);
 					IVdmProject project = (IVdmProject) file.getProject().getAdapter(IVdmProject.class);
-					Assert.isNotNull(project);
+					Assert.isNotNull(project, "Project could not be adapted");
 					doc.setSourceUnit(new VdmSourceUnit(project, file));
 					return doc;
 				}

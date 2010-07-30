@@ -777,7 +777,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 	protected File getOutputFolder(IVdmProject vdmProject)
 	{
 		IProject project = (IProject) vdmProject.getAdapter(IProject.class);
-		Assert.isNotNull(project);
+		Assert.isNotNull(project, "Project could not be adapted");
 		File outputDir = new File(project.getLocation().toFile(), "generated");
 		outputDir.mkdirs();
 		return outputDir;

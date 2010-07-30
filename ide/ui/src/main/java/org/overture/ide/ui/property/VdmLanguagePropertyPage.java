@@ -59,7 +59,7 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 		{
 
 			this.project = (IVdmProject) p.getAdapter(IVdmProject.class);
-			Assert.isNotNull(this.project);
+			Assert.isNotNull(this.project, "Project could not be adapted");
 
 			createLanguagePanel(myComposite);
 			createTypeCheckGroup(myComposite);
