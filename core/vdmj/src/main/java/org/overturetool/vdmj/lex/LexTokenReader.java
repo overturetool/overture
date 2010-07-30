@@ -38,7 +38,7 @@ import org.overturetool.vdmj.config.Properties;
 public class LexTokenReader extends BacktrackInputReader
 {
 	/** The filename used for console expressions. */
-	public static String consoleFileName="console";
+	public static String consoleFileName = "console";
 	/** The current module name, if parsing a module. */
 	public String currentModule = "";
 	/** The current file name. */
@@ -62,26 +62,29 @@ public class LexTokenReader extends BacktrackInputReader
 	/** True if ch is a quoted double quote, ie. \" */
 	private boolean quotedQuote = false;
 
+	/** Added to fix location on the traces **/
+	private LexLocation location = null;
+
 	/**
-	 * An inner class to hold all the position details that need to be
-	 * saved and restored on push/pop.
+	 * An inner class to hold all the position details that need to be saved and
+	 * restored on push/pop.
 	 */
 
 	private class Position
 	{
-    	public int lc;
-    	public int cc;
-    	public int cr;
-    	public int tr;
+		public int lc;
+		public int cc;
+		public int cr;
+		public int tr;
 
-    	public char c;
-    	public LexToken l;
+		public char c;
+		public LexToken l;
 
-    	/**
-    	 * Create a Position from the outer class' current position details.
-    	 */
+		/**
+		 * Create a Position from the outer class' current position details.
+		 */
 
-    	@SuppressWarnings("synthetic-access")
+		@SuppressWarnings("synthetic-access")
 		public Position()
 		{
 			lc = linecount;
@@ -114,17 +117,18 @@ public class LexTokenReader extends BacktrackInputReader
 	private Stack<Position> stack = new Stack<Position>();
 
 	/** An end of file symbol. */
-	private static final char EOF = (char)-1;
-
+	private static final char EOF = (char) -1;
 
 	/** The assumed tab stop, for calculating positions. */
-	public static /*final*/ int TABSTOP = 4;
+	public static/* final */int TABSTOP = 4;
 
 	/**
 	 * Create a LexTokenReader for the filename passed.
-	 *
-	 * @param file	The filename to parse.
-	 * @param dialect if VDM-SL or VDM++ tokens should be processed.
+	 * 
+	 * @param file
+	 *            The filename to parse.
+	 * @param dialect
+	 *            if VDM-SL or VDM++ tokens should be processed.
 	 */
 
 	public LexTokenReader(File file, Dialect dialect)
@@ -137,10 +141,13 @@ public class LexTokenReader extends BacktrackInputReader
 
 	/**
 	 * Create a LexTokenReader for the filename and charset passed.
-	 *
-	 * @param file	The filename to parse.
-	 * @param dialect if VDM-SL or VDM++ tokens should be processed.
-	 * @param charset The charset for the file.
+	 * 
+	 * @param file
+	 *            The filename to parse.
+	 * @param dialect
+	 *            if VDM-SL or VDM++ tokens should be processed.
+	 * @param charset
+	 *            The charset for the file.
 	 */
 
 	public LexTokenReader(File file, Dialect dialect, String charset)
@@ -153,9 +160,11 @@ public class LexTokenReader extends BacktrackInputReader
 
 	/**
 	 * Create a LexTokenReader for the string passed.
-	 *
-	 * @param expression The string (expression) to parse.
-	 * @param dialect Parse VDM++ or VDM-SL tokens.
+	 * 
+	 * @param expression
+	 *            The string (expression) to parse.
+	 * @param dialect
+	 *            Parse VDM++ or VDM-SL tokens.
 	 * @throws UnsupportedEncodingException
 	 */
 
@@ -169,10 +178,13 @@ public class LexTokenReader extends BacktrackInputReader
 
 	/**
 	 * Create a LexTokenReader for the string and charset passed.
-	 *
-	 * @param expression The string (expression) to parse.
-	 * @param dialect Parse VDM++ or VDM-SL tokens.
-	 * @param charset The charset to use.
+	 * 
+	 * @param expression
+	 *            The string (expression) to parse.
+	 * @param dialect
+	 *            Parse VDM++ or VDM-SL tokens.
+	 * @param charset
+	 *            The charset to use.
 	 * @throws UnsupportedEncodingException
 	 */
 
@@ -186,9 +198,8 @@ public class LexTokenReader extends BacktrackInputReader
 
 	/**
 	 * Create a LexTokenReader to read content which originates from a file
-	 * which is not yet saved and enable the source of the file to be set.
-	 * This is used in the IDE to provide while typing outline and parse error
-	 * info.
+	 * which is not yet saved and enable the source of the file to be set. This
+	 * is used in the IDE to provide while typing outline and parse error info.
 	 */
 
 	public LexTokenReader(String content, Dialect dialect, File file)
@@ -201,16 +212,28 @@ public class LexTokenReader extends BacktrackInputReader
 
 	/**
 	 * Create a LexTokenReader to read content which originates from a file
-	 * which is not yet saved and enable the source of the file to be set.
-	 * This is used in the IDE to provide while typing outline and parse error
-	 * info.
+	 * which is not yet saved and enable the source of the file to be set. This
+	 * is used in the IDE to provide while typing outline and parse error info.
 	 */
 
-	public LexTokenReader(String content, Dialect dialect, File file, String charset)
+	public LexTokenReader(String content, Dialect dialect, File file,
+			String charset)
 	{
 		super(content, charset);
 		this.file = file;
 		this.dialect = dialect;
+		init();
+	}
+
+	/**
+	 * Added to fix the location on traces
+	 */
+	public LexTokenReader(String content, Dialect dialect, LexLocation location)
+	{
+		super(content);
+		this.file = location.file;
+		this.dialect = dialect;
+		this.location = location;
 		init();
 	}
 
@@ -221,8 +244,8 @@ public class LexTokenReader extends BacktrackInputReader
 	@Override
 	public String toString()
 	{
-		return "Last token [" + last + "], last char [" + ch +
-			"] in " + file + ":" + linecount + ":" + charpos;
+		return "Last token [" + last + "], last char [" + ch + "] in " + file
+				+ ":" + linecount + ":" + charpos;
 	}
 
 	/**
@@ -241,42 +264,47 @@ public class LexTokenReader extends BacktrackInputReader
 	/**
 	 * Throw a {@link LexException} with the given message and details of the
 	 * current file and position appended.
-	 * @param number The error number.
-	 * @param msg The basic error message.
-	 *
+	 * 
+	 * @param number
+	 *            The error number.
+	 * @param msg
+	 *            The basic error message.
+	 * 
 	 * @throws LexException
 	 */
 
-	private void throwMessage(int number, String msg)
-		throws LexException
+	private void throwMessage(int number, String msg) throws LexException
 	{
 		throwMessage(number, linecount, charpos, msg);
 	}
 
 	private void throwMessage(int number, int line, int pos, String msg)
-		throws LexException
+			throws LexException
 	{
-		throw new LexException(number, msg,
-			new LexLocation(file, currentModule, line, pos, line, pos));
+		throw new LexException(number, msg, new LexLocation(file,
+				currentModule, line, pos, line, pos));
 	}
 
 	/**
-	 * Check the next character is as expected. If the character is
-	 * not as expected, throw the message as a {@link LexException}.
-	 *
-	 * @param c	The expected next character.
-	 * @param number The number of the error message.
-	 * @param message The error message.
+	 * Check the next character is as expected. If the character is not as
+	 * expected, throw the message as a {@link LexException}.
+	 * 
+	 * @param c
+	 *            The expected next character.
+	 * @param number
+	 *            The number of the error message.
+	 * @param message
+	 *            The error message.
 	 * @throws LexException
 	 */
 
-	private void checkFor(char c, int number, String message) throws LexException
+	private void checkFor(char c, int number, String message)
+			throws LexException
 	{
 		if (ch == c)
 		{
 			rdCh();
-		}
-		else
+		} else
 		{
 			throwMessage(number, message);
 		}
@@ -292,7 +320,7 @@ public class LexTokenReader extends BacktrackInputReader
 		super.push();
 		stack.push(new Position());
 		charsread = 0;
-		tokensread = 0;		// Restored on pop
+		tokensread = 0; // Restored on pop
 	}
 
 	/**
@@ -315,14 +343,14 @@ public class LexTokenReader extends BacktrackInputReader
 	public void unpush()
 	{
 		super.unpush();
-		Position p = stack.pop();	// Note, don't set the position
+		Position p = stack.pop(); // Note, don't set the position
 		charsread = charsread + p.cr;
 		tokensread = tokensread + p.tr;
 	}
 
 	/**
-	 * Go back to the mark, and re-mark it. This just calls pop() followed
-	 * by push().
+	 * Go back to the mark, and re-mark it. This just calls pop() followed by
+	 * push().
 	 */
 
 	public void retry()
@@ -350,12 +378,12 @@ public class LexTokenReader extends BacktrackInputReader
 	}
 
 	/**
-	 * Read the next character from the stream. The position details are updated,
-	 * accounting for newlines and tab stops.
-	 *
-	 * The next character is set in the "ch" field, as well as being returned for
-	 * convenience.
-	 *
+	 * Read the next character from the stream. The position details are
+	 * updated, accounting for newlines and tab stops.
+	 * 
+	 * The next character is set in the "ch" field, as well as being returned
+	 * for convenience.
+	 * 
 	 * @return the next character.
 	 */
 
@@ -367,13 +395,11 @@ public class LexTokenReader extends BacktrackInputReader
 		{
 			linecount++;
 			charpos = 0;
-		}
-		else if (c == '\t')
+		} else if (c == '\t')
 		{
-			charpos +=
-				Properties.parser_tabstop - charpos % Properties.parser_tabstop;
-		}
-		else
+			charpos += Properties.parser_tabstop - charpos
+					% Properties.parser_tabstop;
+		} else
 		{
 			charpos++;
 		}
@@ -387,7 +413,7 @@ public class LexTokenReader extends BacktrackInputReader
 	 * Read a backslash quoted character from the stream. This method is used
 	 * when parsing strings and individual quoted characters, which may include
 	 * things like "\n".
-	 *
+	 * 
 	 * @return The actual character value (eg. "\n" returns 10).
 	 * @throws LexException
 	 */
@@ -397,55 +423,81 @@ public class LexTokenReader extends BacktrackInputReader
 		quotedQuote = false;
 		char c = rdCh();
 
-	    if (c == '\\')
-	    {
-    		rdCh();
+		if (c == '\\')
+		{
+			rdCh();
 
-    		switch (ch)
-    		{
-    		    case 'r':  ch = '\r'; break;
-    		    case 'n':  ch = '\n'; break;
-    		    case 't':  ch = '\t'; break;
-    		    case 'f':  ch = '\f'; break;
-    		    case 'e':  ch = '\033'; break;
-    		    case 'a':  ch = '\007'; break;
-    		    case '\'': ch = '\''; break;
-    		    case '\"': ch = '\"'; quotedQuote = true; break;
-    		    case '\\': ch = '\\'; break;
+			switch (ch)
+			{
+				case 'r':
+					ch = '\r';
+					break;
+				case 'n':
+					ch = '\n';
+					break;
+				case 't':
+					ch = '\t';
+					break;
+				case 'f':
+					ch = '\f';
+					break;
+				case 'e':
+					ch = '\033';
+					break;
+				case 'a':
+					ch = '\007';
+					break;
+				case '\'':
+					ch = '\'';
+					break;
+				case '\"':
+					ch = '\"';
+					quotedQuote = true;
+					break;
+				case '\\':
+					ch = '\\';
+					break;
 
-    		    case 'x':
-    		    	ch = (char)(value(rdCh())*16 + value(rdCh()));
-    		    	break;
+				case 'x':
+					ch = (char) (value(rdCh()) * 16 + value(rdCh()));
+					break;
 
-    		    case 'c':
-    		    	ch = (char)(rdCh() - 'A' + 1);	// eg. CTRL-A = 1
-    		    	break;
+				case 'c':
+					ch = (char) (rdCh() - 'A' + 1); // eg. CTRL-A = 1
+					break;
 
-    		    case 'u':
-    		    	ch = (char)(value(rdCh())*4096 + value(rdCh())*256 +
-    		    				value(rdCh())*16 + value(rdCh()));
-    		    	break;
+				case 'u':
+					ch = (char) (value(rdCh()) * 4096 + value(rdCh()) * 256
+							+ value(rdCh()) * 16 + value(rdCh()));
+					break;
 
-    		    case '0': case '1':	case '2': case '3': case '4':
-    			case '5': case '6':	case '7':
-    		    	ch = (char)(value(ch)*64 + value(rdCh())*8 + value(rdCh()));
-       		    	break;
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+					ch = (char) (value(ch) * 64 + value(rdCh()) * 8 + value(rdCh()));
+					break;
 
-    		    default:
-    		    	throwMessage(1000, "Malformed quoted character");
-    		}
-	    }
+				default:
+					throwMessage(1000, "Malformed quoted character");
+			}
+		}
 
-	    return ch;
+		return ch;
 	}
 
 	/**
 	 * Return the value of a character for parsing numbers. The ASCII characters
 	 * 0-9 are turned into decimal 0-9, while a-f and A-F are turned into the
 	 * hex values 10-15. Characters outside these ranges return -1.
-	 *
-	 * @param c	The ASCII value to convert.
-	 * @return	The converted value.
+	 * 
+	 * @param c
+	 *            The ASCII value to convert.
+	 * @return The converted value.
 	 * @see #rdNumber
 	 */
 
@@ -453,16 +505,32 @@ public class LexTokenReader extends BacktrackInputReader
 	{
 		switch (c)
 		{
-			case '0': case '1':	case '2': case '3': case '4':
-			case '5': case '6':	case '7': case '8': case '9':
+			case '0':
+			case '1':
+			case '2':
+			case '3':
+			case '4':
+			case '5':
+			case '6':
+			case '7':
+			case '8':
+			case '9':
 				return c - '0';
 
-			case 'a': case 'b':	case 'c': case 'd':
-			case 'e': case 'f':
+			case 'a':
+			case 'b':
+			case 'c':
+			case 'd':
+			case 'e':
+			case 'f':
 				return c - 'a' + 10;
 
-			case 'A': case 'B': case 'C': case 'D':
-			case 'E': case 'F':
+			case 'A':
+			case 'B':
+			case 'C':
+			case 'D':
+			case 'E':
+			case 'F':
 				return c - 'A' + 10;
 
 			default:
@@ -471,10 +539,11 @@ public class LexTokenReader extends BacktrackInputReader
 	}
 
 	/**
-	 * Read a number of the given base. Parsing terminates when a character
-	 * not within the number base is read.
-	 *
-	 * @param base	The base of the number (eg. 10 for reading decimals)
+	 * Read a number of the given base. Parsing terminates when a character not
+	 * within the number base is read.
+	 * 
+	 * @param base
+	 *            The base of the number (eg. 10 for reading decimals)
 	 * @return The integer value of the number read.
 	 * @throws LexException
 	 */
@@ -483,12 +552,13 @@ public class LexTokenReader extends BacktrackInputReader
 	{
 		StringBuilder v = new StringBuilder();
 		int n = value(ch);
-		//long v = n;
+		// long v = n;
 		v.append(ch);
 
 		if (n < 0 || n >= base)
 		{
-			throwMessage(1001, "Invalid char [" + ch + "] in base " + base + " number");
+			throwMessage(1001, "Invalid char [" + ch + "] in base " + base
+					+ " number");
 		}
 
 		while (true)
@@ -512,7 +582,7 @@ public class LexTokenReader extends BacktrackInputReader
 	 * current stream position. Then the next character to process is used to
 	 * drive a large switch statement to produce the right {@link Token}. The
 	 * lastToken field is updated and the result returned.
-	 *
+	 * 
 	 * @return The next token, or a LexToken of type EOF.
 	 */
 
@@ -544,12 +614,10 @@ public class LexTokenReader extends BacktrackInputReader
 					}
 
 					return nextToken();
-				}
-				else if (ch == '>')
+				} else if (ch == '>')
 				{
 					type = Token.ARROW;
-				}
-				else
+				} else
 				{
 					rdch = false;
 					type = Token.MINUS;
@@ -560,12 +628,10 @@ public class LexTokenReader extends BacktrackInputReader
 				if (rdCh() == '>')
 				{
 					type = Token.TOTAL_FUNCTION;
-				}
-				else if (ch == '+')
+				} else if (ch == '+')
 				{
 					type = Token.PLUSPLUS;
-				}
-				else
+				} else
 				{
 					rdch = false;
 					type = Token.PLUS;
@@ -578,26 +644,21 @@ public class LexTokenReader extends BacktrackInputReader
 					if (rdCh() == '>')
 					{
 						type = Token.RANGERESBY;
-					}
-					else
+					} else
 					{
 						rdch = false;
 						type = Token.EQABST;
 					}
-				}
-				else if (ch == '>')
+				} else if (ch == '>')
 				{
 					type = Token.RANGERESTO;
-				}
-				else if (ch == '=')
+				} else if (ch == '=')
 				{
 					type = Token.ASSIGN;
-				}
-				else if (ch == ':')
+				} else if (ch == ':')
 				{
 					type = Token.COLONCOLON;
-				}
-				else
+				} else
 				{
 					rdch = false;
 					type = Token.COLON;
@@ -610,17 +671,14 @@ public class LexTokenReader extends BacktrackInputReader
 					if (rdCh() == '>')
 					{
 						type = Token.MAPLET;
-					}
-					else
+					} else
 					{
 						throwMessage(1002, "Expecting '|->'");
 					}
-				}
-				else if (ch == '|')
+				} else if (ch == '|')
 				{
 					type = Token.PIPEPIPE;
-				}
-				else
+				} else
 				{
 					rdch = false;
 					type = Token.PIPE;
@@ -637,8 +695,7 @@ public class LexTokenReader extends BacktrackInputReader
 					}
 
 					throwMessage(1003, "Expecting '...'");
-				}
-				else
+				} else
 				{
 					rdch = false;
 					type = Token.POINT;
@@ -651,18 +708,15 @@ public class LexTokenReader extends BacktrackInputReader
 					if (rdCh() == '>')
 					{
 						type = Token.OPDEF;
-					}
-					else
+					} else
 					{
 						rdch = false;
 						type = Token.EQUALSEQUALS;
 					}
-				}
-				else if (ch == '>')
+				} else if (ch == '>')
 				{
 					type = Token.IMPLIES;
-				}
-				else
+				} else
 				{
 					rdch = false;
 					type = Token.EQUALS;
@@ -673,8 +727,7 @@ public class LexTokenReader extends BacktrackInputReader
 				if (rdCh() == '*')
 				{
 					type = Token.STARSTAR;
-				}
-				else
+				} else
 				{
 					rdch = false;
 					type = Token.TIMES;
@@ -689,36 +742,30 @@ public class LexTokenReader extends BacktrackInputReader
 					if (rdCh() == '>')
 					{
 						type = Token.EQUIVALENT;
-					}
-					else
+					} else
 					{
 						rdch = false;
 						type = Token.LE;
 					}
-				}
-				else if (ch == ':')
+				} else if (ch == ':')
 				{
 					unpush();
 					type = Token.DOMRESTO;
-				}
-				else if (ch == '-')
+				} else if (ch == '-')
 				{
 					unpush();
 					if (rdCh() == ':')
 					{
 						type = Token.DOMRESBY;
-					}
-					else
+					} else
 					{
 						throwMessage(1004, "Expecting '<-:'");
 					}
-				}
-				else if (ch == '>')
+				} else if (ch == '>')
 				{
 					unpush();
 					type = Token.NE;
-				}
-				else if (startOfName(ch))
+				} else if (startOfName(ch))
 				{
 					// <QuoteLiteral> or <x
 					String name = rdIdentifier();
@@ -726,16 +773,15 @@ public class LexTokenReader extends BacktrackInputReader
 					if (ch == '>')
 					{
 						unpush();
-						last = new LexQuoteToken(name, location(tokline, tokpos));
+						last = new LexQuoteToken(name,
+								location(tokline, tokpos));
 						type = Token.QUOTE;
-					}
-					else
+					} else
 					{
 						pop();
 						type = Token.LT;
 					}
-				}
-				else
+				} else
 				{
 					unpush();
 					rdch = false;
@@ -747,8 +793,7 @@ public class LexTokenReader extends BacktrackInputReader
 				if (rdCh() == '=')
 				{
 					type = Token.GE;
-				}
-				else
+				} else
 				{
 					rdch = false;
 					type = Token.GT;
@@ -766,12 +811,14 @@ public class LexTokenReader extends BacktrackInputReader
 				}
 
 				checkFor('\"', 1005, "Expecting close double quote");
-				last = new LexStringToken(msg.toString(), location(tokline, tokpos));
+				last = new LexStringToken(msg.toString(), location(tokline,
+						tokpos));
 				rdch = false;
 				break;
 
 			case '\'':
-				last = new LexCharacterToken(rdQuotedCh(), location(tokline, tokpos));
+				last = new LexCharacterToken(rdQuotedCh(), location(tokline,
+						tokpos));
 				rdCh();
 				checkFor('\'', 1006, "Expecting close quote after character");
 				rdch = false;
@@ -780,26 +827,24 @@ public class LexTokenReader extends BacktrackInputReader
 			case '#':
 				if (Character.isLetter(rdCh()))
 				{
-    				StringBuilder tag = new StringBuilder();
-    				tag.append('#');
+					StringBuilder tag = new StringBuilder();
+					tag.append('#');
 
-    				do
-    				{
-    					tag.append(ch);
-    					rdCh();
-    				}
-    				while (Character.isLetter(ch));
+					do
+					{
+						tag.append(ch);
+						rdCh();
+					} while (Character.isLetter(ch));
 
-    				type = Token.lookup(tag.toString(), dialect);
+					type = Token.lookup(tag.toString(), dialect);
 
-    				if (type == null)
-    				{
-    					throwMessage(1007, "Unexpected tag after '#'");
-    				}
+					if (type == null)
+					{
+						throwMessage(1007, "Unexpected tag after '#'");
+					}
 
-    				rdch = false;
-				}
-				else
+					rdch = false;
+				} else
 				{
 					type = Token.HASH;
 					rdch = false;
@@ -807,25 +852,26 @@ public class LexTokenReader extends BacktrackInputReader
 				break;
 
 			case '/':
-				if (rdCh() == '*')		// Block comments
+				if (rdCh() == '*') // Block comments
 				{
 					while (ch != '/' && ch != EOF)
 					{
-					    rdCh();
-					    while (ch != '*' && ch != EOF) rdCh();
+						rdCh();
+						while (ch != '*' && ch != EOF)
+							rdCh();
 
-					    if (ch == EOF)
-					    {
-					    	throwMessage(1011, tokline, tokpos, "Unterminated block comment");
-					    }
+						if (ch == EOF)
+						{
+							throwMessage(1011, tokline, tokpos,
+									"Unterminated block comment");
+						}
 
-					    rdCh();
+						rdCh();
 					}
 
 					rdCh();
 					return nextToken();
-				}
-				else
+				} else
 				{
 					type = Token.DIVIDE;
 					rdch = false;
@@ -877,58 +923,59 @@ public class LexTokenReader extends BacktrackInputReader
 				{
 					last = rdReal(tokline, tokpos);
 					rdch = false;
-				}
-				else if (startOfName(ch))
+				} else if (startOfName(ch))
 				{
-					List<String> name = rdName();	// module`name parts
+					List<String> name = rdName(); // module`name parts
 					rdch = false;
 
 					switch (name.size())
 					{
 						case 1:
-	   						type = Token.lookup(name.get(0), dialect);
+							type = Token.lookup(name.get(0), dialect);
 
-	   						if (type == null)
-	   						{
-	   							last = new LexIdentifierToken(name.get(0), (ch == '~'), location(tokline, tokpos));
-	   							rdch = (ch == '~');
-	   						}
-	   						else
-	   						{
-    	   						switch (type)
-        						{
-        							case TRUE:
-        							case FALSE:
-        								last = new LexBooleanToken(type, location(tokline, tokpos));
-        								break;
+							if (type == null)
+							{
+								last = new LexIdentifierToken(name.get(0),
+										(ch == '~'), location(tokline, tokpos));
+								rdch = (ch == '~');
+							} else
+							{
+								switch (type)
+								{
+									case TRUE:
+									case FALSE:
+										last = new LexBooleanToken(type,
+												location(tokline, tokpos));
+										break;
 
-        							default:
-        								last = new LexKeywordToken(type, location(tokline, tokpos));
-        								break;
-        						}
-	   						}
-    						break;
+									default:
+										last = new LexKeywordToken(type,
+												location(tokline, tokpos));
+										break;
+								}
+							}
+							break;
 
 						case 2:
-   					 		last = new LexNameToken(
-   					 			name.get(0), name.get(1), location(tokline, tokpos), false, true);
-   					 		break;
+							last = new LexNameToken(name.get(0), name.get(1),
+									location(tokline, tokpos), false, true);
+							break;
 
-   					 	default:
-   					 		throwMessage(1008, "Malformed module`name");
+						default:
+							throwMessage(1008, "Malformed module`name");
 					}
-				}
-				else
+				} else
 				{
 					char badch = ch;
 					rdCh();
-					throwMessage(1009, "Unexpected character '" + badch +
-								 "' (code 0x" + Integer.toHexString(badch) + ")");
+					throwMessage(1009, "Unexpected character '" + badch
+							+ "' (code 0x" + Integer.toHexString(badch) + ")");
 				}
 				break;
 		}
 
-		if (rdch) rdCh();
+		if (rdch)
+			rdCh();
 
 		if (last == null)
 		{
@@ -941,23 +988,35 @@ public class LexTokenReader extends BacktrackInputReader
 
 	/**
 	 * Create a {@link LexLocation} object from the current stream position.
-	 *
-	 * @param tokline	The token start line.
-	 * @param tokpos	The token start position.
-	 * @return	A new LexLocation.
+	 * 
+	 * @param tokline
+	 *            The token start line.
+	 * @param tokpos
+	 *            The token start position.
+	 * @return A new LexLocation.
 	 */
 
 	private LexLocation location(int tokline, int tokpos)
 	{
-		return new LexLocation(
-			file, currentModule, tokline, tokpos, linecount, charpos);
+		//Fix for location on traces
+		if (this.location != null)
+		{
+			return this.location;
+		} else
+		{
+			return new LexLocation(file, currentModule, tokline, tokpos,
+					linecount, charpos);
+		}
 	}
+		
 
 	/**
 	 * Read a decimal floating point number.
-	 *
-	 * @param tokline	The start line of the number.
-	 * @param tokpos	The start position of the number.
+	 * 
+	 * @param tokline
+	 *            The start line of the number.
+	 * @param tokpos
+	 *            The start position of the number.
 	 * @return Either a LexRealToken or a LexIntegerToken.
 	 * @throws LexException
 	 */
@@ -980,8 +1039,7 @@ public class LexTokenReader extends BacktrackInputReader
 			{
 				fraction = rdNumber(10);
 				exponent = "0";
-			}
-			else
+			} else
 			{
 				// Somthing like rec.#1.field, so just return the integer
 				pop();
@@ -993,7 +1051,8 @@ public class LexTokenReader extends BacktrackInputReader
 
 		if (ch == 'e' || ch == 'E')
 		{
-			if (fraction == null) fraction = "0";
+			if (fraction == null)
+				fraction = "0";
 
 			switch (rdCh())
 			{
@@ -1012,8 +1071,16 @@ public class LexTokenReader extends BacktrackInputReader
 					break;
 				}
 
-				case '0': case '1': case '2': case '3': case '4':
-				case '5': case '6': case '7': case '8': case '9':
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9':
 				{
 					exponent = rdNumber(10);
 					break;
@@ -1026,8 +1093,8 @@ public class LexTokenReader extends BacktrackInputReader
 
 		if (fraction != null)
 		{
-			String real = "+" + value + "." + fraction + "e" +
-				(negative ? "-" : "+") + exponent;
+			String real = "+" + value + "." + fraction + "e"
+					+ (negative ? "-" : "+") + exponent;
 
 			return new LexRealToken(real, location(tokline, tokpos));
 		}
@@ -1037,7 +1104,7 @@ public class LexTokenReader extends BacktrackInputReader
 
 	/**
 	 * Get the last token returned from the reader.
-	 *
+	 * 
 	 * @return The last token, or the first token if none read yet.
 	 * @throws LexException
 	 */
@@ -1061,8 +1128,7 @@ public class LexTokenReader extends BacktrackInputReader
 		if (c < 0x0100)
 		{
 			return Character.isLetter(c) || c == '$';
-		}
-		else
+		} else
 		{
 			switch (Character.getType(c))
 			{
@@ -1090,9 +1156,9 @@ public class LexTokenReader extends BacktrackInputReader
 	{
 		if (c < 0x0100)
 		{
-			return Character.isLetterOrDigit(c) || c == '$' || c == '_' || c == '\'';
-		}
-		else
+			return Character.isLetterOrDigit(c) || c == '$' || c == '_'
+					|| c == '\'';
+		} else
 		{
 			switch (Character.getType(c))
 			{
@@ -1112,7 +1178,7 @@ public class LexTokenReader extends BacktrackInputReader
 
 	/**
 	 * Read a fully qualified module`name.
-	 *
+	 * 
 	 * @return A list of one or two name parts.
 	 */
 
@@ -1148,7 +1214,7 @@ public class LexTokenReader extends BacktrackInputReader
 
 	/**
 	 * Read a simple identifier without a module name prefix.
-	 *
+	 * 
 	 * @return a simple name.
 	 */
 
