@@ -32,7 +32,7 @@ public class RssChannel
 		sb.append(getTabs(internalTabs) + tag(LINK_TAG, link));
 		sb.append(getTabs(internalTabs) + tag(DESCRIPTION_TAG, description));
 		sb.append(getTabs(internalTabs) + tag(CATEGORY_TAG, category));
-		sb.append(getTabs(internalTabs) + tag(GENERATOR_TAG, generator));
+		//sb.append(getTabs(internalTabs) + tag(GENERATOR_TAG, generator));
 
 		//StringBuilder sbItems = new StringBuilder();
 		for (RssItem item : items)
