@@ -96,7 +96,7 @@
           bannerImage="icons/cview16/vdmpp_file_tsk.png"
           id="org.overture.ide.vdmpp.debug.launchGroup"
           image="icons/cview16/vdmpp_file_tsk.png"
-          label="Vdm Launch Group"
+          label="Vdm Launch"
           mode="debug">
     </launchGroup>
  </extension>

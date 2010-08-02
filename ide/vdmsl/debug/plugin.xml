@@ -33,6 +33,11 @@
 			description="VDM-SL Launch Tab" 
 			id="org.overture.ide.debug.ui.launchConfigurationTabGroup"
 			type="org.overture.ide.vdmsl.debug.launchConfigurationType">
+     <launchMode
+           description="%localVdmSlApplicationTabGroupDescription.debug"
+           mode="debug"
+           perspective="org.eclipse.debug.ui.DebugPerspective">
+     </launchMode>
 		</launchConfigurationTabGroup>
 	</extension>
 
@@ -51,8 +56,7 @@
 	
 	<!-- Shoutcut for launching project. Extends the Debug and Run context menu in the VDM Explorer -->
  <extension point="org.eclipse.debug.ui.launchShortcuts">
-  <shortcut
-        category="org.eclipse.ui.externaltools"
+  <shortcut        
         class="org.overture.ide.vdmsl.debug.ui.launchconfigurations.VdmSlApplicationLaunchShortcut"
         icon="icons/cview16/vdmsl_file_tsk.gif"
         id="org.overture.ide.vdmsl.debug.ui.localVdmShortcut"
@@ -63,20 +67,33 @@
              <with variable="selection">
              <count value="1"/>
                 <iterate>
-                	<and>
-                		<adapt
-                     type="org.overture.ide.core.resources.IVdmProject">
-                  <test
-                        property="org.overture.ide.core.resources.dialect"
-                        value="VDM_SL">
-                  </test>
-               </adapt>
-                	</and>
+                 <or>
+                    <adapt
+                          type="org.overture.ide.core.resources.IVdmProject">
+                       <test
+                             property="org.overture.ide.core.resources.dialect"
+                             value="VDM_SL">
+                       </test>
+                    </adapt>
+                 </or>
                 </iterate>
            	</with>
            </enablement>
   		 </contextualLaunch>
+     <configurationType
+           id="org.overture.ide.vdmsl.debug.launchConfigurationType">
+     </configurationType>
   </shortcut>
+ </extension>
+ <extension
+       point="org.eclipse.debug.ui.launchGroups">
+    <launchGroup
+          bannerImage="icons/cview16/vdmsl_file_tsk.gif"
+          id="org.overture.ide.vdmsl.debug.launchGroup"
+          image="icons/cview16/vdmsl_file_tsk.gif"
+          label="Vdm Launch"
+          mode="debug">
+    </launchGroup>
  </extension>
 <extension
         point="org.eclipse.ui.popupMenus">

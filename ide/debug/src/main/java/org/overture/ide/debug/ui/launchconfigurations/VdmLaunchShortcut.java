@@ -131,7 +131,7 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 			return;
 		}
 		IAstNode type = null;
-		if (types.length == 0)
+		if (types == null || types.length == 0)
 		{
 			MessageDialog.openError(getShell(), LauncherMessages.VdmLaunchShortcut_1, emptyMessage);
 		} else if (types.length > 1)

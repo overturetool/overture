@@ -16,18 +16,6 @@
          </contentTypeBinding>
       </editor>
    </extension>
-   
-   <!-- Nature image -->
-   <extension
-         point="org.eclipse.ui.ide.projectNatureImages">
-      <image
-            icon="icons/ovr16/vdmsl_ovr.gif"
-            id="org.overture.ide.vdmsl.ui.image"
-            natureId="org.overture.ide.vdmsl.core.nature">
-      </image>
-   </extension>
-   
-   <!-- Wizards -->
    <extension
          point="org.eclipse.ui.newWizards">
       <wizard
@@ -62,6 +50,18 @@
             id="org.overture.ide.vdmsl.ui.projectWizard">
       </primaryWizard>
    </extension>
+   
+   <!-- Nature image -->
+   <extension
+         point="org.eclipse.ui.ide.projectNatureImages">
+      <image
+            icon="icons/ovr16/vdmsl_ovr.gif"
+            id="org.overture.ide.vdmsl.ui.image"
+            natureId="org.overture.ide.vdmsl.core.nature">
+      </image>
+   </extension>
+   
+   <!-- Wizards -->
   
 
  <!-- VDM Explorer contribution of menus -->
