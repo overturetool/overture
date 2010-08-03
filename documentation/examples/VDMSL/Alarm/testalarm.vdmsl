@@ -45,7 +45,7 @@ operations
 Run: Expert ==> set of Period
 Run(e) == return ExpertIsOnDuty(e, plant1);
 
-traces
+traces 
 
   Test1: let a in set alarms
          in
