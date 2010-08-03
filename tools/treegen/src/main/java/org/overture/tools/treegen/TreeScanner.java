@@ -7,7 +7,7 @@
 //
 
 // define the package name
-package org.overture.tool.treegen;
+package org.overture.tools.treegen;
 
 // imports
 import java.io.*;

@@ -2,7 +2,7 @@ package org.overture.tools.treegen.typecheck;
 
 // project specific imports
 import java.util.*;
-import nl.marcelverhoef.treegen.ast.itf.*;
+import org.overture.tools.treegen.ast.itf.*;
 
 public class TreeChecker {
 	

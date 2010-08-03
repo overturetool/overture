@@ -6,8 +6,8 @@
 
 // java imports required for the generated parser semantics actions
 %{
-import org.overture.tool.treegen.ast.itf.*;
-import org.overture.tool.treegen.ast.imp.*;
+import org.overture.tools.treegen.ast.itf.*;
+import org.overture.tools.treegen.ast.imp.*;
 import java.util.*;
 %}
 

@@ -13,13 +13,13 @@
 
 
 
-package org.overture.tool.treegen;
+package org.overture.tools.treegen;
 
 
 
 //#line 9 "TreeGen.y"
-import org.overture.tool.treegen.ast.itf.*;
-import org.overture.tool.treegen.ast.imp.*;
+import org.overture.tools.treegen.ast.itf.*;
+import org.overture.tools.treegen.ast.imp.*;
 import java.util.*;
 //#line 21 "TreeParser.java"
 

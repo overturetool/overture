@@ -5,8 +5,8 @@
 class TreeGenAst
 
 values
-	package   = "nl.marcelverhoef.treegen.ast";
-	directory = ".\\src";
+	package   = "org.overture.tools.treegen.ast";
+	directory = ".\\src\\main\java";
 	toplevel = "ClassDefinition"
 	
 instance variables
