@@ -113,7 +113,7 @@ public class CodeGenerator {
 	{
 		// convert basis type representations to its Java equivalent
 		if (tp.isBooleanType()) return "Boolean"; 
-		if (tp.isNatType()) return "Integer";
+		if (tp.isNatType()) return "Long";
 		if (tp.isRealType()) return "Double";
 		if (tp.isCharType()) return "Character";
 		if (tp.isStringType()) return "String";
@@ -250,7 +250,7 @@ public class CodeGenerator {
 		
 		// convert basic type representation to its proper Java initializer
 		if (tp.isBooleanType()) return "new Boolean(false)"; 
-		if (tp.isNatType()) return "new Integer(0)";
+		if (tp.isNatType()) return "new Long(0)";
 		if (tp.isRealType()) return "new Double(0.0)";
 		if (tp.isCharType()) return "new Character(\'\\0\')";
 		if (tp.isStringType()) return "new String()";
@@ -317,7 +317,7 @@ public class CodeGenerator {
 	{
 		// create a copy of the Java basic types
 		if (tp.isBooleanType()) return "new Boolean("+scp+")"; 
-		if (tp.isNatType()) return "new Integer("+scp+")";
+		if (tp.isNatType()) return "new Long("+scp+")";
 		if (tp.isRealType()) return "new Double("+scp+")";
 		if (tp.isCharType()) return "new Character("+scp+")";
 		if (tp.isStringType()) return "new String("+scp+")";
