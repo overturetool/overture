@@ -24,6 +24,9 @@ public class TreeGenAstMapType extends TreeGenAstTypeSpecification implements IT
 
 		// instantiate the member variable
 		m_dom_type = p_dom_type;
+
+		// set the parent of the parameter passed
+		p_dom_type.setParent(this);
 	}
 
 	// private member variable (rng_type)
@@ -43,6 +46,9 @@ public class TreeGenAstMapType extends TreeGenAstTypeSpecification implements IT
 
 		// instantiate the member variable
 		m_rng_type = p_rng_type;
+
+		// set the parent of the parameter passed
+		p_rng_type.setParent(this);
 	}
 
 	// default constructor

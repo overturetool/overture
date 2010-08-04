@@ -43,6 +43,9 @@ public class TreeGenAstShorthandDefinition extends TreeGenAstDefinitions impleme
 
 		// instantiate the member variable
 		m_type = p_type;
+
+		// set the parent of the parameter passed
+		p_type.setParent(this);
 	}
 
 	// default constructor

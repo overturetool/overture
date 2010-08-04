@@ -46,6 +46,9 @@ public class TreeGenAstCompositeDefinition extends TreeGenAstDefinitions impleme
 
 		// instantiate the member variable
 		m_fields = p_fields;
+
+		// set the parent of each element in the sequence parameter passed
+		for (ITreeGenAstNode lnode: p_fields) lnode.setParent(this);
 	}
 
 	// default constructor

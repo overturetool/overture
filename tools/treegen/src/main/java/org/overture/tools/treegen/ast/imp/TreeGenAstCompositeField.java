@@ -43,6 +43,9 @@ public class TreeGenAstCompositeField extends TreeGenAstNode implements ITreeGen
 
 		// instantiate the member variable
 		m_type = p_type;
+
+		// set the parent of the parameter passed
+		p_type.setParent(this);
 	}
 
 	// default constructor

@@ -65,6 +65,9 @@ public class TreeGenAstClassDefinition extends TreeGenAstNode implements ITreeGe
 
 		// instantiate the member variable
 		m_defs = p_defs;
+
+		// set the parent of each element in the sequence parameter passed
+		for (ITreeGenAstNode lnode: p_defs) lnode.setParent(this);
 	}
 
 	// default constructor

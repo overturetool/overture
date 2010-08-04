@@ -24,6 +24,9 @@ public class TreeGenAstOptionalType extends TreeGenAstTypeSpecification implemen
 
 		// instantiate the member variable
 		m_type = p_type;
+
+		// set the parent of the parameter passed
+		p_type.setParent(this);
 	}
 
 	// default constructor

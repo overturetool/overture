@@ -24,6 +24,9 @@ public class TreeGenAstUnionType extends TreeGenAstTypeSpecification implements 
 
 		// instantiate the member variable
 		m_lhs = p_lhs;
+
+		// set the parent of the parameter passed
+		p_lhs.setParent(this);
 	}
 
 	// private member variable (rhs)
@@ -43,6 +46,9 @@ public class TreeGenAstUnionType extends TreeGenAstTypeSpecification implements 
 
 		// instantiate the member variable
 		m_rhs = p_rhs;
+
+		// set the parent of the parameter passed
+		p_rhs.setParent(this);
 	}
 
 	// default constructor

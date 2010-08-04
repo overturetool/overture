@@ -7,6 +7,19 @@ import org.overture.tools.treegen.ast.itf.*;
 
 public class TreeGenAstNode implements ITreeGenAstNode
 {
+	// link each node to a possible parent node
+	private ITreeGenAstNode parent = null;
+
+	// retrieve the parent node
+	public ITreeGenAstNode getParent() { return parent; }
+
+	// set the parent node
+	public void setParent(ITreeGenAstNode pNode)
+	{
+		assert(pNode != null);
+		parent = pNode;
+	}
+
 	// private member variable (column)
 	private Integer m_column;
 

@@ -6,7 +6,7 @@ class TreeGenAst
 
 values
 	package   = "org.overture.tools.treegen.ast";
-	directory = ".\\src\\main\java";
+	directory = "..\\src\\main\java";
 	toplevel = "ClassDefinition"
 	
 instance variables

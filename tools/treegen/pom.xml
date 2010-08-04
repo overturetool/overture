@@ -9,5 +9,23 @@
   <artifactId>treegen</artifactId>
   <version>1.0.0</version>
   <name>TreeGen</name>
-  
+  <organization>
+  	<name>Overture Tool Project</name>
+  	<url>www.overturetool.org</url>
+  </organization>
+  <build>
+  	<plugins>
+  		<plugin>
+  			<groupId>org.apache.maven.plugins</groupId>
+  			<artifactId>maven-jar-plugin</artifactId>
+  			<configuration>
+  			<archive>
+  			<manifest>
+  			<mainClass>org.overture.tools.treegen.TreeGen</mainClass>
+  			</manifest>
+  			</archive>
+  			</configuration>
+  		</plugin>
+  	</plugins>
+  </build>
 </project>

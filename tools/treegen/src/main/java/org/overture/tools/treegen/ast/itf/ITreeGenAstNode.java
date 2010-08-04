@@ -4,6 +4,12 @@ package org.overture.tools.treegen.ast.itf;
 
 public abstract interface ITreeGenAstNode
 {
+	// get the parent of this node
+	public abstract ITreeGenAstNode getParent();
+
+	// set the parent of this node
+	public abstract void setParent(ITreeGenAstNode pNode);
+
 	// member variable read operations
 	public abstract Integer getColumn();
 	public abstract Integer getLine();
