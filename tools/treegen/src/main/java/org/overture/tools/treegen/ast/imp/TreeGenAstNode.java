@@ -21,31 +21,31 @@ public class TreeGenAstNode implements ITreeGenAstNode
 	}
 
 	// private member variable (column)
-	private Integer m_column;
+	private Long m_column;
 
 	// public set operation for private member variable (column)
-	public void setColumn(Integer piv)
+	public void setColumn(Long piv)
 	{
 		m_column = piv;
 	}
 
 	// public get operation for private member variable (column)
-	public Integer getColumn()
+	public Long getColumn()
 	{
 		return m_column;
 	}
 
 	// private member variable (line)
-	private Integer m_line;
+	private Long m_line;
 
 	// public set operation for private member variable (line)
-	public void setLine(Integer piv)
+	public void setLine(Long piv)
 	{
 		m_line = piv;
 	}
 
 	// public get operation for private member variable (line)
-	public Integer getLine()
+	public Long getLine()
 	{
 		return m_line;
 	}

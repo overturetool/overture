@@ -248,6 +248,30 @@ public class TreeChecker {
 				// increase the error count
 				errors++;
 			} else {
+				// check for a single type name as a right hand side
+				if (theType.isTypeName()) {
+					// create a new union type
+					UnionType fixedType = new UnionType();
+					
+					// add the type name to the union type (as the single element)
+					fixedType.union_type.add(theType);
+					
+					// put it back as the result
+					theType = fixedType;
+				}
+				
+				// check for single quoted type as a right hand side
+				if (theType.isQuotedType()) {
+					// create a new union type
+					UnionType fixedType = new UnionType();
+					
+					// add the type name to the union type (as the single element)
+					fixedType.union_type.add(theType);
+										
+					// put it back as the result
+					theType = fixedType;
+				}
+				
 				// store the type in the class definition
 				if (cd.types.containsKey(tgashd.getShorthandName())) {
 					// flag error (multiple defined type)

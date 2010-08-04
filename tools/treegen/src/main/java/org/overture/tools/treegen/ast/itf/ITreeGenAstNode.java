@@ -11,8 +11,8 @@ public abstract interface ITreeGenAstNode
 	public abstract void setParent(ITreeGenAstNode pNode);
 
 	// member variable read operations
-	public abstract Integer getColumn();
-	public abstract Integer getLine();
+	public abstract Long getColumn();
+	public abstract Long getLine();
 
 	// visitor support
 	public abstract void accept(ITreeGenAstVisitor pVisitor);

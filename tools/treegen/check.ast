@@ -13,14 +13,14 @@ types
 SeqOfChar = seq of char;
 
 Expression =
-	UnaryExpression |
+--	UnaryExpression |
 --	BinaryExpression |
 --	SequenceExpression |
 	NatLiteral;
 	
-UnaryExpression ::
-	operator : UnaryOperator
-	operand  : Expression;
+-- UnaryExpression ::
+--	operator : UnaryOperator
+--	operand  : Expression;
 	
 -- BinaryExpression ::
 --	lhs : Expression
@@ -35,9 +35,9 @@ UnaryExpression ::
 --	seq2_expr : seq of real
 --	set2_expr : set of nat;
 		
-UnaryOperator =
-   <PLUS> |
-   <MINUS>;
+-- UnaryOperator =
+--   <PLUS> |
+--   <MINUS>;
    
 -- BinaryOperator =
 -- 	<PLUS> |
