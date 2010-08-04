@@ -27,8 +27,8 @@ BOOTSTRAPPING THE AST USED BY TREEGEN
 
 First compile the treegen tool as-is.
 Then go to the 'target' directory.
-Then execute 'java -jar treegen-x.y.z.jar ..\treegen.ast'
-This will regenerate the Java AST code used by treegen
+Then execute 'java -jar treegen-x.y.z.jar ..\resource\treegen.ast'
+This will regenerate the Java AST code used by treegen in ..\src\main\java
 Then run 'mvn install' again to recompile treegen, which will include the bootstrapped AST code
 
 Marcel Verhoef
