@@ -10,6 +10,7 @@ instance variables
   
 types
 
+-- SeqOfChar = int;
 SeqOfChar = seq of char;
 
 Expression =
@@ -47,6 +48,7 @@ Expression =
 	
 NatLiteral ::
 	val : nat
+--	pos : nat
 	txt : SeqOfChar
 
 end Check

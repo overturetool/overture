@@ -115,17 +115,43 @@ public class TreeChecker {
 	
 	public void performCheckDefinition(ClassDefinition cd, List<? extends ITreeGenAstDefinitions> tgads)
 	{
-		// iterate over the list of embedded definitions
+		// pass one: process all value and variable definitions
 		for (ITreeGenAstDefinitions tgad : tgads) {
+			// check for value definitions
 			if (tgad instanceof ITreeGenAstValueDefinition) {
 				performCheckValueDefinition(cd, (ITreeGenAstValueDefinition) tgad);
-			} else if (tgad instanceof ITreeGenAstVariableDefinition) {
+			}
+			// check for variable definitions
+			if (tgad instanceof ITreeGenAstVariableDefinition) {
 				performCheckVariableDefinition(cd, (ITreeGenAstVariableDefinition) tgad);
-			} else if (tgad instanceof ITreeGenAstShorthandDefinition) {
-				performCheckShorthandDefinition(cd, (ITreeGenAstShorthandDefinition) tgad);				
-			} else if (tgad instanceof ITreeGenAstCompositeDefinition) {
-				performCheckCompositeDefinition(cd, (ITreeGenAstCompositeDefinition) tgad);								
-			} else {
+			}
+		}
+		
+		// pass two: process all short-hand and record definitions
+		for (ITreeGenAstDefinitions tgad : tgads) {
+			// keep track of processing status
+			boolean check = false;
+			
+			// mark value and value definitions as passed in phase one
+			if  ((tgad instanceof ITreeGenAstValueDefinition) ||
+				 (tgad instanceof ITreeGenAstVariableDefinition)) {
+				check = true;
+			}
+			
+			// check shorthand definitions
+			if (tgad instanceof ITreeGenAstShorthandDefinition) {
+				performCheckShorthandDefinition(cd, (ITreeGenAstShorthandDefinition) tgad);
+				check = true;
+			}
+			
+			// check record definitions
+			if (tgad instanceof ITreeGenAstCompositeDefinition) {
+				performCheckCompositeDefinition(cd, (ITreeGenAstCompositeDefinition) tgad);
+				check = true;
+			}
+			
+			// sanity check: did we process this element?
+			if (check == false) {
 				// diagnostics error message
 				System.out.println("Could not resolve type of embedded definition");
 				
@@ -295,6 +321,15 @@ public class TreeChecker {
 								cd.subtypes.put(tnm, shnm);
 							}
 						}
+					} else {
+						// if it is not a union type, then it MUST be a string type
+						if (!theType.isStringType()) {
+							// flag the error
+							System.out.println("Shorthand type '"+shnm+"' is neither a union type nor a seq of char!");
+							
+							// increase the error count
+							errors++;
+						}
 					}
 				}
 			}
@@ -343,6 +378,16 @@ public class TreeChecker {
 					} else {
 						// add the field to the record type definition
 						theRecord.fields.add(new Field(tgfld.getFieldName(), theType));
+					}
+					
+					// check for name clash with variables defined in the base class
+					if (cd.variables.containsKey(tgfld.getFieldName())) {
+						// flag error: field name clashes with instance variable name
+						System.out.println("Field name '"+recnm+"."+tgfld.getFieldName()+
+								"' clashes with instance variable '"+tgfld.getFieldName()+"'");
+						
+						// increase error count
+						errors++;
 					}
 				}
 				
