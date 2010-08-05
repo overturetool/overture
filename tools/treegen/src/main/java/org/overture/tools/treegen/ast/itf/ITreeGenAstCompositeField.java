@@ -6,4 +6,5 @@ public abstract interface ITreeGenAstCompositeField extends ITreeGenAstNode
 {
 	public abstract String getFieldName();
 	public abstract ITreeGenAstTypeSpecification getType();
+	public abstract String getValue();
 }

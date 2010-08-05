@@ -10,7 +10,7 @@ values
   toplevel = "Specifications,Expression";
 
 instance variables
-  remark : java := "String";
+  remark : token := "String";
 
 types
 

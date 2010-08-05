@@ -309,6 +309,12 @@ public class CodeGenerator {
 			return "null";
 		}
 		
+		// convert the java type
+		if (tp.isJavaType()) {
+			// return the result string
+			return "null";
+		}
+		
 		// default (implies an error!)
 		return "undefined";
 	}
@@ -376,6 +382,7 @@ public class CodeGenerator {
 		// default return (all other cases)
 		return false;
 	}
+	
 	public String beautify (String str) {
 		// place holder for the result
 		String res = new String();

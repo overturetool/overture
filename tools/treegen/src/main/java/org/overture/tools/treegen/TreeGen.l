@@ -12,6 +12,9 @@ import java.io.*;
 
 %%
 
+// define the lexer state for processing comments
+%xstates SCOMM, DCOMM, TCOMM
+
 %{
 
 // place holder for the parser instance
@@ -63,32 +66,58 @@ ws				= \n | \r | \r\n | \t | " "
 
 %%
 
---.*			{}
-"subclass"		{ return SUBCLASS; }
-"class"			{ return CLASS; }
-"is"			{ return IS; }
-"of"			{ return OF; }
-"end"			{ return END; }
-"map"			{ return MAP; }
-"to"			{ return TO; }
-"seq"			{ return SEQ; }
-"set"			{ return SET; }
-"values"		{ return VALUES; }
-"types"			{ return TYPES; }
-"instance"		{ return INSTANCE; }
-"variables"		{ return VARIABLES; }
-"::"			{ return DCOLON; }
-":="			{ return ASSIGN; }
-":"				{ return COLON; }
-";"				{ return SCOLON; }
-"="				{ return EQ; }
-"["				{ return LB; }
-"]"				{ return RB; }
-"("				{ return LP; }
-")"				{ return RP; }
-"|"				{ return BAR; }
-{quote}			{ theParser.yylval = new TreeParserVal(yytext().substring(1,yylength()-1)); return QUOTE; }
-{string}		{ theParser.yylval = new TreeParserVal(yytext().substring(1,yylength()-1)); return STRING; }
-{ident}			{ theParser.yylval = new TreeParserVal(yytext()); return IDENT; }
-{ws}			{}
-.				{ return yytext().charAt(0); }
+/* normal production rules for lexems */
+<YYINITIAL> {
+	"--++"			{ yybegin(TCOMM); }
+	"--"			{ yybegin(SCOMM); }
+	"/*"			{ yybegin(DCOMM); }
+	"subclass"		{ return SUBCLASS; }
+	"class"			{ return CLASS; }
+	"is"			{ return IS; }
+	"of"			{ return OF; }
+	"end"			{ return END; }
+	"map"			{ return MAP; }
+	"to"			{ return TO; }
+	"seq"			{ return SEQ; }
+	"set"			{ return SET; }
+	"values"		{ return VALUES; }
+	"types"			{ return TYPES; }
+	"instance"		{ return INSTANCE; }
+	"variables"		{ return VARIABLES; }
+	"::"			{ return DCOLON; }
+	":="			{ return ASSIGN; }
+	":"				{ return COLON; }
+	";"				{ return SCOLON; }
+	"="				{ return EQ; }
+	"["				{ return LB; }
+	"]"				{ return RB; }
+	"("				{ return LP; }
+	")"				{ return RP; }
+	"|"				{ return BAR; }
+	{quote}			{ theParser.yylval = new TreeParserVal(yytext().substring(1,yylength()-1)); return QUOTE; }
+	{string}		{ theParser.yylval = new TreeParserVal(yytext().substring(1,yylength()-1)); return STRING; }
+	{ident}			{ theParser.yylval = new TreeParserVal(yytext()); return IDENT; }
+	{ws}			{ /* ignore all whitespace characters */ }
+	.				{ return yytext().charAt(0); }
+}
+
+/* processing single-line comments */
+<SCOMM> {
+	\n				{ yybegin(YYINITIAL); }
+	.				{ /* ignore all other characters */ }
+}
+
+/* processing multi-line comments */
+<DCOMM> {
+	"*/"			{ yybegin(YYINITIAL); }
+	{ws}			{ /* ignore all other characters */ }
+	.				{ /* ignore all other characters */ }
+}
+
+/* processing single-line comment for constructing tokens in records */
+<TCOMM> {
+	":="			{ return ASSIGN; }
+	{string}		{ theParser.yylval = new TreeParserVal(yytext().substring(1,yylength()-1)); return STRING; }
+	\n				{ yybegin(YYINITIAL); }
+	.				{ /* ignore all other characters */ }
+}

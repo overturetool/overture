@@ -412,6 +412,26 @@ Field:
 	  	TreeGenAstTypeSpecification et = (TreeGenAstTypeSpecification) $3.obj;
 	  	tgacf.setFieldName($1.sval);
 	  	tgacf.setType(et);
+	  	tgacf.setValue(new String());
+	  	$$.obj = tgacf;
+	  }
+
+/**
+ ** SPECIAL CASE (INITIALISE TOKEN EMBEDDED IN A COMMENT)
+ **
+ ** types
+ **   some_record ::
+ **     some_field : token --++ := "java.lang.String"
+ **     another_field : seq of char
+ **/
+ 		  
+	| IDENT COLON Type ASSIGN STRING
+	  {
+	  	TreeGenAstCompositeField tgacf = new TreeGenAstCompositeField();
+	  	TreeGenAstTypeSpecification et = (TreeGenAstTypeSpecification) $3.obj;
+	  	tgacf.setFieldName($1.sval);
+	  	tgacf.setType(et);
+	  	tgacf.setValue($5.sval);
 	  	$$.obj = tgacf;
 	  }
 ;

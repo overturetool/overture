@@ -1,12 +1,18 @@
 class Base
 
+/*
+ *	TEST FILE FOR TREEGEN
+ */
+
+-- supports both single and multi-line comments
+ 
 values
   package = "nl.marcelverhoef.base";
   directory = "d:\\workspace\\test\\src";
   toplevel = "Expression"
 
 instance variables
-  pos : java := "nl.marcelverhoef.position.Position"
+  pos : token := "nl.marcelverhoef.position.Position"
   
 types
 
@@ -47,6 +53,7 @@ BinaryOperator =
 	
 NatLiteral ::
 	val : nat
-	txt : SeqOfChar
-
+	txt : SeqOfChar /* --++ := "test" */
+	tst : token --++ := "java.lang.String" */
+	
 end Base

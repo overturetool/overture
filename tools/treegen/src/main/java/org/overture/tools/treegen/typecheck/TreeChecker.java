@@ -376,6 +376,33 @@ public class TreeChecker {
 						// increase error count
 						errors++;
 					} else {
+						// continue consistency checking
+						if (theType.isJavaType()) {
+							// cast to proper type
+							JavaType theJavaType = (JavaType) theType;
+							
+							// check for non-empty initialiser
+							if (tgfld.getValue().length() == 0) {
+								// flag error: token type should have an initialiser
+								System.out.println("Token field '"+recnm+"."+tgfld.getFieldName()+"' must have an initialiser");
+								
+								// increase the error count
+								errors++;
+							} else {
+								// set the initialiser
+								theJavaType.java_type = tgfld.getValue();
+							}
+						} else {
+							// insist on empty initialiser
+							if (tgfld.getValue().length() != 0) {
+								// flag error: type should not have an initialiser
+								System.out.println("Field '"+recnm+"."+tgfld.getFieldName()+"' cannot have an initialiser");
+								
+								// increate the error count
+								errors++;
+							}
+						}
+						
 						// add the field to the record type definition
 						theRecord.fields.add(new Field(tgfld.getFieldName(), theType));
 					}
@@ -487,8 +514,8 @@ public class TreeChecker {
 		// check for basic type: characters
 		if (tgatn.getName().compareToIgnoreCase("char") == 0) return new CharType();
 
-		// check for special type: embedded java
-		if (tgatn.getName().compareToIgnoreCase("java") == 0) return new JavaType();
+		// check for special type: embedded java (in VDM represented as a token type
+		if (tgatn.getName().compareToIgnoreCase("token") == 0) return new JavaType();
 
 		// ok: it is a true type name, add it to the list
 		ttns.add(tgatn.getName());

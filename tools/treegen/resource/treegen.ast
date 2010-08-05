@@ -45,7 +45,8 @@ types
 		
 	CompositeField ::
 		field_name : seq of char
-		type : TypeSpecification;
+		type : TypeSpecification
+		value : seq of char;
 		
 	TypeSpecification =
 		TypeName |

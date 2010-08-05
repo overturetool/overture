@@ -48,12 +48,32 @@ public class TreeGenAstCompositeField extends TreeGenAstNode implements ITreeGen
 		p_type.setParent(this);
 	}
 
+	// private member variable (value)
+	private String m_value = new String();
+
+	// public operation to retrieve the embedded private field value
+	public String getValue()
+	{
+		return m_value;
+	}
+
+	// public operation to set the embedded private field value
+	public void setValue(String p_value)
+	{
+		// consistency check (field must be non null!)
+		assert(p_value != null);
+
+		// instantiate the member variable
+		m_value = p_value;
+	}
+
 	// default constructor
 	public TreeGenAstCompositeField()
 	{
 		super();
 		m_field_name = null;
 		m_type = null;
+		m_value = null;
 	}
 
 	// visitor support
