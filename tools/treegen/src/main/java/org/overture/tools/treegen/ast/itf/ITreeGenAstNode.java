@@ -2,6 +2,8 @@
 
 package org.overture.tools.treegen.ast.itf;
 
+import java.util.List;
+
 public abstract interface ITreeGenAstNode
 {
 	// get the parent of this node
@@ -9,6 +11,9 @@ public abstract interface ITreeGenAstNode
 
 	// set the parent of this node
 	public abstract void setParent(ITreeGenAstNode pNode);
+
+	// get the children of this node
+	public abstract List<ITreeGenAstNode> getChildren();
 
 	// member variable read operations
 	public abstract Long getColumn();

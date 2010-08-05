@@ -5,8 +5,17 @@ package org.overture.tools.treegen.ast.imp;
 // import the abstract tree interfaces
 import org.overture.tools.treegen.ast.itf.*;
 
+// import the List and Vector types
+import java.util.*;
+
 public class TreeGenAstNode implements ITreeGenAstNode
 {
+	// keep track of all children nodes
+	private Vector<ITreeGenAstNode> children = null;
+
+	// retrieve the list of children of this node
+	public List<ITreeGenAstNode> getChildren() { return children; }
+
 	// link each node to a possible parent node
 	private ITreeGenAstNode parent = null;
 
@@ -16,8 +25,14 @@ public class TreeGenAstNode implements ITreeGenAstNode
 	// set the parent node
 	public void setParent(ITreeGenAstNode pNode)
 	{
+		// integrity check
 		assert(pNode != null);
+
+		// set the parent
 		parent = pNode;
+
+		// and add ourselves to the list of children of that node
+		pNode.getChildren().add(this);
 	}
 
 	// private member variable (column)
@@ -53,6 +68,10 @@ public class TreeGenAstNode implements ITreeGenAstNode
 	// default constructor
 	public TreeGenAstNode()
 	{
+		// initialize the list of children
+		children = new Vector<ITreeGenAstNode>();
+
+		// initialize the instance variables
 		m_column = null;
 		m_line = null;
 	}
