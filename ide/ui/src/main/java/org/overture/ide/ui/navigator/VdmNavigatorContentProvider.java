@@ -81,10 +81,12 @@ public class VdmNavigatorContentProvider extends BaseWorkbenchContentProvider
 				try
 				{
 					TreeViewer viewer = fViewer;
-
-					TreePath[] treePaths = viewer.getExpandedTreePaths();
-					viewer.refresh();
-					viewer.setExpandedTreePaths(treePaths);
+					if (!viewer.getControl().isDisposed())
+					{
+						TreePath[] treePaths = viewer.getExpandedTreePaths();
+						viewer.refresh();
+						viewer.setExpandedTreePaths(treePaths);
+					}
 					return Status.OK_STATUS;
 				} catch (Exception e)
 				{

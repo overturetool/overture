@@ -15,15 +15,17 @@ import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.overture.ide.ui.VdmUIPlugin;
 
 public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
-		IStyledLabelProvider {
+		IStyledLabelProvider
+{
 
 	protected ListenerList fListeners = new ListenerList();
-	 
+
 	public String bla = null;
 	protected VdmElementImageProvider fImageLabelProvider;
-//	protected StorageLabelProvider fStorageLabelProvider;
+	// protected StorageLabelProvider fStorageLabelProvider;
 
 	private ArrayList<ILabelDecorator> fLabelDecorators;
 
@@ -33,238 +35,331 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 	/**
 	 * Creates a new label provider with default flags.
 	 */
-	public VdmUILabelProvider() {
-		this(VdmElementLabels.ALL_DEFAULT, VdmElementImageProvider.OVERLAY_ICONS);
+	public VdmUILabelProvider()
+	{
+		this(VdmElementLabels.ALL_DEFAULT,
+				VdmElementImageProvider.OVERLAY_ICONS);
 	}
 
 	/**
-	 * @param textFlags Flags defined in <code>JavaElementLabels</code>.
-	 * @param imageFlags Flags defined in <code>JavaElementImageProvider</code>.
+	 * @param textFlags
+	 *            Flags defined in <code>JavaElementLabels</code>.
+	 * @param imageFlags
+	 *            Flags defined in <code>JavaElementImageProvider</code>.
 	 */
-	public VdmUILabelProvider(long textFlags, int imageFlags) {
-		fImageLabelProvider= new VdmElementImageProvider();
-		fLabelDecorators= null;
+	public VdmUILabelProvider(long textFlags, int imageFlags)
+	{
+		fImageLabelProvider = new VdmElementImageProvider();
+		fLabelDecorators = null;
 
-//		fStorageLabelProvider= new StorageLabelProvider();
-		fImageFlags= imageFlags;
-		fTextFlags= textFlags;
+		// fStorageLabelProvider= new StorageLabelProvider();
+		fImageFlags = imageFlags;
+		fTextFlags = textFlags;
 	}
 
 	/**
 	 * Adds a decorator to the label provider
-	 * @param decorator the decorator to add
+	 * 
+	 * @param decorator
+	 *            the decorator to add
 	 */
-	public void addLabelDecorator(ILabelDecorator decorator) {
-		if (fLabelDecorators == null) {
-			fLabelDecorators= new ArrayList<ILabelDecorator>(2);
+	public void addLabelDecorator(ILabelDecorator decorator)
+	{
+		if (fLabelDecorators == null)
+		{
+			fLabelDecorators = new ArrayList<ILabelDecorator>(2);
 		}
 		fLabelDecorators.add(decorator);
 	}
 
 	/**
 	 * Sets the textFlags.
-	 * @param textFlags The textFlags to set
+	 * 
+	 * @param textFlags
+	 *            The textFlags to set
 	 */
-	public final void setTextFlags(long textFlags) {
-		fTextFlags= textFlags;
+	public final void setTextFlags(long textFlags)
+	{
+		fTextFlags = textFlags;
 	}
 
 	/**
 	 * Sets the imageFlags
-	 * @param imageFlags The imageFlags to set
+	 * 
+	 * @param imageFlags
+	 *            The imageFlags to set
 	 */
-	public final void setImageFlags(int imageFlags) {
-		fImageFlags= imageFlags;
+	public final void setImageFlags(int imageFlags)
+	{
+		fImageFlags = imageFlags;
 	}
 
 	/**
-	 * Gets the image flags.
-	 * Can be overwritten by super classes.
+	 * Gets the image flags. Can be overwritten by super classes.
+	 * 
 	 * @return Returns a int
 	 */
-	public final int getImageFlags() {
+	public final int getImageFlags()
+	{
 		return fImageFlags;
 	}
 
 	/**
 	 * Gets the text flags.
+	 * 
 	 * @return Returns a int
 	 */
-	public final long getTextFlags() {
+	public final long getTextFlags()
+	{
 		return fTextFlags;
 	}
 
 	/**
-	 * Evaluates the image flags for a element.
-	 * Can be overwritten by super classes.
-	 * @param element the element to compute the image flags for
+	 * Evaluates the image flags for a element. Can be overwritten by super
+	 * classes.
+	 * 
+	 * @param element
+	 *            the element to compute the image flags for
 	 * @return Returns a int
 	 */
-	protected int evaluateImageFlags(Object element) {
+	protected int evaluateImageFlags(Object element)
+	{
 		return getImageFlags();
 	}
 
 	/**
-	 * Evaluates the text flags for a element. Can be overwritten by super classes.
-	 * @param element the element to compute the text flags for
+	 * Evaluates the text flags for a element. Can be overwritten by super
+	 * classes.
+	 * 
+	 * @param element
+	 *            the element to compute the text flags for
 	 * @return Returns a int
 	 */
-	protected long evaluateTextFlags(Object element) {
+	protected long evaluateTextFlags(Object element)
+	{
 		return getTextFlags();
 	}
 
-	protected Image decorateImage(Image image, Object element) {
-		if (fLabelDecorators != null && image != null) {
-			for (int i= 0; i < fLabelDecorators.size(); i++) {
-				ILabelDecorator decorator= (ILabelDecorator) fLabelDecorators.get(i);
-				image= decorator.decorateImage(image, element);
+	protected Image decorateImage(Image image, Object element)
+	{
+		if (fLabelDecorators != null && image != null)
+		{
+			for (int i = 0; i < fLabelDecorators.size(); i++)
+			{
+				ILabelDecorator decorator = (ILabelDecorator) fLabelDecorators
+						.get(i);
+				image = decorator.decorateImage(image, element);
 			}
 		}
 		return image;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ILabelProvider#getImage
 	 */
-	public Image getImage(Object element) {
-		Image result= fImageLabelProvider.getImageLabel(element, evaluateImageFlags(element));
-//		if (result == null && (element instanceof IStorage)) {
-//			result= fStorageLabelProvider.getImage(element);
-//		}
+	public Image getImage(Object element)
+	{
+		try
+		{
+			Image result = fImageLabelProvider.getImageLabel(element,
+					evaluateImageFlags(element));
+			// if (result == null && (element instanceof IStorage)) {
+			// result= fStorageLabelProvider.getImage(element);
+			// }
 
-		return decorateImage(result, element);
+			return decorateImage(result, element);
+		} catch (Exception e)
+		{
+			VdmUIPlugin.log(e);
+			return null;
+		}
 	}
 
-	protected String decorateText(String text, Object element) {
-		if (fLabelDecorators != null && text.length() > 0) {
-			for (int i= 0; i < fLabelDecorators.size(); i++) {
-				ILabelDecorator decorator= (ILabelDecorator) fLabelDecorators.get(i);
-				String decorated= decorator.decorateText(text, element);
-				if (decorated != null) {
-					text= decorated;
+	protected String decorateText(String text, Object element)
+	{
+		if (fLabelDecorators != null && text.length() > 0)
+		{
+			for (int i = 0; i < fLabelDecorators.size(); i++)
+			{
+				ILabelDecorator decorator = (ILabelDecorator) fLabelDecorators
+						.get(i);
+				String decorated = decorator.decorateText(text, element);
+				if (decorated != null)
+				{
+					text = decorated;
 				}
 			}
 		}
 		return text;
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ILabelProvider#getText
 	 */
-	public String getText(Object element) {
-		String result= VdmElementLabels.getTextLabel(element, evaluateTextFlags(element));
-//		if (result.length() == 0 && (element instanceof IStorage)) {
-//			result= fStorageLabelProvider.getText(element);
-//		}
+	public String getText(Object element)
+	{
+		String result = VdmElementLabels.getTextLabel(element,
+				evaluateTextFlags(element));
+		// if (result.length() == 0 && (element instanceof IStorage)) {
+		// result= fStorageLabelProvider.getText(element);
+		// }
 		return decorateText(result, element);
 	}
 
-	public StyledString getStyledText(Object element) {
-		StyledString string= VdmElementLabels.getStyledTextLabel(element, (evaluateTextFlags(element) | VdmElementLabels.COLORIZE));
-//		if (string.length() == 0 && (element instanceof IStorage)) {
-//			string= new StyledString(fStorageLabelProvider.getText(element));
-//		}
-		String decorated= decorateText(string.getString(), element);
-		if (decorated != null) {
-			return StyledCellLabelProvider.styleDecoratedString(decorated, StyledString.DECORATIONS_STYLER, string);
+	public StyledString getStyledText(Object element)
+	{
+		StyledString string = VdmElementLabels.getStyledTextLabel(element,
+				(evaluateTextFlags(element) | VdmElementLabels.COLORIZE));
+		// if (string.length() == 0 && (element instanceof IStorage)) {
+		// string= new StyledString(fStorageLabelProvider.getText(element));
+		// }
+		String decorated = decorateText(string.getString(), element);
+		if (decorated != null)
+		{
+			return StyledCellLabelProvider.styleDecoratedString(decorated,
+					StyledString.DECORATIONS_STYLER, string);
 		}
 		return string;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see IBaseLabelProvider#dispose
 	 */
-	public void dispose() {
-		if (fLabelDecorators != null) {
-			for (int i= 0; i < fLabelDecorators.size(); i++) {
-				ILabelDecorator decorator= (ILabelDecorator) fLabelDecorators.get(i);
+	public void dispose()
+	{
+		if (fLabelDecorators != null)
+		{
+			for (int i = 0; i < fLabelDecorators.size(); i++)
+			{
+				ILabelDecorator decorator = (ILabelDecorator) fLabelDecorators
+						.get(i);
 				decorator.dispose();
 			}
-			fLabelDecorators= null;
+			fLabelDecorators = null;
 		}
-//		fStorageLabelProvider.dispose();
+		// fStorageLabelProvider.dispose();
 		fImageLabelProvider.dispose();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see IBaseLabelProvider#addListener(ILabelProviderListener)
 	 */
-	public void addListener(ILabelProviderListener listener) {
-		if (fLabelDecorators != null) {
-			for (int i= 0; i < fLabelDecorators.size(); i++) {
-				ILabelDecorator decorator= (ILabelDecorator) fLabelDecorators.get(i);
+	public void addListener(ILabelProviderListener listener)
+	{
+		if (fLabelDecorators != null)
+		{
+			for (int i = 0; i < fLabelDecorators.size(); i++)
+			{
+				ILabelDecorator decorator = (ILabelDecorator) fLabelDecorators
+						.get(i);
 				decorator.addListener(listener);
 			}
 		}
 		fListeners.add(listener);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see IBaseLabelProvider#isLabelProperty(Object, String)
 	 */
-	public boolean isLabelProperty(Object element, String property) {
+	public boolean isLabelProperty(Object element, String property)
+	{
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see IBaseLabelProvider#removeListener(ILabelProviderListener)
 	 */
-	public void removeListener(ILabelProviderListener listener) {
-		if (fLabelDecorators != null) {
-			for (int i= 0; i < fLabelDecorators.size(); i++) {
-				ILabelDecorator decorator= (ILabelDecorator) fLabelDecorators.get(i);
+	public void removeListener(ILabelProviderListener listener)
+	{
+		if (fLabelDecorators != null)
+		{
+			for (int i = 0; i < fLabelDecorators.size(); i++)
+			{
+				ILabelDecorator decorator = (ILabelDecorator) fLabelDecorators
+						.get(i);
 				decorator.removeListener(listener);
 			}
 		}
 		fListeners.remove(listener);
 	}
 
-	public static ILabelDecorator[] getDecorators(boolean errortick, ILabelDecorator extra) {
-		if (errortick) {
-			if (extra == null) {
+	public static ILabelDecorator[] getDecorators(boolean errortick,
+			ILabelDecorator extra)
+	{
+		if (errortick)
+		{
+			if (extra == null)
+			{
 				return new ILabelDecorator[] {};
-			} else {
+			} else
+			{
 				return new ILabelDecorator[] { extra };
 			}
 		}
-		if (extra != null) {
+		if (extra != null)
+		{
 			return new ILabelDecorator[] { extra };
 		}
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
 	 */
-	public Color getForeground(Object element) {
+	public Color getForeground(Object element)
+	{
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
 	 */
-	public Color getBackground(Object element) {
+	public Color getBackground(Object element)
+	{
 		return null;
 	}
 
-    /**
-     * Fires a label provider changed event to all registered listeners
-     * Only listeners registered at the time this method is called are notified.
-     *
-     * @param event a label provider changed event
-     *
-     * @see ILabelProviderListener#labelProviderChanged
-     */
-    protected void fireLabelProviderChanged(final LabelProviderChangedEvent event) {
-        Object[] listeners = fListeners.getListeners();
-        for (int i = 0; i < listeners.length; ++i) {
-            final ILabelProviderListener l = (ILabelProviderListener) listeners[i];
-            SafeRunner.run(new SafeRunnable() {
-                public void run() {
-                    l.labelProviderChanged(event);
-                }
-            });
-        }
-    }
+	/**
+	 * Fires a label provider changed event to all registered listeners Only
+	 * listeners registered at the time this method is called are notified.
+	 * 
+	 * @param event
+	 *            a label provider changed event
+	 * 
+	 * @see ILabelProviderListener#labelProviderChanged
+	 */
+	protected void fireLabelProviderChanged(
+			final LabelProviderChangedEvent event)
+	{
+		Object[] listeners = fListeners.getListeners();
+		for (int i = 0; i < listeners.length; ++i)
+		{
+			final ILabelProviderListener l = (ILabelProviderListener) listeners[i];
+			SafeRunner.run(new SafeRunnable()
+			{
+				public void run()
+				{
+					l.labelProviderChanged(event);
+				}
+			});
+		}
+	}
 }

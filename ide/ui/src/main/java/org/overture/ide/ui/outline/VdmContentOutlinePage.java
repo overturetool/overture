@@ -57,7 +57,7 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 						// if (fTopLevelTypeOnly) {
 						// base= cu.findPrimaryType();
 						// if (base == null) {
-						if (fOutlineViewer != null)
+						if (fOutlineViewer != null && !fOutlineViewer.getControl().isDisposed())
 						{
 							fOutlineViewer.refresh(true);
 							fOutlineViewer.expandToLevel(AUTO_EXPAND_LEVEL);
