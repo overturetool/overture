@@ -1,6 +1,7 @@
 grammar vdmpp;
 options{
 	backtrack=true;
+	output=AST;	
 }
 
 tokens{
@@ -117,7 +118,7 @@ tokens{
 	LEX_SUBCLASS='subclass';
 	LEX_SUBSET='subset';
 	LEX_SYNC='sync';
-	LEX_SYSTEM='system;
+	LEX_SYSTEM='system';
 	LEX_THEN='then';
 	LEX_THREAD='thread';
 	LEX_THREADID='threadid';
@@ -152,50 +153,124 @@ tokens{
 	BAR='|';
 }
 
+
+//UCODE 	:	'\u0100'..'\ufff0';
+
+DIGIT 	:	'0'..'9';
+
+fragment HEXDIGIT:	(DIGIT|'A'..'F'|'a'..'f');
+HEXQUAD	:	HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT;
+UNIVERSALCHARACTERNAME 
+	:	 ('\\u'|'\\U') HEXQUAD;
+
 fragment
 LOWER	:	'a'..'z';
 fragment
 UPPER	:	'A'..'Z';
+
 fragment
-CHAR	:	(LOWER|UPPER|'_');
-DIGIT 	:	'0'..'9';
-IDENT	:	CHAR (CHAR|DIGIT)*;
-QUOTE	:	'<'(DIGIT|UPPER|'_')+ '>';
-STRING 	:	'"' (~('\\'|'"') )* '"';
-WS	:	('\n' | '\r' | '\t' | ' ')+ { skip(); };
+LETTER	:	(LOWER|UPPER|UNIVERSALCHARACTERNAME);//|UCODE);
 
-start	:	document EOF {System.out.println("Document parsed");}
+PRIME	:	'\`' | '\.';
+
+HOOK	:	'\~';
+
+RTFUNIVERSALCHARACTER
+	:	'\\u' HEXQUAD (UPPER|LOWER);
+
+IDENTIFIERKEYWORD
+	:	LETTER(DIGIT|'_'|LETTER)*;
+
+NUMERICLITERAL
+	:	DIGIT+;
+
+REALLITERAL
+	:	DIGIT+( ('.' DIGIT+) | (('E'|'e')('+'|'-')? DIGIT+) | '.' DIGIT+ ('E'|'e')('+'|'-')? DIGIT+);
+
+EMBEDDEDCTRLCHAR 
+	:	'\000'..'\037';
+
+
+CHARACTERLITERAL 
+	:	'\'' (UNIVERSALCHARACTERNAME | RTFUNIVERSALCHARACTER) '\'';
+	
+TEXTLITERAL
+	:	'"' (UNIVERSALCHARACTERNAME)* '"';
+
+QUOTELITERAL
+	:	'<' IDENTIFIERKEYWORD '>';
+	
+EOLC1 	:	'--' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
 	;
 
-document:	classDefinitionList
-	|	{System.out.println("empty document");}	
+EOLC2 	:	'//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
+	;	
+
+MULTICOMMENT
+	:	'/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;}
 	;
 
-classDefinitionList
-	:	classDefinition classDefinition*
+EOLCOMMENT
+	:	EOLC1 | EOLC2;
+
+LEX_DOLLAR_IDENTIFIER 
+	:	'$' IDENTIFIERKEYWORD
 	;
 
-classDefinition 
-	:	LEX_CLASS nameStart=IDENT LEX_END nameEnd=IDENT 
-	{ System.out.println(nameStart.getText());}
-	| LEX_CLASS IDENT definitionList LEX_END IDENT
-	| LEX_CLASS IDENT LEX_IS LEX_SUBCLASS LEX_OF IDENT LEX_END IDENT
-	| LEX_CLASS IDENT LEX_IS LEX_SUBCLASS LEX_OF IDENT definitionList LEX_END IDENT
+// GRAMAR
+
+document
+	:	classes EOF
+	//|	expression
+	|
 	;
+
+classes
+	:	class class*
+	;
+
+
+
+class
+	: classHeader identifier definitionList? LEX_END identifier 
+	| classHeader identifier inheritanceClause definitionList? LEX_END identifier
+	| classHeader IDENTIFIERKEYWORD LEX_IS LEX_SUBCLASS LEX_OF IDENTIFIERKEYWORD definitionList LEX_END IDENTIFIERKEYWORD
+	;
+
+classHeader
+	:	LEX_CLASS
+	|	LEX_SYSTEM
+	;
+	
+inheritanceClause
+	:	LEX_IS LEX_SUBCLASS LEX_OF identifierCommaList
+	;
+
+identifierCommaList
+	:	identifier (',' identifier)*;	
+	
+identifier 
+	:	IDENTIFIERKEYWORD
+	| 	LEX_DOLLAR_IDENTIFIER;
 	
 definitionList
 	: definitionBlock definitionBlock*
 	;
 
 definitionBlock 
-	:	valueDefinitions
+	:	typeDefinitions
+	|	valueDefinitions 
+//	|	functionDefinitions
+//	|	operationDefinitions
 	|	instanceVariableDefinitions
-	|	typeDefinitions
+//	|	synchronizationDefinitions	  
+//	| 	threadDefinitions	  
+	//| 	traceDefinitions
 	;
 	
 valueDefinitions
 	:	LEX_VALUES
-	|	LEX_VALUES valueDefinitionList SCOLON?
+	|	LEX_VALUES valueDefinitionList SCOLON? 
 	;
 
 valueDefinitionList
@@ -203,8 +278,8 @@ valueDefinitionList
 	;
 	
 valueDefinition
-	:	IDENT EQ STRING
-	;
+	:	IDENTIFIERKEYWORD EQ IDENTIFIERKEYWORD
+		;
 	
 instanceVariableDefinitions
 	:	LEX_INSTANCE LEX_VARIABLES
@@ -216,37 +291,37 @@ instanceVariableDefinitionList
 	;
 	
 instanceVariable
-	:	IDENT COLON type (ASSIGN STRING)?
+	:	IDENTIFIERKEYWORD COLON type (ASSIGN IDENTIFIERKEYWORD)?
 	;
 	
 typeDefinitions	
 	: LEX_TYPES 
-	| LEX_TYPES typeDefinitionList SCOLON?
+	| LEX_TYPES typeDefinitionList SCOLON? 
 	;
 	
 typeDefinitionList
 	:	typeDefinition (SCOLON typeDefinition)*;
 
 typeDefinition 
-	:	IDENT EQ type
-	|	IDENT DCOLON
-	|	IDENT DCOLON fieldList
+	:	IDENTIFIERKEYWORD EQ type
+	|	IDENTIFIERKEYWORD DCOLON
+	|	IDENTIFIERKEYWORD DCOLON fieldList
 	;
 
 fieldList
-	:	IDENT COLON type (IDENT COLON type)*
+	:	IDENTIFIERKEYWORD COLON type (IDENTIFIERKEYWORD COLON type)*
 	;
 
 	
-type 	: IDENT 
-	| QUOTE 
+type 	: IDENTIFIERKEYWORD 
+	| QUOTELITERAL 
 	| LB type RB 
 	| LP type RP 
 	| LEX_SEQ LEX_OF type 
 	| LEX_SET LEX_OF type 
 	| LEX_MAP type LEX_TO type
-	|	(IDENT 
-		| QUOTE 
+	|	(IDENTIFIERKEYWORD 
+		| QUOTELITERAL 
 		| LB type RB 
 		| LP type RP 
 		| LEX_SEQ LEX_OF type 
