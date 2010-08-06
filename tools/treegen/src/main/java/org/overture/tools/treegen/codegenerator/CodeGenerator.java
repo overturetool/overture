@@ -883,11 +883,21 @@ public class CodeGenerator {
 
 	public void generateCodeTypeNameUnion(String clnm, ClassDefinition cd, String tnm, UnionType ut)
 	{
+		// placeholder for supertype
+		String stp;
+		
+		// compute the supertype
+		if (cd.subtypes.containsKey(tnm)) {
+			stp = cd.subtypes.get(tnm);
+		} else {
+			stp = "Node";
+		}
+		
 		// place holder for the class and interface name
 		String cnm = prefix + tnm;
-		String basenm = prefix + "Node";
+		String basenm = prefix + stp;
 		String inm = iprefix + tnm;
-		String baseinm = iprefix + "Node";
+		String baseinm = iprefix + stp;
 		
 		// the class and interface code
 		String cls = new String();

@@ -18,6 +18,9 @@ public class TreeChecker {
 	// create a set of all type names encountered during first pass
 	public HashSet<String> ttns = new HashSet<String>();
 	
+	// create a set of all shorthand union types
+	public HashSet<String> shuts = new HashSet<String>();
+	
 	// create a map to store all free type name variables per class definition
 	public HashMap<String,HashSet<String>> tns = new HashMap<String,HashSet<String>>();
 
@@ -317,8 +320,16 @@ public class TreeChecker {
 						// check for type name union
 						if (theUnionType.isTypeNameUnion()) {
 							for (String tnm: theUnionType.getTypeNames()) {
-								// insert each type name in the sub type look-up table
-								cd.subtypes.put(tnm, shnm);
+								if (cd.subtypes.containsKey(tnm)) {
+									// flag error: type must have unique supertype
+									System.out.println("Type name union "+tnm+" is embedded in two other union types");
+									
+									// increase the error count
+									errors++;
+								} else {
+									// insert each type name in the sub type look-up table
+									cd.subtypes.put(tnm, shnm);
+								}
 							}
 						}
 					} else {

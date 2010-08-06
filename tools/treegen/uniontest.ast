@@ -1,0 +1,20 @@
+class Union
+
+values
+  package = "nl.marcelverhoef.union";
+  directory = "d:\\workspace\\test\\src";
+  toplevel = "TOP"
+  
+types
+  A ::;
+  B ::;
+  C ::;
+  D ::;
+  
+  U1 = A | B;
+  U2 = C | U1;
+  -- U3 = D  | U1; -- not allowed: U1 can only be nested once
+  
+  TOP :: u2 : U2
+
+end Union
