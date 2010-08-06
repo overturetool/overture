@@ -444,34 +444,35 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 	{
 		for (Object object : elements)
 		{
-			if (object instanceof IVdmProject)
+			if (object instanceof IAdaptable)
 			{
-
-				IVdmProject vdmProject = (IVdmProject) object;
-				final IVdmModel model = vdmProject.getModel();
-				try
+				IVdmProject vdmProject = (IVdmProject) ((IAdaptable) object).getAdapter(IVdmProject.class);
+				if (vdmProject != null)
 				{
-					context.run(false, false, new IRunnableWithProgress()
+					final IVdmModel model = vdmProject.getModel();
+					try
 					{
-
-						public void run(IProgressMonitor monitor)
-								throws InvocationTargetException,
-								InterruptedException
+						context.run(false, false, new IRunnableWithProgress()
 						{
-							model.refresh(false, monitor);
 
-						}
-					});
-				} catch (InvocationTargetException e)
-				{
-					if (VdmDebugPlugin.DEBUG)
+							public void run(IProgressMonitor monitor)
+									throws InvocationTargetException,
+									InterruptedException
+							{
+								model.refresh(false, monitor);
+
+							}
+						});
+					} catch (InvocationTargetException e)
 					{
-						e.printStackTrace();
+						if (VdmDebugPlugin.DEBUG)
+						{
+							e.printStackTrace();
+						}
 					}
+
+					return filterTypes(model.getRootElementList().toArray(), context);
 				}
-
-				return filterTypes(model.getRootElementList().toArray(), context);
-
 			}
 		}
 		return null;

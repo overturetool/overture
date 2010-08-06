@@ -408,4 +408,18 @@
         </enablement>
      </decorator>
   </extension>
+  <extension
+        point="org.eclipse.ui.preferencePages">
+     <page
+           class="org.overture.ide.ui.preferences.WorkbenchPreferencePageVdm"
+           id="org.overture.ide.ui.vdm"
+           name="VDM">
+     </page>
+     <page
+           category="org.overture.ide.ui.vdm"
+           class="org.overture.ide.ui.preferences.WorkbenchPreferencePageTemplates"
+           id="org.overture.ide.ui.templates"
+           name="Templates">
+     </page>
+  </extension>
 </plugin>

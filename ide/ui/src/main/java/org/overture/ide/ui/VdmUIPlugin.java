@@ -2,6 +2,8 @@ package org.overture.ide.ui;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
@@ -56,7 +58,10 @@ public class VdmUIPlugin extends AbstractUIPlugin {
 	}
 
 	public static void log(Exception exception) {
-		exception.printStackTrace();
+		getDefault().getLog().log(new Status(IStatus.ERROR,IVdmUiConstants.PLUGIN_ID,"VdmUIPlugin",exception));
+	}
+	public static void log(String message,Exception exception) {
+		getDefault().getLog().log(new Status(IStatus.ERROR,IVdmUiConstants.PLUGIN_ID,message,exception));
 	}
 
 	public static void println(String s) {
@@ -70,8 +75,8 @@ public class VdmUIPlugin extends AbstractUIPlugin {
 
 	}
 
-	public static void logErrorMessage(String string) {
-		// TODO Auto-generated method stub
+	public static void logErrorMessage(String message) {
+		getDefault().getLog().log(new Status(IStatus.ERROR,IVdmUiConstants.PLUGIN_ID,message));
 
 	}
 

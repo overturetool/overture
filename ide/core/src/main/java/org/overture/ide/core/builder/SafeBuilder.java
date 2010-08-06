@@ -29,7 +29,6 @@ public class SafeBuilder extends Thread
 	@Override
 	public void run()
 	{
-
 		try
 		{
 			IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(ICoreConstants.EXTENSION_BUILDER_ID);
@@ -53,12 +52,6 @@ public class SafeBuilder extends Thread
 							{
 								AbstractVdmBuilder builder = (AbstractVdmBuilder) o;
 
-								// if
-								// (currentProject.hasNature(builder.getNatureId()))
-								// {
-
-								// currentProject.getModel().clean();// we do now support incremental
-								// // build
 								final VdmModelWorkingCopy model = currentProject.getModel().getWorkingCopy();
 								SourceParserManager.parseMissingFiles(currentProject, model, monitor);
 
@@ -79,13 +72,11 @@ public class SafeBuilder extends Thread
 									if (model != null)
 									{
 										model.setChecked(status.getCode() == IStatus.OK);
-
 										model.commit();
 									}
 									return;
 								}
 							}
-							// }
 						};
 						SafeRunner.run(runnable);
 						break;
@@ -95,6 +86,7 @@ public class SafeBuilder extends Thread
 		} catch (Exception ex)
 		{
 			System.out.println(ex.getMessage());
+			VdmCore.log(ex);
 		}
 
 	}

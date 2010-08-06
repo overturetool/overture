@@ -16,9 +16,13 @@ public class WorkbenchPreferencePage1 extends
 	@Override
 	protected void createFieldEditors()
 	{
-		IntegerFieldEditor portFiled = new IntegerFieldEditor(IDebugPreferenceConstants.PREF_DBGP_PORT, "Debug port", getFieldEditorParent());
-		portFiled.setValidRange(-1, Integer.MAX_VALUE);
-		addField(portFiled);
+		IntegerFieldEditor portField = new IntegerFieldEditor(IDebugPreferenceConstants.PREF_DBGP_PORT, "Debug port", getFieldEditorParent());
+		portField.setValidRange(-1, Integer.MAX_VALUE);
+		addField(portField);
+		
+		IntegerFieldEditor commTimeoutField = new IntegerFieldEditor(IDebugPreferenceConstants.PREF_DBGP_CONNECTION_TIMEOUT, "Connection timeout", getFieldEditorParent());
+		commTimeoutField.setValidRange(0, Integer.MAX_VALUE);
+		addField(commTimeoutField);
 		
 	}
 

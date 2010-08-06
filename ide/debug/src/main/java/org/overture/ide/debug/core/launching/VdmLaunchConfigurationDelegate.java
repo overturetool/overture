@@ -51,21 +51,6 @@ public class VdmLaunchConfigurationDelegate implements
 			ILaunch launch, IProgressMonitor monitor) throws CoreException
 	{
 
-		// IVdmDebugThreadConfigurator configurator =
-		// createThreadConfigurator(launch
-		// .getLaunchConfiguration());
-
-		// debugComm.registerDebugTarget(debugSessionId.toString(),target);
-		//
-		// IProcess p = launchExternalProcess(launch, commandList, project);
-		// // IStreamsProxy sProxy = p.getStreamsProxy();
-		// target.setProcess(p);
-		// target.setProject(project);
-		// target.setOutputFolder(getOutputFolder(project));
-		// launch.addDebugTarget(target);
-		// DbgpConnectionConfig.save(config, getBindAddress(),
-		// service.getPort(),
-		// target.getSessionId());
 		if (monitor == null)
 		{
 			monitor = new NullProgressMonitor();
@@ -125,9 +110,7 @@ public class VdmLaunchConfigurationDelegate implements
 	protected void waitDebuggerConnected(ILaunch launch,
 			DebugSessionAcceptor acceptor) throws CoreException
 	{
-
-		ILaunchConfiguration configuration = launch.getLaunchConfiguration();
-		int timeout = 10000;// VdmDebugPlugin.getConnectionTimeout();
+		int timeout =  VdmDebugPlugin.getConnectionTimeout();
 		if (!acceptor.waitConnection(timeout))
 		{
 			launch.terminate();
@@ -145,17 +128,7 @@ public class VdmLaunchConfigurationDelegate implements
 			ILaunchConfiguration configuration, String mode)
 			throws CoreException
 	{
-
-		// DebugCommunication debugComm = null;
-		// try
-		// {
-		// debugComm = DebugCommunication.getInstance();
-		// } catch (IOException e1)
-		// {
-		// // TODO Auto-generated catch block
-		// e1.printStackTrace();
-		// }
-		List<String> commandList = null;
+			List<String> commandList = null;
 		Integer debugSessionId = new Integer(getSessionId());
 		if (useRemoteDebug(configuration))
 		{
@@ -167,9 +140,6 @@ public class VdmLaunchConfigurationDelegate implements
 		ILaunchConfigurationWorkingCopy lcwc = configuration.getWorkingCopy();
 		lcwc.setAttribute(IDebugConstants.VDM_DEBUG_SESSION_ID, debugSessionId);
 		lcwc.doSave();
-
-		// InetSocketAddress address = new InetSocketAddress("localhost",
-		// findFreePort());
 
 		commandList = new ArrayList<String>();
 
@@ -187,8 +157,7 @@ public class VdmLaunchConfigurationDelegate implements
 		commandList.add(new Integer(VdmDebugPlugin.getDefault()
 				.getDbgpService().getPort()).toString());
 		commandList.add("-k");
-		// commandList.add("dbgp_1265361483486");
-		commandList.add(debugSessionId.toString());
+			commandList.add(debugSessionId.toString());
 		commandList.add("-w");
 		commandList.add("-q");
 		commandList.add(vdmProject.getDialect().getArgstring());
@@ -317,25 +286,6 @@ public class VdmLaunchConfigurationDelegate implements
 				IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_CONTROL, "");
 	}
 
-	// private String getCoverageDir(IVdmProject project)
-	// {
-	// DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-	// File coverageDir = new File(new File(getOutputFolder(project),
-	// "coverage"), dateFormat.format(new Date()));
-	// coverageDir.mkdir();
-	// String uri= coverageDir.toURI().toASCIIString();
-	// uri = uri.substring(uri.lastIndexOf("file:"));
-	// try
-	// {
-	// new File(new URI(uri)).mkdirs();
-	// } catch (URISyntaxException e)
-	// {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// return uri;
-	// }
-
 	private String getArgumentString(List<String> args)
 	{
 		String executeString = "";
@@ -389,13 +339,7 @@ public class VdmLaunchConfigurationDelegate implements
 			{
 				process = Runtime.getRuntime().exec(executeString, null,
 						getProject(configuration).getLocation().toFile());
-				//
-				// ConsoleWriter cw = new
-				// ConsoleWriter(IDebugConstants.CONSOLE_DEBUG_NAME);
-				// new ProcessConsolePrinter(false, cw,
-				// process.getInputStream()).start();
-				// new ProcessConsolePrinter(true, cw,
-				// process.getErrorStream()).start();
+				
 			} else
 			{
 				process = Runtime.getRuntime().exec("help");
@@ -460,7 +404,7 @@ public class VdmLaunchConfigurationDelegate implements
 			{
 				if (f.getName().toLowerCase().endsWith(".jar"))
 				{
-					entries.add(f.getAbsolutePath());
+					entries.add(toPlatformPath(f.getAbsolutePath()));
 				}
 			}
 		}
@@ -473,7 +417,7 @@ public class VdmLaunchConfigurationDelegate implements
 			{
 				if (cp.toLowerCase().endsWith(".jar"))
 				{
-					classPath += cp + getCpSeperator();
+					classPath += toPlatformPath(cp) + getCpSeperator();
 				}
 			}
 			classPath = classPath.substring(0, classPath.length() - 1);
@@ -502,10 +446,26 @@ public class VdmLaunchConfigurationDelegate implements
 
 	private String getCpSeperator()
 	{
-		if (System.getProperty("os.name").toLowerCase().contains("win"))
+		if (isWindowsPlatform())
 			return ";";
 		else
 			return ":";
+	}
+	
+	public static boolean isWindowsPlatform()
+	{
+		return System.getProperty("os.name").toLowerCase().contains("win");
+	}
+	
+	protected static String toPlatformPath(String path)
+	{
+		if(isWindowsPlatform())
+		{
+			return "\""+path+"\"";
+		}else
+		{
+			return path.replace(" ", "\\ ");
+		}
 	}
 
 	/**

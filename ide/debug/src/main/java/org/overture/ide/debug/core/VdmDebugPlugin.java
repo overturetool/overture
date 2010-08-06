@@ -33,6 +33,7 @@ import org.overture.ide.debug.core.model.internal.VdmDebugTarget;
 import org.overture.ide.debug.ui.DebugConsoleManager;
 import org.overture.ide.debug.ui.log.VdmDebugLogManager;
 
+@SuppressWarnings("deprecation")
 public class VdmDebugPlugin extends AbstractUIPlugin {
 
 	private static VdmDebugPlugin fgPlugin;
@@ -323,6 +324,7 @@ public class VdmDebugPlugin extends AbstractUIPlugin {
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
 		store.setDefault(IDebugPreferenceConstants.PREF_DBGP_PORT, IDebugPreferenceConstants.DBGP_AVAILABLE_PORT);
+		store.setDefault(IDebugPreferenceConstants.PREF_DBGP_CONNECTION_TIMEOUT, IDebugPreferenceConstants.DBGP_DEFAULT_CONNECTION_TIMEOUT);
 	}
 
 }

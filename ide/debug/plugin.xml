@@ -239,9 +239,10 @@
 	 <extension
          point="org.eclipse.ui.preferencePages">
       <page
+            category="org.overture.ide.ui.vdm"
             class="org.overture.ide.debug.preferences.WorkbenchPreferencePage1"
             id="org.overture.ide.debug.page1"
-            name="VDM Debugger">
+            name="Debugger">
       </page>
    </extension>
 	

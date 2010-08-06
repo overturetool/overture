@@ -7,10 +7,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.resources.IVdmProject;
 
-
 public class VdmBuilder extends VdmCoreBuilder
-{ 
-	
+{
 
 	@Override
 	public void build(final IProgressMonitor monitor) throws CoreException
@@ -19,34 +17,29 @@ public class VdmBuilder extends VdmCoreBuilder
 		{
 			System.out.println("buildModelElements");
 		}
-
 		try
 		{
 			final SafeBuilder builder = new SafeBuilder(getVdmProject(), monitor);
 
 			clearProblemMarkers();
-
+			builder.setDaemon(true);
 			builder.start();
-			
-			try{
-			while (builder.isAlive())
+			while (!builder.isInterrupted() && builder.isAlive())
 			{
-				Thread.sleep(500);
+				Thread.sleep(2000);
+
 				if (monitor.isCanceled())
 				{
 					builder.interrupt();
 					Thread.sleep(2000);
 					builder.stop();
 				}
-			}}catch(Exception e)
-			{
-				
 			}
-
-		} finally
+		} catch (Exception e)
 		{
-
+			VdmCore.log(e);
 		}
+
 	}
 
 	public void clean(IProgressMonitor monitor)
@@ -57,8 +50,6 @@ public class VdmBuilder extends VdmCoreBuilder
 		}
 		monitor.beginTask("Cleaning project: " + getProject().getName(), IProgressMonitor.UNKNOWN);
 
-		
-		
 		if (getProject().getAdapter(IVdmProject.class) != null)
 		{
 			clearProblemMarkers();

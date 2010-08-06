@@ -113,4 +113,12 @@ end ${className}</template>
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
 		deleted="false" description="while predicate do \n statement" enabled="true"
 		name="whileLoop" id="whileLoopPp">while ${predicate} do ${statement}</template>
+		
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
+		deleted="false" description="Is subclass responsibility" enabled="true"
+		name="issubclassresponsibility" id="issubclassresponsibilityPp">is subclass responsibility</template>
+		
+		<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
+		deleted="false" description="Is subclass of" enabled="true"
+		name="issubclassof" id="issubclassofPp">is subclass of</template>
 </templates>

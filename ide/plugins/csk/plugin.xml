@@ -42,6 +42,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
+            category="org.overture.ide.ui.vdm"
             class="org.overture.ide.plugins.csk.internal.WorkbenchPreferencePage1"
             id="org.overture.ide.plugins.csk.page1"
             name="CSK">

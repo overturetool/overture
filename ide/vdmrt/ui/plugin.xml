@@ -173,7 +173,7 @@
   <extension
         point="org.eclipse.ui.editors.templates">
      <contextType
-           class="VdmRtTemplateContextType"
+           class="org.overture.ide.vdmrt.ui.editor.contentAssist.VdmRtTemplateContextType"
            id="org.overture.ide.vdmrt.ui.contextType"
            name="Vdm-Rt Context Type">
      </contextType>

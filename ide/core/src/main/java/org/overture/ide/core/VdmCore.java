@@ -1,7 +1,9 @@
 package org.overture.ide.core;
 
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
 
 import org.osgi.framework.BundleContext;
 import org.overture.ide.internal.core.DeltaProcessingState;
@@ -65,7 +67,13 @@ public class VdmCore extends Plugin
 		return plugin;
 	}
 
-	public static void log(Exception exception) {
-	exception.printStackTrace();
+	public static void log(Exception exception)
+	{
+		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, "VdmCore", exception));
+	}
+
+	public static void log(String message, Exception exception)
+	{
+		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, message, exception));
 	}
 }

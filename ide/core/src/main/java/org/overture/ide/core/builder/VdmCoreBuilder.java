@@ -78,8 +78,8 @@ public abstract class VdmCoreBuilder extends IncrementalProjectBuilder
 		}
 
 		endBuild(monitor);
-
-		return null;
+		return new IProject[]{getProject()};
+		
 	}
 
 	public abstract void initialize();

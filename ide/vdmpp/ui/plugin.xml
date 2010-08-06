@@ -137,13 +137,6 @@
 	</extension>
 
 <!-- Templates -->
-  <extension point="org.eclipse.ui.preferencePages">
-         <page
-              class="org.overture.ide.vdmpp.ui.editor.contentAssist.VdmPpCodeTemplatesPreferencePage"
-              id="org.overture.ide.vdmpp.ui.VdmPpCodeTemplatesPreferencePage"
-              name="Templates VDM++"
-              />
-	</extension>
  	<extension point="org.eclipse.ui.editors.templates">
        <contextType
           class="org.overture.ide.vdmpp.ui.editor.contentAssist.VdmPpTemplateContextType"
