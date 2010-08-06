@@ -40,14 +40,7 @@ public class CodeGenerator {
 	// CONSTRUCTOR
 	//
 	
-	public CodeGenerator (
-			String ppnm,
-			String pbnm,
-			String ptlvl
-	) {
-		// set the global variables
-		this.packname = ppnm;
-		this.basedir = pbnm;
+	public CodeGenerator () {
 	}
 	
 	//
@@ -81,7 +74,7 @@ public class CodeGenerator {
 			if (!fp.exists()) {
 				if (!fp.createNewFile()) {
 					// diagnostics
-					System.out.println("File '" + fname + "' cannot be opened!");
+					System.out.println("** ERROR : File '" + fname + "' cannot be opened!");
 					
 					// flag error and return
 					errors++;
@@ -102,7 +95,7 @@ public class CodeGenerator {
 			fw.close();
 		} catch (IOException e) {
 			// diagnostics
-			System.out.println("Error during '" + fname + "' file access!");
+			System.out.println("** ERROR : Error during '" + fname + "' file access!");
 			
 			// flag error
 			errors++;
@@ -475,8 +468,13 @@ public class CodeGenerator {
 	
 	public void generateCodeValues(String clnm, ClassDefinition cd)
 	{
-		// retrieve the top-level directory (and replace all double backslashes by a single backslash)
-		basedir = cd.getDirectory().replaceAll("\\\\\\\\", "\\\\");
+		if (cd.getDirectory().isEmpty()) {
+			// set the top-level directory to some logical default value
+			basedir = ".\\src";
+		} else {
+			// retrieve the top-level directory (and replace all double backslashes by a single backslash)
+			basedir = cd.getDirectory().replaceAll("\\\\\\\\", "\\\\");
+		}
 		
 		// retrieve the package definition
 		packname = cd.getPackage();
@@ -487,7 +485,7 @@ public class CodeGenerator {
 		// check for existence
 		if (!tldir.exists()) {
 			// diagnostics
-			System.out.println("root directory '"+basedir+"' does not exist!");
+			System.out.println("** ERROR : Root directory '"+basedir+"' does not exist!");
 			
 			// flag error and exit
 			errors++;
@@ -497,7 +495,7 @@ public class CodeGenerator {
 		// check whether or not it is a directory
 		if (!tldir.isDirectory()) {
 			// diagnostics
-			System.out.println("'"+basedir+"' is not a directory!");
+			System.out.println("** ERROR : '"+basedir+"' is not a directory!");
 			
 			// flag error and exit
 			errors++;
@@ -510,7 +508,7 @@ public class CodeGenerator {
 		// create the directory if it does not exist yet
 		if (!createDirectory(basedir)) {
 			// diagnostics
-			System.out.println("'"+basedir+"' cannot be created");
+			System.out.println("** ERROR : '"+basedir+"' cannot be created");
 			
 			// flag error and exit
 			errors++;
@@ -527,7 +525,7 @@ public class CodeGenerator {
 			
 			if (!createDirectory(basedir)) {
 				// diagnostics
-				System.out.println("'"+basedir+"' cannot be created");
+				System.out.println("** ERROR : '"+basedir+"' cannot be created");
 				
 				// flag error and exit
 				errors++;
@@ -542,7 +540,7 @@ public class CodeGenerator {
 		// create the interface directory
 		if (!createDirectory(itfdir)) {
 			// diagnostics
-			System.out.println("'"+basedir+"' cannot be created");
+			System.out.println("** ERROR : '"+basedir+"' cannot be created");
 			
 			// flag error and exit
 			errors++;
@@ -554,7 +552,7 @@ public class CodeGenerator {
 		// create the implementation directory
 		if (!createDirectory(impdir)) {
 			// diagnostics
-			System.out.println("'"+basedir+"' cannot be created");
+			System.out.println("** ERROR : '"+basedir+"' cannot be created");
 			
 			// flag error and exit
 			errors++;
@@ -843,7 +841,7 @@ public class CodeGenerator {
 			// consistency check
 			if (theType == null) {
 				// diagnostics
-				System.out.println("Cannot find type '"+tnm+"' in any definition");
+				System.out.println("** ERROR : Cannot find type '"+tnm+"' in any definition");
 				
 				// flag error
 				errors++;
@@ -874,7 +872,7 @@ public class CodeGenerator {
 			if (ut.isTypeNameUnion()) generateCodeTypeNameUnion(clnm, cd, tnm, ut);
 		} else {
 			// diagnostics
-			System.out.println("Type union '"+tnm+"' is not supported in class '"+clnm+"'");
+			System.out.println("** ERROR : Type union '"+tnm+"' is not supported in class '"+clnm+"'");
 			
 			// flag error
 			errors++;
@@ -1408,7 +1406,7 @@ public class CodeGenerator {
 			// consistency check
 			if (theType == null) {
 				// diagnostics
-				System.out.println("Cannot find type '"+tnm+"' in any definition");
+				System.out.println("** ERROR : Cannot find type '"+tnm+"' in any definition");
 				
 				// flag error
 				errors++;

@@ -7,6 +7,7 @@ import java.util.*;
 
 public abstract interface ITreeGenAstClassDefinition extends ITreeGenAstNode
 {
+	public abstract org.overture.tools.treegen.TreeGenOptions getOpts();
 	public abstract String getClassName();
 	public abstract String getSuperClass();
 	public abstract List<ITreeGenAstDefinitions> getDefs();

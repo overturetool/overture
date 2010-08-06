@@ -6,7 +6,7 @@ values
   toplevel = "Expression"
 
 instance variables
-  pos : java := "nl.marcelverhoef.position.Position"
+  pos : token := "nl.marcelverhoef.position.Position"
   
 types
 

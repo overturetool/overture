@@ -10,10 +10,10 @@ values
   toplevel = "Specification,Expression";
 
 instance variables
-  location 	: java := "nl.marcelverhoef.position.Position";
-  value		: java := "nl.marcelverhoef.position.Position";
---  location 	: java := "org.overturetool.vdmj.lex.ILexLocation";
---  value		: java := "org.overturetool.vdmj.lex.ILexToken";
+  location 	: token := "nl.marcelverhoef.position.Position";
+  value		: token := "nl.marcelverhoef.position.Position";
+--  location 	: token := "org.overturetool.vdmj.lex.ILexLocation";
+--  value		: token := "org.overturetool.vdmj.lex.ILexToken";
 
 types
 

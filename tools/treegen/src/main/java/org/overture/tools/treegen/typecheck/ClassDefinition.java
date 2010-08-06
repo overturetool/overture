@@ -1,8 +1,12 @@
 package org.overture.tools.treegen.typecheck;
 
 import java.util.*;
+import org.overture.tools.treegen.TreeGenOptions;
 
 public class ClassDefinition {
+	
+	// keep track of the command-line options used to parse this file
+	public TreeGenOptions opts;
 	
 	// keep track of the class name
 	public String class_name;

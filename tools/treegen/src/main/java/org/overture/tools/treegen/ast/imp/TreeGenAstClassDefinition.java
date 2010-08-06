@@ -10,6 +10,25 @@ import java.util.*;
 
 public class TreeGenAstClassDefinition extends TreeGenAstNode implements ITreeGenAstClassDefinition
 {
+	// private member variable (opts)
+	private org.overture.tools.treegen.TreeGenOptions m_opts = null;
+
+	// public operation to retrieve the embedded private field value
+	public org.overture.tools.treegen.TreeGenOptions getOpts()
+	{
+		return m_opts;
+	}
+
+	// public operation to set the embedded private field value
+	public void setOpts(org.overture.tools.treegen.TreeGenOptions p_opts)
+	{
+		// consistency check (field must be non null!)
+		assert(p_opts != null);
+
+		// instantiate the member variable
+		m_opts = p_opts;
+	}
+
 	// private member variable (class_name)
 	private String m_class_name = new String();
 
@@ -74,6 +93,7 @@ public class TreeGenAstClassDefinition extends TreeGenAstNode implements ITreeGe
 	public TreeGenAstClassDefinition()
 	{
 		super();
+		m_opts = null;
 		m_class_name = null;
 		m_super_class = null;
 		m_defs = null;
@@ -81,11 +101,13 @@ public class TreeGenAstClassDefinition extends TreeGenAstNode implements ITreeGe
 
 	// auxiliary constructor
 	public TreeGenAstClassDefinition(
+		org.overture.tools.treegen.TreeGenOptions p_opts,
 		String p_class_name,
 		String p_super_class,
 		List<ITreeGenAstDefinitions> p_defs
 	) {
 		super();
+		setOpts(p_opts);
 		setClassName(p_class_name);
 		setSuperClass(p_super_class);
 		setDefs(p_defs);

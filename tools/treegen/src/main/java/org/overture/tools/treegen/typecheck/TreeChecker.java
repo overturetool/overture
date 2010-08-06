@@ -46,7 +46,11 @@ public class TreeChecker {
 			
 			// create a new entry for the class definition
 			ClassDefinition cd = new ClassDefinition();
+			// copy the command-line options
+			cd.opts = def.getOpts();
+			// remember the class name
 			cd.class_name = def.getClassName();
+			// reset the super class (will be instantiated later)
 			cd.super_class = null;
 			
 			// insert the entry in the mapping
@@ -72,6 +76,34 @@ public class TreeChecker {
 				}
 			}
 		}
+		
+		// pass four: override the value definitions
+		for (ClassDefinition cd: cls.values()) overrideValues(cd);
+	}
+	
+	public void overrideValues(ClassDefinition cd)
+	{
+		// check for the directory setting in the command-line options
+		if (cd.opts.getDirectory().length() > 0) {
+			cd.values.put("directory", new String(cd.opts.getDirectory()));
+		}
+		
+		// check for the package setting in the command-line options
+		if (cd.opts.getPackage().length() > 0) {
+			cd.values.put("package", new String(cd.opts.getPackage()));
+		}
+		
+		// check for the top-level setting in the command-line options
+		if (cd.opts.getToplevel().length() > 0) {
+			// first clear the current list
+			cd.tplvl.clear();
+			
+			// construct the new list
+			for (String tplvlnm : cd.opts.getToplevel().split(",")) {
+				// add each individual top-level name
+				cd.tplvl.add(tplvlnm);
+			}			
+		}
 	}
 	
 	public void performCheckClassDefinition (ITreeGenAstClassDefinition def)
@@ -96,7 +128,7 @@ public class TreeChecker {
 				cd2.sub_classes.add(cd1);
 			} else {
 				// diagnostics error message
-				System.out.println ("Superclass "+def.getSuperClass()+" does not exist for type "+def.getClassName());
+				System.out.println ("** ERROR : Superclass "+def.getSuperClass()+" does not exist for type "+def.getClassName());
 				
 				// increase the error count
 				errors++;
@@ -156,7 +188,7 @@ public class TreeChecker {
 			// sanity check: did we process this element?
 			if (check == false) {
 				// diagnostics error message
-				System.out.println("Could not resolve type of embedded definition");
+				System.out.println("** ERROR : Could not resolve type of embedded definition");
 				
 				// increase the error count
 				errors++;
@@ -175,7 +207,7 @@ public class TreeChecker {
 		// check for redefinition of the value
 		if (cd.values.containsKey(vdnm)) {
 			// flag error: value multiple defined
-			System.out.println("value definition '"+vdnm+"' is multiple defined");
+			System.out.println("** ERROR : Value definition '"+vdnm+"' is multiple defined");
 			
 			// increase error count
 			errors++;
@@ -204,7 +236,7 @@ public class TreeChecker {
 
 		if (theType == null) {
 			// flag error: type conversion failed
-			System.out.println("type conversion failed in instance variable '"+tgavd.getKey()+"'");
+			System.out.println("** ERROR : Type conversion failed in instance variable '"+tgavd.getKey()+"'");
 			
 			// increase error count
 			errors++;
@@ -212,7 +244,7 @@ public class TreeChecker {
 			
 			if (cd.variables.containsKey(tgavd.getKey())) {
 				// flag error: member variable multiple defined
-				System.out.println("instance variable '"+tgavd.getKey()+"' is multiple defined");
+				System.out.println("** ERROR :  Instance variable '"+tgavd.getKey()+"' is multiple defined");
 				
 				// increase error count
 				errors++;
@@ -225,13 +257,13 @@ public class TreeChecker {
 					// initialise the embedded type
 					if (tgavd.getValue() == null) {
 						// flag error: init clause is empty
-						System.out.println("init clause must be provided with java type for instance variable '"+tgavd.getKey()+"'");
+						System.out.println("** ERROR : Init clause must be provided with java type for instance variable '"+tgavd.getKey()+"'");
 						
 						// increase error count
 						errors++;
 					} else if (tgavd.getValue().isEmpty()) {
 						// flag error: init clause is empty
-						System.out.println("init clause must be provided with java type for instance variable '"+tgavd.getKey()+"'");
+						System.out.println("** ERROR : Init clause must be provided with java type for instance variable '"+tgavd.getKey()+"'");
 						
 						// increase error count
 						errors++;					
@@ -261,7 +293,7 @@ public class TreeChecker {
 		// check for allowed type name
 		if (restps.contains(shnm)) {
 			// flag error: type name is reserved
-			System.out.println("Shorthand type '"+shnm+"' is a reserved type name!");
+			System.out.println("** ERROR : Shorthand type '"+shnm+"' is a reserved type name!");
 			
 			// increase the error count
 			errors++;
@@ -272,7 +304,7 @@ public class TreeChecker {
 			// check for consistent type conversion
 			if (theType == null) {
 				// flag error (type conversion failed)
-				System.out.println("Shorthand type '"+shnm+"' cannot be converted!");
+				System.out.println("** ERROR : Shorthand type '"+shnm+"' cannot be converted!");
 				
 				// increase the error count
 				errors++;
@@ -304,7 +336,7 @@ public class TreeChecker {
 				// store the type in the class definition
 				if (cd.types.containsKey(tgashd.getShorthandName())) {
 					// flag error (multiple defined type)
-					System.out.println("Shorthand type '"+shnm+"' is multiple defined!");
+					System.out.println("** ERROR : Shorthand type '"+shnm+"' is multiple defined!");
 					
 					// increase the error count
 					errors++;
@@ -322,7 +354,7 @@ public class TreeChecker {
 							for (String tnm: theUnionType.getTypeNames()) {
 								if (cd.subtypes.containsKey(tnm)) {
 									// flag error: type must have unique supertype
-									System.out.println("Type name union "+tnm+" is embedded in two other union types");
+									System.out.println("** ERROR : Type name union "+tnm+" is embedded in two other union types");
 									
 									// increase the error count
 									errors++;
@@ -336,7 +368,7 @@ public class TreeChecker {
 						// if it is not a union type, then it MUST be a string type
 						if (!theType.isStringType()) {
 							// flag the error
-							System.out.println("Shorthand type '"+shnm+"' is neither a union type nor a seq of char!");
+							System.out.println("** ERROR : Shorthand type '"+shnm+"' is neither a union type nor a seq of char!");
 							
 							// increase the error count
 							errors++;
@@ -358,7 +390,7 @@ public class TreeChecker {
 		// check for allowed type name
 		if (restps.contains(recnm)) {
 			// flag error: type name is reserved
-			System.out.println("Composite definition '"+recnm+"' is a reserved type name!");
+			System.out.println("** ERROR : Composite definition '"+recnm+"' is a reserved type name!");
 			
 			// increase the error count
 			errors++;
@@ -366,7 +398,7 @@ public class TreeChecker {
 			// consistency check
 			if (cd.types.containsKey(recnm)) {
 				// flag error: type multiple defined
-				System.out.println("Composite definition '"+recnm+"' is multiple defined");
+				System.out.println("** ERROR : Composite definition '"+recnm+"' is multiple defined");
 				
 				// increase the error count
 				errors++;
@@ -382,7 +414,7 @@ public class TreeChecker {
 					// consistency check
 					if (theType == null) {
 						// flag error: field type conversion failed
-						System.out.println("Field type conversion failed in '"+recnm+"."+tgfld.getFieldName()+"'");
+						System.out.println("** ERROR : Field type conversion failed in '"+recnm+"."+tgfld.getFieldName()+"'");
 						
 						// increase error count
 						errors++;
@@ -395,7 +427,7 @@ public class TreeChecker {
 							// check for non-empty initialiser
 							if (tgfld.getValue().length() == 0) {
 								// flag error: token type should have an initialiser
-								System.out.println("Token field '"+recnm+"."+tgfld.getFieldName()+"' must have an initialiser");
+								System.out.println("** ERROR : Token field '"+recnm+"."+tgfld.getFieldName()+"' must have an initialiser");
 								
 								// increase the error count
 								errors++;
@@ -407,7 +439,7 @@ public class TreeChecker {
 							// insist on empty initialiser
 							if (tgfld.getValue().length() != 0) {
 								// flag error: type should not have an initialiser
-								System.out.println("Field '"+recnm+"."+tgfld.getFieldName()+"' cannot have an initialiser");
+								System.out.println("** ERROR : Field '"+recnm+"."+tgfld.getFieldName()+"' cannot have an initialiser");
 								
 								// increate the error count
 								errors++;
@@ -421,7 +453,7 @@ public class TreeChecker {
 					// check for name clash with variables defined in the base class
 					if (cd.variables.containsKey(tgfld.getFieldName())) {
 						// flag error: field name clashes with instance variable name
-						System.out.println("Field name '"+recnm+"."+tgfld.getFieldName()+
+						System.out.println("** ERROR : Field name '"+recnm+"."+tgfld.getFieldName()+
 								"' clashes with instance variable '"+tgfld.getFieldName()+"'");
 						
 						// increase error count
@@ -444,20 +476,17 @@ public class TreeChecker {
 			
 			if (cd == null) {
 				// flag error: class cannot be found
-				System.out.println("internal error: class '"+clnm+"' cannot be found");
+				System.out.println("** ERROR : Internal error: class '"+clnm+"' cannot be found");
 				
 				// increase error count
 				errors++;
 			} else {
 				// iterate over the list of free variables
 				for (String fvnm: tns.get(clnm)) {
-					// diagnostics
-					//MAVE: System.out.println("Checking type '"+clnm+"."+fvnm+"'");
-					
 					// perform the look-up
 					if (cd.getTypeByName(fvnm) == null) {
 						// flag error: type is not defined
-						System.out.println("Type '"+clnm+"."+fvnm+"' is not defined anywhere");
+						System.out.println("** ERROR : Type '"+clnm+"."+fvnm+"' is not defined anywhere");
 						
 						// increase the error count
 						errors++;
@@ -467,7 +496,7 @@ public class TreeChecker {
 				// check for required top-level definitions
 				if (cd.getToplevel().isEmpty()) {
 					// flag error: top-level definition must not be empty
-					System.out.println("class "+clnm+" does not have a top-level definition");
+					System.out.println("** ERROR : Class "+clnm+" does not have a top-level definition");
 					
 					// increase the error count
 					errors++;
@@ -477,7 +506,7 @@ public class TreeChecker {
 				for (String tplvl: cd.getToplevel()) {
 					if (cd.getTypeByName(tplvl) == null) {
 						// flag error: top-level type is not defined
-						System.out.println("Top-level (value) type '"+tplvl+"' is not defined anywhere");
+						System.out.println("** ERROR : Top-level (value) type '"+tplvl+"' is not defined anywhere");
 						
 						// increase the error count
 						errors++;
@@ -507,8 +536,6 @@ public class TreeChecker {
 	}
 
 	public Type retrieveTypename(ITreeGenAstTypeName tgatn) {
-		// diagnostics
-		// MAVE: System.out.println ("Retrieving type name "+tgatn.getName());
 		
 		// check for basic type: Boolean values
 		if (tgatn.getName().compareToIgnoreCase("bool") == 0) return new BooleanType();
@@ -536,16 +563,12 @@ public class TreeChecker {
 	}
 	
 	public Type retrieveQuotedType(ITreeGenAstQuotedType tgaqt) {
-		// diagnostics
-		// MAVE: System.out.println ("Retrieving quoted type <"+tgaqt.getQuote()+">");
 		
 		// create and return the new quoted type
 		return new QuotedType(tgaqt.getQuote());
 	}
 	
 	public Type retrieveUnionType(ITreeGenAstUnionType tgaut) {
-		// diagnostics
-		// MAVE: System.out.println ("Retrieving union type");
 		
 		// first convert the embedded types recursively
 		Type lhs = retrieveType(tgaut.getLhs());
@@ -595,15 +618,13 @@ public class TreeChecker {
 	}
 	
 	public Type retrieveOptionalType(ITreeGenAstOptionalType tgaot) {
-		// diagnostics
-		// MAVE: System.out.println ("Retrieving optional type");
 		
 		// obtain the embedded type
 		Type res = retrieveType(tgaot.getType());
 		
 		if (res == null) {
 			// flag error (type conversion failed)
-			System.out.println("Optional type cannot be converted");
+			System.out.println("** ERROR : Optional type cannot be converted");
 			
 			// increase the error count
 			errors++;
@@ -617,15 +638,13 @@ public class TreeChecker {
 	}
 	
 	public Type retrieveSetType(ITreeGenAstSetType tgast) {
-		// diagnostics
-		// MAVE: System.out.println("Retrieving set type");
 		
 		// retrieve the embedded type
 		Type est = retrieveType(tgast.getType());
 		
 		if (est == null) {
 			// flag error: type conversion failed
-			System.out.println ("Set type cannot be converted");
+			System.out.println ("** ERROR : Set type cannot be converted");
 			
 			// increase error count
 			errors++;
@@ -639,15 +658,13 @@ public class TreeChecker {
 	}
 	
 	public Type retrieveSeqType(ITreeGenAstSeqType tgast) {
-		// diagnostics
-		// MAVE: System.out.println("Retrieving seq type");
 		
 		// retrieve the embedded type
 		Type est = retrieveType(tgast.getType());
 		
 		if (est == null) {
 			// flag error: type conversion failed
-			System.out.println ("Sequence type cannot be converted");
+			System.out.println ("** ERROR : Sequence type cannot be converted");
 			
 			// increase error count
 			errors++;
@@ -661,8 +678,6 @@ public class TreeChecker {
 	}
 	
 	public Type retrieveMapType(ITreeGenAstMapType tgamt) {
-		// diagnostics
-		// MAVE: System.out.println ("Retrieving map type");
 		
 		// retrieve the embedded domain type
 		Type dom = retrieveType(tgamt.getDomType());
@@ -670,7 +685,7 @@ public class TreeChecker {
 		// consistency check 
 		if (dom == null) {
 			// flag error
-			System.out.println ("domain type conversion failed in map type");
+			System.out.println ("** ERROR : Domain type conversion failed in map type");
 			
 			// increase error count
 			errors++;
@@ -682,7 +697,7 @@ public class TreeChecker {
 		// consistency check 
 		if (rng == null) {
 			// flag error
-			System.out.println ("range type conversion failed in map type");
+			System.out.println ("** ERROR : Range type conversion failed in map type");
 			
 			// increase error count
 			errors++;
