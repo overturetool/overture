@@ -53,6 +53,16 @@ public class TreeGenAstValueDefinition extends TreeGenAstDefinitions implements 
 		m_value = null;
 	}
 
+	// auxiliary constructor
+	public TreeGenAstValueDefinition(
+		String p_key,
+		String p_value
+	) {
+		super();
+		setKey(p_key);
+		setValue(p_value);
+	}
+
 	// visitor support
 	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitValueDefinition(this); }
 

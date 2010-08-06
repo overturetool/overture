@@ -36,6 +36,14 @@ public class TreeGenAstOptionalType extends TreeGenAstTypeSpecification implemen
 		m_type = null;
 	}
 
+	// auxiliary constructor
+	public TreeGenAstOptionalType(
+		ITreeGenAstTypeSpecification p_type
+	) {
+		super();
+		setType(p_type);
+	}
+
 	// visitor support
 	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitOptionalType(this); }
 

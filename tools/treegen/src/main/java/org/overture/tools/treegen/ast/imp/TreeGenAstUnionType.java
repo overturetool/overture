@@ -59,6 +59,16 @@ public class TreeGenAstUnionType extends TreeGenAstTypeSpecification implements 
 		m_rhs = null;
 	}
 
+	// auxiliary constructor
+	public TreeGenAstUnionType(
+		ITreeGenAstTypeSpecification p_lhs,
+		ITreeGenAstTypeSpecification p_rhs
+	) {
+		super();
+		setLhs(p_lhs);
+		setRhs(p_rhs);
+	}
+
 	// visitor support
 	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitUnionType(this); }
 

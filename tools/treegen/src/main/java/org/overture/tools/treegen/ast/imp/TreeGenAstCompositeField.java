@@ -76,6 +76,18 @@ public class TreeGenAstCompositeField extends TreeGenAstNode implements ITreeGen
 		m_value = null;
 	}
 
+	// auxiliary constructor
+	public TreeGenAstCompositeField(
+		String p_field_name,
+		ITreeGenAstTypeSpecification p_type,
+		String p_value
+	) {
+		super();
+		setFieldName(p_field_name);
+		setType(p_type);
+		setValue(p_value);
+	}
+
 	// visitor support
 	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitCompositeField(this); }
 

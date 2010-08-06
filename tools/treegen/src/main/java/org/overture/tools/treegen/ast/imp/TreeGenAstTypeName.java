@@ -33,6 +33,14 @@ public class TreeGenAstTypeName extends TreeGenAstTypeSpecification implements I
 		m_name = null;
 	}
 
+	// auxiliary constructor
+	public TreeGenAstTypeName(
+		String p_name
+	) {
+		super();
+		setName(p_name);
+	}
+
 	// visitor support
 	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitTypeName(this); }
 

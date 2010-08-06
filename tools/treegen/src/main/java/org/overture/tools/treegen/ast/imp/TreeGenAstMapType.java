@@ -59,6 +59,16 @@ public class TreeGenAstMapType extends TreeGenAstTypeSpecification implements IT
 		m_rng_type = null;
 	}
 
+	// auxiliary constructor
+	public TreeGenAstMapType(
+		ITreeGenAstTypeSpecification p_dom_type,
+		ITreeGenAstTypeSpecification p_rng_type
+	) {
+		super();
+		setDomType(p_dom_type);
+		setRngType(p_rng_type);
+	}
+
 	// visitor support
 	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitMapType(this); }
 

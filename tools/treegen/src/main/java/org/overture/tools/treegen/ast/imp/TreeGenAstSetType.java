@@ -36,6 +36,14 @@ public class TreeGenAstSetType extends TreeGenAstTypeSpecification implements IT
 		m_type = null;
 	}
 
+	// auxiliary constructor
+	public TreeGenAstSetType(
+		ITreeGenAstTypeSpecification p_type
+	) {
+		super();
+		setType(p_type);
+	}
+
 	// visitor support
 	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitSetType(this); }
 

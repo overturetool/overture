@@ -59,6 +59,16 @@ public class TreeGenAstCompositeDefinition extends TreeGenAstDefinitions impleme
 		m_fields = null;
 	}
 
+	// auxiliary constructor
+	public TreeGenAstCompositeDefinition(
+		String p_composite_name,
+		List<ITreeGenAstCompositeField> p_fields
+	) {
+		super();
+		setCompositeName(p_composite_name);
+		setFields(p_fields);
+	}
+
 	// visitor support
 	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitCompositeDefinition(this); }
 

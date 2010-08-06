@@ -33,6 +33,14 @@ public class TreeGenAstQuotedType extends TreeGenAstTypeSpecification implements
 		m_quote = null;
 	}
 
+	// auxiliary constructor
+	public TreeGenAstQuotedType(
+		String p_quote
+	) {
+		super();
+		setQuote(p_quote);
+	}
+
 	// visitor support
 	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitQuotedType(this); }
 

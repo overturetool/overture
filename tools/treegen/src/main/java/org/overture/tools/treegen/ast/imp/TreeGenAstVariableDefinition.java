@@ -76,6 +76,18 @@ public class TreeGenAstVariableDefinition extends TreeGenAstDefinitions implemen
 		m_value = null;
 	}
 
+	// auxiliary constructor
+	public TreeGenAstVariableDefinition(
+		String p_key,
+		ITreeGenAstTypeSpecification p_type,
+		String p_value
+	) {
+		super();
+		setKey(p_key);
+		setType(p_type);
+		setValue(p_value);
+	}
+
 	// visitor support
 	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitVariableDefinition(this); }
 

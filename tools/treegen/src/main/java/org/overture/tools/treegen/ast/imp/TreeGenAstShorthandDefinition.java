@@ -56,6 +56,16 @@ public class TreeGenAstShorthandDefinition extends TreeGenAstDefinitions impleme
 		m_type = null;
 	}
 
+	// auxiliary constructor
+	public TreeGenAstShorthandDefinition(
+		String p_shorthand_name,
+		ITreeGenAstTypeSpecification p_type
+	) {
+		super();
+		setShorthandName(p_shorthand_name);
+		setType(p_type);
+	}
+
 	// visitor support
 	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitShorthandDefinition(this); }
 

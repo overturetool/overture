@@ -79,6 +79,18 @@ public class TreeGenAstClassDefinition extends TreeGenAstNode implements ITreeGe
 		m_defs = null;
 	}
 
+	// auxiliary constructor
+	public TreeGenAstClassDefinition(
+		String p_class_name,
+		String p_super_class,
+		List<ITreeGenAstDefinitions> p_defs
+	) {
+		super();
+		setClassName(p_class_name);
+		setSuperClass(p_super_class);
+		setDefs(p_defs);
+	}
+
 	// visitor support
 	public void accept(ITreeGenAstVisitor pVisitor) { pVisitor.visitClassDefinition(this); }
 
