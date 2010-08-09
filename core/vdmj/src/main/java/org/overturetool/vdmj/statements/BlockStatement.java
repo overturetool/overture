@@ -66,7 +66,9 @@ public class BlockStatement extends SimpleBlockStatement
 		// local variables. At runtime (below) they have to be treated
 		// more like (updatable) state.
 
-		return super.typeCheck(local, scope);
+		Type r = super.typeCheck(local, scope);
+		local.unusedCheck(env);
+		return r;
 	}
 
 	@Override
