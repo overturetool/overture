@@ -22,7 +22,7 @@
 	<module>maven-pst</module>
 	<module>packworkspace</module>
 	<module>treegen</module>
-	<!--module>treegenplugin</module-->
+	<module>treegenplugin</module>
   </modules>
 
 </project>
