@@ -50,6 +50,11 @@
 
 
 
+    <dependency>
+    	<groupId>org.overturetool.tools</groupId>
+    	<artifactId>treegen</artifactId>
+    	<version>1.0.0</version>
+    </dependency>
   </dependencies>
 
 
