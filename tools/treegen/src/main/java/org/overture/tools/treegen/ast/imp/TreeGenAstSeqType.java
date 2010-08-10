@@ -30,11 +30,7 @@ public class TreeGenAstSeqType extends TreeGenAstTypeSpecification implements IT
 	}
 
 	// default constructor
-	public TreeGenAstSeqType()
-	{
-		super();
-		m_type = null;
-	}
+	public TreeGenAstSeqType() { super(); }
 
 	// auxiliary constructor
 	public TreeGenAstSeqType(

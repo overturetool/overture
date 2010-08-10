@@ -30,11 +30,7 @@ public class TreeGenAstSetType extends TreeGenAstTypeSpecification implements IT
 	}
 
 	// default constructor
-	public TreeGenAstSetType()
-	{
-		super();
-		m_type = null;
-	}
+	public TreeGenAstSetType() { super(); }
 
 	// auxiliary constructor
 	public TreeGenAstSetType(

@@ -68,13 +68,7 @@ public class TreeGenAstVariableDefinition extends TreeGenAstDefinitions implemen
 	}
 
 	// default constructor
-	public TreeGenAstVariableDefinition()
-	{
-		super();
-		m_key = null;
-		m_type = null;
-		m_value = null;
-	}
+	public TreeGenAstVariableDefinition() { super(); }
 
 	// auxiliary constructor
 	public TreeGenAstVariableDefinition(

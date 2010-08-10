@@ -52,12 +52,7 @@ public class TreeGenAstMapType extends TreeGenAstTypeSpecification implements IT
 	}
 
 	// default constructor
-	public TreeGenAstMapType()
-	{
-		super();
-		m_dom_type = null;
-		m_rng_type = null;
-	}
+	public TreeGenAstMapType() { super(); }
 
 	// auxiliary constructor
 	public TreeGenAstMapType(

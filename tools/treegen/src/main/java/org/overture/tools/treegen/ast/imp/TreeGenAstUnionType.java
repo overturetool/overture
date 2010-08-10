@@ -52,12 +52,7 @@ public class TreeGenAstUnionType extends TreeGenAstTypeSpecification implements 
 	}
 
 	// default constructor
-	public TreeGenAstUnionType()
-	{
-		super();
-		m_lhs = null;
-		m_rhs = null;
-	}
+	public TreeGenAstUnionType() { super(); }
 
 	// auxiliary constructor
 	public TreeGenAstUnionType(

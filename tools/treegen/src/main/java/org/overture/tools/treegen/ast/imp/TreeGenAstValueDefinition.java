@@ -46,12 +46,7 @@ public class TreeGenAstValueDefinition extends TreeGenAstDefinitions implements 
 	}
 
 	// default constructor
-	public TreeGenAstValueDefinition()
-	{
-		super();
-		m_key = null;
-		m_value = null;
-	}
+	public TreeGenAstValueDefinition() { super(); }
 
 	// auxiliary constructor
 	public TreeGenAstValueDefinition(

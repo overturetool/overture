@@ -49,12 +49,7 @@ public class TreeGenAstShorthandDefinition extends TreeGenAstDefinitions impleme
 	}
 
 	// default constructor
-	public TreeGenAstShorthandDefinition()
-	{
-		super();
-		m_shorthand_name = null;
-		m_type = null;
-	}
+	public TreeGenAstShorthandDefinition() { super(); }
 
 	// auxiliary constructor
 	public TreeGenAstShorthandDefinition(

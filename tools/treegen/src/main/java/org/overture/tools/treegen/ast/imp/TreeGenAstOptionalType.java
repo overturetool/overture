@@ -30,11 +30,7 @@ public class TreeGenAstOptionalType extends TreeGenAstTypeSpecification implemen
 	}
 
 	// default constructor
-	public TreeGenAstOptionalType()
-	{
-		super();
-		m_type = null;
-	}
+	public TreeGenAstOptionalType() { super(); }
 
 	// auxiliary constructor
 	public TreeGenAstOptionalType(

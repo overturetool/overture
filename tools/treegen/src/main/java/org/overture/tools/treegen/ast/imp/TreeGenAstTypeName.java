@@ -27,11 +27,7 @@ public class TreeGenAstTypeName extends TreeGenAstTypeSpecification implements I
 	}
 
 	// default constructor
-	public TreeGenAstTypeName()
-	{
-		super();
-		m_name = null;
-	}
+	public TreeGenAstTypeName() { super(); }
 
 	// auxiliary constructor
 	public TreeGenAstTypeName(

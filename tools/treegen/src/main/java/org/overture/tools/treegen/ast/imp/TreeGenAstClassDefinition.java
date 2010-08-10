@@ -89,15 +89,19 @@ public class TreeGenAstClassDefinition extends TreeGenAstNode implements ITreeGe
 		for (ITreeGenAstNode lnode: p_defs) lnode.setParent(this);
 	}
 
-	// default constructor
-	public TreeGenAstClassDefinition()
+	// public operation to add an element to the collection
+	public void addDefs(ITreeGenAstDefinitions p_defs)
 	{
-		super();
-		m_opts = null;
-		m_class_name = null;
-		m_super_class = null;
-		m_defs = null;
+		// consistency check
+		assert(p_defs != null);
+
+		// add element to collection and set parent pointer (if applicable)
+		m_defs.add(p_defs);
+		p_defs.setParent(this);
 	}
+
+	// default constructor
+	public TreeGenAstClassDefinition() { super(); }
 
 	// auxiliary constructor
 	public TreeGenAstClassDefinition(

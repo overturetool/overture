@@ -27,11 +27,7 @@ public class TreeGenAstQuotedType extends TreeGenAstTypeSpecification implements
 	}
 
 	// default constructor
-	public TreeGenAstQuotedType()
-	{
-		super();
-		m_quote = null;
-	}
+	public TreeGenAstQuotedType() { super(); }
 
 	// auxiliary constructor
 	public TreeGenAstQuotedType(

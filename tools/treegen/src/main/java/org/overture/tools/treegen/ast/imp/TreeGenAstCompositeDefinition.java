@@ -51,13 +51,19 @@ public class TreeGenAstCompositeDefinition extends TreeGenAstDefinitions impleme
 		for (ITreeGenAstNode lnode: p_fields) lnode.setParent(this);
 	}
 
-	// default constructor
-	public TreeGenAstCompositeDefinition()
+	// public operation to add an element to the collection
+	public void addFields(ITreeGenAstCompositeField p_fields)
 	{
-		super();
-		m_composite_name = null;
-		m_fields = null;
+		// consistency check
+		assert(p_fields != null);
+
+		// add element to collection and set parent pointer (if applicable)
+		m_fields.add(p_fields);
+		p_fields.setParent(this);
 	}
+
+	// default constructor
+	public TreeGenAstCompositeDefinition() { super(); }
 
 	// auxiliary constructor
 	public TreeGenAstCompositeDefinition(

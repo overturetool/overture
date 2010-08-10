@@ -1105,7 +1105,6 @@ public class CodeGenerator {
 		// the class and interface code
 		String cls = new String();
 		String itf = new String();
-		String cst = new String();
 		String cstb = new String();
 		String cstp = new String();
 		
@@ -1155,9 +1154,6 @@ public class CodeGenerator {
 			// retrieve the Java type initializer of the field
 			String ftpistr = getJavaTypeInitializer(prefix, field.field_type);
 			
-			// IMPLEMENTATION: member variable initialization block for default constructor
-			cst += "\t\tm_"+field.field_name+" = null;\n";
-			
 			// IMPLEMENTATION: parameter definition for auxiliary constructor
 			cstp +="\t\t"+fatpstr+" p_"+field.field_name;
 			if (fldcnt < rt.getAllFields().size()) cstp += ",\n"; else cstp += "\n";
@@ -1197,14 +1193,73 @@ public class CodeGenerator {
 			cls += generateSetParent(field);
 			cls += "\t}\n\n";
 			
+			// check for collection type
+			if (field.field_type.isCollection()) {
+				// TODO setParent operation not yet OK for nested abstract data types
+				// set or sequence types
+				if (field.field_type.isSetType() || field.field_type.isSeqType()) {
+					// placeholder for the embedded type
+					Type embtype =null;
+					String etstr ="";
+					
+					// find the embedded sequence type
+					if (field.field_type.isSeqType()) {
+						SeqType theSeqType = (SeqType) field.field_type;
+						embtype = theSeqType.seq_type;
+						etstr = getAbstractJavaType(iprefix, embtype);
+					}
+					
+					// find the embedded set type
+					if (field.field_type.isSetType()) {
+						SetType theSetType = (SetType) field.field_type;
+						embtype = theSetType.set_type;
+						etstr = getAbstractJavaType(iprefix, embtype);
+					}
+					
+					// create the auxiliary operation
+					cls += "\t// public operation to add an element to the collection\n";
+					cls += "\tpublic void add"+fstr+"("+etstr+" p_"+field.field_name+")\n\t{\n";
+					cls += "\t\t// consistency check\n";
+					cls += "\t\tassert(p_"+field.field_name+" != null);\n\n";
+					cls += "\t\t// add element to collection and set parent pointer (if applicable)\n";
+					cls += "\t\tm_"+field.field_name+".add(p_"+field.field_name+");\n";
+					if (embtype.isTypeName() && (etstr.compareTo("String") != 0))
+						cls += "\t\tp_"+field.field_name+".setParent(this);\n";
+					cls += "\t}\n\n";
+				} else {
+					// consistency check
+					assert (field.field_type.isMapType());
+					
+					// retrieve the map type
+					MapType theMapType = (MapType) field.field_type;
+					
+					// determine the domain and range types
+					String edtp = getAbstractJavaType(iprefix,theMapType.domain);
+					String ertp = getAbstractJavaType(iprefix,theMapType.range);
+					
+					// create the auxiliary operation
+					cls += "\t// public operation to add an element to the collection\n";
+					cls += "\tpublic void add"+fstr+"("+edtp+" p_dom, "+ertp+" p_rng)\n\t{\n";
+					cls += "\t\t// consistency check\n";
+					cls += "\t\tassert(p_dom != null);\n";
+					cls += "\t\tassert(p_rng != null);\n\n";
+					cls += "\t\t// add element to collection and set parent pointer (if applicable)\n";
+					cls += "\t\tm_"+field.field_name+".put(p_dom, p_rng);\n";
+					if (theMapType.domain.isTypeName() && (edtp.compareTo("String") != 0))
+						cls += "\t\tp_dom.setParent(this);\n";
+					if (theMapType.range.isTypeName() && (ertp.compareTo("String") != 0))
+						cls += "\t\tp_rng.setParent(this);\n";
+					cls += "\t}\n\n";
+				}
+			}
+			
 			// update the field counter
 			fldcnt++;
 		}
 		
 		// compose the default constructor
 		cls += "\t// default constructor\n";
-		cls += "\tpublic "+cnm+"()\n";
-		cls += "\t{\n\t\tsuper();\n" + cst + "\t}\n\n";
+		cls += "\tpublic "+cnm+"() { super(); }\n\n";
 		
 		// create the optional constructor taking arguments for each field
 		if (!rt.getAllFields().isEmpty()) {

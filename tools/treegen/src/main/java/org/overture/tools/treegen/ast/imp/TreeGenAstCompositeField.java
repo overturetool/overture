@@ -68,13 +68,7 @@ public class TreeGenAstCompositeField extends TreeGenAstNode implements ITreeGen
 	}
 
 	// default constructor
-	public TreeGenAstCompositeField()
-	{
-		super();
-		m_field_name = null;
-		m_type = null;
-		m_value = null;
-	}
+	public TreeGenAstCompositeField() { super(); }
 
 	// auxiliary constructor
 	public TreeGenAstCompositeField(
