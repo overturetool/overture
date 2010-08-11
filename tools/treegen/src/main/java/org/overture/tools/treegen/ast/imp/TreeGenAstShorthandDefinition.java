@@ -66,4 +66,16 @@ public class TreeGenAstShorthandDefinition extends TreeGenAstDefinitions impleme
 
 	// the identity function
 	public String identify() { return "TreeGenAstShorthandDefinition"; }
+
+	// the toString function
+	public String toString()
+	{
+		StringBuffer buf = new StringBuffer();
+		buf.append("new "+identify()+"(");
+		buf.append(convertToString(getShorthandName()));
+		buf.append(",");
+		buf.append(convertToString(getType()));
+		buf.append(")");
+		return buf.toString();
+	}
 }

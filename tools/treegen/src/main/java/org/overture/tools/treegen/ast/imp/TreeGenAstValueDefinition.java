@@ -63,4 +63,16 @@ public class TreeGenAstValueDefinition extends TreeGenAstDefinitions implements 
 
 	// the identity function
 	public String identify() { return "TreeGenAstValueDefinition"; }
+
+	// the toString function
+	public String toString()
+	{
+		StringBuffer buf = new StringBuffer();
+		buf.append("new "+identify()+"(");
+		buf.append(convertToString(getKey()));
+		buf.append(",");
+		buf.append(convertToString(getValue()));
+		buf.append(")");
+		return buf.toString();
+	}
 }

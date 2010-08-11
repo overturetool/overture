@@ -80,4 +80,16 @@ public class TreeGenAstCompositeDefinition extends TreeGenAstDefinitions impleme
 
 	// the identity function
 	public String identify() { return "TreeGenAstCompositeDefinition"; }
+
+	// the toString function
+	public String toString()
+	{
+		StringBuffer buf = new StringBuffer();
+		buf.append("new "+identify()+"(");
+		buf.append(convertToString(getCompositeName()));
+		buf.append(",");
+		buf.append(convertToString(getFields()));
+		buf.append(")");
+		return buf.toString();
+	}
 }

@@ -87,4 +87,18 @@ public class TreeGenAstCompositeField extends TreeGenAstNode implements ITreeGen
 
 	// the identity function
 	public String identify() { return "TreeGenAstCompositeField"; }
+
+	// the toString function
+	public String toString()
+	{
+		StringBuffer buf = new StringBuffer();
+		buf.append("new "+identify()+"(");
+		buf.append(convertToString(getFieldName()));
+		buf.append(",");
+		buf.append(convertToString(getType()));
+		buf.append(",");
+		buf.append(convertToString(getValue()));
+		buf.append(")");
+		return buf.toString();
+	}
 }

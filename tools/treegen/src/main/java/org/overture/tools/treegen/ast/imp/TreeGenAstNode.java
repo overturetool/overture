@@ -81,4 +81,59 @@ public class TreeGenAstNode implements ITreeGenAstNode
 
 	// the identity function
 	public String identify() { return "TreeGenAstNode"; }
+
+	// convert operation
+	@SuppressWarnings({"unchecked","rawtypes"})
+	protected static String convertToString(Object obj)
+	{
+		// consistency check
+		assert (obj != null);
+		
+		// create the buffer
+		StringBuffer buf = new StringBuffer();
+		
+		if (obj instanceof String) {
+			buf.append("\""+obj.toString()+"\"");
+		} else if (obj instanceof Vector) {
+			buf.append("[");
+			Vector col = (Vector) obj;
+			Iterator iter = col.iterator();
+			while (iter.hasNext()) {
+				buf.append(convertToString(iter.next()));
+				if (iter.hasNext()) buf.append(", ");
+			}
+			buf.append("]");
+		} else if (obj instanceof HashSet) {
+			buf.append("{");
+			HashSet col = (HashSet) obj;
+			Iterator iter = col.iterator();
+			while (iter.hasNext()) {
+				buf.append(convertToString(iter.next()));
+				if (iter.hasNext()) buf.append(", ");
+			}
+			buf.append("}");
+		} else if (obj instanceof HashMap) {
+			buf.append("{");
+			HashMap col = (HashMap) obj;
+			if (col.isEmpty()) {
+				buf.append(" |-> ");
+			} else {
+				Iterator iter = col.keySet().iterator();
+				while (iter.hasNext()) {
+					Object key = iter.next();
+					Object val = col.get(key);
+					buf.append(convertToString(key));
+					buf.append(" |-> ");
+					buf.append(convertToString(val));
+					if (iter.hasNext()) buf.append(", ");
+				}
+			}
+			buf.append("}");
+		} else {
+			buf.append(obj.toString());
+		}
+		
+		// output the buffer
+		return buf.toString();
+	}
 }

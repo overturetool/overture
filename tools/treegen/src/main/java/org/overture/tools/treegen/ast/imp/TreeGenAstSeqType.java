@@ -45,4 +45,14 @@ public class TreeGenAstSeqType extends TreeGenAstTypeSpecification implements IT
 
 	// the identity function
 	public String identify() { return "TreeGenAstSeqType"; }
+
+	// the toString function
+	public String toString()
+	{
+		StringBuffer buf = new StringBuffer();
+		buf.append("new "+identify()+"(");
+		buf.append(convertToString(getType()));
+		buf.append(")");
+		return buf.toString();
+	}
 }

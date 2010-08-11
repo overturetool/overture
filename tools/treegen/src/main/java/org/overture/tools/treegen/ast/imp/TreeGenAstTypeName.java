@@ -42,4 +42,14 @@ public class TreeGenAstTypeName extends TreeGenAstTypeSpecification implements I
 
 	// the identity function
 	public String identify() { return "TreeGenAstTypeName"; }
+
+	// the toString function
+	public String toString()
+	{
+		StringBuffer buf = new StringBuffer();
+		buf.append("new "+identify()+"(");
+		buf.append(convertToString(getName()));
+		buf.append(")");
+		return buf.toString();
+	}
 }

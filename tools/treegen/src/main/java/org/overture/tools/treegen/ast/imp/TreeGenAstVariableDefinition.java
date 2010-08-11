@@ -87,4 +87,18 @@ public class TreeGenAstVariableDefinition extends TreeGenAstDefinitions implemen
 
 	// the identity function
 	public String identify() { return "TreeGenAstVariableDefinition"; }
+
+	// the toString function
+	public String toString()
+	{
+		StringBuffer buf = new StringBuffer();
+		buf.append("new "+identify()+"(");
+		buf.append(convertToString(getKey()));
+		buf.append(",");
+		buf.append(convertToString(getType()));
+		buf.append(",");
+		buf.append(convertToString(getValue()));
+		buf.append(")");
+		return buf.toString();
+	}
 }

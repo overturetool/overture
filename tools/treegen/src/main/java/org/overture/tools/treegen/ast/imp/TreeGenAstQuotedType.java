@@ -42,4 +42,14 @@ public class TreeGenAstQuotedType extends TreeGenAstTypeSpecification implements
 
 	// the identity function
 	public String identify() { return "TreeGenAstQuotedType"; }
+
+	// the toString function
+	public String toString()
+	{
+		StringBuffer buf = new StringBuffer();
+		buf.append("new "+identify()+"(");
+		buf.append(convertToString(getQuote()));
+		buf.append(")");
+		return buf.toString();
+	}
 }

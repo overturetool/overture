@@ -13,6 +13,9 @@ public class TreeGenAstClassDefinition extends TreeGenAstNode implements ITreeGe
 	// private member variable (opts)
 	private org.overture.tools.treegen.TreeGenOptions m_opts = null;
 
+	// public operation to check optional type status
+	public boolean hasOpts() { return (m_opts != null); };
+
 	// public operation to retrieve the embedded private field value
 	public org.overture.tools.treegen.TreeGenOptions getOpts()
 	{
@@ -22,9 +25,6 @@ public class TreeGenAstClassDefinition extends TreeGenAstNode implements ITreeGe
 	// public operation to set the embedded private field value
 	public void setOpts(org.overture.tools.treegen.TreeGenOptions p_opts)
 	{
-		// consistency check (field must be non null!)
-		assert(p_opts != null);
-
 		// instantiate the member variable
 		m_opts = p_opts;
 	}
@@ -122,4 +122,24 @@ public class TreeGenAstClassDefinition extends TreeGenAstNode implements ITreeGe
 
 	// the identity function
 	public String identify() { return "TreeGenAstClassDefinition"; }
+
+	// the toString function
+	public String toString()
+	{
+		StringBuffer buf = new StringBuffer();
+		buf.append("new "+identify()+"(");
+		if (hasOpts()) {
+			buf.append(convertToString(getOpts()));
+		} else {
+			buf.append("nil");
+		}
+		buf.append(",");
+		buf.append(convertToString(getClassName()));
+		buf.append(",");
+		buf.append(convertToString(getSuperClass()));
+		buf.append(",");
+		buf.append(convertToString(getDefs()));
+		buf.append(")");
+		return buf.toString();
+	}
 }

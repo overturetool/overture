@@ -45,4 +45,14 @@ public class TreeGenAstOptionalType extends TreeGenAstTypeSpecification implemen
 
 	// the identity function
 	public String identify() { return "TreeGenAstOptionalType"; }
+
+	// the toString function
+	public String toString()
+	{
+		StringBuffer buf = new StringBuffer();
+		buf.append("new "+identify()+"(");
+		buf.append(convertToString(getType()));
+		buf.append(")");
+		return buf.toString();
+	}
 }

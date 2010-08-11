@@ -69,4 +69,16 @@ public class TreeGenAstMapType extends TreeGenAstTypeSpecification implements IT
 
 	// the identity function
 	public String identify() { return "TreeGenAstMapType"; }
+
+	// the toString function
+	public String toString()
+	{
+		StringBuffer buf = new StringBuffer();
+		buf.append("new "+identify()+"(");
+		buf.append(convertToString(getDomType()));
+		buf.append(",");
+		buf.append(convertToString(getRngType()));
+		buf.append(")");
+		return buf.toString();
+	}
 }

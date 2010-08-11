@@ -69,4 +69,16 @@ public class TreeGenAstUnionType extends TreeGenAstTypeSpecification implements 
 
 	// the identity function
 	public String identify() { return "TreeGenAstUnionType"; }
+
+	// the toString function
+	public String toString()
+	{
+		StringBuffer buf = new StringBuffer();
+		buf.append("new "+identify()+"(");
+		buf.append(convertToString(getLhs()));
+		buf.append(",");
+		buf.append(convertToString(getRhs()));
+		buf.append(")");
+		return buf.toString();
+	}
 }
