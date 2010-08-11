@@ -236,11 +236,22 @@ public class CodeGenerator {
 		return getJavaType(prefix, tp);
 	}
 	
-	public String getJavaTypeInitializer(String pfx, Type tp)
+	public String getJavaTypeInitializer(String pfx, Type tp, boolean fullopt)
 	{
 		// first check for the optional type
-		if (tp.isOptionalType()) return "null";
-		
+		if (tp.isOptionalType()) {
+			if (fullopt) {
+				return getJavaTypeInitializerBasic(pfx, tp);
+			} else {
+				return "null";
+			}
+		} else {
+			return getJavaTypeInitializerBasic(pfx, tp);
+		}
+	}
+	
+	public String getJavaTypeInitializerBasic(String pfx, Type tp)
+	{
 		// convert basic type representation to its proper Java initializer
 		if (tp.isBooleanType()) return "new Boolean(false)"; 
 		if (tp.isNatType()) return "new Long(0)";
@@ -1221,7 +1232,7 @@ public class CodeGenerator {
 			String fatpstr = getAbstractJavaType(iprefix, field.field_type);
 			
 			// retrieve the Java type initializer of the field
-			String ftpistr = getJavaTypeInitializer(prefix, field.field_type);
+			String ftpistr = getJavaTypeInitializer(prefix, field.field_type, false);
 			
 			// IMPLEMENTATION: parameter definition for auxiliary constructor
 			cstp +="\t\t"+fatpstr+" p_"+field.field_name;
@@ -1405,24 +1416,34 @@ public class CodeGenerator {
 	
 	public String generateSetParent(Field field)
 	{
+		// placeholder for the optional field fix
+		String optfix ="";
+		
+		// check for possible optional field
+		if (field.field_type.isOptionalType()) {
+			optfix += "\t\tif (p_"+field.field_name+" != null) ";
+		} else {
+			optfix += "\t\t";
+		}
+		
 		// check type names
 		if (field.field_type.isTypeName() && isUserDefined(field.field_type)) {
 			String retval = "\n\t\t// set the parent of the parameter passed\n";
-			retval += "\t\tp_"+field.field_name+".setParent(this);\n";
+			retval += optfix+"p_"+field.field_name+".setParent(this);\n";
 			return retval;
 		}
 		
 		// check the sequences
 		if (field.field_type.isSeqType() && isUserDefined(field.field_type)) {
 			String retval = "\n\t\t// set the parent of each element in the sequence parameter passed\n";
-			retval += "\t\tfor ("+iprefix+"Node lnode: p_"+field.field_name+") lnode.setParent(this);\n";
+			retval += optfix+"for ("+iprefix+"Node lnode: p_"+field.field_name+") lnode.setParent(this);\n";
 			return retval;
 		}
 		
 		// check the sets
 		if (field.field_type.isSetType() && isUserDefined(field.field_type)) {
 			String retval = "\n\t\t// set the parent of each element in the set parameter passed\n";
-			retval += "\t\tfor ("+iprefix+"Node lnode: p_"+field.field_name+") lnode.setParent(this);\n";
+			retval += optfix+"for ("+iprefix+"Node lnode: p_"+field.field_name+") lnode.setParent(this);\n";
 			return retval;
 		}
 		
@@ -1437,13 +1458,13 @@ public class CodeGenerator {
 			// first check the domain
 			if (isUserDefined(theMapType.domain)) {
 				retval += "\n\t\t// set the parent of each domain element in the map parameter passed\n";
-				retval += "\t\tfor ("+iprefix+"Node lnode: p_"+field.field_name+".keySet()) lnode.setParent(this);\n";
+				retval += optfix+"for ("+iprefix+"Node lnode: p_"+field.field_name+".keySet()) lnode.setParent(this);\n";
 			}
 			
 			// then check the range
 			if (isUserDefined(theMapType.range)) {
 				retval += "\n\t\t// set the parent of each range element in the map parameter passed\n";
-				retval += "\t\tfor ("+iprefix+"Node lnode: p_"+field.field_name+".values()) lnode.setParent(this);\n";
+				retval += optfix+"for ("+iprefix+"Node lnode: p_"+field.field_name+".values()) lnode.setParent(this);\n";
 			}
 			
 			// return the composed string
@@ -1745,7 +1766,7 @@ public class CodeGenerator {
 				
 				// retrieve the target sequence type
 				String tstp = getAbstractJavaType(iprefix, theSeqType);
-				String istp = getJavaTypeInitializer(prefix, theSeqType);
+				String istp = getJavaTypeInitializer(prefix, theSeqType, true);
 				String etp = getAbstractJavaType(pfx, theSeqType.seq_type);
 				
 				// create the target sequence type (pre)
@@ -1789,7 +1810,7 @@ public class CodeGenerator {
 				
 				// retrieve the target sequence type
 				String tstp = getAbstractJavaType(iprefix, theSetType);
-				String istp = getJavaTypeInitializer(prefix, theSetType);
+				String istp = getJavaTypeInitializer(prefix, theSetType, true);
 				String etp = getAbstractJavaType(pfx, theSetType.set_type);
 				
 				// create the target sequence type (pre)
@@ -1833,7 +1854,7 @@ public class CodeGenerator {
 				
 				// retrieve the target sequence type
 				String tstp = getAbstractJavaType(iprefix, theMapType);
-				String istp = getJavaTypeInitializer(prefix, theMapType);
+				String istp = getJavaTypeInitializer(prefix, theMapType, true);
 				String edtp = getAbstractJavaType(pfx, theMapType.domain);
 				String ertp = getAbstractJavaType(pfx, theMapType.range);
 				

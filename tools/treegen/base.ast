@@ -34,10 +34,10 @@ BinaryExpression ::
 	rhs : Expression;
 
 SequenceExpression ::
-	seq_expr : seq of Expression
+	seq_expr : [seq of Expression]
 	set_expr : set of Expression
 	map1_expr : map nat to SeqOfChar
-	map2_expr : map UnaryExpression to Expression
+	map2_expr : [map UnaryExpression to Expression]
 	seq2_expr : seq of real
 	set2_expr : set of nat;
 		
