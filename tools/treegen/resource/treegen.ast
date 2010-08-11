@@ -16,7 +16,7 @@ instance variables
 	
 types
 	ClassDefinition ::
-	    opts		   : [token] --++ := "org.overture.tools.treegen.TreeGenOptions"
+	    opts		   : [token] --++ := mk_token("org.overture.tools.treegen.TreeGenOptions")
 		class_name     : seq of char
 		super_class    : seq of char
 		defs           : seq of Definitions;

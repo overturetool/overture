@@ -23,7 +23,8 @@ public final static short LP=276;
 public final static short RP=277;
 public final static short QUOTE=278;
 public final static short STRING=279;
-public final static short TYPES=280;
-public final static short INSTANCE=281;
-public final static short VARIABLES=282;
+public final static short MK_TOKEN=280;
+public final static short TYPES=281;
+public final static short INSTANCE=282;
+public final static short VARIABLES=283;
 }

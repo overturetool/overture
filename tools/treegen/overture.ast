@@ -10,7 +10,7 @@ values
   toplevel = "Specifications,Expression";
 
 instance variables
-  remark : token := "String";
+  remark : token := mk_token("String");
 
 types
 

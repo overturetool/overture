@@ -71,6 +71,7 @@ ws				= \n | \r | \r\n | \t | " "
 	"--++"			{ yybegin(TCOMM); }
 	"--"			{ yybegin(SCOMM); }
 	"/*"			{ yybegin(DCOMM); }
+	"mk_token"		{ return MK_TOKEN; }
 	"subclass"		{ return SUBCLASS; }
 	"class"			{ return CLASS; }
 	"is"			{ return IS; }
@@ -117,6 +118,9 @@ ws				= \n | \r | \r\n | \t | " "
 /* processing single-line comment for constructing tokens in records */
 <TCOMM> {
 	":="			{ return ASSIGN; }
+	"mk_token"		{ return MK_TOKEN; }
+	"("				{ return LP; }
+	")"				{ return RP; }
 	{string}		{ theParser.yylval = new TreeParserVal(yytext().substring(1,yylength()-1)); return STRING; }
 	\n				{ yybegin(YYINITIAL); }
 	.				{ /* ignore all other characters */ }

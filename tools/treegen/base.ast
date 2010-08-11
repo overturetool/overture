@@ -12,7 +12,7 @@ values
   toplevel = "Expression"
 
 instance variables
-  pos : token := "nl.marcelverhoef.position.Position"
+  pos : token := mk_token("nl.marcelverhoef.position.Position")
   
 types
 
@@ -54,6 +54,6 @@ BinaryOperator =
 NatLiteral ::
 	val : nat
 	txt : SeqOfChar /* --++ := "test" */
-	tst : token --++ := "java.lang.String" */
+	tst : token --++ := mk_token("java.lang.String") */
 	
 end Base

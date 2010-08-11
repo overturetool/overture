@@ -16,7 +16,7 @@ import java.util.*;
 %token DCOLON SCOLON COLON ASSIGN
 %token SEQ SET MAP OF TO BAR
 %token IDENT EQ LB RB LP RP
-%token QUOTE STRING
+%token QUOTE STRING MK_TOKEN
 %token TYPES
 %token INSTANCE VARIABLES
 
@@ -290,13 +290,13 @@ InstanceVariable:
 	  }
 	  
 	|
-	  IDENT COLON Type ASSIGN STRING
+	  IDENT COLON Type ASSIGN MK_TOKEN LP STRING RP
 	  {
 	  	TreeGenAstVariableDefinition tgavd = new TreeGenAstVariableDefinition();
 	  	TreeGenAstTypeSpecification tgatp = (TreeGenAstTypeSpecification) $3.obj;
 	  	tgavd.setKey($1.sval);
 	  	tgavd.setType(tgatp);
-	  	tgavd.setValue($5.sval);
+	  	tgavd.setValue($7.sval);
 	  	$$.obj = tgavd;
 	  }
 ;
@@ -425,13 +425,13 @@ Field:
  **     another_field : seq of char
  **/
  		  
-	| IDENT COLON Type ASSIGN STRING
+	| IDENT COLON Type ASSIGN MK_TOKEN LP STRING RP
 	  {
 	  	TreeGenAstCompositeField tgacf = new TreeGenAstCompositeField();
 	  	TreeGenAstTypeSpecification et = (TreeGenAstTypeSpecification) $3.obj;
 	  	tgacf.setFieldName($1.sval);
 	  	tgacf.setType(et);
-	  	tgacf.setValue($5.sval);
+	  	tgacf.setValue($7.sval);
 	  	$$.obj = tgacf;
 	  }
 ;
