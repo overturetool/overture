@@ -173,8 +173,24 @@ public class CodeGenerator {
 		return "undefined";
 	}
 	
+	public String getCollectionType(String pfx, Type tp)
+	{
+		if (tp.isSeqType()&& !tp.isStringType()) return "List";
+		if (tp.isSetType()) return "Set";
+		if (tp.isMapType()) return "Map";
+		return getAbstractJavaType(pfx,tp,false);
+	}
+	
 	public String getAbstractJavaType(String pfx, Type tp)
 	{
+		return getAbstractJavaType(pfx,tp,false);
+	}
+	
+	public String getAbstractJavaType(String pfx, Type tp, boolean ext)
+	{
+		// define the extends option
+		String hasext = ext?"? extends ":"";
+		
 		// check for abstract data types (sequences)
 		if (tp.isSeqType()) {
 			// overrule seq of char
@@ -187,7 +203,7 @@ public class CodeGenerator {
 			String etp = getAbstractJavaType(pfx, theSeqType.seq_type);
 			
 			// return the result string
-			return "List<" + etp + ">";
+			return "List<" + hasext + etp + ">";
 		}
 		
 		// check for abstract data types (sets)
@@ -199,7 +215,7 @@ public class CodeGenerator {
 			String etp = getAbstractJavaType(pfx, theSetType.set_type);
 			
 			// return the result string
-			return "Set<" + etp + ">";
+			return "Set<" + hasext + etp + ">";
 		}
 		
 		// deal with maps
@@ -212,7 +228,7 @@ public class CodeGenerator {
 			String ertp = getAbstractJavaType(pfx, theMapType.range);
 			
 			// return the result string
-			return "Map<"+edtp+","+ertp+">";
+			return "Map<"+hasext+edtp+","+hasext+ertp+">";
 		}
 		
 		// deal with type names
@@ -268,7 +284,7 @@ public class CodeGenerator {
 			String etp = getJavaType(pfx, theSeqType.seq_type);
 			
 			// return the result string
-			return "new Vector<" + etp + ">()";
+			return "new Vector<"+etp+">()";
 		}
 		
 		// deal with sets
@@ -280,7 +296,7 @@ public class CodeGenerator {
 			String etp = getJavaType(pfx, theSetType.set_type);
 			
 			// return the result string
-			return "new HashSet<" + etp + ">()";
+			return "new HashSet<"+etp+">()";
 		}
 
 		// deal with maps
@@ -338,7 +354,12 @@ public class CodeGenerator {
 			JavaType theJavaType = (JavaType) tp;
 			
 			// default return the copy constructor
-			return "new "+theJavaType.java_type+"("+scp+")";
+			if ((theJavaType.java_type.compareTo("String") == 0) ||
+				(theJavaType.java_type.compareTo("java.lang.String") == 0)) {
+				return "new String("+scp+")"; 
+			} else {
+				return scp+".deepCopy()";
+			}
 		}
 		
 		// default (implies an error!)
@@ -428,11 +449,11 @@ public class CodeGenerator {
 		
 		// compose the convert operations
 		res += "\t// convert operation\n";
-		res += "\t@SuppressWarnings({\"unchecked\",\"rawtypes\"})\n";
+		res += "\t@SuppressWarnings(\"unchecked\")\n";
 		res += "\tprotected static String convertToString(Object obj)\n";
 		res += "\t{\n";
 		res += "\t\t// consistency check\n";
-		res += "\t\tassert (obj != null);\n";
+		res += "\t\tif (obj == null) return \"nil\";\n";
 		res += "\t\t\n";
 		res += "\t\t// create the buffer\n";
 		res += "\t\tStringBuffer buf = new StringBuffer();\n";
@@ -665,9 +686,11 @@ public class CodeGenerator {
 		
 		// compose the class body
 		cls += "public class "+cnm+" implements "+inm+"\n{\n";
+		cls += "\t// default version identifier for serialize\n";
+		cls += "\tpublic static final long serialVersionUID = 1L;\n\n";
 		
 		// compose the interface body
-		itf += "public abstract interface "+inm+"\n{\n";
+		itf += "public abstract interface "+inm+" extends java.io.Serializable \n{\n";
 		
 		// IMPLEMENTATION: add the list of children
 		cls += "\t// keep track of all children nodes\n";
@@ -942,12 +965,7 @@ public class CodeGenerator {
 	{
 		// dispatch to the expected union sub-types
 		if (ut.isQuotedTypeUnion() || ut.isTypeNameUnion()) {
-			if (ut.isQuotedTypeUnion()) {
-				// generate the wrapper class
-				generateCodeQuotedTypeUnion(clnm, cd, tnm, ut);
-//				// generate the enumerator
-//				generateCodeQuotedTypeUnionEnum(clnm, cd, tnm, ut);
-			}
+			if (ut.isQuotedTypeUnion()) generateCodeQuotedTypeUnion(clnm, cd, tnm, ut);
 			if (ut.isTypeNameUnion()) generateCodeTypeNameUnion(clnm, cd, tnm, ut);
 		} else {
 			// diagnostics
@@ -998,6 +1016,8 @@ public class CodeGenerator {
 		
 		// compose the class body
 		cls += "public class "+cnm+" extends "+basenm+" implements "+inm+"\n{\n";
+		cls += "\t// default version identifier for serialize\n";
+		cls += "\tpublic static final long serialVersionUID = 1L;\n\n";
 		
 		// compose the interface body
 		itf += "public abstract interface "+inm+" extends "+baseinm+"\n{\n";
@@ -1123,6 +1143,8 @@ public class CodeGenerator {
 		
 		// compose the class body
 		cls += "public class "+cnm+" extends "+basenm+" implements "+inm+"\n{\n";
+		cls += "\t// default version identifier for serialize\n";
+		cls += "\tpublic static final long serialVersionUID = 1L;\n\n";
 		
 		// declare the private member variable to store the enumerated value
 		cls += "\t// private member variable to store enumerated value\n";
@@ -1215,6 +1237,7 @@ public class CodeGenerator {
 			// IMPLEMENTATION
 			cls += "// import java collection types\n";
 			cls += "import java.util.*;\n\n";
+			cls += "@SuppressWarnings(\"unchecked\")\n";
 			// INTERFACE
 			itf += "// import java collection types\n";
 			itf += "import java.util.*;\n\n";
@@ -1225,6 +1248,8 @@ public class CodeGenerator {
 		
 		// compose the class body
 		cls += "public class "+cnm+" extends "+basenm+" implements "+inm+"\n{\n";
+		cls += "\t// default version identifier for serialize\n";
+		cls += "\tpublic static final long serialVersionUID = 1L;\n\n";
 		
 		// compose the interface body
 		itf += "public abstract interface "+inm+" extends "+baseinm+"\n{\n";
@@ -1238,19 +1263,21 @@ public class CodeGenerator {
 			String fstr = beautify(field.field_name);
 			
 			// retrieve the abstract Java type of the field
+			String fctpstr = getCollectionType(iprefix, field.field_type);
 			String fatpstr = getAbstractJavaType(iprefix, field.field_type);
+			String faetpstr = getAbstractJavaType(iprefix, field.field_type, true);
 			
 			// retrieve the Java type initializer of the field
 			String ftpistr = getJavaTypeInitializer(prefix, field.field_type, false);
 			
 			// IMPLEMENTATION: parameter definition for auxiliary constructor
-			cstp +="\t\t"+fatpstr+" p_"+field.field_name;
+			cstp +="\t\t"+faetpstr+" p_"+field.field_name;
 			if (fldcnt < rt.getAllFields().size()) cstp += ",\n"; else cstp += "\n";
 			cstb +="\t\tset"+fstr+"(p_"+field.field_name+");\n";
 			
 			// IMPLEMENTATION: create the private member variable
 			cls += "\t// private member variable ("+field.field_name+")\n";
-			cls += "\tprivate " + fatpstr + " m_"+field.field_name+" = " + ftpistr + ";\n\n";
+			cls += "\tprivate " + fctpstr + " m_"+field.field_name+" = " + ftpistr + ";\n\n";
 			
 			// check for optional type
 			if (field.field_type.isOptionalType()) {
@@ -1272,7 +1299,7 @@ public class CodeGenerator {
 			
 			// IMPLEMENTATION: create the 'set' operation
 			cls += "\t// public operation to set the embedded private field value\n";
-			cls += "\tpublic void set"+fstr+"("+fatpstr+" p_"+field.field_name+")\n\t{\n";
+			cls += "\tpublic void set"+fstr+"("+faetpstr+" p_"+field.field_name+")\n\t{\n";
 			if (!field.field_type.isOptionalType()) {
 				cls += "\t\t// consistency check (field must be non null!)\n";
 				cls += "\t\tassert(p_"+field.field_name+" != null);\n\n";

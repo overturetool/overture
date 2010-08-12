@@ -7,6 +7,9 @@ import org.overture.tools.treegen.ast.itf.*;
 
 public class TreeGenAstMapType extends TreeGenAstTypeSpecification implements ITreeGenAstMapType
 {
+	// default version identifier for serialize
+	public static final long serialVersionUID = 1L;
+
 	// private member variable (dom_type)
 	private ITreeGenAstTypeSpecification m_dom_type = null;
 

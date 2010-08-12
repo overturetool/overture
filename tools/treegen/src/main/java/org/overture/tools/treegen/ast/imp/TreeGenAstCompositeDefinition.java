@@ -8,8 +8,12 @@ import org.overture.tools.treegen.ast.itf.*;
 // import java collection types
 import java.util.*;
 
+@SuppressWarnings("unchecked")
 public class TreeGenAstCompositeDefinition extends TreeGenAstDefinitions implements ITreeGenAstCompositeDefinition
 {
+	// default version identifier for serialize
+	public static final long serialVersionUID = 1L;
+
 	// private member variable (composite_name)
 	private String m_composite_name = new String();
 
@@ -30,7 +34,7 @@ public class TreeGenAstCompositeDefinition extends TreeGenAstDefinitions impleme
 	}
 
 	// private member variable (fields)
-	private List<ITreeGenAstCompositeField> m_fields = new Vector<ITreeGenAstCompositeField>();
+	private List m_fields = new Vector<ITreeGenAstCompositeField>();
 
 	// public operation to retrieve the embedded private field value
 	public List<ITreeGenAstCompositeField> getFields()
@@ -39,7 +43,7 @@ public class TreeGenAstCompositeDefinition extends TreeGenAstDefinitions impleme
 	}
 
 	// public operation to set the embedded private field value
-	public void setFields(List<ITreeGenAstCompositeField> p_fields)
+	public void setFields(List<? extends ITreeGenAstCompositeField> p_fields)
 	{
 		// consistency check (field must be non null!)
 		assert(p_fields != null);
@@ -68,7 +72,7 @@ public class TreeGenAstCompositeDefinition extends TreeGenAstDefinitions impleme
 	// auxiliary constructor
 	public TreeGenAstCompositeDefinition(
 		String p_composite_name,
-		List<ITreeGenAstCompositeField> p_fields
+		List<? extends ITreeGenAstCompositeField> p_fields
 	) {
 		super();
 		setCompositeName(p_composite_name);

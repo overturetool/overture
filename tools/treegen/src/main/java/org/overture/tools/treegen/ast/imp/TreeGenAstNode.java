@@ -10,6 +10,9 @@ import java.util.*;
 
 public class TreeGenAstNode implements ITreeGenAstNode
 {
+	// default version identifier for serialize
+	public static final long serialVersionUID = 1L;
+
 	// keep track of all children nodes
 	private Vector<ITreeGenAstNode> children = null;
 
@@ -83,11 +86,11 @@ public class TreeGenAstNode implements ITreeGenAstNode
 	public String identify() { return "TreeGenAstNode"; }
 
 	// convert operation
-	@SuppressWarnings({"unchecked","rawtypes"})
+	@SuppressWarnings("unchecked")
 	protected static String convertToString(Object obj)
 	{
 		// consistency check
-		assert (obj != null);
+		if (obj == null) return "nil";
 		
 		// create the buffer
 		StringBuffer buf = new StringBuffer();

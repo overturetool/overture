@@ -7,6 +7,9 @@ import org.overture.tools.treegen.ast.itf.*;
 
 public class TreeGenAstShorthandDefinition extends TreeGenAstDefinitions implements ITreeGenAstShorthandDefinition
 {
+	// default version identifier for serialize
+	public static final long serialVersionUID = 1L;
+
 	// private member variable (shorthand_name)
 	private String m_shorthand_name = new String();
 

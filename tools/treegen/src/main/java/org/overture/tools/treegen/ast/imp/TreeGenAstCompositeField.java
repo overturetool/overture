@@ -7,6 +7,9 @@ import org.overture.tools.treegen.ast.itf.*;
 
 public class TreeGenAstCompositeField extends TreeGenAstNode implements ITreeGenAstCompositeField
 {
+	// default version identifier for serialize
+	public static final long serialVersionUID = 1L;
+
 	// private member variable (field_name)
 	private String m_field_name = new String();
 

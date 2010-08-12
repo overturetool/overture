@@ -7,6 +7,9 @@ import org.overture.tools.treegen.ast.itf.*;
 
 public class TreeGenAstDefinitions extends TreeGenAstNode implements ITreeGenAstDefinitions
 {
+	// default version identifier for serialize
+	public static final long serialVersionUID = 1L;
+
 	// default constructor
 	public TreeGenAstDefinitions()
 	{

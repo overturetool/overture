@@ -4,7 +4,7 @@ package org.overture.tools.treegen.ast.itf;
 
 import java.util.List;
 
-public abstract interface ITreeGenAstNode
+public abstract interface ITreeGenAstNode extends java.io.Serializable 
 {
 	// get the parent of this node
 	public abstract ITreeGenAstNode getParent();

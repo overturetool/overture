@@ -7,6 +7,9 @@ import org.overture.tools.treegen.ast.itf.*;
 
 public class TreeGenAstQuotedType extends TreeGenAstTypeSpecification implements ITreeGenAstQuotedType
 {
+	// default version identifier for serialize
+	public static final long serialVersionUID = 1L;
+
 	// private member variable (quote)
 	private String m_quote = new String();
 

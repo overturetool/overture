@@ -8,8 +8,12 @@ import org.overture.tools.treegen.ast.itf.*;
 // import java collection types
 import java.util.*;
 
+@SuppressWarnings("unchecked")
 public class TreeGenAstClassDefinition extends TreeGenAstNode implements ITreeGenAstClassDefinition
 {
+	// default version identifier for serialize
+	public static final long serialVersionUID = 1L;
+
 	// private member variable (opts)
 	private org.overture.tools.treegen.TreeGenOptions m_opts = null;
 
@@ -68,7 +72,7 @@ public class TreeGenAstClassDefinition extends TreeGenAstNode implements ITreeGe
 	}
 
 	// private member variable (defs)
-	private List<ITreeGenAstDefinitions> m_defs = new Vector<ITreeGenAstDefinitions>();
+	private List m_defs = new Vector<ITreeGenAstDefinitions>();
 
 	// public operation to retrieve the embedded private field value
 	public List<ITreeGenAstDefinitions> getDefs()
@@ -77,7 +81,7 @@ public class TreeGenAstClassDefinition extends TreeGenAstNode implements ITreeGe
 	}
 
 	// public operation to set the embedded private field value
-	public void setDefs(List<ITreeGenAstDefinitions> p_defs)
+	public void setDefs(List<? extends ITreeGenAstDefinitions> p_defs)
 	{
 		// consistency check (field must be non null!)
 		assert(p_defs != null);
@@ -108,7 +112,7 @@ public class TreeGenAstClassDefinition extends TreeGenAstNode implements ITreeGe
 		org.overture.tools.treegen.TreeGenOptions p_opts,
 		String p_class_name,
 		String p_super_class,
-		List<ITreeGenAstDefinitions> p_defs
+		List<? extends ITreeGenAstDefinitions> p_defs
 	) {
 		super();
 		setOpts(p_opts);
