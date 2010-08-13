@@ -980,14 +980,7 @@ public class CodeGenerator {
 	{
 		// placeholder for supertype
 		String stp = cd.getSubtype(tnm);
-		
-//		// compute the supertype
-//		if (cd.subtypes.containsKey(tnm)) {
-//			stp = cd.subtypes.get(tnm);
-//		} else {
-//			stp = "Node";
-//		}
-		
+				
 		// place holder for the class and interface name
 		String cnm = prefix + tnm;
 		String basenm = prefix + stp;
