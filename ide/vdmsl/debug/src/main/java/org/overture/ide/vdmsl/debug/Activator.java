@@ -68,5 +68,4 @@ public class Activator extends Plugin
 	@SuppressWarnings("unused")
 	private final ListenerList shutdownListeners = new ListenerList();
 
-
 }
