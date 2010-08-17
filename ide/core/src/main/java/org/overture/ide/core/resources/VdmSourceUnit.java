@@ -156,7 +156,10 @@ this.parseErrors = parseErrors;
 		return parseList.size() > 0;
 	}
 
-	public synchronized Map<LexLocation, IAstNode> getLocationToAstNodeMap()
+	/**
+	 * No not make this synchronized it will lock up due to getParse list and this one being called at the same time
+	 */
+	public /*synchronized*/ Map<LexLocation, IAstNode> getLocationToAstNodeMap()
 	{
 		return locationToAstNodeMap;
 	}

@@ -60,9 +60,13 @@ public abstract class VdmCodeScanner extends RuleBasedScanner {
 		IRule[] result = new IRule[rules.size()];
 		rules.toArray(result);
 		setRules(result);
+		
 	}
 	
 	protected  abstract String[] getKeywords();
+	
+	
+	
 	
 	
 	

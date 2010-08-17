@@ -23,6 +23,10 @@ public class VdmBreakpointAdapterFactory implements IAdapterFactory
 				IFile file = (IFile) resource;
 				try
 				{
+					if(file==null || !file.exists())
+					{
+						return null;
+					}
 					IContentDescription contentDesc = file.getContentDescription();
 					if(contentDesc == null){
 						return null;

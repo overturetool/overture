@@ -17,18 +17,18 @@ public class SplashHandler extends BasicSplashHandler
 		super.init(splash);
 
 		int foregroundColorInteger;
-		//String foregroundColorString = null;
+		// String foregroundColorString = null;
 
-//		try
-//		{
-//			foregroundColorInteger = Integer.parseInt(foregroundColorString, 16);
-//
-//		} catch (Exception ex)
-//		{
+		// try
+		// {
+		// foregroundColorInteger = Integer.parseInt(foregroundColorString, 16);
+		//
+		// } catch (Exception ex)
+		// {
 
-			foregroundColorInteger = 0xD2D7FF; // off white
+		foregroundColorInteger = 0xD2D7FF; // off white
 
-//		}
+		// }
 		setForeground(new RGB((foregroundColorInteger & 0xFF0000) >> 16,
 
 		(foregroundColorInteger & 0xFF00) >> 8,
@@ -48,6 +48,13 @@ public class SplashHandler extends BasicSplashHandler
 			}
 
 		});
+	}
+
+	@Override
+	public void dispose()
+	{
+
+		super.dispose();
 	}
 
 }

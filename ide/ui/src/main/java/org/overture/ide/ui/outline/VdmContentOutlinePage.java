@@ -10,10 +10,14 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -27,6 +31,8 @@ import org.overture.ide.ui.editor.core.VdmEditor;
 import org.overture.ide.ui.internal.viewsupport.DecorationgVdmLabelProvider;
 import org.overture.ide.ui.internal.viewsupport.VdmUILabelProvider;
 import org.overturetool.vdmj.ast.IAstNode;
+import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.types.Type;
 
 @SuppressWarnings("deprecation")
 public class VdmContentOutlinePage extends ContentOutlinePage implements
@@ -43,32 +49,22 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		public void elementChanged(final ElementChangedEvent e)
 		{
 
-			if (getControl() == null)
+			if (getControl() == null || getControl().isDisposed())
 				return;
 
 			Display d = getControl().getDisplay();
 			if (d != null)
 			{
-				d.asyncExec(new Runnable() {
+				d.asyncExec(new Runnable()
+				{
 					public void run()
 					{
-						// IVdmSourceUnit cu= (IVdmSourceUnit) fInput;
-						// IVdmElement base= cu;
-						// if (fTopLevelTypeOnly) {
-						// base= cu.findPrimaryType();
-						// if (base == null) {
-						if (fOutlineViewer != null && !fOutlineViewer.getControl().isDisposed())
+						if (fOutlineViewer != null
+								&& !fOutlineViewer.getControl().isDisposed())
 						{
 							fOutlineViewer.refresh(true);
 							fOutlineViewer.expandToLevel(AUTO_EXPAND_LEVEL);
 						}
-						// return;
-						// }
-						// }
-						// IVdmElementDelta delta= findElement(base, e.getDelta());
-						// if (delta != null && fOutlineViewer != null) {
-						// fOutlineViewer.reconcile(delta);
-						// }
 					}
 				});
 			}
@@ -129,11 +125,56 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 
 	public class VdmOutlineViewer extends TreeViewer
 	{
+		private class OutlineSorter extends ViewerSorter
+		{
+			private final static int TYPES = 1;
+			private final static int VALUES = 0;
 
-		public VdmOutlineViewer(Composite parent) {
+			// private final static int INSTANCEVARIABLES = 2;
+			// private final static int OPERATIONS = 3;
+			// private final static int FUNCTIONS = 4;
+			// private final static int THREADS = 5;
+			// private final static int SYN = 6;
+			// private final static int TRACES = 7;
+
+			@Override
+			public int category(Object element)
+			{
+				if (element instanceof Type)
+				{
+					return TYPES;
+				} else if (element instanceof Definition)
+				{
+					return VALUES;
+				} else
+					return super.category(element);
+			}
+
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2)
+			{
+				int cat1 = category(e1);
+				int cat2 = category(e2);
+				if (cat1 != cat2)
+				{
+					return cat1 - cat2;
+				}
+				
+				if(e1 instanceof IAstNode && e2 instanceof IAstNode)
+				{
+					return collator.compare(((IAstNode)e1).getName(), ((IAstNode)e2).getName());
+				}else
+				return super.compare(viewer, e1, e2);
+			}
+		}
+
+		public VdmOutlineViewer(Composite parent)
+		{
 			super(parent);
 			setAutoExpandLevel(2);
 			setUseHashlookup(true);
+
+			setSorter(new OutlineSorter());
 		}
 
 		@Override
@@ -143,6 +184,25 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 			{
 				super.fireSelectionChanged(event);
 			}
+		}
+
+		public void dispose()
+		{
+
+			Tree t = getTree();
+			if (t != null && !t.isDisposed())
+			{
+				if (t.getChildren() != null)
+				{
+					for (Control c : t.getChildren())
+					{
+						c.dispose();
+					}
+				}
+				getLabelProvider().dispose();
+				t.dispose();
+			}
+
 		}
 
 	}
@@ -157,7 +217,7 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 
 	private VdmEditor vdmEditor;
 
-	private TreeViewer fOutlineViewer;
+	private VdmOutlineViewer fOutlineViewer;
 	private IVdmElement fInput;
 	private ElementChangedListener fListener;
 
@@ -169,7 +229,10 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 
 	private MemberFilterActionGroup fMemberFilterActionGroup;
 
-	public VdmContentOutlinePage(VdmEditor vdmEditor) {
+	private VdmUILabelProvider uiLabelProvider;
+
+	public VdmContentOutlinePage(VdmEditor vdmEditor)
+	{
 		this.vdmEditor = vdmEditor;
 	}
 
@@ -181,11 +244,10 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		fOutlineViewer.setAutoExpandLevel(AUTO_EXPAND_LEVEL);
 		fOutlineViewer.setContentProvider(new VdmOutlineTreeContentProvider());
 		// fOutlineViewer.setLabelProvider(new VdmOutlineLabelProvider());
-		fOutlineViewer.setLabelProvider(new DecorationgVdmLabelProvider(new VdmUILabelProvider()));
+		uiLabelProvider = new VdmUILabelProvider();
+		fOutlineViewer.setLabelProvider(new DecorationgVdmLabelProvider(uiLabelProvider));
 		fOutlineViewer.addSelectionChangedListener(this);
-		
-		
-		
+
 		Object[] listeners = fSelectionChangedListeners.getListeners();
 		for (int i = 0; i < listeners.length; i++)
 		{
@@ -196,48 +258,46 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		// addSelectionChangedListener(new VdmSelectionListener());
 
 		registerToolBarActions();
-		
+
 		fOutlineViewer.setInput(fInput);
 	}
 
-	private void registerToolBarActions() {
-		
-		
-		IPageSite site= getSite();
-			IActionBars actionBars = site.getActionBars();
-		
-			IToolBarManager toolBarManager= actionBars.getToolBarManager();
-			//toolBarManager.add(new LexicalSortingAction());
+	private void registerToolBarActions()
+	{
 
-			fMemberFilterActionGroup= new MemberFilterActionGroup(fOutlineViewer, "org.overture.ide.ui.VdmOutlinePage"); //$NON-NLS-1$
-			fMemberFilterActionGroup.contributeToToolBar(toolBarManager);
+		IPageSite site = getSite();
+		IActionBars actionBars = site.getActionBars();
 
-//			fCustomFiltersActionGroup.fillActionBars(actionBars);
-//
-//			IMenuManager viewMenuManager= actionBars.getMenuManager();
-//			viewMenuManager.add(new Separator("EndFilterGroup")); //$NON-NLS-1$
-//
-//			fToggleLinkingAction= new ToggleLinkingAction();
-//			fToggleLinkingAction.setActionDefinitionId(IWorkbenchCommandConstants.NAVIGATE_TOGGLE_LINK_WITH_EDITOR);
-//			viewMenuManager.add(new ClassOnlyAction());
-//			viewMenuManager.add(fToggleLinkingAction);
-//
-//			fCategoryFilterActionGroup= new CategoryFilterActionGroup(fOutlineViewer, "org.eclipse.jdt.ui.JavaOutlinePage", new IJavaElement[] {fInput}); //$NON-NLS-1$
-//			fCategoryFilterActionGroup.contributeToViewMenu(viewMenuManager);
-		
+		IToolBarManager toolBarManager = actionBars.getToolBarManager();
+		// toolBarManager.add(new LexicalSortingAction());
 
-		
+		fMemberFilterActionGroup = new MemberFilterActionGroup(fOutlineViewer, "org.overture.ide.ui.VdmOutlinePage"); //$NON-NLS-1$
+		fMemberFilterActionGroup.contributeToToolBar(toolBarManager);
+
+		// fCustomFiltersActionGroup.fillActionBars(actionBars);
+		//
+		// IMenuManager viewMenuManager= actionBars.getMenuManager();
+		//			viewMenuManager.add(new Separator("EndFilterGroup")); //$NON-NLS-1$
+		//
+		// fToggleLinkingAction= new ToggleLinkingAction();
+		// fToggleLinkingAction.setActionDefinitionId(IWorkbenchCommandConstants.NAVIGATE_TOGGLE_LINK_WITH_EDITOR);
+		// viewMenuManager.add(new ClassOnlyAction());
+		// viewMenuManager.add(fToggleLinkingAction);
+		//
+		//			fCategoryFilterActionGroup= new CategoryFilterActionGroup(fOutlineViewer, "org.eclipse.jdt.ui.JavaOutlinePage", new IJavaElement[] {fInput}); //$NON-NLS-1$
+		// fCategoryFilterActionGroup.contributeToViewMenu(viewMenuManager);
+
 	}
 
 	@Override
 	public void dispose()
 	{
-		if (vdmEditor == null)
-			return;
+		if (vdmEditor != null)
+		{
 
-		vdmEditor.outlinePageClosed();
-		vdmEditor = null;
-
+			vdmEditor.outlinePageClosed();
+			vdmEditor = null;
+		}
 		// fListener.clear();
 		// fListener = null;
 
@@ -258,6 +318,21 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		// fActionGroups.dispose();
 
 		// fTogglePresentation.setEditor(null);
+
+		if (fOutlineViewer != null)
+		{
+			fOutlineViewer.dispose();
+		}
+
+		if (fMemberFilterActionGroup != null)
+		{
+			fMemberFilterActionGroup.dispose();
+		}
+
+		if (uiLabelProvider != null)
+		{
+			uiLabelProvider.dispose();
+		}
 
 		fOutlineViewer = null;
 
@@ -346,11 +421,9 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		VdmCore.addElementChangedListener(fListener);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void select(IAstNode reference)
 	{
-		
-		
+
 		if (fOutlineViewer != null)
 		{
 
@@ -359,6 +432,7 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 			if (s instanceof IStructuredSelection)
 			{
 				IStructuredSelection ss = (IStructuredSelection) s;
+				@SuppressWarnings("rawtypes")
 				List elements = ss.toList();
 				if (!elements.contains(reference))
 				{

@@ -1,6 +1,8 @@
 package org.overture.ide.ui.internal.viewsupport;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.SafeRunner;
@@ -20,10 +22,10 @@ import org.overture.ide.ui.VdmUIPlugin;
 public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 		IStyledLabelProvider
 {
+	private List<Image> images = new Vector<Image>();
 
 	protected ListenerList fListeners = new ListenerList();
 
-	public String bla = null;
 	protected VdmElementImageProvider fImageLabelProvider;
 	// protected StorageLabelProvider fStorageLabelProvider;
 
@@ -37,8 +39,7 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 	 */
 	public VdmUILabelProvider()
 	{
-		this(VdmElementLabels.ALL_DEFAULT,
-				VdmElementImageProvider.OVERLAY_ICONS);
+		this(VdmElementLabels.ALL_DEFAULT, VdmElementImageProvider.OVERLAY_ICONS);
 	}
 
 	/**
@@ -115,8 +116,7 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 	}
 
 	/**
-	 * Evaluates the image flags for a element. Can be overwritten by super
-	 * classes.
+	 * Evaluates the image flags for a element. Can be overwritten by super classes.
 	 * 
 	 * @param element
 	 *            the element to compute the image flags for
@@ -128,8 +128,7 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 	}
 
 	/**
-	 * Evaluates the text flags for a element. Can be overwritten by super
-	 * classes.
+	 * Evaluates the text flags for a element. Can be overwritten by super classes.
 	 * 
 	 * @param element
 	 *            the element to compute the text flags for
@@ -146,8 +145,7 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 		{
 			for (int i = 0; i < fLabelDecorators.size(); i++)
 			{
-				ILabelDecorator decorator = (ILabelDecorator) fLabelDecorators
-						.get(i);
+				ILabelDecorator decorator = (ILabelDecorator) fLabelDecorators.get(i);
 				image = decorator.decorateImage(image, element);
 			}
 		}
@@ -156,20 +154,20 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see ILabelProvider#getImage
 	 */
 	public Image getImage(Object element)
 	{
 		try
 		{
-			Image result = fImageLabelProvider.getImageLabel(element,
-					evaluateImageFlags(element));
+			Image resultB = fImageLabelProvider.getImageLabel(element, evaluateImageFlags(element));
 			// if (result == null && (element instanceof IStorage)) {
 			// result= fStorageLabelProvider.getImage(element);
 			// }
+			Image result = decorateImage(resultB, element);
 
-			return decorateImage(result, element);
+			
+			return result;
 		} catch (Exception e)
 		{
 			VdmUIPlugin.log(e);
@@ -183,8 +181,7 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 		{
 			for (int i = 0; i < fLabelDecorators.size(); i++)
 			{
-				ILabelDecorator decorator = (ILabelDecorator) fLabelDecorators
-						.get(i);
+				ILabelDecorator decorator = (ILabelDecorator) fLabelDecorators.get(i);
 				String decorated = decorator.decorateText(text, element);
 				if (decorated != null)
 				{
@@ -197,13 +194,11 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see ILabelProvider#getText
 	 */
 	public String getText(Object element)
 	{
-		String result = VdmElementLabels.getTextLabel(element,
-				evaluateTextFlags(element));
+		String result = VdmElementLabels.getTextLabel(element, evaluateTextFlags(element));
 		// if (result.length() == 0 && (element instanceof IStorage)) {
 		// result= fStorageLabelProvider.getText(element);
 		// }
@@ -212,23 +207,20 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 
 	public StyledString getStyledText(Object element)
 	{
-		StyledString string = VdmElementLabels.getStyledTextLabel(element,
-				(evaluateTextFlags(element) | VdmElementLabels.COLORIZE));
+		StyledString string = VdmElementLabels.getStyledTextLabel(element, (evaluateTextFlags(element) | VdmElementLabels.COLORIZE));
 		// if (string.length() == 0 && (element instanceof IStorage)) {
 		// string= new StyledString(fStorageLabelProvider.getText(element));
 		// }
 		String decorated = decorateText(string.getString(), element);
 		if (decorated != null)
 		{
-			return StyledCellLabelProvider.styleDecoratedString(decorated,
-					StyledString.DECORATIONS_STYLER, string);
+			return StyledCellLabelProvider.styleDecoratedString(decorated, StyledString.DECORATIONS_STYLER, string);
 		}
 		return string;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see IBaseLabelProvider#dispose
 	 */
 	public void dispose()
@@ -237,19 +229,25 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 		{
 			for (int i = 0; i < fLabelDecorators.size(); i++)
 			{
-				ILabelDecorator decorator = (ILabelDecorator) fLabelDecorators
-						.get(i);
+				ILabelDecorator decorator = (ILabelDecorator) fLabelDecorators.get(i);
 				decorator.dispose();
 			}
 			fLabelDecorators = null;
 		}
 		// fStorageLabelProvider.dispose();
 		fImageLabelProvider.dispose();
+
+		// for (Image img : images)
+		// {
+		// if (!img.isDisposed())
+		// {
+		// img.dispose();
+		// }
+		// }
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see IBaseLabelProvider#addListener(ILabelProviderListener)
 	 */
 	public void addListener(ILabelProviderListener listener)
@@ -258,8 +256,7 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 		{
 			for (int i = 0; i < fLabelDecorators.size(); i++)
 			{
-				ILabelDecorator decorator = (ILabelDecorator) fLabelDecorators
-						.get(i);
+				ILabelDecorator decorator = (ILabelDecorator) fLabelDecorators.get(i);
 				decorator.addListener(listener);
 			}
 		}
@@ -268,7 +265,6 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see IBaseLabelProvider#isLabelProperty(Object, String)
 	 */
 	public boolean isLabelProperty(Object element, String property)
@@ -278,7 +274,6 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see IBaseLabelProvider#removeListener(ILabelProviderListener)
 	 */
 	public void removeListener(ILabelProviderListener listener)
@@ -287,8 +282,7 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 		{
 			for (int i = 0; i < fLabelDecorators.size(); i++)
 			{
-				ILabelDecorator decorator = (ILabelDecorator) fLabelDecorators
-						.get(i);
+				ILabelDecorator decorator = (ILabelDecorator) fLabelDecorators.get(i);
 				decorator.removeListener(listener);
 			}
 		}
@@ -317,9 +311,7 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
+	 * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
 	 */
 	public Color getForeground(Object element)
 	{
@@ -328,9 +320,7 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
+	 * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
 	 */
 	public Color getBackground(Object element)
 	{
@@ -338,12 +328,11 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 	}
 
 	/**
-	 * Fires a label provider changed event to all registered listeners Only
-	 * listeners registered at the time this method is called are notified.
+	 * Fires a label provider changed event to all registered listeners Only listeners registered at the time this
+	 * method is called are notified.
 	 * 
 	 * @param event
 	 *            a label provider changed event
-	 * 
 	 * @see ILabelProviderListener#labelProviderChanged
 	 */
 	protected void fireLabelProviderChanged(

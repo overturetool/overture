@@ -152,7 +152,7 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider {
 	}
 
 	public void dispose() {
-		// TODO Auto-generated method stub
+		
 
 	}
 

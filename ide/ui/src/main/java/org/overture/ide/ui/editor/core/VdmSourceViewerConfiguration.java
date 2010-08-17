@@ -24,9 +24,10 @@ import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
 public abstract class VdmSourceViewerConfiguration extends
 		SourceViewerConfiguration
 {
+	private ITokenScanner vdmCodeScanner = null;
+	PresentationReconciler reconciler = null;
+	private String[] commentingPrefix = new String[] { "--" };
 
-	private String[] commentingPrefix = new String[]{"--"};
-	
 	// private Object fScanner;
 
 	@Override
@@ -53,8 +54,7 @@ public abstract class VdmSourceViewerConfiguration extends
 	@Override
 	public IReconciler getReconciler(ISourceViewer sourceViewer)
 	{
-		MonoReconciler reconciler = new MonoReconciler(new VdmReconcilingStrategy(),
-				false);
+		MonoReconciler reconciler = new MonoReconciler(new VdmReconcilingStrategy(), false);
 		reconciler.install(sourceViewer);
 
 		return reconciler;
@@ -64,24 +64,31 @@ public abstract class VdmSourceViewerConfiguration extends
 	public IPresentationReconciler getPresentationReconciler(
 			ISourceViewer sourceViewer)
 	{
-		PresentationReconciler reconciler = new PresentationReconciler();
+		if (reconciler == null)
+		{
+			reconciler = new PresentationReconciler();
 
-		DefaultDamagerRepairer dr = new DefaultDamagerRepairer(getVdmCodeScanner());
-		reconciler.setDamager(dr, VdmPartitionScanner.SINGLELINE_COMMENT);
-		reconciler.setRepairer(dr, VdmPartitionScanner.SINGLELINE_COMMENT);
+			if (vdmCodeScanner == null)
+			{
+				vdmCodeScanner = getVdmCodeScanner();
+			}
 
-		dr = new DefaultDamagerRepairer(getVdmCodeScanner());
-		reconciler.setDamager(dr, VdmPartitionScanner.MULTILINE_COMMENT);
-		reconciler.setRepairer(dr, VdmPartitionScanner.MULTILINE_COMMENT);
+			DefaultDamagerRepairer dr = new DefaultDamagerRepairer(vdmCodeScanner);
+			reconciler.setDamager(dr, VdmPartitionScanner.SINGLELINE_COMMENT);
+			reconciler.setRepairer(dr, VdmPartitionScanner.SINGLELINE_COMMENT);
 
-		dr = new DefaultDamagerRepairer(getVdmCodeScanner());
-		reconciler.setDamager(dr, VdmPartitionScanner.STRING);
-		reconciler.setRepairer(dr, VdmPartitionScanner.STRING);
+			dr = new DefaultDamagerRepairer(getVdmCodeScanner());
+			reconciler.setDamager(dr, VdmPartitionScanner.MULTILINE_COMMENT);
+			reconciler.setRepairer(dr, VdmPartitionScanner.MULTILINE_COMMENT);
 
-		dr = new DefaultDamagerRepairer(getVdmCodeScanner());
-		reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
-		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
+			dr = new DefaultDamagerRepairer(getVdmCodeScanner());
+			reconciler.setDamager(dr, VdmPartitionScanner.STRING);
+			reconciler.setRepairer(dr, VdmPartitionScanner.STRING);
 
+			dr = new DefaultDamagerRepairer(getVdmCodeScanner());
+			reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
+			reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
+		}
 		return reconciler;
 	}
 
@@ -96,14 +103,12 @@ public abstract class VdmSourceViewerConfiguration extends
 		return new IAutoEditStrategy[] { strategy };
 	}
 
-	
-	
-
 	@Override
 	public ITextHover getTextHover(ISourceViewer sourceViewer,
 			String contentType)
 	{
-		return new ITextHover() {
+		return new ITextHover()
+		{
 
 			public IRegion getHoverRegion(ITextViewer textViewer, int offset)
 			{
@@ -117,35 +122,39 @@ public abstract class VdmSourceViewerConfiguration extends
 			}
 		};
 	}
-	
 
 	/*
 	 * @see SourceViewerConfiguration#getAnnotationHover(ISourceViewer)
 	 */
 	@Override
-	public IAnnotationHover getAnnotationHover(ISourceViewer sourceViewer) {
-		
+	public IAnnotationHover getAnnotationHover(ISourceViewer sourceViewer)
+	{
+
 		return new VdmAnnotationHover(false);
 	}
-	
+
 	@Override
-	abstract public IContentAssistant getContentAssistant(ISourceViewer sourceViewer); 
-		//return new VdmContentAssistant();
-	
-	
+	abstract public IContentAssistant getContentAssistant(
+			ISourceViewer sourceViewer);
+
+	// return new VdmContentAssistant();
+
 	@Override
 	public String[] getDefaultPrefixes(ISourceViewer sourceViewer,
-			String contentType) {
-		if(contentType.equals(IDocument.DEFAULT_CONTENT_TYPE)){
-			return commentingPrefix; 
-		}
-		if(contentType.equals(VdmPartitionScanner.SINGLELINE_COMMENT)){
+			String contentType)
+	{
+		if (contentType.equals(IDocument.DEFAULT_CONTENT_TYPE))
+		{
 			return commentingPrefix;
 		}
-		
+		if (contentType.equals(VdmPartitionScanner.SINGLELINE_COMMENT))
+		{
+			return commentingPrefix;
+		}
+
 		return super.getDefaultPrefixes(sourceViewer, contentType);
 	}
-	
-	
-}
 
+	
+
+}

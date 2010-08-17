@@ -40,6 +40,7 @@ public class VdmColoringLabelProvider extends DecoratingStyledCellLabelProvider
 
 	public void dispose() {
 		super.dispose();
+		
 		VdmColoredViewersManager.uninstall(this);
 	}
 

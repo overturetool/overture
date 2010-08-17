@@ -21,7 +21,7 @@ public class VdmColorProvider {
 	public static final RGB VDMDOC_LINK = new RGB(128, 128, 128);
 	public static final RGB VDMDOC_DEFAULT = new RGB(0, 128, 128);
 	
-	protected Map<RGB, Color> fColorTable = new HashMap<RGB, Color>(10);
+	protected static Map<RGB, Color> fColorTable = new HashMap<RGB, Color>(10);
 
 	public void dispose() {
 		Iterator<Color> e = fColorTable.values().iterator();
