@@ -20,8 +20,10 @@ public class TreeGen {
 		} else {
 			// place holders for the input parameters
 			String packname = null;
-			String directory = null;
+			String javadir = null;
+			String vppdir = null;
 			String toplevel = null;
+			boolean split = false;
 			
 			// placeholder for the command-line options
 			List<TreeGenOptions> tgopts = new Vector<TreeGenOptions>();
@@ -42,11 +44,22 @@ public class TreeGen {
 					}
 				} else if (args[idx].compareTo("-d") == 0) {
 					if (idx+1 < args.length) {
-						// copy the base directory and update the index
-						directory = args[idx+1];
+						// copy the base javadir and update the index
+						javadir = args[idx+1];
 						idx += 2;
 						// diagnostics
-						System.out.println("Using base directory '"+packname+"'");
+						System.out.println("Using base javadir '"+javadir+"'");
+					} else {
+						// just update the index
+						idx += 1;
+					}
+				} else if (args[idx].compareTo("-v") == 0) {
+					if (idx+1 < args.length) {
+						// copy the base vppdir and update the index
+						vppdir = args[idx+1];
+						idx += 2;
+						// diagnostics
+						System.out.println("Using base vppdir '"+vppdir+"'");
 					} else {
 						// just update the index
 						idx += 1;
@@ -62,6 +75,12 @@ public class TreeGen {
 						// just update the index
 						idx += 1;
 					}
+				} else if (args[idx].compareTo("-s") == 0) {
+					// copy the value and update the index
+					split = true;
+					idx++;
+					// diagnostics
+					System.out.println("Do not use default VPP file collate option");
 				} else {
 					// assume it is a file name and update the index
 					tgopts.add(new TreeGenOptions(args[idx++]));
@@ -70,12 +89,16 @@ public class TreeGen {
 			
 			// iterate over all treegen options and set the other properties
 			for (TreeGenOptions opt: tgopts) {
-				// copy the directory setting if it is defined
-				if (directory != null) opt.setDirectory(directory);
+				// copy the javadir setting if it is defined
+				if (javadir != null) opt.setJavaDirectory(javadir);
+				// copy the javadir setting if it is defined
+				if (vppdir != null) opt.setVppDirectory(vppdir);
 				// copy the package name if it is defined
 				if (packname != null) opt.setPackage(packname);
 				// copy the top-level definition if it is defined
 				if (toplevel != null) opt.setToplevel(toplevel);
+				// set the option to split the VPP generated files
+				opt.setSplitVpp(split);
 			}
 			
 			// call the top-level function

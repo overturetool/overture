@@ -2,7 +2,7 @@ class Typ is subclass of Syn
 
 values
   package = "org.overturetool.ast.typed";
-  directory = "d:\\workspace\\test\\src";
+  javadir = "d:\\workspace\\test\\src";
   toplevel = "Specification,Expression";
 
 types

@@ -25,6 +25,7 @@ public final static short QUOTE=278;
 public final static short STRING=279;
 public final static short MK_TOKEN=280;
 public final static short TYPES=281;
-public final static short INSTANCE=282;
-public final static short VARIABLES=283;
+public final static short BOOLEAN=282;
+public final static short INSTANCE=283;
+public final static short VARIABLES=284;
 }

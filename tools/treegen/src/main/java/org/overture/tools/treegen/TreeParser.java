@@ -164,110 +164,112 @@ public final static short YYERRCODE=256;
 final static short yylhs[] = {                           -1,
     0,    0,    1,    1,    2,    2,    2,    2,    3,    3,
     3,    4,    4,    4,    5,    5,    5,    8,    8,    8,
-    9,    6,    6,    6,   10,   10,   10,   11,   11,    7,
-    7,    7,   13,   13,   13,   14,   14,   14,   15,   15,
-   16,   16,   12,   12,   12,   12,   12,   12,   12,   12,
+    9,    9,    6,    6,    6,   10,   10,   10,   11,   11,
+    7,    7,    7,   13,   13,   13,   14,   14,   14,   15,
+   15,   16,   16,   12,   12,   12,   12,   12,   12,   12,
+   12,
 };
 final static short yylen[] = {                            2,
     0,    1,    1,    2,    4,    5,    8,    9,    1,    1,
     2,    1,    1,    1,    1,    2,    3,    1,    1,    3,
-    3,    2,    3,    4,    1,    1,    3,    3,    8,    1,
-    2,    3,    1,    1,    3,    3,    2,    3,    1,    2,
-    3,    8,    1,    1,    3,    3,    3,    3,    3,    4,
+    3,    3,    2,    3,    4,    1,    1,    3,    3,    8,
+    1,    2,    3,    1,    1,    3,    3,    2,    3,    1,
+    2,    3,    8,    1,    1,    3,    3,    3,    3,    3,
+    4,
 };
 final static short yydefred[] = {                         0,
     0,    0,    0,    3,    0,    4,    9,    0,    0,    0,
     0,    0,    0,   10,   12,   13,   14,    0,    5,   18,
-    0,    0,   19,   33,    0,    0,   34,    0,    0,   11,
-    0,    0,    0,    0,    0,    0,   25,    0,    0,   26,
-    6,    0,   21,   20,    0,    0,   39,    0,    0,    0,
-   43,    0,    0,   44,    0,   35,    0,    0,    0,    0,
-    0,   40,    0,    0,    0,    0,    0,    0,    0,   27,
-    7,    0,    0,   48,   49,    0,   46,   47,   45,    0,
-    8,    0,    0,    0,    0,    0,    0,    0,    0,   29,
-   42,
+    0,    0,   19,   34,    0,    0,   35,    0,    0,   11,
+    0,    0,    0,    0,    0,    0,   26,    0,    0,   27,
+    6,    0,   21,   22,   20,    0,    0,   40,    0,    0,
+    0,   44,    0,    0,   45,    0,   36,    0,    0,    0,
+    0,    0,   41,    0,    0,    0,    0,    0,    0,    0,
+   28,    7,    0,    0,   49,   50,    0,   47,   48,   46,
+    0,    8,    0,    0,    0,    0,    0,    0,    0,    0,
+   30,   43,
 };
 final static short yydgoto[] = {                          2,
     3,    4,   13,   14,   15,   16,   17,   22,   23,   39,
-   40,   55,   26,   27,   46,   47,
+   40,   56,   26,   27,   47,   48,
 };
-final static short yysindex[] = {                      -237,
- -266,    0, -237,    0, -251,    0,    0, -242, -239, -254,
- -247, -231, -196,    0,    0,    0,    0, -215,    0,    0,
- -219, -201,    0,    0, -223, -188,    0, -243, -183,    0,
- -161, -181, -153, -135, -136, -133,    0, -124, -121,    0,
-    0, -240,    0,    0, -120, -135,    0, -116, -114, -136,
-    0, -136, -136,    0, -123,    0, -136, -125, -122, -187,
- -136,    0, -136, -136, -143, -151, -218, -136, -199,    0,
-    0, -119, -148,    0,    0, -136,    0,    0,    0, -131,
-    0, -129, -123, -118, -117, -127, -115, -112, -111,    0,
-    0,
+final static short yysindex[] = {                      -244,
+ -219,    0, -244,    0, -255,    0,    0, -204, -215, -254,
+ -248, -225, -183,    0,    0,    0,    0, -199,    0,    0,
+ -205, -188,    0,    0, -258, -184,    0, -242, -173,    0,
+ -170, -257, -165, -161, -112, -159,    0, -181, -167,    0,
+    0, -252,    0,    0,    0, -177, -161,    0, -137, -135,
+ -112,    0, -112, -112,    0, -154,    0, -112, -142, -138,
+ -180, -112,    0, -112, -112, -259, -238, -230, -112, -222,
+    0,    0, -136, -176,    0,    0, -112,    0,    0,    0,
+ -160,    0, -141, -154, -132, -131, -133, -128, -127, -124,
+    0,    0,
 };
-final static short yyrindex[] = {                       154,
-    0,    0,  155,    0,    0,    0,    0,    0,    0, -182,
- -178,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0, -174,    0,    0,    0, -169,    0, -165,    0,    0,
-    0,    0, -160, -213,    0, -156,    0,    0, -152,    0,
-    0,    0,    0,    0,    0, -204,    0,    0,    0,    0,
-    0,    0,    0,    0, -200,    0,    0, -147,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0, -191,    0,
-    0,    0, -226,    0,    0,    0,    0,    0,    0,    0,
-    0,    0, -238,    0,    0,    0,    0,    0,    0,    0,
-    0,
+final static short yyrindex[] = {                       142,
+    0,    0,  148,    0,    0,    0,    0,    0,    0, -175,
+ -169,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0, -157,    0,    0,    0, -152,    0, -146,    0,    0,
+    0,    0, -143, -241,    0, -140,    0,    0, -134,    0,
+    0,    0,    0,    0,    0,    0, -198,    0,    0,    0,
+    0,    0,    0,    0,    0, -192,    0,    0, -129,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0, -187,
+    0,    0,    0, -245,    0,    0,    0,    0,    0,    0,
+    0,    0,    0, -210,    0,    0,    0,    0,    0,    0,
+    0,    0,
 };
 final static short yygindex[] = {                         0,
-    0,  153,  115,  -13,    0,    0,    0,    0,  127,    0,
-  103,  -49,    0,  126,    0,  117,
+    0,  155,  117,  -13,    0,    0,    0,    0,  128,    0,
+  104,  -19,    0,  129,    0,  120,
 };
-final static int YYTABLESIZE=166;
+final static int YYTABLESIZE=167;
 static short yytable[];
 static { yytable();}
 static void yytable(){
 yytable = new short[]{                         30,
-   65,   20,   66,   67,    7,    5,    8,   69,   24,    9,
-   10,   73,   37,   74,   75,    7,   18,   21,   79,    1,
-   59,   10,   50,   50,   25,   50,   83,   50,   38,   11,
-   12,   50,   19,   50,   41,   41,   50,   41,   50,   34,
-   11,   12,   50,   50,   31,   41,   30,   37,   37,   35,
-   37,   28,   68,   32,   41,   41,   38,   38,   78,   38,
-   36,   36,   33,   36,   29,   10,   80,   37,   37,   28,
-   28,   68,   28,   72,   10,   36,   38,   38,   15,   15,
-   36,   36,   30,   30,   11,   12,   16,   16,   41,   28,
-   28,   31,   31,   11,   12,   22,   22,   43,   15,   15,
-   17,   17,   30,   30,   32,   32,   16,   16,   23,   23,
-   42,   31,   31,   24,   24,   22,   22,   82,   21,   68,
-   17,   17,   68,   77,   32,   32,   76,   68,   23,   23,
-   48,   49,   50,   24,   24,   51,   45,   52,   25,   53,
-   57,   54,   58,   63,   61,   64,   38,   68,   84,   71,
-   85,   88,   81,    1,    2,    6,   60,   86,   87,   44,
-   70,   56,   62,   89,   90,   91,
+    7,   20,    8,    7,   34,    9,   10,   24,   60,   10,
+   77,   69,    1,   37,   35,   42,   42,   21,   42,   38,
+   38,   43,   38,   25,   44,   11,   42,   12,   11,   38,
+   12,   66,   69,   67,   68,   42,   78,   42,   70,   38,
+   69,   38,   74,   81,   75,   76,   79,   30,   69,   80,
+   51,   51,    5,   51,   18,   51,   19,   84,   28,   51,
+   31,   51,   39,   39,   51,   39,   51,   32,   37,   37,
+   51,   37,   51,   29,   29,   33,   29,   29,   10,   36,
+   73,   10,   39,   58,   39,   15,   15,   62,   37,   83,
+   37,   31,   31,   29,   69,   29,   59,   11,   41,   12,
+   11,   42,   12,   16,   16,   15,   21,   15,   32,   32,
+   46,   31,   25,   31,   23,   23,   69,   17,   17,   85,
+   33,   33,   64,   16,   65,   16,   24,   24,   32,   38,
+   32,   25,   25,   72,   23,   82,   23,   17,   86,   17,
+   33,    1,   33,   87,   88,   89,   24,    2,   24,   91,
+   90,   25,   92,   25,   49,   50,   51,    6,   61,   52,
+   45,   53,   71,   54,   57,   55,   63,
 };
 }
 static short yycheck[];
 static { yycheck(); }
 static void yycheck() {
 yycheck = new short[] {                         13,
-   50,  256,   52,   53,  256,  272,  258,   57,  256,  261,
-  262,   61,  256,   63,   64,  256,  259,  272,   68,  257,
-  261,  262,  261,  262,  272,  264,   76,  266,  272,  281,
-  282,  270,  272,  272,  261,  262,  275,  264,  277,  263,
-  281,  282,  281,  282,  260,  272,   60,  261,  262,  273,
-  264,  283,  271,  273,  281,  282,  261,  262,  277,  264,
-  261,  262,  264,  264,  261,  262,  266,  281,  282,  261,
-  262,  271,  264,  261,  262,  264,  281,  282,  261,  262,
-  281,  282,  261,  262,  281,  282,  261,  262,  272,  281,
-  282,  261,  262,  281,  282,  261,  262,  279,  281,  282,
-  261,  262,  281,  282,  261,  262,  281,  282,  261,  262,
-  272,  281,  282,  261,  262,  281,  282,  266,  272,  271,
-  281,  282,  271,  275,  281,  282,  270,  271,  281,  282,
-  267,  268,  269,  281,  282,  272,  272,  274,  272,  276,
-  265,  278,  264,  260,  265,  260,  272,  271,  280,  272,
-  280,  279,  272,    0,    0,    3,   42,  276,  276,   33,
-   58,   36,   46,  279,  277,  277,
+  256,  256,  258,  256,  263,  261,  262,  256,  261,  262,
+  270,  271,  257,  256,  273,  261,  262,  272,  264,  261,
+  262,  279,  264,  272,  282,  281,  272,  283,  281,  272,
+  283,   51,  271,   53,   54,  281,  275,  283,   58,  281,
+  271,  283,   62,  266,   64,   65,  277,   61,  271,   69,
+  261,  262,  272,  264,  259,  266,  272,   77,  284,  270,
+  260,  272,  261,  262,  275,  264,  277,  273,  261,  262,
+  281,  264,  283,  261,  262,  264,  264,  261,  262,  264,
+  261,  262,  281,  265,  283,  261,  262,  265,  281,  266,
+  283,  261,  262,  281,  271,  283,  264,  281,  272,  283,
+  281,  272,  283,  261,  262,  281,  272,  283,  261,  262,
+  272,  281,  272,  283,  261,  262,  271,  261,  262,  280,
+  261,  262,  260,  281,  260,  283,  261,  262,  281,  272,
+  283,  261,  262,  272,  281,  272,  283,  281,  280,  283,
+  281,    0,  283,  276,  276,  279,  281,    0,  283,  277,
+  279,  281,  277,  283,  267,  268,  269,    3,   42,  272,
+   33,  274,   59,  276,   36,  278,   47,
 };
 }
 final static short YYFINAL=2;
-final static short YYMAXTOKEN=283;
+final static short YYMAXTOKEN=284;
 final static String yyname[] = {
 "end-of-file",null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
@@ -287,7 +289,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,"CLASS","IS","SUBCLASS","OF","END","VALUES","DCOLON","SCOLON",
 "COLON","ASSIGN","SEQ","SET","MAP","TO","BAR","IDENT","EQ","LB","RB","LP","RP",
-"QUOTE","STRING","MK_TOKEN","TYPES","INSTANCE","VARIABLES",
+"QUOTE","STRING","MK_TOKEN","TYPES","BOOLEAN","INSTANCE","VARIABLES",
 };
 final static String yyrule[] = {
 "$accept : Document",
@@ -312,6 +314,7 @@ final static String yyrule[] = {
 "ValueDefinitionList : ValueDefinition",
 "ValueDefinitionList : ValueDefinitionList SCOLON ValueDefinition",
 "ValueDefinition : IDENT EQ STRING",
+"ValueDefinition : IDENT EQ BOOLEAN",
 "InstanceVariableDefinitions : INSTANCE VARIABLES",
 "InstanceVariableDefinitions : INSTANCE VARIABLES InstanceVariableDefinitionList",
 "InstanceVariableDefinitions : INSTANCE VARIABLES InstanceVariableDefinitionList SCOLON",
@@ -343,7 +346,7 @@ final static String yyrule[] = {
 "Type : MAP Type TO Type",
 };
 
-//#line 510 "TreeGen.y"
+//#line 525 "TreeGen.y"
 
 //
 // PARSER CLASS CONSTRUCTORS AND OPERATIONS
@@ -363,9 +366,11 @@ private List <ITreeGenAstClassDefinition> tgacdl;
 
 static {
 	values = new HashSet<String>();
-	values.add("package");
-	values.add("directory");
-	values.add("toplevel");
+	values.add("package");				// name of the Java package
+	values.add("javadir");				// top-level directory where Java is generated
+	values.add("vppdir");				// top-level directory where VDM++ is generated
+	values.add("toplevel");				// top-level entry point in the abstract syntax
+	values.add("split");				// option to split the VPP files
 }
 
 // keep track of the number of parse errors
@@ -447,7 +452,7 @@ private void yyerror (String errmsg)
 	// increase the error counter
 	errors++;
 }
-//#line 404 "TreeParser.java"
+//#line 410 "TreeParser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -801,31 +806,47 @@ case 21:
 	  }
 break;
 case 22:
-//#line 243 "TreeGen.y"
+//#line 237 "TreeGen.y"
+{
+	  	/* check whether the value definition is allowed*/
+	  	if (!values.contains(val_peek(2).sval)) {
+	  		/* flag illegal value setting*/
+	  		yyerror("value '" + val_peek(2).sval + "' is not allowed");
+	  	}
+	  	
+	  	/* create the value definition*/
+	  	TreeGenAstValueDefinition tgavd = new TreeGenAstValueDefinition();
+	  	tgavd.setKey(val_peek(2).sval);
+	  	tgavd.setValue(val_peek(0).sval);
+	  	yyval.obj = tgavd;
+	  }
+break;
+case 23:
+//#line 258 "TreeGen.y"
 {
 	  	yyval.obj = new Vector<ITreeGenAstDefinitions>();
 	  }
 break;
-case 23:
-//#line 248 "TreeGen.y"
+case 24:
+//#line 263 "TreeGen.y"
 {
 	  	yyval.obj = val_peek(0).obj;
 	  }
 break;
-case 24:
-//#line 253 "TreeGen.y"
+case 25:
+//#line 268 "TreeGen.y"
 {
 	  	yyval.obj = val_peek(1).obj;
 	  }
 break;
-case 25:
-//#line 260 "TreeGen.y"
+case 26:
+//#line 275 "TreeGen.y"
 {
 	  	yyval.obj = new Vector<ITreeGenAstDefinitions>();
 	  }
 break;
-case 26:
-//#line 265 "TreeGen.y"
+case 27:
+//#line 280 "TreeGen.y"
 {
 	  	List <ITreeGenAstDefinitions> res = new Vector<ITreeGenAstDefinitions>();
 	  	TreeGenAstVariableDefinition tgavd = (TreeGenAstVariableDefinition) val_peek(0).obj;
@@ -833,8 +854,8 @@ case 26:
 	  	yyval.obj = res;
 	  }
 break;
-case 27:
-//#line 273 "TreeGen.y"
+case 28:
+//#line 288 "TreeGen.y"
 {
 	  	List <ITreeGenAstDefinitions> res = (Vector<ITreeGenAstDefinitions>) val_peek(2).obj;
 	  	TreeGenAstVariableDefinition tgavd = (TreeGenAstVariableDefinition) val_peek(0).obj;
@@ -842,8 +863,8 @@ case 27:
 	  	yyval.obj = res;
 	  }
 break;
-case 28:
-//#line 283 "TreeGen.y"
+case 29:
+//#line 298 "TreeGen.y"
 {
 	  	TreeGenAstVariableDefinition tgavd = new TreeGenAstVariableDefinition();
 	  	TreeGenAstTypeSpecification tgatp = (TreeGenAstTypeSpecification) val_peek(0).obj;
@@ -853,8 +874,8 @@ case 28:
 	  	yyval.obj = tgavd;
 	  }
 break;
-case 29:
-//#line 294 "TreeGen.y"
+case 30:
+//#line 309 "TreeGen.y"
 {
 	  	TreeGenAstVariableDefinition tgavd = new TreeGenAstVariableDefinition();
 	  	TreeGenAstTypeSpecification tgatp = (TreeGenAstTypeSpecification) val_peek(5).obj;
@@ -864,43 +885,34 @@ case 29:
 	  	yyval.obj = tgavd;
 	  }
 break;
-case 30:
-//#line 310 "TreeGen.y"
+case 31:
+//#line 325 "TreeGen.y"
 {
 	  	yyval.obj = new Vector<ITreeGenAstDefinitions>(); 
 	  }
 break;
-case 31:
-//#line 315 "TreeGen.y"
+case 32:
+//#line 330 "TreeGen.y"
 {
 	  	yyval.obj = val_peek(0).obj;
 	  }
 break;
-case 32:
-//#line 320 "TreeGen.y"
+case 33:
+//#line 335 "TreeGen.y"
 {
 	  	yyval.obj = val_peek(1).obj;
 	  }
 break;
-case 33:
-//#line 327 "TreeGen.y"
+case 34:
+//#line 342 "TreeGen.y"
 {
 	  	yyval.obj = new Vector<ITreeGenAstDefinitions>(); 
 	  }
 break;
-case 34:
-//#line 332 "TreeGen.y"
+case 35:
+//#line 347 "TreeGen.y"
 {
 	  	List <ITreeGenAstDefinitions> res = new Vector<ITreeGenAstDefinitions>();
-	  	TreeGenAstDefinitions tpd = (TreeGenAstDefinitions) val_peek(0).obj;
-	  	res.add(tpd);
-	  	yyval.obj = res; 
-	  }
-break;
-case 35:
-//#line 340 "TreeGen.y"
-{
-	  	List <ITreeGenAstDefinitions> res = (Vector<ITreeGenAstDefinitions>) val_peek(2).obj;
 	  	TreeGenAstDefinitions tpd = (TreeGenAstDefinitions) val_peek(0).obj;
 	  	res.add(tpd);
 	  	yyval.obj = res; 
@@ -909,6 +921,15 @@ break;
 case 36:
 //#line 355 "TreeGen.y"
 {
+	  	List <ITreeGenAstDefinitions> res = (Vector<ITreeGenAstDefinitions>) val_peek(2).obj;
+	  	TreeGenAstDefinitions tpd = (TreeGenAstDefinitions) val_peek(0).obj;
+	  	res.add(tpd);
+	  	yyval.obj = res; 
+	  }
+break;
+case 37:
+//#line 370 "TreeGen.y"
+{
 	  	TreeGenAstShorthandDefinition tgash = new TreeGenAstShorthandDefinition();
 	  	TreeGenAstTypeSpecification tps = (TreeGenAstTypeSpecification) val_peek(0).obj;
 	  	tgash.setShorthandName(val_peek(2).sval);
@@ -916,8 +937,8 @@ case 36:
 	  	yyval.obj = tgash;
 	  }
 break;
-case 37:
-//#line 368 "TreeGen.y"
+case 38:
+//#line 383 "TreeGen.y"
 {
 	  	TreeGenAstCompositeDefinition tgac = new TreeGenAstCompositeDefinition();
 	  	List <ITreeGenAstCompositeField> cfv = new Vector<ITreeGenAstCompositeField>();
@@ -926,8 +947,8 @@ case 37:
 		yyval.obj = tgac;	  	
       }
 break;
-case 38:
-//#line 381 "TreeGen.y"
+case 39:
+//#line 396 "TreeGen.y"
 {
 	  	TreeGenAstCompositeDefinition tgac = new TreeGenAstCompositeDefinition();
 	  	List <ITreeGenAstCompositeField> cfv = (Vector<ITreeGenAstCompositeField>) val_peek(0).obj;
@@ -936,8 +957,8 @@ case 38:
 		yyval.obj = tgac;	  	
 	  }
 break;
-case 39:
-//#line 392 "TreeGen.y"
+case 40:
+//#line 407 "TreeGen.y"
 {
 	  	TreeGenAstCompositeField tgacf = (TreeGenAstCompositeField) val_peek(0).obj;
 	  	List <ITreeGenAstCompositeField> res = new Vector<ITreeGenAstCompositeField>();
@@ -945,8 +966,8 @@ case 39:
 	  	yyval.obj = res;
 	  }
 break;
-case 40:
-//#line 400 "TreeGen.y"
+case 41:
+//#line 415 "TreeGen.y"
 {
 	  	TreeGenAstCompositeField tgacf = (TreeGenAstCompositeField) val_peek(0).obj;
 	  	List <ITreeGenAstCompositeField> res = (Vector<ITreeGenAstCompositeField>) val_peek(1).obj;
@@ -954,8 +975,8 @@ case 40:
 	  	yyval.obj = res;
 	  }
 break;
-case 41:
-//#line 410 "TreeGen.y"
+case 42:
+//#line 425 "TreeGen.y"
 {
 	  	TreeGenAstCompositeField tgacf = new TreeGenAstCompositeField();
 	  	TreeGenAstTypeSpecification et = (TreeGenAstTypeSpecification) val_peek(0).obj;
@@ -965,8 +986,8 @@ case 41:
 	  	yyval.obj = tgacf;
 	  }
 break;
-case 42:
-//#line 429 "TreeGen.y"
+case 43:
+//#line 444 "TreeGen.y"
 {
 	  	TreeGenAstCompositeField tgacf = new TreeGenAstCompositeField();
 	  	TreeGenAstTypeSpecification et = (TreeGenAstTypeSpecification) val_peek(5).obj;
@@ -976,24 +997,24 @@ case 42:
 	  	yyval.obj = tgacf;
 	  }
 break;
-case 43:
-//#line 441 "TreeGen.y"
+case 44:
+//#line 456 "TreeGen.y"
 { 
 	    TreeGenAstTypeName tgatn = new TreeGenAstTypeName();
 	  	tgatn.setName(val_peek(0).sval);
 	  	yyval.obj = tgatn;
 	  }
 break;
-case 44:
-//#line 448 "TreeGen.y"
+case 45:
+//#line 463 "TreeGen.y"
 {
 	  	TreeGenAstQuotedType tgaqt = new TreeGenAstQuotedType();
 	  	tgaqt.setQuote(val_peek(0).sval);
 	  	yyval.obj = tgaqt;
 	  }
 break;
-case 45:
-//#line 455 "TreeGen.y"
+case 46:
+//#line 470 "TreeGen.y"
 {
 	  	TreeGenAstUnionType tgaut = new TreeGenAstUnionType();
 	  	TreeGenAstTypeSpecification lhs = (TreeGenAstTypeSpecification) val_peek(2).obj; 
@@ -1003,8 +1024,8 @@ case 45:
 	  	yyval.obj = tgaut; 
 	  }
 break;
-case 46:
-//#line 465 "TreeGen.y"
+case 47:
+//#line 480 "TreeGen.y"
 {
 	  	TreeGenAstOptionalType tgaot = new TreeGenAstOptionalType();
 	  	TreeGenAstTypeSpecification et = (TreeGenAstTypeSpecification) val_peek(1).obj;
@@ -1012,14 +1033,14 @@ case 46:
 	  	yyval.obj = tgaot;
 	  }
 break;
-case 47:
-//#line 473 "TreeGen.y"
+case 48:
+//#line 488 "TreeGen.y"
 {
 	  	yyval.obj = val_peek(2).obj;
 	  }
 break;
-case 48:
-//#line 478 "TreeGen.y"
+case 49:
+//#line 493 "TreeGen.y"
 {
 	  	TreeGenAstSeqType tgast = new TreeGenAstSeqType();
 	  	TreeGenAstTypeSpecification et = (TreeGenAstTypeSpecification) val_peek(0).obj;
@@ -1027,8 +1048,8 @@ case 48:
 	  	yyval.obj = tgast;
 	  }
 break;
-case 49:
-//#line 486 "TreeGen.y"
+case 50:
+//#line 501 "TreeGen.y"
 {
 	  	TreeGenAstSetType tgast = new TreeGenAstSetType();
 	  	TreeGenAstTypeSpecification et = (TreeGenAstTypeSpecification) val_peek(0).obj;
@@ -1036,8 +1057,8 @@ case 49:
 	  	yyval.obj = tgast;
 	  }
 break;
-case 50:
-//#line 494 "TreeGen.y"
+case 51:
+//#line 509 "TreeGen.y"
 {
 	  	TreeGenAstMapType tgamt = new TreeGenAstMapType();
 	  	TreeGenAstTypeSpecification etd = (TreeGenAstTypeSpecification) val_peek(2).obj;
@@ -1047,7 +1068,7 @@ case 50:
 	  	yyval.obj = tgamt;
 	  }
 break;
-//#line 998 "TreeParser.java"
+//#line 1020 "TreeParser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

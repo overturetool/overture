@@ -17,7 +17,7 @@ import java.util.*;
 %token SEQ SET MAP OF TO BAR
 %token IDENT EQ LB RB LP RP
 %token QUOTE STRING MK_TOKEN
-%token TYPES
+%token TYPES BOOLEAN
 %token INSTANCE VARIABLES
 
 // operator precedence and associativity	
@@ -219,6 +219,21 @@ ValueDefinitionList:
 
 ValueDefinition:
 	  IDENT EQ STRING
+	  {
+	  	// check whether the value definition is allowed
+	  	if (!values.contains($1.sval)) {
+	  		// flag illegal value setting
+	  		yyerror("value '" + $1.sval + "' is not allowed");
+	  	}
+	  	
+	  	// create the value definition
+	  	TreeGenAstValueDefinition tgavd = new TreeGenAstValueDefinition();
+	  	tgavd.setKey($1.sval);
+	  	tgavd.setValue($3.sval);
+	  	$$.obj = tgavd;
+	  }
+
+	| IDENT EQ BOOLEAN
 	  {
 	  	// check whether the value definition is allowed
 	  	if (!values.contains($1.sval)) {
@@ -526,9 +541,11 @@ private List <ITreeGenAstClassDefinition> tgacdl;
 
 static {
 	values = new HashSet<String>();
-	values.add("package");
-	values.add("directory");
-	values.add("toplevel");
+	values.add("package");				// name of the Java package
+	values.add("javadir");				// top-level directory where Java is generated
+	values.add("vppdir");				// top-level directory where VDM++ is generated
+	values.add("toplevel");				// top-level entry point in the abstract syntax
+	values.add("split");				// option to split the VPP files
 }
 
 // keep track of the number of parse errors

@@ -2,7 +2,7 @@ class Union
 
 values
   package = "nl.marcelverhoef.union";
-  directory = "d:\\workspace\\test\\src";
+  javadir = "d:\\workspace\\test\\src";
   toplevel = "TOP"
   
 types

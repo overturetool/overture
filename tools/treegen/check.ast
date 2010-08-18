@@ -2,7 +2,7 @@ class Check
 
 values
   package = "nl.marcelverhoef.check";
-  directory = "d:\\workspace\\test\\src";
+  javadir = "d:\\workspace\\test\\src";
   toplevel = "Expression"
 
 instance variables

@@ -3,6 +3,6 @@ class AltExt
 
 values
   package = "nl.marcelverhoef.altext";
-  directory = "d:\\workspace\\test\\src"
+  javadir = "d:\\workspace\\test\\src"
 
 end AltExt

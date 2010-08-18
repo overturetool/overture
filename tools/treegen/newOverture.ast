@@ -6,7 +6,7 @@ class Syn
 
 values
   package = "org.overturetool.ast.syntax";
-  directory = "d:\\workspace\\test\\src";
+  javadir = "d:\\workspace\\test\\src";
   toplevel = "Specification,Expression";
 
 instance variables

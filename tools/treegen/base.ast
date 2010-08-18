@@ -7,9 +7,20 @@ class Base
 -- supports both single and multi-line comments
  
 values
+  -- top-level package name of all generated Java classes
   package = "nl.marcelverhoef.base";
-  directory = "d:\\workspace\\test\\src";
-  toplevel = "Expression"
+  
+  -- top-level directory where all Java code will be stored
+  javadir = "d:\\workspace\\test\\src";
+  
+  -- top-level directory where all VDM code will be stored
+  vppdir = "d:\\workspace\\test\\vdm";
+  
+  -- top-level entry point(s) of the abstract syntax (for 'get' operations in Document class
+  toplevel = "Expression";
+  
+  -- indicate whether or not generated VDM should be split or collated
+  split = true
 
 instance variables
   pos : token := mk_token("nl.marcelverhoef.position.Position")

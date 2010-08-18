@@ -6,7 +6,7 @@ class Oml
 
 values
   package = "org.overturetool.ast";
-  directory = "d:\\workspace\\test\\src";
+  javadir = "d:\\workspace\\test\\src";
   toplevel = "Specifications,Expression";
 
 instance variables

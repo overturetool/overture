@@ -3,7 +3,7 @@ class Extended
 
 values
   package = "nl.marcelverhoef.extended";
-  directory = "d:\\workspace\\test\\src";
+  javadir = "d:\\workspace\\test\\src";
   toplevel = "Toplevel"
 
 instance variables

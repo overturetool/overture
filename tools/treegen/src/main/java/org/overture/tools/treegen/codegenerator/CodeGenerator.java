@@ -565,12 +565,12 @@ public class CodeGenerator {
 	
 	public void generateCodeValues(String clnm, ClassDefinition cd)
 	{
-		if (cd.getDirectory().isEmpty()) {
+		if (cd.getJavaDirectory().isEmpty()) {
 			// set the top-level directory to some logical default value
 			basedir = ".\\src";
 		} else {
 			// retrieve the top-level directory (and replace all double backslashes by a single backslash)
-			basedir = cd.getDirectory().replaceAll("\\\\\\\\", "\\\\");
+			basedir = cd.getJavaDirectory().replaceAll("\\\\\\\\", "\\\\");
 		}
 		
 		// retrieve the package definition

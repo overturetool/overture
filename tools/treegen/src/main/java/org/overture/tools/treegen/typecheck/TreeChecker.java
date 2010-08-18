@@ -84,8 +84,8 @@ public class TreeChecker {
 	public void overrideValues(ClassDefinition cd)
 	{
 		// check for the directory setting in the command-line options
-		if (cd.opts.getDirectory().length() > 0) {
-			cd.values.put("directory", new String(cd.opts.getDirectory()));
+		if (cd.opts.getJavaDirectory().length() > 0) {
+			cd.values.put("javadir", new String(cd.opts.getJavaDirectory()));
 		}
 		
 		// check for the package setting in the command-line options
@@ -103,6 +103,14 @@ public class TreeChecker {
 				// add each individual top-level name
 				cd.tplvl.add(tplvlnm);
 			}			
+		}
+		
+		// insert the option to split the generated VDM++ files
+		if (cd.opts.getSplitVpp()) {
+			cd.values.put("split", new String("true"));
+		} else {
+			if (!cd.values.containsKey("split"))
+				cd.values.put("split", new String("false"));
 		}
 	}
 	

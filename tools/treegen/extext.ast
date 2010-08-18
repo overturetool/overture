@@ -3,6 +3,6 @@ class ExtExt
 
 values
   package = "nl.marcelverhoef.extext";
-  directory = "d:\\workspace\\test\\src"
+  javadir = "d:\\workspace\\test\\src"
 
 end ExtExt

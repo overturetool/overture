@@ -85,6 +85,8 @@ ws				= \n | \r | \r\n | \t | " "
 	"types"			{ return TYPES; }
 	"instance"		{ return INSTANCE; }
 	"variables"		{ return VARIABLES; }
+	"true"			{ return BOOLEAN; }
+	"false"			{ return BOOLEAN; }
 	"::"			{ return DCOLON; }
 	":="			{ return ASSIGN; }
 	":"				{ return COLON; }

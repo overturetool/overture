@@ -128,14 +128,35 @@ public class ClassDefinition {
 		return class_name.toLowerCase();
 	}
 	
-	// retrieve the top-level directory
-	public String getDirectory()
+	// retrieve the top-level Java directory
+	public String getJavaDirectory()
 	{
 		// check if the directory name is defined
-		if (values.containsKey("directory")) return values.get("directory");
+		if (values.containsKey("javadir")) return values.get("javadir");
 		
 		// default: return the current directory indicator
 		return ".";
+	}
+	
+	// retrieve the top-level VDM directory
+	public String getVppDirectory()
+	{
+		// check if the directory name is defined
+		if (values.containsKey("vppdir")) return values.get("vppdir");
+		
+		// default: return the current directory indicator
+		return ".";	
+	}
+	
+	// retrieve the option to split the VDM files
+	public boolean getSplitVpp()
+	{
+		if (values.containsKey("split")) {
+			return (values.get("split").compareTo("true") == 0);
+		}
+		
+		// default: return false
+		return false;
 	}
 	
 	// check whether or not the class uses collection types
