@@ -21,7 +21,7 @@ public class TreeGen {
 			// place holders for the input parameters
 			String packname = null;
 			String javadir = null;
-			String vppdir = null;
+			String vdmppdir = null;
 			String toplevel = null;
 			boolean split = false;
 			
@@ -55,11 +55,11 @@ public class TreeGen {
 					}
 				} else if (args[idx].compareTo("-v") == 0) {
 					if (idx+1 < args.length) {
-						// copy the base vppdir and update the index
-						vppdir = args[idx+1];
+						// copy the base vdmppdir and update the index
+						vdmppdir = args[idx+1];
 						idx += 2;
 						// diagnostics
-						System.out.println("Using base vppdir '"+vppdir+"'");
+						System.out.println("Using base vdmppdir '"+vdmppdir+"'");
 					} else {
 						// just update the index
 						idx += 1;
@@ -92,7 +92,7 @@ public class TreeGen {
 				// copy the javadir setting if it is defined
 				if (javadir != null) opt.setJavaDirectory(javadir);
 				// copy the javadir setting if it is defined
-				if (vppdir != null) opt.setVppDirectory(vppdir);
+				if (vdmppdir != null) opt.setVppDirectory(vdmppdir);
 				// copy the package name if it is defined
 				if (packname != null) opt.setPackage(packname);
 				// copy the top-level definition if it is defined

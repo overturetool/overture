@@ -368,7 +368,7 @@ static {
 	values = new HashSet<String>();
 	values.add("package");				// name of the Java package
 	values.add("javadir");				// top-level directory where Java is generated
-	values.add("vppdir");				// top-level directory where VDM++ is generated
+	values.add("vdmppdir");				// top-level directory where VDM++ is generated
 	values.add("toplevel");				// top-level entry point in the abstract syntax
 	values.add("split");				// option to split the VPP files
 }

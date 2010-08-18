@@ -83,9 +83,14 @@ public class TreeChecker {
 	
 	public void overrideValues(ClassDefinition cd)
 	{
-		// check for the directory setting in the command-line options
+		// check for the java directory setting in the command-line options
 		if (cd.opts.getJavaDirectory().length() > 0) {
 			cd.values.put("javadir", new String(cd.opts.getJavaDirectory()));
+		}
+		
+		// check for the VDM directory setting in the command-line options
+		if (cd.opts.getVppDirectory().length() > 0) {
+			cd.values.put("vdmppdir", new String(cd.opts.getVppDirectory()));
 		}
 		
 		// check for the package setting in the command-line options

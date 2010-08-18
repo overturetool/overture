@@ -142,7 +142,7 @@ public class ClassDefinition {
 	public String getVppDirectory()
 	{
 		// check if the directory name is defined
-		if (values.containsKey("vppdir")) return values.get("vppdir");
+		if (values.containsKey("vdmppdir")) return values.get("vdmppdir");
 		
 		// default: return the current directory indicator
 		return ".";	

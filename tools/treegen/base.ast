@@ -14,7 +14,7 @@ values
   javadir = "d:\\workspace\\test\\src";
   
   -- top-level directory where all VDM code will be stored
-  vppdir = "d:\\workspace\\test\\vdm";
+  vdmppdir = "d:\\workspace\\test\\vdm";
   
   -- top-level entry point(s) of the abstract syntax (for 'get' operations in Document class
   toplevel = "Expression";

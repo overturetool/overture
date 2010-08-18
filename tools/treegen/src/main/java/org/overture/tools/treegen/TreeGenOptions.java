@@ -6,7 +6,7 @@ import java.util.HashMap;
 public class TreeGenOptions {
 	// constant definitions
 	static private final String JOPT = new String ("javadir");
-	static private final String VOPT = new String ("vppdir");
+	static private final String VOPT = new String ("vdmppdir");
 	static private final String POPT = new String ("package");
 	static private final String TOPT = new String ("toplevel");
 	static private final String SOPT = new String ("split");
