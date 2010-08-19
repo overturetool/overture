@@ -78,7 +78,7 @@ public abstract class VdmNewFileWizard extends Wizard implements
 	@Override
 	public boolean canFinish()
 	{
-		return _pageOne.getErrorMessage() == null;
+		return super.canFinish() && _pageOne.getErrorMessage() == null;
 	}
 
 	@SuppressWarnings("restriction")

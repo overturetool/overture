@@ -32,7 +32,7 @@ public class VdmRtNewSystemWizard extends VdmNewFileWizard {
 		return "system " + className + "\n" + "\tinstance variables\n\n"+
 		"-- Architecture definition\n\n"+
 		"/*\nComputing units:\n\tPriority: <FP> - Fixed priority\n\t          <PP> - Priority?\n\n"+
-		"Speed is giving in MIPS - Millioner Instruktioner Per Sekund\n*/\n\n"+
+		"Speed is giving in MIPS - Millions of instructions per second\n*/\n\n"+
 		"  cpu1 : CPU := new CPU(<FP>, 22E6);\n"+
 		"  cpu2 : CPU := new CPU(<FP>, 22E6);\n\n"+
 		"/*\nCommunication bus:\n \tModes: <CSMACD> - ?\n*/\n"+
