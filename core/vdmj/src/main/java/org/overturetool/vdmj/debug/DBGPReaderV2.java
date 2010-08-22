@@ -644,8 +644,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			errorResponse(e.code, e.reason);
 		}catch(StackOverflowError e)
 		{
-			
-			errorResponse(DBGPErrorCode.INTERNAL_ERROR, "StackOverflowError:\n"+getStackTrace(e));
+			invocationError(e);
 		}
 		catch (Throwable e)
 		{

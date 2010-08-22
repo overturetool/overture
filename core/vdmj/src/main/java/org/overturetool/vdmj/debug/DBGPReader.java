@@ -900,9 +900,14 @@ public class DBGPReader implements Serializable
 		}
 	}
 	
-	public void invocationError(Exception e)
+	public void invocationError(Throwable e)
 	{
-		errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
+		String message =e.getMessage();
+		if(e instanceof StackOverflowError)
+		{
+			message = "StackOverflowError:\n Try to increase Java Stack size by adding -Xss4M to the Virtual Machine running the debugger";//+getStackTrace(e));
+		}
+		errorResponse(DBGPErrorCode.INTERNAL_ERROR, message);
 	}
 
 	public void tracing(String display)

@@ -25,6 +25,9 @@ package org.overturetool.vdmj.scheduler;
 
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.DebuggerReader;
+import org.overturetool.vdmj.debug.DBGPErrorCode;
+import org.overturetool.vdmj.debug.DBGPReason;
+import org.overturetool.vdmj.debug.DBGPStatus;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.Console;
@@ -127,6 +130,10 @@ public class MainThread extends SchedulablePoolThread
 		{
 			setException(e);
 			BasicSchedulableThread.signalAll(Signal.SUSPEND);
+		}catch(StackOverflowError e)
+		{
+			ctxt.threadState.dbgp.invocationError(e);
+			BasicSchedulableThread.signalAll(Signal.TERMINATE);
 		}
 		finally
 		{
