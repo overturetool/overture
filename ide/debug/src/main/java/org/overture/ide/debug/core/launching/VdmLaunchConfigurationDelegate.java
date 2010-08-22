@@ -62,7 +62,9 @@ public class VdmLaunchConfigurationDelegate implements
 		}
 		try
 		{
-
+			//set launch encoding to UTF-8. Mainly used to set console encoding.
+			launch.setAttribute(DebugPlugin.ATTR_CONSOLE_ENCODING, "UTF-8");
+			
 			List<String> commandList = initializeLaunch(launch, configuration,
 					mode);
 

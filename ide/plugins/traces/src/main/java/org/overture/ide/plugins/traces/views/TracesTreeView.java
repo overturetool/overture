@@ -1121,36 +1121,7 @@ monitor.done();
 				{
 					TraceTreeNode tn = (TraceTreeNode) selection;
 
-					IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-					String projectName = tn.getParent().getParent().getName();
-					IProject iproject = iworkspaceRoot.getProject(projectName);
-
-					ITracesHelper helper = traceHelpers.get(projectName);
-
-					try
-					{
-						// gotoLine(,
-						// tn.GetTraceDefinition().location.startLine,
-						// tn.getName());
-						IVdmProject vdmProject = (IVdmProject) iproject.getAdapter(IVdmProject.class);
-						
-						IFile file = vdmProject.findIFile(helper.getFile(tn.getParent().getName()));
-
-						EditorUtility.gotoLocation(file, tn.getTraceDefinition().location, tn.getName());
-					} catch (IOException e)
-					{
-						ConsolePrint("File not found: " + e.getMessage());
-						e.printStackTrace();
-					} catch (ClassNotFoundException e)
-					{
-						ConsolePrint(e.toString());
-						e.printStackTrace();
-					} catch (TraceHelperNotInitializedException e)
-					{
-						ConsolePrint("Trace helper not initialized for project: "
-								+ e.getProjectName());
-						e.printStackTrace();
-					}
+					gotoTraceDefinition(tn);
 
 				} else if (selection instanceof TraceTestTreeNode)
 				{
@@ -1162,21 +1133,40 @@ monitor.done();
 							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(IPageLayout.ID_PROGRESS_VIEW);
 						} catch (PartInitException e)
 						{
-
 							e.printStackTrace();
 						}
 					else
 						try
 						{
 							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(TracesConstants.TRACES_TEST_ID);
+							gotoTraceDefinition(findTraceTreeNode((TraceTestTreeNode)selection));
 						} catch (PartInitException e)
 						{
-
 							e.printStackTrace();
 						}
 
 				}
 			}
+
+			private TraceTreeNode findTraceTreeNode(ITreeNode selection)
+			{
+				if(selection!= null)
+				{
+					if(selection.getParent() == null)
+					{
+						return null;
+					}else if( selection.getParent() instanceof TraceTreeNode ){
+						return (TraceTreeNode) selection.getParent();
+					}
+					else{
+						return findTraceTreeNode(selection.getParent());
+					}
+				}
+				
+				return null;
+			}
+
+			
 
 		});
 		viewer.addTreeListener(new ITreeViewerListener()
@@ -1253,13 +1243,7 @@ monitor.done();
 		});
 	}
 
-	// private void showMessage(String message)
-	// {
-	// MessageDialog.openInformation(
-	// viewer.getControl().getShell(),
-	// "Combinatorial Testing Overview",
-	// message);
-	// }
+	
 
 	/**
 	 * Passing the focus request to the viewer's control.
@@ -1270,69 +1254,7 @@ monitor.done();
 		viewer.getControl().setFocus();
 	}
 
-	// private static final String MARKER_TYPE = "org.overturetool.traces";
-
-	// private void addMarker(IFile file, String message, int lineNumber,
-	// int severity) {
-	// try {
-	// if (file == null)
-	// return;
-	// lineNumber -= 1;
-	// IMarker[] markers = file.findMarkers(IMarker.PROBLEM, false,
-	// IResource.DEPTH_INFINITE);
-	// for (IMarker marker : markers) {
-	// if (marker.getAttribute(IMarker.MESSAGE).equals(message)
-	// && marker.getAttribute(IMarker.SEVERITY).equals(
-	// severity)
-	// && marker.getAttribute(IMarker.LINE_NUMBER).equals(
-	// lineNumber))
-	// return;
-	//
-	// }
-	// IMarker marker = file.createMarker(IMarker.PROBLEM);
-	// marker.setAttribute(IMarker.MESSAGE, message);
-	// marker.setAttribute(IMarker.SEVERITY, severity);
-	// marker.setAttribute(IMarker.SOURCE_ID, "org.overturetool.traces");
-	// if (lineNumber == -1) {
-	// lineNumber = 1;
-	// }
-	// marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
-	// } catch (CoreException e) {
-	// e.printStackTrace();
-	// }
-	// }
-
-	// private void gotoLine(IFile file, int lineNumber, String message) {
-	//		
-	// try {
-	// // IWorkspaceRoot iworkspaceRoot =
-	// // ResourcesPlugin.getWorkspace().getRoot();
-	// // IProject[] iprojects = iworkspaceRoot.getProjects();
-	//
-	// IWorkbench wb = PlatformUI.getWorkbench();
-	// IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
-	// // String id =
-	// //
-	// win.getWorkbench().getEditorRegistry().getEditors(file.getName())[0].getId();
-	// IEditorPart editor = IDE.openEditor(win.getActivePage(), file, true);
-	//
-	// IMarker marker = file.createMarker(IMarker.MARKER);
-	// marker.setAttribute(IMarker.MESSAGE, message);
-	// marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
-	// if (lineNumber == -1) {
-	// lineNumber = 1;
-	// }
-	// marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
-	//
-	// IDE.gotoMarker(editor, marker);
-	//
-	// marker.delete();
-	//
-	// } catch (CoreException e) {
-	//
-	// e.printStackTrace();
-	// }
-	// }
+	
 
 	private ViewerFilter okFilter = new ViewerFilter()
 	{
@@ -1443,6 +1365,41 @@ monitor.done();
 			}
 		});
 
+	}
+	
+	private void gotoTraceDefinition(TraceTreeNode tn)
+	{
+		if(tn == null)
+		{
+			return ;
+		}
+		IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+		String projectName = tn.getParent().getParent().getName();
+		IProject iproject = iworkspaceRoot.getProject(projectName);
+
+		ITracesHelper helper = traceHelpers.get(projectName);
+
+		try
+		{
+			IVdmProject vdmProject = (IVdmProject) iproject.getAdapter(IVdmProject.class);
+			
+			IFile file = vdmProject.findIFile(helper.getFile(tn.getParent().getName()));
+
+			EditorUtility.gotoLocation(file, tn.getTraceDefinition().location, tn.getName());
+		} catch (IOException e)
+		{
+			ConsolePrint("File not found: " + e.getMessage());
+			e.printStackTrace();
+		} catch (ClassNotFoundException e)
+		{
+			ConsolePrint(e.toString());
+			e.printStackTrace();
+		} catch (TraceHelperNotInitializedException e)
+		{
+			ConsolePrint("Trace helper not initialized for project: "
+					+ e.getProjectName());
+			e.printStackTrace();
+		}
 	}
 
 	private MessageConsole findConsole(String name)

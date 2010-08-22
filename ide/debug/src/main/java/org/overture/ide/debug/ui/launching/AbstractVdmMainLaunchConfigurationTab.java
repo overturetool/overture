@@ -702,7 +702,6 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		// System.out.println("Expression: " + expression);
 		configuration.setAttribute(
 				IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION, expression);
-
 	}
 
 	public void initializeFrom(ILaunchConfiguration configuration)

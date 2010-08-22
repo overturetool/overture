@@ -263,6 +263,19 @@
 	        </and>
          </filterExpression>
       </commonFilter> 
+      <commonFilter  
+            id="org.eclipse.ui.navigator.resources.filters.endsWithTilde"
+            name="%Filters.endsWithTilde.name"
+            description="%Filters.endsWithTilde.description"
+            activeByDefault="true"
+            >
+         <filterExpression>
+         	<and>
+	            <instanceof value="org.eclipse.core.resources.IFile"/>
+            	<test property="org.eclipse.core.resources.name" value="*.*~"/>	            
+	        </and>
+         </filterExpression>
+      </commonFilter> 
        <commonFilter  
             id="org.eclipse.ui.navigator.resources.filters.endsWithCovTbl"
             name="%Filters.endsWithCovTbl.name"
