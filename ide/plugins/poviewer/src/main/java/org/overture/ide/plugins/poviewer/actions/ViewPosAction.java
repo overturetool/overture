@@ -33,6 +33,7 @@ public abstract class ViewPosAction implements IObjectActionDelegate
 	private Shell shell;
 	private IWorkbenchPart targetPart;
 	private File selectedFile = null;
+	private File libFolder = null;
 
 	/**
 	 * Constructor for Action1.
@@ -74,10 +75,13 @@ public abstract class ViewPosAction implements IObjectActionDelegate
 			IFile tmpFile = ProjectHelper.getSelectedFile(action);
 			if (tmpFile != null)
 			{
-				// selectedFile = ProjectUtility.getFile(selectedProject, tmpFile);
+				 selectedFile = tmpFile.getLocation().toFile();
 			}
 
 			IVdmProject project = (IVdmProject) selectedProject.getAdapter(IVdmProject.class);
+			
+			libFolder = new File(selectedProject.getLocation().toFile(),"lib");
+			
 			viewPos(project);
 
 		} catch (Exception ex)
@@ -90,8 +94,13 @@ public abstract class ViewPosAction implements IObjectActionDelegate
 
 	public boolean skipElement(File file)
 	{
-		return (selectedFile != null && !selectedFile.getName().equals((file.getName())));
+		return (selectedFile != null && !selectedFile.getName().equals((file.getName()))) || (selectedFile==null && isLibrary(file));
 
+	}
+
+	private boolean isLibrary(File file)
+	{
+		return file.getAbsolutePath().startsWith(libFolder.getAbsolutePath());
 	}
 
 	protected abstract String getNature();
