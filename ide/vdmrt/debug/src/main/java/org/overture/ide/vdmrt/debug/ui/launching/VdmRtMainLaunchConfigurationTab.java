@@ -11,6 +11,7 @@ import org.overture.ide.vdmrt.core.IVdmRtCoreConstants;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 
@@ -43,6 +44,7 @@ public class VdmRtMainLaunchConfigurationTab extends
 		{
 			Settings.dialect = Dialect.VDM_RT;
 			Settings.release = project.getLanguageVersion();
+			Console.charset = getProject().getDefaultCharset();
 			IVdmModel model = project.getModel();
 			if (!model.isTypeCorrect())
 			{
@@ -54,9 +56,24 @@ public class VdmRtMainLaunchConfigurationTab extends
 			}
 			ClassList classes = model.getClassList();
 			ClassInterpreter ci = new ClassInterpreter(classes);
-			if (expression.contains("new"))
-				ci.setDefaultName(expression.substring(expression.indexOf(' '), expression.indexOf("(")).trim()); // needed for static fn/op check
-
+			// if (expression.contains("new"))
+			// ci.setDefaultName(expression.substring(expression.indexOf(' '), expression.indexOf("(")).trim()); //
+			// needed for static fn/op check
+			if (!expression.contains("new"))
+			{
+				if (expression.contains("`"))
+				{
+					ci.setDefaultName(expression.substring(0, expression.indexOf("`")));
+				} else if (expression.contains("("))
+				{
+					ci.setDefaultName(expression.substring(0, expression.indexOf("("))); // needed for static fn/op
+																							// check
+				}
+			} else if (expression.contains("new"))
+			{
+				ci.setDefaultName(expression.substring(expression.indexOf(' '), expression.indexOf("(")).trim()); 																										// check
+			}
+			
 			ci.typeCheck(expression);
 			return true;
 		} catch (NotAllowedException e)

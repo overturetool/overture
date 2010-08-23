@@ -65,8 +65,8 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		AbstractLaunchConfigurationTab
 {
 	/**
-	 * Custom content provider for the operation selection. Overloads the
-	 * default one to merge DEFAULT modules into one module
+	 * Custom content provider for the operation selection. Overloads the default one to merge DEFAULT modules into one
+	 * module
 	 * 
 	 * @author kela
 	 */
@@ -140,8 +140,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	{
 		if (fProjectText != null && fProjectText.getText().length() > 0)
 		{
-			return ResourcesPlugin.getWorkspace().getRoot().getProject(
-					fProjectText.getText());
+			return ResourcesPlugin.getWorkspace().getRoot().getProject(fProjectText.getText());
 		} else
 		{
 			setErrorMessage("Project not set");
@@ -174,15 +173,13 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 			{
 
 				boolean syntaxCorrect = validateClass() && validateOperation();
-				IVdmProject project = (IVdmProject) getProject().getAdapter(
-						IVdmProject.class);
+				IVdmProject project = (IVdmProject) getProject().getAdapter(IVdmProject.class);
 				if (!syntaxCorrect)
 				{
 					return syntaxCorrect;
 				} else if (project != null)
 				{
-					expression = getExpression(fModuleNameText.getText(),
-							fOperationText.getText(), staticOperation);
+					expression = getExpression(fModuleNameText.getText(), fOperationText.getText(), staticOperation);
 					return validateTypes(project, expression);
 				}
 			} else
@@ -214,8 +211,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 			return false;
 		}
 		LexTokenReader ltr;
-		ltr = new LexTokenReader(fOperationText.getText(), Dialect.VDM_RT,
-				Console.charset);
+		ltr = new LexTokenReader(fOperationText.getText(), Dialect.VDM_RT, Console.charset);
 
 		ExpressionReader reader = new ExpressionReader(ltr);
 		// reader.setCurrentModule(module);
@@ -246,8 +242,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 			return false;
 		}
 		LexTokenReader ltr;
-		ltr = new LexTokenReader(fModuleNameText.getText(), Dialect.VDM_PP,
-				Console.charset);
+		ltr = new LexTokenReader(fModuleNameText.getText(), Dialect.VDM_PP, Console.charset);
 
 		ExpressionReader reader = new ExpressionReader(ltr);
 		// reader.setCurrentModule(module);
@@ -359,7 +354,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 								try
 								{
 									if (object instanceof IProject
-											&& (((IProject)object).getAdapter(IVdmProject.class) != null)
+											&& (((IProject) object).getAdapter(IVdmProject.class) != null)
 											&& isSupported((IProject) object))
 									{
 										elements.add(object);
@@ -379,9 +374,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 
 				}
 				;
-				ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(
-						getShell(), new WorkbenchLabelProvider(),
-						new ProjectContentProvider());
+				ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(getShell(), new WorkbenchLabelProvider(), new ProjectContentProvider());
 				dialog.setTitle("Project Selection");
 				dialog.setMessage("Select a project:");
 				dialog.setComparator(new ViewerComparator());
@@ -394,8 +387,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 							&& dialog.getFirstResult() instanceof IProject
 							&& ((IProject) dialog.getFirstResult()).getAdapter(IVdmProject.class) != null)
 					{
-						fProjectText.setText(((IProject) dialog
-								.getFirstResult()).getName());
+						fProjectText.setText(((IProject) dialog.getFirstResult()).getName());
 					}
 
 				}
@@ -527,10 +519,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	 */
 	protected void chooseOperation() throws CoreException
 	{
-		final ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(
-				getShell(), new DecorationgVdmLabelProvider(
-						new VdmUILabelProvider()),
-				new MergedModuleVdmOutlineTreeContentProvider());
+		final ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(getShell(), new DecorationgVdmLabelProvider(new VdmUILabelProvider()), new MergedModuleVdmOutlineTreeContentProvider());
 		// ElementTreeSelectionDialog dialog = new
 		// ElementTreeSelectionDialog(getShell(), new
 		// WorkbenchLabelProvider(), new BaseWorkbenchContentProvider());
@@ -556,8 +545,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 					// ((IAstNode)selection[0]).getName(),null);
 					return Status.OK_STATUS;
 				}
-				return new Status(IStatus.CANCEL, IDebugConstants.PLUGIN_ID,
-						"Invalid selection");
+				return new Status(IStatus.CANCEL, IDebugConstants.PLUGIN_ID, "Invalid selection");
 			}
 		});
 
@@ -577,26 +565,32 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 
 				if (method.classDefinition != null)
 				{
-					boolean foundConstructor = false;
-					for (Definition def : method.classDefinition.definitions)
+					if (!method.isStatic())
 					{
-						if (def instanceof ExplicitOperationDefinition
-								&& ((ExplicitOperationDefinition) def).isConstructor)
+						boolean foundConstructor = false;
+						for (Definition def : method.classDefinition.definitions)
 						{
-							foundConstructor = true;
-							module = def;
-							defaultModule = def.getName();
-							fModuleNameText.setText(DisplayNameCreator
-									.getDisplayName(def));
+							if (def instanceof ExplicitOperationDefinition
+									&& ((ExplicitOperationDefinition) def).isConstructor)
+							{
+								foundConstructor = true;
+								module = def;
+								defaultModule = def.getName();
+								fModuleNameText.setText(DisplayNameCreator.getDisplayName(def));
+							}
 						}
-					}
-					if (!foundConstructor)
+						if (!foundConstructor)
+						{
+							module = method.classDefinition;
+							defaultModule = method.classDefinition.getName();
+							fModuleNameText.setText(DisplayNameCreator.getDisplayName(method.classDefinition)
+									+ "()");
+						}
+					} else
 					{
 						module = method.classDefinition;
 						defaultModule = method.classDefinition.getName();
-						fModuleNameText.setText(DisplayNameCreator
-								.getDisplayName(method.classDefinition)
-								+ "()");
+						fModuleNameText.setText(DisplayNameCreator.getDisplayName(method.classDefinition));
 					}
 				} else if (method.location != null
 						&& method.location.module != null)
@@ -610,22 +604,10 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 					// module
 				}
 
-				// fOperationText.setText(method.name.name + "()");
-				fOperationText.setText(DisplayNameCreator
-						.getDisplayName(method));
-				// expressionPathseperator = getCombinChar(module, method);
-				// if (module != null && module instanceof ClassDefinition)
-				// {
-				// expression = "new " + fModuleNameText.getText()
-				// + expressionPathseperator + fOperationText.getText();
-				// } else
-				// {
-				// expression = fModuleNameText.getText()
-				// + expressionPathseperator + fOperationText.getText();
-				// }
+				fOperationText.setText(DisplayNameCreator.getDisplayName(method));
+
 				staticOperation = isStaticCall(module, method);
-				expression = getExpression(fModuleNameText.getText(),
-						fOperationText.getText(), staticOperation);
+				expression = getExpression(fModuleNameText.getText(), fOperationText.getText(), staticOperation);
 
 			}
 		}
@@ -669,82 +651,54 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 
 	public void performApply(ILaunchConfigurationWorkingCopy configuration)
 	{
-		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT,
-				fProjectText.getText());
-		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_MODULE,
-				fModuleNameText.getText());
-		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_OPERATION,
-				fOperationText.getText());
-		configuration.setAttribute(
-				IDebugConstants.VDM_LAUNCH_CONFIG_STATIC_OPERATION,
-				staticOperation);
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, fProjectText.getText());
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_MODULE, fModuleNameText.getText());
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_OPERATION, fOperationText.getText());
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_STATIC_OPERATION, staticOperation);
 
-		configuration.setAttribute(
-				IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_CONTROL,
-				fRemoteControlClassText.getText());
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_CONTROL, fRemoteControlClassText.getText());
 
-		configuration.setAttribute(
-				IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG,
-				checkBoxRemoteDebug.getSelection());
-		configuration.setAttribute(
-				IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE,
-				checkBoxGenerateLatexCoverage.getSelection());
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, checkBoxRemoteDebug.getSelection());
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE, checkBoxGenerateLatexCoverage.getSelection());
 
-		configuration.setAttribute(
-				IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING,
-				checkBoxEnableLogging.getSelection());
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, checkBoxEnableLogging.getSelection());
 
 		// configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION_SEPERATOR,
 		// expressionPathseperator);
-		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_DEFAULT,
-				defaultModule);
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_DEFAULT, defaultModule);
 
 		// System.out.println("Expression: " + expression);
-		configuration.setAttribute(
-				IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION, expression);
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION, expression);
 	}
 
 	public void initializeFrom(ILaunchConfiguration configuration)
 	{
 		try
 		{
-			fProjectText.setText(configuration.getAttribute(
-					IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, ""));
+			fProjectText.setText(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, ""));
 
-			fModuleNameText.setText(configuration.getAttribute(
-					IDebugConstants.VDM_LAUNCH_CONFIG_MODULE, ""));
-			fOperationText.setText(configuration.getAttribute(
-					IDebugConstants.VDM_LAUNCH_CONFIG_OPERATION, ""));
+			fModuleNameText.setText(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_MODULE, ""));
+			fOperationText.setText(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_OPERATION, ""));
 
-			staticOperation = configuration.getAttribute(
-					IDebugConstants.VDM_LAUNCH_CONFIG_STATIC_OPERATION, false);
+			staticOperation = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_STATIC_OPERATION, false);
 
-			fRemoteControlClassText.setText(configuration.getAttribute(
-					IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_CONTROL, ""));
+			fRemoteControlClassText.setText(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_CONTROL, ""));
 
-			checkBoxRemoteDebug.setSelection(configuration.getAttribute(
-					IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, false));
-			checkBoxGenerateLatexCoverage.setSelection(configuration
-					.getAttribute(
-							IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE,
-							false));
+			checkBoxRemoteDebug.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, false));
+			checkBoxGenerateLatexCoverage.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE, false));
 
-			checkBoxEnableLogging.setSelection(configuration.getAttribute(
-					IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false));
+			checkBoxEnableLogging.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false));
 
-			defaultModule = configuration.getAttribute(
-					IDebugConstants.VDM_LAUNCH_CONFIG_DEFAULT, "");
+			defaultModule = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_DEFAULT, "");
 
-			expression = configuration.getAttribute(
-					IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION, "");
+			expression = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION, "");
 
 			if (fProjectText.getText().length() == 0)
 			{
 				String newLaunchConfigName = autoFillBaseSettings();
 				if (newLaunchConfigName != null)
 				{
-					ILaunchConfigurationWorkingCopy wConfig = configuration
-							.getWorkingCopy();
+					ILaunchConfigurationWorkingCopy wConfig = configuration.getWorkingCopy();
 					wConfig.rename(newLaunchConfigName);
 					wConfig.doSave();// we do not need to handle to the new
 					// ILaunchConfiguration since no future
@@ -762,29 +716,23 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	}
 
 	/**
-	 * Gets the last selected project in the platform if selection is tree
-	 * selection
+	 * Gets the last selected project in the platform if selection is tree selection
 	 */
 	private String autoFillBaseSettings()
 	{
-		ISelection selection = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow().getSelectionService()
-				.getSelection();// .getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection();
+		ISelection selection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection();// .getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection();
 		if (selection instanceof TreeSelection)
 		{
 			TreeSelection tSelection = (TreeSelection) selection;
 			if (tSelection.getFirstElement() != null
 					&& tSelection.getFirstElement() instanceof IProject)
 			{
-				String name = ((IProject) tSelection.getFirstElement())
-						.getName();
+				String name = ((IProject) tSelection.getFirstElement()).getName();
 				if (name != null && name.trim().length() > 0)
 				{
 					fProjectText.setText(name);
 
-					String launchConfigName = DebugPlugin.getDefault()
-							.getLaunchManager()
-							.generateUniqueLaunchConfigurationNameFrom(name);
+					String launchConfigName = DebugPlugin.getDefault().getLaunchManager().generateUniqueLaunchConfigurationNameFrom(name);
 					return launchConfigName;
 				}
 			}

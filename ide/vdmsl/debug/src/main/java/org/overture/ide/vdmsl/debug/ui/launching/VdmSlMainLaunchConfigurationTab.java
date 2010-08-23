@@ -11,6 +11,7 @@ import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.ide.vdmsl.core.IVdmSlCoreConstants;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.runtime.ModuleInterpreter;
@@ -39,6 +40,7 @@ public class VdmSlMainLaunchConfigurationTab extends
 		{
 			Settings.dialect = Dialect.VDM_SL;
 			Settings.release = project.getLanguageVersion();
+			Console.charset = getProject().getDefaultCharset();
 			IVdmModel model = project.getModel();
 			if (!model.isTypeCorrect())
 			{
@@ -52,7 +54,9 @@ public class VdmSlMainLaunchConfigurationTab extends
 			modules.combineDefaults();
 			ModuleInterpreter ci = new ModuleInterpreter(modules);
 			if (expression.contains(STATIC_CALL_SEPERATOR))
+			{
 				ci.setDefaultName(expression.substring(0, expression.indexOf(STATIC_CALL_SEPERATOR))); // needed for static fn/op check
+			}
 
 			ci.typeCheck(expression);
 			return true;

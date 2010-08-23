@@ -12,6 +12,7 @@ import org.overture.ide.vdmpp.core.IVdmPpCoreConstants;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 
@@ -44,6 +45,7 @@ public class VdmPpMainLaunchConfigurationTab extends
 		{
 			Settings.dialect = Dialect.VDM_PP;
 			Settings.release = project.getLanguageVersion();
+			Console.charset = getProject().getDefaultCharset();
 			IVdmModel model = project.getModel();
 			if (!model.isTypeCorrect())
 			{
@@ -56,8 +58,16 @@ public class VdmPpMainLaunchConfigurationTab extends
 			ClassList classes = model.getClassList();
 			ClassInterpreter ci = new ClassInterpreter(classes);
 			if (!expression.contains("new"))
-				ci.setDefaultName(expression.substring(0, expression.indexOf("("))); // needed for static fn/op check
-
+			{
+				if(expression.contains("`"))
+				{
+					ci.setDefaultName(expression.substring(0, expression.indexOf(STATIC_CALL_SEPERATOR))); 
+				}else
+				if (expression.contains("("))
+				{
+					ci.setDefaultName(expression.substring(0, expression.indexOf("("))); // needed for static fn/op check
+				}
+			}
 			ci.typeCheck(expression);
 			return true;
 		} catch (NotAllowedException e)
