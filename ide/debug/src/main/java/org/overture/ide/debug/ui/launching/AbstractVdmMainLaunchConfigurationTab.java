@@ -604,10 +604,11 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 					// module
 				}
 
-				fOperationText.setText(DisplayNameCreator.getDisplayName(method));
-
+				String opName = DisplayNameCreator.getDisplayName(method);
+				
 				staticOperation = isStaticCall(module, method);
-				expression = getExpression(fModuleNameText.getText(), fOperationText.getText(), staticOperation);
+				expression = getExpression(fModuleNameText.getText(), opName, staticOperation);
+				fOperationText.setText(opName);
 
 			}
 		}
