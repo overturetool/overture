@@ -60,7 +60,7 @@ public class TraceDebugLauncher
 
 			wc.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_IS_TRACE, true);
 
-			wc.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, true);
+			wc.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false);
 
 			wc.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, false);
 			return wc;
