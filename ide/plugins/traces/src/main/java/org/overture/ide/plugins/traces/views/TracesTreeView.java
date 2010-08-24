@@ -387,8 +387,8 @@ public class TracesTreeView extends ViewPart
 		manager.add(new Separator());
 		manager.add(actionSetOkFilter);
 		manager.add(actionSetInconclusiveFilter);
-		manager.add(new Separator());
-		manager.add(actionSelectToolBoxVDMJ);
+//		manager.add(new Separator());
+//		manager.add(actionSelectToolBoxVDMJ);
 		// manager.add(actionSelectToolBoxVDMTools);
 
 	}
@@ -422,7 +422,7 @@ public class TracesTreeView extends ViewPart
 			}
 
 		manager.add(new Separator());
-		drillDownAdapter.addNavigationActions(manager);
+//		drillDownAdapter.addNavigationActions(manager);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
@@ -437,8 +437,8 @@ public class TracesTreeView extends ViewPart
 		manager.add(new Separator());
 		manager.add(actionSetOkFilter);
 		manager.add(actionSetInconclusiveFilter);
-		manager.add(new Separator());
-		drillDownAdapter.addNavigationActions(manager);
+//		manager.add(new Separator());
+//		drillDownAdapter.addNavigationActions(manager);
 	}
 
 	private void makeActions()
