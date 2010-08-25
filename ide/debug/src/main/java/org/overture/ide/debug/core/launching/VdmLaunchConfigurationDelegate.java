@@ -417,7 +417,7 @@ public class VdmLaunchConfigurationDelegate implements
 			String classPath = " ";
 			for (String cp : entries)
 			{
-				if (cp.toLowerCase().endsWith(".jar"))
+				if (cp.toLowerCase().replace("\"", "").trim().endsWith(".jar"))
 				{
 					classPath += toPlatformPath(cp) + getCpSeperator();
 				}
