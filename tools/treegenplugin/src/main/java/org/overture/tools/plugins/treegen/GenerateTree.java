@@ -39,7 +39,9 @@ public class GenerateTree extends AstGenBaseMojo
 			{
 				System.out.println("Adding: "+ file.getName());
 				TreeGenOptions option = new TreeGenOptions(file.getAbsolutePath());
-				option.setDirectory(getProjectJavaSrcDirectory().getAbsolutePath());
+				option.setJavaDirectory(getProjectJavaSrcDirectory().getAbsolutePath());
+				option.setVppDirectory(getProjectVdmSrcDirectory().getAbsolutePath());
+				option.setSplitVpp(true);
 				options.add(option);
 			}
 		}
