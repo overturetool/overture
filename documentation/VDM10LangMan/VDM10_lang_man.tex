@@ -9064,6 +9064,7 @@ same prefix will be skipped automatically.
 \Rule{trace definition}{
   \Ruleref{trace core definition} \dsep
   \Ruleref{trace bindings}, \Ruleref{trace core definition} \dsep
+  \Ruleref{trace conc} \dsep
   \Ruleref{trace core definition}, \Ruleref{trace repeat pattern} \dsep
   \Ruleref{trace bindings}, \Ruleref{trace core definition}, 
   \Ruleref{trace repeat pattern}
@@ -9076,6 +9077,11 @@ same prefix will be skipped automatically.
 
 \Rule{trace apply expression}{
   \Ruleref{call statement}
+}
+
+\Rule{trace conc}{
+  \Lit{||}, \Lit{(}, \Ruleref{trace definition}, 
+  \SeqPt{\Lit{,}, \Ruleref{trace definition}}, \Lit{)}
 }
 
 \Rule{trace repeat pattern}{
