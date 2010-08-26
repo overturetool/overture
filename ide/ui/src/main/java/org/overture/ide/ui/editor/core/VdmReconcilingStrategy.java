@@ -70,7 +70,8 @@ public class VdmReconcilingStrategy implements IReconcilingStrategy
 					parser.parse(currentDocument.getSourceUnit(),
 							currentDocument.get());
 				}
-
+				//Setting type checked to false after some alteration
+				vdmProject.getModel().setChecked(false);
 			}
 
 		} catch (CoreException e)
