@@ -9080,8 +9080,8 @@ same prefix will be skipped automatically.
 }
 
 \Rule{trace conc}{
-  \Lit{||}, \Lit{(}, \Ruleref{trace definition}, 
-  \SeqPt{\Lit{,}, \Ruleref{trace definition}}, \Lit{)}
+  \Lit{||}, \Lit{(}, \Ruleref{trace definition list}, 
+  \SeqPt{\Lit{,}, \Ruleref{trace definition list}}, \Lit{)}
 }
 
 \Rule{trace repeat pattern}{
@@ -9136,6 +9136,12 @@ The different kinds of repeat patterns have the following meanings:
 \item  \Lit{\{}, n, \Lit{\}} means n occurences.
 \item  \Lit{\{}, n, \Lit{,} m \Lit{\}} means between n and m occurences.
 \end{itemize}
+
+The \emph{trace conc} definitions are similar to the
+\emph{nondeterministic statements} in the sense that the trace
+definition lists inside it will be executed in all possible
+permulations of the elements. This is particular useful for concurrent
+VDM++ models where potential deadlocks can occur under some circumstances.
 
 \item[Examples:] In an example like the one below test cases will be
 generated in all possible combination starting with a call
@@ -10015,21 +10021,27 @@ In VDM++ and VDM-RT extended explicit function definition looks like:
   \Ruleref{trace definition term}, \Lit{|}, \Ruleref{trace definition}
 }
 
-\Ruledef{trace definition}{
+\Rule{trace definition}{
   \Ruleref{trace core definition} \dsep
   \Ruleref{trace bindings}, \Ruleref{trace core definition} \dsep
+  \Ruleref{trace conc} \dsep
   \Ruleref{trace core definition}, \Ruleref{trace repeat pattern} \dsep
   \Ruleref{trace bindings}, \Ruleref{trace core definition}, 
   \Ruleref{trace repeat pattern}
 }
 
-\Ruledef{trace core definition}{
+\Rule{trace core definition}{
   \Ruleref{trace apply expression} \dsep
   \Ruleref{trace bracketed expression}
 }
 
-\Ruledef{trace apply expression}{
+\Rule{trace apply expression}{
   \Ruleref{call statement}
+}
+
+\Rule{trace conc}{
+  \Lit{||}, \Lit{(}, \Ruleref{trace definition list}, 
+  \SeqPt{\Lit{,}, \Ruleref{trace definition list}}, \Lit{)}
 }
 
 \Ruledef{trace repeat pattern}{
