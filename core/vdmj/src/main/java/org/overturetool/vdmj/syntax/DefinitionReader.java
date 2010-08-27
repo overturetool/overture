@@ -1583,6 +1583,24 @@ public class DefinitionReader extends SyntaxReader
 				checkFor(Token.KET, 2269, "Expecting '(trace definitions)'");
 				return new TraceBracketedExpression(token.location, list);
 
+			case PIPEPIPE:
+				nextToken();
+				checkFor(Token.BRA, 9999, "Expecting '|| (...)'");
+				List<TraceDefinition> defs = new Vector<TraceDefinition>();
+				defs.add(readTraceDefinition());
+				checkFor(Token.COMMA, 9999, "Expecting '|| (a, b {,...})'");
+				defs.add(readTraceDefinition());
+
+				while (lastToken().is(Token.COMMA))
+				{
+					nextToken();
+					defs.add(readTraceDefinition());
+				}
+
+				checkFor(Token.KET, 9999, "Expecting ')' ending || clause");
+				throwMessage(9999, "Concurrent trace definitions not supported yet");
+				// return new TraceConcurrentExpression(token.location, defs);
+
 			default:
 				throwMessage(2267, "Expecting 'obj.op(args)' or 'op(args)'", token);
 				return null;
