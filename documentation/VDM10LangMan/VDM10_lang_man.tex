@@ -7287,14 +7287,14 @@ Through inheritance, a subclass inherits from the superclass:
 \item Its synchronization definitions as described in
   section \ref{ch:sync-inh}.
 \item Its thread definitions as described in
-  chapter~\ref{ch:thread-inh}.
+  chapter~\ref{ch:thread}.
 \end{itemize}
 
 A name conflict occurs when two constructs of the same kind and with the
 same name are inherited from different superclasses.
 Name conflicts must be explicitly resolved through {\it name qualification},
 i.e. prefixing the construct with the name of the superclass and a
-\texttt{`}-sign (back-quote) (see also chapter~\ref{sec:nameconflicts}).
+\texttt{`}-sign (back-quote).
 
 \begin{description}
 \item[Example:] In the first example, we see that inheritance can be
@@ -9042,49 +9042,53 @@ same prefix will be skipped automatically.
 
 \begin{description}
 \item[Syntax:]
-\Rule{traces definitions}{\Lop{traces},
-   \SeqPt{\Ruleref{named trace}}
+\Ruledef{traces definitions}{\Lop{traces},
+   \OptPt{named trace}, \SeqPt{\Lit{;}, \Ruleref{named trace}}
 }
 
-\Rule{named trace}{\Ruleref{identifier},
+\Ruledef{named trace}{\Ruleref{identifier},
   \SeqPt{\Lit{/}, \Ruleref{identifier}},
   \Lit{:},\Ruleref{trace definition list}
 }
 
-\Rule{trace definition list}{
+\Ruledef{trace definition list}{
   \Ruleref{trace definition term}, 
   \SeqPt{\Lit{;}, \Ruleref{trace definition term}}
 }
 
-\Rule{trace definition term}{
+\Ruledef{trace definition term}{
   \Ruleref{trace definition} \dsep
   \Ruleref{trace definition term}, \Lit{|}, \Ruleref{trace definition}
 }
 
 \Rule{trace definition}{
-  \Ruleref{trace core definition} \dsep
-  \Ruleref{trace bindings}, \Ruleref{trace core definition} \dsep
-  \Ruleref{trace conc} \dsep
-  \Ruleref{trace core definition}, \Ruleref{trace repeat pattern} \dsep
-  \Ruleref{trace bindings}, \Ruleref{trace core definition}, 
-  \Ruleref{trace repeat pattern}
+  \Ruleref{trace binding definition} \dsep
+  \Ruleref{trace repeat definition}
 }
 
-\Rule{trace core definition}{
-  \Ruleref{trace apply expression} \dsep
-  \Ruleref{trace bracketed expression}
+\Ruledef{trace binding definition}{
+  \Ruleref{trace let def binding} \dsep 
+  \Ruleref{trace let best binding}
+};
+ 
+\Ruledef{trace let def binding}{ 
+  \Lop{let}, \Ruleref{local definition}, 
+  \SeqPt{ \Lit{,}, \Ruleref{local definition}}, \lfeed 
+  \Lop{in}, \Ruleref{trace definition}
+} 
+
+\Ruledef{trace let best binding}{ 
+  \Lop{let} \Ruleref{multiple bind}, 
+  \OptPt{\Lop{be}, \Lop{st}, \Ruleref{expression}}, \lfeed
+  \Lop{in}, \Ruleref{trace definition}
 }
 
-\Rule{trace apply expression}{
-  \Ruleref{call statement}
+\Ruledef{trace repeat definition}{
+  \Ruleref{trace core definition}, 
+  \OptPt{\Ruleref{trace repeat pattern}}
 }
-
-\Rule{trace conc}{
-  \Lit{||}, \Lit{(}, \Ruleref{trace definition list}, 
-  \SeqPt{\Lit{,}, \Ruleref{trace definition list}}, \Lit{)}
-}
-
-\Rule{trace repeat pattern}{
+ 
+\Ruledef{trace repeat pattern}{
   \Lit{*} \dsep 
   \Lit{+} \dsep
   \Lit{?} \dsep
@@ -9093,19 +9097,24 @@ same prefix will be skipped automatically.
   \Ruleref{numeric literal}, \Lit{\}}
 } 
 
-\Rule{trace bracketed expression}{
+\Rule{trace core definition}{
+  \Ruleref{trace apply expression} \dsep
+  \Ruleref{trace concurrent expression} \dsep
+  \Ruleref{trace bracketed expression}
+}
+
+\Rule{trace apply expression}{
+  \Ruleref{call statement}
+}
+
+\Rule{trace concurrent expression}{
+  \Lit{||}, \Lit{(}, \Ruleref{trace definition}, \lfeed 
+  \Lit{,}, \Ruleref{trace definition}, \lfeed
+  \SeqPt{\Lit{,}, \Ruleref{trace definition}}, \Lit{)}
+}
+
+\Ruledef{trace bracketed expression}{
   \Lit{(}, \Ruleref{trace definition list}, \Lit{)}
-}
-
-\Rule{trace bindings}{
-  \Ruleref{trace binding}, \SeqPt{\Ruleref{trace binding}}
-}
-
-\Rule{trace binding}{
-  \Lop{let}, \Ruleref{local definitions}, 
-             \SeqPt{\Lit{,}, \Ruleref{local definition}}, \Lop{in} \dsep
-  \Lop{let}, \Ruleref{multiple bind}, \Lop{in} \dsep
-  \Lop{let}, \Ruleref{multiple bind}, \Lop{be}, \Lop{st}, \Ruleref{expression}, \Lop{in}
 }
 
 \item[Semantics:] Semantically the trace definitions provided in a
@@ -9128,6 +9137,27 @@ same prefix will be skipped automatically.
              cannot directly refer to instance variables, because
              these could be changed during the execution.
 
+So here it makes sense to explain what kind of expansion the different
+kinds of trace definitions gives rise to.
+
+The \emph{trace definition lists} simply use a semicolon (``\texttt{;}'') and
+this simply result in sequencing between the \emph{trace definition
+  terms} used inside it.
+
+In the \emph{trace definition term} it is possible to introduce
+alternatives using the bar (``\texttt{|}'') operator. This result in
+test cases for all alternatives.
+
+The \emph{trace binding definition} exists in two forms where the
+\emph{trace let def binding} simply enables the binding introduced to
+be used after the \Lop{in} in the same way as in
+let-expressions. Alternatively the \emph{trace let best binding} can
+be used and this will expand to test cases with all the different
+possible bindings.
+
+The \emph{trace repeat definition} is used to introduce the
+possibility of having repetitions of the operation calls used in the
+trace. 
 The different kinds of repeat patterns have the following meanings:
 \begin{itemize}
 \item  \Lit{*} means 0 to n occurences (n is tool specific). 
@@ -9137,11 +9167,16 @@ The different kinds of repeat patterns have the following meanings:
 \item  \Lit{\{}, n, \Lit{,} m \Lit{\}} means between n and m occurences.
 \end{itemize}
 
-The \emph{trace conc} definitions are similar to the
+The \emph{trace core definitions} have three possibilities. These are
+ordinary operation calls, trace concurrency expressions and bracketed
+trace definitions respectively. 
+The \emph{trace concurrency expressions} are similar to the
 \emph{nondeterministic statements} in the sense that the trace
 definition lists inside it will be executed in all possible
 permulations of the elements. This is particular useful for concurrent
-VDM++ models where potential deadlocks can occur under some circumstances.
+VDM++ models where potential deadlocks can occur under some
+circumstances\footnote{This feature is not yet available in the tool
+  support.}. 
 
 \item[Examples:] In an example like the one below test cases will be
 generated in all possible combination starting with a call
@@ -10003,7 +10038,7 @@ In VDM++ and VDM-RT extended explicit function definition looks like:
 \subsection{Trace Definitions}
 
 \Ruledef{traces definitions}{\Lop{traces},
-   \SeqPt{\Ruleref{named trace}}
+   \OptPt{named trace}, \SeqPt{\Lit{;}, \Ruleref{named trace}}
 }
 
 \Ruledef{named trace}{\Ruleref{identifier},
@@ -10022,28 +10057,32 @@ In VDM++ and VDM-RT extended explicit function definition looks like:
 }
 
 \Rule{trace definition}{
-  \Ruleref{trace core definition} \dsep
-  \Ruleref{trace bindings}, \Ruleref{trace core definition} \dsep
-  \Ruleref{trace conc} \dsep
-  \Ruleref{trace core definition}, \Ruleref{trace repeat pattern} \dsep
-  \Ruleref{trace bindings}, \Ruleref{trace core definition}, 
-  \Ruleref{trace repeat pattern}
+  \Ruleref{trace binding definition} \dsep
+  \Ruleref{trace repeat definition}
 }
 
-\Rule{trace core definition}{
-  \Ruleref{trace apply expression} \dsep
-  \Ruleref{trace bracketed expression}
+\Ruledef{trace binding definition}{
+  \Ruleref{trace let def binding} \dsep 
+  \Ruleref{trace let best binding}
+};
+ 
+\Ruledef{trace let def binding}{ 
+  \Lop{let}, \Ruleref{local definition}, 
+  \SeqPt{ \Lit{,}, \Ruleref{local definition}}, \lfeed 
+  \Lop{in}, \Ruleref{trace definition}
+} 
+
+\Ruledef{trace let best binding}{ 
+  \Lop{let} \Ruleref{multiple bind}, 
+  \OptPt{\Lop{be}, \Lop{st}, \Ruleref{expression}}, \lfeed
+  \Lop{in}, \Ruleref{trace definition}
 }
 
-\Rule{trace apply expression}{
-  \Ruleref{call statement}
+\Ruledef{trace repeat definition}{
+  \Ruleref{trace core definition}, 
+  \OptPt{\Ruleref{trace repeat pattern}}
 }
-
-\Rule{trace conc}{
-  \Lit{||}, \Lit{(}, \Ruleref{trace definition list}, 
-  \SeqPt{\Lit{,}, \Ruleref{trace definition list}}, \Lit{)}
-}
-
+ 
 \Ruledef{trace repeat pattern}{
   \Lit{*} \dsep 
   \Lit{+} \dsep
@@ -10053,19 +10092,24 @@ In VDM++ and VDM-RT extended explicit function definition looks like:
   \Ruleref{numeric literal}, \Lit{\}}
 } 
 
+\Rule{trace core definition}{
+  \Ruleref{trace apply expression} \dsep
+  \Ruleref{trace concurrent expression} \dsep
+  \Ruleref{trace bracketed expression}
+}
+
+\Rule{trace apply expression}{
+  \Ruleref{call statement}
+}
+
+\Rule{trace concurrent expression}{
+  \Lit{||}, \Lit{(}, \Ruleref{trace definition}, \lfeed 
+  \Lit{,}, \Ruleref{trace definition}, \lfeed
+  \SeqPt{\Lit{,}, \Ruleref{trace definition}}, \Lit{)}
+}
+
 \Ruledef{trace bracketed expression}{
   \Lit{(}, \Ruleref{trace definition list}, \Lit{)}
-}
-
-\Ruledef{trace bindings}{
-  \Ruleref{trace binding}, \SeqPt{\Ruleref{trace binding}}
-}
-
-\Ruledef{trace binding}{
-  \Lop{let}, \Ruleref{local definitions}, 
-             \SeqPt{\Lit{,}, \Ruleref{local definition}}, \Lop{in} \dsep
-  \Lop{let}, \Ruleref{multiple bind}, \Lop{in} \dsep
-  \Lop{let}, \Ruleref{multiple bind}, \Lop{be}, \Lop{st}, \Ruleref{expression}, \Lop{in}
 }
 
 \section{Expressions}
