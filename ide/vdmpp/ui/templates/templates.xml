@@ -1,124 +1,85 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <templates>
-	
-	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
-		deleted="false" description="case Expression" enabled="true" name="caseExpression" id="caseExpressionPp">cases
-		${expression}:
-		${patternList1} -&gt; ${expression1}
-		${patternList2} -&gt; ${expression2}
-		others -&gt; ${expressionOthers}
-		end</template>
-	
-	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
-		deleted="false" description="Class pattern" enabled="true" name="classPattern" id="classPatternPp">class ${className}
-	types
 
-	values
-	
-	instance variables
-
-	operations
-
-	functions
-	
-	sync
-	
-	--thread
-	
-	traces
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="The number of times that operation name operation has been activated" enabled="true" name="act" id="actVDMPP">#act(${operationName})</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="The number of operation name operations that are currently active." enabled="true" name="active" id="activeVDMPP">#active(${operationName})</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Case Expression" enabled="true" name="caseExpression" id="caseExpressionVDMPP">cases ${expression}:
+	${patternList1} -&gt; ${expression1}
+	${patternList2} -&gt; ${expression2}
+	others -&gt; ${expressionOthers}
+end</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Class Definition" enabled="true" name="class" id="classVDMPP">class ${className}
 
 end ${className}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Class Definition full skeleton" enabled="true" name="classSkeleton" id="classSkeletonVDMPP">class ${className}
+types
+	${cursor}
+values
 	
-	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
-		deleted="false" description="Declare" enabled="true" name="dclStatement" id="dclStatementPp">dcl
-		${name} : ${nameType};
-		${name} := ${expression}</template>
-	
-	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
-		deleted="false" description="def pattern = expression1 in expression2"
-		enabled="true" name="defExpression" id="defExpressionPp">def ${pattern} = ${expression1} in
-		${expression2}</template>
-	
-	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
-		deleted="false" description="def pattern = expression1 in expression2"
-		enabled="true" name="defPattern" id="defPatternPp">def ${pattern} = ${expression1} in
-		${expression2}</template>
-	
-	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
-		deleted="false" description="exists bindList &amp; predicate" enabled="true"
-		name="exists" id="existsPp">exists bindList &amp; predicate</template>
-	
-	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
-		deleted="false" description="forall bind list &amp; predicate"
-		enabled="true" name="forall" id="forallPp">forall ${bindList} &amp; ${predicate}
-	</template>
-	
-	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
-		deleted="false" description="forall in set" enabled="true" name="forall_In_set" id="forall_In_setPp">
-		forall p in set s</template>
-		
-	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
-		deleted="false" description="for identifier = expression1 to expression2 do\n statement"
-		enabled="true" name="forallLoop" id ="forallLoopPp">for ${identifier} = ${expression1} to
-		${expression2} do
-		${statement}</template>
-		
-	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
-		deleted="false" description="Explicit function" enabled="true"
-		name="functionExplicit" id="functionExplicitPp">${accessSpecifier}
-		${functionName} :  ${parameterTypes} -&gt; ${resultType}
-		${functionName} (${parameterNames}) == ${expression}
-		pre ${preCondition}
-		post ${postCondition}</template>
-		
-	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
-		deleted="false" description="Implicit function" enabled="true"
-		name="functionImplicit" id="functionImplicitPp">${functionName} (${parameters}) -&gt;
-		${resultName}: ${resultType}
-		pre ${predicate}
-		post ${predicate}</template>
-		
-	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
-		deleted="false" description="if predicate then expression1 else expression2"
-		enabled="true" name="ifthen" id="ifthenPp">if ${predicate} then ${expression1} else
-		${expression2}</template>
-		
-	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
-		deleted="false" description="let pattern = expression1 in expression2"
-		enabled="true" name="letExpressions" id="letExpressionsPp">let ${pattern} = ${expression1} in
-		${expression2}</template>
-		
-	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
-		deleted="false" description="let pattern = expression1 in expression2"
-		enabled="true" name="letPattern" id="letPatternPp">let ${pattern} = ${expression1} in
-		${expression2}</template>
-		
-	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
-		deleted="false" description="Explicit Operation" enabled="true"
-		name="operationExplicit" id="operationExplicitPp">${public} ${operationName} : ${parameterTypes} ==&gt; ${resultType}
-		${operationName} (${parameterNames}) ==
-			${statements}
-		pre ${preCondition}
-		post ${postCondition};</template>
-		
-	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
-		deleted="false" description="Implicit operation" enabled="true"
-		name="operationImplicit" id="operationImplicitPp">${operationName} (${parameters}) -&gt;
-		${resultName}: ${resultType}
-		ext rd ${instanceVariable1} : ${instanceVariable1Type}
-		wr ${instanceVariable2} : ${instanceVariable2Type}
-		pre ${predicate}
-		post ${predicate}</template>
-		
-	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
-		deleted="false" description="while predicate do \n statement" enabled="true"
-		name="whileLoop" id="whileLoopPp">while ${predicate} do ${statement}</template>
-		
-	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
-		deleted="false" description="Is subclass responsibility" enabled="true"
-		name="issubclassresponsibility" id="issubclassresponsibilityPp">is subclass responsibility</template>
-		
-		<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType"
-		deleted="false" description="Is subclass of" enabled="true"
-		name="issubclassof" id="issubclassofPp">is subclass of</template>
+instance variables
+
+operations
+
+functions
+
+end ${className}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Declare" enabled="true" name="dclStatement" id="dclStatementVDMPP">dcl ${name} : ${nameType};
+	${name} := ${expression}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="def pattern = expression1 in expression2" enabled="true" name="defExpression" id="defExpressionVDMPP">def ${pattern} = ${expression1} in
+	${expression2}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="exists bindList &amp; predicate" enabled="true" name="exists" id="existsVDMPP">exists ${bindList} &amp; ${predicate}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="The number of times that the operation name operation has been completed" enabled="true" name="fin" id="finVDMPP">#fin(${operationName})</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="forall bind list &amp; predicate" enabled="true" name="forall" id="forallVDMPP">forall ${bindList} &amp; ${predicate}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="for identifier = expression1 to expression2 do\n statement" enabled="true" name="forallLoop" id="forallLoopVDMPP">for ${identifier} = ${initialValue} to ${upperValue} do
+	${statement}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="forall in set" enabled="true" name="forallinset" id="forallinsetVDMPP">forall ${element} in set ${set}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Explicit function" enabled="true" name="functionExplicit" id="functionExplicitVDMPP">${private} ${functionName} :  ${parameterTypes} -&gt; ${resultType}
+${functionName} (${parameterNames}) == ${expression};</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Implicit function" enabled="true" name="functionImplicit" id="functionImplicitVDMPP">${private} ${functionName} (${parameters}) -&gt;
+${resultName}: ${resultType}
+pre ${predicate}
+post ${predicate}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Function block" enabled="true" name="functions" id="functionsVDMPP">
+functions
+	${cursor}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="if predicate then expression1 else expression2" enabled="true" name="ifthen" id="ifthenVDMPP">if ${predicate} 
+then 
+	${expression1} 
+else
+	${expression2}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Instance Variables block" enabled="true" name="instancevariables" id="instancevariablesVDMPP">
+instance variables
+	${cursor}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="is not yet specified" enabled="true" name="isnotyetspecified" id="isnotyetspecifiedVDMPP">is not yet specified</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Test if an object is of a specific base class" enabled="true" name="isofbaseclass" id="isofbaseclassVDMPP">isofbaseclass(${ClassTypeName}, ${objectName})</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Test if an object is of class" enabled="true" name="isofclass" id="isofclassVDMPP">isofclass(${ClassTypeName}, ${objectName})</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Is subclass of" enabled="true" name="issubclassof" id="issubclassofVDMPP">is subclass of</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Is subclass responsibility" enabled="true" name="issubclassresponsibility" id="issubclassresponsibilityVDMPP">is subclass responsibility</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="let pattern = expression1 in expression2" enabled="true" name="let" id="letVDMPP">let ${pattern} = ${expression1} in
+	${expression2}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Mutex operation" enabled="true" name="mutex" id="mutexVDMPP">mutex ${operationName}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Explicit Operation" enabled="true" name="operationExplicit" id="operationExplicitVDMPP">${private} ${operationName} : ${parameterTypes} ==&gt; ${resultType}
+${operationName} (${parameterNames}) == ${statements};</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Implicit operation" enabled="true" name="operationImplicit" id="operationImplicitVDMPP">${private} ${operationName} (${parameters}) ==&gt;
+${resultName}: ${resultType}
+	ext rd ${instanceVariable1} : ${instanceVariable1Type}
+	wr ${instanceVariable2} : ${instanceVariable2Type}
+	pre ${predicate}
+	post ${predicate};</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Operation block" enabled="true" name="operations" id="operationsVDMPP">
+operations
+	${cursor}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Permission predicate for an operation, history counters can be used: £fin, #act, #active, #req, #waiting" enabled="true" name="per" id="perVDMPP">per ${operationName} =&gt; ${predicate}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="The number of requests that has been issued for the operation name operation" enabled="true" name="req" id="reqVDMPP">#req(${operationName})</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Test if two objects are of the same type" enabled="true" name="samebaseclass" id="samebaseclassVDMPP">samebaseclass(${objectName}, ${objectName})</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Get a reference to the current object" enabled="true" name="self" id="selfVDMPP">self</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Synchronization block" enabled="true" name="sync" id="syncVDMPP">
+sync
+	${cursor}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Values block" enabled="true" name="values" id="valuesVDMPP">
+values
+	${cursor}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="The number of outstanding requests for the operation name operation" enabled="true" name="waiting" id="waitingVDMPP">#waiting(${operationName})</template>
+	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="while predicate do statement" enabled="true" name="while" id="whileVDMPP">while ${predicate} 
+do ${statement}</template>
 </templates>

@@ -170,10 +170,10 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 				| SWT.V_SCROLL);
 		// test setup columns...
 		TableLayout layout = new TableLayout();
-		layout.addColumnData(new ColumnWeightData(20, 20, true));
-		layout.addColumnData(new ColumnWeightData(100, 40, true));
-		layout.addColumnData(new ColumnWeightData(60, 35, false));
-		layout.addColumnData(new ColumnWeightData(20, 20, false));
+		layout.addColumnData(new ColumnWeightData(20,  true));
+		layout.addColumnData(new ColumnWeightData(100,  true));
+		layout.addColumnData(new ColumnWeightData(60,  false));
+		layout.addColumnData(new ColumnWeightData(20,  false));
 		viewer.getTable().setLayout(layout);
 		viewer.getTable().setLinesVisible(true);
 		viewer.getTable().setHeaderVisible(true);
@@ -380,6 +380,11 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 				// numbering
 
 				viewer.setInput(data);
+				
+				for (TableColumn col : viewer.getTable().getColumns())
+				{
+					col.pack();
+				}
 			}
 
 		});

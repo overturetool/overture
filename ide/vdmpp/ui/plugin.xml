@@ -141,7 +141,7 @@
        <contextType
           class="org.overture.ide.vdmpp.ui.editor.contentAssist.VdmPpTemplateContextType"
           id="org.overture.ide.vdmpp.ui.contextType"
-          name="VDM Template content">
+          name="VDM-PP Template context type">
        </contextType>
       <include
           file="templates/templates.xml">

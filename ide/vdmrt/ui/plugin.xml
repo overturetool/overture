@@ -175,7 +175,7 @@
      <contextType
            class="org.overture.ide.vdmrt.ui.editor.contentAssist.VdmRtTemplateContextType"
            id="org.overture.ide.vdmrt.ui.contextType"
-           name="Vdm-Rt Context Type">
+           name="VDM-RT Template context type">
      </contextType>
      <include
            file="templates/templates.xml">

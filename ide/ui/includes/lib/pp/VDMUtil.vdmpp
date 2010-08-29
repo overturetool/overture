@@ -34,9 +34,4 @@ seq_of_char2val(s) ==
 
 end VDMUtil
 
-class A
-functions
-	public f() r:[ seq of char * nat * nat * seq of char * seq of char ]
-		== VDMUtil`get_file_pos();
-	
-end A
+

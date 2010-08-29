@@ -23,7 +23,7 @@ public class ViewPosActionSl extends ViewPosAction {
 		}
 		for (Object definition : root.getModuleList()) {
 			if (definition instanceof Module)
-				if (skipElement(((Module) definition).name.location.file))
+				if (!((Module) definition).getName().equals("DEFAULT") && skipElement(((Module) definition).name.location.file))
 					continue;
 				else
 					cl.add((Module) definition);

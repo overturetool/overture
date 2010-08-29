@@ -98,7 +98,7 @@ public class TraceOptionsDialog extends Composite
 
 		comboSubset = new Combo(this, SWT.READ_ONLY);
 
-		final Integer division = 10;
+		final Integer division = 1;
 		final Integer total = 100;
 		
 		String[] reductions = new String[total/division];

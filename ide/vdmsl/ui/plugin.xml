@@ -142,7 +142,8 @@
         point="org.eclipse.ui.editors.templates">
      <contextType
            class="org.overture.ide.vdmsl.ui.editor.contentAssist.VdmSlTemplateContextType"
-           id="org.overture.ide.vdmsl.ui.contextType">
+           id="org.overture.ide.vdmsl.ui.contextType"
+           name="VDM-SL Template context type">
      </contextType>
      <include
            file="templates/templates.xml">
