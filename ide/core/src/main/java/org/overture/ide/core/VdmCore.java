@@ -67,12 +67,12 @@ public class VdmCore extends Plugin
 		return plugin;
 	}
 
-	public static void log(Exception exception)
+	public static void log(Throwable exception)
 	{
 		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, "VdmCore", exception));
 	}
 
-	public static void log(String message, Exception exception)
+	public static void log(String message, Throwable exception)
 	{
 		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, message, exception));
 	}

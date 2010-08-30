@@ -3,7 +3,6 @@ package org.overture.ide.core.utility;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Vector;
 
@@ -52,7 +51,7 @@ public class FileUtility
 			marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
 		} catch (CoreException e)
 		{
-			e.printStackTrace();
+			VdmCore.log("FileUtility addMarker", e);
 		}
 	}
 
@@ -90,7 +89,7 @@ public class FileUtility
 					converter.getEndPos(lineNumber, columnNumber));
 		} catch (CoreException e)
 		{
-			e.printStackTrace();
+			VdmCore.log("FileUtility addMarker", e);
 		}
 	}
 
@@ -147,7 +146,7 @@ public class FileUtility
 			marker.setAttribute(IMarker.CHAR_END, converter.getEndPos(location));
 		} catch (CoreException e)
 		{
-			e.printStackTrace();
+			VdmCore.log("FileUtility addMarker", e);
 		}
 	}
 	
@@ -178,7 +177,7 @@ public class FileUtility
 		{
 			if (VdmCore.DEBUG)
 			{
-				e.printStackTrace();
+				VdmCore.log("FileUtility deleteMarker", e);
 			}
 		}
 	}
@@ -233,18 +232,9 @@ public class FileUtility
 			while ((c = in.read()) != -1)
 				content.add((char) c);
 
-		} catch (CoreException e)
+		} catch (Exception e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			VdmCore.log("FileUtility getContent", e);
 		} finally
 		{
 			if (in != null)

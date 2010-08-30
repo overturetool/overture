@@ -300,13 +300,13 @@ public class VdmModel implements IVdmModel
 			{
 				if (VdmCore.DEBUG)
 				{
-					e.printStackTrace();
+					VdmCore.log("Error in VdmModel refresh", e);
 				}
 			} catch (IOException e)
 			{
 				if (VdmCore.DEBUG)
 				{
-					e.printStackTrace();
+					VdmCore.log("Error in VdmModel refresh", e);
 				}
 			}
 			if (monitor != null)

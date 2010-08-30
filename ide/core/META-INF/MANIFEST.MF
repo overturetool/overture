@@ -9,7 +9,7 @@ Bundle-Name: org.overture.ide.core
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.core;singleton:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.overture.ide.generated.vdmj;bundle-version="2.0.1";visibility:=reexport,
+Require-Bundle: org.overture.ide.generated.vdmj;bundle-version="0.3.0";visibility:=reexport,
  org.eclipse.core.runtime;bundle-version="3.5.0";visibility:=reexport,
  org.eclipse.core.expressions,
  org.eclipse.core.resources;bundle-version="3.5.2";visibility:=reexport

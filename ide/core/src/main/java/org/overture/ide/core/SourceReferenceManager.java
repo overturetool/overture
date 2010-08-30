@@ -1,6 +1,5 @@
 package org.overture.ide.core;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -97,7 +96,7 @@ public class SourceReferenceManager implements IManager
 			}
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			VdmCore.log("SourceReferenceManager getNodeAt", e);
 		}
 
 		List<Integer> knownOffsets = new Vector<Integer>(offsetToAstNodeMap.keySet());
@@ -212,7 +211,7 @@ public class SourceReferenceManager implements IManager
 					}
 				} catch (Exception e)
 				{
-					e.printStackTrace();
+					VdmCore.log("SourceReferenceManager makeOuterOffsetToAstMap", e);
 				}
 			}
 		}
@@ -257,14 +256,9 @@ public class SourceReferenceManager implements IManager
 			this.lineSize = new Integer[lines.size()];
 			lines.toArray(this.lineSize);
 			// System.out.println(file.getName() + lines);
-		} catch (CoreException e)
+		} catch (Exception e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			VdmCore.log("SourceReferenceManager makeLineSizes", e);
 		}
 	}
 

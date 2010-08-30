@@ -42,10 +42,9 @@ public class SafeBuilder extends Thread
 						ISafeRunnable runnable = new ISafeRunnable()
 						{
 
-							public void handleException(Throwable exception)
+							public void handleException(Throwable e)
 							{
-								exception.printStackTrace();
-
+								VdmCore.log("SafeBuilder", e);
 							}
 
 							public void run() throws Exception

@@ -11,6 +11,7 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.resources.IVdmProject;
 
 public abstract class VdmCoreBuilder extends IncrementalProjectBuilder
@@ -120,10 +121,9 @@ public abstract class VdmCoreBuilder extends IncrementalProjectBuilder
 			{
 				getProject().refreshLocal(IResource.DEPTH_INFINITE, null);
 
-			} catch (CoreException e1)
+			} catch (CoreException e)
 			{
-
-				e1.printStackTrace();
+				VdmCore.log("VdmCoreBuilder:syncProjectResources", e);
 			}
 	}
 
@@ -142,8 +142,7 @@ public abstract class VdmCoreBuilder extends IncrementalProjectBuilder
 
 		} catch (CoreException e)
 		{
-
-			e.printStackTrace();
+			VdmCore.log("VdmCoreBuilder:clearProblemMarkers", e);
 		}
 
 	}

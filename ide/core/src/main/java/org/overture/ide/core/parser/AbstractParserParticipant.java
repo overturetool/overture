@@ -63,7 +63,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		{
 			if (VdmCore.DEBUG)
 			{
-				e.printStackTrace();
+				VdmCore.log("AbstractParserParticipant:parse IVdmSourceUnit", e);
 			}
 		}
 	}
@@ -91,7 +91,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		{
 			if (VdmCore.DEBUG)
 			{
-				e.printStackTrace();
+				VdmCore.log("AbstractParserParticipant:parse IVdmSourceUnit with seperate data", e);
 			}
 		}
 

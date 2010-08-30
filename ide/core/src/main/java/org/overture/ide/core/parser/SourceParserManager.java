@@ -197,8 +197,8 @@ public class SourceParserManager
 		{
 			if (VdmCore.DEBUG)
 			{
-				System.err.println("Error in parseFile");
-				e.printStackTrace();
+//				System.err.println("Error in parseFile");
+				VdmCore.log("SourceParseManager-Error in parseFile", e);
 			}
 		}
 	}

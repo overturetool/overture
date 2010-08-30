@@ -1369,7 +1369,7 @@ monitor.done();
 	
 	private void gotoTraceDefinition(TraceTreeNode tn)
 	{
-		if(tn == null)
+		if(tn == null || tn.getTraceDefinition()==null)
 		{
 			return ;
 		}
@@ -1377,29 +1377,11 @@ monitor.done();
 		String projectName = tn.getParent().getParent().getName();
 		IProject iproject = iworkspaceRoot.getProject(projectName);
 
-		ITracesHelper helper = traceHelpers.get(projectName);
+		IVdmProject vdmProject = (IVdmProject) iproject.getAdapter(IVdmProject.class);
+		
+		IFile file = vdmProject.findIFile(tn.getTraceDefinition().location.file);
 
-		try
-		{
-			IVdmProject vdmProject = (IVdmProject) iproject.getAdapter(IVdmProject.class);
-			
-			IFile file = vdmProject.findIFile(helper.getFile(tn.getParent().getName()));
-
-			EditorUtility.gotoLocation(file, tn.getTraceDefinition().location, tn.getName());
-		} catch (IOException e)
-		{
-			ConsolePrint("File not found: " + e.getMessage());
-			e.printStackTrace();
-		} catch (ClassNotFoundException e)
-		{
-			ConsolePrint(e.toString());
-			e.printStackTrace();
-		} catch (TraceHelperNotInitializedException e)
-		{
-			ConsolePrint("Trace helper not initialized for project: "
-					+ e.getProjectName());
-			e.printStackTrace();
-		}
+		EditorUtility.gotoLocation(file, tn.getTraceDefinition().location, tn.getName());
 	}
 
 	private MessageConsole findConsole(String name)

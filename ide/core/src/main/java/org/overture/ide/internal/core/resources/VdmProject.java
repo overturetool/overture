@@ -109,18 +109,11 @@ public class VdmProject implements IVdmProject
 			{
 				IVdmProject vdmProject = new VdmProject(project);
 				return ResourceManager.getInstance().addProject(vdmProject);
-			} catch (CoreException e)
+			} catch (Exception e)
 			{
 				if (VdmCore.DEBUG)
 				{
-					e.printStackTrace();
-				}
-				return null;
-			} catch (NotAllowedException e)
-			{
-				if (VdmCore.DEBUG)
-				{
-					e.printStackTrace();
+					VdmCore.log("VdmModelManager createProject", e);
 				}
 				return null;
 			}
@@ -411,7 +404,7 @@ public class VdmProject implements IVdmProject
 			// addToProjectStructure(project, paths);
 		} catch (CoreException e)
 		{
-			e.printStackTrace();
+			VdmCore.log("VdmProject createProject", e);
 			project = null;
 		}
 
@@ -450,7 +443,7 @@ public class VdmProject implements IVdmProject
 				}
 			} catch (CoreException e)
 			{
-				e.printStackTrace();
+				VdmCore.log("VdmModelManager createBaseProject", e);
 			}
 		}
 
@@ -490,9 +483,9 @@ public class VdmProject implements IVdmProject
 			ISafeRunnable runnable = new ISafeRunnable()
 			{
 
-				public void handleException(Throwable exception)
+				public void handleException(Throwable e)
 				{
-					exception.printStackTrace();
+					VdmCore.log("VdmProject typeCheck ISafeRunnable", e);
 				}
 
 				@SuppressWarnings("deprecation")
@@ -573,8 +566,7 @@ public class VdmProject implements IVdmProject
 		{
 			if (VdmCore.DEBUG)
 			{
-
-				e.printStackTrace();
+				VdmCore.log("VdmProject clearProblemMarkers", e);
 			}
 		}
 
@@ -706,10 +698,10 @@ public class VdmProject implements IVdmProject
 					ifile.createLink(absolutePath, IResource.REPLACE, null);
 				} catch (CoreException e)
 				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					VdmCore.log("VdmProject linkFileToProject", e);
+					return Status.CANCEL_STATUS;
 				}
-				// TODO Auto-generated method stub
+				
 				return Status.OK_STATUS;
 			}
 			
@@ -757,6 +749,7 @@ public class VdmProject implements IVdmProject
 		return this.project.getName();
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter)
 	{
 		return Platform.getAdapterManager().getAdapter(this, adapter);
