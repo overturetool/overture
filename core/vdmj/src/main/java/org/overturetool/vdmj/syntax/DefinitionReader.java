@@ -75,6 +75,7 @@ import org.overturetool.vdmj.statements.ExternalClause;
 import org.overturetool.vdmj.statements.SpecificationStatement;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.traces.TraceApplyExpression;
+import org.overturetool.vdmj.traces.TraceConcurrentExpression;
 import org.overturetool.vdmj.traces.TraceLetDefBinding;
 import org.overturetool.vdmj.traces.TraceLetBeStBinding;
 import org.overturetool.vdmj.traces.TraceBracketedExpression;
@@ -1585,10 +1586,10 @@ public class DefinitionReader extends SyntaxReader
 
 			case PIPEPIPE:
 				nextToken();
-				checkFor(Token.BRA, 9999, "Expecting '|| (...)'");
+				checkFor(Token.BRA, 2292, "Expecting '|| (...)'");
 				List<TraceDefinition> defs = new Vector<TraceDefinition>();
 				defs.add(readTraceDefinition());
-				checkFor(Token.COMMA, 9999, "Expecting '|| (a, b {,...})'");
+				checkFor(Token.COMMA, 2293, "Expecting '|| (a, b {,...})'");
 				defs.add(readTraceDefinition());
 
 				while (lastToken().is(Token.COMMA))
@@ -1597,9 +1598,8 @@ public class DefinitionReader extends SyntaxReader
 					defs.add(readTraceDefinition());
 				}
 
-				checkFor(Token.KET, 9999, "Expecting ')' ending || clause");
-				throwMessage(9999, "Concurrent trace definitions not supported yet");
-				// return new TraceConcurrentExpression(token.location, defs);
+				checkFor(Token.KET, 2294, "Expecting ')' ending || clause");
+				return new TraceConcurrentExpression(token.location, defs);
 
 			default:
 				throwMessage(2267, "Expecting 'obj.op(args)' or 'op(args)'", token);

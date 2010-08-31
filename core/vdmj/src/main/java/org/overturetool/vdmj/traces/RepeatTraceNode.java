@@ -82,7 +82,6 @@ public class RepeatTraceNode extends TraceNode
 	   			for (int i=0; i<r; i++)
     			{
     				seq.addAll(rtests.get(select[i]));
-    				// seq.addHashes(rtests.get(select[i]).getHashes());
     			}
 
     			tests.add(seq);

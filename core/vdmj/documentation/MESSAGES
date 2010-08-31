@@ -378,6 +378,10 @@ as the expected and actual values.
 2280, "System class cannot be a subclass"
 2290, "System class can only define instance variables and a constructor"
 2291, "'reverse' not available in VDM classic"
+2292, "Expecting '|| (...)'"
+2293, "Expecting '|| (a, b {,...})'"
+2294, "Expecting ')' ending || clause"
+
 
 3000, "Expression does not match declared type"
 3001, "Class inherits thread definition from multiple supertypes"
