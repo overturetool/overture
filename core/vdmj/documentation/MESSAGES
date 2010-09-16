@@ -827,6 +827,7 @@ as the expected and actual values.
 4143, "No such test number: <n>"
 4144, "State init expression cannot be executed"
 4145, "Time: <n> is not a nat1"
+4146, "Measure failure: f(args), measure <name>, current <value>, previous <value>"
 
 5000, "Definition <name> not used"
 5001, "Instance variable is not initialized: <name>"

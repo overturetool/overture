@@ -88,6 +88,7 @@ public class ImplicitFunctionDefinition extends Definition
 	public boolean recursive = false;
 	public boolean isUndefined = false;
 	public int measureLexical = 0;
+	public Definition measuredef;
 	private Type actualResult;
 
 	public ImplicitFunctionDefinition(LexNameToken name,
@@ -318,23 +319,23 @@ public class ImplicitFunctionDefinition extends Definition
 		{
 			LexNameToken mname = new LexNameToken(name.module, measure);
 			if (base.isVDMPP()) mname.setTypeQualifier(type.parameters);
-			Definition mdef = base.findName(mname, scope);
+			measuredef = base.findName(mname, scope);
 
 			if (body == null)
 			{
 				measure.report(3273, "Measure not allowed for an implicit function");
 			}
-			else if (mdef == null)
+			else if (measuredef == null)
 			{
 				measure.report(3270, "Measure " + mname + " is not in scope");
 			}
-			else if (!(mdef instanceof ExplicitFunctionDefinition))
+			else if (!(measuredef instanceof ExplicitFunctionDefinition))
 			{
 				measure.report(3271, "Measure " + mname + " is not an explicit function");
 			}
 			else
 			{
-				FunctionType mtype = (FunctionType)mdef.getType();
+				FunctionType mtype = (FunctionType)measuredef.getType();
 
 				if (!TypeComparator.compatible(mtype.parameters, type.parameters))
 				{

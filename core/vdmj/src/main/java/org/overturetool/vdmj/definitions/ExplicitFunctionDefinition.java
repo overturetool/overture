@@ -92,6 +92,7 @@ public class ExplicitFunctionDefinition extends Definition
 	public boolean isUndefined = false;
 	public boolean recursive = false;
 	public int measureLexical = 0;
+	public Definition measuredef;
 
 	public ExplicitFunctionDefinition(LexNameToken name, NameScope scope,
 		LexNameList typeParams, FunctionType type,
@@ -318,19 +319,19 @@ public class ExplicitFunctionDefinition extends Definition
 		{
 			LexNameToken mname = new LexNameToken(name.module, measure);
 			if (base.isVDMPP()) mname.setTypeQualifier(type.parameters);
-			Definition mdef = base.findName(mname, scope);
+			measuredef = base.findName(mname, scope);
 
-			if (mdef == null)
+			if (measuredef == null)
 			{
 				measure.report(3270, "Measure " + mname + " is not in scope");
 			}
-			else if (!(mdef instanceof ExplicitFunctionDefinition))
+			else if (!(measuredef instanceof ExplicitFunctionDefinition))
 			{
 				measure.report(3271, "Measure " + mname + " is not an explicit function");
 			}
 			else
 			{
-				FunctionType mtype = (FunctionType)mdef.getType();
+				FunctionType mtype = (FunctionType)measuredef.getType();
 
 				if (!TypeComparator.compatible(mtype.parameters, type.parameters))
 				{

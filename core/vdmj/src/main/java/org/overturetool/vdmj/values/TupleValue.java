@@ -80,6 +80,37 @@ public class TupleValue extends Value
 	}
 
 	@Override
+	public int compareTo(Value other)
+	{
+		if (other instanceof TupleValue)
+		{
+			TupleValue ot = (TupleValue)other;
+			int diff = values.size() - ot.values.size();
+
+			if (diff != 0)
+			{
+				return diff;
+			}
+			else
+			{
+				for (int i=0; i<values.size();i++)
+				{
+					int c = values.get(i).compareTo(ot.values.get(i));
+
+					if (c != 0)
+					{
+						return c;
+					}
+				}
+
+				return 0;
+			}
+		}
+
+		return super.compareTo(other);
+	}
+
+	@Override
 	public String toString()
 	{
 		return "mk_(" + Utils.listToString(values) + ")";

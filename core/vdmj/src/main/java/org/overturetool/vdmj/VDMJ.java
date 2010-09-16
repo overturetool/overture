@@ -198,6 +198,10 @@ abstract public class VDMJ
     			Settings.invchecks = false;
     			Settings.dynamictypechecks = false;
     		}
+    		else if (arg.equals("-measures"))
+    		{
+    			Settings.measureChecks = false;
+    		}
     		else if (arg.equals("-log"))
     		{
     			if (i.hasNext())
@@ -379,6 +383,7 @@ abstract public class VDMJ
 		System.err.println("-post: disable postcondition checks");
 		System.err.println("-inv: disable type/state invariant checks");
 		System.err.println("-dtc: disable all dynamic type checking");
+		System.err.println("-measures: disable recursive measure checking");
 		System.err.println("-log: enable real-time event logging");
 		System.err.println("-remote <class>: enable remote control");
 

@@ -23,8 +23,11 @@
 
 package org.overturetool.vdmj.values;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 import java.util.Vector;
 
 import org.overturetool.vdmj.Settings;
@@ -66,6 +69,10 @@ public class FunctionValue extends Value
 	// Causes parameter assignments to check their invariants (if any).
 	// This is set to false for inv_() functions, which cannot check them.
 	private final boolean checkInvariants;
+
+	// Measure function value, if any
+	private FunctionValue measure = null;
+	private Map<Long, Stack<Value>> measureValues = null;
 
 	public ObjectValue self = null;
 	public boolean isStatic = false;
@@ -120,6 +127,14 @@ public class FunctionValue extends Value
 		this.freeVariables = freeVariables;
 		this.checkInvariants = !def.isTypeInvariant;
 		this.classdef = def.classDefinition;
+
+		if (Settings.measureChecks && def.measuredef != null)
+		{
+			measureValues = new HashMap<Long, Stack<Value>>();
+
+			measure = new FunctionValue(
+				(ExplicitFunctionDefinition)def.measuredef, null, null, freeVariables);
+		}
 	}
 
 	public FunctionValue(ImplicitFunctionDefinition def,
@@ -147,6 +162,14 @@ public class FunctionValue extends Value
 		this.freeVariables = freeVariables;
 		this.checkInvariants = true;
 		this.classdef = def.classDefinition;
+
+		if (Settings.measureChecks && def.measuredef != null)
+		{
+			measureValues = new HashMap<Long, Stack<Value>>();
+
+			measure = new FunctionValue(
+				(ExplicitFunctionDefinition)def.measuredef, null, null, freeVariables);
+		}
 	}
 
 	public FunctionValue(ImplicitFunctionDefinition fdef,
@@ -330,6 +353,32 @@ public class FunctionValue extends Value
 				}
 			}
 
+			if (measure != null)
+			{
+				Value mv = measure.eval(measure.location, argValues, evalContext);
+				Stack<Value> stack = measureValues.get(Thread.currentThread().getId());
+
+				if (stack == null)
+				{
+					stack = new Stack<Value>();
+					measureValues.put(Thread.currentThread().getId(), stack);
+				}
+
+				if (!stack.isEmpty())
+				{
+					Value old = stack.peek();		// Previous value
+
+    				if (old != null && mv.compareTo(old) >= 0)		// Not decreasing order
+    				{
+    					abort(4146, "Measure failure: " +
+    						name + Utils.listToString("(", argValues, ", ", ")") + ", measure " +
+    						measure.name + ", current " + mv + ", previous " + old, evalContext);
+    				}
+				}
+
+				stack.push(mv);
+			}
+
     		Value rv = body.eval(evalContext).convertValueTo(type.result, evalContext);
 
 			if (postcondition != null && Settings.postchecks)
@@ -345,6 +394,11 @@ public class FunctionValue extends Value
 					abort(4056,
 						"Postcondition failure: " + postcondition.name, evalContext);
     			}
+			}
+
+			if (measure != null)
+			{
+				measureValues.get(Thread.currentThread().getId()).pop();
 			}
 
 			return rv;
