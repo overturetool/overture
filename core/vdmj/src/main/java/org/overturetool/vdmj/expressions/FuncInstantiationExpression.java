@@ -53,8 +53,8 @@ public class FuncInstantiationExpression extends Expression
 	public TypeList actualTypes;
 	public FunctionType type;
 
-	private ExplicitFunctionDefinition expdef = null;
-	private ImplicitFunctionDefinition impdef = null;
+	public ExplicitFunctionDefinition expdef = null;
+	public ImplicitFunctionDefinition impdef = null;
 
 	public FuncInstantiationExpression(Expression function, TypeList types)
 	{

@@ -29,6 +29,7 @@ import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.PerSyncDefinition;
+import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.pog.FunctionApplyObligation;
 import org.overturetool.vdmj.pog.MapApplyObligation;
 import org.overturetool.vdmj.pog.POContextStack;
@@ -111,33 +112,55 @@ public class ApplyExpression extends Expression
 			(func instanceof ExplicitFunctionDefinition ||
 			 func instanceof ImplicitFunctionDefinition ||
 			 func instanceof PerSyncDefinition);
-
-		if (inFunction && root instanceof VariableExpression)
+		
+		if (inFunction)
 		{
-			VariableExpression var = (VariableExpression)root;
-
-			if (func instanceof ExplicitFunctionDefinition)
+			LexNameToken called = null;
+			
+			if (root instanceof VariableExpression)
+    		{
+    			VariableExpression var = (VariableExpression)root;
+    			called = var.name;
+    		}
+			else if (root instanceof FuncInstantiationExpression)
 			{
-				ExplicitFunctionDefinition def = (ExplicitFunctionDefinition)func;
-
-    			if (var.name.equals(def.name))
-    			{
-    				recursive = def;
-    				def.recursive = true;
-    			}
+				FuncInstantiationExpression fie = (FuncInstantiationExpression)root;
+				
+				if (fie.expdef != null)
+				{
+					called = fie.expdef.name;
+				}
+				else if (fie.impdef != null)
+				{
+					called = fie.impdef.name;
+				}
 			}
-			else if (func instanceof ImplicitFunctionDefinition)
+			
+			if (called != null)
 			{
-				ImplicitFunctionDefinition def = (ImplicitFunctionDefinition)func;
-
-    			if (var.name.equals(def.name))
+    			if (func instanceof ExplicitFunctionDefinition)
     			{
-    				recursive = def;
-    				def.recursive = true;
+    				ExplicitFunctionDefinition def = (ExplicitFunctionDefinition)func;
+    
+        			if (called.equals(def.name))
+        			{
+        				recursive = def;
+        				def.recursive = true;
+        			}
+    			}
+    			else if (func instanceof ImplicitFunctionDefinition)
+    			{
+    				ImplicitFunctionDefinition def = (ImplicitFunctionDefinition)func;
+    
+        			if (called.equals(def.name))
+        			{
+        				recursive = def;
+        				def.recursive = true;
+        			}
     			}
 			}
 		}
-
+		
 		boolean isSimple = !type.isUnion();
 		TypeSet results = new TypeSet();
 

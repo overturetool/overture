@@ -431,10 +431,12 @@ public class FunctionValue extends Value
 					evalContext.putAll(freeVariables);
 				}
 
-    			Value rv = new FunctionValue(location, "curried",
+    			FunctionValue rv = new FunctionValue(location, "curried",
     				(FunctionType)type.result,
     				paramPatternList.subList(1, paramPatternList.size()),
     				body, newpre, newpost, evalContext, false);
+    			
+    			rv.setSelf(self);
 
         		return rv;
 			}
