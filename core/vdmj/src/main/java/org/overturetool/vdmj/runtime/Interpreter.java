@@ -490,12 +490,18 @@ abstract public class Interpreter
 		return typeCheck(expr, getGlobalEnvironment());
 	}
 
+	/**
+	 * @param classname Unused.
+	 */
 	public ClassDefinition findClass(String classname)
 	{
 		assert false : "findClass cannot be called for modules";
 		return null;
 	}
 
+	/**
+	 * @param module Unused.
+	 */
 	public Module findModule(String module)
 	{
 		assert false : "findModule cannot be called for classes";
@@ -546,15 +552,15 @@ abstract public class Interpreter
 		{
 			throw new Exception("Trace " + lexname + " not found");
 		}
-		
+
 		TestSequence tests = null;
-		
+
 		Context ctxt = null;
-		
+
 		ctxt = getInitialTraceContext(tracedef, debug);
-		
+
 		tests = tracedef.getTests(ctxt, subset, type, seed);
-		
+
 		boolean wasDBGP = Settings.usingDBGP;
 		boolean wasCMD = Settings.usingCmdLine;
 
@@ -614,7 +620,7 @@ abstract public class Interpreter
 
 	abstract public List<Object> runOneTrace(
 			NamedTraceDefinition tracedef, CallSequence test, boolean debug);
-	
-		
+
+
 	abstract public Context getInitialTraceContext(NamedTraceDefinition tracedef, boolean debug) throws ValueException;
 }

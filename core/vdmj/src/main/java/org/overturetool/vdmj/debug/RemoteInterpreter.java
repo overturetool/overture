@@ -28,11 +28,13 @@ public class RemoteInterpreter
 	public Value valueExecute(String line) throws Exception
 	{
 		boolean print = false;
+
 		if(line.startsWith("p ")||line.startsWith("print ")||line.startsWith("debug "))
 		{
 			line = line.substring(line.indexOf(' '));
 			print = true;
 		}
+
 		if (interpreter instanceof ClassInterpreter
 				&& line.startsWith("create"))
 		{
@@ -49,7 +51,8 @@ public class RemoteInterpreter
 			}
 			return new VoidValue();
 
-		} else
+		}
+		else
 		{
 
 			Value res = interpreter.execute(line, dbgp);

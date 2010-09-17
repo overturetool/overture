@@ -40,9 +40,9 @@ public class CommandLine
 {
 	protected Dialect dialect;
 	private String startLine = null;
-	
+
 	protected static Queue<String> messages = new ConcurrentLinkedQueue<String>();
-	
+
 	protected static Queue<String> scriptMessages = new ConcurrentLinkedQueue<String>();
 
 	public CommandLine(Dialect dialect, String startLine)
@@ -120,7 +120,7 @@ public class CommandLine
 		return files;
 	}
 
-	protected String getPrompt() throws IOException
+	protected String getPrompt()
 	{
    		return "> ";
 	}
@@ -134,7 +134,7 @@ public class CommandLine
 			startLine = null;
 			return line;
 		}
-		
+
 		StringBuilder lineTyped = new StringBuilder();
 		InputStreamReader console = new InputStreamReader(System.in);
 		boolean prompted = false;
@@ -168,7 +168,7 @@ public class CommandLine
 				print(lineTyped.toString());
 				prompted = true;
 			}
-			
+
 			if(!scriptMessages.isEmpty() && messages.isEmpty() && prompted)
 			{
 				if(acceptScriptCommand(scriptMessages.peek()))
@@ -185,7 +185,7 @@ public class CommandLine
 			while (console.ready())
 			{
 				int c = console.read();
-				
+
 				if (c == '\r')
 				{
 					continue;
@@ -196,13 +196,13 @@ public class CommandLine
 				}
 				else
 				{
-					lineTyped.append((char)c);					
+					lineTyped.append((char)c);
 				}
 			}
 		}
 	}
 
-	protected boolean acceptScriptCommand(String peek)
+	protected boolean acceptScriptCommand(@SuppressWarnings("unused") String peek)
 	{
 		return true;
 	}
@@ -335,7 +335,7 @@ public class CommandLine
 			println("");
 			println("script vdmrt script.vdmjcs log.logrt .");
 			println("");
-			
+
 		}
 		else
 		{
@@ -351,7 +351,7 @@ public class CommandLine
 			(ConnectionThread.setTrace() ? "ON" : "OFF"));
 		return true;
 	}
-	
+
 	protected boolean processDialect(String line)
 	{
 		List<String> arguments = Arrays.asList(line.split("\\s+"));
@@ -395,7 +395,7 @@ public class CommandLine
 
 		return true;
 	}
-	
+
 	protected boolean processExecute(String line)
 	{
 		try
@@ -444,13 +444,13 @@ public class CommandLine
 
 		return true;
 	}
-	
+
 	protected boolean processScript(String line)
 	{
 		List<String> arguments = Arrays.asList(line.split("\\s+"));
-		
+
 		String dialectArg = arguments.get(1);
-		
+
 		dialect = Dialect.lookup("-"+dialectArg);
 		if(dialect== null)
 		{
@@ -459,7 +459,7 @@ public class CommandLine
 		}
 		println("Dialect is "+dialect);
 		File script = new File(arguments.get(2));
-		
+
 		File logFile = new File(arguments.get(3));
 		String files = "script ";//will be skipped by getFiles
 		for (int i = 4; i < arguments.size(); i++)
@@ -467,9 +467,9 @@ public class CommandLine
 			files +=arguments.get(i)+" ";
 		}
 		files = files.trim();
-		
+
 		String expression = "undefined";
-		
+
 		try
 		{
 			if(script.exists() && script.isFile())
@@ -500,10 +500,10 @@ public class CommandLine
 						e.printStackTrace();
 					}
 				}
-				
+
 				scriptMessages.add("quit");//Exit debug
 				scriptMessages.add("quit");//Exit this
-							
+
 				new ProcessCommandLine(dialect, getFiles(files), expression,"vdm10",logFile).run();
 			}else
 			{
@@ -525,12 +525,12 @@ public class CommandLine
 	private List<String> decodeScriptLine(String text)
 	{
 		List<String> commands = new Vector<String>();
-		
+
 		if(text.startsWith("#")|| text.startsWith("--")|| text.startsWith("//"))
 		{
 			return commands;
 		}
-		
+
 		if(text.contains(" "))
 		{
 			String repeatText = text.substring(0,text.indexOf(' '));
@@ -548,12 +548,12 @@ public class CommandLine
 				// no repeat
 				commands.add(text);
 			}
-			
+
 		}else
 		{
 			commands.add(text);
 		}
-		
+
 		return commands;
 	}
 }

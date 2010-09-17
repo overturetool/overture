@@ -580,17 +580,17 @@ public abstract class Definition implements Serializable, IAstNode
 	{
 		throw new ContextException(e.number, e.getMessage(), e.location, ctxt);
 	}
-	
-	
+
 	public String getName()
 	{
-		if(name!=null)
+		if (name != null)
 		{
 			return name.name;
 		}
+
 		return null;
 	}
-	
+
 	public LexLocation getLocation()
 	{
 		return location;

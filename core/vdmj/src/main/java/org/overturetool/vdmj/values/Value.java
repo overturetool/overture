@@ -99,7 +99,7 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 	 *
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
-	
+
 	public int compareTo(Value other)
 	{
 		return toString().compareTo(other.toString());
@@ -232,14 +232,13 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 	 * referenced with another. ReferenceValues like UpdatableValue delegate all
 	 * the other Value method to the contained object.
 	 *
+	 * @param location Unused.
 	 * @param newval The new value to set
 	 * @param ctxt The context used
 	 * @throws ValueException
 	 */
 
-	public void set(
-		LexLocation location, Value newval, Context ctxt)
-		throws ValueException
+	public void set(LexLocation location, Value newval, Context ctxt) throws ValueException
 	{
 		abort(4088, "Set not permitted for " + kind(), ctxt);
 	}

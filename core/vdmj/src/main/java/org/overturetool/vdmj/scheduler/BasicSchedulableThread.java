@@ -73,10 +73,12 @@ public class BasicSchedulableThread implements Serializable
 				}
 			}
 		}
+
 		if (initialThread != null && initialThread.getThread() == t)
 		{
 			return initialThread.getName();
 		}
+
 		return null;
 	}
 
@@ -92,10 +94,12 @@ public class BasicSchedulableThread implements Serializable
 				}
 			}
 		}
+
 		if (initialThread != null && initialThread.getThread() == t)
 		{
 			return initialThread;
 		}
+
 		return null;
 	}
 
@@ -113,7 +117,8 @@ public class BasicSchedulableThread implements Serializable
 					if (Settings.usingDBGP)
 					{
 						ctxt.threadState.dbgp.stopped(ctxt, location);
-					} else
+					}
+					else
 					{
 						DebuggerReader.stopped(ctxt, location);
 					}

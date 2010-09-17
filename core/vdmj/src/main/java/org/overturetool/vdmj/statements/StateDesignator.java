@@ -58,16 +58,20 @@ public abstract class StateDesignator implements Serializable,IAstNode
 
 	abstract public Type typeCheck(Environment env);
 
-	public Definition targetDefinition(
-		Environment env)
+	/**
+	 * @param env Unused.
+	 */
+	public Definition targetDefinition(Environment env)
 	{
 		return null;
 	}
 
 	abstract public Value eval(Context ctxt);
 
-	public ProofObligationList getProofObligations(
-		POContextStack ctxt)
+	/**
+	 * @param ctxt Unused.
+	 */
+	public ProofObligationList getProofObligations(POContextStack ctxt)
 	{
 		return new ProofObligationList();
 	}
@@ -108,12 +112,12 @@ public abstract class StateDesignator implements Serializable,IAstNode
 	{
 		TypeChecker.detail2(tag1, obj1, tag2, obj2);
 	}
-	
+
 	public String getName()
 	{
 		return location.module;
 	}
-	
+
 	public LexLocation getLocation()
 	{
 		return location;

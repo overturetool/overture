@@ -460,7 +460,7 @@ abstract public class CommandReader
 		return true;
 	}
 
-	protected boolean doQuit(String line)
+	protected boolean doQuit(@SuppressWarnings("unused") String line)
 	{
 		if (RTLogger.getLogSize() > 0)
 		{
@@ -551,17 +551,23 @@ abstract public class CommandReader
 		return notAvailable(line);
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	protected boolean doCreate(String line) throws Exception
 	{
 		return notAvailable(line);
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	protected boolean doDefault(String line) throws Exception
 	{
 		return notAvailable(line);
 	}
 
-	protected boolean doInit(String line)
+	protected boolean doInit(@SuppressWarnings("unused") String line)
 	{
 		LexLocation.clearLocations();
 		println("Cleared all coverage information");
@@ -570,7 +576,7 @@ abstract public class CommandReader
 		return true;
 	}
 
-	protected boolean doEnv(String line)
+	protected boolean doEnv(@SuppressWarnings("unused") String line)
 	{
 		print(interpreter.getInitialContext());
 		return true;
@@ -607,7 +613,7 @@ abstract public class CommandReader
 		return true;
 	}
 
-	protected boolean doList(String line)
+	protected boolean doList(@SuppressWarnings("unused") String line)
 	{
 		Map<Integer, Breakpoint> map = interpreter.getBreakpoints();
 
@@ -1030,7 +1036,7 @@ abstract public class CommandReader
 		return assertErrors == 0;
 	}
 
-	protected void doHelp(String line)
+	protected void doHelp(@SuppressWarnings("unused") String line)
 	{
 		println("print <expression> - evaluate expression");
 		println("runtrace <name> [test number] - run CT trace(s)");
@@ -1059,7 +1065,7 @@ abstract public class CommandReader
 	 * returns true.
 	 */
 
-	protected boolean notAvailable(String line)
+	protected boolean notAvailable(@SuppressWarnings("unused") String line)
 	{
 		println("Command not available in this context");
 		return true;

@@ -126,6 +126,9 @@ public abstract class Statement implements Serializable, IAstNode
 		return (location.startLine == lineno) ? this : null;
 	}
 
+	/**
+	 * @param lineno Unused.
+	 */
 	public Expression findExpression(int lineno)
 	{
 		return null;
@@ -187,12 +190,12 @@ public abstract class Statement implements Serializable, IAstNode
 	{
 		TypeChecker.detail2(tag1, obj1, tag2, obj2);
 	}
-	
+
 	public String getName()
 	{
 		return location.module;
 	}
-	
+
 	public LexLocation getLocation()
 	{
 		return location;

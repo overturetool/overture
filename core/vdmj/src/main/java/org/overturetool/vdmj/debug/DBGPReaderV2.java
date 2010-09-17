@@ -101,7 +101,7 @@ import org.overturetool.vdmj.values.Value;
  * <li> In-depth variable inspection.
  * <li> Overture command for writing covtbl files after execution.
  * <li> Overture response. Used to check status after issuing an xcmd Overture
- * </ul> 
+ * </ul>
  * @author kela
  *
  */
@@ -145,7 +145,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		Class<RemoteControl> remoteClass = null;
 
 		Properties.init();		// Read properties file, if any
-		
+
 		Properties.parser_tabstop = 1;
 
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
@@ -458,8 +458,8 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 					RemoteControl remote =
 						(remoteClass == null) ? null : remoteClass.newInstance();
 
-					
-					
+
+
 					new DBGPReaderV2(host, port, ideKey, i, expression, null).startup(remote);
 
 					if (coverage != null)
@@ -506,6 +506,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 	/**
 	 * Overrides to use DBGPReaderV2 debug reader
 	 */
+	@Override
 	public DBGPReaderV2 newThread(CPUValue _cpu)
 	{
 		DBGPReaderV2 r = new DBGPReaderV2(host, port, ideKey, interpreter, null, _cpu);
@@ -513,7 +514,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		r.transaction = "?";
 		return r;
 	}
-	
+
 	@Override
 	protected boolean process(String line)
 	{
@@ -654,10 +655,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		return carryOn;
 	}
 
-	
+
 	private void propertySet(DBGPCommand c) throws DBGPException, IOException
 	{
-		
+
 		checkArgs(c, 4, false);
 		DBGPOption option = c.getOption(DBGPOptionType.K);
 
@@ -665,10 +666,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		{
 			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
 		}
-		
+
 		boolean success = false;
 		Integer key = Integer.parseInt(option.value);
-		
+
 		Value vOriginal = null;
 		UpdatableValue uv=null;
 		try
@@ -679,14 +680,14 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			}
 			Value v = debugValueMap.get(key);
 			vOriginal = v.deepCopy();// inexpensive only support of simple types
-			
+
 			if(v instanceof UpdatableValue)
 			{
 				uv = (UpdatableValue) v;
-			
+
 				//TODO BUG: Here is a problem if the evaluate is suspended in a property_set by the scheduler
 				Value newval = interpreter.evaluate(c.data, interpreter.initialContext);
-				
+
 				if(newval != null && canAssignValue( newval.kind(),uv.kind()))
 				{
 					uv.set(breakpoint.location, newval, breakContext);
@@ -708,20 +709,20 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 				throw new DBGPException(DBGPErrorCode.INTERNAL_ERROR, ex.toString());
 			}
 		}
-		
+
 		catch (Exception e)
 		{
 			throw new DBGPException(DBGPErrorCode.INTERNAL_ERROR, e.toString());
 		}
-		
+
 
 		StringBuilder hdr = new StringBuilder();
 
 		hdr.append("success=\""+(success?"1":"0")+"\"");
 
 		response(hdr, null);
-		
-		
+
+
 	}
 
 	private boolean canAssignValue(String newKind, String source) {
@@ -730,12 +731,12 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		{
 			return true;
 		}
-		
+
 		final String TYPE_REAL="real";
 		final String TYPE_NAT="nat";
 		final String TYPE_INT="int";
-		
-		
+
+
 		if(newKind.contains(TYPE_NAT) &&source.equals(TYPE_NAT))
 		{
 			return true;
@@ -744,7 +745,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		{
 			return true;
 		}
-		
+
 		if(newKind.contains(TYPE_NAT) &&source.equals(TYPE_INT))
 		{
 			return true;
@@ -770,7 +771,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		sb.append("<xcmd_overture_response command=\"");
 		sb.append(command);
 		sb.append("\"");
-		
+
 		sb.append(" overtureCmd=\"");
 		sb.append(overtureCmd);
 		sb.append("\"");
@@ -798,7 +799,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 
 		write(sb);
 	}
-	
+
 	@Override
 	protected void statusResponse(DBGPStatus s, DBGPReason reason)
 	throws IOException
@@ -807,23 +808,23 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		{
 			stopped = true;
 		}
-		
+
 		StringBuilder sb = new StringBuilder();
-	
+
 		status = s;
 		statusReason = reason;
-	
+
 		sb.append("status=\"");
 		sb.append(status);
 		sb.append("\"");
 		sb.append(" reason=\"");
 		sb.append(statusReason);
 		sb.append("\"");
-		
+
 		StringBuilder body = new StringBuilder();
 		body.append("<internal ");
-		
-		
+
+
 		ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
 
 		if (th !=null)
@@ -831,23 +832,23 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			body.append("threadId=\"");
 			body.append(th.getId());
 			body.append("\" ");
-			
+
 			body.append("threadName=\"");
 			body.append(th.getName());
 			body.append("\" ");
-			
+
 			body.append("threadState=\"");
 			body.append(th.getRunState().toString());
 			body.append("\" ");
-		
+
 		}
-		
+
 		body.append("/>");
-	
+
 		response(sb, body);
 	}
 
-	
+
 	/**
 	 * Overrides super class by filtering all entries against isDebugVisible
 	 */
@@ -876,31 +877,31 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			name.name, name.getExplicit(true).toString(),
 			name.module,value);
 	}
-	
+
 	private StringBuilder propertyResponse(
 			String name, String fullname, String clazz, Value value)
 			throws UnsupportedEncodingException
 	    {
 		return propertyResponse(name,fullname,clazz,value,3,0);
 	    }
-	
-	
+
+
 	private StringBuilder propertyResponse(
 		String name, String fullname, String clazz, Value value,Integer depth,Integer currentDepth)
 		throws UnsupportedEncodingException
     {
     	StringBuilder sb = new StringBuilder();
     	currentDepth++;
-    	
+
     	Integer numChildren = getChildCount(value);
-    	
+
     	Integer page = 0;
-    	Integer pageSize = Integer.parseInt(features.getProperty(DBGPFeatures.MAX_CHILDREN));;
-    	
+    	Integer pageSize = Integer.parseInt(features.getProperty(DBGPFeatures.MAX_CHILDREN));
+
     	Integer key=null;
     	String data = null;
     	StringBuilder nestedChildren = null;
-    	
+
     	//store property for retrieval of additional pages or value editing
     	if(numChildren>pageSize || depth == currentDepth || value instanceof UpdatableValue|| value instanceof ObjectValue)
     	{
@@ -908,7 +909,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			debugValueMap.put(debugValueKeyCounter, value);
 			key = debugValueKeyCounter;
     	}
-		
+
     	if(numChildren>pageSize || depth == currentDepth)
     	{
     		name +=" (ref="+ debugValueKeyCounter+")";
@@ -921,27 +922,30 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
     	{
     		data = value.toString();
     	}
-    	
+
     	if(currentDepth < depth && numChildren > 0)
     	{
     		//max depth not reached. Fetch children of page size
     		sb.append(propertyResponseChild(value,depth,currentDepth,pageSize,0));
     		nestedChildren = propertyResponseChild(value,depth,currentDepth,pageSize,0);
     	}
-    	
+
     	boolean constant = numChildren>0 || !(value instanceof UpdatableValue);
-    	
+
     	return makeProperty(name, fullname, value.kind(), clazz, page, pageSize, constant, data.length(), key, numChildren, data, nestedChildren);
     }
-	
-	private StringBuilder makeProperty(String name, String fullName, String type, String clazz, 
-									   Integer page, Integer pageSize,boolean constant, 
-									   Integer size,Integer key,Integer numChildren,String data,
+
+	/**
+	 * @param size Unused.
+	 */
+	private StringBuilder makeProperty(String name, String fullName, String type, String clazz,
+									   Integer page, Integer pageSize, boolean constant,
+									   Integer size, Integer key,Integer numChildren,String data,
 									   StringBuilder nestedProperties) throws UnsupportedEncodingException
 	{
 		StringBuilder sb = new StringBuilder();
     	Integer children=0;
-    	
+
     	if(numChildren>0)
     	{
     		children = 1;
@@ -956,12 +960,12 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 	    	sb.append(" page=\"" + page + "\"");
 	    	sb.append(" pagesize=\"" + pageSize + "\"");
     	}
-    	
+
     	sb.append(" constant=\""+(constant?"1":"0")+"\"");
     	sb.append(" children=\""+children+"\"");
-    	
+
     	StringBuffer encodedData = Base64.encode(data.getBytes("UTF-8"));
-    	
+
     	sb.append(" size=\"" + encodedData.length() + "\"");
     	if(key!=null)
     	{
@@ -975,15 +979,15 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
     	sb.append("><![CDATA[");
     	sb.append(encodedData);
     	sb.append("]]>");
-    	
+
     	if(nestedProperties!=null && nestedProperties.length()>0)
     	{
     		sb.append(nestedProperties.toString());
     	}
-    	
+
     	sb.append("</property>");
 
-    	return sb;	
+    	return sb;
 	}
 
 	/**
@@ -1012,7 +1016,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 					isString = false;
 				}
 			}
-			
+
 			if(isString)
 			{
 				return 0; //tread as simple value
@@ -1021,7 +1025,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			{
 				return ((SeqValue)value).values.size();
 			}
-			
+
 		}
 		else if(value instanceof MapValue)
 		{
@@ -1037,7 +1041,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 				}
 			}
 			return count;
-			
+
 		}else if(value instanceof UpdatableValue || value instanceof TransactionValue || value instanceof  ReferenceValue)
 		{
 			return getChildCount(deref(value));
@@ -1050,10 +1054,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			TupleValue tVal = (TupleValue) value;
 			return tVal.values.size();
 		}
-		
+
 		return 0;
 	}
-	
+
 	/**
 	 * Creates a string with property responses for all requested children of the parsed value, intended to be used as the body of the value parsed
 	 * @param value The value which children should be fetched
@@ -1075,7 +1079,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 				Value element = sVal.values.get(i);
 				Integer vdmIndex = i+1;
 				s.append(propertyResponse("Element["+makeDisplayId(sVal.values.size(),vdmIndex)+"]", vdmIndex.toString(), "-", element,depth,currentDepth));
-				
+
 			}
 		}else if(value instanceof SetValue)
 		{
@@ -1085,7 +1089,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 				Value element = sVal.values.get(i);
 				Integer vdmIndex = i+1;
 				s.append(propertyResponse("Element "+makeDisplayId(sVal.values.size(),vdmIndex), vdmIndex.toString(), "-", element,depth,currentDepth));
-				
+
 			}
 		}else if(value instanceof ObjectValue)
 		{
@@ -1103,16 +1107,16 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		}else if(value instanceof UpdatableValue)
 		{
 			return propertyResponseChild(((UpdatableValue)value).deref(), depth, currentDepth, pageSize, page);
-		
+
 		}else if(value instanceof TransactionValue)
 		{
 			return propertyResponseChild(((TransactionValue)value).deref(), depth, currentDepth, pageSize, page);
-		
+
 		}
 		else if(value instanceof ReferenceValue)
 		{
 			return propertyResponseChild(((ReferenceValue)value).deref(), depth, currentDepth, pageSize, page);
-		
+
 		}else if(value instanceof MapValue)
 		{
 			MapValue mVal = (MapValue) value;
@@ -1122,7 +1126,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 				Value dom = keys[i];
 				Value rng = mVal.values.get(dom);
 				Integer vdmIndex = i+1;
-				
+
 				StringBuilder entries = new StringBuilder();
 				entries.append(propertyResponse("dom", vdmIndex.toString(), "-", dom,depth,currentDepth));
 				entries.append(propertyResponse("rng", vdmIndex.toString(), "-", rng,depth,currentDepth));
@@ -1136,7 +1140,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 				FieldValue field = rVal.fieldmap.get(i);
 				Integer vdmIndex = i+1;
 				s.append(propertyResponse(field.name, vdmIndex.toString(), "-", field.value,depth,currentDepth));
-				
+
 			}
 		}else if(value instanceof TupleValue)
 		{
@@ -1146,13 +1150,13 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 				Value v = tVal.values.get(i);
 				Integer vdmIndex = i+1;
 				s.append(propertyResponse("#"+makeDisplayId(tVal.values.size(),vdmIndex), vdmIndex.toString(), "-", v,depth,currentDepth));
-				
+
 			}
 		}
-		
+
 		return s;
 	}
-	
+
 	private String makeDisplayId(Integer size, Integer vdmIndex) {
 		StringBuffer id =new StringBuffer( vdmIndex.toString());
 		while(size.toString().length()>id.length())
@@ -1178,7 +1182,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			return value;
 		}
 	}
-	
+
 	/**
 	 * Determines if a value should be shown in the debug client
 	 * @param v The value to check
@@ -1186,16 +1190,16 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 	 */
 	private boolean isDebugVisible(Value v)
 	{
-		return 
-			v instanceof ReferenceValue || 
-			v instanceof NumericValue || 
-			v instanceof CharacterValue || 
-			v instanceof BooleanValue || 
-			v instanceof SetValue || 
-			v instanceof SeqValue || 
-			v instanceof MapValue || 
-			v instanceof TokenValue || 
-			v instanceof RecordValue|| 
+		return
+			v instanceof ReferenceValue ||
+			v instanceof NumericValue ||
+			v instanceof CharacterValue ||
+			v instanceof BooleanValue ||
+			v instanceof SetValue ||
+			v instanceof SeqValue ||
+			v instanceof MapValue ||
+			v instanceof TokenValue ||
+			v instanceof RecordValue||
 			v instanceof NilValue;
 	}
 
@@ -1308,14 +1312,14 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
     					}
     				}
 
-    				String traceExpression = parts[0];
-    									
-					interpreter.runtrace(traceExpression, testNo, true, reduction, reductionType , seed);
+    				String traceExpression1 = parts[0];
+
+					interpreter.runtrace(traceExpression1, testNo, true, reduction, reductionType , seed);
 					stdout("\n"+expression + " = " + "Trace completed\n");
     			}
-    			
+
     			statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
-    			
+
     		}
     		catch (ContextException e)
     		{
@@ -1331,7 +1335,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
     		return true;
 		}
 	}
-	
+
 
 
 	@Override
@@ -1406,7 +1410,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		return true;
 	}
 
-	
+
 	@Override
 	protected NameValuePairMap getContextValues(DBGPContextType context, int depth)
 	{
@@ -1470,7 +1474,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		return vars;
 	}
 
-	
+
 
 	@Override
 	protected void propertyGet(DBGPCommand c) throws DBGPException, IOException
@@ -1503,14 +1507,14 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			depth = Integer.parseInt(option.value);
 		}
 		//
-		
+
 		option = c.getOption(DBGPOptionType.P);
 		int page = 0;
 		if(option != null)
 		{
 			page = Integer.parseInt(option.value);
 		}
-		
+
 		option = c.getOption(DBGPOptionType.K);
 		Integer key;
 		if (option != null)
@@ -1566,12 +1570,12 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		Value value = debugValueMap.get(key);
 		StringBuilder sb = new StringBuilder();
     	Integer numChildren = getChildCount(value);
-    	    	
-    	Integer pageSize = Integer.parseInt(features.getProperty(DBGPFeatures.MAX_CHILDREN));; 
+
+    	Integer pageSize = Integer.parseInt(features.getProperty(DBGPFeatures.MAX_CHILDREN));
     	String data = null;
     	StringBuilder nestedChildren = null;
     	String name = "(ref="+ key+")";
-    	
+
     	if(numChildren>0)
     	{
     		data = value.kind().toString();
@@ -1582,13 +1586,13 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
     	Integer defaultPageSize = Integer.parseInt(features.getProperty(DBGPFeatures.MAX_CHILDREN));
     	sb.append(propertyResponseChild(value, 1, 0, defaultPageSize,page));
     	nestedChildren = propertyResponseChild(value, 1, 0, defaultPageSize,page);
-    	    	
+
     	boolean constant = numChildren>0 || !(value instanceof UpdatableValue);
-    	
+
     	return makeProperty(name, name, value.kind(), "", page, pageSize, constant, data.length(), key, numChildren, data, nestedChildren);
 	}
 
-	
+
 
 	@Override
 	protected void processOvertureCmd(DBGPCommand c)
@@ -1608,7 +1612,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		else
 		{
 			DBGPXCmdOvertureCommandType xcmd = DBGPXCmdOvertureCommandType.lookup(option.value);
-			
+
 			switch(xcmd)
 			{
 				case INIT:
@@ -1658,9 +1662,9 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 					break;
 				default:
 					throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
-						
+
 			}
-		}	
+		}
 	}
 
 	private void processClasses(DBGPCommand c) throws IOException, DBGPException
@@ -1785,8 +1789,8 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		cdataResponse(out.toString());
 	}
 
-	
-	
+
+
 	private void processWriteCoverage(DBGPCommand c)
 	throws DBGPException, IOException, URISyntaxException
 	{
@@ -1794,10 +1798,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
-	
+
 		File file = new File(new URI(c.data));
-		
-	
+
+
 		if (file == null || file.getName().length()==0)
 		{
 			cdataResponse(file + ": folder not found");
@@ -1826,7 +1830,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			pw.close();
 		}
 	}
-	
+
 	public static String getStackTrace(Throwable t)
     {
         StringWriter sw = new StringWriter();
@@ -1836,5 +1840,5 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
         sw.flush();
         return sw.toString();
     }
-	
+
 }

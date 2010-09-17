@@ -242,6 +242,9 @@ public abstract class Type implements Comparable<Type>, Serializable, IAstNode
 		return false;
 	}
 
+	/**
+	 * @param n Unused.
+	 */
 	public boolean isProduct(int n)
 	{
 		return false;
@@ -376,12 +379,12 @@ public abstract class Type implements Comparable<Type>, Serializable, IAstNode
 	{
 		TypeChecker.detail2(tag1, obj1, tag2, obj2);
 	}
-	
+
 	public String getName()
 	{
 		return location.module;
 	}
-	
+
 	public LexLocation getLocation()
 	{
 		return location;
