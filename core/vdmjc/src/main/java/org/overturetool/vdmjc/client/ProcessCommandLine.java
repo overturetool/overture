@@ -51,7 +51,7 @@ public class ProcessCommandLine extends CommandLine
 		this.loadedFiles = loadedFiles;
 		this.expression = expression;
 	}
-	
+
 	public ProcessCommandLine(
 			Dialect dialect, List<File> loadedFiles, String expression, String release,File logFile)
 		{
@@ -93,23 +93,26 @@ public class ProcessCommandLine extends CommandLine
 		checkThread();
 		return "[" + currentThread + "]> ";
 	}
-	
+
 	@Override
 	protected boolean acceptScriptCommand(String command)
 	{
-		if(command!=null && command.equalsIgnoreCase("quit"))
+		if (command != null && command.equalsIgnoreCase("quit"))
 		{
-			if(currentThread.getStatus()== DBGPStatus.STOPPED)
+			if (currentThread.getStatus()== DBGPStatus.STOPPED)
 			{
 				return true;
-			}else
+			}
+			else
 			{
 				return false;
 			}
-		}else if(currentThread.getStatus()==DBGPStatus.RUNNING)
+		}
+		else if (currentThread.getStatus()==DBGPStatus.RUNNING)
 		{
 			return false;
 		}
+
 		return true;
 	}
 
@@ -903,16 +906,16 @@ public class ProcessCommandLine extends CommandLine
 			{
 				String fileName = m.group(1);
     			File file = null;
-    			
+
     			//lookup loaded file
     			for (File f : loadedFiles)
 				{
-					if(f.getName().equals(fileName))
+					if (f.getName().equals(fileName))
 					{
 						file = f;
 					}
 				}
-    			
+
     			int lnum = Integer.parseInt(m.group(2));
     			String condition = (m.groupCount() == 3) ? m.group(3) : null;
     			currentThread.breakpoint_set(file, lnum, condition);

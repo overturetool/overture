@@ -54,7 +54,8 @@ public class Stoppoint extends Breakpoint
 		try
 		{
 			boolean shouldBreak = parsed == null;
-			if(!shouldBreak)
+
+			if (!shouldBreak)
 			{
 				//Clear thread state while evaluating the expression and set
 				//the state back after. Done to prevent the debugger from stopping
@@ -66,6 +67,7 @@ public class Stoppoint extends Breakpoint
 				shouldBreak = parsed.eval(ctxt).boolValue(ctxt);
 				ctxt.threadState.setBreaks(stepline, rootContext, outctxt);
 			}
+
 			if (shouldBreak)
 			{
 				ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());

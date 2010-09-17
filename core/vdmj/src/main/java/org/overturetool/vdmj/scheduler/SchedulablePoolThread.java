@@ -44,7 +44,7 @@ import org.overturetool.vdmj.values.ObjectValue;
 public abstract class SchedulablePoolThread implements Serializable,Runnable, ISchedulableThread
 {
 	/**
-	 * VdmThreadPoolExecutor used to set the Thread instance which will run a 
+	 * VdmThreadPoolExecutor used to set the Thread instance which will run a
 	 * SchedulablePoolThread just before execution.
 	 * It also reports a reject error if the pool no longer can expand to handle the requested number of threads
 	 * @author kela
@@ -58,20 +58,20 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		{
 			super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,new VdmjRejectedExecutionHandler());
 		}
-		
+
 		@Override
 		protected void beforeExecute(Thread t, Runnable r)
 		{
 			super.beforeExecute(t, r);
-			if(r instanceof SchedulablePoolThread)
+			if (r instanceof SchedulablePoolThread)
 			{
 				SchedulablePoolThread spt = (SchedulablePoolThread) r;
 				spt.setThread(t);
 				t.setName(spt.getName());
 			}
-			
+
 		}
-		
+
 		/**
 		 * Prints an error message if a execution is rejected
 		 * @author kela
@@ -85,11 +85,11 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 				System.err.println("Thread pool rejected thread: "+ ((ISchedulableThread)r).getName()+" pool size "+executor.getActiveCount());
 				 throw new RejectedExecutionException();
 			}
-			
-		}	
+
+		}
 	}
-	
-	
+
+
     private static final long serialVersionUID = 1L;
 
 	protected final Resource resource;
@@ -107,9 +107,9 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	private Thread executingThread;
 	private char name[];
 	private long tid = 0;
-	
+
 	/**
-	 * Thread pool used by SchedulablePoolThread. It is a none blocking queue 
+	 * Thread pool used by SchedulablePoolThread. It is a none blocking queue
 	 * with an upper limit set to Integer.MAX_VALUE allowing it to freely expand.
 	 * The thread pool will most likely make the Java VM throw OutOfMemoryError before
 	 * Integer.MAX_VALUE is reached do the the native thread creation requiring 2 MB for each thread.
@@ -139,14 +139,14 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		resource.register(this, priority);
 
 		BasicSchedulableThread.add(this);
-		
+
 	}
-	
+
 	private void setThread(Thread t)
 	{
 		executingThread = t;
 	}
-	
+
 	public Thread getThread()
 	{
 		return this.executingThread;
@@ -188,11 +188,11 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
     /* (non-Javadoc)
 	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#start()
 	 */
-    
+
 	public synchronized void start()
 	{
 		pool.execute(this);
-		
+
 		while (state == RunState.CREATED)
 		{
 			sleep(null, null);
@@ -210,7 +210,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	/* (non-Javadoc)
 	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#run()
 	 */
-	
+
 	public void run()
 	{
 		reschedule(null, null);
@@ -419,10 +419,11 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 
 	private void interrupt()
 	{
-		if(getThread()!=null)
+		if (getThread() != null)
 		{
 			getThread().interrupt();
-		}else
+		}
+		else
 		{
 			Thread.currentThread().interrupt();
 		}
@@ -530,7 +531,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 			throw new InternalException(66, "Thread is not running on a CPU");
 		}
 	}
-	
+
 	public long getId()
 	{
 		return tid;
@@ -555,5 +556,5 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		return false;
 	}
 
-	
+
 }

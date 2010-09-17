@@ -190,103 +190,103 @@ abstract public class CommandReader
 				{
 					carryOn = doAssert(line);
 				}
-				else if(line.equals("continue") || line.equals("c"))
+				else if (line.equals("continue") || line.equals("c"))
 				{
 					carryOn = doContinue(line);
 				}
-				else if(line.equals("stack"))
+				else if (line.equals("stack"))
 				{
 					carryOn = doStack(line);
 				}
-				else if(line.equals("up"))
+				else if (line.equals("up"))
 				{
 					carryOn = doUp(line);
 				}
-				else if(line.equals("down"))
+				else if (line.equals("down"))
 				{
 					carryOn = doDown(line);
 				}
-				else if(line.equals("step") || line.equals("s"))
+				else if (line.equals("step") || line.equals("s"))
 				{
 					carryOn = doStep(line);
 				}
-				else if(line.equals("next") || line.equals("n"))
+				else if (line.equals("next") || line.equals("n"))
 				{
 					carryOn = doNext(line);
 				}
-				else if(line.equals("out") || line.equals("o"))
+				else if (line.equals("out") || line.equals("o"))
 				{
 					carryOn = doOut(line);
 				}
-				else if(line.startsWith("trace"))
+				else if (line.startsWith("trace"))
 				{
 					carryOn = doTrace(line);
 				}
-				else if(line.startsWith("break"))
+				else if (line.startsWith("break"))
 				{
 					carryOn = doBreak(line);
 				}
-				else if(line.equals("list"))
+				else if (line.equals("list"))
 				{
 					carryOn = doList(line);
 				}
-				else if(line.equals("threads"))
+				else if (line.equals("threads"))
 				{
 					carryOn = doThreads(line);
 				}
-				else if(line.equals("source"))
+				else if (line.equals("source"))
 				{
 					carryOn = doSource(line);
 				}
-				else if(line.startsWith("coverage"))
+				else if (line.startsWith("coverage"))
 				{
 					carryOn = doCoverage(line);
 				}
-				else if(line.startsWith("latexdoc"))
+				else if (line.startsWith("latexdoc"))
 				{
 					carryOn = doLatex(line, true);
 				}
-				else if(line.startsWith("latex"))
+				else if (line.startsWith("latex"))
 				{
 					carryOn = doLatex(line, false);
 				}
-				else if(line.startsWith("remove"))
+				else if (line.startsWith("remove"))
 				{
 					carryOn = doRemove(line);
 				}
-				else if(line.equals("init"))
+				else if (line.equals("init"))
 				{
 					carryOn = doInit(line);
 				}
-				else if(line.equals("env"))
+				else if (line.equals("env"))
 				{
 					carryOn = doEnv(line);
 				}
-				else if(line.equals("state"))
+				else if (line.equals("state"))
 				{
 					carryOn = doState(line);
 				}
-				else if(line.startsWith("default"))
+				else if (line.startsWith("default"))
 				{
 					carryOn = doDefault(line);
 				}
-				else if(line.equals("classes"))
+				else if (line.equals("classes"))
 				{
 					carryOn = doClasses(line);
 				}
-				else if(line.startsWith("create"))
+				else if (line.startsWith("create"))
 				{
 					carryOn = doCreate(line);
 				}
-				else if(line.equals("modules"))
+				else if (line.equals("modules"))
 				{
 					carryOn = doModules(line);
 				}
-				else if(line.startsWith("pog"))
+				else if (line.startsWith("pog"))
 				{
 					carryOn = doPog(line);
 				}
-				else if(line.startsWith("log"))
+				else if (line.startsWith("log"))
 				{
 					carryOn = doLog(line);
 				}

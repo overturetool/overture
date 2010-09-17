@@ -58,11 +58,11 @@ public class ProcessListener extends Thread
 		this.dialect = dialect;
 		this.files = files;
 		this.expression = expression;
-		
+
 		setName("Process Listener");
 		setDaemon(true);
 	}
-	
+
 	public ProcessListener(Dialect dialect, List<File> files, String expression, String release,File logFile)
 	{
 		this(dialect,files,expression);
@@ -80,12 +80,12 @@ public class ProcessListener extends Thread
 
 			List<String> pargs = new Vector<String>();
 
-			if(!VDMJ_DEBUG)
+			if (!VDMJ_DEBUG)
 			{
 				pargs.add("java");
 				pargs.add("-cp");
 				pargs.add(Config.vdmj_jar);
-	
+
 				if (Config.vdmj_jvm.length() > 0)
 				{
 	    			for (String a: Config.vdmj_jvm.split("\\s+"))
@@ -93,10 +93,10 @@ public class ProcessListener extends Thread
 	    				pargs.add(a);
 	    			}
 				}
-	
+
 				pargs.add("org.overturetool.vdmj.debug.DBGPReader");
 			}
-			
+
 			pargs.add("-h");
 			pargs.add("localhost");
 			pargs.add("-p");
@@ -106,12 +106,12 @@ public class ProcessListener extends Thread
 			pargs.add(dialect.getArgstring());
 			pargs.add("-e");
 			pargs.add(expression);
-			if(logFile!=null && dialect== Dialect.VDM_RT)
+			if (logFile != null && dialect== Dialect.VDM_RT)
 			{
 				pargs.add("-log");
 				pargs.add(logFile.toURI().toASCIIString());
 			}
-			if(release!=null)
+			if (release != null)
 			{
 				pargs.add("-r");
 				pargs.add(release);
@@ -121,12 +121,12 @@ public class ProcessListener extends Thread
 			{
 				pargs.add(file.toURI().toString());
 			}
-			
-			if(VDMJ_DEBUG)
+
+			if (VDMJ_DEBUG)
 			{
 				blockOnRemoteLaunch(pargs);
 			}
-			
+
     		ProcessBuilder pb = new ProcessBuilder(pargs);
 			process = pb.start();
 
@@ -178,11 +178,11 @@ public class ProcessListener extends Thread
 			sb.append(" ");
 		}
 		System.out.println(sb.toString());
-		
+
 		ProcessBuilder pb = new ProcessBuilder("help");
 		process = pb.start();
 
-		
+
 		while(true)
 		{
 			Thread.sleep(1000);
@@ -211,11 +211,11 @@ public class ProcessListener extends Thread
 
 	public synchronized boolean hasEnded()
 	{
-		if(VDMJ_DEBUG)
+		if (VDMJ_DEBUG)
 		{
 			return false;
 		}
-		
+
 		if (process == null)
 		{
 			return true;

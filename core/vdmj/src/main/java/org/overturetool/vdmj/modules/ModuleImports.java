@@ -98,19 +98,21 @@ public class ModuleImports implements Serializable,IAstNode
 
 	public LexLocation getLocation()
 	{
-		if(name!=null)
+		if (name != null)
 		{
 			return this.name.location;
 		}
+
 		return null;
 	}
 
 	public String getName()
 	{
-		if(name!=null)
+		if (name != null)
 		{
 			return this.name.name;
 		}
+
 		return null;
 	}
 }

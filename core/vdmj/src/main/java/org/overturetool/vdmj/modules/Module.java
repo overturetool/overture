@@ -98,7 +98,7 @@ public class Module implements Serializable,IAstNode
 		importdefs = new DefinitionList();	// and import nothing
 
 		this.delegate = new Delegate(name.name, defs);
-		
+
 		LexLocation.addAstNode(getLocation(), this);
 	}
 
@@ -397,19 +397,21 @@ public class Module implements Serializable,IAstNode
 
 	public LexLocation getLocation()
 	{
-		if(name!=null)
+		if (name != null)
 		{
 			return this.name.location;
 		}
+
 		return null;
 	}
 
 	public String getName()
 	{
-		if(name!=null)
+		if (name != null)
 		{
 			return this.name.name;
 		}
+
 		return null;
 	}
 }

@@ -110,7 +110,7 @@ public class MainThread extends SchedulablePoolThread
 		catch (ContextException e)
 		{
 			//If the exception is raised from the console location the debugger is stopped.
-			if(e.location.file.getName().equals(LexTokenReader.consoleFileName))
+			if (e.location.file.getName().equals(LexTokenReader.consoleFileName))
 			{
 				ThreadState s = ctxt.threadState;
 				s.dbgp.invocationError(e);//TODO
@@ -127,7 +127,8 @@ public class MainThread extends SchedulablePoolThread
 		{
 			setException(e);
 			BasicSchedulableThread.signalAll(Signal.SUSPEND);
-		}catch(StackOverflowError e)
+		}
+		catch(StackOverflowError e)
 		{
 			ctxt.threadState.dbgp.invocationError(e);
 			BasicSchedulableThread.signalAll(Signal.TERMINATE);

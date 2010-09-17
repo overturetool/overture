@@ -29,7 +29,7 @@ public class RemoteInterpreter
 	{
 		boolean print = false;
 
-		if(line.startsWith("p ")||line.startsWith("print ")||line.startsWith("debug "))
+		if (line.startsWith("p ")||line.startsWith("print ")||line.startsWith("debug "))
 		{
 			line = line.substring(line.indexOf(' '));
 			print = true;
@@ -56,7 +56,7 @@ public class RemoteInterpreter
 		{
 
 			Value res = interpreter.execute(line, dbgp);
-			if(print && !(res instanceof VoidValue))
+			if (print && !(res instanceof VoidValue))
 			{
 				Console.out.println(res.toString());
 			}

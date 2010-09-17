@@ -169,14 +169,15 @@ public class CommandLine
 				prompted = true;
 			}
 
-			if(!scriptMessages.isEmpty() && messages.isEmpty() && prompted)
+			if (!scriptMessages.isEmpty() && messages.isEmpty() && prompted)
 			{
-				if(acceptScriptCommand(scriptMessages.peek()))
+				if (acceptScriptCommand(scriptMessages.peek()))
 				{
 					String line = scriptMessages.poll();
 					println(line);
 					return line;
-				}else
+				}
+				else
 				{
 					return "";
 				}
@@ -308,7 +309,8 @@ public class CommandLine
     		println("  q[uit]");
      		println("");
     		println("Use 'help <command>' for more help");
-		}else if(line.startsWith("help script"))
+		}
+		else if (line.startsWith("help script"))
 		{
 			println("Scripting:");
 			println("script <vdmsl|vdmpp|vdmrt> <script file> <log file> <files>");
@@ -363,7 +365,8 @@ public class CommandLine
 				println("Problem decoding dialect in script.");
 				dialect = Dialect.VDM_PP;
 			}
-		}else
+		}
+		else
 		{
 			println("Dialect malformed");
 		}
@@ -452,7 +455,7 @@ public class CommandLine
 		String dialectArg = arguments.get(1);
 
 		dialect = Dialect.lookup("-"+dialectArg);
-		if(dialect== null)
+		if (dialect== null)
 		{
 			println("Problem decoding dialect in script.");
 			return false;
@@ -472,7 +475,7 @@ public class CommandLine
 
 		try
 		{
-			if(script.exists() && script.isFile())
+			if (script.exists() && script.isFile())
 			{
 				BufferedReader reader = null;
 				try
@@ -505,12 +508,14 @@ public class CommandLine
 				scriptMessages.add("quit");//Exit this
 
 				new ProcessCommandLine(dialect, getFiles(files), expression,"vdm10",logFile).run();
-			}else
+			}
+			else
 			{
 				println("Script is not found or is not a file");
 				return false;
 			}
-		}catch (IOException e)
+		}
+		catch (IOException e)
 		{
 			println("Problem loading files");
 		}
@@ -526,12 +531,12 @@ public class CommandLine
 	{
 		List<String> commands = new Vector<String>();
 
-		if(text.startsWith("#")|| text.startsWith("--")|| text.startsWith("//"))
+		if (text.startsWith("#")|| text.startsWith("--")|| text.startsWith("//"))
 		{
 			return commands;
 		}
 
-		if(text.contains(" "))
+		if (text.contains(" "))
 		{
 			String repeatText = text.substring(0,text.indexOf(' '));
 
@@ -549,7 +554,8 @@ public class CommandLine
 				commands.add(text);
 			}
 
-		}else
+		}
+		else
 		{
 			commands.add(text);
 		}

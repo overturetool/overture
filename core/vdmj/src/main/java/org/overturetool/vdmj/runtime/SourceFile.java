@@ -152,12 +152,12 @@ public class SourceFile
 	{
 		printLatexCoverage(out,headers,false,true);
 	}
-	
+
 	public void printLatexCoverage(PrintWriter out, boolean headers,boolean modelOnly,boolean includeCoverageTable)
 	{
 		printLatex(out,headers,modelOnly,includeCoverageTable,true);
 	}
-	
+
 	public void printLatex(PrintWriter out, boolean headers,boolean modelOnly,boolean includeCoverageTable,boolean markCoverage)
 	{
 		Map<Integer, List<LexLocation>> hits =
@@ -199,7 +199,8 @@ public class SourceFile
 			}
 
 			String spaced = detab(line, Properties.parser_tabstop);
-			if(markCoverage)
+
+			if (markCoverage)
 			{
 				List<LexLocation> list = hits.get(lnum);
 				out.println(markup(spaced, list));
@@ -208,6 +209,7 @@ public class SourceFile
 			{
 				out.println(spaced);
 			}
+
 			if (line.contains("\\end{vdm_al}"))
 			{
 				inVdmAlModelTag = false;

@@ -96,7 +96,7 @@ abstract public class Import implements Serializable,IAstNode
 	{
 		TypeChecker.detail2(tag1, obj1, tag2, obj2);
 	}
-	
+
 	public LexLocation getLocation()
 	{
 		return location;
@@ -104,8 +104,11 @@ abstract public class Import implements Serializable,IAstNode
 
 	public String getName()
 	{
-		if(name!=null)
+		if (name != null)
+		{
 			return name.name;
+		}
+
 		return null;
 	}
 }

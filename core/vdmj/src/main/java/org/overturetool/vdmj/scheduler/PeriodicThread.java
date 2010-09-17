@@ -82,19 +82,20 @@ public class PeriodicThread extends SchedulablePoolThread
 			this.expected = expected;
 		}
 	}
-	
+
 	@Override
 	protected void body()
 	{
 		RootContext global = ClassInterpreter.getInstance().initialContext;
 		LexLocation from = object.type.classdef.location;
 		Context ctxt = new ObjectContext(from, "async", global, object);
-		
-		if(Settings.usingDBGP)
+
+		if (Settings.usingDBGP)
 		{
 			DBGPReader reader = ctxt.threadState.dbgp.newThread(object.getCPU());
 			ctxt.setThreadState(reader,object.getCPU());
-		}else
+		}
+		else
 		{
 			ctxt.setThreadState(null, object.getCPU());
 		}
@@ -130,7 +131,7 @@ public class PeriodicThread extends SchedulablePoolThread
 
 	}
 
-	
+
 	private void runDBGP(Context ctxt)
 	{
 		try
@@ -139,7 +140,7 @@ public class PeriodicThread extends SchedulablePoolThread
     		{
         		operation.localEval(
         			operation.name.location, new ValueList(), ctxt, true);
-        		
+
         		ctxt.threadState.dbgp.complete(DBGPReason.OK, null);
     		}
     		catch (ValueException e)
@@ -148,7 +149,7 @@ public class PeriodicThread extends SchedulablePoolThread
     			throw new ContextException(e, operation.name.location);
     		}
 
-			
+
 		}
 		catch (ContextException e)
 		{
@@ -166,7 +167,7 @@ public class PeriodicThread extends SchedulablePoolThread
 			TransactionValue.commitAll();
 		}
 	}
-	
+
 	private void runCmd(Context ctxt)
 	{
 		try

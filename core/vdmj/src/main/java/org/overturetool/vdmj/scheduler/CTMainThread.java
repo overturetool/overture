@@ -92,13 +92,16 @@ public class CTMainThread extends MainThread
 			{
 				setException(e);
 				suspendOthers();
-				if(Settings.usingDBGP)
-				{	
+
+				if (Settings.usingDBGP)
+				{
 					ctxt.threadState.dbgp.stopped(e.ctxt, e.location);
-				}else
-				{	
-					DebuggerReader.stopped(e.ctxt, e.location);	
 				}
+				else
+				{
+					DebuggerReader.stopped(e.ctxt, e.location);
+				}
+
 				result.add(Verdict.FAILED);
 			}
 			else

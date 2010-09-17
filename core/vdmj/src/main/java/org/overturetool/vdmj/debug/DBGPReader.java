@@ -591,14 +591,15 @@ public class DBGPReader implements Serializable
 		sb.append("idekey=\"" + ideKey + "\" ");
 		sb.append("session=\"" + sessionId + "\" ");
 		sb.append("thread=\"");
-		
+
 		String threadName = BasicSchedulableThread.getThreadName(Thread.currentThread());
-		
-		
-		if(threadName!=null)
+
+
+		if (threadName != null)
 		{
 			sb.append(threadName);
-		}else
+		}
+		else
 		{
 			sb.append(Thread.currentThread().getName());
 		}
@@ -642,17 +643,19 @@ public class DBGPReader implements Serializable
 				{
 					line.append((char)c);		// Ignore CRs
 				}
-				c = input.read();			
+				c = input.read();
 			}
-	
+
 			return (line.length() == 0 && c == -1) ? null : line.toString();
-		}catch(SocketException e)
+		}
+		catch(SocketException e)
 		{
 			//If DBGP is stopped there is no guarantee that the IDE will be available
-			if(stopped)
+			if (stopped)
 			{
 				return null;
-			}else
+			}
+			else
 			{
 				throw e;
 			}
@@ -661,7 +664,7 @@ public class DBGPReader implements Serializable
 
 	protected void write(StringBuilder data) throws IOException
 	{
-		if(output==null)
+		if (output == null)
 		{
 			//TODO: Handle the error in VDMJ, terminate?
 			System.err.println("Socket to IDE not valid.");
@@ -670,7 +673,7 @@ public class DBGPReader implements Serializable
 		byte[] header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".getBytes("UTF-8");
 		byte[] body = data.toString().getBytes("UTF-8");
 		byte[] size = Integer.toString(header.length + body.length).getBytes("UTF-8");
-		
+
 		output.write(size);
 		output.write(separator);
 		output.write(header);
@@ -745,8 +748,8 @@ public class DBGPReader implements Serializable
 		throws IOException
 	{
 		StringBuilder sb = new StringBuilder();
-		
-		if(s == DBGPStatus.STOPPED)
+
+		if (s == DBGPStatus.STOPPED)
 		{
 			stopped = true;
 		}
@@ -857,7 +860,7 @@ public class DBGPReader implements Serializable
     		.replace("\"", "&quot;");
 	}
 
-	
+
 	protected void run() throws IOException
 	{
 		String line = null;
@@ -899,14 +902,16 @@ public class DBGPReader implements Serializable
 			errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
 		}
 	}
-	
+
 	public void invocationError(Throwable e)
 	{
 		String message =e.getMessage();
-		if(e instanceof StackOverflowError)
+
+		if (e instanceof StackOverflowError)
 		{
 			message = "StackOverflowError:\n Try to increase Java Stack size by adding -Xss4M to the Virtual Machine running the debugger";//+getStackTrace(e));
 		}
+
 		errorResponse(DBGPErrorCode.INTERNAL_ERROR, message);
 	}
 
@@ -1355,7 +1360,7 @@ public class DBGPReader implements Serializable
     			theAnswer = interpreter.execute(expression, this);
     			stdout(expression + " = " + theAnswer.toString());
     			statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
-    			
+
     		}
     		catch (ContextException e)
     		{
@@ -1815,7 +1820,7 @@ public class DBGPReader implements Serializable
 //		names.append("<context name=\"Local\" id=\"0\"/>");
 //		names.append("<context name=\"" + dialect + "\" id=\"1\"/>");
 //		names.append("<context name=\"Global\" id=\"2\"/>");
-		
+
 		for (DBGPContextType type : DBGPContextType.values())
 		{
 			String name = type == DBGPContextType.CLASS && Settings.dialect == Dialect.VDM_SL?"Module":type.name();

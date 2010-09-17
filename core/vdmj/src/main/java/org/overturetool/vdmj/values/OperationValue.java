@@ -409,7 +409,7 @@ public class OperationValue extends Value
 	private void guard(Context ctxt) throws ValueException
 	{
 		ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
-		if (th==null || th instanceof InitThread )
+		if (th == null || th instanceof InitThread )
 		{
 			return;		// Probably during initialization.
 		}
