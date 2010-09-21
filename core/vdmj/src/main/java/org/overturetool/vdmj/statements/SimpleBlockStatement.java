@@ -87,10 +87,11 @@ abstract public class SimpleBlockStatement extends Statement
 	{
 		boolean notreached = false;
 		TypeSet rtypes = new TypeSet();
+		Type last = null;
 
-		for(Statement stmt: statements)
+		for (Statement stmt: statements)
 		{
-			Type st = stmt.typeCheck(env, scope);
+			Type stype = stmt.typeCheck(env, scope);
 
 			if (notreached)
 			{
@@ -98,11 +99,12 @@ abstract public class SimpleBlockStatement extends Statement
 			}
 			else
 			{
+				last = stype;
 				notreached = true;
 
-    			if (st instanceof UnionType)
+    			if (stype instanceof UnionType)
     			{
-    				UnionType ust = (UnionType)st;
+    				UnionType ust = (UnionType)stype;
 
     				for (Type t: ust.types)
     				{
@@ -117,15 +119,24 @@ abstract public class SimpleBlockStatement extends Statement
     			}
     			else
     			{
-    				addOne(rtypes, st);
+    				addOne(rtypes, stype);
 
-					if (st instanceof VoidType ||
-						st instanceof UnknownType)
+					if (stype instanceof VoidType ||
+						stype instanceof UnknownType)
 					{
 						notreached = false;
 					}
     			}
 			}
+		}
+
+		// If the last statement reached has a void component, add this to the overall
+		// return type, as the block may return nothing.
+
+		if (last != null &&
+			(last.isType(VoidType.class) ||	last.isUnknown()))
+		{
+			rtypes.add(new VoidType(location));
 		}
 
 		return rtypes.isEmpty() ?
