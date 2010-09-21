@@ -75,6 +75,7 @@ public class StateDefinition extends Definition
 	private final DefinitionList statedefs;
 	private Type recordType;
 	private State moduleState = null;
+	public boolean canBeExecuted = true;
 
 	public StateDefinition(LexNameToken name, List<Field> fields,
 		Pattern invPattern, Expression invExpression,

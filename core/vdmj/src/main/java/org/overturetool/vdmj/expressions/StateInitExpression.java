@@ -90,7 +90,7 @@ public class StateInitExpression extends Expression
 	{
 		Pattern pattern = state.initPattern;
 		Expression exp = state.initExpression;
-		boolean ok = false;
+		boolean canBeExecuted = false;
 
 		if (pattern instanceof IdentifierPattern &&
 			exp instanceof EqualsExpression)
@@ -105,7 +105,7 @@ public class StateInitExpression extends Expression
 				if (rhs.isRecord())
 				{
 					RecordType rt = rhs.getRecord();
-					ok = rt.name.equals(state.name);
+					canBeExecuted = rt.name.equals(state.name);
 				}
 			}
 		}
@@ -114,12 +114,13 @@ public class StateInitExpression extends Expression
 			exp.typeCheck(env, null, scope);
 		}
 
-		if (!ok)
+		if (!canBeExecuted)
 		{
 			warning(5010, "State init expression cannot be executed");
 			detail("Expected", "p == p = mk_Record(...)");
 		}
 
+		state.canBeExecuted = canBeExecuted;
 		return new BooleanType(location);
 	}
 
