@@ -96,10 +96,10 @@ public class StateInitExpression extends Expression
 			exp instanceof EqualsExpression)
 		{
 			EqualsExpression ee = (EqualsExpression)exp;
+			ee.left.typeCheck(env, null, scope);
 
 			if (ee.left instanceof VariableExpression)
 			{
-				ee.left.typeCheck(env, null, scope);
 				Type rhs = ee.right.typeCheck(env, null, scope);
 
 				if (rhs.isRecord())
