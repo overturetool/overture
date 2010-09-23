@@ -189,11 +189,16 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 			ParameterType pt = (ParameterType)to;
 
 			// Parameter types are ParameterValues of the given name in
-			// the context.
+			// the context. They exist in the context, if the function has
+			// been instantiated with type parameters (see FunctionValue).
 
-			Value v = ctxt.lookup(pt.name);
-
-			if (v instanceof ParameterValue)
+			Value v = ctxt.check(pt.name);
+			
+			if (v == null)
+			{
+				abort(4147, "Polymorphic function missing @" + pt.name, ctxt);
+			}
+			else if (v instanceof ParameterValue)
 			{
 				ParameterValue pv = (ParameterValue)v;
 				return convertValueTo(pv.type, ctxt);
