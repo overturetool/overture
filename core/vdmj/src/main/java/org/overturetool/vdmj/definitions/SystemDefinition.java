@@ -42,6 +42,7 @@ import org.overturetool.vdmj.types.UndefinedType;
 import org.overturetool.vdmj.types.UnresolvedType;
 import org.overturetool.vdmj.values.BUSValue;
 import org.overturetool.vdmj.values.CPUValue;
+import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.QuoteValue;
 import org.overturetool.vdmj.values.RealValue;
@@ -54,6 +55,21 @@ public class SystemDefinition extends ClassDefinition
 	private static final long serialVersionUID = 1L;
 
 	private static Context systemContext = null;
+	
+	/**
+	 * Experimental DESTECS extension. 
+	 * Allowing access at runtime to the instances variables of the system.
+	 */
+	private static ObjectValue system = null;
+	
+	public static NameValuePairList getSystemMembers()
+	{
+		if(system!=null)
+		{
+			return system.members.asList();
+		}
+		return null;
+	}
 
 	public SystemDefinition(LexNameToken className, DefinitionList members)
 	{
@@ -153,7 +169,7 @@ public class SystemDefinition extends ClassDefinition
 
 			// Run the constructor to do any deploys etc.
 
-			ObjectValue system = makeNewInstance(null, new ValueList(),
+			system = makeNewInstance(null, new ValueList(),
 					systemContext, new HashMap<LexNameToken, ObjectValue>());
 
 			// Do CPUs first so that default BUSses can connect all CPUs.
