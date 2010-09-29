@@ -60,14 +60,16 @@ public class SystemDefinition extends ClassDefinition
 	 * Experimental DESTECS extension. 
 	 * Allowing access at runtime to the instances variables of the system.
 	 */
+	
 	private static ObjectValue system = null;
 	
 	public static NameValuePairList getSystemMembers()
 	{
-		if(system!=null)
+		if (system != null)
 		{
 			return system.members.asList();
 		}
+		
 		return null;
 	}
 
