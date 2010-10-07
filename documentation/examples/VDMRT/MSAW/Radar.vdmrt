@@ -114,6 +114,8 @@ thread
 periodic(2000,0,0,0) (Step)
 
 sync 
+mutex(UpdatePriorityList);
+mutex(removeNotDetected,addNewlyDetected);
 per isFinished => not busy;
 --per Step => not busy;
 

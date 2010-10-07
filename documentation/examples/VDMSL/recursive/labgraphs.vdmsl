@@ -35,9 +35,6 @@ LabDescendents(g,id,reached) ==
 pre id in set dom g
 measure measureLabGraphReached;
 
-
-
-
 UniqueArcIds: map NodeId to (map ArcId to NodeId) -> bool
 UniqueArcIds(g) ==
   let m = {nid |-> dom g(nid) | nid in set dom g}

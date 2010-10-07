@@ -1,3 +1,4 @@
+\begin{vdm_al}
 types
 
   Country = seq of char;
@@ -85,4 +86,4 @@ functions
   colMapExpl(r) ==
     colCntrs(CountriesRel(r), r)
    pre isRelation(r)
-
+\end{vdm_al}
