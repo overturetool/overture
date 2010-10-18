@@ -11,12 +11,11 @@ ClockTick(t) ==
 threadID := t;
 
 thread
-
-while true do
-(
-    World`timerRef.WaitRelative(1);
-    World`timerRef.NotifyAll();
-    World`timerRef.Awake();
-)
+  while true 
+  do
+   (World`timerRef.WaitRelative(1);
+--    World`timerRef.NotifyAll();
+--    World`timerRef.Awake();
+   )
 
 end ClockTick
