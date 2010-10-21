@@ -79,7 +79,7 @@ public class ConnectionThread extends Thread
 		return "Id " +  id + ": " + getStatus();
 	}
 
-	
+
 	public String getIdeId()
 	{
 		return id;
@@ -283,6 +283,15 @@ public class ConnectionThread extends Thread
 		}
 	}
 
+	private static String unquote(String in)
+	{
+		return in
+    		.replace("&amp;", "&")
+    		.replace("&lt;", "<")
+    		.replace("&gt;", ">")
+    		.replace("&quot;", "\"");
+	}
+
 	private void processResponse(XMLTagNode msg)
 	{
 		try
@@ -433,7 +442,7 @@ public class ConnectionThread extends Thread
     					{
      						sb.append(sep);
      						XMLOpenTagNode p = (XMLOpenTagNode)prop;
-     						sb.append(p.getAttr("name"));
+     						sb.append(unquote(p.getAttr("name")));
      						sb.append(" = ");
      						XMLDataNode data = (XMLDataNode)p.getChild(0);
      						sb.append(new String(Base64.decode(data.cdata), "UTF-8"));
