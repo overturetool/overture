@@ -1,0 +1,10 @@
+class Water is subclass of Liquid
+
+operations
+  public
+  SetBoilingPoint: () ==> ()
+  SetBoilingPoint() ==
+    boiling_point := {1.0  |-> 100.0,  --- 1atm   (=760mmHg) --> 100
+                      0.53 |-> 85.0};  --- 0.53atm(=400mmHg) --> 85
+
+end Water
