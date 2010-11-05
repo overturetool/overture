@@ -130,7 +130,7 @@ public class Delegate implements Serializable
     	 					ExplicitOperationDefinition e = (ExplicitOperationDefinition)d;
     	 					plist = e.parameterPatterns;
     	 				}
-    	 				else
+    	 				else if (d instanceof ImplicitOperationDefinition)
     	 				{
     	 					ImplicitOperationDefinition e = (ImplicitOperationDefinition)d;
     	 					plist = e.getParamPatternList();
@@ -145,7 +145,7 @@ public class Delegate implements Serializable
     	 					ExplicitFunctionDefinition e = (ExplicitFunctionDefinition)d;
     	 					plist = e.paramPatternList.get(0);
     	 				}
-    	 				else
+    	 				else if (d instanceof ImplicitFunctionDefinition)
     	 				{
     	 					ImplicitFunctionDefinition e = (ImplicitFunctionDefinition)d;
     	 					plist = e.getParamPatternList().get(0);

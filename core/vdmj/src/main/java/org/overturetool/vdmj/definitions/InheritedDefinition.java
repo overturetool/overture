@@ -85,12 +85,6 @@ public class InheritedDefinition extends Definition
 	}
 
 	@Override
-	public boolean isUpdatable()
-	{
-		return superdef.isUpdatable();
-	}
-
-	@Override
 	public DefinitionList getDefinitions()
 	{
 		return superdef.getDefinitions();
@@ -177,9 +171,15 @@ public class InheritedDefinition extends Definition
 	}
 
 	@Override
-	public boolean isFunctionOrOperation()
+	public boolean isFunction()
 	{
-		return superdef.isFunctionOrOperation();
+		return superdef.isFunction();
+	}
+
+	@Override
+	public boolean isOperation()
+	{
+		return superdef.isOperation();
 	}
 
 	@Override
@@ -210,5 +210,17 @@ public class InheritedDefinition extends Definition
 	public boolean isRuntime()
 	{
 		return superdef.isRuntime();
+	}
+
+	@Override
+	public boolean isUpdatable()
+	{
+		return superdef.isUpdatable();
+	}
+	
+	@Override
+	public Definition deref()
+	{
+		return superdef.deref();
 	}
 }

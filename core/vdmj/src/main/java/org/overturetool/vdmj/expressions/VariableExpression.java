@@ -27,7 +27,6 @@ import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.RenamedDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.typechecker.Environment;
@@ -180,13 +179,7 @@ public class VariableExpression extends Expression
 	@Override
 	public String getPreName()
 	{
-		Definition def = vardef;
-
-		while (def instanceof RenamedDefinition)
-		{
-			RenamedDefinition r = (RenamedDefinition)def;
-			def = r.def;
-		}
+		Definition def = vardef.deref();
 
 		if (def instanceof ExplicitFunctionDefinition)
 		{

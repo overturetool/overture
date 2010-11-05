@@ -125,6 +125,8 @@ public class PeriodicStatement extends Statement
 
 		OperationType expected =
 			new OperationType(location, new TypeList(), new VoidType(location));
+		
+		opdef = opdef.deref();
 
 		if (opdef instanceof ExplicitOperationDefinition)
 		{

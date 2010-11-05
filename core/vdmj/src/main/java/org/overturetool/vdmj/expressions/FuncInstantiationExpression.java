@@ -26,7 +26,6 @@ package org.overturetool.vdmj.expressions;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.InheritedDefinition;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -106,11 +105,7 @@ public class FuncInstantiationExpression extends Expression
     			for (Definition def: t.definitions)		// Possibly a union of several
     			{
     				LexNameList typeParams = null;
-
-    				while (def instanceof InheritedDefinition)
-    				{
-    					def = ((InheritedDefinition)def).superdef;
-    				}
+    				def = def.deref();
 
     				if (def instanceof ExplicitFunctionDefinition)
     				{

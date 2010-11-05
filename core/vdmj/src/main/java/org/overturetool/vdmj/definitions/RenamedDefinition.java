@@ -80,12 +80,6 @@ public class RenamedDefinition extends Definition
 	}
 
 	@Override
-	public boolean isUpdatable()
-	{
-		return def.isUpdatable();
-	}
-
-	@Override
 	public DefinitionList getDefinitions()
 	{
 		return new DefinitionList(this);
@@ -158,15 +152,27 @@ public class RenamedDefinition extends Definition
 	}
 
 	@Override
-	public boolean isFunctionOrOperation()
+	public boolean isFunction()
 	{
-		return def.isFunctionOrOperation();
+		return def.isFunction();
+	}
+
+	@Override
+	public boolean isOperation()
+	{
+		return def.isOperation();
 	}
 
 	@Override
 	public boolean isCallableOperation()
 	{
 		return def.isCallableOperation();
+	}
+
+	@Override
+	public boolean isInstanceVariable()
+	{
+		return def.isInstanceVariable();
 	}
 
 	@Override
@@ -185,5 +191,17 @@ public class RenamedDefinition extends Definition
 	public boolean isRuntime()
 	{
 		return def.isRuntime();
+	}
+
+	@Override
+	public boolean isUpdatable()
+	{
+		return def.isUpdatable();
+	}
+	
+	@Override
+	public Definition deref()
+	{
+		return def.deref();
 	}
 }

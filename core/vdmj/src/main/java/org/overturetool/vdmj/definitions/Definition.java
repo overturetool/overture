@@ -401,7 +401,7 @@ public abstract class Definition implements Serializable, IAstNode
 	 * or operation.
 	 */
 
-	public boolean isFunctionOrOperation()
+	public final boolean isFunctionOrOperation()
 	{
 		return isFunction() || isOperation();
 	}
@@ -579,6 +579,15 @@ public abstract class Definition implements Serializable, IAstNode
 	public Value abort(LocatedException e, Context ctxt)
 	{
 		throw new ContextException(e.number, e.getMessage(), e.location, ctxt);
+	}
+
+	/**
+	 * Dereference imported, inherited or renamed definitions.
+	 */
+	
+	public Definition deref()
+	{
+		return this;
 	}
 
 	public String getName()
