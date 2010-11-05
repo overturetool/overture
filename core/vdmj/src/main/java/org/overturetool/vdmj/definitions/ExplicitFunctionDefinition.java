@@ -33,7 +33,6 @@ import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.NotYetSpecifiedExpression;
 import org.overturetool.vdmj.expressions.SubclassResponsibilityExpression;
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.patterns.IdentifierPattern;
@@ -80,7 +79,7 @@ public class ExplicitFunctionDefinition extends Definition
 	public final Expression postcondition;
 	public final Expression body;
 	public final boolean isTypeInvariant;
-	public final LexIdentifierToken measure;
+	public final LexNameToken measure;
 	public final boolean isCurried;
 
 	public ExplicitFunctionDefinition predef;
@@ -98,7 +97,7 @@ public class ExplicitFunctionDefinition extends Definition
 		LexNameList typeParams, FunctionType type,
 		List<PatternList> parameters,
 		Expression body, Expression precondition, Expression postcondition,
-		boolean typeInvariant, LexIdentifierToken measure)
+		boolean typeInvariant, LexNameToken measure)
 	{
 		super(Pass.DEFS, name.location, name, scope);
 
@@ -317,17 +316,16 @@ public class ExplicitFunctionDefinition extends Definition
 		}
 		else if (measure != null)
 		{
-			LexNameToken mname = new LexNameToken(name.module, measure);
-			if (base.isVDMPP()) mname.setTypeQualifier(type.parameters);
-			measuredef = base.findName(mname, scope);
+			if (base.isVDMPP()) measure.setTypeQualifier(type.parameters);
+			measuredef = base.findName(measure, scope);
 
 			if (measuredef == null)
 			{
-				measure.report(3270, "Measure " + mname + " is not in scope");
+				measure.report(3270, "Measure " + measure + " is not in scope");
 			}
 			else if (!(measuredef instanceof ExplicitFunctionDefinition))
 			{
-				measure.report(3271, "Measure " + mname + " is not an explicit function");
+				measure.report(3271, "Measure " + measure + " is not an explicit function");
 			}
 			else
 			{

@@ -677,7 +677,7 @@ public class DefinitionReader extends SyntaxReader
 		Expression body = expr.readExpression();
 		Expression precondition = null;
 		Expression postcondition = null;
-		LexIdentifierToken measure = null;
+		LexNameToken measure = null;
 
 		if (lastToken().is(Token.PRE))
 		{
@@ -694,7 +694,7 @@ public class DefinitionReader extends SyntaxReader
 		if (lastToken().is(Token.MEASURE))
 		{
 			nextToken();
-			measure = readIdToken("Expecting identifier after 'measure'");
+			measure = readNameToken("Expecting name after 'measure'");
 		}
 
 		return new ExplicitFunctionDefinition(
@@ -767,7 +767,7 @@ public class DefinitionReader extends SyntaxReader
 		Expression body = null;
 		Expression precondition = null;
 		Expression postcondition = null;
-		LexIdentifierToken measure = null;
+		LexNameToken measure = null;
 
 		if (lastToken().is(Token.EQUALSEQUALS))		// extended implicit function
 		{
@@ -798,7 +798,7 @@ public class DefinitionReader extends SyntaxReader
 		if (lastToken().is(Token.MEASURE))
 		{
 			nextToken();
-			measure = readIdToken("Expecting identifier after 'measure'");
+			measure = readNameToken("Expecting name after 'measure'");
 		}
 
 		return new ImplicitFunctionDefinition(

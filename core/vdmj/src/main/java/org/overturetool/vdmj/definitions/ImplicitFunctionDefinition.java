@@ -32,7 +32,6 @@ import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.NotYetSpecifiedExpression;
 import org.overturetool.vdmj.expressions.SubclassResponsibilityExpression;
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.patterns.Pattern;
@@ -79,7 +78,7 @@ public class ImplicitFunctionDefinition extends Definition
 	public final Expression body;
 	public final Expression precondition;
 	public final Expression postcondition;
-	public final LexIdentifierToken measure;
+	public final LexNameToken measure;
 
 	public FunctionType type;
 	public ExplicitFunctionDefinition predef;
@@ -97,7 +96,7 @@ public class ImplicitFunctionDefinition extends Definition
 		PatternTypePair result,
 		Expression body,
 		Expression precondition,
-		Expression postcondition, LexIdentifierToken measure)
+		Expression postcondition, LexNameToken measure)
 	{
 		super(Pass.DEFS, name.location, name, scope);
 
@@ -317,9 +316,8 @@ public class ImplicitFunctionDefinition extends Definition
 		}
 		else if (measure != null)
 		{
-			LexNameToken mname = new LexNameToken(name.module, measure);
-			if (base.isVDMPP()) mname.setTypeQualifier(type.parameters);
-			measuredef = base.findName(mname, scope);
+			if (base.isVDMPP()) measure.setTypeQualifier(type.parameters);
+			measuredef = base.findName(measure, scope);
 
 			if (body == null)
 			{
@@ -327,11 +325,11 @@ public class ImplicitFunctionDefinition extends Definition
 			}
 			else if (measuredef == null)
 			{
-				measure.report(3270, "Measure " + mname + " is not in scope");
+				measure.report(3270, "Measure " + measure + " is not in scope");
 			}
 			else if (!(measuredef instanceof ExplicitFunctionDefinition))
 			{
-				measure.report(3271, "Measure " + mname + " is not an explicit function");
+				measure.report(3271, "Measure " + measure + " is not an explicit function");
 			}
 			else
 			{

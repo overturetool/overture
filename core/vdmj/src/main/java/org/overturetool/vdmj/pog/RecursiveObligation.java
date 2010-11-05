@@ -36,12 +36,12 @@ public class RecursiveObligation extends ProofObligation
 		super(def.location, POType.RECURSIVE, ctxt);
 		StringBuilder sb = new StringBuilder();
 
-		sb.append(def.measure);
+		sb.append(def.measure.getName());
 		sb.append("(");
 		sb.append(def.paramPatternList.get(0));
 		sb.append(")");
 		sb.append(def.measureLexical > 0 ? " LEX" + def.measureLexical + "> " : " > ");
-		sb.append(def.measure);
+		sb.append(def.measure.getName());
 		sb.append("(");
 		sb.append(apply.args);
 		sb.append(")");

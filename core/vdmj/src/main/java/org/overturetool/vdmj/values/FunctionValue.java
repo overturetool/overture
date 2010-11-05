@@ -131,9 +131,9 @@ public class FunctionValue extends Value
 		if (Settings.measureChecks && def.measuredef != null)
 		{
 			measureValues = new HashMap<Long, Stack<Value>>();
-
-			measure = new FunctionValue(
-				(ExplicitFunctionDefinition)def.measuredef, null, null, freeVariables);
+			
+			NameValuePairList nvpl = def.measuredef.getNamedValues(freeVariables);
+			measure = (FunctionValue)nvpl.get(0).value;
 		}
 	}
 
@@ -167,8 +167,8 @@ public class FunctionValue extends Value
 		{
 			measureValues = new HashMap<Long, Stack<Value>>();
 
-			measure = new FunctionValue(
-				(ExplicitFunctionDefinition)def.measuredef, null, null, freeVariables);
+			NameValuePairList nvpl = def.measuredef.getNamedValues(freeVariables);
+			measure = (FunctionValue)nvpl.get(0).value;
 		}
 	}
 
