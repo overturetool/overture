@@ -27,6 +27,7 @@ import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
+import org.overturetool.vdmj.definitions.RenamedDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.typechecker.Environment;
@@ -179,9 +180,17 @@ public class VariableExpression extends Expression
 	@Override
 	public String getPreName()
 	{
-		if (vardef instanceof ExplicitFunctionDefinition)
+		Definition def = vardef;
+
+		while (def instanceof RenamedDefinition)
 		{
-			ExplicitFunctionDefinition ex = (ExplicitFunctionDefinition)vardef;
+			RenamedDefinition r = (RenamedDefinition)def;
+			def = r.def;
+		}
+
+		if (def instanceof ExplicitFunctionDefinition)
+		{
+			ExplicitFunctionDefinition ex = (ExplicitFunctionDefinition)def;
 
 			if (ex.predef == null)
 			{
@@ -190,9 +199,9 @@ public class VariableExpression extends Expression
 
 			return ex.predef.name.name;
 		}
-		else if (vardef instanceof ImplicitFunctionDefinition)
+		else if (def instanceof ImplicitFunctionDefinition)
 		{
-			ImplicitFunctionDefinition im = (ImplicitFunctionDefinition)vardef;
+			ImplicitFunctionDefinition im = (ImplicitFunctionDefinition)def;
 
 			if (im.predef == null)
 			{
