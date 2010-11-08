@@ -31,7 +31,7 @@ import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.IntegerType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
-import org.overturetool.vdmj.values.IntegerValue;
+import org.overturetool.vdmj.values.NumericValue;
 import org.overturetool.vdmj.values.Value;
 
 public class ModExpression extends NumericBinaryExpression
@@ -57,18 +57,26 @@ public class ModExpression extends NumericBinaryExpression
 
 		try
 		{
-    		long lv = left.eval(ctxt).intValue(ctxt);
-    		long rv = right.eval(ctxt).intValue(ctxt);
+			/*
+			 * Remainder x rem y and modulus x mod y are the same if the signs of x
+			 * and y are the same, otherwise they differ and rem takes the sign of x and
+			 * mod takes the sign of y. The formulas for remainder and modulus are:
+			 *
+			 *		x rem y = x - y * (x div y)
+			 *		x mod y = x - y * floor(x/y)
+			 *
+			 * Hence, -14 rem 3 equals -2 and -14 mod 3 equals 1. One can view these
+			 * results by walking the real axis, starting at -14 and making jumps of 3.
+			 * The remainder will be the last negative number one visits, because the first
+			 * argument corresponding to x is negative, while the modulus will be the first
+			 * positive number one visit, because the second argument corresponding to y
+			 * is positive.
+			 */
 
-    		if ((lv >= 0 && rv > 0) || (lv <= 0 && rv < 0))
-    		{
-    			return new IntegerValue(lv % rv);
-    		}
-    		else
-    		{
-    			// See http://mathforum.org/library/drmath/view/52343.html :-)
-    			return new IntegerValue((rv + lv % rv));
-    		}
+    		double lv = left.eval(ctxt).realValue(ctxt);
+    		double rv = right.eval(ctxt).realValue(ctxt);
+
+    		return NumericValue.valueOf(lv - rv * (long)Math.floor(lv/rv), ctxt);
 		}
 		catch (ValueException e)
 		{

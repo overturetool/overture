@@ -60,15 +60,45 @@ public class DivExpression extends NumericBinaryExpression
 
 		try
 		{
-    		long lv = left.eval(ctxt).intValue(ctxt);
-    		long rv = right.eval(ctxt).intValue(ctxt);
+    		double lv = left.eval(ctxt).realValue(ctxt);
+    		double rv = right.eval(ctxt).realValue(ctxt);
 
-    		return NumericValue.valueOf(lv / rv, ctxt);
+   			return NumericValue.valueOf(div(lv, rv), ctxt);
         }
         catch (ValueException e)
         {
         	return abort(e);
         }
+	}
+
+	static public long div(double lv, double rv)
+	{
+		/*
+		 * There is often confusion on how integer division, remainder and modulus
+		 * work on negative numbers. In fact, there are two valid answers to -14 div
+		 * 3: either (the intuitive) -4 as in the Toolbox, or -5 as in e.g. Standard
+		 * ML [Paulson91]. It is therefore appropriate to explain these operations in
+		 * some detail.
+		 *
+		 * Integer division is defined using floor and real number division:
+		 *
+		 *		x/y < 0:	x div y = -floor(abs(-x/y))
+		 *		x/y >= 0:	x div y = floor(abs(x/y))
+		 *
+		 * Note that the order of floor and abs on the right-hand side makes a difference,
+		 * the above example would yield -5 if we changed the order. This is
+		 * because floor always yields a smaller (or equal) integer, e.g. floor (14/3) is
+		 * 4 while floor (-14/3) is -5.
+		 */
+
+		if (lv/rv < 0)
+		{
+			return (long)-Math.floor(Math.abs(lv/rv));
+		}
+		else
+		{
+			return (long)Math.floor(Math.abs(-lv/rv));
+		}
 	}
 
 	@Override
