@@ -57,32 +57,34 @@ public class LatexStreamReader extends InputStreamReader
 
 		while (line != null)
 		{
-			if (line.startsWith("%"))
+			String trimmed = line.trim();
+
+			if (trimmed.startsWith("%"))
  			{
  				supress = true;
  				line = "";
  			}
-			else if (line.startsWith("\\"))
+			else if (trimmed.startsWith("\\"))
 			{
-    			if (line.startsWith("\\begin{vdm_al}"))
+    			if (trimmed.startsWith("\\begin{vdm_al}"))
     			{
     				supress = false;
     				line = "";
     			}
-    			else if (line.startsWith("\\end{vdm_al}") ||
-    					 line.startsWith("\\section") ||
-    					 line.startsWith("\\subsection") ||
-    					 line.startsWith("\\document"))
+    			else if (trimmed.startsWith("\\end{vdm_al}") ||
+    					 trimmed.startsWith("\\section") ||
+    					 trimmed.startsWith("\\subsection") ||
+    					 trimmed.startsWith("\\document"))
     			{
     				supress = true;
     				line = "";
     			}
 			}
-			else if (line.startsWith("#"))
+			else if (trimmed.startsWith("#"))
 			{
-    			if (line.startsWith("#ifdef"))
+    			if (trimmed.startsWith("#ifdef"))
     			{
-    				String label = line.substring(6).trim();
+    				String label = trimmed.substring(6).trim();
     				ifstack.push(supress);
 
     				if (!supress && !label.equals(Settings.dialect.name()))
@@ -92,7 +94,7 @@ public class LatexStreamReader extends InputStreamReader
 
     				line = "";
     			}
-    			else if (line.startsWith("#else"))
+    			else if (trimmed.startsWith("#else"))
     			{
     				if (!ifstack.peek())
     				{
@@ -100,7 +102,7 @@ public class LatexStreamReader extends InputStreamReader
     					line = "";
     				}
     			}
-    			else if (line.startsWith("#endif"))
+    			else if (trimmed.startsWith("#endif"))
     			{
     				supress = ifstack.pop();
     				line = "";
