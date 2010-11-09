@@ -886,7 +886,6 @@ public class LexTokenReader extends BacktrackInputReader
 				{
 					while (ch != '/' && ch != EOF)
 					{
-						rdCh();
 						while (ch != '*' && ch != EOF)
 							rdCh();
 
