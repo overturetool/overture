@@ -73,8 +73,8 @@ public class ModExpression extends NumericBinaryExpression
 			 * is positive.
 			 */
 
-    		double lv = left.eval(ctxt).realValue(ctxt);
-    		double rv = right.eval(ctxt).realValue(ctxt);
+    		double lv = left.eval(ctxt).intValue(ctxt);
+    		double rv = right.eval(ctxt).intValue(ctxt);
 
     		return NumericValue.valueOf(lv - rv * (long)Math.floor(lv/rv), ctxt);
 		}

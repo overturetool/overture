@@ -60,8 +60,8 @@ public class DivExpression extends NumericBinaryExpression
 
 		try
 		{
-    		double lv = left.eval(ctxt).realValue(ctxt);
-    		double rv = right.eval(ctxt).realValue(ctxt);
+    		double lv = left.eval(ctxt).intValue(ctxt);
+    		double rv = right.eval(ctxt).intValue(ctxt);
 
    			return NumericValue.valueOf(div(lv, rv), ctxt);
         }
