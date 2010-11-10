@@ -365,7 +365,7 @@ abstract public class VDMJ
 	private static void usage(String msg)
 	{
 		System.err.println("VDMJ: " + msg + "\n");
-		System.err.println("Usage: VDMJ <-vdmsl | -vdmpp | -vdmrt> [<options>] [<files>]");
+		System.err.println("Usage: VDMJ <-vdmsl | -vdmpp | -vdmrt> [<options>] [<files or dirs>]");
 		System.err.println("-vdmsl: parse files as VDM-SL");
 		System.err.println("-vdmpp: parse files as VDM++");
 		System.err.println("-vdmrt: parse files as VDM-RT");

@@ -38,6 +38,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.overturetool.vdmj.ExitStatus;
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.VDMJ;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
@@ -921,7 +922,7 @@ abstract public class CommandReader
 	{
 		if (line.indexOf(' ') < 0)
 		{
-			println("Usage: load <files>");
+			println("Usage: load <files or dirs>");
 			return true;
 		}
 
@@ -929,7 +930,22 @@ abstract public class CommandReader
 
 		for (String s: line.split("\\s+"))
 		{
-			filenames.add(new File(s));
+			File dir = new File(s);
+
+			if (dir.isDirectory())
+			{
+				for (File file: dir.listFiles(Settings.dialect.getFilter()))
+				{
+					if (file.isFile())
+					{
+						filenames.add(file);
+					}
+				}
+			}
+			else
+			{
+				filenames.add(dir);
+			}
 		}
 
 		filenames.remove(0);	// which is "load" :-)
@@ -1055,7 +1071,7 @@ abstract public class CommandReader
 		println("latex|latexdoc [<files>] - generate LaTeX line coverage files");
 		println("files - list files in the current specification");
 		println("reload - reload the current specification files");
-		println("load <files> - replace current loaded specification files");
+		println("load <files or dirs> - replace current loaded specification files");
 		println("quit - leave the interpreter");
 	}
 
