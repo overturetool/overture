@@ -1056,6 +1056,7 @@ abstract public class CommandReader
 	{
 		println("print <expression> - evaluate expression");
 		println("runtrace <name> [test number] - run CT trace(s)");
+		println("debugtrace <name> [test number] - debug CT trace(s)");
 		println("filter %age | <reduction type> - reduce CT trace(s)");
 		println("assert <file> - run assertions from a file");
 		println("init - re-initialize the global environment");
