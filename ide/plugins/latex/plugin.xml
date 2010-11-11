@@ -158,6 +158,32 @@
            </enabledWhen>
     </page>
  </extension>
+ <extension
+       point="org.eclipse.ui.navigator.navigatorContent">
+    <commonFilter
+          activeByDefault="true"
+          description="%Filters.latexTempFiles.description"
+          id="org.overture.resources.filters.latex.latexTmpFilesFilter"
+          name="%Filters.latexTempFiles.name">
+       <filterExpression>
+          <and>
+             <adapt
+                   type="org.eclipse.core.resources.IResource">
+                <or>
+                   <test
+                         property="org.eclipse.core.resources.name"
+                         value="*.aux">
+                   </test>
+                   <test
+                         property="org.eclipse.core.resources.name"
+                         value="*.toc">
+                   </test>
+                </or>
+             </adapt>
+          </and>
+       </filterExpression>
+    </commonFilter>
+ </extension>
  <!--extension
        id="org.overture.ide.plugins.latex.builder"
        name="Pdf Latex Builder"

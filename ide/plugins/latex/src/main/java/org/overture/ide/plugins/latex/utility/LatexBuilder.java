@@ -20,8 +20,6 @@ import org.overturetool.vdmj.lex.Dialect;
 @SuppressWarnings("restriction")
 public class LatexBuilder
 {
-	
-	
 	final static String OUTPUT_FOLDER_NAME = "latex";
 	final String PROJECT_INCLUDE_MODEL_FILES = "%PROJECT_INCLUDE_MODEL_FILES";
 	final String TITLE = "%TITLE";
@@ -31,23 +29,11 @@ public class LatexBuilder
 	public void prepare(IProject project, Dialect dialect) throws IOException
 	{
 		outputFolder = makeOutputFolder(project);
-		String languageStyleFolder = "";
-		switch (dialect)
-		{
-		case VDM_PP:
-			languageStyleFolder = "pp";
-			break;
-		case VDM_RT:
-			languageStyleFolder = "rt";
-			break;
-		case VDM_SL:
-			languageStyleFolder = "sl";
-			break;
-
-		}
-
 		String overturesty = readFile("latex/overture.sty");
-		String overturelanguagedef = readFile("latex/"+languageStyleFolder+"/overturelanguagedef.sty");
+
+		String overturelanguagedef = readFile("latex/overturelanguagedef.sty");
+		
+		overturesty = overturesty.replaceAll("OVERTURE_LANGUAGE", dialect.toString());
 
 		writeFile(outputFolder, "overture.sty", overturesty);
 		writeFile(outputFolder, "overturelanguagedef.sty", overturelanguagedef);
