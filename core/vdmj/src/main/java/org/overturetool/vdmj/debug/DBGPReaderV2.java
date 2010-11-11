@@ -251,6 +251,27 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
     			{
     				usage("-r option requires a VDM release");
     			}
+    		}else if (arg.equals("-pre"))
+    		{
+    			Settings.prechecks = false;
+    		}
+    		else if (arg.equals("-post"))
+    		{
+    			Settings.postchecks = false;
+    		}
+    		else if (arg.equals("-inv"))
+    		{
+    			Settings.invchecks = false;
+    		}
+    		else if (arg.equals("-dtc"))
+    		{
+    			// NB. Turn off both when no DTC
+    			Settings.invchecks = false;
+    			Settings.dynamictypechecks = false;
+    		}
+    		else if (arg.equals("-measures"))
+    		{
+    			Settings.measureChecks = false;
     		}
     		else if (arg.equals("-log"))
     		{
