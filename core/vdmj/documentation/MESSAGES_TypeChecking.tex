@@ -1,0 +1,321 @@
+% VDMJ Error and Warning Messages
+% ===============================
+%
+% Messages and warnings are numbered in the following blocks:
+%
+% 0000-0999	Internal errors
+% 1000-1999	Lexical errors
+% 2000-2999	Syntax errors
+% 3000-3999	Type checking errors
+% 4000-4999	Runtime errors
+% 5000-5999	Warnings
+%
+% Several messages appear to be duplicates, but internally they are raised from
+% different places in the code, and so the exact error number may be used to
+% distinguish the cases. Some errors are followed by additional detail, such
+% as the expected and actual values.
+
+\begin{description}
+\item[3000:] \texttt{"Expression does not match declared type"}
+\item[3001:] \texttt{"Class inherits thread definition from multiple supertypes"}
+\item[3002:] \texttt{"Circular class hierarchy detected: <name>"}
+\item[3003:] \texttt{"Undefined superclass: <supername>"}
+\item[3004:] \texttt{"Superclass name is not a class: <supername>"}
+\item[3005:] \texttt{"Overriding a superclass member of a different kind: <member>"}
+\item[3006:] \texttt{"Overriding definition reduces visibility"}
+\item[3007:] \texttt{"Overriding member incompatible type: <member>"}
+\item[3008:] \texttt{"Overloaded members indistinguishable: <member>"}
+\item[3009:] \texttt{"Circular class hierarchy detected: <class>"}
+\item[3010:] \texttt{"Name <name> is ambiguous"}
+\item[3011:] \texttt{"Name <name> is multiply defined in class"}
+\item[3012:] \texttt{"Type <name> is multiply defined in class"}
+\item[3013:] \texttt{"Class invariant is not a boolean expression"}
+\item[3014:] \texttt{"Expression is not compatible with type bind"}
+\item[3015:] \texttt{"Set bind is not a set type?"}
+\item[3016:] \texttt{"Expression is not compatible with set bind"}
+\item[3017:] \texttt{"Duplicate definitions for <name>"}
+\item[3018:] \texttt{"Function returns unexpected type"}
+\item[3019:] \texttt{"Function parameter visibility less than function definition"}
+\item[3020:] \texttt{"Too many parameter patterns"}
+\item[3021:] \texttt{"Too few parameter patterns"}
+\item[3022:] \texttt{"Too many curried parameters"}
+\item[3023:] \texttt{"Too many parameter patterns"}
+\item[3024:] \texttt{"Too few parameter patterns"}
+\item[3025:] \texttt{"Constructor operation must have return type <class>"}
+\item[3026:] \texttt{"Constructor operation must have return type <class>"}
+\item[3027:] \texttt{"Operation returns unexpected type"}
+\item[3028:] \texttt{"Operation parameter visibility less than operation definition"}
+\item[3029:] \texttt{"Function returns unexpected type"}
+\item[3030:] \texttt{"Function parameter visibility less than function definition"}
+\item[3031:] \texttt{"Unknown state variable <name>"}
+\item[3032:] \texttt{"State variable <name> is not this type"}
+\item[3033:] \texttt{-}
+\item[3034:] \texttt{-}
+\item[3035:] \texttt{"Operation returns unexpected type"}
+\item[3036:] \texttt{"Operation parameter visibility less than operation definition"}
+\item[3037:] \texttt{"Static instance variable is not initialized: <name>"}
+\item[3038:] \texttt{"<name> is not an explicit operation"}
+\item[3039:] \texttt{"<name> is not in scope"}
+\item[3040:] \texttt{"Cannot put mutex on a constructor"}
+\item[3041:] \texttt{"Duplicate mutex name"}
+\item[3042:] \texttt{"<name> is not an explicit operation"}
+\item[3043:] \texttt{"<name> is not in scope"}
+\item[3044:] \texttt{"Duplicate permission guard found for <name>"}
+\item[3045:] \texttt{"Cannot put guard on a constructor"}
+\item[3046:] \texttt{"Guard is not a boolean expression"}
+\item[3047:] \texttt{"Only one state definition allowed per module"}
+\item[3048:] \texttt{"Expression does not return a value"}
+\item[3049:] \texttt{"Thread statement/operation must not return a value"}
+\item[3050:] \texttt{"Type <name> is infinite"}
+\item[3051:] \texttt{"Expression does not match declared type"}
+\item[3052:] \texttt{"Value type visibility less than value definition"}
+\item[3053:] \texttt{"Argument of 'abs' is not numeric"}
+\item[3054:] \texttt{"Type <name> cannot be applied"}
+\item[3055:] \texttt{"Sequence selector must have one argument"}
+\item[3056:] \texttt{"Sequence application argument must be numeric"}
+\item[3057:] \texttt{"Map application must have one argument"}
+\item[3058:] \texttt{"Map application argument is incompatible type"}
+\item[3059:] \texttt{"Too many arguments"}
+\item[3060:] \texttt{"Too few arguments"}
+\item[3061:] \texttt{"Inappropriate type for argument <n>"}
+\item[3062:] \texttt{"Too many arguments"}
+\item[3063:] \texttt{"Too few arguments"}
+\item[3064:] \texttt{"Inappropriate type for argument <n>"}
+\item[3065:] \texttt{"Left hand of <operator> is not <type>"}
+\item[3066:] \texttt{"Right hand of <operator> is not <type>"}
+\item[3067:] \texttt{"Argument of 'card' is not a set"}
+\item[3068:] \texttt{"Right hand of map 'comp' is not a map"}
+\item[3069:] \texttt{"Domain of left should equal range of right in map 'comp'"}
+\item[3070:] \texttt{"Right hand of function 'comp' is not a function"}
+\item[3071:] \texttt{"Left hand function must have a single parameter"}
+\item[3072:] \texttt{"Right hand function must have a single parameter"}
+\item[3073:] \texttt{"Parameter of left should equal result of right in function 'comp'"}
+\item[3074:] \texttt{"Left hand of 'comp' is neither a map nor a function"}
+\item[3075:] \texttt{"Argument of 'conc' is not a seq of seq"}
+\item[3076:] \texttt{"Argument of 'dinter' is not a set of sets"}
+\item[3077:] \texttt{"Merge argument is not a set of maps"}
+\item[3078:] \texttt{"dunion argument is not a set of sets"}
+\item[3079:] \texttt{"Left of '<-:' is not a set"}
+\item[3080:] \texttt{"Right of '<-:' is not a map"}
+\item[3081:] \texttt{"Restriction of map should be set of <type>"}
+\item[3082:] \texttt{"Left of '<:' is not a set"}
+\item[3083:] \texttt{"Right of '<:' is not a map"}
+\item[3084:] \texttt{"Restriction of map should be set of <type>"}
+\item[3085:] \texttt{"Argument of 'elems' is not a sequence"}
+\item[3086:] \texttt{"Else clause is not a boolean"}
+\item[3087:] \texttt{"Left and right of '=' are incompatible types"}
+\item[3088:] \texttt{"Predicate is not boolean"}
+\item[3089:] \texttt{"Predicate is not boolean"}
+\item[3090:] \texttt{"Unknown field <name> in record <type>"}
+\item[3091:] \texttt{"Unknown member <member> of class <class>"}
+\item[3092:] \texttt{"Inaccessible member <member> of class <class>"}
+\item[3093:] \texttt{"Field <name> applied to non-aggregate type"}
+\item[3094:] \texttt{"Field #<n> applied to non-tuple type"}
+\item[3095:] \texttt{"Field number does not match tuple size"}
+\item[3096:] \texttt{"Argument to floor is not numeric"}
+\item[3097:] \texttt{"Predicate is not boolean"}
+\item[3098:] \texttt{"Function value is not polymorphic"}
+\item[3099:] \texttt{"Polymorphic function is not in scope"}
+\item[3100:] \texttt{"Function has no type parameters"}
+\item[3101:] \texttt{"Expecting <n> type parameters"}
+\item[3102:] \texttt{"Parameter name <name> not defined"}
+\item[3103:] \texttt{"Function instantiation does not yield a function"}
+\item[3104:] \texttt{"Argument to 'hd' is not a sequence"}
+\item[3105:] \texttt{"<operation> is not an explicit operation"}
+\item[3106:] \texttt{"<operation> is not in scope"}
+\item[3107:] \texttt{"Cannot use history of a constructor"}
+\item[3108:] \texttt{"If expression is not a boolean"}
+\item[3109:] \texttt{"Argument to 'inds' is not a sequence"}
+\item[3110:] \texttt{"Argument of 'in set' is not a set"}
+\item[3111:] \texttt{"Argument to 'inverse' is not a map"}
+\item[3112:] \texttt{"Iota set bind is not a set"}
+\item[3113:] \texttt{"Unknown type name <name>"}
+\item[3114:] \texttt{"Undefined base class type: <class>"}
+\item[3115:] \texttt{"Undefined class type: <class>"}
+\item[3116:] \texttt{"Argument to 'len' is not a sequence"}
+\item[3117:] \texttt{"Such that clause is not boolean"}
+\item[3118:] \texttt{"Predicate is not boolean"}
+\item[3119:] \texttt{"Map composition is not a maplet"}
+\item[3120:] \texttt{"Argument to 'dom' is not a map"}
+\item[3121:] \texttt{"Element is not of maplet type"}
+\item[3122:] \texttt{"Argument to 'rng' is not a map"}
+\item[3123:] \texttt{"Left hand of 'munion' is not a map"}
+\item[3124:] \texttt{"Right hand of 'munion' is not a map"}
+\item[3125:] \texttt{"Argument of mk_<type> is the wrong type"}
+\item[3126:] \texttt{"Unknown type <type> in constructor"}
+\item[3127:] \texttt{"Type <type> is not a record type"}
+\item[3128:] \texttt{"Record and constructor do not have same number of fields"}
+\item[3129:] \texttt{"Constructor field <n> is of wrong type"}
+\item[3130:] \texttt{"Modifier for <tag> should be <type>"}
+\item[3131:] \texttt{"Modifier <tag> not found in record"}
+\item[3132:] \texttt{"mu operation on non-record type"}
+\item[3133:] \texttt{"Class name <name> not in scope"}
+\item[3134:] \texttt{"Class has no constructor with these parameter types"}
+\item[3135:] \texttt{"Class has no constructor with these parameter types"}
+\item[3136:] \texttt{"Left and right of '<>' different types"}
+\item[3137:] \texttt{"Not expression is not a boolean"}
+\item[3138:] \texttt{"Argument of 'not in set' is not a set"}
+\item[3139:] \texttt{"Left hand of <operator> is not numeric"}
+\item[3140:] \texttt{"Right hand of <operator> is not numeric"}
+\item[3141:] \texttt{"Right hand of '++' is not a map"}
+\item[3142:] \texttt{"Right hand of '++' is not a map"}
+\item[3143:] \texttt{"Domain of right hand of '++' must be nat1"}
+\item[3144:] \texttt{"Left of '++' is neither a map nor a sequence"}
+\item[3145:] \texttt{"Argument to 'power' is not a set"}
+\item[3146:] \texttt{"Left hand of <operator> is not a set"}
+\item[3147:] \texttt{"Right hand of <operator> is not a set"}
+\item[3148:] \texttt{"Left of ':->' is not a map"}
+\item[3149:] \texttt{"Right of ':->' is not a set"}
+\item[3150:] \texttt{"Restriction of map should be set of <type>"}
+\item[3151:] \texttt{"Left of ':>' is not a map"}
+\item[3152:] \texttt{"Right of ':>' is not a set"}
+\item[3153:] \texttt{"Restriction of map should be set of <type>"}
+\item[3154:] \texttt{"<name> not in scope"}
+\item[3155:] \texttt{"List comprehension must define one numeric bind variable"}
+\item[3156:] \texttt{"Predicate is not boolean"}
+\item[3157:] \texttt{"Left hand of '^' is not a sequence"}
+\item[3158:] \texttt{"Right hand of '^' is not a sequence"}
+\item[3159:] \texttt{"Predicate is not boolean"}
+\item[3160:] \texttt{"Left hand of '\\' is not a set"}
+\item[3161:] \texttt{"Right hand of '\\' is not a set"}
+\item[3162:] \texttt{"Left and right of '\\' are different types"}
+\item[3163:] \texttt{"Left hand of <operator> is not a set"}
+\item[3164:] \texttt{"Right hand of <operator> is not a set"}
+\item[3165:] \texttt{"Left and right of intersect are different types"}
+\item[3166:] \texttt{"Set range type must be an number"}
+\item[3167:] \texttt{"Set range type must be an number"}
+\item[3168:] \texttt{"Left hand of <operator> is not a set"}
+\item[3169:] \texttt{"Right hand of <operator> is not a set"}
+\item[3170:] \texttt{"Map iterator expects nat as right hand arg"}
+\item[3171:] \texttt{"Function iterator expects nat as right hand arg"}
+\item[3172:] \texttt{"'**' expects number as right hand arg"}
+\item[3173:] \texttt{"First arg of '**' must be a map, function or number"}
+\item[3174:] \texttt{"Subsequence is not of a sequence type"}
+\item[3175:] \texttt{"Subsequence range start is not a number"}
+\item[3176:] \texttt{"Subsequence range end is not a number"}
+\item[3177:] \texttt{"Left hand of <operator> is not a set"}
+\item[3178:] \texttt{"Right hand of <operator> is not a set"}
+\item[3179:] \texttt{"Argument to 'tl' is not a sequence"}
+\item[3180:] \texttt{"Inaccessible member <name> of class <name>"}
+\item[3181:] \texttt{"Cannot access <name> from a static context"}
+\item[3182:] \texttt{"Name <name> is not in scope"}
+\item[3183:] \texttt{"Exported function <name> not defined in module"}
+\item[3184:] \texttt{"Exported <name> function type incorrect"}
+\item[3185:] \texttt{"Exported operation <name> not defined in module"}
+\item[3186:] \texttt{"Exported operation type does not match actual type"}
+\item[3187:] \texttt{"Exported type <type> not defined in module"}
+\item[3188:] \texttt{"Exported value <name> not defined in module"}
+\item[3189:] \texttt{"Exported type does not match actual type"}
+\item[3190:] \texttt{"Import all from module with no exports?"}
+\item[3191:] \texttt{"No export declared for import of type <type> from <module>"}
+\item[3192:] \texttt{"Type import of <name> does not match export from <module>"}
+\item[3193:] \texttt{"No export declared for import of value <name> from <module>"}
+\item[3194:] \texttt{"Type of value import <name> does not match export from <module>"}
+\item[3195:] \texttt{"Cannot import from self"}
+\item[3196:] \texttt{"No such module as <module>"}
+\item[3197:] \texttt{"Expression matching set bind is not a set"}
+\item[3198:] \texttt{"Type bind not compatible with expression"}
+\item[3199:] \texttt{"Set bind not compatible with expression"}
+\item[3200:] \texttt{"Mk_ expression is not a record type"}
+\item[3201:] \texttt{"Matching expression is not a compatible record type"}
+\item[3202:] \texttt{"Record pattern argument/field count mismatch"}
+\item[3203:] \texttt{"Sequence pattern is matched against <type>"}
+\item[3204:] \texttt{"Set pattern is not matched against set type"}
+\item[3205:] \texttt{"Matching expression is not a product of cardinality <n>"}
+\item[3206:] \texttt{"Matching expression is not a set type"}
+\item[3207:] \texttt{"Object designator is not an object type"}
+\item[3208:] \texttt{"Object designator is not an object type"}
+\item[3209:] \texttt{"Member <field> is not in scope"}
+\item[3210:] \texttt{"Object member is neither a function nor an operation"}
+\item[3211:] \texttt{"Expecting <n> arguments"}
+\item[3212:] \texttt{"Unexpected type for argument <n>"}
+\item[3213:] \texttt{"Operation <name> is not in scope"}
+\item[3214:] \texttt{"Cannot call <name> from static context"}
+\item[3215:] \texttt{"<name> is not an operation"}
+\item[3216:] \texttt{"Expecting <n> arguments"}
+\item[3217:] \texttt{"Unexpected type for argument <n>"}
+\item[3218:] \texttt{"Expression is not boolean"}
+\item[3219:] \texttt{"For all statement does not contain a set type"}
+\item[3220:] \texttt{"From type is not numeric"}
+\item[3221:] \texttt{"To type is not numeric"}
+\item[3222:] \texttt{"By type is not numeric"}
+\item[3223:] \texttt{"Expecting sequence type after 'in'"}
+\item[3224:] \texttt{"If expression is not boolean"}
+\item[3225:] \texttt{"Such that clause is not boolean"}
+\item[3226:] \texttt{"Incompatible types in object assignment"}
+\item[3228:] \texttt{"<name> is not in scope"}
+\item[3229:] \texttt{"<name> should have no parameters or return type"}
+\item[3230:] \texttt{"<name> is implicit"}
+\item[3231:] \texttt{"<name> should have no parameters or return type"}
+\item[3232:] \texttt{"<name> is not an operation name"}
+\item[3233:] \texttt{"Precondition is not a boolean expression"}
+\item[3234:] \texttt{"Postcondition is not a boolean expression"}
+\item[3235:] \texttt{"Expression is not a set of object references"}
+\item[3236:] \texttt{"Class does not define a thread"}
+\item[3237:] \texttt{"Class does not define a thread"}
+\item[3238:] \texttt{"Expression is not an object reference or set of object references"}
+\item[3239:] \texttt{"Incompatible types in assignment"}
+\item[3241:] \texttt{"Body of trap statement does not throw exceptions"}
+\item[3242:] \texttt{"Map element assignment of wrong type"}
+\item[3243:] \texttt{"Seq element assignment is not numeric"}
+\item[3244:] \texttt{"Expecting a map or a sequence"}
+\item[3245:] \texttt{"Field assignment is not of a record type"}
+\item[3246:] \texttt{"Unknown field name, <name>"}
+\item[3247:] \texttt{"Unknown state variable <name> in assignment"}
+\item[3248:] \texttt{"Cannot assign to 'ext rd' state <name>"}
+\item[3249:] \texttt{"Object designator is not a map, sequence, function or operation"}
+\item[3250:] \texttt{"Map application must have one argument"}
+\item[3251:] \texttt{"Map application argument is incompatible type"}
+\item[3252:] \texttt{"Sequence application must have one argument"}
+\item[3253:] \texttt{"Sequence argument is not numeric"}
+\item[3254:] \texttt{"Too many arguments"}
+\item[3255:] \texttt{"Too few arguments"}
+\item[3256:] \texttt{"Inappropriate type for argument <n>"}
+\item[3257:] \texttt{"Too many arguments"}
+\item[3258:] \texttt{"Too few arguments"}
+\item[3259:] \texttt{"Inappropriate type for argument <n>"}
+\item[3260:] \texttt{"Unknown class member name, <name>"}
+\item[3261:] \texttt{"Unknown field name, <name>"}
+\item[3262:] \texttt{"Field assignment is not of a class or record type"}
+\item[3263:] \texttt{"Cannot reference 'self' from here"}
+\item[3264:] \texttt{"At least one bind cannot match set"}
+\item[3265:] \texttt{"At least one bind cannot match this type"}
+\item[3266:] \texttt{"Argument is not an object"}
+\item[3267:] \texttt{"Empty map cannot be applied"}
+\item[3268:] \texttt{"Empty sequence cannot be applied"}
+\item[3269:] \texttt{"Ambiguous function/operation name: <name>"}
+\item[3270:] \texttt{"Measure <name> is not in scope"}
+\item[3271:] \texttt{"Measure <name> is not an explicit function"}
+\item[3272:] \texttt{"Measure result type is not a nat, or a nat tuple"}
+\item[3273:] \texttt{"Measure not allowed for an implicit function"}
+\item[3274:] \texttt{"External variable is not in scope: <name>"}
+\item[3275:] \texttt{"Error clause must be a boolean"}
+\item[3276:] \texttt{"Ambiguous names inherited by <name>"}
+\item[3277:] \texttt{"Trace repeat illegal values"}
+\item[3278:] \texttt{"Cannot inherit from system class <name>"}
+\item[3279:] \texttt{"Cannot instantiate system class <name>"}
+\item[3280:] \texttt{"Argument to deploy must be an object"}
+\item[3281:] \texttt{"Arguments to duration must be integer >= 0"}
+\item[3282:] \texttt{"Arguments to cycles must be integer >= 0"}
+\item[3283:] \texttt{"System class constructor cannot be implicit"}
+\item[3284:] \texttt{"System class can only define instance variables and a constructor"}
+\item[3285:] \texttt{"System class can only define a default constructor"}
+\item[3286:] \texttt{"Constructor cannot be 'async'"}
+\item[3287:] \texttt{"Periodic thread must have <n> argument(s)"}
+\item[3288:] \texttt{"Period argument must be non-zero"}
+\item[3289:] \texttt{"Delay argument must be less than the period"}
+\item[3290:] \texttt{"Argument to setPriority must be an operation"}
+\item[3291:] \texttt{"Argument to setPriority cannot be a constructor"}
+\item[3292:] \texttt{"Constructor is not accessible"}
+\item[3293:] \texttt{"Asynchronous operation <name> cannot return a value"}
+\item[3294:] \texttt{"Only one system class permitted"}
+\item[3295:] \texttt{"Argument to 'reverse' is not a sequence"}
+\item[3296:] \texttt{"Cannot use '" + typename + "' outside system class"}
+\item[3297:] \texttt{"Cannot use default constructor for this class"}
+\item[3298:] \texttt{"Cannot inherit from CPU"}
+\item[3299:] \texttt{"Cannot inherit from BUS"}
+\item[3300:] \texttt{"Operation <type> cannot be called from a function"}
+\item[3301:] \texttt{"Variable <name> in scope is not updatable"}
+\item[3302:] \texttt{"Variable <name> cannot be accessed from this context"}
+\item[3303:] \texttt{"Measure parameters different to function"}
+\end

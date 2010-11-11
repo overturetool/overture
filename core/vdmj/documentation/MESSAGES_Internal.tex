@@ -1,0 +1,85 @@
+% VDMJ Error and Warning Messages
+% ===============================
+%
+% Messages and warnings are numbered in the following blocks:
+%
+% 0000-0999	Internal errors
+% 1000-1999	Lexical errors
+% 2000-2999	Syntax errors
+% 3000-3999	Type checking errors
+% 4000-4999	Runtime errors
+% 5000-5999	Warnings
+%
+% Several messages appear to be duplicates, but internally they are raised from
+% different places in the code, and so the exact error number may be used to
+% distinguish the cases. Some errors are followed by additional detail, such
+% as the expected and actual values.
+
+\begin{description}
+\item[0000:] \texttt{File IO errors, eg. "File not found"}
+\item[0001:] \texttt{"Mark/reset not supported - use push/pop"}
+\item[0002:] \texttt{"Cannot change type qualifier: <name><qualifiers> to <qualifiers>"}
+\item[0003:] \texttt{"PatternBind passed <class name>"}
+\item[0004:] \texttt{"Cannot get bind values for type <type>"}
+\item[0005:] \texttt{"Illegal clone"}
+\item[0006:] \texttt{"Constructor for <class> can't find <member>"}
+\item[0007:] \texttt{"Cannot write to IO file <name>"}
+\item[0009:] \texttt{"Too many syntax errors"}
+\item[0010:] \texttt{"Too many type checking errors"}
+\item[0011:] \texttt{"CPU or BUS creation failure"}
+\item[0012:] \texttt{"Document has no specifications?"}
+\item[0013:] \texttt{"Document has no expression?"}
+\item[0014:] \texttt{"Unexpected type in definition block"}
+\item[0015:] \texttt{"Unexpected type definition shape: <type>"}
+\item[0016:] \texttt{"Typeless functions not supported"}
+\item[0017:] \texttt{"Unexpected function shape: <shape>"}
+\item[0018:] \texttt{"Unknown function body type"}
+\item[0019:] \texttt{"Unexpected operation shape: <shape>"}
+\item[0020:] \texttt{"Unknown operation body type"}
+\item[0021:] \texttt{"Unknown instance variable type"}
+\item[0022:] \texttt{"Unknown sync predicate type"}
+\item[0023:] \texttt{"Expecting integer periodic argument"}
+\item[0024:] \texttt{"Sporadic threads not implemented"}
+\item[0025:] \texttt{"Unknown thread specification type"}
+\item[0026:] \texttt{"Let binding expects value definition"}
+\item[0027:] \texttt{"Bare Dcl statement encountered"}
+\item[0028:] \texttt{"Unknown trace specification type"}
+\item[0029:] \texttt{"DBGP: <reason>"}
+\item[0030:] \texttt{"Statement type unsupported: <type>"}
+\item[0031:] \texttt{"Expected object state designator type"}
+\item[0032:] \texttt{"Expected object state designator type"}
+\item[0033:] \texttt{"Expected state designator type"}
+\item[0034:] \texttt{"Native library error"}
+\item[0035:] \texttt{"Expression type unsupported: <type>"}
+\item[0036:] \texttt{"Unexpected pattern/bind type"}
+\item[0037:] \texttt{"Unexpected pattern/bind type"}
+\item[0038:] \texttt{"Unexpected pattern/bind type"}
+\item[0039:] \texttt{"Unexpected bind type"}
+\item[0040:] \texttt{"Unexpected bind type"}
+\item[0041:] \texttt{"Expected set bind type"}
+\item[0042:] \texttt{"Expected set bind type"}
+\item[0043:] \texttt{"Operator type unsupported: <type>"}
+\item[0044:] \texttt{"Tuple field select is not a number"}
+\item[0045:] \texttt{"Unexpected expression type: <type>"}
+\item[0046:] \texttt{"Unexpected literal expression"}
+\item[0047:] \texttt{"Class instantiation not supported"}
+\item[0048:] \texttt{"Unexpected type expression"}
+\item[0049:] \texttt{"Unexpected literal pattern type"}
+\item[0050:] \texttt{"Unexpected pattern type"}
+\item[0051:] \texttt{"Unexpected scope value"}
+\item[0052:] \texttt{"Cannot set default name at breakpoint"}
+\item[0053:] \texttt{"Unknown trace reduction type"}
+\item[0054:] \texttt{"Cannot instantiate native object: <reason>"}
+\item[0055:] \texttt{"Cannot access native object: <reason>"}
+\item[0056:] \texttt{"Native method cannot use pattern arguments: <sig>"}
+\item[0057:] \texttt{"Native member not found: <name>"}
+\item[0058:] \texttt{"Native method does not return Value: "}
+\item[0059:] \texttt{"Failed in native method: <reason>"}
+\item[0060:] \texttt{"Cannot access native method: <reason>"}
+\item[0061:] \texttt{"Cannot find native method: <reason>"}
+\item[0062:] \texttt{"Cannot invoke native method: <reason>"}
+\item[0063:] \texttt{"No delegate class found: <name>"}
+\item[0064:] \texttt{"Native method should be static: <name>"}
+\item[0065:] \texttt{"Illegal Lock state"}
+\item[0066:] \texttt{"Thread is not running on a CPU"}
+\end

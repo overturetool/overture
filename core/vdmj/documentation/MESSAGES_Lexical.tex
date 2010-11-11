@@ -1,0 +1,31 @@
+% VDMJ Error and Warning Messages
+% ===============================
+%
+% Messages and warnings are numbered in the following blocks:
+%
+% 0000-0999	Internal errors
+% 1000-1999	Lexical errors
+% 2000-2999	Syntax errors
+% 3000-3999	Type checking errors
+% 4000-4999	Runtime errors
+% 5000-5999	Warnings
+%
+% Several messages appear to be duplicates, but internally they are raised from
+% different places in the code, and so the exact error number may be used to
+% distinguish the cases. Some errors are followed by additional detail, such
+% as the expected and actual values.
+
+\begin{description}
+\item[1000:] \texttt{"Malformed quoted character"}
+\item[1001:] \texttt{"Invalid char <ch> in base <n> number"}
+\item[1002:] \texttt{"Expecting '|->'"}
+\item[1003:] \texttt{"Expecting '...'"}
+\item[1004:] \texttt{"Expecting '<-:'"}
+\item[1005:] \texttt{"Expecting close double quote"}
+\item[1006:] \texttt{"Expecting close quote after character"}
+\item[1007:] \texttt{"Unexpected tag after '#'"}
+\item[1008:] \texttt{"Malformed module`name"}
+\item[1009:] \texttt{"Unexpected character 'c'"}
+\item[1010:] \texttt{"Expecting <digits>[.<digits>][e<+-><digits>]"}
+\item[1011:] \texttt{"Unterminated block comment"}
+\end

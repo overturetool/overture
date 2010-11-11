@@ -1,0 +1,162 @@
+% VDMJ Error and Warning Messages
+% ===============================
+%
+% Messages and warnings are numbered in the following blocks:
+%
+% 0000-0999	Internal errors
+% 1000-1999	Lexical errors
+% 2000-2999	Syntax errors
+% 3000-3999	Type checking errors
+% 4000-4999	Runtime errors
+% 5000-5999	Warnings
+%
+% Several messages appear to be duplicates, but internally they are raised from
+% different places in the code, and so the exact error number may be used to
+% distinguish the cases. Some errors are followed by additional detail, such
+% as the expected and actual values.
+
+\begin{description}
+\item[4000:] \texttt{"Cannot instantiate abstract class <class>"}
+\item[4002:] \texttt{"Expression value is not in set bind"}
+\item[4003:] \texttt{"Value <value> cannot be applied"}
+\item[4004:] \texttt{"No cases apply for <value>"}
+\item[4005:] \texttt{"Duplicate map keys have different values"}
+\item[4006:] \texttt{"Type <type> has no field <field>"}
+\item[4007:] \texttt{"No such field in tuple: #<n>"}
+\item[4008:] \texttt{"No such type parameter @<name> in scope"}
+\item[4009:] \texttt{"Type parameter/local variable name clash, @<name>"}
+\item[4010:] \texttt{"Cannot take head of empty sequence"}
+\item[4011:] \texttt{"Illegal history operator: <#op>"}
+\item[4012:] \texttt{"Cannot invert non-injective map"}
+\item[4013:] \texttt{"Iota selects more than one result"}
+\item[4014:] \texttt{"Iota does not select a result"}
+\item[4015:] \texttt{"Let be st found no applicable bindings"}
+\item[4016:] \texttt{"Duplicate map keys have different values: <domain>"}
+\item[4017:] \texttt{"Duplicate map keys have different values: <domain>"}
+\item[4018:] \texttt{"Maplet cannot be evaluated"}
+\item[4019:] \texttt{"Sequence cannot extend to key: <index>"}
+\item[4020:] \texttt{"State value is neither a <type> nor a <type>"}
+\item[4021:] \texttt{"Duplicate map keys have different values: <key>"}
+\item[4022:] \texttt{"mk_ type argument is not <type>"}
+\item[4023:] \texttt{"Mu type conflict? No field tag <tag>"}
+\item[4024:] \texttt{"'not yet specified' expression reached"}
+\item[4025:] \texttt{"Map key not within sequence index range: <key>"}
+\item[4026:] \texttt{"Cannot create post_op environment"}
+\item[4027:] \texttt{"Cannot create pre_op environment"}
+\item[4028:] \texttt{"Sequence comprehension pattern has multiple variables"}
+\item[4029:] \texttt{"Sequence comprehension bindings must be numeric"}
+\item[4030:] \texttt{"Duplicate map keys have different values: <key>"}
+\item[4031:] \texttt{"First arg of '**' must be a map, function or number"}
+\item[4032:] \texttt{"'is subclass responsibility' expression reached"}
+\item[4033:] \texttt{"Tail sequence is empty"}
+\item[4034:] \texttt{"Name <name> not in scope"}
+\item[4035:] \texttt{"Object has no field: <name>"}
+\item[4036:] \texttt{"ERROR statement reached"}
+\item[4037:] \texttt{"No such field: <name>"}
+\item[4038:] \texttt{"Loop, from <value> to <value> by <value> will never terminate"}
+\item[4039:] \texttt{"Set bind does not contain value <value>"}
+\item[4040:] \texttt{"Let be st found no applicable bindings"}
+\item[4041:] \texttt{"'is not yet specified' statement reached"}
+\item[4042:] \texttt{"Sequence does not contain key: <key>"}
+\item[4043:] \texttt{"Object designator is not a map, sequence, operation or function"}
+\item[4045:] \texttt{"Object does not contain value for field: <name>"}
+\item[4046:] \texttt{"No such field: <name>"}
+\item[4047:] \texttt{"Cannot execute specification statement"}
+\item[4048:] \texttt{"'is subclass responsibility' statement reached"}
+\item[4049:] \texttt{"Value <value> is not in set bind"}
+\item[4050:] \texttt{"Value <value> is not in set bind"}
+\item[4051:] \texttt{"Cannot apply implicit function: <name>"}
+\item[4052:] \texttt{"Wrong number of arguments passed to <name>"}
+\item[4053:] \texttt{"Parameter patterns do not match arguments"}
+\item[4055:] \texttt{"Precondition failure: <pre_name>"}
+\item[4056:] \texttt{"Postcondition failure: <post_name>"}
+\item[4057:] \texttt{"Curried function return type is not a function"}
+\item[4058:] \texttt{"Value <value> is not a nat1"}
+\item[4059:] \texttt{"Value <value> is not a nat"}
+\item[4060:] \texttt{"Type invariant violated for <type>"}
+\item[4061:] \texttt{"No such key value in map: <key>"}
+\item[4062:] \texttt{"Cannot convert non-injective map to an inmap"}
+\item[4063:] \texttt{"Duplicate map keys have different values: <domain>"}
+\item[4064:] \texttt{"Value <value> is not a nat1 number"}
+\item[4065:] \texttt{"Value <value> is not a nat"}
+\item[4066:] \texttt{"Cannot call implicit operation: <name>"}
+\item[4067:] \texttt{"Deadlock detected"}
+\item[4068:] \texttt{"Wrong number of arguments passed to <name>"}
+\item[4069:] \texttt{"Parameter patterns do not match arguments"}
+\item[4071:] \texttt{"Precondition failure: <pre_name>"}
+\item[4072:] \texttt{"Postcondition failure: <post_name>"}
+\item[4073:] \texttt{"Cannot convert type parameter value to <type>"}
+\item[4074:] \texttt{"Cannot convert <value> to <type>"}
+\item[4075:] \texttt{"Value <value> is not an integer"}
+\item[4076:] \texttt{"Value <value> is not a nat1"}
+\item[4077:] \texttt{"Value <value> is not a nat"}
+\item[4078:] \texttt{"Wrong number of fields for <type>"}
+\item[4079:] \texttt{"Type invariant violated by mk_ arguments"}
+\item[4080:] \texttt{"Wrong number of fields for <type>"}
+\item[4081:] \texttt{"Field not defined: <tag>"}
+\item[4082:] \texttt{"Type invariant violated by mk_ arguments"}
+\item[4083:] \texttt{"Sequence index out of range: <index>"}
+\item[4084:] \texttt{"Cannot convert empty sequence to seq1"}
+\item[4085:] \texttt{"Cannot convert tuple to <type>"}
+\item[4086:] \texttt{"Value of type parameter is not a type"}
+\item[4087:] \texttt{"Cannot convert <value> (<kind>) to <type>"}
+\item[4088:] \texttt{"Set not permitted for <kind>"}
+\item[4089:] \texttt{"Can't get real value of <kind>"}
+\item[4090:] \texttt{"Can't get rat value of <kind>"}
+\item[4091:] \texttt{"Can't get int value of <kind>"}
+\item[4092:] \texttt{"Can't get nat value of <kind>"}
+\item[4093:] \texttt{"Can't get nat1 value of <kind>"}
+\item[4094:] \texttt{"Can't get bool value of <kind>"}
+\item[4095:] \texttt{"Can't get char value of <kind>"}
+\item[4096:] \texttt{"Can't get tuple value of <kind>"}
+\item[4097:] \texttt{"Can't get record value of <kind>"}
+\item[4098:] \texttt{"Can't get quote value of <kind>"}
+\item[4099:] \texttt{"Can't get sequence value of <kind>"}
+\item[4100:] \texttt{"Can't get set value of <kind>"}
+\item[4101:] \texttt{"Can't get string value of <kind>"}
+\item[4102:] \texttt{"Can't get map value of <kind>"}
+\item[4103:] \texttt{"Can't get function value of <kind>"}
+\item[4104:] \texttt{"Can't get operation value of <kind>"}
+\item[4105:] \texttt{"Can't get object value of <kind>"}
+\item[4106:] \texttt{"Boolean pattern match failed"}
+\item[4107:] \texttt{"Character pattern match failed"}
+\item[4108:] \texttt{"Sequence concatenation pattern does not match expression"}
+\item[4109:] \texttt{"Values do not match concatenation pattern"}
+\item[4110:] \texttt{"Expression pattern match failed"}
+\item[4111:] \texttt{"Integer pattern match failed"}
+\item[4112:] \texttt{"Quote pattern match failed"}
+\item[4113:] \texttt{"Real pattern match failed"}
+\item[4114:] \texttt{"Record type does not match pattern"}
+\item[4115:] \texttt{"Record expression does not match pattern"}
+\item[4116:] \texttt{"Values do not match record pattern"}
+\item[4117:] \texttt{"Wrong number of elements for sequence pattern"}
+\item[4118:] \texttt{"Values do not match sequence pattern"}
+\item[4119:] \texttt{"Wrong number of elements for set pattern"}
+\item[4120:] \texttt{"Values do not match set pattern"}
+\item[4121:] \texttt{"Cannot match set pattern"}
+\item[4122:] \texttt{"String pattern match failed"}
+\item[4123:] \texttt{"Tuple expression does not match pattern"}
+\item[4124:] \texttt{"Values do not match tuple pattern"}
+\item[4125:] \texttt{"Set union pattern does not match expression"}
+\item[4126:] \texttt{"Values do not match union pattern"}
+\item[4127:] \texttt{"Cannot match set pattern"}
+\item[4129:] \texttt{"Exit <value>"}
+\item[4130:] \texttt{"Instance invariant violated: <inv_op>"}
+\item[4131:] \texttt{"State invariant violated: <inv_op>"}
+\item[4132:] \texttt{"Using undefined value"}
+\item[4133:] \texttt{"Map range is not a subset of its domain: <key>"}
+\item[4134:] \texttt{"Infinite or NaN trouble"}
+\item[4135:] \texttt{"Cannot instantiate a system class"}
+\item[4136:] \texttt{"Cannot deploy to CPU"}
+\item[4137:] \texttt{"Cannot set operation priority on CPU"}
+\item[4138:] \texttt{"Cannot set CPU priority for operation"}
+\item[4139:] \texttt{"Multiple BUS routes between CPUs <name> and <name>"}
+\item[4140:] \texttt{"No BUS between CPUs <name> and <name>"}
+\item[4141:] \texttt{"CPU policy does not allow priorities"}
+\item[4142:] \texttt{"Value already updated by thread <n>"}
+\item[4143:] \texttt{"No such test number: <n>"}
+\item[4144:] \texttt{"State init expression cannot be executed"}
+\item[4145:] \texttt{"Time: <n> is not a nat1"}
+\item[4146:] \texttt{"Measure failure: f(args), measure <name>, current <value>, previous <value>"}
+\item[4147:] \texttt{"Polymorphic function missing @T"}
+\end
