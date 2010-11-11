@@ -16,7 +16,8 @@
 % as the expected and actual values.
 
 \begin{description}
-\item[0000:] \texttt{File IO errors, eg. "File not found"}
+\item[0000:] \texttt{File IO errors, eg. "File not found"}  This
+  typically occurs if a specification file is no longer present.
 \item[0001:] \texttt{"Mark/reset not supported - use push/pop"}
 \item[0002:] \texttt{"Cannot change type qualifier: <name><qualifiers> to <qualifiers>"}
 \item[0003:] \texttt{"PatternBind passed <class name>"}
@@ -24,14 +25,19 @@
 \item[0005:] \texttt{"Illegal clone"}
 \item[0006:] \texttt{"Constructor for <class> can't find <member>"}
 \item[0007:] \texttt{"Cannot write to IO file <name>"}
-\item[0009:] \texttt{"Too many syntax errors"}
+\item[0009:] \texttt{"Too many syntax errors"}  This error typically
+  occurs if one have included a file that is in a non VDM format and
+  by mistake have given it a vdm file extension (\texttt{vdmsl},
+  \texttt{vdmpp} or \texttt{vdmrt}).\index{vdm file extension}
 \item[0010:] \texttt{"Too many type checking errors"}
 \item[0011:] \texttt{"CPU or BUS creation failure"}
 \item[0012:] \texttt{"Document has no specifications?"}
 \item[0013:] \texttt{"Document has no expression?"}
 \item[0014:] \texttt{"Unexpected type in definition block"}
 \item[0015:] \texttt{"Unexpected type definition shape: <type>"}
-\item[0016:] \texttt{"Typeless functions not supported"}
+\item[0016:] \texttt{"Typeless functions not supported"} In an
+  experimental version of Overture typeless functions was supported
+  but this have been removed again.
 \item[0017:] \texttt{"Unexpected function shape: <shape>"}
 \item[0018:] \texttt{"Unknown function body type"}
 \item[0019:] \texttt{"Unexpected operation shape: <shape>"}
@@ -39,12 +45,16 @@
 \item[0021:] \texttt{"Unknown instance variable type"}
 \item[0022:] \texttt{"Unknown sync predicate type"}
 \item[0023:] \texttt{"Expecting integer periodic argument"}
-\item[0024:] \texttt{"Sporadic threads not implemented"}
+\item[0024:] \texttt{"Sporadic threads not implemented"} In the PhD
+  thesis from Marcel Verhoef a notion of sporatic threads are
+  included. However these are not (yet) incorporated into Overture.
 \item[0025:] \texttt{"Unknown thread specification type"}
 \item[0026:] \texttt{"Let binding expects value definition"}
 \item[0027:] \texttt{"Bare Dcl statement encountered"}
 \item[0028:] \texttt{"Unknown trace specification type"}
-\item[0029:] \texttt{"DBGP: <reason>"}
+\item[0029:] \texttt{"DBGP: <reason>"}  This error is related to the
+  protocol used between the GUI part of the debugger inside Eclipse
+  and the underlying interpreter implementation inside VDMJ.
 \item[0030:] \texttt{"Statement type unsupported: <type>"}
 \item[0031:] \texttt{"Expected object state designator type"}
 \item[0032:] \texttt{"Expected object state designator type"}
@@ -82,4 +92,4 @@
 \item[0064:] \texttt{"Native method should be static: <name>"}
 \item[0065:] \texttt{"Illegal Lock state"}
 \item[0066:] \texttt{"Thread is not running on a CPU"}
-\end
+\end{description}

@@ -18,7 +18,11 @@
 \begin{description}
 \item[5000:] \texttt{"Definition <name> not used"}
 \item[5001:] \texttt{"Instance variable is not initialized: <name>"}
-\item[5002:] \texttt{"Mutex of overloaded operation"}
+\item[5002:] \texttt{"Mutex of overloaded operation"} This warning is
+  provided if one defined a mutex for an operation that is defined
+  using overloading. The users needs to be aware that all of the
+  overloaded operations will now by synchronisation controlled by this
+  constraint. 
 \item[5003:] \texttt{"Permission guard of overloaded operation"}
 \item[5004:] \texttt{"History expression of overloaded operation"}
 \item[5005:] \texttt{"Should access member <member> from a static context"}
@@ -28,8 +32,15 @@
 \item[5009:] \texttt{"Empty set used in bind"}
 \item[5010:] \texttt{"State init expression cannot be executed"}
 \item[5011:] \texttt{-}
-\item[5012:] \texttt{"Recursive function has no measure"}
+\item[5012:] \texttt{"Recursive function has no measure"} Whenever a
+  recursive function is defined the user have the possibility defining
+  a measure (i.e.\ a function that takes the same parameters as the
+  recursive function and returns a natural number that should decrease
+  at every recursive call). If such measures are included the proof
+  obligation generator can provide proof obligations that will ensure
+  termination of the recursion.
 \item[5013:] \texttt{-}
-\item[5014:] \texttt{"Uninitialized BUS ignored"}
+\item[5014:] \texttt{"Uninitialized BUS ignored"}  This warning appears
+  if one has defined a \texttt{BUS} that is not used.
 \item[5015:] \texttt{"LaTeX source should start with \%comment, \\document, \\section or \\subsection"  }
-\end
+\end{description}

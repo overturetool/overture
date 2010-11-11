@@ -22,7 +22,10 @@
 \item[3003:] \texttt{"Undefined superclass: <supername>"}
 \item[3004:] \texttt{"Superclass name is not a class: <supername>"}
 \item[3005:] \texttt{"Overriding a superclass member of a different kind: <member>"}
-\item[3006:] \texttt{"Overriding definition reduces visibility"}
+\item[3006:] \texttt{"Overriding definition reduces visibility"}  This
+  error message typically are caused by using a more restrictive
+  access modifier (or none which is interpreted as private) at this
+  place compared to for example an inherited definition.
 \item[3007:] \texttt{"Overriding member incompatible type: <member>"}
 \item[3008:] \texttt{"Overloaded members indistinguishable: <member>"}
 \item[3009:] \texttt{"Circular class hierarchy detected: <class>"}
@@ -35,7 +38,11 @@
 \item[3016:] \texttt{"Expression is not compatible with set bind"}
 \item[3017:] \texttt{"Duplicate definitions for <name>"}
 \item[3018:] \texttt{"Function returns unexpected type"}
-\item[3019:] \texttt{"Function parameter visibility less than function definition"}
+\item[3019:] \texttt{"Function parameter visibility less than function
+  definition"} This
+  error message typically are caused by using a more restrictive
+  access modifier (or none which is interpreted as private) at this
+  place compared to for example an inherited definition.
 \item[3020:] \texttt{"Too many parameter patterns"}
 \item[3021:] \texttt{"Too few parameter patterns"}
 \item[3022:] \texttt{"Too many curried parameters"}
@@ -44,15 +51,27 @@
 \item[3025:] \texttt{"Constructor operation must have return type <class>"}
 \item[3026:] \texttt{"Constructor operation must have return type <class>"}
 \item[3027:] \texttt{"Operation returns unexpected type"}
-\item[3028:] \texttt{"Operation parameter visibility less than operation definition"}
+\item[3028:] \texttt{"Operation parameter visibility less than
+  operation definition"} This
+  error message typically are caused by using a more restrictive
+  access modifier (or none which is interpreted as private) at this
+  place compared to for example an inherited definition.
 \item[3029:] \texttt{"Function returns unexpected type"}
-\item[3030:] \texttt{"Function parameter visibility less than function definition"}
+\item[3030:] \texttt{"Function parameter visibility less than function
+  definition"} This
+  error message typically are caused by using a more restrictive
+  access modifier (or none which is interpreted as private) at this
+  place compared to for example an inherited definition.
 \item[3031:] \texttt{"Unknown state variable <name>"}
 \item[3032:] \texttt{"State variable <name> is not this type"}
 \item[3033:] \texttt{-}
 \item[3034:] \texttt{-}
 \item[3035:] \texttt{"Operation returns unexpected type"}
-\item[3036:] \texttt{"Operation parameter visibility less than operation definition"}
+\item[3036:] \texttt{"Operation parameter visibility less than
+  operation definition"} This
+  error message typically are caused by using a more restrictive
+  access modifier (or none which is interpreted as private) at this
+  place compared to for example an inherited definition.
 \item[3037:] \texttt{"Static instance variable is not initialized: <name>"}
 \item[3038:] \texttt{"<name> is not an explicit operation"}
 \item[3039:] \texttt{"<name> is not in scope"}
@@ -68,7 +87,11 @@
 \item[3049:] \texttt{"Thread statement/operation must not return a value"}
 \item[3050:] \texttt{"Type <name> is infinite"}
 \item[3051:] \texttt{"Expression does not match declared type"}
-\item[3052:] \texttt{"Value type visibility less than value definition"}
+\item[3052:] \texttt{"Value type visibility less than value
+  definition"} This
+  error message typically are caused by using a more restrictive
+  access modifier (or none which is interpreted as private) at this
+  place compared to for example an inherited definition.
 \item[3053:] \texttt{"Argument of 'abs' is not numeric"}
 \item[3054:] \texttt{"Type <name> cannot be applied"}
 \item[3055:] \texttt{"Sequence selector must have one argument"}
@@ -110,7 +133,7 @@
 \item[3091:] \texttt{"Unknown member <member> of class <class>"}
 \item[3092:] \texttt{"Inaccessible member <member> of class <class>"}
 \item[3093:] \texttt{"Field <name> applied to non-aggregate type"}
-\item[3094:] \texttt{"Field #<n> applied to non-tuple type"}
+\item[3094:] \texttt{"Field \#<n> applied to non-tuple type"}
 \item[3095:] \texttt{"Field number does not match tuple size"}
 \item[3096:] \texttt{"Argument to floor is not numeric"}
 \item[3097:] \texttt{"Predicate is not boolean"}
@@ -141,7 +164,7 @@
 \item[3122:] \texttt{"Argument to 'rng' is not a map"}
 \item[3123:] \texttt{"Left hand of 'munion' is not a map"}
 \item[3124:] \texttt{"Right hand of 'munion' is not a map"}
-\item[3125:] \texttt{"Argument of mk_<type> is the wrong type"}
+\item[3125:] \texttt{"Argument of mk\_<type> is the wrong type"}
 \item[3126:] \texttt{"Unknown type <type> in constructor"}
 \item[3127:] \texttt{"Type <type> is not a record type"}
 \item[3128:] \texttt{"Record and constructor do not have same number of fields"}
@@ -173,8 +196,8 @@
 \item[3154:] \texttt{"<name> not in scope"}
 \item[3155:] \texttt{"List comprehension must define one numeric bind variable"}
 \item[3156:] \texttt{"Predicate is not boolean"}
-\item[3157:] \texttt{"Left hand of '^' is not a sequence"}
-\item[3158:] \texttt{"Right hand of '^' is not a sequence"}
+\item[3157:] \texttt{"Left hand of '\^' is not a sequence"}
+\item[3158:] \texttt{"Right hand of '\^' is not a sequence"}
 \item[3159:] \texttt{"Predicate is not boolean"}
 \item[3160:] \texttt{"Left hand of '\\' is not a set"}
 \item[3161:] \texttt{"Right hand of '\\' is not a set"}
@@ -216,7 +239,7 @@
 \item[3197:] \texttt{"Expression matching set bind is not a set"}
 \item[3198:] \texttt{"Type bind not compatible with expression"}
 \item[3199:] \texttt{"Set bind not compatible with expression"}
-\item[3200:] \texttt{"Mk_ expression is not a record type"}
+\item[3200:] \texttt{"Mk\_ expression is not a record type"}
 \item[3201:] \texttt{"Matching expression is not a compatible record type"}
 \item[3202:] \texttt{"Record pattern argument/field count mismatch"}
 \item[3203:] \texttt{"Sequence pattern is matched against <type>"}
@@ -318,4 +341,4 @@
 \item[3301:] \texttt{"Variable <name> in scope is not updatable"}
 \item[3302:] \texttt{"Variable <name> cannot be accessed from this context"}
 \item[3303:] \texttt{"Measure parameters different to function"}
-\end
+\end{description}

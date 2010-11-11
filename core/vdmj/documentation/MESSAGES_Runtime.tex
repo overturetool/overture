@@ -22,11 +22,11 @@
 \item[4004:] \texttt{"No cases apply for <value>"}
 \item[4005:] \texttt{"Duplicate map keys have different values"}
 \item[4006:] \texttt{"Type <type> has no field <field>"}
-\item[4007:] \texttt{"No such field in tuple: #<n>"}
+\item[4007:] \texttt{"No such field in tuple: \#<n>"}
 \item[4008:] \texttt{"No such type parameter @<name> in scope"}
 \item[4009:] \texttt{"Type parameter/local variable name clash, @<name>"}
 \item[4010:] \texttt{"Cannot take head of empty sequence"}
-\item[4011:] \texttt{"Illegal history operator: <#op>"}
+\item[4011:] \texttt{"Illegal history operator: <\#op>"}
 \item[4012:] \texttt{"Cannot invert non-injective map"}
 \item[4013:] \texttt{"Iota selects more than one result"}
 \item[4014:] \texttt{"Iota does not select a result"}
@@ -37,12 +37,12 @@
 \item[4019:] \texttt{"Sequence cannot extend to key: <index>"}
 \item[4020:] \texttt{"State value is neither a <type> nor a <type>"}
 \item[4021:] \texttt{"Duplicate map keys have different values: <key>"}
-\item[4022:] \texttt{"mk_ type argument is not <type>"}
+\item[4022:] \texttt{"mk\_ type argument is not <type>"}
 \item[4023:] \texttt{"Mu type conflict? No field tag <tag>"}
 \item[4024:] \texttt{"'not yet specified' expression reached"}
 \item[4025:] \texttt{"Map key not within sequence index range: <key>"}
-\item[4026:] \texttt{"Cannot create post_op environment"}
-\item[4027:] \texttt{"Cannot create pre_op environment"}
+\item[4026:] \texttt{"Cannot create post\_op environment"}
+\item[4027:] \texttt{"Cannot create pre\_op environment"}
 \item[4028:] \texttt{"Sequence comprehension pattern has multiple variables"}
 \item[4029:] \texttt{"Sequence comprehension bindings must be numeric"}
 \item[4030:] \texttt{"Duplicate map keys have different values: <key>"}
@@ -68,8 +68,10 @@
 \item[4051:] \texttt{"Cannot apply implicit function: <name>"}
 \item[4052:] \texttt{"Wrong number of arguments passed to <name>"}
 \item[4053:] \texttt{"Parameter patterns do not match arguments"}
-\item[4055:] \texttt{"Precondition failure: <pre_name>"}
-\item[4056:] \texttt{"Postcondition failure: <post_name>"}
+\item[4055:] \texttt{"Precondition failure: <pre\_name>"} This error
+  occurs if a pre-condition to a function or operation is violated.
+\item[4056:] \texttt{"Postcondition failure: <post\_name>"} This error
+  occurs if a post-condition to a function or operation is violated.
 \item[4057:] \texttt{"Curried function return type is not a function"}
 \item[4058:] \texttt{"Value <value> is not a nat1"}
 \item[4059:] \texttt{"Value <value> is not a nat"}
@@ -83,18 +85,18 @@
 \item[4067:] \texttt{"Deadlock detected"}
 \item[4068:] \texttt{"Wrong number of arguments passed to <name>"}
 \item[4069:] \texttt{"Parameter patterns do not match arguments"}
-\item[4071:] \texttt{"Precondition failure: <pre_name>"}
-\item[4072:] \texttt{"Postcondition failure: <post_name>"}
+\item[4071:] \texttt{"Precondition failure: <pre\_name>"}
+\item[4072:] \texttt{"Postcondition failure: <post\_name>"}
 \item[4073:] \texttt{"Cannot convert type parameter value to <type>"}
 \item[4074:] \texttt{"Cannot convert <value> to <type>"}
 \item[4075:] \texttt{"Value <value> is not an integer"}
 \item[4076:] \texttt{"Value <value> is not a nat1"}
 \item[4077:] \texttt{"Value <value> is not a nat"}
 \item[4078:] \texttt{"Wrong number of fields for <type>"}
-\item[4079:] \texttt{"Type invariant violated by mk_ arguments"}
+\item[4079:] \texttt{"Type invariant violated by mk\_ arguments"}
 \item[4080:] \texttt{"Wrong number of fields for <type>"}
 \item[4081:] \texttt{"Field not defined: <tag>"}
-\item[4082:] \texttt{"Type invariant violated by mk_ arguments"}
+\item[4082:] \texttt{"Type invariant violated by mk\_ arguments"}
 \item[4083:] \texttt{"Sequence index out of range: <index>"}
 \item[4084:] \texttt{"Cannot convert empty sequence to seq1"}
 \item[4085:] \texttt{"Cannot convert tuple to <type>"}
@@ -141,8 +143,8 @@
 \item[4126:] \texttt{"Values do not match union pattern"}
 \item[4127:] \texttt{"Cannot match set pattern"}
 \item[4129:] \texttt{"Exit <value>"}
-\item[4130:] \texttt{"Instance invariant violated: <inv_op>"}
-\item[4131:] \texttt{"State invariant violated: <inv_op>"}
+\item[4130:] \texttt{"Instance invariant violated: <inv\_op>"}
+\item[4131:] \texttt{"State invariant violated: <inv\_op>"}
 \item[4132:] \texttt{"Using undefined value"}
 \item[4133:] \texttt{"Map range is not a subset of its domain: <key>"}
 \item[4134:] \texttt{"Infinite or NaN trouble"}
@@ -159,4 +161,4 @@
 \item[4145:] \texttt{"Time: <n> is not a nat1"}
 \item[4146:] \texttt{"Measure failure: f(args), measure <name>, current <value>, previous <value>"}
 \item[4147:] \texttt{"Polymorphic function missing @T"}
-\end
+\end{description}

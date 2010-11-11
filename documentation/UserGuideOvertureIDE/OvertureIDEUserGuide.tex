@@ -1778,6 +1778,88 @@ breakpoint, there are additional commands that can be used. These are:
 \newpage
 \chapter{Templates in Overture}\label{app:templates}
 
+\begin{tabular}{ l p{9cm} }
+Key & Description\\\hline
+% ALL 
+caseExpression            & Case Expression\\
+dclStatement              & Declare\\
+defExpression             & def pattern = expression1 in expression2\\
+exists                    & exists bindList \& predicate\\
+forall                    & forall bind list \& predicate\\
+forallLoop                & for identifier = expression1 to expression2 do statement\\
+forallinset               & forall in set\\
+functions                 & Function block\\
+ifthen                    & if predicate then expression1 else expression2\\
+let                       & let pattern = expression1 in expression2\\
+operations                & Operation block\\
+while                     & while predicate do statement\\
+
+% VDM-SL 
+functionExplicit          & Explicit function\\
+functionImplicit          & Implicit function\\
+module                    & Module\\
+moduleSkeleton            & Module Full skeleton of a module\\
+operationExplicit         & Explicit Operation\\
+operationImplicit         & Implicit operation\\
+
+% VDM-PP 
+act                       & The number of times that operation name operation has been activated\\
+active                    & The number of operation name operations that are currently active.\\
+class                     & Class Definition\\
+classSkeleton             & Class Definition full skeleton\\
+fin                       & The number of times that the operation name operation has been completed\\
+functionExplicit          & Explicit function\\
+functionImplicit          & Implicit function\\
+instancevariables         & Instance Variables block\\
+isnotyetspecified         & is not yet specified\\
+isofbaseclass             & Test if an object is of a specific base class\\
+isofclass                 & Test if an object is of class\\
+issubclassof              & Is subclass of\\
+issubclassresponsibility  & Is subclass responsibility\\
+mutex                     & Mutex operation\\
+operationExplicit         & Explicit Operation\\
+operationImplicit         & Implicit operation\\
+per                       & Permission predicate for an operation, history counters can be used: \#fin, \#act, \#active, \#req, \#waiting\\
+req                       & The number of requests that has been issued for the operation name operation\\
+samebaseclass             & Test if two objects are of the same type\\
+self                      & Get a reference to the current object\\
+sync                      & Synchronization block\\
+values                    & Values block\\
+waiting                   & The number of outstanding requests for the operation name operation\\
+
+% VDM-RT 
+act                       & The number of times that operation name operation has been activated\\
+active                    & The number of operation name operations that are currently active.\\
+bus                       & BUS (Priority <CSMACD>, capacity,set of connected CPUs)\\
+class                     & Class Definition\\
+classSkeleton             & Class Definition full skeleton\\
+cpu                       & CPU (Priority <FP/FCFS>, capacity)\\
+cycle                     & Cycles(number of cycles)statement\\
+duration                  & Duration(time in milliceconds)statement\\
+fin                       & The number of times that the operation name operation has been completed\\
+functionExplicit          & Explicit function\\
+functionImplicit          & Implicit function\\
+instancevariables         & Instance Variables block\\
+isnotyetspecified         & is not yet specified\\
+isofbaseclass             & Test if an object is of a specific base class\\
+isofclass                 & Test if an object is of class\\
+issubclassof              & Is subclass of\\
+issubclassresponsibility  & Is subclass responsibility\\
+mutex                     & Mutex operation\\
+operationExplicit         & Explicit Operation\\
+operationImplicit         & Implicit operation\\
+per                       & Permission predicate for an operation, history counters can be used: \#fin, \#act, \#active, \#req, \#waiting\\
+periodic                  & periodic(periode,jitter,delay,offset)(operation name)\\
+req                       & The number of requests that has been issued for the operation name operation\\
+samebaseclass             & Test if two objects are of the same type\\
+self                      & Get a reference to the current object\\
+sync                      & Synchronization block\\
+system                    & System skeleton\\
+time                      & Get the current time\\
+values                    & Values block\\
+waiting                   & The number of outstanding requests for the operation name operation\\
+\end{tabular}
+
 \newpage
 \chapter{Internal Errors}\label{app:internalerrors}
 
@@ -1788,70 +1870,7 @@ never be seen by an ordinary user, so if they appear please report it
 to the SourceForge bug reporting utility
 (\url{https://sourceforge.net/tracker/?group_id=141350&atid=749152}). 
 
-\begin{description}
-\item[0000:] File IO errors, e.g.\ \texttt{File not found}. This
-  typically occurs if a specification file is no longer present.
-\item[0001:] \texttt{Mark/reset not supported - use push/pop}
-\item[0002:] \texttt{Cannot change type qualifier: <name><qualifiers> to <qualifiers>}
-\item[0003:] \texttt{PatternBind passed <class name>}
-\item[0004:] \texttt{Cannot get bind values for type <type>}
-\item[0005:] \texttt{Illegal clone}
-\item[0006:] \texttt{Constructor for <class> can't find <member>}
-\item[0007:] \texttt{Cannot write to IO file <name>}
-\item[0009:] \texttt{Too many syntax errors}. This error typically
-  occurs if one have included a file that is in a non VDM format and
-  by mistake have given it a vdm file extension (\texttt{vdmsl},
-  \texttt{vdmpp} or \texttt{vdmrt}).\index{vdm file extension}
-\item[0010:] \texttt{Too many type checking errors} 
-\item[0011:] \texttt{CPU or BUS creation failure}
-\item[0012:] \texttt{Document has no specifications?}
-\item[0013:] \texttt{Document has no expression?}
-\item[0014:] \texttt{Unexpected type in definition block}
-\item[0015:] \texttt{Unexpected type definition shape: <type>}
-\item[0016:] \texttt{Typeless functions not supported} In an
-  experimental version of Overture typeless functions was supported
-  but this have been removed again.
-\item[0017:] \texttt{Unexpected function shape: <shape>}
-\item[0018:] \texttt{Unknown function body type}
-\item[0019:] \texttt{Unexpected operation shape: <shape>}
-\item[0020:] \texttt{Unknown operation body type}
-\item[0021:] \texttt{Unknown instance variable type}
-\item[0022:] \texttt{Unknown sync predicate type}
-\item[0023:] \texttt{Expecting integer periodic argument}
-\item[0024:] \texttt{Sporadic threads not implemented}. In the PhD
-  thesis from Marcel Verhoef a notion of sporatic threads are
-  included. However these are not (yet) incorporated into Overture.
-\item[0025:] \texttt{Unknown thread specification type}
-\item[0026:] \texttt{Let binding expects value definition}
-\item[0027:] \texttt{Bare Dcl statement encountered}
-\item[0028:] \texttt{Unknown trace specification type}
-\item[0029:] \texttt{DBGP: <reason>}. This error is related to the
-  protocol used between the GUI part of the debugger inside Eclipse
-  and the underlying interpreter implementation inside VDMJ.
-\item[0030:] \texttt{Statement type unsupported: <type>}
-\item[0031:] \texttt{Expected object state designator type}
-\item[0032:] \texttt{Expected object state designator type}
-\item[0033:] \texttt{Expected state designator type}
-\item[0034:] \texttt{Native library error}
-\item[0035:] \texttt{Expression type unsupported: <type>}
-\item[0036:] \texttt{Unexpected pattern/bind type}
-\item[0037:] \texttt{Unexpected pattern/bind type}
-\item[0038:] \texttt{Unexpected pattern/bind type}
-\item[0039:] \texttt{Unexpected bind type}
-\item[0040:] \texttt{Unexpected bind type}
-\item[0041:] \texttt{Expected set bind type}
-\item[0042:] \texttt{Expected set bind type}
-\item[0043:] \texttt{Operator type unsupported: <type>}
-\item[0044:] \texttt{Tuple field select is not a number}
-\item[0045:] \texttt{Unexpected expression type: <type>}
-\item[0046:] \texttt{Unexpected literal expression}
-\item[0047:] \texttt{Class instantiation not supported}
-\item[0048:] \texttt{Unexpected type expression}
-\item[0049:] \texttt{Unexpected literal pattern type}
-\item[0050:] \texttt{Unexpected pattern type}
-\item[0051:] \texttt{Unexpected scope value}
-\item[0052:] \texttt{Cannot set default name at breakpoint}
-\end{description}
+\input{../../core/vdmj/documentation/MESSAGES_Internal}
 
 \newpage
 \chapter{Lexical Errors}\label{app:lexerr}
@@ -1861,20 +1880,7 @@ characters into tokens that can be used in the further
 processing. This is called a lexical analysis and errors in this area
 can be as follows:
 
-\begin{description}
-\item[1000:] \texttt{Malformed quoted character}
-\item[1001:] \texttt{Invalid char <ch> in base <n> number}
-\item[1002:] \texttt{Expecting '|->'}
-\item[1003:] \texttt{Expecting '...'}
-\item[1004:] \texttt{Expecting '<-:'}
-\item[1005:] \texttt{Expecting close double quote}
-\item[1006:] \texttt{Expecting close quote after character}
-\item[1007:] \texttt{Unexpected tag after '\#'}
-\item[1008:] \texttt{Malformed module`name}
-\item[1009:] \texttt{Unexpected character '<c>'}
-\item[1010:] \texttt{Expecting <digits>[.<digits>][e<+-><digits>]}
-\item[1011:] \texttt{Unterminated block comment}
-\end{description}
+\input{../../core/vdmj/documentation/MESSAGES_Lexical}
 
 \newpage
 \chapter{Syntatic Errors}\label{app:synerr}
@@ -1883,292 +1889,7 @@ If the syntax of the file you have provided does not live up to the
 syntax rules for the VDM dialect you wish to use, syntax errors will be
 reported. These can be as follows:
 
-\begin{description}
-\item[2000:] \texttt{Expecting 'in set' after pattern in set binding}
-\item[2001:] \texttt{Expecting 'in set' in set bind}
-\item[2002:] \texttt{Expecting ':' in type bind}
-\item[2003:] \texttt{Expecting 'in set' after pattern in binding}
-\item[2004:] \texttt{Expecting 'in set' or ':' after patterns}
-\item[2005:] \texttt{Expecting list of 'class' or 'system' definitions}
-\item[2006:] \texttt{Found tokens after class definitions}
-\item[2007:] \texttt{Expecting 'end <class>'}
-\item[2008:] \texttt{Class does not start with 'class'}
-\item[2009:] \texttt{Can't have instance variables in VDM-SL}
-\item[2010:] \texttt{Can't have a thread clause in VDM-SL}
-\item[2011:] \texttt{Only one thread clause permitted per class}
-\item[2012:] \texttt{Can't have a sync clause in VDM-SL}
-\item[2013:] \texttt{Expected 'operations', 'state', 'functions', 'types' or 'values'}
-\item[2014:] \texttt{Recursive type declaration}. This is reported in
-  type definitions such as \texttt{T = T}.
-\item[2015:] \texttt{Expecting =<type> or ::<field list>}
-\item[2016:] \texttt{Function name cannot start with 'mk\_'}
-\item[2017:] \texttt{Expecting ':' or '(' after name in function definition}
-\item[2018:] \texttt{Function type is not a -> or +> function}
-\item[2019:] \texttt{Expecting identifier <name> after type in definition}
-\item[2020:] \texttt{Expecting '(' after function name}
-\item[2021:] \texttt{Expecting ':' or '(' after name in operation definition}
-\item[2022:] \texttt{Expecting name <name> after type in definition}
-\item[2023:] \texttt{Expecting '(' after operation name}
-\item[2024:] \texttt{Expecting external declarations after 'ext'}
-\item[2025:] \texttt{Expecting <name>: exp->exp in errs clause}
-\item[2026:] \texttt{Expecting 'rd' or 'wr' after 'ext'}
-\item[2027:] \texttt{Expecting +ive number in periodic statement}
-\item[2028:] \texttt{Expecting 'per' or 'mutex'}
-\item[2029:] \texttt{Expecting <set bind> = <expression>}
-\item[2030:] \texttt{Expecting simple field identifier}
-\item[2031:] \texttt{Expecting field number after .\#}
-\item[2032:] \texttt{Expecting field name}
-\item[2033:] \texttt{Expected 'is not specified' or 'is subclass responsibility'}
-\item[2034:] \texttt{Unexpected token in expression}
-\item[2035:] \texttt{Tuple must have >1 argument}
-\item[2036:] \texttt{Expecting mk\_<type>}
-\item[2037:] \texttt{Malformed mk\_<type> name <name>}
-\item[2038:] \texttt{Expecting is\_<type>}
-\item[2039:] \texttt{Expecting maplet in map enumeration}
-\item[2040:] \texttt{Expecting 'else' in 'if' expression}
-\item[2041:] \texttt{Expecting two arguments for 'isofbase'}
-\item[2042:] \texttt{Expecting (<class>,<exp>) arguments for 'isofbase'}
-\item[2043:] \texttt{Expecting two arguments for 'isofclass'}
-\item[2044:] \texttt{Expecting (<class>,<exp>) arguments for 'isofclass'}
-\item[2045:] \texttt{Expecting two expressions in 'samebaseclass'}
-\item[2046:] \texttt{Expecting two expressions in 'sameclass'}
-\item[2047:] \texttt{Can't use history expression here}
-\item[2048:] \texttt{Expecting \#act, \#active, \#fin, \#req or \#waiting}
-\item[2049:] \texttt{Expecting 'end <module>'}
-\item[2050:] \texttt{Expecting library name after 'uselib'}
-\item[2051:] \texttt{Expecting 'end <module>'}
-\item[2052:] \texttt{Expecting 'all', 'types', 'values', 'functions' or 'operations'}
-\item[2053:] \texttt{Exported function is not a function type}
-\item[2054:] \texttt{Expecting types, values, functions or operations}
-\item[2055:] \texttt{Imported function is not a function type}
-\item[2056:] \texttt{Cannot use module'id name in patterns}
-\item[2057:] \texttt{Unexpected token in pattern}
-\item[2058:] \texttt{Expecting identifier}
-\item[2059:] \texttt{Expecting a name}
-\item[2060:] \texttt{Found qualified name <name>. Expecting an identifier}
-\item[2061:] \texttt{Expecting a name}
-\item[2062:] \texttt{Expected 'is not specified' or 'is subclass responsibility'}
-\item[2063:] \texttt{Unexpected token in statement}
-\item[2064:] \texttt{Expecting <object>.identifier(args) or name(args)}
-\item[2065:] \texttt{Expecting <object>.name(args) or name(args)}
-\item[2066:] \texttt{Expecting object field name}
-\item[2067:] \texttt{Expecting 'self', 'new' or name in object designator}
-\item[2068:] \texttt{Expecting field identifier}
-\item[2069:] \texttt{Expecting <identifier>:<type> := <expression>}
-\item[2070:] \texttt{Function type cannot return void type}
-\item[2071:] \texttt{Expecting field identifier before ':'}
-\item[2072:] \texttt{Expecting field name before ':-'}
-\item[2073:] \texttt{Duplicate field names in record type}
-\item[2074:] \texttt{Unexpected token in type expression}
-\item[2075:] \texttt{Expecting 'is subclass of'}
-\item[2076:] \texttt{Expecting 'is subclass of'}
-\item[2077:] \texttt{Expecting 'end' after class members}
-\item[2078:] \texttt{Missing ';' after type definition}
-\item[2079:] \texttt{Missing ';' after function definition}
-\item[2080:] \texttt{Missing ';' after state definition}
-\item[2081:] \texttt{Missing ';' after value definition}
-\item[2082:] \texttt{Missing ';' after operation definition}
-\item[2083:] \texttt{Expecting 'instance variables'}
-\item[2084:] \texttt{Missing ';' after instance variable definition}
-\item[2085:] \texttt{Missing ';' after thread definition}
-\item[2086:] \texttt{Missing ';' after sync definition}
-\item[2087:] \texttt{Expecting '==' after pattern in invariant}
-\item[2088:] \texttt{Expecting '@' before type parameter}
-\item[2089:] \texttt{Expecting '@' before type parameter}
-\item[2090:] \texttt{Expecting ']' after type parameters}
-\item[2091:] \texttt{Expecting ')' after function parameters}
-\item[2092:] \texttt{Expecting '==' after parameters}
-\item[2093:] \texttt{Missing colon after pattern/type parameter}
-\item[2094:] \texttt{Missing colon in identifier/type return value}
-\item[2095:] \texttt{Implicit function must have post condition}
-\item[2096:] \texttt{Expecting <pattern>[:<type>]=<exp>}
-\item[2097:] \texttt{Expecting 'of' after state name}
-\item[2098:] \texttt{Expecting '==' after pattern in invariant}
-\item[2099:] \texttt{Expecting '==' after pattern in initializer}
-\item[2100:] \texttt{Expecting 'end' after state definition}
-\item[2101:] \texttt{Expecting ')' after operation parameters}
-\item[2102:] \texttt{Expecting '==' after parameters}
-\item[2103:] \texttt{Missing colon after pattern/type parameter}
-\item[2104:] \texttt{Missing colon in identifier/type return value}
-\item[2105:] \texttt{Implicit operation must define a post condition}
-\item[2106:] \texttt{Expecting ':' after name in errs clause}
-\item[2107:] \texttt{Expecting '->' in errs clause}
-\item[2108:] \texttt{Expecting <pattern>=<exp>}
-\item[2109:] \texttt{Expecting <type bind>=<exp>}
-\item[2110:] \texttt{Expecting <pattern> in set <set exp>}
-\item[2111:] \texttt{Expecting <pattern> in set <set exp>}
-\item[2112:] \texttt{Expecting '(' after periodic}
-\item[2113:] \texttt{Expecting ')' after period arguments}
-\item[2114:] \texttt{Expecting '(' after periodic(...)}
-\item[2115:] \texttt{Expecting (name) after periodic(...)}
-\item[2116:] \texttt{Expecting <name> => <exp>}
-\item[2117:] \texttt{Expecting '(' after mutex}
-\item[2118:] \texttt{Expecting ')' after 'all'}
-\item[2119:] \texttt{Expecting ')'}
-\item[2120:] \texttt{Expecting 'e1,...,e2' in subsequence}
-\item[2121:] \texttt{Expecting ')' after subsequence}
-\item[2122:] \texttt{Expecting ')' after function args}
-\item[2123:] \texttt{Expecting ']' after function instantiation}
-\item[2124:] \texttt{Expecting ')'}
-\item[2125:] \texttt{Expecting 'is not yet specified}
-\item[2126:] \texttt{Expecting 'is not yet specified}
-\item[2127:] \texttt{Expecting 'is subclass responsibility'}
-\item[2128:] \texttt{Expecting comma separated record modifiers}
-\item[2129:] \texttt{Expecting <identifier> |-> <expression>}
-\item[2130:] \texttt{Expecting ')' after mu maplets}
-\item[2131:] \texttt{Expecting ')' after mk\_ tuple}
-\item[2132:] \texttt{Expecting is\_(expression, type)}
-\item[2133:] \texttt{Expecting ')' after is\_ expression}
-\item[2134:] \texttt{Expecting pre\_(function [,args])}
-\item[2135:] \texttt{Expecting '\}' in empty map}
-\item[2136:] \texttt{Expecting '\}' after set comprehension}
-\item[2137:] \texttt{Expecting 'e1,...,e2' in set range}
-\item[2138:] \texttt{Expecting '\}' after set range}
-\item[2139:] \texttt{Expecting '\}' after set enumeration}
-\item[2140:] \texttt{Expecting '\}' after map comprehension}
-\item[2141:] \texttt{Expecting '\}' after map enumeration}
-\item[2142:] \texttt{Expecting ']' after list comprehension}
-\item[2143:] \texttt{Expecting ']' after list enumeration}
-\item[2144:] \texttt{Missing 'then'}
-\item[2145:] \texttt{Missing 'then' after 'elseif'}
-\item[2146:] \texttt{Expecting ':' after cases expression}
-\item[2147:] \texttt{Expecting '->' after others}
-\item[2148:] \texttt{Expecting 'end' after cases}
-\item[2149:] \texttt{Expecting '->' after case pattern list}
-\item[2150:] \texttt{Expecting 'in' after local definitions}
-\item[2151:] \texttt{Expecting 'st' after 'be' in let expression}
-\item[2152:] \texttt{Expecting 'in' after bind in let expression}
-\item[2153:] \texttt{Expecting '\&' after bind list in forall}
-\item[2154:] \texttt{Expecting '\&' after bind list in exists}
-\item[2155:] \texttt{Expecting '\&' after single bind in exists1}
-\item[2156:] \texttt{Expecting '\&' after single bind in iota}
-\item[2157:] \texttt{Expecting '\&' after bind list in lambda}
-\item[2158:] \texttt{Expecting 'in' after equals definitions}
-\item[2159:] \texttt{Expecting '(' after new class name}
-\item[2160:] \texttt{Expecting '(' after 'isofbase'}
-\item[2161:] \texttt{Expecting ')' after 'isofbase' args}
-\item[2162:] \texttt{Expecting '(' after 'isofclass'}
-\item[2163:] \texttt{Expecting ')' after 'isofclass' args}
-\item[2164:] \texttt{Expecting '(' after 'samebaseclass'}
-\item[2165:] \texttt{Expecting ')' after 'samebaseclass' args}
-\item[2166:] \texttt{Expecting '(' after 'sameclass'}
-\item[2167:] \texttt{Expecting ')' after 'sameclass' args}
-\item[2168:] \texttt{Expecting <\#op>(name(s))}
-\item[2169:] \texttt{Expecting <\#op>(name(s))}
-\item[2170:] \texttt{Expecting 'module' at module start}
-\item[2171:] \texttt{Expecting 'end' after module definitions}
-\item[2172:] \texttt{Expecting 'dlmodule' at module start}
-\item[2173:] \texttt{Expecting 'end' after dlmodule definitions}
-\item[2174:] \texttt{Malformed imports? Expecting 'exports' section}
-\item[2175:] \texttt{Expecting ':' after export name}
-\item[2176:] \texttt{Expecting ':' after export name}
-\item[2177:] \texttt{Expecting ':' after export name}
-\item[2178:] \texttt{Expecting 'imports'}
-\item[2179:] \texttt{Expecting 'from' in import definition}
-\item[2180:] \texttt{Mismatched brackets in pattern}
-\item[2181:] \texttt{Mismatched braces in pattern}
-\item[2182:] \texttt{Mismatched square brackets in pattern}
-\item[2183:] \texttt{Expecting '(' after mk\_ tuple}
-\item[2184:] \texttt{Expecting ')' after mk\_ tuple}
-\item[2185:] \texttt{Expecting '(' after <type> record}
-\item[2186:] \texttt{Expecting ')' after <type> record}
-\item[2187:] \texttt{Expecting 'is not yet specified}
-\item[2188:] \texttt{Expecting 'is not yet specified}
-\item[2189:] \texttt{Expecting 'is subclass responsibility'}
-\item[2190:] \texttt{Expecting 'exit'}
-\item[2191:] \texttt{Expecting 'tixe'}
-\item[2192:] \texttt{Expecting '\{' after 'tixe'}
-\item[2193:] \texttt{Expecting '|->' after pattern bind}
-\item[2194:] \texttt{Expecting 'in' after tixe traps}
-\item[2195:] \texttt{Expecting 'trap'}
-\item[2196:] \texttt{Expecting 'with' in trap statement}
-\item[2197:] \texttt{Expecting 'in' in trap statement}
-\item[2198:] \texttt{Expecting 'always'}
-\item[2199:] \texttt{Expecting 'in' after 'always' statement}
-\item[2200:] \texttt{Expecting '||'}
-\item[2201:] \texttt{Expecting '(' after '||'}
-\item[2202:] \texttt{Expecting ')' at end of '||' block}
-\item[2203:] \texttt{Expecting 'atomic'}
-\item[2204:] \texttt{Expecting '(' after 'atomic'}
-\item[2205:] \texttt{Expecting ')' after atomic assignments}
-\item[2206:] \texttt{Expecting '(' after call operation name}
-\item[2207:] \texttt{Expecting '(' after new class name}
-\item[2208:] \texttt{Expecting 'while'}
-\item[2209:] \texttt{Expecting 'do' after while expression}
-\item[2210:] \texttt{Expecting 'for'}
-\item[2211:] \texttt{Expecting 'in set' after 'for all'}
-\item[2212:] \texttt{Expecting 'in set' after 'for all'}
-\item[2213:] \texttt{Expecting 'do' after for all expression}
-\item[2214:] \texttt{Expecting 'in' after pattern bind}
-\item[2215:] \texttt{Expecting 'do' before loop statement}
-\item[2216:] \texttt{Expecting '=' after for variable}
-\item[2217:] \texttt{Expecting 'to' after from expression}
-\item[2218:] \texttt{Expecting 'do' before loop statement}
-\item[2219:] \texttt{Missing 'then'}
-\item[2220:] \texttt{Missing 'then' after 'elseif' expression}
-\item[2221:] \texttt{Expecting ':=' in object assignment statement}
-\item[2222:] \texttt{Expecting ':=' in state assignment statement}
-\item[2223:] \texttt{Expecting ')' after map/seq reference}
-\item[2224:] \texttt{Expecting statement block}
-\item[2225:] \texttt{Expecting ';' after statement}
-\item[2226:] \texttt{Expecting ')' at end of statement block}
-\item[2227:] \texttt{Expecting ';' after declarations}
-\item[2228:] \texttt{Expecting name:type in declaration}
-\item[2229:] \texttt{Expecting 'return'}
-\item[2230:] \texttt{Expecting 'let'}
-\item[2231:] \texttt{Expecting 'in' after local definitions}
-\item[2232:] \texttt{Expecting 'st' after 'be' in let statement}
-\item[2233:] \texttt{Expecting 'in' after bind in let statement}
-\item[2234:] \texttt{Expecting 'cases'}
-\item[2235:] \texttt{Expecting ':' after cases expression}
-\item[2236:] \texttt{Expecting '->' after case pattern list}
-\item[2237:] \texttt{Expecting '->' after others}
-\item[2238:] \texttt{Expecting 'end' after cases}
-\item[2239:] \texttt{Expecting 'def'}
-\item[2240:] \texttt{Expecting 'in' after equals definitions}
-\item[2241:] \texttt{Expecting '['}
-\item[2242:] \texttt{Expecting ']' after specification statement}
-\item[2243:] \texttt{Expecting 'start'}
-\item[2244:] \texttt{Expecting 'start('}
-\item[2245:] \texttt{Expecting ')' after start object}
-\item[2246:] \texttt{Expecting 'startlist'}
-\item[2247:] \texttt{Expecting 'startlist('}
-\item[2248:] \texttt{Expecting ')' after startlist objects}
-\item[2249:] \texttt{Missing 'of' in compose type}
-\item[2250:] \texttt{Missing 'end' in compose type}
-\item[2251:] \texttt{Expecting 'to' in map type}
-\item[2252:] \texttt{Expecting 'to' in inmap type}
-\item[2253:] \texttt{Expecting 'of' after set}
-\item[2254:] \texttt{Expecting 'of' after seq}
-\item[2255:] \texttt{Expecting 'of' after seq1}
-\item[2256:] \texttt{Bracket mismatch}
-\item[2257:] \texttt{Missing close bracket after optional type}
-\item[2258:] \texttt{Expecting '==>' in explicit operation type}
-\item[2259:] \texttt{Operations cannot have [@T] type parameters}
-\item[2260:] \texttt{Module starts with 'class' instead of 'module'}
-\item[2261:] \texttt{Missing comma between return types?}
-\item[2262:] \texttt{Can't have traces in VDM-SL}
-\item[2263:] \texttt{Missing ';' after named trace definition}
-\item[2264:] \texttt{Expecting ':' after trace name}
-\item[2265:] \texttt{Expecting '\{n1, n2\}' after trace definition}
-\item[2266:] \texttt{Expecting '\{n\}' or '\{n1, n2\}' after trace definition}
-\item[2267:] \texttt{Expecting 'id.id(args)' or '(trace definitions)'}
-\item[2268:] \texttt{Expecting 'id.id(args)'}
-\item[2269:] \texttt{Expecting '(trace definitions)'}
-\item[2270:] \texttt{Only value definitions allowed in traces}
-\item[2271:] \texttt{Expecting 'duration'}
-\item[2272:] \texttt{Expecting 'duration('}
-\item[2273:] \texttt{Expecting ')' after duration}
-\item[2274:] \texttt{Expecting 'cycles'}
-\item[2275:] \texttt{Expecting 'cycles('}
-\item[2276:] \texttt{Expecting ')' after cycles}
-%2277, -
-\item[2278:] \texttt{Async only permitted for operations}
-\item[2279:] \texttt{Invalid breakpoint hit condition}
-\item[2280:] \texttt{System class cannot be a subclass}
-\item[2290:] \texttt{System class can only define instance variables and a constructor}
-\item[2291:] \texttt{'reverse' not available in VDM classic}
-\end{description}
+\input{../../core/vdmj/documentation/MESSAGES_Syntax}
 
 \newpage
 \chapter{Type Errors and Warnings}\label{app:typeerr}
@@ -2177,364 +1898,11 @@ If the syntax rules are satisfied, it is still possible to get type
 errors from additional type checking. The errors here can be as
 follows:
 
-\begin{description}
-\item[3000:] \texttt{Expression does not match declared type}
-\item[3001:] \texttt{Class inherits thread definition from multiple supertypes}
-\item[3002:] \texttt{Circular class hierarchy detected: <name>}
-\item[3003:] \texttt{Undefined superclass: <supername>}
-\item[3004:] \texttt{Superclass name is not a class: <supername>}
-\item[3005:] \texttt{Overriding a superclass member of a different kind: <member>}
-\item[3006:] \texttt{Overriding definition reduces visibility} This
-  error message typically are caused by using a more restrictive
-  access modifier (or none which is interpreted as private) at this
-  place compared to for example an inherited definition.
-\item[3007:] \texttt{Overriding member incompatible type: <member>}
-\item[3008:] \texttt{Overloaded members indistinguishable: <member>}
-\item[3009:] \texttt{Circular class hierarchy detected: <class>}
-\item[3010:] \texttt{Name <name> is ambiguous}
-\item[3011:] \texttt{Name <name> is multiply defined in class}
-\item[3012:] \texttt{Type <name> is multiply defined in class}
-\item[3013:] \texttt{Class invariant is not a boolean expression}
-\item[3014:] \texttt{Expression is not compatible with type bind}
-\item[3015:] \texttt{Set bind is not a set type?}
-\item[3016:] \texttt{Expression is not compatible with set bind}
-\item[3017:] \texttt{Duplicate definitions for <name>}
-\item[3018:] \texttt{Function returns unexpected type}
-\item[3019:] \texttt{Function parameter visibility less than function
-  definition} This
-  error message typically are caused by using a more restrictive
-  access modifier (or none which is interpreted as private) at this
-  place compared to for example an inherited definition.
-\item[3020:] \texttt{Too many parameter patterns}
-\item[3021:] \texttt{Too few parameter patterns}
-\item[3022:] \texttt{Too many curried parameters}
-\item[3023:] \texttt{Too many parameter patterns}
-\item[3024:] \texttt{Too few parameter patterns}
-\item[3025:] \texttt{Constructor operation must have return type <class>}
-\item[3026:] \texttt{Constructor operation must have return type <class>}
-\item[3027:] \texttt{Operation returns unexpected type}
-\item[3028:] \texttt{Operation parameter visibility less than
-  operation definition}  This
-  error message typically are caused by using a more restrictive
-  access modifier (or none which is interpreted as private) at this
-  place compared to for example an inherited definition.
-\item[3029:] \texttt{Function returns unexpected type}
-\item[3030:] \texttt{Function parameter visibility less than function
-  definition} This
-  error message typically are caused by using a more restrictive
-  access modifier (or none which is interpreted as private) at this
-  place compared to for example an inherited definition.
-\item[3031:] \texttt{Unknown state variable <name>}
-\item[3032:] \texttt{State variable <name> is not this type}
-%3033, -
-%3034, -
-\item[3035:] \texttt{Operation returns unexpected type}
-\item[3036:] \texttt{Operation parameter visibility less than
-  operation definition} This
-  error message typically are caused by using a more restrictive
-  access modifier (or none which is interpreted as private) at this
-  place compared to for example an inherited definition.
-\item[3037:] \texttt{Static instance variable is not initialized: <name>}
-\item[3038:] \texttt{<name> is not an explicit operation}
-\item[3039:] \texttt{<name> is not in scope}
-\item[3040:] \texttt{Cannot put mutex on a constructor}
-\item[3041:] \texttt{Duplicate mutex name}
-\item[3042:] \texttt{<name> is not an explicit operation}
-\item[3043:] \texttt{<name> is not in scope}
-\item[3044:] \texttt{Duplicate permission guard found for <name>}
-\item[3045:] \texttt{Cannot put guard on a constructor}
-\item[3046:] \texttt{Guard is not a boolean expression}
-\item[3047:] \texttt{Only one state definition allowed per module}
-%3048, -
-\item[3049:] \texttt{Thread statement/operation must not return a value}
-\item[3050:] \texttt{Type <name> is infinite}
-\item[3051:] \texttt{Expression does not match declared type}
-\item[3052:] \texttt{Value type visibility less than value definition} This
-  error message typically are caused by using a more restrictive
-  access modifier (or none which is interpreted as private) at this
-  place compared to for example an inherited definition.
-\item[3053:] \texttt{Argument of 'abs' is not numeric}
-\item[3054:] \texttt{Type <name> cannot be applied}
-\item[3055:] \texttt{Sequence selector must have one argument}
-\item[3056:] \texttt{Sequence application argument must be numeric}
-\item[3057:] \texttt{Map application must have one argument}
-\item[3058:] \texttt{Map application argument is incompatible type}
-\item[3059:] \texttt{Too many arguments}
-\item[3060:] \texttt{Too few arguments}
-\item[3061:] \texttt{Inappropriate type for argument <n>}
-\item[3062:] \texttt{Too many arguments}
-\item[3063:] \texttt{Too few arguments}
-\item[3064:] \texttt{Inappropriate type for argument <n>}
-\item[3065:] \texttt{Left hand of <operator> is not <type>}
-\item[3066:] \texttt{Right hand of <operator> is not <type>}
-\item[3067:] \texttt{Argument of 'card' is not a set}
-\item[3068:] \texttt{Right hand of map 'comp' is not a map}
-\item[3069:] \texttt{Domain of left should equal range of right in map 'comp'}
-\item[3070:] \texttt{Right hand of function 'comp' is not a function}
-\item[3071:] \texttt{Left hand function must have a single parameter}
-\item[3072:] \texttt{Right hand function must have a single parameter}
-\item[3073:] \texttt{Parameter of left should equal result of right in function 'comp'}
-\item[3074:] \texttt{Left hand of 'comp' is neither a map nor a function}
-\item[3075:] \texttt{Argument of 'conc' is not a seq of seq}
-\item[3076:] \texttt{Argument of 'dinter' is not a set of sets}
-\item[3077:] \texttt{Merge argument is not a set of maps}
-\item[3078:] \texttt{dunion argument is not a set of sets}
-\item[3079:] \texttt{Left of '<-:' is not a set}
-\item[3080:] \texttt{Right of '<-:' is not a map}
-\item[3081:] \texttt{Restriction of map should be set of <type>}
-\item[3082:] \texttt{Left of '<:' is not a set}
-\item[3083:] \texttt{Right of '<:' is not a map}
-\item[3084:] \texttt{Restriction of map should be set of <type>}
-\item[3085:] \texttt{Argument of 'elems' is not a sequence}
-\item[3086:] \texttt{Else clause is not a boolean}
-\item[3087:] \texttt{Left and right of '=' are incompatible types}
-\item[3088:] \texttt{Predicate is not boolean}
-\item[3089:] \texttt{Predicate is not boolean}
-\item[3090:] \texttt{Unknown field <name> in record <type>}
-\item[3091:] \texttt{Unknown member <member> of class <class>}
-\item[3092:] \texttt{Inaccessible member <member> of class <class>}
-\item[3093:] \texttt{Field <name> applied to non-aggregate type}
-\item[3094:] \texttt{Field \#<n> applied to non-tuple type}
-\item[3095:] \texttt{Field number does not match tuple size}
-\item[3096:] \texttt{Argument to floor is not numeric}
-\item[3097:] \texttt{Predicate is not boolean}
-\item[3098:] \texttt{Function value is not polymorphic}
-\item[3099:] \texttt{Polymorphic function is not in scope}
-\item[3100:] \texttt{Function has no type parameters}
-\item[3101:] \texttt{Expecting <n> type parameters}
-\item[3102:] \texttt{Parameter name <name> not defined}
-\item[3103:] \texttt{Function instantiation does not yield a function}
-\item[3104:] \texttt{Argument to 'hd' is not a sequence}
-\item[3105:] \texttt{<operation> is not an explicit operation}
-\item[3106:] \texttt{<operation> is not in scope}
-\item[3107:] \texttt{Cannot use history of a constructor}
-\item[3108:] \texttt{If expression is not a boolean}
-\item[3109:] \texttt{Argument to 'inds' is not a sequence}
-\item[3110:] \texttt{Argument of 'in set' is not a set}
-\item[3111:] \texttt{Argument to 'inverse' is not a map}
-\item[3112:] \texttt{Iota set bind is not a set}
-\item[3113:] \texttt{Unknown type name <name>}
-\item[3114:] \texttt{Undefined base class type: <class>}
-\item[3115:] \texttt{Undefined class type: <class>}
-\item[3116:] \texttt{Argument to 'len' is not a sequence}
-\item[3117:] \texttt{Such that clause is not boolean}
-\item[3118:] \texttt{Predicate is not boolean}
-\item[3119:] \texttt{Map composition is not a maplet}
-\item[3120:] \texttt{Argument to 'dom' is not a map}
-\item[3121:] \texttt{Element is not of maplet type}
-\item[3122:] \texttt{Argument to 'rng' is not a map}
-\item[3123:] \texttt{Left hand of 'munion' is not a map}
-\item[3124:] \texttt{Right hand of 'munion' is not a map}
-\item[3125:] \texttt{Argument of mk\_<type> is the wrong type}
-\item[3126:] \texttt{Unknown type <type> in constructor}
-\item[3127:] \texttt{Type <type> is not a record type}
-\item[3128:] \texttt{Record and constructor do not have same number of fields}
-\item[3129:] \texttt{Constructor field <n> is of wrong type}
-\item[3130:] \texttt{Modifier for <tag> should be <type>}
-\item[3131:] \texttt{Modifier <tag> not found in record}
-\item[3132:] \texttt{mu operation on non-record type}
-\item[3133:] \texttt{Class name <name> not in scope}
-\item[3134:] \texttt{Class has no constructor with these parameter types}
-\item[3135:] \texttt{Class has no constructor with these parameter types}
-\item[3136:] \texttt{Left and right of '<>' different types}
-\item[3137:] \texttt{Not expression is not a boolean}
-\item[3138:] \texttt{Argument of 'not in set' is not a set}
-\item[3139:] \texttt{Left hand of <operator> is not numeric}
-\item[3140:] \texttt{Right hand of <operator> is not numeric}
-\item[3141:] \texttt{Right hand of '++' is not a map}
-\item[3142:] \texttt{Right hand of '++' is not a map}
-\item[3143:] \texttt{Domain of right hand of '++' must be nat1}
-\item[3144:] \texttt{Left of '++' is neither a map nor a sequence}
-\item[3145:] \texttt{Argument to 'power' is not a set}
-\item[3146:] \texttt{Left hand of <operator> is not a set}
-\item[3147:] \texttt{Right hand of <operator> is not a set}
-\item[3148:] \texttt{Left of ':->' is not a map}
-\item[3149:] \texttt{Right of ':->' is not a set}
-\item[3150:] \texttt{Restriction of map should be set of <type>}
-\item[3151:] \texttt{Left of ':>' is not a map}
-\item[3152:] \texttt{Right of ':>' is not a set}
-\item[3153:] \texttt{Restriction of map should be set of <type>}
-\item[3154:] \texttt{<name> not in scope}
-\item[3155:] \texttt{List comprehension must define one numeric bind variable}
-\item[3156:] \texttt{Predicate is not boolean}
-\item[3157:] \texttt{Left hand of '\char'136' is not a sequence}
-\item[3158:] \texttt{Right hand of '\char'136' is not a sequence}
-\item[3159:] \texttt{Predicate is not boolean}
-\item[3160:] \texttt{Left hand of '\char'134' is not a set}
-\item[3161:] \texttt{Right hand of '\char'134' is not a set}
-\item[3162:] \texttt{Left and right of '\char'134' are different types}
-\item[3163:] \texttt{Left hand of <operator> is not a set}
-\item[3164:] \texttt{Right hand of <operator> is not a set}
-\item[3165:] \texttt{Left and right of intersect are different types}
-\item[3166:] \texttt{Set range type must be an number}
-\item[3167:] \texttt{Set range type must be an number}
-\item[3168:] \texttt{Left hand of <operator> is not a set}
-\item[3169:] \texttt{Right hand of <operator> is not a set}
-\item[3170:] \texttt{Map iterator expects nat as right hand arg}
-\item[3171:] \texttt{Function iterator expects nat as right hand arg}
-\item[3172:] \texttt{'**' expects number as right hand arg}
-\item[3173:] \texttt{First arg of '**' must be a map, function or number}
-\item[3174:] \texttt{Subsequence is not of a sequence type}
-\item[3175:] \texttt{Subsequence range start is not a number}
-\item[3176:] \texttt{Subsequence range end is not a number}
-\item[3177:] \texttt{Left hand of <operator> is not a set}
-\item[3178:] \texttt{Right hand of <operator> is not a set}
-\item[3179:] \texttt{Argument to 'tl' is not a sequence}
-\item[3180:] \texttt{Inaccessible member <name> of class <name>}
-\item[3181:] \texttt{Cannot access <name> from a static context}
-\item[3182:] \texttt{Name <name> is not in scope}
-\item[3183:] \texttt{Exported function <name> not defined in module}
-\item[3184:] \texttt{Exported <name> function type incorrect}
-\item[3185:] \texttt{Exported operation <name> not defined in module}
-\item[3186:] \texttt{Exported operation type does not match actual type}
-\item[3187:] \texttt{Exported type <type> not defined in module}
-\item[3188:] \texttt{Exported value <name> not defined in module}
-\item[3189:] \texttt{Exported type does not match actual type}
-\item[3190:] \texttt{Import all from module with no exports?}
-\item[3191:] \texttt{No export declared for import of type <type> from <module>}
-\item[3192:] \texttt{Type import of <name> does not match export from <module>}
-\item[3193:] \texttt{No export declared for import of value <name> from <module>}
-\item[3194:] \texttt{Type of value import <name> does not match export from <module>}
-\item[3195:] \texttt{Cannot import from self}
-\item[3196:] \texttt{No such module as <module>}
-\item[3197:] \texttt{Expression matching set bind is not a set}
-\item[3198:] \texttt{Type bind not compatible with expression}
-\item[3199:] \texttt{Set bind not compatible with expression}
-\item[3200:] \texttt{Mk\_ expression is not a record type}
-\item[3201:] \texttt{Matching expression is not a compatible record type}
-\item[3202:] \texttt{Record pattern argument/field count mismatch}
-\item[3203:] \texttt{Sequence pattern is matched against <type>}
-\item[3204:] \texttt{Set pattern is not matched against set type}
-\item[3205:] \texttt{Matching expression is not a product of cardinality <n>}
-\item[3206:] \texttt{Matching expression is not a set type}
-\item[3207:] \texttt{Object designator is not an object type}
-\item[3208:] \texttt{Object designator is not an object type}
-\item[3209:] \texttt{Member <field> is not in scope}
-\item[3210:] \texttt{Object member is neither a function nor an operation}
-\item[3211:] \texttt{Expecting <n> arguments}
-\item[3212:] \texttt{Unexpected type for argument <n>}
-\item[3213:] \texttt{Operation <name> is not in scope}
-\item[3214:] \texttt{Cannot call <name> from static context}
-\item[3215:] \texttt{<name> is not an operation}
-\item[3216:] \texttt{Expecting <n> arguments}
-\item[3217:] \texttt{Unexpected type for argument <n>}
-\item[3218:] \texttt{Expression is not boolean}
-\item[3219:] \texttt{For all statement does not contain a set type}
-\item[3220:] \texttt{From type is not numeric}
-\item[3221:] \texttt{To type is not numeric}
-\item[3222:] \texttt{By type is not numeric}
-\item[3223:] \texttt{Expecting sequence type after 'in'}
-\item[3224:] \texttt{If expression is not boolean}
-\item[3225:] \texttt{Such that clause is not boolean}
-\item[3226:] \texttt{Incompatible types in object assignment}
-\item[3228:] \texttt{<name> is not in scope}
-\item[3229:] \texttt{<name> should have no parameters or return type}
-\item[3230:] \texttt{<name> is implicit}
-\item[3231:] \texttt{<name> should have no parameters or return type}
-\item[3232:] \texttt{<name> is not an operation name}
-\item[3233:] \texttt{Precondition is not a boolean expression}
-\item[3234:] \texttt{Postcondition is not a boolean expression}
-\item[3235:] \texttt{Expression is not a set of object references}
-\item[3236:] \texttt{Class does not define a thread}
-\item[3237:] \texttt{Class does not define a thread}
-\item[3238:] \texttt{Expression is not an object reference or set of object references}
-\item[3239:] \texttt{Incompatible types in assignment}
-\item[3241:] \texttt{Body of trap statement does not throw exceptions}
-\item[3242:] \texttt{Map element assignment of wrong type}
-\item[3243:] \texttt{Seq element assignment is not numeric}
-\item[3244:] \texttt{Expecting a map or a sequence}
-\item[3245:] \texttt{Field assignment is not of a record type}
-\item[3246:] \texttt{Unknown field name, <name>}
-\item[3247:] \texttt{Unknown state variable <name> in assignment}
-\item[3248:] \texttt{Cannot assign to 'ext rd' state <name>}
-\item[3249:] \texttt{Object designator is not a map, sequence, function or operation}
-\item[3250:] \texttt{Map application must have one argument}
-\item[3251:] \texttt{Map application argument is incompatible type}
-\item[3252:] \texttt{Sequence application must have one argument}
-\item[3253:] \texttt{Sequence argument is not numeric}
-\item[3254:] \texttt{Too many arguments}
-\item[3255:] \texttt{Too few arguments}
-\item[3256:] \texttt{Inappropriate type for argument <n>}
-\item[3257:] \texttt{Too many arguments}
-\item[3258:] \texttt{Too few arguments}
-\item[3259:] \texttt{Inappropriate type for argument <n>}
-\item[3260:] \texttt{Unknown class member name, <name>}
-\item[3261:] \texttt{Unknown field name, <name>}
-\item[3262:] \texttt{Field assignment is not of a class or record type}
-\item[3263:] \texttt{Cannot reference 'self' from here}
-\item[3264:] \texttt{At least one bind cannot match set}
-\item[3265:] \texttt{At least one bind cannot match this type}
-\item[3266:] \texttt{Argument is not an object}
-\item[3267:] \texttt{Empty map cannot be applied}
-\item[3268:] \texttt{Empty sequence cannot be applied}
-\item[3269:] \texttt{Ambiguous function/operation name: <name>}
-\item[3270:] \texttt{Measure <name> is not in scope}
-\item[3271:] \texttt{Measure <name> is not an explicit function}
-\item[3272:] \texttt{Measure result type is not a nat, or a nat tuple}
-\item[3273:] \texttt{Measure not allowed for an implicit function}
-\item[3274:] \texttt{External variable is not in scope: <name>}
-\item[3275:] \texttt{Error clause must be a boolean}
-\item[3276:] \texttt{Ambiguous names inherited by <name>}
-\item[3277:] \texttt{Trace repeat illegal values}
-\item[3278:] \texttt{Cannot inherit from system class <name>}
-\item[3279:] \texttt{Cannot instantiate system class <name>}
-\item[3280:] \texttt{Argument to deploy must be an object}
-\item[3281:] \texttt{Arguments to duration must be integer >= 0}
-\item[3282:] \texttt{Arguments to cycles must be integer >= 0}
-\item[3283:] \texttt{System class constructor cannot be implicit}
-\item[3284:] \texttt{System class can only define instance variables and a constructor}
-\item[3285:] \texttt{System class can only define a default constructor}
-\item[3286:] \texttt{Constructor cannot be 'async'}
-\item[3287:] \texttt{Periodic thread must have <n> argument(s)}
-\item[3288:] \texttt{Period argument must be non-zero}
-\item[3289:] \texttt{Delay argument must be less than the period}
-\item[3290:] \texttt{Argument to setPriority must be an operation}
-\item[3291:] \texttt{Argument to setPriority cannot be a constructor}
-\item[3292:] \texttt{Constructor is not accessible}
-\item[3293:] \texttt{Asynchronous operation <name> cannot return a value}
-\item[3294:] \texttt{Only one system class permitted}
-\item[3295:] \texttt{Argument to 'reverse' is not a sequence}
-\item[3296:] \texttt{Cannot use <typename> outside system class}
-\item[3297:] \texttt{Cannot use default constructor for this class}
-\item[3298:] \texttt{Cannot inherit from CPU}
-\item[3299:] \texttt{Cannot inherit from BUS}
-\item[3300:] \texttt{Operation <type> cannot be called from a function}
-\item[3301:] \texttt{Variable <name> in scope is not updatable}
-\item[3302:] \texttt{Variable <name> cannot be accessed from this context}
-\end{description}
+\input{../../core/vdmj/documentation/MESSAGES_TypeChecking}
 
 Warnings from the type checker include:
 
-\begin{description}
-\item[5000:] \texttt{Definition <name> not used}
-\item[5001:] \texttt{Instance variable is not initialized: <name>}
-\item[5002:] \texttt{Mutex of overloaded operation} This warning is
-  provided if one defined a mutex for an operation that is defined
-  using overloading. The users needs to be aware that all of the
-  overloaded operations will now by synchronisation controlled by this
-  constraint. 
-\item[5003:] \texttt{Permission guard of overloaded operation}
-\item[5004:] \texttt{History expression of overloaded operation}
-\item[5005:] \texttt{Should access member <member> from a static context}
-\item[5006:] \texttt{Statement will not be reached}
-\item[5007:] \texttt{Duplicate definition: <name>}
-\item[5008:] \texttt{<name/location> hides <name/location>}
-\item[5009:] \texttt{Empty set used in bind}
-\item[5010:] \texttt{State init expression cannot be executed}
-%\item[5011:] -
-\item[5012:] \texttt{Recursive function has no measure} Whenever a
-  recursive function is defined the user have the possibility defining
-  a measure (i.e.\ a function that takes the same parameters as the
-  recursive function and returns a natural number that should decrease
-  at every recursive call). If such measures are included the proof
-  obligation generator can provide proof obligations that will ensure
-  termination of the recursion.
-%\item[5013:] -
-\item[5014:] \texttt{Uninitialized BUS ignored}. This warning appears
-  if one has defined a \texttt{BUS} that is not used.
-\item[5015:] \texttt{LaTeX source should start with \%comment,
-  \char'134 document, \char'134 section or \char'134 subsection}  
-\end{description}
+\input{../../core/vdmj/documentation/MESSAGES_Warnings}
 
 \newpage
 \chapter{Run-Time Errors}\label{app:runtimeerr}
@@ -2543,151 +1911,7 @@ When using the interpreter/debugger it is possible to get run-time
 errors indicating that a problem with the VDM model analysed have been
 detected. This includes the following kinds of errors:
 
-\begin{description}
-\item[4000:] \texttt{Cannot instantiate abstract class <class>}
-\item[4002:] \texttt{Expression value is not in set bind}
-\item[4003:] \texttt{Value <value> cannot be applied}
-\item[4004:] \texttt{No cases apply for <value>}
-\item[4005:] \texttt{Duplicate map keys have different values}
-\item[4006:] \texttt{Type <type> has no field <field>}
-\item[4007:] \texttt{No such field in tuple: \#<n>}
-\item[4008:] \texttt{No such type parameter @<name> in scope}
-\item[4009:] \texttt{Type parameter/local variable name clash, @<name>}
-\item[4010:] \texttt{Cannot take head of empty sequence}
-\item[4011:] \texttt{Illegal history operator: <\#op>}
-\item[4012:] \texttt{Cannot invert non-injective map}
-\item[4013:] \texttt{Iota selects more than one result}
-\item[4014:] \texttt{Iota does not select a result}
-\item[4015:] \texttt{Let be st found no applicable bindings}
-\item[4016:] \texttt{Duplicate map keys have different values: <domain>}
-\item[4017:] \texttt{Duplicate map keys have different values: <domain>}
-\item[4018:] \texttt{Maplet cannot be evaluated}
-\item[4019:] \texttt{Sequence cannot extend to key: <index>}
-\item[4020:] \texttt{State value is neither a <type> nor a <type>}
-\item[4021:] \texttt{Duplicate map keys have different values: <key>}
-\item[4022:] \texttt{mk\_ type argument is not <type>}
-\item[4023:] \texttt{Mu type conflict? No field tag <tag>}
-\item[4024:] \texttt{'not yet specified' expression reached}
-\item[4025:] \texttt{Map key not within sequence index range: <key>}
-\item[4026:] \texttt{Cannot create post\_op environment}
-\item[4027:] \texttt{Cannot create pre\_op environment}
-\item[4028:] \texttt{Sequence comprehension pattern has multiple variables}
-\item[4029:] \texttt{Sequence comprehension bindings must be numeric}
-\item[4030:] \texttt{Duplicate map keys have different values: <key>}
-\item[4031:] \texttt{First arg of '**' must be a map, function or number}
-\item[4032:] \texttt{'is subclass responsibility' expression reached}
-\item[4033:] \texttt{Tail sequence is empty}
-\item[4034:] \texttt{Name <name> not in scope}
-\item[4035:] \texttt{Object has no field: <name>}
-\item[4036:] \texttt{ERROR statement reached}
-\item[4037:] \texttt{No such field: <name>}
-\item[4038:] \texttt{Loop, from <value> to <value> by <value> will never terminate}
-\item[4039:] \texttt{Set bind does not contain value <value>}
-\item[4040:] \texttt{Let be st found no applicable bindings}
-\item[4041:] \texttt{'is not yet specified' statement reached}
-\item[4042:] \texttt{Sequence does not contain key: <key>}
-\item[4043:] \texttt{Object designator is not a map, sequence, operation or function}
-\item[4045:] \texttt{Object does not contain value for field: <name>}
-\item[4046:] \texttt{No such field: <name>}
-\item[4047:] \texttt{Cannot execute specification statement}
-\item[4048:] \texttt{'is subclass responsibility' statement reached}
-\item[4049:] \texttt{Value <value> is not in set bind}
-\item[4050:] \texttt{Value <value> is not in set bind}
-\item[4051:] \texttt{Cannot apply implicit function: <name>}
-\item[4052:] \texttt{Wrong number of arguments passed to <name>}
-\item[4053:] \texttt{Parameter patterns do not match arguments}
-\item[4055:] \texttt{Precondition failure: <pre\_name>} This error
-  occurs if a pre-condition to a function or operation is violated.
-\item[4056:] \texttt{Postcondition failure: <post\_name>} This error
-  occurs if a post-condition to a function or operation is violated.
-\item[4057:] \texttt{Curried function return type is not a function}
-\item[4058:] \texttt{Value <value> is not a nat1}
-\item[4059:] \texttt{Value <value> is not a nat}
-\item[4060:] \texttt{Type invariant violated for <type>}
-\item[4061:] \texttt{No such key value in map: <key>}
-\item[4062:] \texttt{Cannot convert non-injective map to an inmap}
-\item[4063:] \texttt{Duplicate map keys have different values: <domain>}
-\item[4064:] \texttt{Value <value> is not a nat1 number}
-\item[4065:] \texttt{Value <value> is not a nat}
-\item[4066:] \texttt{Cannot call implicit operation: <name>}
-\item[4067:] \texttt{Deadlock detected}
-\item[4068:] \texttt{Wrong number of arguments passed to <name>}
-\item[4069:] \texttt{Parameter patterns do not match arguments}
-\item[4071:] \texttt{Precondition failure: <pre\_name>}
-\item[4072:] \texttt{Postcondition failure: <post\_name>}
-\item[4073:] \texttt{Cannot convert type parameter value to <type>}
-\item[4074:] \texttt{Cannot convert <value> to <type>}
-\item[4075:] \texttt{Value <value> is not an integer}
-\item[4076:] \texttt{Value <value> is not a nat1}
-\item[4077:] \texttt{Value <value> is not a nat}
-\item[4078:] \texttt{Wrong number of fields for <type>}
-\item[4079:] \texttt{Type invariant violated by mk\_ arguments}
-\item[4080:] \texttt{Wrong number of fields for <type>}
-\item[4081:] \texttt{Field not defined: <tag>}
-\item[4082:] \texttt{Type invariant violated by mk\_ arguments}
-\item[4083:] \texttt{Sequence index out of range: <index>}
-\item[4084:] \texttt{Cannot convert empty sequence to seq1}
-\item[4085:] \texttt{Cannot convert tuple to <type>}
-\item[4086:] \texttt{Value of type parameter is not a type}
-\item[4087:] \texttt{Cannot convert <value> (<kind>) to <type>}
-\item[4088:] \texttt{Set not permitted for <kind>}
-\item[4089:] \texttt{Can't get real value of <kind>}
-\item[4090:] \texttt{Can't get rat value of <kind>}
-\item[4091:] \texttt{Can't get int value of <kind>}
-\item[4092:] \texttt{Can't get nat value of <kind>}
-\item[4093:] \texttt{Can't get nat1 value of <kind>}
-\item[4094:] \texttt{Can't get bool value of <kind>}
-\item[4095:] \texttt{Can't get char value of <kind>}
-\item[4096:] \texttt{Can't get tuple value of <kind>}
-\item[4097:] \texttt{Can't get record value of <kind>}
-\item[4098:] \texttt{Can't get quote value of <kind>}
-\item[4099:] \texttt{Can't get sequence value of <kind>}
-\item[4100:] \texttt{Can't get set value of <kind>}
-\item[4101:] \texttt{Can't get string value of <kind>}
-\item[4102:] \texttt{Can't get map value of <kind>}
-\item[4103:] \texttt{Can't get function value of <kind>}
-\item[4104:] \texttt{Can't get operation value of <kind>}
-\item[4105:] \texttt{Can't get object value of <kind>}
-\item[4106:] \texttt{Boolean pattern match failed}
-\item[4107:] \texttt{Character pattern match failed}
-\item[4108:] \texttt{Sequence concatenation pattern does not match expression}
-\item[4109:] \texttt{Values do not match concatenation pattern}
-\item[4110:] \texttt{Expression pattern match failed}
-\item[4111:] \texttt{Integer pattern match failed}
-\item[4112:] \texttt{Quote pattern match failed}
-\item[4113:] \texttt{Real pattern match failed}
-\item[4114:] \texttt{Record type does not match pattern}
-\item[4115:] \texttt{Record expression does not match pattern}
-\item[4116:] \texttt{Values do not match record pattern}
-\item[4117:] \texttt{Wrong number of elements for sequence pattern}
-\item[4118:] \texttt{Values do not match sequence pattern}
-\item[4119:] \texttt{Wrong number of elements for set pattern}
-\item[4120:] \texttt{Values do not match set pattern}
-\item[4121:] \texttt{Cannot match set pattern}
-\item[4122:] \texttt{String pattern match failed}
-\item[4123:] \texttt{Tuple expression does not match pattern}
-\item[4124:] \texttt{Values do not match tuple pattern}
-\item[4125:] \texttt{Set union pattern does not match expression}
-\item[4126:] \texttt{Values do not match union pattern}
-\item[4127:] \texttt{Cannot match set pattern}
-\item[4129:] \texttt{Exit <value>}
-\item[4130:] \texttt{Instance invariant violated: <inv\_op>}
-\item[4131:] \texttt{State invariant violated: <inv\_op>}
-\item[4132:] \texttt{Using undefined value}
-\item[4133:] \texttt{Map range is not a subset of its domain: <key>}
-\item[4134:] \texttt{Infinite or NaN trouble}
-\item[4135:] \texttt{Cannot instantiate a system class}
-\item[4136:] \texttt{Cannot deploy to CPU}
-\item[4137:] \texttt{Cannot set operation priority on CPU}
-\item[4138:] \texttt{Cannot set CPU priority for operation}
-\item[4139:] \texttt{Multiple BUS routes between CPUs <name> and <name>}
-\item[4140:] \texttt{No BUS between CPUs <name> and <name>}
-\item[4141:] \texttt{CPU policy does not allow priorities}
-\item[4142:] \texttt{Value already updated by thread <n>}
-\item[4143:] \texttt{No such test number: <n>}
-\item[4144:] \texttt{State init expression cannot be executed}
-\item[4145:] \texttt{Time: <n> is not a nat1}
-\end{description}
+\input{../../core/vdmj/documentation/MESSAGES_Runtime}
 
 \newpage
 \chapter{Categores of Proof Obligations}\label{app:POcategories}
@@ -2778,7 +2002,7 @@ circumstances under which the PO category can be expected.
 
 \newpage
 \chapter{Index}\label{sec:index}
-\printindex\label{sec:index}
+\printindex
 \addcontentsline{toc}{section}{\protect\numberline{}{Index}}
 
 

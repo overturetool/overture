@@ -30,9 +30,10 @@
 \item[2011:] \texttt{"Only one thread clause permitted per class"}
 \item[2012:] \texttt{"Can't have a sync clause in VDM-SL"}
 \item[2013:] \texttt{"Expected 'operations', 'state', 'functions', 'types' or 'values'"}
-\item[2014:] \texttt{"Recursive type declaration"}
+\item[2014:] \texttt{"Recursive type declaration"}  This is reported in
+  type definitions such as \texttt{T = T}.
 \item[2015:] \texttt{"Expecting =<type> or ::<field list>"}
-\item[2016:] \texttt{"Function name cannot start with 'mk_'"}
+\item[2016:] \texttt{"Function name cannot start with 'mk\_'"}
 \item[2017:] \texttt{"Expecting ':' or '(' after name in function definition"}
 \item[2018:] \texttt{"Function type is not a -> or +> function"}
 \item[2019:] \texttt{"Expecting identifier <name> after type in definition"}
@@ -47,14 +48,14 @@
 \item[2028:] \texttt{"Expecting 'per' or 'mutex'"}
 \item[2029:] \texttt{"Expecting <set bind> = <expression>"}
 \item[2030:] \texttt{"Expecting simple field identifier"}
-\item[2031:] \texttt{"Expecting field number after .#"}
+\item[2031:] \texttt{"Expecting field number after .\#"}
 \item[2032:] \texttt{"Expecting field name"}
 \item[2033:] \texttt{"Expected 'is not specified' or 'is subclass responsibility'"}
 \item[2034:] \texttt{"Unexpected token in expression"}
 \item[2035:] \texttt{"Tuple must have >1 argument"}
-\item[2036:] \texttt{"Expecting mk_<type>"}
-\item[2037:] \texttt{"Malformed mk_<type> name <name>"}
-\item[2038:] \texttt{"Expecting is_<type>"}
+\item[2036:] \texttt{"Expecting mk\_<type>"}
+\item[2037:] \texttt{"Malformed mk\_<type> name <name>"}
+\item[2038:] \texttt{"Expecting is\_<type>"}
 \item[2039:] \texttt{"Expecting maplet in map enumeration"}
 \item[2040:] \texttt{"Expecting 'else' in 'if' expression"}
 \item[2041:] \texttt{"Expecting two arguments for 'isofbase'"}
@@ -64,7 +65,7 @@
 \item[2045:] \texttt{"Expecting two expressions in 'samebaseclass'"}
 \item[2046:] \texttt{"Expecting two expressions in 'sameclass'"}
 \item[2047:] \texttt{"Can't use history expression here"}
-\item[2048:] \texttt{"Expecting #act, #active, #fin, #req or #waiting"}
+\item[2048:] \texttt{"Expecting \#act, \#active, \#fin, \#req or \#waiting"}
 \item[2049:] \texttt{"Expecting 'end <module>'"}
 \item[2050:] \texttt{"Expecting library name after 'uselib'"}
 \item[2051:] \texttt{"Expecting 'end <module>'"}
@@ -147,17 +148,17 @@
 \item[2128:] \texttt{"Expecting comma separated record modifiers"}
 \item[2129:] \texttt{"Expecting <identifier> |-> <expression>"}
 \item[2130:] \texttt{"Expecting ')' after mu maplets"}
-\item[2131:] \texttt{"Expecting ')' after mk_ tuple"}
-\item[2132:] \texttt{"Expecting is_(expression, type)"}
-\item[2133:] \texttt{"Expecting ')' after is_ expression"}
-\item[2134:] \texttt{"Expecting pre_(function [,args])"}
-\item[2135:] \texttt{"Expecting '}' in empty map"}
-\item[2136:] \texttt{"Expecting '}' after set comprehension"}
+\item[2131:] \texttt{"Expecting ')' after mk\_ tuple"}
+\item[2132:] \texttt{"Expecting is\_(expression, type)"}
+\item[2133:] \texttt{"Expecting ')' after is\_ expression"}
+\item[2134:] \texttt{"Expecting pre\_(function [,args])"}
+\item[2135:] \texttt{"Expecting '\}' in empty map"}
+\item[2136:] \texttt{"Expecting '\}' after set comprehension"}
 \item[2137:] \texttt{"Expecting 'e1,...,e2' in set range"}
-\item[2138:] \texttt{"Expecting '}' after set range"}
-\item[2139:] \texttt{"Expecting '}' after set enumeration"}
-\item[2140:] \texttt{"Expecting '}' after map comprehension"}
-\item[2141:] \texttt{"Expecting '}' after map enumeration"}
+\item[2138:] \texttt{"Expecting '\}' after set range"}
+\item[2139:] \texttt{"Expecting '\}' after set enumeration"}
+\item[2140:] \texttt{"Expecting '\}' after map comprehension"}
+\item[2141:] \texttt{"Expecting '\}' after map enumeration"}
 \item[2142:] \texttt{"Expecting ']' after list comprehension"}
 \item[2143:] \texttt{"Expecting ']' after list enumeration"}
 \item[2144:] \texttt{"Missing 'then'"}
@@ -169,11 +170,11 @@
 \item[2150:] \texttt{"Expecting 'in' after local definitions"}
 \item[2151:] \texttt{"Expecting 'st' after 'be' in let expression"}
 \item[2152:] \texttt{"Expecting 'in' after bind in let expression"}
-\item[2153:] \texttt{"Expecting '&' after bind list in forall"}
-\item[2154:] \texttt{"Expecting '&' after bind list in exists"}
-\item[2155:] \texttt{"Expecting '&' after single bind in exists1"}
-\item[2156:] \texttt{"Expecting '&' after single bind in iota"}
-\item[2157:] \texttt{"Expecting '&' after bind list in lambda"}
+\item[2153:] \texttt{"Expecting '\&' after bind list in forall"}
+\item[2154:] \texttt{"Expecting '\&' after bind list in exists"}
+\item[2155:] \texttt{"Expecting '\&' after single bind in exists1"}
+\item[2156:] \texttt{"Expecting '\&' after single bind in iota"}
+\item[2157:] \texttt{"Expecting '\&' after bind list in lambda"}
 \item[2158:] \texttt{"Expecting 'in' after equals definitions"}
 \item[2159:] \texttt{"Expecting '(' after new class name"}
 \item[2160:] \texttt{"Expecting '(' after 'isofbase'"}
@@ -184,8 +185,8 @@
 \item[2165:] \texttt{"Expecting ')' after 'samebaseclass' args"}
 \item[2166:] \texttt{"Expecting '(' after 'sameclass'"}
 \item[2167:] \texttt{"Expecting ')' after 'sameclass' args"}
-\item[2168:] \texttt{"Expecting <#op>(name(s))"}
-\item[2169:] \texttt{"Expecting <#op>(name(s))"}
+\item[2168:] \texttt{"Expecting <\#op>(name(s))"}
+\item[2169:] \texttt{"Expecting <\#op>(name(s))"}
 \item[2170:] \texttt{"Expecting 'module' at module start"}
 \item[2171:] \texttt{"Expecting 'end' after module definitions"}
 \item[2172:] \texttt{"Expecting 'dlmodule' at module start"}
@@ -199,8 +200,8 @@
 \item[2180:] \texttt{"Mismatched brackets in pattern"}
 \item[2181:] \texttt{"Mismatched braces in pattern"}
 \item[2182:] \texttt{"Mismatched square brackets in pattern"}
-\item[2183:] \texttt{"Expecting '(' after mk_ tuple"}
-\item[2184:] \texttt{"Expecting ')' after mk_ tuple"}
+\item[2183:] \texttt{"Expecting '(' after mk\_ tuple"}
+\item[2184:] \texttt{"Expecting ')' after mk\_ tuple"}
 \item[2185:] \texttt{"Expecting '(' after <type> record"}
 \item[2186:] \texttt{"Expecting ')' after <type> record"}
 \item[2187:] \texttt{"Expecting 'is not yet specified"}
@@ -208,7 +209,7 @@
 \item[2189:] \texttt{"Expecting 'is subclass responsibility'"}
 \item[2190:] \texttt{"Expecting 'exit'"}
 \item[2191:] \texttt{"Expecting 'tixe'"}
-\item[2192:] \texttt{"Expecting '{' after 'tixe'"}
+\item[2192:] \texttt{"Expecting '\{' after 'tixe'"}
 \item[2193:] \texttt{"Expecting '|->' after pattern bind"}
 \item[2194:] \texttt{"Expecting 'in' after tixe traps"}
 \item[2195:] \texttt{"Expecting 'trap'"}
@@ -302,4 +303,4 @@
 \item[2292:] \texttt{"Expecting '|| (...)'"}
 \item[2293:] \texttt{"Expecting '|| (a, b {,...})'"}
 \item[2294:] \texttt{"Expecting ')' ending || clause"}
-\end
+\end{description}
