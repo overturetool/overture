@@ -120,7 +120,7 @@
       </consoleFactory>
    </extension>
    
-   <!-- Debug as context menus -->
+   <!-- Debug as context menus, by adding this we risk to get two of them, one from eclipse and one we make here -->
    <extension
          point="org.eclipse.ui.popupMenus">
          

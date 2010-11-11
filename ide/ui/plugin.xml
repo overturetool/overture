@@ -57,8 +57,8 @@
             <contentExtension
                   pattern="org.overture.ide.ui.vdmNavigatorContent">
             </contentExtension>
-             		       	      
-	          <contentExtension pattern="org.eclipse.ui.navigator.resources.filters.*"/>
+           <contentExtension pattern="org.overture.resources.filters.*"/>
+	       <contentExtension pattern="org.eclipse.ui.navigator.resources.filters.*"/>
            <contentExtension pattern="org.eclipse.ui.navigator.resources.linkHelper"/>
            <contentExtension pattern="org.eclipse.ui.navigator.resources.workingSets"/>
            <contentExtension
@@ -276,19 +276,7 @@
 	        </and>
          </filterExpression>
       </commonFilter> 
-       <commonFilter  
-            id="org.eclipse.ui.navigator.resources.filters.endsWithCovTbl"
-            name="%Filters.endsWithCovTbl.name"
-            description="%Filters.endsWithCovTbl.description"
-            activeByDefault="true"
-            >
-         <filterExpression>
-         	<and>
-	            <instanceof value="org.eclipse.core.resources.IFile"/>
-            	<test property="org.eclipse.core.resources.name" value="*.covtbl"/>	            
-	        </and>
-         </filterExpression>
-      </commonFilter> 
+      
       <!--<commonFilter
             id="org.eclipse.ui.navigator.resources.filters.closedProject"
             name="%filters.closedProject.name"

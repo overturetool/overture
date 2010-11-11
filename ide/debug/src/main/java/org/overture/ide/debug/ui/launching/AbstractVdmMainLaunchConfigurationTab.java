@@ -156,9 +156,19 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		setErrorMessage(null);
 		// if (fRemoteControlClassText.getText().length() > 0)
 		// return true;// super.validate();
-		if (super.isValid(config) && getProject() != null
-				&& getProject().exists() && getProject().isOpen())
+		if (super.isValid(config))
 		{
+			if(getProject() == null || !getProject().exists() || !getProject().getName().equals(fProjectText.getText()))
+			{
+				setErrorMessage("Project does not exist");
+				return false;
+			}
+			
+			if(!getProject().isOpen())
+			{
+				setErrorMessage("Project is not open");
+				return false;
+			}
 
 			try
 			{
@@ -179,7 +189,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 					return syntaxCorrect;
 				} else if (project != null)
 				{
-					expression = getExpression(fModuleNameText.getText(), fOperationText.getText(), staticOperation);
+					expression = getExpression(fModuleNameText.getText().trim(), fOperationText.getText().trim(), staticOperation);
 					return validateTypes(project, expression);
 				}
 			} else
@@ -607,7 +617,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 				String opName = DisplayNameCreator.getDisplayName(method);
 				
 				staticOperation = isStaticCall(module, method);
-				expression = getExpression(fModuleNameText.getText(), opName, staticOperation);
+				expression = getExpression(fModuleNameText.getText().trim(), opName.trim(), staticOperation);
 				fOperationText.setText(opName);
 
 			}

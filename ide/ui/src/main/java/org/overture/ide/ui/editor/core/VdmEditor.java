@@ -43,13 +43,6 @@ public abstract class VdmEditor extends TextEditor
 {
 	ISourceViewer viewer;
 
-	@Override
-	public boolean isDirty()
-	{
-		// TODO Auto-generated method stub
-		return super.isDirty();
-	}
-
 	/**
 	 * Updates the Java outline page selection and this editor's range indicator.
 	 * 

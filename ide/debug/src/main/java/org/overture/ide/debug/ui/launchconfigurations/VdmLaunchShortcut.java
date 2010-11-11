@@ -120,6 +120,15 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 		try
 		{
 			project = findProject(scope, PlatformUI.getWorkbench().getProgressService());
+			
+			ILaunchConfiguration config =findLaunchConfiguration(project.getName(),getConfigurationType());
+			if(config!=null)
+			{
+				//config already exists for the project.
+				launch(config, mode);
+				return;
+			}
+			
 			types = findTypes(scope, PlatformUI.getWorkbench().getProgressService());
 
 		} catch (InterruptedException e)
@@ -175,16 +184,21 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 
 	private void launch(IAstNode type, String mode, String projectName)
 	{
-		ILaunchConfiguration config = findLaunchConfiguration(type, projectName, getConfigurationType());
+		ILaunchConfiguration config = findLaunchConfiguration( projectName, getConfigurationType());
 		if (config == null)
 		{
 			config = createConfiguration(type, projectName);
 		}
+		launch(config, mode);
+
+	}
+	
+	private void launch(ILaunchConfiguration config, String mode)
+	{
 		if (config != null)
 		{
 			DebugUITools.launch(config, mode);
 		}
-
 	}
 
 	/**
@@ -193,8 +207,7 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 	 * 
 	 * @return a configuration to use for launching the given type or <code>null</code> if none
 	 */
-	protected ILaunchConfiguration findLaunchConfiguration(IAstNode type,
-			String projectName, ILaunchConfigurationType configType)
+	protected ILaunchConfiguration findLaunchConfiguration(String projectName, ILaunchConfigurationType configType)
 	{
 		List<ILaunchConfiguration> candidateConfigs = Collections.emptyList();
 		try
@@ -205,13 +218,15 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 			{
 				ILaunchConfiguration config = configs[i];
 
-				String defaultModule = config.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_DEFAULT, "");
+//				String defaultModule = config.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_DEFAULT, "");
 				String pName = config.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, "");
-				String operation = config.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_OPERATION, "");
+//				String operation = config.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_OPERATION, "");
 
-				if (defaultModule.equals(getModuleName(type).toString())
-						&& pName.equalsIgnoreCase(projectName)
-						&& operation.equals(getOperationName(type) + "()"))
+				if (//defaultModule.equals(getModuleName(type).toString())
+						//&&
+						pName.equalsIgnoreCase(projectName)
+						//&& operation.equals(getOperationName(type) + "()")
+						)
 				{ //$NON-NLS-1$
 					candidateConfigs.add(config);
 				}

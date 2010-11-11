@@ -34,6 +34,7 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 	private Button checkBoxUsePreChecks = null;
 	private Button checkBoxInvChecks = null;
 	private Button checkBoxDynamicTypeChecks = null;
+	private Button checkBoxUseMeasure = null;
 	private IVdmProject project = null;
 
 	private Group typeGroup;
@@ -94,15 +95,13 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 		}
 
 		comboBoxLanguageVersion.setItems(languageTypes);
-		comboBoxLanguageVersion.setLayoutData(new GridData(
-				GridData.FILL_HORIZONTAL));
+		comboBoxLanguageVersion.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		try
 		{
 			if (project.getLanguageVersion() != null)
 				for (int j = 0; j < languageTypes.length; j++)
 				{
-					if (project.getLanguageVersion().toString().equals(
-							languageTypes[j]))
+					if (project.getLanguageVersion().toString().equals(languageTypes[j]))
 						comboBoxLanguageVersion.select(j);
 				}
 		} catch (CoreException e)
@@ -150,13 +149,16 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 		checkBoxUsePostChecks.setText("Post condition checks");
 		checkBoxUsePostChecks.setSelection(project.hasPostchecks());
 
+		checkBoxUseMeasure = new Button(interperterGroup, SWT.CHECK);
+		checkBoxUseMeasure.setText("Measure Run-Time checks");
+		checkBoxUseMeasure.setSelection(project.hasMeasurechecks());
+
 	}
 
 	@SuppressWarnings( { "deprecation" })
 	public static IProject getSelectedProject()
 	{
-		ISelection selectedItem = WorkbenchPlugin.getDefault().getWorkbench()
-				.getActiveWorkbenchWindow().getActivePage().getSelection();
+		ISelection selectedItem = WorkbenchPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getSelection();
 		IProject selectedProject = null;
 
 		if (selectedItem instanceof ITreeSelection)
@@ -184,17 +186,14 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 	{
 		try
 		{
-			project.setBuilder(Release
-					.lookup(comboBoxLanguageVersion.getText()));
+			project.setBuilder(Release.lookup(comboBoxLanguageVersion.getText()));
 
-			project.setDynamictypechecks(checkBoxDynamicTypeChecks
-					.getSelection());
+			project.setDynamictypechecks(checkBoxDynamicTypeChecks.getSelection());
 			project.setInvchecks(checkBoxInvChecks.getSelection());
 			project.setPostchecks(checkBoxUsePostChecks.getSelection());
 			project.setPrechecks(checkBoxUsePreChecks.getSelection());
-			project
-					.setSuppressWarnings(checkBoxSuppressWarnings
-							.getSelection());
+			project.setMeasurechecks(checkBoxUseMeasure.getSelection());
+			project.setSuppressWarnings(checkBoxSuppressWarnings.getSelection());
 
 			// project.typeCheck();
 			VdmTypeCheckerUi.typeCheck(getShell(), project);

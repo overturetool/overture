@@ -51,6 +51,7 @@ public class VdmProject implements IVdmProject
 	private static final String POST_CHECKS_ARGUMENT_KEY = "POST_CHECKS";
 	private static final String PRE_CHECKS_ARGUMENT_KEY = "PRE_CHECKS";
 	private static final String SUPRESS_WARNINGS_ARGUMENT_KEY = "SUPPRESS_WARNINGS";
+	private static final String MEASURE_CHECKS_ARGUMENT_KEY = "MEASURE_CHECKS";
 	
 	
 	
@@ -275,6 +276,11 @@ public class VdmProject implements IVdmProject
 	{
 		return hasArgument(PRE_CHECKS_ARGUMENT_KEY, true);
 	}
+	
+	public boolean hasMeasurechecks()
+	{
+		return hasArgument(MEASURE_CHECKS_ARGUMENT_KEY, true);
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -321,6 +327,11 @@ public class VdmProject implements IVdmProject
 		addBuilder(getProject(), ICoreConstants.BUILDER_ID, PRE_CHECKS_ARGUMENT_KEY, value.toString());
 	}
 
+	public void setMeasurechecks(Boolean value) throws CoreException
+	{
+		addBuilder(getProject(), ICoreConstants.BUILDER_ID,MEASURE_CHECKS_ARGUMENT_KEY, value.toString());
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see org.overture.ide.utility.IVdmProject1#setSuppressWarnings(java.lang.Boolean )
@@ -754,6 +765,8 @@ public class VdmProject implements IVdmProject
 	{
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
+
+
 
 	// @Override
 	// public boolean equals(Object obj)
