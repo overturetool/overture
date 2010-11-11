@@ -18,7 +18,7 @@
 
   <modules>
 	<module>vdmt</module>
-	<!--module>astg</module-->
+	<module>overturetemplategen</module>
 	<module>maven-pst</module>
 	<module>packworkspace</module>
 	<module>treegen</module>
