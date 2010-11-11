@@ -29,12 +29,8 @@ import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.core.utility.ClasspathUtils;
 import org.overture.ide.debug.core.IDbgpService;
 import org.overture.ide.debug.core.IDebugConstants;
-import org.overture.ide.debug.core.IDebugPreferenceConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.model.internal.VdmDebugTarget;
-import org.overture.ide.debug.ui.log.VdmDebugLogManager;
-import org.overture.ide.debug.utils.ProcessConsolePrinter;
-import org.overture.ide.ui.internal.util.ConsoleWriter;
 import org.overturetool.vdmj.util.Base64;
 
 /**
@@ -62,22 +58,18 @@ public class VdmLaunchConfigurationDelegate implements
 		}
 		try
 		{
-			//set launch encoding to UTF-8. Mainly used to set console encoding.
+			// set launch encoding to UTF-8. Mainly used to set console encoding.
 			launch.setAttribute(DebugPlugin.ATTR_CONSOLE_ENCODING, "UTF-8");
-			
-			List<String> commandList = initializeLaunch(launch, configuration,
-					mode);
 
-			final VdmDebugTarget target = (VdmDebugTarget) launch
-					.getDebugTarget();
+			List<String> commandList = initializeLaunch(launch, configuration, mode);
 
-			final DebugSessionAcceptor acceptor = new DebugSessionAcceptor(
-					target, monitor);
+			final VdmDebugTarget target = (VdmDebugTarget) launch.getDebugTarget();
+
+			final DebugSessionAcceptor acceptor = new DebugSessionAcceptor(target, monitor);
 			try
 			{
 				monitor.worked(1);
-				target.setProcess(launchExternalProcess(launch, commandList,
-						getVdmProject(configuration),configuration));
+				target.setProcess(launchExternalProcess(launch, commandList, getVdmProject(configuration), configuration));
 				monitor.worked(1);
 
 				// Waiting for debugging engine to connect
@@ -106,13 +98,12 @@ public class VdmLaunchConfigurationDelegate implements
 	 * @param monitor
 	 *            progress monitor
 	 * @throws CoreException
-	 *             if debuggingProcess terminated, monitor is canceled or // *
-	 *             timeout
+	 *             if debuggingProcess terminated, monitor is canceled or // * timeout
 	 */
 	protected void waitDebuggerConnected(ILaunch launch,
 			DebugSessionAcceptor acceptor) throws CoreException
 	{
-		int timeout =  VdmDebugPlugin.getConnectionTimeout();
+		int timeout = VdmDebugPlugin.getConnectionTimeout();
 		if (!acceptor.waitConnection(timeout))
 		{
 			launch.terminate();
@@ -130,7 +121,7 @@ public class VdmLaunchConfigurationDelegate implements
 			ILaunchConfiguration configuration, String mode)
 			throws CoreException
 	{
-			List<String> commandList = null;
+		List<String> commandList = null;
 		Integer debugSessionId = new Integer(getSessionId());
 		if (useRemoteDebug(configuration))
 		{
@@ -148,23 +139,43 @@ public class VdmLaunchConfigurationDelegate implements
 		IVdmProject vdmProject = getVdmProject(configuration);
 
 		Assert.isNotNull(vdmProject, " Project not found: "
-				+ configuration.getAttribute(
-						IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, ""));
+				+ configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, ""));
 
 		String charSet = getProject(configuration).getDefaultCharset();
 
 		commandList.add("-h");
 		commandList.add("localhost");
 		commandList.add("-p");
-		commandList.add(new Integer(VdmDebugPlugin.getDefault()
-				.getDbgpService().getPort()).toString());
+		commandList.add(new Integer(VdmDebugPlugin.getDefault().getDbgpService().getPort()).toString());
 		commandList.add("-k");
-			commandList.add(debugSessionId.toString());
+		commandList.add(debugSessionId.toString());
 		commandList.add("-w");
 		commandList.add("-q");
 		commandList.add(vdmProject.getDialect().getArgstring());
 		commandList.add("-r");
 		commandList.add(vdmProject.getLanguageVersionName());
+		// set disable interpreter settings
+		if (!vdmProject.hasPrechecks())
+		{
+			commandList.add("-pre");
+		}
+		if (!vdmProject.hasPostchecks())
+		{
+			commandList.add("-post");
+		}
+		if (!vdmProject.hasInvchecks())
+		{
+			commandList.add("-inv");
+		}
+		if (!vdmProject.hasDynamictypechecks())
+		{
+			commandList.add("-dtc");
+		}
+		if (!vdmProject.hasMeasurechecks())
+		{
+			commandList.add("-measures");
+		}
+
 		commandList.add("-c");
 		commandList.add(charSet);
 		if (!isRemoteControllerEnabled(configuration))
@@ -224,8 +235,7 @@ public class VdmLaunchConfigurationDelegate implements
 				abort("Could not create DBGP Service", null);
 			}
 
-			target = new VdmDebugTarget(IDebugConstants.ID_VDM_DEBUG_MODEL,
-					service, debugSessionId.toString(), launch, null);
+			target = new VdmDebugTarget(IDebugConstants.ID_VDM_DEBUG_MODEL, service, debugSessionId.toString(), launch, null);
 			target.setVdmProject(vdmProject);
 			launch.addDebugTarget(target);
 			target.toggleClassVariables(true);
@@ -246,8 +256,7 @@ public class VdmLaunchConfigurationDelegate implements
 			ILaunchConfiguration configuration) throws CoreException
 	{
 		List<String> options = new Vector<String>();
-		String opt = configuration.getAttribute(
-				IDebugConstants.VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION, "");
+		String opt = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION, "");
 		if (opt.trim().length() != 0)
 		{
 			String[] opts = opt.split(" ");
@@ -264,19 +273,18 @@ public class VdmLaunchConfigurationDelegate implements
 	}
 
 	/**
-	 * Intended to be used when sub classing the delegate to add additional
-	 * parameters to the launch of VDMJ
+	 * Intended to be used when sub classing the delegate to add additional parameters to the launch of VDMJ
 	 * 
 	 * @param project
 	 *            the project launched
 	 * @param configuration
 	 *            the launch configuration
-	 * @return a list of parameters to be added to the command line just before
-	 *         the files
-	 * @throws CoreException 
+	 * @return a list of parameters to be added to the command line just before the files
+	 * @throws CoreException
 	 */
 	protected Collection<? extends String> getExtendedCommands(
-			IVdmProject project, ILaunchConfiguration configuration) throws CoreException
+			IVdmProject project, ILaunchConfiguration configuration)
+			throws CoreException
 	{
 		return new Vector<String>();
 	}
@@ -284,8 +292,7 @@ public class VdmLaunchConfigurationDelegate implements
 	private String getRemoteControllerName(ILaunchConfiguration configuration)
 			throws CoreException
 	{
-		return configuration.getAttribute(
-				IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_CONTROL, "");
+		return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_CONTROL, "");
 	}
 
 	private String getArgumentString(List<String> args)
@@ -302,25 +309,23 @@ public class VdmLaunchConfigurationDelegate implements
 	private boolean useRemoteDebug(ILaunchConfiguration configuration)
 			throws CoreException
 	{
-		return configuration.getAttribute(
-				IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, false);
+		return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, false);
 	}
 
 	private boolean isRemoteControllerEnabled(ILaunchConfiguration configuration)
 			throws CoreException
 	{
-		return configuration.getAttribute(
-				IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_CONTROL, "").length() > 0;
+		return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_CONTROL, "").length() > 0;
 	}
 
 	private boolean hasTrace(ILaunchConfiguration configuration)
 			throws CoreException
 	{
-		return configuration.getAttribute(
-				IDebugConstants.VDM_LAUNCH_CONFIG_IS_TRACE, false);
+		return configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_IS_TRACE, false);
 	}
 
-	protected File getOutputFolder(IVdmProject project, ILaunchConfiguration configuration) throws CoreException
+	protected File getOutputFolder(IVdmProject project,
+			ILaunchConfiguration configuration) throws CoreException
 	{
 		File outputDir = new File(getProject(configuration).getLocation().toFile(), "generated");
 		outputDir.mkdirs();
@@ -328,7 +333,8 @@ public class VdmLaunchConfigurationDelegate implements
 	}
 
 	private IProcess launchExternalProcess(ILaunch launch,
-			List<String> commandList, IVdmProject project, ILaunchConfiguration configuration) throws CoreException
+			List<String> commandList, IVdmProject project,
+			ILaunchConfiguration configuration) throws CoreException
 	{
 
 		String executeString = getArgumentString(commandList);
@@ -339,9 +345,8 @@ public class VdmLaunchConfigurationDelegate implements
 		{
 			if (!useRemoteDebug(launch.getLaunchConfiguration()))
 			{
-				process = Runtime.getRuntime().exec(executeString, null,
-						getProject(configuration).getLocation().toFile());
-				
+				process = Runtime.getRuntime().exec(executeString, null, getProject(configuration).getLocation().toFile());
+
 			} else
 			{
 				process = Runtime.getRuntime().exec("help");
@@ -360,8 +365,7 @@ public class VdmLaunchConfigurationDelegate implements
 		String defaultModule;
 		try
 		{
-			defaultModule = configuration.getAttribute(
-					IDebugConstants.VDM_LAUNCH_CONFIG_DEFAULT, "");
+			defaultModule = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_DEFAULT, "");
 
 			return Base64.encode(defaultModule.getBytes(charset)).toString();
 		} catch (UnsupportedEncodingException e)
@@ -378,8 +382,7 @@ public class VdmLaunchConfigurationDelegate implements
 		try
 		{
 
-			expression = configuration.getAttribute(
-					IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION, "");
+			expression = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION, "");
 			return Base64.encode(expression.getBytes(charset)).toString();
 		} catch (UnsupportedEncodingException e)
 		{
@@ -394,12 +397,9 @@ public class VdmLaunchConfigurationDelegate implements
 		List<String> commandList = new Vector<String>();
 		List<String> entries = new Vector<String>();
 		// get the bundled class path of the debugger
-		ClasspathUtils.collectClasspath(
-				new String[] { IDebugConstants.DEBUG_ENGINE_BUNDLE_ID },
-				entries);
+		ClasspathUtils.collectClasspath(new String[] { IDebugConstants.DEBUG_ENGINE_BUNDLE_ID }, entries);
 		// get the class path for all jars in the project lib folder
-		File lib = new File(getProject(configuration).getLocation().toFile(),
-				"lib");
+		File lib = new File(getProject(configuration).getLocation().toFile(), "lib");
 		if (lib.exists() && lib.isDirectory())
 		{
 			for (File f : getAllFiles(lib))
@@ -453,26 +453,25 @@ public class VdmLaunchConfigurationDelegate implements
 		else
 			return ":";
 	}
-	
+
 	public static boolean isWindowsPlatform()
 	{
 		return System.getProperty("os.name").toLowerCase().contains("win");
 	}
-	
+
 	protected static String toPlatformPath(String path)
 	{
-		if(isWindowsPlatform())
+		if (isWindowsPlatform())
 		{
-			return "\""+path+"\"";
-		}else
+			return "\"" + path + "\"";
+		} else
 		{
 			return path.replace(" ", "\\ ");
 		}
 	}
 
 	/**
-	 * Throws an exception with a new status containing the given message and
-	 * optional exception.
+	 * Throws an exception with a new status containing the given message and optional exception.
 	 * 
 	 * @param message
 	 *            error message
@@ -484,16 +483,13 @@ public class VdmLaunchConfigurationDelegate implements
 	{
 		// TODO: the plug-in code should be the example plug-in, not Perl debug
 		// model id
-		throw new CoreException((IStatus) new Status(IStatus.ERROR,
-				IDebugConstants.ID_VDM_DEBUG_MODEL, 0, message, e));
+		throw new CoreException((IStatus) new Status(IStatus.ERROR, IDebugConstants.ID_VDM_DEBUG_MODEL, 0, message, e));
 	}
 
 	/**
-	 * Returns a free port number on localhost, or -1 if unable to find a free
-	 * port.
+	 * Returns a free port number on localhost, or -1 if unable to find a free port.
 	 * 
-	 * @return a free port number on localhost, or -1 if unable to find a free
-	 *         port
+	 * @return a free port number on localhost, or -1 if unable to find a free port
 	 */
 	public static int findFreePort()
 	{
@@ -539,8 +535,7 @@ public class VdmLaunchConfigurationDelegate implements
 
 		if (project != null)
 		{
-			IVdmProject vdmProject = (IVdmProject) project
-					.getAdapter(IVdmProject.class);
+			IVdmProject vdmProject = (IVdmProject) project.getAdapter(IVdmProject.class);
 			return vdmProject;
 		}
 		return null;
@@ -549,9 +544,7 @@ public class VdmLaunchConfigurationDelegate implements
 	static private IProject getProject(ILaunchConfiguration configuration)
 			throws CoreException
 	{
-		return ResourcesPlugin.getWorkspace().getRoot().getProject(
-				configuration.getAttribute(
-						IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, ""));
+		return ResourcesPlugin.getWorkspace().getRoot().getProject(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, ""));
 	}
 
 }

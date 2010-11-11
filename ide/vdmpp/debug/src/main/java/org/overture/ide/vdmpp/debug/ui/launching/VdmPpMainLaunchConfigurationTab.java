@@ -68,6 +68,10 @@ public class VdmPpMainLaunchConfigurationTab extends
 					ci.setDefaultName(expression.substring(0, expression.indexOf("("))); // needed for static fn/op check
 				}
 			}
+//			else if(expression.length()>4)
+//			{
+//				ci.setDefaultName(expression.trim().substring(3, expression.indexOf("(")).trim()); 
+//			}
 			ci.typeCheck(expression);
 			return true;
 		} catch (NotAllowedException e)

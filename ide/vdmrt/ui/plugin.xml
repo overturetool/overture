@@ -190,5 +190,20 @@
         </part>
      </actionSetPartAssociation>
   </extension>
+  <extension
+        point="org.eclipse.ui.popupMenus">
+     <objectContribution
+           adaptable="true"
+           id="org.overture.ide.vdmrt.ui.convertVdmPpVdmRt"
+           objectClass="org.overture.ide.core.resources.IVdmProject">
+        <action
+              class="org.overture.ide.vdmrt.ui.actions.CloneVdmPpProjectToVdmRtAction"
+              id="org.overture.ide.vdmrt.ui.action1"
+              label="Clone as VDM-RT">
+           
+        </action>
+       
+     </objectContribution>
+  </extension>
 
 </plugin>

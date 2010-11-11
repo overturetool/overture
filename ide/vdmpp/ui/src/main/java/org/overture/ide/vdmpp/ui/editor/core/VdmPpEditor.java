@@ -11,7 +11,6 @@ public class VdmPpEditor extends VdmEditor {
 
 	@Override
 	public VdmSourceViewerConfiguration getVdmSourceViewerConfiguration() {
-		// TODO Auto-generated method stub
 		return new VdmPpSourceViewerConfiguration();
 	}
 
