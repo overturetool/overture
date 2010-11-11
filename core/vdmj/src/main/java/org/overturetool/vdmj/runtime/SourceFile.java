@@ -49,6 +49,9 @@ public class SourceFile
 	public final File filename;
 	public List<String> lines = new Vector<String>();
 	public final boolean hasVdm_al;
+	// The argument to lstset is: escapeinside={(*@}{@*)}
+	public final String LST_ESCAPE_BEGIN ="(*@";
+	public final String LST_ESCAPE_END ="@*)";
 
 	public SourceFile(File filename) throws IOException
 	{
@@ -286,9 +289,9 @@ public class SourceFile
 				if (start >= p)		// Backtracker produces duplicate tokens
 				{
     				sb.append(line.substring(p, start));
-    				sb.append("!\\notcovered{");
+    				sb.append(LST_ESCAPE_BEGIN+"\\notcovered{");
     				sb.append(latexQuote(line.substring(start, end)));
-    				sb.append("}!");	//\u00A3");
+    				sb.append("}"+LST_ESCAPE_END);	//\u00A3");
 
     				p = end;
 				}
