@@ -1,0 +1,473 @@
+--////////////////////////////////////////////////////////////////////////////////////////
+--  Format:
+--	#name 			+ 3*TAB + name which is used as key | only A-Z
+--	#description 	+ 1*TAB + name which is used as key
+--	#dialect	 	+ 2*TAB + (all,vdmsl,vdmpp,vdmrt) | vdmrt extends vdmpp by default 
+--	#begin		 	+ newline |The following lines is the templates including line breaks
+--	#end		 	Terminates the template, should be followed by a divider line of --
+--	--------------------------------------------------------------------
+--
+--	Lines beginning with -- is ignored
+--	Blank lines is not allowed, it will terminate the reader
+--
+--	Place holders and navigation:
+--	${public} 			requests the user to enter an access specifier, 
+--						it the user just tabs public will be interted
+--	${cursor}			position of curser after template completion
+--	${line_selection}	the selected line
+--	${word_selection}	the selected word
+--////////////////////////////////////////////////////////////////////////////////////////
+--==================================================================
+--
+--	VDM Shared constructs
+--
+--==================================================================
+#name			while
+#description	while predicate do statement
+#dialect		all
+#begin
+while ${predicate} 
+do ${statement}
+#end
+--------------------------------------------------------------------
+#name			caseExpression
+#description	Case Expression
+#dialect		all
+#begin
+cases ${expression}:
+	${patternList1} -> ${expression1}
+	${patternList2} -> ${expression2}
+	others -> ${expressionOthers}
+end
+#end
+--------------------------------------------------------------------
+#name			dclStatement
+#description	Declare
+#dialect		all
+#begin
+dcl ${name} : ${nameType};
+	${name} := ${expression}
+#end
+--------------------------------------------------------------------
+#name			defExpression
+#description	def pattern = expression1 in expression2
+#dialect		all
+#begin
+def ${pattern} = ${expression1} in
+	${expression2}
+#end
+--------------------------------------------------------------------
+#name			exists
+#description	exists bindList & predicate
+#dialect		all
+#begin
+exists ${bindList} & ${predicate}
+#end
+--------------------------------------------------------------------
+#name			forall
+#description	forall bind list & predicate
+#dialect		all
+#begin
+forall ${bindList} & ${predicate}
+#end
+--------------------------------------------------------------------
+#name			forallinset
+#description	forall in set
+#dialect		all
+#begin
+forall ${element} in set ${set}
+#end
+--------------------------------------------------------------------
+#name			forallLoop
+#description	for identifier = expression1 to expression2 do\n statement
+#dialect		all
+#begin
+for ${identifier} = ${initialValue} to ${upperValue} do
+	${statement}
+#end
+--------------------------------------------------------------------
+#name			functions
+#description	Function block
+#dialect		all
+#begin
+
+functions
+	${cursor}
+#end
+--------------------------------------------------------------------
+#name			operations
+#description	Operation block
+#dialect		all
+#begin
+
+operations
+	${cursor}
+#end
+--------------------------------------------------------------------
+#name			ifthen
+#description	if predicate then expression1 else expression2
+#dialect		all
+#begin
+if ${predicate} 
+then 
+	${expression1} 
+else
+	${expression2}
+#end
+--------------------------------------------------------------------
+#name			let
+#description	let pattern = expression1 in expression2
+#dialect		all
+#begin
+let ${pattern} = ${expression1} in
+	${expression2}
+#end
+--------------------------------------------------------------------
+--==================================================================
+--
+--	VDM-SL
+--
+--==================================================================
+#name			module
+#description	Module
+#dialect		vdmsl
+#begin
+module ${moduleName}
+	exports all
+	definitions
+
+end ${moduleName}
+#end
+--------------------------------------------------------------------
+#name			moduleSkeleton
+#description	Module Full skeleton of a module
+#dialect		vdmsl
+#begin
+module ${moduleName}
+	exports all
+	definitions
+	
+	state ${stateName} of
+	end
+
+	types
+
+	values
+
+	operations
+
+	functions
+
+end ${moduleName}
+#end
+--------------------------------------------------------------------
+#name			functionExplicit
+#description	Explicit function
+#dialect		vdmsl
+#begin
+${functionName} :  ${parameterTypes} -> ${resultType}
+${functionName} (${parameterNames}) == ${expression};
+--pre ${preCondition}
+--post ${postCondition}
+#end
+--------------------------------------------------------------------
+#name			functionImplicit
+#description	Implicit function
+#dialect		vdmsl
+#begin
+${functionName} (${parameters}) ->
+${resultName}: ${resultType}
+pre ${predicate}
+post ${predicate}
+#end
+--------------------------------------------------------------------
+#name			operationExplicit
+#description	Explicit Operation
+#dialect		vdmsl
+#begin
+${operationName} : ${parameterTypes} ==> ${resultType}
+${operationName} (${parameterNames}) == ${statements};
+--pre ${preCondition}
+--post ${postCondition}
+#end
+--------------------------------------------------------------------
+#name			operationImplicit
+#description	Implicit operation
+#dialect		vdmsl
+#begin
+${operationName} (${parameters}) ==>
+${resultName}: ${resultType}
+	ext rd ${instanceVariable1} : ${instanceVariable1Type}
+	wr ${instanceVariable2} : ${instanceVariable2Type}
+	pre ${predicate}
+	post ${predicate};
+#end
+--------------------------------------------------------------------
+--==================================================================
+--
+--	VDM-PP
+--
+--==================================================================
+#name			class
+#description	Class Definition
+#dialect		vdmpp
+#begin
+class ${className}
+
+end ${className}
+#end
+--------------------------------------------------------------------
+#name			classSkeleton
+#description	Class Definition full skeleton
+#dialect		vdmpp
+#begin
+class ${className}
+types
+	${cursor}
+values
+	
+instance variables
+
+operations
+
+functions
+
+end ${className}
+#end
+--------------------------------------------------------------------
+#name			self
+#description	Get a reference to the current object
+#dialect		vdmpp
+#begin
+self
+#end
+--------------------------------------------------------------------
+#name			issubclassresponsibility
+#description	Is subclass responsibility
+#dialect		vdmpp
+#begin
+is subclass responsibility
+#end
+--------------------------------------------------------------------
+#name			isnotyetspecified
+#description	is not yet specified
+#dialect		vdmpp
+#begin
+is not yet specified
+#end
+--------------------------------------------------------------------
+#name			issubclassof
+#description	Is subclass of
+#dialect		vdmpp
+#begin
+is subclass of
+#end
+--------------------------------------------------------------------
+#name			values
+#description	Values block
+#dialect		vdmpp
+#begin
+
+values
+	${cursor}
+#end
+--------------------------------------------------------------------
+#name			instancevariables
+#description	Instance Variables block
+#dialect		vdmpp
+#begin
+
+instance variables
+	${cursor}
+#end
+--------------------------------------------------------------------
+#name			functionExplicit
+#description	Explicit function
+#dialect		vdmpp
+#begin
+${private} ${functionName} :  ${parameterTypes} -> ${resultType}
+${functionName} (${parameterNames}) == ${expression};
+--pre ${preCondition}
+--post ${postCondition}
+#end
+--------------------------------------------------------------------
+#name			functionImplicit
+#description	Implicit function
+#dialect		vdmpp
+#begin
+${private} ${functionName} (${parameters}) ->
+${resultName}: ${resultType}
+pre ${predicate}
+post ${predicate}
+#end
+--------------------------------------------------------------------
+#name			operationExplicit
+#description	Explicit Operation
+#dialect		vdmpp
+#begin
+${private} ${operationName} : ${parameterTypes} ==> ${resultType}
+${operationName} (${parameterNames}) == ${statements};
+--pre ${preCondition}
+--post ${postCondition}
+#end
+--------------------------------------------------------------------
+#name			operationImplicit
+#description	Implicit operation
+#dialect		vdmpp
+#begin
+${private} ${operationName} (${parameters}) ==>
+${resultName}: ${resultType}
+	ext rd ${instanceVariable1} : ${instanceVariable1Type}
+	wr ${instanceVariable2} : ${instanceVariable2Type}
+	pre ${predicate}
+	post ${predicate};
+#end
+--------------------------------------------------------------------
+#name			isofbaseclass
+#description	Test if an object is of a specific base class
+#dialect		vdmpp
+#begin
+isofbaseclass(${ClassTypeName}, ${objectName})
+#end
+--------------------------------------------------------------------
+#name			isofclass
+#description	Test if an object is of class
+#dialect		vdmpp
+#begin
+isofclass(${ClassTypeName}, ${objectName})
+#end
+--------------------------------------------------------------------
+#name			samebaseclass
+#description	Test if two objects are of the same type
+#dialect		vdmpp
+#begin
+samebaseclass(${objectName}, ${objectName})
+#end
+--------------------------------------------------------------------
+#name			sync
+#description	Synchronization block
+#dialect		vdmpp
+#begin
+
+sync
+	${cursor}
+#end
+--------------------------------------------------------------------
+#name			mutex
+#description	Mutex operation
+#dialect		vdmpp
+#begin
+mutex ${operationName}
+#end
+--------------------------------------------------------------------
+#name			per
+#description	Permission predicate for an operation, history counters can be used: #fin, #act, #active, #req, #waiting
+#dialect		vdmpp
+#begin
+per ${operationName} => ${predicate}
+#end
+--------------------------------------------------------------------
+#name			act
+#description	The number of times that operation name operation has been activated
+#dialect		vdmpp
+#begin
+#act(${operationName})
+#end
+--------------------------------------------------------------------
+#name			fin
+#description	The number of times that the operation name operation has been completed
+#dialect		vdmpp
+#begin
+#fin(${operationName})
+#end
+--------------------------------------------------------------------
+#name			active
+#description	The number of operation name operations that are currently active.
+#dialect		vdmpp
+#begin
+#active(${operationName})
+#end
+--------------------------------------------------------------------
+#name			req
+#description	The number of requests that has been issued for the operation name operation
+#dialect		vdmpp
+#begin
+#req(${operationName})
+#end
+--------------------------------------------------------------------
+#name			waiting
+#description	The number of outstanding requests for the operation name operation
+#dialect		vdmpp
+#begin
+#waiting(${operationName})
+#end
+--------------------------------------------------------------------
+--==================================================================
+--
+--	VDM-RT
+--
+--==================================================================
+#name			system
+#description	System skeleton
+#dialect		vdmrt
+#begin
+system ${systemName}
+instance variables
+	cpu1 : CPU := new CPU(<FP>, 22E6);
+	cpu2 : CPU := new CPU(<FP>, 22E6);
+	bus1 : BUS := new BUS(<CSMACD>, 72E3,{ cpu1,cpu2});
+
+	${cursor}
+operations
+
+public ${systemName} : () ==> ${systemName}
+${systemName}()==
+(
+	skip;
+);
+
+end ${systemName}
+#end
+--------------------------------------------------------------------
+#name			periodic
+#description	periodic(periode,jitter,delay,offset)(operation name)
+#dialect		vdmrt
+#begin
+periodic(${periode},${jitter},${delay},${offset})(${operationName});
+#end
+--------------------------------------------------------------------
+#name			duration
+#description	Duration(time in milliceconds)statement
+#dialect		vdmrt
+#begin
+duration(${time})${statement};
+#end
+--------------------------------------------------------------------
+#name			cycle
+#description	Cycles(number of cycles)statement
+#dialect		vdmrt
+#begin
+cycles(${numberOfCycles})${statement};
+#end
+--------------------------------------------------------------------
+#name			cpu
+#description	CPU (Priority <FP/FCFS>, capacity)
+#dialect		vdmrt
+#begin
+${cpuName} : CPU := new CPU (${priority}, ${speed});
+#end
+--------------------------------------------------------------------
+#name			bus
+#description	BUS (Priority <CSMACD>, capacity,set of connected CPUs)
+#dialect		vdmrt
+#begin
+${busName} : BUS := new BUS (${priority}, ${speed}, {${CPU1}, ${CPU2}});
+#end
+--------------------------------------------------------------------
+#name			time
+#description	Get the current time
+#dialect		vdmrt
+#begin
+time
+#end
+--------------------------------------------------------------------
