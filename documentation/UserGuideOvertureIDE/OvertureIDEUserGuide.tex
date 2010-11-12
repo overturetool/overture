@@ -369,6 +369,18 @@ in the editor. The outline displays any declared VDM definitions such as
 their state components, values, types, functions and operations. In
 case of a flat VDM-SL model the module is called {\ttfamily{DEFAULT}}.\index{DEFAULT}
 % and traces.
+The colour of the icons in front of a name in the outline names
+indicates the accessibility of the corresponding definition. Red is
+used for private definitions, yellow for protected definitions and
+finally green is used for public definitions. Triangles are used for
+type definitions, small squares are used for values, state components
+and instance variables, functions and operations are represented by
+larger circles and squares, permission predicates are shown with small
+lock symbols and finally traces are shown with a
+``\texttt{T}''. Functions have a small ``\texttt{F}'' lifted over the
+icons and static definitions have a small ``\texttt{S}'' lifted over
+the icon.
+
 Figure~\ref{fig:userguide:OutlineView} shows a closeup of the outline view. 
 Clicking on an operation or function will move the cursor in
 the editor to the definition of the operation. At the top of the outline view there

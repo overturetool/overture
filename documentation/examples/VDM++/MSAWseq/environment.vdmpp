@@ -9,7 +9,7 @@ FOOut = FOId * Coordinates * Altitude * FOWarning *
 RadarOut = Coordinates * nat1 * RadarWarning * nat *  Time;
   
   
-outline = FOOut | RadarOut; 
+protected outline = FOOut | RadarOut; 
 
 instance variables 
 
