@@ -1,7 +1,7 @@
 package org.overture.ide.core.resources;
 
 import java.io.File;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -14,24 +14,23 @@ import org.overture.ide.core.VdmElementDelta;
 import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.lex.LexLocation;
 
-public class VdmSourceUnit implements IVdmSourceUnit 
+public class VdmSourceUnit implements IVdmSourceUnit
 {
 	protected IVdmProject project;
 	protected IFile file;
 	protected int type;
-	protected	List<LexLocation> allLocation = new Vector<LexLocation>();
-	protected	Map<LexLocation, IAstNode> locationToAstNodeMap = new Hashtable<LexLocation, IAstNode>();
-	protected boolean parseErrors= false;
-	
-
+	protected List<LexLocation> allLocation = new Vector<LexLocation>();
+	protected HashMap<LexLocation, IAstNode> locationToAstNodeMap = new HashMap<LexLocation, IAstNode>();
+	protected boolean parseErrors = false;
 
 	protected List<IAstNode> parseList = new Vector<IAstNode>();
 
-	public VdmSourceUnit(IVdmProject project, IFile file) {
+	public VdmSourceUnit(IVdmProject project, IFile file)
+	{
 		this.project = project;
 		this.file = file;
 		this.type = IVdmSourceUnit.VDM_DEFAULT;
-		
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -58,7 +57,7 @@ public class VdmSourceUnit implements IVdmSourceUnit
 		this.parseList.clear();
 		this.allLocation.clear();
 		this.locationToAstNodeMap.clear();
-this.parseErrors = parseErrors;
+		this.parseErrors = parseErrors;
 		if (!parseErrors)
 		{
 			this.parseList.addAll(parseResult);
@@ -100,10 +99,7 @@ this.parseErrors = parseErrors;
 
 	protected void fireChangedEvent()
 	{
-		VdmCore.getDeltaProcessor().fire(this,
-				new ElementChangedEvent(new VdmElementDelta(this,
-						IVdmElementDelta.CHANGED),
-						ElementChangedEvent.DeltaType.POST_RECONCILE));
+		VdmCore.getDeltaProcessor().fire(this, new ElementChangedEvent(new VdmElementDelta(this, IVdmElementDelta.CHANGED), ElementChangedEvent.DeltaType.POST_RECONCILE));
 	}
 
 	public synchronized List<IAstNode> getParseList()
@@ -148,9 +144,6 @@ this.parseErrors = parseErrors;
 		return project;
 	}
 
-	
-
-	
 	public boolean hasParseTree()
 	{
 		return parseList.size() > 0;
@@ -159,9 +152,10 @@ this.parseErrors = parseErrors;
 	/**
 	 * No not make this synchronized it will lock up due to getParse list and this one being called at the same time
 	 */
-	public /*synchronized*/ Map<LexLocation, IAstNode> getLocationToAstNodeMap()
+	@SuppressWarnings("unchecked")
+	public/* synchronized */Map<LexLocation, IAstNode> getLocationToAstNodeMap()
 	{
-		return locationToAstNodeMap;
+		return (Map<LexLocation, IAstNode>) locationToAstNodeMap.clone();
 	}
 
 	public boolean hasParseErrors()
@@ -173,6 +167,5 @@ this.parseErrors = parseErrors;
 	{
 		return new VdmSourceUnitWorkingCopy(this);
 	}
-
 
 }
