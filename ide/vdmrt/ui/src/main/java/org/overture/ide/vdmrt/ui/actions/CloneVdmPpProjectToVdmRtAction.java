@@ -8,6 +8,8 @@ import java.util.Vector;
 import org.eclipse.core.internal.resources.ProjectDescription;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IObjectActionDelegate;
@@ -56,7 +58,14 @@ public class CloneVdmPpProjectToVdmRtAction implements IObjectActionDelegate
 
 					project.copy(description, true, null);
 
-					rename(project.getLocation().toFile());
+					IProject newProject = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
+					if (newProject != null)
+					{
+						rename(newProject.getLocation().toFile());
+						newProject.refreshLocal(IResource.DEPTH_INFINITE, null);
+					}
+					
+					
 				}
 			}
 		} catch (Exception ex)
@@ -74,11 +83,11 @@ public class CloneVdmPpProjectToVdmRtAction implements IObjectActionDelegate
 			String sourcePath = file.getAbsolutePath();
 			String newPath = sourcePath.substring(0, sourcePath.length() - 5)
 					+ "vdmrt";
-			if(file.renameTo(new File(newPath)))
+			if (file.renameTo(new File(newPath)))
 			{
-				
+
 			}
-		
+
 		}
 		if (file.isDirectory())
 		{

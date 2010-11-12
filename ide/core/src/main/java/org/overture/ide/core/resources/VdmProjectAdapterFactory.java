@@ -7,6 +7,7 @@ import org.overture.ide.internal.core.resources.VdmProject;
 public class VdmProjectAdapterFactory implements IAdapterFactory
 {
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Object adaptableObject, Class adapterType)
 	{
 		if(adapterType == IVdmProject.class)
@@ -32,6 +33,7 @@ public class VdmProjectAdapterFactory implements IAdapterFactory
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Class[] getAdapterList()
 	{		
 		return new Class[]{IVdmProject.class, IProject.class};

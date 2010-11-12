@@ -8,7 +8,6 @@ import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.ObjectPluginAction;
-import org.overture.ide.core.ICoreConstants;
 
 
 

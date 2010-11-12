@@ -10,6 +10,7 @@ import org.overture.ide.core.resources.IVdmProject;
 public class VdmBuilder extends VdmCoreBuilder
 {
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void build(final IProgressMonitor monitor) throws CoreException
 	{
