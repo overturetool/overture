@@ -29,6 +29,7 @@ import java.util.Arrays;
 
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.definitions.AccessSpecifier;
 import org.overturetool.vdmj.definitions.AssignmentDefinition;
 import org.overturetool.vdmj.definitions.ClassInvariantDefinition;
@@ -104,8 +105,6 @@ import org.overturetool.vdmj.types.UnresolvedType;
 
 public class DefinitionReader extends SyntaxReader
 {
-	private static final long MAX_TIMES = 5;
-
 	public DefinitionReader(LexTokenReader reader)
 	{
 		super(reader);
@@ -1416,13 +1415,13 @@ public class DefinitionReader extends SyntaxReader
 		{
 			case TIMES:
 				from = 0;
-				to = MAX_TIMES;
+				to = Properties.traces_max_repeats;
 				nextToken();
 				break;
 
 			case PLUS:
 				from = 1;
-				to = MAX_TIMES;
+				to = Properties.traces_max_repeats;
 				nextToken();
 				break;
 
