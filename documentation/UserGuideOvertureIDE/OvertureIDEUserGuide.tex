@@ -7,7 +7,7 @@
 %\def\@reportno{YY--NN}		% default report no.
 %\def\reportno#1{\gdef\@reportno{#1}}
 \usepackage{fancyhdr}
-
+\usepackage{longtable}
 \newcommand{\bthisbibliography}[1]{\chapter*{References}%
    \begin {list} {}%
      {\settowidth {\labelwidth} {[#1]XX}%
@@ -166,6 +166,7 @@ Month   & Year & Version & Version of Overture.exe \\ \hline
 January & 2010 &         & 0.1.5 \\ \hline
 March   & 2010 &         & 0.2   \\ \hline
 May     & 2010 & 1       & 0.2   \\ \hline
+December& 2010 & 2       & 1.0   \\ \hline
 \end{tabular}
 
 \tableofcontents
@@ -322,7 +323,7 @@ to a large collection of extension products. Thus, if a user is
 familiar with one Eclipse product, it will generally be easy to start
 using a different product on the same workbench. The Eclipse workbench
 consists of several panels known as \emph{views}\index{view}, such as
-the Script Explorer view at the top left of
+the VDM Explorer view at the top left of
 Figure~\ref{fig:userguire:OverturePerspective}. A collection of panels
 is called a \emph{perspective}\index{perspective}, for example
 Figure~\ref{fig:userguire:OverturePerspective} shows the standard
@@ -340,7 +341,7 @@ useful composition of views for conducting a particular task.
 \end{center}
 \end{figure}
 
-The \emph{Script Explorer view}\index{explorer} lets you create, select, 
+The \emph{VDM Explorer view}\index{explorer} lets you create, select, 
 and delete Overture projects and navigate between the files in these 
 projects, as well as adding new files to existing projects.
 
@@ -486,22 +487,22 @@ For example, in order to add SVN support to the Overture IDE you simply have to:
 \begin{enumerate}
 \item Fetch the update site jars from \url{http://subclipse.tigris.org/} under \emph{Download and Install} and select \emph{Zipped downloads}. The latest version demonstrated in this guide is site-1.6.10.zip.
 \item Copy the features and plugins folders into the Overture IDE folder, merging them with the ones of Overture. 
-\item Then add the plugins to the \texttt{osgi.bundles} in the confi.ini file separated by comma.
+\item Then add the plugins to the \texttt{osgi.bundles} in the \texttt{confi.ini} file separated by comma.
 \begin{itemize}
-\item org.tigris.subversion.clientadapter
-\item org.tigris.subversion.clientadapter\_1.6.10.jar
-\item org.tigris.subversion.clientadapter.javahl
-\item org.tigris.subversion.clientadapter.javahl\_1.6.9.3.jar
-\item org.tigris.subversion.clientadapter.javahl.win32
-\item org.tigris.subversion.clientadapter.javahl.win32\_1.6.9
-\item org.tigris.subversion.subclipse.core
-\item org.tigris.subversion.subclipse.core\_1.6.10.jar
-\item org.tigris.subversion.subclipse.doc
-\item org.tigris.subversion.subclipse.doc\_1.3.0.jar
-\item org.tigris.subversion.subclipse.graph
-\item org.tigris.subversion.subclipse.graph\_1.0.7.jar
-\item org.tigris.subversion.subclipse.ui
-\item org.tigris.subversion.subclipse.ui\_1.6.10.jar
+\item \url{org.tigris.subversion.clientadapter}
+\item \url{org.tigris.subversion.clientadapter\_1.6.10.jar}
+\item \url{org.tigris.subversion.clientadapter.javahl}
+\item \url{org.tigris.subversion.clientadapter.javahl\_1.6.9.3.jar}
+\item \url{org.tigris.subversion.clientadapter.javahl.win32}
+\item \url{org.tigris.subversion.clientadapter.javahl.win32\_1.6.9}
+\item \url{org.tigris.subversion.subclipse.core}
+\item \url{org.tigris.subversion.subclipse.core\_1.6.10.jar}
+\item \url{org.tigris.subversion.subclipse.doc}
+\item \url{org.tigris.subversion.subclipse.doc\_1.3.0.jar}
+\item \url{org.tigris.subversion.subclipse.graph}
+\item \url{org.tigris.subversion.subclipse.graph\_1.0.7.jar}
+\item \url{org.tigris.subversion.subclipse.ui}
+\item \url{org.tigris.subversion.subclipse.ui\_1.6.10.jar}
 \end{itemize}
 When the steps above are completed the Overture IDE can be started and SVN support will be available.
 \end{enumerate}
@@ -625,8 +626,7 @@ that can be set for each VDM project are:\index{project!options}
 In addition to these project settings it is possible to chose to have
 a main \LaTeX\ file where one can incorporate the explanations outside
 the \texttt{vdm\_al} environment and decide the order in which the
-different VDM source files shall be included\footnote{This feature is
-  not fully supported in this version of the Overture IDE.}.
+different VDM source files shall be included.
 
 \chapter{Editing VDM models}\label{sec:editVDM}
 
@@ -840,24 +840,24 @@ expression} from the \emph{Variables view}. It is of course possible to edit exi
 expressions. Like the \emph{Breakpoints view} this view is hidden in the upper right
 hand corner.
 
-\subsection{Interactive Console View}
+%\subsection{Interactive Console View}
 
-While the \emph{Expressions view} allows to easily inspect values, the functionality is
-somewhat limited compared to the functionality provided by VDMTools. For more
-thorough inspections the \emph{Interactive console view} is more suited. Here commands
-can be executed on the given context, i.e.\ where the debugger is at a
-breakpoint. The \emph{Interactive console} keeps a command history, so that already
-executed commands can be run again without actually typing in the command all
-over. Figure~\ref{fig:userguide:interactiveConsole} shows the interactive
-console.
+%While the \emph{Expressions view} allows to easily inspect values, the functionality is
+%somewhat limited compared to the functionality provided by VDMTools. For more
+%thorough inspections the \emph{Interactive console view} is more suited. Here commands
+%can be executed on the given context, i.e.\ where the debugger is at a
+%breakpoint. The \emph{Interactive console} keeps a command history, so that already
+%executed commands can be run again without actually typing in the command all
+%over. Figure~\ref{fig:userguide:interactiveConsole} shows the interactive
+%console.
 
-\begin{figure}[htp]
-\begin{center}
-  \includegraphics[width=300px]{figures/InteractiveConsole}
-  \caption{The interactive console}
-  \label{fig:userguide:interactiveConsole}
-\end{center}
-\end{figure}
+%\begin{figure}[htp]
+%\begin{center}
+%  \includegraphics[width=300px]{figures/InteractiveConsole}
+%  \caption{The interactive console}
+%  \label{fig:userguide:interactiveConsole}
+%\end{center}
+%\end{figure}
 
 \chapter{Collecting Test Coverage Information}\label{sec:testcoverage}
 
@@ -1020,7 +1020,9 @@ of test cases for the trace definition name.\index{icon!skipped test case}
 
 For VDM++ and VDM-RT projects it is
 possible to move automatically back and forth between a VDM model
-and its corresponding UML model. Essentially these can be considered
+and its corresponding UML model\footnote{In the current version of
+  Overture this feature is somewhat unstable.}. 
+Essentially these can be considered
 as different views of the same model. The UML model is typically used
 as a graphical overview of the model using class diagrams and the
 sequence diagrams can be used to indicate the desired test scenarios
@@ -1071,7 +1073,7 @@ name. Inside the project all the \texttt{vdmpp} files will instead
 have the \texttt{vdmrt} extension. The original VDM++ project is not
 changed at all. Thus this is simply a quick and easy way to get to the
 starting point for a VDM-RT model. One then manually need to
-create a {\ttfamily\bf system} with appropriate declarations of
+create a {\bf\ttfamily system} with appropriate declarations of
 \texttt{CPU}s and \texttt{BUS}ses.
  
 \chapter{Analysing and Displaying Logs from VDM-RT Executions}\label{sec:showlog}
@@ -1275,6 +1277,7 @@ So the first parameter indicates the VDM dialect used and then
 various extra options can be used. These are:
 
 \begin{description}
+\item[\texttt{-r}:] This will indicate the VDM release number.
 \item[\texttt{-w}:] This will suppress all warning messages.
 \item[\texttt{-q}:] This will suppress all information messages, such as
  the number of source files processed etc.
@@ -1299,6 +1302,7 @@ parsing/checking overhead. If files are sufficiently large, this may be faster.
 \item[\texttt{-post}:] This will disable all post-condition checks.
 \item[\texttt{-inv}:] This will disable type/state invariant checks.
 \item[\texttt{-dtc}:] this will disable all dynamic type checking.
+\item[\texttt{-measures}:] this will disable recursive measure checking.
 \item[\texttt{-log}:] This will enable VDM-RT real-time event logging. These
   are useful with the Overture Eclipse GUI, which has a plugin to
   display timing diagrams (see Chapter~\ref{sec:showlog}).
@@ -1778,7 +1782,11 @@ breakpoint, there are additional commands that can be used. These are:
 \newpage
 \chapter{Templates in Overture}\label{app:templates}
 
-\begin{tabular}{ l p{9cm} }
+Inside Overture there are a number of different templates that are
+supported initially. You can add your own as well. The keys and
+descriptions of the ones that are pre-defined are:
+
+\begin{longtable}{| l| p{9cm}| }\hline
 Key & Description\\\hline
 % ALL 
 caseExpression            & Case Expression\\
@@ -1857,8 +1865,8 @@ sync                      & Synchronization block\\
 system                    & System skeleton\\
 time                      & Get the current time\\
 values                    & Values block\\
-waiting                   & The number of outstanding requests for the operation name operation\\
-\end{tabular}
+waiting                   & The number of outstanding requests for the operation name operation\\\hline
+\end{longtable}
 
 \newpage
 \chapter{Internal Errors}\label{app:internalerrors}
