@@ -380,21 +380,23 @@ larger circles and squares, permission predicates are shown with small
 lock symbols and finally traces are shown with a
 ``\texttt{T}''. Functions have a small ``\texttt{F}'' lifted over the
 icons and static definitions have a small ``\texttt{S}'' lifted over
-the icon.
-
-Figure~\ref{fig:userguide:OutlineView} shows a closeup of the outline view. 
-Clicking on an operation or function will move the cursor in
-the editor to the definition of the operation. At the top of the outline view there
-is a button to sort what is displayed in the outline view, for instance it is possible to hide variables.
-
+the icon. For record types a small arrow is placed in front of the
+icon and if that is pressed the fields of the records can be shown. In
+Figure~\ref{fig:OutlineIcons} this is illustrated with all the
+different kinds of icons.
 
 \begin{figure}[!htb]
 \begin{center}
-  \includegraphics[width=2.5in]{figures/OutlineView}
-  \caption[labelInTOC]{The Outline View}
-  \label{fig:userguide:OutlineView}
+  \includegraphics[width=2.5in]{figures/OutlineIcons}
+  \caption[labelInTOC]{Icons in the Outline View}
+  \label{fig:OutlineIcons}
 \end{center}
 \end{figure}
+
+Clicking on a name of a definition will move the cursor in
+the editor to the definition. At the top of the outline view there
+are buttons to select what is displayed in the outline view, for
+instance it is possible to hide non-public members.
 
 The \emph{Problems view}\index{problems} at the bottom of 
 Figure~\ref{fig:userguire:OverturePerspective} gathers 
@@ -1083,12 +1085,11 @@ moves from a VDM++ model to a VDM-RT model \cite{Larsen&09b}. This
 step is supported by the Overture tool suite where it is possible to
 copy a VDM++ project into the starting point for a VDM-RT
 project. This is done by right clicking on the VDM++ project to be
-converted in this fashion in the Project Explorer view followed by 
-selecting the \emph{Overture Utility}
-$\rightarrow$ \emph{Create Real Time Project}.\index{create real time
+converted in this fashion in the VDM Explorer view followed by 
+selecting the \emph{Clone as VDM-RT} option.\index{create real time
   project} As a consequence a new VDM-RT project is
 created.\index{create!VDM-RT project} It will be called exactly the
-same as the VDM++ project with \texttt{RT} appended to the project
+same as the VDM++ project with \texttt{VDM\_RT} appended to the project
 name. Inside the project all the \texttt{vdmpp} files will instead
 have the \texttt{vdmrt} extension. The original VDM++ project is not
 changed at all. Thus this is simply a quick and easy way to get to the
