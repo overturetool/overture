@@ -232,6 +232,10 @@ public class VdmElementImageDescriptor extends CompositeImageDescriptor
 		{
 			addTopRightImage(VdmPluginImages.DESC_OVR_STATIC, pos);
 		}
+		if ((fFlags & RUNNABLE) != 0)
+		{
+			addTopRightImage(VdmPluginImages.DESC_OVR_RUN, pos);
+		}
 
 	}
 

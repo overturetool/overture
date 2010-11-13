@@ -27,6 +27,7 @@ import org.overturetool.vdmj.definitions.SystemDefinition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.definitions.UntypedDefinition;
 import org.overturetool.vdmj.definitions.ValueDefinition;
+import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.modules.ImportFromModule;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleImports;
@@ -311,7 +312,7 @@ public class VdmElementImageProvider {
 		// result =
 		// VdmPluginImages.getDescriptor(VdmPluginImages.IMG_METHOD_PRIVATE);
 
-		adornmentFlags = adornmentFlags | VdmElementImageDescriptor.FINAL;
+		//adornmentFlags = adornmentFlags | VdmElementImageDescriptor.FINAL;
 
 		if (as.access.toString().equals("private")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
@@ -389,6 +390,8 @@ public class VdmElementImageProvider {
 		AccessSpecifier as = element.accessSpecifier;
 		Point size = useSmallSize(renderFlags) ? SMALL_SIZE : BIG_SIZE;
 
+		adornmentFlags |= VdmElementImageDescriptor.FINAL;
+		
 		if (as.access.toString().equals("private")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_FIELD_PRIVATE),
@@ -578,7 +581,7 @@ public class VdmElementImageProvider {
 	private int getLocalDefinitionFlags(LocalDefinition element) {
 		int flags = 0;
 
-		flags |= VdmElementImageDescriptor.STATIC;
+		//flags |= VdmElementImageDescriptor.STATIC;
 		flags |= VdmElementImageDescriptor.FINAL;
 
 		return flags;
@@ -606,6 +609,14 @@ public class VdmElementImageProvider {
 		if (element.isStatic()) {
 			flags |= VdmElementImageDescriptor.STATIC;
 		}
+		if(element.name != null){
+			String s = element.name.name;
+			if(s.equals("thread")){
+				flags |= VdmElementImageDescriptor.RUNNABLE;
+			}
+		}
+		
+		
 
 		return flags;
 	}
@@ -617,8 +628,12 @@ public class VdmElementImageProvider {
 			flags |= VdmElementImageDescriptor.ABSTRACT;
 		}
 
+		
+		
 		return flags;
 	}
+	
+	
 
 	public void dispose() {
 	}
