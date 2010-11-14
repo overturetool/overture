@@ -26,6 +26,7 @@ import org.overturetool.vdmj.runtime.Interpreter;
 
 public class ProjectTester
 {
+	public static boolean FORCE_RERUN = false;
 	public static boolean skipInterpreter = false;
 	VDMJ controller;
 	File reportLocation;
@@ -35,6 +36,8 @@ public class ProjectTester
 	ExitStatus statusPo = null;
 	ExitStatus statusInterpreter = null;
 	Integer poCount = 0;
+	
+	File pdf=null;
 
 	boolean isFaild = false;
 
@@ -91,6 +94,7 @@ public class ProjectTester
 			dir.mkdirs();
 
 		project.getSettings().createReadme(new File(dir, "Settings.txt"));
+		project.packTo(dir, new File(dir, "model"));
 		setConsole(project.getSettings().getName(), Phase.SyntaxCheck);
 
 		CrcTable tmpCrcTable = new CrcTable(dir, false);
@@ -103,7 +107,7 @@ public class ProjectTester
 		if (tmpCrcTable.equals(readCrcTable))
 			runCheck = false;
 
-		if (runCheck)
+		if (runCheck|| FORCE_RERUN)
 		{
 			tmpCrcTable.saveCheckSums();
 			System.out.print("Syntax..");
@@ -225,12 +229,17 @@ public class ProjectTester
 				break;
 		}
 
+		String settingsLink =HtmlPage.makeLink("(?)", project.getSettings().getName()
+				+ "/Settings.txt");
+		
+		String modelLink =HtmlPage.makeLink(project.getSettings().getName(), project.getSettings().getName()
+				+ "/model");
+		
+		
 		if (!isFaild)
-			sb.append(HtmlTable.makeCell(HtmlPage.makeLink(project.getSettings().getName(), project.getSettings().getName()
-					+ "/Settings.txt")));
+			sb.append(HtmlTable.makeCell(modelLink+ " "+settingsLink ));
 		else
-			sb.append(makeCell(ExitStatus.EXIT_ERRORS, HtmlPage.makeLink(project.getSettings().getName(), project.getSettings().getName()
-					+ "/Settings.txt")));
+			sb.append(makeCell(ExitStatus.EXIT_ERRORS, modelLink+ " "+settingsLink));
 
 		if (statusParse != null)
 			sb.append(makeCell(statusParse, statusParse.name()
@@ -260,17 +269,29 @@ public class ProjectTester
 			sb.append(HtmlTable.makeCell(""));
 
 		if (latex != null)
-			sb.append(makeCell(latex.isBuild() ? ExitStatus.EXIT_ERRORS
-					: ExitStatus.EXIT_OK, getLinks(project.getSettings().getName()
+		{
+			pdf = latex.getPdfFile();
+			String pdfPath =project.getSettings().getName()
+			+ "/latex/" + project.getSettings().getName()
+			+ ".pdf";
+			sb.append(makeCell(latex.isBuild() ?  ExitStatus.EXIT_OK:ExitStatus.EXIT_ERRORS, getLinks(project.getSettings().getName()
 					+ "/latex", Phase.Latex)
 					+ " "
-					+ HtmlPage.makeLink("Pdf", project.getSettings().getName()
-							+ "/latex/" + project.getSettings().getName()
-							+ ".pdf")));
+					+ HtmlPage.makeLink("Pdf", pdfPath)));
+		}
 		else
 			sb.append(HtmlTable.makeCell(""));
 
 		return HtmlTable.makeRow(sb.toString());
+	}
+	
+	public boolean isBuild(String name)
+	{
+		if(name.length()>5)
+		{
+		return new File(name.substring(0,name.length()-4)+".pdf").exists();
+		}
+		return false;
 	}
 
 	private void loadStatus(File dir)
@@ -608,5 +629,10 @@ public class ProjectTester
 		}
 		return text;
 
+	}
+	
+	public File getPdf()
+	{
+		return pdf;
 	}
 }

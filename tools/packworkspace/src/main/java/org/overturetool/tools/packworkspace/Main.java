@@ -7,6 +7,7 @@ import java.util.Vector;
 
 import org.overturetool.tools.packworkspace.rss.RssItem;
 import org.overturetool.tools.packworkspace.testing.LatexBuilder;
+import org.overturetool.tools.packworkspace.testing.ProjectTester;
 import org.overturetool.vdmj.lex.Dialect;
 
 public class Main
@@ -14,7 +15,7 @@ public class Main
 
 	/**
 	 * @param args
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception
 	{
@@ -28,27 +29,31 @@ public class Main
 		}
 		File inputRootFolder = new File(args[1]);
 
+		if (args.length > 3 && args[3].equals("-f"))
+		{
+			ProjectTester.FORCE_RERUN = true;
+		}
+
 		if (args.length > 0)
 		{
 			switch (args[0].toLowerCase().toCharArray()[1])
 			{
-			case 's':
-				dialect = Dialect.VDM_SL;
-				break;
-			case 'p':
-				dialect = Dialect.VDM_PP;
-				break;
-			case 'r':
-				dialect = Dialect.VDM_RT;
-				break;
-			case 'c':
-				runCompleteTest(new File(args[1]));
-				return;
-				
+				case 's':
+					dialect = Dialect.VDM_SL;
+					break;
+				case 'p':
+					dialect = Dialect.VDM_PP;
+					break;
+				case 'r':
+					dialect = Dialect.VDM_RT;
+					break;
+				case 'c':
+					runCompleteTest(new File(args[1]));
+					return;
 
 			}
 		}
-		if (args.length > 1 && args[2].equals("-override"))
+		if (args.length > 2 && args[2].equals("-override"))
 			override = true;
 
 		File tmpFolder = new File("examples");
@@ -64,24 +69,22 @@ public class Main
 		}
 		List<Controller> controllers = new Vector<Controller>();
 
-		Controller controller = runController(dialect,
-				inputRootFolder,
-				tmpFolder);
+		Controller controller = runController(dialect, inputRootFolder, tmpFolder);
 		controllers.add(controller);
-		
+
 		List<RssItem> items = new Vector<RssItem>();
 		for (Controller c : controllers)
 		{
 			items.addAll(c.getRssItems());
 		}
-		Controller.createRss(new File("rss.xml"),items);
-		
+		Controller.createRss(new File("rss.xml"), items);
+
 		Controller.createOverviewPage(controllers);
 
 		System.out.println("Wating for latex");
 		Thread.sleep(5000);
 		LatexBuilder.destroy();
-		
+
 		System.out.println("Done.");
 		System.exit(0);
 	}
@@ -90,72 +93,65 @@ public class Main
 			File inputRootFolder, File tmpFolder) throws IOException
 	{
 		Controller controller = new Controller(dialect, inputRootFolder);
-	
 
-		controller.packExamples(tmpFolder, "Examples"
-				+ dialect.toString().toUpperCase());
+		Controller.webDir.mkdirs();
 
+		File zipFile = new File(Controller.webDir, "Examples"
+				+ dialect.toString().toUpperCase() + ".zip");
+		controller.packExamples(tmpFolder, zipFile);
 		
-		
+		zipFiles.add(zipFile);
+
 		controller.testProjects();
-		
-		
-		
+
 		return controller;
 	}
-	
+
+static	List<File> zipFiles = new Vector<File>();
+
 	public static void runCompleteTest(File root) throws Exception
 	{
-		if(!root.getName().toLowerCase().equals("examples"))
+		if (!root.getName().toLowerCase().equals("examples"))
 			throw new Exception("Illegal root");
-		
-		File tmpFolder = new File("tmp");
-		
-		
-		
 
-		
+		File tmpFolder = new File("tmp");
+
 		List<Controller> controllers = new Vector<Controller>();
 
-		Controller controller = runController(Dialect.VDM_SL,
-				new File(root,"VDMSL"),
-				tmpFolder);
+		Controller controller = runController(Dialect.VDM_SL, new File(root, "VDMSL"), tmpFolder);
 		controllers.add(controller);
 		Controller.delete(tmpFolder);
-		
-		
-		controller = runController(Dialect.VDM_PP,
-				new File(root,"VDM++"),
-				tmpFolder);
+
+		controller = runController(Dialect.VDM_PP, new File(root, "VDM++"), tmpFolder);
 		controllers.add(controller);
 		Controller.delete(tmpFolder);
-		
-		
-		
-		controller = runController(Dialect.VDM_RT,
-				new File(root,"VDMRT"),
-				tmpFolder);
+
+		controller = runController(Dialect.VDM_RT, new File(root, "VDMRT"), tmpFolder);
 		controllers.add(controller);
-		
+
 		List<RssItem> items = new Vector<RssItem>();
 		for (Controller c : controllers)
 		{
+			c.createWebSite();
 			items.addAll(c.getRssItems());
 		}
-		Controller.createRss(new File("rss.xml"),items);
 		
+		Controller.createWebOverviewPage(controllers,zipFiles);
+		
+		Controller.createRss(new File("rss.xml"), items);
+
 		Controller.createOverviewPage(controllers);
 
 		Controller.delete(tmpFolder);
-		
+
 		System.out.println("\nWating for latex");
 		Thread.sleep(5000);
 		LatexBuilder.destroy();
 
 		System.out.println("Done.");
-		
+
 		System.exit(0);
-		
+
 	}
 
 }

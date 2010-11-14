@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.tools.packworkspace.latex.FileUtils;
+import org.overturetool.tools.packworkspace.testing.ProjectTester;
 import org.overturetool.vdmj.lex.Dialect;
 
 public class ProjectPacker implements Comparable<ProjectPacker>
@@ -20,6 +21,7 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 	VdmReadme settings = null;
 	Dialect dialect = Dialect.VDM_PP;
 	File newLocation;
+	private ProjectTester projectTester;
 
 	public ProjectPacker(File root, Dialect dialect) {
 		this.root = root;
@@ -45,6 +47,11 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 
 	public File packTo(File location)
 	{
+		File outputLocation = new File(location, settings.getName());
+		return packTo(location,outputLocation);
+	}
+	public File packTo(File location,File outputLocation)
+	{
 		if (settings == null)
 		{
 			System.out.println("Skipping project: " + root.getAbsolutePath());
@@ -53,7 +60,7 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 
 		System.out.println("Writing project: " + settings.getName());
 
-		File outputLocation = new File(location, settings.getName());
+//		File outputLocation = new File(location, settings.getName());
 		outputLocation.mkdirs();
 
 		copyFiles(root, outputLocation, dialect);
@@ -68,7 +75,7 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 			{
 				try
 				{
-					FileUtils.writeFile(libDir, "/"+lib, FileUtils.readFile("/libs/"+getName(getDialect())+"/"+lib));
+					FileUtils.writeFile( FileUtils.readFile("/libs/"+getName(getDialect())+"/"+lib),new File(libDir, "/"+lib));
 				} catch (IOException e)
 				{
 					// TODO Auto-generated catch block
@@ -78,6 +85,19 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 		}
 		newLocation = outputLocation;
 		return outputLocation;
+	}
+	
+	public void zipTo(File zipFile)
+	{
+		File tmp = new File("zipTmp");
+		tmp.mkdirs();
+		File destination = packTo(tmp);
+		
+		FolderZiper.zipFolder(destination.getAbsolutePath(), zipFile.getAbsolutePath());
+		Controller.delete(tmp);
+		
+		
+		
 	}
 
 	private static String createNewFileName(File newExample, File file,
@@ -169,7 +189,7 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 
 	}
 
-	private static void copyfile(String srFile, String dtFile)
+	public static void copyfile(String srFile, String dtFile)
 	{
 		try
 		{
@@ -211,5 +231,15 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 				.getName()
 				.toLowerCase()
 				.compareTo(o.getSettings().getName().toLowerCase());
+	}
+
+	public void setProjectTester(ProjectTester pTest)
+	{
+		this.projectTester = pTest;
+	}
+	
+	public ProjectTester getProjectTester()
+	{
+		return this.projectTester;
 	}
 }

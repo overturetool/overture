@@ -1,8 +1,6 @@
 package org.overturetool.tools.packworkspace;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -25,12 +23,15 @@ public class Controller
 	Dialect dialect;
 	File inputRootFolder;
 	static final File reportDir = new File("Reports");
+	public static final File webDir = new File("Web");
 
-	public Controller(Dialect dialect, File inputRootFolder) {
+	public Controller(Dialect dialect, File inputRootFolder)
+	{
 		this.dialect = dialect;
 		this.inputRootFolder = inputRootFolder;
 
 		reportDir.mkdirs();
+		webDir.mkdirs();
 		printHeading(dialect.toString());
 	}
 
@@ -38,28 +39,28 @@ public class Controller
 	{
 		return inputRootFolder.getName();
 	}
-	
+
 	public static void printHeading(String text)
 	{
 		System.out.println("\n================================================================================");
 		System.out.println("|                                                                              |");
-		text = "| "+text;
-		while(text.length()<79)
-			text+=" ";
-		text+="|";
-		
+		text = "| " + text;
+		while (text.length() < 79)
+			text += " ";
+		text += "|";
+
 		System.out.println(text);
 		System.out.println("|                                                                              |");
 	}
-	
+
 	public static void printSubHeading(String text)
 	{
 		System.out.println("--------------------------------------------------------------------------------");
-		text = "| "+text;
-		while(text.length()<79)
-			text+=" ";
-		text+="|";
-		
+		text = "| " + text;
+		while (text.length() < 79)
+			text += " ";
+		text += "|";
+
 		System.out.println(text);
 		System.out.println("|                                                                              |");
 	}
@@ -80,17 +81,18 @@ public class Controller
 			ProjectTester pTest = new ProjectTester(logOutput);
 			sb.append(pTest.test(p));
 			testProjects.add(pTest);
+			p.setProjectTester(pTest);
 
 		}
 
 		String page = HtmlPage.makePage(HtmlPage.makeH1(dialect + ": "
 				+ inputRootFolder.getName())
 				+ HtmlTable.makeTable(sb.toString()));
-		FileUtils.writeFile(new File(logOutput, "index.html"), page);
-		FileUtils.writeFile(new File(logOutput, "style.css"), HtmlPage.makeStyleCss());
+		FileUtils.writeFile(page, new File(logOutput, "index.html"));
+		FileUtils.writeFile(HtmlPage.makeStyleCss(), new File(logOutput, "style.css"));
 	}
 
-	public void packExamples(File outputFolder, String outputName)
+	public void packExamples(File outputFolder, File zipName)
 	{
 
 		// if (outputFolder.exists())
@@ -107,14 +109,14 @@ public class Controller
 			p.packTo(outputFolder);
 			projects.add(p);
 		}
-		String zipName = outputName + ".zip";
-		if (new File(zipName).exists())
-			new File(zipName).delete();
+//		String zipName = outputName + ".zip";
+		if (zipName.exists())
+			zipName.delete();
 
-		FolderZiper.zipFolder(outputFolder.getName(), zipName);
+		FolderZiper.zipFolder(outputFolder.getName(), zipName.getAbsolutePath());
 		// GZIPfile.getInterface().zip(outputFolder, new
 		// File(outputName+".zip"));
-		printSubHeading("Folder zipped: ".toUpperCase() + outputName);
+		printSubHeading("Folder zipped: ".toUpperCase() + zipName.getName());
 		// while (outputFolder.exists())
 		// delete(outputFolder);
 
@@ -122,26 +124,27 @@ public class Controller
 
 	public static void delete(File tmpFolder)
 	{
-		//System.out.println("Deleting: " + tmpFolder);
+		// System.out.println("Deleting: " + tmpFolder);
 
-			try
+		try
+		{
+			if (tmpFolder != null && tmpFolder.isFile())
+				tmpFolder.delete();
+			else
 			{
-				if (tmpFolder != null && tmpFolder.isFile())
-					tmpFolder.delete();
-				else
+				for (File file : tmpFolder.listFiles())
 				{
-					for (File file : tmpFolder.listFiles())
-					{
-						delete(file);
-					}
-					tmpFolder.delete();
+					delete(file);
 				}
-			} catch (Exception e)
-			{
-				System.err.println("\nFaild to deleting: " + tmpFolder);
+				tmpFolder.delete();
 			}
-			if(tmpFolder.exists())
-				System.err.println("\nFaild to deleting - file not closed: " + tmpFolder);
+		} catch (Exception e)
+		{
+			System.err.println("\nFaild to deleting: " + tmpFolder);
+		}
+		if (tmpFolder.exists())
+			System.err.println("\nFaild to deleting - file not closed: "
+					+ tmpFolder);
 	}
 
 	public Integer count = 0;
@@ -167,8 +170,8 @@ public class Controller
 			poCount += t.getPoCount();
 		}
 
-		return makeCell(synErrors + typeErrors + interpretationErrors,
-				HtmlPage.makeLink(getName(), getName() + "/index.html"))
+		return makeCell(synErrors + typeErrors + interpretationErrors, HtmlPage.makeLink(getName(), getName()
+				+ "/index.html"))
 				+
 
 				HtmlTable.makeCell(count.toString())
@@ -223,60 +226,141 @@ public class Controller
 
 		String page = HtmlPage.makePage(HtmlPage.makeH1("Test Overview")
 				+ HtmlTable.makeTable(sb.toString()));
-		FileUtils.writeFile(new File(reportDir, "index.html"), page);
-		FileUtils.writeFile(new File(reportDir, "style.css"), HtmlPage.makeStyleCss());
+		FileUtils.writeFile(page, new File(reportDir, "index.html"));
+		FileUtils.writeFile(HtmlPage.makeStyleCss(), new File(reportDir, "style.css"));
 	}
 
-	public static void createRss(File outputFile,List<RssItem> items)
+	public static void createRss(File outputFile, List<RssItem> items)
 	{
 		RssChannel channel = new RssChannel();
-		channel.title="VDM Examples";
-		channel.description="Overture VDM Examples";
-		channel.link="http://overturetool.org";
-		
+		channel.title = "VDM Examples";
+		channel.description = "Overture VDM Examples";
+		channel.link = "http://overturetool.org";
+
 		channel.items.addAll(items);
-		
+
 		RssFeed feed = new RssFeed();
 		feed.channel = channel;
-		
-		FileWriter outputFileReader;
-		try
-		{
-			outputFileReader = new FileWriter(outputFile, false);
-			BufferedWriter outputStream = new BufferedWriter(outputFileReader);
 
-			outputStream.write(feed.getXml().toString());
+		FileUtils.writeFile(feed.getXml().toString(), outputFile);
 
-			outputStream.flush();
-			outputStream.close();
-
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
 	}
-	
-	public  List<RssItem> getRssItems()
+
+	public List<RssItem> getRssItems()
 	{
 		List<RssItem> items = new Vector<RssItem>();
-		
+
 		for (ProjectPacker p : projects)
 		{
 			VdmReadme r = p.settings;
 			RssItem item = new RssItem();
-			
+
 			item.title = r.getName();
 			item.author = r.getTexAuthor();
 			item.category = r.getDialect().toString();
 			item.comments = r.getLanguageVersion().toString();
 			item.description = r.getContent().trim();
 			item.guid = UUID.randomUUID().toString();
-			item.link="http://overture.sourceforge.net/examples/"+r.getDialect().toString()+"/"+r.getName()+".zip";
-			
+			item.link = "http://overture.sourceforge.net/examples/"
+					+ r.getDialect().toString() + "/" + r.getName() + ".zip";
+
 			items.add(item);
 		}
-		
+
 		return items;
+	}
+
+	public void createWebSite()
+	{
+		printSubHeading("Producing website".toUpperCase());
+
+		File logOutput = new File(webDir, inputRootFolder.getName());
+		logOutput.mkdirs();
+
+		StringBuilder sb = new StringBuilder();
+		// sb.append(HtmlTable.makeRow(HtmlTable.makeCellHeaderss(new String[] {
+		// "Project Name", "Syntax check", "Type check", "PO",
+		// "Interpretation test", "Doc" })));
+		Collections.sort(projects);
+		for (ProjectPacker p : projects)
+		{
+			String name = p.getSettings().getName().substring(0,p.getSettings().getName().length()-2);
+			name =name.substring(0,1).toUpperCase()+ name.substring(1); 
+			System.out.println("Creating web entry for: "+name);
+			sb.append(HtmlPage.makeH(3, name));
+
+			System.out.print(" table...");
+			String rows = tableRow("Project Name:", name);
+			rows += tableRow("Authure:", p.getSettings().getTexAuthor());
+			rows += tableRow("Dialect:", p.getSettings().getDialect().toString());
+			rows += tableRow("Language Version:", p.getSettings().getLanguageVersion().toString());
+			rows += tableRow("Description:", p.getSettings().getContent());
+			
+			
+			
+			String pdfLink = "";
+			
+			File pdfFile =p.getProjectTester().getPdf();
+			if(pdfFile!=null && pdfFile.exists())
+			{
+				System.out.print(" pdf...");
+				File newPdf =new File(logOutput, name+".pdf");
+				ProjectPacker.copyfile(pdfFile.getAbsolutePath(), newPdf.getAbsolutePath());
+				pdfLink=HtmlPage.makeLink("pdf", newPdf.getName());
+			}
+			
+			System.out.print(" zip...");
+			File zipFile = new File(logOutput,name+".zip");
+			p.zipTo(zipFile);
+			
+			rows += tableRow("Download:", HtmlPage.makeLink("model", zipFile.getName())+ " "+pdfLink);
+
+			sb.append(HtmlTable.makeTable(rows));
+			System.out.print("\n");
+
+		}
+
+		String page = HtmlPage.makePage(HtmlPage.makeH1( inputRootFolder.getName()+": Examples")
+				+ HtmlTable.makeTable(sb.toString()));
+		FileUtils.writeFile(page, new File(logOutput, "index.html"));
+		FileUtils.writeFile(HtmlPage.makeStyleCss(), new File(logOutput, "style.css"));
+
+	}
+
+	private String tableRow(String... cells)
+	{
+		return HtmlTable.makeRow(HtmlTable.makeCells(cells));
+	}
+
+	public static void createWebOverviewPage(List<Controller> controllers,
+			List<File> zipFiles)
+	{
+		printSubHeading("Producing main website".toUpperCase());
+
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(HtmlPage.makeH1("Overture Examples"));
+		
+		for (Controller controller : controllers)
+		{
+			sb.append(HtmlPage.makeLink(HtmlPage.makeH(2, controller.getName()), controller.getName()));
+		}
+		
+		sb.append(HtmlPage.makeBr());
+		sb.append(HtmlPage.makeBr());
+		
+		sb.append(HtmlPage.makeH(2, "Download example collections"));
+		for (File file : zipFiles)
+		{
+			sb.append(HtmlPage.makeLink(file.getName(), file.getName()));
+			sb.append(HtmlPage.makeBr());
+		}
+		
+		
+		String page = HtmlPage.makePage(sb.toString());
+		FileUtils.writeFile(page, new File(webDir, "index.html"));
+		FileUtils.writeFile(HtmlPage.makeStyleCss(), new File(webDir, "style.css"));
+		
 	}
 
 }

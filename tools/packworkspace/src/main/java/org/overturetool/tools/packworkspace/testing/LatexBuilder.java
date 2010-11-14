@@ -26,16 +26,18 @@ public class LatexBuilder
 	private String alternativeDocumentFileName = "";
 	private static List<Process> processes = new Vector<Process>();
 	private static List<ProcessConsolePrinter> processConsolePrinters = new Vector<ProcessConsolePrinter>();
-	
+
 	public static void destroy()
 	{
-		for (Process p : LatexBuilder.processes) {
-			if(p!=null)
+		for (Process p : LatexBuilder.processes)
+		{
+			if (p != null)
 				p.destroy();
 		}
-		
-		for (Thread t : processConsolePrinters) {
-			if(t!=null)
+
+		for (Thread t : processConsolePrinters)
+		{
+			if (t != null)
 				t.interrupt();
 		}
 	}
@@ -45,15 +47,15 @@ public class LatexBuilder
 		return output;
 	}
 
-	public LatexBuilder(ProjectPacker project) {
+	public LatexBuilder(ProjectPacker project)
+	{
 		this.project = project;
 	}
 
 	public void build(File reportLocation, Interpreter interpreter,
 			String author) throws IOException
 	{
-		File projectDir = new File(reportLocation, project.getSettings()
-				.getName());
+		File projectDir = new File(reportLocation, project.getSettings().getName());
 
 		output = new File(projectDir, OUTPUT_FOLDER_NAME);
 		if (!output.exists())
@@ -62,15 +64,15 @@ public class LatexBuilder
 		String languageStyleFolder = "";
 		switch (project.getDialect())
 		{
-		case VDM_PP:
-			languageStyleFolder = "pp";
-			break;
-		case VDM_RT:
-			languageStyleFolder = "rt";
-			break;
-		case VDM_SL:
-			languageStyleFolder = "sl";
-			break;
+			case VDM_PP:
+				languageStyleFolder = "pp";
+				break;
+			case VDM_RT:
+				languageStyleFolder = "rt";
+				break;
+			case VDM_SL:
+				languageStyleFolder = "sl";
+				break;
 
 		}
 
@@ -78,10 +80,8 @@ public class LatexBuilder
 		String overturelanguagedef = FileUtils.readFile("/latex/"
 				+ languageStyleFolder + "/overturelanguagedef.sty");
 
-		FileUtils.writeFile(output, "/overture.sty", overturesty);
-		FileUtils.writeFile(output,
-				"/overturelanguagedef.sty",
-				overturelanguagedef);
+		FileUtils.writeFile(overturesty, new File(output, "/overture.sty"));
+		FileUtils.writeFile(overturelanguagedef, new File(output, "/overturelanguagedef.sty"));
 
 		for (File f : interpreter.getSourceFiles())
 		{
@@ -91,7 +91,7 @@ public class LatexBuilder
 			try
 			{
 				PrintWriter pw = new PrintWriter(texFile);
-				sf.printLatexCoverage(pw, false, true,true);
+				sf.printLatexCoverage(pw, false, true, true);
 				pw.flush();
 				pw.close();
 
@@ -102,23 +102,20 @@ public class LatexBuilder
 			}
 		}
 		String documentName = "";
-		if (alternativeDocumentFileName == null || alternativeDocumentFileName.length()==0)
-			documentName = saveDocument(output,
-					project.getSettings().getName(),
-					author);
+		if (alternativeDocumentFileName == null
+				|| alternativeDocumentFileName.length() == 0)
+			documentName = saveDocument(output, project.getSettings().getName(), author);
 		else
 			documentName = alternativeDocumentFileName;
-		Process p = Runtime.getRuntime().exec("pdflatex " + documentName,
-				null,
-				output);
+		Process p = Runtime.getRuntime().exec("pdflatex " + documentName, null, output);
 		processes.add(p);
 
-		ProcessConsolePrinter p1 = new ProcessConsolePrinter(new File(output,
-				Phase.Latex + "Err.txt"), p.getErrorStream());
+		ProcessConsolePrinter p1 = new ProcessConsolePrinter(new File(output, Phase.Latex
+				+ "Err.txt"), p.getErrorStream());
 		p1.start();
 
-		ProcessConsolePrinter p2 = new ProcessConsolePrinter(new File(output,
-				Phase.Latex + "Out.txt"), p.getInputStream());
+		ProcessConsolePrinter p2 = new ProcessConsolePrinter(new File(output, Phase.Latex
+				+ "Out.txt"), p.getInputStream());
 		p2.start();
 
 		// try
@@ -166,36 +163,39 @@ public class LatexBuilder
 				sb.append("\n" + "\\input{" + path.replace('\\', '/') + "}");
 
 		}
-		document = document.replace(TITLE, latexQuote(title))
-				.replace(PROJECT_INCLUDE_MODEL_FILES, sb.toString());
+		document = document.replace(TITLE, latexQuote(title)).replace(PROJECT_INCLUDE_MODEL_FILES, sb.toString());
 
 		if (author != null && author.trim().length() != 0)
 			document = document.replace(AUTHOR, "\\author{"
 					+ latexQuote(author) + "}");
 
-		FileUtils.writeFile(output, getDocumentFileName(), document);
+		FileUtils.writeFile(document, new File(output, getDocumentFileName()));
 		return getDocumentFileName();
 	}
 
 	public boolean isBuild()
 	{
-		return new File(getDocumentFileName()).exists();
+		if(getDocumentFileName().length()>5)
+		{
+		return new File(output,getDocumentFileName().substring(0,getDocumentFileName().length()-4)+".pdf").exists();
+		}
+		return false;
+	}
+	
+	public File getPdfFile()
+	{
+		if(getDocumentFileName().length()>5)
+		{
+		return new File(output,getDocumentFileName().substring(0,getDocumentFileName().length()-4)+".pdf");
+		}
+		return null;
 	}
 
 	public static String latexQuote(String s)
 	{
 		// Latex specials: \# \$ \% \^{} \& \_ \{ \} \~{} \\
 
-		return s.replace("\\", "\\textbackslash ")
-				.replace("#", "\\#")
-				.replace("$", "\\$")
-				.replace("%", "\\%")
-				.replace("&", "\\&")
-				.replace("_", "\\_")
-				.replace("{", "\\{")
-				.replace("}", "\\}")
-				.replace("~", "\\~")
-				.replaceAll("\\^{1}", "\\\\^{}");
+		return s.replace("\\", "\\textbackslash ").replace("#", "\\#").replace("$", "\\$").replace("%", "\\%").replace("&", "\\&").replace("_", "\\_").replace("{", "\\{").replace("}", "\\}").replace("~", "\\~").replaceAll("\\^{1}", "\\\\^{}");
 	}
 
 	public void addInclude(String path)

@@ -57,23 +57,63 @@ public class FileUtils
 		return sb.toString();
 	}
 
-	public static void writeFile(File outputFolder, String fileName, String content)
-			throws IOException
+//	public static void writeFile(File outputFolder, String fileName, String content)
+//			throws IOException
+//	{
+//		FileWriter outputFileReader = new FileWriter(new File(outputFolder,
+//				fileName), false);
+//		BufferedWriter outputStream = new BufferedWriter(outputFileReader);
+//		outputStream.write(content);
+//		outputStream.close();
+//
+//	}
+//
+//	public static void writeFile(File file, String content) throws IOException
+//	{
+//		FileWriter outputFileWriter = new FileWriter(file);
+//		BufferedWriter outputStream = new BufferedWriter(outputFileWriter);
+//		outputStream.write(content);
+//		outputStream.close();
+//		outputFileWriter.close();
+//	}
+	
+	
+	
+	public static void writeFile(String data, File file)
 	{
-		FileWriter outputFileReader = new FileWriter(new File(outputFolder,
-				fileName), false);
-		BufferedWriter outputStream = new BufferedWriter(outputFileReader);
-		outputStream.write(content);
-		outputStream.close();
-
+		writeFile(data,file,false);
 	}
-
-	public static void writeFile(File file, String content) throws IOException
+	
+	public static void writeFile(String data, File file,boolean append)
 	{
-		FileWriter outputFileWriter = new FileWriter(file);
-		BufferedWriter outputStream = new BufferedWriter(outputFileWriter);
-		outputStream.write(content);
-		outputStream.close();
-		outputFileWriter.close();
+		BufferedWriter outputStream = null;
+		try
+		{
+			FileWriter	outputFileReader = new FileWriter(file, append);
+			 outputStream = new BufferedWriter(outputFileReader);
+
+			outputStream.write(data);
+
+			outputStream.flush();
+			outputStream.close();
+
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			if(outputStream!=null)
+			{
+				try
+				{
+					outputStream.close();
+				} catch (IOException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
 	}
 }

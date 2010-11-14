@@ -35,7 +35,7 @@ public class ProcessConsolePrinter extends Thread
 		FileWriter outputFileReader;
 		try
 		{
-			outputFileReader = new FileWriter(file, true);
+			outputFileReader = new FileWriter(file, false);
 			BufferedWriter outputStream = new BufferedWriter(outputFileReader);
 			if (headerMessage != null)
 			{

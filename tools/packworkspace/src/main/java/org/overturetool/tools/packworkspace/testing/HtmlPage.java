@@ -18,7 +18,7 @@ public class HtmlPage
 	
 	public static String makeH1(String text)
 	{
-		return "\n<h1>" + text+ "</h1>\n";
+		return makeH(1, text);//return "\n<h1>" + text+ "</h1>\n";
 	}
 	
 	public static String makeStyleCss()
@@ -26,6 +26,10 @@ public class HtmlPage
 		return styleCss;
 	}
 	
+	public static String makeBr()
+	{
+		return "<br/>\n";
+	}
 	
 	
 	final static String styleCss="table.mytable"+
@@ -95,5 +99,12 @@ public class HtmlPage
 		"\n{"+
 		"\n			background-color: #F87676;"+
 		"\n}";
+
+
+
+	public static String makeH(Integer level,String text)
+	{
+		return "\n<h"+level+">" + text+ "</h"+level+">\n";
+	}
 }
 		
