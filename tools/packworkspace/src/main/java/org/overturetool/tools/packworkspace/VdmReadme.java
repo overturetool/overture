@@ -260,22 +260,37 @@ public class VdmReadme
 		StringBuilder sb = new StringBuilder();
 		String method = "";
 		String module = "";
+		String defaultModule = "";
+		Boolean staticAccess = false;
 
 		if (entryPoints.isEmpty())
 			return;
 
 		String entryPoint = entryPoints.get(0);
+		
+		if (entryPoint.contains("`") && !entryPoint.startsWith("new "))
+		{
+			staticAccess = true;
+			module = entryPoint.substring(0, entryPoint.indexOf('`')).trim();
+			method = entryPoint.substring(entryPoint.indexOf('`') + 1).trim();
+			defaultModule = module;
+			
+		}else if(entryPoint.startsWith("new ")){
+			
+		}
+		
 		if (entryPoint.contains("`"))
 		{
 			module = entryPoint.substring(0, entryPoint.indexOf('`')).trim();
 			method = entryPoint.substring(entryPoint.indexOf('`') + 1).trim();
 		} else if (entryPoint.contains("."))
 		{
-			module = entryPoint.substring(0, entryPoint.indexOf(").") + 1).trim().replace("new ", "");
+			module = entryPoint.substring(4, entryPoint.indexOf(").") + 1).trim();
+			defaultModule = entryPoint.substring(4, entryPoint.indexOf("(") ).trim();
 			method = entryPoint.substring(entryPoint.indexOf(").") + 2).trim();
 		}
 
-		String launchConfigarationId = "org.overture.ide.vdmpp.debug.core.launchConfigurationTypeVDMJ";
+		String launchConfigarationId = "org.overture.ide.vdmpp.debug.launchConfigurationType";
 		switch (dialect)
 		{
 			case VDM_SL:
@@ -292,30 +307,26 @@ public class VdmReadme
 		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
 		sb.append("\n<launchConfiguration type=\""
 				+ escapeXml(launchConfigarationId) + "\">");
-		sb.append("\n<booleanAttribute key=\"create_coverage\" value=\"true\"/>");
-		sb.append("\n<booleanAttribute key=\"dbgp_break_on_first_line\" value=\"false\"/>");
-		sb.append("\n<intAttribute key=\"dbgp_connection_timeout\" value=\"5000\"/>");
-		sb.append("\n<booleanAttribute key=\"dbgp_enable_logging\" value=\"true\"/>");
-		sb.append("\n<booleanAttribute key=\"enableBreakOnFirstLine\" value=\"false\"/>");
-		sb.append("\n<booleanAttribute key=\"enableDbgpLogging\" value=\"false\"/>");
-		sb.append("\n<stringAttribute key=\"mainScript\" value=\".project\"/>");
-		sb.append("\n<stringAttribute key=\"nature\" value=\""
-				+ escapeXml(getNature()) + "\"/>");
-		// sb.append("\n<listAttribute key=\"org.eclipse.debug.core.MAPPED_RESOURCE_PATHS\">");
-		// sb.append("\n<listEntry value=\"/dansk/.project\"/>");
-		// sb.append("\n</listAttribute>");
-		// sb.append("\n<listAttribute key=\"org.eclipse.debug.core.MAPPED_RESOURCE_TYPES\">");
-		// sb.append("\n<listEntry value=\"1\"/>");
-		// sb.append("\n</listAttribute>");
-		sb.append("\n<stringAttribute key=\"project\" value=\""
-				+ escapeXml(name) + "\"/>");
-		sb.append("\n<booleanAttribute key=\"remote_debug\" value=\"false\"/>");
-		sb.append("\n<stringAttribute key=\"vdmDebuggingMethod\" value=\""
-				+ escapeXml(method) + "\"/>");
-		sb.append("\n<stringAttribute key=\"vdmDebuggingModule\" value=\""
-				+ escapeXml(module) + "\"/>");
-		sb.append("\n<stringAttribute key=\"vdmDebuggingRemoteControlClass\" value=\"\"/>");
+		
+		sb.append("\n<intAttribute key=\"vdm_debug_session_id\" value=\"1\"/>");
+		sb.append("\n<booleanAttribute key=\"vdm_launch_config_create_coverage\" value=\"true\"/>");
+		sb.append("\n<booleanAttribute key=\"vdm_launch_config_enable_logging\" value=\"false\"/>");
+		sb.append("\n<stringAttribute key=\"vdm_launch_config_memory_option\" value=\"\"/>");
+		sb.append("\n<stringAttribute key=\"vdm_launch_config_remote_control_class\" value=\"\"/>");
+		sb.append("\n<booleanAttribute key=\"vdm_launch_config_remote_debug\" value=\"false\"/>");
+		sb.append("\n<stringAttribute key=\"vdm_launch_config_project\" value=\""+escapeXml(name)+"\"/>");
+		sb.append("\n<stringAttribute key=\"vdm_launch_config_expression\" value=\""+entryPoint+"\"/>");
+		sb.append("\n<booleanAttribute key=\"vdm_launch_config_static_method\" value=\""+staticAccess+"\"/>");
+		sb.append("\n<stringAttribute key=\"vdm_launch_config_default\" value=\""+defaultModule+"\"/>");
+		sb.append("\n<stringAttribute key=\"vdm_launch_config_method\" value=\""+method+"\"/>");
+		sb.append("\n<stringAttribute key=\"vdm_launch_config_module\" value=\""+module+"\"/>");	
+
+
 		sb.append("\n</launchConfiguration>");
+		
+		
+
+
 
 		FileUtils.writeFile(sb.toString(), launch);
 		

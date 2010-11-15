@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.tools.packworkspace.ProjectPacker;
+import org.overturetool.tools.packworkspace.latex.FileUtils;
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.VDMJ;
@@ -36,10 +37,11 @@ public class ProjectTester
 	ExitStatus statusPo = null;
 	ExitStatus statusInterpreter = null;
 	Integer poCount = 0;
-	
-	File pdf=null;
+
+	File pdf = null;
 
 	boolean isFaild = false;
+	private File modelDir=null;
 
 	enum Phase
 	{
@@ -92,9 +94,15 @@ public class ProjectTester
 		File dir = new File(reportLocation, project.getSettings().getName());
 		if (!dir.exists())
 			dir.mkdirs();
+		
+		modelDir = new File(dir, "model");
+		if (!modelDir.exists())
+			modelDir.mkdirs();
 
 		project.getSettings().createReadme(new File(dir, "Settings.txt"));
-		project.packTo(dir, new File(dir, "model"));
+		project.packTo(dir, modelDir);
+		FileUtils.writeFile( FileUtils.readFile("/web/default.asp"),new File(dir, "model/default.asp"));
+		
 		setConsole(project.getSettings().getName(), Phase.SyntaxCheck);
 
 		CrcTable tmpCrcTable = new CrcTable(dir, false);
@@ -107,7 +115,7 @@ public class ProjectTester
 		if (tmpCrcTable.equals(readCrcTable))
 			runCheck = false;
 
-		if (runCheck|| FORCE_RERUN)
+		if (runCheck || FORCE_RERUN)
 		{
 			tmpCrcTable.saveCheckSums();
 			System.out.print("Syntax..");
@@ -229,17 +237,17 @@ public class ProjectTester
 				break;
 		}
 
-		String settingsLink =HtmlPage.makeLink("(?)", project.getSettings().getName()
+		String settingsLink = HtmlPage.makeLink("(?)", project.getSettings().getName()
 				+ "/Settings.txt");
-		
-		String modelLink =HtmlPage.makeLink(project.getSettings().getName(), project.getSettings().getName()
+
+		String modelLink = HtmlPage.makeLink(project.getSettings().getName(), project.getSettings().getName()
 				+ "/model");
-		
-		
+
 		if (!isFaild)
-			sb.append(HtmlTable.makeCell(modelLink+ " "+settingsLink ));
+			sb.append(HtmlTable.makeCell(modelLink + " " + settingsLink));
 		else
-			sb.append(makeCell(ExitStatus.EXIT_ERRORS, modelLink+ " "+settingsLink));
+			sb.append(makeCell(ExitStatus.EXIT_ERRORS, modelLink + " "
+					+ settingsLink));
 
 		if (statusParse != null)
 			sb.append(makeCell(statusParse, statusParse.name()
@@ -271,25 +279,23 @@ public class ProjectTester
 		if (latex != null)
 		{
 			pdf = latex.getPdfFile();
-			String pdfPath =project.getSettings().getName()
-			+ "/latex/" + project.getSettings().getName()
-			+ ".pdf";
-			sb.append(makeCell(latex.isBuild() ?  ExitStatus.EXIT_OK:ExitStatus.EXIT_ERRORS, getLinks(project.getSettings().getName()
+			String pdfPath = project.getSettings().getName() + "/latex/"
+					+ project.getSettings().getName() + ".pdf";
+			sb.append(makeCell(new File(dir,"Latex/"+project.getSettings().getName()+".pdf").exists() ? ExitStatus.EXIT_OK
+					: ExitStatus.EXIT_ERRORS, getLinks(project.getSettings().getName()
 					+ "/latex", Phase.Latex)
-					+ " "
-					+ HtmlPage.makeLink("Pdf", pdfPath)));
-		}
-		else
+					+ " " + HtmlPage.makeLink("Pdf", pdfPath)));
+		} else
 			sb.append(HtmlTable.makeCell(""));
 
 		return HtmlTable.makeRow(sb.toString());
 	}
-	
+
 	public boolean isBuild(String name)
 	{
-		if(name.length()>5)
+		if (name.length() > 5)
 		{
-		return new File(name.substring(0,name.length()-4)+".pdf").exists();
+			return new File(name.substring(0, name.length() - 4) + ".pdf").exists();
 		}
 		return false;
 	}
@@ -399,10 +405,14 @@ public class ProjectTester
 
 		// -default: sets the default module
 
-		if (entryPoint.contains("`"))
+		if (entryPoint.contains("`") && !entryPoint.startsWith("new "))
 		{
 			command.add("-default");
 			command.add(entryPoint.substring(0, entryPoint.indexOf('`')));
+		} else if (entryPoint.startsWith("new "))
+		{
+			command.add("-default");
+			command.add(entryPoint.substring(4, entryPoint.indexOf('(')));
 		}
 
 		for (File f : project.getSpecFiles())
@@ -431,7 +441,8 @@ public class ProjectTester
 		// System.err.println("-remote <class>: enable remote control");
 
 		ProcessBuilder pb = new ProcessBuilder(command);
-		pb.directory(project.getSettings().getWorkingDirectory());
+//		pb.directory(project.getSettings().getWorkingDirectory());
+		pb.directory(modelDir);
 		Process p = pb.start();
 
 		File projectDir = new File(reportLocation, project.getSettings().getName());
@@ -630,7 +641,7 @@ public class ProjectTester
 		return text;
 
 	}
-	
+
 	public File getPdf()
 	{
 		return pdf;
