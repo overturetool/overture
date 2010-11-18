@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -91,7 +90,7 @@ import org.overturetool.vdmj.values.NameValuePairMap;
 import org.overturetool.vdmj.values.TransactionValue;
 import org.overturetool.vdmj.values.Value;
 
-public class DBGPReader implements Serializable
+public class DBGPReader
 {
 	private static final long serialVersionUID = 1L;
 
@@ -250,7 +249,8 @@ public class DBGPReader implements Serializable
     			{
     				usage("-r option requires a VDM release");
     			}
-    		}else if (arg.equals("-pre"))
+    		}
+    		else if (arg.equals("-pre"))
     		{
     			Settings.prechecks = false;
     		}
@@ -533,9 +533,9 @@ public class DBGPReader implements Serializable
 			System.err.println("Default = " + Charset.defaultCharset());
 			Map<String,Charset> available = Charset.availableCharsets();
 
-			for (String name: available.keySet())
+			for (Entry<String, Charset> name: available.entrySet())
 			{
-				System.err.println(name + " " + available.get(name).aliases());
+				System.err.println(name.getKey() + " " + name.getValue().aliases());
 			}
 
 			System.err.println("");
@@ -599,7 +599,7 @@ public class DBGPReader implements Serializable
 
 	protected void init() throws IOException
 	{
-		sessionId = Math.abs(new Random().nextInt());
+		sessionId = Math.abs(new Random().nextInt(1000000));
 		status = DBGPStatus.STARTING;
 		statusReason = DBGPReason.OK;
 		features = new DBGPFeatures();
@@ -1724,9 +1724,7 @@ public class DBGPReader implements Serializable
 			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
 		}
 
-		Breakpoint old = interpreter.clearBreakpoint(Integer.parseInt(option.value));
-
-		if (old == null)
+		if (interpreter.clearBreakpoint(Integer.parseInt(option.value)) == null)
 		{
 			// Multiple threads remove BPs multiple times
 			// throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, c.toString());
@@ -1995,6 +1993,10 @@ public class DBGPReader implements Serializable
 		catch (LexException e)
 		{
 			throw new DBGPException(DBGPErrorCode.CANT_GET_PROPERTY, option.value);
+		}
+		finally
+		{
+			ltr.close();
 		}
 
 		if (token.isNot(Token.NAME))
@@ -2351,9 +2353,9 @@ public class DBGPReader implements Serializable
 		OutputStream out = new ByteArrayOutputStream();
 		PrintWriter pw = new PrintWriter(out);
 
-		for (Integer key: map.keySet())
+		for (Entry<Integer, Breakpoint> entry: map.entrySet())
 		{
-			Breakpoint bp = map.get(key);
+			Breakpoint bp = entry.getValue();
 			pw.println(bp.toString());
 			pw.println(interpreter.getSourceLine(bp.location));
 		}
