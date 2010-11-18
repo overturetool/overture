@@ -362,6 +362,7 @@ public class ProcessCommandLine extends CommandLine
     		println("  init");
     		println("  run");
     		println("  runtrace <trace> [test number]");
+    		println("  debugtrace <trace> [test number]");
     		println("  p[rint] <expression>");
     		println("  coverage [<files>]");
     		println("  latex|latexdoc [<files>]");
