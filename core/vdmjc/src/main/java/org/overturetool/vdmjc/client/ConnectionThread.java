@@ -85,7 +85,7 @@ public class ConnectionThread extends Thread
 		return id;
 	}
 
-	public DBGPStatus getStatus()
+	public synchronized DBGPStatus getStatus()
 	{
 		return status;
 	}
