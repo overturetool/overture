@@ -1,5 +1,7 @@
 package org.overturetool.tools.packworkspace.testing;
 
+import org.overturetool.vdmj.ExitStatus;
+
 public class HtmlPage
 {
 	public static String makePage(String body)
@@ -31,6 +33,19 @@ public class HtmlPage
 		return "<br/>\n";
 	}
 	
+	public static String getName(ExitStatus status)
+	{
+		switch (status)
+		{
+			case EXIT_ERRORS:
+				return "[ FAIL ]";
+			case EXIT_OK:
+				return "[  OK  ]";
+			case RELOAD:
+			default:
+				return status.name();
+		}
+	}
 	
 	final static String styleCss="table.mytable"+
 		"\n{"+

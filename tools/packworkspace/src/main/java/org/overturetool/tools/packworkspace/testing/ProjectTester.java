@@ -41,7 +41,7 @@ public class ProjectTester
 	File pdf = null;
 
 	boolean isFaild = false;
-	private File modelDir=null;
+	private File modelDir = null;
 
 	enum Phase
 	{
@@ -94,15 +94,15 @@ public class ProjectTester
 		File dir = new File(reportLocation, project.getSettings().getName());
 		if (!dir.exists())
 			dir.mkdirs();
-		
+
 		modelDir = new File(dir, "model");
 		if (!modelDir.exists())
 			modelDir.mkdirs();
 
 		project.getSettings().createReadme(new File(dir, "Settings.txt"));
 		project.packTo(dir, modelDir);
-		FileUtils.writeFile( FileUtils.readFile("/web/default.asp"),new File(dir, "model/default.asp"));
-		
+		FileUtils.writeFile(FileUtils.readFile("/web/default.asp"), new File(dir, "model/default.asp"));
+
 		setConsole(project.getSettings().getName(), Phase.SyntaxCheck);
 
 		CrcTable tmpCrcTable = new CrcTable(dir, false);
@@ -195,6 +195,7 @@ public class ProjectTester
 						{
 							Console.err.write(e.toString());
 							Console.err.flush();
+							Console.out.flush();
 							statusInterpreter = ExitStatus.EXIT_ERRORS;
 
 						}
@@ -250,27 +251,27 @@ public class ProjectTester
 					+ settingsLink));
 
 		if (statusParse != null)
-			sb.append(makeCell(statusParse, statusParse.name()
+			sb.append(makeCell(statusParse,HtmlPage.getName( statusParse)
 					+ " "
 					+ getLinks(project.getSettings().getName(), Phase.SyntaxCheck)));
 		else
 			sb.append(HtmlTable.makeCell(""));
 
 		if (statusTypeCheck != null)
-			sb.append(makeCell(statusTypeCheck, statusTypeCheck.name()
+			sb.append(makeCell(statusTypeCheck,HtmlPage.getName( statusTypeCheck)
 					+ " "
 					+ getLinks(project.getSettings().getName(), Phase.TypeCheck)));
 		else
 			sb.append(HtmlTable.makeCell(""));
 
 		if (statusPo != null)
-			sb.append(makeCell(statusPo, statusPo.name() + " "
+			sb.append(makeCell(statusPo, HtmlPage.getName( statusPo) + " "
 					+ getLinks(project.getSettings().getName(), Phase.PO)));
 		else
 			sb.append(HtmlTable.makeCell(""));
 
 		if (statusInterpreter != null)
-			sb.append(makeCell(statusInterpreter, statusInterpreter.name()
+			sb.append(makeCell(statusInterpreter, HtmlPage.getName( statusInterpreter)
 					+ " "
 					+ getLinks(project.getSettings().getName(), Phase.Interpretation)));
 		else
@@ -281,10 +282,26 @@ public class ProjectTester
 			pdf = latex.getPdfFile();
 			String pdfPath = project.getSettings().getName() + "/latex/"
 					+ project.getSettings().getName() + ".pdf";
-			sb.append(makeCell(new File(dir,"Latex/"+project.getSettings().getName()+".pdf").exists() ? ExitStatus.EXIT_OK
-					: ExitStatus.EXIT_ERRORS, getLinks(project.getSettings().getName()
+			
+			if(!latex.isFinished())
+			{
+				try
+				{
+					Thread.sleep(1000);
+				} catch (InterruptedException e)
+				{
+				}
+			}
+			
+			boolean pdfFileExists =new File(dir, "latex/"
+					+ project.getSettings().getName() + ".pdf").exists(); 
+			
+			ExitStatus pdfExists = pdfFileExists ? ExitStatus.EXIT_OK
+							: ExitStatus.EXIT_ERRORS;
+			
+			sb.append(makeCell(pdfExists ,HtmlPage.getName( pdfExists)+" "+ getLinks(project.getSettings().getName()
 					+ "/latex", Phase.Latex)
-					+ " " + HtmlPage.makeLink("Pdf", pdfPath)));
+					+( pdfExists == ExitStatus.EXIT_OK? " " + HtmlPage.makeLink("Pdf", pdfPath):"")));
 		} else
 			sb.append(HtmlTable.makeCell(""));
 
@@ -337,11 +354,32 @@ public class ProjectTester
 			command.add("-" + argument);
 		}
 		command.add("-cp");
-		File thisJar = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
-		String cp = thisJar.getAbsolutePath();
-		if (System.getProperty("user.name", "").equals("kela"))
-			cp += getCpSeperator()
-					+ new File("C:/overture/overturesvn/core/vdmj/target/classes".replace('/', File.separatorChar)).getAbsolutePath();
+		// File thisJar = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+		// String cp = thisJar.getAbsolutePath();
+		// if (System.getProperty("user.name", "").equals("kela"))
+		// cp += getCpSeperator()
+		// + new File("C:/overture/overturesvn/core/vdmj/target/classes".replace('/',
+		// File.separatorChar)).getAbsolutePath();
+		String cp = System.getProperty("java.class.path");//+";vdmj_time-2.0.2.jar";
+		String splitOn = cp.contains(";") ? ";" : ":";
+String[] cps = cp.split(splitOn);
+cp="";
+		for (String path : cps)
+		{
+			File f = new File(path);
+			if (f.isFile() &&!f.isAbsolute())
+			{
+				cp+=new File(f.getName()).getAbsolutePath()+splitOn;
+			}else
+			{
+				cp+=path+splitOn;
+			}
+		}
+		
+		if(cp.length()>0)
+		{
+			cp = cp.substring(0,cp.length()-1);
+		}
 
 		File lib = new File(project.getSettings().getWorkingDirectory(), "lib");
 		if (lib.exists() && lib.isDirectory())
@@ -441,7 +479,7 @@ public class ProjectTester
 		// System.err.println("-remote <class>: enable remote control");
 
 		ProcessBuilder pb = new ProcessBuilder(command);
-//		pb.directory(project.getSettings().getWorkingDirectory());
+		// pb.directory(project.getSettings().getWorkingDirectory());
 		pb.directory(modelDir);
 		Process p = pb.start();
 

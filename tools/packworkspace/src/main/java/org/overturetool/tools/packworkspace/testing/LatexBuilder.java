@@ -24,6 +24,7 @@ public class LatexBuilder
 	File output = null;
 	private String documentFileName = "";
 	private String alternativeDocumentFileName = "";
+	private Process p;
 	private static List<Process> processes = new Vector<Process>();
 	private static List<ProcessConsolePrinter> processConsolePrinters = new Vector<ProcessConsolePrinter>();
 
@@ -62,21 +63,28 @@ public class LatexBuilder
 			output.mkdirs();
 
 		String languageStyleFolder = "";
+		String styleName = "VDM_PP";
 		switch (project.getDialect())
 		{
 			case VDM_PP:
 				languageStyleFolder = "pp";
+				styleName = "VDM_PP";
 				break;
 			case VDM_RT:
 				languageStyleFolder = "rt";
+				styleName = "VDM_RT";
 				break;
 			case VDM_SL:
 				languageStyleFolder = "sl";
+				styleName = "VDM_SL";
 				break;
 
 		}
 
 		String overturesty = FileUtils.readFile("/latex/overture.sty");
+
+		overturesty = overturesty.replace("OVERTURE_LANGUAGE", styleName);
+
 		String overturelanguagedef = FileUtils.readFile("/latex/"
 				+ languageStyleFolder + "/overturelanguagedef.sty");
 
@@ -107,7 +115,7 @@ public class LatexBuilder
 			documentName = saveDocument(output, project.getSettings().getName(), author);
 		else
 			documentName = alternativeDocumentFileName;
-		Process p = Runtime.getRuntime().exec("pdflatex " + documentName, null, output);
+		p = Runtime.getRuntime().exec("pdflatex " + documentName, null, output);
 		processes.add(p);
 
 		ProcessConsolePrinter p1 = new ProcessConsolePrinter(new File(output, Phase.Latex
@@ -128,6 +136,21 @@ public class LatexBuilder
 		// }
 		// p1.interrupt();
 		// p2.interrupt();
+	}
+
+	public boolean isFinished()
+	{
+		try
+		{
+			if (p != null)
+			{
+				p.exitValue();
+			}
+		} catch (IllegalThreadStateException e)
+		{
+			return false;
+		}
+		return true;
 	}
 
 	public String saveDocument(File projectRoot, String name, String author)
@@ -175,18 +198,20 @@ public class LatexBuilder
 
 	public boolean isBuild()
 	{
-		if(getDocumentFileName().length()>5)
+		if (getDocumentFileName().length() > 5)
 		{
-		return new File(output,getDocumentFileName().substring(0,getDocumentFileName().length()-4)+".pdf").exists();
+			return new File(output, getDocumentFileName().substring(0, getDocumentFileName().length() - 4)
+					+ ".pdf").exists();
 		}
 		return false;
 	}
-	
+
 	public File getPdfFile()
 	{
-		if(getDocumentFileName().length()>5)
+		if (getDocumentFileName().length() > 5)
 		{
-		return new File(output,getDocumentFileName().substring(0,getDocumentFileName().length()-4)+".pdf");
+			return new File(output, getDocumentFileName().substring(0, getDocumentFileName().length() - 4)
+					+ ".pdf");
 		}
 		return null;
 	}
