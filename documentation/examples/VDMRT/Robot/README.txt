@@ -1,4 +1,6 @@
-
+This example was produced by Lasse Lorentzen and Kenneth Lausdahl
+as a part of a VDM course of a robot travelling autonomically inside
+a cave aiming at avioding different obstacles on its path.
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------

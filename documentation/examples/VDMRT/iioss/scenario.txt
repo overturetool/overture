@@ -1,20 +1,8 @@
-mk_( 10000,
+mk_( 1000000,
 [
-mk_( 1, <PIG_NEW>, 1, mk_Position( 1, 1 ), 1, 1000 ),
-mk_( 2, <SHOW_PIG>, 1, nil, 1, 1500 ),
-mk_( 3, <PIG_NEW>, 2, mk_Position( 2,2  ), 1, 2000 ),
-mk_( 4, <PIG_NEW>, 3, mk_Position( 3, 3 ), 2, 2500 ),
-mk_( 5, <PIG_NEW>, 4, mk_Position( 4, 4 ), 2, 3000 ),
-mk_( 6, <PIG_NEW>, 5, mk_Position( 5, 5 ), 3, 3500 ),
-mk_( 7, <PIG_NEW>, 6, mk_Position( 6, 6 ), 3, 4000 ),
-mk_( 8, <PIG_NEW>, 7, mk_Position( 7, 7 ), 4, 4500 ),
-mk_( 9, <PIG_NEW>, 8, mk_Position( 8, 8 ), 4, 5000 ),
-mk_( 10, <SHOW_PIG>, 8, nil, 1, 5500 ),
-mk_( 11, <SHOW_PIG>, 9, nil, 1, 6000 ),
-mk_( 12, <PIG_MOVED>, 1, nil, 1, 6500 ),
-mk_( 13, <SHOW_PIG>, 3, nil, 1, 6510 ),
-mk_( 14, <PIG_NEW>, 1, nil, 2, 6520 ),
-mk_( 15, <PIG_NEW>, 2, nil, 2, 6520 ),
-mk_( 16, <SHOW_PIG>, 4, nil, 2, 8000 ) 
+mk_( 1, <PIG_NEW>, 1, mk_IIOSSTYPES`Position( 1, 1 ), 1, 10 ),
+mk_( 2, <SHOW_PIG>, 1, nil, 1, 150 ),
+mk_( 3, <PIG_NEW>, 2, mk_IIOSSTYPES`Position( 2,2  ), 1, 2000 ),
+mk_( 16, <SHOW_PIG>, 2, nil, 2, 80000 ) 
 ]
 )
