@@ -131,7 +131,7 @@ public class FunctionValue extends Value
 		if (Settings.measureChecks && def.measuredef != null)
 		{
 			measureValues = new HashMap<Long, Stack<Value>>();
-			
+
 			NameValuePairList nvpl = def.measuredef.getNamedValues(freeVariables);
 			measure = (FunctionValue)nvpl.get(0).value;
 		}
@@ -209,12 +209,12 @@ public class FunctionValue extends Value
 	// This constructor is used by IterFunctionValue and CompFunctionValue
 	// The methods which matter are overridden in those classes.
 
-	public FunctionValue(LexLocation location, String name)
+	public FunctionValue(LexLocation location, FunctionType type, String name)
 	{
 		this.location = location;
 		this.name = name;
 		this.typeValues = null;
-		this.type = null;
+		this.type = type;
 		this.paramPatternList = null;
 		this.body = null;
 		this.precondition = null;
@@ -435,7 +435,7 @@ public class FunctionValue extends Value
     				(FunctionType)type.result,
     				paramPatternList.subList(1, paramPatternList.size()),
     				body, newpre, newpost, evalContext, false);
-    			
+
     			rv.setSelf(self);
 
         		return rv;
@@ -453,10 +453,15 @@ public class FunctionValue extends Value
 		{
 			Value val = ((Value)other).deref();
 
-    		if (val instanceof FunctionValue)
+			if (val instanceof CompFunctionValue || val instanceof IterFunctionValue)
+			{
+				return false;	// Play safe - we can't really tell
+			}
+			else if (val instanceof FunctionValue)
     		{
     			FunctionValue ov = (FunctionValue)val;
-    			return ov.type.equals(type);
+    			return ov.type.equals(type) &&		// Param and result types same
+    				   ov.body.equals(body);		// Not ideal - a string comparison in fact
     		}
 		}
 

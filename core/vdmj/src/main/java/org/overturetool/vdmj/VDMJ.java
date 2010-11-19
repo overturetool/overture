@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.debug.RemoteControl;
@@ -486,9 +487,9 @@ abstract public class VDMJ
 			println("Default = " + Charset.defaultCharset());
 			Map<String,Charset> available = Charset.availableCharsets();
 
-			for (String name: available.keySet())
+			for (Entry<String, Charset> entry: available.entrySet())
 			{
-				println(name + " " + available.get(name).aliases());
+				println(entry.getKey() + " " + available.get(entry.getValue()).aliases());
 			}
 
 			println("");

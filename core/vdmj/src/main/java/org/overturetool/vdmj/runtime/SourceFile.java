@@ -148,7 +148,7 @@ public class SourceFile
 		}
 
 		out.println("\nCoverage = " +
-			(srccount == 0 ? 0 : (100 * hitcount / srccount)) + "%");
+			(srccount == 0 ? 0 : ((float)(1000 * hitcount/srccount)/10)) + "%");
 	}
 
 	public void printLatexCoverage(PrintWriter out, boolean headers)

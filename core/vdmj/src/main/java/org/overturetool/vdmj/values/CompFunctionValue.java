@@ -26,6 +26,7 @@ package org.overturetool.vdmj.values;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.types.FunctionType;
 
 
 
@@ -37,7 +38,9 @@ public class CompFunctionValue extends FunctionValue
 
 	public CompFunctionValue(FunctionValue f1, FunctionValue f2)
 	{
-		super(f1.location, "comp");
+		super(f1.location,
+			new FunctionType(f1.location,
+				f1.type.partial || f2.type.partial, f2.type.parameters, f1.type.result), "comp");
 		this.ff1 = f1;
 		this.ff2 = f2;
 	}

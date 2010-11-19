@@ -168,6 +168,16 @@ public abstract class Type implements Comparable<Type>, Serializable, IAstNode
 		return r;
 	}
 
+	public Object deBracket(Object other)
+	{
+		while (other instanceof BracketType)
+		{
+			other = ((BracketType)other).type;
+		}
+
+		return other;
+	}
+
 	public boolean narrowerThan(AccessSpecifier accessSpecifier)
 	{
 		if (definitions != null)
@@ -335,10 +345,7 @@ public abstract class Type implements Comparable<Type>, Serializable, IAstNode
 	@Override
 	public boolean equals(Object other)
 	{
-		while (other instanceof BracketType)
-		{
-			other = ((BracketType)other).type;
-		}
+		other = deBracket(other);
 
 		return this.getClass() == other.getClass();
 	}

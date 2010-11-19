@@ -29,6 +29,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Random;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.messages.InternalException;
@@ -182,9 +183,9 @@ public class TestSequence extends Vector<CallSequence>
 
 		clear();
 
-		for (String shape: map.keySet())
+		for (Entry<String, TestSequence> entry: map.entrySet())
 		{
-			addAll(map.get(shape));
+			addAll(map.get(entry.getValue()));
 		}
     }
 

@@ -120,6 +120,7 @@ public class FuncInstantiationExpression extends Expression
     				else
     				{
     					report(3099, "Polymorphic function is not in scope");
+    					continue;
     				}
 
     				if (typeParams == null)
@@ -145,10 +146,13 @@ public class FuncInstantiationExpression extends Expression
 
     						if (d == null)
     						{
-    							concern(serious, 3102, "Parameter name " + pt + " not defined");
+    							report(3102, "Parameter name " + pt + " not defined");
+    							ptype = new UnknownType(location);
     						}
-
-    						ptype = d.getType();
+    						else
+    						{
+    							ptype = d.getType();
+    						}
     					}
 
     					fixed.add(ptype.typeResolve(env, null));

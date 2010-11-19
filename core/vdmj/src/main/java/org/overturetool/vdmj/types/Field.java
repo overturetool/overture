@@ -110,4 +110,10 @@ public class Field implements Serializable, IAstNode
 	{
 		return tagname.location;
 	}
+
+	@Override
+	public int hashCode()
+	{
+		return tag.hashCode() + type.hashCode();
+	}
 }

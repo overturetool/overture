@@ -57,7 +57,7 @@ public class POContextStack extends Stack<POContext>
 		StringBuilder result = new StringBuilder();
 		String spacing = "  ";
 		String indent = "";
-		String tail = "";
+		StringBuilder tail = new StringBuilder();
 
 		for (POContext ctxt: this)
 		{
@@ -70,7 +70,7 @@ public class POContextStack extends Stack<POContext>
 				result.append(indentNewLines(po, indent));
 				result.append("\n");
 				indent = indent + spacing;
-				tail = tail + ")";
+				tail.append(")");
 			}
 		}
 

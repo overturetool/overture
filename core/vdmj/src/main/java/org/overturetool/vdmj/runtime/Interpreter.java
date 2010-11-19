@@ -530,6 +530,7 @@ abstract public class Interpreter
 	{
 		LexTokenReader ltr = new LexTokenReader(name, Dialect.VDM_SL);
 		LexToken token = ltr.nextToken();
+		ltr.close();
 		LexNameToken lexname = null;
 
 		switch (token.type)

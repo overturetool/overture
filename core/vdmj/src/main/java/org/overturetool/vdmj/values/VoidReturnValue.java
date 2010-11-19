@@ -28,18 +28,6 @@ public class VoidReturnValue extends VoidValue
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public boolean equals(Object other)
-	{
-		if (other instanceof Value)
-		{
-			Value val = ((Value)other).deref();
-			return (val instanceof VoidReturnValue);
-		}
-
-		return false;
-	}
-
-	@Override
 	public boolean isVoid()
 	{
 		return false;	// makes it look like a real value

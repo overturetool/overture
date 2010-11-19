@@ -34,6 +34,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -136,7 +137,7 @@ abstract public class CommandReader
 
 				if (line == null)
 				{
-					carryOn = doQuit(line);
+					carryOn = doQuit("");
 					continue;
 				}
 
@@ -618,9 +619,9 @@ abstract public class CommandReader
 	{
 		Map<Integer, Breakpoint> map = interpreter.getBreakpoints();
 
-		for (Integer key: map.keySet())
+		for (Entry<Integer, Breakpoint> entry: map.entrySet())
 		{
-			Breakpoint bp = map.get(key);
+			Breakpoint bp = entry.getValue();
 			println(bp.toString());
 			println(interpreter.getSourceLine(bp.location));
 		}

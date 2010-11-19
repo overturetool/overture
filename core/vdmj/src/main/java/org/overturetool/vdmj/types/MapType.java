@@ -122,10 +122,7 @@ public class MapType extends Type
 	@Override
 	public boolean equals(Object other)
 	{
-		while (other instanceof BracketType)
-		{
-			other = ((BracketType)other).type;
-		}
+		other = deBracket(other);
 
 		if (other instanceof MapType)
 		{

@@ -55,14 +55,18 @@ public class TraceLetDefBinding extends TraceDefinition
 	@Override
 	public String toString()
 	{
-		String result = "let ";
+		StringBuilder result = new StringBuilder("let ");
 
 		for (Definition d: localDefs)
 		{
-			result = result + d.toString() + " ";
+			result.append(d.toString());
+			result.append(" ");
 		}
 
-		return result + "in " + body;
+		result.append("in ");
+		result.append(body);
+
+		return result.toString();
 	}
 
 	@Override

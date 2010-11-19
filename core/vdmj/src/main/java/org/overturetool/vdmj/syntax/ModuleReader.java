@@ -125,7 +125,7 @@ public class ModuleReader extends SyntaxReader
 
 	private Module readModule() throws ParserException, LexException
 	{
-		LexIdentifierToken name = null;
+		LexIdentifierToken name = new LexIdentifierToken("?", false, lastToken().location);
 		ModuleImports imports = null;
 		ModuleExports exports = null;
 
@@ -187,7 +187,7 @@ public class ModuleReader extends SyntaxReader
 
 	private Module readDLModule() throws ParserException, LexException
 	{
-		LexIdentifierToken name = null;
+		LexIdentifierToken name = new LexIdentifierToken("?", false, lastToken().location);
 		ModuleImports imports = null;
 		ModuleExports exports = null;
 		LexStringToken library = null;

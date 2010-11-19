@@ -119,6 +119,7 @@ public class LatexStreamReader extends InputStreamReader
 			line = br.readLine();
 		}
 
+		br.close();
 		return pos;
 	}
 }

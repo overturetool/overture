@@ -37,10 +37,7 @@ public class VoidType extends Type
 	@Override
 	public boolean equals(Object other)
 	{
-		while (other instanceof BracketType)
-		{
-			other = ((BracketType)other).type;
-		}
+		other = deBracket(other);
 
 		return (other instanceof VoidType);
 	}

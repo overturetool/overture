@@ -44,7 +44,7 @@ import org.overturetool.vdmj.types.UnknownType;
  * The parent of all runtime values.
  */
 
-abstract public class Value implements Comparable<Value>, Serializable, Formattable
+abstract public class Value implements Comparable<Value>, Serializable, Formattable, Cloneable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -193,7 +193,7 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 			// been instantiated with type parameters (see FunctionValue).
 
 			Value v = ctxt.check(pt.name);
-			
+
 			if (v == null)
 			{
 				abort(4147, "Polymorphic function missing @" + pt.name, ctxt);

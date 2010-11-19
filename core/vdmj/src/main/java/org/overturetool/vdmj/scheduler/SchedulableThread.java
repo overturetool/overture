@@ -98,7 +98,7 @@ public abstract class SchedulableThread extends Thread implements Serializable,R
 	@Override
 	public int hashCode()
 	{
-		return new Long(getId()).hashCode();
+		return Long.valueOf(getId()).hashCode();
 	}
 
 	/* (non-Javadoc)

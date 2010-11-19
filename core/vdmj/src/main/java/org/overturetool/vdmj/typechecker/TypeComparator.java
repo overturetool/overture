@@ -100,6 +100,12 @@ public class TypeComparator
 
 			return false;
 		}
+
+		@Override
+		public int hashCode()
+		{
+			return a.hashCode() + b.hashCode();
+		}
 	}
 
 	/**

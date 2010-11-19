@@ -39,21 +39,4 @@ public class InMapType extends MapType
 	{
 		return "inmap of (" + from + ") to (" + to + ")";
 	}
-
-	@Override
-	public boolean equals(Object other)
-	{
-		while (other instanceof BracketType)
-		{
-			other = ((BracketType)other).type;
-		}
-
-		if (other instanceof InMapType)
-		{
-			InMapType mt = (InMapType)other;
-			return from.equals(mt.from) && to.equals(mt.to);
-		}
-
-		return false;
-	}
 }

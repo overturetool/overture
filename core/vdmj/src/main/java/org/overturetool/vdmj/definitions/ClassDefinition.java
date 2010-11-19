@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.expressions.Expression;
@@ -1324,9 +1325,9 @@ public class ClassDefinition extends Definition
     		ObjectContext self = new ObjectContext(
 				location, name.name + " guards", ctxt, object);
 
-    		for (LexNameToken member: members.keySet())
+    		for (Entry<LexNameToken, Value> entry: members.entrySet())
 			{
-				Value v = members.get(member);
+				Value v = entry.getValue();
 
 				if (v instanceof OperationValue)
 				{
