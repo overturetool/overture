@@ -427,6 +427,12 @@ public class ProcessCommandLine extends CommandLine
 
 	private boolean processLog(String line) throws IOException
 	{
+		if (dialect != Dialect.VDM_RT)
+		{
+			println("Logging is only available for VDM-RT");
+			return true;
+		}
+		
 		String parts[] = line.split("\\s+");
 
 		if (parts.length > 2)
