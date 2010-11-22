@@ -188,6 +188,12 @@ public class FuncInstantiationExpression extends Expression
 		try
 		{
     		FunctionValue fv = function.eval(ctxt).functionValue(ctxt);
+
+    		if (!fv.uninstantiated)
+    		{
+    			abort(3034, "Function is already instantiated: " + fv.name, ctxt);
+    		}
+
     		TypeList fixed = new TypeList();
 
     		for (Type ptype: actualTypes)

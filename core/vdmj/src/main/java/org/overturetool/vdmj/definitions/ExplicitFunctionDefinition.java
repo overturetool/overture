@@ -544,11 +544,13 @@ public class ExplicitFunctionDefinition extends Definition
 		if (predef != null)
 		{
 			nvl.add(new NameValuePair(predef.name, prefunc));
+			prefunc.uninstantiated = (typeParams != null);
 		}
 
 		if (postdef != null)
 		{
 			nvl.add(new NameValuePair(postdef.name, postfunc));
+			postfunc.uninstantiated = (typeParams != null);
 		}
 
 		if (Settings.dialect == Dialect.VDM_SL)

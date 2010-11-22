@@ -377,7 +377,7 @@ as the expected and actual values.
 3031, "Unknown state variable <name>"
 3032, "State variable <name> is not this type"
 3033, "Polymorphic function has not been instantiated: <name>"
-3034, -
+3034, "Function is already instantiated: <name>"
 3035, "Operation returns unexpected type"
 3036, "Operation parameter visibility less than operation definition"
 3037, "Static instance variable is not initialized: <name>"
