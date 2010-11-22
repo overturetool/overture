@@ -39,7 +39,7 @@ public class ProcessConsolePrinter extends Thread
 				if (cw != null)
 				{
 					if(error){
-						cw.ConsolePrint(line, SWT.COLOR_RED);
+						cw.consolePrint(line, SWT.COLOR_RED);
 					}
 					else{
 						cw.println(line);

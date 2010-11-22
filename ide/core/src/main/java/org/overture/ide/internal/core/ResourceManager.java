@@ -40,7 +40,7 @@ public class ResourceManager implements IResourceChangeListener
 	/**
 	 * A handle to the unique Singleton instance.
 	 */
-	static private ResourceManager _instance = null;
+	static private volatile ResourceManager _instance = null;
 
 	/**
 	 * @return The unique instance of this class.
@@ -124,8 +124,7 @@ public class ResourceManager implements IResourceChangeListener
 
 		if (resource instanceof IFolder)
 		{
-			if (resource instanceof IFolder
-					&& resource.getLocation().lastSegment().startsWith("."))// skip
+			if ( resource.getLocation().lastSegment().startsWith("."))// skip
 				return list;
 			// . folders like.svn
 			for (IResource res : ((IFolder) resource).members(IContainer.INCLUDE_PHANTOMS

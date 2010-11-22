@@ -54,7 +54,6 @@ import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.dbgp.IDbgpSession;
 import org.overture.ide.debug.core.dbgp.IDbgpStreamFilter;
 import org.overture.ide.debug.core.dbgp.IDbgpThreadAcceptor;
-import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 import org.overture.ide.debug.core.launching.VdmLaunchConfigurationDelegate;
 import org.overture.ide.debug.core.model.DefaultDebugOptions;
 import org.overture.ide.debug.core.model.IDebugLaunchConstants;
@@ -66,7 +65,6 @@ import org.overture.ide.debug.core.model.IVdmThread;
 import org.overture.ide.debug.core.model.IVdmVariable;
 import org.overture.ide.debug.logging.LogItem;
 import org.overture.ide.debug.logging.LogView;
-import org.overture.ide.debug.ui.VdmStreamProxy;
 import org.overture.ide.debug.utils.CharOperation;
 
 public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
@@ -77,7 +75,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 	 * @deprecated
 	 * @see #getVdmProject()
 	 */
-	private static final String LAUNCH_CONFIGURATION_ATTR_PROJECT = "project"; //$NON-NLS-1$
+//	private static final String LAUNCH_CONFIGURATION_ATTR_PROJECT = "project"; //$NON-NLS-1$
 
 	private static final int THREAD_TERMINATION_TIMEOUT = 5000; // 5 seconds
 
@@ -89,7 +87,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 
 	private final ILaunch launch;
 
-	private String name;
+//	private String name;
 
 	private boolean disconnected;
 
@@ -761,6 +759,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 		{
 			sb.append((char) inLine);
 		}
+		reader.close();
 		return sb.toString();
 	}
 

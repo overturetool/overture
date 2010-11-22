@@ -7,6 +7,7 @@
          point="org.eclipse.ui.editors">
       <editor
             class="org.overture.ide.vdmsl.ui.editor.core.VdmSlEditor"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             default="true"
             icon="icons/cview16/vdmsl_file_tsk.gif"
             id="org.overture.ide.vdmsl.ui.VdmSlEditor"

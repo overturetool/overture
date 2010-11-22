@@ -128,7 +128,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 					else
 						previousErrorNumber = error.number;
 					FileUtility.addMarker(file,
-							error.message,
+							error.toProblemString(),
 							error.location,
 							IMarker.SEVERITY_ERROR,
 							ICoreConstants.PLUGIN_ID);
@@ -143,7 +143,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 				for (VDMWarning warning : result.getWarnings())
 				{
 					FileUtility.addMarker(file,
-							warning.message,
+							warning.toProblemString(),
 							warning.location,
 							IMarker.SEVERITY_WARNING,
 							ICoreConstants.PLUGIN_ID);
@@ -187,7 +187,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		System.out.println(e.toString());
 	};
 
-	public class ParseResult
+	public static class ParseResult
 	{
 		private List<IAstNode> ast = null;
 		private List<VDMError> errors = new ArrayList<VDMError>();

@@ -673,12 +673,13 @@ public class VdmPluginImages
 	{
 		if (fgImageRegistry == null)
 		{
-			fgImageRegistry = new ImageRegistry();
+			ImageRegistry registry = new ImageRegistry();
 			for (Iterator<String> iter = fgAvoidSWTErrorMap.keySet().iterator(); iter.hasNext();)
 			{
 				String key = iter.next();
-				fgImageRegistry.put(key, fgAvoidSWTErrorMap.get(key));
+				registry.put(key, fgAvoidSWTErrorMap.get(key));
 			}
+			fgImageRegistry=registry;
 			fgAvoidSWTErrorMap = null;
 		}
 		return fgImageRegistry;

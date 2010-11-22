@@ -42,7 +42,7 @@ public class PdfLatex extends Thread
 	{
 
 		ConsoleWriter cw = new ConsoleWriter("PDF LATEX");
-		cw.Show();
+		cw.show();
 		try
 		{
 			

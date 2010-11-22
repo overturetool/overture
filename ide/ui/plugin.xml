@@ -329,20 +329,7 @@
                      
         </page>
      </extension>
-   <!--extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="true"
-            id="org.overture.ide.ui.objectContribution1"
-            objectClass="org.eclipse.core.resources.IProject">
-         <action
-               class="org.overture.ide.ui.actions.AddBuilderAction"
-               id="org.overture.ide.ui.action.AddBuilder"
-               label="Add VDM Builder">
-         </action>
-      </objectContribution>
-      
-   </extension-->
+   
    <extension
          point="org.eclipse.ui.editors.annotationTypes">
       <type
@@ -423,4 +410,5 @@
            name="Templates">
      </page>
   </extension>
+  
 </plugin>

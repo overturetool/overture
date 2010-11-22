@@ -24,7 +24,7 @@ public class VdmModelManager implements IVdmModelManager {
 	/**
 	 * A handle to the unique Singleton instance.
 	 */
-	static private VdmModelManager _instance = null;
+	static private volatile VdmModelManager _instance = null;
 
 	/**
 	 * @return The unique instance of this class.

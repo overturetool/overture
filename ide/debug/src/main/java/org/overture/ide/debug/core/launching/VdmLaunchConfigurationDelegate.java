@@ -297,12 +297,13 @@ public class VdmLaunchConfigurationDelegate implements
 
 	private String getArgumentString(List<String> args)
 	{
-		String executeString = "";
+		StringBuffer executeString = new StringBuffer();
 		for (String string : args)
 		{
-			executeString += string + " ";
+			executeString.append( string);
+			executeString.append( " ");
 		}
-		return executeString.trim();
+		return executeString.toString().trim();
 
 	}
 
@@ -414,16 +415,17 @@ public class VdmLaunchConfigurationDelegate implements
 		if (entries.size() > 0)
 		{
 			commandList.add("-cp");
-			String classPath = " ";
+			StringBuffer classPath =new StringBuffer( " ");
 			for (String cp : entries)
 			{
 				if (cp.toLowerCase().replace("\"", "").trim().endsWith(".jar"))
 				{
-					classPath += toPlatformPath(cp) + getCpSeperator();
+					classPath.append(toPlatformPath(cp));
+					classPath.append(getCpSeperator());
 				}
 			}
-			classPath = classPath.substring(0, classPath.length() - 1);
-			commandList.add(classPath.trim());
+			classPath.deleteCharAt(classPath.length() - 1);
+			commandList.add(classPath.toString().trim());
 
 		}
 		return commandList;

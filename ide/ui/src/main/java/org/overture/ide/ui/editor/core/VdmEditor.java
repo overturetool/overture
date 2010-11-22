@@ -1,12 +1,14 @@
 package org.overture.ide.ui.editor.core;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewerExtension5;
@@ -24,15 +26,21 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.ide.FileStoreEditorInput;
+import org.eclipse.ui.internal.preferences.PreferencesAdapter;
+import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
+import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.SourceReferenceManager;
+import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.parser.SourceParserManager;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.ui.IVdmUiConstants;
+import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.actions.ToggleCommentAction;
 import org.overture.ide.ui.outline.VdmContentOutlinePage;
 import org.overturetool.vdmj.ast.IAstNode;
@@ -293,7 +301,7 @@ public abstract class VdmEditor extends TextEditor
 		ISourceViewer sourceViewer = getSourceViewer();
 		if (!(sourceViewer instanceof ISourceViewerExtension2))
 		{
-			// setPreferenceStore(createCombinedPreferenceStore(input));
+			 setPreferenceStore(createCombinedPreferenceStore(input));
 			internalDoSetInput(input);
 			return;
 		}
@@ -302,7 +310,7 @@ public abstract class VdmEditor extends TextEditor
 		getSourceViewerDecorationSupport(sourceViewer).uninstall();
 		((ISourceViewerExtension2) sourceViewer).unconfigure();
 
-		// setPreferenceStore(createCombinedPreferenceStore(input));
+		 setPreferenceStore(createCombinedPreferenceStore(input));
 
 		// install & register preference store listener
 		sourceViewer.configure(getSourceViewerConfiguration());
@@ -362,8 +370,9 @@ public abstract class VdmEditor extends TextEditor
 		ISourceViewer sourceViewer = getSourceViewer();
 		VdmSourceViewer vdmSourceViewer = null;
 		if (sourceViewer instanceof VdmSourceViewer)
+		{
 			vdmSourceViewer = (VdmSourceViewer) sourceViewer;
-
+		}
 		// IPreferenceStore store = getPreferenceStore();
 
 		// if (vdmSourceViewer != null && isFoldingEnabled() &&(store == null ||
@@ -407,6 +416,33 @@ public abstract class VdmEditor extends TextEditor
 		// installOverrideIndicator(false);
 
 	}
+	
+	/**
+	 * Creates and returns the preference store for this Java editor with the given input.
+	 *
+	 * @param input The editor input for which to create the preference store
+	 * @return the preference store for this editor
+	 *
+	 * @since 3.0
+	 */
+	private IPreferenceStore createCombinedPreferenceStore(IEditorInput input) {
+		List<IPreferenceStore> stores= new ArrayList<IPreferenceStore>(3);
+
+//		IJavaProject project= EditorUtility.getJavaProject(input);
+//		if (project != null) {
+//			stores.add(new EclipsePreferencesAdapter(new ProjectScope(project.getProject()), JavaCore.PLUGIN_ID));
+//		}
+
+		stores.add(VdmUIPlugin.getDefault().getPreferenceStore());
+//		stores.add(new PreferencesAdapter(VdmCore.getDefault().getPluginPreferences()));
+		stores.add(EditorsUI.getPreferenceStore());
+		stores.add(PlatformUI.getPreferenceStore());
+		//stores.get(0).setValue(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_OVERVIEW_RULER,true);
+
+		return new ChainedPreferenceStore((IPreferenceStore[]) stores.toArray(new IPreferenceStore[stores.size()]));
+	}
+	
+	
 
 	/**
 	 * Sets the input of the editor's outline page.
@@ -712,8 +748,8 @@ public abstract class VdmEditor extends TextEditor
 
 		IAstNode element = getElementAt(caret, false);
 
-		if (!(element instanceof IAstNode))
-			return null;
+//		if (!(element instanceof IAstNode))
+//			return null;
 
 		// if (element.getElementType() == IJavaElement.IMPORT_DECLARATION) {
 		//
@@ -731,7 +767,7 @@ public abstract class VdmEditor extends TextEditor
 		// return container;
 		// }
 
-		return (IAstNode) element;
+		return element;
 	}
 
 	/**

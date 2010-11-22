@@ -17,7 +17,7 @@ public class VdmModelWorkingCopy extends VdmModel implements IVdmModel
 		}
 	}
 
-	public void commit()
+	public synchronized void commit()
 	{
 		for (IVdmSourceUnit sourceUnit : this.vdmSourceUnits)
 		{

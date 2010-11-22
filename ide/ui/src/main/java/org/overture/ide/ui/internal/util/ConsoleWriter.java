@@ -36,10 +36,10 @@ public class ConsoleWriter extends PrintWriter {
 
 	@Override
 	public void println(String x) {
-		ConsolePrint(x);
+		consolePrint(x);
 	}
 
-	public void Show() {
+	public void show() {
 		MessageConsole myConsole = findConsole(consoleName);
 		myConsole.activate();
 
@@ -73,7 +73,7 @@ public class ConsoleWriter extends PrintWriter {
 
 	}
 
-	public void ConsolePrint(final String message) {
+	public void consolePrint(final String message) {
 		getDisplay().asyncExec(new Runnable() {
 
 			public void run() {
@@ -103,7 +103,7 @@ public class ConsoleWriter extends PrintWriter {
 		});
 	}
 
-	public void ConsolePrint(final String message, final int color) {
+	public void consolePrint(final String message, final int color) {
 		getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
@@ -135,8 +135,8 @@ public class ConsoleWriter extends PrintWriter {
 		return myConsole;
 	}
 
-	public void ConsolePrint(final Exception exception) {
-		ConsolePrint(getExceptionStackTraceAsString(exception));
+	public void consolePrint(final Exception exception) {
+		consolePrint(getExceptionStackTraceAsString(exception));
 	}
 
 	public static String getExceptionStackTraceAsString(Exception exception) {

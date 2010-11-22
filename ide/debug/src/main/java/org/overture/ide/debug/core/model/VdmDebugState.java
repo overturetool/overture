@@ -124,11 +124,12 @@ public class VdmDebugState
 	@Override
 	public String toString()
 	{
-		String string = "";
+		StringBuffer string = new StringBuffer();
 		for (DebugState s : states)
 		{
-			string += s + " ";
+			string.append( s);
+			string.append( " ");
 		}
-		return string;
+		return string.toString();
 	}
 }

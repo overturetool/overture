@@ -8,7 +8,7 @@ public class ConsoleFactoryDebug implements IConsoleFactory
 
 	public void openConsole()
 	{
-		new ConsoleWriter(IDebugConstants.CONSOLE_DEBUG_NAME).Show();
+		new ConsoleWriter(IDebugConstants.CONSOLE_DEBUG_NAME).show();
 	}
 
 }

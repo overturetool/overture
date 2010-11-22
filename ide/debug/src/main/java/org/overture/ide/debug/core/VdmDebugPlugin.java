@@ -36,7 +36,7 @@ import org.overture.ide.debug.ui.log.VdmDebugLogManager;
 @SuppressWarnings("deprecation")
 public class VdmDebugPlugin extends AbstractUIPlugin {
 
-	private static VdmDebugPlugin fgPlugin;
+	private static VdmDebugPlugin plugin;
 	protected Map<RGB, Color> fColorTable = new HashMap<RGB, Color>(10);
 	public static final int INTERNAL_ERROR = 120;
 
@@ -46,13 +46,7 @@ public class VdmDebugPlugin extends AbstractUIPlugin {
 
 	private static final String LOCALHOST = "127.0.0.1"; //$NON-NLS-1$
 
-	public VdmDebugPlugin() {
-
-		super();
-
-		fgPlugin = this;
-
-	}
+	
 
 	public static IWorkbenchPage getActivePage() {
 		IWorkbenchWindow w = getActiveWorkbenchWindow();
@@ -70,11 +64,12 @@ public class VdmDebugPlugin extends AbstractUIPlugin {
 				.getLaunchManager();
 		launchManager.addLaunchListener(DebugConsoleManager.getInstance());
 		launchManager.addLaunchListener(VdmDebugLogManager.getInstance());
-
+		plugin = this;
 		// HotCodeReplaceManager.getDefault().startup();
 	}
 
 	public void stop(BundleContext context) throws Exception {
+		plugin = null;
 		// HotCodeReplaceManager.getDefault().shutdown();
 		super.stop(context);
 		if (dbgpService != null) {
@@ -265,7 +260,7 @@ public class VdmDebugPlugin extends AbstractUIPlugin {
 	}
 
 	public static VdmDebugPlugin getDefault() {
-		return fgPlugin;
+		return plugin;
 	}
 
 	/**

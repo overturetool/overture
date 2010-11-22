@@ -225,7 +225,7 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 
 	private boolean inExternalSelectionMode = false;
 
-	private final int AUTO_EXPAND_LEVEL = 2;
+	private static final int AUTO_EXPAND_LEVEL = 2;
 
 	private MemberFilterActionGroup fMemberFilterActionGroup;
 

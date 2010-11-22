@@ -37,7 +37,6 @@ public class VdmModel implements IVdmModel
 
 	public VdmModel()
 	{
-		// TODO Auto-generated constructor stub
 		count++;
 		id = count;
 	}
@@ -267,7 +266,7 @@ public class VdmModel implements IVdmModel
 		return IVdmElement.VDM_MODEL;
 	}
 
-	public void clean()
+	public synchronized void clean()
 	{
 		for (IVdmSourceUnit unit : vdmSourceUnits)
 		{

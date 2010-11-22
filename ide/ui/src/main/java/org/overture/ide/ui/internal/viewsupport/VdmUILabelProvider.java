@@ -1,8 +1,6 @@
 package org.overture.ide.ui.internal.viewsupport;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.SafeRunner;
@@ -22,7 +20,7 @@ import org.overture.ide.ui.VdmUIPlugin;
 public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 		IStyledLabelProvider
 {
-	private List<Image> images = new Vector<Image>();
+//	private List<Image> images = new Vector<Image>();
 
 	protected ListenerList fListeners = new ListenerList();
 

@@ -47,8 +47,8 @@ public class SourceParserVdmSl extends AbstractParserParticipant
 		ModuleList modules = new ModuleList();
 		modules.clear();
 		LexLocation.resetLocations();
-		int perrs = 0;
-		int pwarn = 0;
+//		int perrs = 0;
+//		int pwarn = 0;
 
 		ModuleReader reader = null;
 		ParseResult result = new ParseResult();
@@ -69,32 +69,30 @@ public class SourceParserVdmSl extends AbstractParserParticipant
 				result.setAst(nodes);
 			} else
 			{
-				perrs++;
+//				perrs++;
 				result.setFatalError(new Exception("No VDM source in file"));
 			}
 
 		} catch (InternalException e)
 		{
-
-			perrs++;
+//			perrs++;
 			result.setFatalError(e);
 		} catch (Throwable e)
 		{
-
-			perrs++;
+//			perrs++;
 			result.setFatalError(e);
 		}
 
 		if (reader != null && reader.getErrorCount() > 0)
 		{
-			perrs += reader.getErrorCount();
+//			perrs += reader.getErrorCount();
 
 			result.setErrors(reader.getErrors());
 		}
 
 		if (reader != null && reader.getWarningCount() > 0)
 		{
-			pwarn += reader.getWarningCount();
+//			pwarn += reader.getWarningCount();
 
 			result.setWarnings(reader.getWarnings());
 		}

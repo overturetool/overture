@@ -590,7 +590,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 			{
 				ConsoleWriter cw = new ConsoleWriter();
 				cw.println(message);
-				cw.Show();
+				cw.show();
 				// MessageDialog.openInformation(getSite().getShell(),
 				// "Tracefile viewer", message);
 			}
@@ -609,7 +609,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 				ConsoleWriter cw = new ConsoleWriter();
 				cw.println(cge.getMessage());
 				ConsoleWriter.getExceptionStackTraceAsString(cge);
-				cw.Show();
+				cw.show();
 			}
 		});
 

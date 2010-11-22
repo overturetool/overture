@@ -38,6 +38,9 @@ public class PluginFolderInclude
 		{
 			sb.append((char) inLine);
 		}
+		
+		reader.close();
+		
 		return sb.toString();
 	}
 

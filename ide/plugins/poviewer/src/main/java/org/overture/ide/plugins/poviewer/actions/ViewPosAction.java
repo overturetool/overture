@@ -143,7 +143,7 @@ public abstract class ViewPosAction implements IObjectActionDelegate
 				} catch (Exception e)
 				{
 					e.printStackTrace();
-					return new Status(IStatus.ERROR, IPoviewerConstants.PLUGIN_ID, "Error showing PO's", e);
+					return new Status(IStatus.ERROR, IPoviewerConstants.PLUGIN_ID, "Error showing PO's Model state: Parse="+model.isParseCorrect()+" TC="+model.isTypeCorrect() , e);
 				}
 				return new Status(IStatus.OK, "org.overture.ide.plugins.poviewer", "Ok");
 			}
