@@ -467,7 +467,7 @@ label0:
                 return 268;
 
             case 3: // '\003'
-                theParser.yylval = new TraceParserVal(Integer.parseInt(yytext()));
+                theParser.yylval = new TraceParserVal(Long.parseLong(yytext()));
                 return 260;
 
             case 5: // '\005'

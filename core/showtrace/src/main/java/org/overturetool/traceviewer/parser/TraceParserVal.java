@@ -13,7 +13,7 @@ public class TraceParserVal
     {
     }
 
-    public TraceParserVal(int val)
+    public TraceParserVal(long val)
     {
         ival = val;
     }
@@ -33,7 +33,7 @@ public class TraceParserVal
         obj = val;
     }
 
-    public int ival;
+    public long ival;
     public double dval;
     public String sval;
     public Object obj;
