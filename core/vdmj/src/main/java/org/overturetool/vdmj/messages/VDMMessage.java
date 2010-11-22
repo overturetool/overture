@@ -73,9 +73,10 @@ public class VDMMessage
 		StringBuilder sb = new StringBuilder();
 		sb.append(message);
 
+		sb.append(".");
 		for (String d: details)
 		{
-			sb.append("\n");
+			sb.append(" ");
 			sb.append(d);
 		}
 
