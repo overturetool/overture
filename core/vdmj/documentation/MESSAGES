@@ -376,7 +376,7 @@ as the expected and actual values.
 3030, "Function parameter visibility less than function definition"
 3031, "Unknown state variable <name>"
 3032, "State variable <name> is not this type"
-3033, -
+3033, "Polymorphic function has not been instantiated: <name>"
 3034, -
 3035, "Operation returns unexpected type"
 3036, "Operation parameter visibility less than operation definition"

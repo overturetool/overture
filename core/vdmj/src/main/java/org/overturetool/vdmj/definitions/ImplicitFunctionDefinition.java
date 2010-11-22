@@ -453,6 +453,7 @@ public class ImplicitFunctionDefinition extends Definition
 
 		FunctionValue func = new FunctionValue(this, prefunc, postfunc, free);
 		func.isStatic = accessSpecifier.isStatic;
+		func.uninstantiated = (typeParams != null);
 		nvl.add(new NameValuePair(name, func));
 
 		if (predef != null)

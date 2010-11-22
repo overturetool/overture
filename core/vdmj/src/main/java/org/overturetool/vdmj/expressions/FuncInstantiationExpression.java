@@ -244,6 +244,7 @@ public class FuncInstantiationExpression extends Expression
 					impdef, fixed, prefv, postfv, null);
 
 				rv.setSelf(fv.self);
+				rv.uninstantiated = false;
 				return rv;
 			}
 			else
@@ -273,6 +274,7 @@ public class FuncInstantiationExpression extends Expression
 					expdef, fixed, prefv, postfv, null);
 
 				rv.setSelf(fv.self);
+				rv.uninstantiated = false;
 				return rv;
 			}
 		}

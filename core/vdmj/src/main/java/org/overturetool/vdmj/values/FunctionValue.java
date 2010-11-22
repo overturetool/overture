@@ -76,6 +76,7 @@ public class FunctionValue extends Value
 
 	public ObjectValue self = null;
 	public boolean isStatic = false;
+	public boolean uninstantiated = false;
 	private ClassDefinition classdef = null;
 
 	public FunctionValue(LexLocation location, String name, FunctionType type,
@@ -261,6 +262,11 @@ public class FunctionValue extends Value
 		if (body == null)
 		{
 			abort(4051, "Cannot apply implicit function: " + name, ctxt);
+		}
+
+		if (uninstantiated)
+		{
+			abort(3033, "Polymorphic function has not been instantiated: " + name, ctxt);
 		}
 
 		PatternList paramPatterns = paramPatternList.get(0);
