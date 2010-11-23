@@ -517,7 +517,7 @@ abstract public class CommandReader
     		if (m.matches())
     		{
     			list = new ProofObligationList();
-    			String name = m.group(1) + "(";
+    			String name = m.group(1) + (Settings.dialect == Dialect.VDM_SL ? "" : "(");
 
     			for (ProofObligation po: all)
     			{
