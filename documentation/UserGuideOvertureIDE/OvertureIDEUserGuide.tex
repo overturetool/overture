@@ -152,7 +152,7 @@ Fujitsu Services\\
 Lovelace Road, Bracknell, \\
 Berkshire. RG12 8SN, UK}
 
-\date{May 2010}
+\date{Dec 2010}
 
 \reportno{TR-002}     
 
@@ -172,19 +172,19 @@ December& 2010 & 2       & 1.0   \\ \hline
 \tableofcontents
 
 \begin{abstract}
-This document is a user manual for the Overture Integrated Development
-Environment (IDE) open source tool for
-VDM. It can serve as a reference for anybody wishing to make use of
-this tool with one of the VDM dialects (VDM-SL, VDM++ and VDM-RT).
-This tool support is build on top of the Eclipse platform. The
-objective of the Overture open source initiative is to create and support a
-platform that can be used for both experimentation of new subsets or
-supersets of VDM dialects as well as new features analysing such VDM
-models in different ways. The tool is entirely open source so anybody
-can join the development team and influence the future
-developments. The long term target is to ensure that stable
+This document is the user manual for the Overture Integrated Development
+Environment (IDE) for
+VDM. It serves as a reference for anybody wishing to make use of
+the tool with one of the VDM dialects (VDM-SL, VDM++ and VDM-RT).
+Overture tool support is build on top of the Eclipse platform. The
+objective of the Overture initiative is to create and support an open source
+platform that can be used for both experimentation with new subsets or
+supersets of VDM dialects, as well as new features analysing VDM
+models in different ways. The tool is entirely open source, so anybody
+can join the development team and influence future
+developments. The long term goal is to ensure that stable
 versions of the tool suite can be used for large scale industrial
-applications of the VDM technology.
+applications of VDM technology.
 \end{abstract}
 
 \chapter{Introduction}
@@ -195,41 +195,42 @@ systems and software
 \cite{Bjorner&78,Jones90a,Fitzgerald&08c}. It consists of a
 group of mathematically well-founded languages for expressing system
 models during early design stages, before expensive implementation
-commitments are made. The construction and analysis of the model using
-Overture help to identify areas of incompleteness or ambiguity in
-informal system specifications, and provide some level of confidence
+commitments are made. The construction and analysis of a model using
+Overture helps to identify areas of incompleteness or ambiguity in
+informal system specifications, and provides some level of confidence
 that a valid implementation will have key properties, especially those
 of safety or security. VDM has a strong record of industrial
-application, in many cases by practitioners who are not specialists in
+application, in many cases by practitioners who were not specialists in
 the underlying formalism or logic
 \cite{Larsen&95b,Clement&99,Kurita&09}. Experience with the method
-suggests that the effort expended on formal modeling and analysis can
+suggests that the effort expended on formal modelling and analysis can
 be recovered in reduced rework costs arising from design errors.
 
-VDM models can be expressed in a specification language (VDM-SL) which
+VDM models are expressed in a specification language (VDM-SL) which
 supports the description of data and functionality
 \cite{ISOVDM96a,Fitzgerald&98b,Fitzgerald&09}. Data are defined by
 means of types built using constructors that define structured data
 and collections such as sets, sequences and mappings from basic values
 such as Booleans and natural numbers. These types are very abstract, allowing
-the user to add any relevant constraints as data type
+the user to add any relevant constraints using data type
 invariants. Functionality is defined in terms of operations over these
 data types. Operations can be defined implicitly by preconditions and
 postconditions that characterize their behavior, or explicitly by
 means of specific algorithms. An extension of VDM-SL, called VDM++,
 supports object-oriented structuring of models and permits direct
-modeling of concurrency \cite{Fitzgerald&05}. An additional extension
-to VDM++ is called VDM Real Time (VDM-RT) (formerly called VDM In a
-Constrained Environment (VICE)) \cite{Mukherjee&00,Verhoef&06b}. All
-these different dialects are supported by the unified tool called Overture.
+modelling of concurrency \cite{Fitzgerald&05}. An additional extension
+to VDM++, called VDM Real Time (VDM-RT \footnote{Formerly called VDM In a
+Constrained Environment (VICE))}), includes support for discrete
+time models \cite{Mukherjee&00,Verhoef&06b}. All
+three VDM dialects are supported by Overture.
 
-Since the VDM modeling languages have a formal mathematical semantics,
+Since the VDM modelling languages have a formal mathematical semantics,
 a wide range of analyses can be performed on models, both to check
 internal consistency and to confirm that models have emergent
 properties. Analyses may be performed by inspection, static analysis,
 testing or mathematical proof. To assist in this process, Overture
-supply tool support for building models in collaboration with other
-modeling tools, to execute and test models and to carry out different
+supplies tool support for building models in collaboration with other
+modelling tools, to execute and test models and to carry out different
 forms of static analysis \cite{Larsen&10a}. It can be seen as an open
 source version of the commercial tool called VDMTools
 \cite{Elmstrom&94,Larsen01,Fitzgerald&08a} although features to
@@ -237,85 +238,80 @@ generate executable code in high-level programming languages are
 not yet available in Overture.
 
 This guide explains how to use the Overture IDE for developing models
-for different VDM dialects. This user manual starts with an explanation
+for different VDM dialects. It starts with an explanation
 of how to get hold of the software in
 Chapter~\ref{sec:install}. This is followed in
-Chapter~\ref{sec:vdmsupport} with an introduction to the concepts used
-in the different Overture perspectives based on Eclipse
-terminology. In Chapter~\ref{sec:projects} it is explained how
-projects are managed in the Overture IDE. In Chapter~\ref{sec:editVDM}
-the features supported when editing VDM models are explained. This is
+Chapter~\ref{sec:vdmsupport} with an introduction to the Eclipse
+workspace terminology. Chapter~\ref{sec:projects} explains how
+projects are managed in the Overture IDE. Chapter~\ref{sec:editVDM}
+covers the features for creating and editing VDM models. This is
 followed in Chapter~\ref{sec:debug} with an explanation of the
-interpretation and debugging capabilities in the Overture
-IDE. Chapter~\ref{sec:testcoverage} then illustrates how test coverage
-information can be gathered when models are interpreted. Afterwards,
-Chapter~\ref{sec:prettyprint} shows how models with and without test
-coverage information can be generated to the text processing system
-\LaTeX\ and automatically converted to \texttt{pdf} format if one have
-\texttt{pdflatex} installed on the computer. Afterwards, from
-Chapter~\ref{sec:POmanagement} to Chapter~\ref{sec:showlog} different
-VDM specific features are explained. In Chapter~\ref{sec:POmanagement}
-the use of the notion for proof obligations and its support in
-Overture is explained. In Chapter~\ref{sec:testing} a notion of
-combinatorial testing and the automation support for that in Overture
-is presented. In Chapter~\ref{sec:vdmuml} support for mapping between
-object-oriented VDM models and UML models is presented. In
-Section~\ref{sec:ToVDMRT} it is illustrated how a VDM++ project can be 
-changed into a new VDM-RT project. In Chapter~\ref{sec:showlog} it
-is shown how to analyse and display logs from executing
-such VDM-RT models. After these sections the main part of the user
-manual is completed in Chapter~\ref{sec:commandline} with an
-explanation of the features from Overture which are also available from
-a command-line interface. Appendix~\ref{app:templates} provide a list
+interpretation and debugging capabilities in Overture.
+Chapter~\ref{sec:testcoverage} illustrates how test coverage
+information can be gathered when models are interpreted.
+Chapter~\ref{sec:prettyprint} shows how models with =test
+coverage information can be written as
+\LaTeX\ and automatically converted to \texttt{pdf} format. 
+Chapters~\ref{sec:POmanagement} to \ref{sec:showlog} cover various
+VDM specific features: Chapter~\ref{sec:POmanagement}
+explains the notion of proof obligations and their support in
+Overture; Chapter~\ref{sec:testing} explains
+combinatorial testing and the automation support for that;
+Chapter~\ref{sec:vdmuml} explains the support for mapping between
+object-oriented VDM models and UML models; Chapter~\ref{sec:ToVDMRT}
+shows how a VDM++ project can be 
+converted into a new VDM-RT project; Chapter~\ref{sec:showlog} shows
+how to analyse and display execution logs from VDM-RT models; and
+Chapter~\ref{sec:commandline} gives an
+overview of the features of Overture which are also available from
+a command-line interface. Appendix~\ref{app:templates} provides a list
 of all the standard templates built into Overture. 
-From Appendix~\ref{app:internalerrors}
-to~\ref{app:POcategories} complete lists of different kinds of errors,
-warnings and proof obligations are provided and further explanation
-are provided where it is judged necessary.
-Finally, in
-Appendix~\ref{sec:index} an index of significant terms used in this
+Appendixes~\ref{app:internalerrors}
+to~\ref{app:POcategories} give complete lists of possible errors,
+warnings and proof obligation categories.
+Finally, Appendix~\ref{sec:index} an index of significant terms used in this
 user manual can be found. 
 
 
 \chapter{Getting Hold of the Software}\label{sec:install}
 
-Overture is an open source tool, developed by a community of volunteers 
-and is built on top of the Eclipse platform. The project to develop the tools 
-is managed using SourceForge.  The best way to run Overture is to download 
+Overture is an open source VDM tool, developed by a community of volunteers,
+built on top of the Eclipse platform. The project 
+is hosted on SourceForge.  The best way to obtain Overture is to download 
 a special version of Eclipse with the Overture functionality already pre-installed. If you go to:
   \begin{quote}
   \url{http://sourceforge.net/projects/overture}
   \end{quote}
   \noindent you can use the \textit{Download Now} button to
-  automatically download a pre-installed versions of Overture for your
+  automatically download pre-installed versions of Overture for your
   operating system.  Supported systems are: Windows, Linux and
-  Mac\footnote{It is planned to develop an update facility, allowing
-    updates to be applied directly from within the generic Eclipse
-    platform without requiring a re-installation. However, this can be
+  Mac\footnote{An update facility is planned, which will allow plugin
+    updates to be applied directly from Eclipse.
+    However, this can be
     a risky process because of the dependencies on non-Overture
     components and so is not yet supported.}.
-Note that when you have extracted all files from the zip file with the
-Overture executable for your selected operating system you will find
-the first time you start it up it will ask you for selecting a
-workspace. Here we simply recommend you to chose the default one proposed 
-by Overture and tick off the box for ``use this as the default and do
+Simply extract the zip file downloaded and run the Overture executable
+file at the top level to start the tool.
+When you start Overture for the first time, it will request a workspace
+location. Here we recommend that you  choose the default one proposed 
+by Overture and tick the box for ``Use this as the default and do
 not ask again''. A welcome screen will introduce you to the overall 
 mission of the Overture open source initiative. 
 
-Large libraries of sample VDM-SL, VDM++ and VDM-RT models is available
+Large libraries of sample VDM-SL, VDM++ and VDM-RT models are available
 and can be downloaded from SourceForge under the
 \texttt{files/Examples} section using the URL\footnote{The library
-  files are created to be used with Eclipse, but can be opened with
+  files are intended to be used with Eclipse, but can also be opened with
   file compression programs like \texttt{Winrar} on Windows}:
 \begin{quote}
-\url{https://sf.net/projects/overture/files/Examples/}
+\url{https://sourceforge.net/projects/overture/files/Examples/}
 \end{quote}
 Such existing projects can be imported as described in
 section~\ref{subsec:importproj}. 
 
 \chapter{Using the Overture Perspective}\label{sec:vdmsupport}
 
-\section{Getting into the Eclipse Terminology}
+\section{Understanding Eclipse Terminology}
 
 Eclipse is an open source platform based around a
 \emph{workbench}\index{workbench} that provides a common look and feel
@@ -343,16 +339,18 @@ useful composition of views for conducting a particular task.
 
 The \emph{VDM Explorer view}\index{explorer} lets you create, select, 
 and delete Overture projects and navigate between the files in these 
-projects, as well as adding new files to existing projects.
-
-Depending upon the dialect of VDM used in a given project,
-a corresponding Overture editor will be available here. A new VDM
+projects, as well as adding new files to existing projects. A new VDM
 project is created choosing the \emph{File} $ \rightarrow$ \emph{New}
 $\rightarrow$ \emph{Project} resulting in
 Figure~\ref{fig:userguide:newOvertureProjectSL}. Here select
 the desired VDM dialect and press \emph{Next}. Finally, a name needs 
 to be given to the project and then simply select \texttt{Finish}. 
 
+Depending upon the dialect of VDM used in a given project,
+a corresponding Overture editor will be available to edit the files of
+that project. Dialect editors are sensitive to the keywords used in
+each particular dialect, and simplify the task of working on the
+specification.
 
 \begin{figure}[!h]
 \begin{center}
@@ -364,26 +362,26 @@ to be given to the project and then simply select \texttt{Finish}.
 
 
 The \emph{Outline view}\index{outline}, on the right hand side of 
-Figure~\ref{fig:userguire:OverturePerspective}, presents an outline of the file selected
-in the editor. The outline displays any declared VDM definitions such as
-their state components, values, types, functions and operations. The
-type of the definitions are also shown in the \emph{outline view}. In
-case of a flat VDM-SL model the module is called {\ttfamily{DEFAULT}}.\index{DEFAULT}
-% and traces.
-The colour of the icons in front of a name in the outline names
+Figure~\ref{fig:userguire:OverturePerspective}, presents an outline of
+the file selected
+in the editor. The outline displays all VDM definitions, such as
+state definitions, values, types, functions and operations. The
+type of the definitions are also shown in the \emph{outline view}.
+The colour of the icons in front of the names in the outline
 indicates the accessibility of the corresponding definition. Red is
 used for private definitions, yellow for protected definitions and
-finally green is used for public definitions. Triangles are used for
+green for public definitions. Triangles are used for
 type definitions, small squares are used for values, state components
 and instance variables, functions and operations are represented by
 larger circles and squares, permission predicates are shown with small
-lock symbols and finally traces are shown with a
-``\texttt{T}''. Functions have a small ``\texttt{F}'' lifted over the
-icons and static definitions have a small ``\texttt{S}'' lifted over
-the icon. For record types a small arrow is placed in front of the
-icon and if that is pressed the fields of the records can be shown. In
-Figure~\ref{fig:OutlineIcons} this is illustrated with all the
-different kinds of icons.
+lock symbols and traces are shown with a
+``\texttt{T}''. Functions have a small ``\texttt{F}'' superscript over the
+icons and static definitions have a small ``\texttt{S}'' superscript.
+Record types have a small arrow placed in front of the
+icon, and if that is clicked the fields of the record can be seen.
+Figure~\ref{fig:OutlineIcons} illustrates the different outline icons.
+At the top of the outline view there are buttons to filter what is displayed,
+for instance it is possible to hide non-public members.
 
 \begin{figure}[!htb]
 \begin{center}
@@ -393,45 +391,33 @@ different kinds of icons.
 \end{center}
 \end{figure}
 
-Clicking on a name of a definition will move the cursor in
-the editor to the definition. At the top of the outline view there
-are buttons to select what is displayed in the outline view, for
-instance it is possible to hide non-public members.
+Clicking on the name of a definition in the outline will highlight the
+definition in the editor view.
 
 The \emph{Problems view}\index{problems} at the bottom of 
 Figure~\ref{fig:userguire:OverturePerspective} gathers 
 information messages about the projects you are
-working on. This includes information generated by Overture, such as
-warnings and errors. Please use the suggested corrections with caution,
-since the tool cannot guess what you intended to write. More panes are
-available together with the \emph{Problems view} and here in
-particular the \emph{VDM Quick Interpreter}\index{quick interpreter}
-it worth considering. If that pane is selected there is a small
-command-line at the bottom where a plain VDM expression (not depending
-upon the definitions in the VDM model you are working with) can be
-typed in. When return is pressed the expression will be evaluated and
-the result of the evaluation will be shown above the command-line.
+working on.
+
+The \emph{VDM Quick Interpreter}\index{quick interpreter}
+view has a small command-line at the bottom where a plain VDM expression
+(not depending upon the definitions in the VDM model you are working with) can be
+entered. When return is pressed the expression will be evaluated and
+the result shown above the command-line.
 
 Most of the other features of the workbench, such as the menus and
 toolbars, are similar to other Eclipse applications, with the exception 
-of a special menu with Overture specific functionality. One
-convenient feature is a toolbar of shortcuts to switch between
-different perspectives that appears on the right side of the screen;
-these vary dynamically according to context and history.
+of a special menu with Overture specific functionality.
 
 \section{Additional Eclipse Features Applicable in Overture}
 
 \subsection{Opening and Closing Projects}
 
-In order not to take up too much space and computing power it may be
-advantageously to close projects that are not used currently. This can
-be done by right clicking such projects and then selecting the
-\emph{Close Project} entry in the menu.
-%menu as shown in Figure~\ref{fig:closeproject}. 
-For such closed projects it is possible
-to open them again in the same fashion using the \emph{Open project}
-entry in the same right click
-menu.\index{project!open}\index{project!close} 
+To de-clutter the workspace and reduce the risk of accidental changes,
+it may be helpful to close projects that are not used being worked on.
+This can be done by right clicking such projects and then selecting the
+\emph{Close Project} entry in the menu. Projects can similarly be re-opened
+using the same menu.\index{project!open}\index{project!close} 
  
 %\begin{figure}[!htb]
 %\begin{center}
@@ -443,15 +429,11 @@ menu.\index{project!open}\index{project!close}
 
 \subsection{Adding Additional VDM File Extensions}
 
-If one would like to use additional file types to be associated with a
-particular VDM editor instead of the standard {\ttfamily vdmsl},
-{\ttfamily vdmpp} and {\ttfamily vdmrt} file types this is possible in
-Overture. This is done using the \emph{Window} $\rightarrow$
-\emph{Preferences} menu point. Here one can start typing {\ttfamily
-  content types} which will result in a menu similar to
-Figure~\ref{fig:ContentsTypes}. Here one can press the {\ttfamily Add}
-button for the appropriate content type that one wishes to add
-additional types of file extensions.\index{file extension}
+It is possible to associate additional or different file extensions with a
+particular VDM dialect editor, instead of the standard {\ttfamily vdmsl},
+{\ttfamily vdmpp} and {\ttfamily vdmrt}. This is done using the \emph{Window}
+$\rightarrow$ \emph{Preferences} menu point. Click the {\ttfamily Add}
+button for the appropriate content type.\index{file extension}
 
 \begin{figure}[!htb]
 \begin{center}
@@ -460,15 +442,13 @@ additional types of file extensions.\index{file extension}
 \end{center}
 \end{figure}
 
-\subsection{Remove Directories without Source Files}
+\subsection{Filtering Project Contents}
 
-In case the directory with the VDM source files includes
-subdirectories without source files it may be convenient to remove
-this additional noise from the \emph{Explorer} view. This can be
-accomplished by pressing the small downward pointing arrow at the top
-right-most corner of the \emph{Explorer} view. Then the menu shown in
-Figure~\ref{fig:filteringfiles} will pop up and here \emph{Filters...}
-is selected and then different parts can be filtered away including
+It is possible to filter out certain file types from the \emph{Explorer} view.
+This is done by clicking the small downward pointing arrow at the top
+right-most corner of the \emph{Explorer} view. See
+Figure~\ref{fig:filteringfiles}. The \emph{Filters...} option allows
+various files or directories to be hidden, including
 directories that have no source files.
 
 \begin{figure}[!htb]
@@ -480,9 +460,9 @@ directories that have no source files.
 
 \subsection{Including line numbers in the Editor}
 
-In case line numbers\index{line number} are desired in the Overture
-editor it is possible to to right click in the left-hand-side margin
-of the editor and then select \texttt{show line numbers} as shown in
+If line numbers\index{line number} are required in the dialect
+editors, right click in the left-hand margin
+of the editor and select \texttt{show line numbers} as shown in
 Figure~\ref{fig:linenumbers}.\index{line numbers} 
 
 \begin{figure}[!htb]
@@ -531,9 +511,9 @@ Figure~\ref{fig:linenumbers}.\index{line numbers}
 
 \chapter{Managing Overture Projects}\label{sec:projects}
 
-\section{Importing Overture VDM Projects}\label{subsec:importproj}
+\section{Importing Overture Projects}\label{subsec:importproj}
 
-It is possible to import Overture VDM projects by
+It is possible to import Overture projects by
 right-clicking the explorer view and selecting \emph{Import}, followed
 by \emph{General} $\rightarrow$ \emph{Existing Projects into
   Workspace}.  In this way the projects from \texttt{.zip} files
@@ -542,7 +522,7 @@ easily.\index{project!import}
 
 \section{Creating a New Overture Project}
 
-Follow these steps in order to create a new Overture project:
+Follow these steps to create a new Overture project:
 
 \begin{enumerate}
 	\item Create a new project by choosing \emph{File}
@@ -553,10 +533,9 @@ Follow these steps in order to create a new Overture project:
 	\item Press \emph{Next};
          \item Type in a project name;
 	\item Chose whether you would like the contents of the new
-          project to be in your workspace or outside from existing
-          source files (browse to the appropriate directory); and
-         \item Click
-	the finish button (see Figure~\ref{fig:CreateProjectWizard}).
+          project to be in your workspace or outside
+          (browse to the appropriate directory); and
+    \item Click	the finish button (see Figure~\ref{fig:CreateProjectWizard}).
 \end{enumerate}
 
 \begin{figure}[!htb]
@@ -574,10 +553,10 @@ Follow these steps in order to create a new Overture project:
 \section{Creating Files}
 
 Switching to the Overture perspective will change the layout of the user
-interface to focus on the VDM development. To change perspective go to the menu 
-\emph{window} $\rightarrow$ \emph{open perspective} $\rightarrow$ \emph{other}\ldots and choose the
-Overture perspective.
-When the developer is in the Overture Perspective the user can create files
+interface to focus on VDM development. To change perspective, go to the menu 
+\emph{Window} $\rightarrow$ \emph{Open perspective} $\rightarrow$
+\emph{Other}\ldots and choose the Overture perspective.
+From the Overture Perspective you can create files
 using one of the following methods:
 
 \begin{enumerate}
@@ -590,23 +569,22 @@ using one of the following methods:
     \emph{VDM-SL Module} or \emph{VDM-PP Class} or \emph{VDM-RT Class}.
 \end{enumerate}
 
-In both cases one needs to choose a file name and optionally choose a
-directory if one does not want to place the file in the directory of
+In both cases you need to choose a file name and optionally choose a
+directory if you do not want to place the file in the directory of
 the chosen Overture project. Then a new file with the appropriate file
-extension according to the chosen dialect (\texttt{vdmsl},
-\texttt{vdmpp} or \texttt{vdmrt})\index{vdm file extension} can be
-created in the selected directory. This file will use the appropriate
-module/class template to get the user started with defining the
+extension (according to the chosen dialect, \texttt{vdmsl},
+\texttt{vdmpp} or \texttt{vdmrt})\index{vdm file extension} will be
+created in the chosen directory. This file will use the appropriate
+module/class template to get the user started by defining the
 module/class meant to be placed in this new file. Naturally, keywords 
-not used can be deleted.
+that are not required can be deleted.
 
 \section{Setting Project Options}\label{subsec:options}
 
-For each Overture VDM project it is possible to set various VDM
-specific settings. One can get access to these by selecting a project
+For each Overture project it is possible to set various VDM
+specific settings. You can get access to these by selecting a project
 in the \emph{Explorer view} and then right clicking and selecting
-\emph{properties}. Here, a VDM specific settings property which
-looks like in Figure~\ref{fig:VDMSettings} is shown. The options 
+\emph{properties}. See Figure~\ref{fig:VDMSettings}. The options 
 that can be set for each VDM project are:\index{project!options}
 
 \begin{figure}[!hbt]
@@ -619,41 +597,37 @@ that can be set for each VDM project are:\index{project!options}
 
 \begin{description}
 \item[Language version:] Here the standard is to use the
-  \emph{classic} version that is similar to what is used in the
-  VDMTools version. Alternatively one can select VDM-10 which
+  \emph{classic} version which is similar to that used in
+  VDMTools. Alternatively one can select VDM-10 which
   is a new improved (but not necessarily backwards compatible) version of
-  different VDM dialects developed by the Overture Language Board. 
-\item[Suppress type checking warnings:] This flag is per default not
-  set but if one would like to switch off such warning the flag can be
-  set here.
-\item[Dynamic type checks:] This is an option to the interpreter (default on) 
-  for continuously type checking the values
-  during interpretation of a VDM model. It is possible to switch off
-  the check here.
-\item[Invariant checks:] This is an option to the interpreter (default on) 
-  for continuously checking both state and type invariants of the values
-  during interpretation of a VDM model. It is possible to switch off
-  this check here but note that option requires dynamic type
-  checking also to be switched on.
-\item[Pre condition checks:] This is an option to the interpreter (default on) 
-  for continuously checking pre-conditions for all functions and operations
+  the VDM dialects developed by the Overture Language Board. 
+\item[Suppress type checking warnings:] This flag is not
+  set by default but you can change it here.
+\item[Dynamic type checks:] This is an option for the interpreter (default on) 
+  to continuously type check  values during interpretation of a VDM model.
+  It is possible to switch off the check here.
+\item[Invariant checks:] This is an option for the interpreter (default on) 
+  to continuously check both state and type invariants.
+  It is possible to switch off
+  this check here, but note that option requires dynamic type
+  checking also to be switched off.
+\item[Pre condition checks:] This is an option for the interpreter (default on) 
+  to continuously check pre-conditions for all functions and operations
   during interpretation of a VDM model. It is possible to switch off
   this check here.
-\item[Post condition checks:] This is an option to the interpreter (default on) 
-  for continuously checking post-conditions for all functions and operations
+\item[Post condition checks:] This is an option for the interpreter (default on) 
+  to continuously check post-conditions for all functions and operations
   during interpretation of a VDM model. It is possible to switch off
   this check here.
-\item[Measure checks:] This is an option to the interpreter (default
-  on) for continuously checking that recursive functions for which a
-  measure function have been defined that the recursive call indeed
-  yield a smaller number by making use of the measure function during
-  interpretation of a VDM model. It is possible to switch off this
+\item[Measure checks:] This is an option for the interpreter (default
+  on) to continuously check recursive functions, for which a
+  measure function has been defined. It is possible to switch off this
   check here.
 \end{description}
 
-In addition to these project settings it is possible to chose to have
-a main \LaTeX\ file where one can incorporate the explanations outside
-the \texttt{vdm\_al} environment and decide the order in which the
+Overture allows VDM specifications to be embedded in \LaTeX\ files that
+form part of the documentation of a project. It is possible to define
+a main \LaTeX\ file for the project, and define the order in which the
 different VDM source files shall be included.
 
 \chapter{Editing VDM models}\label{sec:editVDM}
@@ -1161,7 +1135,7 @@ be seen in Figure~\ref{fig:userguide:ExecutionCPU}.\index{single CPU overview}
 \chapter{Defining Your Own Java Libraries to be used from Overture}\label{sec:javalibs}
 
 VDM models are not appropriate for describing everything it is common to have existing legacy code that a user may not
-wish to spend time modeling in VDM but would like to make use of
+wish to spend time modelling in VDM but would like to make use of
 from a VDM model. Hence, a feature enabling a combination of a VDM
 model and a library with functionality in a standard \texttt{jar} file
 has been enabled. Using this feature it is possible 
