@@ -105,4 +105,9 @@ public class QuantifierList extends Vector<Quantifier>
 
 		return false;
 	}
+
+	public boolean finished()
+	{
+		return done;
+	}
 }

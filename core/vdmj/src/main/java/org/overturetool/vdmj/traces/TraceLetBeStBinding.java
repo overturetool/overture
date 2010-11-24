@@ -31,6 +31,7 @@ import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.statements.SkipStatement;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -109,6 +110,12 @@ public class TraceLetBeStBinding extends TraceDefinition
 		}
 
 		quantifiers.init();
+
+		if (quantifiers.finished())		// No entries at all
+		{
+			node.alternatives.add(new StatementTraceNode(new SkipStatement(location)));
+			return node;
+		}
 
 		try
 		{
