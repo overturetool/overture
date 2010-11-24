@@ -62,10 +62,8 @@ CreateSignal() ==
          (if timeIn <= curtime
           then (SetTemp(tempIn);
                 SetHumid(humidIn);
-                let - = io.echo("\nNew env values set")
-                in skip;                
-                let - = io.writeval[nat](timeIn)
-                in skip;                
+                IO`print("\nNew env values set");
+                IO`print(timeIn);                
                 inlines := tl inlines;
                 return
                );
@@ -79,7 +77,7 @@ CreateSignal() ==
 
 private ShowResults: () ==> ()
 ShowResults() ==
-  def - = io.writeval[seq of outline](outlines) in skip;
+  IO`print(outlines);
 
 public HandleEvent: nat * nat * nat ==> ()
 HandleEvent(curTime, TempValue, HumidValue) ==

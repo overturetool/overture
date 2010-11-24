@@ -101,8 +101,7 @@ THTWAlgo() ==
         if print
         then (World`env.HandleEvent(time, Temp, Humid);
               printStr("\nTarget values reached");
-              let - = new IO().writeval[nat](time)
-              in skip;
+              IO`print(time);
              );
         print := false;
        );
