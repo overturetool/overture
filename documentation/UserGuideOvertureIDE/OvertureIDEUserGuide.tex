@@ -212,7 +212,7 @@ supports the description of data and functionality
 means of types built using constructors that define structured data
 and collections such as sets, sequences and mappings from basic values
 such as Booleans and natural numbers. These types are very abstract, allowing
-the user to add any relevant constraints using data type
+you to add any relevant constraints using data type
 invariants. Functionality is defined in terms of operations over these
 data types. Operations can be defined implicitly by preconditions and
 postconditions that characterize their behavior, or explicitly by
@@ -570,12 +570,12 @@ using one of the following methods:
 \end{enumerate}
 
 In both cases you need to choose a file name and optionally choose a
-directory if you do not want to place the file in the directory of
+directory if you do not want to place the file in the home directory of
 the chosen Overture project. Then a new file with the appropriate file
 extension (according to the chosen dialect, \texttt{vdmsl},
 \texttt{vdmpp} or \texttt{vdmrt})\index{vdm file extension} will be
 created in the chosen directory. This file will use the appropriate
-module/class template to get the user started by defining the
+module/class template to get you started by defining the
 module/class meant to be placed in this new file. Naturally, keywords 
 that are not required can be deleted.
 
@@ -634,23 +634,24 @@ different VDM source files shall be included.
 
 \section{VDM Dialect Editors}
 
-Editing VDM model files is done in the dialect Editor view. As source files are
-changed in the edit view, syntax checking is carried out continuously (even before the
-files are saved). Whenever files are saved, the syntax checking is accompanied
-by a type check of the \emph{entire} VDM model, if no syntax errors are found.
+VDM model files are always changed in the dialect Editor view. Syntax checking
+is carried out continuously as source files are
+changed (even before the files are saved). Whenever files are saved, assuming
+there are no syntax errors, a full type check of the \emph{entire} VDM model is
+performed.
 Problems and warnings will be displayed both in the Problems view as well as
 directly in the Editor view where the problems have been identified.
 
 \section{Using Templates}
 
-Templates can be particularly useful when modifying VDM models. If you hit the
-key combination \textit{CTRL+space} after the initial characters of the template
-needed, Overture triggers a proposal. For example, if you type ''fun'' followed
+Eclipse templates can be particularly useful when modifying VDM models. If you
+hit \textit{CTRL+space} after typing the first few characters of a template,
+Overture will offer a proposal. For example, if you type ''fun'' followed
 by \textit{CTRL+space}, the IDE will propose the use of an implicit or explicit
-function template as shown in Figure~\ref{fig:functionTemplate}. The IDE supports
+function template as shown in Figure~\ref{fig:functionTemplate}. The IDE includes
 several types of template: cases, quantifications, functions (explicit/implicit),
 operations (explicit/implicit) and many more. The use of templates makes it much
-easier for users to nevertheless construct models even if they are not familiar
+easier for users to construct models, even if they are not deeply familiar
 with the VDM syntax.
 
 \begin{figure}
@@ -661,16 +662,14 @@ with the VDM syntax.
 \end{center}
 \end{figure}
 
-It is possible to adjust and add to the templates defined inside the
-Overture editor. This can be done by selecting the menu 
-\emph{Window} $\rightarrow$ \emph{Preferences}. By starting to type
-\emph{template} the Overture specific preferences for templates will
-become visible. In Figure~\ref{fig:Templatepreferences} shows
-how the template for cases expressions is defined in Overture. Note
+It is possible to adjust and add to the templates defined in 
+Overture. This can be done in the VDM preferences under
+\emph{Window} $\rightarrow$ \emph{Preferences} $\rightarrow$ \emph{VDM}
+$\rightarrow$ \emph{Templates}. Figure~\ref{fig:Templatepreferences} shows
+how the template for ''cases'' expressions is defined in Overture. Note
 that new templates can be added and the existing ones can be
-adjusted by selecting the \emph{Edit} button. It is also possible to
-remove templates using the \emph{Remove} button. A full list of the
-standard defined templates is available in Appendix~\ref{app:templates}.
+edited or removed. A full list of the
+standard Overture templates is available in Appendix~\ref{app:templates}.
 
 \begin{figure}
 \begin{center}
@@ -687,18 +686,17 @@ This section describes how to debug a model using the Overture IDE.
 \section{Debug Launch Configurations}
 
 To execute or debug a VDM model, you must first create a debug launch
-configuration
-\index{debug configuration}
-from the menu \emph{Run} $\rightarrow $ \emph{Debug Configuration}\ldots. The
-launch dialog requires the following information: the project name,
-the class/module and the initial operation/function to call in that
+configuration\index{debug configuration}
+from the menu \emph{Run} $\rightarrow $ \emph{Debug Configurations}\ldots. The
+launch dialog requires the following information: the VDM project name,
+the class/module name and the initial operation/function to call in that
 class/module. Figure~\ref{fig:userguide:debugConfiguration} shows a debug launch
 configuration. Clicking one of the browse buttons will open a dialog which
-gives the user a list of choices - both the class and operation/function can be
+gives you a list of choices - both the class/module and operation/function can be
 chosen this way. If the chosen operation or function has parameters, argument
-values to pass must be entered manually. You can also get to the
-\emph{Debug Configuration} dialog by right clicking on a project in the Explorer
-view and then selecting the \emph{Debug As} $\rightarrow$ \emph{Debug Configuration}.
+values to pass must be entered manually. You can also open the
+\emph{Debug Configurations} dialog by right clicking on a project in the Explorer
+view and then selecting the \emph{Debug As} $\rightarrow$ \emph{VDM Launch Configurations}.
 Once a launch configuration has been defined, it can be re-run at any time by using the
 small downward arrow next to the debug icon
 (\includegraphics[width=0.03\textwidth]{icons/debuggericon}) in the IDE toolbar.
@@ -715,8 +713,8 @@ small downward arrow next to the debug icon
 
 The Debug Perspective\index{debug perspective} contains all the views
 commonly needed for debugging in VDM. Breakpoints can easily be set in the
-model, by double clicking in the left margin of the editor view at the chosen
-line. When the debugger reaches the location of a breakpoint, the user can
+model by double clicking in the left margin of the Editor view at the chosen
+line. When the debugger reaches the location of a breakpoint, you can
 inspect the values of different identifiers and step through the VDM model 
 line by line.\index{perspective!debug}
  
@@ -764,40 +762,38 @@ filters\index{icon!use step filters}\\
 
 The \emph{Debug view} is located in the upper left corner in the Debug Perspective -
 see Figure~\ref{fig:userguide:DebuggingVDM}. The \emph{Debug view} shows all running
-models and the call stack belonging to them. It also displays whether a given model is
-stopped, suspended or running. At the top of the view there are buttons
+models and whether a given model is stopped, suspended or running.
+It shows the call stack of those that are suspended, and for VDM++ and VDM-RT stacks
+for all threads are shown.
+At the top of the view, there are buttons
 for debugging such as: stop, step into, step over, resume, etc. (see
-Table~\ref{tab:debugButtons}) All threads (VDM++/VDM-RT)) are also shown, along
-with their running status. It is possible to switch between threads from the 
-\emph{Debug view} an view variables from each one.
+Table~\ref{tab:debugButtons}).
 
 \subsection{The Variables View}
  
-This view shows all the variables in a given context, allowing them to be
+This view shows all the variables in a thread context, allowing them to be
 examined after a breakpoint has been reached. The variables and their values are
 automatically updated when stepping through a model. The \emph{Variables view} is
 located in the upper right hand corner in the \emph{Debug perspective}. It is
-also possible to inspect compound variables, expanding nested structures and soon.
+possible to inspect compound variables, expanding nested structures and soon.
 
 \subsection{The Breakpoints View}
 
-Breakpoints can be added both from the edit perspective and the \emph{Debug
-perspective} from the Editor view. In the debug perspective however, there is
-also a \emph{Breakpoints view} that lists all current breakpoints, allowing the
-user to easily navigate to the location of a given breakpoint, disable, delete
-or set the hit count or a break condition. In
-Figure~\ref{fig:userguide:DebuggingVDM} the \emph{Breakpoints view} is hidden
-behind the \emph{Variables view} in the upper right hand corner.
+Breakpoints can be added in any perspective from the Editor view.
+The debug perspective also has a \emph{Breakpoints view} that lists all current
+breakpoints, allowing you to easily navigate to the location of a given breakpoint,
+disable, delete or set the hit count or a break condition. The view is located in
+the same panel as the \emph{Variables view} in the upper right hand corner.
 
 \subsection{Conditional Breakpoints}
 \label{sec:userguide:breakpoints}
 
-Conditional breakpoints can also be defined. These are a powerful tool for the
-developer since it allows you to specify a conditional expression for one or
-more variables which has to be true for the debugger to stop at the given breakpoint.
-As well as using an expression, a conditional breakpoint may specify a hitcount and whether the breakpoint should stop when the hit count is equal to,greater than, or a multiple of a given value.
-Making a breakpoint conditional is done by right clicking on the breakpoint
-mark in the left margin and selecting the option \emph{Breakpoint
+Breakpoints can also be conditional. This is a powerful feature for the
+developer since it allows you to specify a conditional expression 
+which has to be true for the debugger to stop at the given breakpoint.
+As well as using an expression, a conditional breakpoint may specify a hitcount and whether the breakpoint should stop when the hit count is equal to,greater than, or a multiple of the given value.
+A normal breakpoint can be made conditional by right clicking on the breakpoint
+mark in the Editor view and selecting \emph{Breakpoint
 properties}\ldots. This opens a dialog like the one shown in
 Figure~\ref{fig:userguide:BreakpointConditional}.
 
@@ -811,43 +807,23 @@ Figure~\ref{fig:userguide:BreakpointConditional}.
 
 \subsection{The Expressions View}
 
-The \emph{Expressions view} allows the user to write expressions used for inspecting
-values of the model. As for the \emph{Variables view}, the expressions are 
-automatically re-evaluated when stepping through the model.
+The \emph{Expressions view} allows you to write expressions that are evaluated
+whenever the debugger stops.
 Watched expressions can be added manually or created by selecting \emph{Create
-watch expression} from the \emph{Variables view}. It is of course possible to edit existing
-expressions. Like the \emph{Breakpoints view} this view is hidden in the upper right
-hand corner.
-
-%\subsection{Interactive Console View}
-
-%While the \emph{Expressions view} allows to easily inspect values, the functionality is
-%somewhat limited compared to the functionality provided by VDMTools. For more
-%thorough inspections the \emph{Interactive console view} is more suited. Here commands
-%can be executed on the given context, i.e.\ where the debugger is at a
-%breakpoint. The \emph{Interactive console} keeps a command history, so that already
-%executed commands can be run again without actually typing in the command all
-%over. Figure~\ref{fig:userguide:interactiveConsole} shows the interactive
-%console.
-
-%\begin{figure}[htp]
-%\begin{center}
-%  \includegraphics[width=300px]{figures/InteractiveConsole}
-%  \caption{The interactive console}
-%  \label{fig:userguide:interactiveConsole}
-%\end{center}
-%\end{figure}
+watch expression} from the \emph{Variables view}. It is possible to edit existing
+expressions. This view sits in the same panel as the \emph{Breakpoints view} and
+the \emph{Variables view}.
 
 \chapter{Collecting Test Coverage Information}\label{sec:testcoverage}
 
 When a VDM model is being interpreted it is possible to automatically collect
-test coverage information. Test coverage measurement helps you to see how well a
-given test suite\index{Test Coverage!Test suite} covers the VDM model.
+test coverage information. Test coverage measurements help you to see how well a
+given test suite\index{Test Coverage!Test suite} exercises the VDM model.
 
 In order to enable collection of test coverage data, go to the \emph{Debug 
-configuration} and select the \emph{Generate Latex coverage} option. After
-running a debug configuration, a new file with the \emph{cov} extension will be created for 
-each file in the project. All these files are put into a project folder named
+Configuration} and select the \emph{Generate Latex coverage} option. After
+running a debug configuration, a new file with the \emph{.cov} extension will be created for 
+each file in the project. These files are written into a project subfolder named
 \texttt{generated/coverage/<date and time>}. Double clicking the .cov files
 will open a special editor window that displays the source with coverage
 coloured in red/green (red is not covered). Alternatively, a \emph{PDF} file
@@ -860,13 +836,11 @@ by right clicking on the project name and choosing \emph{Latex} $\rightarrow$
 Include {\ttfamily overture.tex} which among other things makes use of the
 {\ttfamily times.cls} and {\ttfamily listings.cls} style classes. This enables
 the use of the standard {\ttfamily lstlisting} environment for type setting
-source text and display it in a tele-type proportional font where all VDM keyword
-are typeset in a bold font. By default the listings will be inserted into boxes
-but it is easy to adjust (using the parameters to the {\ttfamily lstlisting}
-environment) if no boxes are desired.
+source text and display it in a fixed width font where all VDM keywords
+are typeset in bold.
 
 It is possible to use literate programming/specification \cite{Johnson96} just as
-inside VDMTools. Then one needs to use the \LaTeX\ text processing system with
+inside VDMTools. Then you need to use the \LaTeX\ text processing system with
 plain VDM models mixed with textual documentation.  The VDM model parts must be
 enclosed within ``\verb+\begin{vdm_al}+'' and ``\verb+\end{vdm_al}+''. The
 text-parts outside the specification blocks are ignored by the parser (but used
@@ -875,32 +849,30 @@ by the pretty-printer).
 \chapter{Managing Proof Obligations}\label{sec:POmanagement}
 
 In all VDM dialects, it is possible to identify places where run-time errors
-could potentially occur if the model was to be executed. These can be considered
-as additional to the static type checking that is performed automatically.
+\emph{could} potentially occur if the model was to be executed. The analysis of
+these areas can be considered
+as an additional check to the static type checking that is performed automatically.
 Unfortunately, it is not always possible to statically check if such
-possible problems will actually occur at run-time error or not. Thus Overture
-provides so-called ``Proof Obligations''\index{proof obligation} for all places
-where such run-time errors ``could'' occur. Each \emph{Proof Obligation} (PO)
+possible problems will \emph{actually} occur at run-time error or not. So Overture
+creates so-called ``Proof Obligations''\index{proof obligation} for all the places
+where run-time errors ``could'' occur. Each \emph{Proof Obligation} (PO)
 is formulated as a predicate that must hold at a particular place in the VDM
-model and thus it may have particular context information associated with it.
-These POs can be considered as
+model if it is error-free, and thus it may have particular context information associated with it.
+POs can be considered as
 constraints that will guarantee the internal integrity of a VDM model if they
 are all met. In the long term it will be possible to prove these constraints
 with a proof component in Overture, but this is not yet available.
 
-It takes a little time for newcomers to VDM to get used to the form
-of Proof Obligations, so it may be worthwhile to elaborate a bit on the form of
-the proof obligations. POs can be divided into different
-categories\index{proof obligation!categories}
-depending upon their nature. These can be found in
+POs can be divided into different categories\index{proof obligation!categories}
+depending upon their nature. The full list of categories can be found in
 Appendix~\ref{app:POcategories} along with a short explanation for
 each of them.
 
 The proof obligation generator is invoked either on a VDM project (and
-then POs for all the VDM model files will be generated) or only for a
-selected VDM file. One can right click in the \emph{Explorer} view and
-then select the \emph{Proof Obligations} $\rightarrow$ \emph{Generate Proof
-  Obligations} menu item. Overture will then change into a special
+then POs for all the VDM model files will be generated) or for one
+selected VDM file. Right-click the project or file in the \emph{Explorer} view and
+then select \emph{Proof Obligations} $\rightarrow$ \emph{Generate Proof
+  Obligations}. Overture will then change into a special
 \emph{Proof Obligations Perspective}\index{proof
   obligation!perspective} as shown in
 Figure~\ref{fig:POview}.\index{perspective!proof obligations}  
@@ -912,46 +884,43 @@ Figure~\ref{fig:POview}.\index{perspective!proof obligations}
 \end{center}
 \end{figure}
 
-Note that in the \emph{Proof Obligation Explorer} view each proof
-obligation have a number of components:
+Note that in the \emph{Proof Obligation Explorer} view, each proof
+obligation has four components:
 \begin{itemize}
 \item A unique number in the list shown;
 \item The name of the definition in which the proof obligation is
-  generated from;
+  located;
 \item The proof obligation category (type); and
 \item A status field indicating whether the proof obligation is
-  trivially correct or would have to be proved by a normal proof
+  trivially correct or would have to be proved by a proof
   engine.
 \end{itemize}
 
-At the top of the \emph{Proof Obligation Explorer} it is
-possible to filter away all the proof obligations that are trivially
-correct pressing the \emph{Filter proved} button at the top of this
-view.\index{filter proved} 
+At the top of the \emph{Proof Obligation Explorer} the \emph{Filter proved} button
+allows you to filter away all the proof obligations that are trivially
+correct.\index{filter proved} 
 
 \chapter{Combinatorial Testing}\label{sec:testing}
 
-In order to automate parts of the testing process a notion of
-\emph{traces} have been introduced into VDM++ (note that this is 
-only available for VDM-SL models if the VDM-10 language version has been selected). 
-Such traces conceptually correspond
-to regular expressions that can be expanded to a collection of test
-cases. Each such test case is then composed as a sequence of operation
-calls. If a user defines such traces it is possible to make use of a
-special combinatorial testing perspective that enables the automatic
-unfolding of the traces and automatic execution of each of the test
-cases. Subsequently, the results of running all these can be inspected
-and erroneous test cases can easily be found. The user can then fix 
-the problem and reuse the same traces definitions.
+In order to automate part of the testing process, a notion of
+test \emph{traces} has been introduced into VDM++\footnote{note that this is 
+only available for VDM-SL models if the VDM-10 language version has been selected}. 
+Traces are effectively regular expressions that can be expanded to a collection of test
+cases. Each test case comprises a sequence of operation
+calls. If a user defines traces it is possible to make use of a
+special \emph{Combinatorial Testing} perspective that enables the automatic
+unfolding of the traces and execution of each of the test
+cases. Subsequently, the results of running the tests can be inspected
+and erroneous test cases easily found. The user can then fix 
+problems and re-run the traces definitions as development proceeds.
 
 \section{Using the Combinatorial Testing GUI}
 
-The syntax for trace definitions are defined in the VDM-10 language
+The syntax for trace definitions is defined in the VDM-10 language
 manual.\index{traces}
-If one have used the {\bf\ttfamily traces} syntax described above it
-is possible to go to the \emph{Combinatorial testing}
-perspective\index{combinatorial testing}. An example of using that
-perspective can be seen in
+If you have created a {\bf\ttfamily traces} entry for a module or class it
+can be exexuted via the \emph{Combinatorial Testing}
+perspective\index{combinatorial testing}. See
 Figure~\ref{fig:tracesalarm}.\index{perspective!combinatorial testing}
 
 Different icons are used to illustrate the verdict in a test
@@ -988,24 +957,23 @@ of test cases for the trace definition name.\index{icon!skipped test case}
 \end{center}
 \end{figure}
 
-\chapter{Mapping VDM++ back and forth to UML}\label{sec:vdmuml}
+\chapter{Mapping VDM++ To and From UML}\label{sec:vdmuml}
 
-For VDM++ and VDM-RT projects it is
-possible to move automatically back and forth between a VDM model
+VDM++ and VDM-RT projects can be converted automatically back and forth between VDM
 and its corresponding UML model\footnote{In the current version of
   Overture this feature is somewhat unstable.}. 
-Essentially these can be considered
-as different views of the same model. The UML model is typically used
-as a graphical overview of the model using class diagrams and the
-sequence diagrams can be used to indicate the desired test scenarios
-that a user would like to perform. The VDM++ model is typically used
-as the model where the details for each definition can be found and
-used for detailed semantic analysis. The exchange between VDM++ and
-UML is done using the XML formal called XMI\index{XMI}. At the moment
-only the UML tool Enterprise Architect\index{Exterprise Architect} is
+Essentially, VDM and UML can be considered
+as different views of the same model. A UML model is typically used
+to give a graphical overview of the model using class diagrams, and
+UML sequence diagrams can be used to indicate the test scenarios
+that a user would like to perform. The VDM model is typically used
+to define the implementation and constraints for each class and
+is therefore used for detailed semantic analysis. The exchange between VDM and
+UML is done using the XML format called XMI\index{XMI}. At the moment,
+Enterprise Architect\index{Exterprise Architect} is the only UML tool
 supported. Export from EA is done by selecting the \emph{Project} menu
-and selecting \emph{Import/Export} $\rightarrow$ \emph{Export Package
-  to XMI}. This is illustrated in Figure~\ref{fig:exportfromUML}.
+and \emph{Import/Export} $\rightarrow$ \emph{Export Package
+to XMI}. This is illustrated in Figure~\ref{fig:exportfromUML}.
 
 \begin{figure}[htbp]
 \begin{center}
@@ -1014,48 +982,42 @@ and selecting \emph{Import/Export} $\rightarrow$ \emph{Export Package
 \end{center}
 \end{figure}
 
-Mapping back and forth between a VDM++ model and a UML model is in
-practice done from the \emph{Explorer} view where right-clicking
-the project will result in a menu with
-entries for \emph{UML transformation}\index{UML transformation}. If this
-is selected it is either possible to \emph{Import XMI}\index{import
-  XMI} if one wish to import UML definitions from UML or to
-\emph{Export XMI}\index{Export XMI} if one wish to go from VDM++ to
-UML.
-
-At the class diagram at the UML level additional classes will be
-generated for standard VDM++ basic types. When such UML models are
-mapped back to VDM++ such additional classes are ignored. 
+Importing and exporting a UML model is
+an option in the Overture \emph{Explorer} view, where right-clicking
+a project gives a submenu for
+\emph{UML Transformation}\index{UML transformation}. From here
+it is possible to \emph{Import XMI}\index{import XMI} or to
+\emph{Export XMI}\index{Export XMI}.
 
 \chapter{Moving from VDM++ to VDM-RT}\label{sec:ToVDMRT}
 
-In the methodology for the development of distributed real-time
-embedded systems using the VDM technology a step is described where one
-moves from a VDM++ model to a VDM-RT model \cite{Larsen&09b}. This
-step is supported by the Overture tool suite where it is possible to
-copy a VDM++ project into the starting point for a VDM-RT
+The methodology for the development of distributed real-time
+embedded systems in VDM defines a step where one
+moves from an initial VDM++ model to a VDM-RT model \cite{Larsen&09b}. This
+step is supported by the Overture tool where it is possible to
+copy a VDM++ project to create the starting point for a VDM-RT
 project. This is done by right clicking on the VDM++ project to be
-converted in this fashion in the VDM Explorer view followed by 
-selecting the \emph{Clone as VDM-RT} option.\index{create real time
-  project} As a consequence a new VDM-RT project is
-created.\index{create!VDM-RT project} It will be called exactly the
-same as the VDM++ project with \texttt{VDM\_RT} appended to the project
-name. Inside the project all the \texttt{vdmpp} files will instead
-have the \texttt{vdmrt} extension. The original VDM++ project is not
-changed at all. Thus this is simply a quick and easy way to get to the
-starting point for a VDM-RT model. One then manually need to
-create a {\bf\ttfamily system} with appropriate declarations of
+converted in the VDM Explorer view, followed by 
+the \emph{Clone as VDM-RT} option.\index{create real time
+  project}. A new VDM-RT project is then
+created.\index{create!VDM-RT project} It will have the
+same as the VDM++ project, but with \texttt{VDM\_RT} appended.
+Inside the project, all the \texttt{vdmpp} files will have been converted
+to a \texttt{vdmrt} extension. The original VDM++ project is not
+changed at all. So this is simply a quick and easy way to get to the
+starting point for a VDM-RT model. You would then manually create
+a {\bf\ttfamily system} class with appropriate declarations of
 \texttt{CPU}s and \texttt{BUS}ses.
  
 \chapter{Analysing and Displaying Logs from VDM-RT Executions}\label{sec:showlog}
 
-When a VDM-RT model is being executed a textual logfile is created in
-a ''\texttt{logs/debugconfig}'' folder with the \emph{.logrt} extension. The
-file name for the logfile indicates the time at which it has been
-written so it is possible to store multiple of these. This logfile can be
-viewed in the build-in \emph{RealTime Log Viewer},\index{RealTime Log viewer}
-by double-clicking the file in the project view. The viewer enables
-the user to explore system execution in various perspectives. In
+When a VDM-RT model is executed, a logfile is created in
+a ''\texttt{logs/debugconfig}'' subfolder with a \emph{.logrt} extension. The
+file name for the logfile indicates the time at which the model was executed
+so it is possible to distinguish multiple runs. Logfiles can be
+viewed with the build-in \emph{RealTime Log Viewer},\index{RealTime Log viewer}
+by double-clicking the .logrt file in the Explorer view. The log viewer enables
+you to explore the simulated system execution in various ways. In
 Figure~\ref{fig:userguide:ArchitecturalOverview} the architectural
 overview of the system is given, describing the distributed nature of
 the model.\index{architecture overview}
@@ -1068,8 +1030,8 @@ the model.\index{architecture overview}
 \end{center}
 \end{figure}
 
-The \emph{RealTime Log Viewer} also enables the user to get an overview of
-the model execution\index{model execution overview} on a system level -- this can be seen in
+The \emph{RealTime Log Viewer} also enables you to get an overview of
+the model execution\index{model execution overview} at a system level -- this can be seen in
 Figure~\ref{fig:userguide:ExecutionOverview}. This view shows how the
 different CPUs\index{CPU} communicate via the BUSes\index{BUS} of the system. 
 
@@ -1082,16 +1044,16 @@ different CPUs\index{CPU} communicate via the BUSes\index{BUS} of the system.
 \end{figure}
 
 Since the complete execution of the model cannot be shown in a normal
-sized window, the user has the option of jumping to a certain time
-using the \emph{Go to time} button.\index{Go to time button} It is
+sized window, you have the option of jumping to a certain time index
+using the \emph{Go to time} button.\index{Go to time} It is
 also possible to export all the generated views to \emph{JPG} format
 using the \emph{Export Image} button.\index{export image button} All
-the generated pictures will be placed in the ''\texttt{logs}'' folder.
+the generated images will be placed in the ''\texttt{logs}'' folder.
 
-In addition to the execution overview, the \emph{RealTime Log Viewer} can
+The \emph{RealTime Log Viewer} can
 also give an overview of all executions on a single CPU. This view
 gives a detailed description of all operations and functions invoked
-on the CPU as well as the scheduling of concurrent processes. This can
+on the one CPU as well as the scheduling of concurrent processes. This can
 be seen in Figure~\ref{fig:userguide:ExecutionCPU}.\index{single CPU overview} 
 
 \begin{figure}[htp]
@@ -1104,38 +1066,37 @@ be seen in Figure~\ref{fig:userguide:ExecutionCPU}.\index{single CPU overview}
 
 \chapter{Defining Your Own Java Libraries to be used from Overture}\label{sec:javalibs}
 
-VDM models are not appropriate for describing everything it is common to have existing legacy code that a user may not
-wish to spend time modelling in VDM but would like to make use of
-from a VDM model. Hence, a feature enabling a combination of a VDM
-model and a library with functionality in a standard \texttt{jar} file
-has been enabled. Using this feature it is possible 
+VDM models are not appropriate for describing everything. It is common
+to have existing legacy code that a user may not
+wish to spend time modelling in VDM, but would like to make use of
+from a VDM model. Overture has a feature enabling a combination of a VDM
+model and external libraries with functionality in a standard \texttt{jar} file.
+Using this feature it is possible 
 to call functionality provided by the jar file from a VDM model. This functionality
-corresponds to DL modules/classes in a VDMTools context \cite{DLMan}.
+corresponds to DL modules/classes in VDMTools \cite{DLMan}.
 
-The external libraries which can be defined for VDM is coupled to the
-\texttt{is not yet specified} statements/ expressions. Only operations
+External libraries are coupled to VDM via
+\texttt{is not yet specified} statements and expressions. Operations
 or functions of modules or classes can be delegated to an external
-jar. The look up for a delegate java class is done based on the
-module/class name where an underscore (``\_'') is replaced with a dot
-(``.''): \texttt{remote\_lib\_sensor} becomes
-\texttt{remote.lib.sensor} in java. The look up is only done once and
-only when a \texttt{is not yet specified} body is
-reached. The jar with the compiled remote library must be places in
-the project in a folder named \texttt{lib} it will then be put in the
-class-path of the interpreter when debugging. To compile a library jar
-for VDM the VDMJ jar needs to be in the class-path. It can be fund in
-the Overture IDE installation under
-\texttt{plugins/org.overture.ide.generated.vdmj\_2.0.1/lib}.
+jar, calling out to a delegate java class. The delegate, if present, has
+the same name as the VDM
+module/class name where underscores (``\_'') are replaced with package naming
+dots (``.''). For example, the VDM class \texttt{remote\_lib\_sensor} becomes
+\texttt{remote.lib.sensor} in java. The delegate lookup is only done once and
+only when a \texttt{is not yet specified} body is first
+reached in a class or module. The jar with the remote library must be places in
+the VDM project in a folder named \texttt{lib} where it will be put in the
+class-path of the interpreter when it is executed.
 
-\section{Remote library example}
+\section{Remote Library Example}
 
-In this example a remote sensor will be defined which can read a
+In this example, a remote sensor will be defined in VDM which can read a
 value from a real sensor. The VDM model interface of the sensor can be
-seen in listing~\ref{remoteSensorVdm} where as the Java class
+seen in listing~\ref{remoteSensorVdm} and the Java class
 implementing it can be seen in listing~\ref{remoteSensorJava}. The
 values that are to be exchanged between the Overture IDE and the jar
-file needs to be the values used in VDMJ. Documentation about these
-can be found in the VDMJ user manual \cite{Battle09}.
+file needs to be the internal Values objects used in VDMJ. Documentation about these
+can be found in the VDMJ Design Specification \cite{Battle09}.
 
 \begin{lstlisting}[language=VDM++,label=remoteSensorVdm,caption=Remote sensor VDM class,captionpos=b]
 class remote_lib_sensor
@@ -1160,8 +1121,8 @@ public class sensor
 {
 	public Value getValue(Value id) throws ValueException
 	{
-		int intId = new Long(id.intValue(null)).intValue();
-		return new IntegerValue(intId);
+		int result = ... // Read value for sensor number "id"
+		return new IntegerValue(result);
 	}
 }
 \end{lstlisting}
@@ -1169,40 +1130,38 @@ public class sensor
 \chapter{Enabling Remote Control of the Overture
   Interpreter}\label{sec:remote}
 
-In some situations it may also be valuable to be able to establish a
-front end (for example with a GUI) for interpreting different aspects
-of a VDM model. This is enabled in a fashion similar to the approach described in the 
-previous section using a java jar file. This functionality corresponds
-to the CORBA based API from VDMTools \cite{APIMan}.
+In some situations, it may be valuable to be able to establish a
+front end (for example a GUI or a test harness) for calling a VDM model.
+This is enabled in a fashion similar to the approach described in the 
+previous section using an external java jar file. This feature corresponds
+roughly to the CORBA based API from VDMTools \cite{APIMan}.
 
 A VDM model can be remotely controlled by the use of the java interface
 \texttt{RemoteControl}. Remote control should be understood as a
-delegation of control of an interpretation, which means that the remote
-controller is in charge of the debug session, and is responsible for taking
-action and executing parts of the VDM model. When finished it should
+delegation of control of the interpreter, which means that the remote
+controller is in charge of the debug session and is responsible for taking
+action and executing parts of the VDM model when needed. When finished, it should
 return and the debug session will stop. When a Remote controller is
-used the debugger continues working normally, so for example breakpoints can be
+used, the Overture debugger continues working normally, so for example breakpoints can be
 used. Launching a debugging session with the use of a remote
 controller can be done by placing the jar with the remote controller
-in a folder \texttt{lib} inside the project. The full
-qualified name of the remote controller must then be specified in the launch configuration
-under the \textit{Remote Control} group.  To compile a remote control
-jar for VDM the VDMJ jar file needs to be in the class-path. It can be found
-in the Overture IDE installation
-under\\ \texttt{plugins/org.overture.ide.generated.vdmj\_2.0.1/lib}.
+in a project subfolder called \texttt{lib}. The fully
+qualified name of the remote controller class must then be specified in the
+launch configuration under the \textit{Remote Control} box.
 
-\section{Example of a Remote Control class}
+\section{Example of a Remote Control Class}
 
-In this example we have a VDM class \texttt{A} which just returns the input. As
+In this example, we have a VDM class \texttt{A} which defines an operation
+that just returns its argument. As
 seen in listing~\ref{remoteControllerJava} it is possible to call
-\texttt{execute} on the interpreter which is parsed to the remote
+\texttt{execute} on the Overture interpreter which is parsed to the remote
 controller which then returns a string with the result. A more
-advanced \texttt{valueExecute} also exists which returns the internal
-Value type of the interpreter which is useful for more advanced
-types. The
+advanced \texttt{valueExecute} is available which returns the internal
+Value type of the interpreter which is useful for more complex
+results. The
 values that are to be exchanged between the Overture IDE and the jar
-file needs to be the values used in VDMJ. Documentation about these
-can be found in the VDMJ user manual \cite{Battle09}.
+file need to be the internal Values used in VDMJ. Documentation about these
+can be found in the VDMJ Design Specification \cite{Battle09}.
 
 \begin{lstlisting}[language=JAVA,label=remoteControllerJava,caption=Remote Controller Java class,captionpos=b]
 import org.overturetool.vdmj.debug.RemoteControl;
@@ -1225,9 +1184,10 @@ public class RemoteController implements RemoteControl
 
 \chapter{A Command-Line Interface to VDMJ}\label{sec:commandline}
 
-A central part of the Overture tool is a Java application
-called VDMJ that provides a command-line interface that may be valuable
-for users outside the Eclipse interface of Overture.\index{VDMJ}
+At the centre of the Overture tool is a Java implementation of VDM
+called VDMJ. This provides a command-line interface that may be valuable
+as it can be used independently of the Eclipse interface of Overture.
+\index{VDMJ}
 
 \section{Starting VDMJ}
 
@@ -1237,32 +1197,30 @@ tool, so the minimum command line invocation is as follows:
 
 \lstset{style=tool,language=}
 \begin{lstlisting}
-$ !\textbf{java -jar vdmj-2.0.0.jar}!
+$ !\textbf{java -jar vdmj-2.0.2.jar}!
 VDMJ: You must specify either -vdmsl, -vdmpp or -vdmrt
 Usage: VDMJ <-vdmsl | -vdmpp | -vdmrt> [<options>] [<files>]
 \end{lstlisting}
 \lstset{style=mystyle}
 \lstset{language=VDM++}
 
-So the first parameter indicates the VDM dialect used and then
+So the first parameter indicates the VDM dialect to use and then
 various extra options can be used. These are:
 
 \begin{description}
-\item[\texttt{-r}:] This will indicate the VDM release number.
+\item[\texttt{-r}:] This will indicate the VDM release number (classic or vdm10).
 \item[\texttt{-w}:] This will suppress all warning messages.
 \item[\texttt{-q}:] This will suppress all information messages, such as
  the number of source files processed etc.
-\item[\texttt{-i}:] This will start the interpreter if the VDM
+\item[\texttt{-i}:] This will start the command line interpreter if the VDM
   model is successfully parsed and type checked, otherwise the errors discovered
   will be listed.
 \item[\texttt{-p}:] This will generate all proof obligations for the
-  VDM model (if it is syntax and type correct) and then 
-  stop.
-\item[\texttt{-e <exp>}:] This will evaluate the \texttt{<exp>} print
-  the result and stop.
+  VDM model (if it is syntax and type correct) and then stop.
+\item[\texttt{-e <exp>}:] This will evaluate the \texttt{<exp>}, print
+  the result, and stop.
 \item[\texttt{-c <charset>}:] This will select a file character set. This is to
-allow a specification written in languages other than the default for your system
-to be used. 
+allow a specification written in languages other than the default for your system. 
 \item[\texttt{-t <charset>}:] This will select a console character set. The output
 terminal can use a different character set to the specification files.
 \item[\texttt{-o <filename>}:] This will save the internal
@@ -1274,19 +1232,14 @@ parsing/checking overhead. If files are sufficiently large, this may be faster.
 \item[\texttt{-inv}:] This will disable type/state invariant checks.
 \item[\texttt{-dtc}:] this will disable all dynamic type checking.
 \item[\texttt{-measures}:] this will disable recursive measure checking.
-\item[\texttt{-log}:] This will enable VDM-RT real-time event logging. These
-  are useful with the Overture Eclipse GUI, which has a plugin to
-  display timing diagrams (see Chapter~\ref{sec:showlog}).
+\item[\texttt{-log}:] This will enable VDM-RT real-time event logging (see Chapter~\ref{sec:showlog}).
 \item [\texttt{-remote}:] This enables remote control of the VDMJ executable.
 \end{description}
-
-%Notice that the error indicates that the tool must be invoked with either the \texttt{-vdmsl}, \texttt{-vdmpp} or \texttt{-vdmrt}
-%option to indicate the VDM dialect and parser required.
 
 Normally, a VDM model will be loaded by identifying all of the VDM source files to include. At least
 one source file must be specified unless the -i option is used, in which case the interpreter can be
 started with no specification. If a directory is specified rather than a file, then VDMJ will load
-all files in that directory with a suffix that matches the dialect (eg. *.vdmpp files for VDM++).
+all files in that directory with a suffix that matches the dialect (eg. \texttt{*.vdmpp} files for VDM++).
 Files and directory arguments can be mixed.
 
 If no \texttt{-i} option is given, the tool will only parse and type check
@@ -1425,26 +1378,27 @@ specification, assuming the specification has no type checking errors.
 %Bye
 %\end{lstlisting}
 
-\section{Parsing, Type Checking, and Proof Obligations}
+\section{Parsing, Type Checking, and Proof Obligations in VDMJ}
 
 All specification files loaded by VDMJ are parsed and type checked
 automatically. There are no type checking options; the type checker
 always uses ``possible'' semantics. If a specification does not parse
 and type check cleanly, the interpreter cannot be started and proof
-obligations cannot be generated (though warnings are allowed).
+obligations cannot be generated (though warnings are allowed). All
+warnings and error messages are printed on standard output, even
+with the \texttt{-q} option.
 
-All warnings and error messages are printed on standard output, even
-with the \texttt{-q} option.  A source file may contain VDM embedded
-in a LaTeX file using \verb|vdm_al| environments (see
+A source file may contain VDM definitions embedded
+in a \LaTeX\ file using \verb|vdm_al| environments (see
 Chapter~\ref{sec:prettyprint}); the markup is ignored by the parser,
 though reported line numbers will be correct.
 
 The Java process will return with an exit code of zero if the
-specification is clean (ignoring warnings).  Parser or type checking
+specification is clean (ignoring warnings). Parser or type checking
 errors result in an exit code of 1. The interpreter and PO generator
 always exit with a code of zero.
 
-\section{The Interpreter with Debugging Fuctionality}
+\section{The VDMJ Interpreter and Debugger}
 
 Assuming a specification does not contain any parse or type checking errors, the interpreter can be
 started by using the \texttt{-i} command line option.
@@ -1454,7 +1408,7 @@ VDM-SL specification from a single file called \texttt{shmem.vdmsl},
 the following options would be used:
 
 \begin{lstlisting}
-$ !\textbf{java -jar vdmj-2.0.0.jar -vdmsl -i shmem.vdmsl}!
+$ !\textbf{java -jar vdmj-2.0.2.jar -vdmsl -i shmem.vdmsl}!
 Parsed 1 module in 0.266 secs. No syntax errors
 Type checked in 0.047 secs. No type errors
 Interpreter started
@@ -1483,14 +1437,14 @@ do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
   for the VDM++ and VDM-RT dialects. It creates a global variable that
   can be used subsequently in the interpreter. It is mostly used for
   creating global instances of classes.\index{create}\index{command!create} 
-\item[\texttt{log [<file> | off]}:] This command can only be used in
+\item[\texttt{log [<file> | off]}:] This command can only be used with
   VDM-RT models. It starts to log real-time events to the file indicated. By
-  default, event logging is turned off, but logging can be enabled to
+  default, event logging is turned off. Logging can be directed to
   the console by using log with no arguments, or to a file using \texttt{log
   <filename>}. Logging can subsequently be turned off again by using
   \\texttt{log off}. The events logged include requests, activations and
-  completions of all functions and operations, as well as all creation
-  of instances of classes, creation of CPUs and BUSses, deployment of objects
+  completions of all functions and operations, as well as all object creations,
+  creation of CPUs and BUSses, deployment of objects
   to specific CPUs and the swapping in an out of threads.\index{log}\index{command!log}  
 \item[\texttt{state}:] This command can only be used for the VDM-SL
   dialect and shows the default module state.\index{state}\index{command!state}  
@@ -1501,26 +1455,21 @@ do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
 \item[\texttt{runtrace <name> [test number]}:] This command runs the trace called
   \texttt{<name>}. This will carry out the combinatorial
   test by expanding all the regular expressions and executing the resulting
-  operation sequences. In case a specific test number is provided only
-  that test will be executed. \index{combinatorial testing}
-
-\item[\texttt{debugtrace <name> [test number]}:] This command runs the
-  trace called \texttt{<name>}. This will carry out the combinatorial
-  test by expanding all the regular expressions and executing the
-  resulting operation sequences but stopping at any breakpoints
-  defined by the user. In case a specific test number is provided only
-  that test will be executed. \index{combinatorial testing}
-
-\item[\texttt{filter \%age | <reduction type>}:] This command reduce
-  the CT trace(s) in a way desired by the user. This can either be a
-  percentage or with a specific reduction type. Here the options are:
-  ``\texttt{RANDOM}'', ``\texttt{SHAPES\_NOVARS}'',
-  ``\texttt{SHAPES\_VARNAMES}'' or ``\texttt{SHAPES\_VARVALUES}''
-  (note that lower case can also be used here). 
-  
+  operation sequences. If a specific test number is provided, only
+  that one test will be executed. \index{combinatorial testing}
+\item[\texttt{debugtrace <name> [test number]}:] This command is the same as
+  \texttt{runtrace}, except that if a runtime exception is encountered during
+  the execution of a test, control will enter the debugger. With texttt{runtrace}
+  runtime exceptions are recorded as the result of a (failed) test, rather than
+  trapping into the debugger.\index{combinatorial testing}
+\item[\texttt{filter \%age | <reduction type>}:] This command reduces
+  the size of expanded CT traces to a given percentage (eg. 10\%).
+  There are various options for making the actual selection of tests to remove:
+  ``\texttt{RANDOM}'', ``\texttt{SHAPES\_NOVARS}'', ``\texttt{SHAPES\_VARNAMES}''
+   or ``\texttt{SHAPES\_VARVALUES}'' (note that lower case can also be used here).
 \item[\texttt{assert <file>}:] This command runs assertions from the
   file provided. The assertions in the file must be Boolean
-  expressions, one per line. This command evaluates each assertion in
+  expressions, one per line. The command evaluates each assertion in
   turn, raising an error for any which is false.\index{assert}\index{command!assert}  
 \item[\texttt{init}:] This command re-initializes the global
   environment. Thus all state components will be initialised to their
@@ -1535,19 +1484,18 @@ do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
   VDM-RT dialects the identifiers created using the \texttt{create}
   command will also be included.\index{env}\index{command!env} 
 \item[\texttt{pog}:] This command generates a list of all proof
-  obligations for the VDM model that is
-  loaded.\index{pog}\index{command!pog}  
+  obligations for the VDM model that is loaded.\index{pog}\index{command!pog}  
 \item[\texttt{break [<file>:]<line\#> [<condition>]}:] This command
-  create a breakpoint at a specific file and line and optionally makes
+  creates a breakpoint at a specific file and line and optionally makes
   it a conditional breakpoint.\index{break}\index{command!break}  
 \item[\texttt{break <function/operation> [<condition>]}:] This command
-  creates a breakpoint at the start of a function or an operation and
+  creates a breakpoint at the start of a named function or operation and
   optionally makes it a conditional breakpoint. 
 \item[\texttt{trace [<file>:]<line\#> [<exp>]}:] This command creates a
-  tracepoint for a specific line inside one of the source files. A
+  tracepoint for a specific file and line. A
   tracepoint is similar to a breakpoint but with an implcit continue
-  after it. This creates a trace of the expression given
-  whenever the tracepoint is reached. \index{trace}\index{command!trace} 
+  after it. A tracepoint prints the value of the expression given
+  whenever the tracepoint is reached.\index{trace}\index{command!trace} 
 \item[\texttt{trace <function/operation> [<exp>]}:] This command
   create a tracepoint at the start of a function or operation.
   See \texttt{trace} above for an explanation of tracepoints.
@@ -1557,11 +1505,11 @@ do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
 \item[\texttt{list}:] This command provides a list of all current
   trace/breakpoints by number.\index{list}\index{command!list}  
 \item[\texttt{coverage [clear|write <dir>|merge <dir>|<filenames>]}:]
-  This command manage test coverage information. The coverage command displays the source
+  This command manages test coverage information. The coverage command displays the source
   code of the loaded VDM model (by default, all source files are
   listed), with ``+'' and ``-'' signs in the left hand column
-  indicating lines which have been executed or not,
-  respectively. Finally, the percentage coverage of each source file
+  indicating lines which have been executed or not. Finally, the percentage
+  coverage of each source file
   is displayed.\index{coverage}\index{command!coverage} Typically, the
   testing of a specification will be incremental, and so it is
   convenient to be able to ``save'' the coverage achieved in each test
@@ -1573,7 +1521,7 @@ do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
   coverage information. For example, each day's test coverage could be
   written to a separate ``day'' directory, and then all the days merged
   together for review of the overall coverage at the end.
-\item[\texttt{latex|latexdoc [<files>]}:] This command generates LaTeX
+\item[\texttt{latex|latexdoc [<files>]}:] This command generates \LaTeX\
   line coverage files. These are \LaTeX\ versions of the source files
   with parts of the
   specification highlighted where they have not been executed. The
@@ -1590,9 +1538,9 @@ do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
   source file can be listed with \texttt{coverage <file>} or
   \texttt{latex <file>}. \index{latex}\index{command!latex} 
   \index{latexdoc}\index{command!latexdoc} 
-\item[\texttt{files}:] This command list all source files loaded.
+\item[\texttt{files}:] This command lists the names of all source files loaded.
   \index{files}\index{command!files} 
-\item[\texttt{reload}:] This command will re-parse and type check the
+\item[\texttt{reload}:] This command will reload, parse and type check the
   VDM model files currently loaded. Note that if there are any errors
   in the parse or type check of the files, the interpreter will exit
   after reload.\index{reload}\index{command!reload} 
@@ -1600,7 +1548,7 @@ do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
   model files. Note that if there are any errors in the parse or type
   check of the files, the interpreter will exit after
   load.\index{load}\index{command!load}  
-\item[\texttt{[q]uit}:] This command leave the
+\item[\texttt{[q]uit}:] This command leaves the
   interpreter.\index{quit}\index{command!quit}  
 \end{description}
 
@@ -1745,7 +1693,8 @@ breakpoint, there are additional commands that can be used. These are:
 
 \begin{description}
 \item[\texttt{[s]tep}:] This command steps forward until the
-  current expression/statement is on a new line.\index{step}\index{command!step} 
+  current expression/statement is on a new line. The command will step
+  into function and operation calls.\index{step}\index{command!step} 
 \item[\texttt{[n]ext}:] This command is similar to \\texttt{step} except
  function and operation calls are stepped over.\index{next}\index{command!next}  
 \item[\texttt{[o]ut}:] This command runs to the return of the current
@@ -1761,7 +1710,7 @@ breakpoint, there are additional commands that can be used. These are:
   one frame.\index{down}\index{command!down}  
 \item[\texttt{source}:] This command lists VDM source around the
   current breakpoint. \index{source}\index{command!source} 
-\item[\texttt{stop}:] This command terminate the execution
+\item[\texttt{stop}:] This command terminates the execution
   immediately.\index{stop}\index{command!stop}  
 \item[\texttt{threads}:] This command can only be used for the VDM++
   and VDM-RT dialects. It lists the active threads with status
@@ -1779,9 +1728,9 @@ breakpoint, there are additional commands that can be used. These are:
 \newpage
 \chapter{Templates in Overture}\label{app:templates}
 
-Inside Overture there are a number of different templates that are
-supported initially. You can add your own as well. The keys and
-descriptions of the ones that are pre-defined are:
+Overture defines a number of standard Eclipse templates. You can add
+your own as well. The keys and descriptions of the pre-defined templates
+are:
 
 \begin{longtable}{| l| p{9cm}| }\hline
 Key & Description\\\hline
@@ -1868,11 +1817,10 @@ waiting                   & The number of outstanding requests for the operation
 \newpage
 \chapter{Internal Errors}\label{app:internalerrors}
 
-This appendix provides a list of the internal errors used in Overture
-and an explanantion, for each of them, the circumstances under which the
-internal error can be expected. Most of these errors should
-never be seen by an ordinary user, so if they appear please report it
-to the SourceForge bug reporting utility
+This appendix gives a list of the internal errors in Overture
+and the circumstances under which each internal error can be expected.
+Most of these errors should \emph{never} be seen, so if they appear
+please report the occurrence to the SourceForge bug reporting utility
 (\url{https://sourceforge.net/tracker/?group_id=141350&atid=749152}). 
 
 \input{../../core/vdmj/documentation/MESSAGES_Internal}
@@ -1888,9 +1836,9 @@ can be as follows:
 \input{../../core/vdmj/documentation/MESSAGES_Lexical}
 
 \newpage
-\chapter{Syntatic Errors}\label{app:synerr}
+\chapter{Syntax Errors}\label{app:synerr}
 
-If the syntax of the file you have provided does not live up to the
+If the syntax of the file you have provided does not meet the
 syntax rules for the VDM dialect you wish to use, syntax errors will be
 reported. These can be as follows:
 
@@ -1899,8 +1847,8 @@ reported. These can be as follows:
 \newpage
 \chapter{Type Errors and Warnings}\label{app:typeerr}
 
-If the syntax rules are satisfied, it is still possible to get type
-errors from additional type checking. The errors here can be as
+If the syntax rules are satisfied, it is still possible to get
+errors from the type checker. The errors here can be as
 follows:
 
 \input{../../core/vdmj/documentation/MESSAGES_TypeChecking}
@@ -1913,36 +1861,35 @@ Warnings from the type checker include:
 \chapter{Run-Time Errors}\label{app:runtimeerr}
 
 When using the interpreter/debugger it is possible to get run-time
-errors indicating that a problem with the VDM model analysed have been
-detected. This includes the following kinds of errors:
+errors, even if there are no type checking errors. The possible errors
+are as follows:
 
 \input{../../core/vdmj/documentation/MESSAGES_Runtime}
 
 \newpage
 \chapter{Categores of Proof Obligations}\label{app:POcategories}
 
-This appendix provide a list of the different proof obligation
-categories used in Overture and an explanantion for each of them the
-circumstances under which the PO category can be expected.
+This appendix provides a list of the different proof obligation
+categories used in Overture, and an explanantion of the
+circumstances under which each PO category can be expected.
 
 \begin{description}
-\item[map apply:] Whenever a map application is used it needs to be
-  ensured that the argument is indeed in the domain of the mapping.
+\item[map apply:] Whenever a map application is made it needs to be
+  certain that the argument is in the domain of the map.
 \item[function apply:] Whenever a function application is used it needs to be
-  ensured that the list of arguments to the function are all of the
-  types expected by the function signature as well as satisfy the
-  pre-condition of the function in case such a predicate is present.
+  certain that the list of arguments to the function satisfy the
+  pre-condition of the function, assuming such a predicate is present.
 \item[sequence apply:] Whenever a sequence application is used it needs to be
-  ensured that the argument is indeed in the indices of the sequence.
+  certain that the argument is within the indices of the sequence.
 \item[post condition:]
 \item[function satisfiability:] For all implicit function definitions
-  this proof obligation will be generated to ensure that it will be
-  possible to find a result satisfying the post-condition for all
-  arguments of the function input types satisfying the pre-conditions.
+  this proof obligation will be generated to ensure that it is
+  possible to find an implementation satisfying the post-conditions for all
+  arguments satisfying the pre-conditions.
 \item[function parameter patterns:]
 \item[let be st existence:] Whenever a let-be-such-that
-  expression/statement is used it needs to be guranteed that the set
-  to selecte from is non-empty.
+  expression/statement is used it needs to be certain that at least one value
+  will match the such-that expression.
 \item[unique existence binding:] The {\bf\ttfamily iota} expression
   requires a unique binding to be present and that is guranteed by
   proof obligations from this category.
@@ -1953,13 +1900,13 @@ circumstances under which the PO category can be expected.
 \item[non-empty set:] This kind of proof obligations are used whenever
   non-empty sets are required.
 \item[non-empty sequence:] This kind of proof obligations are used whenever
-  non-empty sequences are required.
+  non-empty sequences are required (eg. taking the head of a sequence)
 \item[non-zero:] This kind of proof obligations are used whenever zero
   cannot be used (e.g.\ in division).
-\item[finite map:] If a type binding to a type that potentially have
+\item[finite map:] If a type binding to a type that potentially has
   infinitely many elements is used inside a map comprehension this
   proof obligation will be generated because all mappings in VDM are finite.
-\item[finite set:] If a type binding to a type that potentially have
+\item[finite set:] If a type binding to a type that potentially has
   infinitely many elements is used inside a set comprehension this
   proof obligation will be generated because all sets in VDM are finite.
 \item[map compatible:] Mappings in VDM represent a unique relationship
@@ -1971,15 +1918,15 @@ circumstances under which the PO category can be expected.
 \item[sequence modification:]
 \item[tuple selection:] This proof obligation category is used
   whenever a tuple selection expression is used and it must be
-  guranteed that the length of the tuple at least is as long as the
+  guranteed that the length of the tuple is at least as long as the
   selector used.
 \item[value binding:] 
 \item[subtype:] This proof obligation category is used whenever it is
-  not possible to statically detect that the given expression indeed
-  falls into the subtype required in the actual use of it.
+  not possible to statically detect that the given value
+  falls into the subtype required.
 \item[cases exhaustive:] If a cases expression does not have an
   {\bf\ttfamily others} clause it is necessary to ensure that the
-  different case alternatives are exhaustive over the type of the
+  different case alternatives catch all values of the type of the
   expression used in the case choice.
 \item[type invariant:] Proof obligations from this category are used
   to ensure that invariants for elements of a particular type are satisfied.
@@ -1991,17 +1938,15 @@ circumstances under which the PO category can be expected.
   whenever assignment is made to a part of the state all the places
   where the invariant shall be satisfied.
 \item[while loop termination:] This kind of proof obligation is a
-  reminder to ensure that a while loop is terminating. However, for
-  embedded systems that is typically not desirable and thus in those
-  cases there is no need to satisfy this proof obligation.
+  reminder to ensure that a while loop is terminating.
 \item[operation post condition:] Whenever an explicit operation has a
   post-condition there is an implicit proof obligation generated to
   remind the user that one would have to ensure that the explicit body
-  of the operation for all possible input satisfy the post-condition.
+  of the operation satisfies the post-condition for all possible input.
 \item[operation parameter patterns:] 
 \item[operation satifiability:] For all implicit operation definitions
   this proof obligation will be generated to ensure that it will be
-  possible to find a result satisfying the post-condition for all
+  possible to find an implementation satisfying the post-condition for all
   arguments of the operation input types satisfying the pre-conditions. 
 \end{description}
 
