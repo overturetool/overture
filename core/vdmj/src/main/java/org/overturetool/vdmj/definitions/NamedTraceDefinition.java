@@ -123,14 +123,14 @@ public class NamedTraceDefinition extends Definition
 		}
 	}
 
-	public TestSequence getTests(Context ctxt)
+	public TestSequence getTests(Context ctxt) throws Exception
 	{
 		return getTests(
 			ctxt, 1.0F, TraceReductionType.NONE, System.currentTimeMillis());
 	}
 
 	public TestSequence getTests(
-		Context ctxt, float subset, TraceReductionType type, long seed)
+		Context ctxt, float subset, TraceReductionType type, long seed) throws Exception
 	{
 		SequenceTraceNode traces = new SequenceTraceNode();
 

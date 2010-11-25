@@ -75,7 +75,7 @@ public class TestSequence extends Vector<CallSequence>
 		}
 	}
 
-	public void typeCheck(ClassDefinition classdef)
+	public void typeCheck(ClassDefinition classdef) throws Exception
 	{
 		Interpreter interpreter = Interpreter.getInstance();
 		Environment env = null;
@@ -95,15 +95,7 @@ public class TestSequence extends Vector<CallSequence>
 		{
     		for (Statement statement: test)
     		{
-				try
-				{
-					interpreter.typeCheck(statement, env);
-				}
-				catch (Exception e)
-				{
-					// "Better to have tried and failed than never to have
-					// tried at all" :-)
-				}
+				interpreter.typeCheck(statement, env);
     		}
 		}
 	}
