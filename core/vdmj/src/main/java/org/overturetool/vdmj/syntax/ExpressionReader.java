@@ -1460,8 +1460,8 @@ public class ExpressionReader extends SyntaxReader
 		}
 		catch (ParserException e)
 		{
-			reader.pop();
 			e.adjustDepth(reader.getTokensRead());
+			reader.pop();
 			letDefError = e;
 		}
 
@@ -1474,8 +1474,8 @@ public class ExpressionReader extends SyntaxReader
 		}
 		catch (ParserException e)
 		{
-			reader.pop();
 			e.adjustDepth(reader.getTokensRead());
+			reader.pop();
 			throw e.deeperThan(letDefError) ? e : letDefError;
 		}
 	}

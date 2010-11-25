@@ -331,8 +331,8 @@ public class StatementReader extends SyntaxReader
 		}
 		catch (ParserException e)
 		{
-			reader.pop();
 			e.adjustDepth(reader.getTokensRead());
+			reader.pop();
 			assignError = e;
 		}
 
@@ -345,8 +345,8 @@ public class StatementReader extends SyntaxReader
 		}
 		catch (ParserException e)
 		{
-			reader.pop();
 			e.adjustDepth(reader.getTokensRead());
+			reader.pop();
 			throw e.deeperThan(assignError) ? e : assignError;
 		}
 	}
@@ -593,8 +593,8 @@ public class StatementReader extends SyntaxReader
 			}
 			catch (ParserException e)
 			{
-				reader.pop();
 				e.adjustDepth(reader.getTokensRead());
+				reader.pop();
 				forIndexError = e;
 			}
 
@@ -607,8 +607,8 @@ public class StatementReader extends SyntaxReader
 			}
 			catch (ParserException e)
 			{
-				reader.pop();
 				e.adjustDepth(reader.getTokensRead());
+				reader.pop();
 				throw e.deeperThan(forIndexError) ? e : forIndexError;
 			}
 		}
@@ -835,9 +835,20 @@ public class StatementReader extends SyntaxReader
 		}
 		catch (ParserException e)
 		{
+			int count = reader.getTokensRead();
+			e.adjustDepth(count);
 			reader.pop();
-			e.adjustDepth(reader.getTokensRead());
-			return new ReturnStatement(token);
+
+			if (count > 2)
+			{
+				// We got some way, so error is probably in exp
+				throw e;
+			}
+			else
+			{
+				// Probably just a simple return
+				return new ReturnStatement(token);
+			}
 		}
 	}
 
@@ -856,8 +867,8 @@ public class StatementReader extends SyntaxReader
 		}
 		catch (ParserException e)
 		{
-			reader.pop();
 			e.adjustDepth(reader.getTokensRead());
+			reader.pop();
 			letDefError = e;
 		}
 
@@ -870,8 +881,8 @@ public class StatementReader extends SyntaxReader
 		}
 		catch (ParserException e)
 		{
-			reader.pop();
 			e.adjustDepth(reader.getTokensRead());
+			reader.pop();
 			throw e.deeperThan(letDefError) ? e : letDefError;
 		}
 	}

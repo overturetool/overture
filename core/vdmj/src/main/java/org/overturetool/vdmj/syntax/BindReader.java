@@ -64,8 +64,8 @@ public class BindReader extends SyntaxReader
 		}
 		catch (ParserException e)
 		{
-			reader.pop();
 			e.adjustDepth(reader.getTokensRead());
+			reader.pop();
 			bindError = e;
 		}
 
@@ -78,8 +78,8 @@ public class BindReader extends SyntaxReader
 		}
 		catch (ParserException e)
 		{
-			reader.pop();
 			e.adjustDepth(reader.getTokensRead());
+			reader.pop();
 			throw e.deeperThan(bindError) ? e : bindError;
 		}
 	}
@@ -97,8 +97,8 @@ public class BindReader extends SyntaxReader
 		}
 		catch (ParserException e)
 		{
-    		reader.pop();
 			e.adjustDepth(reader.getTokensRead());
+    		reader.pop();
     		setBindError = e;
 		}
 
@@ -111,8 +111,8 @@ public class BindReader extends SyntaxReader
 		}
 		catch (ParserException e)
 		{
-    		reader.pop();
 			e.adjustDepth(reader.getTokensRead());
+    		reader.pop();
 			throw e.deeperThan(setBindError) ? e : setBindError;
 		}
 	}

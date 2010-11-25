@@ -819,8 +819,8 @@ public class DefinitionReader extends SyntaxReader
     	}
     	catch (ParserException e)		// Not a function then...
     	{
-    		reader.pop();
 			e.adjustDepth(reader.getTokensRead());
+    		reader.pop();
     		funcDefError = e;
     	}
 
@@ -833,8 +833,8 @@ public class DefinitionReader extends SyntaxReader
 		}
 		catch (ParserException e)
 		{
-    		reader.pop();
 			e.adjustDepth(reader.getTokensRead());
+    		reader.pop();
 			throw e.deeperThan(funcDefError) ? e : funcDefError;
 		}
 	}
@@ -1185,8 +1185,8 @@ public class DefinitionReader extends SyntaxReader
     	}
     	catch (ParserException e)
     	{
-    		reader.pop();
 			e.adjustDepth(reader.getTokensRead());
+    		reader.pop();
     		equalsDefError = e;
     	}
 
@@ -1202,8 +1202,8 @@ public class DefinitionReader extends SyntaxReader
 		}
 		catch (ParserException e)
 		{
-    		reader.pop();
 			e.adjustDepth(reader.getTokensRead());
+    		reader.pop();
 			equalsDefError = e.deeperThan(equalsDefError) ? e : equalsDefError;
 		}
 
@@ -1221,8 +1221,8 @@ public class DefinitionReader extends SyntaxReader
 		}
 		catch (ParserException e)
 		{
-    		reader.pop();
 			e.adjustDepth(reader.getTokensRead());
+    		reader.pop();
 			throw e.deeperThan(equalsDefError) ? e : equalsDefError;
 		}
  	}
@@ -1482,8 +1482,8 @@ public class DefinitionReader extends SyntaxReader
 		}
 		catch (ParserException e)
 		{
-			reader.pop();
 			e.adjustDepth(reader.getTokensRead());
+			reader.pop();
 			letDefError = e;
 		}
 
@@ -1496,8 +1496,8 @@ public class DefinitionReader extends SyntaxReader
 		}
 		catch (ParserException e)
 		{
-			reader.pop();
 			e.adjustDepth(reader.getTokensRead());
+			reader.pop();
 			throw e.deeperThan(letDefError) ? e : letDefError;
 		}
 	}
