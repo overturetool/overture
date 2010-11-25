@@ -241,6 +241,7 @@ public class TraceInterpreter
 		} else
 			interpreter = new ModuleInterpreter(moduleList);
 
+		interpreter.setDefaultName(moduleName);
 		interpreter.init(null);
 		Module moduledef = interpreter.findModule(moduleName);
 
