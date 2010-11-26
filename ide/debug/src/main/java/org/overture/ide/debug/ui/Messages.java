@@ -9,7 +9,7 @@ public class Messages extends NLS {
 	 * @since 2.0
 	 */
 	public static String DebugConsoleManager_terminated;
-	public static String DLTKDebugUIPlugin_internalError;
+	public static String VDMDebugUIPlugin_internalError;
 	public static String VdmDebuggerConsoleToFileHyperlink_error;
 	public static String VdmDebugModelPresentation_breakpointText;
 	public static String VdmDebugModelPresentation_breakpointNoResourceText;
