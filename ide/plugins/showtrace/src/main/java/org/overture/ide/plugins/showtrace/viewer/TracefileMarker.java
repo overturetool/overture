@@ -55,7 +55,7 @@ public class TracefileMarker
 				theMarker.setAttribute(IMarker.MESSAGE, var_1_1);
 				if (var_2_2 != null)
 				{
-					theMarker.setAttribute(IMarker.LINE_NUMBER, new Integer(var_2_2.intValue()));
+					theMarker.setAttribute(IMarker.LINE_NUMBER, new Integer(var_2_2.intValue()+1));
 				}
 				theMarker.setAttribute(IMarker.SEVERITY, new Integer(2));
 				theMarker.setAttribute(IMarker.SOURCE_ID, TracefileViewerPlugin.PLUGIN_ID);
@@ -68,7 +68,7 @@ public class TracefileMarker
 				{
 					lineNumber = var_2_2;
 				}
-				FileUtility.addMarker(file, var_1_1, lineNumber, IMarker.SEVERITY_ERROR);
+				FileUtility.addMarker(file, var_1_1, lineNumber, IMarker.SEVERITY_ERROR,TracefileViewerPlugin.PLUGIN_ID);
 			}
 
 		} catch (CoreException ce)

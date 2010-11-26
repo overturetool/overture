@@ -263,7 +263,7 @@ public class tdCPU extends tdResource
         obj_7 = getTraceData();
         obj_6 = obj_7.getObject(pobjid);
         var2_5 = obj_6.deployedAt(ptime);
-        rexpr_3 = new Boolean(id.intValue() == var2_5.intValue());
+        rexpr_3 = new Boolean(id.longValue() == var2_5.longValue());
         return rexpr_3;
     }
 

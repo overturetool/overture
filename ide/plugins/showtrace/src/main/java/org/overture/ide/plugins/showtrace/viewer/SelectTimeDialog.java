@@ -72,7 +72,7 @@ public class SelectTimeDialog extends TitleAreaDialog
                 if(idx >= 0)
                 {
                     Long theValue = (Long)theTimes.get(idx);
-                    selectedTime = theValue.intValue();
+                    selectedTime = theValue.longValue();
                 } else
                 {
                     selectedTime = currentTime;

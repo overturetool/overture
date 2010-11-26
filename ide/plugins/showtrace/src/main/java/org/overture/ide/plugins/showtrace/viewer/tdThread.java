@@ -82,7 +82,7 @@ public class tdThread extends tdHistory
     public Boolean hasCurrentObject()
         throws CGException
     {
-        return new Boolean((new Long(curobj.size())).intValue() > (new Long(0L)).intValue());
+        return new Boolean((new Long(curobj.size())).longValue() > (new Long(0L)).longValue());
     }
 
     public tdObject getCurrentObject()

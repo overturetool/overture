@@ -96,7 +96,7 @@ public class tdObject extends tdResource
             }
             if(!succ_6)
                 UTIL.RunTime("Run-Time Error:Pattern match did not succeed in value definition");
-            if((new Boolean(ptime.intValue() >= etime.intValue())).booleanValue())
+            if((new Boolean(ptime.longValue() >= etime.longValue())).booleanValue())
                 return cpunm;
         }
 

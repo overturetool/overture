@@ -53,10 +53,10 @@ public abstract class tdHistory
             {
                 Long elem_7 = UTIL.NumberToLong(enm_32.next());
                 pi = elem_7;
-                if((new Boolean(pi.intValue() < pval.intValue())).booleanValue())
+                if((new Boolean(pi.longValue() < pval.longValue())).booleanValue())
                     res.add(pi);
                 else
-                if((new Boolean(pi.intValue() == pval.intValue())).booleanValue())
+                if((new Boolean(pi.longValue() == pval.longValue())).booleanValue())
                 {
                     res.add(pi);
                     found = (Boolean)UTIL.clone(new Boolean(true));

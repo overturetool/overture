@@ -13,8 +13,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.custom.SashForm;
@@ -44,6 +45,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 
 	private File selectedFile;
 	private Display display;
+	private static final ConsoleWriter cw = new ConsoleWriter("RT Log viewer");
 
 	@Override
 	public void doSave(IProgressMonitor monitor)
@@ -121,18 +123,24 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		form.setWeights(new int[] { 85, 15 });
 		theArch = new GenericTabItem("Architecture overview", folder, null);
 		theOverview = new GenericTabItem("Execution overview", folder, null);
+		cw.clear();
 		try
 		{
-			
+
 			IFile file = ((FileEditorInput) getEditorInput()).getFile();
-			
+
 			FileUtility.deleteMarker(file, null, TracefileViewerPlugin.PLUGIN_ID);
-			
+
 			theMarkers = new TracefileMarker(file);
 
 			if (FileUtility.getContent(file).size() == 0)
 			{
-				FileUtility.addMarker(file, "File is empty", 0, 0, 0, 0, IMarker.SEVERITY_ERROR, TracefileViewerPlugin.PLUGIN_ID);
+				//FileUtility.addMarker(file, "File is empty", 0, 0, 0, 0, IMarker.SEVERITY_ERROR, TracefileViewerPlugin.PLUGIN_ID);
+				 ErrorDialog.openError(
+	                     getSite().getShell(),
+	                     "Editor open",
+	                     "File is empty",
+	                     Status.CANCEL_STATUS);
 				return;
 			}
 		} catch (CGException cge)
@@ -430,7 +438,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 				} catch (VDMRunTimeException e)
 				{
 					e.printStackTrace();
-					//showMessage(e);
+					// showMessage(e);
 					IFile file = ((FileEditorInput) getEditorInput()).getFile();
 					FileUtility.addMarker(file, e.getMessage(), 0, 0, 0, 0, IMarker.SEVERITY_ERROR, org.overture.ide.plugins.showtrace.viewer.TracefileViewerPlugin.PLUGIN_ID);
 
@@ -518,12 +526,17 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 				theDetail = new GenericTabItem(theCpu.getName(), folder, theCpu);
 				theVisitor.drawCpu(theDetail, new Long(currentTime));
 			}
+		} catch (VDMRunTimeException e)
+		{
+			e.printStackTrace();
+			showMessage(e);
 
 		} catch (CGException cge)
 		{
 			cge.printStackTrace();
 			showMessage(cge);
 		}
+
 	}
 
 	/*
@@ -588,7 +601,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 
 			public void run()
 			{
-				ConsoleWriter cw = new ConsoleWriter();
+				
 				cw.println(message);
 				cw.show();
 				// MessageDialog.openInformation(getSite().getShell(),
@@ -604,9 +617,9 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 
 			public void run()
 			{
-				//MessageDialog.openInformation(getSite().getShell(), "Tracefile viewer", cge.getMessage());
+				// MessageDialog.openInformation(getSite().getShell(), "Tracefile viewer", cge.getMessage());
 
-				ConsoleWriter cw = new ConsoleWriter();
+				
 				cw.println(cge.getMessage());
 				ConsoleWriter.getExceptionStackTraceAsString(cge);
 				cw.show();

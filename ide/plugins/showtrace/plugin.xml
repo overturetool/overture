@@ -17,6 +17,7 @@
          point="org.eclipse.ui.editors">
       <editor
             class="org.overture.ide.plugins.showtrace.viewer.VdmRtLogEditor"
+            contributorClass="org.overture.ide.plugins.showtrace.viewer.VdmRtEditorActionBarContributor"
             default="false"
             icon="icons/overture.gif"
             id="org.overture.ide.plugins.showtrace.editor"

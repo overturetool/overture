@@ -95,21 +95,23 @@ public class TracefileChecker extends OmlVisitor
     private String nat2str(Long num)
         throws CGException
     {
-        String varRes_2 = null;
-        if((new Boolean(num.intValue() < (new Long(10L)).intValue())).booleanValue())
-        {
-            Character e_seq_15 = null;
-            if(1 <= (new Long(num.intValue() + (new Long(1L)).intValue())).intValue() && (new Long(num.intValue() + (new Long(1L)).intValue())).intValue() <= (new String("0123456789")).length())
-                e_seq_15 = new Character((new String("0123456789")).charAt((new Long(num.intValue() + (new Long(1L)).intValue())).intValue() - 1));
-            else
-                UTIL.RunTime("Run-Time Error:Illegal index");
-            varRes_2 = new String();
-            varRes_2 = (new StringBuilder(String.valueOf(varRes_2))).append(e_seq_15).toString();
-        } else
-        {
-            varRes_2 = nat2str(new Long(num.intValue() / (new Long(10L)).intValue())).concat(nat2str(new Long((int)(num.doubleValue() - (new Long(10L)).doubleValue() * Math.floor(num.doubleValue() / (new Long(10L)).doubleValue())))));
-        }
-        return varRes_2;
+    	//TODO rewritten in Java
+//        String varRes_2 = null;
+//        if((new Boolean(num.intValue() < (new Long(10L)))).booleanValue())
+//        {
+//            Character e_seq_15 = null;
+//            if(1 <= (new Long(num.intValue() + (new Long(1L)))) && (new Long(num.intValue() + (new Long(1L)))) <= (new String("0123456789")).length())
+//                e_seq_15 = new Character((new String("0123456789")).charAt((new Long(num.intValue() + (new Long(1L)))) - 1));
+//            else
+//                UTIL.RunTime("Run-Time Error:Illegal index");
+//            varRes_2 = new String();
+//            varRes_2 = (new StringBuilder(String.valueOf(varRes_2))).append(e_seq_15).toString();
+//        } else
+//        {
+//            varRes_2 = nat2str(new Long(num.intValue() / (new Long(10L)))).concat(nat2str(new Long((int)(num.doubleValue() - (new Long(10L)).doubleValue() * Math.floor(num.doubleValue() / (new Long(10L)).doubleValue())))));
+//        }
+//        return varRes_2;
+    	return num.toString();
     }
 
     public TracefileChecker(TracefileMarker tfmark)
@@ -140,7 +142,7 @@ public class TracefileChecker extends OmlVisitor
         Boolean rexpr_1 = null;
         Long var1_2 = null;
         var1_2 = errors.errorCount();
-        rexpr_1 = new Boolean(var1_2.intValue() > (new Long(0L)).intValue());
+        rexpr_1 = new Boolean(var1_2 > (new Long(0L)));
         return rexpr_1;
     }
 
@@ -150,7 +152,7 @@ public class TracefileChecker extends OmlVisitor
         Boolean rexpr_1 = null;
         Long var1_2 = null;
         var1_2 = errors.warningCount();
-        rexpr_1 = new Boolean(var1_2.intValue() > (new Long(0L)).intValue());
+        rexpr_1 = new Boolean(var1_2 > (new Long(0L)));
         return rexpr_1;
     }
 
@@ -167,7 +169,7 @@ public class TracefileChecker extends OmlVisitor
             event = elem_5;
             if((new Boolean(!severe.booleanValue())).booleanValue())
                 visitTraceEvent(event);
-            line = UTIL.NumberToLong(UTIL.clone(new Long(line.intValue() + (new Long(1L)).intValue())));
+            line = UTIL.NumberToLong(UTIL.clone(new Long(line + (new Long(1L)))));
         }
 
         if((new Boolean(!hasErrors().booleanValue())).booleanValue())
@@ -180,7 +182,7 @@ public class TracefileChecker extends OmlVisitor
     private Boolean checkTimeOnCpu(Long cpunm, Long ctime)
         throws CGException
     {
-        if((new Boolean(UTIL.NumberToLong(cputime.get(cpunm)).intValue() <= ctime.intValue())).booleanValue())
+        if((new Boolean(UTIL.NumberToLong(cputime.get(cpunm)).longValue() <= ctime.longValue())).booleanValue())
         {
             cputime.put(cpunm, ctime);
             return new Boolean(true);
@@ -207,7 +209,7 @@ public class TracefileChecker extends OmlVisitor
     private Boolean checkTimeOnBus(Long busid, Long ctime)
         throws CGException
     {
-        if((new Boolean(UTIL.NumberToLong(bustime.get(busid)).intValue() <= ctime.intValue())).booleanValue())
+        if((new Boolean(UTIL.NumberToLong(bustime.get(busid)).longValue() <= ctime.longValue())).booleanValue())
         {
             bustime.put(busid, ctime);
             return new Boolean(true);
@@ -302,7 +304,7 @@ public class TracefileChecker extends OmlVisitor
             addError(tmpArg_v_35);
             return new Boolean(false);
         }
-        if((new Boolean(UTIL.NumberToLong(curthr.get(cpunm)).intValue() == thrid.intValue())).booleanValue())
+        if((new Boolean(UTIL.NumberToLong(curthr.get(cpunm)).longValue() == thrid.longValue())).booleanValue())
         {
             return new Boolean(true);
         } else
@@ -360,7 +362,7 @@ public class TracefileChecker extends OmlVisitor
             UTIL.RunTime("Run-Time Error:Precondition failure in isNotCurrentThreadOnCpu");
         if((new Boolean(UTIL.equals(UTIL.NumberToLong(curthr.get(cpunm)), null))).booleanValue())
             return new Boolean(true);
-        if((new Boolean(UTIL.NumberToLong(curthr.get(cpunm)).intValue() == thrid.intValue())).booleanValue())
+        if((new Boolean(UTIL.NumberToLong(curthr.get(cpunm)).longValue() == thrid.longValue())).booleanValue())
         {
             String tmpArg_v_15 = null;
             String var1_16 = null;
@@ -599,7 +601,7 @@ public class TracefileChecker extends OmlVisitor
     {
         if(!pre_hasThreadOnCpu(thrid, cpunm).booleanValue())
             UTIL.RunTime("Run-Time Error:Precondition failure in hasThreadOnCpu");
-        if((new Boolean(UTIL.NumberToLong(thrcpu.get(thrid)).intValue() == cpunm.intValue())).booleanValue())
+        if((new Boolean(UTIL.NumberToLong(thrcpu.get(thrid)).longValue() == cpunm.longValue())).booleanValue())
         {
             return new Boolean(true);
         } else
@@ -711,7 +713,7 @@ public class TracefileChecker extends OmlVisitor
         {
             String elem_2 = UTIL.ConvertToString(enm_31.next());
             opname = elem_2;
-            if((new Boolean(hasRequest(opname).intValue() > hasActivate(opname).intValue())).booleanValue())
+            if((new Boolean(hasRequest(opname) > hasActivate(opname))).booleanValue())
             {
                 String tmpArg_v_25 = null;
                 String var1_26 = null;
@@ -719,7 +721,7 @@ public class TracefileChecker extends OmlVisitor
                 tmpArg_v_25 = var1_26.concat(new String("\" is still pending"));
                 addWarning(tmpArg_v_25, null);
             } else
-            if((new Boolean(hasActivate(opname).intValue() > hasCompleted(opname).intValue())).booleanValue())
+            if((new Boolean(hasActivate(opname) > hasCompleted(opname))).booleanValue())
             {
                 String tmpArg_v_18 = null;
                 String var1_19 = null;
@@ -762,7 +764,7 @@ public class TracefileChecker extends OmlVisitor
         cond_21 = new Boolean(opreq.containsKey(opname));
         if(cond_21.booleanValue())
         {
-            Long rcnt = new Long(UTIL.NumberToLong(opreq.get(opname)).intValue() + (new Long(1L)).intValue());
+            Long rcnt = new Long(UTIL.NumberToLong(opreq.get(opname)).longValue() + (new Long(1L)).longValue());
             opreq.put(opname, rcnt);
         } else
         {
@@ -828,7 +830,7 @@ public class TracefileChecker extends OmlVisitor
             if((new Boolean(!hasObjectOnCpu(objref, cpunm).booleanValue())).booleanValue())
                 return;
         }
-        if((new Boolean(hasActivate(opname).intValue() >= hasRequest(opname).intValue())).booleanValue())
+        if((new Boolean(hasActivate(opname) >= hasRequest(opname))).booleanValue())
         {
             String tmpArg_v_31 = null;
             String var1_32 = null;
@@ -841,7 +843,7 @@ public class TracefileChecker extends OmlVisitor
         cond_36 = new Boolean(opact.containsKey(opname));
         if(cond_36.booleanValue())
         {
-            Long ract = new Long(UTIL.NumberToLong(opact.get(opname)).intValue() + (new Long(1L)).intValue());
+            Long ract = new Long(UTIL.NumberToLong(opact.get(opname)).longValue() + (new Long(1L)).longValue());
             opact.put(opname, ract);
         } else
         {
@@ -911,7 +913,7 @@ public class TracefileChecker extends OmlVisitor
             if((new Boolean(!hasObjectOnCpu(objref, cpunm).booleanValue())).booleanValue())
                 return;
         }
-        if((new Boolean(hasCompleted(opname).intValue() >= hasActivate(opname).intValue())).booleanValue())
+        if((new Boolean(hasCompleted(opname) >= hasActivate(opname))).booleanValue())
         {
             String tmpArg_v_31 = null;
             String var1_32 = null;
@@ -972,7 +974,7 @@ public class TracefileChecker extends OmlVisitor
         {
             Long elem_2 = UTIL.NumberToLong(enm_33.next());
             msg = elem_2;
-            if((new Boolean(UTIL.NumberToLong(msgs.get(msg)).intValue() == (new Long(1L)).intValue())).booleanValue())
+            if((new Boolean(UTIL.NumberToLong(msgs.get(msg)).longValue() == (new Long(1L)).longValue())).booleanValue())
             {
                 String tmpArg_v_26 = null;
                 String var1_27 = null;
@@ -980,7 +982,7 @@ public class TracefileChecker extends OmlVisitor
                 tmpArg_v_26 = var1_27.concat(new String(") is still pending"));
                 addWarning(tmpArg_v_26, null);
             } else
-            if((new Boolean(UTIL.NumberToLong(msgs.get(msg)).intValue() == (new Long(2L)).intValue())).booleanValue())
+            if((new Boolean(UTIL.NumberToLong(msgs.get(msg)).longValue() == (new Long(2L)).longValue())).booleanValue())
             {
                 String tmpArg_v_18 = null;
                 String var1_19 = null;
@@ -1162,7 +1164,7 @@ public class TracefileChecker extends OmlVisitor
         cond_4 = new Boolean(msgs.containsKey(msgid));
         if(cond_4.booleanValue())
         {
-            if((new Boolean(UTIL.NumberToLong(msgs.get(msgid)).intValue() == (new Long(1L)).intValue())).booleanValue())
+            if((new Boolean(UTIL.NumberToLong(msgs.get(msgid)).longValue() == (new Long(1L)).longValue())).booleanValue())
             {
                 msgs.put(msgid, new Long(2L));
             } else
@@ -1193,7 +1195,7 @@ public class TracefileChecker extends OmlVisitor
         cond_4 = new Boolean(msgs.containsKey(msgid));
         if(cond_4.booleanValue())
         {
-            if((new Boolean(UTIL.NumberToLong(msgs.get(msgid)).intValue() == (new Long(2L)).intValue())).booleanValue())
+            if((new Boolean(UTIL.NumberToLong(msgs.get(msgid)).longValue() == (new Long(2L)).longValue())).booleanValue())
             {
                 msgs.put(msgid, new Long(3L));
             } else
@@ -1457,6 +1459,7 @@ public class TracefileChecker extends OmlVisitor
 	public void visitDeployObj(IOmlDeployObj pido)
         throws CGException
     {
+    	//System.out.println("visitDeployObj: DeployObj -> objref: "+pido.getObjref()+" clnm: "+pido.getClnm()+" cpunm: "+pido.getCpunm()+" time: "+pido.getObstime());
         Long objref = null;
         objref = pido.getObjref();
         Long cpunm = null;
@@ -1467,7 +1470,7 @@ public class TracefileChecker extends OmlVisitor
         cond_8 = new Boolean(objs.containsKey(objref));
         if(cond_8.booleanValue())
         {
-            if((new Boolean(UTIL.NumberToLong(objs.get(objref)).intValue() == (new Long(0L)).intValue())).booleanValue())
+            if((new Boolean(UTIL.NumberToLong(objs.get(objref)).longValue() == (new Long(0L)).longValue())).booleanValue())
             {
                 objs.put(objref, cpunm);
             } else
@@ -1532,7 +1535,7 @@ public class TracefileChecker extends OmlVisitor
     {
         if(!pre_hasObjectOnCpu(pobj, pcpu).booleanValue())
             UTIL.RunTime("Run-Time Error:Precondition failure in hasObjectOnCpu");
-        if((new Boolean(UTIL.NumberToLong(objs.get(pobj)).intValue() == pcpu.intValue())).booleanValue())
+        if((new Boolean(UTIL.NumberToLong(objs.get(pobj)).longValue() == pcpu.longValue())).booleanValue())
         {
             return new Boolean(true);
         } else

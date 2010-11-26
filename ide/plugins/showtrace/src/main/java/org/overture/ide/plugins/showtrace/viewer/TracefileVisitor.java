@@ -139,21 +139,21 @@ public class TracefileVisitor extends OmlVisitor
     private String nat2str(Long num)
         throws CGException
     {
-        String varRes_2 = null;
-        if((new Boolean(num.intValue() < (new Long(10L)).intValue())).booleanValue())
-        {
-            Character e_seq_15 = null;
-            if(1 <= (new Long(num.intValue() + (new Long(1L)).intValue())).intValue() && (new Long(num.intValue() + (new Long(1L)).intValue())).intValue() <= (new String("0123456789")).length())
-                e_seq_15 = new Character((new String("0123456789")).charAt((new Long(num.intValue() + (new Long(1L)).intValue())).intValue() - 1));
-            else
-                UTIL.RunTime("Run-Time Error:Illegal index");
-            varRes_2 = new String();
-            varRes_2 = (new StringBuilder(String.valueOf(varRes_2))).append(e_seq_15).toString();
-        } else
-        {
-            varRes_2 = nat2str(new Long(num.intValue() / (new Long(10L)).intValue())).concat(nat2str(new Long((int)(num.doubleValue() - (new Long(10L)).doubleValue() * Math.floor(num.doubleValue() / (new Long(10L)).doubleValue())))));
-        }
-        return varRes_2;
+//        String varRes_2 = null;
+//        if((new Boolean(num.longValue() < (new Long(10L)).longValue())).booleanValue())
+//        {
+//            Character e_seq_15 = null;
+//            if(1 <= (new Long(num.longValue() + (new Long(1L)).longValue())).longValue() && (new Long(num.longValue() + (new Long(1L)).longValue())).longValue() <= (new String("0123456789")).length())
+//                e_seq_15 = new Character((new String("0123456789")).charAt((new Long(num.longValue() + (new Long(1L)).longValue())).longValue() - 1));
+//            else
+//                UTIL.RunTime("Run-Time Error:Illegal index");
+//            varRes_2 = new String();
+//            varRes_2 = (new StringBuilder(String.valueOf(varRes_2))).append(e_seq_15).toString();
+//        } else
+//        {
+//            varRes_2 = nat2str(new Long(num.longValue() / (new Long(10L)).longValue())).concat(nat2str(new Long((int)(num.doubleValue() - (new Long(10L)).doubleValue() * Math.floor(num.doubleValue() / (new Long(10L)).doubleValue())))));
+//        }
+        return num.toString();
     }
 
     public Vector getAllTimes()
@@ -206,8 +206,8 @@ public class TracefileVisitor extends OmlVisitor
             HashSet unArg_18 = new HashSet();
             unArg_18 = cpu.connects();
             var2_17 = new Long(unArg_18.size());
-            var2_15 = new Long((new Long(9L)).intValue() * var2_17.intValue());
-            width = new Long((new Long((new Long(2L)).intValue() * CPU_uHALFWIDTH.intValue())).intValue() + var2_15.intValue());
+            var2_15 = new Long((new Long(9L)).longValue() * var2_17.longValue());
+            width = new Long((new Long((new Long(2L)).longValue() * CPU_uHALFWIDTH.longValue())).longValue() + var2_15.longValue());
             NormalLabel nlb = null;
             String arg_19 = null;
             arg_19 = cpu.getName();
@@ -229,7 +229,7 @@ public class TracefileVisitor extends OmlVisitor
             nrr.setSize(width, CPU_uHEIGHT);
             pgti.addFigure(nrr);
             cpu.setX(curx);
-            curx = UTIL.NumberToLong(UTIL.clone(new Long((new Long(curx.intValue() + width.intValue())).intValue() + CPU_uHINTERVAL.intValue())));
+            curx = UTIL.NumberToLong(UTIL.clone(new Long((new Long(curx.longValue() + width.longValue())).longValue() + CPU_uHINTERVAL.longValue())));
         }
 
         Vector sq_45 = null;
@@ -255,12 +255,12 @@ public class TracefileVisitor extends OmlVisitor
             Dimension tmpRec_62 = null;
             tmpRec_62 = nlb.getSize();
             var2_61 = new Long(tmpRec_62.width);
-            arg_56 = new Long((new Long(BUS_uXPOS.intValue() + (new Long(100L)).intValue())).intValue() - var2_61.intValue());
+            arg_56 = new Long((new Long(BUS_uXPOS.longValue() + (new Long(100L)).longValue())).longValue() - var2_61.longValue());
             np = new Point(arg_56.longValue(), cury.longValue());
             nlb.setLocation(np);
             pgti.addFigure(nlb);
             bus.setY(cury);
-            cury = UTIL.NumberToLong(UTIL.clone(new Long(cury.intValue() + BUS_uVINTERVAL.intValue())));
+            cury = UTIL.NumberToLong(UTIL.clone(new Long(cury.longValue() + BUS_uVINTERVAL.longValue())));
         }
 
         drawArchDetail(pgti);
@@ -271,7 +271,7 @@ public class TracefileVisitor extends OmlVisitor
     {
         if(!pre_drawOverview(pgti, starttime).booleanValue())
             UTIL.RunTime("Run-Time Error:Precondition failure in drawOverview");
-        Long cury = new Long(RESOURCE_uVINTERVAL.intValue() / (new Long(2L)).intValue());
+        Long cury = new Long(RESOURCE_uVINTERVAL.longValue() / (new Long(2L)).longValue());
         data.reset();
         resetLastDrawn();
         ov_uxpos = UTIL.NumberToLong(UTIL.clone(CPU_uXPOS));
@@ -301,13 +301,13 @@ public class TracefileVisitor extends OmlVisitor
             Dimension tmpRec_28 = null;
             tmpRec_28 = nlb.getSize();
             var2_27 = new Long(tmpRec_28.width);
-            arg_22 = new Long((new Long(BUS_uXPOS.intValue() + (new Long(100L)).intValue())).intValue() - var2_27.intValue());
+            arg_22 = new Long((new Long(BUS_uXPOS.longValue() + (new Long(100L)).longValue())).longValue() - var2_27.longValue());
             np = new Point(arg_22.longValue(), cury.longValue());
             nlb.setLocation(np);
             pgti.addFigure(nlb);
             cpu.setX(CPU_uXPOS);
-            cpu.setY(new Long(cury.intValue() + (new Long(10L)).intValue()));
-            cury = UTIL.NumberToLong(UTIL.clone(new Long(cury.intValue() + RESOURCE_uVINTERVAL.intValue())));
+            cpu.setY(new Long(cury.longValue() + (new Long(10L)).longValue()));
+            cury = UTIL.NumberToLong(UTIL.clone(new Long(cury.longValue() + RESOURCE_uVINTERVAL.longValue())));
         }
 
         Vector sq_44 = null;
@@ -331,13 +331,13 @@ public class TracefileVisitor extends OmlVisitor
             Dimension tmpRec_59 = null;
             tmpRec_59 = nlb.getSize();
             var2_58 = new Long(tmpRec_59.width);
-            arg_53 = new Long((new Long(BUS_uXPOS.intValue() + (new Long(100L)).intValue())).intValue() - var2_58.intValue());
+            arg_53 = new Long((new Long(BUS_uXPOS.longValue() + (new Long(100L)).longValue())).longValue() - var2_58.longValue());
             np = new Point(arg_53.longValue(), cury.longValue());
             nlb.setLocation(np);
             pgti.addFigure(nlb);
             bus.setX(CPU_uXPOS);
-            bus.setY(new Long(cury.intValue() + (new Long(10L)).intValue()));
-            cury = UTIL.NumberToLong(UTIL.clone(new Long(cury.intValue() + RESOURCE_uVINTERVAL.intValue())));
+            bus.setY(new Long(cury.longValue() + (new Long(10L)).longValue()));
+            cury = UTIL.NumberToLong(UTIL.clone(new Long(cury.longValue() + RESOURCE_uVINTERVAL.longValue())));
         }
 
         ov_uypos = UTIL.NumberToLong(UTIL.clone(cury));
@@ -368,7 +368,7 @@ public class TracefileVisitor extends OmlVisitor
         ov_ustarttime = UTIL.NumberToLong(UTIL.clone(starttime));
         ov_ucurrenttime = UTIL.NumberToLong(UTIL.clone(new Long(0L)));
         ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(0L)));
-        ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long((new Long(CPU_uYPOS.intValue() + CPU_uHEIGHT.intValue())).intValue() + ELEMENT_uSIZE.intValue())));
+        ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long((new Long(CPU_uYPOS.longValue() + CPU_uHEIGHT.longValue())).longValue() + ELEMENT_uSIZE.longValue())));
         ov_utimepos = (Vector)UTIL.ConvertToList(UTIL.clone(new Vector()));
         Vector sq_13 = null;
         sq_13 = data.getOrderedBuses();
@@ -385,7 +385,7 @@ public class TracefileVisitor extends OmlVisitor
             {
                 tdBUS bus = null;
                 bus = data.getBUS(busid);
-                Long width = new Long((new Long((new Long(2L)).intValue() * CPU_uHALFWIDTH.intValue())).intValue() + (new Long(23L)).intValue());
+                Long width = new Long((new Long((new Long(2L)).longValue() * CPU_uHALFWIDTH.longValue())).longValue() + (new Long(23L)).longValue());
                 NormalLabel nlb = null;
                 String arg_29 = null;
                 arg_29 = bus.getName();
@@ -406,9 +406,9 @@ public class TracefileVisitor extends OmlVisitor
                 nrr.setLocation(np);
                 nrr.setSize(width, CPU_uHEIGHT);
                 pgti.addFigure(nrr);
-                bus.setX(new Long((new Long(curx.intValue() + CPU_uHALFWIDTH.intValue())).intValue() + (new Long(12L)).intValue()));
+                bus.setX(new Long((new Long(curx.longValue() + CPU_uHALFWIDTH.longValue())).longValue() + (new Long(12L)).longValue()));
                 bus.setY(ov_uypos);
-                curx = UTIL.NumberToLong(UTIL.clone(new Long((new Long(curx.intValue() + width.intValue())).intValue() + CPU_uHINTERVAL.intValue())));
+                curx = UTIL.NumberToLong(UTIL.clone(new Long((new Long(curx.longValue() + width.longValue())).longValue() + CPU_uHINTERVAL.longValue())));
             }
         }
 
@@ -436,7 +436,7 @@ public class TracefileVisitor extends OmlVisitor
         Vector cpus = null;
         cpus = data.getOrderedCpus();
         Long lastcpu = null;
-        if(1 <= (new Long(cpus.size())).intValue() && (new Long(cpus.size())).intValue() <= cpus.size())
+        if(1 <= (new Long(cpus.size())).longValue() && (new Long(cpus.size())).longValue() <= cpus.size())
             lastcpu = UTIL.NumberToLong(cpus.get((new Long(cpus.size())).intValue() - 1));
         else
             UTIL.RunTime("Run-Time Error:Illegal index");
@@ -446,22 +446,22 @@ public class TracefileVisitor extends OmlVisitor
         tdCPU obj_13 = null;
         obj_13 = data.getCPU(new Long(0L));
         var1_12 = obj_13.getX();
-        var1_11 = new Long(var1_12.intValue() + CPU_uHALFWIDTH.intValue());
-        x1 = new Long(var1_11.intValue() + (new Long(1L)).intValue());
+        var1_11 = new Long(var1_12.longValue() + CPU_uHALFWIDTH.longValue());
+        x1 = new Long(var1_11.longValue() + (new Long(1L)).longValue());
         Long x2 = null;
         Long var1_18 = null;
         Long var1_19 = null;
         tdCPU obj_20 = null;
         obj_20 = data.getCPU(lastcpu);
         var1_19 = obj_20.getX();
-        var1_18 = new Long(var1_19.intValue() + CPU_uHALFWIDTH.intValue());
-        x2 = new Long(var1_18.intValue() + (new Long(9L)).intValue());
+        var1_18 = new Long(var1_19.longValue() + CPU_uHALFWIDTH.longValue());
+        x2 = new Long(var1_18.longValue() + (new Long(9L)).longValue());
         Long tmpVal_24 = null;
         Long var1_25 = null;
         tdBUS obj_26 = null;
         obj_26 = data.getBUS(new Long(0L));
         var1_25 = obj_26.getY();
-        tmpVal_24 = new Long(var1_25.intValue() + (new Long(1L)).intValue());
+        tmpVal_24 = new Long(var1_25.longValue() + (new Long(1L)).longValue());
         Long y = null;
         y = tmpVal_24;
         Line line = new Line(x1, y, x2, y);
@@ -485,8 +485,8 @@ public class TracefileVisitor extends OmlVisitor
             tdCPU obj_50 = null;
             obj_50 = data.getCPU(cpuid);
             var1_49 = obj_50.getX();
-            var1_48 = new Long(var1_49.intValue() + CPU_uHALFWIDTH.intValue());
-            xbase = new Long(var1_48.intValue() + (new Long(5L)).intValue());
+            var1_48 = new Long(var1_49.longValue() + CPU_uHALFWIDTH.longValue());
+            xbase = new Long(var1_48.longValue() + (new Long(5L)).longValue());
             HashSet iset_54 = new HashSet();
             iset_54 = cpu.connects();
             Long busid = null;
@@ -496,8 +496,8 @@ public class TracefileVisitor extends OmlVisitor
                 busid = elem_55;
                 tdBUS bus = null;
                 bus = data.getBUS(busid);
-                Long nxp = new Long(xbase.intValue() + (new Long((new Long(9L)).intValue() * busid.intValue())).intValue());
-                Long nyp1 = new Long(CPU_uYPOS.intValue() + CPU_uHEIGHT.intValue());
+                Long nxp = new Long(xbase.longValue() + (new Long((new Long(9L)).longValue() * busid.longValue())).longValue());
+                Long nyp1 = new Long(CPU_uYPOS.longValue() + CPU_uHEIGHT.longValue());
                 Long nyp2 = null;
                 tdBUS obj_71 = null;
                 obj_71 = data.getBUS(busid);
@@ -517,7 +517,7 @@ public class TracefileVisitor extends OmlVisitor
                 cond_84 = new Boolean(max.containsKey(busid));
                 if(cond_84.booleanValue())
                 {
-                    if((new Boolean(nxp.intValue() > UTIL.NumberToLong(max.get(busid)).intValue())).booleanValue())
+                    if((new Boolean(nxp.longValue() > UTIL.NumberToLong(max.get(busid)).longValue())).booleanValue())
                         max.put(busid, nxp);
                 } else
                 {
@@ -545,7 +545,7 @@ public class TracefileVisitor extends OmlVisitor
                 cond_106 = new Boolean(min.containsKey(busid));
                 if(cond_106.booleanValue())
                 {
-                    if((new Boolean(nxp.intValue() < UTIL.NumberToLong(min.get(busid)).intValue())).booleanValue())
+                    if((new Boolean(nxp.longValue() < UTIL.NumberToLong(min.get(busid)).longValue())).booleanValue())
                         min.put(busid, nxp);
                 } else
                 {
@@ -587,14 +587,14 @@ public class TracefileVisitor extends OmlVisitor
         {
             Long elem_131 = UTIL.NumberToLong(enm_164.next());
             busid = elem_131;
-             x1 = new Long(UTIL.NumberToLong(min.get(busid)).intValue() - (new Long(4L)).intValue());
-             x2 = new Long(UTIL.NumberToLong(max.get(busid)).intValue() + (new Long(4L)).intValue());
+             x1 = new Long(UTIL.NumberToLong(min.get(busid)).longValue() - (new Long(4L)).longValue());
+             x2 = new Long(UTIL.NumberToLong(max.get(busid)).longValue() + (new Long(4L)).longValue());
             Long tmpVal_151 = null;
             Long var1_152 = null;
             tdBUS obj_153 = null;
             obj_153 = data.getBUS(busid);
             var1_152 = obj_153.getY();
-            tmpVal_151 = new Long(var1_152.intValue() + (new Long(1L)).intValue());
+            tmpVal_151 = new Long(var1_152.longValue() + (new Long(1L)).longValue());
              y = null;
             y = tmpVal_151;
             line = new Line(x1, y, x2, y);
@@ -611,7 +611,7 @@ public class TracefileVisitor extends OmlVisitor
         Vector unArg_4 = null;
         unArg_4 = data.getTimes();
         var1_3 = new Long(unArg_4.size());
-        cond_2 = new Boolean(var1_3.intValue() > (new Long(0L)).intValue());
+        cond_2 = new Boolean(var1_3.longValue() > (new Long(0L)).longValue());
         if(cond_2.booleanValue())
         {
             Long event_utime = null;
@@ -625,7 +625,7 @@ public class TracefileVisitor extends OmlVisitor
             for(Boolean cont = new Boolean(true); cont.booleanValue();)
             {
                 ov_ucurrenttime = UTIL.NumberToLong(UTIL.clone(event_utime));
-                if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+                if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
                     drawOvTimeMarker(pgti, ov_uxpos, ov_uypos, event_utime);
                 Vector sq_18 = null;
                 sq_18 = data.getHistory(event_utime);
@@ -637,7 +637,7 @@ public class TracefileVisitor extends OmlVisitor
                     Boolean cond_24 = null;
                     Long var2_26 = null;
                     var2_26 = pgti.getHorizontalSize();
-                    cond_24 = new Boolean(ov_uxpos.intValue() < var2_26.intValue());
+                    cond_24 = new Boolean(ov_uxpos.longValue() < var2_26.longValue());
                     if(cond_24.booleanValue())
                         if((new Boolean(event instanceof IOmlThreadCreate)).booleanValue())
                             drawOvThreadCreate(pgti, (IOmlThreadCreate)event);
@@ -682,7 +682,7 @@ public class TracefileVisitor extends OmlVisitor
                     Boolean var2_93 = null;
                     Long var2_95 = null;
                     var2_95 = pgti.getHorizontalSize();
-                    var2_93 = new Boolean(ov_uxpos.intValue() >= var2_95.intValue());
+                    var2_93 = new Boolean(ov_uxpos.longValue() >= var2_95.longValue());
                     cond_89 = var2_93;
                 }
                 if(cond_89.booleanValue())
@@ -730,7 +730,7 @@ public class TracefileVisitor extends OmlVisitor
         Vector unArg_5 = null;
         unArg_5 = cpu.getTimes();
         var1_4 = new Long(unArg_5.size());
-        cond_3 = new Boolean(var1_4.intValue() > (new Long(0L)).intValue());
+        cond_3 = new Boolean(var1_4.longValue() > (new Long(0L)).longValue());
         if(cond_3.booleanValue())
         {
             Long event_utime = null;
@@ -744,7 +744,7 @@ public class TracefileVisitor extends OmlVisitor
             for(Boolean cont = new Boolean(true); cont.booleanValue();)
             {
                 ov_ucurrenttime = UTIL.NumberToLong(UTIL.clone(event_utime));
-                if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+                if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
                     drawCpuTimeMarker(pgti, new Long(80L), ov_uypos, event_utime);
                 Vector sq_19 = null;
                 sq_19 = cpu.getHistory(event_utime);
@@ -756,7 +756,7 @@ public class TracefileVisitor extends OmlVisitor
                     Boolean cond_25 = null;
                     Long var2_27 = null;
                     var2_27 = pgti.getVerticalSize();
-                    cond_25 = new Boolean(ov_uypos.intValue() < var2_27.intValue());
+                    cond_25 = new Boolean(ov_uypos.longValue() < var2_27.longValue());
                     if(cond_25.booleanValue())
                         if((new Boolean(event instanceof IOmlThreadCreate)).booleanValue())
                             drawCpuThreadCreate(pgti, (IOmlThreadCreate)event);
@@ -798,7 +798,7 @@ public class TracefileVisitor extends OmlVisitor
                     Boolean var2_89 = null;
                     Long var2_91 = null;
                     var2_91 = pgti.getVerticalSize();
-                    var2_89 = new Boolean(ov_uypos.intValue() >= var2_91.intValue());
+                    var2_89 = new Boolean(ov_uypos.longValue() >= var2_91.longValue());
                     cond_85 = var2_89;
                 }
                 if(cond_85.booleanValue())
@@ -853,9 +853,9 @@ public class TracefileVisitor extends OmlVisitor
         tmpVal_5 = ptdr.getY();
         Long ypos = null;
         ypos = tmpVal_5;
-        if((new Boolean(ov_uxpos.intValue() > xpos.intValue())).booleanValue())
+        if((new Boolean(ov_uxpos.longValue() > xpos.longValue())).booleanValue())
         {
-            Line line = new Line(new Long(xpos.intValue() + (new Long(1L)).intValue()), ypos, new Long(ov_uxpos.intValue() + (new Long(1L)).intValue()), ypos);
+            Line line = new Line(new Long(xpos.longValue() + (new Long(1L)).longValue()), ypos, new Long(ov_uxpos.longValue() + (new Long(1L)).longValue()), ypos);
             Boolean cond_17 = null;
             cond_17 = ptdr.isIdle();
             if(cond_17.booleanValue())
@@ -883,9 +883,9 @@ public class TracefileVisitor extends OmlVisitor
         tmpVal_5 = ptdr.getY();
         Long ypos = null;
         ypos = tmpVal_5;
-        if((new Boolean(ov_uxpos.intValue() > xpos.intValue())).booleanValue())
+        if((new Boolean(ov_uxpos.longValue() > xpos.longValue())).booleanValue())
         {
-            Line line = new Line(new Long(xpos.intValue() + (new Long(1L)).intValue()), ypos, new Long(ov_uxpos.intValue() + (new Long(1L)).intValue()), ypos);
+            Line line = new Line(new Long(xpos.longValue() + (new Long(1L)).longValue()), ypos, new Long(ov_uxpos.longValue() + (new Long(1L)).longValue()), ypos);
             Boolean cond_17 = null;
             cond_17 = ptdr.isIdle();
             if(cond_17.booleanValue())
@@ -913,7 +913,7 @@ public class TracefileVisitor extends OmlVisitor
                 thr = ptdr.getCurrentThread();
                 Long thrid = null;
                 thrid = thr.getId();
-                checkConjectureLimits(pgti, new Long(ov_uxpos.intValue() - ELEMENT_uSIZE.intValue()), ypos, ov_ucurrenttime, thrid);
+                checkConjectureLimits(pgti, new Long(ov_uxpos.longValue() - ELEMENT_uSIZE.longValue()), ypos, ov_ucurrenttime, thrid);
             }
         }
     }
@@ -921,14 +921,14 @@ public class TracefileVisitor extends OmlVisitor
     private void updateCpuObject(GenericTabItem pgti, tdCPU pcpu, tdObject pobj)
         throws CGException
     {
-        Long width = new Long((new Long((new Long(2L)).intValue() * CPU_uHALFWIDTH.intValue())).intValue() + (new Long(23L)).intValue());
+        Long width = new Long((new Long((new Long(2L)).longValue() * CPU_uHALFWIDTH.longValue())).longValue() + (new Long(23L)).longValue());
         Long xpos = null;
         xpos = pobj.getX();
         Long ypos = null;
         ypos = pobj.getY();
         Boolean cond_10 = null;
-        if((cond_10 = new Boolean(xpos.intValue() == (new Long(0L)).intValue())).booleanValue())
-            cond_10 = new Boolean(ypos.intValue() == (new Long(0L)).intValue());
+        if((cond_10 = new Boolean(xpos.longValue() == (new Long(0L)).longValue())).booleanValue())
+            cond_10 = new Boolean(ypos.longValue() == (new Long(0L)).longValue());
         if(cond_10.booleanValue())
         {
             String str = null;
@@ -953,15 +953,15 @@ public class TracefileVisitor extends OmlVisitor
             nrr.setLocation(np);
             nrr.setSize(width, CPU_uHEIGHT);
             pgti.addFigure(nrr);
-            xpos = UTIL.NumberToLong(UTIL.clone(new Long((new Long(ov_uxpos.intValue() + CPU_uHALFWIDTH.intValue())).intValue() + (new Long(12L)).intValue())));
+            xpos = UTIL.NumberToLong(UTIL.clone(new Long((new Long(ov_uxpos.longValue() + CPU_uHALFWIDTH.longValue())).longValue() + (new Long(12L)).longValue())));
             pobj.setX(xpos);
-            ypos = UTIL.NumberToLong(UTIL.clone(new Long((new Long(CPU_uYPOS.intValue() + CPU_uHEIGHT.intValue())).intValue() + ELEMENT_uSIZE.intValue())));
+            ypos = UTIL.NumberToLong(UTIL.clone(new Long((new Long(CPU_uYPOS.longValue() + CPU_uHEIGHT.longValue())).longValue() + ELEMENT_uSIZE.longValue())));
             pobj.setY(ypos);
-            ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long((new Long(ov_uxpos.intValue() + width.intValue())).intValue() + CPU_uHINTERVAL.intValue())));
+            ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long((new Long(ov_uxpos.longValue() + width.longValue())).longValue() + CPU_uHINTERVAL.longValue())));
         }
-        if((new Boolean(ov_uypos.intValue() > ypos.intValue())).booleanValue())
+        if((new Boolean(ov_uypos.longValue() > ypos.longValue())).booleanValue())
         {
-            Line line = new Line(xpos, new Long(ypos.intValue() + (new Long(1L)).intValue()), xpos, new Long(ov_uypos.intValue() - (new Long(1L)).intValue()));
+            Line line = new Line(xpos, new Long(ypos.longValue() + (new Long(1L)).longValue()), xpos, new Long(ov_uypos.longValue() - (new Long(1L)).longValue()));
             line.setForegroundColor(ColorConstants.lightGray);
             line.setDot();
             pgti.addFigure(line);
@@ -980,9 +980,9 @@ public class TracefileVisitor extends OmlVisitor
         tmpVal_5 = ptdr.getY();
         Long ypos = null;
         ypos = tmpVal_5;
-        if((new Boolean(ov_uypos.intValue() > ypos.intValue())).booleanValue())
+        if((new Boolean(ov_uypos.longValue() > ypos.longValue())).booleanValue())
         {
-            Line line = new Line(xpos, new Long(ypos.intValue() + (new Long(1L)).intValue()), xpos, new Long(ov_uypos.intValue() - (new Long(1L)).intValue()));
+            Line line = new Line(xpos, new Long(ypos.longValue() + (new Long(1L)).longValue()), xpos, new Long(ov_uypos.longValue() - (new Long(1L)).longValue()));
             line.setForegroundColor(ColorConstants.lightGray);
             line.setDot();
             pgti.addFigure(line);
@@ -999,16 +999,16 @@ public class TracefileVisitor extends OmlVisitor
         line.setLineWidth(new Long(3L));
         line.setForegroundColor(clr);
         pgti.addFigure(line);
-        line = (Line)UTIL.clone(new Line(x1, new Long(y1.intValue() - (new Long(5L)).intValue()), x1, new Long(y1.intValue() + (new Long(5L)).intValue())));
+        line = (Line)UTIL.clone(new Line(x1, new Long(y1.longValue() - (new Long(5L)).longValue()), x1, new Long(y1.longValue() + (new Long(5L)).longValue())));
         pgti.addFigure(line);
-        line = (Line)UTIL.clone(new Line(x2, new Long(y2.intValue() - (new Long(5L)).intValue()), x2, new Long(y2.intValue() + (new Long(5L)).intValue())));
+        line = (Line)UTIL.clone(new Line(x2, new Long(y2.longValue() - (new Long(5L)).longValue()), x2, new Long(y2.longValue() + (new Long(5L)).longValue())));
         pgti.addFigure(line);
     }
 
     private Boolean pre_drawOvMarker(GenericTabItem pgti, Long x1, Long y1, Long x2, Long y2, Color clr)
         throws CGException
     {
-        return new Boolean(x1.intValue() < x2.intValue());
+        return new Boolean(x1.longValue() < x2.longValue());
     }
 
     private void drawCpuMarker(GenericTabItem pgti, Long x1, Long y1, Long x2, Long y2, Color clr)
@@ -1020,24 +1020,24 @@ public class TracefileVisitor extends OmlVisitor
         line.setLineWidth(new Long(3L));
         line.setForegroundColor(clr);
         pgti.addFigure(line);
-        line = (Line)UTIL.clone(new Line(new Long(x1.intValue() - (new Long(5L)).intValue()), y1, new Long(x1.intValue() + (new Long(5L)).intValue()), y1));
+        line = (Line)UTIL.clone(new Line(new Long(x1.longValue() - (new Long(5L)).longValue()), y1, new Long(x1.longValue() + (new Long(5L)).longValue()), y1));
         pgti.addFigure(line);
-        line = (Line)UTIL.clone(new Line(new Long(x2.intValue() - (new Long(5L)).intValue()), y2, new Long(x2.intValue() + (new Long(5L)).intValue()), y2));
+        line = (Line)UTIL.clone(new Line(new Long(x2.longValue() - (new Long(5L)).longValue()), y2, new Long(x2.longValue() + (new Long(5L)).longValue()), y2));
         pgti.addFigure(line);
     }
 
     private Boolean pre_drawCpuMarker(GenericTabItem pgti, Long x1, Long y1, Long x2, Long y2, Color clr)
         throws CGException
     {
-        return new Boolean(y1.intValue() < y2.intValue());
+        return new Boolean(y1.longValue() < y2.longValue());
     }
 
     private void drawOvTimeMarker(GenericTabItem pgti, Long x, Long y, Long marktime)
         throws CGException
     {
-        Long dy = new Long(RESOURCE_uVINTERVAL.intValue() / (new Long(2L)).intValue());
-        Line line1 = new Line(x, new Long(dy.intValue() - (new Long(10L)).intValue()), x, new Long(y.intValue() - dy.intValue()));
-        Line line2 = new Line(x, y, x, new Long(y.intValue() + (new Long(5L)).intValue()));
+        Long dy = new Long(RESOURCE_uVINTERVAL.longValue() / (new Long(2L)).longValue());
+        Line line1 = new Line(x, new Long(dy.longValue() - (new Long(10L)).longValue()), x, new Long(y.longValue() - dy.longValue()));
+        Line line2 = new Line(x, y, x, new Long(y.longValue() + (new Long(5L)).longValue()));
         RotatedLabel label = null;
         org.eclipse.swt.graphics.Font arg_24 = null;
         arg_24 = pgti.getCurrentFont();
@@ -1047,8 +1047,8 @@ public class TracefileVisitor extends OmlVisitor
         Dimension tmpRec_27 = null;
         tmpRec_27 = label.getSize();
         var1_26 = new Long(tmpRec_27.width);
-        xoffset = new Long(var1_26.intValue() / (new Long(2L)).intValue());
-        Point pt = new Point((new Long((new Long(x.intValue() - xoffset.intValue())).intValue() - (new Long(1L)).intValue())).longValue(), (new Long(y.intValue() + (new Long(10L)).intValue())).longValue());
+        xoffset = new Long(var1_26.longValue() / (new Long(2L)).longValue());
+        Point pt = new Point((new Long((new Long(x.longValue() - xoffset.longValue())).longValue() - (new Long(1L)).longValue())).longValue(), (new Long(y.longValue() + (new Long(10L)).longValue())).longValue());
         line1.setForegroundColor(ColorConstants.lightGray);
         line1.setDot();
         pgti.addFigure(line1);
@@ -1060,8 +1060,8 @@ public class TracefileVisitor extends OmlVisitor
     private void drawCpuTimeMarker(GenericTabItem pgti, Long x, Long y, Long marktime)
         throws CGException
     {
-        Line line1 = new Line(new Long(x.intValue() - (new Long(5L)).intValue()), y, x, y);
-        Line line2 = new Line(new Long(100L), y, new Long((new Long(101L)).intValue() + CPU_uHALFWIDTH.intValue()), y);
+        Line line1 = new Line(new Long(x.longValue() - (new Long(5L)).longValue()), y, x, y);
+        Line line2 = new Line(new Long(100L), y, new Long((new Long(101L)).longValue() + CPU_uHALFWIDTH.longValue()), y);
         NormalLabel label = null;
         org.eclipse.swt.graphics.Font arg_18 = null;
         arg_18 = pgti.getCurrentFont();
@@ -1071,16 +1071,16 @@ public class TracefileVisitor extends OmlVisitor
         Dimension tmpRec_22 = null;
         tmpRec_22 = label.getSize();
         var2_21 = new Long(tmpRec_22.width);
-        xoffset = new Long((new Long(10L)).intValue() + var2_21.intValue());
+        xoffset = new Long((new Long(10L)).longValue() + var2_21.longValue());
         Long yoffset = null;
         Long var2_24 = null;
         Long var1_25 = null;
         Dimension tmpRec_26 = null;
         tmpRec_26 = label.getSize();
         var1_25 = new Long(tmpRec_26.height);
-        var2_24 = new Long(var1_25.intValue() / (new Long(2L)).intValue());
-        yoffset = new Long((new Long(1L)).intValue() + var2_24.intValue());
-        Point pt = new Point((new Long(x.intValue() - xoffset.intValue())).longValue(), (new Long(y.intValue() - yoffset.intValue())).longValue());
+        var2_24 = new Long(var1_25.longValue() / (new Long(2L)).longValue());
+        yoffset = new Long((new Long(1L)).longValue() + var2_24.longValue());
+        Point pt = new Point((new Long(x.longValue() - xoffset.longValue())).longValue(), (new Long(y.longValue() - yoffset.longValue())).longValue());
         ov_utimepos.add(y);
         pgti.addFigure(line1);
         line2.setForegroundColor(ColorConstants.lightGray);
@@ -1093,12 +1093,12 @@ public class TracefileVisitor extends OmlVisitor
     private void drawCpuTimeMarkerHelper(GenericTabItem pgti, tdResource res)
         throws CGException
     {
-        Long width = new Long((new Long((new Long((new Long(2L)).intValue() * CPU_uHALFWIDTH.intValue())).intValue() + (new Long(23L)).intValue())).intValue() + CPU_uHINTERVAL.intValue());
-        Long xmax = new Long(ov_uxpos.intValue() - CPU_uHINTERVAL.intValue());
+        Long width = new Long((new Long((new Long((new Long(2L)).longValue() * CPU_uHALFWIDTH.longValue())).longValue() + (new Long(23L)).longValue())).longValue() + CPU_uHINTERVAL.longValue());
+        Long xmax = new Long(ov_uxpos.longValue() - CPU_uHINTERVAL.longValue());
         Long tmpVal_14 = null;
         Long var1_15 = null;
         var1_15 = res.getX();
-        tmpVal_14 = new Long(var1_15.intValue() + (new Long(10L)).intValue());
+        tmpVal_14 = new Long(var1_15.longValue() + (new Long(10L)).longValue());
         Long x1 = null;
         x1 = tmpVal_14;
         Long tmpVal_17 = null;
@@ -1107,9 +1107,9 @@ public class TracefileVisitor extends OmlVisitor
         Long var1_21 = null;
         Long var1_22 = null;
         var1_22 = res.getX();
-        var1_21 = new Long(var1_22.intValue() + width.intValue());
-        var1_20 = new Long(var1_21.intValue() - (new Long(10L)).intValue());
-        cond_19 = new Boolean(var1_20.intValue() > xmax.intValue());
+        var1_21 = new Long(var1_22.longValue() + width.longValue());
+        var1_20 = new Long(var1_21.longValue() - (new Long(10L)).longValue());
+        cond_19 = new Boolean(var1_20.longValue() > xmax.longValue());
         if(cond_19.booleanValue())
         {
             tmpVal_17 = xmax;
@@ -1118,8 +1118,8 @@ public class TracefileVisitor extends OmlVisitor
             Long var1_26 = null;
             Long var1_27 = null;
             var1_27 = res.getX();
-            var1_26 = new Long(var1_27.intValue() + width.intValue());
-            tmpVal_17 = new Long(var1_26.intValue() - (new Long(10L)).intValue());
+            var1_26 = new Long(var1_27.longValue() + width.longValue());
+            tmpVal_17 = new Long(var1_26.longValue() - (new Long(10L)).longValue());
         }
         Long x2 = null;
         x2 = tmpVal_17;
@@ -1151,20 +1151,20 @@ public class TracefileVisitor extends OmlVisitor
         line.setForegroundColor(clr);
         line.setToolTip(lbl);
         pgti.addFigure(line);
-        if((new Boolean(y1.intValue() < y2.intValue())).booleanValue())
+        if((new Boolean(y1.longValue() < y2.longValue())).booleanValue())
         {
-            line = (Line)UTIL.clone(new Line(new Long(x.intValue() - (new Long(4L)).intValue()), new Long(y2.intValue() - (new Long(8L)).intValue()), x, y2));
+            line = (Line)UTIL.clone(new Line(new Long(x.longValue() - (new Long(4L)).longValue()), new Long(y2.longValue() - (new Long(8L)).longValue()), x, y2));
             line.setForegroundColor(clr);
             pgti.addFigure(line);
-            line = (Line)UTIL.clone(new Line(new Long(x.intValue() + (new Long(4L)).intValue()), new Long(y2.intValue() - (new Long(8L)).intValue()), x, y2));
+            line = (Line)UTIL.clone(new Line(new Long(x.longValue() + (new Long(4L)).longValue()), new Long(y2.longValue() - (new Long(8L)).longValue()), x, y2));
             line.setForegroundColor(clr);
             pgti.addFigure(line);
         } else
         {
-            line = (Line)UTIL.clone(new Line(new Long(x.intValue() - (new Long(4L)).intValue()), new Long(y2.intValue() + (new Long(8L)).intValue()), x, y2));
+            line = (Line)UTIL.clone(new Line(new Long(x.longValue() - (new Long(4L)).longValue()), new Long(y2.longValue() + (new Long(8L)).longValue()), x, y2));
             line.setForegroundColor(clr);
             pgti.addFigure(line);
-            line = (Line)UTIL.clone(new Line(new Long(x.intValue() + (new Long(4L)).intValue()), new Long(y2.intValue() + (new Long(8L)).intValue()), x, y2));
+            line = (Line)UTIL.clone(new Line(new Long(x.longValue() + (new Long(4L)).longValue()), new Long(y2.longValue() + (new Long(8L)).longValue()), x, y2));
             line.setForegroundColor(clr);
             pgti.addFigure(line);
         }
@@ -1185,20 +1185,20 @@ public class TracefileVisitor extends OmlVisitor
         line.setForegroundColor(clr);
         line.setToolTip(lbl);
         pgti.addFigure(line);
-        if((new Boolean(x1.intValue() < x2.intValue())).booleanValue())
+        if((new Boolean(x1.longValue() < x2.longValue())).booleanValue())
         {
-            line = (Line)UTIL.clone(new Line(x1, y, new Long(x1.intValue() + (new Long(8L)).intValue()), new Long(y.intValue() - (new Long(4L)).intValue())));
+            line = (Line)UTIL.clone(new Line(x1, y, new Long(x1.longValue() + (new Long(8L)).longValue()), new Long(y.longValue() - (new Long(4L)).longValue())));
             line.setForegroundColor(clr);
             pgti.addFigure(line);
-            line = (Line)UTIL.clone(new Line(x1, y, new Long(x1.intValue() + (new Long(8L)).intValue()), new Long(y.intValue() + (new Long(4L)).intValue())));
+            line = (Line)UTIL.clone(new Line(x1, y, new Long(x1.longValue() + (new Long(8L)).longValue()), new Long(y.longValue() + (new Long(4L)).longValue())));
             line.setForegroundColor(clr);
             pgti.addFigure(line);
         } else
         {
-            line = (Line)UTIL.clone(new Line(new Long(x1.intValue() - (new Long(8L)).intValue()), new Long(y.intValue() - (new Long(4L)).intValue()), x1, y));
+            line = (Line)UTIL.clone(new Line(new Long(x1.longValue() - (new Long(8L)).longValue()), new Long(y.longValue() - (new Long(4L)).longValue()), x1, y));
             line.setForegroundColor(clr);
             pgti.addFigure(line);
-            line = (Line)UTIL.clone(new Line(new Long(x1.intValue() - (new Long(8L)).intValue()), new Long(y.intValue() + (new Long(4L)).intValue()), x1, y));
+            line = (Line)UTIL.clone(new Line(new Long(x1.longValue() - (new Long(8L)).longValue()), new Long(y.longValue() + (new Long(4L)).longValue()), x1, y));
             line.setForegroundColor(clr);
             pgti.addFigure(line);
         }
@@ -1262,12 +1262,12 @@ public class TracefileVisitor extends OmlVisitor
         tmpVal_6 = data.getCPU(cpunm);
         tdCPU cpu = null;
         cpu = tmpVal_6;
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             updateOvCpu(pgti, cpu);
             Long x1 = null;
             x1 = cpu.getX();
-            Long x2 = new Long(x1.intValue() + ELEMENT_uSIZE.intValue());
+            Long x2 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
             Long tmpVal_19 = null;
             tmpVal_19 = cpu.getY();
             Long y1 = null;
@@ -1305,7 +1305,7 @@ public class TracefileVisitor extends OmlVisitor
         tdObject obj = null;
         obj = data.getObject(objref);
         thr.pushCurrentObject(objref);
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             updateCpuObject(pgti, cpu, obj);
             Long x1 = null;
@@ -1316,7 +1316,7 @@ public class TracefileVisitor extends OmlVisitor
             Long y1 = null;
             y1 = tmpVal_26;
             Long tmpVal_27 = null;
-            tmpVal_27 = new Long(y1.intValue() + ELEMENT_uSIZE.intValue());
+            tmpVal_27 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
             Long y2 = null;
             y2 = tmpVal_27;
             drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.green);
@@ -1357,12 +1357,12 @@ public class TracefileVisitor extends OmlVisitor
         tmpVal_6 = data.getCPU(cpunm);
         tdCPU cpu = null;
         cpu = tmpVal_6;
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             updateOvCpu(pgti, cpu);
             Long x1 = null;
             x1 = cpu.getX();
-            Long x2 = new Long((new Long(x1.intValue() + ELEMENT_uSIZE.intValue())).intValue() - (new Long(1L)).intValue());
+            Long x2 = new Long((new Long(x1.longValue() + ELEMENT_uSIZE.longValue())).longValue() - (new Long(1L)).longValue());
             Long tmpVal_21 = null;
             tmpVal_21 = cpu.getY();
             Long y1 = null;
@@ -1391,7 +1391,7 @@ public class TracefileVisitor extends OmlVisitor
         if((new Boolean(!UTIL.equals(image, null))).booleanValue())
         {
             ImageFigure imagefig = new ImageFigure(image);
-            Point point = new Point((new Long(x.intValue() + (new Long(2L)).intValue())).longValue(), (new Long(y.intValue() - (new Long(24L)).intValue())).longValue());
+            Point point = new Point((new Long(x.longValue() + (new Long(2L)).longValue())).longValue(), (new Long(y.longValue() - (new Long(24L)).longValue())).longValue());
             imagefig.setLocation(point);
             imagefig.setSize(16, 20);
             pgti.addFigure(imagefig);
@@ -1422,7 +1422,7 @@ public class TracefileVisitor extends OmlVisitor
         cpu = tmpVal_13;
         cpu.setCurrentThread(thrid);
         thr.pushCurrentObject(objref);
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             updateCpuObject(pgti, cpu, obj);
             Long x1 = null;
@@ -1433,7 +1433,7 @@ public class TracefileVisitor extends OmlVisitor
             Long y1 = null;
             y1 = tmpVal_29;
             Long tmpVal_30 = null;
-            tmpVal_30 = new Long(y1.intValue() + ELEMENT_uSIZE.intValue());
+            tmpVal_30 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
             Long y2 = null;
             y2 = tmpVal_30;
             drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.gray);
@@ -1453,7 +1453,7 @@ public class TracefileVisitor extends OmlVisitor
         if((new Boolean(!UTIL.equals(image, null))).booleanValue())
         {
             ImageFigure imagefig = new ImageFigure(image);
-            Point point = new Point((new Long(x.intValue() + (new Long(8L)).intValue())).longValue(), (new Long(y.intValue() + (new Long(2L)).intValue())).longValue());
+            Point point = new Point((new Long(x.longValue() + (new Long(8L)).longValue())).longValue(), (new Long(y.longValue() + (new Long(2L)).longValue())).longValue());
             imagefig.setLocation(point);
             imagefig.setSize(20, 16);
             pgti.addFigure(imagefig);
@@ -1492,7 +1492,7 @@ public class TracefileVisitor extends OmlVisitor
         tmpVal_6 = data.getCPU(cpunm);
         tdCPU cpu = null;
         cpu = tmpVal_6;
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             updateOvCpu(pgti, cpu);
             Long tmpVal_15 = null;
@@ -1500,7 +1500,7 @@ public class TracefileVisitor extends OmlVisitor
             Long x1 = null;
             x1 = tmpVal_15;
             Long tmpVal_16 = null;
-            tmpVal_16 = new Long((new Long(x1.intValue() + ELEMENT_uSIZE.intValue())).intValue() - (new Long(1L)).intValue());
+            tmpVal_16 = new Long((new Long(x1.longValue() + ELEMENT_uSIZE.longValue())).longValue() - (new Long(1L)).longValue());
             Long x2 = null;
             x2 = tmpVal_16;
             Long tmpVal_21 = null;
@@ -1545,7 +1545,7 @@ public class TracefileVisitor extends OmlVisitor
         cpu = tmpVal_13;
         cpu.setCurrentThread(thrid);
         thr.pushCurrentObject(objref);
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             updateCpuObject(pgti, cpu, obj);
             Long tmpVal_27 = null;
@@ -1561,7 +1561,7 @@ public class TracefileVisitor extends OmlVisitor
             Long y1 = null;
             y1 = tmpVal_29;
             Long tmpVal_30 = null;
-            tmpVal_30 = new Long(y1.intValue() + ELEMENT_uSIZE.intValue());
+            tmpVal_30 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
             Long y2 = null;
             y2 = tmpVal_30;
             drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.gray);
@@ -1603,7 +1603,7 @@ public class TracefileVisitor extends OmlVisitor
         tmpVal_6 = data.getCPU(cpunm);
         tdCPU cpu = null;
         cpu = tmpVal_6;
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             updateOvCpu(pgti, cpu);
             Long tmpVal_15 = null;
@@ -1611,7 +1611,7 @@ public class TracefileVisitor extends OmlVisitor
             Long x1 = null;
             x1 = tmpVal_15;
             Long tmpVal_16 = null;
-            tmpVal_16 = new Long(x1.intValue() + ELEMENT_uSIZE.intValue());
+            tmpVal_16 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
             Long x2 = null;
             x2 = tmpVal_16;
             Long tmpVal_19 = null;
@@ -1640,7 +1640,7 @@ public class TracefileVisitor extends OmlVisitor
         if((new Boolean(!UTIL.equals(image, null))).booleanValue())
         {
             ImageFigure imagefig = new ImageFigure(image);
-            Point point = new Point((new Long(x.intValue() + (new Long(2L)).intValue())).longValue(), (new Long(y.intValue() - (new Long(24L)).intValue())).longValue());
+            Point point = new Point((new Long(x.longValue() + (new Long(2L)).longValue())).longValue(), (new Long(y.longValue() - (new Long(24L)).longValue())).longValue());
             imagefig.setLocation(point);
             imagefig.setSize(16, 20);
             pgti.addFigure(imagefig);
@@ -1669,7 +1669,7 @@ public class TracefileVisitor extends OmlVisitor
         tmpVal_13 = data.getCPU(cpunm);
         tdCPU cpu = null;
         cpu = tmpVal_13;
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             updateCpuObject(pgti, cpu, obj);
             Long tmpVal_23 = null;
@@ -1685,7 +1685,7 @@ public class TracefileVisitor extends OmlVisitor
             Long y1 = null;
             y1 = tmpVal_25;
             Long tmpVal_26 = null;
-            tmpVal_26 = new Long(y1.intValue() + ELEMENT_uSIZE.intValue());
+            tmpVal_26 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
             Long y2 = null;
             y2 = tmpVal_26;
             drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.gray);
@@ -1707,7 +1707,7 @@ public class TracefileVisitor extends OmlVisitor
         if((new Boolean(!UTIL.equals(image, null))).booleanValue())
         {
             ImageFigure imagefig = new ImageFigure(image);
-            Point point = new Point((new Long(x.intValue() + (new Long(8L)).intValue())).longValue(), (new Long(y.intValue() + (new Long(2L)).intValue())).longValue());
+            Point point = new Point((new Long(x.longValue() + (new Long(8L)).longValue())).longValue(), (new Long(y.longValue() + (new Long(2L)).longValue())).longValue());
             imagefig.setLocation(point);
             imagefig.setSize(20, 16);
             pgti.addFigure(imagefig);
@@ -1746,12 +1746,12 @@ public class TracefileVisitor extends OmlVisitor
         tmpVal_6 = data.getCPU(cpunm);
         tdCPU cpu = null;
         cpu = tmpVal_6;
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             updateOvCpu(pgti, cpu);
             Long x1 = null;
             x1 = cpu.getX();
-            Long x2 = new Long(x1.intValue() + ELEMENT_uSIZE.intValue());
+            Long x2 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
             Long y1 = null;
             y1 = cpu.getY();
             Long y2 = y1;
@@ -1776,7 +1776,7 @@ public class TracefileVisitor extends OmlVisitor
         cpu = tmpVal_8;
         tdObject obj = null;
         obj = thr.getCurrentObject();
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             updateCpuObject(pgti, cpu, obj);
             Long x1 = null;
@@ -1784,7 +1784,7 @@ public class TracefileVisitor extends OmlVisitor
             Long x2 = x1;
             Long y1 = null;
             y1 = obj.getY();
-            Long y2 = new Long(y1.intValue() + ELEMENT_uSIZE.intValue());
+            Long y2 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
             drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.red);
             ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
             obj.setY(y2);
@@ -1818,7 +1818,7 @@ public class TracefileVisitor extends OmlVisitor
     public void drawOvOpRequest(GenericTabItem pgti, IOmlOpRequest pior)
         throws CGException
     {
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             Long cpunm = null;
             cpunm = pior.getCpunm();
@@ -1826,7 +1826,7 @@ public class TracefileVisitor extends OmlVisitor
             tmpVal_9 = data.getCPU(cpunm);
             tdCPU cpu = null;
             cpu = tmpVal_9;
-            ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.intValue() + ELEMENT_uSIZE.intValue())));
+            ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.longValue() + ELEMENT_uSIZE.longValue())));
             updateOvCpu(pgti, cpu);
         }
         Boolean cond_17 = null;
@@ -1868,7 +1868,7 @@ public class TracefileVisitor extends OmlVisitor
     public void drawCpuOpRequest(GenericTabItem pgti, IOmlOpRequest pior)
         throws CGException
     {
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             Long thrid = null;
             thrid = pior.getId();
@@ -1894,7 +1894,7 @@ public class TracefileVisitor extends OmlVisitor
                 Long x2 = x1;
                 Long y1 = null;
                 y1 = obj.getY();
-                Long y2 = new Long(y1.intValue() + ELEMENT_uSIZE.intValue());
+                Long y2 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
                 NormalLabel lbl = null;
                 org.eclipse.swt.graphics.Font arg_29 = null;
                 arg_29 = pgti.getCurrentFont();
@@ -1927,7 +1927,7 @@ public class TracefileVisitor extends OmlVisitor
                 org.eclipse.swt.graphics.Font arg_35 = null;
                 arg_35 = pgti.getCurrentFont();
                 ttl = new NormalLabel(arg_34, arg_35);
-                Point pt = new Point((new Long(x1.intValue() + (new Long(8L)).intValue())).longValue(), (new Long(y1.intValue() + (new Long(2L)).intValue())).longValue());
+                Point pt = new Point((new Long(x1.longValue() + (new Long(8L)).longValue())).longValue(), (new Long(y1.longValue() + (new Long(2L)).longValue())).longValue());
                 drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.blue);
                 lbl.setToolTip(ttl);
                 lbl.setLocation(pt);
@@ -1964,7 +1964,7 @@ public class TracefileVisitor extends OmlVisitor
     public void drawOvOpActivate(GenericTabItem pgti, IOmlOpActivate pioa)
         throws CGException
     {
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             Long cpunm = null;
             cpunm = pioa.getCpunm();
@@ -1972,7 +1972,7 @@ public class TracefileVisitor extends OmlVisitor
             tmpVal_9 = data.getCPU(cpunm);
             tdCPU cpu = null;
             cpu = tmpVal_9;
-            ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.intValue() + ELEMENT_uSIZE.intValue())));
+            ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.longValue() + ELEMENT_uSIZE.longValue())));
             updateOvCpu(pgti, cpu);
         }
     }
@@ -1996,7 +1996,7 @@ public class TracefileVisitor extends OmlVisitor
             destobjref = pioa.getObjref();
             tdObject destobj = null;
             destobj = data.getObject(destobjref);
-            if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+            if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
             {
                 Long cpunm = null;
                 cpunm = pioa.getCpunm();
@@ -2009,7 +2009,7 @@ public class TracefileVisitor extends OmlVisitor
                 var1_23 = srcobj.getId();
                 Long var2_24 = null;
                 var2_24 = destobj.getId();
-                cond_22 = new Boolean(var1_23.intValue() == var2_24.intValue());
+                cond_22 = new Boolean(var1_23.longValue() == var2_24.longValue());
                 if(cond_22.booleanValue())
                 {
                     updateCpuObject(pgti, cpu, destobj);
@@ -2018,7 +2018,7 @@ public class TracefileVisitor extends OmlVisitor
                     Long x2 = x1;
                     Long y1 = null;
                     y1 = destobj.getY();
-                    Long y2 = new Long(y1.intValue() + ELEMENT_uSIZE.intValue());
+                    Long y2 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
                     NormalLabel lbl = null;
                     String arg_49 = null;
                     String var2_52 = null;
@@ -2027,7 +2027,7 @@ public class TracefileVisitor extends OmlVisitor
                     org.eclipse.swt.graphics.Font arg_50 = null;
                     arg_50 = pgti.getCurrentFont();
                     lbl = new NormalLabel(arg_49, arg_50);
-                    Point pt = new Point((new Long(x1.intValue() + (new Long(8L)).intValue())).longValue(), (new Long(y1.intValue() + (new Long(2L)).intValue())).longValue());
+                    Point pt = new Point((new Long(x1.longValue() + (new Long(8L)).longValue())).longValue(), (new Long(y1.longValue() + (new Long(2L)).longValue())).longValue());
                     drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.blue);
                     lbl.setLocation(pt);
                     pgti.addFigure(lbl);
@@ -2057,7 +2057,7 @@ public class TracefileVisitor extends OmlVisitor
         pdx = pdest.getX();
         Long pdy = null;
         pdy = pdest.getY();
-        Line line = new Line(psx, psy, psx, new Long(psy.intValue() + (new Long(20L)).intValue()));
+        Line line = new Line(psx, psy, psx, new Long(psy.longValue() + (new Long(20L)).longValue()));
         NormalLabel lbl = null;
         org.eclipse.swt.graphics.Font arg_18 = null;
         arg_18 = pgti.getCurrentFont();
@@ -2065,22 +2065,22 @@ public class TracefileVisitor extends OmlVisitor
         line.setLineWidth(new Long(3L));
         line.setForegroundColor(ColorConstants.blue);
         pgti.addFigure(line);
-        line = (Line)UTIL.clone(new Line(pdx, new Long(pdy.intValue() + (new Long(20L)).intValue()), pdx, new Long(pdy.intValue() + (new Long(40L)).intValue())));
+        line = (Line)UTIL.clone(new Line(pdx, new Long(pdy.longValue() + (new Long(20L)).longValue()), pdx, new Long(pdy.longValue() + (new Long(40L)).longValue())));
         line.setLineWidth(new Long(3L));
         line.setForegroundColor(ColorConstants.blue);
         pgti.addFigure(line);
-        line = (Line)UTIL.clone(new Line(psx, new Long(psy.intValue() + (new Long(20L)).intValue()), pdx, new Long(psy.intValue() + (new Long(20L)).intValue())));
+        line = (Line)UTIL.clone(new Line(psx, new Long(psy.longValue() + (new Long(20L)).longValue()), pdx, new Long(psy.longValue() + (new Long(20L)).longValue())));
         line.setForegroundColor(ColorConstants.blue);
         pgti.addFigure(line);
-        if((new Boolean(psx.intValue() < pdx.intValue())).booleanValue())
+        if((new Boolean(psx.longValue() < pdx.longValue())).booleanValue())
         {
-            Point pt = new Point((new Long(psx.intValue() + (new Long(20L)).intValue())).longValue(), (new Long(psy.intValue() + (new Long(2L)).intValue())).longValue());
+            Point pt = new Point((new Long(psx.longValue() + (new Long(20L)).longValue())).longValue(), (new Long(psy.longValue() + (new Long(2L)).longValue())).longValue());
             lbl.setLocation(pt);
             pgti.addFigure(lbl);
-            line = (Line)UTIL.clone(new Line(new Long(pdx.intValue() - (new Long(10L)).intValue()), new Long(pdy.intValue() + (new Long(16L)).intValue()), new Long(pdx.intValue() - (new Long(2L)).intValue()), new Long(pdy.intValue() + (new Long(20L)).intValue())));
+            line = (Line)UTIL.clone(new Line(new Long(pdx.longValue() - (new Long(10L)).longValue()), new Long(pdy.longValue() + (new Long(16L)).longValue()), new Long(pdx.longValue() - (new Long(2L)).longValue()), new Long(pdy.longValue() + (new Long(20L)).longValue())));
             line.setForegroundColor(ColorConstants.blue);
             pgti.addFigure(line);
-            line = (Line)UTIL.clone(new Line(new Long(pdx.intValue() - (new Long(10L)).intValue()), new Long(pdy.intValue() + (new Long(24L)).intValue()), new Long(pdx.intValue() - (new Long(2L)).intValue()), new Long(pdy.intValue() + (new Long(20L)).intValue())));
+            line = (Line)UTIL.clone(new Line(new Long(pdx.longValue() - (new Long(10L)).longValue()), new Long(pdy.longValue() + (new Long(24L)).longValue()), new Long(pdx.longValue() - (new Long(2L)).longValue()), new Long(pdy.longValue() + (new Long(20L)).longValue())));
             line.setForegroundColor(ColorConstants.blue);
             pgti.addFigure(line);
         } else
@@ -2091,18 +2091,18 @@ public class TracefileVisitor extends OmlVisitor
             Dimension tmpRec_62 = null;
             tmpRec_62 = lbl.getSize();
             var2_61 = new Long(tmpRec_62.width);
-            arg_56 = new Long((new Long(psx.intValue() - (new Long(20L)).intValue())).intValue() - var2_61.intValue());
-            pt = new Point(arg_56.longValue(), (new Long(psy.intValue() + (new Long(2L)).intValue())).longValue());
+            arg_56 = new Long((new Long(psx.longValue() - (new Long(20L)).longValue())).longValue() - var2_61.longValue());
+            pt = new Point(arg_56.longValue(), (new Long(psy.longValue() + (new Long(2L)).longValue())).longValue());
             lbl.setLocation(pt);
             pgti.addFigure(lbl);
-            line = (Line)UTIL.clone(new Line(new Long(pdx.intValue() + (new Long(2L)).intValue()), new Long(pdy.intValue() + (new Long(20L)).intValue()), new Long(pdx.intValue() + (new Long(10L)).intValue()), new Long(pdy.intValue() + (new Long(16L)).intValue())));
+            line = (Line)UTIL.clone(new Line(new Long(pdx.longValue() + (new Long(2L)).longValue()), new Long(pdy.longValue() + (new Long(20L)).longValue()), new Long(pdx.longValue() + (new Long(10L)).longValue()), new Long(pdy.longValue() + (new Long(16L)).longValue())));
             line.setForegroundColor(ColorConstants.blue);
             pgti.addFigure(line);
-            line = (Line)UTIL.clone(new Line(new Long(pdx.intValue() + (new Long(2L)).intValue()), new Long(pdy.intValue() + (new Long(20L)).intValue()), new Long(pdx.intValue() + (new Long(10L)).intValue()), new Long(pdy.intValue() + (new Long(24L)).intValue())));
+            line = (Line)UTIL.clone(new Line(new Long(pdx.longValue() + (new Long(2L)).longValue()), new Long(pdy.longValue() + (new Long(20L)).longValue()), new Long(pdx.longValue() + (new Long(10L)).longValue()), new Long(pdy.longValue() + (new Long(24L)).longValue())));
             line.setForegroundColor(ColorConstants.blue);
             pgti.addFigure(line);
         }
-        ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uypos.intValue() + (new Long(40L)).intValue())));
+        ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uypos.longValue() + (new Long(40L)).longValue())));
         psrc.setY(ov_uypos);
         pdest.setY(ov_uypos);
     }
@@ -2133,7 +2133,7 @@ public class TracefileVisitor extends OmlVisitor
     public void drawOvOpCompleted(GenericTabItem pgti, IOmlOpCompleted pioc)
         throws CGException
     {
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             Long cpunm = null;
             cpunm = pioc.getCpunm();
@@ -2141,7 +2141,7 @@ public class TracefileVisitor extends OmlVisitor
             tmpVal_9 = data.getCPU(cpunm);
             tdCPU cpu = null;
             cpu = tmpVal_9;
-            ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.intValue() + ELEMENT_uSIZE.intValue())));
+            ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.longValue() + ELEMENT_uSIZE.longValue())));
             updateOvCpu(pgti, cpu);
         }
     }
@@ -2164,7 +2164,7 @@ public class TracefileVisitor extends OmlVisitor
             thr.popCurrentObject();
             tdObject destobj = null;
             destobj = thr.getCurrentObject();
-            if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+            if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
             {
                 Long cpunm = null;
                 cpunm = pioc.getCpunm();
@@ -2177,7 +2177,7 @@ public class TracefileVisitor extends OmlVisitor
                 var1_22 = srcobj.getId();
                 Long var2_23 = null;
                 var2_23 = destobj.getId();
-                cond_21 = new Boolean(var1_22.intValue() == var2_23.intValue());
+                cond_21 = new Boolean(var1_22.longValue() == var2_23.longValue());
                 if(cond_21.booleanValue())
                 {
                     updateCpuObject(pgti, cpu, destobj);
@@ -2189,7 +2189,7 @@ public class TracefileVisitor extends OmlVisitor
                     Long y1 = null;
                     y1 = tmpVal_44;
                     Long tmpVal_45 = null;
-                    tmpVal_45 = new Long(y1.intValue() + ELEMENT_uSIZE.intValue());
+                    tmpVal_45 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
                     Long y2 = null;
                     y2 = tmpVal_45;
                     Long objid = null;
@@ -2226,7 +2226,7 @@ public class TracefileVisitor extends OmlVisitor
                     org.eclipse.swt.graphics.Font arg_56 = null;
                     arg_56 = pgti.getCurrentFont();
                     ttl = new NormalLabel(arg_55, arg_56);
-                    Point pt = new Point((new Long(x1.intValue() + (new Long(8L)).intValue())).longValue(), (new Long(y1.intValue() + (new Long(2L)).intValue())).longValue());
+                    Point pt = new Point((new Long(x1.longValue() + (new Long(8L)).longValue())).longValue(), (new Long(y1.longValue() + (new Long(2L)).longValue())).longValue());
                     drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.blue);
                     lbl.setToolTip(ttl);
                     lbl.setLocation(pt);
@@ -2294,16 +2294,16 @@ public class TracefileVisitor extends OmlVisitor
         bus = data.getBUS(busid);
         tdMessage msg = null;
         msg = data.getMessage(msgid);
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
-            ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.intValue() + (new Long(6L)).intValue())));
+            ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.longValue() + (new Long(6L)).longValue())));
             updateOvBus(pgti, bus);
             Long tmpVal_21 = null;
             tmpVal_21 = bus.getX();
             Long x1 = null;
             x1 = tmpVal_21;
             Long tmpVal_22 = null;
-            tmpVal_22 = new Long(x1.intValue() + ELEMENT_uSIZE.intValue());
+            tmpVal_22 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
             Long x2 = null;
             x2 = tmpVal_22;
             Long tmpVal_25 = null;
@@ -2321,7 +2321,7 @@ public class TracefileVisitor extends OmlVisitor
             par_31 = msg.getFromCpu();
             obj_30 = data.getCPU(par_31);
             var1_29 = obj_30.getY();
-            ycpu = new Long(var1_29.intValue() + (new Long(8L)).intValue());
+            ycpu = new Long(var1_29.longValue() + (new Long(8L)).longValue());
             drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.lightGray);
             String tmpArg_v_47 = null;
             String var1_48 = null;
@@ -2329,7 +2329,7 @@ public class TracefileVisitor extends OmlVisitor
             var2_50 = msg.getDescr();
             var1_48 = (new String(" call ")).concat(var2_50);
             tmpArg_v_47 = var1_48.concat(new String(" "));
-            drawVerticalArrow(pgti, x1, ycpu, new Long(y1.intValue() - (new Long(8L)).intValue()), tmpArg_v_47, ColorConstants.darkBlue);
+            drawVerticalArrow(pgti, x1, ycpu, new Long(y1.longValue() - (new Long(8L)).longValue()), tmpArg_v_47, ColorConstants.darkBlue);
             ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
             bus.setX(x2);
         }
@@ -2346,9 +2346,9 @@ public class TracefileVisitor extends OmlVisitor
         bus = data.getBUS(busid);
         tdMessage msg = null;
         msg = data.getMessage(msgid);
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
-            ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uypos.intValue() + (new Long(10L)).intValue())));
+            ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uypos.longValue() + (new Long(10L)).longValue())));
             updateCpuBus(pgti, bus);
             Long tmpVal_21 = null;
             tmpVal_21 = bus.getX();
@@ -2363,7 +2363,7 @@ public class TracefileVisitor extends OmlVisitor
             Long y1 = null;
             y1 = tmpVal_23;
             Long tmpVal_24 = null;
-            tmpVal_24 = new Long(y1.intValue() + ELEMENT_uSIZE.intValue());
+            tmpVal_24 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
             Long y2 = null;
             y2 = tmpVal_24;
             tdThread thr = null;
@@ -2375,7 +2375,7 @@ public class TracefileVisitor extends OmlVisitor
             Long xobj = null;
             Long var1_34 = null;
             var1_34 = obj.getX();
-            xobj = new Long(var1_34.intValue() - (new Long(10L)).intValue());
+            xobj = new Long(var1_34.longValue() - (new Long(10L)).longValue());
             drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.lightGray);
             String tmpArg_v_50 = null;
             String var1_51 = null;
@@ -2383,7 +2383,7 @@ public class TracefileVisitor extends OmlVisitor
             var2_53 = msg.getDescr();
             var1_51 = (new String(" call ")).concat(var2_53);
             tmpArg_v_50 = var1_51.concat(new String(" "));
-            drawHorizontalArrow(pgti, new Long(x1.intValue() + (new Long(10L)).intValue()), xobj, y1, tmpArg_v_50, ColorConstants.darkGreen);
+            drawHorizontalArrow(pgti, new Long(x1.longValue() + (new Long(10L)).longValue()), xobj, y1, tmpArg_v_50, ColorConstants.darkGreen);
             ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
             bus.setY(y2);
         }
@@ -2444,13 +2444,13 @@ public class TracefileVisitor extends OmlVisitor
         bus = data.getBUS(busid);
         tdMessage msg = null;
         msg = data.getMessage(msgid);
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
-            ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.intValue() + (new Long(6L)).intValue())));
+            ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.longValue() + (new Long(6L)).longValue())));
             updateOvBus(pgti, bus);
             Long x1 = null;
             x1 = bus.getX();
-            Long x2 = new Long(x1.intValue() + ELEMENT_uSIZE.intValue());
+            Long x2 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
             Long tmpVal_25 = null;
             tmpVal_25 = bus.getY();
             Long y1 = null;
@@ -2466,7 +2466,7 @@ public class TracefileVisitor extends OmlVisitor
             par_31 = msg.getFromCpu();
             obj_30 = data.getCPU(par_31);
             var1_29 = obj_30.getY();
-            ycpu = new Long(var1_29.intValue() + (new Long(8L)).intValue());
+            ycpu = new Long(var1_29.longValue() + (new Long(8L)).longValue());
             drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.lightGray);
             String tmpArg_v_47 = null;
             String var1_48 = null;
@@ -2474,7 +2474,7 @@ public class TracefileVisitor extends OmlVisitor
             var2_50 = msg.getDescr();
             var1_48 = (new String(" return from ")).concat(var2_50);
             tmpArg_v_47 = var1_48.concat(new String(" "));
-            drawVerticalArrow(pgti, x1, ycpu, new Long(y1.intValue() - (new Long(8L)).intValue()), tmpArg_v_47, ColorConstants.darkBlue);
+            drawVerticalArrow(pgti, x1, ycpu, new Long(y1.longValue() - (new Long(8L)).longValue()), tmpArg_v_47, ColorConstants.darkBlue);
             ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
             bus.setX(x2);
         }
@@ -2491,9 +2491,9 @@ public class TracefileVisitor extends OmlVisitor
         bus = data.getBUS(busid);
         tdMessage msg = null;
         msg = data.getMessage(msgid);
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
-            ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uypos.intValue() + (new Long(10L)).intValue())));
+            ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uypos.longValue() + (new Long(10L)).longValue())));
             updateCpuBus(pgti, bus);
             Long x1 = null;
             x1 = bus.getX();
@@ -2503,7 +2503,7 @@ public class TracefileVisitor extends OmlVisitor
             Long y1 = null;
             y1 = tmpVal_23;
             Long tmpVal_24 = null;
-            tmpVal_24 = new Long(y1.intValue() + ELEMENT_uSIZE.intValue());
+            tmpVal_24 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
             Long y2 = null;
             y2 = tmpVal_24;
             tdThread thr = null;
@@ -2515,7 +2515,7 @@ public class TracefileVisitor extends OmlVisitor
             Long xobj = null;
             Long var1_34 = null;
             var1_34 = obj.getX();
-            xobj = new Long(var1_34.intValue() - (new Long(10L)).intValue());
+            xobj = new Long(var1_34.longValue() - (new Long(10L)).longValue());
             drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.lightGray);
             String tmpArg_v_50 = null;
             String var1_51 = null;
@@ -2523,7 +2523,7 @@ public class TracefileVisitor extends OmlVisitor
             var2_53 = msg.getDescr();
             var1_51 = (new String(" return from ")).concat(var2_53);
             tmpArg_v_50 = var1_51.concat(new String(" "));
-            drawHorizontalArrow(pgti, new Long(x1.intValue() + (new Long(10L)).intValue()), xobj, y1, tmpArg_v_50, ColorConstants.darkGreen);
+            drawHorizontalArrow(pgti, new Long(x1.longValue() + (new Long(10L)).longValue()), xobj, y1, tmpArg_v_50, ColorConstants.darkGreen);
             ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
             bus.setY(y2);
         }
@@ -2563,7 +2563,7 @@ public class TracefileVisitor extends OmlVisitor
         busid = obj_7.getBusId();
         tdBUS bus = null;
         bus = data.getBUS(busid);
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             updateOvBus(pgti, bus);
             Long tmpVal_18 = null;
@@ -2571,7 +2571,7 @@ public class TracefileVisitor extends OmlVisitor
             Long x1 = null;
             x1 = tmpVal_18;
             Long tmpVal_19 = null;
-            tmpVal_19 = new Long(x1.intValue() + ELEMENT_uSIZE.intValue());
+            tmpVal_19 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
             Long x2 = null;
             x2 = tmpVal_19;
             Long tmpVal_22 = null;
@@ -2635,7 +2635,7 @@ public class TracefileVisitor extends OmlVisitor
         tmpVal_13 = data.getCPU(par_14);
         tdCPU cpu = null;
         cpu = tmpVal_13;
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             updateOvBus(pgti, bus);
             Long tmpVal_22 = null;
@@ -2643,7 +2643,7 @@ public class TracefileVisitor extends OmlVisitor
             Long x1 = null;
             x1 = tmpVal_22;
             Long tmpVal_23 = null;
-            tmpVal_23 = new Long(x1.intValue() + ELEMENT_uSIZE.intValue());
+            tmpVal_23 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
             Long x2 = null;
             x2 = tmpVal_23;
             Long tmpVal_26 = null;
@@ -2657,7 +2657,7 @@ public class TracefileVisitor extends OmlVisitor
             Long ycpu = null;
             Long var1_30 = null;
             var1_30 = cpu.getY();
-            ycpu = new Long(var1_30.intValue() + (new Long(8L)).intValue());
+            ycpu = new Long(var1_30.longValue() + (new Long(8L)).longValue());
             drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.darkGray);
             String tmpArg_v_46 = null;
             String var1_47 = null;
@@ -2665,8 +2665,8 @@ public class TracefileVisitor extends OmlVisitor
             var2_49 = msg.getDescr();
             var1_47 = (new String(" ")).concat(var2_49);
             tmpArg_v_46 = var1_47.concat(new String(" "));
-            drawVerticalArrow(pgti, x2, new Long(y1.intValue() - (new Long(8L)).intValue()), ycpu, tmpArg_v_46, ColorConstants.darkBlue);
-            ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(x2.intValue() + (new Long(6L)).intValue())));
+            drawVerticalArrow(pgti, x2, new Long(y1.longValue() - (new Long(8L)).longValue()), ycpu, tmpArg_v_46, ColorConstants.darkBlue);
+            ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(x2.longValue() + (new Long(6L)).longValue())));
             updateOvCpu(pgti, cpu);
             bus.setX(x2);
         }
@@ -2693,7 +2693,7 @@ public class TracefileVisitor extends OmlVisitor
         busid = msg.getBusId();
         tdBUS bus = null;
         bus = data.getBUS(busid);
-        if((new Boolean(ov_ucurrenttime.intValue() >= ov_ustarttime.intValue())).booleanValue())
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             updateCpuBus(pgti, bus);
             Long tmpVal_19 = null;
@@ -2709,7 +2709,7 @@ public class TracefileVisitor extends OmlVisitor
             Long y1 = null;
             y1 = tmpVal_21;
             Long tmpVal_22 = null;
-            tmpVal_22 = new Long(y1.intValue() + ELEMENT_uSIZE.intValue());
+            tmpVal_22 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
             Long y2 = null;
             y2 = tmpVal_22;
             drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.darkGray);
@@ -2726,14 +2726,14 @@ public class TracefileVisitor extends OmlVisitor
                 Long xobj = null;
                 Long var1_65 = null;
                 var1_65 = obj.getX();
-                xobj = new Long(var1_65.intValue() - (new Long(10L)).intValue());
+                xobj = new Long(var1_65.longValue() - (new Long(10L)).longValue());
                 String tmpArg_v_74 = null;
                 String var1_75 = null;
                 String var2_77 = null;
                 var2_77 = msg.getDescr();
                 var1_75 = (new String(" ")).concat(var2_77);
                 tmpArg_v_74 = var1_75.concat(new String(" "));
-                drawHorizontalArrow(pgti, xobj, new Long(x1.intValue() + (new Long(10L)).intValue()), y2, tmpArg_v_74, ColorConstants.darkGreen);
+                drawHorizontalArrow(pgti, xobj, new Long(x1.longValue() + (new Long(10L)).longValue()), y2, tmpArg_v_74, ColorConstants.darkGreen);
             } else
             {
                 Long objid = null;
@@ -2750,12 +2750,12 @@ public class TracefileVisitor extends OmlVisitor
                 Long tmpArg_v_49 = null;
                 Long var1_50 = null;
                 var1_50 = obj.getX();
-                tmpArg_v_49 = new Long(var1_50.intValue() - (new Long(10L)).intValue());
+                tmpArg_v_49 = new Long(var1_50.longValue() - (new Long(10L)).longValue());
                 String tmpArg_v_56 = null;
                 tmpArg_v_56 = msg.getDescr();
-                drawHorizontalArrow(pgti, tmpArg_v_49, new Long(x1.intValue() + (new Long(10L)).intValue()), y2, tmpArg_v_56, ColorConstants.darkGreen);
+                drawHorizontalArrow(pgti, tmpArg_v_49, new Long(x1.longValue() + (new Long(10L)).longValue()), y2, tmpArg_v_56, ColorConstants.darkGreen);
             }
-            ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long(y2.intValue() + (new Long(10L)).intValue())));
+            ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long(y2.longValue() + (new Long(10L)).longValue())));
             bus.setY(y2);
         }
     }
@@ -2876,7 +2876,7 @@ public class TracefileVisitor extends OmlVisitor
             {
                 Boolean pred_5 = null;
                 ConjectureLimit tmpVal_7 = null;
-                if(1 <= i.intValue() && i.intValue() <= failedLower.size())
+                if(1 <= i.longValue() && i.longValue() <= failedLower.size())
                     tmpVal_7 = (ConjectureLimit)failedLower.get(i.intValue() - 1);
                 else
                     UTIL.RunTime("Run-Time Error:Illegal index");
@@ -2901,10 +2901,10 @@ public class TracefileVisitor extends OmlVisitor
                 if(!succ_6)
                     UTIL.RunTime("Run-Time Error:Pattern match did not succeed in value definition");
                 Boolean var1_12 = null;
-                if((var1_12 = new Boolean(cltime.intValue() == ptime.intValue())).booleanValue())
-                    var1_12 = new Boolean(clthr.intValue() == pthr.intValue());
+                if((var1_12 = new Boolean(cltime.longValue() == ptime.longValue())).booleanValue())
+                    var1_12 = new Boolean(clthr.longValue() == pthr.longValue());
                 if((pred_5 = var1_12).booleanValue())
-                    pred_5 = new Boolean(lastLowerTime(clthr).intValue() < cltime.intValue());
+                    pred_5 = new Boolean(lastLowerTime(clthr).longValue() < cltime.longValue());
                 if(pred_5.booleanValue())
                     tmpQuant_4 = true;
             }
@@ -2948,8 +2948,8 @@ public class TracefileVisitor extends OmlVisitor
             if(!succ_7)
                 UTIL.RunTime("Run-Time Error:Pattern match did not succeed in value definition");
             Boolean cond_11 = null;
-            if((cond_11 = new Boolean(cltime.intValue() == ptime.intValue())).booleanValue())
-                cond_11 = new Boolean(clthr.intValue() == pthr.intValue());
+            if((cond_11 = new Boolean(cltime.longValue() == ptime.longValue())).booleanValue())
+                cond_11 = new Boolean(clthr.longValue() == pthr.longValue());
             if(cond_11.booleanValue())
             {
                 String rhs_18 = null;
@@ -3006,7 +3006,7 @@ public class TracefileVisitor extends OmlVisitor
             {
                 Boolean pred_5 = null;
                 ConjectureLimit tmpVal_7 = null;
-                if(1 <= i.intValue() && i.intValue() <= failedUpper.size())
+                if(1 <= i.longValue() && i.longValue() <= failedUpper.size())
                     tmpVal_7 = (ConjectureLimit)failedUpper.get(i.intValue() - 1);
                 else
                     UTIL.RunTime("Run-Time Error:Illegal index");
@@ -3031,10 +3031,10 @@ public class TracefileVisitor extends OmlVisitor
                 if(!succ_6)
                     UTIL.RunTime("Run-Time Error:Pattern match did not succeed in value definition");
                 Boolean var1_12 = null;
-                if((var1_12 = new Boolean(cltime.intValue() == ptime.intValue())).booleanValue())
-                    var1_12 = new Boolean(clthr.intValue() == pthr.intValue());
+                if((var1_12 = new Boolean(cltime.longValue() == ptime.longValue())).booleanValue())
+                    var1_12 = new Boolean(clthr.longValue() == pthr.longValue());
                 if((pred_5 = var1_12).booleanValue())
-                    pred_5 = new Boolean(lastUpperTime(clthr).intValue() < cltime.intValue());
+                    pred_5 = new Boolean(lastUpperTime(clthr).longValue() < cltime.longValue());
                 if(pred_5.booleanValue())
                     tmpQuant_4 = true;
             }
@@ -3078,8 +3078,8 @@ public class TracefileVisitor extends OmlVisitor
             if(!succ_7)
                 UTIL.RunTime("Run-Time Error:Pattern match did not succeed in value definition");
             Boolean cond_11 = null;
-            if((cond_11 = new Boolean(cltime.intValue() == ptime.intValue())).booleanValue())
-                cond_11 = new Boolean(clthr.intValue() == pthr.intValue());
+            if((cond_11 = new Boolean(cltime.longValue() == ptime.longValue())).booleanValue())
+                cond_11 = new Boolean(clthr.longValue() == pthr.longValue());
             if(cond_11.booleanValue())
             {
                 String rhs_18 = null;
@@ -3111,8 +3111,8 @@ public class TracefileVisitor extends OmlVisitor
         org.eclipse.swt.graphics.Font arg_6 = null;
         arg_6 = pgti.getCurrentFont();
         nlb = new NormalLabel(pname, arg_6);
-        Point p1 = new Point((new Long(xpos.intValue() + (new Long(1L)).intValue())).longValue(), (new Long(ypos.intValue() - (new Long(8L)).intValue())).longValue());
-        Point p2 = new Point((new Long(xpos.intValue() + (new Long(2L)).intValue())).longValue(), (new Long(ypos.intValue() + (new Long(12L)).intValue())).longValue());
+        Point p1 = new Point((new Long(xpos.longValue() + (new Long(1L)).longValue())).longValue(), (new Long(ypos.longValue() - (new Long(8L)).longValue())).longValue());
+        Point p2 = new Point((new Long(xpos.longValue() + (new Long(2L)).longValue())).longValue(), (new Long(ypos.longValue() + (new Long(12L)).longValue())).longValue());
         ellipse.setLocation(p1);
         ellipse.setSize(16, 16);
         ellipse.setFill((new Boolean(false)).booleanValue());
@@ -3131,8 +3131,8 @@ public class TracefileVisitor extends OmlVisitor
         org.eclipse.swt.graphics.Font arg_6 = null;
         arg_6 = pgti.getCurrentFont();
         nlb = new NormalLabel(pname, arg_6);
-        Point p1 = new Point((new Long(xpos.intValue() + (new Long(1L)).intValue())).longValue(), (new Long(ypos.intValue() - (new Long(8L)).intValue())).longValue());
-        Point p2 = new Point((new Long(xpos.intValue() + (new Long(2L)).intValue())).longValue(), (new Long((new Long(ypos.intValue() - (new Long(20L)).intValue())).intValue() - (new Long(20L)).intValue())).longValue());
+        Point p1 = new Point((new Long(xpos.longValue() + (new Long(1L)).longValue())).longValue(), (new Long(ypos.longValue() - (new Long(8L)).longValue())).longValue());
+        Point p2 = new Point((new Long(xpos.longValue() + (new Long(2L)).longValue())).longValue(), (new Long((new Long(ypos.longValue() - (new Long(20L)).longValue())).longValue() - (new Long(20L)).longValue())).longValue());
         ellipse.setLocation(p1);
         ellipse.setSize(16, 16);
         ellipse.setFill((new Boolean(false)).booleanValue());
@@ -3177,7 +3177,7 @@ public class TracefileVisitor extends OmlVisitor
         try
         {
             Long tmpVal_1 = null;
-            tmpVal_1 = new Long((new Long(CPU_uYPOS.intValue() * (new Long(2L)).intValue())).intValue() + CPU_uHEIGHT.intValue());
+            tmpVal_1 = new Long((new Long(CPU_uYPOS.longValue() * (new Long(2L)).longValue())).longValue() + CPU_uHEIGHT.longValue());
             BUS_uYPOStemp = tmpVal_1;
         }
         catch(Throwable e)
