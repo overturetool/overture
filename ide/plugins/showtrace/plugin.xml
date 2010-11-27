@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin>
 
-   <extension
+   <!--extension
          point="org.eclipse.ui.views">
       
       <view
@@ -12,13 +12,13 @@
             class="org.overture.ide.plugins.showtrace.viewer.TracefileViewer"
             id="org.overture.ide.plugins.showtrace.viewer.TracefileViewer">
       </view>
-   </extension>
+   </extension-->
    <extension
          point="org.eclipse.ui.editors">
       <editor
             class="org.overture.ide.plugins.showtrace.viewer.VdmRtLogEditor"
             contributorClass="org.overture.ide.plugins.showtrace.viewer.VdmRtEditorActionBarContributor"
-            default="false"
+            default="true"
             icon="icons/overture.gif"
             id="org.overture.ide.plugins.showtrace.editor"
             name="VDM-RT Realtime Log Viewer">
@@ -40,7 +40,7 @@
          
          
    </extension>
-  <extension point="org.eclipse.ui.editorActions"> 
+  <!--extension point="org.eclipse.ui.editorActions"> 
 <editorContribution 
       id="org.eclipse.ui.articles.action.contribution.editor" 
    targetID="org.overture.ide.plugins.showtrace.editor">
@@ -60,6 +60,6 @@
          tooltip="Tooltip for Editor Action 2">
       </action> 
    </editorContribution> 
-</extension>
+</extension-->
    
 </plugin>
