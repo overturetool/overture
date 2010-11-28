@@ -297,7 +297,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 				}
 
 			};
-			new ProgressMonitorDialog(shell).run(true, true, op);
+			new ProgressMonitorDialog(shell).run(false, true, op);
 		} catch (InvocationTargetException e)
 		{
 			e.printStackTrace();
@@ -477,33 +477,33 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		}
 	}
 
-	private void deleteTabPages()
-	{
-		folder.setSelection(0);
-		canExportJpg = false;
-		canMoveHorizontal = false;
-		canOpenValidation = false;
-		GenericTabItem pgti;
-		for (Iterator<GenericTabItem> iter = theDetails.iterator(); iter.hasNext(); pgti.dispose())
-			pgti = iter.next();
-
-		theDetails = new HashSet<GenericTabItem>();
-		theArch.disposeFigures();
-		theOverview.disposeFigures();
-		fileName = null;
-		theVisitor = null;
-		theTimes = null;
-		currentTime = 0L;
-		try
-		{
-			theMarkers.dispose();
-			IFile file = ((FileEditorInput) getEditorInput()).getFile();
-			theMarkers = new TracefileMarker(file);
-		} catch (CGException cge)
-		{
-			showMessage(cge);
-		}
-	}
+//	private void deleteTabPages()
+//	{
+//		folder.setSelection(0);
+//		canExportJpg = false;
+//		canMoveHorizontal = false;
+//		canOpenValidation = false;
+//		GenericTabItem pgti;
+//		for (Iterator<GenericTabItem> iter = theDetails.iterator(); iter.hasNext(); pgti.dispose())
+//			pgti = iter.next();
+//
+//		theDetails = new HashSet<GenericTabItem>();
+//		theArch.disposeFigures();
+//		theOverview.disposeFigures();
+//		fileName = null;
+//		theVisitor = null;
+//		theTimes = null;
+//		currentTime = 0L;
+//		try
+//		{
+//			theMarkers.dispose();
+//			IFile file = ((FileEditorInput) getEditorInput()).getFile();
+//			theMarkers = new TracefileMarker(file);
+//		} catch (CGException cge)
+//		{
+//			showMessage(cge);
+//		}
+//	}
 
 	/*
 	 * (non-Javadoc)
@@ -550,7 +550,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 	{
 		try
 		{
-			deleteTabPages();
+			//deleteTabPages();
 			if(theMarkers!=null)
 			{
 			theMarkers.dispose();
