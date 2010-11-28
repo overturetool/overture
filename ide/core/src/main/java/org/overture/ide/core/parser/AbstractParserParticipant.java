@@ -174,12 +174,13 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		FileUtility.addMarker(file,
 				message,
 				lineNumber,
-				IMarker.SEVERITY_WARNING);
+				IMarker.SEVERITY_WARNING,
+				ICoreConstants.PLUGIN_ID);
 	}
 
 	protected void addError(IFile file, String message, int lineNumber)
 	{
-		FileUtility.addMarker(file, message, lineNumber, IMarker.SEVERITY_ERROR);
+		FileUtility.addMarker(file, message, lineNumber, IMarker.SEVERITY_ERROR, ICoreConstants.PLUGIN_ID);
 	}
 
 	protected void processInternalError(Throwable e)

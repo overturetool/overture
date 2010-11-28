@@ -5,6 +5,7 @@ import java.io.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IStatus;
+import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.IVdmModel;
 
 import org.overture.ide.core.resources.IVdmProject;
@@ -41,12 +42,12 @@ public abstract class AbstractVdmBuilder
 
 	protected void addWarningMarker(IFile file, String message, int lineNumber)
 	{
-		FileUtility.addMarker(file,message,lineNumber,IMarker.SEVERITY_WARNING);
+		FileUtility.addMarker(file,message,lineNumber,IMarker.SEVERITY_WARNING,ICoreConstants.PLUGIN_ID);
 	}
 
 	protected void addErrorMarker(IFile file, String message, int lineNumber)
 	{
-		FileUtility.addMarker(file, message, lineNumber, IMarker.SEVERITY_ERROR);
+		FileUtility.addMarker(file, message, lineNumber, IMarker.SEVERITY_ERROR,ICoreConstants.PLUGIN_ID);
 	}
 
 	private void setProject(IVdmProject project)

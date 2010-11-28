@@ -17,7 +17,7 @@ import org.overturetool.vdmj.lex.LexLocation;
 public class FileUtility
 {
 	public static void addMarker(IFile file, String message, int lineNumber,
-			int severity)
+			int severity, String sourceId)
 	{
 		try
 		{
@@ -40,7 +40,7 @@ public class FileUtility
 			IMarker marker = file.createMarker(IMarker.PROBLEM);
 			marker.setAttribute(IMarker.MESSAGE, message);
 			marker.setAttribute(IMarker.SEVERITY, severity);
-			marker.setAttribute(IMarker.SOURCE_ID, ICoreConstants.PLUGIN_ID);
+			marker.setAttribute(IMarker.SOURCE_ID, sourceId);//ICoreConstants.PLUGIN_ID);
 			marker.setAttribute(IMarker.LOCATION, "line: "+lineNumber);
 			
 			
@@ -56,7 +56,7 @@ public class FileUtility
 	}
 
 	public static void addMarker(IFile file, String message, int lineNumber,
-			int columnNumber, int severity)
+			int columnNumber, int severity, String sourceId)
 	{
 		try
 		{
@@ -79,7 +79,7 @@ public class FileUtility
 			IMarker marker = file.createMarker(IMarker.PROBLEM);
 			marker.setAttribute(IMarker.MESSAGE, message);
 			marker.setAttribute(IMarker.SEVERITY, severity);
-			marker.setAttribute(IMarker.SOURCE_ID, ICoreConstants.PLUGIN_ID);
+			marker.setAttribute(IMarker.SOURCE_ID, sourceId);//ICoreConstants.PLUGIN_ID);
 			marker.setAttribute(IMarker.LOCATION, "line: "+lineNumber);
 
 			SourceLocationConverter converter = new SourceLocationConverter(getContent(file));
