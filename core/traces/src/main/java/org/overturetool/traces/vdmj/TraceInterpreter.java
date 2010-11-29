@@ -348,7 +348,7 @@ public class TraceInterpreter
 	// }
 
 	private void evaluateTests(String className, TraceXmlWrapper storage,
-			Object traceDefinition, Context ctxt)
+			Object traceDefinition, Context ctxt) throws Exception
 	{
 		NamedTraceDefinition mtd = (NamedTraceDefinition) traceDefinition;
 		TestSequence tests = null;
