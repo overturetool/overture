@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.definitions;
 
+import java.util.Iterator;
+
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -109,6 +111,38 @@ public class ValueDefinition extends Definition
 	{
 		return accessSpecifier.ifSet(" ") + pattern +
 				(type == null ? "" : ":" + type) + " = " + exp;
+	}
+	
+	@Override
+	public boolean equals(Object other)
+	{
+		if (other instanceof ValueDefinition)
+		{
+			ValueDefinition vdo = (ValueDefinition)other;
+			
+			if (defs.size() == vdo.defs.size())
+			{
+				Iterator<Definition> diter = vdo.defs.iterator();
+				
+				for (Definition d: defs)
+				{
+					if (!diter.next().equals(d))
+					{
+						return false;
+					}
+				}
+				
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return defs.hashCode();
 	}
 
 	@Override

@@ -128,6 +128,24 @@ public class ThreadDefinition extends Definition
 	{
 		return "thread " + statement.toString();
 	}
+	
+	@Override
+	public boolean equals(Object other)
+	{
+		if (other instanceof ThreadDefinition)
+		{
+			ThreadDefinition tho = (ThreadDefinition)other;
+			return tho.operationName.equals(operationName);
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return operationName.hashCode();
+	}
 
 	@Override
 	public void typeCheck(Environment base, NameScope scope)

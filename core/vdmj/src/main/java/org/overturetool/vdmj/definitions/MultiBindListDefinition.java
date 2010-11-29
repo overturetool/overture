@@ -58,6 +58,23 @@ public class MultiBindListDefinition extends Definition
 	{
 		return "def " + Utils.listToString(bindings);
 	}
+	
+	@Override
+	public boolean equals(Object other)
+	{
+		if (other instanceof MultiBindListDefinition)
+		{
+			return toString().equals(other.toString());
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return toString().hashCode();
+	}
 
 	@Override
 	public void typeCheck(Environment base, NameScope scope)

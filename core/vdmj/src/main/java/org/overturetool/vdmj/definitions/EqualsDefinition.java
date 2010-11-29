@@ -107,6 +107,23 @@ public class EqualsDefinition extends Definition
 		return (pattern != null ? pattern :
 				typebind != null ? typebind : setbind) + " = " + test;
 	}
+	
+	@Override
+	public boolean equals(Object other)
+	{
+		if (other instanceof EqualsDefinition)
+		{
+			return toString().equals(other.toString());
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return toString().hashCode();
+	}
 
 	@Override
 	public void typeCheck(Environment base, NameScope scope)

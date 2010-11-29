@@ -82,6 +82,23 @@ public class MutexSyncDefinition extends Definition
 			(operations.isEmpty() ? "all)" :
 				Utils.listToString("", operations, ", ", ")"));
 	}
+	
+	@Override
+	public boolean equals(Object other)
+	{
+		if (other instanceof MutexSyncDefinition)
+		{
+			return toString().equals(other.toString());
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return toString().hashCode();
+	}
 
 	@Override
 	public Definition findName(LexNameToken sought, NameScope scope)
