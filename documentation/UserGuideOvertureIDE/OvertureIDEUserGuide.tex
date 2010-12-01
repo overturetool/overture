@@ -628,7 +628,7 @@ form part of the documentation of a project. The project settings allow you
 to define a main \LaTeX\ file for the project, and define the order in which the
 different VDM source files shall be included.
 
-\chapter{Editing VDM models}\label{sec:editVDM}
+\chapter{Editing VDM Models}\label{sec:editVDM}
 
 \section{VDM Dialect Editors}
 
@@ -642,16 +642,15 @@ directly in the Editor view where the problems have been identified.
 
 \section{Using Templates}
 
-Eclipse templates can be particularly useful when modifying VDM models. If you
-hit \textit{CTRL+space} after typing the first few characters of a template,
+Eclipse templates can be particularly useful when writing VDM models. If you
+hit \textit{CTRL+space} after typing the first few characters of a template name,
 Overture will offer a proposal. For example, if you type ''fun'' followed
 by \textit{CTRL+space}, the IDE will propose the use of an implicit or explicit
 function template as shown in Figure~\ref{fig:functionTemplate}. The IDE includes
 several types of template: cases, quantifications, functions (explicit/implicit),
 operations (explicit/implicit) and many more. The use of templates makes it much
-easier for users to construct models, even if they are not deeply familiar
+easier for users to create models, even if they are not deeply familiar
 with the VDM syntax.
-
 \begin{figure}
 \begin{center}
 \includegraphics[width=4in]{figures/FunctionTemplate}
@@ -660,8 +659,8 @@ with the VDM syntax.
 \end{center}
 \end{figure}
 
-It is possible to adjust and add to the templates defined in 
-Overture. This can be done in the VDM preferences under
+It is possible to adjust or add to the templates defined in 
+Overture. This can be done in the general VDM preferences under
 \emph{Window} $\rightarrow$ \emph{Preferences} $\rightarrow$ \emph{VDM}
 $\rightarrow$ \emph{Templates}. Figure~\ref{fig:Templatepreferences} shows
 how the template for ''cases'' expressions is defined in Overture. Note
@@ -683,16 +682,29 @@ This section describes how to debug a model using the Overture IDE.
 
 \section{Debug Launch Configurations}
 
-To execute or debug a VDM model, you must first create a debug launch
-configuration\index{debug configuration}
-from the menu \emph{Run} $\rightarrow $ \emph{Debug Configurations}\ldots. The
-launch dialog requires the following information: the VDM project name,
+To execute or debug a VDM model, you must first create a \emph{debug} launch
+configuration\index{debug configuration}. Note that you need to create a debug
+launcher, even if you do not intend to debug the specification. This is because
+Overture will always jump into the debugger if there are any runtime problems
+with your specification. You cannot create a regular run launch configuration
+in Overture.
+
+To create a debug launch configuration, go to the main Run menu and select
+\emph{Run} $\rightarrow $ \emph{Debug Configurations}. Select the type of
+project you want to launch, click the New icon to
+create a new launch specification of that type and give it a name. The
+launch dialog requires you to identify the VDM project name,
 the class/module name and the initial operation/function to call in that
 class/module. Figure~\ref{fig:userguide:debugConfiguration} shows a debug launch
-configuration. Clicking one of the browse buttons will open a dialog which
-gives you a list of choices - both the class/module and operation/function can be
-chosen this way. If the chosen operation or function has parameters, argument
-values to pass must be entered manually. You can also open the
+dialog. Clicking the Browse button will let you select a project from
+those available in the workspace. Clicking the Search button will search the chosen
+project for classes and modules to select an operation or function from.
+If the chosen operation or function has parameters, the types and names of those
+parameters will be copied into the Operation box - these \emph{must} be replaced with
+valid argument values\footnote{You will see type checking errors at the top of the dialog
+if you do not do this, such as "Error 3063: Too few arguments in ..."}.
+
+You can also open the
 \emph{Debug Configurations} dialog by right clicking on a project in the Explorer
 view and then selecting the \emph{Debug As} $\rightarrow$ \emph{VDM Launch Configurations}.
 Once a launch configuration has been defined, it can be re-run at any time by using the
@@ -712,7 +724,7 @@ small downward arrow next to the debug icon
 The Debug Perspective\index{debug perspective} contains all the views
 commonly needed for debugging in VDM. Breakpoints can easily be set in the
 model by double clicking in the left margin of the Editor view at the chosen
-line. When the debugger reaches the location of a breakpoint, you can
+line. When the debugger reaches the location of a breakpoint and stops, you can
 inspect the values of different identifiers and step through the VDM model 
 line by line.\index{perspective!debug}
  
@@ -758,10 +770,10 @@ filters\index{icon!use step filters}\\
 
 \subsection{The Debug View}
 
-The \emph{Debug view} is located in the upper left corner in the Debug Perspective -
-see Figure~\ref{fig:userguide:DebuggingVDM}. The \emph{Debug view} shows all running
+The \emph{Debug} view is located in the upper left corner in the Debug perspective -
+see Figure~\ref{fig:userguide:DebuggingVDM}. The view shows all running
 models and whether a given model is stopped, suspended or running.
-It shows the call stack of those that are suspended, and for VDM++ and VDM-RT stacks
+It shows the call stack of models that are suspended, and for VDM++ and VDM-RT stacks
 for all threads are shown.
 At the top of the view, there are buttons
 for debugging such as: stop, step into, step over, resume, etc. (see
@@ -769,30 +781,31 @@ Table~\ref{tab:debugButtons}).
 
 \subsection{The Variables View}
  
-This view shows all the variables in a thread context, allowing them to be
-examined after a breakpoint has been reached. The variables and their values are
-automatically updated when stepping through a model. The \emph{Variables view} is
-located in the upper right hand corner in the \emph{Debug perspective}. It is
-possible to inspect compound variables, expanding nested structures and soon.
+The \emph{Variables} view shows all the variables in a thread context, allowing them to be
+examined after a breakpoint (or an error) has been reached. The variables and their values are
+automatically updated when stepping through a model. The view is
+located in the upper right hand corner in the Debug perspective. It is
+possible to inspect compound variables, expand nested structures and soon.
 
 \subsection{The Breakpoints View}
 
-Breakpoints can be added in any perspective from the Editor view.
-The debug perspective also has a \emph{Breakpoints view} that lists all current
-breakpoints, allowing you to easily navigate to the location of a given breakpoint,
-disable, delete or set the hit count or a break condition. The view is located in
-the same panel as the \emph{Variables view} in the upper right hand corner.
+Breakpoints can be added in any perspective from the Editor view\footnote{Note that
+breakpoints can only be set on lines that contain executable code.}.
+The debug perspective also has a \emph{Breakpoints} view that lists all current
+breakpoints, allowing you to navigate easily to the location of a given breakpoint,
+disable it or delete it. The view is located in
+the same panel as the Variables view in the upper right hand corner.
 
 \subsection{Conditional Breakpoints}
 \label{sec:userguide:breakpoints}
 
-Breakpoints can also be conditional. This is a powerful feature for the
+Breakpoints can be conditional. This is a powerful feature for the
 developer since it allows you to specify a conditional expression 
 which has to be true for the debugger to stop at the given breakpoint.
 As well as using an expression, a conditional breakpoint may specify a hitcount and whether the breakpoint should stop when the hit count is equal to,greater than, or a multiple of the given value.
 A normal breakpoint can be made conditional by right clicking on the breakpoint
-mark in the Editor view and selecting \emph{Breakpoint
-properties}\ldots. This opens a dialog like the one shown in
+mark in the Editor view\footnote{Note this is not possible from the Breakpoint view}
+and selecting \emph{Breakpoint Properties}. This opens a dialog like the one shown in
 Figure~\ref{fig:userguide:BreakpointConditional}.
 
 \begin{figure}[htp]
@@ -805,73 +818,75 @@ Figure~\ref{fig:userguide:BreakpointConditional}.
 
 \subsection{The Expressions View}
 
-The \emph{Expressions view} allows you to write expressions that are evaluated
+The \emph{Expressions} view allows you to define expressions that are evaluated
 whenever the debugger stops.
-Watched expressions can be added manually or created by selecting \emph{Create
-watch expression} from the \emph{Variables view}. It is possible to edit existing
-expressions. This view sits in the same panel as the \emph{Breakpoints view} and
-the \emph{Variables view}.
+Watched expressions can be added to the view directly, or created by selecting \emph{Watch}
+when right-clicking a variable in the Variables view. It is possible to edit existing
+expressions. The view sits in the same panel as the Breakpoints view and
+the Variables view.
 
 \chapter{Collecting Test Coverage Information}\label{sec:testcoverage}
 
-When a VDM model is being interpreted it is possible to automatically collect
+When a VDM model is being interpreted, it is possible to automatically collect
 test coverage information. Test coverage measurements help you to see how well a
-given test suite\index{Test Coverage!Test suite} exercises the VDM model.
+given test suite\index{Test Coverage!Test suite} exercises your VDM model.
 
-In order to enable collection of test coverage data, go to the \emph{Debug 
-Configuration} and select the \emph{Generate Latex coverage} option. After
-running a debug configuration, a new file with the \emph{.cov} extension will be created for 
+In order to enable collection of test coverage data, go to the debug launch 
+configuration and select the \emph{Generate Latex coverage} option. After
+running this configuration, a new file with a \textt{.cov} extension will be created for 
 each file in the project. These files are written into a project subfolder named
-\texttt{generated/coverage/<date and time>}. Double clicking the .cov files
+\texttt{generated/coverage/<date and time>}. Double-clicking the \textt{.cov} files
 will open a special editor window that displays the source with coverage
-coloured in red/green (red is not covered). Alternatively, a \emph{PDF} file
-containing the entire model with coloured test coverage data can be generated 
-by right clicking on the project name and choosing \emph{Latex} $\rightarrow$ 
+coloured in red/green (red is executable but not covered). Alternatively, a PDF file
+containing the entire model with coloured test coverage can be generated 
+by right-clicking on the project name and selecting \emph{Latex} $\rightarrow$ 
 \emph{Latex Coverage}.
 
 \chapter{Pretty Printing to \LaTeX}\label{sec:prettyprint}
 
-Include {\ttfamily overture.tex} which among other things makes use of the
-{\ttfamily times.cls} and {\ttfamily listings.cls} style classes. This enables
-the use of the standard {\ttfamily lstlisting} environment for type setting
+Include \textt{overture.tex} which among other things makes use of the
+\texttt{times.cls} and \texttt{listings.cls} style classes. This enables
+the use of the standard \textt{lstlisting} environment for type setting
 source text and display it in a fixed width font where all VDM keywords
 are typeset in bold.
 
-It is possible to use literate programming/specification \cite{Johnson96} just as
-inside VDMTools. Then you need to use the \LaTeX\ text processing system with
+It is possible to use literate programming/specification \cite{Johnson96} with
+Overture just as you can with VDMTools. To take advantage of this,
+you need to use the \LaTeX\ text processing system with
 plain VDM models mixed with textual documentation.  The VDM model parts must be
 enclosed within ``\verb+\begin{vdm_al}+'' and ``\verb+\end{vdm_al}+''. The
-text-parts outside the specification blocks are ignored by the parser (but used
-by the pretty-printer).
+text-parts outside these specification blocks are ignored by the VDM parser.
 
 \chapter{Managing Proof Obligations}\label{sec:POmanagement}
 
-In all VDM dialects, it is possible to identify places where run-time errors
+In all VDM dialects, Overture can identify places where run-time errors
 \emph{could} potentially occur if the model was to be executed. The analysis of
 these areas can be considered
-as an additional check to the static type checking that is performed automatically.
+as a complement to the static type checking that is performed automatically.
+Type checking accepts specifications that are \emph{possibly} correct, but
+we also want to know the places where the specification could possibly fail.
+
 Unfortunately, it is not always possible to statically check if such
 possible problems will \emph{actually} occur at run-time error or not. So Overture
-creates so-called ``Proof Obligations''\index{proof obligation} for all the places
-where run-time errors ``could'' occur. Each \emph{Proof Obligation} (PO)
+creates \emph{Proof Obligations}\index{proof obligation} for all the places
+where run-time errors \emph{could} occur. Each proof obligation (PO)
 is formulated as a predicate that must hold at a particular place in the VDM
-model if it is error-free, and thus it may have particular context information associated with it.
-POs can be considered as
+model if it is error-free, and so it may have particular context information
+associated with it. POs can be considered as
 constraints that will guarantee the internal integrity of a VDM model if they
-are all met. In the long term it will be possible to prove these constraints
+are all met. In the long term, it will be possible to prove these constraints
 with a proof component in Overture, but this is not yet available.
-
 POs can be divided into different categories\index{proof obligation!categories}
 depending upon their nature. The full list of categories can be found in
-Appendix~\ref{app:POcategories} along with a short explanation for
+Appendix~\ref{app:POcategories} along with a short description for
 each of them.
 
 The proof obligation generator is invoked either on a VDM project (and
 then POs for all the VDM model files will be generated) or for one
-selected VDM file. Right-click the project or file in the \emph{Explorer} view and
+selected VDM file. Right-click the project or file in the Explorer view and
 then select \emph{Proof Obligations} $\rightarrow$ \emph{Generate Proof
-  Obligations}. Overture will then change into a special
-\emph{Proof Obligations Perspective}\index{proof
+  Obligations}. Overture will change into a special
+\emph{Proof Obligations} perspective\index{proof
   obligation!perspective} as shown in
 Figure~\ref{fig:POview}.\index{perspective!proof obligations}  
 
@@ -890,8 +905,7 @@ obligation has four components:
   located;
 \item The proof obligation category (type); and
 \item A status field indicating whether the proof obligation is
-  trivially correct or would have to be proved by a proof
-  engine.
+  trivially correct or would have to be proved by a proof engine.
 \end{itemize}
 
 At the top of the \emph{Proof Obligation Explorer} the \emph{Filter proved} button
@@ -900,28 +914,28 @@ correct.\index{filter proved}
 
 \chapter{Combinatorial Testing}\label{sec:testing}
 
-In order to automate part of the testing process, a notion of
-test \emph{traces} has been introduced into VDM++\footnote{note that this is 
+In order to better automate the testing process, a notion of
+test \emph{traces} has been introduced into VDM++\footnote{Note that this is 
 only available for VDM-SL models if the VDM-10 language version has been selected}. 
 Traces are effectively regular expressions that can be expanded to a collection of test
 cases. Each test case comprises a sequence of operation
 calls. If a user defines traces it is possible to make use of a
-special \emph{Combinatorial Testing} perspective that enables the automatic
-unfolding of the traces and execution of each of the test
-cases. Subsequently, the results of running the tests can be inspected
-and erroneous test cases easily found. The user can then fix 
-problems and re-run the traces definitions as development proceeds.
+special \emph{Combinatorial Testing} perspective to automatically
+unfold of the traces and execute of each of the resulting test
+cases. Subsequently, the results all tests can be inspected
+and erroneous test cases easily found. You can then fix 
+problems and re-run the traces definitions to check they are fixed.
 
 \section{Using the Combinatorial Testing GUI}
 
-The syntax for trace definitions is defined in the VDM-10 language
-manual.\index{traces}
-If you have created a {\bf\ttfamily traces} entry for a module or class it
+The syntax for trace definitions is defined in the VDM-10 Language
+Manual.\index{traces}
+If you have created a \texttt{traces} entry for a module or class it
 can be exexuted via the \emph{Combinatorial Testing}
 perspective\index{combinatorial testing}. See
 Figure~\ref{fig:tracesalarm}.\index{perspective!combinatorial testing}
 
-Different icons are used to illustrate the verdict in a test
+Different icons are used to indicate the verdict in a test
 case. These are:
 \begin{description}
 \item[\hspace{-1.8mm}
@@ -930,20 +944,22 @@ case. These are:
   executed.
 \index{icon!not yet executed}
 \item[\hspace{-1.8mm}
-\raisebox{-0.8mm}{\includegraphics[width=0.03\textwidth]{icons/okBigWhiteBG.png}}:] This icon is used to indicate that the test case has a pass
+\raisebox{-0.8mm}{\includegraphics[width=0.03\textwidth]{icons/okBigWhiteBG.png}}:]
+  This icon is used to indicate that the test case has a pass
   verdict.\index{icon!pass verdict}
 \item[\hspace{-1.8mm}
-\raisebox{-0.8mm}{\includegraphics[width=0.03\textwidth]{icons/undeterminedBigWhiteBG.png}}:] This icon is used to indicate that the test case has an inconclusive
+\raisebox{-0.8mm}{\includegraphics[width=0.03\textwidth]{icons/undeterminedBigWhiteBG.png}}:]
+  This icon is used to indicate that the test case has an inconclusive
   verdict.\index{icon!inconclusive verdict}
 \item[\hspace{-1.8mm}
 \raisebox{-0.8mm}{\includegraphics[width=0.03\textwidth]{icons/faildBigWhiteBG.png}}:]
-This icon is used to indicate that the test case has a fail
-verdict.\index{icon!fail verdict}
+  This icon is used to indicate that the test case has a fail
+  verdict.\index{icon!fail verdict}
 \item[\hspace{-1.8mm}
 \raisebox{-0.8mm}{\includegraphics[height=10pt]{screenDumps/skippedIndication.png}}:] 
-If test cases result in a run-time error other test cases with the
-same prefix will be filtered away and thereby skipped by in the test
-execution. The number of skipped test cases is indicated after number
+If any test cases result in a run-time error, other test cases with the
+same sequence of calls will be filtered and automatically skipped in the test
+execution. The number of skipped test cases is indicated after the number
 of test cases for the trace definition name.\index{icon!skipped test case}
 \end{description}
 
@@ -958,7 +974,7 @@ of test cases for the trace definition name.\index{icon!skipped test case}
 \chapter{Mapping VDM++ To and From UML}\label{sec:vdmuml}
 
 VDM++ and VDM-RT projects can be converted automatically back and forth between VDM
-and its corresponding UML model\footnote{In the current version of
+and the corresponding UML model\footnote{In the current version of
   Overture this feature is somewhat unstable.}. 
 Essentially, VDM and UML can be considered
 as different views of the same model. A UML model is typically used
