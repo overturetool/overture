@@ -23,7 +23,7 @@ public class VdmBreakpointAdapterFactory implements IAdapterFactory
 				IFile file = (IFile) resource;
 				try
 				{
-					if(file==null || !file.exists() || file.isSynchronized(IResource.DEPTH_ZERO))
+					if(file==null || !file.exists() || !file.isSynchronized(IResource.DEPTH_ZERO))
 					{
 						return null;
 					}
