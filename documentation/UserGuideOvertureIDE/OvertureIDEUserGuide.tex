@@ -719,6 +719,14 @@ small downward arrow next to the debug icon
 \end{center}
 \end{figure}
 
+\begin{figure}[htp]
+\begin{center}
+  \includegraphics[width=380px]{screenDumps/launchconfig}
+  \caption{The launch configuration dialog}
+  \label{fig:userguide:launchconfig}
+\end{center}
+\end{figure}
+
 \section{The Debug Perspective}
 
 The Debug Perspective\index{debug perspective} contains all the views
@@ -833,9 +841,9 @@ given test suite\index{Test Coverage!Test suite} exercises your VDM model.
 
 In order to enable collection of test coverage data, go to the debug launch 
 configuration and select the \emph{Generate Latex coverage} option. After
-running this configuration, a new file with a \textt{.cov} extension will be created for 
+running this configuration, a new file with a \texttt{.cov} extension will be created for 
 each file in the project. These files are written into a project subfolder named
-\texttt{generated/coverage/<date and time>}. Double-clicking the \textt{.cov} files
+\texttt{generated/coverage/<date and time>}. Double-clicking the \texttt{.cov} files
 will open a special editor window that displays the source with coverage
 coloured in red/green (red is executable but not covered). Alternatively, a PDF file
 containing the entire model with coloured test coverage can be generated 
@@ -844,9 +852,9 @@ by right-clicking on the project name and selecting \emph{Latex} $\rightarrow$
 
 \chapter{Pretty Printing to \LaTeX}\label{sec:prettyprint}
 
-Include \textt{overture.tex} which among other things makes use of the
+Include \texttt{overture.tex} which among other things makes use of the
 \texttt{times.cls} and \texttt{listings.cls} style classes. This enables
-the use of the standard \textt{lstlisting} environment for type setting
+the use of the standard \texttt{lstlisting} environment for type setting
 source text and display it in a fixed width font where all VDM keywords
 are typeset in bold.
 
