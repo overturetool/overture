@@ -23,9 +23,11 @@
 
 package org.overturetool.vdmj.traces;
 
+import org.overturetool.vdmj.definitions.LocalDefinition;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.typechecker.Environment;
+import org.overturetool.vdmj.typechecker.FlatEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.UnknownType;
@@ -74,6 +76,8 @@ public class TraceVariableStatement extends Statement
 	@Override
 	public Type typeCheck(Environment env, NameScope scope)
 	{
+		FlatEnvironment flat = (FlatEnvironment)env;
+		flat.add(new LocalDefinition(location, var.name, scope, new UnknownType(location)));
 		return new UnknownType(location);
 	}
 }
