@@ -178,8 +178,8 @@ VDM. It serves as a reference for anybody wishing to make use of
 the tool with one of the VDM dialects (VDM-SL, VDM++ and VDM-RT).
 Overture tool support is build on top of the Eclipse platform. The
 objective of the Overture initiative is to create and support an open source
-platform that can be used for both experimentation with new subsets or
-supersets of VDM dialects, as well as new features analysing VDM
+platform that can be used for both experimentation with new VDM dialects,
+as well as new features for analysing VDM
 models in different ways. The tool is entirely open source, so anybody
 can join the development team and influence future
 developments. The long term goal is to ensure that stable
@@ -249,9 +249,9 @@ followed in Chapter~\ref{sec:debug} with an explanation of the
 interpretation and debugging capabilities in Overture.
 Chapter~\ref{sec:testcoverage} illustrates how test coverage
 information can be gathered when models are interpreted.
-Chapter~\ref{sec:prettyprint} shows how models with =test
+Chapter~\ref{sec:prettyprint} shows how models with test
 coverage information can be written as
-\LaTeX\ and automatically converted to \texttt{pdf} format. 
+\LaTeX\ and automatically converted to PDF format. 
 Chapters~\ref{sec:POmanagement} to \ref{sec:showlog} cover various
 VDM specific features: Chapter~\ref{sec:POmanagement}
 explains the notion of proof obligations and their support in
@@ -269,8 +269,8 @@ of all the standard templates built into Overture.
 Appendixes~\ref{app:internalerrors}
 to~\ref{app:POcategories} give complete lists of possible errors,
 warnings and proof obligation categories.
-Finally, Appendix~\ref{sec:index} an index of significant terms used in this
-user manual can be found. 
+Finally, Appendix~\ref{sec:index} is an index of significant terms used in the
+user manual. 
 
 
 \chapter{Getting Hold of the Software}\label{sec:install}
@@ -293,7 +293,7 @@ a special version of Eclipse with the Overture functionality already pre-install
 Simply extract the zip file downloaded and run the Overture executable
 file at the top level to start the tool.
 When you start Overture for the first time, it will request a workspace
-location. Here we recommend that you  choose the default one proposed 
+location. Here we recommend that you  choose the default proposed 
 by Overture and tick the box for ``Use this as the default and do
 not ask again''. A welcome screen will introduce you to the overall 
 mission of the Overture open source initiative. 
@@ -319,8 +319,8 @@ to a large collection of extension products. Thus, if a user is
 familiar with one Eclipse product, it will generally be easy to start
 using a different product on the same workbench. The Eclipse workbench
 consists of several panels known as \emph{views}\index{view}, such as
-the VDM Explorer view at the top left of
-Figure~\ref{fig:userguire:OverturePerspective}. A collection of panels
+those shown in
+Figure~\ref{fig:userguire:OverturePerspective}. A particular collection of views
 is called a \emph{perspective}\index{perspective}, for example
 Figure~\ref{fig:userguire:OverturePerspective} shows the standard
 Overture perspective. This consists of a set of views for managing
@@ -337,17 +337,16 @@ useful composition of views for conducting a particular task.
 \end{center}
 \end{figure}
 
-The \emph{VDM Explorer view}\index{explorer} lets you create, select, 
+The \emph{VDM Explorer}\index{explorer} view lets you create, select, 
 and delete Overture projects and navigate between the files in these 
 projects, as well as adding new files to existing projects. A new VDM
 project is created choosing the \emph{File} $ \rightarrow$ \emph{New}
-$\rightarrow$ \emph{Project} resulting in
+$\rightarrow$ \emph{Project} option resulting in
 Figure~\ref{fig:userguide:newOvertureProjectSL}. Here select
 the desired VDM dialect and press \emph{Next}. Finally, a name needs 
-to be given to the project and then simply select \texttt{Finish}. 
-
+to be given to the project and then simply select \texttt{Finish}.
 Depending upon the dialect of VDM used in a given project,
-a corresponding Overture editor will be available to edit the files of
+a corresponding Overture \emph{Editor} view will be available to edit the files of
 that project. Dialect editors are sensitive to the keywords used in
 each particular dialect, and simplify the task of working on the
 specification.
@@ -361,12 +360,12 @@ specification.
 \end{figure}
 
 
-The \emph{Outline view}\index{outline}, on the right hand side of 
+The \emph{Outline}\index{outline} view, on the right hand side of 
 Figure~\ref{fig:userguire:OverturePerspective}, presents an outline of
 the file selected
 in the editor. The outline displays all VDM definitions, such as
 state definitions, values, types, functions and operations. The
-type of the definitions are also shown in the \emph{outline view}.
+type of the definitions are also shown in the view.
 The colour of the icons in front of the names in the outline
 indicates the accessibility of the corresponding definition. Red is
 used for private definitions, yellow for protected definitions and
@@ -392,9 +391,9 @@ for instance it is possible to hide non-public members.
 \end{figure}
 
 Clicking on the name of a definition in the outline will highlight the
-definition in the editor view.
+definition in the Editor view.
 
-The \emph{Problems view}\index{problems} at the bottom of 
+The \emph{Problems}\index{problems} view at the bottom of 
 Figure~\ref{fig:userguire:OverturePerspective} gathers 
 information messages about the projects you are
 working on.
@@ -430,9 +429,9 @@ using the same menu.\index{project!open}\index{project!close}
 \subsection{Adding Additional VDM File Extensions}
 
 It is possible to associate additional or different file extensions with a
-particular VDM dialect editor, instead of the standard {\ttfamily vdmsl},
-{\ttfamily vdmpp} and {\ttfamily vdmrt}. This is done using the \emph{Window}
-$\rightarrow$ \emph{Preferences} menu point. Click the {\ttfamily Add}
+particular VDM dialect editor, instead of the standard {\ttfamily .vdmsl},
+{\ttfamily .vdmpp} and {\ttfamily .vdmrt}. This is done using the \emph{Window}
+$\rightarrow$ \emph{Preferences} menu. Click the Add
 button for the appropriate content type.\index{file extension}
 
 \begin{figure}[!htb]
@@ -444,9 +443,9 @@ button for the appropriate content type.\index{file extension}
 
 \subsection{Filtering Project Contents}
 
-It is possible to filter out certain file types from the \emph{Explorer} view.
+It is possible to filter out certain file types from the VDM Explorer view.
 This is done by clicking the small downward pointing arrow at the top
-right-most corner of the \emph{Explorer} view. See
+right-most corner of the view. See
 Figure~\ref{fig:filteringfiles}. The \emph{Filters...} option allows
 various files or directories to be hidden, including
 directories that have no source files.
@@ -514,7 +513,7 @@ Figure~\ref{fig:linenumbers}.\index{line numbers}
 \section{Importing Overture Projects}\label{subsec:importproj}
 
 It is possible to import Overture projects by
-right-clicking the explorer view and selecting \emph{Import}, followed
+right-clicking in the Explorer view and selecting \emph{Import}, followed
 by \emph{General} $\rightarrow$ \emph{Existing Projects into
   Workspace}.  In this way the projects from \texttt{.zip} files
 mentioned in Chapter~\ref{sec:install} can be imported very
@@ -527,15 +526,15 @@ Follow these steps to create a new Overture project:
 \begin{enumerate}
 	\item Create a new project by choosing \emph{File}
           $\rightarrow$ \emph{New} $\rightarrow$ \emph{Project}
-          $\rightarrow$ \emph{Overture}; \index{project!create};
+          $\rightarrow$ \emph{Overture}; \index{project!create}
 	\item Select the VDM dialect you wish to use (VDM-SL, VDM-PP
-          or VDM-RT);\index{VDM dialect};
+          or VDM-RT);\index{VDM dialect}
 	\item Press \emph{Next};
          \item Type in a project name;
-	\item Chose whether you would like the contents of the new
+	\item Choose whether you would like the contents of the new
           project to be in your workspace or outside
           (browse to the appropriate directory); and
-    \item Click	the finish button (see Figure~\ref{fig:CreateProjectWizard}).
+    \item Click	the Finish button (see Figure~\ref{fig:CreateProjectWizard}).
 \end{enumerate}
 
 \begin{figure}[!htb]
@@ -555,7 +554,7 @@ Follow these steps to create a new Overture project:
 Switching to the Overture perspective will change the layout of the user
 interface to focus on VDM development. To change perspective, go to the menu 
 \emph{Window} $\rightarrow$ \emph{Open perspective} $\rightarrow$
-\emph{Other}\ldots and choose the Overture perspective.
+\emph{Other...} and choose the Overture perspective.
 From the Overture Perspective you can create files
 using one of the following methods:
 
@@ -572,19 +571,18 @@ using one of the following methods:
 In both cases you need to choose a file name and optionally choose a
 directory if you do not want to place the file in the home directory of
 the chosen Overture project. Then a new file with the appropriate file
-extension (according to the chosen dialect, \texttt{vdmsl},
-\texttt{vdmpp} or \texttt{vdmrt})\index{vdm file extension} will be
-created in the chosen directory. This file will use the appropriate
-module/class template to get you started by defining the
-module/class meant to be placed in this new file. Naturally, keywords 
-that are not required can be deleted.
+extension (according to the chosen dialect, \texttt{.vdmsl},
+\texttt{.vdmpp} or \texttt{.vdmrt})\index{vdm file extension} will be
+created in the directory. This file will use the appropriate
+module/class template to get you started. Naturally, keywords 
+that are not required can be deleted from the template.
 
 \section{Setting Project Options}\label{subsec:options}
 
-For each Overture project it is possible to set various VDM
-specific settings. You can get access to these by selecting a project
-in the \emph{Explorer view} and then right clicking and selecting
-\emph{properties}. See Figure~\ref{fig:VDMSettings}. The options 
+It is possible to set various VDM
+specific settings for an Overture project. You can change these by selecting a project
+in the \emph{Explorer} view and then right clicking and selecting
+\emph{Properties}. See Figure~\ref{fig:VDMSettings}. The options 
 that can be set for each VDM project are:\index{project!options}
 
 \begin{figure}[!hbt]
@@ -596,13 +594,13 @@ that can be set for each VDM project are:\index{project!options}
 \end{figure}
 
 \begin{description}
-\item[Language version:] Here the standard is to use the
+\item[Language version:] Here the default is to use the
   \emph{classic} version which is similar to that used in
-  VDMTools. Alternatively one can select VDM-10 which
+  VDMTools. Alternatively you can select VDM-10 which
   is a new improved (but not necessarily backwards compatible) version of
   the VDM dialects developed by the Overture Language Board. 
-\item[Suppress type checking warnings:] This flag is not
-  set by default but you can change it here.
+\item[Suppress type checking warnings:] Warnings are enabled
+  by default but you can change it here.
 \item[Dynamic type checks:] This is an option for the interpreter (default on) 
   to continuously type check  values during interpretation of a VDM model.
   It is possible to switch off the check here.
@@ -626,8 +624,8 @@ that can be set for each VDM project are:\index{project!options}
 \end{description}
 
 Overture allows VDM specifications to be embedded in \LaTeX\ files that
-form part of the documentation of a project. It is possible to define
-a main \LaTeX\ file for the project, and define the order in which the
+form part of the documentation of a project. The project settings allow you
+to define a main \LaTeX\ file for the project, and define the order in which the
 different VDM source files shall be included.
 
 \chapter{Editing VDM models}\label{sec:editVDM}
