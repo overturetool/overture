@@ -983,14 +983,16 @@ of test cases for the trace definition name.\index{icon!skipped test case}
 
 VDM++ and VDM-RT projects can be converted automatically back and forth between VDM
 and the corresponding UML model\footnote{In the current version of
-  Overture this feature is somewhat unstable.}. 
+Overture this feature is somewhat unstable.}. 
 Essentially, VDM and UML can be considered
 as different views of the same model. A UML model is typically used
 to give a graphical overview of the model using class diagrams, and
-UML sequence diagrams can be used to indicate the test scenarios
+sequence diagrams can be used to indicate the test scenarios
 that a user would like to perform. The VDM model is typically used
 to define the implementation and constraints for each class and
-is therefore used for detailed semantic analysis. The exchange between VDM and
+is therefore used for detailed semantic analysis.
+
+The exchange between VDM and
 UML is done using the XML format called XMI\index{XMI}. At the moment,
 Enterprise Architect\index{Exterprise Architect} is the only UML tool
 supported. Export from EA is done by selecting the \emph{Project} menu
@@ -1014,34 +1016,35 @@ it is possible to \emph{Import XMI}\index{import XMI} or to
 \chapter{Moving from VDM++ to VDM-RT}\label{sec:ToVDMRT}
 
 The methodology for the development of distributed real-time
-embedded systems in VDM defines a step where one
-moves from an initial VDM++ model to a VDM-RT model \cite{Larsen&09b}. This
-step is supported by the Overture tool where it is possible to
-copy a VDM++ project to create the starting point for a VDM-RT
-project. This is done by right clicking on the VDM++ project to be
-converted in the VDM Explorer view, followed by 
+embedded systems in VDM defines a step where you
+move from an initial VDM++ model to a VDM-RT model\cite{Larsen&09b}. This
+step is supported by the Overture tool which will convert
+a VDM++ project to create the starting point for a new VDM-RT
+project. This is done by right-clicking on the VDM++ project to be
+converted in the Explorer view, followed by 
 the \emph{Clone as VDM-RT} option.\index{create real time
-  project}. A new VDM-RT project is then
+  project}. A new VDM-RT project is then automatically
 created.\index{create!VDM-RT project} It will have the
-same as the VDM++ project, but with \texttt{VDM\_RT} appended.
-Inside the project, all the \texttt{vdmpp} files will have been converted
-to a \texttt{vdmrt} extension. The original VDM++ project is not
+same name as the original VDM++ project, but with \texttt{VDM\_RT} appended.
+Inside the project, all the \texttt{.vdmpp} files will have been converted
+to a \texttt{.vdmrt} extension. The original VDM++ project is not
 changed at all. So this is simply a quick and easy way to get to the
 starting point for a VDM-RT model. You would then manually create
-a {\bf\ttfamily system} class with appropriate declarations of
-\texttt{CPU}s and \texttt{BUS}ses.
+a \texttt{system} class with appropriate declarations of
+\texttt{CPU}s and \texttt{BUS}ses and proceed with the real time
+model development.
  
 \chapter{Analysing and Displaying Logs from VDM-RT Executions}\label{sec:showlog}
 
-When a VDM-RT model is executed, a logfile is created in
-a ''\texttt{logs/debugconfig}'' subfolder with a \emph{.logrt} extension. The
-file name for the logfile indicates the time at which the model was executed
+Whenever a VDM-RT model is executed, a logfile is created in
+a \texttt{logs/debugconfig} subfolder with a \emph{.logrt} extension. The
+file name for the logfile indicates the time at which the model was executed,
 so it is possible to distinguish multiple runs. Logfiles can be
-viewed with the build-in \emph{RealTime Log Viewer},\index{RealTime Log viewer}
+viewed with the built-in \emph{RealTime Log Viewer},\index{RealTime Log viewer}
 by double-clicking the .logrt file in the Explorer view. The log viewer enables
 you to explore the simulated system execution in various ways. In
 Figure~\ref{fig:userguide:ArchitecturalOverview} the architectural
-overview of the system is given, describing the distributed nature of
+overview of the system is shown, describing the CPU and BUS topology of
 the model.\index{architecture overview}
 
 \begin{figure}[htp]
@@ -1052,10 +1055,11 @@ the model.\index{architecture overview}
 \end{center}
 \end{figure}
 
-The \emph{RealTime Log Viewer} also enables you to get an overview of
-the model execution\index{model execution overview} at a system level -- this can be seen in
-Figure~\ref{fig:userguide:ExecutionOverview}. This view shows how the
-different CPUs\index{CPU} communicate via the BUSes\index{BUS} of the system. 
+The log viewer also enables you to get an overview of
+the model execution\index{model execution overview} at a system level --
+see Figure~\ref{fig:userguide:ExecutionOverview}.
+This view shows how the different CPUs\index{CPU} communicate via the
+BUSes\index{BUS} of the system. 
 
 \begin{figure}[htp]
 \begin{center}
@@ -1065,18 +1069,18 @@ different CPUs\index{CPU} communicate via the BUSes\index{BUS} of the system.
 \end{center}
 \end{figure}
 
-Since the complete execution of the model cannot be shown in a normal
+Since the complete execution of a model cannot generally be shown in a normal
 sized window, you have the option of jumping to a certain time index
 using the \emph{Go to time} button.\index{Go to time} It is
-also possible to export all the generated views to \emph{JPG} format
+also possible to export all the generated views to JPEG format files
 using the \emph{Export Image} button.\index{export image button} All
 the generated images will be placed in the ''\texttt{logs}'' folder.
 
-The \emph{RealTime Log Viewer} can
+The log viewer can
 also give an overview of all executions on a single CPU. This view
 gives a detailed description of all operations and functions invoked
-on the one CPU as well as the scheduling of concurrent processes. This can
-be seen in Figure~\ref{fig:userguide:ExecutionCPU}.\index{single CPU overview} 
+on the one CPU as well as the scheduling of concurrent processes. See
+Figure~\ref{fig:userguide:ExecutionCPU}.\index{single CPU overview} 
 
 \begin{figure}[htp]
 \begin{center}
@@ -1089,36 +1093,38 @@ be seen in Figure~\ref{fig:userguide:ExecutionCPU}.\index{single CPU overview}
 \chapter{Defining Your Own Java Libraries to be used from Overture}\label{sec:javalibs}
 
 VDM models are not appropriate for describing everything. It is common
-to have existing legacy code that a user may not
+to have existing legacy code that you may not
 wish to spend time modelling in VDM, but would like to make use of
-from a VDM model. Overture has a feature enabling a combination of a VDM
-model and external libraries with functionality in a standard \texttt{jar} file.
+from a VDM model. Overture has a feature to link a VDM
+model with external Java libraries contained in a standard \texttt{jar} file
+\footnote{In fact the IO, MATH and VDMUtil libraries are implemented as such
+external jar files.}.
 Using this feature it is possible 
-to call functionality provided by the jar file from a VDM model. This functionality
-corresponds to DL modules/classes in VDMTools \cite{DLMan}.
+to call functionality provided by jar files from a VDM model. This functionality
+corresponds to DL modules/classes in VDMTools\cite{DLMan}.
 
-External libraries are coupled to VDM via
+External jar libraries are linked to VDM via
 \texttt{is not yet specified} statements and expressions. Operations
 or functions of modules or classes can be delegated to an external
-jar, calling out to a delegate java class. The delegate, if present, has
+jar, calling out to a Java class. The Java delegate, if present, has
 the same name as the VDM
-module/class name where underscores (``\_'') are replaced with package naming
+module/class name with underscores (``\_'') replaced with package naming
 dots (``.''). For example, the VDM class \texttt{remote\_lib\_sensor} becomes
-\texttt{remote.lib.sensor} in java. The delegate lookup is only done once and
-only when a \texttt{is not yet specified} body is first
-reached in a class or module. The jar with the remote library must be places in
+\texttt{remote.lib.sensor} in Java. The delegate lookup is only done once and
+only when an \texttt{is not yet specified} statement or expression is first
+reached in a class or module. The jar with the external library must be places in
 the VDM project in a folder named \texttt{lib} where it will be put in the
 class-path of the interpreter when it is executed.
 
-\section{Remote Library Example}
+\section{External Library Example}
 
 In this example, a remote sensor will be defined in VDM which can read a
 value from a real sensor. The VDM model interface of the sensor can be
 seen in listing~\ref{remoteSensorVdm} and the Java class
 implementing it can be seen in listing~\ref{remoteSensorJava}. The
 values that are to be exchanged between the Overture IDE and the jar
-file needs to be the internal Values objects used in VDMJ. Documentation about these
-can be found in the VDMJ Design Specification \cite{Battle10}.
+file needs to be the internal Value objects used in VDMJ. Documentation about
+these classes can be found in the VDMJ Design Specification\cite{Battle10}.
 
 \begin{lstlisting}[language=VDM++,label=remoteSensorVdm,caption=Remote sensor VDM class,captionpos=b]
 class remote_lib_sensor
@@ -1143,7 +1149,7 @@ public class sensor
 {
 	public Value getValue(Value id) throws ValueException
 	{
-		int result = ... // Read value for sensor number "id"
+		int result = ... // Read a value for sensor number "id"
 		return new IntegerValue(result);
 	}
 }
@@ -1154,36 +1160,35 @@ public class sensor
 
 In some situations, it may be valuable to be able to establish a
 front end (for example a GUI or a test harness) for calling a VDM model.
-This is enabled in a fashion similar to the approach described in the 
-previous section using an external java jar file. This feature corresponds
-roughly to the CORBA based API from VDMTools \cite{APIMan}.
+This feature corresponds roughly to the CORBA based API from
+ DMTools\cite{APIMan}.
 
-A VDM model can be remotely controlled by the use of the java interface
+A VDM model can be remotely controlled by implementing the Java interface
 \texttt{RemoteControl}. Remote control should be understood as a
 delegation of control of the interpreter, which means that the remote
 controller is in charge of the debug session and is responsible for taking
 action and executing parts of the VDM model when needed. When finished, it should
 return and the debug session will stop. When a Remote controller is
-used, the Overture debugger continues working normally, so for example breakpoints can be
-used. Launching a debugging session with the use of a remote
-controller can be done by placing the jar with the remote controller
+used, the Overture debugger continues working normally, so for example
+breakpoints can be used. A debugging session with the use of a remote
+controller can be started by placing the jar with the RemoteControl implementation
 in a project subfolder called \texttt{lib}. The fully
-qualified name of the remote controller class must then be specified in the
-launch configuration under the \textit{Remote Control} box.
+qualified name of the RemoteControl class must then be specified in the
+launch configuration in the \textit{Remote Control} box.
 
 \section{Example of a Remote Control Class}
 
 In this example, we have a VDM class \texttt{A} which defines an operation
 that just returns its argument. As
-seen in listing~\ref{remoteControllerJava} it is possible to call
-\texttt{execute} on the Overture interpreter which is parsed to the remote
-controller which then returns a string with the result. A more
-advanced \texttt{valueExecute} is available which returns the internal
+seen in listing~\ref{remoteControllerJava}, it is possible to call
+\texttt{execute} on the Overture interpreter via the RemoteInterpreter object
+which is passed to the RemoteControl implementation via the \texttt{run} method.
+The method returns a string with the result. A more
+advanced \texttt{valueExecute} method is also available which returns the internal
 Value type of the interpreter which is useful for more complex
-results. The
-values that are to be exchanged between the Overture IDE and the jar
-file need to be the internal Values used in VDMJ. Documentation about these
-can be found in the VDMJ Design Specification \cite{Battle10}.
+results. The values exchanged between the Overture IDE and the 
+controller are the internal Values used in VDMJ. Documentation about these
+can be found in the VDMJ Design Specification\cite{Battle10}.
 
 \begin{lstlisting}[language=JAVA,label=remoteControllerJava,caption=Remote Controller Java class,captionpos=b]
 import org.overturetool.vdmj.debug.RemoteControl;
@@ -1207,7 +1212,7 @@ public class RemoteController implements RemoteControl
 \chapter{A Command-Line Interface to VDMJ}\label{sec:commandline}
 
 At the centre of the Overture tool is a Java implementation of VDM
-called VDMJ. This provides a command-line interface that may be valuable
+called \emph{VDMJ}. This provides a command-line interface that may be valuable
 as it can be used independently of the Eclipse interface of Overture.
 \index{VDMJ}
 
@@ -1226,11 +1231,11 @@ Usage: VDMJ <-vdmsl | -vdmpp | -vdmrt> [<options>] [<files>]
 \lstset{style=mystyle}
 \lstset{language=VDM++}
 
-So the first parameter indicates the VDM dialect to use and then
+The first parameter indicates the VDM dialect to use and then
 various extra options can be used. These are:
 
 \begin{description}
-\item[\texttt{-r}:] This will indicate the VDM release number (classic or vdm10).
+\item[\texttt{-r}:] This indicates the VDM release number (classic or vdm10).
 \item[\texttt{-w}:] This will suppress all warning messages.
 \item[\texttt{-q}:] This will suppress all information messages, such as
  the number of source files processed etc.
@@ -1241,28 +1246,28 @@ various extra options can be used. These are:
   VDM model (if it is syntax and type correct) and then stop.
 \item[\texttt{-e <exp>}:] This will evaluate the \texttt{<exp>}, print
   the result, and stop.
-\item[\texttt{-c <charset>}:] This will select a file character set. This is to
+\item[\texttt{-c <charset>}:] This will select a file character set, to
 allow a specification written in languages other than the default for your system. 
 \item[\texttt{-t <charset>}:] This will select a console character set. The output
 terminal can use a different character set to the specification files.
 \item[\texttt{-o <filename>}:] This will save the internal
   representation of a parsed and type checked spe\-ci\-fication. Such files are
-effectively libraries, and can be can be re-loaded without the
-parsing/checking overhead. If files are sufficiently large, this may be faster.
+  effectively libraries, and can be can be re-loaded without the
+  parsing/checking overhead. If files are sufficiently large, this may be faster.
 \item[\texttt{-pre}:] This will disable all pre-condition checks.
 \item[\texttt{-post}:] This will disable all post-condition checks.
 \item[\texttt{-inv}:] This will disable type/state invariant checks.
-\item[\texttt{-dtc}:] this will disable all dynamic type checking.
-\item[\texttt{-measures}:] this will disable recursive measure checking.
+\item[\texttt{-dtc}:] This will disable all dynamic type checking.
+\item[\texttt{-measures}:] This will disable recursive measure checking.
 \item[\texttt{-log}:] This will enable VDM-RT real-time event logging (see Chapter~\ref{sec:showlog}).
-\item [\texttt{-remote}:] This enables remote control of the VDMJ executable.
+\item[\texttt{-remote}:] This enables remote control of the VDMJ executable.
 \end{description}
 
 Normally, a VDM model will be loaded by identifying all of the VDM source files to include. At least
 one source file must be specified unless the -i option is used, in which case the interpreter can be
 started with no specification. If a directory is specified rather than a file, then VDMJ will load
 all files in that directory with a suffix that matches the dialect (eg. \texttt{*.vdmpp} files for VDM++).
-Files and directory arguments can be mixed.
+Multiple files and directory arguments can be mixed.
 
 If no \texttt{-i} option is given, the tool will only parse and type check
 the VDM model files, giving any errors and warnings on
@@ -1404,7 +1409,7 @@ specification, assuming the specification has no type checking errors.
 
 All specification files loaded by VDMJ are parsed and type checked
 automatically. There are no type checking options; the type checker
-always uses ``possible'' semantics. If a specification does not parse
+always uses \texttt{possible} semantics. If a specification does not parse
 and type check cleanly, the interpreter cannot be started and proof
 obligations cannot be generated (though warnings are allowed). All
 warnings and error messages are printed on standard output, even
@@ -1415,7 +1420,7 @@ in a \LaTeX\ file using \verb|vdm_al| environments (see
 Chapter~\ref{sec:prettyprint}); the markup is ignored by the parser,
 though reported line numbers will be correct.
 
-The Java process will return with an exit code of zero if the
+The VDMJ Java process will return with an exit code of zero if the
 specification is clean (ignoring warnings). Parser or type checking
 errors result in an exit code of 1. The interpreter and PO generator
 always exit with a code of zero.
@@ -1439,21 +1444,21 @@ Interpreter started
 The interpreter prompt is ``\texttt{>}''. The 
 interactive interpreter commands are as follows (abbreviated forms are
 permitted for some, shown in square brackets): 
-% (explanation below. The shmem source
+% (explanation below. The shmem.vdmsl source
 %model is in Appendix A):
 
 \begin{description}
 \item[\texttt{modules}:] This command lists the loaded module names in
-  a VDM-SL specification. In case of a flat VDM-SL model the name
+  a VDM-SL specification. For a flat VDM-SL model, the single name
   \texttt{DEFAULT} is used. The default module will be indicated in
   the list displayed.\index{modules}\index{command!modules}
 \item[\texttt{classes}:] This command lists the loaded class names in
-  both VDM++ and VDM-RT specifications. The default class will be indicated in
+  VDM++ and VDM-RT specifications. The default class will be indicated in
   the list displayed.\index{classes}\index{command!classes}
 \item[\texttt{default <module/class>}:] This command sets the default
   module/class name as the prime scope for which the lookup of
   identifiers appear (i.e.\ names in the default module
-do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
+  do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
 ``\texttt{print M`xyz}'').\index{default}\index{command!default}
 \item[\texttt{create <id> := <exp>}:] This command is only available
   for the VDM++ and VDM-RT dialects. It creates a global variable that
@@ -1467,35 +1472,34 @@ do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
   \\texttt{log off}. The events logged include requests, activations and
   completions of all functions and operations, as well as all object creations,
   creation of CPUs and BUSses, deployment of objects
-  to specific CPUs and the swapping in an out of threads.\index{log}\index{command!log}  
+  to specific CPUs and the swapping in/out of threads.\index{log}\index{command!log}  
 \item[\texttt{state}:] This command can only be used for the VDM-SL
   dialect and shows the default module state.\index{state}\index{command!state}  
   The value of the state can be changed by operations called.
 \item[\texttt{[p]rint <expression>}:] This command evaluates the
-  expression provided in the current
-  context.\index{print}\index{command!print}     
+  expression provided in the current context.\index{print}\index{command!print}     
 \item[\texttt{runtrace <name> [test number]}:] This command runs the trace called
-  \texttt{<name>}. This will carry out the combinatorial
-  test by expanding all the regular expressions and executing the resulting
+  \texttt{<name>}. This will expand the combinatorial
+  test and execute the resulting
   operation sequences. If a specific test number is provided, only
-  that one test will be executed. \index{combinatorial testing}
+  that one test from the expansion will be executed. \index{combinatorial testing}
 \item[\texttt{debugtrace <name> [test number]}:] This command is the same as
   \texttt{runtrace}, except that if a runtime exception is encountered during
-  the execution of a test, control will enter the debugger. With texttt{runtrace}
+  the execution of a test, control will enter the debugger. With texttt{runtrace},
   runtime exceptions are recorded as the result of a (failed) test, rather than
   trapping into the debugger.\index{combinatorial testing}
 \item[\texttt{filter \%age | <reduction type>}:] This command reduces
   the size of expanded CT traces to a given percentage (eg. 10\%).
   There are various options for making the actual selection of tests to remove:
   ``\texttt{RANDOM}'', ``\texttt{SHAPES\_NOVARS}'', ``\texttt{SHAPES\_VARNAMES}''
-   or ``\texttt{SHAPES\_VARVALUES}'' (note that lower case can also be used here).
+   or ``\texttt{SHAPES\_VARVALUES}'' (the names are not case sensitive).
 \item[\texttt{assert <file>}:] This command runs assertions from the
   file provided. The assertions in the file must be Boolean
-  expressions, one per line. The command evaluates each assertion in
-  turn, raising an error for any which is false.\index{assert}\index{command!assert}  
+  expressions, one per line. The command evaluates every assertion in
+  the file, raising an error for any which is false.\index{assert}\index{command!assert}  
 \item[\texttt{init}:] This command re-initializes the global
   environment. Thus all state components will be initialised to their
-  initial value again, created variables are lost and code coverage
+  initial value again, created variables are lost and code coverage information
   is reset.\index{init}\index{command!init} 
 \item[\texttt{env}:] This command lists the value of all global symbols
   in the default environment. This will show the signatures for all
@@ -1503,34 +1507,35 @@ do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
   identifiers from value definitions and global state definitions (in VDM++
   terminology, public static instance variables). Note that this includes invariant,
   initialization and pre/postcondition functions. In the VDM++ and
-  VDM-RT dialects the identifiers created using the \texttt{create}
+  VDM-RT dialects, the identifiers created using the \texttt{create}
   command will also be included.\index{env}\index{command!env} 
-\item[\texttt{pog}:] This command generates a list of all proof
-  obligations for the VDM model that is loaded.\index{pog}\index{command!pog}  
+\item[\texttt{pog [<fn/op>]}:] This command generates a list of all proof
+  obligations for the VDM model that is loaded. There is an optional argument
+  to indicate one function or operation name.\index{pog}\index{command!pog}  
 \item[\texttt{break [<file>:]<line\#> [<condition>]}:] This command
   creates a breakpoint at a specific file and line and optionally makes
   it a conditional breakpoint.\index{break}\index{command!break}  
 \item[\texttt{break <function/operation> [<condition>]}:] This command
-  creates a breakpoint at the start of a named function or operation and
+  creates a breakpoint at the start of the body of a named function or operation and
   optionally makes it a conditional breakpoint. 
 \item[\texttt{trace [<file>:]<line\#> [<exp>]}:] This command creates a
-  tracepoint for a specific file and line. A
-  tracepoint is similar to a breakpoint but with an implcit continue
-  after it. A tracepoint prints the value of the expression given
-  whenever the tracepoint is reached.\index{trace}\index{command!trace} 
+  tracepoint for a specific file and line. A tracepoint prints the value of the
+  expression given whenever the tracepoint is reached, and then continues.
+  \index{trace}\index{command!trace} 
 \item[\texttt{trace <function/operation> [<exp>]}:] This command
-  create a tracepoint at the start of a function or operation.
+  create a tracepoint at the start of a function or operation body.
   See \texttt{trace} above for an explanation of tracepoints.
 \item[\texttt{remove <breakpoint\#>}:] This command removes a
   trace/breakpoint by referring to its number (given by the
-  \texttt{list} command). \index{remove}\index{command!remove} 
+  \texttt{list} command).\index{remove}\index{command!remove} 
 \item[\texttt{list}:] This command provides a list of all current
   trace/breakpoints by number.\index{list}\index{command!list}  
 \item[\texttt{coverage [clear|write <dir>|merge <dir>|<filenames>]}:]
-  This command manages test coverage information. The coverage command displays the source
+  This command manages test coverage information.
+  The coverage command displays the source
   code of the loaded VDM model (by default, all source files are
   listed), with ``+'' and ``-'' signs in the left hand column
-  indicating lines which have been executed or not. Finally, the percentage
+  indicating lines which have been executed or not. The percentage
   coverage of each source file
   is displayed.\index{coverage}\index{command!coverage} Typically, the
   testing of a specification will be incremental, and so it is
@@ -1544,13 +1549,13 @@ do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
   written to a separate ``day'' directory, and then all the days merged
   together for review of the overall coverage at the end.
 \item[\texttt{latex|latexdoc [<files>]}:] This command generates \LaTeX\
-  line coverage files. These are \LaTeX\ versions of the source files
+  coverage files. These are \LaTeX\ versions of the source files
   with parts of the
   specification highlighted where they have not been executed. The
   \LaTeX\ output also contains a table of percentage cover by
   module/class and the number of times functions and operations were
   hit during the execution. The \texttt{latexdoc} command is the same,
-  except that output files are wrapped in LaTeX document headers. The
+  except that output files are wrapped in \LaTeX\ document headers. The
   output files are written to the same directory as the source files, one
   per source file, with the extension \texttt{.tex}. Coverage
   information is reset when a specification is loaded, when an \texttt{init}
@@ -1565,11 +1570,11 @@ do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
 \item[\texttt{reload}:] This command will reload, parse and type check the
   VDM model files currently loaded. Note that if there are any errors
   in the parse or type check of the files, the interpreter will exit
-  after reload.\index{reload}\index{command!reload} 
-\item[\texttt{load <files>}:] This command replace current loaded VDM
+  after the reload.\index{reload}\index{command!reload} 
+\item[\texttt{load <files>}:] This command replaces the current loaded VDM
   model files. Note that if there are any errors in the parse or type
   check of the files, the interpreter will exit after
-  load.\index{load}\index{command!load}  
+  the load.\index{load}\index{command!load}  
 \item[\texttt{[q]uit}:] This command leaves the
   interpreter.\index{quit}\index{command!quit}  
 \end{description}
@@ -1710,17 +1715,17 @@ do not need to be qualified, so you can say ``\texttt{print xyz}'' rather than
 %any assertion which is false. The assertions in the file must be
 %simple boolean expressions, one per line:
 
-When the interpretation of a VDM model is stopped at a
+When the execution of a VDM model is stopped at a
 breakpoint, there are additional commands that can be used. These are:
 
 \begin{description}
 \item[\texttt{[s]tep}:] This command steps forward until the
   current expression/statement is on a new line. The command will step
   into function and operation calls.\index{step}\index{command!step} 
-\item[\texttt{[n]ext}:] This command is similar to \\texttt{step} except
+\item[\texttt{[n]ext}:] This command is similar to \texttt{step} except
  function and operation calls are stepped over.\index{next}\index{command!next}  
 \item[\texttt{[o]ut}:] This command runs to the return of the current
-  function or operation. \index{out}\index{command!out} 
+  function or operation.\index{out}\index{command!out} 
 \item[\texttt{[c]ontinue}:] This command resumes execution and continues
   until the next breakpoint or completion of the thread that is being
   debugged.\index{continue}\index{command!continue} 
@@ -1842,7 +1847,7 @@ waiting                   & The number of outstanding requests for the operation
 This appendix gives a list of the internal errors in Overture
 and the circumstances under which each internal error can be expected.
 Most of these errors should \emph{never} be seen, so if they appear
-please report the occurrence to the SourceForge bug reporting utility
+please report the occurrence via the Overture bug reporting utility
 (\url{https://sourceforge.net/tracker/?group_id=141350&atid=749152}). 
 
 \input{../../core/vdmj/documentation/MESSAGES_Internal}
@@ -1870,7 +1875,7 @@ reported. These can be as follows:
 \chapter{Type Errors and Warnings}\label{app:typeerr}
 
 If the syntax rules are satisfied, it is still possible to get
-errors from the type checker. The errors here can be as
+errors from the type checker. The errors can be as
 follows:
 
 \input{../../core/vdmj/documentation/MESSAGES_TypeChecking}
@@ -1892,16 +1897,16 @@ are as follows:
 \chapter{Categores of Proof Obligations}\label{app:POcategories}
 
 This appendix provides a list of the different proof obligation
-categories used in Overture, and an explanantion of the
-circumstances under which each PO category can be expected.
+categories generated by Overture, and an explanantion of the
+circumstances under which each category can be expected.
 
 \begin{description}
-\item[map apply:] Whenever a map application is made it needs to be
+\item[map apply:] Whenever a map application is made you need to be
   certain that the argument is in the domain of the map.
-\item[function apply:] Whenever a function application is used it needs to be
-  certain that the list of arguments to the function satisfy the
+\item[function apply:] Whenever a function application is used you need to be
+  certain that the list of arguments to the function satisfies the
   pre-condition of the function, assuming such a predicate is present.
-\item[sequence apply:] Whenever a sequence application is used it needs to be
+\item[sequence apply:] Whenever a sequence application is used you need to be
   certain that the argument is within the indices of the sequence.
 \item[post condition:]
 \item[function satisfiability:] For all implicit function definitions
@@ -1910,27 +1915,27 @@ circumstances under which each PO category can be expected.
   arguments satisfying the pre-conditions.
 \item[function parameter patterns:]
 \item[let be st existence:] Whenever a let-be-such-that
-  expression/statement is used it needs to be certain that at least one value
+  expression/statement is used you need to be certain that at least one value
   will match the such-that expression.
-\item[unique existence binding:] The {\bf\ttfamily iota} expression
-  requires a unique binding to be present and that is guranteed by
+\item[unique existence binding:] The \texttt{iota} expression
+  requires one unique binding to be present and that is guranteed by
   proof obligations from this category.
 \item[function iteration:] 
 \item[map iteration:]
 \item[function compose:]
 \item[map compose:]
-\item[non-empty set:] This kind of proof obligations are used whenever
+\item[non-empty set:] This kind of proof obligation is used whenever
   non-empty sets are required.
-\item[non-empty sequence:] This kind of proof obligations are used whenever
+\item[non-empty sequence:] This kind of proof obligation is used whenever
   non-empty sequences are required (eg. taking the head of a sequence)
-\item[non-zero:] This kind of proof obligations are used whenever zero
+\item[non-zero:] This kind of proof obligation is used whenever zero
   cannot be used (e.g.\ in division).
 \item[finite map:] If a type binding to a type that potentially has
-  infinitely many elements is used inside a map comprehension this
-  proof obligation will be generated because all mappings in VDM are finite.
+  infinitely many elements is used inside a map comprehension, this
+  proof obligation will be generated because all mappings in VDM must be finite.
 \item[finite set:] If a type binding to a type that potentially has
-  infinitely many elements is used inside a set comprehension this
-  proof obligation will be generated because all sets in VDM are finite.
+  infinitely many elements is used inside a set comprehension, this
+  proof obligation will be generated because all sets in VDM must be finite.
 \item[map compatible:] Mappings in VDM represent a unique relationship
   between the domain values and the corresponding range values. Proof
   obligations in this category are meant to ensure that such a unique
@@ -1939,37 +1944,36 @@ circumstances under which each PO category can be expected.
 \item[map set compatible:] 
 \item[sequence modification:]
 \item[tuple selection:] This proof obligation category is used
-  whenever a tuple selection expression is used and it must be
-  guranteed that the length of the tuple is at least as long as the
+  whenever a tuple selection expression is used to
+  gurantee that the length of the tuple is at least as long as the
   selector used.
 \item[value binding:] 
 \item[subtype:] This proof obligation category is used whenever it is
   not possible to statically detect that the given value
   falls into the subtype required.
 \item[cases exhaustive:] If a cases expression does not have an
-  {\bf\ttfamily others} clause it is necessary to ensure that the
+  \texttt{others} clause it is necessary to ensure that the
   different case alternatives catch all values of the type of the
   expression used in the case choice.
 \item[type invariant:] Proof obligations from this category are used
   to ensure that invariants for elements of a particular type are satisfied.
 \item[recursive function:] This proof obligation makes use of the
-  {\bf\ttfamily measure} construct to ensure that a recursive function
+  \texttt{measure} construct to ensure that a recursive function
   will terminate. 
 \item[state invariant:] If a state (including instance variables in
-  VDM++) have an invariant this proof obligation will be generated
-  whenever assignment is made to a part of the state all the places
-  where the invariant shall be satisfied.
+  VDM++) has an invariant, this proof obligation will be generated
+  whenever an assignment is made to a part of the state.
 \item[while loop termination:] This kind of proof obligation is a
-  reminder to ensure that a while loop is terminating.
+  reminder to ensure that a while loop will terminate.
 \item[operation post condition:] Whenever an explicit operation has a
   post-condition there is an implicit proof obligation generated to
-  remind the user that one would have to ensure that the explicit body
-  of the operation satisfies the post-condition for all possible input.
+  remind the user that you have to ensure that the explicit body
+  of the operation satisfies the post-condition for all possible inputs.
 \item[operation parameter patterns:] 
 \item[operation satifiability:] For all implicit operation definitions
-  this proof obligation will be generated to ensure that it will be
+  this proof obligation will be generated to ensure that it is
   possible to find an implementation satisfying the post-condition for all
-  arguments of the operation input types satisfying the pre-conditions. 
+  arguments satisfying the pre-conditions. 
 \end{description}
 
 \newpage
