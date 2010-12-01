@@ -78,21 +78,22 @@ public class TestSequence extends Vector<CallSequence>
 	public void typeCheck(ClassDefinition classdef) throws Exception
 	{
 		Interpreter interpreter = Interpreter.getInstance();
-		Environment env = null;
-
-		if (interpreter instanceof ClassInterpreter)
-		{
-			 env = new FlatEnvironment(
-				classdef.getSelfDefinition(),
-				new PrivateClassEnvironment(classdef, interpreter.getGlobalEnvironment()));
-		}
-		else
-		{
-			 env = interpreter.getGlobalEnvironment();
-		}
 
 		for (CallSequence test: this)
 		{
+			Environment env = null;
+
+			if (interpreter instanceof ClassInterpreter)
+			{
+				 env = new FlatEnvironment(
+					classdef.getSelfDefinition(),
+					new PrivateClassEnvironment(classdef, interpreter.getGlobalEnvironment()));
+			}
+			else
+			{
+				 env = interpreter.getGlobalEnvironment();
+			}
+
     		for (Statement statement: test)
     		{
 				interpreter.typeCheck(statement, env);
