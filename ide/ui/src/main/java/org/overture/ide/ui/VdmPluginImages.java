@@ -48,6 +48,9 @@ public class VdmPluginImages
 			+ "methpri_obj.gif"; //$NON-NLS-1$
 	public static final String IMG_METHOD_DEFAULT = NAME_PREFIX
 			+ "methdef_obj.gif"; //$NON-NLS-1$
+
+	
+	
 	//	
 	//	
 	//	public static final String IMG_MISC_PUBLIC= NAME_PREFIX + "methpub_obj.gif"; 			//$NON-NLS-1$
@@ -100,6 +103,9 @@ public class VdmPluginImages
 
 	public static final String IMG_OBJS_VDM_PER_SYNC = NAME_PREFIX
 			+ "vdm_per_sync.gif"; //$NON-NLS-1$
+	
+	public static final String IMG_ALPHA_SORTING = NAME_PREFIX + "alphab_sort_co.gif";
+	
 	//
 	//	public static final String IMG_OBJS_INNER_CLASS_PUBLIC= NAME_PREFIX + "innerclass_public_obj.gif"; //$NON-NLS-1$
 	//	public static final String IMG_OBJS_INNER_CLASS_DEFAULT= NAME_PREFIX + "innerclass_default_obj.gif"; //$NON-NLS-1$
@@ -235,6 +241,8 @@ public class VdmPluginImages
 	//
 	//	public static final ImageDescriptor DESC_MENU_REFRESH= createUnManaged(T_ETOOL, "refresh.gif"); 	//$NON-NLS-1$
 	//	
+	public static final ImageDescriptor DESC_IMG_ALPHA_SORTING = createManagedFromKey(T_EVIEW,IMG_ALPHA_SORTING);
+	
 	public static final ImageDescriptor DESC_OBJS_LOCK = createManagedFromKey(T_OBJ, IMG_OBJS_LOCK);
 	// public static final ImageDescriptor DESC_OBJS_GHOST= createManagedFromKey(T_OBJ, IMG_OBJS_GHOST);
 	// public static final ImageDescriptor DESC_OBJS_PACKDECL= createManagedFromKey(T_OBJ, IMG_OBJS_PACKDECL);
@@ -576,6 +584,9 @@ public class VdmPluginImages
 	//
 	// public static final ImageDescriptor DESC_OBJS_PACKAGE = createManagedFromKey(T_OBJ, IMG_OBJS_PACKAGE);
 
+	
+	
+	
 	static
 	{
 		// createManagedFromKey(T_OBJ, IMG_CORRECTION_CHANGE);

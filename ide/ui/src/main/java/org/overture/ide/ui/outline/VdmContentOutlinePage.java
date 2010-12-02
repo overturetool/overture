@@ -7,15 +7,10 @@ import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.part.IPageSite;
@@ -27,12 +22,11 @@ import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.IVdmElementDelta;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.resources.IVdmSourceUnit;
+import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.editor.core.VdmEditor;
 import org.overture.ide.ui.internal.viewsupport.DecorationgVdmLabelProvider;
 import org.overture.ide.ui.internal.viewsupport.VdmUILabelProvider;
 import org.overturetool.vdmj.ast.IAstNode;
-import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.types.Type;
 
 @SuppressWarnings("deprecation")
 public class VdmContentOutlinePage extends ContentOutlinePage implements
@@ -123,90 +117,6 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		}
 	}
 
-	public class VdmOutlineViewer extends TreeViewer
-	{
-		private class OutlineSorter extends ViewerSorter
-		{
-			private final static int TYPES = 1;
-			private final static int VALUES = 0;
-
-			// private final static int INSTANCEVARIABLES = 2;
-			// private final static int OPERATIONS = 3;
-			// private final static int FUNCTIONS = 4;
-			// private final static int THREADS = 5;
-			// private final static int SYN = 6;
-			// private final static int TRACES = 7;
-
-			@Override
-			public int category(Object element)
-			{
-				if (element instanceof Type)
-				{
-					return TYPES;
-				} else if (element instanceof Definition)
-				{
-					return VALUES;
-				} else
-					return super.category(element);
-			}
-
-			@Override
-			public int compare(Viewer viewer, Object e1, Object e2)
-			{
-				int cat1 = category(e1);
-				int cat2 = category(e2);
-				if (cat1 != cat2)
-				{
-					return cat1 - cat2;
-				}
-				
-				if(e1 instanceof IAstNode && e2 instanceof IAstNode)
-				{
-					return collator.compare(((IAstNode)e1).getName(), ((IAstNode)e2).getName());
-				}else
-				return super.compare(viewer, e1, e2);
-			}
-		}
-
-		public VdmOutlineViewer(Composite parent)
-		{
-			super(parent);
-			setAutoExpandLevel(2);
-			setUseHashlookup(true);
-
-			setSorter(new OutlineSorter());
-		}
-
-		@Override
-		protected void fireSelectionChanged(SelectionChangedEvent event)
-		{
-			if (!inExternalSelectionMode)
-			{
-				super.fireSelectionChanged(event);
-			}
-		}
-
-		public void dispose()
-		{
-
-			Tree t = getTree();
-			if (t != null && !t.isDisposed())
-			{
-				if (t.getChildren() != null)
-				{
-					for (Control c : t.getChildren())
-					{
-						c.dispose();
-					}
-				}
-				getLabelProvider().dispose();
-				t.dispose();
-			}
-
-		}
-
-	}
-
 	/**
 	 * Constant indicating that all levels of the tree should be expanded or collapsed.
 	 * 
@@ -223,7 +133,7 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 
 	private ListenerList fSelectionChangedListeners = new ListenerList(ListenerList.IDENTITY);
 
-	private boolean inExternalSelectionMode = false;
+	boolean inExternalSelectionMode = false;
 
 	private static final int AUTO_EXPAND_LEVEL = 2;
 
@@ -240,7 +150,7 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 	public void createControl(Composite parent)
 	{
 
-		fOutlineViewer = new VdmOutlineViewer(parent);
+		fOutlineViewer = new VdmOutlineViewer(this, parent);
 		fOutlineViewer.setAutoExpandLevel(AUTO_EXPAND_LEVEL);
 		fOutlineViewer.setContentProvider(new VdmOutlineTreeContentProvider());
 		// fOutlineViewer.setLabelProvider(new VdmOutlineLabelProvider());
@@ -269,9 +179,11 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		IActionBars actionBars = site.getActionBars();
 
 		IToolBarManager toolBarManager = actionBars.getToolBarManager();
-		// toolBarManager.add(new LexicalSortingAction());
+		toolBarManager.add(new LexicalSortingAction(fOutlineViewer));
 
-		fMemberFilterActionGroup = new MemberFilterActionGroup(fOutlineViewer, "org.overture.ide.ui.VdmOutlinePage"); //$NON-NLS-1$
+		
+		
+		fMemberFilterActionGroup = new MemberFilterActionGroup(fOutlineViewer, IVdmUiConstants.OUTLINE_ID); //$NON-NLS-1$
 		fMemberFilterActionGroup.contributeToToolBar(toolBarManager);
 
 		// fCustomFiltersActionGroup.fillActionBars(actionBars);
