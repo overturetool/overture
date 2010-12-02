@@ -140,13 +140,18 @@ public class VdmLaunchConfigurationDelegate implements
 
 		Assert.isNotNull(vdmProject, " Project not found: "
 				+ configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, ""));
+		
+		if(vdmProject== null || !vdmProject.getModel().isTypeCorrect())
+		{
+			abort("Cannot launch a project ("+vdmProject+") with type errors, please check the problems view", null);
+		}
 
 		String charSet = getProject(configuration).getDefaultCharset();
 
 		commandList.add("-h");
 		commandList.add("localhost");
 		commandList.add("-p");
-		commandList.add(new Integer(VdmDebugPlugin.getDefault().getDbgpService().getPort()).toString());
+		commandList.add(Integer.valueOf(VdmDebugPlugin.getDefault().getDbgpService().getPort()).toString());
 		commandList.add("-k");
 		commandList.add(debugSessionId.toString());
 		commandList.add("-w");

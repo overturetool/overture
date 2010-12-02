@@ -26,7 +26,7 @@ public class VdmModelWorkingCopy extends VdmModel implements IVdmModel
 				((VdmSourceUnitWorkingCopy) sourceUnit).commit();
 			}
 		}
-		sourceModel.setChecked(typeChecked);
+		sourceModel.setTypeCheckedStatus(isTypeCorrect());
 
 	}
 

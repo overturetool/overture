@@ -136,7 +136,7 @@ public class VdmTypeCheckerUi
 		
 		
 		final CompletedStatus checkCompleted = new CompletedStatus();
-		
+		//TODO we may be able to use the istypechecked and istypecorrect in a better way here
 		if(!model.getRootElementList().isEmpty() && model.isTypeCorrect() )
 		{
 			return true; //skip future checking to speed up the process

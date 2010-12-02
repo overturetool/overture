@@ -70,7 +70,7 @@ public class SafeBuilder extends Thread
 									monitor.done();
 									if (model != null)
 									{
-										model.setChecked(status.getCode() == IStatus.OK);
+										model.setTypeCheckedStatus(status.isOK());
 										model.commit();
 									}
 									return;

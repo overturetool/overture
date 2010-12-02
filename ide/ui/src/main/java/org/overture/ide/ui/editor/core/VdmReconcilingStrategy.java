@@ -71,7 +71,7 @@ public class VdmReconcilingStrategy implements IReconcilingStrategy
 							currentDocument.get());
 				}
 				//Setting type checked to false after some alteration
-				vdmProject.getModel().setChecked(false);
+				vdmProject.getModel().setIsTypeChecked(false);
 			}
 
 		} catch (CoreException e)

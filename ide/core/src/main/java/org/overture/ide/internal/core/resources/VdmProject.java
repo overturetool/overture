@@ -486,7 +486,7 @@ public class VdmProject implements IVdmProject
 		if (model.isTypeCorrect())
 		{
 			return true; // no need to do any work
-		} else
+		}else 
 		{
 			final IVdmProject currentProject = this;
 

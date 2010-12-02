@@ -48,11 +48,11 @@ public class VdmRtMainLaunchConfigurationTab extends
 			IVdmModel model = project.getModel();
 			if (!model.isTypeCorrect())
 			{
-				if (VdmTypeCheckerUi.typeCheck(getShell(), project))
+				if (!VdmTypeCheckerUi.typeCheck(getShell(), project))
 				{
-
+					setErrorMessage("Type errors in Model");
+					return false;
 				}
-
 			}
 			ClassList classes = model.getClassList();
 			ClassInterpreter ci = new ClassInterpreter(classes);

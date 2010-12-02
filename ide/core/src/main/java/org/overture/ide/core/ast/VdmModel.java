@@ -28,8 +28,10 @@ public class VdmModel implements IVdmModel
 {
 	static int count = 0;
 	int id;
-	protected boolean typeChecked = false;
-	//private Hashtable<String, Boolean> parseCurrectTable = new Hashtable<String, Boolean>();
+	// protected boolean typeChecked = false;
+	protected boolean isTypeChecked = false;
+	protected boolean isTypeCorrect = false;
+	// private Hashtable<String, Boolean> parseCurrectTable = new Hashtable<String, Boolean>();
 
 	protected Date checkedTime;
 
@@ -68,10 +70,10 @@ public class VdmModel implements IVdmModel
 	 * (non-Javadoc)
 	 * @see org.overture.ide.core.ast.IVdmElement#setChecked(boolean)
 	 */
-	public synchronized void setChecked(boolean checked)
+	public synchronized void setTypeCheckedStatus(boolean checked)
 	{
-
-		this.typeChecked = checked;
+		this.isTypeChecked = true;
+		this.isTypeCorrect = checked;
 		this.checkedTime = new Date();
 		if (checked == true)
 		{
@@ -90,7 +92,7 @@ public class VdmModel implements IVdmModel
 	 */
 	public synchronized boolean isTypeCorrect()
 	{
-		return typeChecked;
+		return isTypeCorrect && isTypeChecked;
 	}
 
 	/*
@@ -124,9 +126,9 @@ public class VdmModel implements IVdmModel
 				throw new NotAllowedException("Other definition than Module is found: "
 						+ definition.getClass().getName());
 		}
-		
+
 		modules.combineDefaults();
-		
+
 		return modules;
 	}
 
@@ -176,19 +178,6 @@ public class VdmModel implements IVdmModel
 		return false;
 	}
 
-//	/*
-//	 * (non-Javadoc)
-//	 * @see org.overture.ide.core.ast.IVdmElement#setParseCorrect(java.lang.String, java.lang.Boolean)
-//	 */
-//	public synchronized void setParseCorrect(String file, Boolean isParseCorrect)
-//	{
-//		if (parseCurrectTable.containsKey(file))
-//			parseCurrectTable.remove(file);
-//
-//		parseCurrectTable.put(file, isParseCorrect);
-//		typeChecked = false;
-//	}
-
 	/*
 	 * (non-Javadoc)
 	 * @see org.overture.ide.core.ast.IVdmElement#isParseCorrect()
@@ -236,19 +225,23 @@ public class VdmModel implements IVdmModel
 
 	public synchronized void addVdmSourceUnit(IVdmSourceUnit unit)
 	{
+		this.isTypeChecked = false;
+		this.isTypeCorrect = false;
 		if (!vdmSourceUnits.contains(unit))
 			this.vdmSourceUnits.add(unit);
 		else
 			System.err.println("Add error: " + unit);
 
 	}
-	
-	public  synchronized void remove(IVdmSourceUnit unit)
+
+	public synchronized void remove(IVdmSourceUnit unit)
 	{
+		this.isTypeChecked = false;
+		this.isTypeCorrect = false;
 		if (vdmSourceUnits.contains(unit))
 			this.vdmSourceUnits.remove(unit);
 		else
-			System.err.println("Remove error: " + unit);	
+			System.err.println("Remove error: " + unit);
 	}
 
 	public synchronized IVdmSourceUnit getVdmSourceUnit(IFile file)
@@ -272,8 +265,9 @@ public class VdmModel implements IVdmModel
 		{
 			unit.clean();
 		}
-		//this.parseCurrectTable.clear();
-		this.typeChecked = false;
+		// this.parseCurrectTable.clear();
+		this.isTypeChecked = false;
+		this.isTypeCorrect = false;
 
 	}
 
@@ -331,5 +325,14 @@ public class VdmModel implements IVdmModel
 		return new VdmModelWorkingCopy(this);
 	}
 
-	
+	public boolean isTypeChecked()
+	{
+		return this.isTypeChecked;
+	}
+
+	public void setIsTypeChecked(boolean checked)
+	{
+		this.isTypeChecked = false;
+	}
+
 }

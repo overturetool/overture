@@ -186,6 +186,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 				IVdmProject project = (IVdmProject) getProject().getAdapter(IVdmProject.class);
 				if (!syntaxCorrect)
 				{
+					//error message set in validate class and operation
 					return syntaxCorrect;
 				} else if (project != null)
 				{

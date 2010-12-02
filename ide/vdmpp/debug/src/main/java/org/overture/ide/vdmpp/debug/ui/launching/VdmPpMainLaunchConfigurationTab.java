@@ -49,29 +49,29 @@ public class VdmPpMainLaunchConfigurationTab extends
 			IVdmModel model = project.getModel();
 			if (!model.isTypeCorrect())
 			{
-				if (VdmTypeCheckerUi.typeCheck(getShell(), project))
+				if (!VdmTypeCheckerUi.typeCheck(getShell(), project))
 				{
-
+					setErrorMessage("Type errors in Model");
+					return false;
 				}
-
 			}
 			ClassList classes = model.getClassList();
 			ClassInterpreter ci = new ClassInterpreter(classes);
 			if (!expression.contains("new"))
 			{
-				if(expression.contains("`"))
+				if (expression.contains("`"))
 				{
-					ci.setDefaultName(expression.substring(0, expression.indexOf(STATIC_CALL_SEPERATOR))); 
-				}else
-				if (expression.contains("("))
+					ci.setDefaultName(expression.substring(0, expression.indexOf(STATIC_CALL_SEPERATOR)));
+				} else if (expression.contains("("))
 				{
-					ci.setDefaultName(expression.substring(0, expression.indexOf("("))); // needed for static fn/op check
+					ci.setDefaultName(expression.substring(0, expression.indexOf("("))); // needed for static fn/op
+																							// check
 				}
 			}
-//			else if(expression.length()>4)
-//			{
-//				ci.setDefaultName(expression.trim().substring(3, expression.indexOf("(")).trim()); 
-//			}
+			// else if(expression.length()>4)
+			// {
+			// ci.setDefaultName(expression.trim().substring(3, expression.indexOf("(")).trim());
+			// }
 			ci.typeCheck(expression);
 			return true;
 		} catch (NotAllowedException e)
