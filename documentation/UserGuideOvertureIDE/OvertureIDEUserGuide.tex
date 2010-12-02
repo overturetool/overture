@@ -919,19 +919,19 @@ test \emph{traces} has been introduced into VDM++\footnote{Note that this is
 only available for VDM-SL models if the VDM-10 language version has been selected}. 
 Traces are effectively regular expressions that can be expanded to a collection of test
 cases. Each test case comprises a sequence of operation
-calls. If a user defines traces it is possible to make use of a
+calls. If a user defines a trace it is possible to make use of a
 special \emph{Combinatorial Testing} perspective to automatically
-unfold of the traces and execute of each of the resulting test
-cases. Subsequently, the results all tests can be inspected
+expand the trace and execute all of the resulting test
+cases. Subsequently, the results from the tests can be inspected
 and erroneous test cases easily found. You can then fix 
-problems and re-run the traces definitions to check they are fixed.
+problems and re-run the trace to check they are fixed.
 
 \section{Using the Combinatorial Testing GUI}
 
 The syntax for trace definitions is defined in the VDM-10 Language
 Manual.\index{traces}
 If you have created a \texttt{traces} entry for a module or class it
-can be exexuted via the \emph{Combinatorial Testing}
+can be executed via the \emph{Combinatorial Testing}
 perspective\index{combinatorial testing}. See
 Figure~\ref{fig:tracesalarm}.\index{perspective!combinatorial testing}
 
@@ -1014,7 +1014,7 @@ step is supported by the Overture tool which will convert
 a VDM++ project to create the starting point for a new VDM-RT
 project. This is done by right-clicking on the VDM++ project to be
 converted in the Explorer view, followed by 
-the \emph{Clone as VDM-RT} option.\index{create real time
+the \emph{Clone as VDM-RT} option\index{create real time
   project}. A new VDM-RT project is then automatically
 created.\index{create!VDM-RT project} It will have the
 same name as the original VDM++ project, but with \texttt{VDM\_RT} appended.
@@ -1029,7 +1029,7 @@ model development.
 \chapter{Analysing and Displaying Logs from VDM-RT Executions}\label{sec:showlog}
 
 Whenever a VDM-RT model is executed, a logfile is created in
-a \texttt{logs/debugconfig} subfolder with a \emph{.logrt} extension. The
+a \texttt{logs/debugconfig} subfolder with a \texttt{.logrt} extension. The
 file name for the logfile indicates the time at which the model was executed,
 so it is possible to distinguish multiple runs. Logfiles can be
 viewed with the built-in \emph{RealTime Log Viewer},\index{RealTime Log viewer}
@@ -1066,7 +1066,7 @@ sized window, you have the option of jumping to a certain time index
 using the \emph{Go to time} button.\index{Go to time} It is
 also possible to export all the generated views to JPEG format files
 using the \emph{Export Image} button.\index{export image button} All
-the generated images will be placed in the ''\texttt{logs}'' folder.
+the generated images will be placed in the \texttt{logs} folder.
 
 The log viewer can
 also give an overview of all executions on a single CPU. This view
@@ -1153,7 +1153,7 @@ public class sensor
 In some situations, it may be valuable to be able to establish a
 front end (for example a GUI or a test harness) for calling a VDM model.
 This feature corresponds roughly to the CORBA based API from
- DMTools\cite{APIMan}.
+VDMTools\cite{APIMan}.
 
 A VDM model can be remotely controlled by implementing the Java interface
 \texttt{RemoteControl}. Remote control should be understood as a
@@ -1203,7 +1203,7 @@ public class RemoteController implements RemoteControl
 
 \chapter{A Command-Line Interface to VDMJ}\label{sec:commandline}
 
-At the centre of the Overture tool is a Java implementation of VDM
+At the centre of the Overture tool there is a Java implementation of VDM
 called \emph{VDMJ}. This provides a command-line interface that may be valuable
 as it can be used independently of the Eclipse interface of Overture.
 \index{VDMJ}
