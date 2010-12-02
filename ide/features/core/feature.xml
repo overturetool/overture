@@ -5,7 +5,7 @@
       version="0.3.0.qualifier"
       plugin="org.overture.ide.platform">
 
-   <description url="%url">
+   <description>
       %description
    </description>
 
