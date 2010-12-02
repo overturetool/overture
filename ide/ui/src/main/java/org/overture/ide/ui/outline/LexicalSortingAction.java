@@ -17,12 +17,9 @@ public class LexicalSortingAction extends Action {
 		this.fOutlineViewer = fOutlineViewer;
 		this.fOutlineSorter = new OutlineSorter();
 		boolean checked = VdmUIPlugin.getDefault().getPreferenceStore().getBoolean(fPreferenceKey);
-		valueChecked(checked, false);
-		
+		valueChecked(checked, false);		
 	}
 
-	
-	
 	@Override
 	public ImageDescriptor getImageDescriptor() {	
 		return VdmPluginImages.getDescriptor(VdmPluginImages.IMG_ALPHA_SORTING);
@@ -30,12 +27,6 @@ public class LexicalSortingAction extends Action {
 	
 	@Override
 	public void run() {
-//		int a = getStyle();
-//		
-//		
-//		boolean t = isChecked();
-//		
-//		isChecked = !isChecked;
 		valueChecked(isChecked(),true);
 	}
 
