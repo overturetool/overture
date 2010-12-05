@@ -624,9 +624,24 @@ that can be set for each VDM project are:\index{project!options}
 \end{description}
 
 Overture allows VDM specifications to be embedded in \LaTeX\ files that
-form part of the documentation of a project. The project settings allow you
+form part of the documentation of a project as seen in
+Figure~\ref{fig:VDMSettingsLatex}. The project settings allow you
 to define a main \LaTeX\ file for the project, and define the order in which the
-different VDM source files shall be included.
+different VDM source files shall be included. Note that if the
+``\texttt{Insert coverage tables}'' and ``\texttt{Mark coverage}''
+options are selected the \LaTeX\ pretty printing will include test
+coverage information as well as provide test coverage tables for each
+class/module in the VDM model. It is also possible to define your own
+main document instead of making use of the standard one suggested by
+Overture (name of the project followed by \texttt{.tex}).
+
+\begin{figure}[!hbt]
+\begin{center}
+  \includegraphics[width=\textwidth]{screendumps/projectsettingslatex}
+  \caption[Overture Project Settings]{Overture Project Settings for \LaTeX}
+  \label{fig:VDMSettingsLatex}
+\end{center}
+\end{figure}
 
 \chapter{Editing VDM Models}\label{sec:editVDM}
 
