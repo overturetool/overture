@@ -134,7 +134,12 @@ public class DefinitionReader extends SyntaxReader
 
 	private boolean newSection() throws LexException
 	{
-		return sectionList.contains(lastToken().type);
+		return newSection(lastToken());
+	}
+	
+	public static boolean newSection(LexToken tok)
+	{
+		return sectionList.contains(tok.type);
 	}
 
 	public DefinitionList readDefinitions() throws ParserException, LexException

@@ -79,6 +79,19 @@ public class ModuleReader extends SyntaxReader
 
 		try
 		{
+			if (lastToken().is(Token.EOF))
+			{
+				return modules;		// The file is empty
+			}
+
+    		if (lastToken().isNot(Token.MODULE) &&
+    			!DefinitionReader.newSection(lastToken()))
+    		{
+    			warning(5015,
+    				"LaTeX source should start with %comment, \\document, \\section or \\subsection",
+    				lastToken().location);
+    		}
+
     		while (lastToken().isNot(Token.EOF) && lastToken().isNot(Token.END))
     		{
     			switch (lastToken().type)
