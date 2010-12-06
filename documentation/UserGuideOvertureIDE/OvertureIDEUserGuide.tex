@@ -870,7 +870,9 @@ Overture just as you can with VDMTools. To take advantage of this,
 you need to use the \LaTeX\ text processing system with
 plain VDM models mixed with textual documentation.  The VDM model parts must be
 enclosed within ``\verb+\begin{vdm_al}+'' and ``\verb+\end{vdm_al}+''. The
-text-parts outside these specification blocks are ignored by the VDM parser.
+text-parts outside these specification blocks are ignored by the VDM parser,
+though note that each source file must start with a recognizable \LaTeX\
+construct: a \verb+\documentclass, \section, \subsection+ or a \LaTeX\ comment.
 
 \chapter{Managing Proof Obligations}\label{sec:POmanagement}
 
@@ -1425,7 +1427,9 @@ with the \texttt{-q} option.
 A source file may contain VDM definitions embedded
 in a \LaTeX\ file using \verb|vdm_al| environments (see
 Chapter~\ref{sec:prettyprint}); the markup is ignored by the parser,
-though reported line numbers will be correct.
+though reported line numbers will be correct. Note that each source file
+must start with a recognizable \LaTeX\ construct:
+a \verb+\documentclass, \section, \subsection+ or a \LaTeX\ comment.
 
 The VDMJ Java process will return with an exit code of zero if the
 specification is clean (ignoring warnings). Parser or type checking
