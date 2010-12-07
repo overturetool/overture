@@ -745,7 +745,7 @@ public class TracefileVisitor extends OmlVisitor
             {
                 ov_ucurrenttime = UTIL.NumberToLong(UTIL.clone(event_utime));
                 if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-                    drawCpuTimeMarker(pgti, new Long(80L), ov_uypos, event_utime);
+                    drawCpuTimeMarker(pgti, new Long(120L), ov_uypos, event_utime);//TODO size of the time label
                 Vector sq_19 = null;
                 sq_19 = cpu.getHistory(event_utime);
                 IOmlTraceEvent event = null;
@@ -921,7 +921,8 @@ public class TracefileVisitor extends OmlVisitor
     private void updateCpuObject(GenericTabItem pgti, tdCPU pcpu, tdObject pobj)
         throws CGException
     {
-        Long width = new Long((new Long((new Long(2L)).longValue() * CPU_uHALFWIDTH.longValue())).longValue() + (new Long(23L)).longValue());
+       // Long width = new Long((new Long((new Long(2L)).longValue() * CPU_uHALFWIDTH.longValue())).longValue() + (new Long(123L)).longValue());
+    	Long width = Long.valueOf(10);
         Long xpos = null;
         xpos = pobj.getX();
         Long ypos = null;
@@ -947,6 +948,7 @@ public class TracefileVisitor extends OmlVisitor
             org.eclipse.swt.graphics.Font arg_25 = null;
             arg_25 = pgti.getCurrentFont();
             nlb = new NormalLabel(str, arg_25);
+            width = Long.valueOf(10*str.length());//TODO fix for CPU Box size
             RectangleLabelFigure nrr = new RectangleLabelFigure(nlb);
             Point np = new Point(ov_uxpos.longValue(), CPU_uYPOS.longValue());
             pcpu.addObject(pobj);
@@ -3161,7 +3163,7 @@ public class TracefileVisitor extends OmlVisitor
     private static final Long CPU_uXPOS = new Long(150L);
     private static final Long CPU_uYPOS;
     private static final Long CPU_uHEIGHT;
-    private static final Long CPU_uHALFWIDTH = new Long(45L);
+    private static final Long CPU_uHALFWIDTH = new Long(65L);
     private static final Long CPU_uHINTERVAL = new Long(40L);
     private static final Long BUS_uXPOS = new Long(25L);
     private static final Long BUS_uYPOS;

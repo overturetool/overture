@@ -141,8 +141,8 @@ public class VdmRtEditorActionBarContributor extends EditorActionBarContributor
 		manager.add(new Separator());
 
 		manager.add(moveHorizontalAction);
-		manager.add(moveNextHorizontalAction);
 		manager.add(movePreviousHorizontalAction);
+		manager.add(moveNextHorizontalAction);
 
 		manager.add(new Separator());
 		manager.add(exportDiagramAction);
