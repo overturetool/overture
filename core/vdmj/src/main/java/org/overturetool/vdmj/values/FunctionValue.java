@@ -23,10 +23,13 @@
 
 package org.overturetool.vdmj.values;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -73,6 +76,7 @@ public class FunctionValue extends Value
 	// Measure function value, if any
 	private FunctionValue measure = null;
 	private Map<Long, Stack<Value>> measureValues = null;
+	private Set<Long> measuringThreads = null;
 
 	public ObjectValue self = null;
 	public boolean isStatic = false;
@@ -131,7 +135,8 @@ public class FunctionValue extends Value
 
 		if (Settings.measureChecks && def.measuredef != null)
 		{
-			measureValues = new HashMap<Long, Stack<Value>>();
+			measureValues = Collections.synchronizedMap(new HashMap<Long, Stack<Value>>());
+			measuringThreads = Collections.synchronizedSet(new HashSet<Long>());
 
 			NameValuePairList nvpl = def.measuredef.getNamedValues(freeVariables);
 			measure = (FunctionValue)nvpl.get(0).value;
@@ -167,6 +172,7 @@ public class FunctionValue extends Value
 		if (Settings.measureChecks && def.measuredef != null)
 		{
 			measureValues = new HashMap<Long, Stack<Value>>();
+			measuringThreads = new HashSet<Long>();
 
 			NameValuePairList nvpl = def.measuredef.getNamedValues(freeVariables);
 			measure = (FunctionValue)nvpl.get(0).value;
@@ -248,6 +254,11 @@ public class FunctionValue extends Value
 		if (!isStatic)
 		{
 			this.self = self;
+
+			if (measure != null)
+			{
+				measure.setSelf(self);
+			}
 		}
 	}
 
@@ -361,13 +372,22 @@ public class FunctionValue extends Value
 
 			if (measure != null)
 			{
+				Long tid = Thread.currentThread().getId();
+
+				if (!measuringThreads.add(tid))
+				{
+					abort(4148, "Measure function is called recursively: " + measure.name, evalContext);
+				}
+
 				Value mv = measure.eval(measure.location, argValues, evalContext);
-				Stack<Value> stack = measureValues.get(Thread.currentThread().getId());
+
+				measuringThreads.remove(tid);
+				Stack<Value> stack = measureValues.get(tid);
 
 				if (stack == null)
 				{
 					stack = new Stack<Value>();
-					measureValues.put(Thread.currentThread().getId(), stack);
+					measureValues.put(tid, stack);
 				}
 
 				if (!stack.isEmpty())

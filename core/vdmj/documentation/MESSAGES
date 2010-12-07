@@ -645,6 +645,7 @@ as the expected and actual values.
 3301, "Variable <name> in scope is not updatable"
 3302, "Variable <name> cannot be accessed from this context"
 3303, "Measure parameters different to function"
+3304, "Recursive function cannot be its own measure"
 
 4000, "Cannot instantiate abstract class <class>"
 4002, "Expression value is not in set bind"
@@ -789,6 +790,7 @@ as the expected and actual values.
 4145, "Time: <n> is not a nat1"
 4146, "Measure failure: f(args), measure <name>, current <value>, previous <value>"
 4147, "Polymorphic function missing @T"
+4148, "Measure function is called recursively: <name>"
 
 5000, "Definition <name> not used"
 5001, "Instance variable is not initialized: <name>"

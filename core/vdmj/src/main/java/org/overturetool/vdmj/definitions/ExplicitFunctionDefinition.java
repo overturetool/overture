@@ -327,6 +327,10 @@ public class ExplicitFunctionDefinition extends Definition
 			{
 				measure.report(3271, "Measure " + measure + " is not an explicit function");
 			}
+			else if (measuredef == this)
+			{
+				measure.report(3304, "Recursive function cannot be its own measure");
+			}
 			else
 			{
 				FunctionType mtype = (FunctionType)measuredef.getType();
