@@ -78,7 +78,8 @@ public class FunctionValue extends Value
 	private FunctionValue measure = null;
 	private Map<Long, Stack<Value>> measureValues = null;
 	private Set<Long> measuringThreads = null;
-	private boolean cannotRecurse = false;
+	private Set<Long> callingThreads = null;
+	private boolean isMeasure = false;
 
 	public ObjectValue self = null;
 	public boolean isStatic = false;
@@ -368,11 +369,14 @@ public class FunctionValue extends Value
 
 			Long tid = Thread.currentThread().getId();
 
-			if (cannotRecurse)
+			if (isMeasure)
 			{
-				if (!measuringThreads.add(tid))
+				if (measuringThreads.contains(tid))		// We are measuring on this thread
 				{
-					abort(4148, "Measure function is called recursively: " + name, evalContext);
+    				if (!callingThreads.add(tid))		// And we've been here already
+    				{
+    					abort(4148, "Measure function is called recursively: " + name, evalContext);
+    				}
 				}
 			}
 
@@ -382,10 +386,13 @@ public class FunctionValue extends Value
 				{
 					measure = evalContext.lookup(measureName).functionValue(ctxt);
 					measure.measuringThreads = Collections.synchronizedSet(new HashSet<Long>());
-					measure.cannotRecurse = true;
+					measure.callingThreads = Collections.synchronizedSet(new HashSet<Long>());
+					measure.isMeasure = true;
 				}
 
+				measure.measuringThreads.add(tid);
 				Value mv = measure.eval(measure.location, argValues, evalContext);
+				measure.measuringThreads.remove(tid);
 
 				Stack<Value> stack = measureValues.get(tid);
 
@@ -432,9 +439,9 @@ public class FunctionValue extends Value
 				measureValues.get(tid).pop();
 			}
 
-			if (cannotRecurse)
+			if (isMeasure)
 			{
-				measuringThreads.remove(tid);
+				callingThreads.remove(tid);
 			}
 
 			return rv;
