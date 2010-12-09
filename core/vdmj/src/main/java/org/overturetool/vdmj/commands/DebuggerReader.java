@@ -309,6 +309,12 @@ public class DebuggerReader extends CommandReader
 	}
 
 	@Override
+	protected boolean doSet(String line)
+	{
+		return notAvailable("");
+	}
+
+	@Override
 	protected boolean doCoverage(String line)
 	{
 		return notAvailable(line);

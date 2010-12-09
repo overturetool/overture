@@ -180,6 +180,10 @@ abstract public class CommandReader
 				{
 					carryOn = doFiles();
 				}
+				else if (line.startsWith("set"))
+				{
+					carryOn = doSet(line);
+				}
 				else if (line.equals("stop"))
 				{
 					carryOn = doStop(line);
@@ -495,6 +499,67 @@ abstract public class CommandReader
 		for (File file: filenames)
 		{
 			println(file.getPath());
+		}
+
+		return true;
+	}
+
+	private void isEnabled(String name, boolean flag)
+	{
+		print(name);
+		println(flag ? " are enabled" : " are disabled");
+	}
+
+	protected boolean doSet(String line)
+	{
+		if (line.equals("set"))
+		{
+			isEnabled("Preconditions", Settings.prechecks);
+			isEnabled("Postconditions", Settings.postchecks);
+			isEnabled("Invariants", Settings.invchecks);
+			isEnabled("Dynamic type checks", Settings.dynamictypechecks);
+			isEnabled("Measure checks", Settings.measureChecks);
+		}
+		else
+		{
+			String[] parts = line.split("\\s+");
+
+			if (parts.length == 3 &&
+				(parts[2].equalsIgnoreCase("on") || parts[2].equalsIgnoreCase("off")))
+			{
+				boolean setting = parts[2].equalsIgnoreCase("on");
+
+	    		if (parts[1].equals("pre"))
+	    		{
+	    			Settings.prechecks = setting;
+	    		}
+	    		else if (parts[1].equals("post"))
+	    		{
+	    			Settings.postchecks = setting;
+	    		}
+	    		else if (parts[1].equals("inv"))
+	    		{
+	    			Settings.invchecks = setting;
+	    		}
+	    		else if (parts[1].equals("dtc"))
+	    		{
+	    			// NB. Do both
+	    			Settings.invchecks = setting;
+	    			Settings.dynamictypechecks = setting;
+	    		}
+	    		else if (parts[1].equals("measures"))
+	    		{
+	    			Settings.measureChecks = setting;
+	    		}
+				else
+				{
+					println("Usage: set [<pre|post|inv|dtc|measures> <on|off>]");
+				}
+			}
+			else
+			{
+				println("Usage: set [<pre|post|inv|dtc|measures> <on|off>]");
+			}
 		}
 
 		return true;
@@ -1072,6 +1137,7 @@ abstract public class CommandReader
 		println("coverage clear|write <dir>|merge <dir>|<filenames> - handle line coverage");
 		println("latex|latexdoc [<files>] - generate LaTeX line coverage files");
 		println("files - list files in the current specification");
+		println("set [<pre|post|inv|dtc|measures> <on|off>] - set runtime checks");
 		println("reload - reload the current specification files");
 		println("load <files or dirs> - replace current loaded specification files");
 		println("quit - leave the interpreter");
