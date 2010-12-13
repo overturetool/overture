@@ -210,6 +210,14 @@ public class IO implements Serializable
 		Console.out.flush();
 		return new VoidValue();
 	}
+	
+	public static Value println(Value v)
+	{
+		Console.out.printf("%s", v);
+		Console.out.printf("%s", "\n");
+		Console.out.flush();
+		return new VoidValue();
+	}
 
 	public static Value printf(Value fv, Value vs)
 		throws ValueException

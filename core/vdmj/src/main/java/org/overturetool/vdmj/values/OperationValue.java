@@ -40,7 +40,10 @@ import org.overturetool.vdmj.lex.LexKeywordToken;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.Token;
-import org.overturetool.vdmj.messages.RTLogger;
+import org.overturetool.vdmj.messages.rtlog.RTExtendedTextMessage;
+import org.overturetool.vdmj.messages.rtlog.RTLogger;
+import org.overturetool.vdmj.messages.rtlog.RTOperationMessage;
+import org.overturetool.vdmj.messages.rtlog.RTMessage.MessageType;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.runtime.ClassContext;
@@ -52,6 +55,7 @@ import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.scheduler.AsyncThread;
 import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
+import org.overturetool.vdmj.scheduler.CPUResource;
 import org.overturetool.vdmj.scheduler.Holder;
 import org.overturetool.vdmj.scheduler.ISchedulableThread;
 import org.overturetool.vdmj.scheduler.InitThread;
@@ -464,19 +468,12 @@ public class OperationValue extends Value
 		CPUValue from = ctxt.threadState.CPU;
 		CPUValue to = self.getCPU();
 		boolean stepping = ctxt.threadState.isStepping();
-
+		long threadId = BasicSchedulableThread.getThread(Thread.currentThread()).getId();
 		// Async calls have the OpRequest made by the caller using the
 		// "from" CPU, whereas the OpActivate and OpComplete are made
 		// by the called object, using self's CPU (see trace(msg)).
 
-		RTLogger.log(
-			"OpRequest -> id: " + BasicSchedulableThread.getThread(Thread.currentThread()).getId() +
-			" opname: \"" + name + "\"" +
-			" objref: " + self.objectReference +
-			" clnm: \"" + self.type.name.name + "\"" +
-			" cpunm: " + from.getNumber() +
-			" async: " + isAsync
-			);
+		RTLogger.log(new RTOperationMessage(MessageType.Request, this, from.resource, threadId));
 
 		if (from != to)		// Remote CPU call
 		{
@@ -586,7 +583,7 @@ public class OperationValue extends Value
 
 		if (logreq)		// Async OpRequests are made in asyncEval
 		{
-			trace("OpRequest");
+			trace(MessageType.Request);
 		}
 
 		debug("#req = " + hashReq);
@@ -598,7 +595,7 @@ public class OperationValue extends Value
 
 		if (!ResourceScheduler.isStopping())
 		{
-			trace("OpActivate");
+			trace(MessageType.Activate);
 			debug("#act = " + hashAct);
 		}
 	}
@@ -609,12 +606,12 @@ public class OperationValue extends Value
 
 		if (!ResourceScheduler.isStopping())
 		{
-			trace("OpCompleted");
+			trace(MessageType.Completed);
 			debug("#fin = " + hashFin);
 		}
 	}
 
-	private void trace(String kind)
+	private void trace(MessageType kind)
 	{
 		if (traceRT)
 		{
@@ -622,35 +619,21 @@ public class OperationValue extends Value
 
 			if (isStatic)
 			{
-				int cpu = 0;
+				CPUResource cpu = null;
 				if (ct instanceof InitThread)
 				{
-					cpu = 0;	// Initialization on vCPU
+					cpu = CPUValue.vCPU.resource;	// Initialization on vCPU
 				}
 				else
 				{
-					cpu = ct.getCPUResource().getNumber();
+					cpu = ct.getCPUResource();
 				}
 
-	    		RTLogger.log(
-	    			kind + " -> id: " + ct.getId() +
-	    			" opname: \"" + name + "\"" +
-	    			" objref: nil" +
-	    			" clnm: \"" + classdef.name.name + "\"" +
-	    			" cpunm: " + cpu +
-	    			" async: " + isAsync
-	    			);
+				RTLogger.log(new RTOperationMessage(kind, this, cpu, ct.getId()));
 			}
 			else
 			{
-        		RTLogger.log(
-        			kind + " -> id: " + ct.getId() +
-        			" opname: \"" + name + "\"" +
-        			" objref: " + self.objectReference +
-        			" clnm: \"" + self.type.name.name + "\"" +
-        			" cpunm: " + self.getCPU().getNumber() +
-        			" async: " + isAsync
-        			);
+				RTLogger.log(new RTOperationMessage(kind, this, self.getCPU().resource, ct.getId()));
 			}
 		}
 	}
@@ -670,8 +653,8 @@ public class OperationValue extends Value
 			}
 			else
 			{
-				RTLogger.log(String.format("-- %s %s %s",
-						BasicSchedulableThread.getThread(Thread.currentThread()), name, string));
+				RTLogger.log(new RTExtendedTextMessage(String.format("-- %s %s %s",
+						BasicSchedulableThread.getThread(Thread.currentThread()), name, string)));
 			}
 		}
 	}

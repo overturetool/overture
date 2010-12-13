@@ -43,7 +43,7 @@ public class CPUValue extends ObjectValue
 
 	public CPUValue(ClassType classtype, NameValuePairMap map, ValueList argvals)
 	{
-		super(classtype, map, new Vector<ObjectValue>(), null);
+		super(classtype, map, new Vector<ObjectValue>(), null, null);
 
 		QuoteValue parg = (QuoteValue)argvals.get(0);
 		SchedulingPolicy cpup = SchedulingPolicy.factory(parg.value.toUpperCase());
@@ -55,7 +55,7 @@ public class CPUValue extends ObjectValue
 
 	public CPUValue(ClassType classtype)	// for virtual CPUs
 	{
-		super(classtype, new NameValuePairMap(), new Vector<ObjectValue>(), null);
+		super(classtype, new NameValuePairMap(), new Vector<ObjectValue>(), null, null);
 		resource = new CPUResource(new FCFSPolicy(), 0);
 		deployed = new Vector<ObjectValue>();
 	}

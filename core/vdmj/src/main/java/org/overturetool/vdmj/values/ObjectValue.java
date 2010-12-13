@@ -28,6 +28,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -52,22 +53,39 @@ public class ObjectValue extends Value
 	public final ClassType type;
 	public final NameValuePairMap members;
 	public final List<ObjectValue> superobjects;
+	
+	/**
+	 * The list holds all object values created by this object value
+	 */
+	public final List<ObjectValue> children;
 
 	public ClassInvariantListener invlistener = null;
 
 	public transient Lock guardLock;
 	private transient CPUValue CPU;
 	private Object delegateObject = null;
+	
+	/**
+	 * The Object value who created this instance
+	 */
+	public ObjectValue creator;
 
 	public ObjectValue(ClassType type,
-		NameValuePairMap members, List<ObjectValue> superobjects, CPUValue cpu)
+		NameValuePairMap members, List<ObjectValue> superobjects, CPUValue cpu, ObjectValue creator)
 	{
 		this.objectReference = getReference();
 		this.type = type;
 		this.members = members;
 		this.superobjects = superobjects;
 		this.CPU = cpu;
+		this.creator = creator;
 		this.guardLock = new Lock();
+		this.children = new LinkedList<ObjectValue>();
+		
+		if(creator != null)
+		{
+			setCreator(creator);
+		}
 
 		setSelf(this);
 	}
@@ -93,6 +111,10 @@ public class ObjectValue extends Value
  				FunctionValue fv = (FunctionValue)deref;
  				fv.setSelf(self);
  			}
+ 			else if(deref instanceof ObjectValue)
+			{
+				((ObjectValue)deref).setCreator(self);
+			}
  		}
 
 		for (ObjectValue obj: superobjects)
@@ -362,7 +384,7 @@ public class ObjectValue extends Value
 		}
 
 		mycopy = new ObjectValue(type,
-					new NameValuePairMap(), new Vector<ObjectValue>(), CPU);
+					new NameValuePairMap(), new Vector<ObjectValue>(), CPU, creator);
 
 		List<ObjectValue> supers = mycopy.superobjects;
 		NameValuePairMap memcopy = mycopy.members;
@@ -371,7 +393,7 @@ public class ObjectValue extends Value
    		{
    			supers.add(	// Type skeleton only...
    				new ObjectValue(sobj.type,
-   					new NameValuePairMap(), new Vector<ObjectValue>(), sobj.CPU));
+   					new NameValuePairMap(), new Vector<ObjectValue>(), sobj.CPU, creator));
    		}
 
 		for (LexNameToken name: members.keySet())
@@ -477,5 +499,54 @@ public class ObjectValue extends Value
 	{
 		invlistener = listener;
 		listener.invopvalue.setSelf(this);
+	}
+	
+	/**
+	 * Sets the creator of this object value and adds this to 
+	 * the newCreator parsed as argument
+	 * @param newCreator The creator of this object value
+	 */
+	private synchronized void setCreator(ObjectValue newCreator)
+	{
+		this.creator = newCreator; 
+		//establish transitive reference
+		newCreator.addChild(this);
+	}
+	
+	/**
+	 * Removed the creator of this object value by detaching from the 
+	 * creator's child list
+	 */
+	public synchronized void removeCreator()
+	{
+		// if we are moving to a new CPU, we are no longer a part of the transitive
+		// references from our creator, so let us remove ourself. This will prevent 
+		// us from being updated if our creator is migrating in the 
+		// future.
+		if(this.creator != null)
+		{
+			this.creator.removeChild(this);
+			//creator no longer needed, as we already detached ourself.
+			this.creator = null; 
+		}
+	}
+	
+	/**
+	 * Add a child created by this object value
+	 * @param referenced
+	 */
+	private synchronized void addChild(ObjectValue referenced)
+	{
+		children.add(referenced); 
+	}
+	
+	/**
+	 * Remove a child from this object value. After this the reference will no longer
+	 * be considered as created by this object value
+	 * @param reference
+	 */
+	private synchronized void removeChild(ObjectValue reference)
+	{
+		children.remove(reference);
 	}
 }

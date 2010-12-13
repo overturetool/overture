@@ -29,7 +29,8 @@ import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.expressions.UndefinedExpression;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.messages.RTLogger;
+import org.overturetool.vdmj.messages.rtlog.RTDeclareCPUMessage;
+import org.overturetool.vdmj.messages.rtlog.RTLogger;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.StateContext;
@@ -160,11 +161,7 @@ public class SystemDefinition extends ClassDefinition
 						cpudefs.add(d);
 						instance = (CPUClassDefinition)ct.classdef;
 
-	    				RTLogger.log(
-	    					"CPUdecl -> id: " + (cpuNumber++) +
-	    					" expl: " + !(ivd.expType instanceof UndefinedType) +
-	    					" sys: \"" + name.name + "\"" +
-	    					" name: \"" + d.name.name + "\"");
+						RTLogger.log(new RTDeclareCPUMessage(cpuNumber++, !(ivd.expType instanceof UndefinedType), name.name, d.name.name));
 					}
 				}
 			}

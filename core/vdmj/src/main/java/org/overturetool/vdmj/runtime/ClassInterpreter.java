@@ -41,11 +41,16 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.messages.RTLogger;
+import org.overturetool.vdmj.messages.rtlog.RTLogger;
+import org.overturetool.vdmj.messages.rtlog.RTThreadCreateMessage;
+import org.overturetool.vdmj.messages.rtlog.RTThreadKillMessage;
+import org.overturetool.vdmj.messages.rtlog.RTThreadSwapMessage;
+import org.overturetool.vdmj.messages.rtlog.RTThreadSwapMessage.SwapType;
 import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.scheduler.CTMainThread;
+import org.overturetool.vdmj.scheduler.ISchedulableThread;
 import org.overturetool.vdmj.scheduler.InitThread;
 import org.overturetool.vdmj.scheduler.MainThread;
 import org.overturetool.vdmj.scheduler.SystemClock;
@@ -370,30 +375,20 @@ public class ClassInterpreter extends Interpreter
 	{
 		// Show the "system constructor" thread creation
 
-		RTLogger.log(
-			"ThreadCreate -> id: " + BasicSchedulableThread.getThread(Thread.currentThread()).getId() +
-			" period: false " +
-			" objref: nil clnm: nil " +
-			" cpunm: 0");
+		ISchedulableThread thread = BasicSchedulableThread.getThread(Thread.currentThread());
+		
+		RTLogger.log(new RTThreadCreateMessage(thread, CPUValue.vCPU.resource));
 
-		RTLogger.log(
-			"ThreadSwapIn -> id: " + BasicSchedulableThread.getThread(Thread.currentThread()).getId() +
-			" objref: nil clnm: nil " +
-			" cpunm: 0" +
-			" overhead: 0");
+		RTLogger.log(new RTThreadSwapMessage(SwapType.In,thread, CPUValue.vCPU.resource, 0, 0));
 	}
 
 	private void logSwapOut()
 	{
-		RTLogger.log(
-			"ThreadSwapOut -> id: " + BasicSchedulableThread.getThread(Thread.currentThread()).getId() +
-			" objref: nil clnm: nil " +
-			" cpunm: 0" +
-			" overhead: 0");
+		ISchedulableThread thread = BasicSchedulableThread.getThread(Thread.currentThread());
+		
+		RTLogger.log(new RTThreadSwapMessage(SwapType.Out,thread,CPUValue.vCPU.resource,0,0));
 
-		RTLogger.log(
-			"ThreadKill -> id: " + BasicSchedulableThread.getThread(Thread.currentThread()).getId() +
-			" cpunm: 0");
+		RTLogger.log(new RTThreadKillMessage(thread, CPUValue.vCPU.resource));
 	}
 	
 

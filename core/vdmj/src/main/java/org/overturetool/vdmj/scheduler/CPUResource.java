@@ -23,7 +23,12 @@
 
 package org.overturetool.vdmj.scheduler;
 
-import org.overturetool.vdmj.messages.RTLogger;
+import org.overturetool.vdmj.messages.rtlog.RTDeployObjectMessage;
+import org.overturetool.vdmj.messages.rtlog.RTLogger;
+import org.overturetool.vdmj.messages.rtlog.RTThreadCreateMessage;
+import org.overturetool.vdmj.messages.rtlog.RTThreadKillMessage;
+import org.overturetool.vdmj.messages.rtlog.RTThreadSwapMessage;
+import org.overturetool.vdmj.messages.rtlog.RTThreadSwapMessage.SwapType;
 import org.overturetool.vdmj.values.ObjectValue;
 
 public class CPUResource extends Resource
@@ -86,31 +91,18 @@ public class CPUResource extends Resource
 			{
 				if (swappedIn != null)
 				{
-	    			RTLogger.log(
-	    				"ThreadSwapOut -> id: " + swappedIn.getId() +
-	    				objRefString(swappedIn.getObject()) +
-	    				" cpunm: " + cpuNumber +
-	    				" overhead: " + 0);
+					RTLogger.log(new RTThreadSwapMessage(SwapType.Out,swappedIn, this, 0,0));
 				}
 
 				long delay = SystemClock.getWallTime() - best.getSwapInBy();
 
 				if (best.getSwapInBy() > 0 && delay > 0)
 				{
-		        	RTLogger.log(
-		        		"DelayedThreadSwapIn -> id: " + best.getId() +
-		        		objRefString(best.getObject()) +
-		        		" delay: " + delay +
-		        		" cpunm: " + cpuNumber +
-		        		" overhead: " + 0);
+					RTLogger.log(new RTThreadSwapMessage(SwapType.DelayedIn,best, this, 0,delay));
 				}
 				else
 				{
-    				RTLogger.log(
-    					"ThreadSwapIn -> id: " + best.getId() +
-    					objRefString(best.getObject()) +
-    					" cpunm: " + cpuNumber +
-    					" overhead: " + 0);
+					RTLogger.log(new RTThreadSwapMessage(SwapType.In,best, this, 0,0));
 				}
 			}
 
@@ -120,15 +112,9 @@ public class CPUResource extends Resource
 			switch (swappedIn.getRunState())
 			{
 				case COMPLETE:
-        			RTLogger.log(
-        				"ThreadSwapOut -> id: " + swappedIn.getId() +
-        				objRefString(swappedIn.getObject()) +
-        				" cpunm: " + cpuNumber +
-        				" overhead: " + 0);
+					RTLogger.log(new RTThreadSwapMessage(SwapType.Out,swappedIn, this, 0,0));
 
-        			RTLogger.log(
-    					"ThreadKill -> id: " + swappedIn.getId() +
-    					" cpunm: " + cpuNumber);
+        			RTLogger.log(new RTThreadKillMessage(swappedIn,this));
 
         			swappedIn = null;
         			return true;	// We may be able to run other threads
@@ -171,27 +157,12 @@ public class CPUResource extends Resource
 
 	public void createThread(ISchedulableThread th)
 	{
-		RTLogger.log(
-			"ThreadCreate -> id: " + th.getId() +
-			" period: " + th.isPeriodic() +
-			objRefString(th.getObject()) +
-			" cpunm: " + cpuNumber);
-			//TODO: Change show trace to allow thread name to allow easier inspection of text log file //+ " name: "+th.getName());
+		RTLogger.log(new RTThreadCreateMessage(th,this));
 	}
 
 	public void deploy(ObjectValue object)
 	{
-		RTLogger.log(
-			"DeployObj -> objref: " + object.objectReference +
-			" clnm: \"" + object.type + "\"" +
-			" cpunm: " + cpuNumber);
-	}
-
-	private String objRefString(ObjectValue obj)
-	{
-		return
-			" objref: " + (obj == null ? "nil" : obj.objectReference) +
-			" clnm: " + (obj == null ? "nil" : ("\"" + obj.type + "\""));
+		RTLogger.log(new RTDeployObjectMessage(object,this));
 	}
 
 	public long getCyclesDuration(long cycles)

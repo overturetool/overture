@@ -37,7 +37,8 @@ import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.messages.InternalException;
-import org.overturetool.vdmj.messages.RTLogger;
+import org.overturetool.vdmj.messages.rtlog.RTExtendedTextMessage;
+import org.overturetool.vdmj.messages.rtlog.RTLogger;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.values.ObjectValue;
 
@@ -318,8 +319,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
     		{
         		if (Properties.diags_timestep)
         		{
-        			RTLogger.log(String.format("-- %s Waiting to move time by %d",
-        				this, timestep));
+        			RTLogger.log(new RTExtendedTextMessage(String.format("-- %s Waiting to move time by %d",
+        				this, timestep)));
         		}
 
         		waitUntilState(RunState.TIMESTEP, RunState.RUNNING, ctxt, location);

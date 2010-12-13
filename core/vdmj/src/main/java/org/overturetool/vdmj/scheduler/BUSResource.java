@@ -26,7 +26,12 @@ package org.overturetool.vdmj.scheduler;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overturetool.vdmj.messages.RTLogger;
+import org.overturetool.vdmj.messages.rtlog.RTBusActivateMessage;
+import org.overturetool.vdmj.messages.rtlog.RTBusCompletedMessage;
+import org.overturetool.vdmj.messages.rtlog.RTBusReplyRequestMessage;
+import org.overturetool.vdmj.messages.rtlog.RTBusRequestMessage;
+import org.overturetool.vdmj.messages.rtlog.RTDeclareBUSMessage;
+import org.overturetool.vdmj.messages.rtlog.RTLogger;
 
 public class BUSResource extends Resource
 {
@@ -83,10 +88,7 @@ public class BUSResource extends Resource
 
 		if (busNumber != 0)
 		{
-    		RTLogger.log(
-    			"BUSdecl -> id: " + busNumber +
-    			" topo: " + cpusToSet() +
-    			" name: \"" + name + "\"");
+			RTLogger.log(new RTDeclareBUSMessage(busNumber,cpusToSet(),name));
 		}
 	}
 
@@ -146,15 +148,7 @@ public class BUSResource extends Resource
 
 	public void transmit(MessageRequest request)
 	{
-		RTLogger.log(
-			"MessageRequest -> busid: " + request.bus.getNumber() +
-			" fromcpu: " + request.from.getNumber() +
-			" tocpu: " + request.to.getNumber() +
-			" msgid: " + request.msgId +
-			" callthr: " + request.thread.getId() +
-			" opname: " + "\"" + request.operation.name + "\"" +
-			" objref: " + request.target.objectReference +
-			" size: " + request.getSize());
+		RTLogger.log(new RTBusRequestMessage(request));
 
 		messages.add(request);
 		cq.stim();
@@ -162,15 +156,7 @@ public class BUSResource extends Resource
 
 	public void reply(MessageResponse response)
 	{
-		RTLogger.log(
-			"ReplyRequest -> busid: " + response.bus.getNumber() +
-			" fromcpu: " + response.from.getNumber() +
-			" tocpu: " + response.to.getNumber() +
-			" msgid: " + response.msgId +
-			" origmsgid: " + response.originalId +
-			" callthr: " + response.caller.getId() +
-			" calleethr: " + response.thread.getId() +
-			" size: " + response.getSize());
+		RTLogger.log(new RTBusReplyRequestMessage(response));
 
 		messages.add(response);
 		cq.stim();
@@ -189,8 +175,7 @@ public class BUSResource extends Resource
 
     		MessagePacket m = messages.remove(0);
 
-    		RTLogger.log(
-				"MessageActivate -> msgid: " + m.msgId);
+    		RTLogger.log(new RTBusActivateMessage(m));
 
     		if (m instanceof MessageRequest)
     		{
@@ -218,8 +203,7 @@ public class BUSResource extends Resource
     			mr.replyTo.set(mr);
     		}
 
-    		RTLogger.log(
-				"MessageCompleted -> msgid: " + m.msgId);
+    		RTLogger.log(new RTBusCompletedMessage(m));
 		}
 	}
 

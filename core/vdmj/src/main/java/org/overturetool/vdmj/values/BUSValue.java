@@ -50,7 +50,7 @@ public class BUSValue extends ObjectValue
 
 	public BUSValue(ClassType classtype, NameValuePairMap map, ValueList argvals)
 	{
-		super(classtype, map, new Vector<ObjectValue>(), null);
+		super(classtype, map, new Vector<ObjectValue>(), null, null);
 
 		QuoteValue parg = (QuoteValue)argvals.get(0);
 		SchedulingPolicy policy = SchedulingPolicy.factory(parg.value.toUpperCase());
@@ -73,7 +73,7 @@ public class BUSValue extends ObjectValue
 
 	public BUSValue(ClassType type, ValueSet cpus)
 	{
-		super(type, new NameValuePairMap(), new Vector<ObjectValue>(), null);
+		super(type, new NameValuePairMap(), new Vector<ObjectValue>(), null, null);
 		List<CPUResource> cpulist = new Vector<CPUResource>();
 
 		for (Value v: cpus)

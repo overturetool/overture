@@ -34,7 +34,8 @@ import org.overturetool.vdmj.definitions.StateDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.messages.RTLogger;
+import org.overturetool.vdmj.messages.rtlog.RTExtendedTextMessage;
+import org.overturetool.vdmj.messages.rtlog.RTLogger;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.pog.StateInvariantObligation;
@@ -161,19 +162,19 @@ public class AssignmentStatement extends Statement
 
 			if (self == null)
 			{
-    			RTLogger.log(
+    			RTLogger.log(new RTExtendedTextMessage(
     				"InstVarChange -> instnm: \"" + target.toString() + "\"" +
     				" val: \"" + noquotes + "\"" +
     				" objref: nil" +
-    				" id: " + BasicSchedulableThread.getThread(Thread.currentThread()).getId());
+    				" id: " + BasicSchedulableThread.getThread(Thread.currentThread()).getId()));
 			}
 			else
 			{
-    			RTLogger.log(
+    			RTLogger.log(new RTExtendedTextMessage(
     				"InstVarChange -> instnm: \"" + target.toString() + "\"" +
     				" val: \"" + noquotes + "\"" +
     				" objref: " + self.objectReference +
-    				" id: " + BasicSchedulableThread.getThread(Thread.currentThread()).getId());
+    				" id: " + BasicSchedulableThread.getThread(Thread.currentThread()).getId()));
 			}
 		}
 

@@ -72,7 +72,7 @@ public class InitThread implements ISchedulableThread
 
 	public ObjectValue getObject()
 	{
-		throw new NotSupportedError();
+		return null;
 	}
 
 	public RunState getRunState()

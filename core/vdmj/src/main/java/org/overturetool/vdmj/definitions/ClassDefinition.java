@@ -1278,9 +1278,11 @@ public class ClassDefinition extends Definition
 		setPermissions(definitions, members, initCtxt);
 		setPermissions(superInheritedDefinitions, members, initCtxt);
 
+		ObjectValue creator = ctxt.outer == null ? null : ctxt.outer.getSelf();
+		
 		ObjectValue object =
 			new ObjectValue((ClassType)getType(), members, inherited,
-			ctxt.threadState.CPU);
+			ctxt.threadState.CPU, creator);
 
 		if (listener != null)
 		{
