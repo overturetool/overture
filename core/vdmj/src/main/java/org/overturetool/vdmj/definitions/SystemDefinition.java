@@ -31,6 +31,7 @@ import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.rtlog.RTDeclareCPUMessage;
 import org.overturetool.vdmj.messages.rtlog.RTLogger;
+import org.overturetool.vdmj.messages.rtlog.RTOperationMessage;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.StateContext;
@@ -236,6 +237,9 @@ public class SystemDefinition extends ClassDefinition
 
 			// For efficiency, we create a 2D array of CPU-to-CPU bus links
 			BUSValue.createMap(systemContext, cpus);
+			
+			//Disable the system construction - all objects have not been created and deployed.
+			RTOperationMessage.inSystemConstruction = false;
 		}
 		catch (ContextException e)
 		{
