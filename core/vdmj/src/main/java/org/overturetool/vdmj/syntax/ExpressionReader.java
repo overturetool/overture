@@ -824,7 +824,10 @@ public class ExpressionReader extends SyntaxReader
 
 			case IDENTIFIER:
 				// Includes mk_ constructors
-				LexNameToken id = lastNameToken();
+				// Note we can't use lastNameToken as this checks that we don't
+				// use old~ names.
+				LexNameToken id =
+					new LexNameToken(reader.currentModule, (LexIdentifierToken)token);
 				nextToken();
 				return new VariableExpression(id);
 
@@ -1616,7 +1619,12 @@ public class ExpressionReader extends SyntaxReader
 
     	LexNameToken classname = ((VariableExpression)args.get(0)).name;
 
-    	return new IsOfBaseClassExpression(start, classname, args.get(1));
+		if (classname.old)
+		{
+			throwMessage(2295, "Can't use old name here", classname);
+		}
+
+		return new IsOfBaseClassExpression(start, classname, args.get(1));
     }
 
 	private IsOfClassExpression readIsOfClassExpression(LexLocation start)
@@ -1638,7 +1646,12 @@ public class ExpressionReader extends SyntaxReader
 
     	LexNameToken classname = ((VariableExpression)args.get(0)).name;
 
-    	return new IsOfClassExpression(start, classname, args.get(1));
+		if (classname.old)
+		{
+			throwMessage(2295, "Can't use old name here", classname);
+		}
+
+		return new IsOfClassExpression(start, classname, args.get(1));
     }
 
 	private SameBaseClassExpression readSameBaseExpression(LexLocation start)

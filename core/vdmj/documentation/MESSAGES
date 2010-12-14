@@ -341,6 +341,7 @@ as the expected and actual values.
 2292, "Expecting '|| (...)'"
 2293, "Expecting '|| (a, b {,...})'"
 2294, "Expecting ')' ending || clause"
+2295, "Can't use old name here"
 
 
 3000, "Expression does not match declared type"

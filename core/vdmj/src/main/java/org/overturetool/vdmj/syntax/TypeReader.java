@@ -157,6 +157,12 @@ public class TypeReader extends SyntaxReader
 
 				nextToken();
 				LexIdentifierToken tagid = (LexIdentifierToken)tag;
+
+				if (tagid.old)
+				{
+					throwMessage(2295, "Can't use old name here", tag);
+				}
+				
 				LexNameToken tagname = idToName(tagid);
 				list.add(new Field(tagname, tagid.name, readType(), false));
 				reader.unpush();
@@ -170,6 +176,12 @@ public class TypeReader extends SyntaxReader
 
 				nextToken();
 				LexIdentifierToken tagid = (LexIdentifierToken)tag;
+
+				if (tagid.old)
+				{
+					throwMessage(2295, "Can't use old name here", tag);
+				}
+
 				LexNameToken tagname = idToName(tagid);
 				list.add(new Field(tagname, tagid.name, readType(), true));
 				reader.unpush();

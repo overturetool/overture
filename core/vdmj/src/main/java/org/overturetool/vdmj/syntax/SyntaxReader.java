@@ -189,7 +189,14 @@ public abstract class SyntaxReader
 
 		if (tok.type == Token.IDENTIFIER)
 		{
-			return (LexIdentifierToken)tok;
+			LexIdentifierToken id = (LexIdentifierToken)tok;
+			
+			if (id.old)
+			{
+				throwMessage(2295, "Can't use old name here", tok);
+			}
+			
+			return id;
 		}
 
 		throwMessage(2058, "Expecting Identifier");
@@ -214,11 +221,25 @@ public abstract class SyntaxReader
 
 		if (tok instanceof LexNameToken)
 		{
-			return (LexNameToken)tok;
+			LexNameToken name = (LexNameToken)tok;
+			
+			if (name.old)
+			{
+				throwMessage(2295, "Can't use old name here", tok);
+			}
+			
+			return name;
 		}
 		else if (tok instanceof LexIdentifierToken)
 		{
-			return new LexNameToken(reader.currentModule, (LexIdentifierToken)tok);
+			LexIdentifierToken id = (LexIdentifierToken)tok;
+			
+			if (id.old)
+			{
+				throwMessage(2295, "Can't use old name here", tok);
+			}
+			
+			return new LexNameToken(reader.currentModule, id);
 		}
 
 		throwMessage(2059, "Expecting a name");
@@ -244,7 +265,14 @@ public abstract class SyntaxReader
 		if (tok.type == Token.IDENTIFIER)
 		{
 			nextToken();
-			return (LexIdentifierToken)tok;
+			LexIdentifierToken id = (LexIdentifierToken)tok;
+			
+			if (id.old)
+			{
+				throwMessage(2295, "Can't use old name here", tok);
+			}
+			
+			return id;
 		}
 
 		if (tok.type == Token.NAME)
@@ -275,11 +303,25 @@ public abstract class SyntaxReader
 
 		if (tok instanceof LexNameToken)
 		{
-			return (LexNameToken)tok;
+			LexNameToken name = (LexNameToken)tok;
+			
+			if (name.old)
+			{
+				throwMessage(2295, "Can't use old name here", tok);
+			}
+			
+			return name;
 		}
 		else if (tok instanceof LexIdentifierToken)
 		{
-			return new LexNameToken(reader.currentModule, (LexIdentifierToken)tok);
+			LexIdentifierToken id = (LexIdentifierToken)tok;
+			
+			if (id.old)
+			{
+				throwMessage(2295, "Can't use old name here", tok);
+			}
+			
+			return new LexNameToken(reader.currentModule, id);
 		}
 
 		throwMessage(2061, message);
