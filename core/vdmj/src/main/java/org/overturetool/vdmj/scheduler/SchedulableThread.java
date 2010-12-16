@@ -158,7 +158,7 @@ public abstract class SchedulableThread extends Thread implements Serializable,R
 		{
 			if (!virtual)
 			{
-				duration(Properties.rt_duration_default, ctxt, location);
+				duration(getObject().getCPU().getDuration(Properties.rt_cycle_default), ctxt, location);
 			}
 		}
 		else

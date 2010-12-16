@@ -40,6 +40,7 @@ import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.NameValuePairMap;
 import org.overturetool.vdmj.values.NaturalValue;
 import org.overturetool.vdmj.values.ObjectValue;
+import org.overturetool.vdmj.values.RealValue;
 import org.overturetool.vdmj.values.SeqValue;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.ValueList;
@@ -48,6 +49,8 @@ import org.overturetool.vdmj.values.VoidValue;
 public class CPUClassDefinition extends ClassDefinition
 {
 	private static final long serialVersionUID = 1L;
+	
+	private static final long CPU_MAX_FREQUENCY = 1000000000; // 1GHz
 
 	public CPUClassDefinition() throws ParserException, LexException
 	{
@@ -84,6 +87,17 @@ public class CPUClassDefinition extends ClassDefinition
 		NameValuePairList nvpl = definitions.getNamedValues(ctxt);
 		NameValuePairMap map = new NameValuePairMap();
 		map.putAll(nvpl);
+		
+		RealValue sarg = (RealValue)argvals.get(1);
+		if(sarg.value <= 0)
+		{
+			throw new ContextException(
+				4149, "CPU frequency to slow: "+ sarg.value+ " Hz", ctxt.location, ctxt);
+		}else if(sarg.value > CPU_MAX_FREQUENCY)
+		{
+			throw new ContextException(
+				4150, "CPU frequency to fast: "+ sarg.value+ " Hz", ctxt.location, ctxt);
+		}
 
 		return new CPUValue((ClassType)getType(), map, argvals);
 	}

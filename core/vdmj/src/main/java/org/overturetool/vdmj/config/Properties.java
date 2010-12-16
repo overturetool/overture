@@ -41,6 +41,9 @@ public class Properties extends ConfigBase
 
 	/** The default duration for RT statements. */
 	public static int rt_duration_default = 2;
+	
+	/** The default cycle for RT statements. */
+	public static int rt_cycle_default = 2;
 
 	/** The default timeslice (statements executed) for a FCFS policy */
 	public static int scheduler_fcfs_timeslice = 10;
