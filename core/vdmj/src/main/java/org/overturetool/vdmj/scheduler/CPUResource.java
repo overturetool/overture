@@ -29,6 +29,7 @@ import org.overturetool.vdmj.messages.rtlog.RTThreadCreateMessage;
 import org.overturetool.vdmj.messages.rtlog.RTThreadKillMessage;
 import org.overturetool.vdmj.messages.rtlog.RTThreadSwapMessage;
 import org.overturetool.vdmj.messages.rtlog.RTThreadSwapMessage.SwapType;
+import org.overturetool.vdmj.scheduler.SystemClock.TimeUnit;
 import org.overturetool.vdmj.values.ObjectValue;
 
 public class CPUResource extends Resource
@@ -167,7 +168,8 @@ public class CPUResource extends Resource
 
 	public long getCyclesDuration(long cycles)
 	{
-		return (long)(cycles/clock + 1);		// Same as VDMTools
+		//TODO optimize by converting the speed into the correct units only once
+		return SystemClock.timeToInternal(TimeUnit.seconds,new Double(cycles)/clock); // cycles/cpu [Hz]
 	}
 
 	public int getNumber()

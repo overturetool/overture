@@ -50,7 +50,7 @@ public class CPUClassDefinition extends ClassDefinition
 {
 	private static final long serialVersionUID = 1L;
 	
-	private static final long CPU_MAX_FREQUENCY = 1000000000; // 1GHz
+	public static final long CPU_MAX_FREQUENCY = 1000000000; // 1GHz
 
 	public CPUClassDefinition() throws ParserException, LexException
 	{

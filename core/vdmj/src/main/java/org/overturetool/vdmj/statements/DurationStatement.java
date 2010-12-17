@@ -30,6 +30,8 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.scheduler.ISchedulableThread;
+import org.overturetool.vdmj.scheduler.SystemClock;
+import org.overturetool.vdmj.scheduler.SystemClock.TimeUnit;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Type;
@@ -66,6 +68,8 @@ public class DurationStatement extends Statement
 	@Override
 	public Type typeCheck(Environment env, NameScope scope)
 	{
+		long durationValue = 0;
+		
 		if (duration instanceof IntegerLiteralExpression)
 		{
 			IntegerLiteralExpression i = (IntegerLiteralExpression)duration;
@@ -75,7 +79,7 @@ public class DurationStatement extends Statement
 				duration.report(3281, "Arguments to duration must be integer >= 0");
 			}
 
-			step = i.value.value;
+			durationValue = i.value.value;
 		}
 		else if (duration instanceof RealLiteralExpression)
 		{
@@ -87,13 +91,15 @@ public class DurationStatement extends Statement
 				duration.report(3282, "Argument to duration must be integer >= 0");
 			}
 
-			step = (long)i.value.value;
+			durationValue = (long)i.value.value;
 		}
 		else
 		{
 			duration.report(3281, "Arguments to duration must be integer >= 0");
 		}
 
+		step = SystemClock.timeToInternal(TimeUnit.millisecond,new Double(durationValue));//convert the input value [ms] to internal
+		
 		return statement.typeCheck(env, scope);
 	}
 

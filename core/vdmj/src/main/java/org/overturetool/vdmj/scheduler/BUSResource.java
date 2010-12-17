@@ -32,6 +32,7 @@ import org.overturetool.vdmj.messages.rtlog.RTBusReplyRequestMessage;
 import org.overturetool.vdmj.messages.rtlog.RTBusRequestMessage;
 import org.overturetool.vdmj.messages.rtlog.RTDeclareBUSMessage;
 import org.overturetool.vdmj.messages.rtlog.RTLogger;
+import org.overturetool.vdmj.scheduler.SystemClock.TimeUnit;
 
 public class BUSResource extends Resource
 {
@@ -221,7 +222,8 @@ public class BUSResource extends Resource
 		}
 		else
 		{
-			return bytes;		// For now...
+			//TODO optimize by converting the speed into the correct units only once
+			return SystemClock.timeToInternal(TimeUnit.seconds,(new Double(bytes)/speed)); // bytes/s
 		}
 	}
 

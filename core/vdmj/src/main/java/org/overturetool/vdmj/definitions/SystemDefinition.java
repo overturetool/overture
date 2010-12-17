@@ -26,6 +26,10 @@ package org.overturetool.vdmj.definitions;
 import java.util.HashMap;
 
 import org.overturetool.vdmj.debug.DBGPReader;
+import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.expressions.IntegerLiteralExpression;
+import org.overturetool.vdmj.expressions.NewExpression;
+import org.overturetool.vdmj.expressions.RealLiteralExpression;
 import org.overturetool.vdmj.expressions.UndefinedExpression;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -99,6 +103,34 @@ public class SystemDefinition extends ClassDefinition
 					if (ut.typename.getName().equals("BUS"))
 					{
 						d.warning(5014, "Uninitialized BUS ignored");
+					}
+				}else if (iv.type instanceof UnresolvedType &&
+						iv.expression instanceof NewExpression)
+				{
+					UnresolvedType ut = (UnresolvedType)iv.type;
+					
+					if (ut.typename.getName().equals("CPU"))
+					{
+						NewExpression newExp = (NewExpression) iv.expression;
+						Expression exp = newExp.args.get(1);
+						double speed = 0;
+						if (exp instanceof IntegerLiteralExpression)
+						{
+							IntegerLiteralExpression frequencyExp = (IntegerLiteralExpression) newExp.args.get(1);
+							speed = frequencyExp.value.value;
+						}else if (exp instanceof RealLiteralExpression)
+						{
+							RealLiteralExpression frequencyExp = (RealLiteralExpression) newExp.args.get(1);
+							speed = frequencyExp.value.value;
+						}
+						
+						if (speed == 0)
+						{
+							d.report(3305, "CPU frequency to slow: " + speed + " Hz");
+						}else if (speed > CPUClassDefinition.CPU_MAX_FREQUENCY)
+						{
+							d.report(3306, "CPU frequency to fast: " + speed + " Hz");
+						}
 					}
 				}
 			}
