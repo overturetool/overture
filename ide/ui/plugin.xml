@@ -328,6 +328,19 @@
            </enabledWhen>
                      
         </page>
+        <!-- VDM Build path protperly page -->
+        <page
+              class="org.overture.ide.ui.property.VdmBuildPathPropertyPage"
+              id="org.overture.ide.ui.property.vdmbuildpath"
+              name="VDM Build Path">
+              <enabledWhen>
+              <or>
+                 <instanceof
+                       value="org.eclipse.core.resources.IProject">
+                 </instanceof>
+              </or>
+           </enabledWhen>
+        </page>
      </extension>
    
    <extension

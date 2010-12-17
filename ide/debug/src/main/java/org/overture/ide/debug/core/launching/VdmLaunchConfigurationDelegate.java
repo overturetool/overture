@@ -31,6 +31,7 @@ import org.overture.ide.debug.core.IDbgpService;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.model.internal.VdmDebugTarget;
+import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overturetool.vdmj.util.Base64;
 
 /**
@@ -61,7 +62,7 @@ public class VdmLaunchConfigurationDelegate implements
 			// set launch encoding to UTF-8. Mainly used to set console encoding.
 			launch.setAttribute(DebugPlugin.ATTR_CONSOLE_ENCODING, "UTF-8");
 
-			List<String> commandList = initializeLaunch(launch, configuration, mode);
+			List<String> commandList = initializeLaunch(launch, configuration, mode,monitor);
 
 			final VdmDebugTarget target = (VdmDebugTarget) launch.getDebugTarget();
 
@@ -118,7 +119,7 @@ public class VdmLaunchConfigurationDelegate implements
 	}
 
 	private List<String> initializeLaunch(ILaunch launch,
-			ILaunchConfiguration configuration, String mode)
+			ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
 			throws CoreException
 	{
 		List<String> commandList = null;
@@ -141,11 +142,12 @@ public class VdmLaunchConfigurationDelegate implements
 		Assert.isNotNull(vdmProject, " Project not found: "
 				+ configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, ""));
 		
-		if(vdmProject== null || !vdmProject.getModel().isTypeCorrect())
+		
+		if(vdmProject== null || !VdmTypeCheckerUi.typeCheck(vdmProject,monitor))
 		{
 			abort("Cannot launch a project ("+vdmProject+") with type errors, please check the problems view", null);
 		}
-
+		
 		String charSet = getProject(configuration).getDefaultCharset();
 
 		commandList.add("-h");
@@ -231,7 +233,26 @@ public class VdmLaunchConfigurationDelegate implements
 		commandList.addAll(1, getVmArguments(configuration));
 
 		VdmDebugTarget target = null;
+		//Debug mode
 		if (mode.equals(ILaunchManager.DEBUG_MODE))
+		{
+			IDbgpService service = VdmDebugPlugin.getDefault().getDbgpService();
+
+			if (!service.available())
+			{
+				abort("Could not create DBGP Service", null);
+			}
+
+			target = new VdmDebugTarget(IDebugConstants.ID_VDM_DEBUG_MODEL, service, debugSessionId.toString(), launch, null);
+			target.setVdmProject(vdmProject);
+			launch.addDebugTarget(target);
+			target.toggleClassVariables(true);
+			target.toggleGlobalVariables(true);
+			target.toggleLocalVariables(true);
+
+		}
+		//Run mode
+		else if (mode.equals(ILaunchManager.RUN_MODE))
 		{
 			IDbgpService service = VdmDebugPlugin.getDefault().getDbgpService();
 
@@ -355,7 +376,7 @@ public class VdmLaunchConfigurationDelegate implements
 
 			} else
 			{
-				process = Runtime.getRuntime().exec("help");
+				process = Runtime.getRuntime().exec("java -version");
 			}
 		} catch (IOException e)
 		{

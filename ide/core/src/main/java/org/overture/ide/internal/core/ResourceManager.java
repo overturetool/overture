@@ -76,8 +76,9 @@ public class ResourceManager implements IResourceChangeListener
 					{
 						file.refreshLocal(IResource.DEPTH_INFINITE, null);
 					}
-					if (file.getContentDescription() != null
-							&& project.getContentTypeIds().contains(file.getContentDescription().getContentType().getId()))
+					//if (file.getContentDescription() != null
+					//		&& project.getContentTypeIds().contains(file.getContentDescription().getContentType().getId()))
+					if(project.isModelFile(file))
 					{
 						IVdmSourceUnit unit = createSourceUnit(file, project);
 						return unit;
@@ -124,7 +125,7 @@ public class ResourceManager implements IResourceChangeListener
 
 		if (resource instanceof IFolder)
 		{
-			if ( resource.getLocation().lastSegment().startsWith("."))// skip
+			if (resource.getLocation().lastSegment().startsWith("."))// skip
 				return list;
 			// . folders like.svn
 			for (IResource res : ((IFolder) resource).members(IContainer.INCLUDE_PHANTOMS
@@ -351,6 +352,40 @@ public class ResourceManager implements IResourceChangeListener
 				new AddBuilderThread().start();
 				addBuilderThreadRunning = true;
 			}
+		}
+	}
+
+	/**
+	 * Sync existing IVdmSource files with the build path of the project. This is used when the build path changed and
+	 * the project should be updated. This method removed old IVdmSource files which no longer is withing the build
+	 * path.
+	 * 
+	 * @param project
+	 * @throws CoreException
+	 */
+	public synchronized void syncBuildPath(IVdmProject project)
+			throws CoreException
+	{
+		List<IVdmSourceUnit> syncedVdmSourceUnits = project.getSpecFiles();
+
+		List<IFile> removedFiles = new Vector<IFile>();
+		IProject p = (IProject) project.getAdapter(IProject.class);
+
+		for (IFile file : vdmSourceUnits.keySet())
+		{
+			if (file.getProject().equals(p)
+					&& !syncedVdmSourceUnits.contains(vdmSourceUnits.get(file)))
+			{
+				removedFiles.add(file);
+				System.out.println("Found an existing file removed from build path: "
+						+ file);
+			}
+		}
+
+		// remove the old files
+		for (IFile iFile : removedFiles)
+		{
+			vdmSourceUnits.remove(iFile);
 		}
 	}
 

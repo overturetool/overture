@@ -73,6 +73,10 @@ public static print: ? ==> ()
 print(arg) ==
 	is not yet specified;
 
+public static println: ? ==> ()
+println(arg) ==
+	is not yet specified;
+
 public static printf: seq of char * seq of ? ==> ()
 printf(format, args) ==
 	is not yet specified;

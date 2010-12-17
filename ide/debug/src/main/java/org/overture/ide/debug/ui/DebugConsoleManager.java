@@ -69,7 +69,8 @@ public class DebugConsoleManager implements ILaunchesListener2 {
 		if (launch == null) {
 			return false;
 		}
-		if (!ILaunchManager.DEBUG_MODE.equals(launch.getLaunchMode())) {
+		//TODO we allow both debug and run here...
+		if (!(ILaunchManager.DEBUG_MODE.equals(launch.getLaunchMode()) || ILaunchManager.RUN_MODE.equals(launch.getLaunchMode()))) {
 			return false;
 		}
 		return launch.getProcesses().length != 0

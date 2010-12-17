@@ -41,21 +41,12 @@ public class VdmReconcilingStrategy implements IReconcilingStrategy
 
 	public void reconcile(IRegion partition)
 	{
-		if (VdmCore.DEBUG)
-		{
-			// System.out.println("reconcile(IRegion partition)");
-			// System.out.println("File: "
-			// + (currentDocument).getFile().toString());
-			// if(outline != null)
-			// {
-			// VdmContentOutlinePage page = (VdmContentOutlinePage)
-			// outline.getCurrentPage();
-			//				
-			// }
-		}
 		try
 		{
-
+			if(currentDocument.getSourceUnit() == null)
+			{
+				return;//No reconcile if the source unit had been removed from the project (build path change)
+			}
 			IVdmProject vdmProject = (IVdmProject) currentDocument.getProject()
 					.getAdapter(IVdmProject.class);
 

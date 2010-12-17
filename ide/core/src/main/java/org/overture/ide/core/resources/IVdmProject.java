@@ -21,7 +21,7 @@ public interface IVdmProject extends IAdaptable
 	 * 
 	 * @see org.overture.ide.utility.IVdmProject#setBuilder(org.overturetool.vdmj .Release)
 	 */
-	public abstract void setBuilder(Release languageVersion)
+	public void setBuilder(Release languageVersion)
 			throws CoreException;
 
 	/**
@@ -29,70 +29,72 @@ public interface IVdmProject extends IAdaptable
 	 * 
 	 * @see org.overture.ide.utility.IVdmProject#hasBuilder()
 	 */
-	public abstract boolean hasBuilder() throws CoreException;
+	public boolean hasBuilder() throws CoreException;
 
 	/**
 	 * (non-Javadoc)
 	 * 
 	 * @see org.overture.ide.utility.IVdmProject#getLanguageVersion()
 	 */
-	public abstract Release getLanguageVersion() throws CoreException;
+	public Release getLanguageVersion() throws CoreException;
 
-	public abstract String getLanguageVersionName() throws CoreException;
+	public String getLanguageVersionName() throws CoreException;
 
-	public abstract List<String> getContentTypeIds();
+	public List<String> getContentTypeIds();
 
-	public abstract Dialect getDialect();
+	public Dialect getDialect();
 
-	public abstract boolean hasDynamictypechecks();
+	public boolean hasDynamictypechecks();
 
-	public abstract boolean hasInvchecks();
+	public boolean hasInvchecks();
 
-	public abstract boolean hasPostchecks();
+	public boolean hasPostchecks();
 
-	public abstract boolean hasPrechecks();
+	public boolean hasPrechecks();
 
-	public abstract boolean hasMeasurechecks();
+	public boolean hasMeasurechecks();
 
-	public abstract boolean hasSuppressWarnings();
+	public boolean hasSuppressWarnings();
 
-	public abstract void setDynamictypechecks(Boolean value)
+	public void setDynamictypechecks(Boolean value)
 			throws CoreException;
 
-	public abstract void setInvchecks(Boolean value) throws CoreException;
+	public void setInvchecks(Boolean value) throws CoreException;
 
-	public abstract void setPostchecks(Boolean value) throws CoreException;
+	public void setPostchecks(Boolean value) throws CoreException;
 
-	public abstract void setPrechecks(Boolean value) throws CoreException;
+	public void setPrechecks(Boolean value) throws CoreException;
 
-	public abstract void setMeasurechecks(Boolean value) throws CoreException;
+	public void setMeasurechecks(Boolean value) throws CoreException;
 
-	public abstract void setSuppressWarnings(Boolean value)
+	public void setSuppressWarnings(Boolean value)
 			throws CoreException;
 
-	public abstract boolean typeCheck(IProgressMonitor monitor)
+	public boolean typeCheck(IProgressMonitor monitor)
 			throws CoreException;
 
-	public abstract void typeCheck(boolean clean, IProgressMonitor monitor)
+	public void typeCheck(boolean clean, IProgressMonitor monitor)
 			throws CoreException;
 
-	public abstract String getName();
+	public String getName();
 
-	public abstract String getVdmNature();
+	public String getVdmNature();
 
-	public abstract List<IVdmSourceUnit> getSpecFiles() throws CoreException;
+	public List<IVdmSourceUnit> getSpecFiles() throws CoreException;
 
-	public abstract File getFile(IFile file);
+	public File getFile(IFile file);
+	
+	boolean isModelFile(IFile file) throws CoreException;
 
-	public abstract IFile findIFile(File file);
+	public IFile findIFile(File file);
 
-	public abstract File getSystemFile(IPath path);
+	public File getSystemFile(IPath path);
 
-	public abstract File getFile(IWorkspaceRoot wroot, IPath path);
+	public File getFile(IWorkspaceRoot wroot, IPath path);
 
-	public abstract IVdmSourceUnit findSourceUnit(IFile file)
+	public IVdmSourceUnit findSourceUnit(IFile file)
 			throws CoreException;
 
-	public abstract IVdmModel getModel();
+	public IVdmModel getModel();
 
 }

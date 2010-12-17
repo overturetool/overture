@@ -35,6 +35,7 @@ import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.builder.SafeBuilder;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
+import org.overture.ide.core.resources.ModelPath;
 import org.overture.ide.core.utility.ILanguage;
 import org.overture.ide.core.utility.LanguageManager;
 
@@ -641,12 +642,38 @@ public class VdmProject implements IVdmProject
 			throws CoreException
 	{
 		List<IVdmSourceUnit> list = new Vector<IVdmSourceUnit>();
-		for (IResource res : this.project.members(IContainer.INCLUDE_PHANTOMS
-				| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
+		ModelPath modelpath= new ModelPath(this);
+		
+		for (IContainer container : modelpath.getModelSrcPaths())
 		{
-			list.addAll(ResourceManager.getInstance().getFiles(this.project, res, contentTypeId));
+			if(!container.exists() || !container.isAccessible())
+			{
+				continue;
+			}
+			for (IResource res : container.members(IContainer.INCLUDE_PHANTOMS
+					| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
+			{
+				list.addAll(ResourceManager.getInstance().getFiles(this.project, res, contentTypeId));
+			}
 		}
+		
 		return list;
+	}
+	
+	
+	public boolean isModelFile(IFile file) throws CoreException
+	{
+		ModelPath modelpath= new ModelPath(this);
+		for (IContainer src : modelpath.getModelSrcPaths())
+		{
+			if(src.getLocation().isPrefixOf(file.getLocation()) && file.getContentDescription() != null
+					&& getContentTypeIds().contains(file.getContentDescription().getContentType().getId()))
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 

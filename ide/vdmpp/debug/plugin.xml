@@ -18,7 +18,7 @@
 		<launchConfigurationType
         delegate="org.overture.ide.debug.core.launching.VdmLaunchConfigurationDelegate"
         id="org.overture.ide.vdmpp.debug.launchConfigurationType"
-        modes="debug"
+        modes="debug,run"
         name="VDM PP Model"
         public="true"
         sourceLocatorId="org.overture.ide.debug.sourceLocator"
@@ -38,11 +38,11 @@
                   perspective="org.eclipse.debug.ui.DebugPerspective"
                   description="%localVdmPpApplicationTabGroupDescription.debug">
             </launchMode>
-            <!--launchMode
+            <launchMode
                   mode="run"
                   perspective="org.eclipse.debug.ui.DebugPerspective"
                   description="%localVdmPpApplicationTabGroupDescription.run">
-            </launchMode-->
+            </launchMode>
 		</launchConfigurationTabGroup>
 	</extension>
 
@@ -66,7 +66,7 @@
         icon="icons/cview16/vdmpp_file_tsk.png"
         id="org.overture.ide.vdmp.debug.ui.localVdmShortcut"
         label="Vdm Application"
-        modes="debug">
+        modes="debug,run">
      <contextualLaunch>
            <enablement>
              <with variable="selection">
@@ -90,16 +90,26 @@
      </configurationType>
   </shortcut>
  </extension>
+ 
  <extension
        point="org.eclipse.debug.ui.launchGroups">
     <launchGroup
           bannerImage="icons/cview16/vdmpp_file_tsk.png"
-          id="org.overture.ide.vdmpp.debug.launchGroup"
+          id="org.overture.ide.vdmpp.debug.launchGroupDebug"
           image="icons/cview16/vdmpp_file_tsk.png"
-          label="Vdm Launch"
+          label="VDM-PP Launch"
           mode="debug">
     </launchGroup>
+     <launchGroup
+          bannerImage="icons/cview16/vdmpp_file_tsk.png"
+          id="org.overture.ide.vdmpp.debug.launchGroupRun"
+          image="icons/cview16/vdmpp_file_tsk.png"
+          label="VDM-PP Launch"
+          mode="run">
+    </launchGroup>
  </extension>
+
+
 	<extension
         point="org.eclipse.ui.popupMenus">
      <viewerContribution

@@ -18,7 +18,7 @@
 		<launchConfigurationType
 			delegate="org.overture.ide.vdmrt.debug.launching.VdmRtLaunchConfigurationDelegate"
 			id="org.overture.ide.vdmrt.debug.launchConfigurationType" 
-			modes="debug"
+			modes="debug,run"
 			name="VDM RT Model" 
 			public="true" 
 			sourceLocatorId="org.overture.ide.debug.sourceLocator"
@@ -38,11 +38,11 @@
                   perspective="org.eclipse.debug.ui.DebugPerspective"
                   description="%localVdmRtApplicationTabGroupDescription.debug">
             </launchMode>
-            <!--launchMode
+            <launchMode
                   mode="run"
                   perspective="org.eclipse.debug.ui.DebugPerspective"
                   description="%localVdmRtApplicationTabGroupDescription.run">
-            </launchMode-->
+            </launchMode>
 		</launchConfigurationTabGroup>
 	</extension>
 
@@ -65,7 +65,7 @@
         icon="icons/cview16/vdmrt_file_tsk.gif"
         id="org.overture.ide.vdmrt.debug.ui.localVdmShortcut"
         label="Vdm Application"
-        modes="debug">
+        modes="debug,run">
      <contextualLaunch>
            <enablement>
              <with variable="selection">
@@ -90,6 +90,25 @@
   </shortcut>
  </extension>
 
+
+ <extension
+       point="org.eclipse.debug.ui.launchGroups">
+    <launchGroup
+          bannerImage="icons/cview16/vdmrt_file_tsk.gif"
+          id="org.overture.ide.vdmrt.debug.launchGroupDebug"
+          image="icons/cview16/vdmrt_file_tsk.gif"
+          label="VDM-RT Launch"
+          mode="debug">
+    </launchGroup>
+     <launchGroup
+          bannerImage="icons/cview16/vdmrt_file_tsk.gif"
+          id="org.overture.ide.vdmrt.debug.launchGroupRun"
+          image="icons/cview16/vdmrt_file_tsk.gif"
+          label="VDM-RT Launch"
+          mode="run">
+    </launchGroup>
+ </extension>
+ 
 
 <extension
         point="org.eclipse.ui.popupMenus">
