@@ -2,13 +2,13 @@ package org.overture.ide.vdmpp.debug.ui.launching;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.debug.ui.launching.AbstractVdmMainLaunchConfigurationTab;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.ide.vdmpp.core.IVdmPpCoreConstants;
+import org.overture.ide.vdmpp.debug.Activator;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
@@ -84,9 +84,14 @@ public class VdmPpMainLaunchConfigurationTab extends
 		} catch (Exception e)
 		{
 			if (e.getMessage() != null && e.getMessage().contains("not loaded"))
+			{
 				setErrorMessage(e.getMessage());
+			}
 			else
-				setErrorMessage("Intrnal type check error: " + e.toString());
+			{
+				Activator.logError("Internal type check error", e);
+				setErrorMessage("Internal type check error: " + e.toString());
+			}
 		}
 
 		return false;

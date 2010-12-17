@@ -14,29 +14,11 @@ import org.overture.ide.core.resources.IVdmProject;
 
 public class VdmReconcilingStrategy implements IReconcilingStrategy
 {
-
 	private VdmDocument currentDocument;
-
-	// private ContentOutline outline =null;
 
 	public VdmReconcilingStrategy()
 	{
-		// IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench()
-		// .getActiveWorkbenchWindow();
-
-		// if (activeWorkbenchWindow != null)
-		// {
-		// IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-		// if (activePage != null)
-		// {
-		// IViewPart outlineCandidate =
-		// activePage.findView(IPageLayout.ID_OUTLINE);
-		// if (outlineCandidate instanceof ContentOutline)
-		// {
-		// outline = (ContentOutline) outlineCandidate;
-		// }
-		// }
-		// }
+		
 	}
 
 	public void reconcile(IRegion partition)

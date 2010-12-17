@@ -28,10 +28,8 @@ public class VdmModel implements IVdmModel
 {
 	static int count = 0;
 	int id;
-	// protected boolean typeChecked = false;
 	protected boolean isTypeChecked = false;
 	protected boolean isTypeCorrect = false;
-	// private Hashtable<String, Boolean> parseCurrectTable = new Hashtable<String, Boolean>();
 
 	protected Date checkedTime;
 
@@ -75,7 +73,7 @@ public class VdmModel implements IVdmModel
 		this.isTypeChecked = true;
 		this.isTypeCorrect = checked;
 		this.checkedTime = new Date();
-		if (checked == true)
+		if (checked)
 		{
 			fireModelCheckedEvent();
 		}
@@ -332,7 +330,7 @@ public class VdmModel implements IVdmModel
 
 	public void setIsTypeChecked(boolean checked)
 	{
-		this.isTypeChecked = false;
+		this.isTypeChecked = checked;
 	}
 
 }

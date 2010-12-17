@@ -4,6 +4,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.debug.core.DebugException;
 import org.osgi.framework.BundleContext;
 
 
@@ -13,6 +14,7 @@ public class Activator extends Plugin
 	public static final String PLUGIN_ID = IVdmRtDebugConstants.PLUGIN_ID;//"org.overturetool.core";
 
 	public static final boolean DEBUG = true;
+	public static final int INTERNAL_ERROR = 120;
 	
 	
 	// The shared instance
@@ -53,15 +55,45 @@ public class Activator extends Plugin
 		return plugin;
 	}
 
-	public static void log(Exception ex) {
-		if (DEBUG){
-			ex.printStackTrace();
+	public static void log(Throwable t) {
+		Throwable top = t;
+		if (t instanceof DebugException) {
+			Throwable throwable = ((DebugException) t).getStatus()
+					.getException();
+			if (throwable != null) {
+				top = throwable;
+			}
 		}
-		String message = ex.getMessage();
-		if (message == null){		
-			message = "(no message)"; //$NON-NLS-1$
+		log(new Status(IStatus.ERROR, PLUGIN_ID, INTERNAL_ERROR,
+				"internalErrorLoggedFromVdmPpDebugPlugin" + top.getMessage(), top));
+	}
+
+	public static void log(IStatus status) {
+		getDefault().getLog().log(status);
+	}
+	
+	public static void logWarning(String message) {
+		logWarning(message, null);
+	}
+
+	public static void logWarning(String message, Throwable t) {
+		log(new Status(IStatus.WARNING, PLUGIN_ID, INTERNAL_ERROR, message, t));
+	}
+
+	public static void logError(String message) {
+		logError(message, null);
+	}
+
+	public static void logError(String message, Throwable t) {
+		Throwable top = t;
+		if (t instanceof DebugException) {
+			Throwable throwable = ((DebugException) t).getStatus()
+					.getException();
+			if (throwable != null) {
+				top = throwable;
+			}
 		}
-		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, 0, message, ex));
+		log(new Status(IStatus.ERROR, PLUGIN_ID, INTERNAL_ERROR, message, top));
 	}
 	
 	@SuppressWarnings("unused")

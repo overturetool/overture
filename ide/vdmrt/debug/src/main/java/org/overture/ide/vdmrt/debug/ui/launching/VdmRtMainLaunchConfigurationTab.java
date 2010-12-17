@@ -7,6 +7,7 @@ import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.debug.ui.launching.AbstractVdmMainLaunchConfigurationTab;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
+import org.overture.ide.vdmrt.debug.Activator;
 import org.overture.ide.vdmrt.core.IVdmRtCoreConstants;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassList;
@@ -86,9 +87,14 @@ public class VdmRtMainLaunchConfigurationTab extends
 		} catch (Exception e)
 		{
 			if (e.getMessage() != null && e.getMessage().contains("not loaded"))
+			{
 				setErrorMessage(e.getMessage());
+			}
 			else
-				setErrorMessage("Intrnal type check error: " + e.toString());
+			{
+				Activator.logError("Internal type check error", e);
+				setErrorMessage("Internal type check error: " + e.toString());
+			}
 		}
 
 		return false;

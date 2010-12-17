@@ -65,36 +65,7 @@ public class VdmSourceUnit implements IVdmSourceUnit
 			this.locationToAstNodeMap.putAll(locationToAstNodeMap);
 		}
 
-		// for (LexLocation lexLocation : allLocation)
-		// {
-		// if (locationToAstNodeMap.containsKey((lexLocation)))
-		// System.out.println(locationToAstNodeMap.get(lexLocation)
-		// .getName()
-		// + " - "
-		// + lexLocation.startLine
-		// + ":"
-		// + lexLocation.startPos
-		// + " - "
-		// + lexLocation.endLine
-		// + ":" + lexLocation.endPos);
-		// else
-		// System.out.println(lexLocation.startLine + ":"
-		// + lexLocation.startPos + " - " + lexLocation.endLine
-		// + ":" + lexLocation.endPos);
-		// }
-
-		// VdmModelManager.getInstance().update(project, parseList);
 		fireChangedEvent();
-		// file.getLocation().toFile().getAbsolutePath()
-		// IVdmModelManager astManager = VdmModelManager.instance();
-		// astManager.update(project, project.getVdmNature(), ast);
-		// IVdmSourceUnit rootNode = astManager.getRootNode(project, natureId);
-		// if (rootNode != null)
-		// {
-		//
-		// rootNode.setParseCorrect(filePath, !parseErrorsOccured);
-		//
-		// }
 	}
 
 	protected void fireChangedEvent()
