@@ -82,8 +82,17 @@ TestRun1() ==
     mk_POP3Types`QUIT()
   ]
 
+instance variables
 
-
+   server : POP3Server;
+   ch : MessageChannelBuffer;
+   mc1 : MessageChannel;
+   mc2 : MessageChannel;
+   mc3 : MessageChannel;
+   send1 : POP3TestSender;
+   send2 : POP3TestSender;
+   listen1 : POP3TestListener;
+   listen2 : POP3TestListener;
 
 operations
 
@@ -142,17 +151,18 @@ Start: POP3TestSender | POP3TestListener ==> ()
 Start(obj) ==
   start(obj);
   
-instance variables
-
-server : POP3Server := new POP3Server(MakeMailDrop(), ch, MakePasswordMap());
-ch : MessageChannelBuffer := new MessageChannelBuffer();
-mc1 : MessageChannel := new MessageChannel();
-mc2 : MessageChannel := new MessageChannel();
-mc3 : MessageChannel := new MessageChannel();
-send1 : POP3TestSender := new POP3TestSender("c1", TestRun1(), mc1);
-send2 : POP3TestSender := new POP3TestSender("c2", TestRun1(), mc2);
-listen1 : POP3TestListener := new POP3TestListener("l1", mc1);
-listen2 : POP3TestListener := new POP3TestListener("l2", mc2)
+POP3Test:() ==> POP3Test
+POP3Test() ==
+  (ch := new MessageChannelBuffer();
+   server := new POP3Server(MakeMailDrop(), ch, MakePasswordMap());
+   mc1 := new MessageChannel();
+   mc2 := new MessageChannel();
+   mc3 := new MessageChannel();
+   send1 := new POP3TestSender("c1", TestRun1(), mc1);
+   send2 := new POP3TestSender("c2", TestRun1(), mc2);
+   listen1 := new POP3TestListener("l1", mc1);
+   listen2 := new POP3TestListener("l2", mc2)
+  );
 
 traces
 
