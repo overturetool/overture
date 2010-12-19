@@ -32,6 +32,7 @@ import java.util.Vector;
 import java.util.Map.Entry;
 
 import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Interpreter;
@@ -85,13 +86,15 @@ public class TestSequence extends Vector<CallSequence>
 
 			if (interpreter instanceof ClassInterpreter)
 			{
-				 env = new FlatEnvironment(
+				env = new FlatEnvironment(
 					classdef.getSelfDefinition(),
 					new PrivateClassEnvironment(classdef, interpreter.getGlobalEnvironment()));
 			}
 			else
 			{
-				 env = interpreter.getGlobalEnvironment();
+				env = new FlatEnvironment(
+					new DefinitionList(),
+					interpreter.getGlobalEnvironment());
 			}
 
     		for (Statement statement: test)
