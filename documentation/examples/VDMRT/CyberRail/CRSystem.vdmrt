@@ -6,7 +6,7 @@ system CRSystem
 instance variables
 
 -- cpu for CyberRail
-cpu1 : CPU := new CPU (<FCFS>,1E20);
+cpu1 : CPU := new CPU (<FCFS>,1E6);
  
 -- cpu for TokenDevice
 cpu3 : CPU := new CPU (<FCFS>,1E6);

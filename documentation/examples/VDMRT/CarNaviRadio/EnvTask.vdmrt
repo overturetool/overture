@@ -64,7 +64,7 @@ operations
   getMinMaxAverage () ==
     ( dcl min : [nat] := nil, max : [nat] := nil, diff : nat := 0;
       for all cnt in set dom s2e do
-        let dt = s2e(cnt) - e2s(cnt) in
+        let dt = s2e(cnt) - e2s(cnt) in 
           ( if min = nil then min := dt
             else (if min > dt then min := dt);
             if max = nil then max := dt

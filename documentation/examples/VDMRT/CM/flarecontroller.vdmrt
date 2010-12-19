@@ -10,7 +10,7 @@ private aperture : Angle;
 ranges : map nat to (Angle * Angle) := {|->};
 dispensers : map nat to FlareDispenser := {|->};
 inv dom ranges = dom dispensers;
-
+ 
 -- the relevant events to be treated by this controller
 threats : seq of (EventId * MissileType * Angle * Time) := [];
 
