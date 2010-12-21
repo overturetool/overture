@@ -32,6 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import org.overturetool.vdmj.definitions.SystemDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.runtime.Context;
@@ -78,7 +79,6 @@ public class ObjectValue extends Value
 		this.members = members;
 		this.superobjects = superobjects;
 		this.CPU = cpu;
-		this.creator = creator;
 		this.guardLock = new Lock();
 		this.children = new LinkedList<ObjectValue>();
 		
@@ -508,7 +508,13 @@ public class ObjectValue extends Value
 	 */
 	private synchronized void setCreator(ObjectValue newCreator)
 	{
-		this.creator = newCreator; 
+		//Do not set the creator if created by the system class. The System contains
+		// fields with references to Thread instances which are not Serializable and 
+		// will fail a deep copy with a NotSerializableExpection for Thread
+		if(newCreator!= null && newCreator.type.classdef instanceof SystemDefinition)
+		{
+			return;
+		}
 		//establish transitive reference
 		newCreator.addChild(this);
 	}
