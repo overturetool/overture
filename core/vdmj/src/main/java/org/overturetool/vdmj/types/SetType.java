@@ -23,12 +23,17 @@
 
 package org.overturetool.vdmj.types;
 
+import java.util.List;
+
 import org.overturetool.vdmj.definitions.AccessSpecifier;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
+import org.overturetool.vdmj.values.SetValue;
+import org.overturetool.vdmj.values.ValueList;
+import org.overturetool.vdmj.values.ValueSet;
 
 public class SetType extends Type
 {
@@ -124,5 +129,22 @@ public class SetType extends Type
 	public int hashCode()
 	{
 		return empty ? 0 : setof.hashCode();
+	}
+
+	@Override
+	public ValueList getAllValues()
+	{
+		ValueList list = setof.getAllValues();
+		ValueSet set = new ValueSet(list.size());
+		set.addAll(list);
+		List<ValueSet> psets = set.powerSet();
+		list.clear();
+
+		for (ValueSet v: psets)
+		{
+			list.add(new SetValue(v));
+		}
+
+		return list;
 	}
 }
