@@ -69,7 +69,7 @@ public class TypeBind extends Bind
 	@Override
 	public ValueList getBindValues(Context ctxt)
 	{
-		return type.getAllValues();
+		return type.getAllValues(ctxt);
 	}
 
 	@Override

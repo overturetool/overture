@@ -24,6 +24,7 @@
 package org.overturetool.vdmj.types;
 
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.values.BooleanValue;
 import org.overturetool.vdmj.values.ValueList;
 
@@ -43,7 +44,7 @@ public class BooleanType extends BasicType
 	}
 
 	@Override
-	public ValueList getAllValues()
+	public ValueList getAllValues(Context ctxt)
 	{
 		ValueList v = new ValueList();
 		v.add(new BooleanValue(true));

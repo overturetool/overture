@@ -68,7 +68,7 @@ public class MultipleTypeBind extends MultipleBind
 	@Override
 	public ValueList getBindValues(Context ctxt)
 	{
-		return type.getAllValues();
+		return type.getAllValues(ctxt);
 	}
 
 	@Override

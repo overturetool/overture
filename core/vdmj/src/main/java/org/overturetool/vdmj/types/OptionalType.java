@@ -27,6 +27,7 @@ import org.overturetool.vdmj.definitions.AccessSpecifier;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.values.NilValue;
 import org.overturetool.vdmj.values.ValueList;
@@ -233,9 +234,9 @@ public class OptionalType extends Type
 	}
 
 	@Override
-	public ValueList getAllValues()
+	public ValueList getAllValues(Context ctxt)
 	{
-		ValueList list = type.getAllValues();
+		ValueList list = type.getAllValues(ctxt);
 		list.add(new NilValue());
 		return list;
 	}

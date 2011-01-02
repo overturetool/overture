@@ -29,6 +29,7 @@ import org.overturetool.vdmj.definitions.AccessSpecifier;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
 import org.overturetool.vdmj.values.SetValue;
@@ -132,9 +133,9 @@ public class SetType extends Type
 	}
 
 	@Override
-	public ValueList getAllValues()
+	public ValueList getAllValues(Context ctxt)
 	{
-		ValueList list = setof.getAllValues();
+		ValueList list = setof.getAllValues(ctxt);
 		ValueSet set = new ValueSet(list.size());
 		set.addAll(list);
 		List<ValueSet> psets = set.powerSet();

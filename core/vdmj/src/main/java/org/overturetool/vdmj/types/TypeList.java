@@ -26,7 +26,17 @@ package org.overturetool.vdmj.types;
 import java.util.Vector;
 
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.patterns.IdentifierPattern;
+import org.overturetool.vdmj.patterns.Pattern;
+import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.util.Utils;
+import org.overturetool.vdmj.values.NameValuePair;
+import org.overturetool.vdmj.values.NameValuePairList;
+import org.overturetool.vdmj.values.Quantifier;
+import org.overturetool.vdmj.values.QuantifierList;
+import org.overturetool.vdmj.values.TupleValue;
+import org.overturetool.vdmj.values.ValueList;
 
 
 @SuppressWarnings("serial")
@@ -68,5 +78,37 @@ public class TypeList extends Vector<Type>
 	public String toString()
 	{
 		return "(" + Utils.listToString(this) + ")";
+	}
+	
+	public ValueList getAllValues(Context ctxt)
+	{
+		QuantifierList quantifiers = new QuantifierList();
+		int n = 0;
+
+		for (Type t: this)
+		{
+			LexNameToken name = new LexNameToken("#", String.valueOf(n), t.location);
+			Pattern p = new IdentifierPattern(name);
+			Quantifier q = new Quantifier(p, t.getAllValues(ctxt));
+			quantifiers.add(q);
+		}
+
+		quantifiers.init();
+		ValueList results = new ValueList();
+
+		while (quantifiers.hasNext(ctxt))
+		{
+			NameValuePairList nvpl = quantifiers.next();
+			ValueList list = new ValueList();
+
+			for (NameValuePair nvp: nvpl)
+			{
+				list.add(nvp.value);
+			}
+			
+			results.add(new TupleValue(list));
+		}
+		
+		return results;
 	}
 }

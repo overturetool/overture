@@ -28,8 +28,14 @@ import java.util.List;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.util.Utils;
+import org.overturetool.vdmj.values.RecordValue;
+import org.overturetool.vdmj.values.TupleValue;
+import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 
 public class RecordType extends InvariantType
@@ -178,5 +184,33 @@ public class RecordType extends InvariantType
 	public int hashCode()
 	{
 		return name.hashCode();
+	}
+	
+	@Override
+	public ValueList getAllValues(Context ctxt)
+	{
+		TypeList types = new TypeList();
+		
+		for (Field f: fields)
+		{
+			types.add(f.type);
+		}
+		
+		ValueList results = new ValueList();
+		
+		for (Value v: types.getAllValues(ctxt))
+		{
+			try
+			{
+				TupleValue tuple = (TupleValue)v;
+				results.add(new RecordValue(this, tuple.values, ctxt));
+			}
+			catch (ValueException e)
+			{
+				// Value does not match invariant, so ignore it
+			}
+		}
+		
+		return results;
 	}
 }

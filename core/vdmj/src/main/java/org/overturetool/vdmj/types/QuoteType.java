@@ -24,6 +24,7 @@
 package org.overturetool.vdmj.types;
 
 import org.overturetool.vdmj.lex.LexQuoteToken;
+import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.values.QuoteValue;
 import org.overturetool.vdmj.values.ValueList;
 
@@ -65,7 +66,7 @@ public class QuoteType extends Type
 	}
 
 	@Override
-	public ValueList getAllValues()
+	public ValueList getAllValues(Context ctxt)
 	{
 		ValueList v = new ValueList();
 		v.add(new QuoteValue(value));

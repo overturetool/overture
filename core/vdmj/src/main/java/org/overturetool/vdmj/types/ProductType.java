@@ -27,9 +27,11 @@ import org.overturetool.vdmj.definitions.AccessSpecifier;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
 import org.overturetool.vdmj.util.Utils;
+import org.overturetool.vdmj.values.ValueList;
 
 public class ProductType extends Type
 {
@@ -161,5 +163,11 @@ public class ProductType extends Type
 	public int hashCode()
 	{
 		return types.hashCode();
+	}
+	
+	@Override
+	public ValueList getAllValues(Context ctxt)
+	{
+		return types.getAllValues(ctxt);
 	}
 }

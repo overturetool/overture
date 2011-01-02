@@ -23,12 +23,21 @@
 
 package org.overturetool.vdmj.types;
 
+import java.util.List;
+
 import org.overturetool.vdmj.definitions.AccessSpecifier;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
+import org.overturetool.vdmj.values.MapValue;
+import org.overturetool.vdmj.values.TupleValue;
+import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
+import org.overturetool.vdmj.values.ValueMap;
+import org.overturetool.vdmj.values.ValueSet;
 
 public class MapType extends Type
 {
@@ -137,5 +146,34 @@ public class MapType extends Type
 	public int hashCode()
 	{
 		return from.hashCode() + to.hashCode();
+	}
+	
+	@Override
+	public ValueList getAllValues(Context ctxt)
+	{
+		TypeList tuple = new TypeList();
+		tuple.add(from);
+		tuple.add(to);
+		
+		ValueList results = new ValueList();
+		ValueList tuples = tuple.getAllValues(ctxt);
+		ValueSet set = new ValueSet();
+		set.addAll(tuples);
+		List<ValueSet> psets = set.powerSet();
+
+		for (ValueSet map: psets)
+		{
+			ValueMap result = new ValueMap();
+			
+			for (Value v: map)
+			{
+				TupleValue tv = (TupleValue)v;
+				result.put(tv.values.get(0), tv.values.get(1));
+			}
+			
+			results.add(new MapValue(result));
+		}
+		
+		return results; 
 	}
 }

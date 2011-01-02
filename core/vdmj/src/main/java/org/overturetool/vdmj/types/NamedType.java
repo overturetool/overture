@@ -23,10 +23,15 @@
 
 package org.overturetool.vdmj.types;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
+import org.overturetool.vdmj.values.InvariantValue;
+import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.ValueList;
 
 public class NamedType extends InvariantType
@@ -260,8 +265,26 @@ public class NamedType extends InvariantType
 	}
 
 	@Override
-	public ValueList getAllValues()
+	public ValueList getAllValues(Context ctxt)
 	{
-		return type.getAllValues();
+		ValueList raw = type.getAllValues(ctxt);
+		boolean checks = Settings.invchecks;
+		Settings.invchecks = true;
+		
+		ValueList result = new ValueList();
+		for (Value v: raw)
+		{
+			try
+			{
+				result.add(new InvariantValue(this, v, ctxt));
+			}
+			catch (ValueException e)
+			{
+				// Raw value not in type because of invariant
+			}
+		}
+		
+		Settings.invchecks = checks;
+		return result;
 	}
 }
