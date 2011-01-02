@@ -104,25 +104,25 @@ public class SetCompExpression extends SetExpression
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);
-
-		QuantifierList quantifiers = new QuantifierList();
-
-		for (MultipleBind mb: bindings)
-		{
-			ValueList bvals = mb.getBindValues(ctxt);
-
-			for (Pattern p: mb.plist)
-			{
-				Quantifier q = new Quantifier(p, bvals);
-				quantifiers.add(q);
-			}
-		}
-
 		ValueSet set = new ValueSet();
-		quantifiers.init();
 
 		try
 		{
+			QuantifierList quantifiers = new QuantifierList();
+
+			for (MultipleBind mb: bindings)
+			{
+				ValueList bvals = mb.getBindValues(ctxt);
+
+				for (Pattern p: mb.plist)
+				{
+					Quantifier q = new Quantifier(p, bvals);
+					quantifiers.add(q);
+				}
+			}
+
+			quantifiers.init();
+
 			while (quantifiers.hasNext(ctxt))
 			{
 				Context evalContext = new Context(location, "set comprehension", ctxt);

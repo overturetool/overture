@@ -101,23 +101,23 @@ public class ForAllExpression extends Expression
 	{
 		breakpoint.check(location, ctxt);
 
-		QuantifierList quantifiers = new QuantifierList();
-
-		for (MultipleBind mb: bindList)
-		{
-			ValueList bvals = mb.getBindValues(ctxt);
-
-			for (Pattern p: mb.plist)
-			{
-				Quantifier q = new Quantifier(p, bvals);
-				quantifiers.add(q);
-			}
-		}
-
-		quantifiers.init();
-
 		try
 		{
+			QuantifierList quantifiers = new QuantifierList();
+
+			for (MultipleBind mb: bindList)
+			{
+				ValueList bvals = mb.getBindValues(ctxt);
+
+				for (Pattern p: mb.plist)
+				{
+					Quantifier q = new Quantifier(p, bvals);
+					quantifiers.add(q);
+				}
+			}
+
+			quantifiers.init();
+
 			while (quantifiers.hasNext(ctxt))
 			{
 				Context evalContext = new Context(location, "forall", ctxt);

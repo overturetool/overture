@@ -93,9 +93,17 @@ public class Exists1Expression extends Expression
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);
-
-		ValueList allValues = bind.getBindValues(ctxt);
+		ValueList allValues = null;
 		boolean alreadyFound = false;
+		
+		try
+		{
+			allValues = bind.getBindValues(ctxt);
+		}
+		catch (ValueException e)
+		{
+			abort(e);
+		}
 
 		for (Value val: allValues)
 		{

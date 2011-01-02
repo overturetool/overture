@@ -265,7 +265,7 @@ public class NamedType extends InvariantType
 	}
 
 	@Override
-	public ValueList getAllValues(Context ctxt)
+	public ValueList getAllValues(Context ctxt) throws ValueException
 	{
 		ValueList raw = type.getAllValues(ctxt);
 		boolean checks = Settings.invchecks;

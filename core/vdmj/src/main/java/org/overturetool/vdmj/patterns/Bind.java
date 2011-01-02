@@ -65,8 +65,8 @@ public abstract class Bind implements Serializable
 	/** Return a list of POs. */
 	abstract public ProofObligationList getProofObligations(POContextStack ctxt);
 
-	/** Return a list of all possible values for the bind. */
-	abstract public ValueList getBindValues(Context ctxt);
+	/** Return a list of all possible values for the bind. */ 
+	abstract public ValueList getBindValues(Context ctxt) throws ValueException;
 
 	/** Return a list of all values read by the bind evaluation. */
 	abstract public ValueList getValues(Context ctxt);

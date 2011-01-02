@@ -30,6 +30,7 @@ import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.patterns.IdentifierPattern;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.util.Utils;
 import org.overturetool.vdmj.values.NameValuePair;
 import org.overturetool.vdmj.values.NameValuePairList;
@@ -80,7 +81,7 @@ public class TypeList extends Vector<Type>
 		return "(" + Utils.listToString(this) + ")";
 	}
 	
-	public ValueList getAllValues(Context ctxt)
+	public ValueList getAllValues(Context ctxt) throws ValueException
 	{
 		QuantifierList quantifiers = new QuantifierList();
 		int n = 0;

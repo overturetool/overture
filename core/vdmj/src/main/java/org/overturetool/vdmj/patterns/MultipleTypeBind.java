@@ -26,6 +26,7 @@ package org.overturetool.vdmj.patterns;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeComparator;
@@ -66,7 +67,7 @@ public class MultipleTypeBind extends MultipleBind
 	}
 
 	@Override
-	public ValueList getBindValues(Context ctxt)
+	public ValueList getBindValues(Context ctxt) throws ValueException
 	{
 		return type.getAllValues(ctxt);
 	}

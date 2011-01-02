@@ -100,10 +100,18 @@ public class IotaExpression extends Expression
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);
-
-		ValueList allValues = bind.getBindValues(ctxt);
+		ValueList allValues = null;
 		Value result = null;
 
+		try
+		{
+			allValues = bind.getBindValues(ctxt);
+		}
+		catch (ValueException e)
+		{
+			abort(e);
+		}
+		
 		for (Value val: allValues)
 		{
 			try

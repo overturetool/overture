@@ -32,7 +32,6 @@ import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ValueException;
@@ -336,10 +335,9 @@ public abstract class Type implements Comparable<Type>, Serializable, IAstNode
 		return null;
 	}
 
-	public ValueList getAllValues(@SuppressWarnings("unused") Context ctxt)
+	public ValueList getAllValues(@SuppressWarnings("unused") Context ctxt) throws ValueException
 	{
-		throw new InternalException(4, "Cannot get bind values for type " + this
-			+ " " + location);
+		throw new ValueException(4, "Cannot get bind values for type " + this, ctxt);
 	}
 
 	@Override

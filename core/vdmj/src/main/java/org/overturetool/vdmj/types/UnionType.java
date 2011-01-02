@@ -38,6 +38,7 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
@@ -771,7 +772,7 @@ public class UnionType extends Type
 	}
 
 	@Override
-	public ValueList getAllValues(Context ctxt)
+	public ValueList getAllValues(Context ctxt) throws ValueException
 	{
 		ValueList v = new ValueList();
 

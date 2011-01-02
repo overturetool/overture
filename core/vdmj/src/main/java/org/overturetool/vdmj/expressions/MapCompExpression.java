@@ -107,26 +107,26 @@ public class MapCompExpression extends MapExpression
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);
-
-		QuantifierList quantifiers = new QuantifierList();
-
-		for (MultipleBind mb: bindings)
-		{
-			ValueList bvals = mb.getBindValues(ctxt);
-
-			for (Pattern p: mb.plist)
-			{
-				Quantifier q = new Quantifier(p, bvals);
-				quantifiers.add(q);
-			}
-		}
-
-		quantifiers.init();
 		ValueMap map = new ValueMap();
-		MapletExpression mapfirst = (MapletExpression)first;
 
 		try
 		{
+			QuantifierList quantifiers = new QuantifierList();
+
+			for (MultipleBind mb: bindings)
+			{
+				ValueList bvals = mb.getBindValues(ctxt);
+
+				for (Pattern p: mb.plist)
+				{
+					Quantifier q = new Quantifier(p, bvals);
+					quantifiers.add(q);
+				}
+			}
+
+			quantifiers.init();
+			MapletExpression mapfirst = (MapletExpression)first;
+
 			while (quantifiers.hasNext(ctxt))
 			{
 				Context evalContext = new Context(location, "map comprehension", ctxt);

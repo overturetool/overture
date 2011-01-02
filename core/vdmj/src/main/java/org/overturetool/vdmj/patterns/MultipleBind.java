@@ -94,8 +94,8 @@ public abstract class MultipleBind implements Serializable
 		return defs;
 	}
 
-	/** Get a list of all the possible values to bind the variables to. */
-	abstract public ValueList getBindValues(Context ctxt);
+	/** Get a list of all the possible values to bind the variables to. */ 
+	abstract public ValueList getBindValues(Context ctxt) throws ValueException;
 
 	/** Get a list of POs. */
 	abstract public ProofObligationList getProofObligations(POContextStack ctxt);

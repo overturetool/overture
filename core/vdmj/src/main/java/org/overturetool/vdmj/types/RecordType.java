@@ -187,7 +187,7 @@ public class RecordType extends InvariantType
 	}
 	
 	@Override
-	public ValueList getAllValues(Context ctxt)
+	public ValueList getAllValues(Context ctxt) throws ValueException
 	{
 		TypeList types = new TypeList();
 		

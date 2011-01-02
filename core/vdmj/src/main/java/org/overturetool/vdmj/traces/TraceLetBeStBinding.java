@@ -96,29 +96,29 @@ public class TraceLetBeStBinding extends TraceDefinition
 	{
 		AlternativeTraceNode node = new AlternativeTraceNode();
 
-		QuantifierList quantifiers = new QuantifierList();
-
-		for (MultipleBind mb: def.bindings)
-		{
-			ValueList bvals = mb.getBindValues(ctxt);
-
-			for (Pattern p: mb.plist)
-			{
-				Quantifier q = new Quantifier(p, bvals);
-				quantifiers.add(q);
-			}
-		}
-
-		quantifiers.init();
-
-		if (quantifiers.finished())		// No entries at all
-		{
-			node.alternatives.add(new StatementTraceNode(new SkipStatement(location)));
-			return node;
-		}
-
 		try
 		{
+			QuantifierList quantifiers = new QuantifierList();
+
+			for (MultipleBind mb: def.bindings)
+			{
+				ValueList bvals = mb.getBindValues(ctxt);
+
+				for (Pattern p: mb.plist)
+				{
+					Quantifier q = new Quantifier(p, bvals);
+					quantifiers.add(q);
+				}
+			}
+
+			quantifiers.init();
+
+			if (quantifiers.finished())		// No entries at all
+			{
+				node.alternatives.add(new StatementTraceNode(new SkipStatement(location)));
+				return node;
+			}
+
 			while (quantifiers.hasNext(ctxt))
 			{
 				Context evalContext = new Context(location, "TRACE", ctxt);
