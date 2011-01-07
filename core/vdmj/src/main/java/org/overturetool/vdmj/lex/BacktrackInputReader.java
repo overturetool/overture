@@ -26,9 +26,11 @@ package org.overturetool.vdmj.lex;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.Stack;
 
@@ -64,8 +66,7 @@ public class BacktrackInputReader extends Reader
 		try
 		{
 			data = new char[(int)file.length() + 1];
-			InputStreamReader isr =
-				new LatexStreamReader(new FileInputStream(file), charset);
+			InputStreamReader isr = readerFactory(file, charset);
 			max = isr.read(data);
 			pos = 0;
 			isr.close();
@@ -119,6 +120,27 @@ public class BacktrackInputReader extends Reader
 
 		// data = expression.toCharArray();
 		// max = expression.length();
+	}
+
+	/**
+	 * Create an InputStreamReader from a File, depending on the filename.
+	 * @throws FileNotFoundException
+	 * @throws UnsupportedEncodingException
+	 */
+
+	public static InputStreamReader readerFactory(File file, String charset)
+		throws UnsupportedEncodingException, FileNotFoundException
+	{
+		String name = file.getName();
+
+		if (name.endsWith(".doc"))
+		{
+			return new DocStreamReader(new FileInputStream(file), charset);
+		}
+		else
+		{
+			return new LatexStreamReader(new FileInputStream(file), charset);
+		}
 	}
 
 	/**
@@ -185,7 +207,7 @@ public class BacktrackInputReader extends Reader
 			cbuf[off + n++] = data[pos++];
 		}
 
-		return (pos == len) ? -1 : n;
+		return (n == 0) ? -1 : n;
 	}
 
 	/**
