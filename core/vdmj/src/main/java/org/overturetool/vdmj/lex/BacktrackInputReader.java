@@ -26,11 +26,9 @@ package org.overturetool.vdmj.lex;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.Stack;
 
@@ -124,18 +122,20 @@ public class BacktrackInputReader extends Reader
 
 	/**
 	 * Create an InputStreamReader from a File, depending on the filename.
-	 * @throws FileNotFoundException
-	 * @throws UnsupportedEncodingException
 	 */
 
 	public static InputStreamReader readerFactory(File file, String charset)
-		throws UnsupportedEncodingException, FileNotFoundException
+		throws IOException
 	{
 		String name = file.getName();
 
 		if (name.endsWith(".doc"))
 		{
 			return new DocStreamReader(new FileInputStream(file), charset);
+		}
+		else if (name.endsWith(".odt"))
+		{
+			return new ODFStreamReader(new FileInputStream(file), charset);
 		}
 		else
 		{
