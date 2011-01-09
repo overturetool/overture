@@ -24,8 +24,6 @@
 package org.overturetool.vdmj.lex;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -43,6 +41,8 @@ public class DocStreamReader extends InputStreamReader
 		super(in, charsetName);
 	}
 
+	private final static String MARKER = "%%VDM%%";
+
 	@Override
 	public int read(char[] array) throws IOException
 	{
@@ -53,7 +53,7 @@ public class DocStreamReader extends InputStreamReader
 
 		while (line != null)
 		{
-			if (line.endsWith("%%VDM%%"))
+			if (line.endsWith(MARKER))
 			{
 				capturing = !capturing;
 			}
@@ -72,16 +72,5 @@ public class DocStreamReader extends InputStreamReader
 
 		br.close();
 		return pos;
-	}
-
-	public static void main(String[] args) throws IOException
-	{
-		File file = new File(args[0]);
-		char[] data = new char[(int)file.length() + 1];
-		InputStreamReader isr =	new DocStreamReader(new FileInputStream(file), "ascii");
-		int pos = isr.read(data);
-		isr.close();
-
-		System.out.print(new String(data, 0, pos));
 	}
 }

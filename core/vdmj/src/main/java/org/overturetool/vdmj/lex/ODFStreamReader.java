@@ -69,19 +69,22 @@ public class ODFStreamReader extends InputStreamReader
 
 		zis.close();
 	}
+	
+	private final static String MARKER = "%%VDM%%\n";
 
 	@Override
 	public int read(char[] array) throws IOException
 	{
-		int start = fileText.indexOf("%%VDM%%");
-		int cp = 0;
+		int start = fileText.indexOf(MARKER);
+		int ap = 0;
 
-		if (start > 0)
+		while (start > 0)
 		{
-			start += 7;
+			start += MARKER.length();
 			char[] clean = new char[fileText.length() - start];
-			int end = fileText.indexOf("%%VDM%%", start+1);
+			int end = fileText.indexOf(MARKER, start);
 			boolean capturing = true;
+			int cp = 0;
 
 			for (int p=start; p<end; p++)
 			{
@@ -108,12 +111,14 @@ public class ODFStreamReader extends InputStreamReader
 			}
 
 			String fixed = dequote(new String(clean, 0, cp));
-			char[] bytes = fixed.toCharArray();
-			cp = bytes.length;
-			System.arraycopy(bytes, 0, array, 0, cp);
+			char[] chars = fixed.toCharArray();
+			System.arraycopy(chars, 0, array, ap, chars.length);
+			ap += chars.length;
+			
+			start = fileText.indexOf(MARKER, end+1);
 		}
 
-		return cp;
+		return ap;
 	}
 	
 	private static String despace(String in)
