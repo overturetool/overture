@@ -27,7 +27,7 @@ import java.util.Random;
 
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.values.IntegerValue;
-import org.overturetool.vdmj.values.NaturalValue;
+import org.overturetool.vdmj.values.NaturalOneValue;
 import org.overturetool.vdmj.values.RealValue;
 import org.overturetool.vdmj.values.Value;
 
@@ -124,7 +124,7 @@ public class MATH
 
 	public static Value fac(Value arg) throws ValueException, Exception
 	{
-		return new NaturalValue(factorial(arg.natValue(null)));
+		return new NaturalOneValue(factorial(arg.natValue(null)));
 	}
 
 	private static long factorial(long n)
