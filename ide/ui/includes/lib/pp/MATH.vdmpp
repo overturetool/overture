@@ -108,6 +108,12 @@ public static
     is not yet specified
     pre a > 0;
 
+public static 
+    fac:nat -> nat1 
+    fac(a) == 
+    is not yet specified 
+    pre a < 26;         -- The limit for 64-bit calculations
+
   values
 public
     pi = 3.14159265358979323846
