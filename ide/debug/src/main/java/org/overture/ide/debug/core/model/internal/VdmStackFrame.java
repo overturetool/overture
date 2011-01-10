@@ -157,10 +157,10 @@ public class VdmStackFrame extends VdmDebugElement implements
 			if (locals != null) {
 				size += locals.length;
 			}
-			if (globals != null) {
+			if (globals != null && globals.length > 0) {
 				++size;
 			}
-			if (classes != null) {
+			if (classes != null && classes.length > 0) {
 				++size;
 			}
 			return size;
@@ -171,7 +171,7 @@ public class VdmStackFrame extends VdmDebugElement implements
 			final IVdmVariable[] result = new IVdmVariable[size];
 			if (size != 0) {
 				int index = 0;
-				if (globals != null) {
+				if (globals != null && globals.length > 0) {
 					if (globalsWrapper == null) {
 						globalsWrapper = new VdmVariableWrapper(target,
 								"Global Variables",
@@ -181,10 +181,10 @@ public class VdmStackFrame extends VdmDebugElement implements
 					}
 					result[index++] = globalsWrapper;
 				}
-				if (classes != null) {
+				if (classes != null && classes.length > 0) {
 					if (classesWrapper == null) {
 						classesWrapper = new VdmVariableWrapper(target,
-								"Class Variables",
+								"Instance Variables",
 								classes);
 					} else {
 						classesWrapper.refreshValue(classes);
