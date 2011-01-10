@@ -46,30 +46,32 @@ public class ConsoleWriter extends PrintWriter {
 		ConsolePlugin.getDefault().getConsoleManager().showConsoleView(
 				myConsole);
 
-		UIJob uiJob = new UIJob("Console pin") {
-
-			@Override
-			public IStatus runInUIThread(IProgressMonitor monitor) {
-				IWorkbench w = PlatformUI.getWorkbench();
-				IWorkbenchWindow[] wws = w.getWorkbenchWindows();
-				String id = IConsoleConstants.ID_CONSOLE_VIEW;
-				for (IWorkbenchWindow iWorkbenchWindow : wws) {
-					try {
-
-						IWorkbenchPage page = iWorkbenchWindow.getActivePage();
-						IConsoleView view = (IConsoleView) page.showView(id);
-//						view.display(myConsole);
-						view.setPinned(true);
-						
-					} catch (PartInitException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				return new Status(IStatus.OK, "pluginId", "OK");
-			}
-		};
-		uiJob.schedule();
+		// This Pin Console was a experience to make the debug console appear always on top of the process 
+		// console, but it doesnt work and it backfires because its not desirable in general that consoles get pinned
+//		UIJob uiJob = new UIJob("Console pin") {
+//
+//			@Override
+//			public IStatus runInUIThread(IProgressMonitor monitor) {
+//				IWorkbench w = PlatformUI.getWorkbench();
+//				IWorkbenchWindow[] wws = w.getWorkbenchWindows();
+//				String id = IConsoleConstants.ID_CONSOLE_VIEW;
+//				for (IWorkbenchWindow iWorkbenchWindow : wws) {
+//					try {
+//
+//						IWorkbenchPage page = iWorkbenchWindow.getActivePage();
+//						IConsoleView view = (IConsoleView) page.showView(id);
+////						view.display(myConsole);
+//						view.setPinned(true);
+//						
+//					} catch (PartInitException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//				}
+//				return new Status(IStatus.OK, "pluginId", "OK");
+//			}
+//		};
+//		uiJob.schedule();
 
 	}
 
