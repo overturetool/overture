@@ -63,8 +63,8 @@ public class BacktrackInputReader extends Reader
 	{
 		try
 		{
-			data = new char[(int)file.length() + 1];
 			InputStreamReader isr = readerFactory(file, charset);
+			data = new char[readerLength(file, isr)];
 			max = isr.read(data);
 			pos = 0;
 			isr.close();
@@ -97,14 +97,13 @@ public class BacktrackInputReader extends Reader
 	{
     	try
         {
-    		data = new char[expression.length() + 1];
-
 	        ByteArrayInputStream is =
 	        	new ByteArrayInputStream(expression.getBytes(charset));
 
 	        InputStreamReader isr =
 	        	new LatexStreamReader(is, charset);
 
+    		data = new char[expression.length() + 1];
 	        max = isr.read(data);
 	        pos = 0;
 
@@ -115,9 +114,6 @@ public class BacktrackInputReader extends Reader
         {
 	        // This can never really happen...
         }
-
-		// data = expression.toCharArray();
-		// max = expression.length();
 	}
 
 	/**
@@ -135,17 +131,40 @@ public class BacktrackInputReader extends Reader
 		}
 		else if (name.endsWith(".docx"))
 		{
-			return new DocxStreamReader(new FileInputStream(file), charset);
+			return new DocxStreamReader(new FileInputStream(file));
 		}
 		else if (name.endsWith(".odt"))
 		{
-			return new ODFStreamReader(new FileInputStream(file), charset);
+			return new ODFStreamReader(new FileInputStream(file));
 		}
 		else
 		{
 			return new LatexStreamReader(new FileInputStream(file), charset);
 		}
 	}
+	
+	/**
+	 * Calculate the length to allocate for a given file/stream.
+	 */
+	
+	private int readerLength(File file, InputStreamReader isr)
+	{
+		String name = file.getName();
+
+		if (name.endsWith(".docx"))
+		{
+			return ((DocxStreamReader)isr).length();
+		}
+		else if (name.endsWith(".odt"))
+		{
+			return ((ODFStreamReader)isr).length();
+		}
+		else
+		{
+			return (int)(file.length() + 1);
+		}
+	}
+
 
 	/**
 	 * Create an object to read the string passed with the default charset.

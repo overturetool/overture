@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *	Copyright (C) 2011 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -41,10 +43,11 @@ abstract public class XMLStreamReader extends InputStreamReader
 	protected String fileText = null;
 	private final static int ARRAYCHUNK = 10000;
 
-	public XMLStreamReader(InputStream in, String partName, String charsetName)
+	public XMLStreamReader(InputStream in, String partName)
 		throws IOException
 	{
-		super(in, charsetName);
+		super(in);
+		
 		ZipInputStream zis = new ZipInputStream(in);
 		ZipEntry ze = zis.getNextEntry();
 
@@ -73,8 +76,19 @@ abstract public class XMLStreamReader extends InputStreamReader
 					}
 				}
 				while (r > 0);
+				
+				// Look for the XML encoding
+				String encoding = VDMJ.filecharset;
+				String firstLine = new String(bytes, 0, 100);
+				Pattern epattern = Pattern.compile("encoding=\"([\\w-]+)\"");
+				Matcher ematch = epattern.matcher(firstLine);
 
-				fileText = despace(new String(bytes, 0, p, VDMJ.filecharset));
+				if (ematch.find())
+				{
+					encoding = ematch.group(1);
+				}
+
+				fileText = despace(new String(bytes, 0, p, encoding));
 				break;
 			}
 

@@ -32,10 +32,9 @@ import java.io.InputStream;
 
 public class ODFStreamReader extends XMLStreamReader
 {
-	public ODFStreamReader(InputStream in, String charsetName)
-		throws IOException
+	public ODFStreamReader(InputStream in) throws IOException
 	{
-		super(in, "content.xml", charsetName);
+		super(in, "content.xml");
 	}
 
 	@Override

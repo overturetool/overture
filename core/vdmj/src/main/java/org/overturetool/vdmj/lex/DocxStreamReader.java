@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *	Copyright (C) 2011 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -32,10 +32,9 @@ import java.io.InputStream;
 
 public class DocxStreamReader extends XMLStreamReader
 {
-	public DocxStreamReader(InputStream in, String charsetName)
-		throws IOException
+	public DocxStreamReader(InputStream in) throws IOException
 	{
-		super(in, "word/document.xml", charsetName);
+		super(in, "word/document.xml");
 	}
 
 	@Override
