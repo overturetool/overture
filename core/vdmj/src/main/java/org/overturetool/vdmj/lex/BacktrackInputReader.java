@@ -133,6 +133,10 @@ public class BacktrackInputReader extends Reader
 		{
 			return new DocStreamReader(new FileInputStream(file), charset);
 		}
+		else if (name.endsWith(".docx"))
+		{
+			return new DocxStreamReader(new FileInputStream(file), charset);
+		}
 		else if (name.endsWith(".odt"))
 		{
 			return new ODFStreamReader(new FileInputStream(file), charset);

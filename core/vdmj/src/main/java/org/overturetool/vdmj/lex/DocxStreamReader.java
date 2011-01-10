@@ -30,35 +30,19 @@ import java.io.InputStream;
  * A class to read an ODF encoded VDM file.
  */
 
-public class ODFStreamReader extends XMLStreamReader
+public class DocxStreamReader extends XMLStreamReader
 {
-	public ODFStreamReader(InputStream in, String charsetName)
+	public DocxStreamReader(InputStream in, String charsetName)
 		throws IOException
 	{
-		super(in, "content.xml", charsetName);
+		super(in, "word/document.xml", charsetName);
 	}
 
 	@Override
 	protected String despace(String in)
 	{
-		int n = 1;
-		String replace = "";
-
-		while (in.indexOf("<text:s text:c") > 0)
-		{
-			String pattern = "<text:s text:c=\"" + (n++) + "\"/>";
-			replace = replace + " ";
-
-			if (in.indexOf(pattern) > 0)
-			{
-				in = in.replaceAll(pattern, replace);
-			}
-		}
-
 		return in
-    		.replaceAll("<text:tab/>", "\t")
-			.replaceAll("<text:s/>", " ")
-    		.replaceAll("</text:p>", "\n")
-			.replaceAll("<text:p [^/>]+/>", "\n");
+    		.replaceAll("<w:tab/>", "\t")
+			.replaceAll("</w:pPr>", "\n");
 	}
 }
