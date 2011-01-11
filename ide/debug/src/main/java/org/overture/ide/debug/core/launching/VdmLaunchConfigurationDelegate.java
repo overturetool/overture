@@ -243,6 +243,8 @@ public class VdmLaunchConfigurationDelegate implements
 				abort("Could not create DBGP Service", null);
 			}
 
+			DebugPlugin.getDefault().getBreakpointManager().setEnabled(true);
+			
 			target = new VdmDebugTarget(IDebugConstants.ID_VDM_DEBUG_MODEL, service, debugSessionId.toString(), launch, null);
 			target.setVdmProject(vdmProject);
 			launch.addDebugTarget(target);
@@ -261,12 +263,16 @@ public class VdmLaunchConfigurationDelegate implements
 				abort("Could not create DBGP Service", null);
 			}
 
+			DebugPlugin.getDefault().getBreakpointManager().setEnabled(false);
+			
 			target = new VdmDebugTarget(IDebugConstants.ID_VDM_DEBUG_MODEL, service, debugSessionId.toString(), launch, null);
 			target.setVdmProject(vdmProject);
 			launch.addDebugTarget(target);
+			
 			target.toggleClassVariables(true);
 			target.toggleGlobalVariables(true);
 			target.toggleLocalVariables(true);
+			
 
 		}
 		return commandList;

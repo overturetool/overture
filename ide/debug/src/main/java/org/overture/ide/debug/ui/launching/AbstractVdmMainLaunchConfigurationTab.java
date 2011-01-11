@@ -409,7 +409,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	private void createOperationEditor(Composite parent)
 	{
 		Group group = new Group(parent, parent.getStyle());
-		group.setText("Operation:");
+		group.setText("Entry Point:");
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 
 		group.setLayoutData(gd);
@@ -452,7 +452,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		});
 
 		label = new Label(group, SWT.NORMAL);
-		label.setText("Operation:");
+		label.setText("Function/Operation:");
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		label.setLayoutData(gd);
 
@@ -536,8 +536,8 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		// WorkbenchLabelProvider(), new BaseWorkbenchContentProvider());
 
 		dialog.setTitle(getModuleLabelName()
-				+ " and operation/function selection");
-		dialog.setMessage("Select a function");
+				+ " and function/operation selection");
+		dialog.setMessage("Select a function or operation");
 
 		dialog.addFilter(new ExecutableFilter());
 		// dialog.setComparator(new

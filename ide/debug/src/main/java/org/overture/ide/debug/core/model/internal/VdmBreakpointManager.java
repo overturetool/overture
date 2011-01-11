@@ -450,6 +450,10 @@ public class VdmBreakpointManager implements IBreakpointListener,
 		if (!addSession(session)) {
 			return;
 		}
+		if(!DebugPlugin.getDefault().getBreakpointManager().isEnabled()){
+			return;
+		}
+		
 		IBreakpoint[] breakpoints = getBreakpointManager().getBreakpoints(
 				target.getModelIdentifier());
 		IVdmProject vdmProject = this.target.getVdmProject();
