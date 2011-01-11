@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.osgi.util.TextProcessor;
+import org.eclipse.swt.custom.StyledText;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
@@ -12,6 +13,7 @@ import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
+import org.overturetool.vdmj.definitions.InheritedDefinition;
 import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
 import org.overturetool.vdmj.definitions.LocalDefinition;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
@@ -159,6 +161,9 @@ public class VdmElementLabels
 			return getPerSyncDefinitionLabel((PerSyncDefinition) element);
 		}
 
+		if(element instanceof InheritedDefinition){
+			return getInheritedDefinition((InheritedDefinition) element,flags);
+		}
 //		else
 		{
 			StyledString result = new StyledString();
@@ -167,6 +172,14 @@ public class VdmElementLabels
 		}
 
 		// return null;
+	}
+
+	private static StyledString getInheritedDefinition(
+			InheritedDefinition element, long flags) {
+
+		StyledString res = getStyledTextLabel(element.superdef, flags);
+		
+		return res;
 	}
 
 	private static StyledString getPerSyncDefinitionLabel(

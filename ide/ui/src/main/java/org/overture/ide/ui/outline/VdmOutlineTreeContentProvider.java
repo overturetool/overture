@@ -37,6 +37,8 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider
 		{
 			// get definitions from the current class without inherited definitions
 			DefinitionList defs = ((ClassDefinition) parentElement).definitions.singleDefinitions();
+			defs.addAll(((ClassDefinition) parentElement).localInheritedDefinitions);
+			
 			//defs = checkForThreads(defs);
 			return filterDefinitionList(defs).toArray();
 
@@ -213,11 +215,11 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider
 						}
 					}
 
-					if (def instanceof InheritedDefinition)
-					{
-						fInput.remove(i);
-						i--;
-					}
+//					if (def instanceof InheritedDefinition)
+//					{
+//						fInput.remove(i);
+//						i--;
+//					}
 
 				} catch (NullPointerException e)
 				{

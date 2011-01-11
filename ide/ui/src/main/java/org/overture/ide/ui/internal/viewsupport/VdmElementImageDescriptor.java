@@ -9,8 +9,9 @@ import org.overture.ide.ui.VdmPluginImages;
 import org.overture.ide.ui.VdmUIPlugin;
 
 /**
- * A {@link JavaElementImageDescriptor} consists of a base image and several adornments. The adornments are computed
- * according to the flags either passed during creation or set via the method {@link #setAdornments(int)}.
+ * A {@link JavaElementImageDescriptor} consists of a base image and several
+ * adornments. The adornments are computed according to the flags either passed
+ * during creation or set via the method {@link #setAdornments(int)}.
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
  * </p>
@@ -18,8 +19,7 @@ import org.overture.ide.ui.VdmUIPlugin;
  * @since 2.0
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class VdmElementImageDescriptor extends CompositeImageDescriptor
-{
+public class VdmElementImageDescriptor extends CompositeImageDescriptor {
 
 	/** Flag to render the abstract adornment. */
 	public final static int ABSTRACT = 0x001;
@@ -82,14 +82,13 @@ public class VdmElementImageDescriptor extends CompositeImageDescriptor
 	 * @param baseImage
 	 *            an image descriptor used as the base image
 	 * @param flags
-	 *            flags indicating which adornments are to be rendered. See {@link #setAdornments(int)} for valid
-	 *            values.
+	 *            flags indicating which adornments are to be rendered. See
+	 *            {@link #setAdornments(int)} for valid values.
 	 * @param size
 	 *            the size of the resulting image
 	 */
 	public VdmElementImageDescriptor(ImageDescriptor baseImage, int flags,
-			Point size)
-	{
+			Point size) {
 		fBaseImage = baseImage;
 		Assert.isNotNull(fBaseImage);
 		fFlags = flags;
@@ -102,10 +101,10 @@ public class VdmElementImageDescriptor extends CompositeImageDescriptor
 	 * Sets the size of the image created by calling {@link #createImage()}.
 	 * 
 	 * @param size
-	 *            the size of the image returned from calling {@link #createImage()}
+	 *            the size of the image returned from calling
+	 *            {@link #createImage()}
 	 */
-	public void setImageSize(Point size)
-	{
+	public void setImageSize(Point size) {
 		Assert.isNotNull(size);
 		Assert.isTrue(size.x >= 0 && size.y >= 0);
 		fSize = size;
@@ -116,16 +115,14 @@ public class VdmElementImageDescriptor extends CompositeImageDescriptor
 	 * 
 	 * @return the size of the image created by calling {@link #createImage()}
 	 */
-	public Point getImageSize()
-	{
+	public Point getImageSize() {
 		return new Point(fSize.x, fSize.y);
 	}
 
 	/*
 	 * (non-Javadoc) Method declared in CompositeImageDescriptor
 	 */
-	protected Point getSize()
-	{
+	protected Point getSize() {
 		return fSize;
 	}
 
@@ -133,11 +130,13 @@ public class VdmElementImageDescriptor extends CompositeImageDescriptor
 	// * Method declared on Object.
 	// */
 	// public boolean equals(Object object) {
-	// if (object == null || !VdmElementImageDescriptor.class.equals(object.getClass()))
+	// if (object == null ||
+	// !VdmElementImageDescriptor.class.equals(object.getClass()))
 	// return false;
 	//
 	// VdmElementImageDescriptor other= (VdmElementImageDescriptor)object;
-	// return (fBaseImage.equals(other.fBaseImage) && fFlags == other.fFlags && fSize.equals(other.fSize));
+	// return (fBaseImage.equals(other.fBaseImage) && fFlags == other.fFlags &&
+	// fSize.equals(other.fSize));
 	// }
 
 	// /* (non-Javadoc)
@@ -150,8 +149,7 @@ public class VdmElementImageDescriptor extends CompositeImageDescriptor
 	/*
 	 * (non-Javadoc) Method declared in CompositeImageDescriptor
 	 */
-	protected void drawCompositeImage(int width, int height)
-	{
+	protected void drawCompositeImage(int width, int height) {
 		ImageData bg = getImageData(fBaseImage);
 
 		drawImage(bg, 0, 0);
@@ -162,123 +160,108 @@ public class VdmElementImageDescriptor extends CompositeImageDescriptor
 
 	}
 
-	private ImageData getImageData(ImageDescriptor descriptor)
-	{
-		ImageData data = descriptor.getImageData(); // see bug 51965: getImageData can return null
-		if (data == null)
-		{
+	private ImageData getImageData(ImageDescriptor descriptor) {
+		ImageData data = descriptor.getImageData(); // see bug 51965:
+													// getImageData can return
+													// null
+		if (data == null) {
 			data = DEFAULT_IMAGE_DATA;
-			VdmUIPlugin.logErrorMessage("Image data not available: " + descriptor.toString()); //$NON-NLS-1$
+			VdmUIPlugin
+					.logErrorMessage("Image data not available: " + descriptor.toString()); //$NON-NLS-1$
 		}
 		return data;
 	}
 
-	private void addTopRightImage(ImageDescriptor desc, Point pos)
-	{
+	private void addTopRightImage(ImageDescriptor desc, Point pos) {
 		ImageData data = getImageData(desc);
 		int x = pos.x - data.width;
-		if (x >= 0)
-		{
+		if (x >= 0) {
 			drawImage(data, x, pos.y);
 			pos.x = x;
 		}
 	}
 
-	private void addBottomRightImage(ImageDescriptor desc, Point pos)
-	{
+	private void addBottomRightImage(ImageDescriptor desc, Point pos) {
 		ImageData data = getImageData(desc);
 		int x = pos.x - data.width;
 		int y = pos.y - data.height;
-		if (x >= 0 && y >= 0)
-		{
+		if (x >= 0 && y >= 0) {
 			drawImage(data, x, y);
 			pos.x = x;
 		}
 	}
 
-	private void addBottomLeftImage(ImageDescriptor desc, Point pos)
-	{
+	private void addBottomLeftImage(ImageDescriptor desc, Point pos) {
 		ImageData data = getImageData(desc);
 		int x = pos.x;
 		int y = pos.y - data.height;
-		if (x + data.width < getSize().x && y >= 0)
-		{
+		if (x + data.width < getSize().x && y >= 0) {
 			drawImage(data, x, y);
 			pos.x = x + data.width;
 		}
 	}
 
-	private void drawTopRight()
-	{
+	private void drawTopRight() {
 		Point pos = new Point(getSize().x, 0);
 
-		if ((fFlags & ABSTRACT) != 0)
-		{
+		if ((fFlags & ABSTRACT) != 0) {
 			addTopRightImage(VdmPluginImages.DESC_OVR_ABSTRACT, pos);
 		}
-		if ((fFlags & CONSTRUCTOR) != 0)
-		{
+		if ((fFlags & CONSTRUCTOR) != 0) {
 			addTopRightImage(VdmPluginImages.DESC_OVR_CONSTRUCTOR, pos);
 		}
-		if ((fFlags & FINAL) != 0)
-		{
+		if ((fFlags & FINAL) != 0) {
 			addTopRightImage(VdmPluginImages.DESC_OVR_FINAL, pos);
 		}
-		if ((fFlags & VOLATILE) != 0)
-		{
+		if ((fFlags & VOLATILE) != 0) {
 			addTopRightImage(VdmPluginImages.DESC_OVR_VOLATILE, pos);
 		}
-		if ((fFlags & STATIC) != 0)
-		{
+		if ((fFlags & STATIC) != 0) {
 			addTopRightImage(VdmPluginImages.DESC_OVR_STATIC, pos);
 		}
-		if ((fFlags & RUNNABLE) != 0)
-		{
+		if ((fFlags & RUNNABLE) != 0) {
 			addTopRightImage(VdmPluginImages.DESC_OVR_RUN, pos);
 		}
 
 	}
 
-	private void drawBottomRight()
-	{
-		// Point size= getSize();
-		// Point pos= new Point(size.x, size.y);
+	private void drawBottomRight() {
+		Point size = getSize();
+		Point pos = new Point(size.x, size.y);
+		
+		if ((fFlags & OVERRIDES) != 0) {
+			addBottomRightImage(VdmPluginImages.DESC_OVR_OVERRIDES, pos);
+		}
 
 	}
 
-	private void drawBottomLeft()
-	{
-		// Point pos= new Point(0, getSize().y);
+	private void drawBottomLeft() {
+		Point pos = new Point(0, getSize().y);
 
 	}
 
 	@Override
-	public String toString()
-	{
-		if (fBaseImage != null)
-		{
+	public String toString() {
+		if (fBaseImage != null) {
 			return fBaseImage.toString();
 		} else
 			return super.toString();
 	}
-	
+
 	@Override
-	public boolean equals(Object obj)
-	{
-		if(obj instanceof VdmElementImageDescriptor)
-		{
+	public boolean equals(Object obj) {
+		if (obj instanceof VdmElementImageDescriptor) {
 			VdmElementImageDescriptor other = (VdmElementImageDescriptor) obj;
-			return this.fFlags== other.fFlags && (this.fSize.equals(other.fSize))&& this.fBaseImage.equals(other.fBaseImage);
-		}
-		else
-		{
+			return this.fFlags == other.fFlags
+					&& (this.fSize.equals(other.fSize))
+					&& this.fBaseImage.equals(other.fBaseImage);
+		} else {
 			return false;
 		}
 	}
-	
+
 	@Override
-	public int hashCode()
-	{
-	return	this.fFlags+fSize.hashCode()+fBaseImage.hashCode();
+	public int hashCode() {
+		return this.fFlags + fSize.hashCode() + fBaseImage.hashCode();
 	}
 }

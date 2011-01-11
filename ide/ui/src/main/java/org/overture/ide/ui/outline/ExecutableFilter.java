@@ -6,6 +6,7 @@ import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
+import org.overturetool.vdmj.definitions.InheritedDefinition;
 import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.modules.Module;
 
@@ -19,7 +20,7 @@ public class ExecutableFilter extends ViewerFilter
 				element instanceof Module || 
 				(
 						parentElement instanceof ClassDefinition
-				&& (element instanceof ExplicitOperationDefinition || element instanceof ExplicitFunctionDefinition)
+				&& (element instanceof ExplicitOperationDefinition || element instanceof ExplicitFunctionDefinition || element instanceof InheritedDefinition)
 				&& (element instanceof Definition && ((Definition) element).accessSpecifier.access == Token.PUBLIC)
 				)
 				

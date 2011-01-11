@@ -19,6 +19,7 @@ import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
+import org.overturetool.vdmj.definitions.InheritedDefinition;
 import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
 import org.overturetool.vdmj.definitions.LocalDefinition;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
@@ -201,10 +202,14 @@ public class VdmElementImageProvider {
 		} else if (element instanceof Field){
 			return getFieldImage((Field) element,
 					SMALL_ICONS, adornmentFlags);
+		} else if (element instanceof InheritedDefinition){
+			return getInheritedDefinitionImage((InheritedDefinition)element,SMALL_ICONS,adornmentFlags);
 		}
 		
 		return null;
 	}
+
+	
 
 	private ImageDescriptor getFieldImage(Field element, int smallIcons,
 			int adornmentFlags) {
@@ -236,6 +241,15 @@ public class VdmElementImageProvider {
 		
 	}
 
+	private ImageDescriptor getInheritedDefinitionImage(
+			InheritedDefinition element, int smallIcons, int adornmentFlags) {
+		Point size = useSmallSize(smallIcons) ? SMALL_SIZE : BIG_SIZE;
+		ImageDescriptor desc = computeDescriptor(element.superdef,adornmentFlags);
+		
+		
+		return new VdmElementImageDescriptor(desc, adornmentFlags, size);
+	}
+	
 	private ImageDescriptor getImplicitOperationDefinitionImage(
 			ImplicitOperationDefinition element, int smallIcons,
 			int adornmentFlags) {
@@ -573,8 +587,18 @@ public class VdmElementImageProvider {
 
 		} else if (element instanceof LocalDefinition) {
 			flags = getLocalDefinitionFlags((LocalDefinition) element);
+		} else if (element instanceof InheritedDefinition){
+			flags = getInheritedDefinitionFlags((InheritedDefinition)element);
 		}
+		
+		
+		return flags;
+	}
 
+	private int getInheritedDefinitionFlags(InheritedDefinition element) {
+		int flags = 0;
+		flags |= VdmElementImageDescriptor.OVERRIDES;
+		
 		return flags;
 	}
 
@@ -602,7 +626,6 @@ public class VdmElementImageProvider {
 			ExplicitOperationDefinition element) {
 
 		int flags = 0;
-
 		if (element.isConstructor) {
 			flags |= VdmElementImageDescriptor.CONSTRUCTOR;
 		}
