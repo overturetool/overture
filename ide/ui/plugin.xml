@@ -422,6 +422,12 @@
            id="org.overture.ide.ui.templates"
            name="Templates">
      </page>
+     <page
+           category="org.overture.ide.ui.vdm"
+           class="org.overture.ide.ui.preferences.WorkbenchPreferencePageLatex"
+           id="org.overture.ide.ui.latex"
+           name="Latex">
+     </page>
   </extension>
   
 </plugin>
