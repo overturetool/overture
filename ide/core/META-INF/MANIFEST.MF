@@ -12,7 +12,8 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.overture.ide.generated.vdmj;bundle-version="0.3.0";visibility:=reexport,
  org.eclipse.core.runtime;bundle-version="3.5.0";visibility:=reexport,
  org.eclipse.core.expressions,
- org.eclipse.core.resources;bundle-version="3.5.2";visibility:=reexport
+ org.eclipse.core.resources;bundle-version="3.5.2";visibility:=reexport,
+ org.eclipse.ui;bundle-version="3.6.0"
 Export-Package: org.overture.ide.core,
  org.overture.ide.core.ast,
  org.overture.ide.core.builder,
