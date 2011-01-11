@@ -276,10 +276,10 @@ public class LatexCoverageAction implements IObjectActionDelegate
 						documentFileName);
 				pdflatex.start();
 
-				while (!monitor.isCanceled() && !pdflatex.isFinished)
+				while (!monitor.isCanceled() && !pdflatex.isFinished && !pdflatex.hasFailed)
 					Thread.sleep(500);
 
-				if (monitor.isCanceled())
+				if (monitor.isCanceled() || pdflatex.hasFailed)
 					pdflatex.kill();
 				else
 				{
@@ -287,10 +287,10 @@ public class LatexCoverageAction implements IObjectActionDelegate
 							outputFolder, documentFileName);
 					pdflatex2.start();
 
-					while (!monitor.isCanceled() && !pdflatex2.isFinished)
+					while (!monitor.isCanceled() && !pdflatex2.isFinished && !pdflatex.hasFailed)
 						Thread.sleep(500);
 
-					if (monitor.isCanceled())
+					if (monitor.isCanceled() || pdflatex.hasFailed)
 						pdflatex2.kill();
 				}
 
