@@ -716,7 +716,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 		StringBuilder sb = new StringBuilder();
 
 		for (Entry<LexNameToken, Value> e : vars.entrySet()) {
-			if (!e.getKey().name.equals("self")) {
+			if (!e.getKey().name.equals("self")) { // This test makes the self not appear
 
 				if (isDebugVisible(e.getValue())) {
 					sb.append(propertyResponse(e.getKey(), e.getValue()));
