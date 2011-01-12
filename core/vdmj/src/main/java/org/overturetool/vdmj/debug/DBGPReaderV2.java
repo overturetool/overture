@@ -1238,6 +1238,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			v instanceof MapValue ||
 			v instanceof TokenValue ||
 			v instanceof RecordValue||
+			v instanceof ObjectValue || 
 			v instanceof NilValue;
 	}
 
