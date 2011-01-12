@@ -125,15 +125,15 @@ public class BacktrackInputReader extends Reader
 	{
 		String name = file.getName();
 
-		if (name.endsWith(".doc"))
+		if (name.toLowerCase().endsWith(".doc"))
 		{
 			return new DocStreamReader(new FileInputStream(file), charset);
 		}
-		else if (name.endsWith(".docx"))
+		else if (name.toLowerCase().endsWith(".docx"))
 		{
 			return new DocxStreamReader(new FileInputStream(file));
 		}
-		else if (name.endsWith(".odt"))
+		else if (name.toLowerCase().endsWith(".odt"))
 		{
 			return new ODFStreamReader(new FileInputStream(file));
 		}
@@ -142,11 +142,11 @@ public class BacktrackInputReader extends Reader
 			return new LatexStreamReader(new FileInputStream(file), charset);
 		}
 	}
-	
+
 	/**
 	 * Calculate the length to allocate for a given file/stream.
 	 */
-	
+
 	private int readerLength(File file, InputStreamReader isr)
 	{
 		String name = file.getName();
