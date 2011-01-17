@@ -35,6 +35,7 @@ import org.overture.ide.plugins.latex.properties.WorkbenchPropertyPage1;
 import org.overture.ide.plugins.latex.utility.LatexBuilder;
 import org.overture.ide.plugins.latex.utility.PdfLatex;
 import org.overture.ide.plugins.latex.utility.TreeSelectionLocater;
+import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.internal.util.ConsoleWriter;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.ide.vdmpp.core.IVdmPpCoreConstants;
@@ -50,6 +51,8 @@ import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.syntax.ClassReader;
 import org.overturetool.vdmj.syntax.ModuleReader;
+
+import com.sun.net.ssl.internal.ssl.Debug;
 
 @SuppressWarnings("restriction")
 public class LatexCoverageAction implements IObjectActionDelegate
@@ -279,8 +282,12 @@ public class LatexCoverageAction implements IObjectActionDelegate
 				while (!monitor.isCanceled() && !pdflatex.isFinished && !pdflatex.hasFailed)
 					Thread.sleep(500);
 
-				if (monitor.isCanceled() || pdflatex.hasFailed)
+				if (monitor.isCanceled() || pdflatex.hasFailed){
 					pdflatex.kill();
+					if(pdflatex.hasFailed){
+						VdmUIPlugin.logErrorMessage("PDF creation failed. Please inspect the pdf console for further information.");
+					}
+				}
 				else
 				{
 					PdfLatex pdflatex2 = new PdfLatex(selectedProject,
@@ -290,8 +297,12 @@ public class LatexCoverageAction implements IObjectActionDelegate
 					while (!monitor.isCanceled() && !pdflatex2.isFinished && !pdflatex.hasFailed)
 						Thread.sleep(500);
 
-					if (monitor.isCanceled() || pdflatex.hasFailed)
+					if (monitor.isCanceled() || pdflatex.hasFailed){
 						pdflatex2.kill();
+						if(pdflatex.hasFailed){
+							VdmUIPlugin.logErrorMessage("PDF creation failed. Please inspect the pdf console for further information.");
+						}
+					}
 				}
 
 				selectedProject.refreshLocal(IResource.DEPTH_INFINITE, null);

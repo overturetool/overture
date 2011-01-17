@@ -23,6 +23,7 @@ public class PdfLatex extends Thread {
 	public boolean isFinished = false;
 	public boolean hasFailed = false;
 	private String currentOS = null;
+	private boolean latexFailed = false;
 
 	public PdfLatex(IProject project, File outputFolder, String documentName) {
 		this.documentName = documentName;
@@ -38,6 +39,10 @@ public class PdfLatex extends Thread {
 		}
 	}
 
+	public void setLatexFail(boolean b){
+		this.latexFailed = b;
+	}
+	
 	@Override
 	public void run() {
 
@@ -79,12 +84,18 @@ public class PdfLatex extends Thread {
 			pb.directory(outputFolder);
 
 			process = pb.start();
-			new ProcessConsolePrinter(cw, process.getInputStream()).start();
-			new ProcessConsolePrinter(cw, process.getErrorStream()).start();
+			new ProcessConsolePrinter(cw, process.getInputStream(),this).start();
+			new ProcessConsolePrinter(cw, process.getErrorStream(),this).start();
 
 			process.waitFor();
+						
 			if (project != null)
 				project.refreshLocal(IResource.DEPTH_INFINITE, null);
+			
+			if(latexFailed){
+				this.hasFailed = true;
+			}
+			
 			isFinished = true;
 		} catch (IOException e) {
 			this.hasFailed = true;
