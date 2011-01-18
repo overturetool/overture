@@ -52,7 +52,6 @@ import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.syntax.ClassReader;
 import org.overturetool.vdmj.syntax.ModuleReader;
 
-import com.sun.net.ssl.internal.ssl.Debug;
 
 @SuppressWarnings("restriction")
 public class LatexCoverageAction implements IObjectActionDelegate
