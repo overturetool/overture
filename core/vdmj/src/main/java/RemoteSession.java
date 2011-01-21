@@ -33,6 +33,7 @@ public class RemoteSession implements RemoteControl
 	{
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		boolean carryOn = true;
+		System.out.println("Session started");
 
 		while (carryOn)
 		{
@@ -41,7 +42,11 @@ public class RemoteSession implements RemoteControl
 				System.out.print(">> ");
 				String line = in.readLine();
 
-				if (line.equals("quit"))
+				if (line.length() == 0)
+				{
+					// Fine...
+				}
+				else if (line.equals("quit"))
 				{
 					in.close();
 					carryOn = false;
@@ -58,7 +63,7 @@ public class RemoteSession implements RemoteControl
 					long before = System.currentTimeMillis();
 					String output = interpreter.execute(line);
 		   			long after = System.currentTimeMillis();
-					System.out.println(output);
+					System.out.println(line + " = " + output);
 		   			System.out.println("Executed in " + (double)(after-before)/1000 + " secs.");
 				}
 			}
