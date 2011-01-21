@@ -60,7 +60,7 @@ definitions
 
     pi_f:() +> real
     pi_f () ==
-    is not yet specified
+    is not yet specified;
 
 	fac:nat -> nat1 
     fac(a) == 
