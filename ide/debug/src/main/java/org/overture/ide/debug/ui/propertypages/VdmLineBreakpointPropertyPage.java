@@ -103,16 +103,23 @@ public class VdmLineBreakpointPropertyPage extends VdmBreakpointPropertyPage imp
 		//			if (member == null) {
 		//				return;
 		//			}
-					String label = "Member:"; //PropertyPageMessages.JavaLineBreakpointPage_3; 
+		
+		
+					//TODO: I removed this label until we find a solution to fidn the member
+		
+//					String label = "Member:"; //PropertyPageMessages.JavaLineBreakpointPage_3; 
 		//			if (breakpoint instanceof IJavaMethodBreakpoint) {
 		//				label = PropertyPageMessages.JavaLineBreakpointPage_4; 
 		//			} else if (breakpoint instanceof IJavaWatchpoint) {
 		//				label = PropertyPageMessages.JavaLineBreakpointPage_5; 
 		//			}
-					createLabel(parent, label);
-					Text text = SWTFactory.createText(parent, SWT.READ_ONLY, 1, 1);
-					text.setText("fJavaLabelProvider.getText(member)");
-					text.setBackground(parent.getBackground());
+//					createLabel(parent, label);
+					
+					//TODO: the member should be reated here
+					
+//					Text text = SWTFactory.createText(parent, SWT.READ_ONLY, 1, 1);
+//					text.setText("fJavaLabelProvider.getText(member)");
+//					text.setBackground(parent.getBackground());
 	}
 	
 	/**

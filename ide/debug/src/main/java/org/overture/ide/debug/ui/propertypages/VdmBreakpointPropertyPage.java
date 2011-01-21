@@ -231,9 +231,10 @@ public class VdmBreakpointPropertyPage extends PropertyPage {
 		try {
 			String typeName = ((IVdmBreakpoint) getElement()).getMessage();
 			if (typeName != null) {
-				createLabel(labelComposite, "TODO: property label (VdmBreakpointPropertyPage"); 
+				String s = getTypeName(typeName);
+				createLabel(labelComposite, "Filename:"); 
 				Text text = SWTFactory.createText(labelComposite, SWT.READ_ONLY, 1, 1);
-				text.setText("DSADSADD");
+				text.setText(s);
 				text.setBackground(parent.getBackground());
 			}
 			createTypeSpecificLabels(labelComposite);
@@ -260,6 +261,21 @@ public class VdmBreakpointPropertyPage extends PropertyPage {
 //			fSuspendPolicy.select(0);
 //		}
 //	}
+
+	private String getTypeName(String typeName) {
+		String[] split = typeName.split(":");
+		String res = "";
+		
+		if(split.length == 3){
+			String[] split2 = split[1].split("\\[");
+			if(split2.length == 2)
+			{
+				res = split2[0];
+			}
+		}
+		
+		return res;
+	}
 
 	/**
 	 * @param parent the composite in which the hit count editor
