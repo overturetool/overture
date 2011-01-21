@@ -25,6 +25,7 @@ package org.overturetool.vdmj.statements;
 
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.POScopeContext;
@@ -87,6 +88,36 @@ public class BlockStatement extends SimpleBlockStatement
 		sb.append(super.toString());
 		sb.append(")");
 		return sb.toString();
+	}
+
+	@Override
+	public Statement findStatement(int lineno)
+	{
+		for (Definition d: assignmentDefs)
+		{
+			Statement found = d.findStatement(lineno);
+			if (found != null)
+			{
+				return found;
+			}
+		}
+
+		return super.findStatement(lineno);
+	}
+
+	@Override
+	public Expression findExpression(int lineno)
+	{
+		for (Definition d: assignmentDefs)
+		{
+			Expression found = d.findExpression(lineno);
+			if (found != null)
+			{
+				return found;
+			}
+		}
+
+		return super.findExpression(lineno);
 	}
 
 	@Override
