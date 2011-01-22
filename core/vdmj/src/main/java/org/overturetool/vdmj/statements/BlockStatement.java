@@ -91,32 +91,10 @@ public class BlockStatement extends SimpleBlockStatement
 	}
 
 	@Override
-	public Statement findStatement(int lineno)
-	{
-		for (Definition d: assignmentDefs)
-		{
-			Statement found = d.findStatement(lineno);
-			if (found != null)
-			{
-				return found;
-			}
-		}
-
-		return super.findStatement(lineno);
-	}
-
-	@Override
 	public Expression findExpression(int lineno)
 	{
-		for (Definition d: assignmentDefs)
-		{
-			Expression found = d.findExpression(lineno);
-			if (found != null)
-			{
-				return found;
-			}
-		}
-
+		Expression found = assignmentDefs.findExpression(lineno);
+		if (found != null) return found;
 		return super.findExpression(lineno);
 	}
 
