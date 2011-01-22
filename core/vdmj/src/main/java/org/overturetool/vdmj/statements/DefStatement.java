@@ -71,18 +71,6 @@ public class DefStatement extends LetDefStatement
 	}
 
 	@Override
-	public Statement findStatement(int lineno)
-	{
-		return statement.findStatement(lineno);
-	}
-
-	@Override
-	public Expression findExpression(int lineno)
-	{
-		return statement.findExpression(lineno);
-	}
-
-	@Override
 	public ProofObligationList getProofObligations(POContextStack ctxt)
 	{
 		ProofObligationList obligations = localDefs.getProofObligations(ctxt);

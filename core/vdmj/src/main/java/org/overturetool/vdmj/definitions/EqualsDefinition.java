@@ -177,6 +177,12 @@ public class EqualsDefinition extends Definition
 	}
 
 	@Override
+	public Expression findExpression(int lineno)
+	{
+		return test.findExpression(lineno);
+	}
+
+	@Override
 	public Definition findName(LexNameToken sought, NameScope scope)
 	{
 		if (defs != null)
