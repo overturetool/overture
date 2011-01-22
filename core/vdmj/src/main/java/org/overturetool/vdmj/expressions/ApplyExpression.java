@@ -330,6 +330,7 @@ public class ApplyExpression extends Expression
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);
+		location.hits--;	// This is counted below when root is evaluated
 
     	try
     	{
