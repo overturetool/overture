@@ -1,13 +1,39 @@
+/*******************************************************************************
+ *
+ *	Copyright (c) 2009 Fujitsu Services Ltd.
+ *
+ *	Author: Nick Battle
+ *
+ *	This file is part of VDMJ.
+ *
+ *	VDMJ is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU General Public License as published by
+ *	the Free Software Foundation, either version 3 of the License, or
+ *	(at your option) any later version.
+ *
+ *	VDMJ is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with VDMJ.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ ******************************************************************************/
+
 package org.overturetool.vdmj.debug;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.File;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
 
-import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Interpreter;
+import org.overturetool.vdmj.runtime.ModuleInterpreter;
 import org.overturetool.vdmj.values.Value;
-import org.overturetool.vdmj.values.VoidValue;
 
 public class RemoteInterpreter
 {
@@ -22,50 +48,77 @@ public class RemoteInterpreter
 
 	public String execute(String line) throws Exception
 	{
-		return valueExecute(line).toString();
+		return interpreter.execute(line, dbgp).toString();
 	}
 
 	public Value valueExecute(String line) throws Exception
 	{
-		boolean print = false;
-
-		if (line.startsWith("p ")||line.startsWith("print ")||line.startsWith("debug "))
-		{
-			line = line.substring(line.indexOf(' '));
-			print = true;
-		}
-
-		if (interpreter instanceof ClassInterpreter
-				&& line.startsWith("create"))
-		{
-			Pattern p = Pattern.compile("^create (\\w+)\\s*?:=\\s*(.+)$");
-			Matcher m = p.matcher(line);
-
-			if (m.matches())
-			{
-				String var = m.group(1);
-				String exp = m.group(2);
-
-				((ClassInterpreter) interpreter).create(var, exp);
-
-			}
-			return new VoidValue();
-
-		}
-		else
-		{
-
-			Value res = interpreter.execute(line, dbgp);
-			if (print && !(res instanceof VoidValue))
-			{
-				Console.out.println(res.toString());
-			}
-			return res;
-		}
+		return interpreter.execute(line, dbgp);
 	}
 
 	public void init()
 	{
 		interpreter.init(null);
+	}
+
+	public void create(String var, String exp) throws Exception
+	{
+		if (interpreter instanceof ClassInterpreter)
+		{
+			ClassInterpreter ci = (ClassInterpreter)interpreter;
+			ci.create(var, exp);
+		}
+		else
+		{
+			throw new Exception("Only available for VDM++ and VDM-RT");
+		}
+	}
+
+	public String getEnvironment()
+	{
+		return interpreter.getInitialContext();
+	}
+
+	public Set<File> getSourceFiles()
+	{
+		return interpreter.getSourceFiles();
+	}
+
+	public List<String> getModules() throws Exception
+	{
+		List<String> names = new Vector<String>();
+
+		if (interpreter instanceof ClassInterpreter)
+		{
+			throw new Exception("Only available for VDM-SL");
+		}
+		else
+		{
+			for (Module m: ((ModuleInterpreter)interpreter).getModules())
+			{
+				names.add(m.name.name);
+			}
+		}
+
+		return names;
+	}
+
+	public List<String> getClasses() throws Exception
+	{
+		List<String> names = new Vector<String>();
+
+		if (interpreter instanceof ClassInterpreter)
+		{
+			for (ClassDefinition def: ((ClassInterpreter)interpreter).getClasses())
+			{
+				names.add(def.name.name);
+			}
+		}
+		else
+		{
+			throw new Exception("Only available for VDM++ and VDM-RT");
+		}
+
+		return names;
 	}
 }
