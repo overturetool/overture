@@ -76,8 +76,7 @@ public class MATH
 		return new RealValue(Math.sqrt(arg.realValue(null)));
 	}
 
-	public static Value pi(@SuppressWarnings("unused") Value arg)
-		throws Exception
+	public static Value pi_f() throws Exception
 	{
 		return new RealValue(Math.PI);
 	}
