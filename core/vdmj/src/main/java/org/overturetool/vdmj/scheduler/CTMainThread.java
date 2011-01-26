@@ -114,7 +114,8 @@ public class CTMainThread extends MainThread
     				case 4060:	// type invariant failure
     				case 4130:	// class invariant failure
 
-    					if (e.ctxt.outer == ctxt)
+    					if (e.ctxt.outer == ctxt ||
+    						(e.ctxt.outer != null && e.ctxt.outer.outer == ctxt))
     					{
     						// These exceptions are inconclusive if they occur
     						// in a call directly from the test because it could
