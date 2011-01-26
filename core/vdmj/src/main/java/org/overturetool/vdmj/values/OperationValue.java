@@ -48,6 +48,7 @@ import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.runtime.ClassContext;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.PatternMatchException;
 import org.overturetool.vdmj.runtime.RootContext;
@@ -240,20 +241,7 @@ public class OperationValue extends Value
 			stateContext = state.getStateContext();
 		}
 
-		RootContext argContext = null;
-
-		if (self != null)
-		{
-			argContext = new ObjectContext(from, toTitle(), ctxt, self);
-		}
-		else if (classdef != null)
-		{
-			argContext = new ClassContext(from, toTitle(), ctxt, classdef);
-		}
-		else
-		{
-			argContext = new StateContext(from, toTitle(), ctxt, stateContext);
-		}
+		RootContext argContext = newContext(from, toTitle(), ctxt);
 
 		req(logreq);
 		notifySelf();
@@ -356,8 +344,14 @@ public class OperationValue extends Value
     			if (!precondition.eval(
     				precondition.location, preArgs, ctxt).boolValue(ctxt))
     			{
-    				abort(4071,
-    					"Precondition failure: " + precondition.name, argContext);
+    				// So that the stack shows the precondition call as well as where it was
+    				// called from, we create a new context frame before throwing an exception.
+    				// We can't use abort() because that throws a ValueException which is
+    				// "located" by the catch clause (usually an enclosing Expression).
+
+    				Context preCtxt = newContext(precondition.location, precondition.name, argContext);
+    				throw new ContextException(4071,
+    					"Precondition failure: " + precondition.name, precondition.location, preCtxt);
     			}
     		}
 
@@ -396,8 +390,14 @@ public class OperationValue extends Value
     			if (!postcondition.eval(
     				postcondition.location, postArgs, ctxt).boolValue(ctxt))
     			{
-    				abort(4072,
-    					"Postcondition failure: " + postcondition.name, argContext);
+    				// So that the stack shows the postcondition call as well as where it was
+    				// called from, we create a new context frame before throwing an exception.
+    				// We can't use abort() because that throws a ValueException which is
+    				// "located" by the catch clause (usually an enclosing Expression).
+
+    				Context postCtxt = newContext(postcondition.location, postcondition.name, argContext);
+    				throw new ContextException(4072,
+    					"Postcondition failure: " + postcondition.name, postcondition.location, postCtxt);
     			}
     		}
 		}
@@ -408,6 +408,26 @@ public class OperationValue extends Value
 		}
 
 		return rv;
+	}
+
+	private RootContext newContext(LexLocation from, String title, Context ctxt)
+	{
+		RootContext argContext;
+
+		if (self != null)
+		{
+			argContext = new ObjectContext(from, title, ctxt, self);
+		}
+		else if (classdef != null)
+		{
+			argContext = new ClassContext(from, title, ctxt, classdef);
+		}
+		else
+		{
+			argContext = new StateContext(from, title, ctxt, stateContext);
+		}
+
+		return argContext;
 	}
 
 	private void guard(Context ctxt) throws ValueException

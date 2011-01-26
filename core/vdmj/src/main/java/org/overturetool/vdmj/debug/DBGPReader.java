@@ -1805,7 +1805,11 @@ public class DBGPReader
 			// level above, and the first level is the BP's location...
 
 			StringBuilder sb = new StringBuilder();
-			sb.append(stackResponse(breakpoint.location, 0));
+
+			if (!breakpoint.location.equals(breakContext.location))		// BP is different
+			{
+				sb.append(stackResponse(breakpoint.location, 0));
+			}
 
 			int d = 0;
 			Context ctxt = breakContext.getFrame(d++);
