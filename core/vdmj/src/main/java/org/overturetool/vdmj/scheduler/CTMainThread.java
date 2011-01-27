@@ -106,22 +106,34 @@ public class CTMainThread extends MainThread
 			}
 			else
 			{
+				// These exceptions are inconclusive if they occur
+				// in a call directly from the test because it could
+				// be a test error, but if the test call has made
+				// further call(s), then they are real failures.
+
     			switch (e.number)
     			{
     				case 4055:	// precondition fails for functions
     				case 4071:	// precondition fails for operations
-    				case 4087:	// invalid type conversion
-    				case 4060:	// type invariant failure
-    				case 4130:	// class invariant failure
 
-    					if (e.ctxt.outer == ctxt ||
-    						(e.ctxt.outer != null && e.ctxt.outer.outer == ctxt))
+    					if (e.ctxt.outer != null && e.ctxt.outer.outer == ctxt)
     					{
-    						// These exceptions are inconclusive if they occur
-    						// in a call directly from the test because it could
-    						// be a test error, but if the test call has made
-    						// further call(s), then they are real failures.
+    						result.add(Verdict.INCONCLUSIVE);
+    					}
+    					else
+    					{
+    						result.add(Verdict.FAILED);
+    					}
+    					break;
 
+    				case 4075: case 4076: case 4077:	// invalid type conversions
+    				case 4060:							// type invariant failures
+    				case 4058: case 4059:
+    				case 4064: case 4065:
+    				case 4134:							// type conversion failures
+
+    					if (e.ctxt == ctxt)
+    					{
     						result.add(Verdict.INCONCLUSIVE);
     					}
     					else
